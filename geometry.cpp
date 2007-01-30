@@ -1694,7 +1694,11 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     if( geom_before_block.size() != geom.size())
+        {
         addDamageFull(); // damage window only if it actually was a resize
+        if( scene != NULL )
+            scene->windowGeometryShapeChanged( this );
+        }
     workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
     geom_before_block = geom;
     }
@@ -1752,6 +1756,8 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     addDamageFull();  // TODO add damage only in added area?
+    if( scene != NULL )
+        scene->windowGeometryShapeChanged( this );
     workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
     geom_before_block = geom;
     }

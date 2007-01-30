@@ -21,6 +21,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "tabbox.h"
 #include "group.h"
 #include "rules.h"
+#include "unmanaged.h"
+#include "scene.h"
+#include "effects.h"
 
 #include <QWhatsThis>
 #include <QApplication>
@@ -218,6 +221,8 @@ bool Workspace::workspaceEvent( XEvent * e )
                 tab_box->handleMouseEvent( e );
                 return true;
                 }
+            if( effects && effects->checkInputWindowEvent( e ))
+                return true;
             break;
         case KeyPress:
             {
@@ -258,6 +263,11 @@ bool Workspace::workspaceEvent( XEvent * e )
             return true;
         }
     else if( Client* c = findClient( FrameIdMatchPredicate( e->xany.window )))
+        {
+        if( c->windowEvent( e ))
+            return true;
+        }
+    else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( e->xany.window )))
         {
         if( c->windowEvent( e ))
             return true;
@@ -319,13 +329,8 @@ bool Workspace::workspaceEvent( XEvent * e )
                     }
                 return true;
                 }
-
             return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
             }
-        case MapNotify:
-
-            return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
-
         case ReparentNotify:
             {
         //do not confuse Qt with these events. After all, _we_ are the
@@ -375,6 +380,19 @@ bool Workspace::workspaceEvent( XEvent * e )
                 }
             break;
             }
+        case MapNotify:
+            {
+            if( e->xmap.override_redirect )
+                {
+                Unmanaged* c = findUnmanaged( HandleMatchPredicate( e->xmap.window ));
+                if( c == NULL )
+                    c = createUnmanaged( e->xmap.window );
+                if( c )
+                    return c->windowEvent( e );
+                }
+            return ( e->xmap.event != e->xmap.window ); // hide wm typical event from Qt
+            }
+
         case EnterNotify:
             {
             if ( QWhatsThis::inWhatsThisMode() )
@@ -451,7 +469,29 @@ bool Workspace::workspaceEvent( XEvent * e )
             if( electricBorder( e ))
                 return true;
             break;
+        case MappingNotify:
+            XRefreshKeyboardMapping( &e->xmapping );
+            tab_box->updateKeyMapping();
+            break;
+        case Expose:
+            if( e->xexpose.window == rootWindow() && compositing())  // root window needs repainting
+                addDamage( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );
+            break;
         default:
+            if( e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable() )
+                {
+#ifdef HAVE_XRANDR
+                XRRUpdateConfiguration( e );
+#endif
+                if( compositing() )
+                    {
+                    // desktopResized() should take care of when the size or
+                    // shape of the desktop has changed, but we also want to
+                    // catch refresh rate changes
+                    finishCompositing();
+                    QTimer::singleShot( 0, this, SLOT( setupCompositing() ) );
+                    }
+                }
             break;
         }
     return false;
@@ -547,6 +587,19 @@ bool Client::windowEvent( XEvent* e )
             if( demandAttentionKNotifyTimer != NULL )
                 demandAttentionKNotify();
             }
+        if( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
+            {
+            if( compositing())
+                {
+                addDamageFull();
+                scene->windowOpacityChanged( this );
+                }
+            else
+                { // forward to the frame if there's possibly another compositing manager running
+                NETWinInfo i( display(), frameId(), rootWindow(), 0 );
+                i.setOpacity( info->opacity());
+                }
+            }
         }
 
 // TODO move all focus handling stuff to separate file?
@@ -627,15 +680,23 @@ bool Client::windowEvent( XEvent* e )
                 workspace()->updateColormap();
             }
             break;
+        case VisibilityNotify:
+            visibilityNotifyEvent( &e->xvisibility );
+            break;
         default:
             if( e->xany.window == window())
-            {
-            if( e->type == Shape::shapeEvent() )
                 {
-                is_shape = Shape::hasShape( window()); // workaround for #19644
-                updateShape();
+                if( e->type == Extensions::shapeNotifyEvent() )
+                    {
+                    detectShape( window()); // workaround for #19644
+                    updateShape();
+                    }
                 }
-            }
+            if( e->xany.window == frameId())
+                {
+                if( e->type == Extensions::damageNotifyEvent())
+                    damageNotifyEvent( reinterpret_cast< XDamageNotifyEvent* >( e ));
+                }
             break;
         }
     return true; // eat all events
@@ -1004,13 +1065,18 @@ void Client::ungrabButton( int modifier )
  */
 void Client::updateMouseGrab()
     {
+    if( workspace()->globalShortcutsDisabled())
+        {
+        XUngrabButton( display(), AnyButton, AnyModifier, wrapperId());
+        // keep grab for the simple click without modifiers if needed
+        if( !( !options->clickRaise || not_obscured ))
+            grabButton( None );
+        return;
+        }
     if( isActive() && !workspace()->forcedGlobalMouseGrab()) // see Workspace::establishTabBoxGrab()
         {
         // remove the grab for no modifiers only if the window
         // is unobscured or if the user doesn't want click raise
-        // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
-        // the most recently raised window)
-        bool not_obscured = workspace()->topClientOnDesktop( workspace()->currentDesktop(), true, false ) == this;
         if( !options->clickRaise || not_obscured )
             ungrabButton( None );
         else
@@ -1028,37 +1094,6 @@ void Client::updateMouseGrab()
             GrabModeSync, GrabModeAsync,
             None, None );
         }
-    }
-
-int qtToX11Button( Qt::ButtonState button )
-    {
-    if( button == Qt::LeftButton )
-        return Button1;
-    else if( button == Qt::MidButton )
-        return Button2;
-    else if( button == Qt::RightButton )
-        return Button3;
-    return AnyButton;
-    }
-    
-int qtToX11State( Qt::ButtonState buttons, Qt::KeyboardModifiers modifiers )
-    {
-    int ret = 0;
-    if( buttons & Qt::LeftButton )
-        ret |= Button1Mask;
-    if( buttons & Qt::MidButton )
-        ret |= Button2Mask;
-    if( buttons & Qt::RightButton )
-        ret |= Button3Mask;
-    if( modifiers & Qt::ShiftModifier )
-        ret |= ShiftMask;
-    if( modifiers & Qt::ControlModifier )
-        ret |= ControlMask;
-    if( modifiers & Qt::AltModifier )
-        ret |= KKeyServer::modXAlt();
-    if( modifiers & Qt::MetaModifier )
-        ret |= KKeyServer::modXMeta();
-    return ret;
     }
 
 // Qt propagates mouse events up the widget hierachy, which means events
@@ -1445,6 +1480,17 @@ void Client::focusOutEvent( XFocusOutEvent* e )
         setActive( false );
     }
 
+void Client::visibilityNotifyEvent( XVisibilityEvent * e)
+    {
+    if( e->window != frameId())
+        return; // care only about the whole frame
+    bool new_not_obscured = e->state == VisibilityUnobscured;
+    if( not_obscured == new_not_obscured )
+        return;
+    not_obscured = new_not_obscured;
+    updateMouseGrab();
+    }
+
 // performs _NET_WM_MOVERESIZE
 void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
     {
@@ -1506,7 +1552,7 @@ void Client::keyPressEvent( uint key_code )
     bool is_alt = key_code & Qt::ALT;
     key_code = key_code & 0xffff;
     int delta = is_control?1:is_alt?32:8;
-    QPoint pos = QCursor::pos();
+    QPoint pos = cursorPos();
     switch ( key_code ) 
         {
 		case Qt::Key_Left:
@@ -1537,6 +1583,74 @@ void Client::keyPressEvent( uint key_code )
             return;
         }
     QCursor::setPos( pos );
+    }
+
+// ****************************************
+// Unmanaged
+// ****************************************
+
+bool Unmanaged::windowEvent( XEvent* e )
+    {
+    unsigned long dirty[ 2 ];
+    info->event( e, dirty, 2 ); // pass through the NET stuff
+    if( dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
+        {
+        scene->windowOpacityChanged( this );
+        addDamageFull();
+        }
+    switch (e->type) 
+        {
+        case UnmapNotify:
+            unmapNotifyEvent( &e->xunmap );
+            break;
+        case MapNotify:
+            mapNotifyEvent( &e->xmap );
+            break;
+        case ConfigureNotify:
+            configureNotifyEvent( &e->xconfigure );
+            break;
+        default:
+            {
+            if( e->type == Extensions::shapeNotifyEvent() )
+                {
+                detectShape( handle());
+                addDamageFull();
+                if( compositing() )
+                    discardWindowPixmap();
+                if( scene != NULL )
+                    scene->windowGeometryShapeChanged( this );
+                }
+            if( e->type == Extensions::damageNotifyEvent())
+                damageNotifyEvent( reinterpret_cast< XDamageNotifyEvent* >( e ));
+            break;
+            }
+        }
+    return false; // don't eat events, even our own unmanaged widgets are tracked
+    }
+
+void Unmanaged::mapNotifyEvent( XMapEvent* )
+    {
+    }
+
+void Unmanaged::unmapNotifyEvent( XUnmapEvent* )
+    {
+    release();
+    }
+
+void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
+    {
+    if( effects )
+        effects->checkInputWindowStacking(); // keep them on top
+    QRect newgeom( e->x, e->y, e->width, e->height );
+    if( newgeom == geom )
+        return;
+    geom = newgeom;
+    if( scene != NULL )
+        scene->windowGeometryShapeChanged( this );
+    // TODO add damage only if the window is not obscured
+    workspace()->addDamage( geometry());
+    // TODO maybe only damage changed area
+    addDamageFull();
     }
 
 // ****************************************
