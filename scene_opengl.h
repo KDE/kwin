@@ -81,6 +81,7 @@ class SceneOpenGL::Window
         void enableTexture();
         void disableTexture();
         void discardTexture();
+        void discardVertices();
         Window() {} // QMap sucks even in Qt4
 
         /**

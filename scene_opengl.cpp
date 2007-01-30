@@ -610,6 +610,7 @@ void SceneOpenGL::windowGeometryShapeChanged( Toplevel* c )
     Window& w = windows[ c ];
     w.discardShape();
     w.discardTexture();
+    w.discardVertices();
     }
 
 void SceneOpenGL::windowOpacityChanged( Toplevel* )
@@ -645,6 +646,7 @@ SceneOpenGL::Window::Window( Toplevel* c )
 void SceneOpenGL::Window::free()
     {
     discardTexture();
+    discardVertices();
     }
 
 void SceneOpenGL::Window::requestVertexGrid(int maxquadsize)
@@ -984,6 +986,13 @@ void SceneOpenGL::Window::discardTexture()
         }
     texture = 0;
     }
+
+void SceneOpenGL::Window::discardVertices()
+{
+    // Causes list of vertices to be recreated before next rendering pass
+    currentXResolution = -1;
+    currentYResolution = -1;
+}
 
 // paint the window
 void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintData data )
