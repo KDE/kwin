@@ -1163,7 +1163,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     glEnableClientState( GL_TEXTURE_COORD_ARRAY );
     glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), verticeslist[0].texcoord);
     // Render
-    if( mask & PAINT_WINDOW_TRANSFORMED )
+    if( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED ))
         // Just draw the entire window, no clipping
         glDrawArrays( GL_QUADS, 0, verticeslist.count() );
     else
