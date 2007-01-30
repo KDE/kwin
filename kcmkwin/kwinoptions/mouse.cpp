@@ -48,6 +48,7 @@
 #include "mouse.h"
 #include "mouse.moc"
 
+
 namespace {
 
 char const * const cnf_Max[] = {
@@ -111,13 +112,13 @@ void createMaxButtonPixmaps()
     "..............."},
   };
 
-  QByteArray baseColor(". c " + KGlobalSettings::baseColor().name().toAscii());
-  QByteArray textColor("# c " + KGlobalSettings::textColor().name().toAscii());
+  QString baseColor(". c " + KGlobalSettings::baseColor().name());
+  QString textColor("# c " + KGlobalSettings::textColor().name());
   for (int t = 0; t < 3; ++t)
   {
     maxButtonXpms[t][0] = "15 13 2 1";
-    maxButtonXpms[t][1] = baseColor.constData();
-    maxButtonXpms[t][2] = textColor.constData();
+    maxButtonXpms[t][1] = baseColor.toAscii();
+    maxButtonXpms[t][2] = textColor.toAscii();
     maxButtonPixmaps[t] = QPixmap(maxButtonXpms[t]);
     maxButtonPixmaps[t].setMask(maxButtonPixmaps[t].createHeuristicMask());
   }
@@ -373,7 +374,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     coMax[b]->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
   }
 
-  connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
+  connect(kapp, SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
 
   layout->addStretch();
 
@@ -570,11 +571,8 @@ void KTitleBarActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    // Send signal to all kwin instances
-    QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-    QDBusConnection::sessionBus().send(message);
-
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
   }
 }
 
@@ -849,10 +847,8 @@ void KWindowActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    // Send signal to all kwin instances
-    QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-    QDBusConnection::sessionBus().send(message);
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
   }
 }
 

@@ -50,9 +50,10 @@ int main( int argc, char* argv[] )
     dest_cfg.writeEntry( "count", pos );
     src_cfg.sync();
     dest_cfg.sync();
-    // Send signal to all kwin instances
-    QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-    QDBusConnection::sessionBus().send(message);
- 
+#ifdef __GNUC__
+#warning D-BUS TODO
+// kwin* , and an attach to dbus is missing as well
+#endif
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
     }
