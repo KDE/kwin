@@ -37,7 +37,7 @@ namespace KWinInternal
 {
 
 KCMRules::KCMRules( QWidget *parent, const QStringList & )
-: KCModule( KCMRulesFactory::componentData(), parent )
+: KCModule( KCMRulesFactory::instance(), parent )
 , config( "kwinrulesrc" )
     {
     QVBoxLayout *layout = new QVBoxLayout( this );
@@ -64,11 +64,8 @@ void KCMRules::save()
     emit KCModule::changed( false );
     // Send signal to kwin
     config.sync();
-    // Send signal to all kwin instances
-    QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-    QDBusConnection::sessionBus().send(message);
-
+    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+    kwin.call( "reconfigure" );
     }
 
 void KCMRules::defaults()

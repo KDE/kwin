@@ -11,16 +11,13 @@ X-KDE-FactoryName=kwinrules
 X-KDE-ParentApp=kcontrol
 
 Name=Window-Specific Settings
-Name[el]=Ρυθμίσεις Σχετικές με Παράθυρα
 Name[fr]=Paramètres spécifiques à la fenêtre
 Name[x-test]=xxWindow-Specific Settingsxx
 
 Comment=Configure settings specifically for a window
-Comment[el]=Ρυθμίσεις σχετικές ειδικά με Ένα Παράθυρο
 Comment[fr]=Configuration de paramètres spécifiques à une fenêtre
 Comment[x-test]=xxConfigure settings specifically for a windowxx
 
 Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
-Keywords[el]=μέγεθος,θέση,κατάσταση,συμπεριφορά παραθύρου,παράθυρα,ειδικές,λύσεις,αποθήκευση,κανόνων
 Keywords[fr]=taille,position,état,comportement de fenêtre,fenêtres,spécifique,astuces,souvenir,règles
 Keywords[x-test]=xxsize,position,state,window behavior,windows,specific,workarounds,remember,rulesxx

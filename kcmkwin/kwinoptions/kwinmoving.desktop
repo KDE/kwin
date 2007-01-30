@@ -10,16 +10,13 @@ X-KDE-Library=kwinoptions
 X-KDE-FactoryName=kwinmoving
 
 Name=Moving
-Name[el]=Μετακίνηση
 Name[fr]=Déplacement
 Name[x-test]=xxMovingxx
 
 Comment=Configure the way that windows are moved
-Comment[el]=Ρυθμίστε τον τρόπο με τον οποίο μετακινούνται τα παράθυρα
 Comment[fr]=Configuration de la manière dont les fenêtres sont déplacées
 Comment[x-test]=xxConfigure the way that windows are movedxx
 
 Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border
-Keywords[el]=μετακίνηση,έξυπνη,διαδοχικός,μεγιστοποίηση,μεγιστοποίηση,ζώνη αρπαγής,αρπαγή,περίγραμμα
 Keywords[fr]=déplacement,cascade,maximiser,minimiser,coller,zone d'attraction,bordure
 Keywords[x-test]=xxmoving,smart,cascade,maximize,maximise,snap zone,snap,borderxx

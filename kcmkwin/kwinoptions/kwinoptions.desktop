@@ -11,16 +11,13 @@ X-KDE-FactoryName=kwinoptions
 X-KDE-ParentApp=kcontrol
 
 Name=Window Behavior
-Name[el]=Συμπεριφορά παραθύρου
 Name[fr]=Comportement des fenêtres
 Name[x-test]=xxWindow Behaviorxx
 
 Comment=Configure the window behavior
-Comment[el]=Ρύθμιση της συμπεριφοράς του παραθύρου
 Comment[fr]=Configuration du comportement des fenêtres
 Comment[x-test]=xxConfigure the window behaviorxx
 
 Keywords=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick
-Keywords[el]=εστίαση,τοποθέτηση,συμπεριφορά παραθύρου,εφέ κίνησης,ανύψωση,αυτόματη ανύψωση,παράθυρα,πλαίσιο,μπάρα τίτλου,διπλό κλικ
 Keywords[fr]=focus,gestion du focus,fenêtre,placement des fenêtres,comportement des fenêtres,animation,fenêtres,barre de titre,double clic,souris,boutons de la souris,dessus,dessous,raise,auto raise
 Keywords[x-test]=xxfocus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx

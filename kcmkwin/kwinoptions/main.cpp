@@ -33,15 +33,16 @@
 
 #include "mouse.h"
 #include "windows.h"
+
 #include "main.h"
 
-static KComponentData *_kcmkwm = 0;
+static KInstance *_kcmkwm = 0;
 
-inline KComponentData inst() {
-        if (!_kcmkwm) {
-            _kcmkwm = new KComponentData("kcmkwm");
-        }
-        return *_kcmkwm;
+inline KInstance *inst() {
+        if (_kcmkwm)
+                return _kcmkwm;
+        _kcmkwm = new KInstance("kcmkwm");
+        return _kcmkwm;
 }
 
 class KFocusConfigStandalone : public KFocusConfig
@@ -96,37 +97,37 @@ KWinOptions::KWinOptions(QWidget *parent, const QStringList &)
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 
-  mFocus = new KFocusConfig(false, mConfig, componentData(), this);
+  mFocus = new KFocusConfig(false, mConfig, instance(), this);
   mFocus->setObjectName("KWin Focus Config");
   mFocus->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mFocus, i18n("&Focus"));
   connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, componentData(), this);
+  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, instance(), this);
   mTitleBarActions->setObjectName("KWin TitleBar Actions");
   mTitleBarActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
   connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mWindowActions = new KWindowActionsConfig(false, mConfig, componentData(), this);
+  mWindowActions = new KWindowActionsConfig(false, mConfig, instance(), this);
   mWindowActions->setObjectName("KWin Window Actions");
   mWindowActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mWindowActions, i18n("Window Actio&ns"));
   connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mMoving = new KMovingConfig(false, mConfig, componentData(), this);
+  mMoving = new KMovingConfig(false, mConfig, instance(), this);
   mMoving->setObjectName("KWin Moving");
   mMoving->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mMoving, i18n("&Moving"));
   connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mAdvanced = new KAdvancedConfig(false, mConfig, componentData(), this);
+  mAdvanced = new KAdvancedConfig(false, mConfig, instance(), this);
   mAdvanced->setObjectName("KWin Advanced");
   mAdvanced->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mAdvanced, i18n("Ad&vanced"));
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mTranslucency = new KTranslucencyConfig(false, mConfig, componentData(), this);
+  mTranslucency = new KTranslucencyConfig(false, mConfig, instance(), this);
   mTranslucency->setObjectName("KWin Translucency");
   mTranslucency->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTranslucency, i18n("&Translucency"));
@@ -179,12 +180,12 @@ void KWinOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-  // Send signal to all kwin instances
-  QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-  QDBusConnection::sessionBus().send(message);
-
-
+#ifdef __GNUC__
+#warning D-BUS TODO
+// All these calls in kcmkwin modules should be actually kwin*, because of multihead.
+#endif
+  QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+  kwin.call( "reconfigure" );
 }
 
 
@@ -225,13 +226,13 @@ KActionsOptions::KActionsOptions(QWidget *parent, const QStringList &)
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 
-  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, componentData(), this);
+  mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, instance(), this);
   mTitleBarActions->setObjectName("KWin TitleBar Actions");
   mTitleBarActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
   connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mWindowActions = new KWindowActionsConfig(false, mConfig, componentData(), this);
+  mWindowActions = new KWindowActionsConfig(false, mConfig, instance(), this);
   mWindowActions->setObjectName("KWin Window Actions");
   mWindowActions->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mWindowActions, i18n("Window Actio&ns"));
@@ -259,11 +260,8 @@ void KActionsOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-  // Send signal to all kwin instances
-  QDBusMessage message =
-       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-  QDBusConnection::sessionBus().send(message);
-
+  QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+  kwin.call( "reconfigure" );
 }
 
 
