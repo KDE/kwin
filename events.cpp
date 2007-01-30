@@ -1644,6 +1644,7 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     QRect newgeom( e->x, e->y, e->width, e->height );
     if( newgeom == geom )
         return;
+    workspace()->addDamage( geometry()); // damage old area
     geom = newgeom;
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
