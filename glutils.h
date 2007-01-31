@@ -63,6 +63,14 @@ inline bool isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
 #define GLX_TEXTURE_FORMAT_RGB_EXT         0x20D9
 #define GLX_TEXTURE_FORMAT_RGBA_EXT        0x20DA
 
+#define GLX_TEXTURE_1D_BIT_EXT             0x00000001
+#define GLX_TEXTURE_2D_BIT_EXT             0x00000002
+#define GLX_TEXTURE_RECTANGLE_BIT_EXT      0x00000004
+
+#define GLX_TEXTURE_1D_EXT                 0x20DB
+#define GLX_TEXTURE_2D_EXT                 0x20DC
+#define GLX_TEXTURE_RECTANGLE_EXT          0x20DD
+
 #define GLX_FRONT_LEFT_EXT                 0x20DE
 
 // Function pointers
