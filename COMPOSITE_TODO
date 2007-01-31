@@ -106,17 +106,9 @@ OpenGL TODO
         (http://lists.kde.org/?l=kwin&m=116439615124838&w=2)
         (http://lists.freedesktop.org/archives/xorg/2006-December/020323.html)
 
-! improved GLXFBConfig support
+/ improved GLXFBConfig support
     - it seems a different config for each depth would be needed
-    - from http://lists.freedesktop.org/archives/xorg/2006-July/016859.html and
-        http://lists.freedesktop.org/archives/xorg/2006-July/017005.html it seems
-        that some implementations have config support broken and glXChooseFBConfig()
-        doesn't work with them properly
-    - Compiz instead uses glXGetFBConfigs(), iterates over all configs and chooses
-        the best one for every depth (code is in screen.c, search for "getFBConfigs")
-!   - so most probably KWin should do similarly - get all configs, find the best
-      one for the root window (or for the window used in the XComposite overlay)
-      and the best one for every depth of drawables
+%       - but it's sometimes not choosing the right depth?
 
 / GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
 %   - works; bugs in tfp_mode with power_of_two textures

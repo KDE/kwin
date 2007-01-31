@@ -44,16 +44,26 @@ class SceneOpenGL
         void cleanupShm();
         void initBuffer();
         void initRenderingContext();
-        bool findConfig( const int* attrs, GLXFBConfig* config, VisualID visual = None );
+        bool initBufferConfigs();
+        bool initDrawableConfigs();
         void waitSync();
         void flushBuffer( int mask, QRegion damage );
         typedef GLuint Texture;
         typedef GLenum Target;
         GC gcroot;
+        class FBConfigInfo
+        {
+            public:
+                GLXFBConfig fbconfig;
+                int bind_texture_format;
+                int y_inverted;
+        };
         Drawable buffer;
         GLXFBConfig fbcbuffer;
         static bool db;
-        static GLXFBConfig fbcdrawable;
+        static GLXFBConfig fbcbuffer_db;
+        static GLXFBConfig fbcbuffer_nondb;
+        static FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
         static GLXDrawable glxbuffer;
         static GLXContext ctxbuffer;
         static GLXContext ctxdrawable;

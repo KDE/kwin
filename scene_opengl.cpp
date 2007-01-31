@@ -74,8 +74,11 @@ namespace KWinInternal
 // SceneOpenGL
 //****************************************
 
-// the config used for windows
-GLXFBConfig SceneOpenGL::fbcdrawable;
+// the configs used for the destination
+GLXFBConfig SceneOpenGL::fbcbuffer_db;
+GLXFBConfig SceneOpenGL::fbcbuffer_nondb;
+// the configs used for windows
+SceneOpenGL::FBConfigInfo SceneOpenGL::fbcdrawableinfo[ 32 + 1 ];
 // GLX content
 GLXContext SceneOpenGL::ctxbuffer;
 GLXContext SceneOpenGL::ctxdrawable;
@@ -100,59 +103,6 @@ static void checkGLError( const char* txt )
         kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
     }
 
-// attributes for finding a double-buffered destination window config
-static const int buffer_db_attrs[] =
-    {
-    GLX_CONFIG_CAVEAT, GLX_NONE,
-    GLX_DOUBLEBUFFER, True,
-    GLX_RED_SIZE, 1,
-    GLX_GREEN_SIZE, 1,
-    GLX_BLUE_SIZE, 1,
-    GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    None
-    };
-
-// attributes for finding a non-double-buffered destination pixmap config
-static const int buffer_nondb_attrs[] =
-    {
-    GLX_CONFIG_CAVEAT, GLX_NONE,
-    GLX_DOUBLEBUFFER, False,
-    GLX_RED_SIZE, 1,
-    GLX_GREEN_SIZE, 1,
-    GLX_BLUE_SIZE, 1,
-    GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    None
-    };
-
-// attributes for finding config for windows
-const int drawable_attrs[] = 
-    {
-    GLX_CONFIG_CAVEAT, GLX_NONE,
-    GLX_DOUBLEBUFFER, False,
-    GLX_DEPTH_SIZE, 0,
-    GLX_RED_SIZE, 1,
-    GLX_GREEN_SIZE, 1,
-    GLX_BLUE_SIZE, 1,
-    GLX_ALPHA_SIZE, 1,
-    GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    None
-    };
-
-// attributes for finding config for windows when using tfp
-const int drawable_tfp_attrs[] = 
-    {
-    GLX_CONFIG_CAVEAT, GLX_NONE,
-    GLX_DOUBLEBUFFER, False,
-    GLX_DEPTH_SIZE, 0,
-    GLX_RED_SIZE, 1,
-    GLX_GREEN_SIZE, 1,
-    GLX_BLUE_SIZE, 1,
-    GLX_ALPHA_SIZE, 1,
-    GLX_RENDER_TYPE, GLX_RGBA_BIT,
-    GLX_BIND_TO_TEXTURE_RGBA_EXT, True, // additional for tfp
-    None
-    };
-
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     {
@@ -169,9 +119,14 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     initBuffer(); // create destination buffer
     int vis_buffer, vis_drawable;
     glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
-    glXGetFBConfigAttrib( display(), fbcdrawable, GLX_VISUAL_ID, &vis_drawable );
-    kDebug( 1212 ) << "Buffer visual: 0x" << QString::number( vis_buffer, 16 ) << ", drawable visual: 0x"
-        << QString::number( vis_drawable, 16 ) << endl;
+    kDebug( 1212 ) << "Buffer visual (depth " << QX11Info::appDepth() << "): 0x" << QString::number( vis_buffer, 16 ) << endl;
+    for( int i = 0; i <= 32; i++ )
+        {
+        if( fbcdrawableinfo[ i ].fbconfig == NULL )
+            continue;
+        glXGetFBConfigAttrib( display(), fbcdrawableinfo[ i ].fbconfig, GLX_VISUAL_ID, &vis_drawable );
+        kDebug( 1212 ) << "Drawable visual (depth " << i << "): 0x" << QString::number( vis_drawable, 16 ) << endl;
+        }
     initRenderingContext();
 
     // Initialize OpenGL
@@ -250,7 +205,7 @@ void SceneOpenGL::selectMode()
         else if( initTfp())
             tfp_mode = true;
         }
-    if( !tfp_mode && !findConfig( drawable_attrs, &fbcdrawable ))
+    if( !initDrawableConfigs())
         assert( false );
     // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
     // 1.0-9xxx don't update pixmaps properly, so do a copy first
@@ -261,7 +216,7 @@ bool SceneOpenGL::initTfp()
     {
     if( glXBindTexImageEXT == NULL || glXReleaseTexImageEXT == NULL )
         return false;
-    if( !findConfig( drawable_tfp_attrs, &fbcdrawable ))
+    if( !initDrawableConfigs())
         return false;
     return true;
     }
@@ -333,7 +288,7 @@ void SceneOpenGL::initRenderingContext()
         }
     if( !tfp_mode && !shm_mode )
         {
-        ctxdrawable = glXCreateNewContext( display(), fbcdrawable, GLX_RGBA_TYPE, ctxbuffer,
+        ctxdrawable = glXCreateNewContext( display(), fbcdrawableinfo[ QX11Info::appDepth() ].fbconfig, GLX_RGBA_TYPE, ctxbuffer,
             direct_rendering ? GL_TRUE : GL_FALSE );
         }
     }
@@ -341,8 +296,10 @@ void SceneOpenGL::initRenderingContext()
 // create destination buffer
 void SceneOpenGL::initBuffer()
     {
-    if( findConfig( buffer_db_attrs, &fbcbuffer ) && wspace->createOverlay())
+    initBufferConfigs();
+    if( fbcbuffer_db != NULL && wspace->createOverlay())
         { // we have overlay, try to create double-buffered window in it
+        fbcbuffer = fbcbuffer_db;
         XVisualInfo* visual = glXGetVisualFromFBConfig( display(), fbcbuffer );
         XSetWindowAttributes attrs;
         attrs.colormap = XCreateColormap( display(), rootWindow(), visual->visual, AllocNone );
@@ -356,8 +313,9 @@ void SceneOpenGL::initBuffer()
         db = true;
         XFree( visual );
         }
-    else if( findConfig( buffer_nondb_attrs, &fbcbuffer ))
+    else if( fbcbuffer_nondb != NULL )
         { // cannot get any double-buffered drawable, will double-buffer using a pixmap
+        fbcbuffer = fbcbuffer_nondb;
         db = false;
         XGCValues gcattr;
         gcattr.subwindow_mode = IncludeInferiors;
@@ -370,72 +328,180 @@ void SceneOpenGL::initBuffer()
         assert( false );
     }
 
-// print info about found configs
-static void debugFBConfig( GLXFBConfig* fbconfigs, int i, const int* attrs )
-    {
-    int pos = 0;
-    while( attrs[ pos ] != (int)None )
-        {
-        int value;
-        if( glXGetFBConfigAttrib( display(), fbconfigs[ i ], attrs[ pos ], &value )
-            == Success )
-            kDebug( 1212 ) << "ATTR: 0x" << QString::number( attrs[ pos ], 16 )
-                << ": 0x" << QString::number( attrs[ pos + 1 ], 16 )
-                << ": 0x" << QString::number( value, 16 ) << endl;
-        else
-            kDebug( 1212 ) << "ATTR FAIL: 0x" << QString::number( attrs[ pos ], 16 ) << endl;
-        pos += 2;
-        }
-    }
-
-// find config matching the given attributes and possibly the given X visual
-bool SceneOpenGL::findConfig( const int* attrs, GLXFBConfig* config, VisualID visual )
+// choose the best configs for the destination buffer
+bool SceneOpenGL::initBufferConfigs()
     {
     int cnt;
-    GLXFBConfig* fbconfigs = glXChooseFBConfig( display(), DefaultScreen( display()),
-        attrs, &cnt );
-    if( fbconfigs != NULL )
+    GLXFBConfig *fbconfigs = glXGetFBConfigs( display(), DefaultScreen( display() ), &cnt );
+    fbcbuffer_db = NULL;
+    fbcbuffer_nondb = NULL;
+
+    for( int i = 0; i < 2; i++ )
         {
-        if( visual == None )
-            {
-            *config = fbconfigs[ 0 ];
-            kDebug( 1212 ) << "Found FBConfig" << endl;
-            debugFBConfig( fbconfigs, 0, attrs );
-            XFree( fbconfigs );
-            return true;
-            }
+        int back, stencil, depth, caveat, alpha;
+        if( i > 0 )
+            back = INT_MAX;
         else
+            back = 1;
+        stencil = 0;
+        depth = 0;
+        caveat = INT_MAX;
+        alpha = 0;
+        for( int j = 0; j < cnt; j++ )
             {
-            for( int i = 0;
-                 i < cnt;
-                 ++i )
+            XVisualInfo *vi;
+            int visual_depth;
+            vi = glXGetVisualFromFBConfig( display(), fbconfigs[ j ] );
+            if( vi == NULL )
+                continue;
+            visual_depth = vi->depth;
+            XFree( vi );
+            if( visual_depth != QX11Info::appDepth() )
+                continue;
+            int value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_ALPHA_SIZE, &alpha );
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_BUFFER_SIZE, &value );
+            if( value != QX11Info::appDepth() && ( value - alpha ) != QX11Info::appDepth() )
+                continue;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_DOUBLEBUFFER, &value );
+            if( i > 0 )
                 {
-                int value;
-                glXGetFBConfigAttrib( display(), fbconfigs[ i ], GLX_VISUAL_ID, &value );
-                if( value == (int)visual )
+                if( value > back )
+                    continue;
+                }
+            else
+                {
+                if( value < back )
+                    continue;
+                }
+            back = value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_STENCIL_SIZE, &value );
+            if( value < stencil )
+                continue;
+            stencil = value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_DEPTH_SIZE, &value );
+            if( value < depth )
+                continue;
+            depth = value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_CONFIG_CAVEAT, &value );
+            if( value > caveat )
+                continue;
+            caveat = value;
+            if( i > 0 )
+                fbcbuffer_nondb = fbconfigs[ j ];
+            else
+                fbcbuffer_db = fbconfigs[ j ];
+            }
+        }
+    if( cnt )
+        XFree( fbconfigs );
+    if( fbcbuffer_db == NULL && fbcbuffer_nondb == NULL )
+        {
+        kDebug( 1212 ) << "Couldn't find framebuffer configuration for buffer!" << endl;
+        return false;
+        }
+    return true;
+    }
+
+// make a list of the best configs for windows by depth
+bool SceneOpenGL::initDrawableConfigs()
+    {
+    int cnt;
+    GLXFBConfig *fbconfigs = glXGetFBConfigs( display(), DefaultScreen( display() ), &cnt );
+
+    for( int i = 0; i <= 32; i++ )
+        {
+        int back, stencil, depth, caveat, alpha, rgba;
+        back = INT_MAX;
+        stencil = INT_MAX;
+        depth = INT_MAX;
+        caveat = INT_MAX;
+        rgba = 0;
+        fbcdrawableinfo[ i ].fbconfig = NULL;
+        fbcdrawableinfo[ i ].bind_texture_format = 0;
+        fbcdrawableinfo[ i ].y_inverted = 0;
+        for( int j = 0; j < cnt; j++ )
+            {
+            XVisualInfo *vi;
+            int visual_depth;
+            vi = glXGetVisualFromFBConfig( display(), fbconfigs[ j ] );
+            if( vi == NULL )
+                continue;
+            visual_depth = vi->depth;
+            XFree( vi );
+            if( visual_depth != i )
+                continue;
+            int value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_ALPHA_SIZE, &alpha );
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_BUFFER_SIZE, &value );
+            if( value != i && ( value - alpha ) != i )
+                continue;
+            if( tfp_mode )
+                {
+                value = 0;
+                if( i == 32 )
                     {
-                    kDebug( 1212 ) << "Found FBConfig" << endl;
-                    *config = fbconfigs[ i ];
-                    debugFBConfig( fbconfigs, i, attrs );
-                    XFree( fbconfigs );
-                    return true;
+                    glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                          GLX_BIND_TO_TEXTURE_RGBA_EXT, &value );
+                    if( value )
+                        {
+                        rgba = 1;
+                        fbcdrawableinfo[ i ].bind_texture_format = GLX_TEXTURE_FORMAT_RGBA_EXT;
+                        }
+                    }
+                if( !value )
+                    {
+                    if( rgba )
+                        continue;
+                    glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                          GLX_BIND_TO_TEXTURE_RGB_EXT, &value );
+                    if( !value )
+                        continue;
+                    fbcdrawableinfo[ i ].bind_texture_format = GLX_TEXTURE_FORMAT_RGB_EXT;
                     }
                 }
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_DOUBLEBUFFER, &value );
+            if( value > back )
+                continue;
+            back = value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_STENCIL_SIZE, &value );
+            if( value > stencil )
+                continue;
+            stencil = value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_DEPTH_SIZE, &value );
+            if( value > depth )
+                continue;
+            depth = value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_CONFIG_CAVEAT, &value );
+            if( value > caveat )
+                continue;
+            caveat = value;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_Y_INVERTED_EXT, &value );
+            fbcdrawableinfo[ i ].y_inverted = value;
+            fbcdrawableinfo[ i ].fbconfig = fbconfigs[ j ];
             }
         }
-#if 0 // for debug
-    fbconfigs = glXGetFBConfigs( display(), DefaultScreen( display()), &cnt );
-    for( int i = 0;
-         i < cnt;
-         ++i )
-        {
-        kDebug( 1212 ) << "Listing FBConfig:" << i << endl;
-        debugFBConfig( fbconfigs, i, attrs );
-        }
-    if( fbconfigs != NULL )
+    if( cnt )
         XFree( fbconfigs );
-#endif
-    return false;
+    if( fbcdrawableinfo[ QX11Info::appDepth() ].fbconfig == NULL )
+        {
+        kDebug( 1212 ) << "Couldn't find framebuffer configuration for default depth!" << endl;
+        return false;
+        }
+    return true;
     }
 
 // the entry function for painting
@@ -766,6 +832,15 @@ void SceneOpenGL::Window::bindTexture()
         glBindTexture( texture_target, texture );
         return;
         }
+    if( tfp_mode )
+        {
+        if( fbcdrawableinfo[ toplevel->depth() ].fbconfig == NULL )
+            {
+            kDebug( 1212 ) << "No framebuffer configuration for depth " << toplevel->depth()
+                           << "; not binding window" << endl;
+            return;
+            }
+        }
     // Get the pixmap with the window contents
     Pixmap pix = toplevel->windowPixmap();
     // HACK
@@ -857,16 +932,14 @@ void SceneOpenGL::Window::bindTexture()
             }
         static const int attrs[] =
             {
-            GLX_TEXTURE_FORMAT_EXT, GLX_TEXTURE_FORMAT_RGBA_EXT,
+            GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ toplevel->depth() ].bind_texture_format,
             None
             };
         // the GLXPixmap will reference the X pixmap, so it will be freed automatically
         // when no longer needed
-        bound_glxpixmap = glXCreatePixmap( display(), fbcdrawable, pix, attrs );
+        bound_glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ toplevel->depth() ].fbconfig, pix, attrs );
         findTextureTarget();
-        int value;
-        glXGetFBConfigAttrib( display(), fbcdrawable, GLX_Y_INVERTED_EXT, &value );
-        texture_y_inverted = value ? true : false;
+        texture_y_inverted = fbcdrawableinfo[ toplevel->depth() ].y_inverted ? true : false;
         glBindTexture( texture_target, texture );
         if( !strict_binding )
             glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
@@ -874,8 +947,10 @@ void SceneOpenGL::Window::bindTexture()
         }
     else
         { // non-tfp case, copy pixmap contents to a texture
+        // note that if toplevel->depth() is not QX11Info::appDepth(), this may
+        // not work (however, it does seem to work with nvidia)
         findTextureTarget();
-        GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawable, pix, NULL );
+        GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawableinfo[ QX11Info::appDepth() ].fbconfig, pix, NULL );
         glXMakeContextCurrent( display(), pixmap, pixmap, ctxdrawable );
         if( last_pixmap != None )
             glXDestroyPixmap( display(), last_pixmap );
