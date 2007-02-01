@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "scene.h"
 
+#include "effects/desktopchangeslide.h"
 #include "effects/dialogparent.h"
 #include "effects/fadein.h"
 #include "effects/fadeout.h"
@@ -73,6 +74,10 @@ void Effect::windowInputMouseEvent( Window, QEvent* )
     {
     }
 
+void Effect::desktopChanged( int )
+    {
+    }
+
 void Effect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     effects->prePaintScreen( mask, region, time );
@@ -127,6 +132,7 @@ EffectsHandler::EffectsHandler( Workspace* ws )
     effects.append( new FadeOutEffect );
 //    effects.append( new ScaleInEffect );
 //    effects.append( new DialogParentEffect );
+//    effects.append( new DesktopChangeSlideEffect );
 
 //    effects.append( new TestInputEffect );
     }
@@ -179,6 +185,12 @@ void EffectsHandler::windowUnminimized( EffectWindow* c )
     {
     foreach( Effect* e, effects )
         e->windowUnminimized( c );
+    }
+
+void EffectsHandler::desktopChanged( int old )
+    {
+    foreach( Effect* e, effects )
+        e->desktopChanged( old );
     }
 
 // start another painting pass
@@ -339,6 +351,42 @@ void EffectsHandler::activateWindow( EffectWindow* c )
         Workspace::self()->activateClient( cl, true );
     }
 
+int EffectsHandler::currentDesktop() const
+    {
+    return Workspace::self()->currentDesktop();
+    }
+
 EffectsHandler* effects;
+
+
+//****************************************
+// EffectWindow
+//****************************************
+
+EffectWindow::EffectWindow()
+    : toplevel( NULL )
+    , sw( NULL )
+    {
+    }
+
+int EffectWindow::desktop() const
+    {
+    return toplevel->desktop();
+    }
+
+bool EffectWindow::isOnCurrentDesktop() const
+    {
+    return isOnDesktop( effects->currentDesktop());
+    }
+
+bool EffectWindow::isOnAllDesktops() const
+    {
+    return desktop() == NET::OnAllDesktops;
+    }
+
+bool EffectWindow::isOnDesktop( int d ) const
+    {
+    return desktop() == d || isOnAllDesktops();
+    }
 
 } // namespace

@@ -104,6 +104,11 @@ double Unmanaged::opacity() const
     return info->opacity() * 1.0 / 0xffffffff;
     }
 
+int Unmanaged::desktop() const
+    {
+    return NET::OnAllDesktops; // TODO for some window types should be the current desktop?
+    }
+
 void Unmanaged::debug( kdbgstream& stream ) const
     {
     stream << "\'ID:" << handle() << "\'";

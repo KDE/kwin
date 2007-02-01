@@ -1238,6 +1238,17 @@ void Client::setDesktop( int desktop )
     updateWindowRules();
     }
 
+/*!
+  Returns the virtual desktop within the workspace() the client window
+  is located in, 0 if it isn't located on any special desktop (not mapped yet),
+  or NET::OnAllDesktops. Do not use desktop() directly, use
+  isOnDesktop() instead.
+ */
+int Client::desktop() const
+    {
+    return desk;
+    }
+
 void Client::setOnAllDesktops( bool b )
     {
     if(( b && isOnAllDesktops())
@@ -1247,11 +1258,6 @@ void Client::setOnAllDesktops( bool b )
         setDesktop( NET::OnAllDesktops );
     else
         setDesktop( workspace()->currentDesktop());
-    }
-
-bool Client::isOnCurrentDesktop() const
-    {
-    return isOnDesktop( workspace()->currentDesktop());
     }
 
 // performs activation and/or raising of the window

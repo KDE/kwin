@@ -189,8 +189,8 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
                 region -= w->transformedShape();
             }
         }
-    // Fill any areas of the root window not covered by windows
-    paintBackground( region );
+    if( !( orig_mask & PAINT_SCREEN_BACKGROUND_FIRST ))
+        paintBackground( region ); // Fill any areas of the root window not covered by windows
     // Now walk the list bottom to top, drawing translucent windows.
     // That we draw bottom to top is important now since we're drawing translucent objects
     // and also are clipping only by opaque windows.

@@ -27,6 +27,7 @@ class Deleted
         void refWindow();
         void unrefWindow();
         virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
+        virtual int desktop() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
     private:
@@ -35,6 +36,7 @@ class Deleted
         virtual ~Deleted(); // deleted only using unrefWindow()
         int delete_refcount;
         double window_opacity;
+        int desk;
     };
 
 inline void Deleted::refWindow()

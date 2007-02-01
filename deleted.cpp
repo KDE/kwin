@@ -40,6 +40,7 @@ void Deleted::copyToDeleted( Toplevel* c )
     assert( dynamic_cast< Deleted* >( c ) == NULL );
     Toplevel::copyToDeleted( c );
     window_opacity = c->opacity();
+    desk = c->desktop();
     }
 
 void Deleted::unrefWindow()
@@ -57,6 +58,11 @@ NET::WindowType Deleted::windowType( bool direct, int supported_types ) const
 double Deleted::opacity() const
     {
     return window_opacity;
+    }
+
+int Deleted::desktop() const
+    {
+    return desk;
     }
 
 void Deleted::debug( kdbgstream& stream ) const

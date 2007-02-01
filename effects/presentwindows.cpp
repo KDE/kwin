@@ -182,7 +182,7 @@ void PresentWindowsEffect::rearrangeWindows()
             continue;
         // TODO: make it possible to show windows of all desktops (needs config
         //  option)
-        if( !client->isOnCurrentDesktop() )
+        if( !client->effectWindow()->isOnCurrentDesktop() )
             continue;
         clientlist.append(client);
         }

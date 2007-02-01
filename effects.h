@@ -80,6 +80,7 @@ class Effect
         virtual void windowMinimized( EffectWindow* c );
         virtual void windowUnminimized( EffectWindow* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
+        virtual void desktopChanged( int old );
 
         // Interpolates between x and y
         static float interpolate(float x, float y, float a)
@@ -108,6 +109,8 @@ class EffectsHandler
         void destroyInputWindow( Window w );
         // functions that allow controlling windows/desktop
         void activateWindow( EffectWindow* c );
+        // 
+        int currentDesktop() const;
         // internal (used by kwin core or compositing code)
         void startPaint();
         void windowUserMovedResized( EffectWindow* c, bool first, bool last );
@@ -119,6 +122,7 @@ class EffectsHandler
         void windowUnminimized( EffectWindow* c );
         bool checkInputWindowEvent( XEvent* e );
         void checkInputWindowStacking();
+        void desktopChanged( int old );
     private:
         QVector< Effect* > effects;
         typedef QPair< Effect*, Window > InputWindowPair;
@@ -133,13 +137,19 @@ class EffectsHandler
 class EffectWindow
     {
     public:
+        EffectWindow();
         const Toplevel* window() const;
         Toplevel* window();
+        bool isOnDesktop( int d ) const;
+        bool isOnCurrentDesktop() const;
+        bool isOnAllDesktops() const;
+        int desktop() const; // prefer isOnXXX()
+
         void setWindow( Toplevel* w ); // internal
         void setSceneWindow( Scene::Window* w ); // internal
         Scene::Window* sceneWindow(); // internal
     private:
-        Toplevel* tw;
+        Toplevel* toplevel;
         Scene::Window* sw; // This one is used only during paint pass.
     };
 
@@ -172,19 +182,19 @@ ScreenPaintData::ScreenPaintData()
 inline
 const Toplevel* EffectWindow::window() const
     {
-    return tw;
+    return toplevel;
     }
 
 inline
 Toplevel* EffectWindow::window()
     {
-    return tw;
+    return toplevel;
     }
 
 inline
 void EffectWindow::setWindow( Toplevel* w )
     {
-    tw = w;
+    toplevel = w;
     }
 
 inline

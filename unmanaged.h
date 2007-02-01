@@ -30,6 +30,7 @@ class Unmanaged
         virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
         static void deleteUnmanaged( Unmanaged* c, allowed_t );
         virtual double opacity() const;
+        virtual int desktop() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
     private:

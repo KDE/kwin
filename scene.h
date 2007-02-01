@@ -66,6 +66,8 @@ class Scene
             PAINT_SCREEN_REGION         = 1 << 4,
             // Whole screen will be painted with transformed geometry.
             PAINT_SCREEN_TRANSFORMED    = 1 << 5,
+            // Clear whole background as the very first step, without optimizing it
+            PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
             };
         // there's nothing to paint (adjust time_diff later)
         void idle();

@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kdecoration.h>
 
 #include "utils.h"
+#include "workspace.h"
 
 namespace KWinInternal
 {
@@ -52,6 +53,11 @@ class Toplevel
         bool isDialog() const;
         bool isSplash() const;
         bool isUtility() const;
+
+        virtual int desktop() const = 0;
+        bool isOnDesktop( int d ) const;
+        bool isOnCurrentDesktop() const;
+        bool isOnAllDesktops() const;
 
         Pixmap windowPixmap( bool allow_create = true ); // for use with compositing
         Visual* visual() const;
@@ -229,6 +235,21 @@ inline
 EffectWindow* Toplevel::effectWindow()
     {
     return effect_window;
+    }
+
+inline bool Toplevel::isOnAllDesktops() const
+    {
+    return desktop() == NET::OnAllDesktops;
+    }
+
+inline bool Toplevel::isOnDesktop( int d ) const
+    {
+    return desktop() == d || /*desk == 0 ||*/ isOnAllDesktops();
+    }
+
+inline bool Toplevel::isOnCurrentDesktop() const
+    {
+    return isOnDesktop( workspace()->currentDesktop());
     }
 
 #ifdef NDEBUG

@@ -108,11 +108,8 @@ class Client
         bool isActive() const;
         void setActive( bool );
 
-        int desktop() const;
+        virtual int desktop() const;
         void setDesktop( int );
-        bool isOnDesktop( int d ) const;
-        bool isOnCurrentDesktop() const;
-        bool isOnAllDesktops() const;
         void setOnAllDesktops( bool set );
 
     // !isMinimized() && not hidden, i.e. normally visible on some virtual desktop
@@ -622,30 +619,6 @@ bool Client::isMinimized() const
 inline bool Client::isActive() const
     {
     return active;
-    }
-
-/*!
-  Returns the virtual desktop within the workspace() the client window
-  is located in, 0 if it isn't located on any special desktop (not mapped yet),
-  or NET::OnAllDesktops. Do not use desktop() directly, use
-  isOnDesktop() instead.
- */
-inline int Client::desktop() const
-    {
-    return desk;
-    }
-
-inline bool Client::isOnAllDesktops() const
-    {
-    return desk == NET::OnAllDesktops;
-    }
-/*!
-  Returns whether the client is on the virtual desktop \a d.
-  This is always true for onAllDesktops clients.
- */
-inline bool Client::isOnDesktop( int d ) const
-    {
-    return desk == d || /*desk == 0 ||*/ isOnAllDesktops();
     }
 
 inline

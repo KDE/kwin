@@ -1307,6 +1307,10 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
     if( old_desktop != 0 )  // not for the very first time
         popupinfo->showInfo( desktopName(currentDesktop()) );
+
+    if( effects != NULL && old_desktop != 0 )
+        effects->desktopChanged( old_desktop );
+
     return true;
     }
 

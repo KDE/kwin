@@ -109,6 +109,8 @@ void Scene::paintScreen( int* mask, QRegion* region )
         { // whole screen, not transformed, force region to be full
         *region = QRegion( 0, 0, displayWidth(), displayHeight());
         }
+    if( *mask & PAINT_SCREEN_BACKGROUND_FIRST )
+        paintBackground( *region );
     ScreenPaintData data;
     effects->paintScreen( *mask, *region, data );
     effects->postPaintScreen();
@@ -153,7 +155,8 @@ void Scene::finalPaintScreen( int mask, QRegion region, ScreenPaintData& data )
 // It simply paints bottom-to-top.
 void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
     {
-    paintBackground( infiniteRegion());
+    if( !( orig_mask & PAINT_SCREEN_BACKGROUND_FIRST ))
+        paintBackground( infiniteRegion());
     foreach( Window* w, stacking_order ) // bottom to top
         {
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
@@ -207,8 +210,8 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
                 region -= w->shape().translated( w->x(), w->y());
             }
         }
-    // Fill any areas of the root window not covered by windows
-    paintBackground( region );
+    if( !( orig_mask & PAINT_SCREEN_BACKGROUND_FIRST ))
+        paintBackground( region ); // Fill any areas of the root window not covered by windows
     // Now walk the list bottom to top, drawing translucent windows.
     // That we draw bottom to top is important now since we're drawing translucent objects
     // and also are clipping only by opaque windows.
@@ -294,8 +297,10 @@ bool Scene::Window::isVisible() const
     {
     if( dynamic_cast< Deleted* >( toplevel ) != NULL )
         return false;
+    if( !toplevel->isOnCurrentDesktop())
+        return false;
     if( Client* c = dynamic_cast< Client* >( toplevel ))
-        return c->isShown( true ) && c->isOnCurrentDesktop();
+        return c->isShown( true );
     return true; // Unmanaged is always visible
     // TODO there may be transformations, so ignore this for now
     return !toplevel->geometry()
