@@ -44,6 +44,12 @@ namespace KWinInternal
  */
 void Workspace::desktopResized()
     {
+    QRect geom = QApplication::desktop()->geometry();
+    NETSize desktop_geometry;
+    desktop_geometry.width = geom.width();
+    desktop_geometry.height = geom.height();
+    rootInfo->setDesktopGeometry( -1, desktop_geometry );
+
     updateClientArea();
     checkElectricBorders( true );
     if( compositing() )

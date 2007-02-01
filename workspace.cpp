@@ -403,12 +403,7 @@ void Workspace::init()
         NETPoint* viewports = new NETPoint[ number_of_desktops ];
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
-        QRect geom = QApplication::desktop()->geometry();
-        NETSize desktop_geometry;
-        desktop_geometry.width = geom.width();
-        desktop_geometry.height = geom.height();
-    // TODO update also after gaining XRANDR support
-        rootInfo->setDesktopGeometry( -1, desktop_geometry );
+        desktopResized();
         setShowingDesktop( false );
 
         } // end updates blocker block
