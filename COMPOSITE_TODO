@@ -73,6 +73,9 @@ General TODO
 
 + Deleted::windowType() does not work
 
+% during screensaving, do no let non-screensaver windows show above screensaver
+    - kdesktop_lock watches for such things and raises again, but there's a small gap
+
 
 OpenGL TODO
 =================================
@@ -152,30 +155,15 @@ Effects framework TODO
 / solve somehow disappearing windows
     - i.e. when a window is e.g. closed, the Client/Unmanaged object is destroyed, but animations
         should be going on
-?   - maybe animations could be done actually before the state change, it makes sense to destroy
-        the window only after it's finished exploding or really minimizing the window only after
-        the animation of minimizing to the taskbar is done, however this looks very hairy
-        and error-prone
-?   - maybe the animation effects should keep the necessary info themselves, so that the object
-        can be destroyed
-        - the problem here may be what to do when the window again reappears, a new object will
-            be created, but the old animation should be stopped - compare window id's?
-        - another problem is that then the window won't exist at all in the scene functions,
-            so e.g. no paintWindow() will be called for it
-?   - maybe just keep the object around in a special list
 
 * more notification functions for effects are needed
     - currently there are only very few notification functions (windowAdded, windowActivated,...)
-!   - virtual desktop change
 !   - window state changes
     ? more
 
 * shadows
 
-* support for effects involving more virtual desktops
-    - currently effects are limited to only the active virtual desktop
-
-* support for grabbing input
+/ support for grabbing input
     - during some more complicated effects, input (at least mouse) should be disabled,
         because currently there is no way to do input redirection
 
@@ -191,6 +179,9 @@ Effects framework TODO
             for minimized windows, because it may be disabled also for other reasons
         - there should be some utility function that will be called by the effect
             with arguments saying which disabled windows it wants enabled
+
++ EffectWindow should be completely opaque when kept as the only API for effects
+    - no inlines, etc.
 
 
 Effects TODO
@@ -252,8 +243,11 @@ Effects TODO
 
 ? other effects
 
-+ EffectWindow should be completely opaque when kept as the only API for effects
-    - no inlines, etc.
-
 + merge fadein and fadeout effects
     - so that they don't conflict and share the progress
+
++ virtual desktop change effects
++   - ... yes, you guessed it, the cube
++   - something that presents all virtual desktops as being in grid (as in pager)
+        and zooms out of the old one and into the new one
+    - or whatever
