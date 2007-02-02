@@ -28,7 +28,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "notifications.h"
 #include "geometrytip.h"
 #include "rules.h"
-#include "effects.h"
 #include <QX11Info>
 #include <QDesktopWidget>
 
@@ -49,14 +48,8 @@ void Workspace::desktopResized()
     desktop_geometry.width = geom.width();
     desktop_geometry.height = geom.height();
     rootInfo->setDesktopGeometry( -1, desktop_geometry );
-
     updateClientArea();
     checkElectricBorders( true );
-    if( compositing() )
-        {
-        finishCompositing();
-        QTimer::singleShot( 0, this, SLOT( setupCompositing() ) );
-        }
     }
 
 /*!
@@ -222,7 +215,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
     if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
     QDesktopWidget *desktopwidget = KApplication::desktop();
-    int screen = desktopwidget->screenNumber( p );
+    int screen = desktopwidget->isVirtualDesktop() ? desktopwidget->screenNumber( p ) : desktopwidget->primaryScreen();
     if( screen < 0 )
         screen = desktopwidget->primaryScreen();
     QRect sarea = screenarea // may be NULL during KWin initialization
@@ -1416,7 +1409,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             || ns != size())
             {
             QRect orig_geometry = geometry();
-            GeometryUpdatesBlocker blocker( this );
+            GeometryUpdatesPostponer blocker( this );
             move( new_pos );
             plainResize( ns );
             setGeometry( QRect( calculateGravitation( false, gravity ), size()));
@@ -1449,7 +1442,7 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
         if( ns != size())  // don't restore if some app sets its own size again
             {
             QRect orig_geometry = geometry();
-            GeometryUpdatesBlocker blocker( this );
+            GeometryUpdatesPostponer blocker( this );
             int save_gravity = xSizeHint.win_gravity;
             xSizeHint.win_gravity = gravity;
             resizeWithChecks( ns );
@@ -1669,44 +1662,31 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         {
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
         }
-    if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
+    if( force == NormalGeometrySet && frame_geometry == QRect( x, y, w, h ))
         return;
-    geom = QRect( x, y, w, h );
+    frame_geometry = QRect( x, y, w, h );
     updateWorkareaDiffs();
-    if( block_geometry_updates != 0 )
+    if( postpone_geometry_updates != 0 )
         {
         pending_geometry_update = true;
         return;
         }
-    if( geom_before_block.size() != geom.size())
+    resizeDecoration( QSize( w, h ));
+    XMoveResizeWindow( display(), frameId(), x, y, w, h );
+//     resizeDecoration( QSize( w, h ));
+    if( !isShade())
         {
-        resizeDecoration( QSize( w, h ));
-        XMoveResizeWindow( display(), frameId(), x, y, w, h );
-        if( !isShade())
-            {
-            QSize cs = clientSize();
-            XMoveResizeWindow( display(), wrapperId(), clientPos().x(), clientPos().y(),
-                cs.width(), cs.height());
-            XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
-            }
-        if( shape())
-            updateShape();
+        QSize cs = clientSize();
+        XMoveResizeWindow( display(), wrapperId(), clientPos().x(), clientPos().y(),
+            cs.width(), cs.height());
+        XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
         }
-    else
-        XMoveWindow( display(), frameId(), x, y );
+    updateShape();
     // SELI TODO won't this be too expensive?
     updateWorkareaDiffs();
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    if( geom_before_block.size() != geom.size())
-        {
-        addDamageFull(); // damage window only if it actually was a resize
-        if( scene != NULL )
-            scene->windowGeometryShapeChanged( this );
-        }
-    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
-    geom_before_block = geom;
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -1736,11 +1716,11 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         kDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h )) << endl;
         kDebug() << kBacktrace() << endl;
         }
-    if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
+    if( force == NormalGeometrySet && frame_geometry.size() == QSize( w, h ))
         return;
-    geom.setSize( QSize( w, h ));
+    frame_geometry.setSize( QSize( w, h ));
     updateWorkareaDiffs();
-    if( block_geometry_updates != 0 )
+    if( postpone_geometry_updates != 0 )
         {
         pending_geometry_update = true;
         return;
@@ -1755,17 +1735,11 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
             cs.width(), cs.height());
         XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
         }
-    if( shape())
-        updateShape();
+    updateShape();
     updateWorkareaDiffs();
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    addDamageFull();  // TODO add damage only in added area?
-    if( scene != NULL )
-        scene->windowGeometryShapeChanged( this );
-    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
-    geom_before_block = geom;
     }
 
 /*!
@@ -1773,11 +1747,11 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
  */
 void Client::move( int x, int y, ForceGeometry_t force )
     {
-    if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
+    if( force == NormalGeometrySet && frame_geometry.topLeft() == QPoint( x, y ))
         return;
-    geom.moveTopLeft( QPoint( x, y ));
+    frame_geometry.moveTopLeft( QPoint( x, y ));
     updateWorkareaDiffs();
-    if( block_geometry_updates != 0 )
+    if( postpone_geometry_updates != 0 )
         {
         pending_geometry_update = true;
         return;
@@ -1786,22 +1760,20 @@ void Client::move( int x, int y, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    // client itself is not damaged
-    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
-    geom_before_block = geom;
     }
 
-void Client::blockGeometryUpdates( bool block )
+
+void Client::postponeGeometryUpdates( bool postpone )
     {
-    if( block )
+    if( postpone )
         {
-        if( block_geometry_updates == 0 )
+        if( postpone_geometry_updates == 0 )
             pending_geometry_update = false;
-        ++block_geometry_updates;
+        ++postpone_geometry_updates;
         }
     else
         {
-        if( --block_geometry_updates == 0 )
+        if( --postpone_geometry_updates == 0 )
             {
             if( pending_geometry_update )
                 {
@@ -1850,7 +1822,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
     if( !adjust && max_mode == old_mode )
         return;
 
-    GeometryUpdatesBlocker blocker( this );
+    GeometryUpdatesPostponer blocker( this );
 
     // maximing one way and unmaximizing the other way shouldn't happen
     Q_ASSERT( !( vertical && horizontal )
@@ -2102,7 +2074,7 @@ void Client::setFullScreen( bool set, bool user )
     if( was_fs == isFullScreen())
         return;
     StackingUpdatesBlocker blocker1( workspace());
-    GeometryUpdatesBlocker blocker2( this );
+    GeometryUpdatesPostponer blocker2( this );
     workspace()->updateClientLayer( this ); // active fullscreens get different layer
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
     updateDecoration( false, false );
@@ -2258,7 +2230,7 @@ bool Client::startMoveResize()
     XMapRaised( display(), move_resize_grab_window );
     if( XGrabPointer( display(), move_resize_grab_window, False,
         ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
-        GrabModeAsync, GrabModeAsync, None, cursor.handle(), xTime() ) == Success )
+        GrabModeAsync, GrabModeAsync, move_resize_grab_window, cursor.handle(), xTime() ) == Success )
         has_grab = true;
     if( XGrabKeyboard( display(), frameId(), False, GrabModeAsync, GrabModeAsync, xTime() ) == Success )
         has_grab = true;
@@ -2288,8 +2260,6 @@ bool Client::startMoveResize()
 // not needed anymore?        kapp->installEventFilter( eater );
         }
     Notify::raise( isResize() ? Notify::ResizeStart : Notify::MoveStart );
-    if( effects )
-        effects->windowUserMovedResized( effectWindow(), true, false );
     return true;
     }
 
@@ -2303,8 +2273,6 @@ void Client::finishMoveResize( bool cancel )
     checkMaximizeGeometry();
 // FRAME    update();
     Notify::raise( isResize() ? Notify::ResizeEnd : Notify::MoveEnd );
-    if( effects )
-        effects->windowUserMovedResized( effectWindow(), false, true );
     }
 
 void Client::leaveMoveResize()
@@ -2568,8 +2536,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         }
     if ( isMove() )
       workspace()->clientMoved(globalPos, xTime());
-    if( effects )
-        effects->windowUserMovedResized( effectWindow(), false, false );
     }
+
 
 } // namespace
