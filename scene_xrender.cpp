@@ -438,6 +438,18 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     Picture pic = picture(); // get XRender picture
     if( pic == None ) // The render format can be null for GL and/or Xv visuals
         return;
+    // set picture filter
+    if( options->smoothScale > 0 ) // only when forced, it's slow
+        {
+        if( mask & PAINT_WINDOW_TRANSFORMED )
+            filter = ImageFilterGood;
+        else if( mask & PAINT_SCREEN_TRANSFORMED )
+            filter = ImageFilterGood;
+        else
+            filter = ImageFilterFast;
+        }
+    else
+        filter = ImageFilterFast;
     // do required transformations
     int x = toplevel->x();
     int y = toplevel->y();
@@ -472,7 +484,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         XRenderSetPictureTransform( display(), pic, &xform );
         width = (int)(width * xscale);
         height = (int)(height * yscale);
-        if( options->smoothScale == 1 ) // only when forced, it's slow
+        if( filter == ImageFilterGood )
             XRenderSetPictureFilter( display(), pic, const_cast< char* >( "good" ), NULL, 0 );
         // transform the shape for clipping in paintTransformedScreen()
         QVector< QRect > rects = transformed_shape.rects();
@@ -508,7 +520,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
             { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
         }};
         XRenderSetPictureTransform( display(), pic, &xform );
-        if( options->smoothScale == 1 )
+        if( filter == ImageFilterGood )
             XRenderSetPictureFilter( display(), pic, const_cast< char* >( "fast" ), NULL, 0 );
         }
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );

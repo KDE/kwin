@@ -242,6 +242,7 @@ void Scene::finalPaintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 
 Scene::Window::Window( Toplevel * c )
     : toplevel( c )
+    , filter( ImageFilterFast )
     , shape_valid( false )
     {
     }

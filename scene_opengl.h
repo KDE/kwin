@@ -139,6 +139,7 @@ class SceneOpenGL::Window
         bool texture_y_inverted; // texture has y inverted
         bool texture_can_use_mipmaps;
         bool texture_has_valid_mipmaps;
+        bool texture_filter_trilinear;
         GLXPixmap bound_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
 
         QVector<Vertex> verticeslist;

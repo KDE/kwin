@@ -69,6 +69,8 @@ class Scene
             // Clear whole background as the very first step, without optimizing it
             PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
             };
+        // types of filtering available
+        enum ImageFilterType { ImageFilterFast, ImageFilterGood };
         // there's nothing to paint (adjust time_diff later)
         void idle();
         bool waitSyncAvailable() { return has_waitSync; }
@@ -139,6 +141,7 @@ class Scene::Window
         Window() {} // QMap sucks even in Qt4
     protected:
         Toplevel* toplevel;
+        ImageFilterType filter;
     private:
         mutable QRegion shape_region;
         mutable bool shape_valid;

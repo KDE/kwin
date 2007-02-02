@@ -717,6 +717,7 @@ SceneOpenGL::Window::Window( Toplevel* c )
     , texture_y_inverted( false )
     , texture_can_use_mipmaps( false )
     , texture_has_valid_mipmaps( false )
+    , texture_filter_trilinear( false )
     , bound_glxpixmap( None )
     , currentXResolution( -1 )
     , currentYResolution( -1 )
@@ -1044,15 +1045,28 @@ void SceneOpenGL::Window::enableTexture()
         assert( bound_glxpixmap != None );
         glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
-    if( options->smoothScale != 0 ) // default to yes
-        {
-        glTexParameteri( texture_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-        glTexParameteri( texture_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-        }
-    else
+    if( filter == ImageFilterFast )
         {
         glTexParameteri( texture_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
         glTexParameteri( texture_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+        }
+    else if( filter == ImageFilterGood )
+        {
+        if( texture_filter_trilinear )
+            {
+            glTexParameteri( texture_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+            glTexParameteri( texture_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+            if( !texture_has_valid_mipmaps )
+                {
+                glGenerateMipmap( texture_target );
+                texture_has_valid_mipmaps = true;
+                }
+            }
+        else
+            {
+            glTexParameteri( texture_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+            glTexParameteri( texture_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+            }
         }
     }
 
@@ -1117,6 +1131,24 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         return;
     bindTexture();
     glPushMatrix();
+    // set texture filter
+    if( options->smoothScale != 0 ) // default to yes
+        {
+        if( mask & PAINT_WINDOW_TRANSFORMED )
+            filter = ImageFilterGood;
+        else if( mask & PAINT_SCREEN_TRANSFORMED )
+            filter = ImageFilterGood;
+        else
+            filter = ImageFilterFast;
+        }
+    else
+        filter = ImageFilterFast;
+    // avoid unneeded mipmap generation by only using trilinear filtering
+    // when it actually makes a difference, that is with minification or
+    // changed vertices
+    texture_filter_trilinear = options->smoothScale == 2
+        && supports_npot_textures && supports_fbo && texture_can_use_mipmaps
+        && ( verticesDirty || data.xScale < 1 || data.yScale < 1 );
     // do required transformations
     int x = toplevel->x();
     int y = toplevel->y();

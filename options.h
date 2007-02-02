@@ -301,7 +301,9 @@ class Options : public KDecorationOptions
         bool onlyDecoTranslucent;
         
         uint refreshRate;
-        int smoothScale; // 0 = no, 1 = yes, -1 = auto
+        int smoothScale; // 0 = no, 1 = yes when transformed,
+                         // 2 = try trilinear when transformed; else 1,
+                         // -1 = auto
         
         enum GLMode { GLTFP, GLSHM, GLFallback };
         GLMode glMode;
