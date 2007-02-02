@@ -90,6 +90,7 @@ bool SceneOpenGL::strict_binding; // intended for AIGLX
 bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 bool SceneOpenGL::supports_npot_textures;
+bool SceneOpenGL::supports_fbo;
 bool SceneOpenGL::supports_saturation;
 bool SceneOpenGL::shm_mode;
 XShmSegmentInfo SceneOpenGL::shm;
@@ -138,6 +139,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     // Check whether certain features are supported
     supports_npot_textures = hasGLExtension( "GL_ARB_texture_non_power_of_two" )
         || hasGLVersion(2, 0);
+    supports_fbo = hasGLExtension( "GL_EXT_framebuffer_object" );
     supports_saturation = ((hasGLExtension("GL_ARB_texture_env_crossbar")
         && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
         && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;

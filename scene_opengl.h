@@ -73,6 +73,7 @@ class SceneOpenGL
         static bool strict_binding;
         static bool copy_buffer_hack;
         static bool supports_npot_textures;
+        static bool supports_fbo;
         static bool supports_saturation;
         QMap< Toplevel*, Window > windows;
         static XShmSegmentInfo shm;

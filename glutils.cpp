@@ -34,13 +34,31 @@ glXQueryDrawable_func glXQueryDrawable;
 // texture_from_pixmap extension functions
 glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
 glXBindTexImageEXT_func glXBindTexImageEXT;
-// glActiveTexture
-glActiveTexture_func glActiveTexture;
 // glXCopySubBufferMESA
 glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
 glXGetVideoSync_func glXGetVideoSync;
 glXWaitVideoSync_func glXWaitVideoSync;
+// glActiveTexture
+glActiveTexture_func glActiveTexture;
+// framebuffer_object extension functions
+glIsRenderbuffer_func glIsRenderbuffer;
+glBindRenderbuffer_func glBindRenderbuffer;
+glDeleteRenderbuffers_func glDeleteRenderbuffers;
+glGenRenderbuffers_func glGenRenderbuffers;
+glRenderbufferStorage_func glRenderbufferStorage;
+glGetRenderbufferParameteriv_func glGetRenderbufferParameteriv;
+glIsFramebuffer_func glIsFramebuffer;
+glBindFramebuffer_func glBindFramebuffer;
+glDeleteFramebuffers_func glDeleteFramebuffers;
+glGenFramebuffers_func glGenFramebuffers;
+glCheckFramebufferStatus_func glCheckFramebufferStatus;
+glFramebufferTexture1D_func glFramebufferTexture1D;
+glFramebufferTexture2D_func glFramebufferTexture2D;
+glFramebufferTexture3D_func glFramebufferTexture3D;
+glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
+glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
+glGenerateMipmap_func glGenerateMipmap;
 
 
 // Functions
@@ -118,6 +136,54 @@ void initGL()
         {
         glActiveTexture = NULL;
         glTextureUnitsCount = 0;
+        }
+    if( hasGLExtension( "GL_EXT_framebuffer_object" ))
+        {
+        glIsRenderbuffer = (glIsRenderbuffer_func) getProcAddress( "glIsRenderbufferEXT" );
+        glBindRenderbuffer = (glBindRenderbuffer_func) getProcAddress( "glBindRenderbufferEXT" );
+        glDeleteRenderbuffers = (glDeleteRenderbuffers_func) getProcAddress( "glDeleteRenderbuffersEXT" );
+        glGenRenderbuffers = (glGenRenderbuffers_func) getProcAddress( "glGenRenderbuffersEXT" );
+
+        glRenderbufferStorage = (glRenderbufferStorage_func) getProcAddress( "glRenderbufferStorageEXT" );
+
+        glGetRenderbufferParameteriv = (glGetRenderbufferParameteriv_func) getProcAddress( "glGetRenderbufferParameterivEXT" );
+
+        glIsFramebuffer = (glIsFramebuffer_func) getProcAddress( "glIsFramebufferEXT" );
+        glBindFramebuffer = (glBindFramebuffer_func) getProcAddress( "glBindFramebufferEXT" );
+        glDeleteFramebuffers = (glDeleteFramebuffers_func) getProcAddress( "glDeleteFramebuffersEXT" );
+        glGenFramebuffers = (glGenFramebuffers_func) getProcAddress( "glGenFramebuffersEXT" );
+
+        glCheckFramebufferStatus = (glCheckFramebufferStatus_func) getProcAddress( "glCheckFramebufferStatusEXT" );
+
+        glFramebufferTexture1D = (glFramebufferTexture1D_func) getProcAddress( "glFramebufferTexture1DEXT" );
+        glFramebufferTexture2D = (glFramebufferTexture2D_func) getProcAddress( "glFramebufferTexture2DEXT" );
+        glFramebufferTexture3D = (glFramebufferTexture3D_func) getProcAddress( "glFramebufferTexture3DEXT" );
+
+        glFramebufferRenderbuffer = (glFramebufferRenderbuffer_func) getProcAddress( "glFramebufferRenderbufferEXT" );
+
+        glGetFramebufferAttachmentParameteriv = (glGetFramebufferAttachmentParameteriv_func) getProcAddress( "glGetFramebufferAttachmentParameterivEXT" );
+
+        glGenerateMipmap = (glGenerateMipmap_func) getProcAddress( "glGenerateMipmapEXT" );
+        }
+    else
+        {
+        glIsRenderbuffer = NULL;
+        glBindRenderbuffer = NULL;
+        glDeleteRenderbuffers = NULL;
+        glGenRenderbuffers = NULL;
+        glRenderbufferStorage = NULL;
+        glGetRenderbufferParameteriv = NULL;
+        glIsFramebuffer = NULL;
+        glBindFramebuffer = NULL;
+        glDeleteFramebuffers = NULL;
+        glGenFramebuffers = NULL;
+        glCheckFramebufferStatus = NULL;
+        glFramebufferTexture1D = NULL;
+        glFramebufferTexture2D = NULL;
+        glFramebufferTexture3D = NULL;
+        glFramebufferRenderbuffer = NULL;
+        glGetFramebufferAttachmentParameteriv = NULL;
+        glGenerateMipmap = NULL;
         }
     }
 

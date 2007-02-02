@@ -88,9 +88,6 @@ typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
 typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
 extern glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
 extern glXBindTexImageEXT_func glXBindTexImageEXT;
-// glActiveTexture
-typedef void (*glActiveTexture_func)(GLenum);
-extern glActiveTexture_func glActiveTexture;
 // glXCopySubBufferMESA
 typedef void (*glXCopySubBuffer_func) ( Display* , GLXDrawable, int, int, int, int );
 extern glXCopySubBuffer_func glXCopySubBuffer;
@@ -99,6 +96,44 @@ typedef void (*glXGetVideoSync_func)( unsigned int *count );
 typedef void (*glXWaitVideoSync_func)( int divisor, int remainder, unsigned int *count );
 extern glXGetVideoSync_func glXGetVideoSync;
 extern glXWaitVideoSync_func glXWaitVideoSync;
+// glActiveTexture
+typedef void (*glActiveTexture_func)(GLenum);
+extern glActiveTexture_func glActiveTexture;
+// framebuffer_object extension functions
+typedef bool (*glIsRenderbuffer_func)( GLuint renderbuffer );
+typedef void (*glBindRenderbuffer_func)( GLenum target, GLuint renderbuffer );
+typedef void (*glDeleteRenderbuffers_func)( GLsizei n, const GLuint *renderbuffers );
+typedef void (*glGenRenderbuffers_func)( GLsizei n, GLuint *renderbuffers );
+typedef void (*glRenderbufferStorage_func)( GLenum target, GLenum internalformat, GLsizei width, GLsizei height );
+typedef void (*glGetRenderbufferParameteriv_func)( GLenum target, GLenum pname, GLint *params );
+typedef bool (*glIsFramebuffer_func)( GLuint framebuffer );
+typedef void (*glBindFramebuffer_func)( GLenum target, GLuint framebuffer );
+typedef void (*glDeleteFramebuffers_func)( GLsizei n, const GLuint *framebuffers );
+typedef void (*glGenFramebuffers_func)( GLsizei n, GLuint *framebuffers );
+typedef void (*glCheckFramebufferStatus_func)( GLenum target );
+typedef void (*glFramebufferTexture1D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level );
+typedef void (*glFramebufferTexture2D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level );
+typedef void (*glFramebufferTexture3D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset );
+typedef void (*glFramebufferRenderbuffer_func)( GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer );
+typedef void (*glGetFramebufferAttachmentParameteriv_func)( GLenum target, GLenum attachment, GLenum pname, GLint *params );
+typedef void (*glGenerateMipmap_func)( GLenum target );
+extern glIsRenderbuffer_func glIsRenderbuffer;
+extern glBindRenderbuffer_func glBindRenderbuffer;
+extern glDeleteRenderbuffers_func glDeleteRenderbuffers;
+extern glGenRenderbuffers_func glGenRenderbuffers;
+extern glRenderbufferStorage_func glRenderbufferStorage;
+extern glGetRenderbufferParameteriv_func glGetRenderbufferParameteriv;
+extern glIsFramebuffer_func glIsFramebuffer;
+extern glBindFramebuffer_func glBindFramebuffer;
+extern glDeleteFramebuffers_func glDeleteFramebuffers;
+extern glGenFramebuffers_func glGenFramebuffers;
+extern glCheckFramebufferStatus_func glCheckFramebufferStatus;
+extern glFramebufferTexture1D_func glFramebufferTexture1D;
+extern glFramebufferTexture2D_func glFramebufferTexture2D;
+extern glFramebufferTexture3D_func glFramebufferTexture3D;
+extern glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
+extern glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
+extern glGenerateMipmap_func glGenerateMipmap;
 
 } // namespace
 
