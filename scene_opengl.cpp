@@ -118,6 +118,22 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     strict_binding = false; // not needed now
     selectMode();
     initBuffer(); // create destination buffer
+    initRenderingContext();
+    
+    // Initialize OpenGL
+    initGL();
+    if( db )
+        glDrawBuffer( GL_BACK );
+    // Check whether certain features are supported
+    has_waitSync = glXGetVideoSync ? true : false;
+    supports_npot_textures = hasGLExtension( "GL_ARB_texture_non_power_of_two" );
+    supports_fbo = hasGLExtension( "GL_EXT_framebuffer_object" );
+    supports_saturation = ((hasGLExtension("GL_ARB_texture_env_crossbar")
+        && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
+        && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
+
+    if( !initDrawableConfigs())
+        assert( false );
     int vis_buffer, vis_drawable;
     glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
     kDebug( 1212 ) << "Buffer visual (depth " << QX11Info::appDepth() << "): 0x" << QString::number( vis_buffer, 16 ) << endl;
@@ -128,21 +144,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         glXGetFBConfigAttrib( display(), fbcdrawableinfo[ i ].fbconfig, GLX_VISUAL_ID, &vis_drawable );
         kDebug( 1212 ) << "Drawable visual (depth " << i << "): 0x" << QString::number( vis_drawable, 16 ) << endl;
         }
-    initRenderingContext();
-
-    // Initialize OpenGL
-    initGL();
-    if( db )
-        glDrawBuffer( GL_BACK );
-    has_waitSync = glXGetVideoSync ? true : false;
-
-    // Check whether certain features are supported
-    supports_npot_textures = hasGLExtension( "GL_ARB_texture_non_power_of_two" )
-        || hasGLVersion(2, 0);
-    supports_fbo = hasGLExtension( "GL_EXT_framebuffer_object" );
-    supports_saturation = ((hasGLExtension("GL_ARB_texture_env_crossbar")
-        && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
-        && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
 
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
@@ -419,15 +420,17 @@ bool SceneOpenGL::initDrawableConfigs()
 
     for( int i = 0; i <= 32; i++ )
         {
-        int back, stencil, depth, caveat, alpha, rgba;
+        int back, stencil, depth, caveat, alpha, mipmap, rgba;
         back = INT_MAX;
         stencil = INT_MAX;
         depth = INT_MAX;
         caveat = INT_MAX;
+        mipmap = 0;
         rgba = 0;
         fbcdrawableinfo[ i ].fbconfig = NULL;
         fbcdrawableinfo[ i ].bind_texture_format = 0;
         fbcdrawableinfo[ i ].y_inverted = 0;
+        fbcdrawableinfo[ i ].mipmap = 0;
         for( int j = 0; j < cnt; j++ )
             {
             XVisualInfo *vi;
@@ -485,6 +488,14 @@ bool SceneOpenGL::initDrawableConfigs()
             if( value > depth )
                 continue;
             depth = value;
+            if( tfp_mode && supports_fbo )
+                {
+                glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                      GLX_BIND_TO_MIPMAP_TEXTURE_EXT, &value );
+                if( value < mipmap )
+                    continue;
+                mipmap = value;
+                }
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_CONFIG_CAVEAT, &value );
             if( value > caveat )
@@ -492,8 +503,10 @@ bool SceneOpenGL::initDrawableConfigs()
             caveat = value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_Y_INVERTED_EXT, &value );
-            fbcdrawableinfo[ i ].y_inverted = value;
+
             fbcdrawableinfo[ i ].fbconfig = fbconfigs[ j ];
+            fbcdrawableinfo[ i ].y_inverted = value;
+            fbcdrawableinfo[ i ].mipmap = mipmap;
             }
         }
     if( cnt )
@@ -702,6 +715,8 @@ SceneOpenGL::Window::Window( Toplevel* c )
     , texture( 0 )
     , texture_target( 0 )
     , texture_y_inverted( false )
+    , texture_can_use_mipmaps( false )
+    , texture_has_valid_mipmaps( false )
     , bound_glxpixmap( None )
     , currentXResolution( -1 )
     , currentYResolution( -1 )
@@ -834,6 +849,8 @@ void SceneOpenGL::Window::bindTexture()
         glBindTexture( texture_target, texture );
         return;
         }
+    if( !toplevel->damage().isEmpty())
+        texture_has_valid_mipmaps = false;
     if( tfp_mode )
         {
         if( fbcdrawableinfo[ toplevel->depth() ].fbconfig == NULL )
@@ -921,6 +938,7 @@ void SceneOpenGL::Window::bindTexture()
             XFreeGC( display(), gc );
             }
         texture_y_inverted = true;
+        texture_can_use_mipmaps = true;
         toplevel->resetDamage( toplevel->rect());
         }
     else if( tfp_mode )
@@ -942,6 +960,7 @@ void SceneOpenGL::Window::bindTexture()
         bound_glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ toplevel->depth() ].fbconfig, pix, attrs );
         findTextureTarget();
         texture_y_inverted = fbcdrawableinfo[ toplevel->depth() ].y_inverted ? true : false;
+        texture_can_use_mipmaps = fbcdrawableinfo[ toplevel->depth() ].mipmap ? true : false;
         glBindTexture( texture_target, texture );
         if( !strict_binding )
             glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
@@ -990,6 +1009,7 @@ void SceneOpenGL::Window::bindTexture()
         glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
         glBindTexture( texture_target, texture );
         texture_y_inverted = false;
+        texture_can_use_mipmaps = true;
         toplevel->resetDamage( toplevel->rect());
         }
     // if using copy_buffer, the pixmap is no longer needed (either referenced

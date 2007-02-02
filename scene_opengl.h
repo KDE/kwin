@@ -57,6 +57,7 @@ class SceneOpenGL
                 GLXFBConfig fbconfig;
                 int bind_texture_format;
                 int y_inverted;
+                int mipmap;
         };
         Drawable buffer;
         GLXFBConfig fbcbuffer;
@@ -136,6 +137,8 @@ class SceneOpenGL::Window
         Target texture_target;
         float texture_scale_x, texture_scale_y; // to un-normalize GL_TEXTURE_2D
         bool texture_y_inverted; // texture has y inverted
+        bool texture_can_use_mipmaps;
+        bool texture_has_valid_mipmaps;
         GLXPixmap bound_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
 
         QVector<Vertex> verticeslist;
