@@ -122,9 +122,13 @@ void Workspace::setupCompositing()
     addDamageFull();
     foreach( Client* c, clients )
         c->setupCompositing();
+    foreach( Client* c, desktops )
+        c->setupCompositing();
     foreach( Unmanaged* c, unmanaged )
         c->setupCompositing();
     foreach( Client* c, clients )
+        scene->windowAdded( c );
+    foreach( Client* c, desktops )
         scene->windowAdded( c );
     foreach( Unmanaged* c, unmanaged )
         scene->windowAdded( c );
@@ -139,11 +143,15 @@ void Workspace::finishCompositing()
     delete cm_selection;
     foreach( Client* c, clients )
         scene->windowClosed( c, NULL );
+    foreach( Client* c, desktops )
+        scene->windowClosed( c, NULL );
     foreach( Unmanaged* c, unmanaged )
         scene->windowClosed( c, NULL );
     foreach( Deleted* c, deleted )
         scene->windowDeleted( c );
     foreach( Client* c, clients )
+        c->finishCompositing();
+    foreach( Client* c, desktops )
         c->finishCompositing();
     foreach( Unmanaged* c, unmanaged )
         c->finishCompositing();
