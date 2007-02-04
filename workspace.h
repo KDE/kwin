@@ -195,6 +195,10 @@ class Workspace : public QObject, public KDecorationDefines
     // KDE4 remove me - and it's also in the DCOP interface :(
         void showWindowMenuAt( unsigned long id, int x, int y );
 
+        void loadEffect( const QString& name );
+
+        void unloadEffect( const QString& name );
+
         /**
 	 * Shows the menu operations menu for the client and makes it active if
 	 * it's not already.

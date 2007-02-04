@@ -19,6 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "client.h"
 #include "workspace.h"
+#include "effects.h"
 
 #include <fixx11h.h>
 #include <QPushButton>
@@ -684,6 +685,18 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
 void Workspace::showWindowMenuAt( unsigned long, int, int )
     {
     slotWindowOperations();
+    }
+
+void Workspace::loadEffect( const QString& name )
+    {
+    if( effects )
+        effects->loadEffect( name );
+    }
+
+void Workspace::unloadEffect( const QString& name )
+    {
+    if( effects )
+        effects->unloadEffect( name );
     }
 
 void Workspace::slotActivateAttentionWindow()

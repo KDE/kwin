@@ -29,9 +29,8 @@ namespace KWinInternal
 {
 
 
-PresentWindowsEffect::PresentWindowsEffect(Workspace* ws) : Effect()
+PresentWindowsEffect::PresentWindowsEffect()
     {
-    mWorkspace = ws;
     mActivated = false;
     mActiveness = 0.0;
 
@@ -108,7 +107,7 @@ void PresentWindowsEffect::postPaintScreen()
     // If mActiveness is between 0 and 1, the effect is still in progress and the
     //  workspace has to be repainted during the next pass
     if( mActiveness > 0.0 && mActiveness < 1.0 )
-        mWorkspace->addDamageFull(); // trigger next animation repaint
+        workspace()->addDamageFull(); // trigger next animation repaint
 
     // Call the next effect.
     effects->postPaintScreen();
@@ -173,7 +172,7 @@ void PresentWindowsEffect::rearrangeWindows()
 
     mWindowData.clear();
 
-    const ClientList& originalclientlist = mWorkspace->stackingOrder();
+    const ClientList& originalclientlist = workspace()->stackingOrder();
     // Filter out special windows such as panels and taskbars
     ClientList clientlist;
     foreach( Client* client, originalclientlist )
@@ -191,7 +190,7 @@ void PresentWindowsEffect::rearrangeWindows()
     calculateWindowTransformationsKompose( clientlist );
 
     // Schedule entire desktop to be repainted
-    mWorkspace->addDamageFull();
+    workspace()->addDamageFull();
     }
 
 void PresentWindowsEffect::calculateWindowTransformationsDumb(ClientList clientlist)
@@ -200,7 +199,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(ClientList clientl
     int rows = clientlist.count() / 4 + 1;
     int cols = clientlist.count() / rows + clientlist.count() % rows;
     // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect placementRect = mWorkspace->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
+    QRect placementRect = workspace()->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
     // Size of one cell
     int cellwidth = placementRect.width() / cols;
     int cellheight = placementRect.height() / rows;
@@ -245,7 +244,7 @@ int PresentWindowsEffect::clientHeightForWidth(Client* c, int w)
 void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clientlist)
     {
      // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect availRect = mWorkspace->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
+    QRect availRect = workspace()->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
 

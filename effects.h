@@ -87,12 +87,35 @@ class Effect
             {
             return x * (1 - a) + y * a;
             }
+
+    protected:
+        Workspace* workspace() const;
     };
+
+class EffectFactory
+    {
+    public:
+        // only here to avoid warnings
+        virtual ~EffectFactory();
+
+        virtual Effect* create() const = 0;
+    };
+
+template <class EFFECT>
+class GenericEffectFactory : public EffectFactory
+    {
+        virtual Effect* create() const
+            {
+            return new EFFECT();
+            }
+    };
+
 
 class EffectsHandler
     {
+    friend class Effect;
     public:
-        EffectsHandler( Workspace* ws );
+        EffectsHandler();
         ~EffectsHandler();
         // for use by effects
         void prePaintScreen( int* mask, QRegion* region, int time );
@@ -123,10 +146,16 @@ class EffectsHandler
         bool checkInputWindowEvent( XEvent* e );
         void checkInputWindowStacking();
         void desktopChanged( int old );
+        void registerEffect( const QString& name, EffectFactory* factory );
+        void loadEffect( const QString& name );
+        void unloadEffect( const QString& name );
+
     private:
-        QVector< Effect* > effects;
+        typedef QPair< QString, Effect* > EffectPair;
+        QVector< EffectPair > loaded_effects;
         typedef QPair< Effect*, Window > InputWindowPair;
         QList< InputWindowPair > input_windows;
+        QMap< QString, EffectFactory* > effect_factories;
         int current_paint_window;
         int current_paint_screen;
     };
@@ -223,6 +252,12 @@ EffectWindow* effectWindow( Scene::Window* w )
     EffectWindow* ret = w->window()->effectWindow();
     ret->setSceneWindow( w );
     return ret;
+    }
+
+inline
+Workspace* Effect::workspace() const
+    {
+    return Workspace::self();
     }
 
 } // namespace

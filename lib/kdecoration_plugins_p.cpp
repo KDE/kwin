@@ -32,6 +32,7 @@ DEALINGS IN THE SOFTWARE.
 #include <klibloader.h>
 #include <kconfiggroup.h>
 #include <assert.h>
+#include <kconfig.h>
 
 #include <QDir>
 #include <QFile>

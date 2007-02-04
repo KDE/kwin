@@ -15,10 +15,9 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-ZoomEffect::ZoomEffect( Workspace* ws )
+ZoomEffect::ZoomEffect()
     : zoom( 1 )
     , target_zoom( 2 )
-    , wspace( ws )
     {
     }
 
@@ -54,7 +53,7 @@ void ZoomEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 void ZoomEffect::postPaintScreen()
     {
     if( zoom != target_zoom )
-        wspace->addDamageFull();
+        workspace()->addDamageFull();
     effects->postPaintScreen();
     }
 

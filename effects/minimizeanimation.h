@@ -25,7 +25,7 @@ class MinimizeAnimationEffect
     : public Effect
     {
     public:
-        MinimizeAnimationEffect( Workspace* ws );
+        MinimizeAnimationEffect();
 
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
@@ -36,7 +36,6 @@ class MinimizeAnimationEffect
         virtual void windowUnminimized( EffectWindow* c );
 
     private:
-        Workspace* mWorkspace;
         QMap< EffectWindow*, float > mAnimationProgress;
         int mActiveAnimations;
     };

@@ -25,7 +25,7 @@ class WavyWindowsEffect
     : public Effect
     {
     public:
-        WavyWindowsEffect( Workspace* ws );
+        WavyWindowsEffect();
 
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
@@ -33,7 +33,6 @@ class WavyWindowsEffect
         virtual void postPaintScreen();
 
     private:
-        Workspace* mWorkspace;
         float mTimeElapsed;
     };
 

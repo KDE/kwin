@@ -24,9 +24,8 @@ namespace KWinInternal
 const int FPS_WIDTH = 10;
 const int MAX_TIME = 100;
 
-ShowFpsEffect::ShowFpsEffect( Workspace* ws )
-    : wspace( ws )
-    , paints_pos( 0 )
+ShowFpsEffect::ShowFpsEffect()
+    : paints_pos( 0 )
     , frames_pos( 0 )
     {
     for( int i = 0;
@@ -217,7 +216,7 @@ void ShowFpsEffect::postPaintScreen()
     paints[ paints_pos ] = t.elapsed();
     if( ++paints_pos == NUM_PAINTS )
         paints_pos = 0;
-    wspace->addDamage( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
+    workspace()->addDamage( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
     }
 
 } // namespace

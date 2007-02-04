@@ -21,9 +21,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-MinimizeAnimationEffect::MinimizeAnimationEffect( Workspace* ws ) : Effect()
+MinimizeAnimationEffect::MinimizeAnimationEffect()
     {
-    mWorkspace = ws;
     mActiveAnimations = 0;
     }
 
@@ -101,7 +100,7 @@ void MinimizeAnimationEffect::postPaintScreen()
     {
     if( mActiveAnimations > 0 )
         // Damage the workspace so that everything would be repainted next time
-        mWorkspace->addDamageFull();
+        workspace()->addDamageFull();
 
     // Call the next effect.
     effects->postPaintScreen();

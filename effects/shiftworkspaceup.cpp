@@ -15,10 +15,9 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-ShiftWorkspaceUpEffect::ShiftWorkspaceUpEffect( Workspace* ws )
+ShiftWorkspaceUpEffect::ShiftWorkspaceUpEffect()
     : up( false )
     , diff( 0 )
-    , wspace( ws )
     {
     connect( &timer, SIGNAL( timeout()), SLOT( tick()));
     timer.start( 2000 );
@@ -45,14 +44,14 @@ void ShiftWorkspaceUpEffect::paintScreen( int mask, QRegion region, ScreenPaintD
 void ShiftWorkspaceUpEffect::postPaintScreen()
     {
     if( up ? diff < 1000 : diff > 0 )
-        wspace->addDamageFull(); // trigger next animation repaint
+        workspace()->addDamageFull(); // trigger next animation repaint
     effects->postPaintScreen();
     }
 
 void ShiftWorkspaceUpEffect::tick()
     {
     up = !up;
-    wspace->addDamageFull();
+    workspace()->addDamageFull();
     }
 
 } // namespace

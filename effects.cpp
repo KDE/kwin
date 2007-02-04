@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "toplevel.h"
 #include "client.h"
 #include "scene.h"
+#include "options.h"
 
 #include "effects/desktopchangeslide.h"
 #include "effects/dialogparent.h"
@@ -112,85 +113,95 @@ void Effect::postPaintWindow( EffectWindow* w )
 // EffectsHandler
 //****************************************
 
-EffectsHandler::EffectsHandler( Workspace* ws )
+EffectsHandler::EffectsHandler()
     : current_paint_window( 0 )
     , current_paint_screen( 0 )
     {
     if( !compositing())
         return;
     KWinInternal::effects = this;
-    effects.append( new ShowFpsEffect( ws ));
-//    effects.append( new ZoomEffect( ws ));
-//    effects.append( new PresentWindowsEffect( ws ));
-//    effects.append( new WavyWindowsEffect( ws ));
-//    effects.append( new MinimizeAnimationEffect( ws ));
-//    effects.append( new HowtoEffect );
-//    effects.append( new MakeTransparentEffect );
-//    effects.append( new ShakyMoveEffect );
-//    effects.append( new ShiftWorkspaceUpEffect( ws ));
-//    effects.append( new FadeInEffect );
-    effects.append( new FadeOutEffect );
-//    effects.append( new ScaleInEffect );
-//    effects.append( new DialogParentEffect );
 //    effects.append( new DesktopChangeSlideEffect );
 
-//    effects.append( new TestInputEffect );
+    registerEffect("ShowFps", new GenericEffectFactory<ShowFpsEffect>);
+    registerEffect("Zoom", new GenericEffectFactory<ZoomEffect>);
+    registerEffect("PresentWindows", new GenericEffectFactory<PresentWindowsEffect>);
+    registerEffect("WavyWindows", new GenericEffectFactory<WavyWindowsEffect>);
+    registerEffect("MinimizeAnimation", new GenericEffectFactory<MinimizeAnimationEffect>);
+    registerEffect("Howto", new GenericEffectFactory<HowtoEffect>);
+    registerEffect("MakeTransparent", new GenericEffectFactory<MakeTransparentEffect>);
+    registerEffect("ShakyMove", new GenericEffectFactory<ShakyMoveEffect>);
+    registerEffect("ShiftWorkspaceUp", new GenericEffectFactory<ShiftWorkspaceUpEffect>);
+    registerEffect("FadeIn", new GenericEffectFactory<FadeInEffect>);
+    registerEffect("FadeOut", new GenericEffectFactory<FadeOutEffect>);
+    registerEffect("ScaleIn", new GenericEffectFactory<ScaleInEffect>);
+    registerEffect("DialogParent", new GenericEffectFactory<DialogParentEffect>);
+    registerEffect("TestInput", new GenericEffectFactory<TestInputEffect>);
+
+     QStringList::const_iterator effectsIterator;
+     for( effectsIterator = options->defaultEffects.constBegin();
+          effectsIterator != options->defaultEffects.constEnd();
+           ++effectsIterator)
+        {
+        loadEffect(*effectsIterator);
+        }
     }
 
 EffectsHandler::~EffectsHandler()
     {
-    foreach( Effect* e, effects )
-        delete e;
+    foreach( EffectPair ep, loaded_effects )
+        delete ep.second;
+    foreach( EffectFactory* ef, effect_factories )
+        delete ef;
     foreach( InputWindowPair pos, input_windows )
         XDestroyWindow( display(), pos.second );
     }
 
 void EffectsHandler::windowUserMovedResized( EffectWindow* c, bool first, bool last )
     {
-    foreach( Effect* e, effects )
-        e->windowUserMovedResized( c, first, last );
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowUserMovedResized( c, first, last );
     }
 
 void EffectsHandler::windowAdded( EffectWindow* c )
     {
-    foreach( Effect* e, effects )
-        e->windowAdded( c );
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowAdded( c );
     }
 
 void EffectsHandler::windowDeleted( EffectWindow* c )
     {
-    foreach( Effect* e, effects )
-        e->windowDeleted( c );
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowDeleted( c );
     }
 
 void EffectsHandler::windowClosed( EffectWindow* c )
     {
-    foreach( Effect* e, effects )
-        e->windowClosed( c );
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowClosed( c );
     }
 
 void EffectsHandler::windowActivated( EffectWindow* c )
     {
-    foreach( Effect* e, effects )
-        e->windowActivated( c );
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowActivated( c );
     }
 
 void EffectsHandler::windowMinimized( EffectWindow* c )
     {
-    foreach( Effect* e, effects )
-        e->windowMinimized( c );
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowMinimized( c );
     }
 
 void EffectsHandler::windowUnminimized( EffectWindow* c )
     {
-    foreach( Effect* e, effects )
-        e->windowUnminimized( c );
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowUnminimized( c );
     }
 
 void EffectsHandler::desktopChanged( int old )
     {
-    foreach( Effect* e, effects )
-        e->desktopChanged( old );
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->desktopChanged( old );
     }
 
 // start another painting pass
@@ -203,9 +214,9 @@ void EffectsHandler::startPaint()
 // the idea is that effects call this function again which calls the next one
 void EffectsHandler::prePaintScreen( int* mask, QRegion* region, int time )
     {
-    if( current_paint_screen < effects.size())
+    if( current_paint_screen < loaded_effects.size())
         {
-        effects[ current_paint_screen++ ]->prePaintScreen( mask, region, time );
+        loaded_effects[current_paint_screen++].second->prePaintScreen( mask, region, time );
         --current_paint_screen;
         }
     // no special final code
@@ -213,9 +224,9 @@ void EffectsHandler::prePaintScreen( int* mask, QRegion* region, int time )
 
 void EffectsHandler::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( current_paint_screen < effects.size())
+    if( current_paint_screen < loaded_effects.size())
         {
-        effects[ current_paint_screen++ ]->paintScreen( mask, region, data );
+        loaded_effects[current_paint_screen++].second->paintScreen( mask, region, data );
         --current_paint_screen;
         }
     else
@@ -224,9 +235,9 @@ void EffectsHandler::paintScreen( int mask, QRegion region, ScreenPaintData& dat
 
 void EffectsHandler::postPaintScreen()
     {
-    if( current_paint_screen < effects.size())
+    if( current_paint_screen < loaded_effects.size())
         {
-        effects[ current_paint_screen++ ]->postPaintScreen();
+        loaded_effects[current_paint_screen++].second->postPaintScreen();
         --current_paint_screen;
         }
     // no special final code
@@ -234,9 +245,9 @@ void EffectsHandler::postPaintScreen()
 
 void EffectsHandler::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
     {
-    if( current_paint_window < effects.size())
+    if( current_paint_window < loaded_effects.size())
         {
-        effects[ current_paint_window++ ]->prePaintWindow( w, mask, region, time );
+        loaded_effects[current_paint_window++].second->prePaintWindow( w, mask, region, time );
         --current_paint_window;
         }
     // no special final code
@@ -244,9 +255,9 @@ void EffectsHandler::prePaintWindow( EffectWindow* w, int* mask, QRegion* region
 
 void EffectsHandler::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( current_paint_window < effects.size())
+    if( current_paint_window < loaded_effects.size())
         {
-        effects[ current_paint_window++ ]->paintWindow( w, mask, region, data );
+        loaded_effects[current_paint_window++].second->paintWindow( w, mask, region, data );
         --current_paint_window;
         }
     else
@@ -255,9 +266,9 @@ void EffectsHandler::paintWindow( EffectWindow* w, int mask, QRegion region, Win
 
 void EffectsHandler::postPaintWindow( EffectWindow* w )
     {
-    if( current_paint_window < effects.size())
+    if( current_paint_window < loaded_effects.size())
         {
-        effects[ current_paint_window++ ]->postPaintWindow( w );
+        loaded_effects[current_paint_window++].second->postPaintWindow( w );
         --current_paint_window;
         }
     // no special final code
@@ -349,6 +360,69 @@ void EffectsHandler::activateWindow( EffectWindow* c )
     {
     if( Client* cl = dynamic_cast< Client* >( c->window()))
         Workspace::self()->activateClient( cl, true );
+    }
+
+void EffectsHandler::registerEffect( const QString& name, EffectFactory* factory )
+    {
+    QMap<QString, EffectFactory*>::const_iterator factories_iterator = effect_factories.find(name);
+    if( factories_iterator != effect_factories.end() )
+        {
+        kDebug( 1212 ) << "EffectsHandler::registerEffect : Effect name already registered : " << name << endl;
+        }
+    else
+        {
+        kDebug( 1212 ) << "EffectsHandler::registerEffect : Register effect : " << name << endl;
+        effect_factories[name] = factory;
+        }
+    }
+
+void EffectsHandler::loadEffect( const QString& name )
+    {
+    assert( current_paint_screen == 0 );
+    assert( current_paint_window == 0 );
+
+    for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); it++)
+        {
+        if( (*it).first == name )
+            {
+            kDebug( 1212 ) << "EffectsHandler::loadEffect : Effect already loaded : " << name << endl;
+            return;
+            }
+        }
+
+    QMap<QString, EffectFactory*>::const_iterator factories_iterator = effect_factories.find(name);
+    if( factories_iterator != effect_factories.end() )
+        {
+        kDebug( 1212 ) << "EffectsHandler::loadEffect : Loading effect : " << name << endl;
+        loaded_effects.append( EffectPair( name, factories_iterator.value()->create() ) );
+        }
+    else
+        {
+        kDebug( 1212 ) << "EffectsHandler::loadEffect : Unknown effect : " << name << endl;
+        }
+    }
+
+void EffectsHandler::unloadEffect( const QString& name )
+    {
+    assert( current_paint_screen == 0 );
+    assert( current_paint_window == 0 );
+
+    for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); it++)
+        {
+        if ( (*it).first == name )
+            {
+            kDebug( 1212 ) << "EffectsHandler::unloadEffect : Unloading Effect : " << name << endl;
+            delete (*it).second;
+            loaded_effects.erase(it);
+            return;
+            }
+        }
+
+    kDebug( 1212 ) << "EffectsHandler::unloadEffect : Effect not loaded : " << name << endl;
+    }
+
+EffectFactory::~EffectFactory()
+    {
     }
 
 int EffectsHandler::currentDesktop() const

@@ -311,6 +311,8 @@ class Options : public KDecorationOptions
         bool glDirect;
         bool glVSync;
 
+        QStringList defaultEffects;
+
         double effectShowFpsAlpha;
         int effectShowFpsX;
         int effectShowFpsY;

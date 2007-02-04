@@ -27,7 +27,7 @@ class PresentWindowsEffect
     {
     Q_OBJECT
     public:
-        PresentWindowsEffect(Workspace* ws);
+        PresentWindowsEffect();
 
 
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
@@ -65,7 +65,6 @@ class PresentWindowsEffect
         // 0 = not active, 1 = fully active
         float mActiveness;
 
-        Workspace* mWorkspace;
         Window mInput;
 
         struct WindowData

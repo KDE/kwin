@@ -22,14 +22,13 @@ class ZoomEffect
     : public Effect
     {
     public:
-        ZoomEffect( Workspace* ws );
+        ZoomEffect();
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
     private:
         double zoom;
         double target_zoom;
-        Workspace* wspace;
     };
 
 } // namespace

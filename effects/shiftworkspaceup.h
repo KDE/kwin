@@ -25,7 +25,7 @@ class ShiftWorkspaceUpEffect
     {
     Q_OBJECT
     public:
-        ShiftWorkspaceUpEffect( Workspace* ws );
+        ShiftWorkspaceUpEffect();
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
@@ -35,7 +35,6 @@ class ShiftWorkspaceUpEffect
         QTimer timer;
         bool up;
         int diff;
-        Workspace* wspace;
     };
 
 } // namespace

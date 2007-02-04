@@ -208,6 +208,9 @@ unsigned long Options::updateSettings()
     glDirect = config->readEntry("GLDirect", true );
     glVSync = config->readEntry("GLVSync", true );
     
+    config->setGroup( "Effects" );
+    defaultEffects = config->readEntry( "Load", QStringList() << "ShowFps" << "FadeOut" );
+
     config->setGroup( "EffectShowFps" );
     effectShowFpsAlpha = config->readEntry( "Alpha", 0.5 );
     effectShowFpsX = config->readEntry( "X", -10000 );

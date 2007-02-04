@@ -24,9 +24,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-WavyWindowsEffect::WavyWindowsEffect( Workspace* ws ) : Effect()
+WavyWindowsEffect::WavyWindowsEffect()
     {
-    mWorkspace = ws;
     mTimeElapsed = 0.0f;
     }
 
@@ -85,7 +84,7 @@ void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
 void WavyWindowsEffect::postPaintScreen()
     {
     // Damage the workspace so that everything would be repainted next time
-    mWorkspace->addDamageFull();
+    workspace()->addDamageFull();
 
     // Call the next effect.
     effects->postPaintScreen();
