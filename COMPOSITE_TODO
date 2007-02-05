@@ -73,6 +73,10 @@ General TODO
 % during screensaving, do no let non-screensaver windows show above screensaver
     - kdesktop_lock watches for such things and raises again, but there's a small gap
 
+% nvidia drivers by default use fake refresh rates as a workaround for some X limitations
+    - see the DynamicTwinView section in nvidia README
+    - this makes KWin repaint at a different rate than it should
+
 
 OpenGL TODO
 =================================
