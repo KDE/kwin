@@ -1160,8 +1160,41 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     glTranslatef( x, y, 0 );
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
+
+    prepareRenderStates( mask, data );
+    enableTexture();
+
+    // update texture matrix to handle GL_TEXTURE_2D and GL_TEXTURE_RECTANGLE
+    glMatrixMode( GL_TEXTURE );
+    glLoadIdentity();
+    glScalef( texture_scale_x, texture_scale_y, 1 );
+    if( !texture_y_inverted )
+        {
+        // Modify texture matrix so that we could always use non-opengl
+        //  coordinates for textures
+        glScalef(1, -1, 1);
+        glTranslatef(0, -height(), 0);
+        }
+    glMatrixMode( GL_MODELVIEW );
+
+    // Render geometry
+    renderGeometry( mask, region );
+
+    // Restore texture matrix
+    glMatrixMode( GL_TEXTURE );
+    glLoadIdentity();
+    glMatrixMode( GL_MODELVIEW );
+    glPopMatrix();
+
+    restoreRenderStates( mask, data );
+    disableTexture();
+    }
+
+void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
+    {
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
+    bool opaque = isOpaque() && data.opacity == 1.0;
     if( !opaque )
         {
         glEnable( GL_BLEND );
@@ -1280,26 +1313,16 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant );
             }
         }
-    enableTexture();
-    // update texture matrix to handle GL_TEXTURE_2D and GL_TEXTURE_RECTANGLE
-    glMatrixMode( GL_TEXTURE );
-    glLoadIdentity();
-    glScalef( texture_scale_x, texture_scale_y, 1 );
-    if( !texture_y_inverted )
-        {
-        // Modify texture matrix so that we could always use non-opengl
-        //  coordinates for textures
-        glScalef(1, -1, 1);
-        glTranslatef(0, -height(), 0);
-        }
-    glMatrixMode( GL_MODELVIEW );
-    if(verticeslist.isEmpty())
-        createVertexGrid(0, 0);
+    }
+
+void SceneOpenGL::Window::renderGeometry( int mask, QRegion region )
+    {
     // Enable arrays
     glEnableClientState( GL_VERTEX_ARRAY );
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex), verticeslist[0].pos);
     glEnableClientState( GL_TEXTURE_COORD_ARRAY );
     glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), verticeslist[0].texcoord);
+
     // Render
     if( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED ))
         // Just draw the entire window, no clipping
@@ -1309,7 +1332,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         // Make sure there's only a single quad (no transformed vertices)
         // Clip using scissoring
         glEnable( GL_SCISSOR_TEST );
-        region.translate( x, y);  // Back to screen coords
+        region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
         int dh = displayHeight();
         foreach( QRect r, region.rects())
             {
@@ -1319,14 +1342,14 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             }
         glDisable( GL_SCISSOR_TEST );
         }
-    // Restore texture matrix
-    glMatrixMode( GL_TEXTURE );
-    glLoadIdentity();
-    glMatrixMode( GL_MODELVIEW );
+
     // Disable arrays
     glDisableClientState( GL_VERTEX_ARRAY );
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-    glPopMatrix();
+    }
+
+void SceneOpenGL::Window::restoreRenderStates( int mask, WindowPaintData data )
+    {
     if( data.opacity != 1.0 || data.saturation != 1.0 || data.brightness != 1.0f )
         {
         if( data.saturation != 1.0 && supports_saturation )
@@ -1342,8 +1365,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
         glColor4f( 0, 0, 0, 0 );
         }
-    glPopAttrib();
-    disableTexture();
+
+    glPopAttrib();  // ENABLE_BIT
     }
 
 } // namespace

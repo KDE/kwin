@@ -13,8 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "scene.h"
 
-#include <GL/gl.h>
-#include <GL/glx.h>
+#include "glutils.h"
 
 #include <X11/extensions/XShm.h>
 
@@ -131,6 +130,11 @@ class SceneOpenGL::Window
         void prepareVertices();
         void createVertexGrid(int xres, int yres);
         void resetVertices();  // Resets positions of vertices
+
+        void prepareRenderStates( int mask, WindowPaintData data );
+        void renderGeometry( int mask, QRegion region );
+        void restoreRenderStates( int mask, WindowPaintData data );
+
     private:
         QRegion optimizeBindDamage( const QRegion& reg, int limit );
         Texture texture;
