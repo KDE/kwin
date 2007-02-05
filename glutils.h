@@ -21,6 +21,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <GL/glext.h>
 #include <GL/glxext.h>
 
+template< class K, class V > class QHash;
+
 
 namespace KWinInternal
 {
@@ -44,6 +46,35 @@ bool hasGLXVersion(int major, int minor, int release = 0);
 bool hasGLExtension(const QString& extension);
 
 inline bool isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
+
+
+class GLShader
+    {
+    public:
+        GLShader(const QString& vertexfile, const QString& fragmentfile);
+
+        bool isValid() const  { return mValid; }
+        void bind();
+        void unbind();
+
+        int uniformLocation(const QString& name);
+        bool setUniform(const QString& name, float value);
+        bool setUniform(const QString& name, int value);
+        int attributeLocation(const QString& name);
+        bool setAttribute(const QString& name, float value);
+
+
+    protected:
+        bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
+        bool load(const QString& vertexsource, const QString& fragmentsource);
+
+
+    private:
+        unsigned int mProgram;
+        bool mValid;
+        QHash< QString, int >* mVariableLocations;
+    };
+
 
 // Defines
 /*
@@ -72,6 +103,14 @@ inline bool isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
 #define GLX_TEXTURE_RECTANGLE_EXT          0x20DD
 
 #define GLX_FRONT_LEFT_EXT                 0x20DE
+
+// Shader stuff
+#define GL_COMPILE_STATUS                               0x8B81
+#define GL_LINK_STATUS                                  0x8B82
+#define GL_INFO_LOG_LENGTH                              0x8B84
+#define GL_FRAGMENT_SHADER                              0x8B30
+#define GL_VERTEX_SHADER                                0x8B31
+
 
 // Function pointers
 // finding of OpenGL extensions functions
@@ -134,6 +173,50 @@ extern glFramebufferTexture3D_func glFramebufferTexture3D;
 extern glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
 extern glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
 extern glGenerateMipmap_func glGenerateMipmap;
+// Shader stuff
+typedef GLuint (*glCreateShader_func)(GLenum);
+typedef GLvoid (*glShaderSource_func)(GLuint, GLsizei, const GLchar**, const GLint*);
+typedef GLvoid (*glCompileShader_func)(GLuint);
+typedef GLvoid (*glDeleteShader_func)(GLuint);
+typedef GLuint (*glCreateProgram_func)();
+typedef GLvoid (*glAttachShader_func)(GLuint, GLuint);
+typedef GLvoid (*glLinkProgram_func)(GLuint);
+typedef GLvoid (*glUseProgram_func)(GLuint);
+typedef GLvoid (*glDeleteProgram_func)(GLuint);
+typedef GLvoid (*glGetShaderInfoLog_func)(GLuint, GLsizei, GLsizei*, GLchar*);
+typedef GLvoid (*glGetProgramInfoLog_func)(GLuint, GLsizei, GLsizei*, GLchar*);
+typedef GLvoid (*glGetProgramiv_func)(GLuint, GLenum, GLint*);
+typedef GLvoid (*glGetShaderiv_func)(GLuint, GLenum, GLint*);
+typedef GLvoid (*glUniform1f_func)(GLint, GLfloat);
+typedef GLvoid (*glUniform1i_func)(GLint, GLint);
+typedef GLvoid (*glUniform1fv_func)(GLint, GLsizei, const GLfloat*);
+typedef GLvoid (*glUniform2fv_func)(GLint, GLsizei, const GLfloat*);
+typedef GLvoid (*glUniform3fv_func)(GLint, GLsizei, const GLfloat*);
+typedef GLvoid (*glValidateProgram_func)(GLuint);
+typedef GLint (*glGetUniformLocation_func)(GLuint, const GLchar*);
+typedef GLvoid (*glVertexAttrib1f_func)(GLuint, GLfloat);
+typedef GLint (*glGetAttribLocation_func)(GLuint, const GLchar*);
+extern glCreateShader_func glCreateShader;
+extern glShaderSource_func glShaderSource;
+extern glCompileShader_func glCompileShader;
+extern glDeleteShader_func glDeleteShader;
+extern glCreateProgram_func glCreateProgram;
+extern glAttachShader_func glAttachShader;
+extern glLinkProgram_func glLinkProgram;
+extern glUseProgram_func glUseProgram;
+extern glDeleteProgram_func glDeleteProgram;
+extern glGetShaderInfoLog_func glGetShaderInfoLog;
+extern glGetProgramInfoLog_func glGetProgramInfoLog;
+extern glGetProgramiv_func glGetProgramiv;
+extern glGetShaderiv_func glGetShaderiv;
+extern glUniform1f_func glUniform1f;
+extern glUniform1i_func glUniform1i;
+extern glUniform1fv_func glUniform1fv;
+extern glUniform2fv_func glUniform2fv;
+extern glValidateProgram_func glValidateProgram;
+extern glGetUniformLocation_func glGetUniformLocation;
+extern glVertexAttrib1f_func glVertexAttrib1f;
+extern glGetAttribLocation_func glGetAttribLocation;
 
 } // namespace
 
