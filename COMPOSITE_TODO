@@ -60,9 +60,6 @@ General TODO
 + support for new window types from the wm spec for compositing
     - this will have to be done in Qt, kdecore and kwin
 
-+ make effects configurable without having to recompile
-    - possibly also add something like KWIN_COMPOSE for debugging purposes
-
 * handle properly stacking order of deleted windows for showing in effects
 
 * handle properly deleted windows that reappear (windowReadded() function?)
@@ -80,15 +77,7 @@ General TODO
 OpenGL TODO
 =================================
 
-+ Check/make it work with other gfx cards
-    - I've tested only with nvidia with the 9625 beta drivers and 8776 stable drivers so far
-    - ATI - some (especially R200 chips) seem to work
-    - I have absolutely no idea about other gfx cards, needs to be tested
-        - intel
-!           - does kwin_composite work there at all?
-!           - does glcompmgr work there at all? (even with the various switches in the source)
-+           - make kwin_composite work there if it doesn't
-+       - who knows what else
+/ Check/make it work with other gfx cards
 
 ? Xgl support
     - Compiz itself doesn't work when compiled with the libGL from nvidia,
@@ -108,10 +97,6 @@ OpenGL TODO
 %   - may require LIBGL_ALWAYS_INDIRECT set with older X.org
         (http://lists.kde.org/?l=kwin&m=116439615124838&w=2)
         (http://lists.freedesktop.org/archives/xorg/2006-December/020323.html)
-
-/ improved GLXFBConfig support
-    - it seems a different config for each depth would be needed
-%       - but it's sometimes not choosing the right depth?
 
 / GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
 %   - works; bugs in tfp_mode with power_of_two textures
@@ -141,6 +126,8 @@ OpenGL TODO
 + shm mode needs support for more data formats than GL_BGRA in order to support e.g. 16bpp mode
     - http://www.xfree86.org/current/glTexImage2D.3.html
 
+% with current nvidia glXCreatePixmap in tfp mode fails with pixmaps 32x32 and smaller
+
 
 XRender TODO
 ==============================
@@ -151,10 +138,6 @@ XRender TODO
 
 Effects framework TODO
 ==============================
-
-/ solve somehow disappearing windows
-    - i.e. when a window is e.g. closed, the Client/Unmanaged object is destroyed, but animations
-        should be going on
 
 * more notification functions for effects are needed
     - currently there are only very few notification functions (windowAdded, windowActivated,...)
