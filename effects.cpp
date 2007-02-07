@@ -120,7 +120,6 @@ EffectsHandler::EffectsHandler()
     if( !compositing())
         return;
     KWinInternal::effects = this;
-//    effects.append( new DesktopChangeSlideEffect );
 
     registerEffect("ShowFps", new GenericEffectFactory<ShowFpsEffect>);
     registerEffect("Zoom", new GenericEffectFactory<ZoomEffect>);
@@ -135,6 +134,7 @@ EffectsHandler::EffectsHandler()
     registerEffect("FadeOut", new GenericEffectFactory<FadeOutEffect>);
     registerEffect("ScaleIn", new GenericEffectFactory<ScaleInEffect>);
     registerEffect("DialogParent", new GenericEffectFactory<DialogParentEffect>);
+    registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);
     registerEffect("TestInput", new GenericEffectFactory<TestInputEffect>);
 
      QStringList::const_iterator effectsIterator;
