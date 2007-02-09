@@ -77,6 +77,8 @@ General TODO
     - see the DynamicTwinView section in nvidia README
     - this makes KWin repaint at a different rate than it should
 
+% clean up completely after kompmgr (kwin sources, kdelibs classes)
+
 
 OpenGL TODO
 =================================
