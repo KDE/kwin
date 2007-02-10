@@ -104,13 +104,7 @@ bool DialogParentEffect::hasModalWindow( Toplevel* t )
     Client* c = qobject_cast<Client *>(t);
     if( !c )
         return false;
-
-    // Check if any of the direct transients (children) of this window is modal
-    for( ClientList::ConstIterator it = c->transients().begin(); it != c->transients().end(); ++it )
-        if( (*it)->isModal())
-            return true;
-
-    return false;
+    return c->findModal() != NULL;
     }
 
 
