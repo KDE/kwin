@@ -336,6 +336,20 @@ Pixmap Toplevel::createWindowPixmap() const
 void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
     {
     addDamage( e->area.x, e->area.y, e->area.width, e->area.height );
+    // compress
+    while( XPending( display()))
+        {
+        XEvent e2;
+        if( XPeekEvent( display(), &e2 ) && e2.type == Extensions::damageNotifyEvent()
+            && e2.xany.window == handle())
+            {
+            XNextEvent( display(), &e2 );
+            XDamageNotifyEvent* e = reinterpret_cast< XDamageNotifyEvent* >( &e2 );
+            addDamage( e->area.x, e->area.y, e->area.width, e->area.height );
+            continue;
+            }
+        break;
+        }
     }
 
 void Toplevel::addDamage( const QRect& r )
