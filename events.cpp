@@ -1139,6 +1139,15 @@ bool Client::eventFilter( QObject* o, QEvent* e )
         // on the decoration widget.
         if( ev->size() != size())
             return true;
+        // HACK: Avoid decoration redraw delays. On resize Qt sets WA_WStateConfigPending
+        // which delays all painting until a matching ConfigureNotify event comes.
+        // But this process itself is the window manager, so it's not needed
+        // to wait for that event, the geometry is known.
+        // Note that if Qt in the future changes how this flag is handled and what it
+        // triggers then this may potentionally break things. See mainly QETWidget::translateConfigEvent().
+        decoration->widget()->setAttribute( Qt::WA_WState_ConfigPending, false );
+        decoration->widget()->update();
+        return false;
         }
     return false;
     }
