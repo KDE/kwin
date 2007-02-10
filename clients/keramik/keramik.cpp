@@ -563,10 +563,10 @@ void KeramikHandler::readConfig()
 	KConfig *c = new KConfig( "kwinkeramikrc" );
 
 	c->setGroup( "General" );
-	showIcons = c->readEntry( "ShowAppIcons", QVariant(true )).toBool();
-	shadowedText = c->readEntry( "UseShadowedText", QVariant(true )).toBool();
-	smallCaptionBubbles = c->readEntry( "SmallCaptionBubbles", QVariant(false )).toBool();
-	largeGrabBars = c->readEntry( "LargeGrabBars", QVariant(true )).toBool();
+	showIcons = c->readEntry( "ShowAppIcons", true);
+	shadowedText = c->readEntry( "UseShadowedText", true);
+	smallCaptionBubbles = c->readEntry( "SmallCaptionBubbles", false);
+	largeGrabBars = c->readEntry( "LargeGrabBars", true);
 
 	if ( ! settings_cache ) {
 		settings_cache = new SettingsCache;

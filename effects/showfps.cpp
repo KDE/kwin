@@ -51,8 +51,9 @@ ShowFpsEffect::ShowFpsEffect()
 
 void ShowFpsEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
-    if( time == 0 )
-        ; // TODO optimized away
+    if( time == 0 ) {
+        // TODO optimized away
+    }
     t.start();
     frames[ frames_pos ] = t.minute() * 60000 + t.second() * 1000 + t.msec();
     if( ++frames_pos == MAX_FPS )

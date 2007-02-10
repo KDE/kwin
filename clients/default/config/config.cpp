@@ -91,14 +91,14 @@ void KDEDefaultConfig::slotSelectionChanged()
 void KDEDefaultConfig::load( KConfig* conf )
 {
 	conf->setGroup("KDEDefault");
-	bool override = conf->readEntry( "ShowTitleBarStipple", QVariant(true )).toBool();
+	bool override = conf->readEntry( "ShowTitleBarStipple", true);
 	cbShowStipple->setChecked( override );
 
-	override = conf->readEntry( "ShowGrabBar", QVariant(true )).toBool();
+	override = conf->readEntry( "ShowGrabBar", true);
 	cbShowGrabBar->setChecked( override );
 
 	if (highcolor) {
-		override = conf->readEntry( "UseGradients", QVariant(true )).toBool();
+		override = conf->readEntry( "UseGradients", true);
 		cbUseGradients->setChecked( override );
 	}
 }

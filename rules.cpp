@@ -116,7 +116,7 @@ void Rules::readFromCfg( KConfig& cfg )
     {
     description = cfg.readEntry( "description" );
     READ_MATCH_STRING( wmclass, .toLower().toLatin1() );
-    wmclasscomplete = cfg.readEntry( "wmclasscomplete" , QVariant(false)).toBool();
+    wmclasscomplete = cfg.readEntry( "wmclasscomplete" , false);
     READ_MATCH_STRING( windowrole, .toLower().toLatin1() );
     READ_MATCH_STRING( title, );
     READ_MATCH_STRING( extrarole, .toLower().toLatin1() );

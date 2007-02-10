@@ -167,7 +167,7 @@ void PlastikHandler::readConfig()
     config.setGroup("General");
 
     // grab settings
-    m_titleShadow    = config.readEntry("TitleShadow", QVariant(true)).toBool();
+    m_titleShadow    = config.readEntry("TitleShadow", true);
 
     QFontMetrics fm(m_titleFont);  // active font = inactive font
     int titleHeightMin = config.readEntry("MinTitleHeight", 16);
@@ -190,9 +190,9 @@ void PlastikHandler::readConfig()
     else if (value == "AlignHCenter") m_titleAlign = Qt::AlignHCenter;
     else if (value == "AlignRight")   m_titleAlign = Qt::AlignRight;
 
-    m_coloredBorder = config.readEntry("ColoredBorder", QVariant(true)).toBool();
-    m_animateButtons = config.readEntry("AnimateButtons", QVariant(true)).toBool();
-    m_menuClose = config.readEntry("CloseOnMenuDoubleClick", QVariant(true)).toBool();
+    m_coloredBorder = config.readEntry("ColoredBorder", true);
+    m_animateButtons = config.readEntry("AnimateButtons", true);
+    m_menuClose = config.readEntry("CloseOnMenuDoubleClick", true);
 }
 
 QColor PlastikHandler::getColor(KWinPlastik::ColorType type, const bool active)

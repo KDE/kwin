@@ -32,6 +32,7 @@
 #include <kglobal.h>
 
 #include "config.h"
+#include "configdialog.h"
 
 PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
     : QObject(parent), m_config(0), m_dialog(0)
@@ -62,8 +63,8 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
 
 PlastikConfig::~PlastikConfig()
 {
-    delete m_dialog;
-    delete m_config;
+    if (m_dialog) delete m_dialog;
+    if (m_config) delete m_config;
 }
 
 void PlastikConfig::load(KConfig*)
@@ -74,13 +75,13 @@ void PlastikConfig::load(KConfig*)
     QString value = m_config->readEntry("TitleAlignment", "AlignLeft");
     QRadioButton *button = m_dialog->titleAlign->findChild<QRadioButton*>(value.toLatin1());
     if (button) button->setChecked(true);
-    bool animateButtons = m_config->readEntry("AnimateButtons", QVariant(true)).toBool();
+    bool animateButtons = m_config->readEntry("AnimateButtons", true);
     m_dialog->animateButtons->setChecked(animateButtons);
-    bool menuClose = m_config->readEntry("CloseOnMenuDoubleClick", QVariant(true)).toBool();
+    bool menuClose = m_config->readEntry("CloseOnMenuDoubleClick", true);
     m_dialog->menuClose->setChecked(menuClose);
-    bool titleShadow = m_config->readEntry("TitleShadow", QVariant(true)).toBool();
+    bool titleShadow = m_config->readEntry("TitleShadow", true);
     m_dialog->titleShadow->setChecked(titleShadow);
-    bool coloredBorder = m_config->readEntry("ColoredBorder", QVariant(true)).toBool();
+    bool coloredBorder = m_config->readEntry("ColoredBorder", true);
     m_dialog->coloredBorder->setChecked(coloredBorder);
 }
 

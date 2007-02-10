@@ -435,7 +435,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 {
 	// General tab
 	// ============
-	cbShowToolTips->setChecked( conf->readEntry("ShowToolTips", QVariant(true )).toBool());
+	cbShowToolTips->setChecked( conf->readEntry("ShowToolTips", true));
 //	cbUseMiniWindows->setChecked( conf->readEntry("MiniWindowBorders", QVariant(false)).toBool());
 
 	// Find the corresponding decoration name to that of
@@ -462,7 +462,7 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 
 	// Buttons tab
 	// ============
-	bool customPositions = conf->readEntry("CustomButtonPositions", QVariant(false)).toBool();
+	bool customPositions = conf->readEntry("CustomButtonPositions", false);
 	cbUseCustomButtonPositions->setChecked( customPositions );
 	buttonPositionWidget->setEnabled( customPositions );
 	// Menu and onAllDesktops buttons are default on LHS

@@ -207,8 +207,8 @@ void QuartzHandler::readConfig()
 {
 	KConfig conf("kwinquartzrc");
 	conf.setGroup("General");
-	coloredFrame = conf.readEntry( "UseTitleBarBorderColors", QVariant(true )).toBool();
-	extraSlim    = conf.readEntry( "UseQuartzExtraSlim", QVariant(false )).toBool();
+	coloredFrame = conf.readEntry( "UseTitleBarBorderColors", true);
+	extraSlim    = conf.readEntry( "UseQuartzExtraSlim", false);
 
 	// A small hack to make the on all desktops button look nicer
 	onAllDesktopsButtonOnLeft = KDecoration::options()->titleButtonsLeft().contains( 'S' );

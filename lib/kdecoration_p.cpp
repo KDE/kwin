@@ -145,15 +145,15 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QFont old_activeFontSmall = activeFontSmall;
     QFont old_inactiveFontSmall = inactiveFontSmall;
 
-    QFont activeFontGuess = KGlobalSettings::windowTitleFont();
+    QFont activeFontGuess = KGlobalSettings::generalFont();
+    activeFontGuess.setBold(true);
+    activeFontGuess.setPixelSize(12);
 
     activeFont = config->readEntry("activeFont", activeFontGuess);
     inactiveFont = config->readEntry("inactiveFont", activeFont);
 
     activeFontSmall = activeFont;
-#ifdef __GNUC__
 #warning KDE4 : is it useful ? ( temporary hack )
-#endif    
 //    activeFontSmall.setPointSize(activeFont.pointSize() - 2 > 0 ? activeFont.pointSize() - 2 : activeFont.pointSize()+1 );
     activeFontSmall = config->readEntry("activeFontSmall", activeFontSmall);
     inactiveFontSmall = config->readEntry("inactiveFontSmall", activeFontSmall);
@@ -169,7 +169,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QString old_title_buttons_left = title_buttons_left;
     QString old_title_buttons_right = title_buttons_right;
     bool old_custom_button_positions = custom_button_positions;
-    custom_button_positions = config->readEntry("CustomButtonPositions", QVariant(false)).toBool();
+    custom_button_positions = config->readEntry("CustomButtonPositions", false);
     if (custom_button_positions)
         {
         title_buttons_left  = config->readEntry("ButtonsOnLeft", "MS");
@@ -188,7 +188,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
 // SettingTooltips
     bool old_show_tooltips = show_tooltips;
-    show_tooltips = config->readEntry("ShowToolTips", QVariant(true)).toBool();
+    show_tooltips = config->readEntry("ShowToolTips", true);
     if( old_show_tooltips != show_tooltips )
         changed |= SettingTooltips;
 
@@ -206,7 +206,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
     config->setGroup( "Windows" );
     bool old_move_resize_maximized_windows = move_resize_maximized_windows;
-    move_resize_maximized_windows = config->readEntry( "MoveResizeMaximizedWindows", QVariant(false )).toBool();
+    move_resize_maximized_windows = config->readEntry( "MoveResizeMaximizedWindows", false);
     if( old_move_resize_maximized_windows != move_resize_maximized_windows )
         changed |= SettingBorder;
 

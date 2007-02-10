@@ -76,9 +76,9 @@ void QuartzConfig::slotSelectionChanged()
 void QuartzConfig::load( KConfig* /*conf*/ )
 {
 	quartzConfig->setGroup("General");
-	bool override = quartzConfig->readEntry( "UseTitleBarBorderColors", QVariant(true )).toBool();
+	bool override = quartzConfig->readEntry( "UseTitleBarBorderColors", true);
 	cbColorBorder->setChecked( override );
-	override = quartzConfig->readEntry( "UseQuartzExtraSlim", QVariant(false )).toBool();
+	override = quartzConfig->readEntry( "UseQuartzExtraSlim", false);
 	cbExtraSmall->setChecked( override );
 }
 
