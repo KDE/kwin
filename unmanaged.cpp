@@ -21,13 +21,11 @@ namespace KWinInternal
 
 Unmanaged::Unmanaged( Workspace* ws )
     : Toplevel( ws )
-    , info( NULL )
     {
     }
     
 Unmanaged::~Unmanaged()
     {
-    delete info;
     }
 
 bool Unmanaged::track( Window w )
@@ -44,7 +42,7 @@ bool Unmanaged::track( Window w )
         ungrabXServer();
         return false;
         }
-    setHandle( w );
+    setWindowHandles( w, w ); // the window is also the frame
     XSelectInput( display(), w, StructureNotifyMask );
     geom = QRect( attr.x, attr.y, attr.width, attr.height );
     vis = attr.visual;
@@ -71,37 +69,26 @@ bool Unmanaged::track( Window w )
 
 void Unmanaged::release()
     {
+    Deleted* del = Deleted::create( this );
     if( effects )
         {
-        Deleted* del = Deleted::create( this );
-        effects->windowClosed( del->effectWindow()); // effectWindow is already 'del'
+        effects->windowClosed( effectWindow());
         scene->windowClosed( this, del );
-        del->unrefWindow();
         }
     finishCompositing();
     workspace()->removeUnmanaged( this, Allowed );
     if( Extensions::shapeAvailable())
-        XShapeSelectInput( display(), handle(), NoEventMask );
-    XSelectInput( display(), handle(), NoEventMask );
+        XShapeSelectInput( display(), window(), NoEventMask );
+    XSelectInput( display(), window(), NoEventMask );
     workspace()->addDamage( geometry());
+    disownDataPassedToDeleted();
+    del->unrefWindow();
     deleteUnmanaged( this, Allowed );
     }
 
 void Unmanaged::deleteUnmanaged( Unmanaged* c, allowed_t )
     {
     delete c;
-    }
-
-NET::WindowType Unmanaged::windowType( bool, int supported_types ) const
-    {
-    return info->windowType( supported_types );
-    }
-
-double Unmanaged::opacity() const
-    {
-    if( info->opacity() == 0xffffffff )
-        return 1.0;
-    return info->opacity() * 1.0 / 0xffffffff;
     }
 
 int Unmanaged::desktop() const
@@ -111,7 +98,7 @@ int Unmanaged::desktop() const
 
 void Unmanaged::debug( kdbgstream& stream ) const
     {
-    stream << "\'ID:" << handle() << "\'";
+    stream << "\'ID:" << window() << "\'";
     }
 
 } // namespace

@@ -86,6 +86,10 @@ void WinInfo::changeState( unsigned long state, unsigned long mask )
         m_client->setFullScreen( true, false );
     }
 
+void WinInfo::disable()
+    {
+    m_client = NULL; // only used when the object is passed to Deleted
+    }
 
 // ****************************************
 // RootInfo
@@ -267,7 +271,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         if( c->windowEvent( e ))
             return true;
         }
-    else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( e->xany.window )))
+    else if( Unmanaged* c = findUnmanaged( WindowMatchPredicate( e->xany.window )))
         {
         if( c->windowEvent( e ))
             return true;
@@ -384,7 +388,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             {
             if( e->xmap.override_redirect )
                 {
-                Unmanaged* c = findUnmanaged( HandleMatchPredicate( e->xmap.window ));
+                Unmanaged* c = findUnmanaged( WindowMatchPredicate( e->xmap.window ));
                 if( c == NULL )
                     c = createUnmanaged( e->xmap.window );
                 if( c )
@@ -899,6 +903,7 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
  */
 void Client::propertyNotifyEvent( XPropertyEvent* e )
     {
+    Toplevel::propertyNotifyEvent( e );
     if( e->window != window())
         return; // ignore frame/wrapper
     switch ( e->atom ) 
@@ -922,10 +927,6 @@ void Client::propertyNotifyEvent( XPropertyEvent* e )
         default:
             if ( e->atom == atoms->wm_protocols )
                 getWindowProtocols();
-            else if (e->atom == atoms->wm_client_leader )
-                getWmClientLeader();
-            else if( e->atom == atoms->wm_window_role )
-                window_role = staticWindowRole( window());
             else if( e->atom == atoms->motif_wm_hints )
                 getMotifHints();
             break;
@@ -1618,11 +1619,13 @@ bool Unmanaged::windowEvent( XEvent* e )
         case ConfigureNotify:
             configureNotifyEvent( &e->xconfigure );
             break;
+        case PropertyNotify:
+            propertyNotifyEvent( &e->xproperty );
         default:
             {
             if( e->type == Extensions::shapeNotifyEvent() )
                 {
-                detectShape( handle());
+                detectShape( window());
                 addDamageFull();
                 if( compositing() )
                     discardWindowPixmap();
@@ -1661,6 +1664,25 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     workspace()->addDamage( geometry());
     // TODO maybe only damage changed area
     addDamageFull();
+    }
+
+// ****************************************
+// Toplevel
+// ****************************************
+
+void Toplevel::propertyNotifyEvent( XPropertyEvent* e )
+    {
+    if( e->window != window())
+        return; // ignore frame/wrapper
+    switch ( e->atom ) 
+        {
+        default:
+            if (e->atom == atoms->wm_client_leader )
+                getWmClientLeader();
+            else if( e->atom == atoms->wm_window_role )
+                getWindowRole();
+            break;
+        }
     }
 
 // ****************************************

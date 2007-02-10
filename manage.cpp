@@ -92,19 +92,8 @@ bool Client::manage( Window w, bool isMapped )
 
     cmap = attr.colormap;
 
-    XClassHint classHint;
-    if ( XGetClassHint( display(), client, &classHint ) ) 
-        {
-        // Qt3.2 and older had this all lowercase, Qt3.3 capitalized resource class
-        // force lowercase, so that workarounds listing resource classes still work
-        resource_name = QByteArray( classHint.res_name ).toLower();
-        resource_class = QByteArray( classHint.res_class ).toLower();
-        XFree( classHint.res_name );
-        XFree( classHint.res_class );
-        }
-    ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
-
-    window_role = staticWindowRole( w );
+    getResourceClass();
+    getWindowRole();
     getWmClientLeader();
     getWmClientMachine();
     // first only read the caption text, so that setupWindowRules() can use it for matching,
@@ -112,6 +101,7 @@ bool Client::manage( Window w, bool isMapped )
     // and also relies on rules already existing
     cap_normal = readName();
     setupWindowRules( false );
+    ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
     setCaption( cap_normal, true );
 
     if( Extensions::shapeAvailable())
@@ -558,7 +548,7 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
     Window frame = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
-    setHandle( frame );
+    setWindowHandles( client, frame );
     wrapper = XCreateWindow( display(), frame, 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );

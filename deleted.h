@@ -22,11 +22,9 @@ class Deleted
     Q_OBJECT
     public:
         static Deleted* create( Toplevel* c );
-        virtual double opacity() const;
         // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
         void refWindow();
         void unrefWindow();
-        virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
         virtual int desktop() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;

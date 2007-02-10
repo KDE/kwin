@@ -272,7 +272,7 @@ QRegion Scene::Window::shape() const
         if( toplevel->shape() || ( c != NULL && !c->mask().isEmpty()))
             {
             int count, order;
-            XRectangle* rects = XShapeGetRectangles( display(), toplevel->handle(),
+            XRectangle* rects = XShapeGetRectangles( display(), toplevel->frameId(),
                 ShapeBounding, &count, &order );
             if(rects)
                 {

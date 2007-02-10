@@ -11,6 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "deleted.h"
 
 #include "workspace.h"
+#include "client.h"
 
 namespace KWinInternal
 {
@@ -39,8 +40,9 @@ void Deleted::copyToDeleted( Toplevel* c )
     {
     assert( dynamic_cast< Deleted* >( c ) == NULL );
     Toplevel::copyToDeleted( c );
-    window_opacity = c->opacity();
     desk = c->desktop();
+    if( WinInfo* cinfo = dynamic_cast< WinInfo* >( info ))
+        cinfo->disable();
     }
 
 void Deleted::unrefWindow()
@@ -50,16 +52,6 @@ void Deleted::unrefWindow()
     deleteLater();
     }
 
-NET::WindowType Deleted::windowType( bool direct, int supported_types ) const
-    {
-    return NET::Normal; // TODO
-    }
-
-double Deleted::opacity() const
-    {
-    return window_opacity;
-    }
-
 int Deleted::desktop() const
     {
     return desk;
@@ -67,7 +59,7 @@ int Deleted::desktop() const
 
 void Deleted::debug( kdbgstream& stream ) const
     {
-    stream << "\'ID:" << handle() << "\' (deleted)";
+    stream << "\'ID:" << window() << "\' (deleted)";
     }
 
 } // namespace

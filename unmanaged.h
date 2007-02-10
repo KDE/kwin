@@ -27,9 +27,7 @@ class Unmanaged
         bool windowEvent( XEvent* e );
         void release();
         bool track( Window w );
-        virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
         static void deleteUnmanaged( Unmanaged* c, allowed_t );
-        virtual double opacity() const;
         virtual int desktop() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
@@ -39,7 +37,6 @@ class Unmanaged
         void mapNotifyEvent( XMapEvent* e );
         void unmapNotifyEvent( XUnmapEvent*e );
         void configureNotifyEvent( XConfigureEvent* e );
-        NETWinInfo* info;
     };
 
 } // namespace

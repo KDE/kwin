@@ -39,7 +39,6 @@ namespace KWinInternal
 
 class Workspace;
 class Client;
-class WinInfo;
 class SessionInfo;
 class Bridge;
 
@@ -49,8 +48,6 @@ class Client
     Q_OBJECT
     public:
         Client( Workspace *ws );
-        Window window() const;
-        Window frameId() const;
         Window wrapperId() const;
         Window decorationId() const;
 
@@ -71,7 +68,7 @@ class Client
         void removeRule( Rules* r );
         void setupWindowRules( bool ignore_temporary );
         void applyWindowRules();
-        virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
+
     // returns true for "special" windows and false for windows which are "normal"
     // (normal=window which has a border, can be moved by the user, can be closed, etc.)
     // true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
@@ -88,7 +85,6 @@ class Client
         virtual bool eventFilter( QObject* o, QEvent* e );
 
         bool manage( Window w, bool isMapped );
-
         void releaseWindow( bool on_shutdown = false );
         void destroyClient();
 
@@ -179,9 +175,6 @@ class Client
 
         void updateShape();
         
-        virtual double opacity() const;
-        void setOpacity( double opacity );
-
         void setGeometry( int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void setGeometry( const QRect& r, ForceGeometry_t force = NormalGeometrySet );
         void move( int x, int y, ForceGeometry_t force = NormalGeometrySet );
@@ -204,15 +197,6 @@ class Client
         void setShortcut( const QString& cut );
 
         bool performMouseCommand( Options::MouseCommand, QPoint globalPos, bool handled = false );
-
-        QByteArray windowRole() const;
-        QByteArray sessionId();
-        QByteArray resourceName() const;
-        QByteArray resourceClass() const;
-        QByteArray wmCommand();
-        QByteArray wmClientMachine( bool use_localhost ) const;
-        Window   wmClientLeader() const;
-        pid_t pid() const;
 
         QRect adjustedClientArea( const QRect& desktop, const QRect& area ) const;
 
@@ -238,12 +222,6 @@ class Client
         
         void gotPing( Time timestamp );
 
-        static QByteArray staticWindowRole(WId);
-        static QByteArray staticSessionId(WId);
-        static QByteArray staticWmCommand(WId);
-        static QByteArray staticWmClientMachine(WId);
-        static Window   staticWmClientLeader(WId);
-
         void checkWorkspacePosition();
         void updateUserTime( Time time = CurrentTime );
         Time userTime() const;
@@ -253,8 +231,8 @@ class Client
     // does 'delete c;'
         static void deleteClient( Client* c, allowed_t );
 
-        static bool resourceMatch( const Client* c1, const Client* c2 );
         static bool belongToSameApplication( const Client* c1, const Client* c2, bool active_hack = false );
+        static bool sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool active_hack );
         static void readIcons( Window win, QPixmap* icon, QPixmap* miniicon );
 
         void minimize( bool avoid_animation = false );
@@ -307,7 +285,7 @@ class Client
         void unmapNotifyEvent( XUnmapEvent*e );
         void destroyNotifyEvent( XDestroyWindowEvent*e );
         void configureRequestEvent( XConfigureRequestEvent* e );
-        void propertyNotifyEvent( XPropertyEvent* e );
+        virtual void propertyNotifyEvent( XPropertyEvent* e );
         void clientMessageEvent( XClientMessageEvent* e );
         void enterNotifyEvent( XCrossingEvent* e );
         void leaveNotifyEvent( XCrossingEvent* e );
@@ -345,8 +323,6 @@ class Client
         void getWmNormalHints();
         void getMotifHints();
         void getIcons();
-        void getWmClientLeader();
-        void getWmClientMachine();
         void fetchName();
         void fetchIconicName();
         QString readName() const;
@@ -392,7 +368,6 @@ class Client
         Time readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
             bool session ) const;
         Time readUserCreationTime() const;
-        static bool sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool active_hack );
         void startupIdChanged();
         
         Window client;
@@ -469,16 +444,10 @@ class Client
         QRect geom_fs_restore;
         MaximizeMode maxmode_restore;
         int workarea_diff_x, workarea_diff_y;
-        WinInfo* info;
         QTimer* autoRaiseTimer;
         QTimer* shadeHoverTimer;
         Colormap cmap;
-        QByteArray resource_name;
-        QByteArray resource_class;
-        QByteArray client_machine;
         QString cap_normal, cap_iconic, cap_suffix;
-        WId wmClientLeaderWin;
-        QByteArray window_role;
         Group* in_group;
         Window window_group;
         Layer in_layer;
@@ -529,19 +498,10 @@ class WinInfo : public NETWinInfo
                 Window rwin, const unsigned long pr[], int pr_size );
         virtual void changeDesktop(int desktop);
         virtual void changeState( unsigned long state, unsigned long mask );
+        void disable();
     private:
         Client * m_client;
     };
-
-inline Window Client::window() const
-    {
-    return client;
-    }
-
-inline Window Client::frameId() const
-    {
-    return handle();
-    }
 
 inline Window Client::wrapperId() const
     {
@@ -598,16 +558,6 @@ inline Group* Client::group()
 inline int Client::mappingState() const
     {
     return mapping_state;
-    }
-
-inline QByteArray Client::resourceName() const
-    {
-    return resource_name; // it is always lowercase
-    }
-
-inline QByteArray Client::resourceClass() const
-    {
-    return resource_class; // it is always lowercase
     }
 
 inline
@@ -704,11 +654,6 @@ inline Colormap Client::colormap() const
     return cmap;
     }
 
-inline pid_t Client::pid() const
-    {
-    return info->pid();
-    }
-
 inline void Client::invalidateLayer()
     {
     in_layer = UnknownLayer;
@@ -732,11 +677,6 @@ inline bool Client::isNormalState() const
 inline bool Client::isManaged() const
     {
     return mapping_state != WithdrawnState;
-    }
-
-inline QByteArray Client::windowRole() const
-    {
-    return window_role;
     }
 
 inline QPoint Client::clientPos() const
@@ -801,8 +741,6 @@ inline void Client::removeRule( Rules* rule )
     client_rules.remove( rule );
     }
 
-KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Client, Window, cl->window() == value );
-KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Client, Window, cl->frameId() == value );
 KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value );
 
 } // namespace

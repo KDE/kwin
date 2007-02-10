@@ -232,7 +232,7 @@ void Workspace::performCompositing()
         {
         if( Client* c = findClient( FrameIdMatchPredicate( children[ i ] )))
             windows.append( c );
-        else if( Unmanaged* c = findUnmanaged( HandleMatchPredicate( children[ i ] )))
+        else if( Unmanaged* c = findUnmanaged( WindowMatchPredicate( children[ i ] )))
             windows.append( c );
         }
     foreach( Deleted* c, deleted ) // TODO remember stacking order somehow
@@ -301,7 +301,7 @@ void Toplevel::setupCompositing()
         return;
     if( damage_handle != None )
         return;
-    damage_handle = XDamageCreate( display(), handle(), XDamageReportRawRectangles );
+    damage_handle = XDamageCreate( display(), frameId(), XDamageReportRawRectangles );
     damage_region = QRegion( 0, 0, width(), height());
     effect_window = new EffectWindow();
     effect_window->setWindow( this );
@@ -311,11 +311,14 @@ void Toplevel::finishCompositing()
     {
     if( damage_handle == None )
         return;
+    if( effect_window->window() == this ) // otherwise it's already passed to Deleted, don't free data
+        {
+        discardWindowPixmap();
+        delete effect_window;
+        }
     XDamageDestroy( display(), damage_handle );
-    discardWindowPixmap();
     damage_handle = None;
     damage_region = QRegion();
-    delete effect_window;
     effect_window = NULL;
     }
 
@@ -330,7 +333,7 @@ void Toplevel::discardWindowPixmap()
 Pixmap Toplevel::createWindowPixmap() const
     {
     assert( compositing());
-    return XCompositeNameWindowPixmap( display(), handle());
+    return XCompositeNameWindowPixmap( display(), frameId());
     }
 
 void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
@@ -341,7 +344,7 @@ void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
         {
         XEvent e2;
         if( XPeekEvent( display(), &e2 ) && e2.type == Extensions::damageNotifyEvent()
-            && e2.xany.window == handle())
+            && e2.xany.window == frameId())
             {
             XNextEvent( display(), &e2 );
             XDamageNotifyEvent* e = reinterpret_cast< XDamageNotifyEvent* >( &e2 );

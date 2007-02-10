@@ -161,7 +161,6 @@ Client::~Client()
     assert( decoration == NULL );
     assert( block_geometry_updates == 0 );
     assert( !check_active_modal );
-    delete info;
     delete bridge;
     }
 
@@ -178,12 +177,11 @@ void Client::releaseWindow( bool on_shutdown )
     {
     assert( !deleting );
     deleting = true;
+    Deleted* del = Deleted::create( this );
     if( effects )
         {
-        Deleted* del = Deleted::create( this );
-        effects->windowClosed( del->effectWindow()); // effectWindow is already 'del'
+        effects->windowClosed( effectWindow());
         scene->windowClosed( this, del );
-        del->unrefWindow();
         }
     finishCompositing();
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
@@ -235,6 +233,8 @@ void Client::releaseWindow( bool on_shutdown )
 //    frame = None;
     --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     workspace()->addDamage( geometry());
+    disownDataPassedToDeleted();
+    del->unrefWindow();
     deleteClient( this, Allowed );
     }
 
@@ -244,12 +244,11 @@ void Client::destroyClient()
     {
     assert( !deleting );
     deleting = true;
+    Deleted* del = Deleted::create( this );
     if( effects )
         {
-        Deleted* del = Deleted::create( this );
-        effects->windowClosed( del->effectWindow()); // effectWindow is already 'del'
+        effects->windowClosed( effectWindow());
         scene->windowClosed( this, del );
-        del->unrefWindow();
         }
     finishCompositing();
     workspace()->discardUsedWindowRules( this, true ); // remove ForceTemporarily rules
@@ -273,6 +272,8 @@ void Client::destroyClient()
 //    frame = None;
     --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     workspace()->addDamage( geometry());
+    disownDataPassedToDeleted();
+    del->unrefWindow();
     deleteClient( this, Allowed );
     }
 
@@ -1542,125 +1543,6 @@ void Client::getWindowProtocols()
         }
     }
 
-static int nullErrorHandler(Display *, XErrorEvent *)
-    {
-    return 0;
-    }
-
-/*!
-  Returns WM_WINDOW_ROLE property for a given window.
- */
-QByteArray Client::staticWindowRole(WId w)
-    {
-    return getStringProperty(w, atoms->wm_window_role).toLower();
-    }
-
-/*!
-  Returns SM_CLIENT_ID property for a given window.
- */
-QByteArray Client::staticSessionId(WId w)
-    {
-    return getStringProperty(w, atoms->sm_client_id);
-    }
-
-/*!
-  Returns WM_COMMAND property for a given window.
- */
-QByteArray Client::staticWmCommand(WId w)
-    {
-    return getStringProperty(w, XA_WM_COMMAND, ' ');
-    }
-
-/*!
-  Returns WM_CLIENT_LEADER property for a given window.
- */
-Window Client::staticWmClientLeader(WId w)
-    {
-    Atom type;
-    int format, status;
-    unsigned long nitems = 0;
-    unsigned long extra = 0;
-    unsigned char *data = 0;
-    Window result = w;
-    XErrorHandler oldHandler = XSetErrorHandler(nullErrorHandler);
-    status = XGetWindowProperty( display(), w, atoms->wm_client_leader, 0, 10000,
-                                 false, XA_WINDOW, &type, &format,
-                                 &nitems, &extra, &data );
-    XSetErrorHandler(oldHandler);
-    if (status  == Success ) 
-        {
-        if (data && nitems > 0)
-            result = *((Window*) data);
-        XFree(data);
-        }
-    return result;
-    }
-
-
-void Client::getWmClientLeader()
-    {
-    wmClientLeaderWin = staticWmClientLeader(window());
-    }
-
-/*!
-  Returns sessionId for this client,
-  taken either from its window or from the leader window.
- */
-QByteArray Client::sessionId()
-    {
-    QByteArray result = staticSessionId(window());
-    if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=window())
-        result = staticSessionId(wmClientLeaderWin);
-    return result;
-    }
-
-/*!
-  Returns command property for this client,
-  taken either from its window or from the leader window.
- */
-QByteArray Client::wmCommand()
-    {
-    QByteArray result = staticWmCommand(window());
-    if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=window())
-        result = staticWmCommand(wmClientLeaderWin);
-    return result;
-    }
-
-void Client::getWmClientMachine()
-    {
-    client_machine = getStringProperty(window(), XA_WM_CLIENT_MACHINE);
-    if( client_machine.isEmpty() && wmClientLeaderWin && wmClientLeaderWin!=window())
-        client_machine = getStringProperty(wmClientLeaderWin, XA_WM_CLIENT_MACHINE);
-    if( client_machine.isEmpty())
-        client_machine = "localhost";
-    }
-
-/*!
-  Returns client machine for this client,
-  taken either from its window or from the leader window.
-*/
-QByteArray Client::wmClientMachine( bool use_localhost ) const
-    {
-    QByteArray result = client_machine;
-    if( use_localhost )
-        { // special name for the local machine (localhost)
-        if( result != "localhost" && isLocalMachine( result ))
-            result = "localhost";
-        }
-    return result;
-    }
-
-/*!
-  Returns client leader window for this client.
-  Returns the client window itself if no leader window is defined.
-*/
-Window Client::wmClientLeader() const
-    {
-    if (wmClientLeaderWin)
-        return wmClientLeaderWin;
-    return window();
-    }
-
 bool Client::wantsTabFocus() const
     {
     return ( isNormalWindow() || isDialog()) && wantsInput();
@@ -1670,37 +1552,6 @@ bool Client::wantsTabFocus() const
 bool Client::wantsInput() const
     {
     return rules()->checkAcceptFocus( input || Ptakefocus );
-    }
-
-NET::WindowType Client::windowType( bool direct, int supported_types ) const
-    {
-    NET::WindowType wt = info->windowType( supported_types );
-    if( direct )
-        return wt;
-    NET::WindowType wt2 = rules()->checkType( wt );
-    if( wt != wt2 )
-        {
-        wt = wt2;
-        info->setWindowType( wt ); // force hint change
-        }
-    // hacks here
-    if( wt == NET::Menu )
-        {
-        // ugly hack to support the times when NET::Menu meant NET::TopMenu
-        // if it's as wide as the screen, not very high and has its upper-left
-        // corner a bit above the screen's upper-left cornet, it's a topmenu
-        if( x() == 0 && y() < 0 && y() > -10 && height() < 100
-            && abs( width() - workspace()->clientArea( FullArea, this ).width()) < 10 )
-            wt = NET::TopMenu;
-        }
-    // TODO change this to rule
-    const char* const oo_prefix = "openoffice.org"; // QByteArray has no startsWith()
-    // oo_prefix is lowercase, because resourceClass() is forced to be lowercase
-    if( qstrncmp( resourceClass(), oo_prefix, strlen( oo_prefix )) == 0 && wt == NET::Dialog )
-        wt = NET::Normal; // see bug #66065
-    if( wt == NET::Unknown ) // this is more or less suggested in NETWM spec
-        wt = isTransient() ? NET::Dialog : NET::Normal;
-    return wt;
     }
 
 bool Client::isSpecialWindow() const
@@ -1803,20 +1654,6 @@ void Client::cancelAutoRaise()
     {
     delete autoRaiseTimer;
     autoRaiseTimer = 0;
-    }
-
-double Client::opacity() const
-    {
-    if( info->opacity() == 0xffffffff )
-        return 1.0;
-    return info->opacity() * 1.0 / 0xffffffff;
-    }
-
-void Client::setOpacity( double opacity )
-    {
-    opacity = qBound( 0.0, opacity, 1.0 );
-    info->setOpacity( static_cast< unsigned long >( opacity * 0xffffffff ));
-    // we'll react on PropertyNotify
     }
 
 void Client::debug( kdbgstream& stream ) const

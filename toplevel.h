@@ -18,6 +18,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "utils.h"
 #include "workspace.h"
 
+class NETWinInfo;
+
 namespace KWinInternal
 {
 
@@ -30,7 +32,8 @@ class Toplevel
     Q_OBJECT
     public:
         Toplevel( Workspace *ws );
-        Window handle() const;
+        Window frameId() const;
+        Window window() const;
         Workspace* workspace() const;
         QRect geometry() const;
         QSize size() const;
@@ -42,7 +45,7 @@ class Toplevel
         int height() const;
 
     // prefer isXXX() instead
-        virtual NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const = 0;
+        NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
         bool hasNETSupport() const;
         bool isDesktop() const;
         bool isDock() const;
@@ -59,10 +62,21 @@ class Toplevel
         bool isOnCurrentDesktop() const;
         bool isOnAllDesktops() const;
 
+        QByteArray windowRole() const;
+        QByteArray sessionId();
+        QByteArray resourceName() const;
+        QByteArray resourceClass() const;
+        QByteArray wmCommand();
+        QByteArray wmClientMachine( bool use_localhost ) const;
+        Window wmClientLeader() const;
+        pid_t pid() const;
+        static bool resourceMatch( const Toplevel* c1, const Toplevel* c2 );
+
         Pixmap windowPixmap( bool allow_create = true ); // for use with compositing
         Visual* visual() const;
         bool shape() const;
-        virtual double opacity() const = 0;
+        void setOpacity( double opacity );
+        double opacity() const;
         int depth() const;
         bool hasAlpha() const;
         void setupCompositing();
@@ -76,37 +90,63 @@ class Toplevel
 
     protected:
         virtual ~Toplevel();
-        void setHandle( Window id );
+        void setWindowHandles( Window client, Window frame );
         void detectShape( Window id );
+        virtual void propertyNotifyEvent( XPropertyEvent* e );
         void damageNotifyEvent( XDamageNotifyEvent* e );
         Pixmap createWindowPixmap() const;
         void discardWindowPixmap();
+        void getWmClientLeader();
+        void getWmClientMachine();
+        void getResourceClass();
+        void getWindowRole();
+        virtual void debug( kdbgstream& stream ) const = 0;
+        void copyToDeleted( Toplevel* c );
+        void disownDataPassedToDeleted();
+        friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
         QRect geom;
         Visual* vis;
         int bit_depth;
-        virtual void debug( kdbgstream& stream ) const = 0;
-        void copyToDeleted( Toplevel* c );
-        friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
+        NETWinInfo* info;
     private:
+        static QByteArray staticWindowRole(WId);
+        static QByteArray staticSessionId(WId);
+        static QByteArray staticWmCommand(WId);
+        static QByteArray staticWmClientMachine(WId);
+        static Window staticWmClientLeader(WId);
         // when adding new data members, check also copyToDeleted()
-        Window id;
+        Window client;
+        Window frame;
         Workspace* wspace;
         Pixmap window_pix;
         Damage damage_handle;
         QRegion damage_region;
         bool is_shape;
         EffectWindow* effect_window;
+        QByteArray resource_name;
+        QByteArray resource_class;
+        QByteArray client_machine;
+        WId wmClientLeaderWin;
+        QByteArray window_role;
+        // when adding new data members, check also copyToDeleted()
     };
 
-inline Window Toplevel::handle() const
+inline Window Toplevel::window() const
     {
-    return id;
+    return client;
     }
 
-inline void Toplevel::setHandle( Window w )
+inline Window Toplevel::frameId() const
     {
-    assert( id == None && w != None );
-    id = w;
+    return frame;
+    }
+
+inline void Toplevel::setWindowHandles( Window w, Window f )
+    {
+    assert( client == None && w != None );
+    client = w;
+    assert( frame == None && f != None );
+    frame = f;
     }
 
 inline Workspace* Toplevel::workspace() const
@@ -252,6 +292,26 @@ inline bool Toplevel::isOnCurrentDesktop() const
     return isOnDesktop( workspace()->currentDesktop());
     }
 
+inline QByteArray Toplevel::resourceName() const
+    {
+    return resource_name; // it is always lowercase
+    }
+
+inline QByteArray Toplevel::resourceClass() const
+    {
+    return resource_class; // it is always lowercase
+    }
+
+inline QByteArray Toplevel::windowRole() const
+    {
+    return window_role;
+    }
+
+inline pid_t Toplevel::pid() const
+    {
+    return info->pid();
+    }
+
 #ifdef NDEBUG
 inline
 kndbgstream& operator<<( kndbgstream& stream, const Toplevel* ) { return stream; }
@@ -265,7 +325,8 @@ kdbgstream& operator<<( kdbgstream& stream, const ToplevelList& );
 kdbgstream& operator<<( kdbgstream& stream, const ConstToplevelList& );
 #endif
 
-KWIN_COMPARE_PREDICATE( HandleMatchPredicate, Toplevel, Window, cl->handle() == value );
+KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Toplevel, Window, cl->window() == value );
+KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Toplevel, Window, cl->frameId() == value );
 
 } // namespace
 
