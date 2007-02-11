@@ -53,6 +53,7 @@ set(kwin_KDEINIT_SRCS
    glutils_funcs.cpp
    deleted.cpp
    effects.cpp
+   effects/fade.cpp
    effects/fadein.cpp
    effects/fadeout.cpp
    effects/maketransparent.cpp

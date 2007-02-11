@@ -1,0 +1,67 @@
+/*****************************************************************
+ KWin - the KDE window manager
+ This file is part of the KDE project.
+
+Copyright (C) 2007 Philip Falkner <philip.falkner@gmail.com>
+
+You can Freely distribute this program under the GNU General Public
+License. See the file "COPYING" for the exact licensing terms.
+******************************************************************/
+
+// TODO MIT or some other licence, perhaps move to some lib
+
+#ifndef KWIN_FADE_H
+#define KWIN_FADE_H
+
+#include <effects.h>
+
+namespace KWinInternal
+{
+
+class FadeEffect
+    : public Effect
+    {
+    public:
+        FadeEffect();
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void postPaintWindow( EffectWindow* w );
+        // TODO react also on virtual desktop changes
+        virtual void windowOpacityChanged( EffectWindow* c );
+        virtual void windowAdded( EffectWindow* c );
+        virtual void windowClosed( EffectWindow* c );
+        virtual void windowDeleted( EffectWindow* c );
+    private:
+        int fade_in_speed, fade_out_speed; // TODO make these configurable
+        class WindowInfo;
+        QMap< const EffectWindow*, WindowInfo > windows;
+    };
+
+class FadeEffect::WindowInfo
+    {
+    public:
+        WindowInfo()
+            : deleted( false )
+            , opacity_is_zero( false )
+            , old_opacity( 0 )
+            , current( 0 )
+            , target( 0 )
+            , step_mult( 0 )
+            {};
+        bool isFading() const;
+        bool deleted;
+        bool opacity_is_zero;
+        double old_opacity;
+        double current;
+        double target;
+        double step_mult;
+    };
+
+inline bool FadeEffect::WindowInfo::isFading() const
+    {
+    return current != target;
+    }
+
+} // namespace
+
+#endif
