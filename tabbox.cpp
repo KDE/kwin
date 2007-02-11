@@ -44,7 +44,7 @@ namespace KWinInternal
 extern QPixmap* kwin_get_menu_pix_hack();
 
 TabBox::TabBox( Workspace *ws, const char *name )
-    : Q3Frame( 0, name, Qt::WNoAutoErase ), client(0), wspace(ws)
+    : Q3Frame( 0, name, Qt::WNoAutoErase | Qt::X11BypassWindowManagerHint ), client(0), wspace(ws)
     {
     setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
     setLineWidth(2);
