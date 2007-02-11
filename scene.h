@@ -126,6 +126,10 @@ class Scene::Window
         int y() const;
         int width() const;
         int height() const;
+        QRect geometry() const;
+        QPoint pos() const;
+        QSize size() const;
+        QRect rect() const;
         // access to the internal window class
         // TODO eventually get rid of this
         Toplevel* window();
@@ -194,6 +198,30 @@ inline
 int Scene::Window::height() const
     {
     return toplevel->height();
+    }
+
+inline
+QRect Scene::Window::geometry() const
+    {
+    return toplevel->geometry();
+    }
+
+inline
+QSize Scene::Window::size() const
+    {
+    return toplevel->size();
+    }
+    
+inline
+QPoint Scene::Window::pos() const
+    {
+    return toplevel->pos();
+    }
+    
+inline
+QRect Scene::Window::rect() const
+    {
+    return toplevel->rect();
     }
 
 inline

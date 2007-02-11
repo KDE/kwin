@@ -177,6 +177,14 @@ class EffectWindow
         bool isOnCurrentDesktop() const;
         bool isOnAllDesktops() const;
         int desktop() const; // prefer isOnXXX()
+        int x() const;
+        int y() const;
+        int width() const;
+        int height() const;
+        QRect geometry() const;
+        QPoint pos() const;
+        QSize size() const;
+        QRect rect() const;
 
         void setWindow( Toplevel* w ); // internal
         void setSceneWindow( Scene::Window* w ); // internal
@@ -242,6 +250,53 @@ Scene::Window* EffectWindow::sceneWindow()
     return sw;
     }
 
+inline
+int EffectWindow::x() const
+    {
+    return toplevel->x();
+    }
+    
+inline
+int EffectWindow::y() const
+    {
+    return toplevel->y();
+    }
+
+inline
+int EffectWindow::width() const
+    {
+    return toplevel->width();
+    }
+    
+inline
+int EffectWindow::height() const
+    {
+    return toplevel->height();
+    }
+
+inline
+QRect EffectWindow::geometry() const
+    {
+    return toplevel->geometry();
+    }
+
+inline
+QSize EffectWindow::size() const
+    {
+    return toplevel->size();
+    }
+    
+inline
+QPoint EffectWindow::pos() const
+    {
+    return toplevel->pos();
+    }
+    
+inline
+QRect EffectWindow::rect() const
+    {
+    return toplevel->rect();
+    }
 inline
 EffectWindow* effectWindow( Toplevel* w )
     {
