@@ -47,6 +47,10 @@ void Effect::windowUserMovedResized( EffectWindow* , bool, bool )
     {
     }
 
+void Effect::windowOpacityChanged( EffectWindow* )
+    {
+    }
+
 void Effect::windowAdded( EffectWindow* )
     {
     }
@@ -160,6 +164,12 @@ void EffectsHandler::windowUserMovedResized( EffectWindow* c, bool first, bool l
     {
     foreach( EffectPair ep, loaded_effects )
         ep.second->windowUserMovedResized( c, first, last );
+    }
+
+void EffectsHandler::windowOpacityChanged( EffectWindow* c )
+    {
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowOpacityChanged( c );
     }
 
 void EffectsHandler::windowAdded( EffectWindow* c )

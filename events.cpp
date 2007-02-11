@@ -597,6 +597,8 @@ bool Client::windowEvent( XEvent* e )
                 {
                 addDamageFull();
                 scene->windowOpacityChanged( this );
+                if( effects )
+                    effects->windowOpacityChanged( effectWindow());
                 }
             else
                 { // forward to the frame if there's possibly another compositing manager running
@@ -1606,6 +1608,8 @@ bool Unmanaged::windowEvent( XEvent* e )
     if( dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
         {
         scene->windowOpacityChanged( this );
+        if( effects )
+            effects->windowOpacityChanged( effectWindow());
         addDamageFull();
         }
     switch (e->type) 
