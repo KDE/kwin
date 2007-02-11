@@ -1790,6 +1790,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     checkMaximizeGeometry();
     // client itself is not damaged
     workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
+    workspace()->addDamage( geom ); // damage window's new location
     geom_before_block = geom;
     }
 
