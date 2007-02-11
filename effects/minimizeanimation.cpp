@@ -62,7 +62,7 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegio
             {
             // We'll transform this window
             *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-            *mask &= ~Scene::PAINT_WINDOW_DISABLED;
+            w->enablePainting( Scene::Window::PAINT_DISABLED_BY_MINIMIZE );
             }
         else
             // Animation just finished

@@ -443,6 +443,16 @@ EffectWindow::EffectWindow()
     {
     }
 
+void EffectWindow::enablePainting( int reason )
+    {
+    sceneWindow()->enablePainting( reason );
+    }
+
+void EffectWindow::disablePainting( int reason )
+    {
+    sceneWindow()->disablePainting( reason );
+    }
+
 int EffectWindow::desktop() const
     {
     return toplevel->desktop();

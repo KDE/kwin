@@ -169,6 +169,8 @@ class EffectWindow
         EffectWindow();
         const Toplevel* window() const;
         Toplevel* window();
+        void enablePainting( int reason );
+        void disablePainting( int reason );
         bool isOnDesktop( int d ) const;
         bool isOnCurrentDesktop() const;
         bool isOnAllDesktops() const;

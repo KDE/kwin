@@ -161,7 +161,7 @@ Effects framework TODO
         which means that if an effect sets PAINT_WINDOW_TRANSFORMED it needs to set it
         also in prePaintScreen()
 
-* PAINT_WINDOW_DISABLED turning off from effects needs some utility functions
+* PAINT_DISABLED turning off from effects needs some improvement
     - a window may have painting disabled for various reasons and their numbers may increase
         over time
         - so e.g. an effect showing minimized windows cannot simply turn off DISABLED

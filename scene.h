@@ -58,18 +58,15 @@ class Scene
             PAINT_WINDOW_TRANSLUCENT    = 1 << 1,
             // Window will be painted with transformed geometry.
             PAINT_WINDOW_TRANSFORMED    = 1 << 2,
-            // When set, the window won't be painted (set by default
-            // for hidden windows, can be unset in pre-paint).
-            PAINT_WINDOW_DISABLED       = 1 << 3,
             // Paint only a region of the screen (can be optimized, cannot
             // be used together with TRANSFORMED flags).
-            PAINT_SCREEN_REGION         = 1 << 4,
+            PAINT_SCREEN_REGION         = 1 << 3,
             // Whole screen will be painted with transformed geometry.
-            PAINT_SCREEN_TRANSFORMED    = 1 << 5,
+            PAINT_SCREEN_TRANSFORMED    = 1 << 4,
             // At least one window will be painted with transformed geometry.
-            PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 6,
+            PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 5,
             // Clear whole background as the very first step, without optimizing it
-            PAINT_SCREEN_BACKGROUND_FIRST = 1 << 7
+            PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6
             };
         // types of filtering available
         enum ImageFilterType { ImageFilterFast, ImageFilterGood };
@@ -132,6 +129,23 @@ class Scene::Window
         // access to the internal window class
         // TODO eventually get rid of this
         Toplevel* window();
+        // should the window be painted
+        bool isPaintingEnabled() const;
+        void resetPaintingEnabled();
+        // Flags explaining why painting should be disabled
+        enum
+            {
+            // Window will not be painted
+            PAINT_DISABLED              = 1 << 0,
+            // Window will not be painted because it is deleted
+            PAINT_DISABLED_BY_DELETE    = 1 << 1,
+            // Window will not be painted because of which desktop it's on
+            PAINT_DISABLED_BY_DESKTOP   = 1 << 2,
+            // Window will not be painted because it is minimized
+            PAINT_DISABLED_BY_MINIMIZE  = 1 << 3,
+            };
+        void enablePainting( int reason );
+        void disablePainting( int reason );
         // is the window visible at all
         bool isVisible() const;
         // is the window fully opaque
@@ -145,6 +159,7 @@ class Scene::Window
         Toplevel* toplevel;
         ImageFilterType filter;
     private:
+        int disable_painting;
         mutable QRegion shape_region;
         mutable bool shape_valid;
     };

@@ -69,7 +69,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* 
         {
         // This window will be transformed by the effect
         *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-        *mask &= ~Scene::PAINT_WINDOW_DISABLED;
+        w->enablePainting( Scene::Window::PAINT_DISABLED_BY_MINIMIZE );
         // If it's minimized window and effect is not fully active, then apply
         //  some transparency
         if( mActiveness < 1.0f && static_cast< Client* >( w->window() )->isMinimized() )

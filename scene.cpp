@@ -160,12 +160,11 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
     foreach( Window* w, stacking_order ) // bottom to top
         {
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
-        if( !w->isVisible())
-            mask |= PAINT_WINDOW_DISABLED;
+        w->resetPaintingEnabled();
         QRegion damage = infiniteRegion();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), &mask, &damage, time_diff );
-        if( mask & PAINT_WINDOW_DISABLED )
+        if( !w->isPaintingEnabled())
             continue;
         paintWindow( w, mask, damage );
         }
@@ -191,12 +190,11 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         if( region.isEmpty()) // completely clipped
             continue;
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
-        if( !w->isVisible())
-            mask |= PAINT_WINDOW_DISABLED;
+        w->resetPaintingEnabled();
         QRegion damage = region;
         // preparation step
         effects->prePaintWindow( effectWindow( w ), &mask, &damage, time_diff );
-        if( mask & PAINT_WINDOW_DISABLED )
+        if( !w->isPaintingEnabled())
             continue;
         // If the window is transparent, the transparent part will be done
         // in the 2nd pass.
@@ -243,6 +241,7 @@ void Scene::finalPaintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 Scene::Window::Window( Toplevel * c )
     : toplevel( c )
     , filter( ImageFilterFast )
+    , disable_painting( 0 )
     , shape_valid( false )
     {
     }
@@ -312,6 +311,35 @@ bool Scene::Window::isVisible() const
 bool Scene::Window::isOpaque() const
     {
     return toplevel->opacity() == 1.0 && !toplevel->hasAlpha();
+    }
+
+bool Scene::Window::isPaintingEnabled() const
+    {
+    return !disable_painting;
+    }
+
+void Scene::Window::resetPaintingEnabled()
+    {
+    disable_painting = 0;
+    if( dynamic_cast< Deleted* >( toplevel ) != NULL )
+        disable_painting |= PAINT_DISABLED_BY_DELETE;
+    if( !toplevel->isOnCurrentDesktop())
+        disable_painting |= PAINT_DISABLED_BY_DESKTOP;
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        {
+        if( c->isMinimized() )
+            disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
+        }
+    }
+
+void Scene::Window::enablePainting( int reason )
+    {
+    disable_painting &= ~reason;
+    }
+
+void Scene::Window::disablePainting( int reason )
+    {
+    disable_painting |= reason;
     }
 
 } // namespace

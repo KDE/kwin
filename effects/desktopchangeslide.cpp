@@ -40,9 +40,9 @@ void DesktopChangeSlideEffect::prePaintWindow( EffectWindow* w, int* mask, QRegi
         if( painting_old_desktop )
             {
             if( w->isOnDesktop( old_desktop ) && !w->isOnCurrentDesktop())
-                *mask &= ~Scene::PAINT_WINDOW_DISABLED; // paint windows on old desktop
+                w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
             else
-                *mask |= Scene::PAINT_WINDOW_DISABLED;
+                w->disablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
             }
         else
             {

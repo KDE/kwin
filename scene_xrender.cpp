@@ -169,12 +169,11 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
         if( region.isEmpty()) // completely clipped
             continue;
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
-        if( !w->isVisible())
-            mask |= PAINT_WINDOW_DISABLED;
+        w->resetPaintingEnabled();
         QRegion damage = region;
         // preparation step
         effects->prePaintWindow( effectWindow( w ), &mask, &damage, time_diff );
-        if( mask & PAINT_WINDOW_DISABLED )
+        if( !w->isPaintingEnabled())
             continue;
         // If the window is transparent, the transparent part will be done
         // in the 2nd pass.

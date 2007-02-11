@@ -24,7 +24,8 @@ void FadeOutEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region,
         if( windows[ w  ] > 0 )
             {
             *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
-            *mask &= ~( Scene::PAINT_WINDOW_OPAQUE | Scene::PAINT_WINDOW_DISABLED );
+            *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
+            w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
             }
         else
             {
