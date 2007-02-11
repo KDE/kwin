@@ -55,10 +55,10 @@ void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time 
             effectTerminated();
         }
 
-    // We need to mark the screen as transformed. Otherwise the whole screen
-    //  won't be repainted, resulting in artefacts
+    // We need to mark the screen windows as transformed. Otherwise the whole
+    //  screen won't be repainted, resulting in artefacts
     if( mActiveness > 0.0f )
-        *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
+        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(mask, region, time);
     }

@@ -34,9 +34,9 @@ void WavyWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     // Adjust elapsed time
     mTimeElapsed += (time / 1000.0f);
-    // We need to mark the screen as transformed. Otherwise the whole screen
-    //  won't be repainted, resulting in artefacts
-    *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
+    // We need to mark the screen windows as transformed. Otherwise the whole
+    //  screen won't be repainted, resulting in artefacts
+    *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(mask, region, time);
     }

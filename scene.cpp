@@ -95,7 +95,7 @@ void Scene::paintScreen( int* mask, QRegion* region )
     // preparation step
     effects->startPaint();
     effects->prePaintScreen( mask, region, time_diff );
-    if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
+    if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS ))
         { // Region painting is not possible with transformations,
           // because screen damage doesn't match transformed positions.
         *mask &= ~PAINT_SCREEN_REGION;
@@ -145,7 +145,7 @@ void Scene::idle()
 // the function that'll be eventually called by paintScreen() above
 void Scene::finalPaintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED ))
+    if( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS ))
         paintGenericScreen( mask, data );
     else
         paintSimpleScreen( mask, region );

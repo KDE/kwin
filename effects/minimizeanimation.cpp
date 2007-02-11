@@ -30,9 +30,9 @@ MinimizeAnimationEffect::MinimizeAnimationEffect()
 void MinimizeAnimationEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     if( mActiveAnimations > 0 )
-        // We need to mark the screen as transformed. Otherwise the whole
-        //  screen won't be repainted, resulting in artefacts
-        *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
+        // We need to mark the screen windows as transformed. Otherwise the
+        //  whole screen won't be repainted, resulting in artefacts
+        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(mask, region, time);
     }

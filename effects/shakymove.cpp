@@ -26,7 +26,7 @@ static const int SHAKY_MAX = sizeof( shaky_diff ) / sizeof( shaky_diff[ 0 ] );
 void ShakyMoveEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     if( !windows.isEmpty())
-        *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     effects->prePaintScreen( mask, region, time );
     }
 
