@@ -1487,14 +1487,14 @@ void KTranslucencyConfig::load( void )
   useTranslucency->setChecked(config->readEntry("UseTranslucency", false));
 
   config->setGroup( "Translucency" );
-  activeWindowTransparency->setChecked(config->readEntry("TranslucentActiveWindows", false);
-  inactiveWindowTransparency->setChecked(config->readEntry("TranslucentInactiveWindows", true);
-  movingWindowTransparency->setChecked(config->readEntry("TranslucentMovingWindows", false);
-  removeShadowsOnMove->setChecked(config->readEntry("RemoveShadowsOnMove", false);
-  removeShadowsOnResize->setChecked(config->readEntry("RemoveShadowsOnResize", false);
-  dockWindowTransparency->setChecked(config->readEntry("TranslucentDocks", true);
-  keepAboveAsActive->setChecked(config->readEntry("TreatKeepAboveAsActive", true);
-  onlyDecoTranslucent->setChecked(config->readEntry("OnlyDecoTranslucent", false);
+  activeWindowTransparency->setChecked(config->readEntry("TranslucentActiveWindows", false));
+  inactiveWindowTransparency->setChecked(config->readEntry("TranslucentInactiveWindows", true));
+  movingWindowTransparency->setChecked(config->readEntry("TranslucentMovingWindows", false));
+  removeShadowsOnMove->setChecked(config->readEntry("RemoveShadowsOnMove", false));
+  removeShadowsOnResize->setChecked(config->readEntry("RemoveShadowsOnResize", false));
+  dockWindowTransparency->setChecked(config->readEntry("TranslucentDocks", true));
+  keepAboveAsActive->setChecked(config->readEntry("TreatKeepAboveAsActive", true));
+  onlyDecoTranslucent->setChecked(config->readEntry("OnlyDecoTranslucent", false));
 
   activeWindowOpacity->setValue(config->readEntry("ActiveWindowOpacity",100));
   inactiveWindowOpacity->setValue(config->readEntry("InactiveWindowOpacity",75));
