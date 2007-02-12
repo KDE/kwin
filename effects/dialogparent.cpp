@@ -63,7 +63,7 @@ void DialogParentEffect::postPaintWindow( EffectWindow* w )
     // If strength is between 0 and 1, the effect is still in progress and the
     //  window has to be repainted during the next pass
     if( s > 0.0 && s < 1.0 )
-        w->window()->addDamageFull(); // trigger next animation repaint
+        w->window()->addRepaintFull(); // trigger next animation repaint
 
     // Call the next effect.
     effects->postPaintWindow( w );
@@ -71,7 +71,7 @@ void DialogParentEffect::postPaintWindow( EffectWindow* w )
 
 void DialogParentEffect::windowActivated( EffectWindow* t )
     {
-    // If this window is a dialog, we need to damage it's parent window, so
+    // If this window is a dialog, we need to repaint it's parent window, so
     //  that the effect could be run for it
     // Set the window to be faded (or NULL if no window is active).
     Client* c = qobject_cast<Client *>(t?t->window():NULL);
@@ -80,13 +80,13 @@ void DialogParentEffect::windowActivated( EffectWindow* t )
         // c is a modal dialog
         ClientList mainclients = c->mainClients();
         foreach( Client* parent, mainclients )
-            parent->addDamageFull();
+            parent->addRepaintFull();
         }
     }
 
 void DialogParentEffect::windowClosed( EffectWindow* t )
     {
-    // If this window is a dialog, we need to damage it's parent window, so
+    // If this window is a dialog, we need to repaint it's parent window, so
     //  that the effect could be run for it
     // Set the window to be faded (or NULL if no window is active).
     Client* c = qobject_cast<Client *>(t->window());
@@ -95,7 +95,7 @@ void DialogParentEffect::windowClosed( EffectWindow* t )
         // c is a modal dialog
         ClientList mainclients = c->mainClients();
         foreach( Client* parent, mainclients )
-            parent->addDamageFull();
+            parent->addRepaintFull();
         }
     }
 

@@ -39,7 +39,7 @@ void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion regi
 void MakeTransparentEffect::windowUserMovedResized( EffectWindow* c, bool first, bool last )
     {
     if( first || last )
-        c->window()->addDamageFull();
+        c->window()->addRepaintFull();
     }
 
 } // namespace

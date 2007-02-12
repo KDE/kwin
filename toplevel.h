@@ -81,9 +81,11 @@ class Toplevel
         bool hasAlpha() const;
         void setupCompositing();
         void finishCompositing();
-        void addDamage( const QRect& r );
-        void addDamage( int x, int y, int w, int h );
-        void addDamageFull();
+        void addRepaint( const QRect& r );
+        void addRepaint( int x, int y, int w, int h );
+        void addRepaintFull();
+        QRegion repaints() const;
+        void resetRepaints( const QRect& r );
         QRegion damage() const;
         void resetDamage( const QRect& r );
         EffectWindow* effectWindow();
@@ -96,6 +98,9 @@ class Toplevel
         void damageNotifyEvent( XDamageNotifyEvent* e );
         Pixmap createWindowPixmap() const;
         void discardWindowPixmap();
+        void addDamage( const QRect& r );
+        void addDamage( int x, int y, int w, int h );
+        void addDamageFull();
         void getWmClientLeader();
         void getWmClientMachine();
         void getResourceClass();
@@ -120,7 +125,8 @@ class Toplevel
         Workspace* wspace;
         Pixmap window_pix;
         Damage damage_handle;
-        QRegion damage_region;
+        QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
+        QRegion repaints_region; // updating, repaint just requires repaint of that area
         bool is_shape;
         EffectWindow* effect_window;
         QByteArray resource_name;
@@ -254,6 +260,11 @@ inline Pixmap Toplevel::windowPixmap( bool allow_create )
 inline QRegion Toplevel::damage() const
     {
     return damage_region;
+    }
+
+inline QRegion Toplevel::repaints() const
+    {
+    return repaints_region;
     }
 
 inline bool Toplevel::shape() const

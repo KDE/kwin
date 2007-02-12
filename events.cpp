@@ -479,7 +479,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             break;
         case Expose:
             if( e->xexpose.window == rootWindow() && compositing())  // root window needs repainting
-                addDamage( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );
+                addRepaint( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );
             break;
         default:
             if( e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable() )
@@ -595,7 +595,7 @@ bool Client::windowEvent( XEvent* e )
             {
             if( compositing())
                 {
-                addDamageFull();
+                addRepaintFull();
                 scene->windowOpacityChanged( this );
                 if( effects )
                     effects->windowOpacityChanged( effectWindow());
@@ -1610,7 +1610,7 @@ bool Unmanaged::windowEvent( XEvent* e )
         scene->windowOpacityChanged( this );
         if( effects )
             effects->windowOpacityChanged( effectWindow());
-        addDamageFull();
+        addRepaintFull();
         }
     switch (e->type) 
         {
@@ -1630,7 +1630,6 @@ bool Unmanaged::windowEvent( XEvent* e )
             if( e->type == Extensions::shapeNotifyEvent() )
                 {
                 detectShape( window());
-                addDamageFull();
                 if( compositing() )
                     discardWindowPixmap();
                 if( scene != NULL )
@@ -1660,14 +1659,11 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     QRect newgeom( e->x, e->y, e->width, e->height );
     if( newgeom == geom )
         return;
-    workspace()->addDamage( geometry()); // damage old area
+    workspace()->addRepaint( geometry()); // damage old area
     geom = newgeom;
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
-    // TODO add damage only if the window is not obscured
-    workspace()->addDamage( geometry());
-    // TODO maybe only damage changed area
-    addDamageFull();
+    discardWindowPixmap();
     }
 
 // ****************************************

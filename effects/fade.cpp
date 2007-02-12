@@ -65,7 +65,7 @@ void FadeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 void FadeEffect::postPaintWindow( EffectWindow* w )
     {
     if( windows.contains( w ) && windows.value( w ).isFading())
-        w->window()->addDamageFull(); // trigger next animation repaint
+        w->window()->addRepaintFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
     }
 
@@ -97,7 +97,7 @@ void FadeEffect::windowOpacityChanged( EffectWindow* c )
             }
         }
     windows[ c ].old_opacity = new_opacity;
-    c->window()->addDamageFull();
+    c->window()->addRepaintFull();
     }
 
 void FadeEffect::windowAdded( EffectWindow* c )
@@ -119,7 +119,7 @@ void FadeEffect::windowAdded( EffectWindow* c )
         windows[ c ].target = 1;
         windows[ c ].step_mult = 1 / c->window()->opacity();
         }
-    c->window()->addDamageFull();
+    c->window()->addRepaintFull();
     }
 
 void FadeEffect::windowClosed( EffectWindow* c )
@@ -141,7 +141,7 @@ void FadeEffect::windowClosed( EffectWindow* c )
         }
     windows[ c ].deleted = true;
     windows[ c ].target = 0;
-    c->window()->addDamageFull();
+    c->window()->addRepaintFull();
     static_cast< Deleted* >( c->window())->refWindow();
     }
 

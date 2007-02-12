@@ -43,7 +43,7 @@ void FadeInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
 void FadeInEffect::postPaintWindow( EffectWindow* w )
     {
     if( windows.contains( w ))
-        w->window()->addDamageFull(); // trigger next animation repaint
+        w->window()->addRepaintFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
     }
 
@@ -53,7 +53,7 @@ void FadeInEffect::windowAdded( EffectWindow* c )
     if( cc == NULL || cc->isOnCurrentDesktop())
         {
         windows[ c ] = 0;
-        c->window()->addDamageFull();
+        c->window()->addRepaintFull();
         }
     }
 

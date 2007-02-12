@@ -107,7 +107,7 @@ void PresentWindowsEffect::postPaintScreen()
     // If mActiveness is between 0 and 1, the effect is still in progress and the
     //  workspace has to be repainted during the next pass
     if( mActiveness > 0.0 && mActiveness < 1.0 )
-        workspace()->addDamageFull(); // trigger next animation repaint
+        workspace()->addRepaintFull(); // trigger next animation repaint
 
     // Call the next effect.
     effects->postPaintScreen();
@@ -190,7 +190,7 @@ void PresentWindowsEffect::rearrangeWindows()
     calculateWindowTransformationsKompose( clientlist );
 
     // Schedule entire desktop to be repainted
-    workspace()->addDamageFull();
+    workspace()->addRepaintFull();
     }
 
 void PresentWindowsEffect::calculateWindowTransformationsDumb(ClientList clientlist)

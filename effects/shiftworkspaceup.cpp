@@ -44,14 +44,14 @@ void ShiftWorkspaceUpEffect::paintScreen( int mask, QRegion region, ScreenPaintD
 void ShiftWorkspaceUpEffect::postPaintScreen()
     {
     if( up ? diff < 1000 : diff > 0 )
-        workspace()->addDamageFull(); // trigger next animation repaint
+        workspace()->addRepaintFull(); // trigger next animation repaint
     effects->postPaintScreen();
     }
 
 void ShiftWorkspaceUpEffect::tick()
     {
     up = !up;
-    workspace()->addDamageFull();
+    workspace()->addRepaintFull();
     }
 
 } // namespace

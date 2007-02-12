@@ -289,10 +289,10 @@ class Workspace : public QObject, public KDecorationDefines
 
         void toggleTopDockShadows(bool on);
         
-        void addDamage( const QRect& r );
-        void addDamage( int x, int y, int w, int h );
-        void addDamageFull();
-        // creates XComposite overlay window, cal initOverlay() afterwards
+        void addRepaint( const QRect& r );
+        void addRepaint( int x, int y, int w, int h );
+        void addRepaintFull();
+        // creates XComposite overlay window, call initOverlay() afterwards
         bool createOverlay();
         // init overlay and the destination window in it
         void setupOverlay( Window window );
@@ -525,6 +525,7 @@ class Workspace : public QObject, public KDecorationDefines
         void updateClientArea( bool force );
         
         void finishCompositing();
+        bool windowRepaintsPending() const;
 
         SystemTrayWindowList systemTrayWins;
 
@@ -688,7 +689,7 @@ class Workspace : public QObject, public KDecorationDefines
         QTimer compositeTimer;
         QTime lastCompositePaint;
         int compositeRate;
-        QRegion damage_region;
+        QRegion repaints_region;
         Window overlay; // XComposite overlay window
         QSlider *transSlider;
         QPushButton *transButton;

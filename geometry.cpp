@@ -1701,13 +1701,11 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     checkMaximizeGeometry();
     if( geom_before_block.size() != geom.size())
         {
-        addDamageFull(); // damage window only if it actually was a resize
+        discardWindowPixmap();
         if( scene != NULL )
             scene->windowGeometryShapeChanged( this );
         }
-    else
-        workspace()->addDamage( geom ); // damage window's new location
-    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
+    workspace()->addRepaint( geom_before_block );
     geom_before_block = geom;
     }
 
@@ -1763,10 +1761,10 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
-    addDamageFull();  // TODO add damage only in added area?
+    discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
-    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
+    workspace()->addRepaint( geom_before_block );
     geom_before_block = geom;
     }
 
@@ -1789,8 +1787,8 @@ void Client::move( int x, int y, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     // client itself is not damaged
-    workspace()->addDamage( geom_before_block ); // TODO add damage only if not obscured
-    workspace()->addDamage( geom ); // damage window's new location
+    workspace()->addRepaint( geom_before_block );
+    workspace()->addRepaint( geom ); // trigger repaint of window's new location
     geom_before_block = geom;
     }
 

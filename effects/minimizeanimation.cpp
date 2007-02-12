@@ -99,8 +99,8 @@ void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion re
 void MinimizeAnimationEffect::postPaintScreen()
     {
     if( mActiveAnimations > 0 )
-        // Damage the workspace so that everything would be repainted next time
-        workspace()->addDamageFull();
+        // Repaint the workspace so that everything would be repainted next time
+        workspace()->addRepaintFull();
 
     // Call the next effect.
     effects->postPaintScreen();

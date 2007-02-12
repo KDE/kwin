@@ -55,8 +55,8 @@ void ShakyMoveEffect::windowUserMovedResized( EffectWindow* c, bool first, bool 
     else if( last )
         {
         windows.remove( c );
-        // just damage whole screen, transformation is involved
-        c->window()->workspace()->addDamageFull();
+        // just repaint whole screen, transformation is involved
+        c->window()->workspace()->addRepaintFull();
         if( windows.isEmpty())
             timer.stop();
         }
@@ -80,8 +80,8 @@ void ShakyMoveEffect::tick()
             *it = 0;
         else
             ++(*it);
-        // just damage whole screen, transformation is involved
-        it.key()->window()->workspace()->addDamageFull();
+        // just repaint whole screen, transformation is involved
+        it.key()->window()->workspace()->addRepaintFull();
         }
     }
 

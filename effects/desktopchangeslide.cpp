@@ -85,7 +85,7 @@ void DesktopChangeSlideEffect::paintWindow( EffectWindow* w, int mask, QRegion r
 void DesktopChangeSlideEffect::postPaintScreen()
     {
     if( progress != MAX_PROGRESS )
-        Workspace::self()->addDamageFull(); // trigger next animation repaint
+        Workspace::self()->addRepaintFull(); // trigger next animation repaint
     effects->postPaintScreen();
     }
 
@@ -95,7 +95,7 @@ void DesktopChangeSlideEffect::desktopChanged( int old )
         {
         old_desktop = old;
         progress = 0;
-        Workspace::self()->addDamageFull();
+        Workspace::self()->addRepaintFull();
         }
     }
 

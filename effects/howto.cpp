@@ -108,16 +108,16 @@ void HowtoEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Window
     }
 
 // The function that is called after the painting pass is finished. When an animation is going on,
-// it can damage some areas so that the next painting pass has to repaint them again.
+// it can add repaints of some areas so that the next painting pass has to repaint them again.
 void HowtoEffect::postPaintWindow( EffectWindow* w )
     {
     // Is this the window to be faded out and in again?
     if( w == fade_window )
         {
-        // Damage the whole window, this will cause it to be repainted the next painting pass.
+        // Trigger repaint of the whole window, this will cause it to be repainted the next painting pass.
         // Currently the API for effects is not complete, so for now window() is used to access
         // internal class Toplevel. This should change in the future.
-        w->window()->addDamageFull(); // trigger next animation repaint
+        w->window()->addRepaintFull(); // trigger next animation repaint
         }
     // Call the next effect.
     effects->postPaintWindow( w );
@@ -132,8 +132,8 @@ void HowtoEffect::windowActivated( EffectWindow* c )
         {
         // If there is a window to be faded, reset the progress to zero.
         progress = 0;
-        // And damage the window so that it needs to be repainted.
-        c->window()->addDamageFull();
+        // And add repaint to the window so that it needs to be repainted.
+        c->window()->addRepaintFull();
         }
     }
 

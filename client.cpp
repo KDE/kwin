@@ -190,8 +190,8 @@ void Client::releaseWindow( bool on_shutdown )
        leaveMoveResize();
     finishWindowRules();
     ++block_geometry_updates;
-    if( isNormalState()) // is mapped?
-        workspace()->addDamage( geometry());
+    if( isOnCurrentDesktop() && isShown( true ))
+        workspace()->addRepaint( geometry());
     setMappingState( WithdrawnState );
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
@@ -232,7 +232,6 @@ void Client::releaseWindow( bool on_shutdown )
     XDestroyWindow( display(), frameId());
 //    frame = None;
     --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
-    workspace()->addDamage( geometry());
     disownDataPassedToDeleted();
     del->unrefWindow();
     deleteClient( this, Allowed );
@@ -257,8 +256,8 @@ void Client::destroyClient()
        leaveMoveResize();
     finishWindowRules();
     ++block_geometry_updates;
-    if( isNormalState()) // is mapped?
-        workspace()->addDamage( geometry());
+    if( isOnCurrentDesktop() && isShown( true ))
+        workspace()->addRepaint( geometry());
     setModal( false );
     hidden = true; // so that it's not considered visible anymore
     workspace()->clientHidden( this );
@@ -271,7 +270,6 @@ void Client::destroyClient()
     XDestroyWindow( display(), frameId());
 //    frame = None;
     --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
-    workspace()->addDamage( geometry());
     disownDataPassedToDeleted();
     del->unrefWindow();
     deleteClient( this, Allowed );
@@ -315,7 +313,6 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
     if( do_show )
         decoration->widget()->show();
     updateFrameExtents();
-    addDamageFull();
     }
 
 void Client::destroyDecoration()
@@ -337,7 +334,6 @@ void Client::destroyDecoration()
             discardWindowPixmap();
         if( scene != NULL && !deleting ) 
             scene->windowGeometryShapeChanged( this );
-        addDamageFull();
         }
     }
 
@@ -466,7 +462,6 @@ void Client::updateShape()
         discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
-    addDamageFull();
     // workaround for #19644 - shaped windows shouldn't have decoration
     if( shape() && !noBorder()) 
         {
@@ -505,7 +500,6 @@ void Client::setMask( const QRegion& reg, int mode )
         discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
-    addDamageFull();
     }
 
 QRegion Client::mask() const
@@ -788,6 +782,7 @@ void Client::setShade( ShadeMode mode )
         // we're about to shade, texx xcompmgr to prepare
         long _shade = 1;
         XChangeProperty(display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);
+        workspace()->addRepaint( geometry());
         // shade
         int h = height();
         shade_geometry_change = true;
@@ -824,13 +819,9 @@ void Client::setShade( ShadeMode mode )
         // tell xcompmgr shade's done
         _shade = 2;
         XChangeProperty(display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);    
-        if( isNormalState()) // is mapped?
-            workspace()->addDamage( geometry());
         }
     else 
         {
-        if( isNormalState()) // is mapped?
-            workspace()->addDamage( geometry());
         int h = height();
         shade_geometry_change = true;
         QSize s( sizeForClientSize( clientSize()));
@@ -862,6 +853,7 @@ void Client::setShade( ShadeMode mode )
     checkMaximizeGeometry();
     info->setState( isShade() ? NET::Shaded : 0, NET::Shaded );
     info->setState( isShown( false ) ? 0 : NET::Hidden, NET::Hidden );
+    discardWindowPixmap();
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
@@ -997,7 +989,7 @@ void Client::rawShow()
 */
 void Client::rawHide()
     {
-    workspace()->addDamage( geometry());
+    workspace()->addRepaint( geometry());
 // Here it may look like a race condition, as some other client might try to unmap
 // the window between these two XSelectInput() calls. However, they're supposed to
 // use XWithdrawWindow(), which also sends a synthetic event to the root window,

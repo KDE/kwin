@@ -119,7 +119,7 @@ void Workspace::setupCompositing()
     else if( dynamic_cast< SceneBasic* >( scene ))
         kDebug( 1212 ) << "X compositing" << endl;
     new EffectsHandler(); // sets also the 'effects' pointer
-    addDamageFull();
+    addRepaintFull();
     foreach( Client* c, clients )
         c->setupCompositing();
     foreach( Client* c, desktops )
@@ -163,7 +163,7 @@ void Workspace::finishCompositing()
     effects = NULL;
     delete scene;
     scene = NULL;
-    damage_region = QRegion();
+    repaints_region = QRegion();
     for( ClientList::ConstIterator it = clients.begin();
          it != clients.end();
          ++it )
@@ -184,25 +184,25 @@ void Workspace::lostCMSelection()
     finishCompositing();
     }
 
-void Workspace::addDamage( int x, int y, int w, int h )
+void Workspace::addRepaint( int x, int y, int w, int h )
     {
     if( !compositing())
         return;
-    damage_region += QRegion( x, y, w, h );
+    repaints_region += QRegion( x, y, w, h );
     }
 
-void Workspace::addDamage( const QRect& r )
+void Workspace::addRepaint( const QRect& r )
     {
     if( !compositing())
         return;
-    damage_region += r;
+    repaints_region += r;
     }
     
-void Workspace::addDamageFull()
+void Workspace::addRepaintFull()
     {
     if( !compositing())
         return;
-    damage_region = QRegion( 0, 0, displayWidth(), displayHeight());
+    repaints_region = QRegion( 0, 0, displayWidth(), displayHeight());
     }
 
 void Workspace::performCompositing()
@@ -214,7 +214,7 @@ void Workspace::performCompositing()
     // is started.
     if( lastCompositePaint.elapsed() < 5 )
         return;
-    if( damage_region.isEmpty()) // no damage
+    if( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
         {
         scene->idle();
         return;
@@ -237,10 +237,16 @@ void Workspace::performCompositing()
         }
     foreach( Deleted* c, deleted ) // TODO remember stacking order somehow
         windows.append( c );
-    QRegion damage = damage_region;
-    // clear all damage, so that post-pass can add damage for the next repaint
-    damage_region = QRegion();
-    scene->paint( damage, windows );
+    foreach( Toplevel* c, windows )
+        { // this could be possibly optimized WRT obscuring, but that'd need being already
+          // past prePaint() phase - probably not worth it
+        repaints_region |= c->repaints().translated( c->pos());
+        c->resetRepaints( c->rect());
+        }
+    QRegion repaints = repaints_region;
+    // clear all repaints, so that post-pass can add repaints for the next repaint
+    repaints_region = QRegion();
+    scene->paint( repaints, windows );
     if( scene->waitSyncAvailable() && options->glVSync )
         { // if we're using vsync, then time the next paint pass to
           // before the next available sync
@@ -252,6 +258,23 @@ void Workspace::performCompositing()
             compositeTimer.start( compositeRate - paintTime );
         }
     lastCompositePaint.start();
+    }
+
+bool Workspace::windowRepaintsPending() const
+    {
+    foreach( Toplevel* c, clients )
+        if( !c->repaints().isEmpty())
+            return true;
+    foreach( Toplevel* c, desktops )
+        if( !c->repaints().isEmpty())
+            return true;
+    foreach( Toplevel* c, unmanaged )
+        if( !c->repaints().isEmpty())
+            return true;
+    foreach( Toplevel* c, deleted )
+        if( !c->repaints().isEmpty())
+            return true;
+    return false;
     }
 
 bool Workspace::createOverlay()
@@ -319,6 +342,7 @@ void Toplevel::finishCompositing()
     XDamageDestroy( display(), damage_handle );
     damage_handle = None;
     damage_region = QRegion();
+    repaints_region = QRegion();
     effect_window = NULL;
     }
 
@@ -328,6 +352,7 @@ void Toplevel::discardWindowPixmap()
         return;
     XFreePixmap( display(), window_pix );
     window_pix = None;
+    addDamageFull();
     }
 
 Pixmap Toplevel::createWindowPixmap() const
@@ -369,22 +394,44 @@ void Toplevel::addDamage( int x, int y, int w, int h )
     // may be a damage event coming with size larger than the current window size
     r &= rect();
     damage_region += r;
-    r.translate( this->x(), this->y());
-    // this could be possibly optimized to damage Workspace only if the toplevel
-    // is actually visible there and not obscured by something, but I guess
-    // that's not really worth it
-    workspace()->addDamage( r );
+    repaints_region += r;
     }
 
 void Toplevel::addDamageFull()
     {
-    damage_region = QRegion(); // first reset e.g. in case of shrinking
-    addDamage( rect());
+    if( !compositing())
+        return;
+    damage_region = rect();
+    repaints_region = rect();
     }
 
 void Toplevel::resetDamage( const QRect& r )
     {
     damage_region -= r;
+    }
+
+void Toplevel::addRepaint( const QRect& r )
+    {
+    addRepaint( r.x(), r.y(), r.width(), r.height());
+    }
+
+void Toplevel::addRepaint( int x, int y, int w, int h )
+    {
+    if( !compositing())
+        return;
+    QRect r( x, y, w, h );
+    r &= rect();
+    repaints_region += r;
+    }
+
+void Toplevel::addRepaintFull()
+    {
+    repaints_region = rect();
+    }
+
+void Toplevel::resetRepaints( const QRect& r )
+    {
+    repaints_region -= r;
     }
 
 #endif

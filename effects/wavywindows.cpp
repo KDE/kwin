@@ -83,8 +83,8 @@ void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
 
 void WavyWindowsEffect::postPaintScreen()
     {
-    // Damage the workspace so that everything would be repainted next time
-    workspace()->addDamageFull();
+    // Repaint the workspace so that everything would be repainted next time
+    workspace()->addRepaintFull();
 
     // Call the next effect.
     effects->postPaintScreen();

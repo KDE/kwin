@@ -80,7 +80,7 @@ void Unmanaged::release()
     if( Extensions::shapeAvailable())
         XShapeSelectInput( display(), window(), NoEventMask );
     XSelectInput( display(), window(), NoEventMask );
-    workspace()->addDamage( geometry());
+    workspace()->addRepaint( geometry());
     disownDataPassedToDeleted();
     del->unrefWindow();
     deleteUnmanaged( this, Allowed );

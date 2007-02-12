@@ -119,7 +119,7 @@ void Workspace::updateStackingOrder( bool propagate_new_clients )
     if( changed || propagate_new_clients )
         {
         propagateClients( propagate_new_clients );
-        addDamageFull();
+        addRepaintFull();
         }
     }
 

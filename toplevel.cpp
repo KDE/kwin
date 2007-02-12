@@ -101,6 +101,7 @@ void Toplevel::copyToDeleted( Toplevel* c )
     window_pix = c->window_pix;
     damage_handle = None;
     damage_region = c->damage_region;
+    repaints_region = c->repaints_region;
     is_shape = c->is_shape;
     effect_window = c->effect_window;
     if( effect_window != NULL )

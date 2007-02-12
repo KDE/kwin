@@ -48,7 +48,7 @@ void FadeOutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wind
 void FadeOutEffect::postPaintWindow( EffectWindow* w )
     {
     if( windows.contains( w ))
-        w->window()->addDamageFull(); // trigger next animation repaint
+        w->window()->addRepaintFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
     }
 
@@ -58,7 +58,7 @@ void FadeOutEffect::windowClosed( EffectWindow* c )
     if( cc == NULL || cc->isOnCurrentDesktop())
         {
         windows[ c ] = 1; // count down to 0
-        c->window()->addDamageFull();
+        c->window()->addRepaintFull();
         static_cast< Deleted* >( c->window())->refWindow();
         }
     }

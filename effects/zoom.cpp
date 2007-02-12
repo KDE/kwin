@@ -53,7 +53,7 @@ void ZoomEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 void ZoomEffect::postPaintScreen()
     {
     if( zoom != target_zoom )
-        workspace()->addDamageFull();
+        workspace()->addRepaintFull();
     effects->postPaintScreen();
     }
 

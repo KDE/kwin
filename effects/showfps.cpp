@@ -217,7 +217,7 @@ void ShowFpsEffect::postPaintScreen()
     paints[ paints_pos ] = t.elapsed();
     if( ++paints_pos == NUM_PAINTS )
         paints_pos = 0;
-    workspace()->addDamage( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
+    workspace()->addRepaint( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
     }
 
 } // namespace

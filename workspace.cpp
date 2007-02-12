@@ -131,7 +131,6 @@ Workspace::Workspace( bool restore )
     forced_global_mouse_grab( false ),
     cm_selection( NULL ),
     compositeRate( 0 ),
-    damage_region( None ),
     overlay( None ),
     transSlider( NULL ),
     transButton( NULL )
