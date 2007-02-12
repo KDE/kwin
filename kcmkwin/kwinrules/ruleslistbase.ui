@@ -17,7 +17,7 @@
         <number>0</number>
       </property>
       <item rowspan="6" row="0" column="0" colspan="1" >
-        <widget class="KListBox" name="rules_listbox" />
+        <widget class="KListWidget" name="rules_listbox" />
       </item>
       <item row="0" column="1" >
         <widget class="KPushButton" name="new_button" >
@@ -80,9 +80,9 @@
   <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <customwidgets>
     <customwidget>
-      <class>KListBox</class>
-      <extends>Q3ListBox</extends>
-      <header>klistbox.h</header>
+      <class>KListWidget</class>
+      <extends>QListWidget</extends>
+      <header>klistwidget.h</header>
     </customwidget>
   </customwidgets>
   <includes>

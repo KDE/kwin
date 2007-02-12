@@ -26,7 +26,7 @@
 
 #include "../../rules.h"
 
-class Q3ListBoxItem;
+class QListWidgetItem;
 
 namespace KWinInternal
 {
@@ -58,7 +58,7 @@ class KCMRulesList
         void deleteClicked();
         void moveupClicked();
         void movedownClicked();
-        void activeChanged( Q3ListBoxItem* );
+        void activeChanged( QListWidgetItem* );
     private:
         QVector< Rules* > rules;
     };

@@ -329,7 +329,7 @@
                             <cstring>types</cstring>
                         </property>
                     </widget>
-                    <widget class="KListBox" row="1" column="0" rowspan="1" colspan="4">
+                    <widget class="KListWidget" row="1" column="0" rowspan="1" colspan="4">
                         <item>
                             <property name="text">
                                 <string>Normal Window</string>
