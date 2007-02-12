@@ -73,7 +73,7 @@ class Effect
         virtual void postPaintWindow( EffectWindow* w );
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        virtual void windowOpacityChanged( EffectWindow* c );
+        virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
         virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
@@ -138,7 +138,7 @@ class EffectsHandler
         // internal (used by kwin core or compositing code)
         void startPaint();
         void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        void windowOpacityChanged( EffectWindow* c );
+        void windowOpacityChanged( EffectWindow* c, double old_opacity );
         void windowAdded( EffectWindow* c );
         void windowClosed( EffectWindow* c );
         void windowDeleted( EffectWindow* c );

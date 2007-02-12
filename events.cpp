@@ -561,6 +561,7 @@ bool Client::windowEvent( XEvent* e )
     if( e->xany.window == window()) // avoid doing stuff on frame or wrapper
         {
         unsigned long dirty[ 2 ];
+        double old_opacity = opacity();
         info->event( e, dirty, 2 ); // pass through the NET stuff
 
         if ( ( dirty[ WinInfo::PROTOCOLS ] & NET::WMName ) != 0 )
@@ -598,7 +599,7 @@ bool Client::windowEvent( XEvent* e )
                 addRepaintFull();
                 scene->windowOpacityChanged( this );
                 if( effects )
-                    effects->windowOpacityChanged( effectWindow());
+                    effects->windowOpacityChanged( effectWindow(), old_opacity );
                 }
             else
                 { // forward to the frame if there's possibly another compositing manager running
@@ -1603,14 +1604,18 @@ void Client::keyPressEvent( uint key_code )
 
 bool Unmanaged::windowEvent( XEvent* e )
     {
+    double old_opacity = opacity();
     unsigned long dirty[ 2 ];
     info->event( e, dirty, 2 ); // pass through the NET stuff
     if( dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity )
         {
-        scene->windowOpacityChanged( this );
-        if( effects )
-            effects->windowOpacityChanged( effectWindow());
-        addRepaintFull();
+        if( compositing())
+            {
+            addRepaintFull();
+            scene->windowOpacityChanged( this );
+            if( effects )
+                effects->windowOpacityChanged( effectWindow(), old_opacity );
+            }
         }
     switch (e->type) 
         {

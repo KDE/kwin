@@ -292,11 +292,18 @@ double Toplevel::opacity() const
     return info->opacity() * 1.0 / 0xffffffff;
     }
 
-void Toplevel::setOpacity( double opacity )
+void Toplevel::setOpacity( double new_opacity )
     {
-    opacity = qBound( 0.0, opacity, 1.0 );
-    info->setOpacity( static_cast< unsigned long >( opacity * 0xffffffff ));
-    // we'll react on PropertyNotify
+    double old_opacity = opacity();
+    new_opacity = qBound( 0.0, new_opacity, 1.0 );
+    info->setOpacity( static_cast< unsigned long >( new_opacity * 0xffffffff ));
+    if( compositing())
+        {
+        addRepaintFull();
+        scene->windowOpacityChanged( this );
+        if( effects )
+            effects->windowOpacityChanged( effectWindow(), old_opacity );
+        }
     }
 
 } // namespace

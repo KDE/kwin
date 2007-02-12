@@ -27,7 +27,7 @@ class FadeEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
         // TODO react also on virtual desktop changes
-        virtual void windowOpacityChanged( EffectWindow* c );
+        virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
         virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
@@ -41,20 +41,16 @@ class FadeEffect::WindowInfo
     {
     public:
         WindowInfo()
-            : deleted( false )
-            , opacity_is_zero( false )
-            , old_opacity( 0 )
-            , current( 0 )
+            : current( 0 )
             , target( 0 )
             , step_mult( 0 )
+            , deleted( false )
             {};
         bool isFading() const;
-        bool deleted;
-        bool opacity_is_zero;
-        double old_opacity;
         double current;
         double target;
         double step_mult;
+        bool deleted;
     };
 
 inline bool FadeEffect::WindowInfo::isFading() const
