@@ -41,10 +41,6 @@ class Atoms
         Atom kde_system_tray_embedding;
         Atom net_wm_take_activity;
         Atom net_wm_window_opacity;
-        Atom net_wm_window_shadow;
-        Atom net_wm_window_shade;
-        Atom net_wm_window_shapable;
-        Atom net_wm_window_decohash;
         Atom xdnd_aware;
         Atom xdnd_position;
         Atom net_frame_extents;

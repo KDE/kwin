@@ -80,18 +80,6 @@ Atoms::Atoms()
     atoms[n] = &net_wm_window_opacity;
     names[n++] = (char*) "_NET_WM_WINDOW_OPACITY";
 
-    atoms[n] = &net_wm_window_shadow;
-    names[n++] = (char*) "_KDE_WM_WINDOW_SHADOW";
-
-    atoms[n] = &net_wm_window_shade;
-    names[n++] = (char*) "_KDE_WM_WINDOW_SHADE";
-    
-    atoms[n] = &net_wm_window_shapable;
-    names[n++] = (char*) "_KDE_WM_WINDOW_SHAPABLE";
-    
-    atoms[n] = &net_wm_window_decohash;
-    names[n++] = (char*) "_KDE_WM_WINDOW_DECOHASH";
-        
     Atom fake;
     atoms[n] = &fake;
     names[n++] = (char *) "_DT_SM_WINDOW_INFO";

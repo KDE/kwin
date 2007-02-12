@@ -779,9 +779,6 @@ void Client::setShade( ShadeMode mode )
 // TODO all this unmapping, resizing etc. feels too much duplicated from elsewhere
     if ( isShade()) 
         { // shade_mode == ShadeNormal
-        // we're about to shade, texx xcompmgr to prepare
-        long _shade = 1;
-        XChangeProperty(display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);
         workspace()->addRepaint( geometry());
         // shade
         int h = height();
@@ -792,8 +789,6 @@ void Client::setShade( ShadeMode mode )
         XUnmapWindow( display(), wrapper );
         XUnmapWindow( display(), client );
         XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
-        //as we hid the unmap event, xcompmgr didn't recognize the client wid has vanished, so we'll extra inform it        
-        //done xcompmgr workaround
 // FRAME       repaint( false );
 //        bool wasStaticContents = testWFlags( WStaticContents );
 //        setWFlags( WStaticContents );
@@ -816,9 +811,6 @@ void Client::setShade( ShadeMode mode )
             else
                 workspace()->focusToNull();
             }
-        // tell xcompmgr shade's done
-        _shade = 2;
-        XChangeProperty(display(), frameId(), atoms->net_wm_window_shade, XA_CARDINAL, 32, PropModeReplace, (unsigned char *) &_shade, 1L);    
         }
     else 
         {
@@ -846,7 +838,6 @@ void Client::setShade( ShadeMode mode )
             setActive( true );
         XMapWindow( display(), wrapperId());
         XMapWindow( display(), window());
-        XDeleteProperty (display(), client, atoms->net_wm_window_shade);
         if ( isActive() )
             workspace()->requestFocus( this );
         }
