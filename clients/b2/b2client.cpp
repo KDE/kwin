@@ -9,7 +9,7 @@
  *   Thin frame in fixed size windows, titlebar gradient support, accessibility
  *   improvements, customizable menu double click action and button hover
  *   effects are
- *   Copyright (c) 2003,2004 Luciano Montanaro <mikelima@cirulla.net>
+ *   Copyright (c) 2003, 2004, 2006 Luciano Montanaro <mikelima@cirulla.net>
  */
 
 #include "b2client.h"
@@ -144,10 +144,10 @@ static void read_config(B2ClientFactory *f)
 	thickness = 8;
 	break;
     case KDecoration::BorderHuge:
-	thickness = 12;
-	break;
     case KDecoration::BorderVeryHuge:
     case KDecoration::BorderOversized:
+	thickness = 12;
+	break;
     case KDecoration::BorderNormal:
     default:
 	thickness = 4;
@@ -199,37 +199,37 @@ static void create_pixmaps()
     for (i = 0; i < NUM_PIXMAPS; i++) {
 
         switch (i / NumStates) {
-            case P_MAX: // will be initialized by copying P_CLOSE
-            case P_RESIZE:
-                pixmap[i] = new QPixmap();
-                break;
-            case P_ICONIFY:
-                pixmap[i] = new QPixmap(10, 10);
-                break;
-            case P_SHADE:
-            case P_CLOSE:
-                pixmap[i] = new QPixmap(bsize, bsize);
-                break;
-            default:
-                pixmap[i] = new QPixmap(16, 16);
-                break;
+	case P_MAX: // will be initialized by copying P_CLOSE
+	case P_RESIZE:
+	    pixmap[i] = new QPixmap();
+	    break;
+	case P_ICONIFY:
+	    pixmap[i] = new QPixmap(10, 10);
+	    break;
+	case P_SHADE:
+	case P_CLOSE:
+	    pixmap[i] = new QPixmap(bsize, bsize);
+	    break;
+	default:
+	    pixmap[i] = new QPixmap(16, 16);
+	    break;
         }
     }
 
     // there seems to be no way to load X bitmaps from data properly, so
     // we need to create new ones for each mask :P
-    QBitmap pinupMask = QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits);
+    QBitmap pinupMask = QBitmap::fromData(QSize(16, 16), pinup_mask_bits);
     PIXMAP_A(P_PINUP)->setMask(pinupMask);
     PIXMAP_I(P_PINUP)->setMask(pinupMask);
-    QBitmap pindownMask = QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits);
+    QBitmap pindownMask = QBitmap::fromData(QSize(16, 16), pindown_mask_bits);
     PIXMAP_AD(P_PINUP)->setMask(pindownMask);
     PIXMAP_ID(P_PINUP)->setMask(pindownMask);
 
-    QBitmap menuMask = QBitmap::fromData(QSize( 16, 16 ), menu_mask_bits);
+    QBitmap menuMask = QBitmap::fromData(QSize(16, 16), menu_mask_bits);
     for (i = 0; i < NumStates; i++)
 	pixmap[P_MENU * NumStates + i]->setMask(menuMask);
 
-    QBitmap helpMask = QBitmap::fromData(QSize( 16, 16 ), help_mask_bits);
+    QBitmap helpMask = QBitmap::fromData(QSize(16, 16), help_mask_bits);
     for (i = 0; i < NumStates; i++)
 	pixmap[P_HELP * NumStates + i]->setMask(helpMask);
 
@@ -309,10 +309,9 @@ bool B2ClientFactory::reset(unsigned long changed)
     return needsReset;
 }
 
-bool B2ClientFactory::supports( Ability ability )
+bool B2ClientFactory::supports(Ability ability)
 {
-    switch( ability )
-    {
+    switch (ability) {
         case AbilityAnnounceButtons:
         case AbilityButtonMenu:
         case AbilityButtonOnAllDesktops:
@@ -416,7 +415,7 @@ void B2Client::init()
     }
 
     // titlebar
-    g->addItem( new QSpacerItem( 0, buttonSize + 4 ), 0, 0 );
+    g->addItem( new QSpacerItem(0, buttonSize + 4), 0, 0 );
 
     titlebar = new B2Titlebar(this);
     titlebar->setMinimumWidth(buttonSize + 4);
@@ -650,7 +649,7 @@ void B2Client::paintEvent(QPaintEvent* e)
 	    qDrawShadePanel(&p, 1, t.bottom() - thickness + 2,
 	    	width() - 2, fHeight - 2 - bb + thickness, fillColor, false);
 	    if (thickness == 4) {
-		p.setPen(fillColor.color( QPalette::Background ) );
+		p.setPen(fillColor.color(QPalette::Background));
 		p.drawRect(thickness - 2, t.bottom() - 1,
 			width() - 2 * (thickness - 2), fHeight + 4 - bDepth);
 	    } else if (thickness > 4) {
@@ -686,12 +685,12 @@ void B2Client::paintEvent(QPaintEvent* e)
 	p.fillRect(hx + 1, height() - thickness - 3,
 		hw - 2, thickness + 2, fillBrush);
 
-	p.setPen(fillColor.color( QPalette::Dark ));
+	p.setPen(fillColor.color(QPalette::Dark));
 	p.drawLine(width() - 2, height() - thickness - 4,
 		width() - 2, height() - 2);
 	p.drawLine(hx + 1, height() - 2, width() - 2, height() - 2);
 
-	p.setPen(fillColor.color( QPalette::Light ));
+	p.setPen(fillColor.color(QPalette::Light));
 	p.drawLine(hx + 1, height() - thickness - 2,
 		hx + 1, height() - 3);
 	p.drawLine(hx + 1, height() - thickness - 3,
@@ -729,7 +728,7 @@ void B2Client::doShape()
     }
     if (t.right() < width() - 1) {
 	mask -= QRect(width() - 1,
-		t.height() - thickness, 1, 1); //top right point
+		t.height() - thickness, 1, 1); // top right point
 	mask -= QRect(t.right() + 1, 0,
 		width() - t.right() - 1, t.height() - thickness);
     }
@@ -856,7 +855,7 @@ void B2Client::activeChange()
     titlebar->repaint();
 
     QColor c = options()->palette(
-				KDecoration::ColorTitleBar, isActive()).color(QPalette::Active, QPalette::Button);
+	    KDecoration::ColorTitleBar, isActive()).color(QPalette::Active, QPalette::Button);
 
     for (int i = 0; i < BtnCount; i++)
         if (button[i]) {
@@ -872,7 +871,7 @@ void B2Client::shadeChange()
     g->activate();
     doShape();
     if (B2Button *b = button[BtnShade]) {
-	b->setToolTip( isSetShade() ? i18n("Unshade") : i18n("Shade"));
+	b->setToolTip(isSetShade() ? i18n("Unshade") : i18n("Shade"));
     }
 }
 
@@ -940,7 +939,7 @@ void B2Client::unobscureTitlebar()
 	return;
     }
     in_unobs = 1;
-    QRegion reg(QRect(0,0,width(), buttonSize + 4));
+    QRegion reg(QRect(0, 0, width(), buttonSize + 4));
     reg = unobscuredRegion(reg);
     if (!reg.isEmpty()) {
         // there is at least _one_ pixel from our title area, which is not
@@ -955,8 +954,8 @@ void B2Client::unobscureTitlebar()
 static void redraw_pixmaps()
 {
     int i;
-		QPalette aGrp = options()->palette(KDecoration::ColorButtonBg, true);
-		QPalette iGrp = options()->palette(KDecoration::ColorButtonBg, false);
+    QPalette aGrp = options()->palette(KDecoration::ColorButtonBg, true);
+    QPalette iGrp = options()->palette(KDecoration::ColorButtonBg, false);
 
     // close
     drawB2Rect(PIXMAP_A(P_CLOSE), aGrp.color( QPalette::Button ), false);
@@ -1137,10 +1136,10 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
 	if (barRight > geom.right()) barRight = geom.right();
         // line width is 5 pixels, so compensate for the 2 outer pixels (#88657)
         QRect g = geom;
-        g.setLeft( g.left() + 2 );
-        g.setTop( g.top() + 2 );
-        g.setRight( g.right() - 2 );
-        g.setBottom( g.bottom() - 2 );
+        g.setLeft(g.left() + 2);
+        g.setTop(g.top() + 2);
+        g.setRight(g.right() - 2);
+        g.setBottom(g.bottom() - 2);
         frameTop += 2;
         barLeft += 2;
         barRight -= 2;
@@ -1209,7 +1208,7 @@ B2Button::B2Button(B2Client *_client, QWidget *parent,
     client = _client;
     useMiniIcon = false;
     setFixedSize(buttonSize, buttonSize);
-    this->setToolTip( tip);
+    this->setToolTip(tip);
 }
 
 
@@ -1232,7 +1231,8 @@ void B2Button::drawButton(QPainter *p)
 	p->fillRect(rect(), bg);
     }
     if (useMiniIcon) {
-        QPixmap miniIcon = client->icon().pixmap(style()->pixelMetric( QStyle::PM_SmallIconSize ),
+        QPixmap miniIcon = client->icon().pixmap(
+		style()->pixelMetric(QStyle::PM_SmallIconSize),
 		client->isActive() ? QIcon::Normal : QIcon::Disabled);
         p->drawPixmap((width() - miniIcon.width()) / 2,
                       (height() - miniIcon.height()) / 2, miniIcon);
@@ -1386,7 +1386,7 @@ void B2Titlebar::resizeEvent(QResizeEvent *)
 
 void B2Titlebar::paintEvent(QPaintEvent *)
 {
-    if(client->isActive())
+    if (client->isActive())
         bitBlt(this, 0, 0, &titleBuffer, 0, 0, titleBuffer.width(),
                titleBuffer.height());
     else {
@@ -1436,6 +1436,6 @@ void B2Titlebar::mouseMoveEvent(QMouseEvent * e)
 
 #include "b2client.moc"
 
-// vim: sw=4
+// vim: sw=4 ts=8
 
 #endif // CLIENTS/B2/B2CLIENT.CPP

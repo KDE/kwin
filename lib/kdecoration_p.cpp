@@ -145,15 +145,15 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QFont old_activeFontSmall = activeFontSmall;
     QFont old_inactiveFontSmall = inactiveFontSmall;
 
-    QFont activeFontGuess = KGlobalSettings::generalFont();
-    activeFontGuess.setBold(true);
-    activeFontGuess.setPixelSize(12);
+    QFont activeFontGuess = KGlobalSettings::windowTitleFont();
 
     activeFont = config->readEntry("activeFont", activeFontGuess);
     inactiveFont = config->readEntry("inactiveFont", activeFont);
 
     activeFontSmall = activeFont;
+#ifdef __GNUC__
 #warning KDE4 : is it useful ? ( temporary hack )
+#endif    
 //    activeFontSmall.setPointSize(activeFont.pointSize() - 2 > 0 ? activeFont.pointSize() - 2 : activeFont.pointSize()+1 );
     activeFontSmall = config->readEntry("activeFontSmall", activeFontSmall);
     inactiveFontSmall = config->readEntry("inactiveFontSmall", activeFontSmall);
