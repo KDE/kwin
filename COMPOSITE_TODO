@@ -193,8 +193,10 @@ Effects TODO
 
 + minimize/shade effects
     - to replace the ones from KWin core
-    - Client::animateMinimizeOrUnminimize()
-    - Client::setShade()
+/       - minimizing
+            - check support for it and the avoid_animation flag
++       - shading
+            - shading will probably need special support
 
 / zoom effect
     - enlarge a portion of the screen

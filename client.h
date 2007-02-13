@@ -273,8 +273,6 @@ class Client
         void setCursor( Position m );
         void setCursor( const QCursor& c );
 
-        void  animateMinimizeOrUnminimize( bool minimize );
-        QPixmap animationPixmap( int w );
     // transparent stuff
         void drawbound( const QRect& geom );
         void clearbound();

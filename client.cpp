@@ -558,10 +558,6 @@ void Client::minimize( bool avoid_animation )
 
     Notify::raise( Notify::Minimize );
 
-    // SELI mainClients().isEmpty() ??? - and in unminimize() too
-    if ( mainClients().isEmpty() && isOnCurrentDesktop() && isShown( true ) && !avoid_animation )
-        animateMinimizeOrUnminimize( true ); // was visible or shaded
-
     minimized = true;
 
     updateVisibility();
@@ -569,7 +565,7 @@ void Client::minimize( bool avoid_animation )
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
     workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
-    if( effects )
+    if( effects && !avoid_animation ) // TODO shouldn't it tell effects at least about the change?
         effects->windowMinimized( effectWindow());
     }
 
@@ -580,16 +576,11 @@ void Client::unminimize( bool avoid_animation )
 
     Notify::raise( Notify::UnMinimize );
     minimized = false;
-    if( isOnCurrentDesktop() && isShown( true ))
-        {
-        if( mainClients().isEmpty() && !avoid_animation )
-            animateMinimizeOrUnminimize( false );
-        }
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
-    if( effects )
+    if( effects && !avoid_animation )
         effects->windowUnminimized( effectWindow());
     }
 
@@ -612,130 +603,6 @@ QRect Client::iconGeometry() const
         return QRect();
         }
     }
-
-extern bool         blockAnimation;
-
-void Client::animateMinimizeOrUnminimize( bool minimize )
-    {
-#ifdef __GNUC__
-    #warning implement kwin animation
-#endif
-    if ( 1 || blockAnimation )
-        return;
-    if ( !options->animateMinimize )
-        return;
-
-    if( decoration != NULL && decoration->animateMinimize( minimize ))
-        return; // decoration did it
-
-    // the function is a bit tricky since it will ensure that an
-    // animation action needs always the same time regardless of the
-    // performance of the machine or the X-Server.
-
-    float lf,rf,tf,bf,step;
-
-    int speed = options->animateMinimizeSpeed;
-    if ( speed > 10 )
-        speed = 10;
-    if ( speed < 0 )
-        speed = 0;
-
-    step = 40. * (11 - speed );
-
-    QRect icongeom = iconGeometry();
-    if ( !icongeom.isValid() )
-        return;
-
-    QPixmap pm = animationPixmap( minimize ? width() : icongeom.width() );
-
-    QRect before, after;
-    if ( minimize ) 
-        {
-        before = QRect( x(), y(), width(), pm.height() );
-        after = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
-        }
-    else 
-        {
-        before = QRect( icongeom.x(), icongeom.y(), icongeom.width(), pm.height() );
-        after = QRect( x(), y(), width(), pm.height() );
-        }
-
-    lf = (after.left() - before.left())/step;
-    rf = (after.right() - before.right())/step;
-    tf = (after.top() - before.top())/step;
-    bf = (after.bottom() - before.bottom())/step;
-
-    grabXServer();
-
-    QRect area = before;
-    QRect area2;
-    QPixmap pm2;
-
-    QTime t;
-    t.start();
-    float diff;
-
-    QPainter p ( workspace()->desktopWidget() );
-    bool need_to_clear = false;
-    QPixmap pm3;
-    do 
-        {
-        if (area2 != area)
-            {
-            pm = animationPixmap( area.width() );
-            pm2 = QPixmap::grabWindow( rootWindow(), area.x(), area.y(), area.width(), area.height() );
-            p.drawPixmap( area.x(), area.y(), pm );
-            if ( need_to_clear ) 
-                {
-                p.drawPixmap( area2.x(), area2.y(), pm3 );
-                need_to_clear = false;
-                }
-            area2 = area;
-            }
-        XFlush(display());
-        XSync( display(), false );
-        diff = t.elapsed();
-        if (diff > step)
-            diff = step;
-        area.setLeft(before.left() + int(diff*lf));
-        area.setRight(before.right() + int(diff*rf));
-        area.setTop(before.top() + int(diff*tf));
-        area.setBottom(before.bottom() + int(diff*bf));
-        if (area2 != area ) 
-            {
-            if ( area2.intersects( area ) )
-                p.drawPixmap( area2.x(), area2.y(), pm2 );
-            else 
-                { // no overlap, we can clear later to avoid flicker
-                pm3 = pm2;
-                need_to_clear = true;
-                }
-            }
-        } while ( t.elapsed() < step);
-    if (area2 == area || need_to_clear )
-        p.drawPixmap( area2.x(), area2.y(), pm2 );
-
-    p.end();
-    ungrabXServer();
-    }
-
-
-/*!
-  The pixmap shown during (un)minimalization animation
- */
-QPixmap Client::animationPixmap( int w )
-    {
-    QFont font = options->font(isActive());
-    QFontMetrics fm( font );
-    QPixmap pm( w, fm.lineSpacing() );
-    pm.fill( options->color(Options::ColorTitleBar, isActive() || isMinimized() ) );
-    QPainter p( &pm );
-    p.setPen(options->color(Options::ColorFont, isActive() || isMinimized() ));
-    p.setFont(options->font(isActive()));
-    p.drawText( pm.rect(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, caption() );
-    return pm;
-    }
-
 
 bool Client::isShadeable() const
     {
@@ -775,13 +642,11 @@ void Client::setShade( ShadeMode mode )
     // decorations may turn off some borders when shaded
     decoration->borders( border_left, border_right, border_top, border_bottom );
 
-    int as = options->animateShade? 10 : 1;
 // TODO all this unmapping, resizing etc. feels too much duplicated from elsewhere
     if ( isShade()) 
         { // shade_mode == ShadeNormal
         workspace()->addRepaint( geometry());
         // shade
-        int h = height();
         shade_geometry_change = true;
         QSize s( sizeForClientSize( QSize( clientSize())));
         s.setHeight( border_top + border_bottom );
@@ -789,19 +654,6 @@ void Client::setShade( ShadeMode mode )
         XUnmapWindow( display(), wrapper );
         XUnmapWindow( display(), client );
         XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
-// FRAME       repaint( false );
-//        bool wasStaticContents = testWFlags( WStaticContents );
-//        setWFlags( WStaticContents );
-        int step = qMax( 4, QABS( h - s.height() ) / as )+1;
-        do 
-            {
-            h -= step;
-            XResizeWindow( display(), frameId(), s.width(), h );
-            resizeDecoration( QSize( s.width(), h ));
-            QApplication::syncX();
-            } while ( h > s.height() + step );
-//        if ( !wasStaticContents )
-//            clearWFlags( WStaticContents );
         plainResize( s );
         shade_geometry_change = false;
         if( isActive())
@@ -814,24 +666,8 @@ void Client::setShade( ShadeMode mode )
         }
     else 
         {
-        int h = height();
         shade_geometry_change = true;
         QSize s( sizeForClientSize( clientSize()));
-// FRAME       bool wasStaticContents = testWFlags( WStaticContents );
-//        setWFlags( WStaticContents );
-        int step = qMax( 4, QABS( h - s.height() ) / as )+1;
-        do 
-            {
-            h += step;
-            XResizeWindow( display(), frameId(), s.width(), h );
-            resizeDecoration( QSize( s.width(), h ));
-            // assume a border
-            // we do not have time to wait for X to send us paint events
-// FRAME           repaint( 0, h - step-5, width(), step+5, true);
-            QApplication::syncX();
-            } while ( h < s.height() - step );
-//        if ( !wasStaticContents )
-//            clearWFlags( WStaticContents );
         shade_geometry_change = false;
         plainResize( s );
         if( shade_mode == ShadeHover || shade_mode == ShadeActivated )
