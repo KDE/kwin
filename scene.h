@@ -146,7 +146,7 @@ class Scene::Window
             // Window will not be painted because of which desktop it's on
             PAINT_DISABLED_BY_DESKTOP   = 1 << 2,
             // Window will not be painted because it is minimized
-            PAINT_DISABLED_BY_MINIMIZE  = 1 << 3,
+            PAINT_DISABLED_BY_MINIMIZE  = 1 << 3
             };
         void enablePainting( int reason );
         void disablePainting( int reason );

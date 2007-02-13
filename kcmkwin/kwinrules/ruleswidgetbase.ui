@@ -329,7 +329,7 @@
                             <cstring>types</cstring>
                         </property>
                     </widget>
-                    <widget class="KListWidget" row="1" column="0" rowspan="1" colspan="4">
+                    <widget class="K3ListBox" row="1" column="0" rowspan="1" colspan="4">
                         <item>
                             <property name="text">
                                 <string>Normal Window</string>
@@ -2541,10 +2541,4 @@
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
-<includehints>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>klistbox.h</includehint>
-    <includehint>kcombobox.h</includehint>
-    <includehint>krestrictedline.h</includehint>
-</includehints>
 </UI>

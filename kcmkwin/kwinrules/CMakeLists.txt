@@ -12,7 +12,7 @@ kde4_automoc(kwin_rules_dialog ${kwin_rules_dialog_KDEINIT_SRCS})
 
 kde4_add_kdeinit_executable( kwin_rules_dialog ${kwin_rules_dialog_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin_rules_dialog  ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kdeinit_kwin_rules_dialog  ${KDE4_KDEUI_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
 
 install(TARGETS kdeinit_kwin_rules_dialog  DESTINATION ${LIB_INSTALL_DIR} )
 
@@ -29,7 +29,7 @@ kde4_add_plugin(kcm_kwinrules ${kcm_kwinrules_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kwinrules )
 
-target_link_libraries(kcm_kwinrules  ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kcm_kwinrules  ${KDE4_KDEUI_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
 
 install(TARGETS kcm_kwinrules  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
