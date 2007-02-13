@@ -61,7 +61,7 @@ QMenu* Workspace::clientPopup()
         advanced_popup->setFont(KGlobalSettings::menuFont());
 
         mKeepAboveOpAction = advanced_popup->addAction( i18n("Keep &Above Others") );
-        mKeepAboveOpAction->setIcon( SmallIconSet( "up" ) );
+        mKeepAboveOpAction->setIcon( KIcon( "up" ) );
         KAction *kaction = qobject_cast<KAction*>( keys->action("Window Above Other Windows") );
         if ( kaction!=0 )
             mKeepAboveOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -69,7 +69,7 @@ QMenu* Workspace::clientPopup()
         mKeepAboveOpAction->setData( Options::KeepAboveOp );
 
         mKeepBelowOpAction = advanced_popup->addAction( i18n("Keep &Below Others") );
-        mKeepBelowOpAction->setIcon( SmallIconSet( "down" ) );
+        mKeepBelowOpAction->setIcon( KIcon( "down" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Below Other Windows") );
         if ( kaction!=0 )
             mKeepBelowOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -77,7 +77,7 @@ QMenu* Workspace::clientPopup()
         mKeepBelowOpAction->setData( Options::KeepBelowOp );
 
         mFullScreenOpAction = advanced_popup->addAction( i18n("&Fullscreen") );
-        mFullScreenOpAction->setIcon( SmallIconSet( "window_fullscreen" ) );
+        mFullScreenOpAction->setIcon( KIcon( "window_fullscreen" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Fullscreen") );
         if ( kaction!=0 )
             mFullScreenOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -92,18 +92,18 @@ QMenu* Workspace::clientPopup()
         mNoBorderOpAction->setData( Options::NoBorderOp );
 
         QAction *action = advanced_popup->addAction( i18n("Window &Shortcut...") );
-        action->setIcon( SmallIconSet("key_bindings") );
+        action->setIcon( KIcon("key_bindings") );
         kaction = qobject_cast<KAction*>( keys->action("Setup Window Shortcut") );
         if ( kaction!=0 )
             action->setShortcut( kaction->globalShortcut().primary() );
         action->setData( Options::SetupWindowShortcutOp );
 
         action = advanced_popup->addAction( i18n("&Special Window Settings...") );
-        action->setIcon( SmallIconSet( "wizard" ) );
+        action->setIcon( KIcon( "wizard" ) );
         action->setData( Options::WindowRulesOp );
 
         action = advanced_popup->addAction( i18n("&Special Application Settings...") );
-        action->setIcon( SmallIconSet( "wizard" ) );
+        action->setIcon( KIcon( "wizard" ) );
         action->setData( Options::ApplicationRulesOp );
 
         action = popup->addMenu( advanced_popup );
@@ -129,7 +129,7 @@ QMenu* Workspace::clientPopup()
         }
 
         mMoveOpAction = popup->addAction( i18n("&Move") );
-        mMoveOpAction->setIcon( SmallIconSet( "move" ) );
+        mMoveOpAction->setIcon( KIcon( "move" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Move") );
         if ( kaction!=0 )
             mMoveOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -167,13 +167,13 @@ QMenu* Workspace::clientPopup()
             !KAuthorized::authorizeControlModules(Workspace::configModules(true)).isEmpty())
             {
               action = popup->addAction( i18n("Configur&e Window Behavior...") );
-              action->setIcon( SmallIconSet( "configure" ) );
+              action->setIcon( KIcon( "configure" ) );
               connect( action, SIGNAL( triggered() ), this, SLOT( configureWM() ) );
               popup->addSeparator();
             }
 
         mCloseOpAction = popup->addAction( i18n("&Close") );
-        mCloseOpAction->setIcon( SmallIconSet( "fileclose" ) );
+        mCloseOpAction->setIcon( KIcon( "fileclose" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Close") );
         if ( kaction!=0 )
             mCloseOpAction->setShortcut( kaction->globalShortcut().primary() );
