@@ -701,8 +701,10 @@ bool Client::windowEvent( XEvent* e )
                 }
             if( e->xany.window == frameId())
                 {
+#ifdef HAVE_XDAMAGE
                 if( e->type == Extensions::damageNotifyEvent())
                     damageNotifyEvent( reinterpret_cast< XDamageNotifyEvent* >( e ));
+#endif
                 }
             break;
         }
@@ -1636,8 +1638,10 @@ bool Unmanaged::windowEvent( XEvent* e )
                 if( scene != NULL )
                     scene->windowGeometryShapeChanged( this );
                 }
+#ifdef HAVE_XDAMAGE
             if( e->type == Extensions::damageNotifyEvent())
                 damageNotifyEvent( reinterpret_cast< XDamageNotifyEvent* >( e ));
+#endif
             break;
             }
         }

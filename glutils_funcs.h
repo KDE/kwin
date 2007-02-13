@@ -11,6 +11,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_GLUTILS_FUNCS_H
 #define KWIN_GLUTILS_FUNCS_H
 
+#ifdef HAVE_OPENGL
+
 namespace KWinInternal
 {
 
@@ -164,3 +166,4 @@ extern glGetAttribLocation_func glGetAttribLocation;
 
 #endif
 
+#endif

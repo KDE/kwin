@@ -16,8 +16,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <QStringList>
 
+#ifdef HAVE_OPENGL
 #include <GL/gl.h>
 #include <GL/glx.h>
+#endif
 
 #include "glutils_funcs.h"
 
@@ -48,6 +50,7 @@ bool hasGLExtension(const QString& extension);
 
 inline bool isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
 
+#ifdef HAVE_OPENGL
 
 class GLShader
     {
@@ -75,6 +78,8 @@ class GLShader
         bool mValid;
         QHash< QString, int >* mVariableLocations;
     };
+
+#endif
 
 } // namespace
 

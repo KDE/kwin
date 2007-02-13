@@ -33,6 +33,7 @@ int glTextureUnitsCount;
 // Functions
 void initGLX()
     {
+#ifdef HAVE_OPENGL
     // Get GLX version
     int major, minor;
     glXQueryVersion( display(), &major, &minor );
@@ -42,10 +43,14 @@ void initGLX()
         display(), DefaultScreen( display()))).split(" ");
 
     glxResolveFunctions();
+#else
+    glXVersion = MAKE_GL_VERSION( 0, 0, 0 );
+#endif
     }
 
 void initGL()
     {
+#ifdef HAVE_OPENGL
     // Get OpenGL version
     QString glversionstring = QString((const char*)glGetString(GL_VERSION));
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
@@ -56,6 +61,9 @@ void initGL()
 
     // handle OpenGL extensions functions
     glResolveFunctions();
+#else
+    glVersion = MAKE_GL_VERSION( 0, 0, 0 );
+#endif
     }
 
 bool hasGLVersion(int major, int minor, int release)
@@ -74,6 +82,7 @@ bool hasGLExtension(const QString& extension)
     }
 
 
+#ifdef HAVE_OPENGL
 
 GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
     {
@@ -272,5 +281,7 @@ bool GLShader::setAttribute(const QString& name, float value)
         }
     return (location >= 0);
     }
+
+#endif
 
 } // namespace

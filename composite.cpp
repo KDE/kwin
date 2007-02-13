@@ -49,9 +49,9 @@ namespace KWinInternal
 // Workspace
 //****************************************
 
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
 void Workspace::setupCompositing()
     {
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
     if( !options->useTranslucency )
         return;
     if( !Extensions::compositeAvailable() || !Extensions::damageAvailable())
@@ -70,13 +70,20 @@ void Workspace::setupCompositing()
         {
         case 'B':
             scene = new SceneBasic( this );
+            kDebug( 1212 ) << "X compositing" << endl;
           break;
+#ifdef HAVE_XRENDER
         case 'X':
             scene = new SceneXrender( this );
+            kDebug( 1212 ) << "XRender compositing" << endl;
           break;
+#endif
+#ifdef HAVE_OPENGL
         case 'O':
             scene = new SceneOpenGL( this );
+            kDebug( 1212 ) << "OpenGL compositing" << endl;
           break;
+#endif
         default:
           kDebug( 1212 ) << "No compositing" << endl;
           return;
@@ -112,12 +119,6 @@ void Workspace::setupCompositing()
     compositeTimer.start( compositeRate );
     lastCompositePaint.start();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
-    if( dynamic_cast< SceneOpenGL* >( scene ))
-        kDebug( 1212 ) << "OpenGL compositing" << endl;
-    else if( dynamic_cast< SceneXrender* >( scene ))
-        kDebug( 1212 ) << "XRender compositing" << endl;
-    else if( dynamic_cast< SceneBasic* >( scene ))
-        kDebug( 1212 ) << "X compositing" << endl;
     new EffectsHandler(); // sets also the 'effects' pointer
     addRepaintFull();
     foreach( Client* c, clients )
@@ -134,10 +135,12 @@ void Workspace::setupCompositing()
         scene->windowAdded( c );
     delete popup; // force re-creation of the Alt+F3 popup (opacity option)
     popup = NULL;
+#endif
     }
 
 void Workspace::finishCompositing()
     {
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
     if( scene == NULL )
         return;
     delete cm_selection;
@@ -176,6 +179,7 @@ void Workspace::finishCompositing()
         }
     delete popup; // force re-creation of the Alt+F3 popup (opacity option)
     popup = NULL;
+#endif
     }
 
 void Workspace::lostCMSelection()
@@ -207,6 +211,7 @@ void Workspace::addRepaintFull()
 
 void Workspace::performCompositing()
     {
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
     // The event loop apparently tries to fire a QTimer as often as possible, even
     // at the expense of not processing many X events. This means that the composite
     // repaints can seriously impact performance of everything else, therefore throttle
@@ -258,6 +263,7 @@ void Workspace::performCompositing()
             compositeTimer.start( compositeRate - paintTime );
         }
     lastCompositePaint.start();
+#endif
     }
 
 bool Workspace::windowRepaintsPending() const
@@ -320,6 +326,7 @@ void Workspace::destroyOverlay()
 
 void Toplevel::setupCompositing()
     {
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
     if( !compositing())
         return;
     if( damage_handle != None )
@@ -328,10 +335,12 @@ void Toplevel::setupCompositing()
     damage_region = QRegion( 0, 0, width(), height());
     effect_window = new EffectWindow();
     effect_window->setWindow( this );
+#endif
     }
 
 void Toplevel::finishCompositing()
     {
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
     if( damage_handle == None )
         return;
     if( effect_window->window() == this ) // otherwise it's already passed to Deleted, don't free data
@@ -344,6 +353,7 @@ void Toplevel::finishCompositing()
     damage_region = QRegion();
     repaints_region = QRegion();
     effect_window = NULL;
+#endif
     }
 
 void Toplevel::discardWindowPixmap()
@@ -357,10 +367,15 @@ void Toplevel::discardWindowPixmap()
 
 Pixmap Toplevel::createWindowPixmap() const
     {
+#ifdef HAVE_XCOMPOSITE
     assert( compositing());
     return XCompositeNameWindowPixmap( display(), frameId());
+#else
+    return None;
+#endif
     }
 
+#ifdef HAVE_XDAMAGE
 void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
     {
     addDamage( e->area.x, e->area.y, e->area.width, e->area.height );
@@ -379,6 +394,7 @@ void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
         break;
         }
     }
+#endif
 
 void Toplevel::addDamage( const QRect& r )
     {
@@ -433,7 +449,5 @@ void Toplevel::resetRepaints( const QRect& r )
     {
     repaints_region -= r;
     }
-
-#endif
 
 } // namespace

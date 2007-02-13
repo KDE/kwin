@@ -22,6 +22,8 @@ License. See the file "COPYING" for the exact licensing terms.
   if( !function ) \
     function = (function ## _func)getProcAddress( #backup );
 
+#ifdef HAVE_OPENGL
+
 namespace KWinInternal
 {
 
@@ -213,3 +215,4 @@ void glResolveFunctions()
 
 } // namespace
 
+#endif

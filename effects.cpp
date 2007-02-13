@@ -28,7 +28,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/shakymove.h"
 #include "effects/shiftworkspaceup.h"
 #include "effects/showfps.h"
+#ifdef HAVE_OPENGL
 #include "effects/wavywindows.h"
+#endif
 #include "effects/zoom.h"
 
 #include "effects/test_input.h"
@@ -129,7 +131,9 @@ EffectsHandler::EffectsHandler()
     registerEffect("ShowFps", new GenericEffectFactory<ShowFpsEffect>);
     registerEffect("Zoom", new GenericEffectFactory<ZoomEffect>);
     registerEffect("PresentWindows", new GenericEffectFactory<PresentWindowsEffect>);
+#ifdef HAVE_OPENGL
     registerEffect("WavyWindows", new GenericEffectFactory<WavyWindowsEffect>);
+#endif
     registerEffect("MinimizeAnimation", new GenericEffectFactory<MinimizeAnimationEffect>);
     registerEffect("Howto", new GenericEffectFactory<HowtoEffect>);
     registerEffect("MakeTransparent", new GenericEffectFactory<MakeTransparentEffect>);

@@ -66,10 +66,15 @@ set(kwin_KDEINIT_SRCS
    effects/zoom.cpp
    effects/test_input.cpp
    effects/presentwindows.cpp
-   effects/wavywindows.cpp
    effects/minimizeanimation.cpp
    effects/desktopchangeslide.cpp
    )
+
+if(HAVE_OPENGL)
+   set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+   effects/wavywindows.cpp
+   )
+endif(HAVE_OPENGL)
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWinInternal::Workspace )
 
@@ -79,9 +84,11 @@ kde4_automoc(kwin ${kwin_KDEINIT_SRCS})
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
-target_link_libraries(kdeinit_kwin -lGL)
-# -ldl used by OpenGL code
-target_link_libraries(kdeinit_kwin -ldl)
+if(OPENGL_FOUND)
+  target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})
+  # -ldl used by OpenGL code
+  target_link_libraries(kdeinit_kwin -ldl)
+endif(OPENGL_FOUND)
 if (X11_Xrandr_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xrandr_LIB})
 endif (X11_Xrandr_FOUND)

@@ -15,7 +15,11 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "glutils.h"
 
+#ifdef HAVE_OPENGL
+
+#ifdef HAVE_XSHM
 #include <X11/extensions/XShm.h>
+#endif
 
 namespace KWinInternal
 {
@@ -76,7 +80,9 @@ class SceneOpenGL
         static bool supports_fbo;
         static bool supports_saturation;
         QMap< Toplevel*, Window > windows;
+#ifdef HAVE_XSHM
         static XShmSegmentInfo shm;
+#endif
     };
 
 class SceneOpenGL::Window
@@ -158,5 +164,7 @@ class SceneOpenGL::Window
     };
 
 } // namespace
+
+#endif
 
 #endif

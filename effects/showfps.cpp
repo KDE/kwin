@@ -16,7 +16,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <scene_opengl.h>
 #include <scene_xrender.h>
 
+#ifdef HAVE_OPENGL
 #include <GL/gl.h>
+#endif
 
 namespace KWinInternal
 {
@@ -73,12 +75,14 @@ void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data
             ++fps; // count all frames in the last second
     if( fps > MAX_TIME )
         fps = MAX_TIME; // keep it the same height
+#ifdef HAVE_OPENGL
     if( dynamic_cast< SceneOpenGL* >( scene ))
         {
         paintGL( fps );
         glFinish(); // make sure all rendering is done
         }
     else
+#endif
         {
         paintX( fps );
         XSync( display(), False ); // make sure all rendering is done
@@ -87,6 +91,7 @@ void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data
 
 void ShowFpsEffect::paintGL( int fps )
     {
+#ifdef HAVE_OPENGL
     int x = this->x;
     int y = this->y;
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
@@ -141,6 +146,7 @@ void ShowFpsEffect::paintGL( int fps )
         }
     glEnd();
     glPopAttrib();
+#endif
     }
 
 /*
@@ -150,6 +156,7 @@ void ShowFpsEffect::paintGL( int fps )
 */
 void ShowFpsEffect::paintX( int fps )
     {
+#ifdef HAVE_XRENDER
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), NUM_PAINTS + FPS_WIDTH, MAX_TIME, 32 );
     XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardARGB32 );
     Picture p = XRenderCreatePicture( display(), pixmap, format, 0, NULL );
@@ -209,6 +216,7 @@ void ShowFpsEffect::paintX( int fps )
     XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc, p, None,
         static_cast< SceneXrender* >( scene )->bufferPicture(), 0, 0, 0, 0, x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
     XRenderFreePicture( display(), p );
+#endif
     }
 
 void ShowFpsEffect::postPaintScreen()

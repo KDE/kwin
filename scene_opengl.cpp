@@ -67,6 +67,8 @@ Sources and other compositing managers:
 #include <sys/shm.h>
 #include <math.h>
 
+#ifdef HAVE_OPENGL
+
 namespace KWinInternal
 {
 
@@ -93,7 +95,9 @@ bool SceneOpenGL::supports_npot_textures;
 bool SceneOpenGL::supports_fbo;
 bool SceneOpenGL::supports_saturation;
 bool SceneOpenGL::shm_mode;
+#ifdef HAVE_XSHM
 XShmSegmentInfo SceneOpenGL::shm;
+#endif
 
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
@@ -226,6 +230,7 @@ bool SceneOpenGL::initTfp()
 
 bool SceneOpenGL::initShm()
     {
+#ifdef HAVE_XSHM
     int major, minor;
     Bool pixmaps;
     if( !XShmQueryVersion( display(), &major, &minor, &pixmaps ) || !pixmaps )
@@ -260,13 +265,18 @@ bool SceneOpenGL::initShm()
         return false;
         }
     return true;
+#else
+    return false;
+#endif
     }
 
 void SceneOpenGL::cleanupShm()
     {
+#ifdef HAVE_XSHM
     shmdt( shm.shmaddr );
 #ifndef __linux__
     shmctl( shm.shmid, IPC_RMID, 0 );
+#endif
 #endif
     }
 
@@ -902,6 +912,7 @@ void SceneOpenGL::Window::bindTexture()
         glXWaitX();
     if( shm_mode )
         { // non-tfp case, copy pixmap contents to a texture
+#ifdef HAVE_XSHM
         findTextureTarget();
         if( texture == None )
             {
@@ -941,6 +952,7 @@ void SceneOpenGL::Window::bindTexture()
         texture_y_inverted = true;
         texture_can_use_mipmaps = true;
         toplevel->resetDamage( toplevel->rect());
+#endif
         }
     else if( tfp_mode )
         { // tfp mode, simply bind the pixmap to texture
@@ -1370,3 +1382,5 @@ void SceneOpenGL::Window::restoreRenderStates( int mask, WindowPaintData data )
     }
 
 } // namespace
+
+#endif
