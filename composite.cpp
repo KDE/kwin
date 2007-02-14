@@ -242,6 +242,8 @@ void Workspace::performCompositing()
         }
     foreach( Deleted* c, deleted ) // TODO remember stacking order somehow
         windows.append( c );
+    if( children != NULL )
+        XFree( children );
     foreach( Toplevel* c, windows )
         { // this could be possibly optimized WRT obscuring, but that'd need being already
           // past prePaint() phase - probably not worth it
