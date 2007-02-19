@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "workspace.h"
 #include "client.h"
+#include "effects.h"
 
 namespace KWinInternal
 {
