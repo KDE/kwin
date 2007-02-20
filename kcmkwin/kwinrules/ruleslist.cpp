@@ -18,7 +18,6 @@
 
 #include "ruleslist.h"
 
-#include <klistwidget.h>
 #include <kpushbutton.h>
 #include <assert.h>
 #include <kdebug.h>
@@ -29,14 +28,14 @@
 namespace KWinInternal
 {
 
-KCMRulesList::KCMRulesList( QWidget* parent)
-: KCMRulesListBase( parent)
+KCMRulesList::KCMRulesList( QWidget* parent, const char* name )
+: KCMRulesListBase( parent, name )
     {
     // connect both current/selected, so that current==selected (stupid QListBox :( )
-    connect( rules_listbox, SIGNAL(itemChanged(QListWidgetItem*)),
-        SLOT(activeChanged(QListWidgetItem*)));
-    connect( rules_listbox, SIGNAL( selectionChanged( QListWidgetItem* )),
-        SLOT( activeChanged( QListWidgetItem*)));
+    connect( rules_listbox, SIGNAL( currentChanged( Q3ListBoxItem* )),
+        SLOT( activeChanged( Q3ListBoxItem*)));
+    connect( rules_listbox, SIGNAL( selectionChanged( Q3ListBoxItem* )),
+        SLOT( activeChanged( Q3ListBoxItem*)));
     connect( new_button, SIGNAL( clicked()),
         SLOT( newClicked()));
     connect( modify_button, SIGNAL( clicked()),
@@ -47,7 +46,7 @@ KCMRulesList::KCMRulesList( QWidget* parent)
         SLOT( moveupClicked()));
     connect( movedown_button, SIGNAL( clicked()),
         SLOT( movedownClicked()));
-    connect( rules_listbox, SIGNAL(itemDoubleClicked(QListWidgetItem*) ),
+    connect( rules_listbox, SIGNAL( doubleClicked ( Q3ListBoxItem * ) ),
             SLOT( modifyClicked()));
     load();
     }
@@ -61,16 +60,14 @@ KCMRulesList::~KCMRulesList()
     rules.clear();
     }
 
-void KCMRulesList::activeChanged( QListWidgetItem* item )
+void KCMRulesList::activeChanged( Q3ListBoxItem* item )
     {
-    int itemRow = rules_listbox->row(item);
-
     if( item != NULL )
-        item->setSelected( true ); // make current==selected
+        rules_listbox->setSelected( item, true ); // make current==selected
     modify_button->setEnabled( item != NULL );
     delete_button->setEnabled( item != NULL );
-    moveup_button->setEnabled( item != NULL && itemRow > 0 );
-    movedown_button->setEnabled( item != NULL && itemRow < (rules_listbox->count()-1) );
+    moveup_button->setEnabled( item != NULL && item->prev() != NULL );
+    movedown_button->setEnabled( item != NULL && item->next() != NULL );
     }
 
 void KCMRulesList::newClicked()
@@ -79,16 +76,16 @@ void KCMRulesList::newClicked()
     Rules* rule = dlg.edit( NULL, 0, false );
     if( rule == NULL )
         return;
-    int pos = rules_listbox->currentRow() + 1;
-    rules_listbox->insertItem( pos , rule->description );
-    rules_listbox->item(pos)->setSelected( true );
+    int pos = rules_listbox->currentItem() + 1;
+    rules_listbox->insertItem( rule->description, pos );
+    rules_listbox->setSelected( pos, true );
     rules.insert( rules.begin() + pos, rule );
     emit changed( true );
     }
 
 void KCMRulesList::modifyClicked()
     {
-    int pos = rules_listbox->currentRow();
+    int pos = rules_listbox->currentItem();
     if ( pos == -1 )
         return;
     RulesDialog dlg;
@@ -97,29 +94,29 @@ void KCMRulesList::modifyClicked()
         return;
     delete rules[ pos ];
     rules[ pos ] = rule;
-    rules_listbox->item(pos)->setText( rule->description );
+    rules_listbox->changeItem( rule->description, pos );
     emit changed( true );
     }
 
 void KCMRulesList::deleteClicked()
     {
-    int pos = rules_listbox->currentRow();
+    int pos = rules_listbox->currentItem();
     assert( pos != -1 );
-    delete rules_listbox->takeItem( pos );
+    rules_listbox->removeItem( pos );
     rules.erase( rules.begin() + pos );
     emit changed( true );
     }
 
 void KCMRulesList::moveupClicked()
     {
-    int pos = rules_listbox->currentRow();
+    int pos = rules_listbox->currentItem();
     assert( pos != -1 );
     if( pos > 0 )
         {
-        QString txt = rules_listbox->item(pos)->text();
-        delete rules_listbox->takeItem( pos );
-        rules_listbox->insertItem( pos - 1 , txt );
-        rules_listbox->item(pos-1)->setSelected( true );
+        QString txt = rules_listbox->text( pos );
+        rules_listbox->removeItem( pos );
+        rules_listbox->insertItem( txt, pos - 1 );
+        rules_listbox->setSelected( pos - 1, true );
         Rules* rule = rules[ pos ];
         rules[ pos ] = rules[ pos - 1 ];
         rules[ pos - 1 ] = rule;
@@ -129,14 +126,14 @@ void KCMRulesList::moveupClicked()
 
 void KCMRulesList::movedownClicked()
     {
-    int pos = rules_listbox->currentRow();
+    int pos = rules_listbox->currentItem();
     assert( pos != -1 );
     if( pos < int( rules_listbox->count()) - 1 )
         {
-        QString txt = rules_listbox->item(pos)->text();
-        delete rules_listbox->takeItem( pos );
-        rules_listbox->insertItem( pos + 1 , txt);
-        rules_listbox->item(pos+1)->setSelected( true );
+        QString txt = rules_listbox->text( pos );
+        rules_listbox->removeItem( pos );
+        rules_listbox->insertItem( txt, pos + 1 );
+        rules_listbox->setSelected( pos + 1, true );
         Rules* rule = rules[ pos ];
         rules[ pos ] = rules[ pos + 1 ];
         rules[ pos + 1 ] = rule;
@@ -163,10 +160,10 @@ void KCMRulesList::load()
         cfg.changeGroup( QString::number( i ));
         Rules* rule = new Rules( cfg );
         rules.append( rule );
-        rules_listbox->addItem( rule->description );
+        rules_listbox->insertItem( rule->description );
         }
     if( rules.count() > 0 )
-        rules_listbox->item(0)->setSelected( true );
+        rules_listbox->setSelected( 0, true );
     else
         activeChanged( NULL );
     }

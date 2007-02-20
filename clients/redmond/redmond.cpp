@@ -288,7 +288,7 @@ void RedmondButton::setBitmap(const unsigned char *bitmap)
         pix = QPixmap();
 
 	if (bitmap)
-		deco = QBitmap::fromData( QSize(10,  10),  bitmap);
+		deco = QBitmap(10, 10, bitmap, true);
 	else {
 		deco = QBitmap(10,10);
 		deco.fill(Qt::color0);

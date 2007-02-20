@@ -33,6 +33,7 @@
 
 #include "mouse.h"
 #include "windows.h"
+
 #include "main.h"
 
 static KComponentData *_kcmkwm = 0;
@@ -179,12 +180,12 @@ void KWinOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-  // Send signal to all kwin instances
-  QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-  QDBusConnection::sessionBus().send(message);
-
-
+#ifdef __GNUC__
+#warning D-BUS TODO
+// All these calls in kcmkwin modules should be actually kwin*, because of multihead.
+#endif
+  QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+  kwin.call( "reconfigure" );
 }
 
 
@@ -259,11 +260,8 @@ void KActionsOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-  // Send signal to all kwin instances
-  QDBusMessage message =
-       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-  QDBusConnection::sessionBus().send(message);
-
+  QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
+  kwin.call( "reconfigure" );
 }
 
 
