@@ -197,9 +197,9 @@ unsigned long KDEDefaultHandler::readConfig( bool update )
         unsigned long changed = 0;
 	KConfigGroup conf(KGlobal::config(), "KDEDefault");
 
-        bool new_showGrabBar 		= conf->readEntry("ShowGrabBar", true);
-	bool new_showTitleBarStipple = conf->readEntry("ShowTitleBarStipple", true);
-	bool new_useGradients 		= conf->readEntry("UseGradients", true);
+        bool new_showGrabBar 		= conf.readEntry("ShowGrabBar", true);
+	bool new_showTitleBarStipple = conf.readEntry("ShowTitleBarStipple", true);
+	bool new_useGradients 		= conf.readEntry("UseGradients", true);
 	int  new_titleHeight 		= QFontMetrics(options()->font(true)).height();
 	int  new_toolTitleHeight 	= QFontMetrics(options()->font(true, true)).height()-2;
 

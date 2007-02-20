@@ -463,7 +463,7 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
 
 	// Buttons tab
 	// ============
-	bool customPositions = conf->readEntry("CustomButtonPositions", false);
+	bool customPositions = conf.readEntry("CustomButtonPositions", false);
 	cbUseCustomButtonPositions->setChecked( customPositions );
 	buttonPositionWidget->setEnabled( customPositions );
 	// Menu and onAllDesktops buttons are default on LHS
