@@ -10,10 +10,11 @@ License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
 //#define QT_CLEAN_NAMESPACE
-#include <kconfig.h>
+#include <ksharedconfig.h>
 
 #include "main.h"
 
+#include <kglobal.h>
 #include <klocale.h>
 #include <stdlib.h>
 #include <kcmdlineargs.h>
@@ -25,13 +26,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 #include <fixx11h.h>
 #include <QtDBus/QtDBus>
-#include <kglobal.h>
+#include "ksplash_interface.h"
 
 #include "atoms.h"
 #include "options.h"
 #include "sm.h"
 #include "utils.h"
-#include "effects.h"
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -61,7 +61,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
          e->request_code == X_ChangeWindowAttributes
          || e->request_code == X_GrabKey
          )
-        && (e->error_code == BadAccess)) 
+        && (e->error_code == BadAccess))
         {
         fputs(i18n("kwin: it looks like there's already a window manager running. kwin not started.\n").toLocal8Bit(), stderr);
         exit(1);
@@ -76,7 +76,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
 
     fprintf(stderr, "kwin: %s(0x%lx): %s\n", req, e->resourceid, msg);
 
-    if (initting) 
+    if (initting)
         {
         fputs(i18n("kwin: failure during initialization; aborting").toLocal8Bit(), stderr);
         exit(1);
@@ -91,7 +91,8 @@ Application::Application( )
     KSharedConfig::Ptr config = KGlobal::config();
     if (!config->isImmutable() && args->isSet("lock"))
         {
-        config->setReadOnly(true);
+#warning this shouldn not be necessary
+        //config->setReadOnly(true);
         config->reparseConfiguration();
         }
 
@@ -104,7 +105,7 @@ Application::Application( )
         ::exit(1);
         }
     connect( &owner, SIGNAL( lostOwnership()), SLOT( lostSelection()));
-    
+
     // if there was already kwin running, it saved its configuration after loosing the selection -> reread
     config->reparseConfiguration();
 
@@ -120,17 +121,16 @@ Application::Application( )
     options = new Options;
     atoms = new Atoms;
 
-    initting = false; // TODO
-    
     // create workspace.
     (void) new Workspace( isSessionRestored() );
 
     syncX(); // trigger possible errors, there's still a chance to abort
 
     initting = false; // startup done, we are up and running now.
-    
-    QDBusInterface ksplash( "org.kde.ksplash", "/ksplash", "org.kde.KSplash" );   
-    ksplash.call( "upAndRunning", QString( "wm started" ));
+
+    org::kde::KSplash ksplash("org.kde.ksplash", "/KSplash", QDBusConnection::sessionBus());
+    ksplash.upAndRunning(QString( "wm started" ));
+
     XEvent e;
     e.xclient.type = ClientMessage;
     e.xclient.message_type = XInternAtom( display(), "_KDE_SPLASH_PROGRESS", False );
@@ -147,8 +147,6 @@ Application::~Application()
     if( owner.ownerWindow() != None ) // if there was no --replace (no new WM)
         XSetInputFocus( display(), PointerRoot, RevertToPointerRoot, xTime() );
     delete options;
-    delete effects;
-    delete atoms;
     }
 
 void Application::lostSelection()
@@ -165,8 +163,8 @@ bool Application::x11EventFilter( XEvent *e )
              return true;
     return KApplication::x11EventFilter( e );
     }
-    
-static void sighandler(int) 
+
+static void sighandler(int)
     {
     QApplication::exit();
     }
@@ -188,26 +186,26 @@ extern "C"
 KDE_EXPORT int kdemain( int argc, char * argv[] )
     {
     bool restored = false;
-    for (int arg = 1; arg < argc; arg++) 
+    for (int arg = 1; arg < argc; arg++)
         {
-        if (! qstrcmp(argv[arg], "-session")) 
+        if (! qstrcmp(argv[arg], "-session"))
             {
             restored = true;
             break;
             }
         }
 
-    if (! restored) 
+    if (! restored)
         {
         // we only do the multihead fork if we are not restored by the session
 	// manager, since the session manager will register multiple kwins,
         // one for each screen...
         QByteArray multiHead = getenv("KDE_MULTIHEAD");
-        if (multiHead.toLower() == "true") 
+        if (multiHead.toLower() == "true")
             {
 
             Display* dpy = XOpenDisplay( NULL );
-            if ( !dpy ) 
+            if ( !dpy )
                 {
                 fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
                         argv[0], XDisplayName(NULL ) );
@@ -225,13 +223,13 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
                 display_name.remove(pos,10); // 10 is enough to be sure we removed ".s"
 
             QString envir;
-            if (number_of_screens != 1) 
+            if (number_of_screens != 1)
                 {
-                for (int i = 0; i < number_of_screens; i++ ) 
+                for (int i = 0; i < number_of_screens; i++ )
                     {
 		    // if execution doesn't pass by here, then kwin
 		    // acts exactly as previously
-                    if ( i != KWinInternal::screen_number && fork() == 0 ) 
+                    if ( i != KWinInternal::screen_number && fork() == 0 )
                         {
                         KWinInternal::screen_number = i;
 			// break here because we are the child process, we don't
@@ -243,7 +241,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 		//   number. If it had it, it was removed at the "pos" check
                 envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWinInternal::screen_number);
 
-                if (putenv( strdup(envir.toAscii())) ) 
+                if (putenv( strdup(envir.toAscii())) )
                     {
                     fprintf(stderr,
                             "%s: WARNING: unable to set DISPLAY environment variable\n",
@@ -283,9 +281,9 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 
     QString appname;
     if (KWinInternal::screen_number == 0)
-        appname = "kwin";
+        appname = "org.kde.kwin";
     else
-        appname.sprintf("kwin-screen-%d", KWinInternal::screen_number);
+        appname.sprintf("org.kde.kwin-screen-%d", KWinInternal::screen_number);
 
     QDBusConnection::sessionBus().interface()->registerService( appname, QDBusConnectionInterface::DontQueueService );
 

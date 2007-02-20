@@ -66,11 +66,11 @@ PopupInfo::~PopupInfo()
  */
 void PopupInfo::reset()
     {
-    QRect r = KGlobalSettings::desktopGeometry(cursorPos());
+    QRect r = KGlobalSettings::desktopGeometry(QCursor::pos());
 
     int w = fontMetrics().width( m_infoString ) + 30;
 
-    setGeometry( 
+    setGeometry(
        (r.width()-w)/2 + r.x(), r.height()/2-fontMetrics().height()-10 + r.y(),
                  w,                      fontMetrics().height() + 20 );
     }
@@ -92,7 +92,7 @@ void PopupInfo::paintEvent( QPaintEvent* )
 
 
 /*!
-  Paints the contents of the tab popup info box. 
+  Paints the contents of the tab popup info box.
   Used in paintEvent() and whenever the contents changes.
  */
 void PopupInfo::paintContents()
@@ -124,25 +124,25 @@ void PopupInfo::hide()
     m_shown = false;
     }
 
-void PopupInfo::reconfigure() 
+void PopupInfo::reconfigure()
     {
     KSharedConfigPtr c(KGlobal::config());
-    c->setGroup("PopupInfo");
-    m_show = c->readEntry("ShowPopup", false );
-    m_delayTime = c->readEntry("PopupHideDelay", 350 );
+    const KConfigGroup cg = c->group("PopupInfo");
+    m_show = cg.readEntry("ShowPopup", false );
+    m_delayTime = cg.readEntry("PopupHideDelay", 350 );
     }
 
 void PopupInfo::showInfo(QString infoString)
     {
-    if (m_show) 
+    if (m_show)
         {
         m_infoString = infoString;
         reset();
-        if (m_shown) 
+        if (m_shown)
             {
             paintContents();
             }
-        else 
+        else
             {
             show();
             raise();

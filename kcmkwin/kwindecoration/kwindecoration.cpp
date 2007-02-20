@@ -73,7 +73,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
     kwinConfig(KSharedConfig::openConfig("kwinrc")),
     pluginObject(0)
 {
-    kwinConfig->setGroup("Style");
+    KConfigGroup style( kwinConfig, "Style");
     plugins = new KDecorationPreviewPlugins(kwinConfig);
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
@@ -172,8 +172,9 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
 	// Set up the decoration lists and other UI settings
 	findDecorations();
 	createDecorationList();
-	readConfig( kwinConfig.data() );
-	resetPlugin( kwinConfig.data() );
+	readConfig( style );
+
+	resetPlugin( style );
 
 	tabWidget->addTab( pluginPage, i18n("&Window Decoration") );
 	tabWidget->addTab( buttonPage, i18n("&Buttons") );
@@ -224,7 +225,7 @@ void KWinDecorationModule::findDecorations()
 				if (KDesktopFile::isDesktopFile(filename))
 				{
 					KDesktopFile desktopFile(filename);
-					QString libName = desktopFile.readEntry("X-KDE-Library");
+					QString libName = desktopFile.desktopGroup().readEntry("X-KDE-Library");
 
 					if (!libName.isEmpty() && libName.startsWith( "kwin3_" ))
 					{
@@ -259,11 +260,11 @@ void KWinDecorationModule::createDecorationList()
 // Reset the decoration plugin to what the user just selected
 void KWinDecorationModule::slotChangeDecoration( const QString & text)
 {
-	KConfig kwinConfig("kwinrc");
-	kwinConfig.setGroup("Style");
+	KConfig _kwinConfig( "kwinrc" );
+	KConfigGroup kwinConfig(&_kwinConfig, "Style");
 
 	// Let the user see config options for the currently selected decoration
-	resetPlugin( &kwinConfig, text );
+	resetPlugin( kwinConfig, text );
 }
 
 
@@ -367,7 +368,7 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 
 // Loads/unloads and inserts the decoration config plugin into the
 // pluginConfigWidget, allowing for dynamic configuration of decorations
-void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDecoName )
+void KWinDecorationModule::resetPlugin( KConfigGroup& conf, const QString& currentDecoName )
 {
 	// Config names are "kwin_icewm_config"
 	// for "kwin3_icewm" kwin client
@@ -412,7 +413,7 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 
 		if (alloc_ptr != NULL)
 		{
-			allocatePlugin = (QObject* (*)(KConfig* conf, QWidget* parent))alloc_ptr;
+			allocatePlugin = (QObject* (*)(KConfigGroup& conf, QWidget* parent))alloc_ptr;
 			pluginObject = (QObject*)(allocatePlugin( conf, pluginConfigWidget ));
 
 			// connect required signals and slots together...
@@ -431,18 +432,18 @@ void KWinDecorationModule::resetPlugin( KConfig* conf, const QString& currentDec
 
 // Reads the kwin config settings, and sets all UI controls to those settings
 // Updating the config plugin if required
-void KWinDecorationModule::readConfig( KConfig* conf )
+void KWinDecorationModule::readConfig( const KConfigGroup & conf )
 {
 	// General tab
 	// ============
-	cbShowToolTips->setChecked( conf->readEntry("ShowToolTips", true));
-//	cbUseMiniWindows->setChecked( conf->readEntry("MiniWindowBorders", QVariant(false)).toBool());
+	cbShowToolTips->setChecked( conf.readEntry("ShowToolTips", true));
+//	cbUseMiniWindows->setChecked( conf.readEntry("MiniWindowBorders", false));
 
 	// Find the corresponding decoration name to that of
 	// the current plugin library name
 
 	oldLibraryName = currentLibraryName;
-	currentLibraryName = conf->readEntry("PluginLib",
+	currentLibraryName = conf.readEntry("PluginLib",
 					((QPixmap::defaultDepth() > 8) ? "kwin_plastik" : "kwin_quartz"));
 	QString decoName = decorationName( currentLibraryName );
 
@@ -466,11 +467,11 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 	cbUseCustomButtonPositions->setChecked( customPositions );
 	buttonPositionWidget->setEnabled( customPositions );
 	// Menu and onAllDesktops buttons are default on LHS
-	buttonPositionWidget->setButtonsLeft( conf->readEntry("ButtonsOnLeft", "MS") );
+	buttonPositionWidget->setButtonsLeft( conf.readEntry("ButtonsOnLeft", "MS") );
 	// Help, Minimize, Maximize and Close are default on RHS
-	buttonPositionWidget->setButtonsRight( conf->readEntry("ButtonsOnRight", "HIAX") );
+	buttonPositionWidget->setButtonsRight( conf.readEntry("ButtonsOnRight", "HIAX") );
 
-        int bsize = conf->readEntry( "BorderSize", (int)BorderNormal );
+        int bsize = conf.readEntry( "BorderSize", (int)BorderNormal );
         if( bsize >= BorderTiny && bsize < BordersCount )
             border_size = static_cast< BorderSize >( bsize );
         else
@@ -482,24 +483,24 @@ void KWinDecorationModule::readConfig( KConfig* conf )
 
 
 // Writes the selected user configuration to the kwin config file
-void KWinDecorationModule::writeConfig( KConfig* conf )
+void KWinDecorationModule::writeConfig( KConfigGroup & conf )
 {
 	QString name = decorationList->currentText();
 	QString libName = decorationLibName( name );
 
-	KConfig kwinConfig("kwinrc");
-	kwinConfig.setGroup("Style");
+	KConfig _kwinConfig( "kwinrc" );
+	KConfigGroup kwinConfig(&_kwinConfig, "Style");
 
 	// General settings
-	conf->writeEntry("PluginLib", libName);
-	conf->writeEntry("CustomButtonPositions", cbUseCustomButtonPositions->isChecked());
-	conf->writeEntry("ShowToolTips", cbShowToolTips->isChecked());
-//	conf->writeEntry("MiniWindowBorders", cbUseMiniWindows->isChecked());
+	conf.writeEntry("PluginLib", libName);
+	conf.writeEntry("CustomButtonPositions", cbUseCustomButtonPositions->isChecked());
+	conf.writeEntry("ShowToolTips", cbShowToolTips->isChecked());
+//	conf.writeEntry("MiniWindowBorders", cbUseMiniWindows->isChecked());
 
 	// Button settings
-	conf->writeEntry("ButtonsOnLeft", buttonPositionWidget->buttonsLeft() );
-	conf->writeEntry("ButtonsOnRight", buttonPositionWidget->buttonsRight() );
-	conf->writeEntry("BorderSize", static_cast<int>( border_size ) );
+	conf.writeEntry("ButtonsOnLeft", buttonPositionWidget->buttonsLeft() );
+	conf.writeEntry("ButtonsOnRight", buttonPositionWidget->buttonsRight() );
+	conf.writeEntry("BorderSize", static_cast<int>( border_size ) );
 
 	oldLibraryName = currentLibraryName;
 	currentLibraryName = libName;
@@ -512,22 +513,22 @@ void KWinDecorationModule::writeConfig( KConfig* conf )
 // Virutal functions required by KCModule
 void KWinDecorationModule::load()
 {
-	KConfig kwinConfig("kwinrc");
-	kwinConfig.setGroup("Style");
+	KConfig _kwinConfig( "kwinrc" );
+	KConfigGroup kwinConfig(&_kwinConfig, "Style");
 
 	// Reset by re-reading the config
-	readConfig( &kwinConfig );
-        resetPlugin( &kwinConfig );
+	readConfig( kwinConfig );
+        resetPlugin( kwinConfig );
 }
 
 
 void KWinDecorationModule::save()
 {
-	KConfig kwinConfig("kwinrc");
-	kwinConfig.setGroup("Style");
+	KConfig _kwinConfig( "kwinrc" );
+	KConfigGroup kwinConfig(&_kwinConfig, "Style");
 
-	writeConfig( &kwinConfig );
-	emit pluginSave( &kwinConfig );
+	writeConfig( kwinConfig );
+	emit pluginSave( kwinConfig );
 
 	kwinConfig.sync();
     // Send signal to all kwin instances

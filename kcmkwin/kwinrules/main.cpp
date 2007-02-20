@@ -34,14 +34,14 @@ namespace KWinInternal
 
 static void loadRules( QList< Rules* >& rules )
     {
-    KConfig cfg( "kwinrulesrc", true );
-    cfg.setGroup( "General" );
+    KConfig _cfg( "kwinrulesrc" );
+    KConfigGroup cfg(&_cfg, "General" );
     int count = cfg.readEntry( "count",0 );
     for( int i = 1;
          i <= count;
          ++i )
         {
-        cfg.setGroup( QString::number( i ));
+        cfg.changeGroup( QString::number( i ));
         Rules* rule = new Rules( cfg );
         rules.append( rule );
         }
@@ -62,8 +62,8 @@ static void saveRules( const QList< Rules* >& rules )
          it != rules.end();
          ++it )
         {
-        cfg.setGroup( QString::number( i ));
-        (*it)->write( cfg );
+            KConfigGroup cg( &cfg, QString::number( i ));
+        (*it)->write( cg );
         ++i;
         }
     }
@@ -154,7 +154,7 @@ static Rules* findRule( const QList< Rules* >& rules, Window wid, bool whole_app
         ret->description = i18n( "Application settings for %1", QString::fromLatin1( wmclass_class ));
         // TODO maybe exclude some types? If yes, then also exclude them above
         // when searching.
-        ret->types = NET::AllTypesMask; 
+        ret->types = NET::AllTypesMask;
         ret->titlematch = Rules::UnimportantMatch;
         ret->clientmachine = machine; // set, but make unimportant
         ret->clientmachinematch = Rules::UnimportantMatch;
@@ -262,7 +262,7 @@ static int edit( Window wid, bool whole_app )
     QDBusConnection::sessionBus().send(message);
     return 0;
     }
-    
+
 } // namespace
 
 static const KCmdLineOptions options[] =

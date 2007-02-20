@@ -460,7 +460,7 @@ KDecorationPreviewOptions::~KDecorationPreviewOptions()
 
 unsigned long KDecorationPreviewOptions::updateSettings()
     {
-    KConfig cfg( "kwinrc", true );
+    KConfig cfg( "kwinrc" );
     unsigned long changed = 0;
     changed |= d->updateKWinSettings( &cfg );
 

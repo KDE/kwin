@@ -221,8 +221,8 @@ void ModernSysFactory::read_config()
     bool showh;
     int hsize, hwidth, bwidth, theight;
 
-    KConfig c("kwinmodernsysrc");
-    c.setGroup("General");
+    KConfig _c( "kwinmodernsysrc" );
+    KConfigGroup c(&_c, "General");
     showh = c.readEntry("ShowHandle", true);
 
     hwidth = c.readEntry("HandleWidth", 6);

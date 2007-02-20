@@ -14,7 +14,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfig.h>
 #include <QRegExp>
 #include <ktemporaryfile.h>
-#include <ksimpleconfig.h>
 #include <QFile>
 #include <ktoolinvocation.h>
 
@@ -75,8 +74,8 @@ Rules::Rules( const QString& str, bool temporary )
         file.write( s.data(), s.length());
         }
     file.flush();
-    KSimpleConfig cfg( file.fileName());
-    readFromCfg( cfg );
+    KConfig cfg( file.fileName(), KConfig::OnlyLocal);
+    readFromCfg( cfg.group( QString() ) );
     if( description.isEmpty())
         description = "temporary";
     }
@@ -85,7 +84,7 @@ Rules::Rules( const QString& str, bool temporary )
     var = cfg.readEntry( #var ) func; \
     var##match = (StringMatch) qMax( FirstStringMatch, \
         qMin( LastStringMatch, static_cast< StringMatch >( cfg.readEntry( #var "match",0 ))));
-    
+
 #define READ_SET_RULE( var, func, def ) \
     var = func ( cfg.readEntry( #var, def)); \
     var##rule = readSetRule( cfg, #var "rule" );
@@ -93,7 +92,7 @@ Rules::Rules( const QString& str, bool temporary )
 #define READ_SET_RULE_DEF( var , func, def ) \
     var = func ( cfg.readEntry( #var, def )); \
     var##rule = readSetRule( cfg, #var "rule" );
-    
+
 #define READ_FORCE_RULE( var, func, def) \
     var = func ( cfg.readEntry( #var, def)); \
     var##rule = readForceRule( cfg, #var "rule" );
@@ -104,7 +103,7 @@ Rules::Rules( const QString& str, bool temporary )
 
 
 
-Rules::Rules( KConfig& cfg )
+Rules::Rules( const KConfigGroup& cfg )
     : temporary_state( 0 )
     {
     readFromCfg( cfg );
@@ -112,7 +111,7 @@ Rules::Rules( KConfig& cfg )
 
 static int limit0to4( int i ) { return qMax( 0, qMin( 4, i )); }
 
-void Rules::readFromCfg( KConfig& cfg )
+void Rules::readFromCfg( const KConfigGroup& cfg )
     {
     description = cfg.readEntry( "description" );
     READ_MATCH_STRING( wmclass, .toLower().toLatin1() );
@@ -203,7 +202,7 @@ void Rules::readFromCfg( KConfig& cfg )
         cfg.deleteEntry( #var "rule" ); \
         }
 
-void Rules::write( KConfig& cfg ) const
+void Rules::write( KConfigGroup& cfg ) const
     {
     cfg.writeEntry( "description", description );
     // always write wmclass
@@ -245,7 +244,7 @@ void Rules::write( KConfig& cfg ) const
     WRITE_SET_RULE( shortcut, );
     WRITE_FORCE_RULE( disableglobalshortcuts, );
     }
-    
+
 #undef WRITE_MATCH_STRING
 #undef WRITE_SET_RULE
 #undef WRITE_FORCE_RULE
@@ -282,7 +281,7 @@ bool Rules::isEmpty() const
         && disableglobalshortcutsrule == UnusedForceRule );
     }
 
-Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
+Rules::SetRule Rules::readSetRule( const KConfigGroup& cfg, const QString& key )
     {
     int v = cfg.readEntry( key,0 );
     if( v >= DontAffect && v <= ForceTemporarily )
@@ -290,7 +289,7 @@ Rules::SetRule Rules::readSetRule( KConfig& cfg, const QString& key )
     return UnusedSetRule;
     }
 
-Rules::ForceRule Rules::readForceRule( KConfig& cfg, const QString& key )
+Rules::ForceRule Rules::readForceRule( const KConfigGroup& cfg, const QString& key )
     {
     int v = cfg.readEntry( key,0 );
     if( v == DontAffect || v == Force || v == ForceTemporarily )
@@ -298,7 +297,7 @@ Rules::ForceRule Rules::readForceRule( KConfig& cfg, const QString& key )
     return UnusedForceRule;
     }
 
-NET::WindowType Rules::readType( KConfig& cfg, const QString& key )
+NET::WindowType Rules::readType( const KConfigGroup& cfg, const QString& key )
     {
     int v = cfg.readEntry( key,0 );
     if( v >= NET::Normal && v <= NET::Splash )
@@ -317,7 +316,7 @@ bool Rules::matchType( NET::WindowType match_type ) const
         }
     return true;
     }
-    
+
 bool Rules::matchWMClass( const QByteArray& match_class, const QByteArray& match_name ) const
     {
     if( wmclassmatch != UnimportantMatch )
@@ -333,7 +332,7 @@ bool Rules::matchWMClass( const QByteArray& match_class, const QByteArray& match
         }
     return true;
     }
-    
+
 bool Rules::matchRole( const QByteArray& match_role ) const
     {
     if( windowrolematch != UnimportantMatch )
@@ -347,7 +346,7 @@ bool Rules::matchRole( const QByteArray& match_role ) const
         }
     return true;
     }
-    
+
 bool Rules::matchTitle( const QString& match_title ) const
     {
     if( titlematch != UnimportantMatch )
@@ -625,7 +624,7 @@ bool Rules::discardTemporary( bool force )
         }
     return false;
     }
-    
+
 #define DISCARD_USED_SET_RULE( var ) \
     do { \
     if( var##rule == ( SetRule ) ApplyNow || ( withdrawn && var##rule == ( SetRule ) ForceTemporarily )) \
@@ -803,7 +802,7 @@ void Client::setupWindowRules( bool ignore_temporary )
     }
 
 // Applies Force, ForceTemporarily and ApplyNow rules
-// Used e.g. after the rules have been modified using the kcm.    
+// Used e.g. after the rules have been modified using the kcm.
 void Client::applyWindowRules()
     {
     // apply force rules
@@ -859,7 +858,7 @@ void Client::finishWindowRules()
     updateWindowRules();
     client_rules = WindowRules();
     }
-    
+
 // Workspace
 
 WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
@@ -907,16 +906,15 @@ void Workspace::loadWindowRules()
         delete rules.front();
         rules.pop_front();
         }
-    KConfig cfg( "kwinrulesrc", true );
-    cfg.setGroup( "General" );
-    int count = cfg.readEntry( "count",0 );
+    KConfig cfg( "kwinrulesrc" );
+    int count = cfg.group("General").readEntry( "count",0 );
     for( int i = 1;
          i <= count;
          ++i )
         {
-        cfg.setGroup( QString::number( i ));
-        Rules* rule = new Rules( cfg );
-        rules.append( rule );
+            KConfigGroup cg( &cfg, QString::number( i ));
+            Rules* rule = new Rules( cg );
+            rules.append( rule );
         }
     }
 
@@ -929,8 +927,7 @@ void Workspace::writeWindowRules()
          it != groups.end();
          ++it )
         cfg.deleteGroup( *it );
-    cfg.setGroup( "General" );
-    cfg.writeEntry( "count", rules.count());
+    cfg.group("General").writeEntry( "count", rules.count());
     int i = 1;
     for( QList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
@@ -938,8 +935,8 @@ void Workspace::writeWindowRules()
         {
         if( (*it)->isTemporary())
             continue;
-        cfg.setGroup( QString::number( i ));
-        (*it)->write( cfg );
+        KConfigGroup cg( &cfg, QString::number( i ));
+        (*it)->write( cg );
         ++i;
         }
     }

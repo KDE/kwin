@@ -82,9 +82,9 @@ class Rules
     {
     public:
         Rules();
-        Rules( KConfig& );
+        Rules( const KConfigGroup& );
         Rules( const QString&, bool temporary );
-        void write( KConfig& ) const;
+        void write( KConfigGroup& ) const;
         bool isEmpty() const;
 #ifndef KCMRULES
         void discardUsed( bool withdrawn );
@@ -159,10 +159,10 @@ class Rules
             RegExpMatch,
             LastStringMatch = RegExpMatch
             };
-        void readFromCfg( KConfig& cfg );
-        static SetRule readSetRule( KConfig&, const QString& key );
-        static ForceRule readForceRule( KConfig&, const QString& key );
-        static NET::WindowType readType( KConfig&, const QString& key );
+        void readFromCfg( const KConfigGroup& cfg );
+        static SetRule readSetRule( const KConfigGroup&, const QString& key );
+        static ForceRule readForceRule( const KConfigGroup&, const QString& key );
+        static NET::WindowType readType( const KConfigGroup&, const QString& key );
 #ifndef KCMRULES
         static bool checkSetRule( SetRule rule, bool init );
         static bool checkForceRule( ForceRule rule );
@@ -264,7 +264,7 @@ bool Rules::checkSetStop( SetRule rule )
     {
     return rule != UnusedSetRule;
     }
-    
+
 inline
 bool Rules::checkForceStop( ForceRule rule )
     {
@@ -287,7 +287,7 @@ bool WindowRules::contains( const Rules* rule ) const
     {
     return qFind( rules.begin(), rules.end(), rule ) != rules.end();
     }
-    
+
 inline
 void WindowRules::remove( Rules* rule )
     {

@@ -30,7 +30,7 @@ class RedmondButton : public KCommonDecorationButton
 {
 	Q_OBJECT
 public:
-	RedmondButton(ButtonType type, RedmondDeco *parent, const char *name);
+	RedmondButton(ButtonType type, RedmondDeco *parent);
 	void setBitmap(const unsigned char *bitmap);
 	void setPixmap(const QPixmap &p);
 	void reset(unsigned long changed);

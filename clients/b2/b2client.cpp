@@ -116,8 +116,8 @@ static void read_config(B2ClientFactory *f)
     buttonSize = (QFontMetrics(options()->font(true)).height() + 1) & 0x3e;
     if (buttonSize < 16) buttonSize = 16;
 
-    KConfig conf("kwinb2rc");
-    conf.setGroup("General");
+    KConfig _conf( "kwinb2rc" );
+    KConfigGroup conf(&_conf, "General");
     colored_frame = conf.readEntry("UseTitleBarBorderColors", false);
     do_draw_handle = conf.readEntry("DrawGrabHandle", true);
     drawSmallBorders = !options()->moveResizeMaximizedWindows();

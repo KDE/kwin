@@ -32,7 +32,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <QString>
 #include <QWidget>
-#include <kconfig.h>
+#include <ksharedconfig.h>
 
 #include "kdecoration.h"
 

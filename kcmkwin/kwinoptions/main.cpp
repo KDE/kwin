@@ -33,7 +33,6 @@
 
 #include "mouse.h"
 #include "windows.h"
-
 #include "main.h"
 
 static KComponentData *_kcmkwm = 0;
@@ -49,7 +48,7 @@ class KFocusConfigStandalone : public KFocusConfig
 {
     public:
         KFocusConfigStandalone(QWidget* parent, const QStringList &)
-            : KFocusConfig(true, new KConfig("kwinrc", false, true), inst(), parent)
+            : KFocusConfig(true, new KConfig("kwinrc"), inst(), parent)
         {}
 };
 typedef KGenericFactory<KFocusConfigStandalone> KFocusConfigFactory;
@@ -59,7 +58,7 @@ class KMovingConfigStandalone : public KMovingConfig
 {
     public:
         KMovingConfigStandalone(QWidget* parent, const QStringList &)
-            : KMovingConfig(true, new KConfig("kwinrc", false, true), inst(), parent)
+            : KMovingConfig(true, new KConfig("kwinrc"), inst(), parent)
         {}
 };
 typedef KGenericFactory<KMovingConfigStandalone> KMovingConfigFactory;
@@ -69,7 +68,7 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
 {
     public:
         KAdvancedConfigStandalone(QWidget* parent, const QStringList &)
-            : KAdvancedConfig(true, new KConfig("kwinrc", false, true), inst(), parent)
+            : KAdvancedConfig(true, new KConfig("kwinrc"), inst(), parent)
         {}
 };
 typedef KGenericFactory<KAdvancedConfigStandalone> KAdvancedConfigFactory;
@@ -79,7 +78,7 @@ class KTranslucencyConfigStandalone : public KTranslucencyConfig
 {
     public:
         KTranslucencyConfigStandalone(QWidget* parent, const QStringList &)
-            : KTranslucencyConfig(true, new KConfig("kwinrc", false, true), inst(), parent)
+            : KTranslucencyConfig(true, new KConfig("kwinrc"), inst(), parent)
         {}
 };
 typedef KGenericFactory<KTranslucencyConfigStandalone> KTranslucencyConfigFactory;
@@ -91,7 +90,7 @@ K_EXPORT_COMPONENT_FACTORY(kwinoptions, KWinOptionsFactory)
 KWinOptions::KWinOptions(QWidget *parent, const QStringList &)
   : KCModule(inst(), parent)
 {
-  mConfig = new KConfig("kwinrc", false, true);
+  mConfig = new KConfig( "kwinrc", KConfig::IncludeGlobals );
 
   QVBoxLayout *layout = new QVBoxLayout(this);
   tab = new QTabWidget(this);
@@ -132,7 +131,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QStringList &)
   mTranslucency->layout()->setMargin( KDialog::marginHint() );
   tab->addTab(mTranslucency, i18n("&Translucency"));
   connect(mTranslucency, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
-    
+
   KAboutData *about =
     new KAboutData(I18N_NOOP("kcmkwinoptions"), I18N_NOOP("Window Behavior Configuration Module"),
                   0, 0, KAboutData::License_GPL,
@@ -180,12 +179,12 @@ void KWinOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-#ifdef __GNUC__
-#warning D-BUS TODO
-// All these calls in kcmkwin modules should be actually kwin*, because of multihead.
-#endif
-  QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-  kwin.call( "reconfigure" );
+  // Send signal to all kwin instances
+  QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+  QDBusConnection::sessionBus().send(message);
+
+
 }
 
 
@@ -220,7 +219,7 @@ K_EXPORT_COMPONENT_FACTORY(kwinactions, KActionsOptionsFactory)
 KActionsOptions::KActionsOptions(QWidget *parent, const QStringList &)
   : KCModule(inst(), parent)
 {
-  mConfig = new KConfig("kwinrc", false, true);
+  mConfig = new KConfig( "kwinrc", KConfig::IncludeGlobals );
 
   QVBoxLayout *layout = new QVBoxLayout(this);
   tab = new QTabWidget(this);
@@ -260,8 +259,11 @@ void KActionsOptions::save()
   emit KCModule::changed( false );
   // Send signal to kwin
   mConfig->sync();
-  QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-  kwin.call( "reconfigure" );
+  // Send signal to all kwin instances
+  QDBusMessage message =
+       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+  QDBusConnection::sessionBus().send(message);
+
 }
 
 

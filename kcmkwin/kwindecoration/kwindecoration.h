@@ -8,19 +8,19 @@
 	Supports new kwin configuration plugins, and titlebar button position
 	modification via dnd interface.
 
-	Based on original "kwintheme" (Window Borders) 
+	Based on original "kwintheme" (Window Borders)
 	Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-  
+
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -74,8 +74,8 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 		QString quickHelp() const;
 
 	signals:
-		void pluginLoad( KConfig* conf );
-		void pluginSave( KConfig* conf );
+		void pluginLoad( const KConfigGroup& conf );
+		void pluginSave( KConfigGroup &conf );
 		void pluginDefaults();
 
 	protected slots:
@@ -86,15 +86,15 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 		void slotButtonsChanged();
 
 	private:
-		void readConfig( KConfig* conf );
-		void writeConfig( KConfig* conf );
+		void readConfig( const KConfigGroup& conf );
+		void writeConfig( KConfigGroup &conf );
 		void findDecorations();
 		void createDecorationList();
 		void updateSelection();
 		QString decorationLibName( const QString& name );
 		QString decorationName ( QString& libName );
 		static QString styleToConfigLib( QString& styleLib );
-		void resetPlugin( KConfig* conf, const QString& currentDecoName = QString() );
+		void resetPlugin( KConfigGroup& conf, const QString& currentDecoName = QString() );
 		void checkSupportedBorderSizes();
 		static int borderSizeToIndex( BorderSize size, QList< BorderSize > sizes );
 		static BorderSize indexToBorderSize( int index, QList< BorderSize > sizes );
@@ -120,7 +120,7 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 		QWidget* pluginConfigWidget;
 		QString  currentLibraryName;
 		QString  oldLibraryName;
-		QObject* (*allocatePlugin)( KConfig* conf, QWidget* parent );
+		QObject* (*allocatePlugin)( KConfigGroup& conf, QWidget* parent );
 
 		// Page 2
 		ButtonPositionWidget *buttonPositionWidget;

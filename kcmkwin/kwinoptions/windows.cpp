@@ -637,7 +637,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     focusStealing->setWhatsThis( wtstr );
     focusStealingLabel->setWhatsThis( wtstr );
     connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
-    
+
     hideUtilityWindowsForInactive = new QCheckBox( i18n( "Hide utility windows for inactive applications" ), this );
     hideUtilityWindowsForInactive->setWhatsThis(
         i18n( "When turned on, utility windows (tool windows, torn-off menus,...) of inactive applications will be"
@@ -1273,12 +1273,12 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, co
   vLay->setMargin(KDialog::marginHint());
   vLay->setSpacing(KDialog::spacingHint());
   vLay->addSpacing(11); // to get the proper gb top offset
-  
+
   onlyDecoTranslucent = new QCheckBox(i18n("Apply translucency only to decoration"),tGroup);
   vLay->addWidget(onlyDecoTranslucent);
-  
+
   vLay->addSpacing(11);
-  
+
   QGridLayout *gLay = new QGridLayout();
   gLay->setSpacing(KDialog::spacingHint());
   gLay->setColumnStretch(1,1);
@@ -1311,7 +1311,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, co
   dockWindowOpacity->setRange(0,100);
   dockWindowOpacity->setSuffix("%");
   gLay->addWidget(dockWindowOpacity,3,1);
-  
+
   vLay->addSpacing(11);
 
   keepAboveAsActive = new QCheckBox(i18n("Treat 'keep above' windows as active ones"),tGroup);
@@ -1331,7 +1331,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, co
   vLay2->addSpacing(11); // to get the proper gb top offset
   useShadows = new QCheckBox(i18n("Use shadows"),sGroup);
   vLay2->addWidget(useShadows);
-  
+
   vLay2->addSpacing(11);
 
   QGridLayout *gLay2 = new QGridLayout();
@@ -1513,7 +1513,7 @@ void KTranslucencyConfig::load( void )
 
   KConfig conf_(QDir::homePath() + "/.xcompmgrrc");
   conf_.setGroup("xcompmgr");
-  
+
   disableARGB->setChecked(conf_.readEntry("DisableARGB", false));
 
   useShadows->setChecked(conf_.readEntry("Compmode","CompClientShadows").compare("CompClientShadows") == 0);
@@ -1568,33 +1568,33 @@ void KTranslucencyConfig::save( void )
    config->writeEntry("DockShadowSize",(int)(200.0 * dockWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
    config->writeEntry("ActiveWindowShadowSize",(int)(200.0 * activeWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
    config->writeEntry("InctiveWindowShadowSize",(int)(200.0 * inactiveWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
-   
+
   config->writeEntry("RemoveShadowsOnMove",removeShadowsOnMove->isChecked());
   config->writeEntry("RemoveShadowsOnResize",removeShadowsOnResize->isChecked());
   config->writeEntry("OnlyDecoTranslucent", onlyDecoTranslucent->isChecked());
   config->writeEntry("ResetKompmgr",resetKompmgr_);
 
-  KConfig *conf_ = new KConfig(QDir::homePath() + "/.xcompmgrrc");
-  conf_->setGroup("xcompmgr");
+  KConfig *pConf = new KConfig(QDir::homePath() + "/.xcompmgrrc");
+  KConfigGroup conf_(pConf, "xcompmgr");
 
-  conf_->writeEntry("Compmode",useShadows->isChecked()?"CompClientShadows":"");
-  conf_->writeEntry("DisableARGB",disableARGB->isChecked());
-  conf_->writeEntry("ShadowOffsetY",-1*shadowTopOffset->value());
-  conf_->writeEntry("ShadowOffsetX",-1*shadowLeftOffset->value());
+  conf_.writeEntry("Compmode",useShadows->isChecked()?"CompClientShadows":"");
+  conf_.writeEntry("DisableARGB",disableARGB->isChecked());
+  conf_.writeEntry("ShadowOffsetY",-1*shadowTopOffset->value());
+  conf_.writeEntry("ShadowOffsetX",-1*shadowLeftOffset->value());
 
 
   int r, g, b;
   shadowColor->color().getRgb( &r, &g, &b );
   QString hex;
   hex.sprintf("0x%02X%02X%02X", r,g,b);
-  conf_->writeEntry("ShadowColor",hex);
-  conf_->writeEntry("ShadowRadius",(activeWindowShadowSize->value() + inactiveWindowShadowSize->value()) / 2);
-  conf_->writeEntry("FadeWindows",fadeInWindows->isChecked());
-  conf_->writeEntry("FadeTrans",fadeOnOpacityChange->isChecked());
-  conf_->writeEntry("FadeInStep",fadeInSpeed->value()/1000.0);
-  conf_->writeEntry("FadeOutStep",fadeOutSpeed->value()/1000.0);
+  conf_.writeEntry("ShadowColor",hex);
+  conf_.writeEntry("ShadowRadius",(activeWindowShadowSize->value() + inactiveWindowShadowSize->value()) / 2);
+  conf_.writeEntry("FadeWindows",fadeInWindows->isChecked());
+  conf_.writeEntry("FadeTrans",fadeOnOpacityChange->isChecked());
+  conf_.writeEntry("FadeInStep",fadeInSpeed->value()/1000.0);
+  conf_.writeEntry("FadeOutStep",fadeOutSpeed->value()/1000.0);
 
-  delete conf_;
+  delete pConf;
 
   if (standAlone)
   {

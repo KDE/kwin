@@ -152,15 +152,15 @@ void KCMRulesList::load()
          ++it )
         delete *it;
     rules.clear();
-    KConfig cfg( "kwinrulesrc", true );
-    cfg.setGroup( "General" );
+    KConfig _cfg( "kwinrulesrc" );
+    KConfigGroup cfg(&_cfg, "General" );
     int count = cfg.readEntry( "count",0 );
     rules.reserve( count );
     for( int i = 1;
          i <= count;
          ++i )
         {
-        cfg.setGroup( QString::number( i ));
+        cfg.changeGroup( QString::number( i ));
         Rules* rule = new Rules( cfg );
         rules.append( rule );
         rules_listbox->addItem( rule->description );
@@ -186,8 +186,8 @@ void KCMRulesList::save()
          it != rules.end();
          ++it )
         {
-        cfg.setGroup( QString::number( i ));
-        (*it)->write( cfg );
+            KConfigGroup cg( &cfg, QString::number( i ));
+        (*it)->write( cg );
         ++i;
         }
     }

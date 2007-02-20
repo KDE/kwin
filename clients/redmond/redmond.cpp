@@ -238,7 +238,7 @@ void delete_pixmaps()
     pixmaps_created = false;
 }
 
-RedmondButton::RedmondButton(ButtonType type, RedmondDeco *parent, const char *name)
+RedmondButton::RedmondButton(ButtonType type, RedmondDeco *parent)
     : KCommonDecorationButton(type, parent)
 {
 	// Eliminate background flicker
@@ -443,15 +443,15 @@ KCommonDecorationButton *RedmondDeco::createButton(ButtonType type)
 {
     switch (type) {
         case MenuButton:
-            return new RedmondButton(MenuButton, this, "menu");
+            return new RedmondButton(MenuButton, this);
         case HelpButton:
-            return new RedmondButton(HelpButton, this, "help");
+            return new RedmondButton(HelpButton, this);
         case MinButton:
-            return new RedmondButton(MinButton, this, "minimize");
+            return new RedmondButton(MinButton, this);
         case MaxButton:
-            return new RedmondButton(MaxButton, this, "maximize");
+            return new RedmondButton(MaxButton, this);
         case CloseButton:
-            return new RedmondButton(CloseButton, this, "close");
+            return new RedmondButton(CloseButton, this);
 
         default:
             return 0;

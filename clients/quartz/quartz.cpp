@@ -205,8 +205,8 @@ bool QuartzHandler::supports( Ability ability )
 
 void QuartzHandler::readConfig()
 {
-	KConfig conf("kwinquartzrc");
-	conf.setGroup("General");
+	KConfig configFile("kwinquartzrc");
+        KConfigGroup conf( &configFile, "General");
 	coloredFrame = conf.readEntry( "UseTitleBarBorderColors", true);
 	extraSlim    = conf.readEntry( "UseQuartzExtraSlim", false);
 

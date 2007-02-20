@@ -73,7 +73,7 @@ unsigned long Options::updateSettings()
         altTabStyle = CDE;
 
     rollOverDesktops = config->readEntry("RollOverDesktops", true);
-    
+
 //    focusStealingPreventionLevel = config->readEntry( "FocusStealingPreventionLevel", 2 );
     // TODO use low level for now
     focusStealingPreventionLevel = config->readEntry( "FocusStealingPreventionLevel", 1 );
@@ -81,19 +81,19 @@ unsigned long Options::updateSettings()
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
 
-    KConfig *gc = new KConfig("kdeglobals", false, false);
+    KConfig *gc = new KConfig("kdeglobals", KConfig::NoGlobals);
     bool isVirtual = KApplication::desktop()->isVirtualDesktop();
     gc->setGroup("Windows");
     xineramaEnabled = gc->readEntry ("XineramaEnabled", isVirtual) &&
                       isVirtual;
-    if (xineramaEnabled) 
+    if (xineramaEnabled)
         {
         xineramaPlacementEnabled = gc->readEntry ("XineramaPlacementEnabled", true);
         xineramaMovementEnabled = gc->readEntry ("XineramaMovementEnabled", true);
         xineramaMaximizeEnabled = gc->readEntry ("XineramaMaximizeEnabled", true);
         xineramaFullscreenEnabled = gc->readEntry ("XineramaFullscreenEnabled", true);
         }
-    else 
+    else
         {
         xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = xineramaFullscreenEnabled = false;
         }
@@ -106,14 +106,14 @@ unsigned long Options::updateSettings()
     animateMinimize = config->readEntry("AnimateMinimize", true);
     animateMinimizeSpeed = config->readEntry("AnimateMinimizeSpeed", 5 );
 
-    if( focusPolicy == ClickToFocus ) 
+    if( focusPolicy == ClickToFocus )
         {
         autoRaise = false;
         autoRaiseInterval = 0;
         delayFocus = false;
         delayFocusInterval = 0;
         }
-    else 
+    else
         {
         autoRaise = config->readEntry("AutoRaise", false);
         autoRaiseInterval = config->readEntry("AutoRaiseInterval", 0 );
@@ -174,8 +174,9 @@ unsigned long Options::updateSettings()
     CmdAllWheel = mouseWheelCommand(config->readEntry("CommandAllWheel","Nothing"));
 
     //translucency settings - TODO
+    config->setGroup( "Notification Messages" );
+    useTranslucency = config->readEntry("UseTranslucency", false);
     config->setGroup( "Translucency");
-    useTranslucency = config->readEntry("UseTranslucency", true);
     translucentActiveWindows = config->readEntry("TranslucentActiveWindows", false);
     activeWindowOpacity = uint((config->readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentInactiveWindows = config->readEntry("TranslucentInactiveWindows", false);
@@ -193,38 +194,17 @@ unsigned long Options::updateSettings()
     removeShadowsOnMove = config->readEntry("RemoveShadowsOnMove", true);
     removeShadowsOnResize = config->readEntry("RemoveShadowsOnResize", true);
     onlyDecoTranslucent = config->readEntry("OnlyDecoTranslucent", false);
-    
-    refreshRate = config->readEntry( "RefreshRate", 0 );
-    smoothScale = qBound( -1, config->readEntry( "SmoothScale", -1 ), 2 );
 
-    QString glmode = config->readEntry("GLMode", "TFP" ).upper();
-    if( glmode == "TFP" )
-        glMode = GLTFP;
-    else if( glmode == "SHM" )
-        glMode = GLSHM;
-    else
-        glMode = GLFallback;
-    glAlwaysRebind = config->readEntry("GLAlwaysRebind", false );
-    glDirect = config->readEntry("GLDirect", true );
-    glVSync = config->readEntry("GLVSync", true );
-    
-    config->setGroup( "Effects" );
-    defaultEffects = config->readEntry( "Load", QStringList() << "ShowFps" << "Fade" );
-
-    config->setGroup( "EffectShowFps" );
-    effectShowFpsAlpha = config->readEntry( "Alpha", 0.5 );
-    effectShowFpsX = config->readEntry( "X", -10000 );
-    effectShowFpsY = config->readEntry( "Y", 0 );
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
     // and not kstyle tooltips and vise-versa, we don't read the
     // "EffectNoTooltip" setting from kdeglobals.
-    KConfig globalConfig("kdeglobals");
-    globalConfig.setGroup("KDE");
+    KConfig _globalConfig( "kdeglobals" );
+    KConfigGroup globalConfig(&_globalConfig, "KDE");
     topmenus = globalConfig.readEntry( "macStyle", false);
 
-    KConfig kdesktopcfg( "kdesktoprc", true );
-    kdesktopcfg.setGroup( "Menubar" );
+    KConfig _kdesktopcfg( "kdesktoprc" );
+    KConfigGroup kdesktopcfg(&_kdesktopcfg, "Menubar" );
     desktop_topmenu = kdesktopcfg.readEntry( "ShowMenubar", false);
     if( desktop_topmenu )
         topmenus = true;

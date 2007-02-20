@@ -163,8 +163,8 @@ bool PlastikHandler::supports( Ability ability )
 void PlastikHandler::readConfig()
 {
     // create a config object
-    KConfig config("kwinplastikrc");
-    config.setGroup("General");
+    KConfig configFile("kwinplastikrc");
+    const KConfigGroup config( &configFile, "General");
 
     // grab settings
     m_titleShadow    = config.readEntry("TitleShadow", true);
