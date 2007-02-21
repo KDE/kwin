@@ -90,15 +90,15 @@ void KDEDefaultConfig::slotSelectionChanged()
 // It is passed the open config from kwindecoration to improve efficiency
 void KDEDefaultConfig::load( KConfig* conf )
 {
-	conf->setGroup("KDEDefault");
-	bool override = conf->readEntry( "ShowTitleBarStipple", true);
+	KConfigGroup cg(conf, "KDEDefault");
+	bool override = cg.readEntry( "ShowTitleBarStipple", true);
 	cbShowStipple->setChecked( override );
 
-	override = conf->readEntry( "ShowGrabBar", true);
+	override = cg.readEntry( "ShowGrabBar", true);
 	cbShowGrabBar->setChecked( override );
 
 	if (highcolor) {
-		override = conf->readEntry( "UseGradients", true);
+		override = cg.readEntry( "UseGradients", true);
 		cbUseGradients->setChecked( override );
 	}
 }
@@ -107,12 +107,12 @@ void KDEDefaultConfig::load( KConfig* conf )
 // Saves the configurable options to the kwinrc config file
 void KDEDefaultConfig::save( KConfig* conf )
 {
-	conf->setGroup("KDEDefault");
-	conf->writeEntry( "ShowTitleBarStipple", cbShowStipple->isChecked() );
-	conf->writeEntry( "ShowGrabBar", cbShowGrabBar->isChecked() );
+	KConfigGroup cg(conf, "KDEDefault");
+	cg.writeEntry( "ShowTitleBarStipple", cbShowStipple->isChecked() );
+	cg.writeEntry( "ShowGrabBar", cbShowGrabBar->isChecked() );
 
 	if (highcolor)
-		conf->writeEntry( "UseGradients", cbUseGradients->isChecked() );
+		cg.writeEntry( "UseGradients", cbUseGradients->isChecked() );
 	// No need to conf->sync() - kwindecoration will do it for us
 }
 

@@ -102,15 +102,15 @@ void B2Config::slotSelectionChanged()
 // It is passed the open config from kwindecoration to improve efficiency
 void B2Config::load(KConfig * /*conf*/)
 {
-	b2Config->setGroup("General");
+    KConfigGroup cg(b2Config, "General");
 
-	bool override = b2Config->readEntry("UseTitleBarBorderColors", false);
-	cbColorBorder->setChecked(override);
+    bool override = cg.readEntry("UseTitleBarBorderColors", false);
+    cbColorBorder->setChecked(override);
 
-    override = b2Config->readEntry( "DrawGrabHandle", true);
+    override = cg.readEntry( "DrawGrabHandle", true);
     showGrabHandleCb->setChecked(override);
 
-    QString returnString = b2Config->readEntry(
+    QString returnString = cg.readEntry(
 					"MenuButtonDoubleClickOperation", "NoOp");
 
     int op;
@@ -147,13 +147,13 @@ static QString opToString(int op)
 // Saves the configurable options to the kwinrc config file
 void B2Config::save(KConfig * /*conf*/)
 {
-	b2Config->setGroup("General");
-	b2Config->writeEntry("UseTitleBarBorderColors", cbColorBorder->isChecked());
-    b2Config->writeEntry("DrawGrabHandle", showGrabHandleCb->isChecked());
-    b2Config->writeEntry("MenuButtonDoubleClickOperation",
-	    opToString(menuDblClickOp->currentIndex()));
-	// Ensure others trying to read this config get updated
-	b2Config->sync();
+    KConfigGroup cg(b2Config, "General");
+    cg.writeEntry("UseTitleBarBorderColors", cbColorBorder->isChecked());
+    cg.writeEntry("DrawGrabHandle", showGrabHandleCb->isChecked());
+    cg.writeEntry("MenuButtonDoubleClickOperation",
+		  opToString(menuDblClickOp->currentIndex()));
+    // Ensure others trying to read this config get updated
+    b2Config->sync();
 }
 
 

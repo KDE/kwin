@@ -66,8 +66,7 @@ void KDecorationOptionsPrivate::defaultKWinSettings()
 unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     {
     unsigned long changed = 0;
-    QString old_group = config->group();
-    config->setGroup( "WM" );
+    KConfigGroup wmConfig(config, "WM");
 
 // SettingColors
     QColor old_colors[NUM_COLORS*2];
@@ -79,35 +78,35 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QPalette appPal = QApplication::palette();
     // normal colors
     colors[ColorFrame] = appPal.color( QPalette::Active, QPalette::Background );
-    colors[ColorFrame] = config->readEntry("frame", colors[ColorFrame]);
+    colors[ColorFrame] = wmConfig.readEntry("frame", colors[ColorFrame]);
     colors[ColorHandle] = colors[ColorFrame];
-    colors[ColorHandle] = config->readEntry("handle", colors[ColorHandle]);
+    colors[ColorHandle] = wmConfig.readEntry("handle", colors[ColorHandle]);
 
     // full button configuration (background, blend, and foreground
     if(QPixmap::defaultDepth() > 8)
         colors[ColorButtonBg] = colors[ColorFrame].light(130);
     else
         colors[ColorButtonBg] = colors[ColorFrame];
-    colors[ColorButtonBg] = config->readEntry("activeTitleBtnBg",
+    colors[ColorButtonBg] = wmConfig.readEntry("activeTitleBtnBg",
                                               colors[ColorFrame]);
     colors[ColorTitleBar] = appPal.color( QPalette::Active, QPalette::Highlight );
-    colors[ColorTitleBar] = config->readEntry("activeBackground",
+    colors[ColorTitleBar] = wmConfig.readEntry("activeBackground",
                                               colors[ColorTitleBar]);
     if(QPixmap::defaultDepth() > 8)
         colors[ColorTitleBlend] = colors[ ColorTitleBar ].dark(110);
     else
         colors[ColorTitleBlend] = colors[ ColorTitleBar ];
-    colors[ColorTitleBlend] = config->readEntry("activeBlend",
+    colors[ColorTitleBlend] = wmConfig.readEntry("activeBlend",
                                                 colors[ColorTitleBlend]);
 
     colors[ColorFont] = appPal.color( QPalette::Active, QPalette::HighlightedText );
-    colors[ColorFont] = config->readEntry("activeForeground", colors[ColorFont]);
+    colors[ColorFont] = wmConfig.readEntry("activeForeground", colors[ColorFont]);
 
     // inactive
-    colors[ColorFrame+NUM_COLORS] = config->readEntry("inactiveFrame",
+    colors[ColorFrame+NUM_COLORS] = wmConfig.readEntry("inactiveFrame",
                                                       colors[ColorFrame]);
     colors[ColorTitleBar+NUM_COLORS] = colors[ColorFrame];
-    colors[ColorTitleBar+NUM_COLORS] = config->
+    colors[ColorTitleBar+NUM_COLORS] = wmConfig.
         readEntry("inactiveBackground", colors[ColorTitleBar+NUM_COLORS]);
 
     if(QPixmap::defaultDepth() > 8)
@@ -115,7 +114,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     else
         colors[ColorTitleBlend+NUM_COLORS] = colors[ ColorTitleBar+NUM_COLORS ];
     colors[ColorTitleBlend+NUM_COLORS] =
-        config->readEntry("inactiveBlend", colors[ColorTitleBlend+NUM_COLORS]);
+        wmConfig.readEntry("inactiveBlend", colors[ColorTitleBlend+NUM_COLORS]);
 
     // full button configuration
     if(QPixmap::defaultDepth() > 8)
@@ -123,14 +122,14 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     else
         colors[ColorButtonBg+NUM_COLORS] = colors[ColorFrame+NUM_COLORS];
     colors[ColorButtonBg+NUM_COLORS] =
-        config->readEntry("inactiveTitleBtnBg",
+        wmConfig.readEntry("inactiveTitleBtnBg",
                                colors[ColorButtonBg]);
 
     colors[ColorHandle+NUM_COLORS] =
-        config->readEntry("inactiveHandle", colors[ColorHandle]);
+        wmConfig.readEntry("inactiveHandle", colors[ColorHandle]);
 
     colors[ColorFont+NUM_COLORS] = colors[ColorFrame].dark();
-    colors[ColorFont+NUM_COLORS] = config->readEntry("inactiveForeground",
+    colors[ColorFont+NUM_COLORS] = wmConfig.readEntry("inactiveForeground",
                                                      colors[ColorFont+NUM_COLORS]);
 
     for( int i = 0;
@@ -147,16 +146,16 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
     QFont activeFontGuess = KGlobalSettings::windowTitleFont();
 
-    activeFont = config->readEntry("activeFont", activeFontGuess);
-    inactiveFont = config->readEntry("inactiveFont", activeFont);
+    activeFont = wmConfig.readEntry("activeFont", activeFontGuess);
+    inactiveFont = wmConfig.readEntry("inactiveFont", activeFont);
 
     activeFontSmall = activeFont;
 #ifdef __GNUC__
 #warning KDE4 : is it useful ? ( temporary hack )
 #endif    
 //    activeFontSmall.setPointSize(activeFont.pointSize() - 2 > 0 ? activeFont.pointSize() - 2 : activeFont.pointSize()+1 );
-    activeFontSmall = config->readEntry("activeFontSmall", activeFontSmall);
-    inactiveFontSmall = config->readEntry("inactiveFontSmall", activeFontSmall);
+    activeFontSmall = wmConfig.readEntry("activeFontSmall", activeFontSmall);
+    inactiveFontSmall = wmConfig.readEntry("inactiveFontSmall", activeFontSmall);
 
     if( old_activeFont != activeFont
         || old_inactiveFont != inactiveFont
@@ -164,16 +163,16 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
         || old_inactiveFontSmall != inactiveFontSmall )
         changed |= SettingFont;
 
-    config->setGroup( "Style" );
+    KConfigGroup styleConfig(config, "Style");
 // SettingsButtons        
     QString old_title_buttons_left = title_buttons_left;
     QString old_title_buttons_right = title_buttons_right;
     bool old_custom_button_positions = custom_button_positions;
-    custom_button_positions = config->readEntry("CustomButtonPositions", false);
+    custom_button_positions = styleConfig.readEntry("CustomButtonPositions", false);
     if (custom_button_positions)
         {
-        title_buttons_left  = config->readEntry("ButtonsOnLeft", "MS");
-        title_buttons_right = config->readEntry("ButtonsOnRight", "HIAX");
+        title_buttons_left  = styleConfig.readEntry("ButtonsOnLeft", "MS");
+        title_buttons_right = styleConfig.readEntry("ButtonsOnRight", "HIAX");
         }
     else
         {
@@ -188,14 +187,14 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
 
 // SettingTooltips
     bool old_show_tooltips = show_tooltips;
-    show_tooltips = config->readEntry("ShowToolTips", true);
+    show_tooltips = styleConfig.readEntry("ShowToolTips", true);
     if( old_show_tooltips != show_tooltips )
         changed |= SettingTooltips;
 
 // SettingBorder
 
     BorderSize old_border_size = border_size;
-    int border_size_num = config->readEntry( "BorderSize", (int)BorderNormal );
+    int border_size_num = styleConfig.readEntry( "BorderSize", (int)BorderNormal );
     if( border_size_num >= 0 && border_size_num < BordersCount )
         border_size = static_cast< BorderSize >( border_size_num );
     else
@@ -204,9 +203,9 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
         changed |= SettingBorder;
     cached_border_size = BordersCount; // invalid
 
-    config->setGroup( "Windows" );
+    KConfigGroup windowsConfig(config, "Windows");
     bool old_move_resize_maximized_windows = move_resize_maximized_windows;
-    move_resize_maximized_windows = config->readEntry( "MoveResizeMaximizedWindows", false);
+    move_resize_maximized_windows = windowsConfig.readEntry( "MoveResizeMaximizedWindows", false);
     if( old_move_resize_maximized_windows != move_resize_maximized_windows )
         changed |= SettingBorder;
 
@@ -220,8 +219,6 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
             pal[i] = NULL;
             }
         }
-
-    config->setGroup( old_group );
 
     return changed;
     }

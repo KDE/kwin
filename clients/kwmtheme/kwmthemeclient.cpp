@@ -83,14 +83,15 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
     
-    KSharedConfig::Ptr config = KGlobal::config();
-    config->setGroup("General");
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup config(_config, "General");
+    
     QString tmpStr;
 
     for(int i=0; i < 8; ++i)
     {
         framePixmaps[i] = new QPixmap(locate("data",
-                                      "kwin/pics/"+config->readEntry(keys[i], " ")));
+                                      "kwin/pics/"+config.readEntry(keys[i], " ")));
         if(framePixmaps[i]->isNull())
             kWarning() << "Unable to load frame pixmap for " << keys[i] << endl;
     }
@@ -111,19 +112,19 @@ static void create_pixmaps()
     maxExtent++;
 
     menuPix = new QPixmap(locate("data",
-                                 "kwin/pics/"+config->readEntry("menu", " ")));
+                                 "kwin/pics/"+config.readEntry("menu", " ")));
     iconifyPix = new QPixmap(locate("data",
-                                    "kwin/pics/"+config->readEntry("iconify", " ")));
+                                    "kwin/pics/"+config.readEntry("iconify", " ")));
     maxPix = new QPixmap(locate("appdata",
-                                "pics/"+config->readEntry("maximize", " ")));
+                                "pics/"+config.readEntry("maximize", " ")));
     minmaxPix = new QPixmap(locate("data",
-                                   "kwin/pics/"+config->readEntry("maximizedown", " ")));
+                                   "kwin/pics/"+config.readEntry("maximizedown", " ")));
     closePix = new QPixmap(locate("data",
-                                  "kwin/pics/"+config->readEntry("close", " ")));
+                                  "kwin/pics/"+config.readEntry("close", " ")));
     pinupPix = new QPixmap(locate("data",
-                                  "kwin/pics/"+config->readEntry("pinup", " ")));
+                                  "kwin/pics/"+config.readEntry("pinup", " ")));
     pindownPix = new QPixmap(locate("data",
-                                    "kwin/pics/"+config->readEntry("pindown", " ")));
+                                    "kwin/pics/"+config.readEntry("pindown", " ")));
     if(menuPix->isNull())                           
         menuPix->load(locate("data", "kwin/pics/menu.png"));
     if(iconifyPix->isNull())
@@ -139,18 +140,18 @@ static void create_pixmaps()
     if(pindownPix->isNull())
         pindownPix->load(locate("data", "kwin/pics/pindown.png"));
     
-    tmpStr = config->readEntry("TitleAlignment");
+    tmpStr = config.readEntry("TitleAlignment");
     if(tmpStr == "right")
         titleAlign = Qt::AlignRight | Qt::AlignVCenter;
     else if(tmpStr == "middle")
         titleAlign = Qt::AlignCenter;
     else
         titleAlign = Qt::AlignLeft | Qt::AlignVCenter;
-    titleSunken = config->readEntry("TitleFrameShaded", QVariant(true)).toBool();
+    titleSunken = config.readEntry("TitleFrameShaded", QVariant(true)).toBool();
     // titleSunken = true; // is this fixed?
-    titleTransparent = config->readEntry("PixmapUnderTitleText", QVariant(true)).toBool();
+    titleTransparent = config.readEntry("PixmapUnderTitleText", QVariant(true)).toBool();
 
-    tmpStr = config->readEntry("TitlebarLook");
+    tmpStr = config.readEntry("TitlebarLook");
     if(tmpStr == "shadedVertical"){
         aTitlePix = new QPixmap;
         aTitlePix->resize(32, 20);
@@ -183,14 +184,14 @@ static void create_pixmaps()
         grType = KPixmapEffect::EllipticGradient;
     else{
         titleGradient = false;
-        tmpStr = config->readEntry("TitlebarPixmapActive", "");
+        tmpStr = config.readEntry("TitlebarPixmapActive", "");
         if(!tmpStr.isEmpty()){
             aTitlePix = new QPixmap;
             aTitlePix->load(locate("data", "kwin/pics/" + tmpStr));
         }
         else
             aTitlePix = NULL;
-        tmpStr = config->readEntry("TitlebarPixmapInactive", "");
+        tmpStr = config.readEntry("TitlebarPixmapInactive", "");
         if(!tmpStr.isEmpty()){
             iTitlePix = new QPixmap;
             iTitlePix->load(locate("data", "kwin/pics/" + tmpStr));
@@ -270,8 +271,8 @@ void KWMThemeClient::init()
     QBoxLayout* hb = new QBoxLayout(0, QBoxLayout::LeftToRight, 0, 0, 0);
     layout->addLayout( hb, 1, 1 );
 
-    KSharedConfig::Ptr config = KGlobal::config();
-    config->setGroup("Buttons");
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup config(_config, "Buttons");
     QString val;
     MyButton *btn;
     int i;
@@ -286,7 +287,7 @@ void KWMThemeClient::init()
         }
         QString key("Button");
         key += QChar(keyOffsets[i]);
-        val = config->readEntry(key, defaultButtons[i]);
+        val = config.readEntry(key, defaultButtons[i]);
         if(val == "Menu"){
             mnuBtn = new MyButton(widget(), "menu");
             mnuBtn->setToolTip( i18n("Menu"));

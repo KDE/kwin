@@ -48,7 +48,6 @@
 #include "mouse.h"
 #include "mouse.moc"
 
-
 namespace {
 
 char const * const cnf_Max[] = {
@@ -112,13 +111,13 @@ void createMaxButtonPixmaps()
     "..............."},
   };
 
-  QString baseColor(". c " + KGlobalSettings::baseColor().name());
-  QString textColor("# c " + KGlobalSettings::textColor().name());
+  QByteArray baseColor(". c " + KGlobalSettings::baseColor().name().toAscii());
+  QByteArray textColor("# c " + KGlobalSettings::textColor().name().toAscii());
   for (int t = 0; t < 3; ++t)
   {
     maxButtonXpms[t][0] = "15 13 2 1";
-    maxButtonXpms[t][1] = baseColor.toAscii();
-    maxButtonXpms[t][2] = textColor.toAscii();
+    maxButtonXpms[t][1] = baseColor.constData();
+    maxButtonXpms[t][2] = textColor.constData();
     maxButtonPixmaps[t] = QPixmap(maxButtonXpms[t]);
     maxButtonPixmaps[t].setMask(maxButtonPixmaps[t].createHeuristicMask());
   }
@@ -374,7 +373,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     coMax[b]->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
   }
 
-  connect(kapp, SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
+  connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
 
   layout->addStretch();
 
@@ -537,42 +536,45 @@ const char* KTitleBarActionsConfig::functionMax( int i )
 
 void KTitleBarActionsConfig::load()
 {
-  config->setGroup("Windows");
-  setComboText(coTiDbl, config->readEntry("TitlebarDoubleClickCommand","Shade").toAscii());
+  KConfigGroup windowsConfig(config, "Windows");
+  setComboText(coTiDbl, windowsConfig.readEntry("TitlebarDoubleClickCommand","Shade").toAscii());
   for (int t = 0; t < 3; ++t)
-    setComboText(coMax[t],config->readEntry(cnf_Max[t], tbl_Max[t]).toAscii());
+    setComboText(coMax[t],windowsConfig.readEntry(cnf_Max[t], tbl_Max[t]).toAscii());
 
-  config->setGroup( "MouseBindings");
-  setComboText(coTiAct1,config->readEntry("CommandActiveTitlebar1","Raise").toAscii());
-  setComboText(coTiAct2,config->readEntry("CommandActiveTitlebar2","Lower").toAscii());
-  setComboText(coTiAct3,config->readEntry("CommandActiveTitlebar3","Operations menu").toAscii());
-  setComboText(coTiAct4,config->readEntry("CommandTitlebarWheel","Nothing").toAscii());  
-  setComboText(coTiInAct1,config->readEntry("CommandInactiveTitlebar1","Activate and raise").toAscii());
-  setComboText(coTiInAct2,config->readEntry("CommandInactiveTitlebar2","Activate and lower").toAscii());
-  setComboText(coTiInAct3,config->readEntry("CommandInactiveTitlebar3","Operations menu").toAscii());
+  KConfigGroup cg(config, "MouseBindings");
+  setComboText(coTiAct1,cg.readEntry("CommandActiveTitlebar1","Raise").toAscii());
+  setComboText(coTiAct2,cg.readEntry("CommandActiveTitlebar2","Lower").toAscii());
+  setComboText(coTiAct3,cg.readEntry("CommandActiveTitlebar3","Operations menu").toAscii());
+  setComboText(coTiAct4,cg.readEntry("CommandTitlebarWheel","Nothing").toAscii());  
+  setComboText(coTiInAct1,cg.readEntry("CommandInactiveTitlebar1","Activate and raise").toAscii());
+  setComboText(coTiInAct2,cg.readEntry("CommandInactiveTitlebar2","Activate and lower").toAscii());
+  setComboText(coTiInAct3,cg.readEntry("CommandInactiveTitlebar3","Operations menu").toAscii());
 }
 
 void KTitleBarActionsConfig::save()
 {
-  config->setGroup("Windows");
-  config->writeEntry("TitlebarDoubleClickCommand", functionTiDbl( coTiDbl->currentIndex() ) );
+  KConfigGroup windowsConfig(config, "Windows");
+  windowsConfig.writeEntry("TitlebarDoubleClickCommand", functionTiDbl( coTiDbl->currentIndex() ) );
   for (int t = 0; t < 3; ++t)
-    config->writeEntry(cnf_Max[t], functionMax(coMax[t]->currentIndex()));
+    windowsConfig.writeEntry(cnf_Max[t], functionMax(coMax[t]->currentIndex()));
 
-  config->setGroup("MouseBindings");
-  config->writeEntry("CommandActiveTitlebar1", functionTiAc(coTiAct1->currentIndex()));
-  config->writeEntry("CommandActiveTitlebar2", functionTiAc(coTiAct2->currentIndex()));
-  config->writeEntry("CommandActiveTitlebar3", functionTiAc(coTiAct3->currentIndex()));
-  config->writeEntry("CommandInactiveTitlebar1", functionTiInAc(coTiInAct1->currentIndex()));
-  config->writeEntry("CommandTitlebarWheel", functionTiWAc(coTiAct4->currentIndex()));  
-  config->writeEntry("CommandInactiveTitlebar2", functionTiInAc(coTiInAct2->currentIndex()));
-  config->writeEntry("CommandInactiveTitlebar3", functionTiInAc(coTiInAct3->currentIndex()));
+  KConfigGroup cg(config, "MouseBindings");
+  cg.writeEntry("CommandActiveTitlebar1", functionTiAc(coTiAct1->currentIndex()));
+  cg.writeEntry("CommandActiveTitlebar2", functionTiAc(coTiAct2->currentIndex()));
+  cg.writeEntry("CommandActiveTitlebar3", functionTiAc(coTiAct3->currentIndex()));
+  cg.writeEntry("CommandInactiveTitlebar1", functionTiInAc(coTiInAct1->currentIndex()));
+  cg.writeEntry("CommandTitlebarWheel", functionTiWAc(coTiAct4->currentIndex()));  
+  cg.writeEntry("CommandInactiveTitlebar2", functionTiInAc(coTiInAct2->currentIndex()));
+  cg.writeEntry("CommandInactiveTitlebar3", functionTiInAc(coTiInAct3->currentIndex()));
   
   if (standAlone)
   {
     config->sync();
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
   }
 }
 
@@ -821,34 +823,36 @@ const char* KWindowActionsConfig::functionAllW(int i)
 
 void KWindowActionsConfig::load()
 {
-  config->setGroup( "MouseBindings");
-  setComboText(coWin1,config->readEntry("CommandWindow1","Activate, raise and pass click").toAscii());
-  setComboText(coWin2,config->readEntry("CommandWindow2","Activate and pass click").toAscii());
-  setComboText(coWin3,config->readEntry("CommandWindow3","Activate and pass click").toAscii());
-  setComboText(coAllKey,config->readEntry("CommandAllKey","Alt").toAscii());
-  setComboText(coAll1,config->readEntry("CommandAll1","Move").toAscii());
-  setComboText(coAll2,config->readEntry("CommandAll2","Toggle raise and lower").toAscii());
-  setComboText(coAll3,config->readEntry("CommandAll3","Resize").toAscii());
-  setComboText(coAllW,config->readEntry("CommandAllWheel","Nothing").toAscii());
+  KConfigGroup cg(config, "MouseBindings");
+  setComboText(coWin1,cg.readEntry("CommandWindow1","Activate, raise and pass click").toAscii());
+  setComboText(coWin2,cg.readEntry("CommandWindow2","Activate and pass click").toAscii());
+  setComboText(coWin3,cg.readEntry("CommandWindow3","Activate and pass click").toAscii());
+  setComboText(coAllKey,cg.readEntry("CommandAllKey","Alt").toAscii());
+  setComboText(coAll1,cg.readEntry("CommandAll1","Move").toAscii());
+  setComboText(coAll2,cg.readEntry("CommandAll2","Toggle raise and lower").toAscii());
+  setComboText(coAll3,cg.readEntry("CommandAll3","Resize").toAscii());
+  setComboText(coAllW,cg.readEntry("CommandAllWheel","Nothing").toAscii());
 }
 
 void KWindowActionsConfig::save()
 {
-  config->setGroup("MouseBindings");
-  config->writeEntry("CommandWindow1", functionWin(coWin1->currentIndex()));
-  config->writeEntry("CommandWindow2", functionWin(coWin2->currentIndex()));
-  config->writeEntry("CommandWindow3", functionWin(coWin3->currentIndex()));
-  config->writeEntry("CommandAllKey", functionAllKey(coAllKey->currentIndex()));
-  config->writeEntry("CommandAll1", functionAll(coAll1->currentIndex()));
-  config->writeEntry("CommandAll2", functionAll(coAll2->currentIndex()));
-  config->writeEntry("CommandAll3", functionAll(coAll3->currentIndex()));
-  config->writeEntry("CommandAllWheel", functionAllW(coAllW->currentIndex()));
+  KConfigGroup cg(config, "MouseBindings");
+  cg.writeEntry("CommandWindow1", functionWin(coWin1->currentIndex()));
+  cg.writeEntry("CommandWindow2", functionWin(coWin2->currentIndex()));
+  cg.writeEntry("CommandWindow3", functionWin(coWin3->currentIndex()));
+  cg.writeEntry("CommandAllKey", functionAllKey(coAllKey->currentIndex()));
+  cg.writeEntry("CommandAll1", functionAll(coAll1->currentIndex()));
+  cg.writeEntry("CommandAll2", functionAll(coAll2->currentIndex()));
+  cg.writeEntry("CommandAll3", functionAll(coAll3->currentIndex()));
+  cg.writeEntry("CommandAllWheel", functionAllW(coAllW->currentIndex()));
   
   if (standAlone)
   {
     config->sync();
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
   }
 }
 

@@ -186,8 +186,7 @@ WebClient::init()
     titleHeight_ += 1;
 
   KConfig c("kwinwebrc");
-  c.setGroup("General");
-  shape_ = c.readEntry("Shape", true);
+  shape_ = c.group("General").readEntry("Shape", true);
 
   KCommonDecoration::init();
 }

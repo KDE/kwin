@@ -107,13 +107,13 @@ void ModernSysConfig::slotSelectionChanged()
 
 void ModernSysConfig::load(KConfig* /*conf*/)
 {
-	clientrc->setGroup("General");
-	bool i = clientrc->readEntry("ShowHandle", true);
+	KConfigGroup cg(clientrc, "General");
+	bool i = cg.readEntry("ShowHandle", true);
 	cbShowHandle->setChecked(i);
 	hbox->setEnabled(i);
 	handleSizeSlider->setEnabled(i);
-	handleWidth = clientrc->readEntry("HandleWidth", 6);
-	handleSize = clientrc->readEntry("HandleSize", 30);
+	handleWidth = cg.readEntry("HandleWidth", 6);
+	handleSize = cg.readEntry("HandleSize", 30);
 	handleSizeSlider->setValue(qMin((handleWidth - 6) / 2, (uint)4));
 
 }
@@ -121,10 +121,10 @@ void ModernSysConfig::load(KConfig* /*conf*/)
 
 void ModernSysConfig::save(KConfig* /*conf*/)
 {
-	clientrc->setGroup("General");
-	clientrc->writeEntry("ShowHandle", cbShowHandle->isChecked());
-	clientrc->writeEntry("HandleWidth", 6 + 2 * handleSizeSlider->value());
-	clientrc->writeEntry("HandleSize", 30 + 4 * handleSizeSlider->value());
+	KConfigGroup cg(clientrc, "General");
+	cg.writeEntry("ShowHandle", cbShowHandle->isChecked());
+	cg.writeEntry("HandleWidth", 6 + 2 * handleSizeSlider->value());
+	cg.writeEntry("HandleSize", 30 + 4 * handleSizeSlider->value());
 	clientrc->sync();
 }
 

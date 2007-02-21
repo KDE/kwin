@@ -22,7 +22,6 @@
 #include <klocale.h>
 #include <kwin.h>
 #include <QtDBus/QtDBus>
-
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 
@@ -56,8 +55,7 @@ static void saveRules( const QList< Rules* >& rules )
          it != groups.end();
          ++it )
         cfg.deleteGroup( *it );
-    cfg.setGroup( "General" );
-    cfg.writeEntry( "count", rules.count());
+    cfg.group("General").writeEntry( "count", rules.count());
     int i = 1;
     for( QList< Rules* >::ConstIterator it = rules.begin();
          it != rules.end();
@@ -257,8 +255,10 @@ static int edit( Window wid, bool whole_app )
         delete orig_rule;
         }
     saveRules( rules );
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
     return 0;
     }
 

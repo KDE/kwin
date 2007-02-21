@@ -39,6 +39,7 @@
 #include <QVBoxLayout>
 #include <kmessagebox.h>
 
+#include <qlabel.h>
 #include <klocale.h>
 #include <kcolorbutton.h>
 #include <kconfig.h>
@@ -55,7 +56,6 @@
 #include <X11/Xutil.h>
 
 #include "windows.h"
-
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
@@ -397,9 +397,9 @@ void KFocusConfig::load( void )
 {
     QString key;
 
-    config->setGroup( "Windows" );
+    KConfigGroup cg(config, "Windows");
 
-    key = config->readEntry(KWIN_FOCUS);
+    key = cg.readEntry(KWIN_FOCUS);
     if( key == "ClickToFocus")
         setFocus(CLICK_TO_FOCUS);
     else if( key == "FocusFollowsMouse")
@@ -409,31 +409,29 @@ void KFocusConfig::load( void )
     else if(key == "FocusStrictlyUnderMouse")
         setFocus(FOCUS_STRICTLY_UNDER_MOUSE);
 
-    int k = config->readEntry(KWIN_AUTORAISE_INTERVAL,750);
+    int k = cg.readEntry(KWIN_AUTORAISE_INTERVAL,750);
     setAutoRaiseInterval(k);
 
-    k = config->readEntry(KWIN_DELAYFOCUS_INTERVAL,750);
+    k = cg.readEntry(KWIN_DELAYFOCUS_INTERVAL,750);
     setDelayFocusInterval(k);
 
-    key = config->readEntry(KWIN_AUTORAISE);
+    key = cg.readEntry(KWIN_AUTORAISE);
     setAutoRaise(key == "on");
-    key = config->readEntry(KWIN_DELAYFOCUS);
+    key = cg.readEntry(KWIN_DELAYFOCUS);
     setDelayFocus(key == "on");
-    key = config->readEntry(KWIN_CLICKRAISE);
+    key = cg.readEntry(KWIN_CLICKRAISE);
     setClickRaise(key != "off");
     setAutoRaiseEnabled();      // this will disable/hide the auto raise delay widget if focus==click
     setDelayFocusEnabled();
 
-    key = config->readEntry(KWIN_ALTTABMODE, "KDE");
+    key = cg.readEntry(KWIN_ALTTABMODE, "KDE");
     setAltTabMode(key == "KDE");
 
-    setRollOverDesktops( config->readEntry(KWIN_ROLL_OVER_DESKTOPS, true));
+    setRollOverDesktops( cg.readEntry(KWIN_ROLL_OVER_DESKTOPS, true));
 
-    config->setGroup( "PopupInfo" );
-    setShowPopupinfo( config->readEntry(KWIN_SHOW_POPUP, false));
+    setShowPopupinfo( config->group("PopupInfo").readEntry(KWIN_SHOW_POPUP, false));
 
-    config->setGroup( "TabBox" );
-    setTraverseAll( config->readEntry(KWIN_TRAVERSE_ALL, false));
+    setTraverseAll( config->group("TabBox").readEntry(KWIN_TRAVERSE_ALL, false));
 
     config->setGroup("Desktops");
     emit KCModule::changed(false);
@@ -443,61 +441,61 @@ void KFocusConfig::save( void )
 {
     int v;
 
-    config->setGroup( "Windows" );
+    KConfigGroup cg(config, "Windows");
 
     v = getFocus();
     if (v == CLICK_TO_FOCUS)
-        config->writeEntry(KWIN_FOCUS,"ClickToFocus");
+        cg.writeEntry(KWIN_FOCUS,"ClickToFocus");
     else if (v == FOCUS_UNDER_MOUSE)
-        config->writeEntry(KWIN_FOCUS,"FocusUnderMouse");
+        cg.writeEntry(KWIN_FOCUS,"FocusUnderMouse");
     else if (v == FOCUS_STRICTLY_UNDER_MOUSE)
-        config->writeEntry(KWIN_FOCUS,"FocusStrictlyUnderMouse");
+        cg.writeEntry(KWIN_FOCUS,"FocusStrictlyUnderMouse");
     else
-        config->writeEntry(KWIN_FOCUS,"FocusFollowsMouse");
+        cg.writeEntry(KWIN_FOCUS,"FocusFollowsMouse");
 
     v = getAutoRaiseInterval();
     if (v <0) v = 0;
-    config->writeEntry(KWIN_AUTORAISE_INTERVAL,v);
+    cg.writeEntry(KWIN_AUTORAISE_INTERVAL,v);
 
     v = getDelayFocusInterval();
     if (v <0) v = 0;
-    config->writeEntry(KWIN_DELAYFOCUS_INTERVAL,v);
+    cg.writeEntry(KWIN_DELAYFOCUS_INTERVAL,v);
 
     if (autoRaiseOn->isChecked())
-        config->writeEntry(KWIN_AUTORAISE, "on");
+        cg.writeEntry(KWIN_AUTORAISE, "on");
     else
-        config->writeEntry(KWIN_AUTORAISE, "off");
+        cg.writeEntry(KWIN_AUTORAISE, "off");
 
     if (delayFocusOn->isChecked())
-        config->writeEntry(KWIN_DELAYFOCUS, "on");
+        cg.writeEntry(KWIN_DELAYFOCUS, "on");
     else
-        config->writeEntry(KWIN_DELAYFOCUS, "off");
+        cg.writeEntry(KWIN_DELAYFOCUS, "off");
 
     if (clickRaiseOn->isChecked())
-        config->writeEntry(KWIN_CLICKRAISE, "on");
+        cg.writeEntry(KWIN_CLICKRAISE, "on");
     else
-        config->writeEntry(KWIN_CLICKRAISE, "off");
+        cg.writeEntry(KWIN_CLICKRAISE, "off");
 
     if (altTabPopup->isChecked())
-        config->writeEntry(KWIN_ALTTABMODE, "KDE");
+        cg.writeEntry(KWIN_ALTTABMODE, "KDE");
     else
-        config->writeEntry(KWIN_ALTTABMODE, "CDE");
+        cg.writeEntry(KWIN_ALTTABMODE, "CDE");
 
-    config->writeEntry( KWIN_ROLL_OVER_DESKTOPS, rollOverDesktops->isChecked());
+    cg.writeEntry( KWIN_ROLL_OVER_DESKTOPS, rollOverDesktops->isChecked());
 
-    config->setGroup( "PopupInfo" );
-    config->writeEntry( KWIN_SHOW_POPUP, showPopupinfo->isChecked());
+    config->group("PopupInfo").writeEntry( KWIN_SHOW_POPUP, showPopupinfo->isChecked());
 
-    config->setGroup( "TabBox" );
-    config->writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
+    config->group("TabBox").writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
 
     config->setGroup("Desktops");
 
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+       // Send signal to all kwin instances
+       QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+       QDBusConnection::sessionBus().send(message);
     }
     emit KCModule::changed(false);
 }
@@ -682,19 +680,19 @@ void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
 
 void KAdvancedConfig::load( void )
 {
-    config->setGroup( "Windows" );
+    KConfigGroup cg(config, "Windows");
 
-    setAnimateShade(config->readEntry(KWIN_ANIMSHADE, true));
-    setShadeHover(config->readEntry(KWIN_SHADEHOVER, false));
-    setShadeHoverInterval(config->readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
+    setAnimateShade(cg.readEntry(KWIN_ANIMSHADE, true));
+    setShadeHover(cg.readEntry(KWIN_SHADEHOVER, false));
+    setShadeHoverInterval(cg.readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
 
-    setElectricBorders(config->readEntry(KWM_ELECTRIC_BORDER, false));
-    setElectricBorderDelay(config->readEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
+    setElectricBorders(cg.readEntry(KWM_ELECTRIC_BORDER, 0));
+    setElectricBorderDelay(cg.readEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
 
-//    setFocusStealing( config->readEntry(KWIN_FOCUS_STEALING, 2 ));
+//    setFocusStealing( cg.readEntry(KWIN_FOCUS_STEALING, 2 ));
     // TODO default to low for now
-    setFocusStealing( config->readEntry(KWIN_FOCUS_STEALING, 1 ));
-    setHideUtilityWindowsForInactive( config->readEntry( KWIN_HIDE_UTILITY, true));
+    setFocusStealing( cg.readEntry(KWIN_FOCUS_STEALING, 1 ));
+    setHideUtilityWindowsForInactive( cg.readEntry( KWIN_HIDE_UTILITY, true));
 
     emit KCModule::changed(false);
 }
@@ -703,28 +701,31 @@ void KAdvancedConfig::save( void )
 {
     int v;
 
-    config->setGroup( "Windows" );
-    config->writeEntry(KWIN_ANIMSHADE, animateShade->isChecked());
+    KConfigGroup cg(config, "Windows");
+    cg.writeEntry(KWIN_ANIMSHADE, animateShade->isChecked());
     if (shadeHoverOn->isChecked())
-        config->writeEntry(KWIN_SHADEHOVER, "on");
+        cg.writeEntry(KWIN_SHADEHOVER, "on");
     else
-        config->writeEntry(KWIN_SHADEHOVER, "off");
+        cg.writeEntry(KWIN_SHADEHOVER, "off");
 
     v = getShadeHoverInterval();
     if (v<0) v = 0;
-    config->writeEntry(KWIN_SHADEHOVER_INTERVAL, v);
+    cg.writeEntry(KWIN_SHADEHOVER_INTERVAL, v);
 
-    config->writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
-    config->writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
+    cg.writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
+    cg.writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
 
-    config->writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentIndex());
-    config->writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
+    cg.writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentIndex());
+    cg.writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
 
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+       // Send signal to all kwin instances
+       QDBusMessage message =
+       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+       QDBusConnection::sessionBus().send(message);
+
     }
     emit KCModule::changed(false);
 }
@@ -1052,35 +1053,35 @@ void KMovingConfig::load( void )
 {
     QString key;
 
-    config->setGroup( "Windows" );
+    KConfigGroup cg(config, "Windows");
 
-    key = config->readEntry(KWIN_MOVE, "Opaque");
+    key = cg.readEntry(KWIN_MOVE, "Opaque");
     if( key == "Transparent")
         setMove(TRANSPARENT);
     else if( key == "Opaque")
         setMove(OPAQUE);
 
     //CT 17Jun1998 - variable animation speed from 0 (none!!) to 10 (max)
-    bool anim = config->readEntry(KWIN_MINIMIZE_ANIM, true);
-    int animSpeed = config->readEntry(KWIN_MINIMIZE_ANIM_SPEED, 5);
+    bool anim = cg.readEntry(KWIN_MINIMIZE_ANIM, true);
+    int animSpeed = cg.readEntry(KWIN_MINIMIZE_ANIM_SPEED, 5);
     if( animSpeed < 1 ) animSpeed = 0;
     if( animSpeed > 10 ) animSpeed = 10;
     setMinimizeAnim( anim );
     setMinimizeAnimSpeed( animSpeed );
 
     // DF: please keep the default consistent with kwin (options.cpp line 145)
-    key = config->readEntry(KWIN_RESIZE_OPAQUE, "Opaque");
+    key = cg.readEntry(KWIN_RESIZE_OPAQUE, "Opaque");
     if( key == "Opaque")
         setResizeOpaque(RESIZE_OPAQUE);
     else if ( key == "Transparent")
         setResizeOpaque(RESIZE_TRANSPARENT);
 
     //KS 10Jan2003 - Geometry Tip during window move/resize
-    bool showGeomTip = config->readEntry(KWIN_GEOMETRY, false);
+    bool showGeomTip = cg.readEntry(KWIN_GEOMETRY, false);
     setGeometryTip( showGeomTip );
 
     // placement policy --- CT 19jan98 ---
-    key = config->readEntry(KWIN_PLACEMENT);
+    key = cg.readEntry(KWIN_PLACEMENT);
     //CT 13mar98 interactive placement
 //   if( key.left(11) == "interactive") {
 //     setPlacement(INTERACTIVE_PLACEMENT);
@@ -1114,21 +1115,21 @@ void KMovingConfig::load( void )
         setPlacement(SMART_PLACEMENT);
 //  }
 
-    setMoveResizeMaximized(config->readEntry(KWIN_MOVE_RESIZE_MAXIMIZED, false));
+    setMoveResizeMaximized(cg.readEntry(KWIN_MOVE_RESIZE_MAXIMIZED, false));
 
     int v;
 
-    v = config->readEntry(KWM_BRDR_SNAP_ZONE, KWM_BRDR_SNAP_ZONE_DEFAULT);
+    v = cg.readEntry(KWM_BRDR_SNAP_ZONE, KWM_BRDR_SNAP_ZONE_DEFAULT);
     if (v > MAX_BRDR_SNAP) setBorderSnapZone(MAX_BRDR_SNAP);
     else if (v < 0) setBorderSnapZone (0);
     else setBorderSnapZone(v);
 
-    v = config->readEntry(KWM_WNDW_SNAP_ZONE, KWM_WNDW_SNAP_ZONE_DEFAULT);
+    v = cg.readEntry(KWM_WNDW_SNAP_ZONE, KWM_WNDW_SNAP_ZONE_DEFAULT);
     if (v > MAX_WNDW_SNAP) setWindowSnapZone(MAX_WNDW_SNAP);
     else if (v < 0) setWindowSnapZone (0);
     else setWindowSnapZone(v);
 
-    OverlapSnap->setChecked(config->readEntry("SnapOnlyWhenOverlapping", false));
+    OverlapSnap->setChecked(cg.readEntry("SnapOnlyWhenOverlapping", false));
     emit KCModule::changed(false);
 }
 
@@ -1136,59 +1137,61 @@ void KMovingConfig::save( void )
 {
     int v;
 
-    config->setGroup( "Windows" );
+    KConfigGroup cg(config, "Windows");
 
     v = getMove();
     if (v == TRANSPARENT)
-        config->writeEntry(KWIN_MOVE,"Transparent");
+        cg.writeEntry(KWIN_MOVE,"Transparent");
     else
-        config->writeEntry(KWIN_MOVE,"Opaque");
+        cg.writeEntry(KWIN_MOVE,"Opaque");
 
-    config->writeEntry(KWIN_GEOMETRY, getGeometryTip());
+    cg.writeEntry(KWIN_GEOMETRY, getGeometryTip());
 
     // placement policy --- CT 31jan98 ---
     v =getPlacement();
     if (v == RANDOM_PLACEMENT)
-        config->writeEntry(KWIN_PLACEMENT, "Random");
+        cg.writeEntry(KWIN_PLACEMENT, "Random");
     else if (v == CASCADE_PLACEMENT)
-        config->writeEntry(KWIN_PLACEMENT, "Cascade");
+        cg.writeEntry(KWIN_PLACEMENT, "Cascade");
     else if (v == CENTERED_PLACEMENT)
-        config->writeEntry(KWIN_PLACEMENT, "Centered");
+        cg.writeEntry(KWIN_PLACEMENT, "Centered");
     else if (v == ZEROCORNERED_PLACEMENT)
-        config->writeEntry(KWIN_PLACEMENT, "ZeroCornered");
+        cg.writeEntry(KWIN_PLACEMENT, "ZeroCornered");
     else if (v == MAXIMIZING_PLACEMENT)
-        config->writeEntry(KWIN_PLACEMENT, "Maximizing");
+        cg.writeEntry(KWIN_PLACEMENT, "Maximizing");
 //CT 13mar98 manual and interactive placement
 //   else if (v == MANUAL_PLACEMENT)
-//     config->writeEntry(KWIN_PLACEMENT, "Manual");
+//     cg.writeEntry(KWIN_PLACEMENT, "Manual");
 //   else if (v == INTERACTIVE_PLACEMENT) {
 //       QString tmpstr = QString("Interactive,%1").arg(interactiveTrigger->value());
-//       config->writeEntry(KWIN_PLACEMENT, tmpstr);
+//       cg.writeEntry(KWIN_PLACEMENT, tmpstr);
 //   }
     else
-        config->writeEntry(KWIN_PLACEMENT, "Smart");
+        cg.writeEntry(KWIN_PLACEMENT, "Smart");
 
-    config->writeEntry(KWIN_MINIMIZE_ANIM, getMinimizeAnim());
-    config->writeEntry(KWIN_MINIMIZE_ANIM_SPEED, getMinimizeAnimSpeed());
+    cg.writeEntry(KWIN_MINIMIZE_ANIM, getMinimizeAnim());
+    cg.writeEntry(KWIN_MINIMIZE_ANIM_SPEED, getMinimizeAnimSpeed());
 
     v = getResizeOpaque();
     if (v == RESIZE_OPAQUE)
-        config->writeEntry(KWIN_RESIZE_OPAQUE, "Opaque");
+        cg.writeEntry(KWIN_RESIZE_OPAQUE, "Opaque");
     else
-        config->writeEntry(KWIN_RESIZE_OPAQUE, "Transparent");
+        cg.writeEntry(KWIN_RESIZE_OPAQUE, "Transparent");
 
-    config->writeEntry(KWIN_MOVE_RESIZE_MAXIMIZED, moveResizeMaximized->isChecked());
+    cg.writeEntry(KWIN_MOVE_RESIZE_MAXIMIZED, moveResizeMaximized->isChecked());
 
 
-    config->writeEntry(KWM_BRDR_SNAP_ZONE,getBorderSnapZone());
-    config->writeEntry(KWM_WNDW_SNAP_ZONE,getWindowSnapZone());
-    config->writeEntry("SnapOnlyWhenOverlapping",OverlapSnap->isChecked());
+    cg.writeEntry(KWM_BRDR_SNAP_ZONE,getBorderSnapZone());
+    cg.writeEntry(KWM_WNDW_SNAP_ZONE,getWindowSnapZone());
+    cg.writeEntry("SnapOnlyWhenOverlapping",OverlapSnap->isChecked());
 
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+        // Send signal to all kwin instances
+        QDBusMessage message =
+           QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusConnection::sessionBus().send(message);
     }
     emit KCModule::changed(false);
 }
@@ -1254,6 +1257,8 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, co
                                  "And if your GPU provides hardware-accelerated Xrender support (mainly nVidia cards):<br><br>"
                                  "<i>Option     \"RenderAccel\" \"true\"</i><br>"
                                  "In <i>Section \"Device\"</i></qt>"), this);
+  label->setOpenExternalLinks(true);
+  label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
   lay->addWidget(label);
   }
   else
@@ -1474,34 +1479,35 @@ void KTranslucencyConfig::load( void )
 
     if (!kompmgrAvailable_)
         return;
-  config->setGroup( "Translucency" );
-  useTranslucency->setChecked(config->readEntry("UseTranslucency", false));
-  activeWindowTransparency->setChecked(config->readEntry("TranslucentActiveWindows", false));
-  inactiveWindowTransparency->setChecked(config->readEntry("TranslucentInactiveWindows", true));
-  movingWindowTransparency->setChecked(config->readEntry("TranslucentMovingWindows", false));
-  removeShadowsOnMove->setChecked(config->readEntry("RemoveShadowsOnMove", false));
-  removeShadowsOnResize->setChecked(config->readEntry("RemoveShadowsOnResize", false));
-  dockWindowTransparency->setChecked(config->readEntry("TranslucentDocks", true));
-  keepAboveAsActive->setChecked(config->readEntry("TreatKeepAboveAsActive", true));
-  onlyDecoTranslucent->setChecked(config->readEntry("OnlyDecoTranslucent", false));
+  useTranslucency->setChecked(config->group("Notification Messages").readEntry("UseTranslucency", false));
 
-  activeWindowOpacity->setValue(config->readEntry("ActiveWindowOpacity",100));
-  inactiveWindowOpacity->setValue(config->readEntry("InactiveWindowOpacity",75));
-  movingWindowOpacity->setValue(config->readEntry("MovingWindowOpacity",25));
-  dockWindowOpacity->setValue(config->readEntry("DockOpacity",80));
+  KConfigGroup translucencyConfig(config, "Translucency");
+  activeWindowTransparency->setChecked(translucencyConfig.readEntry("TranslucentActiveWindows", false));
+  inactiveWindowTransparency->setChecked(translucencyConfig.readEntry("TranslucentInactiveWindows", true));
+  movingWindowTransparency->setChecked(translucencyConfig.readEntry("TranslucentMovingWindows", false));
+  removeShadowsOnMove->setChecked(translucencyConfig.readEntry("RemoveShadowsOnMove", false));
+  removeShadowsOnResize->setChecked(translucencyConfig.readEntry("RemoveShadowsOnResize", false));
+  dockWindowTransparency->setChecked(translucencyConfig.readEntry("TranslucentDocks", true));
+  keepAboveAsActive->setChecked(translucencyConfig.readEntry("TreatKeepAboveAsActive", true));
+  onlyDecoTranslucent->setChecked(translucencyConfig.readEntry("OnlyDecoTranslucent", false));
+
+  activeWindowOpacity->setValue(translucencyConfig.readEntry("ActiveWindowOpacity",100));
+  inactiveWindowOpacity->setValue(translucencyConfig.readEntry("InactiveWindowOpacity",75));
+  movingWindowOpacity->setValue(translucencyConfig.readEntry("MovingWindowOpacity",25));
+  dockWindowOpacity->setValue(translucencyConfig.readEntry("DockOpacity",80));
 
   int ass, iss, dss;
-  dss = config->readEntry("DockShadowSize", 33);
-  ass = config->readEntry("ActiveWindowShadowSize", 133);
-  iss = config->readEntry("InactiveWindowShadowSize", 67);
+  dss = translucencyConfig.readEntry("DockShadowSize", 33);
+  ass = translucencyConfig.readEntry("ActiveWindowShadowSize", 133);
+  iss = translucencyConfig.readEntry("InactiveWindowShadowSize", 67);
 
   activeWindowOpacity->setEnabled(activeWindowTransparency->isChecked());
   inactiveWindowOpacity->setEnabled(inactiveWindowTransparency->isChecked());
   movingWindowOpacity->setEnabled(movingWindowTransparency->isChecked());
   dockWindowOpacity->setEnabled(dockWindowTransparency->isChecked());
 
-  KConfig conf_(QDir::homePath() + "/.xcompmgrrc");
-  conf_.setGroup("xcompmgr");
+  KConfig *pConf = new KConfig(QDir::homePath() + "/.xcompmgrrc");
+  KConfigGroup conf_(pConf, "xcompmgr");
 
   disableARGB->setChecked(conf_.readEntry("DisableARGB", false));
 
@@ -1527,6 +1533,8 @@ void KTranslucencyConfig::load( void )
   fadeOnOpacityChange->setChecked(conf_.readEntry("FadeTrans", false));
   fadeInSpeed->setValue((int)(conf_.readEntry("FadeInStep",0.020)*1000.0));
   fadeOutSpeed->setValue((int)(conf_.readEntry("FadeOutStep",0.070)*1000.0));
+  
+  delete pConf;
 
   emit KCModule::changed(false);
 }
@@ -1535,31 +1543,32 @@ void KTranslucencyConfig::save( void )
 {
     if (!kompmgrAvailable_)
         return;
-  config->setGroup( "Translucency" );
-  config->writeEntry("UseTranslucency",useTranslucency->isChecked());
-  config->writeEntry("TranslucentActiveWindows",activeWindowTransparency->isChecked());
-  config->writeEntry("TranslucentInactiveWindows",inactiveWindowTransparency->isChecked());
-  config->writeEntry("TranslucentMovingWindows",movingWindowTransparency->isChecked());
-  config->writeEntry("TranslucentDocks",dockWindowTransparency->isChecked());
-  config->writeEntry("TreatKeepAboveAsActive",keepAboveAsActive->isChecked());
-  config->writeEntry("ActiveWindowOpacity",activeWindowOpacity->value());
-  config->writeEntry("InactiveWindowOpacity",inactiveWindowOpacity->value());
-  config->writeEntry("MovingWindowOpacity",movingWindowOpacity->value());
-  config->writeEntry("DockOpacity",dockWindowOpacity->value());
+  config->group("Notification Messages").writeEntry("UseTranslucency",useTranslucency->isChecked());
+
+  KConfigGroup translucencyConfig(config, "Translucency");
+  translucencyConfig.writeEntry("TranslucentActiveWindows",activeWindowTransparency->isChecked());
+  translucencyConfig.writeEntry("TranslucentInactiveWindows",inactiveWindowTransparency->isChecked());
+  translucencyConfig.writeEntry("TranslucentMovingWindows",movingWindowTransparency->isChecked());
+  translucencyConfig.writeEntry("TranslucentDocks",dockWindowTransparency->isChecked());
+  translucencyConfig.writeEntry("TreatKeepAboveAsActive",keepAboveAsActive->isChecked());
+  translucencyConfig.writeEntry("ActiveWindowOpacity",activeWindowOpacity->value());
+  translucencyConfig.writeEntry("InactiveWindowOpacity",inactiveWindowOpacity->value());
+  translucencyConfig.writeEntry("MovingWindowOpacity",movingWindowOpacity->value());
+  translucencyConfig.writeEntry("DockOpacity",dockWindowOpacity->value());
   // for simplification:
   // xcompmgr supports a general shadow radius and additionally lets external apps set a multiplicator for each window
   // (speed reasons, so the shadow matrix hasn't to be recreated for every window)
   // we set inactive windows to 100%, the radius to the inactive window value and adjust the multiplicators for docks and active windows
   // this way the user can set the three values without caring about the radius/multiplicator stuff
    // additionally we find a value between big and small values to have a more smooth appereance
-   config->writeEntry("DockShadowSize",(int)(200.0 * dockWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
-   config->writeEntry("ActiveWindowShadowSize",(int)(200.0 * activeWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
-   config->writeEntry("InctiveWindowShadowSize",(int)(200.0 * inactiveWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
+   translucencyConfig.writeEntry("DockShadowSize",(int)(200.0 * dockWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
+   translucencyConfig.writeEntry("ActiveWindowShadowSize",(int)(200.0 * activeWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
+   translucencyConfig.writeEntry("InctiveWindowShadowSize",(int)(200.0 * inactiveWindowShadowSize->value() / (activeWindowShadowSize->value() + inactiveWindowShadowSize->value())));
 
-  config->writeEntry("RemoveShadowsOnMove",removeShadowsOnMove->isChecked());
-  config->writeEntry("RemoveShadowsOnResize",removeShadowsOnResize->isChecked());
-  config->writeEntry("OnlyDecoTranslucent", onlyDecoTranslucent->isChecked());
-  config->writeEntry("ResetKompmgr",resetKompmgr_);
+  translucencyConfig.writeEntry("RemoveShadowsOnMove",removeShadowsOnMove->isChecked());
+  translucencyConfig.writeEntry("RemoveShadowsOnResize",removeShadowsOnResize->isChecked());
+  translucencyConfig.writeEntry("OnlyDecoTranslucent", onlyDecoTranslucent->isChecked());
+  translucencyConfig.writeEntry("ResetKompmgr",resetKompmgr_);
 
   KConfig *pConf = new KConfig(QDir::homePath() + "/.xcompmgrrc");
   KConfigGroup conf_(pConf, "xcompmgr");
@@ -1586,8 +1595,11 @@ void KTranslucencyConfig::save( void )
   if (standAlone)
   {
     config->sync();
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
   }
   emit KCModule::changed(false);
 }

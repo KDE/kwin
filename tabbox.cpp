@@ -44,7 +44,7 @@ namespace KWinInternal
 extern QPixmap* kwin_get_menu_pix_hack();
 
 TabBox::TabBox( Workspace *ws, const char *name )
-    : Q3Frame( 0, name, Qt::WNoAutoErase | Qt::X11BypassWindowManagerHint ), client(0), wspace(ws)
+    : Q3Frame( 0, name, Qt::WNoAutoErase ), current_client( NULL ), wspace(ws)
     {
     setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
     setLineWidth(2);
@@ -54,14 +54,28 @@ TabBox::TabBox( Workspace *ws, const char *name )
 
     no_tasks = i18n("*** No Windows ***");
     m = DesktopMode; // init variables
-    updateKeyMapping();
     reconfigure();
     reset();
     connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
+    
+    XSetWindowAttributes attr;
+    attr.override_redirect = 1;
+    outline_left = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_right = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_top = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_bottom = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
     }
 
 TabBox::~TabBox()
     {
+    XDestroyWindow( display(), outline_left );
+    XDestroyWindow( display(), outline_right );
+    XDestroyWindow( display(), outline_top );
+    XDestroyWindow( display(), outline_bottom );
     }
 
 
@@ -111,6 +125,10 @@ void TabBox::createClientList(ClientList &list, int desktop /*-1 = all*/, Client
                     list += c;
                 else if( !list.contains( modal ))
                     list += modal;
+                else
+                    {
+                    // nothing
+                    }
                 }
             }
 
@@ -138,7 +156,7 @@ void TabBox::reset()
     {
     int w, h, cw = 0, wmax = 0;
 
-    QRect r = KGlobalSettings::desktopGeometry(cursorPos());
+    QRect r = KGlobalSettings::desktopGeometry(QCursor::pos());
 
     // calculate height of 1 line
     // fontheight + 1 pixel above + 1 pixel below, or 32x32 icon + 2 pixel above + below
@@ -146,10 +164,10 @@ void TabBox::reset()
 
     if ( mode() == WindowsMode )
         {
-        client = workspace()->activeClient();
+        setCurrentClient( workspace()->activeClient());
 
         // get all clients to show
-        createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), client, true);
+        createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), current_client, true);
 
         // calculate maximum caption width
         cw = fontMetrics().width(no_tasks)+20;
@@ -226,7 +244,8 @@ void TabBox::nextPrev( bool next)
     {
     if ( mode() == WindowsMode )
         {
-        Client* firstClient = 0;
+        Client* firstClient = NULL;
+        Client* client = current_client;
         do
             {
             if ( next )
@@ -246,6 +265,7 @@ void TabBox::nextPrev( bool next)
                 break;
                 }
             } while ( client && !clients.contains( client ));
+        setCurrentClient( client );
         }
     else if( mode() == DesktopMode )
         {
@@ -283,9 +303,18 @@ Client* TabBox::currentClient()
     {
     if ( mode() != WindowsMode )
         return 0;
-    if (!workspace()->hasClient( client ))
+    if (!workspace()->hasClient( current_client ))
         return 0;
-    return client;
+    return current_client;
+    }
+
+void TabBox::setCurrentClient( Client* c )
+    {
+    if( current_client != c )
+        {
+        current_client = c;
+        updateOutline();
+        }
     }
 
 /*!
@@ -307,6 +336,11 @@ int TabBox::currentDesktop()
  */
 void TabBox::showEvent( QShowEvent* )
     {
+    updateOutline();
+    XRaiseWindow( display(), outline_left );
+    XRaiseWindow( display(), outline_right );
+    XRaiseWindow( display(), outline_top );
+    XRaiseWindow( display(), outline_bottom );
     raise();
     }
 
@@ -316,6 +350,10 @@ void TabBox::showEvent( QShowEvent* )
  */
 void TabBox::hideEvent( QHideEvent* )
     {
+    XUnmapWindow( display(), outline_left );
+    XUnmapWindow( display(), outline_right );
+    XUnmapWindow( display(), outline_top );
+    XUnmapWindow( display(), outline_bottom );
     }
 
 /*!
@@ -354,7 +392,7 @@ void TabBox::drawContents( QPainter * )
               if ( workspace()->hasClient( *it ) )  // safety
                   {
                   // draw highlight background
-                  if ( (*it) == currentClient() )
+                  if ( (*it) == current_client )
                     p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Highlight ));
 
                   // draw icon
@@ -388,10 +426,10 @@ void TabBox::drawContents( QPainter * )
                   else
                     s += (*it)->caption();
 
-                  s = KStringHandler::cPixelSqueeze(s, fontMetrics(), r.width() - 5 - iconWidth - 8);
+                  s = fontMetrics().elidedText(s, Qt::ElideMiddle, r.width() - 5 - iconWidth - 8);
 
                   // draw text
-                  if ( (*it) == currentClient() )
+                  if ( (*it) == current_client )
                     p.setPen(palette().color( QPalette::HighlightedText ));
                   else if( (*it)->isMinimized())
                     {
@@ -509,6 +547,91 @@ void TabBox::drawContents( QPainter * )
     localPainter.drawImage( QPoint( r.x(), r.y() ), pix.toImage() );
     }
 
+void TabBox::updateOutline()
+    {
+    Client* c = currentClient();
+    if( c == NULL || this->isHidden() || !c->isShown( true ) || !c->isOnCurrentDesktop())
+        {
+        XUnmapWindow( display(), outline_left );
+        XUnmapWindow( display(), outline_right );
+        XUnmapWindow( display(), outline_top );
+        XUnmapWindow( display(), outline_bottom );
+        return;
+        }
+    // left/right parts are between top/bottom, they don't reach as far as the corners
+    XMoveResizeWindow( display(), outline_left, c->x(), c->y() + 5, 5, c->height() - 10 );
+    XMoveResizeWindow( display(), outline_right, c->x() + c->width() - 5, c->y() + 5, 5, c->height() - 10 );
+    XMoveResizeWindow( display(), outline_top, c->x(), c->y(), c->width(), 5 );
+    XMoveResizeWindow( display(), outline_bottom, c->x(), c->y() + c->height() - 5, c->width(), 5 );
+    {
+    QPixmap pix( 5, c->height() - 10 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 0, 0, 0, pix.height() - 1 );
+    p.drawLine( 4, 0, 4, pix.height() - 1 );
+    p.setPen( Qt::gray );
+    p.drawLine( 1, 0, 1, pix.height() - 1 );
+    p.drawLine( 3, 0, 3, pix.height() - 1 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 0, 2, pix.height() - 1 );
+    p.end();
+    XSetWindowBackgroundPixmap( display(), outline_left, pix.handle());
+    XSetWindowBackgroundPixmap( display(), outline_right, pix.handle());
+    }
+    {
+    QPixmap pix( c->width(), 5 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 0, 0, pix.width() - 1 - 0, 0 );
+    p.drawLine( 4, 4, pix.width() - 1 - 4, 4 );
+    p.drawLine( 0, 0, 0, 4 );
+    p.drawLine( pix.width() - 1 - 0, 0, pix.width() - 1 - 0, 4 );
+    p.setPen( Qt::gray );
+    p.drawLine( 1, 1, pix.width() - 1 - 1, 1 );
+    p.drawLine( 3, 3, pix.width() - 1 - 3, 3 );
+    p.drawLine( 1, 1, 1, 4 );
+    p.drawLine( 3, 3, 3, 4 );
+    p.drawLine( pix.width() - 1 - 1, 1, pix.width() - 1 - 1, 4 );
+    p.drawLine( pix.width() - 1 - 3, 3, pix.width() - 1 - 3, 4 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 2, pix.width() - 1 - 2, 2 );
+    p.drawLine( 2, 2, 2, 4 );
+    p.drawLine( pix.width() - 1 - 2, 2, pix.width() - 1 - 2, 4 );
+    p.end();
+    XSetWindowBackgroundPixmap( display(), outline_top, pix.handle());
+    }
+    {
+    QPixmap pix( c->width(), 5 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 4, 0, pix.width() - 1 - 4, 0 );
+    p.drawLine( 0, 4, pix.width() - 1 - 0, 4 );
+    p.drawLine( 0, 4, 0, 0 );
+    p.drawLine( pix.width() - 1 - 0, 4, pix.width() - 1 - 0, 0 );
+    p.setPen( Qt::gray );
+    p.drawLine( 3, 1, pix.width() - 1 - 3, 1 );
+    p.drawLine( 1, 3, pix.width() - 1 - 1, 3 );
+    p.drawLine( 3, 1, 3, 0 );
+    p.drawLine( 1, 3, 1, 0 );
+    p.drawLine( pix.width() - 1 - 3, 1, pix.width() - 1 - 3, 0 );
+    p.drawLine( pix.width() - 1 - 1, 3, pix.width() - 1 - 1, 0 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 2, pix.width() - 1 - 2, 2 );
+    p.drawLine( 2, 0, 2, 2 );
+    p.drawLine( pix.width() - 1 - 2, 0, pix.width() - 1 - 2 , 2 );
+    p.end();
+    XSetWindowBackgroundPixmap( display(), outline_bottom, pix.handle());
+    }
+    XClearWindow( display(), outline_left );
+    XClearWindow( display(), outline_right );
+    XClearWindow( display(), outline_top );
+    XClearWindow( display(), outline_bottom );
+    XMapWindow( display(), outline_left );
+    XMapWindow( display(), outline_right );
+    XMapWindow( display(), outline_top );
+    XMapWindow( display(), outline_bottom );
+    }
+
 void TabBox::hide()
     {
     delayedShowTimer.stop();
@@ -523,8 +646,7 @@ void TabBox::hide()
 void TabBox::reconfigure()
     {
     KSharedConfigPtr c(KGlobal::config());
-    c->setGroup("TabBox");
-    options_traverse_all = c->readEntry("TraverseAll", false );
+    options_traverse_all = c->group("TabBox").readEntry("TraverseAll", false );
     }
 
 /*!
@@ -548,8 +670,8 @@ void TabBox::reconfigure()
 void TabBox::delayedShow()
     {
     KSharedConfigPtr c(KGlobal::config());
-    c->setGroup("TabBox");
-    bool delay = c->readEntry("ShowDelay", true);
+    KConfigGroup cg(c, "TabBox");
+    bool delay = cg.readEntry("ShowDelay", true);
 
     if (!delay)
         {
@@ -557,7 +679,7 @@ void TabBox::delayedShow()
         return;
         }
 
-    int delayTime = c->readEntry("DelayTime", 90);
+    int delayTime = cg.readEntry("DelayTime", 90);
     delayedShowTimer.setSingleShot(true);
     delayedShowTimer.start(delayTime);
     }
@@ -586,7 +708,7 @@ void TabBox::handleMouseEvent( XEvent* e )
             {
             if( workspace()->hasClient( *it ) && (num == 0) ) // safety
                 {
-                client = *it;
+                setCurrentClient( *it );
                 break;
                 }
             num--;
@@ -666,10 +788,6 @@ bool areKeySymXsDepressed( bool bAll, const uint keySyms[], int nKeySyms )
     return bAll;
     }
 
-static const int MAX_KEYSYMS = 4;
-static uint alt_keysyms[ MAX_KEYSYMS ];
-static uint win_keysyms[ MAX_KEYSYMS ];
-
 static bool areModKeysDepressed( const QKeySequence& seq )
     {
     uint rgKeySyms[10];
@@ -690,17 +808,18 @@ static bool areModKeysDepressed( const QKeySequence& seq )
         }
     if( mod & Qt::ALT )
         {
-        for( int i = 0;
-             i < MAX_KEYSYMS && alt_keysyms[ i ] != NoSymbol;
-             ++i )
-            rgKeySyms[nKeySyms++] = alt_keysyms[ i ];
+        rgKeySyms[nKeySyms++] = XK_Alt_L;
+        rgKeySyms[nKeySyms++] = XK_Alt_R;
         }
     if( mod & Qt::META )
         {
-        for( int i = 0;
-             i < MAX_KEYSYMS && win_keysyms[ i ] != NoSymbol;
-             ++i )
-            rgKeySyms[nKeySyms++] = win_keysyms[ i ];
+        // It would take some code to determine whether the Win key
+        // is associated with Super or Meta, so check for both.
+        // See bug #140023 for details.
+        rgKeySyms[nKeySyms++] = XK_Super_L;
+        rgKeySyms[nKeySyms++] = XK_Super_R;
+        rgKeySyms[nKeySyms++] = XK_Meta_L;
+        rgKeySyms[nKeySyms++] = XK_Meta_R;
         }
 
     return areKeySymXsDepressed( false, rgKeySyms, nKeySyms );
@@ -712,44 +831,6 @@ static bool areModKeysDepressed( const KShortcut& cut )
         return true;
 
     return false;
-    }
-
-void TabBox::updateKeyMapping()
-    {
-    const int size = 6;
-    uint keysyms[ size ] = { XK_Alt_L, XK_Alt_R, XK_Super_L, XK_Super_R, XK_Meta_L, XK_Meta_R };
-    XModifierKeymap* map = XGetModifierMapping( display() );
-    int altpos = 0;
-    int winpos = 0;
-    int winmodpos = -1;
-    int winmod = KKeyServer::modXMeta();
-    while( winmod > 0 ) // get position of the set bit in winmod
-        {
-        winmod >>= 1;
-        ++winmodpos;
-        }
-    for( int i = 0;
-         i < MAX_KEYSYMS;
-         ++i )
-        alt_keysyms[ i ] = win_keysyms[ i ] = NoSymbol;
-    for( int i = 0;
-         i < size;
-         ++i )
-        {
-        KeyCode keycode = XKeysymToKeycode( display(), keysyms[ i ] );
-        for( int j = 0;
-             j < map->max_keypermod;
-             ++j )
-            {
-            if( map->modifiermap[ 3 * map->max_keypermod + j ] == keycode ) // Alt
-                if( altpos < MAX_KEYSYMS )
-                    alt_keysyms[ altpos++ ] = keysyms[ i ];
-            if( winmodpos >= 0 && map->modifiermap[ winmodpos * map->max_keypermod + j ] == keycode )
-                if( winpos < MAX_KEYSYMS )
-                    win_keysyms[ winpos++ ] = keysyms[ i ];
-            }
-        }
-    XFreeModifiermap( map );
     }
 
 void Workspace::slotWalkThroughWindows()

@@ -68,32 +68,32 @@ PlastikConfig::~PlastikConfig()
 
 void PlastikConfig::load(KConfig*)
 {
-    m_config->setGroup("General");
+    KConfigGroup cg(m_config, "General");
 
 
-    QString value = m_config->readEntry("TitleAlignment", "AlignLeft");
+    QString value = cg.readEntry("TitleAlignment", "AlignLeft");
     QRadioButton *button = m_dialog->titleAlign->findChild<QRadioButton*>(value.toLatin1());
     if (button) button->setChecked(true);
-    bool animateButtons = m_config->readEntry("AnimateButtons", true);
+    bool animateButtons = cg.readEntry("AnimateButtons", true);
     m_dialog->animateButtons->setChecked(animateButtons);
-    bool menuClose = m_config->readEntry("CloseOnMenuDoubleClick", true);
+    bool menuClose = cg.readEntry("CloseOnMenuDoubleClick", true);
     m_dialog->menuClose->setChecked(menuClose);
-    bool titleShadow = m_config->readEntry("TitleShadow", true);
+    bool titleShadow = cg.readEntry("TitleShadow", true);
     m_dialog->titleShadow->setChecked(titleShadow);
-    bool coloredBorder = m_config->readEntry("ColoredBorder", true);
+    bool coloredBorder = cg.readEntry("ColoredBorder", true);
     m_dialog->coloredBorder->setChecked(coloredBorder);
 }
 
 void PlastikConfig::save(KConfig*)
 {
-    m_config->setGroup("General");
+    KConfigGroup cg(m_config, "General");
 
     QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->selected();
-    if (button) m_config->writeEntry("TitleAlignment", QString(button->objectName()));
-    m_config->writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
-    m_config->writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked() );
-    m_config->writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
-    m_config->writeEntry("ColoredBorder", m_dialog->coloredBorder->isChecked() );
+    if (button) cg.writeEntry("TitleAlignment", QString(button->objectName()));
+    cg.writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
+    cg.writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked() );
+    cg.writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
+    cg.writeEntry("ColoredBorder", m_dialog->coloredBorder->isChecked() );
     m_config->sync();
 }
 

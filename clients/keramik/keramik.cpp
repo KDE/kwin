@@ -561,12 +561,11 @@ void KeramikHandler::pretile( QPixmap *&pix, int size, Qt::Orientation dir )
 void KeramikHandler::readConfig()
 {
 	KConfig *c = new KConfig( "kwinkeramikrc" );
-
-	c->setGroup( "General" );
-	showIcons = c->readEntry( "ShowAppIcons", true);
-	shadowedText = c->readEntry( "UseShadowedText", true);
-	smallCaptionBubbles = c->readEntry( "SmallCaptionBubbles", false);
-	largeGrabBars = c->readEntry( "LargeGrabBars", true);
+	KConfigGroup cg(c, "General");
+	showIcons = cg.readEntry( "ShowAppIcons", true);
+	shadowedText = cg.readEntry( "UseShadowedText", true);
+	smallCaptionBubbles = cg.readEntry( "SmallCaptionBubbles", false);
+	largeGrabBars = cg.readEntry( "LargeGrabBars", true);
 
 	if ( ! settings_cache ) {
 		settings_cache = new SettingsCache;

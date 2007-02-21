@@ -76,22 +76,22 @@ KeramikConfig::~KeramikConfig()
 // It is passed the open config from kwindecoration to improve efficiency
 void KeramikConfig::load( KConfig* )
 {
-	c->setGroup("General");
-	ui->showAppIcons->setChecked( c->readEntry("ShowAppIcons", true) );
-	ui->smallCaptions->setChecked( c->readEntry("SmallCaptionBubbles", false) );
-	ui->largeGrabBars->setChecked( c->readEntry("LargeGrabBars", true) );
-	ui->useShadowedText->setChecked( c->readEntry("UseShadowedText", true) );
+	KConfigGroup cg(c, "General");
+	ui->showAppIcons->setChecked( cg.readEntry("ShowAppIcons", true) );
+	ui->smallCaptions->setChecked( cg.readEntry("SmallCaptionBubbles", false) );
+	ui->largeGrabBars->setChecked( cg.readEntry("LargeGrabBars", true) );
+	ui->useShadowedText->setChecked( cg.readEntry("UseShadowedText", true) );
 }
 
 
 // Saves the configurable options to the kwinrc config file
 void KeramikConfig::save( KConfig* )
 {
-	c->setGroup( "General" );
-	c->writeEntry( "ShowAppIcons", ui->showAppIcons->isChecked() );
-	c->writeEntry( "SmallCaptionBubbles", ui->smallCaptions->isChecked() );
-	c->writeEntry( "LargeGrabBars", ui->largeGrabBars->isChecked() );
-	c->writeEntry( "UseShadowedText", ui->useShadowedText->isChecked() );
+	KConfigGroup cg(c, "General");
+	cg.writeEntry( "ShowAppIcons", ui->showAppIcons->isChecked() );
+	cg.writeEntry( "SmallCaptionBubbles", ui->smallCaptions->isChecked() );
+	cg.writeEntry( "LargeGrabBars", ui->largeGrabBars->isChecked() );
+	cg.writeEntry( "UseShadowedText", ui->useShadowedText->isChecked() );
 	c->sync();
 }
 

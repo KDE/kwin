@@ -75,10 +75,10 @@ void QuartzConfig::slotSelectionChanged()
 // It is passed the open config from kwindecoration to improve efficiency
 void QuartzConfig::load( KConfig* /*conf*/ )
 {
-	quartzConfig->setGroup("General");
-	bool override = quartzConfig->readEntry( "UseTitleBarBorderColors", true);
+	KConfigGroup cg(quartzConfig, "General");
+	bool override = cg.readEntry( "UseTitleBarBorderColors", true);
 	cbColorBorder->setChecked( override );
-	override = quartzConfig->readEntry( "UseQuartzExtraSlim", false);
+	override = cg.readEntry( "UseQuartzExtraSlim", false);
 	cbExtraSmall->setChecked( override );
 }
 
@@ -86,9 +86,9 @@ void QuartzConfig::load( KConfig* /*conf*/ )
 // Saves the configurable options to the kwinrc config file
 void QuartzConfig::save( KConfig* /*conf*/ )
 {
-	quartzConfig->setGroup("General");
-	quartzConfig->writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );
-	quartzConfig->writeEntry( "UseQuartzExtraSlim", cbExtraSmall->isChecked() );
+	KConfigGroup cg(quartzConfig, "General");
+	cg.writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );
+	cg.writeEntry( "UseQuartzExtraSlim", cbExtraSmall->isChecked() );
 	// Ensure others trying to read this config get updated
 	quartzConfig->sync();
 }
