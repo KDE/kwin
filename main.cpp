@@ -122,7 +122,7 @@ Application::Application( )
     atoms = new Atoms;
 
     initting = false; // TODO
-    
+
     // create workspace.
     (void) new Workspace( isSessionRestored() );
 
