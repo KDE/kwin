@@ -360,11 +360,11 @@ void Toplevel::finishCompositing()
 
 void Toplevel::discardWindowPixmap()
     {
+    addDamageFull();
     if( window_pix == None )
         return;
     XFreePixmap( display(), window_pix );
     window_pix = None;
-    addDamageFull();
     }
 
 Pixmap Toplevel::createWindowPixmap() const
