@@ -18,8 +18,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/desktopchangeslide.h"
 #include "effects/dialogparent.h"
 #include "effects/fade.h"
-#include "effects/fadein.h"
-#include "effects/fadeout.h"
 #include "effects/howto.h"
 #include "effects/maketransparent.h"
 #include "effects/minimizeanimation.h"
@@ -146,8 +144,6 @@ EffectsHandler::EffectsHandler()
     registerEffect("ShakyMove", new GenericEffectFactory<ShakyMoveEffect>);
     registerEffect("ShiftWorkspaceUp", new GenericEffectFactory<ShiftWorkspaceUpEffect>);
     registerEffect("Fade", new GenericEffectFactory<FadeEffect>);
-    registerEffect("FadeIn", new GenericEffectFactory<FadeInEffect>);
-    registerEffect("FadeOut", new GenericEffectFactory<FadeOutEffect>);
     registerEffect("ScaleIn", new GenericEffectFactory<ScaleInEffect>);
     registerEffect("DialogParent", new GenericEffectFactory<DialogParentEffect>);
     registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);

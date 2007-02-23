@@ -63,8 +63,6 @@ set(kwin_KDEINIT_SRCS
    deleted.cpp
    effects.cpp
    effects/fade.cpp
-   effects/fadein.cpp
-   effects/fadeout.cpp
    effects/maketransparent.cpp
    effects/scalein.cpp
    effects/shakymove.cpp
