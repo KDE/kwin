@@ -1,4 +1,8 @@
-include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
+include_directories(
+    ${CMAKE_SOURCE_DIR}/workspace/kwin/lib
+    ${CMAKE_SOURCE_DIR}/workspace/kwin/lib
+    ${CMAKE_BINARY_DIR}/workspace/kwin
+)
 
 ADD_DEFINITIONS(-DKCMRULES)
 ########### next target ###############
