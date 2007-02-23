@@ -194,27 +194,27 @@ unsigned long Options::updateSettings()
     removeShadowsOnResize = config.readEntry("RemoveShadowsOnResize", true);
     onlyDecoTranslucent = config.readEntry("OnlyDecoTranslucent", false);
 
-    refreshRate = config->readEntry( "RefreshRate", 0 );
-    smoothScale = qBound( -1, config->readEntry( "SmoothScale", -1 ), 2 );
+    refreshRate = config.readEntry( "RefreshRate", 0 );
+    smoothScale = qBound( -1, config.readEntry( "SmoothScale", -1 ), 2 );
 
-    QString glmode = config->readEntry("GLMode", "TFP" ).upper();
+    QString glmode = config.readEntry("GLMode", "TFP" ).upper();
     if( glmode == "TFP" )
         glMode = GLTFP;
     else if( glmode == "SHM" )
         glMode = GLSHM;
     else
         glMode = GLFallback;
-    glAlwaysRebind = config->readEntry("GLAlwaysRebind", false );
-    glDirect = config->readEntry("GLDirect", true );
-    glVSync = config->readEntry("GLVSync", true );
+    glAlwaysRebind = config.readEntry("GLAlwaysRebind", false );
+    glDirect = config.readEntry("GLDirect", true );
+    glVSync = config.readEntry("GLVSync", true );
     
-    config->setGroup( "Effects" );
-    defaultEffects = config->readEntry( "Load", QStringList() << "ShowFps" << "Fade" );
+    config.changeGroup( "Effects" );
+    defaultEffects = config.readEntry( "Load", QStringList() << "ShowFps" << "Fade" );
 
-    config->setGroup( "EffectShowFps" );
-    effectShowFpsAlpha = config->readEntry( "Alpha", 0.5 );
-    effectShowFpsX = config->readEntry( "X", -10000 );
-    effectShowFpsY = config->readEntry( "Y", 0 );
+    config.changeGroup( "EffectShowFps" );
+    effectShowFpsAlpha = config.readEntry( "Alpha", 0.5 );
+    effectShowFpsX = config.readEntry( "X", -10000 );
+    effectShowFpsY = config.readEntry( "Y", 0 );
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
     // and not kstyle tooltips and vise-versa, we don't read the
