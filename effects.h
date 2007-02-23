@@ -185,6 +185,21 @@ class EffectWindow
         QPoint pos() const;
         QSize size() const;
         QRect rect() const;
+        bool isDesktop() const;
+        bool isDock() const;
+        bool isToolbar() const;
+        bool isTopMenu() const;
+        bool isMenu() const;
+        bool isNormalWindow() const; // normal as in 'NET::Normal or NET::Unknown non-transient'
+        bool isDialog() const;
+        bool isSplash() const;
+        bool isUtility() const;
+        bool isDropdownMenu() const;
+        bool isPopupMenu() const; // a context popup, not dropdown, not torn-off
+        bool isTooltip() const;
+        bool isNotification() const;
+        bool isComboBox() const;
+        bool isDNDIcon() const;
 
         void setWindow( Toplevel* w ); // internal
         void setSceneWindow( Scene::Window* w ); // internal
@@ -297,6 +312,97 @@ QRect EffectWindow::rect() const
     {
     return toplevel->rect();
     }
+
+inline
+bool EffectWindow::isDesktop() const
+    {
+    return toplevel->isDesktop();
+    }
+
+inline
+bool EffectWindow::isDock() const
+    {
+    return toplevel->isDock();
+    }
+
+inline
+bool EffectWindow::isToolbar() const
+    {
+    return toplevel->isToolbar();
+    }
+
+inline
+bool EffectWindow::isTopMenu() const
+    {
+    return toplevel->isTopMenu();
+    }
+
+inline
+bool EffectWindow::isMenu() const
+    {
+    return toplevel->isMenu();
+    }
+
+inline
+bool EffectWindow::isNormalWindow() const
+    {
+    return toplevel->isNormalWindow();
+    }
+
+inline
+bool EffectWindow::isDialog() const
+    {
+    return toplevel->isDialog();
+    }
+
+inline
+bool EffectWindow::isSplash() const
+    {
+    return toplevel->isSplash();
+    }
+
+inline
+bool EffectWindow::isUtility() const
+    {
+    return toplevel->isUtility();
+    }
+
+inline
+bool EffectWindow::isDropdownMenu() const
+    {
+    return toplevel->isDropdownMenu();
+    }
+
+inline
+bool EffectWindow::isPopupMenu() const
+    {
+    return toplevel->isPopupMenu();
+    }
+
+inline
+bool EffectWindow::isTooltip() const
+    {
+    return toplevel->isTooltip();
+    }
+
+inline
+bool EffectWindow::isNotification() const
+    {
+    return toplevel->isNotification();
+    }
+
+inline
+bool EffectWindow::isComboBox() const
+    {
+    return toplevel->isComboBox();
+    }
+
+inline
+bool EffectWindow::isDNDIcon() const
+    {
+    return toplevel->isDNDIcon();
+    }
+
 inline
 EffectWindow* effectWindow( Toplevel* w )
     {
