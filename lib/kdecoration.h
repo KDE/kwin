@@ -795,11 +795,11 @@ class KWIN_EXPORT KDecoration
         /**
          * @internal
          */
-        void emitKeepAboveChanged( bool above ) { emit keepAboveChanged( above ); }
+        void emitKeepAboveChanged( bool above ) { keepAboveChanged( above ); }
         /**
          * @internal
          */
-        void emitKeepBelowChanged( bool below ) { emit keepBelowChanged( below ); }
+        void emitKeepBelowChanged( bool below ) { keepBelowChanged( below ); }
     private:
 	KDecorationBridge* bridge_;
 	QWidget* w_;

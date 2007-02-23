@@ -17,7 +17,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QByteArray>
 #include <QList>
 #include <QtDBus/QtDBus>
-
 struct SessionInfo
     {
     QByteArray sessionId;
@@ -68,32 +67,32 @@ NET::WindowType txtToWindowType( const char* txt )
 void loadFakeSessionInfo( KConfig* config )
     {
     fakeSession.clear();
-    config->setGroup("FakeSession" );
-    int count =  config->readEntry( "count",0 );
+    KConfigGroup fakeGroup(config, "FakeSession");
+    int count = fakeGroup->readEntry( "count",0 );
     for ( int i = 1; i <= count; i++ ) 
         {
         QString n = QString::number(i);
         SessionInfo* info = new SessionInfo;
         fakeSession.append( info );
-        info->windowRole = config->readEntry( QString("windowRole")+n, QString() ).toLatin1();
-        info->resourceName = config->readEntry( QString("resourceName")+n, QString() ).toLatin1();
-        info->resourceClass = config->readEntry( QString("resourceClass")+n, QString() ).toLower().toLatin1();
-        info->wmClientMachine = config->readEntry( QString("clientMachine")+n, QString() ).toLatin1();
-        info->geometry = config->readEntry( QString("geometry")+n, QRect() );
-        info->restore = config->readEntry( QString("restore")+n, QRect() );
-        info->fsrestore = config->readEntry( QString("fsrestore")+n, QRect() );
-        info->maximized = config->readEntry( QString("maximize")+n, 0 );
-        info->fullscreen = config->readEntry( QString("fullscreen")+n, 0 );
-        info->desktop = config->readEntry( QString("desktop")+n, 0 );
-        info->minimized = config->readEntry( QString("iconified")+n, false );
-        info->onAllDesktops = config->readEntry( QString("sticky")+n, false );
-        info->shaded = config->readEntry( QString("shaded")+n, false );
-        info->keepAbove = config->readEntry( QString("staysOnTop")+n, false  );
-        info->keepBelow = config->readEntry( QString("keepBelow")+n, false  );
-        info->skipTaskbar = config->readEntry( QString("skipTaskbar")+n, false  );
-        info->skipPager = config->readEntry( QString("skipPager")+n, false  );
-        info->userNoBorder = config->readEntry( QString("userNoBorder")+n, false  );
-        info->windowType = txtToWindowType( config->readEntry( QString("windowType")+n, QString() ).toLatin1());
+        info->windowRole = fakeGroup->readEntry( QString("windowRole")+n, QString() ).toLatin1();
+        info->resourceName = fakeGroup->readEntry( QString("resourceName")+n, QString() ).toLatin1();
+        info->resourceClass = fakeGroup->readEntry( QString("resourceClass")+n, QString() ).toLower().toLatin1();
+        info->wmClientMachine = fakeGroup->readEntry( QString("clientMachine")+n, QString() ).toLatin1();
+        info->geometry = fakeGroup->readEntry( QString("geometry")+n, QRect() );
+        info->restore = fakeGroup->readEntry( QString("restore")+n, QRect() );
+        info->fsrestore = fakeGroup->readEntry( QString("fsrestore")+n, QRect() );
+        info->maximized = fakeGroup->readEntry( QString("maximize")+n, 0 );
+        info->fullscreen = fakeGroup->readEntry( QString("fullscreen")+n, 0 );
+        info->desktop = fakeGroup->readEntry( QString("desktop")+n, 0 );
+        info->minimized = fakeGroup->readEntry( QString("iconified")+n, false );
+        info->onAllDesktops = fakeGroup->readEntry( QString("sticky")+n, false );
+        info->shaded = fakeGroup->readEntry( QString("shaded")+n, false );
+        info->keepAbove = fakeGroup->readEntry( QString("staysOnTop")+n, false  );
+        info->keepBelow = fakeGroup->readEntry( QString("keepBelow")+n, false  );
+        info->skipTaskbar = fakeGroup->readEntry( QString("skipTaskbar")+n, false  );
+        info->skipPager = fakeGroup->readEntry( QString("skipPager")+n, false  );
+        info->userNoBorder = fakeGroup->readEntry( QString("userNoBorder")+n, false  );
+        info->windowType = txtToWindowType( fakeGroup->readEntry( QString("windowType")+n, QString() ).toLatin1());
         info->active = false;
         info->fake = true;
         }
@@ -168,10 +167,8 @@ int main()
     writeRules( dest_cfg );
     src_cfg.sync();
     dest_cfg.sync();
-#ifdef __GNUC__
-#warning D-BUS TODO
-// kwin* , and an attach to dbus is missing as well
-#endif
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
     }
