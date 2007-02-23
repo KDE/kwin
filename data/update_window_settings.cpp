@@ -68,31 +68,31 @@ void loadFakeSessionInfo( KConfig* config )
     {
     fakeSession.clear();
     KConfigGroup fakeGroup(config, "FakeSession");
-    int count = fakeGroup->readEntry( "count",0 );
+    int count = fakeGroup.readEntry( "count",0 );
     for ( int i = 1; i <= count; i++ ) 
         {
         QString n = QString::number(i);
         SessionInfo* info = new SessionInfo;
         fakeSession.append( info );
-        info->windowRole = fakeGroup->readEntry( QString("windowRole")+n, QString() ).toLatin1();
-        info->resourceName = fakeGroup->readEntry( QString("resourceName")+n, QString() ).toLatin1();
-        info->resourceClass = fakeGroup->readEntry( QString("resourceClass")+n, QString() ).toLower().toLatin1();
-        info->wmClientMachine = fakeGroup->readEntry( QString("clientMachine")+n, QString() ).toLatin1();
-        info->geometry = fakeGroup->readEntry( QString("geometry")+n, QRect() );
-        info->restore = fakeGroup->readEntry( QString("restore")+n, QRect() );
-        info->fsrestore = fakeGroup->readEntry( QString("fsrestore")+n, QRect() );
-        info->maximized = fakeGroup->readEntry( QString("maximize")+n, 0 );
-        info->fullscreen = fakeGroup->readEntry( QString("fullscreen")+n, 0 );
-        info->desktop = fakeGroup->readEntry( QString("desktop")+n, 0 );
-        info->minimized = fakeGroup->readEntry( QString("iconified")+n, false );
-        info->onAllDesktops = fakeGroup->readEntry( QString("sticky")+n, false );
-        info->shaded = fakeGroup->readEntry( QString("shaded")+n, false );
-        info->keepAbove = fakeGroup->readEntry( QString("staysOnTop")+n, false  );
-        info->keepBelow = fakeGroup->readEntry( QString("keepBelow")+n, false  );
-        info->skipTaskbar = fakeGroup->readEntry( QString("skipTaskbar")+n, false  );
-        info->skipPager = fakeGroup->readEntry( QString("skipPager")+n, false  );
-        info->userNoBorder = fakeGroup->readEntry( QString("userNoBorder")+n, false  );
-        info->windowType = txtToWindowType( fakeGroup->readEntry( QString("windowType")+n, QString() ).toLatin1());
+        info->windowRole = fakeGroup.readEntry( QString("windowRole")+n, QString() ).toLatin1();
+        info->resourceName = fakeGroup.readEntry( QString("resourceName")+n, QString() ).toLatin1();
+        info->resourceClass = fakeGroup.readEntry( QString("resourceClass")+n, QString() ).toLower().toLatin1();
+        info->wmClientMachine = fakeGroup.readEntry( QString("clientMachine")+n, QString() ).toLatin1();
+        info->geometry = fakeGroup.readEntry( QString("geometry")+n, QRect() );
+        info->restore = fakeGroup.readEntry( QString("restore")+n, QRect() );
+        info->fsrestore = fakeGroup.readEntry( QString("fsrestore")+n, QRect() );
+        info->maximized = fakeGroup.readEntry( QString("maximize")+n, 0 );
+        info->fullscreen = fakeGroup.readEntry( QString("fullscreen")+n, 0 );
+        info->desktop = fakeGroup.readEntry( QString("desktop")+n, 0 );
+        info->minimized = fakeGroup.readEntry( QString("iconified")+n, false );
+        info->onAllDesktops = fakeGroup.readEntry( QString("sticky")+n, false );
+        info->shaded = fakeGroup.readEntry( QString("shaded")+n, false );
+        info->keepAbove = fakeGroup.readEntry( QString("staysOnTop")+n, false  );
+        info->keepBelow = fakeGroup.readEntry( QString("keepBelow")+n, false  );
+        info->skipTaskbar = fakeGroup.readEntry( QString("skipTaskbar")+n, false  );
+        info->skipPager = fakeGroup.readEntry( QString("skipPager")+n, false  );
+        info->userNoBorder = fakeGroup.readEntry( QString("userNoBorder")+n, false  );
+        info->windowType = txtToWindowType( fakeGroup.readEntry( QString("windowType")+n, QString() ).toLatin1());
         info->active = false;
         info->fake = true;
         }
@@ -111,48 +111,49 @@ void writeRules( KConfig& cfg )
             continue;
         ++pos;
         cfg.setGroup( QString::number( pos ));
-        cfg.writeEntry( "description", ( const char* ) ( (*it)->resourceClass + " (KDE3.2)" ));
-        cfg.writeEntry( "wmclass", ( const char* )( (*it)->resourceName + ' ' + (*it)->resourceClass ));
-        cfg.writeEntry( "wmclasscomplete", true );
-        cfg.writeEntry( "wmclassmatch", 1 ); // 1 == exact match
+        KConfigGroup groupCfg(&cfg, QString::number( pos ));
+        groupCfg.writeEntry( "description", ( const char* ) ( (*it)->resourceClass + " (KDE3.2)" ));
+        groupCfg.writeEntry( "wmclass", ( const char* )( (*it)->resourceName + ' ' + (*it)->resourceClass ));
+        groupCfg.writeEntry( "wmclasscomplete", true );
+        groupCfg.writeEntry( "wmclassmatch", 1 ); // 1 == exact match
         if( !(*it)->windowRole.isEmpty())
             {
-            cfg.writeEntry( "windowrole", ( const char* ) (*it)->windowRole );
-            cfg.writeEntry( "windowrolematch", 1 );
+            groupCfg.writeEntry( "windowrole", ( const char* ) (*it)->windowRole );
+            groupCfg.writeEntry( "windowrolematch", 1 );
             }
         if( (*it)->windowType == static_cast< NET::WindowType >( -2 )) { // undefined
             // all types
         }
         if( (*it)->windowType == NET::Unknown )
-            cfg.writeEntry( "types", (int)NET::NormalMask );
+            groupCfg.writeEntry( "types", (int)NET::NormalMask );
         else
-            cfg.writeEntry( "types", 1 << (*it)->windowType );
-        cfg.writeEntry( "position", (*it)->geometry.topLeft());
-        cfg.writeEntry( "positionrule", 4 ); // 4 == remember
-        cfg.writeEntry( "size", (*it)->geometry.size());
-        cfg.writeEntry( "sizerule", 4 );
-        cfg.writeEntry( "maximizevert", (*it)->maximized & NET::MaxVert );
-        cfg.writeEntry( "maximizevertrule", 4 );
-        cfg.writeEntry( "maximizehoriz", (*it)->maximized & NET::MaxHoriz );
-        cfg.writeEntry( "maximizehorizrule", 4 );
-        cfg.writeEntry( "fullscreen", (*it)->fullscreen );
-        cfg.writeEntry( "fullscreenrule", 4 );
-        cfg.writeEntry( "desktop", (*it)->desktop );
-        cfg.writeEntry( "desktoprule", 4 );
-        cfg.writeEntry( "minimize", (*it)->minimized );
-        cfg.writeEntry( "minimizerule", 4 );
-        cfg.writeEntry( "shade", (*it)->shaded );
-        cfg.writeEntry( "shaderule", 4 );
-        cfg.writeEntry( "above", (*it)->keepAbove );
-        cfg.writeEntry( "aboverule", 4 );
-        cfg.writeEntry( "below", (*it)->keepBelow );
-        cfg.writeEntry( "belowrule", 4 );
-        cfg.writeEntry( "skiptaskbar", (*it)->skipTaskbar );
-        cfg.writeEntry( "skiptaskbarrule", 4 );
-        cfg.writeEntry( "skippager", (*it)->skipPager );
-        cfg.writeEntry( "skippagerrule", 4 );
-        cfg.writeEntry( "noborder", (*it)->userNoBorder );
-        cfg.writeEntry( "noborderrule", 4 );
+            groupCfg.writeEntry( "types", 1 << (*it)->windowType );
+        groupCfg.writeEntry( "position", (*it)->geometry.topLeft());
+        groupCfg.writeEntry( "positionrule", 4 ); // 4 == remember
+        groupCfg.writeEntry( "size", (*it)->geometry.size());
+        groupCfg.writeEntry( "sizerule", 4 );
+        groupCfg.writeEntry( "maximizevert", (*it)->maximized & NET::MaxVert );
+        groupCfg.writeEntry( "maximizevertrule", 4 );
+        groupCfg.writeEntry( "maximizehoriz", (*it)->maximized & NET::MaxHoriz );
+        groupCfg.writeEntry( "maximizehorizrule", 4 );
+        groupCfg.writeEntry( "fullscreen", (*it)->fullscreen );
+        groupCfg.writeEntry( "fullscreenrule", 4 );
+        groupCfg.writeEntry( "desktop", (*it)->desktop );
+        groupCfg.writeEntry( "desktoprule", 4 );
+        groupCfg.writeEntry( "minimize", (*it)->minimized );
+        groupCfg.writeEntry( "minimizerule", 4 );
+        groupCfg.writeEntry( "shade", (*it)->shaded );
+        groupCfg.writeEntry( "shaderule", 4 );
+        groupCfg.writeEntry( "above", (*it)->keepAbove );
+        groupCfg.writeEntry( "aboverule", 4 );
+        groupCfg.writeEntry( "below", (*it)->keepBelow );
+        groupCfg.writeEntry( "belowrule", 4 );
+        groupCfg.writeEntry( "skiptaskbar", (*it)->skipTaskbar );
+        groupCfg.writeEntry( "skiptaskbarrule", 4 );
+        groupCfg.writeEntry( "skippager", (*it)->skipPager );
+        groupCfg.writeEntry( "skippagerrule", 4 );
+        groupCfg.writeEntry( "noborder", (*it)->userNoBorder );
+        groupCfg.writeEntry( "noborderrule", 4 );
         }
     cfg.setGroup( "General" );
     cfg.writeEntry( "count", pos );
