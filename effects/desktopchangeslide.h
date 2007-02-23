@@ -8,8 +8,6 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-// TODO MIT or some other licence, perhaps move to some lib
-
 #ifndef KWIN_DESKTOPCHANGESLIDE_H
 #define KWIN_DESKTOPCHANGESLIDE_H
 
