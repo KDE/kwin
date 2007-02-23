@@ -58,7 +58,8 @@ struct XDamageNotifyEvent
 
 const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
     | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
-    | NET::UtilityMask | NET::SplashMask;
+    | NET::UtilityMask | NET::SplashMask | NET::DropdownMenuMask | NET::PopupMenuMask
+    | NET::TooltipMask | NET::NotificationMask | NET::ComboBoxMask | NET::DNDIconMask;
 
 const long ClientWinMask = KeyPressMask | KeyReleaseMask |
                           ButtonPressMask | ButtonReleaseMask |

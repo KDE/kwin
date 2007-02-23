@@ -56,6 +56,12 @@ class Toplevel
         bool isDialog() const;
         bool isSplash() const;
         bool isUtility() const;
+        bool isDropdownMenu() const;
+        bool isPopupMenu() const; // a context popup, not dropdown, not torn-off
+        bool isTooltip() const;
+        bool isNotification() const;
+        bool isComboBox() const;
+        bool isDNDIcon() const;
 
         virtual int desktop() const = 0;
         bool isOnDesktop( int d ) const;
@@ -248,6 +254,36 @@ inline bool Toplevel::isDialog() const
 inline bool Toplevel::isNormalWindow() const
     {
     return windowType() == NET::Normal;
+    }
+
+inline bool Toplevel::isDropdownMenu() const
+    {
+    return windowType() == NET::DropdownMenu;
+    }
+
+inline bool Toplevel::isPopupMenu() const
+    {
+    return windowType() == NET::PopupMenu;
+    }
+
+inline bool Toplevel::isTooltip() const
+    {
+    return windowType() == NET::Tooltip;
+    }
+
+inline bool Toplevel::isNotification() const
+    {
+    return windowType() == NET::Notification;
+    }
+
+inline bool Toplevel::isComboBox() const
+    {
+    return windowType() == NET::ComboBox;
+    }
+
+inline bool Toplevel::isDNDIcon() const
+    {
+    return windowType() == NET::DNDIcon;
     }
 
 inline Pixmap Toplevel::windowPixmap( bool allow_create )
