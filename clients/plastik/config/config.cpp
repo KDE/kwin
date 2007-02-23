@@ -32,6 +32,7 @@
 #include <kglobal.h>
 
 #include "config.h"
+#include "configdialog.h"
 
 PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
     : QObject(parent), m_config(0), m_dialog(0)
@@ -62,8 +63,8 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
 
 PlastikConfig::~PlastikConfig()
 {
-    delete m_dialog;
-    delete m_config;
+    if (m_dialog) delete m_dialog;
+    if (m_config) delete m_config;
 }
 
 void PlastikConfig::load(KConfig*)
