@@ -47,18 +47,18 @@ Options::~Options()
 
 unsigned long Options::updateSettings()
     {
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr _config = KGlobal::config();
     unsigned long changed = 0;
-    changed |= d->updateKWinSettings( config.data() ); // read decoration settings
+    changed |= d->updateKWinSettings( _config.data() ); // read decoration settings
 
-    KConfigGroup windowsConfig(config, "Windows");
-    moveMode = stringToMoveResizeMode( windowsConfig.readEntry("MoveMode", "Opaque" ));
-    resizeMode = stringToMoveResizeMode( windowsConfig.readEntry("ResizeMode", "Opaque" ));
-    show_geometry_tip = windowsConfig.readEntry("GeometryTip", false);
+    KConfigGroup config(_config, "Windows");
+    moveMode = stringToMoveResizeMode( config.readEntry("MoveMode", "Opaque" ));
+    resizeMode = stringToMoveResizeMode( config.readEntry("ResizeMode", "Opaque" ));
+    show_geometry_tip = config.readEntry("GeometryTip", false);
 
     QString val;
 
-    val = windowsConfig.readEntry ("FocusPolicy", "ClickToFocus");
+    val = config.readEntry ("FocusPolicy", "ClickToFocus");
     focusPolicy = ClickToFocus; // what a default :-)
     if ( val == "FocusFollowsMouse" )
         focusPolicy = FocusFollowsMouse;
@@ -67,16 +67,16 @@ unsigned long Options::updateSettings()
     else if ( val == "FocusStrictlyUnderMouse" )
         focusPolicy = FocusStrictlyUnderMouse;
 
-    val = windowsConfig.readEntry ("AltTabStyle", "KDE");
+    val = config.readEntry ("AltTabStyle", "KDE");
     altTabStyle = KDE; // what a default :-)
     if ( val == "CDE" )
         altTabStyle = CDE;
 
-    rollOverDesktops = windowsConfig.readEntry("RollOverDesktops", true);
+    rollOverDesktops = config.readEntry("RollOverDesktops", true);
 
-//    focusStealingPreventionLevel = config->readEntry( "FocusStealingPreventionLevel", 2 );
+//    focusStealingPreventionLevel = config.readEntry( "FocusStealingPreventionLevel", 2 );
     // TODO use low level for now
-    focusStealingPreventionLevel = windowsConfig.readEntry( "FocusStealingPreventionLevel", 1 );
+    focusStealingPreventionLevel = config.readEntry( "FocusStealingPreventionLevel", 1 );
     focusStealingPreventionLevel = qMax( 0, qMin( 4, focusStealingPreventionLevel ));
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
@@ -99,12 +99,12 @@ unsigned long Options::updateSettings()
         }
     delete gc;
 
-    placement = Placement::policyFromString( windowsConfig.readEntry("Placement"), true );
+    placement = Placement::policyFromString( config.readEntry("Placement"), true );
 
-    animateShade = windowsConfig.readEntry("AnimateShade", true);
+    animateShade = config.readEntry("AnimateShade", true);
 
-    animateMinimize = windowsConfig.readEntry("AnimateMinimize", true);
-    animateMinimizeSpeed = windowsConfig.readEntry("AnimateMinimizeSpeed", 5 );
+    animateMinimize = config.readEntry("AnimateMinimize", true);
+    animateMinimizeSpeed = config.readEntry("AnimateMinimizeSpeed", 5 );
 
     if( focusPolicy == ClickToFocus )
         {
@@ -115,31 +115,31 @@ unsigned long Options::updateSettings()
         }
     else
         {
-        autoRaise = windowsConfig.readEntry("AutoRaise", false);
-        autoRaiseInterval = windowsConfig.readEntry("AutoRaiseInterval", 0 );
-        delayFocus = windowsConfig.readEntry("DelayFocus", false);
-        delayFocusInterval = windowsConfig.readEntry("DelayFocusInterval", 0 );
+        autoRaise = config.readEntry("AutoRaise", false);
+        autoRaiseInterval = config.readEntry("AutoRaiseInterval", 0 );
+        delayFocus = config.readEntry("DelayFocus", false);
+        delayFocusInterval = config.readEntry("DelayFocusInterval", 0 );
         }
 
-    shadeHover = windowsConfig.readEntry("ShadeHover", false);
-    shadeHoverInterval = windowsConfig.readEntry("ShadeHoverInterval", 250 );
+    shadeHover = config.readEntry("ShadeHover", false);
+    shadeHoverInterval = config.readEntry("ShadeHoverInterval", 250 );
 
     // important: autoRaise implies ClickRaise
-    clickRaise = autoRaise || windowsConfig.readEntry("ClickRaise", true);
+    clickRaise = autoRaise || config.readEntry("ClickRaise", true);
 
-    borderSnapZone = windowsConfig.readEntry("BorderSnapZone", 10);
-    windowSnapZone = windowsConfig.readEntry("WindowSnapZone", 10);
-    snapOnlyWhenOverlapping = windowsConfig.readEntry("SnapOnlyWhenOverlapping", false);
-    electric_borders = windowsConfig.readEntry("ElectricBorders", 0);
-    electric_border_delay = windowsConfig.readEntry("ElectricBorderDelay", 150);
+    borderSnapZone = config.readEntry("BorderSnapZone", 10);
+    windowSnapZone = config.readEntry("WindowSnapZone", 10);
+    snapOnlyWhenOverlapping = config.readEntry("SnapOnlyWhenOverlapping", false);
+    electric_borders = config.readEntry("ElectricBorders", 0);
+    electric_border_delay = config.readEntry("ElectricBorderDelay", 150);
 
-    OpTitlebarDblClick = windowOperation( windowsConfig.readEntry("TitlebarDoubleClickCommand", "Shade"), true );
-    d->OpMaxButtonLeftClick = windowOperation( windowsConfig.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true );
-    d->OpMaxButtonMiddleClick = windowOperation( windowsConfig.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true );
-    d->OpMaxButtonRightClick = windowOperation( windowsConfig.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true );
+    OpTitlebarDblClick = windowOperation( config.readEntry("TitlebarDoubleClickCommand", "Shade"), true );
+    d->OpMaxButtonLeftClick = windowOperation( config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true );
+    d->OpMaxButtonMiddleClick = windowOperation( config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true );
+    d->OpMaxButtonRightClick = windowOperation( config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true );
 
-    ignorePositionClasses = windowsConfig.readEntry("IgnorePositionClasses",QStringList());
-    ignoreFocusStealingClasses = windowsConfig.readEntry("IgnoreFocusStealingClasses",QStringList());
+    ignorePositionClasses = config.readEntry("IgnorePositionClasses",QStringList());
+    ignoreFocusStealingClasses = config.readEntry("IgnoreFocusStealingClasses",QStringList());
     // Qt3.2 and older had resource class all lowercase, but Qt3.3 has it capitalized
     // therefore Client::resourceClass() forces lowercase, force here lowercase as well
     for( QStringList::Iterator it = ignorePositionClasses.begin();
@@ -151,48 +151,48 @@ unsigned long Options::updateSettings()
          ++it )
         (*it) = (*it).toLower();
 
-    killPingTimeout = windowsConfig.readEntry( "KillPingTimeout", 5000 );
-    hideUtilityWindowsForInactive = windowsConfig.readEntry( "HideUtilityWindowsForInactive", true);
-    showDesktopIsMinimizeAll = windowsConfig.readEntry( "ShowDesktopIsMinimizeAll", false );
+    killPingTimeout = config.readEntry( "KillPingTimeout", 5000 );
+    hideUtilityWindowsForInactive = config.readEntry( "HideUtilityWindowsForInactive", true);
+    showDesktopIsMinimizeAll = config.readEntry( "ShowDesktopIsMinimizeAll", false );
 
     // Mouse bindings
-    KConfigGroup mouseConfig(config, "MouseBindings");
-    CmdActiveTitlebar1 = mouseCommand(mouseConfig.readEntry("CommandActiveTitlebar1","Raise"), true );
-    CmdActiveTitlebar2 = mouseCommand(mouseConfig.readEntry("CommandActiveTitlebar2","Lower"), true );
-    CmdActiveTitlebar3 = mouseCommand(mouseConfig.readEntry("CommandActiveTitlebar3","Operations menu"), true );
-    CmdInactiveTitlebar1 = mouseCommand(mouseConfig.readEntry("CommandInactiveTitlebar1","Activate and raise"), true );
-    CmdInactiveTitlebar2 = mouseCommand(mouseConfig.readEntry("CommandInactiveTitlebar2","Activate and lower"), true );
-    CmdInactiveTitlebar3 = mouseCommand(mouseConfig.readEntry("CommandInactiveTitlebar3","Operations menu"), true );
-    CmdTitlebarWheel = mouseWheelCommand(mouseConfig.readEntry("CommandTitlebarWheel","Nothing"));
-    CmdWindow1 = mouseCommand(mouseConfig.readEntry("CommandWindow1","Activate, raise and pass click"), false );
-    CmdWindow2 = mouseCommand(mouseConfig.readEntry("CommandWindow2","Activate and pass click"), false );
-    CmdWindow3 = mouseCommand(mouseConfig.readEntry("CommandWindow3","Activate and pass click"), false );
-    CmdAllModKey = (mouseConfig.readEntry("CommandAllKey","Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
-    CmdAll1 = mouseCommand(mouseConfig.readEntry("CommandAll1","Move"), false );
-    CmdAll2 = mouseCommand(mouseConfig.readEntry("CommandAll2","Toggle raise and lower"), false );
-    CmdAll3 = mouseCommand(mouseConfig.readEntry("CommandAll3","Resize"), false );
-    CmdAllWheel = mouseWheelCommand(mouseConfig.readEntry("CommandAllWheel","Nothing"));
+    config.changeGroup("MouseBindings");
+    CmdActiveTitlebar1 = mouseCommand(config.readEntry("CommandActiveTitlebar1","Raise"), true );
+    CmdActiveTitlebar2 = mouseCommand(config.readEntry("CommandActiveTitlebar2","Lower"), true );
+    CmdActiveTitlebar3 = mouseCommand(config.readEntry("CommandActiveTitlebar3","Operations menu"), true );
+    CmdInactiveTitlebar1 = mouseCommand(config.readEntry("CommandInactiveTitlebar1","Activate and raise"), true );
+    CmdInactiveTitlebar2 = mouseCommand(config.readEntry("CommandInactiveTitlebar2","Activate and lower"), true );
+    CmdInactiveTitlebar3 = mouseCommand(config.readEntry("CommandInactiveTitlebar3","Operations menu"), true );
+    CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel","Nothing"));
+    CmdWindow1 = mouseCommand(config.readEntry("CommandWindow1","Activate, raise and pass click"), false );
+    CmdWindow2 = mouseCommand(config.readEntry("CommandWindow2","Activate and pass click"), false );
+    CmdWindow3 = mouseCommand(config.readEntry("CommandWindow3","Activate and pass click"), false );
+    CmdAllModKey = (config.readEntry("CommandAllKey","Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
+    CmdAll1 = mouseCommand(config.readEntry("CommandAll1","Move"), false );
+    CmdAll2 = mouseCommand(config.readEntry("CommandAll2","Toggle raise and lower"), false );
+    CmdAll3 = mouseCommand(config.readEntry("CommandAll3","Resize"), false );
+    CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
 
     //translucency settings - TODO
-    KConfigGroup translucencyConfig(config, "Translucency");
-    useTranslucency = translucencyConfig.readEntry("UseTranslucency", true);
-    translucentActiveWindows = translucencyConfig.readEntry("TranslucentActiveWindows", false);
-    activeWindowOpacity = uint((translucencyConfig.readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
-    translucentInactiveWindows = translucencyConfig.readEntry("TranslucentInactiveWindows", false);
-    inactiveWindowOpacity = uint((translucencyConfig.readEntry("InactiveWindowOpacity", 75)/100.0)*0xFFFFFFFF);
-    translucentMovingWindows = translucencyConfig.readEntry("TranslucentMovingWindows", false);
-    movingWindowOpacity = uint((translucencyConfig.readEntry("MovingWindowOpacity", 50)/100.0)*0xFFFFFFFF);
-    translucentDocks = translucencyConfig.readEntry("TranslucentDocks", false);
-    dockOpacity = uint((translucencyConfig.readEntry("DockOpacity", 80)/100.0)*0xFFFFFFFF);
-    keepAboveAsActive = translucencyConfig.readEntry("TreatKeepAboveAsActive", true);
+    config.changeGroup("Translucency");
+    useTranslucency = config.readEntry("UseTranslucency", true);
+    translucentActiveWindows = config.readEntry("TranslucentActiveWindows", false);
+    activeWindowOpacity = uint((config.readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
+    translucentInactiveWindows = config.readEntry("TranslucentInactiveWindows", false);
+    inactiveWindowOpacity = uint((config.readEntry("InactiveWindowOpacity", 75)/100.0)*0xFFFFFFFF);
+    translucentMovingWindows = config.readEntry("TranslucentMovingWindows", false);
+    movingWindowOpacity = uint((config.readEntry("MovingWindowOpacity", 50)/100.0)*0xFFFFFFFF);
+    translucentDocks = config.readEntry("TranslucentDocks", false);
+    dockOpacity = uint((config.readEntry("DockOpacity", 80)/100.0)*0xFFFFFFFF);
+    keepAboveAsActive = config.readEntry("TreatKeepAboveAsActive", true);
     //TODO: remove this variable
     useTitleMenuSlider = true;
-    activeWindowShadowSize = translucencyConfig.readEntry("ActiveWindowShadowSize", 200);
-    inactiveWindowShadowSize = translucencyConfig.readEntry("InactiveWindowShadowSize", 100);
-    dockShadowSize = translucencyConfig.readEntry("DockShadowSize", 80);
-    removeShadowsOnMove = translucencyConfig.readEntry("RemoveShadowsOnMove", true);
-    removeShadowsOnResize = translucencyConfig.readEntry("RemoveShadowsOnResize", true);
-    onlyDecoTranslucent = translucencyConfig.readEntry("OnlyDecoTranslucent", false);
+    activeWindowShadowSize = config.readEntry("ActiveWindowShadowSize", 200);
+    inactiveWindowShadowSize = config.readEntry("InactiveWindowShadowSize", 100);
+    dockShadowSize = config.readEntry("DockShadowSize", 80);
+    removeShadowsOnMove = config.readEntry("RemoveShadowsOnMove", true);
+    removeShadowsOnResize = config.readEntry("RemoveShadowsOnResize", true);
+    onlyDecoTranslucent = config.readEntry("OnlyDecoTranslucent", false);
 
     refreshRate = config->readEntry( "RefreshRate", 0 );
     smoothScale = qBound( -1, config->readEntry( "SmoothScale", -1 ), 2 );
