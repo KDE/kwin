@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <config.h>
 #include <config-X11.h>
+#include <config-kwin.h>
 
 #include <X11/Xlib.h>
 

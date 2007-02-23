@@ -28,6 +28,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/shakymove.h"
 #include "effects/shiftworkspaceup.h"
 #include "effects/showfps.h"
+#ifdef HAVE_CAPTURY
+#include "effects/videorecord.h"
+#endif
 #ifdef HAVE_OPENGL
 #include "effects/wavywindows.h"
 #endif
@@ -128,6 +131,9 @@ EffectsHandler::EffectsHandler()
         return;
     KWinInternal::effects = this;
 
+#ifdef HAVE_CAPTURY
+    registerEffect("VideoRecord", new GenericEffectFactory<VideoRecordEffect>);
+#endif
     registerEffect("ShowFps", new GenericEffectFactory<ShowFpsEffect>);
     registerEffect("Zoom", new GenericEffectFactory<ZoomEffect>);
     registerEffect("PresentWindows", new GenericEffectFactory<PresentWindowsEffect>);

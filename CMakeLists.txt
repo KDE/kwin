@@ -14,6 +14,15 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
     )
 
+include(UsePkgConfig)
+PKGCONFIG(libcaptury CAPTURY_INCLUDES CAPTURY_LINK_DIR CAPTURY_LDFLAGS CAPTURY_CFLAGS)
+if( CAPTURY_LDFLAGS )
+    SET( CAPTURY_FOUND TRUE )
+endif( CAPTURY_LDFLAGS )
+macro_bool_to_01( CAPTURY_FOUND HAVE_CAPTURY )
+
+configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 
 ########### next target ###############
@@ -70,6 +79,13 @@ set(kwin_KDEINIT_SRCS
    effects/desktopchangeslide.cpp
    )
 
+if( CAPTURY_FOUND )
+   set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+   effects/videorecord.cpp
+   )
+    include_directories(${CAPTURY_INCLUDES})
+endif( CAPTURY_FOUND )
+
 if(HAVE_OPENGL)
    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
    effects/wavywindows.cpp
@@ -104,6 +120,10 @@ endif (X11_Xrender_FOUND)
 if (X11_Xfixes_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xfixes_LIB})
 endif (X11_Xfixes_FOUND)
+if( HAVE_CAPTURY )
+  target_link_libraries(kdeinit_kwin ${CAPTURY_LDFLAGS})
+endif( HAVE_CAPTURY )
+
 
 install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
 
