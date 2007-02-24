@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
  
  Requires libcaptury:
  
- - svn co svn://battousai.mylair.de/capseo/trunk
+ - svn co svn://battousai.mylair.de/captury/trunk/capseo
  - you may want to remove 1.10 from AUTOMAKE_OPTIONS in Makefile.am
  - ./autogen.sh
  - the usual configure && make && make install procedure
