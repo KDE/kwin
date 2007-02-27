@@ -458,8 +458,8 @@ void Client::updateShape()
     else
         XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
                            None, ShapeSet);
-    if( compositing() )
-        discardWindowPixmap();
+    if( compositing())
+        addDamageFull();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
     // workaround for #19644 - shaped windows shouldn't have decoration
@@ -496,8 +496,8 @@ void Client::setMask( const QRegion& reg, int mode )
             xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
-    if( compositing() )
-        discardWindowPixmap();
+    if( compositing())
+        addDamageFull();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
     }

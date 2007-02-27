@@ -78,7 +78,7 @@ class Toplevel
         pid_t pid() const;
         static bool resourceMatch( const Toplevel* c1, const Toplevel* c2 );
 
-        Pixmap windowPixmap( bool allow_create = true ); // for use with compositing
+        Pixmap windowPixmap( bool allow_create = true ); // may return None (e.g. at a bad moment while resizing)
         Visual* visual() const;
         bool shape() const;
         void setOpacity( double opacity );
@@ -102,7 +102,7 @@ class Toplevel
         void detectShape( Window id );
         virtual void propertyNotifyEvent( XPropertyEvent* e );
         void damageNotifyEvent( XDamageNotifyEvent* e );
-        Pixmap createWindowPixmap() const;
+        Pixmap createWindowPixmap();
         void discardWindowPixmap();
         void addDamage( const QRect& r );
         void addDamage( int x, int y, int w, int h );

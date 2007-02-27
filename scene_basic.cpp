@@ -48,6 +48,8 @@ void SceneBasic::paint( QRegion, ToplevelList windows )
         if( !r.isEmpty())
             {
             Pixmap pix = (*it)->windowPixmap();
+            if( pix == None )
+                continue;
             XCopyArea( display(), pix, composite_pixmap, gc,
                 qMax( 0, -(*it)->x()), qMax( 0, -(*it)->y()), r.width(), r.height(), r.x(), r.y());
             }

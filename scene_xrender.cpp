@@ -325,6 +325,8 @@ Picture SceneXrender::Window::picture()
         {
         // Get the pixmap with the window contents.
         Pixmap pix = toplevel->windowPixmap();
+        if( pix == None )
+            return None;
         // HACK the same alpha clear hack like with opengl, see there
         Client* c = dynamic_cast< Client* >( toplevel );
         bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();

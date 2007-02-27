@@ -851,14 +851,14 @@ void SceneOpenGL::Window::findTextureTarget()
     }
 
 // Bind the window pixmap to an OpenGL texture.
-void SceneOpenGL::Window::bindTexture()
+bool SceneOpenGL::Window::bindTexture()
     {
     if( texture != 0 && toplevel->damage().isEmpty()
         && !options->glAlwaysRebind ) // interestingly with some gfx cards always rebinding is faster
         {
         // texture doesn't need updating, just bind it
         glBindTexture( texture_target, texture );
-        return;
+        return true;
         }
     if( !toplevel->damage().isEmpty())
         texture_has_valid_mipmaps = false;
@@ -868,11 +868,13 @@ void SceneOpenGL::Window::bindTexture()
             {
             kDebug( 1212 ) << "No framebuffer configuration for depth " << toplevel->depth()
                            << "; not binding window" << endl;
-            return;
+            return false;
             }
         }
     // Get the pixmap with the window contents
     Pixmap pix = toplevel->windowPixmap();
+    if( pix == None )
+        return false;
     // HACK
     // When a window uses ARGB visual and has a decoration, the decoration
     // does use ARGB visual. When converting such window to a texture
@@ -1029,8 +1031,8 @@ void SceneOpenGL::Window::bindTexture()
     // by GLXPixmap in the tfp case or not needed at all in non-tfp cases)
     if( copy_buffer )
         XFreePixmap( display(), pix );
+    return true;
     }
-
 
 QRegion SceneOpenGL::Window::optimizeBindDamage( const QRegion& reg, int limit )
     {
@@ -1141,7 +1143,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     region &= shape();
     if( region.isEmpty())
         return;
-    bindTexture();
+    if( !bindTexture())
+        return;
     glPushMatrix();
     // set texture filter
     if( options->smoothScale != 0 ) // default to yes

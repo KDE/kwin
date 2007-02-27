@@ -94,7 +94,7 @@ class SceneOpenGL::Window
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         virtual void prepareForPainting();
         void findTextureTarget();
-        void bindTexture();
+        bool bindTexture();
         void enableTexture();
         void disableTexture();
         void discardTexture();

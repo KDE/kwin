@@ -1633,8 +1633,7 @@ bool Unmanaged::windowEvent( XEvent* e )
             if( e->type == Extensions::shapeNotifyEvent() )
                 {
                 detectShape( window());
-                if( compositing() )
-                    discardWindowPixmap();
+                addDamageFull();
                 if( scene != NULL )
                     scene->windowGeometryShapeChanged( this );
                 }
@@ -1666,9 +1665,9 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
         return;
     workspace()->addRepaint( geometry()); // damage old area
     geom = newgeom;
+    discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
-    discardWindowPixmap();
     }
 
 // ****************************************

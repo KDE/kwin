@@ -39,6 +39,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 
 #include <QMenu>
+#include <kxerrorhandler.h>
 
 #include <X11/extensions/shape.h>
 
@@ -367,11 +368,26 @@ void Toplevel::discardWindowPixmap()
     window_pix = None;
     }
 
-Pixmap Toplevel::createWindowPixmap() const
+Pixmap Toplevel::createWindowPixmap()
     {
 #ifdef HAVE_XCOMPOSITE
     assert( compositing());
-    return XCompositeNameWindowPixmap( display(), frameId());
+    grabXServer();
+    KXErrorHandler err;
+    window_pix = XCompositeNameWindowPixmap( display(), frameId());
+    // check that the received pixmap is valid and actually matches what we
+    // know about the window (i.e. size)
+    XWindowAttributes attrs;
+    if( !XGetWindowAttributes( display(), frameId(), &attrs ))
+        window_pix = None;
+    if( err.error( false ))
+        window_pix = None;
+    if( attrs.width != width() || attrs.height != height() || attrs.map_state != IsViewable )
+        window_pix = None;
+    ungrabXServer();
+    if( window_pix == None )
+        kDebug( 1212 ) << "Creating window pixmap failed: " << this << endl;
+    return window_pix;
 #else
     return None;
 #endif
