@@ -39,19 +39,13 @@ General TODO
     - maybe posted paint events need to be processed immediatelly, or maybe the compositing
         code should not update the window until the decoration is finished painting
 
-! compile even without OpenGL or XRender
-    - kwin_composite currently requires both OpenGL and XRender to build
-    - compiling without either results in compile errors, needs to be fixed
-!   - scene_xrender.cpp also requires XFixes
-!   - check whether it compiles fine without XComposite/XDamage
-
 ? Expose events for overlay window - is it necessary to track it, like with root window?
 
 % paint throttling
     - there's 5ms grace period per repaint to avoid overloading the system with just compositing
         and not letting the system do anything else - check and evaluate 
 
-+ support for new window types from the wm spec for compositing
+% support for new window types from the wm spec for compositing
     - this will have to be done in Qt, kdecore and kwin
 
 * handle properly stacking order of deleted windows for showing in effects
@@ -68,6 +62,12 @@ General TODO
 % nvidia drivers by default use fake refresh rates as a workaround for some X limitations
     - see the DynamicTwinView section in nvidia README
     - this makes KWin repaint at a different rate than it should
+
+* handling of window pixmap for unmapped windows
+    - currently it's kept around after a window is unmapped
+*       - but it's still discarded on e.g. resize - how to solve this?
+*   - perhaps there should be an option not to unmap windows in order to always have live thumbnails
+*       - another option could be to unmap but quickly map when a live thumbnail is needed
 
 
 OpenGL TODO
