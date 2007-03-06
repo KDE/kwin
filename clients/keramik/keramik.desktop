@@ -1,6 +1,25 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Keramik
+Name[ar]=قرميدي
+Name[be]=Кераміка
+Name[cs]=Keramika
+Name[eo]=Ceramiko
+Name[fa]=کرامیک
+Name[fy]=Keramyk
+Name[it]=Ceramica
+Name[lv]=Keramika
+Name[mk]=Керамик
+Name[nb]=Keramikk
+Name[ne]=केरामिक
+Name[nn]=Keramikk
+Name[pa]=ਕੀਰਾਮਿਕ
+Name[se]=Bálseduodji
+Name[sr]=Керамика
+Name[sr@Latn]=Keramika
+Name[ta]=கெராமிக்
+Name[uk]=Керамік
+Name[uz]=Керамика
 Name[x-test]=xxKeramikxx
 X-KDE-Library=kwin3_keramik
 
