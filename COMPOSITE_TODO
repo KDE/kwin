@@ -224,9 +224,6 @@ Effects TODO
 
 ? other effects
 
-+ merge fadein and fadeout effects
-    - so that they don't conflict and share the progress
-
 + virtual desktop change effects
 +   - ... yes, you guessed it, the cube
 +   - something that presents all virtual desktops as being in grid (as in pager)
