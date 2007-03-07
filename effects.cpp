@@ -35,6 +35,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/zoom.h"
 
 #include "effects/test_input.h"
+#include "effects/test_thumbnail.h"
 
 namespace KWinInternal
 {
@@ -87,6 +88,14 @@ void Effect::desktopChanged( int )
     {
     }
 
+void Effect::windowDamaged( EffectWindow*, const QRect& )
+    {
+    }
+
+void Effect::windowGeometryShapeChanged( EffectWindow*, const QRect& )
+    {
+    }
+
 void Effect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     effects->prePaintScreen( mask, region, time );
@@ -117,13 +126,35 @@ void Effect::postPaintWindow( EffectWindow* w )
     effects->postPaintWindow( w );
     }
 
+void Effect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    effects->drawWindow( w, mask, region, data );
+    }
+
+void Effect::setPositionTransformations( WindowPaintData& data, QRect& region, EffectWindow* w,
+    const QRect& r, Qt::AspectRatioMode aspect )
+    {
+    QSize size = w->size();
+    size.scale( r.size(), aspect );
+    data.xScale = size.width() / double( w->width());
+    data.yScale = size.height() / double( w->height());
+    int width = int( w->width() * data.xScale );
+    int height = int( w->height() * data.yScale );
+    int x = r.x() + ( r.width() - width ) / 2;
+    int y = r.y() + ( r.height() - height ) / 2;
+    region = QRect( x, y, width, height );
+    data.xTranslate = x - w->x();
+    data.yTranslate = y - w->y();
+    }
+
 //****************************************
 // EffectsHandler
 //****************************************
 
 EffectsHandler::EffectsHandler()
-    : current_paint_window( 0 )
-    , current_paint_screen( 0 )
+    : current_paint_screen( 0 )
+    , current_paint_window( 0 )
+    , current_draw_window( 0 )
     {
     if( !compositing())
         return;
@@ -147,7 +178,9 @@ EffectsHandler::EffectsHandler()
     registerEffect("ScaleIn", new GenericEffectFactory<ScaleInEffect>);
     registerEffect("DialogParent", new GenericEffectFactory<DialogParentEffect>);
     registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);
+
     registerEffect("TestInput", new GenericEffectFactory<TestInputEffect>);
+    registerEffect("TestThumbnail", new GenericEffectFactory<TestThumbnailEffect>);
 
      QStringList::const_iterator effectsIterator;
      for( effectsIterator = options->defaultEffects.constBegin();
@@ -224,11 +257,26 @@ void EffectsHandler::desktopChanged( int old )
         ep.second->desktopChanged( old );
     }
 
+void EffectsHandler::windowDamaged( EffectWindow* w, const QRect& r )
+    {
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowDamaged( w, r );
+    }
+
+void EffectsHandler::windowGeometryShapeChanged( EffectWindow* w, const QRect& old )
+    {
+    if( w == NULL ) // during late cleanup effectWindow() may be already NULL
+        return;     // in some functions that may still call this
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->windowGeometryShapeChanged( w, old );
+    }
+
 // start another painting pass
 void EffectsHandler::startPaint()
     {
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
+    assert( current_draw_window == 0 );
     }
 
 // the idea is that effects call this function again which calls the next one
@@ -292,6 +340,17 @@ void EffectsHandler::postPaintWindow( EffectWindow* w )
         --current_paint_window;
         }
     // no special final code
+    }
+
+void EffectsHandler::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    if( current_draw_window < loaded_effects.size())
+        {
+        loaded_effects[current_draw_window++].second->drawWindow( w, mask, region, data );
+        --current_draw_window;
+        }
+    else
+        scene->finalDrawWindow( w, mask, region, data );
     }
 
 Window EffectsHandler::createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor )
@@ -400,6 +459,7 @@ void EffectsHandler::loadEffect( const QString& name )
     {
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
+    assert( current_draw_window == 0 );
 
     for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); it++)
         {
@@ -426,6 +486,7 @@ void EffectsHandler::unloadEffect( const QString& name )
     {
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
+    assert( current_draw_window == 0 );
 
     for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); it++)
         {

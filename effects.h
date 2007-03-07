@@ -69,8 +69,12 @@ class Effect
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        // paintWindow() can do various transformations
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
+        // drawWindow() is used even for thumbnails etc. - it can alter the window itself where it
+        // makes sense (e.g.darkening out unresponsive windows), but it cannot do transformations
+        virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
         virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
@@ -82,12 +86,18 @@ class Effect
         virtual void windowUnminimized( EffectWindow* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void desktopChanged( int old );
+        virtual void windowDamaged( EffectWindow* w, const QRect& r );
+        virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
 
         // Interpolates between x and y
         static float interpolate(float x, float y, float a)
             {
             return x * (1 - a) + y * a;
             }
+        // helper to set WindowPaintData and QRegion to necessary transformations so that
+        // a following drawWindow() would put the window at the requested geometry (useful for thumbnails)
+        static void setPositionTransformations( WindowPaintData& data, QRect& region, EffectWindow* w,
+            const QRect& r, Qt::AspectRatioMode aspect );
 
     protected:
         Workspace* workspace() const;
@@ -125,6 +135,7 @@ class EffectsHandler
         void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
         void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         void postPaintWindow( EffectWindow* w );
+        void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
         // covering the whole screen is created and all mouse events will be intercepted by it.
         // The effect's windowInputMouseEvent() will get called with such events.
@@ -148,6 +159,9 @@ class EffectsHandler
         bool checkInputWindowEvent( XEvent* e );
         void checkInputWindowStacking();
         void desktopChanged( int old );
+        void windowDamaged( EffectWindow* w, const QRect& r );
+        void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
+
         void registerEffect( const QString& name, EffectFactory* factory );
         void loadEffect( const QString& name );
         void unloadEffect( const QString& name );
@@ -158,8 +172,9 @@ class EffectsHandler
         typedef QPair< Effect*, Window > InputWindowPair;
         QList< InputWindowPair > input_windows;
         QMap< QString, EffectFactory* > effect_factories;
-        int current_paint_window;
         int current_paint_screen;
+        int current_paint_window;
+        int current_draw_window;
     };
 
 // This class is a representation of a window used by/for Effect classes.

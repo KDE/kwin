@@ -90,6 +90,8 @@ class Scene
         void finalPaintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         // shared implementation, starts painting the window
         virtual void paintWindow( Window* w, int mask, QRegion region );
+        // called after all effects had their drawWindow() called
+        void finalDrawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         // infinite region, i.e. everything
         static QRegion infiniteRegion();
         // compute time since the last repaint

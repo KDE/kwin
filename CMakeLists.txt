@@ -71,10 +71,11 @@ set(kwin_KDEINIT_SRCS
    effects/dialogparent.cpp
    effects/showfps.cpp
    effects/zoom.cpp
-   effects/test_input.cpp
    effects/presentwindows.cpp
    effects/minimizeanimation.cpp
    effects/desktopchangeslide.cpp
+   effects/test_input.cpp
+   effects/test_thumbnail.cpp
    )
 
 if( CAPTURY_FOUND )

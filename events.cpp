@@ -1636,6 +1636,8 @@ bool Unmanaged::windowEvent( XEvent* e )
                 addDamageFull();
                 if( scene != NULL )
                     scene->windowGeometryShapeChanged( this );
+                if( effects != NULL )
+                    effects->windowGeometryShapeChanged( effectWindow(), geometry());
                 }
 #ifdef HAVE_XDAMAGE
             if( e->type == Extensions::damageNotifyEvent())
@@ -1664,10 +1666,13 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     if( newgeom == geom )
         return;
     workspace()->addRepaint( geometry()); // damage old area
+    QRect old = geom;
     geom = newgeom;
     discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
+    if( effects != NULL )
+        effects->windowGeometryShapeChanged( effectWindow(), old );
     }
 
 // ****************************************

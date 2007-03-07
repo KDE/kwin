@@ -1704,6 +1704,8 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         discardWindowPixmap();
         if( scene != NULL )
             scene->windowGeometryShapeChanged( this );
+        if( effects != NULL )
+            effects->windowGeometryShapeChanged( effectWindow(), geom_before_block );
         }
     workspace()->addRepaint( geom_before_block );
     geom_before_block = geom;
@@ -1764,6 +1766,8 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
+    if( effects != NULL )
+        effects->windowGeometryShapeChanged( effectWindow(), geom_before_block );
     workspace()->addRepaint( geom_before_block );
     geom_before_block = geom;
     }

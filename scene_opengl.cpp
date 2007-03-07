@@ -1140,7 +1140,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     // paint only requested areas
     if( region != infiniteRegion()) // avoid integer overflow
         region.translate( -x(), -y());
-    region &= shape();
+    if(( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED )) == 0 )
+        region &= shape();
     if( region.isEmpty())
         return;
     if( !bindTexture())

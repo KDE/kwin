@@ -281,6 +281,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
                     || ( decoration != NULL && !noBorder())))
         return;
     bool do_show = false;
+    QRect oldgeom = geometry();
     blockGeometryUpdates( true );
     if( force )
         destroyDecoration();
@@ -304,6 +305,8 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
             discardWindowPixmap();
         if( scene != NULL )
             scene->windowGeometryShapeChanged( this );
+        if( effects != NULL )
+            effects->windowGeometryShapeChanged( effectWindow(), oldgeom );
         }
     else
         destroyDecoration();
@@ -317,6 +320,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
 
 void Client::destroyDecoration()
     {
+    QRect oldgeom = geometry();
     if( decoration != NULL )
         {
         delete decoration;
@@ -334,6 +338,8 @@ void Client::destroyDecoration()
             discardWindowPixmap();
         if( scene != NULL && !deleting ) 
             scene->windowGeometryShapeChanged( this );
+        if( effects != NULL && !deleting )
+            effects->windowGeometryShapeChanged( effectWindow(), oldgeom );
         }
     }
 
@@ -462,6 +468,8 @@ void Client::updateShape()
         addDamageFull();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
+    if( effects != NULL )
+        effects->windowGeometryShapeChanged( effectWindow(), geometry());
     // workaround for #19644 - shaped windows shouldn't have decoration
     if( shape() && !noBorder()) 
         {
@@ -500,6 +508,8 @@ void Client::setMask( const QRegion& reg, int mode )
         addDamageFull();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
+    if( effects != NULL )
+        effects->windowGeometryShapeChanged( effectWindow(), geometry());
     }
 
 QRegion Client::mask() const
