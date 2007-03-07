@@ -124,6 +124,10 @@ OpenGL TODO
 
 % with current nvidia glXCreatePixmap in tfp mode fails with pixmaps 32x32 and smaller
 
++ vertices list (and possibly more things) should not be part of SceneOpenGL::Window
+    - otherwise drawWindow() used for thumbnails would use them too
+    - they should be probably part of WindowPaintData
+
 
 XRender TODO
 ==============================
