@@ -24,7 +24,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QApplication>
 #include <qdesktopwidget.h>
 #include <QCursor>
-#include <kstringhandler.h>
 #include <stdarg.h>
 #include <kdebug.h>
 #include <kglobalsettings.h>
@@ -43,12 +42,14 @@ namespace KWinInternal
 
 extern QPixmap* kwin_get_menu_pix_hack();
 
-TabBox::TabBox( Workspace *ws, const char *name )
-    : Q3Frame( 0, name, Qt::WNoAutoErase | Qt::X11BypassWindowManagerHint ), client(0), wspace(ws)
+TabBox::TabBox( Workspace *ws )
+    : QFrame( 0, Qt::X11BypassWindowManagerHint )
+    , client(0)
+    , wspace(ws)
     {
     setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
     setLineWidth(2);
-    setMargin(2);
+    setContentsMargins( 2, 2, 2, 2 );
 
     showMiniIcon = false;
 
@@ -321,20 +322,18 @@ void TabBox::hideEvent( QHideEvent* )
 /*!
   Paints the tab box
  */
-void TabBox::drawContents( QPainter * )
+void TabBox::paintEvent( QPaintEvent* e )
     {
-    QRect r(contentsRect());
-    QPixmap pix(r.size());  // do double buffering to avoid flickers
-    pix.fill(this, 0, 0);
+    QFrame::paintEvent( e );
 
-    QPainter p;
-    p.begin(&pix);
+    QPainter p( this );
+    QRect r( contentsRect());
 
     QPixmap* menu_pix = kwin_get_menu_pix_hack();
 
     int iconWidth = showMiniIcon ? 16 : 32;
-    int x = 0;
-    int y = 0;
+    int x = r.x();
+    int y = r.y();
 
     if ( mode () == WindowsMode )
         {
@@ -388,7 +387,7 @@ void TabBox::drawContents( QPainter * )
                   else
                     s += (*it)->caption();
 
-                  s = KStringHandler::cPixelSqueeze(s, fontMetrics(), r.width() - 5 - iconWidth - 8);
+                  s = fontMetrics().elidedText( s, Qt::ElideMiddle, r.width() - 5 - iconWidth - 8 );
 
                   // draw text
                   if ( (*it) == currentClient() )
@@ -503,10 +502,6 @@ void TabBox::drawContents( QPainter * )
                 iDesktop++;
             }
         }
-    p.end();
-
-    QPainter localPainter( this );
-    localPainter.drawImage( QPoint( r.x(), r.y() ), pix.toImage() );
     }
 
 void TabBox::hide()

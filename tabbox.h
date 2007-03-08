@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_TABBOX_H
 #define KWIN_TABBOX_H
 
-#include <Q3Frame>
+#include <QFrame>
 #include <QTimer>
 #include "utils.h"
 
@@ -24,15 +24,14 @@ namespace KWinInternal
 class Workspace;
 class Client;
 
-class TabBox : public Q3Frame
+class TabBox : public QFrame
     {
     Q_OBJECT
     public:
-        TabBox( Workspace *ws, const char *name=0 );
+        TabBox( Workspace *ws );
         ~TabBox();
 
         Client* currentClient();
-        void setCurrentClient( Client* c );
         int currentDesktop();
 
     // DesktopMode and WindowsMode are based on the order in which the desktop
@@ -53,18 +52,18 @@ class TabBox : public Q3Frame
         Workspace* workspace() const;
 
         void reconfigure();
+        void updateKeyMapping();
 
     protected:
         void showEvent( QShowEvent* );
         void hideEvent( QHideEvent* );
-        void drawContents( QPainter * );
+        void paintEvent( QPaintEvent* );
 
     private:
         void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
-        void updateOutline();
 
     private:
-        Client* current_client;
+        Client* client;
         Mode m;
         Workspace* wspace;
         ClientList clients;
@@ -74,7 +73,6 @@ class TabBox : public Q3Frame
         QTimer delayedShowTimer;
         QString no_tasks;
         bool options_traverse_all;
-        Window outline_left, outline_right, outline_top, outline_bottom;
     };
 
 
