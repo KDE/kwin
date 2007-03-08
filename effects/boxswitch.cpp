@@ -10,12 +10,11 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "boxswitch.h"
 
-#include "tabbox.h"
-#include "client.h"
-#include "scene_opengl.h"
+#include <tabbox.h>
+#include <client.h>
+#include <scene_xrender.h>
+#include <scene_opengl.h>
 #include <QSize>
-#include <QPainter>
-#include <QPixmap>
 
 #ifdef HAVE_OPENGL
 #include <GL/gl.h>
@@ -31,6 +30,9 @@ BoxSwitchEffect::BoxSwitchEffect()
     {
     frame_margin = 10;
     highlight_margin = 5;
+#ifdef HAVE_XRENDER
+    alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
+#endif
     }
 
 BoxSwitchEffect::~BoxSwitchEffect()
@@ -85,6 +87,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                         static_cast< Client* >( w->window())->caption());
                     }
                 paintWindowThumbnail( w );
+                paintWindowIcon( w );
                 }
             }
         else
@@ -309,6 +312,20 @@ void BoxSwitchEffect::setActive()
             {
             if( w != selected_window )
                 w->window()->addRepaintFull();
+#ifdef HAVE_OPENGL
+            if( dynamic_cast< SceneOpenGL* >( scene ))
+                {
+//                windows[ w ].iconTexture.discard();
+                }
+            else
+#endif
+                {
+#ifdef HAVE_XRENDER
+            if( windows[ w ].iconPicture != None )
+                XRenderFreePicture( display(), windows[ w ].iconPicture );
+            windows[ w ].iconPicture = None;
+#endif
+                }
             }
         }
     }
@@ -327,6 +344,20 @@ void BoxSwitchEffect::setInactive()
             {
             if( w != selected_window )
                 w->window()->addRepaintFull();
+#ifdef HAVE_OPENGL
+            if( dynamic_cast< SceneOpenGL* >( scene ))
+                {
+//                windows[ w ].iconTexture.discard();
+                }
+            else
+#endif
+                {
+#ifdef HAVE_XRENDER
+            if( windows[ w ].iconPicture != None )
+                XRenderFreePicture( display(), windows[ w ].iconPicture );
+            windows[ w ].iconPicture = None;
+#endif
+                }
             }
         }
     workspace()->addRepaint( frame_area );
@@ -380,11 +411,6 @@ void BoxSwitchEffect::calculateItemSizes()
                 frame_area.y() + frame_margin,
                 item_max_size.width(), item_max_size.height());
             windows[ w ].clickable = windows[ w ].area;
-            windows[ w ].icon = static_cast< Client* >( w->window())->icon();
-/* #ifdef HAVE_OPENGL
-            windows[ w ].glIcon.bindPixmap( windows[ w ].icon.handle(), windows[ w ].icon.width(), windows[ w ].icon.height(), windows[ w ].icon.depth());
-            windows[ w ].glIcon.glFilter = GL_LINEAR;
-#endif */
             }
         }
     else
@@ -409,36 +435,84 @@ void BoxSwitchEffect::calculateItemSizes()
 
 void BoxSwitchEffect::paintFrame()
     {
+    double alpha = 0.75;
 #ifdef HAVE_OPENGL
-    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 0, 0, 0, 0.75 );
-    glBegin( GL_QUADS );
-    glVertex2i( frame_area.x(), frame_area.y());
-    glVertex2i( frame_area.x() + frame_area.width(), frame_area.y());
-    glVertex2i( frame_area.x() + frame_area.width(), frame_area.y() + frame_area.height());
-    glVertex2i( frame_area.x(), frame_area.y() + frame_area.height());
-    glEnd();
-    glPopAttrib();
+    if( dynamic_cast< SceneOpenGL* >( scene ))
+        {
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glColor4f( 0, 0, 0, alpha );
+        glBegin( GL_QUADS );
+        glVertex2i( frame_area.x(), frame_area.y());
+        glVertex2i( frame_area.x() + frame_area.width(), frame_area.y());
+        glVertex2i( frame_area.x() + frame_area.width(), frame_area.y() + frame_area.height());
+        glVertex2i( frame_area.x(), frame_area.y() + frame_area.height());
+        glEnd();
+        glPopAttrib();
+        }
+    else
 #endif
+        {
+#ifdef HAVE_XRENDER
+        Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
+            frame_area.width(), frame_area.height(), 32 );
+        Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
+        XFreePixmap( display(), pixmap );
+        XRenderColor col;
+        col.alpha = int( alpha * 0xffff );
+        col.red = 0;
+        col.green = 0;
+        col.blue = 0;
+        XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
+            frame_area.width(), frame_area.height());
+        XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc,
+            pic, None, static_cast< SceneXrender* >( scene )->bufferPicture(),
+            0, 0, 0, 0, frame_area.x(), frame_area.y(), frame_area.width(), frame_area.height());
+        XRenderFreePicture( display(), pic );
+#endif
+        }
     }
 
 void BoxSwitchEffect::paintHighlight( QRect area, QString text )
     {
+    double alpha = 0.75;
 #ifdef HAVE_OPENGL
-    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 1, 1, 1, 0.75 );
-    glBegin( GL_QUADS );
-    glVertex2i( area.x(), area.y());
-    glVertex2i( area.x() + area.width(), area.y());
-    glVertex2i( area.x() + area.width(), area.y() + area.height());
-    glVertex2i( area.x(), area.y() + area.height());
-    glEnd();
-    glPopAttrib();
+    if( dynamic_cast< SceneOpenGL* >( scene ))
+        {
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glColor4f( 1, 1, 1, alpha );
+        glBegin( GL_QUADS );
+        glVertex2i( area.x(), area.y());
+        glVertex2i( area.x() + area.width(), area.y());
+        glVertex2i( area.x() + area.width(), area.y() + area.height());
+        glVertex2i( area.x(), area.y() + area.height());
+        glEnd();
+        glPopAttrib();
+        }
+    else
 #endif
+        {
+#ifdef HAVE_XRENDER
+        Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
+            area.width(), area.height(), 32 );
+        Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
+        XFreePixmap( display(), pixmap );
+        XRenderColor col;
+        col.alpha = int( alpha * 0xffff );
+        col.red = int( alpha * 0xffff );
+        col.green = int( alpha * 0xffff );
+        col.blue = int( alpha * 0xffff );
+        XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
+            area.width(), area.height());
+        XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc,
+            pic, None, static_cast< SceneXrender* >( scene )->bufferPicture(),
+            0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
+        XRenderFreePicture( display(), pic );
+#endif
+        }
 //    kDebug() << text << endl; // TODO draw this nicely on screen
     }
 
@@ -488,45 +562,68 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     {
     if( !windows.contains( w ))
         return;
-/*    if( windows[ w ].icon.serialNumber()
+    if( windows[ w ].icon.serialNumber()
         != static_cast< Client* >( w->window())->icon().serialNumber())
-        { // icon changed
+        { // make sure windows[ w ].icon is the right QPixmap, and rebind
         windows[ w ].icon = static_cast< Client* >( w->window())->icon();
 #ifdef HAVE_OPENGL
-        windows[ w ].glIcon.bindPixmap( windows[ w ].icon.handle(),
-            windows[ w ].icon.width(), windows[ w ].icon.height(),
-            windows[ w ].icon.depth(), windows[ w ].icon.rect());
+        if( dynamic_cast< SceneOpenGL* >( scene ))
+            {
+//            windows[ w ].iconTexture.bindPixmap( windows[ w ].icon.handle(),
+//                windows[ w ].icon.width(), windows[ w ].icon.height(),
+//                windows[ w ].icon.depth(), windows[ w ].icon.rect());
+//            windows[ w ].iconTexture.setFilter( GL_LINEAR );
+            }
+        else
+#endif
+            {
+#ifdef HAVE_XRENDER
+            if( windows[ w ].iconPicture != None )
+                XRenderFreePicture( display(), windows[ w ].iconPicture );
+            windows[ w ].iconPicture = XRenderCreatePicture( display(),
+                windows[ w ].icon.handle(), alphaFormat, 0, NULL );
+#endif
+            }
+        }
+    int x = windows[ w ].area.x() + ( windows[ w ].area.width() - windows[ w ].icon.width()) / 2;
+    int y = windows[ w ].area.y() + ( windows[ w ].area.height() - windows[ w ].icon.height()) / 2;
+    int width = windows[ w ].icon.width();
+    int height = windows[ w ].icon.height();
+#ifdef HAVE_OPENGL
+    if( dynamic_cast< SceneOpenGL* >( scene ))
+        {
+//        glPushMatrix();
+//        glPushAttrib( GL_ENABLE_BIT );
+//        glEnable( GL_BLEND );
+//        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+//        windows[ w ].iconTexture.enable();
+//        windows[ w ].iconTexture.preparePaint();
+//        glBegin( GL_QUADS );
+//        glTexCoord2i( 0, 0 );
+//        glVertex2i( x, y );
+//        glTexCoord2i( windows[ w ].icon.width(), 0 );
+//        glVertex2i( x + width, y );
+//        glTexCoord2i( windows[ w ].icon.width(), windows[ w ].icon.height());
+//        glVertex2i( x + width, y + height );
+//        glTexCoord2i( 0, windows[ w ].icon.height());
+//        glVertex2i( x, y + height );
+//        glEnd();
+//        windows[ w ].iconTexture.finishPaint();
+//        glPopMatrix();
+//        glPopAttrib();
+//        windows[ w ].iconTexture.disable();
+        }
+    else
+#endif
+        {
+#ifdef HAVE_XRENDER
+        XRenderComposite( display(),
+            windows[ w ].icon.depth() == 32 ? PictOpOver : PictOpSrc,
+            windows[ w ].iconPicture, None,
+            static_cast< SceneXrender* >( scene )->bufferPicture(),
+            0, 0, 0, 0, x, y, width, height );
 #endif
         }
-#ifdef HAVE_OPENGL
-    glPushMatrix();
-    glPushAttrib( GL_ENABLE_BIT );
-    windows[ w ].glIcon.enable();
-    windows[ w ].glIcon.preparePaint();
-    int x = windows[ w ].area.x() + ( windows[ w ].area.width() - windows[ w ].icon.width()) / 2
-    int y = windows[ w ].area.y() + ( windows[ w ].area.height() - windows[ w ].icon.height()) / 2
-    glBegin( GL_QUADS );
-    glTexCoord2i( 0, 0 );
-    glVertex2i( x, y );
-    glTexCoord2i( windows[ w ].icon.width(), 0 );
-    glVertex2i( x + windows[ w ].icon.width(), y );
-    glTexCoord2i( windows[ w ].icon.width(), windows[ w ].icon.height());
-    glVertex2i( x + windows[ w ].icon.width(), y + windows[ w ].icon.height());
-    glTexCoord2i( 0, windows[ w ].icon.height());
-    glVertex2i( x, y + windows[ w ].icon.height());
-    glEnd();
-    windows[ w ].glIcon.finishPaint();
-    glPopAttrib();
-    glPopMatrix();
-    windows[ w ].glIcon.disable();
-#endif */
-    }
-
-BoxSwitchEffect::ItemInfo::~ItemInfo()
-    {
-/* #ifdef HAVE_OPENGL
-    glIcon.discard();
-#endif */
     }
 
 } // namespace

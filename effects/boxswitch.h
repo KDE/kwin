@@ -11,11 +11,15 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_BOXSWITCH_H
 #define KWIN_BOXSWITCH_H
 
-#include "effects.h"
-#include "scene_opengl.h"
+#include <effects.h>
+#include <scene_xrender.h>
+#include <scene_opengl.h>
 
-#include <QPoint>
+#include <QMap>
+#include <QPixmap>
 #include <QRect>
+#include <QRegion>
+#include <QSize>
 
 namespace KWinInternal
 {
@@ -70,19 +74,25 @@ class BoxSwitchEffect
         EffectWindow* selected_window;
 
         int painting_desktop;
+
+#ifdef HAVE_XRENDER
+        XRenderPictFormat* alphaFormat;
+#endif
     };
 
 class BoxSwitchEffect::ItemInfo
     {
     public:
-        ~ItemInfo();
         QRect area; // maximal painting area, including any frames/highlights/etc.
         QRegion clickable;
         QRect thumbnail;
         QPixmap icon;
-/* #ifdef HAVE_OPENGL
-        SceneOpenGL::Texture glIcon;
-#endif */
+#ifdef HAVE_OPENGL
+//        SceneOpenGL::Texture iconTexture;
+#endif
+#ifdef HAVE_XRENDER
+        Picture iconPicture;
+#endif
     };
 
 } // namespace
