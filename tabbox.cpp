@@ -135,7 +135,7 @@ void TabBox::createClientList(ClientList &list, int desktop /*-1 = all*/, Client
   Resets the tab box to display the active client in WindowsMode, or the
   current desktop in DesktopListMode
  */
-void TabBox::reset()
+void TabBox::reset( bool partial_reset )
     {
     int w, h, cw = 0, wmax = 0;
 
@@ -147,10 +147,14 @@ void TabBox::reset()
 
     if ( mode() == WindowsMode )
         {
-        client = workspace()->activeClient();
+        Client* starting_client = 0;
+        if( partial_reset && clients.count() != 0 )
+            starting_client = clients.first();
+        else
+            client = starting_client = workspace()->activeClient();
 
         // get all clients to show
-        createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), client, true);
+        createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), starting_client, true);
 
         // calculate maximum caption width
         cw = fontMetrics().width(no_tasks)+20;

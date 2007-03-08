@@ -41,7 +41,7 @@ class TabBox : public QFrame
         void setMode( Mode mode );
         Mode mode() const;
 
-        void reset();
+        void reset( bool partial_reset = false );
         void nextPrev( bool next = true);
 
         void delayedShow();
