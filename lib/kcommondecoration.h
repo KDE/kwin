@@ -238,7 +238,7 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         virtual void iconChange();
         virtual void activeChange();
         virtual void captionChange();
-    public Q_SLOTS:
+    public slots:
         void keepAboveChange(bool above);
         void keepBelowChange(bool below);
         void slotMaximize();
@@ -258,8 +258,8 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
     private:
         void resetLayout();
 
-        void moveWidget(int x, int y, QWidget *widget) const;
-        void resizeWidget(int w, int h, QWidget *widget) const;
+        void moveWidget(int x, int y, QWidget *w) const;
+        void resizeWidget(int w, int h, QWidget *w) const;
 
         typedef QVector <KCommonDecorationButton*> ButtonContainer; ///< If the entry is 0, it's a spacer.
         int buttonContainerWidth(const ButtonContainer &btnContainer, bool countHidden = false) const;
@@ -287,9 +287,10 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
  */
 class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
 {
+    Q_OBJECT
+
     friend class KCommonDecoration;
 
-        Q_OBJECT
     public:
         KCommonDecorationButton(ButtonType type, KCommonDecoration *parent);
         virtual ~KCommonDecorationButton();
