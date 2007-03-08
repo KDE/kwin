@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 //#define QT_CLEAN_NAMESPACE
 #include "tabbox.h"
 #include "workspace.h"
+#include "effects.h"
 #include "client.h"
 #include <QPainter>
 #include <QLabel>
@@ -46,6 +47,7 @@ TabBox::TabBox( Workspace *ws )
     : QFrame( 0, Qt::X11BypassWindowManagerHint )
     , client(0)
     , wspace(ws)
+    , display_refcount( 0 )
     {
     setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
     setLineWidth(2);
@@ -156,16 +158,18 @@ void TabBox::reset( bool partial_reset )
         // get all clients to show
         createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), starting_client, true);
 
+        displayed_clients = clients;
+
         // calculate maximum caption width
         cw = fontMetrics().width(no_tasks)+20;
-        for (ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+        for (ClientList::ConstIterator it = displayed_clients.begin(); it != displayed_clients.end(); ++it)
           {
           cw = fontMetrics().width( (*it)->caption() );
           if ( cw > wmax ) wmax = cw;
           }
 
         // calculate height for the popup
-        if ( clients.count() == 0 )  // height for the "not tasks" text
+        if ( displayed_clients.count() == 0 )  // height for the "not tasks" text
           {
           QFont f = font();
           f.setBold( true );
@@ -176,7 +180,7 @@ void TabBox::reset( bool partial_reset )
         else
           {
           showMiniIcon = false;
-          h = clients.count() * lineHeight;
+          h = displayed_clients.count() * lineHeight;
 
           if ( h > (r.height()-(2*frameWidth())) )  // if too high, use mini icons
             {
@@ -184,16 +188,16 @@ void TabBox::reset( bool partial_reset )
             // fontheight + 1 pixel above + 1 pixel below, or 16x16 icon + 1 pixel above + below
             lineHeight = qMax(fontMetrics().height() + 2, 16 + 2);
 
-            h = clients.count() * lineHeight;
+            h = displayed_clients.count() * lineHeight;
 
             if ( h > (r.height()-(2*frameWidth())) ) // if still too high, remove some clients
               {
                 // how many clients to remove
                 int howMany = (h - (r.height()-(2*frameWidth())))/lineHeight;
                 for (; howMany; howMany--)
-                  clients.removeAll(clients.last());
+                  displayed_clients.removeAll(displayed_clients.last());
 
-                h = clients.count() * lineHeight;
+                h = displayed_clients.count() * lineHeight;
               }
             }
           }
@@ -221,6 +225,9 @@ void TabBox::reset( bool partial_reset )
     setGeometry( (r.width()-w)/2 + r.x(),
                  (r.height()-h)/2+ r.y(),
                  w, h );
+
+    if( effects )
+        effects->tabBoxUpdated();
     }
 
 
@@ -275,6 +282,8 @@ void TabBox::nextPrev( bool next)
             }
         }
 
+    if( effects )
+        effects->tabBoxUpdated();
     update();
     }
 
@@ -292,6 +301,19 @@ Client* TabBox::currentClient()
         return 0;
     return client;
     }
+
+/*!
+  Returns the list of clients potentially displayed ( only works in
+  WindowsMode ).
+  Returns an empty list if no clients are available.
+ */
+ClientList TabBox::currentClientList()
+    {
+    if( mode() != WindowsMode )
+        return ClientList();
+    return clients;
+    }
+
 
 /*!
   Returns the currently displayed virtual desktop ( only works in
@@ -352,7 +374,7 @@ void TabBox::paintEvent( QPaintEvent* e )
             }
         else
             {
-            for (ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+            for (ClientList::ConstIterator it = displayed_clients.begin(); it != displayed_clients.end(); ++it)
               {
               if ( workspace()->hasClient( *it ) )  // safety
                   {
@@ -508,6 +530,17 @@ void TabBox::paintEvent( QPaintEvent* e )
         }
     }
 
+void TabBox::show()
+    {
+    if( display_refcount > 0 )
+        return;
+    display_refcount = 0;
+    if( effects )
+        effects->tabBoxAdded( mode());
+    if( display_refcount == 0 ) // no effects have claimed TabBox
+        QWidget::show();
+    }
+
 void TabBox::hide()
     {
     delayedShowTimer.stop();
@@ -518,6 +551,16 @@ void TabBox::hide()
         ;
     }
 
+
+/*!
+  Reduce the reference count, eventually closing the tabbox.
+ */
+void TabBox::unrefTabBox()
+    {
+    if( --display_refcount > 0 )
+        return;
+    workspace()->closeTabBox();
+    }
 
 void TabBox::reconfigure()
     {
@@ -564,12 +607,18 @@ void TabBox::delayedShow()
 void TabBox::handleMouseEvent( XEvent* e )
     {
     XAllowEvents( display(), AsyncPointer, xTime() );
+    if( display_refcount > 0 ) // tabbox has been replaced, check effects
+        {
+        if( effects && !effects->checkInputWindowEvent( e ) && e->type == ButtonPress )
+            unrefTabBox();
+        return;
+        }
     if( e->type != ButtonPress )
         return;
     QPoint pos( e->xbutton.x_root, e->xbutton.y_root );
     if( !geometry().contains( pos ))
         {
-        workspace()->closeTabBox();  // click outside closes tab
+        unrefTabBox();  // click outside closes tab
         return;
         }
     pos.rx() -= x(); // pos is now inside tabbox
@@ -578,8 +627,8 @@ void TabBox::handleMouseEvent( XEvent* e )
 
     if( mode() == WindowsMode )
         {
-        for( ClientList::ConstIterator it = clients.begin();
-             it != clients.end();
+        for( ClientList::ConstIterator it = displayed_clients.begin();
+             it != displayed_clients.end();
              ++it)
             {
             if( workspace()->hasClient( *it ) && (num == 0) ) // safety
@@ -1048,15 +1097,29 @@ void Workspace::tabBoxKeyPress( int keyQt )
         if ( ((keyQt & ~Qt::KeyboardModifierMask) == Qt::Key_Escape)
             && !(forward || backward) )
             { // if Escape is part of the shortcut, don't cancel
-            closeTabBox();
+            unrefTabBox();
             }
         }
+    }
+
+void Workspace::refTabBox()
+    {
+    if( tab_box )
+        tab_box->refTabBox();
+    }
+
+void Workspace::unrefTabBox()
+    {
+    if( tab_box )
+        tab_box->unrefTabBox();
     }
 
 void Workspace::closeTabBox()
     {
     removeTabBoxGrab();
     tab_box->hide();
+    if( effects )
+        effects->tabBoxClosed();
     keys->setEnabled( true );
     disable_shortcuts_keys->setEnabled( true );
     client_keys->setEnabled( true );
@@ -1104,12 +1167,9 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
          return;
     if (tab_grab)
         {
-        removeTabBoxGrab();
-        tab_box->hide();
-        keys->setEnabled( true );
-        disable_shortcuts_keys->setEnabled( true );
-        client_keys->setEnabled( true );
-        tab_grab = false;
+        bool old_control_grab = control_grab;
+        unrefTabBox();
+        control_grab = old_control_grab;
         if( Client* c = tab_box->currentClient())
             {
             activateClient( c );
@@ -1119,12 +1179,9 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
         }
     if (control_grab)
         {
-        removeTabBoxGrab();
-        tab_box->hide();
-        keys->setEnabled( true );
-        disable_shortcuts_keys->setEnabled( true );
-        client_keys->setEnabled( true );
-        control_grab = False;
+        bool old_tab_grab = tab_grab;
+        unrefTabBox();
+        tab_grab = old_tab_grab;
         if ( tab_box->currentDesktop() != -1 )
             {
             setCurrentDesktop( tab_box->currentDesktop() );
@@ -1220,6 +1277,27 @@ Client* Workspace::previousStaticClient( Client* c ) const
         return clients.last();
     --pos;
     return clients[ pos ];
+    }
+
+Client* Workspace::currentTabBoxClient() const
+    {
+    if( !tab_box )
+        return 0;
+    return tab_box->currentClient();
+    }
+
+ClientList Workspace::currentTabBoxClientList() const
+    {
+    if( !tab_box )
+        return ClientList();
+    return tab_box->currentClientList();
+    }
+
+int Workspace::currentTabBoxDesktop() const
+    {
+    if( !tab_box )
+        return -1;
+    return tab_box->currentDesktop();
     }
 
 bool Workspace::establishTabBoxGrab()

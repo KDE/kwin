@@ -32,6 +32,7 @@ class TabBox : public QFrame
         ~TabBox();
 
         Client* currentClient();
+        ClientList currentClientList();
         int currentDesktop();
 
     // DesktopMode and WindowsMode are based on the order in which the desktop
@@ -47,12 +48,18 @@ class TabBox : public QFrame
         void delayedShow();
         void hide();
 
+        void refTabBox();
+        void unrefTabBox();
+
         void handleMouseEvent( XEvent* );
 
         Workspace* workspace() const;
 
         void reconfigure();
         void updateKeyMapping();
+
+    public slots:
+        void show();
 
     protected:
         void showEvent( QShowEvent* );
@@ -66,13 +73,14 @@ class TabBox : public QFrame
         Client* client;
         Mode m;
         Workspace* wspace;
-        ClientList clients;
+        ClientList clients, displayed_clients;
         int desk;
         int lineHeight;
         bool showMiniIcon;
         QTimer delayedShowTimer;
         QString no_tasks;
         bool options_traverse_all;
+        int display_refcount;
     };
 
 
@@ -92,6 +100,14 @@ inline Workspace* TabBox::workspace() const
 inline TabBox::Mode TabBox::mode() const
     {
     return m;
+    }
+
+/*!
+  Increase the reference count, preventing the default tabbox from showing.
+ */
+inline void TabBox::refTabBox()
+    {
+    ++display_refcount;
     }
 
 } // namespace

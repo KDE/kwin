@@ -88,6 +88,9 @@ class Effect
         virtual void desktopChanged( int old );
         virtual void windowDamaged( EffectWindow* w, const QRect& r );
         virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
+        virtual void tabBoxAdded( int mode );
+        virtual void tabBoxClosed();
+        virtual void tabBoxUpdated();
 
         // Interpolates between x and y
         static float interpolate(float x, float y, float a)
@@ -161,6 +164,9 @@ class EffectsHandler
         void desktopChanged( int old );
         void windowDamaged( EffectWindow* w, const QRect& r );
         void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
+        void tabBoxAdded( int mode );
+        void tabBoxClosed();
+        void tabBoxUpdated();
 
         void registerEffect( const QString& name, EffectFactory* factory );
         void loadEffect( const QString& name );

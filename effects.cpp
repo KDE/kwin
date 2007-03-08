@@ -96,6 +96,18 @@ void Effect::windowGeometryShapeChanged( EffectWindow*, const QRect& )
     {
     }
 
+void Effect::tabBoxAdded( int )
+    {
+    }
+
+void Effect::tabBoxClosed()
+    {
+    }
+
+void Effect::tabBoxUpdated()
+    {
+    }
+
 void Effect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     effects->prePaintScreen( mask, region, time );
@@ -259,6 +271,8 @@ void EffectsHandler::desktopChanged( int old )
 
 void EffectsHandler::windowDamaged( EffectWindow* w, const QRect& r )
     {
+    if( w == NULL )
+        return;
     foreach( EffectPair ep, loaded_effects )
         ep.second->windowDamaged( w, r );
     }
@@ -269,6 +283,24 @@ void EffectsHandler::windowGeometryShapeChanged( EffectWindow* w, const QRect& o
         return;     // in some functions that may still call this
     foreach( EffectPair ep, loaded_effects )
         ep.second->windowGeometryShapeChanged( w, old );
+    }
+
+void EffectsHandler::tabBoxAdded( int mode )
+    {
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->tabBoxAdded( mode );
+    }
+
+void EffectsHandler::tabBoxClosed()
+    {
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->tabBoxClosed();
+    }
+
+void EffectsHandler::tabBoxUpdated()
+    {
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->tabBoxUpdated();
     }
 
 // start another painting pass
