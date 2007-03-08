@@ -15,6 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "scene.h"
 #include "options.h"
 
+#include "effects/boxswitch.h"
 #include "effects/desktopchangeslide.h"
 #include "effects/dialogparent.h"
 #include "effects/fade.h"
@@ -190,6 +191,7 @@ EffectsHandler::EffectsHandler()
     registerEffect("ScaleIn", new GenericEffectFactory<ScaleInEffect>);
     registerEffect("DialogParent", new GenericEffectFactory<DialogParentEffect>);
     registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);
+    registerEffect("BoxSwitch", new GenericEffectFactory<BoxSwitchEffect>);
 
     registerEffect("TestInput", new GenericEffectFactory<TestInputEffect>);
     registerEffect("TestThumbnail", new GenericEffectFactory<TestThumbnailEffect>);
