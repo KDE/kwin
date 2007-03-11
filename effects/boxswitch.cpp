@@ -225,7 +225,7 @@ void BoxSwitchEffect::tabBoxAdded( int mode )
         {
         if( mode == TabBox::WindowsMode )
             {
-            if( Workspace::self()->currentTabBoxClientList().count() > 1 )
+            if( Workspace::self()->currentTabBoxClientList().count() > 0 )
                 {
                 mMode = mode;
                 Workspace::self()->refTabBox();
@@ -234,7 +234,7 @@ void BoxSwitchEffect::tabBoxAdded( int mode )
             }
         else
             { // DesktopMode or DesktopListMode
-            if( Workspace::self()->numberOfDesktops() > 1 )
+            if( Workspace::self()->numberOfDesktops() > 0 )
                 {
                 mMode = mode;
                 painting_desktop = 0;
