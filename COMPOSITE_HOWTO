@@ -1,4 +1,6 @@
-This file describes how to set up kwin_composite.
+This file describes how to set up kwin_composite. Note that since it is still
+a work in progress, this file may possibly get out of date at times.
+
 
 See file HACKING for details on developing KWin, including building
     the kwin_composite branch.
@@ -95,4 +97,6 @@ Y=<number> = Y position, the same like X
 Effects:
 --------
 
-Effects can be currently enabled/disabled only by modifying effects.cpp source file.
+Which modules are enabled is currently set by config value Load in group [Effects] in kwinrc config file.
+Effects are named like the class, without the Effect suffix (e.g. Load=ShowFps,Fade). There is
+no depedency checking implemented yet.
