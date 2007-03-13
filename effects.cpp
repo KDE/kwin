@@ -31,6 +31,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/videorecord.h"
 #endif
 #ifdef HAVE_OPENGL
+#include "effects/fallapart.h"
 #include "effects/wavywindows.h"
 #endif
 #include "effects/zoom.h"
@@ -189,6 +190,7 @@ EffectsHandler::EffectsHandler()
     registerEffect("ShiftWorkspaceUp", new GenericEffectFactory<ShiftWorkspaceUpEffect>);
     registerEffect("Fade", new GenericEffectFactory<FadeEffect>);
     registerEffect("ScaleIn", new GenericEffectFactory<ScaleInEffect>);
+    registerEffect("FallApart", new GenericEffectFactory<FallApartEffect>);
     registerEffect("DialogParent", new GenericEffectFactory<DialogParentEffect>);
     registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);
     registerEffect("BoxSwitch", new GenericEffectFactory<BoxSwitchEffect>);
