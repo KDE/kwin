@@ -42,7 +42,10 @@ void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, in
         if( !windows[ w ].isFading())
             {
             if( windows[ w ].deleted )
+                {
                 static_cast< Deleted* >( w->window())->unrefWindow();
+                windows.remove( w );
+                }
             }
         else
             {
