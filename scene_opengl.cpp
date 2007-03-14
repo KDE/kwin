@@ -163,7 +163,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
 
 SceneOpenGL::~SceneOpenGL()
     {
-    for( QMap< Toplevel*, Window >::Iterator it = windows.begin();
+    for( QHash< Toplevel*, Window >::Iterator it = windows.begin();
          it != windows.end();
          ++it )
         (*it).free();

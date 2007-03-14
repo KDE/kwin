@@ -79,7 +79,7 @@ class SceneOpenGL
         static bool supports_npot_textures;
         static bool supports_fbo;
         static bool supports_saturation;
-        QMap< Toplevel*, Window > windows;
+        QHash< Toplevel*, Window > windows;
 #ifdef HAVE_XSHM
         static XShmSegmentInfo shm;
 #endif

@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <scene_xrender.h>
 #include <scene_opengl.h>
 
-#include <QMap>
+#include <QHash>
 #include <QPixmap>
 #include <QRect>
 #include <QRegion>
@@ -66,8 +66,8 @@ class BoxSwitchEffect
         QSize item_max_size; // maximum item display size (including highlight)
         int highlight_margin; // TODO graphical background, highlight
 
-        QMap< int, ItemInfo > desktops;
-        QMap< EffectWindow*, ItemInfo > windows;
+        QHash< int, ItemInfo > desktops;
+        QHash< EffectWindow*, ItemInfo > windows;
 
         int selected_desktop;
         ClientList tab_clients;

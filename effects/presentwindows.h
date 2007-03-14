@@ -72,7 +72,7 @@ class PresentWindowsEffect
             QRect area;
             float scale;
             };
-        QMap<Toplevel*, WindowData> mWindowData;
+        QHash<Toplevel*, WindowData> mWindowData;
     };
 
 } // namespace

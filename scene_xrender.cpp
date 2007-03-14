@@ -97,7 +97,7 @@ SceneXrender::~SceneXrender()
     XRenderFreePicture( display(), front );
     XRenderFreePicture( display(), buffer );
     wspace->destroyOverlay();
-    for( QMap< Toplevel*, Window >::Iterator it = windows.begin();
+    for( QHash< Toplevel*, Window >::Iterator it = windows.begin();
          it != windows.end();
          ++it )
         (*it).free();

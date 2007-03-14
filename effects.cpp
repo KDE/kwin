@@ -479,7 +479,7 @@ void EffectsHandler::activateWindow( EffectWindow* c )
 
 void EffectsHandler::registerEffect( const QString& name, EffectFactory* factory )
     {
-    QMap<QString, EffectFactory*>::const_iterator factories_iterator = effect_factories.find(name);
+    QHash<QString, EffectFactory*>::const_iterator factories_iterator = effect_factories.find(name);
     if( factories_iterator != effect_factories.end() )
         {
         kDebug( 1212 ) << "EffectsHandler::registerEffect : Effect name already registered : " << name << endl;
@@ -506,7 +506,7 @@ void EffectsHandler::loadEffect( const QString& name )
             }
         }
 
-    QMap<QString, EffectFactory*>::const_iterator factories_iterator = effect_factories.find(name);
+    QHash<QString, EffectFactory*>::const_iterator factories_iterator = effect_factories.find(name);
     if( factories_iterator != effect_factories.end() )
         {
         kDebug( 1212 ) << "EffectsHandler::loadEffect : Loading effect : " << name << endl;

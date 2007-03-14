@@ -121,7 +121,7 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
 
     // Find out which window (if any) was clicked and activate it
     QPoint pos = static_cast< QMouseEvent* >( e )->pos();
-    for( QMap<Toplevel*, WindowData>::iterator it = mWindowData.begin();
+    for( QHash<Toplevel*, WindowData>::iterator it = mWindowData.begin();
          it != mWindowData.end(); ++it )
         {
         if( it.value().area.contains(pos) )

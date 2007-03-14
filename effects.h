@@ -177,7 +177,7 @@ class EffectsHandler
         QVector< EffectPair > loaded_effects;
         typedef QPair< Effect*, Window > InputWindowPair;
         QList< InputWindowPair > input_windows;
-        QMap< QString, EffectFactory* > effect_factories;
+        QHash< QString, EffectFactory* > effect_factories;
         int current_paint_screen;
         int current_paint_window;
         int current_draw_window;

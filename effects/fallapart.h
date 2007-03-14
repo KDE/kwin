@@ -27,7 +27,7 @@ class FallApartEffect
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
     private:
-        QMap< const EffectWindow*, double > windows;
+        QHash< const EffectWindow*, double > windows;
     };
 
 } // namespace

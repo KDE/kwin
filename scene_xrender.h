@@ -48,7 +48,7 @@ class SceneXrender
         static Picture buffer;
         static ScreenPaintData screen_paint;
         class Window;
-        QMap< Toplevel*, Window > windows;
+        QHash< Toplevel*, Window > windows;
     };
 
 class SceneXrender::Window

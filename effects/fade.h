@@ -32,7 +32,7 @@ class FadeEffect
     private:
         int fade_in_speed, fade_out_speed; // TODO make these configurable
         class WindowInfo;
-        QMap< const EffectWindow*, WindowInfo > windows;
+        QHash< const EffectWindow*, WindowInfo > windows;
     };
 
 class FadeEffect::WindowInfo

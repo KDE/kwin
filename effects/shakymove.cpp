@@ -72,7 +72,7 @@ void ShakyMoveEffect::windowClosed( EffectWindow* c )
 // TODO use time provided with prePaintWindow() instead
 void ShakyMoveEffect::tick()
     {
-    for( QMap< const EffectWindow*, int >::Iterator it = windows.begin();
+    for( QHash< const EffectWindow*, int >::Iterator it = windows.begin();
          it != windows.end();
          ++it )
         {

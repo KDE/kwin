@@ -32,7 +32,7 @@ class ShakyMoveEffect
     private slots:
         void tick();
     private:
-        QMap< const EffectWindow*, int > windows;
+        QHash< const EffectWindow*, int > windows;
         QTimer timer;
     };
 
