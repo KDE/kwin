@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/boxswitch.h"
 #include "effects/desktopchangeslide.h"
 #include "effects/dialogparent.h"
+#include "effects/drunken.h"
 #include "effects/fade.h"
 #include "effects/howto.h"
 #include "effects/maketransparent.h"
@@ -194,6 +195,7 @@ EffectsHandler::EffectsHandler()
     registerEffect("DialogParent", new GenericEffectFactory<DialogParentEffect>);
     registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);
     registerEffect("BoxSwitch", new GenericEffectFactory<BoxSwitchEffect>);
+    registerEffect("Drunken", new GenericEffectFactory<DrunkenEffect>);
 
     registerEffect("TestInput", new GenericEffectFactory<TestInputEffect>);
     registerEffect("TestThumbnail", new GenericEffectFactory<TestThumbnailEffect>);

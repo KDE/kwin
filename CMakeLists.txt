@@ -76,6 +76,7 @@ set(kwin_KDEINIT_SRCS
    effects/desktopchangeslide.cpp
    effects/boxswitch.cpp
    effects/fallapart.cpp
+   effects/drunken.cpp
    effects/test_input.cpp
    effects/test_thumbnail.cpp
    )
