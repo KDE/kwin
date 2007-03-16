@@ -130,6 +130,9 @@ class SceneOpenGL::Window
         // Marks vertices of the window as dirty. Call this if you change
         //  position of the vertices
         void markVerticesDirty()  { verticesDirty = true; }
+
+        void setShader( GLShader* s )  { shader = s; }
+
     protected:
         // Makes sure that vertex grid requests are fulfilled and that vertices
         //  aren't dirty. Call this before paint pass
@@ -138,8 +141,10 @@ class SceneOpenGL::Window
         void resetVertices();  // Resets positions of vertices
 
         void prepareRenderStates( int mask, WindowPaintData data );
+        void prepareShaderRenderStates( int mask, WindowPaintData data );
         void renderGeometry( int mask, QRegion region );
         void restoreRenderStates( int mask, WindowPaintData data );
+        void restoreShaderRenderStates( int mask, WindowPaintData data );
 
     private:
         QRegion optimizeBindDamage( const QRegion& reg, int limit );
@@ -161,6 +166,7 @@ class SceneOpenGL::Window
         int requestedXResolution;
         int requestedYResolution;
         bool verticesDirty;  // vertices have been modified in some way
+        GLShader* shader;  // shader to be used for rendering, if any
     };
 
 } // namespace

@@ -811,6 +811,9 @@ void SceneOpenGL::Window::prepareVertices()
     // Reset requests for the next painting
     requestedXResolution = 0;
     requestedYResolution = 0;
+
+    // Reset shader. If effect wants to use shader, it has to set it in paint pass
+    shader = 0;
     }
 
 void SceneOpenGL::Window::prepareForPainting()
@@ -1177,7 +1180,10 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
 
-    prepareRenderStates( mask, data );
+    if(shader)
+        prepareShaderRenderStates( mask, data );
+    else
+        prepareRenderStates( mask, data );
     enableTexture();
 
     // update texture matrix to handle GL_TEXTURE_2D and GL_TEXTURE_RECTANGLE
@@ -1202,12 +1208,32 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     glMatrixMode( GL_MODELVIEW );
     glPopMatrix();
 
-    restoreRenderStates( mask, data );
+    if(shader)
+        restoreShaderRenderStates( mask, data );
+    else
+        restoreRenderStates( mask, data );
     disableTexture();
+    }
+
+void SceneOpenGL::Window::prepareShaderRenderStates( int mask, WindowPaintData data )
+    {
+    Q_UNUSED( mask );
+    // setup blending of transparent windows
+    glPushAttrib( GL_ENABLE_BIT );
+    bool opaque = isOpaque() && data.opacity == 1.0;
+    if( !opaque )
+        {
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        }
+    shader->setUniform("opacity", (float)data.opacity);
+    shader->setUniform("saturation", (float)data.saturation);
+    shader->setUniform("brightness", (float)data.brightness);
     }
 
 void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
     {
+    Q_UNUSED( mask );
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
     bool opaque = isOpaque() && data.opacity == 1.0;
@@ -1364,8 +1390,16 @@ void SceneOpenGL::Window::renderGeometry( int mask, QRegion region )
     glDisableClientState( GL_TEXTURE_COORD_ARRAY );
     }
 
+void SceneOpenGL::Window::restoreShaderRenderStates( int mask, WindowPaintData data )
+    {
+    Q_UNUSED( mask );
+    Q_UNUSED( data );
+    glPopAttrib();  // ENABLE_BIT
+    }
+
 void SceneOpenGL::Window::restoreRenderStates( int mask, WindowPaintData data )
     {
+    Q_UNUSED( mask );
     if( data.opacity != 1.0 || data.saturation != 1.0 || data.brightness != 1.0f )
         {
         if( data.saturation != 1.0 && supports_saturation )
