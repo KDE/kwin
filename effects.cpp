@@ -19,6 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/desktopchangeslide.h"
 #include "effects/dialogparent.h"
 #include "effects/drunken.h"
+#include "effects/explosioneffect.h"
 #include "effects/fade.h"
 #include "effects/howto.h"
 #include "effects/maketransparent.h"
@@ -183,6 +184,7 @@ EffectsHandler::EffectsHandler()
     registerEffect("PresentWindows", new GenericEffectFactory<PresentWindowsEffect>);
 #ifdef HAVE_OPENGL
     registerEffect("WavyWindows", new GenericEffectFactory<WavyWindowsEffect>);
+    registerEffect("Explosion", new GenericEffectFactory<ExplosionEffect>);
 #endif
     registerEffect("MinimizeAnimation", new GenericEffectFactory<MinimizeAnimationEffect>);
     registerEffect("Howto", new GenericEffectFactory<HowtoEffect>);
