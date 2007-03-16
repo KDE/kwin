@@ -133,7 +133,7 @@ Application::Application( )
     e.xclient.display = display();
     e.xclient.window = rootWindow();
     e.xclient.format = 8;
-    strcpy( e.xclient.data.b, "wm started" );
+    strcpy( e.xclient.data.b, "wm" );
     XSendEvent( display(), rootWindow(), False, SubstructureNotifyMask, &e );
     }
 
