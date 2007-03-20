@@ -32,7 +32,7 @@ void FallApartEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* regio
             {
             if( windows[ w ] < 1 )
                 {
-                windows[ w ] += time / 500.;
+                windows[ w ] += time / 1000.;
                 *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
                 glwin->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
                 // Request the window to be divided into cells
@@ -61,17 +61,25 @@ void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                  i < vertices.count();
                  i += 4 )
                 {
+                QPointF p1( vertices[ i ].pos[ 0 ], vertices[ i ].pos[ 1 ] );
+                QPointF p2( vertices[ i + 1 ].pos[ 0 ], vertices[ i + 1 ].pos[ 1 ] );
+                QPointF p3( vertices[ i + 2 ].pos[ 0 ], vertices[ i + 2 ].pos[ 1 ] );
+                QPointF p4( vertices[ i + 3 ].pos[ 0 ], vertices[ i + 3 ].pos[ 1 ] );
                 double xdiff = 0;
-                if( vertices[ i ].pos[ 0 ] < w->width() / 2 )
-                    xdiff = -( w->width() / 2 - vertices[ i ].pos[ 0 ] ) / w->width() * 100;
-                if( vertices[ i ].pos[ 0 ] > w->width() / 2 )
-                    xdiff = ( vertices[ i ].pos[ 0 ] - w->width() / 2 ) / w->width() * 100;
+                if( p1.x() < w->width() / 2 )
+                    xdiff = -( w->width() / 2 - p1.x()) / w->width() * 100;
+                if( p1.x() > w->width() / 2 )
+                    xdiff = ( p1.x() - w->width() / 2 ) / w->width() * 100;
                 double ydiff = 0;
-                if( vertices[ i ].pos[ 1 ] < w->height() / 2 )
-                    ydiff = -( w->height() / 2 - vertices[ i ].pos[ 1 ] ) / w->height() * 100;
-                if( vertices[ i ].pos[ 1 ] > w->height() / 2 )
-                    ydiff = ( vertices[ i ].pos[ 1 ] - w->height() / 2 ) / w->height() * 100;
-                double modif = windows[ w ] * windows[ w ] * 16;
+                if( p1.y() < w->height() / 2 )
+                    ydiff = -( w->height() / 2 - p1.y()) / w->height() * 100;
+                if( p1.y() > w->height() / 2 )
+                    ydiff = ( p1.y() - w->height() / 2 ) / w->height() * 100;
+                double modif = windows[ w ] * windows[ w ] * 64;
+                // change direction randomly but consistently
+                srandom( i );
+                xdiff += ( rand() % 21 - 10 );
+                ydiff += ( rand() % 21 - 10 );
                 for( int j = 0;
                      j < 4;
                      ++j )
