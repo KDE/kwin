@@ -37,7 +37,7 @@ class B2Button : public Q3Button
 {
 public:
     B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=NULL, const int realizeBtns = Qt::LeftButton);
-    ~B2Button() {};
+    ~B2Button() {}
 
     void setBg(const QColor &c){bg = c;}
     void setPixmaps(QPixmap *pix, QPixmap *pixDown, QPixmap *iPix,

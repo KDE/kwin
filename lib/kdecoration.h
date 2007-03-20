@@ -175,7 +175,7 @@ class KDecorationProvides
     : public KDecorationDefines
     {
     public:
-        virtual  ~KDecorationProvides(){};
+        virtual  ~KDecorationProvides(){}
 		virtual bool provides( Requirement req ) = 0;
     };
 

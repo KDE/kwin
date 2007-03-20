@@ -60,7 +60,7 @@ class KWIN_EXPORT KDecorationOptionsPrivate : public KDecorationDefines
 class KDecorationBridge : public KDecorationDefines
     {
     public:
-	virtual ~KDecorationBridge(){};
+	virtual ~KDecorationBridge(){}
 	virtual bool isActive() const = 0;
 	virtual bool isCloseable() const = 0;
 	virtual bool isMaximizable() const = 0;
