@@ -33,6 +33,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/videorecord.h"
 #endif
 #ifdef HAVE_OPENGL
+#include "effects/flame.h"
 #include "effects/fallapart.h"
 #include "effects/wavywindows.h"
 #endif
@@ -194,6 +195,7 @@ EffectsHandler::EffectsHandler()
     registerEffect("Fade", new GenericEffectFactory<FadeEffect>);
     registerEffect("ScaleIn", new GenericEffectFactory<ScaleInEffect>);
     registerEffect("FallApart", new GenericEffectFactory<FallApartEffect>);
+    registerEffect("Flame", new GenericEffectFactory<FlameEffect>);
     registerEffect("DialogParent", new GenericEffectFactory<DialogParentEffect>);
     registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);
     registerEffect("BoxSwitch", new GenericEffectFactory<BoxSwitchEffect>);
