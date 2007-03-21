@@ -10,6 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "fallapart.h"
 
+#include <math.h>
+
 #include <deleted.h>
 #include <scene_opengl.h>
 
@@ -36,7 +38,7 @@ void FallApartEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* regio
                 *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
                 glwin->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
                 // Request the window to be divided into cells
-                glwin->requestVertexGrid( 10 );
+                glwin->requestVertexGrid( 40 );
                 }
             else
                 {
@@ -61,10 +63,9 @@ void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                  i < vertices.count();
                  i += 4 )
                 {
+                // make fragments move in various directions, based on where
+                // they are (left pieces generally move to the left, etc.)
                 QPointF p1( vertices[ i ].pos[ 0 ], vertices[ i ].pos[ 1 ] );
-                QPointF p2( vertices[ i + 1 ].pos[ 0 ], vertices[ i + 1 ].pos[ 1 ] );
-                QPointF p3( vertices[ i + 2 ].pos[ 0 ], vertices[ i + 2 ].pos[ 1 ] );
-                QPointF p4( vertices[ i + 3 ].pos[ 0 ], vertices[ i + 3 ].pos[ 1 ] );
                 double xdiff = 0;
                 if( p1.x() < w->width() / 2 )
                     xdiff = -( w->width() / 2 - p1.x()) / w->width() * 100;
@@ -76,8 +77,7 @@ void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                 if( p1.y() > w->height() / 2 )
                     ydiff = ( p1.y() - w->height() / 2 ) / w->height() * 100;
                 double modif = windows[ w ] * windows[ w ] * 64;
-                // change direction randomly but consistently
-                srandom( i );
+                srandom( i ); // change direction randomly but consistently
                 xdiff += ( rand() % 21 - 10 );
                 ydiff += ( rand() % 21 - 10 );
                 for( int j = 0;
@@ -86,6 +86,26 @@ void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                     {
                     vertices[ i + j ].pos[ 0 ] += xdiff * modif;
                     vertices[ i + j ].pos[ 1 ] += ydiff * modif;
+                    }
+                // also make the fragments rotate around their center
+                QPointF center(( vertices[ i ].pos[ 0 ] + vertices[ i + 1 ].pos[ 0 ]
+                    + vertices[ i + 2 ].pos[ 0 ] + vertices[ i + 3 ].pos[ 0 ] ) / 4,
+                    ( vertices[ i ].pos[ 1 ] + vertices[ i + 1 ].pos[ 1 ]
+                    + vertices[ i + 2 ].pos[ 1 ] + vertices[ i + 3 ].pos[ 1 ] ) / 4 );
+                double adiff = ( rand() % 720 - 360 ) / 360. * 2 * M_PI; // spin randomly
+                for( int j = 0;
+                     j < 4;
+                     ++j )
+                    {
+                    double x = vertices[ i + j ].pos[ 0 ] - center.x();
+                    double y = vertices[ i + j ].pos[ 1 ] - center.y();
+                    double angle = atan2( y, x );
+                    angle += windows[ w ] * adiff;
+                    double dist = sqrt( x * x + y * y );
+                    x = dist * cos( angle );
+                    y = dist * sin( angle );
+                    vertices[ i + j ].pos[ 0 ] = center.x() + x;
+                    vertices[ i + j ].pos[ 1 ] = center.y() + y;
                     }
                 }
             glwin->markVerticesDirty();
