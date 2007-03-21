@@ -69,6 +69,8 @@ General TODO
 *   - perhaps there should be an option not to unmap windows in order to always have live thumbnails
 *       - another option could be to unmap but quickly map when a live thumbnail is needed
 
+* cursorPos() does not work reliably now (not from e.g. timers, it needs events), so it's disabled
+
 
 OpenGL TODO
 =================================

@@ -430,6 +430,7 @@ static Time last_cursor_timestamp = CurrentTime;
 
 QPoint cursorPos()
     {
+    last_cursor_timestamp = CurrentTime;
     if( last_cursor_timestamp == CurrentTime
         || last_cursor_timestamp != QX11Info::appTime())
         {
