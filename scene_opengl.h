@@ -28,6 +28,7 @@ class SceneOpenGL
     : public Scene
     {
     public:
+        class Texture;
         class Window;
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
@@ -51,8 +52,6 @@ class SceneOpenGL
         bool initDrawableConfigs();
         void waitSync();
         void flushBuffer( int mask, QRegion damage );
-        typedef GLuint Texture;
-        typedef GLenum Target;
         GC gcroot;
         class FBConfigInfo
         {
@@ -76,13 +75,37 @@ class SceneOpenGL
         static bool shm_mode;
         static bool strict_binding;
         static bool copy_buffer_hack;
-        static bool supports_npot_textures;
-        static bool supports_fbo;
-        static bool supports_saturation;
         QHash< Toplevel*, Window* > windows;
 #ifdef HAVE_XSHM
         static XShmSegmentInfo shm;
 #endif
+    };
+
+class SceneOpenGL::Texture
+    : public GLTexture
+    {
+    public:
+        Texture();
+        Texture( const Pixmap& pix, const QSize& size, int depth );
+
+        using GLTexture::load;
+        virtual bool load( const Pixmap& pix, const QSize& size, int depth,
+            QRegion region );
+        virtual bool load( const Pixmap& pix, const QSize& size, int depth );
+        virtual bool load( const QImage& image, GLenum target = GL_TEXTURE_2D );
+        virtual bool load( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
+        virtual void discard();
+        virtual void bind();
+        virtual void unbind();
+
+    protected:
+        void findTarget();
+        QRegion optimizeBindDamage( const QRegion& reg, int limit );
+
+    private:
+        void init();
+
+        GLXPixmap bound_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
     };
 
 class SceneOpenGL::Window
@@ -93,10 +116,7 @@ class SceneOpenGL::Window
         virtual ~Window();
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         virtual void prepareForPainting();
-        void findTextureTarget();
         bool bindTexture();
-        void enableTexture();
-        void disableTexture();
         void discardTexture();
         void discardVertices();
 
@@ -146,15 +166,7 @@ class SceneOpenGL::Window
         void restoreShaderRenderStates( int mask, WindowPaintData data );
 
     private:
-        QRegion optimizeBindDamage( const QRegion& reg, int limit );
         Texture texture;
-        Target texture_target;
-        float texture_scale_x, texture_scale_y; // to un-normalize GL_TEXTURE_2D
-        bool texture_y_inverted; // texture has y inverted
-        bool texture_can_use_mipmaps;
-        bool texture_has_valid_mipmaps;
-        bool texture_filter_trilinear;
-        GLXPixmap bound_glxpixmap; // the glx pixmap the texture is bound to, only for tfp_mode
 
         QVector<Vertex> verticeslist;
         // Maximum size of the biggest quad that window currently has, in pixels

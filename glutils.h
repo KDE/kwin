@@ -49,8 +49,64 @@ bool hasGLXVersion(int major, int minor, int release = 0);
 bool hasGLExtension(const QString& extension);
 
 inline bool isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
+int nearestPowerOfTwo( int x );
 
 #ifdef HAVE_OPENGL
+
+class GLTexture
+    {
+    public:
+        GLTexture();
+        GLTexture( const QImage& image, GLenum target = GL_TEXTURE_2D );
+        GLTexture( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
+        GLTexture( const QString& fileName );
+        virtual ~GLTexture();
+
+        bool isNull() const;
+
+        virtual bool load( const QImage& image, GLenum target = GL_TEXTURE_2D );
+        virtual bool load( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
+        virtual bool load( const QString& fileName );
+        virtual void discard();
+        virtual void bind();
+        virtual void unbind();
+        void enableUnnormalizedTexCoords();
+        void disableUnnormalizedTexCoords();
+
+        GLuint texture() const;
+        GLenum target() const;
+        GLenum filter() const;
+        virtual bool isDirty() const;
+        void setTexture( GLuint texture );
+        void setTarget( GLenum target );
+        void setFilter( GLenum filter );
+        virtual void setDirty();
+
+        static void initStatic();
+        static bool NPOTTextureSupported()  { return mNPOTTextureSupported; }
+        static bool framebufferObjectSupported()  { return mFramebufferObjectSupported; }
+        static bool saturationSupported()  { return mSaturationSupported; }
+
+    protected:
+        void enableFilter();
+        QImage convertToGLFormat( const QImage& img ) const;
+
+        GLuint mTexture;
+        GLenum mTarget;
+        GLenum mFilter;
+        QSize mSize;
+        QSizeF mScale; // to un-normalize GL_TEXTURE_2D
+        bool y_inverted; // texture has y inverted
+        bool can_use_mipmaps;
+        bool has_valid_mipmaps;
+
+    private:
+        void init();
+
+        static bool mNPOTTextureSupported;
+        static bool mFramebufferObjectSupported;
+        static bool mSaturationSupported;
+    };
 
 class GLShader
     {

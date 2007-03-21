@@ -18,6 +18,7 @@ namespace KWinInternal
 {
 
 class GLShader;
+class GLTexture;
 
 /**
  * Makes windows explode into small pieces when they're closed
@@ -39,13 +40,11 @@ class ExplosionEffect
 
     protected:
         bool loadData();
-        unsigned int loadTexture(const QString& filename);
-        QImage convertToGLFormat(const QImage& img) const;
 
     private:
         GLShader* mShader;
-        unsigned int mStartOffsetTex;
-        unsigned int mEndOffsetTex;
+        GLTexture* mStartOffsetTex;
+        GLTexture* mEndOffsetTex;
         QMap< const EffectWindow*, double > mWindows;
         int mActiveAnimations;
         bool mValid;

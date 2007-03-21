@@ -39,9 +39,16 @@ bool ExplosionEffect::loadData()
     QString shadername("explosion");
     QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/explosion.frag");
     QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/explosion.vert");
+    QString starttexture =  KGlobal::dirs()->findResource("data", "kwin/explosion-start.png");
+    QString endtexture =  KGlobal::dirs()->findResource("data", "kwin/explosion-end.png");
     if(fragmentshader.isEmpty() || vertexshader.isEmpty())
     {
         kError() << k_funcinfo << "Couldn't locate shader files" << endl;
+        return false;
+    }
+    if(starttexture.isEmpty() || endtexture.isEmpty())
+    {
+        kError() << k_funcinfo << "Couldn't locate texture files" << endl;
         return false;
     }
 
@@ -60,72 +67,28 @@ bool ExplosionEffect::loadData()
         mShader->unbind();
     }
 
-    if((mStartOffsetTex = loadTexture("explosion-start.png")) == 0)
+    mStartOffsetTex = new GLTexture(starttexture);
+    mEndOffsetTex = new GLTexture(endtexture);
+    if(mStartOffsetTex->isNull() || mEndOffsetTex->isNull())
+    {
+        kError() << k_funcinfo << "The textures failed to load!" << endl;
         return false;
-    if((mEndOffsetTex = loadTexture("explosion-end.png")) == 0)
-        return false;
+    }
+    else
+    {
+        mStartOffsetTex->setFilter( GL_LINEAR );
+        mEndOffsetTex->setFilter( GL_LINEAR );
+    }
 
     return true;
     }
-
-unsigned int ExplosionEffect::loadTexture(const QString& filename)
-{
-    QString fullfilename = KGlobal::dirs()->findResource("data", "kwin/" + filename);
-    if(fullfilename.isEmpty())
-    {
-        kError() << k_funcinfo << "Couldn't find texture '" << filename << "'" << endl;
-        return 0;
-    }
-
-    QImage img(fullfilename);
-    if(img.isNull())
-    {
-        kError() << k_funcinfo << "Couldn't load image from file " << fullfilename << endl;
-        return 0;
-    }
-    img = convertToGLFormat(img);
-
-    unsigned int tex;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width(), img.height(), 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, img.bits());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    return tex;
-}
-
-QImage ExplosionEffect::convertToGLFormat(const QImage& img) const
-{
-    // This method has been copied from Qt's QGLWidget::convertToGLFormat()
-    QImage res = img.convertToFormat(QImage::Format_ARGB32);
-    res = res.mirrored();
-
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        // Qt has ARGB; OpenGL wants RGBA
-        for (int i=0; i < res.height(); i++) {
-            uint *p = (uint*)res.scanLine(i);
-            uint *end = p + res.width();
-            while (p < end) {
-                *p = (*p << 8) | ((*p >> 24) & 0xFF);
-                p++;
-            }
-        }
-    }
-    else {
-        // Qt has ARGB; OpenGL wants ABGR (i.e. RGBA backwards)
-        res = res.rgbSwapped();
-    }
-    return res;
-}
 
 void ExplosionEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     if( mActiveAnimations > 0 )
         // We need to mark the screen as transformed. Otherwise the whole screen
         //  won't be repainted, resulting in artefacts
-        *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
+        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(mask, region, time);
     }
@@ -175,11 +138,9 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         mShader->setUniform("factor", (float)mWindows[w]);
         mShader->setUniform("scale", scale);
         glActiveTexture(GL_TEXTURE4);
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, mStartOffsetTex);
+        mStartOffsetTex->bind();
         glActiveTexture(GL_TEXTURE5);
-        glEnable(GL_TEXTURE_2D);
-        glBindTexture(GL_TEXTURE_2D, mEndOffsetTex);
+        mEndOffsetTex->bind();
         glActiveTexture(GL_TEXTURE0);
         glwin->setShader(mShader);
         }
@@ -191,11 +152,9 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         {
         mShader->unbind();
         glActiveTexture(GL_TEXTURE4);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_TEXTURE_2D);
+        mStartOffsetTex->unbind();
         glActiveTexture(GL_TEXTURE5);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDisable(GL_TEXTURE_2D);
+        mEndOffsetTex->unbind();
         glActiveTexture(GL_TEXTURE0);
         }
     }

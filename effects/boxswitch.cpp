@@ -83,7 +83,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 {
                 if( w == selected_window )
                     {
-                    paintHighlight( windows[ w ].area,
+                    paintHighlight( windows[ w ]->area,
                         static_cast< Client* >( w->window())->caption());
                     }
                 paintWindowThumbnail( w );
@@ -100,7 +100,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                     {
                     if( painting_desktop == selected_desktop )
                         {
-                        paintHighlight( desktops[ painting_desktop ].area,
+                        paintHighlight( desktops[ painting_desktop ]->area,
                             Workspace::self()->desktopName( painting_desktop ));
                         }
 
@@ -140,7 +140,7 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
         {
         foreach( EffectWindow* w, windows.keys())
             {
-            if( windows[ w ].clickable.contains( pos ))
+            if( windows[ w ]->clickable.contains( pos ))
                 {
                 if( Client* c = static_cast< Client* >( w->window()))
                     {
@@ -149,6 +149,7 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
                         c->setShade( ShadeActivated );
                     Workspace::self()->unrefTabBox();
                     setInactive();
+                    break;
                     }
                 }
             }
@@ -157,11 +158,12 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
         {
         for( int i = 1; i <= desktops.count(); i++ )
             {
-            if( desktops[ i ].clickable.contains( pos ))
+            if( desktops[ i ]->clickable.contains( pos ))
                 {
                 Workspace::self()->setCurrentDesktop( i );
                 Workspace::self()->unrefTabBox();
                 setInactive();
+                break;
                 }
             }
         }
@@ -175,19 +177,19 @@ void BoxSwitchEffect::windowDamaged( EffectWindow* w, const QRect& damage )
             {
             if( windows.contains( w ))
                 {
-                workspace()->addRepaint( windows[ w ].area );
+                workspace()->addRepaint( windows[ w ]->area );
                 }
             }
         else
             {
             if( w->isOnAllDesktops())
                 {
-                foreach( ItemInfo info, desktops )
-                    workspace()->addRepaint( info.area );
+                foreach( ItemInfo* info, desktops )
+                    workspace()->addRepaint( info->area );
                 }
             else
                 {
-                workspace()->addRepaint( desktops[ w->desktop() ].area );
+                workspace()->addRepaint( desktops[ w->desktop() ]->area );
                 }
             }
         }
@@ -201,19 +203,19 @@ void BoxSwitchEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& 
             {
             if( windows.contains( w ) && w->size() != old.size())
                 {
-                workspace()->addRepaint( windows[ w ].area );
+                workspace()->addRepaint( windows[ w ]->area );
                 }
             }
         else
             {
             if( w->isOnAllDesktops())
                 {
-                foreach( ItemInfo info, desktops )
-                    workspace()->addRepaint( info.area );
+                foreach( ItemInfo* info, desktops )
+                    workspace()->addRepaint( info->area );
                 }
             else
                 {
-                workspace()->addRepaint( desktops[ w->desktop() ].area );
+                workspace()->addRepaint( desktops[ w->desktop() ]->area );
                 }
             }
         }
@@ -260,12 +262,12 @@ void BoxSwitchEffect::tabBoxUpdated()
             if( selected_window != NULL )
                 {
                 if( windows.contains( selected_window ))
-                    workspace()->addRepaint( windows.value( selected_window ).area );
+                    workspace()->addRepaint( windows.value( selected_window )->area );
                 selected_window->window()->addRepaintFull();
                 }
             selected_window = Workspace::self()->currentTabBoxClient()->effectWindow();
             if( windows.contains( selected_window ))
-                workspace()->addRepaint( windows.value( selected_window ).area );
+                workspace()->addRepaint( windows.value( selected_window )->area );
             selected_window->window()->addRepaintFull();
             if( Workspace::self()->currentTabBoxClientList() == tab_clients )
                 return;
@@ -274,10 +276,10 @@ void BoxSwitchEffect::tabBoxUpdated()
         else
             {
             if( desktops.contains( selected_desktop ))
-                workspace()->addRepaint( desktops.value( selected_desktop ).area );
+                workspace()->addRepaint( desktops.value( selected_desktop )->area );
             selected_desktop = Workspace::self()->currentTabBoxDesktop();
             if( desktops.contains( selected_desktop ))
-                workspace()->addRepaint( desktops.value( selected_desktop ).area );
+                workspace()->addRepaint( desktops.value( selected_desktop )->area );
             if( Workspace::self()->numberOfDesktops() == desktops.count())
                 return;
             }
@@ -312,20 +314,6 @@ void BoxSwitchEffect::setActive()
             {
             if( w != selected_window )
                 w->window()->addRepaintFull();
-#ifdef HAVE_OPENGL
-            if( dynamic_cast< SceneOpenGL* >( scene ))
-                {
-//                windows[ w ].iconTexture.discard();
-                }
-            else
-#endif
-                {
-#ifdef HAVE_XRENDER
-            if( windows[ w ].iconPicture != None )
-                XRenderFreePicture( display(), windows[ w ].iconPicture );
-            windows[ w ].iconPicture = None;
-#endif
-                }
             }
         }
     }
@@ -344,21 +332,26 @@ void BoxSwitchEffect::setInactive()
             {
             if( w != selected_window )
                 w->window()->addRepaintFull();
-#ifdef HAVE_OPENGL
-            if( dynamic_cast< SceneOpenGL* >( scene ))
-                {
-//                windows[ w ].iconTexture.discard();
-                }
-            else
-#endif
-                {
-#ifdef HAVE_XRENDER
-            if( windows[ w ].iconPicture != None )
-                XRenderFreePicture( display(), windows[ w ].iconPicture );
-            windows[ w ].iconPicture = None;
-#endif
-                }
             }
+        foreach( ItemInfo* i, windows )
+            {
+#ifdef HAVE_XRENDER
+            if( dynamic_cast< SceneXrender* >( scene ))
+                {
+                if( i->iconPicture != None )
+                    XRenderFreePicture( display(), i->iconPicture );
+                i->iconPicture = None;
+                }
+#endif
+            delete i;
+            }
+        windows.clear();
+        }
+    else
+        { // DesktopMode
+        foreach( ItemInfo* i, desktops )
+            delete i;
+        desktops.clear();
         }
     workspace()->addRepaint( frame_area );
     frame_area = QRect();
@@ -405,12 +398,13 @@ void BoxSwitchEffect::calculateItemSizes()
         for( int i = 0; i < tab_clients.count(); i++ )
             {
             EffectWindow* w = tab_clients.at( i )->effectWindow();
+            windows[ w ] = new ItemInfo();
 
-            windows[ w ].area = QRect( frame_area.x() + frame_margin
+            windows[ w ]->area = QRect( frame_area.x() + frame_margin
                 + i * item_max_size.width(),
                 frame_area.y() + frame_margin,
                 item_max_size.width(), item_max_size.height());
-            windows[ w ].clickable = windows[ w ].area;
+            windows[ w ]->clickable = windows[ w ]->area;
             }
         }
     else
@@ -419,11 +413,13 @@ void BoxSwitchEffect::calculateItemSizes()
         int iDesktop = ( mMode == TabBox::DesktopMode ) ? Workspace::self()->currentDesktop() : 1;
         for( int i = 1; i <= Workspace::self()->numberOfDesktops(); i++ )
             {
-            desktops[ iDesktop ].area = QRect( frame_area.x() + frame_margin
+            desktops[ iDesktop ] = new ItemInfo();
+
+            desktops[ iDesktop ]->area = QRect( frame_area.x() + frame_margin
                 + ( i - 1 ) * item_max_size.width(),
                 frame_area.y() + frame_margin,
                 item_max_size.width(), item_max_size.height());
-            desktops[ iDesktop ].clickable = desktops[ iDesktop ].area;
+            desktops[ iDesktop ]->clickable = desktops[ iDesktop ]->area;
 
             if( mMode == TabBox::DesktopMode )
                 iDesktop = Workspace::self()->nextDesktopFocusChain( iDesktop );
@@ -523,7 +519,7 @@ void BoxSwitchEffect::paintDesktopThumbnail( int iDesktop )
 
     ScreenPaintData data;
     QRect region;
-    QRect r = desktops[ iDesktop ].area.adjusted( highlight_margin, highlight_margin,
+    QRect r = desktops[ iDesktop ]->area.adjusted( highlight_margin, highlight_margin,
         -highlight_margin, -highlight_margin );
     QSize size = QSize( displayWidth(), displayHeight());
 
@@ -549,77 +545,73 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
     WindowPaintData data;
 
     setPositionTransformations( data,
-        windows[ w ].thumbnail, w,
-        windows[ w ].area.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
+        windows[ w ]->thumbnail, w,
+        windows[ w ]->area.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
         Qt::KeepAspectRatio );
 
     effects->drawWindow( w,
         Scene::PAINT_WINDOW_OPAQUE | Scene::PAINT_WINDOW_TRANSFORMED,
-        windows[ w ].thumbnail, data );
+        windows[ w ]->thumbnail, data );
     }
 
 void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     {
     if( !windows.contains( w ))
         return;
-    if( windows[ w ].icon.serialNumber()
+    if( windows[ w ]->icon.serialNumber()
         != static_cast< Client* >( w->window())->icon().serialNumber())
-        { // make sure windows[ w ].icon is the right QPixmap, and rebind
-        windows[ w ].icon = static_cast< Client* >( w->window())->icon();
+        { // make sure windows[ w ]->icon is the right QPixmap, and rebind
+        windows[ w ]->icon = static_cast< Client* >( w->window())->icon();
 #ifdef HAVE_OPENGL
         if( dynamic_cast< SceneOpenGL* >( scene ))
             {
-//            windows[ w ].iconTexture.bindPixmap( windows[ w ].icon.handle(),
-//                windows[ w ].icon.width(), windows[ w ].icon.height(),
-//                windows[ w ].icon.depth(), windows[ w ].icon.rect());
-//            windows[ w ].iconTexture.setFilter( GL_LINEAR );
+            windows[ w ]->iconTexture.load( windows[ w ]->icon );
+            windows[ w ]->iconTexture.setFilter( GL_LINEAR );
             }
         else
 #endif
             {
 #ifdef HAVE_XRENDER
-            if( windows[ w ].iconPicture != None )
-                XRenderFreePicture( display(), windows[ w ].iconPicture );
-            windows[ w ].iconPicture = XRenderCreatePicture( display(),
-                windows[ w ].icon.handle(), alphaFormat, 0, NULL );
+            if( windows[ w ]->iconPicture != None )
+                XRenderFreePicture( display(), windows[ w ]->iconPicture );
+            windows[ w ]->iconPicture = XRenderCreatePicture( display(),
+                windows[ w ]->icon.handle(), alphaFormat, 0, NULL );
 #endif
             }
         }
-    int x = windows[ w ].area.x() + ( windows[ w ].area.width() - windows[ w ].icon.width()) / 2;
-    int y = windows[ w ].area.y() + ( windows[ w ].area.height() - windows[ w ].icon.height()) / 2;
-    int width = windows[ w ].icon.width();
-    int height = windows[ w ].icon.height();
+    int width = windows[ w ]->icon.width();
+    int height = windows[ w ]->icon.height();
+    int x = windows[ w ]->area.x() + windows[ w ]->area.width() - width - highlight_margin;
+    int y = windows[ w ]->area.y() + windows[ w ]->area.height() - height - highlight_margin;
 #ifdef HAVE_OPENGL
     if( dynamic_cast< SceneOpenGL* >( scene ))
         {
-//        glPushMatrix();
-//        glPushAttrib( GL_ENABLE_BIT );
-//        glEnable( GL_BLEND );
-//        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-//        windows[ w ].iconTexture.enable();
-//        windows[ w ].iconTexture.preparePaint();
-//        glBegin( GL_QUADS );
-//        glTexCoord2i( 0, 0 );
-//        glVertex2i( x, y );
-//        glTexCoord2i( windows[ w ].icon.width(), 0 );
-//        glVertex2i( x + width, y );
-//        glTexCoord2i( windows[ w ].icon.width(), windows[ w ].icon.height());
-//        glVertex2i( x + width, y + height );
-//        glTexCoord2i( 0, windows[ w ].icon.height());
-//        glVertex2i( x, y + height );
-//        glEnd();
-//        windows[ w ].iconTexture.finishPaint();
-//        glPopMatrix();
-//        glPopAttrib();
-//        windows[ w ].iconTexture.disable();
+        glPushMatrix();
+        glPushAttrib( GL_ENABLE_BIT );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        windows[ w ]->iconTexture.bind();
+        glBegin( GL_QUADS );
+        glTexCoord2i( 0, 1 );
+        glVertex2i( x, y );
+        glTexCoord2i( 1, 1 );
+        glVertex2i( x + width, y );
+        glTexCoord2i( 1, 0 );
+        glVertex2i( x + width, y + height );
+        glTexCoord2i( 0, 0 );
+        glVertex2i( x, y + height );
+        glEnd();
+        windows[ w ]->iconTexture.unbind();
+        glPopMatrix();
+        glPopAttrib();
         }
     else
 #endif
         {
 #ifdef HAVE_XRENDER
         XRenderComposite( display(),
-            windows[ w ].icon.depth() == 32 ? PictOpOver : PictOpSrc,
-            windows[ w ].iconPicture, None,
+            windows[ w ]->icon.depth() == 32 ? PictOpOver : PictOpSrc,
+            windows[ w ]->iconPicture, None,
             static_cast< SceneXrender* >( scene )->bufferPicture(),
             0, 0, 0, 0, x, y, width, height );
 #endif

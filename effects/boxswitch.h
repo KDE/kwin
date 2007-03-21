@@ -66,8 +66,8 @@ class BoxSwitchEffect
         QSize item_max_size; // maximum item display size (including highlight)
         int highlight_margin; // TODO graphical background, highlight
 
-        QHash< int, ItemInfo > desktops;
-        QHash< EffectWindow*, ItemInfo > windows;
+        QHash< int, ItemInfo* > desktops;
+        QHash< EffectWindow*, ItemInfo* > windows;
 
         int selected_desktop;
         ClientList tab_clients;
@@ -88,7 +88,7 @@ class BoxSwitchEffect::ItemInfo
         QRect thumbnail;
         QPixmap icon;
 #ifdef HAVE_OPENGL
-//        SceneOpenGL::Texture iconTexture;
+        GLTexture iconTexture;
 #endif
 #ifdef HAVE_XRENDER
         Picture iconPicture;
