@@ -31,6 +31,7 @@ namespace KWinInternal
 
 PresentWindowsEffect::PresentWindowsEffect()
     {
+    mShowWindowsFromAllDesktops = false;
     mActivated = false;
     mActiveness = 0.0;
 
@@ -39,6 +40,10 @@ PresentWindowsEffect::PresentWindowsEffect()
     a->setText( i18n("Toggle Expose effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
+    KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
+    b->setText( i18n("Toggle Expose effect (incl other desktops)" ));
+    b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
+    connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
     }
 
 
@@ -70,9 +75,11 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* 
         // This window will be transformed by the effect
         *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
         w->enablePainting( Scene::Window::PAINT_DISABLED_BY_MINIMIZE );
-        // If it's minimized window and effect is not fully active, then apply
-        //  some transparency
-        if( mActiveness < 1.0f && static_cast< Client* >( w->window() )->isMinimized() )
+        w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
+        // If it's minimized window or on another desktop and effect is not
+        //  fully active, then apply some transparency
+        Client* c = static_cast< Client* >( w->window() );
+        if( mActiveness < 1.0f && (c->isMinimized() || !c->isOnCurrentDesktop() ))
             *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
         }
 
@@ -92,9 +99,10 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         // Darken all windows except for the one under the cursor
         if( !windata.area.contains(cursorPos()) )
             data.brightness *= interpolate(1.0, 0.7, mActiveness);
-        // If it's minimized window and effect is not fully active, then apply
-        //  some transparency
-        if( mActiveness < 1.0f && static_cast< Client* >( w->window() )->isMinimized() )
+        // If it's minimized window or on another desktop and effect is not
+        //  fully active, then apply some transparency
+        Client* c = static_cast< Client* >( w->window() );
+        if( mActiveness < 1.0f && (c->isMinimized() || !c->isOnCurrentDesktop() ))
             data.opacity *= interpolate(0.0, 1.0, mActiveness);
         }
 
@@ -179,9 +187,7 @@ void PresentWindowsEffect::rearrangeWindows()
         {
         if( client->isSpecialWindow() )
             continue;
-        // TODO: make it possible to show windows of all desktops (needs config
-        //  option)
-        if( !client->effectWindow()->isOnCurrentDesktop() )
+        if( !mShowWindowsFromAllDesktops && !client->effectWindow()->isOnCurrentDesktop() )
             continue;
         clientlist.append(client);
         }

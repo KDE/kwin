@@ -41,7 +41,8 @@ class PresentWindowsEffect
 
     public slots:
         void setActive(bool active);
-        void toggleActive()  { setActive(!mActivated); }
+        void toggleActive()  { mShowWindowsFromAllDesktops = false; setActive(!mActivated); }
+        void toggleActiveAllDesktops()  { mShowWindowsFromAllDesktops = true; setActive(!mActivated); }
 
     protected:
         // Updates window tranformations, i.e. destination pos and scale of the window
@@ -60,6 +61,8 @@ class PresentWindowsEffect
         void effectTerminated();
 
     private:
+        bool mShowWindowsFromAllDesktops;
+
         // Whether the effect is currently activated by the user
         bool mActivated;
         // 0 = not active, 1 = fully active
