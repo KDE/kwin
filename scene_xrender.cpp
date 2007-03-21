@@ -97,10 +97,8 @@ SceneXrender::~SceneXrender()
     XRenderFreePicture( display(), front );
     XRenderFreePicture( display(), buffer );
     wspace->destroyOverlay();
-    for( QHash< Toplevel*, Window >::Iterator it = windows.begin();
-         it != windows.end();
-         ++it )
-        (*it).free();
+    foreach( Window* w, windows )
+        delete w;
     }
 
 // the entry point for painting
@@ -109,7 +107,7 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
     foreach( Toplevel* c, toplevels )
         {
         assert( windows.contains( c ));
-        stacking_order.append( &windows[ c ] );
+        stacking_order.append( windows[ c ] );
         }
     int mask = 0;
     paintScreen( &mask, &damage );
@@ -218,18 +216,18 @@ void SceneXrender::windowGeometryShapeChanged( Toplevel* c )
     {
     if( !windows.contains( c )) // this is ok, shape is not valid by default
         return;
-    Window& w = windows[ c ];
-    w.discardPicture();
-    w.discardShape();
-    w.discardAlpha();
+    Window* w = windows[ c ];
+    w->discardPicture();
+    w->discardShape();
+    w->discardAlpha();
     }
     
 void SceneXrender::windowOpacityChanged( Toplevel* c )
     {
     if( !windows.contains( c )) // this is ok, alpha is created on demand
         return;
-    Window& w = windows[ c ];
-    w.discardAlpha();
+    Window* w = windows[ c ];
+    w->discardAlpha();
     }
 
 void SceneXrender::windowClosed( Toplevel* c, Deleted* deleted )
@@ -237,29 +235,26 @@ void SceneXrender::windowClosed( Toplevel* c, Deleted* deleted )
     assert( windows.contains( c ));
     if( deleted != NULL )
         { // replace c with deleted
-        Window& w = windows[ c ];
-        w.updateToplevel( deleted );
+        Window* w = windows.take( c );
+        w->updateToplevel( deleted );
         windows[ deleted ] = w;
-        windows.remove( c );
         }
     else
         {
-        windows[ c ].free();
-        windows.remove( c );
+        delete windows.take( c );
         }
     }
 
 void SceneXrender::windowDeleted( Deleted* c )
     {
     assert( windows.contains( c ));
-    windows[ c ].free();
-    windows.remove( c );
+    delete windows.take( c );
     }
 
 void SceneXrender::windowAdded( Toplevel* c )
     {
     assert( !windows.contains( c ));
-    windows[ c ] = Window( c );
+    windows[ c ] = new Window( c );
     }
 
 // Create the compositing buffer. The root window is not double-buffered,
@@ -306,7 +301,7 @@ SceneXrender::Window::Window( Toplevel* c )
     {
     }
 
-void SceneXrender::Window::free()
+SceneXrender::Window::~Window()
     {
     discardPicture();
     discardAlpha();

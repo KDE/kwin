@@ -79,7 +79,7 @@ class SceneOpenGL
         static bool supports_npot_textures;
         static bool supports_fbo;
         static bool supports_saturation;
-        QHash< Toplevel*, Window > windows;
+        QHash< Toplevel*, Window* > windows;
 #ifdef HAVE_XSHM
         static XShmSegmentInfo shm;
 #endif
@@ -90,7 +90,7 @@ class SceneOpenGL::Window
     {
     public:
         Window( Toplevel* c );
-        virtual void free();
+        virtual ~Window();
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         virtual void prepareForPainting();
         void findTextureTarget();
@@ -99,7 +99,6 @@ class SceneOpenGL::Window
         void disableTexture();
         void discardTexture();
         void discardVertices();
-        Window() {} // QMap sucks even in Qt4
 
         /**
          * @short Vertex class

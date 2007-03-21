@@ -48,7 +48,7 @@ class SceneXrender
         static Picture buffer;
         static ScreenPaintData screen_paint;
         class Window;
-        QHash< Toplevel*, Window > windows;
+        QHash< Toplevel*, Window* > windows;
     };
 
 class SceneXrender::Window
@@ -56,13 +56,12 @@ class SceneXrender::Window
     {
     public:
         Window( Toplevel* c );
-        virtual void free();
+        virtual ~Window();
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         void discardPicture();
         void discardAlpha();
         QRegion transformedShape() const;
         void setTransformedShape( const QRegion& shape );
-        Window() {} // QMap sucks even in Qt4
     private:
         Picture picture();
         Picture alphaMask( double opacity );

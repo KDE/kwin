@@ -256,10 +256,6 @@ Scene::Window::~Window()
     {
     }
 
-void Scene::Window::free()
-    {
-    }
-
 void Scene::Window::discardShape()
     {
     // it is created on-demand and cached, simply

@@ -119,8 +119,6 @@ class Scene::Window
     public:
         Window( Toplevel* c );
         virtual ~Window();
-        // this class is often copied by value, use manually instead of dtor
-        virtual void free();
         // perform the actual painting of the window
         virtual void performPaint( int mask, QRegion region, WindowPaintData data ) = 0;
         virtual void prepareForPainting()  {}
@@ -160,7 +158,6 @@ class Scene::Window
         QRegion shape() const;
         void discardShape();
         void updateToplevel( Toplevel* c );
-        Window() {} // QMap sucks even in Qt4
     protected:
         Toplevel* toplevel;
         ImageFilterType filter;
@@ -168,6 +165,7 @@ class Scene::Window
         int disable_painting;
         mutable QRegion shape_region;
         mutable bool shape_valid;
+        Q_DISABLE_COPY(Window);
     };
 
 extern Scene* scene;
