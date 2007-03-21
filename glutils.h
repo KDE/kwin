@@ -68,6 +68,11 @@ class GLShader
         bool setAttribute(const QString& name, float value);
 
 
+        static void initStatic();
+        static bool fragmentShaderSupported()  { return mFragmentShaderSupported; }
+        static bool vertexShaderSupported()  { return mVertexShaderSupported; }
+
+
     protected:
         bool loadFromFiles(const QString& vertexfile, const QString& fragmentfile);
         bool load(const QString& vertexsource, const QString& fragmentsource);
@@ -77,6 +82,8 @@ class GLShader
         unsigned int mProgram;
         bool mValid;
         QHash< QString, int >* mVariableLocations;
+        static bool mFragmentShaderSupported;
+        static bool mVertexShaderSupported;
     };
 
 #endif

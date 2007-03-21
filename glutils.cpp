@@ -61,6 +61,8 @@ void initGL()
 
     // handle OpenGL extensions functions
     glResolveFunctions();
+
+    GLShader::initStatic();
 #else
     glVersion = MAKE_GL_VERSION( 0, 0, 0 );
 #endif
@@ -83,6 +85,18 @@ bool hasGLExtension(const QString& extension)
 
 
 #ifdef HAVE_OPENGL
+
+bool GLShader::mFragmentShaderSupported = false;
+bool GLShader::mVertexShaderSupported = false;
+
+void GLShader::initStatic()
+{
+    mFragmentShaderSupported = mVertexShaderSupported =
+            hasGLExtension("GL_ARB_shader_objects") && hasGLExtension("GL_ARB_shading_language_100");
+    mVertexShaderSupported &= hasGLExtension("GL_ARB_vertex_shader");
+    mFragmentShaderSupported &= hasGLExtension("GL_ARB_fragment_shader");
+}
+
 
 GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
     {
@@ -115,6 +129,14 @@ bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentf
 
 bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
     {
+    // Make sure shaders are actually supported
+    if(( !vertexsource.isEmpty() && !vertexShaderSupported() ) ||
+          ( !fragmentsource.isEmpty() && !fragmentShaderSupported() ))
+        {
+        kDebug(1212) << k_funcinfo << "Shaders not supported" << endl;
+        return false;
+        }
+
     GLuint vertexshader;
     GLuint fragmentshader;
 
