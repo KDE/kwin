@@ -42,9 +42,10 @@ Sources and other compositing managers:
             to understand
 
 - beryl
-    - the community fork of Compiz
+    - a fork of Compiz
     - http://beryl-project.org
-    - svn co http://svn.beryl-project.org/trunk/
+    - git clone git://anongit.beryl-project.org/beryl/beryl-core (or beryl-plugins etc. ,
+        the full list should be at git://anongit.beryl-project.org/beryl/)
 
 - libcm (metacity)
     - cvs -d :pserver:anonymous@anoncvs.gnome.org:/cvs/gnome co libcm
