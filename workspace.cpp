@@ -43,10 +43,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "group.h"
 #include "rules.h"
 #include "kwinadaptor.h"
-#include "unmanaged.h"
-#include "scene.h"
-#include "deleted.h"
-#include "effects.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -80,6 +76,7 @@ Workspace::Workspace( bool restore )
     active_popup_client( NULL ),
     desktop_widget    (0),
     temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false ),
+    rules_updates_disabled( false ),
     active_client     (0),
     last_active_client     (0),
     most_recently_raised (0),
@@ -98,7 +95,6 @@ Workspace::Workspace( bool restore )
     popupinfo         (0),
     popup             (0),
     advanced_popup    (0),
-    trans_popup       (0),
     desk_popup        (0),
     desk_popup_index  (0),
     keys              (0),
@@ -128,16 +124,12 @@ Workspace::Workspace( bool restore )
     topmenu_space( NULL ),
     set_active_client_recursion( 0 ),
     block_stacking_updates( 0 ),
-    forced_global_mouse_grab( false ),
-    cm_selection( NULL ),
-    compositeRate( 0 ),
-    overlay( None ),
-    transSlider( NULL ),
-    transButton( NULL )
+    forced_global_mouse_grab( false )
     {
     (void) new KWinAdaptor( this );
-    QDBusConnection::sessionBus().registerObject("/KWin", this);
-
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerObject("/KWin", this);
+    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
     _self = this;
     mgr = new PluginMgr;
     root = rootWindow();
@@ -178,12 +170,10 @@ Workspace::Workspace( bool restore )
                  ColormapChangeMask |
                  SubstructureRedirectMask |
                  SubstructureNotifyMask |
-                 FocusChangeMask | // for NotifyDetailNone
-                 ExposureMask
+                 FocusChangeMask // for NotifyDetailNone
                  );
 
-    Extensions::init();
-    setupCompositing();
+    Shape::init();
 
     // compatibility
     long data = 1;
@@ -289,6 +279,7 @@ void Workspace::init()
         NET::WM2ExtendedStrut |
         NET::WM2KDETemporaryRules |
         NET::WM2ShowingDesktop |
+        NET::WM2DesktopLayout |
         0
         ,
         NET::ActionMove |
@@ -332,7 +323,6 @@ void Workspace::init()
     connect(&reconfigureTimer, SIGNAL(timeout()), this,
             SLOT(slotReconfigure()));
     connect( &updateToolWindowsTimer, SIGNAL( timeout()), this, SLOT( slotUpdateToolWindows()));
-    connect( &compositeTimer, SIGNAL( timeout()), SLOT( performCompositing()));
 
     connect(KGlobalSettings::self(), SIGNAL(appearanceChanged()), this,
             SLOT(slotReconfigure()));
@@ -370,10 +360,7 @@ void Workspace::init()
             XWindowAttributes attr;
             XGetWindowAttributes(display(), wins[i], &attr);
             if (attr.override_redirect )
-                {
-                createUnmanaged( wins[ i ] );
                 continue;
-                }
             if( topmenu_space && topmenu_space->winId() == wins[ i ] )
                 continue;
             if (attr.map_state != IsUnmapped)
@@ -435,7 +422,6 @@ void Workspace::init()
 
 Workspace::~Workspace()
     {
-    finishCompositing();
     blockStackingUpdates( true );
 // TODO    grabXServer();
     // use stacking_order, so that kwin --replace keeps stacking order
@@ -445,12 +431,12 @@ Workspace::~Workspace()
         {
 	// only release the window
         (*it)->releaseWindow( true );
-        // no removeClient() is called !
+        // No removeClient() is called, it does more than just removing.
+        // However, remove from some lists to e.g. prevent performTransiencyCheck()
+        // from crashing.
+        clients.remove( *it );
+        desktops.remove( *it );
         }
-    for( UnmanagedList::ConstIterator it = unmanaged.begin();
-         it != unmanaged.end();
-         ++it )
-        (*it)->release();
     delete desktop_widget;
     delete tab_box;
     delete popupinfo;
@@ -494,28 +480,6 @@ Client* Workspace::createClient( Window w, bool is_mapped )
         return NULL;
         }
     addClient( c, Allowed );
-    if( scene )
-        scene->windowAdded( c );
-    if( effects )
-        effects->windowAdded( c->effectWindow());
-    return c;
-    }
-
-Unmanaged* Workspace::createUnmanaged( Window w )
-    {
-    if( w == overlay )
-        return NULL;
-    Unmanaged* c = new Unmanaged( this );
-    if( !c->track( w ))
-        {
-        Unmanaged::deleteUnmanaged( c, Allowed );
-        return NULL;
-        }
-    addUnmanaged( c, Allowed );
-    if( scene )
-        scene->windowAdded( c );
-    if( effects )
-        effects->windowAdded( c->effectWindow());
     return c;
     }
 
@@ -556,13 +520,7 @@ void Workspace::addClient( Client* c, allowed_t )
     updateStackingOrder( true ); // propagate new client
     if( c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows( true );
-    if( tab_grab )
-        tab_box->reset( true );
-    }
-
-void Workspace::addUnmanaged( Unmanaged* c, allowed_t )
-    {
-    unmanaged.append( c );
+    checkNonExistentClients();
     }
 
 /*
@@ -582,12 +540,6 @@ void Workspace::removeClient( Client* c, allowed_t )
         Notify::raise( Notify::TransDelete );
     if( c->isNormalWindow())
         Notify::raise( Notify::Delete );
-
-    if( tab_grab )
-        {
-        if( tab_box->currentClient() == c )
-            tab_box->nextPrev( true );
-        }
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
     clients.removeAll( c );
@@ -619,32 +571,10 @@ void Workspace::removeClient( Client* c, allowed_t )
 
     updateStackingOrder( true );
 
-    if( tab_grab )
-        tab_box->reset( true );
+    if (tab_grab)
+       tab_box->repaint();
 
     updateClientArea();
-    }
-
-void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
-    {
-    assert( unmanaged.contains( c ));
-    unmanaged.removeAll( c );
-    }
-
-void Workspace::addDeleted( Deleted* c, allowed_t )
-    {
-    assert( !deleted.contains( c ));
-    deleted.append( c );
-    }
-
-void Workspace::removeDeleted( Deleted* c, allowed_t )
-    {
-    assert( deleted.contains( c ));
-    if( scene )
-        scene->windowDeleted( c );
-    if( effects )
-        effects->windowDeleted( c->effectWindow());
-    deleted.removeAll( c );
     }
 
 void Workspace::updateFocusChains( Client* c, FocusChainChange change )
@@ -672,7 +602,13 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                     focus_chain[ i ].prepend( c );
                 }
             else if( !focus_chain[ i ].contains( c ))
-                focus_chain[ i ].prepend( c ); // otherwise add as the last one
+                { // add it after the active one
+                if( active_client != NULL && active_client != c
+                    && !focus_chain[ i ].isEmpty() && focus_chain[ i ].last() == active_client )
+                    focus_chain[ i ].insert( focus_chain[ i ].size() - 1, c );
+                else
+                    focus_chain[ i ].append( c ); // otherwise add as the first one
+                }
             }
         }
     else    //now only on desktop, remove it anywhere else
@@ -692,7 +628,13 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                     focus_chain[ i ].prepend( c );
                     }
                 else if( !focus_chain[ i ].contains( c ))
-                    focus_chain[ i ].prepend( c );
+                    { // add it after the active one
+                    if( active_client != NULL && active_client != c
+                        && !focus_chain[ i ].isEmpty() && focus_chain[ i ].last() == active_client )
+                        focus_chain[ i ].insert( focus_chain[ i ].size() - 1, c );
+                    else
+                        focus_chain[ i ].append( c ); // otherwise add as the first one
+                    }
                 }
             else
                 focus_chain[ i ].removeAll( c );
@@ -709,7 +651,13 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
         global_focus_chain.prepend( c );
         }
     else if( !global_focus_chain.contains( c ))
-        global_focus_chain.prepend( c );
+        { // add it after the active one
+        if( active_client != NULL && active_client != c
+            && !global_focus_chain.isEmpty() && global_focus_chain.last() == active_client )
+            global_focus_chain.insert( global_focus_chain.size() - 1, c );
+        else
+            global_focus_chain.append( c ); // otherwise add as the first one
+        }
     }
 
 void Workspace::updateCurrentTopMenu()
@@ -927,6 +875,11 @@ void Workspace::updateColormap()
         }
     }
 
+void Workspace::slotReloadConfig()
+{
+  reconfigure();
+}
+
 void Workspace::reconfigure()
     {
     reconfigureTimer.start( 200 );
@@ -943,7 +896,7 @@ void Workspace::slotSettingsChanged(int category)
 /*!
   Reread settings
  */
-KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes() );
+KWIN_PROCEDURE( CheckBorderSizesProcedure, cl->checkBorderSizes() );
 
 void Workspace::slotReconfigure()
     {
@@ -1000,11 +953,6 @@ void Workspace::slotReconfigure()
         updateTopMenuGeometry();
         updateCurrentTopMenu();
         }
-        
-    if( options->useTranslucency )
-        setupCompositing();
-    else
-        finishCompositing();
 
     loadWindowRules();
     for( ClientList::Iterator it = clients.begin();
@@ -1287,15 +1235,16 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     // and active_client is on_all_desktops and under mouse (hence == old_active_client),
     // conserve focus (thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
     else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop())
-      c= active_client;
+      c = active_client;
+
+    if( c == NULL && !desktops.isEmpty())
+        c = findDesktop( true, currentDesktop());
 
     if( c != active_client )
         setActiveClient( NULL, Allowed );
 
     if ( c )
         requestFocus( c );
-    else if( !desktops.isEmpty() )
-        requestFocus( findDesktop( true, currentDesktop()));
     else
         focusToNull();
 
@@ -1317,10 +1266,6 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
     if( old_desktop != 0 )  // not for the very first time
         popupinfo->showInfo( desktopName(currentDesktop()) );
-
-    if( effects != NULL && old_desktop != 0 )
-        effects->desktopChanged( old_desktop );
-
     return true;
     }
 
@@ -1553,25 +1498,26 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     updateClientArea();
     }
 
-void Workspace::setDesktopLayout(int o, int x, int y)
+void Workspace::setDesktopLayout(NET::Orientation o, int x, int y,NET::DesktopLayoutCorner c)
     {
-    layoutOrientation = (Qt::Orientation) o;
+    Q_UNUSED( c ); // I don't find this worth bothering, feel free to
+    layoutOrientation = ( o == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical );
     layoutX = x;
     layoutY = y;
     }
 
 void Workspace::calcDesktopLayout(int &x, int &y) const
     {
-    x = layoutX;
+    x = layoutX; // <= 0 means compute it from the other and total number of desktops
     y = layoutY;
-    if ((x == -1) && (y > 0))
+    if((x <= 0) && (y > 0))
        x = (numberOfDesktops()+y-1) / y;
-    else if ((y == -1) && (x > 0))
+    else if((y <=0) && (x > 0))
        y = (numberOfDesktops()+x-1) / x;
 
-    if (x == -1)
+    if(x <=0)
        x = 1;
-    if (y == -1)
+    if (y <= 0)
        y = 1;
     }
 
@@ -1703,7 +1649,7 @@ void Workspace::slotGrabWindow()
         QPixmap snapshot = QPixmap::grabWindow( active_client->frameId() );
 
 	//No XShape - no work.
-        if( Extensions::shapeAvailable())
+        if( Shape::available())
             {
 	    //As the first step, get the mask from XShape.
             int count, order;
@@ -1904,7 +1850,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
     bool is_alt = km & Mod1Mask;
     bool is_shift = km & ShiftMask;
     int delta = is_control?1:is_alt?32:8;
-    QPoint pos = cursorPos();
+    QPoint pos = QCursor::pos();
 
     switch ( kc )
         {
@@ -2056,8 +2002,7 @@ void Workspace::createBorderWindows()
     XSetWindowAttributes attributes;
     unsigned long valuemask;
     attributes.override_redirect = True;
-    attributes.event_mask =  (EnterWindowMask | LeaveWindowMask |
-                              VisibilityChangeMask);
+    attributes.event_mask =  ( EnterWindowMask | LeaveWindowMask );
     valuemask=  (CWOverrideRedirect | CWEventMask | CWCursor );
     attributes.cursor = XCreateFontCursor(display(),
                                           XC_sb_up_arrow);
@@ -2449,7 +2394,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         {
         KConfig cfg( "kwin_dialogsrc" );
 	KConfigGroup cg(&cfg, "Notification Messages" ); // this depends on KMessageBox
-        if( !cg.readEntry( type, QVariant(true )).toBool()) // has don't show again checked
+        if( !cg.readEntry( type, true )) // has don't show again checked
             return;                           // save launching kdialog
         proc << "--dontagain" << "kwin_dialogsrc:" + type;
         }
