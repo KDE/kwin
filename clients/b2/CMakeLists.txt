@@ -12,7 +12,7 @@ kde4_automoc(${kwin3_b2_PART_SRCS})
 
 kde4_add_plugin(kwin3_b2 ${kwin3_b2_PART_SRCS})
 
-target_link_libraries(kwin3_b2 kdecorations ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kwin3_b2 kdecorations)
 
 install(TARGETS kwin3_b2  DESTINATION ${PLUGIN_INSTALL_DIR})
 

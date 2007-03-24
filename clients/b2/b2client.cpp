@@ -16,7 +16,6 @@
 
 #include <QApplication>
 #include <QLayout>
-#include <qdrawutil.h>
 #include <QEvent>
 #include <QPaintEvent>
 #include <QMouseEvent>
@@ -24,6 +23,7 @@
 #include <QResizeEvent>
 #include <QGridLayout>
 #include <QBoxLayout>
+#include <QPainter>
 #include <QGradient>
 #include <QPixmap>
 #include <QPolygon>
@@ -1054,13 +1054,13 @@ static void redraw_pixmaps()
 
     // pin
     for (i = 0; i < NumStates; i++) {
-	bool isDown = (i == Down || i == IDown);
+	const bool isDown = (i == Down || i == IDown);
         unsigned const char *white = isDown ? pindown_white_bits : pinup_white_bits;
         unsigned const char *gray = isDown ? pindown_gray_bits : pinup_gray_bits;
-        unsigned const char *dgray =isDown ? pindown_dgray_bits : pinup_dgray_bits;
+        unsigned const char *dgray = isDown ? pindown_dgray_bits : pinup_dgray_bits;
         p.begin(pixmap[P_PINUP * NumStates + i]);
-        kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, 0, 0, 16, 16, true, white,
-                      gray, NULL, dgray, NULL, NULL);
+        kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, 0, 0, 16, 16, true, 
+		      white, gray, NULL, dgray, NULL, NULL);
         p.end();
     }
 
@@ -1216,7 +1216,7 @@ bool B2Client::eventFilter(QObject *o, QEvent *e)
 
 B2Button::B2Button(B2Client *_client, QWidget *parent,
 	const QString& tip, const int realizeBtns)
-   : Q3Button(parent, 0), hover(false)
+   : QAbstractButton(parent), hover(false)
 {
     setAttribute(Qt::WA_NoSystemBackground);
     setCursor(Qt::ArrowCursor);
@@ -1238,19 +1238,20 @@ QSizePolicy B2Button::sizePolicy() const
     return(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 }
 
-void B2Button::drawButton(QPainter *p)
+void B2Button::paintEvent(QPaintEvent *)
 {
+    QPainter p(this);
     QPixmap* gradient = titleGradient[client->isActive() ? 0 : 1];
     if (gradient) {
-	p->drawTiledPixmap(0, 0, buttonSize, buttonSize, *gradient, 0, 2);
+	p.drawTiledPixmap(0, 0, buttonSize, buttonSize, *gradient, 0, 2);
     } else {
-	p->fillRect(rect(), bg);
+	p.fillRect(rect(), bg);
     }
     if (useMiniIcon) {
         QPixmap miniIcon = client->icon().pixmap(
 		style()->pixelMetric(QStyle::PM_SmallIconSize),
 		client->isActive() ? QIcon::Normal : QIcon::Disabled);
-        p->drawPixmap((width() - miniIcon.width()) / 2,
+        p.drawPixmap((width() - miniIcon.width()) / 2,
                       (height() - miniIcon.height()) / 2, miniIcon);
     } else {
 	int type;
@@ -1269,7 +1270,7 @@ void B2Button::drawButton(QPainter *p)
             else
 		type = INorm;
         }
-	p->drawPixmap((width() - icon[type]->width()) / 2,
+	p.drawPixmap((width() - icon[type]->width()) / 2,
 		(height() - icon[type]->height()) / 2, *icon[type]);
     }
 }
@@ -1290,7 +1291,7 @@ void B2Button::mousePressEvent(QMouseEvent * e)
 	    (e->button() & realizeButtons) ? Qt::LeftButton : Qt::NoButton,
 	    (e->button() & realizeButtons) ? Qt::LeftButton : Qt::NoButton,
 	    e->modifiers());
-    Q3Button::mousePressEvent(&me);
+    QAbstractButton::mousePressEvent(&me);
 }
 
 void B2Button::mouseReleaseEvent(QMouseEvent * e)
@@ -1300,21 +1301,21 @@ void B2Button::mouseReleaseEvent(QMouseEvent * e)
 	    (e->button() & realizeButtons) ? Qt::LeftButton : Qt::NoButton,
 	    (e->button() & realizeButtons) ? Qt::LeftButton : Qt::NoButton,
 	    e->modifiers());
-    Q3Button::mouseReleaseEvent(&me);
+    QAbstractButton::mouseReleaseEvent(&me);
 }
 
 void B2Button::enterEvent(QEvent *e)
 {
     hover = true;
     repaint();
-    Q3Button::enterEvent(e);
+    QAbstractButton::enterEvent(e);
 }
 
 void B2Button::leaveEvent(QEvent *e)
 {
     hover = false;
     repaint();
-    Q3Button::leaveEvent(e);
+    QAbstractButton::leaveEvent(e);
 }
 
 // =====================================
