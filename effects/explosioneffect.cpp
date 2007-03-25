@@ -93,7 +93,7 @@ void ExplosionEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen(mask, region, time);
     }
 
-void ExplosionEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void ExplosionEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( mWindows.contains( w ))
         {
@@ -112,7 +112,7 @@ void ExplosionEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* regio
             }
         }
 
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

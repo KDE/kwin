@@ -1665,7 +1665,7 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     QRect newgeom( e->x, e->y, e->width, e->height );
     if( newgeom == geom )
         return;
-    workspace()->addRepaint( geometry()); // damage old area
+    addWorkspaceRepaint( geometry()); // damage old area
     QRect old = geom;
     geom = newgeom;
     discardWindowPixmap();

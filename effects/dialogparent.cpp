@@ -19,7 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-void DialogParentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void DialogParentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     // How long does it take for the effect to get it's full strength (in ms)
     const float changeTime = 200;
@@ -38,7 +38,7 @@ void DialogParentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* re
         }
 
     // Call the next effect
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void DialogParentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

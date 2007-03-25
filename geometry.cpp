@@ -1707,7 +1707,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         if( effects != NULL )
             effects->windowGeometryShapeChanged( effectWindow(), geom_before_block );
         }
-    workspace()->addRepaint( geom_before_block );
+    addWorkspaceRepaint( geom_before_block );
     geom_before_block = geom;
     }
 
@@ -1768,7 +1768,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         scene->windowGeometryShapeChanged( this );
     if( effects != NULL )
         effects->windowGeometryShapeChanged( effectWindow(), geom_before_block );
-    workspace()->addRepaint( geom_before_block );
+    addWorkspaceRepaint( geom_before_block );
     geom_before_block = geom;
     }
 
@@ -1791,8 +1791,8 @@ void Client::move( int x, int y, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     // client itself is not damaged
-    workspace()->addRepaint( geom_before_block );
-    workspace()->addRepaint( geom ); // trigger repaint of window's new location
+    addWorkspaceRepaint( geom_before_block );
+    addWorkspaceRepaint( geom ); // trigger repaint of window's new location
     geom_before_block = geom;
     }
 

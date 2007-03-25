@@ -22,7 +22,7 @@ void DrunkenEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen( mask, region, time );
     }
 
-void DrunkenEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void DrunkenEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( windows.contains( w ))
         {
@@ -32,7 +32,7 @@ void DrunkenEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region,
         else
             windows.remove( w );
         }
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void DrunkenEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

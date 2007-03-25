@@ -26,6 +26,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/minimizeanimation.h"
 #include "effects/presentwindows.h"
 #include "effects/scalein.h"
+#include "effects/shadow.h"
 #include "effects/shakymove.h"
 #include "effects/shiftworkspaceup.h"
 #include "effects/showfps.h"
@@ -128,9 +129,9 @@ void Effect::postPaintScreen()
     effects->postPaintScreen();
     }
 
-void Effect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void Effect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void Effect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
@@ -146,6 +147,11 @@ void Effect::postPaintWindow( EffectWindow* w )
 void Effect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     effects->drawWindow( w, mask, region, data );
+    }
+
+QRect Effect::transformWindowDamage( EffectWindow* w, const QRect& r )
+    {
+    return effects->transformWindowDamage( w, r );
     }
 
 void Effect::setPositionTransformations( WindowPaintData& data, QRect& region, EffectWindow* w,
@@ -172,6 +178,7 @@ EffectsHandler::EffectsHandler()
     : current_paint_screen( 0 )
     , current_paint_window( 0 )
     , current_draw_window( 0 )
+    , current_transform( 0 )
     {
     if( !compositing())
         return;
@@ -200,6 +207,7 @@ EffectsHandler::EffectsHandler()
     registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);
     registerEffect("BoxSwitch", new GenericEffectFactory<BoxSwitchEffect>);
     registerEffect("Drunken", new GenericEffectFactory<DrunkenEffect>);
+    registerEffect("Shadow", new GenericEffectFactory<ShadowEffect>);
 
     registerEffect("TestInput", new GenericEffectFactory<TestInputEffect>);
     registerEffect("TestThumbnail", new GenericEffectFactory<TestThumbnailEffect>);
@@ -319,6 +327,7 @@ void EffectsHandler::startPaint()
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );
+    assert( current_transform == 0 );
     }
 
 // the idea is that effects call this function again which calls the next one
@@ -353,11 +362,11 @@ void EffectsHandler::postPaintScreen()
     // no special final code
     }
 
-void EffectsHandler::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void EffectsHandler::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( current_paint_window < loaded_effects.size())
         {
-        loaded_effects[current_paint_window++].second->prePaintWindow( w, mask, region, time );
+        loaded_effects[current_paint_window++].second->prePaintWindow( w, mask, paint, clip, time );
         --current_paint_window;
         }
     // no special final code
@@ -393,6 +402,18 @@ void EffectsHandler::drawWindow( EffectWindow* w, int mask, QRegion region, Wind
         }
     else
         scene->finalDrawWindow( w, mask, region, data );
+    }
+
+QRect EffectsHandler::transformWindowDamage( EffectWindow* w, const QRect& r )
+    {
+    if( current_transform < loaded_effects.size())
+        {
+        QRect rr = loaded_effects[current_transform++].second->transformWindowDamage( w, r );
+        --current_transform;
+        return rr;
+        }
+    else
+        return r;
     }
 
 Window EffectsHandler::createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor )
@@ -502,6 +523,7 @@ void EffectsHandler::loadEffect( const QString& name )
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );
+    assert( current_transform == 0 );
 
     for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); it++)
         {
@@ -529,6 +551,7 @@ void EffectsHandler::unloadEffect( const QString& name )
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );
+    assert( current_transform == 0 );
 
     for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); it++)
         {

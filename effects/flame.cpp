@@ -23,7 +23,7 @@ void FlameEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen(mask, region, time);
     }
 
-void FlameEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void FlameEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( windows.contains( w ))
         {
@@ -45,7 +45,7 @@ void FlameEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, i
                 }
             }
         }
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void FlameEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

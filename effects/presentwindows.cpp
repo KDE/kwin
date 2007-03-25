@@ -68,7 +68,7 @@ void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time 
     effects->prePaintScreen(mask, region, time);
     }
 
-void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( mActiveness > 0.0f && mWindowData.contains(w->window()) )
         {
@@ -83,7 +83,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* 
             *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
         }
 
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

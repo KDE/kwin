@@ -38,7 +38,7 @@ class HowtoEffect
 
         // A pre-paint function. It tells the compositing code how the painting will
         // be affected by this effect.        
-        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
         
         // A paint function. It actually performs the modifications to the painting.
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );

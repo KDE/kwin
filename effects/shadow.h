@@ -2,35 +2,32 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
 
 You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef KWIN_DESKTOPCHANGESLIDE_H
-#define KWIN_DESKTOPCHANGESLIDE_H
+#ifndef KWIN_SHADOW_H
+#define KWIN_SHADOW_H
 
 #include <effects.h>
 
 namespace KWinInternal
 {
 
-class DesktopChangeSlideEffect
+class ShadowEffect
     : public Effect
     {
     public:
-        DesktopChangeSlideEffect();
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void postPaintScreen();
+        ShadowEffect();
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void desktopChanged( int old );
+        virtual void postPaintWindow( EffectWindow* w );
+        virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
     private:
-        int old_desktop;
-        int progress;
-        bool painting_old_desktop;
+        void drawShadow( EffectWindow* w, int mask, QRegion region, double opacity );
+        int shadowXOffset, shadowYOffset;
     };
 
 } // namespace

@@ -38,7 +38,7 @@ namespace KWinInternal
 // region - the region of the screen that needs to be painted, support for modifying it
 //   is not fully implemented yet, do not use
 // time - time in milliseconds since the last paint, useful for animations
-void HowtoEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void HowtoEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     // Is this window the one that is going to be faded out and in again?
     if( w == fade_window )
@@ -63,7 +63,7 @@ void HowtoEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, i
         }
     // Call the next effect (or the actual window painting code if this is the last effect).
     // Effects are chained and they all modify something if needed and then call the next one.
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 // The function that handles the actual painting. Some simple modifications are possible

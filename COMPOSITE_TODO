@@ -137,6 +137,9 @@ XRender TODO
 + SceneXrender::Window::performPaint() doesn't use saturation
 + SceneXrender::Window::performPaint() doesn't use brightness
 
++ SceneXrender::paintTransformedScreen() doesn't handle properly extending of painted area
+    in window's pre-paint - see the transformedShape() comment
+
 
 Effects framework TODO
 ==============================
@@ -146,7 +149,9 @@ Effects framework TODO
 !   - window state changes
     ? more
 
-* shadows
+/ shadows
++   - right now is only a rectangle, probably needs some shape support
++   - right now is only a flat black color, probably should be improved
 
 / support for grabbing input
     - during some more complicated effects, input (at least mouse) should be disabled,
@@ -178,7 +183,7 @@ Effects TODO
 ?   - I don't think these effects should be plugins or anything like that,
         probably simply write to kwinrc and use the Option class in KWin
 
-+ implements all effects Kompmgr could do
+/ implements all effects Kompmgr could do
 +   - all effects from the Opacity tab should be already doable
 !       - applying translucency only to the decoration
             - use clientSize() and clientPos() from Client
@@ -187,15 +192,12 @@ Effects TODO
             - just clear the alpha channel in the alpha clear hack
             - or do it while painting (see also the alpha clear hack todo entry)
 !       - the rest - should be simple
-*   - shadows
-        - framework is not ready for them yet (see the todo entry)
+/   - shadows
 +   - tab Effects
-!       - fade-in should be simple
 +       - fade between changes
             - will need notification about opacity changes
             - not sure if this is doable for other opacity changes then the ones
                 initiated by the user or by the application
-*       - fade-out needs framework for disappearing windows (see the todo entry)
 
 + minimize/shade effects
     - to replace the ones from KWin core

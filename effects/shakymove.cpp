@@ -30,11 +30,11 @@ void ShakyMoveEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen( mask, region, time );
     }
 
-void ShakyMoveEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void ShakyMoveEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( windows.contains( w ))
         *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void ShakyMoveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

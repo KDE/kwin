@@ -41,7 +41,7 @@ void WavyWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen(mask, region, time);
     }
 
-void WavyWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void WavyWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     // This window will be transformed by the effect
     *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
@@ -52,7 +52,7 @@ void WavyWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* reg
         //  pixels big
         glwin->requestVertexGrid(30);
 
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

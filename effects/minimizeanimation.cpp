@@ -37,7 +37,7 @@ void MinimizeAnimationEffect::prePaintScreen( int* mask, QRegion* region, int ti
     effects->prePaintScreen(mask, region, time);
     }
 
-void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     const float changeTime = 500;
     if( mAnimationProgress.contains( w ))
@@ -69,7 +69,7 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegio
             mActiveAnimations--;
         }
 
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

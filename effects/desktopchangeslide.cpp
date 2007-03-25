@@ -33,7 +33,7 @@ void DesktopChangeSlideEffect::prePaintScreen( int* mask, QRegion* region, int t
     effects->prePaintScreen( mask, region, time );
     }
 
-void DesktopChangeSlideEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void DesktopChangeSlideEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( progress != MAX_PROGRESS )
         {
@@ -50,7 +50,7 @@ void DesktopChangeSlideEffect::prePaintWindow( EffectWindow* w, int* mask, QRegi
                 *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
             }
         }
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void DesktopChangeSlideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

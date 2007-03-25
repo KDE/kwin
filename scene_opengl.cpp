@@ -557,8 +557,6 @@ void SceneOpenGL::waitSync()
 // actually paint to the screen (double-buffer swap or copy from pixmap buffer)
 void SceneOpenGL::flushBuffer( int mask, QRegion damage )
     {
-    if( mask & PAINT_SCREEN_REGION )//    make sure not to go outside visible screen
-        damage &= QRegion( 0, 0, displayWidth(), displayHeight());
     if( db )
         {
         if( mask & PAINT_SCREEN_REGION )

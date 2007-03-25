@@ -90,6 +90,9 @@ class Toplevel
         void addRepaint( const QRect& r );
         void addRepaint( int x, int y, int w, int h );
         void addRepaintFull();
+        // these call workspace->addRepaint(), but first transform the damage if needed
+        void addWorkspaceRepaint( const QRect& r );
+        void addWorkspaceRepaint( int x, int y, int w, int h );
         QRegion repaints() const;
         void resetRepaints( const QRect& r );
         QRegion damage() const;

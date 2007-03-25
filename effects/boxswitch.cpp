@@ -44,7 +44,7 @@ void BoxSwitchEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen( mask, region, time );
     }
 
-void BoxSwitchEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void BoxSwitchEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( mActivated )
         {
@@ -67,7 +67,7 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* regio
                 }
             }
         }
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

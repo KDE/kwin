@@ -109,6 +109,7 @@ void Scene::paintScreen( int* mask, QRegion* region )
         { // whole screen, not transformed, force region to be full
         *region = QRegion( 0, 0, displayWidth(), displayHeight());
         }
+    painted_region = *region;
     if( *mask & PAINT_SCREEN_BACKGROUND_FIRST )
         paintBackground( *region );
     ScreenPaintData data;
@@ -116,6 +117,9 @@ void Scene::paintScreen( int* mask, QRegion* region )
     effects->postPaintScreen();
     foreach( Window* w, stacking_order )
         effects->postPaintWindow( effectWindow( w ));
+    *region |= painted_region;
+    // make sure not to go outside of the screen area
+    *region &= QRegion( 0, 0, displayWidth(), displayHeight());
     }
 
 // Compute time since the last painting pass.
@@ -161,12 +165,13 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
         {
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
-        QRegion damage = infiniteRegion();
+        QRegion paint = infiniteRegion(); // no clipping, so doesn't really matter
+        QRegion clip = QRegion();
         // preparation step
-        effects->prePaintWindow( effectWindow( w ), &mask, &damage, time_diff );
+        effects->prePaintWindow( effectWindow( w ), &mask, &paint, &clip, time_diff );
         if( !w->isPaintingEnabled())
             continue;
-        paintWindow( w, mask, damage );
+        paintWindow( w, mask, infiniteRegion());
         }
     }
 
@@ -180,6 +185,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
     assert(( orig_mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED
         | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_OPAQUE )) == 0 );
     QList< Phase2Data > phase2;
+    QRegion allclips;
     // Draw each opaque window top to bottom, subtracting the bounding rect of
     // each window from the clip region after it's been drawn.
     for( int i = stacking_order.count() - 1; // top to bottom
@@ -187,25 +193,32 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
          --i )
         {
         Window* w = stacking_order[ i ];
-        if( region.isEmpty()) // completely clipped
-            continue;
         int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
-        QRegion damage = region;
+        QRegion paint = region;
+        QRegion clip = w->isOpaque() ? w->shape().translated( w->x(), w->y()) : QRegion();
         // preparation step
-        effects->prePaintWindow( effectWindow( w ), &mask, &damage, time_diff );
+        effects->prePaintWindow( effectWindow( w ), &mask, &paint, &clip, time_diff );
         if( !w->isPaintingEnabled())
             continue;
+        paint -= allclips; // make sure to avoid already clipped areas
+        if( paint.isEmpty()) // completely clipped
+            continue;
+        if( paint != region ) // prepaint added area to draw
+            {
+            region |= paint; // make sure other windows in that area get painted too
+            painted_region |= paint; // make sure it makes it to the screen
+            }
         // If the window is transparent, the transparent part will be done
         // in the 2nd pass.
         if( mask & PAINT_WINDOW_TRANSLUCENT )
-            phase2.prepend( Phase2Data( w, region, mask ));
+            phase2.prepend( Phase2Data( w, paint, mask ));
         if( mask & PAINT_WINDOW_OPAQUE )
             {
-            paintWindow( w, mask, region );
-            // If the window is not transparent at all, it can clip windows below.
-            if( ( mask & PAINT_WINDOW_TRANSLUCENT ) == 0 )
-                region -= w->shape().translated( w->x(), w->y());
+            paintWindow( w, mask, paint );
+            // The window can clip by its opaque parts the windows below.
+            region -= clip;
+            allclips |= clip;
             }
         }
     if( !( orig_mask & PAINT_SCREEN_BACKGROUND_FIRST ))
@@ -213,10 +226,14 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
     // Now walk the list bottom to top, drawing translucent windows.
     // That we draw bottom to top is important now since we're drawing translucent objects
     // and also are clipping only by opaque windows.
+    QRegion add_paint;
     foreach( Phase2Data d, phase2 )
         {
         Window* w = d.window;
-        paintWindow( w, d.mask, d.region );
+        paintWindow( w, d.mask, d.region | add_paint );
+        // It is necessary to also add paint regions of windows below, because their
+        // pre-paint's might have extended the paint area, so those areas need to be painted too.
+        add_paint |= d.region;
         }
     }
 

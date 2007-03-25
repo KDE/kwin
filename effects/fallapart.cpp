@@ -25,7 +25,7 @@ void FallApartEffect::prePaintScreen( int* mask, QRegion* region, int time )
     effects->prePaintScreen(mask, region, time);
     }
 
-void FallApartEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void FallApartEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( windows.contains( w ))
         {
@@ -47,7 +47,7 @@ void FallApartEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* regio
                 }
             }
         }
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

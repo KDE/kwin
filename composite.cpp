@@ -246,8 +246,10 @@ void Workspace::performCompositing()
     if( children != NULL )
         XFree( children );
     foreach( Toplevel* c, windows )
-        { // this could be possibly optimized WRT obscuring, but that'd need being already
-          // past prePaint() phase - probably not worth it
+        { // This could be possibly optimized WRT obscuring, but that'd need being already
+          // past prePaint() phase - probably not worth it.
+          // TODO I think effects->transformWindowDamage() doesn't need to be called here,
+          // pre-paint will extend painted window areas as necessary.
         repaints_region |= c->repaints().translated( c->pos());
         c->resetRepaints( c->rect());
         }
@@ -468,6 +470,19 @@ void Toplevel::addRepaintFull()
 void Toplevel::resetRepaints( const QRect& r )
     {
     repaints_region -= r;
+    }
+
+void Toplevel::addWorkspaceRepaint( int x, int y, int w, int h )
+    {
+    addWorkspaceRepaint( QRect( x, y, w, h ));
+    }
+
+void Toplevel::addWorkspaceRepaint( const QRect& r2 )
+    {
+    if( !compositing())
+        return;
+    QRect r = effects->transformWindowDamage( effectWindow(), r2 );
+    workspace()->addRepaint( r );
     }
 
 } // namespace

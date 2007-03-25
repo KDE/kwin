@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWinInternal
 {
 
-void MakeTransparentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void MakeTransparentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     const Client* c = dynamic_cast< const Client* >( w->window());
     if(( c != NULL && ( c->isMove() || c->isResize())) || w->window()->isDialog())
@@ -23,7 +23,7 @@ void MakeTransparentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion*
         *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
         *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
         }
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

@@ -191,7 +191,7 @@ void Client::releaseWindow( bool on_shutdown )
     finishWindowRules();
     ++block_geometry_updates;
     if( isOnCurrentDesktop() && isShown( true ))
-        workspace()->addRepaint( geometry());
+        addWorkspaceRepaint( geometry());
     setMappingState( WithdrawnState );
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
@@ -257,7 +257,7 @@ void Client::destroyClient()
     finishWindowRules();
     ++block_geometry_updates;
     if( isOnCurrentDesktop() && isShown( true ))
-        workspace()->addRepaint( geometry());
+        addWorkspaceRepaint( geometry());
     setModal( false );
     hidden = true; // so that it's not considered visible anymore
     workspace()->clientHidden( this );
@@ -655,7 +655,7 @@ void Client::setShade( ShadeMode mode )
 // TODO all this unmapping, resizing etc. feels too much duplicated from elsewhere
     if ( isShade()) 
         { // shade_mode == ShadeNormal
-        workspace()->addRepaint( geometry());
+        addWorkspaceRepaint( geometry());
         // shade
         shade_geometry_change = true;
         QSize s( sizeForClientSize( QSize( clientSize())));
@@ -826,7 +826,7 @@ void Client::rawShow()
 */
 void Client::rawHide()
     {
-    workspace()->addRepaint( geometry());
+    addWorkspaceRepaint( geometry());
 // Here it may look like a race condition, as some other client might try to unmap
 // the window between these two XSelectInput() calls. However, they're supposed to
 // use XWithdrawWindow(), which also sends a synthetic event to the root window,

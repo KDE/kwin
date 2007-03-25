@@ -68,13 +68,18 @@ class Effect
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
         // paintWindow() can do various transformations
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
         // drawWindow() is used even for thumbnails etc. - it can alter the window itself where it
         // makes sense (e.g.darkening out unresponsive windows), but it cannot do transformations
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        // This function is used e.g. by the shadow effect which adds area around windows
+        // that needs to be painted as well - e.g. when a window is hidden and the workspace needs
+        // to be repainted at that area, shadow's transformWindowDamage() adds the shadow area
+        // to it, so that it is repainted as well.
+        virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
         virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
@@ -135,10 +140,11 @@ class EffectsHandler
         void prePaintScreen( int* mask, QRegion* region, int time );
         void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         void postPaintScreen();
-        void prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time );
+        void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
         void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         void postPaintWindow( EffectWindow* w );
         void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        QRect transformWindowDamage( EffectWindow* w, const QRect& r );
         // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
         // covering the whole screen is created and all mouse events will be intercepted by it.
         // The effect's windowInputMouseEvent() will get called with such events.
@@ -181,6 +187,7 @@ class EffectsHandler
         int current_paint_screen;
         int current_paint_window;
         int current_draw_window;
+        int current_transform;
     };
 
 // This class is a representation of a window used by/for Effect classes.

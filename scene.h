@@ -106,6 +106,12 @@ class Scene
             };
         // windows in their stacking order
         QVector< Window* > stacking_order;
+        // The region which actually has been painted by paintScreen() and should be
+        // copied from the buffer to the screen. I.e. the region returned from Scene::paintScreen().
+        // Since prePaintWindow() can extend areas to paint, these changes would have to propagate
+        // up all the way from paintSimpleScreen() up to paintScreen(), so save them here rather
+        // than propagate them up in arguments.
+        QRegion painted_region;
         // time since last repaint
         int time_diff;
         QTime last_time;

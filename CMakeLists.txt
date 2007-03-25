@@ -78,6 +78,7 @@ set(kwin_KDEINIT_SRCS
    effects/fallapart.cpp
    effects/drunken.cpp
    effects/flame.cpp
+   effects/shadow.cpp
    effects/test_input.cpp
    effects/test_thumbnail.cpp
    )

@@ -22,7 +22,7 @@ FadeEffect::FadeEffect()
     {
     }
 
-void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, int time )
+void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( windows.contains( w ))
         {
@@ -55,7 +55,7 @@ void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* region, in
                 w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
             }
         }
-    effects->prePaintWindow( w, mask, region, time );
+    effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void FadeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
