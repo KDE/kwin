@@ -33,12 +33,13 @@
 #include <QToolTip>
 #include <kicontheme.h>
 #include <kiconeffect.h>
-#include <kdrawutil.h>
+//#include <kdrawutil.h>
 #include <klocale.h>
 #include <kconfig.h>
 
 #include <X11/Xlib.h>
 #include <QX11Info>
+#include <KDebug>
 
 namespace B2 {
 
@@ -220,22 +221,23 @@ static void create_pixmaps()
         }
     }
 
+    // This should stay here, before the mask creation, because of a bug with
+    // drawing a bitmap with drawPixmap() with the mask set (present at least
+    // in Qt 4.2.3). 
+    redraw_pixmaps();
+
     // there seems to be no way to load X bitmaps from data properly, so
     // we need to create new ones for each mask :P
     QBitmap pinupMask = QBitmap::fromData(QSize(16, 16), pinup_mask_bits);
-    PIXMAP_A(P_PINUP)->setMask(pinupMask);
-    PIXMAP_I(P_PINUP)->setMask(pinupMask);
     QBitmap pindownMask = QBitmap::fromData(QSize(16, 16), pindown_mask_bits);
-    PIXMAP_AD(P_PINUP)->setMask(pindownMask);
-    PIXMAP_ID(P_PINUP)->setMask(pindownMask);
-
     QBitmap menuMask = QBitmap::fromData(QSize(16, 16), menu_mask_bits);
-    for (i = 0; i < NumStates; i++)
-	pixmap[P_MENU * NumStates + i]->setMask(menuMask);
-
     QBitmap helpMask = QBitmap::fromData(QSize(16, 16), help_mask_bits);
-    for (i = 0; i < NumStates; i++)
+    for (i = 0; i < NumStates; i++) {
+	bool isDown = (i == Down) || (i == IDown);
+	pixmap[P_MENU * NumStates + i]->setMask(menuMask);
 	pixmap[P_HELP * NumStates + i]->setMask(helpMask);
+	pixmap[P_PINUP * NumStates + i]->setMask(isDown ? pindownMask: pinupMask);
+    }
 
     QBitmap normalizeMask(16, 16);
     normalizeMask.clear();
@@ -262,8 +264,6 @@ static void create_pixmaps()
 
     titleGradient[0] = 0;
     titleGradient[1] = 0;
-
-    redraw_pixmaps();
 }
 
 static void delete_pixmaps()
@@ -573,10 +573,9 @@ void B2Client::calcHiddenButtons()
 	button[BtnShade], button[BtnSticky], button[BtnHelp], button[BtnResize],
 	button[BtnMax], button[BtnIconify], button[BtnClose], button[BtnMenu]
     };
-    int minWidth = 120;
+    const int minWidth = 120;
     int currentWidth = width();
     int count = 0;
-    int i;
 
     // Determine how many buttons we need to hide
     while (currentWidth < minWidth) {
@@ -587,12 +586,12 @@ void B2Client::calcHiddenButtons()
     if (count > BtnCount) count = BtnCount;
 
     // Hide the required buttons
-    for (i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         if (btnArray[i] && btnArray[i]->isVisible())
             btnArray[i]->hide();
     }
     // Show the rest of the buttons
-    for (i = count; i < BtnCount; i++) {
+    for (int i = count; i < BtnCount; i++) {
         if (btnArray[i] && (!btnArray[i]->isVisible()))
             btnArray[i]->show();
     }
@@ -772,7 +771,7 @@ KDecoration::Position B2Client::mousePosition(const QPoint& p) const
     const int lx = t.right();
     const int bb = mustDrawHandle() ? 0 : 5;
 
-    if (p.x() > t.right()) {
+    if (p.x() > lx) {
         if (p.y() <= ly + range && p.x() >= width() - range)
             return PositionTopRight;
         else if (p.y() <= ly + thickness)
@@ -905,8 +904,8 @@ void B2Client::menuButtonPressed()
 {
     static B2Client *lastClient = NULL;
 
-    bool dbl = (lastClient == this &&
-	        time.elapsed() <= QApplication::doubleClickInterval());
+    const bool dbl = (lastClient == this && 
+	    time.elapsed() <= QApplication::doubleClickInterval());
     lastClient = this;
     time.start();
     if (!dbl) {
@@ -960,7 +959,6 @@ void B2Client::unobscureTitlebar()
 
 static void redraw_pixmaps()
 {
-    int i;
     QPalette aGrp = options()->palette(KDecoration::ColorButtonBg, true);
     QPalette iGrp = options()->palette(KDecoration::ColorButtonBg, false);
 
@@ -978,7 +976,7 @@ static void redraw_pixmaps()
 
     // shade
     QPixmap thinBox(buttonSize - 2, 6);
-    for (i = 0; i < NumStates; i++) {
+    for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 2);
 	bool is_down = ((i & 1) == 1);
 	QPixmap *pix = pixmap[P_SHADE * NumStates + i];
@@ -990,7 +988,7 @@ static void redraw_pixmaps()
     }
 
     // maximize
-    for (i = 0; i < NumStates; i++) {
+    for (int i = 0; i < NumStates; i++) {
 	*pixmap[P_MAX * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
 	pixmap[P_MAX * NumStates + i]->detach();
     }
@@ -999,7 +997,7 @@ static void redraw_pixmaps()
     QPixmap smallBox( 10, 10 );
     QPixmap largeBox( 12, 12 );
 
-    for (i = 0; i < NumStates; i++) {
+    for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
 	bool is_down = (i == Down || i == IDown);
 	QPixmap *pix = pixmap[P_NORMALIZE * NumStates + i];
@@ -1016,7 +1014,7 @@ static void redraw_pixmaps()
     }
 
     // resize
-    for (i = 0; i < NumStates; i++) {
+    for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
 	bool is_down = (i == Down || i == IDown);
 	*pixmap[P_RESIZE * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
@@ -1044,30 +1042,78 @@ static void redraw_pixmaps()
             break;
         }
 	int off = (pixmap[pix * NumStates]->width() - 16) / 2;
-        for (i = 0; i < NumStates; i++) {
-            p.begin(pixmap[pix * NumStates + i]);
-            kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, off, off, 16, 16, true,
-                          light, NULL, NULL, dark, NULL, NULL);
-            p.end();
+	QSize bSize(16, 16);
+	QBitmap lightBitmap = QBitmap::fromData(bSize, 
+		    light, QImage::Format_MonoLSB);
+	lightBitmap.setMask(lightBitmap);
+	QBitmap darkBitmap = QBitmap::fromData(bSize, 
+		    dark, QImage::Format_MonoLSB);
+	darkBitmap.setMask(darkBitmap);
+
+        for (int i = 0; i < NumStates; i++) {
+	    bool isAct = (i < 3);
+	    QPixmap *pixm = pixmap[pix* NumStates + i];
+	    p.begin(pixm);
+	    QColor color = isAct ? activeColor : inactiveColor;
+	    p.setPen(color.light(150));
+	    p.drawPixmap(off, off, lightBitmap);
+	    p.setPen(color.dark(150));
+	    p.drawPixmap(off, off, darkBitmap);
+	    p.end();
         }
     }
 
     // pin
-    for (i = 0; i < NumStates; i++) {
+    for (int i = 0; i < NumStates; i++) {
 	const bool isDown = (i == Down || i == IDown);
+	bool isAct = (i < 3);
+
+#if 0
         unsigned const char *white = isDown ? pindown_white_bits : pinup_white_bits;
         unsigned const char *gray = isDown ? pindown_gray_bits : pinup_gray_bits;
         unsigned const char *dgray = isDown ? pindown_dgray_bits : pinup_dgray_bits;
-        p.begin(pixmap[P_PINUP * NumStates + i]);
+	QPixmap *pix = pixmap[P_PINUP * NumStates + i];
+        p.begin(pix);
+
         kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, 0, 0, 16, 16, true, 
 		      white, gray, NULL, dgray, NULL, NULL);
         p.end();
+	QBitmap pinupMask = QBitmap::fromData(QSize(16, 16), pinup_mask_bits);
+	QBitmap pindownMask = QBitmap::fromData(QSize(16, 16), pindown_mask_bits);
+	pixmap[P_PINUP * NumStates + i]->setMask(isDown ? pindownMask: pinupMask);
+#else
+
+	QSize pinSize(16, 16);
+	QBitmap white = QBitmap::fromData(pinSize, 
+		    isDown ? pindown_white_bits : pinup_white_bits, 
+		    QImage::Format_MonoLSB);
+	white.setMask(white);
+	QBitmap gray = QBitmap::fromData(pinSize, 
+		    isDown ? pindown_gray_bits : pinup_gray_bits, 
+		    QImage::Format_MonoLSB);
+	gray.setMask(gray);
+	QBitmap dgray = QBitmap::fromData(pinSize, 
+		    isDown ? pindown_dgray_bits : pinup_dgray_bits, 
+		    QImage::Format_MonoLSB);
+	dgray.setMask(dgray);
+
+	QPixmap *pix = pixmap[P_PINUP * NumStates + i];
+	QColor color = isAct ? activeColor : inactiveColor;
+        p.begin(pix);
+	p.setPen(color.light(150));
+	p.drawPixmap(0, 0, white);
+	p.setPen(color);
+	p.drawPixmap(0, 0, gray);
+	p.setPen(color.dark(150));
+	p.drawPixmap(0, 0, dgray);
+	p.end();
+#endif
     }
 
     // Apply the hilight effect to the 'Hover' icons
     KIconEffect ie;
     QPixmap hilighted;
-    for (i = 0; i < P_NUM_BUTTON_TYPES; i++) {
+    for (int i = 0; i < P_NUM_BUTTON_TYPES; i++) {
 	int offset = i * NumStates;
 	hilighted = ie.apply(*pixmap[offset + Norm],
 		K3Icon::Small, K3Icon::ActiveState);
@@ -1094,7 +1140,7 @@ static void redraw_pixmaps()
 	    titleColor[1] = options()->color(KDecoration::ColorTitleBar, true);
 	}
 
-	for (i = 0; i < 2; i++) {
+	for (int i = 0; i < 2; i++) {
 	    if (titleColor[2 * i] != titleColor[2 * i + 1]) {
 		if (!titleGradient[i]) {
 		    titleGradient[i] = new QPixmap;
