@@ -517,8 +517,7 @@ class Client : public QObject, public KDecorationDefines
         friend struct CheckIgnoreFocusStealingProcedure;
         friend struct ResetupRulesProcedure;
         friend class GeometryUpdatesPostponer;
-        void show() { assert( false ); } // SELI remove after Client is no longer QWidget
-        void hide() { assert( false ); }
+        virtual void setVisible(bool /*visible*/) { assert(false); } // SELI remove after Client is no longer QWidget
         QTimer* demandAttentionKNotifyTimer;
 
         friend bool performTransiencyCheck();
