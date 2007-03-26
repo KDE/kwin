@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <kmessagebox.h>
-#include <kprocess.h>
+#include <k3process.h>
 #include <klocale.h>
 #include <unistd.h>
 #include <kwin.h>
@@ -78,9 +78,9 @@ int main( int argc, char* argv[] )
         {    
 	if( hostname != "localhost" )
             {
-    	    KProcess proc;
+    	    K3Process proc;
 	    proc << "xon" << hostname << "kill" << QString::number( pid );
-    	    proc.start( KProcess::DontCare );
+    	    proc.start( K3Process::DontCare );
 	    }
 	else
 	    ::kill( pid, SIGKILL );

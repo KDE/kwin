@@ -233,7 +233,7 @@ private:
   QCheckBox* hideUtilityWindowsForInactive;
 };
 
-class KProcess;
+class K3Process;
 class KTranslucencyConfig : public KCModule
 {
   Q_OBJECT
@@ -279,7 +279,7 @@ private:
   bool resetKompmgr_;
   bool kompmgrAvailable();
   bool kompmgrAvailable_;
-  KProcess *kompmgr;
+  K3Process *kompmgr;
   
 private slots:
   void resetKompmgr();

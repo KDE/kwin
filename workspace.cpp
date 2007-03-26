@@ -24,7 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QBitmap>
 #include <QClipboard>
 #include <kmenubar.h>
-#include <kprocess.h>
+#include <k3process.h>
 #include <kglobalaccel.h>
 #include <QDesktopWidget>
 #include <QToolButton>
@@ -2388,7 +2388,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         }
     else
         assert( false );
-    KProcess proc;
+    K3Process proc;
     proc << "kdialog" << args;
     if( !type.isEmpty())
         {
@@ -2400,7 +2400,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         }
     if( c != NULL )
         proc << "--embed" << QString::number( c->window());
-    proc.start( KProcess::DontCare );
+    proc.start( K3Process::DontCare );
     }
 
 void Workspace::setShowingDesktop( bool showing )

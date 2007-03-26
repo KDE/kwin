@@ -30,7 +30,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "rules.h"
 
 class QTimer;
-class KProcess;
+class K3Process;
 class KStartupInfoData;
 
 namespace KWinInternal
@@ -499,7 +499,7 @@ class Client : public QObject, public KDecorationDefines
         Window window_group;
         Layer in_layer;
         QTimer* ping_timer;
-        KProcess* process_killer;
+        K3Process* process_killer;
         Time ping_timestamp;
         Time user_time;
         unsigned long allowed_actions;
