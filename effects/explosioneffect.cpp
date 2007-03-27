@@ -97,18 +97,24 @@ void ExplosionEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
     {
     if( mWindows.contains( w ))
         {
-        mWindows[ w  ] += time / 700.0; // complete change in 700ms
-        if( mWindows[ w  ] < 1 )
+        SceneOpenGL::Window* glwin = dynamic_cast< SceneOpenGL::Window* >( w->sceneWindow() );
+        if( mValid && glwin && !mInited )
+            mValid = loadData();
+        if( mValid )
             {
-            *mask |= Scene::PAINT_WINDOW_TRANSLUCENT | Scene::PAINT_WINDOW_TRANSFORMED;
-            *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
-            w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
-            }
-        else
-            {
-            mWindows.remove( w );
-            static_cast< Deleted* >( w->window())->unrefWindow();
-            mActiveAnimations--;
+            mWindows[ w  ] += time / 700.0; // complete change in 700ms
+            if( mWindows[ w  ] < 1 )
+                {
+                *mask |= Scene::PAINT_WINDOW_TRANSLUCENT | Scene::PAINT_WINDOW_TRANSFORMED;
+                *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
+                w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
+                }
+            else
+                {
+                mWindows.remove( w );
+                static_cast< Deleted* >( w->window())->unrefWindow();
+                mActiveAnimations--;
+                }
             }
         }
 
@@ -120,15 +126,11 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
     // Make sure we have OpenGL compositing and the window is vidible and not a
     //  special window
     SceneOpenGL::Window* glwin = dynamic_cast< SceneOpenGL::Window* >( w->sceneWindow() );
-    //Client* c = qobject_cast< Client* >( w->window() );
     bool useshader = ( mValid && glwin && mWindows.contains( w ) );
-    if( useshader && !mInited )
-        useshader = mValid = loadData();
     if( useshader )
         {
         float maxscaleadd = 1.5f;
         float scale = 1 + maxscaleadd*mWindows[w];
-        //data.xTranslate = (f - 1)*
         data.xScale = scale;
         data.yScale = scale;
         data.xTranslate += int( w->window()->width() / 2 * ( 1 - scale ));
