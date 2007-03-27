@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "options.h"
 
 #include "effects/boxswitch.h"
+#include "effects/demo_taskbarthumbnail.h"
 #include "effects/desktopchangeslide.h"
 #include "effects/dialogparent.h"
 #include "effects/drunken.h"
@@ -207,6 +208,7 @@ EffectsHandler::EffectsHandler()
     registerEffect("DesktopChangeSlide", new GenericEffectFactory<DesktopChangeSlideEffect>);
     registerEffect("BoxSwitch", new GenericEffectFactory<BoxSwitchEffect>);
     registerEffect("Drunken", new GenericEffectFactory<DrunkenEffect>);
+    registerEffect("TaskbarThumbnail", new GenericEffectFactory<TaskbarThumbnailEffect>);
     registerEffect("Shadow", new GenericEffectFactory<ShadowEffect>);
 
     registerEffect("TestInput", new GenericEffectFactory<TestInputEffect>);

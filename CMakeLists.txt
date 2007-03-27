@@ -77,6 +77,7 @@ set(kwin_KDEINIT_SRCS
    effects/boxswitch.cpp
    effects/fallapart.cpp
    effects/drunken.cpp
+   effects/demo_taskbarthumbnail.cpp
    effects/flame.cpp
    effects/shadow.cpp
    effects/test_input.cpp
