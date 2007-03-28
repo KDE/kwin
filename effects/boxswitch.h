@@ -12,8 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_BOXSWITCH_H
 
 #include <effects.h>
-#include <scene_xrender.h>
-#include <scene_opengl.h>
+#include "scene_xrender.h"
+#include "scene_opengl.h"
 
 #include <QHash>
 #include <QPixmap>
@@ -52,8 +52,8 @@ class BoxSwitchEffect
 
         void paintFrame();
         void paintHighlight( QRect area, QString text );
-        void paintDesktopThumbnail( int iDesktop );
         void paintWindowThumbnail( EffectWindow* w );
+        void paintDesktopThumbnail( int iDesktop );
         void paintWindowIcon( EffectWindow* w );
 
         bool mActivated;
@@ -61,17 +61,16 @@ class BoxSwitchEffect
         int mMode;
 
         QRect frame_area;
-        int frame_margin;
-
+        int frame_margin; // TODO graphical background
+        int highlight_margin; // TODO graphical background
         QSize item_max_size; // maximum item display size (including highlight)
-        int highlight_margin; // TODO graphical background, highlight
 
-        QHash< int, ItemInfo* > desktops;
         QHash< EffectWindow*, ItemInfo* > windows;
-
-        int selected_desktop;
-        ClientList tab_clients;
+        ClientList original_windows;
         EffectWindow* selected_window;
+        QHash< int, ItemInfo* > desktops;
+        QList< int > original_desktops;
+        int selected_desktop;
 
         int painting_desktop;
 

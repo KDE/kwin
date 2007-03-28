@@ -34,11 +34,16 @@ class TabBox : public QFrame
         Client* currentClient();
         ClientList currentClientList();
         int currentDesktop();
+        QList< int > currentDesktopList();
+
+        void setCurrentClient( Client* newClient );
+        void setCurrentDesktop( int newDesktop );
 
     // DesktopMode and WindowsMode are based on the order in which the desktop
     //  or window were viewed.
     // DesktopListMode lists them in the order created.
         enum Mode { DesktopMode, DesktopListMode, WindowsMode };
+        enum SortOrder { StaticOrder, MostRecentlyUsedOrder };
         void setMode( Mode mode );
         Mode mode() const;
 
@@ -48,8 +53,9 @@ class TabBox : public QFrame
         void delayedShow();
         void hide();
 
-        void refTabBox();
-        void unrefTabBox();
+        void refDisplay();
+        void unrefDisplay();
+        bool isDisplayed() const;
 
         void handleMouseEvent( XEvent* );
 
@@ -68,19 +74,22 @@ class TabBox : public QFrame
 
     private:
         void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
+        void createDesktopList(QList< int > &list, int start, SortOrder order);
 
     private:
-        Client* client;
-        Mode m;
         Workspace* wspace;
-        ClientList clients, displayed_clients;
+        Mode m;
+        ClientList clients;
+        Client* client;
+        QList< int > desktops;
         int desk;
+
+        QTimer delayedShowTimer;
+        int display_refcount;
+        QString no_tasks;
         int lineHeight;
         bool showMiniIcon;
-        QTimer delayedShowTimer;
-        QString no_tasks;
         bool options_traverse_all;
-        int display_refcount;
     };
 
 
@@ -104,10 +113,23 @@ inline TabBox::Mode TabBox::mode() const
 
 /*!
   Increase the reference count, preventing the default tabbox from showing.
+
+  \sa unrefDisplay(), isDisplayed()
  */
-inline void TabBox::refTabBox()
+inline void TabBox::refDisplay()
     {
     ++display_refcount;
+    }
+
+/*!
+  Returns whether the tab box is being displayed, either natively or by an
+  effect.
+
+  \sa refDisplay(), unrefDisplay()
+ */
+inline bool TabBox::isDisplayed() const
+    {
+    return display_refcount > 0;
     }
 
 } // namespace

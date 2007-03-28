@@ -10,10 +10,11 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "boxswitch.h"
 
-#include <tabbox.h>
-#include <client.h>
-#include <scene_xrender.h>
-#include <scene_opengl.h>
+#include "tabbox.h"
+#include "client.h"
+#include "scene_xrender.h"
+#include "scene_opengl.h"
+
 #include <QSize>
 
 #ifdef HAVE_OPENGL
@@ -96,7 +97,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 {
                 paintFrame();
 
-                for( painting_desktop = 1; painting_desktop <= desktops.count(); painting_desktop++ )
+                foreach( painting_desktop, desktops.keys())
                     {
                     if( painting_desktop == selected_desktop )
                         {
@@ -120,7 +121,7 @@ void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
             {
             if( windows.contains( w ) && w != selected_window )
                 {
-                data.opacity *= 0.1;
+                data.opacity *= 0.2;
                 }
             }
         }
@@ -142,28 +143,17 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
             {
             if( windows[ w ]->clickable.contains( pos ))
                 {
-                if( Client* c = static_cast< Client* >( w->window()))
-                    {
-                    Workspace::self()->activateClient( c );
-                    if( c->isShade() && options->shadeHover )
-                        c->setShade( ShadeActivated );
-                    Workspace::self()->unrefTabBox();
-                    setInactive();
-                    break;
-                    }
+                Workspace::self()->setTabBoxClient( static_cast< Client* >( w->window()));
                 }
             }
         }
     else
         {
-        for( int i = 1; i <= desktops.count(); i++ )
+        foreach( int i, desktops.keys())
             {
             if( desktops[ i ]->clickable.contains( pos ))
                 {
-                Workspace::self()->setCurrentDesktop( i );
-                Workspace::self()->unrefTabBox();
-                setInactive();
-                break;
+                Workspace::self()->setTabBoxDesktop( i );
                 }
             }
         }
@@ -235,8 +225,8 @@ void BoxSwitchEffect::tabBoxAdded( int mode )
                 }
             }
         else
-            { // DesktopMode or DesktopListMode
-            if( Workspace::self()->numberOfDesktops() > 0 )
+            { // DesktopMode
+            if( Workspace::self()->currentTabBoxDesktopList().count() > 0 )
                 {
                 mMode = mode;
                 painting_desktop = 0;
@@ -269,19 +259,20 @@ void BoxSwitchEffect::tabBoxUpdated()
             if( windows.contains( selected_window ))
                 workspace()->addRepaint( windows.value( selected_window )->area );
             selected_window->window()->addRepaintFull();
-            if( Workspace::self()->currentTabBoxClientList() == tab_clients )
+            if( Workspace::self()->currentTabBoxClientList() == original_windows )
                 return;
-            tab_clients = Workspace::self()->currentTabBoxClientList();
+            original_windows = Workspace::self()->currentTabBoxClientList();
             }
         else
-            {
+            { // DesktopMode
             if( desktops.contains( selected_desktop ))
                 workspace()->addRepaint( desktops.value( selected_desktop )->area );
             selected_desktop = Workspace::self()->currentTabBoxDesktop();
             if( desktops.contains( selected_desktop ))
                 workspace()->addRepaint( desktops.value( selected_desktop )->area );
-            if( Workspace::self()->numberOfDesktops() == desktops.count())
+            if( Workspace::self()->currentTabBoxDesktopList() == original_desktops )
                 return;
+            original_desktops = Workspace::self()->currentTabBoxDesktopList();
             }
         workspace()->addRepaint( frame_area );
         calculateFrameSize();
@@ -296,11 +287,12 @@ void BoxSwitchEffect::setActive()
     mActivated = true;
     if( mMode == TabBox::WindowsMode )
         {
-        tab_clients = Workspace::self()->currentTabBoxClientList();
+        original_windows = Workspace::self()->currentTabBoxClientList();
         selected_window = Workspace::self()->currentTabBoxClient()->effectWindow();
         }
     else
         {
+        original_desktops = Workspace::self()->currentTabBoxDesktopList();
         selected_desktop = Workspace::self()->currentTabBoxDesktop();
         }
     calculateFrameSize();
@@ -321,6 +313,7 @@ void BoxSwitchEffect::setActive()
 void BoxSwitchEffect::setInactive()
     {
     mActivated = false;
+    Workspace::self()->unrefTabBox();
     if( mInput != None )
         {
         effects->destroyInputWindow( mInput );
@@ -369,13 +362,13 @@ void BoxSwitchEffect::calculateFrameSize()
 
     if( mMode == TabBox::WindowsMode )
         {
-        itemcount = tab_clients.count();
+        itemcount = original_windows.count();
         item_max_size.setWidth( 200 );
         item_max_size.setHeight( 200 );
         }
     else
         {
-        itemcount = Workspace::self()->numberOfDesktops();
+        itemcount = original_desktops.count();
         item_max_size.setWidth( 200 );
         item_max_size.setHeight( 200 );
         }
@@ -395,9 +388,9 @@ void BoxSwitchEffect::calculateItemSizes()
     if( mMode == TabBox::WindowsMode )
         {
         windows.clear();
-        for( int i = 0; i < tab_clients.count(); i++ )
+        for( int i = 0; i < original_windows.count(); i++ )
             {
-            EffectWindow* w = tab_clients.at( i )->effectWindow();
+            EffectWindow* w = original_windows.at( i )->effectWindow();
             windows[ w ] = new ItemInfo();
 
             windows[ w ]->area = QRect( frame_area.x() + frame_margin
@@ -410,21 +403,16 @@ void BoxSwitchEffect::calculateItemSizes()
     else
         {
         desktops.clear();
-        int iDesktop = ( mMode == TabBox::DesktopMode ) ? Workspace::self()->currentDesktop() : 1;
-        for( int i = 1; i <= Workspace::self()->numberOfDesktops(); i++ )
+        for( int i = 0; i < original_desktops.count(); i++ )
             {
-            desktops[ iDesktop ] = new ItemInfo();
+            int it = original_desktops.at( i );
+            desktops[ it ] = new ItemInfo();
 
-            desktops[ iDesktop ]->area = QRect( frame_area.x() + frame_margin
-                + ( i - 1 ) * item_max_size.width(),
+            desktops[ it ]->area = QRect( frame_area.x() + frame_margin
+                + i * item_max_size.width(),
                 frame_area.y() + frame_margin,
                 item_max_size.width(), item_max_size.height());
-            desktops[ iDesktop ]->clickable = desktops[ iDesktop ]->area;
-
-            if( mMode == TabBox::DesktopMode )
-                iDesktop = Workspace::self()->nextDesktopFocusChain( iDesktop );
-            else
-                iDesktop++;
+            desktops[ it ]->clickable = desktops[ it ]->area;
             }
         }
     }
@@ -439,12 +427,17 @@ void BoxSwitchEffect::paintFrame()
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glColor4f( 0, 0, 0, alpha );
-        glBegin( GL_QUADS );
-        glVertex2i( frame_area.x(), frame_area.y());
-        glVertex2i( frame_area.x() + frame_area.width(), frame_area.y());
-        glVertex2i( frame_area.x() + frame_area.width(), frame_area.y() + frame_area.height());
-        glVertex2i( frame_area.x(), frame_area.y() + frame_area.height());
-        glEnd();
+        glEnableClientState( GL_VERTEX_ARRAY );
+        int verts[ 4 * 2 ] =
+            {
+            frame_area.x(), frame_area.y(),
+            frame_area.x(), frame_area.y() + frame_area.height(),
+            frame_area.x() + frame_area.width(), frame_area.y() + frame_area.height(),
+            frame_area.x() + frame_area.width(), frame_area.y()
+            };
+        glVertexPointer( 2, GL_INT, 0, verts );
+        glDrawArrays( GL_QUADS, 0, 4 );
+        glDisableClientState( GL_VERTEX_ARRAY );
         glPopAttrib();
         }
     else
@@ -480,12 +473,17 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glColor4f( 1, 1, 1, alpha );
-        glBegin( GL_QUADS );
-        glVertex2i( area.x(), area.y());
-        glVertex2i( area.x() + area.width(), area.y());
-        glVertex2i( area.x() + area.width(), area.y() + area.height());
-        glVertex2i( area.x(), area.y() + area.height());
-        glEnd();
+        glEnableClientState( GL_VERTEX_ARRAY );
+        int verts[ 4 * 2 ] =
+            {
+            area.x(), area.y(),
+            area.x(), area.y() + area.height(),
+            area.x() + area.width(), area.y() + area.height(),
+            area.x() + area.width(), area.y()
+            };
+        glVertexPointer( 2, GL_INT, 0, verts );
+        glDrawArrays( GL_QUADS, 0, 4 );
+        glDisableClientState( GL_VERTEX_ARRAY );
         glPopAttrib();
         }
     else
@@ -512,6 +510,22 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
 //    kDebug() << text << endl; // TODO draw this nicely on screen
     }
 
+void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
+    {
+    if( !windows.contains( w ))
+        return;
+    WindowPaintData data;
+
+    setPositionTransformations( data,
+        windows[ w ]->thumbnail, w,
+        windows[ w ]->area.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
+        Qt::KeepAspectRatio );
+
+    effects->drawWindow( w,
+        Scene::PAINT_WINDOW_OPAQUE | Scene::PAINT_WINDOW_TRANSFORMED,
+        windows[ w ]->thumbnail, data );
+    }
+
 void BoxSwitchEffect::paintDesktopThumbnail( int iDesktop )
     {
     if( !desktops.contains( iDesktop ))
@@ -536,22 +550,6 @@ void BoxSwitchEffect::paintDesktopThumbnail( int iDesktop )
 
     effects->paintScreen( Scene::PAINT_SCREEN_TRANSFORMED | Scene::PAINT_SCREEN_BACKGROUND_FIRST,
         region, data );
-    }
-
-void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
-    {
-    if( !windows.contains( w ))
-        return;
-    WindowPaintData data;
-
-    setPositionTransformations( data,
-        windows[ w ]->thumbnail, w,
-        windows[ w ]->area.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
-        Qt::KeepAspectRatio );
-
-    effects->drawWindow( w,
-        Scene::PAINT_WINDOW_OPAQUE | Scene::PAINT_WINDOW_TRANSFORMED,
-        windows[ w ]->thumbnail, data );
     }
 
 void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
@@ -586,23 +584,32 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
 #ifdef HAVE_OPENGL
     if( dynamic_cast< SceneOpenGL* >( scene ))
         {
-        glPushMatrix();
-        glPushAttrib( GL_ENABLE_BIT );
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         windows[ w ]->iconTexture.bind();
-        glBegin( GL_QUADS );
-        glTexCoord2i( 0, 1 );
-        glVertex2i( x, y );
-        glTexCoord2i( 1, 1 );
-        glVertex2i( x + width, y );
-        glTexCoord2i( 1, 0 );
-        glVertex2i( x + width, y + height );
-        glTexCoord2i( 0, 0 );
-        glVertex2i( x, y + height );
-        glEnd();
+        glEnableClientState( GL_VERTEX_ARRAY );
+        int verts[ 4 * 2 ] =
+            {
+            x, y,
+            x, y + height,
+            x + width, y + height,
+            x + width, y
+            };
+        glVertexPointer( 2, GL_INT, 0, verts );
+        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+        int texcoords[ 4 * 2 ] =
+            {
+            0, 1,
+            0, 0,
+            1, 0,
+            1, 1
+            };
+        glTexCoordPointer( 2, GL_INT, 0, texcoords );
+        glDrawArrays( GL_QUADS, 0, 4 );
+        glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+        glDisableClientState( GL_VERTEX_ARRAY );
         windows[ w ]->iconTexture.unbind();
-        glPopMatrix();
         glPopAttrib();
         }
     else
