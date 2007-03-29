@@ -26,7 +26,7 @@ class ShadowEffect
         virtual void postPaintWindow( EffectWindow* w );
         virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
     private:
-        void drawShadow( EffectWindow* w, int mask, QRegion region, double opacity );
+        void drawShadow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         int shadowXOffset, shadowYOffset;
     };
 

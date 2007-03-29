@@ -32,7 +32,7 @@ void ShadowEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, Q
 
 void ShadowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    drawShadow( w, mask, region, data.opacity );
+    drawShadow( w, mask, region, data );
     effects->paintWindow( w, mask, region, data );
     }
 
@@ -47,23 +47,29 @@ QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
     return effects->transformWindowDamage( w, r2 );
     }
 
-void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, double opacity )
+void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if(( mask & Scene::PAINT_WINDOW_TRANSLUCENT ) == 0 )
         return;
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 0, 0, 0, 0.2 * opacity ); // black
-    QRect r( w->geometry());
-    r.moveBy( shadowXOffset, shadowYOffset );
+    glColor4f( 0, 0, 0, 0.2 * data.opacity ); // black
+
+    glPushMatrix();
+    if( mask & Scene::PAINT_WINDOW_TRANSFORMED )
+        glTranslatef( data.xTranslate, data.yTranslate, 0 );
+    glTranslatef( w->x() + shadowXOffset, w->y() + shadowYOffset, 0 );
+    if(( mask & Scene::PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
+        glScalef( data.xScale, data.yScale, 1 );
+
     glEnableClientState( GL_VERTEX_ARRAY );
     int verts[ 4 * 2 ] =
         {
-        r.x(), r.y(),
-        r.x(), r.y() + r.height(),
-        r.x() + r.width(), r.y() + r.height(),
-        r.x() + r.width(), r.y()
+        0, 0,
+        0, w->height(),
+         w->width(), w->height(),
+         w->width(), 0
         };
     glVertexPointer( 2, GL_INT, 0, verts );
     if( mask & ( Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED ))
@@ -80,6 +86,7 @@ void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, double
             }
         }
     glDisableClientState( GL_VERTEX_ARRAY );
+    glPopMatrix();
     glPopAttrib();
     }
 
