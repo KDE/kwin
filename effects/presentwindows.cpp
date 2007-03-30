@@ -141,6 +141,9 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
         if( it.value().area.contains(pos) )
             {
             effects->activateWindow( it.key()->effectWindow());
+            // mWindowData gets cleared and rebuilt when a window is
+            // activated, so it's dangerous (and unnecessary) to continue
+            break;
             }
         }
 
