@@ -201,6 +201,7 @@ class EffectWindow
         Toplevel* window();
         void enablePainting( int reason );
         void disablePainting( int reason );
+        bool isDeleted() const;
         bool isOnDesktop( int d ) const;
         bool isOnCurrentDesktop() const;
         bool isOnAllDesktops() const;

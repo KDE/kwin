@@ -32,7 +32,8 @@ void ShadowEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, Q
 
 void ShadowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    drawShadow( w, mask, region, data );
+    if( !w->isDeleted() )
+        drawShadow( w, mask, region, data );
     effects->paintWindow( w, mask, region, data );
     }
 

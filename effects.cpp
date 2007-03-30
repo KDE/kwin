@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "scene.h"
 #include "options.h"
+#include "deleted.h"
 
 #include "effects/boxswitch.h"
 #include "effects/demo_taskbarthumbnail.h"
@@ -620,5 +621,10 @@ bool EffectWindow::isOnDesktop( int d ) const
     {
     return desktop() == d || isOnAllDesktops();
     }
+
+bool EffectWindow::isDeleted() const
+{
+    return (dynamic_cast<Deleted*>( toplevel ) != 0);
+}
 
 } // namespace
