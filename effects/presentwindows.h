@@ -74,6 +74,7 @@ class PresentWindowsEffect
             {
             QRect area;
             float scale;
+            float hover;
             };
         QHash<Toplevel*, WindowData> mWindowData;
     };

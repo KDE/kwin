@@ -81,6 +81,13 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* 
         Client* c = static_cast< Client* >( w->window() );
         if( mActiveness < 1.0f && (c->isMinimized() || !c->isOnCurrentDesktop() ))
             *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
+        // Change window's hover according to cursor pos
+        WindowData& windata = mWindowData[w->window()];
+        const float hoverchangetime = 200;
+        if( windata.area.contains(cursorPos()) )
+            windata.hover = qMin(1.0f, windata.hover + time / hoverchangetime);
+        else
+            windata.hover = qMax(0.0f, windata.hover - time / hoverchangetime);
         }
 
     effects->prePaintWindow( w, mask, paint, clip, time );
@@ -97,8 +104,7 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         data.xTranslate = (int)interpolate(data.xTranslate, windata.area.left() - w->window()->x(), mActiveness);
         data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->window()->y(), mActiveness);
         // Darken all windows except for the one under the cursor
-        if( !windata.area.contains(cursorPos()) )
-            data.brightness *= interpolate(1.0, 0.7, mActiveness);
+        data.brightness *= interpolate(1.0, 0.7, mActiveness * (1.0f - windata.hover));
         // If it's minimized window or on another desktop and effect is not
         //  fully active, then apply some transparency
         Client* c = static_cast< Client* >( w->window() );
@@ -219,6 +225,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(ClientList clientl
         // Row/Col of this window
         int r = i / cols;
         int c = i % cols;
+        mWindowData[client].hover = 0.0f;
         mWindowData[client].scale = qMin(cellwidth / (float)client->width(), cellheight / (float)client->height());
         mWindowData[client].area.setLeft(placementRect.left() + cellwidth * c);
         mWindowData[client].area.setTop(placementRect.top() + cellheight * r);
@@ -375,6 +382,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clie
             geom.setY( geom.y() + topOffset );
             mWindowData[client].area = geom;
             mWindowData[client].scale = geom.width() / (float)client->width();
+            mWindowData[client].hover = 0.0f;
 
             kDebug() << k_funcinfo << "Window '" << client->caption() << "' gets moved to (" <<
                     mWindowData[client].area.left() << "; " << mWindowData[client].area.right() <<
