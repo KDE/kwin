@@ -681,7 +681,7 @@ void RulesWidget::prepareWindowSpecific( WId window )
 void RulesWidget::shortcutEditClicked()
     {
 #ifdef __GNUC__
-#warning KShortcutDialog is gone, and it's a good opportunity to clean up here
+#warning KShortcutDialog is gone, and it is a good opportunity to clean up here
 #endif
 #if 0
     EditShortcutDialog dlg( topLevelWidget());
