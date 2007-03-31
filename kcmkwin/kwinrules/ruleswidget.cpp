@@ -680,10 +680,15 @@ void RulesWidget::prepareWindowSpecific( WId window )
 
 void RulesWidget::shortcutEditClicked()
     {
+#ifdef __GNUC__
+#warning KShortcutDialog is gone, and it's a good opportunity to clean up here
+#endif
+#if 0
     EditShortcutDialog dlg( topLevelWidget());
     dlg.setShortcut( shortcut->text());
     if( dlg.exec() == QDialog::Accepted )
         shortcut->setText( dlg.shortcut());
+#endif
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
@@ -733,6 +738,10 @@ void RulesDialog::accept()
     KDialog::accept();
     }
 
+#ifdef __GNUC__
+#warning KShortcutDialog is gone
+#endif
+#if 0
 EditShortcut::EditShortcut( QWidget* parent )
 : EditShortcutBase( parent )
     {
@@ -804,7 +813,7 @@ void ShortcutDialog::accept()
         }
     KShortcutDialog::accept();
     }
-
+#endif
 } // namespace
 
 #include "ruleswidget.moc"

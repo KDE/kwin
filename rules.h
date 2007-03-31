@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QString>
 #include <netwm_def.h>
 #include <QRect>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 
 #include "placement.h"

@@ -22,7 +22,7 @@
 
 #include <kdialog.h>
 #include <kwin.h>
-#include <kshortcutdialog.h>
+//#include <kshortcutdialog.h>
 
 #include "ruleswidgetbase.h"
 #include "editshortcutbase.h"
@@ -110,6 +110,10 @@ class RulesDialog
         Rules* rules;
     };
 
+#ifdef __GNUC__
+#warning KShortcutDialog is gone
+#endif //__GNUC__
+#if 0
 class EditShortcut
     : public EditShortcutBase
     {
@@ -142,7 +146,7 @@ class ShortcutDialog
         ShortcutDialog( const KShortcut& cut, QWidget* parent = NULL );
         virtual void accept();
     };
-
+#endif //0
 } // namespace
 
 #endif

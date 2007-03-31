@@ -363,6 +363,10 @@ void Workspace::readShortcuts()
 
 void Workspace::setupWindowShortcut( Client* c )
     {
+#ifdef __GNUC__
+#warning ifdefed out, KShortcutDialog is 0xDEAD
+#endif //__GNUC__
+#if 0
     assert( client_keys_dialog == NULL );
     keys->setEnabled( false );
     disable_shortcuts_keys->setEnabled( false );
@@ -381,10 +385,12 @@ void Workspace::setupWindowShortcut( Client* c )
     client_keys_dialog->show();
     active_popup = client_keys_dialog;
     active_popup_client = c;
+#endif
     }
 
 void Workspace::setupWindowShortcutDone( bool ok )
     {
+#if 0 //see above
     keys->setEnabled( true );
     disable_shortcuts_keys->setEnabled( true );
     client_keys->setEnabled( true );
@@ -396,6 +402,7 @@ void Workspace::setupWindowShortcutDone( bool ok )
     delete client_keys_dialog;
     client_keys_dialog = NULL;
     client_keys_client = NULL;
+#endif
     }
 
 void Workspace::clientShortcutUpdated( Client* c )

@@ -25,13 +25,11 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <assert.h>
 #include <kdebug.h>
 #include <kshortcut.h>
-#include <kkeyserver.h>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
-
 #include <stdio.h>
 
 #include "atoms.h"
@@ -44,68 +42,19 @@ namespace KWinInternal
 
 #ifndef KCMRULES
 
-bool Extensions::has_shape = false;
-int Extensions::shape_event_base = 0;
-bool Extensions::has_randr = false;
-int Extensions::randr_event_base = 0;
-bool Extensions::has_damage = false;
-int Extensions::damage_event_base = 0;
-bool Extensions::has_composite = false;
-bool Extensions::has_composite_overlay = false;
-bool Extensions::has_fixes = false;
+// used to store the return values of
+// XShapeQueryExtension.
+// Necessary since shaped window are an extension to X
+int Shape::kwin_shape_version = 0;
+int Shape::kwin_shape_event = 0;
 
-void Extensions::init()
-    {
-    int dummy;
-    has_shape = XShapeQueryExtension( display(), &shape_event_base, &dummy);
-#ifdef HAVE_XRANDR
-    has_randr = XRRQueryExtension( display(), &randr_event_base, &dummy );
-    if( has_randr )
-        {
-        int major, minor;
-        XRRQueryVersion( display(), &major, &minor );
-        has_randr = ( major > 1 || ( major == 1 && minor >= 1 ) );
-        }
-#else
-    has_randr = false;
-#endif
-#ifdef HAVE_XDAMAGE
-    has_damage = XDamageQueryExtension( display(), &damage_event_base, &dummy );
-#else
-    has_damage = false;
-#endif
-#ifdef HAVE_XCOMPOSITE
-    has_composite = XCompositeQueryExtension( display(), &dummy, &dummy );
-    if( has_composite )
-        {
-        int major, minor;
-        XCompositeQueryVersion( display(), &major, &minor );
-        has_composite = ( major > 0 || minor >= 2 );
-        has_composite_overlay = ( major > 0 || minor >= 3 );
-        }
-#else
-    has_composite = false;
-    has_composite_overlay = false;
-#endif
-#ifdef HAVE_XFIXES
-    has_fixes = XFixesQueryExtension( display(), &dummy, &dummy );
-#else
-    has_fixes = false;
-#endif
-    }
-
-int Extensions::shapeNotifyEvent()
-    {
-    return shape_event_base + ShapeNotify;
-    }
-
-// does the window w need a shape combine mask around it?
-bool Extensions::hasShape( Window w )
+// does the window w  need a shape combine mask around it?
+bool Shape::hasShape( WId w)
     {
     int xws, yws, xbs, ybs;
     unsigned int wws, hws, wbs, hbs;
     int boundingShaped = 0, clipShaped = 0;
-    if( !Extensions::shapeAvailable())
+    if (!available())
         return false;
     XShapeQueryExtents(display(), w,
                        &boundingShaped, &xws, &yws, &wws, &hws,
@@ -113,22 +62,21 @@ bool Extensions::hasShape( Window w )
     return boundingShaped != 0;
     }
 
-int Extensions::randrNotifyEvent()
+int Shape::shapeEvent()
     {
-#ifdef HAVE_XRANDR
-    return randr_event_base + RRScreenChangeNotify;
-#else
-    return 0;
-#endif
+    return kwin_shape_event;
     }
 
-int Extensions::damageNotifyEvent()
+void Shape::init()
     {
-#ifdef HAVE_XDAMAGE
-    return damage_event_base + XDamageNotify;
-#else
-    return 0;
-#endif
+    kwin_shape_version = 0;
+    int dummy;
+    if( !XShapeQueryExtension( display(), &kwin_shape_event, &dummy ))
+        return;
+    int major, minor;
+    if( !XShapeQueryVersion( display(), &major, &minor ))
+        return;
+    kwin_shape_version = major * 0x10 + minor;
     }
 
 void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
@@ -353,93 +301,6 @@ bool grabbedXServer()
     return server_grab_count > 0;
     }
 
-// converting between X11 mouse/keyboard state mask and Qt button/keyboard states
-
-int qtToX11Button( Qt::MouseButton button )
-    {
-    if( button == Qt::LeftButton )
-        return Button1;
-    else if( button == Qt::MidButton )
-        return Button2;
-    else if( button == Qt::RightButton )
-        return Button3;
-    return AnyButton; // 0
-    }
-
-Qt::MouseButton x11ToQtMouseButton( int button )
-    {
-    if( button == Button1 )
-        return Qt::LeftButton;
-    if( button == Button2 )
-        return Qt::MidButton;
-    if( button == Button3 )
-        return Qt::RightButton;
-    return Qt::NoButton;
-    }
-
-int qtToX11State( Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
-    {
-    int ret = 0;
-    if( buttons & Qt::LeftButton )
-        ret |= Button1Mask;
-    if( buttons & Qt::MidButton )
-        ret |= Button2Mask;
-    if( buttons & Qt::RightButton )
-        ret |= Button3Mask;
-    if( modifiers & Qt::ShiftModifier )
-        ret |= ShiftMask;
-    if( modifiers & Qt::ControlModifier )
-        ret |= ControlMask;
-    if( modifiers & Qt::AltModifier )
-        ret |= KKeyServer::modXAlt();
-    if( modifiers & Qt::MetaModifier )
-        ret |= KKeyServer::modXMeta();
-    return ret;
-    }
-
-Qt::MouseButtons x11ToQtMouseButtons( int state )
-    {
-    Qt::MouseButtons ret = 0;
-    if( state & Button1Mask )
-        ret |= Qt::LeftButton;
-    if( state & Button2Mask )
-        ret |= Qt::MidButton;
-    if( state & Button3Mask )
-        ret |= Qt::RightButton;
-    return ret;
-    }
-
-Qt::KeyboardModifiers x11ToQtKeyboardModifiers( int state )
-    {
-    Qt::KeyboardModifiers ret = 0;
-    if( state & ShiftMask )
-        ret |= Qt::ShiftModifier;
-    if( state & ControlMask )
-        ret |= Qt::ControlModifier;
-    if( state & KKeyServer::modXAlt())
-        ret |= Qt::AltModifier;
-    if( state & KKeyServer::modXMeta())
-        ret |= Qt::MetaModifier;
-    return ret;
-    }
-
-// Optimized version of QCursor::pos() that tries to avoid X roundtrips
-// by updating the value only when the X timestamp changes.
-static QPoint last_cursor_pos;
-static Time last_cursor_timestamp = CurrentTime;
-
-QPoint cursorPos()
-    {
-    last_cursor_timestamp = CurrentTime;
-    if( last_cursor_timestamp == CurrentTime
-        || last_cursor_timestamp != QX11Info::appTime())
-        {
-        last_cursor_timestamp = QX11Info::appTime();
-        last_cursor_pos = QCursor::pos();
-        }
-    return last_cursor_pos;
-    }
-
 #endif
 
 bool isLocalMachine( const QByteArray& host )
@@ -465,8 +326,12 @@ bool isLocalMachine( const QByteArray& host )
     }
 
 #ifndef KCMRULES
+#ifdef __GNUC__
+#warning KShortcutDialog is gone
+#endif //__GNUC__
+#if 0
 ShortcutDialog::ShortcutDialog( const KShortcut& cut )
-    : KShortcutDialog( cut, false /*TODO???*/ )
+    : KShortcutDialog( cut, false /*TODO: ???*/ )
     {
     // make it a popup, so that it has the grab
     XSetWindowAttributes attrs;
@@ -502,7 +367,9 @@ void ShortcutDialog::accept()
         }
     KShortcutDialog::accept();
     }
-#endif
+#endif //0
+#endif //KCMRULES
+
 } // namespace
 
 #ifndef KCMRULES
