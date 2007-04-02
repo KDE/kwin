@@ -679,7 +679,7 @@ class StackingUpdatesBlocker
     };
 
 // NET WM Protocol handler class
-class RootInfo : public NETRootInfo4
+class RootInfo : public NETRootInfo
     {
     private:
         typedef KWinInternal::Client Client;  // because of NET::Client
