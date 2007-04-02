@@ -688,7 +688,6 @@ class RootInfo : public NETRootInfo4
     protected:
         virtual void changeNumberOfDesktops(int n);
         virtual void changeCurrentDesktop(int d);
-//    virtual void changeActiveWindow(Window w); the extended version is used
         virtual void changeActiveWindow(Window w,NET::RequestSource src, Time timestamp, Window active_window);
         virtual void closeWindow(Window w);
         virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction);
