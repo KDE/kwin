@@ -20,9 +20,8 @@
 #include <kapplication.h>
 #include <kconfig.h>
 #include <klocale.h>
-#include <kwin.h>
+#include <kwm.h>
 #include <QtDBus/QtDBus>
-
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 
@@ -70,7 +69,7 @@ static void saveRules( const QList< Rules* >& rules )
 
 static Rules* findRule( const QList< Rules* >& rules, Window wid, bool whole_app )
     {
-    KWin::WindowInfo info = KWin::windowInfo( wid,
+    KWM::WindowInfo info = KWM::windowInfo( wid,
         NET::WMName | NET::WMWindowType,
         NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine );
     if( !info.valid()) // shouldn't really happen
@@ -256,8 +255,10 @@ static int edit( Window wid, bool whole_app )
         delete orig_rule;
         }
     saveRules( rules );
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
     return 0;
     }
 

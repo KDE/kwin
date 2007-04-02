@@ -28,7 +28,6 @@ DEALINGS IN THE SOFTWARE.
 #include <k3process.h>
 #include <klocale.h>
 #include <unistd.h>
-#include <kwin.h>
 #include <X11/Xlib.h>
 #include <QX11Info>
 

@@ -21,7 +21,7 @@
 #define __RULESWIDGET_H__
 
 #include <kdialog.h>
-#include <kwin.h>
+#include <kwm.h>
 //#include <kshortcutdialog.h>
 
 #include "ruleswidgetbase.h"
@@ -89,7 +89,7 @@ class RulesWidget
     private:
         int desktopToCombo( int d ) const;
         int comboToDesktop( int val ) const;
-        void prefillUnusedValues( const KWin::WindowInfo& info );
+        void prefillUnusedValues( const KWM::WindowInfo& info );
         DetectDialog* detect_dlg;
         bool detect_dlg_ok;
     };

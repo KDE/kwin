@@ -24,7 +24,7 @@
 #include <QCheckBox>
 #include <kpushbutton.h>
 #include <QLabel>
-#include <kwinmodule.h>
+#include <kwm.h>
 #include <klocale.h>
 #include <QRegExp>
 
@@ -108,12 +108,11 @@ RulesWidget::RulesWidget( QWidget* parent )
     SETUP( maxsize, force );
     SETUP( strictgeometry, force );
     SETUP( disableglobalshortcuts, force );
-    KWinModule module;
     int i;
     for( i = 1;
-         i <= module.numberOfDesktops();
+         i <= KWM::numberOfDesktops();
          ++i )
-        desktop->addItem( QString::number( i ).rightJustified( 2 ) + ':' + module.desktopName( i ));
+        desktop->addItem( QString::number( i ).rightJustified( 2 ) + ':' + KWM::desktopName( i ));
     desktop->addItem( i18n( "All Desktops" ));
     }
 
@@ -589,7 +588,7 @@ void RulesWidget::detected( bool ok )
         machine_match->setCurrentIndex( Rules::UnimportantMatch );
         machineMatchChanged();
         // prefill values from to window to settings which already set
-        const KWin::WindowInfo& info = detect_dlg->windowInfo();
+        const KWM::WindowInfo& info = detect_dlg->windowInfo();
         prefillUnusedValues( info );
         }
     delete detect_dlg;
@@ -607,7 +606,7 @@ void RulesWidget::detected( bool ok )
 #define LINEEDIT_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setText )
 #define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentIndex )
 
-void RulesWidget::prefillUnusedValues( const KWin::WindowInfo& info )
+void RulesWidget::prefillUnusedValues( const KWM::WindowInfo& info )
     {
     LINEEDIT_PREFILL( position, positionToStr, info.frameGeometry().topLeft() );
     LINEEDIT_PREFILL( size, sizeToStr, info.frameGeometry().size() );
@@ -674,7 +673,7 @@ bool RulesWidget::finalCheck()
 void RulesWidget::prepareWindowSpecific( WId window )
     {
     tabs->setCurrentIndex( 2 ); // geometry tab, skip tabs for window identification
-    KWin::WindowInfo info( window, -1U, -1U ); // read everything
+    KWM::WindowInfo info( window, -1U, -1U ); // read everything
     prefillUnusedValues( info );
     }
 

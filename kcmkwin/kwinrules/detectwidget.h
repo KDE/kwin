@@ -23,7 +23,7 @@
 #include "ui_detectwidgetbase.h"
 
 #include <kdialog.h>
-#include <kwin.h>
+#include <kwm.h>
 
 #include "../../rules.h"
 //Added by qt3to4:
@@ -65,7 +65,7 @@ class DetectDialog
         QString selectedTitle() const;
         Rules::StringMatch titleMatch() const;
         QByteArray selectedMachine() const;
-        const KWin::WindowInfo& windowInfo() const;
+        const KWM::WindowInfo& windowInfo() const;
     signals:
         void detectionDone( bool );
     protected:
@@ -84,11 +84,11 @@ class DetectDialog
         QByteArray machine;
         DetectWidget* widget;
         QDialog* grabber;
-        KWin::WindowInfo info;
+        KWM::WindowInfo info;
     };
 
 inline
-const KWin::WindowInfo& DetectDialog::windowInfo() const
+const KWM::WindowInfo& DetectDialog::windowInfo() const
     {
     return info;
     }
