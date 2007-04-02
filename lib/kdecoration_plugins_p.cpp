@@ -32,7 +32,6 @@ DEALINGS IN THE SOFTWARE.
 #include <klibloader.h>
 #include <kconfiggroup.h>
 #include <assert.h>
-#include <kconfig.h>
 
 #include <QDir>
 #include <QFile>
@@ -92,7 +91,7 @@ KDecoration* KDecorationPlugins::createDecoration( KDecorationBridge* bridge )
         return fact->createDecoration( bridge );
     return NULL;
     }
-    
+
 // returns true if plugin was loaded successfully
 bool KDecorationPlugins::loadPlugin( QString nameStr )
     {
@@ -152,12 +151,10 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
         }
 
     create_ptr = NULL;
-    if( library->hasSymbol("create_factory"))
-        {
-        void* create_func = library->symbol("create_factory");
-        if(create_func)
-            create_ptr = (KDecorationFactory* (*)())create_func;
-        }
+    KLibrary::void_function_ptr create_func = library->resolveFunction("create_factory");
+    if(create_func)
+        create_ptr = (KDecorationFactory* (*)())create_func;
+
     if(!create_ptr)
         {
         error( i18n( "The library %1 is not a KWin plugin.", path ));
@@ -169,7 +166,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
 
     pluginStr = nameStr;
 
-    // For clients in kdeartwork    
+    // For clients in kdeartwork
     QString catalog = nameStr;
     catalog.replace( "kwin3_", "kwin_" );
     KGlobal::locale()->insertCatalog( catalog );
@@ -182,7 +179,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
 
     old_library = oldLibrary; // save for delayed destroying
     old_fact = oldFactory;
-    
+
     return true;
 }
 

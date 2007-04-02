@@ -409,7 +409,7 @@ void KWinDecorationModule::resetPlugin( KConfigGroup& conf, const QString& curre
 	KLibrary* library = loader->library( QFile::encodeName(currentName) );
 	if (library != NULL)
 	{
-		void* alloc_ptr = library->symbol("allocate_config");
+                KLibrary::void_function_ptr alloc_ptr = library->resolveFunction("allocate_config");
 
 		if (alloc_ptr != NULL)
 		{
@@ -531,8 +531,11 @@ void KWinDecorationModule::save()
 	emit pluginSave( kwinConfig );
 
 	kwinConfig.sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
 }
 
 
