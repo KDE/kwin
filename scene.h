@@ -171,7 +171,7 @@ class Scene::Window
         int disable_painting;
         mutable QRegion shape_region;
         mutable bool shape_valid;
-        Q_DISABLE_COPY(Window);
+        Q_DISABLE_COPY(Window)
     };
 
 extern Scene* scene;
