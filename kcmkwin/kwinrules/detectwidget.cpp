@@ -40,8 +40,8 @@
 namespace KWinInternal
 {
 
-DetectWidget::DetectWidget( QWidget* parent )
-: DetectWidgetBase( parent )
+DetectWidget::DetectWidget( QWidget* parent, const char* name )
+: DetectWidgetBase( parent, name )
     {
     }
 

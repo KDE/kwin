@@ -383,16 +383,16 @@ void RulesWidget::setRules( Rules* rules )
     role->setText( rules->windowrole );
     role_match->setCurrentIndex( rules->windowrolematch );
     roleMatchChanged();
-    types->item(0)->setSelected( rules->types & NET::NormalMask );
-    types->item(1)->setSelected( rules->types & NET::DialogMask );
-    types->item(2)->setSelected( rules->types & NET::UtilityMask );
-    types->item(3)->setSelected( rules->types & NET::DockMask );
-    types->item(4)->setSelected( rules->types & NET::ToolbarMask );
-    types->item(5)->setSelected( rules->types & NET::MenuMask );
-    types->item(6)->setSelected( rules->types & NET::SplashMask );
-    types->item(7)->setSelected( rules->types & NET::DesktopMask );
-    types->item(8)->setSelected( rules->types & NET::OverrideMask );
-    types->item(9)->setSelected( rules->types & NET::TopMenuMask );
+    types->setSelected( 0, rules->types & NET::NormalMask );
+    types->setSelected( 1, rules->types & NET::DialogMask );
+    types->setSelected( 2, rules->types & NET::UtilityMask );
+    types->setSelected( 3, rules->types & NET::DockMask );
+    types->setSelected( 4, rules->types & NET::ToolbarMask );
+    types->setSelected( 5, rules->types & NET::MenuMask );
+    types->setSelected( 6, rules->types & NET::SplashMask );
+    types->setSelected( 7, rules->types & NET::DesktopMask );
+    types->setSelected( 8, rules->types & NET::OverrideMask );
+    types->setSelected( 9, rules->types & NET::TopMenuMask );
     title->setText( rules->title );
     title_match->setCurrentIndex( rules->titlematch );
     titleMatchChanged();
@@ -466,25 +466,25 @@ Rules* RulesWidget::rules() const
     rules->windowrolematch = static_cast< Rules::StringMatch >( role_match->currentIndex());
     rules->types = 0;
     bool all_types = true;
-    for( int i = 0;
+    for( unsigned int i = 0;
          i < types->count();
          ++i )
-        if( !types->item(i)->isSelected())
+        if( !types->isSelected( i ))
             all_types = false;
     if( all_types ) // if all types are selected, use AllTypesMask (for future expansion)
         rules->types = NET::AllTypesMask;
     else
         {
-        rules->types |= types->item(0)->isSelected() ? NET::NormalMask : 0;
-        rules->types |= types->item(1)->isSelected() ? NET::DialogMask : 0;
-        rules->types |= types->item(2)->isSelected() ? NET::UtilityMask : 0;
-        rules->types |= types->item(3)->isSelected() ? NET::DockMask : 0;
-        rules->types |= types->item(4)->isSelected() ? NET::ToolbarMask : 0;
-        rules->types |= types->item(5)->isSelected() ? NET::MenuMask : 0;
-        rules->types |= types->item(6)->isSelected() ? NET::SplashMask : 0;
-        rules->types |= types->item(7)->isSelected() ? NET::DesktopMask : 0;
-        rules->types |= types->item(8)->isSelected() ? NET::OverrideMask : 0;
-        rules->types |= types->item(9)->isSelected() ? NET::TopMenuMask : 0;
+        rules->types |= types->isSelected( 0 ) ? NET::NormalMask : 0;
+        rules->types |= types->isSelected( 1 ) ? NET::DialogMask : 0;
+        rules->types |= types->isSelected( 2 ) ? NET::UtilityMask : 0;
+        rules->types |= types->isSelected( 3 ) ? NET::DockMask : 0;
+        rules->types |= types->isSelected( 4 ) ? NET::ToolbarMask : 0;
+        rules->types |= types->isSelected( 5 ) ? NET::MenuMask : 0;
+        rules->types |= types->isSelected( 6 ) ? NET::SplashMask : 0;
+        rules->types |= types->isSelected( 7 ) ? NET::DesktopMask : 0;
+        rules->types |= types->isSelected( 8 ) ? NET::OverrideMask : 0;
+        rules->types |= types->isSelected( 9 ) ? NET::TopMenuMask : 0;
         }
     rules->title = title->text();
     rules->titlematch = static_cast< Rules::StringMatch >( title_match->currentIndex());
@@ -567,19 +567,19 @@ void RulesWidget::detected( bool ok )
         roleMatchChanged();
         if( detect_dlg->selectedWholeApp())
             {
-            for( int i = 0;
+            for( unsigned int i = 0;
                  i < types->count();
                  ++i )
-                types->item(i)->setSelected( true );
+                types->setSelected( i, true );
             }
         else
             {
             NET::WindowType type = detect_dlg->selectedType();
-            for( int i = 0;
+            for( unsigned int i = 0;
                  i < types->count();
                  ++i )
-                types->item(i)->setSelected( false );
-            types->item( typeToCombo(type) )->setSelected( true );
+                types->setSelected( i, false );
+            types->setSelected( typeToCombo( type ), true );
             }
         title->setText( detect_dlg->selectedTitle());
         title_match->setCurrentIndex( detect_dlg->titleMatch());
@@ -653,10 +653,10 @@ bool RulesWidget::finalCheck()
             description->setText( i18n( "Unnamed entry" ));
         }
     bool all_types = true;
-    for( int i = 0;
+    for( unsigned int i = 0;
          i < types->count();
          ++i )
-        if( !types->item(i)->isSelected())
+        if( !types->isSelected( i ))
             all_types = false;
     if( wmclass_match->currentIndex() == Rules::UnimportantMatch && all_types )
         {
@@ -680,7 +680,7 @@ void RulesWidget::prepareWindowSpecific( WId window )
 void RulesWidget::shortcutEditClicked()
     {
 #ifdef __GNUC__
-#warning KShortcutDialog is gone, and it is a good opportunity to clean up here
+#warning KShortcutDialog is gone, and it's a good opportunity to clean up here
 #endif
 #if 0
     EditShortcutDialog dlg( topLevelWidget());
