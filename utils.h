@@ -154,6 +154,20 @@ enum ShadeMode
     ShadeActivated // "shaded", but visible due to alt+tab to the window
     };
 
+enum ElectricBorder
+    {
+    ElectricTop,
+    ElectricTopRight,
+    ElectricRight,
+    ElectricBottomRight,
+    ElectricBottom,
+    ElectricBottomLeft,
+    ElectricLeft,
+    ElectricTopLeft,
+    ELECTRIC_COUNT,
+    ElectricNone
+    };
+
 class Extensions
     {
     public:

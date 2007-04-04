@@ -51,7 +51,8 @@ void Workspace::desktopResized()
     rootInfo->setDesktopGeometry( -1, desktop_geometry );
 
     updateClientArea();
-    checkElectricBorders( true );
+    destroyElectricBorders();
+    updateElectricBorders();
     if( compositing() )
         {
         finishCompositing();
@@ -2295,6 +2296,8 @@ bool Client::startMoveResize()
     Notify::raise( isResize() ? Notify::ResizeStart : Notify::MoveStart );
     if( effects )
         effects->windowUserMovedResized( effectWindow(), true, false );
+    if( options->electricBorders() == Options::ElectricMoveOnly )
+        workspace()->reserveElectricBorderSwitching( true );
     return true;
     }
 
@@ -2335,6 +2338,8 @@ void Client::leaveMoveResize()
     moveResizeMode = false;
     delete eater;
     eater = 0;
+    if( options->electricBorders() == Options::ElectricMoveOnly )
+        workspace()->reserveElectricBorderSwitching( false );
     }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.
@@ -2572,7 +2577,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             }                               // so the geometry tip will be painted above the outline
         }
     if ( isMove() )
-      workspace()->clientMoved(globalPos, xTime());
+      workspace()->checkElectricBorder(globalPos, xTime());
     if( effects )
         effects->windowUserMovedResized( effectWindow(), false, false );
     }

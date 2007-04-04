@@ -154,7 +154,10 @@ class Workspace : public QObject, public KDecorationDefines
         void clientHidden( Client*  );
         void clientAttentionChanged( Client* c, bool set );
 
-        void clientMoved(const QPoint &pos, Time time);
+        void checkElectricBorder(const QPoint &pos, Time time);
+        void reserveElectricBorder( ElectricBorder border );
+        void unreserveElectricBorder( ElectricBorder border );
+        void reserveElectricBorderSwitching( bool reserve );
 
         /**
          * Returns the current virtual desktop of this workspace
@@ -444,6 +447,7 @@ class Workspace : public QObject, public KDecorationDefines
         void setupCompositing();
         void performCompositing();
         void lostCMSelection();
+        void updateElectricBorders();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -518,11 +522,9 @@ class Workspace : public QObject, public KDecorationDefines
         void tabBoxKeyRelease( const XKeyEvent& ev );
 
     // electric borders
-        void checkElectricBorders( bool force = false );
-        void createBorderWindows();
-        void destroyBorderWindows();
-        bool electricBorder(XEvent * e);
-        void raiseElectricBorders();
+        void destroyElectricBorders();
+        bool electricBorderEvent(XEvent * e);
+        void electricBorderSwitchDesktop( ElectricBorder border, const QPoint& pos );
 
     // ------------------
 
@@ -659,12 +661,8 @@ class Workspace : public QObject, public KDecorationDefines
 
         KStartupInfo* startup;
 
-        bool electric_have_borders;
-        int electric_current_border;
-        WId electric_top_border;
-        WId electric_bottom_border;
-        WId electric_left_border;
-        WId electric_right_border;
+        ElectricBorder electric_current_border;
+        Window electric_windows[ ELECTRIC_COUNT ];
         int electricLeft;
         int electricRight;
         int electricTop;
@@ -672,6 +670,7 @@ class Workspace : public QObject, public KDecorationDefines
         Time electric_time_first;
         Time electric_time_last;
         QPoint electric_push_point;
+        int electric_reserved[ ELECTRIC_COUNT ]; // corners/edges used by something
 
         Qt::Orientation layoutOrientation;
         int layoutX;

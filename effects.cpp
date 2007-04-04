@@ -116,6 +116,11 @@ void Effect::tabBoxUpdated()
     {
     }
 
+bool Effect::borderActivated( ElectricBorder )
+    {
+    return false;
+    }
+
 void Effect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     effects->prePaintScreen( mask, region, time );
@@ -417,6 +422,15 @@ QRect EffectsHandler::transformWindowDamage( EffectWindow* w, const QRect& r )
         }
     else
         return r;
+    }
+
+bool EffectsHandler::borderActivated( ElectricBorder border )
+    {
+    bool ret = false;
+    foreach( EffectPair ep, loaded_effects )
+        if( ep.second->borderActivated( border ))
+            ret = true; // bail out or tell all?
+    return ret;
     }
 
 Window EffectsHandler::createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor )

@@ -10,6 +10,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "glutils.h"
 
+#include <kdebug.h>
 #include <QPixmap>
 #include <QImage>
 #include <QHash>

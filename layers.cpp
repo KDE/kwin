@@ -133,7 +133,8 @@ void Workspace::propagateClients( bool propagate_new_clients )
                                 // when passig pointers around.
 
     // restack the windows according to the stacking order
-    Window* new_stack = new Window[ stacking_order.count() + 2 ];
+    // 1 - supportWindow, 1 - topmenu_space, 8 - electric borders
+    Window* new_stack = new Window[ stacking_order.count() + 1 + 1 + 8 ];
     int pos = 0;
     // Stack all windows under the support window. The support window is
     // not used for anything (besides the NETWM property), and it's not shown,
@@ -157,9 +158,14 @@ void Workspace::propagateClients( bool propagate_new_clients )
         new_stack[ topmenu_space_pos ] = topmenu_space->winId();
         ++pos;
         }
-    // TODO isn't it too inefficient to restart always all clients?
+    for( int i = 0;
+         i < ELECTRIC_COUNT;
+         ++i )
+        if( electric_windows[ i ] != None )
+            new_stack[ pos++ ] = electric_windows[ i ];
+    // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
-    assert( new_stack[ 0 ] = supportWindow->winId());
+    assert( new_stack[ 0 ] == supportWindow->winId());
     XRestackWindows(display(), new_stack, pos);
     delete [] new_stack;
 

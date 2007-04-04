@@ -405,7 +405,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 if ( w )
                     QWhatsThis::leaveWhatsThisMode();
                 }
-            if( electricBorder(e))
+            if( electricBorderEvent(e))
                 return true;
             break;
             }
@@ -470,7 +470,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         case FocusOut:
             return true; // always eat these, they would tell Qt that KWin is the active app
         case ClientMessage:
-            if( electricBorder( e ))
+            if( electricBorderEvent( e ))
                 return true;
             break;
         case MappingNotify:

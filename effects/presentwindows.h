@@ -28,7 +28,7 @@ class PresentWindowsEffect
     Q_OBJECT
     public:
         PresentWindowsEffect();
-
+        virtual ~PresentWindowsEffect();
 
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
@@ -38,6 +38,7 @@ class PresentWindowsEffect
         virtual void windowClosed( EffectWindow* c );
         virtual void windowActivated( EffectWindow* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
+        virtual bool borderActivated( ElectricBorder border );
 
     public slots:
         void setActive(bool active);
@@ -77,6 +78,9 @@ class PresentWindowsEffect
             float hover;
             };
         QHash<Toplevel*, WindowData> mWindowData;
+
+        ElectricBorder borderActivate;
+        ElectricBorder borderActivateAll;
     };
 
 } // namespace

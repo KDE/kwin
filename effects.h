@@ -62,6 +62,7 @@ class ScreenPaintData
     };
 
 class Effect
+    : public KDecorationDefines
     {
     public:
         virtual ~Effect();
@@ -96,6 +97,7 @@ class Effect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
+        virtual bool borderActivated( ElectricBorder border );
 
         // Interpolates between x and y
         static float interpolate(float x, float y, float a)
@@ -131,6 +133,7 @@ class GenericEffectFactory : public EffectFactory
 
 
 class EffectsHandler
+    : public KDecorationDefines
     {
     friend class Effect;
     public:
@@ -173,6 +176,7 @@ class EffectsHandler
         void tabBoxAdded( int mode );
         void tabBoxClosed();
         void tabBoxUpdated();
+        bool borderActivated( ElectricBorder border );
 
         void registerEffect( const QString& name, EffectFactory* factory );
         void loadEffect( const QString& name );

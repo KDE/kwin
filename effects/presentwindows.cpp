@@ -44,6 +44,18 @@ PresentWindowsEffect::PresentWindowsEffect()
     b->setText( i18n("Toggle Expose effect (incl other desktops)" ));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
+
+    borderActivate = ElectricTopRight;
+    borderActivateAll = ElectricNone;
+
+    Workspace::self()->reserveElectricBorder( borderActivate );
+    Workspace::self()->reserveElectricBorder( borderActivateAll );
+    }
+
+PresentWindowsEffect::~PresentWindowsEffect()
+    {
+    Workspace::self()->unreserveElectricBorder( borderActivate );
+    Workspace::self()->unreserveElectricBorder( borderActivateAll );
     }
 
 
@@ -396,7 +408,20 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clie
         }
     }
 
+bool PresentWindowsEffect::borderActivated( ElectricBorder border )
+    {
+    if( border == borderActivate && !mActivated )
+        {
+        toggleActive();
+        return true;
+        }
+    if( border == borderActivateAll && !mActivated )
+        {
+        toggleActiveAllDesktops();
+        return true;
+        }
+    return false;
+    }
 
 } // namespace
 #include "presentwindows.moc"
-
