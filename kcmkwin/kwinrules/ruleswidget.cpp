@@ -37,7 +37,7 @@
 
 #include "detectwidget.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 #define SETUP( var, type ) \

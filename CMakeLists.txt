@@ -100,7 +100,7 @@ if(HAVE_OPENGL)
    )
 endif(HAVE_OPENGL)
 
-qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWinInternal::Workspace )
+qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
 
 kde4_automoc(kwin ${kwin_KDEINIT_SRCS})
 

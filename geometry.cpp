@@ -32,7 +32,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QX11Info>
 #include <QDesktopWidget>
 
-namespace KWinInternal
+namespace KWin
 {
 
 //********************************************

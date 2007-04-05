@@ -37,7 +37,7 @@ class KStartupInfoData;
 class QSlider;
 class QPushButton;
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Client;
@@ -721,7 +721,7 @@ class StackingUpdatesBlocker
 class RootInfo : public NETRootInfo
     {
     private:
-        typedef KWinInternal::Client Client;  // because of NET::Client
+        typedef KWin::Client Client;  // because of NET::Client
     public:
         RootInfo( Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr[], int pr_num, int scr= -1);
     protected:

@@ -21,7 +21,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <GL/gl.h>
 #endif
 
-namespace KWinInternal
+namespace KWin
 {
 
 BoxSwitchEffect::BoxSwitchEffect()

@@ -25,7 +25,7 @@
 
 #include "ruleswidget.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 KCMRulesList::KCMRulesList( QWidget* parent, const char* name )

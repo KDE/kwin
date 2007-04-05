@@ -74,7 +74,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "rules.h"
 #include <QX11Info>
 
-namespace KWinInternal
+namespace KWin
 {
 
 //*******************************

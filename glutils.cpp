@@ -20,7 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define MAKE_GL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
 
 
-namespace KWinInternal
+namespace KWin
 {
 // Variables
 // GL version, use MAKE_GL_VERSION() macro for comparing with a specific version

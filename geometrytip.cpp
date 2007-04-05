@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "geometrytip.h"
 #include <QX11Info>
 
-namespace KWinInternal
+namespace KWin
 {
 
 GeometryTip::GeometryTip( const XSizeHints* xSizeHints, bool save_under ):

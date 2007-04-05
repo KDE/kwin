@@ -16,7 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "utils.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Application : public  KApplication

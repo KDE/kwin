@@ -22,7 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #endif
 
-namespace KWinInternal
+namespace KWin
 {
 
 Rules::Rules()
@@ -850,8 +850,6 @@ void Client::updateWindowRules()
     {
     if( !isManaged()) // not fully setup yet
         return;
-    if( workspace()->rulesUpdatesDisabled())
-        return;
     client_rules.update( this );
     }
 
@@ -1007,14 +1005,6 @@ void Workspace::rulesUpdated()
     {
     rulesUpdatedTimer.setSingleShot( true );
     rulesUpdatedTimer.start( 1000 );
-    }
-
-void Workspace::disableRulesUpdates( bool disable )
-    {
-    rules_updates_disabled = disable;
-    if( !disable )
-        foreach( Client* c, clients )
-            c->updateWindowRules();
     }
 
 #endif

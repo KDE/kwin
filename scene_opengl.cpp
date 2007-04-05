@@ -70,7 +70,7 @@ Sources and other compositing managers:
 
 #ifdef HAVE_OPENGL
 
-namespace KWinInternal
+namespace KWin
 {
 
 //****************************************

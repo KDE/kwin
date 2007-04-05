@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QWidget>
 #include <QTimer>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Workspace;

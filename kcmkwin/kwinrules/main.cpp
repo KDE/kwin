@@ -30,7 +30,7 @@
 #include "../../rules.h"
 #include <QByteArray>
 
-namespace KWinInternal
+namespace KWin
 {
 
 static void loadRules( QList< Rules* >& rules )
@@ -289,5 +289,5 @@ KDE_EXPORT int kdemain( int argc, char* argv[] )
 	KCmdLineArgs::usage( i18n( "This helper utility is not supposed to be called directly." ));
 	return 1;
         }
-    return KWinInternal::edit( id, whole_app );
+    return KWin::edit( id, whole_app );
     }

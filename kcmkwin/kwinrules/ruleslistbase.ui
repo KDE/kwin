@@ -1,5 +1,5 @@
 <!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>KWinInternal::KCMRulesListBase</class>
+<class>KWin::KCMRulesListBase</class>
 <widget class="QWidget">
     <property name="name">
         <cstring>KCMRulesListBase</cstring>

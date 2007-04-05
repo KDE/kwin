@@ -30,7 +30,7 @@
 #include <QEvent>
 #include <QByteArray>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class DetectWidget

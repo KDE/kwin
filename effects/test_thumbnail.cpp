@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "test_thumbnail.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 TestThumbnailEffect::TestThumbnailEffect()

@@ -27,7 +27,7 @@ License. See the file "COPYING" for the exact licensing terms.
 template< class K, class V > class QHash;
 
 
-namespace KWinInternal
+namespace KWin
 {
 
 

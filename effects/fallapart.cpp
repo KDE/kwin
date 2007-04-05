@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <deleted.h>
 #include <scene_opengl.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 void FallApartEffect::prePaintScreen( int* mask, QRegion* region, int time )

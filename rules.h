@@ -24,7 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 class KConfig;
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Client;

@@ -33,7 +33,7 @@ License. See the file "COPYING" for the exact licensing terms.
  or I'll get it backwards in half of the cases again.
 */
 
-namespace KWinInternal
+namespace KWin
 {
 
 //********************************************

@@ -20,7 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/cursorfont.h>
 #include <QX11Info>
 
-namespace KWinInternal
+namespace KWin
 {
 
 KillWindow::KillWindow( Workspace* ws )
@@ -76,7 +76,7 @@ void KillWindow::start()
                     mx /= 10;
                     my /= 10;
                     }
-                QCursor::setPos(QCursor::pos()+QPoint(mx, my));
+                QCursor::setPos(cursorPos()+QPoint(mx, my));
                 }
 
             if (ev.type == ButtonRelease) 
@@ -87,8 +87,7 @@ void KillWindow::start()
                     escape_pressed = true;
                     break;
                     }
-                if( ev.xbutton.button == Button1 || ev.xbutton.button == Button2 )
-                    workspace->killWindowId(ev.xbutton.subwindow);
+                workspace->killWindowId(ev.xbutton.subwindow);
                 }
             continue;
             }

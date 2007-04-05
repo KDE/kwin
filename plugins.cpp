@@ -16,7 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdlib.h>
 #include <QPixmap>
 
-namespace KWinInternal
+namespace KWin
 {
 
 PluginMgr::PluginMgr()

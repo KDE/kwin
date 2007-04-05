@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_ATOMS_H
 #include <X11/Xlib.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Atoms 

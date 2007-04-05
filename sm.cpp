@@ -11,7 +11,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "sm.h"
 
-//#include <kdebug.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <pwd.h>
@@ -23,8 +22,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include <QSocketNotifier>
 #include <qsessionmanager.h>
+#include <kdebug.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 bool SessionManager::saveState( QSessionManager& sm )
@@ -256,6 +256,28 @@ bool Workspace::sessionInfoWindowTypeMatch( Client* c, SessionInfo* info )
     return info->windowType == c->windowType();
     }
 
+// maybe needed later
+#if 0
+// KMainWindow's without name() given have WM_WINDOW_ROLE in the form
+// of <appname>-mainwindow#<number>
+// when comparing them for fake session info, it's probably better to check
+// them without the trailing number
+bool Workspace::windowRoleMatch( const QByteArray& role1, const QByteArray& role2 )
+    {
+    if( role1.isEmpty() && role2.isEmpty())
+        return true;
+    int pos1 = role1.find( '#' );
+    int pos2 = role2.find( '#' );
+    bool ret;
+    if( pos1 < 0 || pos2 < 0 || pos1 != pos2 )
+        ret = role1 == role2;
+    else
+        ret = qstrncmp( role1, role2, pos1 ) == 0;
+    kDebug() << "WR:" << role1 << ":" << pos1 << ":" << role2 << ":" << pos2 << ":::" << ret << endl;
+    return ret;
+    }
+#endif
+
 static const char* const window_type_names[] = 
     {
     "Unknown", "Normal" , "Desktop", "Dock", "Toolbar", "Menu", "Dialog",
@@ -293,21 +315,11 @@ NET::WindowType Workspace::txtToWindowType( const char* txt )
 // but Qt doesn't have API for saying when session saved finished (either
 // successfully, or was canceled). Therefore, create another connection
 // to session manager, that will provide this information.
-// Similarly the remember feature of window-specific settings should be disabled
-// during KDE shutdown when windows may move e.g. because of Kicker going away
-// (struts changing). When session saving starts, it can be cancelled, in which
-// case the shutdown_cancelled callback is invoked, or it's a checkpoint that
-// is immediatelly followed by save_complete, or finally it's a shutdown that
-// is immediatelly followed by die callback. So getting save_yourself with shutdown
-// set disables window-specific settings remembering, getting shutdown_cancelled
-// re-enables, otherwise KWin will go away after die.
-static void save_yourself( SmcConn conn_P, SmPointer ptr, int, Bool shutdown, int, Bool )
+static void save_yourself( SmcConn conn_P, SmPointer ptr, int, Bool, int, Bool )
     {
     SessionSaveDoneHelper* session = reinterpret_cast< SessionSaveDoneHelper* >( ptr );
     if( conn_P != session->connection())
         return;
-    if( shutdown )
-        Workspace::self()->disableRulesUpdates( true );
     SmcSaveYourselfDone( conn_P, True );
     }
 
@@ -333,7 +345,6 @@ static void shutdown_cancelled( SmcConn conn_P, SmPointer ptr )
     SessionSaveDoneHelper* session = reinterpret_cast< SessionSaveDoneHelper* >( ptr );
     if( conn_P != session->connection())
         return;
-    Workspace::self()->disableRulesUpdates( false ); // re-enable
     // no need to differentiate between successful finish and cancel
     session->saveDone();
     }

@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <qdatetime.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class ShowFpsEffect

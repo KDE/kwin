@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #ifdef HAVE_OPENGL
 
-namespace KWinInternal
+namespace KWin
 {
 
 void glxResolveFunctions();

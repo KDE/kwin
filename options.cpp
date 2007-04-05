@@ -26,7 +26,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #endif
 
-namespace KWinInternal
+namespace KWin
 {
 
 #ifndef KCMRULES

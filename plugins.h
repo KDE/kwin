@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kdecoration_plugins_p.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class PluginMgr

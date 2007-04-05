@@ -22,7 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "rules.h"
 #endif
 
-namespace KWinInternal
+namespace KWin
 {
 
 #ifndef KCMRULES

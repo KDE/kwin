@@ -46,7 +46,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <limits.h>
 #include <QX11Info>
 
-namespace KWinInternal
+namespace KWin
 {
 
 #ifndef HAVE_XDAMAGE

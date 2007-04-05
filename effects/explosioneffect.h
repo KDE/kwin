@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 // Include with base class for effects.
 #include <effects.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class GLShader;

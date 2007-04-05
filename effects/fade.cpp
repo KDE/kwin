@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <client.h>
 #include <deleted.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 FadeEffect::FadeEffect()

@@ -23,7 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <math.h>
 
 
-namespace KWinInternal
+namespace KWin
 {
 
 ExplosionEffect::ExplosionEffect() : Effect()

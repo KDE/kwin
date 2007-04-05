@@ -38,7 +38,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 // specify externals before namespace
 
-namespace KWinInternal
+namespace KWin
 {
 
 extern QPixmap* kwin_get_menu_pix_hack();

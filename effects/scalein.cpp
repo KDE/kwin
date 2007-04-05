@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <client.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 void ScaleInEffect::prePaintScreen( int* mask, QRegion* region, int time )

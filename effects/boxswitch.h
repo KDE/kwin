@@ -21,7 +21,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QRegion>
 #include <QSize>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class BoxSwitchEffect

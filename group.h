@@ -16,7 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/X.h>
 #include <netwm.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Client;
@@ -41,8 +41,6 @@ class Group
         bool groupEvent( XEvent* e );
         void updateUserTime( Time time = CurrentTime );
         Time userTime() const;
-        void ref();
-        void deref();
     private:
         void getIcons();
         void startupIdChanged();
@@ -52,7 +50,6 @@ class Group
         Workspace* _workspace;
         NETWinInfo* leader_info;
         Time user_time;
-        int refcount;
     };
 
 inline Window Group::leader() const

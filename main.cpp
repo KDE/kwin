@@ -14,7 +14,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "main.h"
 
-#include <kglobal.h>
 #include <klocale.h>
 #include <stdlib.h>
 #include <kcmdlineargs.h>
@@ -26,11 +25,13 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 #include <fixx11h.h>
 #include <QtDBus/QtDBus>
+#include <kglobal.h>
 
 #include "atoms.h"
 #include "options.h"
 #include "sm.h"
 #include "utils.h"
+#include "effects.h"
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -38,7 +39,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #undef INT8
 #undef INT32
 
-namespace KWinInternal
+namespace KWin
 {
 
 Options* options;
@@ -120,6 +121,8 @@ Application::Application( )
     options = new Options;
     atoms = new Atoms;
 
+    initting = false; // TODO
+
     // create workspace.
     (void) new Workspace( isSessionRestored() );
 
@@ -127,13 +130,15 @@ Application::Application( )
 
     initting = false; // startup done, we are up and running now.
 
+    QDBusInterface ksplash( "org.kde.ksplash", "/ksplash", "org.kde.KSplash" );   
+    ksplash.call( "upAndRunning", QString( "wm started" ));
     XEvent e;
     e.xclient.type = ClientMessage;
     e.xclient.message_type = XInternAtom( display(), "_KDE_SPLASH_PROGRESS", False );
     e.xclient.display = display();
     e.xclient.window = rootWindow();
     e.xclient.format = 8;
-    strcpy( e.xclient.data.b, "wm" );
+    strcpy( e.xclient.data.b, "wm started" );
     XSendEvent( display(), rootWindow(), False, SubstructureNotifyMask, &e );
     }
 
@@ -143,6 +148,8 @@ Application::~Application()
     if( owner.ownerWindow() != None ) // if there was no --replace (no new WM)
         XSetInputFocus( display(), PointerRoot, RevertToPointerRoot, xTime() );
     delete options;
+    delete effects;
+    delete atoms;
     }
 
 void Application::lostSelection()
@@ -209,7 +216,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
                 }
 
             int number_of_screens = ScreenCount( dpy );
-            KWinInternal::screen_number = DefaultScreen( dpy );
+            KWin::screen_number = DefaultScreen( dpy );
             int pos; // temporarily needed to reconstruct DISPLAY var if multi-head
             QByteArray display_name = XDisplayString( dpy );
             XCloseDisplay( dpy );
@@ -225,9 +232,9 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
                     {
 		    // if execution doesn't pass by here, then kwin
 		    // acts exactly as previously
-                    if ( i != KWinInternal::screen_number && fork() == 0 )
+                    if ( i != KWin::screen_number && fork() == 0 )
                         {
-                        KWinInternal::screen_number = i;
+                        KWin::screen_number = i;
 			// break here because we are the child process, we don't
 			// want to fork() anymore
                         break;
@@ -235,7 +242,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
                     }
 		// in the next statement, display_name shouldn't contain a screen
 		//   number. If it had it, it was removed at the "pos" check
-                envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWinInternal::screen_number);
+                envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWin::screen_number);
 
                 if (putenv( strdup(envir.toAscii())) )
                     {
@@ -259,27 +266,27 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     KCmdLineArgs::init(argc, argv, &aboutData);
     KCmdLineArgs::addCmdLineOptions( args );
 
-    if (signal(SIGTERM, KWinInternal::sighandler) == SIG_IGN)
+    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
         signal(SIGTERM, SIG_IGN);
-    if (signal(SIGINT, KWinInternal::sighandler) == SIG_IGN)
+    if (signal(SIGINT, KWin::sighandler) == SIG_IGN)
         signal(SIGINT, SIG_IGN);
-    if (signal(SIGHUP, KWinInternal::sighandler) == SIG_IGN)
+    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
 #ifdef __GNUC__
 #warning D-BUS TODO
 //    KApplication::disableAutoDcopRegistration();
 #endif
-    KWinInternal::Application a;
-    KWinInternal::SessionManager weAreIndeed;
-    KWinInternal::SessionSaveDoneHelper helper;
+    KWin::Application a;
+    KWin::SessionManager weAreIndeed;
+    KWin::SessionSaveDoneHelper helper;
 
-    fcntl(XConnectionNumber(KWinInternal::display()), F_SETFD, 1);
+    fcntl(XConnectionNumber(KWin::display()), F_SETFD, 1);
 
     QString appname;
-    if (KWinInternal::screen_number == 0)
-        appname = "org.kde.kwin";
+    if (KWin::screen_number == 0)
+        appname = "kwin";
     else
-        appname.sprintf("org.kde.kwin-screen-%d", KWinInternal::screen_number);
+        appname.sprintf("kwin-screen-%d", KWin::screen_number);
 
     QDBusConnection::sessionBus().interface()->registerService( appname, QDBusConnectionInterface::DontQueueService );
 

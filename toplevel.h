@@ -20,7 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 class NETWinInfo;
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Workspace;

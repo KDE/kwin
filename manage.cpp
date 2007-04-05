@@ -26,7 +26,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "rules.h"
 #include "group.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 /*!

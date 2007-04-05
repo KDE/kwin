@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kdecoration_p.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Client;

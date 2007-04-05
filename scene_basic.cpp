@@ -20,7 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "utils.h"
 #include "client.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 SceneBasic::SceneBasic( Workspace* ws )

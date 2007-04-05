@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <qpair.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Toplevel;

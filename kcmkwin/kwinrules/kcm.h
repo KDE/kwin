@@ -27,7 +27,7 @@ class KConfig;
 class KAboutData;
 class QStringList;
 
-namespace KWinInternal
+namespace KWin
 {
 
 class KCMRulesList;

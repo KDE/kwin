@@ -33,7 +33,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 // specify externals before namespace
 
-namespace KWinInternal
+namespace KWin
 {
 
 PopupInfo::PopupInfo( const char *name )

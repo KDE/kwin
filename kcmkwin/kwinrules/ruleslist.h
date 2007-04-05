@@ -20,32 +20,23 @@
 #ifndef __RULESLIST_H__
 #define __RULESLIST_H__
 
-#include "ui_ruleslistbase.h"
+#include "ruleslistbase.h"
 
 
 
 #include "../../rules.h"
 
-class QListWidgetItem;
+class Q3ListBoxItem;
 
-namespace KWinInternal
+namespace KWin
 {
-
-class KCMRulesListBase : public QWidget, public Ui::KCMRulesListBase
-{
-public:
-  KCMRulesListBase( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
-
 
 class KCMRulesList
     : public KCMRulesListBase
     {
     Q_OBJECT
     public:
-        KCMRulesList( QWidget* parent = NULL );
+        KCMRulesList( QWidget* parent = NULL, const char* name = NULL );
         virtual ~KCMRulesList();
         void load();
         void save();
@@ -58,7 +49,7 @@ class KCMRulesList
         void deleteClicked();
         void moveupClicked();
         void movedownClicked();
-        void activeChanged( QListWidgetItem* );
+        void activeChanged( Q3ListBoxItem* );
     private:
         QVector< Rules* > rules;
     };

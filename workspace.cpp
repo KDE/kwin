@@ -58,7 +58,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <ktoolinvocation.h>
 #include <kglobalsettings.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 extern int screen_number;

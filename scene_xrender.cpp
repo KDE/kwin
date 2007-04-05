@@ -36,7 +36,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "deleted.h"
 #include "effects.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 //****************************************

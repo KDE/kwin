@@ -20,7 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "placement.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Client;

@@ -21,7 +21,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/XShm.h>
 #endif
 
-namespace KWinInternal
+namespace KWin
 {
 
 class SceneOpenGL

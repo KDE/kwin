@@ -45,7 +45,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "effects/test_input.h"
 #include "effects/test_thumbnail.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 //****************************************
@@ -189,7 +189,7 @@ EffectsHandler::EffectsHandler()
     {
     if( !compositing())
         return;
-    KWinInternal::effects = this;
+    KWin::effects = this;
 
 #ifdef HAVE_CAPTURY
     registerEffect("VideoRecord", new GenericEffectFactory<VideoRecordEffect>);

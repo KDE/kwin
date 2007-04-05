@@ -30,10 +30,10 @@
 
 #include "ruleslist.h"
 
-typedef KGenericFactory<KWinInternal::KCMRules> KCMRulesFactory;
+typedef KGenericFactory<KWin::KCMRules> KCMRulesFactory;
 K_EXPORT_COMPONENT_FACTORY(kwinrules, KCMRulesFactory("kcmkwinrules"))
 
-namespace KWinInternal
+namespace KWin
 {
 
 KCMRules::KCMRules( QWidget *parent, const QStringList & )

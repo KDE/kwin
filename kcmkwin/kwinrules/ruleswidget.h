@@ -27,7 +27,7 @@
 #include "ruleswidgetbase.h"
 #include "editshortcutbase.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Rules;

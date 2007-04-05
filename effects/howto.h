@@ -23,7 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 // Everything in KWin is in a namespace. There's no need to prefix names
 // with KWin or K, there's no (big) need to care about symbol clashes.
-namespace KWinInternal
+namespace KWin
 {
 
 // The class implementing the effect.

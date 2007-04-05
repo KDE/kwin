@@ -16,7 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <X11/extensions/shape.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 Unmanaged::Unmanaged( Workspace* ws )

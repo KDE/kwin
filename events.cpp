@@ -34,7 +34,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/Xatom.h>
 #include <QX11Info>
 
-namespace KWinInternal
+namespace KWin
 {
 
 // ****************************************

@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "client.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 QString Notify::eventToName( Event e )

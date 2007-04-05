@@ -38,7 +38,7 @@ License. See the file "COPYING" for the exact licensing terms.
 // put all externs before the namespace statement to allow the linker
 // to resolve them properly
 
-namespace KWinInternal
+namespace KWin
 {
 
 /*

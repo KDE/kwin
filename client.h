@@ -34,7 +34,7 @@ class QTimer;
 class K3Process;
 class KStartupInfoData;
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Workspace;
@@ -490,7 +490,7 @@ class GeometryUpdatesBlocker
 class WinInfo : public NETWinInfo
     {
     private:
-        typedef KWinInternal::Client Client; // because of NET::Client
+        typedef KWin::Client Client; // because of NET::Client
     public:
         WinInfo( Client* c, Display * display, Window window,
                 Window rwin, const unsigned long pr[], int pr_size );

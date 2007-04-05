@@ -18,7 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifdef HAVE_XRENDER
 #include <X11/extensions/Xrender.h>
 
-namespace KWinInternal
+namespace KWin
 {
 
 class Matrix;

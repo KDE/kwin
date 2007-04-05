@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "options.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 Bridge::Bridge( Client* cl )
@@ -197,9 +197,9 @@ QRegion Bridge::unobscuredRegion( const QRegion& r ) const
 void Bridge::grabXServer( bool grab )
     {
     if( grab )
-        KWinInternal::grabXServer();
+        KWin::grabXServer();
     else
-        KWinInternal::ungrabXServer();
+        KWin::ungrabXServer();
     }
 
 } // namespace

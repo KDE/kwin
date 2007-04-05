@@ -41,7 +41,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "killwindow.h"
 #include "tabbox.h"
 
-namespace KWinInternal
+namespace KWin
 {
 
 //****************************************

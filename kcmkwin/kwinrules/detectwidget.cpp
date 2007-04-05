@@ -37,7 +37,7 @@
 #include <fixx11h.h>
 #include <QX11Info>
 
-namespace KWinInternal
+namespace KWin
 {
 
 DetectWidget::DetectWidget( QWidget* parent, const char* name )
