@@ -64,8 +64,11 @@ void KCMRules::save()
     emit KCModule::changed( false );
     // Send signal to kwin
     config.sync();
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
     }
 
 void KCMRules::defaults()

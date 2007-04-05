@@ -38,25 +38,17 @@ bool Client::manage( Window w, bool isMapped )
     {
     StackingUpdatesBlocker stacking_blocker( workspace());
 
-    grabXServer();
-
     XWindowAttributes attr;
     if( !XGetWindowAttributes(display(), w, &attr))
-        {
-        ungrabXServer();
         return false;
-        }
+
+    grabXServer();
 
     // from this place on, manage() mustn't return false
-    block_geometry_updates = 1;
+    postpone_geometry_updates = 1;
     pending_geometry_update = true; // force update when finishing with geometry changes
 
     embedClient( w, attr );
-    
-    vis = attr.visual;
-    bit_depth = attr.depth;
-
-    setupCompositing();
 
     // SELI order all these things in some sane manner
 
@@ -85,15 +77,25 @@ bool Client::manage( Window w, bool isMapped )
         NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2ExtendedStrut |
-        NET::WM2Opacity |
         0;
 
     info = new WinInfo( this, display(), client, rootWindow(), properties, 2 );
 
     cmap = attr.colormap;
 
-    getResourceClass();
-    getWindowRole();
+    XClassHint classHint;
+    if ( XGetClassHint( display(), client, &classHint ) ) 
+        {
+        // Qt3.2 and older had this all lowercase, Qt3.3 capitalized resource class
+        // force lowercase, so that workarounds listing resource classes still work
+        resource_name = QByteArray( classHint.res_name ).toLower();
+        resource_class = QByteArray( classHint.res_class ).toLower();
+        XFree( classHint.res_name );
+        XFree( classHint.res_class );
+        }
+    ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
+
+    window_role = staticWindowRole( w );
     getWmClientLeader();
     getWmClientMachine();
     // first only read the caption text, so that setupWindowRules() can use it for matching,
@@ -101,12 +103,8 @@ bool Client::manage( Window w, bool isMapped )
     // and also relies on rules already existing
     cap_normal = readName();
     setupWindowRules( false );
-    ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
     setCaption( cap_normal, true );
 
-    if( Extensions::shapeAvailable())
-        XShapeSelectInput( display(), window(), ShapeNotifyMask );
-    detectShape( window());
     detectNoBorder();
     fetchIconicName();
     getWMHints(); // needs to be done before readTransient() because of reading the group
@@ -202,7 +200,7 @@ bool Client::manage( Window w, bool isMapped )
     if( isMapped || session )
         area = workspace()->clientArea( FullArea, geom.center(), desktop());
     else if( options->xineramaPlacementEnabled )
-        area = workspace()->clientArea( PlacementArea, cursorPos(), desktop());
+        area = workspace()->clientArea( PlacementArea, QCursor::pos(), desktop());
     else
         area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
 
@@ -315,8 +313,9 @@ bool Client::manage( Window w, bool isMapped )
     if(( !isSpecialWindow() || isToolbar()) && isMovable())
         keepInArea( area, partial_keep_in_area );
 
-    if( shape()) 
-        updateShape();
+    XShapeSelectInput( display(), window(), ShapeNotifyMask );
+    is_shape = Shape::hasShape( window());
+    updateShape();
 	
     //CT extra check for stupid jdk 1.3.1. But should make sense in general
     // if client has initial state set to Iconic and is transient with a parent
@@ -511,7 +510,7 @@ bool Client::manage( Window w, bool isMapped )
 //    sendSyntheticConfigureNotify(); done when setting mapping state
 
     delete session;
-    
+
     ungrabXServer();
     
     client_rules.discardTemporary();
@@ -529,7 +528,7 @@ bool Client::manage( Window w, bool isMapped )
 void Client::embedClient( Window w, const XWindowAttributes &attr )
     {
     assert( client == None );
-    assert( frameId() == None );
+    assert( frame == None );
     assert( wrapper == None );
     client = w;
     // we don't want the window to be destroyed when we are destroyed
@@ -545,10 +544,9 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
     swa.background_pixmap = None;
     swa.border_pixel = 0;
 
-    Window frame = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
+    frame = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
-    setWindowHandles( client, frame );
     wrapper = XCreateWindow( display(), frame, 0, 0, 1, 1, 0,
 		    attr.depth, InputOutput, attr.visual,
 		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
@@ -567,8 +565,7 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
             FocusChangeMask |
             ExposureMask |
             PropertyChangeMask |
-            StructureNotifyMask | SubstructureRedirectMask |
-            VisibilityChangeMask );
+            StructureNotifyMask | SubstructureRedirectMask );
     XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
     XSelectInput( display(), client,
                   FocusChangeMask |

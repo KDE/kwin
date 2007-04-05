@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_TABBOX_H
 #define KWIN_TABBOX_H
 
-#include <QFrame>
+#include <Q3Frame>
 #include <QTimer>
 #include "utils.h"
 
@@ -24,72 +24,57 @@ namespace KWin
 class Workspace;
 class Client;
 
-class TabBox : public QFrame
+class TabBox : public Q3Frame
     {
     Q_OBJECT
     public:
-        TabBox( Workspace *ws );
+        TabBox( Workspace *ws, const char *name=0 );
         ~TabBox();
 
         Client* currentClient();
-        ClientList currentClientList();
+        void setCurrentClient( Client* c );
         int currentDesktop();
-        QList< int > currentDesktopList();
-
-        void setCurrentClient( Client* newClient );
-        void setCurrentDesktop( int newDesktop );
 
     // DesktopMode and WindowsMode are based on the order in which the desktop
     //  or window were viewed.
     // DesktopListMode lists them in the order created.
         enum Mode { DesktopMode, DesktopListMode, WindowsMode };
-        enum SortOrder { StaticOrder, MostRecentlyUsedOrder };
         void setMode( Mode mode );
         Mode mode() const;
 
-        void reset( bool partial_reset = false );
+        void reset();
         void nextPrev( bool next = true);
 
         void delayedShow();
         void hide();
-
-        void refDisplay();
-        void unrefDisplay();
-        bool isDisplayed() const;
 
         void handleMouseEvent( XEvent* );
 
         Workspace* workspace() const;
 
         void reconfigure();
-        void updateKeyMapping();
-
-    public slots:
-        void show();
 
     protected:
         void showEvent( QShowEvent* );
         void hideEvent( QHideEvent* );
-        void paintEvent( QPaintEvent* );
+        void drawContents( QPainter * );
 
     private:
         void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
-        void createDesktopList(QList< int > &list, int start, SortOrder order);
+        void updateOutline();
 
     private:
-        Workspace* wspace;
+        Client* current_client;
         Mode m;
+        Workspace* wspace;
         ClientList clients;
-        Client* client;
-        QList< int > desktops;
         int desk;
-
-        QTimer delayedShowTimer;
-        int display_refcount;
-        QString no_tasks;
         int lineHeight;
         bool showMiniIcon;
+        QTimer delayedShowTimer;
+        QString no_tasks;
         bool options_traverse_all;
+        Window outline_left, outline_right, outline_top, outline_bottom;
     };
 
 
@@ -109,27 +94,6 @@ inline Workspace* TabBox::workspace() const
 inline TabBox::Mode TabBox::mode() const
     {
     return m;
-    }
-
-/*!
-  Increase the reference count, preventing the default tabbox from showing.
-
-  \sa unrefDisplay(), isDisplayed()
- */
-inline void TabBox::refDisplay()
-    {
-    ++display_refcount;
-    }
-
-/*!
-  Returns whether the tab box is being displayed, either natively or by an
-  effect.
-
-  \sa refDisplay(), unrefDisplay()
- */
-inline bool TabBox::isDisplayed() const
-    {
-    return display_refcount > 0;
     }
 
 } // namespace

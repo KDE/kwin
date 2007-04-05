@@ -76,7 +76,7 @@ void KillWindow::start()
                     mx /= 10;
                     my /= 10;
                     }
-                QCursor::setPos(cursorPos()+QPoint(mx, my));
+                QCursor::setPos(QCursor::pos()+QPoint(mx, my));
                 }
 
             if (ev.type == ButtonRelease) 
@@ -87,7 +87,8 @@ void KillWindow::start()
                     escape_pressed = true;
                     break;
                     }
-                workspace->killWindowId(ev.xbutton.subwindow);
+                if( ev.xbutton.button == Button1 || ev.xbutton.button == Button2 )
+                    workspace->killWindowId(ev.xbutton.subwindow);
                 }
             continue;
             }

@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "main.h"
 
+#include <kglobal.h>
 #include <klocale.h>
 #include <stdlib.h>
 #include <kcmdlineargs.h>
@@ -25,13 +26,11 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 #include <fixx11h.h>
 #include <QtDBus/QtDBus>
-#include <kglobal.h>
 
 #include "atoms.h"
 #include "options.h"
 #include "sm.h"
 #include "utils.h"
-#include "effects.h"
 
 #define INT8 _X11INT8
 #define INT32 _X11INT32
@@ -121,8 +120,6 @@ Application::Application( )
     options = new Options;
     atoms = new Atoms;
 
-    initting = false; // TODO
-
     // create workspace.
     (void) new Workspace( isSessionRestored() );
 
@@ -130,15 +127,13 @@ Application::Application( )
 
     initting = false; // startup done, we are up and running now.
 
-    QDBusInterface ksplash( "org.kde.ksplash", "/ksplash", "org.kde.KSplash" );   
-    ksplash.call( "upAndRunning", QString( "wm started" ));
     XEvent e;
     e.xclient.type = ClientMessage;
     e.xclient.message_type = XInternAtom( display(), "_KDE_SPLASH_PROGRESS", False );
     e.xclient.display = display();
     e.xclient.window = rootWindow();
     e.xclient.format = 8;
-    strcpy( e.xclient.data.b, "wm started" );
+    strcpy( e.xclient.data.b, "wm" );
     XSendEvent( display(), rootWindow(), False, SubstructureNotifyMask, &e );
     }
 
@@ -148,8 +143,6 @@ Application::~Application()
     if( owner.ownerWindow() != None ) // if there was no --replace (no new WM)
         XSetInputFocus( display(), PointerRoot, RevertToPointerRoot, xTime() );
     delete options;
-    delete effects;
-    delete atoms;
     }
 
 void Application::lostSelection()
@@ -284,9 +277,9 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
 
     QString appname;
     if (KWin::screen_number == 0)
-        appname = "kwin";
+        appname = "org.kde.kwin";
     else
-        appname.sprintf("kwin-screen-%d", KWin::screen_number);
+        appname.sprintf("org.kde.kwin-screen-%d", KWin::screen_number);
 
     QDBusConnection::sessionBus().interface()->registerService( appname, QDBusConnectionInterface::DontQueueService );
 

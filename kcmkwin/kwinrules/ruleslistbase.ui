@@ -1,95 +1,91 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>KWin::KCMRulesListBase</class>
-<widget class="QWidget">
-    <property name="name">
-        <cstring>KCMRulesListBase</cstring>
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>KWin::KCMRulesListBase</class>
+  <widget class="QWidget" name="KWin::KCMRulesListBase" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>600</width>
+        <height>480</height>
+      </rect>
     </property>
-    <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>600</width>
-            <height>480</height>
-        </rect>
-    </property>
-    <grid>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <property name="margin">
-            <number>0</number>
-        </property>
-        <widget class="K3ListBox" row="0" column="0" rowspan="6" colspan="1">
-            <property name="name">
-                <cstring>rules_listbox</cstring>
-            </property>
+    <layout class="QGridLayout" >
+      <property name="margin" >
+        <number>0</number>
+      </property>
+      <item rowspan="6" row="0" column="0" colspan="1" >
+        <widget class="KListWidget" name="rules_listbox" />
+      </item>
+      <item row="0" column="1" >
+        <widget class="KPushButton" name="new_button" >
+          <property name="text" >
+            <string>&amp;New...</string>
+          </property>
         </widget>
-        <widget class="KPushButton" row="0" column="1">
-            <property name="name">
-                <cstring>new_button</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;New...</string>
-            </property>
+      </item>
+      <item row="1" column="1" >
+        <widget class="KPushButton" name="modify_button" >
+          <property name="text" >
+            <string>&amp;Modify...</string>
+          </property>
         </widget>
-        <widget class="KPushButton" row="1" column="1">
-            <property name="name">
-                <cstring>modify_button</cstring>
-            </property>
-            <property name="text">
-                <string>&amp;Modify...</string>
-            </property>
+      </item>
+      <item row="2" column="1" >
+        <widget class="KPushButton" name="delete_button" >
+          <property name="text" >
+            <string>Delete</string>
+          </property>
+          <property name="shortcut" >
+            <string/>
+          </property>
         </widget>
-        <widget class="KPushButton" row="2" column="1">
-            <property name="name">
-                <cstring>delete_button</cstring>
-            </property>
-            <property name="text">
-                <string>Delete</string>
-            </property>
-            <property name="accel">
-                <string></string>
-            </property>
+      </item>
+      <item row="3" column="1" >
+        <widget class="KPushButton" name="moveup_button" >
+          <property name="text" >
+            <string>Move &amp;Up</string>
+          </property>
         </widget>
-        <widget class="KPushButton" row="3" column="1">
-            <property name="name">
-                <cstring>moveup_button</cstring>
-            </property>
-            <property name="text">
-                <string>Move &amp;Up</string>
-            </property>
+      </item>
+      <item row="4" column="1" >
+        <widget class="KPushButton" name="movedown_button" >
+          <property name="text" >
+            <string>Move &amp;Down</string>
+          </property>
         </widget>
-        <widget class="KPushButton" row="4" column="1">
-            <property name="name">
-                <cstring>movedown_button</cstring>
-            </property>
-            <property name="text">
-                <string>Move &amp;Down</string>
-            </property>
-        </widget>
-        <spacer row="5" column="1">
-            <property name="name">
-                <cstring>spacer1</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Vertical</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Expanding</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>20</width>
-                    <height>294</height>
-                </size>
-            </property>
+      </item>
+      <item row="5" column="1" >
+        <spacer name="spacer1" >
+          <property name="sizeHint" >
+            <size>
+              <width>20</width>
+              <height>294</height>
+            </size>
+          </property>
+          <property name="sizeType" >
+            <enum>Expanding</enum>
+          </property>
+          <property name="orientation" >
+            <enum>Vertical</enum>
+          </property>
         </spacer>
-    </grid>
-</widget>
-<layoutdefaults spacing="6" margin="11"/>
-<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
-<includes>
-    <include location="local" impldecl="in declaration">kdialog.h</include>
-</includes>
-
-</UI>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <layoutfunction spacing="KDialog::spacingHint" margin="KDialog::marginHint" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <customwidgets>
+    <customwidget>
+      <class>KListWidget</class>
+      <extends>QListWidget</extends>
+      <header>klistwidget.h</header>
+    </customwidget>
+  </customwidgets>
+  <includes>
+    <include location="local" >kdialog.h</include>
+  </includes>
+</ui>

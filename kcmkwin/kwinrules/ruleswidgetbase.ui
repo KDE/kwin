@@ -329,7 +329,7 @@
                             <cstring>types</cstring>
                         </property>
                     </widget>
-                    <widget class="K3ListBox" row="1" column="0" rowspan="1" colspan="4">
+                    <widget class="KListWidget" row="1" column="0" rowspan="1" colspan="4">
                         <item>
                             <property name="text">
                                 <string>Normal Window</string>
@@ -384,7 +384,7 @@
                             <cstring>types</cstring>
                         </property>
                         <property name="selectionMode">
-                            <enum>Multi</enum>
+                            <enum>MultiSelection</enum>
                         </property>
                     </widget>
                     <widget class="QLabel" row="2" column="0" rowspan="1" colspan="4">
@@ -2541,4 +2541,9 @@
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>kpushbutton.h</includehint>
+    <includehint>kcombobox.h</includehint>
+    <includehint>krestrictedline.h</includehint>
+</includehints>
 </UI>
