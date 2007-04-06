@@ -43,6 +43,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "group.h"
 #include "rules.h"
 #include "kwinadaptor.h"
+#include "unmanaged.h"
+#include "scene.h"
+#include "deleted.h"
+#include "effects.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -76,7 +80,6 @@ Workspace::Workspace( bool restore )
     active_popup_client( NULL ),
     desktop_widget    (0),
     temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false ),
-    rules_updates_disabled( false ),
     active_client     (0),
     last_active_client     (0),
     most_recently_raised (0),
@@ -95,6 +98,7 @@ Workspace::Workspace( bool restore )
     popupinfo         (0),
     popup             (0),
     advanced_popup    (0),
+    trans_popup       (0),
     desk_popup        (0),
     desk_popup_index  (0),
     keys              (0),
@@ -106,12 +110,7 @@ Workspace::Workspace( bool restore )
     global_shortcuts_disabled_for_client( false ),
     root              (0),
     workspaceInit     (true),
-    startup(0), electric_have_borders(false),
-    electric_current_border(0),
-    electric_top_border(None),
-    electric_bottom_border(None),
-    electric_left_border(None),
-    electric_right_border(None),
+    startup(0),
     layoutOrientation(Qt::Vertical),
     layoutX(-1),
     layoutY(2),
@@ -124,18 +123,30 @@ Workspace::Workspace( bool restore )
     topmenu_space( NULL ),
     set_active_client_recursion( 0 ),
     block_stacking_updates( 0 ),
-    forced_global_mouse_grab( false )
+    forced_global_mouse_grab( false ),
+    cm_selection( NULL ),
+    compositeRate( 0 ),
+    overlay( None ),
+    transSlider( NULL ),
+    transButton( NULL )
     {
     (void) new KWinAdaptor( this );
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject("/KWin", this);
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
+    QDBusConnection::sessionBus().registerObject("/KWin", this);
+
     _self = this;
     mgr = new PluginMgr;
     root = rootWindow();
 	QX11Info info;
     default_colormap = DefaultColormap(display(), info.screen() );
     installed_colormap = default_colormap;
+
+    for( int i = 0;
+         i < ELECTRIC_COUNT;
+         ++i )
+        {
+        electric_reserved[ i ] = 0;
+        electric_windows[ i ] = None;
+        }
 
     connect( &temporaryRulesMessages, SIGNAL( gotMessage( const QString& )),
         this, SLOT( gotTemporaryRulesMessage( const QString& )));
@@ -144,9 +155,6 @@ Workspace::Workspace( bool restore )
     updateXTime(); // needed for proper initialization of user_time in Client ctor
 
     delayFocusTimer = 0;
-
-    electric_time_first = xTime();
-    electric_time_last = xTime();
 
     if ( restore )
       loadSessionInfo();
@@ -170,10 +178,12 @@ Workspace::Workspace( bool restore )
                  ColormapChangeMask |
                  SubstructureRedirectMask |
                  SubstructureNotifyMask |
-                 FocusChangeMask // for NotifyDetailNone
+                 FocusChangeMask | // for NotifyDetailNone
+                 ExposureMask
                  );
 
-    Shape::init();
+    Extensions::init();
+    setupCompositing();
 
     // compatibility
     long data = 1;
@@ -201,7 +211,9 @@ Workspace::Workspace( bool restore )
 
 void Workspace::init()
     {
-    checkElectricBorders();
+    if( options->electricBorders() == Options::ElectricAlways )
+        reserveElectricBorderSwitching( true  );
+    updateElectricBorders();
 
 // not used yet
 //     topDock = 0L;
@@ -279,7 +291,6 @@ void Workspace::init()
         NET::WM2ExtendedStrut |
         NET::WM2KDETemporaryRules |
         NET::WM2ShowingDesktop |
-        NET::WM2DesktopLayout |
         0
         ,
         NET::ActionMove |
@@ -323,6 +334,7 @@ void Workspace::init()
     connect(&reconfigureTimer, SIGNAL(timeout()), this,
             SLOT(slotReconfigure()));
     connect( &updateToolWindowsTimer, SIGNAL( timeout()), this, SLOT( slotUpdateToolWindows()));
+    connect( &compositeTimer, SIGNAL( timeout()), SLOT( performCompositing()));
 
     connect(KGlobalSettings::self(), SIGNAL(appearanceChanged()), this,
             SLOT(slotReconfigure()));
@@ -360,7 +372,10 @@ void Workspace::init()
             XWindowAttributes attr;
             XGetWindowAttributes(display(), wins[i], &attr);
             if (attr.override_redirect )
+                {
+                createUnmanaged( wins[ i ] );
                 continue;
+                }
             if( topmenu_space && topmenu_space->winId() == wins[ i ] )
                 continue;
             if (attr.map_state != IsUnmapped)
@@ -382,7 +397,6 @@ void Workspace::init()
         updateStackingOrder( true );
 
         updateClientArea();
-        raiseElectricBorders();
 
     // NETWM spec says we have to set it to (0,0) if we don't support it
         NETPoint* viewports = new NETPoint[ number_of_desktops ];
@@ -422,6 +436,7 @@ void Workspace::init()
 
 Workspace::~Workspace()
     {
+    finishCompositing();
     blockStackingUpdates( true );
 // TODO    grabXServer();
     // use stacking_order, so that kwin --replace keeps stacking order
@@ -431,12 +446,12 @@ Workspace::~Workspace()
         {
 	// only release the window
         (*it)->releaseWindow( true );
-        // No removeClient() is called, it does more than just removing.
-        // However, remove from some lists to e.g. prevent performTransiencyCheck()
-        // from crashing.
-        clients.remove( *it );
-        desktops.remove( *it );
+        // no removeClient() is called !
         }
+    for( UnmanagedList::ConstIterator it = unmanaged.begin();
+         it != unmanaged.end();
+         ++it )
+        (*it)->release();
     delete desktop_widget;
     delete tab_box;
     delete popupinfo;
@@ -480,6 +495,28 @@ Client* Workspace::createClient( Window w, bool is_mapped )
         return NULL;
         }
     addClient( c, Allowed );
+    if( scene )
+        scene->windowAdded( c );
+    if( effects )
+        effects->windowAdded( c->effectWindow());
+    return c;
+    }
+
+Unmanaged* Workspace::createUnmanaged( Window w )
+    {
+    if( w == overlay )
+        return NULL;
+    Unmanaged* c = new Unmanaged( this );
+    if( !c->track( w ))
+        {
+        Unmanaged::deleteUnmanaged( c, Allowed );
+        return NULL;
+        }
+    addUnmanaged( c, Allowed );
+    if( scene )
+        scene->windowAdded( c );
+    if( effects )
+        effects->windowAdded( c->effectWindow());
     return c;
     }
 
@@ -520,7 +557,13 @@ void Workspace::addClient( Client* c, allowed_t )
     updateStackingOrder( true ); // propagate new client
     if( c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows( true );
-    checkNonExistentClients();
+    if( tab_grab )
+        tab_box->reset( true );
+    }
+
+void Workspace::addUnmanaged( Unmanaged* c, allowed_t )
+    {
+    unmanaged.append( c );
     }
 
 /*
@@ -540,6 +583,12 @@ void Workspace::removeClient( Client* c, allowed_t )
         Notify::raise( Notify::TransDelete );
     if( c->isNormalWindow())
         Notify::raise( Notify::Delete );
+
+    if( tab_grab )
+        {
+        if( tab_box->currentClient() == c )
+            tab_box->nextPrev( true );
+        }
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
     clients.removeAll( c );
@@ -571,10 +620,32 @@ void Workspace::removeClient( Client* c, allowed_t )
 
     updateStackingOrder( true );
 
-    if (tab_grab)
-       tab_box->repaint();
+    if( tab_grab )
+        tab_box->reset( true );
 
     updateClientArea();
+    }
+
+void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
+    {
+    assert( unmanaged.contains( c ));
+    unmanaged.removeAll( c );
+    }
+
+void Workspace::addDeleted( Deleted* c, allowed_t )
+    {
+    assert( !deleted.contains( c ));
+    deleted.append( c );
+    }
+
+void Workspace::removeDeleted( Deleted* c, allowed_t )
+    {
+    assert( deleted.contains( c ));
+    if( scene )
+        scene->windowDeleted( c );
+    if( effects )
+        effects->windowDeleted( c->effectWindow());
+    deleted.removeAll( c );
     }
 
 void Workspace::updateFocusChains( Client* c, FocusChainChange change )
@@ -602,13 +673,7 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                     focus_chain[ i ].prepend( c );
                 }
             else if( !focus_chain[ i ].contains( c ))
-                { // add it after the active one
-                if( active_client != NULL && active_client != c
-                    && !focus_chain[ i ].isEmpty() && focus_chain[ i ].last() == active_client )
-                    focus_chain[ i ].insert( focus_chain[ i ].size() - 1, c );
-                else
-                    focus_chain[ i ].append( c ); // otherwise add as the first one
-                }
+                focus_chain[ i ].prepend( c ); // otherwise add as the last one
             }
         }
     else    //now only on desktop, remove it anywhere else
@@ -628,13 +693,7 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                     focus_chain[ i ].prepend( c );
                     }
                 else if( !focus_chain[ i ].contains( c ))
-                    { // add it after the active one
-                    if( active_client != NULL && active_client != c
-                        && !focus_chain[ i ].isEmpty() && focus_chain[ i ].last() == active_client )
-                        focus_chain[ i ].insert( focus_chain[ i ].size() - 1, c );
-                    else
-                        focus_chain[ i ].append( c ); // otherwise add as the first one
-                    }
+                    focus_chain[ i ].prepend( c );
                 }
             else
                 focus_chain[ i ].removeAll( c );
@@ -651,13 +710,7 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
         global_focus_chain.prepend( c );
         }
     else if( !global_focus_chain.contains( c ))
-        { // add it after the active one
-        if( active_client != NULL && active_client != c
-            && !global_focus_chain.isEmpty() && global_focus_chain.last() == active_client )
-            global_focus_chain.insert( global_focus_chain.size() - 1, c );
-        else
-            global_focus_chain.append( c ); // otherwise add as the first one
-        }
+        global_focus_chain.prepend( c );
     }
 
 void Workspace::updateCurrentTopMenu()
@@ -875,11 +928,6 @@ void Workspace::updateColormap()
         }
     }
 
-void Workspace::slotReloadConfig()
-{
-  reconfigure();
-}
-
 void Workspace::reconfigure()
     {
     reconfigureTimer.start( 200 );
@@ -896,12 +944,15 @@ void Workspace::slotSettingsChanged(int category)
 /*!
   Reread settings
  */
-KWIN_PROCEDURE( CheckBorderSizesProcedure, cl->checkBorderSizes() );
+KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes() );
 
 void Workspace::slotReconfigure()
     {
     kDebug(1212) << "Workspace::slotReconfigure()" << endl;
     reconfigureTimer.stop();
+
+    if( options->electricBorders() == Options::ElectricAlways )
+        reserveElectricBorderSwitching( false );
 
     KGlobal::config()->reparseConfiguration();
     unsigned long changed = options->updateSettings();
@@ -933,7 +984,9 @@ void Workspace::slotReconfigure()
         forEachClient( CheckBorderSizesProcedure());
         }
 
-    checkElectricBorders();
+    if( options->electricBorders() == Options::ElectricAlways )
+        reserveElectricBorderSwitching( true );
+    updateElectricBorders();
 
     if( options->topMenuEnabled() && !managingTopMenus())
         {
@@ -953,6 +1006,11 @@ void Workspace::slotReconfigure()
         updateTopMenuGeometry();
         updateCurrentTopMenu();
         }
+        
+    if( options->useTranslucency )
+        setupCompositing();
+    else
+        finishCompositing();
 
     loadWindowRules();
     for( ClientList::Iterator it = clients.begin();
@@ -1235,16 +1293,15 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     // and active_client is on_all_desktops and under mouse (hence == old_active_client),
     // conserve focus (thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
     else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop())
-      c = active_client;
-
-    if( c == NULL && !desktops.isEmpty())
-        c = findDesktop( true, currentDesktop());
+      c= active_client;
 
     if( c != active_client )
         setActiveClient( NULL, Allowed );
 
     if ( c )
         requestFocus( c );
+    else if( !desktops.isEmpty() )
+        requestFocus( findDesktop( true, currentDesktop()));
     else
         focusToNull();
 
@@ -1266,6 +1323,10 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
     if( old_desktop != 0 )  // not for the very first time
         popupinfo->showInfo( desktopName(currentDesktop()) );
+
+    if( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
+        effects->desktopChanged( old_desktop );
+
     return true;
     }
 
@@ -1286,9 +1347,10 @@ void Workspace::previousDesktop()
 int Workspace::desktopToRight( int desktop ) const
     {
     int x,y;
-    calcDesktopLayout(x,y);
+    Qt::Orientation orientation;
+    calcDesktopLayout( &x, &y, &orientation );
     int dt = desktop-1;
-    if (layoutOrientation == Qt::Vertical)
+    if (orientation == Qt::Vertical)
         {
         dt += y;
         if ( dt >= numberOfDesktops() )
@@ -1317,9 +1379,10 @@ int Workspace::desktopToRight( int desktop ) const
 int Workspace::desktopToLeft( int desktop ) const
     {
     int x,y;
-    calcDesktopLayout(x,y);
+    Qt::Orientation orientation;
+    calcDesktopLayout( &x, &y, &orientation );
     int dt = desktop-1;
-    if (layoutOrientation == Qt::Vertical)
+    if (orientation == Qt::Vertical)
         {
         dt -= y;
         if ( dt < 0 )
@@ -1348,9 +1411,10 @@ int Workspace::desktopToLeft( int desktop ) const
 int Workspace::desktopUp( int desktop ) const
     {
     int x,y;
-    calcDesktopLayout(x,y);
+    Qt::Orientation orientation;
+    calcDesktopLayout( &x, &y, &orientation);
     int dt = desktop-1;
-    if (layoutOrientation == Qt::Horizontal)
+    if (orientation == Qt::Horizontal)
         {
         dt -= x;
         if ( dt < 0 )
@@ -1379,9 +1443,10 @@ int Workspace::desktopUp( int desktop ) const
 int Workspace::desktopDown( int desktop ) const
     {
     int x,y;
-    calcDesktopLayout(x,y);
+    Qt::Orientation orientation;
+    calcDesktopLayout( &x, &y, &orientation);
     int dt = desktop-1;
-    if (layoutOrientation == Qt::Horizontal)
+    if (orientation == Qt::Horizontal)
         {
         dt += x;
         if ( dt >= numberOfDesktops() )
@@ -1498,27 +1563,29 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     updateClientArea();
     }
 
-void Workspace::setDesktopLayout(NET::Orientation o, int x, int y,NET::DesktopLayoutCorner c)
+void Workspace::setDesktopLayout(int o, int x, int y)
     {
-    Q_UNUSED( c ); // I don't find this worth bothering, feel free to
-    layoutOrientation = ( o == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical );
+    layoutOrientation = (Qt::Orientation) o;
     layoutX = x;
     layoutY = y;
     }
 
-void Workspace::calcDesktopLayout(int &x, int &y) const
+void Workspace::calcDesktopLayout(int* xp, int* yp, Qt::Orientation* orientation) const
     {
-    x = layoutX; // <= 0 means compute it from the other and total number of desktops
-    y = layoutY;
-    if((x <= 0) && (y > 0))
+    int x = layoutX;
+    int y = layoutY;
+    if ((x == -1) && (y > 0))
        x = (numberOfDesktops()+y-1) / y;
-    else if((y <=0) && (x > 0))
+    else if ((y == -1) && (x > 0))
        y = (numberOfDesktops()+x-1) / x;
 
-    if(x <=0)
+    if (x == -1)
        x = 1;
-    if (y <= 0)
+    if (y == -1)
        y = 1;
+    *xp = x;
+    *yp = y;
+    *orientation = layoutOrientation;
     }
 
 /*!
@@ -1649,7 +1716,7 @@ void Workspace::slotGrabWindow()
         QPixmap snapshot = QPixmap::grabWindow( active_client->frameId() );
 
 	//No XShape - no work.
-        if( Shape::available())
+        if( Extensions::shapeAvailable())
             {
 	    //As the first step, get the mask from XShape.
             int count, order;
@@ -1850,7 +1917,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
     bool is_alt = km & Mod1Mask;
     bool is_shift = km & ShiftMask;
     int delta = is_control?1:is_alt?32:8;
-    QPoint pos = QCursor::pos();
+    QPoint pos = cursorPos();
 
     switch ( kc )
         {
@@ -1968,149 +2035,146 @@ void Workspace::cancelDelayFocus()
 // Electric Borders
 //========================================================================//
 // Electric Border Window management. Electric borders allow a user
-// to change the virtual desktop by moving the mouse pointer to the
-// borders. Technically this is done with input only windows. Since
-// electric borders can be switched on and off, we have these two
-// functions to create and destroy them.
-void Workspace::checkElectricBorders( bool force )
+// to change the virtual desktop or activate another features
+// by moving the mouse pointer to the borders or corners.
+// Technically this is done with input only windows.
+void Workspace::updateElectricBorders()
     {
-    if( force )
-        destroyBorderWindows();
-
-    electric_current_border = 0;
-
+    electric_time_first = xTime();
+    electric_time_last = xTime();
+    electric_current_border = ElectricNone;
     QRect r = QApplication::desktop()->geometry();
     electricTop = r.top();
     electricBottom = r.bottom();
     electricLeft = r.left();
     electricRight = r.right();
 
-    if (options->electricBorders() == Options::ElectricAlways)
-       createBorderWindows();
+    for( int pos = 0;
+         pos < ELECTRIC_COUNT;
+         ++pos )
+        {
+        if( electric_reserved[ pos ] == 0 )
+            {
+            if( electric_windows[ pos ] != None )
+                XDestroyWindow( display(), electric_windows[ pos ] );
+            electric_windows[ pos ] = None;
+            continue;
+            }
+        if( electric_windows[ pos ] != None )
+            continue;
+        XSetWindowAttributes attributes;
+        attributes.override_redirect = True;
+        attributes.event_mask = EnterWindowMask | LeaveWindowMask;
+        unsigned long valuemask = CWOverrideRedirect | CWEventMask;
+        int xywh[ ELECTRIC_COUNT ][ 4 ] =
+            {
+                { r.left() + 1, r.top(), r.width() - 2, 1 }, // top
+                { r.right(), r.top(), 1, 1 }, // topright
+                { r.right(), r.top() + 1, 1, r.height() - 2 }, // etc.
+                { r.right(), r.bottom(), 1, 1 },
+                { r.left() + 1, r.bottom(), r.width() - 2, 1 },
+                { r.left(), r.bottom(), 1, 1 },
+                { r.left(), r.top() + 1, 1, r.height() - 2 },
+                { r.left(), r.top(), 1, 1 }
+            };
+        electric_windows[ pos ] = XCreateWindow( display(), rootWindow(),
+            xywh[ pos ][ 0 ], xywh[ pos ][ 1 ], xywh[ pos ][ 2 ], xywh[ pos ][ 3 ],
+            0, CopyFromParent, InputOnly, CopyFromParent, valuemask, &attributes );
+        XMapWindow( display(), electric_windows[ pos ]);
+        // Set XdndAware on the windows, so that DND enter events are received (#86998)
+        Atom version = 4; // XDND version
+        XChangeProperty( display(), electric_windows[ pos ], atoms->xdnd_aware, XA_ATOM,
+            32, PropModeReplace, ( unsigned char* )&version, 1 );
+        }
+    }
+
+void Workspace::destroyElectricBorders()
+    {
+    for( int pos = 0;
+         pos < ELECTRIC_COUNT;
+         ++pos )
+        {
+        if( electric_windows[ pos ] != None )
+            XDestroyWindow( display(), electric_windows[ pos ] );
+        electric_windows[ pos ] = None;
+        }
+    }
+
+void Workspace::reserveElectricBorderSwitching( bool reserve )
+    {
+    if( reserve )
+        {
+        reserveElectricBorder( ElectricTop );
+        reserveElectricBorder( ElectricBottom );
+        reserveElectricBorder( ElectricLeft );
+        reserveElectricBorder( ElectricRight );
+        }
     else
-       destroyBorderWindows();
+        {
+        unreserveElectricBorder( ElectricTop );
+        unreserveElectricBorder( ElectricBottom );
+        unreserveElectricBorder( ElectricLeft );
+        unreserveElectricBorder( ElectricRight );
+        }
     }
 
-void Workspace::createBorderWindows()
+void Workspace::reserveElectricBorder( ElectricBorder border )
     {
-    if ( electric_have_borders )
+    if( border == ElectricNone )
         return;
-
-    electric_have_borders = true;
-
-    QRect r = QApplication::desktop()->geometry();
-    XSetWindowAttributes attributes;
-    unsigned long valuemask;
-    attributes.override_redirect = True;
-    attributes.event_mask =  ( EnterWindowMask | LeaveWindowMask );
-    valuemask=  (CWOverrideRedirect | CWEventMask | CWCursor );
-    attributes.cursor = XCreateFontCursor(display(),
-                                          XC_sb_up_arrow);
-    electric_top_border = XCreateWindow (display(), rootWindow(),
-                                0,0,
-                                r.width(),1,
-                                0,
-                                CopyFromParent, InputOnly,
-                                CopyFromParent,
-                                valuemask, &attributes);
-    XMapWindow(display(), electric_top_border);
-
-    attributes.cursor = XCreateFontCursor(display(),
-                                          XC_sb_down_arrow);
-    electric_bottom_border = XCreateWindow (display(), rootWindow(),
-                                   0,r.height()-1,
-                                   r.width(),1,
-                                   0,
-                                   CopyFromParent, InputOnly,
-                                   CopyFromParent,
-                                   valuemask, &attributes);
-    XMapWindow(display(), electric_bottom_border);
-
-    attributes.cursor = XCreateFontCursor(display(),
-                                          XC_sb_left_arrow);
-    electric_left_border = XCreateWindow (display(), rootWindow(),
-                                 0,0,
-                                 1,r.height(),
-                                 0,
-                                 CopyFromParent, InputOnly,
-                                 CopyFromParent,
-                                 valuemask, &attributes);
-    XMapWindow(display(), electric_left_border);
-
-    attributes.cursor = XCreateFontCursor(display(),
-                                          XC_sb_right_arrow);
-    electric_right_border = XCreateWindow (display(), rootWindow(),
-                                  r.width()-1,0,
-                                  1,r.height(),
-                                  0,
-                                  CopyFromParent, InputOnly,
-                                  CopyFromParent,
-                                  valuemask, &attributes);
-    XMapWindow(display(), electric_right_border);
-    // Set XdndAware on the windows, so that DND enter events are received (#86998)
-    Atom version = 4; // XDND version
-    XChangeProperty( display(), electric_top_border, atoms->xdnd_aware, XA_ATOM,
-        32, PropModeReplace, ( unsigned char* )&version, 1 );
-    XChangeProperty( display(), electric_bottom_border, atoms->xdnd_aware, XA_ATOM,
-        32, PropModeReplace, ( unsigned char* )&version, 1 );
-    XChangeProperty( display(), electric_left_border, atoms->xdnd_aware, XA_ATOM,
-        32, PropModeReplace, ( unsigned char* )&version, 1 );
-    XChangeProperty( display(), electric_right_border, atoms->xdnd_aware, XA_ATOM,
-        32, PropModeReplace, ( unsigned char* )&version, 1 );
+    if( electric_reserved[ border ]++ == 0 )
+        QTimer::singleShot( 0, this, SLOT( updateElectricBorders()));
     }
 
-
-// Electric Border Window management. Electric borders allow a user
-// to change the virtual desktop by moving the mouse pointer to the
-// borders. Technically this is done with input only windows. Since
-// electric borders can be switched on and off, we have these two
-// functions to create and destroy them.
-void Workspace::destroyBorderWindows()
+void Workspace::unreserveElectricBorder( ElectricBorder border )
     {
-    if( !electric_have_borders)
-      return;
-
-    electric_have_borders = false;
-
-    if(electric_top_border)
-      XDestroyWindow(display(),electric_top_border);
-    if(electric_bottom_border)
-      XDestroyWindow(display(),electric_bottom_border);
-    if(electric_left_border)
-      XDestroyWindow(display(),electric_left_border);
-    if(electric_right_border)
-      XDestroyWindow(display(),electric_right_border);
-
-    electric_top_border    = None;
-    electric_bottom_border = None;
-    electric_left_border   = None;
-    electric_right_border  = None;
+    if( border == ElectricNone )
+        return;
+    assert( electric_reserved[ border ] > 0 );
+    if( --electric_reserved[ border ] == 0 )
+        QTimer::singleShot( 0, this, SLOT( updateElectricBorders()));
     }
 
-void Workspace::clientMoved(const QPoint &pos, Time now)
+void Workspace::checkElectricBorder(const QPoint &pos, Time now)
     {
-    if (options->electricBorders() == Options::ElectricDisabled)
-       return;
-
     if ((pos.x() != electricLeft) &&
         (pos.x() != electricRight) &&
         (pos.y() != electricTop) &&
         (pos.y() != electricBottom))
        return;
 
+    bool have_borders = false;
+    for( int i = 0;
+         i < ELECTRIC_COUNT;
+         ++i )
+        if( electric_windows[ i ] != None )
+            have_borders = true;
+    if( !have_borders )
+        return;
+
     Time treshold_set = options->electricBorderDelay(); // set timeout
     Time treshold_reset = 250; // reset timeout
     int distance_reset = 30; // Mouse should not move more than this many pixels
 
-    int border = 0;
-    if (pos.x() == electricLeft)
-       border = 1;
-    else if (pos.x() == electricRight)
-       border = 2;
-    else if (pos.y() == electricTop)
-       border = 3;
-    else if (pos.y() == electricBottom)
-       border = 4;
+    ElectricBorder border;
+    if( pos.x() == electricLeft && pos.y() == electricTop )
+        border = ElectricTopLeft;
+    else if( pos.x() == electricRight && pos.y() == electricTop )
+        border = ElectricTopRight;
+    else if( pos.x() == electricLeft && pos.y() == electricBottom )
+        border = ElectricBottomLeft;
+    else if( pos.x() == electricRight && pos.y() == electricBottom )
+        border = ElectricBottomRight;
+    else if( pos.x() == electricLeft )
+        border = ElectricLeft;
+    else if( pos.x() == electricRight )
+        border = ElectricRight;
+    else if( pos.y() == electricTop )
+        border = ElectricTop;
+    else if( pos.y() == electricBottom )
+        border = ElectricBottom;
+    else
+        abort();
 
     if ((electric_current_border == border) &&
         (timestampDiff(electric_time_last, now) < treshold_reset) &&
@@ -2120,50 +2184,11 @@ void Workspace::clientMoved(const QPoint &pos, Time now)
 
         if (timestampDiff(electric_time_first, now) > treshold_set)
             {
-            electric_current_border = 0;
-
-            QRect r = QApplication::desktop()->geometry();
-            int offset;
-
-            int desk_before = currentDesktop();
-            switch(border)
-                {
-                case 1:
-                 slotSwitchDesktopLeft();
-                 if (currentDesktop() != desk_before)
-                    {
-                    offset = r.width() / 5;
-                    QCursor::setPos(r.width() - offset, pos.y());
-                    }
-                break;
-
-               case 2:
-                slotSwitchDesktopRight();
-                if (currentDesktop() != desk_before)
-                    {
-                    offset = r.width() / 5;
-                    QCursor::setPos(offset, pos.y());
-                    }
-                break;
-
-               case 3:
-                slotSwitchDesktopUp();
-                if (currentDesktop() != desk_before)
-                    {
-                    offset = r.height() / 5;
-                    QCursor::setPos(pos.x(), r.height() - offset);
-                    }
-                break;
-
-               case 4:
-                slotSwitchDesktopDown();
-                if (currentDesktop() != desk_before)
-                    {
-                    offset = r.height() / 5;
-                    QCursor::setPos(pos.x(), offset);
-                    }
-                break;
-                }
+            electric_current_border = ElectricNone;
+            if( effects && effects->borderActivated( border ))
+                {} // handled by effects
+            else
+                electricBorderSwitchDesktop( border, pos );
             return;
             }
         }
@@ -2175,65 +2200,89 @@ void Workspace::clientMoved(const QPoint &pos, Time now)
         electric_push_point = pos;
         }
 
-    int mouse_warp = 1;
+    // reset the pointer to find out wether the user is really pushing
+    // (the direction back from which it came, starting from top clockwise)
+    static int xdiff[ ELECTRIC_COUNT ] = { 0, -1, -1, -1, 0, 1, 1, 1 };
+    static int ydiff[ ELECTRIC_COUNT ] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+    QCursor::setPos( pos.x() + xdiff[ border ], pos.y() + ydiff[ border ] );
+    }
 
-  // reset the pointer to find out wether the user is really pushing
-    switch( border)
+void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint& pos )
+    {
+    QRect r = QApplication::desktop()->geometry();
+    int offset;
+
+    int desk_before = currentDesktop();
+    switch(border)
         {
-        case 1: QCursor::setPos(pos.x()+mouse_warp, pos.y()); break;
-        case 2: QCursor::setPos(pos.x()-mouse_warp, pos.y()); break;
-        case 3: QCursor::setPos(pos.x(), pos.y()+mouse_warp); break;
-        case 4: QCursor::setPos(pos.x(), pos.y()-mouse_warp); break;
+        case ElectricLeft:
+            slotSwitchDesktopLeft();
+            if (currentDesktop() != desk_before)
+                {
+                offset = r.width() / 5;
+                QCursor::setPos(r.width() - offset, pos.y());
+                }
+            break;
+        case ElectricRight:
+            slotSwitchDesktopRight();
+            if (currentDesktop() != desk_before)
+                {
+                offset = r.width() / 5;
+                QCursor::setPos(offset, pos.y());
+                }
+            break;
+        case ElectricTop:
+            slotSwitchDesktopUp();
+            if (currentDesktop() != desk_before)
+                {
+                offset = r.height() / 5;
+                QCursor::setPos(pos.x(), r.height() - offset);
+                }
+            break;
+        case ElectricBottom:
+            slotSwitchDesktopDown();
+            if (currentDesktop() != desk_before)
+                {
+                offset = r.height() / 5;
+                QCursor::setPos(pos.x(), offset);
+                }
+            break;
+        default:
+            break;
         }
     }
 
 // this function is called when the user entered an electric border
 // with the mouse. It may switch to another virtual desktop
-bool Workspace::electricBorder(XEvent *e)
+bool Workspace::electricBorderEvent(XEvent *e)
     {
-    if( !electric_have_borders )
-        return false;
     if( e->type == EnterNotify )
         {
-        if( e->xcrossing.window == electric_top_border ||
-            e->xcrossing.window == electric_left_border ||
-            e->xcrossing.window == electric_bottom_border ||
-            e->xcrossing.window == electric_right_border)
-            // the user entered an electric border
-            {
-            clientMoved( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ), e->xcrossing.time );
-            return true;
-            }
+        for( int i = 0;
+             i < ELECTRIC_COUNT;
+             ++i )
+            if( electric_windows[ i ] != None && e->xcrossing.window == electric_windows[ i ] )
+                { // the user entered an electric border
+                checkElectricBorder( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ), e->xcrossing.time );
+                return true;
+                }
         }
     if( e->type == ClientMessage )
         {
-        if( e->xclient.message_type == atoms->xdnd_position
-            && ( e->xclient.window == electric_top_border
-                 || e->xclient.window == electric_bottom_border
-                 || e->xclient.window == electric_left_border
-                 || e->xclient.window == electric_right_border ))
+        if( e->xclient.message_type == atoms->xdnd_position )
             {
-            updateXTime();
-            clientMoved( QPoint( e->xclient.data.l[2]>>16, e->xclient.data.l[2]&0xffff), xTime() );
-            return true;
+            for( int i = 0;
+                 i < ELECTRIC_COUNT;
+                 ++i )
+                if( electric_windows[ i ] != None && e->xclient.window == electric_windows[ i ] )
+                    {
+                    updateXTime();
+                    checkElectricBorder( QPoint( e->xclient.data.l[2]>>16, e->xclient.data.l[2]&0xffff), xTime() );
+                    return true;
+                    }
             }
         }
     return false;
-    }
-
-// electric borders (input only windows) have to be always on the
-// top. For that reason kwm calls this function always after some
-// windows have been raised.
-void Workspace::raiseElectricBorders()
-    {
-
-    if(electric_have_borders)
-        {
-        XRaiseWindow(display(), electric_top_border);
-        XRaiseWindow(display(), electric_left_border);
-        XRaiseWindow(display(), electric_bottom_border);
-        XRaiseWindow(display(), electric_right_border);
-        }
     }
 
 void Workspace::addTopMenu( Client* c )
@@ -2394,7 +2443,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         {
         KConfig cfg( "kwin_dialogsrc" );
 	KConfigGroup cg(&cfg, "Notification Messages" ); // this depends on KMessageBox
-        if( !cg.readEntry( type, true )) // has don't show again checked
+        if( !cg.readEntry( type, QVariant(true )).toBool()) // has don't show again checked
             return;                           // save launching kdialog
         proc << "--dontagain" << "kwin_dialogsrc:" + type;
         }

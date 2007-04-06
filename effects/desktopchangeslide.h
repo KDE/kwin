@@ -28,9 +28,12 @@ class DesktopChangeSlideEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void desktopChanged( int old );
     private:
-        int old_desktop;
+        QPoint desktopPos( int desktop );
+        QPoint startPos;
         int progress;
-        bool painting_old_desktop;
+        int painting_desktop;
+        bool painting_sticky;
+        QPoint painting_diff;
     };
 
 } // namespace
