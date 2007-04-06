@@ -105,7 +105,7 @@ void DesktopChangeSlideEffect::paintScreen( int mask, QRegion region, ScreenPain
             {
             painting_desktop = desktop;
             painting_sticky = do_sticky;
-            painting_diff = QPoint( currentPos - desktopRect.topLeft());
+            painting_diff = desktopRect.topLeft() - currentPos;
             if( options->rollOverDesktops )
                 {
                 if( painting_diff.x() > displayWidth())
@@ -119,8 +119,8 @@ void DesktopChangeSlideEffect::paintScreen( int mask, QRegion region, ScreenPain
                 }
             do_sticky = false; // paint on-all-desktop windows only once
             ScreenPaintData d = data;
-            d.xTranslate -= painting_diff.x();
-            d.yTranslate -= painting_diff.y();
+            d.xTranslate += painting_diff.x();
+            d.yTranslate += painting_diff.y();
             // TODO mask parts that are not visible?
             effects->paintScreen( mask, region, d );
             }
@@ -133,8 +133,8 @@ void DesktopChangeSlideEffect::paintWindow( EffectWindow* w, int mask, QRegion r
         { // don't move windows on all desktops (compensate screen transformation)
         if( w->isOnAllDesktops()) // TODO also fix 'Workspace::movingClient'
             {
-            data.xTranslate += painting_diff.x();
-            data.yTranslate += painting_diff.y();
+            data.xTranslate -= painting_diff.x();
+            data.yTranslate -= painting_diff.y();
             }
         }
     effects->paintWindow( w, mask, region, data );
@@ -204,8 +204,9 @@ void DesktopChangeSlideEffect::desktopChanged( int old )
             }
         else // current position is not on current desktop, do full progress
             progress = 0;
-        diffPos = ( currentPos - desktopRect.topLeft());
-        startPos = desktopRect.topLeft() + diffPos / ( MAX_PROGRESS - progress ) * MAX_PROGRESS;
+        diffPos = desktopRect.topLeft() - currentPos;
+        // Compute starting point for this new move (given current and end positions)
+        startPos = desktopRect.topLeft() - diffPos * MAX_PROGRESS / ( MAX_PROGRESS - progress );
         }
     else
         {
