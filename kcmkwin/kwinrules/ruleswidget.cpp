@@ -588,7 +588,7 @@ void RulesWidget::detected( bool ok )
         machine_match->setCurrentIndex( Rules::UnimportantMatch );
         machineMatchChanged();
         // prefill values from to window to settings which already set
-        const KWM::WindowInfo& info = detect_dlg->windowInfo();
+        const KWindowInfo& info = detect_dlg->windowInfo();
         prefillUnusedValues( info );
         }
     delete detect_dlg;
@@ -606,7 +606,7 @@ void RulesWidget::detected( bool ok )
 #define LINEEDIT_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setText )
 #define COMBOBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setCurrentIndex )
 
-void RulesWidget::prefillUnusedValues( const KWM::WindowInfo& info )
+void RulesWidget::prefillUnusedValues( const KWindowInfo& info )
     {
     LINEEDIT_PREFILL( position, positionToStr, info.frameGeometry().topLeft() );
     LINEEDIT_PREFILL( size, sizeToStr, info.frameGeometry().size() );
@@ -673,7 +673,7 @@ bool RulesWidget::finalCheck()
 void RulesWidget::prepareWindowSpecific( WId window )
     {
     tabs->setCurrentIndex( 2 ); // geometry tab, skip tabs for window identification
-    KWM::WindowInfo info( window, -1U, -1U ); // read everything
+    KWindowInfo info( window, -1U, -1U ); // read everything
     prefillUnusedValues( info );
     }
 

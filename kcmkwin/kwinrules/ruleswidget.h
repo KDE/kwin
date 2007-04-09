@@ -89,7 +89,7 @@ class RulesWidget
     private:
         int desktopToCombo( int d ) const;
         int comboToDesktop( int val ) const;
-        void prefillUnusedValues( const KWM::WindowInfo& info );
+        void prefillUnusedValues( const KWindowInfo& info );
         DetectDialog* detect_dlg;
         bool detect_dlg_ok;
     };

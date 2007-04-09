@@ -65,7 +65,7 @@ class DetectDialog
         QString selectedTitle() const;
         Rules::StringMatch titleMatch() const;
         QByteArray selectedMachine() const;
-        const KWM::WindowInfo& windowInfo() const;
+        const KWindowInfo& windowInfo() const;
     signals:
         void detectionDone( bool );
     protected:
@@ -84,11 +84,11 @@ class DetectDialog
         QByteArray machine;
         DetectWidget* widget;
         QDialog* grabber;
-        KWM::WindowInfo info;
+        KWindowInfo info;
     };
 
 inline
-const KWM::WindowInfo& DetectDialog::windowInfo() const
+const KWindowInfo& DetectDialog::windowInfo() const
     {
     return info;
     }
