@@ -29,6 +29,7 @@ class SceneXrender
     public:
         SceneXrender( Workspace* ws );
         virtual ~SceneXrender();
+        virtual CompositingType compositingType() const { return XRenderCompositing; }
         virtual void paint( QRegion damage, ToplevelList windows );
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );

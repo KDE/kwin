@@ -15,15 +15,15 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "toplevel.h"
 #include "utils.h"
+#include "kwineffects.h"
 
 namespace KWin
 {
 
 class Workspace;
 class Deleted;
-class WindowPaintData;
-class ScreenPaintData;
-class EffectWindow;
+class EffectWindowImpl;
+class EffectHandlerImpl;
 
 // The base class for compositing backends.
 class Scene
@@ -32,6 +32,8 @@ class Scene
         Scene( Workspace* ws );
         virtual ~Scene() = 0;
         class Window;
+
+        virtual CompositingType compositingType() const = 0;
         // Repaints the given screen areas, windows provides the stacking order.
         // The entry point for the main part of the painting pass.
         virtual void paint( QRegion damage, ToplevelList windows ) = 0;
@@ -76,7 +78,7 @@ class Scene
     protected:
         // shared implementation, starts painting the screen
         void paintScreen( int* mask, QRegion* region );
-        friend class EffectsHandler;
+        friend class EffectsHandlerImpl;
         // called after all effects had their paintScreen() called
         void finalPaintScreen( int mask, QRegion region, ScreenPaintData& data );
         // shared implementation of painting the screen in the generic
@@ -87,11 +89,11 @@ class Scene
         // paint the background (not the desktop background - the whole background)
         virtual void paintBackground( QRegion region ) = 0;
         // called after all effects had their paintWindow() called
-        void finalPaintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        void finalPaintWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data );
         // shared implementation, starts painting the window
         virtual void paintWindow( Window* w, int mask, QRegion region );
         // called after all effects had their drawWindow() called
-        void finalDrawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        void finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data );
         // infinite region, i.e. everything
         static QRegion infiniteRegion();
         // compute time since the last repaint

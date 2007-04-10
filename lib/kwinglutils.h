@@ -11,17 +11,20 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_GLUTILS_H
 #define KWIN_GLUTILS_H
 
-
-#include "utils.h"
-
-#include <QStringList>
+#include <config.h>
 
 #ifdef HAVE_OPENGL
 #include <GL/gl.h>
 #include <GL/glx.h>
+#include <fixx11h.h>
 #endif
 
-#include "glutils_funcs.h"
+#include <QPixmap>
+#include <QString>
+#include <QImage>
+#include <QSize>
+
+#include <kwinglutils_funcs.h>
 
 
 template< class K, class V > class QHash;
@@ -32,28 +35,28 @@ namespace KWin
 
 
 // Initializes GLX function pointers
-void initGLX();
+void KWIN_EXPORT initGLX();
 // Initializes OpenGL stuff. This includes resolving function pointers as
 //  well as checking for GL version and extensions
 //  Note that GL context has to be created by the time this function is called
-void initGL();
+void KWIN_EXPORT initGL();
 
 
 // Number of supported texture units
-extern int glTextureUnitsCount;
+extern KWIN_EXPORT int glTextureUnitsCount;
 
 
-bool hasGLVersion(int major, int minor, int release = 0);
-bool hasGLXVersion(int major, int minor, int release = 0);
+bool KWIN_EXPORT hasGLVersion(int major, int minor, int release = 0);
+bool KWIN_EXPORT hasGLXVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
-bool hasGLExtension(const QString& extension);
+bool KWIN_EXPORT hasGLExtension(const QString& extension);
 
-inline bool isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
-int nearestPowerOfTwo( int x );
+inline bool KWIN_EXPORT isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
+int KWIN_EXPORT nearestPowerOfTwo( int x );
 
 #ifdef HAVE_OPENGL
 
-class GLTexture
+class KWIN_EXPORT GLTexture
     {
     public:
         GLTexture();
@@ -108,7 +111,7 @@ class GLTexture
         static bool mSaturationSupported;
     };
 
-class GLShader
+class KWIN_EXPORT GLShader
     {
     public:
         GLShader(const QString& vertexfile, const QString& fragmentfile);

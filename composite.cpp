@@ -120,7 +120,7 @@ void Workspace::setupCompositing()
     compositeTimer.start( compositeRate );
     lastCompositePaint.start();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
-    new EffectsHandler(); // sets also the 'effects' pointer
+    new EffectsHandlerImpl( scene->compositingType() ); // sets also the 'effects' pointer
     addRepaintFull();
     foreach( Client* c, clients )
         c->setupCompositing();
@@ -338,7 +338,7 @@ void Toplevel::setupCompositing()
         return;
     damage_handle = XDamageCreate( display(), frameId(), XDamageReportRawRectangles );
     damage_region = QRegion( 0, 0, width(), height());
-    effect_window = new EffectWindow();
+    effect_window = new EffectWindowImpl();
     effect_window->setWindow( this );
 #endif
     }

@@ -8,9 +8,12 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include "glutils.h"
+#include "kwinglutils.h"
 
-#include <kdebug.h>
+#include "kwinglobals.h"
+
+#include "kdebug.h"
+
 #include <QPixmap>
 #include <QImage>
 #include <QHash>
@@ -441,7 +444,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
         glCompileShader(vertexshader);
         // Make sure it compiled correctly
         int compiled;
-        glGetShaderiv(fragmentshader, GL_COMPILE_STATUS, &compiled);
+        glGetShaderiv(vertexshader, GL_COMPILE_STATUS, &compiled);
         // Get info log
         glGetShaderiv(vertexshader, GL_INFO_LOG_LENGTH, &logarraysize);
         log = new char[logarraysize];

@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "scene.h"
 
-#include "glutils.h"
+#include "kwinglutils.h"
 
 #ifdef HAVE_OPENGL
 
@@ -32,6 +32,7 @@ class SceneOpenGL
         class Window;
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
+        virtual CompositingType compositingType() const { return OpenGLCompositing; }
         virtual void paint( QRegion damage, ToplevelList windows );
         virtual void windowGeometryShapeChanged( Toplevel* );
         virtual void windowOpacityChanged( Toplevel* );
@@ -87,6 +88,7 @@ class SceneOpenGL::Texture
     public:
         Texture();
         Texture( const Pixmap& pix, const QSize& size, int depth );
+        virtual ~Texture();
 
         using GLTexture::load;
         virtual bool load( const Pixmap& pix, const QSize& size, int depth,

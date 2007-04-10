@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_SHADOW_H
 #define KWIN_SHADOW_H
 
-#include <effects.h>
+#include <kwineffects.h>
 
 namespace KWin
 {
@@ -29,6 +29,8 @@ class ShadowEffect
         void drawShadow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         int shadowXOffset, shadowYOffset;
     };
+
+    KWIN_EFFECT( Shadow, ShadowEffect )
 
 } // namespace
 

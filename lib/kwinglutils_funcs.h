@@ -11,13 +11,17 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_GLUTILS_FUNCS_H
 #define KWIN_GLUTILS_FUNCS_H
 
+#include <kdemacros.h>
+
+#define KWIN_EXPORT KDE_EXPORT
+
 #ifdef HAVE_OPENGL
 
 namespace KWin
 {
 
-void glxResolveFunctions();
-void glResolveFunctions();
+void KWIN_EXPORT glxResolveFunctions();
+void KWIN_EXPORT glResolveFunctions();
 
 
 // Defines
@@ -56,32 +60,37 @@ void glResolveFunctions();
 #define GL_VERTEX_SHADER                                0x8B31
 
 
+#define GL_TEXTURE_RECTANGLE_ARB                        0x84F5
+
+
+typedef char GLchar;
+
 // Function pointers
 // finding of OpenGL extensions functions
 typedef void (*glXFuncPtr)();
 typedef glXFuncPtr (*glXGetProcAddress_func)( const GLubyte* );
-extern glXGetProcAddress_func glXGetProcAddress;
+extern KWIN_EXPORT glXGetProcAddress_func  glXGetProcAddress;
 // glXQueryDrawable (added in GLX 1.3)
 typedef void (*glXQueryDrawable_func)( Display* dpy, GLXDrawable drawable,
     int attribute, unsigned int *value );
-extern glXQueryDrawable_func glXQueryDrawable;
+extern KWIN_EXPORT glXQueryDrawable_func glXQueryDrawable;
 // texture_from_pixmap extension functions
 typedef void (*glXBindTexImageEXT_func)( Display* dpy, GLXDrawable drawable,
     int buffer, const int* attrib_list );
 typedef void (*glXReleaseTexImageEXT_func)( Display* dpy, GLXDrawable drawable, int buffer );
-extern glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
-extern glXBindTexImageEXT_func glXBindTexImageEXT;
+extern KWIN_EXPORT glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
+extern KWIN_EXPORT glXBindTexImageEXT_func glXBindTexImageEXT;
 // glXCopySubBufferMESA
 typedef void (*glXCopySubBuffer_func) ( Display* , GLXDrawable, int, int, int, int );
-extern glXCopySubBuffer_func glXCopySubBuffer;
+extern KWIN_EXPORT glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
 typedef void (*glXGetVideoSync_func)( unsigned int *count );
 typedef void (*glXWaitVideoSync_func)( int divisor, int remainder, unsigned int *count );
-extern glXGetVideoSync_func glXGetVideoSync;
-extern glXWaitVideoSync_func glXWaitVideoSync;
+extern KWIN_EXPORT glXGetVideoSync_func glXGetVideoSync;
+extern KWIN_EXPORT glXWaitVideoSync_func glXWaitVideoSync;
 // glActiveTexture
 typedef void (*glActiveTexture_func)(GLenum);
-extern glActiveTexture_func glActiveTexture;
+extern KWIN_EXPORT glActiveTexture_func glActiveTexture;
 // framebuffer_object extension functions
 typedef bool (*glIsRenderbuffer_func)( GLuint renderbuffer );
 typedef void (*glBindRenderbuffer_func)( GLenum target, GLuint renderbuffer );
@@ -100,23 +109,23 @@ typedef void (*glFramebufferTexture3D_func)( GLenum target, GLenum attachment, G
 typedef void (*glFramebufferRenderbuffer_func)( GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer );
 typedef void (*glGetFramebufferAttachmentParameteriv_func)( GLenum target, GLenum attachment, GLenum pname, GLint *params );
 typedef void (*glGenerateMipmap_func)( GLenum target );
-extern glIsRenderbuffer_func glIsRenderbuffer;
-extern glBindRenderbuffer_func glBindRenderbuffer;
-extern glDeleteRenderbuffers_func glDeleteRenderbuffers;
-extern glGenRenderbuffers_func glGenRenderbuffers;
-extern glRenderbufferStorage_func glRenderbufferStorage;
-extern glGetRenderbufferParameteriv_func glGetRenderbufferParameteriv;
-extern glIsFramebuffer_func glIsFramebuffer;
-extern glBindFramebuffer_func glBindFramebuffer;
-extern glDeleteFramebuffers_func glDeleteFramebuffers;
-extern glGenFramebuffers_func glGenFramebuffers;
-extern glCheckFramebufferStatus_func glCheckFramebufferStatus;
-extern glFramebufferTexture1D_func glFramebufferTexture1D;
-extern glFramebufferTexture2D_func glFramebufferTexture2D;
-extern glFramebufferTexture3D_func glFramebufferTexture3D;
-extern glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
-extern glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
-extern glGenerateMipmap_func glGenerateMipmap;
+extern KWIN_EXPORT glIsRenderbuffer_func glIsRenderbuffer;
+extern KWIN_EXPORT glBindRenderbuffer_func glBindRenderbuffer;
+extern KWIN_EXPORT glDeleteRenderbuffers_func glDeleteRenderbuffers;
+extern KWIN_EXPORT glGenRenderbuffers_func glGenRenderbuffers;
+extern KWIN_EXPORT glRenderbufferStorage_func glRenderbufferStorage;
+extern KWIN_EXPORT glGetRenderbufferParameteriv_func glGetRenderbufferParameteriv;
+extern KWIN_EXPORT glIsFramebuffer_func glIsFramebuffer;
+extern KWIN_EXPORT glBindFramebuffer_func glBindFramebuffer;
+extern KWIN_EXPORT glDeleteFramebuffers_func glDeleteFramebuffers;
+extern KWIN_EXPORT glGenFramebuffers_func glGenFramebuffers;
+extern KWIN_EXPORT glCheckFramebufferStatus_func glCheckFramebufferStatus;
+extern KWIN_EXPORT glFramebufferTexture1D_func glFramebufferTexture1D;
+extern KWIN_EXPORT glFramebufferTexture2D_func glFramebufferTexture2D;
+extern KWIN_EXPORT glFramebufferTexture3D_func glFramebufferTexture3D;
+extern KWIN_EXPORT glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
+extern KWIN_EXPORT glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
+extern KWIN_EXPORT glGenerateMipmap_func glGenerateMipmap;
 // Shader stuff
 typedef GLuint (*glCreateShader_func)(GLenum);
 typedef GLvoid (*glShaderSource_func)(GLuint, GLsizei, const GLchar**, const GLint*);
@@ -140,27 +149,27 @@ typedef GLvoid (*glValidateProgram_func)(GLuint);
 typedef GLint (*glGetUniformLocation_func)(GLuint, const GLchar*);
 typedef GLvoid (*glVertexAttrib1f_func)(GLuint, GLfloat);
 typedef GLint (*glGetAttribLocation_func)(GLuint, const GLchar*);
-extern glCreateShader_func glCreateShader;
-extern glShaderSource_func glShaderSource;
-extern glCompileShader_func glCompileShader;
-extern glDeleteShader_func glDeleteShader;
-extern glCreateProgram_func glCreateProgram;
-extern glAttachShader_func glAttachShader;
-extern glLinkProgram_func glLinkProgram;
-extern glUseProgram_func glUseProgram;
-extern glDeleteProgram_func glDeleteProgram;
-extern glGetShaderInfoLog_func glGetShaderInfoLog;
-extern glGetProgramInfoLog_func glGetProgramInfoLog;
-extern glGetProgramiv_func glGetProgramiv;
-extern glGetShaderiv_func glGetShaderiv;
-extern glUniform1f_func glUniform1f;
-extern glUniform1i_func glUniform1i;
-extern glUniform1fv_func glUniform1fv;
-extern glUniform2fv_func glUniform2fv;
-extern glValidateProgram_func glValidateProgram;
-extern glGetUniformLocation_func glGetUniformLocation;
-extern glVertexAttrib1f_func glVertexAttrib1f;
-extern glGetAttribLocation_func glGetAttribLocation;
+extern KWIN_EXPORT glCreateShader_func glCreateShader;
+extern KWIN_EXPORT glShaderSource_func glShaderSource;
+extern KWIN_EXPORT glCompileShader_func glCompileShader;
+extern KWIN_EXPORT glDeleteShader_func glDeleteShader;
+extern KWIN_EXPORT glCreateProgram_func glCreateProgram;
+extern KWIN_EXPORT glAttachShader_func glAttachShader;
+extern KWIN_EXPORT glLinkProgram_func glLinkProgram;
+extern KWIN_EXPORT glUseProgram_func glUseProgram;
+extern KWIN_EXPORT glDeleteProgram_func glDeleteProgram;
+extern KWIN_EXPORT glGetShaderInfoLog_func glGetShaderInfoLog;
+extern KWIN_EXPORT glGetProgramInfoLog_func glGetProgramInfoLog;
+extern KWIN_EXPORT glGetProgramiv_func glGetProgramiv;
+extern KWIN_EXPORT glGetShaderiv_func glGetShaderiv;
+extern KWIN_EXPORT glUniform1f_func glUniform1f;
+extern KWIN_EXPORT glUniform1i_func glUniform1i;
+extern KWIN_EXPORT glUniform1fv_func glUniform1fv;
+extern KWIN_EXPORT glUniform2fv_func glUniform2fv;
+extern KWIN_EXPORT glValidateProgram_func glValidateProgram;
+extern KWIN_EXPORT glGetUniformLocation_func glGetUniformLocation;
+extern KWIN_EXPORT glVertexAttrib1f_func glVertexAttrib1f;
+extern KWIN_EXPORT glGetAttribLocation_func glGetAttribLocation;
 
 } // namespace
 

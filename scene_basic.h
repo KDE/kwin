@@ -22,6 +22,7 @@ class SceneBasic
     public:
         SceneBasic( Workspace* ws );
         virtual ~SceneBasic();
+        virtual CompositingType compositingType() const { return NoCompositing; }
         virtual void paint( QRegion damage, ToplevelList windows );
     protected:
         virtual void paintBackground( QRegion region );

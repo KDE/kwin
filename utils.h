@@ -12,6 +12,33 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_UTILS_H
 #define KWIN_UTILS_H
 
+#include <config.h>
+#include <config-X11.h>
+#include <config-kwin.h>
+
+#include <X11/Xlib.h>
+
+#ifdef HAVE_XRANDR
+#include <X11/extensions/Xrandr.h>
+#endif
+
+#ifdef HAVE_XCOMPOSITE
+#include <X11/extensions/Xcomposite.h>
+#if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
+#define HAVE_XCOMPOSITE_OVERLAY
+#endif
+#endif
+
+#ifdef HAVE_XDAMAGE
+#include <X11/extensions/Xdamage.h>
+#endif
+
+#ifdef HAVE_XFIXES
+#include <X11/extensions/Xfixes.h>
+#endif
+
+#include <fixx11h.h>
+
 #include <QWidget>
 #include <kmanagerselection.h>
 #include <netwm_def.h>
@@ -19,12 +46,23 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <limits.h>
 #include <QX11Info>
 
+#include <kwinglobals.h>
+
+
 namespace KWin
 {
 
+#ifndef HAVE_XDAMAGE
+typedef long Damage;
+struct XDamageNotifyEvent
+    {
+    };
+#endif
+
 const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
     | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
-    | NET::UtilityMask | NET::SplashMask;
+    | NET::UtilityMask | NET::SplashMask | NET::DropdownMenuMask | NET::PopupMenuMask
+    | NET::TooltipMask | NET::NotificationMask | NET::ComboBoxMask | NET::DNDIconMask;
 
 const long ClientWinMask = KeyPressMask | KeyReleaseMask |
                           ButtonPressMask | ButtonReleaseMask |
@@ -39,12 +77,21 @@ const long ClientWinMask = KeyPressMask | KeyReleaseMask |
 
 const QPoint invalidPoint( INT_MIN, INT_MIN );
 
+class Toplevel;
 class Client;
+class Unmanaged;
+class Deleted;
 class Group;
 class Options;
 
+typedef QList< Toplevel* > ToplevelList;
+typedef QList< const Toplevel* > ConstToplevelList;
 typedef QList< Client* > ClientList;
 typedef QList< const Client* > ConstClientList;
+typedef QList< Unmanaged* > UnmanagedList;
+typedef QList< const Unmanaged* > ConstUnmanagedList;
+typedef QList< Deleted* > DeletedList;
+typedef QList< const Deleted* > ConstDeletedList;
 
 typedef QList< Group* > GroupList;
 typedef QList< const Group* > ConstGroupList;
@@ -87,19 +134,7 @@ enum allowed_t { Allowed };
 // some enums to have more readable code, instead of using bools
 enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
 
-// Areas, mostly related to Xinerama
-enum clientAreaOption
-    {
-    PlacementArea,         // geometry where a window will be initially placed after being mapped
-    MovementArea,          // ???  window movement snapping area?  ignore struts
-    MaximizeArea,          // geometry to which a window will be maximized
-    MaximizeFullArea,      // like MaximizeArea, but ignore struts - used e.g. for topmenu
-    FullScreenArea,        // area for fullscreen windows
-    // these below don't depend on xinerama settings
-    WorkArea,              // whole workarea (all screens together)
-    FullArea,              // whole area (all screens together), ignore struts
-    ScreenArea             // one whole screen, ignore struts
-    };
+
 
 enum ShadeMode
     {
@@ -109,23 +144,31 @@ enum ShadeMode
     ShadeActivated // "shaded", but visible due to alt+tab to the window
     };
 
-class Shape 
+class Extensions
     {
     public:
-        static bool available() { return kwin_shape_version > 0; }
-        static int version() { return kwin_shape_version; } // as 16*major+minor, i.e. two hex digits
-        static bool hasShape( WId w);
-        static int shapeEvent();
         static void init();
+        static bool shapeAvailable() { return has_shape; }
+        static int shapeNotifyEvent();
+        static bool randrAvailable() { return has_randr; }
+        static int randrNotifyEvent();
+        static bool damageAvailable() { return has_damage; }
+        static int damageNotifyEvent();
+        static bool compositeAvailable() { return has_composite; }
+        static bool compositeOverlayAvailable() { return has_composite && has_composite_overlay; }
+        static bool fixesAvailable() { return has_fixes; }
+        static bool hasShape( Window w );
     private:
-        static int kwin_shape_version;
-        static int kwin_shape_event;
+        static bool has_shape;
+        static int shape_event_base;
+        static bool has_randr;
+        static int randr_event_base;
+        static bool has_damage;
+        static int damage_event_base;
+        static bool has_composite;
+        static bool has_composite_overlay;
+        static bool has_fixes;
     };
-
-// compile with XShape older than 1.0
-#ifndef ShapeInput
-const int ShapeInput = 2;
-#endif
 
 class Motif 
     {
@@ -197,12 +240,6 @@ void ungrabXServer();
 bool grabbedXServer();
 
 inline
-Display* display()
-    {
-    return QX11Info::display();
-    }
-    
-inline
 Window rootWindow()
     {
     return QX11Info::appRootWindow();
@@ -214,17 +251,10 @@ Window xTime()
     return QX11Info::appTime();
     }
 
-inline
-int displayWidth()
-    {
-    return XDisplayWidth( display(), DefaultScreen( display()));
-    }
 
-inline
-int displayHeight()
-    {
-    return XDisplayHeight( display(), DefaultScreen( display()));
-    }
+class Scene;
+extern Scene* scene;
+inline bool compositing() { return scene != NULL; }
 
 // the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
 #ifndef UrgencyHint
@@ -232,28 +262,28 @@ int displayHeight()
 #endif
 
 // for STL-like algo's
-#define KWIN_CHECK_PREDICATE( name, check ) \
+#define KWIN_CHECK_PREDICATE( name, cls, check ) \
 struct name \
     { \
-    inline bool operator()( const Client* cl ) { return check; } \
+    inline bool operator()( const cls* cl ) { return check; }; \
     }
 
-#define KWIN_COMPARE_PREDICATE( name, type, check ) \
+#define KWIN_COMPARE_PREDICATE( name, cls, type, check ) \
 struct name \
     { \
     typedef type type_helper; /* in order to work also with type being 'const Client*' etc. */ \
-    inline name( const type_helper& compare_value ) : value( compare_value ) {} \
-    inline bool operator()( const Client* cl ) { return check; } \
+    inline name( const type_helper& compare_value ) : value( compare_value ) {}; \
+    inline bool operator()( const cls* cl ) { return check; }; \
     const type_helper& value; \
     }
 
-#define KWIN_PROCEDURE( name, action ) \
+#define KWIN_PROCEDURE( name, cls, action ) \
 struct name \
     { \
-    inline void operator()( Client* cl ) { action; } \
+    inline void operator()( cls* cl ) { action; }; \
     }
 
-KWIN_CHECK_PREDICATE( TruePredicate, cl == cl /*true, avoid warning about 'cl' */ );
+KWIN_CHECK_PREDICATE( TruePredicate, Client, cl == cl /*true, avoid warning about 'cl' */ );
 
 template< typename T >
 Client* findClientInList( const ClientList& list, T predicate )
@@ -261,6 +291,17 @@ Client* findClientInList( const ClientList& list, T predicate )
     for ( ClientList::ConstIterator it = list.begin(); it != list.end(); ++it) 
         {
         if ( predicate( const_cast< const Client* >( *it)))
+            return *it;
+        }
+    return NULL;
+    }
+
+template< typename T >
+Unmanaged* findUnmanagedInList( const UnmanagedList& list, T predicate )
+    {
+    for ( UnmanagedList::ConstIterator it = list.begin(); it != list.end(); ++it) 
+        {
+        if ( predicate( const_cast< const Unmanaged* >( *it)))
             return *it;
         }
     return NULL;
@@ -280,7 +321,12 @@ Time timestampDiff( Time time1, Time time2 ) // returns time2 - time1
 
 bool isLocalMachine( const QByteArray& host );
 
-void checkNonExistentClients();
+// converting between X11 mouse/keyboard state mask and Qt button/keyboard states
+int qtToX11Button( Qt::MouseButton button );
+Qt::MouseButton x11ToQtMouseButton( int button );
+int qtToX11State( Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
+Qt::MouseButtons x11ToQtMouseButtons( int state );
+Qt::KeyboardModifiers x11ToQtKeyboardModifiers( int state );
 
 #ifndef KCMRULES
 // Qt dialogs emit no signal when closed :(

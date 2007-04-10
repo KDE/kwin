@@ -62,7 +62,6 @@ Sources and other compositing managers:
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
-#include "glutils.h"
 
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -715,6 +714,10 @@ SceneOpenGL::Texture::Texture( const Pixmap& pix, const QSize& size, int depth )
     {
     init();
     load( pix, size, depth );
+    }
+
+SceneOpenGL::Texture::~Texture()
+    {
     }
 
 void SceneOpenGL::Texture::init()

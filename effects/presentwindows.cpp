@@ -11,14 +11,14 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "presentwindows.h"
 
-#include <client.h>
-#include <workspace.h>
-
 #include <kactioncollection.h>
 #include <kaction.h>
 #include <klocale.h>
 
+#include <QMouseEvent>
+
 #include <math.h>
+#include <assert.h>
 
 
 
@@ -29,7 +29,7 @@ namespace KWin
 {
 
 
-PresentWindowsEffect::PresentWindowsEffect()
+PresentWindowsEffect::PresentWindowsEffect() : QObject(), Effect()
     {
     mShowWindowsFromAllDesktops = false;
     mActivated = false;
@@ -48,14 +48,14 @@ PresentWindowsEffect::PresentWindowsEffect()
     borderActivate = ElectricTopRight;
     borderActivateAll = ElectricNone;
 
-    Workspace::self()->reserveElectricBorder( borderActivate );
-    Workspace::self()->reserveElectricBorder( borderActivateAll );
+    effects->reserveElectricBorder( borderActivate );
+    effects->reserveElectricBorder( borderActivateAll );
     }
 
 PresentWindowsEffect::~PresentWindowsEffect()
     {
-    Workspace::self()->unreserveElectricBorder( borderActivate );
-    Workspace::self()->unreserveElectricBorder( borderActivateAll );
+    effects->unreserveElectricBorder( borderActivate );
+    effects->unreserveElectricBorder( borderActivateAll );
     }
 
 
@@ -75,26 +75,25 @@ void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time 
     // We need to mark the screen windows as transformed. Otherwise the whole
     //  screen won't be repainted, resulting in artefacts
     if( mActiveness > 0.0f )
-        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        *mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(mask, region, time);
     }
 
 void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
-    if( mActiveness > 0.0f && mWindowData.contains(w->window()) )
+    if( mActiveness > 0.0f && mWindowData.contains(w) )
         {
         // This window will be transformed by the effect
-        *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-        w->enablePainting( Scene::Window::PAINT_DISABLED_BY_MINIMIZE );
-        w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
+        *mask |= Effect::PAINT_WINDOW_TRANSFORMED;
+        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
+        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         // If it's minimized window or on another desktop and effect is not
         //  fully active, then apply some transparency
-        Client* c = static_cast< Client* >( w->window() );
-        if( mActiveness < 1.0f && (c->isMinimized() || !c->isOnCurrentDesktop() ))
-            *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
+        if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
+            *mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
         // Change window's hover according to cursor pos
-        WindowData& windata = mWindowData[w->window()];
+        WindowData& windata = mWindowData[w];
         const float hoverchangetime = 200;
         if( windata.area.contains(cursorPos()) )
             windata.hover = qMin(1.0f, windata.hover + time / hoverchangetime);
@@ -107,20 +106,19 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* 
 
 void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if(mActiveness > 0.0f && mWindowData.contains(w->window()))
+    if(mActiveness > 0.0f && mWindowData.contains(w))
         {
         // Change window's position and scale
-        const WindowData& windata = mWindowData[w->window()];
+        const WindowData& windata = mWindowData[w];
         data.xScale = interpolate(data.xScale, windata.scale, mActiveness);
         data.yScale = interpolate(data.xScale, windata.scale, mActiveness);
-        data.xTranslate = (int)interpolate(data.xTranslate, windata.area.left() - w->window()->x(), mActiveness);
-        data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->window()->y(), mActiveness);
+        data.xTranslate = (int)interpolate(data.xTranslate, windata.area.left() - w->x(), mActiveness);
+        data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->y(), mActiveness);
         // Darken all windows except for the one under the cursor
         data.brightness *= interpolate(1.0, 0.7, mActiveness * (1.0f - windata.hover));
         // If it's minimized window or on another desktop and effect is not
         //  fully active, then apply some transparency
-        Client* c = static_cast< Client* >( w->window() );
-        if( mActiveness < 1.0f && (c->isMinimized() || !c->isOnCurrentDesktop() ))
+        if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
             data.opacity *= interpolate(0.0, 1.0, mActiveness);
         }
 
@@ -133,7 +131,7 @@ void PresentWindowsEffect::postPaintScreen()
     // If mActiveness is between 0 and 1, the effect is still in progress and the
     //  workspace has to be repainted during the next pass
     if( mActiveness > 0.0 && mActiveness < 1.0 )
-        workspace()->addRepaintFull(); // trigger next animation repaint
+        effects->addRepaintFull(); // trigger next animation repaint
 
     // Call the next effect.
     effects->postPaintScreen();
@@ -147,12 +145,12 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
 
     // Find out which window (if any) was clicked and activate it
     QPoint pos = static_cast< QMouseEvent* >( e )->pos();
-    for( QHash<Toplevel*, WindowData>::iterator it = mWindowData.begin();
+    for( QHash<EffectWindow*, WindowData>::iterator it = mWindowData.begin();
          it != mWindowData.end(); ++it )
         {
         if( it.value().area.contains(pos) )
             {
-            effects->activateWindow( it.key()->effectWindow());
+            effects->activateWindow( it.key() );
             // mWindowData gets cleared and rebuilt when a window is
             // activated, so it's dangerous (and unnecessary) to continue
             break;
@@ -184,7 +182,7 @@ void PresentWindowsEffect::setActive(bool active)
 void PresentWindowsEffect::effectActivated()
     {
     // Create temporary input window to catch mouse events
-    mInput = effects->createInputWindow( this, 0, 0, displayWidth(), displayHeight(), Qt::PointingHandCursor );
+    mInput = effects->createFullScreenInputWindow( this, Qt::PointingHandCursor );
     // TODO: maybe also create a KAction so that ressing Esc would terminate the effect?
     }
 
@@ -201,78 +199,78 @@ void PresentWindowsEffect::rearrangeWindows()
 
     mWindowData.clear();
 
-    const ClientList& originalclientlist = workspace()->stackingOrder();
+    const EffectWindowList& originalwindowlist = effects->stackingOrder();
     // Filter out special windows such as panels and taskbars
-    ClientList clientlist;
-    foreach( Client* client, originalclientlist )
+    EffectWindowList windowlist;
+    foreach( EffectWindow* window, originalwindowlist )
         {
-        if( client->isSpecialWindow() )
+        if( window->isSpecialWindow() )
             continue;
-        if( !mShowWindowsFromAllDesktops && !client->effectWindow()->isOnCurrentDesktop() )
+        if( !mShowWindowsFromAllDesktops && !window->isOnCurrentDesktop() )
             continue;
-        clientlist.append(client);
+        windowlist.append(window);
         }
 
     // Calculate new positions and scales for windows
-    calculateWindowTransformationsKompose( clientlist );
+    calculateWindowTransformationsKompose( windowlist );
 
     // Schedule entire desktop to be repainted
-    workspace()->addRepaintFull();
+    effects->addRepaintFull();
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsDumb(ClientList clientlist)
+void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList windowlist)
     {
     // Calculate number of rows/cols
-    int rows = clientlist.count() / 4 + 1;
-    int cols = clientlist.count() / rows + clientlist.count() % rows;
+    int rows = windowlist.count() / 4 + 1;
+    int cols = windowlist.count() / rows + windowlist.count() % rows;
     // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect placementRect = workspace()->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
+    QRect placementRect = effects->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
     // Size of one cell
     int cellwidth = placementRect.width() / cols;
     int cellheight = placementRect.height() / rows;
-    kDebug() << k_funcinfo << "Got " << clientlist.count() << " clients, using " << rows << "x" << cols << " grid" << endl;
+    kDebug() << k_funcinfo << "Got " << windowlist.count() << " clients, using " << rows << "x" << cols << " grid" << endl;
 
     // Calculate position and scale factor for each window
     int i = 0;
-    foreach( Client* client, clientlist )
+    foreach( EffectWindow* window, windowlist )
         {
 
         // Row/Col of this window
         int r = i / cols;
         int c = i % cols;
-        mWindowData[client].hover = 0.0f;
-        mWindowData[client].scale = qMin(cellwidth / (float)client->width(), cellheight / (float)client->height());
-        mWindowData[client].area.setLeft(placementRect.left() + cellwidth * c);
-        mWindowData[client].area.setTop(placementRect.top() + cellheight * r);
-        mWindowData[client].area.setWidth((int)(client->width() * mWindowData[client].scale));
-        mWindowData[client].area.setHeight((int)(client->height() * mWindowData[client].scale));
+        mWindowData[window].hover = 0.0f;
+        mWindowData[window].scale = qMin(cellwidth / (float)window->width(), cellheight / (float)window->height());
+        mWindowData[window].area.setLeft(placementRect.left() + cellwidth * c);
+        mWindowData[window].area.setTop(placementRect.top() + cellheight * r);
+        mWindowData[window].area.setWidth((int)(window->width() * mWindowData[window].scale));
+        mWindowData[window].area.setHeight((int)(window->height() * mWindowData[window].scale));
 
-        kDebug() << k_funcinfo << "Window '" << client->caption() << "' gets moved to (" <<
-            mWindowData[client].area.left() << "; " << mWindowData[client].area.right() <<
-            "), scale: " << mWindowData[client].scale << endl;
+        kDebug() << k_funcinfo << "Window '" << window->caption() << "' gets moved to (" <<
+            mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
+            "), scale: " << mWindowData[window].scale << endl;
         i++;
         }
     }
 
-float PresentWindowsEffect::clientAspectRatio(Client* c)
+float PresentWindowsEffect::windowAspectRatio(EffectWindow* c)
     {
     return c->width() / (float)c->height();
     }
 
-int PresentWindowsEffect::clientWidthForHeight(Client* c, int h)
+int PresentWindowsEffect::windowWidthForHeight(EffectWindow* c, int h)
     {
     return (int)((h / (float)c->height()) * c->width());
     }
 
-int PresentWindowsEffect::clientHeightForWidth(Client* c, int w)
+int PresentWindowsEffect::windowHeightForWidth(EffectWindow* c, int w)
     {
     return (int)((w / (float)c->width()) * c->height());
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clientlist)
+void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowList windowlist)
     {
      // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect availRect = workspace()->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
+    QRect availRect = effects->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
 
@@ -282,21 +280,21 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clie
     // Use more columns than rows when parent's width > parent's height
     if ( parentRatio > 1 )
     {
-        columns = (int)ceil( sqrt(clientlist.count()) );
-        rows = (int)ceil( (double)clientlist.count() / (double)columns );
+        columns = (int)ceil( sqrt(windowlist.count()) );
+        rows = (int)ceil( (double)windowlist.count() / (double)columns );
     }
     else
     {
-        rows = (int)ceil( sqrt(clientlist.count()) );
-        columns = (int)ceil( (double)clientlist.count() / (double)rows );
+        rows = (int)ceil( sqrt(windowlist.count()) );
+        columns = (int)ceil( (double)windowlist.count() / (double)rows );
     }
-    kDebug() << k_funcinfo << "Using " << rows << " rows & " << columns << " columns for " << clientlist.count() << " clients" << endl;
+    kDebug() << k_funcinfo << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients" << endl;
 
     // Calculate width & height
     int w = (availRect.width() - (columns+1) * spacing ) / columns;
     int h = (availRect.height() - (rows+1) * spacing ) / rows;
 
-    ClientList::iterator it( clientlist.begin() );
+    EffectWindowList::iterator it( windowlist.begin() );
     QList<QRect> geometryRects;
     QList<int> maxRowHeights;
     // Process rows
@@ -307,15 +305,15 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clie
         // Process columns
         for ( int j=0; j<columns; ++j )
             {
-            Client *client;
+            EffectWindow* window;
 
             // Check for end of List
-            if ( it == clientlist.end() )
+            if ( it == windowlist.end() )
                 break;
-            client = *it;
+            window = *it;
 
             // Calculate width and height of widget
-            float ratio = clientAspectRatio(client);
+            float ratio = windowAspectRatio(window);
 
             int widgetw = 100;
             int widgeth = 100;
@@ -323,15 +321,15 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clie
             int usableH = h;
 
             // use width of two boxes if there is no right neighbour
-            if (client == clientlist.last() && j != columns-1)
+            if (window == windowlist.last() && j != columns-1)
                 {
                 usableW = 2*w;
                 }
             ++it; // We need access to the neighbour in the following
             // expand if right neighbour has ratio < 1
-            if (j != columns-1 && it != clientlist.end() && clientAspectRatio(*it) < 1)
+            if (j != columns-1 && it != windowlist.end() && windowAspectRatio(*it) < 1)
                 {
-                int addW = w - clientWidthForHeight(*it, h);
+                int addW = w - windowWidthForHeight(*it, h);
                 if ( addW > 0 )
                     {
                     usableW = w + addW;
@@ -345,8 +343,8 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clie
                 }
             else
                 {
-                double widthForHeight = clientWidthForHeight(client, usableH);
-                double heightForWidth = clientHeightForWidth(client, usableW);
+                double widthForHeight = windowWidthForHeight(window, usableH);
+                double heightForWidth = windowHeightForWidth(window, usableW);
                 if ( (ratio >= 1.0 && heightForWidth <= usableH) ||
                       (ratio < 1.0 && widthForHeight > usableW)   )
                     {
@@ -389,19 +387,19 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(ClientList clie
         for( int j = 0; j < columns; j++ )
             {
             int pos = i*columns + j;
-            if(pos >= clientlist.count())
+            if(pos >= windowlist.count())
                 break;
 
-            Client* client = clientlist[pos];
+            EffectWindow* window = windowlist[pos];
             QRect geom = geometryRects[pos];
             geom.setY( geom.y() + topOffset );
-            mWindowData[client].area = geom;
-            mWindowData[client].scale = geom.width() / (float)client->width();
-            mWindowData[client].hover = 0.0f;
+            mWindowData[window].area = geom;
+            mWindowData[window].scale = geom.width() / (float)window->width();
+            mWindowData[window].hover = 0.0f;
 
-            kDebug() << k_funcinfo << "Window '" << client->caption() << "' gets moved to (" <<
-                    mWindowData[client].area.left() << "; " << mWindowData[client].area.right() <<
-                    "), scale: " << mWindowData[client].scale << endl;
+            kDebug() << k_funcinfo << "Window '" << window->caption() << "' gets moved to (" <<
+                    mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
+                    "), scale: " << mWindowData[window].scale << endl;
             }
         if ( maxRowHeights[i]-h > 0 )
             topOffset += maxRowHeights[i]-h;

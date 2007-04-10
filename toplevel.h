@@ -24,7 +24,7 @@ namespace KWin
 {
 
 class Workspace;
-class EffectWindow;
+class EffectWindowImpl;
 
 class Toplevel
     : public QObject, public KDecorationDefines
@@ -97,7 +97,7 @@ class Toplevel
         void resetRepaints( const QRect& r );
         QRegion damage() const;
         void resetDamage( const QRect& r );
-        EffectWindow* effectWindow();
+        EffectWindowImpl* effectWindow();
 
     protected:
         virtual ~Toplevel();
@@ -137,7 +137,7 @@ class Toplevel
         QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
         QRegion repaints_region; // updating, repaint just requires repaint of that area
         bool is_shape;
-        EffectWindow* effect_window;
+        EffectWindowImpl* effect_window;
         QByteArray resource_name;
         QByteArray resource_class;
         QByteArray client_machine;
@@ -322,7 +322,7 @@ inline bool Toplevel::hasAlpha() const
     }
 
 inline
-EffectWindow* Toplevel::effectWindow()
+EffectWindowImpl* Toplevel::effectWindow()
     {
     return effect_window;
     }

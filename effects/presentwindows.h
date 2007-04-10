@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_PRESENTWINDOWS_H
 
 // Include with base class for effects.
-#include <effects.h>
+#include <kwineffects.h>
 
 
 namespace KWin
@@ -48,13 +48,13 @@ class PresentWindowsEffect
     protected:
         // Updates window tranformations, i.e. destination pos and scale of the window
         void rearrangeWindows();
-        void calculateWindowTransformationsDumb(ClientList clientlist);
-        void calculateWindowTransformationsKompose(ClientList clientlist);
+        void calculateWindowTransformationsDumb(EffectWindowList windowlist);
+        void calculateWindowTransformationsKompose(EffectWindowList windowlist);
 
         // Helper methods for layout calculation
-        float clientAspectRatio(Client* c);
-        int clientWidthForHeight(Client* c, int h);
-        int clientHeightForWidth(Client* c, int w);
+        float windowAspectRatio(EffectWindow* c);
+        int windowWidthForHeight(EffectWindow* c, int h);
+        int windowHeightForWidth(EffectWindow* c, int w);
 
         // Called once the effect is activated (and wasn't activated before)
         void effectActivated();
@@ -77,11 +77,13 @@ class PresentWindowsEffect
             float scale;
             float hover;
             };
-        QHash<Toplevel*, WindowData> mWindowData;
+        QHash<EffectWindow*, WindowData> mWindowData;
 
         ElectricBorder borderActivate;
         ElectricBorder borderActivateAll;
     };
+
+    KWIN_EFFECT( PresentWindows, PresentWindowsEffect );
 
 } // namespace
 

@@ -10,9 +10,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "shadow.h"
 
-#ifdef HAVE_OPENGL
-#include <GL/gl.h>
-#endif
+#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -25,7 +23,7 @@ ShadowEffect::ShadowEffect()
 
 void ShadowEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
-    *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
+    *mask |= PAINT_WINDOW_TRANSLUCENT;
     *paint |= ( QRegion( w->geometry()) & *paint ).translated( shadowXOffset, shadowYOffset );
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
@@ -50,7 +48,7 @@ QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
 
 void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if(( mask & Scene::PAINT_WINDOW_TRANSLUCENT ) == 0 )
+    if(( mask & PAINT_WINDOW_TRANSLUCENT ) == 0 )
         return;
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
     glEnable( GL_BLEND );
@@ -58,10 +56,10 @@ void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, Window
     glColor4f( 0, 0, 0, 0.2 * data.opacity ); // black
 
     glPushMatrix();
-    if( mask & Scene::PAINT_WINDOW_TRANSFORMED )
+    if( mask & PAINT_WINDOW_TRANSFORMED )
         glTranslatef( data.xTranslate, data.yTranslate, 0 );
     glTranslatef( w->x() + shadowXOffset, w->y() + shadowYOffset, 0 );
-    if(( mask & Scene::PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
+    if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
 
     glEnableClientState( GL_VERTEX_ARRAY );
@@ -73,7 +71,7 @@ void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, Window
          w->width(), 0
         };
     glVertexPointer( 2, GL_INT, 0, verts );
-    if( mask & ( Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED ))
+    if( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED ))
         glDrawArrays( GL_QUADS, 0, 4 );
     else
         { // clip by region

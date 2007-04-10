@@ -8,7 +8,7 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include "glutils.h"
+#include "kwinglutils.h"
 
 #include <dlfcn.h>
 

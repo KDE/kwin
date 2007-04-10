@@ -246,13 +246,13 @@ void Scene::paintWindow( Window* w, int mask, QRegion region )
     }
 
 // the function that'll be eventually called by paintWindow() above
-void Scene::finalPaintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+void Scene::finalPaintWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
     effects->drawWindow( w, mask, region, data );
     }
 
 // will be eventually called from drawWindow()
-void Scene::finalDrawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+void Scene::finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
     w->sceneWindow()->performPaint( mask, region, data );
     }
