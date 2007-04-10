@@ -188,35 +188,9 @@ class KWIN_EXPORT EffectsHandler
         virtual void addRepaint( const QRect& r ) = 0;
         virtual void addRepaint( int x, int y, int w, int h ) = 0;
 
-        // internal (used by kwin core or compositing code)
-        virtual void startPaint();
-        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
-        virtual void windowAdded( EffectWindow* c );
-        virtual void windowClosed( EffectWindow* c );
-        virtual void windowDeleted( EffectWindow* c );
-        virtual void windowActivated( EffectWindow* c );
-        virtual void windowMinimized( EffectWindow* c );
-        virtual void windowUnminimized( EffectWindow* c );
-        virtual bool checkInputWindowEvent( XEvent* e ) = 0;
-        virtual void checkInputWindowStacking() = 0;
-        virtual void desktopChanged( int old );
-        virtual void windowDamaged( EffectWindow* w, const QRect& r );
-        virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
-        virtual void tabBoxAdded( int mode );
-        virtual void tabBoxClosed();
-        virtual void tabBoxUpdated();
-        virtual bool borderActivated( ElectricBorder border );
-
         CompositingType compositingType() const  { return compositing_type; }
         virtual unsigned long xrenderBufferPicture() = 0;
 
-        //void registerEffect( const QString& name, EffectFactory* factory );
-        void loadEffect( const QString& name );
-        void unloadEffect( const QString& name );
-
-    protected:
-        KLibrary* findEffectLibrary( const QString& effectname );
 
     protected:
         QVector< EffectPair > loaded_effects;

@@ -498,7 +498,7 @@ Client* Workspace::createClient( Window w, bool is_mapped )
     if( scene )
         scene->windowAdded( c );
     if( effects )
-        effects->windowAdded( c->effectWindow());
+        static_cast<EffectsHandlerImpl*>(effects)->windowAdded( c->effectWindow());
     return c;
     }
 
@@ -516,7 +516,7 @@ Unmanaged* Workspace::createUnmanaged( Window w )
     if( scene )
         scene->windowAdded( c );
     if( effects )
-        effects->windowAdded( c->effectWindow());
+        static_cast<EffectsHandlerImpl*>(effects)->windowAdded( c->effectWindow());
     return c;
     }
 
@@ -644,7 +644,7 @@ void Workspace::removeDeleted( Deleted* c, allowed_t )
     if( scene )
         scene->windowDeleted( c );
     if( effects )
-        effects->windowDeleted( c->effectWindow());
+        static_cast<EffectsHandlerImpl*>(effects)->windowDeleted( c->effectWindow());
     deleted.removeAll( c );
     }
 
@@ -1327,7 +1327,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         popupinfo->showInfo( desktopName(currentDesktop()) );
 
     if( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
-        effects->desktopChanged( old_desktop );
+        static_cast<EffectsHandlerImpl*>(effects)->desktopChanged( old_desktop );
 
     return true;
     }
@@ -2187,7 +2187,7 @@ void Workspace::checkElectricBorder(const QPoint &pos, Time now)
         if (timestampDiff(electric_time_first, now) > treshold_set)
             {
             electric_current_border = ElectricNone;
-            if( effects && effects->borderActivated( border ))
+            if( effects && static_cast<EffectsHandlerImpl*>(effects)->borderActivated( border ))
                 {} // handled by effects
             else
                 electricBorderSwitchDesktop( border, pos );

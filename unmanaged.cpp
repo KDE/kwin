@@ -63,7 +63,7 @@ bool Unmanaged::track( Window w )
     setupCompositing();
     ungrabXServer();
     if( effects )
-        effects->checkInputWindowStacking();
+        static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking();
     return true;
     }
 
@@ -72,7 +72,7 @@ void Unmanaged::release()
     Deleted* del = Deleted::create( this );
     if( effects )
         {
-        effects->windowClosed( effectWindow());
+        static_cast<EffectsHandlerImpl*>(effects)->windowClosed( effectWindow());
         scene->windowClosed( this, del );
         }
     finishCompositing();

@@ -93,7 +93,7 @@ void Scene::paintScreen( int* mask, QRegion* region )
         ? 0 : PAINT_SCREEN_REGION;
     updateTimeDiff();
     // preparation step
-    effects->startPaint();
+    static_cast<EffectsHandlerImpl*>(effects)->startPaint();
     effects->prePaintScreen( mask, region, time_diff );
     if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS ))
         { // Region painting is not possible with transformations,

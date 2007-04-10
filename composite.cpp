@@ -431,7 +431,7 @@ void Toplevel::addDamage( int x, int y, int w, int h )
     r &= rect();
     damage_region += r;
     repaints_region += r;
-    effects->windowDamaged( effectWindow(), r );
+    static_cast<EffectsHandlerImpl*>(effects)->windowDamaged( effectWindow(), r );
     }
 
 void Toplevel::addDamageFull()
@@ -440,7 +440,7 @@ void Toplevel::addDamageFull()
         return;
     damage_region = rect();
     repaints_region = rect();
-    effects->windowDamaged( effectWindow(), rect());
+    static_cast<EffectsHandlerImpl*>(effects)->windowDamaged( effectWindow(), rect());
     }
 
 void Toplevel::resetDamage( const QRect& r )

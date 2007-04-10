@@ -34,7 +34,6 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
-        virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
         virtual void activateWindow( EffectWindow* c );
 
         virtual int currentDesktop() const;
@@ -58,6 +57,30 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void reserveElectricBorderSwitching( bool reserve );
 
         virtual unsigned long xrenderBufferPicture();
+
+        // internal (used by kwin core or compositing code)
+        virtual void startPaint();
+        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
+        virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
+        virtual void windowAdded( EffectWindow* c );
+        virtual void windowClosed( EffectWindow* c );
+        virtual void windowDeleted( EffectWindow* c );
+        virtual void windowActivated( EffectWindow* c );
+        virtual void windowMinimized( EffectWindow* c );
+        virtual void windowUnminimized( EffectWindow* c );
+        virtual void desktopChanged( int old );
+        virtual void windowDamaged( EffectWindow* w, const QRect& r );
+        virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
+        virtual void tabBoxAdded( int mode );
+        virtual void tabBoxClosed();
+        virtual void tabBoxUpdated();
+        virtual bool borderActivated( ElectricBorder border );
+
+        void loadEffect( const QString& name );
+        void unloadEffect( const QString& name );
+
+    protected:
+        KLibrary* findEffectLibrary( const QString& effectname );
 };
 
 class EffectWindowImpl : public EffectWindow
