@@ -239,19 +239,6 @@ void grabXServer();
 void ungrabXServer();
 bool grabbedXServer();
 
-inline
-Window rootWindow()
-    {
-    return QX11Info::appRootWindow();
-    }
-
-inline
-Window xTime()
-    {
-    return QX11Info::appTime();
-    }
-
-
 class Scene;
 extern Scene* scene;
 inline bool compositing() { return scene != NULL; }

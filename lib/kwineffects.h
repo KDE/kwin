@@ -185,6 +185,8 @@ class KWIN_EXPORT EffectsHandler
 
         // Repaints the entire workspace
         virtual void addRepaintFull() = 0;
+        virtual void addRepaint( const QRect& r ) = 0;
+        virtual void addRepaint( int x, int y, int w, int h ) = 0;
 
         // internal (used by kwin core or compositing code)
         virtual void startPaint();
@@ -207,6 +209,7 @@ class KWIN_EXPORT EffectsHandler
         virtual bool borderActivated( ElectricBorder border );
 
         CompositingType compositingType() const  { return compositing_type; }
+        virtual unsigned long xrenderBufferPicture() = 0;
 
         //void registerEffect( const QString& name, EffectFactory* factory );
         void loadEffect( const QString& name );

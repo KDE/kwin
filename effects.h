@@ -43,6 +43,8 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual QPoint cursorPos() const;
         virtual EffectWindowList stackingOrder() const;
         virtual void addRepaintFull();
+        virtual void addRepaint( const QRect& r );
+        virtual void addRepaint( int x, int y, int w, int h );
         virtual QRect clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const;
 
         virtual Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor );
@@ -54,6 +56,8 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void reserveElectricBorder( ElectricBorder border );
         virtual void unreserveElectricBorder( ElectricBorder border );
         virtual void reserveElectricBorderSwitching( bool reserve );
+
+        virtual unsigned long xrenderBufferPicture();
 };
 
 class EffectWindowImpl : public EffectWindow

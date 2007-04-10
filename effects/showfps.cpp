@@ -8,20 +8,25 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+#include <config.h>
+
 #include "showfps.h"
 
-#include <workspace.h>
-
-#include <options.h>
-#include <scene_opengl.h>
-#include <scene_xrender.h>
+#include <kconfig.h>
+#include <ksharedconfig.h>
 
 #ifdef HAVE_OPENGL
 #include <GL/gl.h>
 #endif
+#ifdef HAVE_XRENDER
+#include <X11/Xlib.h>
+#include <X11/extensions/Xrender.h>
+#endif
 
 namespace KWin
 {
+
+KWIN_EFFECT( ShowFps, ShowFpsEffect )
 
 const int FPS_WIDTH = 10;
 const int MAX_TIME = 100;
@@ -38,9 +43,10 @@ ShowFpsEffect::ShowFpsEffect()
          i < MAX_FPS;
          ++i )
         frames[ i ] = 0;
-    alpha = options->effectShowFpsAlpha;
-    x = options->effectShowFpsX;
-    y = options->effectShowFpsY;
+    KConfigGroup config( KGlobal::config(), "EffectShowFps" );
+    alpha = config.readEntry( "Alpha", 0.5 );
+    x = config.readEntry( "X", -10000 );
+    y = config.readEntry( "Y", 0 );
     if( x == -10000 ) // there's no -0 :(
         x = displayWidth() - NUM_PAINTS - FPS_WIDTH;
     else if ( x < 0 )
@@ -76,17 +82,19 @@ void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data
     if( fps > MAX_TIME )
         fps = MAX_TIME; // keep it the same height
 #ifdef HAVE_OPENGL
-    if( dynamic_cast< SceneOpenGL* >( scene ))
+    if( effects->compositingType() == OpenGLCompositing)
         {
         paintGL( fps );
         glFinish(); // make sure all rendering is done
         }
-    else
 #endif
+#ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing)
         {
-        paintX( fps );
+        paintXrender( fps );
         XSync( display(), False ); // make sure all rendering is done
         }
+#endif
     }
 
 void ShowFpsEffect::paintGL( int fps )
@@ -154,7 +162,7 @@ void ShowFpsEffect::paintGL( int fps )
  - differenly specified rectangles (X: width/height, O: x2,y2)
  - XRender uses pre-multiplied alpha
 */
-void ShowFpsEffect::paintX( int fps )
+void ShowFpsEffect::paintXrender( int fps )
     {
 #ifdef HAVE_XRENDER
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), NUM_PAINTS + FPS_WIDTH, MAX_TIME, 32 );
@@ -214,7 +222,7 @@ void ShowFpsEffect::paintX( int fps )
         XRenderFillRectangle( display(), PictOpSrc, p, &col, FPS_WIDTH + NUM_PAINTS - i, MAX_TIME - value, 1, value );
         }
     XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc, p, None,
-        static_cast< SceneXrender* >( scene )->bufferPicture(), 0, 0, 0, 0, x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
+        effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
     XRenderFreePicture( display(), p );
 #endif
     }
@@ -225,7 +233,7 @@ void ShowFpsEffect::postPaintScreen()
     paints[ paints_pos ] = t.elapsed();
     if( ++paints_pos == NUM_PAINTS )
         paints_pos = 0;
-    workspace()->addRepaint( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
+    effects->addRepaint( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
     }
 
 } // namespace

@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_SHOWFPS_H
 #define KWIN_SHOWFPS_H
 
-#include <effects.h>
+#include <kwineffects.h>
 
 #include <qdatetime.h>
 
@@ -28,7 +28,7 @@ class ShowFpsEffect
         virtual void postPaintScreen();
     private:
         void paintGL( int fps );
-        void paintX( int fps );
+        void paintXrender( int fps );
         QTime t;
         enum { NUM_PAINTS = 100 }; // remember time needed to paint this many paints
         int paints[ NUM_PAINTS ]; // time needed to paint

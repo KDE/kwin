@@ -299,6 +299,19 @@ class Options : public KDecorationOptions
         uint inactiveWindowShadowSize;
         uint dockShadowSize;
         bool onlyDecoTranslucent;
+        
+        uint refreshRate;
+        int smoothScale; // 0 = no, 1 = yes when transformed,
+                         // 2 = try trilinear when transformed; else 1,
+                         // -1 = auto
+        
+        enum GLMode { GLTFP, GLSHM, GLFallback };
+        GLMode glMode;
+        bool glAlwaysRebind;
+        bool glDirect;
+        bool glVSync;
+
+        QStringList defaultEffects;
 
     private:
         WindowOperation OpTitlebarDblClick;

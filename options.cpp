@@ -174,8 +174,8 @@ unsigned long Options::updateSettings()
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
 
     //translucency settings - TODO
-    useTranslucency = _config->group("Notification Messages").readEntry("UseTranslucency", false);
     config.changeGroup("Translucency");
+    useTranslucency = config.readEntry("UseTranslucency", true);
     translucentActiveWindows = config.readEntry("TranslucentActiveWindows", false);
     activeWindowOpacity = uint((config.readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentInactiveWindows = config.readEntry("TranslucentInactiveWindows", false);
@@ -193,6 +193,23 @@ unsigned long Options::updateSettings()
     removeShadowsOnMove = config.readEntry("RemoveShadowsOnMove", true);
     removeShadowsOnResize = config.readEntry("RemoveShadowsOnResize", true);
     onlyDecoTranslucent = config.readEntry("OnlyDecoTranslucent", false);
+
+    refreshRate = config.readEntry( "RefreshRate", 0 );
+    smoothScale = qBound( -1, config.readEntry( "SmoothScale", -1 ), 2 );
+
+    QString glmode = config.readEntry("GLMode", "TFP" ).upper();
+    if( glmode == "TFP" )
+        glMode = GLTFP;
+    else if( glmode == "SHM" )
+        glMode = GLSHM;
+    else
+        glMode = GLFallback;
+    glAlwaysRebind = config.readEntry("GLAlwaysRebind", false );
+    glDirect = config.readEntry("GLDirect", true );
+    glVSync = config.readEntry("GLVSync", true );
+    
+    config.changeGroup( "Effects" );
+    defaultEffects = config.readEntry( "Load", QStringList() << "ShowFps" << "Fade" );
 
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips

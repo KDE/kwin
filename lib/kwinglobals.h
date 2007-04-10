@@ -98,24 +98,36 @@ class KWIN_EXPORT ScreenPaintData
     };
 
 inline
-Display* display()
+KWIN_EXPORT Display* display()
     {
     return QX11Info::display();
     }
 
 inline
-int displayWidth()
+KWIN_EXPORT Window rootWindow()
+    {
+    return QX11Info::appRootWindow();
+    }
+
+inline
+KWIN_EXPORT Window xTime()
+    {
+    return QX11Info::appTime();
+    }
+
+inline
+KWIN_EXPORT int displayWidth()
     {
     return XDisplayWidth( display(), DefaultScreen( display()));
     }
 
 inline
-int displayHeight()
+KWIN_EXPORT int displayHeight()
     {
     return XDisplayHeight( display(), DefaultScreen( display()));
     }
 
-QPoint KWIN_EXPORT cursorPos();
+KWIN_EXPORT QPoint cursorPos();
 
 } // namespace
 

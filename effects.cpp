@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "deleted.h"
 #include "client.h"
 #include "group.h"
+#include "scene_xrender.h"
 #include "workspace.h"
 
 #include "kdebug.h"
@@ -134,38 +135,48 @@ int EffectsHandlerImpl::currentDesktop() const
     }
 
 int EffectsHandlerImpl::displayWidth() const
-{
+    {
     return KWin::displayWidth();
-}
+    }
 
 int EffectsHandlerImpl::displayHeight() const
-{
+    {
     return KWin::displayWidth();
-}
+    }
 
 QPoint EffectsHandlerImpl::cursorPos() const
-{
+    {
     return KWin::cursorPos();
-}
+    }
 
 EffectWindowList EffectsHandlerImpl::stackingOrder() const
-{
+    {
     ClientList list = Workspace::self()->stackingOrder();
     EffectWindowList ret;
     foreach( Client* c, list )
         ret.append( effectWindow( c ));
     return ret;
-}
+    }
 
 void EffectsHandlerImpl::addRepaintFull()
-{
+    {
     Workspace::self()->addRepaintFull();
-}
+    }
+
+void EffectsHandlerImpl::addRepaint( const QRect& r )
+    {
+    Workspace::self()->addRepaint( r );
+    }
+
+void EffectsHandlerImpl::addRepaint( int x, int y, int w, int h )
+    {
+    Workspace::self()->addRepaint( x, y, w, h );
+    }
 
 QRect EffectsHandlerImpl::clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const
-{
+    {
     return Workspace::self()->clientArea( opt, p, desktop );
-}
+    }
 
 Window EffectsHandlerImpl::createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor )
     {
@@ -244,24 +255,33 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     }
 
 void EffectsHandlerImpl::checkElectricBorder(const QPoint &pos, Time time)
-{
+    {
     Workspace::self()->checkElectricBorder( pos, time );
-}
+    }
 
 void EffectsHandlerImpl::reserveElectricBorder( ElectricBorder border )
-{
+    {
     Workspace::self()->reserveElectricBorder( border );
-}
+    }
 
 void EffectsHandlerImpl::unreserveElectricBorder( ElectricBorder border )
-{
+    {
     Workspace::self()->unreserveElectricBorder( border );
-}
+    }
 
 void EffectsHandlerImpl::reserveElectricBorderSwitching( bool reserve )
-{
+    {
     Workspace::self()->reserveElectricBorderSwitching( reserve );
-}
+    }
+
+unsigned long EffectsHandlerImpl::xrenderBufferPicture()
+    {
+#ifdef HAVE_XRENDER
+    if( SceneXrender* s = dynamic_cast< SceneXrender* >( scene ))
+        return s->bufferPicture();
+#endif
+    return None;
+    }
 
 //****************************************
 // EffectWindowImpl
