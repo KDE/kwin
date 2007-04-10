@@ -64,6 +64,9 @@ class EffectWindowImpl : public EffectWindow
 
         virtual void enablePainting( int reason );
         virtual void disablePainting( int reason );
+        virtual void addRepaint( const QRect& r );
+        virtual void addRepaint( int x, int y, int w, int h );
+        virtual void addRepaintFull();
 
         virtual bool isDeleted() const;
 
@@ -71,6 +74,7 @@ class EffectWindowImpl : public EffectWindow
         virtual int desktop() const; // prefer isOnXXX()
         virtual bool isMinimized() const;
         virtual QString caption() const;
+        virtual const EffectWindowGroup* group() const;
 
         virtual int x() const;
         virtual int y() const;
@@ -108,6 +112,22 @@ class EffectWindowImpl : public EffectWindow
         Toplevel* toplevel;
         Scene::Window* sw; // This one is used only during paint pass.
 };
+
+class EffectWindowGroupImpl
+    : public EffectWindowGroup
+    {
+    public:
+        EffectWindowGroupImpl( Group* g );
+        virtual EffectWindowList members() const;
+    private:
+        Group* group;
+    };
+
+inline
+EffectWindowGroupImpl::EffectWindowGroupImpl( Group* g )
+    : group( g )
+    {
+    }
 
 EffectWindow* effectWindow( Toplevel* w );
 EffectWindow* effectWindow( Scene::Window* w );

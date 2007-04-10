@@ -71,6 +71,8 @@ General TODO
 
 * cursorPos() does not work reliably now (not from e.g. timers, it needs events), so it's disabled
 
+* window grouping is not implemented for unmanaged windows (used e.g. by DimInactive)
+
 
 OpenGL TODO
 =================================
@@ -237,3 +239,5 @@ Effects TODO
 +   - something that presents all virtual desktops as being in grid (as in pager)
         and zooms out of the old one and into the new one
     - or whatever
+
+* DimInactive flickers when switching between windows (temporarily no window becomes active)

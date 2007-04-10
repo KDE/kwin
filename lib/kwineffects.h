@@ -32,6 +32,7 @@ namespace KWin
 
 
 class EffectWindow;
+class EffectWindowGroup;
 class Effect;
 
 typedef QPair< QString, Effect* > EffectPair;
@@ -251,6 +252,9 @@ class KWIN_EXPORT EffectWindow
 
         virtual void enablePainting( int reason ) = 0;
         virtual void disablePainting( int reason ) = 0;
+        virtual void addRepaint( const QRect& r ) = 0;
+        virtual void addRepaint( int x, int y, int w, int h ) = 0;
+        virtual void addRepaintFull() = 0;
 
         virtual bool isDeleted() const = 0;
         virtual bool isMinimized() const = 0;
@@ -270,6 +274,7 @@ class KWIN_EXPORT EffectWindow
         virtual QRect rect() const = 0;
 
         virtual QString caption() const = 0;
+        virtual const EffectWindowGroup* group() const = 0;
 
         virtual bool isDesktop() const = 0;
         virtual bool isDock() const = 0;
@@ -290,6 +295,12 @@ class KWIN_EXPORT EffectWindow
 
     };
 
+class KWIN_EXPORT EffectWindowGroup
+    {
+    public:
+        virtual ~EffectWindowGroup();
+        virtual EffectWindowList members() const = 0;
+    };
 
 extern KWIN_EXPORT EffectsHandler* effects;
 

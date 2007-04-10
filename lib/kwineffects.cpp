@@ -469,4 +469,13 @@ bool EffectWindow::isOnDesktop( int d ) const
     }
 
 
+//****************************************
+// EffectWindowGroup
+//****************************************
+
+EffectWindowGroup::~EffectWindowGroup()
+    {
+    }
+
+
 } // namespace

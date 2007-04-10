@@ -11,7 +11,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/workspace/kwin/lib
     )
 
-KWIN4_ADD_EFFECT(builtins presentwindows.cpp shadow.cpp)
+KWIN4_ADD_EFFECT(builtins presentwindows.cpp shadow.cpp diminactive.cpp)
 
-install( FILES presentwindows.desktop shadow.desktop
+install( FILES presentwindows.desktop shadow.desktop diminactive.desktop
         DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )

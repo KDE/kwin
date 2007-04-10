@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "deleted.h"
 #include "client.h"
+#include "group.h"
 #include "workspace.h"
 
 #include "kdebug.h"
@@ -286,6 +287,21 @@ void EffectWindowImpl::disablePainting( int reason )
     sceneWindow()->disablePainting( reason );
     }
 
+void EffectWindowImpl::addRepaint( const QRect& r )
+    {
+    toplevel->addRepaint( r );
+    }
+
+void EffectWindowImpl::addRepaint( int x, int y, int w, int h )
+    {
+    toplevel->addRepaint( x, y, w, h );
+    }
+
+void EffectWindowImpl::addRepaintFull()
+    {
+    toplevel->addRepaintFull();
+    }
+
 int EffectWindowImpl::desktop() const
     {
     return toplevel->desktop();
@@ -302,6 +318,13 @@ QString EffectWindowImpl::caption() const
         return c->caption();
     else
         return "";
+    }
+
+const EffectWindowGroup* EffectWindowImpl::group() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->group()->effectGroup();
+    return NULL; // TODO
     }
 
 bool EffectWindowImpl::isMinimized() const
@@ -479,5 +502,17 @@ EffectWindow* effectWindow( Scene::Window* w )
     return ret;
     }
 
+//****************************************
+// EffectWindowGroupImpl
+//****************************************
+
+ 
+EffectWindowList EffectWindowGroupImpl::members() const
+    {
+    EffectWindowList ret;
+    foreach( Toplevel* c, group->members())
+        ret.append( c->effectWindow());
+    return ret;
+    }
 
 } // namespace

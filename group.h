@@ -21,6 +21,7 @@ namespace KWin
 
 class Client;
 class Workspace;
+class EffectWindowGroupImpl;
 
 class Group
     {
@@ -41,8 +42,7 @@ class Group
         bool groupEvent( XEvent* e );
         void updateUserTime( Time time = CurrentTime );
         Time userTime() const;
-        void ref();
-        void deref();
+        EffectWindowGroupImpl* effectGroup();
     private:
         void getIcons();
         void startupIdChanged();
@@ -52,7 +52,7 @@ class Group
         Workspace* _workspace;
         NETWinInfo* leader_info;
         Time user_time;
-        int refcount;
+        EffectWindowGroupImpl* effect_group;
     };
 
 inline Window Group::leader() const
@@ -83,6 +83,12 @@ inline Workspace* Group::workspace()
 inline Time Group::userTime() const
     {
     return user_time;
+    }
+
+inline
+EffectWindowGroupImpl* Group::effectGroup()
+    {
+    return effect_group;
     }
 
 } // namespace
