@@ -30,8 +30,6 @@ class ShadowEffect
         int shadowXOffset, shadowYOffset;
     };
 
-    KWIN_EFFECT( Shadow, ShadowEffect )
-
 } // namespace
 
 #endif

@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+KWIN_EFFECT( PresentWindows, PresentWindowsEffect )
 
 PresentWindowsEffect::PresentWindowsEffect() : QObject(), Effect()
     {

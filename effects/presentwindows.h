@@ -83,8 +83,6 @@ class PresentWindowsEffect
         ElectricBorder borderActivateAll;
     };
 
-    KWIN_EFFECT( PresentWindows, PresentWindowsEffect );
-
 } // namespace
 
 #endif
