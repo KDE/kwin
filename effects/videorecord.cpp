@@ -39,8 +39,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kactioncollection.h>
 #include <klocale.h>
 
-#include <GL/gl.h>
-
 namespace KWin
 {
 
