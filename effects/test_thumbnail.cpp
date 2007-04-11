@@ -20,6 +20,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+KWIN_EFFECT( TestThumbnail, TestThumbnailEffect )
+
 TestThumbnailEffect::TestThumbnailEffect()
     : active_window( NULL )
     {
@@ -34,7 +36,7 @@ void TestThumbnailEffect::paintScreen( int mask, QRegion region, ScreenPaintData
         QRect region;
         setPositionTransformations( data, region, active_window, thumbnailRect(), Qt::KeepAspectRatio );
         effects->drawWindow( active_window,
-            Scene::PAINT_WINDOW_OPAQUE | Scene::PAINT_WINDOW_TRANSLUCENT | Scene::PAINT_WINDOW_TRANSFORMED,
+            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED,
             region, data );
         }
     }
@@ -42,20 +44,20 @@ void TestThumbnailEffect::paintScreen( int mask, QRegion region, ScreenPaintData
 void TestThumbnailEffect::windowActivated( EffectWindow* act )
     {
     active_window = act;
-    workspace()->addRepaint( thumbnailRect());
+    effects->addRepaint( thumbnailRect());
     }
 
 void TestThumbnailEffect::windowDamaged( EffectWindow* w, const QRect& )
     {
     if( w == active_window )
-        workspace()->addRepaint( thumbnailRect());
+        effects->addRepaint( thumbnailRect());
     // TODO maybe just the relevant part of the area should be repainted?
     }
 
 void TestThumbnailEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& old )
     {
     if( w == active_window && w->size() != old.size())
-        workspace()->addRepaint( thumbnailRect());
+        effects->addRepaint( thumbnailRect());
     }
 
 void TestThumbnailEffect::windowClosed( EffectWindow* w )
@@ -63,7 +65,7 @@ void TestThumbnailEffect::windowClosed( EffectWindow* w )
     if( w == active_window )
         {
         active_window = NULL;
-        workspace()->addRepaint( thumbnailRect());
+        effects->addRepaint( thumbnailRect());
         }
     }
 

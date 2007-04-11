@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_TEST_THUMBNAIL_H
 #define KWIN_TEST_THUMBNAIL_H
 
-#include <effects.h>
+#include <kwineffects.h>
 
 namespace KWin
 {

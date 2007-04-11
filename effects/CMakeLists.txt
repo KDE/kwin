@@ -16,6 +16,11 @@ SET(kwin4_effect_builtins_sources
     zoom.cpp
     )
 
+SET(kwin4_effect_tests_sources
+    test_input.cpp
+    test_thumbnail.cpp
+    )
+
 if(OPENGL_FOUND)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         shadow.cpp
@@ -47,10 +52,14 @@ if (X11_Xrender_FOUND)
   target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB})
 endif (X11_Xrender_FOUND)
 
+KWIN4_ADD_EFFECT(tests ${kwin4_effect_tests_sources})
+
 install( FILES
     presentwindows.desktop
     diminactive.desktop
     zoom.desktop
+    test_input.desktop
+    test_thumbnail.desktop
     DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
 
 include(UsePkgConfig)

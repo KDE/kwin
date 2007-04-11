@@ -21,11 +21,15 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "test_input.h"
 
-#include <workspace.h>
-#include <client.h>
+#include <assert.h>
+
+#include <qcursor.h>
+#include <qevent.h>
 
 namespace KWin
 {
+
+KWIN_EFFECT( TestInput, TestInputEffect )
 
 TestInputEffect::TestInputEffect()
     {
@@ -39,7 +43,7 @@ TestInputEffect::~TestInputEffect()
 
 void TestInputEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
-    *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
+    *mask |= PAINT_SCREEN_TRANSFORMED;
     effects->prePaintScreen( mask, region, time );
     }
 
@@ -56,12 +60,12 @@ void TestInputEffect::windowInputMouseEvent( Window w, QEvent* e )
         return;
     QPoint pos = static_cast< QMouseEvent* >( e )->pos();
     pos -= QPoint( 0, 100 ); // adjust for transformation
-    foreach( Client* c, Workspace::self()->stackingOrder())
+    foreach( EffectWindow* c, effects->stackingOrder())
         {
-        if( c->isShown( true ) && c->isOnCurrentDesktop()
+        if( /* TODO c->isShown( true ) && */c->isOnCurrentDesktop()
             && c->geometry().contains( pos ))
             {
-            effects->activateWindow( c->effectWindow());
+            effects->activateWindow( c );
             return;
             }
         }
