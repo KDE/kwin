@@ -34,6 +34,7 @@ namespace KWin
 class EffectWindow;
 class EffectWindowGroup;
 class Effect;
+class Vertex;
 
 typedef QPair< QString, Effect* > EffectPair;
 typedef QPair< Effect*, Window > InputWindowPair;
@@ -270,6 +271,14 @@ class KWIN_EXPORT EffectWindow
         virtual bool isComboBox() const = 0;
         virtual bool isDNDIcon() const = 0;
 
+        virtual QVector<Vertex>& vertices() = 0;
+        // Can be called in pre-paint pass. Makes sure that all quads that the
+        //  window consists of are not bigger than maxquadsize x maxquadsize
+        //  (in pixels) in the following paint pass.
+        virtual void requestVertexGrid(int maxquadsize) = 0;
+        // Marks vertices of the window as dirty. Call this if you change
+        //  position of the vertices
+        virtual void markVerticesDirty() = 0;
     };
 
 class KWIN_EXPORT EffectWindowGroup
@@ -278,6 +287,27 @@ class KWIN_EXPORT EffectWindowGroup
         virtual ~EffectWindowGroup();
         virtual EffectWindowList members() const = 0;
     };
+
+/**
+ * @short Vertex class
+ * Vertex has position and texture coordinate which are equal at first,
+ *  however effects can e.g. modify position to move the window or part of it.
+ **/
+class KWIN_EXPORT Vertex
+{
+    public:
+        Vertex()  {}
+        Vertex(float x, float y)
+            {
+            pos[0] = texcoord[0] = x; pos[1] = texcoord[1] = y; pos[2] = 0.0f;
+            }
+        Vertex(float x, float y, float u, float v)
+            {
+            pos[0] = x; pos[1] = y; pos[2] = 0.0f; texcoord[0] = u; texcoord[1] = v;
+            }
+        float pos[3];
+        float texcoord[2];
+};
 
 extern KWIN_EXPORT EffectsHandler* effects;
 

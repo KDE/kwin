@@ -122,26 +122,6 @@ class SceneOpenGL::Window
         void discardTexture();
         void discardVertices();
 
-        /**
-         * @short Vertex class
-         * Vertex has position and texture coordinate which are equal at first,
-         *  however effects can e.g. modify position to move the window or part of it.
-         **/
-        class Vertex
-        {
-            public:
-                Vertex()  {}
-                Vertex(float x, float y)
-                {
-                    pos[0] = texcoord[0] = x; pos[1] = texcoord[1] = y; pos[2] = 0.0f;
-                }
-                Vertex(float x, float y, float u, float v)
-                {
-                    pos[0] = x; pos[1] = y; pos[2] = 0.0f; texcoord[0] = u; texcoord[1] = v;
-                }
-                float pos[3];
-                float texcoord[2];
-        };
         // Returns list of vertices
         QVector<Vertex>& vertices()  { return verticeslist; }
         // Can be called in pre-paint pass. Makes sure that all quads that the

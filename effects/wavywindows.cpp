@@ -11,10 +11,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "wavywindows.h"
 
-#include <scene_opengl.h>
-#include <workspace.h>
-#include <client.h>
-
 #include <math.h>
 
 
@@ -23,6 +19,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 namespace KWin
 {
+
+KWIN_EFFECT( WavyWindows, WavyWindowsEffect )
 
 WavyWindowsEffect::WavyWindowsEffect()
     {
@@ -36,7 +34,7 @@ void WavyWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time )
     mTimeElapsed += (time / 1000.0f);
     // We need to mark the screen windows as transformed. Otherwise the whole
     //  screen won't be repainted, resulting in artefacts
-    *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(mask, region, time);
     }
@@ -44,13 +42,11 @@ void WavyWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time )
 void WavyWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     // This window will be transformed by the effect
-    *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+    *mask |= PAINT_WINDOW_TRANSFORMED;
     // Check if OpenGL compositing is used
-    SceneOpenGL::Window* glwin = dynamic_cast< SceneOpenGL::Window *>( w->sceneWindow() );
-    if(glwin)
-        // Request the window to be divided into cells which are at most 30x30
-        //  pixels big
-        glwin->requestVertexGrid(30);
+    // Request the window to be divided into cells which are at most 30x30
+    //  pixels big
+    w->requestVertexGrid(30);
 
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
@@ -59,14 +55,13 @@ void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
     {
     // Make sure we have OpenGL compositing and the window is vidible and not a
     //  special window
-    SceneOpenGL::Window* glwin = dynamic_cast< SceneOpenGL::Window* >( w->sceneWindow() );
-    Client* c = qobject_cast< Client* >( w->window() );
-    if( glwin && glwin->isVisible() && c && !c->isSpecialWindow() )
+// TODO    if( w->isVisible() && !w->isSpecialWindow() )
+    if( !w->isSpecialWindow() )
         {
         // We have OpenGL compositing and the window has been subdivided
         //  because of our request (in pre-paint pass)
         // Transform all the vertices to create wavy effect
-        QVector< SceneOpenGL::Window::Vertex >& vertices = glwin->vertices();
+        QVector< Vertex >& vertices = w->vertices();
         for(int i = 0; i < vertices.count(); i++)
             {
             vertices[i].pos[0] += sin(mTimeElapsed + vertices[i].texcoord[1] / 60 + 0.5f) * 10;
@@ -74,7 +69,7 @@ void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
             }
         // We have changed the vertices, so they will have to be reset before
         //  the next paint pass
-        glwin->markVerticesDirty();
+        w->markVerticesDirty();
         }
 
     // Call the next effect.
@@ -84,7 +79,7 @@ void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
 void WavyWindowsEffect::postPaintScreen()
     {
     // Repaint the workspace so that everything would be repainted next time
-    workspace()->addRepaintFull();
+    effects->addRepaintFull();
 
     // Call the next effect.
     effects->postPaintScreen();

@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include "group.h"
 #include "scene_xrender.h"
+#include "scene_opengl.h"
 #include "workspace.h"
 
 #include <QFile>
@@ -715,6 +716,27 @@ bool EffectWindowImpl::isComboBox() const
 bool EffectWindowImpl::isDNDIcon() const
     {
     return toplevel->isDNDIcon();
+    }
+
+QVector<Vertex>& EffectWindowImpl::vertices()
+    {
+    if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
+        return w->vertices();
+    abort(); // TODO
+    }
+
+void EffectWindowImpl::requestVertexGrid(int maxquadsize)
+    {
+    if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
+        return w->requestVertexGrid( maxquadsize );
+    abort(); // TODO
+    }
+
+void EffectWindowImpl::markVerticesDirty()
+    {
+    if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
+        return w->markVerticesDirty();
+    abort(); // TODO
     }
 
 EffectWindow* effectWindow( Toplevel* w )

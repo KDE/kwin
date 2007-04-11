@@ -129,6 +129,10 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isComboBox() const;
         virtual bool isDNDIcon() const;
 
+        virtual QVector<Vertex>& vertices();
+        virtual void requestVertexGrid(int maxquadsize);
+        virtual void markVerticesDirty();
+
         const Toplevel* window() const;
         Toplevel* window();
 
