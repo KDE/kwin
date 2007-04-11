@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_VIDEO_H
 #define KWIN_VIDEO_H
 
-#include <effects.h>
+#include <kwineffects.h>
 
 #include <captury/captury.h>
 

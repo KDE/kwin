@@ -10,8 +10,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "zoom.h"
 
-#include <workspace.h>
-
 namespace KWin
 {
 
@@ -32,7 +30,7 @@ void ZoomEffect::prePaintScreen( int* mask, QRegion* region, int time )
             zoom = qMax( zoom - diff, target_zoom );
         }
     if( zoom != 1.0 )
-        *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
+        *mask |= PAINT_SCREEN_TRANSFORMED;
     effects->prePaintScreen( mask, region, time );
     }
 
@@ -53,7 +51,7 @@ void ZoomEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 void ZoomEffect::postPaintScreen()
     {
     if( zoom != target_zoom )
-        workspace()->addRepaintFull();
+        effects->addRepaintFull();
     effects->postPaintScreen();
     }
 

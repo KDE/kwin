@@ -39,8 +39,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kactioncollection.h>
 #include <klocale.h>
 
-#include <workspace.h>
-
 #include <GL/gl.h>
 
 namespace KWin
@@ -117,7 +115,7 @@ void VideoRecordEffect::startRecording()
         kDebug( 1212 ) << "Video recording file open failed" << endl;
         return;
         }
-    workspace()->addRepaintFull(); // trigger reading initial screen contents into buffer
+    effects->addRepaintFull(); // trigger reading initial screen contents into buffer
     kDebug( 1212 ) << "Video recording start" << endl;
     }
 
