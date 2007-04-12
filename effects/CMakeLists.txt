@@ -18,6 +18,7 @@ SET(kwin4_effect_builtins_sources
 
 SET(kwin4_effect_tests_sources
     test_input.cpp
+    test_shiftworkspaceup.cpp
     test_thumbnail.cpp
     )
 
@@ -59,6 +60,7 @@ install( FILES
     diminactive.desktop
     zoom.desktop
     test_input.desktop
+    test_shiftworkspaceup.desktop
     test_thumbnail.desktop
     DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
 

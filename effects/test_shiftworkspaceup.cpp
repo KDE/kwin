@@ -8,12 +8,12 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include "shiftworkspaceup.h"
-
-#include <workspace.h>
+#include "test_shiftworkspaceup.h"
 
 namespace KWin
 {
+
+KWIN_EFFECT( ShiftWorkspaceUp, ShiftWorkspaceUpEffect )
 
 ShiftWorkspaceUpEffect::ShiftWorkspaceUpEffect()
     : up( false )
@@ -30,7 +30,7 @@ void ShiftWorkspaceUpEffect::prePaintScreen( int* mask, QRegion* region, int tim
     if( !up && diff > 0 )
         diff = qBound( 0, diff - time, 1000 );
     if( diff != 0 )
-        *mask |= Scene::PAINT_SCREEN_TRANSFORMED;
+        *mask |= PAINT_SCREEN_TRANSFORMED;
     effects->prePaintScreen( mask, region, time );
     }
 
@@ -44,16 +44,16 @@ void ShiftWorkspaceUpEffect::paintScreen( int mask, QRegion region, ScreenPaintD
 void ShiftWorkspaceUpEffect::postPaintScreen()
     {
     if( up ? diff < 1000 : diff > 0 )
-        workspace()->addRepaintFull(); // trigger next animation repaint
+        effects->addRepaintFull(); // trigger next animation repaint
     effects->postPaintScreen();
     }
 
 void ShiftWorkspaceUpEffect::tick()
     {
     up = !up;
-    workspace()->addRepaintFull();
+    effects->addRepaintFull();
     }
 
 } // namespace
 
-#include "shiftworkspaceup.moc"
+#include "test_shiftworkspaceup.moc"

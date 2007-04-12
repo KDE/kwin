@@ -8,12 +8,12 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef KWIN_SHIFTWORKSPACEUP_H
-#define KWIN_SHIFTWORKSPACEUP_H
+#ifndef KWIN_TEST_SHIFTWORKSPACEUP_H
+#define KWIN_TEST_SHIFTWORKSPACEUP_H
 
 #include <qtimer.h>
 
-#include <effects.h>
+#include <kwineffects.h>
 
 namespace KWin
 {
