@@ -11,9 +11,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_BOXSWITCH_H
 #define KWIN_BOXSWITCH_H
 
-#if 0
-// TODO
-
 #include <kwineffects.h>
 
 #include <QHash>
@@ -103,5 +100,4 @@ class BoxSwitchEffect::ItemInfo
 
 } // namespace
 
-#endif
 #endif

@@ -181,11 +181,22 @@ class KWIN_EXPORT EffectsHandler
         // 
         virtual int currentDesktop() const = 0;
         virtual int numberOfDesktops() const = 0;
+        virtual QString desktopName( int desktop ) const = 0;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const = 0;
         virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const = 0;
         virtual bool optionRollOverDesktops() const = 0;
 
         virtual EffectWindowList stackingOrder() const = 0;
+
+        virtual void setTabBoxWindow(EffectWindow*) = 0;
+        virtual void setTabBoxDesktop(int) = 0;
+        virtual EffectWindowList currentTabBoxWindowList() const = 0;
+        virtual void refTabBox() = 0;
+        virtual void unrefTabBox() = 0;
+        virtual void closeTabBox() = 0;
+        virtual QList< int > currentTabBoxDesktopList() const = 0;
+        virtual int currentTabBoxDesktop() const = 0;
+        virtual EffectWindow* currentTabBoxWindow() const = 0;
 
         // Repaints the entire workspace
         virtual void addRepaintFull() = 0;
@@ -262,6 +273,7 @@ class KWIN_EXPORT EffectWindow
         virtual QRect iconGeometry() const = 0;
 
         virtual QString caption() const = 0;
+        virtual QPixmap icon() const = 0;
         virtual const EffectWindowGroup* group() const = 0;
 
         virtual bool isDesktop() const = 0;

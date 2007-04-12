@@ -38,10 +38,22 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual int currentDesktop() const;
         virtual int numberOfDesktops() const;
+        virtual QString desktopName( int desktop ) const;
         virtual int displayWidth() const;
         virtual int displayHeight() const;
         virtual QPoint cursorPos() const;
         virtual EffectWindowList stackingOrder() const;
+
+        virtual void setTabBoxWindow(EffectWindow*);
+        virtual void setTabBoxDesktop(int);
+        virtual EffectWindowList currentTabBoxWindowList() const;
+        virtual void refTabBox();
+        virtual void unrefTabBox();
+        virtual void closeTabBox();
+        virtual QList< int > currentTabBoxDesktopList() const;
+        virtual int currentTabBoxDesktop() const;
+        virtual EffectWindow* currentTabBoxWindow() const;
+
         virtual void addRepaintFull();
         virtual void addRepaint( const QRect& r );
         virtual void addRepaint( int x, int y, int w, int h );
@@ -107,6 +119,7 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isMinimized() const;
         virtual double opacity() const;
         virtual QString caption() const;
+        virtual QPixmap icon() const;
         virtual const EffectWindowGroup* group() const;
 
         virtual int x() const;

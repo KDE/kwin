@@ -462,14 +462,14 @@ class Workspace : public QObject, public KDecorationDefines
         void setupWindowShortcut( Client* c );
 
         bool startKDEWalkThroughWindows();
-        bool startWalkThroughDesktops( int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
+        bool startWalkThroughDesktops( TabBoxMode mode ); // TabBoxDesktopMode | TabBoxDesktopListMode
         bool startWalkThroughDesktops();
         bool startWalkThroughDesktopList();
         void KDEWalkThroughWindows( bool forward );
         void CDEWalkThroughWindows( bool forward );
         void walkThroughDesktops( bool forward );
         void KDEOneStepThroughWindows( bool forward );
-        void oneStepThroughDesktops( bool forward, int mode ); // TabBox::Mode::DesktopMode | DesktopListMode
+        void oneStepThroughDesktops( bool forward, TabBoxMode mode ); // TabBoxDesktopMode | TabBoxDesktopListMode
         void oneStepThroughDesktops( bool forward );
         void oneStepThroughDesktopList( bool forward );
         bool establishTabBoxGrab();

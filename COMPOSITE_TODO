@@ -175,6 +175,8 @@ Effects framework TODO
 + EffectWindow should be completely opaque when kept as the only API for effects
     - no inlines, etc.
 
++ API for tabbox for effects should be cleaned up
+
 
 Effects TODO
 ===============================

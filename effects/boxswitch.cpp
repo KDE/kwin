@@ -12,14 +12,16 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "boxswitch.h"
 
+#include <QCursor>
+#include <QMouseEvent>
 #include <QSize>
+
+#include <assert.h>
 
 #ifdef HAVE_OPENGL
 #include <GL/gl.h>
 #endif
 
-#if 0
-// TODO
 namespace KWin
 {
 
@@ -50,12 +52,12 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
     {
     if( mActivated )
         {
-        if( mMode == TabBox::WindowsMode )
+        if( mMode == TabBoxWindowsMode )
             {
             if( windows.contains( w ) && w != selected_window )
                 {
-                *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
-                *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
+                *mask |= PAINT_WINDOW_TRANSLUCENT;
+                *mask &= ~PAINT_WINDOW_OPAQUE;
                 }
             }
         else
@@ -63,9 +65,9 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
             if( painting_desktop )
                 {
                 if( w->isOnDesktop( painting_desktop ))
-                    w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
+                    w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
                 else
-                    w->disablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
+                    w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
                 }
             }
         }
@@ -77,7 +79,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     effects->paintScreen( mask, region, data );
     if( mActivated )
         {
-        if( mMode == TabBox::WindowsMode )
+        if( mMode == TabBoxWindowsMode )
             {
             paintFrame();
 
@@ -85,8 +87,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 {
                 if( w == selected_window )
                     {
-                    paintHighlight( windows[ w ]->area,
-                        static_cast< Client* >( w->window())->caption());
+                    paintHighlight( windows[ w ]->area, w->caption());
                     }
                 paintWindowThumbnail( w );
                 paintWindowIcon( w );
@@ -103,7 +104,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                     if( painting_desktop == selected_desktop )
                         {
                         paintHighlight( desktops[ painting_desktop ]->area,
-                            Workspace::self()->desktopName( painting_desktop ));
+                            effects->desktopName( painting_desktop ));
                         }
 
                     paintDesktopThumbnail( painting_desktop );
@@ -118,7 +119,7 @@ void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
     {
     if( mActivated )
         {
-        if( mMode == TabBox::WindowsMode )
+        if( mMode == TabBoxWindowsMode )
             {
             if( windows.contains( w ) && w != selected_window )
                 {
@@ -138,13 +139,13 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
     pos += frame_area.topLeft();
 
     // determine which item was clicked
-    if( mMode == TabBox::WindowsMode )
+    if( mMode == TabBoxWindowsMode )
         {
         foreach( EffectWindow* w, windows.keys())
             {
             if( windows[ w ]->clickable.contains( pos ))
                 {
-                Workspace::self()->setTabBoxClient( static_cast< Client* >( w->window()));
+                effects->setTabBoxWindow( w );
                 }
             }
         }
@@ -154,7 +155,7 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
             {
             if( desktops[ i ]->clickable.contains( pos ))
                 {
-                Workspace::self()->setTabBoxDesktop( i );
+                effects->setTabBoxDesktop( i );
                 }
             }
         }
@@ -164,11 +165,11 @@ void BoxSwitchEffect::windowDamaged( EffectWindow* w, const QRect& damage )
     {
     if( mActivated )
         {
-        if( mMode == TabBox::WindowsMode )
+        if( mMode == TabBoxWindowsMode )
             {
             if( windows.contains( w ))
                 {
-                workspace()->addRepaint( windows[ w ]->area );
+                effects->addRepaint( windows[ w ]->area );
                 }
             }
         else
@@ -176,11 +177,11 @@ void BoxSwitchEffect::windowDamaged( EffectWindow* w, const QRect& damage )
             if( w->isOnAllDesktops())
                 {
                 foreach( ItemInfo* info, desktops )
-                    workspace()->addRepaint( info->area );
+                    effects->addRepaint( info->area );
                 }
             else
                 {
-                workspace()->addRepaint( desktops[ w->desktop() ]->area );
+                effects->addRepaint( desktops[ w->desktop() ]->area );
                 }
             }
         }
@@ -190,11 +191,11 @@ void BoxSwitchEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& 
     {
     if( mActivated )
         {
-        if( mMode == TabBox::WindowsMode )
+        if( mMode == TabBoxWindowsMode )
             {
             if( windows.contains( w ) && w->size() != old.size())
                 {
-                workspace()->addRepaint( windows[ w ]->area );
+                effects->addRepaint( windows[ w ]->area );
                 }
             }
         else
@@ -202,11 +203,11 @@ void BoxSwitchEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& 
             if( w->isOnAllDesktops())
                 {
                 foreach( ItemInfo* info, desktops )
-                    workspace()->addRepaint( info->area );
+                    effects->addRepaint( info->area );
                 }
             else
                 {
-                workspace()->addRepaint( desktops[ w->desktop() ]->area );
+                effects->addRepaint( desktops[ w->desktop() ]->area );
                 }
             }
         }
@@ -216,22 +217,22 @@ void BoxSwitchEffect::tabBoxAdded( int mode )
     {
     if( !mActivated )
         {
-        if( mode == TabBox::WindowsMode )
+        if( mode == TabBoxWindowsMode )
             {
-            if( Workspace::self()->currentTabBoxClientList().count() > 0 )
+            if( effects->currentTabBoxWindowList().count() > 0 )
                 {
                 mMode = mode;
-                Workspace::self()->refTabBox();
+                effects->refTabBox();
                 setActive();
                 }
             }
         else
             { // DesktopMode
-            if( Workspace::self()->currentTabBoxDesktopList().count() > 0 )
+            if( effects->currentTabBoxDesktopList().count() > 0 )
                 {
                 mMode = mode;
                 painting_desktop = 0;
-                Workspace::self()->refTabBox();
+                effects->refTabBox();
                 setActive();
                 }
             }
@@ -248,65 +249,65 @@ void BoxSwitchEffect::tabBoxUpdated()
     {
     if( mActivated )
         {
-        if( mMode == TabBox::WindowsMode )
+        if( mMode == TabBoxWindowsMode )
             {
             if( selected_window != NULL )
                 {
                 if( windows.contains( selected_window ))
-                    workspace()->addRepaint( windows.value( selected_window )->area );
-                selected_window->window()->addRepaintFull();
+                    effects->addRepaint( windows.value( selected_window )->area );
+                selected_window->addRepaintFull();
                 }
-            selected_window = Workspace::self()->currentTabBoxClient()->effectWindow();
+            selected_window = effects->currentTabBoxWindow();
             if( windows.contains( selected_window ))
-                workspace()->addRepaint( windows.value( selected_window )->area );
-            selected_window->window()->addRepaintFull();
-            if( Workspace::self()->currentTabBoxClientList() == original_windows )
+                effects->addRepaint( windows.value( selected_window )->area );
+            selected_window->addRepaintFull();
+            if( effects->currentTabBoxWindowList() == original_windows )
                 return;
-            original_windows = Workspace::self()->currentTabBoxClientList();
+            original_windows = effects->currentTabBoxWindowList();
             }
         else
             { // DesktopMode
             if( desktops.contains( selected_desktop ))
-                workspace()->addRepaint( desktops.value( selected_desktop )->area );
-            selected_desktop = Workspace::self()->currentTabBoxDesktop();
+                effects->addRepaint( desktops.value( selected_desktop )->area );
+            selected_desktop = effects->currentTabBoxDesktop();
             if( desktops.contains( selected_desktop ))
-                workspace()->addRepaint( desktops.value( selected_desktop )->area );
-            if( Workspace::self()->currentTabBoxDesktopList() == original_desktops )
+                effects->addRepaint( desktops.value( selected_desktop )->area );
+            if( effects->currentTabBoxDesktopList() == original_desktops )
                 return;
-            original_desktops = Workspace::self()->currentTabBoxDesktopList();
+            original_desktops = effects->currentTabBoxDesktopList();
             }
-        workspace()->addRepaint( frame_area );
+        effects->addRepaint( frame_area );
         calculateFrameSize();
         calculateItemSizes();
         moveResizeInputWindow( frame_area.x(), frame_area.y(), frame_area.width(), frame_area.height());
-        workspace()->addRepaint( frame_area );
+        effects->addRepaint( frame_area );
         }
     }
 
 void BoxSwitchEffect::setActive()
     {
     mActivated = true;
-    if( mMode == TabBox::WindowsMode )
+    if( mMode == TabBoxWindowsMode )
         {
-        original_windows = Workspace::self()->currentTabBoxClientList();
-        selected_window = Workspace::self()->currentTabBoxClient()->effectWindow();
+        original_windows = effects->currentTabBoxWindowList();
+        selected_window = effects->currentTabBoxWindow();
         }
     else
         {
-        original_desktops = Workspace::self()->currentTabBoxDesktopList();
-        selected_desktop = Workspace::self()->currentTabBoxDesktop();
+        original_desktops = effects->currentTabBoxDesktopList();
+        selected_desktop = effects->currentTabBoxDesktop();
         }
     calculateFrameSize();
     calculateItemSizes();
     mInput = effects->createInputWindow( this, frame_area.x(), frame_area.y(),
         frame_area.width(), frame_area.height(), Qt::ArrowCursor );
-    workspace()->addRepaint( frame_area );
-    if( mMode == TabBox::WindowsMode )
+    effects->addRepaint( frame_area );
+    if( mMode == TabBoxWindowsMode )
         {
         foreach( EffectWindow* w, windows.keys())
             {
             if( w != selected_window )
-                w->window()->addRepaintFull();
+                w->addRepaintFull();
             }
         }
     }
@@ -314,23 +315,23 @@ void BoxSwitchEffect::setActive()
 void BoxSwitchEffect::setInactive()
     {
     mActivated = false;
-    Workspace::self()->unrefTabBox();
+    effects->unrefTabBox();
     if( mInput != None )
         {
         effects->destroyInputWindow( mInput );
         mInput = None;
         }
-    if( mMode == TabBox::WindowsMode )
+    if( mMode == TabBoxWindowsMode )
         {
         foreach( EffectWindow* w, windows.keys())
             {
             if( w != selected_window )
-                w->window()->addRepaintFull();
+                w->addRepaintFull();
             }
         foreach( ItemInfo* i, windows )
             {
 #ifdef HAVE_XRENDER
-            if( dynamic_cast< SceneXrender* >( scene ))
+        if( effects->compositingType() == XRenderCompositing )
                 {
                 if( i->iconPicture != None )
                     XRenderFreePicture( display(), i->iconPicture );
@@ -347,7 +348,7 @@ void BoxSwitchEffect::setInactive()
             delete i;
         desktops.clear();
         }
-    workspace()->addRepaint( frame_area );
+    effects->addRepaint( frame_area );
     frame_area = QRect();
     }
 
@@ -361,7 +362,7 @@ void BoxSwitchEffect::calculateFrameSize()
     {
     int itemcount;
 
-    if( mMode == TabBox::WindowsMode )
+    if( mMode == TabBoxWindowsMode )
         {
         itemcount = original_windows.count();
         item_max_size.setWidth( 200 );
@@ -386,12 +387,12 @@ void BoxSwitchEffect::calculateFrameSize()
 
 void BoxSwitchEffect::calculateItemSizes()
     {
-    if( mMode == TabBox::WindowsMode )
+    if( mMode == TabBoxWindowsMode )
         {
         windows.clear();
         for( int i = 0; i < original_windows.count(); i++ )
             {
-            EffectWindow* w = original_windows.at( i )->effectWindow();
+            EffectWindow* w = original_windows.at( i );
             windows[ w ] = new ItemInfo();
 
             windows[ w ]->area = QRect( frame_area.x() + frame_margin
@@ -422,7 +423,7 @@ void BoxSwitchEffect::paintFrame()
     {
     double alpha = 0.75;
 #ifdef HAVE_OPENGL
-    if( dynamic_cast< SceneOpenGL* >( scene ))
+    if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_BLEND );
@@ -441,10 +442,10 @@ void BoxSwitchEffect::paintFrame()
         glDisableClientState( GL_VERTEX_ARRAY );
         glPopAttrib();
         }
-    else
 #endif
-        {
 #ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing )
+        {
         Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
             frame_area.width(), frame_area.height(), 32 );
         Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
@@ -457,18 +458,18 @@ void BoxSwitchEffect::paintFrame()
         XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
             frame_area.width(), frame_area.height());
         XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc,
-            pic, None, static_cast< SceneXrender* >( scene )->bufferPicture(),
+            pic, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, frame_area.x(), frame_area.y(), frame_area.width(), frame_area.height());
         XRenderFreePicture( display(), pic );
-#endif
         }
+#endif
     }
 
 void BoxSwitchEffect::paintHighlight( QRect area, QString text )
     {
     double alpha = 0.75;
 #ifdef HAVE_OPENGL
-    if( dynamic_cast< SceneOpenGL* >( scene ))
+    if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_BLEND );
@@ -487,10 +488,10 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
         glDisableClientState( GL_VERTEX_ARRAY );
         glPopAttrib();
         }
-    else
 #endif
-        {
 #ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing )
+        {
         Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
             area.width(), area.height(), 32 );
         Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
@@ -503,11 +504,11 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
         XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
             area.width(), area.height());
         XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc,
-            pic, None, static_cast< SceneXrender* >( scene )->bufferPicture(),
+            pic, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
         XRenderFreePicture( display(), pic );
-#endif
         }
+#endif
 //    kDebug() << text << endl; // TODO draw this nicely on screen
     }
 
@@ -523,7 +524,7 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
         Qt::KeepAspectRatio );
 
     effects->drawWindow( w,
-        Scene::PAINT_WINDOW_OPAQUE | Scene::PAINT_WINDOW_TRANSFORMED,
+        PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
         windows[ w ]->thumbnail, data );
     }
 
@@ -549,7 +550,7 @@ void BoxSwitchEffect::paintDesktopThumbnail( int iDesktop )
     data.xTranslate = x;
     data.yTranslate = y;
 
-    effects->paintScreen( Scene::PAINT_SCREEN_TRANSFORMED | Scene::PAINT_SCREEN_BACKGROUND_FIRST,
+    effects->paintScreen( PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST,
         region, data );
     }
 
@@ -557,33 +558,32 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     {
     if( !windows.contains( w ))
         return;
-    if( windows[ w ]->icon.serialNumber()
-        != static_cast< Client* >( w->window())->icon().serialNumber())
+    if( windows[ w ]->icon.serialNumber() != w->icon().serialNumber())
         { // make sure windows[ w ]->icon is the right QPixmap, and rebind
-        windows[ w ]->icon = static_cast< Client* >( w->window())->icon();
+        windows[ w ]->icon = w->icon();
 #ifdef HAVE_OPENGL
-        if( dynamic_cast< SceneOpenGL* >( scene ))
+        if( effects->compositingType() == OpenGLCompositing )
             {
             windows[ w ]->iconTexture.load( windows[ w ]->icon );
             windows[ w ]->iconTexture.setFilter( GL_LINEAR );
             }
-        else
 #endif
-            {
 #ifdef HAVE_XRENDER
+        if( effects->compositingType() == XRenderCompositing )
+            {
             if( windows[ w ]->iconPicture != None )
                 XRenderFreePicture( display(), windows[ w ]->iconPicture );
             windows[ w ]->iconPicture = XRenderCreatePicture( display(),
                 windows[ w ]->icon.handle(), alphaFormat, 0, NULL );
-#endif
             }
+#endif
         }
     int width = windows[ w ]->icon.width();
     int height = windows[ w ]->icon.height();
     int x = windows[ w ]->area.x() + windows[ w ]->area.width() - width - highlight_margin;
     int y = windows[ w ]->area.y() + windows[ w ]->area.height() - height - highlight_margin;
 #ifdef HAVE_OPENGL
-    if( dynamic_cast< SceneOpenGL* >( scene ))
+    if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_BLEND );
@@ -613,18 +613,17 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         windows[ w ]->iconTexture.unbind();
         glPopAttrib();
         }
-    else
 #endif
-        {
 #ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing )
+        {
         XRenderComposite( display(),
             windows[ w ]->icon.depth() == 32 ? PictOpOver : PictOpSrc,
             windows[ w ]->iconPicture, None,
-            static_cast< SceneXrender* >( scene )->bufferPicture(),
+            effects->xrenderBufferPicture(),
             0, 0, 0, 0, x, y, width, height );
-#endif
         }
+#endif
     }
 
 } // namespace
-#endif

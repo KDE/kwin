@@ -247,6 +247,11 @@ int EffectsHandlerImpl::numberOfDesktops() const
     return Workspace::self()->numberOfDesktops();
     }
 
+QString EffectsHandlerImpl::desktopName( int desktop ) const
+    {
+    return Workspace::self()->desktopName( desktop );
+    }
+
 void EffectsHandlerImpl::calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const
     {
     Workspace::self()->calcDesktopLayout( x, y, orientation );
@@ -279,6 +284,58 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
     foreach( Client* c, list )
         ret.append( effectWindow( c ));
     return ret;
+    }
+
+void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
+    {
+    if( Client* c = dynamic_cast< Client* >( static_cast< EffectWindowImpl* >( w )->window()))
+        Workspace::self()->setTabBoxClient( c );
+    }
+
+void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
+    {
+    Workspace::self()->setTabBoxDesktop( desktop );
+    }
+
+EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
+    {
+    EffectWindowList ret;
+    ClientList clients = Workspace::self()->currentTabBoxClientList();
+    foreach( Client* c, clients )
+        ret.append( c->effectWindow());
+    return ret;
+    }
+
+void EffectsHandlerImpl::refTabBox()
+    {
+    Workspace::self()->refTabBox();
+    }
+
+void EffectsHandlerImpl::unrefTabBox()
+    {
+    Workspace::self()->unrefTabBox();
+    }
+
+void EffectsHandlerImpl::closeTabBox()
+    {
+    Workspace::self()->closeTabBox();
+    }
+
+QList< int > EffectsHandlerImpl::currentTabBoxDesktopList() const
+    {
+    return Workspace::self()->currentTabBoxDesktopList();
+    }
+
+int EffectsHandlerImpl::currentTabBoxDesktop() const
+    {
+    return Workspace::self()->currentTabBoxDesktop();
+    }
+
+EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
+    {
+    if( Client* c = Workspace::self()->currentTabBoxClient())
+        return c->effectWindow();
+    return NULL;
     }
 
 void EffectsHandlerImpl::addRepaintFull()
@@ -563,6 +620,13 @@ QString EffectWindowImpl::caption() const
         return c->caption();
     else
         return "";
+    }
+
+QPixmap EffectWindowImpl::icon() const
+    {
+    if( Client* c = dynamic_cast<Client*>( toplevel ))
+        return c->icon();
+    return QPixmap(); // TODO
     }
 
 const EffectWindowGroup* EffectWindowImpl::group() const

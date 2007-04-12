@@ -59,6 +59,10 @@ enum ElectricBorder
     ElectricNone
 };
 
+// DesktopMode and WindowsMode are based on the order in which the desktop
+//  or window were viewed.
+// DesktopListMode lists them in the order created.
+enum TabBoxMode { TabBoxDesktopMode, TabBoxDesktopListMode, TabBoxWindowsMode };
 
 class KWIN_EXPORT WindowPaintData
     {
