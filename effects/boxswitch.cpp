@@ -8,12 +8,9 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include "boxswitch.h"
+#include <config.h>
 
-#include "tabbox.h"
-#include "client.h"
-#include "scene_xrender.h"
-#include "scene_opengl.h"
+#include "boxswitch.h"
 
 #include <QSize>
 
@@ -21,8 +18,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <GL/gl.h>
 #endif
 
+#if 0
+// TODO
 namespace KWin
 {
+
+KWIN_EFFECT( BoxSwitch, BoxSwitchEffect )
 
 BoxSwitchEffect::BoxSwitchEffect()
     : mActivated( 0 )
@@ -626,3 +627,4 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     }
 
 } // namespace
+#endif

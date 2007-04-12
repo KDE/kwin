@@ -11,7 +11,13 @@ include_directories(
     )
 
 SET(kwin4_effect_builtins_sources
+    boxswitch.cpp
+    desktopchangeslide.cpp
+    dialogparent.cpp
     diminactive.cpp
+    drunken.cpp
+    fade.cpp
+    fallapart.cpp
     flame.cpp
     maketransparent.cpp
     minimizeanimation.cpp
@@ -22,9 +28,10 @@ SET(kwin4_effect_builtins_sources
     )
 
 SET(kwin4_effect_tests_sources
+    demo_shiftworkspaceup.cpp
+    demo_taskbarthumbnail.cpp
     howto.cpp
     test_input.cpp
-    test_shiftworkspaceup.cpp
     test_thumbnail.cpp
     )
 
@@ -62,7 +69,13 @@ endif (X11_Xrender_FOUND)
 KWIN4_ADD_EFFECT(tests ${kwin4_effect_tests_sources})
 
 install( FILES
+    boxswitch.desktop
+    desktopchangeslide.desktop
+    dialogparent.desktop
     diminactive.desktop
+    drunken.desktop
+    fade.desktop
+    fallapart.desktop
     flame.desktop
     howto.desktop
     maketransparent.desktop
@@ -71,8 +84,9 @@ install( FILES
     scalein.desktop
     shakymove.desktop
     zoom.desktop
+    demo_shiftworkspaceup.desktop
+    demo_taskbarthumbnail.desktop
     test_input.desktop
-    test_shiftworkspaceup.desktop
     test_thumbnail.desktop
     DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
 

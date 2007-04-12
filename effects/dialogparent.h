@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_DIALOGPARENT_H
 
 // Include with base class for effects.
-#include <effects.h>
+#include <kwineffects.h>
 
 
 namespace KWin
@@ -36,7 +36,7 @@ class DialogParentEffect
         virtual void windowActivated( EffectWindow* c );
 
     protected:
-        bool hasModalWindow( Toplevel* t );
+        bool hasModalWindow( EffectWindow* t );
     private:
         // The progress of the fading.
         QHash<EffectWindow*, float> effectStrength;

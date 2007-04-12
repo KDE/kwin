@@ -10,11 +10,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "desktopchangeslide.h"
 
-#include <options.h>
-#include <workspace.h>
-
 namespace KWin
 {
+
+KWIN_EFFECT( DesktopChangeSlide, DesktopChangeSlideEffect )
 
 const int MAX_PROGRESS = 500; // ms
 
@@ -29,7 +28,7 @@ void DesktopChangeSlideEffect::prePaintScreen( int* mask, QRegion* region, int t
     // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
     // so with normal screen painting second screen paint would erase parts of the first paint
     if( progress != MAX_PROGRESS )
-        *mask |= Scene::PAINT_SCREEN_TRANSFORMED | Scene::PAINT_SCREEN_BACKGROUND_FIRST;
+        *mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
     effects->prePaintScreen( mask, region, time );
     }
 
@@ -40,14 +39,14 @@ void DesktopChangeSlideEffect::prePaintWindow( EffectWindow* w, int* mask, QRegi
         if( w->isOnAllDesktops())
             {
             if( painting_sticky )
-                *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+                *mask |= PAINT_WINDOW_TRANSFORMED;
             else
-                w->disablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
+                w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             }
         else if( w->isOnDesktop( painting_desktop ))
-            w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
+            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         else
-            w->disablePainting( Scene::Window::PAINT_DISABLED_BY_DESKTOP );
+            w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
@@ -64,15 +63,15 @@ void DesktopChangeSlideEffect::paintScreen( int mask, QRegion region, ScreenPain
      of it, the destination is computed from the current desktop. Positions of desktops
      are done using their topleft corner.
     */
-    QPoint destPos = desktopPos( Workspace::self()->currentDesktop());
+    QPoint destPos = desktopPos( effects->currentDesktop());
     QPoint diffPos = destPos - startPos;
     int w = 0;
     int h = 0;
-    if( options->rollOverDesktops )
+    if( effects->optionRollOverDesktops())
         {
         int x, y;
         Qt::Orientation orientation;
-        Workspace::self()->calcDesktopLayout( &x, &y, &orientation );
+        effects->calcDesktopLayout( &x, &y, &orientation );
         w = x * displayWidth();
         h = y * displayHeight();
         // wrap around if shorter
@@ -88,7 +87,7 @@ void DesktopChangeSlideEffect::paintScreen( int mask, QRegion region, ScreenPain
     QPoint currentPos = startPos + progress * diffPos / MAX_PROGRESS;
     QSize displaySize( displayWidth(), displayHeight());
     QRegion currentRegion = QRect( currentPos, displaySize );
-    if( options->rollOverDesktops )
+    if( effects->optionRollOverDesktops())
         {
         currentRegion |= ( currentRegion & QRect( -w, 0, w, h )).translated( w, 0 );
         currentRegion |= ( currentRegion & QRect( 0, -h, w, h )).translated( 0, h );
@@ -97,7 +96,7 @@ void DesktopChangeSlideEffect::paintScreen( int mask, QRegion region, ScreenPain
         }
     bool do_sticky = true;
     for( int desktop = 1;
-         desktop <= Workspace::self()->numberOfDesktops();
+         desktop <= effects->numberOfDesktops();
          ++desktop )
         {
         QRect desktopRect( desktopPos( desktop ), displaySize );
@@ -106,7 +105,7 @@ void DesktopChangeSlideEffect::paintScreen( int mask, QRegion region, ScreenPain
             painting_desktop = desktop;
             painting_sticky = do_sticky;
             painting_diff = desktopRect.topLeft() - currentPos;
-            if( options->rollOverDesktops )
+            if( effects->optionRollOverDesktops())
                 {
                 if( painting_diff.x() > displayWidth())
                     painting_diff.setX( painting_diff.x() - w );
@@ -143,7 +142,7 @@ void DesktopChangeSlideEffect::paintWindow( EffectWindow* w, int mask, QRegion r
 void DesktopChangeSlideEffect::postPaintScreen()
     {
     if( progress != MAX_PROGRESS )
-        Workspace::self()->addRepaintFull(); // trigger next animation repaint
+        effects->addRepaintFull(); // trigger next animation repaint
     effects->postPaintScreen();
     }
 
@@ -152,7 +151,7 @@ QPoint DesktopChangeSlideEffect::desktopPos( int desktop )
     {
     int x, y;
     Qt::Orientation orientation;
-    Workspace::self()->calcDesktopLayout( &x, &y, &orientation );
+    effects->calcDesktopLayout( &x, &y, &orientation );
     --desktop; // make it start with 0
     if( orientation == Qt::Vertical )
         return QPoint(( desktop % x ) * displayWidth(), ( desktop / x ) * displayHeight());
@@ -167,11 +166,11 @@ void DesktopChangeSlideEffect::desktopChanged( int old )
         QPoint diffPos = desktopPos( old ) - startPos;
         int w = 0;
         int h = 0;
-        if( options->rollOverDesktops )
+        if( effects->optionRollOverDesktops())
             {
             int x, y;
             Qt::Orientation orientation;
-            Workspace::self()->calcDesktopLayout( &x, &y, &orientation );
+            effects->calcDesktopLayout( &x, &y, &orientation );
             w = x * displayWidth();
             h = y * displayHeight();
             // wrap around if shorter
@@ -186,14 +185,14 @@ void DesktopChangeSlideEffect::desktopChanged( int old )
             }
         QPoint currentPos = startPos + progress * diffPos / MAX_PROGRESS;
         QRegion currentRegion = QRect( currentPos, QSize( displayWidth(), displayHeight()));
-        if( options->rollOverDesktops )
+        if( effects->optionRollOverDesktops())
             {
             currentRegion |= ( currentRegion & QRect( -w, 0, w, h )).translated( w, 0 );
             currentRegion |= ( currentRegion & QRect( 0, -h, w, h )).translated( 0, h );
             currentRegion |= ( currentRegion & QRect( w, 0, w, h )).translated( -w, 0 );
             currentRegion |= ( currentRegion & QRect( 0, h, w, h )).translated( 0, -h );
             }
-        QRect desktopRect( desktopPos( Workspace::self()->currentDesktop()), QSize( displayWidth(), displayHeight()));
+        QRect desktopRect( desktopPos( effects->currentDesktop()), QSize( displayWidth(), displayHeight()));
         if( currentRegion.contains( desktopRect ))
             { // current position is in new current desktop (e.g. quickly changing back),
               // don't do full progress
@@ -213,7 +212,7 @@ void DesktopChangeSlideEffect::desktopChanged( int old )
         progress = 0;
         startPos = desktopPos( old );
         }
-    Workspace::self()->addRepaintFull();
+    effects->addRepaintFull();
     }
 
 } // namespace

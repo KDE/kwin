@@ -8,12 +8,12 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include "test_shiftworkspaceup.h"
+#include "demo_shiftworkspaceup.h"
 
 namespace KWin
 {
 
-KWIN_EFFECT( ShiftWorkspaceUp, ShiftWorkspaceUpEffect )
+KWIN_EFFECT( DemoShiftWorkspaceUp, ShiftWorkspaceUpEffect )
 
 ShiftWorkspaceUpEffect::ShiftWorkspaceUpEffect()
     : up( false )
@@ -56,4 +56,4 @@ void ShiftWorkspaceUpEffect::tick()
 
 } // namespace
 
-#include "test_shiftworkspaceup.moc"
+#include "demo_shiftworkspaceup.moc"

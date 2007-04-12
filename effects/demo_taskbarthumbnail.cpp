@@ -11,12 +11,12 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "demo_taskbarthumbnail.h"
 
-#include <workspace.h>
-#include <client.h>
-
+#include <limits.h>
 
 namespace KWin
 {
+
+KWIN_EFFECT( DemoTaskbarThumbnail, TaskbarThumbnailEffect )
 
 TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     {
@@ -31,7 +31,7 @@ void TaskbarThumbnailEffect::prePaintScreen( int* mask, QRegion* region, int tim
     QPoint cpos = cursorPos();
     if(cpos != mLastCursorPos || mThumbnails.count() > 0)
         {
-        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         mThumbnails.clear();
         mLastCursorPos = cpos;
         }
@@ -41,15 +41,9 @@ void TaskbarThumbnailEffect::prePaintScreen( int* mask, QRegion* region, int tim
 
 void TaskbarThumbnailEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
-    Client* c = dynamic_cast< Client* >( w->window() );
-    if( c )
-        {
-        QRect iconGeo = c->iconGeometry();
-        if(iconGeo.contains( mLastCursorPos ))
-            {
-            mThumbnails.append( w );
-            }
-        }
+    QRect iconGeo = w->iconGeometry();
+    if(iconGeo.contains( mLastCursorPos ))
+        mThumbnails.append( w );
 
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
@@ -61,23 +55,22 @@ void TaskbarThumbnailEffect::postPaintScreen()
     int space = 4;
     foreach( EffectWindow* w, mThumbnails )
         {
-        Client* c = static_cast< Client* >( w->window() );
-        QRect thumb = getThumbnailPosition(c, &space);
+        QRect thumb = getThumbnailPosition( w, &space);
         WindowPaintData thumbdata;
-        thumbdata.xTranslate = thumb.x() - c->x();
-        thumbdata.yTranslate = thumb.y() - c->y();
-        thumbdata.xScale = thumb.width() / (float)c->width();
-        thumbdata.yScale = thumb.height() / (float)c->height();
+        thumbdata.xTranslate = thumb.x() - w->x();
+        thumbdata.yTranslate = thumb.y() - w->y();
+        thumbdata.xScale = thumb.width() / (float)w->width();
+        thumbdata.yScale = thumb.height() / (float)w->height();
         // From Scene::Window::infiniteRegion()
         QRegion infRegion = QRegion( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
-        effects->paintWindow( w, Scene::PAINT_WINDOW_TRANSFORMED, infRegion, thumbdata );
+        effects->paintWindow( w, PAINT_WINDOW_TRANSFORMED, infRegion, thumbdata );
         }
 
     // Call the next effect.
     effects->postPaintScreen();
     }
 
-QRect TaskbarThumbnailEffect::getThumbnailPosition( Client* c, int* space ) const
+QRect TaskbarThumbnailEffect::getThumbnailPosition( EffectWindow* c, int* space ) const
     {
     QRect thumb;
     QRect icon = c->iconGeometry();

@@ -11,15 +11,22 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_BOXSWITCH_H
 #define KWIN_BOXSWITCH_H
 
-#include <effects.h>
-#include "scene_xrender.h"
-#include "scene_opengl.h"
+#if 0
+// TODO
+
+#include <kwineffects.h>
 
 #include <QHash>
 #include <QPixmap>
 #include <QRect>
 #include <QRegion>
 #include <QSize>
+
+#include <kwinglutils.h>
+
+#ifdef HAVE_XRENDER
+#include <X11/extensions/Xrender.h>
+#endif
 
 namespace KWin
 {
@@ -66,7 +73,7 @@ class BoxSwitchEffect
         QSize item_max_size; // maximum item display size (including highlight)
 
         QHash< EffectWindow*, ItemInfo* > windows;
-        ClientList original_windows;
+        EffectWindowList original_windows;
         EffectWindow* selected_window;
         QHash< int, ItemInfo* > desktops;
         QList< int > original_desktops;
@@ -96,4 +103,5 @@ class BoxSwitchEffect::ItemInfo
 
 } // namespace
 
+#endif
 #endif

@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_FALLAPART_H
 #define KWIN_FALLAPART_H
 
-#include <effects.h>
+#include <kwineffects.h>
 
 namespace KWin
 {

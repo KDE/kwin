@@ -15,10 +15,12 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+KWIN_EFFECT( Drunken, DrunkenEffect )
+
 void DrunkenEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     if( !windows.isEmpty())
-        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     effects->prePaintScreen( mask, region, time );
     }
 
@@ -28,7 +30,7 @@ void DrunkenEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, 
         {
         windows[ w ] += time / 1000.;
         if( windows[ w ] < 1 )
-            *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+            *mask |= PAINT_WINDOW_TRANSFORMED;
         else
             windows.remove( w );
         }
@@ -57,14 +59,14 @@ void DrunkenEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wind
 void DrunkenEffect::postPaintWindow( EffectWindow* w )
     {
     if( windows.contains( w ))
-        w->window()->addRepaintFull();
+        w->addRepaintFull();
     effects->postPaintWindow( w );
     }
 
 void DrunkenEffect::windowAdded( EffectWindow* w )
     {
     windows[ w ] = 0;
-    w->window()->addRepaintFull();
+    w->addRepaintFull();
     }
 
 void DrunkenEffect::windowClosed( EffectWindow* w )

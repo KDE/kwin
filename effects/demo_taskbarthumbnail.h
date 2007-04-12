@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_TASKBARTHUMBNAIL_H
 
 // Include with base class for effects.
-#include <effects.h>
+#include <kwineffects.h>
 
 
 namespace KWin
@@ -37,7 +37,7 @@ class TaskbarThumbnailEffect
 
 
     protected:
-        QRect getThumbnailPosition( Client*c, int* space ) const;
+        QRect getThumbnailPosition( EffectWindow* c, int* space ) const;
 
     private:
         QList< EffectWindow* > mThumbnails;

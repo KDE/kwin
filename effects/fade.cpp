@@ -10,11 +10,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "fade.h"
 
-#include <client.h>
-#include <deleted.h>
-
 namespace KWin
 {
+
+KWIN_EFFECT( Fade, FadeEffect )
 
 FadeEffect::FadeEffect()
     : fade_in_speed( 20 )
@@ -43,16 +42,16 @@ void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRe
             {
             if( windows[ w ].deleted )
                 {
-                static_cast< Deleted* >( w->window())->unrefWindow();
+                w->unrefWindow();
                 windows.remove( w );
                 }
             }
         else
             {
-            *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
-            *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
+            *mask |= PAINT_WINDOW_TRANSLUCENT;
+            *mask &= ~PAINT_WINDOW_OPAQUE;
             if( windows[ w ].deleted )
-                w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
             }
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
@@ -61,20 +60,20 @@ void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRe
 void FadeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( windows.contains( w ))
-        data.opacity = ( data.opacity + ( w->window()->opacity() == 0.0 ? 1 : 0 )) * windows[ w ].current;
+        data.opacity = ( data.opacity + ( w->opacity() == 0.0 ? 1 : 0 )) * windows[ w ].current;
     effects->paintWindow( w, mask, region, data );
     }
 
 void FadeEffect::postPaintWindow( EffectWindow* w )
     {
     if( windows.contains( w ) && windows.value( w ).isFading())
-        w->window()->addRepaintFull(); // trigger next animation repaint
+        w->addRepaintFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
     }
 
 void FadeEffect::windowOpacityChanged( EffectWindow* c, double old_opacity )
     {
-    double new_opacity = c->window()->opacity();
+    double new_opacity = c->opacity();
     if( !windows.contains( c ))
         windows[ c ].current = 1;
     if( new_opacity == 0.0 )
@@ -89,14 +88,14 @@ void FadeEffect::windowOpacityChanged( EffectWindow* c, double old_opacity )
         windows[ c ].target = 1;
         windows[ c ].step_mult = 1 / new_opacity;
         }
-    c->window()->addRepaintFull();
+    c->addRepaintFull();
     }
 
 void FadeEffect::windowAdded( EffectWindow* c )
     {
     if( !windows.contains( c ))
         windows[ c ].current = 0;
-    if( c->window()->opacity() == 0.0 )
+    if( c->opacity() == 0.0 )
         {
         windows[ c ].target = 0;
         windows[ c ].step_mult = 1;
@@ -104,23 +103,23 @@ void FadeEffect::windowAdded( EffectWindow* c )
     else
         {
         windows[ c ].target = 1;
-        windows[ c ].step_mult = 1 / c->window()->opacity();
+        windows[ c ].step_mult = 1 / c->opacity();
         }
-    c->window()->addRepaintFull();
+    c->addRepaintFull();
     }
 
 void FadeEffect::windowClosed( EffectWindow* c )
     {
     if( !windows.contains( c ))
         windows[ c ].current = 1;
-    if( c->window()->opacity() == 0.0 )
+    if( c->opacity() == 0.0 )
         windows[ c ].step_mult = 1;
     else
-        windows[ c ].step_mult = 1 / c->window()->opacity();
+        windows[ c ].step_mult = 1 / c->opacity();
     windows[ c ].target = 0;
     windows[ c ].deleted = true;
-    c->window()->addRepaintFull();
-    static_cast< Deleted* >( c->window())->refWindow();
+    c->addRepaintFull();
+    c->refWindow();
     }
 
 void FadeEffect::windowDeleted( EffectWindow* c )
