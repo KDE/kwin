@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <qtimer.h>
 
-#include <effects.h>
+#include <kwineffects.h>
 
 namespace KWin
 {

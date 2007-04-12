@@ -11,15 +11,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "minimizeanimation.h"
 
-#include <workspace.h>
-#include <client.h>
-
-
-// Note that currently effects need to be manually enabled in the EffectsHandler
-// class constructor (in effects.cpp).
-
 namespace KWin
 {
+
+KWIN_EFFECT( MinimizeAnimation, MinimizeAnimationEffect )
 
 MinimizeAnimationEffect::MinimizeAnimationEffect()
     {
@@ -32,7 +27,7 @@ void MinimizeAnimationEffect::prePaintScreen( int* mask, QRegion* region, int ti
     if( mActiveAnimations > 0 )
         // We need to mark the screen windows as transformed. Otherwise the
         //  whole screen won't be repainted, resulting in artefacts
-        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(mask, region, time);
     }
@@ -42,8 +37,7 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegio
     const float changeTime = 500;
     if( mAnimationProgress.contains( w ))
         {
-        Client* c = static_cast< Client* >( w->window() );
-        if( c->isMinimized() )
+        if( w->isMinimized() )
             {
             mAnimationProgress[w] += time / changeTime;
             if( mAnimationProgress[w] >= 1.0f )
@@ -61,8 +55,8 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegio
         if( mAnimationProgress.contains( w ))
             {
             // We'll transform this window
-            *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-            w->enablePainting( Scene::Window::PAINT_DISABLED_BY_MINIMIZE );
+            *mask |= PAINT_WINDOW_TRANSFORMED;
+            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
             }
         else
             // Animation just finished
@@ -79,9 +73,8 @@ void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion re
         // 0 = not minimized, 1 = fully minimized
         float progress = mAnimationProgress[w];
 
-        Client* c = static_cast< Client* >( w->window() );
-        QRect geo = c->geometry();
-        QRect icon = c->iconGeometry();
+        QRect geo = w->geometry();
+        QRect icon = w->iconGeometry();
         // If there's no icon geometry, minimize to the center of the screen
         if( !icon.isValid() )
             icon = QRect( displayWidth() / 2, displayHeight() / 2, 0, 0 );
@@ -100,7 +93,7 @@ void MinimizeAnimationEffect::postPaintScreen()
     {
     if( mActiveAnimations > 0 )
         // Repaint the workspace so that everything would be repainted next time
-        workspace()->addRepaintFull();
+        effects->addRepaintFull();
 
     // Call the next effect.
     effects->postPaintScreen();

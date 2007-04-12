@@ -570,6 +570,20 @@ bool EffectWindowImpl::isDeleted() const
     return (dynamic_cast<Deleted*>( toplevel ) != 0);
     }
 
+void EffectWindowImpl::refWindow()
+    {
+    if( Deleted* d = dynamic_cast< Deleted* >( toplevel ))
+        return d->refWindow();
+    abort(); // TODO
+    }
+
+void EffectWindowImpl::unrefWindow()
+    {
+    if( Deleted* d = dynamic_cast< Deleted* >( toplevel ))
+        return d->unrefWindow();
+    abort(); // TODO
+    }
+
 const Toplevel* EffectWindowImpl::window() const
     {
     return toplevel;
@@ -633,6 +647,27 @@ QPoint EffectWindowImpl::pos() const
 QRect EffectWindowImpl::rect() const
     {
     return toplevel->rect();
+    }
+
+bool EffectWindowImpl::isUserMove() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->isMove();
+    return false;
+    }
+
+bool EffectWindowImpl::isUserResize() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->isResize();
+    return false;
+    }
+
+QRect EffectWindowImpl::iconGeometry() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->iconGeometry();
+    return QRect();
     }
 
 bool EffectWindowImpl::isDesktop() const

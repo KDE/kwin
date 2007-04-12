@@ -22,9 +22,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 
 
-// Note that currently effects need to be manually enabled in the EffectsHandler
-// class constructor (in effects.cpp).
-
 namespace KWin
 {
 

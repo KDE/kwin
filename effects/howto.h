@@ -19,7 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_HOWTO_H
 
 // Include with base class for effects.
-#include <effects.h>
+#include <kwineffects.h>
 
 // Everything in KWin is in a namespace. There's no need to prefix names
 // with KWin or K, there's no (big) need to care about symbol clashes.

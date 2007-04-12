@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_MINIMIZEANIMATION_H
 
 // Include with base class for effects.
-#include <effects.h>
+#include <kwineffects.h>
 
 
 namespace KWin

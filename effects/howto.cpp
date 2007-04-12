@@ -20,11 +20,6 @@ License. See the file "COPYING" for the exact licensing terms.
 // Include the class definition.
 #include "howto.h"
 
-#include "deleted.h"
-
-// Note that currently effects need to be manually enabled in the EffectsHandler
-// class constructor (in effects.cpp).
-
 namespace KWin
 {
 
@@ -51,8 +46,8 @@ void HowtoEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QR
             {
             // Since the effect will make the window translucent, explicitly change
             // the flags so that the window will be painted only as translucent.
-            *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
-            *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
+            *mask |= PAINT_WINDOW_TRANSLUCENT;
+            *mask &= ~PAINT_WINDOW_OPAQUE;
             }
         else
             {
@@ -115,9 +110,7 @@ void HowtoEffect::postPaintWindow( EffectWindow* w )
     if( w == fade_window )
         {
         // Trigger repaint of the whole window, this will cause it to be repainted the next painting pass.
-        // Currently the API for effects is not complete, so for now window() is used to access
-        // internal class Toplevel. This should change in the future.
-        w->window()->addRepaintFull(); // trigger next animation repaint
+        w->addRepaintFull(); // trigger next animation repaint
         }
     // Call the next effect.
     effects->postPaintWindow( w );
@@ -133,7 +126,7 @@ void HowtoEffect::windowActivated( EffectWindow* c )
         // If there is a window to be faded, reset the progress to zero.
         progress = 0;
         // And add repaint to the window so that it needs to be repainted.
-        c->window()->addRepaintFull();
+        c->addRepaintFull();
         }
     }
 
@@ -146,6 +139,7 @@ void HowtoEffect::windowClosed( EffectWindow* c )
         fade_window = NULL;
     }
 
-// That's all. Don't forget to enable the effect as described at the beginning of this file.
+// That's all. Now only the matching .desktop file is needed.
+
 
 } // namespace

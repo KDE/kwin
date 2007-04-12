@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_MAKETRANSPARENT_H
 #define KWIN_MAKETRANSPARENT_H
 
-#include <effects.h>
+#include <kwineffects.h>
 
 namespace KWin
 {

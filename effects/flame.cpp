@@ -10,16 +10,17 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "flame.h"
 
-#include <deleted.h>
-#include <scene_opengl.h>
+#include <assert.h>
 
 namespace KWin
 {
 
+KWIN_EFFECT( Flame, FlameEffect )
+
 void FlameEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     if( !windows.isEmpty())
-        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     effects->prePaintScreen(mask, region, time);
     }
 
@@ -27,22 +28,18 @@ void FlameEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QR
     {
     if( windows.contains( w ))
         {
-        SceneOpenGL::Window* glwin = dynamic_cast< SceneOpenGL::Window* >( w->sceneWindow());
-        if( glwin )
+        if( windows[ w ] < 1 )
             {
-            if( windows[ w ] < 1 )
-                {
-                windows[ w ] += time / 500.;
-                *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
-                glwin->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
-                // Request the window to be divided into cells
-                glwin->requestVertexGrid( qMax( glwin->height() / 50, 5 ));
-                }
-            else
-                {
-                windows.remove( w );
-                static_cast< Deleted* >( w->window())->unrefWindow();
-                }
+            windows[ w ] += time / 500.;
+            *mask |= PAINT_WINDOW_TRANSFORMED;
+            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
+            // Request the window to be divided into cells
+            w->requestVertexGrid( qMax( w->height() / 50, 5 ));
+            }
+        else
+            {
+            windows.remove( w );
+            w->unrefWindow();
             }
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
@@ -52,38 +49,34 @@ void FlameEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Window
     {
     if( windows.contains( w ))
         {
-        SceneOpenGL::Window* glwin = dynamic_cast< SceneOpenGL::Window* >( w->sceneWindow() );
-        if( glwin )
+        QVector< Vertex >& vertices = w->vertices();
+        QVector< Vertex > new_vertices;
+        double ylimit = windows[ w ] * w->height(); // parts above this are already away
+        assert( vertices.count() % 4 == 0 );
+        for( int i = 0;
+             i < vertices.count();
+             i += 4 )
             {
-            QVector< SceneOpenGL::Window::Vertex >& vertices = glwin->vertices();
-            QVector< SceneOpenGL::Window::Vertex > new_vertices;
-            double ylimit = windows[ w ] * w->height(); // parts above this are already away
-            assert( vertices.count() % 4 == 0 );
-            for( int i = 0;
-                 i < vertices.count();
-                 i += 4 )
+            bool is_in = false;
+            for( int j = 0;
+                 j < 4;
+                 ++j )
+                if( vertices[ i + j ].pos[ 1 ] >= ylimit )
+                    is_in = true;
+            if( !is_in )
+                continue;
+            for( int j = 0;
+                 j < 4;
+                 ++j )
                 {
-                bool is_in = false;
-                for( int j = 0;
-                     j < 4;
-                     ++j )
-                    if( vertices[ i + j ].pos[ 1 ] >= ylimit )
-                        is_in = true;
-                if( !is_in )
-                    continue;
-                for( int j = 0;
-                     j < 4;
-                     ++j )
-                    {
-                    SceneOpenGL::Window::Vertex vertex = vertices[ i + j ];
-                    new_vertices.append( vertex );
-                    }
+                Vertex vertex = vertices[ i + j ];
+                new_vertices.append( vertex );
                 }
-            if( new_vertices.isEmpty())
-                return; // nothing to paint
-            glwin->vertices() = new_vertices;
-            glwin->markVerticesDirty();
             }
+        if( new_vertices.isEmpty())
+            return; // nothing to paint
+        w->vertices() = new_vertices;
+        w->markVerticesDirty();
         }
     effects->paintWindow( w, mask, region, data );
     }
@@ -91,14 +84,14 @@ void FlameEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Window
 void FlameEffect::postPaintWindow( EffectWindow* w )
     {
     if( windows.contains( w ))
-        workspace()->addRepaint( w->geometry()); // workspace, since the window under it will need painting too
+        effects->addRepaint( w->geometry()); // workspace, since the window under it will need painting too
     effects->postPaintScreen();
     }
 
 void FlameEffect::windowClosed( EffectWindow* c )
     {
     windows[ c ] = 0;
-    static_cast< Deleted* >( c->window())->refWindow();
+    c->refWindow();
     }
 
 void FlameEffect::windowDeleted( EffectWindow* c )

@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_SCALEIN_H
 #define KWIN_SCALEIN_H
 
-#include <effects.h>
+#include <kwineffects.h>
 
 namespace KWin
 {

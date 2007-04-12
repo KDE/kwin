@@ -95,6 +95,8 @@ class EffectWindowImpl : public EffectWindow
         virtual void addRepaint( int x, int y, int w, int h );
         virtual void addRepaintFull();
 
+        virtual void refWindow();
+        virtual void unrefWindow();
         virtual bool isDeleted() const;
 
         virtual bool isOnAllDesktops() const;
@@ -111,6 +113,9 @@ class EffectWindowImpl : public EffectWindow
         virtual QPoint pos() const;
         virtual QSize size() const;
         virtual QRect rect() const;
+        virtual bool isUserMove() const;
+        virtual bool isUserResize() const;
+        virtual QRect iconGeometry() const;
 
         virtual bool isDesktop() const;
         virtual bool isDock() const;

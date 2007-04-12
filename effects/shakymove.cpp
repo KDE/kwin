@@ -10,10 +10,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "shakymove.h"
 
-#include <workspace.h>
-
 namespace KWin
 {
+
+KWIN_EFFECT( ShakyMove, ShakyMoveEffect )
 
 ShakyMoveEffect::ShakyMoveEffect()
     {
@@ -26,14 +26,14 @@ static const int SHAKY_MAX = sizeof( shaky_diff ) / sizeof( shaky_diff[ 0 ] );
 void ShakyMoveEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     if( !windows.isEmpty())
-        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     effects->prePaintScreen( mask, region, time );
     }
 
 void ShakyMoveEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( windows.contains( w ))
-        *mask |= Scene::PAINT_WINDOW_TRANSFORMED;
+        *mask |= PAINT_WINDOW_TRANSFORMED;
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
@@ -56,7 +56,7 @@ void ShakyMoveEffect::windowUserMovedResized( EffectWindow* c, bool first, bool 
         {
         windows.remove( c );
         // just repaint whole screen, transformation is involved
-        c->window()->workspace()->addRepaintFull();
+        effects->addRepaintFull();
         if( windows.isEmpty())
             timer.stop();
         }
@@ -81,7 +81,7 @@ void ShakyMoveEffect::tick()
         else
             ++(*it);
         // just repaint whole screen, transformation is involved
-        it.key()->window()->workspace()->addRepaintFull();
+        effects->addRepaintFull();
         }
     }
 

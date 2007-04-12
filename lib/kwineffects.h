@@ -234,7 +234,10 @@ class KWIN_EXPORT EffectWindow
         virtual void addRepaint( int x, int y, int w, int h ) = 0;
         virtual void addRepaintFull() = 0;
 
+        virtual void refWindow() = 0;
+        virtual void unrefWindow() = 0;
         virtual bool isDeleted() const = 0;
+
         virtual bool isMinimized() const = 0;
 
         virtual bool isOnDesktop( int d ) const;
@@ -250,6 +253,9 @@ class KWIN_EXPORT EffectWindow
         virtual QPoint pos() const = 0;
         virtual QSize size() const = 0;
         virtual QRect rect() const = 0;
+        virtual bool isUserMove() const = 0;
+        virtual bool isUserResize() const = 0;
+        virtual QRect iconGeometry() const = 0;
 
         virtual QString caption() const = 0;
         virtual const EffectWindowGroup* group() const = 0;

@@ -11,12 +11,18 @@ include_directories(
     )
 
 SET(kwin4_effect_builtins_sources
-    presentwindows.cpp
     diminactive.cpp
+    flame.cpp
+    maketransparent.cpp
+    minimizeanimation.cpp
+    presentwindows.cpp
+    scalein.cpp
+    shakymove.cpp
     zoom.cpp
     )
 
 SET(kwin4_effect_tests_sources
+    howto.cpp
     test_input.cpp
     test_shiftworkspaceup.cpp
     test_thumbnail.cpp
@@ -56,8 +62,14 @@ endif (X11_Xrender_FOUND)
 KWIN4_ADD_EFFECT(tests ${kwin4_effect_tests_sources})
 
 install( FILES
-    presentwindows.desktop
     diminactive.desktop
+    flame.desktop
+    howto.desktop
+    maketransparent.desktop
+    minimizeanimation.desktop
+    presentwindows.desktop
+    scalein.desktop
+    shakymove.desktop
     zoom.desktop
     test_input.desktop
     test_shiftworkspaceup.desktop

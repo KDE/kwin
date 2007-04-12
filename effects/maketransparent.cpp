@@ -10,36 +10,34 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "maketransparent.h"
 
-#include <client.h>
-
 namespace KWin
 {
 
+KWIN_EFFECT( MakeTransparent, MakeTransparentEffect )
+
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
-    const Client* c = dynamic_cast< const Client* >( w->window());
-    if(( c != NULL && ( c->isMove() || c->isResize())) || w->window()->isDialog())
+    if(( w->isUserMove() || w->isUserResize()) || w->isDialog())
         {
-        *mask |= Scene::PAINT_WINDOW_TRANSLUCENT;
-        *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
+        *mask |= PAINT_WINDOW_TRANSLUCENT;
+        *mask &= ~PAINT_WINDOW_OPAQUE;
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
 void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    const Client* c = dynamic_cast< const Client* >( w->window());
-    if( w->window()->isDialog())
+    if( w->isDialog())
         data.opacity *= 0.8;
-    if( c != NULL && ( c->isMove() || c->isResize()))
+    if( w->isUserMove() || w->isUserResize())
         data.opacity *= 0.5;
     effects->paintWindow( w, mask, region, data );
     }
 
-void MakeTransparentEffect::windowUserMovedResized( EffectWindow* c, bool first, bool last )
+void MakeTransparentEffect::windowUserMovedResized( EffectWindow* w, bool first, bool last )
     {
     if( first || last )
-        c->window()->addRepaintFull();
+        w->addRepaintFull();
     }
 
 } // namespace
