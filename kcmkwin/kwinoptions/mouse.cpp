@@ -21,7 +21,7 @@
 #include <QComboBox>
 
 #include <QLayout>
-#include <q3grid.h>
+#include <Qt3Support/Q3Grid>
 #include <QSizePolicy>
 #include <QBitmap>
 #include <QToolTip>
@@ -47,7 +47,6 @@
 
 #include "mouse.h"
 #include "mouse.moc"
-
 
 namespace {
 
@@ -112,13 +111,13 @@ void createMaxButtonPixmaps()
     "..............."},
   };
 
-  QString baseColor(". c " + KGlobalSettings::baseColor().name());
-  QString textColor("# c " + KGlobalSettings::textColor().name());
+  QByteArray baseColor(". c " + KGlobalSettings::baseColor().name().toAscii());
+  QByteArray textColor("# c " + KGlobalSettings::textColor().name().toAscii());
   for (int t = 0; t < 3; ++t)
   {
     maxButtonXpms[t][0] = "15 13 2 1";
-    maxButtonXpms[t][1] = baseColor.toAscii();
-    maxButtonXpms[t][2] = textColor.toAscii();
+    maxButtonXpms[t][1] = baseColor.constData();
+    maxButtonXpms[t][2] = textColor.constData();
     maxButtonPixmaps[t] = QPixmap(maxButtonXpms[t]);
     maxButtonPixmaps[t].setMask(maxButtonPixmaps[t].createHeuristicMask());
   }
@@ -374,7 +373,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     coMax[b]->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
   }
 
-  connect(kapp, SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
+  connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
 
   layout->addStretch();
 
@@ -571,8 +570,11 @@ void KTitleBarActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
   }
 }
 
@@ -847,8 +849,10 @@ void KWindowActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
   }
 }
 

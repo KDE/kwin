@@ -16,7 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "client.h"
 #include <QPainter>
 #include <QLabel>
-#include <qdrawutil.h>
+#include <QtGui/qdrawutil.h>
 #include <QStyle>
 #include <kglobal.h>
 #include <fixx11h.h>
@@ -24,7 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kdebug.h>
 #include <klocale.h>
 #include <QApplication>
-#include <qdesktopwidget.h>
+#include <QtGui/QDesktopWidget>
 #include <QCursor>
 #include <kstringhandler.h>
 #include <kglobalsettings.h>

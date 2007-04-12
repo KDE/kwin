@@ -28,7 +28,7 @@
 
 */
 
-#include <q3header.h>
+#include <Qt3Support/Q3Header>
 #include <QPainter>
 #include <QLabel>
 #include <QLayout>

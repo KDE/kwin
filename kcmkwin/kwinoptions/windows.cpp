@@ -39,6 +39,7 @@
 #include <QVBoxLayout>
 #include <kmessagebox.h>
 
+#include <QtGui/QLabel>
 #include <klocale.h>
 #include <kcolorbutton.h>
 #include <kconfig.h>
@@ -55,7 +56,6 @@
 #include <X11/Xutil.h>
 
 #include "windows.h"
-
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
@@ -433,7 +433,6 @@ void KFocusConfig::load( void )
 
     setTraverseAll( config->group("TabBox").readEntry(KWIN_TRAVERSE_ALL, false));
 
-    config->setGroup("Desktops");
     emit KCModule::changed(false);
 }
 
@@ -487,13 +486,13 @@ void KFocusConfig::save( void )
 
     config->group("TabBox").writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
 
-    config->setGroup("Desktops");
-
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+       // Send signal to all kwin instances
+       QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+       QDBusConnection::sessionBus().send(message);
     }
     emit KCModule::changed(false);
 }
@@ -719,8 +718,11 @@ void KAdvancedConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+       // Send signal to all kwin instances
+       QDBusMessage message =
+       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+       QDBusConnection::sessionBus().send(message);
+
     }
     emit KCModule::changed(false);
 }
@@ -1183,8 +1185,10 @@ void KMovingConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+        // Send signal to all kwin instances
+        QDBusMessage message =
+           QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusConnection::sessionBus().send(message);
     }
     emit KCModule::changed(false);
 }
@@ -1250,6 +1254,8 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, co
                                  "And if your GPU provides hardware-accelerated Xrender support (mainly nVidia cards):<br><br>"
                                  "<i>Option     \"RenderAccel\" \"true\"</i><br>"
                                  "In <i>Section \"Device\"</i></qt>"), this);
+  label->setOpenExternalLinks(true);
+  label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
   lay->addWidget(label);
   }
   else
@@ -1470,9 +1476,9 @@ void KTranslucencyConfig::load( void )
 
     if (!kompmgrAvailable_)
         return;
+  useTranslucency->setChecked(config->group("Notification Messages").readEntry("UseTranslucency", false));
 
   KConfigGroup translucencyConfig(config, "Translucency");
-  useTranslucency->setChecked(translucencyConfig.readEntry("UseTranslucency", false));
   activeWindowTransparency->setChecked(translucencyConfig.readEntry("TranslucentActiveWindows", false));
   inactiveWindowTransparency->setChecked(translucencyConfig.readEntry("TranslucentInactiveWindows", true));
   movingWindowTransparency->setChecked(translucencyConfig.readEntry("TranslucentMovingWindows", false));
@@ -1534,8 +1540,9 @@ void KTranslucencyConfig::save( void )
 {
     if (!kompmgrAvailable_)
         return;
+  config->group("Notification Messages").writeEntry("UseTranslucency",useTranslucency->isChecked());
+
   KConfigGroup translucencyConfig(config, "Translucency");
-  translucencyConfig.writeEntry("UseTranslucency",useTranslucency->isChecked());
   translucencyConfig.writeEntry("TranslucentActiveWindows",activeWindowTransparency->isChecked());
   translucencyConfig.writeEntry("TranslucentInactiveWindows",inactiveWindowTransparency->isChecked());
   translucencyConfig.writeEntry("TranslucentMovingWindows",movingWindowTransparency->isChecked());
@@ -1585,8 +1592,11 @@ void KTranslucencyConfig::save( void )
   if (standAlone)
   {
     config->sync();
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
   }
   emit KCModule::changed(false);
 }

@@ -10,7 +10,7 @@
 #define _KDE_B2CONFIG_H
 
 #include <QCheckBox>
-#include <q3groupbox.h>
+#include <Qt3Support/Q3GroupBox>
 #include <QLabel>
 #include <QComboBox>
 #include <kconfig.h>

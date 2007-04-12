@@ -33,8 +33,8 @@
 
 #include <QBitmap>
 #include <QEvent>
-#include <q3dragobject.h>
-#include <q3listbox.h>
+#include <Qt3Support/Q3ColorDrag>
+#include <Qt3Support/Q3ListBox>
 //Added by qt3to4:
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>

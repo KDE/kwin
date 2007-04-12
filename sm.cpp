@@ -22,7 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "client.h"
 #include <QSocketNotifier>
-#include <qsessionmanager.h>
+#include <QtGui/QSessionManager>
 
 namespace KWin
 {

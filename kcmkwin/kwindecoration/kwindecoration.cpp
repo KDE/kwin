@@ -32,7 +32,7 @@
 #include <QFileInfo>
 #include <QLayout>
 
-#include <q3groupbox.h>
+#include <Qt3Support/Q3GroupBox>
 #include <QCheckBox>
 #include <QTabWidget>
 
@@ -531,8 +531,11 @@ void KWinDecorationModule::save()
 	emit pluginSave( kwinConfig );
 
 	kwinConfig.sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
 }
 
 

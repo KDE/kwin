@@ -8,7 +8,7 @@
 
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "laptopclient.h"
-#include <qdrawutil.h>
+#include <QtGui/qdrawutil.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QPaintEvent>

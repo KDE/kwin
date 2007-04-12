@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_CLIENT_H
 #define KWIN_CLIENT_H
 
-#include <qframe.h>
+#include <QtGui/QFrame>
 #include <QPixmap>
 #include <netwm.h>
 #include <kdebug.h>

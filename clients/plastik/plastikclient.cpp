@@ -30,7 +30,7 @@
 #include <QLayout>
 #include <QPainter>
 #include <QPixmap>
-#include <qdesktopwidget.h>
+#include <QtGui/QDesktopWidget>
 
 #include "plastikclient.h"
 #include "plastikbutton.h"

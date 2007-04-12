@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include <QColor>
 #include <QFont>
 #include <QObject>
-#include <qiconset.h>
+#include <Qt3Support/qiconset.h>
 #include <netwm_def.h>
 #include <kdeversion.h>
 #include <QMouseEvent>

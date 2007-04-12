@@ -14,7 +14,7 @@
 
 #include "redmond.h"
 
-#include <qdrawutil.h>
+#include <QtGui/qdrawutil.h>
 #include <QDateTime>
 //Added by qt3to4:
 #include <QPixmap>
@@ -288,7 +288,7 @@ void RedmondButton::setBitmap(const unsigned char *bitmap)
         pix = QPixmap();
 
 	if (bitmap)
-		deco = QBitmap(10, 10, bitmap, true);
+		deco = QBitmap::fromData( QSize(10,  10),  bitmap);
 	else {
 		deco = QBitmap(10,10);
 		deco.fill(Qt::color0);

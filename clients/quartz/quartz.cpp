@@ -20,7 +20,7 @@
 #include <klocale.h>
 #include <kpixmapeffect.h>
 #include <QBitmap>
-#include <qdrawutil.h>
+#include <QtGui/qdrawutil.h>
 #include <QImage>
 #include <QPixmap>
 #include <QApplication>

@@ -19,7 +19,7 @@
 #include <kdrawutil.h>
 #include <klocale.h>
 #include <QLayout>
-#include <qdrawutil.h>
+#include <QtGui/qdrawutil.h>
 #include <QBitmap>
 #include <QImage>
 #include <QToolTip>

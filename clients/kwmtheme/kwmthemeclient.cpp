@@ -2,7 +2,7 @@
 #include "kwmthemeclient.h"
 #include <kglobal.h>
 #include <QLayout>
-#include <qdrawutil.h>
+#include <QtGui/qdrawutil.h>
 #include <QPainter>
 #include <kpixmapeffect.h>
 #include <kstandarddirs.h>
