@@ -37,6 +37,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void activateWindow( EffectWindow* c );
 
         virtual int currentDesktop() const;
+        virtual int numberOfDesktops() const;
         virtual int displayWidth() const;
         virtual int displayHeight() const;
         virtual QPoint cursorPos() const;
@@ -45,6 +46,8 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void addRepaint( const QRect& r );
         virtual void addRepaint( int x, int y, int w, int h );
         virtual QRect clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const;
+        virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const;
+        virtual bool optionRollOverDesktops() const;
 
         virtual Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor );
         virtual void destroyInputWindow( Window w );
@@ -102,6 +105,7 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isOnAllDesktops() const;
         virtual int desktop() const; // prefer isOnXXX()
         virtual bool isMinimized() const;
+        virtual double opacity() const;
         virtual QString caption() const;
         virtual const EffectWindowGroup* group() const;
 
@@ -133,6 +137,10 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isNotification() const;
         virtual bool isComboBox() const;
         virtual bool isDNDIcon() const;
+
+        virtual bool isModal() const;
+        virtual EffectWindow* findModal();
+        virtual EffectWindowList mainWindows() const;
 
         virtual QVector<Vertex>& vertices();
         virtual void requestVertexGrid(int maxquadsize);

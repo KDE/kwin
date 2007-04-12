@@ -180,7 +180,10 @@ class KWIN_EXPORT EffectsHandler
         virtual void activateWindow( EffectWindow* c ) = 0;
         // 
         virtual int currentDesktop() const = 0;
+        virtual int numberOfDesktops() const = 0;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const = 0;
+        virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const = 0;
+        virtual bool optionRollOverDesktops() const = 0;
 
         virtual EffectWindowList stackingOrder() const = 0;
 
@@ -239,6 +242,7 @@ class KWIN_EXPORT EffectWindow
         virtual bool isDeleted() const = 0;
 
         virtual bool isMinimized() const = 0;
+        virtual double opacity() const = 0;
 
         virtual bool isOnDesktop( int d ) const;
         virtual bool isOnCurrentDesktop() const;
@@ -276,6 +280,10 @@ class KWIN_EXPORT EffectWindow
         virtual bool isNotification() const = 0;
         virtual bool isComboBox() const = 0;
         virtual bool isDNDIcon() const = 0;
+        
+        virtual bool isModal() const = 0;
+        virtual EffectWindow* findModal() = 0;
+        virtual EffectWindowList mainWindows() const = 0;
 
         virtual QVector<Vertex>& vertices() = 0;
         // Can be called in pre-paint pass. Makes sure that all quads that the

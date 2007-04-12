@@ -242,6 +242,21 @@ int EffectsHandlerImpl::currentDesktop() const
     return Workspace::self()->currentDesktop();
     }
 
+int EffectsHandlerImpl::numberOfDesktops() const
+    {
+    return Workspace::self()->numberOfDesktops();
+    }
+
+void EffectsHandlerImpl::calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const
+    {
+    Workspace::self()->calcDesktopLayout( x, y, orientation );
+    }
+
+bool EffectsHandlerImpl::optionRollOverDesktops() const
+    {
+    return options->rollOverDesktops;
+    }
+
 int EffectsHandlerImpl::displayWidth() const
     {
     return KWin::displayWidth();
@@ -565,6 +580,11 @@ bool EffectWindowImpl::isMinimized() const
         return false;
     }
 
+double EffectWindowImpl::opacity() const
+    {
+    return toplevel->opacity();
+    }
+
 bool EffectWindowImpl::isDeleted() const
     {
     return (dynamic_cast<Deleted*>( toplevel ) != 0);
@@ -751,6 +771,36 @@ bool EffectWindowImpl::isComboBox() const
 bool EffectWindowImpl::isDNDIcon() const
     {
     return toplevel->isDNDIcon();
+    }
+
+bool EffectWindowImpl::isModal() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->isModal();
+    return false;
+    }
+
+EffectWindow* EffectWindowImpl::findModal()
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        {
+        if( Client* c2 = c->findModal())
+            return c2->effectWindow();
+        }
+    return NULL;
+    }
+
+EffectWindowList EffectWindowImpl::mainWindows() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        {
+        EffectWindowList ret;
+        ClientList mainclients = c->mainClients();
+        foreach( Client* tmp, mainclients )
+            ret.append( tmp->effectWindow());
+        return ret;
+        }
+    return EffectWindowList();
     }
 
 QVector<Vertex>& EffectWindowImpl::vertices()
