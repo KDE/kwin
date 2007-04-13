@@ -746,14 +746,14 @@ ClientList Client::mainClients() const
     return result;
     }
 
-Client* Client::findModal()
+Client* Client::findModal( bool allow_itself )
     {
     for( ClientList::ConstIterator it = transients().begin();
          it != transients().end();
          ++it )
-        if( Client* ret = (*it)->findModal())
+        if( Client* ret = (*it)->findModal( true ))
             return ret;
-    if( isModal())
+    if( isModal() && allow_itself )
         return this;
     return NULL;
     }
