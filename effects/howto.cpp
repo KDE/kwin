@@ -23,6 +23,9 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+// This macro creates entry function for the plugin. First argument is name, second is class name.
+KWIN_EFFECT( Howto, HowtoEffect )
+
 // A pre-paint function that tells the compositing code how this effect will affect
 // the painting. During every painting pass this function is called first, before
 // the actual painting function.

@@ -19,7 +19,7 @@ KWIN_EFFECT( DimInactive, DimInactiveEffect )
 DimInactiveEffect::DimInactiveEffect()
     : active( NULL )
     {
-    dim_panels = true; // TODO config option
+    dim_panels = false; // TODO config option
     dim_by_group = true; // TODO config option
     }
 
@@ -27,7 +27,12 @@ void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
     {
     bool dim = false;
     if( active == NULL )
-        dim = true;
+        {
+        if( !w->isDock() || dim_panels )
+            dim = true;
+        else
+            dim = false;
+        }
     else if( dim_by_group && active->group() == w->group())
         dim = false;
     else if( !dim_by_group && active == w )

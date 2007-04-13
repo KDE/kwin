@@ -16,7 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( DemoTaskbarThumbnail, TaskbarThumbnailEffect )
+KWIN_EFFECT( Demo_TaskbarThumbnail, TaskbarThumbnailEffect )
 
 TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     {

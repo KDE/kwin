@@ -1,4 +1,5 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=DemoTaskbarThumbnail
-X-KDE-Library=kwin4_effect_demos
+Name=Demo_TaskbarThumbnail
+X-KDE-Library=kwin4_effect_tests
+

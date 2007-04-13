@@ -29,7 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( TestInput, TestInputEffect )
+KWIN_EFFECT( Test_Input, TestInputEffect )
 
 TestInputEffect::TestInputEffect()
     {
