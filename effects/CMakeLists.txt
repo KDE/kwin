@@ -19,6 +19,7 @@ SET(kwin4_effect_builtins_sources
     fade.cpp
     fallapart.cpp
     flame.cpp
+    magnifier.cpp
     maketransparent.cpp
     minimizeanimation.cpp
     presentwindows.cpp
@@ -78,6 +79,7 @@ install( FILES
     fallapart.desktop
     flame.desktop
     howto.desktop
+    magnifier.desktop
     maketransparent.desktop
     minimizeanimation.desktop
     presentwindows.desktop
