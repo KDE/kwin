@@ -17,13 +17,18 @@ namespace KWin
 {
 
 class ZoomEffect
-    : public Effect
+    : public QObject, public Effect
     {
+    Q_OBJECT
     public:
         ZoomEffect();
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
+    private slots:
+        void zoomIn();
+        void zoomOut();
+        void actualSize();
     private:
         double zoom;
         double target_zoom;
