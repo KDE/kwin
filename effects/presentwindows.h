@@ -78,6 +78,7 @@ class PresentWindowsEffect
             float hover;
             };
         QHash<EffectWindow*, WindowData> mWindowData;
+        EffectWindow* mHoverWindow;
 
         ElectricBorder borderActivate;
         ElectricBorder borderActivateAll;

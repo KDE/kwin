@@ -90,6 +90,7 @@ class EffectsHandlerImpl : public EffectsHandler
         void tabBoxClosed();
         void tabBoxUpdated();
         bool borderActivated( ElectricBorder border );
+        void cursorMoved( const QPoint& pos, Qt::MouseButtons buttons );
 
         void loadEffect( const QString& name );
         void unloadEffect( const QString& name );

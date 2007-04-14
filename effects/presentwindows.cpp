@@ -27,11 +27,12 @@ namespace KWin
 
 KWIN_EFFECT( PresentWindows, PresentWindowsEffect )
 
-PresentWindowsEffect::PresentWindowsEffect() : QObject(), Effect()
+PresentWindowsEffect::PresentWindowsEffect()
+    : mShowWindowsFromAllDesktops ( false )
+    , mActivated( false )
+    , mActiveness( 0.0 )
+    , mHoverWindow( NULL )
     {
-    mShowWindowsFromAllDesktops = false;
-    mActivated = false;
-    mActiveness = 0.0;
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Expose" );
@@ -126,11 +127,15 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
 
 void PresentWindowsEffect::postPaintScreen()
     {
-    // If mActiveness is between 0 and 1, the effect is still in progress and the
-    //  workspace has to be repainted during the next pass
-    if( mActiveness > 0.0 && mActiveness < 1.0 )
-        effects->addRepaintFull(); // trigger next animation repaint
-
+    if( mActivated && mActiveness < 1.0 ) // activating effect
+        effects->addRepaintFull();
+    if( !mActivated && mActiveness > 0.0 ) // deactivating effect
+        effects->addRepaintFull();
+    foreach( const WindowData& d, mWindowData )
+        {
+        if( d.hover > 0 && d.hover < 1 ) // changing highlight
+            effects->addRepaintFull();
+        }
     // Call the next effect.
     effects->postPaintScreen();
     }
@@ -138,6 +143,25 @@ void PresentWindowsEffect::postPaintScreen()
 void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
     {
     assert( w == mInput );
+    if( e->type() == QEvent::MouseMove )
+        { // Repaint if the hovered-over window changed.
+          // (No need to use cursorMoved(), this takes care of it as well)
+        for( QHash<EffectWindow*, WindowData>::ConstIterator it = mWindowData.begin();
+             it != mWindowData.end();
+             ++it )
+            {
+            if( (*it).area.contains( cursorPos()))
+                {
+                if( mHoverWindow != it.key())
+                    {
+                    mHoverWindow = it.key();
+                    effects->addRepaintFull(); // screen is transformed, so paint all
+                    }
+                return;
+                }
+            }
+        return;
+        }
     if( e->type() != QEvent::MouseButtonPress )
         return;
 
@@ -161,20 +185,26 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
 
 void PresentWindowsEffect::windowActivated( EffectWindow* )
     {
-        rearrangeWindows();
+    rearrangeWindows();
     }
 
-void PresentWindowsEffect::windowClosed( EffectWindow* )
+void PresentWindowsEffect::windowClosed( EffectWindow* w )
     {
-        rearrangeWindows();
+    if( mHoverWindow == w )
+        mHoverWindow = NULL;
+    rearrangeWindows();
     }
 
 void PresentWindowsEffect::setActive(bool active)
     {
+    if( mActivated == active )
+        return;
     mActivated = active;
+    mHoverWindow = NULL;
     rearrangeWindows();
     if( mActivated && mActiveness == 0.0f )
         effectActivated();
+    effects->addRepaintFull(); // trigger next animation repaint
     }
 
 void PresentWindowsEffect::effectActivated()

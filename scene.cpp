@@ -129,13 +129,14 @@ void Scene::updateTimeDiff()
         {
         // Painting has been idle (optimized out) for some time,
         // which means time_diff would be huge and would break animations.
-        // Simply set it to zero.
-        time_diff = 0;
+        // Simply set it to one (zero would mean no change at all and could
+        // cause problems).
+        time_diff = 1;
         }
     else
         time_diff = last_time.elapsed();
     if( time_diff < 0 ) // check time rollback
-        time_diff = 0;
+        time_diff = 1;
     last_time.start();;
     }
 

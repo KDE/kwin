@@ -114,6 +114,10 @@ bool Effect::borderActivated( ElectricBorder )
     return false;
     }
 
+void Effect::cursorMoved( const QPoint&, Qt::MouseButtons )
+    {
+    }
+
 void Effect::prePaintScreen( int* mask, QRegion* region, int time )
     {
     effects->prePaintScreen( mask, region, time );

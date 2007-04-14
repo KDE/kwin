@@ -231,6 +231,12 @@ bool EffectsHandlerImpl::borderActivated( ElectricBorder border )
     return ret;
     }
 
+void EffectsHandlerImpl::cursorMoved( const QPoint& pos, Qt::MouseButtons buttons )
+    {
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->cursorMoved( pos, buttons );
+    }
+
 void EffectsHandlerImpl::activateWindow( EffectWindow* c )
     {
     if( Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(c)->window()))
