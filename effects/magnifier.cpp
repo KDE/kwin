@@ -25,6 +25,8 @@ namespace KWin
 
 KWIN_EFFECT( Magnifier, MagnifierEffect )
 
+const int FRAME_WIDTH = 5;
+
 MagnifierEffect::MagnifierEffect()
     : zoom( 1 )
     , target_zoom( 1 )
@@ -51,6 +53,7 @@ void MagnifierEffect::prePaintScreen( int* mask, QRegion* region, int time )
             zoom = qMax( zoom * qMin( 1 - diff, 0.8 ), target_zoom );
         }
     effects->prePaintScreen( mask, region, time );
+    *region |= magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH );
     }
 
 void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -77,22 +80,22 @@ void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
         glPushAttrib( GL_CURRENT_BIT );
         glColor4f( 0, 0, 0, 1 ); // black
         glBegin( GL_QUADS );
-        glVertex2i( area.left() - 5, area.top() - 5 ); // top frame
-        glVertex2i( area.right() + 5, area.top() - 5 );
-        glVertex2i( area.right() + 5, area.top() - 1 );
-        glVertex2i( area.left() - 5, area.top() - 1 );
-        glVertex2i( area.left() - 5, area.top() - 5 ); // left frame
-        glVertex2i( area.left() - 1, area.top() - 5 );
-        glVertex2i( area.left() - 1, area.bottom() + 5 );
-        glVertex2i( area.left() - 5, area.bottom() + 5 );
-        glVertex2i( area.right() + 1, area.top() - 5 ); // right frame
-        glVertex2i( area.right() + 5, area.top() - 5 );
-        glVertex2i( area.right() + 5, area.bottom() + 5 );
-        glVertex2i( area.right() + 1, area.bottom() + 5 );
-        glVertex2i( area.left() - 5, area.bottom() + 1 ); // bottom frame
-        glVertex2i( area.right() + 5, area.bottom() + 1 );
-        glVertex2i( area.right() + 5, area.bottom() + 5 );
-        glVertex2i( area.left() - 5, area.bottom() + 5 );
+        glVertex2i( area.left() - FRAME_WIDTH, area.top() - FRAME_WIDTH ); // top frame
+        glVertex2i( area.right() + FRAME_WIDTH, area.top() - FRAME_WIDTH );
+        glVertex2i( area.right() + FRAME_WIDTH, area.top() - 1 );
+        glVertex2i( area.left() - FRAME_WIDTH, area.top() - 1 );
+        glVertex2i( area.left() - FRAME_WIDTH, area.top() - FRAME_WIDTH ); // left frame
+        glVertex2i( area.left() - 1, area.top() - FRAME_WIDTH );
+        glVertex2i( area.left() - 1, area.bottom() + FRAME_WIDTH );
+        glVertex2i( area.left() - FRAME_WIDTH, area.bottom() + FRAME_WIDTH );
+        glVertex2i( area.right() + 1, area.top() - FRAME_WIDTH ); // right frame
+        glVertex2i( area.right() + FRAME_WIDTH, area.top() - FRAME_WIDTH );
+        glVertex2i( area.right() + FRAME_WIDTH, area.bottom() + FRAME_WIDTH );
+        glVertex2i( area.right() + 1, area.bottom() + FRAME_WIDTH );
+        glVertex2i( area.left() - FRAME_WIDTH, area.bottom() + 1 ); // bottom frame
+        glVertex2i( area.right() + FRAME_WIDTH, area.bottom() + 1 );
+        glVertex2i( area.right() + FRAME_WIDTH, area.bottom() + FRAME_WIDTH );
+        glVertex2i( area.left() - FRAME_WIDTH, area.bottom() + FRAME_WIDTH );
         glEnd();
         glPopAttrib();
         }
@@ -101,12 +104,7 @@ void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
 void MagnifierEffect::postPaintScreen()
     {
     if( zoom != target_zoom )
-        effects->addRepaintFull();
-    if( zoom != 1.0 )
-        { // TODO repaint only what's need and when needed
-//        effects->addRepaint( magnifierArea());
-        effects->addRepaintFull();
-        }
+        effects->addRepaint( magnifierArea());
     effects->postPaintScreen();
     }
 
@@ -120,7 +118,7 @@ QRect MagnifierEffect::magnifierArea() const
 void MagnifierEffect::zoomIn()
     {
     target_zoom *= 1.2;
-    effects->addRepaintFull();
+    effects->addRepaint( magnifierArea());
     }
 
 void MagnifierEffect::zoomOut()
@@ -128,7 +126,7 @@ void MagnifierEffect::zoomOut()
     target_zoom /= 1.2;
     if( target_zoom < 1 )
         target_zoom = 1;
-    effects->addRepaintFull();
+    effects->addRepaint( magnifierArea());
     }
 
 void MagnifierEffect::toggle()
@@ -137,7 +135,13 @@ void MagnifierEffect::toggle()
         target_zoom = 2;
     else
         target_zoom = 1;
-    effects->addRepaintFull();
+    effects->addRepaint( magnifierArea());
+    }
+
+void MagnifierEffect::cursorMoved( const QPoint&, Qt::MouseButtons )
+    {
+    if( zoom != 1 )
+        effects->addRepaint( magnifierArea());
     }
 
 } // namespace

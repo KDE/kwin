@@ -220,6 +220,7 @@ void Workspace::performCompositing()
     // is started.
     if( lastCompositePaint.elapsed() < 5 )
         return;
+    checkCursorPos();
     if( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
         {
         scene->idle();

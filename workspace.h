@@ -462,6 +462,7 @@ class Workspace : public QObject, public KDecorationDefines
         void readShortcuts();
         void initDesktopPopup();
         void setupWindowShortcut( Client* c );
+        void checkCursorPos();
 
         bool startKDEWalkThroughWindows();
         bool startWalkThroughDesktops( TabBoxMode mode ); // TabBoxDesktopMode | TabBoxDesktopListMode

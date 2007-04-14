@@ -89,6 +89,12 @@ void ZoomEffect::actualSize()
     effects->addRepaintFull();
     }
 
+void ZoomEffect::cursorMoved( const QPoint&, Qt::MouseButtons )
+    {
+    if( zoom != 1 )
+        effects->addRepaintFull();
+    }
+
 } // namespace
 
 #include "zoom.moc"

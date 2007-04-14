@@ -2579,6 +2579,7 @@ void Workspace::slotBlockShortcuts( int data )
 // Optimized version of QCursor::pos() that tries to avoid X roundtrips
 // by updating the value only when the X timestamp changes.
 static QPoint last_cursor_pos;
+static int last_buttons = 0;
 static Time last_cursor_timestamp = CurrentTime;
 
 QPoint Workspace::cursorPos()
@@ -2587,7 +2588,14 @@ QPoint Workspace::cursorPos()
         || last_cursor_timestamp != QX11Info::appTime())
         {
         last_cursor_timestamp = QX11Info::appTime();
-        last_cursor_pos = QCursor::pos();
+        Window root;
+        Window child;
+        int root_x, root_y, win_x, win_y;
+        uint state;
+        XQueryPointer( display(), rootWindow(), &root, &child,
+            &root_x, &root_y, &win_x, &win_y, &state );
+        last_cursor_pos = QPoint( root_x, root_y );
+        last_buttons = state;
         QTimer::singleShot( 0, this, SLOT( resetCursorPosTime()));
         }
     return last_cursor_pos;
@@ -2599,6 +2607,15 @@ QPoint Workspace::cursorPos()
 void Workspace::resetCursorPosTime()
     {
     last_cursor_timestamp = CurrentTime;
+    }
+
+void Workspace::checkCursorPos()
+    {
+    QPoint last = last_cursor_pos;
+    int lastb = last_buttons;
+    cursorPos(); // update if needed
+    if( last != last_cursor_pos || lastb != last_buttons )
+        static_cast< EffectsHandlerImpl* >( effects )->cursorMoved( cursorPos(), x11ToQtMouseButtons( last_buttons ));
     }
 
 } // namespace
