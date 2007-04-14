@@ -131,8 +131,6 @@ KWIN_EXPORT int displayHeight()
     return XDisplayHeight( display(), DefaultScreen( display()));
     }
 
-KWIN_EXPORT QPoint cursorPos();
-
 } // namespace
 
 #endif

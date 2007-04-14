@@ -2576,6 +2576,31 @@ void Workspace::slotBlockShortcuts( int data )
         (*it)->updateMouseGrab();
     }
 
+// Optimized version of QCursor::pos() that tries to avoid X roundtrips
+// by updating the value only when the X timestamp changes.
+static QPoint last_cursor_pos;
+static Time last_cursor_timestamp = CurrentTime;
+
+QPoint Workspace::cursorPos()
+    {
+    if( last_cursor_timestamp == CurrentTime
+        || last_cursor_timestamp != QX11Info::appTime())
+        {
+        last_cursor_timestamp = QX11Info::appTime();
+        last_cursor_pos = QCursor::pos();
+        QTimer::singleShot( 0, this, SLOT( resetCursorPosTime()));
+        }
+    return last_cursor_pos;
+    }
+
+// Because of QTimer's and the impossibility to get events for all mouse
+// movements (at least I haven't figured out how) the position needs
+// to be also refetched after each return to the event loop.
+void Workspace::resetCursorPosTime()
+    {
+    last_cursor_timestamp = CurrentTime;
+    }
+
 } // namespace
 
 #include "workspace.moc"

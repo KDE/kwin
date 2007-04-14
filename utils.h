@@ -308,6 +308,8 @@ Time timestampDiff( Time time1, Time time2 ) // returns time2 - time1
 
 bool isLocalMachine( const QByteArray& host );
 
+QPoint cursorPos();
+
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
 int qtToX11Button( Qt::MouseButton button );
 Qt::MouseButton x11ToQtMouseButton( int button );

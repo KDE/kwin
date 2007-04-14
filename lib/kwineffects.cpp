@@ -182,7 +182,7 @@ int Effect::displayHeight()
 
 QPoint Effect::cursorPos()
     {
-    return KWin::cursorPos();
+    return effects->cursorPos();
     }
 
 //****************************************

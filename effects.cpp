@@ -272,11 +272,6 @@ int EffectsHandlerImpl::displayHeight() const
     return KWin::displayWidth();
     }
 
-QPoint EffectsHandlerImpl::cursorPos() const
-    {
-    return KWin::cursorPos();
-    }
-
 EffectWindowList EffectsHandlerImpl::stackingOrder() const
     {
     ClientList list = Workspace::self()->stackingOrder();
@@ -421,6 +416,7 @@ bool EffectsHandlerImpl::checkInputWindowEvent( XEvent* e )
         }
     return false;
     }
+
 void EffectsHandlerImpl::checkInputWindowStacking()
     {
     if( input_windows.count() == 0 )
@@ -432,6 +428,11 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     XRaiseWindow( display(), wins[ 0 ] );
     XRestackWindows( display(), wins, pos );
     delete[] wins;
+    }
+
+QPoint EffectsHandlerImpl::cursorPos() const
+    {
+    return Workspace::self()->cursorPos();
     }
 
 void EffectsHandlerImpl::checkElectricBorder(const QPoint &pos, Time time)

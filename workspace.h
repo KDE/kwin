@@ -279,6 +279,7 @@ class Workspace : public QObject, public KDecorationDefines
         bool globalShortcutsDisabled() const;
         void disableGlobalShortcuts( bool disable );
         void disableGlobalShortcutsForClient( bool disable );
+        QPoint cursorPos();
 
         void sessionSaveStarted();
         void sessionSaveDone();
@@ -449,6 +450,7 @@ class Workspace : public QObject, public KDecorationDefines
         void performCompositing();
         void lostCMSelection();
         void updateElectricBorders();
+        void resetCursorPosTime();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );

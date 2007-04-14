@@ -36,6 +36,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "atoms.h"
 #include "notifications.h"
+#include "workspace.h"
 
 #endif
 
@@ -351,6 +352,11 @@ void ungrabXServer()
 bool grabbedXServer()
     {
     return server_grab_count > 0;
+    }
+
+QPoint cursorPos()
+    {
+    return Workspace::self()->cursorPos();
     }
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states

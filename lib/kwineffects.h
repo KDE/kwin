@@ -170,6 +170,7 @@ class KWIN_EXPORT EffectsHandler
         virtual Window createInputWindow( Effect* e, const QRect& r, const QCursor& cursor );
         virtual Window createFullScreenInputWindow( Effect* e, const QCursor& cursor );
         virtual void destroyInputWindow( Window w ) = 0;
+        virtual QPoint cursorPos() const = 0;
 
         virtual void checkElectricBorder(const QPoint &pos, Time time) = 0;
         virtual void reserveElectricBorder( ElectricBorder border ) = 0;
