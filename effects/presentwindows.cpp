@@ -529,8 +529,22 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
             area.y() + ((*it).slot / columns ) * slotheight,
             slotwidth, slotheight );
         geom.adjust( 10, 10, -10, -10 ); // borders
+        float scale;
+        EffectWindow* w = it.key();
+        if( geom.width() / float( w->width()) < geom.height() / float( w->height()))
+            { // center vertically
+            scale = geom.width() / float( w->width());
+            geom.moveTop( geom.top() + ( geom.height() - int( w->height() * scale )) / 2 );
+            geom.setHeight( int( w->height() * scale ));
+            }
+        else
+            { // center horizontally
+            scale = geom.height() / float( w->height());
+            geom.moveLeft( geom.left() + ( geom.width() - int( w->width() * scale )) / 2 );
+            geom.setWidth( int( w->width() * scale ));
+            }
         (*it).area = geom;
-        (*it).scale = qMin( geom.width() / float( it.key()->width()), geom.height() / float( it.key()->height()));
+        (*it).scale = scale;
         (*it).hover = 0;
         }
     }
