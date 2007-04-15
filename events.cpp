@@ -1561,31 +1561,31 @@ void Client::keyPressEvent( uint key_code )
         return;
     bool is_control = key_code & Qt::CTRL;
     bool is_alt = key_code & Qt::ALT;
-    key_code = key_code & 0xffff;
+    key_code = key_code & ~Qt::KeyboardModifierMask;
     int delta = is_control?1:is_alt?32:8;
     QPoint pos = cursorPos();
     switch ( key_code ) 
         {
-		case Qt::Key_Left:
+    case Qt::Key_Left:
             pos.rx() -= delta;
             break;
-		case Qt::Key_Right:
+    case Qt::Key_Right:
             pos.rx() += delta;
             break;
-		case Qt::Key_Up:
+    case Qt::Key_Up:
             pos.ry() -= delta;
             break;
-		case Qt::Key_Down:
+    case Qt::Key_Down:
             pos.ry() += delta;
             break;
-		case Qt::Key_Space:
-		case Qt::Key_Return:
-		case Qt::Key_Enter:
+    case Qt::Key_Space:
+    case Qt::Key_Return:
+    case Qt::Key_Enter:
             finishMoveResize( false );
             buttonDown = false;
             setCursor( mode );
             break;
-		case Qt::Key_Escape:
+    case Qt::Key_Escape:
             finishMoveResize( true );
             buttonDown = false;
             setCursor( mode );
