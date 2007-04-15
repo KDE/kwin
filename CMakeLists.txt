@@ -99,7 +99,7 @@ install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
 install( FILES effects/data/explosion.frag effects/data/explosion.vert effects/data/explosion-start.png effects/data/explosion-end.png   DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
-kde4_install_icons( ${ICON_INSTALL_DIR} crystalsvg )
+kde4_install_icons( ${ICON_INSTALL_DIR} )
 
 
 
