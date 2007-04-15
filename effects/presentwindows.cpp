@@ -166,12 +166,23 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         const WindowData& windata = mWindowData[w];
         if( mRearranging < 1 ) // rearranging
             {
-            data.xScale = interpolate(windata.old_scale, windata.scale, mRearranging);
-            data.yScale = interpolate(windata.old_scale, windata.scale, mRearranging);
-            data.xTranslate = (int)interpolate(windata.old_area.left() - w->x(),
-                windata.area.left() - w->x(), mRearranging);
-            data.yTranslate = (int)interpolate(windata.old_area.top() - w->y(),
-                windata.area.top() - w->y(), mRearranging);
+            if( windata.old_area.isEmpty()) // no old position
+                {
+                data.xScale = windata.scale;
+                data.yScale = windata.scale;
+                data.xTranslate = windata.area.left() - w->x();
+                data.yTranslate = windata.area.top() - w->y();
+                data.opacity *= interpolate(0.0, 1.0, mRearranging);
+                }
+            else
+                {
+                data.xScale = interpolate(windata.old_scale, windata.scale, mRearranging);
+                data.yScale = interpolate(windata.old_scale, windata.scale, mRearranging);
+                data.xTranslate = (int)interpolate(windata.old_area.left() - w->x(),
+                    windata.area.left() - w->x(), mRearranging);
+                data.yTranslate = (int)interpolate(windata.old_area.top() - w->y(),
+                    windata.area.top() - w->y(), mRearranging);
+                }
             }
         else
             {
