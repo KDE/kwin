@@ -80,25 +80,29 @@ void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time 
 
 void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
-    if( mActiveness > 0.0f && mWindowData.contains(w) )
+    if( mActiveness > 0.0f )
         {
-        // This window will be transformed by the effect
-        *mask |= Effect::PAINT_WINDOW_TRANSFORMED;
-        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
-        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
-        // If it's minimized window or on another desktop and effect is not
-        //  fully active, then apply some transparency
-        if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
-            *mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
-        // Change window's hover according to cursor pos
-        WindowData& windata = mWindowData[w];
-        const float hoverchangetime = 200;
-        if( windata.area.contains(cursorPos()) )
-            windata.hover = qMin(1.0f, windata.hover + time / hoverchangetime);
+        if( mWindowData.contains(w) )
+            {
+            // This window will be transformed by the effect
+            *mask |= Effect::PAINT_WINDOW_TRANSFORMED;
+            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
+            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+            // If it's minimized window or on another desktop and effect is not
+            //  fully active, then apply some transparency
+            if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
+                *mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
+            // Change window's hover according to cursor pos
+            WindowData& windata = mWindowData[w];
+            const float hoverchangetime = 200;
+            if( windata.area.contains(cursorPos()) )
+                windata.hover = qMin(1.0f, windata.hover + time / hoverchangetime);
+            else
+                windata.hover = qMax(0.0f, windata.hover - time / hoverchangetime);
+            }
         else
-            windata.hover = qMax(0.0f, windata.hover - time / hoverchangetime);
+            w->disablePainting( EffectWindow::PAINT_DISABLED );
         }
-
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
@@ -187,15 +191,11 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
     setActive(false);
     }
 
-void PresentWindowsEffect::windowActivated( EffectWindow* )
-    {
-    rearrangeWindows();
-    }
-
 void PresentWindowsEffect::windowClosed( EffectWindow* w )
     {
     if( mHoverWindow == w )
         mHoverWindow = NULL;
+    mWindowsToPresent.remove( w );
     rearrangeWindows();
     }
 
@@ -205,6 +205,24 @@ void PresentWindowsEffect::setActive(bool active)
         return;
     mActivated = active;
     mHoverWindow = NULL;
+    if( mActivated )
+        {
+        mWindowsToPresent.clear();
+        const EffectWindowList& originalwindowlist = effects->stackingOrder();
+        // Filter out special windows such as panels and taskbars
+        foreach( EffectWindow* window, originalwindowlist )
+            {
+            if( window->isSpecialWindow() )
+                continue;
+            if( window->isDeleted())
+                continue;
+            if( !mShowWindowsFromAllDesktops && !window->isOnCurrentDesktop() )
+                continue;
+            mWindowsToPresent.append(window);
+            }
+        }
+    else
+        mWindowsToPresent.clear();
     rearrangeWindows();
     if( mActivated && mActiveness == 0.0f )
         effectActivated();
@@ -231,18 +249,7 @@ void PresentWindowsEffect::rearrangeWindows()
 
     mWindowData.clear();
 
-    const EffectWindowList& originalwindowlist = effects->stackingOrder();
-    // Filter out special windows such as panels and taskbars
-    EffectWindowList windowlist;
-    foreach( EffectWindow* window, originalwindowlist )
-        {
-        if( window->isSpecialWindow() )
-            continue;
-        if( !mShowWindowsFromAllDesktops && !window->isOnCurrentDesktop() )
-            continue;
-        windowlist.append(window);
-        }
-
+    EffectWindowList windowlist = mWindowsToPresent;
     // Calculate new positions and scales for windows
 //    calculateWindowTransformationsDumb( windowlist );
 //    calculateWindowTransformationsKompose( windowlist );

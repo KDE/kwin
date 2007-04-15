@@ -36,7 +36,6 @@ class PresentWindowsEffect
         virtual void postPaintScreen();
 
         virtual void windowClosed( EffectWindow* c );
-        virtual void windowActivated( EffectWindow* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual bool borderActivated( ElectricBorder border );
 
@@ -75,6 +74,7 @@ class PresentWindowsEffect
 
         Window mInput;
 
+        EffectWindowList mWindowsToPresent;
         struct WindowData
             {
             QRect area;
