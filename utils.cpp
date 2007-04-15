@@ -354,6 +354,32 @@ bool grabbedXServer()
     return server_grab_count > 0;
     }
 
+static bool keyboard_grabbed = false;
+
+bool grabXKeyboard( Window w )
+    {
+    if( QWidget::keyboardGrabber() != NULL )
+        return false;
+    if( keyboard_grabbed )
+        return false;
+    if( qApp->activePopupWidget() != NULL )
+        return false;
+    if( w == None )
+        w = rootWindow();
+    if( XGrabKeyboard( display(), w, False,
+        GrabModeAsync, GrabModeAsync, xTime()) != GrabSuccess )
+        return false;
+    keyboard_grabbed = true;
+    return true;
+    }
+
+void ungrabXKeyboard()
+    {
+    assert( keyboard_grabbed );
+    keyboard_grabbed = false;
+    XUngrabKeyboard( display(), xTime());
+    }
+
 QPoint cursorPos()
     {
     return Workspace::self()->cursorPos();

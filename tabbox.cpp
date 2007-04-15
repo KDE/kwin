@@ -870,7 +870,7 @@ void Workspace::slotWalkThroughWindows()
         return;
     if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
         {
-        //XUngrabKeyboard(display(), xTime()); // need that because of accelerator raw mode
+        //ungrabXKeyboard(); // need that because of accelerator raw mode
         // CDE style raise / lower
         CDEWalkThroughWindows( true );
         }
@@ -1398,8 +1398,7 @@ void Workspace::setTabBoxDesktop( int iDesktop )
 
 bool Workspace::establishTabBoxGrab()
     {
-    if( XGrabKeyboard( display(), root, false,
-        GrabModeAsync, GrabModeAsync, xTime()) != GrabSuccess )
+    if( !grabXKeyboard())
         return false;
     // Don't try to establish a global mouse grab using XGrabPointer, as that would prevent
     // using Alt+Tab while DND (#44972). However force passive grabs on all windows
@@ -1415,7 +1414,7 @@ bool Workspace::establishTabBoxGrab()
 
 void Workspace::removeTabBoxGrab()
     {
-    XUngrabKeyboard(display(), xTime());
+    ungrabXKeyboard();
     assert( forced_global_mouse_grab );
     forced_global_mouse_grab = false;
     if( active_client != NULL )

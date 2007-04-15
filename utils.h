@@ -238,6 +238,8 @@ void updateXTime();
 void grabXServer();
 void ungrabXServer();
 bool grabbedXServer();
+bool grabXKeyboard( Window w = rootWindow());
+void ungrabXKeyboard();
 
 class Scene;
 extern Scene* scene;

@@ -1778,18 +1778,14 @@ void Workspace::slotGrabDesktop()
  */
 void Workspace::slotMouseEmulation()
     {
-
     if ( mouse_emulation )
         {
-        XUngrabKeyboard(display(), xTime());
+        ungrabXKeyboard();
         mouse_emulation = false;
         return;
         }
 
-    if ( XGrabKeyboard(display(),
-                       root, false,
-                       GrabModeAsync, GrabModeAsync,
-                       xTime()) == GrabSuccess )
+    if( grabXKeyboard())
         {
         mouse_emulation = true;
         mouse_emulation_state = 0;
@@ -1987,7 +1983,7 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
             }
     // fall through
         case XK_Escape:
-            XUngrabKeyboard(display(), xTime());
+            ungrabXKeyboard();
             mouse_emulation = false;
             return true;
         default:

@@ -377,6 +377,7 @@ class Client
         bool moveResizeMode;
         bool move_faked_activity;
         Window move_resize_grab_window;
+        bool move_resize_has_keyboard_grab;
         bool unrestrictedMoveResize;
 
         Position mode;

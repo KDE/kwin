@@ -2266,8 +2266,8 @@ bool Client::startMoveResize()
         ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
         GrabModeAsync, GrabModeAsync, None, cursor.handle(), xTime() ) == Success )
         has_grab = true;
-    if( XGrabKeyboard( display(), frameId(), False, GrabModeAsync, GrabModeAsync, xTime() ) == Success )
-        has_grab = true;
+    if( grabXKeyboard( frameId()))
+        has_grab = move_resize_has_keyboard_grab = true;
     if( !has_grab ) // at least one grab is necessary in order to be able to finish move/resize
         {
         XDestroyWindow( display(), move_resize_grab_window );
@@ -2327,7 +2327,9 @@ void Client::leaveMoveResize()
     if ( ( isMove() && rules()->checkMoveResizeMode( options->moveMode ) != Options::Opaque )
       || ( isResize() && rules()->checkMoveResizeMode( options->resizeMode ) != Options::Opaque ) )
         ungrabXServer();
-    XUngrabKeyboard( display(), xTime() );
+    if( move_resize_has_keyboard_grab )
+        ungrabXKeyboard();
+    move_resize_has_keyboard_grab = false;
     XUngrabPointer( display(), xTime() );
     XDestroyWindow( display(), move_resize_grab_window );
     move_resize_grab_window = None;

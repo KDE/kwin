@@ -45,8 +45,7 @@ void KillWindow::start()
                      GrabModeAsync, GrabModeAsync, None,
                      kill_cursor, CurrentTime) == GrabSuccess) 
         {
-        XGrabKeyboard(display(), rootWindow(), False,
-                      GrabModeAsync, GrabModeAsync, CurrentTime);
+        grabXKeyboard();
 
         XEvent ev;
         int return_pressed  = 0;
@@ -76,7 +75,7 @@ void KillWindow::start()
                     mx /= 10;
                     my /= 10;
                     }
-                QCursor::setPos(QCursor::pos()+QPoint(mx, my));
+                QCursor::setPos(cursorPos()+QPoint(mx, my));
                 }
 
             if (ev.type == ButtonRelease) 
@@ -87,8 +86,7 @@ void KillWindow::start()
                     escape_pressed = true;
                     break;
                     }
-                if( ev.xbutton.button == Button1 || ev.xbutton.button == Button2 )
-                    workspace->killWindowId(ev.xbutton.subwindow);
+                workspace->killWindowId(ev.xbutton.subwindow);
                 }
             continue;
             }
@@ -104,8 +102,7 @@ void KillWindow::start()
             }
 
         ungrabXServer();
-
-        XUngrabKeyboard(display(), CurrentTime);
+        ungrabXKeyboard();
         XUngrabPointer(display(), CurrentTime);
         }
     }

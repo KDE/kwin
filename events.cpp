@@ -203,7 +203,7 @@ bool Workspace::workspaceEvent( XEvent * e )
     if ( mouse_emulation && (e->type == ButtonPress || e->type == ButtonRelease ) ) 
         {
         mouse_emulation = false;
-        XUngrabKeyboard( display(), xTime() );
+        ungrabXKeyboard();
         }
 
     if ( e->type == PropertyNotify || e->type == ClientMessage ) 
