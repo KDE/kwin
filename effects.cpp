@@ -243,6 +243,11 @@ void EffectsHandlerImpl::activateWindow( EffectWindow* c )
         Workspace::self()->activateClient( cl, true );
     }
 
+EffectWindow* EffectsHandlerImpl::activeWindow() const
+    {
+    return Workspace::self()->activeClient() ? Workspace::self()->activeClient()->effectWindow() : NULL;
+    }
+
 int EffectsHandlerImpl::currentDesktop() const
     {
     return Workspace::self()->currentDesktop();

@@ -180,6 +180,7 @@ class KWIN_EXPORT EffectsHandler
 
         // functions that allow controlling windows/desktop
         virtual void activateWindow( EffectWindow* c ) = 0;
+        virtual EffectWindow* activeWindow() const = 0 ;
         // 
         virtual int currentDesktop() const = 0;
         virtual int numberOfDesktops() const = 0;

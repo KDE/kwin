@@ -35,6 +35,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
         virtual void activateWindow( EffectWindow* c );
+        virtual EffectWindow* activeWindow() const;
 
         virtual int currentDesktop() const;
         virtual int numberOfDesktops() const;

@@ -25,6 +25,7 @@ SET(kwin4_effect_builtins_sources
     presentwindows.cpp
     scalein.cpp
     shakymove.cpp
+    thumbnailaside.cpp
     zoom.cpp
     )
 
@@ -85,6 +86,7 @@ install( FILES
     presentwindows.desktop
     scalein.desktop
     shakymove.desktop
+    thumbnailaside.desktop
     zoom.desktop
     demo_shiftworkspaceup.desktop
     demo_taskbarthumbnail.desktop
