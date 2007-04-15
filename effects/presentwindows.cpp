@@ -44,7 +44,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
 
-    borderActivate = ElectricTopRight;
+    borderActivate = ElectricTopRight; // TODO config options
     borderActivateAll = ElectricNone;
 
     effects->reserveElectricBorder( borderActivate );
@@ -164,6 +164,11 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
         }
     if( e->type() != QEvent::MouseButtonPress )
         return;
+    if( static_cast< QMouseEvent* >( e )->button() != Qt::LeftButton )
+        {
+        setActive( false );
+        return;
+        }
 
     // Find out which window (if any) was clicked and activate it
     QPoint pos = static_cast< QMouseEvent* >( e )->pos();
