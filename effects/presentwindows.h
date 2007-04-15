@@ -50,11 +50,15 @@ class PresentWindowsEffect
         void rearrangeWindows();
         void calculateWindowTransformationsDumb(EffectWindowList windowlist);
         void calculateWindowTransformationsKompose(EffectWindowList windowlist);
+        void calculateWindowTransformationsClosest(EffectWindowList windowlist);
 
         // Helper methods for layout calculation
         float windowAspectRatio(EffectWindow* c);
         int windowWidthForHeight(EffectWindow* c, int h);
         int windowHeightForWidth(EffectWindow* c, int w);
+
+        void assignSlots( const QRect& area, int columns, int rows );
+        void getBestAssignments();
 
         // Called once the effect is activated (and wasn't activated before)
         void effectActivated();
@@ -76,6 +80,8 @@ class PresentWindowsEffect
             QRect area;
             float scale;
             float hover;
+            int slot;
+            int slot_distance;
             };
         QHash<EffectWindow*, WindowData> mWindowData;
         EffectWindow* mHoverWindow;

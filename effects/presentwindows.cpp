@@ -19,8 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <math.h>
 #include <assert.h>
-
-
+#include <limits.h>
 
 namespace KWin
 {
@@ -245,7 +244,9 @@ void PresentWindowsEffect::rearrangeWindows()
         }
 
     // Calculate new positions and scales for windows
-    calculateWindowTransformationsKompose( windowlist );
+//    calculateWindowTransformationsDumb( windowlist );
+//    calculateWindowTransformationsKompose( windowlist );
+    calculateWindowTransformationsClosest( windowlist );
 
     // Schedule entire desktop to be repainted
     effects->addRepaintFull();
@@ -303,7 +304,7 @@ int PresentWindowsEffect::windowHeightForWidth(EffectWindow* c, int w)
 void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowList windowlist)
     {
      // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect availRect = effects->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
+    QRect availRect = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
 
@@ -436,6 +437,118 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             }
         if ( maxRowHeights[i]-h > 0 )
             topOffset += maxRowHeights[i]-h;
+        }
+    }
+
+void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowList windowlist)
+    {
+    QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    int columns = int( ceil( sqrt( windowlist.count())));
+    int rows = int( ceil( windowlist.count() / double( columns )));
+    foreach( EffectWindow* w, windowlist )
+        {
+        WindowData d;
+        d.slot = -1;
+        d.hover = 0;  // other data will be computed later
+        mWindowData[ w ] = d;
+        }
+    for(;;)
+        {
+        // Assign each window to the closest available slot
+        assignSlots( area, columns, rows );
+        // Leave only the closest window in each slot, remove further conflicts
+        getBestAssignments();
+        bool all_assigned = true;
+        foreach( EffectWindow* w, windowlist )
+            if( mWindowData[ w ].slot == -1 )
+                {
+                all_assigned = false;
+                break;
+                }
+        if( all_assigned )
+            break; // ok
+        }
+    int slotwidth = area.width() / columns;
+    int slotheight = area.height() / rows;
+    for( QHash<EffectWindow*, WindowData>::Iterator it = mWindowData.begin();
+         it != mWindowData.end();
+         ++it )
+        {
+        QRect geom( area.x() + ((*it).slot % columns ) * slotwidth,
+            area.y() + ((*it).slot / columns ) * slotheight,
+            slotwidth, slotheight );
+        geom.adjust( 10, 10, -10, -10 ); // borders
+        (*it).area = geom;
+        (*it).scale = geom.width() / float( it.key()->width());
+        }
+    }
+
+void PresentWindowsEffect::assignSlots( const QRect& area, int columns, int rows )
+    {
+    QVector< bool > taken;
+    taken.fill( false, columns * rows );
+    foreach( const WindowData& d, mWindowData )
+        {
+        if( d.slot != -1 )
+            taken[ d.slot ] = true;
+        }
+    int slotwidth = area.width() / columns;
+    int slotheight = area.height() / rows;
+    for( QHash<EffectWindow*, WindowData>::Iterator it = mWindowData.begin();
+         it != mWindowData.end();
+         ++it )
+        {
+        if( (*it).slot != -1 )
+            continue; // it already has a slot
+        QPoint pos = it.key()->geometry().center();
+        if( pos.x() < area.left())
+            pos.setX( area.left());
+        if( pos.x() > area.right())
+            pos.setX( area.right());
+        if( pos.y() < area.top())
+            pos.setY( area.top());
+        if( pos.y() > area.bottom())
+            pos.setY( area.bottom());
+        int distance = INT_MAX;
+        for( int x = 0;
+             x < columns;
+             ++x )
+            for( int y = 0;
+                 y < rows;
+                 ++y )
+                {
+                int slot = x + y * columns;
+                if( taken[ slot ] )
+                    continue;
+                int xdiff = pos.x() - ( area.x() + slotwidth * x + slotwidth / 2 ); // slotwidth/2 for center
+                int ydiff = pos.y() - ( area.y() + slotheight * y + slotheight / 2 );
+                int dist = int( sqrt( xdiff * xdiff + ydiff * ydiff ));
+                if( dist < distance )
+                    {
+                    distance = dist;
+                    (*it).slot = slot;
+                    (*it).slot_distance = distance;
+                    }
+                }
+        }
+    }
+
+void PresentWindowsEffect::getBestAssignments()
+    {
+    for( QHash<EffectWindow*, WindowData>::Iterator it1 = mWindowData.begin();
+         it1 != mWindowData.end();
+         ++it1 )
+        {
+        for( QHash<EffectWindow*, WindowData>::ConstIterator it2 = mWindowData.begin();
+             it2 != mWindowData.end();
+             ++it2 )
+            {
+            if( it1.key() != it2.key() && (*it1).slot == (*it2).slot
+                && (*it1).slot_distance >= (*it2).slot_distance )
+                {
+                (*it1).slot = -1;
+                }
+            }
         }
     }
 
