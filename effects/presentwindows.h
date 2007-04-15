@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 // Include with base class for effects.
 #include <kwineffects.h>
-
+#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -32,6 +32,7 @@ class PresentWindowsEffect
 
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintScreen();
 
@@ -61,6 +62,9 @@ class PresentWindowsEffect
         void assignSlots( const QRect& area, int columns, int rows );
         void getBestAssignments();
 
+        void updateFilterTexture();
+        void discardFilterTexture();
+        
         // Called once the effect is activated (and wasn't activated before)
         void effectActivated();
         // Called once the effect has terminated
@@ -90,8 +94,15 @@ class PresentWindowsEffect
             int slot;
             int slot_distance;
             };
-        QHash<EffectWindow*, WindowData> mWindowData;
+        typedef QHash<EffectWindow*, WindowData> DataHash;
+        DataHash mWindowData;
         EffectWindow* mHoverWindow;
+        
+        QString windowFilter;
+#ifdef HAVE_OPENGL
+        GLTexture* filterTexture;
+        QRect filterTextureRect;
+#endif
 
         ElectricBorder borderActivate;
         ElectricBorder borderActivateAll;

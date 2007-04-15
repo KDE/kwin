@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <klocale.h>
 
 #include <QMouseEvent>
+#include <qpainter.h>
 
 #include <math.h>
 #include <assert.h>
@@ -33,6 +34,9 @@ PresentWindowsEffect::PresentWindowsEffect()
     , mRearranging( 1.0 )
     , hasKeyboardGrab( false )
     , mHoverWindow( NULL )
+#ifdef HAVE_OPENGL
+    , filterTexture( NULL )
+#endif
     {
 
     KActionCollection* actionCollection = new KActionCollection( this );
@@ -56,6 +60,7 @@ PresentWindowsEffect::~PresentWindowsEffect()
     {
     effects->unreserveElectricBorder( borderActivate );
     effects->unreserveElectricBorder( borderActivateAll );
+    discardFilterTexture();
     }
 
 
@@ -110,6 +115,47 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* 
             w->disablePainting( EffectWindow::PAINT_DISABLED );
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
+    }
+
+void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
+    {
+    effects->paintScreen( mask, region, data );
+#ifdef HAVE_OPENGL
+    if( filterTexture && region.intersects( filterTextureRect ))
+        {
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        filterTexture->bind();
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glEnableClientState( GL_VERTEX_ARRAY );
+        int x = filterTextureRect.x();
+        int y = filterTextureRect.y();
+        int width = filterTextureRect.width();
+        int height = filterTextureRect.height();
+        int verts[ 4 * 2 ] =
+            {
+            x, y,
+            x, y + height,
+            x + width, y + height,
+            x + width, y
+            };
+        glVertexPointer( 2, GL_INT, 0, verts );
+        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+        int texcoords[ 4 * 2 ] =
+            {
+            0, 1,
+            0, 0,
+            1, 0,
+            1, 1
+            };
+        glTexCoordPointer( 2, GL_INT, 0, texcoords );
+        glDrawArrays( GL_QUADS, 0, 4 );
+        glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+        glDisableClientState( GL_VERTEX_ARRAY );
+        filterTexture->unbind();
+        glPopAttrib();
+        }
+#endif
     }
 
 void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
@@ -169,7 +215,7 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
     if( e->type() == QEvent::MouseMove )
         { // Repaint if the hovered-over window changed.
           // (No need to use cursorMoved(), this takes care of it as well)
-        for( QHash<EffectWindow*, WindowData>::ConstIterator it = mWindowData.begin();
+        for( DataHash::ConstIterator it = mWindowData.begin();
              it != mWindowData.end();
              ++it )
             {
@@ -195,7 +241,7 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
 
     // Find out which window (if any) was clicked and activate it
     QPoint pos = static_cast< QMouseEvent* >( e )->pos();
-    for( QHash<EffectWindow*, WindowData>::iterator it = mWindowData.begin();
+    for( DataHash::iterator it = mWindowData.begin();
          it != mWindowData.end(); ++it )
         {
         if( it.value().area.contains(pos) )
@@ -230,6 +276,7 @@ void PresentWindowsEffect::setActive(bool active)
         mWindowData.clear();
         effectActivated();
         mActiveness = 0;
+        windowFilter.clear();
         mWindowsToPresent.clear();
         const EffectWindowList& originalwindowlist = effects->stackingOrder();
         // Filter out special windows such as panels and taskbars
@@ -250,6 +297,7 @@ void PresentWindowsEffect::setActive(bool active)
         mWindowsToPresent.clear();
         mRearranging = 1; // turn off
         mActiveness = 1; // go back from arranged position
+        discardFilterTexture();
         }
     effects->addRepaintFull(); // trigger next animation repaint
     }
@@ -275,13 +323,30 @@ void PresentWindowsEffect::rearrangeWindows()
     if( !mActivated )
         return;
 
-    EffectWindowList windowlist = mWindowsToPresent;
+    EffectWindowList windowlist;
+    if( windowFilter.isEmpty())
+        windowlist = mWindowsToPresent;
+    else
+        {
+        foreach( EffectWindow* w, mWindowsToPresent )
+            {
+            if( w->caption().contains( windowFilter, Qt::CaseInsensitive )
+                || w->windowClass().contains( windowFilter, Qt::CaseInsensitive ))
+                windowlist.append( w );
+            }
+        }
+    if( windowlist.isEmpty())
+        {
+        mWindowData.clear();
+        effects->addRepaintFull();
+        return;
+        }
 
-    if( !mWindowData.isEmpty()) // this is not first arranging
+    if( !mWindowData.isEmpty()) // this is not the first arranging
         {
         bool canrearrange = canRearrangeClosest( windowlist );
-        QHash<EffectWindow*, WindowData> newdata;
-        for( QHash<EffectWindow*, WindowData>::ConstIterator it = mWindowData.begin();
+        DataHash newdata;
+        for( DataHash::ConstIterator it = mWindowData.begin();
              it != mWindowData.end();
              ++it )
             if( windowlist.contains( it.key())) // remove windows that are not in the window list
@@ -289,7 +354,7 @@ void PresentWindowsEffect::rearrangeWindows()
         mWindowData = newdata;
         if( !canrearrange ) // canRearrange was called before adjusting the list, so that
             return;         // changes can be detected
-        for( QHash<EffectWindow*, WindowData>::Iterator it = mWindowData.begin();
+        for( DataHash::Iterator it = mWindowData.begin();
              it != mWindowData.end();
              ++it )
             {
@@ -521,7 +586,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
         }
     int slotwidth = area.width() / columns;
     int slotheight = area.height() / rows;
-    for( QHash<EffectWindow*, WindowData>::Iterator it = mWindowData.begin();
+    for( DataHash::Iterator it = mWindowData.begin();
          it != mWindowData.end();
          ++it )
         {
@@ -560,7 +625,7 @@ void PresentWindowsEffect::assignSlots( const QRect& area, int columns, int rows
         }
     int slotwidth = area.width() / columns;
     int slotheight = area.height() / rows;
-    for( QHash<EffectWindow*, WindowData>::Iterator it = mWindowData.begin();
+    for( DataHash::Iterator it = mWindowData.begin();
          it != mWindowData.end();
          ++it )
         {
@@ -601,11 +666,11 @@ void PresentWindowsEffect::assignSlots( const QRect& area, int columns, int rows
 
 void PresentWindowsEffect::getBestAssignments()
     {
-    for( QHash<EffectWindow*, WindowData>::Iterator it1 = mWindowData.begin();
+    for( DataHash::Iterator it1 = mWindowData.begin();
          it1 != mWindowData.end();
          ++it1 )
         {
-        for( QHash<EffectWindow*, WindowData>::ConstIterator it2 = mWindowData.begin();
+        for( DataHash::ConstIterator it2 = mWindowData.begin();
              it2 != mWindowData.end();
              ++it2 )
             {
@@ -645,11 +710,82 @@ bool PresentWindowsEffect::borderActivated( ElectricBorder border )
 
 void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent* e )
     {
+    if( e->type() != QEvent::KeyPress )
+        return;
     if( e->key() == Qt::Key_Escape )
         {
         setActive( false );
         return;
         }
+    if( e->key() == Qt::Key_Backspace )
+        {
+        if( !windowFilter.isEmpty())
+            {
+            windowFilter.remove( windowFilter.length() - 1, 1 );
+            updateFilterTexture();
+            rearrangeWindows();
+            }
+        return;
+        }
+    if( e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter )
+        {
+        if( mHoverWindow != NULL )
+            {
+            effects->activateWindow( mHoverWindow );
+            setActive( false );
+            return;
+            }
+        if( mWindowData.count() == 1 ) // only one window shown
+            {
+            effects->activateWindow( mWindowData.begin().key());
+            setActive( false );
+            }
+        return;
+        }
+    if( !e->text().isEmpty())
+        {
+        windowFilter.append( e->text());
+        updateFilterTexture();
+        rearrangeWindows();
+        return;
+        }
+    }
+
+void PresentWindowsEffect::discardFilterTexture()
+    {
+#ifdef HAVE_OPENGL
+    delete filterTexture;
+    filterTexture = NULL;
+#endif
+    }
+
+void PresentWindowsEffect::updateFilterTexture()
+    {
+#ifdef HAVE_OPENGL
+    discardFilterTexture();
+    if( windowFilter.isEmpty())
+        return;
+    QFont font;
+    font.setPointSize( font.pointSize() * 2 );
+    font.setBold( true );
+    QRect rect = QFontMetrics( font ).boundingRect( windowFilter );
+    const int border = 10;
+    rect.adjust( -border, -border, border, border );
+    QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    QImage im( rect.width(), rect.height(), QImage::Format_ARGB32 );
+    QColor col = QPalette().highlight();
+    col.setAlpha( 128 ); // 0.5
+    im.fill( col.rgba());
+    QPainter p( &im );
+    p.setFont( font );
+    p.setPen( QPalette().highlightedText());
+    p.drawText( -rect.topLeft(), windowFilter );
+    p.end();
+    filterTexture = new GLTexture( im );
+    filterTextureRect = QRect( area.x() + ( area.width() - rect.width()) / 2,
+        area.y() + ( area.height() - rect.height()) / 2, rect.width(), rect.height());
+    effects->addRepaint( filterTextureRect );
+#endif
     }
 
 } // namespace
