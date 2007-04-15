@@ -30,6 +30,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     : mShowWindowsFromAllDesktops ( false )
     , mActivated( false )
     , mActiveness( 0.0 )
+    , mRearranging( 1.0 )
     , mHoverWindow( NULL )
     {
 
@@ -62,7 +63,11 @@ void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time 
     // How long does it take for the effect to get it's full strength (in ms)
     const float changeTime = 300;
     if(mActivated)
+        {
         mActiveness = qMin(1.0f, mActiveness + time/changeTime);
+        if( mRearranging < 1 )
+            mRearranging = qMin(1.0f, mRearranging + time/changeTime);
+        }
     else if(mActiveness > 0.0f)
         {
         mActiveness = qMax(0.0f, mActiveness - time/changeTime);
@@ -112,10 +117,22 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         {
         // Change window's position and scale
         const WindowData& windata = mWindowData[w];
-        data.xScale = interpolate(data.xScale, windata.scale, mActiveness);
-        data.yScale = interpolate(data.xScale, windata.scale, mActiveness);
-        data.xTranslate = (int)interpolate(data.xTranslate, windata.area.left() - w->x(), mActiveness);
-        data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->y(), mActiveness);
+        if( mRearranging < 1 ) // rearranging
+            {
+            data.xScale = interpolate(windata.old_scale, windata.scale, mRearranging);
+            data.yScale = interpolate(windata.old_scale, windata.scale, mRearranging);
+            data.xTranslate = (int)interpolate(windata.old_area.left() - w->x(),
+                windata.area.left() - w->x(), mRearranging);
+            data.yTranslate = (int)interpolate(windata.old_area.top() - w->y(),
+                windata.area.top() - w->y(), mRearranging);
+            }
+        else
+            {
+            data.xScale = interpolate(data.xScale, windata.scale, mActiveness);
+            data.yScale = interpolate(data.xScale, windata.scale, mActiveness);
+            data.xTranslate = (int)interpolate(data.xTranslate, windata.area.left() - w->x(), mActiveness);
+            data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->y(), mActiveness);
+            }
         // Darken all windows except for the one under the cursor
         data.brightness *= interpolate(1.0, 0.7, mActiveness * (1.0f - windata.hover));
         // If it's minimized window or on another desktop and effect is not
@@ -131,6 +148,8 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
 void PresentWindowsEffect::postPaintScreen()
     {
     if( mActivated && mActiveness < 1.0 ) // activating effect
+        effects->addRepaintFull();
+    if( mActivated && mRearranging < 1.0 ) // rearranging
         effects->addRepaintFull();
     if( !mActivated && mActiveness > 0.0 ) // deactivating effect
         effects->addRepaintFull();
@@ -207,6 +226,9 @@ void PresentWindowsEffect::setActive(bool active)
     mHoverWindow = NULL;
     if( mActivated )
         {
+        mWindowData.clear();
+        effectActivated();
+        mActiveness = 0;
         mWindowsToPresent.clear();
         const EffectWindowList& originalwindowlist = effects->stackingOrder();
         // Filter out special windows such as panels and taskbars
@@ -220,12 +242,14 @@ void PresentWindowsEffect::setActive(bool active)
                 continue;
             mWindowsToPresent.append(window);
             }
+        rearrangeWindows();
         }
     else
+        {
         mWindowsToPresent.clear();
-    rearrangeWindows();
-    if( mActivated && mActiveness == 0.0f )
-        effectActivated();
+        mRearranging = 1; // turn off
+        mActiveness = 1; // go back from arranged position
+        }
     effects->addRepaintFull(); // trigger next animation repaint
     }
 
@@ -247,9 +271,30 @@ void PresentWindowsEffect::rearrangeWindows()
     if( !mActivated )
         return;
 
-    mWindowData.clear();
-
     EffectWindowList windowlist = mWindowsToPresent;
+
+    if( !mWindowData.isEmpty()) // this is not first arranging
+        {
+        bool canrearrange = canRearrangeClosest( windowlist );
+        QHash<EffectWindow*, WindowData> newdata;
+        for( QHash<EffectWindow*, WindowData>::ConstIterator it = mWindowData.begin();
+             it != mWindowData.end();
+             ++it )
+            if( windowlist.contains( it.key())) // remove windows that are not in the window list
+                newdata[ it.key() ] = *it;
+        mWindowData = newdata;
+        if( !canrearrange ) // canRearrange was called before adjusting the list, so that
+            return;         // changes can be detected
+        for( QHash<EffectWindow*, WindowData>::Iterator it = mWindowData.begin();
+             it != mWindowData.end();
+             ++it )
+            {
+            (*it).old_area = (*it).area;
+            (*it).old_scale = (*it).scale;
+            }
+        mRearranging = 0; // start animation again
+        }
+
     // Calculate new positions and scales for windows
 //    calculateWindowTransformationsDumb( windowlist );
 //    calculateWindowTransformationsKompose( windowlist );
@@ -453,12 +498,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
     int columns = int( ceil( sqrt( windowlist.count())));
     int rows = int( ceil( windowlist.count() / double( columns )));
     foreach( EffectWindow* w, windowlist )
-        {
-        WindowData d;
-        d.slot = -1;
-        d.hover = 0;  // other data will be computed later
-        mWindowData[ w ] = d;
-        }
+        mWindowData[ w ].slot = -1;
     for(;;)
         {
         // Assign each window to the closest available slot
@@ -487,6 +527,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
         geom.adjust( 10, 10, -10, -10 ); // borders
         (*it).area = geom;
         (*it).scale = geom.width() / float( it.key()->width());
+        (*it).hover = 0;
         }
     }
 
@@ -557,6 +598,16 @@ void PresentWindowsEffect::getBestAssignments()
                 }
             }
         }
+    }
+
+bool PresentWindowsEffect::canRearrangeClosest(EffectWindowList windowlist)
+    {
+    QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    int columns = int( ceil( sqrt( windowlist.count())));
+    int rows = int( ceil( windowlist.count() / double( columns )));
+    int old_columns = int( ceil( sqrt( mWindowData.count())));
+    int old_rows = int( ceil( mWindowData.count() / double( columns )));
+    return old_columns != columns || old_rows != rows;
     }
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )

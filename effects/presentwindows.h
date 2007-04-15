@@ -50,6 +50,7 @@ class PresentWindowsEffect
         void calculateWindowTransformationsDumb(EffectWindowList windowlist);
         void calculateWindowTransformationsKompose(EffectWindowList windowlist);
         void calculateWindowTransformationsClosest(EffectWindowList windowlist);
+        bool canRearrangeClosest(EffectWindowList windowlist);
 
         // Helper methods for layout calculation
         float windowAspectRatio(EffectWindow* c);
@@ -71,6 +72,8 @@ class PresentWindowsEffect
         bool mActivated;
         // 0 = not active, 1 = fully active
         float mActiveness;
+        // 0 = start of rearranging (old_area), 1 = done
+        float mRearranging;
 
         Window mInput;
 
@@ -78,7 +81,9 @@ class PresentWindowsEffect
         struct WindowData
             {
             QRect area;
+            QRect old_area; // when rearranging, otherwise unset
             float scale;
+            float old_scale; // when rearranging, otherwise unset
             float hover;
             int slot;
             int slot_distance;
