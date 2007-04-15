@@ -355,16 +355,20 @@ void PresentWindowsEffect::rearrangeWindows()
 
     if( !mWindowData.isEmpty()) // this is not the first arranging
         {
-        bool canrearrange = canRearrangeClosest( windowlist );
+        bool rearrange = canRearrangeClosest( windowlist ); // called before manipulating mWindowData
         DataHash newdata;
+        EffectWindowList newlist = windowlist;
+        EffectWindowList oldlist = mWindowData.keys();
+        qSort( newlist );
+        qSort( oldlist );
         for( DataHash::ConstIterator it = mWindowData.begin();
              it != mWindowData.end();
              ++it )
             if( windowlist.contains( it.key())) // remove windows that are not in the window list
                 newdata[ it.key() ] = *it;
         mWindowData = newdata;
-        if( !canrearrange ) // canRearrange was called before adjusting the list, so that
-            return;         // changes can be detected
+        if( !rearrange && newlist == oldlist )
+            return;
         for( DataHash::Iterator it = mWindowData.begin();
              it != mWindowData.end();
              ++it )
