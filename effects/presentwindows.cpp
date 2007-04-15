@@ -111,7 +111,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* 
             else
                 windata.hover = qMax(0.0f, windata.hover - time / hoverchangetime);
             }
-        else
+        else if( !w->isDesktop())
             w->disablePainting( EffectWindow::PAINT_DISABLED );
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
