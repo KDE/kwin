@@ -530,7 +530,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
             slotwidth, slotheight );
         geom.adjust( 10, 10, -10, -10 ); // borders
         (*it).area = geom;
-        (*it).scale = geom.width() / float( it.key()->width());
+        (*it).scale = qMin( geom.width() / float( it.key()->width()), geom.height() / float( it.key()->height()));
         (*it).hover = 0;
         }
     }
