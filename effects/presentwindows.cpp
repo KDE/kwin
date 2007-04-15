@@ -376,6 +376,12 @@ void PresentWindowsEffect::rearrangeWindows()
             (*it).old_area = (*it).area;
             (*it).old_scale = (*it).scale;
             }
+        // Initialize new entries
+        foreach( EffectWindow* w, windowlist )
+            if( !mWindowData.contains( w ))
+                {
+                mWindowData[ w ].hover = 0;
+                }
         mRearranging = 0; // start animation again
         }
 
@@ -625,7 +631,6 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
             }
         (*it).area = geom;
         (*it).scale = scale;
-        (*it).hover = 0;
         }
     }
 
