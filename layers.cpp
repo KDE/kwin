@@ -119,8 +119,7 @@ void Workspace::updateStackingOrder( bool propagate_new_clients )
     if( changed || propagate_new_clients )
         {
         propagateClients( propagate_new_clients );
-        if( active_client )
-            active_client->updateMouseGrab();
+        addRepaintFull();
         }
     }
 
@@ -134,7 +133,8 @@ void Workspace::propagateClients( bool propagate_new_clients )
                                 // when passig pointers around.
 
     // restack the windows according to the stacking order
-    Window* new_stack = new Window[ stacking_order.count() + 2 ];
+    // 1 - supportWindow, 1 - topmenu_space, 8 - electric borders
+    Window* new_stack = new Window[ stacking_order.count() + 1 + 1 + 8 ];
     int pos = 0;
     // Stack all windows under the support window. The support window is
     // not used for anything (besides the NETWM property), and it's not shown,
@@ -142,6 +142,11 @@ void Workspace::propagateClients( bool propagate_new_clients )
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
     new_stack[ pos++ ] = supportWindow->winId();
+    for( int i = 0;
+         i < ELECTRIC_COUNT;
+         ++i )
+        if( electric_windows[ i ] != None )
+            new_stack[ pos++ ] = electric_windows[ i ];
     int topmenu_space_pos = 1; // not 0, that's supportWindow !!!
 	for ( int i = stacking_order.size() - 1; i >= 0; i-- )
         {
@@ -158,9 +163,9 @@ void Workspace::propagateClients( bool propagate_new_clients )
         new_stack[ topmenu_space_pos ] = topmenu_space->winId();
         ++pos;
         }
-    // TODO isn't it too inefficient to restart always all clients?
+    // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
-    assert( new_stack[ 0 ] = supportWindow->winId());
+    assert( new_stack[ 0 ] == supportWindow->winId());
     XRestackWindows(display(), new_stack, pos);
     delete [] new_stack;
 
@@ -192,26 +197,24 @@ void Workspace::propagateClients( bool propagate_new_clients )
   doesn't accept focus it's excluded.
  */
 // TODO misleading name for this method
-Client* Workspace::topClientOnDesktop( int desktop, bool unconstrained, bool only_normal ) const
+Client* Workspace::topClientOnDesktop( int desktop, bool unconstrained ) const
     {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     ClientList list;
     if( !unconstrained )
-        list = stacking_order;
-    else
-        list = unconstrained_stacking_order;
-    for( int i = list.size() - 1;
-         i >= 0;
-         --i )
         {
-        if( list.at( i )->isOnDesktop( desktop ) && list.at( i )->isShown( false ))
-            {
-            if( !only_normal )
-                return list.at( i );
-            if( list.at( i )->wantsTabFocus() && !list.at( i )->isSpecialWindow())
-                return list.at( i );
-            }
+			list = stacking_order;
         }
+    else
+        {
+			list = unconstrained_stacking_order;
+        }
+	for ( int i = list.size() - 1; i>=0; i-- )
+	{
+		if ( list.at( i )->isOnDesktop( desktop ) && !list.at( i )->isSpecialWindow()
+				&& list.at(  i )->isShown( false ) && list.at(  i )->wantsTabFocus())
+			return list.at(  i );
+	}
     return 0;
     }
 
@@ -401,27 +404,20 @@ void Workspace::restackClientUnderActive( Client* c )
         return;
         }
 
+    // put in the stacking order below _all_ windows belonging to the active application
     assert( unconstrained_stacking_order.contains( active_client ));
-    if( Client::belongToSameApplication( active_client, c ))
-        { // put it below the active window if it's the same app
-        unconstrained_stacking_order.removeAll( c );
-        unconstrained_stacking_order.insert( unconstrained_stacking_order.find( active_client ), c );
-        }
-    else
-        { // put in the stacking order below _all_ windows belonging to the active application
-        for( ClientList::Iterator it = unconstrained_stacking_order.begin();
-             it != unconstrained_stacking_order.end();
-             ++it )
-            { // TODO ignore topmenus?
-            if( Client::belongToSameApplication( active_client, *it ))
+    for( ClientList::Iterator it = unconstrained_stacking_order.begin();
+         it != unconstrained_stacking_order.end();
+         ++it )
+        { // TODO ignore topmenus?
+        if( Client::belongToSameApplication( active_client, *it ))
+            {
+            if( *it != c )
                 {
-                if( *it != c )
-                    {
-                    unconstrained_stacking_order.removeAll( c );
-                    unconstrained_stacking_order.insert( it, c );
-                    }
-                break;
+                unconstrained_stacking_order.removeAll( c );
+                unconstrained_stacking_order.insert( it, c );
                 }
+            break;
             }
         }
     assert( unconstrained_stacking_order.contains( c ));
@@ -431,23 +427,16 @@ void Workspace::restackClientUnderActive( Client* c )
         { // do for every virtual desktop to handle the case of onalldesktop windows
         if( c->wantsTabFocus() && c->isOnDesktop( desktop ) && focus_chain[ desktop ].contains( active_client ))
             {
-            if( Client::belongToSameApplication( active_client, c ))
-                { // put it after the active window if it's the same app
-                focus_chain[ desktop ].removeAll( c );
-                focus_chain[ desktop ].insert( focus_chain[ desktop ].find( active_client ), c );
-                }
-            else
-                { // put it in focus_chain[currentDesktop()] after all windows belonging to the active applicationa
-                focus_chain[ desktop ].removeAll( c );
-                for( int i = focus_chain[ desktop ].size() - 1;
-                     i >= 0;
-                     --i )
+            // also put in focus_chain[currentDesktop()] after all windows belonging to the active applicationa
+            focus_chain[ desktop ].removeAll( c );
+            for ( int i = focus_chain[ desktop ].size() - 1;
+                  i >= 0;
+                  --i )
+                {
+                if( Client::belongToSameApplication( active_client, focus_chain[ desktop ].at( i ) ))
                     {
-                    if( Client::belongToSameApplication( active_client, focus_chain[ desktop ].at( i )))
-                        {
-                        focus_chain[ desktop ].insert( i, c );
-                        break;
-                        }
+                    focus_chain[ desktop ].insert( i, c );
+                    break;
                     }
                 }
             }
@@ -455,23 +444,15 @@ void Workspace::restackClientUnderActive( Client* c )
     // the same for global_focus_chain
     if( c->wantsTabFocus() && global_focus_chain.contains( active_client ))
         {
-        if( Client::belongToSameApplication( active_client, c ))
+        global_focus_chain.removeAll( c );
+        for ( int i = global_focus_chain.size() - 1;
+              i >= 0;
+              --i )
             {
-            global_focus_chain.removeAll( c );
-            global_focus_chain.insert( global_focus_chain.find( active_client ), c );
-            }
-        else
-            {
-            global_focus_chain.removeAll( c );
-            for ( int i = global_focus_chain.size() - 1;
-                  i >= 0;
-                  --i )
+            if( Client::belongToSameApplication( active_client, global_focus_chain.at( i ) ))
                 {
-                if( Client::belongToSameApplication( active_client, global_focus_chain.at( i ) ))
-                    {
-                    global_focus_chain.insert( i, c );
-                    break;
-                    }
+                global_focus_chain.insert( i, c );
+                break;
                 }
             }
         }
