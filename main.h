@@ -28,6 +28,7 @@ class Application : public  KApplication
 
     protected:
         bool x11EventFilter( XEvent * );
+        bool notify( QObject* o, QEvent* e );
     private slots:
         void lostSelection();
 

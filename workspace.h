@@ -80,6 +80,7 @@ class Workspace : public QObject, public KDecorationDefines
         static Workspace * self() { return _self; }
         
         bool workspaceEvent( XEvent * );
+        bool workspaceEvent( QEvent * );
 
         KDecoration* createDecoration( KDecorationBridge* bridge );
 

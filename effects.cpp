@@ -32,7 +32,9 @@ namespace KWin
 {
 
 
-EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type) : EffectsHandler(type)
+EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
+    : EffectsHandler(type)
+    , keyboard_grab_effect( NULL )
     {
     foreach( const QString& effect, options->defaultEffects )
         loadEffect( effect );
@@ -40,11 +42,10 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type) : EffectsHandler(ty
 
 EffectsHandlerImpl::~EffectsHandlerImpl()
     {
-    // Can't be done in EffectsHandler since it would result in pure virtuals
-    //  being called
+    if( keyboard_grab_effect != NULL )
+        ungrabKeyboard();
     foreach( EffectPair ep, loaded_effects )
         unloadEffect( ep.first );
-
     foreach( InputWindowPair pos, input_windows )
         XDestroyWindow( display(), pos.second );
     }
@@ -235,6 +236,35 @@ void EffectsHandlerImpl::cursorMoved( const QPoint& pos, Qt::MouseButtons button
     {
     foreach( EffectPair ep, loaded_effects )
         ep.second->cursorMoved( pos, buttons );
+    }
+
+bool EffectsHandlerImpl::grabKeyboard( Effect* effect )
+    {
+    if( keyboard_grab_effect != NULL )
+        return false;
+    bool ret = grabXKeyboard();
+    if( !ret )
+        return false;
+    keyboard_grab_effect = effect;
+    return true;
+    }
+
+void EffectsHandlerImpl::ungrabKeyboard()
+    {
+    assert( keyboard_grab_effect != NULL );
+    ungrabXKeyboard();
+    keyboard_grab_effect = NULL;
+    }
+
+void EffectsHandlerImpl::grabbedKeyboardEvent( QKeyEvent* e )
+    {
+    if( keyboard_grab_effect != NULL )
+        keyboard_grab_effect->grabbedKeyboardEvent( e );
+    }
+
+bool EffectsHandlerImpl::hasKeyboardGrab() const
+    {
+    return keyboard_grab_effect != NULL;
     }
 
 void EffectsHandlerImpl::activateWindow( EffectWindow* c )

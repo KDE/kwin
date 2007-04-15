@@ -26,6 +26,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 
 class KLibrary;
+class QKeyEvent;
 
 namespace KWin
 {
@@ -99,6 +100,7 @@ class KWIN_EXPORT Effect
         virtual void windowDamaged( EffectWindow* w, const QRect& r );
         virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
         virtual void cursorMoved( const QPoint& pos, Qt::MouseButtons buttons );
+        virtual void grabbedKeyboardEvent( QKeyEvent* e );
 
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxClosed();
@@ -172,6 +174,8 @@ class KWIN_EXPORT EffectsHandler
         virtual Window createFullScreenInputWindow( Effect* e, const QCursor& cursor );
         virtual void destroyInputWindow( Window w ) = 0;
         virtual QPoint cursorPos() const = 0;
+        virtual bool grabKeyboard( Effect* effect ) = 0;
+        virtual void ungrabKeyboard() = 0;
 
         virtual void checkElectricBorder(const QPoint &pos, Time time) = 0;
         virtual void reserveElectricBorder( ElectricBorder border ) = 0;

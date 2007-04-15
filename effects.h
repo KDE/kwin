@@ -43,6 +43,8 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual int displayWidth() const;
         virtual int displayHeight() const;
         virtual QPoint cursorPos() const;
+        virtual bool grabKeyboard( Effect* effect );
+        virtual void ungrabKeyboard();
         virtual EffectWindowList stackingOrder() const;
 
         virtual void setTabBoxWindow(EffectWindow*);
@@ -92,12 +94,15 @@ class EffectsHandlerImpl : public EffectsHandler
         void tabBoxUpdated();
         bool borderActivated( ElectricBorder border );
         void cursorMoved( const QPoint& pos, Qt::MouseButtons buttons );
+        void grabbedKeyboardEvent( QKeyEvent* e );
+        bool hasKeyboardGrab() const;
 
         void loadEffect( const QString& name );
         void unloadEffect( const QString& name );
 
     protected:
         KLibrary* findEffectLibrary( const QString& effectname );
+        Effect* keyboard_grab_effect;
 };
 
 class EffectWindowImpl : public EffectWindow

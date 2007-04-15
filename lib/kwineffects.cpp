@@ -86,6 +86,10 @@ void Effect::windowInputMouseEvent( Window, QEvent* )
     {
     }
 
+void Effect::grabbedKeyboardEvent( QKeyEvent* )
+    {
+    }
+
 void Effect::desktopChanged( int )
     {
     }

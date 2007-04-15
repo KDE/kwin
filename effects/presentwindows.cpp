@@ -31,6 +31,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , mActivated( false )
     , mActiveness( 0.0 )
     , mRearranging( 1.0 )
+    , hasKeyboardGrab( false )
     , mHoverWindow( NULL )
     {
 
@@ -257,13 +258,16 @@ void PresentWindowsEffect::effectActivated()
     {
     // Create temporary input window to catch mouse events
     mInput = effects->createFullScreenInputWindow( this, Qt::PointingHandCursor );
-    // TODO: maybe also create a KAction so that ressing Esc would terminate the effect?
+    hasKeyboardGrab = effects->grabKeyboard( this );
     }
 
 void PresentWindowsEffect::effectTerminated()
     {
     // Destroy the temporary input window
     effects->destroyInputWindow( mInput );
+    if( hasKeyboardGrab )
+        effects->ungrabKeyboard();
+    hasKeyboardGrab = false;
     }
 
 void PresentWindowsEffect::rearrangeWindows()
@@ -623,6 +627,15 @@ bool PresentWindowsEffect::borderActivated( ElectricBorder border )
         return true;
         }
     return false;
+    }
+
+void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent* e )
+    {
+    if( e->key() == Qt::Key_Escape )
+        {
+        setActive( false );
+        return;
+        }
     }
 
 } // namespace

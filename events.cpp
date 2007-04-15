@@ -205,6 +205,9 @@ bool Workspace::workspaceEvent( XEvent * e )
         mouse_emulation = false;
         ungrabXKeyboard();
         }
+    if( effects && static_cast< EffectsHandlerImpl* >( effects )->hasKeyboardGrab()
+        && ( e->type == KeyPress || e->type == KeyRelease ))
+        return false; // let Qt process it, it'll be intercepted again in eventFilter()
 
     if ( e->type == PropertyNotify || e->type == ClientMessage ) 
         {
@@ -497,6 +500,20 @@ bool Workspace::workspaceEvent( XEvent * e )
                     }
                 }
             break;
+        }
+    return false;
+    }
+
+// Used only to filter events that need to be processed by Qt first
+// (e.g. keyboard input to be composed), otherwise events are
+// handle by the XEvent filter above
+bool Workspace::workspaceEvent( QEvent* e )
+    {
+    if(( e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease || e->type() == QEvent::ShortcutOverride )
+        && effects && static_cast< EffectsHandlerImpl* >( effects )->hasKeyboardGrab())
+        {
+        static_cast< EffectsHandlerImpl* >( effects )->grabbedKeyboardEvent( static_cast< QKeyEvent* >( e ));
+        return true;
         }
     return false;
     }

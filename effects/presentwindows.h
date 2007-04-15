@@ -38,6 +38,7 @@ class PresentWindowsEffect
         virtual void windowClosed( EffectWindow* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual bool borderActivated( ElectricBorder border );
+        virtual void grabbedKeyboardEvent( QKeyEvent* e );
 
     public slots:
         void setActive(bool active);
@@ -76,6 +77,7 @@ class PresentWindowsEffect
         float mRearranging;
 
         Window mInput;
+        bool hasKeyboardGrab;
 
         EffectWindowList mWindowsToPresent;
         struct WindowData
