@@ -188,6 +188,7 @@ class KWIN_EXPORT EffectsHandler
         // 
         virtual int currentDesktop() const = 0;
         virtual int numberOfDesktops() const = 0;
+        virtual void setCurrentDesktop( int desktop ) = 0;
         virtual QString desktopName( int desktop ) const = 0;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const = 0;
         virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const = 0;

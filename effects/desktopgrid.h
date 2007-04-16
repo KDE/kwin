@@ -27,14 +27,24 @@ class DesktopGridEffect
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void desktopChanged( int old );
+        virtual void windowInputMouseEvent( Window w, QEvent* e );
+        virtual void grabbedKeyboardEvent( QKeyEvent* e );
     private slots:
         void toggle();
     private:
-        QRect desktopRect( int desktop, bool scaled );
+        QRect desktopRect( int desktop, bool scaled ) const;
+        int posToDesktop( const QPoint& pos ) const;
+        void setActive( bool active );
+        void setup();
+        void finish();
         float progress;
         bool activated;
         int painting_desktop;
+        int hover_desktop;
+        Window input;
+        bool keyboard_grab;
     };
 
 } // namespace

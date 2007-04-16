@@ -39,6 +39,7 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual int currentDesktop() const;
         virtual int numberOfDesktops() const;
+        virtual void setCurrentDesktop( int desktop );
         virtual QString desktopName( int desktop ) const;
         virtual int displayWidth() const;
         virtual int displayHeight() const;

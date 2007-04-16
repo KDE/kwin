@@ -288,6 +288,11 @@ int EffectsHandlerImpl::numberOfDesktops() const
     return Workspace::self()->numberOfDesktops();
     }
 
+void EffectsHandlerImpl::setCurrentDesktop( int desktop )
+    {
+    Workspace::self()->setCurrentDesktop( desktop );
+    }
+
 QString EffectsHandlerImpl::desktopName( int desktop ) const
     {
     return Workspace::self()->desktopName( desktop );
