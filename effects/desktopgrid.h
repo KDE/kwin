@@ -39,12 +39,18 @@ class DesktopGridEffect
         void setActive( bool active );
         void setup();
         void finish();
+        void paintSlide( int mask, QRegion region, const ScreenPaintData& data );
+        void slideDesktopChanged( int old );
         float progress;
         bool activated;
         int painting_desktop;
         int hover_desktop;
         Window input;
         bool keyboard_grab;
+        bool slide;
+        QPoint slide_start_pos;
+        bool slide_painting_sticky;
+        QPoint slide_painting_diff;
     };
 
 } // namespace
