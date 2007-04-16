@@ -19,7 +19,6 @@ SET(kwin4_effect_builtins_sources
     fade.cpp
     fallapart.cpp
     flame.cpp
-    magnifier.cpp
     maketransparent.cpp
     minimizeanimation.cpp
     presentwindows.cpp
@@ -40,10 +39,12 @@ SET(kwin4_effect_tests_sources
 
 if(OPENGL_FOUND)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
+        magnifier.cpp
         shadow.cpp
         wavywindows.cpp
         )
     install( FILES
+        magnifier.desktop
         shadow.desktop
         wavywindows.desktop
         DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
