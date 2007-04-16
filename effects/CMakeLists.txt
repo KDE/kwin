@@ -41,13 +41,23 @@ if(OPENGL_FOUND)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         magnifier.cpp
         shadow.cpp
+        trackmouse.cpp
         wavywindows.cpp
         )
     install( FILES
         magnifier.desktop
         shadow.desktop
+        trackmouse.desktop
         wavywindows.desktop
         DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
+
+    install( FILES
+        data/trackmouse.png
+        data/explosion.frag
+        data/explosion.vert
+        data/explosion-start.png
+        data/explosion-end.png
+        DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 endif(OPENGL_FOUND)
 
 if (X11_Xrender_FOUND)
@@ -108,3 +118,4 @@ if( HAVE_CAPTURY )
     target_link_libraries(kwin4_effect_videorecord ${CAPTURY_LDFLAGS})
     install( FILES videorecord.desktop DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
 endif( HAVE_CAPTURY )
+

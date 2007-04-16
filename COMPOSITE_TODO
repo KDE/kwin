@@ -245,3 +245,7 @@ Effects TODO
     - or whatever
 
 * DimInactive flickers when switching between windows (temporarily no window becomes active)
+
++ TrackMouse needs a better way of activating
+    - LMB+RMB is problematic, some systems handle that as MMB, and LMB+RMB press is still
+        two consequent events
