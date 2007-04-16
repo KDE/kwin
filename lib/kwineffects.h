@@ -185,6 +185,8 @@ class KWIN_EXPORT EffectsHandler
         // functions that allow controlling windows/desktop
         virtual void activateWindow( EffectWindow* c ) = 0;
         virtual EffectWindow* activeWindow() const = 0 ;
+        virtual void moveWindow( EffectWindow* w, const QPoint& pos ) = 0;
+        virtual void windowToDesktop( EffectWindow* w, int desktop ) = 0;
         // 
         virtual int currentDesktop() const = 0;
         virtual int numberOfDesktops() const = 0;
@@ -276,6 +278,7 @@ class KWIN_EXPORT EffectWindow
         virtual QPoint pos() const = 0;
         virtual QSize size() const = 0;
         virtual QRect rect() const = 0;
+        virtual bool isMovable() const = 0;
         virtual bool isUserMove() const = 0;
         virtual bool isUserResize() const = 0;
         virtual QRect iconGeometry() const = 0;

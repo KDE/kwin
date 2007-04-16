@@ -278,6 +278,20 @@ EffectWindow* EffectsHandlerImpl::activeWindow() const
     return Workspace::self()->activeClient() ? Workspace::self()->activeClient()->effectWindow() : NULL;
     }
 
+void EffectsHandlerImpl::moveWindow( EffectWindow* w, const QPoint& pos )
+    {
+    Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window());
+    if( cl && cl->isMovable())
+        cl->move( pos );
+    }
+
+void EffectsHandlerImpl::windowToDesktop( EffectWindow* w, int desktop )
+    {
+    Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window());
+    if( cl && cl->isMovable())
+        Workspace::self()->sendClientToDesktop( cl, desktop, true );
+    }
+
 int EffectsHandlerImpl::currentDesktop() const
     {
     return Workspace::self()->currentDesktop();
@@ -439,12 +453,24 @@ bool EffectsHandlerImpl::checkInputWindowEvent( XEvent* e )
             switch( e->type )
                 {
                 case ButtonPress:
+                    {
+                    XButtonEvent* e2 = &e->xbutton;
+                    Qt::MouseButton button = x11ToQtMouseButton( e2->button );
+                    Qt::MouseButtons buttons = x11ToQtMouseButtons( e2->state ) | button;
+                    QMouseEvent ev( QEvent::MouseButtonPress,
+                        QPoint( e2->x, e2->y ), QPoint( e2->x_root, e2->y_root ),
+                        button, buttons, x11ToQtKeyboardModifiers( e2->state ));
+                    pos.first->windowInputMouseEvent( pos.second, &ev );
+                    break; // --->
+                    }
                 case ButtonRelease:
                     {
                     XButtonEvent* e2 = &e->xbutton;
-                    QMouseEvent ev( e->type == ButtonPress ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
-                        QPoint( e2->x, e2->y ), QPoint( e2->x_root, e2->y_root ), x11ToQtMouseButton( e2->button ),
-                        x11ToQtMouseButtons( e2->state ), x11ToQtKeyboardModifiers( e2->state ));
+                    Qt::MouseButton button = x11ToQtMouseButton( e2->button );
+                    Qt::MouseButtons buttons = x11ToQtMouseButtons( e2->state ) & ~button;
+                    QMouseEvent ev( QEvent::MouseButtonRelease,
+                        QPoint( e2->x, e2->y ), QPoint( e2->x_root, e2->y_root ),
+                        button, buttons, x11ToQtKeyboardModifiers( e2->state ));
                     pos.first->windowInputMouseEvent( pos.second, &ev );
                     break; // --->
                     }
@@ -783,6 +809,13 @@ QPoint EffectWindowImpl::pos() const
 QRect EffectWindowImpl::rect() const
     {
     return toplevel->rect();
+    }
+
+bool EffectWindowImpl::isMovable() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->isMovable();
+    return false;
     }
 
 bool EffectWindowImpl::isUserMove() const

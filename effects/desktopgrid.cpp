@@ -26,6 +26,8 @@ DesktopGridEffect::DesktopGridEffect()
     : progress( 0 )
     , activated( false )
     , keyboard_grab( false )
+    , was_window_move( false )
+    , window_move( NULL )
     , slide( false )
     {
     KActionCollection* actionCollection = new KActionCollection( this );
@@ -95,6 +97,8 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* pai
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         else
             w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+        if( w == window_move )
+            *mask |= PAINT_WINDOW_TRANSFORMED;
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
@@ -213,7 +217,17 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
         }
     else if( progress != 0 )
         {
-        if( painting_desktop != hover_desktop )
+        if( w == window_move )
+            {
+            int x, y;
+            Qt::Orientation orientation;
+            effects->calcDesktopLayout( &x, &y, &orientation );
+            QRect desktop = desktopRect( w->isOnCurrentDesktop()
+                ? effects->currentDesktop() : w->desktop(), false );
+            data.xTranslate += window_move_pos.x() * x - ( desktop.x() + w->x());
+            data.yTranslate += window_move_pos.y() * y - ( desktop.y() + w->y());
+            }
+        else if( painting_desktop != hover_desktop )
             data.brightness *= 0.7;
         }
     effects->paintWindow( w, mask, region, data );    
@@ -262,6 +276,19 @@ int DesktopGridEffect::posToDesktop( const QPoint& pos ) const
             return desktop;
         }
     return 0;
+    }
+
+QRect DesktopGridEffect::windowRect( EffectWindow* w ) const
+    {
+    int x, y;
+    Qt::Orientation orientation;
+    effects->calcDesktopLayout( &x, &y, &orientation );
+    if( w == window_move ) // it's being moved, return moved position
+        return QRect( window_move_pos, QSize( w->width() / x, w->height() / y ));
+    QRect desktop = desktopRect( w->isOnCurrentDesktop()
+        ? effects->currentDesktop() : w->desktop(), true );
+    return QRect( desktop.x() + w->x() / x, desktop.y() + w->y() / y,
+        w->width() / x, w->height() / y );
     }
 
 void DesktopGridEffect::desktopChanged( int old )
@@ -357,33 +384,101 @@ void DesktopGridEffect::finish()
     if( keyboard_grab )
         effects->ungrabKeyboard();
     keyboard_grab = false;
+    window_move = NULL;
     effects->destroyInputWindow( input );
     effects->addRepaintFull(); // to get rid of hover
     }
 
 void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
     {
-    if( e->type() == QEvent::MouseButtonPress )
-        {
-        effects->setCurrentDesktop( posToDesktop( static_cast< QMouseEvent* >( e )->pos()));
-        setActive( false );
-        }
+    if( e->type() != QEvent::MouseMove
+        && e->type() != QEvent::MouseButtonPress
+        && e->type() != QEvent::MouseButtonRelease )
+        return;
+    QMouseEvent* me = static_cast< QMouseEvent* >( e );
     if( e->type() == QEvent::MouseMove )
         {
-        int d = posToDesktop( static_cast< QMouseEvent* >( e )->pos());
+        // highlight desktop under mouse
+        int d = posToDesktop( me->pos());
         if( d != hover_desktop )
             {
             effects->addRepaint( desktopRect( hover_desktop, true ));
             hover_desktop = d;
             effects->addRepaint( desktopRect( hover_desktop, true ));
             }
+        if( window_move != NULL ) // handle window moving
+            {
+            was_window_move = true;
+            // windowRect() handles window_move specially
+            effects->addRepaint( windowRect( window_move ));
+            window_move_pos = me->pos() + window_move_diff;
+            effects->addRepaint( windowRect( window_move ));
+            }
         }
+    if( e->type() == QEvent::MouseButtonPress && me->buttons() == Qt::LeftButton )
+        {
+        EffectWindowList windows = effects->stackingOrder();
+        // qReverse()
+        EffectWindowList::Iterator begin = windows.begin();
+        EffectWindowList::Iterator end = windows.end();
+        --end;
+        while( begin < end )
+            qSwap( *begin++, *end-- );
+        window_move = NULL;
+        foreach( EffectWindow* w, windows )
+            {
+            QRect rect = windowRect( w );
+            if( rect.contains( me->pos()))
+                { // window is under mouse
+                if( w->isMovable())
+                    { // prepare it for moving
+                    window_move = w;
+                    window_move_pos = rect.topLeft();
+                    window_move_diff = window_move_pos - me->pos();
+                    }
+                break;
+                }
+            }
+        }
+    if( e->type() == QEvent::MouseButtonRelease && me->buttons() == 0
+        && me->button() == Qt::LeftButton )
+        {
+        if( was_window_move )
+            {
+            if( window_move != NULL )
+                {
+                QRect rect = windowRect( window_move );
+                int desktop = posToDesktop( rect.center());
+                // to desktop's coordinates
+                rect.moveBy( -desktopRect( desktop, true ).topLeft());
+                int x, y;
+                Qt::Orientation orientation;
+                effects->calcDesktopLayout( &x, &y, &orientation );
+                effects->moveWindow( window_move, QPoint( rect.x() * x, rect.y() * y ));
+                effects->windowToDesktop( window_move, desktop );
+                window_move = NULL;
+                }
+            was_window_move = false;
+            }
+        else
+            {
+            effects->setCurrentDesktop( posToDesktop( me->pos()));
+            setActive( false );
+            }
+        }
+    }
+
+void DesktopGridEffect::windowClosed( EffectWindow* w )
+    {
+    if( w == window_move )
+        window_move = NULL;
     }
 
 void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )
     {
     // TODO
     }
+
 
 } // namespace
 
