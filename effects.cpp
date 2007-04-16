@@ -664,6 +664,11 @@ QString EffectWindowImpl::caption() const
         return "";
     }
 
+QString EffectWindowImpl::windowClass() const
+    {
+    return toplevel->resourceName() + ' ' + toplevel->resourceClass();
+    }
+
 QPixmap EffectWindowImpl::icon() const
     {
     if( Client* c = dynamic_cast<Client*>( toplevel ))

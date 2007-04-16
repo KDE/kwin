@@ -281,6 +281,7 @@ class KWIN_EXPORT EffectWindow
 
         virtual QString caption() const = 0;
         virtual QPixmap icon() const = 0;
+        virtual QString windowClass() const = 0;
         virtual const EffectWindowGroup* group() const = 0;
 
         virtual bool isDesktop() const = 0;

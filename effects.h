@@ -127,6 +127,7 @@ class EffectWindowImpl : public EffectWindow
         virtual double opacity() const;
         virtual QString caption() const;
         virtual QPixmap icon() const;
+        virtual QString windowClass() const;
         virtual const EffectWindowGroup* group() const;
 
         virtual int x() const;
