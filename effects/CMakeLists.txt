@@ -12,7 +12,6 @@ include_directories(
 
 SET(kwin4_effect_builtins_sources
     boxswitch.cpp
-    desktopchangeslide.cpp
     desktopgrid.cpp
     dialogparent.cpp
     diminactive.cpp
@@ -73,7 +72,6 @@ KWIN4_ADD_EFFECT(tests ${kwin4_effect_tests_sources})
 
 install( FILES
     boxswitch.desktop
-    desktopchangeslide.desktop
     desktopgrid.desktop
     dialogparent.desktop
     diminactive.desktop
