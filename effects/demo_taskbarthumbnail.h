@@ -8,8 +8,8 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef KWIN_TASKBARTHUMBNAIL_H
-#define KWIN_TASKBARTHUMBNAIL_H
+#ifndef KWIN_DEMO_TASKBARTHUMBNAIL_H
+#define KWIN_DEMO_TASKBARTHUMBNAIL_H
 
 // Include with base class for effects.
 #include <kwineffects.h>

@@ -31,6 +31,7 @@ SET(kwin4_effect_builtins_sources
 
 SET(kwin4_effect_tests_sources
     demo_shiftworkspaceup.cpp
+    demo_showpicture.cpp
     demo_taskbarthumbnail.cpp
     howto.cpp
     test_input.cpp
@@ -89,6 +90,7 @@ install( FILES
     thumbnailaside.desktop
     zoom.desktop
     demo_shiftworkspaceup.desktop
+    demo_showpicture.desktop
     demo_taskbarthumbnail.desktop
     test_input.desktop
     test_thumbnail.desktop
