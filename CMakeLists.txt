@@ -90,7 +90,7 @@ endif (X11_Xfixes_FOUND)
 install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
 
 target_link_libraries( kwin kdeinit_kwin )
-install(TARGETS kwin DESTINATION bin)
+install(TARGETS kwin DESTINATION ${BIN_INSTALL_DIR})
 
 ########### install files ###############
 
