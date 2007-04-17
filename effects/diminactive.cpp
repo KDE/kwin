@@ -17,10 +17,10 @@ namespace KWin
 KWIN_EFFECT( DimInactive, DimInactiveEffect )
 
 DimInactiveEffect::DimInactiveEffect()
-    : active( NULL )
     {
     dim_panels = false; // TODO config option
     dim_by_group = true; // TODO config option
+    active = effects->activeWindow();
     }
 
 void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
