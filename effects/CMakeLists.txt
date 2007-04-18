@@ -44,11 +44,16 @@ if(OPENGL_FOUND)
         trackmouse.cpp
         wavywindows.cpp
         )
+    SET(kwin4_effect_tests_sources ${kwin4_effect_tests_sources}
+        test_fbo.cpp
+        )
+
     install( FILES
         magnifier.desktop
         shadow.desktop
         trackmouse.desktop
         wavywindows.desktop
+        test_fbo.desktop
         DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
 
     install( FILES
