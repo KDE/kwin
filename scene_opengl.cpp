@@ -97,14 +97,6 @@ XShmSegmentInfo SceneOpenGL::shm;
 #endif
 
 
-// detect OpenGL error (add to various places in code to pinpoint the place)
-static void checkGLError( const char* txt )
-    {
-    GLenum err = glGetError();
-    if( err != GL_NO_ERROR )
-        kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
-    }
-
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     {

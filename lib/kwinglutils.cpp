@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QImage>
 #include <QHash>
 #include <QFile>
+#include <QString>
 
 
 #define MAKE_GL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
@@ -90,6 +91,13 @@ bool hasGLExtension(const QString& extension)
     return glExtensions.contains(extension);
     }
 
+void checkGLError( const char* txt )
+    {
+    GLenum err = glGetError();
+    if( err != GL_NO_ERROR )
+        kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
+    }
+
 int nearestPowerOfTwo( int x )
     {
     // This method had been copied from Qt's nearest_gl_texture_size()
@@ -136,6 +144,24 @@ GLTexture::GLTexture( const QString& fileName )
     {
     init();
     load( fileName );
+    }
+
+GLTexture::GLTexture( int width, int height )
+    {
+    init();
+
+    if( NPOTTextureSupported() || ( isPowerOfTwo( width ) && isPowerOfTwo( height )))
+        {
+        mTarget = GL_TEXTURE_2D;
+        mScale.setWidth( 1.0 );
+        mScale.setHeight( 1.0 );
+        can_use_mipmaps = true;
+
+        glGenTextures( 1, &mTexture );
+        bind();
+        glTexImage2D( mTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        unbind();
+        }
     }
 
 GLTexture::~GLTexture()
@@ -591,6 +617,76 @@ bool GLShader::setAttribute(const QString& name, float value)
     return (location >= 0);
     }
 
+
+
+/***  GLRenderTarget  ***/
+GLRenderTarget::GLRenderTarget(GLTexture* color)
+    {
+    // Reset variables
+    mValid = false;
+
+    mTexture = color;
+
+    // Make sure FBO is supported
+    if(hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D &&
+            mTexture && !mTexture->isNull())
+        {
+        initFBO();
+        }
+    }
+
+GLRenderTarget::~GLRenderTarget()
+    {
+    if(mValid)
+        {
+        glDeleteFramebuffers(1, &mFramebuffer);
+        }
+    }
+
+bool GLRenderTarget::enable()
+    {
+    if(!valid())
+        {
+        kError(1212) << k_funcinfo << "Can't enable invalid render target!" << endl;
+        return false;
+        }
+
+    glBindFramebuffer(GL_FRAMEBUFFER_EXT, mFramebuffer);
+
+    return true;
+    }
+
+bool GLRenderTarget::disable()
+    {
+    if(!valid())
+        {
+        kError(1212) << k_funcinfo << "Can't disable invalid render target!" << endl;
+        return false;
+        }
+
+    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+    mTexture->setDirty();
+
+    return true;
+    }
+
+void GLRenderTarget::initFBO()
+    {
+    glGenFramebuffers(1, &mFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER_EXT, mFramebuffer);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, mTexture->texture(), 0);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER_EXT);
+    if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
+        {
+        kError(1212) << k_funcinfo << "Invalid fb status: " << status << endl;
+        }
+
+    glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+
+    mValid = true;
+    }
 #endif
 
 } // namespace

@@ -51,6 +51,9 @@ bool KWIN_EXPORT hasGLXVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
 bool KWIN_EXPORT hasGLExtension(const QString& extension);
 
+// detect OpenGL error (add to various places in code to pinpoint the place)
+void KWIN_EXPORT checkGLError( const char* txt );
+
 inline bool KWIN_EXPORT isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
 int KWIN_EXPORT nearestPowerOfTwo( int x );
 
@@ -63,6 +66,7 @@ class KWIN_EXPORT GLTexture
         GLTexture( const QImage& image, GLenum target = GL_TEXTURE_2D );
         GLTexture( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
         GLTexture( const QString& fileName );
+        GLTexture( int width, int height );
         virtual ~GLTexture();
 
         bool isNull() const;
@@ -145,6 +149,49 @@ class KWIN_EXPORT GLShader
         static bool mVertexShaderSupported;
     };
 
+/**
+ * @short Render target object
+ *
+ * Render target object enables you to render onto a texture. This texture can
+ *  later be used to e.g. do post-processing of the scene.
+ *
+ * @author Rivo Laks <rivolaks@hot.ee>
+ **/
+class KWIN_EXPORT GLRenderTarget
+{
+    public:
+        /**
+         * Constructs a GLRenderTarget
+         * @param color texture where the scene will be rendered onto
+         **/
+        GLRenderTarget(GLTexture* color);
+        ~GLRenderTarget();
+
+        /**
+         * Enables this render target.
+         * All OpenGL commands from now on affect this render target until the
+         *  @ref disable method is called
+         **/
+        bool enable();
+        /**
+         * Disables this render target, activating whichever target was active
+         *  when @ref enable was called.
+         **/
+        bool disable();
+
+        bool valid() const  { return mValid; }
+
+
+    protected:
+        void initFBO();
+
+
+    private:
+        GLTexture* mTexture;
+        bool mValid;
+
+        GLuint mFramebuffer;
+};
 #endif
 
 } // namespace
