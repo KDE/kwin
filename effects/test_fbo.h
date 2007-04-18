@@ -35,9 +35,6 @@ class TestFBOEffect : public Effect
 
         static bool supported();
 
-    protected:
-        bool loadData();
-
     private:
         GLTexture* mTexture;
         GLRenderTarget* mRenderTarget;
