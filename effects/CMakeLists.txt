@@ -46,6 +46,7 @@ if(OPENGL_FOUND)
         )
     SET(kwin4_effect_tests_sources ${kwin4_effect_tests_sources}
         test_fbo.cpp
+        demo_liquid.cpp
         )
 
     install( FILES
@@ -54,6 +55,7 @@ if(OPENGL_FOUND)
         trackmouse.desktop
         wavywindows.desktop
         test_fbo.desktop
+        demo_liquid.desktop
         DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
 
     install( FILES
@@ -62,6 +64,8 @@ if(OPENGL_FOUND)
         data/explosion.vert
         data/explosion-start.png
         data/explosion-end.png
+        data/liquid.frag
+        data/liquid.vert
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 endif(OPENGL_FOUND)
 
