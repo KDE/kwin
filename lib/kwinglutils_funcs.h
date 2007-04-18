@@ -59,6 +59,59 @@ void KWIN_EXPORT glResolveFunctions();
 #define GL_FRAGMENT_SHADER                              0x8B30
 #define GL_VERTEX_SHADER                                0x8B31
 
+// FBO
+#define GL_FRAMEBUFFER_EXT                     0x8D40
+#define GL_RENDERBUFFER_EXT                    0x8D41
+#define GL_STENCIL_INDEX1_EXT                  0x8D46
+#define GL_STENCIL_INDEX4_EXT                  0x8D47
+#define GL_STENCIL_INDEX8_EXT                  0x8D48
+#define GL_STENCIL_INDEX16_EXT                 0x8D49
+#define GL_RENDERBUFFER_WIDTH_EXT              0x8D42
+#define GL_RENDERBUFFER_HEIGHT_EXT             0x8D43
+#define GL_RENDERBUFFER_INTERNAL_FORMAT_EXT    0x8D44
+#define GL_RENDERBUFFER_RED_SIZE_EXT           0x8D50
+#define GL_RENDERBUFFER_GREEN_SIZE_EXT         0x8D51
+#define GL_RENDERBUFFER_BLUE_SIZE_EXT          0x8D52
+#define GL_RENDERBUFFER_ALPHA_SIZE_EXT         0x8D53
+#define GL_RENDERBUFFER_DEPTH_SIZE_EXT         0x8D54
+#define GL_RENDERBUFFER_STENCIL_SIZE_EXT       0x8D55
+#define GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT            0x8CD0
+#define GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME_EXT            0x8CD1
+#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL_EXT          0x8CD2
+#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT  0x8CD3
+#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT     0x8CD4
+#define GL_COLOR_ATTACHMENT0_EXT               0x8CE0
+#define GL_COLOR_ATTACHMENT1_EXT               0x8CE1
+#define GL_COLOR_ATTACHMENT2_EXT               0x8CE2
+#define GL_COLOR_ATTACHMENT3_EXT               0x8CE3
+#define GL_COLOR_ATTACHMENT4_EXT               0x8CE4
+#define GL_COLOR_ATTACHMENT5_EXT               0x8CE5
+#define GL_COLOR_ATTACHMENT6_EXT               0x8CE6
+#define GL_COLOR_ATTACHMENT7_EXT               0x8CE7
+#define GL_COLOR_ATTACHMENT8_EXT               0x8CE8
+#define GL_COLOR_ATTACHMENT9_EXT               0x8CE9
+#define GL_COLOR_ATTACHMENT10_EXT              0x8CEA
+#define GL_COLOR_ATTACHMENT11_EXT              0x8CEB
+#define GL_COLOR_ATTACHMENT12_EXT              0x8CEC
+#define GL_COLOR_ATTACHMENT13_EXT              0x8CED
+#define GL_COLOR_ATTACHMENT14_EXT              0x8CEE
+#define GL_COLOR_ATTACHMENT15_EXT              0x8CEF
+#define GL_DEPTH_ATTACHMENT_EXT                0x8D00
+#define GL_STENCIL_ATTACHMENT_EXT              0x8D20
+#define GL_FRAMEBUFFER_COMPLETE_EXT                          0x8CD5
+#define GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT             0x8CD6
+#define GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT     0x8CD7
+#define GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT             0x8CD9
+#define GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT                0x8CDA
+#define GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT            0x8CDB
+#define GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT            0x8CDC
+#define GL_FRAMEBUFFER_UNSUPPORTED_EXT                       0x8CDD
+#define GL_FRAMEBUFFER_BINDING_EXT             0x8CA6
+#define GL_RENDERBUFFER_BINDING_EXT            0x8CA7
+#define GL_MAX_COLOR_ATTACHMENTS_EXT           0x8CDF
+#define GL_MAX_RENDERBUFFER_SIZE_EXT           0x84E8
+#define GL_INVALID_FRAMEBUFFER_OPERATION_EXT   0x0506
+
 
 #define GL_TEXTURE_RECTANGLE_ARB                        0x84F5
 
@@ -102,7 +155,7 @@ typedef bool (*glIsFramebuffer_func)( GLuint framebuffer );
 typedef void (*glBindFramebuffer_func)( GLenum target, GLuint framebuffer );
 typedef void (*glDeleteFramebuffers_func)( GLsizei n, const GLuint *framebuffers );
 typedef void (*glGenFramebuffers_func)( GLsizei n, GLuint *framebuffers );
-typedef void (*glCheckFramebufferStatus_func)( GLenum target );
+typedef GLenum (*glCheckFramebufferStatus_func)( GLenum target );
 typedef void (*glFramebufferTexture1D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level );
 typedef void (*glFramebufferTexture2D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level );
 typedef void (*glFramebufferTexture3D_func)( GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset );
