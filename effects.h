@@ -101,6 +101,7 @@ class EffectsHandlerImpl : public EffectsHandler
         bool hasKeyboardGrab() const;
 
         void loadEffect( const QString& name );
+        void toggleEffect( const QString& name );
         void unloadEffect( const QString& name );
 
     protected:

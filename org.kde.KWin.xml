@@ -1,7 +1,7 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-    <interface name="org.kde.KWin">
+  <interface name="org.kde.KWin">
     <method name="cascadeDesktop">
     <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
@@ -23,6 +23,11 @@
     <arg name="x" type="i" direction="in"/>
     <arg name="y" type="i" direction="in"/>
     </method>
+    <method name="setDesktopLayout">
+    <arg name="orientation" type="i" direction="in"/>
+    <arg name="x" type="i" direction="in"/>
+    <arg name="y" type="i" direction="in"/>
+    </method>
     <method name="setCurrentDesktop">
     <arg name="desktop" type="i" direction="in"/>
     <arg type="b" direction="out"/>
@@ -33,6 +38,14 @@
     <method name="nextDesktop"/>
     <method name="previousDesktop"/>
     <method name="circulateDesktopApplications"/>
-    <signal name="reloadConfig"/>
+    <method name="loadEffect">
+    <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="unloadEffect">
+    <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="toggleEffect">
+    <arg name="name" type="s" direction="in"/>
+    </method>
   </interface>
 </node>

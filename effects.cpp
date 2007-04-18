@@ -560,8 +560,28 @@ KLibrary* EffectsHandlerImpl::findEffectLibrary( const QString& effectname )
     return library;
     }
 
+void EffectsHandlerImpl::toggleEffect( const QString& name )
+    {
+    assert( current_paint_screen == 0 );
+    assert( current_paint_window == 0 );
+    assert( current_draw_window == 0 );
+    assert( current_transform == 0 );
+
+    // Make sure a single effect won't be loaded multiple times
+    for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); it++)
+        {
+        if( (*it).first == name )
+            {
+            unloadEffect( name );
+            return;
+            }
+        }
+    loadEffect( name );
+    }
+
 void EffectsHandlerImpl::loadEffect( const QString& name )
     {
+    Workspace::self()->addRepaintFull();
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );
@@ -617,6 +637,7 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
 
 void EffectsHandlerImpl::unloadEffect( const QString& name )
     {
+    Workspace::self()->addRepaintFull();
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );

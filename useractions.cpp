@@ -700,6 +700,12 @@ void Workspace::loadEffect( const QString& name )
         static_cast<EffectsHandlerImpl*>(effects)->loadEffect( name );
     }
 
+void Workspace::toggleEffect( const QString& name )
+    {
+    if( effects )
+        static_cast<EffectsHandlerImpl*>(effects)->toggleEffect( name );
+    }
+
 void Workspace::unloadEffect( const QString& name )
     {
     if( effects )

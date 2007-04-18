@@ -210,6 +210,7 @@ class Workspace : public QObject, public KDecorationDefines
         void showWindowMenuAt( unsigned long id, int x, int y );
 
         void loadEffect( const QString& name );
+        void toggleEffect( const QString& name );
 
         void unloadEffect( const QString& name );
 
