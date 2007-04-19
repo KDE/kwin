@@ -288,7 +288,7 @@ Sound=KDE_Window_Hide.ogg
 
 
 [Event/on_all_desktops]
-Name=Window On All Desktops
+Name=Window on All Desktops
 Name[Event/fr]=Fenêtre visible sur tous les bureaux
 Name[Event/x-test]=xxWindow On All Desktopsxx
 Comment=A window is made visible on all desktops
@@ -298,7 +298,7 @@ Sound=KDE_Window_Sticky.ogg
 
 
 [Event/not_on_all_desktops]
-Name=Window Not On All Desktops
+Name=Window Not on All Desktops
 Name[Event/fr]=Fenêtre visible sur un seul bureau
 Name[Event/x-test]=xxWindow Not On All Desktopsxx
 Comment=A Window is no longer visible on all desktops
@@ -364,7 +364,7 @@ Comment[Event/x-test]=xxA window has finished resizingxx
 
 
 [Event/demandsattentioncurrent]
-Name=Window On Current Desktop Demands Attention
+Name=Window on Current Desktop Demands Attention
 Name[Event/fr]=La fenêtre sur le bureau courant demande votre attention
 Name[Event/x-test]=xxWindow On Current Desktop Demands Attentionxx
 Comment=A window on the current virtual desktop demands attention
@@ -373,7 +373,7 @@ Comment[Event/x-test]=xxA window on the current virtual desktop demands attentio
 
 
 [Event/demandsattentionother]
-Name=Window On Other Desktop Demands Attention
+Name=Window on Other Desktop Demands Attention
 Name[Event/fr]=Une fenêtre sur un autre bureau demande votre attention
 Name[Event/x-test]=xxWindow On Other Desktop Demands Attentionxx
 Comment=A window on an inactive virtual desktop demands attention
