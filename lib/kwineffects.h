@@ -36,6 +36,7 @@ class EffectWindow;
 class EffectWindowGroup;
 class Effect;
 class Vertex;
+class GLRenderTarget;
 
 typedef QPair< QString, Effect* > EffectPair;
 typedef QPair< Effect*, Window > InputWindowPair;
@@ -207,6 +208,9 @@ class KWIN_EXPORT EffectsHandler
         virtual QList< int > currentTabBoxDesktopList() const = 0;
         virtual int currentTabBoxDesktop() const = 0;
         virtual EffectWindow* currentTabBoxWindow() const = 0;
+
+        virtual void pushRenderTarget(GLRenderTarget* target) = 0;
+        virtual GLRenderTarget* popRenderTarget() = 0;
 
         // Repaints the entire workspace
         virtual void addRepaintFull() = 0;

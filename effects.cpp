@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 #include "workspace.h"
+#include "kwinglutils.h"
 
 #include <QFile>
 
@@ -392,6 +393,27 @@ EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
         return c->effectWindow();
     return NULL;
     }
+
+void EffectsHandlerImpl::pushRenderTarget(GLRenderTarget* target)
+{
+#ifdef HAVE_OPENGL
+    target->enable();
+    render_targets.push(target);
+#endif
+}
+
+GLRenderTarget* EffectsHandlerImpl::popRenderTarget()
+{
+#ifdef HAVE_OPENGL
+    GLRenderTarget* ret = render_targets.pop();
+    ret->disable();
+    if( !render_targets.isEmpty() )
+        render_targets.top()->enable();
+    return ret;
+#else
+    return 0;
+#endif
+}
 
 void EffectsHandlerImpl::addRepaintFull()
     {

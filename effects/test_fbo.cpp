@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kwinglutils.h>
 
+#include <assert.h>
 
 namespace KWin
 {
@@ -47,7 +48,7 @@ void TestFBOEffect::prePaintScreen( int* mask, QRegion* region, int time )
         {
         *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
-        mRenderTarget->enable();
+        effects->pushRenderTarget(mRenderTarget);
         }
 
     effects->prePaintScreen(mask, region, time);
@@ -61,7 +62,7 @@ void TestFBOEffect::postPaintScreen()
     if(mValid)
         {
         // Disable render texture
-        mRenderTarget->disable();
+        assert( effects->popRenderTarget() == mRenderTarget );
         mTexture->bind();
 
         // Render fullscreen quad with screen contents

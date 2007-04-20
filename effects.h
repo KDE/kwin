@@ -15,6 +15,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "scene.h"
 
+#include <QStack>
+
 
 
 namespace KWin
@@ -59,6 +61,9 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual QList< int > currentTabBoxDesktopList() const;
         virtual int currentTabBoxDesktop() const;
         virtual EffectWindow* currentTabBoxWindow() const;
+
+        virtual void pushRenderTarget(GLRenderTarget* target);
+        virtual GLRenderTarget* popRenderTarget();
 
         virtual void addRepaintFull();
         virtual void addRepaint( const QRect& r );
@@ -107,6 +112,7 @@ class EffectsHandlerImpl : public EffectsHandler
     protected:
         KLibrary* findEffectLibrary( const QString& effectname );
         Effect* keyboard_grab_effect;
+        QStack<GLRenderTarget*> render_targets;
 };
 
 class EffectWindowImpl : public EffectWindow

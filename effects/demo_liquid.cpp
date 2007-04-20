@@ -17,6 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <KStandardDirs>
 
 #include <kdebug.h>
+#include <assert.h>
 
 
 namespace KWin
@@ -79,7 +80,7 @@ void LiquidEffect::prePaintScreen( int* mask, QRegion* region, int time )
         {
         *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
-        mRenderTarget->enable();
+        effects->pushRenderTarget(mRenderTarget);
         }
 
     effects->prePaintScreen(mask, region, time);
@@ -93,7 +94,7 @@ void LiquidEffect::postPaintScreen()
     if(mValid)
         {
         // Disable render texture
-        mRenderTarget->disable();
+        assert( effects->popRenderTarget() == mRenderTarget );
         mTexture->bind();
 
         // Use the shader
