@@ -101,7 +101,7 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* pai
         if( w == window_move )
             {
             *mask |= PAINT_WINDOW_TRANSFORMED;
-            if( w->isOnAllDesktops() && painting_desktop != effects->currentDesktop())
+            if( w->isOnAllDesktops() && painting_desktop != posToDesktop( window_move_pos - window_move_diff ))
                 w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             }
         }
@@ -122,7 +122,8 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         }
     int desktop_with_move = -1;
     if( window_move != NULL )
-        desktop_with_move = window_move->isOnAllDesktops() ? effects->currentDesktop() : window_move->desktop();
+        desktop_with_move = window_move->isOnAllDesktops()
+            ? posToDesktop( window_move_pos - window_move_diff ) : window_move->desktop();
     for( int desktop = 1;
          desktop <= effects->numberOfDesktops();
          ++desktop )
@@ -239,8 +240,7 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
             int x, y;
             Qt::Orientation orientation;
             effects->calcDesktopLayout( &x, &y, &orientation );
-            QRect desktop = desktopRect( w->isOnCurrentDesktop()
-                ? effects->currentDesktop() : w->desktop(), false );
+            QRect desktop = desktopRect( painting_desktop, false );
             data.xTranslate += window_move_pos.x() * x - ( desktop.x() + w->x());
             data.yTranslate += window_move_pos.y() * y - ( desktop.y() + w->y());
             }
@@ -308,10 +308,14 @@ QRect DesktopGridEffect::windowRect( EffectWindow* w ) const
         w->width() / x, w->height() / y );
     }
 
-EffectWindow* DesktopGridEffect::windowAt( const QPoint& pos ) const
+EffectWindow* DesktopGridEffect::windowAt( const QPoint& pos, QRect* rect ) const
     {
     if( window_move != NULL && windowRect( window_move ).contains( pos ))
+        {
+        if( rect != NULL )
+            *rect = windowRect( window_move );
         return window_move; // has special position and is on top
+        }
     EffectWindowList windows = effects->stackingOrder();
     // qReverse()
     EffectWindowList::Iterator begin = windows.begin();
@@ -327,10 +331,14 @@ EffectWindow* DesktopGridEffect::windowAt( const QPoint& pos ) const
         // don't use windowRect(), take special care of on-all-desktop windows
         QRect desktop = desktopRect( w->isOnAllDesktops()
             ? posToDesktop( pos ) : w->desktop(), true );
-        QRect rect( desktop.x() + w->x() / x, desktop.y() + w->y() / y,
+        QRect r( desktop.x() + w->x() / x, desktop.y() + w->y() / y,
             w->width() / x, w->height() / y );
-        if( rect.contains( pos ))
+        if( r.contains( pos ))
+            {
+            if( rect != NULL )
+                *rect = r;
             return w;
+            }
         }
     return NULL;
     }
@@ -463,10 +471,11 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
         {
         if( me->buttons() == Qt::LeftButton )
             {
-            EffectWindow* w = windowAt( me->pos());
+            QRect rect;
+            EffectWindow* w = windowAt( me->pos(), &rect );
             if( w->isMovable())
                 { // prepare it for moving
-                window_move_pos = windowRect( w ).topLeft();
+                window_move_pos = rect.topLeft();
                 window_move_diff = window_move_pos - me->pos();
                 window_move = w;
                 }
