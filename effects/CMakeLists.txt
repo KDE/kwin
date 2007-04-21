@@ -41,6 +41,7 @@ if(OPENGL_FOUND)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         explosioneffect.cpp
         magnifier.cpp
+        mousemark.cpp
         shadow.cpp
         trackmouse.cpp
         wavywindows.cpp
@@ -53,6 +54,7 @@ if(OPENGL_FOUND)
     install( FILES
         explosion.desktop
         magnifier.desktop
+        mousemark.desktop
         shadow.desktop
         trackmouse.desktop
         wavywindows.desktop
@@ -103,7 +105,6 @@ install( FILES
     fallapart.desktop
     flame.desktop
     howto.desktop
-    magnifier.desktop
     maketransparent.desktop
     minimizeanimation.desktop
     presentwindows.desktop

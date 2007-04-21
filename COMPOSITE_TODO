@@ -73,6 +73,9 @@ General TODO
 
 * window grouping is not implemented for unmanaged windows (used e.g. by DimInactive)
 
+% clean up and sort out shortcuts so that they don't conflict and make sense
+    - also make configurable etc.
+
 
 OpenGL TODO
 =================================
