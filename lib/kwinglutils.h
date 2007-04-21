@@ -87,6 +87,8 @@ class KWIN_EXPORT GLTexture
         virtual void discard();
         virtual void bind();
         virtual void unbind();
+        void render( bool clip, QRegion region, const QRect& rect );
+        void render( int mask, QRegion region, const QRect& rect );
         void enableUnnormalizedTexCoords();
         void disableUnnormalizedTexCoords();
 

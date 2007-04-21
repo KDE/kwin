@@ -127,25 +127,7 @@ void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintDat
         filterTexture->bind();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        int x = filterTextureRect.x();
-        int y = filterTextureRect.y();
-        int width = filterTextureRect.width();
-        int height = filterTextureRect.height();
-        const float verts[ 4 * 2 ] =
-            {
-            x, y,
-            x, y + height,
-            x + width, y + height,
-            x + width, y
-            };
-        const float texcoords[ 4 * 2 ] =
-            {
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1
-            };
-        renderGLGeometry( mask, region, verts, texcoords, 4 );
+        filterTexture->render( mask, region, filterTextureRect );
         filterTexture->unbind();
         glPopAttrib();
         }

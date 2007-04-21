@@ -44,25 +44,7 @@ void ShowPictureEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         picture->bind();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        int x = pictureRect.x();
-        int y = pictureRect.y();
-        int width = pictureRect.width();
-        int height = pictureRect.height();
-        const float verts[ 4 * 2 ] =
-            {
-            x, y,
-            x, y + height,
-            x + width, y + height,
-            x + width, y
-            };
-        const float texcoords[ 4 * 2 ] =
-            {
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1
-            };
-        renderGLGeometry( mask, region, verts, texcoords, 4 );
+        picture->render( mask, region, pictureRect );
         picture->unbind();
         glPopAttrib();
         }

@@ -315,6 +315,31 @@ void GLTexture::unbind()
     glDisable( mTarget );
     }
 
+void GLTexture::render( int mask, QRegion region, const QRect& rect )
+    {
+    return render( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
+        region, rect );
+    }
+
+void GLTexture::render( bool clip, QRegion region, const QRect& rect )
+    {
+    const float verts[ 4 * 2 ] =
+        {
+        rect.x(), rect.y(),
+        rect.x(), rect.y() + rect.height(),
+        rect.x() + rect.width(), rect.y() + rect.height(),
+        rect.x() + rect.width(), rect.y()
+        };
+    const float texcoords[ 4 * 2 ] =
+        {
+        0, 1,
+        0, 0,
+        1, 0,
+        1, 1
+        };
+    renderGLGeometry( clip, region, verts, texcoords, 4 );
+    }
+
 void GLTexture::enableUnnormalizedTexCoords()
     {
     // update texture matrix to handle GL_TEXTURE_2D and GL_TEXTURE_RECTANGLE
