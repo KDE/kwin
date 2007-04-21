@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
+#include <netwm_def.h>
 #include <qevent.h>
 
 namespace KWin
@@ -307,6 +308,33 @@ QRect DesktopGridEffect::windowRect( EffectWindow* w ) const
         w->width() / x, w->height() / y );
     }
 
+EffectWindow* DesktopGridEffect::windowAt( const QPoint& pos ) const
+    {
+    if( window_move != NULL && windowRect( window_move ).contains( pos ))
+        return window_move; // has special position and is on top
+    EffectWindowList windows = effects->stackingOrder();
+    // qReverse()
+    EffectWindowList::Iterator begin = windows.begin();
+    EffectWindowList::Iterator end = windows.end();
+    --end;
+    while( begin < end )
+        qSwap( *begin++, *end-- );
+    int x, y;
+    Qt::Orientation orientation;
+    effects->calcDesktopLayout( &x, &y, &orientation );
+    foreach( EffectWindow* w, windows )
+        {
+        // don't use windowRect(), take special care of on-all-desktop windows
+        QRect desktop = desktopRect( w->isOnAllDesktops()
+            ? posToDesktop( pos ) : w->desktop(), true );
+        QRect rect( desktop.x() + w->x() / x, desktop.y() + w->y() / y,
+            w->width() / x, w->height() / y );
+        if( rect.contains( pos ))
+            return w;
+        }
+    return NULL;
+    }
+
 void DesktopGridEffect::desktopChanged( int old )
     {
     if( activated )
@@ -431,33 +459,32 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             effects->addRepaint( windowRect( window_move ));
             }
         }
-    if( e->type() == QEvent::MouseButtonPress && me->buttons() == Qt::LeftButton )
+    if( e->type() == QEvent::MouseButtonPress )
         {
-        EffectWindowList windows = effects->stackingOrder();
-        // qReverse()
-        EffectWindowList::Iterator begin = windows.begin();
-        EffectWindowList::Iterator end = windows.end();
-        --end;
-        while( begin < end )
-            qSwap( *begin++, *end-- );
-        window_move = NULL;
-        foreach( EffectWindow* w, windows )
+        if( me->buttons() == Qt::LeftButton )
             {
-            QRect rect = windowRect( w );
-            if( rect.contains( me->pos()))
-                { // window is under mouse
-                if( w->isMovable())
-                    { // prepare it for moving
-                    window_move = w;
-                    window_move_pos = rect.topLeft();
-                    window_move_diff = window_move_pos - me->pos();
-                    }
-                break;
+            EffectWindow* w = windowAt( me->pos());
+            if( w->isMovable())
+                { // prepare it for moving
+                window_move_pos = windowRect( w ).topLeft();
+                window_move_diff = window_move_pos - me->pos();
+                window_move = w;
+                }
+            }
+        else if( me->buttons() == Qt::MidButton && window_move == NULL )
+            {
+            EffectWindow* w = windowAt( me->pos());
+            if( w != NULL && w->isMovable())
+                {
+                if( w->isOnAllDesktops())
+                    effects->windowToDesktop( w, posToDesktop( me->pos()));
+                else
+                    effects->windowToDesktop( w, NET::OnAllDesktops );
+                effects->addRepaintFull();
                 }
             }
         }
-    if( e->type() == QEvent::MouseButtonRelease && me->buttons() == 0
-        && me->button() == Qt::LeftButton )
+    if( e->type() == QEvent::MouseButtonRelease && me->buttons() == 0 )
         {
         if( was_window_move )
             {
@@ -474,13 +501,13 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 effects->windowToDesktop( window_move, desktop );
                 window_move = NULL;
                 }
-            was_window_move = false;
             }
-        else
+        if( !was_window_move && me->button() == Qt::LeftButton )
             {
             effects->setCurrentDesktop( posToDesktop( me->pos()));
             setActive( false );
             }
+        was_window_move = false;
         }
     }
 

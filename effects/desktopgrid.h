@@ -38,6 +38,7 @@ class DesktopGridEffect
         QRect desktopRect( int desktop, bool scaled ) const;
         int posToDesktop( const QPoint& pos ) const;
         QRect windowRect( EffectWindow* w ) const; // returns always scaled
+        EffectWindow* windowAt( const QPoint& pos ) const;
         void setActive( bool active );
         void setup();
         void finish();
