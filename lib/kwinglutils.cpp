@@ -11,6 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "kwinglutils.h"
 
 #include "kwinglobals.h"
+#include "kwineffects.h"
 
 #include "kdebug.h"
 
@@ -111,6 +112,52 @@ int nearestPowerOfTwo( int x )
     if (n > 1)
         return 1 << (last+1);
     return 1 << last;
+    }
+
+void renderGLGeometry( const float* vertices, const float* texture, int count, int dim, int stride )
+    {
+    return renderGLGeometry( false, QRegion(), vertices, texture, count, dim, stride );
+    }
+
+void renderGLGeometry( int mask, QRegion region, const float* vertices, const float* texture, int count,
+    int dim, int stride )
+    {
+    return renderGLGeometry( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
+        region, vertices, texture, count, dim, stride );
+    }
+
+void renderGLGeometry( bool clip, QRegion region, const float* vertices, const float* texture, int count,
+    int dim, int stride )
+    {
+    glPushAttrib( GL_ENABLE_BIT );
+    glPushClientAttrib( GL_CLIENT_VERTEX_ARRAY_BIT );
+    // Enable arrays
+    glEnableClientState( GL_VERTEX_ARRAY );
+    glVertexPointer( dim, GL_FLOAT, stride, vertices );
+    if( texture != NULL )
+        {
+        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+        glTexCoordPointer( 2, GL_FLOAT, stride, texture );
+        }
+    // Render
+    if( !clip )
+        // Just draw the entire window, no clipping
+        glDrawArrays( GL_QUADS, 0, count );
+    else
+        {
+        // Make sure there's only a single quad (no transformed vertices)
+        // Clip using scissoring
+        glEnable( GL_SCISSOR_TEST );
+        int dh = displayHeight();
+        foreach( QRect r, region.rects())
+            {
+            // Scissor rect has to be given in OpenGL coords
+            glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
+            glDrawArrays( GL_QUADS, 0, count );
+            }
+        }
+    glPopClientAttrib();
+    glPopAttrib();
     }
 
 #ifdef HAVE_OPENGL

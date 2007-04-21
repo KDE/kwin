@@ -64,29 +64,15 @@ void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, Window
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
 
-    glEnableClientState( GL_VERTEX_ARRAY );
-    int verts[ 4 * 2 ] =
+    const float verts[ 4 * 2 ] =
         {
         0, 0,
         0, w->height(),
          w->width(), w->height(),
          w->width(), 0
         };
-    glVertexPointer( 2, GL_INT, 0, verts );
-    if( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED ))
-        glDrawArrays( GL_QUADS, 0, 4 );
-    else
-        { // clip by region
-        glEnable( GL_SCISSOR_TEST );
-        int dh = displayHeight();
-        foreach( QRect r, region.rects())
-            {
-            // Scissor rect has to be given in OpenGL coords
-            glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
-            glDrawArrays( GL_QUADS, 0, 4 );
-            }
-        }
-    glDisableClientState( GL_VERTEX_ARRAY );
+    renderGLGeometry( mask, region, verts, NULL, 4 );
+
     glPopMatrix();
     glPopAttrib();
     }

@@ -59,6 +59,16 @@ int KWIN_EXPORT nearestPowerOfTwo( int x );
 
 #ifdef HAVE_OPENGL
 
+// renders quads using the given vertices
+KWIN_EXPORT void renderGLGeometry( bool clip, QRegion region, const float* vertices, const float* texture, int count,
+    int dim = 2, int stride = 0 );
+// sets clip according to mask
+KWIN_EXPORT void renderGLGeometry( int mask, QRegion region, const float* vertices, const float* texture, int count,
+    int dim = 2, int stride = 0 );
+// clip = false
+KWIN_EXPORT void renderGLGeometry( const float* vertices, const float* texture, int count,
+    int dim = 2, int stride = 0 );
+
 class KWIN_EXPORT GLTexture
     {
     public:

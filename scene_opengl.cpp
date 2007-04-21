@@ -1213,7 +1213,9 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     texture.enableUnnormalizedTexCoords();
 
     // Render geometry
-    renderGeometry( mask, region );
+    region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
+    renderGLGeometry( mask, region, verticeslist[ 0 ].pos, verticeslist[ 0 ].texcoord,
+        verticeslist.count(), 3, sizeof( Vertex ));
 
     texture.disableUnnormalizedTexCoords();
     glPopMatrix();
@@ -1365,39 +1367,6 @@ void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
             glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant );
             }
         }
-    }
-
-void SceneOpenGL::Window::renderGeometry( int mask, QRegion region )
-    {
-    // Enable arrays
-    glEnableClientState( GL_VERTEX_ARRAY );
-    glVertexPointer(3, GL_FLOAT, sizeof(Vertex), verticeslist[0].pos);
-    glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-    glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), verticeslist[0].texcoord);
-
-    // Render
-    if( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED ))
-        // Just draw the entire window, no clipping
-        glDrawArrays( GL_QUADS, 0, verticeslist.count() );
-    else
-        {
-        // Make sure there's only a single quad (no transformed vertices)
-        // Clip using scissoring
-        glEnable( GL_SCISSOR_TEST );
-        region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
-        int dh = displayHeight();
-        foreach( QRect r, region.rects())
-            {
-            // Scissor rect has to be given in OpenGL coords
-            glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
-            glDrawArrays( GL_QUADS, 0, verticeslist.count() );
-            }
-        glDisable( GL_SCISSOR_TEST );
-        }
-
-    // Disable arrays
-    glDisableClientState( GL_VERTEX_ARRAY );
-    glDisableClientState( GL_TEXTURE_COORD_ARRAY );
     }
 
 void SceneOpenGL::Window::restoreShaderRenderStates( int mask, WindowPaintData data )

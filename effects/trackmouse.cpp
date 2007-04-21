@@ -67,27 +67,21 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
              ++i )
             {
             QRect r = starRect( i );
-            glEnableClientState( GL_VERTEX_ARRAY );
-            int verts[ 4 * 2 ] =
+            const float verts[ 4 * 2 ] =
                 {
                 r.x(), r.y(),
                 r.x(), r.y() + r.height(),
                 r.x() + r.width(), r.y() + r.height(),
                 r.x() + r.width(), r.y()
                 };
-            glVertexPointer( 2, GL_INT, 0, verts );
-            glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-            int texcoords[ 4 * 2 ] =
+            const float texcoords[ 4 * 2 ] =
                 {
                 0, 1,
                 0, 0,
                 1, 0,
                 1, 1
                 };
-            glTexCoordPointer( 2, GL_INT, 0, texcoords );
-            glDrawArrays( GL_QUADS, 0, 4 );
-            glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-            glDisableClientState( GL_VERTEX_ARRAY );
+            renderGLGeometry( mask, region, verts, texcoords, 4 );
             }
         texture->unbind();
         glPopAttrib();

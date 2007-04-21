@@ -429,17 +429,14 @@ void BoxSwitchEffect::paintFrame()
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glColor4f( 0, 0, 0, alpha );
-        glEnableClientState( GL_VERTEX_ARRAY );
-        int verts[ 4 * 2 ] =
+        const float verts[ 4 * 2 ] =
             {
             frame_area.x(), frame_area.y(),
             frame_area.x(), frame_area.y() + frame_area.height(),
             frame_area.x() + frame_area.width(), frame_area.y() + frame_area.height(),
             frame_area.x() + frame_area.width(), frame_area.y()
             };
-        glVertexPointer( 2, GL_INT, 0, verts );
-        glDrawArrays( GL_QUADS, 0, 4 );
-        glDisableClientState( GL_VERTEX_ARRAY );
+        renderGLGeometry( verts, NULL, 4 );
         glPopAttrib();
         }
 #endif
@@ -475,17 +472,14 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glColor4f( 1, 1, 1, alpha );
-        glEnableClientState( GL_VERTEX_ARRAY );
-        int verts[ 4 * 2 ] =
+        const float verts[ 4 * 2 ] =
             {
             area.x(), area.y(),
             area.x(), area.y() + area.height(),
             area.x() + area.width(), area.y() + area.height(),
             area.x() + area.width(), area.y()
             };
-        glVertexPointer( 2, GL_INT, 0, verts );
-        glDrawArrays( GL_QUADS, 0, 4 );
-        glDisableClientState( GL_VERTEX_ARRAY );
+        renderGLGeometry( verts, NULL, 4 );
         glPopAttrib();
         }
 #endif
@@ -589,27 +583,21 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         windows[ w ]->iconTexture.bind();
-        glEnableClientState( GL_VERTEX_ARRAY );
-        int verts[ 4 * 2 ] =
+        const float verts[ 4 * 2 ] =
             {
             x, y,
             x, y + height,
             x + width, y + height,
             x + width, y
             };
-        glVertexPointer( 2, GL_INT, 0, verts );
-        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-        int texcoords[ 4 * 2 ] =
+        const float texcoords[ 4 * 2 ] =
             {
             0, 1,
             0, 0,
             1, 0,
             1, 1
             };
-        glTexCoordPointer( 2, GL_INT, 0, texcoords );
-        glDrawArrays( GL_QUADS, 0, 4 );
-        glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-        glDisableClientState( GL_VERTEX_ARRAY );
+        renderGLGeometry( verts, texcoords, 4 );
         windows[ w ]->iconTexture.unbind();
         glPopAttrib();
         }

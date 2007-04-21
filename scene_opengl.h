@@ -143,7 +143,6 @@ class SceneOpenGL::Window
 
         void prepareRenderStates( int mask, WindowPaintData data );
         void prepareShaderRenderStates( int mask, WindowPaintData data );
-        void renderGeometry( int mask, QRegion region );
         void restoreRenderStates( int mask, WindowPaintData data );
         void restoreShaderRenderStates( int mask, WindowPaintData data );
 

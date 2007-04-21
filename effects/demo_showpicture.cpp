@@ -44,31 +44,25 @@ void ShowPictureEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         picture->bind();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        glEnableClientState( GL_VERTEX_ARRAY );
         int x = pictureRect.x();
         int y = pictureRect.y();
         int width = pictureRect.width();
         int height = pictureRect.height();
-        int verts[ 4 * 2 ] =
+        const float verts[ 4 * 2 ] =
             {
             x, y,
             x, y + height,
             x + width, y + height,
             x + width, y
             };
-        glVertexPointer( 2, GL_INT, 0, verts );
-        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-        int texcoords[ 4 * 2 ] =
+        const float texcoords[ 4 * 2 ] =
             {
             0, 1,
             0, 0,
             1, 0,
             1, 1
             };
-        glTexCoordPointer( 2, GL_INT, 0, texcoords );
-        glDrawArrays( GL_QUADS, 0, 4 );
-        glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-        glDisableClientState( GL_VERTEX_ARRAY );
+        renderGLGeometry( mask, region, verts, texcoords, 4 );
         picture->unbind();
         glPopAttrib();
         }
