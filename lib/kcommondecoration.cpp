@@ -26,7 +26,7 @@
 #include <QCursor>
 #include <QDateTime>
 #include <QLabel>
-#include <QToolTip>
+
 #include <QWidget>
 
 #include <kdebug.h>

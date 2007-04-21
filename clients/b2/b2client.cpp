@@ -9,37 +9,37 @@
  *   Thin frame in fixed size windows, titlebar gradient support, accessibility
  *   improvements, customizable menu double click action and button hover
  *   effects are
- *   Copyright (c) 2003, 2004, 2006 Luciano Montanaro <mikelima@cirulla.net>
+ *   Copyright (c) 2003,2004 Luciano Montanaro <mikelima@cirulla.net>
  */
 
 #include "b2client.h"
-
 #include <QApplication>
 #include <QLayout>
-#include <QEvent>
-#include <QPaintEvent>
-#include <QMouseEvent>
-#include <QShowEvent>
-#include <QResizeEvent>
-#include <QGridLayout>
-#include <QBoxLayout>
-#include <QPainter>
-#include <QGradient>
+#include <qdrawutil.h>
 #include <QPixmap>
+#include <QPaintEvent>
 #include <QPolygon>
+#include <QGridLayout>
+#include <QEvent>
+#include <QBoxLayout>
+#include <QShowEvent>
 #include <QStyle>
-#include <QBitmap>
-#include <QLabel>
-#include <QToolTip>
+#include <QResizeEvent>
+#include <QMouseEvent>
+#include <kpixmapeffect.h>
+#include <kimageeffect.h>
 #include <kicontheme.h>
 #include <kiconeffect.h>
-//#include <kdrawutil.h>
+#include <kdrawutil.h>
 #include <klocale.h>
 #include <kconfig.h>
+#include <QBitmap>
+#include <QLabel>
+
+#include <QPixmap>
 
 #include <X11/Xlib.h>
 #include <QX11Info>
-#include <KDebug>
 
 namespace B2 {
 
@@ -141,15 +141,13 @@ static void read_config(B2ClientFactory *f)
 	thickness = 5;
 	break;
     case KDecoration::BorderVeryLarge:
-	thickness = 7;
+	thickness = 8;
 	break;
     case KDecoration::BorderHuge:
-	thickness = 9;
-    case KDecoration::BorderVeryHuge:
-	thickness = 11;
-    case KDecoration::BorderOversized:
-	thickness = 14;
+	thickness = 12;
 	break;
+    case KDecoration::BorderVeryHuge:
+    case KDecoration::BorderOversized:
     case KDecoration::BorderNormal:
     default:
 	thickness = 4;
@@ -165,23 +163,20 @@ static void drawB2Rect(QPixmap *pix, const QColor &primary, bool down)
     if (down) qSwap(hColor, lColor);
 
     if (QPixmap::defaultDepth() > 8) {
-	QLinearGradient gradient(0, 0, pix->width(), pix->height());
-	gradient.setColorAt(0.0, hColor);
-	gradient.setColorAt(1.0, lColor);
-	QBrush brush(gradient);
-	p.fillRect(pix->rect(), brush);
+	KPixmapEffect::gradient(*pix, hColor, lColor,
+		KPixmapEffect::DiagonalGradient);
     }
     else
         pix->fill(primary);
-    const int x2 = pix->width() - 1;
-    const int y2 = pix->height() - 1;
+    int x2 = pix->width() - 1;
+    int y2 = pix->height() - 1;
     p.setPen(lColor);
     p.drawLine(0, 0, x2, 0);
     p.drawLine(0, 0, 0, y2);
     p.drawLine(1, x2 - 1, x2 - 1, y2 - 1);
     p.drawLine(x2 - 1, 1, x2 - 1, y2 - 1);
     p.setPen(hColor);
-    p.drawRect(1, 1, x2 - 1, y2 - 1);
+    p.drawRect(1, 1, x2, y2);
 
 }
 
@@ -204,40 +199,39 @@ static void create_pixmaps()
     for (i = 0; i < NUM_PIXMAPS; i++) {
 
         switch (i / NumStates) {
-	case P_MAX: // will be initialized by copying P_CLOSE
-	case P_RESIZE:
-	    pixmap[i] = new QPixmap();
-	    break;
-	case P_ICONIFY:
-	    pixmap[i] = new QPixmap(10, 10);
-	    break;
-	case P_SHADE:
-	case P_CLOSE:
-	    pixmap[i] = new QPixmap(bsize, bsize);
-	    break;
-	default:
-	    pixmap[i] = new QPixmap(16, 16);
-	    break;
+            case P_MAX: // will be initialized by copying P_CLOSE
+            case P_RESIZE:
+                pixmap[i] = new QPixmap();
+                break;
+            case P_ICONIFY:
+                pixmap[i] = new QPixmap(10, 10);
+                break;
+            case P_SHADE:
+            case P_CLOSE:
+                pixmap[i] = new QPixmap(bsize, bsize);
+                break;
+            default:
+                pixmap[i] = new QPixmap(16, 16);
+                break;
         }
     }
 
-    // This should stay here, before the mask creation, because of a bug with
-    // drawing a bitmap with drawPixmap() with the mask set (present at least
-    // in Qt 4.2.3). 
-    redraw_pixmaps();
-
     // there seems to be no way to load X bitmaps from data properly, so
     // we need to create new ones for each mask :P
-    QBitmap pinupMask = QBitmap::fromData(QSize(16, 16), pinup_mask_bits);
-    QBitmap pindownMask = QBitmap::fromData(QSize(16, 16), pindown_mask_bits);
-    QBitmap menuMask = QBitmap::fromData(QSize(16, 16), menu_mask_bits);
-    QBitmap helpMask = QBitmap::fromData(QSize(16, 16), help_mask_bits);
-    for (i = 0; i < NumStates; i++) {
-	bool isDown = (i == Down) || (i == IDown);
+    QBitmap pinupMask = QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits);
+    PIXMAP_A(P_PINUP)->setMask(pinupMask);
+    PIXMAP_I(P_PINUP)->setMask(pinupMask);
+    QBitmap pindownMask = QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits);
+    PIXMAP_AD(P_PINUP)->setMask(pindownMask);
+    PIXMAP_ID(P_PINUP)->setMask(pindownMask);
+
+    QBitmap menuMask = QBitmap::fromData(QSize( 16, 16 ), menu_mask_bits);
+    for (i = 0; i < NumStates; i++)
 	pixmap[P_MENU * NumStates + i]->setMask(menuMask);
+
+    QBitmap helpMask = QBitmap::fromData(QSize( 16, 16 ), help_mask_bits);
+    for (i = 0; i < NumStates; i++)
 	pixmap[P_HELP * NumStates + i]->setMask(helpMask);
-	pixmap[P_PINUP * NumStates + i]->setMask(isDown ? pindownMask: pinupMask);
-    }
 
     QBitmap normalizeMask(16, 16);
     normalizeMask.clear();
@@ -264,6 +258,8 @@ static void create_pixmaps()
 
     titleGradient[0] = 0;
     titleGradient[1] = 0;
+
+    redraw_pixmaps();
 }
 
 static void delete_pixmaps()
@@ -313,9 +309,10 @@ bool B2ClientFactory::reset(unsigned long changed)
     return needsReset;
 }
 
-bool B2ClientFactory::supports(Ability ability)
+bool B2ClientFactory::supports( Ability ability )
 {
-    switch (ability) {
+    switch( ability )
+    {
         case AbilityAnnounceButtons:
         case AbilityButtonMenu:
         case AbilityButtonOnAllDesktops:
@@ -338,8 +335,7 @@ QList< B2ClientFactory::BorderSize > B2ClientFactory::borderSizes() const
 {
     // the list must be sorted
     return QList< BorderSize >() << BorderTiny << BorderNormal <<
-	BorderLarge << BorderVeryLarge << 
-	BorderHuge << BorderVeryHuge << BorderOversized;
+	BorderLarge << BorderVeryLarge << BorderHuge;
 }
 
 // =====================================
@@ -420,7 +416,7 @@ void B2Client::init()
     }
 
     // titlebar
-    g->addItem( new QSpacerItem(0, buttonSize + 4), 0, 0 );
+    g->addItem( new QSpacerItem( 0, buttonSize + 4 ), 0, 0 );
 
     titlebar = new B2Titlebar(this);
     titlebar->setMinimumWidth(buttonSize + 4);
@@ -573,9 +569,10 @@ void B2Client::calcHiddenButtons()
 	button[BtnShade], button[BtnSticky], button[BtnHelp], button[BtnResize],
 	button[BtnMax], button[BtnIconify], button[BtnClose], button[BtnMenu]
     };
-    const int minWidth = 120;
+    int minWidth = 120;
     int currentWidth = width();
     int count = 0;
+    int i;
 
     // Determine how many buttons we need to hide
     while (currentWidth < minWidth) {
@@ -586,12 +583,12 @@ void B2Client::calcHiddenButtons()
     if (count > BtnCount) count = BtnCount;
 
     // Hide the required buttons
-    for (int i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
         if (btnArray[i] && btnArray[i]->isVisible())
             btnArray[i]->hide();
     }
     // Show the rest of the buttons
-    for (int i = count; i < BtnCount; i++) {
+    for (i = count; i < BtnCount; i++) {
         if (btnArray[i] && (!btnArray[i]->isVisible()))
             btnArray[i]->show();
     }
@@ -630,37 +627,36 @@ void B2Client::paintEvent(QPaintEvent* e)
     QRect t = titlebar->geometry();
 
     // Frame height, this is used a lot of times
-    const int fHeight = height() - t.height() - 1;
-    const int fWidth = width() - 1;
+    int fHeight = height() - t.height();
 
     // distance from the bottom border - it is different if window is resizable
-    const int bb = mustDrawHandle() ? 4 : 0;
-    const int bDepth = thickness + bb;
+    int bb = mustDrawHandle() ? 4 : 0;
+    int bDepth = thickness + bb;
 
     QPalette fillColor = options()->palette(frameColorGroup, isActive());
     QBrush fillBrush(options()->color(frameColorGroup, isActive()));
 
     // outer frame rect
     p.drawRect(0, t.bottom() - thickness + 1,
-	    fWidth, fHeight - bb + thickness);
+	    width(), fHeight - bb + thickness);
 
     if (thickness >= 2) {
 	// inner window rect
 	p.drawRect(thickness - 1, t.bottom(),
-		fWidth - 2 * (thickness - 1), fHeight - bDepth + 2);
+		width() - 2 * (thickness - 1), fHeight - bDepth + 2);
 
 	if (thickness >= 3) {
 	    // frame shade panel
 	    qDrawShadePanel(&p, 1, t.bottom() - thickness + 2,
-	    	width() - 2, fHeight - 1 - bb + thickness, fillColor, false);
+	    	width() - 2, fHeight - 2 - bb + thickness, fillColor, false);
 	    if (thickness == 4) {
-		p.setPen(fillColor.color(QPalette::Background));
+		p.setPen(fillColor.color( QPalette::Background ) );
 		p.drawRect(thickness - 2, t.bottom() - 1,
-			width() - 2 * thickness + 3, fHeight + 4 - bDepth);
+			width() - 2 * (thickness - 2), fHeight + 4 - bDepth);
 	    } else if (thickness > 4) {
 		qDrawShadePanel(&p, thickness - 2,
 	    	    t.bottom() - 1, width() - 2 * (thickness - 2),
-	    	    fHeight + 5 - bDepth, fillColor, true);
+	    	    fHeight + 4 - bDepth, fillColor, true);
 		if (thickness >= 5) {
 		    // draw frame interior
 		    p.fillRect(2, t.bottom() - thickness + 3,
@@ -668,9 +664,9 @@ void B2Client::paintEvent(QPaintEvent* e)
 		    p.fillRect(2, height() - bDepth + 2,
 		    	width() - 4, thickness - 4, fillBrush);
 		    p.fillRect(2, t.bottom() - 1,
-		    	thickness - 4, fHeight - bDepth + 5, fillBrush);
+		    	thickness - 4, fHeight - bDepth + 4, fillBrush);
 		    p.fillRect(width() - thickness + 2, t.bottom() - 1,
-		    	thickness - 4, fHeight - bDepth + 5, fillBrush);
+		    	thickness - 4, fHeight - bDepth + 4, fillBrush);
 		}
 	    }
 	}
@@ -679,8 +675,8 @@ void B2Client::paintEvent(QPaintEvent* e)
     // bottom handle rect
     if (mustDrawHandle()) {
         p.setPen(Qt::black);
-	const int hx = width() - 40;
-	const int hw = 40;
+	int hx = width() - 40;
+	int hw = 40;
 
 	p.drawLine(width() - 1, height() - thickness - 4,
 		width() - 1, height() - 1);
@@ -690,12 +686,12 @@ void B2Client::paintEvent(QPaintEvent* e)
 	p.fillRect(hx + 1, height() - thickness - 3,
 		hw - 2, thickness + 2, fillBrush);
 
-	p.setPen(fillColor.color(QPalette::Dark));
+	p.setPen(fillColor.color( QPalette::Dark ));
 	p.drawLine(width() - 2, height() - thickness - 4,
 		width() - 2, height() - 2);
 	p.drawLine(hx + 1, height() - 2, width() - 2, height() - 2);
 
-	p.setPen(fillColor.color(QPalette::Light));
+	p.setPen(fillColor.color( QPalette::Light ));
 	p.drawLine(hx + 1, height() - thickness - 2,
 		hx + 1, height() - 3);
 	p.drawLine(hx + 1, height() - thickness - 3,
@@ -722,9 +718,7 @@ void B2Client::paintEvent(QPaintEvent* e)
 
 void B2Client::doShape()
 {
-    const QRect t = titlebar->geometry();
-    const int w = width();
-    const int h = height();
+    QRect t = titlebar->geometry();
     QRegion mask(widget()->rect());
     // top to the tilebar right
     if (bar_x_ofs) {
@@ -733,23 +727,24 @@ void B2Client::doShape()
 	// top left point
 	mask -= QRect(0, t.height() - thickness, 1, 1);
     }
-    if (t.right() < w - 1) {
-	mask -= QRect(w - 1, t.height() - thickness, 1, 1); // top right point
+    if (t.right() < width() - 1) {
+	mask -= QRect(width() - 1,
+		t.height() - thickness, 1, 1); //top right point
 	mask -= QRect(t.right() + 1, 0,
-		w - t.right() - 1, t.height() - thickness);
+		width() - t.right() - 1, t.height() - thickness);
     }
     // bottom right point
-    mask -= QRect(w - 1, h - 1, 1, 1);
+    mask -= QRect(width() - 1, height() - 1, 1, 1);
     if (mustDrawHandle()) {
 	// bottom left point
-	mask -= QRect(0, h - 5, 1, 1);
+	mask -= QRect(0, height() - 5, 1, 1);
 	// handle left point
-	mask -= QRect(w - 40, h - 1, 1, 1);
+	mask -= QRect(width() - 40, height() - 1, 1, 1);
 	// bottom left
-	mask -= QRect(0, h - 4, w - 40, 4);
+	mask -= QRect(0, height() - 4, width() - 40, 4);
     } else {
 	// bottom left point
-	mask -= QRect(0, h - 1, 1, 1);
+	mask -= QRect(0, height() - 1, 1, 1);
     }
 
     setMask(mask);
@@ -767,11 +762,11 @@ KDecoration::Position B2Client::mousePosition(const QPoint& p) const
     const int range = 16;
     QRect t = titlebar->geometry();
     t.setHeight(buttonSize + 4 - thickness);
-    const int ly = t.bottom();
-    const int lx = t.right();
-    const int bb = mustDrawHandle() ? 0 : 5;
+    int ly = t.bottom();
+    int lx = t.right();
+    int bb = mustDrawHandle() ? 0 : 5;
 
-    if (p.x() > lx) {
+    if (p.x() > t.right()) {
         if (p.y() <= ly + range && p.x() >= width() - range)
             return PositionTopRight;
         else if (p.y() <= ly + thickness)
@@ -861,7 +856,7 @@ void B2Client::activeChange()
     titlebar->repaint();
 
     QColor c = options()->palette(
-	    KDecoration::ColorTitleBar, isActive()).color(QPalette::Active, QPalette::Button);
+				KDecoration::ColorTitleBar, isActive()).color(QPalette::Active, QPalette::Button);
 
     for (int i = 0; i < BtnCount; i++)
         if (button[i]) {
@@ -877,7 +872,7 @@ void B2Client::shadeChange()
     g->activate();
     doShape();
     if (B2Button *b = button[BtnShade]) {
-	b->setToolTip(isSetShade() ? i18n("Unshade") : i18n("Shade"));
+	b->setToolTip( isSetShade() ? i18n("Unshade") : i18n("Shade"));
     }
 }
 
@@ -904,8 +899,8 @@ void B2Client::menuButtonPressed()
 {
     static B2Client *lastClient = NULL;
 
-    const bool dbl = (lastClient == this && 
-	    time.elapsed() <= QApplication::doubleClickInterval());
+    bool dbl = (lastClient == this &&
+	        time.elapsed() <= QApplication::doubleClickInterval());
     lastClient = this;
     time.start();
     if (!dbl) {
@@ -945,7 +940,7 @@ void B2Client::unobscureTitlebar()
 	return;
     }
     in_unobs = 1;
-    QRegion reg(QRect(0, 0, width(), buttonSize + 4));
+    QRegion reg(QRect(0,0,width(), buttonSize + 4));
     reg = unobscuredRegion(reg);
     if (!reg.isEmpty()) {
         // there is at least _one_ pixel from our title area, which is not
@@ -959,28 +954,26 @@ void B2Client::unobscureTitlebar()
 
 static void redraw_pixmaps()
 {
-    QPalette aGrp = options()->palette(KDecoration::ColorButtonBg, true);
-    QPalette iGrp = options()->palette(KDecoration::ColorButtonBg, false);
-
-    QColor inactiveColor = iGrp.color(QPalette::Button);
-    QColor activeColor = aGrp.color(QPalette::Button);
+    int i;
+		QPalette aGrp = options()->palette(KDecoration::ColorButtonBg, true);
+		QPalette iGrp = options()->palette(KDecoration::ColorButtonBg, false);
 
     // close
-    drawB2Rect(PIXMAP_A(P_CLOSE), activeColor, false);
-    drawB2Rect(PIXMAP_AH(P_CLOSE), activeColor, true);
-    drawB2Rect(PIXMAP_AD(P_CLOSE), activeColor, true);
+    drawB2Rect(PIXMAP_A(P_CLOSE), aGrp.color( QPalette::Button ), false);
+    drawB2Rect(PIXMAP_AH(P_CLOSE), aGrp.color( QPalette::Button ), true);
+    drawB2Rect(PIXMAP_AD(P_CLOSE), aGrp.color( QPalette::Button ), true);
 
-    drawB2Rect(PIXMAP_I(P_CLOSE), inactiveColor, false);
-    drawB2Rect(PIXMAP_IH(P_CLOSE), inactiveColor, true);
-    drawB2Rect(PIXMAP_ID(P_CLOSE), inactiveColor, true);
+    drawB2Rect(PIXMAP_I(P_CLOSE), iGrp.color( QPalette::Button ), false);
+    drawB2Rect(PIXMAP_IH(P_CLOSE), iGrp.color( QPalette::Button ), true);
+    drawB2Rect(PIXMAP_ID(P_CLOSE), iGrp.color( QPalette::Button ), true);
 
     // shade
     QPixmap thinBox(buttonSize - 2, 6);
-    for (int i = 0; i < NumStates; i++) {
+    for (i = 0; i < NumStates; i++) {
 	bool is_act = (i < 2);
 	bool is_down = ((i & 1) == 1);
 	QPixmap *pix = pixmap[P_SHADE * NumStates + i];
-	QColor color = is_act ? activeColor : inactiveColor;
+	QColor color = is_act ? aGrp.color( QPalette::Button ) : iGrp.color( QPalette::Button );
 	drawB2Rect(&thinBox, color, is_down);
 	pix->fill(Qt::black);
 	bitBlt(pix, 0, 0, &thinBox,
@@ -988,7 +981,7 @@ static void redraw_pixmaps()
     }
 
     // maximize
-    for (int i = 0; i < NumStates; i++) {
+    for (i = 0; i < NumStates; i++) {
 	*pixmap[P_MAX * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
 	pixmap[P_MAX * NumStates + i]->detach();
     }
@@ -997,13 +990,12 @@ static void redraw_pixmaps()
     QPixmap smallBox( 10, 10 );
     QPixmap largeBox( 12, 12 );
 
-    for (int i = 0; i < NumStates; i++) {
+    for (i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
 	bool is_down = (i == Down || i == IDown);
 	QPixmap *pix = pixmap[P_NORMALIZE * NumStates + i];
-	QColor color = is_act ? activeColor : inactiveColor;
-	drawB2Rect(&smallBox, color, is_down);
-	drawB2Rect(&largeBox, color, is_down);
+	drawB2Rect(&smallBox, is_act ? aGrp.color( QPalette::Button ) : iGrp.color( QPalette::Button ), is_down);
+	drawB2Rect(&largeBox, is_act ? aGrp.color( QPalette::Button ) : iGrp.color( QPalette::Button ), is_down);
 	pix->fill(options()->color(KDecoration::ColorTitleBar, is_act));
 	bitBlt(pix, pix->width() - 12, pix->width() - 12, &largeBox,
 	       0, 0, 12, 12);
@@ -1014,12 +1006,12 @@ static void redraw_pixmaps()
     }
 
     // resize
-    for (int i = 0; i < NumStates; i++) {
+    for (i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
 	bool is_down = (i == Down || i == IDown);
 	*pixmap[P_RESIZE * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
 	pixmap[P_RESIZE * NumStates + i]->detach();
-	drawB2Rect(&smallBox, is_act ? activeColor : inactiveColor, is_down);
+	drawB2Rect(&smallBox, is_act ? aGrp.color( QPalette::Button ) : iGrp.color( QPalette::Button ), is_down);
 	bitBlt(pixmap[P_RESIZE * NumStates + i],
 		0, 0, &smallBox, 0, 0, 10, 10);
     }
@@ -1042,78 +1034,30 @@ static void redraw_pixmaps()
             break;
         }
 	int off = (pixmap[pix * NumStates]->width() - 16) / 2;
-	QSize bSize(16, 16);
-	QBitmap lightBitmap = QBitmap::fromData(bSize, 
-		    light, QImage::Format_MonoLSB);
-	lightBitmap.setMask(lightBitmap);
-	QBitmap darkBitmap = QBitmap::fromData(bSize, 
-		    dark, QImage::Format_MonoLSB);
-	darkBitmap.setMask(darkBitmap);
-
-        for (int i = 0; i < NumStates; i++) {
-	    bool isAct = (i < 3);
-	    QPixmap *pixm = pixmap[pix* NumStates + i];
-	    p.begin(pixm);
-	    QColor color = isAct ? activeColor : inactiveColor;
-	    p.setPen(color.light(150));
-	    p.drawPixmap(off, off, lightBitmap);
-	    p.setPen(color.dark(150));
-	    p.drawPixmap(off, off, darkBitmap);
-	    p.end();
+        for (i = 0; i < NumStates; i++) {
+            p.begin(pixmap[pix * NumStates + i]);
+            kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, off, off, 16, 16, true,
+                          light, NULL, NULL, dark, NULL, NULL);
+            p.end();
         }
     }
 
     // pin
-    for (int i = 0; i < NumStates; i++) {
-	const bool isDown = (i == Down || i == IDown);
-	bool isAct = (i < 3);
-
-#if 0
+    for (i = 0; i < NumStates; i++) {
+	bool isDown = (i == Down || i == IDown);
         unsigned const char *white = isDown ? pindown_white_bits : pinup_white_bits;
         unsigned const char *gray = isDown ? pindown_gray_bits : pinup_gray_bits;
-        unsigned const char *dgray = isDown ? pindown_dgray_bits : pinup_dgray_bits;
-	QPixmap *pix = pixmap[P_PINUP * NumStates + i];
-        p.begin(pix);
-
-        kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, 0, 0, 16, 16, true, 
-		      white, gray, NULL, dgray, NULL, NULL);
+        unsigned const char *dgray =isDown ? pindown_dgray_bits : pinup_dgray_bits;
+        p.begin(pixmap[P_PINUP * NumStates + i]);
+        kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, 0, 0, 16, 16, true, white,
+                      gray, NULL, dgray, NULL, NULL);
         p.end();
-	QBitmap pinupMask = QBitmap::fromData(QSize(16, 16), pinup_mask_bits);
-	QBitmap pindownMask = QBitmap::fromData(QSize(16, 16), pindown_mask_bits);
-	pixmap[P_PINUP * NumStates + i]->setMask(isDown ? pindownMask: pinupMask);
-#else
-
-	QSize pinSize(16, 16);
-	QBitmap white = QBitmap::fromData(pinSize, 
-		    isDown ? pindown_white_bits : pinup_white_bits, 
-		    QImage::Format_MonoLSB);
-	white.setMask(white);
-	QBitmap gray = QBitmap::fromData(pinSize, 
-		    isDown ? pindown_gray_bits : pinup_gray_bits, 
-		    QImage::Format_MonoLSB);
-	gray.setMask(gray);
-	QBitmap dgray = QBitmap::fromData(pinSize, 
-		    isDown ? pindown_dgray_bits : pinup_dgray_bits, 
-		    QImage::Format_MonoLSB);
-	dgray.setMask(dgray);
-
-	QPixmap *pix = pixmap[P_PINUP * NumStates + i];
-	QColor color = isAct ? activeColor : inactiveColor;
-        p.begin(pix);
-	p.setPen(color.light(150));
-	p.drawPixmap(0, 0, white);
-	p.setPen(color);
-	p.drawPixmap(0, 0, gray);
-	p.setPen(color.dark(150));
-	p.drawPixmap(0, 0, dgray);
-	p.end();
-#endif
     }
 
     // Apply the hilight effect to the 'Hover' icons
     KIconEffect ie;
     QPixmap hilighted;
-    for (int i = 0; i < P_NUM_BUTTON_TYPES; i++) {
+    for (i = 0; i < P_NUM_BUTTON_TYPES; i++) {
 	int offset = i * NumStates;
 	hilighted = ie.apply(*pixmap[offset + Norm],
 		K3Icon::Small, K3Icon::ActiveState);
@@ -1140,20 +1084,15 @@ static void redraw_pixmaps()
 	    titleColor[1] = options()->color(KDecoration::ColorTitleBar, true);
 	}
 
-	for (int i = 0; i < 2; i++) {
+	for (i = 0; i < 2; i++) {
 	    if (titleColor[2 * i] != titleColor[2 * i + 1]) {
 		if (!titleGradient[i]) {
 		    titleGradient[i] = new QPixmap;
 		}
-		const int titleHeight = buttonSize + 3;
-		*titleGradient[i] = QPixmap(64, titleHeight);
-
-		QPainter p(titleGradient[i]);
-		QLinearGradient gradient(0, 0, 0, titleHeight);
-		gradient.setColorAt(0.0, titleColor[2 * i]);
-		gradient.setColorAt(1.0, titleColor[2 * i + 1]);
-		QBrush brush(gradient);
-		p.fillRect(0, 0, 64, titleHeight, brush);
+		*titleGradient[i] = QPixmap(64, buttonSize + 3);
+		KPixmapEffect::gradient(*titleGradient[i],
+			titleColor[2 * i], titleColor[2 * i + 1],
+			KPixmapEffect::VerticalGradient);
 	    } else {
 	       delete titleGradient[i];
 	       titleGradient[i] = 0;
@@ -1198,10 +1137,10 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
 	if (barRight > geom.right()) barRight = geom.right();
         // line width is 5 pixels, so compensate for the 2 outer pixels (#88657)
         QRect g = geom;
-        g.setLeft(g.left() + 2);
-        g.setTop(g.top() + 2);
-        g.setRight(g.right() - 2);
-        g.setBottom(g.bottom() - 2);
+        g.setLeft( g.left() + 2 );
+        g.setTop( g.top() + 2 );
+        g.setRight( g.right() - 2 );
+        g.setBottom( g.bottom() - 2 );
         frameTop += 2;
         barLeft += 2;
         barRight -= 2;
@@ -1262,7 +1201,7 @@ bool B2Client::eventFilter(QObject *o, QEvent *e)
 
 B2Button::B2Button(B2Client *_client, QWidget *parent,
 	const QString& tip, const int realizeBtns)
-   : QAbstractButton(parent), hover(false)
+   : Q3Button(parent, 0), hover(false)
 {
     setAttribute(Qt::WA_NoSystemBackground);
     setCursor(Qt::ArrowCursor);
@@ -1270,7 +1209,7 @@ B2Button::B2Button(B2Client *_client, QWidget *parent,
     client = _client;
     useMiniIcon = false;
     setFixedSize(buttonSize, buttonSize);
-    this->setToolTip(tip);
+    this->setToolTip( tip);
 }
 
 
@@ -1284,20 +1223,18 @@ QSizePolicy B2Button::sizePolicy() const
     return(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 }
 
-void B2Button::paintEvent(QPaintEvent *)
+void B2Button::drawButton(QPainter *p)
 {
-    QPainter p(this);
     QPixmap* gradient = titleGradient[client->isActive() ? 0 : 1];
     if (gradient) {
-	p.drawTiledPixmap(0, 0, buttonSize, buttonSize, *gradient, 0, 2);
+	p->drawTiledPixmap(0, 0, buttonSize, buttonSize, *gradient, 0, 2);
     } else {
-	p.fillRect(rect(), bg);
+	p->fillRect(rect(), bg);
     }
     if (useMiniIcon) {
-        QPixmap miniIcon = client->icon().pixmap(
-		style()->pixelMetric(QStyle::PM_SmallIconSize),
+        QPixmap miniIcon = client->icon().pixmap(style()->pixelMetric( QStyle::PM_SmallIconSize ),
 		client->isActive() ? QIcon::Normal : QIcon::Disabled);
-        p.drawPixmap((width() - miniIcon.width()) / 2,
+        p->drawPixmap((width() - miniIcon.width()) / 2,
                       (height() - miniIcon.height()) / 2, miniIcon);
     } else {
 	int type;
@@ -1316,7 +1253,7 @@ void B2Button::paintEvent(QPaintEvent *)
             else
 		type = INorm;
         }
-	p.drawPixmap((width() - icon[type]->width()) / 2,
+	p->drawPixmap((width() - icon[type]->width()) / 2,
 		(height() - icon[type]->height()) / 2, *icon[type]);
     }
 }
@@ -1337,7 +1274,7 @@ void B2Button::mousePressEvent(QMouseEvent * e)
 	    (e->button() & realizeButtons) ? Qt::LeftButton : Qt::NoButton,
 	    (e->button() & realizeButtons) ? Qt::LeftButton : Qt::NoButton,
 	    e->modifiers());
-    QAbstractButton::mousePressEvent(&me);
+    Q3Button::mousePressEvent(&me);
 }
 
 void B2Button::mouseReleaseEvent(QMouseEvent * e)
@@ -1347,21 +1284,21 @@ void B2Button::mouseReleaseEvent(QMouseEvent * e)
 	    (e->button() & realizeButtons) ? Qt::LeftButton : Qt::NoButton,
 	    (e->button() & realizeButtons) ? Qt::LeftButton : Qt::NoButton,
 	    e->modifiers());
-    QAbstractButton::mouseReleaseEvent(&me);
+    Q3Button::mouseReleaseEvent(&me);
 }
 
 void B2Button::enterEvent(QEvent *e)
 {
     hover = true;
     repaint();
-    QAbstractButton::enterEvent(e);
+    Q3Button::enterEvent(e);
 }
 
 void B2Button::leaveEvent(QEvent *e)
 {
     hover = false;
     repaint();
-    QAbstractButton::leaveEvent(e);
+    Q3Button::leaveEvent(e);
 }
 
 // =====================================
@@ -1449,7 +1386,7 @@ void B2Titlebar::resizeEvent(QResizeEvent *)
 
 void B2Titlebar::paintEvent(QPaintEvent *)
 {
-    if (client->isActive())
+    if(client->isActive())
         bitBlt(this, 0, 0, &titleBuffer, 0, 0, titleBuffer.width(),
                titleBuffer.height());
     else {
@@ -1499,6 +1436,6 @@ void B2Titlebar::mouseMoveEvent(QMouseEvent * e)
 
 #include "b2client.moc"
 
-// vim: sw=4 ts=8
+// vim: sw=4
 
 #endif // CLIENTS/B2/B2CLIENT.CPP

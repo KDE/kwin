@@ -27,7 +27,7 @@ class KConfig;
 #include <QWidget>
 #include <kcmodule.h>
 #include <QComboBox>
-#include <QToolTip>
+
 
 
 class ToolTipComboBox: public QComboBox

@@ -2,7 +2,7 @@
 #include "kwmthemeclient.h"
 #include <kglobal.h>
 #include <QLayout>
-#include <QtGui/qdrawutil.h>
+#include <qdrawutil.h>
 #include <QPainter>
 #include <kpixmapeffect.h>
 #include <kstandarddirs.h>
@@ -11,7 +11,7 @@
 #include <QBitmap>
 #include <QStyle>
 #include <QLabel>
-#include <QToolTip>
+
 
 namespace KWMTheme {
 
@@ -147,9 +147,9 @@ static void create_pixmaps()
         titleAlign = Qt::AlignCenter;
     else
         titleAlign = Qt::AlignLeft | Qt::AlignVCenter;
-    titleSunken = config.readEntry("TitleFrameShaded", true);
+    titleSunken = config.readEntry("TitleFrameShaded", QVariant(true)).toBool();
     // titleSunken = true; // is this fixed?
-    titleTransparent = config.readEntry("PixmapUnderTitleText", true);
+    titleTransparent = config.readEntry("PixmapUnderTitleText", QVariant(true)).toBool();
 
     tmpStr = config.readEntry("TitlebarLook");
     if(tmpStr == "shadedVertical"){

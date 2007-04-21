@@ -5,7 +5,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <QLayout>
-#include <QtGui/qdrawutil.h>
+#include <qdrawutil.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QPaintEvent>
@@ -13,7 +13,7 @@
 #include <QPixmap>
 #include <kdrawutil.h>
 #include <QBitmap>
-#include <QToolTip>
+
 #include <QApplication>
 #include <QLabel>
 #include "modernsys.h"
@@ -294,7 +294,8 @@ ModernButton::ModernButton(ButtonType type, ModernSys *parent, const char *name)
     setObjectName( name );
     setAttribute(Qt::WA_NoSystemBackground, true);
 
-    QBitmap mask = QBitmap::fromData( QSize(14,  15),  QPixmap::defaultDepth() > 8 ? btnhighcolor_mask_bits : lowcolor_mask_bits);
+    QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
+                 btnhighcolor_mask_bits : lowcolor_mask_bits, true);
     resize(14, 15);
 
     setMask(mask);
@@ -343,7 +344,7 @@ void ModernButton::reset(unsigned long changed)
 void ModernButton::setBitmap(const unsigned char *bitmap)
 {
     if (bitmap)
-        deco = QBitmap::fromData( QSize(8,  8),  bitmap);
+        deco = QBitmap(8, 8, bitmap, true);
     else {
         deco = QBitmap(8,8);
         deco.fill(Qt::color0);
