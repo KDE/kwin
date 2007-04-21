@@ -179,6 +179,12 @@ Effects framework TODO
 
 * check Scene::updateTimeDiff() - should the time be 0 or 1?
 
+* DesktopGridEffect has somewhat broken stacking order while moving windows
+    - the window is in proper layer when on its desktop but on top of everything when moved
+        to another desktop, due to its desktop being painted later
+    - maybe there should be PAINT_WINDOW_TOP (_LAST or whatever) that'd make it painted always
+        on top of everything
+
 
 Effects TODO
 ===============================

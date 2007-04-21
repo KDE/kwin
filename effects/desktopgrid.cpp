@@ -98,7 +98,11 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* pai
         else
             w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         if( w == window_move )
+            {
             *mask |= PAINT_WINDOW_TRANSFORMED;
+            if( w->isOnAllDesktops() && painting_desktop != effects->currentDesktop())
+                w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+            }
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
@@ -115,23 +119,35 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         paintSlide( mask, region, data );
         return;
         }
+    int desktop_with_move = -1;
+    if( window_move != NULL )
+        desktop_with_move = window_move->isOnAllDesktops() ? effects->currentDesktop() : window_move->desktop();
     for( int desktop = 1;
          desktop <= effects->numberOfDesktops();
          ++desktop )
         {
-        QRect rect = desktopRect( desktop, true );
-        if( region.contains( rect )) // this desktop needs painting
-            {
-            painting_desktop = desktop;
-            ScreenPaintData d = data;
-            QRect normal = desktopRect( effects->currentDesktop(), false );
-            d.xTranslate += rect.x(); // - normal.x();
-            d.yTranslate += rect.y(); // - normal.y();
-            d.xScale *= rect.width() / float( normal.width());
-            d.yScale *= rect.height() / float( normal.height());
-            // TODO mask parts that are not visible?
-            effects->paintScreen( mask, region, d );
-            }
+        if( desktop != desktop_with_move )
+            paintScreenDesktop( desktop, mask, region, data );
+        }
+    // paint the desktop with the window being moved as the last one, i.e. on top of others
+    if( desktop_with_move != -1 )
+        paintScreenDesktop( desktop_with_move, mask, region, data );
+    }
+
+void DesktopGridEffect::paintScreenDesktop( int desktop, int mask, QRegion region, ScreenPaintData data )
+    {
+    QRect rect = desktopRect( desktop, true );
+    if( region.contains( rect )) // this desktop needs painting
+        {
+        painting_desktop = desktop;
+        ScreenPaintData d = data;
+        QRect normal = desktopRect( effects->currentDesktop(), false );
+        d.xTranslate += rect.x(); // - normal.x();
+        d.yTranslate += rect.y(); // - normal.y();
+        d.xScale *= rect.width() / float( normal.width());
+        d.yScale *= rect.height() / float( normal.height());
+        // TODO mask parts that are not visible?
+        effects->paintScreen( mask, region, d );
         }
     }
 

@@ -42,6 +42,7 @@ class DesktopGridEffect
         void setup();
         void finish();
         void paintSlide( int mask, QRegion region, const ScreenPaintData& data );
+        void paintScreenDesktop( int desktop, int mask, QRegion region, ScreenPaintData data );
         void slideDesktopChanged( int old );
         float progress;
         bool activated;
