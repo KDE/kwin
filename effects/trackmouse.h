@@ -26,7 +26,8 @@ class TrackMouseEffect
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
-        virtual void cursorMoved( const QPoint& pos, Qt::MouseButtons buttons );
+        virtual void mouseChanged( const QPoint& pos, const QPoint& old,
+            Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
     private:
         QRect starRect( int num ) const;
         void loadTexture();

@@ -2613,7 +2613,8 @@ void Workspace::checkCursorPos()
     int lastb = last_buttons;
     cursorPos(); // update if needed
     if( last != last_cursor_pos || lastb != last_buttons )
-        static_cast< EffectsHandlerImpl* >( effects )->cursorMoved( cursorPos(), x11ToQtMouseButtons( last_buttons ));
+        static_cast< EffectsHandlerImpl* >( effects )->mouseChanged( cursorPos(), last_cursor_pos,
+            x11ToQtMouseButtons( last_buttons ), x11ToQtKeyboardModifiers( last_buttons ));
     }
 
 } // namespace

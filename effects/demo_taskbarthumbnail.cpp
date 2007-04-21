@@ -101,7 +101,7 @@ QRect TaskbarThumbnailEffect::getThumbnailPosition( EffectWindow* c, int* space 
     return thumb;
     }
 
-void TaskbarThumbnailEffect::cursorMoved( const QPoint& pos, Qt::MouseButtons )
+void TaskbarThumbnailEffect::mouseChanged( const QPoint& pos, const QPoint&, Qt::MouseButtons, Qt::KeyboardModifiers )
     {
     // this should check if the mouse position change actually means something
     // (just like it should be done in prePaintScreen()), but since this effect

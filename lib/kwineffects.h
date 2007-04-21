@@ -100,7 +100,8 @@ class KWIN_EXPORT Effect
         virtual void desktopChanged( int old );
         virtual void windowDamaged( EffectWindow* w, const QRect& r );
         virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
-        virtual void cursorMoved( const QPoint& pos, Qt::MouseButtons buttons );
+        virtual void mouseChanged( const QPoint& pos, const QPoint& old,
+            Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
 
         virtual void tabBoxAdded( int mode );

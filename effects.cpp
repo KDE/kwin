@@ -233,10 +233,11 @@ bool EffectsHandlerImpl::borderActivated( ElectricBorder border )
     return ret;
     }
 
-void EffectsHandlerImpl::cursorMoved( const QPoint& pos, Qt::MouseButtons buttons )
+void EffectsHandlerImpl::mouseChanged( const QPoint& pos, const QPoint& old,
+    Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
     {
     foreach( EffectPair ep, loaded_effects )
-        ep.second->cursorMoved( pos, buttons );
+        ep.second->mouseChanged( pos, old, buttons, modifiers );
     }
 
 bool EffectsHandlerImpl::grabKeyboard( Effect* effect )

@@ -34,7 +34,8 @@ class TaskbarThumbnailEffect
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
         virtual void postPaintScreen();
-        virtual void cursorMoved( const QPoint& pos, Qt::MouseButtons buttons );
+        virtual void mouseChanged( const QPoint& pos, const QPoint& old,
+            Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
 
     protected:
         QRect getThumbnailPosition( EffectWindow* c, int* space ) const;
