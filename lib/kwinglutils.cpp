@@ -153,8 +153,8 @@ GLTexture::GLTexture( int width, int height )
     if( NPOTTextureSupported() || ( isPowerOfTwo( width ) && isPowerOfTwo( height )))
         {
         mTarget = GL_TEXTURE_2D;
-        mScale.setWidth( 1.0 );
-        mScale.setHeight( 1.0 );
+        mScale.setWidth( 1.0 / width);
+        mScale.setHeight( 1.0 / height);
         can_use_mipmaps = true;
 
         glGenTextures( 1, &mTexture );
@@ -652,6 +652,7 @@ bool GLRenderTarget::enable()
         }
 
     glBindFramebuffer(GL_FRAMEBUFFER_EXT, mFramebuffer);
+    mTexture->setDirty();
 
     return true;
     }
