@@ -12,7 +12,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_EXPLOSIONEFFECT_H
 
 // Include with base class for effects.
-#include <effects.h>
+#include <kwineffects.h>
+
+#include <QMap>
 
 namespace KWin
 {
@@ -36,6 +38,8 @@ class ExplosionEffect
 
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
+
+        static bool supported();
 
 
     protected:

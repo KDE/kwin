@@ -11,14 +11,11 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "explosioneffect.h"
 
-#include <scene_opengl.h>
-#include <workspace.h>
-#include <client.h>
-#include <glutils.h>
-#include <deleted.h>
+#include <kwinglutils.h>
 
 #include <QString>
 #include <KStandardDirs>
+#include <kdebug.h>
 
 #include <math.h>
 
@@ -26,11 +23,20 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+KWIN_EFFECT( Explosion, ExplosionEffect );
+KWIN_EFFECT_SUPPORTED( Explosion, ExplosionEffect::supported() );
+
 ExplosionEffect::ExplosionEffect() : Effect()
     {
     mActiveAnimations = 0;
     mValid = true;
     mInited = false;
+    }
+
+    bool ExplosionEffect::supported()
+    {
+    return GLShader::fragmentShaderSupported() &&
+            (effects->compositingType() == OpenGLCompositing);
     }
 
 bool ExplosionEffect::loadData()
@@ -88,7 +94,7 @@ void ExplosionEffect::prePaintScreen( int* mask, QRegion* region, int time )
     if( mActiveAnimations > 0 )
         // We need to mark the screen as transformed. Otherwise the whole screen
         //  won't be repainted, resulting in artefacts
-        *mask |= Scene::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(mask, region, time);
     }
@@ -97,22 +103,21 @@ void ExplosionEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
     {
     if( mWindows.contains( w ))
         {
-        SceneOpenGL::Window* glwin = dynamic_cast< SceneOpenGL::Window* >( w->sceneWindow() );
-        if( mValid && glwin && !mInited )
+        if( mValid && !mInited )
             mValid = loadData();
         if( mValid )
             {
             mWindows[ w  ] += time / 700.0; // complete change in 700ms
             if( mWindows[ w  ] < 1 )
                 {
-                *mask |= Scene::PAINT_WINDOW_TRANSLUCENT | Scene::PAINT_WINDOW_TRANSFORMED;
-                *mask &= ~Scene::PAINT_WINDOW_OPAQUE;
-                w->enablePainting( Scene::Window::PAINT_DISABLED_BY_DELETE );
+                *mask |= PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED;
+                *mask &= ~PAINT_WINDOW_OPAQUE;
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
                 }
             else
                 {
                 mWindows.remove( w );
-                static_cast< Deleted* >( w->window())->unrefWindow();
+                w->unrefWindow();
                 mActiveAnimations--;
                 }
             }
@@ -125,16 +130,15 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
     {
     // Make sure we have OpenGL compositing and the window is vidible and not a
     //  special window
-    SceneOpenGL::Window* glwin = dynamic_cast< SceneOpenGL::Window* >( w->sceneWindow() );
-    bool useshader = ( mValid && glwin && mWindows.contains( w ) );
+    bool useshader = ( mValid && mWindows.contains( w ) );
     if( useshader )
         {
         float maxscaleadd = 1.5f;
         float scale = 1 + maxscaleadd*mWindows[w];
         data.xScale = scale;
         data.yScale = scale;
-        data.xTranslate += int( w->window()->width() / 2 * ( 1 - scale ));
-        data.yTranslate += int( w->window()->height() / 2 * ( 1 - scale ));
+        data.xTranslate += int( w->width() / 2 * ( 1 - scale ));
+        data.yTranslate += int( w->height() / 2 * ( 1 - scale ));
         data.opacity *= 0.99;  // Force blending
         mShader->bind();
         mShader->setUniform("factor", (float)mWindows[w]);
@@ -144,7 +148,7 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         glActiveTexture(GL_TEXTURE5);
         mEndOffsetTex->bind();
         glActiveTexture(GL_TEXTURE0);
-        glwin->setShader(mShader);
+        w->setShader(mShader);
         }
 
     // Call the next effect.
@@ -164,7 +168,7 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 void ExplosionEffect::postPaintScreen()
     {
     if( mActiveAnimations > 0 )
-        workspace()->addRepaintFull();
+        effects->addRepaintFull();
 
     // Call the next effect.
     effects->postPaintScreen();
@@ -172,19 +176,18 @@ void ExplosionEffect::postPaintScreen()
 
 void ExplosionEffect::windowClosed( EffectWindow* c )
     {
-    Client* cc = dynamic_cast< Client* >( c->window());
-    if( cc == NULL || (cc->isOnCurrentDesktop() && !cc->isMinimized()))
+    if( c->isOnCurrentDesktop() && !c->isMinimized())
         {
         mWindows[ c ] = 0; // count up to 1
-        c->window()->addRepaintFull();
-        static_cast< Deleted* >( c->window())->refWindow();
+        c->addRepaintFull();
+        c->refWindow();
         mActiveAnimations++;
         }
     }
 
 void ExplosionEffect::windowDeleted( EffectWindow* c )
     {
-        mWindows.remove( c );
+    mWindows.remove( c );
     }
 
 } // namespace

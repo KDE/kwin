@@ -178,6 +178,7 @@ class EffectWindowImpl : public EffectWindow
         virtual QVector<Vertex>& vertices();
         virtual void requestVertexGrid(int maxquadsize);
         virtual void markVerticesDirty();
+        virtual void setShader(GLShader* shader);
 
         const Toplevel* window() const;
         Toplevel* window();

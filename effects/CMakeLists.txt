@@ -39,6 +39,7 @@ SET(kwin4_effect_tests_sources
 
 if(OPENGL_FOUND)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
+        explosioneffect.cpp
         magnifier.cpp
         shadow.cpp
         trackmouse.cpp
@@ -50,6 +51,7 @@ if(OPENGL_FOUND)
         )
 
     install( FILES
+        explosion.desktop
         magnifier.desktop
         shadow.desktop
         trackmouse.desktop

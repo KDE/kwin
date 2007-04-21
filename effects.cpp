@@ -1017,6 +1017,13 @@ void EffectWindowImpl::markVerticesDirty()
     abort(); // TODO
     }
 
+    void EffectWindowImpl::setShader(GLShader* shader)
+    {
+    if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
+        return w->setShader(shader);
+    abort(); // TODO
+    }
+
 EffectWindow* effectWindow( Toplevel* w )
     {
     EffectWindowImpl* ret = w->effectWindow();

@@ -37,6 +37,7 @@ class EffectWindowGroup;
 class Effect;
 class Vertex;
 class GLRenderTarget;
+class GLShader;
 
 typedef QPair< QString, Effect* > EffectPair;
 typedef QPair< Effect*, Window > InputWindowPair;
@@ -322,6 +323,7 @@ class KWIN_EXPORT EffectWindow
         // Marks vertices of the window as dirty. Call this if you change
         //  position of the vertices
         virtual void markVerticesDirty() = 0;
+        virtual void setShader(GLShader* shader) = 0;
     };
 
 class KWIN_EXPORT EffectWindowGroup
