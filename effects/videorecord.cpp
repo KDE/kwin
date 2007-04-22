@@ -64,7 +64,8 @@ void VideoRecordEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
     {
     effects->paintScreen( mask, region, data );
     if( client != NULL )
-        capture_region = region;
+        capture_region = ( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED ))
+            ? QRect( 0, 0, displayWidth(), displayHeight()) : region;
     }
 
 void VideoRecordEffect::postPaintScreen()
@@ -75,6 +76,7 @@ void VideoRecordEffect::postPaintScreen()
 #if 1
         if( CapturyProcessRegionStart( client ) == CAPTURY_SUCCESS )
             {
+            capture_region &= QRect( 0, 0, displayWidth(), displayHeight()); // limit to screen
             foreach( QRect r, capture_region.rects())
                 {
                 int gly = displayHeight() - r.y() - r.height(); // opengl coords
