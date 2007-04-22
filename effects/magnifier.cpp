@@ -108,17 +108,16 @@ void MagnifierEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
-QRect MagnifierEffect::magnifierArea() const
+QRect MagnifierEffect::magnifierArea( QPoint pos ) const
     {
-    QPoint cursor = cursorPos();
-    return QRect( cursor.x() - magnifier_size.width() / 2, cursor.y() - magnifier_size.height() / 2,
+    return QRect( pos.x() - magnifier_size.width() / 2, pos.y() - magnifier_size.height() / 2,
         magnifier_size.width(), magnifier_size.height());
     }
 
 void MagnifierEffect::zoomIn()
     {
     target_zoom *= 1.2;
-    effects->addRepaint( magnifierArea());
+    effects->addRepaint( magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
     }
 
 void MagnifierEffect::zoomOut()
@@ -126,7 +125,7 @@ void MagnifierEffect::zoomOut()
     target_zoom /= 1.2;
     if( target_zoom < 1 )
         target_zoom = 1;
-    effects->addRepaint( magnifierArea());
+    effects->addRepaint( magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
     }
 
 void MagnifierEffect::toggle()
@@ -135,13 +134,13 @@ void MagnifierEffect::toggle()
         target_zoom = 2;
     else
         target_zoom = 1;
-    effects->addRepaint( magnifierArea());
+    effects->addRepaint( magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
     }
 
 void MagnifierEffect::mouseChanged( const QPoint& pos, const QPoint& old, Qt::MouseButtons, Qt::KeyboardModifiers )
     {
     if( pos != old && zoom != 1 )
-        effects->addRepaint( magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
+        effects->addRepaint( magnifierArea( old ).adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
     }
 
 } // namespace
