@@ -18,7 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qpair.h>
 #include <QRect>
 #include <QRegion>
-#include <QString>
+
 #include <QVector>
 #include <QList>
 #include <QHash>

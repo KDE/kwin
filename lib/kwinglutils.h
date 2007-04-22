@@ -20,7 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #endif
 
 #include <QPixmap>
-#include <QString>
+
 #include <QImage>
 #include <QSize>
 

@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_RULES_H
 #define KWIN_RULES_H
 
-#include <QString>
+
 #include <netwm_def.h>
 #include <QRect>
 #include <kconfiggroup.h>

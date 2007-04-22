@@ -19,7 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QImage>
 #include <QHash>
 #include <QFile>
-#include <QString>
+
 
 
 #define MAKE_GL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )

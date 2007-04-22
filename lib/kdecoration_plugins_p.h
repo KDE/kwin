@@ -30,7 +30,7 @@ DEALINGS IN THE SOFTWARE.
 // This header file is internal. I mean it.
 // 
 
-#include <QString>
+
 #include <QWidget>
 #include <ksharedconfig.h>
 

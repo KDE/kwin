@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kwinglutils.h>
 
-#include <QString>
+
 #include <KStandardDirs>
 #include <kdebug.h>
 
