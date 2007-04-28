@@ -39,6 +39,7 @@ SET(kwin4_effect_tests_sources
 
 if(OPENGL_FOUND)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
+        blur.cpp
         explosioneffect.cpp
         magnifier.cpp
         mousemark.cpp
@@ -52,6 +53,7 @@ if(OPENGL_FOUND)
         )
 
     install( FILES
+        blur.desktop
         explosion.desktop
         magnifier.desktop
         mousemark.desktop
@@ -70,6 +72,10 @@ if(OPENGL_FOUND)
         data/explosion-end.png
         data/liquid.frag
         data/liquid.vert
+        data/blur.frag
+        data/blur.vert
+        data/blur-render.frag
+        data/blur-render.vert
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 endif(OPENGL_FOUND)
 
