@@ -132,6 +132,7 @@ class KWIN_EXPORT GLShader
     {
     public:
         GLShader(const QString& vertexfile, const QString& fragmentfile);
+        ~GLShader();
 
         bool isValid() const  { return mValid; }
         void bind();

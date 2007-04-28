@@ -28,12 +28,23 @@ KWIN_EFFECT_SUPPORTED( Explosion, ExplosionEffect::supported() );
 
 ExplosionEffect::ExplosionEffect() : Effect()
     {
+    mShader = 0;
+    mStartOffsetTex = 0;
+    mEndOffsetTex = 0;
+
     mActiveAnimations = 0;
     mValid = true;
     mInited = false;
     }
 
-    bool ExplosionEffect::supported()
+ExplosionEffect::~ExplosionEffect()
+    {
+    delete mShader;
+    delete mStartOffsetTex;
+    delete mEndOffsetTex;
+    }
+
+bool ExplosionEffect::supported()
     {
     return GLShader::fragmentShaderSupported() &&
             (effects->compositingType() == OpenGLCompositing);

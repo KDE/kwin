@@ -495,9 +495,24 @@ GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
     {
     mValid = false;
     mVariableLocations = 0;
+    mProgram = 0;
 
     loadFromFiles(vertexfile, fragmentfile);
     }
+
+GLShader::~GLShader()
+{
+    if(mVariableLocations)
+    {
+        mVariableLocations->clear();
+        delete mVariableLocations;
+    }
+
+    if(mProgram)
+    {
+        glDeleteProgram(mProgram);
+    }
+}
 
 bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentfile)
     {

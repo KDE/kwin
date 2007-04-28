@@ -28,6 +28,7 @@ class LiquidEffect : public Effect
     {
     public:
         LiquidEffect();
+        ~LiquidEffect();
 
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void postPaintScreen();

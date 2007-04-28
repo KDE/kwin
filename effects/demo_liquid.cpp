@@ -29,8 +29,18 @@ KWIN_EFFECT_SUPPORTED( Demo_Liquid, LiquidEffect::supported() );
 
 LiquidEffect::LiquidEffect() : Effect()
     {
+    mTexture = 0;
+    mRenderTarget = 0;
+    mShader = 0;
+
     mTime = 0.0f;
     mValid = loadData();
+    }
+LiquidEffect::~LiquidEffect()
+    {
+    delete mTexture;
+    delete mRenderTarget;
+    delete mShader;
     }
 
 bool LiquidEffect::loadData()
