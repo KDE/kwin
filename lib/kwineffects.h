@@ -260,6 +260,7 @@ class KWIN_EXPORT EffectWindow
 
         virtual void enablePainting( int reason ) = 0;
         virtual void disablePainting( int reason ) = 0;
+        virtual bool isPaintingEnabled() = 0;
         virtual void addRepaint( const QRect& r ) = 0;
         virtual void addRepaint( int x, int y, int w, int h ) = 0;
         virtual void addRepaintFull() = 0;
