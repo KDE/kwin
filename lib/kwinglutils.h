@@ -99,6 +99,7 @@ class KWIN_EXPORT GLTexture
         void setTexture( GLuint texture );
         void setTarget( GLenum target );
         void setFilter( GLenum filter );
+        void setWrapMode( GLenum mode );
         virtual void setDirty();
 
         static void initStatic();

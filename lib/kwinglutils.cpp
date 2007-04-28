@@ -401,6 +401,14 @@ void GLTexture::setFilter( GLenum filter )
     mFilter = filter;
     }
 
+void GLTexture::setWrapMode( GLenum mode )
+    {
+    bind();
+    glTexParameteri( mTarget, GL_TEXTURE_WRAP_S, mode );
+    glTexParameteri( mTarget, GL_TEXTURE_WRAP_T, mode );
+    unbind();
+    }
+
 void GLTexture::setDirty()
     {
     has_valid_mipmaps = false;

@@ -38,6 +38,7 @@ bool LiquidEffect::loadData()
     // Create texture and render target
     mTexture = new GLTexture(displayWidth(), displayHeight());
     mTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
+    mTexture->setWrapMode(GL_CLAMP);
 
     mRenderTarget = new GLRenderTarget(mTexture);
     if( !mRenderTarget->valid() )
