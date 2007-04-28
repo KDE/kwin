@@ -35,9 +35,15 @@ TestFBOEffect::TestFBOEffect() : Effect()
     mValid = mRenderTarget->valid();
     }
 
+TestFBOEffect::~TestFBOEffect()
+    {
+    delete mTexture;
+    delete mRenderTarget;
+    }
+
 bool TestFBOEffect::supported()
     {
-    return hasGLExtension("GL_EXT_framebuffer_object") &&
+    return GLRenderTarget::supported() &&
             (effects->compositingType() == OpenGLCompositing);
     }
 
@@ -80,12 +86,16 @@ void TestFBOEffect::postPaintScreen()
         glScalef(0.2, 0.2, 0.2);
         glTranslatef(-displayWidth()/2.0f, -displayHeight()/2.0f, 0.0f);
 
+        glEnable(GL_BLEND);
+        glColor4f(1.0, 1.0, 1.0, 0.8);
         glBegin(GL_QUADS);
             glTexCoord2f(0.0, 0.0); glVertex2f(0.0, displayHeight());
             glTexCoord2f(1.0, 0.0); glVertex2f(displayWidth(), displayHeight());
             glTexCoord2f(1.0, 1.0); glVertex2f(displayWidth(), 0.0);
             glTexCoord2f(0.0, 1.0); glVertex2f(0.0, 0.0);
         glEnd();
+        glColor4f(1.0, 1.0, 1.0, 1.0);
+        glDisable(GL_BLEND);
 
         // Reset matrix and unbind texture
         glLoadIdentity();

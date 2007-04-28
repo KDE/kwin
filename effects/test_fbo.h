@@ -29,6 +29,7 @@ class TestFBOEffect : public Effect
     {
     public:
         TestFBOEffect();
+        ~TestFBOEffect();
 
         virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void postPaintScreen();

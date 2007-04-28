@@ -72,6 +72,7 @@ void initGL()
 
     GLTexture::initStatic();
     GLShader::initStatic();
+    GLRenderTarget::initStatic();
 #else
     glVersion = MAKE_GL_VERSION( 0, 0, 0 );
 #endif
@@ -715,6 +716,14 @@ bool GLShader::setAttribute(const QString& name, float value)
 
 
 /***  GLRenderTarget  ***/
+bool GLRenderTarget::mSupported = false;
+
+void GLRenderTarget::initStatic()
+    {
+    mSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D &&
+            GLTexture::NPOTTextureSupported();
+    }
+
 GLRenderTarget::GLRenderTarget(GLTexture* color)
     {
     // Reset variables
@@ -723,11 +732,12 @@ GLRenderTarget::GLRenderTarget(GLTexture* color)
     mTexture = color;
 
     // Make sure FBO is supported
-    if(hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D &&
-            mTexture && !mTexture->isNull())
+    if(mSupported && mTexture && !mTexture->isNull())
         {
         initFBO();
         }
+    else
+        kError(1212) << k_funcinfo << "Render targets aren't supported!" << endl;
     }
 
 GLRenderTarget::~GLRenderTarget()

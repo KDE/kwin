@@ -78,7 +78,7 @@ bool LiquidEffect::loadData()
 
 bool LiquidEffect::supported()
     {
-    return hasGLExtension("GL_EXT_framebuffer_object") &&
+    return GLRenderTarget::supported() &&
             GLShader::fragmentShaderSupported() &&
             (effects->compositingType() == OpenGLCompositing);
     }

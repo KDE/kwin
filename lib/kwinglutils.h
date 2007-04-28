@@ -195,12 +195,17 @@ class KWIN_EXPORT GLRenderTarget
 
         bool valid() const  { return mValid; }
 
+        static void initStatic();
+        static bool supported()  { return mSupported; }
+
 
     protected:
         void initFBO();
 
 
     private:
+        static bool mSupported;
+
         GLTexture* mTexture;
         bool mValid;
 
