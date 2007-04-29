@@ -188,6 +188,8 @@ Effects framework TODO
     - maybe there should be PAINT_WINDOW_TOP (_LAST or whatever) that'd make it painted always
         on top of everything
 
+% post calls are probably not necessary by now (http://lists.kde.org/?t=117770818100003&r=1&w=2)
+
 
 Effects TODO
 ===============================
