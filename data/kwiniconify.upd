@@ -1,8 +1,0 @@
-Id=iconifyupd3.1
-File=kwin.eventsrc
-Group=iconify,minimize
-AllKeys
-Group=deiconify,unminimize
-AllKeys
-RemoveGroup=iconify
-RemoveGroup=deiconify
