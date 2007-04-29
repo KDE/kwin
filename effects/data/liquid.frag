@@ -1,6 +1,6 @@
 uniform sampler2D sceneTex;
-uniform float displayWidth;
-uniform float displayHeight;
+uniform float textureWidth;
+uniform float textureHeight;
 uniform float time;
 
 varying vec2 pos;
@@ -12,7 +12,7 @@ varying vec2 pos;
 // Converts pixel coordinates to texture coordinates
 vec2 pix2tex(vec2 pix)
 {
-    return vec2(pix.x / displayWidth, 1.0 - pix.y / displayHeight);
+    return vec2(pix.x / textureWidth, 1.0 - pix.y / textureHeight);
 }
 
 float wave(vec2 pos, vec2 wave_dir, float wave_length, float wave_speed)

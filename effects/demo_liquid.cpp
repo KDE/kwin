@@ -45,8 +45,19 @@ LiquidEffect::~LiquidEffect()
 
 bool LiquidEffect::loadData()
     {
+    // If NPOT textures are not supported, use nearest power-of-two sized
+    //  texture. It wastes memory, but it's possible to support systems without
+    //  NPOT textures that way
+    int texw = displayWidth();
+    int texh = displayHeight();
+    if( !GLTexture::NPOTTextureSupported() )
+    {
+        kWarning( 1212 ) << k_funcinfo << "NPOT textures not supported, wasting some memory" << endl;
+        texw = nearestPowerOfTwo(texw);
+        texh = nearestPowerOfTwo(texh);
+    }
     // Create texture and render target
-    mTexture = new GLTexture(displayWidth(), displayHeight());
+    mTexture = new GLTexture(texw, texh);
     mTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     mTexture->setWrapMode(GL_CLAMP);
 
@@ -69,8 +80,8 @@ bool LiquidEffect::loadData()
     }
     mShader->bind();
     mShader->setUniform("sceneTex", 0);
-    mShader->setUniform("displayWidth", (float)displayWidth());
-    mShader->setUniform("displayHeight", (float)displayHeight());
+    mShader->setUniform("textureWidth", (float)texw);
+    mShader->setUniform("textureHeight", (float)texh);
     mShader->unbind();
 
     return true;
@@ -78,7 +89,7 @@ bool LiquidEffect::loadData()
 
 bool LiquidEffect::supported()
     {
-    return GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
+    return GLRenderTarget::supported() &&
             GLShader::fragmentShaderSupported() &&
             (effects->compositingType() == OpenGLCompositing);
     }
