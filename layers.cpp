@@ -120,6 +120,8 @@ void Workspace::updateStackingOrder( bool propagate_new_clients )
         {
         propagateClients( propagate_new_clients );
         addRepaintFull();
+        if( active_client )
+            active_client->updateMouseGrab();
         }
     }
 

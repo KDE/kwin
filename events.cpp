@@ -704,9 +704,6 @@ bool Client::windowEvent( XEvent* e )
                 workspace()->updateColormap();
             }
             break;
-        case VisibilityNotify:
-            visibilityNotifyEvent( &e->xvisibility );
-            break;
         default:
             if( e->xany.window == window())
                 {
@@ -1084,18 +1081,13 @@ void Client::ungrabButton( int modifier )
  */
 void Client::updateMouseGrab()
     {
-    if( workspace()->globalShortcutsDisabled())
-        {
-        XUngrabButton( display(), AnyButton, AnyModifier, wrapperId());
-        // keep grab for the simple click without modifiers if needed
-        if( !( !options->clickRaise || not_obscured ))
-            grabButton( None );
-        return;
-        }
     if( isActive() && !workspace()->forcedGlobalMouseGrab()) // see Workspace::establishTabBoxGrab()
         {
         // remove the grab for no modifiers only if the window
         // is unobscured or if the user doesn't want click raise
+        // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
+        // the most recently raised window)
+        bool not_obscured = workspace()->topClientOnDesktop( workspace()->currentDesktop(), true ) == this;
         if( !options->clickRaise || not_obscured )
             ungrabButton( None );
         else
@@ -1506,17 +1498,6 @@ void Client::focusOutEvent( XFocusOutEvent* e )
         return;
     if( !check_follows_focusin( this ))
         setActive( false );
-    }
-
-void Client::visibilityNotifyEvent( XVisibilityEvent * e)
-    {
-    if( e->window != frameId())
-        return; // care only about the whole frame
-    bool new_not_obscured = e->state == VisibilityUnobscured;
-    if( not_obscured == new_not_obscured )
-        return;
-    not_obscured = new_not_obscured;
-    updateMouseGrab();
     }
 
 // performs _NET_WM_MOVERESIZE

@@ -287,7 +287,6 @@ class Client
         void clientMessageEvent( XClientMessageEvent* e );
         void enterNotifyEvent( XCrossingEvent* e );
         void leaveNotifyEvent( XCrossingEvent* e );
-        void visibilityNotifyEvent( XVisibilityEvent* e );
         void focusInEvent( XFocusInEvent* e );
         void focusOutEvent( XFocusOutEvent* e );
 
@@ -423,7 +422,6 @@ class Client
         uint modal : 1; // NET::Modal
         uint noborder : 1;
         uint user_noborder : 1;
-        uint not_obscured : 1;
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         uint demands_attention : 1;
