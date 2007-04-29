@@ -149,8 +149,7 @@ class Extensions
     public:
         static void init();
         static bool shapeAvailable() { return shape_version > 0; }
-        static int shapeMajor() { return shape_version / 16; }
-        static int shapeMinor() { return shape_version % 16; }
+        static int shapeVersion() { return shape_version; } // as 16*major+minor, i.e. two hex digits
         static int shapeNotifyEvent();
         static bool randrAvailable() { return has_randr; }
         static int randrNotifyEvent();
@@ -161,7 +160,7 @@ class Extensions
         static bool fixesAvailable() { return has_fixes; }
         static bool hasShape( Window w );
     private:
-        static int shape_version; // as 16*major+minor
+        static int shape_version;
         static int shape_event_base;
         static bool has_randr;
         static int randr_event_base;
@@ -171,6 +170,11 @@ class Extensions
         static bool has_composite_overlay;
         static bool has_fixes;
     };
+
+// compile with XShape older than 1.0
+#ifndef ShapeInput
+const int ShapeInput = 2;
+#endif
 
 class Motif 
     {

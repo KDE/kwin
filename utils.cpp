@@ -63,7 +63,7 @@ void Extensions::init()
         {
         int major, minor;
         if( XShapeQueryVersion( display(), &major, &minor ))
-            shape_version = major * 16 + minor;
+            shape_version = major * 0x10 + minor;
         }
 #ifdef HAVE_XRANDR
     has_randr = XRRQueryExtension( display(), &randr_event_base, &dummy );
