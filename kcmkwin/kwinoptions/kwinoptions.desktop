@@ -1,0 +1,23 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=kcmkwm
+Type=Service
+ServiceTypes=KCModule
+Exec=kcmshell kwinoptions
+DocPath=kcontrol/windowmanagement/index.html
+
+X-KDE-Library=kwinoptions
+X-KDE-FactoryName=kwinoptions
+X-KDE-ParentApp=kcontrol
+
+Name=Window Behavior
+Name[fr]=Comportement des fenêtres
+Name[x-test]=xxWindow Behaviorxx
+
+Comment=Configure the window behavior
+Comment[fr]=Configuration du comportement des fenêtres
+Comment[x-test]=xxConfigure the window behaviorxx
+
+Keywords=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick
+Keywords[fr]=focus,gestion du focus,fenêtre,placement des fenêtres,comportement des fenêtres,animation,fenêtres,barre de titre,double clic,souris,boutons de la souris,dessus,dessous,raise,auto raise
+Keywords[x-test]=xxfocus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx

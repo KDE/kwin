@@ -1,0 +1,5 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Web
+Name[x-test]=xxWebxx
+X-KDE-Library=kwin3_web

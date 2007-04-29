@@ -1,0 +1,4 @@
+Id=kde3.2
+File=kwinrc
+Options=overwrite
+Script=kwin3_plugin.pl,perl

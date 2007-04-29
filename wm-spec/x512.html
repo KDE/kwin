@@ -1,0 +1,763 @@
+<HTML
+><HEAD
+><TITLE
+>Change history</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.72
+"><LINK
+REL="HOME"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Contributors"
+HREF="x489.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x489.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+>&nbsp;</TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN512"
+>11. Change history</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN514"
+>11.1. Changes since 1.1</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+> Changed WM_CLIENT_NAME(STRING) from suggested to required for _NET_WM_PID.
+ 			</P
+></LI
+><LI
+><P
+> Specification and sample code for the content of WM_CLIENT_NAME(STRING).
+ 			</P
+></LI
+><LI
+><P
+> Added _NET_WM_WINDOW_TYPE_SPLASH, _NET_WM_WINDOW_TYPE_UTILITY.
+ 			</P
+></LI
+><LI
+><P
+> Added _NET_WM_STATE_FULLSCREEN.
+ 			</P
+></LI
+><LI
+><P
+> Added _NET_WM_ALLOWED_ACTIONS.
+ 			</P
+></LI
+><LI
+><P
+> Added _NET_WM_STATE_HIDDEN and clarified purpose of
+ _NET_WM_STATE_SKIP_PAGER and _NET_WM_STATE_SKIP_TASKBAR. Changed
+ section on virtual desktop implementation to suggest ICCCM compliance
+ regarding IconicState, using _NET_WM_STATE_HIDDEN to avoid confusion.
+ Added implementation note for pagers on when to display a window.
+ 			</P
+></LI
+><LI
+><P
+> Added button field and new directions for keyboard-initiated actions
+ to the _NET_WM_MOVERESIZE message. 
+ 			</P
+></LI
+><LI
+><P
+> Added advice on removing _NET_WM_STATE and _NET_WM_DESKTOP when a window 
+ is withdrawn.
+ 			</P
+></LI
+><LI
+><P
+> Added _NET_DESKTOP_LAYOUT to allow a Pager to specify inter-desktop geometry.
+ 			</P
+></LI
+><LI
+><P
+> Added _NET_SHOWING_DESKTOP. 
+ 			</P
+></LI
+><LI
+><P
+> Added _NET_WM_STATE_FLOATING.
+ 			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN539"
+>11.2. Changes since 1.0</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Fix doctype, add author info, update data.
+			</P
+></LI
+><LI
+><P
+>Change specification description wording to be more inclusive, and to reflect the joint nature of the specification.
+			</P
+></LI
+><LI
+><P
+>Fix miscellaneous typographical, grammar and spelling errors.
+			</P
+></LI
+><LI
+><P
+>Clarified _NET_SUPPORTED to include ALL atoms, not just the property names.
+			</P
+></LI
+><LI
+><P
+>Various corrections to use of MUST and SHOULD.
+			</P
+></LI
+><LI
+><P
+>Fix problem in _NET_WM_ICON where 'bytes' should have been 'cardinals'
+			</P
+></LI
+><LI
+><P
+>Replaced ISO-8559-1 characters with entities.
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN556"
+>11.3. Changes since 1.0pre5</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Change history moved to end.
+			</P
+></LI
+><LI
+><P
+>UTF-8 Reference updated.
+			</P
+></LI
+><LI
+><P
+>Window Gravity information updated.
+			</P
+></LI
+><LI
+><P
+>Copyright Added.
+			</P
+></LI
+><LI
+><P
+>Minor typo corrections.
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN569"
+>11.4. Changes since 1.0pre4</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Clarified the interpretation of client-provided geometries on large desktops.
+			</P
+></LI
+><LI
+><P
+>Added more explanation for _NET_DESKTOP_NAMES. 
+			</P
+></LI
+><LI
+><P
+>Added _NET_WM_ICON_NAME and _NET_WM_VISIBLE_ICON_NAME.
+			</P
+></LI
+><LI
+><P
+>Tried to improve the wording of _NET_WM_STRUT explanation.
+			</P
+></LI
+><LI
+><P
+>Changed _NET_WORKAREA to an array of viewport-relative geometries.
+			</P
+></LI
+><LI
+><P
+>Updated list of <SPAN
+CLASS="QUOTE"
+>"dependent"</SPAN
+> properties for _NET_NUMBER_OF_DESKTOPS
+to include _NET_WORKAREA and _NET_DESKTOP_VIEWPORT.
+			</P
+></LI
+><LI
+><P
+>Tidied formatting of all client messages.
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN587"
+>11.5. Changes since 1.0pre3</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Added information about common non-ICCCM features.
+			</P
+></LI
+><LI
+><P
+>Added explanation of sending messages to the root window.
+			</P
+></LI
+><LI
+><P
+>Removed XA_ prefix from type names.
+			</P
+></LI
+><LI
+><P
+>Clarified that <SPAN
+CLASS="QUOTE"
+>"mapping order"</SPAN
+> refers to initial mapping 
+and specify the directions of both orders.
+			</P
+></LI
+><LI
+><P
+>Clarified that desktops have a common size specified by _NET_DESKTOP_GEOMETRY.
+			</P
+></LI
+><LI
+><P
+>Rewrote explanation of _NET_DESKTOP_VIEWPORT.
+			</P
+></LI
+><LI
+><P
+>Tidied formatting of _NET_CURRENT_DESKTOP.
+			</P
+></LI
+><LI
+><P
+>Replaced <SPAN
+CLASS="QUOTE"
+>"window handle"</SPAN
+> by <SPAN
+CLASS="QUOTE"
+>"window ID"</SPAN
+>.
+			</P
+></LI
+><LI
+><P
+>Tidied formatting of _NET_WORKAREA.
+			</P
+></LI
+><LI
+><P
+>Rewrote the motivation for _NET_VIRTUAL_ROOTS.
+			</P
+></LI
+><LI
+><P
+>Added advice on Pointer grabs to _NET_WM_MOVERESIZE.
+			</P
+></LI
+><LI
+><P
+>Fixed typos in _NET_WM_STATE.
+			</P
+></LI
+><LI
+><P
+>Added _NET_WM_STATE_SKIP_PAGER.
+			</P
+></LI
+><LI
+><P
+>Tidied formatting of _NET_WM_STRUT.
+			</P
+></LI
+><LI
+><P
+>Tidied formatting of _NET_WM_ICON_GEOMETRY.
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN623"
+>11.6. Changes since 1.0pre2</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>_NET_SET_NUMBER_OF_DESKTOPS -&#62; _NET_NUMBER_OF_DESKTOPS for consistency.
+			</P
+></LI
+><LI
+><P
+>_NET_WM_VISIBLE_NAME_STRING -&#62; _NET_WM_VISIBLE_NAME for consistency.
+			</P
+></LI
+><LI
+><P
+>_NET_WM_STATE: added explanation of permitted extensions. Added explanation of 
+being set / not set.
+			</P
+></LI
+><LI
+><P
+>Spellchecked, corrected various typos.
+			</P
+></LI
+><LI
+><P
+>UTF8 -&#62; UTF-8 for consistency.
+			</P
+></LI
+><LI
+><P
+>added references to the ICCCM an UTF-8 (incomplete).
+			</P
+></LI
+><LI
+><P
+>added data and event formats where missing.
+			</P
+></LI
+><LI
+><P
+>clarified _NET_SUPPORTING_WM_CHECK.
+			</P
+></LI
+><LI
+><P
+>fixed formatting of _NET_CLOSE_WINDOW message.
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN644"
+>11.7. Changes since 1.0pre1</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Removed implementation note concerning Gnome's (potential) file manager behaviour.
+			</P
+></LI
+><LI
+><P
+>The Window Movement section of the implementation notes has been revised.
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN651"
+>11.8. Changes since 1.9f</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Revised revision number for first accepted release 1.9XX -&#62; 1.0preXX.
+			</P
+></LI
+><LI
+><P
+>Prerequisites for adoption of this specification added.
+			</P
+></LI
+><LI
+><P
+>Tidied formatting of _NET_CURRENT_DESKTOP for consistency.
+			</P
+></LI
+><LI
+><P
+>Tidied formatting of _NET_ACTIVE_WINDOW  for consistency. Removed doubled text.
+			</P
+></LI
+><LI
+><P
+>Tidied formatting of _NET_WM_DESKTOP for consistency.
+			</P
+></LI
+><LI
+><P
+>Killing Hung Processes implementation note added. _NET_WM_PID and _NET_WM_PING now link to this.
+			</P
+></LI
+><LI
+><P
+>Clarified x_root and y_root meaning for _NET_WM_MOVERESIZE.
+			</P
+></LI
+><LI
+><P
+>Added contributor list.
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN670"
+>11.9. Changes since 1.9e</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Added _NET_WM_VISIBLE_NAME_STRING
+			</P
+></LI
+><LI
+><P
+>Removed ambiguity from _NET_NUMBER_OF_DESKTOPS and  _NET_DESKTOP_NAMES in combination.
+			</P
+></LI
+><LI
+><P
+>Set _NET_WM_MOVERESIZE format to 32 for consistency.
+			</P
+></LI
+><LI
+><P
+>Removed _NET_PROPERTIES.
+			</P
+></LI
+><LI
+><P
+>Removed comment from _NET_WM_MOVERESIZE.
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN683"
+>11.10. Changes since 1.9d</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Added _NET_VIRTUAL_ROOTS
+			</P
+></LI
+><LI
+><P
+>Added note about ICCCM compliant window moves.
+			</P
+></LI
+><LI
+><P
+>Added _NET_WM_HANDLED_ICONS
+			</P
+></LI
+><LI
+><P
+>Added _NET_SUPPORTING_WM_CHECK
+			</P
+></LI
+><LI
+><P
+>Removed degrees of activation
+			</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN696"
+>11.11. Changes since 1.9c</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Removed packaging of hints into 2 X properties.  Jim Gettys points out that the
+performance gains of fewer round trips can be better achieved using Xlib
+routines.
+				</P
+></LI
+><LI
+><P
+>Clarified that _NET_DESKTOP_VIEWPORT is in pixels
+				</P
+></LI
+><LI
+><P
+>_NET_DESKTOP_VIEWPORT is now an array, one for each desktop, to allow for
+different active viewports on different desktops
+				</P
+></LI
+><LI
+><P
+>_NET_WM_STRUT now only applies on desktops on which the client is visible
+				</P
+></LI
+><LI
+><P
+>Introduced RFC 2119 language, and attempted to clarify the roles of the Window
+Manager, Pagers and Applications
+				</P
+></LI
+><LI
+><P
+>Added _NET_WM_NAME
+				</P
+></LI
+><LI
+><P
+>_NET_DESKTOP_NAMES now in UTF8
+				</P
+></LI
+><LI
+><P
+>Desktops now start from 0
+				</P
+></LI
+><LI
+><P
+>Added _NET_WM_PID
+				</P
+></LI
+><LI
+><P
+>Added _NET_WM_PING protocol
+				</P
+></LI
+><LI
+><P
+>Added _NET_WM_STATE_SKIP_TASKBAR
+				</P
+></LI
+></UL
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN721"
+>11.12. Changes since 1.9b</A
+></H2
+><P
+></P
+><UL
+><LI
+><P
+>Removed _NET_NUMBER_OF_DESKTOPS client message, as it overlaps unnecessarily with _NET_{INSERT/DELETE}_DESKTOP.</P
+></LI
+><LI
+><P
+>Replaced _NET_WM_LAYER and _NET_WM_HINTS with _NET_WM_WINDOW_TYPE functional hint.</P
+></LI
+><LI
+><P
+>Changed _NET_WM_STATE to a list of atoms, for extensibility.</P
+></LI
+><LI
+><P
+>Expanded description of _NET_WORKAREA and _NET_WM_STRUT.</P
+></LI
+><LI
+><P
+>Removed _NET_WM_SIZEMOVE_NOTIFY protocol. </P
+></LI
+><LI
+><P
+>Added degrees of activation to _NET_ACTIVE_WINDOW client message</P
+></LI
+><LI
+><P
+>Added _NET_WM_ICON</P
+></LI
+><LI
+><P
+>My comments are in [[ ]].  Comments from Marko's draft are in [[MM: ]]</P
+></LI
+></UL
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x489.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Contributors</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>&nbsp;</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

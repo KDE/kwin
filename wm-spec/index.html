@@ -1,0 +1,243 @@
+<HTML
+><HEAD
+><TITLE
+>Extended Window Manager Hints</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.72
+"><LINK
+REL="NEXT"
+TITLE="Non-ICCCM features"
+HREF="x24.html"></HEAD
+><BODY
+CLASS="ARTICLE"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="ARTICLE"
+><DIV
+CLASS="TITLEPAGE"
+><H1
+CLASS="TITLE"
+><A
+NAME="AEN2"
+>Extended Window Manager Hints</A
+></H1
+><DIV
+CLASS="AUTHORGROUP"
+><A
+NAME="AEN3"
+></A
+><H3
+CLASS="CORPAUTHOR"
+>      <A
+HREF="http://www.freedesktop.org"
+TARGET="_top"
+>X Desktop Group</A
+>
+      </H3
+></DIV
+><SPAN
+CLASS="RELEASEINFO"
+>DRAFT version 1.2<BR></SPAN
+><SPAN
+CLASS="DATE"
+>August 19, 2002<BR></SPAN
+><HR></DIV
+><DIV
+CLASS="TOC"
+><DL
+><DT
+><B
+>Table of Contents</B
+></DT
+><DT
+>1. <A
+HREF="index.html#AEN9"
+>Introduction</A
+></DT
+><DT
+>2. <A
+HREF="x24.html"
+>Non-ICCCM features</A
+></DT
+><DT
+>3. <A
+HREF="x107.html"
+>Root Window Properties (+Related Messages)</A
+></DT
+><DT
+>4. <A
+HREF="x208.html"
+>Other Root Window Messages</A
+></DT
+><DT
+>5. <A
+HREF="x225.html"
+>Application Window Properties</A
+></DT
+><DT
+>6. <A
+HREF="x340.html"
+>Window Manager Protocols</A
+></DT
+><DT
+>7. <A
+HREF="x351.html"
+>Implementation notes</A
+></DT
+><DT
+>8. <A
+HREF="x479.html"
+>References</A
+></DT
+><DT
+>9. <A
+HREF="x483.html"
+>Copyright</A
+></DT
+><DT
+>10. <A
+HREF="x489.html"
+>Contributors</A
+></DT
+><DT
+>11. <A
+HREF="x512.html"
+>Change history</A
+></DT
+></DL
+></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN9"
+>1. Introduction</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN11"
+>1.1. Version</A
+></H2
+><P
+>This is DRAFT version 1.2 of the Extended Window Manager Hints (EWMH) spec, updated August 19, 2002.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN14"
+>1.2. What is this spec?</A
+></H2
+><P
+>This spec defines interactions between window managers, applications,
+and the utilities that form part of a desktop environment.  It builds
+on the ICCCM [2], which defines WM (window manager) interactions at a
+lower level. The ICCCM does not provide ways to implement many
+features that modern desktop users expect. The GNOME and KDE desktop
+projects originally developed their own extensions to the ICCCM to
+support these features; this spec replaces those custom extensions
+with a standardized set of ICCCM additions that any desktop
+environment can adopt.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN17"
+>1.3. Language used in this specification</A
+></H2
+><P
+>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be
+interpreted as described in RFC 2119.  
+		</P
+><P
+>The key words "Window Manager" refer to a window manager which is adopting this
+specification.  "Pager" refers to desktop utility applications, including
+pagers and taskbars.  "Application" refers to other clients.  "Clients" refers
+to Pagers + Applications ie. all X clients, except for the Window Manager.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN21"
+>1.4. Prerequisites for adoption of this specification</A
+></H2
+><P
+>Window Managers and Clients which aim to fulfil this specification MUST adhere 
+to the ICCCM on which this specification builds. If this specification 
+explicitly modifies the ICCCM Window Managers and Clients MUST fulfil these 
+modifications.
+		</P
+></DIV
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x24.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Non-ICCCM features</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

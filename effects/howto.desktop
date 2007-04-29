@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+# Name of the effect
+Name=Howto
+# The plugin (library) which contains the effect. One library may contain more effects.
+X-KDE-Library=kwin4_effect_tests

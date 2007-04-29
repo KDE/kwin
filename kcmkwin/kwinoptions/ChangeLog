@@ -1,0 +1,51 @@
+1999-03-06  Mario Weilguni <mweilguni@kde.org>
+
+	* changes for Qt 2.0
+
+1998-11-29  Alex Zepeda  <garbanzo@hooked.net>
+
+	* pics/Makefile.am, pics/mini/Makefile.am: Install icons from their
+	"proper" subdirectories.
+
+1998-11-20  Cristian Tibirna  <ctibirna@gch.ulaval.ca>
+
+	* advanced.[cpp,h]: fixed bugs. Mostly a disgusting one: 
+		no lists saving for the special options (Decor, Focus a.o.)
+
+1998-11-09  Cristian Tibirna  <ctibirna@gch.ulaval.ca>
+
+	* advanced.[cpp,h] : new tab for some of the last of the
+  		kwm's options which remained out of the GUI config:
+		CtrlTab, TraverseAll, AltTabeMode, Button3Grab and 
+		the filter lists for decorations, focus, stickyness,
+		session management ignore ( I kinda disklike the solution
+		I got for the latest)
+
+1998-11-06  Cristian Tibirna  <ctibirna@gch.ulaval.ca>
+
+	* titlebar.[cpp,h] : added title alignment config
+
+1998-10-23  Cristian Tibirna  <ctibirna@gch.ulaval.ca>
+
+	* titlebar.cpp: completed what Matthias started (took out
+		useless checks)
+	* widows.cpp: make autoRaise toggling clearer
+
+1998-10-22  Matthias Ettrich  <ettrich@kde.org>
+
+	* titlebar.cpp: less options on titlebar doubleclick
+
+1998-10-21  Cristian Tibirna  <ctibirna@gch.ulaval.ca>
+
+	* desktop.[cpp,h]: now with consistent layout use
+		resizeEvent() deleted
+
+1998-10-19  Cristian Tibirna  <ctibirna@gch.ulaval.ca>
+
+	* windows.[cpp,h]: now with consistent layout use
+		resizeEvent() deleted
+
+1998-10-18  Cristian Tibirna  <ctibirna@gch.ulaval.ca>
+
+	* titlebar.[cpp,h]: fixed the (in)activetitleebar pixmap selection 
+		1998-10-21 (still buggy, don't quite understand why)

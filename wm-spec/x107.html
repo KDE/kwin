@@ -1,0 +1,627 @@
+<HTML
+><HEAD
+><TITLE
+>Root Window Properties (+Related Messages)</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.72
+"><LINK
+REL="HOME"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Non-ICCCM features"
+HREF="x24.html"><LINK
+REL="NEXT"
+TITLE="Other Root Window Messages"
+HREF="x208.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x24.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x208.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN107"
+>3. Root Window Properties (+Related Messages)</A
+></H1
+><P
+>Whenever this spec speaks about <SPAN
+CLASS="QUOTE"
+>"sending a message to the root 
+window"</SPAN
+>, it is understood that the client is supposed to create 
+a ClientMessage event with the specified contents and send it by using 
+a SendEvent request with the following arguments:
+	<PRE
+CLASS="PROGRAMLISTING"
+>destination     root
+propagate       False
+event-mask      (SubstructureNotify|SubstructureRedirect)
+event           the specified ClientMessage</PRE
+>
+	</P
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN112"
+>3.1. _NET_SUPPORTED</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_SUPPORTED, ATOM[]/32</PRE
+><P
+>This property MUST be set by the Window Manager to indicate which hints it
+supports.  For example: considering _NET_WM_STATE 
+both this atom and all supported states e.g. _NET_WM_STATE_MODAL, 
+_NET_WM_STATE_STICKY, would be listed. This assumes that backwards 
+incompatible changes will not be made to the hints (without being renamed). 
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN116"
+>3.2. _NET_CLIENT_LIST</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_CLIENT_LIST, WINDOW[]/32
+_NET_CLIENT_LIST_STACKING, WINDOW[]/32</PRE
+><P
+>These arrays contain all X Windows managed by the Window Manager.  
+_NET_CLIENT_LIST has initial mapping order, starting with the oldest window. 
+_NET_CLIENT_LIST_STACKING has bottom-to-top stacking order.  These properties
+SHOULD be set and updated by the Window Manager.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN120"
+>3.3. _NET_NUMBER_OF_DESKTOPS</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_NUMBER_OF_DESKTOPS, CARDINAL/32</PRE
+><P
+>This property SHOULD be set and updated by the Window Manager to indicate the
+number of virtual desktops. 
+	</P
+><P
+>A Pager can request change in the desktops number by sending a _NET_NUMBER_OF_DESKTOPS message to the root window:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_NUMBER_OF_DESKTOPS
+  message_type = _NET_NUMBER_OF_DESKTOPS
+  format = 32
+  data.l[0] = new_number_of_desktops</PRE
+><P
+>The Window Manager is free to honor or reject this request. If request is honored _NET_NUMBER_OF_DESKTOPS MUST be set to the new number of desktops, _NET_VIRTUAL_ROOTS MUST be set to store the new number of desktop virtual root window IDs and _NET_DESKTOP_VIEWPORT and _NET_WORKAREA must also be changed accordingly. The _NET_DESKTOP_NAMES property MAY remain unchanged.
+	</P
+><P
+> 
+If the number of desktops is shrinking and _NET_CURRENT_DESKTOP is out of the new range of available desktops, then this MUST be set to the last available desktop from the new set. If number of desktops is shrinking then clients that are still present on desktops, that are out of the new range, MUST be moved to the very last desktop from the new set. For these _NET_WM_DESKTOP MUST be updated.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN128"
+>3.4. _NET_DESKTOP_GEOMETRY</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_GEOMETRY width, height, CARDINAL[2]/32</PRE
+><P
+>Array of two cardinals that defines the common size of all desktops. 
+This property SHOULD be set by the Window Manager. 
+		</P
+><P
+>A Pager can request a change in  the desktop geometry by sending a _NET_DESKTOP_GEOMETRY client
+message to the root window:
+		</P
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_GEOMETRY
+  message_type = _NET_DESKTOP_GEOMETRY 
+  format = 32
+  data.l[0] = new_width
+  data.l[1] = new_height</PRE
+><P
+>The Window Manager MAY choose to ignore this message, in which case _NET_DESKTOP_GEOMETRY property will remain unchanged.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN135"
+>3.5. _NET_DESKTOP_VIEWPORT</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_VIEWPORT x, y, CARDINAL[][2]/32</PRE
+><P
+>Array of pairs of cardinals that define the top left corner of each desktops 
+viewport.  For Window Managers that don't support large desktops, this MUST 
+always be set to (0,0).  
+	</P
+><P
+>A Pager can request to change the viewport for the current desktop by sending a
+_NET_DESKTOP_VIEWPORT client message to the root window:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_VIEWPORT
+  message_type = _NET_DESKTOP_VIEWPORT
+  format = 32
+  data.l[0] = new_vx
+  data.l[1] = new_vy</PRE
+><P
+>The Window Manager MAY choose to ignore this message, in which case _NET_DESKTOP_VIEWPORT property will remain unchanged.
+		</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN142"
+>3.6. _NET_CURRENT_DESKTOP</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_CURRENT_DESKTOP desktop, CARDINAL/32</PRE
+><P
+>The index of the current desktop. This is always an integer between 0 and 
+_NET_NUMBER_OF_DESKTOPS - 1. This MUST be set and updated by the Window 
+Manager  If a Pager wants to switch to another virtual desktop, it MUST send 
+a _NET_CURRENT_DESKTOP client message to the root window:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_CURRENT_DESKTOP
+  message_type = _NET_CURRENT_DESKTOP 
+  format = 32
+  data.l[0] = new_index</PRE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN147"
+>3.7. _NET_DESKTOP_NAMES</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_NAMES, UTF8_STRING[]</PRE
+><P
+>The names of all virtual desktops. This is a list of NULL-terminated strings in UTF-8 [1] encoding. This property MAY be changed by a Pager or the Window Manager at any time.
+	</P
+><P
+>Note: The number of names could be different from _NET_NUMBER_OF_DESKTOPS.
+If it is less than _NET_NUMBER_OF_DESKTOPS - then the desktops with high
+numbers are unnamed. If it is larger than _NET_NUMBER_OF_DESKTOPS, then the 
+excess names outside of the _NET_NUMBER_OF_DESKTOPS are considered to be
+reserved in case number of desktops is increased.</P
+><P
+>Rationale: The name is not a necessary attribute of a virtual desktop. Thus 
+the availability or unavailability of names has no impact on virtual desktop
+functionality. Since names are set by users and users are likely to preset 
+names for a fixed number of desktops, it doesn't make sense to shrink or grow 
+this list when the number of available desktops changes.</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN153"
+>3.8. _NET_ACTIVE_WINDOW</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_ACTIVE_WINDOW, WINDOW/32</PRE
+><P
+>The window ID of the currently active window or None if no window has the focus.
+This is a read-only property set by the
+Window Manager.  If a client (for example, a taskbar) wants to activate
+another window, it MUST send a _NET_ACTIVE_WINDOW client message to the root
+window: 
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_ACTIVE_WINDOW
+  window  = window to activate
+  message_type = _NET_ACTIVE_WINDOW
+  format = 32
+  data.l[0] = 0 /* may be used later */</PRE
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN158"
+>3.9. _NET_WORKAREA</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WORKAREA, x, y, width, height CARDINAL[][4]/32
+	</PRE
+><P
+>This property MUST be set by WM upon calculating the work area for 
+each desktop.  Contains a geometry for each desktop.  These geometries are 
+specified relative to the viewport on each desktop and specify an area that is
+completely contained within the viewport.
+ Work area SHOULD be used by desktop applications to place desktop icons appropriately.
+	</P
+><P
+>	The Window Manager SHOULD calculate this space by taking the current page minus space occupied by dock and panel windows, as indicated by the <A
+HREF="x225.html#NETWMSTRUT"
+>_NET_WM_STRUT</A
+> property set on client windows.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN164"
+>3.10. _NET_SUPPORTING_WM_CHECK</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_SUPPORTING_WM_CHECK, WINDOW/32</PRE
+><P
+>The Window Manager MUST set this property on the root window to be the ID of a
+	child window created by the WM, to indicate that a compliant WM is
+	active.  The child window MUST also have the _NET_SUPPORTING_WM_CHECK
+	property set to the ID of the child window. The child window MUST also
+	have the _NET_WM_NAME property set to the name of the Window Manager.
+	</P
+><P
+>Rationale:  The child window is used to distinguish an active Window Manager 
+ from a stale _NET_SUPPORTING_WM_CHECK 
+ property that happens to point to another window. If the
+ _NET_SUPPORTING_WM_CHECK window on the client window is missing
+ or not properly set, clients SHOULD assume that no conforming
+ Window Manager is present.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN169"
+>3.11. _NET_VIRTUAL_ROOTS</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_VIRTUAL_ROOTS, WINDOW[]/32</PRE
+><P
+>To implement virtual desktops, some window managers reparent client windows to 
+a child of the root window.  Window managers using this technique MUST set 
+this property to a list of IDs for windows that are acting as virtual root 
+windows.  This property allows background setting programs to work with 
+virtual roots and allows clients to figure out the WM frame windows of their 
+windows.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN173"
+>3.12. _NET_DESKTOP_LAYOUT</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_DESKTOP_LAYOUT, orientation, x, y, starting_corner CARDINAL[4]/32
+  #define _NET_WM_ORIENTATION_HORZ 0
+  #define _NET_WM_ORIENTATION_VERT 1
+
+  #define _NET_WM_TOPLEFT     0
+  #define _NET_WM_TOPRIGHT    1
+  #define _NET_WM_BOTTOMRIGHT 2
+  #define _NET_WM_BOTTOMLEFT  3</PRE
+><P
+>        <SPAN
+CLASS="emphasis"
+><I
+CLASS="EMPHASIS"
+>This property is set by a Pager, not by the Window 
+	  Manager.</I
+></SPAN
+>
+        When setting this property, the Pager must own a manager selection (as
+	defined in the ICCCM 2.8). The manager selection is called
+        <TT
+CLASS="LITERAL"
+>_NET_DESKTOP_LAYOUT_Sn</TT
+> where
+        <TT
+CLASS="LITERAL"
+>n</TT
+> is the screen number. The purpose of 
+        this property is to allow the Window Manager to know the desktop 
+        layout displayed by the Pager.
+        </P
+><P
+>  <TT
+CLASS="LITERAL"
+>_NET_DESKTOP_LAYOUT</TT
+> describes the layout of virtual
+  desktops relative to each other. More specifically, it describes the layout
+  used by the owner of the manager selection. The Window Manager may use 
+  this layout information or may choose to ignore it.
+  The property contains four values: the Pager orientation, the number of
+  desktops in the X direction, the number in the Y direction, and the
+  starting corner of the Pager.
+        </P
+><P
+>   Note: In order to interoperate with Pagers implementing an earlier
+   draft of this document, Window Managers should accept a
+  <TT
+CLASS="LITERAL"
+>_NET_DESKTOP_LAYOUT</TT
+> property of length 3 and
+  use <TT
+CLASS="LITERAL"
+>_NET_WM_TOPLEFT</TT
+> as the starting corner in this case.
+  </P
+><P
+>  The virtual desktops are arranged in a rectangle
+  with X rows and Y columns.  If X times Y does not match the total number of
+  desktops as specified by
+  <TT
+CLASS="LITERAL"
+>_NET_NUMBER_OF_DESKTOPS</TT
+>, the highest-numbered
+  workspaces are assumed to be nonexistent. Either X or Y (but not
+  both) may be specified as 0 in which case its actual value will be
+  derived from <TT
+CLASS="LITERAL"
+>_NET_NUMBER_OF_DESKTOPS</TT
+>.
+        </P
+><P
+>  When the orientation is <TT
+CLASS="LITERAL"
+>_NET_WM_ORIENTATION_HORZ</TT
+>
+  the desktops are layed out in rows, with the first desktop in the 
+  specified starting corner. So a layout with X=4 and Y=3 starting in 
+  the <TT
+CLASS="LITERAL"
+>_NET_WM_TOPLEFT</TT
+> corner looks like this:
+<PRE
+CLASS="PROGRAMLISTING"
+> +--+--+--+--+
+ | 0| 1| 2| 3|
+ +--+--+--+--+
+ | 4| 5| 6| 7|
+ +--+--+--+--+
+ | 8| 9|10|11|
+ +--+--+--+--+</PRE
+>
+With starting_corner <TT
+CLASS="LITERAL"
+>_NET_WM_BOTTOMRIGHT</TT
+>, it looks like
+this:
+<PRE
+CLASS="PROGRAMLISTING"
+> +--+--+--+--+
+ |11|10| 9| 8|
+ +--+--+--+--+
+ | 7| 6| 5| 4|
+ +--+--+--+--+
+ | 3| 2| 1| 0|
+ +--+--+--+--+</PRE
+>
+
+         </P
+><P
+>&#13;  When the orientation is <TT
+CLASS="LITERAL"
+>_NET_WM_ORIENTATION_VERT</TT
+>
+  the layout for X=4 and Y=3 starting in the <TT
+CLASS="LITERAL"
+>_NET_WM_TOPLEFT</TT
+>
+  corner looks like:
+
+<PRE
+CLASS="PROGRAMLISTING"
+> +--+--+--+--+
+ | 0| 3| 6| 9|
+ +--+--+--+--+
+ | 1| 4| 7|10|
+ +--+--+--+--+
+ | 2| 5| 8|11|
+ +--+--+--+--+</PRE
+>
+With starting_corner <TT
+CLASS="LITERAL"
+>_NET_WM_TOPRIGHT</TT
+>, it looks like:
+
+<PRE
+CLASS="PROGRAMLISTING"
+> +--+--+--+--+
+ | 9| 6| 3| 0|
+ +--+--+--+--+
+ |10| 7| 4| 1|
+ +--+--+--+--+
+ |11| 8| 5| 2|
+ +--+--+--+--+</PRE
+>
+       </P
+><P
+>         The numbers here are the desktop numbers, as for 
+         <TT
+CLASS="LITERAL"
+>_NET_CURRENT_DESKTOP</TT
+>.
+        </P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN202"
+>3.13. _NET_SHOWING_DESKTOP</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_SHOWING_DESKTOP desktop, CARDINAL/32</PRE
+><P
+>	Some Window Managers have a "showing the desktop" mode in which windows
+	are hidden, and the desktop background is displayed and focused. If a
+	Window Manager supports the _NET_SHOWING_DESKTOP hint, it MUST set it
+	to a value of 1 if the Window Manager is in "showing the desktop" mode,
+	and a value of zero if the Window Manager is not in this mode.
+        </P
+><P
+>	If a Pager wants to enter or leave the mode, it MUST
+	send a _NET_SHOWING_DESKTOP client message to the root window
+	requesting the change: 
+       <PRE
+CLASS="PROGRAMLISTING"
+>_NET_SHOWING_DESKTOP
+  message_type = _NET_SHOWING_DESKTOP 
+  format = 32
+  data.l[0] = boolean 0 or 1</PRE
+> 
+ The Window Manager may choose to ignore this client message.
+       </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x24.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x208.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Non-ICCCM features</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Other Root Window Messages</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,21 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=kcmkwm
+Type=Service
+ServiceTypes=KCModule
+Exec=kcmshell kwinactions
+DocPath=kcontrol/windowmanagement/index.html#action-actions
+
+X-KDE-Library=kwinoptions
+X-KDE-FactoryName=kwinactions
+
+Name=Actions
+Name[x-test]=xxActionsxx
+
+Comment=Configure keyboard and mouse settings
+Comment[fr]=Configuration des réglages du clavier et de la souris
+Comment[x-test]=xxConfigure keyboard and mouse settingsxx
+
+Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
+Keywords[fr]=fondu,maximiser,enrouler,réduire,abaisser, menu des opérations,barre de titre,redimensionner
+Keywords[x-test]=xxshade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resizexx

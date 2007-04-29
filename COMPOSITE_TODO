@@ -1,0 +1,262 @@
+This file lists TODO items for the compositing code.
+
+See file COMPOSITE_HOWTO for setting up kwin_composite.
+See file HACKING for details on developing KWin, including building
+    the kwin_composite branch.
+See effects/howto.* for a HOWTO on writting effects.
+See documentation in source (mainly in scene.cpp) for description
+    of the design of the compositing framework.
+
+TODO
+=================================
+
+* = not done, will be either done by me, or should be at least discussed first with me
++ = not done, I don't plan on doing it that soon
+    - in other words, these should be the best ones for you if you want to help
+! = like +, but they should be relatively simple
+    - in other words, these should be the best if you want to get started with the code
+/ = work in progress
+? = should it be done?
+% = should be probably done later, during cleanups and preparations for being stable
+
+
+General TODO
+=================================
+
+? alpha clear hack
++   - find out if it affects performance
++   - if yes, try to find a better way of solving the problem
+!   - since kompmgr has an option to make only the decoration transparent,
+        it should be possible to do the same here - if the window has alpha and a decoration
+        or if there should be only the decoration transparent, paint first the contents
+        and then the decoration - this should make it possible to paint the decoration
+        without the random alpha that is right now handled by the alpha hack
+
+? wait for decoration repaints
+    - it is sometimes visible that the window contents are painted first and the decoration
+        only afterwards with a small delay
+?       - this has been already greatly improved by r632378, so it's maybe not worth it anymore
+    - maybe posted paint events need to be processed immediatelly, or maybe the compositing
+        code should not update the window until the decoration is finished painting
+
+? Expose events for overlay window - is it necessary to track it, like with root window?
+
+% paint throttling
+    - there's 5ms grace period per repaint to avoid overloading the system with just compositing
+        and not letting the system do anything else - check and evaluate 
+
+% support for new window types from the wm spec for compositing
+    - this will have to be done in Qt, kdecore and kwin
+
+* handle properly stacking order of deleted windows for showing in effects
+
+* handle properly deleted windows that reappear (windowReadded() function?)
+
+/ consider using an extra class for representing deleted windows
+    - cleaning up Client/Unmanaged instances may still leave e.g. timers around if they're overlooked
+    - an extra class could copy some interesting data and "replace" the old instance
+
+% during screensaving, do no let non-screensaver windows show above screensaver
+    - kdesktop_lock watches for such things and raises again, but there's a small gap
+
+% nvidia drivers by default use fake refresh rates as a workaround for some X limitations
+    - see the DynamicTwinView section in nvidia README
+    - this makes KWin repaint at a different rate than it should
+
+* handling of window pixmap for unmapped windows
+    - currently it's kept around after a window is unmapped
+*       - but it's still discarded on e.g. resize - how to solve this?
+*   - perhaps there should be an option not to unmap windows in order to always have live thumbnails
+*       - another option could be to unmap but quickly map when a live thumbnail is needed
+
+* cursorPos() does not work reliably now (not from e.g. timers, it needs events), so it's disabled
+
+* window grouping is not implemented for unmanaged windows (used e.g. by DimInactive)
+
+% clean up and sort out shortcuts so that they don't conflict and make sense
+    - also make configurable etc.
+
+
+OpenGL TODO
+=================================
+
+/ Check/make it work with other gfx cards
+
+? Xgl support
+    - Compiz itself doesn't work when compiled with the libGL from nvidia,
+        it ships its own and links against it
+?   - might be worth trying to use that libGL as well
+    - it may be just because of the special libGL, but when testing with Xgl
+        it even seemed non-conformant - none of the provided configs had
+        GLX_RENDER_TYPE with GLX_RGBA_BIT even though required by GLX
+        and other funny things. Indeed, it may be just me being still pretty
+        clueless about these things.
+?   - is there a good reason to support Xgl? With the 9625 nvidia drivers
+        it seems to work fine without them and there's AIGLX
+    
++ AIGLX support
+    - kind of works, needs more work
++   - it needs indirect rendering, should be autodetected and disabled somehow
+%   - may require LIBGL_ALWAYS_INDIRECT set with older X.org
+        (http://lists.kde.org/?l=kwin&m=116439615124838&w=2)
+        (http://lists.freedesktop.org/archives/xorg/2006-December/020323.html)
+
+/ GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
+%   - works; bugs in tfp_mode with power_of_two textures
+        - ati (others?): power_of_two windows are drawn white unless non-tfp_mode
+            is forced in findTextureTarget()
+
+? in SceneOpenGL::bindTexture() with tfp_mode, with some gfx cards it seems
+    to be faster to not short-circuit the texture binding when there's been
+    no damage
+
++ strict binding
+    - there is code to support strict binding as required by AIGLX, but it's disabled, because
+        copy_buffer in bindTexture() ensures strict binding as a side-effect
+    - since copy_buffer hack should be removed in the future, strict binding will need to be enabled then
+    - http://lists.kde.org/?l=kwin&m=116363084129170&w=2
+
+% bindTexture() optimize copied areas
+    - right now bindTexture() updates every damaged area and resets the window damage
+    - it might make things faster to update only areas that need to be repainted
+        and keep the rest damaged until needed
+
+% clipping optimization
+    - like XRender code has paintTransformedScreen(), avoid painting parts that are
+        obscured (makes a difference with many windows open)
+    - http://lists.kde.org/?l=kwin&m=116585618111882&w=2
+
++ shm mode needs support for more data formats than GL_BGRA in order to support e.g. 16bpp mode
+    - http://www.xfree86.org/current/glTexImage2D.3.html
+
+% with current nvidia glXCreatePixmap in tfp mode fails with pixmaps 32x32 and smaller
+
++ vertices list (and possibly more things) should not be part of SceneOpenGL::Window
+    - otherwise drawWindow() used for thumbnails would use them too
+    - they should be probably part of WindowPaintData
+
+
+XRender TODO
+==============================
+
++ SceneXrender::Window::performPaint() doesn't use saturation
++ SceneXrender::Window::performPaint() doesn't use brightness
+
++ SceneXrender::paintTransformedScreen() doesn't handle properly extending of painted area
+    in window's pre-paint - see the transformedShape() comment
+
+
+Effects framework TODO
+==============================
+
+* more notification functions for effects are needed
+    - currently there are only very few notification functions (windowAdded, windowActivated,...)
+!   - window state changes
+    ? more
+
+/ shadows
++   - right now is only a rectangle, probably needs some shape support
++   - right now is only a flat black color, probably should be improved
+
+/ support for grabbing input
+    - during some more complicated effects, input (at least mouse) should be disabled,
+        because currently there is no way to do input redirection
+
+? pre-paint pass should be done completely before the paint pass
+    - currently prePaintWindow() is done only after paintScreen() has already started,
+        which means that if an effect sets PAINT_WINDOW_TRANSFORMED it needs to set it
+        also in prePaintScreen()
+
+* PAINT_DISABLED turning off from effects needs some improvement
+    - a window may have painting disabled for various reasons and their numbers may increase
+        over time
+        - so e.g. an effect showing minimized windows cannot simply turn off DISABLED
+            for minimized windows, because it may be disabled also for other reasons
+        - there should be some utility function that will be called by the effect
+            with arguments saying which disabled windows it wants enabled
+
++ EffectWindow should be completely opaque when kept as the only API for effects
+    - no inlines, etc.
+
++ API for tabbox for effects should be cleaned up
+
+* check Scene::updateTimeDiff() - should the time be 0 or 1?
+
+* DesktopGridEffect has somewhat broken stacking order while moving windows
+    - the window is in proper layer when on its desktop but on top of everything when moved
+        to another desktop, due to its desktop being painted later
+    - maybe there should be PAINT_WINDOW_TOP (_LAST or whatever) that'd make it painted always
+        on top of everything
+
+% post calls are probably not necessary by now (http://lists.kde.org/?t=117770818100003&r=1&w=2)
+
+
+Effects TODO
+===============================
+
++ adapt the kcontrol module used by Kompmgr
+    - in kcmkwin/kwinoptions
+!   - uses ~/.xcompmgr, convert to use normal KConfig
+?   - I don't think these effects should be plugins or anything like that,
+        probably simply write to kwinrc and use the Option class in KWin
+
+/ implements all effects Kompmgr could do
++   - all effects from the Opacity tab should be already doable
+!       - applying translucency only to the decoration
+            - use clientSize() and clientPos() from Client
+            - see also the alpha clear hack todo entry
+!       - not usign ARGB visuals
+            - just clear the alpha channel in the alpha clear hack
+            - or do it while painting (see also the alpha clear hack todo entry)
+!       - the rest - should be simple
+/   - shadows
++   - tab Effects
++       - fade between changes
+            - will need notification about opacity changes
+            - not sure if this is doable for other opacity changes then the ones
+                initiated by the user or by the application
+
++ minimize/shade effects
+    - to replace the ones from KWin core
+/       - minimizing
+            - check support for it and the avoid_animation flag
++       - shading
+            - shading will probably need special support
+
+/ zoom effect
+    - enlarge a portion of the screen
+
++ logout effect
+*   - should be triggered by ksmserver somehow
+
++ effects to replace widget effects (the ones in the Effects tab in "kcmshell style")
++   - needs support for new window types from the current draft of the EWMH WM spec
++       - needs patching Qt, netwm* classes in kdecore
+
+/ showfps effect
+    - for debugging, just shows transparent fps in some corner
+    - just painting the number in paintScreen() should do, with glPushMatrix() and glLoadIdentity()
+        to avoid all transformations
++   - needs bindPixmapToTexture() or something like that, for displaying the text
+    - should also detect kwin being idle - it probably should detect in pre-paint that the only
+        damage is its own area and avoid damaging for the next round in post-paint
+
++ debugpaint effect
+    - should show what is damaged during each repaint step
+    - probably just e.g. paint a red almost transparent area over damaged areas
+    - needs special care to avoid causing infinite loops by its own damage (i.e. it damages
+        part of screen to clear its own painting, that triggers itself again next repaint)
+
+? other effects
+
++ virtual desktop change effects
++   - ... yes, you guessed it, the cube
++   - something that presents all virtual desktops as being in grid (as in pager)
+        and zooms out of the old one and into the new one
+    - or whatever
+
+* DimInactive flickers when switching between windows (temporarily no window becomes active)
+
++ TrackMouse needs a better way of activating
+    - LMB+RMB is problematic, some systems handle that as MMB, and LMB+RMB press is still
+        two consequent events

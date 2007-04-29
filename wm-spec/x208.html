@@ -1,0 +1,225 @@
+<HTML
+><HEAD
+><TITLE
+>Other Root Window Messages</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.72
+"><LINK
+REL="HOME"
+HREF="index.html"><LINK
+REL="PREVIOUS"
+TITLE="Root Window Properties (+Related Messages)"
+HREF="x107.html"><LINK
+REL="NEXT"
+TITLE="Application Window Properties"
+HREF="x225.html"></HEAD
+><BODY
+CLASS="SECT1"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+></TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="x107.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="x225.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><DIV
+CLASS="SECT1"
+><H1
+CLASS="SECT1"
+><A
+NAME="AEN208"
+>4. Other Root Window Messages</A
+></H1
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN210"
+>4.1. _NET_CLOSE_WINDOW</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_CLOSE_WINDOW</PRE
+><P
+>	Pagers wanting to close a window MUST send a _NET_CLOSE_WINDOW client
+	message request to the root window:
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_CLOSE_WINDOW
+  window = window to close
+  message_type = _NET_CLOSE_WINDOW
+  format = 32
+  data.l[0] = 0 /* may be used later */</PRE
+><P
+>The Window Manager MUST then attempt to close the window specified.
+	</P
+><P
+>	Rationale: A Window Manager might be more clever than the usual method (send WM_DELETE message if the protocol is selected, XKillClient otherwise).  It might introduce a timeout, for example.  Instead of duplicating the code, the Window Manager can easily do the job.
+	</P
+></DIV
+><DIV
+CLASS="SECT2"
+><H2
+CLASS="SECT2"
+><A
+NAME="AEN217"
+>4.2. _NET_WM_MOVERESIZE</A
+></H2
+><PRE
+CLASS="PROGRAMLISTING"
+>_NET_WM_MOVERESIZE
+  window = window to be moved or resized
+  message_type = _NET_WM_MOVERESIZE
+  format = 32
+  data.l[0] = x_root 
+  data.l[1] = y_root
+  data.l[2] = direction
+  data.l[3] = button</PRE
+><P
+>	This message allows an application to initiate window movement or 
+        resizing.  This allows the application to define its own move and size
+	"grips", whilst letting the window manager control the actual operation.
+	This means that all moves/resizes can happen in a consistent manner as 
+	defined by the WM.
+	</P
+><P
+>	When sending this message in response to a button press event, button 
+	SHOULD indicate the button which was pressed, x_root and y_root MUST 
+	indicate the position of the button press with respect to the root 
+	window and direction MUST indicate whether this is a move or resize 
+	event, and if it is a resize event, which edges of the window the size 
+	grip applies to. When sending this message in response to a key event, 
+	the direction MUST indicate wether this this is a move or resize event 
+	and the other fields are unused. 
+	</P
+><PRE
+CLASS="PROGRAMLISTING"
+>#define _NET_WM_MOVERESIZE_SIZE_TOPLEFT      0
+#define _NET_WM_MOVERESIZE_SIZE_TOP          1
+#define _NET_WM_MOVERESIZE_SIZE_TOPRIGHT     2
+#define _NET_WM_MOVERESIZE_SIZE_RIGHT        3
+#define _NET_WM_MOVERESIZE_SIZE_BOTTOMRIGHT  4
+#define _NET_WM_MOVERESIZE_SIZE_BOTTOM       5
+#define _NET_WM_MOVERESIZE_SIZE_BOTTOMLEFT   6
+#define _NET_WM_MOVERESIZE_SIZE_LEFT         7
+#define _NET_WM_MOVERESIZE_MOVE              8   /* movement only */
+#define _NET_WM_MOVERESIZE_SIZE_KEYBOARD     9   /* size via keyboard */
+#define _NET_WM_MOVERESIZE_MOVE_KEYBOARD    10   /* move via keyboard */</PRE
+><P
+>	The Client MUST release all grabs prior to sending such message.
+	</P
+><P
+>        The Window Manager can use the button field to determine the
+	events on which it terminates the operation initiated by the
+        _NET_WM_MOVERESIZE message. Since there is a race condition between 
+	client sending the _NET_WM_MOVERESIZE message and the user releasing 
+	the button, Window Managers are advised to offer some other means to 
+	terminate the operation, e.g. by pressing the ESC key.  
+        </P
+></DIV
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="x107.html"
+ACCESSKEY="P"
+>Prev</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="index.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="x225.html"
+ACCESSKEY="N"
+>Next</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>Root Window Properties (+Related Messages)</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+>&nbsp;</TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>Application Window Properties</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,20 @@
+If you are looking to include a C++ KWin style client in CVS make sure you
+follow the following requirements:
+
+A) You must follow the current color scheme for all decorations. *No* fixed
+pixmaps are allowed for the clients. If you wish to draw your decorations
+use as few shades as possible, then use kpixmap2bitmap in kdegraphics
+to convert them into individual bitmaps. Once this is done you can
+draw the bitmaps using a colorgroup with kColorBitmaps.
+
+If your client is just a set of pixmaps that doesn't follow any of the options
+I suggest you make a KWM theme so the user gets those options to 
+configure the pixmaps and look. Making a plain pixmapped dedicated style 
+makes no sense since it is less configurable than KWM themes and cannot follow
+client plugin options. 
+
+B) You must follow at least the color settings in the Options class.
+
+Daniel M. Duley
+mosfet@kde.org
+

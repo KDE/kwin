@@ -1,0 +1,44 @@
+KWin can now handle some new color scheme entries in addition to the ones
+handled by KWM. Note that these are suggestions and all the colors may not
+be used by all KWin styles. These all currently go into the [WM] group.
+
+frame, inactiveFrame : Window frame (was fixed to general KDE bg in KWM).
+
+handle, inactiveHandle : Window handles (sometimes called "grips").
+
+activeBackground, inactiveBackground : Tilebars (bad name, but it's what KWM
+uses). This is for styles that use a solid filled rectangle for the titlebar
+such as the standard style and KStep.
+
+activeGroove, inactiveGroove: This is for titlebars that instead of a solid
+rectangle use some sort of groove or small bevels layered on the frame.
+An example of this is System.
+
+activeBlend, inactiveBlend : Titlebar blend for styles that use a rectangle
+titlebar fill.
+
+activeForeground, inactiveForeground : Tilebar text for styles that use a
+rectangle titlebar fill.
+
+activeGrooveText, inactiveGrooveText: Titlebar text for styles that use
+grooved titlebar styles instead of the solid fill. This should contrast with
+the frame color.
+
+activeTitleBtnBg, inactiveTitleButtonBg : Button background color for up and 
+down states.
+
+activeTitleBtnBlend, inactiveTitleBtnBlend : Button blend.
+
+activeTitleBtnFg, activeTitleBtnFg :  Some style's buttons don't use the
+above button background colors but instead draw the button foreground
+transparently on the frame. The best example of this is the standard KDE
+style. Use this to specify a color for such styles, which should contrast with
+the frame - not the button bg.
+
+activeTitleBtnFullFg, inactiveTitleBtnFullFg: This is for styles that have
+full support for button background settings. Examples are KStep and System.
+This should contrast with the button background.
+
+Daniel M. Duley
+mosfet@kde.org
+mosfet@linuxmandrake.com

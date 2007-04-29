@@ -1,0 +1,7 @@
+Id=kde33b1
+# the file is intentionally a dummy, as the binary will update kwinrc and kwinrulesrc
+# the kwin_update will just remember it has been done
+File=kwin_update
+Group=Dummy
+Options=overwrite
+Script=kwin_update_window_settings
