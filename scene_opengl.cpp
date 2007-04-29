@@ -827,18 +827,26 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
     else if( shm_mode )
         { // copy pixmap contents to a texture via shared memory
 #ifdef HAVE_XSHM
+        GLenum pixfmt, type;
+        if( depth >= 24 )
+            {
+            pixfmt = GL_BGRA;
+            type = GL_UNSIGNED_BYTE;
+            }
+        else
+            { // depth 16
+            pixfmt = GL_RGB;
+            type = GL_UNSIGNED_SHORT_5_6_5;
+            }
         findTarget();
         if( mTexture == None )
             {
             glGenTextures( 1, &mTexture );
             glBindTexture( mTarget, mTexture );
             y_inverted = false;
-            glTexImage2D( mTarget, 0, GL_RGBA, mSize.width(), mSize.height(),
-                0, GL_BGRA, GL_UNSIGNED_BYTE, NULL );
-            // TODO hasAlpha() ?
-//            glCopyTexImage2D( mTarget, 0,
-//                depth == 32 ? GL_RGBA : GL_RGB,
-//                0, 0, mSize.width(), mSize.height(), 0 );
+            glTexImage2D( mTarget, 0, depth == 32 ? GL_RGBA : GL_RGB,
+                mSize.width(), mSize.height(), 0,
+                pixfmt, type, NULL );
             }
         else
             glBindTexture( mTarget, mTexture );
@@ -848,19 +856,21 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             xgcv.graphics_exposures = False;
             xgcv.subwindow_mode = IncludeInferiors;
             GC gc = XCreateGC( display(), pix, GCGraphicsExposures | GCSubwindowMode, &xgcv );
+            Pixmap p = XShmCreatePixmap( display(), rootWindow(), shm.shmaddr, &shm,
+                mSize.width(), mSize.height(), depth );
             QRegion damage = optimizeBindDamage( region, 100 * 100 );
+            glPixelStorei( GL_UNPACK_ROW_LENGTH, mSize.width());
             foreach( QRect r, damage.rects())
                 { // TODO for small areas it might be faster to not use SHM to avoid the XSync()
-                Pixmap p = XShmCreatePixmap( display(), rootWindow(), shm.shmaddr, &shm,
-                    r.width(), r.height(), depth );
                 XCopyArea( display(), pix, p, gc, r.x(), r.y(), r.width(), r.height(), 0, 0 );
-                XSync( display(), False );
                 glXWaitX();
                 glTexSubImage2D( mTarget, 0,
-                    r.x(), r.y(), r.width(), r.height(), GL_BGRA, GL_UNSIGNED_BYTE, shm.shmaddr );
+                    r.x(), r.y(), r.width(), r.height(),
+                    pixfmt, type, shm.shmaddr );
                 glXWaitGL();
-                XFreePixmap( display(), p );
                 }
+            glPixelStorei( GL_UNPACK_ROW_LENGTH, 0 );
+            XFreePixmap( display(), p );
             XFreeGC( display(), gc );
             }
         y_inverted = true;

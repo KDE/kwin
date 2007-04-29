@@ -126,8 +126,10 @@ OpenGL TODO
         obscured (makes a difference with many windows open)
     - http://lists.kde.org/?l=kwin&m=116585618111882&w=2
 
-+ shm mode needs support for more data formats than GL_BGRA in order to support e.g. 16bpp mode
+/ shm mode needs support for more data formats than GL_BGRA
     - http://www.xfree86.org/current/glTexImage2D.3.html
+    - this now works for 16bpp, but maybe not 15bpp or less
+    - endian issues?
 
 % with current nvidia glXCreatePixmap in tfp mode fails with pixmaps 32x32 and smaller
 
