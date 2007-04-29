@@ -1,3 +1,20 @@
+- The mailing list for KWin is kwin@kde.org (https://mail.kde.org/mailman/listinfo/kwin).
+
+- If you want to develop KWin, see file HACKING.
+
+- If you want to check KWin's compliance with specifications, see file COMPLIANCE.
+
+- File CONFIGURATION includes some details on configuring KWin.
+
+- Below is some info for application developers about application interaction
+  with the window manager, but it'd need some cleanup.
+
+
+
+
+
+
+
 
  This README is meant as an explanation of various window manager related
 mechanisms that application developers need to be aware of. As some of these
