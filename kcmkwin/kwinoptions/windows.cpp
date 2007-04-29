@@ -1251,6 +1251,8 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, co
                                  "<i>Option     \"RenderAccel\" \"true\"</i><br>"
                                  "In <i>Section \"Device\"</i></qt>"), this);
   label->setOpenExternalLinks(true);
+  label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+  label->setTextInteractionFlags(Qt::TextInteractionFlags(style()->styleHint(QStyle::SH_MessageBox_TextInteractionFlags)));
   lay->addWidget(label);
   }
   else
