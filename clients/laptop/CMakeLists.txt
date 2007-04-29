@@ -11,6 +11,7 @@ kde4_automoc(kwin3_laptop ${kwin3_laptop_PART_SRCS})
 kde4_add_plugin(kwin3_laptop ${kwin3_laptop_PART_SRCS})
 
 target_link_libraries(kwin3_laptop ${KDE4_KDECORE_LIBS} ${KDE4_KDEFX_LIBS} kdecorations)
+target_link_libraries(kwin3_laptop ${KDE4_KDEFX_LIBS} kdecorations)
 
 install(TARGETS kwin3_laptop  DESTINATION ${PLUGIN_INSTALL_DIR})
 

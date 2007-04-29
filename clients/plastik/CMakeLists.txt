@@ -18,7 +18,7 @@ kde4_add_plugin(kwin3_plastik ${kwin3_plastik_PART_SRCS})
 
 
 
-target_link_libraries(kwin3_plastik  ${KDE4_KDEUI_LIBS} kdecorations kdefx)
+target_link_libraries(kwin3_plastik kdecorations ${KDE4_KDEFX_LIBS})
 
 install(TARGETS kwin3_plastik  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

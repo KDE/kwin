@@ -14,7 +14,7 @@ kde4_add_plugin(kwin3_quartz ${kwin3_quartz_PART_SRCS})
 
 
 
-target_link_libraries(kwin3_quartz  ${KDE4_KDEUI_LIBS} kdecorations kdefx)
+target_link_libraries(kwin3_quartz kdecorations ${KDE4_KDEFX_LIBS})
 
 install(TARGETS kwin3_quartz  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
