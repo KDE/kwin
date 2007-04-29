@@ -1250,6 +1250,7 @@ KTranslucencyConfig::KTranslucencyConfig (bool _standAlone, KConfig *_config, co
                                  "And if your GPU provides hardware-accelerated Xrender support (mainly nVidia cards):<br><br>"
                                  "<i>Option     \"RenderAccel\" \"true\"</i><br>"
                                  "In <i>Section \"Device\"</i></qt>"), this);
+  label->setOpenExternalLinks(true);
   lay->addWidget(label);
   }
   else
