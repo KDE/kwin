@@ -567,8 +567,7 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
             FocusChangeMask |
             ExposureMask |
             PropertyChangeMask |
-            StructureNotifyMask | SubstructureRedirectMask |
-            VisibilityChangeMask );
+            StructureNotifyMask | SubstructureRedirectMask );
     XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
     XSelectInput( display(), client,
                   FocusChangeMask |
