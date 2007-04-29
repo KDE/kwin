@@ -458,13 +458,36 @@ void Client::setUserNoBorder( bool set )
 
 void Client::updateShape()
     {
-    if ( shape() )
+    // workaround for #19644 - shaped windows shouldn't have decoration
+    if( shape() && !noBorder()) 
+        {
+        noborder = true;
+        updateDecoration( true );
+        }
+    if( shape())
+        {
         XShapeCombineShape(display(), frameId(), ShapeBounding,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSet);
+        }
     else
+        {
         XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
                            None, ShapeSet);
+        }
+    if( Extensions::shapeMajor() > 1 || Extensions::shapeMinor() >= 1 ) // has input shape support
+        { // there appears to be no way to find out if a window has input
+          // shape set or not, so always set propagate the input shape
+          // (it's the same like the bounding shape by default)
+        XShapeCombineMask( display(), frameId(), ShapeInput, 0, 0,
+                           None, ShapeSet );
+        XShapeCombineShape( display(), frameId(), ShapeInput,
+                           clientPos().x(), clientPos().y(),
+                           window(), ShapeBounding, ShapeSubtract );
+        XShapeCombineShape( display(), frameId(), ShapeInput,
+                           clientPos().x(), clientPos().y(),
+                           window(), ShapeInput, ShapeUnion );
+        }
     if( compositing())
         addDamageFull();
     if( scene != NULL )

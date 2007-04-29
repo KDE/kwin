@@ -148,7 +148,9 @@ class Extensions
     {
     public:
         static void init();
-        static bool shapeAvailable() { return has_shape; }
+        static bool shapeAvailable() { return shape_version > 0; }
+        static int shapeMajor() { return shape_version / 16; }
+        static int shapeMinor() { return shape_version % 16; }
         static int shapeNotifyEvent();
         static bool randrAvailable() { return has_randr; }
         static int randrNotifyEvent();
@@ -159,7 +161,7 @@ class Extensions
         static bool fixesAvailable() { return has_fixes; }
         static bool hasShape( Window w );
     private:
-        static bool has_shape;
+        static int shape_version; // as 16*major+minor
         static int shape_event_base;
         static bool has_randr;
         static int randr_event_base;
