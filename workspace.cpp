@@ -673,7 +673,13 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                     focus_chain[ i ].prepend( c );
                 }
             else if( !focus_chain[ i ].contains( c ))
-                focus_chain[ i ].prepend( c ); // otherwise add as the last one
+                { // add it after the active one
+                if( active_client != NULL && active_client != c
+                    && !focus_chain[ i ].isEmpty() && focus_chain[ i ].last() == active_client )
+                    focus_chain[ i ].insert( focus_chain[ i ].size() - 1, c );
+                else
+                    focus_chain[ i ].append( c ); // otherwise add as the first one
+                }
             }
         }
     else    //now only on desktop, remove it anywhere else
@@ -693,7 +699,13 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
                     focus_chain[ i ].prepend( c );
                     }
                 else if( !focus_chain[ i ].contains( c ))
-                    focus_chain[ i ].prepend( c );
+                    { // add it after the active one
+                    if( active_client != NULL && active_client != c
+                        && !focus_chain[ i ].isEmpty() && focus_chain[ i ].last() == active_client )
+                        focus_chain[ i ].insert( focus_chain[ i ].size() - 1, c );
+                    else
+                        focus_chain[ i ].append( c ); // otherwise add as the first one
+                    }
                 }
             else
                 focus_chain[ i ].removeAll( c );
@@ -710,7 +722,13 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
         global_focus_chain.prepend( c );
         }
     else if( !global_focus_chain.contains( c ))
-        global_focus_chain.prepend( c );
+        { // add it after the active one
+        if( active_client != NULL && active_client != c
+            && !global_focus_chain.isEmpty() && global_focus_chain.last() == active_client )
+            global_focus_chain.insert( global_focus_chain.size() - 1, c );
+        else
+            global_focus_chain.append( c ); // otherwise add as the first one
+        }
     }
 
 void Workspace::updateCurrentTopMenu()

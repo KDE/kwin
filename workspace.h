@@ -582,9 +582,9 @@ class Workspace : public QObject, public KDecorationDefines
         UnmanagedList unmanaged;
         DeletedList deleted;
 
-        ClientList unconstrained_stacking_order;
-        ClientList stacking_order;
-        QVector< ClientList > focus_chain;
+        ClientList unconstrained_stacking_order; // topmost last
+        ClientList stacking_order; // topmost last
+        QVector< ClientList > focus_chain; // currently ative last
         ClientList global_focus_chain; // this one is only for things like tabbox's MRU
         ClientList should_get_focus; // last is most recent
         ClientList attention_chain;
