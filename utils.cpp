@@ -45,7 +45,7 @@ namespace KWin
 
 #ifndef KCMRULES
 
-int Shape::kwin_shape_version = 0;
+int Extensions::shape_version = 0;
 int Extensions::shape_event_base = 0;
 bool Extensions::has_randr = false;
 int Extensions::randr_event_base = 0;
@@ -59,11 +59,11 @@ void Extensions::init()
     {
     int dummy;
     shape_version = 0;
-    if( XShapeQueryExtension( display(), &kwin_shape_event, &dummy ))
+    if( XShapeQueryExtension( display(), &shape_event_base, &dummy ))
         {
         int major, minor;
         if( XShapeQueryVersion( display(), &major, &minor ))
-            kwin_shape_version = major * 16 + minor;
+            shape_version = major * 16 + minor;
         }
 #ifdef HAVE_XRANDR
     has_randr = XRRQueryExtension( display(), &randr_event_base, &dummy );
