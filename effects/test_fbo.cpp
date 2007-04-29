@@ -18,8 +18,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Test_FBO, TestFBOEffect );
-KWIN_EFFECT_SUPPORTED( Test_FBO, TestFBOEffect::supported() );
+KWIN_EFFECT( Test_FBO, TestFBOEffect )
+KWIN_EFFECT_SUPPORTED( Test_FBO, TestFBOEffect::supported() )
 
 
 TestFBOEffect::TestFBOEffect() : Effect()

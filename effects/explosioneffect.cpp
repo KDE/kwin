@@ -23,8 +23,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Explosion, ExplosionEffect );
-KWIN_EFFECT_SUPPORTED( Explosion, ExplosionEffect::supported() );
+KWIN_EFFECT( Explosion, ExplosionEffect )
+KWIN_EFFECT_SUPPORTED( Explosion, ExplosionEffect::supported() )
 
 ExplosionEffect::ExplosionEffect() : Effect()
     {

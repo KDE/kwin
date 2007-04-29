@@ -23,8 +23,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Demo_Liquid, LiquidEffect );
-KWIN_EFFECT_SUPPORTED( Demo_Liquid, LiquidEffect::supported() );
+KWIN_EFFECT( Demo_Liquid, LiquidEffect )
+KWIN_EFFECT_SUPPORTED( Demo_Liquid, LiquidEffect::supported() )
 
 
 LiquidEffect::LiquidEffect() : Effect()

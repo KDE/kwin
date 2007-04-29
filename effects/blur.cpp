@@ -22,8 +22,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Blur, BlurEffect );
-KWIN_EFFECT_SUPPORTED( Blur, BlurEffect::supported() );
+KWIN_EFFECT( Blur, BlurEffect )
+KWIN_EFFECT_SUPPORTED( Blur, BlurEffect::supported() )
 
 
 BlurEffect::BlurEffect() : Effect()
