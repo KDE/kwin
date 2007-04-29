@@ -63,8 +63,8 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
 
 PlastikConfig::~PlastikConfig()
 {
-    if (m_dialog) delete m_dialog;
-    if (m_config) delete m_config;
+    delete m_dialog;
+    delete m_config;
 }
 
 void PlastikConfig::load(KConfig*)
