@@ -475,17 +475,30 @@ void Client::updateShape()
     // calls it or when the decoration is created/destroyed
 
     if( Shape::version() >= 0x11 ) // 1.1, has input shape support
-        { // there appears to be no way to find out if a window has input
-          // shape set or not, so always set propagate the input shape
-          // (it's the same like the bounding shape by default)
-        XShapeCombineShape( display(), frameId(), ShapeInput, 0, 0,
+        { // There appears to be no way to find out if a window has input
+          // shape set or not, so always propagate the input shape
+          // (it's the same like the bounding shape by default).
+          // Also, build the shape using a helper window, not directly
+          // in the frame window, because the sequence set-shape-to-frame,
+          // remove-shape-of-client, add-input-shape-of-client has the problem
+          // that after the second step there's a hole in the input shape
+          // until the real shape of the client is added and that can make
+          // the window lose focus (which is a problem with mouse focus policies)
+        static Window helper_window = None;
+        if( helper_window == None )
+            helper_window = XCreateSimpleWindow( display(), rootWindow(),
+                0, 0, 1, 1, 0, 0, 0 );
+        XResizeWindow( display(), helper_window, width(), height());
+        XShapeCombineShape( display(), helper_window, ShapeInput, 0, 0,
                            frameId(), ShapeBounding, ShapeSet );
-        XShapeCombineShape( display(), frameId(), ShapeInput,
+        XShapeCombineShape( display(), helper_window, ShapeInput,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSubtract );
-        XShapeCombineShape( display(), frameId(), ShapeInput,
+        XShapeCombineShape( display(), helper_window, ShapeInput,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeInput, ShapeUnion );
+        XShapeCombineShape( display(), frameId(), ShapeInput, 0, 0,
+                           helper_window, ShapeInput, ShapeSet );
         }
     if( compositing())
         addDamageFull();
