@@ -267,12 +267,22 @@ bool Toplevel::resourceMatch( const Toplevel* c1, const Toplevel* c2 )
 bool Client::belongToSameApplication( const Client* c1, const Client* c2, bool active_hack )
     {
     bool same_app = false;
+
+    // tests that definitely mean they belong together
     if( c1 == c2 )
         same_app = true;
     else if( c1->isTransient() && c2->hasTransient( c1, true ))
         same_app = true; // c1 has c2 as mainwindow
     else if( c2->isTransient() && c1->hasTransient( c2, true ))
         same_app = true; // c2 has c1 as mainwindow
+    else if( c1->group() == c2->group())
+        same_app = true; // same group
+    else if( c1->wmClientLeader() == c2->wmClientLeader()
+        && c1->wmClientLeader() != c1->window() // if WM_CLIENT_LEADER is not set, it returns window(),
+        && c2->wmClientLeader() != c2->window()) // don't use in this test then
+        same_app = true; // same client leader
+
+    // tests that mean they most probably don't belong together
     else if( c1->pid() != c2->pid()
         || c1->wmClientMachine( false ) != c2->wmClientMachine( false ))
         ; // different processes
@@ -284,17 +294,12 @@ bool Client::belongToSameApplication( const Client* c1, const Client* c2, bool a
         ; // different apps
     else if( !sameAppWindowRoleMatch( c1, c2, active_hack ))
         ; // "different" apps
-    else if( c1->wmClientLeader() == c2->wmClientLeader()
-        && c1->wmClientLeader() != c1->window() // if WM_CLIENT_LEADER is not set, it returns window(),
-        && c2->wmClientLeader() != c2->window()) // don't use in this test then
-        same_app = true; // same client leader
-    else if( c1->group() == c2->group())
-        same_app = true; // same group
     else if( c1->pid() == 0 || c2->pid() == 0 )
         ; // old apps that don't have _NET_WM_PID, consider them different
           // if they weren't found to match above
     else
         same_app = true; // looks like it's the same app
+
     return same_app;
     }
 
