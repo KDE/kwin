@@ -283,7 +283,7 @@ WebButton::drawButton(QPainter *p)
 WebButton::setBitmap(const unsigned char *bitmap)
 {
   if (bitmap)
-    bitmap_ = QBitmap(8,8, bitmap, true);
+    bitmap_ = QBitmap::fromData( QSize(8, 8),  bitmap);
   else
     bitmap_ = QBitmap(8,8);
   bitmap_.setMask(bitmap_);
