@@ -43,7 +43,7 @@ TestFBOEffect::~TestFBOEffect()
 
 bool TestFBOEffect::supported()
     {
-    return GLRenderTarget::supported() &&
+    return GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
             (effects->compositingType() == OpenGLCompositing);
     }
 

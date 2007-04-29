@@ -78,7 +78,7 @@ bool LiquidEffect::loadData()
 
 bool LiquidEffect::supported()
     {
-    return GLRenderTarget::supported() &&
+    return GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
             GLShader::fragmentShaderSupported() &&
             (effects->compositingType() == OpenGLCompositing);
     }

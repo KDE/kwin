@@ -720,8 +720,7 @@ bool GLRenderTarget::mSupported = false;
 
 void GLRenderTarget::initStatic()
     {
-    mSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D &&
-            GLTexture::NPOTTextureSupported();
+    mSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
     }
 
 GLRenderTarget::GLRenderTarget(GLTexture* color)
@@ -781,7 +780,8 @@ void GLRenderTarget::initFBO()
     glGenFramebuffers(1, &mFramebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER_EXT, mFramebuffer);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, mTexture->texture(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT,
+                           mTexture->target(), mTexture->texture(), 0);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER_EXT);
     if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
