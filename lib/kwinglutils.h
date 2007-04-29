@@ -55,6 +55,10 @@ bool KWIN_EXPORT hasGLExtension(const QString& extension);
 void KWIN_EXPORT checkGLError( const char* txt );
 
 inline bool KWIN_EXPORT isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
+/**
+ * @return power of two integer _greater or equal to_ x.
+ *  E.g. nearestPowerOfTwo(513) = nearestPowerOfTwo(800) = 1024
+ **/
 int KWIN_EXPORT nearestPowerOfTwo( int x );
 
 #ifdef HAVE_OPENGL
