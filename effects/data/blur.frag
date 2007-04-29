@@ -1,6 +1,6 @@
 uniform sampler2D inputTex;
-uniform float displayWidth;
-uniform float displayHeight;
+uniform float textureWidth;
+uniform float textureHeight;
 
 varying vec2 pos;
 varying vec2 blurDirection;
@@ -9,7 +9,7 @@ varying vec2 blurDirection;
 // Converts pixel coordinates to texture coordinates
 vec2 pix2tex(vec2 pix)
 {
-    return vec2(pix.x / displayWidth, 1.0 - pix.y / displayHeight);
+    return vec2(pix.x / textureWidth, 1.0 - pix.y / textureHeight);
 }
 
 vec3 blurTex(float offset, float strength)

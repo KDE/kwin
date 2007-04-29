@@ -58,11 +58,19 @@ BlurEffect::~BlurEffect()
 bool BlurEffect::loadData()
     {
     // Create texture and render target
-    mSceneTexture = new GLTexture(displayWidth(), displayHeight());
+    int texw = displayWidth();
+    int texh = displayHeight();
+    if( !GLTexture::NPOTTextureSupported() )
+    {
+        kWarning( 1212 ) << k_funcinfo << "NPOT textures not supported, wasting some memory" << endl;
+        texw = nearestPowerOfTwo(texw);
+        texh = nearestPowerOfTwo(texh);
+    }
+    mSceneTexture = new GLTexture(texw, texh);
     mSceneTexture->setFilter(GL_LINEAR);
-    mTmpTexture = new GLTexture(displayWidth(), displayHeight());
+    mTmpTexture = new GLTexture(texw, texh);
     mTmpTexture->setFilter(GL_LINEAR);
-    mBlurTexture = new GLTexture(displayWidth(), displayHeight());
+    mBlurTexture = new GLTexture(texw, texh);
 
     mSceneTarget = new GLRenderTarget(mSceneTexture);
     if( !mSceneTarget->valid() )
@@ -83,15 +91,15 @@ bool BlurEffect::loadData()
 
     mBlurShader->bind();
     mBlurShader->setUniform("inputTex", 0);
-    mBlurShader->setUniform("displayWidth", (float)displayWidth());
-    mBlurShader->setUniform("displayHeight", (float)displayHeight());
+    mBlurShader->setUniform("textureWidth", (float)texw);
+    mBlurShader->setUniform("textureHeight", (float)texh);
     mBlurShader->unbind();
 
     mWindowShader->bind();
     mWindowShader->setUniform("windowTex", 0);
     mWindowShader->setUniform("backgroundTex", 4);
-    mWindowShader->setUniform("displayWidth", (float)displayWidth());
-    mWindowShader->setUniform("displayHeight", (float)displayHeight());
+    mWindowShader->setUniform("textureWidth", (float)texw);
+    mWindowShader->setUniform("textureHeight", (float)texh);
     mWindowShader->unbind();
 
     return true;
@@ -171,7 +179,6 @@ void BlurEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             // Put the blur texture to tex unit 4
             glActiveTexture(GL_TEXTURE4);
             mBlurTexture->bind();
-            mBlurTexture->enableUnnormalizedTexCoords();
             glActiveTexture(GL_TEXTURE0);
 
             // Paint
@@ -188,7 +195,6 @@ void BlurEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 
             // Disable blur texture and shader
             glActiveTexture(GL_TEXTURE4);
-            mBlurTexture->disableUnnormalizedTexCoords();
             mBlurTexture->unbind();
             glActiveTexture(GL_TEXTURE0);
             mWindowShader->unbind();
