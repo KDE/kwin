@@ -20,7 +20,7 @@ target_link_libraries(kdeinit_kwin_rules_dialog  ${KDE4_KDEUI_LIBS} ${KDE4_KDE3S
 install(TARGETS kdeinit_kwin_rules_dialog  DESTINATION ${LIB_INSTALL_DIR} )
 
 target_link_libraries( kwin_rules_dialog kdeinit_kwin_rules_dialog )
-install(TARGETS kwin_rules_dialog DESTINATION bin)
+install(TARGETS kwin_rules_dialog DESTINATION ${BIN_INSTALL_DIR})
 
 ########### next target ###############
 
