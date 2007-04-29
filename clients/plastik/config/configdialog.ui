@@ -1,119 +1,109 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>ConfigDialog</class>
-<widget class="QWidget">
-    <property name="name">
-        <cstring>ConfigDialog</cstring>
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>ConfigDialog</class>
+  <widget class="QWidget" name="ConfigDialog" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>541</width>
+        <height>170</height>
+      </rect>
     </property>
-    <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>541</width>
-            <height>170</height>
-        </rect>
+    <property name="windowTitle" >
+      <string>Config Dialog</string>
     </property>
-    <property name="windowTitle">
-        <string>Config Dialog</string>
-    </property>
-    <vbox>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <property name="margin">
-            <number>0</number>
-        </property>
-        <widget class="QButtonGroup">
-            <property name="name">
-                <cstring>titleAlign</cstring>
+    <layout class="QVBoxLayout" >
+      <property name="margin" >
+        <number>0</number>
+      </property>
+      <item>
+        <widget class="Q3ButtonGroup" name="titleAlign" >
+          <property name="title" >
+            <string>Title &amp;Alignment</string>
+          </property>
+          <layout class="QHBoxLayout" >
+            <property name="margin" >
+              <number>0</number>
             </property>
-            <property name="title">
-                <string>Title &amp;Alignment</string>
-            </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
+            <item>
+              <widget class="QRadioButton" name="AlignLeft" >
+                <property name="text" >
+                  <string>Left</string>
                 </property>
-                <widget class="QRadioButton">
-                    <property name="name">
-                        <cstring>AlignLeft</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Left</string>
-                    </property>
-                </widget>
-                <widget class="QRadioButton">
-                    <property name="name">
-                        <cstring>AlignHCenter</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Center</string>
-                    </property>
-                </widget>
-                <widget class="QRadioButton">
-                    <property name="name">
-                        <cstring>AlignRight</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Right</string>
-                    </property>
-                </widget>
-            </hbox>
+              </widget>
+            </item>
+            <item>
+              <widget class="QRadioButton" name="AlignHCenter" >
+                <property name="text" >
+                  <string>Center</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QRadioButton" name="AlignRight" >
+                <property name="text" >
+                  <string>Right</string>
+                </property>
+              </widget>
+            </item>
+          </layout>
         </widget>
-        <widget class="QCheckBox">
-            <property name="name">
-                <cstring>coloredBorder</cstring>
-            </property>
-            <property name="text">
-                <string>Colored Window Border</string>
-            </property>
-            <property name="accel">
-                <string></string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>Check this option if the window border should be painted in the titlebar color. Otherwise it will be painted in the background color.</string>
-            </property>
+      </item>
+      <item>
+        <widget class="QCheckBox" name="coloredBorder" >
+          <property name="text" >
+            <string>Colored Window Border</string>
+          </property>
+          <property name="shortcut" >
+            <string/>
+          </property>
+          <property name="whatsThis" stdset="0" >
+            <string>Check this option if the window border should be painted in the titlebar color. Otherwise it will be painted in the background color.</string>
+          </property>
         </widget>
-        <widget class="QCheckBox">
-            <property name="name">
-                <cstring>titleShadow</cstring>
-            </property>
-            <property name="text">
-                <string>Use shadowed &amp;text</string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
-            </property>
+      </item>
+      <item>
+        <widget class="QCheckBox" name="titleShadow" >
+          <property name="text" >
+            <string>Use shadowed &amp;text</string>
+          </property>
+          <property name="whatsThis" stdset="0" >
+            <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
+          </property>
         </widget>
-        <widget class="QCheckBox">
-            <property name="name">
-                <cstring>animateButtons</cstring>
-            </property>
-            <property name="text">
-                <string>Animate buttons</string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>Check this option if you want the buttons to fade in when the mouse pointer hovers over them and fade out again when it moves away.</string>
-            </property>
+      </item>
+      <item>
+        <widget class="QCheckBox" name="animateButtons" >
+          <property name="text" >
+            <string>Animate buttons</string>
+          </property>
+          <property name="whatsThis" stdset="0" >
+            <string>Check this option if you want the buttons to fade in when the mouse pointer hovers over them and fade out again when it moves away.</string>
+          </property>
         </widget>
-        <widget class="QCheckBox">
-            <property name="name">
-                <cstring>menuClose</cstring>
-            </property>
-            <property name="text">
-                <string>Close windows by double clicking the menu button</string>
-            </property>
-            <property name="whatsThis" stdset="0">
-                <string>Check this option if you want windows to be closed when you double click the menu button, similar to Microsoft Windows.</string>
-            </property>
+      </item>
+      <item>
+        <widget class="QCheckBox" name="menuClose" >
+          <property name="text" >
+            <string>Close windows by double clicking the menu button</string>
+          </property>
+          <property name="whatsThis" stdset="0" >
+            <string>Check this option if you want windows to be closed when you double click the menu button, similar to Microsoft Windows.</string>
+          </property>
         </widget>
-    </vbox>
-</widget>
-<tabstops>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <tabstops>
     <tabstop>AlignLeft</tabstop>
     <tabstop>AlignHCenter</tabstop>
     <tabstop>AlignRight</tabstop>
     <tabstop>animateButtons</tabstop>
     <tabstop>titleShadow</tabstop>
-</tabstops>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+  </tabstops>
+</ui>

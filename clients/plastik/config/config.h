@@ -24,11 +24,19 @@
 #define KNIFTYCONFIG_H
 
 #include <QObject>
-
+#include "ui_configdialog.h"
 class QButtonGroup;
 class QGroupBox;
 class KConfig;
-class ConfigDialog;
+
+class ConfigDialog : public QWidget, public Ui::ConfigDialog
+{
+public:
+  ConfigDialog( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
 
 class PlastikConfig : public QObject
 {

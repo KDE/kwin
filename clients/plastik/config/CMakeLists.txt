@@ -7,7 +7,7 @@ set(kwin_plastik_config_PART_SRCS config.cpp )
 
 kde4_automoc(${kwin_plastik_config_PART_SRCS})
 
-kde4_add_ui3_files(kwin_plastik_config_PART_SRCS configdialog.ui )
+kde4_add_ui_files(kwin_plastik_config_PART_SRCS configdialog.ui )
 
 kde4_add_plugin(kwin_plastik_config ${kwin_plastik_config_PART_SRCS})
 
