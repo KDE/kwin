@@ -44,7 +44,6 @@
 #include <X11/Xutil.h>
 
 #include <stdlib.h>
-#include <cstring>
 
 #include "mouse.h"
 #include "mouse.moc"
