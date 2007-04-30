@@ -432,7 +432,6 @@ void KFocusConfig::load( void )
 
     setTraverseAll( config->group("TabBox").readEntry(KWIN_TRAVERSE_ALL, false));
 
-    config->setGroup("Desktops");
     emit KCModule::changed(false);
 }
 
@@ -485,8 +484,6 @@ void KFocusConfig::save( void )
     config->group("PopupInfo").writeEntry( KWIN_SHOW_POPUP, showPopupinfo->isChecked());
 
     config->group("TabBox").writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
-
-    config->setGroup("Desktops");
 
     if (standAlone)
     {
