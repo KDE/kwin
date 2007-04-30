@@ -158,7 +158,7 @@ As already said, many parts of KWin don't need knowledge of Xlib or even how X a
 Some parts do, and it may be also useful to have at least a basic understand for general
 understanding. A reference manual for Xlib can be found e.g.
 at ftp://ftp.x.org/pub/X11R7.0/doc/PDF/xlib.pdf , a tutorial explaining basic can be found
-e.g. at ttp://users.actcom.co.il/~choo/lupg/tutorials/xlib-programming/xlib-programming.html
+e.g. at http://users.actcom.co.il/~choo/lupg/tutorials/xlib-programming/xlib-programming.html
 (note that you don't need to know that all - e.g. GC's are very rarely needed and the
 section on fonts is today outdated).
 
