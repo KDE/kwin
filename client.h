@@ -468,8 +468,6 @@ class Client
         friend struct CheckIgnoreFocusStealingProcedure;
         friend struct ResetupRulesProcedure;
         friend class GeometryUpdatesBlocker;
-        void show() { assert( false ); } // SELI remove after Client is no longer QWidget
-        void hide() { assert( false ); }
         QTimer* demandAttentionKNotifyTimer;
 
         friend bool performTransiencyCheck();
