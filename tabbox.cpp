@@ -25,6 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QApplication>
 #include <qdesktopwidget.h>
 #include <QCursor>
+#include <QAction>
 #include <stdarg.h>
 #include <kdebug.h>
 #include <kglobalsettings.h>
@@ -981,14 +982,23 @@ void Workspace::slotWalkBackThroughDesktopList()
         }
     }
 
+void Workspace::modalActionsSwitch( bool enabled )
+    {
+    QList<KActionCollection*> collections;
+    collections.append( keys );
+    collections.append( disable_shortcuts_keys );
+    collections.append( client_keys );
+    foreach (KActionCollection* collection, collections)
+        foreach (QAction *action, collection->actions())
+            action->setEnabled(enabled);
+    }
+
 bool Workspace::startKDEWalkThroughWindows()
     {
     if( !establishTabBoxGrab())
         return false;
     tab_grab = true;
-    keys->setEnabled( false );
-    disable_shortcuts_keys->setEnabled( false );
-    client_keys->setEnabled( false );
+    modalActionsSwitch( false );
     tab_box->setMode( TabBoxWindowsMode );
     tab_box->reset();
     return true;
@@ -999,9 +1009,7 @@ bool Workspace::startWalkThroughDesktops( TabBoxMode mode )
     if( !establishTabBoxGrab())
         return false;
     control_grab = true;
-    keys->setEnabled( false );
-    disable_shortcuts_keys->setEnabled( false );
-    client_keys->setEnabled( false );
+    modalActionsSwitch( false );
     tab_box->setMode( mode );
     tab_box->reset();
     return true;
@@ -1181,9 +1189,7 @@ void Workspace::closeTabBox()
     {
     removeTabBoxGrab();
     tab_box->hide();
-    keys->setEnabled( true );
-    disable_shortcuts_keys->setEnabled( true );
-    client_keys->setEnabled( true );
+    modalActionsSwitch( true );
     tab_grab = false;
     control_grab = false;
     }

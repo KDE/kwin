@@ -622,6 +622,8 @@ class Workspace : public QObject, public KDecorationDefines
         QMenu *desk_popup;
         int desk_popup_index;
 
+        void modalActionsSwitch( bool enabled );
+
         KActionCollection *keys;
         KActionCollection *client_keys;
         QAction *mResizeOpAction;
