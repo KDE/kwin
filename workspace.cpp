@@ -1324,7 +1324,10 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     // and active_client is on_all_desktops and under mouse (hence == old_active_client),
     // conserve focus (thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
     else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop())
-      c= active_client;
+      c = active_client;
+
+    if( c == NULL && !desktops.isEmpty())
+        c = findDesktop( true, currentDesktop());
 
     if( c != active_client )
         setActiveClient( NULL, Allowed );

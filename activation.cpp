@@ -222,8 +222,8 @@ void Workspace::setActiveClient( Client* c, allowed_t )
     ++set_active_client_recursion;
     if( active_client != NULL )
         { // note that this may call setActiveClient( NULL ), therefore the recursion counter
-            active_client->setActive( false );
-    }
+        active_client->setActive( false );
+        }
     active_client = c;
     Q_ASSERT( c == NULL || c->isActive());
     if( active_client != NULL )
@@ -266,6 +266,7 @@ void Workspace::activateClient( Client* c, bool force )
     {
     if( c == NULL )
         {
+        focusToNull();
         setActiveClient( NULL, Allowed );
         return;
         }
