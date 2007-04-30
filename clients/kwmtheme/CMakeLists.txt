@@ -1,5 +1,6 @@
 
 add_subdirectory( cli_installer ) 
+add_subdirectory( pics ) 
 
 
 
