@@ -21,7 +21,7 @@
 #define __RULESWIDGET_H__
 
 #include <kdialog.h>
-#include <kwm.h>
+#include <kwindowsystem.h>
 //#include <kshortcutdialog.h>
 
 #include "ruleswidgetbase.h"

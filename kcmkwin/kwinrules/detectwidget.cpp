@@ -22,7 +22,7 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kwm.h>
+#include <kwindowsystem.h>
 #include <QLabel>
 #include <QRadioButton>
 #include <QCheckBox>
@@ -72,7 +72,7 @@ void DetectDialog::readWindow( WId w )
         emit detectionDone( false );
         return;
         }
-    info = KWM::windowInfo( w, -1U, -1U ); // read everything
+    info = KWindowSystem::windowInfo( w, -1U, -1U ); // read everything
     if( !info.valid())
         {
         emit detectionDone( false );

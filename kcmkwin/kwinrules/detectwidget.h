@@ -23,7 +23,7 @@
 #include "ui_detectwidgetbase.h"
 
 #include <kdialog.h>
-#include <kwm.h>
+#include <kwindowsystem.h>
 
 #include "../../rules.h"
 //Added by qt3to4:

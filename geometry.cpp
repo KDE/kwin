@@ -22,7 +22,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kapplication.h>
 #include <kglobal.h>
 #include <QPainter>
-#include <kwm.h>
+#include <kwindowsystem.h>
 
 #include "placement.h"
 #include "notifications.h"
@@ -658,7 +658,7 @@ void Workspace::updateTopMenuGeometry( Client* c )
         ev.xclient.data.l[3] = 0;
         ev.xclient.data.l[4] = 0;
         XSendEvent( display(), c->window(), False, NoEventMask, &ev );
-        KWM::setStrut( c->window(), 0, 0, topmenu_height, 0 ); // so that kicker etc. know
+        KWindowSystem::setStrut( c->window(), 0, 0, topmenu_height, 0 ); // so that kicker etc. know
         c->checkWorkspacePosition();
         return;
         }

@@ -18,7 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <unistd.h>
 #include <kstandarddirs.h>
 #include <QWhatsThis>
-#include <kwm.h>
+#include <kwindowsystem.h>
 #include <kiconloader.h>
 #include <stdlib.h>
 
@@ -1225,7 +1225,7 @@ QString Client::readName() const
     if ( info->name() && info->name()[ 0 ] != '\0' ) 
         return QString::fromUtf8( info->name() );
     else 
-        return KWM::readNameProperty( window(), XA_WM_NAME );
+        return KWindowSystem::readNameProperty( window(), XA_WM_NAME );
     }
     
 KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, Client, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
@@ -1284,7 +1284,7 @@ void Client::fetchIconicName()
     if ( info->iconName() && info->iconName()[ 0 ] != '\0' ) 
         s = QString::fromUtf8( info->iconName() );
     else 
-        s = KWM::readNameProperty( window(), XA_WM_ICON_NAME );
+        s = KWindowSystem::readNameProperty( window(), XA_WM_ICON_NAME );
     if ( s != cap_iconic ) 
         {
 	bool was_set = !cap_iconic.isEmpty();
@@ -1349,10 +1349,10 @@ void Client::readIcons( Window win, QPixmap* icon, QPixmap* miniicon )
     {    
     // get the icons, allow scaling
     if( icon != NULL )
-        *icon = KWM::icon( win, 32, 32, true, KWM::NETWM | KWM::WMHints );
+        *icon = KWindowSystem::icon( win, 32, 32, true, KWindowSystem::NETWM | KWindowSystem::WMHints );
     if( miniicon != NULL )
         if( icon == NULL || !icon->isNull())
-            *miniicon = KWM::icon( win, 16, 16, true, KWM::NETWM | KWM::WMHints );
+            *miniicon = KWindowSystem::icon( win, 16, 16, true, KWindowSystem::NETWM | KWindowSystem::WMHints );
         else
             *miniicon = QPixmap();
     }
@@ -1379,8 +1379,8 @@ void Client::getIcons()
         }
     if( icon_pix.isNull())
         { // and if nothing else, load icon from classhint or xapp icon
-        icon_pix = KWM::icon( window(), 32, 32, true, KWM::ClassHint | KWM::XApp );
-        miniicon_pix = KWM::icon( window(), 16, 16, true, KWM::ClassHint | KWM::XApp );
+        icon_pix = KWindowSystem::icon( window(), 32, 32, true, KWindowSystem::ClassHint | KWindowSystem::XApp );
+        miniicon_pix = KWindowSystem::icon( window(), 16, 16, true, KWindowSystem::ClassHint | KWindowSystem::XApp );
         }
     if( isManaged() && decoration != NULL )
         decoration->iconChange();

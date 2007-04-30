@@ -24,7 +24,7 @@
 #include <QCheckBox>
 #include <kpushbutton.h>
 #include <QLabel>
-#include <kwm.h>
+#include <kwindowsystem.h>
 #include <klocale.h>
 #include <QRegExp>
 
@@ -110,9 +110,9 @@ RulesWidget::RulesWidget( QWidget* parent )
     SETUP( disableglobalshortcuts, force );
     int i;
     for( i = 1;
-         i <= KWM::numberOfDesktops();
+         i <= KWindowSystem::numberOfDesktops();
          ++i )
-        desktop->addItem( QString::number( i ).rightJustified( 2 ) + ':' + KWM::desktopName( i ));
+        desktop->addItem( QString::number( i ).rightJustified( 2 ) + ':' + KWindowSystem::desktopName( i ));
     desktop->addItem( i18n( "All Desktops" ));
     }
 
