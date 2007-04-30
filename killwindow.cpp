@@ -86,7 +86,8 @@ void KillWindow::start()
                     escape_pressed = true;
                     break;
                     }
-                workspace->killWindowId(ev.xbutton.subwindow);
+                if( ev.xbutton.button == Button1 || ev.xbutton.button == Button2 )
+                    workspace->killWindowId(ev.xbutton.subwindow);
                 }
             continue;
             }
