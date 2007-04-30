@@ -583,23 +583,23 @@ QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 	int width = over->width(), height = over->height();
 
 	// Clear the destination image
-	Q_UINT32 *data = reinterpret_cast<Q_UINT32*>( dest.bits() );
+	quint32 *data = reinterpret_cast<quint32*>( dest.bits() );
 	for (int i = 0; i < width * height; i++)
 		*(data++) = 0;
 
 	// Copy the under image (bottom aligned) to the destination image
 	for (int y1 = height - under->height(), y2 = 0; y1 < height; y1++, y2++ )
 	{
-		register Q_UINT32 *dst = reinterpret_cast<Q_UINT32*>( dest.scanLine(y1) );
-		register Q_UINT32 *src = reinterpret_cast<Q_UINT32*>( under->scanLine(y2) );
+		register quint32 *dst = reinterpret_cast<quint32*>( dest.scanLine(y1) );
+		register quint32 *src = reinterpret_cast<quint32*>( under->scanLine(y2) );
 
 		for ( int x = 0; x < width; x++ )
 			*(dst++) = *(src++);
 	}
 
 	// Blend the over image onto the destination
-	register Q_UINT32 *dst = reinterpret_cast<Q_UINT32*>( dest.bits() );
-	register Q_UINT32 *src = reinterpret_cast<Q_UINT32*>( over->bits() );
+	register quint32 *dst = reinterpret_cast<quint32*>( dest.bits() );
+	register quint32 *src = reinterpret_cast<quint32*>( over->bits() );
 	for ( int i = 0; i < width * height; i++ )
 	{
 		int r1 = qRed( *dst ), g1 = qGreen( *dst ), b1 = qBlue( *dst );
