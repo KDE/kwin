@@ -16,7 +16,7 @@ kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 
 target_link_libraries(kdecorations  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
 
-set_target_properties(kdecorations PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kdecorations PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}  )
 install(TARGETS kdecorations  DESTINATION ${LIB_INSTALL_DIR} )
 
 
