@@ -175,7 +175,7 @@ unsigned long Options::updateSettings()
 
     //translucency settings - TODO
     config.changeGroup("Translucency");
-    useTranslucency = config.readEntry("UseTranslucency", true);
+    useTranslucency = config.readEntry("UseTranslucency", false);
     translucentActiveWindows = config.readEntry("TranslucentActiveWindows", false);
     activeWindowOpacity = uint((config.readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
     translucentInactiveWindows = config.readEntry("TranslucentInactiveWindows", false);
