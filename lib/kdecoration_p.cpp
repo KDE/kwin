@@ -144,9 +144,7 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     QFont old_activeFontSmall = activeFontSmall;
     QFont old_inactiveFontSmall = inactiveFontSmall;
 
-    QFont activeFontGuess = KGlobalSettings::generalFont();
-    activeFontGuess.setBold(true);
-    activeFontGuess.setPixelSize(12);
+    QFont activeFontGuess = KGlobalSettings::windowTitleFont();
 
     activeFont = wmConfig.readEntry("activeFont", activeFontGuess);
     inactiveFont = wmConfig.readEntry("inactiveFont", activeFont);
