@@ -42,6 +42,8 @@ class Group
         bool groupEvent( XEvent* e );
         void updateUserTime( Time time = CurrentTime );
         Time userTime() const;
+        void ref();
+        void deref();
         EffectWindowGroupImpl* effectGroup();
     private:
         void getIcons();
@@ -52,6 +54,7 @@ class Group
         Workspace* _workspace;
         NETWinInfo* leader_info;
         Time user_time;
+        int refcount;
         EffectWindowGroupImpl* effect_group;
     };
 
