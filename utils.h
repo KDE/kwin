@@ -260,22 +260,22 @@ inline bool compositing() { return scene != NULL; }
 #define KWIN_CHECK_PREDICATE( name, cls, check ) \
 struct name \
     { \
-    inline bool operator()( const cls* cl ) { return check; }; \
+    inline bool operator()( const cls* cl ) { return check; } \
     }
 
 #define KWIN_COMPARE_PREDICATE( name, cls, type, check ) \
 struct name \
     { \
     typedef type type_helper; /* in order to work also with type being 'const Client*' etc. */ \
-    inline name( const type_helper& compare_value ) : value( compare_value ) {}; \
-    inline bool operator()( const cls* cl ) { return check; }; \
+    inline name( const type_helper& compare_value ) : value( compare_value ) {} \
+    inline bool operator()( const cls* cl ) { return check; } \
     const type_helper& value; \
     }
 
 #define KWIN_PROCEDURE( name, cls, action ) \
 struct name \
     { \
-    inline void operator()( cls* cl ) { action; }; \
+    inline void operator()( cls* cl ) { action; } \
     }
 
 KWIN_CHECK_PREDICATE( TruePredicate, Client, cl == cl /*true, avoid warning about 'cl' */ );

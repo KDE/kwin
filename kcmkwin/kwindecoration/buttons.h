@@ -70,7 +70,7 @@ class ButtonDrag : public Q3StoredDrag
 {
 	public:
 		ButtonDrag( Button btn, QWidget* parent, const char* name=0 );
-		~ButtonDrag() {};
+		~ButtonDrag() {}
 
 		static bool canDecode( QDropEvent* e );
 		static bool decode( QDropEvent* e, Button& btn );

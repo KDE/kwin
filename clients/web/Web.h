@@ -73,8 +73,8 @@ namespace Web
 
     public:
 
-      WebFactory() {};
-      virtual ~WebFactory() {};
+      WebFactory() {}
+      virtual ~WebFactory() {}
       virtual KDecoration* createDecoration( KDecorationBridge* );
       virtual bool reset( unsigned long changed );
       virtual bool supports( Ability ability );
