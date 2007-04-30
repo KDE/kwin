@@ -1610,7 +1610,7 @@ void Workspace::setDesktopLayout(NET::Orientation o, int x, int y,NET::DesktopLa
 
 void Workspace::calcDesktopLayout(int* xp, int* yp, Qt::Orientation* orientation) const
     {
-    x = layoutX; // <= 0 means compute it from the other and total number of desktops
+    int x = layoutX; // <= 0 means compute it from the other and total number of desktops
     int y = layoutY;
     if((x <= 0) && (y > 0))
        x = (numberOfDesktops()+y-1) / y;
