@@ -446,7 +446,11 @@ Workspace::~Workspace()
         {
 	// only release the window
         (*it)->releaseWindow( true );
-        // no removeClient() is called !
+        // No removeClient() is called, it does more than just removing.
+        // However, remove from some lists to e.g. prevent performTransiencyCheck()
+        // from crashing.
+        clients.remove( *it );
+        desktops.remove( *it );
         }
     for( UnmanagedList::ConstIterator it = unmanaged.begin();
          it != unmanaged.end();
