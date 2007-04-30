@@ -291,7 +291,6 @@ class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
 
     friend class KCommonDecoration;
 
-        Q_OBJECT
     public:
         KCommonDecorationButton(ButtonType type, KCommonDecoration *parent);
         virtual ~KCommonDecorationButton();
