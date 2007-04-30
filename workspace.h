@@ -248,7 +248,7 @@ class Workspace : public QObject, public KDecorationDefines
         void circulateDesktopApplications();
 
         QString desktopName( int desk ) const;
-        void setDesktopLayout(int o, int x, int y);
+        void setDesktopLayout(NET::Orientation o, int x, int y, NET::DesktopLayoutCorner c);
         void setShowingDesktop( bool showing );
         void resetShowingDesktop( bool keep_hidden );
         bool showingDesktop() const;
@@ -457,7 +457,6 @@ class Workspace : public QObject, public KDecorationDefines
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
-        bool netCheck( XEvent* e );
 
     private:
         void init();

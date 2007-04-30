@@ -209,10 +209,15 @@ bool Workspace::workspaceEvent( XEvent * e )
         && ( e->type == KeyPress || e->type == KeyRelease ))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
 
-    if ( e->type == PropertyNotify || e->type == ClientMessage ) 
+    if( e->type == PropertyNotify || e->type == ClientMessage )
         {
-        if ( netCheck( e ) )
-            return true;
+        unsigned long dirty[ NETRootInfo::PROPERTIES_SIZE ];
+        rootInfo->event( e, dirty, NETRootInfo::PROPERTIES_SIZE );
+        if( dirty[ NETRootInfo::PROTOCOLS ] & NET::DesktopNames )
+            saveDesktopSettings();
+        if( dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout )
+            setDesktopLayout( rootInfo->desktopLayoutOrientation(), rootInfo->desktopLayoutColumnsRows().width(),
+                rootInfo->desktopLayoutColumnsRows().height(), rootInfo->desktopLayoutCorner());
         }
 
     // events that should be handled before Clients can get them
@@ -547,20 +552,6 @@ Window Workspace::findSpecialEventWindow( XEvent* e )
             return None;
         };
     }
-
-/*!
-  Handles client messages sent to the workspace
- */
-bool Workspace::netCheck( XEvent* e )
-    {
-    unsigned int dirty = rootInfo->event( e );
-
-    if ( dirty & NET::DesktopNames )
-        saveDesktopSettings();
-
-    return dirty != 0;
-    }
-
 
 // ****************************************
 // Client

@@ -292,6 +292,7 @@ void Workspace::init()
         NET::WM2ExtendedStrut |
         NET::WM2KDETemporaryRules |
         NET::WM2ShowingDesktop |
+        NET::WM2DesktopLayout |
         0
         ,
         NET::ActionMove |
@@ -1599,25 +1600,26 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     updateClientArea();
     }
 
-void Workspace::setDesktopLayout(int o, int x, int y)
+void Workspace::setDesktopLayout(NET::Orientation o, int x, int y,NET::DesktopLayoutCorner c)
     {
-    layoutOrientation = (Qt::Orientation) o;
+    Q_UNUSED( c ); // I don't find this worth bothering, feel free to
+    layoutOrientation = ( o == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical );
     layoutX = x;
     layoutY = y;
     }
 
 void Workspace::calcDesktopLayout(int* xp, int* yp, Qt::Orientation* orientation) const
     {
-    int x = layoutX;
+    x = layoutX; // <= 0 means compute it from the other and total number of desktops
     int y = layoutY;
-    if ((x == -1) && (y > 0))
+    if((x <= 0) && (y > 0))
        x = (numberOfDesktops()+y-1) / y;
-    else if ((y == -1) && (x > 0))
+    else if((y <=0) && (x > 0))
        y = (numberOfDesktops()+x-1) / x;
 
-    if (x == -1)
+    if(x <=0)
        x = 1;
-    if (y == -1)
+    if (y <= 0)
        y = 1;
     *xp = x;
     *yp = y;

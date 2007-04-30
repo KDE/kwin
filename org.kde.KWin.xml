@@ -23,11 +23,6 @@
     <arg name="x" type="i" direction="in"/>
     <arg name="y" type="i" direction="in"/>
     </method>
-    <method name="setDesktopLayout">
-    <arg name="orientation" type="i" direction="in"/>
-    <arg name="x" type="i" direction="in"/>
-    <arg name="y" type="i" direction="in"/>
-    </method>
     <method name="setCurrentDesktop">
     <arg name="desktop" type="i" direction="in"/>
     <arg type="b" direction="out"/>
