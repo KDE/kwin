@@ -1587,8 +1587,8 @@ void KTranslucencyConfig::save( void )
   if (standAlone)
   {
     config->sync();
-    QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-    kwin.call( "reconfigure" );
+    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    kwin.reconfigure();
   }
   emit KCModule::changed(false);
 }
