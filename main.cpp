@@ -131,8 +131,6 @@ Application::Application( )
 
     initting = false; // startup done, we are up and running now.
 
-    QDBusInterface ksplash( "org.kde.ksplash", "/KSplash", "org.kde.KSplash" );   
-    ksplash.call( "upAndRunning", QString( "wm started" ));
     XEvent e;
     e.xclient.type = ClientMessage;
     e.xclient.message_type = XInternAtom( display(), "_KDE_SPLASH_PROGRESS", False );
