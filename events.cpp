@@ -476,10 +476,6 @@ bool Workspace::workspaceEvent( XEvent * e )
             if( electricBorderEvent( e ))
                 return true;
             break;
-        case MappingNotify:
-            XRefreshKeyboardMapping( &e->xmapping );
-            tab_box->updateKeyMapping();
-            break;
         case Expose:
             if( e->xexpose.window == rootWindow() && compositing())  // root window needs repainting
                 addRepaint( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );

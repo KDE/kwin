@@ -60,7 +60,6 @@ TabBox::TabBox( Workspace *ws )
 
     no_tasks = i18n("*** No Windows ***");
     m = TabBoxDesktopMode; // init variables
-    updateKeyMapping();
     reconfigure();
     reset();
     connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
@@ -777,10 +776,6 @@ bool areKeySymXsDepressed( bool bAll, const uint keySyms[], int nKeySyms )
     return bAll;
     }
 
-static const int MAX_KEYSYMS = 4;
-static uint alt_keysyms[ MAX_KEYSYMS ];
-static uint win_keysyms[ MAX_KEYSYMS ];
-
 static bool areModKeysDepressed( const QKeySequence& seq )
     {
     uint rgKeySyms[10];
@@ -801,17 +796,18 @@ static bool areModKeysDepressed( const QKeySequence& seq )
         }
     if( mod & Qt::ALT )
         {
-        for( int i = 0;
-             i < MAX_KEYSYMS && alt_keysyms[ i ] != NoSymbol;
-             ++i )
-            rgKeySyms[nKeySyms++] = alt_keysyms[ i ];
+        rgKeySyms[nKeySyms++] = XK_Alt_L;
+        rgKeySyms[nKeySyms++] = XK_Alt_R;
         }
     if( mod & Qt::META )
         {
-        for( int i = 0;
-             i < MAX_KEYSYMS && win_keysyms[ i ] != NoSymbol;
-             ++i )
-            rgKeySyms[nKeySyms++] = win_keysyms[ i ];
+        // It would take some code to determine whether the Win key
+        // is associated with Super or Meta, so check for both.
+        // See bug #140023 for details.
+        rgKeySyms[nKeySyms++] = XK_Super_L;
+        rgKeySyms[nKeySyms++] = XK_Super_R;
+        rgKeySyms[nKeySyms++] = XK_Meta_L;
+        rgKeySyms[nKeySyms++] = XK_Meta_R;
         }
 
     return areKeySymXsDepressed( false, rgKeySyms, nKeySyms );
@@ -823,44 +819,6 @@ static bool areModKeysDepressed( const KShortcut& cut )
         return true;
 
     return false;
-    }
-
-void TabBox::updateKeyMapping()
-    {
-    const int size = 6;
-    uint keysyms[ size ] = { XK_Alt_L, XK_Alt_R, XK_Super_L, XK_Super_R, XK_Meta_L, XK_Meta_R };
-    XModifierKeymap* map = XGetModifierMapping( display() );
-    int altpos = 0;
-    int winpos = 0;
-    int winmodpos = -1;
-    int winmod = KKeyServer::modXMeta();
-    while( winmod > 0 ) // get position of the set bit in winmod
-        {
-        winmod >>= 1;
-        ++winmodpos;
-        }
-    for( int i = 0;
-         i < MAX_KEYSYMS;
-         ++i )
-        alt_keysyms[ i ] = win_keysyms[ i ] = NoSymbol;
-    for( int i = 0;
-         i < size;
-         ++i )
-        {
-        KeyCode keycode = XKeysymToKeycode( display(), keysyms[ i ] );
-        for( int j = 0;
-             j < map->max_keypermod;
-             ++j )
-            {
-            if( map->modifiermap[ 3 * map->max_keypermod + j ] == keycode ) // Alt
-                if( altpos < MAX_KEYSYMS )
-                    alt_keysyms[ altpos++ ] = keysyms[ i ];
-            if( winmodpos >= 0 && map->modifiermap[ winmodpos * map->max_keypermod + j ] == keycode )
-                if( winpos < MAX_KEYSYMS )
-                    win_keysyms[ winpos++ ] = keysyms[ i ];
-            }
-        }
-    XFreeModifiermap( map );
     }
 
 void Workspace::slotWalkThroughWindows()
