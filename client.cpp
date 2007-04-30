@@ -237,9 +237,9 @@ void Client::releaseWindow( bool on_shutdown )
     --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     disownDataPassedToDeleted();
     del->unrefWindow();
+    checkNonExistentClients();
     deleteClient( this, Allowed );
     ungrabXServer();
-    checkNonExistentClients();
     }
 
 // like releaseWindow(), but this one is called when the window has been already destroyed
@@ -277,8 +277,8 @@ void Client::destroyClient()
     --block_geometry_updates; // don't use GeometryUpdatesBlocker, it would now set the geometry
     disownDataPassedToDeleted();
     del->unrefWindow();
-    deleteClient( this, Allowed );
     checkNonExistentClients();
+    deleteClient( this, Allowed );
     }
 
 void Client::updateDecoration( bool check_workspace_pos, bool force )
