@@ -621,7 +621,7 @@ class KWIN_EXPORT KDecoration
 	 * isShade() to get the current state.
 	 */
         virtual void shadeChange() = 0;
-    signals:
+    Q_SIGNALS:
         /**
          * This signal is emitted whenever the window's keep-above state changes.
          */
@@ -726,7 +726,7 @@ class KWIN_EXPORT KDecoration
          * Ungrabs X server (if the number of ungrab attempts matches the number of grab attempts).
          */
         void ungrabXServer();
-    public slots:
+    public Q_SLOTS:
 	// requests from decoration
 
 	/**
