@@ -980,7 +980,8 @@ void Client::pingWindow()
 
 void Client::gotPing( Time timestamp )
     {
-    if( timestamp != ping_timestamp )
+    // just plain compare is not good enough because of 64bit and truncating and whatnot
+    if( NET::timestampCompare( timestamp, ping_timestamp ) != 0 )
         return;
     delete ping_timer;
     ping_timer = NULL;
