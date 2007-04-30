@@ -223,7 +223,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
     if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
     QDesktopWidget *desktopwidget = KApplication::desktop();
-    int screen = desktopwidget->screenNumber( p );
+    int screen = desktopwidget->isVirtualDesktop() ? desktopwidget->screenNumber( p ) : desktopwidget->primaryScreen();
     if( screen < 0 )
         screen = desktopwidget->primaryScreen();
     QRect sarea = screenarea // may be NULL during KWin initialization
