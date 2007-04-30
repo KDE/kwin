@@ -64,6 +64,7 @@ class Client
         const Group* group() const;
         Group* group();
         void checkGroup( Group* gr = NULL, bool force = false );
+        void changeClientLeaderGroup( Group* gr );
         const WindowRules* rules() const;
         void removeRule( Rules* r );
         void setupWindowRules( bool ignore_temporary );
