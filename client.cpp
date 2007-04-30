@@ -239,6 +239,7 @@ void Client::releaseWindow( bool on_shutdown )
     del->unrefWindow();
     deleteClient( this, Allowed );
     ungrabXServer();
+    checkNonExistentClients();
     }
 
 // like releaseWindow(), but this one is called when the window has been already destroyed
@@ -277,6 +278,7 @@ void Client::destroyClient()
     disownDataPassedToDeleted();
     del->unrefWindow();
     deleteClient( this, Allowed );
+    checkNonExistentClients();
     }
 
 void Client::updateDecoration( bool check_workspace_pos, bool force )

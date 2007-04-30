@@ -325,6 +325,8 @@ int qtToX11State( Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
 Qt::MouseButtons x11ToQtMouseButtons( int state );
 Qt::KeyboardModifiers x11ToQtKeyboardModifiers( int state );
 
+void checkNonExistentClients();
+
 #ifndef KCMRULES
 // Qt dialogs emit no signal when closed :(
 
