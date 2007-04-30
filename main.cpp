@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "main.h"
 
+#include <kglobal.h>
 #include <klocale.h>
 #include <stdlib.h>
 #include <kcmdlineargs.h>
