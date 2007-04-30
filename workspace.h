@@ -709,6 +709,9 @@ class Workspace : public QObject, public KDecorationDefines
         Window overlay; // XComposite overlay window
         QSlider *transSlider;
         QPushButton *transButton;
+
+    private:
+        friend bool performTransiencyCheck();
     };
 
 // helper for Workspace::blockStackingUpdates() being called in pairs (true/false)

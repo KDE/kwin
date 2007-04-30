@@ -471,6 +471,8 @@ class Client
         void show() { assert( false ); } // SELI remove after Client is no longer QWidget
         void hide() { assert( false ); }
         QTimer* demandAttentionKNotifyTimer;
+
+        friend bool performTransiencyCheck();
     };
 
 // helper for Client::blockGeometryUpdates() being called in pairs (true/false)
