@@ -2475,7 +2475,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         {
         KConfig cfg( "kwin_dialogsrc" );
 	KConfigGroup cg(&cfg, "Notification Messages" ); // this depends on KMessageBox
-        if( !cg.readEntry( type, QVariant(true )).toBool()) // has don't show again checked
+        if( !cg.readEntry( type, true )) // has don't show again checked
             return;                           // save launching kdialog
         proc << "--dontagain" << "kwin_dialogsrc:" + type;
         }
