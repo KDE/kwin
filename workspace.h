@@ -447,6 +447,7 @@ class Workspace : public QObject, public KDecorationDefines
         void cleanupTemporaryRules();
         void writeWindowRules();
         void slotBlockShortcuts(int data);
+        void slotReloadConfig();
         void setPopupClientOpacity( QAction* action );
         void setupCompositing();
         void performCompositing();

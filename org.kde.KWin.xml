@@ -38,6 +38,7 @@
     <method name="nextDesktop"/>
     <method name="previousDesktop"/>
     <method name="circulateDesktopApplications"/>
+    <signal name="reloadConfig"/>
     <method name="loadEffect">
     <arg name="name" type="s" direction="in"/>
     </method>
