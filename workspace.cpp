@@ -101,7 +101,6 @@ Workspace::Workspace( bool restore )
     advanced_popup    (0),
     trans_popup       (0),
     desk_popup        (0),
-    desk_popup_index  (0),
     keys              (0),
     client_keys       ( NULL ),
 //    client_keys_dialog ( NULL ),

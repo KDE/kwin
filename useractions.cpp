@@ -109,8 +109,6 @@ QMenu* Workspace::clientPopup()
         action = popup->addMenu( advanced_popup );
         action->setText( i18n("Ad&vanced") );
 
-        desk_popup_index = popup->actions().count();
-
         if (options->useTranslucency){
             trans_popup = new QMenu( popup );
             trans_popup->setFont(KGlobalSettings::menuFont());
@@ -249,9 +247,9 @@ void Workspace::initDesktopPopup()
     connect( desk_popup, SIGNAL( aboutToShow() ),
              this, SLOT( desktopPopupAboutToShow() ) );
 
-    QAction *action = popup->addMenu( desk_popup );
+    QAction *action = desk_popup->menuAction();
+    popup->insertAction(mMoveOpAction, action);
     action->setText( i18n("To &Desktop") );
-    action->setData( desk_popup_index );
     }
 
 /*!

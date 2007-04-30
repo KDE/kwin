@@ -623,7 +623,6 @@ class Workspace : public QObject, public KDecorationDefines
         QMenu *advanced_popup;
         QMenu *trans_popup;
         QMenu *desk_popup;
-        int desk_popup_index;
 
         void modalActionsSwitch( bool enabled );
 
