@@ -62,6 +62,7 @@
 #include <kdecoration_plugins_p.h>
 #include <kdecorationfactory.h>
 #include <kvbox.h>
+#include <kwin_interface.h>
 
 // KCModule plugin interface
 // =========================
@@ -531,8 +532,8 @@ void KWinDecorationModule::save()
 	emit pluginSave( kwinConfig );
 
 	kwinConfig.sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    kwin.reconfigure();
 }
 
 

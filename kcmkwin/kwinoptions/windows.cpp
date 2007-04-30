@@ -55,7 +55,7 @@
 #include <X11/Xutil.h>
 
 #include "windows.h"
-
+#include "kwin_interface.h"
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
@@ -492,8 +492,8 @@ void KFocusConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+        kwin.reconfigure();
     }
     emit KCModule::changed(false);
 }
@@ -719,8 +719,8 @@ void KAdvancedConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+        kwin.reconfigure();
     }
     emit KCModule::changed(false);
 }
@@ -1183,8 +1183,8 @@ void KMovingConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        QDBusInterface kwin( "org.kde.kwin", "/KWin", "org.kde.KWin" );
-        kwin.call( "reconfigure" );
+        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+        kwin.reconfigure();
     }
     emit KCModule::changed(false);
 }
