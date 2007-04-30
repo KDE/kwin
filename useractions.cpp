@@ -61,7 +61,7 @@ QMenu* Workspace::clientPopup()
         advanced_popup->setFont(KGlobalSettings::menuFont());
 
         mKeepAboveOpAction = advanced_popup->addAction( i18n("Keep &Above Others") );
-        mKeepAboveOpAction->setIcon( KIcon( "up" ) );
+        mKeepAboveOpAction->setIcon( KIcon( "go-up" ) );
         KAction *kaction = qobject_cast<KAction*>( keys->action("Window Above Other Windows") );
         if ( kaction!=0 )
             mKeepAboveOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -69,7 +69,7 @@ QMenu* Workspace::clientPopup()
         mKeepAboveOpAction->setData( Options::KeepAboveOp );
 
         mKeepBelowOpAction = advanced_popup->addAction( i18n("Keep &Below Others") );
-        mKeepBelowOpAction->setIcon( KIcon( "down" ) );
+        mKeepBelowOpAction->setIcon( KIcon( "go-down" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Below Other Windows") );
         if ( kaction!=0 )
             mKeepBelowOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -77,7 +77,7 @@ QMenu* Workspace::clientPopup()
         mKeepBelowOpAction->setData( Options::KeepBelowOp );
 
         mFullScreenOpAction = advanced_popup->addAction( i18n("&Fullscreen") );
-        mFullScreenOpAction->setIcon( KIcon( "window_fullscreen" ) );
+        mFullScreenOpAction->setIcon( KIcon( "view-fullscreen" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Fullscreen") );
         if ( kaction!=0 )
             mFullScreenOpAction->setShortcut( kaction->globalShortcut().primary() );
@@ -173,7 +173,7 @@ QMenu* Workspace::clientPopup()
             }
 
         mCloseOpAction = popup->addAction( i18n("&Close") );
-        mCloseOpAction->setIcon( KIcon( "fileclose" ) );
+        mCloseOpAction->setIcon( KIcon( "window-close" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Close") );
         if ( kaction!=0 )
             mCloseOpAction->setShortcut( kaction->globalShortcut().primary() );
