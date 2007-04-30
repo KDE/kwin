@@ -55,7 +55,6 @@
 #include <X11/Xutil.h>
 
 #include "windows.h"
-#include "kwin_interface.h"
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
@@ -492,8 +491,10 @@ void KFocusConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-        kwin.reconfigure();
+       // Send signal to all kwin instances
+       QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+       QDBusConnection::sessionBus().send(message);
     }
     emit KCModule::changed(false);
 }
@@ -719,8 +720,11 @@ void KAdvancedConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-        kwin.reconfigure();
+       // Send signal to all kwin instances
+       QDBusMessage message =
+       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+       QDBusConnection::sessionBus().send(message);
+
     }
     emit KCModule::changed(false);
 }
@@ -1183,8 +1187,10 @@ void KMovingConfig::save( void )
     if (standAlone)
     {
         config->sync();
-        org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-        kwin.reconfigure();
+        // Send signal to all kwin instances
+        QDBusMessage message =
+           QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusConnection::sessionBus().send(message);
     }
     emit KCModule::changed(false);
 }
@@ -1587,8 +1593,11 @@ void KTranslucencyConfig::save( void )
   if (standAlone)
   {
     config->sync();
-    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-    kwin.reconfigure();
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
   }
   emit KCModule::changed(false);
 }

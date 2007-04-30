@@ -47,7 +47,6 @@
 
 #include "mouse.h"
 #include "mouse.moc"
-#include "kwin_interface.h"
 
 namespace {
 
@@ -571,8 +570,11 @@ void KTitleBarActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-    kwin.reconfigure();
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
   }
 }
 
@@ -847,8 +849,10 @@ void KWindowActionsConfig::save()
   if (standAlone)
   {
     config->sync();
-    org::kde::KWin kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-    kwin.reconfigure();
+    // Send signal to all kwin instances
+    QDBusMessage message =
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
   }
 }
 

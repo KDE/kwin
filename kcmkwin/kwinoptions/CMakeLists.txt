@@ -5,9 +5,6 @@
 
 set(kcm_kwinoptions_PART_SRCS windows.cpp mouse.cpp main.cpp )
 
-set(kwin_xml  ${CMAKE_SOURCE_DIR}/workspace/kwin/org.kde.KWin.xml)
-
-QT4_ADD_DBUS_INTERFACE( kcm_kwinoptions_PART_SRCS ${kwin_xml} kwin_interface )
 
 kde4_automoc(${kcm_kwinoptions_PART_SRCS})
 

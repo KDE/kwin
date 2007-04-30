@@ -134,7 +134,6 @@ Workspace::Workspace( bool restore )
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject("/KWin", this);
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
-
     _self = this;
     mgr = new PluginMgr;
     root = rootWindow();
