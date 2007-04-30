@@ -10,8 +10,7 @@
 #define __B2CLIENT_H
 
 #include <QDateTime>
-#include <q3button.h>
-#include <QBitmap>
+#include <QAbstractButton>
 //Added by qt3to4:
 #include <QPaintEvent>
 #include <QGridLayout>
@@ -20,6 +19,7 @@
 #include <QShowEvent>
 #include <QResizeEvent>
 #include <QMouseEvent>
+#include <QBitmap>
 #include <QPixmap>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
@@ -32,7 +32,7 @@ namespace B2 {
 
 class B2Client;
 
-class B2Button : public Q3Button
+class B2Button : public QAbstractButton
 {
 public:
     B2Button(B2Client *_client=0, QWidget *parent=0, const QString& tip=NULL, const int realizeBtns = Qt::LeftButton);
@@ -48,8 +48,7 @@ public:
     QSize sizeHint() const;
     QSizePolicy sizePolicy() const;
 protected:
-    virtual void drawButton(QPainter *p);
-    void drawButtonLabel(QPainter *){;}
+    virtual void paintEvent(QPaintEvent *e);
 
     void mousePressEvent( QMouseEvent* e );
     void mouseReleaseEvent( QMouseEvent* e );
