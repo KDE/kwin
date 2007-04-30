@@ -33,8 +33,8 @@ KCMRulesList::KCMRulesList( QWidget* parent)
 : KCMRulesListBase( parent)
     {
     // connect both current/selected, so that current==selected (stupid QListBox :( )
-    connect( rules_listbox, SIGNAL( currentChanged( QListWidgetItem* )),
-        SLOT( activeChanged( QListWidgetItem*)));
+    connect( rules_listbox, SIGNAL(itemChanged(QListWidgetItem*)),
+        SLOT(activeChanged(QListWidgetItem*)));
     connect( rules_listbox, SIGNAL( selectionChanged( QListWidgetItem* )),
         SLOT( activeChanged( QListWidgetItem*)));
     connect( new_button, SIGNAL( clicked()),
@@ -47,7 +47,7 @@ KCMRulesList::KCMRulesList( QWidget* parent)
         SLOT( moveupClicked()));
     connect( movedown_button, SIGNAL( clicked()),
         SLOT( movedownClicked()));
-    connect( rules_listbox, SIGNAL( doubleClicked ( QListWidgetItem * ) ),
+    connect( rules_listbox, SIGNAL(itemDoubleClicked(QListWidgetItem*) ),
             SLOT( modifyClicked()));
     load();
     }
