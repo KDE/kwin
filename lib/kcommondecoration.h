@@ -238,7 +238,7 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         virtual void iconChange();
         virtual void activeChange();
         virtual void captionChange();
-    public slots:
+    public Q_SLOTS:
         void keepAboveChange(bool above);
         void keepBelowChange(bool below);
         void slotMaximize();
