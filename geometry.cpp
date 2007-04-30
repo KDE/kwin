@@ -2263,7 +2263,7 @@ bool Client::startMoveResize()
     XMapRaised( display(), move_resize_grab_window );
     if( XGrabPointer( display(), move_resize_grab_window, False,
         ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
-        GrabModeAsync, GrabModeAsync, None, cursor.handle(), xTime() ) == Success )
+        GrabModeAsync, GrabModeAsync, move_resize_grab_window, cursor.handle(), xTime() ) == Success )
         has_grab = true;
     if( grabXKeyboard( frameId()))
         has_grab = move_resize_has_keyboard_grab = true;
