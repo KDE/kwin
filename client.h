@@ -69,6 +69,7 @@ class Client
         void removeRule( Rules* r );
         void setupWindowRules( bool ignore_temporary );
         void applyWindowRules();
+        void updateWindowRules();
 
     // returns true for "special" windows and false for windows which are "normal"
     // (normal=window which has a border, can be moved by the user, can be closed, etc.)
@@ -326,7 +327,6 @@ class Client
         QString readName() const;
         void setCaption( const QString& s, bool force = false );
         bool hasTransientInternal( const Client* c, bool indirect, ConstClientList& set ) const;
-        void updateWindowRules();
         void finishWindowRules();
         void setShortcutInternal( const KShortcut& cut );
 

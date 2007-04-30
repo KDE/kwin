@@ -80,6 +80,7 @@ Workspace::Workspace( bool restore )
     active_popup_client( NULL ),
     desktop_widget    (0),
     temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false ),
+    rules_updates_disabled( false ),
     active_client     (0),
     last_active_client     (0),
     most_recently_raised (0),

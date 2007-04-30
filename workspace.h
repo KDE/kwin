@@ -237,6 +237,8 @@ class Workspace : public QObject, public KDecorationDefines
         WindowRules findWindowRules( const Client*, bool );
         void rulesUpdated();
         void discardUsedWindowRules( Client* c, bool withdraw );
+        void disableRulesUpdates( bool disable );
+        bool rulesUpdatesDisabled() const;
 
     // dcop interface
         void cascadeDesktop();
@@ -563,6 +565,7 @@ class Workspace : public QObject, public KDecorationDefines
         QList<Rules*> rules;
         KXMessages temporaryRulesMessages;
         QTimer rulesUpdatedTimer;
+        bool rules_updates_disabled;
         static const char* windowTypeToTxt( NET::WindowType type );
         static NET::WindowType txtToWindowType( const char* txt );
         static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );
@@ -857,6 +860,12 @@ inline bool Workspace::globalShortcutsDisabled() const
 inline Window Workspace::overlayWindow()
     {
     return overlay;
+    }
+
+inline
+bool Workspace::rulesUpdatesDisabled() const
+    {
+    return rules_updates_disabled;
     }
 
 template< typename T >
