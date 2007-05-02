@@ -517,7 +517,6 @@ void Client::updateShape()
         noborder = true;
         updateDecoration( true );
         }
-    updateShape();
     }
 
 void Client::setMask( const QRegion& reg, int mode )
@@ -552,6 +551,7 @@ void Client::setMask( const QRegion& reg, int mode )
         scene->windowGeometryShapeChanged( this );
     if( effects != NULL )
         static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geometry());
+    updateShape();
     }
 
 QRegion Client::mask() const
