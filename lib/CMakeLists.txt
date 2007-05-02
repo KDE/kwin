@@ -34,7 +34,7 @@ set(kwin_EFFECTSLIB_SRCS
 kde4_automoc(${kwin_EFFECTSLIB_SRCS})
 kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 target_link_libraries(kwineffects ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${X11_LIBRARIES})
-set_target_properties(kdecorations PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kwineffects DESTINATION ${LIB_INSTALL_DIR})
 
 if(OPENGL_FOUND)
