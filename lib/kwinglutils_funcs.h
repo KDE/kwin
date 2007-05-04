@@ -15,6 +15,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #define KWIN_EXPORT KDE_EXPORT
 
+#include <config-X11.h> // HAVE_OPENGL
+
 #ifdef HAVE_OPENGL
 
 namespace KWin

@@ -95,9 +95,13 @@ bool hasGLExtension(const QString& extension)
 
 void checkGLError( const char* txt )
     {
+#ifdef HAVE_OPENGL
     GLenum err = glGetError();
     if( err != GL_NO_ERROR )
         kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
+#else
+    Q_UNUSED( txt );
+#endif
     }
 
 int nearestPowerOfTwo( int x )

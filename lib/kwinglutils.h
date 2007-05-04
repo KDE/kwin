@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_GLUTILS_H
 #define KWIN_GLUTILS_H
 
-#include <config.h>
+#include <config-X11.h> // HAVE_OPENGL
 
 #ifdef HAVE_OPENGL
 #include <GL/gl.h>

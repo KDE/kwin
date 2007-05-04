@@ -8,7 +8,7 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include <config.h>
+#include <config-X11.h> // HAVE_OPENGL
 
 #include "magnifier.h"
 
@@ -62,6 +62,7 @@ void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     effects->paintScreen( mask, region, data ); // paint normal screen
     if( zoom != 1.0 )
         { // paint magnifier
+// ## TODO this should be inside HAVE_OPENGL
         glPushAttrib( GL_ENABLE_BIT );
         QRect area = magnifierArea();
         glEnable( GL_SCISSOR_TEST );

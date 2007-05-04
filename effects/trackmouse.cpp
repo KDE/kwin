@@ -8,7 +8,7 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include <config.h>
+#include <config-X11.h>
 
 #include "trackmouse.h"
 
