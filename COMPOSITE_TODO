@@ -137,6 +137,9 @@ OpenGL TODO
     - otherwise drawWindow() used for thumbnails would use them too
     - they should be probably part of WindowPaintData
 
+% __GL_YIELD=NOTHING for NVidia reportedly improves perceived performance
+    - it needs to be set somehow (http://lists.kde.org/?l=kwin&m=117794153720348&w=2)
+
 
 XRender TODO
 ==============================
