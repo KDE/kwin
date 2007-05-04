@@ -1,4 +1,5 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=TrackMouse
+Name[zh_TW]=追蹤滑鼠
 X-KDE-Library=kwin4_effect_builtins

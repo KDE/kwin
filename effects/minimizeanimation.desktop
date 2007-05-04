@@ -1,4 +1,5 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=MinimizeAnimation
+Name[zh_TW]=縮小動畫
 X-KDE-Library=kwin4_effect_builtins

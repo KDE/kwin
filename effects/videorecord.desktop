@@ -1,4 +1,5 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Videorecord
+Name[zh_TW]=影像錄影
 X-KDE-Library=kwin4_effect_videorecord
