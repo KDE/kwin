@@ -20,7 +20,7 @@ namespace KWin
 {
 
 Toplevel::Toplevel( Workspace* ws )
-    : vis( None )
+    : vis( NULL )
     , info( NULL )
     , client( None )
     , frame( None )
