@@ -119,21 +119,10 @@ int nearestPowerOfTwo( int x )
     return 1 << last;
     }
 
-void renderGLGeometry( const float* vertices, const float* texture, int count, int dim, int stride )
-    {
-    return renderGLGeometry( false, QRegion(), vertices, texture, count, dim, stride );
-    }
-
-void renderGLGeometry( int mask, QRegion region, const float* vertices, const float* texture, int count,
-    int dim, int stride )
-    {
-    return renderGLGeometry( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
-        region, vertices, texture, count, dim, stride );
-    }
-
 void renderGLGeometry( bool clip, QRegion region, const float* vertices, const float* texture, int count,
     int dim, int stride )
     {
+#ifdef HAVE_OPENGL
     glPushAttrib( GL_ENABLE_BIT );
     glPushClientAttrib( GL_CLIENT_VERTEX_ARRAY_BIT );
     // Enable arrays
@@ -163,6 +152,19 @@ void renderGLGeometry( bool clip, QRegion region, const float* vertices, const f
         }
     glPopClientAttrib();
     glPopAttrib();
+#endif
+    }
+
+void renderGLGeometry( const float* vertices, const float* texture, int count, int dim, int stride )
+    {
+    renderGLGeometry( false, QRegion(), vertices, texture, count, dim, stride );
+    }
+
+void renderGLGeometry( int mask, QRegion region, const float* vertices, const float* texture, int count,
+    int dim, int stride )
+    {
+    renderGLGeometry( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
+        region, vertices, texture, count, dim, stride );
     }
 
 #ifdef HAVE_OPENGL
