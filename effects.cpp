@@ -552,7 +552,7 @@ void EffectsHandlerImpl::reserveElectricBorderSwitching( bool reserve )
 
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()
     {
-#ifdef HAVE_XRENDER
+#if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
     if( SceneXrender* s = dynamic_cast< SceneXrender* >( scene ))
         return s->bufferPicture();
 #endif

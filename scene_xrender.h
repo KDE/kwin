@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "scene.h"
 
-#ifdef HAVE_XRENDER
+#if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
 #include <X11/extensions/Xrender.h>
 
 namespace KWin

@@ -73,7 +73,7 @@ void Workspace::setupCompositing()
             scene = new SceneBasic( this );
             kDebug( 1212 ) << "X compositing" << endl;
           break;
-#ifdef HAVE_XRENDER
+#if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
         case 'X':
             scene = new SceneXrender( this );
             kDebug( 1212 ) << "XRender compositing" << endl;

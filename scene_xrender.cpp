@@ -29,7 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "scene_xrender.h"
 
-#ifdef HAVE_XRENDER
+#if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
 
 #include "toplevel.h"
 #include "client.h"
