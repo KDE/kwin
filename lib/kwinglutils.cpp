@@ -10,6 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "kwinglutils.h"
 
+#ifdef HAVE_OPENGL
+
 #include "kwinglobals.h"
 #include "kwineffects.h"
 
@@ -41,7 +43,6 @@ int glTextureUnitsCount;
 // Functions
 void initGLX()
     {
-#ifdef HAVE_OPENGL
     // Get GLX version
     int major, minor;
     glXQueryVersion( display(), &major, &minor );
@@ -51,14 +52,10 @@ void initGLX()
         display(), DefaultScreen( display()))).split(" ");
 
     glxResolveFunctions();
-#else
-    glXVersion = MAKE_GL_VERSION( 0, 0, 0 );
-#endif
     }
 
 void initGL()
     {
-#ifdef HAVE_OPENGL
     // Get OpenGL version
     QString glversionstring = QString((const char*)glGetString(GL_VERSION));
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
@@ -73,9 +70,6 @@ void initGL()
     GLTexture::initStatic();
     GLShader::initStatic();
     GLRenderTarget::initStatic();
-#else
-    glVersion = MAKE_GL_VERSION( 0, 0, 0 );
-#endif
     }
 
 bool hasGLVersion(int major, int minor, int release)
@@ -95,13 +89,9 @@ bool hasGLExtension(const QString& extension)
 
 void checkGLError( const char* txt )
     {
-#ifdef HAVE_OPENGL
     GLenum err = glGetError();
     if( err != GL_NO_ERROR )
         kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
-#else
-    Q_UNUSED( txt );
-#endif
     }
 
 int nearestPowerOfTwo( int x )
@@ -119,10 +109,21 @@ int nearestPowerOfTwo( int x )
     return 1 << last;
     }
 
+void renderGLGeometry( const float* vertices, const float* texture, int count, int dim, int stride )
+    {
+    return renderGLGeometry( false, QRegion(), vertices, texture, count, dim, stride );
+    }
+
+void renderGLGeometry( int mask, QRegion region, const float* vertices, const float* texture, int count,
+    int dim, int stride )
+    {
+    return renderGLGeometry( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
+        region, vertices, texture, count, dim, stride );
+    }
+
 void renderGLGeometry( bool clip, QRegion region, const float* vertices, const float* texture, int count,
     int dim, int stride )
     {
-#ifdef HAVE_OPENGL
     glPushAttrib( GL_ENABLE_BIT );
     glPushClientAttrib( GL_CLIENT_VERTEX_ARRAY_BIT );
     // Enable arrays
@@ -152,22 +153,7 @@ void renderGLGeometry( bool clip, QRegion region, const float* vertices, const f
         }
     glPopClientAttrib();
     glPopAttrib();
-#endif
     }
-
-void renderGLGeometry( const float* vertices, const float* texture, int count, int dim, int stride )
-    {
-    renderGLGeometry( false, QRegion(), vertices, texture, count, dim, stride );
-    }
-
-void renderGLGeometry( int mask, QRegion region, const float* vertices, const float* texture, int count,
-    int dim, int stride )
-    {
-    renderGLGeometry( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
-        region, vertices, texture, count, dim, stride );
-    }
-
-#ifdef HAVE_OPENGL
 
 //****************************************
 // GLTexture
@@ -799,6 +785,7 @@ void GLRenderTarget::initFBO()
 
     mValid = true;
     }
-#endif
 
 } // namespace
+
+#endif
