@@ -25,7 +25,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <klocale.h>
 #include <QApplication>
 #include <qdesktopwidget.h>
-#include <QCursor>
 #include <kstringhandler.h>
 #include <kglobalsettings.h>
 #include <QX11Info>
@@ -36,10 +35,10 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-PopupInfo::PopupInfo( const char *name )
-    : QWidget( 0 )
+PopupInfo::PopupInfo( Workspace* ws, const char *name )
+    : QWidget( 0, name ), workspace( ws )
     {
-      setObjectName( name );
+    setObjectName( name );
 
     m_infoString = "";
     m_shown = false;
@@ -66,7 +65,7 @@ PopupInfo::~PopupInfo()
  */
 void PopupInfo::reset()
     {
-    QRect r = KGlobalSettings::desktopGeometry(cursorPos());
+    QRect r = workspace->screenGeometry( workspace->activeScreen());
 
     int w = fontMetrics().width( m_infoString ) + 30;
 

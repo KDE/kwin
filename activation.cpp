@@ -411,16 +411,19 @@ bool Workspace::activateNextClient( Client* c )
                   i >= 0;
                   --i )
                 {
-                if( !focus_chain[ currentDesktop() ].at( i )->isShown( false )
-                    || !focus_chain[ currentDesktop() ].at(  i )->isOnCurrentDesktop())
+                Client* ci = focus_chain[ currentDesktop() ].at( i );
+                if( !ci->isShown( false )
+                    || !ci->isOnCurrentDesktop())
                     continue;
-                if( mainwindows.contains( focus_chain[ currentDesktop() ].at(  i ) ))
+                if( options->separateScreenFocus && !ci->isOnScreen( c->screen()))
+                    continue;
+                if( mainwindows.contains( ci ))
                     {
-                    get_focus = focus_chain[ currentDesktop() ].at(  i );
+                    get_focus = ci;
                     break;
                     }
                 if( get_focus == NULL )
-                    get_focus = focus_chain[ currentDesktop() ].at(  i );
+                    get_focus = ci;
                 }
             if( get_focus == NULL )
                 get_focus = findDesktop( true, currentDesktop());

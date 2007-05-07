@@ -24,7 +24,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <klocale.h>
 #include <QApplication>
 #include <qdesktopwidget.h>
-#include <QCursor>
 #include <QAction>
 #include <stdarg.h>
 #include <kdebug.h>
@@ -101,24 +100,35 @@ void TabBox::createClientList(ClientList &list, int desktop /*-1 = all*/, Client
 
     while ( c )
         {
+        Client* add = NULL;
         if ( ((desktop == -1) || c->isOnDesktop(desktop))
              && c->wantsTabFocus() )
-            {
-            if ( start == c )
-                {
-                list.removeAll( c );
-                list.prepend( c );
-                }
+            { // don't add windows that have modal dialogs
+            Client* modal = c->findModal();
+            if( modal == NULL || modal == c )
+                add = c;
+            else if( !list.contains( modal ))
+                add = modal;
             else
-                { // don't add windows that have modal dialogs
-                Client* modal = c->findModal();
-                if( modal == NULL || modal == c )
-                    list += c;
-                else if( !list.contains( modal ))
-                    list += modal;
+                {
+                // nothing
                 }
             }
-
+        if( options->separateScreenFocus && options->xineramaEnabled )
+            {
+            if( c->screen() != workspace()->activeScreen())
+                add = NULL;
+            }
+        if( add != NULL )
+            {
+            if ( start == add )
+                {
+                list.removeAll( add );
+                list.prepend( add );
+                }
+            else
+                list += add;
+            }
         if ( chain )
           c = workspace()->nextClientFocusChain( c );
         else
@@ -167,7 +177,7 @@ void TabBox::reset( bool partial_reset )
     {
     int w, h, cw = 0, wmax = 0;
 
-    QRect r = KGlobalSettings::desktopGeometry(cursorPos());
+    QRect r = workspace()->screenGeometry( workspace()->activeScreen());
 
     // calculate height of 1 line
     // fontheight + 1 pixel above + 1 pixel below, or 32x32 icon + 2 pixel above + below

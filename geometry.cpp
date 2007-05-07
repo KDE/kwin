@@ -218,14 +218,11 @@ void Workspace::updateClientArea()
 
   \sa geometry()
  */
-QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const
+QRect Workspace::clientArea( clientAreaOption opt, int screen, int desktop ) const
     {
     if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
     QDesktopWidget *desktopwidget = KApplication::desktop();
-    int screen = desktopwidget->isVirtualDesktop() ? desktopwidget->screenNumber( p ) : desktopwidget->primaryScreen();
-    if( screen < 0 )
-        screen = desktopwidget->primaryScreen();
     QRect sarea = screenarea // may be NULL during KWin initialization
         ? screenarea[ desktop ][ screen ]
         : desktopwidget->screenGeometry( screen );
@@ -270,10 +267,20 @@ QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop 
     return QRect();
     }
 
+QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const
+    {
+    QDesktopWidget *desktopwidget = KApplication::desktop();
+    int screen = desktopwidget->isVirtualDesktop() ? desktopwidget->screenNumber( p ) : desktopwidget->primaryScreen();
+    if( screen < 0 )
+        screen = desktopwidget->primaryScreen();
+    return clientArea( opt, screen, desktop );
+    }
+
 QRect Workspace::clientArea( clientAreaOption opt, const Client* c ) const
     {
     return clientArea( opt, c->geometry().center(), c->desktop());
     }
+
 
 /*!
   Client \a c is moved around to position \a pos. This gives the

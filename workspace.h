@@ -95,6 +95,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
         QRect clientArea( clientAreaOption, const Client* c ) const;
+        QRect clientArea( clientAreaOption, int screen, int desktop ) const;
 
         /**
          * @internal
@@ -171,6 +172,10 @@ class Workspace : public QObject, public KDecorationDefines
         void setNumberOfDesktops( int n );
         void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const;
 
+        int activeScreen() const;
+        int numScreens() const;
+        QRect screenGeometry( int screen ) const;
+        int screenNumber( QPoint pos ) const;
         QWidget* desktopWidget();
 
     // for TabBox

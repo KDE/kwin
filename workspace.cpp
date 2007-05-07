@@ -203,7 +203,7 @@ Workspace::Workspace( bool restore )
     client_keys = new KActionCollection( this );
     initShortcuts();
     tab_box = new TabBox( this );
-    popupinfo = new PopupInfo( );
+    popupinfo = new PopupInfo( this );
 
     init();
 
@@ -1598,6 +1598,40 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
          ++it )
         sendClientToDesktop( *it, desk, dont_activate );
     updateClientArea();
+    }
+
+int Workspace::numScreens() const
+    {
+    if( !options->xineramaEnabled )
+        return 0;
+    return qApp->desktop()->numScreens();
+    }
+
+int Workspace::activeScreen() const
+    {
+    if( !options->xineramaEnabled )
+        return 0;
+    if( !options->activeMouseScreen )
+        {
+        if( activeClient() != NULL )
+            return qApp->desktop()->screenNumber( activeClient()->geometry().center());
+        return qApp->desktop()->primaryScreen();
+        }
+    return qApp->desktop()->screenNumber( QCursor::pos());
+    }
+
+QRect Workspace::screenGeometry( int screen ) const
+    {
+    if( !options->xineramaEnabled )
+        return qApp->desktop()->geometry();
+    return qApp->desktop()->screenGeometry( screen );
+    }
+
+int Workspace::screenNumber( QPoint pos ) const
+    {
+    if( !options->xineramaEnabled )
+        return 0;
+    return qApp->desktop()->screenNumber( pos );
     }
 
 void Workspace::setDesktopLayout(NET::Orientation o, int x, int y,NET::DesktopLayoutCorner c)

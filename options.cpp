@@ -71,6 +71,9 @@ unsigned long Options::updateSettings()
     altTabStyle = KDE; // what a default :-)
     if ( val == "CDE" )
         altTabStyle = CDE;
+        
+    separateScreenFocus = config.readEntry( "SeparateScreenFocus", true );
+    activeMouseScreen = config.readEntry( "ActiveMouseScreen", focusPolicy != ClickToFocus );
 
     rollOverDesktops = config.readEntry("RollOverDesktops", true);
 

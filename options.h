@@ -124,6 +124,11 @@ class Options : public KDecorationOptions
          */
         enum AltTabStyle { KDE, CDE };
         AltTabStyle altTabStyle;
+        
+        // whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
+        bool separateScreenFocus;
+        // whether active Xinerama screen is the one with mouse (or with the active window)
+        bool activeMouseScreen;
 
         /**
          * Xinerama options

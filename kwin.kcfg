@@ -60,6 +60,8 @@
   <entry key="IgnorePositionClasses" type="StringList" />
   <entry key="KillPingTimeout" type="Int" />
   <entry key="ShowDesktopIsMinimizeAll" type="Bool" />
+  <entry key="SeparateScreenFocus" type="Bool" />
+  <entry key="ActiveMouseScreen" type="Bool" />
  </group>
  <group name="WM" >
   <entry key="frame" type="Color" />
