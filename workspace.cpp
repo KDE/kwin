@@ -293,6 +293,7 @@ void Workspace::init()
         NET::WM2KDETemporaryRules |
         NET::WM2ShowingDesktop |
         NET::WM2DesktopLayout |
+        NET::WM2FullPlacement |
         0
         ,
         NET::ActionMove |

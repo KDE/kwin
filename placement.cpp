@@ -473,7 +473,7 @@ void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement )
          it != mainwindows.end();
          ++it )
         {
-        if( (*it)->isSpecialWindow())
+        if( mainwindows.count() > 1 && (*it)->isSpecialWindow())
             continue; // don't consider toolbars etc when placing
         ++mains_count;
         place_on2 = *it;
@@ -501,6 +501,11 @@ void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement )
             return;
             }
         place_on = place_on2; // use the only window filtered together with 'mains_count'
+        }
+    if( place_on->isDesktop())
+        {
+        place( c, area, Centered );
+        return;
         }
     QRect geom = c->geometry();
     geom.moveCenter( place_on->geometry().center());

@@ -166,7 +166,7 @@ bool Client::manage( Window w, bool isMapped )
                  it != mainclients.end();
                  ++it )
                 {
-                if( (*it)->isSpecialWindow())
+                if( mainclients.count() > 1 && (*it)->isSpecialWindow())
                     continue; // don't consider toolbars etc when placing
                 maincl = *it;
                 if( (*it)->isOnCurrentDesktop())
