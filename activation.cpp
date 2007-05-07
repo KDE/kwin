@@ -360,6 +360,8 @@ void Workspace::takeActivity( Client* c, int flags, bool handled )
         return;
         }
     c->takeActivity( flags, handled, Allowed );
+    if( !c->isOnScreen( active_screen ))
+        active_screen = c->screen();
     }
 
 void Workspace::handleTakeActivity( Client* c, Time /*timestamp*/, int flags )
@@ -442,6 +444,32 @@ bool Workspace::activateNextClient( Client* c )
     return true;
     }
 
+void Workspace::setCurrentScreen( int new_screen )
+    {
+    if (new_screen < 0 || new_screen > numScreens())
+        return;
+    if ( !options->focusPolicyIsReasonable())
+        return;
+    closeActivePopup();
+    Client* get_focus = NULL;
+    for( int i = focus_chain[ currentDesktop() ].count() - 1;
+         i >= 0;
+         --i )
+        {
+        Client* ci = focus_chain[ currentDesktop() ].at( i );
+        if( !ci->isShown( false ) || !ci->isOnCurrentDesktop())
+            continue;
+        if( !ci->screen() == new_screen )
+            continue;
+        get_focus = ci;
+        break;
+        }
+    if( get_focus == NULL )
+        get_focus = findDesktop( true, currentDesktop());
+    if( get_focus != NULL && get_focus != mostRecentlyActivatedClient())
+        requestFocus( get_focus );
+    active_screen = new_screen;
+    }
 
 void Workspace::gotFocusIn( const Client* c )
     {

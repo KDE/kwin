@@ -877,10 +877,6 @@ void Client::checkWorkspacePosition()
             setGeometry( area );
         return;
         }
-    if( maximizeMode() != MaximizeRestore )
-	// TODO update geom_restore?
-        changeMaximize( false, false, true ); // adjust size
-
     if( isFullScreen())
         {
         QRect area = workspace()->clientArea( FullScreenArea, this );
@@ -906,6 +902,10 @@ void Client::checkWorkspacePosition()
             }
         return;
         }
+
+    if( maximizeMode() != MaximizeRestore )
+	// TODO update geom_restore?
+        changeMaximize( false, false, true ); // adjust size
 
     if( !isShade()) // TODO
         {

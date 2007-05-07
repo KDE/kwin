@@ -86,6 +86,7 @@ Workspace::Workspace( bool restore )
     most_recently_raised (0),
     movingClient(0),
     pending_take_activity ( NULL ),
+    active_screen     (0),
     delayfocus_client (0),
     showing_desktop( false ),
     block_showing_desktop( 0 ),
@@ -1614,9 +1615,9 @@ int Workspace::activeScreen() const
         return 0;
     if( !options->activeMouseScreen )
         {
-        if( activeClient() != NULL )
+        if( activeClient() != NULL && !activeClient()->isOnScreen( active_screen ))
             return qApp->desktop()->screenNumber( activeClient()->geometry().center());
-        return qApp->desktop()->primaryScreen();
+        return active_screen;
         }
     return qApp->desktop()->screenNumber( QCursor::pos());
     }
@@ -1633,6 +1634,23 @@ int Workspace::screenNumber( QPoint pos ) const
     if( !options->xineramaEnabled )
         return 0;
     return qApp->desktop()->screenNumber( pos );
+    }
+
+void Workspace::sendClientToScreen( Client* c, int screen )
+    {
+    if( c->screen() == screen ) // don't use isOnScreen(), that's true even when only partially
+        return;
+    GeometryUpdatesBlocker blocker( c );
+    QRect old_sarea = clientArea( MaximizeArea, c );
+    QRect sarea = clientArea( MaximizeArea, screen, c->desktop());
+    c->setGeometry( sarea.x() - old_sarea.x() + c->x(), sarea.y() - old_sarea.y() + c->y(),
+        c->size().width(), c->size().height());
+    c->checkWorkspacePosition();
+    ClientList transients_stacking_order = ensureStackingOrder( c->transients());
+    for( ClientList::ConstIterator it = transients_stacking_order.begin();
+         it != transients_stacking_order.end();
+         ++it )
+        sendClientToScreen( *it, screen );
     }
 
 void Workspace::setDesktopLayout(NET::Orientation o, int x, int y,NET::DesktopLayoutCorner c)

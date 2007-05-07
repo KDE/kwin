@@ -210,6 +210,7 @@ class Workspace : public QObject, public KDecorationDefines
         void sendClientToDesktop( Client* c, int desktop, bool dont_activate );
         void windowToPreviousDesktop( Client* c );
         void windowToNextDesktop( Client* c );
+        void sendClientToScreen( Client* c, int screen );
 
     // KDE4 remove me - and it's also in the DCOP interface :(
         void showWindowMenuAt( unsigned long id, int x, int y );
@@ -253,6 +254,7 @@ class Workspace : public QObject, public KDecorationDefines
         void nextDesktop();
         void previousDesktop();
         void circulateDesktopApplications();
+        void setCurrentScreen( int new_screen );
 
         QString desktopName( int desk ) const;
         void setDesktopLayout(NET::Orientation o, int x, int y, NET::DesktopLayoutCorner c);
@@ -379,6 +381,26 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWindowToDesktop19() { return slotWindowToDesktop( 19 ); }
         void slotWindowToDesktop20() { return slotWindowToDesktop( 20 ); }
     //void slotWindowToListPosition( int );
+        void slotSwitchToScreen( int );
+        void slotSwitchToScreen0() { return slotSwitchToScreen( 0 ); }
+        void slotSwitchToScreen1() { return slotSwitchToScreen( 1 ); }
+        void slotSwitchToScreen2() { return slotSwitchToScreen( 2 ); }
+        void slotSwitchToScreen3() { return slotSwitchToScreen( 3 ); }
+        void slotSwitchToScreen4() { return slotSwitchToScreen( 4 ); }
+        void slotSwitchToScreen5() { return slotSwitchToScreen( 5 ); }
+        void slotSwitchToScreen6() { return slotSwitchToScreen( 6 ); }
+        void slotSwitchToScreen7() { return slotSwitchToScreen( 7 ); }
+        void slotWindowToScreen( int );
+        void slotWindowToScreen0() { return slotWindowToScreen( 0 ); }
+        void slotWindowToScreen1() { return slotWindowToScreen( 1 ); }
+        void slotWindowToScreen2() { return slotWindowToScreen( 2 ); }
+        void slotWindowToScreen3() { return slotWindowToScreen( 3 ); }
+        void slotWindowToScreen4() { return slotWindowToScreen( 4 ); }
+        void slotWindowToScreen5() { return slotWindowToScreen( 5 ); }
+        void slotWindowToScreen6() { return slotWindowToScreen( 6 ); }
+        void slotWindowToScreen7() { return slotWindowToScreen( 7 ); }
+        void slotSwitchToNextScreen();
+        void slotWindowToNextScreen();
 
         void slotWindowMaximize();
         void slotWindowMaximizeVertical();
@@ -580,6 +602,7 @@ class Workspace : public QObject, public KDecorationDefines
         Client* most_recently_raised; // used _only_ by raiseOrLowerClient()
         Client* movingClient;
         Client* pending_take_activity;
+        int active_screen;
 
     // delay(ed) window focus timer and client
         QTimer* delayFocusTimer;

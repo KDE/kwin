@@ -118,6 +118,15 @@
 	DEF( I18N_NOOP("Window One Desktop to the Left"),     0, slotWindowToDesktopLeft() );
 	DEF( I18N_NOOP("Window One Desktop Up"),              0, slotWindowToDesktopUp() );
 	DEF( I18N_NOOP("Window One Desktop Down"),            0, slotWindowToDesktopDown() );
+	DEF( I18N_NOOP("Window to Screen 0"),                 0, slotWindowToScreen0() );
+	DEF( I18N_NOOP("Window to Screen 1"),                 0, slotWindowToScreen1() );
+	DEF( I18N_NOOP("Window to Screen 2"),                 0, slotWindowToScreen2() );
+	DEF( I18N_NOOP("Window to Screen 3"),                 0, slotWindowToScreen3() );
+	DEF( I18N_NOOP("Window to Screen 4"),                 0, slotWindowToScreen4() );
+	DEF( I18N_NOOP("Window to Screen 5"),                 0, slotWindowToScreen5() );
+	DEF( I18N_NOOP("Window to Screen 6"),                 0, slotWindowToScreen6() );
+	DEF( I18N_NOOP("Window to Screen 7"),                 0, slotWindowToScreen7() );
+	DEF( I18N_NOOP("Window to Next Screen"),              0, slotWindowToNextScreen() );
 
         a = actionCollection->addAction( "Group:Desktop Switching" );
         a->setText( i18n("Desktop Switching") );
@@ -147,6 +156,15 @@
 	DEF( I18N_NOOP("Switch One Desktop to the Left"),     0, slotSwitchDesktopLeft() );
 	DEF( I18N_NOOP("Switch One Desktop Up"),              0, slotSwitchDesktopUp() );
 	DEF( I18N_NOOP("Switch One Desktop Down"),            0, slotSwitchDesktopDown() );
+	DEF( I18N_NOOP("Switch to Screen 0"),                 0, slotSwitchToScreen0() );
+	DEF( I18N_NOOP("Switch to Screen 1"),                 0, slotSwitchToScreen1() );
+	DEF( I18N_NOOP("Switch to Screen 2"),                 0, slotSwitchToScreen2() );
+	DEF( I18N_NOOP("Switch to Screen 3"),                 0, slotSwitchToScreen3() );
+	DEF( I18N_NOOP("Switch to Screen 4"),                 0, slotSwitchToScreen4() );
+	DEF( I18N_NOOP("Switch to Screen 5"),                 0, slotSwitchToScreen5() );
+	DEF( I18N_NOOP("Switch to Screen 6"),                 0, slotSwitchToScreen6() );
+	DEF( I18N_NOOP("Switch to Screen 7"),                 0, slotSwitchToScreen7() );
+	DEF( I18N_NOOP("Switch to Next Screen"),              0, slotSwitchToNextScreen() );
 
         a = actionCollection->addAction( "Group:Miscellaneous" );
         a->setText( i18n("Miscellaneous") );

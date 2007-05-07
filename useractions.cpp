@@ -794,6 +794,40 @@ void Workspace::slotWindowToDesktop( int i )
             sendClientToDesktop( c, i, true );
     }
 
+void Workspace::slotSwitchToScreen( int i )
+    {
+    setCurrentScreen( i );
+    }
+
+void Workspace::slotSwitchToNextScreen()
+    {
+    slotSwitchToScreen(( activeScreen() + 1 ) % numScreens());
+    }
+
+void Workspace::slotWindowToScreen( int i )
+    {
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( i >= 0 && i <= numScreens() && c
+        && !c->isDesktop()
+        && !c->isDock()
+        && !c->isTopMenu())
+        {
+        sendClientToScreen( c, i );
+        }
+    }
+
+void Workspace::slotWindowToNextScreen()
+    {
+    Client* c = active_popup_client ? active_popup_client : active_client;
+    if( c
+        && !c->isDesktop()
+        && !c->isDock()
+        && !c->isTopMenu())
+        {
+        sendClientToScreen( c, ( c->screen() + 1 ) % numScreens());
+        }
+    }
+
 /*!
   Maximizes the popup client
  */
