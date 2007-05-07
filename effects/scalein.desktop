@@ -1,5 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Shadow
+Name[de]=Schatten
+Name[el]=Σκιά
 Name[zh_TW]=陰影
 X-KDE-Library=kwin4_effect_builtins

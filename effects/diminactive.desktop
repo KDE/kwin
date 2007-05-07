@@ -1,4 +1,5 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=DimInactive
+Name[de]=Inaktive abdunkeln
 X-KDE-Library=kwin4_effect_builtins

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Magnifier
+Name[de]=Vergrößerung
 Name[zh_TW]=放大鏡
 X-KDE-Library=kwin4_effect_builtins
