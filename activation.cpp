@@ -885,6 +885,8 @@ void Client::startupIdChanged()
         desktop = asn_data.desktop();
     if( !isOnAllDesktops())
         workspace()->sendClientToDesktop( this, desktop, true );
+    if( asn_data.xinerama() != -1 )
+        workspace()->sendClientToScreen( this, asn_data.xinerama());
     Time timestamp = asn_id.timestamp();
     if( timestamp == 0 && asn_data.timestamp() != -1U )
         timestamp = asn_data.timestamp();

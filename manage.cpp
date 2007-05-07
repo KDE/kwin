@@ -205,7 +205,7 @@ bool Client::manage( Window w, bool isMapped )
         {
         int screen = options->xineramaPlacementScreen;
         if( screen == -1 ) // active screen
-            screen = workspace()->activeScreen();
+            screen = asn_data.xinerama() == -1 ? workspace()->activeScreen() : asn_data.xinerama();
         area = workspace()->clientArea( PlacementArea, workspace()->screenGeometry( screen ).center(), desktop());
         }
     else
