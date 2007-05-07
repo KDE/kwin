@@ -417,8 +417,13 @@ bool Workspace::activateNextClient( Client* c )
                 if( !ci->isShown( false )
                     || !ci->isOnCurrentDesktop())
                     continue;
-                if( options->separateScreenFocus && !ci->isOnScreen( c->screen()))
-                    continue;
+                if( options->separateScreenFocus )
+                    {
+                    if( c != NULL && !ci->isOnScreen( c->screen()))
+                        continue;
+                    if( c == NULL && !ci->isOnScreen( activeScreen()))
+                        continue;
+                    }
                 if( mainwindows.contains( ci ))
                     {
                     get_focus = ci;
