@@ -30,7 +30,6 @@ SET(kwin4_effect_builtins_sources
 
 SET(kwin4_effect_tests_sources
     demo_shiftworkspaceup.cpp
-    demo_showpicture.cpp
     demo_taskbarthumbnail.cpp
     howto.cpp
     test_input.cpp
@@ -50,6 +49,7 @@ if(OPENGL_FOUND)
     SET(kwin4_effect_tests_sources ${kwin4_effect_tests_sources}
         test_fbo.cpp
         demo_liquid.cpp
+        demo_showpicture.cpp
         )
 
     install( FILES
@@ -62,6 +62,7 @@ if(OPENGL_FOUND)
         wavywindows.desktop
         test_fbo.desktop
         demo_liquid.desktop
+        demo_showpicture.desktop
         DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
 
     install( FILES
@@ -119,7 +120,6 @@ install( FILES
     thumbnailaside.desktop
     zoom.desktop
     demo_shiftworkspaceup.desktop
-    demo_showpicture.desktop
     demo_taskbarthumbnail.desktop
     test_input.desktop
     test_thumbnail.desktop

@@ -76,6 +76,9 @@ General TODO
 % clean up and sort out shortcuts so that they don't conflict and make sense
     - also make configurable etc.
 
+% installed headers currently include config.h files to find out about e.g. OpenGL
+    - this needs to be sorted out somehow, installed headers shouldn't do this
+
 
 OpenGL TODO
 =================================

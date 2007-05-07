@@ -32,7 +32,6 @@ ShowPictureEffect::~ShowPictureEffect()
 void ShowPictureEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     effects->paintScreen( mask, region, data );
-#ifdef HAVE_OPENGL
     if( init )
         {
         loadPicture();
@@ -48,12 +47,10 @@ void ShowPictureEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         picture->unbind();
         glPopAttrib();
         }
-#endif
     }
 
 void ShowPictureEffect::loadPicture()
     {
-#ifdef HAVE_OPENGL
     QString file = KGlobal::dirs()->findResource( "appdata", "showpicture.png" );
     if( file.isEmpty())
         return;
@@ -62,7 +59,6 @@ void ShowPictureEffect::loadPicture()
     picture = new GLTexture( im );
     pictureRect = QRect( area.x() + ( area.width() - im.width()) / 2,
         area.y() + ( area.height() - im.height()) / 2, im.width(), im.height());
-#endif
     }
 
 } // namespace

@@ -1003,29 +1003,37 @@ EffectWindowList EffectWindowImpl::mainWindows() const
 
 QVector<Vertex>& EffectWindowImpl::vertices()
     {
+#ifdef HAVE_OPENGL
     if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
         return w->vertices();
+#endif
     abort(); // TODO
     }
 
 void EffectWindowImpl::requestVertexGrid(int maxquadsize)
     {
+#ifdef HAVE_OPENGL
     if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
         return w->requestVertexGrid( maxquadsize );
+#endif
     abort(); // TODO
     }
 
 void EffectWindowImpl::markVerticesDirty()
     {
+#ifdef HAVE_OPENGL
     if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
         return w->markVerticesDirty();
+#endif
     abort(); // TODO
     }
 
-    void EffectWindowImpl::setShader(GLShader* shader)
+void EffectWindowImpl::setShader(GLShader* shader)
     {
+#ifdef HAVE_OPENGL
     if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
         return w->setShader(shader);
+#endif
     abort(); // TODO
     }
 

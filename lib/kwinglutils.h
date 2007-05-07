@@ -17,7 +17,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <GL/gl.h>
 #include <GL/glx.h>
 #include <fixx11h.h>
-#endif
 
 #include <QPixmap>
 
@@ -60,8 +59,6 @@ inline bool KWIN_EXPORT isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 );
  *  E.g. nearestPowerOfTwo(513) = nearestPowerOfTwo(800) = 1024
  **/
 int KWIN_EXPORT nearestPowerOfTwo( int x );
-
-#ifdef HAVE_OPENGL
 
 // renders quads using the given vertices
 KWIN_EXPORT void renderGLGeometry( bool clip, QRegion region, const float* vertices, const float* texture, int count,
@@ -215,8 +212,9 @@ class KWIN_EXPORT GLRenderTarget
 
         GLuint mFramebuffer;
 };
-#endif
 
 } // namespace
+
+#endif
 
 #endif
