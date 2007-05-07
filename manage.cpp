@@ -202,9 +202,14 @@ bool Client::manage( Window w, bool isMapped )
     if( isMapped || session )
         area = workspace()->clientArea( FullArea, geom.center(), desktop());
     else if( options->xineramaPlacementEnabled )
-        area = workspace()->clientArea( PlacementArea, cursorPos(), desktop());
+        {
+        int screen = options->xineramaPlacementScreen;
+        if( screen == -1 ) // active screen
+            screen = workspace()->activeScreen();
+        area = workspace()->clientArea( PlacementArea, workspace()->screenGeometry( screen ).center(), desktop());
+        }
     else
-        area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
+        area = workspace()->clientArea( PlacementArea, cursorPos(), desktop());
 
     if( int type = checkFullScreenHack( geom ))
         {

@@ -62,6 +62,7 @@
   <entry key="ShowDesktopIsMinimizeAll" type="Bool" />
   <entry key="SeparateScreenFocus" type="Bool" />
   <entry key="ActiveMouseScreen" type="Bool" />
+  <entry key="XineramaPlacementScreen" type="Int" />
  </group>
  <group name="WM" >
   <entry key="frame" type="Color" />

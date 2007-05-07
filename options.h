@@ -138,6 +138,9 @@ class Options : public KDecorationOptions
         bool xineramaMovementEnabled;
         bool xineramaMaximizeEnabled;
         bool xineramaFullscreenEnabled;
+        
+        // number, or -1 = active screen (Workspace::activeScreen())
+        int xineramaPlacementScreen;
 
         /**
            MoveResizeMode, either Tranparent or Opaque.

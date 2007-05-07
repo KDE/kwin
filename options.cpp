@@ -103,9 +103,10 @@ unsigned long Options::updateSettings()
     delete gc;
 
     placement = Placement::policyFromString( config.readEntry("Placement"), true );
+    xineramaPlacementScreen = qBound( -1, config.readEntry( "XineramaPlacementScreen", -1 ),
+        qApp->desktop()->numScreens() - 1 );
 
     animateShade = config.readEntry("AnimateShade", true);
-
     animateMinimize = config.readEntry("AnimateMinimize", true);
     animateMinimizeSpeed = config.readEntry("AnimateMinimizeSpeed", 5 );
 
