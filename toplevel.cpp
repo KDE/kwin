@@ -29,6 +29,7 @@ Toplevel::Toplevel( Workspace* ws )
     , damage_handle( None )
     , is_shape( false )
     , effect_window( NULL )
+    , wmClientLeaderWin( 0 )
     {
     }
 
