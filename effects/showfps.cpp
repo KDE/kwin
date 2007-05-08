@@ -159,7 +159,7 @@ void ShowFpsEffect::paintGL( int fps )
 
 /*
  Differences between OpenGL and XRender:
- - differenly specified rectangles (X: width/height, O: x2,y2)
+ - differently specified rectangles (X: width/height, O: x2,y2)
  - XRender uses pre-multiplied alpha
 */
 void ShowFpsEffect::paintXrender( int fps )
