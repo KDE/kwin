@@ -565,27 +565,33 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
         case Options::MouseActivateAndRaise:
             replay = isActive(); // for clickraise mode
             workspace()->takeActivity( this, ActivityFocus | ActivityRaise, handled && replay );
+            workspace()->setActiveScreenMouse( globalPos );
             break;
         case Options::MouseActivateAndLower:
             workspace()->requestFocus( this );
             workspace()->lowerClient( this );
+            workspace()->setActiveScreenMouse( globalPos );
             break;
         case Options::MouseActivate:
             replay = isActive(); // for clickraise mode
             workspace()->takeActivity( this, ActivityFocus, handled && replay );
+            workspace()->setActiveScreenMouse( globalPos );
             break;
         case Options::MouseActivateRaiseAndPassClick:
             workspace()->takeActivity( this, ActivityFocus | ActivityRaise, handled );
+            workspace()->setActiveScreenMouse( globalPos );
             replay = true;
             break;
         case Options::MouseActivateAndPassClick:
             workspace()->takeActivity( this, ActivityFocus, handled );
+            workspace()->setActiveScreenMouse( globalPos );
             replay = true;
             break;
         case Options::MouseActivateRaiseAndMove:
         case Options::MouseActivateRaiseAndUnrestrictedMove:
             workspace()->raiseClient( this );
             workspace()->requestFocus( this );
+            workspace()->setActiveScreenMouse( globalPos );
             if( options->moveMode == Options::Transparent && isMovable())
                 move_faked_activity = workspace()->fakeRequestedActivity( this );
         // fallthrough

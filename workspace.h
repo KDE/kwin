@@ -175,6 +175,7 @@ class Workspace : public QObject, public KDecorationDefines
         int activeScreen() const;
         int numScreens() const;
         void checkActiveScreen( const Client* c );
+        void setActiveScreenMouse( QPoint mousepos );
         QRect screenGeometry( int screen ) const;
         int screenNumber( QPoint pos ) const;
         QWidget* desktopWidget();

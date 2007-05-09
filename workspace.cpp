@@ -1634,6 +1634,15 @@ void Workspace::checkActiveScreen( const Client* c )
         active_screen = c->screen();
     }
 
+// called e.g. when a user clicks on a window, set active screen to be the screen
+// where the click occured
+void Workspace::setActiveScreenMouse( QPoint mousepos )
+    {
+    if( !options->xineramaEnabled )
+        return;
+    active_screen = qApp->desktop()->screenNumber( mousepos );
+    }
+
 QRect Workspace::screenGeometry( int screen ) const
     {
     if( !options->xineramaEnabled )
