@@ -791,7 +791,7 @@ void EffectWindowImpl::refWindow()
 void EffectWindowImpl::unrefWindow()
     {
     if( Deleted* d = dynamic_cast< Deleted* >( toplevel ))
-        return d->unrefWindow();
+        return d->unrefWindow( true ); // delayed
     abort(); // TODO
     }
 

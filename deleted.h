@@ -24,7 +24,7 @@ class Deleted
         static Deleted* create( Toplevel* c );
         // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
         void refWindow();
-        void unrefWindow();
+        void unrefWindow( bool delay = false );
         virtual int desktop() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;

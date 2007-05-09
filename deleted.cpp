@@ -47,11 +47,16 @@ void Deleted::copyToDeleted( Toplevel* c )
         cinfo->disable();
     }
 
-void Deleted::unrefWindow()
+void Deleted::unrefWindow( bool delay )
     {
     if( --delete_refcount > 0 )
         return;
-    deleteLater();
+    // needs to be delayed when calling from effects, otherwise it'd be rather
+    // complicated to handle the case of the window going away during a painting pass
+    if( delay )
+        deleteLater();
+    else
+        delete this;
     }
 
 int Deleted::desktop() const

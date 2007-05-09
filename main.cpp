@@ -153,6 +153,7 @@ Application::~Application()
 
 void Application::lostSelection()
     {
+    sendPostedEvents();
     delete Workspace::self();
     // remove windowmanager privileges
     XSelectInput(display(), rootWindow(), PropertyChangeMask );
