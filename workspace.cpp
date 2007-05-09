@@ -610,6 +610,7 @@ void Workspace::removeClient( Client* c, allowed_t )
         focus_chain[ i ].removeAll( c );
     global_focus_chain.removeAll( c );
     attention_chain.removeAll( c );
+    showing_desktop_clients.removeAll( c );
     if( c->isTopMenu())
         removeTopMenu( c );
     Group* group = findGroup( c->window());
