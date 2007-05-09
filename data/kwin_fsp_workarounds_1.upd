@@ -4,5 +4,5 @@ Id=kde351
 File=kwinrules_update
 Group=Dummy
 Options=overwrite
-ScriptArguments=fsp_workarounds_1
+ScriptArguments=fsp_workarounds_1.kwinrules
 Script=kwin_update_default_rules

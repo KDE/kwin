@@ -113,7 +113,9 @@ static int limit0to4( int i ) { return qMax( 0, qMin( 4, i )); }
 
 void Rules::readFromCfg( const KConfigGroup& cfg )
     {
-    description = cfg.readEntry( "description" );
+    description = cfg.readEntry( "Description" );
+    if( description.isEmpty()) // capitalized first, lowercase for backwards compatibility
+        description = cfg.readEntry( "description" );
     READ_MATCH_STRING( wmclass, .toLower().toLatin1() );
     wmclasscomplete = cfg.readEntry( "wmclasscomplete" , false);
     READ_MATCH_STRING( windowrole, .toLower().toLatin1() );
@@ -204,7 +206,7 @@ void Rules::readFromCfg( const KConfigGroup& cfg )
 
 void Rules::write( KConfigGroup& cfg ) const
     {
-    cfg.writeEntry( "description", description );
+    cfg.writeEntry( "Description", description );
     // always write wmclass
     WRITE_MATCH_STRING( wmclass, (const char*), true );
     cfg.writeEntry( "wmclasscomplete", wmclasscomplete );

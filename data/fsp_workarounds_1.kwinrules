@@ -1,5 +1,5 @@
 [1]
-description=(Default) Disable focus stealing prevention for XV
+Description=(Default) Disable focus stealing prevention for XV
 fsplevel=0
 fsplevelrule=2
 wmclass=^xv .*
