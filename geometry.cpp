@@ -1707,6 +1707,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    workspace()->checkActiveScreen( this );
     if( geom_before_block.size() != geom.size())
         {
         discardWindowPixmap();
@@ -1770,6 +1771,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    workspace()->checkActiveScreen( this );
     discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
@@ -1797,6 +1799,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
+    workspace()->checkActiveScreen( this );
     // client itself is not damaged
     addWorkspaceRepaint( geom_before_block );
     addWorkspaceRepaint( geom ); // trigger repaint of window's new location

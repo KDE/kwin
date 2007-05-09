@@ -1622,6 +1622,18 @@ int Workspace::activeScreen() const
     return qApp->desktop()->screenNumber( QCursor::pos());
     }
 
+// check whether a client moved completely out of what's considered the active screen,
+// if yes, set a new active screen
+void Workspace::checkActiveScreen( const Client* c )
+    {
+    if( !options->xineramaEnabled )
+        return;
+    if( !c->isActive())
+        return;
+    if( !c->isOnScreen( active_screen ))
+        active_screen = c->screen();
+    }
+
 QRect Workspace::screenGeometry( int screen ) const
     {
     if( !options->xineramaEnabled )
@@ -1651,6 +1663,8 @@ void Workspace::sendClientToScreen( Client* c, int screen )
          it != transients_stacking_order.end();
          ++it )
         sendClientToScreen( *it, screen );
+    if( c->isActive())
+        active_screen = screen;
     }
 
 void Workspace::setDesktopLayout(NET::Orientation o, int x, int y,NET::DesktopLayoutCorner c)
