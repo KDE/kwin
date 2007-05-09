@@ -58,7 +58,7 @@ class KCMRulesList
         void deleteClicked();
         void moveupClicked();
         void movedownClicked();
-        void activeChanged( QListWidgetItem* );
+        void activeChanged();
     private:
         QVector< Rules* > rules;
     };
