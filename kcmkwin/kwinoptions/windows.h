@@ -86,6 +86,7 @@ private slots:
   void delayFocusOnTog(bool);
   void clickRaiseOnTog(bool);
   void updateAltTabMode();
+  void updateActiveMouseScreen();
 	void changed() { emit KCModule::changed(true); }
 
 
@@ -101,6 +102,8 @@ private:
   void setDelayFocusInterval(int);
   void setDelayFocus(bool);
   void setClickRaise(bool);
+  void setSeparateScreenFocus(bool);
+  void setActiveMouseScreen(bool);
   void setAltTabMode(bool);
   void setTraverseAll(bool);
   void setRollOverDesktops(bool);
@@ -113,6 +116,8 @@ private:
   QCheckBox *clickRaiseOn;
   KIntNumInput *autoRaise;
   KIntNumInput *delayFocus;
+  QCheckBox *separateScreenFocus;
+  QCheckBox *activeMouseScreen;
 
   Q3ButtonGroup *kbdBox;
   QCheckBox    *altTabPopup;
