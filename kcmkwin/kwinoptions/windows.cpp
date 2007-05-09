@@ -465,7 +465,7 @@ void KFocusConfig::load( void )
     setAutoRaiseEnabled();      // this will disable/hide the auto raise delay widget if focus==click
     setDelayFocusEnabled();
     
-    setSeparateScreenFocus( cg.readEntry(KWIN_SEPARATE_SCREEN_FOCUS, false));
+    setSeparateScreenFocus( cg.readEntry(KWIN_SEPARATE_SCREEN_FOCUS, true));
     // on by default for non click to focus policies
     setActiveMouseScreen( cg.readEntry(KWIN_ACTIVE_MOUSE_SCREEN, focusCombo->currentItem() != 0 ));
 
@@ -553,7 +553,7 @@ void KFocusConfig::defaults()
     setAutoRaise(false);
     setDelayFocus(false);
     setClickRaise(true);
-    setSeparateScreenFocus( false );
+    setSeparateScreenFocus( true );
     // on by default for non click to focus policies
     setActiveMouseScreen( focusCombo->currentItem() != 0 );
     setAltTabMode(true);
