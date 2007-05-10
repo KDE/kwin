@@ -68,9 +68,10 @@ target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations kwineffects 
 if(OPENGL_FOUND)
   target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
-  if(NOT CMAKE_SYSTEM_NAME MATCHES BSD)
-    target_link_libraries(kdeinit_kwin -ldl)
-  endif(NOT CMAKE_SYSTEM_NAME MATCHES BSD)
+  find_library(DL_LIBRARY dl)
+  if (DL_LIBRARY)
+    target_link_libraries(kdeinit_kwin ${DL_LIBRARY})
+  endif(DL_LIBRARY)
 endif(OPENGL_FOUND)
 if (X11_Xrandr_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xrandr_LIB})
