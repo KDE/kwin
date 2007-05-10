@@ -40,7 +40,9 @@ install(TARGETS kwineffects DESTINATION ${LIB_INSTALL_DIR})
 if(OPENGL_FOUND)
   target_link_libraries(kwineffects ${OPENGL_gl_LIBRARY})
 # -ldl used by OpenGL code
-  target_link_libraries(kwineffects -ldl)
+  if(NOT CMAKE_SYSTEM_NAME MATCHES BSD)
+    target_link_libraries(kwineffects -ldl)
+  endif(NOT CMAKE_SYSTEM_NAME MATCHES BSD)
 endif(OPENGL_FOUND)
 
 install( FILES kwinglobals.h kwineffects.h kwinglutils.h kwinglutils_funcs.h DESTINATION ${INCLUDE_INSTALL_DIR})
