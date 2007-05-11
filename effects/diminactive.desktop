@@ -2,4 +2,5 @@
 Encoding=UTF-8
 Name=DimInactive
 Name[de]=Inaktive abdunkeln
+Name[nds]=Nich aktive düüster maken
 X-KDE-Library=kwin4_effect_builtins

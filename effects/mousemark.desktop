@@ -1,5 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=MouseMark
+Name[nds]=Muus-Mark
 Name[zh_TW]=滑鼠標記
 X-KDE-Library=kwin4_effect_builtins

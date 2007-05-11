@@ -3,5 +3,6 @@ Encoding=UTF-8
 Name=Zoom
 Name[de]=Vergrößerung
 Name[el]=Εστίαση
+Name[nds]=Ansichtgrött
 Name[zh_TW]=縮放
 X-KDE-Library=kwin4_effect_builtins

@@ -2,4 +2,5 @@
 Encoding=UTF-8
 Name=ShowFps
 Name[de]=Bilder pro Sekunden anzeigen
+Name[nds]=Bps wiesen
 X-KDE-Library=kwin4_effect_builtins

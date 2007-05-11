@@ -1,5 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo_ShiftWorkspaceUp
+Name[nds]=Demo: Arbeitrebeet na baven
 Name[zh_TW]=示範_將工作空間上移
 X-KDE-Library=kwin4_effect_tests

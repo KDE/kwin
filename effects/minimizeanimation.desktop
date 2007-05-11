@@ -2,5 +2,6 @@
 Encoding=UTF-8
 Name=MinimizeAnimation
 Name[de]=Minimieren-Animation
+Name[nds]=Minimeer-Animeren
 Name[zh_TW]=縮小動畫
 X-KDE-Library=kwin4_effect_builtins

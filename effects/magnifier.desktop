@@ -2,5 +2,6 @@
 Encoding=UTF-8
 Name=Magnifier
 Name[de]=Vergrößerung
+Name[nds]=Kiekglas
 Name[zh_TW]=放大鏡
 X-KDE-Library=kwin4_effect_builtins
