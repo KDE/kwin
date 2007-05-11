@@ -29,8 +29,8 @@ class KDEDefaultConfig: public QObject
 		void changed();
 
 	public slots:
-		void load( KConfig* conf );
-		void save( KConfig* conf );
+		void load( const KConfigGroup& conf );
+		void save( KConfigGroup& conf );
 		void defaults();
 
 	protected slots:
@@ -41,6 +41,7 @@ class KDEDefaultConfig: public QObject
 		QCheckBox* cbShowGrabBar;
 		QCheckBox* cbUseGradients;
 		KVBox* gb;
+        KConfig *c;
 		bool 	   highcolor;
 };
 

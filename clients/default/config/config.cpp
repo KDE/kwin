@@ -30,7 +30,7 @@ extern "C"
 //		  Configure tab in kwindecoration
 
 KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
-	: QObject( parent )
+	: QObject( parent ),c(conf)
 {
 	KGlobal::locale()->insertCatalog("kwin_clients");
 	highcolor = QPixmap::defaultDepth() > 8;
@@ -58,7 +58,8 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	}
 
 	// Load configuration options
-	load( conf );
+    KConfigGroup cg(c, "KDEDefault");
+	load( cg );
 
 	// Ensure we track user changes properly
 	connect( cbShowStipple, SIGNAL(clicked()), 
@@ -88,9 +89,9 @@ void KDEDefaultConfig::slotSelectionChanged()
 
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void KDEDefaultConfig::load( KConfig* conf )
+void KDEDefaultConfig::load( const KConfigGroup&  )
 {
-	KConfigGroup cg(conf, "KDEDefault");
+	KConfigGroup cg(c, "KDEDefault");
 	bool override = cg.readEntry( "ShowTitleBarStipple", true);
 	cbShowStipple->setChecked( override );
 
@@ -105,9 +106,9 @@ void KDEDefaultConfig::load( KConfig* conf )
 
 
 // Saves the configurable options to the kwinrc config file
-void KDEDefaultConfig::save( KConfig* conf )
+void KDEDefaultConfig::save( KConfigGroup&  )
 {
-	KConfigGroup cg(conf, "KDEDefault");
+	KConfigGroup cg(c, "KDEDefault");
 	cg.writeEntry( "ShowTitleBarStipple", cbShowStipple->isChecked() );
 	cg.writeEntry( "ShowGrabBar", cbShowGrabBar->isChecked() );
 

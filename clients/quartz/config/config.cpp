@@ -35,6 +35,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
 	quartzConfig = new KConfig("kwinquartzrc");
+    KConfigGroup cg(quartzConfig, "General");
 	KGlobal::locale()->insertCatalog("kwin_clients");
 	gb = new KVBox( parent );
 	cbColorBorder = new QCheckBox( 
@@ -47,7 +48,7 @@ QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 	cbExtraSmall->setWhatsThis(
 		i18n("Quartz window decorations with extra-small title bar.") );
 	// Load configuration options
-	load( conf );
+	load( cg );
 
 	// Ensure we track user changes properly
 	connect( cbColorBorder, SIGNAL(clicked()), this, SLOT(slotSelectionChanged()) );
@@ -73,7 +74,7 @@ void QuartzConfig::slotSelectionChanged()
 
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void QuartzConfig::load( KConfig* /*conf*/ )
+void QuartzConfig::load( const KConfigGroup& /*conf*/ )
 {
 	KConfigGroup cg(quartzConfig, "General");
 	bool override = cg.readEntry( "UseTitleBarBorderColors", true);
@@ -84,7 +85,7 @@ void QuartzConfig::load( KConfig* /*conf*/ )
 
 
 // Saves the configurable options to the kwinrc config file
-void QuartzConfig::save( KConfig* /*conf*/ )
+void QuartzConfig::save( KConfigGroup& /*conf*/ )
 {
 	KConfigGroup cg(quartzConfig, "General");
 	cg.writeEntry( "UseTitleBarBorderColors", cbColorBorder->isChecked() );

@@ -71,7 +71,8 @@ B2Config::B2Config( KConfig* conf, QWidget* parent )
 		 "of the menu button. Leave it to none if in doubt."));
 
 	// Load configuration options
-	load(conf);
+    KConfigGroup cg(b2Config, "General");
+	load(cg);
 
 	// Ensure we track user changes properly
 	connect(cbColorBorder, SIGNAL(clicked()),
@@ -100,7 +101,7 @@ void B2Config::slotSelectionChanged()
 
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void B2Config::load(KConfig * /*conf*/)
+void B2Config::load(const KConfigGroup & /*conf*/)
 {
     KConfigGroup cg(b2Config, "General");
 
@@ -145,7 +146,7 @@ static QString opToString(int op)
 
 
 // Saves the configurable options to the kwinrc config file
-void B2Config::save(KConfig * /*conf*/)
+void B2Config::save(KConfigGroup & /*conf*/)
 {
     KConfigGroup cg(b2Config, "General");
     cg.writeEntry("UseTitleBarBorderColors", cbColorBorder->isChecked());

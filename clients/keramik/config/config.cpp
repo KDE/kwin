@@ -53,14 +53,14 @@ KeramikConfig::KeramikConfig( KConfig* conf, QWidget* parent )
 {
 	KGlobal::locale()->insertCatalog("kwin_clients");
 	c = new KConfig( "kwinkeramikrc" );
-	
+	KConfigGroup cg(c, "General");
 	ui = new KeramikConfigUI( parent );
 	connect( ui->showAppIcons,   SIGNAL(clicked()), SIGNAL(changed()) );
 	connect( ui->smallCaptions,  SIGNAL(clicked()), SIGNAL(changed()) );
 	connect( ui->largeGrabBars,  SIGNAL(clicked()), SIGNAL(changed()) );
 	connect( ui->useShadowedText, SIGNAL(clicked()), SIGNAL(changed()) );
 
-	load( conf );
+	load( cg );
 	ui->show();
 }
 
@@ -74,7 +74,7 @@ KeramikConfig::~KeramikConfig()
 
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void KeramikConfig::load( KConfig* )
+void KeramikConfig::load( const KConfigGroup&  )
 {
 	KConfigGroup cg(c, "General");
 	ui->showAppIcons->setChecked( cg.readEntry("ShowAppIcons", true) );
@@ -85,7 +85,7 @@ void KeramikConfig::load( KConfig* )
 
 
 // Saves the configurable options to the kwinrc config file
-void KeramikConfig::save( KConfig* )
+void KeramikConfig::save( KConfigGroup& )
 {
 	KConfigGroup cg(c, "General");
 	cg.writeEntry( "ShowAppIcons", ui->showAppIcons->isChecked() );

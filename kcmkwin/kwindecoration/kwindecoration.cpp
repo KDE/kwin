@@ -418,8 +418,8 @@ void KWinDecorationModule::resetPlugin( KConfigGroup& conf, const QString& curre
 
 			// connect required signals and slots together...
 			connect( pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()) );
-			connect( this, SIGNAL(pluginLoad(KConfig*)), pluginObject, SLOT(load(KConfig*)) );
-			connect( this, SIGNAL(pluginSave(KConfig*)), pluginObject, SLOT(save(KConfig*)) );
+			connect( this, SIGNAL(pluginLoad(const KConfigGroup&)), pluginObject, SLOT(load(const KConfigGroup&)) );
+			connect( this, SIGNAL(pluginSave(KConfigGroup &)), pluginObject, SLOT(save(KConfigGroup &)) );
 			connect( this, SIGNAL(pluginDefaults()), pluginObject, SLOT(defaults()) );
 			pluginConfigWidget->show();
 			return;

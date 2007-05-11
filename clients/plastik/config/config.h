@@ -49,8 +49,8 @@ signals:
     void changed();
 
 public slots:
-    void load(KConfig *config);
-    void save(KConfig *config);
+    void load(const KConfigGroup &config);
+    void save(KConfigGroup &config);
     void defaults();
 
 private:

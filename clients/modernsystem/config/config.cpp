@@ -82,7 +82,8 @@ ModernSysConfig::ModernSysConfig(KConfig* conf, QWidget* parent) : QObject(paren
         layout->addItem(new QSpacerItem(30, 10, QSizePolicy::Fixed, QSizePolicy::Fixed), 1, 0);
         layout->addWidget(sliderBox, 1, 1);
 
-	load(conf);
+        KConfigGroup group(conf,"General");
+	load(group);
 	mainw->show();
 }
 
@@ -105,7 +106,7 @@ void ModernSysConfig::slotSelectionChanged()
 }
 
 
-void ModernSysConfig::load(KConfig* /*conf*/)
+void ModernSysConfig::load(const KConfigGroup& /*conf*/)
 {
 	KConfigGroup cg(clientrc, "General");
 	bool i = cg.readEntry("ShowHandle", true);
@@ -119,7 +120,7 @@ void ModernSysConfig::load(KConfig* /*conf*/)
 }
 
 
-void ModernSysConfig::save(KConfig* /*conf*/)
+void ModernSysConfig::save(KConfigGroup& /*conf*/)
 {
 	KConfigGroup cg(clientrc, "General");
 	cg.writeEntry("ShowHandle", cbShowHandle->isChecked());

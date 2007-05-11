@@ -38,6 +38,7 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
 {
     // create the configuration object
     m_config = new KConfig("kwinplastikrc");
+    KConfigGroup cg(m_config, "General");
     KGlobal::locale()->insertCatalog("kwin_clients");
 
     // create and show the configuration dialog
@@ -45,7 +46,7 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
     m_dialog->show();
 
     // load the configuration
-    load(config);
+    load(cg);
 
     // setup the connections
     connect(m_dialog->titleAlign, SIGNAL(clicked(int)),
@@ -66,7 +67,7 @@ PlastikConfig::~PlastikConfig()
     delete m_config;
 }
 
-void PlastikConfig::load(KConfig*)
+void PlastikConfig::load(const KConfigGroup&)
 {
     KConfigGroup cg(m_config, "General");
 
@@ -84,7 +85,7 @@ void PlastikConfig::load(KConfig*)
     m_dialog->coloredBorder->setChecked(coloredBorder);
 }
 
-void PlastikConfig::save(KConfig*)
+void PlastikConfig::save(KConfigGroup&)
 {
     KConfigGroup cg(m_config, "General");
 
