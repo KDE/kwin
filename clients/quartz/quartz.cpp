@@ -24,11 +24,9 @@
 #include <QImage>
 #include <QPixmap>
 #include <QApplication>
+#include <QPaintEvent>
 
 #include "quartz.h"
-//Added by qt3to4:
-#include <QPixmap>
-#include <QPaintEvent>
 
 
 namespace Quartz {

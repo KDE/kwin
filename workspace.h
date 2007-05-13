@@ -251,7 +251,7 @@ class Workspace : public QObject, public KDecorationDefines
     // dcop interface
         void cascadeDesktop();
         void unclutterDesktop();
-        void doNotManage(QString);
+        void doNotManage( const QString & );
         bool setCurrentDesktop( int new_desktop );
         void nextDesktop();
         void previousDesktop();

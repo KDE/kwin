@@ -8,9 +8,9 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include <config-X11.h>
-
 #include "showfps.h"
+
+#include <config-X11.h>
 
 #include <kconfig.h>
 #include <ksharedconfig.h>

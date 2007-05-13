@@ -37,8 +37,6 @@
 #include <QBitmap>
 #include <QLabel>
 
-#include <QPixmap>
-
 #include <X11/Xlib.h>
 #include <QX11Info>
 #include <KDebug>

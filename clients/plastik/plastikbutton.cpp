@@ -20,6 +20,8 @@
   Boston, MA 02110-1301, USA.
  */
 
+#include "plastikbutton.h"
+
 // #include <kwin/options.h>
 
 #include <QAbstractButton>
@@ -28,10 +30,8 @@
 #include <QPainter>
 #include <QPixmap>
 #include <kpixmapeffect.h>
-#include <QPixmap>
 #include <QTimer>
 
-#include "plastikbutton.h"
 #include "plastikbutton.moc"
 #include "plastikclient.h"
 #include "misc.h"

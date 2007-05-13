@@ -9,10 +9,10 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+#include "main.h"
+
 //#define QT_CLEAN_NAMESPACE
 #include <ksharedconfig.h>
-
-#include "main.h"
 
 #include <kglobal.h>
 #include <klocale.h>

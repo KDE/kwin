@@ -8,9 +8,9 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include <config-X11.h>
-
 #include "mousemark.h"
+
+#include <config-X11.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>

@@ -11,12 +11,14 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #ifndef KWIN_ATOMS_H
 #define KWIN_ATOMS_H
+
+#include <QApplication>
 #include <X11/Xlib.h>
 
 namespace KWin
 {
 
-class Atoms 
+class Atoms
     {
     public:
         Atoms();

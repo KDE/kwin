@@ -157,6 +157,7 @@ private:
 
 class B2ClientFactory : public QObject, public KDecorationFactory
 {
+    Q_OBJECT
 public:
     B2ClientFactory();
     virtual ~B2ClientFactory();

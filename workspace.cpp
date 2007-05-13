@@ -1138,7 +1138,7 @@ void Workspace::configureWM()
 /*!
   avoids managing a window with title \a title
  */
-void Workspace::doNotManage( QString title )
+void Workspace::doNotManage( const QString &title )
     {
     doNotManageList.append( title );
     }
@@ -1636,7 +1636,7 @@ void Workspace::checkActiveScreen( const Client* c )
     }
 
 // called e.g. when a user clicks on a window, set active screen to be the screen
-// where the click occured
+// where the click occurred
 void Workspace::setActiveScreenMouse( QPoint mousepos )
     {
     if( !options->xineramaEnabled )

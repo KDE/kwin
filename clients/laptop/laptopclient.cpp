@@ -13,7 +13,6 @@
 #include <QPixmap>
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
-#include <QPixmap>
 #include <kdrawutil.h>
 #include <kglobal.h>
 #include <klocale.h>

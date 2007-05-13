@@ -8,9 +8,9 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include <config-X11.h>
-
 #include "trackmouse.h"
+
+#include <config-X11.h>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>

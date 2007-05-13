@@ -1,5 +1,6 @@
-#include <kconfig.h>
 #include "kwmthemeclient.h"
+
+#include <kconfig.h>
 #include <kglobal.h>
 #include <QLayout>
 #include <qdrawutil.h>

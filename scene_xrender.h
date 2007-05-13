@@ -11,7 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_SCENE_XRENDER_H
 #define KWIN_SCENE_XRENDER_H
 
-#include "config.h"
+#include <config.h>
 
 #include "scene.h"
 
