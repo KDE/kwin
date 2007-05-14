@@ -30,9 +30,9 @@ After starting, KWin's debug output also says which compositing backend it uses,
 
 
 nVidia:
------------
+===========
 
-Both 9xxx and 8xxx drivers work, only 9xxx drivers provide TFP (texture_from_pixmap)
+8xxx drivers and newer work, only 9xxx and later drivers provide TFP (texture_from_pixmap)
 functionality.
 
 You need in xorg.conf
@@ -45,9 +45,20 @@ Section "Extensions"
  Option "Composite" "Enable"
 EndSection
 
+Issues:
+-------
+
+When switching away from the X session KWin freezes in nvidia's OpenGL library
+    - turn off GLVSync option (see below)
+TFP mode (see GLMode) below crashes with windows with certain sizes (32x32)
+    - use SHM mode
+Refresh rate is slower than it should be
+    - nvidia drivers use refresh rate to work around some X limitations
+    - disable DynamicTwinView (see nvidia README)
+
 
 ATI:
---------
+========
 
 The radeon driver should work for R200 chips, it's worse with R300 chips.
 TODO - fglrx - no idea
@@ -70,13 +81,13 @@ running kwin may be necessary).
 
 
 Intel:
--------
+=======
 
 TODO - no idea. Possibly similar to ATI.
 
 
 Configuration options:
-----------------------
+======================
 
 All general configuration option are in group [Translucency] in kwinrc config file:
 
@@ -95,7 +106,7 @@ Y=<number> = Y position, the same like X
 
 
 Effects:
---------
+========
 
 Which modules are enabled is currently set by config value Load in group [Effects] in kwinrc config file.
 Effects are named like the class, without the Effect suffix (e.g. Load=ShowFps,Fade). There is
