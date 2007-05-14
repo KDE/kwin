@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=DesktopGrid
+Name[csb]=MrzéżkaPùltu
 Name[nds]=Schriefdisch-Gadder
 Name[zh_TW]=桌面格
 X-KDE-Library=kwin4_effect_builtins

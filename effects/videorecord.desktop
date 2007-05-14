@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Videorecord
+Name[csb]=Nagranié wideò
 Name[nds]=Video opnehmen
 Name[zh_TW]=影像錄影
 X-KDE-Library=kwin4_effect_videorecord

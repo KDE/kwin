@@ -2,6 +2,7 @@
 Encoding=UTF-8
 # Name of the effect
 Name=Howto
+Name[csb]=Jak to zrobic
 Name[nds]=Anleden
 # The plugin (library) which contains the effect. One library may contain more effects.
 X-KDE-Library=kwin4_effect_tests
