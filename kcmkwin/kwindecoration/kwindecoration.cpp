@@ -404,9 +404,9 @@ void KWinDecorationModule::resetPlugin( KConfigGroup& conf, const QString& curre
 
 	// Free the old library if possible
 	if (!oldLibraryName.isNull())
-		loader->unloadLibrary( QFile::encodeName(oldName) );
+		loader->unloadLibrary( oldName );
 
-	KLibrary* library = loader->library( QFile::encodeName(currentName) );
+	KLibrary* library = loader->library( currentName );
 	if (library != NULL)
 	{
                 KLibrary::void_function_ptr alloc_ptr = library->resolveFunction("allocate_config");

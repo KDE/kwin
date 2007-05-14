@@ -107,14 +107,14 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     KLibrary *oldLibrary = library;
     KDecorationFactory* oldFactory = fact;
 
-    QString path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
+    QString path = KLibLoader::findLibrary(nameStr);
 	kDebug() << "kwin : path " << path << " for " << nameStr << endl;
 
     // If the plugin was not found, try to find the default
     if (path.isEmpty())
         {
         nameStr = defaultPlugin;
-        path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
+        path = KLibLoader::findLibrary(nameStr);
         }
 
     // If no library was found, exit kwin with an error message
@@ -129,7 +129,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
 	return true;
 
     // Try loading the requested plugin
-    library = KLibLoader::self()->library(QFile::encodeName(path));
+    library = KLibLoader::self()->library(path);
 
     // If that fails, fall back to the default plugin
     if (!library)
@@ -138,9 +138,9 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
         nameStr = defaultPlugin;
 	if ( pluginStr == nameStr )
 	    return true;
-        path = KLibLoader::findLibrary(QFile::encodeName(nameStr));
+        path = KLibLoader::findLibrary(nameStr);
 	if (!path.isEmpty())
-            library = KLibLoader::self()->library(QFile::encodeName(path));
+            library = KLibLoader::self()->library(path);
         }
 
     if (!library)

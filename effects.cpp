@@ -572,7 +572,7 @@ KLibrary* EffectsHandlerImpl::findEffectLibrary( const QString& effectname )
         libname = conf.readEntry( "X-KDE-Library", libname );
         }
 
-    KLibrary* library = KLibLoader::self()->library(QFile::encodeName(libname));
+    KLibrary* library = KLibLoader::self()->library(libname);
     if( !library )
         {
         kError( 1212 ) << k_funcinfo << "couldn't open library for effect '" <<
