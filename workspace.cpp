@@ -1606,7 +1606,7 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
 int Workspace::numScreens() const
     {
     if( !options->xineramaEnabled )
-        return 0;
+        return 1;
     return qApp->desktop()->numScreens();
     }
 
