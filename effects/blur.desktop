@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Blur
 Name[de]=Verwischen
+Name[el]=Θόλωμα
 Name[nds]=Verwischen
 Name[zh_TW]=模糊
 X-KDE-Library=kwin4_effect_builtins

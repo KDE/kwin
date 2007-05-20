@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=DialogParent
+Name[el]=ΓονέαςΔιαλόγου
 Name[nds]=Överornt Dialoog
 Name[zh_TW]=上層對話框
 X-KDE-Library=kwin4_effect_builtins

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=MakeTransparent
 Name[de]=Transparent machen
+Name[el]=Εμφάνιση διαφανούς
 Name[nds]=Dörsichtig maken
 Name[zh_TW]=製造透明
 X-KDE-Library=kwin4_effect_builtins

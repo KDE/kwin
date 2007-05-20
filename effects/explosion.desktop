@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Explosion
+Name[el]=Έκρηξη
 Name[nds]=Exploschoon
 Name[zh_TW]=爆炸
 X-KDE-Library=kwin4_effect_builtins

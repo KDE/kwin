@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=TrackMouse
 Name[de]=Mausspur
+Name[el]=Ανίχνευση ποντικιού
 Name[nds]=Muusspoor
 Name[zh_TW]=追蹤滑鼠
 X-KDE-Library=kwin4_effect_builtins

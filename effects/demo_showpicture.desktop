@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo_ShowPicture
+Name[el]=Δοκιμή_Εμφάνιση εικόνας
 Name[nds]=Demo: Bild wiesen
 Name[zh_TW]=示範_顯示圖片
 X-KDE-Library=kwin4_effect_tests

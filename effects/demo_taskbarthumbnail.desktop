@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo_TaskbarThumbnail
+Name[el]=Δοκιμή_Εικόνα επισκόπησης γραμμής εργασιών
 Name[nds]=Demo: Programmbalken-Vöransicht
 Name[zh_TW]=示範_工作列縮圖
 X-KDE-Library=kwin4_effect_tests

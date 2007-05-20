@@ -1,5 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=BoxSwitch
+Name[el]=Εναλλαγή πλαισίου
 Name[zh_TW]=盒切換
 X-KDE-Library=kwin4_effect_builtins

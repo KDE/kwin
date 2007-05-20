@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=WavyWindows
 Name[de]=Wellige Fenster
+Name[el]=Κυματιστά παράθυρα
 Name[nds]=Bülgenfinstern
 Name[zh_TW]=波浪狀視窗
 X-KDE-Library=kwin4_effect_builtins

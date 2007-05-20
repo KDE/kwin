@@ -2,5 +2,6 @@
 Encoding=UTF-8
 Name=ThumbnailAside
 Name[de]=Seitliche Vorschaubilder
+Name[el]=Εικόνα επισκόπησης στο πλάι
 Name[nds]=Vöransicht an de Kant
 X-KDE-Library=kwin4_effect_builtins

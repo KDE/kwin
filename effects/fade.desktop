@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Fade
 Name[de]=Verblassen
+Name[el]=Ομαλή εμφάνιση
 Name[nds]=Utblennen
 Name[zh_TW]=淡出
 X-KDE-Library=kwin4_effect_builtins

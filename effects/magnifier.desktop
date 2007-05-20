@@ -3,6 +3,7 @@ Encoding=UTF-8
 Name=Magnifier
 Name[csb]=Zwikszanié
 Name[de]=Vergrößerung
+Name[el]=Μεγεθυντικός φακός
 Name[nds]=Kiekglas
 Name[zh_TW]=放大鏡
 X-KDE-Library=kwin4_effect_builtins
