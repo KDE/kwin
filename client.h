@@ -265,6 +265,7 @@ class Client
         void autoRaise();
         void shadeHover();
         void shortcutActivated();
+        void delayedMoveResize();
 
     private:
         friend class Bridge; // FRAME
@@ -275,8 +276,7 @@ class Client
         virtual ~Client(); // use destroyClient() or releaseWindow()
 
         Position mousePosition( const QPoint& ) const;
-        void setCursor( Position m );
-        void setCursor( const QCursor& c );
+        void updateCursor();
 
     // transparent stuff
         void drawbound( const QRect& geom );
@@ -346,6 +346,8 @@ class Client
         void leaveMoveResize();
         void checkUnrestrictedMoveResize();
         void handleMoveResize( int x, int y, int x_root, int y_root );
+        void startDelayedMoveResize();
+        void stopDelayedMoveResize();
         void positionGeometryTip();
         void grabButton( int mod );
         void ungrabButton( int mod );
@@ -447,6 +449,7 @@ class Client
         int workarea_diff_x, workarea_diff_y;
         QTimer* autoRaiseTimer;
         QTimer* shadeHoverTimer;
+        QTimer* delayedMoveResizeTimer;
         Colormap cmap;
         QString cap_normal, cap_iconic, cap_suffix;
         Group* in_group;

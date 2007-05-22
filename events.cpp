@@ -988,7 +988,7 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
         if ( !buttonDown ) 
             {
             mode = PositionCenter;
-            setCursor( Qt::ArrowCursor );
+            updateCursor();
             }
         bool lostMouse = !rect().contains( QPoint( e->x, e->y ) );
         // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
@@ -1281,7 +1281,8 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         moveOffset = QPoint( x, y );
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
-        setCursor( mode ); // update to sizeAllCursor if about to move
+        startDelayedMoveResize();
+        updateCursor();
         }
     performMouseCommand( com, QPoint( x_root, y_root ));
     }
@@ -1297,13 +1298,13 @@ void Client::processMousePressEvent( QMouseEvent* e )
     int button;
     switch( e->button())
         {
-		case Qt::LeftButton:
+        case Qt::LeftButton:
             button = Button1;
           break;
-		case Qt::MidButton:
+        case Qt::MidButton:
             button = Button2;
           break;
-		case Qt::RightButton:
+        case Qt::RightButton:
             button = Button3;
           break;
         default:
@@ -1329,6 +1330,7 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
     if ( (state & ( Button1Mask & Button2Mask & Button3Mask )) == 0 )
         {
         buttonDown = false;
+        stopDelayedMoveResize();
         if ( moveResizeMode ) 
             {
             finishMoveResize( false );
@@ -1336,7 +1338,7 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
             QPoint mousepos( x_root - x, y_root - y );
             mode = mousePosition( mousepos );
             }
-        setCursor( mode );
+        updateCursor();
         }
     return true;
     }
@@ -1384,8 +1386,10 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
         {
         Position newmode = mousePosition( QPoint( x, y ));
         if( newmode != mode )
-            setCursor( newmode );
-        mode = newmode;
+            {
+            mode = newmode;
+            updateCursor();
+            }
         // reset the timestamp for the optimization, otherwise with long passivity
         // the option in waitingMotionEvent() may be always true
         next_motion_time = CurrentTime;
@@ -1496,7 +1500,7 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
     {
         finishMoveResize( true );
         buttonDown = false;
-        setCursor( mode );
+        updateCursor();
     }
     else if( direction >= NET::TopLeft && direction <= NET::Left ) 
         {
@@ -1520,12 +1524,9 @@ void Client::NETMoveResize( int x_root, int y_root, NET::Direction direction )
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
         mode = convert[ direction ];
-        setCursor( mode );
         if( !startMoveResize())
-            {
             buttonDown = false;
-            setCursor( mode );
-            }
+        updateCursor();
         }
     else if( direction == NET::KeyboardMove )
         { // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
@@ -1568,12 +1569,12 @@ void Client::keyPressEvent( uint key_code )
     case Qt::Key_Enter:
             finishMoveResize( false );
             buttonDown = false;
-            setCursor( mode );
+            updateCursor();
             break;
     case Qt::Key_Escape:
             finishMoveResize( true );
             buttonDown = false;
-            setCursor( mode );
+            updateCursor();
             break;
         default:
             return;

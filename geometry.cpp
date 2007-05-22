@@ -2260,6 +2260,7 @@ bool Client::startMoveResize()
     assert( !moveResizeMode );
     assert( QWidget::keyboardGrabber() == NULL );
     assert( QWidget::mouseGrabber() == NULL );
+    stopDelayedMoveResize();
     if( QApplication::activePopupWidget() != NULL )
         return false; // popups have grab
     bool has_grab = false;
@@ -2398,6 +2399,33 @@ void Client::checkUnrestrictedMoveResize()
         }
     }
 
+// When the user pressed mouse on the titlebar, don't activate move immediatelly,
+// since it may be just a click. Activate instead after a delay. Move used to be
+// activated only after moving by several pixels, but that looks bad.
+void Client::startDelayedMoveResize()
+    {
+    delete delayedMoveResizeTimer;
+    delayedMoveResizeTimer = new QTimer( this );
+    connect( delayedMoveResizeTimer, SIGNAL( timeout()), this, SLOT( delayedMoveResize()));
+    delayedMoveResizeTimer->setSingleShot( true );
+    delayedMoveResizeTimer->start( QApplication::doubleClickInterval());
+    }
+
+void Client::stopDelayedMoveResize()
+    {
+    delete delayedMoveResizeTimer;
+    delayedMoveResizeTimer = NULL;
+    }
+
+void Client::delayedMoveResize()
+    {
+    assert( buttonDown );
+    if( !startMoveResize())
+        buttonDown = false;
+    updateCursor();
+    stopDelayedMoveResize();
+    }
+
 void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     {
     if(( mode == PositionCenter && !isMovable())
@@ -2412,9 +2440,10 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             if( !startMoveResize())
                 {
                 buttonDown = false;
-                setCursor( mode );
+                updateCursor();
                 return;
                 }
+            updateCursor();
             }
         else
             return;

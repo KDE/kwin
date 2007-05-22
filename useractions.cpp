@@ -608,12 +608,9 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
             invertedMoveOffset = rect().bottomRight() - moveOffset;
             unrestrictedMoveResize = ( command == Options::MouseActivateRaiseAndUnrestrictedMove
                                     || command == Options::MouseUnrestrictedMove );
-            setCursor( mode );
             if( !startMoveResize())
-                {
                 buttonDown = false;
-                setCursor( mode );
-                }
+            updateCursor();
             break;
             }
         case Options::MouseResize:
@@ -638,12 +635,9 @@ bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPo
                 mode = (x < width() / 2) ? PositionLeft : PositionRight;
             invertedMoveOffset = rect().bottomRight() - moveOffset;
             unrestrictedMoveResize = ( command == Options::MouseUnrestrictedResize );
-            setCursor( mode );
             if( !startMoveResize())
-                {
                 buttonDown = false;
-                setCursor( mode );
-                }
+            updateCursor();
             break;
             }
         case Options::MouseMaximize:

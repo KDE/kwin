@@ -77,6 +77,9 @@ Client::Client( Workspace *ws )
         transient_for( NULL ),
         transient_for_id( None ),
         original_transient_for_id( None ),
+        autoRaiseTimer( NULL ),
+        shadeHoverTimer( NULL ),
+        delayedMoveResizeTimer( NULL ),
         in_group( NULL ),
         window_group( None ),
         in_layer( UnknownLayer ),
@@ -95,8 +98,6 @@ Client::Client( Workspace *ws )
         demandAttentionKNotifyTimer( NULL )
 // SELI do all as initialization
     {
-    autoRaiseTimer = 0;
-    shadeHoverTimer = 0;
 
     // set the initial mapping state
     mapping_state = WithdrawnState;
@@ -1450,48 +1451,47 @@ bool Client::isSpecialWindow() const
   Sets an appropriate cursor shape for the logical mouse position \a m
 
  */
-void Client::setCursor( Position m )
+void Client::updateCursor()
     {
+    Position m = mode;
     if( !isResizable() || isShade())
-        {
         m = PositionCenter;
-        }
-    switch ( m ) 
+    QCursor c;
+    switch( m )
         {
         case PositionTopLeft:
         case PositionBottomRight:
-            setCursor( Qt::SizeFDiagCursor );
+            c = Qt::SizeFDiagCursor;
             break;
         case PositionBottomLeft:
         case PositionTopRight:
-            setCursor( Qt::SizeBDiagCursor );
+            c = Qt::SizeBDiagCursor;
             break;
         case PositionTop:
         case PositionBottom:
-            setCursor( Qt::SizeVerCursor );
+            c = Qt::SizeVerCursor;
             break;
         case PositionLeft:
         case PositionRight:
-            setCursor( Qt::SizeHorCursor );
+            c = Qt::SizeHorCursor;
             break;
         default:
-            if( buttonDown && isMovable())
-                setCursor( Qt::SizeAllCursor );
+            if( moveResizeMode )
+                c = Qt::SizeAllCursor;
             else
-                setCursor( Qt::ArrowCursor );
+                c = Qt::ArrowCursor;
             break;
         }
-    }
-
-// TODO mit nejake checkCursor(), ktere se zavola v manage() a pri vecech, kdy by se kurzor mohl zmenit?
-void Client::setCursor( const QCursor& c )
-    {
     if( c.handle() == cursor.handle())
         return;
     cursor = c;
     if( decoration != NULL )
         decoration->widget()->setCursor( cursor );
     XDefineCursor( display(), frameId(), cursor.handle());
+    if( moveResizeMode ) // XDefineCursor doesn't change cursor if there's pointer grab active
+        XChangeActivePointerGrab( display(),
+            ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
+            cursor.handle(), xTime());
     }
 
 Client::Position Client::mousePosition( const QPoint& p ) const
