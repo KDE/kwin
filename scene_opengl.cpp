@@ -1005,8 +1005,8 @@ void SceneOpenGL::Window::createVertexGrid(int xres, int yres)
         {
         // First calculate number of columns/rows that this rect will be
         //  divided into
-        int cols = (xres <= 0) ? 1 : (int)ceilf( r.width() / (float)xres );
-        int rows = (yres <= 0) ? 1 : (int)ceilf( r.height() / (float)yres );
+        int cols = (xres <= 0) ? 1 : (int)ceil( r.width() / (float)xres );
+        int rows = (yres <= 0) ? 1 : (int)ceil( r.height() / (float)yres );
         // Now calculate actual size of each cell
         int cellw = r.width() / cols;
         int cellh = r.height() / rows;
