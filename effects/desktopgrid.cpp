@@ -278,10 +278,10 @@ QRect DesktopGridEffect::desktopRect( int desktop, bool scaled ) const
     if( !scaled )
         return rect;
     QRect current = desktopRect( effects->currentDesktop(), false );
-    rect = QRect( lround( interpolate( rect.x() - current.x(), rect.x() / float( x ), progress )),
-        lround( interpolate( rect.y() - current.y(), rect.y() / float( y ), progress )),
-        lround( interpolate( rect.width(), displayWidth() / float( x ), progress )),
-        lround( interpolate( rect.height(), displayHeight() / float( y ), progress )));
+    rect = QRect( int( round( interpolate( rect.x() - current.x(), rect.x() / float( x ), progress ))),
+        int( round( interpolate( rect.y() - current.y(), rect.y() / float( y ), progress ))),
+        int( round( interpolate( rect.width(), displayWidth() / float( x ), progress ))),
+        int( round( interpolate( rect.height(), displayHeight() / float( y ), progress ))));
     return rect;
     }
 
