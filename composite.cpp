@@ -227,25 +227,13 @@ void Workspace::performCompositing()
         return;
         }
     // create a list of all windows in the stacking order
-    // TODO keep this list like now a stacking order of Client window is kept
     ToplevelList windows;
-    Window* children;
-    unsigned int children_count;
-    Window dummy;
-    XQueryTree( display(), rootWindow(), &dummy, &dummy, &children, &children_count );
-    for( unsigned int i = 0;
-         i < children_count;
-         ++i )
-        {
-        if( Client* c = findClient( FrameIdMatchPredicate( children[ i ] )))
-            windows.append( c );
-        else if( Unmanaged* c = findUnmanaged( WindowMatchPredicate( children[ i ] )))
-            windows.append( c );
-        }
+    foreach( Client* c, stacking_order )
+        windows.append( c );
+    foreach( Unmanaged* c, unmanaged_stacking_order )
+        windows.append( c );
     foreach( Deleted* c, deleted ) // TODO remember stacking order somehow
         windows.append( c );
-    if( children != NULL )
-        XFree( children );
     foreach( Toplevel* c, windows )
         { // This could be possibly optimized WRT obscuring, but that'd need being already
           // past prePaint() phase - probably not worth it.

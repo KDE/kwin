@@ -151,6 +151,7 @@ class Workspace : public QObject, public KDecorationDefines
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client * );
         void restoreSessionStackingOrder( Client* c );
+        void restackUnmanaged( Unmanaged* c, Window above );
         void reconfigure();
 
         void clientHidden( Client*  );
@@ -617,6 +618,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         ClientList unconstrained_stacking_order; // topmost last
         ClientList stacking_order; // topmost last
+        UnmanagedList unmanaged_stacking_order;
         QVector< ClientList > focus_chain; // currently ative last
         ClientList global_focus_chain; // this one is only for things like tabbox's MRU
         ClientList should_get_focus; // last is most recent

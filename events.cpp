@@ -1649,16 +1649,18 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking(); // keep them on top
     QRect newgeom( e->x, e->y, e->width, e->height );
-    if( newgeom == geom )
-        return;
-    addWorkspaceRepaint( geometry()); // damage old area
-    QRect old = geom;
-    geom = newgeom;
-    discardWindowPixmap();
-    if( scene != NULL )
-        scene->windowGeometryShapeChanged( this );
-    if( effects != NULL )
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), old );
+    if( newgeom != geom )
+        {
+        addWorkspaceRepaint( geometry()); // damage old area
+        QRect old = geom;
+        geom = newgeom;
+        discardWindowPixmap();
+        if( scene != NULL )
+            scene->windowGeometryShapeChanged( this );
+        if( effects != NULL )
+            static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), old );
+        }
+    workspace()->restackUnmanaged( this, e->above );
     }
 
 // ****************************************

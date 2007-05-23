@@ -72,6 +72,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "tabbox.h"
 #include "group.h"
 #include "rules.h"
+#include "unmanaged.h"
 #include <QX11Info>
 
 namespace KWin
@@ -227,7 +228,7 @@ Client* Workspace::findDesktop( bool topmost, int desktop ) const
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if( topmost )
         {
-		for ( int i = stacking_order.size() - 1; i>=0; i-- )
+        for ( int i = stacking_order.size() - 1; i>=0; i-- )
             {
             if ( stacking_order.at( i )->isOnDesktop( desktop ) && stacking_order.at( i )->isDesktop()
                 && stacking_order.at( i )->isShown( true ))
@@ -236,7 +237,7 @@ Client* Workspace::findDesktop( bool topmost, int desktop ) const
         }
     else // bottom-most
         {
-		foreach ( Client* c, stacking_order )
+        foreach ( Client* c, stacking_order )
             {
             if ( c->isOnDesktop( desktop ) && c->isDesktop()
                 && c->isShown( true ))
@@ -686,6 +687,44 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
     if( mainwindow->isDock())
         return false;
     return true;
+    }
+
+void Workspace::restackUnmanaged( Unmanaged* c, Window above )
+    {
+    if( above == None )
+        {
+        unmanaged_stacking_order.removeAll( c );
+        unmanaged_stacking_order.prepend( c );
+        addRepaint( c->geometry());
+        return;
+        }
+    bool was_below = false;
+    for( int i = 0;
+         i < unmanaged_stacking_order.size();
+         ++i )
+        {
+        if( unmanaged_stacking_order.at( i )->window() == above )
+            {
+            if( i + 1 < unmanaged_stacking_order.size()
+                && unmanaged_stacking_order.at( i ) == c )
+                {
+                // it is already there, do nothing
+                return;
+                }
+            unmanaged_stacking_order.removeAll( c );
+            if( was_below )
+                --i;
+            unmanaged_stacking_order.insert( i, c );
+            addRepaint( c->geometry());
+            return;
+            }
+        if( unmanaged_stacking_order.at( i ) == c )
+            was_below = true;
+        }
+    // TODO not found?
+    unmanaged_stacking_order.removeAll( c );
+    unmanaged_stacking_order.append( c );
+    addRepaint( c->geometry());
     }
 
 //*******************************
