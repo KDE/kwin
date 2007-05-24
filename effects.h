@@ -51,6 +51,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual bool grabKeyboard( Effect* effect );
         virtual void ungrabKeyboard();
         virtual EffectWindowList stackingOrder() const;
+        virtual void setElevatedWindow( EffectWindow* w, bool set );
 
         virtual void setTabBoxWindow(EffectWindow*);
         virtual void setTabBoxDesktop(int);
@@ -109,11 +110,14 @@ class EffectsHandlerImpl : public EffectsHandler
         void loadEffect( const QString& name );
         void toggleEffect( const QString& name );
         void unloadEffect( const QString& name );
+        
+        ToplevelList elevatedWindows() const;
 
     protected:
         KLibrary* findEffectLibrary( const QString& effectname );
         Effect* keyboard_grab_effect;
         QStack<GLRenderTarget*> render_targets;
+        ToplevelList elevated_windows;
 };
 
 class EffectWindowImpl : public EffectWindow
@@ -201,6 +205,14 @@ class EffectWindowGroupImpl
     private:
         Group* group;
     };
+
+
+inline
+ToplevelList EffectsHandlerImpl::elevatedWindows() const
+    {
+    return elevated_windows;
+    }
+
 
 inline
 EffectWindowGroupImpl::EffectWindowGroupImpl( Group* g )

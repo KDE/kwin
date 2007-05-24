@@ -234,6 +234,11 @@ void Workspace::performCompositing()
         windows.append( c );
     foreach( Deleted* c, deleted ) // TODO remember stacking order somehow
         windows.append( c );
+    foreach( Toplevel* c, static_cast< EffectsHandlerImpl* >( effects )->elevatedWindows())
+        {
+        windows.removeAll( c );
+        windows.append( c );
+        }
     foreach( Toplevel* c, windows )
         { // This could be possibly optimized WRT obscuring, but that'd need being already
           // past prePaint() phase - probably not worth it.

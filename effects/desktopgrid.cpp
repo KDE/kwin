@@ -438,6 +438,8 @@ void DesktopGridEffect::finish()
     if( keyboard_grab )
         effects->ungrabKeyboard();
     keyboard_grab = false;
+    if( window_move != NULL )
+        effects->setElevatedWindow( window_move, false );
     window_move = NULL;
     effects->destroyInputWindow( input );
     effects->addRepaintFull(); // to get rid of hover
@@ -480,6 +482,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 window_move_pos = rect.topLeft();
                 window_move_diff = window_move_pos - me->pos();
                 window_move = w;
+                effects->setElevatedWindow( window_move, true );
                 }
             }
         else if( me->buttons() == Qt::MidButton && window_move == NULL )
@@ -525,7 +528,10 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
 void DesktopGridEffect::windowClosed( EffectWindow* w )
     {
     if( w == window_move )
+        {
+        effects->setElevatedWindow( window_move, false );
         window_move = NULL;
+        }
     }
 
 void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )

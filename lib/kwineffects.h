@@ -200,6 +200,8 @@ class KWIN_EXPORT EffectsHandler
         virtual bool optionRollOverDesktops() const = 0;
 
         virtual EffectWindowList stackingOrder() const = 0;
+        // window will be temporarily painted as if being at the top of the stack
+        virtual void setElevatedWindow( EffectWindow* w, bool set ) = 0;
 
         virtual void setTabBoxWindow(EffectWindow*) = 0;
         virtual void setTabBoxDesktop(int) = 0;
