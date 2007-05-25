@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=kcmshell kwineffects
+Icon=kcmeffects
+Type=Service
+ServiceTypes=KCModule
+DocPath=kcontrol/kwineffects/index.html
+
+X-KDE-Library=kcm_kwineffects
+X-KDE-FactoryName=kcm_kwineffects
+X-KDE-ParentApp=kcontrol
+
+Name=Window Effects
+
+Comment=Configure window effects
+
+Keywords=kwin,window,manager,effect
