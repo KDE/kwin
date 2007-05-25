@@ -3,4 +3,15 @@ Encoding=UTF-8
 Name=BoxSwitch
 Name[el]=Εναλλαγή πλαισίου
 Name[zh_TW]=盒切換
+
+Type=Service
+ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Philip Falkner
+X-KDE-PluginInfo-Email=philip.falkner@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_boxswitch
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Window Management
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Library=kwin4_effect_builtins

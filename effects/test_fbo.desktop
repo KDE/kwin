@@ -4,4 +4,15 @@ Name=Test_FBO
 Name[el]=Δοκιμή_FBO
 Name[nds]=Test: FBO
 Name[zh_TW]=測試_FBO
+
+Type=Service
+ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Rivo Laks
+X-KDE-PluginInfo-Email=rivolaks@hot.ee
+X-KDE-PluginInfo-Name=kwin4_effect_test_fbo
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Tests
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
 X-KDE-Library=kwin4_effect_tests

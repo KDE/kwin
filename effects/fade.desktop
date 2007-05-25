@@ -5,4 +5,15 @@ Name[de]=Verblassen
 Name[el]=Ομαλή εμφάνιση
 Name[nds]=Utblennen
 Name[zh_TW]=淡出
+
+Type=Service
+ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Philip Falkner
+X-KDE-PluginInfo-Email=philip.falkner@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_fade
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Library=kwin4_effect_builtins
