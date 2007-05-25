@@ -5,6 +5,7 @@ Name[de]=Minimieren-Animation
 Name[el]=Κίνηση ελαχιστοποίησης
 Name[nds]=Minimeer-Animeren
 Name[zh_TW]=縮小動畫
+Comment=Animates minimizing of windows
 
 Type=Service
 ServiceTypes=KWin/Effect

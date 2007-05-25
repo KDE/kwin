@@ -6,6 +6,7 @@ Name[de]=Vergrößerung
 Name[el]=Μεγεθυντικός φακός
 Name[nds]=Kiekglas
 Name[zh_TW]=放大鏡
+Comment=Magnifies the part of the screen that is under the mouse
 
 Type=Service
 ServiceTypes=KWin/Effect

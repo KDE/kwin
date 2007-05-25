@@ -4,6 +4,7 @@ Name=Explosion
 Name[el]=Έκρηξη
 Name[nds]=Exploschoon
 Name[zh_TW]=爆炸
+Comment=Makes windows explode when they're closed
 
 Type=Service
 ServiceTypes=KWin/Effect

@@ -4,6 +4,7 @@ Name=DimInactive
 Name[de]=Inaktive abdunkeln
 Name[el]=Θαμπάδα ανενεργού
 Name[nds]=Nich aktive düüster maken
+Comment=Darkens inactive windows
 
 Type=Service
 ServiceTypes=KWin/Effect

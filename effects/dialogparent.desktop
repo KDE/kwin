@@ -4,6 +4,7 @@ Name=DialogParent
 Name[el]=ΓονέαςΔιαλόγου
 Name[nds]=Överornt Dialoog
 Name[zh_TW]=上層對話框
+Comment=Darkens parent windows of active dialogs
 
 Type=Service
 ServiceTypes=KWin/Effect

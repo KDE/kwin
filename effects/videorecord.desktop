@@ -5,6 +5,7 @@ Name[csb]=Nagranié wideò
 Name[el]=Εγγραφή βίντεο
 Name[nds]=Video opnehmen
 Name[zh_TW]=影像錄影
+Comment=Lets you record videos of your desktop
 
 Type=Service
 ServiceTypes=KWin/Effect

@@ -5,6 +5,7 @@ Name[csb]=BiéżnéÒkno
 Name[el]=Παρουσίαση παραθύρων
 Name[nds]=Vörhannen Finstern
 Name[zh_TW]=展示視窗
+Comment=Shows all windows side-by-side
 
 Type=Service
 ServiceTypes=KWin/Effect

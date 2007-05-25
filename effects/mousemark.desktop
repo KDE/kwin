@@ -4,6 +4,7 @@ Name=MouseMark
 Name[el]=Σήμανση ποντικιού
 Name[nds]=Muus-Mark
 Name[zh_TW]=滑鼠標記
+Comment=Let's you draw lines onto your desktop
 
 Type=Service
 ServiceTypes=KWin/Effect

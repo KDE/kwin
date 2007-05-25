@@ -5,6 +5,7 @@ Name[csb]=MrzéżkaPùltu
 Name[el]=Κάνναβος επιφάνειας εργασίας
 Name[nds]=Schriefdisch-Gadder
 Name[zh_TW]=桌面格
+Comment=Desktop switcher that lays the desktops out in a grid
 
 Type=Service
 ServiceTypes=KWin/Effect

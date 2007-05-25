@@ -5,6 +5,7 @@ Name[de]=Schatten
 Name[el]=Σκιά
 Name[nds]=Schadden
 Name[zh_TW]=陰影
+Comment=Adds shadow under the windows
 
 Type=Service
 ServiceTypes=KWin/Effect
