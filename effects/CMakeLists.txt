@@ -6,6 +6,13 @@ macro(KWIN4_ADD_EFFECT name)
     install(TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
 endmacro(KWIN4_ADD_EFFECT)
 
+macro(KWIN4_ADD_EFFECT_CONFIG name)
+    kde4_automoc(${ARGN})
+    kde4_add_plugin(kcm_kwin4_effect_${name} ${ARGN})
+    target_link_libraries(kcm_kwin4_effect_${name} ${KDE4_KUTILS_LIBS})
+    install(TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
+endmacro(KWIN4_ADD_EFFECT_CONFIG)
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/workspace/kwin/lib
     )
@@ -77,6 +84,15 @@ if(OPENGL_FOUND)
         data/blur-render.frag
         data/blur-render.vert
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
+
+    # config modules
+    KWIN4_ADD_EFFECT_CONFIG( builtins presentwindows_config.cpp shadow_config.cpp )
+    install( FILES
+        presentwindows_config.desktop
+        shadow_config.desktop
+        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+
+
 endif(OPENGL_FOUND)
 
 # showfps - need both xrender and opengl

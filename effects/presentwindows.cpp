@@ -38,6 +38,8 @@ PresentWindowsEffect::PresentWindowsEffect()
     , filterTexture( NULL )
 #endif
     {
+    KConfig c("kwinrc");
+    KConfigGroup conf(&c, "Effect-PresentWindows");
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Expose" );
@@ -49,8 +51,8 @@ PresentWindowsEffect::PresentWindowsEffect()
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
 
-    borderActivate = ElectricTopRight; // TODO config options
-    borderActivateAll = ElectricNone;
+    borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricTopRight);
+    borderActivateAll = (ElectricBorder)conf.readEntry("BorderActivateAll", (int)ElectricNone);
 
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );

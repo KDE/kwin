@@ -12,15 +12,21 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kwinglutils.h>
 
+#include <kconfiggroup.h>
+#include <kconfig.h>
+
 namespace KWin
 {
 
 KWIN_EFFECT( shadow, ShadowEffect )
 
 ShadowEffect::ShadowEffect()
-    : shadowXOffset( 10 )
-    , shadowYOffset( 10 )
     {
+    KConfig c( "kwinrc" );
+    KConfigGroup conf( &c, "Effect-Shadow" );
+    shadowXOffset = conf.readEntry( "XOffset", 5 );
+    shadowYOffset = conf.readEntry( "YOffset", 5 );
+    shadowOpacity = (float)conf.readEntry( "Opacity", 0.2 );
     }
 
 void ShadowEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
@@ -55,7 +61,7 @@ void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, Window
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    glColor4f( 0, 0, 0, 0.2 * data.opacity ); // black
+    glColor4f( 0, 0, 0, shadowOpacity * data.opacity ); // black
 
     glPushMatrix();
     if( mask & PAINT_WINDOW_TRANSFORMED )
