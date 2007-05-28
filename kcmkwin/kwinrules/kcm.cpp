@@ -41,6 +41,8 @@ KCMRules::KCMRules( QWidget *parent, const QStringList & )
 , config( "kwinrulesrc" )
     {
     QVBoxLayout *layout = new QVBoxLayout( this );
+    layout->setMargin(0);
+
     widget = new KCMRulesList( this );
     layout->addWidget( widget );
     connect( widget, SIGNAL( changed( bool )), SLOT( moduleChanged( bool )));

@@ -93,6 +93,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QStringList &)
   mConfig = new KConfig( "kwinrc", KConfig::IncludeGlobals );
 
   QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setMargin(0);
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 

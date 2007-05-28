@@ -40,6 +40,7 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
 {
     mPluginSelector = new KPluginSelector(this);
     QHBoxLayout* layout = new QHBoxLayout;
+    layout->setMargin(0);
     layout->addWidget(mPluginSelector);
     setLayout(layout);
 
