@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( ScaleIn, ScaleInEffect )
+KWIN_EFFECT( scalein, ScaleInEffect )
 
 void ScaleInEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {

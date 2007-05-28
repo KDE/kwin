@@ -26,7 +26,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( TrackMouse, TrackMouseEffect )
+KWIN_EFFECT( trackmouse, TrackMouseEffect )
 
 const int STARS = 5;
 const int DIST = 50;

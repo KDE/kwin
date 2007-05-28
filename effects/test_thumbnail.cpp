@@ -20,7 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Test_Thumbnail, TestThumbnailEffect )
+KWIN_EFFECT( test_thumbnail, TestThumbnailEffect )
 
 TestThumbnailEffect::TestThumbnailEffect()
     : active_window( NULL )

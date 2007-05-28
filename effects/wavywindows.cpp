@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( WavyWindows, WavyWindowsEffect )
+KWIN_EFFECT( wavywindows, WavyWindowsEffect )
 
 WavyWindowsEffect::WavyWindowsEffect()
     {

@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( ThumbnailAside, ThumbnailAsideEffect )
+KWIN_EFFECT( thumbnailaside, ThumbnailAsideEffect )
 
 ThumbnailAsideEffect::ThumbnailAsideEffect()
     {

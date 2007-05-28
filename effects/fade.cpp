@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Fade, FadeEffect )
+KWIN_EFFECT( fade, FadeEffect )
 
 FadeEffect::FadeEffect()
     : fade_in_speed( 20 )

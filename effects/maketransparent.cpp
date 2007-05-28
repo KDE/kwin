@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( MakeTransparent, MakeTransparentEffect )
+KWIN_EFFECT( maketransparent, MakeTransparentEffect )
 
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {

@@ -127,31 +127,34 @@ class KWIN_EXPORT Effect
 
 
 /**
- * Defines the class to be used for effect with given name
- * E.g.  KWIN_EFFECT( Flames, MyFlameEffect )
+ * Defines the class to be used for effect with given name.
+ * The name must be same as effect's X-KDE-PluginInfo-Name values in .desktop
+ *  file, but without the "kwin4_effect_" prefix.
+ * E.g.  KWIN_EFFECT( flames, MyFlameEffect )
  * In this case object of MyFlameEffect class would be created when effect
- *  "Flames" is loaded.
+ *  "flames" (which has X-KDE-PluginInfo-Name=kwin4_effect_flames in .desktop
+ *  file) is loaded.
  **/
 #define KWIN_EFFECT( name, classname ) \
     extern "C" { \
-        KWIN_EXPORT Effect* effect_create_##name() { return new classname; } \
+        KWIN_EXPORT Effect* effect_create_kwin4_effect_##name() { return new classname; } \
     }
 /**
  * Defines the function used to check whether an effect is supported
- * E.g.  KWIN_EFFECT_SUPPORTED( Flames, MyFlameEffect::supported() )
+ * E.g.  KWIN_EFFECT_SUPPORTED( flames, MyFlameEffect::supported() )
  **/
 #define KWIN_EFFECT_SUPPORTED( name, function ) \
     extern "C" { \
-        KWIN_EXPORT bool effect_supported_##name() { return function; } \
+        KWIN_EXPORT bool effect_supported_kwin4_effect_##name() { return function; } \
     }
 /**
  * Defines the function used to retrieve an effect's config widget
- * E.g.  KWIN_EFFECT_CONFIG( Flames, MyFlameEffect::configWidget() )
+ * E.g.  KWIN_EFFECT_CONFIG( flames, MyFlameEffectConfig )
  **/
-#define KWIN_EFFECT_CONFIG( name, function ) \
-    extern "C" { \
-        KWIN_EXPORT Effect* effect_config_##name() { return function; } \
-    }
+#define KWIN_EFFECT_CONFIG( name, classname ) \
+    K_EXPORT_COMPONENT_FACTORY( \
+        kcm_kwineffect_##name, \
+        KGenericFactory<classname>( "kcm_kwineffect_" #name ) )
 
 
 class KWIN_EXPORT EffectsHandler

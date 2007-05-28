@@ -23,7 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Magnifier, MagnifierEffect )
+KWIN_EFFECT( magnifier, MagnifierEffect )
 
 const int FRAME_WIDTH = 5;
 

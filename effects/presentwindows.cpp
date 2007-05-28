@@ -25,7 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( PresentWindows, PresentWindowsEffect )
+KWIN_EFFECT( presentwindows, PresentWindowsEffect )
 
 PresentWindowsEffect::PresentWindowsEffect()
     : mShowWindowsFromAllDesktops ( false )

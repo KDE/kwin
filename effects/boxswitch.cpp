@@ -25,7 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( BoxSwitch, BoxSwitchEffect )
+KWIN_EFFECT( boxswitch, BoxSwitchEffect )
 
 BoxSwitchEffect::BoxSwitchEffect()
     : mActivated( 0 )

@@ -16,7 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Demo_ShowPicture, ShowPictureEffect )
+KWIN_EFFECT( demo_showpicture, ShowPictureEffect )
 
 ShowPictureEffect::ShowPictureEffect()
     : init( true )

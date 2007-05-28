@@ -16,7 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( FallApart, FallApartEffect )
+KWIN_EFFECT( fallapart, FallApartEffect )
 
 void FallApartEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {

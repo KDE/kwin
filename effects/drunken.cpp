@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Drunken, DrunkenEffect )
+KWIN_EFFECT( drunken, DrunkenEffect )
 
 void DrunkenEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {

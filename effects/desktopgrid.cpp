@@ -21,7 +21,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( DesktopGrid, DesktopGridEffect )
+KWIN_EFFECT( desktopgrid, DesktopGridEffect )
 
 const int PROGRESS_TIME = 500; // ms
 

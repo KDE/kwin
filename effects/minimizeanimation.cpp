@@ -14,7 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( MinimizeAnimation, MinimizeAnimationEffect )
+KWIN_EFFECT( minimizeanimation, MinimizeAnimationEffect )
 
 MinimizeAnimationEffect::MinimizeAnimationEffect()
     {

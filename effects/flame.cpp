@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Flame, FlameEffect )
+KWIN_EFFECT( flame, FlameEffect )
 
 void FlameEffect::prePaintScreen( int* mask, QRegion* region, int time )
     {

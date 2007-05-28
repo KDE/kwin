@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Zoom, ZoomEffect )
+KWIN_EFFECT( zoom, ZoomEffect )
 
 ZoomEffect::ZoomEffect()
     : zoom( 1 )

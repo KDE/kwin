@@ -26,7 +26,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( ShowFps, ShowFpsEffect )
+KWIN_EFFECT( showfps, ShowFpsEffect )
 
 const int FPS_WIDTH = 10;
 const int MAX_TIME = 100;

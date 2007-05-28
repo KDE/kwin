@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( ShakyMove, ShakyMoveEffect )
+KWIN_EFFECT( shakymove, ShakyMoveEffect )
 
 ShakyMoveEffect::ShakyMoveEffect()
     {

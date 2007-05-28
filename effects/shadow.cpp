@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Shadow, ShadowEffect )
+KWIN_EFFECT( shadow, ShadowEffect )
 
 ShadowEffect::ShadowEffect()
     : shadowXOffset( 10 )

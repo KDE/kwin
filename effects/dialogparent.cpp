@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( DialogParent, DialogParentEffect )
+KWIN_EFFECT( dialogparent, DialogParentEffect )
 
 void DialogParentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {

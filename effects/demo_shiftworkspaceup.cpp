@@ -13,7 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( Demo_ShiftWorkspaceUp, ShiftWorkspaceUpEffect )
+KWIN_EFFECT( demo_shiftworkspaceup, ShiftWorkspaceUpEffect )
 
 ShiftWorkspaceUpEffect::ShiftWorkspaceUpEffect()
     : up( false )

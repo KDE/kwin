@@ -42,7 +42,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( VideoRecord, VideoRecordEffect )
+KWIN_EFFECT( videorecord, VideoRecordEffect )
 
 VideoRecordEffect::VideoRecordEffect()
     : client( NULL )
