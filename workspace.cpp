@@ -1041,9 +1041,12 @@ void Workspace::slotReconfigure()
         updateTopMenuGeometry();
         updateCurrentTopMenu();
         }
-        
+
     if( options->useTranslucency )
+    {
         setupCompositing();
+        effects->reconfigure();
+    }
     else
         finishCompositing();
 
