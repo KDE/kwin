@@ -25,6 +25,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "kdesktopfile.h"
 #include "kconfiggroup.h"
 #include "kstandarddirs.h"
+#include <kservice.h>
+#include <kservicetypetrader.h>
+#include <kplugininfo.h>
 
 #include <assert.h>
 
@@ -37,8 +40,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     : EffectsHandler(type)
     , keyboard_grab_effect( NULL )
     {
-    foreach( const QString& effect, options->defaultEffects )
-        loadEffect( effect );
     }
 
 EffectsHandlerImpl::~EffectsHandlerImpl()
@@ -571,17 +572,17 @@ unsigned long EffectsHandlerImpl::xrenderBufferPicture()
 
 KLibrary* EffectsHandlerImpl::findEffectLibrary( const QString& effectname )
     {
-    QString libname = "kwin4_effect_" + effectname.toLower();
+    QString internalname = effectname.toLower();
 
-    QString desktopfile = KStandardDirs::locate("appdata",
-            "effects/" + effectname.toLower() + ".desktop");
-    if( !desktopfile.isEmpty() )
-        {
-        KDesktopFile desktopconf( desktopfile );
-        KConfigGroup conf = desktopconf.desktopGroup();
-        libname = conf.readEntry( "X-KDE-Library", libname );
-        }
+    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect", constraint);
+    if(offers.isEmpty())
+    {
+        kError( 1212 ) << k_funcinfo << "Couldn't find effect " << effectname << endl;
+        return 0;
+    }
 
+    QString libname = offers.first()->library();
     KLibrary* library = KLibLoader::self()->library(libname);
     if( !library )
         {
@@ -619,6 +620,9 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );
     assert( current_transform == 0 );
+
+    if( !name.startsWith("kwin4_effect_") )
+        kWarning( 1212 ) << k_funcinfo << "Effect names usually have kwin4_effect_ prefix" << endl;
 
     // Make sure a single effect won't be loaded multiple times
     for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); it++)

@@ -12,12 +12,12 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
-#include <kstandarddirs.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kpluginselector.h>
 #include <kservicetypetrader.h>
 #include <kplugininfo.h>
+#include <kservice.h>
 
 #include <QtDBus/QtDBus>
 #include <QBoxLayout>
@@ -46,8 +46,8 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
     connect(mPluginSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
 
     // Find all .desktop files of the effects
-    QStringList desktopFiles = KGlobal::dirs()->findAllResources("data", "kwin/effects/*.desktop");
-    QList<KPluginInfo*> effectinfos = KPluginInfo::fromFiles(desktopFiles);
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+    QList<KPluginInfo*> effectinfos = KPluginInfo::fromServices(offers);
 
     // Add them to the plugin selector
     mPluginSelector->addPlugins(effectinfos, i18n("Appearance"), "Appearance", mKWinConfig);

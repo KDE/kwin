@@ -1,6 +1,6 @@
 # Adds effect plugin with given name. Sources are given after the name
 macro(KWIN4_ADD_EFFECT name)
-    kde4_automoc(kwin4_effect_${name} ${ARGN})
+    kde4_automoc(${ARGN})
     kde4_add_plugin(kwin4_effect_${name} ${ARGN})
     target_link_libraries(kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS})
     install(TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
@@ -9,6 +9,8 @@ endmacro(KWIN4_ADD_EFFECT)
 include_directories(
     ${CMAKE_SOURCE_DIR}/workspace/kwin/lib
     )
+
+install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 
 
@@ -44,7 +46,7 @@ install( FILES
     scalein.desktop
     thumbnailaside.desktop
     zoom.desktop
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
+    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 if(OPENGL_FOUND)
     # opengl-based effects
@@ -63,7 +65,7 @@ if(OPENGL_FOUND)
         mousemark.desktop
         shadow.desktop
         trackmouse.desktop
-        DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
+        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
     install( FILES
         data/trackmouse.png
         data/explosion.frag
@@ -84,7 +86,7 @@ if( OPENGL_FOUND AND X11_Xrender_FOUND )
         )
     install( FILES
         showfps.desktop
-        DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
+        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif( OPENGL_FOUND AND X11_Xrender_FOUND )
 
 # add the plugin
@@ -115,7 +117,7 @@ install( FILES
     shakymove.desktop
     test_input.desktop
     test_thumbnail.desktop
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
+    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 if(OPENGL_FOUND)
     # opengl test/demo stuff
@@ -131,7 +133,7 @@ if(OPENGL_FOUND)
         demo_showpicture.desktop
         test_fbo.desktop
         wavywindows.desktop
-        DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
+        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
     install( FILES
         data/liquid.frag
@@ -154,6 +156,6 @@ macro_bool_to_01( CAPTURY_FOUND HAVE_CAPTURY )
 if( HAVE_CAPTURY )
     KWIN4_ADD_EFFECT(videorecord videorecord.cpp)
     target_link_libraries(kwin4_effect_videorecord ${CAPTURY_LDFLAGS})
-    install( FILES videorecord.desktop DESTINATION ${DATA_INSTALL_DIR}/kwin/effects )
+    install( FILES videorecord.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif( HAVE_CAPTURY )
 
