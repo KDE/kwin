@@ -319,8 +319,6 @@ class Options : public KDecorationOptions
         bool glDirect;
         bool glVSync;
 
-        QStringList defaultEffects;
-
     private:
         WindowOperation OpTitlebarDblClick;
 

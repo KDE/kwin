@@ -40,6 +40,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     : EffectsHandler(type)
     , keyboard_grab_effect( NULL )
     {
+    reconfigure();
     }
 
 EffectsHandlerImpl::~EffectsHandlerImpl()
@@ -50,6 +51,24 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
         unloadEffect( ep.first );
     foreach( InputWindowPair pos, input_windows )
         XDestroyWindow( display(), pos.second );
+    }
+
+void EffectsHandlerImpl::reconfigure()
+    {
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup conf(_config, "Plugins");
+
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+    foreach( KService::Ptr service, offers )
+        {
+        KPluginInfo plugininfo( service );
+        plugininfo.load( &conf );
+
+        if( plugininfo.isPluginEnabled() )
+            loadEffect( plugininfo.pluginName() );
+        else
+            unloadEffect( plugininfo.pluginName() );
+        }
     }
 
 // the idea is that effects call this function again which calls the next one

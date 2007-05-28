@@ -226,6 +226,7 @@ class KWIN_EXPORT EffectsHandler
 
         CompositingType compositingType() const  { return compositing_type; }
         virtual unsigned long xrenderBufferPicture() = 0;
+        virtual void reconfigure() = 0;
 
 
     protected:

@@ -84,6 +84,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void reserveElectricBorderSwitching( bool reserve );
 
         virtual unsigned long xrenderBufferPicture();
+        virtual void reconfigure();
 
         // internal (used by kwin core or compositing code)
         void startPaint();

@@ -211,9 +211,6 @@ unsigned long Options::updateSettings()
     glAlwaysRebind = config.readEntry("GLAlwaysRebind", false );
     glDirect = config.readEntry("GLDirect", true );
     glVSync = config.readEntry("GLVSync", true );
-    
-    config.changeGroup( "Effects" );
-    defaultEffects = config.readEntry( "Load", QStringList() << "ShowFps" << "Fade" );
 
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
