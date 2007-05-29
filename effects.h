@@ -111,7 +111,9 @@ class EffectsHandlerImpl : public EffectsHandler
         void loadEffect( const QString& name );
         void toggleEffect( const QString& name );
         void unloadEffect( const QString& name );
-        
+        void reloadEffect( const QString& name );
+        bool isEffectLoaded( const QString& name );
+
         ToplevelList elevatedWindows() const;
 
     protected:

@@ -64,9 +64,11 @@ void EffectsHandlerImpl::reconfigure()
         KPluginInfo plugininfo( service );
         plugininfo.load( &conf );
 
-        if( plugininfo.isPluginEnabled() )
+        bool isloaded = isEffectLoaded( plugininfo.pluginName() );
+        bool shouldbeloaded = plugininfo.isPluginEnabled();
+        if( shouldbeloaded && !isloaded)
             loadEffect( plugininfo.pluginName() );
-        else
+        else if( !shouldbeloaded && isloaded )
             unloadEffect( plugininfo.pluginName() );
         }
     }
@@ -615,21 +617,10 @@ KLibrary* EffectsHandlerImpl::findEffectLibrary( const QString& effectname )
 
 void EffectsHandlerImpl::toggleEffect( const QString& name )
     {
-    assert( current_paint_screen == 0 );
-    assert( current_paint_window == 0 );
-    assert( current_draw_window == 0 );
-    assert( current_transform == 0 );
-
-    // Make sure a single effect won't be loaded multiple times
-    for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); it++)
-        {
-        if( (*it).first == name )
-            {
-            unloadEffect( name );
-            return;
-            }
-        }
-    loadEffect( name );
+    if( isEffectLoaded( name ))
+        unloadEffect( name );
+    else
+        loadEffect( name );
     }
 
 void EffectsHandlerImpl::loadEffect( const QString& name )
@@ -712,6 +703,24 @@ void EffectsHandlerImpl::unloadEffect( const QString& name )
         }
 
     kDebug( 1212 ) << "EffectsHandler::unloadEffect : Effect not loaded : " << name << endl;
+    }
+
+void EffectsHandlerImpl::reloadEffect( const QString& name )
+    {
+    if( isEffectLoaded( name ))
+        {
+        unloadEffect( name );
+        loadEffect( name );
+        }
+    }
+
+bool EffectsHandlerImpl::isEffectLoaded( const QString& name )
+    {
+    for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); it++)
+        if ( (*it).first == name )
+            return true;
+
+    return false;
     }
 
 
