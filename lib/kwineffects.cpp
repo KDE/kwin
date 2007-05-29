@@ -11,8 +11,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "kwineffects.h"
 
 #include <QStringList>
+#include <QtDBus/QtDBus>
+#include <QVariant>
+#include <QList>
 
-#include "kdebug.h"
+#include <kdebug.h>
+#include <ksharedconfig.h>
 
 #include <assert.h>
 
@@ -235,6 +239,19 @@ Window EffectsHandler::createInputWindow( Effect* e, const QRect& r, const QCurs
 Window EffectsHandler::createFullScreenInputWindow( Effect* e, const QCursor& cursor )
     {
     return createInputWindow( e, 0, 0, displayWidth(), displayHeight(), cursor );
+    }
+
+void EffectsHandler::sendReloadMessage( const QString& effectname )
+    {
+    QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reloadEffect");
+    message << QString("kwin4_effect_" + effectname);
+    QDBusConnection::sessionBus().send(message);
+    }
+
+KConfigGroup EffectsHandler::effectConfig( const QString& effectname )
+    {
+    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig( "kwinrc", KConfig::NoGlobals );
+    return kwinconfig->group( "Effect-" + effectname );
     }
 
 

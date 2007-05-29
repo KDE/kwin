@@ -26,6 +26,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 
 class KLibrary;
+class KConfigGroup;
 class QKeyEvent;
 
 namespace KWin
@@ -227,6 +228,18 @@ class KWIN_EXPORT EffectsHandler
         CompositingType compositingType() const  { return compositing_type; }
         virtual unsigned long xrenderBufferPicture() = 0;
         virtual void reconfigure() = 0;
+
+
+        /**
+         * Sends message over DCOP to reload given effect.
+         * @param effectname effect's name without "kwin4_effect_" prefix.
+         * Can be called from effect's config module to apply config changes.
+         **/
+        static void sendReloadMessage( const QString& effectname );
+        /**
+         * @return @ref KConfigGroup which holds given effect's config options
+         **/
+        static KConfigGroup effectConfig( const QString& effectname );
 
 
     protected:
