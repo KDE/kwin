@@ -6,6 +6,7 @@ Name[el]=Θόλωμα
 Name[nds]=Verwischen
 Name[zh_TW]=模糊
 Comment=Blurs background of semi-transparent windows
+Comment[zh_TW]=將半透明視窗的背景弄模糊
 
 Type=Service
 ServiceTypes=KWin/Effect

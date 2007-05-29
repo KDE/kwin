@@ -5,6 +5,7 @@ Name[el]=Σήμανση ποντικιού
 Name[nds]=Muus-Mark
 Name[zh_TW]=滑鼠標記
 Comment=Let's you draw lines onto your desktop
+Comment[zh_TW]=讓您在您的桌面上畫線
 
 Type=Service
 ServiceTypes=KWin/Effect

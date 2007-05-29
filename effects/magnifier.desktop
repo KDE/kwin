@@ -7,6 +7,7 @@ Name[el]=Μεγεθυντικός φακός
 Name[nds]=Kiekglas
 Name[zh_TW]=放大鏡
 Comment=Magnifies the part of the screen that is under the mouse
+Comment[zh_TW]=將滑鼠底下的部份視窗放大
 
 Type=Service
 ServiceTypes=KWin/Effect

@@ -5,6 +5,7 @@ Name[de]=Inaktive abdunkeln
 Name[el]=Θαμπάδα ανενεργού
 Name[nds]=Nich aktive düüster maken
 Comment=Darkens inactive windows
+Comment[zh_TW]=將不使用的視窗變暗
 
 Type=Service
 ServiceTypes=KWin/Effect

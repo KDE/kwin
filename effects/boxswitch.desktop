@@ -4,6 +4,7 @@ Name=BoxSwitch
 Name[el]=Εναλλαγή πλαισίου
 Name[zh_TW]=盒切換
 Comment=Improved Alt-tab window switcher
+Comment[zh_TW]=Alt-tab 視窗切換加強版
 
 Type=Service
 ServiceTypes=KWin/Effect
