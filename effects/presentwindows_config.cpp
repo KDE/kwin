@@ -78,8 +78,7 @@ void PresentWindowsEffectConfig::load()
     kDebug() << k_funcinfo << endl;
     KCModule::load();
 
-    KConfig c("kwinrc");
-    KConfigGroup conf(&c, "Effect-PresentWindows");
+    KConfigGroup conf = EffectsHandler::effectConfig("PresentWindows");
     int activateBorder = conf.readEntry("BorderActivate", (int)ElectricTopRight);
     if(activateBorder == (int)ElectricNone)
         activateBorder--;
@@ -97,8 +96,7 @@ void PresentWindowsEffectConfig::save()
     kDebug() << k_funcinfo << endl;
     KCModule::save();
 
-    KConfig c("kwinrc");
-    KConfigGroup conf(&c, "Effect-PresentWindows");
+    KConfigGroup conf = EffectsHandler::effectConfig("PresentWindows");
 
     int activateBorder = mActivateCombo->currentIndex();
     if(activateBorder == (int)ELECTRIC_COUNT)
@@ -112,6 +110,7 @@ void PresentWindowsEffectConfig::save()
     conf.sync();
 
     emit changed(false);
+    EffectsHandler::sendReloadMessage( "presentwindows" );
     }
 
 void PresentWindowsEffectConfig::defaults()

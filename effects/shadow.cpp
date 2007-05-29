@@ -13,7 +13,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kwinglutils.h>
 
 #include <kconfiggroup.h>
-#include <kconfig.h>
 
 namespace KWin
 {
@@ -22,8 +21,7 @@ KWIN_EFFECT( shadow, ShadowEffect )
 
 ShadowEffect::ShadowEffect()
     {
-    KConfig c( "kwinrc" );
-    KConfigGroup conf( &c, "Effect-Shadow" );
+    KConfigGroup conf = effects->effectConfig("Shadow");
     shadowXOffset = conf.readEntry( "XOffset", 5 );
     shadowYOffset = conf.readEntry( "YOffset", 5 );
     shadowOpacity = (float)conf.readEntry( "Opacity", 0.2 );

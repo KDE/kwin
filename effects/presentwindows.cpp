@@ -38,8 +38,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , filterTexture( NULL )
 #endif
     {
-    KConfig c("kwinrc");
-    KConfigGroup conf(&c, "Effect-PresentWindows");
+    KConfigGroup conf = effects->effectConfig("PresentWindows");
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Expose" );

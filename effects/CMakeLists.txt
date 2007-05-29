@@ -9,7 +9,7 @@ endmacro(KWIN4_ADD_EFFECT)
 macro(KWIN4_ADD_EFFECT_CONFIG name)
     kde4_automoc(${ARGN})
     kde4_add_plugin(kcm_kwin4_effect_${name} ${ARGN})
-    target_link_libraries(kcm_kwin4_effect_${name} ${KDE4_KUTILS_LIBS})
+    target_link_libraries(kcm_kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS})
     install(TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
 endmacro(KWIN4_ADD_EFFECT_CONFIG)
 
