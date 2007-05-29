@@ -710,6 +710,12 @@ void Workspace::unloadEffect( const QString& name )
         static_cast<EffectsHandlerImpl*>(effects)->unloadEffect( name );
     }
 
+void Workspace::reloadEffect( const QString& name )
+    {
+    if( effects )
+        static_cast<EffectsHandlerImpl*>(effects)->reloadEffect( name );
+    }
+
 void Workspace::slotActivateAttentionWindow()
     {
     if( attention_chain.count() > 0 )

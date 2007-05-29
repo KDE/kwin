@@ -220,6 +220,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         void loadEffect( const QString& name );
         void toggleEffect( const QString& name );
+        void reloadEffect( const QString& name );
 
         void unloadEffect( const QString& name );
 

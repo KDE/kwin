@@ -43,5 +43,8 @@
     <method name="toggleEffect">
     <arg name="name" type="s" direction="in"/>
     </method>
+    <method name="reloadEffect">
+    <arg name="name" type="s" direction="in"/>
+    </method>
   </interface>
 </node>
