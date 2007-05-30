@@ -461,38 +461,42 @@ bool SceneOpenGL::initDrawableConfigs()
                     fbcdrawableinfo[ i ].bind_texture_format = GLX_TEXTURE_FORMAT_RGB_EXT;
                     }
                 }
+            int back_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                  GLX_DOUBLEBUFFER, &value );
-            if( value > back )
+                                  GLX_DOUBLEBUFFER, &back_value );
+            if( back_value > back )
                 continue;
-            back = value;
+            int stencil_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                  GLX_STENCIL_SIZE, &value );
-            if( value > stencil )
+                                  GLX_STENCIL_SIZE, &stencil_value );
+            if( stencil_value > stencil )
                 continue;
-            stencil = value;
+            int depth_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                  GLX_DEPTH_SIZE, &value );
-            if( value > depth )
+                                  GLX_DEPTH_SIZE, &depth_value );
+            if( depth_value > depth )
                 continue;
-            depth = value;
+            int mipmap_value;
             if( tfp_mode && GLTexture::framebufferObjectSupported())
                 {
                 glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                      GLX_BIND_TO_MIPMAP_TEXTURE_EXT, &value );
-                if( value < mipmap )
+                                      GLX_BIND_TO_MIPMAP_TEXTURE_EXT, &mipmap_value );
+                if( mipmap_value < mipmap )
                     continue;
-                mipmap = value;
                 }
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_CONFIG_CAVEAT, &value );
             if( value > caveat )
                 continue;
+            // ok, config passed all tests, it's the best one so far
+            fbcdrawableinfo[ i ].fbconfig = fbconfigs[ j ];
             caveat = value;
+            back = back_value;
+            stencil = stencil_value;
+            depth = depth_value;
+            mipmap = mipmap_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_Y_INVERTED_EXT, &value );
-
-            fbcdrawableinfo[ i ].fbconfig = fbconfigs[ j ];
             fbcdrawableinfo[ i ].y_inverted = value;
             fbcdrawableinfo[ i ].mipmap = mipmap;
             }
