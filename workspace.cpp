@@ -316,6 +316,7 @@ void Workspace::init()
         protocols, 5, info.screen() );
 
     loadDesktopSettings();
+    updateDesktopLayout();
     // extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info( display(), NET::ActiveWindow | NET::CurrentDesktop );
     int initial_desktop;
@@ -1682,12 +1683,13 @@ void Workspace::sendClientToScreen( Client* c, int screen )
         active_screen = screen;
     }
 
-void Workspace::setDesktopLayout(NET::Orientation o, int x, int y,NET::DesktopLayoutCorner c)
+void Workspace::updateDesktopLayout()
     {
-    Q_UNUSED( c ); // I don't find this worth bothering, feel free to
-    layoutOrientation = ( o == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical );
-    layoutX = x;
-    layoutY = y;
+    // rootInfo->desktopLayoutCorner(); // I don't find this worth bothering, feel free to
+    layoutOrientation = ( rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal
+        ? Qt::Horizontal : Qt::Vertical );
+    layoutX = rootInfo->desktopLayoutColumnsRows().width();
+    layoutY = rootInfo->desktopLayoutColumnsRows().height();
     }
 
 void Workspace::calcDesktopLayout(int* xp, int* yp, Qt::Orientation* orientation) const

@@ -261,7 +261,7 @@ class Workspace : public QObject, public KDecorationDefines
         void setCurrentScreen( int new_screen );
 
         QString desktopName( int desk ) const;
-        void setDesktopLayout(NET::Orientation o, int x, int y, NET::DesktopLayoutCorner c);
+        void updateDesktopLayout();
         void setShowingDesktop( bool showing );
         void resetShowingDesktop( bool keep_hidden );
         bool showingDesktop() const;

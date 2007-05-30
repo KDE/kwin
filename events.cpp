@@ -222,8 +222,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         if( dirty[ NETRootInfo::PROTOCOLS ] & NET::DesktopNames )
             saveDesktopSettings();
         if( dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout )
-            setDesktopLayout( rootInfo->desktopLayoutOrientation(), rootInfo->desktopLayoutColumnsRows().width(),
-                rootInfo->desktopLayoutColumnsRows().height(), rootInfo->desktopLayoutCorner());
+            updateDesktopLayout();
         }
 
     // events that should be handled before Clients can get them
