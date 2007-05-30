@@ -14,13 +14,13 @@ License. See the file "COPYING" for the exact licensing terms.
  
  Requires libcaptury:
  
- - svn co svn://battousai.mylair.de/captury/trunk/capseo
+ - svn co svn://77.74.232.49/captury/trunk/capseo
  - you may want to remove 1.10 from AUTOMAKE_OPTIONS in Makefile.am
  - ./autogen.sh
  - the usual configure && make && make install procedure
    (you may want to pass --enable-theora --with-accel=x86 [or amd64])
 
- - svn co svn://battousai.mylair.de/captury/trunk/libcaptury
+ - svn co svn://77.74.232.49/captury/trunk/libcaptury
  - you may want to remove 1.10 from AUTOMAKE_OPTIONS in Makefile.am
  - ./autogen.sh
  - the usual configure && make && make install procedure
