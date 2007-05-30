@@ -93,6 +93,6 @@ Y=<number> = Y position, the same like X
 Effects:
 ========
 
-Which modules are enabled is currently set by config value Load in group [Effects] in kwinrc config file.
-Effects are named like the class, without the Effect suffix (e.g. Load=ShowFps,Fade). There is
-no depedency checking implemented yet.
+Effects can be enabled/disabled in KConfig module accessible by right-clicking
+on a window title, choosing "Configure Window Behaviour" and then
+"Window Effects".
