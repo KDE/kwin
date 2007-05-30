@@ -36,6 +36,7 @@ static int glVersion;
 static int glXVersion;
 // List of all supported GL and GLX extensions
 static QStringList glExtensions;
+static QStringList glxExtensions;
 
 int glTextureUnitsCount;
 
@@ -47,8 +48,8 @@ void initGLX()
     int major, minor;
     glXQueryVersion( display(), &major, &minor );
     glXVersion = MAKE_GL_VERSION( major, minor, 0 );
-    // Get list of supported GLX extensions. Simply add it to the list of OpenGL extensions.
-    glExtensions += QString((const char*)glXQueryExtensionsString(
+    // Get list of supported GLX extensions
+    glxExtensions = QString((const char*)glXQueryExtensionsString(
         display(), DefaultScreen( display()))).split(" ");
 
     glxResolveFunctions();
@@ -84,7 +85,7 @@ bool hasGLXVersion(int major, int minor, int release)
 
 bool hasGLExtension(const QString& extension)
     {
-    return glExtensions.contains(extension);
+    return glExtensions.contains(extension) || glxExtensions.contains(extension);
     }
 
 void checkGLError( const char* txt )
