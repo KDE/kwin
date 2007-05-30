@@ -157,6 +157,7 @@ SceneOpenGL::~SceneOpenGL()
     if( !init_ok )
         {
         // TODO this probably needs to clean up whatever has been created until the failure
+        wspace->destroyOverlay();
         return;
         }
     foreach( Window* w, windows )
