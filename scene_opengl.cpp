@@ -120,8 +120,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     // Check whether certain features are supported
     has_waitSync = glXGetVideoSync ? true : false;
 
-    if( !initDrawableConfigs())
-        assert( false );
     int vis_buffer, vis_drawable;
     glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
     kDebug( 1212 ) << "Buffer visual (depth " << QX11Info::appDepth() << "): 0x" << QString::number( vis_buffer, 16 ) << endl;
@@ -204,8 +202,6 @@ void SceneOpenGL::selectMode()
 bool SceneOpenGL::initTfp()
     {
     if( glXBindTexImageEXT == NULL || glXReleaseTexImageEXT == NULL )
-        return false;
-    if( !initDrawableConfigs())
         return false;
     return true;
     }
