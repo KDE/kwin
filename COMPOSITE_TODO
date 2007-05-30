@@ -170,11 +170,6 @@ Effects framework TODO
     - during some more complicated effects, input (at least mouse) should be disabled,
         because currently there is no way to do input redirection
 
-? pre-paint pass should be done completely before the paint pass
-    - currently prePaintWindow() is done only after paintScreen() has already started,
-        which means that if an effect sets PAINT_WINDOW_TRANSFORMED it needs to set it
-        also in prePaintScreen()
-
 * PAINT_DISABLED turning off from effects needs some improvement
     - a window may have painting disabled for various reasons and their numbers may increase
         over time
@@ -189,12 +184,6 @@ Effects framework TODO
 + API for tabbox for effects should be cleaned up
 
 * check Scene::updateTimeDiff() - should the time be 0 or 1?
-
-* DesktopGridEffect has somewhat broken stacking order while moving windows
-    - the window is in proper layer when on its desktop but on top of everything when moved
-        to another desktop, due to its desktop being painted later
-    - maybe there should be PAINT_WINDOW_TOP (_LAST or whatever) that'd make it painted always
-        on top of everything
 
 % post calls are probably not necessary by now (http://lists.kde.org/?t=117770818100003&r=1&w=2)
 
@@ -264,7 +253,3 @@ Effects TODO
     - or whatever
 
 * DimInactive flickers when switching between windows (temporarily no window becomes active)
-
-+ TrackMouse needs a better way of activating
-    - LMB+RMB is problematic, some systems handle that as MMB, and LMB+RMB press is still
-        two consequent events
