@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=BoxSwitch
+Name=Box Switch
+Icon=kwin-effect-boxswitch
 Name[el]=Εναλλαγή πλαισίου
 Name[zh_TW]=盒切換
 Comment=Improved Alt-tab window switcher

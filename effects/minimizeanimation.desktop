@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=MinimizeAnimation
+Name=Minimize Animation
+Icon=kwin-effect-minimiseanimation
 Name[de]=Minimieren-Animation
 Name[el]=Κίνηση ελαχιστοποίησης
 Name[nds]=Minimeer-Animeren

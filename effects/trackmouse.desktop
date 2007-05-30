@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=TrackMouse
+Name=Track Mouse
+Icon=kwin-effect-trackmouse
 Name[de]=Mausspur
 Name[el]=Ανίχνευση ποντικιού
 Name[nds]=Muusspoor

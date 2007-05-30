@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=ScaleIn
+Name=Scale In
+Icon=kwin-effect-scalein
 Name[zh_TW]=縮放
 
 Type=Service

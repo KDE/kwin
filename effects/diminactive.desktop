@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=DimInactive
+Name=Dim Inactive
+Icon=kwin-effect-diminactive
 Name[de]=Inaktive abdunkeln
 Name[el]=Θαμπάδα ανενεργού
 Name[nds]=Nich aktive düüster maken

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=ShowFps
+Name=Show FPS
+Icon=kwin-effect-showfps
 Name[de]=Bilder pro Sekunden anzeigen
 Name[el]=Εμφάνιση καρέ
 Name[nds]=Bps wiesen
