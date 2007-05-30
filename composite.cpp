@@ -55,8 +55,16 @@ void Workspace::setupCompositing()
 #if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
     if( !options->useTranslucency )
         return;
-    if( !Extensions::compositeAvailable() || !Extensions::damageAvailable())
+    if( !Extensions::compositeAvailable())
+        {
+        kDebug( 1212 ) << "No composite extension available" << endl;
         return;
+        }
+    if( !Extensions::damageAvailable())
+        {
+        kDebug( 1212 ) << "No damage extension available" << endl;
+        return;
+        }
     if( scene != NULL )
         return;
     char selection_name[ 100 ];
