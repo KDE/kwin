@@ -480,7 +480,7 @@ void Client::updateShape()
     // !shape() mask setting is done in setMask() when the decoration
     // calls it or when the decoration is created/destroyed
 
-    if( Extensions::shapeVersion() >= 0x11 ) // 1.1, has input shape support
+    if( Extensions::shapeInputAvailable())
         { // There appears to be no way to find out if a window has input
           // shape set or not, so always propagate the input shape
           // (it's the same like the bounding shape by default).

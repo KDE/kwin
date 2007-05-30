@@ -32,6 +32,25 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/Xatom.h>
 #include <QX11Info>
 
+#ifdef HAVE_XRENDER
+#include <X11/extensions/Xrender.h>
+#endif
+#ifdef HAVE_XFIXES
+#include <X11/extensions/Xfixes.h>
+#endif
+#ifdef HAVE_XDAMAGE
+#include <X11/extensions/Xdamage.h>
+#endif
+#ifdef HAVE_XRANDR
+#include <X11/extensions/Xrandr.h>
+#endif
+#ifdef HAVE_XCOMPOSITE
+#include <X11/extensions/Xcomposite.h>
+#endif
+#ifdef HAVE_OPENGL
+#include <GL/glx.h>
+#endif
+
 #include <stdio.h>
 
 #include "atoms.h"
@@ -51,9 +70,10 @@ bool Extensions::has_randr = false;
 int Extensions::randr_event_base = 0;
 bool Extensions::has_damage = false;
 int Extensions::damage_event_base = 0;
-bool Extensions::has_composite = false;
-bool Extensions::has_composite_overlay = false;
-bool Extensions::has_fixes = false;
+int Extensions::composite_version = 0;
+int Extensions::fixes_version = 0;
+int Extensions::render_version = 0;
+bool Extensions::has_glx = false;
 
 void Extensions::init()
     {
@@ -81,24 +101,41 @@ void Extensions::init()
 #else
     has_damage = false;
 #endif
+    composite_version = 0;
 #ifdef HAVE_XCOMPOSITE
-    has_composite = XCompositeQueryExtension( display(), &dummy, &dummy );
-    if( has_composite )
+    if( XCompositeQueryExtension( display(), &dummy, &dummy ))
         {
-        int major, minor;
+        int major = 0, minor = 0;
         XCompositeQueryVersion( display(), &major, &minor );
-        has_composite = ( major > 0 || minor >= 2 );
-        has_composite_overlay = ( major > 0 || minor >= 3 );
+        composite_version = major * 0x10 + minor;
         }
-#else
-    has_composite = false;
-    has_composite_overlay = false;
 #endif
+    fixes_version = 0;
 #ifdef HAVE_XFIXES
-    has_fixes = XFixesQueryExtension( display(), &dummy, &dummy );
-#else
-    has_fixes = false;
+    if( XFixesQueryExtension( display(), &dummy, &dummy ))
+        {
+        int major = 0, minor = 0;
+        XFixesQueryVersion( display(), &major, &minor );
+        fixes_version = major * 0x10 + minor;
+        }
 #endif
+    render_version = 0;
+#ifdef HAVE_XRENDER
+    if( XRenderQueryExtension( display(), &dummy, &dummy ))
+        {
+        int major = 0, minor = 0;
+        XRenderQueryVersion( display(), &major, &minor );
+        render_version = major * 0x10 + minor;
+        }
+#endif
+    has_glx = false;
+#ifdef HAVE_OPENGL
+    has_glx = glXQueryExtension( display(), &dummy, &dummy );
+#endif
+    kDebug( 1212 ) << "Extensions: shape: 0x" << QString::number( shape_version, 16 )
+        << " composite: 0x" << QString::number( composite_version, 16 )
+        << " render: 0x" << QString::number( render_version, 16 )
+        << " fixes: 0x" << QString::number( fixes_version, 16 ) << endl;
     }
 
 int Extensions::shapeNotifyEvent()
@@ -120,6 +157,11 @@ bool Extensions::hasShape( Window w )
     return boundingShaped != 0;
     }
 
+bool Extensions::shapeInputAvailable()
+    {
+    return shape_version >= 0x11; // 1.1
+    }
+
 int Extensions::randrNotifyEvent()
     {
 #ifdef HAVE_XRANDR
@@ -136,6 +178,16 @@ int Extensions::damageNotifyEvent()
 #else
     return 0;
 #endif
+    }
+
+bool Extensions::compositeOverlayAvailable()
+    {
+    return composite_version >= 0x03; // 0.3
+    }
+
+bool Extensions::fixesRegionAvailable()
+    {
+    return fixes_version >= 0x30; // 3
     }
 
 void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,

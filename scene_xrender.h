@@ -29,6 +29,7 @@ class SceneXrender
     public:
         SceneXrender( Workspace* ws );
         virtual ~SceneXrender();
+        virtual bool initFailed() const;
         virtual CompositingType compositingType() const { return XRenderCompositing; }
         virtual void paint( QRegion damage, ToplevelList windows );
         virtual void windowGeometryShapeChanged( Toplevel* );
@@ -50,6 +51,7 @@ class SceneXrender
         static ScreenPaintData screen_paint;
         class Window;
         QHash< Toplevel*, Window* > windows;
+        bool init_ok;
     };
 
 class SceneXrender::Window

@@ -11,12 +11,18 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_TOPLEVEL_H
 #define KWIN_TOPLEVEL_H
 
+#include <config-X11.h>
+
 #include <assert.h>
 #include <qobject.h>
 #include <kdecoration.h>
 
 #include "utils.h"
 #include "workspace.h"
+
+#ifdef HAVE_XDAMAGE
+#include <X11/extensions/Xdamage.h>
+#endif
 
 class NETWinInfo;
 
@@ -104,7 +110,9 @@ class Toplevel
         void setWindowHandles( Window client, Window frame );
         void detectShape( Window id );
         virtual void propertyNotifyEvent( XPropertyEvent* e );
+#ifdef HAVE_XDAMAGE
         void damageNotifyEvent( XDamageNotifyEvent* e );
+#endif
         Pixmap createWindowPixmap();
         void discardWindowPixmap();
         void addDamage( const QRect& r );
@@ -133,7 +141,9 @@ class Toplevel
         Window frame;
         Workspace* wspace;
         Pixmap window_pix;
+#ifdef HAVE_XDAMAGE
         Damage damage_handle;
+#endif
         QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
         QRegion repaints_region; // updating, repaint just requires repaint of that area
         bool is_shape;

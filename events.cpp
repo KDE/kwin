@@ -15,6 +15,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 */
 
+#include <config-X11.h>
+
 #include "client.h"
 #include "workspace.h"
 #include "atoms.h"
@@ -33,6 +35,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
+
+#ifdef HAVE_XRANDR
+#include <X11/extensions/Xrandr.h>
+#endif
 
 namespace KWin
 {

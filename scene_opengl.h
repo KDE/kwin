@@ -32,6 +32,7 @@ class SceneOpenGL
         class Window;
         SceneOpenGL( Workspace* ws );
         virtual ~SceneOpenGL();
+        virtual bool initFailed() const;
         virtual CompositingType compositingType() const { return OpenGLCompositing; }
         virtual void paint( QRegion damage, ToplevelList windows );
         virtual void windowGeometryShapeChanged( Toplevel* );
@@ -43,12 +44,12 @@ class SceneOpenGL
         virtual void paintGenericScreen( int mask, ScreenPaintData data );
         virtual void paintBackground( QRegion region );
     private:
-        void selectMode();
+        bool selectMode();
         bool initTfp();
         bool initShm();
         void cleanupShm();
-        void initBuffer();
-        void initRenderingContext();
+        bool initBuffer();
+        bool initRenderingContext();
         bool initBufferConfigs();
         bool initDrawableConfigs();
         void waitSync();
@@ -80,6 +81,7 @@ class SceneOpenGL
 #ifdef HAVE_XSHM
         static XShmSegmentInfo shm;
 #endif
+        bool init_ok;
     };
 
 class SceneOpenGL::Texture

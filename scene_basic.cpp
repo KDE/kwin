@@ -60,6 +60,11 @@ void SceneBasic::paint( QRegion, ToplevelList windows )
     XFlush( display());
     }
 
+bool SceneBasic::initFailed() const
+    {
+    return false;
+    }
+
 // These functions are not used at all, SceneBasic
 // is not using inherited functionality.
 

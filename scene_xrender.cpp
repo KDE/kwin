@@ -70,14 +70,28 @@ kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
     }
 #endif
 
-Picture SceneXrender::buffer;
+Picture SceneXrender::buffer = None;
 ScreenPaintData SceneXrender::screen_paint;
 
 SceneXrender::SceneXrender( Workspace* ws )
     : Scene( ws )
+    , front( None )
+    , init_ok( false )
     {
+    if( !Extensions::renderAvailable())
+        {
+        kDebug( 1212 ) << "No xrender extension available" << endl;
+        return;
+        }
+    if( !Extensions::fixesRegionAvailable())
+        {
+        kDebug( 1212 ) << "No xfixes v3+ extension available" << endl;
+        return;
+        }
     // create XRender picture for the root window
     format = XRenderFindVisualFormat( display(), DefaultVisual( display(), DefaultScreen( display())));
+    if( format == NULL )
+        return; // error
     if( wspace->createOverlay())
         {
         wspace->setupOverlay( None );
@@ -90,15 +104,34 @@ SceneXrender::SceneXrender( Workspace* ws )
         front = XRenderCreatePicture( display(), rootWindow(), format, CPSubwindowMode, &pa );
         }
     createBuffer();
+    init_ok = true;
     }
 
 SceneXrender::~SceneXrender()
     {
+    if( !init_ok )
+        return;
     XRenderFreePicture( display(), front );
     XRenderFreePicture( display(), buffer );
     wspace->destroyOverlay();
     foreach( Window* w, windows )
         delete w;
+    }
+
+bool SceneXrender::initFailed() const
+    {
+    return !init_ok;
+    }
+
+// Create the compositing buffer. The root window is not double-buffered,
+// so it is done manually using this buffer,
+void SceneXrender::createBuffer()
+    {
+    if( buffer != None )
+        XRenderFreePicture( display(), buffer );
+    Pixmap pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), QX11Info::appDepth());
+    buffer = XRenderCreatePicture( display(), pixmap, format, 0, 0 );
+    XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }
 
 // the entry point for painting
@@ -267,17 +300,6 @@ void SceneXrender::windowAdded( Toplevel* c )
     {
     assert( !windows.contains( c ));
     windows[ c ] = new Window( c );
-    }
-
-// Create the compositing buffer. The root window is not double-buffered,
-// so it is done manually using this buffer,
-void SceneXrender::createBuffer()
-    {
-    if( buffer != None )
-        XRenderFreePicture( display(), buffer );
-    Pixmap pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), QX11Info::appDepth());
-    buffer = XRenderCreatePicture( display(), pixmap, format, 0, 0 );
-    XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }
 
 // Convert QRegion to XserverRegion. This code uses XserverRegion

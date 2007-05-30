@@ -85,8 +85,8 @@ SceneOpenGL::FBConfigInfo SceneOpenGL::fbcdrawableinfo[ 32 + 1 ];
 GLXContext SceneOpenGL::ctxbuffer;
 GLXContext SceneOpenGL::ctxdrawable;
 // the destination drawable where the compositing is done
-GLXDrawable SceneOpenGL::glxbuffer;
-GLXDrawable SceneOpenGL::last_pixmap;
+GLXDrawable SceneOpenGL::glxbuffer = None;
+GLXDrawable SceneOpenGL::last_pixmap = None;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::strict_binding; // intended for AIGLX
 bool SceneOpenGL::db; // destination drawable is double-buffered
@@ -99,20 +99,28 @@ XShmSegmentInfo SceneOpenGL::shm;
 
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
+    , init_ok( false )
     {
-    // TODO add checks where needed
-    int dummy;
-    if( !glXQueryExtension( display(), &dummy, &dummy ))
-        return;
+    if( !Extensions::glxAvailable())
+        {
+        kDebug( 1212 ) << "No glx extensions available" << endl;
+        return; // error
+        }
     initGLX();
     // check for FBConfig support
     if( !hasGLXVersion( 1, 3 ) && !hasGLExtension( "GLX_SGIX_fbconfig" ))
-        return;
+        {
+        kDebug( 1212 ) << "GLX1.3 or GLX_SGIX_fbconfig missing" << endl;
+        return; // error
+        }
     strict_binding = false; // not needed now
-    selectMode();
-    initBuffer(); // create destination buffer
-    initRenderingContext();
-    
+    if( !selectMode())
+        return; // error
+    if( !initBuffer()) // create destination buffer
+        return; // error
+    if( !initRenderingContext())
+        return; // error
+
     // Initialize OpenGL
     initGL();
     if( db )
@@ -141,10 +149,16 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     checkGLError( "Init" );
     kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
         << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
+    init_ok = true;
     }
 
 SceneOpenGL::~SceneOpenGL()
     {
+    if( !init_ok )
+        {
+        // TODO this probably needs to clean up whatever has been created until the failure
+        return;
+        }
     foreach( Window* w, windows )
         delete w;
     // do cleanup after initBuffer()
@@ -173,7 +187,12 @@ SceneOpenGL::~SceneOpenGL()
     checkGLError( "Cleanup" );
     }
 
-void SceneOpenGL::selectMode()
+bool SceneOpenGL::initFailed() const
+    {
+    return !init_ok;
+    }
+
+bool SceneOpenGL::selectMode()
     {
     // select mode - try TFP first, then SHM, otherwise fallback mode
     shm_mode = false;
@@ -193,10 +212,11 @@ void SceneOpenGL::selectMode()
             tfp_mode = true;
         }
     if( !initDrawableConfigs())
-        assert( false );
+        return false;
     // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
     // 1.0-9xxx don't update pixmaps properly, so do a copy first
     copy_buffer_hack = !tfp_mode && !shm_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
+    return true;
     }
 
 bool SceneOpenGL::initTfp()
@@ -258,7 +278,7 @@ void SceneOpenGL::cleanupShm()
 #endif
     }
 
-void SceneOpenGL::initRenderingContext()
+bool SceneOpenGL::initRenderingContext()
     {
     bool direct_rendering = options->glDirect;
     if( !tfp_mode && !shm_mode )
@@ -270,24 +290,26 @@ void SceneOpenGL::initRenderingContext()
         || errs.error( true ))
         { // failed
         if( !direct_rendering )
-            assert( false );
+            return false;
         glXDestroyContext( display(), ctxbuffer );
         direct_rendering = false; // try again
         ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
         if( ctxbuffer == NULL || !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ))
-            assert( false );
+            return false;
         }
     if( !tfp_mode && !shm_mode )
         {
         ctxdrawable = glXCreateNewContext( display(), fbcdrawableinfo[ QX11Info::appDepth() ].fbconfig, GLX_RGBA_TYPE, ctxbuffer,
             direct_rendering ? GL_TRUE : GL_FALSE );
         }
+    return true;
     }
 
 // create destination buffer
-void SceneOpenGL::initBuffer()
+bool SceneOpenGL::initBuffer()
     {
-    initBufferConfigs();
+    if( !initBufferConfigs())
+        return false;
     if( fbcbuffer_db != NULL && wspace->createOverlay())
         { // we have overlay, try to create double-buffered window in it
         fbcbuffer = fbcbuffer_db;
@@ -316,7 +338,10 @@ void SceneOpenGL::initBuffer()
         glxbuffer = glXCreatePixmap( display(), fbcbuffer, buffer, NULL );
         }
     else
-        assert( false );
+        {
+        return false; // error
+        }
+    return true;
     }
 
 // choose the best configs for the destination buffer

@@ -33,6 +33,8 @@ class Scene
         virtual ~Scene() = 0;
         class Window;
 
+        // Returns true if the ctor failed to properly initialize.
+        virtual bool initFailed() const = 0;
         virtual CompositingType compositingType() const = 0;
         // Repaints the given screen areas, windows provides the stacking order.
         // The entry point for the main part of the painting pass.

@@ -18,25 +18,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <X11/Xlib.h>
 
-#ifdef HAVE_XRANDR
-#include <X11/extensions/Xrandr.h>
-#endif
-
-#ifdef HAVE_XCOMPOSITE
-#include <X11/extensions/Xcomposite.h>
-#if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
-#define HAVE_XCOMPOSITE_OVERLAY
-#endif
-#endif
-
-#ifdef HAVE_XDAMAGE
-#include <X11/extensions/Xdamage.h>
-#endif
-
-#ifdef HAVE_XFIXES
-#include <X11/extensions/Xfixes.h>
-#endif
-
 #include <fixx11h.h>
 
 #include <QWidget>
@@ -149,16 +130,19 @@ class Extensions
     public:
         static void init();
         static bool shapeAvailable() { return shape_version > 0; }
-        static int shapeVersion() { return shape_version; } // as 16*major+minor, i.e. two hex digits
+        static bool shapeInputAvailable();
         static int shapeNotifyEvent();
+        static bool hasShape( Window w );
         static bool randrAvailable() { return has_randr; }
         static int randrNotifyEvent();
         static bool damageAvailable() { return has_damage; }
         static int damageNotifyEvent();
-        static bool compositeAvailable() { return has_composite; }
-        static bool compositeOverlayAvailable() { return has_composite && has_composite_overlay; }
-        static bool fixesAvailable() { return has_fixes; }
-        static bool hasShape( Window w );
+        static bool compositeAvailable() { return composite_version > 0; }
+        static bool compositeOverlayAvailable();
+        static bool renderAvailable() { return render_version > 0; }
+        static bool fixesAvailable() { return fixes_version > 0; }
+        static bool fixesRegionAvailable();
+        static bool glxAvailable() { return has_glx; }
     private:
         static int shape_version;
         static int shape_event_base;
@@ -166,9 +150,10 @@ class Extensions
         static int randr_event_base;
         static bool has_damage;
         static int damage_event_base;
-        static bool has_composite;
-        static bool has_composite_overlay;
-        static bool has_fixes;
+        static int composite_version;
+        static int render_version;
+        static int fixes_version;
+        static bool has_glx;
     };
 
 // compile with XShape older than 1.0

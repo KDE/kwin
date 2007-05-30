@@ -25,6 +25,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 */
 
+#include <config-X11.h>
+
 #include "utils.h"
 #include "workspace.h"
 #include "client.h"
@@ -42,6 +44,16 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kxerrorhandler.h>
 
 #include <X11/extensions/shape.h>
+
+#ifdef HAVE_XCOMPOSITE
+#include <X11/extensions/Xcomposite.h>
+#if XCOMPOSITE_MAJOR > 0 || XCOMPOSITE_MINOR >= 3
+#define HAVE_XCOMPOSITE_OVERLAY
+#endif
+#endif
+#ifdef HAVE_XRANDR
+#include <X11/extensions/Xrandr.h>
+#endif
 
 namespace KWin
 {
@@ -78,24 +90,31 @@ void Workspace::setupCompositing()
     switch( type )
         {
         case 'B':
-            scene = new SceneBasic( this );
             kDebug( 1212 ) << "X compositing" << endl;
+            scene = new SceneBasic( this );
           break;
 #if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
         case 'X':
-            scene = new SceneXrender( this );
             kDebug( 1212 ) << "XRender compositing" << endl;
+            scene = new SceneXrender( this );
           break;
 #endif
 #ifdef HAVE_OPENGL
         case 'O':
-            scene = new SceneOpenGL( this );
             kDebug( 1212 ) << "OpenGL compositing" << endl;
+            scene = new SceneOpenGL( this );
           break;
 #endif
         default:
           kDebug( 1212 ) << "No compositing" << endl;
           return;
+        }
+    if( scene != NULL && scene->initFailed())
+        {
+        delete scene;
+        scene = NULL;
+        delete cm_selection;
+        return;
         }
     int rate = 0;
     if( options->refreshRate > 0 )
