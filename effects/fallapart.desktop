@@ -2,9 +2,6 @@
 Encoding=UTF-8
 Name=Fall Apart
 Icon=kwin-effect-fallapart
-Name[el]=Κατάρρευση
-Name[nds]=Uteneenfallen
-Name[zh_TW]=破裂
 
 Type=Service
 ServiceTypes=KWin/Effect

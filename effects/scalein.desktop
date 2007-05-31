@@ -2,7 +2,6 @@
 Encoding=UTF-8
 Name=Scale In
 Icon=kwin-effect-scalein
-Name[zh_TW]=縮放
 
 Type=Service
 ServiceTypes=KWin/Effect

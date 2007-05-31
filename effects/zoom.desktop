@@ -1,11 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Zoom
-Icon=kwin-effect-zoom
 Name[de]=Vergrößerung
 Name[el]=Εστίαση
 Name[nds]=Ansichtgrött
 Name[zh_TW]=縮放
+Icon=kwin-effect-zoom
 
 Type=Service
 ServiceTypes=KWin/Effect

@@ -1,11 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Shadow
-Icon=kwin-effect-shadow
 Name[de]=Schatten
 Name[el]=Σκιά
 Name[nds]=Schadden
 Name[zh_TW]=陰影
+Icon=kwin-effect-shadow
 Comment=Adds shadow under the windows
 Comment[zh_TW]=在視窗底下加上陰影
 

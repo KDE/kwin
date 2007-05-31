@@ -2,10 +2,6 @@
 Encoding=UTF-8
 Name=Desktop Grid
 Icon=kwin-effect-desktopgrid
-Name[csb]=MrzéżkaPùltu
-Name[el]=Κάνναβος επιφάνειας εργασίας
-Name[nds]=Schriefdisch-Gadder
-Name[zh_TW]=桌面格
 Comment=Desktop switcher that lays the desktops out in a grid
 Comment[zh_TW]=將桌面以格狀佈局呈現的桌面切換器
 

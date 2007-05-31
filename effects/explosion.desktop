@@ -1,10 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Explosion
-Icon=kwin-effect-explosion
 Name[el]=Έκρηξη
 Name[nds]=Exploschoon
 Name[zh_TW]=爆炸
+Icon=kwin-effect-explosion
 Comment=Makes windows explode when they're closed
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 

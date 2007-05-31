@@ -2,10 +2,6 @@
 Encoding=UTF-8
 Name=Video Record
 Icon=kwin-effect-videorecord
-Name[csb]=Nagranié wideò
-Name[el]=Εγγραφή βίντεο
-Name[nds]=Video opnehmen
-Name[zh_TW]=影像錄影
 Comment=Lets you record videos of your desktop
 Comment[zh_TW]=讓您錄下您桌面的影像
 

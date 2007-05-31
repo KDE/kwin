@@ -2,10 +2,6 @@
 Encoding=UTF-8
 Name=Present Windows
 Icon=kwin-effect-presentwindows
-Name[csb]=BiéżnéÒkno
-Name[el]=Παρουσίαση παραθύρων
-Name[nds]=Vörhannen Finstern
-Name[zh_TW]=展示視窗
 Comment=Shows all windows side-by-side
 Comment[zh_TW]=讓所有視窗排排站
 

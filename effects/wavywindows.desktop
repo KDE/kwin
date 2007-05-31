@@ -2,10 +2,6 @@
 Encoding=UTF-8
 Name=Wavy Windows
 Icon=kwin-effect-wavywindows
-Name[de]=Wellige Fenster
-Name[el]=Κυματιστά παράθυρα
-Name[nds]=Bülgenfinstern
-Name[zh_TW]=波浪狀視窗
 
 Type=Service
 ServiceTypes=KWin/Effect

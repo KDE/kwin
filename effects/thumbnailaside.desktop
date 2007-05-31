@@ -2,9 +2,6 @@
 Encoding=UTF-8
 Name=Thumbnail Aside
 Icon=kwin-effect-thumbnailaside
-Name[de]=Seitliche Vorschaubilder
-Name[el]=Εικόνα επισκόπησης στο πλάι
-Name[nds]=Vöransicht an de Kant
 
 Type=Service
 ServiceTypes=KWin/Effect

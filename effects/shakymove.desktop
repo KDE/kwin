@@ -2,9 +2,6 @@
 Encoding=UTF-8
 Name=Shaky Move
 Icon=kwin-effect-shakymove
-Name[el]=Τρεμάμενη κίνηση
-Name[nds]=Bevern
-Name[zh_TW]=搖晃
 
 Type=Service
 ServiceTypes=KWin/Effect

@@ -2,10 +2,6 @@
 Encoding=UTF-8
 Name=Make Transparent
 Icon=kwin-effect-maketransparent
-Name[de]=Transparent machen
-Name[el]=Εμφάνιση διαφανούς
-Name[nds]=Dörsichtig maken
-Name[zh_TW]=製造透明
 
 Type=Service
 ServiceTypes=KWin/Effect
