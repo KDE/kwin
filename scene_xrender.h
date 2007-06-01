@@ -17,6 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
 #include <X11/extensions/Xrender.h>
+#include <X11/extensions/Xfixes.h>
 
 namespace KWin
 {
