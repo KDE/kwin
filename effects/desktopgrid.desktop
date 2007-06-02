@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Desktop Grid
+Name[de]=Arbeitsflächen-Raster
 Icon=kwin-effect-desktopgrid
 Comment=Desktop switcher that lays the desktops out in a grid
+Comment[de]=Arbeitsflächenumschaltung (Fensteranordnung in einem Raster)
 Comment[zh_TW]=將桌面以格狀佈局呈現的桌面切換器
 
 Type=Service

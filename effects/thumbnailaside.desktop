@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Thumbnail Aside
+Name[de]=Seitliche Vorschaubilder
 Icon=kwin-effect-thumbnailaside
 
 Type=Service

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Make Transparent
+Name[de]=Transparent machen
 Icon=kwin-effect-maketransparent
 
 Type=Service

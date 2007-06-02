@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Wavy Windows
+Name[de]=Wellige Fenster
 Icon=kwin-effect-wavywindows
 
 Type=Service

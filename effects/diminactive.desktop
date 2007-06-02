@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Dim Inactive
+Name[de]=Inaktive abdunkeln
 Icon=kwin-effect-diminactive
 Comment=Darkens inactive windows
+Comment[de]=Dunkelt inaktive Fenster ab
 Comment[zh_TW]=將不使用的視窗變暗
 
 Type=Service

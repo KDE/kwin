@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Shaky Move
+Name[de]=Zitternde Bewegung
 Icon=kwin-effect-shakymove
 
 Type=Service

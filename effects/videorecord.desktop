@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Video Record
+Name[de]=Video-Aufnahme
 Icon=kwin-effect-videorecord
 Comment=Lets you record videos of your desktop
+Comment[de]=Zeichnet Videos von der Arbeitsfläche auf
 Comment[zh_TW]=讓您錄下您桌面的影像
 
 Type=Service

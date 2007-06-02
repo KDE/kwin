@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Mouse Mark
+Name[de]=Mausspur
 Icon=kwin-effect-mousemark
 Comment=Let's you draw lines onto your desktop
+Comment[de]=Zeichnet Mausspuren auf der Arbeitsfläche
 Comment[zh_TW]=讓您在您的桌面上畫線
 
 Type=Service

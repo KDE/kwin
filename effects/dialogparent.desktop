@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Dialog Parent
+Name[de]=Eltern-Dialog
 Icon=kwin-effect-dialogparent
 Comment=Darkens parent windows of active dialogs
+Comment[de]=Dunkelt den Eltern-Dialog des aktiven Fensters ab
 Comment[zh_TW]=將目前對話框的父視窗變暗
 
 Type=Service

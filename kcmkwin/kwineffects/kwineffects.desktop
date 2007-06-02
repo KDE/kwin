@@ -11,9 +11,12 @@ X-KDE-FactoryName=kcm_kwineffects
 X-KDE-ParentApp=kcontrol
 
 Name=Window Effects
+Name[de]=Fenstereffekte
 Name[zh_TW]=視窗效果
 
 Comment=Configure window effects
+Comment[de]=Fenstereffekte einrichten
 Comment[zh_TW]=設定視窗效果
 
 Keywords=kwin,window,manager,effect
+Keywords[de]=kwin,fenster,manager,effekt,verwaltung
