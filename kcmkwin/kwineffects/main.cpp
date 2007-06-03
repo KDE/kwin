@@ -51,11 +51,11 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
     QList<KPluginInfo*> effectinfos = KPluginInfo::fromServices(offers);
 
     // Add them to the plugin selector
-    mPluginSelector->addPlugins(effectinfos, i18n("Appearance"), "Appearance", mKWinConfig);
-    mPluginSelector->addPlugins(effectinfos, i18n("Window Management"), "Window Management", mKWinConfig);
-    mPluginSelector->addPlugins(effectinfos, i18n("Demos"), "Demos", mKWinConfig);
-    mPluginSelector->addPlugins(effectinfos, i18n("Tests"), "Tests", mKWinConfig);
-    mPluginSelector->addPlugins(effectinfos, i18n("Misc"), "Misc", mKWinConfig);
+    mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mKWinConfig);
+    mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mKWinConfig);
+    mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mKWinConfig);
+    mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mKWinConfig);
+    mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Misc"), "Misc", mKWinConfig);
 
     // Load config
     load();
