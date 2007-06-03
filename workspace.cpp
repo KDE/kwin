@@ -1046,7 +1046,10 @@ void Workspace::slotReconfigure()
     if( options->useTranslucency )
     {
         setupCompositing();
-        effects->reconfigure();
+        if( effects )
+        {
+            effects->reconfigure();
+        }
     }
     else
         finishCompositing();
