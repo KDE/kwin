@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Make Transparent
 Name[de]=Transparent machen
+Name[el]=Εμφάνιση διαφανούς
 Icon=kwin-effect-maketransparent
 
 Type=Service

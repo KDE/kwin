@@ -12,11 +12,14 @@ X-KDE-ParentApp=kcontrol
 
 Name=Window Effects
 Name[de]=Fenstereffekte
+Name[el]=Εφέ παραθύρων
 Name[zh_TW]=視窗效果
 
 Comment=Configure window effects
 Comment[de]=Fenstereffekte einrichten
+Comment[el]=Ρύθμιση εφέ των παραθύρων
 Comment[zh_TW]=設定視窗效果
 
 Keywords=kwin,window,manager,effect
 Keywords[de]=kwin,fenster,manager,effekt,verwaltung
+Keywords[el]=παράθυρο,διαχειριστής,εφέ,kwin,παράθυρο,διαχειριστής,εφέ

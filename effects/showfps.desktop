@@ -2,9 +2,11 @@
 Encoding=UTF-8
 Name=Show FPS
 Name[de]=Bilder pro Sekunden anzeigen
+Name[el]=Εμφάνιση καρέ ανά δευτερόλεπτο
 Icon=kwin-effect-showfps
 Comment=Shows KWin's performance
 Comment[de]=Zeigt die Leistung von KWin
+Comment[el]=Εμφάνιση επίδοσης του KWin
 Comment[zh_TW]=顯示 KWin 的效能
 
 Type=Service

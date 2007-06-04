@@ -2,9 +2,11 @@
 Encoding=UTF-8
 Name=Minimize Animation
 Name[de]=Minimieren-Animation
+Name[el]=Κίνηση ελαχιστοποίησης
 Icon=kwin-effect-minimiseanimation
 Comment=Animates minimizing of windows
 Comment[de]=Animiert den Minimieren-Vorgang von Fenstern
+Comment[el]=Κίνηση στα παράθυρα που ελαχιστοποιούνται
 Comment[zh_TW]=動畫最小化視窗
 
 Type=Service

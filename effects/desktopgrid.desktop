@@ -2,9 +2,11 @@
 Encoding=UTF-8
 Name=Desktop Grid
 Name[de]=Arbeitsflächen-Raster
+Name[el]=Κάνναβος επιφάνειας εργασίας
 Icon=kwin-effect-desktopgrid
 Comment=Desktop switcher that lays the desktops out in a grid
 Comment[de]=Arbeitsflächenumschaltung (Fensteranordnung in einem Raster)
+Comment[el]=Εναλλαγή επιφάνειας εργασίας με τοποθέτηση των επιφανειών σε έναν κάνναβο
 Comment[zh_TW]=將桌面以格狀佈局呈現的桌面切換器
 
 Type=Service

@@ -9,6 +9,7 @@ Name[zh_TW]=放大鏡
 Icon=kwin-effect-magnifier
 Comment=Magnifies the part of the screen that is under the mouse
 Comment[de]=Vergrößert den Arbeitsflächenbereich unter der Maus
+Comment[el]=Μεγέθυνση του τμήματος της οθόνη κάτω από το ποντίκι
 Comment[zh_TW]=將滑鼠底下的部份視窗放大
 
 Type=Service
