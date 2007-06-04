@@ -30,7 +30,6 @@ License. See the file "COPYING" for the exact licensing terms.
 class QMenu;
 class KConfig;
 class KActionCollection;
-class KShortcutDialog;
 class KStartupInfo;
 class KStartupInfoId;
 class KStartupInfoData;

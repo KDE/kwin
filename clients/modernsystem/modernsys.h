@@ -5,8 +5,6 @@
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 
-class QLabel;
-class QSpacerItem;
 
 namespace ModernSystem {
 

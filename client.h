@@ -39,7 +39,6 @@ namespace KWin
 
 class Workspace;
 class Client;
-class SessionInfo;
 class Bridge;
 
 class Client

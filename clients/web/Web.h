@@ -26,15 +26,11 @@
 #include "../../lib/kcommondecoration.h"
 #include "../../lib/kdecorationfactory.h"
 
-class QLabel;
-class QSpacerItem;
-class QBoxLayout;
 
 namespace Web
 {
 
-  class WebButton;
-
+  
   class WebClient : public KCommonDecoration
   {
     public:

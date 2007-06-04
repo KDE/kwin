@@ -22,7 +22,6 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-class Matrix;
 
 class SceneXrender
     : public Scene

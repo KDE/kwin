@@ -16,7 +16,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QTimer>
 #include "utils.h"
 
-class QLabel;
 
 namespace KWin
 {

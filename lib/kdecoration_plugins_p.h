@@ -37,7 +37,6 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration.h"
 
 class KLibrary;
-class KConfig;
 class KDecoration;
 class KDecorationBridge;
 class KDecorationFactory;

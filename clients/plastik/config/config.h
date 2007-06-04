@@ -25,8 +25,6 @@
 
 #include <QObject>
 #include "ui_configdialog.h"
-class QButtonGroup;
-class QGroupBox;
 class KConfig;
 
 class ConfigDialog : public QWidget, public Ui::ConfigDialog

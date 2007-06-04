@@ -19,11 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QHash>
 #include <QSet>
 
-class KListWidget;
-class QListWidgetItem;
 class KPluginSelector;
-class QLabel;
-class QCheckBox;
 
 namespace KWin
 {

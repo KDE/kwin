@@ -46,7 +46,6 @@ class QCheckBox;
 class QLabel;
 class QTabWidget;
 class KVBox;
-class QSlider;
 
 class KDecorationPlugins;
 class KDecorationPreview;

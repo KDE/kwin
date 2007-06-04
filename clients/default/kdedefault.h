@@ -18,9 +18,6 @@
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 
-class QSpacerItem;
-class QBoxLayout;
-class QGridLayout;
 class QPixmap;
 
 namespace Default {

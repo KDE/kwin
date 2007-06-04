@@ -24,7 +24,6 @@
 #include <kdecoration_p.h>
 #include <kdecoration_plugins_p.h>
 
-class QLabel;
 
 class KDecorationPreviewBridge;
 class KDecorationPreviewOptions;

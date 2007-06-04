@@ -29,7 +29,6 @@
 
 namespace KWinPlastik {
 
-class PlastikButton;
 
 class PlastikClient : public KCommonDecoration
 {

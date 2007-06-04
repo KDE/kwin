@@ -24,7 +24,6 @@
 #include <kconfig.h>
 
 class KConfig;
-class KAboutData;
 class QStringList;
 
 namespace KWin

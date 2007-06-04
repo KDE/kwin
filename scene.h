@@ -23,7 +23,6 @@ namespace KWin
 class Workspace;
 class Deleted;
 class EffectWindowImpl;
-class EffectHandlerImpl;
 
 // The base class for compositing backends.
 class Scene

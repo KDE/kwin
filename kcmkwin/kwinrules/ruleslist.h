@@ -26,7 +26,6 @@
 
 #include "../../rules.h"
 
-class QListWidgetItem;
 
 namespace KWin
 {

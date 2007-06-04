@@ -20,8 +20,6 @@
 #include "../../lib/kcommondecoration.h"
 #include "../../lib/kdecorationfactory.h"
 
-class QSpacerItem;
-class QBoxLayout;
 
 namespace Quartz {
 
