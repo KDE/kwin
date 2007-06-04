@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kservicetypetrader.h>
 #include <kplugininfo.h>
 #include <kservice.h>
+#include <ksettings/dispatcher.h>
 
 #include <QtDBus/QtDBus>
 #include <QBoxLayout>
@@ -45,6 +46,8 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
     setLayout(layout);
 
     connect(mPluginSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
+    connect(mPluginSelector, SIGNAL(configCommitted(const QByteArray&)),
+            KSettings::Dispatcher::self(), SLOT(reparseConfiguration(const QByteArray&)));
 
     // Find all .desktop files of the effects
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");

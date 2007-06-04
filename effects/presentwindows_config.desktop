@@ -7,7 +7,7 @@ X-KDE-Library=kcm_kwin4_effect_builtins
 X-KDE-FactoryName=kcm_kwineffect_presentwindows
 X-KDE-ParentComponents=kwin4_effect_presentwindows
 
-Name=PresentWindows
+Name=Present Windows
 Name[csb]=BiéżnéÒkno
 Name[de]=Fenster zeigen
 Name[el]=Παρουσίαση παραθύρων
