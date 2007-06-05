@@ -9,6 +9,7 @@ Icon=kwin-effect-fade
 Comment=Makes windows smoothly fade in/out when they're shown or hidden
 Comment[de]=Blendet Fenster beim Öffnen/Schließen langsam ein bzw. aus.
 Comment[el]=Κάνει τα παράθυρα να εμφανίζονται/αποκρύπτονται ομαλά
+Comment[nds]=Finstern warrt bi't Wiesen oder Versteken week in- oder utblendt.
 Comment[zh_TW]=顯示或隱藏視窗時以淡入/淡出方式呈現
 
 Type=Service

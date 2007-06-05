@@ -3,10 +3,12 @@ Encoding=UTF-8
 Name=Present Windows
 Name[de]=Fenster zeigen
 Name[el]=Παρουσίαση παραθύρων
+Name[nds]=Finstern wiesen
 Icon=kwin-effect-presentwindows
 Comment=Shows all windows side-by-side
 Comment[de]=Zeigt alle Fenster nebeneinander an
 Comment[el]=Εμφάνιση όλων των παραθύρων σε παράθεση
+Comment[nds]=Wiest all Finstern blangenanner
 Comment[zh_TW]=讓所有視窗排排站
 
 Type=Service

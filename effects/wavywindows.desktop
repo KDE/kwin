@@ -3,6 +3,7 @@ Encoding=UTF-8
 Name=Wavy Windows
 Name[de]=Wellige Fenster
 Name[el]=Κυματιστά παράθυρα
+Name[nds]=Bülgenfinstern
 Icon=kwin-effect-wavywindows
 
 Type=Service

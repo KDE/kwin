@@ -8,6 +8,7 @@ Icon=kwin-effect-explosion
 Comment=Makes windows explode when they're closed
 Comment[de]=Lässt Fenster beim Schließen explodieren
 Comment[el]=Έκρηξη των παραθύρων κατά το κλείσιμο
+Comment[nds]=Finstern explodeert bi't Tomaken
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 
 Type=Service

@@ -3,6 +3,7 @@ Encoding=UTF-8
 Name=Track Mouse
 Name[de]=Mausspur
 Name[el]=Ανίχνευση ποντικιού
+Name[nds]=Muusspoor
 Icon=kwin-effect-trackmouse
 
 Type=Service

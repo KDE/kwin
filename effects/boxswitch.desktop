@@ -6,6 +6,7 @@ Icon=kwin-effect-boxswitch
 Comment=Improved Alt-tab window switcher
 Comment[de]=Verbesserter Fensterwechsel mit Alt-Tabulator
 Comment[el]=Βελτιωμένη εναλλαγή παραθύρου Alt-tab
+Comment[nds]=Verbetert Wesseln vun Finster mit Alt+Tabtast
 Comment[zh_TW]=Alt-tab 視窗切換加強版
 
 Type=Service

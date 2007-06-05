@@ -8,8 +8,6 @@ X-KDE-FactoryName=kcm_kwineffect_presentwindows
 X-KDE-ParentComponents=kwin4_effect_presentwindows
 
 Name=Present Windows
-Name[csb]=BiéżnéÒkno
 Name[de]=Fenster zeigen
 Name[el]=Παρουσίαση παραθύρων
-Name[nds]=Vörhannen Finstern
-Name[zh_TW]=展示視窗
+Name[nds]=Finstern wiesen

@@ -9,6 +9,7 @@ Icon=kwin-effect-shadow
 Comment=Adds shadow under the windows
 Comment[de]=Lässt Fenster einen Schatten werfen
 Comment[el]=Προσθήκη σκιάς κάτω από τα παράθυρα
+Comment[nds]=Föögt Schaddens nerrn de Finstern to
 Comment[zh_TW]=在視窗底下加上陰影
 
 Type=Service

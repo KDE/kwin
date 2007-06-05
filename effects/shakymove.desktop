@@ -3,6 +3,7 @@ Encoding=UTF-8
 Name=Shaky Move
 Name[de]=Zitternde Bewegung
 Name[el]=Τρεμάμενη κίνηση
+Name[nds]=Bevern
 Icon=kwin-effect-shakymove
 
 Type=Service
