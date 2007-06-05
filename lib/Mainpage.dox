@@ -1,0 +1,7 @@
+/**
+* @mainpage KWin Libraries
+*
+* This directory provides the interfaces for the window manager effects 
+* interface and the interface for window decorations.
+*
+*/
