@@ -603,8 +603,8 @@ void B2Client::resizeEvent(QResizeEvent * /*e*/)
     titlebar->layout()->activate();
     positionButtons();
 
-    /* may be the resize cut off some space occupied by titlebar, which
-       was moved, so instead of reducing it, we first try to move it */
+    // may be the resize cut off some space occupied by titlebar, which
+    // was moved, so instead of reducing it, we first try to move it
     titleMoveAbs(bar_x_ofs);
 
     doShape();
@@ -613,8 +613,14 @@ void B2Client::resizeEvent(QResizeEvent * /*e*/)
 
 void B2Client::captionChange()
 {
+    // XXX This function and resizeEvent are quite similar. 
+    // Factor out common code.
+    calcHiddenButtons();
+    titlebar->layout()->activate();
     positionButtons();
+    
     titleMoveAbs(bar_x_ofs);
+    
     doShape();
     titlebar->recalcBuffer();
     titlebar->repaint();
