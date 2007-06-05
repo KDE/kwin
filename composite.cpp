@@ -92,24 +92,28 @@ void Workspace::setupCompositing()
         case 'B':
             kDebug( 1212 ) << "X compositing" << endl;
             scene = new SceneBasic( this );
-          break;
+          break; // don't fall through (this is a testing one)
+#ifdef HAVE_OPENGL
+        case 'O':
+            kDebug( 1212 ) << "OpenGL compositing" << endl;
+            scene = new SceneOpenGL( this );
+            if( !scene->initFailed())
+                break; // -->
+            delete scene;
+            scene = NULL;
+            // fall through, try XRender
+#endif
 #if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
         case 'X':
             kDebug( 1212 ) << "XRender compositing" << endl;
             scene = new SceneXrender( this );
           break;
 #endif
-#ifdef HAVE_OPENGL
-        case 'O':
-            kDebug( 1212 ) << "OpenGL compositing" << endl;
-            scene = new SceneOpenGL( this );
-          break;
-#endif
         default:
           kDebug( 1212 ) << "No compositing" << endl;
           return;
         }
-    if( scene != NULL && scene->initFailed())
+    if( scene == NULL || scene->initFailed())
         {
         delete scene;
         scene = NULL;
