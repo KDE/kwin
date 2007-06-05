@@ -46,5 +46,5 @@ if(OPENGL_FOUND)
   endif(DL_LIBRARY)
 endif(OPENGL_FOUND)
 
-install( FILES kwinglobals.h kwineffects.h kwinglutils.h kwinglutils_funcs.h DESTINATION ${INCLUDE_INSTALL_DIR})
+install( FILES kwinglobals.h kwineffects.h DESTINATION ${INCLUDE_INSTALL_DIR})
 
