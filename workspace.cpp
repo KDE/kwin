@@ -1693,6 +1693,8 @@ void Workspace::updateDesktopLayout()
         ? Qt::Horizontal : Qt::Vertical );
     layoutX = rootInfo->desktopLayoutColumnsRows().width();
     layoutY = rootInfo->desktopLayoutColumnsRows().height();
+    if( layoutX == 0 && layoutY == 0 ) // not given, set default layout
+        layoutY = 2;
     }
 
 void Workspace::calcDesktopLayout(int* xp, int* yp, Qt::Orientation* orientation) const
