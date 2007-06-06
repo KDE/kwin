@@ -66,7 +66,10 @@ void Workspace::setupCompositing()
     {
 #if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
     if( !options->useTranslucency )
+        {
+        kDebug( 1212 ) << "Compositing is turned off in options" << endl;
         return;
+        }
     if( !Extensions::compositeAvailable())
         {
         kDebug( 1212 ) << "No composite extension available" << endl;
@@ -115,6 +118,7 @@ void Workspace::setupCompositing()
         }
     if( scene == NULL || scene->initFailed())
         {
+        kError( 1212 ) << "Failed to create Scene object. Compositing disabled" << endl;
         delete scene;
         scene = NULL;
         delete cm_selection;
@@ -167,6 +171,8 @@ void Workspace::setupCompositing()
         scene->windowAdded( c );
     delete popup; // force re-creation of the Alt+F3 popup (opacity option)
     popup = NULL;
+#else
+    kDebug( 1212 ) << "Compositing was not available at compile time" << endl;
 #endif
     }
 
