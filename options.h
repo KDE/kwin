@@ -291,22 +291,6 @@ class Options : public KDecorationOptions
 
         //translucency settings
         bool useTranslucency;
-        bool translucentActiveWindows;
-        uint activeWindowOpacity;
-        bool translucentInactiveWindows;
-        uint inactiveWindowOpacity;
-        bool translucentMovingWindows;
-        uint movingWindowOpacity;
-        bool removeShadowsOnResize;
-        bool removeShadowsOnMove;
-        bool translucentDocks;
-        uint dockOpacity;
-        bool keepAboveAsActive;
-        bool useTitleMenuSlider;
-        uint activeWindowShadowSize;
-        uint inactiveWindowShadowSize;
-        uint dockShadowSize;
-        bool onlyDecoTranslucent;
         
         uint refreshRate;
         int smoothScale; // 0 = no, 1 = yes when transformed,

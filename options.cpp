@@ -180,24 +180,6 @@ unsigned long Options::updateSettings()
     //translucency settings - TODO
     config.changeGroup("Translucency");
     useTranslucency = config.readEntry("UseTranslucency", false);
-    translucentActiveWindows = config.readEntry("TranslucentActiveWindows", false);
-    activeWindowOpacity = uint((config.readEntry("ActiveWindowOpacity", 100)/100.0)*0xFFFFFFFF);
-    translucentInactiveWindows = config.readEntry("TranslucentInactiveWindows", false);
-    inactiveWindowOpacity = uint((config.readEntry("InactiveWindowOpacity", 75)/100.0)*0xFFFFFFFF);
-    translucentMovingWindows = config.readEntry("TranslucentMovingWindows", false);
-    movingWindowOpacity = uint((config.readEntry("MovingWindowOpacity", 50)/100.0)*0xFFFFFFFF);
-    translucentDocks = config.readEntry("TranslucentDocks", false);
-    dockOpacity = uint((config.readEntry("DockOpacity", 80)/100.0)*0xFFFFFFFF);
-    keepAboveAsActive = config.readEntry("TreatKeepAboveAsActive", true);
-    //TODO: remove this variable
-    useTitleMenuSlider = true;
-    activeWindowShadowSize = config.readEntry("ActiveWindowShadowSize", 200);
-    inactiveWindowShadowSize = config.readEntry("InactiveWindowShadowSize", 100);
-    dockShadowSize = config.readEntry("DockShadowSize", 80);
-    removeShadowsOnMove = config.readEntry("RemoveShadowsOnMove", true);
-    removeShadowsOnResize = config.readEntry("RemoveShadowsOnResize", true);
-    onlyDecoTranslucent = config.readEntry("OnlyDecoTranslucent", false);
-
     refreshRate = config.readEntry( "RefreshRate", 0 );
     smoothScale = qBound( -1, config.readEntry( "SmoothScale", -1 ), 2 );
 
