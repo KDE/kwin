@@ -46,14 +46,14 @@
 
 static void flip( QPixmap *&pix )
 {
-	QPixmap *tmp = new QPixmap( pix->transformed( QWMatrix(-1,0,0,1,pix->width(),0) ) );
+	QPixmap *tmp = new QPixmap( pix->transformed( QMatrix(-1,0,0,1,pix->width(),0) ) );
 	delete pix;
 	pix = tmp;
 }
 
 static void flip( QBitmap *&pix )
 {
-	QBitmap *tmp = new QBitmap( pix->transformed( QWMatrix(-1,0,0,1,pix->width(),0) ) );
+	QBitmap *tmp = new QBitmap( pix->transformed( QMatrix(-1,0,0,1,pix->width(),0) ) );
 	delete pix;
 	pix = tmp;
 }
@@ -610,9 +610,9 @@ QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 			*dst = *src;
 
 		else if ( a != 0x00 )
-			*dst = qRgba( Q_UINT8( r1 + (((r2 - r1) * a) >> 8) ),
-		                  Q_UINT8( g1 + (((g2 - g1) * a) >> 8) ),
-		                  Q_UINT8( b1 + (((b2 - b1) * a) >> 8) ),
+			*dst = qRgba( quint8( r1 + (((r2 - r1) * a) >> 8) ),
+		                  quint8( g1 + (((g2 - g1) * a) >> 8) ),
+		                  quint8( b1 + (((b2 - b1) * a) >> 8) ),
 		                  0xff );
 
 		else if ( qAlpha(*dst) == 0x00 )
@@ -1639,10 +1639,10 @@ void KeramikClient::resizeEvent( QResizeEvent *e )
 		int dy = 0;
 
 		if ( e->oldSize().width() != width() )
-			dx = 32 + QABS( e->oldSize().width() -  width() );
+			dx = 32 + qAbs( e->oldSize().width() -  width() );
 
 		if ( e->oldSize().height() != height() )
-			dy = 8 + QABS( e->oldSize().height() -  height() );
+			dy = 8 + qAbs( e->oldSize().height() -  height() );
 
 		if ( dy )
 			widget()->update( 0, height() - dy + 1, width(), dy );

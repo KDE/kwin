@@ -511,7 +511,7 @@ GLShader::~GLShader()
 bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentfile)
     {
     QFile vf(vertexfile);
-    if(!vf.open(IO_ReadOnly))
+    if(!vf.open(QIODevice::ReadOnly))
         {
         kError(1212) << k_funcinfo << "Couldn't open '" << vertexfile << "' for reading!" << endl;
         return false;
@@ -519,7 +519,7 @@ bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentf
     QString vertexsource(vf.readAll());
 
     QFile ff(fragmentfile);
-    if(!ff.open(IO_ReadOnly))
+    if(!ff.open(QIODevice::ReadOnly))
         {
         kError(1212) << k_funcinfo << "Couldn't open '" << fragmentfile << "' for reading!" << endl;
         return false;

@@ -770,12 +770,12 @@ void PresentWindowsEffect::updateFilterTexture()
     rect.adjust( -border, -border, border, border );
     QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
     QImage im( rect.width(), rect.height(), QImage::Format_ARGB32 );
-    QColor col = QPalette().highlight();
+    QColor col = QPalette().color( QPalette::Highlight );
     col.setAlpha( 128 ); // 0.5
     im.fill( col.rgba());
     QPainter p( &im );
     p.setFont( font );
-    p.setPen( QPalette().highlightedText());
+    p.setPen( QPalette().color( QPalette::HighlightedText ) );
     p.drawText( -rect.topLeft(), windowFilter );
     p.end();
     filterTexture = new GLTexture( im );

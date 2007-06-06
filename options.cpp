@@ -201,7 +201,7 @@ unsigned long Options::updateSettings()
     refreshRate = config.readEntry( "RefreshRate", 0 );
     smoothScale = qBound( -1, config.readEntry( "SmoothScale", -1 ), 2 );
 
-    QString glmode = config.readEntry("GLMode", "TFP" ).upper();
+    QString glmode = config.readEntry("GLMode", "TFP" ).toUpper();
     if( glmode == "TFP" )
         glMode = GLTFP;
     else if( glmode == "SHM" )

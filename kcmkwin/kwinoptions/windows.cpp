@@ -415,7 +415,7 @@ void KFocusConfig::updateActiveMouseScreen()
     // on by default for non click to focus policies
     KConfigGroup cfg( config, "Windows" );
     if( !cfg.hasKey( KWIN_ACTIVE_MOUSE_SCREEN ))
-        setActiveMouseScreen( focusCombo->currentItem() != 0 );
+        setActiveMouseScreen( focusCombo->currentIndex() != 0 );
 }
 
 void KFocusConfig::setAltTabMode(bool a) {
@@ -467,7 +467,7 @@ void KFocusConfig::load( void )
     
     setSeparateScreenFocus( cg.readEntry(KWIN_SEPARATE_SCREEN_FOCUS, true));
     // on by default for non click to focus policies
-    setActiveMouseScreen( cg.readEntry(KWIN_ACTIVE_MOUSE_SCREEN, focusCombo->currentItem() != 0 ));
+    setActiveMouseScreen( cg.readEntry(KWIN_ACTIVE_MOUSE_SCREEN, focusCombo->currentIndex() != 0 ));
 
     key = cg.readEntry(KWIN_ALTTABMODE, "KDE");
     setAltTabMode(key == "KDE");
@@ -555,7 +555,7 @@ void KFocusConfig::defaults()
     setClickRaise(true);
     setSeparateScreenFocus( true );
     // on by default for non click to focus policies
-    setActiveMouseScreen( focusCombo->currentItem() != 0 );
+    setActiveMouseScreen( focusCombo->currentIndex() != 0 );
     setAltTabMode(true);
     setTraverseAll( false );
     setRollOverDesktops(true);

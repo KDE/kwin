@@ -507,7 +507,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 QRect rect = windowRect( window_move );
                 int desktop = posToDesktop( rect.center());
                 // to desktop's coordinates
-                rect.moveBy( -desktopRect( desktop, true ).topLeft());
+                rect.translate( -desktopRect( desktop, true ).topLeft());
                 int x, y;
                 Qt::Orientation orientation;
                 effects->calcDesktopLayout( &x, &y, &orientation );

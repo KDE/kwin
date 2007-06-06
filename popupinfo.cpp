@@ -36,7 +36,7 @@ namespace KWin
 {
 
 PopupInfo::PopupInfo( Workspace* ws, const char *name )
-    : QWidget( 0, name ), workspace( ws )
+    : QWidget( 0 ), workspace( ws )
     {
     setObjectName( name );
 
