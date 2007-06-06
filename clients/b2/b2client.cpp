@@ -113,7 +113,7 @@ static void read_config(B2ClientFactory *f)
 {
     // Force button size to be in a reasonable range.
     // If the frame width is large, the button size must be large too.
-    buttonSize = (QFontMetrics(options()->font(true)).height() + 1) & 0x3e;
+    buttonSize = (QFontMetrics(options()->font(true)).height()) & 0x3e;
     if (buttonSize < 16) buttonSize = 16;
 
     KConfig _conf( "kwinb2rc" );
@@ -420,15 +420,15 @@ void B2Client::init()
     }
 
     // titlebar
-    g->addItem( new QSpacerItem(0, buttonSize + 4), 0, 0 );
+    g->addItem(new QSpacerItem(0, buttonSize + 4), 0, 0);
 
     titlebar = new B2Titlebar(this);
     titlebar->setMinimumWidth(buttonSize + 4);
     titlebar->setFixedHeight(buttonSize + 4);
 
-    QBoxLayout *titleLayout = new QBoxLayout(QBoxLayout::LeftToRight, titlebar );
-    titleLayout->setMargin(1);
-    titleLayout->setSpacing(3);
+    QBoxLayout *titleLayout = new QBoxLayout(QBoxLayout::LeftToRight, titlebar);
+    titleLayout->setMargin(2);
+    titleLayout->setSpacing(1);
 
     if (options()->customButtonPositions()) {
         addButtons(options()->titleButtonsLeft(), tips, titlebar, titleLayout);
@@ -765,6 +765,8 @@ void B2Client::showEvent(QShowEvent *)
 {
     calcHiddenButtons();
     positionButtons();
+    // TODO check if setting a flag and doing this during the paintEvent is a
+    // better approach.
     doShape();
 }
 
@@ -817,7 +819,7 @@ KDecoration::Position B2Client::mousePosition(const QPoint& p) const
 void B2Client::titleMoveAbs(int new_ofs)
 {
     if (new_ofs < 0) new_ofs = 0;
-    if (new_ofs + titlebar->width() > width()) {
+    if (new_ofs > width() - titlebar->width()) {
         new_ofs = width() - titlebar->width();
     }
     if (bar_x_ofs != new_ofs) {
@@ -1303,7 +1305,7 @@ void B2Button::paintEvent(QPaintEvent *)
         QPixmap miniIcon = client->icon().pixmap(
 		style()->pixelMetric(QStyle::PM_SmallIconSize),
 		client->isActive() ? QIcon::Normal : QIcon::Disabled);
-        p.drawPixmap((width() - miniIcon.width()) / 2,
+        p.drawPixmap(1 + (width() - miniIcon.width()) / 2,
                       (height() - miniIcon.height()) / 2, miniIcon);
     } else {
 	int type;
@@ -1322,7 +1324,7 @@ void B2Button::paintEvent(QPaintEvent *)
             else
 		type = INorm;
         }
-	p.drawPixmap((width() - icon[type]->width()) / 2,
+	p.drawPixmap(1 + (width() - icon[type]->width()) / 2,
 		(height() - icon[type]->height()) / 2, *icon[type]);
     }
 }
