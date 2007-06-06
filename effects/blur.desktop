@@ -4,11 +4,13 @@ Name=Blur
 Name[de]=Verwischen
 Name[el]=Θόλωμα
 Name[nds]=Verwischen
+Name[nl]=Vervagen
 Name[zh_TW]=模糊
 Icon=kwin-effect-blur
 Comment=Blurs background of semi-transparent windows
 Comment[el]=Θόλωμα φόντου των ημιδιαφανών παραθύρων
 Comment[nds]=Verwischt den Achtergrund vun halfdörsichtig Finstern
+Comment[nl]=Vervaagt de achtergrond van halftransparante vensters
 Comment[zh_TW]=將半透明視窗的背景弄模糊
 
 Type=Service

@@ -4,6 +4,7 @@ Name=Drunken
 Name[de]=Betrunken
 Name[el]=Κούνημα
 Name[nds]=Duun
+Name[nl]=Dronken
 Icon=kwin-effect-drunken
 
 Type=Service

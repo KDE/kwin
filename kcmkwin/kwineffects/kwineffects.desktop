@@ -14,15 +14,18 @@ Name=Window Effects
 Name[de]=Fenstereffekte
 Name[el]=Εφέ παραθύρων
 Name[nds]=Finstereffekten
+Name[nl]=Venstereffecten
 Name[zh_TW]=視窗效果
 
 Comment=Configure window effects
 Comment[de]=Fenstereffekte einrichten
 Comment[el]=Ρύθμιση εφέ των παραθύρων
 Comment[nds]=Finstereffekten instellen
+Comment[nl]=Venstereffecten instellen
 Comment[zh_TW]=設定視窗效果
 
 Keywords=kwin,window,manager,effect
 Keywords[de]=kwin,fenster,manager,effekt,verwaltung
 Keywords[el]=παράθυρο,διαχειριστής,εφέ,kwin,παράθυρο,διαχειριστής,εφέ
 Keywords[nds]=kwin,Finster,Pleger,Effekt
+Keywords[nl]=kwin,window,venster,window manager,effect

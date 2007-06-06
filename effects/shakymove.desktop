@@ -4,6 +4,7 @@ Name=Shaky Move
 Name[de]=Zitternde Bewegung
 Name[el]=Τρεμάμενη κίνηση
 Name[nds]=Bevern
+Name[nl]=Wiebelige beweging
 Icon=kwin-effect-shakymove
 
 Type=Service

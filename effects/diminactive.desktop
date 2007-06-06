@@ -4,11 +4,13 @@ Name=Dim Inactive
 Name[de]=Inaktive abdunkeln
 Name[el]=Θαμπάδα ανενεργού
 Name[nds]=Nich aktive bedüüstern
+Name[nl]=Inactief dimmen
 Icon=kwin-effect-diminactive
 Comment=Darkens inactive windows
 Comment[de]=Dunkelt inaktive Fenster ab
 Comment[el]=Σκίαση μη ενεργών παραθύρων
 Comment[nds]=Maakt nich aktive Finstern düüsterer
+Comment[nl]=Maakt inactieve vensters donkerder
 Comment[zh_TW]=將不使用的視窗變暗
 
 Type=Service

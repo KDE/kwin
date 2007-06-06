@@ -2,6 +2,7 @@
 Description=(Default) Disable focus stealing prevention for XV
 Description[el]=(Προκαθορισμένο) Αποτροπή κλεψίματος εστίασης για το XV
 Description[nds]=(Standard) För XV de Fokusverleer-Schuul utmaken
+Description[nl]=(Standaard) schakel het voorkomen dat focus wordt gestolen uit voor XV
 Description[zh_TW]=（預設）為 XV 關閉避免焦點被偷的功能
 fsplevel=0
 fsplevelrule=2

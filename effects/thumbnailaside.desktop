@@ -4,6 +4,7 @@ Name=Thumbnail Aside
 Name[de]=Seitliche Vorschaubilder
 Name[el]=Εικόνα επισκόπησης στο πλάι
 Name[nds]=Vöransicht kantsiets
+Name[nl]=Miniatuur ernaast
 Icon=kwin-effect-thumbnailaside
 
 Type=Service

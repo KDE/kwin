@@ -3,6 +3,7 @@ Encoding=UTF-8
 Name=Scale In
 Name[el]=Εστίαση
 Name[nds]=Inpassen
+Name[nl]=Inschalen
 Icon=kwin-effect-scalein
 
 Type=Service

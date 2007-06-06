@@ -4,11 +4,13 @@ Name=Video Record
 Name[de]=Video-Aufnahme
 Name[el]=Εγγραφή βίντεο
 Name[nds]=Video opnehmen
+Name[nl]=Video-opname
 Icon=kwin-effect-videorecord
 Comment=Lets you record videos of your desktop
 Comment[de]=Zeichnet Videos von der Arbeitsfläche auf
 Comment[el]=Επιτρέπει την εγγραφή βίντεο της επιφάνειας εργασίας σας
 Comment[nds]=Videos vun Dien Schriefdisch opnehmen
+Comment[nl]=Laat u opnames maken van uw bureaublad
 Comment[zh_TW]=讓您錄下您桌面的影像
 
 Type=Service

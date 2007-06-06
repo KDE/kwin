@@ -4,6 +4,7 @@ Name=Track Mouse
 Name[de]=Mausspur
 Name[el]=Ανίχνευση ποντικιού
 Name[nds]=Muusspoor
+Name[nl]=Muis volgen
 Icon=kwin-effect-trackmouse
 
 Type=Service

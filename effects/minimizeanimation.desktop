@@ -4,11 +4,13 @@ Name=Minimize Animation
 Name[de]=Minimieren-Animation
 Name[el]=Κίνηση ελαχιστοποίησης
 Name[nds]=Minimeer-Animeren
+Name[nl]=Minimaliseeranimatie
 Icon=kwin-effect-minimiseanimation
 Comment=Animates minimizing of windows
 Comment[de]=Animiert den Minimieren-Vorgang von Fenstern
 Comment[el]=Κίνηση στα παράθυρα που ελαχιστοποιούνται
 Comment[nds]=Animeert dat Minimeren vun Finstern
+Comment[nl]=Voorziet het minimaliseren van vensters van een animatie
 Comment[zh_TW]=動畫最小化視窗
 
 Type=Service
