@@ -113,7 +113,7 @@ static void read_config(B2ClientFactory *f)
 {
     // Force button size to be in a reasonable range.
     // If the frame width is large, the button size must be large too.
-    buttonSize = (QFontMetrics(options()->font(true)).height()) & 0x3e;
+    buttonSize = (QFontMetrics(options()->font(true)).height() + 1) & 0x3e;
     if (buttonSize < 16) buttonSize = 16;
 
     KConfig _conf( "kwinb2rc" );
@@ -440,9 +440,9 @@ void B2Client::init()
         addButtons("IAX", tips, titlebar, titleLayout);
     }
 
-    titleLayout->addSpacing(3);
+    titleLayout->addSpacing(2);
 
-    QColor c = options()->palette(KDecoration::ColorTitleBar, isActive()).color( QPalette::Active, QPalette::Button );
+    QColor c = options()->palette(KDecoration::ColorTitleBar, isActive()).color(QPalette::Active, QPalette::Button);
 
     for (int i = 0; i < BtnCount; i++) {
         if (button[i])
@@ -1436,7 +1436,7 @@ void B2Titlebar::drawTitlebar(QPainter &p, bool state)
     p.setPen(options()->color(KDecoration::ColorFont, state));
     p.setFont(options()->font(state));
     t = captionSpacer->geometry();
-    p.drawText(t, Qt::AlignLeft | Qt::AlignVCenter, client->caption());
+    p.drawText(t, Qt::AlignCenter | Qt::AlignVCenter, client->caption());
 }
 
 void B2Titlebar::recalcBuffer()
