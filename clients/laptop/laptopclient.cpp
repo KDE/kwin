@@ -479,13 +479,13 @@ void LaptopClient::paintEvent( QPaintEvent* )
 
     QRect r(widget()->rect());
     p.setPen(Qt::black);
-    p.drawRect(r);
+    p.drawRect(r.adjusted(0, 0, -1, -1));
 
     // fill mid frame...
     p.setPen(g.background().color());
     p.drawLine(r.x()+2, r.y()+2, r.right()-2, r.y()+2);
-    p.drawLine(r.left()+2, r.y()+3, r.left()+2, r.bottom()-layoutMetric(LM_BorderBottom)+1 );
-    p.drawLine(r.right()-2, r.y()+3, r.right()-2, r.bottom()-layoutMetric(LM_BorderBottom)+1 );
+    p.drawLine(r.left()+2, r.y()+3, r.left()+2, r.bottom()-layoutMetric(LM_BorderBottom)+1);
+    p.drawLine(r.right()-2, r.y()+3, r.right()-2, r.bottom()-layoutMetric(LM_BorderBottom)+1);
     p.drawLine(r.left()+3, r.y()+3, r.left()+3, r.y()+layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeTop) );
     p.drawLine(r.right()-3, r.y()+3, r.right()-3, r.y()+layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeTop) );
     if (!mustDrawHandle() )
@@ -510,7 +510,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
 	th -= 2;
 
     // inner rect
-    p.drawRect(r.x() + 3, r.y() + th + 3, r.width() - 6, r.height() - th - bb);
+    p.drawRect(r.x() + 3, r.y() + th + 3, r.width() - 7, r.height() - th - bb - 1);
 
     // handles
     if (mustDrawHandle()) {
