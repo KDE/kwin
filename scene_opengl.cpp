@@ -829,9 +829,10 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         { // tfp mode, simply bind the pixmap to texture
         if( mTexture == None )
             glGenTextures( 1, &mTexture );
-        if( bound_glxpixmap != None && !strict_binding ) // release old if needed
+        if( bound_glxpixmap != None ) // release old if needed
             {
-            glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
+            if( !strict_binding )
+                glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
             }
         static const int attrs[] =
