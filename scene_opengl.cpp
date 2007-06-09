@@ -382,34 +382,38 @@ bool SceneOpenGL::initBufferConfigs()
                                   GLX_BUFFER_SIZE, &value );
             if( value != QX11Info::appDepth() && ( value - alpha ) != QX11Info::appDepth() )
                 continue;
+            int back_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                  GLX_DOUBLEBUFFER, &value );
+                                  GLX_DOUBLEBUFFER, &back_value );
             if( i > 0 )
                 {
-                if( value > back )
+                if( back_value > back )
                     continue;
                 }
             else
                 {
-                if( value < back )
+                if( back_value < back )
                     continue;
                 }
-            back = value;
+            int stencil_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                  GLX_STENCIL_SIZE, &value );
-            if( value < stencil )
+                                  GLX_STENCIL_SIZE, &stencil_value );
+            if( stencil_value < stencil )
                 continue;
-            stencil = value;
+            int depth_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                  GLX_DEPTH_SIZE, &value );
-            if( value < depth )
+                                  GLX_DEPTH_SIZE, &depth_value );
+            if( depth_value < depth )
                 continue;
-            depth = value;
+            int caveat_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                  GLX_CONFIG_CAVEAT, &value );
-            if( value > caveat )
+                                  GLX_CONFIG_CAVEAT, &caveat_value );
+            if( caveat_value > caveat )
                 continue;
-            caveat = value;
+            back = back_value;
+            stencil = stencil_value;
+            depth = depth_value;
+            caveat = caveat_value;
             if( i > 0 )
                 fbcbuffer_nondb = fbconfigs[ j ];
             else
@@ -510,13 +514,14 @@ bool SceneOpenGL::initDrawableConfigs()
                 if( mipmap_value < mipmap )
                     continue;
                 }
+            int caveat_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
-                                  GLX_CONFIG_CAVEAT, &value );
-            if( value > caveat )
+                                  GLX_CONFIG_CAVEAT, &caveat_value );
+            if( caveat_value > caveat )
                 continue;
             // ok, config passed all tests, it's the best one so far
             fbcdrawableinfo[ i ].fbconfig = fbconfigs[ j ];
-            caveat = value;
+            caveat = caveat_value;
             back = back_value;
             stencil = stencil_value;
             depth = depth_value;
