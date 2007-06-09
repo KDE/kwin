@@ -360,8 +360,8 @@ bool SceneOpenGL::initBufferConfigs()
             back = INT_MAX;
         else
             back = 1;
-        stencil = 0;
-        depth = 0;
+        stencil = INT_MAX;
+        depth = INT_MAX;
         caveat = INT_MAX;
         alpha = 0;
         for( int j = 0; j < cnt; j++ )
@@ -398,12 +398,12 @@ bool SceneOpenGL::initBufferConfigs()
             int stencil_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_STENCIL_SIZE, &stencil_value );
-            if( stencil_value < stencil )
+            if( stencil_value > stencil )
                 continue;
             int depth_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_DEPTH_SIZE, &depth_value );
-            if( depth_value < depth )
+            if( depth_value > depth )
                 continue;
             int caveat_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
