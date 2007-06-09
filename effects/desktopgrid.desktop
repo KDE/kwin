@@ -5,6 +5,7 @@ Name[de]=Arbeitsflächen-Raster
 Name[el]=Κάνναβος επιφάνειας εργασίας
 Name[nds]=Schriefdisch-Gadder
 Name[nl]=Bureaubladraster
+Name[zh_TW]=桌面格
 Icon=kwin-effect-desktopgrid
 Comment=Desktop switcher that lays the desktops out in a grid
 Comment[de]=Arbeitsflächenumschaltung (Fensteranordnung in einem Raster)

@@ -4,6 +4,7 @@ Name=Scale In
 Name[el]=Εστίαση
 Name[nds]=Inpassen
 Name[nl]=Inschalen
+Name[zh_TW]=縮放
 Icon=kwin-effect-scalein
 
 Type=Service

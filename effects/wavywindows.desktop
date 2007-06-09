@@ -5,6 +5,7 @@ Name[de]=Wellige Fenster
 Name[el]=Κυματιστά παράθυρα
 Name[nds]=Bülgenfinstern
 Name[nl]=Wuifende vensters
+Name[zh_TW]=波浪狀視窗
 Icon=kwin-effect-wavywindows
 
 Type=Service

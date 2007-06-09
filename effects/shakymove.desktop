@@ -5,6 +5,7 @@ Name[de]=Zitternde Bewegung
 Name[el]=Τρεμάμενη κίνηση
 Name[nds]=Bevern
 Name[nl]=Wiebelige beweging
+Name[zh_TW]=搖晃
 Icon=kwin-effect-shakymove
 
 Type=Service

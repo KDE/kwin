@@ -5,6 +5,7 @@ Name[de]=Transparent machen
 Name[el]=Εμφάνιση διαφανούς
 Name[nds]=Dörsichtig maken
 Name[nl]=Transparant maken
+Name[zh_TW]=製造透明
 Icon=kwin-effect-maketransparent
 
 Type=Service

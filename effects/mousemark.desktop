@@ -5,6 +5,7 @@ Name[de]=Mausspur
 Name[el]=Σήμανση ποντικιού
 Name[nds]=Muus-Mark
 Name[nl]=Muismarkering
+Name[zh_TW]=滑鼠標記
 Icon=kwin-effect-mousemark
 Comment=Let's you draw lines onto your desktop
 Comment[de]=Zeichnet Mausspuren auf der Arbeitsfläche

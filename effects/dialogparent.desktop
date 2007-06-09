@@ -5,6 +5,7 @@ Name[de]=Eltern-Dialog
 Name[el]=Γονικός διάλογος
 Name[nds]=Överornt Finster
 Name[nl]=Dialoogeigenaar
+Name[zh_TW]=上層對話框
 Icon=kwin-effect-dialogparent
 Comment=Darkens parent windows of active dialogs
 Comment[de]=Dunkelt den Eltern-Dialog des aktiven Fensters ab

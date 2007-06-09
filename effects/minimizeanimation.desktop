@@ -5,6 +5,7 @@ Name[de]=Minimieren-Animation
 Name[el]=Κίνηση ελαχιστοποίησης
 Name[nds]=Minimeer-Animeren
 Name[nl]=Minimaliseeranimatie
+Name[zh_TW]=縮小動畫
 Icon=kwin-effect-minimiseanimation
 Comment=Animates minimizing of windows
 Comment[de]=Animiert den Minimieren-Vorgang von Fenstern

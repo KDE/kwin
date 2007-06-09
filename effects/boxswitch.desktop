@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Box Switch
 Name[el]=Εναλλαγή πλαισίου
+Name[zh_TW]=盒切換
 Icon=kwin-effect-boxswitch
 Comment=Improved Alt-tab window switcher
 Comment[de]=Verbesserter Fensterwechsel mit Alt-Tabulator
