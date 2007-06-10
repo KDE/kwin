@@ -1,11 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Box Switch
+Name[de]=Würfel-Fensterwechsel
 Name[el]=Εναλλαγή πλαισίου
 Name[zh_TW]=盒切換
 Icon=kwin-effect-boxswitch
 Comment=Improved Alt-tab window switcher
-Comment[de]=Verbesserter Fensterwechsel mit Alt-Tabulator
+Comment[de]=Verbesserter Fensterwechsel mittels Alt-Tabulator
 Comment[el]=Βελτιωμένη εναλλαγή παραθύρου Alt-tab
 Comment[nds]=Verbetert Wesseln vun Finster mit Alt+Tabtast
 Comment[nl]=Verbeterde Alt-Tab vensternavigatie

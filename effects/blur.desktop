@@ -8,6 +8,7 @@ Name[nl]=Vervagen
 Name[zh_TW]=模糊
 Icon=kwin-effect-blur
 Comment=Blurs background of semi-transparent windows
+Comment[de]=Verwischt den Hintergrund halbtransparenter Fenster
 Comment[el]=Θόλωμα φόντου των ημιδιαφανών παραθύρων
 Comment[nds]=Verwischt den Achtergrund vun halfdörsichtig Finstern
 Comment[nl]=Vervaagt de achtergrond van halftransparante vensters
