@@ -14,16 +14,13 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <config-X11.h> // HAVE_OPENGL
 
 #ifdef HAVE_OPENGL
-#include <GL/gl.h>
-#include <GL/glx.h>
-#include <fixx11h.h>
+#include <kwinglutils_funcs.h>
 
 #include <QPixmap>
 
 #include <QImage>
 #include <QSize>
 
-#include <kwinglutils_funcs.h>
 
 
 template< class K, class V > class QHash;

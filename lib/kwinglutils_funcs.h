@@ -19,6 +19,17 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #ifdef HAVE_OPENGL
 
+// gcc-3.3.3 apparently cannot resolve KWin's namespaced versions properly,
+// so hide possible global functions
+#define glXQueryDrawable kwinhide_glXQueryDrawable
+
+#include <GL/gl.h>
+#include <GL/glx.h>
+
+#undef glXQueryDrawable
+
+#include <fixx11h.h>
+
 namespace KWin
 {
 

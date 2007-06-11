@@ -766,8 +766,8 @@ void SceneOpenGL::Texture::discard()
 void SceneOpenGL::Texture::findTarget()
     {
     unsigned int new_target = 0;
-    if( tfp_mode && KWin::glXQueryDrawable && bound_glxpixmap != None )
-        KWin::glXQueryDrawable( display(), bound_glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target );
+    if( tfp_mode && glXQueryDrawable && bound_glxpixmap != None )
+        glXQueryDrawable( display(), bound_glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target );
     else
         {
         if( NPOTTextureSupported() ||
