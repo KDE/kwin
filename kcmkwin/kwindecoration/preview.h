@@ -43,7 +43,7 @@ class KDecorationPreview
         //       and an inactive window.
         enum Windows { Inactive = 0, Active, NumWindows };
 
-        KDecorationPreview( QWidget* parent = NULL, const char* name = NULL );
+        KDecorationPreview( QWidget* parent = NULL );
         virtual ~KDecorationPreview();
         bool recreateDecoration( KDecorationPlugins* plugin );
         void enablePreview();

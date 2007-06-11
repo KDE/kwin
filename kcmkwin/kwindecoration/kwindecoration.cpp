@@ -32,7 +32,8 @@
 #include <QFileInfo>
 #include <QLayout>
 
-#include <q3groupbox.h>
+#include <QGroupBox>
+#include <QGridLayout>
 #include <QCheckBox>
 #include <QTabWidget>
 
@@ -101,11 +102,12 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
 	decorationList->setWhatsThis( whatsThis);
 	pluginLayout->addWidget(decorationList);
 
-	Q3GroupBox *pluginSettingsGrp = new Q3GroupBox( i18n("Decoration Options"), pluginPage );
-	pluginSettingsGrp->setColumnLayout( 0, Qt::Vertical );
+	QGroupBox *pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
+    QGridLayout *pluginSettingsLayout = new QGridLayout();
 	pluginSettingsGrp->setFlat( true );
-	pluginSettingsGrp->layout()->setMargin( 0 );
-	pluginSettingsGrp->layout()->setSpacing( KDialog::spacingHint() );
+	pluginSettingsLayout->setMargin( 0 );
+	pluginSettingsLayout->setSpacing( KDialog::spacingHint() );
+	pluginSettingsGrp->setLayout( pluginSettingsLayout );
 	pluginLayout->addWidget( pluginSettingsGrp );
 
 	pluginLayout->addStretch();
