@@ -4,8 +4,10 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Effect
 
 Comment=KWin Effect
+Comment[be]=Эфекты KWin
 Comment[de]=KWin-Effekt
 Comment[el]=Εφέ KWin
+Comment[fa]=جلوه‌های KWin
 Comment[nds]=KWin-Effekt
 Comment[nl]=KWin-effect
 Comment[zh_TW]=KWin 效果

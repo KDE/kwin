@@ -8,8 +8,10 @@ X-KDE-FactoryName=kcm_kwineffect_shadow
 X-KDE-ParentComponents=kwin4_effect_shadow
 
 Name=Shadow
+Name[be]=Цень
 Name[de]=Schatten
 Name[el]=Σκιά
+Name[fa]=سایه
 Name[nds]=Schadden
 Name[nl]=Schaduw
 Name[zh_TW]=陰影
