@@ -15,7 +15,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kcmodule.h>
 
 #include <ksharedconfig.h>
-#include <QStringList>
 #include <QHash>
 #include <QSet>
 

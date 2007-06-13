@@ -22,7 +22,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <QtDBus/QtDBus>
 #include <QBoxLayout>
-#include <QStringList>
 
 
 

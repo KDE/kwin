@@ -10,7 +10,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "kwineffects.h"
 
-#include <QStringList>
 #include <QtDBus/QtDBus>
 #include <QVariant>
 #include <QList>

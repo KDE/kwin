@@ -19,7 +19,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QWidget>
 #include <QGridLayout>
 #include <QLabel>
-#include <QStringList>
 #include <QSpinBox>
 
 KWIN_EFFECT_CONFIG( shadow, KWin::ShadowEffectConfig )

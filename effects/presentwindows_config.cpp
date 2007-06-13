@@ -19,7 +19,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QWidget>
 #include <QGridLayout>
 #include <QLabel>
-#include <QStringList>
 #include <QComboBox>
 
 KWIN_EFFECT_CONFIG( presentwindows, KWin::PresentWindowsEffectConfig )
