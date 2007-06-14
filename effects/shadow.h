@@ -29,6 +29,7 @@ class ShadowEffect
         void drawShadow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         int shadowXOffset, shadowYOffset;
         float shadowOpacity;
+        int shadowFuzzyness;
     };
 
 } // namespace

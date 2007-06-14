@@ -52,7 +52,13 @@ ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QStringList& args)
     connect(mShadowOpacity, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     layout->addWidget(mShadowOpacity, 2, 1);
 
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 3, 0, 1, 2);
+    layout->addWidget(new QLabel(i18n("Shadow fuzzyness:")), 3, 0);
+    mShadowFuzzyness = new QSpinBox;
+    mShadowFuzzyness->setRange(0, 20);
+    connect(mShadowFuzzyness, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    layout->addWidget(mShadowFuzzyness, 3, 1);
+
+    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 4, 0, 1, 2);
 
     load();
     }
@@ -71,6 +77,7 @@ void ShadowEffectConfig::load()
     mShadowXOffset->setValue( conf.readEntry( "XOffset", 5 ) );
     mShadowYOffset->setValue( conf.readEntry( "YOffset", 5 ) );
     mShadowOpacity->setValue( (int)( conf.readEntry( "Opacity", 0.2 ) * 100 ) );
+    mShadowFuzzyness->setValue( conf.readEntry( "Fuzzyness", 10 ) );
 
     emit changed(false);
     }
@@ -84,6 +91,7 @@ void ShadowEffectConfig::save()
     conf.writeEntry( "XOffset", mShadowXOffset->value() );
     conf.writeEntry( "YOffset", mShadowYOffset->value() );
     conf.writeEntry( "Opacity", mShadowOpacity->value() / 100.0 );
+    conf.writeEntry( "Fuzzyness", mShadowFuzzyness->value() );
     conf.sync();
 
     emit changed(false);
@@ -96,6 +104,7 @@ void ShadowEffectConfig::defaults()
     mShadowXOffset->setValue( 5 );
     mShadowYOffset->setValue( 5 );
     mShadowOpacity->setValue( 20 );
+    mShadowFuzzyness->setValue( 10 );
     emit changed(true);
     }
 
