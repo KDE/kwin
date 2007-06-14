@@ -13,7 +13,6 @@ X-KDE-ParentApp=kcontrol
 Name=Window-Specific Settings
 Name[af]=Venser spesifike Instellings
 Name[ar]=تعيينات خاصة بالنوافذ
-Name[be]=Настаўленні для асобных вокнаў
 Name[ca]=Arranjament específic de finestra
 Name[cs]=Specifická nastavení oken
 Name[csb]=Nastôw specyficzny dlô òkna
@@ -68,7 +67,6 @@ Name[zh_TW]=特定視窗設定
 Comment=Configure settings specifically for a window
 Comment[af]=Stel spesifieke venster instellings op
 Comment[ar]=إعداد التعيينات الخاصة بنافذة
-Comment[be]=Настаўленні для кожнага вакна асабіста
 Comment[ca]=Configura l'arranjament específicament per a una finestra
 Comment[cs]=Nastavení specifická pro okno
 Comment[csb]=Kònfigùracëjô nastôwów specyficznëch dlô wëbrónegò òkna
@@ -124,7 +122,6 @@ Comment[zh_TW]=設定特定視窗設定值
 
 Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
 Keywords[ar]=القياس,الموضع,الحالة,سلوك النافذة,نوافذ,خاص,تدكر,قواعد,معاملات
-Keywords[be]=Keywords=Памер,Пазіцыя,Стан,Паводзіны акна,Вокны,Акно,Спецыфічныя,Запомніць,Правілы,size,position,state,window behavior,windows,specific,workarounds,remember,rules
 Keywords[ca]=mida,posició,estat,comportament de finestra,finestres,específic,reparacions,recorda,regles
 Keywords[cs]=velikost,pozice,umístění,stav,chování oken,pravidla
 Keywords[csb]=miara,pòłożenié,stón,ùchòwanié òknół,òkna,spamiãtanié nastôwów,zapamiãtanié nastôwów,regle
