@@ -22,8 +22,8 @@ KWIN_EFFECT( shadow, ShadowEffect )
 ShadowEffect::ShadowEffect()
     {
     KConfigGroup conf = effects->effectConfig("Shadow");
-    shadowXOffset = conf.readEntry( "XOffset", 5 );
-    shadowYOffset = conf.readEntry( "YOffset", 5 );
+    shadowXOffset = conf.readEntry( "XOffset", 10 );
+    shadowYOffset = conf.readEntry( "YOffset", 10 );
     shadowOpacity = (float)conf.readEntry( "Opacity", 0.2 );
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
     }

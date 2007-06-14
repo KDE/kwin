@@ -74,8 +74,8 @@ void ShadowEffectConfig::load()
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Shadow");
-    mShadowXOffset->setValue( conf.readEntry( "XOffset", 5 ) );
-    mShadowYOffset->setValue( conf.readEntry( "YOffset", 5 ) );
+    mShadowXOffset->setValue( conf.readEntry( "XOffset", 10 ) );
+    mShadowYOffset->setValue( conf.readEntry( "YOffset", 10 ) );
     mShadowOpacity->setValue( (int)( conf.readEntry( "Opacity", 0.2 ) * 100 ) );
     mShadowFuzzyness->setValue( conf.readEntry( "Fuzzyness", 10 ) );
 
@@ -101,8 +101,8 @@ void ShadowEffectConfig::save()
 void ShadowEffectConfig::defaults()
     {
     kDebug() << k_funcinfo << endl;
-    mShadowXOffset->setValue( 5 );
-    mShadowYOffset->setValue( 5 );
+    mShadowXOffset->setValue( 10 );
+    mShadowYOffset->setValue( 10 );
     mShadowOpacity->setValue( 20 );
     mShadowFuzzyness->setValue( 10 );
     emit changed(true);
