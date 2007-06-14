@@ -110,51 +110,145 @@ int nearestPowerOfTwo( int x )
     return 1 << last;
     }
 
-void renderGLGeometry( const float* vertices, const float* texture, int count, int dim, int stride )
+void renderGLGeometry( int count, const float* vertices, const float* texture, const float* color,
+    int dim, int stride )
     {
-    return renderGLGeometry( false, QRegion(), vertices, texture, count, dim, stride );
+    return renderGLGeometry( false, QRegion(), count, vertices, texture, color, dim, stride );
     }
 
-void renderGLGeometry( int mask, QRegion region, const float* vertices, const float* texture, int count,
+void renderGLGeometry( int mask, const QRegion& region, int count,
+    const float* vertices, const float* texture, const float* color,
     int dim, int stride )
     {
     return renderGLGeometry( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
-        region, vertices, texture, count, dim, stride );
+        region, count, vertices, texture, color, dim, stride );
     }
 
-void renderGLGeometry( bool clip, QRegion region, const float* vertices, const float* texture, int count,
+void renderGLGeometry( bool clip, const QRegion& region, int count,
+    const float* vertices, const float* texture, const float* color,
     int dim, int stride )
     {
-    glPushAttrib( GL_ENABLE_BIT );
-    glPushClientAttrib( GL_CLIENT_VERTEX_ARRAY_BIT );
-    // Enable arrays
-    glEnableClientState( GL_VERTEX_ARRAY );
-    glVertexPointer( dim, GL_FLOAT, stride, vertices );
-    if( texture != NULL )
+    // Using arrays only makes sense if we have larger number of vertices.
+    //  Otherwise overhead of enabling/disabling them is too big.
+    bool use_arrays = (count > 5);
+
+    if( use_arrays )
         {
-        glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-        glTexCoordPointer( 2, GL_FLOAT, stride, texture );
+        glPushAttrib( GL_ENABLE_BIT );
+        glPushClientAttrib( GL_CLIENT_VERTEX_ARRAY_BIT );
+        // Enable arrays
+        glEnableClientState( GL_VERTEX_ARRAY );
+        glVertexPointer( dim, GL_FLOAT, stride, vertices );
+        if( texture != NULL )
+            {
+            glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+            glTexCoordPointer( 2, GL_FLOAT, stride, texture );
+            }
+        if( color != NULL )
+            {
+            glEnableClientState( GL_COLOR_ARRAY );
+            glTexCoordPointer( 4, GL_FLOAT, stride, color );
+            }
         }
+
     // Render
     if( !clip )
+        {
         // Just draw the entire window, no clipping
-        glDrawArrays( GL_QUADS, 0, count );
+        if( use_arrays )
+            glDrawArrays( GL_QUADS, 0, count );
+        else
+            renderGLGeometryImmediate( count, vertices, texture, color, dim, stride );
+        }
     else
         {
         // Make sure there's only a single quad (no transformed vertices)
         // Clip using scissoring
         glEnable( GL_SCISSOR_TEST );
         int dh = displayHeight();
-        foreach( QRect r, region.rects())
+        if( use_arrays )
             {
-            // Scissor rect has to be given in OpenGL coords
-            glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
-            glDrawArrays( GL_QUADS, 0, count );
+            foreach( QRect r, region.rects())
+                {
+                // Scissor rect has to be given in OpenGL coords
+                glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
+                glDrawArrays( GL_QUADS, 0, count );
+                }
+            }
+        else
+            {
+            foreach( QRect r, region.rects())
+                {
+                // Scissor rect has to be given in OpenGL coords
+                glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
+                renderGLGeometryImmediate( count, vertices, texture, color, dim, stride );
+                }
             }
         }
-    glPopClientAttrib();
-    glPopAttrib();
+
+    if( use_arrays )
+        {
+        glPopClientAttrib();
+        glPopAttrib();
+        }
     }
+
+void renderGLGeometryImmediate( int count, const float* vertices, const float* texture, const float* color,
+      int dim, int stride )
+{
+    // Find out correct glVertex*fv function according to dim parameter.
+    void ( *glVertexFunc )( const float* ) = glVertex2fv;
+    if( dim == 3 )
+        glVertexFunc = glVertex3fv;
+    else if( dim == 4 )
+        glVertexFunc = glVertex4fv;
+
+    // These are number of _floats_ per item, not _bytes_ per item as opengl uses.
+    int vsize, tsize, csize;
+    vsize = tsize = csize = stride / sizeof(float);
+    if( !stride )
+        {
+        // 0 means that arrays are tightly packed. This gives us different
+        //  strides for different arrays
+        vsize = dim;
+        tsize = 2;
+        csize = 4;
+        }
+
+    glBegin( GL_QUADS );
+    // This sucks. But makes it faster.
+    if( texture && color )
+        {
+        for( int i = 0; i < count; i++ )
+            {
+            glTexCoord2fv( texture + i*tsize );
+            glColor4fv( color + i*csize );
+            glVertexFunc( vertices + i*vsize );
+            }
+        }
+    else if( texture )
+        {
+        for( int i = 0; i < count; i++ )
+            {
+            glTexCoord2fv( texture + i*tsize );
+            glVertexFunc( vertices + i*vsize );
+            }
+        }
+    else if( color )
+        {
+        for( int i = 0; i < count; i++ )
+            {
+            glColor4fv( color + i*csize );
+            glVertexFunc( vertices + i*vsize );
+            }
+        }
+    else
+        {
+        for( int i = 0; i < count; i++ )
+            glVertexFunc( vertices + i*vsize );
+        }
+    glEnd();
+}
 
 //****************************************
 // GLTexture
@@ -331,7 +425,7 @@ void GLTexture::render( bool clip, QRegion region, const QRect& rect )
         1, 0,
         1, 1
         };
-    renderGLGeometry( clip, region, verts, texcoords, 4 );
+    renderGLGeometry( clip, region, 4, verts, texcoords );
     }
 
 void GLTexture::enableUnnormalizedTexCoords()

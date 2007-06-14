@@ -75,7 +75,7 @@ void ShadowEffect::drawShadow( EffectWindow* w, int mask, QRegion region, Window
          w->width(), w->height(),
          w->width(), 0
         };
-    renderGLGeometry( mask, region, verts, NULL, 4 );
+    renderGLGeometry( mask, region, 4, verts );
 
     glPopMatrix();
     glPopAttrib();

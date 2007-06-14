@@ -57,14 +57,34 @@ inline bool KWIN_EXPORT isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 );
  **/
 int KWIN_EXPORT nearestPowerOfTwo( int x );
 
-// renders quads using the given vertices
-KWIN_EXPORT void renderGLGeometry( bool clip, QRegion region, const float* vertices, const float* texture, int count,
+/**
+ * Renders quads using given vertices.
+ * If texture is not 0, each texture coordinate much have two components (st).
+ * If color is not 0, each color much have four components (rgba).
+ *
+ * @param count number of vertices to use.
+ * @param dim number of components per vertex coordinate in vertices array.
+ * @param stride byte offset of consecutive elements in arrays. If 0, then
+ *  arrays must be tighly packed. Stride must be a multiple of sizeof(float)!
+ **/
+KWIN_EXPORT void renderGLGeometry( bool clip, const QRegion& region, int count,
+    const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
-// sets clip according to mask
-KWIN_EXPORT void renderGLGeometry( int mask, QRegion region, const float* vertices, const float* texture, int count,
+/**
+ * Same as above, sets clip parameter according to mask.
+ **/
+KWIN_EXPORT void renderGLGeometry( int mask, const QRegion& region, int count,
+    const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
-// clip = false
-KWIN_EXPORT void renderGLGeometry( const float* vertices, const float* texture, int count,
+/**
+ * Same as above, renders without clipping
+ **/
+KWIN_EXPORT void renderGLGeometry( int count,
+    const float* vertices, const float* texture = 0, const float* color = 0,
+    int dim = 2, int stride = 0 );
+
+KWIN_EXPORT void renderGLGeometryImmediate( int count,
+    const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
 
 class KWIN_EXPORT GLTexture

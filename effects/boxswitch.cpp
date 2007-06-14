@@ -436,7 +436,7 @@ void BoxSwitchEffect::paintFrame()
             frame_area.x() + frame_area.width(), frame_area.y() + frame_area.height(),
             frame_area.x() + frame_area.width(), frame_area.y()
             };
-        renderGLGeometry( verts, NULL, 4 );
+        renderGLGeometry( 4, verts );
         glPopAttrib();
         }
 #endif
@@ -479,7 +479,7 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
             area.x() + area.width(), area.y() + area.height(),
             area.x() + area.width(), area.y()
             };
-        renderGLGeometry( verts, NULL, 4 );
+        renderGLGeometry( 4, verts );
         glPopAttrib();
         }
 #endif
@@ -597,7 +597,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
             1, 0,
             1, 1
             };
-        renderGLGeometry( verts, texcoords, 4 );
+        renderGLGeometry( 4, verts, texcoords );
         windows[ w ]->iconTexture.unbind();
         glPopAttrib();
         }

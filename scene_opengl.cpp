@@ -1256,8 +1256,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
 
     // Render geometry
     region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
-    renderGLGeometry( mask, region, verticeslist[ 0 ].pos, verticeslist[ 0 ].texcoord,
-        verticeslist.count(), 3, sizeof( Vertex ));
+    renderGLGeometry( mask, region, verticeslist.count(),
+            verticeslist[ 0 ].pos, verticeslist[ 0 ].texcoord, 0,  3, sizeof( Vertex ));
 
     texture.disableUnnormalizedTexCoords();
     glPopMatrix();
