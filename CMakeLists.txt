@@ -101,3 +101,7 @@ install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_DIR} )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
+
+
+SET(KWIN_COMPOSITE_ENABLED X11_Xrender_FOUND AND X11_Xcomposite_FOUND)
+macro_log_feature(KWIN_COMPOSITE_ENABLED "Compositing support" "XRender and XComposite extensions are required for KWin compositing support" "http://www.x.org/")
