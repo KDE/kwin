@@ -147,7 +147,7 @@ void renderGLGeometry( bool clip, const QRegion& region, int count,
         if( color != NULL )
             {
             glEnableClientState( GL_COLOR_ARRAY );
-            glTexCoordPointer( 4, GL_FLOAT, stride, color );
+            glColorPointer( 4, GL_FLOAT, stride, color );
             }
         }
 
