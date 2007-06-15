@@ -43,7 +43,7 @@ class FadeEffect::WindowInfo
             , target( 0 )
             , step_mult( 0 )
             , deleted( false )
-            {};
+            {}
         bool isFading() const;
         double current;
         double target;
