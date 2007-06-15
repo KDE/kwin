@@ -1,7 +1,0 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-<file alias="leftCenter">../imagebase/leftCenter.png</file>
-<file alias="leftTile">../imagebase/leftTile.png</file>
-<file alias="glow">../imagebase/glow.png</file>
-</qresource>
-</RCC>
