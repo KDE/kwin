@@ -2299,6 +2299,9 @@ void Workspace::checkElectricBorder(const QPoint &pos, Time now)
     else
         abort();
 
+    if( electric_windows[ border ] == None )
+        return;
+
     if ((electric_current_border == border) &&
         (timestampDiff(electric_time_last, now) < treshold_reset) &&
         ((pos-electric_push_point).manhattanLength() < distance_reset))
