@@ -1,0 +1,83 @@
+# NOTE: The file is ready-to-use. You can just copy it to  ~/.config/Oxygen/Style.conf.
+
+# Config file path:
+# ~/.config/Oxygen/Style.conf
+
+# style section: (with def. values)
+
+[Style]
+# controls the way the huge bg pixmaps (BackgroundMode=3) are created
+# 0: No acceleration, the pixmap is fetched from a daemon "oxygenPP" that MUST be running if you wanna use this (maybe removed)
+# 1: the QGradient classes are used (afaics pure software) - slow
+# 2: XRender, *use this*, currently the fastest and in matters of color best adjusted function
+# 3: OpenGL, currently too dark - slow as long as we don't have HW for gl_ext_pixmap_from_texture...
+Acceleration=2
+
+# the background appereance
+# 0: plain color
+# 1: the beloved scanlines - don't argue, they'll stay ;)
+# 2: [reserved]
+# 3: complex lights (i.e. huge pixmap with several gradients, see above)
+# 4: Simple gradient that brightens on the upper and darkens on the lower end (fallback suggestion 1, alphablending can be cached)
+# 5: Simple gradient that darkens on left and right side
+# 6: The window vertically brightens to the center
+# 7: The window horizontally brightens to the center (like Apples Brushed Metal, fallback suggestion 2, requires realtime alphablending)
+BackgroundMode=3
+
+# 0: X
+# 1: V
+# 2: O
+CheckType=0
+
+# do you like glass/gloss?
+Aqua=true
+
+# invert (sink) normal buttons etc by default
+InverseButtons=false
+
+# not fully supportes yet, don't try values < 1 here (if you want a stable desktop ;)
+Scale=1.0
+
+# whether there shall be unstylish icons in popupmenus
+ShowMenuIcons=false
+
+# affects the scanlines
+# 0: scanlines
+# 1: checkboard
+# 2: should have been bricks, looks crap ;P
+Structure=0
+
+# the color roles to use for various elements, the counter color is autocalculated
+# WindowText: 0
+# Window: 10
+# Base: 9
+# Text: 6
+# Button: 1
+# ButtonText: 8
+# Highlight: 12
+# HighlightedText: 13
+
+# all buttons, colored parts of combos, sliders (in scrollbars as well)
+role_button=10
+role_buttonHover=1
+# popup menus (also for non editable combos), menubar highlight
+role_popup=10
+# the progressbar
+role_progress=10
+role_progressGroove=0
+# tabwidget header
+role_tab=1
+
+# the way of tabblending
+# 0: Jump
+# 1: CrossFade
+# 2: ScanlineBlend
+# 3: SlideIn
+# 4: SlideOut
+# 5: RollIn
+# 6: RollOut
+# 7: OpenVertically
+# 8: CloseVertically
+# 9: OpenHorizontally
+# 10: CloseHorizontally
+TabTransition=1
