@@ -2225,20 +2225,13 @@ void Workspace::destroyElectricBorders()
 
 void Workspace::reserveElectricBorderSwitching( bool reserve )
     {
-    if( reserve )
-        {
-        reserveElectricBorder( ElectricTop );
-        reserveElectricBorder( ElectricBottom );
-        reserveElectricBorder( ElectricLeft );
-        reserveElectricBorder( ElectricRight );
-        }
-    else
-        {
-        unreserveElectricBorder( ElectricTop );
-        unreserveElectricBorder( ElectricBottom );
-        unreserveElectricBorder( ElectricLeft );
-        unreserveElectricBorder( ElectricRight );
-        }
+    for( int pos = 0;
+         pos < ELECTRIC_COUNT;
+         ++pos )
+        if( reserve )
+            reserveElectricBorder( static_cast< ElectricBorder >( pos ));
+        else
+            unreserveElectricBorder( static_cast< ElectricBorder >( pos ));
     }
 
 void Workspace::reserveElectricBorder( ElectricBorder border )
@@ -2328,54 +2321,40 @@ void Workspace::checkElectricBorder(const QPoint &pos, Time now)
 
     // reset the pointer to find out wether the user is really pushing
     // (the direction back from which it came, starting from top clockwise)
-    static int xdiff[ ELECTRIC_COUNT ] = { 0, -1, -1, -1, 0, 1, 1, 1 };
-    static int ydiff[ ELECTRIC_COUNT ] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+    const int xdiff[ ELECTRIC_COUNT ] = { 0, -1, -1, -1, 0, 1, 1, 1 };
+    const int ydiff[ ELECTRIC_COUNT ] = { 1, 1, 0, -1, -1, -1, 0, 1 };
     QCursor::setPos( pos.x() + xdiff[ border ], pos.y() + ydiff[ border ] );
     }
 
-void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint& pos )
+void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint& _pos )
     {
-    QRect r = QApplication::desktop()->geometry();
-    int offset;
-
-    int desk_before = currentDesktop();
-    switch(border)
+    QPoint pos = _pos;
+    int desk = currentDesktop();
+    const int OFFSET = 10;
+    if( border == ElectricLeft || border == ElectricTopLeft || border == ElectricBottomLeft )
         {
-        case ElectricLeft:
-            slotSwitchDesktopLeft();
-            if (currentDesktop() != desk_before)
-                {
-                offset = r.width() / 5;
-                QCursor::setPos(r.width() - offset, pos.y());
-                }
-            break;
-        case ElectricRight:
-            slotSwitchDesktopRight();
-            if (currentDesktop() != desk_before)
-                {
-                offset = r.width() / 5;
-                QCursor::setPos(offset, pos.y());
-                }
-            break;
-        case ElectricTop:
-            slotSwitchDesktopUp();
-            if (currentDesktop() != desk_before)
-                {
-                offset = r.height() / 5;
-                QCursor::setPos(pos.x(), r.height() - offset);
-                }
-            break;
-        case ElectricBottom:
-            slotSwitchDesktopDown();
-            if (currentDesktop() != desk_before)
-                {
-                offset = r.height() / 5;
-                QCursor::setPos(pos.x(), offset);
-                }
-            break;
-        default:
-            break;
+        desk = desktopToLeft( desk );
+        pos.setX( displayWidth() - 1 - OFFSET );
         }
+    if( border == ElectricRight || border == ElectricTopRight || border == ElectricBottomRight )
+        {
+        desk = desktopToRight( desk );
+        pos.setX( OFFSET );
+        }
+    if( border == ElectricTop || border == ElectricTopLeft || border == ElectricTopRight )
+        {
+        desk = desktopUp( desk );
+        pos.setY( displayHeight() - 1 - OFFSET );
+        }
+    if( border == ElectricBottom || border == ElectricBottomLeft || border == ElectricBottomRight )
+        {
+        desk = desktopDown( desk );
+        pos.setY( OFFSET );
+        }
+    int desk_before = currentDesktop();
+    setCurrentDesktop( desk );
+    if( currentDesktop() != desk_before )
+        QCursor::setPos( pos ); 
     }
 
 // this function is called when the user entered an electric border
