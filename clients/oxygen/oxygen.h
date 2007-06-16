@@ -31,7 +31,6 @@
 
 namespace Oxygen
 {
-class OxygenClient;
 // OxygenFactory /////////////////////////////////////////////////////////////
 
 enum ButtonType {

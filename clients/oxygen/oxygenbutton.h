@@ -28,7 +28,6 @@
 #define OXYGENBUTTON_H
 
 #include <QAbstractButton>
-class QPainterPath;
 
 #include "oxygen.h"
 

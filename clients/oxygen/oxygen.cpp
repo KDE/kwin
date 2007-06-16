@@ -103,11 +103,11 @@ bool OxygenFactory::readConfig()
 {
     // create a config object
     KConfig config("kwinexamplerc");
-    config.setGroup("General");
+    KConfigGroup group = config.group("General");
 
     // grab settings
     Qt::Alignment oldalign = titlealign_;
-    QString value = config.readEntry("TitleAlignment", "AlignHCenter");
+    QString value = group.readEntry("TitleAlignment", "AlignHCenter");
     if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
     else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
