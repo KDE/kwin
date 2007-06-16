@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Explosion
 Name[el]=Έκρηξη
+Name[es]=Explosión
 Name[nds]=Exploschoon
 Name[nl]=Explosie
 Name[zh_TW]=爆炸
@@ -9,6 +10,7 @@ Icon=kwin-effect-explosion
 Comment=Makes windows explode when they're closed
 Comment[de]=Lässt Fenster beim Schließen explodieren
 Comment[el]=Έκρηξη των παραθύρων κατά το κλείσιμο
+Comment[es]=Hace que las ventanas exploten al cerrarlas
 Comment[nds]=Finstern explodeert bi't Tomaken
 Comment[nl]=Laat vensters uit elkaar spatten als ze worden gesloten
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
