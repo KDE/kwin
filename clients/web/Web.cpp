@@ -238,7 +238,9 @@ WebClient::paintEvent(QPaintEvent * pe)
 
   p.setClipRegion(pe->region() - titleRect);
 
-  p.drawRect(widget()->rect());
+  QRect r(widget()->rect());
+  r.adjust(0, 0, -1, -1);
+  p.drawRect(r);
 
   p.setClipRegion(pe->region());
 
