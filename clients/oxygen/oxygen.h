@@ -43,7 +43,7 @@ enum ButtonType {
     ButtonSticky,
     ButtonTypeCount
 };
-Q_DECLARE_FLAGS(ButtonTypes, ButtonType);
+Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
 
 class OxygenFactory: public KDecorationFactory
 {

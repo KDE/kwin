@@ -41,7 +41,7 @@ enum ButtonStatus {
     Hovered,
     Pressed };
 
-Q_DECLARE_FLAGS(ButtonState, ButtonStatus);
+Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
 
 class OxygenButton : public QAbstractButton
 {
