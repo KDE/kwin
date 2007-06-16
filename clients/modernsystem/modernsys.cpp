@@ -649,7 +649,7 @@ void ModernSys::paintEvent( QPaintEvent* )
         p.drawLine(width()-hs-1, height()-hw, width()-hs-1, height()-4);
 
         p.setPen(Qt::black);
-        p.drawRect(0, 0, w, h);
+        p.drawRect(0, 0, w-1, h-1);
 
         // handle outline
         p.drawLine(width()-hw, height()-hs, width(), height()-hs);
@@ -658,7 +658,7 @@ void ModernSys::paintEvent( QPaintEvent* )
         p.drawLine(width()-hs, height()-hw, width()-hs, height()-2);
     } else {
         p.setPen(Qt::black);
-        p.drawRect(0, 0, w, h);
+        p.drawRect(0, 0, w-1, h-1);
     }
 }
 
