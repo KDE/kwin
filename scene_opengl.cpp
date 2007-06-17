@@ -834,27 +834,26 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         { // tfp mode, simply bind the pixmap to texture
         if( mTexture == None )
             glGenTextures( 1, &mTexture );
-        if( bound_glxpixmap != None ) // release old if needed
+        // when the pixmap is bound to the texture, they share the same data, so the texture
+        // updates automatically - no need to do anything in such case
+        if( bound_glxpixmap == None )
             {
+            static const int attrs[] =
+                {
+                GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
+                GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
+                None
+                };
+            // the GLXPixmap will reference the X pixmap, so it will be freed automatically
+            // when no longer needed
+            bound_glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
+            findTarget();
+            y_inverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
+            can_use_mipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
+            glBindTexture( mTarget, mTexture );
             if( !strict_binding )
-                glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
-            glXDestroyGLXPixmap( display(), bound_glxpixmap );
+                glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
             }
-        static const int attrs[] =
-            {
-            GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
-            GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
-            None
-            };
-        // the GLXPixmap will reference the X pixmap, so it will be freed automatically
-        // when no longer needed
-        bound_glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
-        findTarget();
-        y_inverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
-        can_use_mipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
-        glBindTexture( mTarget, mTexture );
-        if( !strict_binding )
-            glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
     else if( shm_mode )
         { // copy pixmap contents to a texture via shared memory
@@ -1153,7 +1152,10 @@ bool SceneOpenGL::Window::bindTexture()
         XFreeGC( display(), gc );
         }
     if( copy_buffer || alpha_clear )
+        {
         glXWaitX();
+        texture.discard(); // it will be bound to the new temporary pixmap
+        }
 
     bool success = texture.load( pix, toplevel->size(), toplevel->depth(),
         toplevel->damage());
