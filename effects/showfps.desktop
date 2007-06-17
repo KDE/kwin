@@ -1,12 +1,14 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Show FPS
+Name[csb]=Wëskrzëni FPS
 Name[de]=Bilder pro Sekunden anzeigen
 Name[el]=Εμφάνιση καρέ ανά δευτερόλεπτο
 Name[nds]=Bps wiesen
 Name[nl]=FPS tonen
 Icon=kwin-effect-showfps
 Comment=Shows KWin's performance
+Comment[csb]=Wëskrzënianié spòroscë òknów KDE
 Comment[de]=Zeigt die Leistung von KWin
 Comment[el]=Εμφάνιση επίδοσης του KWin
 Comment[fa]=کارایی KWin را نشان می‌دهد

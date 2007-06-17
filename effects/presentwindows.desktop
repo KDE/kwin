@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Present Windows
+Name[csb]=Prezentëjë òkna
 Name[de]=Fenster zeigen
 Name[el]=Παρουσίαση παραθύρων
 Name[fa]=پنجره‌های موجود
@@ -9,6 +10,7 @@ Name[nl]=Vensters presenteren
 Name[zh_TW]=展示視窗
 Icon=kwin-effect-presentwindows
 Comment=Shows all windows side-by-side
+Comment[csb]=Wëskrzëni wszëtczé òkna, starna pò stranie
 Comment[de]=Zeigt alle Fenster nebeneinander an
 Comment[el]=Εμφάνιση όλων των παραθύρων σε παράθεση
 Comment[nds]=Wiest all Finstern blangenanner

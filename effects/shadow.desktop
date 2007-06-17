@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Shadow
+Name[csb]=Ceniô
 Name[de]=Schatten
 Name[el]=Σκιά
 Name[fa]=سایه
@@ -9,6 +10,7 @@ Name[nl]=Schaduw
 Name[zh_TW]=陰影
 Icon=kwin-effect-shadow
 Comment=Adds shadow under the windows
+Comment[csb]=Dodôwô ceniô pòd òknama
 Comment[de]=Lässt Fenster einen Schatten werfen
 Comment[el]=Προσθήκη σκιάς κάτω από τα παράθυρα
 Comment[nds]=Föögt Schaddens nerrn de Finstern to

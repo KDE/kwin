@@ -11,6 +11,7 @@ X-KDE-FactoryName=kcm_kwineffects
 X-KDE-ParentApp=kcontrol
 
 Name=Window Effects
+Name[csb]=Efektë òknów
 Name[de]=Fenstereffekte
 Name[el]=Εφέ παραθύρων
 Name[es]=Efectos de las ventanas
@@ -20,6 +21,7 @@ Name[nl]=Venstereffecten
 Name[zh_TW]=視窗效果
 
 Comment=Configure window effects
+Comment[csb]=Kònfigùracëjô efektów òknów
 Comment[de]=Fenstereffekte einrichten
 Comment[el]=Ρύθμιση εφέ των παραθύρων
 Comment[es]=Configurar los efectos de las ventanas
@@ -29,6 +31,7 @@ Comment[nl]=Venstereffecten instellen
 Comment[zh_TW]=設定視窗效果
 
 Keywords=kwin,window,manager,effect
+Keywords[csb]=kwin,òkno,menadżer,efekt
 Keywords[de]=kwin,fenster,manager,effekt,verwaltung
 Keywords[el]=παράθυρο,διαχειριστής,εφέ,kwin,παράθυρο,διαχειριστής,εφέ
 Keywords[es]=kwin,ventana,gestor,efecto
