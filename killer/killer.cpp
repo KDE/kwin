@@ -25,11 +25,12 @@ DEALINGS IN THE SOFTWARE.
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <kmessagebox.h>
-#include <k3process.h>
 #include <klocale.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
 #include <QX11Info>
+#include <QProcess>
+#include <signal.h>
 
 static const KCmdLineOptions options[] =
     {
@@ -77,9 +78,9 @@ int main( int argc, char* argv[] )
         {    
 	if( hostname != "localhost" )
             {
-    	    K3Process proc;
-	    proc << "xon" << hostname << "kill" << QString::number( pid );
-    	    proc.start( K3Process::DontCare );
+		  QStringList lst;
+		  lst << hostname << "kill" << QString::number( pid );
+		  QProcess::startDetached("xon",lst);
 	    }
 	else
 	    ::kill( pid, SIGKILL );

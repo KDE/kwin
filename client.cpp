@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QApplication>
 #include <QPainter>
 #include <QDateTime>
+#include <QProcess>
 #include <k3process.h>
 #include <unistd.h>
 #include <kstandarddirs.h>
@@ -1016,9 +1017,9 @@ void Client::killProcess( bool ask, Time timestamp )
         {
         if( machine != "localhost" )
             {
-            K3Process proc;
-            proc << "xon" << machine << "kill" << QString::number( pid );
-            proc.start( K3Process::DontCare );
+                  QStringList lst;
+                  lst << machine << "kill" << QString::number( pid );
+                  QProcess::startDetached("xon",lst);
             }
         else
             ::kill( pid, SIGTERM );

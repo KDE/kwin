@@ -24,7 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QBitmap>
 #include <QClipboard>
 #include <kmenubar.h>
-#include <k3process.h>
+#include <kprocess.h>
 #include <kglobalaccel.h>
 #include <QDesktopWidget>
 #include <QToolButton>
@@ -2542,19 +2542,17 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         }
     else
         assert( false );
-    K3Process proc;
-    proc << "kdialog" << args;
     if( !type.isEmpty())
         {
         KConfig cfg( "kwin_dialogsrc" );
 	KConfigGroup cg(&cfg, "Notification Messages" ); // this depends on KMessageBox
         if( !cg.readEntry( type, true )) // has don't show again checked
             return;                           // save launching kdialog
-        proc << "--dontagain" << "kwin_dialogsrc:" + type;
+	args <<"--dontagain" << "kwin_dialogsrc:" + type;
         }
     if( c != NULL )
-        proc << "--embed" << QString::number( c->window());
-    proc.start( K3Process::DontCare );
+	args <<"--embed" << QString::number( c->window());
+    KProcess::startDetached("kdialog",args);
     }
 
 void Workspace::setShowingDesktop( bool showing )
