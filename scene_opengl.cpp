@@ -88,7 +88,6 @@ GLXContext SceneOpenGL::ctxdrawable;
 GLXDrawable SceneOpenGL::glxbuffer = None;
 GLXDrawable SceneOpenGL::last_pixmap = None;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
-bool SceneOpenGL::strict_binding; // intended for AIGLX
 bool SceneOpenGL::db; // destination drawable is double-buffered
 bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 bool SceneOpenGL::shm_mode;
@@ -113,7 +112,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         kDebug( 1212 ) << "GLX1.3 or GLX_SGIX_fbconfig missing" << endl;
         return; // error
         }
-    strict_binding = false; // not needed now
     if( !selectMode())
         return; // error
     if( !initBuffer()) // create destination buffer
@@ -754,7 +752,7 @@ void SceneOpenGL::Texture::discard()
         {
         if( tfp_mode )
             {
-            if( !strict_binding )
+            if( !options->glStrictBinding )
                 glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
             glXDestroyGLXPixmap( display(), bound_glxpixmap );
             bound_glxpixmap = None;
@@ -851,7 +849,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             y_inverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
             can_use_mipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
             glBindTexture( mTarget, mTexture );
-            if( !strict_binding )
+            if( !options->glStrictBinding )
                 glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
             }
         }
@@ -982,7 +980,7 @@ void SceneOpenGL::Texture::bind()
     {
     glEnable( mTarget );
     glBindTexture( mTarget, mTexture );
-    if( tfp_mode && strict_binding )
+    if( tfp_mode && options->glStrictBinding )
         {
         assert( bound_glxpixmap != None );
         glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
@@ -992,7 +990,7 @@ void SceneOpenGL::Texture::bind()
 
 void SceneOpenGL::Texture::unbind()
     {
-    if( tfp_mode && strict_binding )
+    if( tfp_mode && options->glStrictBinding )
         {
         assert( bound_glxpixmap != None );
         glBindTexture( mTarget, mTexture );

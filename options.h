@@ -301,6 +301,7 @@ class Options : public KDecorationOptions
         bool glAlwaysRebind;
         bool glDirect;
         bool glVSync;
+        bool glStrictBinding;
 
     private:
         WindowOperation OpTitlebarDblClick;

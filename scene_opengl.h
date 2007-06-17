@@ -75,7 +75,6 @@ class SceneOpenGL
         static GLXDrawable last_pixmap; // for a workaround in bindTexture()
         static bool tfp_mode;
         static bool shm_mode;
-        static bool strict_binding;
         static bool copy_buffer_hack;
         QHash< Toplevel*, Window* > windows;
 #ifdef HAVE_XSHM
