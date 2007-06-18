@@ -85,20 +85,19 @@ OpenGL TODO
 
 / Check/make it work with other gfx cards
 
-? Xgl support
-    - Compiz itself doesn't work when compiled with the libGL from nvidia,
-        it ships its own and links against it
-?   - might be worth trying to use that libGL as well
-    - it may be just because of the special libGL, but when testing with Xgl
-        it even seemed non-conformant - none of the provided configs had
-        GLX_RENDER_TYPE with GLX_RGBA_BIT even though required by GLX
-        and other funny things. Indeed, it may be just me being still pretty
-        clueless about these things.
-?   - is there a good reason to support Xgl? With the 9625 nvidia drivers
-        it seems to work fine without them and there's AIGLX
-    
-+ AIGLX support
-    - kind of works, needs more work
+% Xgl support
+    - should work
+    - in SceneGL::Texture::findTarget() there is a hack that makes KWin work with XGL
+        without requiring KWin to be built against the libGL version that Compiz is
+        built against
+%       - that may not be necessary somewhen later
+    - interesting observation: normally run glxgears performs somewhat poorly compared
+        to normal nvidia mode, changing glxgears to be override-redirect (i.e. no reparenting)
+        however makes glxgears to be even faster than without any compositing at all,
+        in this case however kwin's redrawing speed drops somewhat
+
+% AIGLX support
+    - should work
 +   - it needs indirect rendering, should be autodetected and disabled somehow
 %   - may require LIBGL_ALWAYS_INDIRECT set with older X.org
         (http://lists.kde.org/?l=kwin&m=116439615124838&w=2)

@@ -766,7 +766,11 @@ void SceneOpenGL::Texture::findTarget()
     unsigned int new_target = 0;
     if( tfp_mode && glXQueryDrawable && bound_glxpixmap != None )
         glXQueryDrawable( display(), bound_glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target );
-    else
+    // Hack for XGL - this should not be a fallback for glXQueryDrawable() but instead the case
+    // when glXQueryDrawable is not available. However this call fails with XGL, unless KWin
+    // is compiled statically with the libGL that Compiz is built against (without which neither
+    // Compiz works with XGL). Falling back to doing this manually makes this work.
+    if( new_target == 0 )
         {
         if( NPOTTextureSupported() ||
             ( isPowerOfTwo( mSize.width()) && isPowerOfTwo( mSize.height())))
