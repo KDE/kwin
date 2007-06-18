@@ -48,27 +48,6 @@ class Placement;
 class Rules;
 class WindowRules;
 
-class SystemTrayWindow
-    {
-    public:
-        SystemTrayWindow()
-            : win(0),winFor(0)
-            {}
-        SystemTrayWindow( WId w )
-            : win(w),winFor(0)
-            {}
-        SystemTrayWindow( WId w, WId wf  )
-            : win(w),winFor(wf)
-            {}
-
-        bool operator==( const SystemTrayWindow& other )
-            { return win == other.win; }
-        WId win;
-        WId winFor;
-    };
-
-typedef QList<SystemTrayWindow> SystemTrayWindowList;
-
 class Workspace : public QObject, public KDecorationDefines
     {
     Q_OBJECT
@@ -542,11 +521,6 @@ class Workspace : public QObject, public KDecorationDefines
         void smartPlacement(Client* c);
         void cascadePlacement(Client* c, bool re_init = false);
 
-        bool addSystemTrayWin( WId w );
-        bool removeSystemTrayWin( WId w, bool check );
-        void propagateSystemTrayWins();
-        SystemTrayWindow findSystemTrayWin( WId w );
-
     // desktop names and number of desktops
         void loadDesktopSettings();
         void saveDesktopSettings();
@@ -575,8 +549,6 @@ class Workspace : public QObject, public KDecorationDefines
         
         void finishCompositing();
         bool windowRepaintsPending() const;
-
-        SystemTrayWindowList systemTrayWins;
 
         int current_desktop;
         int number_of_desktops;

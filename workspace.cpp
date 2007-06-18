@@ -243,7 +243,6 @@ void Workspace::init()
         NET::WorkArea |
         NET::CloseWindow |
         NET::DesktopNames |
-        NET::KDESystemTrayWindows |
         NET::WMName |
         NET::WMVisibleName |
         NET::WMDesktop |
@@ -254,7 +253,6 @@ void Workspace::init()
         NET::WMIcon |
         NET::WMPid |
         NET::WMMoveResize |
-        NET::WMKDESystemTrayWinFor |
         NET::WMFrameExtents |
         NET::WMPing
         ,
@@ -385,8 +383,6 @@ void Workspace::init()
                 continue;
             if (attr.map_state != IsUnmapped)
                 {
-                if ( addSystemTrayWin( wins[i] ) )
-                    continue;
                 Client* c = createClient( wins[i], true );
                 if ( c != NULL && root != rootWindow() )
                     { // TODO what is this?
@@ -1714,84 +1710,6 @@ void Workspace::calcDesktopLayout(int* xp, int* yp, Qt::Orientation* orientation
     *yp = y;
     *orientation = layoutOrientation;
     }
-
-/*!
-  Check whether \a w is a system tray window. If so, add it to the respective
-  datastructures and propagate it to the world.
- */
-bool Workspace::addSystemTrayWin( WId w )
-    {
-    if ( systemTrayWins.contains( w ) )
-        return true;
-
-    NETWinInfo ni( display(), w, root, NET::WMKDESystemTrayWinFor );
-    WId trayWinFor = ni.kdeSystemTrayWinFor();
-    if ( !trayWinFor )
-        return false;
-    systemTrayWins.append( SystemTrayWindow( w, trayWinFor ) );
-    XSelectInput( display(), w,
-                  StructureNotifyMask
-                  );
-    XAddToSaveSet( display(), w );
-    propagateSystemTrayWins();
-    return true;
-    }
-
-/*!
-  Check whether \a w is a system tray window. If so, remove it from
-  the respective datastructures and propagate this to the world.
- */
-bool Workspace::removeSystemTrayWin( WId w, bool check )
-    {
-    if ( !systemTrayWins.contains( w ) )
-        return false;
-    if( check )
-        {
-    // When getting UnmapNotify, it's not clear if it's the systray
-    // reparenting the window into itself, or if it's the window
-    // going away. This is obviously a flaw in the design, and we were
-    // just lucky it worked for so long. Kicker's systray temporarily
-    // sets _KDE_SYSTEM_TRAY_EMBEDDING property on the window while
-    // embedding it, allowing KWin to figure out. Kicker just mustn't
-    // crash before removing it again ... *shrug* .
-        int num_props;
-        Atom* props = XListProperties( display(), w, &num_props );
-        if( props != NULL )
-            {
-            for( int i = 0;
-                 i < num_props;
-                 ++i )
-                if( props[ i ] == atoms->kde_system_tray_embedding )
-                    {
-                    XFree( props );
-                    return false;
-                    }
-            XFree( props );
-            }
-        }
-    systemTrayWins.removeAll( w );
-    propagateSystemTrayWins();
-    return true;
-    }
-
-
-/*!
-  Propagates the systemTrayWins to the world
- */
-void Workspace::propagateSystemTrayWins()
-    {
-    Window *cl = new Window[ systemTrayWins.count()];
-
-    int i = 0;
-    for ( SystemTrayWindowList::ConstIterator it = systemTrayWins.begin(); it != systemTrayWins.end(); ++it )
-        {
-        cl[i++] =  (*it).win;
-        }
-
-    rootInfo->setKDESystemTrayWindows( cl, i );
-    delete [] cl;
-    }
-
 
 void Workspace::killWindowId( Window window_to_kill )
     {

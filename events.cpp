@@ -323,29 +323,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 
     case UnmapNotify:
             {
-        // check for system tray windows
-            if ( removeSystemTrayWin( e->xunmap.window, true ) ) 
-                {
-	    // If the system tray gets destroyed, the system tray
-	    // icons automatically get unmapped, reparented and mapped
-	    // again to the closest non-client ancestor due to
-	    // QXEmbed's SaveSet feature. Unfortunately with kicker
-	    // this closest ancestor is not the root window, but our
-	    // decoration, so we reparent explicitly back to the root
-	    // window.
-                XEvent ev;
-                WId w = e->xunmap.window;
-                if ( XCheckTypedWindowEvent (display(), w,
-                                             ReparentNotify, &ev) )
-                    {
-                    if ( ev.xreparent.parent != root ) 
-                        {
-                        XReparentWindow( display(), w, root, 0, 0 );
-                        addSystemTrayWin( w );
-                        }
-                    }
-                return true;
-                }
             return ( e->xunmap.event != e->xunmap.window ); // hide wm typical event from Qt
             }
         case ReparentNotify:
@@ -356,8 +333,6 @@ bool Workspace::workspaceEvent( XEvent * e )
             }
         case DestroyNotify:
             {
-            if ( removeSystemTrayWin( e->xdestroywindow.window, false ) )
-                return true;
             return false;
             }
         case MapRequest:
@@ -377,8 +352,6 @@ bool Workspace::workspaceEvent( XEvent * e )
 // Note: Now the save-set support in Client::mapRequestEvent() actually requires that
 // this code doesn't check the parent to be root.
 //            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
-                if ( addSystemTrayWin( e->xmaprequest.window ) )
-                    return true;
                 c = createClient( e->xmaprequest.window, false );
                 if ( c != NULL && root != rootWindow() ) 
                     { // TODO what is this?
