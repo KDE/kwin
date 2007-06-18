@@ -79,7 +79,6 @@ All general configuration option are in group [Translucency] in kwinrc config fi
 UseTranslucency=<true|false> - enables/disables compositing support
 GLMode=<TFP|SHM|Fallback> - selects texture creating mode
 RefreshRate=<number> - manually specified refresh rate, should be usually automatically detected
-GLAlwaysRebind=<true|false> - may increase speed with some graphics cards
 GLDirect=<true|false> - enables/disables direct rendering
 GLVSync=<true|false> - enables/disables synchronizing with monitor refresh
 

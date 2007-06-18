@@ -108,10 +108,6 @@ OpenGL TODO
         - ati (others?): power_of_two windows are drawn white unless non-tfp_mode
             is forced in findTextureTarget()
 
-? in SceneOpenGL::bindTexture() with tfp_mode, with some gfx cards it seems
-    to be faster to not short-circuit the texture binding when there's been
-    no damage
-
 + strict binding
     - there is code to support strict binding as required by AIGLX, but it's disabled, because
         copy_buffer in bindTexture() ensures strict binding as a side-effect

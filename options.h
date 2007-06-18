@@ -298,7 +298,6 @@ class Options : public KDecorationOptions
         
         enum GLMode { GLTFP, GLSHM, GLFallback };
         GLMode glMode;
-        bool glAlwaysRebind;
         bool glDirect;
         bool glVSync;
         bool glStrictBinding;

@@ -1107,8 +1107,7 @@ void SceneOpenGL::Window::prepareForPainting()
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
     {
-    if( texture.texture() != None && toplevel->damage().isEmpty()
-        && !options->glAlwaysRebind ) // interestingly with some gfx cards always rebinding is faster
+    if( texture.texture() != None && toplevel->damage().isEmpty())
         {
         // texture doesn't need updating, just bind it
         glBindTexture( texture.target(), texture.texture());

@@ -190,7 +190,6 @@ unsigned long Options::updateSettings()
         glMode = GLSHM;
     else
         glMode = GLFallback;
-    glAlwaysRebind = config.readEntry("GLAlwaysRebind", false );
     glDirect = config.readEntry("GLDirect", true );
     glVSync = config.readEntry("GLVSync", true );
     glStrictBinding = config.readEntry( "GLStrictBinding", false );
