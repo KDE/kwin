@@ -184,6 +184,9 @@ Effects framework TODO
 
 % consider using http://lists.kde.org/?l=kwin&m=118094888517415&w=2 for notification functions
 
+% API cleanups and making sure it will stay backwards compatible
+?   - should we try at all for 4.0? it will be probably still too "unstable" at that point
+
 
 Effects TODO
 ===============================
@@ -245,8 +248,10 @@ Effects TODO
 
 + virtual desktop change effects
 +   - ... yes, you guessed it, the cube
-+   - something that presents all virtual desktops as being in grid (as in pager)
+/   - something that presents all virtual desktops as being in grid (as in pager)
         and zooms out of the old one and into the new one
     - or whatever
+
++ effect for drawing attention to windows demanding attention
 
 * DimInactive flickers when switching between windows (temporarily no window becomes active)
