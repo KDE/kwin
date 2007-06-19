@@ -36,7 +36,7 @@ class KWinEffectsConfig : public KCModule
         virtual void load();
         virtual void save();
         virtual void defaults();
-
+	void reparseConfiguration(const QByteArray&conf);
 
     private:
         KSharedConfigPtr mKWinConfig;

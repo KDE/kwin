@@ -46,7 +46,7 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
 
     connect(mPluginSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
     connect(mPluginSelector, SIGNAL(configCommitted(const QByteArray&)),
-            KSettings::Dispatcher::self(), SLOT(reparseConfiguration(const QByteArray&)));
+            this, SLOT(reparseConfiguration(const QByteArray&)));
 
     // Find all .desktop files of the effects
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
@@ -71,6 +71,11 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
 
 KWinEffectsConfig::~KWinEffectsConfig()
 {
+}
+
+void KWinEffectsConfig::reparseConfiguration(const QByteArray&conf)
+{
+  KSettings::Dispatcher::reparseConfiguration(conf);
 }
 
 void KWinEffectsConfig::load()
