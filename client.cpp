@@ -89,7 +89,7 @@ Client::Client( Workspace *ws )
         user_time( CurrentTime ), // not known yet
         allowed_actions( 0 ),
         block_geometry_updates( 0 ),
-        pending_geometry_update( false ),
+        pending_geometry_update( PendingGeometryNone ),
         shade_geometry_change( false ),
         border_left( 0 ),
         border_right( 0 ),

@@ -461,7 +461,8 @@ class Client
         unsigned long allowed_actions;
         QSize client_size;
         int block_geometry_updates; // >0 - new geometry is remembered, but not actually set
-        bool pending_geometry_update;
+        enum PendingGeometry_t { PendingGeometryNone, PendingGeometryNormal, PendingGeometryForced };
+        PendingGeometry_t pending_geometry_update;
         QRect geom_before_block;
         bool shade_geometry_change;
         int border_left, border_right, border_top, border_bottom;

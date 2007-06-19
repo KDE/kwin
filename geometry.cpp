@@ -1677,16 +1677,21 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         {
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
         }
-    if( force == NormalGeometrySet && geom == QRect( x, y, w, h ))
+    if( force == NormalGeometrySet && geom == QRect( x, y, w, h ) && pending_geometry_update == PendingGeometryNone )
         return;
     geom = QRect( x, y, w, h );
-    updateWorkareaDiffs();
     if( block_geometry_updates != 0 )
         {
-        pending_geometry_update = true;
+        if( pending_geometry_update == PendingGeometryForced )
+            {} // maximum, nothing needed
+        else if( force == ForceGeometrySet )
+            pending_geometry_update = PendingGeometryForced;
+        else
+            pending_geometry_update = PendingGeometryNormal;
         return;
         }
-    if( geom_before_block.size() != geom.size())
+    bool resized = ( geom_before_block.size() != geom.size() || pending_geometry_update == PendingGeometryForced );
+    if( resized )
         {
         resizeDecoration( QSize( w, h ));
         XMoveResizeWindow( display(), frameId(), x, y, w, h );
@@ -1708,7 +1713,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     workspace()->checkActiveScreen( this );
-    if( geom_before_block.size() != geom.size())
+    if( resized )
         {
         discardWindowPixmap();
         if( scene != NULL )
@@ -1747,13 +1752,19 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         kDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h )) << endl;
         kDebug() << kBacktrace() << endl;
         }
+    // resuming geometry updates is handled only in setGeometry()
+    assert( pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0 );
     if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
         return;
     geom.setSize( QSize( w, h ));
-    updateWorkareaDiffs();
     if( block_geometry_updates != 0 )
         {
-        pending_geometry_update = true;
+        if( pending_geometry_update == PendingGeometryForced )
+            {} // maximum, nothing needed
+        else if( force == ForceGeometrySet )
+            pending_geometry_update = PendingGeometryForced;
+        else
+            pending_geometry_update = PendingGeometryNormal;
         return;
         }
     resizeDecoration( QSize( w, h ));
@@ -1786,16 +1797,23 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
  */
 void Client::move( int x, int y, ForceGeometry_t force )
     {
+    // resuming geometry updates is handled only in setGeometry()
+    assert( pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0 );
     if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
         return;
     geom.moveTopLeft( QPoint( x, y ));
-    updateWorkareaDiffs();
     if( block_geometry_updates != 0 )
         {
-        pending_geometry_update = true;
+        if( pending_geometry_update == PendingGeometryForced )
+            {} // maximum, nothing needed
+        else if( force == ForceGeometrySet )
+            pending_geometry_update = PendingGeometryForced;
+        else
+            pending_geometry_update = PendingGeometryNormal;
         return;
         }
     XMoveWindow( display(), frameId(), x, y );
+    updateWorkareaDiffs();
     sendSyntheticConfigureNotify();
     updateWindowRules();
     checkMaximizeGeometry();
@@ -1811,20 +1829,20 @@ void Client::blockGeometryUpdates( bool block )
     if( block )
         {
         if( block_geometry_updates == 0 )
-            pending_geometry_update = false;
+            pending_geometry_update = PendingGeometryNone;
         ++block_geometry_updates;
         }
     else
         {
         if( --block_geometry_updates == 0 )
             {
-            if( pending_geometry_update )
+            if( pending_geometry_update != PendingGeometryNone )
                 {
                 if( isShade())
-                    setGeometry( QRect( pos(), adjustedSize()), ForceGeometrySet );
+                    setGeometry( QRect( pos(), adjustedSize()), NormalGeometrySet );
                 else
-                    setGeometry( geometry(), ForceGeometrySet );
-                pending_geometry_update = false;
+                    setGeometry( geometry(), NormalGeometrySet );
+                pending_geometry_update = PendingGeometryNone;
                 }
             }
         }
