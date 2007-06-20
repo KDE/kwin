@@ -703,7 +703,7 @@ bool LaptopClientFactory::reset(unsigned long changed)
     Laptop::create_pixmaps();
 
     bool needHardReset = true;
-    if (changed & SettingButtons) {
+    if ((changed & ~SettingButtons) == 0) {
 		// handled by KCommonDecoration
         needHardReset = false;
     }

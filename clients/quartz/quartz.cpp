@@ -161,11 +161,8 @@ bool QuartzHandler::reset(unsigned long changed)
 
 	// Do we need to "hit the wooden hammer" ?
 	bool needHardReset = true;
-	if (changed & SettingColors)
+	if ((changed & ~(SettingColors | SettingButtons)) == 0)
 	{
-		needHardReset = false;
-	} else if (changed & SettingButtons) {
-		// handled by KCommonDecoration
 		needHardReset = false;
 	}
 

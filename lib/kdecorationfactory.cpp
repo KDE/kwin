@@ -39,7 +39,7 @@ KDecorationFactory::~KDecorationFactory()
 
 bool KDecorationFactory::reset( unsigned long )
     {
-    return false;
+    return true;
     }
     
 bool KDecorationFactory::supports( Ability )

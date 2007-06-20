@@ -709,11 +709,9 @@ bool ModernSysFactory::reset( unsigned long changed )
     {
         delete_pixmaps();
         create_pixmaps();
-        needHardReset = false;
-    } else if (changed & SettingButtons) {
-        // handled by KCommonDecoration
-        needHardReset = false;
     }
+    if( ( changed & ~(SettingColors | SettingBorder | SettingFont | SettingButtons)) == 0 )
+        needHardReset = false;
 
     if( needHardReset )
         return true;
