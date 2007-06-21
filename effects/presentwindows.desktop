@@ -7,6 +7,7 @@ Name[el]=Παρουσίαση παραθύρων
 Name[fa]=پنجره‌های موجود
 Name[nds]=Finstern wiesen
 Name[nl]=Vensters presenteren
+Name[sv]=Befintliga fönster
 Name[zh_TW]=展示視窗
 Icon=kwin-effect-presentwindows
 Comment=Shows all windows side-by-side
@@ -15,6 +16,7 @@ Comment[de]=Zeigt alle Fenster nebeneinander an
 Comment[el]=Εμφάνιση όλων των παραθύρων σε παράθεση
 Comment[nds]=Wiest all Finstern blangenanner
 Comment[nl]=Toont alle venters naast elkaar
+Comment[sv]=Visar alla fönster sida vid sida
 Comment[zh_TW]=讓所有視窗排排站
 
 Type=Service

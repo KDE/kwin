@@ -7,6 +7,7 @@ Name[el]=Σήμανση ποντικιού
 Name[fa]=نشان موشی
 Name[nds]=Muus-Mark
 Name[nl]=Muismarkering
+Name[sv]=Markera med musen
 Name[zh_TW]=滑鼠標記
 Icon=kwin-effect-mousemark
 Comment=Let's you draw lines onto your desktop
@@ -14,6 +15,7 @@ Comment[de]=Zeichnet Mausspuren auf der Arbeitsfläche
 Comment[el]=Σας επιτρέπει τη σχεδίαση γραμμών στην επιφάνεια εργασίας σας
 Comment[nds]=Teekt en Muusspoor op den Schriefdisch
 Comment[nl]=Laat u lijnen tekenen op uw bureaublad
+Comment[sv]=Låter dig rita linjer på skrivbordet
 Comment[zh_TW]=讓您在您的桌面上畫線
 
 Type=Service

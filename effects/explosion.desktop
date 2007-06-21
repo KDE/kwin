@@ -14,6 +14,7 @@ Comment[el]=Έκρηξη των παραθύρων κατά το κλείσιμ�
 Comment[es]=Hace que las ventanas exploten al cerrarlas
 Comment[nds]=Finstern explodeert bi't Tomaken
 Comment[nl]=Laat vensters uit elkaar spatten als ze worden gesloten
+Comment[sv]=Gör att fönster exploderar när de stängs
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 
 Type=Service

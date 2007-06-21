@@ -18,6 +18,7 @@ Name[es]=Efectos de las ventanas
 Name[fa]=جلوه‌های پنجره
 Name[nds]=Finstereffekten
 Name[nl]=Venstereffecten
+Name[sv]=Fönstereffekt
 Name[zh_TW]=視窗效果
 
 Comment=Configure window effects
@@ -28,6 +29,7 @@ Comment[es]=Configurar los efectos de las ventanas
 Comment[fa]=پیکربندی جلوه‌های پنجره
 Comment[nds]=Finstereffekten instellen
 Comment[nl]=Venstereffecten instellen
+Comment[sv]=Anpassa fönstereffekter
 Comment[zh_TW]=設定視窗效果
 
 Keywords=kwin,window,manager,effect
@@ -37,3 +39,4 @@ Keywords[el]=παράθυρο,διαχειριστής,εφέ,kwin,παράθυ�
 Keywords[es]=kwin,ventana,gestor,efecto
 Keywords[nds]=kwin,Finster,Pleger,Effekt
 Keywords[nl]=kwin,window,venster,window manager,effect
+Keywords[sv]=kwin,fönster,hantera,effekt

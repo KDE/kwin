@@ -7,6 +7,7 @@ Name[es]=Fundido
 Name[fa]=محو کردن
 Name[nds]=Utblennen
 Name[nl]=Vervagen
+Name[sv]=Tona
 Name[zh_TW]=淡出
 Icon=kwin-effect-fade
 Comment=Makes windows smoothly fade in/out when they're shown or hidden
@@ -15,6 +16,7 @@ Comment[el]=Κάνει τα παράθυρα να εμφανίζονται/απ�
 Comment[es]=Hace que las ventanas aparezcan suavemente o se desvanezcan al mostrarlas u ocultarlas
 Comment[nds]=Finstern warrt bi't Wiesen oder Versteken week in- oder utblendt.
 Comment[nl]=Laat vensters vloeiend in/uitvagen als ze worden weergegeven of verborgen
+Comment[sv]=Gör att fönster mjukt tonas in eller ut när de visas eller döljs
 Comment[zh_TW]=顯示或隱藏視窗時以淡入/淡出方式呈現
 
 Type=Service

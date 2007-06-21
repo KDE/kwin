@@ -7,6 +7,7 @@ Name[el]=Μεγεθυντικός φακός
 Name[fa]=ذره‌بین
 Name[nds]=Kiekglas
 Name[nl]=Vergrootglas
+Name[sv]=Förstoringsglas
 Name[zh_TW]=放大鏡
 Icon=kwin-effect-magnifier
 Comment=Magnifies the part of the screen that is under the mouse
@@ -14,6 +15,7 @@ Comment[de]=Vergrößert den Arbeitsflächenbereich unter der Maus
 Comment[el]=Μεγέθυνση του τμήματος της οθόνη κάτω από το ποντίκι
 Comment[nds]=Maakt den Deel vun den Schirm ünner de Muus grötter
 Comment[nl]=Vergroot het deel van het scherm dat zich onder de muis bevindt
+Comment[sv]=Förstorar den del av skärmen som är under musen
 Comment[zh_TW]=將滑鼠底下的部份視窗放大
 
 Type=Service
