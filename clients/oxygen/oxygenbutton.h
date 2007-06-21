@@ -53,8 +53,8 @@ public:
 
     void setBitmap(const unsigned char *bitmap);
     QSize sizeHint() const;
-    const int lastMousePress(){return lastmouse_;};
-    void reset(){repaint();};
+    const int lastMousePress(){return lastmouse_;}
+    void reset(){repaint();}
 
 private:
     void enterEvent(QEvent *e);
