@@ -2246,7 +2246,7 @@ void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint
     {
     QPoint pos = _pos;
     int desk = currentDesktop();
-    const int OFFSET = 10;
+    const int OFFSET = 2;
     if( border == ElectricLeft || border == ElectricTopLeft || border == ElectricBottomLeft )
         {
         desk = desktopToLeft( desk );
