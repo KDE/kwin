@@ -77,13 +77,14 @@ public:
     void recalcBuffer();
     QSpacerItem *captionSpacer;
 protected:
-    void paintEvent( QPaintEvent* );
+    void paintEvent(QPaintEvent *e);
     bool x11Event(XEvent *e);
-    void mouseDoubleClickEvent( QMouseEvent * );
-    void mousePressEvent( QMouseEvent * );
-    void mouseReleaseEvent( QMouseEvent * );
-    void mouseMoveEvent(QMouseEvent *);
-    void resizeEvent(QResizeEvent *ev);
+    void mouseDoubleClickEvent(QMouseEvent *e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void resizeEvent(QResizeEvent *e);
+    void wheelEvent(QWheelEvent *e);
 private:
     void drawTitlebar(QPainter &p, bool state);
 

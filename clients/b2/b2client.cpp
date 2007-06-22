@@ -221,9 +221,12 @@ static void create_pixmaps()
         }
     }
 
+
     // This should stay here, before the mask creation, because of a bug with
     // drawing a bitmap with drawPixmap() with the mask set (present at least
     // in Qt 4.2.3). 
+    titleGradient[0] = 0;
+    titleGradient[1] = 0;
     redraw_pixmaps();
 
     // there seems to be no way to load X bitmaps from data properly, so
@@ -241,6 +244,7 @@ static void create_pixmaps()
 
     QBitmap normalizeMask(16, 16);
     normalizeMask.clear();
+
     // draw normalize icon mask
     QPainter mask;
     mask.begin(&normalizeMask);
@@ -261,9 +265,6 @@ static void create_pixmaps()
     mask.end();
     for (i = 0; i < NumStates; i++)
 	pixmap[P_SHADE * NumStates + i]->setMask(shadeMask);
-
-    titleGradient[0] = 0;
-    titleGradient[1] = 0;
 }
 
 static void delete_pixmaps()
@@ -414,7 +415,6 @@ void B2Client::init()
 		i18n("<b><center>B II preview</center></b>"),
 		widget());
         g->addWidget(previewLabel, 1, 1);
-
     } else {
 	g->addItem(new QSpacerItem(0, 0), 1, 1);
     }
@@ -618,9 +618,9 @@ void B2Client::captionChange()
     calcHiddenButtons();
     titlebar->layout()->activate();
     positionButtons();
-    
+
     titleMoveAbs(bar_x_ofs);
-    
+
     doShape();
     titlebar->recalcBuffer();
     titlebar->repaint();
@@ -967,11 +967,11 @@ void B2Client::unobscureTitlebar()
 
 static void redraw_pixmaps()
 {
-    QPalette aGrp = options()->palette(KDecoration::ColorButtonBg, true);
-    QPalette iGrp = options()->palette(KDecoration::ColorButtonBg, false);
+    QPalette aPal = options()->palette(KDecoration::ColorButtonBg, true);
+    QPalette iPal = options()->palette(KDecoration::ColorButtonBg, false);
 
-    QColor inactiveColor = iGrp.color(QPalette::Button);
-    QColor activeColor = aGrp.color(QPalette::Button);
+    QColor inactiveColor = iPal.color(QPalette::Button);
+    QColor activeColor = aPal.color(QPalette::Button);
 
     // close
     drawB2Rect(PIXMAP_A(P_CLOSE), activeColor, false);
@@ -1053,10 +1053,10 @@ static void redraw_pixmaps()
 	QSize bSize(16, 16);
 	QBitmap lightBitmap = QBitmap::fromData(bSize, 
 		    light, QImage::Format_MonoLSB);
-	lightBitmap.setMask(lightBitmap);
+	//lightBitmap.setMask(lightBitmap);
 	QBitmap darkBitmap = QBitmap::fromData(bSize, 
 		    dark, QImage::Format_MonoLSB);
-	darkBitmap.setMask(darkBitmap);
+	//darkBitmap.setMask(darkBitmap);
 
         for (int i = 0; i < NumStates; i++) {
 	    bool isAct = (i < 3);
@@ -1076,34 +1076,16 @@ static void redraw_pixmaps()
 	const bool isDown = (i == Down || i == IDown);
 	bool isAct = (i < 3);
 
-#if 0
-        unsigned const char *white = isDown ? pindown_white_bits : pinup_white_bits;
-        unsigned const char *gray = isDown ? pindown_gray_bits : pinup_gray_bits;
-        unsigned const char *dgray = isDown ? pindown_dgray_bits : pinup_dgray_bits;
-	QPixmap *pix = pixmap[P_PINUP * NumStates + i];
-        p.begin(pix);
-
-        kColorBitmaps(&p, (i < 3) ? aGrp : iGrp, 0, 0, 16, 16, true, 
-		      white, gray, NULL, dgray, NULL, NULL);
-        p.end();
-	QBitmap pinupMask = QBitmap::fromData(QSize(16, 16), pinup_mask_bits);
-	QBitmap pindownMask = QBitmap::fromData(QSize(16, 16), pindown_mask_bits);
-	pixmap[P_PINUP * NumStates + i]->setMask(isDown ? pindownMask: pinupMask);
-#else
-
 	QSize pinSize(16, 16);
 	QBitmap white = QBitmap::fromData(pinSize, 
 		    isDown ? pindown_white_bits : pinup_white_bits, 
 		    QImage::Format_MonoLSB);
-	white.setMask(white);
 	QBitmap gray = QBitmap::fromData(pinSize, 
 		    isDown ? pindown_gray_bits : pinup_gray_bits, 
 		    QImage::Format_MonoLSB);
-	gray.setMask(gray);
 	QBitmap dgray = QBitmap::fromData(pinSize, 
 		    isDown ? pindown_dgray_bits : pinup_dgray_bits, 
 		    QImage::Format_MonoLSB);
-	dgray.setMask(dgray);
 
 	QPixmap *pix = pixmap[P_PINUP * NumStates + i];
 	QColor color = isAct ? activeColor : inactiveColor;
@@ -1115,7 +1097,6 @@ static void redraw_pixmaps()
 	p.setPen(color.dark(150));
 	p.drawPixmap(0, 0, dgray);
 	p.end();
-#endif
     }
 
     // Apply the hilight effect to the 'Hover' icons
@@ -1253,6 +1234,9 @@ bool B2Client::eventFilter(QObject *o, QEvent *e)
 	return true;
     case QEvent::MouseButtonDblClick:
 	titlebar->mouseDoubleClickEvent(static_cast< QMouseEvent* >(e));
+	return true;
+    case QEvent::Wheel:
+	titlebar->wheelEvent(static_cast< QWheelEvent* >(e));
 	return true;
     case QEvent::MouseButtonPress:
 	processMousePressEvent(static_cast< QMouseEvent* >(e));
@@ -1471,6 +1455,12 @@ void B2Titlebar::mouseDoubleClickEvent(QMouseEvent *e)
     if (e->button() == Qt::LeftButton && e->y() < height()) {
 	client->titlebarDblClickOperation();
     }
+}
+
+void B2Titlebar::wheelEvent(QWheelEvent *e)
+{
+    if (client->isSetShade() || rect().contains(e->pos()))
+	client->titlebarMouseWheelOperation(e->delta());
 }
 
 void B2Titlebar::mousePressEvent(QMouseEvent * e)
