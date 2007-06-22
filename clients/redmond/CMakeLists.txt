@@ -1,8 +1,4 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
-
-
-
 ########### next target ###############
 
 set(kwin3_redmond_PART_SRCS redmond.cpp)

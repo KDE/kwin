@@ -1,6 +1,3 @@
-include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
-
-
 ########### next target ###############
 
 set(kcm_kwineffects_PART_SRCS main.cpp )

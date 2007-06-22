@@ -1,8 +1,3 @@
-include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../lib # KWin library dir
-    ${CMAKE_CURRENT_BINARY_DIR}/../../    # main KWin dir
-)
-
 ADD_DEFINITIONS(-DKCMRULES)
 ########### next target ###############
 

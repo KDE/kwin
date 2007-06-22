@@ -4,17 +4,19 @@ project(kwin)
 add_definitions (-DQT3_SUPPORT)
 
 add_subdirectory( lib ) 
-add_subdirectory( killer ) 
-add_subdirectory( kcmkwin ) 
-add_subdirectory( clients ) 
-add_subdirectory( effects )
-add_subdirectory( data ) 
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/lib
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
     )
+
+add_subdirectory( killer )
+add_subdirectory( kcmkwin )
+add_subdirectory( clients )
+add_subdirectory( effects )
+add_subdirectory( data )
 
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 include_directories(${CMAKE_CURRENT_BINARY_DIR})

@@ -1,8 +1,6 @@
 
 add_subdirectory( config ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
-
 ########### next target ###############
 
 set(kwin3_default_PART_SRCS kdedefault.cpp)

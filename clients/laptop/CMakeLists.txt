@@ -1,7 +1,4 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
-
-
 ########### next target ###############
 
 set(kwin3_laptop_PART_SRCS laptopclient.cpp)
