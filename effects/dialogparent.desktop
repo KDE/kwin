@@ -6,6 +6,7 @@ Name[el]=Γονικός διάλογος
 Name[fa]=پدر محاوره
 Name[nds]=Överornt Finster
 Name[nl]=Dialoogeigenaar
+Name[sv]=Dialogrutors ägare
 Name[zh_TW]=上層對話框
 Icon=kwin-effect-dialogparent
 Comment=Darkens parent windows of active dialogs
@@ -14,6 +15,7 @@ Comment[el]=Σκίαση γονικών παραθύρων των ενεργών
 Comment[fa]=پنجره‌های پدر محاوره‌های فعال را تیره می‌کند
 Comment[nds]=Maakt överornt Finstern vun aktiv Dialogen düüsterer
 Comment[nl]=Maakt het venter dat bij het actieve dialoog hoort donkerder
+Comment[sv]=Gör fönster som äger aktiva dialogrutor mörkare
 Comment[zh_TW]=將目前對話框的父視窗變暗
 
 Type=Service

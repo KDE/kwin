@@ -3,6 +3,7 @@ Encoding=UTF-8
 Name=Box Switch
 Name[de]=Würfel-Fensterwechsel
 Name[el]=Εναλλαγή πλαισίου
+Name[sv]=Byte med ruta
 Name[zh_TW]=盒切換
 Icon=kwin-effect-boxswitch
 Comment=Improved Alt-tab window switcher

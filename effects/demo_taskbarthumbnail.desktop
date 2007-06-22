@@ -4,6 +4,7 @@ Name=Demo_TaskbarThumbnail
 Name[de]=Demo: Vorschaubild in der Fensterleiste
 Name[el]=Δοκιμή_Εικόνα επισκόπησης γραμμής εργασιών
 Name[nds]=Demo: Programmbalken-Vöransicht
+Name[sv]=Demonstration av miniatyrbild i aktivitetsfält
 Name[zh_TW]=示範_工作列縮圖
 
 Type=Service
