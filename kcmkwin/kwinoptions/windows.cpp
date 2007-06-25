@@ -21,7 +21,7 @@
  *
  */
 
-#include <config.h>
+#include <config-workspace.h>
 
 #include <QDir>
 #include <QLayout>

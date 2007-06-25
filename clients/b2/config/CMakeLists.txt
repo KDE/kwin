@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_SOURCE_DIR}/workspace/kwin/lib  )
+include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib  )
 
 
 ########### next target ###############

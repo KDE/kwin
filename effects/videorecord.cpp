@@ -31,7 +31,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 */
 
-#include <config.h>
+#include <config-workspace.h>
 
 #include "videorecord.h"
 

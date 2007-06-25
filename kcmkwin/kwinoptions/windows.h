@@ -24,7 +24,7 @@
 
 #include <QWidget>
 #include <kcmodule.h>
-#include <config.h>
+#include <config-workspace.h>
 
 class QRadioButton;
 class QCheckBox;

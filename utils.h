@@ -12,7 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_UTILS_H
 #define KWIN_UTILS_H
 
-#include <config.h>
+#include <config-workspace.h>
 #include <config-X11.h>
 #include <config-kwin.h>
 

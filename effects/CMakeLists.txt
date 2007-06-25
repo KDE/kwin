@@ -14,7 +14,7 @@ macro(KWIN4_ADD_EFFECT_CONFIG name)
 endmacro(KWIN4_ADD_EFFECT_CONFIG)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/workspace/kwin/lib
+    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib
     )
 
 install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
