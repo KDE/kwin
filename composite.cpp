@@ -284,6 +284,11 @@ void Workspace::performCompositing()
         repaints_region |= c->repaints().translated( c->pos());
         c->resetRepaints( c->rect());
         }
+    ToplevelList tmp = windows;
+    windows.clear();
+    foreach( Toplevel* c, tmp )
+        if( c->readyForPainting())
+            windows.append( c );
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
@@ -444,6 +449,17 @@ void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
             }
         break;
         }
+    }
+
+void Client::damageNotifyEvent( XDamageNotifyEvent* e )
+    {
+    Toplevel::damageNotifyEvent( e );
+#ifdef HAVE_XSYNC
+    if( sync_counter == None ) // cannot detect complete redraw, consider done now
+        ready_for_painting = true;
+#else
+    ready_for_painting = true; // no sync at all, consider done now
+#endif
     }
 #endif
 

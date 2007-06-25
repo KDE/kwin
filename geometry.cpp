@@ -2368,6 +2368,8 @@ void Client::leaveMoveResize()
     moveResizeMode = false;
     delete eater;
     eater = 0;
+    delete sync_timeout;
+    sync_timeout = NULL;
     if( options->electricBorders() == Options::ElectricMoveOnly )
         workspace()->reserveElectricBorderSwitching( false );
     }
@@ -2618,26 +2620,57 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     else
         assert( false );
 
-    if( update )
+    if( isResize())
         {
-        if( rules()->checkMoveResizeMode
-            ( isResize() ? options->resizeMode : options->moveMode ) == Options::Opaque )
+        if( sync_timeout != NULL )
             {
-            setGeometry( moveResizeGeom );
-            positionGeometryTip();
+            sync_resize_pending = true;
+            return;
             }
-        else if( rules()->checkMoveResizeMode
-            ( isResize() ? options->resizeMode : options->moveMode ) == Options::Transparent )
-            {
-            clearbound();  // it's necessary to move the geometry tip when there's no outline
-            positionGeometryTip(); // shown, otherwise it would cause repaint problems in case
-            drawbound( moveResizeGeom ); // they overlap; the paint event will come after this,
-            }                               // so the geometry tip will be painted above the outline
         }
+
+    if( update )
+        performMoveResize();
     if ( isMove() )
-      workspace()->checkElectricBorder(globalPos, xTime());
+        workspace()->checkElectricBorder(globalPos, xTime());
+    }
+
+void Client::performMoveResize()
+    {    
+#ifdef HAVE_XSYNC
+    if( isResize() && sync_counter != None )
+        {
+        sync_timeout = new QTimer( this );
+        connect( sync_timeout, SIGNAL( timeout()), SLOT( syncTimeout()));
+        sync_timeout->setSingleShot( true );
+        sync_timeout->start( 500 );
+        sendSyncRequest();
+        }
+#endif
+    sync_resize_pending = false;
+    if( rules()->checkMoveResizeMode
+        ( isResize() ? options->resizeMode : options->moveMode ) == Options::Opaque )
+        {
+        setGeometry( moveResizeGeom );
+        positionGeometryTip();
+        }
+    else if( rules()->checkMoveResizeMode
+        ( isResize() ? options->resizeMode : options->moveMode ) == Options::Transparent )
+        {
+        clearbound();  // it's necessary to move the geometry tip when there's no outline
+        positionGeometryTip(); // shown, otherwise it would cause repaint problems in case
+        drawbound( moveResizeGeom ); // they overlap; the paint event will come after this,
+        }                               // so the geometry tip will be painted above the outline
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized( effectWindow(), false, false );
+    }
+
+void Client::syncTimeout()
+    {
+    sync_timeout->deleteLater();
+    sync_timeout = NULL;
+    if( sync_resize_pending )
+        performMoveResize();
     }
 
 } // namespace

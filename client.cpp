@@ -36,6 +36,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/shape.h>
 #include <QX11Info>
 
+#ifdef HAVE_XSYNC
+#include <X11/extensions/sync.h>
+#endif
+
 // put all externs before the namespace statement to allow the linker
 // to resolve them properly
 
@@ -91,6 +95,12 @@ Client::Client( Workspace *ws )
         block_geometry_updates( 0 ),
         pending_geometry_update( PendingGeometryNone ),
         shade_geometry_change( false ),
+#ifdef HAVE_XSYNC
+        sync_counter( None ),
+        sync_alarm( None ),
+#endif
+        sync_timeout( NULL ),
+        sync_resize_pending( false ),
         border_left( 0 ),
         border_right( 0 ),
         border_top( 0 ),
@@ -147,6 +157,9 @@ Client::Client( Workspace *ws )
     
     geom = QRect( 0, 0, 100, 100 ); // so that decorations don't start with size being (0,0)
     client_size = QSize( 100, 100 );
+#if defined(HAVE_XSYNC) || defined(HAVE_XDAMAGE)
+    ready_for_painting = false; // wait for first damage or sync reply
+#endif
 
     // SELI initialize xsizehints??
     }
@@ -156,6 +169,10 @@ Client::Client( Workspace *ws )
  */
 Client::~Client()
     {
+#ifdef HAVE_XSYNC
+    if( sync_alarm != None )
+        XSyncDestroyAlarm( display(), sync_alarm );
+#endif
     assert(!moveResizeMode);
     assert( client == None );
     assert( wrapper == None );
@@ -1430,6 +1447,76 @@ void Client::getWindowProtocols()
             XFree(p);
         }
     }
+
+void Client::getSyncCounter() 
+{
+#ifdef HAVE_XSYNC
+    if( !Extensions::syncAvailable())
+        return;
+
+    Atom retType;
+    unsigned long nItemRet;
+    unsigned long byteRet;
+    int formatRet;
+    unsigned char* propRet;
+    int ret = XGetWindowProperty( display(), window(), atoms->net_wm_sync_request_counter,
+        0, 1, false, XA_CARDINAL, &retType, &formatRet, &nItemRet, &byteRet, &propRet );
+    
+    if( ret == Success && formatRet == 32 )
+        {
+        sync_counter = *(long*)propRet;
+        XSyncIntToValue( &sync_counter_value, 0 );
+	XSyncValue zero;
+	XSyncIntToValue( &zero, 0 );
+	XSyncSetCounter( display(), sync_counter, zero );
+        if( sync_alarm == None )
+            {
+            XSyncAlarmAttributes attrs;
+            attrs.trigger.counter = sync_counter;
+            attrs.trigger.value_type = XSyncRelative;
+            attrs.trigger.test_type = XSyncPositiveTransition;
+            XSyncIntToValue( &attrs.trigger.wait_value, 1 );
+            XSyncIntToValue( &attrs.delta, 1 );
+            sync_alarm = XSyncCreateAlarm( display(),
+                XSyncCACounter | XSyncCAValueType | XSyncCATestType | XSyncCADelta | XSyncCAValue,
+                &attrs );  
+            }
+        }
+#endif
+}
+
+// send the client a _NET_SYNC_REQUEST
+void Client::sendSyncRequest()
+{
+#ifdef HAVE_XSYNC
+    if( sync_counter == None )
+        return;
+
+    // we increment before the notify so that after the notify
+    // syncCounterSerial will equal the value we are expecting
+    // in the acknowledgement
+    int overflow;
+    XSyncValue one;
+    XSyncIntToValue( &one, 1 );
+#undef XSyncValueAdd // it causes a warning :-/
+    XSyncValueAdd( &sync_counter_value, sync_counter_value, one, &overflow );
+
+    // send the message to client
+    XEvent ev;
+    ev.xclient.type = ClientMessage;
+    ev.xclient.window = window();
+    ev.xclient.format = 32;
+    ev.xclient.message_type = atoms->wm_protocols;
+    ev.xclient.data.l[ 0 ] = atoms->net_wm_sync_request;
+    ev.xclient.data.l[ 1 ] = xTime();
+    ev.xclient.data.l[ 2 ] = XSyncValueLow32( sync_counter_value );
+    ev.xclient.data.l[ 3 ] = XSyncValueHigh32( sync_counter_value );
+    ev.xclient.data.l[ 4 ] = 0;
+    XSendEvent( display(), window(), False, NoEventMask, &ev );
+    XSync(display(),false);
+#endif
+}
+
 
 bool Client::wantsTabFocus() const
     {

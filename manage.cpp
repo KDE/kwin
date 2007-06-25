@@ -96,6 +96,7 @@ bool Client::manage( Window w, bool isMapped )
     getWindowRole();
     getWmClientLeader();
     getWmClientMachine();
+    getSyncCounter();
     // first only read the caption text, so that setupWindowRules() can use it for matching,
     // and only then really set the caption using setCaption(), which checks for duplicates etc.
     // and also relies on rules already existing
@@ -440,6 +441,9 @@ bool Client::manage( Window w, bool isMapped )
         sm_stacking_order = session->stackingOrder;
         workspace()->restoreSessionStackingOrder( this );
         }
+
+    if( compositing())     // sending ConfigureNotify is done when setting mapping state below,
+        sendSyncRequest(); // getting the first sync response means window is ready for compositing
 
     if( isShown( true ) && !doNotShow )
         {

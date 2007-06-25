@@ -22,6 +22,7 @@ namespace KWin
 Toplevel::Toplevel( Workspace* ws )
     : vis( NULL )
     , info( NULL )
+    , ready_for_painting( true )
     , client( None )
     , frame( None )
     , wspace( ws )
@@ -104,6 +105,7 @@ void Toplevel::copyToDeleted( Toplevel* c )
     frame = c->frame;
     wspace = c->wspace;
     window_pix = c->window_pix;
+    ready_for_painting = c->ready_for_painting;
 #ifdef HAVE_XDAMAGE
     damage_handle = None;
 #endif

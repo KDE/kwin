@@ -92,6 +92,12 @@ Atoms::Atoms()
     atoms[n] = &kde_net_wm_frame_strut;
     names[n++] = (char*) "_KDE_NET_WM_FRAME_STRUT";
     
+    atoms[n] = &net_wm_sync_request_counter;
+    names[n++] = (char*) "_NET_WM_SYNC_REQUEST_COUNTER";
+
+    atoms[n] = &net_wm_sync_request;
+    names[n++] = (char*) "_NET_WM_SYNC_REQUEST";
+
     assert( n <= max );
 
     XInternAtoms( display(), names, n, false, atoms_return );

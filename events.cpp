@@ -478,6 +478,15 @@ bool Workspace::workspaceEvent( XEvent * e )
                     QTimer::singleShot( 0, this, SLOT( setupCompositing() ) );
                     }
                 }
+            else if( e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable())
+                {
+#ifdef HAVE_XSYNC
+                foreach( Client* c, clients )
+                    c->syncEvent( reinterpret_cast< XSyncAlarmNotifyEvent* >( e ));
+                foreach( Client* c, desktops )
+                    c->syncEvent( reinterpret_cast< XSyncAlarmNotifyEvent* >( e ));
+#endif
+                }
             break;
         }
     return false;
@@ -909,6 +918,8 @@ void Client::propertyNotifyEvent( XPropertyEvent* e )
                 getWindowProtocols();
             else if( e->atom == atoms->motif_wm_hints )
                 getMotifHints();
+            else if( e->atom == atoms->net_wm_sync_request_counter )
+                getSyncCounter();
             break;
         }
     }
@@ -1559,6 +1570,23 @@ void Client::keyPressEvent( uint key_code )
         }
     QCursor::setPos( pos );
     }
+
+#ifdef HAVE_XSYNC
+void Client::syncEvent( XSyncAlarmNotifyEvent* e )
+    {
+    if( e->alarm == sync_alarm && XSyncValueEqual( e->counter_value, sync_counter_value ))
+        {
+        ready_for_painting = true;
+        if( isResize())
+            {
+            delete sync_timeout;
+            sync_timeout = NULL;
+            if( sync_resize_pending )
+                performMoveResize();
+            }
+        }
+    }
+#endif
 
 // ****************************************
 // Unmanaged

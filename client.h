@@ -12,6 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_CLIENT_H
 #define KWIN_CLIENT_H
 
+#include <config-X11.h>
+
 #include <qframe.h>
 #include <QPixmap>
 #include <netwm.h>
@@ -29,6 +31,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "kdecoration.h"
 #include "rules.h"
 #include "toplevel.h"
+
+#ifdef HAVE_XSYNC
+#include <X11/extensions/sync.h>
+#endif
 
 class QTimer;
 class K3Process;
@@ -84,6 +90,9 @@ class Client
 
         bool windowEvent( XEvent* e );
         virtual bool eventFilter( QObject* o, QEvent* e );
+#ifdef HAVE_XSYNC
+        void syncEvent( XSyncAlarmNotifyEvent* e );
+#endif
 
         bool manage( Window w, bool isMapped );
         void releaseWindow( bool on_shutdown = false );
@@ -293,6 +302,9 @@ class Client
         void leaveNotifyEvent( XCrossingEvent* e );
         void focusInEvent( XFocusInEvent* e );
         void focusOutEvent( XFocusOutEvent* e );
+#ifdef HAVE_XDAMAGE
+        virtual void damageNotifyEvent( XDamageNotifyEvent* e );
+#endif
 
         bool buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
         bool buttonReleaseEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
@@ -307,6 +319,7 @@ class Client
         void pingTimeout();
         void processKillerExited();
         void demandAttentionKNotify();
+        void syncTimeout();
 
     private:
     // ICCCM 4.1.3.1, 4.1.4 , NETWM 2.5.1
@@ -339,6 +352,8 @@ class Client
         NETExtendedStrut strut() const;
         int checkShadeGeometry( int w, int h );
         void blockGeometryUpdates( bool block );
+        void getSyncCounter();
+        void sendSyncRequest();
 
         bool startMoveResize();
         void finishMoveResize( bool cancel );
@@ -352,6 +367,7 @@ class Client
         void ungrabButton( int mod );
         void resetMaximize();
         void resizeDecoration( const QSize& s );
+        void performMoveResize();
 
         void pingWindow();
         void killProcess( bool ask, Time timestamp = CurrentTime );
@@ -465,6 +481,13 @@ class Client
         PendingGeometry_t pending_geometry_update;
         QRect geom_before_block;
         bool shade_geometry_change;
+#ifdef HAVE_XSYNC
+        XSyncCounter sync_counter;
+        XSyncValue sync_counter_value;
+        XSyncAlarm sync_alarm;
+#endif
+        QTimer* sync_timeout;
+        bool sync_resize_pending;
         int border_left, border_right, border_top, border_bottom;
         QRegion _mask;
         static bool check_active_modal; // see Client::checkActiveModal()

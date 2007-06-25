@@ -50,6 +50,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifdef HAVE_OPENGL
 #include <GL/glx.h>
 #endif
+#ifdef HAVE_XSYNC
+#include <X11/extensions/sync.h>
+#endif
 
 #include <stdio.h>
 
@@ -74,6 +77,8 @@ int Extensions::composite_version = 0;
 int Extensions::fixes_version = 0;
 int Extensions::render_version = 0;
 bool Extensions::has_glx = false;
+bool Extensions::has_sync = false;
+int Extensions::sync_event_base = 0;
 
 void Extensions::init()
     {
@@ -132,6 +137,14 @@ void Extensions::init()
 #ifdef HAVE_OPENGL
     has_glx = glXQueryExtension( display(), &dummy, &dummy );
 #endif
+#ifdef HAVE_XSYNC
+    if( XSyncQueryExtension( display(), &sync_event_base, &dummy ))
+        {
+        int major = 0, minor = 0;
+        if( XSyncInitialize( display(), &major, &minor ))
+            has_sync = true;
+        }
+#endif
     kDebug( 1212 ) << "Extensions: shape: 0x" << QString::number( shape_version, 16 )
         << " composite: 0x" << QString::number( composite_version, 16 )
         << " render: 0x" << QString::number( render_version, 16 )
@@ -188,6 +201,15 @@ bool Extensions::compositeOverlayAvailable()
 bool Extensions::fixesRegionAvailable()
     {
     return fixes_version >= 0x30; // 3
+    }
+
+int Extensions::syncAlarmNotifyEvent()
+    {
+#ifdef HAVE_XSYNC
+    return sync_event_base + XSyncAlarmNotify;
+#else
+    return 0;
+#endif
     }
 
 void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,

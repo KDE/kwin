@@ -143,6 +143,8 @@ class Extensions
         static bool fixesAvailable() { return fixes_version > 0; }
         static bool fixesRegionAvailable();
         static bool glxAvailable() { return has_glx; }
+        static bool syncAvailable() { return has_sync; }
+        static int syncAlarmNotifyEvent();
     private:
         static int shape_version;
         static int shape_event_base;
@@ -154,6 +156,8 @@ class Extensions
         static int render_version;
         static int fixes_version;
         static bool has_glx;
+        static bool has_sync;
+        static int sync_event_base;
     };
 
 // compile with XShape older than 1.0

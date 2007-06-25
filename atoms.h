@@ -47,6 +47,8 @@ class Atoms
         Atom xdnd_position;
         Atom net_frame_extents;
         Atom kde_net_wm_frame_strut;
+        Atom net_wm_sync_request_counter;
+        Atom net_wm_sync_request;
     };
 
 

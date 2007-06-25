@@ -85,6 +85,7 @@ class Toplevel
         static bool resourceMatch( const Toplevel* c1, const Toplevel* c2 );
 
         Pixmap windowPixmap( bool allow_create = true ); // may return None (e.g. at a bad moment while resizing)
+        bool readyForPainting() const; // true if the window has been already painted its contents
         Visual* visual() const;
         bool shape() const;
         void setOpacity( double opacity );
@@ -111,7 +112,7 @@ class Toplevel
         void detectShape( Window id );
         virtual void propertyNotifyEvent( XPropertyEvent* e );
 #ifdef HAVE_XDAMAGE
-        void damageNotifyEvent( XDamageNotifyEvent* e );
+        virtual void damageNotifyEvent( XDamageNotifyEvent* e );
 #endif
         Pixmap createWindowPixmap();
         void discardWindowPixmap();
@@ -130,6 +131,7 @@ class Toplevel
         Visual* vis;
         int bit_depth;
         NETWinInfo* info;
+        bool ready_for_painting;
     private:
         static QByteArray staticWindowRole(WId);
         static QByteArray staticSessionId(WId);
@@ -217,6 +219,11 @@ inline int Toplevel::height() const
 inline QRect Toplevel::rect() const
     {
     return QRect( 0, 0, width(), height());
+    }
+
+inline bool Toplevel::readyForPainting() const
+    {
+    return ready_for_painting;
     }
 
 inline Visual* Toplevel::visual() const
