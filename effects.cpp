@@ -62,7 +62,7 @@ void EffectsHandlerImpl::reconfigure()
     foreach( KService::Ptr service, offers )
         {
         KPluginInfo plugininfo( service );
-        plugininfo.load( &conf );
+        plugininfo.load( conf );
 
         bool isloaded = isEffectLoaded( plugininfo.pluginName() );
         bool shouldbeloaded = plugininfo.isPluginEnabled();
