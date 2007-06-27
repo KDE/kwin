@@ -4,6 +4,8 @@ Name=Box Switch
 Name[de]=Würfel-Fensterwechsel
 Name[el]=Εναλλαγή πλαισίου
 Name[ja]=ボックススイッチ
+Name[pt]=Mudança em Caixa
+Name[pt_BR]=Mudança em Caixa
 Name[sv]=Byte med ruta
 Name[zh_TW]=盒切換
 Icon=kwin-effect-boxswitch
@@ -13,6 +15,8 @@ Comment[el]=Βελτιωμένη εναλλαγή παραθύρου Alt-tab
 Comment[ja]=Alt+Tab によるウィンドウ切り替えの改良版
 Comment[nds]=Verbetert Wesseln vun Finster mit Alt+Tabtast
 Comment[nl]=Verbeterde Alt-Tab vensternavigatie
+Comment[pt]=Um selector melhorado de janelas com o Alt-Tab
+Comment[pt_BR]=Um selector melhorado de janelas com o Alt-Tab
 Comment[sv]=Förbättrat fönsterbyte med Alt+Tabulator
 Comment[zh_TW]=Alt-tab 視窗切換加強版
 

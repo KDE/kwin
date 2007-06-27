@@ -7,6 +7,8 @@ Name[es]=Explosión
 Name[ja]=爆発
 Name[nds]=Exploschoon
 Name[nl]=Explosie
+Name[pt]=Explosão
+Name[pt_BR]=Explosão
 Name[zh_TW]=爆炸
 Icon=kwin-effect-explosion
 Comment=Makes windows explode when they're closed
@@ -16,6 +18,8 @@ Comment[es]=Hace que las ventanas exploten al cerrarlas
 Comment[ja]=ウィンドウを閉じるときに爆発させます
 Comment[nds]=Finstern explodeert bi't Tomaken
 Comment[nl]=Laat vensters uit elkaar spatten als ze worden gesloten
+Comment[pt]=Faz com que as janelas expludam quando são fechadas
+Comment[pt_BR]=Faz com que as janelas expludam quando são fechadas
 Comment[sv]=Gör att fönster exploderar när de stängs
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 

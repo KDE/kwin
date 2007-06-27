@@ -6,6 +6,8 @@ Name[el]=Θαμπάδα ανενεργού
 Name[ja]=非アクティブを暗く
 Name[nds]=Nich aktive bedüüstern
 Name[nl]=Inactief dimmen
+Name[pt]=Escurecer as Inactivas
+Name[pt_BR]=Escurecer as Inactivas
 Name[sv]=Dämpa inaktiva
 Icon=kwin-effect-diminactive
 Comment=Darkens inactive windows
@@ -14,6 +16,8 @@ Comment[el]=Σκίαση μη ενεργών παραθύρων
 Comment[ja]=非アクティブなウィンドウを暗くします
 Comment[nds]=Maakt nich aktive Finstern düüsterer
 Comment[nl]=Maakt inactieve vensters donkerder
+Comment[pt]=Torna as janelas inactivas mais escuras
+Comment[pt_BR]=Torna as janelas inactivas mais escuras
 Comment[sv]=Gör inaktiva fönster mörkare
 Comment[zh_TW]=將不使用的視窗變暗
 
