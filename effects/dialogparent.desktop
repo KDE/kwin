@@ -7,6 +7,8 @@ Name[fa]=پدر محاوره
 Name[ja]=ダイアログの親
 Name[nds]=Överornt Finster
 Name[nl]=Dialoogeigenaar
+Name[pt]=Pai da Janela
+Name[pt_BR]=Pai da Janela
 Name[sv]=Dialogrutors ägare
 Name[zh_TW]=上層對話框
 Icon=kwin-effect-dialogparent
@@ -17,6 +19,8 @@ Comment[fa]=پنجره‌های پدر محاوره‌های فعال را تی�
 Comment[ja]=アクティブなダイアログの親ウィンドウを暗くします
 Comment[nds]=Maakt överornt Finstern vun aktiv Dialogen düüsterer
 Comment[nl]=Maakt het venter dat bij het actieve dialoog hoort donkerder
+Comment[pt]=Esconde as janelas-mães das janelas activas
+Comment[pt_BR]=Esconde as janelas-mães das janelas activas
 Comment[sv]=Gör fönster som äger aktiva dialogrutor mörkare
 Comment[zh_TW]=將目前對話框的父視窗變暗
 
