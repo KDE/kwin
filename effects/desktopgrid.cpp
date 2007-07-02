@@ -38,6 +38,8 @@ DesktopGridEffect::DesktopGridEffect()
     a->setText( i18n("Show Desktop Grid" ));
     a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F8 ));
     connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
+    KConfigGroup conf = effects->effectConfig("DesktopGrid");
+    slideEnabled = conf.readEntry( "Slide", true );
     }
 
 void DesktopGridEffect::prePaintScreen( int* mask, QRegion* region, int time )
@@ -355,6 +357,8 @@ void DesktopGridEffect::desktopChanged( int old )
 
 void DesktopGridEffect::slideDesktopChanged( int old )
     {
+    if( !slideEnabled )
+        return;
     if( slide ) // old slide still in progress
         {
         QPoint diffPos = desktopRect( old, false ).topLeft() - slide_start_pos;

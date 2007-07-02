@@ -55,6 +55,7 @@ class DesktopGridEffect
         EffectWindow* window_move;
         QPoint window_move_diff;
         QPoint window_move_pos;
+        bool slideEnabled;
         bool slide;
         QPoint slide_start_pos;
         bool slide_painting_sticky;
