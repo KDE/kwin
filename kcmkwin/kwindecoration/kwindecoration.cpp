@@ -194,11 +194,11 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
 //	connect( cbUseMiniWindows, SIGNAL(clicked()), SLOT(slotSelectionChanged()) );
 
 	KAboutData *about =
-		new KAboutData(I18N_NOOP("kcmkwindecoration"),
-				I18N_NOOP("Window Decoration Control Module"),
-				0, 0, KAboutData::License_GPL,
-				I18N_NOOP("(c) 2001 Karol Szwed"));
-	about->addAuthor("Karol Szwed", 0, "gallium@kde.org");
+		new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
+				ki18n("Window Decoration Control Module"),
+				0, KLocalizedString(), KAboutData::License_GPL,
+				ki18n("(c) 2001 Karol Szwed"));
+	about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
 	setAboutData(about);
 }
 

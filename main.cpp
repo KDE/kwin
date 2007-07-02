@@ -185,13 +185,6 @@ static void sighandler(int)
 static const char version[] = "3.0";
 static const char description[] = I18N_NOOP( "KDE window manager" );
 
-static KCmdLineOptions args[] =
-    {
-        { "lock", I18N_NOOP("Disable configuration options"), 0 },
-        { "replace", I18N_NOOP("Replace already-running ICCCM2.0-compliant window manager"), 0 },
-        KCmdLineLastOption
-    };
-
 extern "C"
 KDE_EXPORT int kdemain( int argc, char * argv[] )
     {
@@ -262,15 +255,19 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
             }
         }
 
-    KAboutData aboutData( "kwin", I18N_NOOP("KWin"),
-                          version, description, KAboutData::License_GPL,
-                          I18N_NOOP("(c) 1999-2005, The KDE Developers"));
-    aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
-    aboutData.addAuthor("Cristian Tibirna",0, "tibirna@kde.org");
-    aboutData.addAuthor("Daniel M. Duley",0, "mosfet@kde.org");
-    aboutData.addAuthor("Luboš Luňák", I18N_NOOP( "Maintainer" ), "l.lunak@kde.org");
+    KAboutData aboutData( "kwin", 0, ki18n("KWin"),
+                          version, ki18n(description), KAboutData::License_GPL,
+                          ki18n("(c) 1999-2005, The KDE Developers"));
+    aboutData.addAuthor(ki18n("Matthias Ettrich"),KLocalizedString(), "ettrich@kde.org");
+    aboutData.addAuthor(ki18n("Cristian Tibirna"),KLocalizedString(), "tibirna@kde.org");
+    aboutData.addAuthor(ki18n("Daniel M. Duley"),KLocalizedString(), "mosfet@kde.org");
+    aboutData.addAuthor(ki18n("Luboš Luňák"), ki18n( "Maintainer" ), "l.lunak@kde.org");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
+
+    KCmdLineOptions args;
+    args.add("lock", ki18n("Disable configuration options"));
+    args.add("replace", ki18n("Replace already-running ICCCM2.0-compliant window manager"));
     KCmdLineArgs::addCmdLineOptions( args );
 
     if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)

@@ -134,19 +134,19 @@ KWinOptions::KWinOptions(QWidget *parent, const QStringList &)
   connect(mTranslucency, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
   KAboutData *about =
-    new KAboutData(I18N_NOOP("kcmkwinoptions"), I18N_NOOP("Window Behavior Configuration Module"),
-                  0, 0, KAboutData::License_GPL,
-                  I18N_NOOP("(c) 1997 - 2002 KWin and KControl Authors"));
+    new KAboutData(I18N_NOOP("kcmkwinoptions"), 0, ki18n("Window Behavior Configuration Module"),
+                  0, KLocalizedString(), KAboutData::License_GPL,
+                  ki18n("(c) 1997 - 2002 KWin and KControl Authors"));
 
-  about->addAuthor("Matthias Ettrich",0,"ettrich@kde.org");
-  about->addAuthor("Waldo Bastian",0,"bastian@kde.org");
-  about->addAuthor("Cristian Tibirna",0,"tibirna@kde.org");
-  about->addAuthor("Matthias Kalle Dalheimer",0,"kalle@kde.org");
-  about->addAuthor("Daniel Molkentin",0,"molkentin@kde.org");
-  about->addAuthor("Wynn Wilkes",0,"wynnw@caldera.com");
-  about->addAuthor("Pat Dowler",0,"dowler@pt1B1106.FSH.UVic.CA");
-  about->addAuthor("Bernd Wuebben",0,"wuebben@kde.org");
-  about->addAuthor("Matthias Hoelzer-Kluepfel",0,"hoelzer@kde.org");
+  about->addAuthor(ki18n("Matthias Ettrich"),KLocalizedString(),"ettrich@kde.org");
+  about->addAuthor(ki18n("Waldo Bastian"),KLocalizedString(),"bastian@kde.org");
+  about->addAuthor(ki18n("Cristian Tibirna"),KLocalizedString(),"tibirna@kde.org");
+  about->addAuthor(ki18n("Matthias Kalle Dalheimer"),KLocalizedString(),"kalle@kde.org");
+  about->addAuthor(ki18n("Daniel Molkentin"),KLocalizedString(),"molkentin@kde.org");
+  about->addAuthor(ki18n("Wynn Wilkes"),KLocalizedString(),"wynnw@caldera.com");
+  about->addAuthor(ki18n("Pat Dowler"),KLocalizedString(),"dowler@pt1B1106.FSH.UVic.CA");
+  about->addAuthor(ki18n("Bernd Wuebben"),KLocalizedString(),"wuebben@kde.org");
+  about->addAuthor(ki18n("Matthias Hoelzer-Kluepfel"),KLocalizedString(),"hoelzer@kde.org");
   setAboutData(about);
 }
 

@@ -62,10 +62,10 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
     // Load config
     load();
 
-    KAboutData *about = new KAboutData(I18N_NOOP("kcmkwineffects"),
-            I18N_NOOP("Window Effects Configuration Module"),
-            0, 0, KAboutData::License_GPL, I18N_NOOP("(c) 2007 Rivo Laks"));
-    about->addAuthor("Rivo Laks", 0, "rivolaks@hot.ee");
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkwineffects"), 0,
+            ki18n("Window Effects Configuration Module"),
+            0, KLocalizedString(), KAboutData::License_GPL, ki18n("(c) 2007 Rivo Laks"));
+    about->addAuthor(ki18n("Rivo Laks"), KLocalizedString(), "rivolaks@hot.ee");
     setAboutData(about);
 }
 

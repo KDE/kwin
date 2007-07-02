@@ -37,14 +37,6 @@
 #include "preview.h"
 #include "main.h"
 
-static KCmdLineOptions options[] =
-{
-	{ "+decoration", "Decoration library to use, such as kwin3_plastik.", 0 },
-	{ "+tests", "Which test should be executed ('all', 'repaint', 'caption', 'resize', 'recreation')", 0 },
-	{ "+repetitions", "Number of test repetitions.", 0 },
-	{ 0, 0, 0 }
-};
-
 DecoBenchApplication::DecoBenchApplication(const QString &library, Tests tests, int count) :
 		m_tests(tests),
 		m_count(count)
@@ -101,8 +93,13 @@ int main(int argc, char** argv)
 {
 	QString style = "keramik";
 	// KApplication app(argc, argv);
-	KAboutData about("decobenchmark", "DecoBenchmark", "0.1", "kwin decoration performance tester...", KAboutData::License_LGPL, "(C) 2005 Sandro Giessl");
+	KAboutData about("decobenchmark", 0, ki18n("DecoBenchmark"), "0.1", ki18n("kwin decoration performance tester..."), KAboutData::License_LGPL, ki18n("(C) 2005 Sandro Giessl"));
 	KCmdLineArgs::init(argc, argv, &about);
+
+	KCmdLineOptions options;
+	options.add("+decoration", ki18n("Decoration library to use, such as kwin3_plastik."));
+	options.add("+tests", ki18n("Which test should be executed ('all', 'repaint', 'caption', 'resize', 'recreation')"));
+	options.add("+repetitions", ki18n("Number of test repetitions."));
 	KCmdLineArgs::addCmdLineOptions( options );
 
 	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();

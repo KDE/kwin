@@ -11,12 +11,6 @@
 static const char description[] =
         I18N_NOOP("Installs a KWM theme");
 
-static KCmdLineOptions options[] =
-{
-    { "+[file]", I18N_NOOP("Path to a theme config file"), 0 },
-    KCmdLineLastOption
-};
-
 void copy(const QString &src, const QString &dest)
 {
     QFile copyInput(src);
@@ -40,6 +34,9 @@ void copy(const QString &src, const QString &dest)
 int main(int argc, char **argv)
 {
     KCmdLineArgs::init(argc, argv, "kwmtheme", description, "0.1");
+
+    KCmdLineOptions options;
+    options.add("+[file]", ki18n("Path to a theme config file"));
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app(argc, argv);
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -48,7 +45,7 @@ int main(int argc, char **argv)
         return(1);
     }
 
-    QString srcStr = QString(QFile::decodeName(args->arg(0)));
+    QString srcStr = QString(args->arg(0));
     QFile f(srcStr);
     QString tmpStr;
 

@@ -32,31 +32,26 @@ DEALINGS IN THE SOFTWARE.
 #include <QProcess>
 #include <signal.h>
 
-static const KCmdLineOptions options[] =
-    {
-    // no need for I18N_NOOP(), this is not supposed to be used directly
-        { "pid <pid>", "PID of the application to terminate.", 0 },
-        { "hostname <hostname>", "Hostname on which the application is running.", 0 },
-        { "windowname <caption>", "Caption of the window to be terminated.", 0 },
-        { "applicationname <name>", "Name of the application to be terminated.", 0 },
-        { "wid <id>", "ID of resource belonging to the application.", 0 },
-        { "timestamp <time>", "Time of user action causing killing.", 0 },
-        KCmdLineLastOption
-    };
-
 int main( int argc, char* argv[] )
     {
-    KLocale::setMainCatalog( "kwin" ); // the messages are in kwin's .po file
-    KCmdLineArgs::init( argc, argv, "kwin_killer_helper", I18N_NOOP( "KWin" ),
-	I18N_NOOP( "KWin helper utility" ), "1.0" );
+    KCmdLineArgs::init( argc, argv, "kwin_killer_helper", "kwin", ki18n( "KWin" ), "1.0" ,
+	ki18n( "KWin helper utility" ));
+
+    KCmdLineOptions options;
+    options.add("pid <pid>", ki18n("PID of the application to terminate."));
+    options.add("hostname <hostname>", ki18n("Hostname on which the application is running."));
+    options.add("windowname <caption>", ki18n("Caption of the window to be terminated."));
+    options.add("applicationname <name>", ki18n("Name of the application to be terminated."));
+    options.add("wid <id>", ki18n("ID of resource belonging to the application."));
+    options.add("timestamp <time>", ki18n("Time of user action causing killing."));
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    QByteArray hostname = args->getOption( "hostname" );
+    QString hostname = args->getOption( "hostname" );
     bool pid_ok = false;
     pid_t pid = QString( args->getOption( "pid" ) ).toULong( &pid_ok );
-    QString caption = QString::fromUtf8( args->getOption( "windowname" ));
-    QString appname = QString::fromLatin1( args->getOption( "applicationname" ));
+    QString caption = args->getOption( "windowname" );
+    QString appname = args->getOption( "applicationname" );
     bool id_ok = false;
     Window id = QString( args->getOption( "wid" ) ).toULong( &id_ok );
     bool time_ok = false;
@@ -65,7 +60,7 @@ int main( int argc, char* argv[] )
     if( !pid_ok || pid == 0 || !id_ok || id == None || !time_ok || timestamp == CurrentTime
 	|| hostname.isEmpty() || caption.isEmpty() || appname.isEmpty())
         {
-	KCmdLineArgs::usage( i18n( "This helper utility is not supposed to be called directly." ));
+	KCmdLineArgs::usageError( i18n( "This helper utility is not supposed to be called directly." ));
 	return 1;
         }
     QString question = i18n(

@@ -46,10 +46,10 @@ KCMRules::KCMRules( QWidget *parent, const QStringList & )
     widget = new KCMRulesList( this );
     layout->addWidget( widget );
     connect( widget, SIGNAL( changed( bool )), SLOT( moduleChanged( bool )));
-    KAboutData *about = new KAboutData(I18N_NOOP( "kcmkwinrules" ),
-        I18N_NOOP( "Window-Specific Settings Configuration Module" ),
-        0, 0, KAboutData::License_GPL, I18N_NOOP( "(c) 2004 KWin and KControl Authors" ));
-    about->addAuthor("Lubos Lunak",0,"l.lunak@kde.org");
+    KAboutData *about = new KAboutData(I18N_NOOP( "kcmkwinrules" ), 0,
+        ki18n( "Window-Specific Settings Configuration Module" ),
+        0, KLocalizedString(), KAboutData::License_GPL, ki18n( "(c) 2004 KWin and KControl Authors" ));
+    about->addAuthor(ki18n("Lubos Lunak"),KLocalizedString(),"l.lunak@kde.org");
     setAboutData(about);
     }
 

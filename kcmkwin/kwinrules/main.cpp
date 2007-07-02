@@ -264,20 +264,15 @@ static int edit( Window wid, bool whole_app )
 
 } // namespace
 
-static const KCmdLineOptions options[] =
-    {
-    // no need for I18N_NOOP(), this is not supposed to be used directly
-        { "wid <wid>", "WId of the window for special window settings.", 0 },
-        { "whole-app", "Whether the settings should affect all windows of the application.", 0 },
-        KCmdLineLastOption
-    };
-
 extern "C"
 KDE_EXPORT int kdemain( int argc, char* argv[] )
     {
-    KLocale::setMainCatalog( "kcmkwinrules" );
-    KCmdLineArgs::init( argc, argv, "kwin_rules_dialog", I18N_NOOP( "KWin" ),
-	I18N_NOOP( "KWin helper utility" ), "1.0" );
+    KCmdLineArgs::init( argc, argv, "kwin_rules_dialog", "kcmkwinrules", ki18n( "KWin" ), "1.0" ,
+	ki18n( "KWin helper utility" ));
+
+    KCmdLineOptions options;
+    options.add("wid <wid>", ki18n("WId of the window for special window settings."));
+    options.add("whole-app", ki18n("Whether the settings should affect all windows of the application."));
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
@@ -287,7 +282,7 @@ KDE_EXPORT int kdemain( int argc, char* argv[] )
     args->clear();
     if( !id_ok || id == None )
         {
-	KCmdLineArgs::usage( i18n( "This helper utility is not supposed to be called directly." ));
+	KCmdLineArgs::usageError( i18n( "This helper utility is not supposed to be called directly." ));
 	return 1;
         }
     return KWin::edit( id, whole_app );
