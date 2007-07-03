@@ -9,7 +9,7 @@ License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
 
-#include "wavywindows.h"
+#include "demo_wavywindows.h"
 
 #include <math.h>
 
@@ -17,7 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-KWIN_EFFECT( wavywindows, WavyWindowsEffect )
+KWIN_EFFECT( demo_wavywindows, WavyWindowsEffect )
 
 WavyWindowsEffect::WavyWindowsEffect()
     {

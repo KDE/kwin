@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Wavy Windows
+Name=Demo Wavy Windows
 Name[de]=Wellige Fenster
 Name[el]=Κυματιστά παράθυρα
 Name[es]=Ventanas ondeantes
@@ -18,7 +18,7 @@ Type=Service
 ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Rivo Laks
 X-KDE-PluginInfo-Email=rivolaks@hot.ee
-X-KDE-PluginInfo-Name=kwin4_effect_wavywindows
+X-KDE-PluginInfo-Name=kwin4_effect_demo_wavywindows
 X-KDE-PluginInfo-Version=0.1.0
 X-KDE-PluginInfo-Category=Demos
 X-KDE-PluginInfo-Depends=

@@ -8,12 +8,12 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#include "shakymove.h"
+#include "demo_shakymove.h"
 
 namespace KWin
 {
 
-KWIN_EFFECT( shakymove, ShakyMoveEffect )
+KWIN_EFFECT( demo_shakymove, ShakyMoveEffect )
 
 ShakyMoveEffect::ShakyMoveEffect()
     {
@@ -87,4 +87,4 @@ void ShakyMoveEffect::tick()
 
 } // namespace
 
-#include "shakymove.moc"
+#include "demo_shakymove.moc"

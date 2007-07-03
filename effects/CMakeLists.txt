@@ -117,20 +117,20 @@ endif (X11_Xrender_FOUND)
 
 ### tests - meant to test/demo certain functionality, not really usable for end-users
 SET(kwin4_effect_tests_sources
+    demo_shakymove.cpp
     demo_shiftworkspaceup.cpp
     demo_taskbarthumbnail.cpp
     drunken.cpp
     howto.cpp
-    shakymove.cpp
     test_input.cpp
     test_thumbnail.cpp
     )
 install( FILES
+    demo_shakymove.desktop
     demo_shiftworkspaceup.desktop
     demo_taskbarthumbnail.desktop
     drunken.desktop
     howto.desktop
-    shakymove.desktop
     test_input.desktop
     test_thumbnail.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
@@ -140,15 +140,15 @@ if(OPENGL_FOUND)
     SET(kwin4_effect_tests_sources ${kwin4_effect_tests_sources}
         demo_liquid.cpp
         demo_showpicture.cpp
+        demo_wavywindows.cpp
         test_fbo.cpp
-        wavywindows.cpp
         )
 
     install( FILES
         demo_liquid.desktop
         demo_showpicture.desktop
+        demo_wavywindows.desktop
         test_fbo.desktop
-        wavywindows.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
     install( FILES
