@@ -26,6 +26,7 @@ KDE 4.0 TODO
 - configure dialog
     - dump kompmgr settings
 ?   - some simple basic settings in the Translucency config tab
+    - generic options
 
 - shortcut configuration
     - configurable per effect (in the options dialog)
@@ -42,11 +43,17 @@ KDE 4.0 TODO
 
 - effects (to do)
     - add configuration options (dialogs)
+    - add generic support to use effect only for certain window types
     - split effects to groups (eyecandy, accessibility, whatever)
+    - login effect, e.g. fade to desktop
+    - logout effect
+    - effect for windows demanding attention
+        - rays? ripples?
     - explosion
 ?       - use for forcible killing (add support to windowClosed())
     - diminactive
 *       - needs grouping for unmanaged windows
+        - trailfocus (windows keep getting darker over time)
 *   - inactive window notification (when it stops responding)
     - shadow
         - xrender mode
@@ -67,9 +74,47 @@ KDE 4.0 TODO
         - define protocol (with _KDE prefix for now?)
         - add support to taskbar
     - inversion effect
+    - rollup animation when shading/unshading window
+        - also use it for comboboxes
+    - select a region to zoom
+        - needs mouse to be warped
 
 - fix inclusion of config-X11.h in installed headers
 
+- IHV database - set config settings according to card/driver
+?   - some sort of performance slider
+
+? - undirect fullscreen windows
+
+- fix shading
+
+? generic dbus scripting support
+
+- check effects' dependencies when loading
+- correct ordering for effects
+
+- vertex redesign
+    affects alpha clear hack
+    - support applying opacity only to decoration
+    - not using ARGB visuals
+
+- handling of window pixmaps for unmapped windows
+- strict binding
+
+- shm mode needs support for more data formats than GL_BGRA
+
+? __GL_YIELD=NOTHING
+
+- check what works with XRender
+
+- more notification functions for effects
+
+- documentation
+
+- KompMgr
+    - remove options
+
+- disable application effects when kwin can provide them, e.g. shadow/transparency
 
 General TODO
 =================================
@@ -314,3 +359,5 @@ Effects TODO
 * DimInactive flickers when switching between windows (temporarily no window becomes active)
 
 + generic class for shader effects
+
+- focus effect (windows waves a little when it gets focus)
