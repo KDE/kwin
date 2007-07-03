@@ -47,6 +47,7 @@
 #include <kapplication.h>
 #include <kdialog.h>
 #include <kglobal.h>
+#include <kprocess.h>
 #include <k3process.h>
 #include <QTabWidget>
 #include <QtDBus/QtDBus>
@@ -1693,12 +1694,11 @@ void KTranslucencyConfig::defaults()
 
 bool KTranslucencyConfig::kompmgrAvailable()
 {
-    bool ret;
-    K3Process proc;
+    KProcess proc;
+    proc.setOutputChannelMode( KProcess::MergedChannels );
+    proc.setStandardOutputFile( "/dev/null" );
     proc << "kompmgr" << "-v";
-    ret = proc.start(K3Process::DontCare, K3Process::AllOutput);
-    proc.detach();
-    return ret;
+    return proc.startDetached() != 0;
 }
 
 void KTranslucencyConfig::showWarning(bool alphaActivated)
