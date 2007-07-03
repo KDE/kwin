@@ -43,22 +43,22 @@ KDE 4.0 TODO
 
 - effects (to do)
     - add configuration options (dialogs)
-    - add generic support to use effect only for certain window types
+    - add generic support to use effect only for certain window types [Seli]
     - split effects to groups (eyecandy, accessibility, whatever)
     - login effect, e.g. fade to desktop
-    - logout effect
+    - logout effect [Seli]
     - effect for windows demanding attention
         - rays? ripples?
     - explosion
 ?       - use for forcible killing (add support to windowClosed())
     - diminactive
-*       - needs grouping for unmanaged windows
+*       - needs grouping for unmanaged windows [Seli]
         - trailfocus (windows keep getting darker over time)
-*   - inactive window notification (when it stops responding)
+*   - inactive window notification (when it stops responding) [Seli]
     - shadow
         - xrender mode
         - needs to follow the window shape
-        - textured shadow
+        - textured shadow [rivo]
     - make transparent
         - make windows that are moved/resized by the user slightly transparent
     - hide all testing, demo etc. effects in final builds
@@ -70,16 +70,16 @@ KDE 4.0 TODO
 ?           - duplicate code or try to share it?
     - presentwindows
         - should preserve aspect ratio (as an option?)
-    - taskbar thumbnail
+    - taskbar thumbnail [Seli]
         - define protocol (with _KDE prefix for now?)
         - add support to taskbar
-    - inversion effect
-    - rollup animation when shading/unshading window
+    - inversion effect [rivo]
+    - rollup animation when shading/unshading window  [Seli]
         - also use it for comboboxes
     - select a region to zoom
         - needs mouse to be warped
 
-- fix inclusion of config-X11.h in installed headers
+- fix inclusion of config-X11.h in installed headers [Seli]
 
 - IHV database - set config settings according to card/driver
 ?   - some sort of performance slider
@@ -90,15 +90,16 @@ KDE 4.0 TODO
 
 ? generic dbus scripting support
 
-- check effects' dependencies when loading
-- correct ordering for effects
+- check effects' dependencies when loading [rivo]
+- correct ordering for effects [rivo]
+    would be nice if isn't too strict
 
-- vertex redesign
+- vertex redesign [Seli]
     affects alpha clear hack
     - support applying opacity only to decoration
     - not using ARGB visuals
 
-- handling of window pixmaps for unmapped windows
+- handling of window pixmaps for unmapped windows [Seli]
 - strict binding
 
 - shm mode needs support for more data formats than GL_BGRA
@@ -110,9 +111,6 @@ KDE 4.0 TODO
 - more notification functions for effects
 
 - documentation
-
-- KompMgr
-    - remove options
 
 - disable application effects when kwin can provide them, e.g. shadow/transparency
 
