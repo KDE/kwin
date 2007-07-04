@@ -1,15 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo Shaky Move
-Name[de]=Zitternde Bewegung
-Name[el]=Τρεμάμενη κίνηση
-Name[fa]=حرکت سست
-Name[nds]=Bevern
-Name[nl]=Wiebelige beweging
-Name[pt]=Agitação
-Name[pt_BR]=Agitação
-Name[sv]=Skakig förflyttning
-Name[zh_TW]=搖晃
 Icon=kwin-effect-shakymove
 
 Type=Service
