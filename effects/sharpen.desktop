@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Sharpen
+Comment=Makes your desktop look sharper
 
 Type=Service
 ServiceTypes=KWin/Effect
