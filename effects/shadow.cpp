@@ -78,16 +78,18 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
+    int fuzzy = shadowFuzzyness;
+    // Shadow's size must be a least 2*fuzzy in both directions (or the corners will be broken)
+    int w = qMax(fuzzy*2, window->width());
+    int h = qMax(fuzzy*2, window->height());
+
     glPushMatrix();
     if( mask & PAINT_WINDOW_TRANSFORMED )
         glTranslatef( data.xTranslate, data.yTranslate, 0 );
-    glTranslatef( window->x() + shadowXOffset, window->y() + shadowYOffset, 0 );
+    glTranslatef( window->x() + shadowXOffset - qMax(0, w - window->width()) / 2.0,
+                  window->y() + shadowYOffset - qMax(0, h - window->height()) / 2.0, 0 );
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
-
-    int w = window->width();
-    int h = window->height();
-    int fuzzy = shadowFuzzyness;
 
     QVector<float> verts, texcoords;
     // center
@@ -121,7 +123,9 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     addQuadVertices(texcoords, 0.5, 0.5, 1.0, 1.0);
 
     mShadowTexture->bind();
-    glColor4f(0, 0, 0, shadowOpacity * data.opacity);
+    // Take the transparency settings and window's transparency into account.
+    // Also make the shadow more transparent if we've made it bigger
+    glColor4f(0, 0, 0, shadowOpacity * data.opacity * (window->width() / (float)w) * (window->height() / (float)h));
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     // We have two elements per vertex in the verts array
     int verticesCount = verts.count() / 2;
