@@ -91,6 +91,7 @@ if(OPENGL_FOUND)
         data/invert.vert
         data/sharpen.frag
         data/sharpen.vert
+        data/shadow-texture.png
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
     # config modules
