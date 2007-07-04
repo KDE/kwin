@@ -73,7 +73,6 @@ KDE 4.0 TODO
     - taskbar thumbnail [Seli]
         - define protocol (with _KDE prefix for now?)
         - add support to taskbar
-    - inversion effect [rivo]
     - rollup animation when shading/unshading window  [Seli]
         - also use it for comboboxes
     - select a region to zoom
