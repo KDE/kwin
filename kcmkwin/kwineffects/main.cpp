@@ -54,6 +54,7 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
 
     // Add them to the plugin selector
     mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mKWinConfig);
+    mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Accessibility"), "Accessibility", mKWinConfig);
     mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mKWinConfig);
     mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mKWinConfig);
     mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mKWinConfig);
