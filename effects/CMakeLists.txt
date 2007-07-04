@@ -60,6 +60,7 @@ if(OPENGL_FOUND)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         blur.cpp
         explosioneffect.cpp
+        invert.cpp
         magnifier.cpp
         mousemark.cpp
         shadow.cpp
@@ -68,6 +69,7 @@ if(OPENGL_FOUND)
     install( FILES
         blur.desktop
         explosion.desktop
+        invert.desktop
         magnifier.desktop
         mousemark.desktop
         shadow.desktop
@@ -83,6 +85,8 @@ if(OPENGL_FOUND)
         data/blur.vert
         data/blur-render.frag
         data/blur-render.vert
+        data/invert.frag
+        data/invert.vert
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
     # config modules
