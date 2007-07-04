@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kwinglutils.h>
 
 #include <kconfiggroup.h>
+#include <KStandardDirs>
 
 namespace KWin
 {
@@ -26,12 +27,20 @@ ShadowEffect::ShadowEffect()
     shadowYOffset = conf.readEntry( "YOffset", 10 );
     shadowOpacity = (float)conf.readEntry( "Opacity", 0.2 );
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
+
+    QString shadowtexture =  KGlobal::dirs()->findResource("data", "kwin/shadow-texture.png");
+    mShadowTexture = new GLTexture(shadowtexture);
     }
 
+QRect ShadowEffect::shadowRectangle(const QRect& windowRectangle) const
+    {
+    return windowRectangle.adjusted( shadowXOffset - shadowFuzzyness - 20, shadowYOffset - shadowFuzzyness - 20,
+            shadowXOffset + shadowFuzzyness + 20, shadowYOffset + shadowFuzzyness + 20);
+    }
 void ShadowEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     *mask |= PAINT_WINDOW_TRANSLUCENT;
-    *paint |= ( QRegion( w->geometry()) & *paint ).translated( shadowXOffset, shadowYOffset );
+    *paint |= QRegion( shadowRectangle( ( QRegion( w->geometry()) & *paint ).boundingRect() ));
     effects->prePaintWindow( w, mask, paint, clip, time );
     }
 
@@ -49,16 +58,23 @@ void ShadowEffect::postPaintWindow( EffectWindow* w )
 
 QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
     {
-    QRect r2 = r | r.adjusted( shadowXOffset - shadowFuzzyness, shadowYOffset - shadowFuzzyness,
-            shadowXOffset + shadowFuzzyness, shadowYOffset + shadowFuzzyness);
+    QRect r2 = r | shadowRectangle( r );
     return effects->transformWindowDamage( w, r2 );
     }
+
+void ShadowEffect::addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const
+{
+    verts << x1 << y1;
+    verts << x1 << y2;
+    verts << x2 << y2;
+    verts << x2 << y1;
+}
 
 void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, WindowPaintData& data )
     {
     if(( mask & PAINT_WINDOW_TRANSLUCENT ) == 0 )
         return;
-    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
@@ -72,34 +88,45 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     int w = window->width();
     int h = window->height();
     int fuzzy = shadowFuzzyness;
-    const float verts[ 5 * 4 * 2 ] =
-        {
-        // center piece (100% opacity)
-        0 + fuzzy, 0 + fuzzy,   0 + fuzzy, h - fuzzy,   w - fuzzy, h - fuzzy,   w - fuzzy, 0 + fuzzy,
-        // left
-        0 - fuzzy, 0 - fuzzy,   0 - fuzzy, h + fuzzy,   0 + fuzzy, h - fuzzy,   0 + fuzzy, 0 + fuzzy,
-        // top
-        0 - fuzzy, 0 - fuzzy,   0 + fuzzy, 0 + fuzzy,   w - fuzzy, 0 + fuzzy,   w + fuzzy, 0 - fuzzy,
-        // right piece
-        w - fuzzy, 0 + fuzzy,   w - fuzzy, h - fuzzy,   w + fuzzy, h + fuzzy,   w + fuzzy, 0 - fuzzy,
-        // bottom
-        0 + fuzzy, h - fuzzy,   0 - fuzzy, h + fuzzy,   w + fuzzy, h + fuzzy,   w - fuzzy, h - fuzzy,
-        };
-    float opacity = shadowOpacity * data.opacity;
-    const float colors[ 5 * 4 * 4 ] =
-        {
-        // center
-        0, 0, 0, opacity,   0, 0, 0, opacity,   0, 0, 0, opacity,   0, 0, 0, opacity,
-        // left
-        0, 0, 0, 0      ,   0, 0, 0, 0      ,   0, 0, 0, opacity,   0, 0, 0, opacity,
-        // top
-        0, 0, 0, 0      ,   0, 0, 0, opacity,   0, 0, 0, opacity,   0, 0, 0, 0      ,
-        // right
-        0, 0, 0, opacity,   0, 0, 0, opacity,   0, 0, 0, 0      ,   0, 0, 0, 0      ,
-        // bottom
-        0, 0, 0, opacity,   0, 0, 0, 0      ,   0, 0, 0, 0      ,   0, 0, 0, opacity,
-        };
-    renderGLGeometry( mask, region, 5 * 4, verts, 0, colors );
+
+    QVector<float> verts, texcoords;
+    // center
+    addQuadVertices(verts, 0 + fuzzy, 0 + fuzzy, w - fuzzy, h - fuzzy);
+    addQuadVertices(texcoords, 0.5, 0.5, 0.5, 0.5);
+    // sides
+    // left
+    addQuadVertices(verts, 0 - fuzzy, 0 + fuzzy, 0 + fuzzy, h - fuzzy);
+    addQuadVertices(texcoords, 0.0, 0.5, 0.5, 0.5);
+    // top
+    addQuadVertices(verts, 0 + fuzzy, 0 - fuzzy, w - fuzzy, 0 + fuzzy);
+    addQuadVertices(texcoords, 0.5, 0.0, 0.5, 0.5);
+    // right
+    addQuadVertices(verts, w - fuzzy, 0 + fuzzy, w + fuzzy, h - fuzzy);
+    addQuadVertices(texcoords, 0.5, 0.5, 1.0, 0.5);
+    // bottom
+    addQuadVertices(verts, 0 + fuzzy, h - fuzzy, w - fuzzy, h + fuzzy);
+    addQuadVertices(texcoords, 0.5, 0.5, 0.5, 1.0);
+    // corners
+    // top-left
+    addQuadVertices(verts, 0 - fuzzy, 0 - fuzzy, 0 + fuzzy, 0 + fuzzy);
+    addQuadVertices(texcoords, 0.0, 0.0, 0.5, 0.5);
+    // top-right
+    addQuadVertices(verts, w - fuzzy, 0 - fuzzy, w + fuzzy, 0 + fuzzy);
+    addQuadVertices(texcoords, 0.5, 0.0, 1.0, 0.5);
+    // bottom-left
+    addQuadVertices(verts, 0 - fuzzy, h - fuzzy, 0 + fuzzy, h + fuzzy);
+    addQuadVertices(texcoords, 0.0, 0.5, 0.5, 1.0);
+    // bottom-right
+    addQuadVertices(verts, w - fuzzy, h - fuzzy, w + fuzzy, h + fuzzy);
+    addQuadVertices(texcoords, 0.5, 0.5, 1.0, 1.0);
+
+    mShadowTexture->bind();
+    glColor4f(0, 0, 0, shadowOpacity * data.opacity);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    // We have two elements per vertex in the verts array
+    int verticesCount = verts.count() / 2;
+    renderGLGeometry( mask, region, verticesCount, verts.data(), texcoords.data() );
+    mShadowTexture->unbind();
 
     glPopMatrix();
     glPopAttrib();
