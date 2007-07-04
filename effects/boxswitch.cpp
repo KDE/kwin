@@ -425,18 +425,9 @@ void BoxSwitchEffect::paintFrame()
 #ifdef HAVE_OPENGL
     if( effects->compositingType() == OpenGLCompositing )
         {
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glPushAttrib( GL_CURRENT_BIT );
         glColor4f( 0, 0, 0, alpha );
-        const float verts[ 4 * 2 ] =
-            {
-            frame_area.x(), frame_area.y(),
-            frame_area.x(), frame_area.y() + frame_area.height(),
-            frame_area.x() + frame_area.width(), frame_area.y() + frame_area.height(),
-            frame_area.x() + frame_area.width(), frame_area.y()
-            };
-        renderGLGeometry( 4, verts );
+        renderRoundBox( frame_area );
         glPopAttrib();
         }
 #endif
@@ -468,18 +459,9 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
 #ifdef HAVE_OPENGL
     if( effects->compositingType() == OpenGLCompositing )
         {
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glPushAttrib( GL_CURRENT_BIT );
         glColor4f( 1, 1, 1, alpha );
-        const float verts[ 4 * 2 ] =
-            {
-            area.x(), area.y(),
-            area.x(), area.y() + area.height(),
-            area.x() + area.width(), area.y() + area.height(),
-            area.x() + area.width(), area.y()
-            };
-        renderGLGeometry( 4, verts );
+        renderRoundBox( area );
         glPopAttrib();
         }
 #endif
