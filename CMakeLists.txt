@@ -1,5 +1,4 @@
 
-project(kwin)
 
 add_definitions (-DQT3_SUPPORT)
 
