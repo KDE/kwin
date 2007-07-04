@@ -30,6 +30,7 @@ set(kwin_EFFECTSLIB_SRCS
     kwineffects.cpp
     kwinglutils.cpp
     kwinglutils_funcs.cpp
+    kwinshadereffect.cpp
     )
 kde4_automoc(${kwin_EFFECTSLIB_SRCS})
 kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
