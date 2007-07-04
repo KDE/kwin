@@ -329,6 +329,8 @@ bool Workspace::createOverlay()
     assert( overlay == None );
     if( !Extensions::compositeOverlayAvailable())
         return false;
+    if( !Extensions::shapeInputAvailable()) // needed in setupOverlay()
+        return false;
 #ifdef HAVE_XCOMPOSITE_OVERLAY
     overlay = XCompositeGetOverlayWindow( display(), rootWindow());
     if( overlay == None )
@@ -342,6 +344,7 @@ bool Workspace::createOverlay()
 void Workspace::setupOverlay( Window w )
     {
     assert( overlay != None );
+    assert( Extensions::shapeInputAvailable());
     XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
     if( w != None )
         {
