@@ -23,6 +23,10 @@ TODO
 KDE 4.0 TODO
 =================================
 
+- animations
+    - need to be faster (300ms at most)
+    - global setting?
+
 - configure dialog
     - dump kompmgr settings
 ?   - some simple basic settings in the Translucency config tab
