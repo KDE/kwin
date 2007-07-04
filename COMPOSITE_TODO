@@ -62,7 +62,6 @@ KDE 4.0 TODO
     - shadow
         - xrender mode
         - needs to follow the window shape
-        - textured shadow [rivo]
     - make transparent
         - make windows that are moved/resized by the user slightly transparent
     - hide all testing, demo etc. effects in final builds
