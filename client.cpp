@@ -497,7 +497,19 @@ void Client::updateShape()
         }
     // !shape() mask setting is done in setMask() when the decoration
     // calls it or when the decoration is created/destroyed
+    updateInputShape();
+    if( compositing())
+        addDamageFull();
+    if( scene != NULL )
+        scene->windowGeometryShapeChanged( this );
+    if( effects != NULL )
+        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geometry());
+    }
 
+void Client::updateInputShape()
+    {
+    if( hidden_preview ) // sets it to none, don't change
+        return;
     if( Extensions::shapeInputAvailable())
         { // There appears to be no way to find out if a window has input
           // shape set or not, so always propagate the input shape
@@ -524,12 +536,6 @@ void Client::updateShape()
         XShapeCombineShape( display(), frameId(), ShapeInput, 0, 0,
                            helper_window, ShapeInput, ShapeSet );
         }
-    if( compositing())
-        addDamageFull();
-    if( scene != NULL )
-        scene->windowGeometryShapeChanged( this );
-    if( effects != NULL )
-        static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geometry());
     }
 
 void Client::setMask( const QRegion& reg, int mode )
@@ -867,11 +873,19 @@ void Client::rawShow()
         XMapWindow( display(), wrapper );
         XMapWindow( display(), client );
         }
-    // XComposite invalidates backing pixmaps on unmap (minimize, different
-    // virtual desktop, etc.).  We kept the last known good pixmap around
-    // for use in effects, but now we want to have access to the new pixmap
-    if( compositing() )
-        discardWindowPixmap();
+    if( options->hiddenPreviews == HiddenPreviewsNever )
+        {
+        // XComposite invalidates backing pixmaps on unmap (minimize, different
+        // virtual desktop, etc.).  We kept the last known good pixmap around
+        // for use in effects, but now we want to have access to the new pixmap
+        if( compositing() )
+            discardWindowPixmap();
+        }
+    else
+        {
+        if( hidden_preview )
+            setHiddenPreview( false, Allowed );
+        }
     }
 
 /*!
@@ -881,21 +895,67 @@ void Client::rawShow()
 */
 void Client::rawHide()
     {
+    StackingUpdatesBlocker blocker( workspace());
     addWorkspaceRepaint( geometry());
-// Here it may look like a race condition, as some other client might try to unmap
-// the window between these two XSelectInput() calls. However, they're supposed to
-// use XWithdrawWindow(), which also sends a synthetic event to the root window,
-// which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
-// will be missed is also very minimal, so I don't think it's needed to grab the server
-// here.
-    XSelectInput( display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
-    XUnmapWindow( display(), frameId());
-    XUnmapWindow( display(), wrapper );
-    XUnmapWindow( display(), client );
-    XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
-    if( decoration != NULL )
-        decoration->widget()->hide(); // not really necessary, but let it know the state
+    if( options->hiddenPreviews == HiddenPreviewsNever )
+        {
+        // Here it may look like a race condition, as some other client might try to unmap
+        // the window between these two XSelectInput() calls. However, they're supposed to
+        // use XWithdrawWindow(), which also sends a synthetic event to the root window,
+        // which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
+        // will be missed is also very minimal, so I don't think it's needed to grab the server
+        // here.
+            XSelectInput( display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
+            XUnmapWindow( display(), frameId());
+            XUnmapWindow( display(), wrapper );
+            XUnmapWindow( display(), client );
+            XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
+            if( decoration != NULL )
+                decoration->widget()->hide(); // not really necessary, but let it know the state
+        }
+    else
+        {
+        if( !hidden_preview )
+            {
+            setHiddenPreview( true, Allowed );
+            // actually keep the window mapped (taken from rawShow())
+            if( decoration != NULL )
+                decoration->widget()->show(); // not really necessary, but let it know the state
+            XMapWindow( display(), frameId());
+            if( !isShade())
+                {
+                XMapWindow( display(), wrapper );
+                XMapWindow( display(), client );
+                }
+            }
+        }
     workspace()->clientHidden( this );
+    }
+
+// XComposite doesn't keep window pixmaps of unmapped windows, which means
+// there wouldn't be any previews of windows that are minimized or on another
+// virtual desktop. Therefore rawHide() actually keeps such windows mapped.
+// However special care needs to be taken so that such windows don't interfere.
+// Therefore they're put very low in the stacking order and they have input shape
+// set to none, which hopefully is enough. If there's no input shape available,
+// then it's hoped that there will be some other desktop above it *shrug*.
+// Using normal shape would be better, but that'd affect other things, e.g. painting
+// of the actual preview.
+void Client::setHiddenPreview( bool set, allowed_t )
+    {
+    if( set && !hidden_preview )
+        { // set
+        hidden_preview = true;
+        workspace()->forceRestacking();
+        if( Extensions::shapeInputAvailable())
+            XShapeCombineRectangles( display(), frameId(), ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
+        }
+    else if( !set && hidden_preview )
+        { // unset
+        hidden_preview = false;
+        workspace()->forceRestacking();
+        updateInputShape();
+        }
     }
 
 void Client::sendClientMessage(Window w, Atom a, Atom protocol, long data1, long data2, long data3)

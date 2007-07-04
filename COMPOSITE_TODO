@@ -173,6 +173,11 @@ General TODO
 % installed headers currently include config.h files to find out about e.g. OpenGL
     - this needs to be sorted out somehow, installed headers shouldn't do this
 
+? hidden previews currently needs input shape extension, otherwise the window can possibly interfere
+    - not very likely though, so is this worth bothering at all?
+
++ hidden preview has two modes unimplemented
+
 
 OpenGL TODO
 =================================

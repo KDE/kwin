@@ -290,7 +290,7 @@ void Scene::Window::discardShape()
     }
 
 // Find out the shape of the window using the XShape extension
-// or if not shape is set then simply it's the window geometry.
+// or if shape is not set then simply it's the window geometry.
 QRegion Scene::Window::shape() const
     {
     if( !shape_valid )

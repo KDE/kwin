@@ -88,6 +88,7 @@ Workspace::Workspace( bool restore )
     pending_take_activity ( NULL ),
     active_screen     (0),
     delayfocus_client (0),
+    force_restacking( false ),
     showing_desktop( false ),
     block_showing_desktop( 0 ),
     was_user_interaction (false),

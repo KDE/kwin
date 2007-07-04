@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kdecoration_p.h>
 
 #include "placement.h"
+#include "utils.h"
 
 namespace KWin
 {
@@ -290,6 +291,7 @@ class Options : public KDecorationOptions
 
         //translucency settings
         bool useTranslucency;
+        HiddenPreviews hiddenPreviews;
         
         uint refreshRate;
         int smoothScale; // 0 = no, 1 = yes when transformed,

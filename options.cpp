@@ -193,6 +193,8 @@ unsigned long Options::updateSettings()
     glDirect = config.readEntry("GLDirect", true );
     glVSync = config.readEntry("GLVSync", true );
     glStrictBinding = config.readEntry( "GLStrictBinding", false );
+    const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
+    hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 3 ), 3 ) ];
 
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips

@@ -125,6 +125,14 @@ enum ShadeMode
     ShadeActivated // "shaded", but visible due to alt+tab to the window
     };
 
+enum HiddenPreviews // whether to keep all windows mapped when compositing
+    { // do not reorder (config file)
+    HiddenPreviewsNever, // don't keep pixmaps of unmapped windows at all
+/**/    HiddenPreviewsKeep, // only keep pixmaps, but unmap windows
+/**/    HiddenPreviewUpdate, // unmap, keep, but when needed map back and wait
+    HiddenPreviewsActive // keep windows mapped
+    };
+
 class Extensions
     {
     public:

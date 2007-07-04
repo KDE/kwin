@@ -105,7 +105,8 @@ void Workspace::updateStackingOrder( bool propagate_new_clients )
         return;
         }
     ClientList new_stacking_order = constrainedStackingOrder();
-    bool changed = ( new_stacking_order != stacking_order );
+    bool changed = ( new_stacking_order != stacking_order || force_restacking );
+    force_restacking = false;
     stacking_order = new_stacking_order;
 #if 0
     kDebug() << "stacking:" << changed << endl;
@@ -151,8 +152,10 @@ void Workspace::propagateClients( bool propagate_new_clients )
         if( electric_windows[ i ] != None )
             new_stack[ pos++ ] = electric_windows[ i ];
     int topmenu_space_pos = 1; // not 0, that's supportWindow !!!
-	for ( int i = stacking_order.size() - 1; i >= 0; i-- )
+    for ( int i = stacking_order.size() - 1; i >= 0; i-- )
         {
+        if( stacking_order.at( i )->hiddenPreview())
+            continue;
         new_stack[ pos++ ] = stacking_order.at( i )->frameId();
         if( stacking_order.at( i )->belongsToLayer() >= DockLayer )
             topmenu_space_pos = pos;
@@ -165,6 +168,17 @@ void Workspace::propagateClients( bool propagate_new_clients )
             new_stack[ i ] = new_stack[ i - 1 ];
         new_stack[ topmenu_space_pos ] = topmenu_space->winId();
         ++pos;
+        }
+    // when having hidden previews, stack hidden windows below everything else
+    // (as far as pure X stacking order is concerned), in order to avoid having
+    // these windows that should be unmapped to interfere with other windows
+    for ( int i = stacking_order.size() - 1; i >= 0; i-- )
+        {
+        if( !stacking_order.at( i )->hiddenPreview())
+            continue;
+        new_stack[ pos++ ] = stacking_order.at( i )->frameId();
+        if( stacking_order.at( i )->belongsToLayer() >= DockLayer )
+            topmenu_space_pos = pos;
         }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?

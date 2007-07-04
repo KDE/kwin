@@ -219,6 +219,7 @@ class Client
         void updateVisibility();
     // hides a client - basically like minimize, but without effects, it's simply hidden
         void hideClient( bool hide );
+        bool hiddenPreview() const; // window is mapped in order to get a window pixmap
 
         QString caption( bool full = true ) const;
         void updateCaption();
@@ -322,8 +323,7 @@ class Client
         void syncTimeout();
 
     private:
-    // ICCCM 4.1.3.1, 4.1.4 , NETWM 2.5.1
-        void setMappingState( int s );
+        void setMappingState( int s ); // ICCCM 4.1.3.1, 4.1.4 , NETWM 2.5.1
         int mappingState() const;
         bool isIconicState() const;
         bool isNormalState() const;
@@ -382,6 +382,8 @@ class Client
 
         void rawShow(); // just shows it
         void rawHide(); // just hides it
+        void setHiddenPreview( bool set, allowed_t );
+        void updateInputShape();
 
         Time readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
             bool session ) const;
@@ -446,6 +448,7 @@ class Client
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         uint demands_attention : 1;
+        uint hidden_preview : 1; // mapped only to get a window pixmap for compositing
         WindowRules client_rules;
         void getWMHints();
         void readIcons();
@@ -766,6 +769,11 @@ inline KShortcut Client::shortcut() const
 inline void Client::removeRule( Rules* rule )
     {
     client_rules.remove( rule );
+    }
+
+inline bool Client::hiddenPreview() const
+    {
+    return hidden_preview;
     }
 
 KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value );

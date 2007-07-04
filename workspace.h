@@ -131,6 +131,7 @@ class Workspace : public QObject, public KDecorationDefines
         void restoreSessionStackingOrder( Client* c );
         void restackUnmanaged( Unmanaged* c, Window above );
         void reconfigure();
+        void forceRestacking();
 
         void clientHidden( Client*  );
         void clientAttentionChanged( Client* c, bool set );
@@ -591,6 +592,7 @@ class Workspace : public QObject, public KDecorationDefines
         ClientList unconstrained_stacking_order; // topmost last
         ClientList stacking_order; // topmost last
         UnmanagedList unmanaged_stacking_order;
+        bool force_restacking;
         QVector< ClientList > focus_chain; // currently ative last
         ClientList global_focus_chain; // this one is only for things like tabbox's MRU
         ClientList should_get_focus; // last is most recent
@@ -868,6 +870,13 @@ inline
 bool Workspace::rulesUpdatesDisabled() const
     {
     return rules_updates_disabled;
+    }
+
+inline
+void Workspace::forceRestacking()
+    {
+    force_restacking = true;
+    StackingUpdatesBlocker blocker( this ); // do restacking if not blocked
     }
 
 template< typename T >
