@@ -530,12 +530,6 @@ void Client::updateShape()
         scene->windowGeometryShapeChanged( this );
     if( effects != NULL )
         static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geometry());
-    // workaround for #19644 - shaped windows shouldn't have decoration
-    if( shape() && !noBorder()) 
-        {
-        noborder = true;
-        updateDecoration( true );
-        }
     }
 
 void Client::setMask( const QRegion& reg, int mode )
