@@ -64,6 +64,7 @@ if(OPENGL_FOUND)
         magnifier.cpp
         mousemark.cpp
         shadow.cpp
+        sharpen.cpp
         trackmouse.cpp
         )
     install( FILES
@@ -73,6 +74,7 @@ if(OPENGL_FOUND)
         magnifier.desktop
         mousemark.desktop
         shadow.desktop
+        sharpen.desktop
         trackmouse.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
     install( FILES
@@ -87,6 +89,8 @@ if(OPENGL_FOUND)
         data/blur-render.vert
         data/invert.frag
         data/invert.vert
+        data/sharpen.frag
+        data/sharpen.vert
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
     # config modules
