@@ -30,6 +30,9 @@ namespace KWin
 {
 
 
+class GLTexture;
+
+
 // Initializes GLX function pointers
 void KWIN_EXPORT initGLX();
 // Initializes OpenGL stuff. This includes resolving function pointers as
@@ -86,6 +89,10 @@ KWIN_EXPORT void renderGLGeometry( int count,
 KWIN_EXPORT void renderGLGeometryImmediate( int count,
     const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
+
+
+KWIN_EXPORT void renderRoundBox( const QRect& area, float roundness = 10.0f, GLTexture* texture = 0 );
+
 
 class KWIN_EXPORT GLTexture
     {

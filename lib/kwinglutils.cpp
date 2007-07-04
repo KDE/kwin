@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "kwineffects.h"
 
 #include "kdebug.h"
+#include <kstandarddirs.h>
 
 #include <QPixmap>
 #include <QImage>
@@ -248,6 +249,75 @@ void renderGLGeometryImmediate( int count, const float* vertices, const float* t
             glVertexFunc( vertices + i*vsize );
         }
     glEnd();
+}
+
+void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2)
+{
+    verts << x1 << y1;
+    verts << x1 << y2;
+    verts << x2 << y2;
+    verts << x2 << y1;
+}
+
+void renderRoundBox( const QRect& area, float roundness, GLTexture* texture )
+{
+    static GLTexture* circleTexture = 0;
+    if( !texture && !circleTexture )
+        {
+        QString texturefile =  KGlobal::dirs()->findResource("data", "kwin/circle.png");
+        circleTexture = new GLTexture(texturefile);
+        }
+    if( !texture )
+        {
+        texture = circleTexture;
+        }
+
+    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+    glPushMatrix();
+
+    QVector<float> verts, texcoords;
+    // center
+    addQuadVertices(verts, area.left() + roundness, area.top() + roundness, area.right() - roundness, area.bottom() - roundness);
+    addQuadVertices(texcoords, 0.5, 0.5, 0.5, 0.5);
+    // sides
+    // left
+    addQuadVertices(verts, area.left(), area.top() + roundness, area.left() + roundness, area.bottom() - roundness);
+    addQuadVertices(texcoords, 0.0, 0.5, 0.5, 0.5);
+    // top
+    addQuadVertices(verts, area.left() + roundness, area.top(), area.right() - roundness, area.top() + roundness);
+    addQuadVertices(texcoords, 0.5, 0.0, 0.5, 0.5);
+    // right
+    addQuadVertices(verts, area.right() - roundness, area.top() + roundness, area.right(), area.bottom() - roundness);
+    addQuadVertices(texcoords, 0.5, 0.5, 1.0, 0.5);
+    // bottom
+    addQuadVertices(verts, area.left() + roundness, area.bottom() - roundness, area.right() - roundness, area.bottom());
+    addQuadVertices(texcoords, 0.5, 0.5, 0.5, 1.0);
+    // corners
+    // top-left
+    addQuadVertices(verts, area.left(), area.top(), area.left() + roundness, area.top() + roundness);
+    addQuadVertices(texcoords, 0.0, 0.0, 0.5, 0.5);
+    // top-right
+    addQuadVertices(verts, area.right() - roundness, area.top(), area.right(), area.top() + roundness);
+    addQuadVertices(texcoords, 0.5, 0.0, 1.0, 0.5);
+    // bottom-left
+    addQuadVertices(verts, area.left(), area.bottom() - roundness, area.left() + roundness, area.bottom());
+    addQuadVertices(texcoords, 0.0, 0.5, 0.5, 1.0);
+    // bottom-right
+    addQuadVertices(verts, area.right() - roundness, area.bottom() - roundness, area.right(), area.bottom());
+    addQuadVertices(texcoords, 0.5, 0.5, 1.0, 1.0);
+
+    texture->bind();
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    // We have two elements per vertex in the verts array
+    int verticesCount = verts.count() / 2;
+    renderGLGeometry( verticesCount, verts.data(), texcoords.data() );
+    texture->unbind();
+
+    glPopMatrix();
+    glPopAttrib();
 }
 
 //****************************************
