@@ -271,7 +271,7 @@ QRect DesktopGridEffect::desktopRect( int desktop, bool scaled ) const
     effects->calcDesktopLayout( &x, &y, &orientation );
     --desktop; // make it start with 0
     QRect rect;
-    if( orientation == Qt::Vertical )
+    if( orientation == Qt::Horizontal )
         rect = QRect(( desktop % x ) * displayWidth(), ( desktop / x ) * displayHeight(),
             displayWidth(), displayHeight());
     else
