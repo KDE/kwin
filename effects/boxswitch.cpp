@@ -461,7 +461,7 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
         {
         glPushAttrib( GL_CURRENT_BIT );
         glColor4f( 1, 1, 1, alpha );
-        renderRoundBox( area );
+        renderRoundBox( area, 6 );
         glPopAttrib();
         }
 #endif
@@ -564,6 +564,11 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        // Render some background
+        glColor4f( 0, 0, 0, 0.5 );
+        renderRoundBox( QRect( x-3, y-3, width+6, height+6 ), 3 );
+        // Render the icon
+        glColor4f( 1, 1, 1, 1 );
         windows[ w ]->iconTexture.bind();
         const float verts[ 4 * 2 ] =
             {
