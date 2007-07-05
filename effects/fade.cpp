@@ -10,121 +10,173 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "fade.h"
 
+#include <kconfiggroup.h>
+
 namespace KWin
 {
 
 KWIN_EFFECT( fade, FadeEffect )
 
 FadeEffect::FadeEffect()
-    : fade_in_speed( 20 )
-    , fade_out_speed( 70 )
     {
+    KConfigGroup conf = effects->effectConfig( "Fade" );
+    fadeInTime = qMax( conf.readEntry( "FadeInTime", 150 ), 1 );
+    fadeOutTime = qMax( conf.readEntry( "FadeOutTime", 150 ), 1 );
+    fadeWindows = conf.readEntry( "FadeWindows", true );
+    }
+
+void FadeEffect::prePaintScreen( int* mask, QRegion* region, int time )
+    {
+    if( !windows.isEmpty())
+        {
+        fadeInStep = time / double( fadeInTime );
+        fadeOutStep = time / double( fadeOutTime );
+        }
+    effects->prePaintScreen( mask, region, time );
     }
 
 void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
     {
     if( windows.contains( w ))
         {
-        if( windows[ w ].current < windows[ w ].target )
+        windows[ w ].fadeInStep += fadeInStep;
+        windows[ w ].fadeOutStep += fadeOutStep;
+        if( windows[ w ].opacity < 1.0 )
             {
-            windows[ w ].current += time / double( 10000 / fade_in_speed ) * windows[ w ].step_mult;
-            if( windows[ w ].current > windows[ w ].target )
-                windows[ w ].current = windows[ w ].target;
-            }
-        else if( windows[ w ].current > windows[ w ].target )
-            {
-            windows[ w ].current -= time / double( 10000 / fade_out_speed ) * windows[ w ].step_mult;
-            if( windows[ w ].current < windows[ w ].target )
-                windows[ w ].current = windows[ w ].target;
-            }
-
-        if( !windows[ w ].isFading())
-            {
-            if( windows[ w ].deleted )
-                {
-                w->unrefWindow();
-                windows.remove( w );
-                }
-            }
-        else
-            {
-            *mask |= PAINT_WINDOW_TRANSLUCENT;
             *mask &= ~PAINT_WINDOW_OPAQUE;
-            if( windows[ w ].deleted )
+            *mask |= PAINT_WINDOW_TRANSLUCENT;
+            }
+        if( windows[ w ].deleted )
+            {
+            if( windows[ w ].opacity <= 0.0 )
+                {
+                windows.remove( w );
+                w->unrefWindow();
+                }
+            else
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
             }
         }
     effects->prePaintWindow( w, mask, paint, clip, time );
+    if( windows.contains( w ) && !w->isPaintingEnabled())
+        { // if the window isn't to be painted, then let's make sure
+          // to track its progress
+        if( windows[ w ].fadeInStep < 1.0
+            || windows[ w ].fadeOutStep < 1.0 )
+            { // but only if the total change is less than the
+              // maximum possible change
+            w->addRepaintFull();
+            }
+        }
     }
 
 void FadeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( windows.contains( w ))
-        data.opacity = ( data.opacity + ( w->opacity() == 0.0 ? 1 : 0 )) * windows[ w ].current;
+        {
+        if( windows[ w ].deleted
+            || windows[ w ].opacity != data.opacity
+            || windows[ w ].saturation != data.saturation
+            || windows[ w ].brightness != data.brightness )
+            {
+            WindowPaintData new_data = data;
+
+            if( windows[ w ].deleted )
+                new_data.opacity = 0.0;
+
+            if( new_data.opacity > windows[ w ].opacity )
+                {
+                windows[ w ].opacity = qMin( new_data.opacity,
+                    windows[ w ].opacity + windows[ w ].fadeInStep );
+                }
+            else if( new_data.opacity < windows[ w ].opacity )
+                {
+                windows[ w ].opacity = qMax( new_data.opacity,
+                    windows[ w ].opacity - windows[ w ].fadeOutStep );
+                }
+
+            if( new_data.saturation > windows[ w ].saturation )
+                {
+                windows[ w ].saturation = qMin( new_data.saturation,
+                    windows[ w ].saturation + float( windows[ w ].fadeInStep ));
+                }
+            else if( new_data.saturation < windows[ w ].saturation )
+                {
+                windows[ w ].saturation = qMax( new_data.saturation,
+                    windows[ w ].saturation - float( windows[ w ].fadeOutStep ));
+                }
+
+            if( new_data.brightness > windows[ w ].brightness )
+                {
+                windows[ w ].brightness = qMin( new_data.brightness,
+                    windows[ w ].brightness + float( windows[ w ].fadeInStep ));
+                }
+            else if( new_data.brightness < windows[ w ].brightness )
+                {
+                windows[ w ].brightness = qMax( new_data.brightness,
+                    windows[ w ].brightness - float( windows[ w ].fadeOutStep ));
+                }
+
+            windows[ w ].opacity = qBound( 0.0, windows[ w ].opacity, 1.0 );
+            windows[ w ].saturation = qBound( 0.0f, windows[ w ].saturation, 1.0f );
+            windows[ w ].brightness = qBound( 0.0f, windows[ w ].brightness, 1.0f );
+            windows[ w ].fadeInStep = 0.0;
+            windows[ w ].fadeOutStep = 0.0;
+
+            new_data.opacity = windows[ w ].opacity;
+            new_data.saturation = windows[ w ].saturation;
+            new_data.brightness = windows[ w ].brightness;
+            effects->paintWindow( w, mask, region, new_data );
+            if( windows[ w ].opacity != data.opacity
+                || windows[ w ].saturation != data.saturation
+                || windows[ w ].brightness != data.brightness )
+                w->addRepaintFull();
+            return;
+            }
+        windows[ w ].fadeInStep = 0.0;
+        windows[ w ].fadeOutStep = 0.0;
+        }
     effects->paintWindow( w, mask, region, data );
     }
 
-void FadeEffect::postPaintWindow( EffectWindow* w )
+void FadeEffect::windowOpacityChanged( EffectWindow* w, double old_opacity )
     {
-    if( windows.contains( w ) && windows.value( w ).isFading())
-        w->addRepaintFull(); // trigger next animation repaint
-    effects->postPaintWindow( w );
+    if( !windows.contains( w ))
+        windows[ w ].opacity = old_opacity;
+    if( windows[ w ].opacity == 1.0 )
+        windows[ w ].opacity -= 0.1 / fadeOutTime;
+    w->addRepaintFull();
     }
 
-void FadeEffect::windowOpacityChanged( EffectWindow* c, double old_opacity )
+void FadeEffect::windowAdded( EffectWindow* w )
     {
-    double new_opacity = c->opacity();
-    if( !windows.contains( c ))
-        windows[ c ].current = 1;
-    if( new_opacity == 0.0 )
-        { // special case; if opacity is 0, we can't just multiply data.opacity
-        windows[ c ].current = windows[ c ].current * ( old_opacity == 0.0 ? 1 : old_opacity );
-        windows[ c ].target = 0;
-        windows[ c ].step_mult = 1;
-        }
-    else
-        {
-        windows[ c ].current = ( windows[ c ].current * ( old_opacity == 0.0 ? 1 : old_opacity )) / new_opacity;
-        windows[ c ].target = 1;
-        windows[ c ].step_mult = 1 / new_opacity;
-        }
-    c->addRepaintFull();
+    if( !fadeWindows || !isFadeWindow( w ))
+        return;
+    windows[ w ].opacity = 0.0;
+    w->addRepaintFull();
     }
 
-void FadeEffect::windowAdded( EffectWindow* c )
+void FadeEffect::windowClosed( EffectWindow* w )
     {
-    if( !windows.contains( c ))
-        windows[ c ].current = 0;
-    if( c->opacity() == 0.0 )
-        {
-        windows[ c ].target = 0;
-        windows[ c ].step_mult = 1;
-        }
-    else
-        {
-        windows[ c ].target = 1;
-        windows[ c ].step_mult = 1 / c->opacity();
-        }
-    c->addRepaintFull();
+    if( !fadeWindows || !isFadeWindow( w ))
+        return;
+    if( !windows.contains( w ))
+        windows[ w ].opacity = w->opacity();
+    if( windows[ w ].opacity == 1.0 )
+        windows[ w ].opacity -= 0.1 / fadeOutTime;
+    windows[ w ].deleted = true;
+    w->refWindow();
+    w->addRepaintFull();
     }
 
-void FadeEffect::windowClosed( EffectWindow* c )
+void FadeEffect::windowDeleted( EffectWindow* w )
     {
-    if( !windows.contains( c ))
-        windows[ c ].current = 1;
-    if( c->opacity() == 0.0 )
-        windows[ c ].step_mult = 1;
-    else
-        windows[ c ].step_mult = 1 / c->opacity();
-    windows[ c ].target = 0;
-    windows[ c ].deleted = true;
-    c->addRepaintFull();
-    c->refWindow();
+    windows.remove( w );
     }
 
-void FadeEffect::windowDeleted( EffectWindow* c )
+bool FadeEffect::isFadeWindow( EffectWindow* w )
     {
-    windows.remove( c );
+    return !w->isDesktop();
     }
 
 } // namespace

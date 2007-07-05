@@ -21,40 +21,41 @@ class FadeEffect
     {
     public:
         FadeEffect();
+        virtual void prePaintScreen( int* mask, QRegion* region, int time );
         virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
+
         // TODO react also on virtual desktop changes
         virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
         virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
+
+        bool isFadeWindow( EffectWindow* w );
     private:
-        int fade_in_speed, fade_out_speed; // TODO make these configurable
         class WindowInfo;
         QHash< const EffectWindow*, WindowInfo > windows;
+        double fadeInStep, fadeOutStep;
+        int fadeInTime, fadeOutTime;
+        bool fadeWindows;
     };
 
 class FadeEffect::WindowInfo
     {
     public:
         WindowInfo()
-            : current( 0 )
-            , target( 0 )
-            , step_mult( 0 )
+            : fadeInStep( 0.0 )
+            , fadeOutStep( 0.0 )
+            , opacity( 1.0 )
+            , saturation( 1.0 )
+            , brightness( 1.0 )
             , deleted( false )
             {}
-        bool isFading() const;
-        double current;
-        double target;
-        double step_mult;
+        double fadeInStep, fadeOutStep;
+        double opacity;
+        float saturation, brightness;
         bool deleted;
     };
-
-inline bool FadeEffect::WindowInfo::isFading() const
-    {
-    return current != target;
-    }
 
 } // namespace
 
