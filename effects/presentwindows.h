@@ -15,6 +15,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kwineffects.h>
 #include <kwinglutils.h>
 
+#ifdef HAVE_XRENDER
+#include <X11/extensions/Xrender.h>
+#endif
+
 namespace KWin
 {
 
@@ -64,7 +68,9 @@ class PresentWindowsEffect
 
         void updateFilterTexture();
         void discardFilterTexture();
-        
+
+        void paintWindowIcon( EffectWindow* w, WindowPaintData& data );
+
         // Called once the effect is activated (and wasn't activated before)
         void effectActivated();
         // Called once the effect has terminated
@@ -93,6 +99,13 @@ class PresentWindowsEffect
             float hover;
             int slot;
             int slot_distance;
+            QPixmap icon;
+#ifdef HAVE_OPENGL
+            GLTexture iconTexture;
+#endif
+#ifdef HAVE_XRENDER
+            Picture iconPicture;
+#endif
             };
         typedef QHash<EffectWindow*, WindowData> DataHash;
         DataHash mWindowData;
@@ -106,6 +119,10 @@ class PresentWindowsEffect
 
         ElectricBorder borderActivate;
         ElectricBorder borderActivateAll;
+
+#ifdef HAVE_XRENDER
+        XRenderPictFormat* alphaFormat;
+#endif
     };
 
 } // namespace

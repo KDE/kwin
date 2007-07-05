@@ -55,6 +55,10 @@ PresentWindowsEffect::PresentWindowsEffect()
 
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );
+
+#ifdef HAVE_XRENDER
+    alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
+#endif
     }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -178,6 +182,11 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
 
     // Call the next effect.
     effects->paintWindow( w, mask, region, data );
+
+    if(mActiveness > 0.0f && mWindowData.contains(w))
+        {
+        paintWindowIcon( w, data );
+        }
     }
 
 void PresentWindowsEffect::postPaintScreen()
@@ -782,6 +791,78 @@ void PresentWindowsEffect::updateFilterTexture()
     filterTextureRect = QRect( area.x() + ( area.width() - rect.width()) / 2,
         area.y() + ( area.height() - rect.height()) / 2, rect.width(), rect.height());
     effects->addRepaint( filterTextureRect );
+#endif
+    }
+
+void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& paintdata )
+    {
+    WindowData& data = mWindowData[ w ];
+    if( data.icon.serialNumber() != w->icon().serialNumber())
+        { // make sure data.icon is the right QPixmap, and rebind
+        data.icon = w->icon();
+#ifdef HAVE_OPENGL
+        if( effects->compositingType() == OpenGLCompositing )
+            {
+            data.iconTexture.load( data.icon );
+            data.iconTexture.setFilter( GL_LINEAR );
+            }
+#endif
+#ifdef HAVE_XRENDER
+        if( effects->compositingType() == XRenderCompositing )
+            {
+            if( data.iconPicture != None )
+                XRenderFreePicture( display(), data.iconPicture );
+            data.iconPicture = XRenderCreatePicture( display(),
+                data.icon.handle(), alphaFormat, 0, NULL );
+            }
+#endif
+        }
+    int icon_margin = 8;
+    int width = data.icon.width();
+    int height = data.icon.height();
+    int x = w->x() + paintdata.xTranslate + w->width() * paintdata.xScale * 0.95 - width - icon_margin;
+    int y = w->y() + paintdata.yTranslate + w->height() * paintdata.yScale * 0.95 - height - icon_margin;
+#ifdef HAVE_OPENGL
+    if( effects->compositingType() == OpenGLCompositing )
+        {
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        // Render some background
+        glColor4f( 0, 0, 0, 0.5 * mActiveness );
+        renderRoundBox( QRect( x-3, y-3, width+6, height+6 ), 3 );
+        // Render the icon
+        glColor4f( 1, 1, 1, 1 * mActiveness );
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        data.iconTexture.bind();
+        const float verts[ 4 * 2 ] =
+            {
+            x, y,
+            x, y + height,
+            x + width, y + height,
+            x + width, y
+            };
+        const float texcoords[ 4 * 2 ] =
+            {
+            0, 1,
+            0, 0,
+            1, 0,
+            1, 1
+            };
+        renderGLGeometry( 4, verts, texcoords );
+        data.iconTexture.unbind();
+        glPopAttrib();
+        }
+#endif
+#ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing )
+        {
+        XRenderComposite( display(),
+            data.icon.depth() == 32 ? PictOpOver : PictOpSrc,
+            data.iconPicture, None,
+            effects->xrenderBufferPicture(),
+            0, 0, 0, 0, x, y, width, height );
+        }
 #endif
     }
 
