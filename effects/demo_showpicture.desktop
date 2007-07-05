@@ -1,6 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo ShowPicture
+Name[sv]=Demonstration av visa bild
+Name[zh_TW]=示範_顯示圖片
 
 Type=Service
 ServiceTypes=KWin/Effect

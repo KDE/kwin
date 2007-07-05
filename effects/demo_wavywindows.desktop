@@ -1,6 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo Wavy Windows
+Name[nl]=Demo Wuifende vensters
+Name[pt]=Demonstração das Janelas Ondulantes
+Name[pt_BR]=Demonstração das Janelas Ondulantes
+Name[sv]=Demonstration av vågiga fönster
+Name[zh_TW]=示範_波浪狀視窗
 Icon=kwin-effect-wavywindows
 
 Type=Service

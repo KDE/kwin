@@ -1,6 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo TaskbarThumbnail
+Name[nl]=Demo Taakbalkminiatuur
+Name[sv]=Demonstration av miniatyrbild i aktivitetsfält
+Name[zh_TW]=示範_工作列縮圖
 
 Type=Service
 ServiceTypes=KWin/Effect

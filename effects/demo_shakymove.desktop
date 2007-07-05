@@ -1,6 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo Shaky Move
+Name[nl]=Demo Wiebelige beweging
+Name[pt]=Demonstrar a Agitação
+Name[pt_BR]=Demonstrar a Agitação
+Name[sv]=Demonstration av skakig förflyttning
+Name[zh_TW]=示範_搖晃
 Icon=kwin-effect-shakymove
 
 Type=Service

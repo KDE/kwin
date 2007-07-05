@@ -1,6 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Demo Liquid
+Name[nl]=Demo Vloeibaar
+Name[pt]=Demo_Liquid
+Name[pt_BR]=Demo_Liquid
+Name[sv]=Demonstration av Liquid
+Name[zh_TW]=示範ˍ液體
 
 Type=Service
 ServiceTypes=KWin/Effect
