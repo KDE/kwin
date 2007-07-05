@@ -1082,7 +1082,6 @@ void EffectWindowImpl::setShader(GLShader* shader)
 EffectWindow* effectWindow( Toplevel* w )
     {
     EffectWindowImpl* ret = w->effectWindow();
-    ret->setSceneWindow( NULL ); // just in case
     return ret;
     }
 

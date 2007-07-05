@@ -98,6 +98,7 @@ class SceneOpenGL::Texture
         virtual bool load( const QImage& image, GLenum target = GL_TEXTURE_2D );
         virtual bool load( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
         virtual void discard();
+        virtual void release(); // undo the tfp_mode binding
         virtual void bind();
         virtual void unbind();
 
@@ -119,6 +120,7 @@ class SceneOpenGL::Window
         virtual ~Window();
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
         virtual void prepareForPainting();
+        virtual void pixmapDiscarded();
         bool bindTexture();
         void discardTexture();
         void discardVertices();

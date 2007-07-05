@@ -691,6 +691,7 @@ void SceneOpenGL::windowClosed( Toplevel* c, Deleted* deleted )
     else
         {
         delete windows.take( c );
+        c->effectWindow()->setSceneWindow( NULL );
         }
     }
 
@@ -698,6 +699,7 @@ void SceneOpenGL::windowDeleted( Deleted* c )
     {
     assert( windows.contains( c ));
     delete windows.take( c );
+    c->effectWindow()->setSceneWindow( NULL );
     }
 
 void SceneOpenGL::windowGeometryShapeChanged( Toplevel* c )
@@ -749,16 +751,19 @@ void SceneOpenGL::Texture::init()
 void SceneOpenGL::Texture::discard()
     {
     if( mTexture != None )
-        {
-        if( tfp_mode )
-            {
-            if( !options->glStrictBinding )
-                glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
-            glXDestroyGLXPixmap( display(), bound_glxpixmap );
-            bound_glxpixmap = None;
-            }
-        }
+        release();
     GLTexture::discard();
+    }
+
+void SceneOpenGL::Texture::release()
+    {
+    if( tfp_mode && bound_glxpixmap != None )
+        {
+        if( !options->glStrictBinding )
+            glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
+        glXDestroyGLXPixmap( display(), bound_glxpixmap );
+        bound_glxpixmap = None;
+        }
     }
 
 void SceneOpenGL::Texture::findTarget()
@@ -1182,6 +1187,12 @@ void SceneOpenGL::Window::discardVertices()
     currentXResolution = -1;
     currentYResolution = -1;
 }
+
+// when the window's composite pixmap is discarded, undo binding it to the texture
+void SceneOpenGL::Window::pixmapDiscarded()
+    {
+    texture.release();
+    }
 
 // paint the window
 void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintData data )

@@ -131,6 +131,8 @@ class Scene::Window
         // perform the actual painting of the window
         virtual void performPaint( int mask, QRegion region, WindowPaintData data ) = 0;
         virtual void prepareForPainting()  {}
+        // do any cleanup needed when the window's composite pixmap is discarded
+        virtual void pixmapDiscarded()  {}
         int x() const;
         int y() const;
         int width() const;

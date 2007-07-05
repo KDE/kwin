@@ -407,6 +407,8 @@ void Toplevel::discardWindowPixmap()
         return;
     XFreePixmap( display(), window_pix );
     window_pix = None;
+    if( effectWindow() != NULL && effectWindow()->sceneWindow() != NULL )
+        effectWindow()->sceneWindow()->pixmapDiscarded();
     }
 
 Pixmap Toplevel::createWindowPixmap()

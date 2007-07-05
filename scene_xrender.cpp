@@ -287,6 +287,7 @@ void SceneXrender::windowClosed( Toplevel* c, Deleted* deleted )
     else
         {
         delete windows.take( c );
+        c->effectWindow()->setSceneWindow( NULL );
         }
     }
 
@@ -294,6 +295,7 @@ void SceneXrender::windowDeleted( Deleted* c )
     {
     assert( windows.contains( c ));
     delete windows.take( c );
+    c->effectWindow()->setSceneWindow( NULL );
     }
 
 void SceneXrender::windowAdded( Toplevel* c )
