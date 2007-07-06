@@ -16,7 +16,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "scene.h"
 
 #include <QStack>
+#include <QMap>
 
+
+class KService;
 
 
 namespace KWin
@@ -117,10 +120,13 @@ class EffectsHandlerImpl : public EffectsHandler
         ToplevelList elevatedWindows() const;
 
     protected:
-        KLibrary* findEffectLibrary( const QString& effectname );
+        KLibrary* findEffectLibrary( KService* service );
+        void effectsChanged();
+
         Effect* keyboard_grab_effect;
         QStack<GLRenderTarget*> render_targets;
         ToplevelList elevated_windows;
+        QMultiMap< int, EffectPair > effect_order;
 };
 
 class EffectWindowImpl : public EffectWindow

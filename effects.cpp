@@ -591,24 +591,14 @@ unsigned long EffectsHandlerImpl::xrenderBufferPicture()
     return None;
     }
 
-KLibrary* EffectsHandlerImpl::findEffectLibrary( const QString& effectname )
+KLibrary* EffectsHandlerImpl::findEffectLibrary( KService* service )
     {
-    QString internalname = effectname.toLower();
-
-    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect", constraint);
-    if(offers.isEmpty())
-    {
-        kError( 1212 ) << k_funcinfo << "Couldn't find effect " << effectname << endl;
-        return 0;
-    }
-
-    QString libname = offers.first()->library();
+    QString libname = service->library();
     KLibrary* library = KLibLoader::self()->library(libname);
     if( !library )
         {
         kError( 1212 ) << k_funcinfo << "couldn't open library for effect '" <<
-                effectname << "'" << endl;
+                service->name() << "'" << endl;
         return 0;
         }
 
@@ -646,7 +636,18 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
 
 
     kDebug( 1212 ) << k_funcinfo << "Trying to load " << name << endl;
-    KLibrary* library = findEffectLibrary( name );
+    QString internalname = name.toLower();
+
+    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect", constraint);
+    if(offers.isEmpty())
+    {
+        kError( 1212 ) << k_funcinfo << "Couldn't find effect " << name << endl;
+        return;
+    }
+    KSharedPtr<KService> service = offers.first();
+
+    KLibrary* library = findEffectLibrary( service.data() );
     if( !library )
         {
         return;
@@ -678,7 +679,8 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
 
     Effect* e = create();
 
-    loaded_effects.append( EffectPair( name, e ) );
+    effect_order.insert( service->property( "X-Ordering" ).toInt(), EffectPair( name, e ));
+    effectsChanged();
     effect_libraries[ name ] = library;
     }
 
@@ -690,13 +692,14 @@ void EffectsHandlerImpl::unloadEffect( const QString& name )
     assert( current_draw_window == 0 );
     assert( current_transform == 0 );
 
-    for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); it++)
+    for( QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); it++)
         {
-        if ( (*it).first == name )
+        if ( it.value().first == name )
             {
             kDebug( 1212 ) << "EffectsHandler::unloadEffect : Unloading Effect : " << name << endl;
-            delete (*it).second;
-            loaded_effects.erase(it);
+            delete it.value().second;
+            effect_order.erase(it);
+            effectsChanged();
             effect_libraries[ name ]->unload();
             return;
             }
@@ -721,6 +724,17 @@ bool EffectsHandlerImpl::isEffectLoaded( const QString& name )
             return true;
 
     return false;
+    }
+
+void EffectsHandlerImpl::effectsChanged()
+    {
+    loaded_effects.clear();
+    kDebug() << k_funcinfo << "Recreating effects' list:" << endl;
+    foreach( EffectPair effect, effect_order )
+        {
+        kDebug() << k_funcinfo << effect.first << endl;
+        loaded_effects.append( effect );
+        }
     }
 
 
