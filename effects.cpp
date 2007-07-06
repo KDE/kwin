@@ -625,7 +625,7 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
         kWarning( 1212 ) << k_funcinfo << "Effect names usually have kwin4_effect_ prefix" << endl;
 
     // Make sure a single effect won't be loaded multiple times
-    for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); it++)
+    for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
         {
         if( (*it).first == name )
             {
@@ -692,7 +692,7 @@ void EffectsHandlerImpl::unloadEffect( const QString& name )
     assert( current_draw_window == 0 );
     assert( current_transform == 0 );
 
-    for( QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); it++)
+    for( QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it)
         {
         if ( it.value().first == name )
             {
@@ -719,7 +719,7 @@ void EffectsHandlerImpl::reloadEffect( const QString& name )
 
 bool EffectsHandlerImpl::isEffectLoaded( const QString& name )
     {
-    for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); it++)
+    for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it)
         if ( (*it).first == name )
             return true;
 

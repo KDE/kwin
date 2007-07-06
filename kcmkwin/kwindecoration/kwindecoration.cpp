@@ -217,7 +217,7 @@ void KWinDecorationModule::findDecorations()
 	QStringList dirList = KGlobal::dirs()->findDirs("data", "kwin");
 	QStringList::ConstIterator it;
 
-	for (it = dirList.begin(); it != dirList.end(); it++)
+	for (it = dirList.begin(); it != dirList.end(); ++it)
 	{
 		QDir d(*it);
 		if (d.exists())
