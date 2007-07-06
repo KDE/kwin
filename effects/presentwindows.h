@@ -15,6 +15,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kwineffects.h>
 #include <kwinglutils.h>
 
+#include <QPixmap>
+
 #ifdef HAVE_XRENDER
 #include <X11/extensions/Xrender.h>
 #endif
