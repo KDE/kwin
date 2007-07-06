@@ -1,7 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Invert
+Name[pt]=Inverter
+Name[pt_BR]=Inverter
+Name[sv]=Invertera
 Comment=Inverts (negates) colors of the desktop
+Comment[pt]=Inverte (nega) as cores no ecrã
+Comment[pt_BR]=Inverte (nega) as cores no ecrã
+Comment[sv]=Inverterar (vänder på) skrivbordets färger
 
 Type=Service
 ServiceTypes=KWin/Effect

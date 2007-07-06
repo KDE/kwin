@@ -1,7 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Sharpen
+Name[pt]=Aumento de Detalhe
+Name[pt_BR]=Aumento de Detalhe
+Name[sv]=Skärpa
 Comment=Makes your desktop look sharper
+Comment[pt]=Faz o seu ecrã parecer mais definido
+Comment[pt_BR]=Faz o seu ecrã parecer mais definido
+Comment[sv]=Gör att skrivbordet ser skarpare ut
 
 Type=Service
 ServiceTypes=KWin/Effect
