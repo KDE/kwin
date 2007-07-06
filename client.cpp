@@ -140,6 +140,7 @@ Client::Client( Workspace *ws )
     urgency = false;
     ignore_focus_stealing = false;
     demands_attention = false;
+    hidden_preview = false;
     check_active_modal = false;
 
     Pdeletewindow = 0;
