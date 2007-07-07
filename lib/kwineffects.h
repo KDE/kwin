@@ -23,7 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QList>
 #include <QHash>
 
-#include <stdio.h>
+#include <assert.h>
 
 class KLibrary;
 class KConfigGroup;
@@ -36,9 +36,14 @@ namespace KWin
 class EffectWindow;
 class EffectWindowGroup;
 class Effect;
-class Vertex;
+class WindowQuad;
 class GLRenderTarget;
 class GLShader;
+class WindowQuadList;
+class WindowPrePaintData;
+class WindowPaintData;
+class ScreenPrePaintData;
+class ScreenPaintData;
 
 typedef QPair< QString, Effect* > EffectPair;
 typedef QPair< Effect*, Window > InputWindowPair;
@@ -72,10 +77,10 @@ class KWIN_EXPORT Effect
         Effect();
         virtual ~Effect();
 
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
+        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
+        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         // paintWindow() can do various transformations
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
@@ -165,10 +170,10 @@ class KWIN_EXPORT EffectsHandler
         EffectsHandler(CompositingType type);
         virtual ~EffectsHandler();
         // for use by effects
-        virtual void prePaintScreen( int* mask, QRegion* region, int time ) = 0;
+        virtual void prePaintScreen( ScreenPrePaintData& data, int time ) = 0;
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data ) = 0;
         virtual void postPaintScreen() = 0;
-        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time ) = 0;
+        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time ) = 0;
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) = 0;
         virtual void postPaintWindow( EffectWindow* w ) = 0;
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) = 0;
@@ -335,14 +340,6 @@ class KWIN_EXPORT EffectWindow
         virtual EffectWindow* findModal() = 0;
         virtual EffectWindowList mainWindows() const = 0;
 
-        virtual QVector<Vertex>& vertices() = 0;
-        // Can be called in pre-paint pass. Makes sure that all quads that the
-        //  window consists of are not bigger than maxquadsize x maxquadsize
-        //  (in pixels) in the following paint pass.
-        virtual void requestVertexGrid(int maxquadsize) = 0;
-        // Marks vertices of the window as dirty. Call this if you change
-        //  position of the vertices
-        virtual void markVerticesDirty() = 0;
         virtual void setShader(GLShader* shader) = 0;
     };
 
@@ -355,28 +352,265 @@ class KWIN_EXPORT EffectWindowGroup
 
 /**
  * @short Vertex class
- * Vertex has position and texture coordinate which are equal at first,
- *  however effects can e.g. modify position to move the window or part of it.
+ * A vertex is one position in a window. WindowQuad consists of four WindowVertex objects
+ * and represents one part of a window.
  **/
-class KWIN_EXPORT Vertex
-{
+class KWIN_EXPORT WindowVertex
+    {
     public:
-        Vertex()  {}
-        Vertex(float x, float y)
-            {
-            pos[0] = texcoord[0] = x; pos[1] = texcoord[1] = y; pos[2] = 0.0f;
-            }
-        Vertex(float x, float y, float u, float v)
-            {
-            pos[0] = x; pos[1] = y; pos[2] = 0.0f; texcoord[0] = u; texcoord[1] = v;
-            }
-        float pos[3];
-        float texcoord[2];
-};
+        float x() const;
+        float y() const;
+        void move( float x, float y );
+        void setX( float x );
+        void setY( float y );
+        float textureX() const;
+        float textureY() const;
+        WindowVertex();
+        WindowVertex( float x, float y, float tx, float ty );
+    private:
+        friend class WindowQuad;
+        float px, py; // position
+        float tx, ty; // texture coords
+    };
+
+/**
+ * @short Class representing one area of a window.
+ * WindowQuads consists of four WindowVertex objects and represents one part of a window.
+ */
+class KWIN_EXPORT WindowQuad
+    {
+    public:
+        WindowQuad();
+        WindowQuad makeSubQuad( float x1, float y1, float x2, float y2 ) const;
+        WindowVertex& operator[]( int index );
+        const WindowVertex& operator[]( int index ) const;
+        // these 8 work only with untransformed quads
+        float left() const;
+        float right() const;
+        float top() const;
+        float bottom() const;
+        float textureLeft() const;
+        float textureRight() const;
+        float textureTop() const;
+        float textureBottom() const;
+    private:
+        void checkUntransformed() const;
+        WindowVertex verts[ 4 ];
+    };
+
+class KWIN_EXPORT WindowQuadList
+    : public QList< WindowQuad >
+    {
+    public:
+        WindowQuadList splitAtX( float x ) const;
+        WindowQuadList splitAtY( float y ) const;
+        WindowQuadList makeGrid( int maxquadsize ) const;
+        bool smoothNeeded() const;
+        void makeArrays( float** vertices, float** texcoords );
+    };
+
+class KWIN_EXPORT WindowPrePaintData
+    {
+    public:
+        int mask;
+        QRegion paint;
+        QRegion clip;
+        WindowQuadList quads;
+    };
+
+class KWIN_EXPORT WindowPaintData
+    {
+    public:
+        WindowPaintData();
+        /**
+         * Window opacity, in range 0 = transparent to 1 = fully opaque
+         */
+        double opacity;
+        double xScale;
+        double yScale;
+        int xTranslate;
+        int yTranslate;
+        /**
+         * Saturation of the window, in range [0; 1]
+         * 1 means that the window is unchanged, 0 means that it's completely
+         *  unsaturated (greyscale). 0.5 would make the colors less intense,
+         *  but not completely grey
+         **/
+        float saturation;
+        /**
+         * Brightness of the window, in range [0; 1]
+         * 1 means that the window is unchanged, 0 means that it's completely
+         * black. 0.5 would make it 50% darker than usual
+         **/
+        float brightness;
+        WindowQuadList quads;
+    };
+
+class KWIN_EXPORT ScreenPaintData
+    {
+    public:
+        ScreenPaintData();
+        double xScale;
+        double yScale;
+        int xTranslate;
+        int yTranslate;
+    };
+
+class KWIN_EXPORT ScreenPrePaintData
+    {
+    public:
+        int mask;
+        QRegion paint;
+    };
 
 extern KWIN_EXPORT EffectsHandler* effects;
 
+/***************************************************************
+ WindowVertex
+***************************************************************/
 
+inline
+WindowVertex::WindowVertex()
+    : px( 0 ), py( 0 ), tx( 0 ), ty( 0 )
+    {
+    }
+
+inline
+WindowVertex::WindowVertex( float _x, float _y, float _tx, float _ty )
+    : px( _x ), py( _y ), tx( _tx ), ty( _ty )
+    {
+    }
+
+inline
+float WindowVertex::x() const
+    {
+    return px;
+    }
+
+inline
+float WindowVertex::y() const
+    {
+    return py;
+    }
+
+inline
+void WindowVertex::move( float x, float y )
+    {
+    px = x;
+    py = y;
+    }
+
+inline
+void WindowVertex::setX( float x )
+    {
+    px = x;
+    }
+
+inline
+void WindowVertex::setY( float y )
+    {
+    py = y;
+    }
+
+inline
+float WindowVertex::textureX() const
+    {
+    return tx;
+    }
+
+inline
+float WindowVertex::textureY() const
+    {
+    return ty;
+    }
+
+/***************************************************************
+ WindowQuad
+***************************************************************/
+
+inline
+WindowQuad::WindowQuad()
+    {
+    }
+
+inline
+WindowVertex& WindowQuad::operator[]( int index )
+    {
+    assert( index >= 0 && index < 4 );
+    return verts[ index ];
+    }
+
+inline
+const WindowVertex& WindowQuad::operator[]( int index ) const
+    {
+    assert( index >= 0 && index < 4 );
+    return verts[ index ];
+    }
+
+inline
+void WindowQuad::checkUntransformed() const
+    {
+    assert( verts[ 0 ].py == verts[ 1 ].py && verts[ 2 ].py == verts[ 3 ].py
+        && verts[ 0 ].px == verts[ 3 ].px && verts[ 1 ].px == verts[ 2 ].px );
+    assert( verts[ 0 ].ty == verts[ 1 ].ty && verts[ 2 ].ty == verts[ 3 ].ty
+        && verts[ 0 ].tx == verts[ 3 ].tx && verts[ 1 ].tx == verts[ 2 ].tx );
+    }
+
+inline
+float WindowQuad::left() const
+    {
+    checkUntransformed();
+    return verts[ 0 ].px;
+    }
+
+inline
+float WindowQuad::right() const
+    {
+    checkUntransformed();
+    return verts[ 2 ].px;
+    }
+
+inline
+float WindowQuad::top() const
+    {
+    checkUntransformed();
+    return verts[ 0 ].py;
+    }
+
+inline
+float WindowQuad::bottom() const
+    {
+    checkUntransformed();
+    return verts[ 2 ].py;
+    }
+
+inline
+float WindowQuad::textureLeft() const
+    {
+    checkUntransformed();
+    return verts[ 0 ].tx;
+    }
+
+inline
+float WindowQuad::textureRight() const
+    {
+    checkUntransformed();
+    return verts[ 2 ].tx;
+    }
+
+inline
+float WindowQuad::textureTop() const
+    {
+    checkUntransformed();
+    return verts[ 0 ].ty;
+    }
+
+inline
+float WindowQuad::textureBottom() const
+    {
+    checkUntransformed();
+    return verts[ 2 ].ty;
+    }
 
 } // namespace
 

@@ -42,7 +42,7 @@ MagnifierEffect::MagnifierEffect()
     magnifier_size = QSize( 200, 200 ); // TODO config option
     }
 
-void MagnifierEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void MagnifierEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( zoom != target_zoom )
         {
@@ -52,8 +52,8 @@ void MagnifierEffect::prePaintScreen( int* mask, QRegion* region, int time )
         else
             zoom = qMax( zoom * qMin( 1 - diff, 0.8 ), target_zoom );
         }
-    effects->prePaintScreen( mask, region, time );
-    *region |= magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH );
+    effects->prePaintScreen( data, time );
+    data.paint |= magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH );
     }
 
 void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

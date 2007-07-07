@@ -23,18 +23,18 @@ ShakyMoveEffect::ShakyMoveEffect()
 static const int shaky_diff[] = { 0, 1, 2, 3, 2, 1, 0, -1, -2, -3, -2, -1 };
 static const int SHAKY_MAX = sizeof( shaky_diff ) / sizeof( shaky_diff[ 0 ] );
 
-void ShakyMoveEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void ShakyMoveEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !windows.isEmpty())
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    effects->prePaintScreen( mask, region, time );
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    effects->prePaintScreen( data, time );
     }
 
-void ShakyMoveEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void ShakyMoveEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( windows.contains( w ))
-        *mask |= PAINT_WINDOW_TRANSFORMED;
-    effects->prePaintWindow( w, mask, paint, clip, time );
+        data.mask |= PAINT_WINDOW_TRANSFORMED;
+    effects->prePaintWindow( w, data, time );
     }
 
 void ShakyMoveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

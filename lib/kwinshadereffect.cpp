@@ -116,19 +116,19 @@ GLShader* ShaderEffect::shader() const
     return mShader;
 }
 
-void ShaderEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void ShaderEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 {
     mTime += time / 1000.0f;
 #ifdef HAVE_OPENGL
     if( mValid && mEnabled )
     {
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
         effects->pushRenderTarget(mRenderTarget);
     }
 #endif
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
 }
 
 void ShaderEffect::postPaintScreen()

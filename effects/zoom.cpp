@@ -33,7 +33,7 @@ ZoomEffect::ZoomEffect()
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
     }
 
-void ZoomEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void ZoomEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( zoom != target_zoom )
         {
@@ -44,8 +44,8 @@ void ZoomEffect::prePaintScreen( int* mask, QRegion* region, int time )
             zoom = qMax( zoom * qMin( 1 - diff, 0.8 ), target_zoom );
         }
     if( zoom != 1.0 )
-        *mask |= PAINT_SCREEN_TRANSFORMED;
-    effects->prePaintScreen( mask, region, time );
+        data.mask |= PAINT_SCREEN_TRANSFORMED;
+    effects->prePaintScreen( data, time );
     }
 
 void ZoomEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

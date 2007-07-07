@@ -15,14 +15,14 @@ namespace KWin
 
 KWIN_EFFECT( maketransparent, MakeTransparentEffect )
 
-void MakeTransparentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if(( w->isUserMove() || w->isUserResize()) || w->isDialog())
         {
-        *mask |= PAINT_WINDOW_TRANSLUCENT;
-        *mask &= ~PAINT_WINDOW_OPAQUE;
+        data.mask |= PAINT_WINDOW_TRANSLUCENT;
+        data.mask &= ~PAINT_WINDOW_OPAQUE;
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

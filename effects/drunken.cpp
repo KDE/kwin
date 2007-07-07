@@ -17,24 +17,24 @@ namespace KWin
 
 KWIN_EFFECT( drunken, DrunkenEffect )
 
-void DrunkenEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void DrunkenEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !windows.isEmpty())
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    effects->prePaintScreen( mask, region, time );
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    effects->prePaintScreen( data, time );
     }
 
-void DrunkenEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void DrunkenEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( windows.contains( w ))
         {
         windows[ w ] += time / 1000.;
         if( windows[ w ] < 1 )
-            *mask |= PAINT_WINDOW_TRANSFORMED;
+            data.mask |= PAINT_WINDOW_TRANSFORMED;
         else
             windows.remove( w );
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void DrunkenEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

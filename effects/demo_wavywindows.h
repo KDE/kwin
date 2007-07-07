@@ -27,8 +27,8 @@ class WavyWindowsEffect
     public:
         WavyWindowsEffect();
 
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
-        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
+        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
+        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintScreen();
 

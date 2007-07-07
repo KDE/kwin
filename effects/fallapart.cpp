@@ -18,24 +18,24 @@ namespace KWin
 
 KWIN_EFFECT( fallapart, FallApartEffect )
 
-void FallApartEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void FallApartEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !windows.isEmpty())
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    effects->prePaintScreen(mask, region, time);
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    effects->prePaintScreen(data, time);
     }
 
-void FallApartEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void FallApartEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( windows.contains( w ))
         {
         if( windows[ w ] < 1 )
             {
             windows[ w ] += time / 1000.;
-            *mask |= PAINT_WINDOW_TRANSFORMED;
+            data.mask |= PAINT_WINDOW_TRANSFORMED;
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
             // Request the window to be divided into cells
-            w->requestVertexGrid( 40 );
+            data.quads = data.quads.makeGrid( 40 );
             }
         else
             {
@@ -43,22 +43,20 @@ void FallApartEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
             w->unrefWindow();
             }
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( windows.contains( w ))
         {
-        QVector< Vertex >& vertices = w->vertices();
-        assert( vertices.count() % 4 == 0 );
-        for( int i = 0;
-             i < vertices.count();
-             i += 4 )
+        WindowQuadList new_quads;
+        int cnt = 0;
+        foreach( WindowQuad quad, data.quads )
             {
             // make fragments move in various directions, based on where
             // they are (left pieces generally move to the left, etc.)
-            QPointF p1( vertices[ i ].pos[ 0 ], vertices[ i ].pos[ 1 ] );
+            QPointF p1( quad[ 0 ].x(), quad[ 0 ].y());
             double xdiff = 0;
             if( p1.x() < w->width() / 2 )
                 xdiff = -( w->width() / 2 - p1.x()) / w->width() * 100;
@@ -70,38 +68,36 @@ void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
             if( p1.y() > w->height() / 2 )
                 ydiff = ( p1.y() - w->height() / 2 ) / w->height() * 100;
             double modif = windows[ w ] * windows[ w ] * 64;
-            srandom( i ); // change direction randomly but consistently
+            srandom( cnt ); // change direction randomly but consistently
             xdiff += ( rand() % 21 - 10 );
             ydiff += ( rand() % 21 - 10 );
             for( int j = 0;
                  j < 4;
                  ++j )
                 {
-                vertices[ i + j ].pos[ 0 ] += xdiff * modif;
-                vertices[ i + j ].pos[ 1 ] += ydiff * modif;
+                quad[ j ].move( quad[ j ].x() + xdiff * modif, quad[ j ].y() + ydiff * modif );
                 }
             // also make the fragments rotate around their center
-            QPointF center(( vertices[ i ].pos[ 0 ] + vertices[ i + 1 ].pos[ 0 ]
-                + vertices[ i + 2 ].pos[ 0 ] + vertices[ i + 3 ].pos[ 0 ] ) / 4,
-                ( vertices[ i ].pos[ 1 ] + vertices[ i + 1 ].pos[ 1 ]
-                + vertices[ i + 2 ].pos[ 1 ] + vertices[ i + 3 ].pos[ 1 ] ) / 4 );
+            QPointF center(( quad[ 0 ].x() + quad[ 1 ].x() + quad[ 2 ].x() + quad[ 3 ].x()) / 4,
+                ( quad[ 0 ].y() + quad[ 1 ].y() + quad[ 2 ].y() + quad[ 3 ].y()) / 4 );
             double adiff = ( rand() % 720 - 360 ) / 360. * 2 * M_PI; // spin randomly
             for( int j = 0;
                  j < 4;
                  ++j )
                 {
-                double x = vertices[ i + j ].pos[ 0 ] - center.x();
-                double y = vertices[ i + j ].pos[ 1 ] - center.y();
+                double x = quad[ j ].x() - center.x();
+                double y = quad[ j ].y() - center.y();
                 double angle = atan2( y, x );
                 angle += windows[ w ] * adiff;
                 double dist = sqrt( x * x + y * y );
                 x = dist * cos( angle );
                 y = dist * sin( angle );
-                vertices[ i + j ].pos[ 0 ] = center.x() + x;
-                vertices[ i + j ].pos[ 1 ] = center.y() + y;
+                quad[ j ].move( center.x() + x, center.y() + y );
                 }
-            w->markVerticesDirty();
+            new_quads.append( quad );
+            ++cnt;
             }
+        data.quads = new_quads;
         }
     effects->paintWindow( w, mask, region, data );
     }

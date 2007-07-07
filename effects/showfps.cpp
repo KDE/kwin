@@ -57,7 +57,7 @@ ShowFpsEffect::ShowFpsEffect()
         y = displayHeight() - MAX_TIME - y;
     }
 
-void ShowFpsEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void ShowFpsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( time == 0 ) {
         // TODO optimized away
@@ -66,8 +66,8 @@ void ShowFpsEffect::prePaintScreen( int* mask, QRegion* region, int time )
     frames[ frames_pos ] = t.minute() * 60000 + t.second() * 1000 + t.msec();
     if( ++frames_pos == MAX_FPS )
         frames_pos = 0;
-    effects->prePaintScreen( mask, region, time );
-    *region += QRect( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
+    effects->prePaintScreen( data, time );
+    data.paint += QRect( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
     }
 
 void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

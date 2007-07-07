@@ -96,7 +96,7 @@ KDE 4.0 TODO
 - correct ordering for effects [rivo]
     would be nice if isn't too strict
 
-- vertex redesign [Seli]
+/ vertex redesign [Seli]
     affects alpha clear hack
     - support applying opacity only to decoration
     - not using ARGB visuals
@@ -234,7 +234,7 @@ OpenGL TODO
 
 % with current nvidia glXCreatePixmap in tfp mode fails with pixmaps 32x32 and smaller
 
-+ vertices list (and possibly more things) should not be part of SceneOpenGL::Window
+/ vertices list (and possibly more things) should not be part of SceneOpenGL::Window
     - otherwise drawWindow() used for thumbnails would use them too
     - they should be probably part of WindowPaintData
 

@@ -41,10 +41,10 @@ TestInputEffect::~TestInputEffect()
     effects->destroyInputWindow( input );
     }
 
-void TestInputEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void TestInputEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    *mask |= PAINT_SCREEN_TRANSFORMED;
-    effects->prePaintScreen( mask, region, time );
+    data.mask |= PAINT_SCREEN_TRANSFORMED;
+    effects->prePaintScreen( data, time );
     }
 
 void TestInputEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

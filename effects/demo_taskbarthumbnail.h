@@ -31,8 +31,8 @@ class TaskbarThumbnailEffect
     public:
         TaskbarThumbnailEffect();
 
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
-        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
+        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
+        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void postPaintScreen();
         virtual void mouseChanged( const QPoint& pos, const QPoint& old,
             Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );

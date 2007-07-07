@@ -25,17 +25,17 @@ FadeEffect::FadeEffect()
     fadeWindows = conf.readEntry( "FadeWindows", true );
     }
 
-void FadeEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void FadeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !windows.isEmpty())
         {
         fadeInStep = time / double( fadeInTime );
         fadeOutStep = time / double( fadeOutTime );
         }
-    effects->prePaintScreen( mask, region, time );
+    effects->prePaintScreen( data, time );
     }
 
-void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void FadeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( windows.contains( w ))
         {
@@ -43,8 +43,8 @@ void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRe
         windows[ w ].fadeOutStep += fadeOutStep;
         if( windows[ w ].opacity < 1.0 )
             {
-            *mask &= ~PAINT_WINDOW_OPAQUE;
-            *mask |= PAINT_WINDOW_TRANSLUCENT;
+            data.mask &= ~PAINT_WINDOW_OPAQUE;
+            data.mask |= PAINT_WINDOW_TRANSLUCENT;
             }
         if( windows[ w ].deleted )
             {
@@ -57,7 +57,7 @@ void FadeEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRe
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
             }
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     if( windows.contains( w ) && !w->isPaintingEnabled())
         { // if the window isn't to be painted, then let's make sure
           // to track its progress

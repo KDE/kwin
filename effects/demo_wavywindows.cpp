@@ -25,27 +25,27 @@ WavyWindowsEffect::WavyWindowsEffect()
     }
 
 
-void WavyWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void WavyWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     // Adjust elapsed time
     mTimeElapsed += (time / 1000.0f);
     // We need to mark the screen windows as transformed. Otherwise the whole
     //  screen won't be repainted, resulting in artefacts
-    *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
     }
 
-void WavyWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void WavyWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     // This window will be transformed by the effect
-    *mask |= PAINT_WINDOW_TRANSFORMED;
+    data.mask |= PAINT_WINDOW_TRANSFORMED;
     // Check if OpenGL compositing is used
     // Request the window to be divided into cells which are at most 30x30
     //  pixels big
-    w->requestVertexGrid(30);
+    data.quads = data.quads.makeGrid( 30 );
 
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
@@ -58,15 +58,17 @@ void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
         // We have OpenGL compositing and the window has been subdivided
         //  because of our request (in pre-paint pass)
         // Transform all the vertices to create wavy effect
-        QVector< Vertex >& vertices = w->vertices();
-        for(int i = 0; i < vertices.count(); i++)
-            {
-            vertices[i].pos[0] += sin(mTimeElapsed + vertices[i].texcoord[1] / 60 + 0.5f) * 10;
-            vertices[i].pos[1] += sin(mTimeElapsed + vertices[i].texcoord[0] / 80) * 10;
+        for( int i = 0;
+             i < data.quads.count();
+             ++i )
+            for( int j = 0;
+                 j < 4;
+                 ++j )
+                {
+                WindowVertex& v = data.quads[ i ][ j ];
+                v.move( v.x() + sin(mTimeElapsed + v.textureY() / 60 + 0.5f) * 10,
+                    v.y() + sin(mTimeElapsed + v.textureX() / 80) * 10 );
             }
-        // We have changed the vertices, so they will have to be reset before
-        //  the next paint pass
-        w->markVerticesDirty();
         }
 
     // Call the next effect.

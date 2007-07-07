@@ -42,7 +42,7 @@ DesktopGridEffect::DesktopGridEffect()
     slideEnabled = conf.readEntry( "Slide", true );
     }
 
-void DesktopGridEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void DesktopGridEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( slide )
         {
@@ -50,7 +50,7 @@ void DesktopGridEffect::prePaintScreen( int* mask, QRegion* region, int time )
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
         if( progress != 1 )
-            *mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
+            data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         else
             {
             slide = false;
@@ -66,28 +66,28 @@ void DesktopGridEffect::prePaintScreen( int* mask, QRegion* region, int time )
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
         if( progress != 0 )
-            *mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
+            data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         if( !activated && progress == 0 )
             finish();
         int d = posToDesktop( cursorPos());
         if( d != hover_desktop )
             {
-            *region |= desktopRect( hover_desktop, true );
+            data.paint |= desktopRect( hover_desktop, true );
             hover_desktop = d;
-            *region |= desktopRect( hover_desktop, true );
+            data.paint |= desktopRect( hover_desktop, true );
             }
         }
-    effects->prePaintScreen( mask, region, time );
+    effects->prePaintScreen( data, time );
     }
 
-void DesktopGridEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void DesktopGridEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( slide )
         {
         if( w->isOnAllDesktops())
             {
             if( slide_painting_sticky )
-                *mask |= PAINT_WINDOW_TRANSFORMED;
+                data.mask |= PAINT_WINDOW_TRANSFORMED;
             else
                 w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             }
@@ -104,12 +104,12 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* pai
             w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         if( w == window_move )
             {
-            *mask |= PAINT_WINDOW_TRANSFORMED;
+            data.mask |= PAINT_WINDOW_TRANSFORMED;
             if( w->isOnAllDesktops() && painting_desktop != posToDesktop( window_move_pos - window_move_diff ))
                 w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             }
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

@@ -92,9 +92,11 @@ class Scene
         // called after all effects had their paintWindow() called
         void finalPaintWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data );
         // shared implementation, starts painting the window
-        virtual void paintWindow( Window* w, int mask, QRegion region );
+        virtual void paintWindow( Window* w, int mask, QRegion region, WindowQuadList quads );
         // called after all effects had their drawWindow() called
         void finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data );
+        // creates initial quad list for a window
+        virtual WindowQuadList buildQuads( const Window* w );
         // infinite region, i.e. everything
         static QRegion infiniteRegion();
         // compute time since the last repaint
@@ -102,10 +104,12 @@ class Scene
         // saved data for 2nd pass of optimized screen painting
         struct Phase2Data
             {
-            Phase2Data( Window* w, QRegion r, int m ) : window( w ), region( r ), mask( m ) {}
+            Phase2Data( Window* w, QRegion r, int m, const WindowQuadList& q )
+                : window( w ), region( r ), mask( m ), quads( q ) {}
             Window* window;
             QRegion region;
             int mask;
+            WindowQuadList quads;
             };
         // windows in their stacking order
         QVector< Window* > stacking_order;

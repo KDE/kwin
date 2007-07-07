@@ -23,7 +23,7 @@ class ShowFpsEffect
     {
     public:
         ShowFpsEffect();
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
+        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
     private:

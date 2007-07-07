@@ -24,28 +24,28 @@ TaskbarThumbnailEffect::TaskbarThumbnailEffect()
     }
 
 
-void TaskbarThumbnailEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void TaskbarThumbnailEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     // We might need to paint thumbnails if cursor has moved since last
     //  painting or some thumbnails were painted the last time
     QPoint cpos = cursorPos();
     if(cpos != mLastCursorPos || mThumbnails.count() > 0)
         {
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         mThumbnails.clear();
         mLastCursorPos = cpos;
         }
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
     }
 
-void TaskbarThumbnailEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void TaskbarThumbnailEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     QRect iconGeo = w->iconGeometry();
     if(iconGeo.contains( mLastCursorPos ))
         mThumbnails.append( w );
 
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void TaskbarThumbnailEffect::postPaintScreen()

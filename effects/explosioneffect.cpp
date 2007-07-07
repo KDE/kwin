@@ -100,17 +100,17 @@ bool ExplosionEffect::loadData()
     return true;
     }
 
-void ExplosionEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void ExplosionEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( mActiveAnimations > 0 )
         // We need to mark the screen as transformed. Otherwise the whole screen
         //  won't be repainted, resulting in artefacts
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
     }
 
-void ExplosionEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void ExplosionEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( mWindows.contains( w ))
         {
@@ -121,8 +121,8 @@ void ExplosionEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
             mWindows[ w  ] += time / 700.0; // complete change in 700ms
             if( mWindows[ w  ] < 1 )
                 {
-                *mask |= PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED;
-                *mask &= ~PAINT_WINDOW_OPAQUE;
+                data.mask |= PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED;
+                data.mask &= ~PAINT_WINDOW_OPAQUE;
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
                 }
             else
@@ -134,7 +134,7 @@ void ExplosionEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
             }
         }
 
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

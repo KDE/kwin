@@ -48,16 +48,16 @@ bool TestFBOEffect::supported()
     }
 
 
-void TestFBOEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void TestFBOEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if(mValid)
         {
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
         effects->pushRenderTarget(mRenderTarget);
         }
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
     }
 
 void TestFBOEffect::postPaintScreen()

@@ -22,17 +22,17 @@ MinimizeAnimationEffect::MinimizeAnimationEffect()
     }
 
 
-void MinimizeAnimationEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( mActiveAnimations > 0 )
         // We need to mark the screen windows as transformed. Otherwise the
         //  whole screen won't be repainted, resulting in artefacts
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
     }
 
-void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     const float changeTime = 500;
     if( mAnimationProgress.contains( w ))
@@ -55,7 +55,7 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegio
         if( mAnimationProgress.contains( w ))
             {
             // We'll transform this window
-            *mask |= PAINT_WINDOW_TRANSFORMED;
+            data.mask |= PAINT_WINDOW_TRANSFORMED;
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
             }
         else
@@ -63,7 +63,7 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, int* mask, QRegio
             mActiveAnimations--;
         }
 
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

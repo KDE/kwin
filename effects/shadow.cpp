@@ -37,11 +37,11 @@ QRect ShadowEffect::shadowRectangle(const QRect& windowRectangle) const
     return windowRectangle.adjusted( shadowXOffset - shadowFuzzyness - 20, shadowYOffset - shadowFuzzyness - 20,
             shadowXOffset + shadowFuzzyness + 20, shadowYOffset + shadowFuzzyness + 20);
     }
-void ShadowEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void ShadowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    *mask |= PAINT_WINDOW_TRANSLUCENT;
-    *paint |= QRegion( shadowRectangle( ( QRegion( w->geometry()) & *paint ).boundingRect() ));
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    data.mask |= PAINT_WINDOW_TRANSLUCENT;
+    data.paint |= QRegion( shadowRectangle( ( QRegion( w->geometry()) & data.paint ).boundingRect() ));
+    effects->prePaintWindow( w, data, time );
     }
 
 void ShadowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

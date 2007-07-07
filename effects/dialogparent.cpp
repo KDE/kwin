@@ -15,7 +15,7 @@ namespace KWin
 
 KWIN_EFFECT( dialogparent, DialogParentEffect )
 
-void DialogParentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void DialogParentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     // How long does it take for the effect to get it's full strength (in ms)
     const float changeTime = 200;
@@ -34,7 +34,7 @@ void DialogParentEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* pa
         }
 
     // Call the next effect
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void DialogParentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

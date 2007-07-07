@@ -132,19 +132,19 @@ bool BlurEffect::supported()
     }
 
 
-void BlurEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void BlurEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     mTransparentWindows = 0;
     mTime += time;
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
     }
 
-void BlurEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void BlurEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
 {
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
 
-    if( w->isPaintingEnabled() && ( *mask & PAINT_WINDOW_TRANSLUCENT ))
+    if( w->isPaintingEnabled() && ( data.mask & PAINT_WINDOW_TRANSLUCENT ))
         mTransparentWindows++;
 }
 

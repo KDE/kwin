@@ -27,7 +27,7 @@ class KWIN_EXPORT ShaderEffect : public Effect
         ShaderEffect(const QString& shadername);
         virtual ~ShaderEffect();
 
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
+        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void postPaintScreen();
 
         static bool supported();

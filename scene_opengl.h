@@ -123,27 +123,9 @@ class SceneOpenGL::Window
         virtual void pixmapDiscarded();
         bool bindTexture();
         void discardTexture();
-        void discardVertices();
-
-        // Returns list of vertices
-        QVector<Vertex>& vertices()  { return verticeslist; }
-        // Can be called in pre-paint pass. Makes sure that all quads that the
-        //  window consists of are not bigger than maxquadsize x maxquadsize
-        //  (in pixels) in the following paint pass.
-        void requestVertexGrid(int maxquadsize);
-        // Marks vertices of the window as dirty. Call this if you change
-        //  position of the vertices
-        void markVerticesDirty()  { verticesDirty = true; }
-
         void setShader( GLShader* s )  { shader = s; }
 
     protected:
-        // Makes sure that vertex grid requests are fulfilled and that vertices
-        //  aren't dirty. Call this before paint pass
-        void prepareVertices();
-        void createVertexGrid(int xres, int yres);
-        void resetVertices();  // Resets positions of vertices
-
         void prepareRenderStates( int mask, WindowPaintData data );
         void prepareShaderRenderStates( int mask, WindowPaintData data );
         void restoreRenderStates( int mask, WindowPaintData data );
@@ -151,16 +133,6 @@ class SceneOpenGL::Window
 
     private:
         Texture texture;
-
-        QVector<Vertex> verticeslist;
-        // Maximum size of the biggest quad that window currently has, in pixels
-        int currentXResolution;
-        int currentYResolution;
-        // Requested maximum size of the biggest quad that window would have
-        //  during the next paint pass, in pixels
-        int requestedXResolution;
-        int requestedYResolution;
-        bool verticesDirty;  // vertices have been modified in some way
         GLShader* shader;  // shader to be used for rendering, if any
     };
 

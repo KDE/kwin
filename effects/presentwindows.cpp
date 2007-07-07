@@ -69,7 +69,7 @@ PresentWindowsEffect::~PresentWindowsEffect()
     }
 
 
-void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void PresentWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     // How long does it take for the effect to get it's full strength (in ms)
     const float changeTime = 300;
@@ -89,25 +89,25 @@ void PresentWindowsEffect::prePaintScreen( int* mask, QRegion* region, int time 
     // We need to mark the screen windows as transformed. Otherwise the whole
     //  screen won't be repainted, resulting in artefacts
     if( mActiveness > 0.0f )
-        *mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
     }
 
-void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( mActiveness > 0.0f )
         {
         if( mWindowData.contains(w) )
             {
             // This window will be transformed by the effect
-            *mask |= Effect::PAINT_WINDOW_TRANSFORMED;
+            data.mask |= Effect::PAINT_WINDOW_TRANSFORMED;
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             // If it's minimized window or on another desktop and effect is not
             //  fully active, then apply some transparency
             if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
-                *mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
+                data.mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
             // Change window's hover according to cursor pos
             WindowData& windata = mWindowData[w];
             const float hoverchangetime = 200;
@@ -119,7 +119,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* 
         else if( !w->isDesktop())
             w->disablePainting( EffectWindow::PAINT_DISABLED );
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

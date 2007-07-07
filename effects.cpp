@@ -74,11 +74,11 @@ void EffectsHandlerImpl::reconfigure()
     }
 
 // the idea is that effects call this function again which calls the next one
-void EffectsHandlerImpl::prePaintScreen( int* mask, QRegion* region, int time )
+void EffectsHandlerImpl::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( current_paint_screen < loaded_effects.size())
         {
-        loaded_effects[current_paint_screen++].second->prePaintScreen( mask, region, time );
+        loaded_effects[current_paint_screen++].second->prePaintScreen( data, time );
         --current_paint_screen;
         }
     // no special final code
@@ -105,11 +105,11 @@ void EffectsHandlerImpl::postPaintScreen()
     // no special final code
     }
 
-void EffectsHandlerImpl::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void EffectsHandlerImpl::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( current_paint_window < loaded_effects.size())
         {
-        loaded_effects[current_paint_window++].second->prePaintWindow( w, mask, paint, clip, time );
+        loaded_effects[current_paint_window++].second->prePaintWindow( w, data, time );
         --current_paint_window;
         }
     // no special final code
@@ -1055,33 +1055,6 @@ EffectWindowList EffectWindowImpl::mainWindows() const
         return ret;
         }
     return EffectWindowList();
-    }
-
-QVector<Vertex>& EffectWindowImpl::vertices()
-    {
-#ifdef HAVE_OPENGL
-    if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
-        return w->vertices();
-#endif
-    abort(); // TODO
-    }
-
-void EffectWindowImpl::requestVertexGrid(int maxquadsize)
-    {
-#ifdef HAVE_OPENGL
-    if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
-        return w->requestVertexGrid( maxquadsize );
-#endif
-    abort(); // TODO
-    }
-
-void EffectWindowImpl::markVerticesDirty()
-    {
-#ifdef HAVE_OPENGL
-    if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
-        return w->markVerticesDirty();
-#endif
-    abort(); // TODO
     }
 
 void EffectWindowImpl::setShader(GLShader* shader)

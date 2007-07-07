@@ -15,24 +15,24 @@ namespace KWin
 
 KWIN_EFFECT( scalein, ScaleInEffect )
 
-void ScaleInEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void ScaleInEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !windows.isEmpty())
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    effects->prePaintScreen( mask, region, time );
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    effects->prePaintScreen( data, time );
     }
 
-void ScaleInEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void ScaleInEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( windows.contains( w ))
         {
         windows[ w ] += time / 500.; // complete change in 500ms
         if( windows[ w ] < 1 )
-            *mask |= PAINT_WINDOW_TRANSFORMED;
+            data.mask |= PAINT_WINDOW_TRANSFORMED;
         else
             windows.remove( w );
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void ScaleInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

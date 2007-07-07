@@ -94,7 +94,12 @@ void Scene::paintScreen( int* mask, QRegion* region )
     updateTimeDiff();
     // preparation step
     static_cast<EffectsHandlerImpl*>(effects)->startPaint();
-    effects->prePaintScreen( mask, region, time_diff );
+    ScreenPrePaintData pdata;
+    pdata.mask = *mask;
+    pdata.paint = *region;
+    effects->prePaintScreen( pdata, time_diff );
+    *mask = pdata.mask;
+    *region = pdata.paint;
     if( *mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS ))
         { // Region painting is not possible with transformations,
           // because screen damage doesn't match transformed positions.
@@ -165,19 +170,21 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
     QList< Phase2Data > phase2;
     foreach( Window* w, stacking_order ) // bottom to top
         {
-        int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
+        WindowPrePaintData data;
+        data.mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
-        QRegion paint = infiniteRegion(); // no clipping, so doesn't really matter
-        QRegion clip = QRegion();
+        data.paint = infiniteRegion(); // no clipping, so doesn't really matter
+        data.clip = QRegion();
+        data.quads = buildQuads( w );
         // preparation step
-        effects->prePaintWindow( effectWindow( w ), &mask, &paint, &clip, time_diff );
+        effects->prePaintWindow( effectWindow( w ), data, time_diff );
         if( !w->isPaintingEnabled())
             continue;
-        phase2.append( Phase2Data( w,  infiniteRegion(), mask ));
+        phase2.append( Phase2Data( w, infiniteRegion(), data.mask, data.quads ));
         }
 
     foreach( Phase2Data d, phase2 )
-        paintWindow( d.window, d.mask, d.region );
+        paintWindow( d.window, d.mask, d.region, d.quads );
     }
 
 // The optimized case without any transformations at all.
@@ -199,38 +206,40 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
          --i )
         {
         Window* w = stacking_order[ i ];
-        int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
+        WindowPrePaintData data;
+        data.mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
-        QRegion paint = region;
-        QRegion clip = w->isOpaque() ? w->shape().translated( w->x(), w->y()) : QRegion();
+        data.paint = region;
+        data.clip = w->isOpaque() ? w->shape().translated( w->x(), w->y()) : QRegion();
+        data.quads = buildQuads( w );
         // preparation step
-        effects->prePaintWindow( effectWindow( w ), &mask, &paint, &clip, time_diff );
+        effects->prePaintWindow( effectWindow( w ), data, time_diff );
         if( !w->isPaintingEnabled())
             continue;
-        paint -= allclips; // make sure to avoid already clipped areas
-        if( paint.isEmpty()) // completely clipped
+        data.paint -= allclips; // make sure to avoid already clipped areas
+        if( data.paint.isEmpty()) // completely clipped
             continue;
-        if( paint != region ) // prepaint added area to draw
+        if( data.paint != region ) // prepaint added area to draw
             {
-            region |= paint; // make sure other windows in that area get painted too
-            painted_region |= paint; // make sure it makes it to the screen
+            region |= data.paint; // make sure other windows in that area get painted too
+            painted_region |= data.paint; // make sure it makes it to the screen
             }
         // If the window is transparent, the transparent part will be done
         // in the 2nd pass.
-        if( mask & PAINT_WINDOW_TRANSLUCENT )
-            phase2translucent.prepend( Phase2Data( w, paint, mask ));
-        if( mask & PAINT_WINDOW_OPAQUE )
+        if( data.mask & PAINT_WINDOW_TRANSLUCENT )
+            phase2translucent.prepend( Phase2Data( w, data.paint, data.mask, data.quads ));
+        if( data.mask & PAINT_WINDOW_OPAQUE )
             {
-            phase2opaque.append( Phase2Data( w, paint, mask ));
+            phase2opaque.append( Phase2Data( w, data.paint, data.mask, data.quads ));
             // The window can clip by its opaque parts the windows below.
-            region -= clip;
-            allclips |= clip;
+            region -= data.clip;
+            allclips |= data.clip;
             }
         }
     // Do the actual painting
     // First opaque windows, top to bottom
     foreach( Phase2Data d, phase2opaque )
-        paintWindow( d.window, d.mask, d.region );
+        paintWindow( d.window, d.mask, d.region, d.quads );
     if( !( orig_mask & PAINT_SCREEN_BACKGROUND_FIRST ))
         paintBackground( region ); // Fill any areas of the root window not covered by windows
     // Now walk the list bottom to top, drawing translucent windows.
@@ -239,17 +248,18 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
     QRegion add_paint;
     foreach( Phase2Data d, phase2translucent )
         {
-        paintWindow( d.window, d.mask, d.region | add_paint );
+        paintWindow( d.window, d.mask, d.region | add_paint, d.quads );
         // It is necessary to also add paint regions of windows below, because their
         // pre-paint's might have extended the paint area, so those areas need to be painted too.
         add_paint |= d.region;
         }
     }
 
-void Scene::paintWindow( Window* w, int mask, QRegion region )
+void Scene::paintWindow( Window* w, int mask, QRegion region, WindowQuadList quads )
     {
     WindowPaintData data;
     data.opacity = w->window()->opacity();
+    data.quads = quads;
     w->prepareForPainting();
     effects->paintWindow( effectWindow( w ), mask, region, data );
     }
@@ -264,6 +274,22 @@ void Scene::finalPaintWindow( EffectWindowImpl* w, int mask, QRegion region, Win
 void Scene::finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
     w->sceneWindow()->performPaint( mask, region, data );
+    }
+
+WindowQuadList Scene::buildQuads( const Window* w )
+    {
+    WindowQuadList ret;
+    foreach( QRect r, w->shape().rects())
+        {
+        WindowQuad quad;
+        // TODO asi mam spatne pravy dolni roh - bud tady, nebo v jinych castech
+        quad[ 0 ] = WindowVertex( r.x(), r.y(), r.x(), r.y());
+        quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), r.x() + r.width(), r.y());
+        quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), r.x() + r.width(), r.y() + r.height());
+        quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), r.x(), r.y() + r.height());
+        ret.append( quad );
+        }
+    return ret;
     }
 
 //****************************************

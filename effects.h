@@ -30,10 +30,10 @@ class EffectsHandlerImpl : public EffectsHandler
     public:
         EffectsHandlerImpl(CompositingType type);
         virtual ~EffectsHandlerImpl();
-        virtual void prePaintScreen( int* mask, QRegion* region, int time );
+        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
-        virtual void prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time );
+        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
 
@@ -189,9 +189,6 @@ class EffectWindowImpl : public EffectWindow
         virtual EffectWindow* findModal();
         virtual EffectWindowList mainWindows() const;
 
-        virtual QVector<Vertex>& vertices();
-        virtual void requestVertexGrid(int maxquadsize);
-        virtual void markVerticesDirty();
         virtual void setShader(GLShader* shader);
 
         const Toplevel* window() const;

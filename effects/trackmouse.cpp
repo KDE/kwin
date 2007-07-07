@@ -43,11 +43,11 @@ TrackMouseEffect::~TrackMouseEffect()
     delete texture;
     }
 
-void TrackMouseEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void TrackMouseEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( active )
         angle = ( angle + time / 10 ) % 360;
-    effects->prePaintScreen( mask, region, time );
+    effects->prePaintScreen( data, time );
     }
 
 void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

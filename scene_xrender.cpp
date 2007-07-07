@@ -198,31 +198,33 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
          --i )
         {
         Window* w = static_cast< Window* >( stacking_order[ i ] );
-        int mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
+        WindowPrePaintData data;
+        data.mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
-        QRegion paint = region;
+        data.paint = region;
         // TODO this is wrong, transformedShape() should be used here, but is not known yet
-        QRegion clip = w->isOpaque() ? region : QRegion();
+        data.clip = w->isOpaque() ? region : QRegion();
+        data.quads = buildQuads( w );
         // preparation step
-        effects->prePaintWindow( effectWindow( w ), &mask, &paint, &clip, time_diff );
+        effects->prePaintWindow( effectWindow( w ), data, time_diff );
         if( !w->isPaintingEnabled())
             continue;
-        paint -= allclips; // make sure to avoid already clipped areas
-        if( paint.isEmpty()) // completely clipped
+        data.paint -= allclips; // make sure to avoid already clipped areas
+        if( data.paint.isEmpty()) // completely clipped
             continue;
-        if( paint != region ) // prepaint added area to draw
+        if( data.paint != region ) // prepaint added area to draw
             {
-            region |= paint; // make sure other windows in that area get painted too
-            painted_region |= paint; // make sure it makes it to the screen
+            region |= data.paint; // make sure other windows in that area get painted too
+            painted_region |= data.paint; // make sure it makes it to the screen
             }
         // If the window is transparent, the transparent part will be done
         // in the 2nd pass.
-        if( mask & PAINT_WINDOW_TRANSLUCENT )
-            phase2.prepend( Phase2Data( w, paint, mask ));
-        if( mask & PAINT_WINDOW_OPAQUE )
+        if( data.mask & PAINT_WINDOW_TRANSLUCENT )
+            phase2.prepend( Phase2Data( w, data.paint, data.mask, data.quads ));
+        if( data.mask & PAINT_WINDOW_OPAQUE )
             {
             w->setTransformedShape( QRegion());
-            paintWindow( w, mask, paint );
+            paintWindow( w, data.mask, data.paint, data.quads );
             // The window can clip by its opaque parts the windows below.
             region -= w->transformedShape();
             }
@@ -236,7 +238,7 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
     foreach( Phase2Data d, phase2 )
         {
         Scene::Window* w = d.window;
-        paintWindow( w, d.mask, d.region | add_paint );
+        paintWindow( w, d.mask, d.region | add_paint, d.quads );
         // It is necessary to also add paint regions of windows below, because their
         // pre-paint's might have extended the paint area, so those areas need to be painted too.
         add_paint |= d.region;

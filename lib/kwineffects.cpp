@@ -125,9 +125,9 @@ void Effect::mouseChanged( const QPoint&, const QPoint&, Qt::MouseButtons, Qt::K
     {
     }
 
-void Effect::prePaintScreen( int* mask, QRegion* region, int time )
+void Effect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    effects->prePaintScreen( mask, region, time );
+    effects->prePaintScreen( data, time );
     }
 
 void Effect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -140,9 +140,9 @@ void Effect::postPaintScreen()
     effects->postPaintScreen();
     }
 
-void Effect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void Effect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void Effect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
@@ -289,5 +289,157 @@ EffectWindowGroup::~EffectWindowGroup()
     {
     }
 
+/***************************************************************
+ WindowQuad
+***************************************************************/
+
+WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) const
+    {
+    assert( x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
+    WindowQuad ret( *this );
+    ret.verts[ 0 ].px = x1;
+    ret.verts[ 3 ].px = x1;
+    ret.verts[ 1 ].px = x2;
+    ret.verts[ 2 ].px = x2;
+    ret.verts[ 0 ].py = y1;
+    ret.verts[ 1 ].py = y1;
+    ret.verts[ 2 ].py = y2;
+    ret.verts[ 3 ].py = y2;
+    float tleft = ( x1 - left()) / ( right() - left()) * ( textureRight() - textureLeft()) + textureLeft();
+    float tright = ( x2 - left()) / ( right() - left()) * ( textureRight() - textureLeft()) + textureLeft();
+    float ttop = ( y1 - top()) / ( bottom() - top()) * ( textureBottom() - textureTop()) + textureTop();
+    float tbottom = ( y2 - top()) / ( bottom() - top()) * ( textureBottom() - textureTop()) + textureTop();
+    ret.verts[ 0 ].tx = tleft;
+    ret.verts[ 3 ].tx = tleft;
+    ret.verts[ 1 ].tx = tright;
+    ret.verts[ 2 ].tx = tright;
+    ret.verts[ 0 ].ty = ttop;
+    ret.verts[ 1 ].ty = ttop;
+    ret.verts[ 2 ].ty = tbottom;
+    ret.verts[ 3 ].ty = tbottom;
+    return ret;
+    }
+
+/***************************************************************
+ WindowQuadList
+***************************************************************/
+
+WindowQuadList WindowQuadList::splitAtX( float x ) const
+    {
+    WindowQuadList ret;
+    foreach( WindowQuad quad, *this )
+        {
+        bool wholeleft = true;
+        bool wholeright = true;
+        for( int i = 0;
+             i < 4;
+             ++i )
+            {
+            if( quad[ i ].x() < x )
+                wholeright = false;
+            if( quad[ i ].x() >= x )
+                wholeleft = false;
+            }
+        if( wholeleft || wholeright ) // is whole in one split part
+            {
+            ret.append( quad );
+            continue;
+            }
+        ret.append( quad.makeSubQuad( quad.left(), quad.top(), x, quad.bottom()));
+        ret.append( quad.makeSubQuad( x, quad.top(), quad.right(), quad.bottom()));
+        }
+    return ret;
+    }
+
+WindowQuadList WindowQuadList::splitAtY( float y ) const
+    {
+    WindowQuadList ret;
+    foreach( WindowQuad quad, *this )
+        {
+        bool wholetop = true;
+        bool wholebottom = true;
+        for( int i = 0;
+             i < 4;
+             ++i )
+            {
+            if( quad[ i ].y() < y )
+                wholebottom = false;
+            if( quad[ i ].y() >= y )
+                wholetop = false;
+            }
+        if( wholetop || wholebottom ) // is whole in one split part
+            {
+            ret.append( quad );
+            continue;
+            }
+        ret.append( quad.makeSubQuad( quad.left(), quad.top(), quad.right(), y ));
+        ret.append( quad.makeSubQuad( quad.left(), y, quad.right(), quad.bottom()));
+        }
+    return ret;
+    }
+
+WindowQuadList WindowQuadList::makeGrid( int maxquadsize ) const
+    {
+    if( empty())
+        return *this;
+    // find the bounding rectangle
+    float left = first().left();
+    float right = first().right();
+    float top = first().top();
+    float bottom = first().bottom();
+    foreach( WindowQuad quad, *this )
+        {
+        left = qMin( left, quad.left());
+        right = qMax( right, quad.right());
+        top = qMin( top, quad.top());
+        bottom = qMax( bottom, quad.bottom());
+        }
+    WindowQuadList ret;
+    for( float x = left;
+         x < right;
+         x += maxquadsize )
+        {
+        for( float y = top;
+             y < bottom;
+             y += maxquadsize )
+            {
+            foreach( WindowQuad quad, *this )
+                {
+                if( QRectF( QPointF( quad.left(), quad.top()), QPointF( quad.right(), quad.bottom()))
+                    .intersects( QRectF( x, y, maxquadsize, maxquadsize )))
+                    {
+                    ret.append( quad.makeSubQuad( qMax( x, quad.left()), qMax( y, quad.top()),
+                        qMin( quad.right(), x + maxquadsize ), qMin( quad.bottom(), y + maxquadsize )));
+                    }
+                }
+            }
+        }
+    return ret;
+    }
+
+void WindowQuadList::makeArrays( float** vertices, float** texcoords )
+    {
+    *vertices = new float[ count() * 4 * 2 ];
+    *texcoords = new float[ count() * 4 * 2 ];
+    float* vpos = *vertices;
+    float* tpos = *texcoords;
+    for( int i = 0;
+         i < count();
+         ++i )
+        for( int j = 0;
+             j < 4;
+             ++j )
+            {
+            *vpos++ = at( i )[ j ].x();
+            *vpos++ = at( i )[ j ].y();
+            *tpos++ = at( i )[ j ].textureX();
+            *tpos++ = at( i )[ j ].textureY();
+            }
+    }
+
+bool WindowQuadList::smoothNeeded() const
+    {
+    return false; // TODO
+    }
 
 } // namespace

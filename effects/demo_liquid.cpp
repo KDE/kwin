@@ -95,17 +95,17 @@ bool LiquidEffect::supported()
     }
 
 
-void LiquidEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void LiquidEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     mTime += time / 1000.0f;
     if(mValid)
         {
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         // Start rendering to texture
         effects->pushRenderTarget(mRenderTarget);
         }
 
-    effects->prePaintScreen(mask, region, time);
+    effects->prePaintScreen(data, time);
     }
 
 void LiquidEffect::postPaintScreen()

@@ -11,30 +11,30 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "flame.h"
 
 #include <assert.h>
+#include <kdebug.h>
 
 namespace KWin
 {
 
 KWIN_EFFECT( flame, FlameEffect )
 
-void FlameEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void FlameEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !windows.isEmpty())
-        *mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    effects->prePaintScreen(mask, region, time);
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    effects->prePaintScreen(data, time);
     }
 
-void FlameEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void FlameEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( windows.contains( w ))
         {
         if( windows[ w ] < 1 )
             {
             windows[ w ] += time / 500.;
-            *mask |= PAINT_WINDOW_TRANSFORMED;
+            data.mask |= PAINT_WINDOW_TRANSFORMED;
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
-            // Request the window to be divided into cells
-            w->requestVertexGrid( qMax( w->height() / 50, 5 ));
+            data.quads = data.quads.splitAtY( windows[ w ] * w->height());
             }
         else
             {
@@ -42,41 +42,24 @@ void FlameEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QR
             w->unrefWindow();
             }
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void FlameEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( windows.contains( w ))
         {
-        QVector< Vertex >& vertices = w->vertices();
-        QVector< Vertex > new_vertices;
-        double ylimit = windows[ w ] * w->height(); // parts above this are already away
-        assert( vertices.count() % 4 == 0 );
-        for( int i = 0;
-             i < vertices.count();
-             i += 4 )
+        WindowQuadList new_quads;
+        float ylimit = windows[ w ] * w->height(); // parts above this are already away
+        foreach( WindowQuad quad, data.quads )
             {
-            bool is_in = false;
-            for( int j = 0;
-                 j < 4;
-                 ++j )
-                if( vertices[ i + j ].pos[ 1 ] >= ylimit )
-                    is_in = true;
-            if( !is_in )
+            if( quad.bottom() <= ylimit )
                 continue;
-            for( int j = 0;
-                 j < 4;
-                 ++j )
-                {
-                Vertex vertex = vertices[ i + j ];
-                new_vertices.append( vertex );
-                }
+            new_quads.append( quad );
             }
-        if( new_vertices.isEmpty())
+        if( new_quads.isEmpty())
             return; // nothing to paint
-        w->vertices() = new_vertices;
-        w->markVerticesDirty();
+        data.quads = new_quads;
         }
     effects->paintWindow( w, mask, region, data );
     }

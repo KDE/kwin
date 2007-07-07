@@ -709,7 +709,6 @@ void SceneOpenGL::windowGeometryShapeChanged( Toplevel* c )
     Window* w = windows[ c ];
     w->discardShape();
     w->discardTexture();
-    w->discardVertices();
     }
 
 void SceneOpenGL::windowOpacityChanged( Toplevel* )
@@ -1015,96 +1014,17 @@ void SceneOpenGL::Texture::unbind()
 SceneOpenGL::Window::Window( Toplevel* c )
     : Scene::Window( c )
     , texture()
-    , currentXResolution( -1 )
-    , currentYResolution( -1 )
-    , requestedXResolution( 0 )
-    , requestedYResolution( 0 )
-    , verticesDirty( false )
     {
     }
 
 SceneOpenGL::Window::~Window()
     {
     discardTexture();
-    discardVertices();
-    }
-
-void SceneOpenGL::Window::requestVertexGrid(int maxquadsize)
-    {
-    requestedXResolution = (requestedXResolution <= 0) ? maxquadsize : qMin(maxquadsize, requestedXResolution);
-    requestedYResolution = (requestedYResolution <= 0) ? maxquadsize : qMin(maxquadsize, requestedYResolution);
-    }
-
-void SceneOpenGL::Window::createVertexGrid(int xres, int yres)
-    {
-    int oldcount = verticeslist.count();
-    verticeslist.clear();
-    foreach( QRect r, shape().rects())
-        {
-        // First calculate number of columns/rows that this rect will be
-        //  divided into
-        int cols = (xres <= 0) ? 1 : (int)ceil( r.width() / (float)xres );
-        int rows = (yres <= 0) ? 1 : (int)ceil( r.height() / (float)yres );
-        // Now calculate actual size of each cell
-        int cellw = r.width() / cols;
-        int cellh = r.height() / rows;
-        int maxx = r.x() + r.width();
-        int maxy = r.y() + r.height();
-        for( int x1 = r.x(); x1 < maxx; x1 += cellw )
-            {
-            int x2 = qMin(x1 + cellw, maxx);
-            for( int y1 = r.y(); y1 < maxy; y1 += cellh )
-                {
-                int y2 = qMin(y1 + cellh, maxy);
-                // Add this quad to vertices' list
-                verticeslist.append( Vertex( x1, y1 ));
-                verticeslist.append( Vertex( x1, y2 ));
-                verticeslist.append( Vertex( x2, y2 ));
-                verticeslist.append( Vertex( x2, y1 ));
-                }
-            }
-        }
-    Client* c = qobject_cast<Client *>(window());
-    kDebug( 1212 ) << k_funcinfo << "'" << (c ? c->caption() : "") << "': Resized vertex grid from " <<
-            oldcount/4 << " quads (minreso: " << currentXResolution << "x" << currentYResolution <<
-            ") to " << verticeslist.count()/4 << " quads (minreso: " << xres << "x" << yres << ")" << endl;
-
-    currentXResolution = xres;
-    currentYResolution = yres;
-    verticesDirty = false;
-    }
-
-void SceneOpenGL::Window::resetVertices()
-    {
-    // This assumes that texcoords of the vertices are unchanged. If they are,
-    //  we need to do this in some other way (or maybe the effects should then
-    // clean things up themselves)
-    for(int i = 0; i < verticeslist.count(); i++)
-        {
-        verticeslist[i].pos[0] = verticeslist[i].texcoord[0];
-        verticeslist[i].pos[1] = verticeslist[i].texcoord[1];
-        }
-    verticesDirty = false;
-    }
-
-void SceneOpenGL::Window::prepareVertices()
-    {
-    if( requestedXResolution != currentXResolution || requestedYResolution != currentYResolution )
-        createVertexGrid( requestedXResolution, requestedYResolution );
-    else if( verticesDirty )
-        resetVertices();
-
-    // Reset requests for the next painting
-    requestedXResolution = 0;
-    requestedYResolution = 0;
-
-    // Reset shader. If effect wants to use shader, it has to set it in paint pass
-    shader = 0;
     }
 
 void SceneOpenGL::Window::prepareForPainting()
     {
-    prepareVertices();
+    shader = NULL; // TODO
     // We should also bind texture here so that effects could access it in the
     //  paint pass
     }
@@ -1181,13 +1101,6 @@ void SceneOpenGL::Window::discardTexture()
     texture.discard();
     }
 
-void SceneOpenGL::Window::discardVertices()
-{
-    // Causes list of vertices to be recreated before next rendering pass
-    currentXResolution = -1;
-    currentYResolution = -1;
-}
-
 // when the window's composite pixmap is discarded, undo binding it to the texture
 void SceneOpenGL::Window::pixmapDiscarded()
     {
@@ -1240,7 +1153,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         // filtering when it actually makes a difference, that is with
         // minification or changed vertices
         if( options->smoothScale == 2
-            && ( verticesDirty || data.xScale < 1 || data.yScale < 1 ))
+            && ( data.quads.smoothNeeded() || data.xScale < 1 || data.yScale < 1 ))
             {
             texture.setFilter( GL_LINEAR_MIPMAP_LINEAR );
             }
@@ -1267,12 +1180,15 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         prepareRenderStates( mask, data );
     texture.bind();
     texture.enableUnnormalizedTexCoords();
-
     // Render geometry
     region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
-    renderGLGeometry( mask, region, verticeslist.count(),
-            verticeslist[ 0 ].pos, verticeslist[ 0 ].texcoord, 0,  3, sizeof( Vertex ));
-
+    float* vertices;
+    float* texcoords;
+    data.quads.makeArrays( &vertices, &texcoords );
+    renderGLGeometry( mask, region, data.quads.count() * 4,
+            vertices, texcoords, NULL, 2, 0 );
+    delete[] vertices;
+    delete[] texcoords;
     texture.disableUnnormalizedTexCoords();
     glPopMatrix();
 

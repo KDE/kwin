@@ -23,15 +23,15 @@ ShiftWorkspaceUpEffect::ShiftWorkspaceUpEffect()
     timer.start( 2000 );
     }
 
-void ShiftWorkspaceUpEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void ShiftWorkspaceUpEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( up && diff < 1000 )
         diff = qBound( 0, diff + time, 1000 ); // KDE3: note this differs from KCLAMP
     if( !up && diff > 0 )
         diff = qBound( 0, diff - time, 1000 );
     if( diff != 0 )
-        *mask |= PAINT_SCREEN_TRANSFORMED;
-    effects->prePaintScreen( mask, region, time );
+        data.mask |= PAINT_SCREEN_TRANSFORMED;
+    effects->prePaintScreen( data, time );
     }
 
 void ShiftWorkspaceUpEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

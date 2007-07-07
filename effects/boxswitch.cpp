@@ -43,12 +43,12 @@ BoxSwitchEffect::~BoxSwitchEffect()
     {
     }
 
-void BoxSwitchEffect::prePaintScreen( int* mask, QRegion* region, int time )
+void BoxSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    effects->prePaintScreen( mask, region, time );
+    effects->prePaintScreen( data, time );
     }
 
-void BoxSwitchEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint, QRegion* clip, int time )
+void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( mActivated )
         {
@@ -56,8 +56,8 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
             {
             if( windows.contains( w ) && w != selected_window )
                 {
-                *mask |= PAINT_WINDOW_TRANSLUCENT;
-                *mask &= ~PAINT_WINDOW_OPAQUE;
+                data.mask |= PAINT_WINDOW_TRANSLUCENT;
+                data.mask &= ~PAINT_WINDOW_OPAQUE;
                 }
             }
         else
@@ -71,7 +71,7 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, int* mask, QRegion* paint
                 }
             }
         }
-    effects->prePaintWindow( w, mask, paint, clip, time );
+    effects->prePaintWindow( w, data, time );
     }
 
 void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
