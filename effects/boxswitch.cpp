@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QSize>
 
 #include <kapplication.h>
+#include <kcolorscheme.h>
 
 #ifdef HAVE_OPENGL
 #include <GL/gl.h>
@@ -430,12 +431,13 @@ void BoxSwitchEffect::calculateItemSizes()
 
 void BoxSwitchEffect::paintFrame()
     {
-    double alpha = 0.75;
+    QColor color = KColorScheme( KColorScheme::Window ).background();
+    color.setAlphaF( 0.9 );
 #ifdef HAVE_OPENGL
     if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT );
-        glColor4f( 0, 0, 0, alpha );
+        glColor4f( color.redF(), color.greenF(), color.blueF(), color.alphaF());
         renderRoundBox( frame_area );
         glPopAttrib();
         }
@@ -448,13 +450,13 @@ void BoxSwitchEffect::paintFrame()
         Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
         XFreePixmap( display(), pixmap );
         XRenderColor col;
-        col.alpha = int( alpha * 0xffff );
-        col.red = 0;
-        col.green = 0;
-        col.blue = 0;
+        col.alpha = int( color.alphaF() * 0xffff );
+        col.red = int( color.redF() * color.alphaF() * 0xffff );
+        col.green = int( color.greenF() * color.alphaF() * 0xffff );
+        col.blue = int( color.blueF() * color.alphaF() * 0xffff );
         XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
             frame_area.width(), frame_area.height());
-        XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc,
+        XRenderComposite( display(), color.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
             pic, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, frame_area.x(), frame_area.y(), frame_area.width(), frame_area.height());
         XRenderFreePicture( display(), pic );
@@ -464,12 +466,13 @@ void BoxSwitchEffect::paintFrame()
 
 void BoxSwitchEffect::paintHighlight( QRect area )
     {
-    double alpha = 0.75;
+    QColor color = KColorScheme( KColorScheme::Selection ).background();
+    color.setAlphaF( 0.9 );
 #ifdef HAVE_OPENGL
     if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT );
-        glColor4f( 1, 1, 1, alpha );
+        glColor4f( color.redF(), color.greenF(), color.blueF(), color.alphaF());
         renderRoundBox( area, 6 );
         glPopAttrib();
         }
@@ -482,13 +485,13 @@ void BoxSwitchEffect::paintHighlight( QRect area )
         Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
         XFreePixmap( display(), pixmap );
         XRenderColor col;
-        col.alpha = int( alpha * 0xffff );
-        col.red = int( alpha * 0xffff );
-        col.green = int( alpha * 0xffff );
-        col.blue = int( alpha * 0xffff );
+        col.alpha = int( color.alphaF() * 0xffff );
+        col.red = int( color.redF() * color.alphaF() * 0xffff );
+        col.green = int( color.greenF() * color.alphaF() * 0xffff );
+        col.blue = int( color.blueF() * color.alphaF() * 0xffff );
         XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
             area.width(), area.height());
-        XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc,
+        XRenderComposite( display(), color.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
             pic, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
         XRenderFreePicture( display(), pic );
@@ -618,7 +621,7 @@ void BoxSwitchEffect::paintText( QRect area, QString text )
 
     p.begin( &textPixmap );
     p.setRenderHint( QPainter::TextAntialiasing );
-    p.setPen( Qt::white );
+    p.setPen( KColorScheme( KColorScheme::Window ).foreground());
     p.drawText( 0, 0, textPixmap.width(), textPixmap.height(),
         Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextSingleLine,
         p.fontMetrics().elidedText( text, Qt::ElideMiddle, textPixmap.width()));
