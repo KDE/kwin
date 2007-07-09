@@ -10,6 +10,7 @@ Name[nl]=FPS tonen
 Name[pt]=Mostrar as IPS
 Name[pt_BR]=Mostrar as IPS
 Name[sv]=Visa ramar/s
+Name[zh_TW]=顯示每秒幾張
 Icon=kwin-effect-showfps
 Comment=Shows KWin's performance
 Comment[csb]=Wëskrzënianié spòroscë òknów KDE
