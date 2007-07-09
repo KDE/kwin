@@ -55,10 +55,11 @@ class BoxSwitchEffect
         void calculateItemSizes();
 
         void paintFrame();
-        void paintHighlight( QRect area, QString text );
+        void paintHighlight( QRect area );
         void paintWindowThumbnail( EffectWindow* w );
         void paintDesktopThumbnail( int iDesktop );
         void paintWindowIcon( EffectWindow* w );
+        void paintText( QRect area, QString text );
 
         bool mActivated;
         Window mInput;
@@ -68,6 +69,8 @@ class BoxSwitchEffect
         int frame_margin; // TODO graphical background
         int highlight_margin; // TODO graphical background
         QSize item_max_size; // maximum item display size (including highlight)
+        QRect text_area;
+        QPixmap textPixmap;
 
         QHash< EffectWindow*, ItemInfo* > windows;
         EffectWindowList original_windows;
@@ -78,8 +81,12 @@ class BoxSwitchEffect
 
         int painting_desktop;
 
+#ifdef HAVE_OPENGL
+        GLTexture textTexture;
+#endif
 #ifdef HAVE_XRENDER
         XRenderPictFormat* alphaFormat;
+        Picture textPicture;
 #endif
     };
 

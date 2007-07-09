@@ -14,9 +14,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <QCursor>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QSize>
 
-#include <assert.h>
+#include <kapplication.h>
 
 #ifdef HAVE_OPENGL
 #include <GL/gl.h>
@@ -87,11 +88,12 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 {
                 if( w == selected_window )
                     {
-                    paintHighlight( windows[ w ]->area, w->caption());
+                    paintHighlight( windows[ w ]->area );
                     }
                 paintWindowThumbnail( w );
                 paintWindowIcon( w );
                 }
+            paintText( text_area, selected_window->caption());
             }
         else
             {
@@ -103,12 +105,12 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                     {
                     if( painting_desktop == selected_desktop )
                         {
-                        paintHighlight( desktops[ painting_desktop ]->area,
-                            effects->desktopName( painting_desktop ));
+                        paintHighlight( desktops[ painting_desktop ]->area ); //effects->desktopName( painting_desktop )
                         }
 
                     paintDesktopThumbnail( painting_desktop );
                     }
+                paintText( text_area, effects->desktopName( selected_desktop ));
                 painting_desktop = 0;
                 }
             }
@@ -261,6 +263,7 @@ void BoxSwitchEffect::tabBoxUpdated()
             if( windows.contains( selected_window ))
                 effects->addRepaint( windows.value( selected_window )->area );
             selected_window->addRepaintFull();
+            effects->addRepaint( text_area );
             if( effects->currentTabBoxWindowList() == original_windows )
                 return;
             original_windows = effects->currentTabBoxWindowList();
@@ -272,6 +275,7 @@ void BoxSwitchEffect::tabBoxUpdated()
             selected_desktop = effects->currentTabBoxDesktop();
             if( desktops.contains( selected_desktop ))
                 effects->addRepaint( desktops.value( selected_desktop )->area );
+            effects->addRepaint( text_area );
             if( effects->currentTabBoxDesktopList() == original_desktops )
                 return;
             original_desktops = effects->currentTabBoxDesktopList();
@@ -374,6 +378,8 @@ void BoxSwitchEffect::calculateFrameSize()
         item_max_size.setWidth( 200 );
         item_max_size.setHeight( 200 );
         }
+    // How much height to reserve for a one-line text label
+    text_area.setHeight( int( kapp->fontMetrics().height() * 1.2 ));
     // Shrink the size until all windows/desktops can fit onscreen
     frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
     while( frame_area.width() > displayWidth())
@@ -381,8 +387,11 @@ void BoxSwitchEffect::calculateFrameSize()
         item_max_size /= 2;
         frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
         }
-    frame_area.setHeight( frame_margin * 2 + item_max_size.height() + 15 );
-    frame_area.moveTo( ( displayWidth() - frame_area.width()) / 2, ( displayHeight() - frame_area.height()) / 2 );
+    frame_area.setHeight( frame_margin * 2 + item_max_size.height() + text_area.height());
+    text_area.setWidth( frame_area.width() - frame_margin * 2 );
+
+    frame_area.moveTo(( displayWidth() - frame_area.width()) / 2, ( displayHeight() - frame_area.height()) / 2 );
+    text_area.moveTo( frame_area.x() + frame_margin, frame_area.y() + frame_margin + item_max_size.height());
     }
 
 void BoxSwitchEffect::calculateItemSizes()
@@ -453,7 +462,7 @@ void BoxSwitchEffect::paintFrame()
 #endif
     }
 
-void BoxSwitchEffect::paintHighlight( QRect area, QString text )
+void BoxSwitchEffect::paintHighlight( QRect area )
     {
     double alpha = 0.75;
 #ifdef HAVE_OPENGL
@@ -485,7 +494,6 @@ void BoxSwitchEffect::paintHighlight( QRect area, QString text )
         XRenderFreePicture( display(), pic );
         }
 #endif
-//    kDebug() << text << endl; // TODO draw this nicely on screen
     }
 
 void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
@@ -597,6 +605,61 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
             windows[ w ]->iconPicture, None,
             effects->xrenderBufferPicture(),
             0, 0, 0, 0, x, y, width, height );
+        }
+#endif
+    }
+
+void BoxSwitchEffect::paintText( QRect area, QString text )
+    {
+    QPainter p;
+
+    textPixmap = QPixmap( area.width(), area.height());
+    textPixmap.fill( Qt::transparent );
+
+    p.begin( &textPixmap );
+    p.setRenderHint( QPainter::TextAntialiasing );
+    p.setPen( Qt::white );
+    p.drawText( 0, 0, textPixmap.width(), textPixmap.height(),
+        Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextSingleLine,
+        p.fontMetrics().elidedText( text, Qt::ElideMiddle, textPixmap.width()));
+    p.end();
+
+#ifdef HAVE_OPENGL
+    if( effects->compositingType() == OpenGLCompositing )
+        {
+        textTexture.load( textPixmap, GL_TEXTURE_RECTANGLE_ARB );
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        textTexture.bind();
+        const float verts[ 4 * 2 ] = 
+            {
+            area.x(), area.y(),
+            area.x(), area.y() + area.height(),
+            area.x() + area.width(), area.y() + area.height(),
+            area.x() + area.width(), area.y()
+            };
+        const float texcoords[ 4 * 2 ] =
+            {
+            0, textPixmap.height(),
+            0, 0,
+            textPixmap.width(), 0,
+            textPixmap.width(), textPixmap.height()
+            };
+        renderGLGeometry( 4, verts, texcoords );
+        textTexture.unbind();
+        glPopAttrib();
+        }
+#endif
+#ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing )
+        {
+        if( textPicture != None )
+            XRenderFreePicture( display(), textPicture );
+        textPicture = XRenderCreatePicture( display(), textPixmap.handle(), alphaFormat, 0, NULL );
+        XRenderComposite( display(), textPixmap.depth() == 32 ? PictOpOver : PictOpSrc,
+        textPicture, None, effects->xrenderBufferPicture(),
+        0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
         }
 #endif
     }
