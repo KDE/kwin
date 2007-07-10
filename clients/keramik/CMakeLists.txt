@@ -5,7 +5,6 @@ add_subdirectory( config )
 
 set(kwin3_keramik_PART_SRCS keramik.cpp )
 
-kde4_automoc(${kwin3_keramik_PART_SRCS})
 
 qt4_add_resources(kwin3_keramik_PART_SRCS tiles.qrc )
 

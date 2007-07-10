@@ -3,7 +3,6 @@
 set(kcm_kwindecoration_PART_SRCS kwindecoration.cpp buttons.cpp preview.cpp )
 
 
-kde4_automoc(${kcm_kwindecoration_PART_SRCS})
 
 
 kde4_add_plugin(kcm_kwindecoration ${kcm_kwindecoration_PART_SRCS})

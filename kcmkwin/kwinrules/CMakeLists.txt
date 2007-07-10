@@ -8,7 +8,6 @@ kde4_add_ui3_files(kwinrules_SRCS ruleswidgetbase.ui editshortcutbase.ui )
 
 set(kwin_rules_dialog_KDEINIT_SRCS main.cpp ${kwinrules_SRCS})
 
-kde4_automoc(${kwin_rules_dialog_KDEINIT_SRCS})
 
 kde4_add_kdeinit_executable( kwin_rules_dialog ${kwin_rules_dialog_KDEINIT_SRCS})
 
@@ -23,7 +22,6 @@ install(TARGETS kwin_rules_dialog DESTINATION ${BIN_INSTALL_DIR})
 
 set(kcm_kwinrules_PART_SRCS kcm.cpp ${kwinrules_SRCS})
 
-kde4_automoc(${kcm_kwinrules_PART_SRCS})
 
 kde4_add_plugin(kcm_kwinrules ${kcm_kwinrules_PART_SRCS})
 

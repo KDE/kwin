@@ -5,7 +5,6 @@ add_subdirectory( config )
 
 set(kwin3_default_PART_SRCS kdedefault.cpp)
 
-kde4_automoc(${kwin3_default_PART_SRCS})
 
 kde4_add_plugin(kwin3_default ${kwin3_default_PART_SRCS})
 

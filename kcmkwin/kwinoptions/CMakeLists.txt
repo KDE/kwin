@@ -6,7 +6,6 @@
 set(kcm_kwinoptions_PART_SRCS windows.cpp mouse.cpp main.cpp )
 
 
-kde4_automoc(${kcm_kwinoptions_PART_SRCS})
 
 kde4_add_plugin(kcm_kwinoptions ${kcm_kwinoptions_PART_SRCS})
 

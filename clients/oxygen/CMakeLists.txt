@@ -7,7 +7,6 @@ set(kwin_oxy_SRCS
      definitions.cpp
    )
 
-kde4_automoc(${kwin_oxy_SRCS})
 
 kde4_add_plugin(kwin3_oxy ${kwin_oxy_SRCS})
 

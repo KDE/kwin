@@ -6,7 +6,6 @@ set(kwin_xml  ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.KWin.xml)
 set(kwin_update_window_settings_SRCS update_window_settings.cpp )
 
 
-kde4_automoc(${kwin_update_window_settings_SRCS})
 
 kde4_add_executable( kwin_update_window_settings ${kwin_update_window_settings_SRCS})
 
@@ -18,7 +17,6 @@ install(TARGETS kwin_update_window_settings DESTINATION ${LIB_INSTALL_DIR}/kconf
 ########### next target ###############
 set(kwin_update_default_rules_SRCS update_default_rules.cpp)
 
-kde4_automoc(${kwin_update_default_rules})
 
 kde4_add_executable( kwin_update_default_rules ${kwin_update_default_rules_SRCS})
 
