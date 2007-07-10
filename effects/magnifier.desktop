@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Magnifier
+Name[be]=Павелічальная лупа
 Name[csb]=Zwikszanié
 Name[de]=Lupe
 Name[el]=Μεγεθυντικός φακός
@@ -17,6 +18,7 @@ Icon=kwin-effect-magnifier
 Comment=Magnifies the part of the screen that is under the mouse
 Comment[de]=Vergrößert den Arbeitsflächenbereich unter der Maus
 Comment[el]=Μεγέθυνση του τμήματος της οθόνη κάτω από το ποντίκι
+Comment[fa]=جزئی از پرده را که زیر موشی است درشت‌نما می‌کند
 Comment[ja]=マウスの下のスクリーン領域を拡大します
 Comment[nds]=Maakt den Deel vun den Schirm ünner de Muus grötter
 Comment[nl]=Vergroot het deel van het scherm dat zich onder de muis bevindt

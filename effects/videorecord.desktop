@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Video Record
+Name[be]=Відэазапіс
 Name[csb]=Nagranié wideò
 Name[de]=Video-Aufnahme
 Name[el]=Εγγραφή βίντεο
@@ -15,6 +16,7 @@ Name[sv]=Videoinspelning
 Name[zh_TW]=影像錄影
 Icon=kwin-effect-videorecord
 Comment=Lets you record videos of your desktop
+Comment[be]=Дазваляе вам запісваць відэа з вашага экрана
 Comment[de]=Zeichnet Videos von der Arbeitsfläche auf
 Comment[el]=Επιτρέπει την εγγραφή βίντεο της επιφάνειας εργασίας σας
 Comment[es]=Le permite grabar vídeos de su escritorio

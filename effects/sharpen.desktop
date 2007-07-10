@@ -2,12 +2,14 @@
 Encoding=UTF-8
 Name=Sharpen
 Name[fa]=تیز کردن
+Name[ja]=シャープ化
 Name[nds]=Scharp maken
 Name[pt]=Aumento de Detalhe
 Name[pt_BR]=Aumento de Detalhe
 Name[sv]=Skärpa
 Name[zh_TW]=讓輪廓更分明
 Comment=Makes your desktop look sharper
+Comment[ja]=デスクトップをシャープに見せます
 Comment[nds]=Lett Dien Schriefdisch wat scharper utsehn
 Comment[pt]=Faz o seu ecrã parecer mais definido
 Comment[pt_BR]=Faz o seu ecrã parecer mais definido

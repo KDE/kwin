@@ -11,6 +11,7 @@ X-KDE-FactoryName=kwintranslucency
 
 Name=Translucency
 Name[af]=Deursigtigheid
+Name[be]=Празрыстасць
 Name[br]=Treuzwel
 Name[ca]=Translucidesa
 Name[cs]=Průhlednost
@@ -64,6 +65,7 @@ Name[zh_TW]=透明度
 
 Comment=Configure window translucency and shadow management
 Comment[af]=Stel die venster deursigtigheid en skaduwee op
+Comment[be]=Настаўленні празрыстасці вокнаў і кіраванне ценем
 Comment[ca]=Configura la translucidesa de finestres i gestiona l'ombra
 Comment[cs]=Nastavení průhlednosti a stínování oken
 Comment[csb]=Kònfigùracëjô przezérnotë ë ceniów òknów
@@ -115,6 +117,7 @@ Comment[x-test]=xxConfigure window translucency and shadow managementxx
 Comment[zh_TW]=設定視窗透明度與陰影管理功能
 
 Keywords=translucency,transparence,shadows
+Keywords[be]=Празрыстасць,Цені,translucency,transparence,shadows
 Keywords[ca]=translucidesa,transparència,ombres
 Keywords[cs]=průhlednost,průsvitnost,stín
 Keywords[csb]=przezérnota,półprzezérnota,przeswiécëna,ceniô,cenie

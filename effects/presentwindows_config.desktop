@@ -8,6 +8,7 @@ X-KDE-FactoryName=kcm_kwineffect_presentwindows
 X-KDE-ParentComponents=kwin4_effect_presentwindows
 
 Name=Present Windows
+Name[be]=Існуючыя вокны
 Name[csb]=Prezentëjë òkna
 Name[de]=Fenster zeigen
 Name[el]=Παρουσίαση παραθύρων

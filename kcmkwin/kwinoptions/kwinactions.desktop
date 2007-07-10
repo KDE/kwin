@@ -11,6 +11,7 @@ X-KDE-FactoryName=kwinactions
 
 Name=Actions
 Name[af]=Aksies
+Name[be]=Дзеянні
 Name[br]=Oberoù
 Name[ca]=Accions
 Name[cs]=Činnosti
@@ -69,6 +70,7 @@ Name[zh_TW]=動作
 
 Comment=Configure keyboard and mouse settings
 Comment[af]=Konfigureer sleutelbord en muis instellings
+Comment[be]=Настаўленні клавіятуры і мышы
 Comment[br]=Kefluniañ ar stokellaoueg hag al logodenn
 Comment[ca]=Aquí podeu configurar l'arranjament del teclat i del ratolí
 Comment[cs]=Nastavení klávesnice a myši
@@ -126,6 +128,7 @@ Comment[xh]=Qwalasela izicwangciso zebhodi yezitshixho neze mouse
 Comment[zh_TW]=設定鍵盤與滑鼠的設定值
 
 Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
+Keywords[be]=Згарнуць,Найбольшыць,Найменшыць,Змяніць памер,Меню аперацыяў,Меню дзеянняў,Загаловак,shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
 Keywords[ca]=plegar,maximitzar,minimitzar,passar al davant,operacions del menú, barra del títol,redimensionar
 Keywords[cs]=zarolování,maximalizace,minimalizace,nabídka činností,titulek,změna velikosti
 Keywords[csb]=ceniô,maksymalizacëjô,minimalizacëjô,niżi,menu dzejaniów,titlowô lëstew,zmiana miarë

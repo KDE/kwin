@@ -11,6 +11,7 @@ X-KDE-FactoryName=kwinadvanced
 
 Name=Advanced
 Name[af]=Gevorderde
+Name[be]=Асаблівы
 Name[br]=Barek
 Name[ca]=Avançat
 Name[cs]=Pokročilé
@@ -71,6 +72,7 @@ Name[zh_TW]=進階
 
 Comment=Configure advanced window management features
 Comment[af]=Konfigureer gevorderde venster bestuuring funksies
+Comment[be]=Настаўленне адмысловых здольнасцяў кіравання вокнамі
 Comment[ca]=Aquí podeu configurar les característiques avançades de la gestió de finestres
 Comment[cs]=Nastavení pokročilých vlastností správce oken
 Comment[csb]=Kònfigùracëjô awansowónëch òptacëji sprôwianiô òknama
@@ -128,6 +130,7 @@ Comment[zh_TW]=設定進階視窗管理功能
 
 Keywords=shading,border,hover,active borders
 Keywords[af]=shading,border,hover,active grense
+Keywords[be]=Згортванне,Мяжа,Актыўныя межы,Актыўныя краі,shading,border,hover,active borders
 Keywords[ca]=plegat,vora,desplegat automàtic,vores actives
 Keywords[cs]=zarolování,vyrolování,okraj,přejezd myší,aktivní okraje
 Keywords[csb]=cenienié,grańce,przesëwanié nad,aktiwné grańce
