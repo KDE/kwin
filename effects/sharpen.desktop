@@ -1,16 +1,20 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Sharpen
+Name[el]=Όξυνση
 Name[fa]=تیز کردن
 Name[ja]=シャープ化
 Name[nds]=Scharp maken
+Name[nl]=Verscherpen
 Name[pt]=Aumento de Detalhe
 Name[pt_BR]=Aumento de Detalhe
 Name[sv]=Skärpa
 Name[zh_TW]=讓輪廓更分明
 Comment=Makes your desktop look sharper
+Comment[el]=Κάνει την επιφάνεια εργασίας σας να δείχνει πιο οξεία
 Comment[ja]=デスクトップをシャープに見せます
 Comment[nds]=Lett Dien Schriefdisch wat scharper utsehn
+Comment[nl]=Maakt het uiterlijk van uw desktop scherper
 Comment[pt]=Faz o seu ecrã parecer mais definido
 Comment[pt_BR]=Faz o seu ecrã parecer mais definido
 Comment[sv]=Gör att skrivbordet ser skarpare ut
