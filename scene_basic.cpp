@@ -34,7 +34,7 @@ SceneBasic::~SceneBasic()
     
 void SceneBasic::paint( QRegion, ToplevelList windows )
     {
-    Pixmap composite_pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), QX11Info::appDepth());
+    Pixmap composite_pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), DefaultDepth( display(), DefaultScreen( display())));
     XGCValues val;
     val.foreground = WhitePixel( display(), DefaultScreen( display()));
     val.subwindow_mode = IncludeInferiors;

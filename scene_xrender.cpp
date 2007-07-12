@@ -129,7 +129,7 @@ void SceneXrender::createBuffer()
     {
     if( buffer != None )
         XRenderFreePicture( display(), buffer );
-    Pixmap pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), QX11Info::appDepth());
+    Pixmap pixmap = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(), DefaultDepth( display(), DefaultScreen( display())));
     buffer = XRenderCreatePicture( display(), pixmap, format, 0, 0 );
     XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }

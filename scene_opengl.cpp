@@ -128,7 +128,9 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
 
     int vis_buffer, vis_drawable;
     glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
-    kDebug( 1212 ) << "Buffer visual (depth " << QX11Info::appDepth() << "): 0x" << QString::number( vis_buffer, 16 ) << endl;
+    XVisualInfo* visinfo_buffer = glXGetVisualFromFBConfig( display(), fbcbuffer );
+    kDebug( 1212 ) << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number( vis_buffer, 16 ) << endl;
+    XFree( visinfo_buffer );
     for( int i = 0; i <= 32; i++ )
         {
         if( fbcdrawableinfo[ i ].fbconfig == NULL )
@@ -316,7 +318,7 @@ bool SceneOpenGL::initBuffer()
         XSetWindowAttributes attrs;
         attrs.colormap = XCreateColormap( display(), rootWindow(), visual->visual, AllocNone );
         buffer = XCreateWindow( display(), wspace->overlayWindow(), 0, 0, displayWidth(), displayHeight(),
-            0, QX11Info::appDepth(), InputOutput, visual->visual, CWColormap, &attrs );
+            0, visual->depth, InputOutput, visual->visual, CWColormap, &attrs );
         if( hasGLXVersion( 1, 3 ))
             glxbuffer = glXCreateWindow( display(), fbcbuffer, buffer, NULL );
         else
@@ -328,13 +330,15 @@ bool SceneOpenGL::initBuffer()
     else if( fbcbuffer_nondb != NULL )
         { // cannot get any double-buffered drawable, will double-buffer using a pixmap
         fbcbuffer = fbcbuffer_nondb;
-        db = false;
+        XVisualInfo* visual = glXGetVisualFromFBConfig( display(), fbcbuffer );
         XGCValues gcattr;
         gcattr.subwindow_mode = IncludeInferiors;
         gcroot = XCreateGC( display(), rootWindow(), GCSubwindowMode, &gcattr );
         buffer = XCreatePixmap( display(), rootWindow(), displayWidth(), displayHeight(),
-            QX11Info::appDepth());
+            visual->depth );
         glxbuffer = glXCreatePixmap( display(), fbcbuffer, buffer, NULL );
+        db = false;
+        XFree( visual );
         }
     else
         {
@@ -354,10 +358,7 @@ bool SceneOpenGL::initBufferConfigs()
     for( int i = 0; i < 2; i++ )
         {
         int back, stencil, depth, caveat, alpha;
-        if( i > 0 )
-            back = INT_MAX;
-        else
-            back = 1;
+        back = i > 0 ? INT_MAX : 1;
         stencil = INT_MAX;
         depth = INT_MAX;
         caveat = INT_MAX;
@@ -371,14 +372,14 @@ bool SceneOpenGL::initBufferConfigs()
                 continue;
             visual_depth = vi->depth;
             XFree( vi );
-            if( visual_depth != QX11Info::appDepth() )
+            if( visual_depth != DefaultDepth( display(), DefaultScreen( display())))
                 continue;
             int value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_ALPHA_SIZE, &alpha );
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_BUFFER_SIZE, &value );
-            if( value != QX11Info::appDepth() && ( value - alpha ) != QX11Info::appDepth() )
+            if( value != visual_depth && ( value - alpha ) != visual_depth )
                 continue;
             int back_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
@@ -532,7 +533,7 @@ bool SceneOpenGL::initDrawableConfigs()
         }
     if( cnt )
         XFree( fbconfigs );
-    if( fbcdrawableinfo[ QX11Info::appDepth() ].fbconfig == NULL )
+    if( fbcdrawableinfo[ DefaultDepth( display(), DefaultScreen( display())) ].fbconfig == NULL )
         {
         kDebug( 1212 ) << "Couldn't find framebuffer configuration for default depth!" << endl;
         return false;
