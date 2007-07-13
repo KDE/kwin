@@ -146,6 +146,8 @@ void ShaderEffect::postPaintScreen()
         // Use the shader
         mShader->bind();
         mShader->setUniform("time", mTime);
+        mShader->setUniform("cursorX", (float)cursorPos().x());
+        mShader->setUniform("cursorY", (float)cursorPos().y());
 
         // Render fullscreen quad with screen contents
         glBegin(GL_QUADS);
