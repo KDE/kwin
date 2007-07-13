@@ -59,6 +59,7 @@ if(OPENGL_FOUND)
         blur.cpp
         explosioneffect.cpp
         invert.cpp
+        lookingglass.cpp
         magnifier.cpp
         mousemark.cpp
         shadow.cpp
@@ -69,6 +70,7 @@ if(OPENGL_FOUND)
         blur.desktop
         explosion.desktop
         invert.desktop
+        lookingglass.desktop
         magnifier.desktop
         mousemark.desktop
         shadow.desktop
@@ -89,6 +91,8 @@ if(OPENGL_FOUND)
         data/invert.vert
         data/sharpen.frag
         data/sharpen.vert
+        data/lookingglass.frag
+        data/lookingglass.vert
         data/shadow-texture.png
         data/circle.png
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
