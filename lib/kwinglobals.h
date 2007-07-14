@@ -11,9 +11,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_LIB_KWINGLOBALS_H
 #define KWIN_LIB_KWINGLOBALS_H
 
-#include <QX11Info>
-#include <QPoint>
-#include <qregion.h>
+#include <QtGui/QX11Info>
+#include <QtCore/QPoint>
+#include <QtGui/QRegion>
 
 #include <kdemacros.h>
 

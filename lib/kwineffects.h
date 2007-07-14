@@ -15,13 +15,13 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kwinglobals.h>
 
-#include <qpair.h>
-#include <QRect>
-#include <QRegion>
+#include <QtCore/QPair>
+#include <QtCore/QRect>
+#include <QtGui/QRegion>
 
-#include <QVector>
-#include <QList>
-#include <QHash>
+#include <QtCore/QVector>
+#include <QtCore/QList>
+#include <QtCore/QHash>
 
 #include <assert.h>
 
