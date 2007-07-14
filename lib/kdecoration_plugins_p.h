@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 // 
 
 
-#include <QWidget>
+#include <QtGui/QWidget>
 #include <ksharedconfig.h>
 
 #include "kdecoration.h"

@@ -25,13 +25,13 @@ DEALINGS IN THE SOFTWARE.
 #ifndef KDECORATION_H
 #define KDECORATION_H
 
-#include <QColor>
-#include <QFont>
-#include <QObject>
-#include <qiconset.h>
+#include <QtGui/QColor>
+#include <QtGui/QFont>
+#include <QtCore/QObject>
+#include <QtGui/QIcon>
 #include <netwm_def.h>
 #include <kdeversion.h>
-#include <QMouseEvent>
+#include <QtGui/QMouseEvent>
 
 class KDecorationOptionsPrivate;
 class KDecorationBridge;

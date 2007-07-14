@@ -25,7 +25,7 @@
 #ifndef KCOMMONDECORATION_H
 #define KCOMMONDECORATION_H
 
-#include <QAbstractButton>
+#include <QtGui/QAbstractButton>
 #include "kdecoration.h"
 
 class KDecorationBridge;
