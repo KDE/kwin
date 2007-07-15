@@ -505,7 +505,7 @@ bool SceneOpenGL::initDrawableConfigs()
                                   GLX_DEPTH_SIZE, &depth_value );
             if( depth_value > depth )
                 continue;
-            int mipmap_value;
+            int mipmap_value = -1;
             if( tfp_mode && GLTexture::framebufferObjectSupported())
                 {
                 glXGetFBConfigAttrib( display(), fbconfigs[ j ],
