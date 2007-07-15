@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Sharpen
+Name[de]=Schärfen
 Name[el]=Όξυνση
 Name[fa]=تیز کردن
 Name[ja]=シャープ化
@@ -11,6 +12,7 @@ Name[pt_BR]=Aumento de Detalhe
 Name[sv]=Skärpa
 Name[zh_TW]=讓輪廓更分明
 Comment=Makes your desktop look sharper
+Comment[de]=Lässt Ihre Arbeitsfläche schärfer erscheinen
 Comment[el]=Κάνει την επιφάνεια εργασίας σας να δείχνει πιο οξεία
 Comment[ja]=デスクトップをシャープに見せます
 Comment[nds]=Lett Dien Schriefdisch wat scharper utsehn

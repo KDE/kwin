@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Invert
 Name[be]=Інвертаваць
+Name[de]=Invertieren
 Name[el]=Αντιστροφή
 Name[fa]=وارونه
 Name[ja]=色調反転
@@ -12,6 +13,7 @@ Name[pt_BR]=Inverter
 Name[sv]=Invertera
 Name[zh_TW]=反轉
 Comment=Inverts (negates) colors of the desktop
+Comment[de]=Invertiert Farben der Arbeitsfläche
 Comment[el]=Αντιστρέφει τα χρώματα της επιφάνειας εργασίας
 Comment[fa]=رنگهای رومیزی را وارونه )خنثی( می‌کند
 Comment[ja]=デスクトップの色を反転させます

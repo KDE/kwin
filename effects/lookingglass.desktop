@@ -1,7 +1,12 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Looking Glass
+Name[nds]=Kiekglas
+Name[sv]=Spegel
 Comment=Looking Glass enhanced magnifier
+Comment[de]=Looking Glass erweiterte Lupe
+Comment[nds]=Verwiedert Luup
+Comment[sv]=Spegel förbättrat förstoringsglas
 
 Type=Service
 ServiceTypes=KWin/Effect
