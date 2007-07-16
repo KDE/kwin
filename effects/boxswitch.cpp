@@ -545,6 +545,12 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     {
     if( !windows.contains( w ))
         return;
+    // Don't render null icons
+    if( w->icon().isNull() )
+        {
+        return;
+        }
+
     if( windows[ w ]->icon.serialNumber() != w->icon().serialNumber())
         { // make sure windows[ w ]->icon is the right QPixmap, and rebind
         windows[ w ]->icon = w->icon();
