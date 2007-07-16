@@ -796,6 +796,12 @@ void PresentWindowsEffect::updateFilterTexture()
 
 void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& paintdata )
     {
+    // Don't render null icons
+    if( w->icon().isNull() )
+        {
+        return;
+        }
+
     WindowData& data = mWindowData[ w ];
     if( data.icon.serialNumber() != w->icon().serialNumber())
         { // make sure data.icon is the right QPixmap, and rebind
