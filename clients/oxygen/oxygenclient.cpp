@@ -66,7 +66,6 @@ class TileCache
         static TileCache *instance();
 
         QPixmap verticalGradient(const QColor &color, int height);
-        QPixmap horizontalGradient(const QColor &color, int width);
         QPixmap radialGradient(const QColor &color, int width);
 
     private:
@@ -99,37 +98,12 @@ QPixmap TileCache::verticalGradient(const QColor &color, int height)
         pixmap = new QPixmap(32, height);
 
         QLinearGradient gradient(0, 0, 0, height);
-        gradient.setColorAt(0, color.lighter(180));
-        gradient.setColorAt(1, color.darker(110));
+        gradient.setColorAt(0, color.lighter(115));
+        gradient.setColorAt(1, color);
 
         QPainter p(pixmap);
         p.setCompositionMode(QPainter::CompositionMode_Source);
         p.fillRect(pixmap->rect(), gradient);
-
-        m_cache.insert(key, pixmap);
-    }
-
-    return *pixmap;
-}
-
-QPixmap TileCache::horizontalGradient(const QColor &color, int width)
-{
-    quint64 key = (quint64(color.rgba()) << 32) | width | 0x4000;
-    QPixmap *pixmap = m_cache.object(key);
-
-    if (!pixmap)
-    {
-        pixmap = new QPixmap(width, 32);
-        pixmap->fill(Qt::transparent);
-        QLinearGradient gradient(0, 0, width, 0);
-        gradient.setColorAt(0, color.lighter(110));
-        gradient.setColorAt(1, color.darker(110));
-
-        QPainter p(pixmap);
-        p.setCompositionMode(QPainter::CompositionMode_Source);
-        p.fillRect(pixmap->rect(), gradient);
-        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        p.fillRect(pixmap->rect(), QColor(0,0,0,128));
 
         m_cache.insert(key, pixmap);
     }
@@ -147,10 +121,14 @@ QPixmap TileCache::radialGradient(const QColor &color, int width)
         width /= 2;
         pixmap = new QPixmap(width, 64);
         pixmap->fill(QColor(0,0,0,0));
-        QColor radialColor = color.lighter(120);
+        QColor radialColor = color.lighter(140);
         radialColor.setAlpha(255);
         QRadialGradient gradient(64, TITLESIZE + TFRAMESIZE, 64);
         gradient.setColorAt(0, radialColor);
+        radialColor.setAlpha(101);
+        gradient.setColorAt(0.5, radialColor);
+        radialColor.setAlpha(37);
+        gradient.setColorAt(0.75, radialColor);
         radialColor.setAlpha(0);
         gradient.setColorAt(1, radialColor);
 
@@ -577,41 +555,26 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.fillRect(QRect(frame.width()-RFRAMESIZE, 0,
                                                         RFRAMESIZE, frame.height()), gradient);
 
-    gradient = QLinearGradient(0, 0, frame.width(), 0);
-    gradient.setColorAt(0, color.lighter(110));
-    gradient.setColorAt(1, color.darker(110));
-    painter.setOpacity(128);
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    painter.fillRect(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), gradient);
-    painter.fillRect(QRect(0, 0, LFRAMESIZE, frame.height()), gradient);
-    painter.fillRect(QRect(0, frame.height() - BFRAMESIZE -1,
-                                                        frame.width(), BFRAMESIZE), gradient);
-    painter.fillRect(QRect(frame.width()-RFRAMESIZE, 0,
-                                                        RFRAMESIZE, frame.height()), gradient);
 */
 
-   QPixmap tile = TileCache::instance()->verticalGradient(color, frame.height());
-    painter.drawTiledPixmap(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), tile);
-    painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, frame.height()), tile);
-    painter.drawTiledPixmap(QRect(0, frame.height() - BFRAMESIZE,
-                                                        frame.width(), BFRAMESIZE), tile,
-                                                        QPoint(0, frame.height() - BFRAMESIZE));
-    painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
-                                                        RFRAMESIZE, frame.height()), tile,
-                                                        QPoint(frame.width()-RFRAMESIZE, 0));
+    int splitY = qMin(300, 3*frame.height()/4);
 
-    tile = TileCache::instance()->horizontalGradient(color, widget()->rect().width());
+    QPixmap tile = TileCache::instance()->verticalGradient(color, splitY);
     painter.drawTiledPixmap(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), tile);
-    painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, frame.height()), tile);
-    painter.drawTiledPixmap(QRect(0, frame.height() - BFRAMESIZE,
-                                                        frame.width(), BFRAMESIZE), tile,
-                                                        QPoint(0, frame.height() - BFRAMESIZE));
-    painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
-                                                        RFRAMESIZE, frame.height()), tile,
-                                                        QPoint(frame.width()-RFRAMESIZE, 0));
 
-    tile = TileCache::instance()->radialGradient(color, widget()->rect().width());
-    QRect radialRect = QRect(0, 0, widget()->rect().width(), 64);
+    painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, splitY), tile);
+    painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, color);
+
+    painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
+                                                        RFRAMESIZE, splitY), tile,
+                                                        QPoint(frame.width()-RFRAMESIZE, 0));
+    painter.fillRect(frame.width()-RFRAMESIZE, 0, RFRAMESIZE, frame.height(), color);
+
+    painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, color);
+
+    int radialW = qMin(600, frame.width());
+    tile = TileCache::instance()->radialGradient(color, radialW);
+    QRect radialRect = QRect((frame.width() - radialW) / 2, 0, radialW, 64);
     painter.drawPixmap(radialRect, tile);
 
     //painter.setRenderHint(QPainter::Antialiasing,true);
@@ -654,15 +617,13 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.drawArc(QRectF(w-9.5-0.5, h-9.5-0.5, 9.5, 9.5), 270*16, 90*16);
     painter.drawLine(QPointF(6.3, h-0.5), QPointF(w-6.3, h-0.5));
 
-    qreal cenX = frame.width() / 2 + 0.5;
-
+    qreal cenY = frame.height() / 2 + 0.5;
+    qreal posX = frame.width() - 2.5;
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(0, 0, 0, 66));
-    renderDot(&painter, QPointF(cenX-10, 2.5), 1);
-    renderDot(&painter, QPointF(cenX-5, 2.5), 1.5);
-    renderDot(&painter, QPointF(cenX, 2.5), 2);
-    renderDot(&painter, QPointF(cenX+5, 2.5), 1.5);
-    renderDot(&painter, QPointF(cenX+10, 2.5), 1);
+    renderDot(&painter, QPointF(posX, cenY - 5), 2.5);
+    renderDot(&painter, QPointF(posX, cenY), 2.5);
+    renderDot(&painter, QPointF(posX, cenY + 5), 2.5);
 
     painter.translate(frame.width()-9, frame.height()-9);
     renderDot(&painter, QPointF(0.5, 6.5), 2.5);
