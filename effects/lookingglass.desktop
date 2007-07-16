@@ -2,11 +2,17 @@
 Encoding=UTF-8
 Name=Looking Glass
 Name[nds]=Kiekglas
+Name[pt]=Aparência de Vidro
+Name[pt_BR]=Aparência de Vidro
 Name[sv]=Spegel
+Name[zh_TW]=鏡射
 Comment=Looking Glass enhanced magnifier
 Comment[de]=Looking Glass erweiterte Lupe
 Comment[nds]=Verwiedert Luup
+Comment[pt]=Ampliação melhorada com Aparência de Vidro
+Comment[pt_BR]=Ampliação melhorada com Aparência de Vidro
 Comment[sv]=Spegel förbättrat förstoringsglas
+Comment[zh_TW]=鏡面放大
 
 Type=Service
 ServiceTypes=KWin/Effect
