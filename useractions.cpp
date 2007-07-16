@@ -317,7 +317,10 @@ void Workspace::initShortcuts()
 
 void Workspace::readShortcuts()
     {
-    KGlobalAccel::self()->readSettings();
+#ifdef __GNUC__
+#warning TODO PORT ME (KGlobalAccel related)
+#endif
+    //KGlobalAccel::self()->readSettings();
 
     KAction *kaction = qobject_cast<KAction*>( keys->action("Walk Through Desktops") );
     if ( kaction!=0 )
