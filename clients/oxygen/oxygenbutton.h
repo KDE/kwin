@@ -51,7 +51,6 @@ public:
                   const unsigned char *bitmap=0);
     ~OxygenButton();
 
-    void setBitmap(const unsigned char *bitmap);
     QSize sizeHint() const;
     const int lastMousePress(){return lastmouse_;}
     void reset(){repaint();}
@@ -68,7 +67,6 @@ private:
     OxygenClient *client_;
     ButtonType type_;
     ButtonState status_;
-    QBitmap *deco_;
     int lastmouse_;
 };
 

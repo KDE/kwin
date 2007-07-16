@@ -33,8 +33,7 @@
 #include <QPaintEvent>
 #include <QPainterPath>
 #include <QTimer>
-#include <QX11Info>
-#include <X11/Xatom.h>
+#include <QCache>
 
 #include "oxygenclient.h"
 #include "oxygenclient.moc"
@@ -57,6 +56,113 @@ namespace Oxygen
 // static const int RFRAMESIZE       = 7;BUTTONSIZE     
 // static const int FRAMEBUTTONSPACE       = 67;
 
+class TileCache
+{
+    private:
+        TileCache();
+
+    public:
+        ~TileCache() {}
+        static TileCache *instance();
+
+        QPixmap verticalGradient(const QColor &color, int height);
+        QPixmap horizontalGradient(const QColor &color, int width);
+        QPixmap radialGradient(const QColor &color, int width);
+
+    private:
+        static TileCache *s_instance;
+        QCache<quint64, QPixmap> m_cache;
+};
+
+TileCache *TileCache::s_instance = 0;
+
+TileCache::TileCache()
+{
+    m_cache.setMaxCost(64);
+}
+
+TileCache *TileCache::instance()
+{
+    if (!s_instance)
+        s_instance = new TileCache;
+
+    return s_instance;
+}
+
+QPixmap TileCache::verticalGradient(const QColor &color, int height)
+{
+    quint64 key = (quint64(color.rgba()) << 32) | height | 0x8000;
+    QPixmap *pixmap = m_cache.object(key);
+
+    if (!pixmap)
+    {
+        pixmap = new QPixmap(32, height);
+
+        QLinearGradient gradient(0, 0, 0, height);
+        gradient.setColorAt(0, color.lighter(180));
+        gradient.setColorAt(1, color.darker(110));
+
+        QPainter p(pixmap);
+        p.setCompositionMode(QPainter::CompositionMode_Source);
+        p.fillRect(pixmap->rect(), gradient);
+
+        m_cache.insert(key, pixmap);
+    }
+
+    return *pixmap;
+}
+
+QPixmap TileCache::horizontalGradient(const QColor &color, int width)
+{
+    quint64 key = (quint64(color.rgba()) << 32) | width | 0x4000;
+    QPixmap *pixmap = m_cache.object(key);
+
+    if (!pixmap)
+    {
+        pixmap = new QPixmap(width, 32);
+        pixmap->fill(Qt::transparent);
+        QLinearGradient gradient(0, 0, width, 0);
+        gradient.setColorAt(0, color.lighter(110));
+        gradient.setColorAt(1, color.darker(110));
+
+        QPainter p(pixmap);
+        p.setCompositionMode(QPainter::CompositionMode_Source);
+        p.fillRect(pixmap->rect(), gradient);
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.fillRect(pixmap->rect(), QColor(0,0,0,128));
+
+        m_cache.insert(key, pixmap);
+    }
+
+    return *pixmap;
+}
+
+QPixmap TileCache::radialGradient(const QColor &color, int width)
+{
+    quint64 key = (quint64(color.rgba()) << 32) | width | 0xb000;
+    QPixmap *pixmap = m_cache.object(key);
+
+    if (!pixmap)
+    {
+        width /= 2;
+        pixmap = new QPixmap(width, 64);
+        pixmap->fill(QColor(0,0,0,0));
+        QColor radialColor = color.lighter(120);
+        radialColor.setAlpha(255);
+        QRadialGradient gradient(64, TITLESIZE + TFRAMESIZE, 64);
+        gradient.setColorAt(0, radialColor);
+        radialColor.setAlpha(0);
+        gradient.setColorAt(1, radialColor);
+
+        QPainter p(pixmap);
+        p.scale(width/128.0,1);
+        p.fillRect(pixmap->rect(), gradient);
+
+        m_cache.insert(key, pixmap);
+    }
+
+    return *pixmap;
+}
 
 
 void renderDot(QPainter *p, const QPointF &point, qreal diameter)
@@ -116,7 +222,9 @@ static QTimer updateTimer;
 void OxygenClient::init()
 {
     createMainWidget(); //PORT  Qt::WResizeNoErase | Qt::WNoAutoErase);
-    widget()->setAutoFillBackground(true);
+    widget()->setAutoFillBackground(false);
+    widget()->setAttribute(Qt::WA_OpaquePaintEvent);
+    widget()->setAttribute( Qt::WA_PaintOnScreen, false);
     widget()->installEventFilter(this);
 
     // setup layout
@@ -126,8 +234,7 @@ void OxygenClient::init()
                                 QSizePolicy::Fixed);
 
     mainlayout->addItem(new QSpacerItem(LFRAMESIZE, TFRAMESIZE), 0, 0);
-//     mainlayout->addItem(new QSpacerItem(RFRAMESIZE, BFRAMESIZE), 2, 2);
-    mainlayout->addItem(new QSpacerItem(0, TFRAMESIZE), 3, 0);
+    mainlayout->addItem(new QSpacerItem(0, BFRAMESIZE), 3, 0);
     mainlayout->addItem(new QSpacerItem(RFRAMESIZE, 0), 0, 2);
 
     mainlayout->addLayout(titlelayout, 1, 1);
@@ -147,26 +254,15 @@ void OxygenClient::init()
         button[n] = 0;
     }
 
-    titlelayout->addSpacing(5);
     addButtons(titlelayout, options()->titleButtonsLeft());
-    titlelayout->addSpacing(15);
     titlelayout->addItem(titlebar_);
-    titlelayout->addSpacing(15);
     addButtons(titlelayout, options()->titleButtonsRight());
-    titlelayout->addSpacing(5);
+    titlelayout->addSpacing(2);
 
     titlelayout->setSpacing(0);
     titlelayout->setMargin(0);
     mainlayout->setSpacing(0);
     mainlayout->setMargin(0);
-   
-    setDecoDim(TITLESIZE + TFRAMESIZE, BFRAMESIZE, LFRAMESIZE, RFRAMESIZE);
-    fallbackDeco = false;
-    xPic[0] = xPic[1] = xPic[2] = xPic[3] = 0L;
-    connect (&updateTimer, SIGNAL(timeout()), this, SLOT(updateDecoPics()));
-    if (!updateTimer.isActive())
-       updateTimer.start(250);
-
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -296,8 +392,7 @@ void OxygenClient::desktopChange()
 {
     bool d = isOnAllDesktops();
     if (button[ButtonSticky]) {
-        button[ButtonSticky]->setBitmap(d ? stickydown_bits : sticky_bits);
-    button[ButtonSticky]->setToolTip( d ? i18n("Un-Sticky") : i18n("Sticky"));
+        button[ButtonSticky]->setToolTip( d ? i18n("Un-Sticky") : i18n("Sticky"));
     }
 }
 
@@ -309,7 +404,6 @@ void OxygenClient::desktopChange()
 void OxygenClient::iconChange()
 {
     if (button[ButtonMenu]) {
-        button[ButtonMenu]->setBitmap(0);
         button[ButtonMenu]->repaint();
     }
 }
@@ -323,8 +417,7 @@ void OxygenClient::maximizeChange()
 {
     bool m = (maximizeMode() == MaximizeFull);
     if (button[ButtonMax]) {
-        button[ButtonMax]->setBitmap(m ? minmax_bits : max_bits);
-    button[ButtonMax]->setToolTip(m ? i18n("Restore") : i18n("Maximize"));
+        button[ButtonMax]->setToolTip(m ? i18n("Restore") : i18n("Maximize"));
     }
 }
 
@@ -428,10 +521,6 @@ bool OxygenClient::eventFilter(QObject *obj, QEvent *e)
           paintEvent(static_cast<QPaintEvent *>(e));
           return true;
       }
-      case QEvent::Resize: {
-          resizeEvent(static_cast<QResizeEvent *>(e));
-          return true;
-      }
       case QEvent::Show: {
           showEvent(static_cast<QShowEvent *>(e));
           return true;
@@ -461,120 +550,83 @@ void OxygenClient::mouseDoubleClickEvent(QMouseEvent *e)
 
 void OxygenClient::paintEvent(QPaintEvent *e)
 {
+    Q_UNUSED(e)
     if (!OxygenFactory::initialized()) return;
 
     doShape();
 
     QPalette palette = widget()->palette();
     QPainter painter(widget());
-    painter.setRenderHint(QPainter::Antialiasing,true);
 
     QRect title(titlebar_->geometry());
 
-    // the background
-
-    updateDecoPics();
-
     int x,y,w,h;
+    QRect frame = widget()->frameGeometry();
+    QColor color = palette.window();
+//color = QColor(Qt::red);
+/*
 
-    if (fallbackDeco)
-        painter.fillRect(widget()->rect(), Qt::red);
-    else {
-      // explanation if you don't know render syntax:
-      //------------------------------------------------
-      // XRenderComposite (dpy, op,
-      // src.x11PictureHandle(), mask, dst.x11PictureHandle(),
-      // sx, sy, mx, my, dx, dy, w, h);
-      //=====================================================
-        QRect winRect = widget()->rect();
-        winRect.getRect(&x,&y,&w,&h);
-        x = e->rect().x();
-        y = e->rect().y();
-        int updW = e->rect().width();
-        int updH = e->rect().height();
+    QLinearGradient gradient(0, 0, 0, frame.height());
+    gradient.setColorAt(0, color.lighter(110));
+    gradient.setColorAt(1, color.darker(110));
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.fillRect(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), gradient);
+    painter.fillRect(QRect(0, 0, LFRAMESIZE, frame.height()), gradient);
+    painter.fillRect(QRect(0, frame.height() - BFRAMESIZE -1,
+                                                        frame.width(), BFRAMESIZE), gradient);
+    painter.fillRect(QRect(frame.width()-RFRAMESIZE, 0,
+                                                        RFRAMESIZE, frame.height()), gradient);
 
-        Picture window = widget()->x11PictureHandle();
-        // left
-        if (x < LFRAMESIZE)
-            XRenderComposite (QX11Info::display(), PictOpSrc, xPic[2], 0, window,
-                        x, y, 0, 0, x, y, qMin(LFRAMESIZE - x, updW), qMin(h - y, updH));
-        // right
-        if (x+updW >= w - RFRAMESIZE - 1) {
-            int paintW = updW;
-            if(x < w-RFRAMESIZE-1)
-                paintW = updW - (w - RFRAMESIZE - 1) + x;
-            XRenderComposite (QX11Info::display(), PictOpSrc, xPic[3], 0, window,
-                        qMax(x-(w-RFRAMESIZE),0), y, 0, 0,
-                        qMax(x, w-RFRAMESIZE-1), y, paintW, qMin(h - y, updH));
-        }
+    gradient = QLinearGradient(0, 0, frame.width(), 0);
+    gradient.setColorAt(0, color.lighter(110));
+    gradient.setColorAt(1, color.darker(110));
+    painter.setOpacity(128);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter.fillRect(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), gradient);
+    painter.fillRect(QRect(0, 0, LFRAMESIZE, frame.height()), gradient);
+    painter.fillRect(QRect(0, frame.height() - BFRAMESIZE -1,
+                                                        frame.width(), BFRAMESIZE), gradient);
+    painter.fillRect(QRect(frame.width()-RFRAMESIZE, 0,
+                                                        RFRAMESIZE, frame.height()), gradient);
+*/
 
-        if (x < LFRAMESIZE) {   // don't paint left frame again
-           updW -= (LFRAMESIZE - x);
-           x = LFRAMESIZE;
-        }
-        if (x + updW > w - RFRAMESIZE) // dont paint right frame again
-            updW = w - RFRAMESIZE - x;
+   QPixmap tile = TileCache::instance()->verticalGradient(color, frame.height());
+    painter.drawTiledPixmap(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), tile);
+    painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, frame.height()), tile);
+    painter.drawTiledPixmap(QRect(0, frame.height() - BFRAMESIZE,
+                                                        frame.width(), BFRAMESIZE), tile,
+                                                        QPoint(0, frame.height() - BFRAMESIZE));
+    painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
+                                                        RFRAMESIZE, frame.height()), tile,
+                                                        QPoint(frame.width()-RFRAMESIZE, 0));
 
-        // top
-        if (y < TITLESIZE + TFRAMESIZE)
-            XRenderComposite (QX11Info::display(), PictOpSrc, xPic[0], 0, window,
-                        x-LFRAMESIZE, y, 0, 0, x, y, updW, qMin(TITLESIZE + TFRAMESIZE - y, updH));
-        // bottom
-        if (y + updH >= h - BFRAMESIZE - 1) {
-            int paintH = updH;
-            if(y < h-BFRAMESIZE-1)
-                paintH = updH - (h - BFRAMESIZE - 1) + y;
-            XRenderComposite (QX11Info::display(), PictOpSrc, xPic[1], 0, window,
-                        x-LFRAMESIZE, qMax(y-(h-BFRAMESIZE),0), 0, 0,
-                        x, qMax(y, h-BFRAMESIZE-1), updW, paintH);
-        }
+    tile = TileCache::instance()->horizontalGradient(color, widget()->rect().width());
+    painter.drawTiledPixmap(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), tile);
+    painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, frame.height()), tile);
+    painter.drawTiledPixmap(QRect(0, frame.height() - BFRAMESIZE,
+                                                        frame.width(), BFRAMESIZE), tile,
+                                                        QPoint(0, frame.height() - BFRAMESIZE));
+    painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
+                                                        RFRAMESIZE, frame.height()), tile,
+                                                        QPoint(frame.width()-RFRAMESIZE, 0));
 
-        XFlush(QX11Info::display()); // must be?! - the pictures will change soon
-    }
+    tile = TileCache::instance()->radialGradient(color, widget()->rect().width());
+    QRect radialRect = QRect(0, 0, widget()->rect().width(), 64);
+    painter.drawPixmap(radialRect, tile);
+
+    //painter.setRenderHint(QPainter::Antialiasing,true);
 
     // draw title text
     painter.setFont(options()->font(isActive(), false));
     painter.setBrush(palette.windowText());
     painter.drawText(title.x(), title.y(), title.width(), title.height(),
               OxygenFactory::titleAlign() | Qt::AlignVCenter, caption());
-#if 0
-    // draw frame
-    QRect frame(0, 0, width(), TFRAMESIZE);
-    painter.fillRect(frame, palette.window());
-    frame.setRect(0, 0, LFRAMESIZE, height());
-    painter.fillRect(frame, palette.window());
-    frame.setRect(0, height() - BFRAMESIZE, width(), BFRAMESIZE);
-    painter.fillRect(frame, palette.window());
-    frame.setRect(width()-RFRAMESIZE, 0, RFRAMESIZE, height());
-    painter.fillRect(frame, palette.window());
-#endif
-    
-    // Draw depression lines where the buttons are
-    QLinearGradient grad1(LFRAMESIZE, TFRAMESIZE + title.height()/2, title.x(), TFRAMESIZE + title.height()/2);
-    grad1.setColorAt(0.0, QColor(0,0,0,64));
-    grad1.setColorAt(1.0, QColor(0,0,0,5));
-    QBrush brush1(grad1);
-    painter.fillRect(LFRAMESIZE, TFRAMESIZE + title.height()/2-1, title.x(), 1, brush1);
-    QLinearGradient grad2(LFRAMESIZE, TFRAMESIZE + title.height()/2, title.x(), TFRAMESIZE + title.height()/2);
-    grad2.setColorAt(0.0, QColor(255,255,255,128));
-    grad2.setColorAt(1.0, QColor(255,255,255,5));
-    QBrush brush2(grad2);
-    painter.fillRect(LFRAMESIZE, TFRAMESIZE + title.height()/2, title.x(), 1, brush2);
-    QLinearGradient grad3(width()-RFRAMESIZE, TFRAMESIZE + title.height()/2, title.right(), TFRAMESIZE + title.height()/2);
-    grad3.setColorAt(0.0, QColor(0,0,0,64));
-    grad3.setColorAt(1.0, QColor(0,0,0,5));
-    QBrush brush3(grad3);
-    painter.fillRect(title.right(), TFRAMESIZE + title.height()/2-1, width() - title.right()-RFRAMESIZE, 1, brush3);
-    QLinearGradient grad4(width()-RFRAMESIZE, TFRAMESIZE + title.height()/2, title.right(), TFRAMESIZE + title.height()/2);
-    grad4.setColorAt(0.0, QColor(255,255,255,128));
-    grad4.setColorAt(1.0, QColor(255,255,255,5));
-    QBrush brush4(grad4);
-    painter.fillRect(title.right(), TFRAMESIZE + title.height()/2, width() -title.right()-RFRAMESIZE, 1, brush4);
+
 
     painter.setRenderHint(QPainter::Antialiasing);
 
     // shadows of the frame
-    QRect frame = widget()->rect();
+    frame = widget()->rect();
     frame.getRect(&x, &y, &w, &h);
 
     painter.setBrush(Qt::NoBrush);
@@ -647,20 +699,6 @@ QRegion mask(0,0,r,b);
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// resizeEvent()
-// -------------
-// Window is being resized
-
-void OxygenClient::resizeEvent(QResizeEvent *)
-{
-    if (widget()->isVisible()) {
-        QRegion region = widget()->rect();
-        region = region.subtract(titlebar_->geometry());
-    widget()->update();
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////
 // showEvent()
 // -----------
 // Window is being shown
@@ -707,84 +745,6 @@ void OxygenClient::menuButtonPressed()
         if (!f->exists(this)) return; // decoration was destroyed
         button[ButtonMenu]->setDown(false);
     }
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// updateDecoPics()
-// -----------------
-// The function queries the X server for the location of the bg pixmaps
-// (XRender pictures), provided by the style
-// as these pictures can get lost or updated anytime (e.g. if the user
-// deselects the oxygen style), it's a slot and bound to a 250ms timer, i.e.
-// every quarter second we check if we're still using the proper and if not,
-// trigger a repaint
-
-void OxygenClient::updateDecoPics()
-{
-   if (readDecoPics())
-      widget()->update();
-}
-
-static const Atom oxygen_deco_top =
-XInternAtom(QX11Info::display(), "OXYGEN_DECO_TOP", False);
-static const Atom oxygen_deco_bottom =
-XInternAtom(QX11Info::display(), "OXYGEN_DECO_BOTTOM", False);
-static const Atom oxygen_deco_left =
-XInternAtom(QX11Info::display(), "OXYGEN_DECO_LEFT", False);
-static const Atom oxygen_deco_right =
-XInternAtom(QX11Info::display(), "OXYGEN_DECO_RIGHT", False);
-
-#define READ_PIC(_ATOM_, _CARD_)\
-   result = XGetWindowProperty(QX11Info::display(), windowId(), \
-                               _ATOM_, 0L, 1L, False, XA_CARDINAL, \
-                               &actual, &format, &n, &left, &data); \
-   if (result == Success && data != None) \
-      memcpy (&_CARD_, data, sizeof (unsigned int)); \
-   else {\
-      _CARD_ = 0; \
-      fallbackDeco = true;\
-   }//
-
-// this function reads out the Render Pictures the style should have stacked
-// onto the server
-//notice that on any read failure, we'll fall back to a simple deco
-
-bool OxygenClient::readDecoPics()
-{
-   fallbackDeco = false;
-   
-   unsigned char *data = 0;
-   Atom actual;
-   int format, result;
-   unsigned long n, left;
-
-// DON'T change the order atom -> pixmap
-   Picture oldPic = xPic[0];
-   READ_PIC(oxygen_deco_top, xPic[0]);
-   if (xPic[0] == oldPic) // there has been NO update
-      return false;
-   READ_PIC(oxygen_deco_bottom, xPic[1]);
-   READ_PIC(oxygen_deco_left, xPic[2]);
-   READ_PIC(oxygen_deco_right, xPic[3]);
-   
-   return true; // has been an update
-}
-
-static const Atom oxygen_decoDim =
-XInternAtom(QX11Info::display(), "OXYGEN_DECO_DIM", False);
-
-// this function tells the deco about how much oversize it should create for
-// the bg pixmap (each dim must be < 256)
-// it's called in init() and should be recalled whenever the sizes get changed
-// for some reason
-void OxygenClient::setDecoDim(int top, int bottom, int left, int right) {
-// DON'T change the order
-   int tmp = (top & 0xff) |
-             ((bottom & 0xff) << 8) |
-             ((left & 0xff) << 16) |
-             ((right & 0xff) <<24 );
-   XChangeProperty(QX11Info::display(), windowId(), oxygen_decoDim, XA_CARDINAL,
-   32, PropModeReplace, (unsigned char *) &(tmp), 1L);
 }
 
 } //namespace Oxygen

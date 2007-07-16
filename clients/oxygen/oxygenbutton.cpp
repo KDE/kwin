@@ -59,35 +59,17 @@ OxygenButton::OxygenButton(OxygenClient *parent,
                              const QString& tip, ButtonType type,
                              const unsigned char *bitmap)
     : QAbstractButton(parent->widget()), client_(parent), type_(type),
-      deco_(0), lastmouse_(0)
+      lastmouse_(0)
 {
-    //setBackgroundMode(Qt::NoBackground); PORT to qt4
+    setAutoFillBackground(false);
+    setAttribute(Qt::WA_OpaquePaintEvent, false);
     setFixedSize(BUTTONSIZE, BUTTONSIZE);
     setCursor(Qt::ArrowCursor);
-    if (bitmap) setBitmap(bitmap);
     setToolTip(tip);
-    connect(this, SIGNAL(pressed()), this, SLOT(pressSlot()));
 }
 
 OxygenButton::~OxygenButton()
 {
-    if (deco_) delete deco_;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// setBitmap()
-// -----------
-// Set the button decoration
-
-void OxygenButton::setBitmap(const unsigned char *bitmap)
-{
-    if (!bitmap) return; // no bitmap, probably the menu button
-
-    if (deco_) delete deco_;
-    deco_ = new QBitmap(DECOSIZE, DECOSIZE);
-    //PORT to qt4 set actual pixels   , bitmap, true);
-    deco_->setMask(*deco_);
-    update();
 }
 
 //////////////////////////////////////////////////////////////////////////////

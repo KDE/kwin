@@ -39,10 +39,6 @@
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
-#include <X11/Xlib.h>
-#include <X11/extensions/Xrender.h>
-#include <fixx11h.h>
-
 #include "oxygenbutton.h"
 // #include "oxygen.h"
 
@@ -92,21 +88,15 @@ private:
     bool eventFilter(QObject *obj, QEvent *e);
     void mouseDoubleClickEvent(QMouseEvent *e);
     void paintEvent(QPaintEvent *e);
-    void resizeEvent(QResizeEvent *);
     void showEvent(QShowEvent *);
     void doShape();
-    bool readDecoPics();
-    void setDecoDim(int top, int bottom, int left, int right);
 private slots:
     void maxButtonPressed();
     void menuButtonPressed();
-    void updateDecoPics();
 
 private:
     OxygenButton *button[ButtonTypeCount];
     QSpacerItem *titlebar_;
-    Picture xPic[4];
-    bool fallbackDeco;
 };
 
 
