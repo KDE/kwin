@@ -568,7 +568,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
                                                         RFRAMESIZE, splitY), tile,
                                                         QPoint(frame.width()-RFRAMESIZE, 0));
-    painter.fillRect(frame.width()-RFRAMESIZE, 0, RFRAMESIZE, frame.height(), color);
+    painter.fillRect(frame.width()-RFRAMESIZE, splitY, RFRAMESIZE, frame.height() - splitY, color);
 
     painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, color);
 
