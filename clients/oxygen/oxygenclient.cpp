@@ -591,14 +591,14 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.drawTiledPixmap(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), tile);
 
     painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, splitY), tile);
-    painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, color);
+    painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, OxygenHelper::backgroundBottomColor(color));
 
     painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
                                                         RFRAMESIZE, splitY), tile,
                                                         QPoint(frame.width()-RFRAMESIZE, 0));
-    painter.fillRect(frame.width()-RFRAMESIZE, splitY, RFRAMESIZE, frame.height() - splitY, color);
+    painter.fillRect(frame.width()-RFRAMESIZE, splitY, RFRAMESIZE, frame.height() - splitY, OxygenHelper::backgroundBottomColor(color));
 
-    painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, color);
+    painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, OxygenHelper::backgroundBottomColor(color));
 
     int radialW = qMin(600, frame.width());
     tile = TileCache::instance()->radialGradient(color, radialW);
