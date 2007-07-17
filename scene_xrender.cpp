@@ -36,6 +36,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "deleted.h"
 #include "effects.h"
 
+#include <kxerrorhandler.h>
+
 namespace KWin
 {
 
@@ -88,6 +90,7 @@ SceneXrender::SceneXrender( Workspace* ws )
         kDebug( 1212 ) << "No xfixes v3+ extension available" << endl;
         return;
         }
+    KXErrorHandler xerr;
     // create XRender picture for the root window
     format = XRenderFindVisualFormat( display(), DefaultVisual( display(), DefaultScreen( display())));
     if( format == NULL )
@@ -104,13 +107,17 @@ SceneXrender::SceneXrender( Workspace* ws )
         front = XRenderCreatePicture( display(), rootWindow(), format, CPSubwindowMode, &pa );
         }
     createBuffer();
-    init_ok = true;
+    init_ok = !xerr.error( true );
     }
 
 SceneXrender::~SceneXrender()
     {
     if( !init_ok )
+        {
+        // TODO this probably needs to clean up whatever has been created until the failure
+        wspace->destroyOverlay();
         return;
+        }
     XRenderFreePicture( display(), front );
     XRenderFreePicture( display(), buffer );
     wspace->destroyOverlay();
