@@ -17,6 +17,7 @@
 #include <kglobalsettings.h>
 #include <klocale.h>
 #include <kdebug.h>
+#include <kcolorscheme.h>
 
 #include <qbitmap.h>
 #include <qlabel.h>
@@ -53,8 +54,34 @@ namespace Oxygen
 // static const int TFRAMESIZE       = 8;
 // static const int BFRAMESIZE       = 7;
 // static const int LFRAMESIZE       = 8;
-// static const int RFRAMESIZE       = 7;BUTTONSIZE     
+// static const int RFRAMESIZE       = 7;BUTTONSIZE
 // static const int FRAMEBUTTONSPACE       = 67;
+
+//BEGIN SHARED CODE
+// TODO this should all be moved to its own file and shared with the style
+
+class OxygenHelper
+{
+    public:
+        static QColor backgroundRadialColor(const QColor &color);
+        static QColor backgroundTopColor(const QColor &color);
+        static QColor backgroundBottomColor(const QColor &color);
+};
+
+QColor OxygenHelper::backgroundRadialColor(const QColor &color)
+{
+    return KColorScheme::shade(color, KColorScheme::LightShade, 0.7/*FIXME*/);
+}
+
+QColor OxygenHelper::backgroundTopColor(const QColor &color)
+{
+    return KColorScheme::shade(color, KColorScheme::MidlightShade, 0.7/*FIXME*/);
+}
+
+QColor OxygenHelper::backgroundBottomColor(const QColor &color)
+{
+    return KColorScheme::shade(color, KColorScheme::MidShade, 0.7/*FIXME*/ * -0.6);
+}
 
 class TileCache
 {
@@ -98,8 +125,9 @@ QPixmap TileCache::verticalGradient(const QColor &color, int height)
         pixmap = new QPixmap(32, height);
 
         QLinearGradient gradient(0, 0, 0, height);
-        gradient.setColorAt(0, color.lighter(115));
-        gradient.setColorAt(1, color);
+        gradient.setColorAt(0.0, OxygenHelper::backgroundTopColor(color));
+        gradient.setColorAt(0.5, color);
+        gradient.setColorAt(1.0, OxygenHelper::backgroundBottomColor(color));
 
         QPainter p(pixmap);
         p.setCompositionMode(QPainter::CompositionMode_Source);
@@ -121,9 +149,9 @@ QPixmap TileCache::radialGradient(const QColor &color, int width)
         width /= 2;
         pixmap = new QPixmap(width, 64);
         pixmap->fill(QColor(0,0,0,0));
-        QColor radialColor = color.lighter(140);
+        QColor radialColor = OxygenHelper::backgroundRadialColor(color);
         radialColor.setAlpha(255);
-        QRadialGradient gradient(64, TITLESIZE + TFRAMESIZE, 64);
+        QRadialGradient gradient(64, 0, 64);
         gradient.setColorAt(0, radialColor);
         radialColor.setAlpha(101);
         gradient.setColorAt(0.5, radialColor);
@@ -141,7 +169,7 @@ QPixmap TileCache::radialGradient(const QColor &color, int width)
 
     return *pixmap;
 }
-
+//END SHARED CODE
 
 void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 {
