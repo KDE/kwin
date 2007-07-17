@@ -848,7 +848,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         // updates automatically - no need to do anything in such case
         if( bound_glxpixmap == None )
             {
-            static const int attrs[] =
+            int attrs[] =
                 {
                 GLX_TEXTURE_FORMAT_EXT, fbcdrawableinfo[ depth ].bind_texture_format,
                 GLX_MIPMAP_TEXTURE_EXT, fbcdrawableinfo[ depth ].mipmap,
