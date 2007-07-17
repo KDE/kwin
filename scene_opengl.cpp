@@ -291,12 +291,18 @@ bool SceneOpenGL::initRenderingContext()
         || errs.error( true ))
         { // failed
         if( !direct_rendering )
+            {
+            kDebug( 1212 ) << "Couldn't initialize rendering context" << endl;
             return false;
+            }
         glXDestroyContext( display(), ctxbuffer );
         direct_rendering = false; // try again
         ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
         if( ctxbuffer == NULL || !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ))
+            {
+            kDebug( 1212 ) << "Couldn't initialize rendering context" << endl;
             return false;
+            }
         }
     if( !tfp_mode && !shm_mode )
         {
@@ -342,6 +348,7 @@ bool SceneOpenGL::initBuffer()
         }
     else
         {
+        kDebug( 1212 ) << "Couldn't create output buffer (failed to create overlay window?) !" << endl;
         return false; // error
         }
     return true;
