@@ -89,7 +89,6 @@ GLXDrawable SceneOpenGL::glxbuffer = None;
 GLXDrawable SceneOpenGL::last_pixmap = None;
 bool SceneOpenGL::tfp_mode; // using glXBindTexImageEXT (texture_from_pixmap)
 bool SceneOpenGL::db; // destination drawable is double-buffered
-bool SceneOpenGL::copy_buffer_hack; // workaround for nvidia < 1.0-9xxx drivers
 bool SceneOpenGL::shm_mode;
 #ifdef HAVE_XSHM
 XShmSegmentInfo SceneOpenGL::shm;
@@ -214,9 +213,6 @@ bool SceneOpenGL::selectMode()
         }
     if( !initDrawableConfigs())
         return false;
-    // use copy buffer hack from glcompmgr (called COPY_BUFFER there) - nvidia drivers older than
-    // 1.0-9xxx don't update pixmaps properly, so do a copy first
-    copy_buffer_hack = !tfp_mode && !shm_mode; // TODO detect that it's nvidia < 1.0-9xxx driver
     return true;
     }
 
@@ -1062,7 +1058,7 @@ bool SceneOpenGL::Window::bindTexture()
     Client* c = dynamic_cast< Client* >( toplevel );
     bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();
     bool alpha_clear_copy = true;
-    bool copy_buffer = (( alpha_clear && alpha_clear_copy ) || copy_buffer_hack );
+    bool copy_buffer = ( alpha_clear && alpha_clear_copy );
     if( copy_buffer )
         {
         Pixmap p2 = XCreatePixmap( display(), pix, toplevel->width(), toplevel->height(), toplevel->depth());
