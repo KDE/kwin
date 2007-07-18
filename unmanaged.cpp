@@ -96,6 +96,16 @@ int Unmanaged::desktop() const
     return NET::OnAllDesktops; // TODO for some window types should be the current desktop?
     }
 
+QPoint Unmanaged::clientPos() const
+    {
+    return QPoint( 0, 0 ); // unmanaged windows don't have decorations
+    }
+
+QSize Unmanaged::clientSize() const
+    {
+    return size();
+    }
+
 void Unmanaged::debug( kdbgstream& stream ) const
     {
     stream << "\'ID:" << window() << "\'";

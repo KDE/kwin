@@ -43,6 +43,7 @@ void Deleted::copyToDeleted( Toplevel* c )
     assert( dynamic_cast< Deleted* >( c ) == NULL );
     Toplevel::copyToDeleted( c );
     desk = c->desktop();
+    contentsRect = QRect( c->clientPos(), c->clientSize());
     if( WinInfo* cinfo = dynamic_cast< WinInfo* >( info ))
         cinfo->disable();
     }
@@ -62,6 +63,16 @@ void Deleted::unrefWindow( bool delay )
 int Deleted::desktop() const
     {
     return desk;
+    }
+
+QPoint Deleted::clientPos() const
+    {
+    return contentsRect.topLeft();
+    }
+
+QSize Deleted::clientSize() const
+    {
+    return contentsRect.size();
     }
 
 void Deleted::debug( kdbgstream& stream ) const

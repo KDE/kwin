@@ -29,6 +29,8 @@ class Unmanaged
         bool track( Window w );
         static void deleteUnmanaged( Unmanaged* c, allowed_t );
         virtual int desktop() const;
+        virtual QPoint clientPos() const;
+        virtual QSize clientSize() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
     private:

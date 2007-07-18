@@ -26,6 +26,8 @@ class Deleted
         void refWindow();
         void unrefWindow( bool delay = false );
         virtual int desktop() const;
+        virtual QPoint clientPos() const;
+        virtual QSize clientSize() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
     private:
@@ -35,6 +37,7 @@ class Deleted
         int delete_refcount;
         double window_opacity;
         int desk;
+        QRect contentsRect; // for clientPos()/clientSize()
     };
 
 inline void Deleted::refWindow()

@@ -85,8 +85,8 @@ class Client
 
         QSize minSize() const;
         QSize maxSize() const;
-        QPoint clientPos() const; // inside of geometry()
-        QSize clientSize() const;
+        virtual QPoint clientPos() const; // inside of geometry()
+        virtual QSize clientSize() const;
 
         bool windowEvent( XEvent* e );
         virtual bool eventFilter( QObject* o, QEvent* e );

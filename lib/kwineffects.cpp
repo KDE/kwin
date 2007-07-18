@@ -437,6 +437,24 @@ void WindowQuadList::makeArrays( float** vertices, float** texcoords )
             }
     }
 
+WindowQuadList WindowQuadList::filterOut( WindowQuadType type ) const
+    {
+    foreach( WindowQuad q, *this )
+        {
+        if( q.type == type ) // something to filter out, make a copy and filter
+            {
+            WindowQuadList ret;
+            foreach( WindowQuad q, *this )
+                {
+                if( q.type != type )
+                    ret.append( q );
+                }
+            return ret;
+            }
+        }
+    return *this; // nothing to filter out
+    }
+
 bool WindowQuadList::smoothNeeded() const
     {
     return false; // TODO

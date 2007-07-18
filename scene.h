@@ -95,8 +95,6 @@ class Scene
         virtual void paintWindow( Window* w, int mask, QRegion region, WindowQuadList quads );
         // called after all effects had their drawWindow() called
         void finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data );
-        // creates initial quad list for a window
-        virtual WindowQuadList buildQuads( const Window* w );
         // infinite region, i.e. everything
         static QRegion infiniteRegion();
         // compute time since the last repaint
@@ -173,7 +171,10 @@ class Scene::Window
         QRegion shape() const;
         void discardShape();
         void updateToplevel( Toplevel* c );
+        // creates initial quad list for the window
+        virtual WindowQuadList buildQuads() const;
     protected:
+        WindowQuadList makeQuads( WindowQuadType type, const QRegion& reg ) const;
         Toplevel* toplevel;
         ImageFilterType filter;
     private:

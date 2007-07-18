@@ -49,6 +49,8 @@ class Toplevel
         int y() const;
         int width() const;
         int height() const;
+        virtual QPoint clientPos() const = 0; // inside of geometry()
+        virtual QSize clientSize() const = 0;
 
     // prefer isXXX() instead
         NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;

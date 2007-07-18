@@ -211,7 +211,7 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
         data.paint = region;
         // TODO this is wrong, transformedShape() should be used here, but is not known yet
         data.clip = w->isOpaque() ? region : QRegion();
-        data.quads = buildQuads( w );
+        data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
         if( !w->isPaintingEnabled())

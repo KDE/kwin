@@ -373,6 +373,13 @@ class KWIN_EXPORT WindowVertex
         float tx, ty; // texture coords
     };
 
+enum WindowQuadType
+    {
+    WindowQuadError, // for the stupid default ctor
+    WindowQuadContents,
+    WindowQuadDecoration,
+    };
+
 /**
  * @short Class representing one area of a window.
  * WindowQuads consists of four WindowVertex objects and represents one part of a window.
@@ -380,10 +387,11 @@ class KWIN_EXPORT WindowVertex
 class KWIN_EXPORT WindowQuad
     {
     public:
-        WindowQuad();
+        explicit WindowQuad( WindowQuadType type );
         WindowQuad makeSubQuad( float x1, float y1, float x2, float y2 ) const;
         WindowVertex& operator[]( int index );
         const WindowVertex& operator[]( int index ) const;
+        bool decoration() const;
         // these 8 work only with untransformed quads
         float left() const;
         float right() const;
@@ -394,8 +402,10 @@ class KWIN_EXPORT WindowQuad
         float textureTop() const;
         float textureBottom() const;
     private:
+        friend class WindowQuadList;
         void checkUntransformed() const;
         WindowVertex verts[ 4 ];
+        WindowQuadType type; // 0 - contents, 1 - decoration
     };
 
 class KWIN_EXPORT WindowQuadList
@@ -405,6 +415,7 @@ class KWIN_EXPORT WindowQuadList
         WindowQuadList splitAtX( float x ) const;
         WindowQuadList splitAtY( float y ) const;
         WindowQuadList makeGrid( int maxquadsize ) const;
+        WindowQuadList filterOut( WindowQuadType type ) const;
         bool smoothNeeded() const;
         void makeArrays( float** vertices, float** texcoords );
     };
@@ -529,7 +540,8 @@ float WindowVertex::textureY() const
 ***************************************************************/
 
 inline
-WindowQuad::WindowQuad()
+WindowQuad::WindowQuad( WindowQuadType t )
+    : type( t )
     {
     }
 
@@ -545,6 +557,13 @@ const WindowVertex& WindowQuad::operator[]( int index ) const
     {
     assert( index >= 0 && index < 4 );
     return verts[ index ];
+    }
+
+inline
+bool WindowQuad::decoration() const
+    {
+    assert( type != WindowQuadError );
+    return type == WindowQuadDecoration;
     }
 
 inline

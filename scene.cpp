@@ -175,7 +175,7 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
         w->resetPaintingEnabled();
         data.paint = infiniteRegion(); // no clipping, so doesn't really matter
         data.clip = QRegion();
-        data.quads = buildQuads( w );
+        data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
         if( !w->isPaintingEnabled())
@@ -211,7 +211,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         w->resetPaintingEnabled();
         data.paint = region;
         data.clip = w->isOpaque() ? w->shape().translated( w->x(), w->y()) : QRegion();
-        data.quads = buildQuads( w );
+        data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
         if( !w->isPaintingEnabled())
@@ -274,22 +274,6 @@ void Scene::finalPaintWindow( EffectWindowImpl* w, int mask, QRegion region, Win
 void Scene::finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
     w->sceneWindow()->performPaint( mask, region, data );
-    }
-
-WindowQuadList Scene::buildQuads( const Window* w )
-    {
-    WindowQuadList ret;
-    foreach( QRect r, w->shape().rects())
-        {
-        WindowQuad quad;
-        // TODO asi mam spatne pravy dolni roh - bud tady, nebo v jinych castech
-        quad[ 0 ] = WindowVertex( r.x(), r.y(), r.x(), r.y());
-        quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), r.x() + r.width(), r.y());
-        quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), r.x() + r.width(), r.y() + r.height());
-        quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), r.x(), r.y() + r.height());
-        ret.append( quad );
-        }
-    return ret;
     }
 
 //****************************************
@@ -394,6 +378,33 @@ void Scene::Window::enablePainting( int reason )
 void Scene::Window::disablePainting( int reason )
     {
     disable_painting |= reason;
+    }
+
+WindowQuadList Scene::Window::buildQuads() const
+    {
+    if( toplevel->clientPos() == QPoint( 0, 0 ) && toplevel->clientSize() == toplevel->size())
+        return makeQuads( WindowQuadContents, shape()); // has no decoration
+    QRegion contents = shape() & QRect( toplevel->clientPos(), toplevel->clientSize());
+    QRegion decoration = shape() - contents;
+    WindowQuadList ret = makeQuads( WindowQuadContents, contents );
+    ret += makeQuads( WindowQuadDecoration, decoration );
+    return ret;
+    }
+
+WindowQuadList Scene::Window::makeQuads( WindowQuadType type, const QRegion& reg ) const
+    {
+    WindowQuadList ret;
+    foreach( QRect r, reg.rects())
+        {
+        WindowQuad quad( type );
+        // TODO asi mam spatne pravy dolni roh - bud tady, nebo v jinych castech
+        quad[ 0 ] = WindowVertex( r.x(), r.y(), r.x(), r.y());
+        quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), r.x() + r.width(), r.y());
+        quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), r.x() + r.width(), r.y() + r.height());
+        quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), r.x(), r.y() + r.height());
+        ret.append( quad );
+        }
+    return ret;
     }
 
 } // namespace
