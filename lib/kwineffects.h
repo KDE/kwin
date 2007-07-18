@@ -377,7 +377,7 @@ enum WindowQuadType
     {
     WindowQuadError, // for the stupid default ctor
     WindowQuadContents,
-    WindowQuadDecoration,
+    WindowQuadDecoration
     };
 
 /**
