@@ -89,6 +89,7 @@ KDE 4.0 TODO
 ? - undirect fullscreen windows
 
 - fix shading
+- window rules need to apply to unmanaged windows as well (where applicable)
 
 ? generic dbus scripting support
 
