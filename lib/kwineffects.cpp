@@ -316,6 +316,7 @@ EffectWindowGroup::~EffectWindowGroup()
 WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) const
     {
     assert( x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
+    checkUntransformed();
     WindowQuad ret( *this );
     ret.verts[ 0 ].px = x1;
     ret.verts[ 3 ].px = x1;
@@ -325,6 +326,15 @@ WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) con
     ret.verts[ 1 ].py = y1;
     ret.verts[ 2 ].py = y2;
     ret.verts[ 3 ].py = y2;
+    // original x/y are supposed to be the same, no transforming is done here
+    ret.verts[ 0 ].ox = x1;
+    ret.verts[ 3 ].ox = x1;
+    ret.verts[ 1 ].ox = x2;
+    ret.verts[ 2 ].ox = x2;
+    ret.verts[ 0 ].oy = y1;
+    ret.verts[ 1 ].oy = y1;
+    ret.verts[ 2 ].oy = y2;
+    ret.verts[ 3 ].oy = y2;
     float tleft = ( x1 - left()) / ( right() - left()) * ( textureRight() - textureLeft()) + textureLeft();
     float tright = ( x2 - left()) / ( right() - left()) * ( textureRight() - textureLeft()) + textureLeft();
     float ttop = ( y1 - top()) / ( bottom() - top()) * ( textureBottom() - textureTop()) + textureTop();
