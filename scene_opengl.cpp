@@ -1047,57 +1047,12 @@ bool SceneOpenGL::Window::bindTexture()
     Pixmap pix = toplevel->windowPixmap();
     if( pix == None )
         return false;
-    // HACK
-    // When a window uses ARGB visual and has a decoration, the decoration
-    // does use ARGB visual. When converting such window to a texture
-    // the alpha for the decoration part is broken for some reason (undefined?).
-    // I wasn't lucky converting KWin to use ARGB visuals for decorations,
-    // so instead simply set alpha in those parts to opaque.
-    // Without alpha_clear_copy the setting is done directly in the window
-    // pixmap, which seems to be ok, but let's not risk trouble right now.
-    // TODO check if this isn't a performance problem and how it can be done better
-    Client* c = dynamic_cast< Client* >( toplevel );
-    bool alpha_clear = c != NULL && c->hasAlpha() && !c->noBorder();
-    bool alpha_clear_copy = true;
-    bool copy_buffer = ( alpha_clear && alpha_clear_copy );
-    if( copy_buffer )
-        {
-        Pixmap p2 = XCreatePixmap( display(), pix, toplevel->width(), toplevel->height(), toplevel->depth());
-        GC gc = XCreateGC( display(), pix, 0, NULL );
-        XCopyArea( display(), pix, p2, gc, 0, 0, toplevel->width(), toplevel->height(), 0, 0 );
-        pix = p2;
-        XFreeGC( display(), gc );
-        }
-    if( alpha_clear )
-        {
-        XGCValues gcv;
-        gcv.foreground = 0xff000000;
-        gcv.plane_mask = 0xff000000;
-        GC gc = XCreateGC( display(), pix, GCPlaneMask | GCForeground, &gcv );
-        XFillRectangle( display(), pix, gc, 0, 0, c->width(), c->clientPos().y());
-        XFillRectangle( display(), pix, gc, 0, 0, c->clientPos().x(), c->height());
-        int tw = c->clientPos().x() + c->clientSize().width();
-        int th = c->clientPos().y() + c->clientSize().height();
-        XFillRectangle( display(), pix, gc, 0, th, c->width(), c->height() - th );
-        XFillRectangle( display(), pix, gc, tw, 0, c->width() - tw, c->height());
-        XFreeGC( display(), gc );
-        }
-    if( copy_buffer || alpha_clear )
-        {
-        glXWaitX();
-        texture.discard(); // it will be bound to the new temporary pixmap
-        }
-
     bool success = texture.load( pix, toplevel->size(), toplevel->depth(),
         toplevel->damage());
     if( success )
         toplevel->resetDamage( toplevel->rect());
     else
         kDebug( 1212 ) << "Failed to bind window" << endl;
-    // if using copy_buffer, the pixmap is no longer needed (either referenced
-    // by GLXPixmap in the tfp case or not needed at all in non-tfp cases)
-    if( copy_buffer )
-        XFreePixmap( display(), pix );
     return success;
     }
 

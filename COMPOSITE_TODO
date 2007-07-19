@@ -98,8 +98,6 @@ KDE 4.0 TODO
     would be nice if isn't too strict
 
 / vertex redesign [Seli]
-    affects alpha clear hack
-    - not using ARGB visuals
 
 - handling of window pixmaps for unmapped windows [Seli]
 - strict binding
@@ -122,13 +120,11 @@ General TODO
 =================================
 
 ? alpha clear hack
-+   - find out if it affects performance
-+   - if yes, try to find a better way of solving the problem
-!   - since kompmgr has an option to make only the decoration transparent,
-        it should be possible to do the same here - if the window has alpha and a decoration
-        or if there should be only the decoration transparent, paint first the contents
-        and then the decoration - this should make it possible to paint the decoration
-        without the random alpha that is right now handled by the alpha hack
+    - some decorations have parts transparent, probably because they don't expect
+        to have an alpha channel
+    - should be probably simply fixed in the decorations
+    - if not feasible, code that makes non-alpha windows opaque (SceneOpenGL::Window::prepareRenderStates())
+        could be used to also ignore alpha channel of the decoration
 
 ? wait for decoration repaints
     - it is sometimes visible that the window contents are painted first and the decoration
@@ -301,11 +297,6 @@ Effects TODO
         probably simply write to kwinrc and use the Option class in KWin
 
 / implements all effects Kompmgr could do
-+   - all effects from the Opacity tab should be already doable
-!       - not usign ARGB visuals
-            - just clear the alpha channel in the alpha clear hack
-            - or do it while painting (see also the alpha clear hack todo entry)
-!       - the rest - should be simple
 /   - shadows
 +   - tab Effects
 +       - fade between changes
