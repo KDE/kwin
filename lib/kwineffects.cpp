@@ -452,8 +452,8 @@ void WindowQuadList::makeArrays( float** vertices, float** texcoords ) const
             {
             *vpos++ = at( i )[ j ].x();
             *vpos++ = at( i )[ j ].y();
-            *tpos++ = at( i )[ j ].textureX();
-            *tpos++ = at( i )[ j ].textureY();
+            *tpos++ = at( i )[ j ].tx;
+            *tpos++ = at( i )[ j ].ty;
             }
     }
 

@@ -66,8 +66,8 @@ void WavyWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
                  ++j )
                 {
                 WindowVertex& v = data.quads[ i ][ j ];
-                v.move( v.x() + sin(mTimeElapsed + v.textureY() / 60 + 0.5f) * 10,
-                    v.y() + sin(mTimeElapsed + v.textureX() / 80) * 10 );
+                v.move( v.x() + sin(mTimeElapsed + v.originalY() / 60 + 0.5f) * 10,
+                    v.y() + sin(mTimeElapsed + v.originalX() / 80) * 10 );
             }
         }
 

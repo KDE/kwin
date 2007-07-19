@@ -368,13 +368,15 @@ class KWIN_EXPORT WindowVertex
         void move( float x, float y );
         void setX( float x );
         void setY( float y );
-        float textureX() const;
-        float textureY() const;
+        float originalX() const;
+        float originalY() const;
         WindowVertex();
         WindowVertex( float x, float y, float tx, float ty );
     private:
         friend class WindowQuad;
+        friend class WindowQuadList;
         float px, py; // position
+        float ox, oy; // origional position
         float tx, ty; // texture coords
     };
 
@@ -507,7 +509,7 @@ WindowVertex::WindowVertex()
 
 inline
 WindowVertex::WindowVertex( float _x, float _y, float _tx, float _ty )
-    : px( _x ), py( _y ), tx( _tx ), ty( _ty )
+    : px( _x ), py( _y ), ox( _x ), oy( _y ), tx( _tx ), ty( _ty )
     {
     }
 
@@ -521,6 +523,18 @@ inline
 float WindowVertex::y() const
     {
     return py;
+    }
+
+inline
+float WindowVertex::originalX() const
+    {
+    return ox;
+    }
+
+inline
+float WindowVertex::originalY() const
+    {
+    return oy;
     }
 
 inline
@@ -540,18 +554,6 @@ inline
 void WindowVertex::setY( float y )
     {
     py = y;
-    }
-
-inline
-float WindowVertex::textureX() const
-    {
-    return tx;
-    }
-
-inline
-float WindowVertex::textureY() const
-    {
-    return ty;
     }
 
 /***************************************************************
@@ -590,8 +592,6 @@ void WindowQuad::checkUntransformed() const
     {
     assert( verts[ 0 ].py == verts[ 1 ].py && verts[ 2 ].py == verts[ 3 ].py
         && verts[ 0 ].px == verts[ 3 ].px && verts[ 1 ].px == verts[ 2 ].px );
-    assert( verts[ 0 ].ty == verts[ 1 ].ty && verts[ 2 ].ty == verts[ 3 ].ty
-        && verts[ 0 ].tx == verts[ 3 ].tx && verts[ 1 ].tx == verts[ 2 ].tx );
     }
 
 inline
