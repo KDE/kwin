@@ -409,6 +409,7 @@ class KWIN_EXPORT WindowQuad
         float originalRight() const;
         float originalTop() const;
         float originalBottom() const;
+        bool smoothNeeded() const;
     private:
         friend class WindowQuadList;
         void checkUntransformed() const;

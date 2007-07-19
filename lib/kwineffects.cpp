@@ -355,6 +355,15 @@ WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) con
     return ret;
     }
 
+bool WindowQuad::smoothNeeded() const
+    {
+    // smoothing is needed if the width or height of the quad does not match the original size
+    float width = verts[ 1 ].ox - verts[ 0 ].ox;
+    float height = verts[ 2 ].oy - verts[ 1 ].oy;
+    return( verts[ 1 ].px - verts[ 0 ].px != width || verts[ 2 ].px - verts[ 3 ].px != width
+        || verts[ 2 ].py - verts[ 1 ].py != height || verts[ 3 ].py - verts[ 0 ].py != height );
+    }
+
 /***************************************************************
  WindowQuadList
 ***************************************************************/
@@ -510,7 +519,10 @@ WindowQuadList WindowQuadList::filterOut( WindowQuadType type ) const
 
 bool WindowQuadList::smoothNeeded() const
     {
-    return false; // TODO
+    foreach( WindowQuad q, *this )
+        if( q.smoothNeeded())
+            return true;
+    return false;
     }
 
 } // namespace
