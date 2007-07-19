@@ -1,8 +1,9 @@
 ########### next target ###############
 
-set(kwin_oxy_SRCS 
-     oxygenclient.cpp 
-     oxygenbutton.cpp	
+set(kwin_oxy_SRCS
+     lib/helper.cpp
+     oxygenclient.cpp
+     oxygenbutton.cpp
      oxygen.cpp
      definitions.cpp
    )
