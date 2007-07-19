@@ -313,6 +313,11 @@ class KWIN_EXPORT EffectWindow
         virtual bool isUserMove() const = 0;
         virtual bool isUserResize() const = 0;
         virtual QRect iconGeometry() const = 0;
+        /**
+         * Geometry of the actual window contents inside the whole (including decorations) window.
+         */
+        virtual QRect contentsRect() const = 0;
+        bool hasDecoration() const;
 
         virtual QString caption() const = 0;
         virtual QPixmap icon() const = 0;
@@ -428,6 +433,11 @@ class KWIN_EXPORT WindowPrePaintData
         QRegion paint;
         QRegion clip;
         WindowQuadList quads;
+        /**
+         * Simple helper than sets data to say the window will be painted as non-opaque.
+         * Takes also care of changing the regions.
+         */
+        void setTranslucent();
     };
 
 class KWIN_EXPORT WindowPaintData

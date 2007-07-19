@@ -49,8 +49,8 @@ void HowtoEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int
             {
             // Since the effect will make the window translucent, explicitly change
             // the flags so that the window will be painted only as translucent.
-            data.mask |= PAINT_WINDOW_TRANSLUCENT;
-            data.mask &= ~PAINT_WINDOW_OPAQUE;
+            // Use a helper that also takes care of changing the clipping rectangle.
+            data.setTranslucent();
             }
         else
             {

@@ -25,23 +25,23 @@ MakeTransparentEffect::MakeTransparentEffect()
 
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( decoration != 1.0 )
+    if( decoration != 1.0 && w->hasDecoration())
         {
         data.mask |= PAINT_WINDOW_TRANSLUCENT;
-        data.mask &= ~PAINT_WINDOW_OPAQUE;
+        // don't clear PAINT_WINDOW_OPAQUE, contents are not affected
+        data.clip &= w->contentsRect().translated( w->pos()); // decoration cannot clip
         }
     if(( moveresize != 1.0 && ( w->isUserMove() || w->isUserResize()))
         || ( dialogs != 1.0 && w->isDialog()))
         {
-        data.mask |= PAINT_WINDOW_TRANSLUCENT;
-        data.mask &= ~PAINT_WINDOW_OPAQUE;
+        data.setTranslucent();
         }
     effects->prePaintWindow( w, data, time );
     }
 
 void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( decoration != 1.0 )
+    if( decoration != 1.0 && w->hasDecoration())
         data.decoration_opacity *= decoration;
     if( dialogs != 1.0 && w->isDialog())
         data.opacity *= dialogs;

@@ -42,10 +42,7 @@ void FadeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
         windows[ w ].fadeInStep += fadeInStep;
         windows[ w ].fadeOutStep += fadeOutStep;
         if( windows[ w ].opacity < 1.0 )
-            {
-            data.mask &= ~PAINT_WINDOW_OPAQUE;
-            data.mask |= PAINT_WINDOW_TRANSLUCENT;
-            }
+            data.setTranslucent();
         if( windows[ w ].deleted )
             {
             if( windows[ w ].opacity <= 0.0 )

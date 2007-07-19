@@ -916,6 +916,11 @@ QRect EffectWindowImpl::rect() const
     return toplevel->rect();
     }
 
+QRect EffectWindowImpl::contentsRect() const
+    {
+    return QRect( toplevel->clientPos(), toplevel->clientSize());
+    }
+
 bool EffectWindowImpl::isMovable() const
     {
     if( Client* c = dynamic_cast< Client* >( toplevel ))

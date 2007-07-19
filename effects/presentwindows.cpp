@@ -107,7 +107,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
             // If it's minimized window or on another desktop and effect is not
             //  fully active, then apply some transparency
             if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
-                data.mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
+                data.setTranslucent();
             // Change window's hover according to cursor pos
             WindowData& windata = mWindowData[w];
             const float hoverchangetime = 200;

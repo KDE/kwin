@@ -121,8 +121,8 @@ void ExplosionEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
             mWindows[ w  ] += time / 700.0; // complete change in 700ms
             if( mWindows[ w  ] < 1 )
                 {
-                data.mask |= PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED;
-                data.mask &= ~PAINT_WINDOW_OPAQUE;
+                data.setTranslucent();
+                data.mask |= PAINT_WINDOW_TRANSFORMED;
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
                 }
             else

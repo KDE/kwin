@@ -22,6 +22,13 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+void WindowPrePaintData::setTranslucent()
+    {
+    mask |= Effect::PAINT_WINDOW_TRANSLUCENT;
+    mask &= ~Effect::PAINT_WINDOW_OPAQUE;
+    clip = QRegion(); // cannot clip, will be transparent
+    }
+
 WindowPaintData::WindowPaintData()
     : opacity( 1.0 )
     , contents_opacity( 1.0 )
@@ -280,6 +287,11 @@ bool EffectWindow::isOnCurrentDesktop() const
 bool EffectWindow::isOnDesktop( int d ) const
     {
     return desktop() == d || isOnAllDesktops();
+    }
+
+bool EffectWindow::hasDecoration() const
+    {
+    return contentsRect() != QRect( 0, 0, width(), height());
     }
 
 

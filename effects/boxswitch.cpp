@@ -57,10 +57,7 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
         if( mMode == TabBoxWindowsMode )
             {
             if( windows.contains( w ) && w != selected_window )
-                {
-                data.mask |= PAINT_WINDOW_TRANSLUCENT;
-                data.mask &= ~PAINT_WINDOW_OPAQUE;
-                }
+                data.setTranslucent();
             }
         else
             {
