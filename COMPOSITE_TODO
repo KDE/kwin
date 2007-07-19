@@ -98,7 +98,6 @@ KDE 4.0 TODO
 
 / vertex redesign [Seli]
     affects alpha clear hack
-    - support applying opacity only to decoration
     - not using ARGB visuals
 
 - handling of window pixmaps for unmapped windows [Seli]
@@ -302,9 +301,6 @@ Effects TODO
 
 / implements all effects Kompmgr could do
 +   - all effects from the Opacity tab should be already doable
-!       - applying translucency only to the decoration
-            - use clientSize() and clientPos() from Client
-            - see also the alpha clear hack todo entry
 !       - not usign ARGB visuals
             - just clear the alpha channel in the alpha clear hack
             - or do it while painting (see also the alpha clear hack todo entry)

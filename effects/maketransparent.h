@@ -20,9 +20,14 @@ class MakeTransparentEffect
     : public Effect
     {
     public:
+        MakeTransparentEffect();
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+    private:
+        float decoration;
+        float moveresize;
+        float dialogs;
     };
 
 } // namespace

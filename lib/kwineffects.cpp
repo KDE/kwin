@@ -24,6 +24,8 @@ namespace KWin
 
 WindowPaintData::WindowPaintData()
     : opacity( 1.0 )
+    , contents_opacity( 1.0 )
+    , decoration_opacity( 1.0 )
     , xScale( 1 )
     , yScale( 1 )
     , xTranslate( 0 )
@@ -417,7 +419,7 @@ WindowQuadList WindowQuadList::makeGrid( int maxquadsize ) const
     return ret;
     }
 
-void WindowQuadList::makeArrays( float** vertices, float** texcoords )
+void WindowQuadList::makeArrays( float** vertices, float** texcoords ) const
     {
     *vertices = new float[ count() * 4 * 2 ];
     *texcoords = new float[ count() * 4 * 2 ];
@@ -435,6 +437,24 @@ void WindowQuadList::makeArrays( float** vertices, float** texcoords )
             *tpos++ = at( i )[ j ].textureX();
             *tpos++ = at( i )[ j ].textureY();
             }
+    }
+
+WindowQuadList WindowQuadList::select( WindowQuadType type ) const
+    {
+    foreach( WindowQuad q, *this )
+        {
+        if( q.type != type ) // something else than ones to select, make a copy and filter
+            {
+            WindowQuadList ret;
+            foreach( WindowQuad q, *this )
+                {
+                if( q.type == type )
+                    ret.append( q );
+                }
+            return ret;
+            }
+        }
+    return *this; // nothing to filter out
     }
 
 WindowQuadList WindowQuadList::filterOut( WindowQuadType type ) const

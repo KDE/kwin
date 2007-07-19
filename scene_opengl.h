@@ -125,10 +125,13 @@ class SceneOpenGL::Window
         void setShader( GLShader* s )  { shader = s; }
 
     protected:
-        void prepareRenderStates( int mask, WindowPaintData data );
-        void prepareShaderRenderStates( int mask, WindowPaintData data );
-        void restoreRenderStates( int mask, WindowPaintData data );
-        void restoreShaderRenderStates( int mask, WindowPaintData data );
+        void renderQuads( int mask, const QRegion& region, const WindowQuadList& quads );
+        void prepareStates( double opacity, double brightness, double saturation );
+        void prepareRenderStates( double opacity, double brightness, double saturation );
+        void prepareShaderRenderStates( double opacity, double brightness, double saturation );
+        void restoreStates( double opacity, double brightness, double saturation );
+        void restoreRenderStates( double opacity, double brightness, double saturation );
+        void restoreShaderRenderStates( double opacity, double brightness, double saturation );
 
     private:
         Texture texture;

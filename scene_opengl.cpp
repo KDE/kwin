@@ -1177,60 +1177,82 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     glTranslatef( x, y, 0 );
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
+    region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
 
-    if(shader)
-        prepareShaderRenderStates( mask, data );
-    else
-        prepareRenderStates( mask, data );
     texture.bind();
     texture.enableUnnormalizedTexCoords();
+
+    WindowQuadList decoration = data.quads.select( WindowQuadDecoration );    
+    if( data.contents_opacity != data.decoration_opacity && !decoration.isEmpty())
+        {
+        prepareStates( data.opacity * data.contents_opacity, data.brightness, data.saturation );
+        renderQuads( mask, region, data.quads.select( WindowQuadContents ));
+        restoreStates( data.opacity * data.contents_opacity, data.brightness, data.saturation );
+        prepareStates( data.opacity * data.decoration_opacity, data.brightness, data.saturation );
+        renderQuads( mask, region, decoration );
+        restoreStates( data.opacity * data.decoration_opacity, data.brightness, data.saturation );
+        }
+    else
+        {
+        prepareStates( data.opacity * data.contents_opacity, data.brightness, data.saturation );
+        renderQuads( mask, region, data.quads.select( WindowQuadContents ));
+        renderQuads( mask, region, data.quads.select( WindowQuadDecoration ));
+        restoreStates( data.opacity * data.contents_opacity, data.brightness, data.saturation );
+        }
+
+    texture.disableUnnormalizedTexCoords();
+    texture.unbind();
+    glPopMatrix();
+    }
+
+void SceneOpenGL::Window::renderQuads( int mask, const QRegion& region, const WindowQuadList& quads )
+    {
+    if( quads.isEmpty())
+        return;
     // Render geometry
-    region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
     float* vertices;
     float* texcoords;
-    data.quads.makeArrays( &vertices, &texcoords );
-    renderGLGeometry( mask, region, data.quads.count() * 4,
+    quads.makeArrays( &vertices, &texcoords );
+    renderGLGeometry( mask, region, quads.count() * 4,
             vertices, texcoords, NULL, 2, 0 );
     delete[] vertices;
     delete[] texcoords;
-    texture.disableUnnormalizedTexCoords();
-    glPopMatrix();
+    }
 
+void SceneOpenGL::Window::prepareStates( double opacity, double brightness, double saturation )
+    {
     if(shader)
-        restoreShaderRenderStates( mask, data );
+        prepareShaderRenderStates( opacity, brightness, saturation );
     else
-        restoreRenderStates( mask, data );
-    texture.unbind();
+        prepareRenderStates( opacity, brightness, saturation );
     }
 
-void SceneOpenGL::Window::prepareShaderRenderStates( int mask, WindowPaintData data )
+void SceneOpenGL::Window::prepareShaderRenderStates( double opacity, double brightness, double saturation )
     {
-    Q_UNUSED( mask );
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
-    bool opaque = isOpaque() && data.opacity == 1.0;
+    bool opaque = isOpaque() && opacity == 1.0;
     if( !opaque )
         {
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         }
-    shader->setUniform("opacity", (float)data.opacity);
-    shader->setUniform("saturation", (float)data.saturation);
-    shader->setUniform("brightness", (float)data.brightness);
+    shader->setUniform("opacity", (float)opacity);
+    shader->setUniform("saturation", (float)saturation);
+    shader->setUniform("brightness", (float)brightness);
     }
 
-void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
+void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness, double saturation )
     {
-    Q_UNUSED( mask );
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
-    bool opaque = isOpaque() && data.opacity == 1.0;
+    bool opaque = isOpaque() && opacity == 1.0;
     if( !opaque )
         {
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         }
-    if( data.saturation != 1.0 && texture.saturationSupported())
+    if( saturation != 1.0 && texture.saturationSupported())
         {
         // First we need to get the color from [0; 1] range to [0.5; 1] range
         glActiveTexture( GL_TEXTURE0 );
@@ -1252,7 +1274,7 @@ void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
         // Note that both operands have to be in range [0.5; 1] since opengl
         //  automatically substracts 0.5 from them
         glActiveTexture( GL_TEXTURE1 );
-        float saturation_constant[] = { 0.5 + 0.5*0.30, 0.5 + 0.5*0.59, 0.5 + 0.5*0.11, data.saturation };
+        float saturation_constant[] = { 0.5 + 0.5*0.30, 0.5 + 0.5*0.59, 0.5 + 0.5*0.11, saturation };
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
         glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB );
         glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
@@ -1279,10 +1301,10 @@ void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
         glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PRIMARY_COLOR );
         glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
         // And make primary color contain the wanted opacity
-        glColor4f( data.opacity, data.opacity, data.opacity, data.opacity );
+        glColor4f( opacity, opacity, opacity, opacity );
         texture.bind();
 
-        if( toplevel->hasAlpha() || data.brightness != 1.0f )
+        if( toplevel->hasAlpha() || brightness != 1.0f )
             {
             glActiveTexture( GL_TEXTURE3 );
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
@@ -1294,8 +1316,8 @@ void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
             if( toplevel->hasAlpha() )
                 {
                 // The color has to be multiplied by both opacity and brightness
-                float opacityByBrightness = data.opacity * data.brightness;
-                glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, data.opacity );
+                float opacityByBrightness = opacity * brightness;
+                glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity );
                 // Also multiply original texture's alpha by our opacity
                 glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE );
                 glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE0 );
@@ -1306,7 +1328,7 @@ void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
             else
                 {
                 // Color has to be multiplied only by brightness
-                glColor4f( data.brightness, data.brightness, data.brightness, data.opacity );
+                glColor4f( brightness, brightness, brightness, opacity );
                 // Alpha will be taken from previous stage
                 glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
                 glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS );
@@ -1317,21 +1339,21 @@ void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
 
         glActiveTexture(GL_TEXTURE0 );
         }
-    else if( data.opacity != 1.0 || data.brightness != 1.0 )
+    else if( opacity != 1.0 || brightness != 1.0 )
         {
         // the window is additionally configured to have its opacity adjusted,
         // do it
         if( toplevel->hasAlpha())
             {
-            float opacityByBrightness = data.opacity * data.brightness;
+            float opacityByBrightness = opacity * brightness;
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
             glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness,
-                data.opacity);
+                opacity);
             }
         else
             {
             // Multiply color by brightness and replace alpha by opacity
-            float constant[] = { data.brightness, data.brightness, data.brightness, data.opacity };
+            float constant[] = { brightness, brightness, brightness, opacity };
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
             glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE );
             glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
@@ -1345,19 +1367,27 @@ void SceneOpenGL::Window::prepareRenderStates( int mask, WindowPaintData data )
         }
     }
 
-void SceneOpenGL::Window::restoreShaderRenderStates( int mask, WindowPaintData data )
+void SceneOpenGL::Window::restoreStates( double opacity, double brightness, double saturation )
     {
-    Q_UNUSED( mask );
-    Q_UNUSED( data );
+    if(shader)
+        restoreShaderRenderStates( opacity, brightness, saturation );
+    else
+        restoreRenderStates( opacity, brightness, saturation );
+    }
+
+void SceneOpenGL::Window::restoreShaderRenderStates( double opacity, double brightness, double saturation )
+    {
+    Q_UNUSED( opacity );
+    Q_UNUSED( brightness );
+    Q_UNUSED( saturation );
     glPopAttrib();  // ENABLE_BIT
     }
 
-void SceneOpenGL::Window::restoreRenderStates( int mask, WindowPaintData data )
+void SceneOpenGL::Window::restoreRenderStates( double opacity, double brightness, double saturation )
     {
-    Q_UNUSED( mask );
-    if( data.opacity != 1.0 || data.saturation != 1.0 || data.brightness != 1.0f )
+    if( opacity != 1.0 || saturation != 1.0 || brightness != 1.0f )
         {
-        if( data.saturation != 1.0 && texture.saturationSupported())
+        if( saturation != 1.0 && texture.saturationSupported())
             {
             glActiveTexture(GL_TEXTURE3);
             glDisable( texture.target());

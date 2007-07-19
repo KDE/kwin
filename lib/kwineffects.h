@@ -415,9 +415,10 @@ class KWIN_EXPORT WindowQuadList
         WindowQuadList splitAtX( float x ) const;
         WindowQuadList splitAtY( float y ) const;
         WindowQuadList makeGrid( int maxquadsize ) const;
+        WindowQuadList select( WindowQuadType type ) const;
         WindowQuadList filterOut( WindowQuadType type ) const;
         bool smoothNeeded() const;
-        void makeArrays( float** vertices, float** texcoords );
+        void makeArrays( float** vertices, float** texcoords ) const;
     };
 
 class KWIN_EXPORT WindowPrePaintData
@@ -435,8 +436,12 @@ class KWIN_EXPORT WindowPaintData
         WindowPaintData();
         /**
          * Window opacity, in range 0 = transparent to 1 = fully opaque
+         * Opacity for contents is opacity*contents_opacity, the same
+         * way for decoration.
          */
         double opacity;
+        double contents_opacity;
+        double decoration_opacity;
         double xScale;
         double yScale;
         int xTranslate;
