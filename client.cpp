@@ -1097,7 +1097,7 @@ void Client::killProcess( bool ask, Time timestamp )
             ::kill( pid, SIGTERM );
         }
     else
-        { // SELI TODO handle the window created by handler specially (on top,urgent?)
+        {
         process_killer = new K3Process( this );
         *process_killer << KStandardDirs::findExe( "kwin_killer_helper" )
             << "--pid" << QByteArray().setNum( pid ) << "--hostname" << machine

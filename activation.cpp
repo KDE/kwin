@@ -862,7 +862,6 @@ void Client::setActive( bool act )
         
     StackingUpdatesBlocker blocker( workspace());
     workspace()->updateClientLayer( this ); // active windows may get different layer
-    // TODO optimize? mainClients() may be a bit expensive
     ClientList mainclients = mainClients();
     for( ClientList::ConstIterator it = mainclients.begin();
          it != mainclients.end();

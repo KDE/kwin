@@ -595,7 +595,6 @@ bool Client::windowEvent( XEvent* e )
             }
         }
 
-// TODO move all focus handling stuff to separate file?
     switch (e->type) 
         {
         case UnmapNotify:
@@ -870,7 +869,7 @@ void Client::configureRequestEvent( XConfigureRequestEvent* e )
     if ( e->value_mask & CWStackMode )
         restackWindow( e->above, e->detail, NET::FromApplication, userTime(), false );
 
-    // TODO sending a synthetic configure notify always is fine, even in cases where
+    // Sending a synthetic configure notify always is fine, even in cases where
     // the ICCCM doesn't require this - it can be though of as 'the WM decided to move
     // the window later'. The client should not cause that many configure request,
     // so this should not have any significant impact. With user moving/resizing
