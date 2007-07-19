@@ -400,7 +400,6 @@ class KWIN_EXPORT WindowQuad
         WindowVertex& operator[]( int index );
         const WindowVertex& operator[]( int index ) const;
         bool decoration() const;
-        // these 8 work only with untransformed quads
         float left() const;
         float right() const;
         float top() const;
@@ -410,9 +409,9 @@ class KWIN_EXPORT WindowQuad
         float originalTop() const;
         float originalBottom() const;
         bool smoothNeeded() const;
+        bool isTransformed() const;
     private:
         friend class WindowQuadList;
-        void checkUntransformed() const;
         WindowVertex verts[ 4 ];
         WindowQuadType type; // 0 - contents, 1 - decoration
     };
@@ -590,38 +589,36 @@ bool WindowQuad::decoration() const
     }
 
 inline
-void WindowQuad::checkUntransformed() const
+bool WindowQuad::isTransformed() const
     {
-    assert( verts[ 0 ].py == verts[ 1 ].py && verts[ 2 ].py == verts[ 3 ].py
-        && verts[ 0 ].px == verts[ 3 ].px && verts[ 1 ].px == verts[ 2 ].px );
+    return !( verts[ 0 ].px == verts[ 0 ].ox && verts[ 0 ].py == verts[ 0 ].oy
+        && verts[ 1 ].px == verts[ 1 ].ox && verts[ 1 ].py == verts[ 1 ].oy
+        && verts[ 2 ].px == verts[ 2 ].ox && verts[ 2 ].py == verts[ 2 ].oy
+        && verts[ 3 ].px == verts[ 3 ].ox && verts[ 3 ].py == verts[ 3 ].oy );
     }
 
 inline
 float WindowQuad::left() const
     {
-    checkUntransformed();
-    return verts[ 0 ].px;
+    return qMin( verts[ 0 ].px, qMin( verts[ 1 ].px, qMin( verts[ 2 ].px, verts[ 3 ].px )));
     }
 
 inline
 float WindowQuad::right() const
     {
-    checkUntransformed();
-    return verts[ 2 ].px;
+    return qMax( verts[ 0 ].px, qMax( verts[ 1 ].px, qMax( verts[ 2 ].px, verts[ 3 ].px )));
     }
 
 inline
 float WindowQuad::top() const
     {
-    checkUntransformed();
-    return verts[ 0 ].py;
+    return qMin( verts[ 0 ].py, qMin( verts[ 1 ].py, qMin( verts[ 2 ].py, verts[ 3 ].py )));
     }
 
 inline
 float WindowQuad::bottom() const
     {
-    checkUntransformed();
-    return verts[ 2 ].py;
+    return qMax( verts[ 0 ].py, qMax( verts[ 1 ].py, qMax( verts[ 2 ].py, verts[ 3 ].py )));
     }
 
 inline

@@ -178,6 +178,11 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
         data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
+#ifndef NDEBUG
+        foreach( WindowQuad q, data.quads )
+            if( q.isTransformed())
+                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" << endl;
+#endif
         if( !w->isPaintingEnabled())
             continue;
         phase2.append( Phase2Data( w, infiniteRegion(), data.mask, data.quads ));
@@ -214,6 +219,11 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
+#ifndef NDEBUG
+        foreach( WindowQuad q, data.quads )
+            if( q.isTransformed())
+                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" << endl;
+#endif
         if( !w->isPaintingEnabled())
             continue;
         data.paint -= allclips; // make sure to avoid already clipped areas

@@ -214,6 +214,11 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
         data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
+#ifndef NDEBUG
+        foreach( WindowQuad q, data.quads )
+            if( q.isTransformed())
+                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" << endl;
+#endif
         if( !w->isPaintingEnabled())
             continue;
         data.paint -= allclips; // make sure to avoid already clipped areas

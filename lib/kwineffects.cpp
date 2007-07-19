@@ -316,7 +316,10 @@ EffectWindowGroup::~EffectWindowGroup()
 WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) const
     {
     assert( x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
-    checkUntransformed();
+#ifndef NDEBUG
+    if( isTransformed())
+        kFatal( 1212 ) << "Splitting quads is allowed only in pre-paint calls!" << endl;
+#endif
     WindowQuad ret( *this );
     // vertices are clockwise starting from topleft
     ret.verts[ 0 ].px = x1;
@@ -373,6 +376,10 @@ WindowQuadList WindowQuadList::splitAtX( float x ) const
     WindowQuadList ret;
     foreach( WindowQuad quad, *this )
         {
+#ifndef NDEBUG
+        if( quad.isTransformed())
+            kFatal( 1212 ) << "Splitting quads is allowed only in pre-paint calls!" << endl;
+#endif
         bool wholeleft = true;
         bool wholeright = true;
         for( int i = 0;
@@ -400,6 +407,10 @@ WindowQuadList WindowQuadList::splitAtY( float y ) const
     WindowQuadList ret;
     foreach( WindowQuad quad, *this )
         {
+#ifndef NDEBUG
+        if( quad.isTransformed())
+            kFatal( 1212 ) << "Splitting quads is allowed only in pre-paint calls!" << endl;
+#endif
         bool wholetop = true;
         bool wholebottom = true;
         for( int i = 0;
@@ -433,6 +444,10 @@ WindowQuadList WindowQuadList::makeGrid( int maxquadsize ) const
     float bottom = first().bottom();
     foreach( WindowQuad quad, *this )
         {
+#ifndef NDEBUG
+        if( quad.isTransformed())
+            kFatal( 1212 ) << "Splitting quads is allowed only in pre-paint calls!" << endl;
+#endif
         left = qMin( left, quad.left());
         right = qMax( right, quad.right());
         top = qMin( top, quad.top());
