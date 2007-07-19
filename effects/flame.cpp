@@ -32,7 +32,7 @@ void FlameEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int
         if( windows[ w ] < 1 )
             {
             windows[ w ] += time / 500.;
-            data.mask |= PAINT_WINDOW_TRANSFORMED;
+            data.setTransformed();
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
             data.quads = data.quads.splitAtY( windows[ w ] * w->height());
             }

@@ -32,7 +32,7 @@ void FallApartEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
         if( windows[ w ] < 1 )
             {
             windows[ w ] += time / 1000.;
-            data.mask |= PAINT_WINDOW_TRANSFORMED;
+            data.setTransformed();
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
             // Request the window to be divided into cells
             data.quads = data.quads.makeGrid( 40 );

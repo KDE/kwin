@@ -30,7 +30,7 @@ void DrunkenEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, i
         {
         windows[ w ] += time / 1000.;
         if( windows[ w ] < 1 )
-            data.mask |= PAINT_WINDOW_TRANSFORMED;
+            data.setTransformed();
         else
             windows.remove( w );
         }

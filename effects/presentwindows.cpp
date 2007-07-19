@@ -101,7 +101,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
         if( mWindowData.contains(w) )
             {
             // This window will be transformed by the effect
-            data.mask |= Effect::PAINT_WINDOW_TRANSFORMED;
+            data.setTransformed();
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             // If it's minimized window or on another desktop and effect is not

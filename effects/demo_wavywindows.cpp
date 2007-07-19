@@ -39,7 +39,7 @@ void WavyWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 void WavyWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     // This window will be transformed by the effect
-    data.mask |= PAINT_WINDOW_TRANSFORMED;
+    data.setTransformed();
     // Check if OpenGL compositing is used
     // Request the window to be divided into cells which are at most 30x30
     //  pixels big

@@ -434,10 +434,14 @@ class KWIN_EXPORT WindowPrePaintData
         QRegion clip;
         WindowQuadList quads;
         /**
-         * Simple helper than sets data to say the window will be painted as non-opaque.
+         * Simple helper that sets data to say the window will be painted as non-opaque.
          * Takes also care of changing the regions.
          */
         void setTranslucent();
+        /**
+         * Helper to mark that this window will be transformed
+         **/
+        void setTransformed();
     };
 
 class KWIN_EXPORT WindowPaintData

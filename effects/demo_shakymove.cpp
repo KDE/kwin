@@ -33,7 +33,7 @@ void ShakyMoveEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 void ShakyMoveEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( windows.contains( w ))
-        data.mask |= PAINT_WINDOW_TRANSFORMED;
+        data.setTransformed();
     effects->prePaintWindow( w, data, time );
     }
 

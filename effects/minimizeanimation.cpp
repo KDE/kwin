@@ -55,7 +55,7 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintDat
         if( mAnimationProgress.contains( w ))
             {
             // We'll transform this window
-            data.mask |= PAINT_WINDOW_TRANSFORMED;
+            data.setTransformed();
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
             }
         else

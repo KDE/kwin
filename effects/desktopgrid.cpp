@@ -87,7 +87,7 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& dat
         if( w->isOnAllDesktops())
             {
             if( slide_painting_sticky )
-                data.mask |= PAINT_WINDOW_TRANSFORMED;
+                data.setTransformed();
             else
                 w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             }
@@ -104,7 +104,7 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& dat
             w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         if( w == window_move )
             {
-            data.mask |= PAINT_WINDOW_TRANSFORMED;
+            data.setTransformed();
             if( w->isOnAllDesktops() && painting_desktop != posToDesktop( window_move_pos - window_move_diff ))
                 w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             }

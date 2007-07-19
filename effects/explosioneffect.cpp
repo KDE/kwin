@@ -122,7 +122,7 @@ void ExplosionEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
             if( mWindows[ w  ] < 1 )
                 {
                 data.setTranslucent();
-                data.mask |= PAINT_WINDOW_TRANSFORMED;
+                data.setTransformed();
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
                 }
             else
