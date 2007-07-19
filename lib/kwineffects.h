@@ -391,6 +391,7 @@ enum WindowQuadType
  * @short Class representing one area of a window.
  * WindowQuads consists of four WindowVertex objects and represents one part of a window.
  */
+// NOTE: This class expects the (original) vertices to be in the clockwise order starting from topleft.
 class KWIN_EXPORT WindowQuad
     {
     public:
@@ -404,10 +405,10 @@ class KWIN_EXPORT WindowQuad
         float right() const;
         float top() const;
         float bottom() const;
-        float textureLeft() const;
-        float textureRight() const;
-        float textureTop() const;
-        float textureBottom() const;
+        float originalLeft() const;
+        float originalRight() const;
+        float originalTop() const;
+        float originalBottom() const;
     private:
         friend class WindowQuadList;
         void checkUntransformed() const;
@@ -623,31 +624,27 @@ float WindowQuad::bottom() const
     }
 
 inline
-float WindowQuad::textureLeft() const
+float WindowQuad::originalLeft() const
     {
-    checkUntransformed();
-    return verts[ 0 ].tx;
+    return verts[ 0 ].ox;
     }
 
 inline
-float WindowQuad::textureRight() const
+float WindowQuad::originalRight() const
     {
-    checkUntransformed();
-    return verts[ 2 ].tx;
+    return verts[ 2 ].ox;
     }
 
 inline
-float WindowQuad::textureTop() const
+float WindowQuad::originalTop() const
     {
-    checkUntransformed();
-    return verts[ 0 ].ty;
+    return verts[ 0 ].oy;
     }
 
 inline
-float WindowQuad::textureBottom() const
+float WindowQuad::originalBottom() const
     {
-    checkUntransformed();
-    return verts[ 2 ].ty;
+    return verts[ 2 ].oy;
     }
 
 } // namespace

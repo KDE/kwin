@@ -318,6 +318,7 @@ WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) con
     assert( x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
     checkUntransformed();
     WindowQuad ret( *this );
+    // vertices are clockwise starting from topleft
     ret.verts[ 0 ].px = x1;
     ret.verts[ 3 ].px = x1;
     ret.verts[ 1 ].px = x2;
@@ -335,10 +336,14 @@ WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) con
     ret.verts[ 1 ].oy = y1;
     ret.verts[ 2 ].oy = y2;
     ret.verts[ 3 ].oy = y2;
-    float tleft = ( x1 - left()) / ( right() - left()) * ( textureRight() - textureLeft()) + textureLeft();
-    float tright = ( x2 - left()) / ( right() - left()) * ( textureRight() - textureLeft()) + textureLeft();
-    float ttop = ( y1 - top()) / ( bottom() - top()) * ( textureBottom() - textureTop()) + textureTop();
-    float tbottom = ( y2 - top()) / ( bottom() - top()) * ( textureBottom() - textureTop()) + textureTop();
+    float my_tleft = verts[ 0 ].tx;
+    float my_tright = verts[ 2 ].tx;
+    float my_ttop = verts[ 0 ].ty;
+    float my_tbottom = verts[ 2 ].ty;
+    float tleft = ( x1 - left()) / ( right() - left()) * ( my_tright - my_tleft ) + my_tleft;
+    float tright = ( x2 - left()) / ( right() - left()) * ( my_tright - my_tleft ) + my_tleft;
+    float ttop = ( y1 - top()) / ( bottom() - top()) * ( my_tbottom - my_ttop ) + my_ttop;
+    float tbottom = ( y2 - top()) / ( bottom() - top()) * ( my_tbottom - my_ttop ) + my_ttop;
     ret.verts[ 0 ].tx = tleft;
     ret.verts[ 3 ].tx = tleft;
     ret.verts[ 1 ].tx = tright;
