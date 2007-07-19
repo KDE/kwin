@@ -478,6 +478,7 @@ bool SceneOpenGL::initDrawableConfigs()
                                           GLX_BIND_TO_TEXTURE_RGBA_EXT, &value );
                     if( value )
                         {
+                        // TODO I think this should be set only after the config passes all tests
                         rgba = 1;
                         fbcdrawableinfo[ i ].bind_texture_format = GLX_TEXTURE_FORMAT_RGBA_EXT;
                         }
