@@ -833,8 +833,6 @@ static bool areModKeysDepressed( const KShortcut& cut )
 
 void Workspace::slotWalkThroughWindows()
     {
-    if ( root != rootWindow() )
-        return;
     if ( tab_grab || control_grab )
         return;
     if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
@@ -859,8 +857,6 @@ void Workspace::slotWalkThroughWindows()
 
 void Workspace::slotWalkBackThroughWindows()
     {
-    if ( root != rootWindow() )
-        return;
     if( tab_grab || control_grab )
         return;
     if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
@@ -884,8 +880,6 @@ void Workspace::slotWalkBackThroughWindows()
 
 void Workspace::slotWalkThroughDesktops()
     {
-    if ( root != rootWindow() )
-        return;
     if( tab_grab || control_grab )
         return;
     if ( areModKeysDepressed( cutWalkThroughDesktops ) )
@@ -901,8 +895,6 @@ void Workspace::slotWalkThroughDesktops()
 
 void Workspace::slotWalkBackThroughDesktops()
     {
-    if ( root != rootWindow() )
-        return;
     if( tab_grab || control_grab )
         return;
     if ( areModKeysDepressed( cutWalkThroughDesktopsReverse ) )
@@ -918,8 +910,6 @@ void Workspace::slotWalkBackThroughDesktops()
 
 void Workspace::slotWalkThroughDesktopList()
     {
-    if ( root != rootWindow() )
-        return;
     if( tab_grab || control_grab )
         return;
     if ( areModKeysDepressed( cutWalkThroughDesktopList ) )
@@ -935,8 +925,6 @@ void Workspace::slotWalkThroughDesktopList()
 
 void Workspace::slotWalkBackThroughDesktopList()
     {
-    if ( root != rootWindow() )
-        return;
     if( tab_grab || control_grab )
         return;
     if ( areModKeysDepressed( cutWalkThroughDesktopListReverse ) )

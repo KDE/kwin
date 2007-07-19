@@ -211,7 +211,7 @@ Group::Group( Window leader_P, Workspace* workspace_P )
         {
         leader_client = workspace_P->findClient( WindowMatchPredicate( leader_P ));
         unsigned long properties[ 2 ] = { 0, NET::WM2StartupId };
-        leader_info = new NETWinInfo( display(), leader_P, workspace()->rootWin(),
+        leader_info = new NETWinInfo( display(), leader_P, rootWindow(),
             properties, 2 );
         }
     effect_group = new EffectWindowGroupImpl( this );
@@ -773,23 +773,23 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
     // make sure splashscreens are shown above all their app's windows, even though
     // they're in Normal layer
     if( isSplash() && new_transient_for == None )
-        new_transient_for = workspace()->rootWin();
+        new_transient_for = rootWindow();
     if( new_transient_for == None )
         if( defined ) // sometimes WM_TRANSIENT_FOR is set to None, instead of root window
-            new_property_value = new_transient_for = workspace()->rootWin();
+            new_property_value = new_transient_for = rootWindow();
         else
             return None;
     if( new_transient_for == window()) // pointing to self
         { // also fix the property itself
         kWarning( 1216 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." << endl;
-        new_property_value = new_transient_for = workspace()->rootWin();
+        new_property_value = new_transient_for = rootWindow();
         }
 //  The transient_for window may be embedded in another application,
 //  so kwin cannot see it. Try to find the managed client for the
 //  window and fix the transient_for property if possible.
     WId before_search = new_transient_for;
     while( new_transient_for != None
-           && new_transient_for != workspace()->rootWin()
+           && new_transient_for != rootWindow()
            && !workspace()->findClient( WindowMatchPredicate( new_transient_for )))
         {
         Window root_return, parent_return;
@@ -818,7 +818,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
 // windows in the group
     int count = 20;
     Window loop_pos = new_transient_for;
-    while( loop_pos != None && loop_pos != workspace()->rootWin())
+    while( loop_pos != None && loop_pos != rootWindow())
         {
         Client* pos = workspace()->findClient( WindowMatchPredicate( loop_pos ));
         if( pos == NULL )
@@ -827,13 +827,13 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
         if( --count == 0 )
             {
             kWarning( 1216 ) << "Client " << this << " caused WM_TRANSIENT_FOR loop." << endl;
-            new_transient_for = workspace()->rootWin();
+            new_transient_for = rootWindow();
             }
         }
-    if( new_transient_for != workspace()->rootWin()
+    if( new_transient_for != rootWindow()
         && workspace()->findClient( WindowMatchPredicate( new_transient_for )) == NULL )
         { // it's transient for a specific window, but that window is not mapped
-        new_transient_for = workspace()->rootWin();
+        new_transient_for = rootWindow();
         }
     if( new_property_value != original_transient_for_id )
         XSetTransientForHint( display(), window(), new_property_value );
@@ -869,7 +869,7 @@ void Client::removeTransient( Client* cl )
         {
         cl->transient_for_id = None;
         cl->transient_for = NULL; // SELI
-// SELI       cl->setTransient( workspace()->rootWin());
+// SELI       cl->setTransient( rootWindow());
         cl->setTransient( None );
         }
     }

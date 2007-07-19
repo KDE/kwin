@@ -82,8 +82,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         void killWindow() { slotKillWindow(); }
 
-        WId rootWin() const;
-
         bool initializing() const;
 
         /**
@@ -650,8 +648,6 @@ class Workspace : public QObject, public KDecorationDefines
         bool global_shortcuts_disabled;
         bool global_shortcuts_disabled_for_client;
 
-        WId root;
-
         PluginMgr *mgr;
 
         RootInfo *rootInfo;
@@ -756,11 +752,6 @@ class RootInfo : public NETRootInfo
         Workspace* workspace;
     };
 
-
-inline WId Workspace::rootWin() const
-    {
-    return root;
-    }
 
 inline bool Workspace::initializing() const
     {

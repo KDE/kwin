@@ -110,7 +110,6 @@ Workspace::Workspace( bool restore )
     disable_shortcuts_keys ( NULL ),
     global_shortcuts_disabled( false ),
     global_shortcuts_disabled_for_client( false ),
-    root              (0),
     workspaceInit     (true),
     startup(0),
     layoutOrientation(Qt::Vertical),
@@ -138,8 +137,7 @@ Workspace::Workspace( bool restore )
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
     _self = this;
     mgr = new PluginMgr;
-    root = rootWindow();
-	QX11Info info;
+    QX11Info info;
     default_colormap = DefaultColormap(display(), info.screen() );
     installed_colormap = default_colormap;
 
@@ -175,7 +173,7 @@ Workspace::Workspace( bool restore )
         KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this );
 
     // select windowmanager privileges
-    XSelectInput(display(), root,
+    XSelectInput(display(), rootWindow(),
                  KeyPressMask |
                  PropertyChangeMask |
                  ColormapChangeMask |
@@ -370,7 +368,7 @@ void Workspace::init()
 
         unsigned int i, nwins;
         Window root_return, parent_return, *wins;
-        XQueryTree(display(), root, &root_return, &parent_return, &wins, &nwins);
+        XQueryTree(display(), rootWindow(), &root_return, &parent_return, &wins, &nwins);
         for (i = 0; i < nwins; i++)
             {
             XWindowAttributes attr;
@@ -383,15 +381,7 @@ void Workspace::init()
             if( topmenu_space && topmenu_space->winId() == wins[ i ] )
                 continue;
             if (attr.map_state != IsUnmapped)
-                {
-                Client* c = createClient( wins[i], true );
-                if ( c != NULL && root != rootWindow() )
-                    { // TODO what is this?
-                // TODO may use QWidget:.create
-                    XReparentWindow( display(), c->frameId(), root, 0, 0 );
-                    c->move(0,0);
-                    }
-                }
+                createClient( wins[i], true );
             }
         if ( wins )
             XFree((void *) wins);
@@ -462,8 +452,7 @@ Workspace::~Workspace()
     delete tab_box;
     delete popupinfo;
     delete popup;
-    if ( root == rootWindow() )
-        XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
+    XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
     writeWindowRules();
     KGlobal::config()->sync();
@@ -1948,8 +1937,6 @@ unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation t
  */
 bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
     {
-    if ( root != rootWindow() )
-        return false;
     int kc = XKeycodeToKeysym(display(), ev.keycode, 0);
     int km = ev.state & (ControlMask | Mod1Mask | ShiftMask);
 

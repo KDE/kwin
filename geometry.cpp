@@ -2287,7 +2287,7 @@ bool Client::startMoveResize()
     // (http://lists.kde.org/?t=107302193400001&r=1&w=2)
     XSetWindowAttributes attrs;
     QRect r = workspace()->clientArea( FullArea, this );
-    move_resize_grab_window = XCreateWindow( display(), workspace()->rootWin(), r.x(), r.y(),
+    move_resize_grab_window = XCreateWindow( display(), rootWindow(), r.x(), r.y(),
         r.width(), r.height(), 0, CopyFromParent, InputOnly, CopyFromParent, 0, &attrs );
     XMapRaised( display(), move_resize_grab_window );
     if( XGrabPointer( display(), move_resize_grab_window, False,

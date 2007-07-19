@@ -177,7 +177,7 @@ class Rules
         bool wmclasscomplete;
         QByteArray windowrole;
         StringMatch windowrolematch;
-        QString title; // TODO "caption" ?
+        QString title;
         StringMatch titlematch;
         QByteArray extrarole;
         StringMatch extrarolematch;

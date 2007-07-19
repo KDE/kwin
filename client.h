@@ -555,14 +555,14 @@ inline Client* Client::transientFor()
 
 inline bool Client::groupTransient() const
     {
-    return transient_for_id == workspace()->rootWin();
+    return transient_for_id == rootWindow();
     }
 
 // needed because verifyTransientFor() may set transient_for_id to root window,
 // if the original value has a problem (window doesn't exist, etc.)
 inline bool Client::wasOriginallyGroupTransient() const
     {
-    return original_transient_for_id == workspace()->rootWin();
+    return original_transient_for_id == rootWindow();
     }
 
 inline bool Client::isTransient() const

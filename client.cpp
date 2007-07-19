@@ -235,7 +235,7 @@ void Client::releaseWindow( bool on_shutdown )
     XDeleteProperty( display(), client, atoms->kde_net_wm_user_creation_time);
     XDeleteProperty( display(), client, atoms->net_frame_extents );
     XDeleteProperty( display(), client, atoms->kde_net_wm_frame_strut );
-    XReparentWindow( display(), client, workspace()->rootWin(), x(), y());
+    XReparentWindow( display(), client, rootWindow(), x(), y());
     XRemoveFromSaveSet( display(), client );
     XSelectInput( display(), client, NoEventMask );
     if( on_shutdown )

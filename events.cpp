@@ -309,7 +309,7 @@ bool Workspace::workspaceEvent( XEvent * e )
     switch (e->type) 
         {
         case CreateNotify:
-            if ( e->xcreatewindow.parent == root &&
+            if ( e->xcreatewindow.parent == rootWindow() &&
                  !QWidget::find( e->xcreatewindow.window) &&
                  !e->xcreatewindow.override_redirect )
             {
@@ -351,13 +351,8 @@ bool Workspace::workspaceEvent( XEvent * e )
 // children of WindowWrapper (=clients), the check is AFAIK useless anyway
 // Note: Now the save-set support in Client::mapRequestEvent() actually requires that
 // this code doesn't check the parent to be root.
-//            if ( e->xmaprequest.parent == root ) { //###TODO store previously destroyed client ids
+//            if ( e->xmaprequest.parent == root ) {
                 c = createClient( e->xmaprequest.window, false );
-                if ( c != NULL && root != rootWindow() ) 
-                    { // TODO what is this?
-                    // TODO may use QWidget::create
-                    XReparentWindow( display(), c->frameId(), root, 0, 0 );
-                    }
                 if( c == NULL ) // refused to manage, simply map it (most probably override redirect)
                     XMapRaised( display(), e->xmaprequest.window );
                 return true;
@@ -407,7 +402,7 @@ bool Workspace::workspaceEvent( XEvent * e )
             }
         case ConfigureRequest:
             {
-            if ( e->xconfigurerequest.parent == root ) 
+            if ( e->xconfigurerequest.parent == rootWindow()) 
                 {
                 XWindowChanges wc;
                 wc.border_width = e->xconfigurerequest.border_width;
@@ -433,7 +428,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                 return false;
             break;
         case FocusIn:
-            if( e->xfocus.window == rootWin()
+            if( e->xfocus.window == rootWindow()
                 && ( e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot ))
                 {
                 updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
@@ -761,7 +756,7 @@ void Client::unmapNotifyEvent( XUnmapEvent* e )
     if( e->event != wrapperId())
         { // most probably event from root window when initially reparenting
         bool ignore = true;
-        if( e->event == workspace()->rootWin() && e->send_event )
+        if( e->event == rootWindow() && e->send_event )
             ignore = false; // XWithdrawWindow()
         if( ignore )
             return;
