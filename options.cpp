@@ -177,9 +177,15 @@ unsigned long Options::updateSettings()
     CmdAll3 = mouseCommand(config.readEntry("CommandAll3","Resize"), false );
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
 
-    //translucency settings - TODO
+    // Compositing settings
+    config.changeGroup("Compositing");
+    useCompositing = config.readEntry("Enabled", true);
+    QString compositingBackend = config.readEntry("Backend", "OpenGL");
+    if( compositingBackend == "XRender" )
+        compositingMode = XRenderCompositing;
+    else
+        compositingMode = OpenGLCompositing;
     config.changeGroup("Translucency");
-    useTranslucency = config.readEntry("UseTranslucency", false);
     refreshRate = config.readEntry( "RefreshRate", 0 );
     smoothScale = qBound( -1, config.readEntry( "SmoothScale", -1 ), 2 );
 

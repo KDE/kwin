@@ -289,8 +289,9 @@ class Options : public KDecorationOptions
         // Whether to hide utility windows for inactive applications.
         bool hideUtilityWindowsForInactive;
 
-        //translucency settings
-        bool useTranslucency;
+        // Compositing settings
+        bool useCompositing;
+        CompositingType compositingMode;
         HiddenPreviews hiddenPreviews;
         
         uint refreshRate;

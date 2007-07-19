@@ -109,7 +109,7 @@ QMenu* Workspace::clientPopup()
         action = popup->addMenu( advanced_popup );
         action->setText( i18n("Ad&vanced") );
 
-        if (options->useTranslucency){
+        if (options->useCompositing){
             trans_popup = new QMenu( popup );
             trans_popup->setFont(KGlobalSettings::menuFont());
             connect( trans_popup, SIGNAL( triggered(QAction*) ), this, SLOT( setPopupClientOpacity(QAction*)));
@@ -222,7 +222,7 @@ void Workspace::clientPopupAboutToShow()
     mNoBorderOpAction->setChecked( active_popup_client->noBorder() );
     mMinimizeOpAction->setEnabled( active_popup_client->isMinimizable() );
     mCloseOpAction->setEnabled( active_popup_client->isCloseable() );
-    if (options->useTranslucency)
+    if (options->useCompositing)
         {
         foreach( QAction* action, trans_popup->actions())
             {

@@ -65,7 +65,7 @@ namespace KWin
 void Workspace::setupCompositing()
     {
 #if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
-    if( !options->useTranslucency )
+    if( !options->useCompositing )
         {
         kDebug( 1212 ) << "Compositing is turned off in options" << endl;
         return;
@@ -87,17 +87,33 @@ void Workspace::setupCompositing()
     cm_selection = new KSelectionOwner( selection_name );
     connect( cm_selection, SIGNAL( lostOwnership()), SLOT( lostCMSelection()));
     cm_selection->claim( true ); // force claiming
-    char type = 'O';
+
+    CompositingType type = options->compositingMode;
     if( getenv( "KWIN_COMPOSE" ))
-        type = getenv( "KWIN_COMPOSE" )[ 0 ];
+        {
+        char c = getenv( "KWIN_COMPOSE" )[ 0 ];
+        switch( c )
+            {
+            case 'O':
+                type = OpenGLCompositing;
+                break;
+            case 'X':
+                type = XRenderCompositing;
+                break;
+            default:
+                kDebug( 1212 ) << "No compositing" << endl;
+                return;
+            }
+        }
+
     switch( type )
         {
-        case 'B':
+        /*case 'B':
             kDebug( 1212 ) << "X compositing" << endl;
             scene = new SceneBasic( this );
-          break; // don't fall through (this is a testing one)
+          break; // don't fall through (this is a testing one) */
 #ifdef HAVE_OPENGL
-        case 'O':
+        case OpenGLCompositing:
             kDebug( 1212 ) << "OpenGL compositing" << endl;
             scene = new SceneOpenGL( this );
             if( !scene->initFailed())
@@ -107,7 +123,7 @@ void Workspace::setupCompositing()
             // fall through, try XRender
 #endif
 #if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
-        case 'X':
+        case XRenderCompositing:
             kDebug( 1212 ) << "XRender compositing" << endl;
             scene = new SceneXrender( this );
           break;

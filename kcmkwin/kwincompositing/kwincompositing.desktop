@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=kcmshell kwincompositing
+Icon=kcmcompositing
+Type=Service
+ServiceTypes=KCModule
+DocPath=kcontrol/kwincompositing/index.html
+
+X-KDE-Library=kcm_kwincompositing
+X-KDE-FactoryName=kcm_kwincompositing
+X-KDE-ParentApp=kcontrol
+
+Name=Compositing
+
+Comment=Configure window compositing
+
+Keywords=kwin,window,manager,compositing,effect
