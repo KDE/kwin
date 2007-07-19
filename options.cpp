@@ -179,7 +179,7 @@ unsigned long Options::updateSettings()
 
     // Compositing settings
     config.changeGroup("Compositing");
-    useCompositing = config.readEntry("Enabled", true);
+    useCompositing = config.readEntry("Enabled", false);
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if( compositingBackend == "XRender" )
         compositingMode = XRenderCompositing;
