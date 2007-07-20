@@ -613,7 +613,7 @@ void EffectsHandlerImpl::toggleEffect( const QString& name )
         loadEffect( name );
     }
 
-void EffectsHandlerImpl::loadEffect( const QString& name )
+bool EffectsHandlerImpl::loadEffect( const QString& name )
     {
     Workspace::self()->addRepaintFull();
     assert( current_paint_screen == 0 );
@@ -630,7 +630,7 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
         if( (*it).first == name )
             {
             kDebug( 1212 ) << "EffectsHandler::loadEffect : Effect already loaded : " << name << endl;
-            return;
+            return true;
             }
         }
 
@@ -643,14 +643,14 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
     if(offers.isEmpty())
     {
         kError( 1212 ) << k_funcinfo << "Couldn't find effect " << name << endl;
-        return;
+        return false;
     }
     KSharedPtr<KService> service = offers.first();
 
     KLibrary* library = findEffectLibrary( service.data() );
     if( !library )
         {
-        return;
+        return false;
         }
 
     QString supported_symbol = "effect_supported_" + name;
@@ -665,14 +665,14 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
             {
             kWarning( 1212 ) << "EffectsHandler::loadEffect : Effect " << name << " is not supported" << endl;
             library->unload();
-            return;
+            return false;
             }
         }
     if(!create_func)
         {
         kError( 1212 ) << "EffectsHandler::loadEffect : effect_create function not found" << endl;
         library->unload();
-        return;
+        return false;
         }
     typedef Effect* (*t_createfunc)();
     t_createfunc create = reinterpret_cast<t_createfunc>(create_func);
@@ -682,6 +682,8 @@ void EffectsHandlerImpl::loadEffect( const QString& name )
     effect_order.insert( service->property( "X-Ordering" ).toInt(), EffectPair( name, e ));
     effectsChanged();
     effect_libraries[ name ] = library;
+
+    return true;
     }
 
 void EffectsHandlerImpl::unloadEffect( const QString& name )

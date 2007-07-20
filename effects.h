@@ -111,7 +111,7 @@ class EffectsHandlerImpl : public EffectsHandler
         void grabbedKeyboardEvent( QKeyEvent* e );
         bool hasKeyboardGrab() const;
 
-        void loadEffect( const QString& name );
+        bool loadEffect( const QString& name );
         void toggleEffect( const QString& name );
         void unloadEffect( const QString& name );
         void reloadEffect( const QString& name );
