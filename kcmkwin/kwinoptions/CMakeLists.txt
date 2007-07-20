@@ -19,7 +19,7 @@ install(TARGETS kcm_kwinoptions  DESTINATION ${PLUGIN_INSTALL_DIR} )
 ########### install files ###############
 
 install( FILES kwinoptions.desktop kwinactions.desktop kwinadvanced.desktop
-    kwinfocus.desktop kwinmoving.desktop kwintranslucency.desktop
+    kwinfocus.desktop kwinmoving.desktop
     DESTINATION ${SERVICES_INSTALL_DIR})
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )

@@ -74,16 +74,6 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
 typedef KGenericFactory<KAdvancedConfigStandalone> KAdvancedConfigFactory;
 K_EXPORT_COMPONENT_FACTORY(kwinadvanced, KAdvancedConfigFactory)
 
-class KTranslucencyConfigStandalone : public KTranslucencyConfig
-{
-    public:
-        KTranslucencyConfigStandalone(QWidget* parent, const QStringList &)
-            : KTranslucencyConfig(true, new KConfig("kwinrc"), inst(), parent)
-        {}
-};
-typedef KGenericFactory<KTranslucencyConfigStandalone> KTranslucencyConfigFactory;
-K_EXPORT_COMPONENT_FACTORY(kwintranslucency, KTranslucencyConfigFactory)
-
 typedef KGenericFactory<KWinOptions> KWinOptionsFactory;
 K_EXPORT_COMPONENT_FACTORY(kwinoptions, KWinOptionsFactory)
 
@@ -127,12 +117,6 @@ KWinOptions::KWinOptions(QWidget *parent, const QStringList &)
   tab->addTab(mAdvanced, i18n("Ad&vanced"));
   connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-  mTranslucency = new KTranslucencyConfig(false, mConfig, componentData(), this);
-  mTranslucency->setObjectName("KWin Translucency");
-  mTranslucency->layout()->setMargin( KDialog::marginHint() );
-  tab->addTab(mTranslucency, i18n("&Translucency"));
-  connect(mTranslucency, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
-
   KAboutData *about =
     new KAboutData(I18N_NOOP("kcmkwinoptions"), 0, ki18n("Window Behavior Configuration Module"),
                   0, KLocalizedString(), KAboutData::License_GPL,
@@ -163,7 +147,6 @@ void KWinOptions::load()
   mWindowActions->load();
   mMoving->load();
   mAdvanced->load();
-  mTranslucency->load();
   emit KCModule::changed( false );
 }
 
@@ -175,7 +158,6 @@ void KWinOptions::save()
   mWindowActions->save();
   mMoving->save();
   mAdvanced->save();
-  mTranslucency->save();
 
   emit KCModule::changed( false );
   // Send signal to kwin
@@ -196,7 +178,6 @@ void KWinOptions::defaults()
   mWindowActions->defaults();
   mMoving->defaults();
   mAdvanced->defaults();
-  mTranslucency->defaults();
 }
 
 QString KWinOptions::quickHelp() const

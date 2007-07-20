@@ -33,7 +33,6 @@ class KFocusConfig;
 class KTitleBarActionsConfig;
 class KWindowActionsConfig;
 class KAdvancedConfig;
-class KTranslucencyConfig;
 class QStringList;
 
 class KWinOptions : public KCModule
@@ -65,7 +64,6 @@ private:
   KWindowActionsConfig *mWindowActions;
   KMovingConfig *mMoving;
   KAdvancedConfig *mAdvanced;
-  KTranslucencyConfig *mTranslucency;
 
   KConfig *mConfig;
 };
