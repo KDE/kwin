@@ -28,9 +28,6 @@ KWinAdvancedCompositingOptions::KWinAdvancedCompositingOptions(QWidget* parent, 
     ui.setupUi(mainWidget);
     setMainWidget(mainWidget);
 
-    ui.compositingType->insertItem(0, i18n("OpenGL"));
-    ui.compositingType->insertItem(1, i18n("XRender"));
-
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     connect(this, SIGNAL(okClicked()), this, SLOT(save()));

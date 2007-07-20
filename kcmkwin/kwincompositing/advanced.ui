@@ -23,7 +23,18 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="compositingType" />
+      <widget class="QComboBox" name="compositingType" >
+       <item>
+        <property name="text" >
+         <string>OpenGL</string>
+        </property>
+       </item>
+       <item>
+        <property name="text" >
+         <string>XRender</string>
+        </property>
+       </item>
+      </widget>
      </item>
     </layout>
    </item>
