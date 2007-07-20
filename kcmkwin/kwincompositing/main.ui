@@ -16,7 +16,7 @@
    <item>
     <widget class="QCheckBox" name="useCompositing" >
      <property name="text" >
-      <string>Use compositing</string>
+      <string>Enable desktop effects</string>
      </property>
      <property name="checked" >
       <bool>true</bool>
@@ -26,20 +26,6 @@
    <item>
     <widget class="QWidget" native="1" name="compositingOptionsContainer" >
      <layout class="QVBoxLayout" >
-      <item>
-       <layout class="QHBoxLayout" >
-        <item>
-         <widget class="QLabel" name="label_2" >
-          <property name="text" >
-           <string>Compositing type:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="compositingType" />
-        </item>
-       </layout>
-      </item>
       <item>
        <widget class="QGroupBox" name="groupBox" >
         <property name="title" >
@@ -96,6 +82,30 @@
         </layout>
        </widget>
       </item>
+      <item>
+       <layout class="QHBoxLayout" >
+        <item>
+         <spacer>
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" >
+           <size>
+            <width>101</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="advancedOptions" >
+          <property name="text" >
+           <string>Advanced options...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
      </layout>
     </widget>
    </item>
@@ -116,22 +126,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>useCompositing</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>compositingType</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>110</x>
-     <y>21</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>324</x>
-     <y>50</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>useCompositing</sender>
    <signal>toggled(bool)</signal>

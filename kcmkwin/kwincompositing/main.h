@@ -33,10 +33,14 @@ class KWinCompositingConfig : public KCModule
         virtual QString quickHelp() const;
 
     public slots:
+        virtual void showAdvancedOptions();
+
         virtual void load();
         virtual void save();
         virtual void defaults();
         void reparseConfiguration(const QByteArray&conf);
+
+        void configChanged();
 
     private:
         KSharedConfigPtr mKWinConfig;

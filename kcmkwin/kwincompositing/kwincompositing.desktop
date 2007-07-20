@@ -10,8 +10,8 @@ X-KDE-Library=kcm_kwincompositing
 X-KDE-FactoryName=kcm_kwincompositing
 X-KDE-ParentApp=kcontrol
 
-Name=Compositing
+Name=Desktop effects
 
-Comment=Configure window compositing
+Comment=Configure desktop effects
 
 Keywords=kwin,window,manager,compositing,effect

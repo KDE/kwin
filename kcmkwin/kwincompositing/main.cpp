@@ -10,6 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "main.h"
 
+#include "advanced.h"
+
 #include <kgenericfactory.h>
 #include <kaboutdata.h>
 #include <kconfig.h>
@@ -36,19 +38,16 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QStringList 
 {
     ui.setupUi(this);
 
-    ui.compositingType->insertItem(0, i18n("OpenGL"));
-    ui.compositingType->insertItem(1, i18n("XRender"));
-
+    connect(ui.advancedOptions, SIGNAL(clicked()), this, SLOT(showAdvancedOptions()));
     connect(ui.useCompositing, SIGNAL(toggled(bool)), ui.compositingOptionsContainer, SLOT(setEnabled(bool)));
 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     // Load config
     load();
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
-            ki18n("KWin Compositing Configuration Module"),
+            ki18n("KWin Desktop Effects Configuration Module"),
             0, KLocalizedString(), KAboutData::License_GPL, ki18n("(c) 2007 Rivo Laks"));
     about->addAuthor(ki18n("Rivo Laks"), KLocalizedString(), "rivolaks@hot.ee");
     setAboutData(about);
@@ -63,6 +62,14 @@ void KWinCompositingConfig::reparseConfiguration(const QByteArray&conf)
   KSettings::Dispatcher::reparseConfiguration(conf);
 }
 
+void KWinCompositingConfig::showAdvancedOptions()
+{
+    KWinAdvancedCompositingOptions* dialog = new KWinAdvancedCompositingOptions(this, mKWinConfig);
+
+    dialog->show();
+    connect(dialog, SIGNAL(configSaved()), this, SLOT(configChanged()));
+}
+
 void KWinCompositingConfig::load()
 {
     kDebug() << k_funcinfo << endl;
@@ -70,8 +77,6 @@ void KWinCompositingConfig::load()
 
     KConfigGroup config(mKWinConfig, "Compositing");
     ui.useCompositing->setChecked(config.readEntry("Enabled", false));
-    QString backend = config.readEntry("Backend", "OpenGL");
-    ui.compositingType->setCurrentIndex((backend == "XRender") ? 1 : 0);
 
     emit changed( false );
 }
@@ -83,12 +88,16 @@ void KWinCompositingConfig::save()
 
     KConfigGroup config(mKWinConfig, "Compositing");
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
-    config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
 
     // TODO: save effects
 
     emit changed( false );
 
+    configChanged();
+}
+
+void KWinCompositingConfig::configChanged()
+{
     // Send signal to kwin
     mKWinConfig->sync();
     // Send signal to all kwin instances
@@ -101,7 +110,6 @@ void KWinCompositingConfig::defaults()
 {
     kDebug() << k_funcinfo << endl;
     ui.useCompositing->setChecked(false);
-    ui.compositingType->setCurrentIndex(0);
 }
 
 QString KWinCompositingConfig::quickHelp() const
