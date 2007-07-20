@@ -39,6 +39,59 @@
     </layout>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>OpenGL options</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <item>
+       <layout class="QHBoxLayout" >
+        <item>
+         <widget class="QLabel" name="label" >
+          <property name="text" >
+           <string>OpenGL mode:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="glMode" >
+          <item>
+           <property name="text" >
+            <string>Texture From Pixmap</string>
+           </property>
+          </item>
+          <item>
+           <property name="text" >
+            <string>Shared Memory</string>
+           </property>
+          </item>
+          <item>
+           <property name="text" >
+            <string>Fallback</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="glDirect" >
+        <property name="text" >
+         <string>Direct rendering</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="glVSync" >
+        <property name="text" >
+         <string>Use VSync</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
@@ -46,7 +99,7 @@
      <property name="sizeHint" >
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>31</height>
       </size>
      </property>
     </spacer>

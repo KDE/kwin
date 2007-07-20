@@ -185,10 +185,6 @@ unsigned long Options::updateSettings()
         compositingMode = XRenderCompositing;
     else
         compositingMode = OpenGLCompositing;
-    config.changeGroup("Translucency");
-    refreshRate = config.readEntry( "RefreshRate", 0 );
-    smoothScale = qBound( -1, config.readEntry( "SmoothScale", -1 ), 2 );
-
     QString glmode = config.readEntry("GLMode", "TFP" ).toUpper();
     if( glmode == "TFP" )
         glMode = GLTFP;
@@ -198,6 +194,10 @@ unsigned long Options::updateSettings()
         glMode = GLFallback;
     glDirect = config.readEntry("GLDirect", true );
     glVSync = config.readEntry("GLVSync", true );
+
+    config.changeGroup("Translucency");
+    refreshRate = config.readEntry( "RefreshRate", 0 );
+    smoothScale = qBound( -1, config.readEntry( "SmoothScale", -1 ), 2 );
     glStrictBinding = config.readEntry( "GLStrictBinding", false );
     const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
     hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 3 ), 3 ) ];
