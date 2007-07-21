@@ -59,6 +59,8 @@ void EffectsHandlerImpl::reconfigure()
     KConfigGroup conf(_config, "Plugins");
 
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+    QStringList effectsToBeLoaded;
+    // First unload necessary effects
     foreach( KService::Ptr service, offers )
         {
         KPluginInfo plugininfo( service );
@@ -66,10 +68,18 @@ void EffectsHandlerImpl::reconfigure()
 
         bool isloaded = isEffectLoaded( plugininfo.pluginName() );
         bool shouldbeloaded = plugininfo.isPluginEnabled();
-        if( shouldbeloaded && !isloaded)
-            loadEffect( plugininfo.pluginName() );
-        else if( !shouldbeloaded && isloaded )
+        if( !shouldbeloaded && isloaded )
             unloadEffect( plugininfo.pluginName() );
+        if( shouldbeloaded )
+            effectsToBeLoaded.append( plugininfo.pluginName() );
+        }
+    // Then load those that should be loaded
+    foreach( QString effectName, effectsToBeLoaded )
+        {
+        if( !isEffectLoaded( effectName ))
+            {
+            loadEffect( effectName );
+            }
         }
     }
 
@@ -645,7 +655,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
         kError( 1212 ) << k_funcinfo << "Couldn't find effect " << name << endl;
         return false;
     }
-    KSharedPtr<KService> service = offers.first();
+    KService::Ptr service = offers.first();
 
     KLibrary* library = findEffectLibrary( service.data() );
     if( !library )
@@ -676,6 +686,20 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
         }
     typedef Effect* (*t_createfunc)();
     t_createfunc create = reinterpret_cast<t_createfunc>(create_func);
+
+    // Make sure all depenedencies have been loaded
+    // TODO: detect circular deps
+    KPluginInfo plugininfo( service );
+    QStringList dependencies = plugininfo.dependencies();
+    foreach( QString depName, dependencies )
+        {
+        if( !loadEffect(depName))
+            {
+            kError() << "EffectsHandler::loadEffect : Couldn't load dependencies for effect " << name << endl;
+            library->unload();
+            return false;
+            }
+        }
 
     Effect* e = create();
 
