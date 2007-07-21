@@ -42,6 +42,9 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QStringList 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), ui.compositingOptionsContainer, SLOT(setEnabled(bool)));
 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.effectWinManagement, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.effectShadows, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.effectAnimations, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
     // Load config
     load();
@@ -78,6 +81,17 @@ void KWinCompositingConfig::load()
     KConfigGroup config(mKWinConfig, "Compositing");
     ui.useCompositing->setChecked(config.readEntry("Enabled", false));
 
+    // Load effect settings
+    config.changeGroup("Plugins");
+#define LOAD_EFFECT_CONFIG(effectname)  config.readEntry("kwin4_effect_" effectname "Enabled", true)
+    bool winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows");
+    winManagementEnabled &= LOAD_EFFECT_CONFIG("boxswitch");
+    winManagementEnabled &= LOAD_EFFECT_CONFIG("desktopgrid");
+    winManagementEnabled &= LOAD_EFFECT_CONFIG("dialogparent");
+    ui.effectWinManagement->setChecked(winManagementEnabled);
+    ui.effectShadows->setChecked(LOAD_EFFECT_CONFIG("shadow"));
+    ui.effectAnimations->setChecked(LOAD_EFFECT_CONFIG("minimizeanimation"));
+
     emit changed( false );
 }
 
@@ -89,7 +103,18 @@ void KWinCompositingConfig::save()
     KConfigGroup config(mKWinConfig, "Compositing");
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
 
-    // TODO: save effects
+    // Save effects
+    config.changeGroup("Plugins");
+#define WRITE_EFFECT_CONFIG(effectname, widget)  config.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
+    WRITE_EFFECT_CONFIG("presentwindows", ui.effectWinManagement);
+    WRITE_EFFECT_CONFIG("boxswitch", ui.effectWinManagement);
+    WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
+    WRITE_EFFECT_CONFIG("dialogparent", ui.effectWinManagement);
+    WRITE_EFFECT_CONFIG("shadow", ui.effectShadows);
+    // TODO: maybe also do some effect-specific configuration here, e.g.
+    //  enable/disable desktopgrid's animation according to this setting
+    WRITE_EFFECT_CONFIG("minimizeanimation", ui.effectAnimations);
+#undef WRITE_EFFECT_CONFIG
 
     emit changed( false );
 
@@ -110,12 +135,15 @@ void KWinCompositingConfig::defaults()
 {
     kDebug() << k_funcinfo << endl;
     ui.useCompositing->setChecked(false);
+    ui.effectWinManagement->setChecked(true);
+    ui.effectShadows->setChecked(true);
+    ui.effectAnimations->setChecked(true);
 }
 
 QString KWinCompositingConfig::quickHelp() const
 {
     kDebug() << k_funcinfo << endl;
-    return i18n("<h1>Compositing</h1>");
+    return i18n("<h1>Desktop Effects</h1>");
 }
 
 } // namespace
