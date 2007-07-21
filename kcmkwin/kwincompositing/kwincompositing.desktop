@@ -15,3 +15,7 @@ Name=Desktop effects
 Comment=Configure desktop effects
 
 Keywords=kwin,window,manager,compositing,effect
+Keywords[ja]=kwin,ウィンドウ,マネージャ,コンポジティング,効果,エフェクト
+Keywords[pt]=kwin,janela,gestor,efeito,composição
+Keywords[pt_BR]=kwin,janela,gestor,efeito,composição
+Keywords[sv]=kwin,fönster,hantera,sammansättning,effekt
