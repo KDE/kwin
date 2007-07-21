@@ -9,7 +9,7 @@ License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
 #include "advanced.h"
-
+#include "advanced.moc"
 #include <klocale.h>
 
 namespace KWin
