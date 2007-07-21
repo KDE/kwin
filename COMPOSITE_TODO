@@ -97,7 +97,7 @@ KDE 4.0 TODO
 
 ? generic dbus scripting support
 
-- check effects' dependencies when loading [rivo]
+/ check effects' dependencies when loading [rivo]
 / correct ordering for effects [rivo]
     would be nice if isn't too strict
 
