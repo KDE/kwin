@@ -10,7 +10,7 @@ X-KDE-Library=kcm_kwincompositing
 X-KDE-FactoryName=kcm_kwincompositing
 X-KDE-ParentApp=kcontrol
 
-Name=Desktop effects
+Name=Desktop Effects
 Name[pt]=Efeitos do ecrã
 Name[pt_BR]=Efeitos do ecrã
 Name[sv]=Skrivbordseffekter
