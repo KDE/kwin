@@ -10,6 +10,8 @@ X-KDE-Library=kcm_kwineffects
 X-KDE-FactoryName=kcm_kwineffects
 X-KDE-ParentApp=kcontrol
 
+X-KDE-System-Settings-Parent-Category=window-behaviour
+
 Name=Window Effects
 Name[be]=Эфекты вокнаў
 Name[csb]=Efektë òknów
@@ -56,3 +58,6 @@ Keywords[nl]=kwin,window,venster,window manager,effect
 Keywords[pt]=kwin,janela,gestor,efeito
 Keywords[pt_BR]=kwin,janela,gestor,efeito
 Keywords[sv]=kwin,fönster,hantera,effekt
+
+Categories=Qt;KDE;X-KDE-settings-looknfeel;
+

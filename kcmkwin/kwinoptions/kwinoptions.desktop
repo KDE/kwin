@@ -6,9 +6,11 @@ ServiceTypes=KCModule
 Exec=kcmshell kwinoptions
 DocPath=kcontrol/windowmanagement/index.html
 
-X-KDE-Library=kwinoptions
+X-KDE-Library=kcm_kwinoptions
 X-KDE-FactoryName=kwinoptions
 X-KDE-ParentApp=kcontrol
+
+X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=Window Behavior
 Name[af]=Venster Gedrag
@@ -179,3 +181,6 @@ Keywords[uk]=фокус,розташовування,поведінка вікн
 Keywords[uz]=фокуслаш,жойлашиш,ойнанинг хусусиятлари,анимация,олдинга,авто-олдинга,ойналар,фрейм,сарлавҳа,икки марта босиш
 Keywords[x-test]=xxfocus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx
 Keywords[zh_TW]=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick,焦點,放置,視窗行為,動畫,抬升,自動抬升,視窗,框架,標題列,雙擊
+
+Categories=Qt;KDE;X-KDE-settings-looknfeel;
+

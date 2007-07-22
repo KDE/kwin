@@ -7,7 +7,7 @@ ServiceTypes=KCModule
 DocPath=kcontrol/kwindecoration/index.html
 
 X-KDE-Library=kcm_kwindecoration
-X-KDE-FactoryName=kwindecoration
+X-KDE-FactoryName=kcm_kwindecoration
 X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=appearance

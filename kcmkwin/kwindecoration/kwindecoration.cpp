@@ -67,7 +67,7 @@
 // KCModule plugin interface
 // =========================
 typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
-K_EXPORT_COMPONENT_FACTORY( kwindecoration, KWinDecoFactory("kcmkwindecoration") )
+K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") )
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
     : KCModule(KWinDecoFactory::componentData(), parent),
