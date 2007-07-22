@@ -50,7 +50,7 @@ KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
 
     // Find all .desktop files of the effects
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
-    QList<KPluginInfo*> effectinfos = KPluginInfo::fromServices(offers);
+    QList<KPluginInfo> effectinfos = KPluginInfo::fromServices(offers);
 
     // Add them to the plugin selector
     mPluginSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mKWinConfig);
