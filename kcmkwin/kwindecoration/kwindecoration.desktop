@@ -7,8 +7,10 @@ ServiceTypes=KCModule
 DocPath=kcontrol/kwindecoration/index.html
 
 X-KDE-Library=kcm_kwindecoration
-X-KDE-FactoryName=kcm_kwindecoration
+X-KDE-FactoryName=kwindecoration
 X-KDE-ParentApp=kcontrol
+
+X-KDE-System-Settings-Parent-Category=appearance
 
 Name=Window Decorations
 Name[af]=Venster Versierings
@@ -178,3 +180,6 @@ Keywords[uz]=kwin,kwm,безак,ойна,бошқарувчи,усул,ташқ
 Keywords[x-test]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decorationxx
 Keywords[xh]=kwin,window,umphathi,umda,uhlobo,umxholo wokuxoxwa,jonga,yiva,beka,iqhosha,umqheba,umda,kwm,uhombiso
 Keywords[zh_TW]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,視窗,管理員,邊框,風格,佈景主題,外觀,感覺,佈局,按鈕,邊緣,裝飾
+
+Categories=Qt;KDE;X-KDE-settings-looknfeel;
+
