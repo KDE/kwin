@@ -98,7 +98,7 @@ install(TARGETS kwin DESTINATION ${BIN_INSTALL_DIR})
 
 install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
-install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_DIR} )
+install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
 
