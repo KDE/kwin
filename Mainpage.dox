@@ -1,5 +1,19 @@
-/**
-* @mainpage KWin
-*
-* KDE Window Manager
+/** @mainpage KWin
+
+KWin is the KDE window manager.
+
+@authors
+Matthias Ettrich \<ettrich@kde.org\><br>
+Lubos Lunak \<l.lunak@kde.org\>
+
+@maintainers
+Lubos Lunak \<l.lunak@kde.org\>
+
+@licenses
+@gpl
+
+
 */
+
+// DOXYGEN_SET_PROJECT_NAME = KWin
+// vim:ts=4:sw=4:expandtab:filetype=doxygen

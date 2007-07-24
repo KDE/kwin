@@ -1,7 +1,25 @@
-/**
-* @mainpage KWin Libraries
-*
-* This directory provides the interfaces for the window manager effects 
-* interface and the interface for window decorations.
-*
+/** @mainpage KWin Libraries
+
+There are two libraries provided: libkdecorations and libkwineffects.
+<p>
+libkdecorations is a library for implementing window decoration plugins
+for KWin.
+
+libkwineffects is a library for implementing window transition effect
+plugins for KWin.
+
+@authors
+Lubos Lunak \<l.lunak@kde.org\><br>
+Rivo Laks \<rivolaks@hot.ee\>
+
+@maintainers
+Lubos Lunak \<l.lunak@kde.org\>
+
+@licences
+libkdecorations: @bsd<br>
+libkwineffects: @gpl
+
 */
+
+// DOXYGEN_SET_PROJECT_NAME = KWin Libraries
+// vim:ts=4:sw=4:expandtab:filetype=doxygen
