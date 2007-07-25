@@ -11,6 +11,7 @@ X-KDE-FactoryName=kcm_kwincompositing
 X-KDE-ParentApp=kcontrol
 
 Name=Desktop Effects
+Name[fa]=جلوه‌های رومیزی
 Name[ga]=Maisíochtaí Deisce
 Name[ja]=デスクトップ効果
 Name[pt]=Efeitos do Ecrã
@@ -19,6 +20,7 @@ Name[sv]=Skrivbordseffekter
 Name[zh_TW]=桌面效果
 
 Comment=Configure desktop effects
+Comment[fa]=پیکربندی جلوه‌های رومیزی
 Comment[ga]=Cumraigh maisíochtaí deisce
 Comment[ja]=デスクトップ効果を設定
 Comment[pt]=Configuração dos efeitos do ecrã
@@ -27,6 +29,7 @@ Comment[sv]=Anpassa skrivbordseffekter
 Comment[zh_TW]=設定桌面效果
 
 Keywords=kwin,window,manager,compositing,effect
+Keywords[fa]=kwin، پنجره، مدیر، ترکیب، جلوه
 Keywords[ga]=kwin,fuinneog,bainisteoir,comhshuíomh,maisíocht
 Keywords[ja]=kwin,ウィンドウ,マネージャ,コンポジティング,効果,エフェクト
 Keywords[pt]=kwin,janela,gestor,efeito,composição
