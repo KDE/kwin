@@ -378,12 +378,12 @@ KDecorationOptions::~KDecorationOptions()
     KDecoration::options_ = NULL;
     }
 
-const QColor& KDecorationOptions::color(ColorType type, bool active) const
+QColor KDecorationOptions::color(ColorType type, bool active) const
 {
     return(d->colors[type + (active ? 0 : NUM_COLORS)]);
 }
 
-const QFont& KDecorationOptions::font(bool active, bool small) const
+QFont KDecorationOptions::font(bool active, bool small) const
 {
     if ( small )
         return(active ? d->activeFontSmall : d->inactiveFontSmall);
@@ -391,7 +391,7 @@ const QFont& KDecorationOptions::font(bool active, bool small) const
         return(active ? d->activeFont : d->inactiveFont);
 }
 
-const QPalette& KDecorationOptions::palette(ColorType type, bool active) const
+QPalette KDecorationOptions::palette(ColorType type, bool active) const
 {
     int idx = type + (active ? 0 : NUM_COLORS);
     if(d->pal[idx])

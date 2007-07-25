@@ -196,7 +196,7 @@ public:
      * @param type   The requested color type.
      * @param active Whether the color should be for active or inactive windows.
      */
-    const QColor& color(ColorType type, bool active=true) const;
+    QColor color(ColorType type, bool active=true) const;
     /**
      * Returns a palette using the given decoration color as the background.
      * The changed flags for this setting is SettingColors.
@@ -204,7 +204,7 @@ public:
      * @param type   The requested color type.
      * @param active Whether to return the color for active or inactive windows.
      */
-    const QPalette& palette(ColorType type, bool active=true) const;
+    QPalette palette(ColorType type, bool active=true) const;
     /**
      * Returns the active or inactive decoration font.
      * The changed flags for this setting is SettingFont.
@@ -212,7 +212,7 @@ public:
      * @param active Whether to return the color for active or inactive windows.
      * @param small  If @a true, returns a font that's suitable for tool windows.
      */
-    const QFont& font(bool active=true, bool small = false) const;
+    QFont font(bool active=true, bool small = false) const;
     /**
     * Returns @a true if the style should use custom button positions
     * The changed flags for this setting is SettingButtons.
