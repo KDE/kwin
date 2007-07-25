@@ -61,6 +61,8 @@ private:
 
 class LaptopClientFactory : public QObject, public KDecorationFactory
 {
+    Q_OBJECT
+
 public:
     LaptopClientFactory();
     virtual ~LaptopClientFactory();

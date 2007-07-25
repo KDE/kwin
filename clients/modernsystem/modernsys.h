@@ -53,6 +53,8 @@ private:
 
 class ModernSysFactory : public QObject, public KDecorationFactory
 {
+    Q_OBJECT
+
 public:
     ModernSysFactory();
     virtual ~ModernSysFactory();
