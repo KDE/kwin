@@ -51,7 +51,7 @@ class KWIN_EXPORT KDecorationPlugins
         void destroyPreviousPlugin();
         KDecorationFactory* factory();
         KDecoration* createDecoration( KDecorationBridge* );
-        QString currentPlugin() { return pluginStr; }
+        QString currentPlugin();
         bool reset( unsigned long changed ); // returns true if decorations need to be recreated
     protected:
         virtual void error( const QString& error_msg );

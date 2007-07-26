@@ -65,6 +65,11 @@ KDecorationPlugins::~KDecorationPlugins()
         }
     }
 
+QString KDecorationPlugins::currentPlugin()
+    {
+    return pluginStr;
+    }
+
 bool KDecorationPlugins::reset( unsigned long changed )
     {
     QString oldPlugin = pluginStr;

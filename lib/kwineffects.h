@@ -230,7 +230,7 @@ class KWIN_EXPORT EffectsHandler
         virtual void addRepaint( const QRect& r ) = 0;
         virtual void addRepaint( int x, int y, int w, int h ) = 0;
 
-        CompositingType compositingType() const  { return compositing_type; }
+        CompositingType compositingType() const;
         virtual unsigned long xrenderBufferPicture() = 0;
         virtual void reconfigure() = 0;
 

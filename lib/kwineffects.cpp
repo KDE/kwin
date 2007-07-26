@@ -255,6 +255,11 @@ Window EffectsHandler::createFullScreenInputWindow( Effect* e, const QCursor& cu
     return createInputWindow( e, 0, 0, displayWidth(), displayHeight(), cursor );
     }
 
+CompositingType EffectsHandler::compositingType() const
+    {
+    return compositing_type;
+    }
+
 void EffectsHandler::sendReloadMessage( const QString& effectname )
     {
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reloadEffect");
