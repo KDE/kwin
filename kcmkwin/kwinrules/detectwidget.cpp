@@ -16,7 +16,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <kdialog.h>
+#include <KDialog>
 #include "detectwidget.h"
 
 #include <kapplication.h>
@@ -119,7 +119,7 @@ void DetectDialog::executeDialog()
     widget->title_label->setText( title );
     widget->extrarole_label->setText( extrarole );
     widget->machine_label->setText( machine );
-    emit detectionDone( exec() == QDialog::Accepted );
+    emit detectionDone( exec() == KDialog::Accepted );
     }
 
 QByteArray DetectDialog::selectedClass() const
@@ -171,7 +171,7 @@ void DetectDialog::selectWindow()
     // use a dialog, so that all user input is blocked
     // use WX11BypassWM and moving away so that it's not actually visible
     // grab only mouse, so that keyboard can be used e.g. for switching windows
-    grabber = new QDialog( 0, Qt::WX11BypassWM );
+    grabber = new KDialog( 0, Qt::WX11BypassWM );
     grabber->move( -1000, -1000 );
     grabber->show();
     grabber->grabMouse( Qt::CrossCursor );

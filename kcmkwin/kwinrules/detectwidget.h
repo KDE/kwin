@@ -22,7 +22,7 @@
 
 #include "ui_detectwidgetbase.h"
 
-#include <kdialog.h>
+#include <KDialog>
 #include <kwindowsystem.h>
 
 #include "../../rules.h"
@@ -83,7 +83,7 @@ class DetectDialog
         QByteArray extrarole;
         QByteArray machine;
         DetectWidget* widget;
-        QDialog* grabber;
+        KDialog* grabber;
         KWindowInfo info;
     };
 
