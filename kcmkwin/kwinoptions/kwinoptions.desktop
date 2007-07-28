@@ -15,6 +15,7 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 Name=Window Behavior
 Name[af]=Venster Gedrag
 Name[be]=Паводзіны вокнаў
+Name[bg]=Прозорци
 Name[br]=Emzalc'h ar prenester
 Name[ca]=Comportament de les finestres
 Name[cs]=Chování oken
@@ -75,6 +76,7 @@ Name[zh_TW]=視窗行為
 Comment=Configure the window behavior
 Comment[af]=Stel die venster gedrag op
 Comment[be]=Настаўленні паводзінаў вокнаў
+Comment[bg]=Настройване поведението на прозорците
 Comment[br]=Kefluniañ emzalc'h ar prenester
 Comment[ca]=Configura el comportament de finestra
 Comment[cs]=Nastavení chování oken
@@ -132,6 +134,7 @@ Comment[zh_TW]=設定視窗行為
 
 Keywords=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 Keywords[be]=Фокус,Размяшчэнне,Паводзіны акна,Анімацыя,Вокны,Акно,Фрэйм,Загаловак,Двайны націск мышы,focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick
+Keywords[bg]=Keywords=фокус, поведение, прозорец, активиране, заглавие, focus, placement, window behaviour, animation, raise, auto raise, windows, frame, titlebar, doubleclick
 Keywords[ca]=focus,emplaçament,comportament de la finestra,animació,eleva,eleva automàticament,finestres,marc,barra del títol,doble clic
 Keywords[cs]=Zaměření,Umístění oken,Chování oken,Animace,Okna,Rámeček,Titulek,Dvojklik
 Keywords[csb]=zrëszanié,aktiwòwanié,ùkłôdanié òknów,ùchòwanié òknów,animacëjô,aùtomatné aktiwòwanié,òkna,òkno,rama,tilowô lëstew,dëbeltné klëkniãce

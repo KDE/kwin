@@ -14,6 +14,7 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=Window Effects
 Name[be]=Эфекты вокнаў
+Name[bg]=Декорация
 Name[csb]=Efektë òknów
 Name[de]=Fenstereffekte
 Name[el]=Εφέ παραθύρων
@@ -31,6 +32,7 @@ Name[zh_TW]=視窗效果
 
 Comment=Configure window effects
 Comment[be]=Настаўленні эфектаў вокнаў
+Comment[bg]=Настройване активирането на прозорците
 Comment[csb]=Kònfigùracëjô efektów òknów
 Comment[de]=Fenstereffekte einrichten
 Comment[el]=Ρύθμιση εφέ των παραθύρων

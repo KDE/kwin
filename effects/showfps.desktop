@@ -14,6 +14,7 @@ Name[sv]=Visa ramar/s
 Name[zh_TW]=顯示每秒幾張
 Icon=kwin-effect-showfps
 Comment=Shows KWin's performance
+Comment[bg]=Производителност
 Comment[csb]=Wëskrzënianié spòroscë òknów KDE
 Comment[de]=Zeigt die Leistung von KWin
 Comment[el]=Εμφάνιση επίδοσης του KWin
