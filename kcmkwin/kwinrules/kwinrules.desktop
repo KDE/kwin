@@ -1,9 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-Icon=kcmkwm
+Exec=kcmshell kwinrules
+Icon=preferences-system-windows-specific
 Type=Service
 ServiceTypes=KCModule
-Exec=kcmshell kwinrules
 DocPath=kcontrol/windowmanagement/index.html
 
 X-KDE-Library=kwinrules

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Exec=kcmshell kwineffects
-Icon=kcmeffects
+Icon=preferences-system-windows-effects
 Type=Service
 ServiceTypes=KCModule
 DocPath=kcontrol/kwineffects/index.html
