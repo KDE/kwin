@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Exec=kcmshell kwinoptions
-Icon=preferences-system-windows
+Icon=preferences-system-windows-behaviour
 Type=Service
 ServiceTypes=KCModule
 DocPath=kcontrol/windowmanagement/index.html
