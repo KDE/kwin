@@ -12,6 +12,7 @@ X-KDE-ParentApp=kcontrol
 
 Name=Desktop Effects
 Name[bg]=Пейджър на работните плотове
+Name[de]=Arbeitsflächen-Effekte
 Name[fa]=جلوه‌های رومیزی
 Name[ga]=Maisíochtaí Deisce
 Name[ja]=デスクトップ効果
@@ -23,6 +24,7 @@ Name[zh_TW]=桌面效果
 
 Comment=Configure desktop effects
 Comment[bg]=Настройване активирането на прозорците
+Comment[de]=Arbeitsflächen-Effekte einrichten
 Comment[fa]=پیکربندی جلوه‌های رومیزی
 Comment[ga]=Cumraigh maisíochtaí deisce
 Comment[ja]=デスクトップ効果を設定
@@ -33,6 +35,7 @@ Comment[sv]=Anpassa skrivbordseffekter
 Comment[zh_TW]=設定桌面效果
 
 Keywords=kwin,window,manager,compositing,effect
+Keywords[de]=kwin,fenster,manager,effekt,verwaltung,composit
 Keywords[fa]=kwin، پنجره، مدیر، ترکیب، جلوه
 Keywords[ga]=kwin,fuinneog,bainisteoir,comhshuíomh,maisíocht
 Keywords[ja]=kwin,ウィンドウ,マネージャ,コンポジティング,効果,エフェクト
