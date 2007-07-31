@@ -190,16 +190,22 @@ QPixmap* OxygenHelper::roundButton(const QColor &color, int size)
     p.setBrush(QBrush(bevelGradient));
     p.drawEllipse(QRectF(2.4,2.4,15.2,15.0));
 
+    // inside mask
+    QRadialGradient maskGradient(10,10,7.4,10,10);
+    maskGradient.setColorAt(0.75, QColor(0,0,0,0));
+    maskGradient.setColorAt(0.90, QColor(0,0,0,140));
+    maskGradient.setColorAt(1.00, QColor(0,0,0,255));
+    p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+    p.setBrush(maskGradient);
+    p.drawRect(0,0,20,20);
+
     // inside
     QLinearGradient innerGradient(0, 0, 0, 20);
     innerGradient.setColorAt(0.0, color);
     innerGradient.setColorAt(1.0, calcLightColor(color));
-    p.setOpacity(0.4);
-    p.setBrush(QBrush(innerGradient));
-    p.drawEllipse(QRectF(3.2,3.2,13.6,13.6));
-    p.setOpacity(1.0);
-    p.setBrush(QBrush(innerGradient));
-    p.drawEllipse(QRectF(4.0,4.0,12.0,12.0));
+    p.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+    p.setBrush(innerGradient);
+    p.drawEllipse(QRectF(2.5,2.5,15.0,14.8));
 
     return pixmap;
 }
