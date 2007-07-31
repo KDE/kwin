@@ -249,7 +249,7 @@ void KWinDecorationModule::createDecorationList()
 
 	// Sync with kwin hardcoded KDE2 style which has no desktop item
     QStringList decorationNames;
-	decorationNames.append( i18n("KDE 2") );
+//	decorationNames.append( i18n("KDE 2") );
 	for (it = decorations.begin(); it != decorations.end(); ++it)
 	{
 		decorationNames.append((*it).name);
@@ -361,8 +361,8 @@ QString KWinDecorationModule::decorationLibName( const QString& name )
 			break;
 		}
 
-	if (libName.isEmpty())
-		libName = "kwin_default";	// KDE 2
+//	if (libName.isEmpty())
+//		libName = "kwin_default";	// KDE 2
 
 	return libName;
 }
@@ -450,8 +450,8 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
 	QString decoName = decorationName( currentLibraryName );
 
 	// If we are using the "default" kde client, use the "default" entry.
-	if (decoName.isEmpty())
-		decoName = i18n("KDE 2");
+//	if (decoName.isEmpty())
+//		decoName = i18n("KDE 2");
 
     int numDecos = decorationList->count();
 	for (int i = 0; i < numDecos; ++i)
