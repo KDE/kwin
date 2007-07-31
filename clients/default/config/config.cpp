@@ -8,18 +8,20 @@
  */
 
 #include "config.h"
-#include <kglobal.h>
+
 #include <QWhatsThis>
+#include <QPixmap>
+
+#include <kglobal.h>
 #include <kdialog.h>
 #include <klocale.h>
-#include <QPixmap>
 #include <kvbox.h>
 
 extern "C"
 {
 	KDE_EXPORT QObject* allocate_config( KConfig* conf, QWidget* parent )
 	{
-		return(new KDEDefaultConfig(conf, parent));
+		return(new KDE2Config(conf, parent));
 	}
 }
 
@@ -29,13 +31,13 @@ extern "C"
 // 'parent' is the parent of the QObject, which is a VBox inside the
 //		  Configure tab in kwindecoration
 
-KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
-	: QObject( parent ),c(conf)
+KDE2Config::KDE2Config( KConfig* conf, QWidget* parent )
+	: QObject( parent ), c(conf)
 {
 	KGlobal::locale()->insertCatalog("kwin_clients");
 	highcolor = QPixmap::defaultDepth() > 8;
 	gb = new KVBox( parent );
-        gb->setSpacing( KDialog::spacingHint() );
+	gb->setSpacing( KDialog::spacingHint() );
 
 	cbShowStipple = new QCheckBox( i18n("Draw titlebar &stipple effect"), gb );
 	cbShowStipple->setWhatsThis(
@@ -58,7 +60,8 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 	}
 
 	// Load configuration options
-    KConfigGroup cg(c, "KDEDefault");
+	c = new KConfig("kwinKDE2rc");
+	KConfigGroup cg(c, "General");
 	load( cg );
 
 	// Ensure we track user changes properly
@@ -75,13 +78,13 @@ KDEDefaultConfig::KDEDefaultConfig( KConfig* conf, QWidget* parent )
 }
 
 
-KDEDefaultConfig::~KDEDefaultConfig()
+KDE2Config::~KDE2Config()
 {
 	delete gb;
 }
 
 
-void KDEDefaultConfig::slotSelectionChanged()
+void KDE2Config::slotSelectionChanged()
 {
 	emit changed();
 }
@@ -89,9 +92,9 @@ void KDEDefaultConfig::slotSelectionChanged()
 
 // Loads the configurable options from the kwinrc config file
 // It is passed the open config from kwindecoration to improve efficiency
-void KDEDefaultConfig::load( const KConfigGroup&  )
+void KDE2Config::load( const KConfigGroup&  )
 {
-	KConfigGroup cg(c, "KDEDefault");
+	KConfigGroup cg(c, "KDE2");
 	bool override = cg.readEntry( "ShowTitleBarStipple", true);
 	cbShowStipple->setChecked( override );
 
@@ -106,9 +109,9 @@ void KDEDefaultConfig::load( const KConfigGroup&  )
 
 
 // Saves the configurable options to the kwinrc config file
-void KDEDefaultConfig::save( KConfigGroup&  )
+void KDE2Config::save( KConfigGroup&  )
 {
-	KConfigGroup cg(c, "KDEDefault");
+	KConfigGroup cg(c, "KDE2");
 	cg.writeEntry( "ShowTitleBarStipple", cbShowStipple->isChecked() );
 	cg.writeEntry( "ShowGrabBar", cbShowGrabBar->isChecked() );
 
@@ -119,7 +122,7 @@ void KDEDefaultConfig::save( KConfigGroup&  )
 
 
 // Sets UI widget defaults which must correspond to style defaults
-void KDEDefaultConfig::defaults()
+void KDE2Config::defaults()
 {
 	cbShowStipple->setChecked( true );
 	cbShowGrabBar->setChecked( true );
@@ -130,3 +133,4 @@ void KDEDefaultConfig::defaults()
 
 #include "config.moc"
 // vim: ts=4
+// kate: space-indent off; tab-width 4;

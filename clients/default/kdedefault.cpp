@@ -18,19 +18,18 @@
 #include <kimageeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
+#include <kdebug.h>
+
 #include <QLayout>
-#include <qdrawutil.h>
 #include <QBitmap>
 #include <QImage>
-
 #include <QApplication>
 #include <QLabel>
-#include <kdebug.h>
 #include <QPixmap>
 #include <QPolygon>
 #include <QStyle>
 
-namespace Default
+namespace KDE2
 {
 
 static const unsigned char iconify_bits[] = {
@@ -139,12 +138,12 @@ static QPixmap* leftBtnDownPix[2];
 static QPixmap* ileftBtnUpPix[2];
 static QPixmap* ileftBtnDownPix[2];
 
-static KDEDefaultHandler* clientHandler;
-static int	toolTitleHeight;
-static int	normalTitleHeight;
+static KDE2Handler* clientHandler;
+static int toolTitleHeight;
+static int normalTitleHeight;
 static int borderWidth;
 static int grabBorderWidth;
-static bool KDEDefault_initialized = false;
+static bool KDE2_initialized = false;
 static bool useGradients;
 static bool showGrabBar;
 static bool showTitleBarStipple;
@@ -152,37 +151,37 @@ static bool showTitleBarStipple;
 
 // ===========================================================================
 
-KDEDefaultHandler::KDEDefaultHandler()
+KDE2Handler::KDE2Handler()
 {
-        clientHandler = this;
+	clientHandler = this;
 	readConfig( false );
 	createPixmaps();
-	KDEDefault_initialized = true;
+	KDE2_initialized = true;
 }
 
 
-KDEDefaultHandler::~KDEDefaultHandler()
+KDE2Handler::~KDE2Handler()
 {
-	KDEDefault_initialized = false;
+	KDE2_initialized = false;
 	freePixmaps();
-        clientHandler = NULL;
+	clientHandler = NULL;
 }
 
-KDecoration* KDEDefaultHandler::createDecoration( KDecorationBridge* b )
+KDecoration* KDE2Handler::createDecoration( KDecorationBridge* b )
 {
-        return new KDEDefaultClient( b, this );
+	return new KDE2Client( b, this );
 }
 
-bool KDEDefaultHandler::reset( unsigned long changed )
+bool KDE2Handler::reset( unsigned long changed )
 {
-	KDEDefault_initialized = false;
+	KDE2_initialized = false;
         changed |= readConfig( true );
         if( changed & SettingColors )
         { // pixmaps need to be recreated
 	        freePixmaps();
                 createPixmaps();
         }
-	KDEDefault_initialized = true;
+	KDE2_initialized = true;
 	// SettingButtons is handled by KCommonDecoration
         bool need_recreate = ( changed & ( SettingDecoration | SettingFont | SettingBorder )) != 0;
         if( need_recreate )  // something else than colors changed
@@ -192,12 +191,13 @@ bool KDEDefaultHandler::reset( unsigned long changed )
 }
 
 
-unsigned long KDEDefaultHandler::readConfig( bool update )
+unsigned long KDE2Handler::readConfig( bool update )
 {
-        unsigned long changed = 0;
-	KConfigGroup conf(KGlobal::config(), "KDEDefault");
+	unsigned long changed = 0;
+	KConfig c("kwinKDE2rc");
+	KConfigGroup conf(&c, "General");
 
-        bool new_showGrabBar 		= conf.readEntry("ShowGrabBar", true);
+	bool new_showGrabBar 		= conf.readEntry("ShowGrabBar", true);
 	bool new_showTitleBarStipple = conf.readEntry("ShowTitleBarStipple", true);
 	bool new_useGradients 		= conf.readEntry("UseGradients", true);
 	int  new_titleHeight 		= QFontMetrics(options()->font(true)).height();
@@ -257,7 +257,7 @@ unsigned long KDEDefaultHandler::readConfig( bool update )
 
 
 // This paints the button pixmaps upon loading the style.
-void KDEDefaultHandler::createPixmaps()
+void KDE2Handler::createPixmaps()
 {
 	bool highcolor = useGradients && (QPixmap::defaultDepth() > 8);
 
@@ -410,7 +410,7 @@ void KDEDefaultHandler::createPixmaps()
 }
 
 
-void KDEDefaultHandler::freePixmaps()
+void KDE2Handler::freePixmaps()
 {
 	// Free button pixmaps
 	if (rightBtnUpPix[true])
@@ -471,7 +471,7 @@ void KDEDefaultHandler::freePixmaps()
 }
 
 
-void KDEDefaultHandler::drawButtonBackground(QPixmap *pix,
+void KDE2Handler::drawButtonBackground(QPixmap *pix,
 		const QPalette &g, bool sunken)
 {
     QPainter p;
@@ -508,13 +508,13 @@ void KDEDefaultHandler::drawButtonBackground(QPixmap *pix,
     p.drawLine(2, x2-2, y2-2, x2-2);
 }
 
-QList< KDEDefaultHandler::BorderSize > KDEDefaultHandler::borderSizes() const
+QList< KDE2Handler::BorderSize > KDE2Handler::borderSizes() const
 { // the list must be sorted
   return QList< BorderSize >() << BorderNormal << BorderLarge <<
       BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
-bool KDEDefaultHandler::supports( Ability ability )
+bool KDE2Handler::supports( Ability ability )
 {
     switch( ability )
         {
@@ -537,7 +537,7 @@ bool KDEDefaultHandler::supports( Ability ability )
 
 // ===========================================================================
 
-KDEDefaultButton::KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name)
+KDE2Button::KDE2Button(ButtonType type, KDE2Client *parent, const char *name)
 	: KCommonDecorationButton(type, parent)
 {
     setObjectName( name );
@@ -549,14 +549,14 @@ KDEDefaultButton::KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, co
 }
 
 
-KDEDefaultButton::~KDEDefaultButton()
+KDE2Button::~KDE2Button()
 {
 	if (deco)
 		delete deco;
 }
 
 
-void KDEDefaultButton::reset(unsigned long changed)
+void KDE2Button::reset(unsigned long changed)
 {
 	if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
 		switch (type() ) {
@@ -594,7 +594,7 @@ void KDEDefaultButton::reset(unsigned long changed)
 }
 
 
-void KDEDefaultButton::setBitmap(const unsigned char *bitmap)
+void KDE2Button::setBitmap(const unsigned char *bitmap)
 {
 	delete deco;
 	deco = 0;
@@ -605,15 +605,15 @@ void KDEDefaultButton::setBitmap(const unsigned char *bitmap)
 	}
 }
 
-void KDEDefaultButton::paintEvent(QPaintEvent *)
+void KDE2Button::paintEvent(QPaintEvent *)
 {
 	QPainter p(this);
 	drawButton(&p);
 }
 
-void KDEDefaultButton::drawButton(QPainter *p)
+void KDE2Button::drawButton(QPainter *p)
 {
-	if (!KDEDefault_initialized)
+	if (!KDE2_initialized)
 		return;
 
 	const bool active = decoration()->isActive();
@@ -662,7 +662,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 	// otherwise we paint a menu button (with mini icon), or a sticky button.
 	if( deco ) {
 		// Select the appropriate button decoration color
-   		bool darkDeco = qGray( KDecoration::options()->color(
+		bool darkDeco = qGray( KDecoration::options()->color(
 				isLeft() ? KDecoration::ColorTitleBar : KDecoration::ColorButtonBg,
 				active).rgb() ) > 127;
 
@@ -703,7 +703,7 @@ void KDEDefaultButton::drawButton(QPainter *p)
 }
 
 
-void KDEDefaultButton::enterEvent(QEvent *e)
+void KDE2Button::enterEvent(QEvent *e)
 {
 	isMouseOver=true;
 	repaint();
@@ -711,7 +711,7 @@ void KDEDefaultButton::enterEvent(QEvent *e)
 }
 
 
-void KDEDefaultButton::leaveEvent(QEvent *e)
+void KDE2Button::leaveEvent(QEvent *e)
 {
 	isMouseOver=false;
 	repaint();
@@ -721,28 +721,28 @@ void KDEDefaultButton::leaveEvent(QEvent *e)
 
 // ===========================================================================
 
-KDEDefaultClient::KDEDefaultClient( KDecorationBridge* b, KDecorationFactory* f )
+KDE2Client::KDE2Client( KDecorationBridge* b, KDecorationFactory* f )
     : KCommonDecoration( b, f )/*,
       m_closing(false)*/
 {
 }
 
-QString KDEDefaultClient::visibleName() const
+QString KDE2Client::visibleName() const
 {
-	return i18n("KDE2");
+	return i18n("KDE 2");
 }
 
-QString KDEDefaultClient::defaultButtonsLeft() const
+QString KDE2Client::defaultButtonsLeft() const
 {
 	return "MS";
 }
 
-QString KDEDefaultClient::defaultButtonsRight() const
+QString KDE2Client::defaultButtonsRight() const
 {
 	return "HIAX";
 }
 
-bool KDEDefaultClient::decorationBehaviour(DecorationBehaviour behaviour) const
+bool KDE2Client::decorationBehaviour(DecorationBehaviour behaviour) const
 {
 	switch (behaviour) {
 		case DB_MenuClose:
@@ -757,7 +757,7 @@ bool KDEDefaultClient::decorationBehaviour(DecorationBehaviour behaviour) const
 	}
 }
 
-int KDEDefaultClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
+int KDE2Client::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
 	switch (lm) {
 		case LM_BorderLeft:
@@ -794,40 +794,40 @@ int KDEDefaultClient::layoutMetric(LayoutMetric lm, bool respectWindowState, con
 		case LM_ExplicitButtonSpacer:
 			if ( !isToolWindow() )
 				return borderWidth/2;
-			// fall though
+			// fall through
 		default:
 			return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
 	}
 }
 
-KCommonDecorationButton *KDEDefaultClient::createButton(ButtonType type)
+KCommonDecorationButton *KDE2Client::createButton(ButtonType type)
 {
 	switch (type) {
 		case MenuButton:
-			return new KDEDefaultButton(MenuButton, this, "menu");
+			return new KDE2Button(MenuButton, this, "menu");
 		case OnAllDesktopsButton:
-			return new KDEDefaultButton(OnAllDesktopsButton, this, "on_all_desktops");
+			return new KDE2Button(OnAllDesktopsButton, this, "on_all_desktops");
 		case HelpButton:
-			return new KDEDefaultButton(HelpButton, this, "help");
+			return new KDE2Button(HelpButton, this, "help");
 		case MinButton:
-			return new KDEDefaultButton(MinButton, this, "minimize");
+			return new KDE2Button(MinButton, this, "minimize");
 		case MaxButton:
-			return new KDEDefaultButton(MaxButton, this, "maximize");
+			return new KDE2Button(MaxButton, this, "maximize");
 		case CloseButton:
-			return new KDEDefaultButton(CloseButton, this, "close");
+			return new KDE2Button(CloseButton, this, "close");
 		case AboveButton:
-			return new KDEDefaultButton(AboveButton, this, "above");
+			return new KDE2Button(AboveButton, this, "above");
 		case BelowButton:
-			return new KDEDefaultButton(BelowButton, this, "below");
+			return new KDE2Button(BelowButton, this, "below");
 		case ShadeButton:
-			return new KDEDefaultButton(ShadeButton, this, "shade");
+			return new KDE2Button(ShadeButton, this, "shade");
 
 		default:
 			return 0;
 	}
 }
 
-void KDEDefaultClient::init()
+void KDE2Client::init()
 {
     // Finally, toolWindows look small
     if ( isToolWindow() ) {
@@ -840,14 +840,14 @@ void KDEDefaultClient::init()
 	KCommonDecoration::init();
 }
 
-void KDEDefaultClient::reset( unsigned long changed)
+void KDE2Client::reset( unsigned long changed)
 {
     widget()->repaint();
 
 	KCommonDecoration::reset(changed);
 }
 
-bool KDEDefaultClient::mustDrawHandle() const
+bool KDE2Client::mustDrawHandle() const
 {
     bool drawSmallBorders = !options()->moveResizeMaximizedWindows();
     if (drawSmallBorders && (maximizeMode() & MaximizeVertical)) {
@@ -857,9 +857,9 @@ bool KDEDefaultClient::mustDrawHandle() const
     }
 }
 
-void KDEDefaultClient::paintEvent( QPaintEvent* )
+void KDE2Client::paintEvent( QPaintEvent* )
 {
-	if (!KDEDefault_initialized)
+	if (!KDE2_initialized)
 		return;
 
 	QPalette g;
@@ -1024,7 +1024,7 @@ void KDEDefaultClient::paintEvent( QPaintEvent* )
 #endif
 }
 
-QRegion KDEDefaultClient::cornerShape(WindowCorner corner)
+QRegion KDE2Client::cornerShape(WindowCorner corner)
 {
 	switch (corner) {
 		case WC_TopLeft:
@@ -1049,7 +1049,7 @@ QRegion KDEDefaultClient::cornerShape(WindowCorner corner)
 // Extended KWin plugin interface
 extern "C" KDE_EXPORT KDecorationFactory* create_factory()
 {
-    return new Default::KDEDefaultHandler();
+    return new KDE2::KDE2Handler();
 }
 
 // vim: ts=4

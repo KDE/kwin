@@ -10,8 +10,8 @@
  *	Many features are now customizable.
  */
 
-#ifndef _KDE_DEFAULT_H
-#define _KDE_DEFAULT_H
+#ifndef KDE2_H
+#define KDE2_H
 
 #include <QBitmap>
 #include <QDateTime>
@@ -20,15 +20,15 @@
 
 class QPixmap;
 
-namespace Default {
+namespace KDE2 {
 
-class KDEDefaultClient;
+class KDE2Client;
 
-class KDEDefaultHandler: public KDecorationFactory
+class KDE2Handler: public KDecorationFactory
 {
 	public:
-		KDEDefaultHandler();
-		~KDEDefaultHandler();
+		KDE2Handler();
+		~KDE2Handler();
                 KDecoration* createDecoration( KDecorationBridge* b );
 		bool reset( unsigned long changed );
 		virtual QList< BorderSize > borderSizes() const;
@@ -43,12 +43,11 @@ class KDEDefaultHandler: public KDecorationFactory
 };
 
 
-// class KDEDefaultButton : public QButton, public KDecorationDefines
-class KDEDefaultButton : public KCommonDecorationButton
+class KDE2Button : public KCommonDecorationButton
 {
 	public:
-		KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name);
-		~KDEDefaultButton();
+		KDE2Button(ButtonType type, KDE2Client *parent, const char *name);
+		~KDE2Button();
 
 		void reset(unsigned long changed);
 
@@ -67,11 +66,11 @@ class KDEDefaultButton : public KCommonDecorationButton
 };
 
 
-class KDEDefaultClient : public KCommonDecoration
+class KDE2Client : public KCommonDecoration
 {
 	public:
-		KDEDefaultClient( KDecorationBridge* b, KDecorationFactory* f );
-		~KDEDefaultClient() {;}
+		KDE2Client( KDecorationBridge* b, KDecorationFactory* f );
+		~KDE2Client() {;}
 
 		virtual QString visibleName() const;
 		virtual QString defaultButtonsLeft() const;

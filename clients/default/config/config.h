@@ -7,22 +7,23 @@
  *		http://gallium.n3.net/
  */
 
-#ifndef _KDE_DEFAULT_CONFIG_H
-#define _KDE_DEFAULT_CONFIG_H
+#ifndef KDE2_CONFIG_H
+#define KDE2_CONFIG_H
 
 #include <QCheckBox>
 #include <QGroupBox>
-#include <kconfig.h>
 #include <QLabel>
-#include <kvbox.h>
 
-class KDEDefaultConfig: public QObject
+#include <kvbox.h>
+#include <kconfig.h>
+
+class KDE2Config: public QObject
 {
 	Q_OBJECT
 
 	public:
-		KDEDefaultConfig( KConfig* conf, QWidget* parent );
-		~KDEDefaultConfig();
+		KDE2Config( KConfig* conf, QWidget* parent );
+		~KDE2Config();
 
 	// These public signals/slots work similar to KCM modules
 	signals:
@@ -41,9 +42,10 @@ class KDEDefaultConfig: public QObject
 		QCheckBox* cbShowGrabBar;
 		QCheckBox* cbUseGradients;
 		KVBox* gb;
-        KConfig *c;
-		bool 	   highcolor;
+		KConfig *c;
+		bool highcolor;
 };
 
 #endif
 // vim: ts=4
+// kate: space-indent off; tab-width 4;
