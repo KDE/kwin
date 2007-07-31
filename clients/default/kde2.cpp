@@ -10,7 +10,7 @@
  *	Many features are now customizable.
  */
 
-#include "kdedefault.h"
+#include "kde2.h"
 
 #include <kconfig.h>
 #include <kglobal.h>

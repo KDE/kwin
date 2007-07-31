@@ -3,7 +3,7 @@ add_subdirectory( config )
 
 ########### next target ###############
 
-set(kwin3_kde2_PART_SRCS kdedefault.cpp)
+set(kwin3_kde2_PART_SRCS kde2.cpp)
 
 
 kde4_add_plugin(kwin3_kde2 ${kwin3_kde2_PART_SRCS})
