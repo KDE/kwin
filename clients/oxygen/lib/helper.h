@@ -44,9 +44,15 @@ public:
     QColor backgroundRadialColor(const QColor &color) const;
     QColor backgroundTopColor(const QColor &color) const;
     QColor backgroundBottomColor(const QColor &color) const;
+    QColor calcLightColor(const QColor &color);
+    QColor calcMidlightColor(const QColor &color);
+    QColor calcMidColor(const QColor &color);
+    QColor calcDarkColor(const QColor &color);
 
     QPixmap verticalGradient(const QColor &color, int height);
     QPixmap radialGradient(const QColor &color, int width);
+
+    QPixmap* roundButton(const QColor &color, int size);
 
 protected:
     KComponentData _componentData;
@@ -54,6 +60,7 @@ protected:
     qreal _contrast;
 
     QCache<quint64, QPixmap> m_cache;
+    QCache<quint64, QPixmap> m_roundCache;
 };
 
 #endif // __OXYGEN_HELPER_H
