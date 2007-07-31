@@ -1,7 +1,7 @@
 
 add_subdirectory( plastik ) 
 add_subdirectory( b2 ) 
-add_subdirectory( default ) 
+add_subdirectory( kde2 ) 
 add_subdirectory( keramik ) 
 add_subdirectory( laptop ) 
 add_subdirectory( modernsystem ) 
