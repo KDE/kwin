@@ -41,7 +41,7 @@ public:
 
     KSharedConfigPtr config() const;
 
-    bool lowThreshold(const QColor &color) const;
+    static bool lowThreshold(const QColor &color);
     QColor backgroundRadialColor(const QColor &color) const;
     QColor backgroundTopColor(const QColor &color) const;
     QColor backgroundBottomColor(const QColor &color) const;

@@ -65,7 +65,7 @@ KSharedConfigPtr OxygenHelper::config() const
     return _config;
 }
 
-bool OxygenHelper::lowThreshold(const QColor &color) const
+bool OxygenHelper::lowThreshold(const QColor &color)
 {
     QColor darker = KColorScheme::shade(color, KColorScheme::MidShade, 0.5);
     return KColorUtils::luma(darker) > KColorUtils::luma(color);
