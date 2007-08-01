@@ -65,19 +65,34 @@ KSharedConfigPtr OxygenHelper::config() const
     return _config;
 }
 
+bool OxygenHelper::lowThreshold(const QColor &color) const
+{
+    QColor darker = KColorScheme::shade(color, KColorScheme::MidShade, 0.5);
+    return KColorUtils::luma(darker) > KColorUtils::luma(color);
+}
+
 QColor OxygenHelper::backgroundRadialColor(const QColor &color) const
 {
-    return KColorScheme::shade(color, KColorScheme::LightShade, _contrast);
+    if (lowThreshold(color))
+        return KColorScheme::shade(color, KColorScheme::LightShade, 0.0);
+    else
+        return KColorScheme::shade(color, KColorScheme::LightShade, _contrast);
 }
 
 QColor OxygenHelper::backgroundTopColor(const QColor &color) const
 {
-    return KColorScheme::shade(color, KColorScheme::MidlightShade, _contrast);
+    if (lowThreshold(color))
+        return KColorScheme::shade(color, KColorScheme::MidlightShade, 0.0);
+    else
+        return KColorScheme::shade(color, KColorScheme::MidlightShade, _contrast);
 }
 
 QColor OxygenHelper::backgroundBottomColor(const QColor &color) const
 {
-    return KColorScheme::shade(color, KColorScheme::MidShade, _contrast - 1.1);
+    if (lowThreshold(color))
+        return KColorScheme::shade(color, KColorScheme::MidShade, 0.0);
+    else
+        return KColorScheme::shade(color, KColorScheme::MidShade, _contrast - 1.1);
 }
 
 QColor OxygenHelper::calcLightColor(const QColor &color)
