@@ -55,7 +55,8 @@ OxygenHelper::OxygenHelper(const QByteArray &componentName)
     _config = _componentData.config();
     _contrast = KGlobalSettings::contrastF(_config);
 
-    m_cache.setMaxCost(64);
+    m_backgroundCache.setMaxCost(64);
+    m_roundCache.setMaxCost(64);
 }
 
 KSharedConfigPtr OxygenHelper::config() const
@@ -80,28 +81,18 @@ QColor OxygenHelper::backgroundBottomColor(const QColor &color) const
 
 QColor OxygenHelper::calcLightColor(const QColor &color)
 {
-    return KColorScheme::shade(color, KColorScheme::LightShade, 0.7);
-}
-
-QColor OxygenHelper::calcMidlightColor(const QColor &color)
-{
-    return KColorScheme::shade(color, KColorScheme::MidlightShade, 0.7);
-}
-
-QColor OxygenHelper::calcMidColor(const QColor &color)
-{
-    return KColorScheme::shade(color, KColorScheme::MidShade, -0.4);
+    return KColorScheme::shade(color, KColorScheme::LightShade, _contrast);
 }
 
 QColor OxygenHelper::calcDarkColor(const QColor &color)
 {
-    return KColorScheme::shade(color, KColorScheme::MidShade, 0.7);
+    return KColorScheme::shade(color, KColorScheme::MidShade, _contrast);
 }
 
 QPixmap OxygenHelper::verticalGradient(const QColor &color, int height)
 {
     quint64 key = (quint64(color.rgba()) << 32) | height | 0x8000;
-    QPixmap *pixmap = m_cache.object(key);
+    QPixmap *pixmap = m_backgroundCache.object(key);
 
     if (!pixmap)
     {
@@ -116,7 +107,7 @@ QPixmap OxygenHelper::verticalGradient(const QColor &color, int height)
         p.setCompositionMode(QPainter::CompositionMode_Source);
         p.fillRect(pixmap->rect(), gradient);
 
-        m_cache.insert(key, pixmap);
+        m_backgroundCache.insert(key, pixmap);
     }
 
     return *pixmap;
@@ -125,7 +116,7 @@ QPixmap OxygenHelper::verticalGradient(const QColor &color, int height)
 QPixmap OxygenHelper::radialGradient(const QColor &color, int width)
 {
     quint64 key = (quint64(color.rgba()) << 32) | width | 0xb000;
-    QPixmap *pixmap = m_cache.object(key);
+    QPixmap *pixmap = m_backgroundCache.object(key);
 
     if (!pixmap)
     {
@@ -147,65 +138,73 @@ QPixmap OxygenHelper::radialGradient(const QColor &color, int width)
         p.scale(width/128.0,1);
         p.fillRect(pixmap->rect(), gradient);
 
-        m_cache.insert(key, pixmap);
+        m_backgroundCache.insert(key, pixmap);
     }
 
     return *pixmap;
 }
 
-QPixmap* OxygenHelper::roundButton(const QColor &color, int size)
+QPixmap OxygenHelper::roundButton(const QColor &color, int size)
 {
-    QPixmap *pixmap = new QPixmap(size, size);
-    pixmap->fill(QColor(0,0,0,0));
+    quint64 key = (quint64(color.rgba()) << 32) | size;
+    QPixmap *pixmap = m_roundCache.object(key);
 
-    QPainter p(pixmap);
-    p.setRenderHints(QPainter::Antialiasing);
-    p.setPen(Qt::NoPen);
-    p.setWindow(0,0,20,20);
+    if (!pixmap)
+    {
+        pixmap = new QPixmap(size, size);
+        pixmap->fill(QColor(0,0,0,0));
 
-    // shadow
-    QRadialGradient shadowGradient(10, 11, 9, 10, 12);
-    shadowGradient.setColorAt(0.0, QColor(0,0,0,80));
-    shadowGradient.setColorAt(1.0, QColor(0,0,0,0));
-    p.setBrush(shadowGradient);
-    p.drawEllipse(QRectF(0, 0, 20, 20));
+        QPainter p(pixmap);
+        p.setRenderHints(QPainter::Antialiasing);
+        p.setPen(Qt::NoPen);
+        p.setWindow(0,0,20,20);
 
-    // outline
-    QRadialGradient edgeGradient(10, 10, 9, 10, 10);
-    edgeGradient.setColorAt(0.0, QColor(0,0,0,60));
-    edgeGradient.setColorAt(0.9, QColor(0,0,0,20));
-    edgeGradient.setColorAt(1.0, QColor(0,0,0,0));
-    p.setBrush(edgeGradient);
-    p.drawEllipse(QRectF(0, 0, 20, 20));
+        // shadow
+        QRadialGradient shadowGradient(10, 11, 9, 10, 12);
+        shadowGradient.setColorAt(0.0, QColor(0,0,0,80));
+        shadowGradient.setColorAt(1.0, QColor(0,0,0,0));
+        p.setBrush(shadowGradient);
+        p.drawEllipse(QRectF(0, 0, 20, 20));
 
-    // base (for anti-shadow)
-    p.setBrush(color);
-    p.drawEllipse(QRectF(2.4,2.4,15.2,15.2));
+        // outline
+        QRadialGradient edgeGradient(10, 10, 9, 10, 10);
+        edgeGradient.setColorAt(0.0, QColor(0,0,0,60));
+        edgeGradient.setColorAt(0.9, QColor(0,0,0,20));
+        edgeGradient.setColorAt(1.0, QColor(0,0,0,0));
+        p.setBrush(edgeGradient);
+        p.drawEllipse(QRectF(0, 0, 20, 20));
 
-    // bevel
-    QLinearGradient bevelGradient(0, 0, 0, 20);
-    bevelGradient.setColorAt(0.45, calcLightColor(color));
-    bevelGradient.setColorAt(0.55, color);
-    bevelGradient.setColorAt(0.65, calcDarkColor(color));
-    p.setBrush(QBrush(bevelGradient));
-    p.drawEllipse(QRectF(2.4,2.4,15.2,15.0));
+        // base (for anti-shadow)
+        p.setBrush(color);
+        p.drawEllipse(QRectF(2.4,2.4,15.2,15.2));
 
-    // inside mask
-    QRadialGradient maskGradient(10,10,7.4,10,10);
-    maskGradient.setColorAt(0.75, QColor(0,0,0,0));
-    maskGradient.setColorAt(0.90, QColor(0,0,0,140));
-    maskGradient.setColorAt(1.00, QColor(0,0,0,255));
-    p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-    p.setBrush(maskGradient);
-    p.drawRect(0,0,20,20);
+        // bevel
+        QLinearGradient bevelGradient(0, 0, 0, 18);
+        bevelGradient.setColorAt(0.45, calcLightColor(color));
+        bevelGradient.setColorAt(0.55, color);
+        bevelGradient.setColorAt(0.65, calcDarkColor(color));
+        p.setBrush(QBrush(bevelGradient));
+        p.drawEllipse(QRectF(2.4,2.4,15.2,15.0));
 
-    // inside
-    QLinearGradient innerGradient(0, 0, 0, 20);
-    innerGradient.setColorAt(0.0, color);
-    innerGradient.setColorAt(1.0, calcLightColor(color));
-    p.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-    p.setBrush(innerGradient);
-    p.drawEllipse(QRectF(2.5,2.5,15.0,14.8));
+        // inside mask
+        QRadialGradient maskGradient(10,10,7.4,10,10);
+        maskGradient.setColorAt(0.75, QColor(0,0,0,0));
+        maskGradient.setColorAt(0.90, QColor(0,0,0,140));
+        maskGradient.setColorAt(1.00, QColor(0,0,0,255));
+        p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        p.setBrush(maskGradient);
+        p.drawRect(0,0,20,20);
 
-    return pixmap;
+        // inside
+        QLinearGradient innerGradient(0, 0, 0, 20);
+        innerGradient.setColorAt(0.0, color);
+        innerGradient.setColorAt(1.0, calcLightColor(color));
+        p.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+        p.setBrush(innerGradient);
+        p.drawEllipse(QRectF(2.5,2.5,15.0,14.8));
+
+        m_roundCache.insert(key, pixmap);
+    }
+
+    return *pixmap;
 }
