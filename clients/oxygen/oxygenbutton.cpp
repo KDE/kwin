@@ -139,7 +139,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     }
 
     QColor bg = globalHelper->backgroundTopColor(palette().window());
-   painter.drawPixmap(0, 0, *globalHelper->roundButton(bg, BUTTONSIZE));
+   painter.drawPixmap(0, 0, globalHelper->roundButton(palette().button(), BUTTONSIZE));
 }
 
 
