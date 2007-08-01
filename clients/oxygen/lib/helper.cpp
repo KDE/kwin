@@ -55,6 +55,7 @@ OxygenHelper::OxygenHelper(const QByteArray &componentName)
 {
     _config = _componentData.config();
     _contrast = KGlobalSettings::contrastF(_config);
+    _bgcontrast = _contrast; // TODO get style setting
 
     m_backgroundCache.setMaxCost(64);
     m_roundCache.setMaxCost(64);
@@ -76,7 +77,7 @@ QColor OxygenHelper::backgroundRadialColor(const QColor &color) const
     if (lowThreshold(color))
         return KColorScheme::shade(color, KColorScheme::LightShade, 0.0);
     else
-        return KColorScheme::shade(color, KColorScheme::LightShade, _contrast);
+        return KColorScheme::shade(color, KColorScheme::LightShade, _bgcontrast);
 }
 
 QColor OxygenHelper::backgroundTopColor(const QColor &color) const
@@ -84,7 +85,7 @@ QColor OxygenHelper::backgroundTopColor(const QColor &color) const
     if (lowThreshold(color))
         return KColorScheme::shade(color, KColorScheme::MidlightShade, 0.0);
     else
-        return KColorScheme::shade(color, KColorScheme::MidlightShade, _contrast);
+        return KColorScheme::shade(color, KColorScheme::MidlightShade, _bgcontrast);
 }
 
 QColor OxygenHelper::backgroundBottomColor(const QColor &color) const
@@ -92,7 +93,7 @@ QColor OxygenHelper::backgroundBottomColor(const QColor &color) const
     if (lowThreshold(color))
         return KColorScheme::shade(color, KColorScheme::MidShade, 0.0);
     else
-        return KColorScheme::shade(color, KColorScheme::MidShade, _contrast - 1.1);
+        return KColorScheme::shade(color, KColorScheme::MidShade, _bgcontrast - 1.1);
 }
 
 QColor OxygenHelper::calcLightColor(const QColor &color)

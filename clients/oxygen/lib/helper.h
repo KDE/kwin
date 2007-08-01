@@ -57,6 +57,7 @@ protected:
     KComponentData _componentData;
     KSharedConfigPtr _config;
     qreal _contrast;
+    qreal _bgcontrast;
 
     QCache<quint64, QPixmap> m_backgroundCache;
     QCache<quint64, QPixmap> m_roundCache;
