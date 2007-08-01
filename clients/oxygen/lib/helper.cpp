@@ -21,6 +21,7 @@
 #include "helper.h"
 
 #include <KGlobalSettings>
+#include <KColorUtils>
 #include <KColorScheme>
 
 #include <QtGui/QPainter>
@@ -179,10 +180,16 @@ QPixmap OxygenHelper::roundButton(const QColor &color, int size)
         p.drawEllipse(QRectF(2.4,2.4,15.2,15.2));
 
         // bevel
+        QColor light = calcLightColor(color);
+        QColor dark = calcDarkColor(color);
+        qreal y = KColorUtils::luma(color);
+        qreal yl = KColorUtils::luma(light);
+        qreal yd = KColorUtils::luma(light);
         QLinearGradient bevelGradient(0, 0, 0, 18);
-        bevelGradient.setColorAt(0.45, calcLightColor(color));
-        bevelGradient.setColorAt(0.55, color);
-        bevelGradient.setColorAt(0.65, calcDarkColor(color));
+        bevelGradient.setColorAt(0.45, light);
+        bevelGradient.setColorAt(0.65, dark);
+        if (y < yl && y > yd) // no middle when color is very light/dark
+            bevelGradient.setColorAt(0.55, color);
         p.setBrush(QBrush(bevelGradient));
         p.drawEllipse(QRectF(2.4,2.4,15.2,15.0));
 
