@@ -11,6 +11,7 @@ X-KDE-FactoryName=kcm_kwincompositing
 X-KDE-ParentApp=kcontrol
 
 Name=Desktop Effects
+Name[be]=Эфекты працоўнага стала
 Name[bg]=Пейджър на работните плотове
 Name[de]=Arbeitsflächen-Effekte
 Name[fa]=جلوه‌های رومیزی
@@ -23,6 +24,7 @@ Name[sv]=Skrivbordseffekter
 Name[zh_TW]=桌面效果
 
 Comment=Configure desktop effects
+Comment[be]=Настаўленні эфектаў стала
 Comment[bg]=Настройване активирането на прозорците
 Comment[de]=Arbeitsflächen-Effekte einrichten
 Comment[fa]=پیکربندی جلوه‌های رومیزی
