@@ -1360,11 +1360,6 @@ void Workspace::setTabBoxDesktop( int iDesktop )
 
 bool Workspace::establishTabBoxGrab()
     {
-    // The KDED Global Shortcuts Server will have used XGrabKey and
-    // XUngrabKeyboard as part of handling the shortcut for activating the
-    // tabbox.  Make sure to update our current X time, or else it will be
-    // older than the Server's grab/ungrab.
-    updateXTime();
     if( !grabXKeyboard())
         return false;
     // Don't try to establish a global mouse grab using XGrabPointer, as that would prevent
