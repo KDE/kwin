@@ -75,7 +75,7 @@ void KWinCompositingConfig::showAdvancedOptions()
 
 void KWinCompositingConfig::load()
 {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     mKWinConfig->reparseConfiguration();
 
     KConfigGroup config(mKWinConfig, "Compositing");
@@ -98,7 +98,7 @@ void KWinCompositingConfig::load()
 
 void KWinCompositingConfig::save()
 {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
 
     KConfigGroup config(mKWinConfig, "Compositing");
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
@@ -133,7 +133,7 @@ void KWinCompositingConfig::configChanged()
 
 void KWinCompositingConfig::defaults()
 {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     ui.useCompositing->setChecked(false);
     ui.effectWinManagement->setChecked(true);
     ui.effectShadows->setChecked(true);
@@ -142,7 +142,7 @@ void KWinCompositingConfig::defaults()
 
 QString KWinCompositingConfig::quickHelp() const
 {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     return i18n("<h1>Desktop Effects</h1>");
 }
 

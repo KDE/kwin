@@ -29,7 +29,7 @@ namespace KWin
 PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QStringList& args) :
         KCModule(KGenericFactory<PresentWindowsEffectConfig>::componentData(), parent, args)
     {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
 
     QGridLayout* layout = new QGridLayout(this);
 
@@ -56,7 +56,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QS
 
 PresentWindowsEffectConfig::~PresentWindowsEffectConfig()
     {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     }
 
 void PresentWindowsEffectConfig::addItems(QComboBox* combo)
@@ -74,7 +74,7 @@ void PresentWindowsEffectConfig::addItems(QComboBox* combo)
 
 void PresentWindowsEffectConfig::load()
     {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("PresentWindows");
@@ -92,7 +92,7 @@ void PresentWindowsEffectConfig::load()
 
 void PresentWindowsEffectConfig::save()
     {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("PresentWindows");
@@ -114,7 +114,7 @@ void PresentWindowsEffectConfig::save()
 
 void PresentWindowsEffectConfig::defaults()
     {
-    kDebug() << k_funcinfo << endl;
+    kDebug() << k_funcinfo;
     mActivateCombo->setCurrentIndex( (int)ElectricTopRight );
     mActivateAllCombo->setCurrentIndex( (int)ElectricNone - 1 );
     emit changed(true);

@@ -880,7 +880,7 @@ WindowRules Workspace::findWindowRules( const Client* c, bool ignore_temporary )
         if( (*it)->match( c ))
             {
             Rules* rule = *it;
-            kDebug( 1212 ) << "Rule found:" << rule << ":" << c << endl;
+            kDebug( 1212 ) << "Rule found:" << rule << ":" << c;
             if( rule->isTemporary())
                 it = rules.erase( it );
             else

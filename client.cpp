@@ -1018,7 +1018,7 @@ void Client::closeWindow()
  */
 void Client::killWindow()
     {
-    kDebug( 1212 ) << "Client::killWindow():" << caption() << endl;
+    kDebug( 1212 ) << "Client::killWindow():" << caption();
     // not sure if we need an Notify::Kill or not.. until then, use
     // Notify::Close
     Notify::raise( Notify::Close );
@@ -1069,7 +1069,7 @@ void Client::gotPing( Time timestamp )
 
 void Client::pingTimeout()
     {
-    kDebug( 1212 ) << "Ping timeout:" << caption() << endl;
+    kDebug( 1212 ) << "Ping timeout:" << caption();
     delete ping_timer;
     ping_timer = NULL;
     killProcess( true, ping_timestamp );
@@ -1084,7 +1084,7 @@ void Client::killProcess( bool ask, Time timestamp )
     pid_t pid = info->pid();
     if( pid <= 0 || machine.isEmpty()) // needed properties missing
         return;
-    kDebug( 1212 ) << "Kill process:" << pid << "(" << machine << ")" << endl;
+    kDebug( 1212 ) << "Kill process:" << pid << "(" << machine << ")";
     if( !ask )
         {
         if( machine != "localhost" )
@@ -1118,7 +1118,7 @@ void Client::killProcess( bool ask, Time timestamp )
 
 void Client::processKillerExited()
     {
-    kDebug( 1212 ) << "Killer exited" << endl;
+    kDebug( 1212 ) << "Killer exited";
     delete process_killer;
     process_killer = NULL;
     }
@@ -1238,8 +1238,8 @@ void Client::takeActivity( int flags, bool handled, allowed_t )
     static Client* previous_client;
     if( previous_activity_timestamp == xTime() && previous_client != this )
         {
-        kDebug( 1212 ) << "Repeated use of the same X timestamp for activity" << endl;
-        kDebug( 1212 ) << kBacktrace() << endl;
+        kDebug( 1212 ) << "Repeated use of the same X timestamp for activity";
+        kDebug( 1212 ) << kBacktrace();
         }
     previous_activity_timestamp = xTime();
     previous_client = this;
@@ -1255,8 +1255,8 @@ void Client::takeFocus( allowed_t )
     static Client* previous_client;
     if( previous_focus_timestamp == xTime() && previous_client != this )
         {
-        kDebug( 1212 ) << "Repeated use of the same X timestamp for focus" << endl;
-        kDebug( 1212 ) << kBacktrace() << endl;
+        kDebug( 1212 ) << "Repeated use of the same X timestamp for focus";
+        kDebug( 1212 ) << kBacktrace();
         }
     previous_focus_timestamp = xTime();
     previous_client = this;

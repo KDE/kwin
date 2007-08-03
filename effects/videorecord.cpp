@@ -108,24 +108,24 @@ void VideoRecordEffect::startRecording()
     client = CapturyOpen( &config );
     if( client == NULL )
         {
-        kDebug( 1212 ) << "Video recording init failed" << endl;
+        kDebug( 1212 ) << "Video recording init failed";
         return;
         }
     // TODO
     if( CapturySetOutputFileName( client, "/tmp/kwin_video.cps" ) != CAPTURY_SUCCESS )
         {
-        kDebug( 1212 ) << "Video recording file open failed" << endl;
+        kDebug( 1212 ) << "Video recording file open failed";
         return;
         }
     effects->addRepaintFull(); // trigger reading initial screen contents into buffer
-    kDebug( 1212 ) << "Video recording start" << endl;
+    kDebug( 1212 ) << "Video recording start";
     }
 
 void VideoRecordEffect::stopRecording()
     {
     if( client == NULL )
         return;
-    kDebug( 1212 ) << "Video recording stop" << endl;
+    kDebug( 1212 ) << "Video recording stop";
     CapturyClose( client );
     client = NULL;
     }

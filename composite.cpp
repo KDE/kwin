@@ -67,17 +67,17 @@ void Workspace::setupCompositing()
 #if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
     if( !options->useCompositing )
         {
-        kDebug( 1212 ) << "Compositing is turned off in options" << endl;
+        kDebug( 1212 ) << "Compositing is turned off in options";
         return;
         }
     if( !Extensions::compositeAvailable())
         {
-        kDebug( 1212 ) << "No composite extension available" << endl;
+        kDebug( 1212 ) << "No composite extension available";
         return;
         }
     if( !Extensions::damageAvailable())
         {
-        kDebug( 1212 ) << "No damage extension available" << endl;
+        kDebug( 1212 ) << "No damage extension available";
         return;
         }
     if( scene != NULL )
@@ -101,7 +101,7 @@ void Workspace::setupCompositing()
                 type = XRenderCompositing;
                 break;
             default:
-                kDebug( 1212 ) << "No compositing" << endl;
+                kDebug( 1212 ) << "No compositing";
                 return;
             }
         }
@@ -109,12 +109,12 @@ void Workspace::setupCompositing()
     switch( type )
         {
         /*case 'B':
-            kDebug( 1212 ) << "X compositing" << endl;
+            kDebug( 1212 ) << "X compositing";
             scene = new SceneBasic( this );
           break; // don't fall through (this is a testing one) */
 #ifdef HAVE_OPENGL
         case OpenGLCompositing:
-            kDebug( 1212 ) << "OpenGL compositing" << endl;
+            kDebug( 1212 ) << "OpenGL compositing";
             scene = new SceneOpenGL( this );
             if( !scene->initFailed())
                 break; // -->
@@ -124,12 +124,12 @@ void Workspace::setupCompositing()
 #endif
 #if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
         case XRenderCompositing:
-            kDebug( 1212 ) << "XRender compositing" << endl;
+            kDebug( 1212 ) << "XRender compositing";
             scene = new SceneXrender( this );
           break;
 #endif
         default:
-          kDebug( 1212 ) << "No compositing" << endl;
+          kDebug( 1212 ) << "No compositing";
           return;
         }
     if( scene == NULL || scene->initFailed())
@@ -166,7 +166,7 @@ void Workspace::setupCompositing()
     // 200Hz to 1000Hz are effectively identical
     else if( rate > 1000 )
         rate = 1000;
-    kDebug( 1212 ) << "Refresh rate " << rate << "Hz" << endl;
+    kDebug( 1212 ) << "Refresh rate " << rate << "Hz";
     compositeRate = 1000 / rate;
     compositeTimer.start( compositeRate );
     lastCompositePaint.start();
@@ -188,7 +188,7 @@ void Workspace::setupCompositing()
     delete popup; // force re-creation of the Alt+F3 popup (opacity option)
     popup = NULL;
 #else
-    kDebug( 1212 ) << "Compositing was not available at compile time" << endl;
+    kDebug( 1212 ) << "Compositing was not available at compile time";
 #endif
     }
 
@@ -238,7 +238,7 @@ void Workspace::finishCompositing()
 
 void Workspace::lostCMSelection()
     {
-    kDebug( 1212 ) << "Lost compositing manager selection" << endl;
+    kDebug( 1212 ) << "Lost compositing manager selection";
     finishCompositing();
     }
 
@@ -445,7 +445,7 @@ Pixmap Toplevel::createWindowPixmap()
         window_pix = None;
     ungrabXServer();
     if( window_pix == None )
-        kDebug( 1212 ) << "Creating window pixmap failed: " << this << endl;
+        kDebug( 1212 ) << "Creating window pixmap failed: " << this;
     return window_pix;
 #else
     return None;

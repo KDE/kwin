@@ -390,7 +390,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
     // Size of one cell
     int cellwidth = placementRect.width() / cols;
     int cellheight = placementRect.height() / rows;
-    kDebug() << k_funcinfo << "Got " << windowlist.count() << " clients, using " << rows << "x" << cols << " grid" << endl;
+    kDebug() << k_funcinfo << "Got " << windowlist.count() << " clients, using " << rows << "x" << cols << " grid";
 
     // Calculate position and scale factor for each window
     int i = 0;
@@ -450,7 +450,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
         rows = (int)ceil( sqrt(windowlist.count()) );
         columns = (int)ceil( (double)windowlist.count() / (double)rows );
     }
-    kDebug() << k_funcinfo << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients" << endl;
+    kDebug() << k_funcinfo << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
     // Calculate width & height
     int w = (availRect.width() - (columns+1) * spacing ) / columns;

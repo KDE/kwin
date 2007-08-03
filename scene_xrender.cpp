@@ -82,12 +82,12 @@ SceneXrender::SceneXrender( Workspace* ws )
     {
     if( !Extensions::renderAvailable())
         {
-        kDebug( 1212 ) << "No xrender extension available" << endl;
+        kDebug( 1212 ) << "No xrender extension available";
         return;
         }
     if( !Extensions::fixesRegionAvailable())
         {
-        kDebug( 1212 ) << "No xfixes v3+ extension available" << endl;
+        kDebug( 1212 ) << "No xfixes v3+ extension available";
         return;
         }
     KXErrorHandler xerr;
@@ -217,7 +217,7 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
 #ifndef NDEBUG
         foreach( WindowQuad q, data.quads )
             if( q.isTransformed())
-                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" << endl;
+                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" ;
 #endif
         if( !w->isPaintingEnabled())
             continue;

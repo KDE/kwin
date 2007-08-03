@@ -181,7 +181,7 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
 #ifndef NDEBUG
         foreach( WindowQuad q, data.quads )
             if( q.isTransformed())
-                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" << endl;
+                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" ;
 #endif
         if( !w->isPaintingEnabled())
             continue;
@@ -222,7 +222,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
 #ifndef NDEBUG
         foreach( WindowQuad q, data.quads )
             if( q.isTransformed())
-                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" << endl;
+                kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" ;
 #endif
         if( !w->isPaintingEnabled())
             continue;

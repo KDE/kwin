@@ -802,7 +802,7 @@ void Workspace::updateCurrentTopMenu()
             }
         }
 
-//    kDebug() << "CURRENT TOPMENU:" << menubar << ":" << active_client << endl;
+//    kDebug() << "CURRENT TOPMENU:" << menubar << ":" << active_client;
     if ( menubar )
         {
         if( active_client && !menubar->isOnDesktop( active_client->desktop()))
@@ -958,7 +958,7 @@ void Workspace::reconfigure()
 
 void Workspace::slotSettingsChanged(int category)
     {
-    kDebug(1212) << "Workspace::slotSettingsChanged()" << endl;
+    kDebug(1212) << "Workspace::slotSettingsChanged()";
     if( category == KGlobalSettings::SETTINGS_SHORTCUTS )
         readShortcuts();
     }
@@ -970,7 +970,7 @@ KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes() );
 
 void Workspace::slotReconfigure()
     {
-    kDebug(1212) << "Workspace::slotReconfigure()" << endl;
+    kDebug(1212) << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
 
     if( options->electricBorders() == Options::ElectricAlways )
@@ -2310,13 +2310,13 @@ void Workspace::addTopMenu( Client* c )
         updateTopMenuGeometry( c );
         updateCurrentTopMenu();
         }
-//        kDebug() << "NEW TOPMENU:" << c << endl;
+//        kDebug() << "NEW TOPMENU:" << c;
     }
 
 void Workspace::removeTopMenu( Client* c )
     {
 //    if( c->isTopMenu())
-//        kDebug() << "REMOVE TOPMENU:" << c << endl;
+//        kDebug() << "REMOVE TOPMENU:" << c;
     assert( c->isTopMenu());
     assert( topmenus.contains( c ));
     topmenus.removeAll( c );
@@ -2326,7 +2326,7 @@ void Workspace::removeTopMenu( Client* c )
 
 void Workspace::lostTopMenuSelection()
     {
-//    kDebug() << "lost TopMenu selection" << endl;
+//    kDebug() << "lost TopMenu selection";
     // make sure this signal is always set when not owning the selection
     disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
@@ -2348,13 +2348,13 @@ void Workspace::lostTopMenuOwner()
     {
     if( !options->topMenuEnabled())
         return;
-//    kDebug() << "TopMenu selection lost owner" << endl;
+//    kDebug() << "TopMenu selection lost owner";
     if( !topmenu_selection->claim( false ))
         {
-//        kDebug() << "Failed to claim TopMenu selection" << endl;
+//        kDebug() << "Failed to claim TopMenu selection";
         return;
         }
-//    kDebug() << "claimed TopMenu selection" << endl;
+//    kDebug() << "claimed TopMenu selection";
     setupTopMenuHandling();
     }
 

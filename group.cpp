@@ -90,8 +90,8 @@ bool performTransiencyCheck()
                     && !Workspace::self()->clients.contains( *it2 )
                     && !Workspace::self()->desktops.contains( *it2 ))
                     {
-                    kDebug() << "TC:" << *it1 << " has non-existent main client " << endl;
-                    kDebug() << "TC2:" << *it2 << endl; // this may crash
+                    kDebug() << "TC:" << *it1 << " has non-existent main client ";
+                    kDebug() << "TC2:" << *it2; // this may crash
                     ret = false;
                     continue;
                     }
@@ -111,8 +111,8 @@ bool performTransiencyCheck()
                 && !Workspace::self()->clients.contains( *it2 )
                 && !Workspace::self()->desktops.contains( *it2 ))
                 {
-                kDebug() << "TC:" << *it1 << " has non-existent transient " << endl;
-                kDebug() << "TC2:" << *it2 << endl; // this may crash
+                kDebug() << "TC:" << *it1 << " has non-existent transient ";
+                kDebug() << "TC2:" << *it2; // this may crash
                 ret = false;
                 continue;
                 }
@@ -254,15 +254,15 @@ void Group::addMember( Client* member_P )
     {
     TRANSIENCY_CHECK( member_P );
     _members.append( member_P );
-//    kDebug() << "GROUPADD:" << this << ":" << member_P << endl;
-//    kDebug() << kBacktrace() << endl;
+//    kDebug() << "GROUPADD:" << this << ":" << member_P;
+//    kDebug() << kBacktrace();
     }
 
 void Group::removeMember( Client* member_P )
     {
     TRANSIENCY_CHECK( member_P );
-//    kDebug() << "GROUPREMOVE:" << this << ":" << member_P << endl;
-//    kDebug() << kBacktrace() << endl;
+//    kDebug() << "GROUPREMOVE:" << this << ":" << member_P;
+//    kDebug() << kBacktrace();
     Q_ASSERT( _members.contains( member_P ));
     _members.removeAll( member_P );
 // there are cases when automatic deleting of groups must be delayed,
@@ -643,28 +643,28 @@ void Client::removeFromMainClients()
 void Client::cleanGrouping()
     {
     TRANSIENCY_CHECK( this );
-//    kDebug() << "CLEANGROUPING:" << this << endl;
+//    kDebug() << "CLEANGROUPING:" << this;
 //    for( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kDebug() << "CL:" << *it << endl;
+//        kDebug() << "CL:" << *it;
 //    ClientList mains;
 //    mains = mainClients();
 //    for( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kDebug() << "MN:" << *it << endl;
+//        kDebug() << "MN:" << *it;
     removeFromMainClients();
-//    kDebug() << "CLEANGROUPING2:" << this << endl;
+//    kDebug() << "CLEANGROUPING2:" << this;
 //    for( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kDebug() << "CL2:" << *it << endl;
+//        kDebug() << "CL2:" << *it;
 //    mains = mainClients();
 //    for( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kDebug() << "MN2:" << *it << endl;
+//        kDebug() << "MN2:" << *it;
     for( ClientList::ConstIterator it = transients_list.begin();
          it != transients_list.end();
          )
@@ -677,16 +677,16 @@ void Client::cleanGrouping()
         else
             ++it;
         }
-//    kDebug() << "CLEANGROUPING3:" << this << endl;
+//    kDebug() << "CLEANGROUPING3:" << this;
 //    for( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kDebug() << "CL3:" << *it << endl;
+//        kDebug() << "CL3:" << *it;
 //    mains = mainClients();
 //    for( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kDebug() << "MN3:" << *it << endl;
+//        kDebug() << "MN3:" << *it;
     // HACK
     // removeFromMainClients() did remove 'this' from transient
     // lists of all group members, but then made windows that
@@ -699,11 +699,11 @@ void Client::cleanGrouping()
          it != group_members.end();
          ++it )
         (*it)->removeTransient( this );
-//    kDebug() << "CLEANGROUPING4:" << this << endl;
+//    kDebug() << "CLEANGROUPING4:" << this;
 //    for( ClientList::ConstIterator it = group_members.begin();
 //         it != group_members.end();
 //         ++it )
-//        kDebug() << "CL4:" << *it << endl;
+//        kDebug() << "CL4:" << *it;
     }
 
 // Make sure that no group transient is considered transient
@@ -781,7 +781,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
             return None;
     if( new_transient_for == window()) // pointing to self
         { // also fix the property itself
-        kWarning( 1216 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." << endl;
+        kWarning( 1216 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." ;
         new_property_value = new_transient_for = rootWindow();
         }
 //  The transient_for window may be embedded in another application,
@@ -826,7 +826,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
         loop_pos = pos->transient_for_id;
         if( --count == 0 )
             {
-            kWarning( 1216 ) << "Client " << this << " caused WM_TRANSIENT_FOR loop." << endl;
+            kWarning( 1216 ) << "Client " << this << " caused WM_TRANSIENT_FOR loop." ;
             new_transient_for = rootWindow();
             }
         }
@@ -849,19 +849,19 @@ void Client::addTransient( Client* cl )
     transients_list.append( cl );
     if( workspace()->mostRecentlyActivatedClient() == this && cl->isModal())        
         check_active_modal = true;
-//    kDebug() << "ADDTRANS:" << this << ":" << cl << endl;
-//    kDebug() << kBacktrace() << endl;
+//    kDebug() << "ADDTRANS:" << this << ":" << cl;
+//    kDebug() << kBacktrace();
 //    for( ClientList::ConstIterator it = transients_list.begin();
 //         it != transients_list.end();
 //         ++it )
-//        kDebug() << "AT:" << (*it) << endl;
+//        kDebug() << "AT:" << (*it);
     }
 
 void Client::removeTransient( Client* cl )
     {
     TRANSIENCY_CHECK( this );
-//    kDebug() << "REMOVETRANS:" << this << ":" << cl << endl;
-//    kDebug() << kBacktrace() << endl;
+//    kDebug() << "REMOVETRANS:" << this << ":" << cl;
+//    kDebug() << kBacktrace();
     transients_list.removeAll( cl );
     // cl is transient for this, but this is going away
     // make cl group transient

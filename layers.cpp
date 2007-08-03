@@ -109,13 +109,13 @@ void Workspace::updateStackingOrder( bool propagate_new_clients )
     force_restacking = false;
     stacking_order = new_stacking_order;
 #if 0
-    kDebug() << "stacking:" << changed << endl;
+    kDebug() << "stacking:" << changed;
     if( changed || propagate_new_clients )
         {
         for( ClientList::ConstIterator it = stacking_order.begin();
              it != stacking_order.end();
              ++it )
-            kDebug() << (void*)(*it) << *it << ":" << (*it)->layer() << endl;
+            kDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
         }
 #endif
     if( changed || propagate_new_clients )
@@ -543,7 +543,7 @@ ClientList Workspace::constrainedStackingOrder()
     ClientList layer[ NumLayers ];
 
 #if 0
-    kDebug() << "stacking1:" << endl;
+    kDebug() << "stacking1:";
 #endif
     // build the order from layers
     QHash< Group*, Layer > minimum_layer;
@@ -570,11 +570,11 @@ ClientList Workspace::constrainedStackingOrder()
          ++lay )    
         stacking += layer[ lay ];
 #if 0
-    kDebug() << "stacking2:" << endl;
+    kDebug() << "stacking2:";
     for( ClientList::ConstIterator it = stacking.begin();
          it != stacking.end();
          ++it )
-        kDebug() << (void*)(*it) << *it << ":" << (*it)->layer() << endl;
+        kDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
@@ -623,7 +623,7 @@ ClientList Workspace::constrainedStackingOrder()
                     break;
                 }
             }
-//        kDebug() << "STACK:" << stacking[ i ] << ":" << ( i2 == -1 ? ((Client*)0) : stacking[ i2 ] ) << endl;
+//        kDebug() << "STACK:" << stacking[ i ] << ":" << ( i2 == -1 ? ((Client*)0) : stacking[ i2 ] );
         if( i2 == -1 )
             {
             --i;
@@ -638,12 +638,12 @@ ClientList Workspace::constrainedStackingOrder()
         stacking.insert( i2, current );
         }
 #if 0
-    kDebug() << "stacking3:" << endl;
+    kDebug() << "stacking3:";
     for( ClientList::ConstIterator it = stacking.begin();
          it != stacking.end();
          ++it )
-        kDebug() << (void*)(*it) << *it << ":" << (*it)->layer() << endl;
-    kDebug() << "\n\n" << endl;
+        kDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+    kDebug() << "\n\n";
 #endif
     return stacking;
     }

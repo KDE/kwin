@@ -52,7 +52,7 @@ bool LiquidEffect::loadData()
     int texh = displayHeight();
     if( !GLTexture::NPOTTextureSupported() )
     {
-        kWarning( 1212 ) << k_funcinfo << "NPOT textures not supported, wasting some memory" << endl;
+        kWarning( 1212 ) << k_funcinfo << "NPOT textures not supported, wasting some memory" ;
         texw = nearestPowerOfTwo(texw);
         texh = nearestPowerOfTwo(texh);
     }

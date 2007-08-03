@@ -101,14 +101,14 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     {
     if( !Extensions::glxAvailable())
         {
-        kDebug( 1212 ) << "No glx extensions available" << endl;
+        kDebug( 1212 ) << "No glx extensions available";
         return; // error
         }
     initGLX();
     // check for FBConfig support
     if( !hasGLXVersion( 1, 3 ) && !hasGLExtension( "GLX_SGIX_fbconfig" ))
         {
-        kDebug( 1212 ) << "GLX1.3 or GLX_SGIX_fbconfig missing" << endl;
+        kDebug( 1212 ) << "GLX1.3 or GLX_SGIX_fbconfig missing";
         return; // error
         }
     if( !selectMode())
@@ -128,14 +128,14 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     int vis_buffer, vis_drawable;
     glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
     XVisualInfo* visinfo_buffer = glXGetVisualFromFBConfig( display(), fbcbuffer );
-    kDebug( 1212 ) << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number( vis_buffer, 16 ) << endl;
+    kDebug( 1212 ) << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number( vis_buffer, 16 );
     XFree( visinfo_buffer );
     for( int i = 0; i <= 32; i++ )
         {
         if( fbcdrawableinfo[ i ].fbconfig == NULL )
             continue;
         glXGetFBConfigAttrib( display(), fbcdrawableinfo[ i ].fbconfig, GLX_VISUAL_ID, &vis_drawable );
-        kDebug( 1212 ) << "Drawable visual (depth " << i << "): 0x" << QString::number( vis_drawable, 16 ) << endl;
+        kDebug( 1212 ) << "Drawable visual (depth " << i << "): 0x" << QString::number( vis_drawable, 16 );
         }
 
     // OpenGL scene setup
@@ -288,7 +288,7 @@ bool SceneOpenGL::initRenderingContext()
         { // failed
         if( !direct_rendering )
             {
-            kDebug( 1212 ) << "Couldn't initialize rendering context" << endl;
+            kDebug( 1212 ) << "Couldn't initialize rendering context";
             return false;
             }
         glXDestroyContext( display(), ctxbuffer );
@@ -296,7 +296,7 @@ bool SceneOpenGL::initRenderingContext()
         ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
         if( ctxbuffer == NULL || !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ))
             {
-            kDebug( 1212 ) << "Couldn't initialize rendering context" << endl;
+            kDebug( 1212 ) << "Couldn't initialize rendering context";
             return false;
             }
         }
@@ -344,7 +344,7 @@ bool SceneOpenGL::initBuffer()
         }
     else
         {
-        kDebug( 1212 ) << "Couldn't create output buffer (failed to create overlay window?) !" << endl;
+        kDebug( 1212 ) << "Couldn't create output buffer (failed to create overlay window?) !";
         return false; // error
         }
     return true;
@@ -426,7 +426,7 @@ bool SceneOpenGL::initBufferConfigs()
         XFree( fbconfigs );
     if( fbcbuffer_db == NULL && fbcbuffer_nondb == NULL )
         {
-        kDebug( 1212 ) << "Couldn't find framebuffer configuration for buffer!" << endl;
+        kDebug( 1212 ) << "Couldn't find framebuffer configuration for buffer!";
         return false;
         }
     return true;
@@ -539,7 +539,7 @@ bool SceneOpenGL::initDrawableConfigs()
         XFree( fbconfigs );
     if( fbcdrawableinfo[ DefaultDepth( display(), DefaultScreen( display())) ].fbconfig == NULL )
         {
-        kDebug( 1212 ) << "Couldn't find framebuffer configuration for default depth!" << endl;
+        kDebug( 1212 ) << "Couldn't find framebuffer configuration for default depth!";
         return false;
         }
     return true;
@@ -1052,7 +1052,7 @@ bool SceneOpenGL::Window::bindTexture()
     if( success )
         toplevel->resetDamage( toplevel->rect());
     else
-        kDebug( 1212 ) << "Failed to bind window" << endl;
+        kDebug( 1212 ) << "Failed to bind window";
     return success;
     }
 

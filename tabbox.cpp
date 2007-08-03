@@ -623,7 +623,7 @@ void TabBox::hide()
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxClosed();
     if( isDisplayed())
-        kDebug( 1212 ) << "Tab box was not properly closed by an effect" << endl;
+        kDebug( 1212 ) << "Tab box was not properly closed by an effect";
     QWidget::hide();
     QApplication::syncX();
     XEvent otherEvent;
@@ -748,7 +748,7 @@ bool areKeySymXsDepressed( bool bAll, const uint keySyms[], int nKeySyms )
     {
     char keymap[32];
 
-    kDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms << endl;
+    kDebug(125) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms;
 
     XQueryKeymap( display(), keymap );
 

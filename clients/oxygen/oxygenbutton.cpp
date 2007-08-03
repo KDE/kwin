@@ -117,7 +117,7 @@ void OxygenButton::leaveEvent(QEvent *e)
 
 void OxygenButton::pressSlot()
 {
-    kDebug() << "Pressed " << endl;
+    kDebug() << "Pressed ";
     status_ = Oxygen::Pressed;
     update();
 }

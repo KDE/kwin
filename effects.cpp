@@ -632,20 +632,20 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
     assert( current_transform == 0 );
 
     if( !name.startsWith("kwin4_effect_") )
-        kWarning( 1212 ) << k_funcinfo << "Effect names usually have kwin4_effect_ prefix" << endl;
+        kWarning( 1212 ) << k_funcinfo << "Effect names usually have kwin4_effect_ prefix" ;
 
     // Make sure a single effect won't be loaded multiple times
     for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
         {
         if( (*it).first == name )
             {
-            kDebug( 1212 ) << "EffectsHandler::loadEffect : Effect already loaded : " << name << endl;
+            kDebug( 1212 ) << "EffectsHandler::loadEffect : Effect already loaded : " << name;
             return true;
             }
         }
 
 
-    kDebug( 1212 ) << k_funcinfo << "Trying to load " << name << endl;
+    kDebug( 1212 ) << k_funcinfo << "Trying to load " << name;
     QString internalname = name.toLower();
 
     QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
@@ -673,7 +673,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
         t_supportedfunc supported = reinterpret_cast<t_supportedfunc>(supported_func);
         if(!supported())
             {
-            kWarning( 1212 ) << "EffectsHandler::loadEffect : Effect " << name << " is not supported" << endl;
+            kWarning( 1212 ) << "EffectsHandler::loadEffect : Effect " << name << " is not supported" ;
             library->unload();
             return false;
             }
@@ -722,7 +722,7 @@ void EffectsHandlerImpl::unloadEffect( const QString& name )
         {
         if ( it.value().first == name )
             {
-            kDebug( 1212 ) << "EffectsHandler::unloadEffect : Unloading Effect : " << name << endl;
+            kDebug( 1212 ) << "EffectsHandler::unloadEffect : Unloading Effect : " << name;
             delete it.value().second;
             effect_order.erase(it);
             effectsChanged();
@@ -731,7 +731,7 @@ void EffectsHandlerImpl::unloadEffect( const QString& name )
             }
         }
 
-    kDebug( 1212 ) << "EffectsHandler::unloadEffect : Effect not loaded : " << name << endl;
+    kDebug( 1212 ) << "EffectsHandler::unloadEffect : Effect not loaded : " << name;
     }
 
 void EffectsHandlerImpl::reloadEffect( const QString& name )
@@ -755,10 +755,10 @@ bool EffectsHandlerImpl::isEffectLoaded( const QString& name )
 void EffectsHandlerImpl::effectsChanged()
     {
     loaded_effects.clear();
-    kDebug() << k_funcinfo << "Recreating effects' list:" << endl;
+    kDebug() << k_funcinfo << "Recreating effects' list:";
     foreach( EffectPair effect, effect_order )
         {
-        kDebug() << k_funcinfo << effect.first << endl;
+        kDebug() << k_funcinfo << effect.first;
         loaded_effects.append( effect );
         }
     }

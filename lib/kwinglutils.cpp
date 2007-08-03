@@ -93,7 +93,7 @@ void checkGLError( const char* txt )
     {
     GLenum err = glGetError();
     if( err != GL_NO_ERROR )
-        kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) << endl;
+        kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) ;
     }
 
 int nearestPowerOfTwo( int x )
@@ -699,7 +699,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
     if(( !vertexsource.isEmpty() && !vertexShaderSupported() ) ||
           ( !fragmentsource.isEmpty() && !fragmentShaderSupported() ))
         {
-        kDebug(1212) << k_funcinfo << "Shaders not supported" << endl;
+        kDebug(1212) << k_funcinfo << "Shaders not supported";
         return false;
         }
 
@@ -735,7 +735,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
             return false;
             }
         else if(logsize > 0)
-            kDebug(1212) << "Vertex shader compilation log:" << endl << log << endl;
+            kDebug(1212) << "Vertex shader compilation log:"<< log;
         // Attach the shader to the program
         glAttachShader(mProgram, vertexshader);
         // Delete shader
@@ -768,7 +768,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
             return false;
             }
         else if(logsize > 0)
-            kDebug(1212) << "Fragment shader compilation log:" << endl << log << endl;
+            kDebug(1212) << "Fragment shader compilation log:"<< log;
         // Attach the shader to the program
         glAttachShader(mProgram, fragmentshader);
         // Delete shader
@@ -793,7 +793,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
         return false;
         }
     else if(logsize > 0)
-        kDebug(1212) << "Shader linking log:" << endl << log << endl;
+        kDebug(1212) << "Shader linking log:"<< log;
     delete[] log;
 
     mVariableLocations = new QHash<QString, int>;
