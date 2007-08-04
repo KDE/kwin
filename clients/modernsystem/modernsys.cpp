@@ -1,3 +1,22 @@
+/*
+  Copyright (C) 1999 Daniel M. Duley <mosfet@kde.org>
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; see the file COPYING.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+ */
+
 // Daniel M. DULEY <mosfet@kde.org>               original work
 // Melchior FRANZ  <a8603365@unet.univie.ac.at>   configuration options
 
@@ -11,7 +30,6 @@
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
 #include <QPixmap>
-#include <kdrawutil.h>
 #include <QBitmap>
 
 #include <QApplication>
@@ -214,6 +232,44 @@ static void delete_pixmaps()
     delete buttonFg;
 
     pixmaps_created = false;
+}
+
+static void draw_button(QPainter &p, int x, int y, int w, int h, const QPalette &pal)
+{
+    if (w > 16 && h > 16){
+        int x2 = x+w, y2 = y+h;
+        QPen oldPen = p.pen();
+        QPolygon hPntArray, lPntArray;
+        hPntArray.putPoints(0, 12, x+4,y+1, x+5,y+1, // top left
+                            x+3,y+2, x+2,y+3, x+1,y+4, x+1,y+5,
+                            x+1,y2-5, x+1,y2-4, x+2,y2-3, // half corners
+                            x2-5,y+1, x2-4,y+1, x2-3,y+2);
+
+        lPntArray.putPoints(0, 17, x2-5,y2-1, x2-4,y2-1, // btm right
+                            x2-3,y2-2, x2-2,y2-3, x2-1,y2-5, x2-1,y2-4,
+
+                            x+3,y2-2, x+4,y2-1, x+5,y2-1, //half corners
+                            x2-2,y+3, x2-1,y+4, x2-1,y+5,
+
+                            x2-5,y2-2, x2-4,y2-2, // testing
+                            x2-3,y2-3,
+                            x2-2,y2-5, x2-2,y2-4);
+
+        p.setPen(pal.color(QPalette::Light));
+        p.drawLine(x+6, y, x2-6, y);
+        p.drawLine(0, y+6, 0, y2-6);
+        p.drawPoints(hPntArray);
+
+        p.setPen(pal.color(QPalette::Dark));
+        p.drawLine(x+6, y2, x2-6, y2);
+        p.drawLine(x+6, y2-1, x2-6, y2-1);
+        p.drawLine(x2, y+6, x2, y2-6);
+        p.drawLine(x2-1, y+6, x2-1, y2-6);
+        p.drawPoints(lPntArray);
+        p.setPen(oldPen);
+    }
+    else
+        qDrawWinPanel(&p, x, y, w, h, pal, false);
 }
 
 void ModernSysFactory::read_config()
@@ -567,8 +623,7 @@ void ModernSys::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
 {
     QPalette pt = options()->palette(ColorFrame, isActive());
     pt.setCurrentColorGroup( QPalette::Active );
-    kDrawRoundButton(&p, x, y, w, h,
-                     pt, false);
+    draw_button(p, x, y, w, h, pt);
 
 }
 
