@@ -53,7 +53,8 @@ void MagnifierEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             zoom = qMax( zoom * qMin( 1 - diff, 0.8 ), target_zoom );
         }
     effects->prePaintScreen( data, time );
-    data.paint |= magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH );
+    if( zoom != 1.0 )
+        data.paint |= magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH );
     }
 
 void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
