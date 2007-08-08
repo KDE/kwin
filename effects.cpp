@@ -877,16 +877,6 @@ void EffectWindowImpl::unrefWindow()
     abort(); // TODO
     }
 
-const Toplevel* EffectWindowImpl::window() const
-    {
-    return toplevel;
-    }
-
-Toplevel* EffectWindowImpl::window()
-    {
-    return toplevel;
-    }
-
 void EffectWindowImpl::setWindow( Toplevel* w )
     {
     toplevel = w;
@@ -895,11 +885,6 @@ void EffectWindowImpl::setWindow( Toplevel* w )
 void EffectWindowImpl::setSceneWindow( Scene::Window* w )
     {
     sw = w;
-    }
-
-Scene::Window* EffectWindowImpl::sceneWindow()
-    {
-    return sw;
     }
 
 int EffectWindowImpl::x() const
@@ -1095,6 +1080,11 @@ void EffectWindowImpl::setShader(GLShader* shader)
         return w->setShader(shader);
 #endif
     abort(); // TODO
+    }
+
+WindowQuadList EffectWindowImpl::buildQuads() const
+    {
+    return sceneWindow()->buildQuads();
     }
 
 EffectWindow* effectWindow( Toplevel* w )

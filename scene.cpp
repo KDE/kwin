@@ -267,8 +267,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
 
 void Scene::paintWindow( Window* w, int mask, QRegion region, WindowQuadList quads )
     {
-    WindowPaintData data;
-    data.opacity = w->window()->opacity();
+    WindowPaintData data( w->window()->effectWindow());
     data.quads = quads;
     w->prepareForPainting();
     effects->paintWindow( effectWindow( w ), mask, region, data );

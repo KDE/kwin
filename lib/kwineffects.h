@@ -346,6 +346,9 @@ class KWIN_EXPORT EffectWindow
         virtual EffectWindowList mainWindows() const = 0;
 
         virtual void setShader(GLShader* shader) = 0;
+        
+        // TODO internal?
+        virtual WindowQuadList buildQuads() const = 0;
     };
 
 class KWIN_EXPORT EffectWindowGroup
@@ -450,7 +453,7 @@ class KWIN_EXPORT WindowPrePaintData
 class KWIN_EXPORT WindowPaintData
     {
     public:
-        WindowPaintData();
+        WindowPaintData( EffectWindow* w );
         /**
          * Window opacity, in range 0 = transparent to 1 = fully opaque
          * Opacity for contents is opacity*contents_opacity, the same

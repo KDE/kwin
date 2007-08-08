@@ -38,7 +38,7 @@ void ThumbnailAsideEffect::paintScreen( int mask, QRegion region, ScreenPaintDat
         {
         if( region.contains( d.rect ))
             {
-            WindowPaintData data;
+            WindowPaintData data( d.window );
             data.opacity = opacity;
             QRect region;
             setPositionTransformations( data, region, d.window, d.rect, Qt::KeepAspectRatio );

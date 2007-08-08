@@ -56,7 +56,7 @@ void TaskbarThumbnailEffect::postPaintScreen()
     foreach( EffectWindow* w, mThumbnails )
         {
         QRect thumb = getThumbnailPosition( w, &space);
-        WindowPaintData thumbdata;
+        WindowPaintData thumbdata( w );
         thumbdata.xTranslate = thumb.x() - w->x();
         thumbdata.yTranslate = thumb.y() - w->y();
         thumbdata.xScale = thumb.width() / (float)w->width();

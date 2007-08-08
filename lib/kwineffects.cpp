@@ -35,8 +35,8 @@ void WindowPrePaintData::setTransformed()
     }
 
 
-WindowPaintData::WindowPaintData()
-    : opacity( 1.0 )
+WindowPaintData::WindowPaintData( EffectWindow* w )
+    : opacity( w->opacity())
     , contents_opacity( 1.0 )
     , decoration_opacity( 1.0 )
     , xScale( 1 )
@@ -46,6 +46,7 @@ WindowPaintData::WindowPaintData()
     , saturation( 1 )
     , brightness( 1 )
     {
+    quads = w->buildQuads();
     }
 
 ScreenPaintData::ScreenPaintData()

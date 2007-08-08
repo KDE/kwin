@@ -32,7 +32,7 @@ void TestThumbnailEffect::paintScreen( int mask, QRegion region, ScreenPaintData
     effects->paintScreen( mask, region, data );
     if( active_window != NULL && region.contains( thumbnailRect()))
         {
-        WindowPaintData data;
+        WindowPaintData data( active_window );
         QRect region;
         setPositionTransformations( data, region, active_window, thumbnailRect(), Qt::KeepAspectRatio );
         effects->drawWindow( active_window,

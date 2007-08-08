@@ -191,12 +191,14 @@ class EffectWindowImpl : public EffectWindow
         virtual EffectWindowList mainWindows() const;
 
         virtual void setShader(GLShader* shader);
+        virtual WindowQuadList buildQuads() const;
 
         const Toplevel* window() const;
         Toplevel* window();
 
         void setWindow( Toplevel* w ); // internal
         void setSceneWindow( Scene::Window* w ); // internal
+        const Scene::Window* sceneWindow() const; // internal
         Scene::Window* sceneWindow(); // internal
     private:
         Toplevel* toplevel;
@@ -229,6 +231,30 @@ EffectWindowGroupImpl::EffectWindowGroupImpl( Group* g )
 
 EffectWindow* effectWindow( Toplevel* w );
 EffectWindow* effectWindow( Scene::Window* w );
+
+inline
+const Scene::Window* EffectWindowImpl::sceneWindow() const
+    {
+    return sw;
+    }
+
+inline
+Scene::Window* EffectWindowImpl::sceneWindow()
+    {
+    return sw;
+    }
+
+inline
+const Toplevel* EffectWindowImpl::window() const
+    {
+    return toplevel;
+    }
+
+inline
+Toplevel* EffectWindowImpl::window()
+    {
+    return toplevel;
+    }
 
 
 } // namespace

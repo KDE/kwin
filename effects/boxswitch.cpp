@@ -500,7 +500,7 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
     {
     if( !windows.contains( w ))
         return;
-    WindowPaintData data;
+    WindowPaintData data( w );
 
     setPositionTransformations( data,
         windows[ w ]->thumbnail, w,
