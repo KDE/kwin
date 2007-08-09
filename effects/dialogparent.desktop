@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Dialog Parent
+Name[ar]=محرر صناديق حوار
 Name[be]=Бацькоўскае акно
 Name[bg]=Редактор на диалози
 Name[de]=Eltern-Dialog
@@ -17,6 +18,7 @@ Name[sv]=Dialogrutors ägare
 Name[zh_TW]=上層對話框
 Icon=kwin-effect-dialogparent
 Comment=Darkens parent windows of active dialogs
+Comment[ar]=تظهر نافذة ( حوار) مءقت
 Comment[de]=Dunkelt den Eltern-Dialog des aktiven Fensters ab
 Comment[el]=Σκίαση γονικών παραθύρων των ενεργών διαλόγων
 Comment[fa]=پنجره‌های پدر محاوره‌های فعال را تیره می‌کند

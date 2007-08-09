@@ -4,6 +4,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Effect
 
 Comment=KWin Effect
+Comment[ar]=زخرفة النافذة
 Comment[be]=Эфекты KWin
 Comment[bg]=Декорация
 Comment[csb]=Efektë òknów

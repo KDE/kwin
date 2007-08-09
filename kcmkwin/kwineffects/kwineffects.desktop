@@ -13,6 +13,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=Window Effects
+Name[ar]=زخرفة النافذة
 Name[be]=Эфекты вокнаў
 Name[bg]=Декорация
 Name[csb]=Efektë òknów
