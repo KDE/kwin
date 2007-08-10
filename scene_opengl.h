@@ -118,24 +118,21 @@ class SceneOpenGL::Window
         Window( Toplevel* c );
         virtual ~Window();
         virtual void performPaint( int mask, QRegion region, WindowPaintData data );
-        virtual void prepareForPainting();
         virtual void pixmapDiscarded();
         bool bindTexture();
         void discardTexture();
-        void setShader( GLShader* s )  { shader = s; }
 
     protected:
         void renderQuads( int mask, const QRegion& region, const WindowQuadList& quads );
-        void prepareStates( double opacity, double brightness, double saturation );
+        void prepareStates( double opacity, double brightness, double saturation, GLShader* shader );
         void prepareRenderStates( double opacity, double brightness, double saturation );
-        void prepareShaderRenderStates( double opacity, double brightness, double saturation );
-        void restoreStates( double opacity, double brightness, double saturation );
+        void prepareShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader );
+        void restoreStates( double opacity, double brightness, double saturation, GLShader* shader );
         void restoreRenderStates( double opacity, double brightness, double saturation );
-        void restoreShaderRenderStates( double opacity, double brightness, double saturation );
+        void restoreShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader );
 
     private:
         Texture texture;
-        GLShader* shader;  // shader to be used for rendering, if any
     };
 
 } // namespace

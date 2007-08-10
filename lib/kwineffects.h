@@ -345,8 +345,6 @@ class KWIN_EXPORT EffectWindow
         virtual EffectWindow* findModal() = 0;
         virtual EffectWindowList mainWindows() const = 0;
 
-        virtual void setShader(GLShader* shader) = 0;
-        
         // TODO internal?
         virtual WindowQuadList buildQuads() const = 0;
     };
@@ -480,6 +478,10 @@ class KWIN_EXPORT WindowPaintData
          **/
         float brightness;
         WindowQuadList quads;
+        /**
+         * Shader to be used for rendering, if any.
+         */
+        GLShader* shader;
     };
 
 class KWIN_EXPORT ScreenPaintData

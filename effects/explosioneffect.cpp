@@ -159,7 +159,7 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         glActiveTexture(GL_TEXTURE5);
         mEndOffsetTex->bind();
         glActiveTexture(GL_TEXTURE0);
-        w->setShader(mShader);
+        data.shader = mShader;
         }
 
     // Call the next effect.

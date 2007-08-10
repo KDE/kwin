@@ -269,7 +269,6 @@ void Scene::paintWindow( Window* w, int mask, QRegion region, WindowQuadList qua
     {
     WindowPaintData data( w->window()->effectWindow());
     data.quads = quads;
-    w->prepareForPainting();
     effects->paintWindow( effectWindow( w ), mask, region, data );
     }
 

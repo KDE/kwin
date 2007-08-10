@@ -1027,13 +1027,6 @@ SceneOpenGL::Window::~Window()
     discardTexture();
     }
 
-void SceneOpenGL::Window::prepareForPainting()
-    {
-    shader = NULL; // TODO
-    // We should also bind texture here so that effects could access it in the
-    //  paint pass
-    }
-
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
     {
@@ -1141,19 +1134,19 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     WindowQuadList decoration = data.quads.select( WindowQuadDecoration );    
     if( data.contents_opacity != data.decoration_opacity && !decoration.isEmpty())
         {
-        prepareStates( data.opacity * data.contents_opacity, data.brightness, data.saturation );
+        prepareStates( data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
         renderQuads( mask, region, data.quads.select( WindowQuadContents ));
-        restoreStates( data.opacity * data.contents_opacity, data.brightness, data.saturation );
-        prepareStates( data.opacity * data.decoration_opacity, data.brightness, data.saturation );
+        restoreStates( data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+        prepareStates( data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
         renderQuads( mask, region, decoration );
-        restoreStates( data.opacity * data.decoration_opacity, data.brightness, data.saturation );
+        restoreStates( data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
         }
     else
         {
-        prepareStates( data.opacity * data.contents_opacity, data.brightness, data.saturation );
+        prepareStates( data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
         renderQuads( mask, region, data.quads.select( WindowQuadContents ));
         renderQuads( mask, region, data.quads.select( WindowQuadDecoration ));
-        restoreStates( data.opacity * data.contents_opacity, data.brightness, data.saturation );
+        restoreStates( data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
         }
 
     texture.disableUnnormalizedTexCoords();
@@ -1175,15 +1168,15 @@ void SceneOpenGL::Window::renderQuads( int mask, const QRegion& region, const Wi
     delete[] texcoords;
     }
 
-void SceneOpenGL::Window::prepareStates( double opacity, double brightness, double saturation )
+void SceneOpenGL::Window::prepareStates( double opacity, double brightness, double saturation, GLShader* shader )
     {
     if(shader)
-        prepareShaderRenderStates( opacity, brightness, saturation );
+        prepareShaderRenderStates( opacity, brightness, saturation, shader );
     else
         prepareRenderStates( opacity, brightness, saturation );
     }
 
-void SceneOpenGL::Window::prepareShaderRenderStates( double opacity, double brightness, double saturation )
+void SceneOpenGL::Window::prepareShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader )
     {
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
@@ -1323,19 +1316,20 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         }
     }
 
-void SceneOpenGL::Window::restoreStates( double opacity, double brightness, double saturation )
+void SceneOpenGL::Window::restoreStates( double opacity, double brightness, double saturation, GLShader* shader )
     {
     if(shader)
-        restoreShaderRenderStates( opacity, brightness, saturation );
+        restoreShaderRenderStates( opacity, brightness, saturation, shader );
     else
         restoreRenderStates( opacity, brightness, saturation );
     }
 
-void SceneOpenGL::Window::restoreShaderRenderStates( double opacity, double brightness, double saturation )
+void SceneOpenGL::Window::restoreShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader )
     {
     Q_UNUSED( opacity );
     Q_UNUSED( brightness );
     Q_UNUSED( saturation );
+    Q_UNUSED( shader );
     glPopAttrib();  // ENABLE_BIT
     }
 

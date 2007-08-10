@@ -1073,15 +1073,6 @@ EffectWindowList EffectWindowImpl::mainWindows() const
     return EffectWindowList();
     }
 
-void EffectWindowImpl::setShader(GLShader* shader)
-    {
-#ifdef HAVE_OPENGL
-    if( SceneOpenGL::Window* w = dynamic_cast< SceneOpenGL::Window* >( sceneWindow()))
-        return w->setShader(shader);
-#endif
-    abort(); // TODO
-    }
-
 WindowQuadList EffectWindowImpl::buildQuads() const
     {
     return sceneWindow()->buildQuads();

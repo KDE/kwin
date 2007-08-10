@@ -190,7 +190,6 @@ class EffectWindowImpl : public EffectWindow
         virtual EffectWindow* findModal();
         virtual EffectWindowList mainWindows() const;
 
-        virtual void setShader(GLShader* shader);
         virtual WindowQuadList buildQuads() const;
 
         const Toplevel* window() const;

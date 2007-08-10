@@ -45,6 +45,7 @@ WindowPaintData::WindowPaintData( EffectWindow* w )
     , yTranslate( 0 )
     , saturation( 1 )
     , brightness( 1 )
+    , shader( NULL )
     {
     quads = w->buildQuads();
     }

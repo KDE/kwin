@@ -175,7 +175,7 @@ void BlurEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 
             // Set custom shader to render the window with
             mWindowShader->bind();
-            w->setShader(mWindowShader);
+            data.shader = mWindowShader;
             // Put the blur texture to tex unit 4
             glActiveTexture(GL_TEXTURE4);
             mBlurTexture->bind();
