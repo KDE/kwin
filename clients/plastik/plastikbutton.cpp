@@ -278,10 +278,10 @@ void PlastikButton::drawButton(QPainter *painter)
         if(!isDown() && Handler()->titleShadow() ) {
             QColor shadowColor;
             if (qGray(Handler()->getColor(TitleFont,active).rgb()) < 100)
-                shadowColor = QColor(255, 255, 255);
+                shadowColor = QColor(255, 255, 255, 75);
             else
-                shadowColor = QColor(0,0,0);
-            bP.setPen(alphaBlendColors(sourfaceTop, shadowColor, 180) );
+                shadowColor = QColor(0,0,0,75);
+            bP.setPen(shadowColor);
             bP.drawPixmap(dX+1, dY+1, icon);
         }
 
