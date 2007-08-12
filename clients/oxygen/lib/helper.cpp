@@ -55,7 +55,7 @@ OxygenHelper::OxygenHelper(const QByteArray &componentName)
 {
     _config = _componentData.config();
     _contrast = KGlobalSettings::contrastF(_config);
-    _bgcontrast = _contrast; // TODO get style setting
+    _bgcontrast = 0.1;// // shouldn't use contrast for this _contrast; // TODO get style setting
 
     m_backgroundCache.setMaxCost(64);
     m_roundCache.setMaxCost(64);
@@ -93,7 +93,7 @@ QColor OxygenHelper::backgroundBottomColor(const QColor &color) const
     if (lowThreshold(color))
         return KColorScheme::shade(color, KColorScheme::MidShade, 0.0);
     else
-        return KColorScheme::shade(color, KColorScheme::MidShade, _bgcontrast - 1.1);
+        return color;
 }
 
 QColor OxygenHelper::calcLightColor(const QColor &color)
