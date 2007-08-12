@@ -6,7 +6,7 @@ Type=Service
 ServiceTypes=KCModule
 DocPath=kcontrol/windowmanagement/index.html
 
-X-KDE-Library=kwinrules
+X-KDE-Library=kcm_kwinrules
 X-KDE-FactoryName=kwinrules
 X-KDE-ParentApp=kcontrol
 

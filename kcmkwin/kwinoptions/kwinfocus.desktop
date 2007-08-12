@@ -6,7 +6,7 @@ ServiceTypes=KCModule
 Exec=kcmshell kwinfocus
 DocPath=kcontrol/windowmanagement/index.html#action-focus
 
-X-KDE-Library=kwinoptions
+X-KDE-Library=kcm_kwinoptions
 X-KDE-FactoryName=kwinfocus
 
 Name=Focus
