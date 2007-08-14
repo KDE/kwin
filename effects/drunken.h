@@ -27,7 +27,7 @@ class DrunkenEffect
         virtual void windowAdded( EffectWindow* w );
         virtual void windowClosed( EffectWindow* w );
     private:
-        QHash< EffectWindow*, double > windows; // progress
+        QHash< EffectWindow*, float > windows; // progress
     };
 
 } // namespace

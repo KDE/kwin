@@ -124,12 +124,12 @@ class SceneOpenGL::Window
 
     protected:
         void renderQuads( int mask, const QRegion& region, const WindowQuadList& quads );
-        void prepareStates( double opacity, double brightness, double saturation, GLShader* shader );
-        void prepareRenderStates( double opacity, double brightness, double saturation );
-        void prepareShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader );
-        void restoreStates( double opacity, double brightness, double saturation, GLShader* shader );
-        void restoreRenderStates( double opacity, double brightness, double saturation );
-        void restoreShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader );
+        void prepareStates( float opacity, float brightness, float saturation, GLShader* shader );
+        void prepareRenderStates( float opacity, float brightness, float saturation );
+        void prepareShaderRenderStates( float opacity, float brightness, float saturation, GLShader* shader );
+        void restoreStates( float opacity, float brightness, float saturation, GLShader* shader );
+        void restoreRenderStates( float opacity, float brightness, float saturation );
+        void restoreShaderRenderStates( float opacity, float brightness, float saturation, GLShader* shader );
 
     private:
         Texture texture;

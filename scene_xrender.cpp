@@ -394,7 +394,7 @@ void SceneXrender::Window::discardAlpha()
     }
 
 // Create XRender picture for the alpha mask.
-Picture SceneXrender::Window::alphaMask( double opacity )
+Picture SceneXrender::Window::alphaMask( float opacity )
     {
     if( isOpaque() && opacity == 1.0 )
         return None;
@@ -469,8 +469,8 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     int y = toplevel->y();
     int width = toplevel->width();
     int height = toplevel->height();
-    double xscale = 1;
-    double yscale = 1;
+    float xscale = 1;
+    float yscale = 1;
     transformed_shape = shape();
     if( mask & PAINT_WINDOW_TRANSFORMED )
         {

@@ -443,12 +443,12 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
     if ( parentRatio > 1 )
     {
         columns = (int)ceil( sqrt(windowlist.count()) );
-        rows = (int)ceil( (double)windowlist.count() / (double)columns );
+        rows = (int)ceil( (float)windowlist.count() / (float)columns );
     }
     else
     {
         rows = (int)ceil( sqrt(windowlist.count()) );
-        columns = (int)ceil( (double)windowlist.count() / (double)rows );
+        columns = (int)ceil( (float)windowlist.count() / (float)rows );
     }
     kDebug() << k_funcinfo << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
@@ -505,8 +505,8 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
                 }
             else
                 {
-                double widthForHeight = windowWidthForHeight(window, usableH);
-                double heightForWidth = windowHeightForWidth(window, usableW);
+                float widthForHeight = windowWidthForHeight(window, usableH);
+                float heightForWidth = windowHeightForWidth(window, usableW);
                 if ( (ratio >= 1.0 && heightForWidth <= usableH) ||
                       (ratio < 1.0 && widthForHeight > usableW)   )
                     {
@@ -572,7 +572,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
     {
     QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
     int columns = int( ceil( sqrt( windowlist.count())));
-    int rows = int( ceil( windowlist.count() / double( columns )));
+    int rows = int( ceil( windowlist.count() / float( columns )));
     foreach( EffectWindow* w, windowlist )
         mWindowData[ w ].slot = -1;
     for(;;)
@@ -693,9 +693,9 @@ bool PresentWindowsEffect::canRearrangeClosest(EffectWindowList windowlist)
     {
     QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
     int columns = int( ceil( sqrt( windowlist.count())));
-    int rows = int( ceil( windowlist.count() / double( columns )));
+    int rows = int( ceil( windowlist.count() / float( columns )));
     int old_columns = int( ceil( sqrt( mWindowData.count())));
-    int old_rows = int( ceil( mWindowData.count() / double( columns )));
+    int old_rows = int( ceil( mWindowData.count() / float( columns )));
     return old_columns != columns || old_rows != rows;
     }
 

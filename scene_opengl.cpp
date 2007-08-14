@@ -1168,7 +1168,7 @@ void SceneOpenGL::Window::renderQuads( int mask, const QRegion& region, const Wi
     delete[] texcoords;
     }
 
-void SceneOpenGL::Window::prepareStates( double opacity, double brightness, double saturation, GLShader* shader )
+void SceneOpenGL::Window::prepareStates( float opacity, float brightness, float saturation, GLShader* shader )
     {
     if(shader)
         prepareShaderRenderStates( opacity, brightness, saturation, shader );
@@ -1176,7 +1176,7 @@ void SceneOpenGL::Window::prepareStates( double opacity, double brightness, doub
         prepareRenderStates( opacity, brightness, saturation );
     }
 
-void SceneOpenGL::Window::prepareShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader )
+void SceneOpenGL::Window::prepareShaderRenderStates( float opacity, float brightness, float saturation, GLShader* shader )
     {
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
@@ -1191,7 +1191,7 @@ void SceneOpenGL::Window::prepareShaderRenderStates( double opacity, double brig
     shader->setUniform("brightness", (float)brightness);
     }
 
-void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness, double saturation )
+void SceneOpenGL::Window::prepareRenderStates( float opacity, float brightness, float saturation )
     {
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
@@ -1316,7 +1316,7 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         }
     }
 
-void SceneOpenGL::Window::restoreStates( double opacity, double brightness, double saturation, GLShader* shader )
+void SceneOpenGL::Window::restoreStates( float opacity, float brightness, float saturation, GLShader* shader )
     {
     if(shader)
         restoreShaderRenderStates( opacity, brightness, saturation, shader );
@@ -1324,7 +1324,7 @@ void SceneOpenGL::Window::restoreStates( double opacity, double brightness, doub
         restoreRenderStates( opacity, brightness, saturation );
     }
 
-void SceneOpenGL::Window::restoreShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader )
+void SceneOpenGL::Window::restoreShaderRenderStates( float opacity, float brightness, float saturation, GLShader* shader )
     {
     Q_UNUSED( opacity );
     Q_UNUSED( brightness );
@@ -1333,7 +1333,7 @@ void SceneOpenGL::Window::restoreShaderRenderStates( double opacity, double brig
     glPopAttrib();  // ENABLE_BIT
     }
 
-void SceneOpenGL::Window::restoreRenderStates( double opacity, double brightness, double saturation )
+void SceneOpenGL::Window::restoreRenderStates( float opacity, float brightness, float saturation )
     {
     if( opacity != 1.0 || saturation != 1.0 || brightness != 1.0f )
         {

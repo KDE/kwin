@@ -36,7 +36,7 @@ class ShowFpsEffect
         enum { MAX_FPS = 200 };
         int frames[ MAX_FPS ]; // (sec*1000+msec) of the time the frame was done
         int frames_pos; // position in the queue
-        double alpha;
+        float alpha;
         int x;
         int y;
     };

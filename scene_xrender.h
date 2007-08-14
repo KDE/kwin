@@ -67,11 +67,11 @@ class SceneXrender::Window
         void setTransformedShape( const QRegion& shape );
     private:
         Picture picture();
-        Picture alphaMask( double opacity );
+        Picture alphaMask( float opacity );
         Picture _picture;
         XRenderPictFormat* format;
         Picture alpha;
-        double alpha_cached_opacity;
+        float alpha_cached_opacity;
         QRegion transformed_shape;
     };
 

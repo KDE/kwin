@@ -46,7 +46,7 @@ void DesktopGridEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( slide )
         {
-        progress = qMin( 1.0, progress + time / double( PROGRESS_TIME ));
+        progress = qMin( 1.0f, progress + time / float( PROGRESS_TIME ));
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
         if( progress != 1 )
@@ -60,9 +60,9 @@ void DesktopGridEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     else if( progress != 0 || activated )
         {
         if( activated )
-            progress = qMin( 1.0, progress + time / double( PROGRESS_TIME ));
+            progress = qMin( 1.0f, progress + time / float( PROGRESS_TIME ));
         else
-            progress = qMax( 0.0, progress - time / double( PROGRESS_TIME ));
+            progress = qMax( 0.0f, progress - time / float( PROGRESS_TIME ));
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
         if( progress != 0 )

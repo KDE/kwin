@@ -96,7 +96,7 @@ class KWIN_EXPORT Effect
 
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
+        virtual void windowOpacityChanged( EffectWindow* c, float old_opacity );
         virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
@@ -294,7 +294,7 @@ class KWIN_EXPORT EffectWindow
         virtual bool isDeleted() const = 0;
 
         virtual bool isMinimized() const = 0;
-        virtual double opacity() const = 0;
+        virtual float opacity() const = 0;
 
         virtual bool isOnDesktop( int d ) const;
         virtual bool isOnCurrentDesktop() const;
@@ -457,11 +457,11 @@ class KWIN_EXPORT WindowPaintData
          * Opacity for contents is opacity*contents_opacity, the same
          * way for decoration.
          */
-        double opacity;
-        double contents_opacity;
-        double decoration_opacity;
-        double xScale;
-        double yScale;
+        float opacity;
+        float contents_opacity;
+        float decoration_opacity;
+        float xScale;
+        float yScale;
         int xTranslate;
         int yTranslate;
         /**
@@ -488,8 +488,8 @@ class KWIN_EXPORT ScreenPaintData
     {
     public:
         ScreenPaintData();
-        double xScale;
-        double yScale;
+        float xScale;
+        float yScale;
         int xTranslate;
         int yTranslate;
     };

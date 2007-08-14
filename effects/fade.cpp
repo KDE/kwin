@@ -29,8 +29,8 @@ void FadeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( !windows.isEmpty())
         {
-        fadeInStep = time / double( fadeInTime );
-        fadeOutStep = time / double( fadeOutTime );
+        fadeInStep = time / float( fadeInTime );
+        fadeOutStep = time / float( fadeOutTime );
         }
     effects->prePaintScreen( data, time );
     }
@@ -114,7 +114,7 @@ void FadeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     windows[ w ].brightness - float( windows[ w ].fadeOutStep ));
                 }
 
-            windows[ w ].opacity = qBound( 0.0, windows[ w ].opacity, 1.0 );
+            windows[ w ].opacity = qBound( 0.0f, windows[ w ].opacity, 1.0f );
             windows[ w ].saturation = qBound( 0.0f, windows[ w ].saturation, 1.0f );
             windows[ w ].brightness = qBound( 0.0f, windows[ w ].brightness, 1.0f );
             windows[ w ].fadeInStep = 0.0;
@@ -136,7 +136,7 @@ void FadeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
     effects->paintWindow( w, mask, region, data );
     }
 
-void FadeEffect::windowOpacityChanged( EffectWindow* w, double old_opacity )
+void FadeEffect::windowOpacityChanged( EffectWindow* w, float old_opacity )
     {
     if( !windows.contains( w ))
         windows[ w ].opacity = old_opacity;

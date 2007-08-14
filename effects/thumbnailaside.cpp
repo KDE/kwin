@@ -127,8 +127,8 @@ void ThumbnailAsideEffect::arrange()
         pos[ d.index ] = d.window->height();
         }
     QRect area = effects->clientArea( WorkArea, QPoint(), effects->currentDesktop());
-    double scale = area.height() / double( height );
-    scale = qMin( scale, maxwidth / double( mwidth )); // don't be wider than maxwidth pixels
+    float scale = area.height() / float( height );
+    scale = qMin( scale, maxwidth / float( mwidth )); // don't be wider than maxwidth pixels
     int add = 0;
     for( int i = 0;
          i < windows.size();

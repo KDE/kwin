@@ -92,7 +92,7 @@ class EffectsHandlerImpl : public EffectsHandler
         // internal (used by kwin core or compositing code)
         void startPaint();
         void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        void windowOpacityChanged( EffectWindow* c, double old_opacity );
+        void windowOpacityChanged( EffectWindow* c, float old_opacity );
         void windowAdded( EffectWindow* c );
         void windowClosed( EffectWindow* c );
         void windowDeleted( EffectWindow* c );
@@ -149,7 +149,7 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isOnAllDesktops() const;
         virtual int desktop() const; // prefer isOnXXX()
         virtual bool isMinimized() const;
-        virtual double opacity() const;
+        virtual float opacity() const;
         virtual QString caption() const;
         virtual QPixmap icon() const;
         virtual QString windowClass() const;

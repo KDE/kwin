@@ -294,17 +294,17 @@ void Toplevel::getResourceClass()
         }
     }
 
-double Toplevel::opacity() const
+float Toplevel::opacity() const
     {
     if( info->opacity() == 0xffffffff )
         return 1.0;
     return info->opacity() * 1.0 / 0xffffffff;
     }
 
-void Toplevel::setOpacity( double new_opacity )
+void Toplevel::setOpacity( float new_opacity )
     {
-    double old_opacity = opacity();
-    new_opacity = qBound( 0.0, new_opacity, 1.0 );
+    float old_opacity = opacity();
+    new_opacity = qBound( 0.0f, new_opacity, 1.0f );
     if( old_opacity == new_opacity )
         return;
     info->setOpacity( static_cast< unsigned long >( new_opacity * 0xffffffff ));

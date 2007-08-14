@@ -57,17 +57,17 @@ void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
             // make fragments move in various directions, based on where
             // they are (left pieces generally move to the left, etc.)
             QPointF p1( quad[ 0 ].x(), quad[ 0 ].y());
-            double xdiff = 0;
+            float xdiff = 0;
             if( p1.x() < w->width() / 2 )
                 xdiff = -( w->width() / 2 - p1.x()) / w->width() * 100;
             if( p1.x() > w->width() / 2 )
                 xdiff = ( p1.x() - w->width() / 2 ) / w->width() * 100;
-            double ydiff = 0;
+            float ydiff = 0;
             if( p1.y() < w->height() / 2 )
                 ydiff = -( w->height() / 2 - p1.y()) / w->height() * 100;
             if( p1.y() > w->height() / 2 )
                 ydiff = ( p1.y() - w->height() / 2 ) / w->height() * 100;
-            double modif = windows[ w ] * windows[ w ] * 64;
+            float modif = windows[ w ] * windows[ w ] * 64;
             srandom( cnt ); // change direction randomly but consistently
             xdiff += ( rand() % 21 - 10 );
             ydiff += ( rand() % 21 - 10 );
@@ -80,16 +80,16 @@ void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
             // also make the fragments rotate around their center
             QPointF center(( quad[ 0 ].x() + quad[ 1 ].x() + quad[ 2 ].x() + quad[ 3 ].x()) / 4,
                 ( quad[ 0 ].y() + quad[ 1 ].y() + quad[ 2 ].y() + quad[ 3 ].y()) / 4 );
-            double adiff = ( rand() % 720 - 360 ) / 360. * 2 * M_PI; // spin randomly
+            float adiff = ( rand() % 720 - 360 ) / 360. * 2 * M_PI; // spin randomly
             for( int j = 0;
                  j < 4;
                  ++j )
                 {
-                double x = quad[ j ].x() - center.x();
-                double y = quad[ j ].y() - center.y();
-                double angle = atan2( y, x );
+                float x = quad[ j ].x() - center.x();
+                float y = quad[ j ].y() - center.y();
+                float angle = atan2( y, x );
                 angle += windows[ w ] * adiff;
-                double dist = sqrt( x * x + y * y );
+                float dist = sqrt( x * x + y * y );
                 x = dist * cos( angle );
                 y = dist * sin( angle );
                 quad[ j ].move( center.x() + x, center.y() + y );

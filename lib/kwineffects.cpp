@@ -74,7 +74,7 @@ void Effect::windowUserMovedResized( EffectWindow* , bool, bool )
     {
     }
 
-void Effect::windowOpacityChanged( EffectWindow*, double )
+void Effect::windowOpacityChanged( EffectWindow*, float )
     {
     }
 
@@ -187,8 +187,8 @@ void Effect::setPositionTransformations( WindowPaintData& data, QRect& region, E
     {
     QSize size = w->size();
     size.scale( r.size(), aspect );
-    data.xScale = size.width() / double( w->width());
-    data.yScale = size.height() / double( w->height());
+    data.xScale = size.width() / float( w->width());
+    data.yScale = size.height() / float( w->height());
     int width = int( w->width() * data.xScale );
     int height = int( w->height() * data.yScale );
     int x = r.x() + ( r.width() - width ) / 2;

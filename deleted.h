@@ -35,7 +35,7 @@ class Deleted
         void copyToDeleted( Toplevel* c );
         virtual ~Deleted(); // deleted only using unrefWindow()
         int delete_refcount;
-        double window_opacity;
+        float window_opacity;
         int desk;
         QRect contentsRect; // for clientPos()/clientSize()
     };
