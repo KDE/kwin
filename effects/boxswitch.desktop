@@ -1,9 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Box Switch
+Name[bg]=Превключване между прозорци
 Name[de]=Würfel-Fensterwechsel
 Name[el]=Εναλλαγή πλαισίου
 Name[fa]=سودهی جعبه
+Name[he]=מחליף מבוסס תיבה
 Name[ja]=ボックススイッチ
 Name[km]=ប្ដូរ​ប្រអប់​
 Name[pa]=ਬਾਕਸ ਸਵਿੱਚ
@@ -13,9 +15,11 @@ Name[sv]=Byte med ruta
 Name[zh_TW]=盒切換
 Icon=kwin-effect-boxswitch
 Comment=Improved Alt-tab window switcher
+Comment[bg]=Подобрено превключване между прозорците с Alt-табулация
 Comment[de]=Verbesserter Fensterwechsel mittels Alt-Tabulator
 Comment[el]=Βελτιωμένη εναλλαγή παραθύρου Alt-tab
 Comment[fa]=سوده پنجره دگرساز-تب بهبودیافته
+Comment[he]=מחליף חלונות משופר מבוסס Alt-tab
 Comment[ja]=Alt+Tab によるウィンドウ切り替えの改良版
 Comment[km]=កម្មវិធី​ប្តូរ​បង្អួច​ ជំនួស​-ថេប ​ដែល​បាន​ធ្វើ​ឲ្យ​ប្រសើរ​ឡើង​
 Comment[nds]=Verbetert Wesseln vun Finster mit Alt+Tabtast

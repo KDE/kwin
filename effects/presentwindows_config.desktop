@@ -9,11 +9,12 @@ X-KDE-ParentComponents=kwin4_effect_presentwindows
 
 Name=Present Windows
 Name[be]=Існуючыя вокны
-Name[bg]=Фиксирани действия
+Name[bg]=Представяне на прозорци
 Name[csb]=Prezentëjë òkna
 Name[de]=Fenster zeigen
 Name[el]=Παρουσίαση παραθύρων
 Name[fa]=پنجره‌های موجود
+Name[he]=הצג חלונות
 Name[ja]=すべてのウィンドウを表示
 Name[km]=បង្ហាញ​បង្អួច​
 Name[nds]=Finstern wiesen
