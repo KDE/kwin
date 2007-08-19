@@ -19,6 +19,7 @@ Name[pt_BR]=Lupa
 Name[sl]=Povečevalni
 Name[sv]=Förstoringsglas
 Name[uk]=Лупа
+Name[vi]=Kính lúp
 Name[zh_TW]=放大鏡
 Icon=kwin-effect-magnifier
 Comment=Magnifies the part of the screen that is under the mouse
@@ -35,6 +36,7 @@ Comment[nl]=Vergroot het deel van het scherm dat zich onder de muis bevindt
 Comment[pt]=Amplia a parte do ecrã que está sob o rato
 Comment[pt_BR]=Amplia a parte do ecrã que está sob o rato
 Comment[sv]=Förstorar den del av skärmen som är under musen
+Comment[vi]=To ra phần màn hình nằm dưới con chuột
 Comment[zh_TW]=將滑鼠底下的部份視窗放大
 
 Type=Service

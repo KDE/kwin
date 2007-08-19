@@ -17,6 +17,7 @@ Name[pa]=ਡੈਸਕਟਾਪ ਗਰਿੱਡ
 Name[pt]=Grelha de Ecrãs
 Name[pt_BR]=Grelha de Ecrãs
 Name[sv]=Skrivbordsrutnät
+Name[vi]=Lưới màn hình nền
 Name[zh_TW]=桌面格
 Icon=kwin-effect-desktopgrid
 Comment=Desktop switcher that lays the desktops out in a grid
@@ -32,6 +33,7 @@ Comment[nl]=Bureaubladwisselaar die de bureaubladen in een raster indeelt
 Comment[pt]=Um selector de ecrãs que dispõe os ecrãs numa grelha
 Comment[pt_BR]=Um selector de ecrãs que dispõe os ecrãs numa grelha
 Comment[sv]=Skrivbordsbyte som placerar skrivborden i ett rutnät
+Comment[vi]=Bộ chuyển đổi màn hình nền có sắp đặt các màn hình nền theo lưới
 Comment[zh_TW]=將桌面以格狀佈局呈現的桌面切換器
 
 Type=Service

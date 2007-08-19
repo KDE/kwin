@@ -13,6 +13,7 @@ Description[nl]=(Standaard) schakel het voorkomen dat focus wordt gestolen uit v
 Description[pt]=(Predefinido) Desactivar a prevenção de roubo do primeiro plano do XV
 Description[pt_BR]=(Predefinido) Desactivar a prevenção de roubo do primeiro plano do XV
 Description[sv]=(Förval) Inaktivera möjlighet att förhindra stöld av fokus för XV
+Description[vi]=(Mặc định) Tắt khả năng ngăn cản bắt tiêu điểm cho XV
 Description[zh_TW]=（預設）為 XV 關閉避免焦點被偷的功能
 fsplevel=0
 fsplevelrule=2

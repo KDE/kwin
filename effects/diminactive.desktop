@@ -13,6 +13,7 @@ Name[pa]=Dim ਨਾ-ਸਰਗਰਮ
 Name[pt]=Escurecer as Inactivas
 Name[pt_BR]=Escurecer as Inactivas
 Name[sv]=Dämpa inaktiva
+Name[vi]=Mờ đi bị động
 Icon=kwin-effect-diminactive
 Comment=Darkens inactive windows
 Comment[bg]=Потъмнява неактивните прозорци
@@ -27,6 +28,7 @@ Comment[nl]=Maakt inactieve vensters donkerder
 Comment[pt]=Torna as janelas inactivas mais escuras
 Comment[pt_BR]=Torna as janelas inactivas mais escuras
 Comment[sv]=Gör inaktiva fönster mörkare
+Comment[vi]=Làm tối các cửa sổ không hoạt động
 Comment[zh_TW]=將不使用的視窗變暗
 
 Type=Service

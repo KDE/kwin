@@ -33,6 +33,7 @@ Name[pt_BR]=Efeitos das Janelas
 Name[sl]=Učinki oken
 Name[sv]=Fönstereffekt
 Name[uk]=Ефекти вікон
+Name[vi]=Hiệu ứng Cửa sổ
 Name[zh_TW]=視窗效果
 
 Comment=Configure window effects
@@ -54,6 +55,7 @@ Comment[pt]=Configuração dos efeitos das janelas
 Comment[pt_BR]=Configurar efeitos das janelas
 Comment[sl]=Nastavi učinke oken
 Comment[sv]=Anpassa fönstereffekter
+Comment[vi]=Cấu hình các hiệu ứng cửa sổ
 Comment[zh_TW]=設定視窗效果
 
 Keywords=kwin,window,manager,effect
@@ -73,6 +75,7 @@ Keywords[pa]=kwin,ਵਿੰਡੋ,ਮੈਨੇਜਰ,ਪਰਭਾਵ
 Keywords[pt]=kwin,janela,gestor,efeito
 Keywords[pt_BR]=kwin,janela,gestor,efeito
 Keywords[sv]=kwin,fönster,hantera,effekt
+Keywords[vi]=kwin,cửa sổ,quản lý,hiệu ứng
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
 

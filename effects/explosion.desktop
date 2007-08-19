@@ -14,6 +14,7 @@ Name[pa]=ਧਮਾਕਾ
 Name[pt]=Explosão
 Name[pt_BR]=Explosão
 Name[sl]=Eksplozija
+Name[vi]=Nổ bung
 Name[zh_TW]=爆炸
 Icon=kwin-effect-explosion
 Comment=Makes windows explode when they're closed
@@ -30,6 +31,7 @@ Comment[nl]=Laat vensters uit elkaar spatten als ze worden gesloten
 Comment[pt]=Faz com que as janelas expludam quando são fechadas
 Comment[pt_BR]=Faz com que as janelas expludam quando são fechadas
 Comment[sv]=Gör att fönster exploderar när de stängs
+Comment[vi]=Làm cho cửa sổ nổ bung khi được đóng
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 
 Type=Service

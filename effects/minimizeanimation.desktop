@@ -18,6 +18,7 @@ Name[pa]=ਘੱਟੋ-ਘੱਟ ਸਜੀਵਤਾ
 Name[pt]=Animação da Minimização
 Name[pt_BR]=Animação da Minimização
 Name[sv]=Minimera animering
+Name[vi]=Thu nhỏ hoạt ảnh
 Name[zh_TW]=縮小動畫
 Icon=kwin-effect-minimiseanimation
 Comment=Animates minimizing of windows
@@ -34,6 +35,7 @@ Comment[nl]=Voorziet het minimaliseren van vensters van een animatie
 Comment[pt]=Anima a minimização das janelas
 Comment[pt_BR]=Anima a minimização das janelas
 Comment[sv]=Animerar minimering av fönster
+Comment[vi]=Hoạt ảnh việc thu nhỏ cửa sổ
 Comment[zh_TW]=動畫最小化視窗
 
 Type=Service

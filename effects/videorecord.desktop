@@ -18,6 +18,7 @@ Name[pa]=ਵੀਡਿਓ ਰਿਕਾਰਡ
 Name[pt]=Gravação de Vídeo
 Name[pt_BR]=Gravação de Vídeo
 Name[sv]=Videoinspelning
+Name[vi]=Thu ảnh động
 Name[zh_TW]=影像錄影
 Icon=kwin-effect-videorecord
 Comment=Lets you record videos of your desktop
@@ -36,6 +37,7 @@ Comment[pa]=ਆਪਣੇ ਡੈਸਕਟਾਪ ਲਈ ਆਪਣੀ ਵੀਡਿ�
 Comment[pt]=Permite-lhe gravar vídeos do seu ecrã
 Comment[pt_BR]=Permite-lhe gravar vídeos do seu ecrã
 Comment[sv]=Låter dig spela in videor av skrivbordet
+Comment[vi]=Cho bạn có khả năng thu ảnh động của màn hình nền
 Comment[zh_TW]=讓您錄下您桌面的影像
 
 Type=Service

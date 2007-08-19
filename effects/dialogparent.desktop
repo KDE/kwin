@@ -18,6 +18,7 @@ Name[pa]=ਡਾਈਲਾਗ ਪੇਰੈਂਟ
 Name[pt]=Pai da Janela
 Name[pt_BR]=Pai da Janela
 Name[sv]=Dialogrutors ägare
+Name[vi]=Cha hộp thoại
 Name[zh_TW]=上層對話框
 Icon=kwin-effect-dialogparent
 Comment=Darkens parent windows of active dialogs
@@ -35,6 +36,7 @@ Comment[pa]=ਸਰਗਰਮ ਡਾਈਲਾਗ ਦਾ ਡਾਕਿਨਜ਼ ਪ�
 Comment[pt]=Esconde as janelas-mães das janelas activas
 Comment[pt_BR]=Esconde as janelas-mães das janelas activas
 Comment[sv]=Gör fönster som äger aktiva dialogrutor mörkare
+Comment[vi]=Làm tối cửa sổ cha của các hộp thoại hoạt động
 Comment[zh_TW]=將目前對話框的父視窗變暗
 
 Type=Service

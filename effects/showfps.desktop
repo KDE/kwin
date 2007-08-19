@@ -15,6 +15,7 @@ Name[pa]=FPS ਵੇਖੋ
 Name[pt]=Mostrar as IPS
 Name[pt_BR]=Mostrar as IPS
 Name[sv]=Visa ramar/s
+Name[vi]=Hiện FPS
 Name[zh_TW]=顯示每秒幾張
 Icon=kwin-effect-showfps
 Comment=Shows KWin's performance
@@ -35,6 +36,7 @@ Comment[pa]=KWin ਦਾ ਕਾਰਗੁਜ਼ਾਰੀ ਵੇਖੋ
 Comment[pt]=Mostra a performance do KDE
 Comment[pt_BR]=Mostra a performance do KDE
 Comment[sv]=Visar Kwins prestanda
+Comment[vi]=Hiển thị hiệu năng của KWin
 Comment[zh_TW]=顯示 KWin 的效能
 
 Type=Service
