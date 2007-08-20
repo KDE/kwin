@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Present Windows
+Name[ar]=نوافذ حديثة
 Name[be]=Існуючыя вокны
 Name[bg]=Представяне на прозорци
 Name[csb]=Prezentëjë òkna
@@ -11,6 +12,7 @@ Name[he]=הצג חלונות
 Name[ja]=すべてのウィンドウを表示
 Name[km]=បង្ហាញ​បង្អួច​
 Name[nds]=Finstern wiesen
+Name[ne]=हालको सञ्झ्याल
 Name[nl]=Vensters presenteren
 Name[pa]=ਮੌਜੂਦਾ ਝਰੋਖੇ
 Name[pt]=Apresentar as Janelas
@@ -30,6 +32,7 @@ Comment[he]=מציג את כל החלונות זה לצד זה
 Comment[ja]=すべてのウィンドウを横に並べて表示します
 Comment[km]=បង្ហាញ​បង្អួច​ទាំងអស់​ម្តង​មួយ​ផ្នែក​ៗ​
 Comment[nds]=Wiest all Finstern blangenanner
+Comment[ne]=साइड-बाइ-साइड सबै सञ्झ्याल देखाउँदछ
 Comment[nl]=Toont alle venters naast elkaar
 Comment[pa]=ਸਭ ਝਰੋਖੇ ਨਾਲ ਨਾਲ ਵੇਖਾਓ
 Comment[pt]=Mostra todas as janelas lado-a-lado

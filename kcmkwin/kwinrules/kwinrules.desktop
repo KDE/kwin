@@ -12,6 +12,7 @@ X-KDE-ParentApp=kcontrol
 
 Name=Window-Specific Settings
 Name[af]=Venser spesifike Instellings
+Name[ar]=إعدادات خاصة بالنوافذ
 Name[be]=Настаўленні для асобных вокнаў
 Name[bg]=Потребителски
 Name[ca]=Arranjament específic de finestra
@@ -69,6 +70,7 @@ Name[zh_TW]=特定視窗設定
 
 Comment=Configure settings specifically for a window
 Comment[af]=Stel spesifieke venster instellings op
+Comment[ar]=إعداد التعيينات الخاصة بنافذة
 Comment[be]=Настаўленні для кожнага вакна асабіста
 Comment[bg]=Потребителски настройки на прозорците
 Comment[ca]=Configura l'arranjament específicament per a una finestra
@@ -102,7 +104,7 @@ Comment[lv]=Konfigurē parametrus priekš speciāla loga
 Comment[mk]=Конфигурирајте ги поставувањата за поодделни прозорци
 Comment[nb]=Innstillinger som er knyttet til et spesielt vindu
 Comment[nds]=Instellen för enkelte Finstern
-Comment[ne]=सञ्झ्यालका लागि निर्दिष्ट तरिकाले सेटिङ कन्फिगर गर्नुहोस्
+Comment[ne]=सञ्झ्यालका लागि निर्दिष्ट तरीकाले सेटिङ कन्फिगर गर्नुहोस्
 Comment[nl]=Hier kunt u instellingen kiezen specifiek voor één venster
 Comment[nn]=Innstillingar som er knytte til eitt særskilt vindauge
 Comment[pa]=ਇੱਕ ਝਰੋਖੇ ਲਈ ਖਾਸ ਸਥਾਪਨ ਸੰਰਚਨਾ

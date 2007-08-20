@@ -1,7 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Shadow
-Name[ar]=تشاد
 Name[be]=Цень
 Name[bg]=Сянка
 Name[csb]=Ceniô
@@ -13,6 +12,7 @@ Name[he]=צל
 Name[ja]=シャドウ
 Name[km]=ស្រមោល​
 Name[nds]=Schadden
+Name[ne]=छायाँ
 Name[nl]=Schaduw
 Name[pa]=ਛਾਂ
 Name[pt]=Sombra
@@ -34,6 +34,7 @@ Comment[he]=הוספת צל מתחת לחלונות
 Comment[ja]=ウィンドウの下に影を付けます
 Comment[km]=បន្ថែម​ស្រមោល​ក្រោម​បង្អួច​
 Comment[nds]=Föögt Schaddens nerrn de Finstern to
+Comment[ne]=सञ्झ्याल मुनि छायाँ थप्दछ
 Comment[nl]=Voegt een schaduw toe onder de vensters
 Comment[pa]=ਝਰੋਖਾ ਹੇਠ ਛਾਂ ਸ਼ਾਮਲ ਕਰਦਾ ਹੈ।
 Comment[pt]=Adiciona uma sombra sob as janelas

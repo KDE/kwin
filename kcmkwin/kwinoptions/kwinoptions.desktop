@@ -14,6 +14,7 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=Window Behavior
 Name[af]=Venster Gedrag
+Name[ar]=سلوك النوافذ
 Name[be]=Паводзіны вокнаў
 Name[bg]=Прозорци
 Name[br]=Emzalc'h ar prenester
@@ -76,6 +77,7 @@ Name[zh_TW]=視窗行為
 
 Comment=Configure the window behavior
 Comment[af]=Stel die venster gedrag op
+Comment[ar]=إعداد سلوك النافذة
 Comment[be]=Настаўленні паводзінаў вокнаў
 Comment[bg]=Настройване поведението на прозорците
 Comment[br]=Kefluniañ emzalc'h ar prenester

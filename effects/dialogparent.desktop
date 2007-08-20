@@ -1,7 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Dialog Parent
-Name[ar]=محرر صناديق حوار
 Name[be]=Бацькоўскае акно
 Name[bg]=Редактор на диалози
 Name[de]=Eltern-Dialog
@@ -13,6 +12,7 @@ Name[he]=חלונות־אב של תיבות דו־שיח
 Name[ja]=ダイアログの親
 Name[km]=ប្រអប់មេ​
 Name[nds]=Överornt Finster
+Name[ne]=प्रमूल संवाद
 Name[nl]=Dialoogeigenaar
 Name[pa]=ਡਾਈਲਾਗ ਪੇਰੈਂਟ
 Name[pt]=Pai da Janela
@@ -22,7 +22,6 @@ Name[vi]=Cha hộp thoại
 Name[zh_TW]=上層對話框
 Icon=kwin-effect-dialogparent
 Comment=Darkens parent windows of active dialogs
-Comment[ar]=تظهر نافذة ( حوار) مءقت
 Comment[bg]=Потъмнение на главните от активните прозорци
 Comment[de]=Dunkelt den Eltern-Dialog des aktiven Fensters ab
 Comment[el]=Σκίαση γονικών παραθύρων των ενεργών διαλόγων
@@ -31,6 +30,7 @@ Comment[he]=מחשיך חלונות־אב של תיבות דו־שיח פעיל�
 Comment[ja]=アクティブなダイアログの親ウィンドウを暗くします
 Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​មេ​នៃ​ប្រអប់​សកម្ម​ងងឹត​
 Comment[nds]=Maakt överornt Finstern vun aktiv Dialogen düüsterer
+Comment[ne]=सक्रिय संवादको गाढा प्यारेन्ट सञ्झ्याल
 Comment[nl]=Maakt het venter dat bij het actieve dialoog hoort donkerder
 Comment[pa]=ਸਰਗਰਮ ਡਾਈਲਾਗ ਦਾ ਡਾਕਿਨਜ਼ ਪੇਰੈਂਟ ਝਰੋਖੇ
 Comment[pt]=Esconde as janelas-mães das janelas activas

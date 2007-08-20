@@ -8,6 +8,7 @@ X-KDE-FactoryName=kcm_kwineffect_presentwindows
 X-KDE-ParentComponents=kwin4_effect_presentwindows
 
 Name=Present Windows
+Name[ar]=نوافذ حديثة
 Name[be]=Існуючыя вокны
 Name[bg]=Представяне на прозорци
 Name[csb]=Prezentëjë òkna
@@ -18,6 +19,7 @@ Name[he]=הצג חלונות
 Name[ja]=すべてのウィンドウを表示
 Name[km]=បង្ហាញ​បង្អួច​
 Name[nds]=Finstern wiesen
+Name[ne]=हालको सञ्झ्याल
 Name[nl]=Vensters presenteren
 Name[pa]=ਮੌਜੂਦਾ ਝਰੋਖੇ
 Name[pt]=Apresentar as Janelas

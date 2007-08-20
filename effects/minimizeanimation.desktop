@@ -1,7 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Minimize Animation
-Name[ar]=معلومات عن الوسيط
 Name[be]=Анімацыя змяншэння
 Name[bg]=Минимизиране на анимацията
 Name[csb]=Minimalizëjë animacëjã
@@ -13,6 +12,7 @@ Name[he]=אנימציית מיזעור
 Name[ja]=最小化のアニメーション
 Name[km]=ចលនា​បង្រួម​អប្បបរមា
 Name[nds]=Minimeer-Animeren
+Name[ne]=एनिमेसन सानो पार्नुहोस्
 Name[nl]=Minimaliseeranimatie
 Name[pa]=ਘੱਟੋ-ਘੱਟ ਸਜੀਵਤਾ
 Name[pt]=Animação da Minimização
@@ -31,6 +31,7 @@ Comment[he]=הנפשת מיזעור חלונות
 Comment[ja]=ウィンドウの最小化をアニメーション化します
 Comment[km]=ចលនា​បង្រួម​បង្អួច​អប្បរមា​
 Comment[nds]=Animeert dat Minimeren vun Finstern
+Comment[ne]=सञ्झ्यालको न्यूनिकरण एनिमेट गर्दछ
 Comment[nl]=Voorziet het minimaliseren van vensters van een animatie
 Comment[pt]=Anima a minimização das janelas
 Comment[pt_BR]=Anima a minimização das janelas

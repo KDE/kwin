@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Desktop Grid
-Name[ar]=سطح المكتب
+Name[ar]=شبكية سطح المكتب
 Name[be]=Сетка на працоўны стол
 Name[bg]=Работен плот
 Name[de]=Arbeitsflächen-Raster
@@ -12,6 +12,7 @@ Name[he]=רשת שולחנות עבודה
 Name[ja]=デスクトップグリッド
 Name[km]= ក្រឡា​ចត្រង្គ​ផ្ទៃ​តុ​
 Name[nds]=Schriefdisch-Gadder
+Name[ne]=डेस्कटप ग्रिड
 Name[nl]=Bureaubladraster
 Name[pa]=ਡੈਸਕਟਾਪ ਗਰਿੱਡ
 Name[pt]=Grelha de Ecrãs
@@ -29,6 +30,7 @@ Comment[he]=מחליף שולחנות עבודה שמסדר את שולחנות 
 Comment[ja]=デスクトップを格子状に並べるデスクトップスイッチャー
 Comment[km]=កម្មវិធី​ប្ដូរ​ផ្ទៃ​តុ​ដែលអាច​​ក្រាល​ក្រឡាចត្រង្គ​នៅ​លើ​ផ្ទៃ​តុ
 Comment[nds]=Wesseln vun Schriefdischen, de binnen en Gadder wiest warrt
+Comment[ne]=डेस्कटप स्विचर जसले डेस्कटपलाई बाहिर ग्रिडमा राख्दछ
 Comment[nl]=Bureaubladwisselaar die de bureaubladen in een raster indeelt
 Comment[pt]=Um selector de ecrãs que dispõe os ecrãs numa grelha
 Comment[pt_BR]=Um selector de ecrãs que dispõe os ecrãs numa grelha

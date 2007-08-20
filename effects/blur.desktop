@@ -1,7 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Blur
-Name[ar]=BlueFish
 Name[bg]=Замъгляване
 Name[de]=Verwischen
 Name[el]=Θόλωμα
@@ -10,6 +9,7 @@ Name[he]=טשטש
 Name[ja]=ぼかし
 Name[km]=ព្រិល​
 Name[nds]=Verwischen
+Name[ne]=धब्बा
 Name[nl]=Vervagen
 Name[pa]=ਧੁੰਦਲਾ
 Name[pt]=BlueFish
@@ -27,6 +27,7 @@ Comment[he]=טישטוש הרקע של חלונות שקופים למחצה
 Comment[ja]=半透明のウィンドウの背景をぼかします
 Comment[km]=ដាក់​ផ្ទៃ​ខាង​ក្រោយ​ព្រិល​នៃ​បង្អួច​ពាក់​កណ្តាល​ថ្លា​
 Comment[nds]=Verwischt den Achtergrund vun halfdörsichtig Finstern
+Comment[ne]=अर्ध-पारदर्शी विन्डोजको अस्पष्ट पृष्ठभूमि
 Comment[nl]=Vervaagt de achtergrond van halftransparante vensters
 Comment[pa]=ਬਲੌਰੀ (ਅਰਧ-ਪਾਰਦਰਸ਼ੀ) ਝਰੋਖਿਆਂ ਲਈ ਧੁੰਦਲੀ ਬੈਕਗਰਾਊਂਡ
 Comment[pt]=Borra o fundo das janelas semi-transparentes
