@@ -60,19 +60,19 @@ bool ExplosionEffect::loadData()
     QString endtexture =  KGlobal::dirs()->findResource("data", "kwin/explosion-end.png");
     if(fragmentshader.isEmpty() || vertexshader.isEmpty())
     {
-        kError() << k_funcinfo << "Couldn't locate shader files" << endl;
+        kError() << "Couldn't locate shader files" << endl;
         return false;
     }
     if(starttexture.isEmpty() || endtexture.isEmpty())
     {
-        kError() << k_funcinfo << "Couldn't locate texture files" << endl;
+        kError() << "Couldn't locate texture files" << endl;
         return false;
     }
 
     mShader = new GLShader(vertexshader, fragmentshader);
     if(!mShader->isValid())
     {
-        kError() << k_funcinfo << "The shader failed to load!" << endl;
+        kError() << "The shader failed to load!" << endl;
         return false;
     }
     else
@@ -88,7 +88,7 @@ bool ExplosionEffect::loadData()
     mEndOffsetTex = new GLTexture(endtexture);
     if(mStartOffsetTex->isNull() || mEndOffsetTex->isNull())
     {
-        kError() << k_funcinfo << "The textures failed to load!" << endl;
+        kError() << "The textures failed to load!" << endl;
         return false;
     }
     else

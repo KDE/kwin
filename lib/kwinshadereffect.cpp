@@ -52,7 +52,7 @@ bool ShaderEffect::loadData(const QString& shadername)
     int texh = displayHeight();
     if( !GLTexture::NPOTTextureSupported() )
     {
-        kWarning( 1212 ) << k_funcinfo << "NPOT textures not supported, wasting some memory" ;
+        kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
         texw = nearestPowerOfTwo(texw);
         texh = nearestPowerOfTwo(texh);
     }
@@ -69,13 +69,13 @@ bool ShaderEffect::loadData(const QString& shadername)
     QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/" + shadername + ".vert");
     if(fragmentshader.isEmpty() || vertexshader.isEmpty())
     {
-        kError() << k_funcinfo << "Couldn't locate shader files" << endl;
+        kError() << "Couldn't locate shader files" << endl;
         return false;
     }
     mShader = new GLShader(vertexshader, fragmentshader);
     if(!mShader->isValid())
     {
-        kError() << k_funcinfo << "The shader failed to load!" << endl;
+        kError() << "The shader failed to load!" << endl;
         return false;
     }
     mShader->bind();

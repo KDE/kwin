@@ -29,7 +29,7 @@ namespace KWin
 ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QStringList& args) :
         KCModule(KGenericFactory<ShadowEffectConfig>::componentData(), parent, args)
     {
-    kDebug() << k_funcinfo;
+    kDebug() ;
 
     QGridLayout* layout = new QGridLayout(this);
 
@@ -65,12 +65,12 @@ ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QStringList& args)
 
 ShadowEffectConfig::~ShadowEffectConfig()
     {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     }
 
 void ShadowEffectConfig::load()
     {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Shadow");
@@ -84,7 +84,7 @@ void ShadowEffectConfig::load()
 
 void ShadowEffectConfig::save()
     {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Shadow");
@@ -100,7 +100,7 @@ void ShadowEffectConfig::save()
 
 void ShadowEffectConfig::defaults()
     {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     mShadowXOffset->setValue( 10 );
     mShadowYOffset->setValue( 10 );
     mShadowOpacity->setValue( 20 );

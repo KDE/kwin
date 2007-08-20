@@ -677,7 +677,7 @@ bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentf
     QFile vf(vertexfile);
     if(!vf.open(QIODevice::ReadOnly))
         {
-        kError(1212) << k_funcinfo << "Couldn't open '" << vertexfile << "' for reading!" << endl;
+        kError(1212) << "Couldn't open '" << vertexfile << "' for reading!" << endl;
         return false;
         }
     QString vertexsource(vf.readAll());
@@ -685,7 +685,7 @@ bool GLShader::loadFromFiles(const QString& vertexfile, const QString& fragmentf
     QFile ff(fragmentfile);
     if(!ff.open(QIODevice::ReadOnly))
         {
-        kError(1212) << k_funcinfo << "Couldn't open '" << fragmentfile << "' for reading!" << endl;
+        kError(1212) << "Couldn't open '" << fragmentfile << "' for reading!" << endl;
         return false;
         }
     QString fragsource(ff.readAll());
@@ -699,7 +699,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
     if(( !vertexsource.isEmpty() && !vertexShaderSupported() ) ||
           ( !fragmentsource.isEmpty() && !fragmentShaderSupported() ))
         {
-        kDebug(1212) << k_funcinfo << "Shaders not supported";
+        kDebug(1212) << "Shaders not supported";
         return false;
         }
 
@@ -730,7 +730,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
         glGetShaderInfoLog(vertexshader, logarraysize, &logsize, log);
         if(!compiled)
             {
-            kError(1212) << k_funcinfo << "Couldn't compile vertex shader! Log:" << endl << log << endl;
+            kError(1212) << "Couldn't compile vertex shader! Log:" << endl << log << endl;
             delete[] log;
             return false;
             }
@@ -763,7 +763,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
         glGetShaderInfoLog(fragmentshader, logarraysize, &logsize, log);
         if(!compiled)
             {
-            kError(1212) << k_funcinfo << "Couldn't compile fragment shader! Log:" << endl << log << endl;
+            kError(1212) << "Couldn't compile fragment shader! Log:" << endl << log << endl;
             delete[] log;
             return false;
             }
@@ -788,7 +788,7 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
     glGetProgramInfoLog(mProgram, logarraysize, &logsize, log);
     if(!linked)
         {
-        kError(1212) << k_funcinfo << "Couldn't link the program! Log" << endl << log << endl;
+        kError(1212) << "Couldn't link the program! Log" << endl << log << endl;
         delete[] log;
         return false;
         }
@@ -893,7 +893,7 @@ GLRenderTarget::GLRenderTarget(GLTexture* color)
         initFBO();
         }
     else
-        kError(1212) << k_funcinfo << "Render targets aren't supported!" << endl;
+        kError(1212) << "Render targets aren't supported!" << endl;
     }
 
 GLRenderTarget::~GLRenderTarget()
@@ -908,7 +908,7 @@ bool GLRenderTarget::enable()
     {
     if(!valid())
         {
-        kError(1212) << k_funcinfo << "Can't enable invalid render target!" << endl;
+        kError(1212) << "Can't enable invalid render target!" << endl;
         return false;
         }
 
@@ -922,7 +922,7 @@ bool GLRenderTarget::disable()
     {
     if(!valid())
         {
-        kError(1212) << k_funcinfo << "Can't disable invalid render target!" << endl;
+        kError(1212) << "Can't disable invalid render target!" << endl;
         return false;
         }
 
@@ -943,7 +943,7 @@ void GLRenderTarget::initFBO()
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER_EXT);
     if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
         {
-        kError(1212) << k_funcinfo << "Invalid fb status: " << status << endl;
+        kError(1212) << "Invalid fb status: " << status << endl;
         }
 
     glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);

@@ -607,7 +607,7 @@ KLibrary* EffectsHandlerImpl::findEffectLibrary( KService* service )
     KLibrary* library = KLibLoader::self()->library(libname);
     if( !library )
         {
-        kError( 1212 ) << k_funcinfo << "couldn't open library for effect '" <<
+        kError( 1212 ) << "couldn't open library for effect '" <<
                 service->name() << "'" << endl;
         return 0;
         }
@@ -632,7 +632,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
     assert( current_transform == 0 );
 
     if( !name.startsWith("kwin4_effect_") )
-        kWarning( 1212 ) << k_funcinfo << "Effect names usually have kwin4_effect_ prefix" ;
+        kWarning( 1212 ) << "Effect names usually have kwin4_effect_ prefix" ;
 
     // Make sure a single effect won't be loaded multiple times
     for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
@@ -645,14 +645,14 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
         }
 
 
-    kDebug( 1212 ) << k_funcinfo << "Trying to load " << name;
+    kDebug( 1212 ) << "Trying to load " << name;
     QString internalname = name.toLower();
 
     QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect", constraint);
     if(offers.isEmpty())
     {
-        kError( 1212 ) << k_funcinfo << "Couldn't find effect " << name << endl;
+        kError( 1212 ) << "Couldn't find effect " << name << endl;
         return false;
     }
     KService::Ptr service = offers.first();
@@ -755,10 +755,10 @@ bool EffectsHandlerImpl::isEffectLoaded( const QString& name )
 void EffectsHandlerImpl::effectsChanged()
     {
     loaded_effects.clear();
-    kDebug() << k_funcinfo << "Recreating effects' list:";
+    kDebug() << "Recreating effects' list:";
     foreach( EffectPair effect, effect_order )
         {
-        kDebug() << k_funcinfo << effect.first;
+        kDebug() << effect.first;
         loaded_effects.append( effect );
         }
     }

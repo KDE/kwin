@@ -81,7 +81,7 @@ void KWinEffectsConfig::reparseConfiguration(const QByteArray&conf)
 
 void KWinEffectsConfig::load()
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     mKWinConfig->reparseConfiguration();
 
     mPluginSelector->load();
@@ -92,7 +92,7 @@ void KWinEffectsConfig::load()
 
 void KWinEffectsConfig::save()
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
 
     mPluginSelector->save();
 
@@ -108,13 +108,13 @@ void KWinEffectsConfig::save()
 
 void KWinEffectsConfig::defaults()
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     mPluginSelector->defaults();
 }
 
 QString KWinEffectsConfig::quickHelp() const
 {
-    kDebug() << k_funcinfo;
+    kDebug() ;
     return i18n("<h1>Window Effects</h1> Here you can configure which effects will be used.");
 }
 

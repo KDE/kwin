@@ -62,7 +62,7 @@ bool BlurEffect::loadData()
     int texh = displayHeight();
     if( !GLTexture::NPOTTextureSupported() )
     {
-        kWarning( 1212 ) << k_funcinfo << "NPOT textures not supported, wasting some memory" ;
+        kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
         texw = nearestPowerOfTwo(texw);
         texh = nearestPowerOfTwo(texh);
     }
@@ -111,13 +111,13 @@ GLShader* BlurEffect::loadShader(const QString& name)
     QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/" + name + ".vert");
     if(fragmentshader.isEmpty() || vertexshader.isEmpty())
     {
-        kError() << k_funcinfo << "Couldn't locate shader files for '" << name << "'" << endl;
+        kError() << "Couldn't locate shader files for '" << name << "'" << endl;
         return false;
     }
     GLShader* shader = new GLShader(vertexshader, fragmentshader);
     if(!shader->isValid())
     {
-        kError() << k_funcinfo << "Shader '" << name << "' failed to load!" << endl;
+        kError() << "Shader '" << name << "' failed to load!" << endl;
         delete shader;
         return 0;
     }

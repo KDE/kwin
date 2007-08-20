@@ -390,7 +390,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
     // Size of one cell
     int cellwidth = placementRect.width() / cols;
     int cellheight = placementRect.height() / rows;
-    kDebug() << k_funcinfo << "Got " << windowlist.count() << " clients, using " << rows << "x" << cols << " grid";
+    kDebug() << "Got " << windowlist.count() << " clients, using " << rows << "x" << cols << " grid";
 
     // Calculate position and scale factor for each window
     int i = 0;
@@ -407,7 +407,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
         mWindowData[window].area.setWidth((int)(window->width() * mWindowData[window].scale));
         mWindowData[window].area.setHeight((int)(window->height() * mWindowData[window].scale));
 
-        kDebug() << k_funcinfo << "Window '" << window->caption() << "' gets moved to (" <<
+        kDebug() << "Window '" << window->caption() << "' gets moved to (" <<
             mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
             "), scale: " << mWindowData[window].scale << endl;
         i++;
@@ -450,7 +450,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
         rows = (int)ceil( sqrt(windowlist.count()) );
         columns = (int)ceil( (float)windowlist.count() / (float)rows );
     }
-    kDebug() << k_funcinfo << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
+    kDebug() << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
     // Calculate width & height
     int w = (availRect.width() - (columns+1) * spacing ) / columns;
@@ -559,7 +559,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             mWindowData[window].scale = geom.width() / (float)window->width();
             mWindowData[window].hover = 0.0f;
 
-            kDebug() << k_funcinfo << "Window '" << window->caption() << "' gets moved to (" <<
+            kDebug() << "Window '" << window->caption() << "' gets moved to (" <<
                     mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
                     "), scale: " << mWindowData[window].scale << endl;
             }
