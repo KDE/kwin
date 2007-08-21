@@ -1,9 +1,7 @@
 ########### next target ###############
 
-set(oxygen_lib_dir ../../../../runtime/kstyles/oxygen/lib)
-
 set(kwin_oxy_SRCS
-     ${oxygen_lib_dir}/helper.cpp
+     lib/helper.cpp
      oxygenclient.cpp
      oxygenbutton.cpp
      oxygen.cpp
