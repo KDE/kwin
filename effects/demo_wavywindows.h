@@ -8,12 +8,11 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef KWIN_WAVYWINDOWS_H
-#define KWIN_WAVYWINDOWS_H
+#ifndef DEMO_WAVYWINDOWS_H
+#define DEMO_WAVYWINDOWS_H
 
 // Include with base class for effects.
 #include <kwineffects.h>
-
 
 namespace KWin
 {
@@ -38,4 +37,4 @@ class WavyWindowsEffect
 
 } // namespace
 
-#endif
+#endif // DEMO_WAVYWINDOWS_H

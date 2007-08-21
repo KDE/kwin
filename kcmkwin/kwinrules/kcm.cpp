@@ -80,11 +80,11 @@ void KCMRules::defaults()
 
 QString KCMRules::quickHelp() const
     {
-    return i18n("<h1>Window-specific Settings</h1> Here you can customize window settings specifically only"
-        " for some windows."
+    return i18n("<p><h1>Window-specific Settings</h1> Here you can customize window settings specifically only"
+        " for some windows.</p>"
         " <p>Please note that this configuration will not take effect if you do not use"
         " KWin as your window manager. If you do use a different window manager, please refer to its documentation"
-        " for how to customize window behavior.");
+        " for how to customize window behavior.</p>");
     }
 
 void KCMRules::moduleChanged( bool state )

@@ -4,8 +4,8 @@
  * Copyright (c) 2005 Sandro Giessl <sandro@giessl.com>
  * Ported to the kde3.2 API by Luciano Montanaro <mikelima@cirulla.net>
  */
-#ifndef __KDECLIENT_H
-#define __KDECLIENT_H
+#ifndef LAPTOPCLIENT_H
+#define LAPTOPCLIENT_H
 
 #include <QBitmap>
 #include <QPixmap>
@@ -76,4 +76,4 @@ private:
 
 }
 
-#endif
+#endif // LAPTOPCLIENT_H

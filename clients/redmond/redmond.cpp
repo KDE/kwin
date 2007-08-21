@@ -23,7 +23,6 @@
 #include <kimageeffect.h>
 #include <kdrawutil.h>
 #include <klocale.h>
-#include <QPixmap>
 
 #include <QBitmap>
 #include <QImage>

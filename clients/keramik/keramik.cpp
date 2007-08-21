@@ -28,19 +28,15 @@
 #include <QLayout>
 #include <QBitmap>
 #include <QStyle>
-
 #include <QWidget>
 #include <QLabel>
 #include <QEvent>
 #include <QApplication>
-#include <QStyle>
 
 #include <X11/Xlib.h>
 
 #include "keramik.h"
 #include "keramik.moc"
-
-
 
 // -------------------------------------------------------------------------------------------
 

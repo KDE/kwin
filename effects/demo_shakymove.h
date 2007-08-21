@@ -8,8 +8,8 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef KWIN_SHAKYMOVE_H
-#define KWIN_SHAKYMOVE_H
+#ifndef DEMO_SHAKYMOVE_H
+#define DEMO_SHAKYMOVE_H
 
 #include <qtimer.h>
 
@@ -38,4 +38,4 @@ class ShakyMoveEffect
 
 } // namespace
 
-#endif
+#endif // DEMO_SHAKYMOVE_H

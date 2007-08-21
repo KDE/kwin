@@ -29,7 +29,6 @@
 #include <QPixmap>
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
-#include <QPixmap>
 #include <QPainter>
 #include <QBitmap>
 
