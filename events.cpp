@@ -1051,6 +1051,15 @@ void Client::ungrabButton( int modifier )
  */
 void Client::updateMouseGrab()
     {
+    if( workspace()->globalShortcutsDisabled())
+        {
+        XUngrabButton( display(), AnyButton, AnyModifier, wrapperId());
+        // keep grab for the simple click without modifiers if needed (see below)
+        bool not_obscured = workspace()->topClientOnDesktop( workspace()->currentDesktop(), true, false ) == this;
+        if( !( !options->clickRaise || not_obscured ))
+            grabButton( None );
+        return;
+        }
     if( isActive() && !workspace()->forcedGlobalMouseGrab()) // see Workspace::establishTabBoxGrab()
         {
         // remove the grab for no modifiers only if the window
