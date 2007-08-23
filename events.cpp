@@ -1062,6 +1062,11 @@ void Client::updateMouseGrab()
         }
     if( isActive() && !workspace()->forcedGlobalMouseGrab()) // see Workspace::establishTabBoxGrab()
         {
+        // first grab all modifier combinations
+        XGrabButton( display(), AnyButton, AnyModifier, wrapperId(), FALSE,
+            ButtonPressMask,
+            GrabModeSync, GrabModeAsync,
+            None, None );
         // remove the grab for no modifiers only if the window
         // is unobscured or if the user doesn't want click raise
         // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
