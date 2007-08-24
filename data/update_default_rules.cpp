@@ -29,10 +29,10 @@ int main( int argc, char* argv[] )
         }
     KConfig src_cfg( file );
     KConfig dest_cfg( "kwinrulesrc" );
-    src_cfg.setGroup( "General" );
-    dest_cfg.setGroup( "General" );
-    int count = src_cfg.readEntry( "count", 0 );
-    int pos = dest_cfg.readEntry( "count", 0 );
+	KConfigGroup scg(&src_cfg, "General");
+	KConfigGroup dcg(&dest_cfg, "General");
+    int count = scg.readEntry( "count", 0 );
+    int pos = dcg.readEntry( "count", 0 );
     for( int group = 1;
          group <= count;
          ++group )
@@ -40,16 +40,15 @@ int main( int argc, char* argv[] )
         QMap< QString, QString > entries = src_cfg.entryMap( QString::number( group ));
         ++pos;
         dest_cfg.deleteGroup( QString::number( pos ));
-        dest_cfg.setGroup( QString::number( pos ));
+		KConfigGroup dcg2 (&dest_cfg, QString::number( pos ));
         for( QMap< QString, QString >::ConstIterator it = entries.begin();
              it != entries.end();
              ++it )
-            dest_cfg.writeEntry( it.key(), *it );
+            dcg2.writeEntry( it.key(), *it );
         }
-    dest_cfg.setGroup( "General" );
-    dest_cfg.writeEntry( "count", pos );
-    src_cfg.sync();
-    dest_cfg.sync();
+    dcg.writeEntry( "count", pos );
+    scg.sync();
+    dcg.sync();
     // Send signal to all kwin instances
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");

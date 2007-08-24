@@ -101,8 +101,8 @@ void loadFakeSessionInfo( KConfig* config )
 
 void writeRules( KConfig& cfg )
     {
-    cfg.setGroup( "General" );
-    int pos = cfg.readEntry( "count",0 );
+	KConfigGroup cg(&cfg, "General");
+    int pos = cg.readEntry( "count",0 );
 
     QList<SessionInfo*>::iterator it;
     for ( it = fakeSession.begin(); it != fakeSession.end(); ++it)
@@ -110,7 +110,6 @@ void writeRules( KConfig& cfg )
         if( (*it)->resourceName.isEmpty() && (*it)->resourceClass.isEmpty())
             continue;
         ++pos;
-        cfg.setGroup( QString::number( pos ));
         KConfigGroup groupCfg(&cfg, QString::number( pos ));
         groupCfg.writeEntry( "description", ( const char* ) ( (*it)->resourceClass + " (KDE3.2)" ));
         groupCfg.writeEntry( "wmclass", ( const char* )( (*it)->resourceName + ' ' + (*it)->resourceClass ));
@@ -154,8 +153,7 @@ void writeRules( KConfig& cfg )
         groupCfg.writeEntry( "noborder", (*it)->userNoBorder );
         groupCfg.writeEntry( "noborderrule", 4 );
         }
-    cfg.setGroup( "General" );
-    cfg.writeEntry( "count", pos );
+    cg.writeEntry( "count", pos );
     }
 
 int main()
