@@ -271,7 +271,7 @@ class Workspace : public QObject, public KDecorationDefines
         bool globalShortcutsDisabled() const;
         void disableGlobalShortcuts( bool disable );
         void disableGlobalShortcutsForClient( bool disable );
-        QPoint cursorPos();
+        QPoint cursorPos() const;
 
         void sessionSaveStarted();
         void sessionSaveDone();

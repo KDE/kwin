@@ -1613,7 +1613,7 @@ int Workspace::activeScreen() const
             return qApp->desktop()->screenNumber( activeClient()->geometry().center());
         return active_screen;
         }
-    return qApp->desktop()->screenNumber( QCursor::pos());
+    return qApp->desktop()->screenNumber( cursorPos());
     }
 
 // check whether a client moved completely out of what's considered the active screen,
@@ -2587,7 +2587,7 @@ static QPoint last_cursor_pos;
 static int last_buttons = 0;
 static Time last_cursor_timestamp = CurrentTime;
 
-QPoint Workspace::cursorPos()
+QPoint Workspace::cursorPos() const
     {
     if( last_cursor_timestamp == CurrentTime
         || last_cursor_timestamp != QX11Info::appTime())
@@ -2601,7 +2601,7 @@ QPoint Workspace::cursorPos()
             &root_x, &root_y, &win_x, &win_y, &state );
         last_cursor_pos = QPoint( root_x, root_y );
         last_buttons = state;
-        QTimer::singleShot( 0, this, SLOT( resetCursorPosTime()));
+        QTimer::singleShot( 0, const_cast< Workspace* >( this ), SLOT( resetCursorPosTime()));
         }
     return last_cursor_pos;
     }

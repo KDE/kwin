@@ -220,7 +220,7 @@ void Workspace::setActiveClient( Client* c, allowed_t )
         closeActivePopup();
     StackingUpdatesBlocker blocker( this );
     ++set_active_client_recursion;
-    updateFocusMousePosition( QCursor::pos());
+    updateFocusMousePosition( cursorPos());
     if( active_client != NULL )
         { // note that this may call setActiveClient( NULL ), therefore the recursion counter
         active_client->setActive( false );
