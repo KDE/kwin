@@ -320,6 +320,17 @@ void renderRoundBox( const QRect& area, float roundness, GLTexture* texture )
     glPopAttrib();
 }
 
+void renderRoundBoxWithEdge( const QRect& area, float roundness )
+{
+    static GLTexture* texture = 0;
+    if( !texture )
+    {
+        QString texturefile =  KGlobal::dirs()->findResource("data", "kwin/circle-edgy.png");
+        texture = new GLTexture(texturefile);
+    }
+    renderRoundBox( area, roundness, texture );
+}
+
 //****************************************
 // GLTexture
 //****************************************

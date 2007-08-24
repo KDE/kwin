@@ -95,6 +95,7 @@ if(OPENGL_FOUND)
         data/lookingglass.vert
         data/shadow-texture.png
         data/circle.png
+        data/circle-edgy.png
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
     # config modules
