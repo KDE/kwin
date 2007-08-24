@@ -749,7 +749,14 @@ SceneOpenGL::Texture::~Texture()
 
 void SceneOpenGL::Texture::init()
     {
+    bind();
     bound_glxpixmap = None;
+    if( hasGLVersion( 1, 4, 0 ))
+        {
+        // Lod bias makes the trilinear-filtered texture look a bit sharper
+        glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, -1.0f );
+        }
+    unbind();
     }
 
 void SceneOpenGL::Texture::discard()
