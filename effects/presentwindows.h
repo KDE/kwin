@@ -117,6 +117,7 @@ class PresentWindowsEffect
 #ifdef HAVE_OPENGL
         GLTexture* filterTexture;
         QRect filterTextureRect;
+        QRect filterFrameRect;
 #endif
 
         ElectricBorder borderActivate;

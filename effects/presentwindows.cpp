@@ -126,12 +126,17 @@ void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintDat
     {
     effects->paintScreen( mask, region, data );
 #ifdef HAVE_OPENGL
-    if( filterTexture && region.intersects( filterTextureRect ))
+    if( filterTexture && region.intersects( filterFrameRect ))
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-        filterTexture->bind();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        // First render the frame
+        QColor color = QPalette().color( QPalette::Highlight );
+        glColor4f( color.redF(), color.greenF(), color.blueF(), 0.75f );
+        renderRoundBoxWithEdge( filterFrameRect );
+        // And then the text on top of it
+        filterTexture->bind();
         filterTexture->render( mask, region, filterTextureRect );
         filterTexture->unbind();
         glPopAttrib();
@@ -771,25 +776,34 @@ void PresentWindowsEffect::updateFilterTexture()
     discardFilterTexture();
     if( windowFilter.isEmpty())
         return;
+    // Create font for filter text
     QFont font;
     font.setPointSize( font.pointSize() * 2 );
     font.setBold( true );
-    QRect rect = QFontMetrics( font ).boundingRect( windowFilter );
-    const int border = 10;
-    rect.adjust( -border, -border, border, border );
+    // Get size of the rect containing filter text
+    QFontMetrics fm( font );
+    QRect rect;
+    QString translatedString = i18n( "Filter:\n%1", windowFilter );
+    rect.setSize( fm.size( 0, translatedString ));
     QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    // Create image
     QImage im( rect.width(), rect.height(), QImage::Format_ARGB32 );
-    QColor col = QPalette().color( QPalette::Highlight );
-    col.setAlpha( 128 ); // 0.5
-    im.fill( col.rgba());
+    im.fill( Qt::transparent );
+    // Paint the filter text to it
     QPainter p( &im );
     p.setFont( font );
     p.setPen( QPalette().color( QPalette::HighlightedText ) );
-    p.drawText( -rect.topLeft(), windowFilter );
+    p.drawText( rect, Qt::AlignCenter, translatedString );
     p.end();
+    // Create GL texture
     filterTexture = new GLTexture( im );
+    // Get position for filter text and it's frame
     filterTextureRect = QRect( area.x() + ( area.width() - rect.width()) / 2,
         area.y() + ( area.height() - rect.height()) / 2, rect.width(), rect.height());
+    const int borderh = 10;
+    const int borderw = 20;
+    filterFrameRect = filterTextureRect.adjusted( -borderw, -borderh, borderw, borderh );
+    // Schedule repaint
     effects->addRepaint( filterTextureRect );
 #endif
     }
