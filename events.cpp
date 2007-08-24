@@ -637,6 +637,7 @@ bool Client::windowEvent( XEvent* e )
         case MotionNotify:
             motionNotifyEvent( e->xmotion.window, e->xmotion.state,
                 e->xmotion.x, e->xmotion.y, e->xmotion.x_root, e->xmotion.y_root );
+            workspace()->updateFocusMousePosition( QPoint( e->xmotion.x_root, e->xmotion.y_root ));
             break;
         case EnterNotify:
             enterNotifyEvent( &e->xcrossing );
@@ -647,11 +648,14 @@ bool Client::windowEvent( XEvent* e )
             // events simpler (Qt does that too).
             motionNotifyEvent( e->xcrossing.window, e->xcrossing.state,
                 e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root );
+            workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
             break;
         case LeaveNotify:
             motionNotifyEvent( e->xcrossing.window, e->xcrossing.state,
                 e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root );
             leaveNotifyEvent( &e->xcrossing );
+            // not here, it'd break following enter notify handling
+            // workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
             break;
         case FocusIn:
             focusInEvent( &e->xfocus );
@@ -951,13 +955,19 @@ void Client::enterNotifyEvent( XCrossingEvent* e )
             autoRaiseTimer->start( options->autoRaiseInterval );
             }
 
-        if ( options->focusPolicy !=  Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isTopMenu() ) )
+        QPoint currentPos( e->x_root, e->y_root );
+        if ( options->focusPolicy != Options::FocusStrictlyUnderMouse && ( isDesktop() || isDock() || isTopMenu() ) )
             return;
-        if ( options->delayFocus )
-            workspace()->requestDelayFocus( this );
-        else
-            workspace()->requestFocus( this );
-
+        // for FocusFollowsMouse, change focus only if the mouse has actually been moved, not if the focus
+        // change came because of window changes (e.g. closing a window) - #92290
+        if( options->focusPolicy != Options::FocusFollowsMouse
+            || currentPos != workspace()->focusMousePosition())
+            {
+            if ( options->delayFocus )
+                workspace()->requestDelayFocus( this );
+            else
+                workspace()->requestFocus( this );
+            }
         return;
         }
     }

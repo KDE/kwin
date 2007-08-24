@@ -292,6 +292,8 @@ class Workspace : public QObject, public KDecorationDefines
 
         void cancelDelayFocus();
         void requestDelayFocus( Client* );
+        void updateFocusMousePosition( const QPoint& pos );
+        QPoint focusMousePosition() const;
 
         void toggleTopDockShadows(bool on);
 
@@ -581,6 +583,7 @@ class Workspace : public QObject, public KDecorationDefines
     // delay(ed) window focus timer and client
         QTimer* delayFocusTimer;
         Client* delayfocus_client;
+        QPoint focusMousePos;
 
         ClientList clients;
         ClientList desktops;
@@ -868,6 +871,18 @@ void Workspace::forceRestacking()
     {
     force_restacking = true;
     StackingUpdatesBlocker blocker( this ); // do restacking if not blocked
+    }
+
+inline
+void Workspace::updateFocusMousePosition( const QPoint& pos )
+    {
+    focusMousePos = pos;
+    }
+
+inline
+QPoint Workspace::focusMousePosition() const
+    {
+    return focusMousePos;
     }
 
 template< typename T >
