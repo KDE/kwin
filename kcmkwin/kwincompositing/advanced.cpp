@@ -30,6 +30,7 @@ KWinAdvancedCompositingOptions::KWinAdvancedCompositingOptions(QWidget* parent, 
 
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(ui.glTextureFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
@@ -57,6 +58,7 @@ void KWinAdvancedCompositingOptions::load()
     ui.compositingType->setCurrentIndex((backend == "XRender") ? 1 : 0);
     QString glMode = config.readEntry("GLMode", "TFP");
     ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
+    ui.glTextureFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 1));
     ui.glDirect->setChecked(config.readEntry("GLDirect", true));
     ui.glVSync->setChecked(config.readEntry("GLVSync", true));
 }
@@ -72,6 +74,7 @@ void KWinAdvancedCompositingOptions::save()
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
     QString glModes[] = { "TFP", "SHM", "Fallback" };
     config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
+    config.writeEntry("GLTextureFilter", ui.glTextureFilter->currentIndex());
     config.writeEntry("GLDirect", ui.glDirect->isChecked());
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
 

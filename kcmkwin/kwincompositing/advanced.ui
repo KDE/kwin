@@ -72,6 +72,36 @@
        </layout>
       </item>
       <item>
+       <layout class="QHBoxLayout" >
+        <item>
+         <widget class="QLabel" name="label_3" >
+          <property name="text" >
+           <string>Texture filter:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="glTextureFilter" >
+          <item>
+           <property name="text" >
+            <string>Nearest (fastest)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text" >
+            <string>Bilinear</string>
+           </property>
+          </item>
+          <item>
+           <property name="text" >
+            <string>Trilinear (best quality)</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
        <widget class="QCheckBox" name="glDirect" >
         <property name="text" >
          <string>Direct rendering</string>
@@ -95,8 +125,8 @@
      </property>
      <property name="sizeHint" >
       <size>
-       <width>20</width>
-       <height>31</height>
+       <width>382</width>
+       <height>101</height>
       </size>
      </property>
     </spacer>
