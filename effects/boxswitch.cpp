@@ -435,7 +435,7 @@ void BoxSwitchEffect::paintFrame()
         {
         glPushAttrib( GL_CURRENT_BIT );
         glColor4f( color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        renderRoundBox( frame_area );
+        renderRoundBoxWithEdge( frame_area );
         glPopAttrib();
         }
 #endif
