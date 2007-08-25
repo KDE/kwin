@@ -35,11 +35,11 @@
 #include "oxygenbutton.h"
 #include "oxygen.h"
 #include "definitions.cpp"
-#include "lib/helper.h"
+#include "helper.h"
 
 namespace Oxygen
 {
-K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("OxygenDeco"))
+K_GLOBAL_STATIC_WITH_ARGS(OxygenWindecoHelper, globalHelper, ("OxygenDeco"))
 
 // class OxygenClient;
 /*
@@ -139,7 +139,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     }
 
     QColor bg = globalHelper->backgroundTopColor(palette().window());
-   painter.drawPixmap(0, 0, globalHelper->roundButton(palette().button(), BUTTONSIZE));
+   painter.drawPixmap(0, 0, globalHelper->windecoButton(palette().button(), BUTTONSIZE));
 }
 
 

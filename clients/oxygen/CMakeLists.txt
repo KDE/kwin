@@ -2,6 +2,7 @@
 
 set(kwin_oxy_SRCS
      lib/helper.cpp
+     helper.cpp
      oxygenclient.cpp
      oxygenbutton.cpp
      oxygen.cpp
