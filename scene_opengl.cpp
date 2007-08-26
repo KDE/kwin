@@ -732,12 +732,12 @@ void SceneOpenGL::windowOpacityChanged( Toplevel* )
 // SceneOpenGL::Texture
 //****************************************
 
-SceneOpenGL::Texture::Texture()
+SceneOpenGL::Texture::Texture() : GLTexture()
     {
     init();
     }
 
-SceneOpenGL::Texture::Texture( const Pixmap& pix, const QSize& size, int depth )
+SceneOpenGL::Texture::Texture( const Pixmap& pix, const QSize& size, int depth ) : GLTexture()
     {
     init();
     load( pix, size, depth );
@@ -749,14 +749,18 @@ SceneOpenGL::Texture::~Texture()
 
 void SceneOpenGL::Texture::init()
     {
-    bind();
     bound_glxpixmap = None;
+    }
+
+void SceneOpenGL::Texture::createTexture()
+    {
+    glGenTextures( 1, &mTexture );
+    glBindTexture( mTarget, mTexture );
     if( hasGLVersion( 1, 4, 0 ))
         {
         // Lod bias makes the trilinear-filtered texture look a bit sharper
         glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, -1.0f );
         }
-    unbind();
     }
 
 void SceneOpenGL::Texture::discard()
@@ -851,7 +855,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
     if( tfp_mode )
         { // tfp mode, simply bind the pixmap to texture
         if( mTexture == None )
-            glGenTextures( 1, &mTexture );
+            createTexture();
         // when the pixmap is bound to the texture, they share the same data, so the texture
         // updates automatically - no need to do anything in such case
         if( bound_glxpixmap == None )
@@ -890,8 +894,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         findTarget();
         if( mTexture == None )
             {
-            glGenTextures( 1, &mTexture );
-            glBindTexture( mTarget, mTexture );
+            createTexture();
             y_inverted = false;
             glTexImage2D( mTarget, 0, depth == 32 ? GL_RGBA : GL_RGB,
                 mSize.width(), mSize.height(), 0,
@@ -942,8 +945,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         glDrawBuffer( GL_FRONT );
         if( mTexture == None )
             {
-            glGenTextures( 1, &mTexture );
-            glBindTexture( mTarget, mTexture );
+            createTexture();
             y_inverted = false;
             glCopyTexImage2D( mTarget, 0,
                 depth == 32 ? GL_RGBA : GL_RGB,

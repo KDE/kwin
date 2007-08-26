@@ -104,6 +104,7 @@ class SceneOpenGL::Texture
     protected:
         void findTarget();
         QRegion optimizeBindDamage( const QRegion& reg, int limit );
+        void createTexture();
 
     private:
         void init();
