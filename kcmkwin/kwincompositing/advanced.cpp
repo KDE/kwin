@@ -28,6 +28,8 @@ KWinAdvancedCompositingOptions::KWinAdvancedCompositingOptions(QWidget* parent, 
     ui.setupUi(mainWidget);
     setMainWidget(mainWidget);
 
+    connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(compositingModeChanged()));
+
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glTextureFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
@@ -49,6 +51,11 @@ KWinAdvancedCompositingOptions::~KWinAdvancedCompositingOptions()
 void KWinAdvancedCompositingOptions::changed()
 {
     enableButtonApply(true);
+}
+
+void KWinAdvancedCompositingOptions::compositingModeChanged()
+{
+    ui.glGroup->setEnabled(ui.compositingType->currentIndex() == 0);
 }
 
 void KWinAdvancedCompositingOptions::load()

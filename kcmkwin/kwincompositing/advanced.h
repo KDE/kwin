@@ -32,6 +32,7 @@ class KWinAdvancedCompositingOptions : public KDialog
     public slots:
         void changed();
         void save();
+        void compositingModeChanged();
 
     signals:
         void configSaved();

@@ -36,7 +36,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox" >
+    <widget class="QGroupBox" name="glGroup" >
      <property name="title" >
       <string>OpenGL options</string>
      </property>
