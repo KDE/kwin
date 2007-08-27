@@ -26,7 +26,9 @@
 #define __MAIN_H__
 
 #include <QTabWidget>
+#define KDE3_SUPPORT
 #include <kcmodule.h>
+#undef KDE3_SUPPORT
 
 class KConfig;
 class KFocusConfig;

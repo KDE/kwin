@@ -30,7 +30,9 @@
 #ifndef KWINDECORATION_H
 #define KWINDECORATION_H
 
+#define KDE3_SUPPORT
 #include <kcmodule.h>
+#undef KDE3_SUPPORT
 #include "buttons.h"
 #include <kconfig.h>
 #include <klibloader.h>

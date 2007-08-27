@@ -11,7 +11,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KWIN_PRESENTWINDOWS_CONFIG_H
 #define KWIN_PRESENTWINDOWS_CONFIG_H
 
+#define KDE3_SUPPORT
 #include <kcmodule.h>
+#undef KDE3_SUPPORT
 
 class QComboBox;
 
