@@ -1073,7 +1073,7 @@ void Client::updateMouseGrab()
     if( isActive() && !workspace()->forcedGlobalMouseGrab()) // see Workspace::establishTabBoxGrab()
         {
         // first grab all modifier combinations
-        XGrabButton( display(), AnyButton, AnyModifier, wrapperId(), FALSE,
+        XGrabButton( display(), AnyButton, AnyModifier, wrapperId(), false,
             ButtonPressMask,
             GrabModeSync, GrabModeAsync,
             None, None );

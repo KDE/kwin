@@ -1,3 +1,6 @@
+#ifndef __BTNHIGHCOLOR_H
+#define __BTNHIGHCOLOR_H
+
 /* XPM */
 static const char * btnhighcolor_xpm[] = {
 "14 15 75 1",
@@ -91,3 +94,5 @@ static const char * btnhighcolor_xpm[] = {
 " .GcHAAAAF0<. ",
 "  ..I5kk5I..  ",
 "    J.....    "};
+
+#endif // __BTNHIGHCOLOR_H

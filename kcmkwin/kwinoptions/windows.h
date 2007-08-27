@@ -19,8 +19,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __KWINDOWCONFIG_H__
-#define __KWINDOWCONFIG_H__
+#ifndef __KKWMWINDOWS_H__
+#define __KKWMWINDOWS_H__
 
 #include <QWidget>
 #include <kcmodule.h>
@@ -237,4 +237,5 @@ private:
   QComboBox* focusStealing;
   QCheckBox* hideUtilityWindowsForInactive;
 };
-#endif
+
+#endif // __KKWMWINDOWS_H__

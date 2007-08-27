@@ -10,8 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 // TODO MIT or some other license, perhaps move to some lib
 
-#ifndef KWIN_LIB_EFFECTS_H
-#define KWIN_LIB_EFFECTS_H
+#ifndef KWINEFFECTS_H
+#define KWINEFFECTS_H
 
 #include <kwinglobals.h>
 
@@ -652,4 +652,4 @@ float WindowQuad::originalBottom() const
 
 } // namespace
 
-#endif
+#endif // KWINEFFECTS_H

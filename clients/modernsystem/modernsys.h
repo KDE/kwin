@@ -1,10 +1,9 @@
-#ifndef __MODSYSTEMCLIENT_H
-#define __MODSYSTEMCLIENT_H
+#ifndef __MODERNSYS_H
+#define __MODERNSYS_H
 
 #include <QBitmap>
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
-
 
 namespace ModernSystem {
 
@@ -68,4 +67,4 @@ private:
 
 }
 
-#endif
+#endif // __MODERNSYS_H

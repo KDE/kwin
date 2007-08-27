@@ -28,6 +28,9 @@
 
 */
 
+#ifndef KWINDECORATION_PIXMAPS_H
+#define KWINDECORATION_PIXMAPS_H
+
 // Button icon bitmap data which is hopefully generic enough to be recognized by everyone.
 
 // close.xbm:
@@ -108,3 +111,5 @@ static unsigned char spacer_bits[] = {
    0xac, 0x02, 0x04, 0x02, 0x04, 0x02, 0x04, 0x02, 0x04, 0x02, 0x00, 0x00 };
 
 // vim: ts=4
+
+#endif // KWINDECORATION_PIXMAPS_H

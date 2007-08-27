@@ -8,8 +8,8 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef KWIN_VIDEO_H
-#define KWIN_VIDEO_H
+#ifndef KWIN_VIDEORECORD_H
+#define KWIN_VIDEORECORD_H
 
 #include <kwineffects.h>
 
@@ -40,4 +40,4 @@ class VideoRecordEffect
 
 } // namespace
 
-#endif
+#endif // KWIN_VIDEORECORD_H
