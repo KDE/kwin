@@ -28,19 +28,12 @@ KDE 4.0 TODO
     - global setting?
 
 / configure dialog
-    - dump kompmgr settings
-?   - some simple basic settings in the Translucency config tab
-    - generic options
 ?   - when enabling compositing, have a confirmation msgbox with 10-sec delay
       as with resolution changes: if you don't click ok before timeout then
       fall back to non-composited mode.
 
 - shortcut configuration
     - configurable per effect (in the options dialog)
-
-- handle selecting mode
-    / opengl vs xrender option
-    - tfp vs shm should not be needed
 
 - different handling of differeng gfx cards
     - check that nvidia/ati/intel work and add specific hacks if needed
@@ -69,7 +62,7 @@ KDE 4.0 TODO
         - make windows that are moved/resized by the user slightly transparent
     - hide all testing, demo etc. effects in final builds
     - presentwindows
-        - should show window icon, title (like boxswitch)
+        / should show window icon, title (like boxswitch)
     - boxswitch
         - should share some features (next/previous, etc.) with presentwindows
 ?           - duplicate code or try to share it?
