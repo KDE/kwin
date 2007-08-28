@@ -20,13 +20,10 @@
 #ifndef __KCM_H__
 #define __KCM_H__
 
-#define KDE3_SUPPORT
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
 #include <kconfig.h>
 
 class KConfig;
-class QStringList;
 
 namespace KWin
 {
@@ -38,7 +35,7 @@ class KCMRules
     {
     Q_OBJECT
     public:
-        KCMRules( QWidget *parent, const QStringList &args );
+        KCMRules( QWidget *parent, const QVariantList &args );
         virtual void load();
         virtual void save();
         virtual void defaults();

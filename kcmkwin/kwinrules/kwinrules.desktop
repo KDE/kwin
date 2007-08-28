@@ -7,7 +7,6 @@ ServiceTypes=KCModule
 DocPath=kcontrol/windowmanagement/index.html
 
 X-KDE-Library=kcm_kwinrules
-X-KDE-FactoryName=kwinrules
 X-KDE-ParentApp=kcontrol
 
 Name=Window-Specific Settings

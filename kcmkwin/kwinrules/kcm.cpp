@@ -19,7 +19,6 @@
 #include "kcm.h"
 
 #include <kglobal.h>
-#include <kgenericfactory.h>
 #include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
@@ -29,14 +28,18 @@
 #include <QtDBus/QtDBus>
 
 #include "ruleslist.h"
+#include <KPluginFactory>
+#include <KPluginLoader>
 
-typedef KGenericFactory<KWin::KCMRules> KCMRulesFactory;
-K_EXPORT_COMPONENT_FACTORY(kwinrules, KCMRulesFactory("kcmkwinrules"))
+K_PLUGIN_FACTORY(KCMRulesFactory,
+        registerPlugin<KWin::KCMRules>();
+        )
+K_EXPORT_PLUGIN(KCMRulesFactory("kcmkwinrules"))
 
 namespace KWin
 {
 
-KCMRules::KCMRules( QWidget *parent, const QStringList & )
+KCMRules::KCMRules( QWidget *parent, const QVariantList & )
 : KCModule( KCMRulesFactory::componentData(), parent )
 , config( "kwinrulesrc" )
     {
