@@ -19,7 +19,6 @@
 #include <kglobal.h>
 #include <kpixmapeffect.h>
 #include <kimageeffect.h>
-#include <kdrawutil.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -31,6 +30,7 @@
 #include <QPixmap>
 #include <QPolygon>
 #include <QStyle>
+#include <QPainter>
 
 namespace KDE2
 {

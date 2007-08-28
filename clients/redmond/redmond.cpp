@@ -21,12 +21,12 @@
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
 #include <kimageeffect.h>
-#include <kdrawutil.h>
 #include <klocale.h>
 
 #include <QBitmap>
 #include <QImage>
 #include <QApplication>
+#include <QPainter>
 
 namespace Redmond {
 

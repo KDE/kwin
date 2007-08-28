@@ -13,10 +13,10 @@
 #include <QPixmap>
 #include <QPaintEvent>
 #include <kpixmapeffect.h>
-#include <kdrawutil.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <QBitmap>
+#include <QPainter>
 
 namespace Laptop {
 

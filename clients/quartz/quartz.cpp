@@ -17,16 +17,15 @@
  */
 
 #include <kconfig.h>
-#include <kdrawutil.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kpixmapeffect.h>
 #include <QBitmap>
-#include <qdrawutil.h>
 #include <QImage>
 #include <QPixmap>
 #include <QApplication>
 #include <QPaintEvent>
+#include <QPainter>
 
 #include "quartz.h"
 
