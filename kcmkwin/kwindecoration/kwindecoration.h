@@ -30,9 +30,7 @@
 #ifndef KWINDECORATION_H
 #define KWINDECORATION_H
 
-#define KDE3_SUPPORT
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
 #include "buttons.h"
 #include <kconfig.h>
 #include <klibloader.h>
@@ -65,7 +63,7 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 	Q_OBJECT
 
 	public:
-		KWinDecorationModule(QWidget* parent, const QStringList &);
+		KWinDecorationModule(QWidget* parent, const QVariantList &);
 		~KWinDecorationModule();
 
 		virtual void load();

@@ -55,7 +55,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdialog.h>
-#include <kgenericfactory.h>
 #include <kaboutdata.h>
 
 #include "kwindecoration.h"
@@ -63,13 +62,17 @@
 #include <kdecoration_plugins_p.h>
 #include <kdecorationfactory.h>
 #include <kvbox.h>
+#include <KPluginFactory>
+#include <KPluginLoader>
 
 // KCModule plugin interface
 // =========================
-typedef KGenericFactory<KWinDecorationModule, QWidget> KWinDecoFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kwindecoration, KWinDecoFactory("kcmkwindecoration") )
+K_PLUGIN_FACTORY(KWinDecoFactory,
+        registerPlugin<KWinDecorationModule>();
+        )
+K_EXPORT_PLUGIN(KWinDecoFactory("kcmkwindecoration"))
 
-KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QStringList &)
+KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &)
     : KCModule(KWinDecoFactory::componentData(), parent),
     kwinConfig(KSharedConfig::openConfig("kwinrc")),
     pluginObject(0)
