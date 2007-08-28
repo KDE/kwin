@@ -8,6 +8,9 @@
  *
  *	Draws mini titlebars for tool windows.
  *	Many features are now customizable.
+ *
+ *	drawColorBitmaps orignally from kdefx:
+ *	  Copyright (C) 1999 Daniel M. Duley <mosfet@kde.org>
  */
 
 #include "kde2.h"
@@ -115,6 +118,23 @@ static const unsigned char pinup_mask_bits[] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x20, 0xc0, 0x31, 0xc0, 0x3f,
   0xff, 0x3f, 0xff, 0x3f, 0xff, 0x3f, 0xc0, 0x3f, 0xc0, 0x31, 0xc0, 0x20,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+void drawColorBitmaps(QPainter *p, const QPalette &pal, int x, int y, int w, int h,
+                      const uchar *lightColor, const uchar *midColor, const uchar *blackColor)
+{
+    const uchar *data[]={lightColor, midColor, blackColor};
+
+    QColor colors[]={pal.color(QPalette::Light), pal.color(QPalette::Mid), Qt::black};
+
+    int i;
+    QSize s(w,h);
+    for(i=0; i < 3; ++i){
+		QBitmap b = QBitmap::fromData(s, data[i], QImage::Format_MonoLSB );
+		b.setMask(b);
+		p->setPen(colors[i]);
+		p->drawPixmap(x, y, b);
+    }
+}
 
 // ===========================================================================
 
@@ -331,15 +351,13 @@ void KDE2Handler::createPixmaps()
 	g = options()->palette( ColorButtonBg, true );
 	pinUpPix  = new QPixmap(16, 16);
 	p.begin( pinUpPix );
-	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
-		pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
+    drawColorBitmaps( &p, g, 0, 0, 16, 16, pinup_white_bits, pinup_gray_bits, pinup_dgray_bits );
 	p.end();
 	pinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
 	pinDownPix = new QPixmap(16, 16);
 	p.begin( pinDownPix );
-	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pindown_white_bits,
-		pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
+    drawColorBitmaps( &p, g, 0, 0, 16, 16, pindown_white_bits, pindown_gray_bits, pindown_dgray_bits );
 	p.end();
 	pinDownPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits) );
 
@@ -347,15 +365,13 @@ void KDE2Handler::createPixmaps()
 	g = options()->palette( ColorButtonBg, false );
 	ipinUpPix = new QPixmap(16, 16);
 	p.begin( ipinUpPix );
-	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pinup_white_bits,
-		pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
+    drawColorBitmaps( &p, g, 0, 0, 16, 16, pinup_white_bits, pinup_gray_bits, pinup_dgray_bits );
 	p.end();
 	ipinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
 	ipinDownPix = new QPixmap(16, 16);
 	p.begin( ipinDownPix );
-	kColorBitmaps( &p, g, 0, 0, 16, 16, true, pindown_white_bits,
-		pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
+    drawColorBitmaps( &p, g, 0, 0, 16, 16, pindown_white_bits, pindown_gray_bits, pindown_dgray_bits );
 	p.end();
 	ipinDownPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits) );
 

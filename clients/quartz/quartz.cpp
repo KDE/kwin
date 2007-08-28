@@ -12,6 +12,8 @@
  * Includes mini titlebars for ToolWindow Support.
  * Button positions are now customizable.
  *
+ *	drawColorBitmaps orignally from kdefx:
+ *	  Copyright (C) 1999 Daniel M. Duley <mosfet@kde.org>
  */
 
 #include <kconfig.h>
@@ -105,6 +107,22 @@ static const unsigned char shade_off_bits[] = {
   0x00, 0x00, 0xfe, 0x01, 0xfe, 0x01, 0xfe, 0x01, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
+void drawColorBitmaps(QPainter *p, const QPalette &pal, int x, int y, int w, int h,
+                      const uchar *lightColor, const uchar *midColor, const uchar *blackColor)
+{
+    const uchar *data[]={lightColor, midColor, blackColor};
+
+    QColor colors[]={pal.color(QPalette::Light), pal.color(QPalette::Mid), Qt::black};
+
+    int i;
+    QSize s(w,h);
+    for(i=0; i < 3; ++i){
+		QBitmap b = QBitmap::fromData(s, data[i], QImage::Format_MonoLSB );
+		b.setMask(b);
+		p->setPen(colors[i]);
+		p->drawPixmap(x, y, b);
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -323,15 +341,13 @@ void QuartzHandler::createPixmaps()
 	pinUpPix = new QPixmap(16, 16);
 	p.begin( pinUpPix );
 	p.fillRect( 0, 0, 16, 16, c);
-	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pinup_white_bits,
-					pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
+    drawColorBitmaps( &p, g2, 0, 1, 16, 16, pinup_white_bits, pinup_gray_bits, pinup_dgray_bits );
 	p.end();
 
 	pinDownPix = new QPixmap(16, 16);
 	p.begin( pinDownPix );
 	p.fillRect( 0, 0, 16, 16, c);
-	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pindown_white_bits,
-					pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
+    drawColorBitmaps( &p, g2, 0, 1, 16, 16, pindown_white_bits, pindown_gray_bits, pindown_dgray_bits );
 	p.end();
 
 
@@ -345,15 +361,13 @@ void QuartzHandler::createPixmaps()
 	ipinUpPix = new QPixmap(16, 16);
 	p.begin( ipinUpPix );
 	p.fillRect( 0, 0, 16, 16, c);
-	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pinup_white_bits,
-					pinup_gray_bits, NULL, NULL, pinup_dgray_bits, NULL );
+    drawColorBitmaps( &p, g2, 0, 1, 16, 16, pinup_white_bits, pinup_gray_bits, pinup_dgray_bits );
 	p.end();
 
 	ipinDownPix = new QPixmap(16, 16);
 	p.begin( ipinDownPix );
 	p.fillRect( 0, 0, 16, 16, c);
-	kColorBitmaps( &p, g2, 0, 1, 16, 16, true, pindown_white_bits,
-					pindown_gray_bits, NULL, NULL, pindown_dgray_bits, NULL );
+    drawColorBitmaps( &p, g2, 0, 1, 16, 16, pindown_white_bits, pindown_gray_bits, pindown_dgray_bits );
 	p.end();
 }
 
