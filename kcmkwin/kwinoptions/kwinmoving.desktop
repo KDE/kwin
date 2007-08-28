@@ -7,7 +7,7 @@ Exec=kcmshell kwinmoving
 DocPath=kcontrol/windowmanagement/index.html#action-moving
 
 X-KDE-Library=kcm_kwinoptions
-X-KDE-FactoryName=kwinmoving
+X-KDE-PluginKeyword=kwinmoving
 
 Name=Moving
 Name[af]=Beweeg

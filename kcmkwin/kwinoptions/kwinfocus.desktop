@@ -7,7 +7,7 @@ Exec=kcmshell kwinfocus
 DocPath=kcontrol/windowmanagement/index.html#action-focus
 
 X-KDE-Library=kcm_kwinoptions
-X-KDE-FactoryName=kwinfocus
+X-KDE-PluginKeyword=kwinfocus
 
 Name=Focus
 Name[af]=Fokus

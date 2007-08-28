@@ -7,7 +7,6 @@ ServiceTypes=KCModule
 DocPath=kcontrol/kwineffects/index.html
 
 X-KDE-Library=kcm_kwineffects
-X-KDE-FactoryName=kcm_kwineffects
 X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=window-behaviour

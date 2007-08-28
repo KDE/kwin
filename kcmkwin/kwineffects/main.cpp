@@ -10,7 +10,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "main.h"
 
-#include <kgenericfactory.h>
 #include <kaboutdata.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -19,22 +18,23 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kplugininfo.h>
 #include <kservice.h>
 #include <ksettings/dispatcher.h>
+#include <KPluginFactory>
+#include <KPluginLoader>
 
 #include <QtDBus/QtDBus>
 #include <QBoxLayout>
 
-
-
-
-typedef KGenericFactory<KWin::KWinEffectsConfig> KWinEffectsConfigFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kwineffects, KWinEffectsConfigFactory("kcmkwineffects"))
+K_PLUGIN_FACTORY(KWinEffectsConfigFactory,
+        registerPlugin<KWin::KWinEffectsConfig>();
+        )
+K_EXPORT_PLUGIN(KWinEffectsConfigFactory("kcmkwineffects"))
 
 
 namespace KWin
 {
 
 
-KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QStringList &)
+KWinEffectsConfig::KWinEffectsConfig(QWidget *parent, const QVariantList &)
     : KCModule( KWinEffectsConfigFactory::componentData(), parent),
         mKWinConfig(KSharedConfig::openConfig("kwinrc"))
 {

@@ -7,7 +7,7 @@ Exec=kcmshell kwinactions
 DocPath=kcontrol/windowmanagement/index.html#action-actions
 
 X-KDE-Library=kcm_kwinoptions
-X-KDE-FactoryName=kwinactions
+X-KDE-PluginKeyword=kwinactions
 
 Name=Actions
 Name[af]=Aksies

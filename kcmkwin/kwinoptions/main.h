@@ -26,16 +26,13 @@
 #define __MAIN_H__
 
 #include <QTabWidget>
-#define KDE3_SUPPORT
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
 
 class KConfig;
 class KFocusConfig;
 class KTitleBarActionsConfig;
 class KWindowActionsConfig;
 class KAdvancedConfig;
-class QStringList;
 
 class KWinOptions : public KCModule
 {
@@ -43,7 +40,7 @@ class KWinOptions : public KCModule
 
 public:
 
-  KWinOptions(QWidget *parent, const QStringList &args);
+  KWinOptions(QWidget *parent, const QVariantList &args);
   virtual ~KWinOptions();
 
   void load();
@@ -76,7 +73,7 @@ class KActionsOptions : public KCModule
 
 public:
 
-  KActionsOptions(QWidget *parent, const QStringList &args);
+  KActionsOptions(QWidget *parent, const QVariantList &args);
   virtual ~KActionsOptions();
 
   void load();

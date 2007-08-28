@@ -7,7 +7,7 @@ Exec=kcmshell kwinadvanced
 DocPath=kcontrol/windowmanagement/index.html#action-advanced
 
 X-KDE-Library=kcm_kwinoptions
-X-KDE-FactoryName=kwinadvanced
+X-KDE-PluginKeyword=kwinadvanced
 
 Name=Advanced
 Name[af]=Gevorderde

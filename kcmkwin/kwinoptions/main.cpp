@@ -27,58 +27,46 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kconfig.h>
-#include <kgenericfactory.h>
 #include <kaboutdata.h>
 #include <kdialog.h>
+#include <KPluginFactory>
+#include <KPluginLoader>
 
 #include "mouse.h"
 #include "windows.h"
 #include "main.h"
 
-static KComponentData *_kcmkwm = 0;
-
-inline KComponentData inst() {
-        if (!_kcmkwm) {
-            _kcmkwm = new KComponentData("kcmkwm");
-        }
-        return *_kcmkwm;
-}
+K_PLUGIN_FACTORY_DECLARATION(KWinOptionsFactory)
 
 class KFocusConfigStandalone : public KFocusConfig
 {
+    Q_OBJECT
     public:
-        KFocusConfigStandalone(QWidget* parent, const QStringList &)
-            : KFocusConfig(true, new KConfig("kwinrc"), inst(), parent)
+        KFocusConfigStandalone(QWidget* parent, const QVariantList &)
+            : KFocusConfig(true, new KConfig("kwinrc"), KWinOptionsFactory::componentData(), parent)
         {}
 };
-typedef KGenericFactory<KFocusConfigStandalone> KFocusConfigFactory;
-K_EXPORT_COMPONENT_FACTORY(kwinfocus, KFocusConfigFactory)
 
 class KMovingConfigStandalone : public KMovingConfig
 {
+    Q_OBJECT
     public:
-        KMovingConfigStandalone(QWidget* parent, const QStringList &)
-            : KMovingConfig(true, new KConfig("kwinrc"), inst(), parent)
+        KMovingConfigStandalone(QWidget* parent, const QVariantList &)
+            : KMovingConfig(true, new KConfig("kwinrc"), KWinOptionsFactory::componentData(), parent)
         {}
 };
-typedef KGenericFactory<KMovingConfigStandalone> KMovingConfigFactory;
-K_EXPORT_COMPONENT_FACTORY(kwinmoving, KMovingConfigFactory)
 
 class KAdvancedConfigStandalone : public KAdvancedConfig
 {
+    Q_OBJECT
     public:
-        KAdvancedConfigStandalone(QWidget* parent, const QStringList &)
-            : KAdvancedConfig(true, new KConfig("kwinrc"), inst(), parent)
+        KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
+            : KAdvancedConfig(true, new KConfig("kwinrc"), KWinOptionsFactory::componentData(), parent)
         {}
 };
-typedef KGenericFactory<KAdvancedConfigStandalone> KAdvancedConfigFactory;
-K_EXPORT_COMPONENT_FACTORY(kwinadvanced, KAdvancedConfigFactory)
 
-typedef KGenericFactory<KWinOptions> KWinOptionsFactory;
-K_EXPORT_COMPONENT_FACTORY(kwinoptions, KWinOptionsFactory)
-
-KWinOptions::KWinOptions(QWidget *parent, const QStringList &)
-  : KCModule(inst(), parent)
+KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
+  : KCModule(KWinOptionsFactory::componentData(), parent)
 {
   mConfig = new KConfig( "kwinrc", KConfig::IncludeGlobals );
 
@@ -195,11 +183,8 @@ void KWinOptions::moduleChanged(bool state)
   emit KCModule::changed(state);
 }
 
-typedef KGenericFactory<KActionsOptions> KActionsOptionsFactory;
-K_EXPORT_COMPONENT_FACTORY(kwinactions, KActionsOptionsFactory)
-
-KActionsOptions::KActionsOptions(QWidget *parent, const QStringList &)
-  : KCModule(inst(), parent)
+KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
+  : KCModule(KWinOptionsFactory::componentData(), parent)
 {
   mConfig = new KConfig( "kwinrc", KConfig::IncludeGlobals );
 
@@ -260,4 +245,14 @@ void KActionsOptions::moduleChanged(bool state)
   emit KCModule::changed(state);
 }
 
+K_PLUGIN_FACTORY_DEFINITION(KWinOptionsFactory,
+        registerPlugin<KActionsOptions>("kwinactions");
+        registerPlugin<KFocusConfigStandalone>("kwinfocus");
+        registerPlugin<KMovingConfigStandalone>("kwinmoving");
+        registerPlugin<KAdvancedConfigStandalone>("kwinadvanced");
+        registerPlugin<KWinOptions>("kwinoptions");
+        )
+K_EXPORT_PLUGIN(KWinOptionsFactory("kcmkwm"))
+
 #include "main.moc"
+#include "moc_main.cpp"

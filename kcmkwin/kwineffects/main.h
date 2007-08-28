@@ -12,9 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
-#define KDE3_SUPPORT
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
 
 #include <ksharedconfig.h>
 #include <QHash>
@@ -29,7 +27,7 @@ class KWinEffectsConfig : public KCModule
     {
     Q_OBJECT
     public:
-        KWinEffectsConfig(QWidget *parent, const QStringList &args);
+        KWinEffectsConfig(QWidget *parent, const QVariantList &args);
         virtual ~KWinEffectsConfig();
 
         virtual QString quickHelp() const;
