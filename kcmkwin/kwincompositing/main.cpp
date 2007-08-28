@@ -12,7 +12,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "advanced.h"
 
-#include <kgenericfactory.h>
 #include <kaboutdata.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
@@ -20,19 +19,19 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <ksettings/dispatcher.h>
 
 #include <QtDBus/QtDBus>
+#include <KPluginFactory>
+#include <KPluginLoader>
 
-
-
-
-typedef KGenericFactory<KWin::KWinCompositingConfig> KWinCompositingConfigFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kwincompositing, KWinCompositingConfigFactory("kcmkwincompositing"))
-
+K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
+        registerPlugin<KWin::KWinCompositingConfig>();
+        )
+K_EXPORT_PLUGIN(KWinCompositingConfigFactory("kcmkwincompositing"))
 
 namespace KWin
 {
 
 
-KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QStringList &)
+KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList &)
     : KCModule( KWinCompositingConfigFactory::componentData(), parent),
         mKWinConfig(KSharedConfig::openConfig("kwinrc"))
 {

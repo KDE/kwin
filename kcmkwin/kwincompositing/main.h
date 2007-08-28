@@ -12,9 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
-#define KDE3_SUPPORT
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
 
 #include <ksharedconfig.h>
 
@@ -29,7 +27,7 @@ class KWinCompositingConfig : public KCModule
     {
     Q_OBJECT
     public:
-        KWinCompositingConfig(QWidget *parent, const QStringList &args);
+        KWinCompositingConfig(QWidget *parent, const QVariantList &args);
         virtual ~KWinCompositingConfig();
 
         virtual QString quickHelp() const;

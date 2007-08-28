@@ -7,7 +7,6 @@ ServiceTypes=KCModule
 DocPath=kcontrol/kwincompositing/index.html
 
 X-KDE-Library=kcm_kwincompositing
-X-KDE-FactoryName=kcm_kwincompositing
 X-KDE-ParentApp=kcontrol
 
 Name=Desktop Effects
