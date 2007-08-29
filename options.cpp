@@ -194,10 +194,10 @@ unsigned long Options::updateSettings()
         glMode = GLFallback;
     glDirect = config.readEntry("GLDirect", true );
     glVSync = config.readEntry("GLVSync", true );
+    smoothScale = qBound( -1, config.readEntry( "GLTextureFilter", -1 ), 2 );
 
     config.changeGroup("Translucency");
     refreshRate = config.readEntry( "RefreshRate", 0 );
-    smoothScale = qBound( -1, config.readEntry( "SmoothScale", -1 ), 2 );
     glStrictBinding = config.readEntry( "GLStrictBinding", false );
     const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
     hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 3 ), 3 ) ];
