@@ -181,6 +181,9 @@ PKGCONFIG(libcaptury CAPTURY_INCLUDES CAPTURY_LINK_DIR CAPTURY_LDFLAGS CAPTURY_C
 if( CAPTURY_LDFLAGS )
     SET( CAPTURY_FOUND TRUE )
 endif( CAPTURY_LDFLAGS )
+
+macro_log_feature(CAPTURY_FOUND "Capseo framework" "libcaptury is a framework realtime video capturing for e.g. screen casts" "http://rm-rf.in/captury")
+
 macro_bool_to_01( CAPTURY_FOUND HAVE_CAPTURY )
 if( HAVE_CAPTURY )
     KWIN4_ADD_EFFECT(videorecord videorecord.cpp)
