@@ -25,7 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
  - ./autogen.sh
  - the usual configure && make && make install procedure
  
- Video is saved to /tmp/kwin_video.cps, use
+ Video is saved to $HOME/kwin_video.cps, use
  "cpsrecode -i kwin_video.cps  -o - | mplayer -" to play,
  use mencoder the same way to create a video.
 
@@ -112,7 +112,8 @@ void VideoRecordEffect::startRecording()
         return;
         }
     // TODO
-    if( CapturySetOutputFileName( client, "/tmp/kwin_video.cps" ) != CAPTURY_SUCCESS )
+    if( CapturySetOutputFileName( client, QFile::encodeName(QDir::homePath()+
+                    "/kwin_video.cps").constData() ) != CAPTURY_SUCCESS )
         {
         kDebug( 1212 ) << "Video recording file open failed";
         return;
