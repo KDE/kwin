@@ -15,6 +15,7 @@ Name[ne]=उल्टाउनुहोस्
 Name[nl]=Omkeren
 Name[pa]=ਉਲਟ
 Name[pt]=Inverter
+Name[pt_BR]=Inverter
 Name[sl]=Obrni
 Name[sv]=Invertera
 Name[zh_TW]=反轉
@@ -31,7 +32,7 @@ Comment[nds]=Dreiht de Klören vun den Schriefdisch üm
 Comment[ne]=डेस्कटपको रङ उल्टाउँदछ (खण्डन गर्दछ)
 Comment[nl]=Keert de kleuren van de desktop om (negatief)
 Comment[pt]=Inverte (nega) as cores no ecrã
-Comment[pt_BR]=Inverte (nega) as cores no ecrã
+Comment[pt_BR]=Inverte (nega) as cores da área de trabalho
 Comment[sv]=Inverterar (vänder på) skrivbordets färger
 Comment[zh_TW]=將桌面上的顏色反轉
 
