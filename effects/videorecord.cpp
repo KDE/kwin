@@ -38,6 +38,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
+#include <qdir.h>
+#include <qfile.h>
 
 namespace KWin
 {
