@@ -168,7 +168,7 @@ void PlastikHandler::readConfig()
 
     QFontMetrics fm(m_titleFont);  // active font = inactive font
     int titleHeightMin = config.readEntry("MinTitleHeight", 16);
-    // The title should strech with bigger font sizes!
+    // The title should stretch with bigger font sizes!
     m_titleHeight = qMax(titleHeightMin, fm.height() + 4); // 4 px for the shadow etc.
     // have an even title/button size so the button icons are fully centered...
     if ( m_titleHeight%2 == 0)
@@ -176,7 +176,7 @@ void PlastikHandler::readConfig()
 
     fm = QFontMetrics(m_titleFontTool);  // active font = inactive font
     int titleHeightToolMin = config.readEntry("MinTitleHeightTool", 13);
-    // The title should strech with bigger font sizes!
+    // The title should stretch with bigger font sizes!
     m_titleHeightTool = qMax(titleHeightToolMin, fm.height() ); // don't care about the shadow etc.
     // have an even title/button size so the button icons are fully centered...
     if ( m_titleHeightTool%2 == 0)

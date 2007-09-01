@@ -8,7 +8,7 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-// read addtional window rules and add them to kwinrulesrc
+// read additional window rules and add them to kwinrulesrc
 
 #include <kconfig.h>
 #include <kdebug.h>

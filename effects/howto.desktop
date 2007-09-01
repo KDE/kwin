@@ -25,7 +25,7 @@ X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_howto
 # Category of the effect, for config dialog
 X-KDE-PluginInfo-Category=Demos
-# Version and licence
+# Version and license
 X-KDE-PluginInfo-Version=0.1.0
 X-KDE-PluginInfo-License=GPL
 # If the effect depends on any other effect(s) to be active, then internal
