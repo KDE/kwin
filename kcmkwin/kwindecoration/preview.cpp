@@ -29,7 +29,7 @@
 #include <QMouseEvent>
 #include <QResizeEvent>
 #include <QVector>
-#include <kiconloader.h>
+#include <kicon.h>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
@@ -326,7 +326,7 @@ NET::WindowType KDecorationPreviewBridge::windowType( unsigned long ) const
 
 QIcon KDecorationPreviewBridge::icon() const
     {
-    return QIcon( KIconLoader::global()->loadIcon( "xapp", K3Icon::NoGroup, 32 ));
+    return KIcon( "xapp" );
     }
 
 QString KDecorationPreviewBridge::caption() const
