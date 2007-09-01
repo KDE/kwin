@@ -414,6 +414,7 @@ void B2Client::init()
 	QLabel *previewLabel = new QLabel(
 		i18n("<b><center>B II preview</center></b>"),
 		widget());
+        previewLabel->setAutoFillBackground(true);
         g->addWidget(previewLabel, 1, 1);
     } else {
 	g->addItem(new QSpacerItem(0, 0), 1, 1);

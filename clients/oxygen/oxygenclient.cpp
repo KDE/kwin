@@ -135,9 +135,9 @@ void OxygenClient::init()
 
     mainlayout->addLayout(titlelayout, 1, 1);
     if (isPreview()) {
-        mainlayout->addWidget(
-        new QLabel(i18n("<b><center>Oxygen preview! =)</center></b>"),
-        widget()), 2, 1);
+        QWidget *previewWidget = new QLabel(i18n("<b><center>Oxygen preview! =)</center></b>"), widget());
+        previewWidget->setAutoFillBackground(true);
+        mainlayout->addWidget(previewWidget, 2, 1);
     } else {
         mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
     }
