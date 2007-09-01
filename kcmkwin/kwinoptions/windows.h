@@ -33,7 +33,6 @@ class QComboBox;
 class QGroupBox;
 class QLabel;
 class QSlider;
-class Q3ButtonGroup;
 class QSpinBox;
 class Q3VButtonGroup;
 
@@ -109,7 +108,7 @@ private:
   void setRollOverDesktops(bool);
   void setShowPopupinfo(bool);
 
-  Q3ButtonGroup *fcsBox;
+  QGroupBox *fcsBox;
   QComboBox *focusCombo;
   QCheckBox *autoRaiseOn;
   QCheckBox *delayFocusOn;
@@ -119,7 +118,7 @@ private:
   QCheckBox *separateScreenFocus;
   QCheckBox *activeMouseScreen;
 
-  Q3ButtonGroup *kbdBox;
+  QGroupBox    *kbdBox;
   QCheckBox    *altTabPopup;
   QCheckBox    *traverseAll;
   QCheckBox    *rollOverDesktops;
@@ -161,7 +160,7 @@ private:
   void setPlacement(int); //CT
   void setMoveResizeMaximized(bool);
 
-  Q3ButtonGroup *windowsBox;
+  QGroupBox *windowsBox;
   QCheckBox *opaque;
   QCheckBox *resizeOpaqueOn;
   QCheckBox *geometryTipOn;
@@ -180,7 +179,7 @@ private:
   int getWindowSnapZone();
   void setWindowSnapZone( int );
 
-  Q3VButtonGroup *MagicBox;
+  QGroupBox *MagicBox;
   KIntNumInput *BrdrSnap, *WndwSnap;
   QCheckBox *OverlapSnap;
 
@@ -213,7 +212,7 @@ private:
   void setShadeHoverInterval(int);
 
   QCheckBox *animateShade;
-  Q3ButtonGroup *shBox;
+  QGroupBox *shBox;
   QCheckBox *shadeHoverOn;
   KIntNumInput *shadeHover;
 
