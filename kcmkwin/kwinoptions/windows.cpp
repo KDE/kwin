@@ -991,7 +991,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     BrdrSnap->setSteps(1,10);
     WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
-                                    " they're moved near another window.") );
+                                    " they are moved near another window.") );
 
     OverlapSnap=new QCheckBox(i18n("Snap windows onl&y when overlapping"),MagicBox);
     OverlapSnap->setWhatsThis( i18n("Here you can set that windows will be only"
