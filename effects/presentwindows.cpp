@@ -263,7 +263,7 @@ void PresentWindowsEffect::windowClosed( EffectWindow* w )
     {
     if( mHoverWindow == w )
         mHoverWindow = NULL;
-    mWindowsToPresent.remove( w );
+    mWindowsToPresent.removeAll( w );
     rearrangeWindows();
     }
 

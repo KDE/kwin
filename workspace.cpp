@@ -441,8 +441,8 @@ Workspace::~Workspace()
         // No removeClient() is called, it does more than just removing.
         // However, remove from some lists to e.g. prevent performTransiencyCheck()
         // from crashing.
-        clients.remove( *it );
-        desktops.remove( *it );
+        clients.removeAll( *it );
+        desktops.removeAll( *it );
         }
     for( UnmanagedList::ConstIterator it = unmanaged.begin();
          it != unmanaged.end();
