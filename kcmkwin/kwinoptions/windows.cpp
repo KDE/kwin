@@ -33,6 +33,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include <qdesktopwidget.h>
+//Added by qt3to4:
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QBoxLayout>
@@ -126,10 +127,12 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     //lay->addWidget(plcBox);
 
     // focus policy
-    fcsBox = new QGroupBox(i18n("Focus"),this);
+    fcsBox = new Q3ButtonGroup(i18n("Focus"),this);
+    fcsBox->setColumnLayout( 0, Qt::Horizontal );
 
-    QBoxLayout *fLay = new QVBoxLayout(fcsBox);
+    QBoxLayout *fLay = new QVBoxLayout();
     fLay->setSpacing(KDialog::spacingHint());
+    fcsBox->layout()->addItem( fLay );
 
     QBoxLayout *cLay = new QHBoxLayout();
     fLay->addLayout( cLay );
@@ -240,9 +243,11 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     lay->addWidget(fcsBox);
 
-    kbdBox = new QGroupBox(i18n("Navigation"), this);
-    QVBoxLayout *kLay = new QVBoxLayout(kbdBox);
+    kbdBox = new Q3ButtonGroup(i18n("Navigation"), this);
+    kbdBox->setColumnLayout( 0, Qt::Horizontal );
+    QVBoxLayout *kLay = new QVBoxLayout();
     kLay->setSpacing(KDialog::spacingHint());
+    kbdBox->layout()->addItem( kLay );
 
     altTabPopup = new QCheckBox( i18n("Show window list while switching windows"), kbdBox );
     kLay->addWidget( altTabPopup );
@@ -585,21 +590,17 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     //lay->addWidget(plcBox);
 
-    shBox = new QGroupBox(i18n("Shading"), this);
-    QVBoxLayout *shBoxLayout = new QVBoxLayout(shBox);
+    shBox = new Q3VButtonGroup(i18n("Shading"), this);
 
     animateShade = new QCheckBox(i18n("Anima&te"), shBox);
-    shBoxLayout->addWidget(animateShade);
     animateShade->setWhatsThis( i18n("Animate the action of reducing the window to its titlebar (shading)"
                                        " as well as the expansion of a shaded window") );
 
     shadeHoverOn = new QCheckBox(i18n("&Enable hover"), shBox);
-    shBoxLayout->addWidget(shadeHoverOn);
 
     connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
 
     shadeHover = new KIntNumInput(500, shBox);
-    shBoxLayout->addWidget(shadeHover);
     shadeHover->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     shadeHover->setRange(0, 3000, 100, true);
     shadeHover->setSteps(100, 100);
@@ -840,32 +841,37 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     lay->setMargin(0);
     lay->setSpacing(KDialog::spacingHint());
 
-    windowsBox = new QGroupBox(i18n("Windows"), this);
+    windowsBox = new Q3ButtonGroup(i18n("Windows"), this);
+    windowsBox->setColumnLayout( 0, Qt::Horizontal );
 
-    QBoxLayout *wLay = new QVBoxLayout(windowsBox);
+    QBoxLayout *wLay = new QVBoxLayout ();
     wLay->setSpacing(KDialog::spacingHint());
+    windowsBox->layout()->addItem( wLay );
+
+    QBoxLayout *bLay = new QVBoxLayout;
+    wLay->addLayout(bLay);
 
     opaque = new QCheckBox(i18n("Di&splay content in moving windows"), windowsBox);
-    wLay->addWidget(opaque);
+    bLay->addWidget(opaque);
     opaque->setWhatsThis( i18n("Enable this option if you want a window's content to be fully shown"
                                   " while moving it, instead of just showing a window 'skeleton'. The result may not be satisfying"
                                   " on slow machines without graphic acceleration.") );
 
     resizeOpaqueOn = new QCheckBox(i18n("Display content in &resizing windows"), windowsBox);
-    wLay->addWidget(resizeOpaqueOn);
+    bLay->addWidget(resizeOpaqueOn);
     resizeOpaqueOn->setWhatsThis( i18n("Enable this option if you want a window's content to be shown"
                                           " while resizing it, instead of just showing a window 'skeleton'. The result may not be satisfying"
                                           " on slow machines.") );
 
     geometryTipOn = new QCheckBox(i18n("Display window &geometry when moving or resizing"), windowsBox);
-    wLay->addWidget(geometryTipOn);
+    bLay->addWidget(geometryTipOn);
     geometryTipOn->setWhatsThis( i18n("Enable this option if you want a window's geometry to be displayed"
                                         " while it is being moved or resized. The window position relative"
                                         " to the top-left corner of the screen is displayed together with"
                                         " its size."));
 
     QGridLayout *rLay = new QGridLayout();
-    wLay->addLayout(rLay);
+    bLay->addLayout(rLay);
     rLay->setColumnStretch(0,0);
     rLay->setColumnStretch(1,1);
 
@@ -902,13 +908,13 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     minimizeAnimFastLabel->setWhatsThis( wtstr );
 
     moveResizeMaximized = new QCheckBox( i18n("Allow moving and resizing o&f maximized windows"), windowsBox);
-    wLay->addWidget(moveResizeMaximized);
+    bLay->addWidget(moveResizeMaximized);
     moveResizeMaximized->setWhatsThis( i18n("When enabled, this feature activates the border of maximized windows"
                                               " and allows you to move or resize them,"
                                               " just like for normal windows"));
 
     QBoxLayout *vLay = new QHBoxLayout();
-    wLay->addLayout( vLay );
+    bLay->addLayout( vLay );
 
     QLabel *plcLabel = new QLabel(i18n("&Placement:"),windowsBox);
 
@@ -946,7 +952,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     vLay->addWidget(plcLabel, 0);
     vLay->addWidget(placementCombo, 1, Qt::AlignLeft);
 
-    wLay->addSpacing(10);
+    bLay->addSpacing(10);
 
     lay->addWidget(windowsBox);
 
@@ -965,12 +971,10 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
 
 
     //CT 15mar98 - add EdgeResistance, BorderAttractor, WindowsAttractor config
-    MagicBox = new QGroupBox(i18n("Snap Zones"), this);
-    QVBoxLayout *MagicBoxLayout = new QVBoxLayout(MagicBox);
-    MagicBoxLayout->setMargin(15);
+    MagicBox = new Q3VButtonGroup(i18n("Snap Zones"), this);
+    MagicBox->layout()->setMargin(15);
 
     BrdrSnap = new KIntNumInput(10, MagicBox);
-    MagicBoxLayout->addWidget(BrdrSnap);
     BrdrSnap->setSpecialValueText( i18n("none") );
     BrdrSnap->setRange( 0, MAX_BRDR_SNAP);
     BrdrSnap->setLabel(i18n("&Border snap zone:"));
@@ -980,7 +984,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
                                     " moved near it.") );
 
     WndwSnap = new KIntNumInput(10, MagicBox);
-    MagicBoxLayout->addWidget(WndwSnap);
     WndwSnap->setSpecialValueText( i18n("none") );
     WndwSnap->setRange( 0, MAX_WNDW_SNAP);
     WndwSnap->setLabel(i18n("&Window snap zone:"));
@@ -990,7 +993,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
                                     " they are moved near another window.") );
 
     OverlapSnap=new QCheckBox(i18n("Snap windows onl&y when overlapping"),MagicBox);
-    MagicBoxLayout->addWidget(OverlapSnap);
     OverlapSnap->setWhatsThis( i18n("Here you can set that windows will be only"
                                        " snapped if you try to overlap them, i.e. they will not be snapped if the windows"
                                        " comes only near another window or border.") );
