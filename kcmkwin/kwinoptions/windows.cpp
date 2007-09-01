@@ -48,7 +48,6 @@
 #include <kdialog.h>
 #include <kglobal.h>
 #include <kprocess.h>
-#include <k3process.h>
 #include <QTabWidget>
 #include <QtDBus/QtDBus>
 
