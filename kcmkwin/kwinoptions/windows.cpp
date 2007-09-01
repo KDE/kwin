@@ -889,7 +889,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     minimizeAnimSlider->setValue( 0 );
     minimizeAnimSlider->setOrientation( Qt::Horizontal );
     minimizeAnimSlider->setTickPosition(QSlider::TicksBelow);
-    rLay->addWidget(minimizeAnimSlider,0,0,1,2);
+    rLay->addWidget(minimizeAnimSlider,0,1,1,2);
 
     connect(minimizeAnimOn, SIGNAL(toggled(bool)), this, SLOT(setMinimizeAnim(bool)));
     connect(minimizeAnimSlider, SIGNAL(valueChanged(int)), this, SLOT(setMinimizeAnimSpeed(int)));

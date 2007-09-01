@@ -24,7 +24,6 @@
 
 class KConfig;
 
-#include <QWidget>
 #include <kcmodule.h>
 #include <QComboBox>
 
