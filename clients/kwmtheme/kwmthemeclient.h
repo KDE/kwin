@@ -15,7 +15,7 @@ namespace KWMTheme {
 class MyButton : public QToolButton
 {
 public:
-    MyButton(QWidget *parent=0, const char *name=0)
+    explicit MyButton(QWidget *parent=0, const char *name=0)
         : QToolButton(parent, name){setAutoRaise(true);setCursor( arrowCursor ); }
 protected:
     void drawButtonLabel(QPainter *p);

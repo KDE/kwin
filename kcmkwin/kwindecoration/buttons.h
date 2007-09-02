@@ -150,7 +150,7 @@ class ButtonDropSite: public QFrame
 	Q_OBJECT
 
 	public:
-		ButtonDropSite( QWidget* parent=0, const char* name=0 );
+		explicit ButtonDropSite( QWidget* parent=0, const char* name=0 );
 		~ButtonDropSite();
 
 		// Allow external classes access our buttons - ensure buttons are
@@ -203,7 +203,7 @@ class ButtonPositionWidget : public QWidget
 	Q_OBJECT
 
 	public:
-		ButtonPositionWidget(QWidget *parent = 0, const char* name = 0);
+		explicit ButtonPositionWidget(QWidget *parent = 0, const char* name = 0);
 		~ButtonPositionWidget();
 
 		/**

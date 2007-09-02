@@ -23,7 +23,7 @@ class PopupInfo : public QWidget
     {
     Q_OBJECT
     public:
-        PopupInfo( Workspace* ws, const char *name=0 );
+        explicit PopupInfo( Workspace* ws, const char *name=0 );
         ~PopupInfo();
 
         void reset();

@@ -32,7 +32,7 @@ class KDecorationPreview
     : public QWidget
     {
     public:
-        KDecorationPreview( KDecorationPlugins* plugin, QWidget* parent = NULL, const char* name = NULL );
+        explicit KDecorationPreview( KDecorationPlugins* plugin, QWidget* parent = NULL, const char* name = NULL );
         virtual ~KDecorationPreview();
 
         void performRepaintTest(int n);

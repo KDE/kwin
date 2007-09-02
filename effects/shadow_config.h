@@ -25,7 +25,7 @@ class ShadowEffectConfig : public KCModule
     {
     Q_OBJECT
     public:
-        ShadowEffectConfig(QWidget* parent = 0, const QStringList& args = QStringList());
+        explicit ShadowEffectConfig(QWidget* parent = 0, const QStringList& args = QStringList());
         ~ShadowEffectConfig();
 
         virtual void save();

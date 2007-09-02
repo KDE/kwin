@@ -45,7 +45,7 @@ Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
 class OxygenButton : public QAbstractButton
 {
 public:
-    OxygenButton(OxygenClient *parent=0,
+    explicit OxygenButton(OxygenClient *parent=0,
                   const QString &tip=NULL,
                   ButtonType type=ButtonHelp,
                   const unsigned char *bitmap=0);

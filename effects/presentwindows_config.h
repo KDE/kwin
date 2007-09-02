@@ -25,7 +25,7 @@ class PresentWindowsEffectConfig : public KCModule
     {
     Q_OBJECT
     public:
-        PresentWindowsEffectConfig(QWidget* parent = 0, const QStringList& args = QStringList());
+        explicit PresentWindowsEffectConfig(QWidget* parent = 0, const QStringList& args = QStringList());
         ~PresentWindowsEffectConfig();
 
         virtual void save();

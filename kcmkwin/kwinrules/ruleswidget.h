@@ -99,7 +99,7 @@ class RulesDialog
     {
     Q_OBJECT
     public:
-        RulesDialog( QWidget* parent = NULL, const char* name = NULL );
+        explicit RulesDialog( QWidget* parent = NULL, const char* name = NULL );
         Rules* edit( Rules* r, WId window, bool show_hints );
     protected:
         virtual void accept();

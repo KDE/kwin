@@ -55,7 +55,7 @@ class DetectDialog
     {
     Q_OBJECT
     public:
-        DetectDialog( QWidget* parent = NULL, const char* name = NULL );
+        explicit DetectDialog( QWidget* parent = NULL, const char* name = NULL );
         void detect( WId window );
         QByteArray selectedClass() const;
         bool selectedWholeClass() const;

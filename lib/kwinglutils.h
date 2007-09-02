@@ -99,8 +99,8 @@ class KWIN_EXPORT GLTexture
     {
     public:
         GLTexture();
-        GLTexture( const QImage& image, GLenum target = GL_TEXTURE_2D );
-        GLTexture( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
+        explicit GLTexture( const QImage& image, GLenum target = GL_TEXTURE_2D );
+        explicit GLTexture( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
         GLTexture( const QString& fileName );
         GLTexture( int width, int height );
         virtual ~GLTexture();
