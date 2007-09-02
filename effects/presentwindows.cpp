@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kactioncollection.h>
 #include <kaction.h>
 #include <klocale.h>
+#include <kcolorscheme.h>
 
 #include <QMouseEvent>
 #include <qpainter.h>
@@ -190,7 +191,15 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
 
     if(mActiveness > 0.0f && mWindowData.contains(w))
         {
+        const WindowData& windata = mWindowData[w];
         paintWindowIcon( w, data );
+        if( windata.hover > 0.0f )
+        {
+            QString text = w->caption();
+            float centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
+            float centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
+            paintText( text, QPointF(centerx, centery), w->width() * data.xScale - 20, windata.hover );
+        }
         }
     }
 
@@ -882,6 +891,80 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
             data.iconPicture, None,
             effects->xrenderBufferPicture(),
             0, 0, 0, 0, x, y, width, height );
+        }
+#endif
+    }
+
+void PresentWindowsEffect::paintText( const QString& text, const QPointF& center, float maxwidth, float alpha )
+    {
+    QPainter p;
+    // Set a bigger font
+    QFont f = p.font();
+    f.setBold( true );
+    f.setPointSize( 12 );
+    // Calculate size of the text
+    QFontMetricsF fm( f );
+    QString painttext = fm.elidedText( text, Qt::ElideRight, maxwidth );
+    QRectF textrect = fm.boundingRect( painttext );
+
+    // Create temporary QPixmap where the text will be drawn onto
+    QPixmap textPixmap( textrect.width(), textrect.height());
+    textPixmap.fill( Qt::transparent );
+
+    // Draw the text
+    p.begin( &textPixmap );
+    p.setFont( f );
+    p.setRenderHint( QPainter::TextAntialiasing );
+    p.setPen( Qt::white );
+    p.drawText( -textrect.topLeft(), painttext );
+    p.end();
+
+    // Area covered by text
+    QRect area( center.x() - textrect.width() / 2, center.y() - textrect.height() / 2,
+                 textrect.width(), textrect.height() );
+
+#ifdef HAVE_OPENGL
+    if( effects->compositingType() == OpenGLCompositing )
+        {
+        GLTexture textTexture( textPixmap, GL_TEXTURE_RECTANGLE_ARB );
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glColor4f( 0.0f, 0.0f, 0.0f, alpha );
+        renderRoundBox( area.adjusted( -8, -3, 8, 3 ), 5 );
+        textTexture.bind();
+        glColor4f( 1.0f, 1.0f, 1.0f, alpha );
+        const float verts[ 4 * 2 ] =
+            {
+            area.x(), area.y(),
+            area.x(), area.y() + area.height(),
+            area.x() + area.width(), area.y() + area.height(),
+            area.x() + area.width(), area.y()
+            };
+        const float texcoords[ 4 * 2 ] =
+            {
+            0, textPixmap.height(),
+            0, 0,
+            textPixmap.width(), 0,
+            textPixmap.width(), textPixmap.height()
+            };
+        renderGLGeometry( 4, verts, texcoords );
+        textTexture.unbind();
+        glPopAttrib();
+        }
+#endif
+#ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing )
+        {
+        static XRenderPictFormat* alphaFormat = 0;
+        if( !alphaFormat)
+            alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
+        Picture textPicture;
+        textPicture = XRenderCreatePicture( display(), textPixmap.handle(), alphaFormat, 0, NULL );
+        XRenderComposite( display(), textPixmap.depth() == 32 ? PictOpOver : PictOpSrc,
+        textPicture, None, effects->xrenderBufferPicture(),
+        0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
+        XRenderFreePicture( display(), textPicture );
         }
 #endif
     }
