@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QtCore/QPair>
 #include <QtCore/QRect>
 #include <QtGui/QRegion>
+#include <QtGui/QFont>
 
 #include <QtCore/QVector>
 #include <QtCore/QList>
@@ -233,6 +234,20 @@ class KWIN_EXPORT EffectsHandler
         CompositingType compositingType() const;
         virtual unsigned long xrenderBufferPicture() = 0;
         virtual void reconfigure() = 0;
+
+        /**
+         * Paints given text onto screen, possibly in elided form
+         * @param text
+         * @param center center point of the painted text
+         * @param maxwidth if text is longer than this, is will be elided
+         * @param color color of the text, may contain alpha
+         * @param font font for the text
+         **/
+        bool paintText( const QString& text, const QPoint& center, int maxwidth,
+                        const QColor& color, const QFont& font = QFont() );
+        bool paintTextWithBackground( const QString& text, const QPoint& center, int maxwidth,
+                                      const QColor& color, const QColor& bgcolor,
+                                      const QFont& font = QFont() );
 
 
         /**

@@ -44,6 +44,9 @@ if(OPENGL_FOUND)
     target_link_libraries(kwineffects ${DL_LIBRARY})
   endif(DL_LIBRARY)
 endif(OPENGL_FOUND)
+if (X11_Xrender_FOUND)
+  target_link_libraries(kwineffects ${X11_Xrender_LIB})
+endif (X11_Xrender_FOUND)
 
 install( FILES kwinglobals.h kwineffects.h DESTINATION ${INCLUDE_INSTALL_DIR})
 

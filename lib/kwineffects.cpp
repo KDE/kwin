@@ -10,14 +10,24 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "kwineffects.h"
 
+#include "kwinglutils.h"
+
 #include <QtDBus/QtDBus>
 #include <QVariant>
 #include <QList>
+#include <QtGui/QFontMetrics>
+#include <QtGui/QPainter>
+#include <QtGui/QPixmap>
 
 #include <kdebug.h>
 #include <ksharedconfig.h>
 
 #include <assert.h>
+
+#ifdef HAVE_XRENDER
+#include <X11/extensions/Xrender.h>
+#endif
+
 
 namespace KWin
 {
@@ -275,6 +285,101 @@ KConfigGroup EffectsHandler::effectConfig( const QString& effectname )
     return kwinconfig->group( "Effect-" + effectname );
     }
 
+bool EffectsHandler::paintText( const QString& text, const QPoint& center, int maxwidth,
+        const QColor& color, const QFont& font )
+{
+    QPainter p;
+    // Calculate size of the text
+    QFontMetrics fm( font );
+    QString painttext = fm.elidedText( text, Qt::ElideRight, maxwidth );
+    QRect textrect = fm.boundingRect( painttext );
+
+    // Create temporary QPixmap where the text will be drawn onto
+    QPixmap textPixmap( textrect.width(), textrect.height());
+    textPixmap.fill( Qt::transparent );
+
+    // Draw the text
+    p.begin( &textPixmap );
+    p.setFont( font );
+    p.setRenderHint( QPainter::TextAntialiasing );
+    p.setPen( color );
+    p.drawText( -textrect.topLeft(), painttext );
+    p.end();
+
+    // Area covered by text
+    QRect area( center.x() - textrect.width() / 2, center.y() - textrect.height() / 2,
+                 textrect.width(), textrect.height() );
+
+#ifdef HAVE_OPENGL
+    if( effects->compositingType() == OpenGLCompositing )
+        {
+        GLTexture textTexture( textPixmap, GL_TEXTURE_RECTANGLE_ARB );
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        textTexture.bind();
+        const float verts[ 4 * 2 ] =
+            {
+            area.x(), area.y(),
+            area.x(), area.y() + area.height(),
+            area.x() + area.width(), area.y() + area.height(),
+            area.x() + area.width(), area.y()
+            };
+        const float texcoords[ 4 * 2 ] =
+            {
+            0, textPixmap.height(),
+            0, 0,
+            textPixmap.width(), 0,
+            textPixmap.width(), textPixmap.height()
+            };
+        renderGLGeometry( 4, verts, texcoords );
+        textTexture.unbind();
+        glPopAttrib();
+        return true;
+        }
+#endif
+#ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing )
+        {
+        static XRenderPictFormat* alphaFormat = 0;
+        if( !alphaFormat)
+            alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
+        Picture textPicture;
+        textPicture = XRenderCreatePicture( display(), textPixmap.handle(), alphaFormat, 0, NULL );
+        XRenderComposite( display(), textPixmap.depth() == 32 ? PictOpOver : PictOpSrc,
+        textPicture, None, effects->xrenderBufferPicture(),
+        0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
+        XRenderFreePicture( display(), textPicture );
+        return true;
+        }
+#endif
+    return false;
+}
+
+bool EffectsHandler::paintTextWithBackground( const QString& text, const QPoint& center, int maxwidth,
+        const QColor& color, const QColor& bgcolor, const QFont& font )
+{
+    // Calculate size of the text
+    QFontMetrics fm( font );
+    QString painttext = fm.elidedText( text, Qt::ElideRight, maxwidth );
+    QRect textrect = fm.boundingRect( painttext );
+
+    // Area covered by text
+    QRect area( center.x() - textrect.width() / 2, center.y() - textrect.height() / 2,
+                textrect.width(), textrect.height() );
+
+#ifdef HAVE_OPENGL
+    if( effects->compositingType() == OpenGLCompositing )
+    {
+        glColor4f( bgcolor.redF(), bgcolor.greenF(), bgcolor.blueF(), bgcolor.alphaF() );
+        renderRoundBox( area.adjusted( -8, -3, 8, 3 ), 5 );
+
+        return paintText( text, center, maxwidth, color, font );
+    }
+#endif
+    // TODO: render at least a simple background rect in XRender mode
+    return false;
+}
 
 
 EffectsHandler* effects = 0;

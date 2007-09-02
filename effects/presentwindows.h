@@ -72,7 +72,6 @@ class PresentWindowsEffect
         void discardFilterTexture();
 
         void paintWindowIcon( EffectWindow* w, WindowPaintData& data );
-        void paintText( const QString& text, const QPointF& center, float maxwidth, float alpha );
 
         // Called once the effect is activated (and wasn't activated before)
         void effectActivated();
