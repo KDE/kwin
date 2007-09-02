@@ -261,7 +261,7 @@ int ButtonDropSiteItem::height()
 	return 20;
 }
 
-void ButtonDropSiteItem::draw(QPainter *p, const QPalette& cg, QRect r)
+void ButtonDropSiteItem::draw(QPainter *p, const QPalette& cg, const QRect &r)
 {
 // 	p->fillRect(r, cg.base() );
 	if (m_button.supported)
@@ -529,7 +529,7 @@ void ButtonDropSite::recalcItemGeometry()
 	}
 }
 
-ButtonDropSiteItem *ButtonDropSite::buttonAt(QPoint p) {
+ButtonDropSiteItem *ButtonDropSite::buttonAt(const QPoint &p) {
 	// try to find the item in the left button list
 	for (ButtonList::const_iterator it = buttonsLeft.begin(); it != buttonsLeft.end(); ++it) {
 		if ( (*it)->rect.contains(p) ) {

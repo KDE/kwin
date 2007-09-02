@@ -534,7 +534,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
 /*!
   Performs a mouse command on this client (see options.h)
  */
-bool Client::performMouseCommand( Options::MouseCommand command, QPoint globalPos, bool handled )
+bool Client::performMouseCommand( Options::MouseCommand command, const QPoint &globalPos, bool handled )
     {
     bool replay = false;
     switch (command) 

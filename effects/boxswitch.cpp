@@ -465,7 +465,7 @@ void BoxSwitchEffect::paintFrame()
 #endif
     }
 
-void BoxSwitchEffect::paintHighlight( QRect area )
+void BoxSwitchEffect::paintHighlight( const QRect &area )
     {
     QColor color = KColorScheme( KColorScheme::Selection ).background();
     color.setAlphaF( 0.9 );

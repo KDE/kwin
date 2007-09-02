@@ -131,7 +131,7 @@ void PopupInfo::reconfigure()
     m_delayTime = cg.readEntry("PopupHideDelay", 350 );
     }
 
-void PopupInfo::showInfo(QString infoString)
+void PopupInfo::showInfo(const QString &infoString)
     {
     if (m_show)
         {

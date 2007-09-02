@@ -28,7 +28,7 @@ class PopupInfo : public QWidget
 
         void reset();
         void hide();
-        void showInfo(QString infoString);
+        void showInfo(const QString &infoString);
 
         void reconfigure();
 

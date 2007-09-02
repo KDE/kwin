@@ -1630,7 +1630,7 @@ void Workspace::checkActiveScreen( const Client* c )
 
 // called e.g. when a user clicks on a window, set active screen to be the screen
 // where the click occurred
-void Workspace::setActiveScreenMouse( QPoint mousepos )
+void Workspace::setActiveScreenMouse( const QPoint &mousepos )
     {
     if( !options->xineramaEnabled )
         return;
@@ -1644,7 +1644,7 @@ QRect Workspace::screenGeometry( int screen ) const
     return qApp->desktop()->screenGeometry( screen );
     }
 
-int Workspace::screenNumber( QPoint pos ) const
+int Workspace::screenNumber( const QPoint &pos ) const
     {
     if( !options->xineramaEnabled )
         return 0;
@@ -1855,7 +1855,7 @@ WId Workspace::getMouseEmulationWindow()
 /*!
   Sends a faked mouse event to the specified window. Returns the new button state.
  */
-unsigned int Workspace::sendFakedMouseEvent( QPoint pos, WId w, MouseEmulation type, int button, unsigned int state )
+unsigned int Workspace::sendFakedMouseEvent( const QPoint &pos, WId w, MouseEmulation type, int button, unsigned int state )
     {
     if ( !w )
         return state;

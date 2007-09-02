@@ -153,9 +153,9 @@ class Workspace : public QObject, public KDecorationDefines
         int activeScreen() const;
         int numScreens() const;
         void checkActiveScreen( const Client* c );
-        void setActiveScreenMouse( QPoint mousepos );
+        void setActiveScreenMouse( const QPoint &mousepos );
         QRect screenGeometry( int screen ) const;
-        int screenNumber( QPoint pos ) const;
+        int screenNumber( const QPoint &pos ) const;
         QWidget* desktopWidget();
 
     // for TabBox
@@ -529,7 +529,7 @@ class Workspace : public QObject, public KDecorationDefines
     // mouse emulation
         WId getMouseEmulationWindow();
         enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
-        unsigned int sendFakedMouseEvent( QPoint pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
+        unsigned int sendFakedMouseEvent( const QPoint &pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
 
         void tabBoxKeyPress( int key );
         void tabBoxKeyRelease( const XKeyEvent& ev );

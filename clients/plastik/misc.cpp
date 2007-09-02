@@ -67,7 +67,7 @@ QColor alphaBlendColors(const QColor &bgColor, const QColor &fgColor, const int 
     return result;
 }
 
-QImage recolorImage(QImage *img, QColor color) {
+QImage recolorImage(QImage *img, const QColor &color) {
     QImage destImg(img->width(),img->height(), QImage::Format_ARGB32);
     for (int x = 0; x < img->width(); x++) {
         for (int y = 0; y < img->height(); y++) {

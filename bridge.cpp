@@ -80,7 +80,7 @@ bool Bridge::isSetShade() const
     return c->shadeMode() != ShadeNone;
     }
 
-void Bridge::showWindowMenu( QPoint p )
+void Bridge::showWindowMenu( const QPoint &p )
     {
     c->workspace()->showWindowMenu( p, c );
     }

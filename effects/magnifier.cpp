@@ -110,7 +110,7 @@ void MagnifierEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
-QRect MagnifierEffect::magnifierArea( QPoint pos ) const
+QRect MagnifierEffect::magnifierArea( const QPoint &pos ) const
     {
     return QRect( pos.x() - magnifier_size.width() / 2, pos.y() - magnifier_size.height() / 2,
         magnifier_size.width(), magnifier_size.height());

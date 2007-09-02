@@ -209,7 +209,7 @@ class Client
         KShortcut shortcut() const;
         void setShortcut( const QString& cut );
 
-        bool performMouseCommand( Options::MouseCommand, QPoint globalPos, bool handled = false );
+        bool performMouseCommand( Options::MouseCommand, const QPoint &globalPos, bool handled = false );
 
         QRect adjustedClientArea( const QRect& desktop, const QRect& area ) const;
 
