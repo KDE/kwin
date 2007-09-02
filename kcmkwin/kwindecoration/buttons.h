@@ -91,7 +91,7 @@ class ButtonDropSiteItem
 		int width();
 		int height();
 
-		void draw(QPainter *p, const QPalette& cg, QRect rect);
+		void draw(QPainter *p, const QPalette& cg, const QRect &rect);
 
 	private:
 		Button m_button;
