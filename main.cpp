@@ -26,7 +26,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdio.h>
 #include <fixx11h.h>
 #include <QtDBus/QtDBus>
-#include <kglobal.h>
 
 #include "atoms.h"
 #include "options.h"
