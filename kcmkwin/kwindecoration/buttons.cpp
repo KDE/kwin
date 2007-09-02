@@ -529,7 +529,7 @@ void ButtonDropSite::recalcItemGeometry()
 	}
 }
 
-ButtonDropSiteItem *ButtonDropSite::buttonAt(const QPoint &p) {
+ButtonDropSiteItem *ButtonDropSite::buttonAt(QPoint p) {
 	// try to find the item in the left button list
 	for (ButtonList::const_iterator it = buttonsLeft.begin(); it != buttonsLeft.end(); ++it) {
 		if ( (*it)->rect.contains(p) ) {

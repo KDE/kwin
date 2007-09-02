@@ -342,7 +342,7 @@ void KDecorationPreviewBridge::showWindowMenu( const QRect &)
     {
     }
 
-void KDecorationPreviewBridge::showWindowMenu( const QPoint & )
+void KDecorationPreviewBridge::showWindowMenu( QPoint )
     {
     }
 
