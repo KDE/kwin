@@ -193,13 +193,12 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         {
         const WindowData& windata = mWindowData[w];
         paintWindowIcon( w, data );
-        if( windata.hover > 0.0f )
-        {
-            QString text = w->caption();
-            float centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
-            float centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
-            paintText( text, QPointF(centerx, centery), w->width() * data.xScale - 20, windata.hover );
-        }
+
+        QString text = w->caption();
+        float centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
+        float centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
+        float textopacity = (0.7 + 0.2*windata.hover) * data.opacity;
+        paintText( text, QPointF(centerx, centery), w->width() * data.xScale - 20, textopacity );
         }
     }
 
@@ -927,12 +926,13 @@ void PresentWindowsEffect::paintText( const QString& text, const QPointF& center
     if( effects->compositingType() == OpenGLCompositing )
         {
         GLTexture textTexture( textPixmap, GL_TEXTURE_RECTANGLE_ARB );
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glColor4f( 0.0f, 0.0f, 0.0f, alpha );
         renderRoundBox( area.adjusted( -8, -3, 8, 3 ), 5 );
         textTexture.bind();
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         glColor4f( 1.0f, 1.0f, 1.0f, alpha );
         const float verts[ 4 * 2 ] =
             {
