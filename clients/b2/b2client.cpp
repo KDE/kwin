@@ -456,7 +456,7 @@ void B2Client::init()
     titlebar->installEventFilter(this);
 }
 
-void B2Client::addButtons(const QString& s, QString tips[],
+void B2Client::addButtons(const QString& s, const QString tips[],
                           B2Titlebar* tb, QBoxLayout* titleLayout)
 {
     if (s.length() <= 0)
