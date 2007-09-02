@@ -91,7 +91,9 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 paintWindowThumbnail( w );
                 paintWindowIcon( w );
                 }
-            paintText( text_area, selected_window->caption());
+            int maxwidth = text_area.width();
+            QColor color = KColorScheme( KColorScheme::Window ).foreground();
+            effects->paintText( selected_window->caption(), text_area.center(), maxwidth, color );
             }
         else
             {
@@ -108,7 +110,9 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
 
                     paintDesktopThumbnail( painting_desktop );
                     }
-                paintText( text_area, effects->desktopName( selected_desktop ));
+                int maxwidth = text_area.width();
+                QColor color = KColorScheme( KColorScheme::Window ).foreground();
+                effects->paintText( effects->desktopName( selected_desktop ), text_area.center(), maxwidth, color );
                 painting_desktop = 0;
                 }
             }
@@ -611,61 +615,6 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
             windows[ w ]->iconPicture, None,
             effects->xrenderBufferPicture(),
             0, 0, 0, 0, x, y, width, height );
-        }
-#endif
-    }
-
-void BoxSwitchEffect::paintText( QRect area, QString text )
-    {
-    QPainter p;
-
-    textPixmap = QPixmap( area.width(), area.height());
-    textPixmap.fill( Qt::transparent );
-
-    p.begin( &textPixmap );
-    p.setRenderHint( QPainter::TextAntialiasing );
-    p.setPen( KColorScheme( KColorScheme::Window ).foreground());
-    p.drawText( 0, 0, textPixmap.width(), textPixmap.height(),
-        Qt::AlignHCenter | Qt::AlignVCenter | Qt::TextSingleLine,
-        p.fontMetrics().elidedText( text, Qt::ElideMiddle, textPixmap.width()));
-    p.end();
-
-#ifdef HAVE_OPENGL
-    if( effects->compositingType() == OpenGLCompositing )
-        {
-        textTexture.load( textPixmap, GL_TEXTURE_RECTANGLE_ARB );
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        textTexture.bind();
-        const float verts[ 4 * 2 ] = 
-            {
-            area.x(), area.y(),
-            area.x(), area.y() + area.height(),
-            area.x() + area.width(), area.y() + area.height(),
-            area.x() + area.width(), area.y()
-            };
-        const float texcoords[ 4 * 2 ] =
-            {
-            0, textPixmap.height(),
-            0, 0,
-            textPixmap.width(), 0,
-            textPixmap.width(), textPixmap.height()
-            };
-        renderGLGeometry( 4, verts, texcoords );
-        textTexture.unbind();
-        glPopAttrib();
-        }
-#endif
-#ifdef HAVE_XRENDER
-    if( effects->compositingType() == XRenderCompositing )
-        {
-        if( textPicture != None )
-            XRenderFreePicture( display(), textPicture );
-        textPicture = XRenderCreatePicture( display(), textPixmap.handle(), alphaFormat, 0, NULL );
-        XRenderComposite( display(), textPixmap.depth() == 32 ? PictOpOver : PictOpSrc,
-        textPicture, None, effects->xrenderBufferPicture(),
-        0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
         }
 #endif
     }
