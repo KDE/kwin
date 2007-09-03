@@ -18,7 +18,7 @@ KWIN_EFFECT( dialogparent, DialogParentEffect )
 void DialogParentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     // How long does it take for the effect to get it's full strength (in ms)
-    const float changeTime = 200;
+    const double changeTime = 200;
 
     // Check if this window has a modal dialog and change the window's
     //  effect's strength accordingly
@@ -26,11 +26,11 @@ void DialogParentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& da
     if( hasDialog )
         {
         // Increase effect strength of this window
-        effectStrength[w] = qMin(1.0f, effectStrength[w] + time/changeTime);
+        effectStrength[w] = qMin(1.0, effectStrength[w] + time/changeTime);
         }
     else
         {
-        effectStrength[w] = qMax(0.0f, effectStrength[w] - time/changeTime);
+        effectStrength[w] = qMax(0.0, effectStrength[w] - time/changeTime);
         }
 
     // Call the next effect
@@ -39,7 +39,7 @@ void DialogParentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& da
 
 void DialogParentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    float s = effectStrength[w];
+    double s = effectStrength[w];
     if(s > 0.0f)
         {
         // Brightness will be within [1.0; 0.6]
@@ -54,7 +54,7 @@ void DialogParentEffect::paintWindow( EffectWindow* w, int mask, QRegion region,
 
 void DialogParentEffect::postPaintWindow( EffectWindow* w )
     {
-    float s = effectStrength[w];
+    double s = effectStrength[w];
 
     // If strength is between 0 and 1, the effect is still in progress and the
     //  window has to be repainted during the next pass

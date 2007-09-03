@@ -50,7 +50,7 @@ void FlameEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Window
     if( windows.contains( w ))
         {
         WindowQuadList new_quads;
-        float ylimit = windows[ w ] * w->height(); // parts above this are already away
+        double ylimit = windows[ w ] * w->height(); // parts above this are already away
         foreach( WindowQuad quad, data.quads )
             {
             if( quad.bottom() <= ylimit )

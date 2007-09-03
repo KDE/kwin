@@ -97,7 +97,7 @@ class KWIN_EXPORT Effect
 
         // called when moved/resized or once after it's finished
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        virtual void windowOpacityChanged( EffectWindow* c, float old_opacity );
+        virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
         virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
@@ -122,7 +122,7 @@ class KWIN_EXPORT Effect
         static QPoint cursorPos();
 
         // Interpolates between x and y
-        static float interpolate(float x, float y, float a)
+        static double interpolate(double x, double y, double a)
             {
             return x * (1 - a) + y * a;
             }
@@ -309,7 +309,7 @@ class KWIN_EXPORT EffectWindow
         virtual bool isDeleted() const = 0;
 
         virtual bool isMinimized() const = 0;
-        virtual float opacity() const = 0;
+        virtual double opacity() const = 0;
 
         virtual bool isOnDesktop( int d ) const;
         virtual bool isOnCurrentDesktop() const;
@@ -379,21 +379,21 @@ class KWIN_EXPORT EffectWindowGroup
 class KWIN_EXPORT WindowVertex
     {
     public:
-        float x() const;
-        float y() const;
-        void move( float x, float y );
-        void setX( float x );
-        void setY( float y );
-        float originalX() const;
-        float originalY() const;
+        double x() const;
+        double y() const;
+        void move( double x, double y );
+        void setX( double x );
+        void setY( double y );
+        double originalX() const;
+        double originalY() const;
         WindowVertex();
-        WindowVertex( float x, float y, float tx, float ty );
+        WindowVertex( double x, double y, double tx, double ty );
     private:
         friend class WindowQuad;
         friend class WindowQuadList;
-        float px, py; // position
-        float ox, oy; // origional position
-        float tx, ty; // texture coords
+        double px, py; // position
+        double ox, oy; // origional position
+        double tx, ty; // texture coords
     };
 
 enum WindowQuadType
@@ -412,18 +412,18 @@ class KWIN_EXPORT WindowQuad
     {
     public:
         explicit WindowQuad( WindowQuadType type );
-        WindowQuad makeSubQuad( float x1, float y1, float x2, float y2 ) const;
+        WindowQuad makeSubQuad( double x1, double y1, double x2, double y2 ) const;
         WindowVertex& operator[]( int index );
         const WindowVertex& operator[]( int index ) const;
         bool decoration() const;
-        float left() const;
-        float right() const;
-        float top() const;
-        float bottom() const;
-        float originalLeft() const;
-        float originalRight() const;
-        float originalTop() const;
-        float originalBottom() const;
+        double left() const;
+        double right() const;
+        double top() const;
+        double bottom() const;
+        double originalLeft() const;
+        double originalRight() const;
+        double originalTop() const;
+        double originalBottom() const;
         bool smoothNeeded() const;
         bool isTransformed() const;
     private:
@@ -436,8 +436,8 @@ class KWIN_EXPORT WindowQuadList
     : public QList< WindowQuad >
     {
     public:
-        WindowQuadList splitAtX( float x ) const;
-        WindowQuadList splitAtY( float y ) const;
+        WindowQuadList splitAtX( double x ) const;
+        WindowQuadList splitAtY( double y ) const;
         WindowQuadList makeGrid( int maxquadsize ) const;
         WindowQuadList select( WindowQuadType type ) const;
         WindowQuadList filterOut( WindowQuadType type ) const;
@@ -472,11 +472,11 @@ class KWIN_EXPORT WindowPaintData
          * Opacity for contents is opacity*contents_opacity, the same
          * way for decoration.
          */
-        float opacity;
-        float contents_opacity;
-        float decoration_opacity;
-        float xScale;
-        float yScale;
+        double opacity;
+        double contents_opacity;
+        double decoration_opacity;
+        double xScale;
+        double yScale;
         int xTranslate;
         int yTranslate;
         /**
@@ -485,13 +485,13 @@ class KWIN_EXPORT WindowPaintData
          *  unsaturated (greyscale). 0.5 would make the colors less intense,
          *  but not completely grey
          **/
-        float saturation;
+        double saturation;
         /**
          * Brightness of the window, in range [0; 1]
          * 1 means that the window is unchanged, 0 means that it's completely
          * black. 0.5 would make it 50% darker than usual
          **/
-        float brightness;
+        double brightness;
         WindowQuadList quads;
         /**
          * Shader to be used for rendering, if any.
@@ -503,8 +503,8 @@ class KWIN_EXPORT ScreenPaintData
     {
     public:
         ScreenPaintData();
-        float xScale;
-        float yScale;
+        double xScale;
+        double yScale;
         int xTranslate;
         int yTranslate;
     };
@@ -529,50 +529,50 @@ WindowVertex::WindowVertex()
     }
 
 inline
-WindowVertex::WindowVertex( float _x, float _y, float _tx, float _ty )
+WindowVertex::WindowVertex( double _x, double _y, double _tx, double _ty )
     : px( _x ), py( _y ), ox( _x ), oy( _y ), tx( _tx ), ty( _ty )
     {
     }
 
 inline
-float WindowVertex::x() const
+double WindowVertex::x() const
     {
     return px;
     }
 
 inline
-float WindowVertex::y() const
+double WindowVertex::y() const
     {
     return py;
     }
 
 inline
-float WindowVertex::originalX() const
+double WindowVertex::originalX() const
     {
     return ox;
     }
 
 inline
-float WindowVertex::originalY() const
+double WindowVertex::originalY() const
     {
     return oy;
     }
 
 inline
-void WindowVertex::move( float x, float y )
+void WindowVertex::move( double x, double y )
     {
     px = x;
     py = y;
     }
 
 inline
-void WindowVertex::setX( float x )
+void WindowVertex::setX( double x )
     {
     px = x;
     }
 
 inline
-void WindowVertex::setY( float y )
+void WindowVertex::setY( double y )
     {
     py = y;
     }
@@ -618,49 +618,49 @@ bool WindowQuad::isTransformed() const
     }
 
 inline
-float WindowQuad::left() const
+double WindowQuad::left() const
     {
     return qMin( verts[ 0 ].px, qMin( verts[ 1 ].px, qMin( verts[ 2 ].px, verts[ 3 ].px )));
     }
 
 inline
-float WindowQuad::right() const
+double WindowQuad::right() const
     {
     return qMax( verts[ 0 ].px, qMax( verts[ 1 ].px, qMax( verts[ 2 ].px, verts[ 3 ].px )));
     }
 
 inline
-float WindowQuad::top() const
+double WindowQuad::top() const
     {
     return qMin( verts[ 0 ].py, qMin( verts[ 1 ].py, qMin( verts[ 2 ].py, verts[ 3 ].py )));
     }
 
 inline
-float WindowQuad::bottom() const
+double WindowQuad::bottom() const
     {
     return qMax( verts[ 0 ].py, qMax( verts[ 1 ].py, qMax( verts[ 2 ].py, verts[ 3 ].py )));
     }
 
 inline
-float WindowQuad::originalLeft() const
+double WindowQuad::originalLeft() const
     {
     return verts[ 0 ].ox;
     }
 
 inline
-float WindowQuad::originalRight() const
+double WindowQuad::originalRight() const
     {
     return verts[ 2 ].ox;
     }
 
 inline
-float WindowQuad::originalTop() const
+double WindowQuad::originalTop() const
     {
     return verts[ 0 ].oy;
     }
 
 inline
-float WindowQuad::originalBottom() const
+double WindowQuad::originalBottom() const
     {
     return verts[ 2 ].oy;
     }

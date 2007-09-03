@@ -32,8 +32,8 @@ class ZoomEffect
         void zoomOut();
         void actualSize();
     private:
-        float zoom;
-        float target_zoom;
+        double zoom;
+        double target_zoom;
     };
 
 } // namespace

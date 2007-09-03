@@ -121,7 +121,7 @@ void LiquidEffect::postPaintScreen()
 
         // Use the shader
         mShader->bind();
-        mShader->setUniform("time", mTime);
+        mShader->setUniform("time", (float)mTime);
 
         // Render fullscreen quad with screen contents
         glBegin(GL_QUADS);

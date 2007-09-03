@@ -36,7 +36,7 @@ class MinimizeAnimationEffect
         virtual void windowUnminimized( EffectWindow* c );
 
     private:
-        QHash< EffectWindow*, float > mAnimationProgress;
+        QHash< EffectWindow*, double > mAnimationProgress;
         int mActiveAnimations;
     };
 

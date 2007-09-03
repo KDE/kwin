@@ -39,7 +39,7 @@ class DialogParentEffect
         bool hasModalWindow( EffectWindow* t );
     private:
         // The progress of the fading.
-        QHash<EffectWindow*, float> effectStrength;
+        QHash<EffectWindow*, double> effectStrength;
     };
 
 } // namespace

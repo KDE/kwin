@@ -36,8 +36,8 @@ class LookingGlassEffect : public QObject, public ShaderEffect
         void zoomOut();
 
     private:
-        float zoom;
-        float target_zoom;
+        double zoom;
+        double target_zoom;
         int radius;
     };
 

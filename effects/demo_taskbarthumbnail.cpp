@@ -59,8 +59,8 @@ void TaskbarThumbnailEffect::postPaintScreen()
         WindowPaintData thumbdata( w );
         thumbdata.xTranslate = thumb.x() - w->x();
         thumbdata.yTranslate = thumb.y() - w->y();
-        thumbdata.xScale = thumb.width() / (float)w->width();
-        thumbdata.yScale = thumb.height() / (float)w->height();
+        thumbdata.xScale = thumb.width() / (double)w->width();
+        thumbdata.yScale = thumb.height() / (double)w->height();
         // From Scene::Window::infiniteRegion()
         QRegion infRegion = QRegion( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
         effects->paintWindow( w, PAINT_WINDOW_TRANSFORMED, infRegion, thumbdata );
@@ -79,7 +79,7 @@ QRect TaskbarThumbnailEffect::getThumbnailPosition( EffectWindow* c, int* space 
     if( icon.right() < 40 || ( displayWidth() - icon.left()) < 40 )
         {
         // Vertical taskbar...
-        float scale = qMin(qMax(icon.height(), 100) / (float)c->height(), 200.0f / c->width());
+        double scale = qMin(qMax(icon.height(), 100) / (double)c->height(), 200.0 / c->width());
         thumb.setSize( QSize( int(scale * c->width()),int(scale * c->height()) ));
         if( icon.right() < 40 )  // ...on the left
             thumb.moveTopLeft( QPoint( icon.right() + *space, icon.top() ));
@@ -90,7 +90,7 @@ QRect TaskbarThumbnailEffect::getThumbnailPosition( EffectWindow* c, int* space 
     else
         {
         // Horizontal taskbar...
-        float scale = qMin(qMax(icon.width(), 75) / (float)c->width(), 200.0f / c->height());
+        double scale = qMin(qMax(icon.width(), 75) / (double)c->width(), 200.0 / c->height());
         thumb.setSize( QSize( int(scale * c->width()),int(scale * c->height()) ));
         if( icon.top() < ( displayHeight() - icon.bottom()))  // ...at the top
             thumb.moveTopLeft( QPoint( icon.left(), icon.bottom() + *space ));

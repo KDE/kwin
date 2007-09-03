@@ -34,7 +34,7 @@ void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time
 
 void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    const float changeTime = 500;
+    const double changeTime = 500;
     if( mAnimationProgress.contains( w ))
         {
         if( w->isMinimized() )
@@ -71,7 +71,7 @@ void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion re
     if( mAnimationProgress.contains( w ))
     {
         // 0 = not minimized, 1 = fully minimized
-        float progress = mAnimationProgress[w];
+        double progress = mAnimationProgress[w];
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
@@ -79,8 +79,8 @@ void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion re
         if( !icon.isValid() )
             icon = QRect( displayWidth() / 2, displayHeight() / 2, 0, 0 );
 
-        data.xScale *= interpolate(1.0, icon.width() / (float)geo.width(), progress);
-        data.yScale *= interpolate(1.0, icon.height() / (float)geo.height(), progress);
+        data.xScale *= interpolate(1.0, icon.width() / (double)geo.width(), progress);
+        data.yScale *= interpolate(1.0, icon.height() / (double)geo.height(), progress);
         data.xTranslate = (int)interpolate(data.xTranslate, icon.x() - geo.x(), progress);
         data.yTranslate = (int)interpolate(data.yTranslate, icon.y() - geo.y(), progress);
     }

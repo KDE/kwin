@@ -144,8 +144,8 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
     bool useshader = ( mValid && mWindows.contains( w ) );
     if( useshader )
         {
-        float maxscaleadd = 1.5f;
-        float scale = 1 + maxscaleadd*mWindows[w];
+        double maxscaleadd = 1.5f;
+        double scale = 1 + maxscaleadd*mWindows[w];
         data.xScale = scale;
         data.yScale = scale;
         data.xTranslate += int( w->width() / 2 * ( 1 - scale ));
@@ -153,7 +153,7 @@ void ExplosionEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         data.opacity *= 0.99;  // Force blending
         mShader->bind();
         mShader->setUniform("factor", (float)mWindows[w]);
-        mShader->setUniform("scale", scale);
+        mShader->setUniform("scale", (float)scale);
         glActiveTexture(GL_TEXTURE4);
         mStartOffsetTex->bind();
         glActiveTexture(GL_TEXTURE5);

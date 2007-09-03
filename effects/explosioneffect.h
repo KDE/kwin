@@ -50,7 +50,7 @@ class ExplosionEffect
         GLShader* mShader;
         GLTexture* mStartOffsetTex;
         GLTexture* mEndOffsetTex;
-        QMap< const EffectWindow*, float > mWindows;
+        QMap< const EffectWindow*, double > mWindows;
         int mActiveAnimations;
         bool mValid;
         bool mInited;

@@ -84,7 +84,7 @@ void Effect::windowUserMovedResized( EffectWindow* , bool, bool )
     {
     }
 
-void Effect::windowOpacityChanged( EffectWindow*, float )
+void Effect::windowOpacityChanged( EffectWindow*, double )
     {
     }
 
@@ -197,8 +197,8 @@ void Effect::setPositionTransformations( WindowPaintData& data, QRect& region, E
     {
     QSize size = w->size();
     size.scale( r.size(), aspect );
-    data.xScale = size.width() / float( w->width());
-    data.yScale = size.height() / float( w->height());
+    data.xScale = size.width() / double( w->width());
+    data.yScale = size.height() / double( w->height());
     int width = int( w->width() * data.xScale );
     int height = int( w->height() * data.yScale );
     int x = r.x() + ( r.width() - width ) / 2;
@@ -425,7 +425,7 @@ EffectWindowGroup::~EffectWindowGroup()
  WindowQuad
 ***************************************************************/
 
-WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) const
+WindowQuad WindowQuad::makeSubQuad( double x1, double y1, double x2, double y2 ) const
     {
     assert( x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
 #ifndef NDEBUG
@@ -451,14 +451,14 @@ WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) con
     ret.verts[ 1 ].oy = y1;
     ret.verts[ 2 ].oy = y2;
     ret.verts[ 3 ].oy = y2;
-    float my_tleft = verts[ 0 ].tx;
-    float my_tright = verts[ 2 ].tx;
-    float my_ttop = verts[ 0 ].ty;
-    float my_tbottom = verts[ 2 ].ty;
-    float tleft = ( x1 - left()) / ( right() - left()) * ( my_tright - my_tleft ) + my_tleft;
-    float tright = ( x2 - left()) / ( right() - left()) * ( my_tright - my_tleft ) + my_tleft;
-    float ttop = ( y1 - top()) / ( bottom() - top()) * ( my_tbottom - my_ttop ) + my_ttop;
-    float tbottom = ( y2 - top()) / ( bottom() - top()) * ( my_tbottom - my_ttop ) + my_ttop;
+    double my_tleft = verts[ 0 ].tx;
+    double my_tright = verts[ 2 ].tx;
+    double my_ttop = verts[ 0 ].ty;
+    double my_tbottom = verts[ 2 ].ty;
+    double tleft = ( x1 - left()) / ( right() - left()) * ( my_tright - my_tleft ) + my_tleft;
+    double tright = ( x2 - left()) / ( right() - left()) * ( my_tright - my_tleft ) + my_tleft;
+    double ttop = ( y1 - top()) / ( bottom() - top()) * ( my_tbottom - my_ttop ) + my_ttop;
+    double tbottom = ( y2 - top()) / ( bottom() - top()) * ( my_tbottom - my_ttop ) + my_ttop;
     ret.verts[ 0 ].tx = tleft;
     ret.verts[ 3 ].tx = tleft;
     ret.verts[ 1 ].tx = tright;
@@ -473,8 +473,8 @@ WindowQuad WindowQuad::makeSubQuad( float x1, float y1, float x2, float y2 ) con
 bool WindowQuad::smoothNeeded() const
     {
     // smoothing is needed if the width or height of the quad does not match the original size
-    float width = verts[ 1 ].ox - verts[ 0 ].ox;
-    float height = verts[ 2 ].oy - verts[ 1 ].oy;
+    double width = verts[ 1 ].ox - verts[ 0 ].ox;
+    double height = verts[ 2 ].oy - verts[ 1 ].oy;
     return( verts[ 1 ].px - verts[ 0 ].px != width || verts[ 2 ].px - verts[ 3 ].px != width
         || verts[ 2 ].py - verts[ 1 ].py != height || verts[ 3 ].py - verts[ 0 ].py != height );
     }
@@ -483,7 +483,7 @@ bool WindowQuad::smoothNeeded() const
  WindowQuadList
 ***************************************************************/
 
-WindowQuadList WindowQuadList::splitAtX( float x ) const
+WindowQuadList WindowQuadList::splitAtX( double x ) const
     {
     WindowQuadList ret;
     foreach( WindowQuad quad, *this )
@@ -514,7 +514,7 @@ WindowQuadList WindowQuadList::splitAtX( float x ) const
     return ret;
     }
 
-WindowQuadList WindowQuadList::splitAtY( float y ) const
+WindowQuadList WindowQuadList::splitAtY( double y ) const
     {
     WindowQuadList ret;
     foreach( WindowQuad quad, *this )
@@ -550,10 +550,10 @@ WindowQuadList WindowQuadList::makeGrid( int maxquadsize ) const
     if( empty())
         return *this;
     // find the bounding rectangle
-    float left = first().left();
-    float right = first().right();
-    float top = first().top();
-    float bottom = first().bottom();
+    double left = first().left();
+    double right = first().right();
+    double top = first().top();
+    double bottom = first().bottom();
     foreach( WindowQuad quad, *this )
         {
 #ifndef NDEBUG
@@ -566,11 +566,11 @@ WindowQuadList WindowQuadList::makeGrid( int maxquadsize ) const
         bottom = qMax( bottom, quad.bottom());
         }
     WindowQuadList ret;
-    for( float x = left;
+    for( double x = left;
          x < right;
          x += maxquadsize )
         {
-        for( float y = top;
+        for( double y = top;
              y < bottom;
              y += maxquadsize )
             {

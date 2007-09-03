@@ -145,7 +145,7 @@ void ShaderEffect::postPaintScreen()
 
         // Use the shader
         mShader->bind();
-        mShader->setUniform("time", mTime);
+        mShader->setUniform("time", (float)mTime);
         mShader->setUniform("cursorX", (float)cursorPos().x());
         mShader->setUniform("cursorY", (float)cursorPos().y());
 

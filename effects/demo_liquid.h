@@ -44,7 +44,7 @@ class LiquidEffect : public Effect
         GLShader* mShader;
         bool mValid;
 
-        float mTime;
+        double mTime;
     };
 
 } // namespace

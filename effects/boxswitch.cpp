@@ -528,8 +528,8 @@ void BoxSwitchEffect::paintDesktopThumbnail( int iDesktop )
     QSize size = QSize( displayWidth(), displayHeight());
 
     size.scale( r.size(), Qt::KeepAspectRatio );
-    data.xScale = size.width() / float( displayWidth());
-    data.yScale = size.height() / float( displayHeight());
+    data.xScale = size.width() / double( displayWidth());
+    data.yScale = size.height() / double( displayHeight());
     int width = int( displayWidth() * data.xScale );
     int height = int( displayHeight() * data.yScale );
     int x = r.x() + ( r.width() - width ) / 2;

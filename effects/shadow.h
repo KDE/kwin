@@ -35,7 +35,7 @@ class ShadowEffect
         QRect shadowRectangle(const QRect& windowRectangle) const;
 
         int shadowXOffset, shadowYOffset;
-        float shadowOpacity;
+        double shadowOpacity;
         int shadowFuzzyness;
         GLTexture* mShadowTexture;
     };

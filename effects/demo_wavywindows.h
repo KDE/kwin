@@ -32,7 +32,7 @@ class WavyWindowsEffect
         virtual void postPaintScreen();
 
     private:
-        float mTimeElapsed;
+        double mTimeElapsed;
     };
 
 } // namespace

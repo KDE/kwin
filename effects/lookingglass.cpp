@@ -53,7 +53,7 @@ void LookingGlassEffect::toggle()
 
 void LookingGlassEffect::zoomIn()
     {
-    target_zoom = qMin(7.0f, target_zoom + 0.5f);
+    target_zoom = qMin(7.0, target_zoom + 0.5);
     setEnabled( true );
     effects->addRepaint( cursorPos().x() - radius, cursorPos().y() - radius, 2*radius, 2*radius );
     }
@@ -73,18 +73,18 @@ void LookingGlassEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( zoom != target_zoom )
         {
-        float diff = time / 500.0f;
+        double diff = time / 500.0;
         if( target_zoom > zoom )
-            zoom = qMin( zoom * qMax( 1.0f + diff, 1.2f ), target_zoom );
+            zoom = qMin( zoom * qMax( 1.0 + diff, 1.2 ), target_zoom );
         else
-            zoom = qMax( zoom * qMin( 1.0f - diff, 0.8f ), target_zoom );
+            zoom = qMax( zoom * qMin( 1.0 - diff, 0.8 ), target_zoom );
         kDebug() << "zoom is now " << zoom;
-        radius = qBound(200.0f, 200.0f * zoom, 500.0f);
+        radius = qBound(200.0, 200.0 * zoom, 500.0);
 
         if( zoom > 1.0f )
             {
             shader()->bind();
-            shader()->setUniform("zoom", zoom);
+            shader()->setUniform("zoom", (float)zoom);
             shader()->setUniform("radius", (float)radius);
             shader()->unbind();
             }

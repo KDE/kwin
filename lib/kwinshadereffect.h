@@ -46,7 +46,7 @@ class KWIN_EXPORT ShaderEffect : public Effect
         GLShader* mShader;
         bool mValid;
 
-        float mTime;
+        double mTime;
 
         bool mEnabled;
 };

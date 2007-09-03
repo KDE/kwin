@@ -41,7 +41,7 @@ class TestFBOEffect : public Effect
         GLRenderTarget* mRenderTarget;
         bool mValid;
 
-        float mRot;
+        double mRot;
     };
 
 } // namespace

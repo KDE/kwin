@@ -61,7 +61,7 @@ class PresentWindowsEffect
         bool canRearrangeClosest(EffectWindowList windowlist);
 
         // Helper methods for layout calculation
-        float windowAspectRatio(EffectWindow* c);
+        double windowAspectRatio(EffectWindow* c);
         int windowWidthForHeight(EffectWindow* c, int h);
         int windowHeightForWidth(EffectWindow* c, int w);
 
@@ -84,9 +84,9 @@ class PresentWindowsEffect
         // Whether the effect is currently activated by the user
         bool mActivated;
         // 0 = not active, 1 = fully active
-        float mActiveness;
+        double mActiveness;
         // 0 = start of rearranging (old_area), 1 = done
-        float mRearranging;
+        double mRearranging;
 
         Window mInput;
         bool hasKeyboardGrab;
@@ -96,9 +96,9 @@ class PresentWindowsEffect
             {
             QRect area;
             QRect old_area; // when rearranging, otherwise unset
-            float scale;
-            float old_scale; // when rearranging, otherwise unset
-            float hover;
+            double scale;
+            double old_scale; // when rearranging, otherwise unset
+            double hover;
             int slot;
             int slot_distance;
             QPixmap icon;

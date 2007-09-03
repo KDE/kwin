@@ -33,8 +33,8 @@ class MagnifierEffect
         void toggle();
     private:
         QRect magnifierArea( QPoint pos = cursorPos()) const;
-        float zoom;
-        float target_zoom;
+        double zoom;
+        double target_zoom;
         QSize magnifier_size;
     };
 

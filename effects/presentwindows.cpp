@@ -73,17 +73,17 @@ PresentWindowsEffect::~PresentWindowsEffect()
 void PresentWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     // How long does it take for the effect to get it's full strength (in ms)
-    const float changeTime = 300;
+    const double changeTime = 300;
     if(mActivated)
         {
-        mActiveness = qMin(1.0f, mActiveness + time/changeTime);
+        mActiveness = qMin(1.0, mActiveness + time/changeTime);
         if( mRearranging < 1 )
-            mRearranging = qMin(1.0f, mRearranging + time/changeTime);
+            mRearranging = qMin(1.0, mRearranging + time/changeTime);
         }
-    else if(mActiveness > 0.0f)
+    else if(mActiveness > 0.0)
         {
-        mActiveness = qMax(0.0f, mActiveness - time/changeTime);
-        if(mActiveness <= 0.0f)
+        mActiveness = qMax(0.0, mActiveness - time/changeTime);
+        if(mActiveness <= 0.0)
             effectTerminated();
         }
 
@@ -111,11 +111,11 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
                 data.setTranslucent();
             // Change window's hover according to cursor pos
             WindowData& windata = mWindowData[w];
-            const float hoverchangetime = 200;
+            const double hoverchangetime = 200;
             if( windata.area.contains(cursorPos()) )
-                windata.hover = qMin(1.0f, windata.hover + time / hoverchangetime);
+                windata.hover = qMin(1.0, windata.hover + time / hoverchangetime);
             else
-                windata.hover = qMax(0.0f, windata.hover - time / hoverchangetime);
+                windata.hover = qMax(0.0, windata.hover - time / hoverchangetime);
             }
         else if( !w->isDesktop())
             w->disablePainting( EffectWindow::PAINT_DISABLED );
@@ -195,10 +195,10 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         paintWindowIcon( w, data );
 
         QString text = w->caption();
-        float centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
-        float centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
+        double centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
+        double centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
         int maxwidth = (int)(w->width() * data.xScale - 20);
-        float opacity = (0.7 + 0.2*windata.hover) * data.opacity;
+        double opacity = (0.7 + 0.2*windata.hover) * data.opacity;
         QColor textcolor( 255, 255, 255, (int)(255*opacity) );
         QColor bgcolor( 0, 0, 0, (int)(255*opacity) );
         QFont f;
@@ -421,7 +421,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
         int r = i / cols;
         int c = i % cols;
         mWindowData[window].hover = 0.0f;
-        mWindowData[window].scale = qMin(cellwidth / (float)window->width(), cellheight / (float)window->height());
+        mWindowData[window].scale = qMin(cellwidth / (double)window->width(), cellheight / (double)window->height());
         mWindowData[window].area.setLeft(placementRect.left() + cellwidth * c);
         mWindowData[window].area.setTop(placementRect.top() + cellheight * r);
         mWindowData[window].area.setWidth((int)(window->width() * mWindowData[window].scale));
@@ -434,19 +434,19 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
         }
     }
 
-float PresentWindowsEffect::windowAspectRatio(EffectWindow* c)
+double PresentWindowsEffect::windowAspectRatio(EffectWindow* c)
     {
-    return c->width() / (float)c->height();
+    return c->width() / (double)c->height();
     }
 
 int PresentWindowsEffect::windowWidthForHeight(EffectWindow* c, int h)
     {
-    return (int)((h / (float)c->height()) * c->width());
+    return (int)((h / (double)c->height()) * c->width());
     }
 
 int PresentWindowsEffect::windowHeightForWidth(EffectWindow* c, int w)
     {
-    return (int)((w / (float)c->width()) * c->height());
+    return (int)((w / (double)c->width()) * c->height());
     }
 
 void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowList windowlist)
@@ -458,17 +458,17 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
 
     int spacing = 10;
     int rows, columns;
-    float parentRatio = availRect.width() / (float)availRect.height();
+    double parentRatio = availRect.width() / (double)availRect.height();
     // Use more columns than rows when parent's width > parent's height
     if ( parentRatio > 1 )
     {
         columns = (int)ceil( sqrt(windowlist.count()) );
-        rows = (int)ceil( (float)windowlist.count() / (float)columns );
+        rows = (int)ceil( (double)windowlist.count() / (double)columns );
     }
     else
     {
         rows = (int)ceil( sqrt(windowlist.count()) );
-        columns = (int)ceil( (float)windowlist.count() / (float)rows );
+        columns = (int)ceil( (double)windowlist.count() / (double)rows );
     }
     kDebug() << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
@@ -495,7 +495,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             window = *it;
 
             // Calculate width and height of widget
-            float ratio = windowAspectRatio(window);
+            double ratio = windowAspectRatio(window);
 
             int widgetw = 100;
             int widgeth = 100;
@@ -525,8 +525,8 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
                 }
             else
                 {
-                float widthForHeight = windowWidthForHeight(window, usableH);
-                float heightForWidth = windowHeightForWidth(window, usableW);
+                double widthForHeight = windowWidthForHeight(window, usableH);
+                double heightForWidth = windowHeightForWidth(window, usableW);
                 if ( (ratio >= 1.0 && heightForWidth <= usableH) ||
                       (ratio < 1.0 && widthForHeight > usableW)   )
                     {
@@ -576,7 +576,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             QRect geom = geometryRects[pos];
             geom.setY( geom.y() + topOffset );
             mWindowData[window].area = geom;
-            mWindowData[window].scale = geom.width() / (float)window->width();
+            mWindowData[window].scale = geom.width() / (double)window->width();
             mWindowData[window].hover = 0.0f;
 
             kDebug() << "Window '" << window->caption() << "' gets moved to (" <<
@@ -592,7 +592,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
     {
     QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
     int columns = int( ceil( sqrt( windowlist.count())));
-    int rows = int( ceil( windowlist.count() / float( columns )));
+    int rows = int( ceil( windowlist.count() / double( columns )));
     foreach( EffectWindow* w, windowlist )
         mWindowData[ w ].slot = -1;
     for(;;)
@@ -621,17 +621,17 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
             area.y() + ((*it).slot / columns ) * slotheight,
             slotwidth, slotheight );
         geom.adjust( 10, 10, -10, -10 ); // borders
-        float scale;
+        double scale;
         EffectWindow* w = it.key();
-        if( geom.width() / float( w->width()) < geom.height() / float( w->height()))
+        if( geom.width() / double( w->width()) < geom.height() / double( w->height()))
             { // center vertically
-            scale = geom.width() / float( w->width());
+            scale = geom.width() / double( w->width());
             geom.moveTop( geom.top() + ( geom.height() - int( w->height() * scale )) / 2 );
             geom.setHeight( int( w->height() * scale ));
             }
         else
             { // center horizontally
-            scale = geom.height() / float( w->height());
+            scale = geom.height() / double( w->height());
             geom.moveLeft( geom.left() + ( geom.width() - int( w->width() * scale )) / 2 );
             geom.setWidth( int( w->width() * scale ));
             }
@@ -713,9 +713,9 @@ bool PresentWindowsEffect::canRearrangeClosest(EffectWindowList windowlist)
     {
     QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
     int columns = int( ceil( sqrt( windowlist.count())));
-    int rows = int( ceil( windowlist.count() / float( columns )));
+    int rows = int( ceil( windowlist.count() / double( columns )));
     int old_columns = int( ceil( sqrt( mWindowData.count())));
-    int old_rows = int( ceil( mWindowData.count() / float( columns )));
+    int old_rows = int( ceil( mWindowData.count() / double( columns )));
     return old_columns != columns || old_rows != rows;
     }
 

@@ -90,8 +90,8 @@ class Toplevel
         bool readyForPainting() const; // true if the window has been already painted its contents
         Visual* visual() const;
         bool shape() const;
-        void setOpacity( float opacity );
-        float opacity() const;
+        void setOpacity( double opacity );
+        double opacity() const;
         int depth() const;
         bool hasAlpha() const;
         void setupCompositing();

@@ -51,7 +51,7 @@ class ThumbnailAsideEffect
         QHash< EffectWindow*, Data > windows;
         int maxwidth;
         int spacing;
-        float opacity;
+        double opacity;
     };
 
 } // namespace

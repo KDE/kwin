@@ -172,7 +172,7 @@ void EffectsHandlerImpl::windowUserMovedResized( EffectWindow* c, bool first, bo
         ep.second->windowUserMovedResized( c, first, last );
     }
 
-void EffectsHandlerImpl::windowOpacityChanged( EffectWindow* c, float old_opacity )
+void EffectsHandlerImpl::windowOpacityChanged( EffectWindow* c, double old_opacity )
     {
     if( static_cast<EffectWindowImpl*>(c)->window()->opacity() == old_opacity )
         return;
@@ -853,7 +853,7 @@ bool EffectWindowImpl::isMinimized() const
         return false;
     }
 
-float EffectWindowImpl::opacity() const
+double EffectWindowImpl::opacity() const
     {
     return toplevel->opacity();
     }

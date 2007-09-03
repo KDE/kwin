@@ -25,9 +25,9 @@ class MakeTransparentEffect
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
     private:
-        float decoration;
-        float moveresize;
-        float dialogs;
+        double decoration;
+        double moveresize;
+        double dialogs;
     };
 
 } // namespace

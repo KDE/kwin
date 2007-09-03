@@ -46,7 +46,7 @@ void DesktopGridEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( slide )
         {
-        progress = qMin( 1.0f, progress + time / float( PROGRESS_TIME ));
+        progress = qMin( 1.0, progress + time / double( PROGRESS_TIME ));
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
         if( progress != 1 )
@@ -60,9 +60,9 @@ void DesktopGridEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     else if( progress != 0 || activated )
         {
         if( activated )
-            progress = qMin( 1.0f, progress + time / float( PROGRESS_TIME ));
+            progress = qMin( 1.0, progress + time / double( PROGRESS_TIME ));
         else
-            progress = qMax( 0.0f, progress - time / float( PROGRESS_TIME ));
+            progress = qMax( 0.0, progress - time / double( PROGRESS_TIME ));
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
         if( progress != 0 )
@@ -150,8 +150,8 @@ void DesktopGridEffect::paintScreenDesktop( int desktop, int mask, QRegion regio
         QRect normal = desktopRect( effects->currentDesktop(), false );
         d.xTranslate += rect.x(); // - normal.x();
         d.yTranslate += rect.y(); // - normal.y();
-        d.xScale *= rect.width() / float( normal.width());
-        d.yScale *= rect.height() / float( normal.height());
+        d.xScale *= rect.width() / double( normal.width());
+        d.yScale *= rect.height() / double( normal.height());
         // TODO mask parts that are not visible?
         effects->paintScreen( mask, region, d );
         }
@@ -280,10 +280,10 @@ QRect DesktopGridEffect::desktopRect( int desktop, bool scaled ) const
     if( !scaled )
         return rect;
     QRect current = desktopRect( effects->currentDesktop(), false );
-    rect = QRect( qRound( interpolate( rect.x() - current.x(), rect.x() / float( x ), progress )),
-        qRound( interpolate( rect.y() - current.y(), rect.y() / float( y ), progress )),
-        qRound( interpolate( rect.width(), displayWidth() / float( x ), progress )),
-        qRound( interpolate( rect.height(), displayHeight() / float( y ), progress )));
+    rect = QRect( qRound( interpolate( rect.x() - current.x(), rect.x() / double( x ), progress )),
+        qRound( interpolate( rect.y() - current.y(), rect.y() / double( y ), progress )),
+        qRound( interpolate( rect.width(), displayWidth() / double( x ), progress )),
+        qRound( interpolate( rect.height(), displayHeight() / double( y ), progress )));
     return rect;
     }
 
@@ -395,9 +395,9 @@ void DesktopGridEffect::slideDesktopChanged( int old )
             { // current position is in new current desktop (e.g. quickly changing back),
               // don't do full progress
             if( abs( currentPos.x() - rect.x()) > abs( currentPos.y() - rect.y()))
-                progress = 1 - abs( currentPos.x() - rect.x()) / float( displayWidth());
+                progress = 1 - abs( currentPos.x() - rect.x()) / double( displayWidth());
             else
-                progress = 1 - abs( currentPos.y() - rect.y()) / float( displayHeight());
+                progress = 1 - abs( currentPos.y() - rect.y()) / double( displayHeight());
             }
         else // current position is not on current desktop, do full progress
             progress = 0;
