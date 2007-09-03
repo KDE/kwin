@@ -380,6 +380,8 @@ void BoxSwitchEffect::calculateFrameSize()
     text_font.setBold( true );
     text_font.setPointSize( 12 );
     text_area.setHeight( QFontMetrics( text_font ).height() * 1.2 );
+    // Separator space between items and text
+    const int separator_height = 6;
     // Shrink the size until all windows/desktops can fit onscreen
     frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
     while( frame_area.width() > displayWidth())
@@ -387,11 +389,13 @@ void BoxSwitchEffect::calculateFrameSize()
         item_max_size /= 2;
         frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
         }
-    frame_area.setHeight( frame_margin * 2 + item_max_size.height() + text_area.height());
+    frame_area.setHeight( frame_margin * 2 + item_max_size.height() +
+            separator_height + text_area.height());
     text_area.setWidth( frame_area.width() - frame_margin * 2 );
 
     frame_area.moveTo(( displayWidth() - frame_area.width()) / 2, ( displayHeight() - frame_area.height()) / 2 );
-    text_area.moveTo( frame_area.x() + frame_margin, frame_area.y() + frame_margin + item_max_size.height());
+    text_area.moveTo( frame_area.x() + frame_margin,
+                      frame_area.y() + frame_margin + item_max_size.height() + separator_height);
     }
 
 void BoxSwitchEffect::calculateItemSizes()
