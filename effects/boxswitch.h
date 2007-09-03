@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QRect>
 #include <QRegion>
 #include <QSize>
+#include <QFont>
 
 #include <kwinglutils.h>
 
@@ -59,6 +60,7 @@ class BoxSwitchEffect
         void paintWindowThumbnail( EffectWindow* w );
         void paintDesktopThumbnail( int iDesktop );
         void paintWindowIcon( EffectWindow* w );
+        void paintText( const QString& text );
 
         bool mActivated;
         Window mInput;
@@ -69,6 +71,7 @@ class BoxSwitchEffect
         int highlight_margin; // TODO graphical background
         QSize item_max_size; // maximum item display size (including highlight)
         QRect text_area;
+        QFont text_font;
 
         QHash< EffectWindow*, ItemInfo* > windows;
         EffectWindowList original_windows;

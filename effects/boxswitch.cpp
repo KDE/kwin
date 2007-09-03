@@ -91,9 +91,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 paintWindowThumbnail( w );
                 paintWindowIcon( w );
                 }
-            int maxwidth = text_area.width();
-            QColor color = KColorScheme( KColorScheme::Window ).foreground();
-            effects->paintText( selected_window->caption(), text_area.center(), maxwidth, color );
+            paintText( selected_window->caption() );
             }
         else
             {
@@ -110,9 +108,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
 
                     paintDesktopThumbnail( painting_desktop );
                     }
-                int maxwidth = text_area.width();
-                QColor color = KColorScheme( KColorScheme::Window ).foreground();
-                effects->paintText( effects->desktopName( selected_desktop ), text_area.center(), maxwidth, color );
+                paintText( effects->desktopName( selected_desktop ));
                 painting_desktop = 0;
                 }
             }
@@ -381,7 +377,9 @@ void BoxSwitchEffect::calculateFrameSize()
         item_max_size.setHeight( 200 );
         }
     // How much height to reserve for a one-line text label
-    text_area.setHeight( int( kapp->fontMetrics().height() * 1.2 ));
+    text_font.setBold( true );
+    text_font.setPointSize( 12 );
+    text_area.setHeight( QFontMetrics( text_font ).height() * 1.2 );
     // Shrink the size until all windows/desktops can fit onscreen
     frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
     while( frame_area.width() > displayWidth())
@@ -432,7 +430,7 @@ void BoxSwitchEffect::calculateItemSizes()
 
 void BoxSwitchEffect::paintFrame()
     {
-    QColor color = KColorScheme( KColorScheme::Window ).background();
+    QColor color = KColorScheme( QPalette::Active, KColorScheme::Window ).background();
     color.setAlphaF( 0.9 );
 #ifdef HAVE_OPENGL
     if( effects->compositingType() == OpenGLCompositing )
@@ -467,7 +465,7 @@ void BoxSwitchEffect::paintFrame()
 
 void BoxSwitchEffect::paintHighlight( QRect area )
     {
-    QColor color = KColorScheme( KColorScheme::Selection ).background();
+    QColor color = KColorScheme( QPalette::Active, KColorScheme::Selection ).background();
     color.setAlphaF( 0.9 );
 #ifdef HAVE_OPENGL
     if( effects->compositingType() == OpenGLCompositing )
@@ -618,5 +616,12 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         }
 #endif
     }
+
+void BoxSwitchEffect::paintText( const QString& text )
+{
+    int maxwidth = text_area.width();
+    QColor color = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground();
+    effects->paintText( text, text_area.center(), maxwidth, color, text_font );
+}
 
 } // namespace
