@@ -81,7 +81,7 @@ KDE 4.0 TODO
 - IHV database - set config settings according to card/driver
 ?   - some sort of performance slider
 
-? - undirect fullscreen windows
+? - unredirect fullscreen windows
 
 - fix shading
 - window-specific rules need to apply to unmanaged windows as well (where applicable)
@@ -113,6 +113,7 @@ KDE 4.0 TODO
 
 - since API won't be stable, a version check for modules is needed
 
+
 General TODO
 =================================
 
@@ -136,16 +137,9 @@ General TODO
     - there's 5ms grace period per repaint to avoid overloading the system with just compositing
         and not letting the system do anything else - check and evaluate 
 
-% support for new window types from the wm spec for compositing
-    - this will have to be done in Qt, kdecore and kwin
-
 * handle properly stacking order of deleted windows for showing in effects
 
 * handle properly deleted windows that reappear (windowReadded() function?)
-
-/ consider using an extra class for representing deleted windows
-    - cleaning up Client/Unmanaged instances may still leave e.g. timers around if they're overlooked
-    - an extra class could copy some interesting data and "replace" the old instance
 
 % during screensaving, do no let non-screensaver windows show above screensaver
     - kdesktop_lock watches for such things and raises again, but there's a small gap
@@ -207,7 +201,6 @@ OpenGL TODO
 + strict binding
     - there is code to support strict binding as required by AIGLX, but it's disabled, because
         copy_buffer in bindTexture() ensures strict binding as a side-effect
-    - since copy_buffer hack should be removed in the future, strict binding will need to be enabled then
     - http://lists.kde.org/?l=kwin&m=116363084129170&w=2
 
 % bindTexture() optimize copied areas
@@ -220,16 +213,10 @@ OpenGL TODO
         obscured (makes a difference with many windows open)
     - http://lists.kde.org/?l=kwin&m=116585618111882&w=2
 
-/ shm mode needs support for more data formats than GL_BGRA
+! shm mode needs support for more data formats than GL_BGRA
     - http://www.xfree86.org/current/glTexImage2D.3.html
     - this now works for 16bpp, but maybe not 15bpp or less
     - endian issues?
-
-% with current nvidia glXCreatePixmap in tfp mode fails with pixmaps 32x32 and smaller
-
-/ vertices list (and possibly more things) should not be part of SceneOpenGL::Window
-    - otherwise drawWindow() used for thumbnails would use them too
-    - they should be probably part of WindowPaintData
 
 % __GL_YIELD=NOTHING for NVidia reportedly improves perceived performance
     - it needs to be set somehow (http://lists.kde.org/?l=kwin&m=117794153720348&w=2)
@@ -254,8 +241,6 @@ Effects framework TODO
     ? more
 
 / shadows
-+   - right now is only a rectangle, probably needs some shape support
-+   - right now is only a flat black color, probably should be improved
 
 / support for grabbing input
     - during some more complicated effects, input (at least mouse) should be disabled,
@@ -287,20 +272,6 @@ Effects framework TODO
 Effects TODO
 ===============================
 
-+ adapt the kcontrol module used by Kompmgr
-    - in kcmkwin/kwinoptions
-!   - uses ~/.xcompmgr, convert to use normal KConfig
-?   - I don't think these effects should be plugins or anything like that,
-        probably simply write to kwinrc and use the Option class in KWin
-
-/ implements all effects Kompmgr could do
-/   - shadows
-+   - tab Effects
-+       - fade between changes
-            - will need notification about opacity changes
-            - not sure if this is doable for other opacity changes then the ones
-                initiated by the user or by the application
-
 + minimize/shade effects
     - to replace the ones from KWin core
 /       - minimizing
@@ -315,8 +286,6 @@ Effects TODO
 *   - should be triggered by ksmserver somehow
 
 + effects to replace widget effects (the ones in the Effects tab in "kcmshell style")
-+   - needs support for new window types from the current draft of the EWMH WM spec
-+       - needs patching Qt, netwm* classes in kdecore
 
 / showfps effect
     - for debugging, just shows transparent fps in some corner
