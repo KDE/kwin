@@ -294,6 +294,7 @@ Effects TODO
 +   - needs bindPixmapToTexture() or something like that, for displaying the text
     - should also detect kwin being idle - it probably should detect in pre-paint that the only
         damage is its own area and avoid damaging for the next round in post-paint
+    - should also have a graph showing how much of the screen is redraw, to detect too big redraws
 
 + debugpaint effect
     - should show what is damaged during each repaint step
