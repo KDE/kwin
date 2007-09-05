@@ -114,6 +114,7 @@ OxygenClient::~OxygenClient()
 // Actual initializer for class
 
 static QTimer updateTimer;
+static int titleBarHeight = TITLESIZE;
 
 void OxygenClient::init()
 {
@@ -126,7 +127,12 @@ void OxygenClient::init()
     // setup layout
     QGridLayout *mainlayout = new QGridLayout(widget());
     QHBoxLayout *titlelayout = new QHBoxLayout();
-    titlebar_ = new QSpacerItem(1, TITLESIZE, QSizePolicy::Expanding,
+    // Force button size to be in a reasonable range.
+    // If the frame width is large, the button size must be large too.
+    titleBarHeight = (QFontMetrics(options()->font(true)).height() + 1) & 0x3e;
+    if (titleBarHeight < TITLESIZE) titleBarHeight = TITLESIZE;
+
+    titlebar_ = new QSpacerItem(1, titleBarHeight, QSizePolicy::Expanding,
                                 QSizePolicy::Fixed);
 
     mainlayout->addItem(new QSpacerItem(LFRAMESIZE, TFRAMESIZE), 0, 0);
@@ -334,7 +340,7 @@ void OxygenClient::borders(int &l, int &r, int &t, int &b) const
 {
     l = LFRAMESIZE;
     r = RFRAMESIZE;
-    t = TITLESIZE + TFRAMESIZE;
+    t = titleBarHeight + TFRAMESIZE;
     b = BFRAMESIZE;
 }
 
@@ -478,7 +484,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     int splitY = qMin(300, 3*frame.height()/4);
 
     QPixmap tile = globalHelper->verticalGradient(color, splitY);
-    painter.drawTiledPixmap(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), tile);
+    painter.drawTiledPixmap(QRect(0, 0, frame.width(), titleBarHeight + TFRAMESIZE), tile);
 
     painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, splitY), tile);
     painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, globalHelper->backgroundBottomColor(color));
