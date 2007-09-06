@@ -23,6 +23,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/Xrender.h>
 #endif
 
+#include <math.h>
+
+
 namespace KWin
 {
 
@@ -38,7 +41,10 @@ ShowFpsEffect::ShowFpsEffect()
     for( int i = 0;
          i < NUM_PAINTS;
          ++i )
+        {
         paints[ i ] = 0;
+        paint_size[ i ] = 0;
+        }
     for( int i = 0;
          i < MAX_FPS;
          ++i )
@@ -48,13 +54,14 @@ ShowFpsEffect::ShowFpsEffect()
     x = config.readEntry( "X", -10000 );
     y = config.readEntry( "Y", 0 );
     if( x == -10000 ) // there's no -0 :(
-        x = displayWidth() - NUM_PAINTS - FPS_WIDTH;
+        x = displayWidth() - 2*NUM_PAINTS - FPS_WIDTH;
     else if ( x < 0 )
-        x = displayWidth() - NUM_PAINTS - FPS_WIDTH - x;
+        x = displayWidth() - 2*NUM_PAINTS - FPS_WIDTH - x;
     if( y == -10000 )
         y = displayHeight() - MAX_TIME;
     else if ( y < 0 )
         y = displayHeight() - MAX_TIME - y;
+    fps_rect = QRect( x, y, FPS_WIDTH + 2*NUM_PAINTS, MAX_TIME );
     }
 
 void ShowFpsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -67,7 +74,23 @@ void ShowFpsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     if( ++frames_pos == MAX_FPS )
         frames_pos = 0;
     effects->prePaintScreen( data, time );
-    data.paint += QRect( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
+    data.paint += fps_rect;
+
+    paint_size[ paints_pos ] = 0;
+    }
+
+void ShowFpsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    effects->paintWindow( w, mask, region, data );
+
+    // Take intersection of region and actual window's rect, minus the fps area
+    //  (since we keep repainting it) and count the pixels.
+    QRegion r2 = region & QRect( w->x(), w->y(), w->width(), w->height() );
+    r2 -= fps_rect;
+    int winsize = 0;
+    foreach( const QRect& r, r2.rects())
+        winsize += r.width() * r.height();
+    paint_size[ paints_pos ] += winsize;
     }
 
 void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -110,8 +133,8 @@ void ShowFpsEffect::paintGL( int fps )
     glColor4f( 1, 1, 1, alpha ); // white
     glBegin( GL_QUADS );
     glVertex2i( x, y );
-    glVertex2i( x + NUM_PAINTS + FPS_WIDTH, y );
-    glVertex2i( x + NUM_PAINTS + FPS_WIDTH, y + MAX_TIME );
+    glVertex2i( x + 2*NUM_PAINTS + FPS_WIDTH, y );
+    glVertex2i( x + 2*NUM_PAINTS + FPS_WIDTH, y + MAX_TIME );
     glVertex2i( x, y + MAX_TIME );
     glEnd();
     y += MAX_TIME; // paint up from the bottom
@@ -122,37 +145,28 @@ void ShowFpsEffect::paintGL( int fps )
     glVertex2i( x + FPS_WIDTH, y - fps );
     glVertex2i( x, y - fps );
     glEnd();
+
+
     glColor4f( 0, 0, 0, alpha ); // black
     glBegin( GL_LINES );
     for( int i = 10;
          i < MAX_TIME;
          i += 10 )
-        {
+    {
         glVertex2i( x, y - i );
         glVertex2i( x + FPS_WIDTH, y - i );
-        }
+    }
     glEnd();
     x += FPS_WIDTH;
-    glBegin( GL_LINES );
-    for( int i = 0;
-         i < NUM_PAINTS;
-         ++i )
-        {
-        int value = paints[ ( i + paints_pos ) % NUM_PAINTS ];
-        if( value > MAX_TIME )
-            value = MAX_TIME; // limit
-        if( value <= 10 )
-            glColor4f( 0, 1, 0, alpha ); // green
-        else if( value <= 20 )
-            glColor4f( 1, 1, 0, alpha ); // yellow
-        else if( value <= 50 )
-            glColor4f( 1, 0, 0, alpha ); // red
-        else
-            glColor4f( 0, 0, 0, alpha ); // black
-        glVertex2i( x + NUM_PAINTS - i, y );
-        glVertex2i( x + NUM_PAINTS - i, y - value );
-        }
-    glEnd();
+
+    // Paint FPS graph
+    paintFPSGraph( x, y );
+    x += NUM_PAINTS;
+
+    // Paint amount of rendered pixels graph
+    paintDrawSizeGraph( x, y );
+
+    // Paint paint sizes
     glPopAttrib();
 #endif
     }
@@ -165,7 +179,7 @@ void ShowFpsEffect::paintGL( int fps )
 void ShowFpsEffect::paintXrender( int fps )
     {
 #ifdef HAVE_XRENDER
-    Pixmap pixmap = XCreatePixmap( display(), rootWindow(), NUM_PAINTS + FPS_WIDTH, MAX_TIME, 32 );
+    Pixmap pixmap = XCreatePixmap( display(), rootWindow(), FPS_WIDTH, MAX_TIME, 32 );
     XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardARGB32 );
     Picture p = XRenderCreatePicture( display(), pixmap, format, 0, NULL );
     XFreePixmap( display(), pixmap );
@@ -174,7 +188,7 @@ void ShowFpsEffect::paintXrender( int fps )
     col.red = int( alpha * 0xffff ); // white
     col.green = int( alpha * 0xffff );
     col.blue= int( alpha * 0xffff );
-    XRenderFillRectangle( display(), PictOpSrc, p, &col, 0, 0, NUM_PAINTS + FPS_WIDTH, MAX_TIME );
+    XRenderFillRectangle( display(), PictOpSrc, p, &col, 0, 0, FPS_WIDTH, MAX_TIME );
     col.red = 0; // blue
     col.green = 0;
     col.blue = int( alpha * 0xffff );
@@ -188,42 +202,152 @@ void ShowFpsEffect::paintXrender( int fps )
         {
         XRenderFillRectangle( display(), PictOpSrc, p, &col, 0, MAX_TIME - i, FPS_WIDTH, 1 );
         }
+    XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc, p, None,
+        effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, FPS_WIDTH, MAX_TIME );
+    XRenderFreePicture( display(), p );
+
+    // Paint FPS graph
+    paintFPSGraph( x + FPS_WIDTH, y );
+
+    // Paint amount of rendered pixels graph
+    paintDrawSizeGraph( x + FPS_WIDTH + MAX_TIME, y );
+
+#endif
+    }
+
+void ShowFpsEffect::paintFPSGraph(int x, int y)
+    {
+    // Paint FPS graph
+    QList<int> lines;
+    lines << 10 << 20 << 50;
+    QList<int> values;
     for( int i = 0;
          i < NUM_PAINTS;
          ++i )
         {
-        int value = paints[ ( i + paints_pos ) % NUM_PAINTS ];
-        if( value > MAX_TIME )
-            value = MAX_TIME; // limit
-        if( value <= 10 )
-            { // green
-            col.red = 0;
-            col.green = int( alpha * 0xffff );
-            col.blue = 0;
-            }
-        else if( value <= 20 )
-            { // yellow
-            col.red = int( alpha * 0xffff );
-            col.green = int( alpha * 0xffff );
-            col.blue = 0;
-            }
-        else if( value <= 50 )
-            { // red
-            col.red = int( alpha * 0xffff );
-            col.green = 0;
-            col.blue = 0;
-            }
-        else
-            { // black
-            col.red = 0;
-            col.green = 0;
-            col.blue = 0;
-            }
-        XRenderFillRectangle( display(), PictOpSrc, p, &col, FPS_WIDTH + NUM_PAINTS - i, MAX_TIME - value, 1, value );
+        values.append( paints[ ( i + paints_pos ) % NUM_PAINTS ] );
         }
-    XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc, p, None,
-        effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
-    XRenderFreePicture( display(), p );
+    paintGraph( x, y, values, lines, true );
+    }
+
+void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
+{
+    int max_drawsize = 0;
+    for( int i = 0; i < NUM_PAINTS; i++)
+        max_drawsize = qMax(max_drawsize, paint_size[ i ] );
+
+    const int max_pixels_log = 8;
+    float drawscale = MAX_TIME / max_pixels_log;
+    QList<int> drawlines;
+
+    for( int logh = 2; logh <= max_pixels_log; logh++ )
+        drawlines.append( (int)(logh*drawscale) );
+
+    QList<int> drawvalues;
+    for( int i = 0;
+         i < NUM_PAINTS;
+         ++i )
+        {
+        int value = paint_size[ ( i + paints_pos ) % NUM_PAINTS ];
+        int h = ( !value ) ? 0 : qMin( (int)( log10( value ) * drawscale ), MAX_TIME );
+        drawvalues.append( h );
+        }
+    paintGraph( x, y, drawvalues, drawlines, false );
+    }
+
+void ShowFpsEffect::paintGraph( int x, int y, QList<int> values, QList<int> lines, bool colorize)
+    {
+#ifdef HAVE_OPENGL
+    if( effects->compositingType() == OpenGLCompositing)
+        {
+        glColor4f( 0, 0, 0, alpha ); // black
+        glBegin( GL_LINES );
+        // First draw the lines
+        foreach( int h, lines)
+            {
+            glVertex2i( x, y - h );
+            glVertex2i( x + values.count(), y - h );
+            }
+        // Then the graph values
+        glColor4f( 0.5, 0.5, 0.5, alpha );
+        for( int i = 0; i < values.count(); i++ )
+            {
+            int value = values[ i ];
+            if( colorize )
+                {
+                if( value <= 10 )
+                    glColor4f( 0, 1, 0, alpha ); // green
+                else if( value <= 20 )
+                    glColor4f( 1, 1, 0, alpha ); // yellow
+                else if( value <= 50 )
+                    glColor4f( 1, 0, 0, alpha ); // red
+                else
+                    glColor4f( 0, 0, 0, alpha ); // black
+                }
+            glVertex2i( x + values.count() - i, y );
+            glVertex2i( x + values.count() - i, y - value );
+            }
+        glEnd();
+        }
+#endif
+#ifdef HAVE_XRENDER
+    if( effects->compositingType() == XRenderCompositing)
+        {
+        Pixmap pixmap = XCreatePixmap( display(), rootWindow(), values.count(), MAX_TIME, 32 );
+        XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardARGB32 );
+        Picture p = XRenderCreatePicture( display(), pixmap, format, 0, NULL );
+        XFreePixmap( display(), pixmap );
+        XRenderColor col;
+        col.alpha = int( alpha * 0xffff );
+
+        // Draw background
+        col.red = col.green = col.blue = int( alpha * 0xffff ); // white
+        XRenderFillRectangle( display(), PictOpSrc, p, &col, 0, 0, values.count(), MAX_TIME );
+
+        // Then the lines
+        col.red = col.green = col.blue = 0;  // black
+        foreach( int h, lines)
+            XRenderFillRectangle( display(), PictOpSrc, p, &col, 0, MAX_TIME - h, values.count(), 1 );
+
+        // Then the values
+        col.red = col.green = col.blue = int( alpha * 0x8000 );  // grey
+        for( int i = 0; i < values.count(); i++ )
+            {
+            int value = values[ i ];
+            if( colorize )
+                {
+                if( value <= 10 )
+                    { // green
+                    col.red = 0;
+                    col.green = int( alpha * 0xffff );
+                    col.blue = 0;
+                    }
+                else if( value <= 20 )
+                    { // yellow
+                    col.red = int( alpha * 0xffff );
+                    col.green = int( alpha * 0xffff );
+                    col.blue = 0;
+                    }
+                else if( value <= 50 )
+                    { // red
+                    col.red = int( alpha * 0xffff );
+                    col.green = 0;
+                    col.blue = 0;
+                    }
+                else
+                    { // black
+                    col.red = 0;
+                    col.green = 0;
+                    col.blue = 0;
+                    }
+                }
+            XRenderFillRectangle( display(), PictOpSrc, p, &col,
+                                  values.count() - i, MAX_TIME - value, 1, value );
+            }
+        XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc, p, None,
+            effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, values.count(), MAX_TIME );
+        XRenderFreePicture( display(), p );
+        }
 #endif
     }
 
@@ -233,7 +357,7 @@ void ShowFpsEffect::postPaintScreen()
     paints[ paints_pos ] = t.elapsed();
     if( ++paints_pos == NUM_PAINTS )
         paints_pos = 0;
-    effects->addRepaint( x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME );
+    effects->addRepaint( fps_rect );
     }
 
 } // namespace
