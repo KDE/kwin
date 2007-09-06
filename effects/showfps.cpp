@@ -236,12 +236,16 @@ void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
     for( int i = 0; i < NUM_PAINTS; i++)
         max_drawsize = qMax(max_drawsize, paint_size[ i ] );
 
-    const int max_pixels_log = 8;
-    float drawscale = MAX_TIME / max_pixels_log;
+    // Log of min/max values shown on graph
+    const float max_pixels_log = 7.2f;
+    const float min_pixels_log = 2.0f;
+    const int minh = 5;  // Minimum height of the bar when  value > 0
+
+    float drawscale = (MAX_TIME - minh) / (max_pixels_log - min_pixels_log);
     QList<int> drawlines;
 
-    for( int logh = 2; logh <= max_pixels_log; logh++ )
-        drawlines.append( (int)(logh*drawscale) );
+    for( int logh = (int)min_pixels_log; logh <= max_pixels_log; logh++ )
+        drawlines.append( (int)(( logh - min_pixels_log ) * drawscale ) + minh );
 
     QList<int> drawvalues;
     for( int i = 0;
@@ -249,7 +253,12 @@ void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
          ++i )
         {
         int value = paint_size[ ( i + paints_pos ) % NUM_PAINTS ];
-        int h = ( !value ) ? 0 : qMin( (int)( log10( value ) * drawscale ), MAX_TIME );
+        int h = 0;
+        if( value > 0)
+            {
+            h = (int)(( log10( value ) - min_pixels_log ) * drawscale );
+            h = qMin( qMax( 0, h ) + minh, MAX_TIME );
+            }
         drawvalues.append( h );
         }
     paintGraph( x, y, drawvalues, drawlines, false );
