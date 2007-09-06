@@ -304,11 +304,6 @@ void ShowFpsEffect::paintGraph( int x, int y, QList<int> values, QList<int> line
         col.red = col.green = col.blue = int( alpha * 0xffff ); // white
         XRenderFillRectangle( display(), PictOpSrc, p, &col, 0, 0, values.count(), MAX_TIME );
 
-        // Then the lines
-        col.red = col.green = col.blue = 0;  // black
-        foreach( int h, lines)
-            XRenderFillRectangle( display(), PictOpSrc, p, &col, 0, MAX_TIME - h, values.count(), 1 );
-
         // Then the values
         col.red = col.green = col.blue = int( alpha * 0x8000 );  // grey
         for( int i = 0; i < values.count(); i++ )
@@ -344,6 +339,13 @@ void ShowFpsEffect::paintGraph( int x, int y, QList<int> values, QList<int> line
             XRenderFillRectangle( display(), PictOpSrc, p, &col,
                                   values.count() - i, MAX_TIME - value, 1, value );
             }
+
+        // Then the lines
+        col.red = col.green = col.blue = 0;  // black
+        foreach( int h, lines)
+            XRenderFillRectangle( display(), PictOpSrc, p, &col, 0, MAX_TIME - h, values.count(), 1 );
+
+        // Finally render the pixmap onto screen
         XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc, p, None,
             effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, values.count(), MAX_TIME );
         XRenderFreePicture( display(), p );
