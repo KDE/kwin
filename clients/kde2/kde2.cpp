@@ -18,7 +18,6 @@
 #include <kconfig.h>
 #include <kglobal.h>
 #include <kpixmapeffect.h>
-#include <kimageeffect.h>
 #include <klocale.h>
 #include <kdebug.h>
 

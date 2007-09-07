@@ -27,8 +27,6 @@
 #include <QResizeEvent>
 #include <QMouseEvent>
 #include <QPainter>
-#include <kpixmapeffect.h>
-#include <kimageeffect.h>
 #include <kicontheme.h>
 #include <kiconeffect.h>
 //#include <kdrawutil.h>
