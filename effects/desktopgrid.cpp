@@ -23,7 +23,7 @@ namespace KWin
 
 KWIN_EFFECT( desktopgrid, DesktopGridEffect )
 
-const int PROGRESS_TIME = 500; // ms
+const int PROGRESS_TIME = 300; // ms
 
 DesktopGridEffect::DesktopGridEffect()
     : progress( 0 )
