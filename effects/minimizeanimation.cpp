@@ -34,7 +34,7 @@ void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time
 
 void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    const double changeTime = 500;
+    const double changeTime = 300;
     if( mAnimationProgress.contains( w ))
         {
         if( w->isMinimized() )
