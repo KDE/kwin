@@ -33,6 +33,7 @@
 #include <kconfig.h>
 #include <kdialog.h>
 #include <kglobalsettings.h>
+#include <kcolorscheme.h>
 #include <kseparator.h>
 #include <QtDBus/QtDBus>
 
@@ -108,8 +109,8 @@ void createMaxButtonPixmaps()
     "..............."},
   };
 
-  QByteArray baseColor(". c " + KGlobalSettings::baseColor().name().toAscii());
-  QByteArray textColor("# c " + KGlobalSettings::textColor().name().toAscii());
+  QByteArray baseColor(". c " + KColorScheme(QPalette::Active, KColorScheme::View).background().color().name().toAscii());
+  QByteArray textColor("# c " + KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name().toAscii());
   for (int t = 0; t < 3; ++t)
   {
     maxButtonXpms[t][0] = "15 13 2 1";
