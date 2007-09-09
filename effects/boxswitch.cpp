@@ -39,6 +39,11 @@ BoxSwitchEffect::BoxSwitchEffect()
 #ifdef HAVE_XRENDER
     alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
 #endif
+    color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background();
+    color_frame.setAlphaF( 0.9 );
+    color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background();
+    color_highlight.setAlphaF( 0.9 );
+    color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground();
     }
 
 BoxSwitchEffect::~BoxSwitchEffect()
@@ -434,13 +439,11 @@ void BoxSwitchEffect::calculateItemSizes()
 
 void BoxSwitchEffect::paintFrame()
     {
-    QColor color = KColorScheme( QPalette::Active, KColorScheme::Window ).background();
-    color.setAlphaF( 0.9 );
 #ifdef HAVE_OPENGL
     if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT );
-        glColor4f( color.redF(), color.greenF(), color.blueF(), color.alphaF());
+        glColor4f( color_frame.redF(), color_frame.greenF(), color_frame.blueF(), color_frame.alphaF());
         renderRoundBoxWithEdge( frame_area );
         glPopAttrib();
         }
@@ -453,13 +456,13 @@ void BoxSwitchEffect::paintFrame()
         Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
         XFreePixmap( display(), pixmap );
         XRenderColor col;
-        col.alpha = int( color.alphaF() * 0xffff );
-        col.red = int( color.redF() * color.alphaF() * 0xffff );
-        col.green = int( color.greenF() * color.alphaF() * 0xffff );
-        col.blue = int( color.blueF() * color.alphaF() * 0xffff );
+        col.alpha = int( color_frame.alphaF() * 0xffff );
+        col.red = int( color_frame.redF() * color_frame.alphaF() * 0xffff );
+        col.green = int( color_frame.greenF() * color_frame.alphaF() * 0xffff );
+        col.blue = int( color_frame.blueF() * color_frame.alphaF() * 0xffff );
         XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
             frame_area.width(), frame_area.height());
-        XRenderComposite( display(), color.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
+        XRenderComposite( display(), color_frame.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
             pic, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, frame_area.x(), frame_area.y(), frame_area.width(), frame_area.height());
         XRenderFreePicture( display(), pic );
@@ -469,13 +472,11 @@ void BoxSwitchEffect::paintFrame()
 
 void BoxSwitchEffect::paintHighlight( QRect area )
     {
-    QColor color = KColorScheme( QPalette::Active, KColorScheme::Selection ).background();
-    color.setAlphaF( 0.9 );
 #ifdef HAVE_OPENGL
     if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT );
-        glColor4f( color.redF(), color.greenF(), color.blueF(), color.alphaF());
+        glColor4f( color_highlight.redF(), color_highlight.greenF(), color_highlight.blueF(), color_highlight.alphaF());
         renderRoundBox( area, 6 );
         glPopAttrib();
         }
@@ -488,13 +489,13 @@ void BoxSwitchEffect::paintHighlight( QRect area )
         Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
         XFreePixmap( display(), pixmap );
         XRenderColor col;
-        col.alpha = int( color.alphaF() * 0xffff );
-        col.red = int( color.redF() * color.alphaF() * 0xffff );
-        col.green = int( color.greenF() * color.alphaF() * 0xffff );
-        col.blue = int( color.blueF() * color.alphaF() * 0xffff );
+        col.alpha = int( color_highlight.alphaF() * 0xffff );
+        col.red = int( color_highlight.redF() * color_highlight.alphaF() * 0xffff );
+        col.green = int( color_highlight.greenF() * color_highlight.alphaF() * 0xffff );
+        col.blue = int( color_highlight.blueF() * color_highlight.alphaF() * 0xffff );
         XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
             area.width(), area.height());
-        XRenderComposite( display(), color.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
+        XRenderComposite( display(), color_highlight.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
             pic, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
         XRenderFreePicture( display(), pic );
@@ -624,8 +625,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
 void BoxSwitchEffect::paintText( const QString& text )
 {
     int maxwidth = text_area.width();
-    QColor color = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground();
-    effects->paintText( text, text_area.center(), maxwidth, color, text_font );
+    effects->paintText( text, text_area.center(), maxwidth, color_text, text_font );
 }
 
 } // namespace

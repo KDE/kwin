@@ -72,6 +72,9 @@ class BoxSwitchEffect
         QSize item_max_size; // maximum item display size (including highlight)
         QRect text_area;
         QFont text_font;
+        QColor color_frame;
+        QColor color_highlight;
+        QColor color_text;
 
         QHash< EffectWindow*, ItemInfo* > windows;
         EffectWindowList original_windows;
