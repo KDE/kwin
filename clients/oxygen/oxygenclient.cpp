@@ -14,10 +14,8 @@
 
 #include <kconfig.h>
 #include <kglobal.h>
-#include <kglobalsettings.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <kcolorscheme.h>
 
 #include <qbitmap.h>
 #include <qlabel.h>
@@ -459,6 +457,15 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     QPalette palette = widget()->palette();
     QPainter painter(widget());
+
+    // ### - This feels like a kwin bug; the palette we get back always seems
+    // to be (incorrectly) using the Inactive group, which is wrong; active
+    // windows should have currentColorGroup() == Active. So, hack around it...
+    // I don't think a window can be disabled?
+    if (isActive())
+        palette.setCurrentColorGroup(QPalette::Active);
+    else
+        palette.setCurrentColorGroup(QPalette::Inactive);
 
     QRect title(titlebar_->geometry());
 
