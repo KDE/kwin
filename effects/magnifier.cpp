@@ -106,7 +106,10 @@ void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
 void MagnifierEffect::postPaintScreen()
     {
     if( zoom != target_zoom )
-        effects->addRepaint( magnifierArea());
+    {
+        QRect framedarea = magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH );
+        effects->addRepaint( framedarea );
+    }
     effects->postPaintScreen();
     }
 
