@@ -35,11 +35,11 @@
 #include "oxygenbutton.h"
 #include "oxygen.h"
 #include "definitions.cpp"
-#include "helper.h"
+#include "lib/helper.h"
 
 namespace Oxygen
 {
-K_GLOBAL_STATIC_WITH_ARGS(OxygenWindecoHelper, globalHelper, ("OxygenDeco"))
+K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("OxygenDeco"))
 
 // class OxygenClient;
 /*
@@ -139,7 +139,32 @@ void OxygenButton::paintEvent(QPaintEvent *)
     }
 
     QColor bg = globalHelper->backgroundTopColor(palette().window());
-   painter.drawPixmap(0, 0, globalHelper->windecoButton(palette().button(), BUTTONSIZE));
+    painter.drawPixmap(0, 0, globalHelper->windecoButton(palette().button(), BUTTONSIZE));
+
+    painter.setRenderHints(QPainter::Antialiasing);
+    painter.setBrush(Qt::NoBrush);
+    QLinearGradient lg(0, 6, 0, 12);
+    lg.setColorAt(0.45, QColor(0,0,0,150));
+    lg.setColorAt(0.80, QColor(0,0,0,80));
+    painter.setPen(QPen(lg,2));
+    switch(type_)
+    {
+        case ButtonSticky:
+        case ButtonHelp:
+            break;
+        case ButtonMin:
+            painter.drawLine(6,8,9,11);
+            painter.drawLine(9,11,12,8);
+            break;
+        case ButtonMax:
+            painter.drawLine(9,8,12,11);
+            painter.drawLine(6,11,9,8);
+            break;
+        case ButtonClose:
+            painter.drawLine(6,6,12,12);
+            painter.drawLine(12,6,6,12);
+            break;
+    }
 }
 
 
