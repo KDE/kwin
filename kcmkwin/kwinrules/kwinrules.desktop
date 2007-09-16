@@ -9,6 +9,8 @@ DocPath=kcontrol/windowmanagement/index.html
 X-KDE-Library=kcm_kwinrules
 X-KDE-ParentApp=kcontrol
 
+X-KDE-System-Settings-Parent-Category=window-behaviour
+
 Name=Window-Specific Settings
 Name[af]=Venser spesifike Instellings
 Name[ar]=إعدادات خاصة بالنوافذ
