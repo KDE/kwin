@@ -64,29 +64,6 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
     p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
 }
 
-// window button decorations
-static const unsigned char close_bits[] = {
-    0xc3, 0x66, 0x7e, 0x3c, 0x3c, 0x7e, 0x66, 0xc3};
-
-static const unsigned char help_bits[] = {
-    0x7e, 0x7e, 0x60, 0x78, 0x78, 0x00, 0x18, 0x18};
-
-static const unsigned char max_bits[] = {
-    0x00, 0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0x00};
-
-static const unsigned char min_bits[] = {
-//    0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
-    0x00, 0x00, 0x38, 0x38, 0x38, 0x00, 0x00, 0x00};
-
-static const unsigned char minmax_bits[] = {
-    0x00, 0x02, 0x06, 0x0e, 0x1e, 0x3e, 0x7e, 0x00};
-
-static const unsigned char stickydown_bits[] = {
-    0x00, 0x18, 0x18, 0x7e, 0x7e, 0x18, 0x18, 0x00};
-
-static const unsigned char sticky_bits[] = {
-    0x00, 0x00, 0x00, 0x7e, 0x7e, 0x00, 0x00, 0x00};
-
 //////////////////////////////////////////////////////////////////////////////
 // OxygenClient Class                                                      //
 //////////////////////////////////////////////////////////////////////////////
@@ -97,351 +74,142 @@ static const unsigned char sticky_bits[] = {
 // Constructor
 
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
-    : KDecoration(b, f) { ; }
+    : KCommonDecoration(b, f) { ; }
 
 OxygenClient::~OxygenClient()
 {
-    for (int n=0; n<ButtonTypeCount; n++) {
-        if (button[n]) delete button[n];
-    }
+}
+QString OxygenClient::visibleName() const
+{
+    return i18n("Oxygen");
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// init()
-// ------
-// Actual initializer for class
+QString OxygenClient::defaultButtonsLeft() const
+{
+    return "M";
+}
 
-static QTimer updateTimer;
-static int titleBarHeight = TITLESIZE;
+QString OxygenClient::defaultButtonsRight() const
+{
+    return "HIAX";
+}
 
 void OxygenClient::init()
 {
-    createMainWidget(); //PORT  Qt::WResizeNoErase | Qt::WNoAutoErase);
+    KCommonDecoration::init();
+
     widget()->setAutoFillBackground(false);
     widget()->setAttribute(Qt::WA_OpaquePaintEvent);
     widget()->setAttribute( Qt::WA_PaintOnScreen, false);
-    widget()->installEventFilter(this);
-
-    // setup layout
-    QGridLayout *mainlayout = new QGridLayout(widget());
-    QHBoxLayout *titlelayout = new QHBoxLayout();
-    // Force button size to be in a reasonable range.
-    // If the frame width is large, the button size must be large too.
-    titleBarHeight = (QFontMetrics(options()->font(true)).height() + 1) & 0x3e;
-    if (titleBarHeight < TITLESIZE) titleBarHeight = TITLESIZE;
-
-    titlebar_ = new QSpacerItem(1, titleBarHeight, QSizePolicy::Expanding,
-                                QSizePolicy::Fixed);
-
-    mainlayout->addItem(new QSpacerItem(LFRAMESIZE, TFRAMESIZE), 0, 0);
-    mainlayout->addItem(new QSpacerItem(0, BFRAMESIZE), 3, 0);
-    mainlayout->addItem(new QSpacerItem(RFRAMESIZE, 0), 0, 2);
-
-    mainlayout->addLayout(titlelayout, 1, 1);
-    if (isPreview()) {
-        QWidget *previewWidget = new QLabel(i18n("<b><center>Oxygen preview! =)</center></b>"), widget());
-        previewWidget->setAutoFillBackground(true);
-        mainlayout->addWidget(previewWidget, 2, 1);
-    } else {
-        mainlayout->addItem(new QSpacerItem(0, 0), 2, 1);
-    }
-
-    mainlayout->setRowStretch(2, 10);
-    mainlayout->setColumnStretch(1, 10);
-
-    // setup titlebar buttons
-    for (int n=0; n<ButtonTypeCount; n++) {
-        button[n] = 0;
-    }
-
-    addButtons(titlelayout, options()->titleButtonsLeft());
-    titlelayout->addItem(titlebar_);
-    addButtons(titlelayout, options()->titleButtonsRight());
-    titlelayout->addSpacing(2);
-
-    titlelayout->setSpacing(0);
-    titlelayout->setMargin(0);
-    mainlayout->setSpacing(0);
-    mainlayout->setMargin(0);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// addButtons()
-// ------------
-// Add buttons to title layout
-
-void OxygenClient::addButtons(QHBoxLayout *layout, const QString& s)
+bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
 {
-    const unsigned char *bitmap;
-    QString tip;
+    switch (behaviour) {
+        case DB_MenuClose:
+            return true;//Handler()->menuClose();
 
-    if (s.length() > 0) {
-        for (int n=0; n < s.length(); n++) {
-            if(n>0)
-                layout->addSpacing(3);
-            switch (s[n].toLatin1()) {
-              case 'M': // Menu button
-                  if (!button[ButtonMenu]) {
-                      button[ButtonMenu] =
-                          new OxygenButton(this, i18n("Menu"), ButtonMenu, 0);
-                      connect(button[ButtonMenu], SIGNAL(pressed()),
-                              this, SLOT(menuButtonPressed()));
-                      layout->addWidget(button[ButtonMenu]);
-                  }
-                  break;
+        case DB_WindowMask:
+            return false;
 
-              case 'S': // Sticky button
-                  if (!button[ButtonSticky]) {
-              if (isOnAllDesktops()) {
-              bitmap = stickydown_bits;
-              tip = i18n("Un-Sticky");
-              } else {
-              bitmap = sticky_bits;
-              tip = i18n("Sticky");
-              }
-                      button[ButtonSticky] =
-                          new OxygenButton(this, tip, ButtonSticky, bitmap);
-                      connect(button[ButtonSticky], SIGNAL(clicked()),
-                              this, SLOT(toggleOnAllDesktops()));
-                      layout->addWidget(button[ButtonSticky]);
-                  }
-                  break;
+        default:
+            return KCommonDecoration::decorationBehaviour(behaviour);
+    }
+}
 
-              case 'H': // Help button
-                  if ((!button[ButtonHelp]) && providesContextHelp()) {
-                      button[ButtonHelp] =
-                          new OxygenButton(this, i18n("Help"), ButtonHelp, help_bits);
-                      connect(button[ButtonHelp], SIGNAL(clicked()),
-                              this, SLOT(showContextHelp()));
-                      layout->addWidget(button[ButtonHelp]);
-                  }
-                  break;
+int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
+{
+    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
 
-              case 'I': // Minimize button
-                  if ((!button[ButtonMin]) && isMinimizable())  {
-                      button[ButtonMin] =
-                          new OxygenButton(this, i18n("Minimize"), ButtonMin, min_bits);
-                      connect(button[ButtonMin], SIGNAL(clicked()),
-                              this, SLOT(minimize()));
-                      layout->addWidget(button[ButtonMin]);
-                  }
-                  break;
-
-              case 'A': // Maximize button
-                  if ((!button[ButtonMax]) && isMaximizable()) {
-              if (maximizeMode() == MaximizeFull) {
-              bitmap = minmax_bits;
-              tip = i18n("Restore");
-              } else {
-              bitmap = max_bits;
-              tip = i18n("Maximize");
-              }
-                      button[ButtonMax]  =
-                          new OxygenButton(this, tip, ButtonMax, bitmap);
-                      connect(button[ButtonMax], SIGNAL(clicked()),
-                              this, SLOT(maxButtonPressed()));
-                      layout->addWidget(button[ButtonMax]);
-                  }
-                  break;
-
-              case 'X': // Close button
-                  if ((!button[ButtonClose]) && isCloseable()) {
-                      button[ButtonClose] =
-                          new OxygenButton(this, i18n("Close"), ButtonClose, close_bits);
-                      connect(button[ButtonClose], SIGNAL(clicked()),
-                              this, SLOT(closeWindow()));
-                      layout->addWidget(button[ButtonClose]);
-                  }
-                  break;
-
-              case '_': // Spacer item
-                  layout->addSpacing(FRAMEBUTTONSPACE);
+    switch (lm) {
+        case LM_BorderLeft:
+        case LM_BorderRight:
+        case LM_BorderBottom:
+        {
+            if (respectWindowState && maximized) {
+                return 0;
+            } else {
+                return BFRAMESIZE;
             }
         }
+
+        case LM_TitleEdgeTop:
+        {
+            if (respectWindowState && maximized) {
+                return 0;
+            } else {
+                return TFRAMESIZE;
+            }
+        }
+
+        case LM_TitleEdgeBottom:
+        {
+            return 0;
+        }
+
+        case LM_TitleEdgeLeft:
+        case LM_TitleEdgeRight:
+        {
+            if (respectWindowState && maximized) {
+                return 0;
+            } else {
+                return 6;
+            }
+        }
+
+        case LM_TitleBorderLeft:
+        case LM_TitleBorderRight:
+            return 5;
+
+        case LM_ButtonWidth:
+        case LM_ButtonHeight:
+        case LM_TitleHeight:
+        {
+            if (respectWindowState && isToolWindow()) {
+                return BUTTONSIZE;
+            } else {
+                return BUTTONSIZE;
+            }
+        }
+
+        case LM_ButtonSpacing:
+            return 1;
+
+        case LM_ButtonMarginTop:
+            return 0;
+
+        case LM_ExplicitButtonSpacer:
+            return 3;
+
+        default:
+            return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// activeChange()
-// --------------
-// window active state has changed
 
-void OxygenClient::activeChange()
+KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
 {
-    for (int n=0; n<ButtonTypeCount; n++)
-        if (button[n]) button[n]->reset();
-    widget()->repaint();
-}
+    switch (type) {
+        case MenuButton:
+            return new OxygenButton(this, i18n("Menu"), ButtonMenu);
 
-//////////////////////////////////////////////////////////////////////////////
-// captionChange()
-// ---------------
-// The title has changed
+        case HelpButton:
+            return new OxygenButton(this, i18n("Help"), ButtonHelp);
 
-void OxygenClient::captionChange()
-{
-    widget()->repaint(titlebar_->geometry());
-}
+        case MinButton:
+            return new OxygenButton(this, i18n("Minimize"), ButtonMin);
 
-//////////////////////////////////////////////////////////////////////////////
-// desktopChange()
-// ---------------
-// Called when desktop/sticky changes
+        case MaxButton:
+            return new OxygenButton(this, i18n("Minimize"), ButtonMax);
 
-void OxygenClient::desktopChange()
-{
-    bool d = isOnAllDesktops();
-    if (button[ButtonSticky]) {
-        button[ButtonSticky]->setToolTip( d ? i18n("Un-Sticky") : i18n("Sticky"));
+        case CloseButton:
+            return new OxygenButton(this, i18n("Minimize"), ButtonClose);
+
+        default:
+            return 0;
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// iconChange()
-// ------------
-// The title has changed
-
-void OxygenClient::iconChange()
-{
-    if (button[ButtonMenu]) {
-        button[ButtonMenu]->repaint();
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// maximizeChange()
-// ----------------
-// Maximized state has changed
-
-void OxygenClient::maximizeChange()
-{
-    bool m = (maximizeMode() == MaximizeFull);
-    if (button[ButtonMax]) {
-        button[ButtonMax]->setToolTip(m ? i18n("Restore") : i18n("Maximize"));
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// shadeChange()
-// -------------
-// Called when window shading changes
-
-void OxygenClient::shadeChange()
-{ ; }
-
-//////////////////////////////////////////////////////////////////////////////
-// borders()
-// ----------
-// Get the size of the borders
-
-void OxygenClient::borders(int &l, int &r, int &t, int &b) const
-{
-    l = LFRAMESIZE;
-    r = RFRAMESIZE;
-    t = titleBarHeight + TFRAMESIZE;
-    b = BFRAMESIZE;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// resize()
-// --------
-// Called to resize the window
-
-void OxygenClient::resize(const QSize &size)
-{
-    widget()->resize(size);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// minimumSize()
-// -------------
-// Return the minimum allowable size for this window
-
-QSize OxygenClient::minimumSize() const
-{
-    return widget()->minimumSize();
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// mousePosition()
-// ---------------
-// Return logical mouse position
-
-KDecoration::Position OxygenClient::mousePosition(const QPoint &point) const
-{
-    const int corner = 24;
-    Position pos;
-
-    if (point.y() <= TFRAMESIZE) {
-        // inside top frame
-        if (point.x() <= corner)                 pos = PositionTopLeft;
-        else if (point.x() >= (width()-corner))  pos = PositionTopRight;
-        else                                     pos = PositionTop;
-    } else if (point.y() >= (height()-BFRAMESIZE)) {
-        // inside handle
-        if (point.x() <= corner)                 pos = PositionBottomLeft;
-        else if (point.x() >= (width()-corner))  pos = PositionBottomRight;
-        else                                     pos = PositionBottom;
-    } else if (point.x() <= LFRAMESIZE) {
-        // on left frame
-        if (point.y() <= corner)                 pos = PositionTopLeft;
-        else if (point.y() >= (height()-corner)) pos = PositionBottomLeft;
-        else                                     pos = PositionLeft;
-    } else if (point.x() >= width()-RFRAMESIZE) {
-        // on right frame
-        if (point.y() <= corner)                 pos = PositionTopRight;
-        else if (point.y() >= (height()-corner)) pos = PositionBottomRight;
-        else                                     pos = PositionRight;
-    } else {
-        // inside the frame
-        pos = PositionCenter;
-    }
-    return pos;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// eventFilter()
-// -------------
-// Event filter
-
-bool OxygenClient::eventFilter(QObject *obj, QEvent *e)
-{
-    if (obj != widget()) return false;
-
-    switch (e->type()) {
-      case QEvent::MouseButtonDblClick: {
-          mouseDoubleClickEvent(static_cast<QMouseEvent *>(e));
-          return true;
-      }
-      case QEvent::MouseButtonPress: {
-          processMousePressEvent(static_cast<QMouseEvent *>(e));
-          return true;
-      }
-      case QEvent::Paint: {
-          paintEvent(static_cast<QPaintEvent *>(e));
-          return true;
-      }
-      case QEvent::Show: {
-          showEvent(static_cast<QShowEvent *>(e));
-          return true;
-      }
-      default: {
-          return false;
-      }
-    }
-
-    return false;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// mouseDoubleClickEvent()
-// -----------------------
-// Doubleclick on title
-
-void OxygenClient::mouseDoubleClickEvent(QMouseEvent *e)
-{
-    if (titlebar_->geometry().contains(e->pos())) titlebarDblClickOperation();
-}
 
 //////////////////////////////////////////////////////////////////////////////
 // paintEvent()
@@ -467,31 +235,27 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     else
         palette.setCurrentColorGroup(QPalette::Inactive);
 
-    QRect title(titlebar_->geometry());
-
     int x,y,w,h;
     QRect frame = widget()->frameGeometry();
     QColor color = palette.window();
-//color = QColor(Qt::red);
-/*
 
-    QLinearGradient gradient(0, 0, 0, frame.height());
-    gradient.setColorAt(0, color.lighter(110));
-    gradient.setColorAt(1, color.darker(110));
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.fillRect(QRect(0, 0, frame.width(), TITLESIZE + TFRAMESIZE), gradient);
-    painter.fillRect(QRect(0, 0, LFRAMESIZE, frame.height()), gradient);
-    painter.fillRect(QRect(0, frame.height() - BFRAMESIZE -1,
-                                                        frame.width(), BFRAMESIZE), gradient);
-    painter.fillRect(QRect(frame.width()-RFRAMESIZE, 0,
-                                                        RFRAMESIZE, frame.height()), gradient);
+    const int titleHeight = layoutMetric(LM_TitleHeight);
+    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top();
+    const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
+    const int marginLeft = layoutMetric(LM_TitleBorderLeft);
+    const int marginRight = layoutMetric(LM_TitleBorderRight);
 
-*/
+    const int titleLeft = frame.left() + titleEdgeLeft + buttonsLeftWidth() + marginLeft;
+    const int titleWidth = frame.width() -
+            titleEdgeLeft - layoutMetric(LM_TitleEdgeRight) -
+            buttonsLeftWidth() - buttonsRightWidth() -
+            marginLeft - marginRight;
+
 
     int splitY = qMin(300, 3*frame.height()/4);
 
     QPixmap tile = globalHelper->verticalGradient(color, splitY);
-    painter.drawTiledPixmap(QRect(0, 0, frame.width(), titleBarHeight + TFRAMESIZE), tile);
+    painter.drawTiledPixmap(QRect(0, 0, frame.width(), titleHeight + TFRAMESIZE), tile);
 
     painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, splitY), tile);
     painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, globalHelper->backgroundBottomColor(color));
@@ -513,7 +277,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     // draw title text
     painter.setFont(options()->font(isActive(), false));
     painter.setBrush(palette.windowText());
-    painter.drawText(title.x(), title.y(), title.width(), title.height(),
+    painter.drawText(titleLeft, titleTop, titleWidth, titleHeight,
               OxygenFactory::titleAlign() | Qt::AlignVCenter, caption());
 
 
@@ -588,55 +352,6 @@ QRegion mask(0,0,r,b);
     mask -= QRegion(r - 1, b-1-2, 1, b-1-1);
 
     setMask(mask);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// showEvent()
-// -----------
-// Window is being shown
-
-void OxygenClient::showEvent(QShowEvent *)
-{
-   widget()->repaint();
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// maxButtonPressed()
-// -----------------
-// Max button was pressed
-
-void OxygenClient::maxButtonPressed()
-{
-    if (button[ButtonMax]) {
-        switch (button[ButtonMax]->lastMousePress()) {
-          case Qt::MidButton:
-              maximize(maximizeMode() ^ MaximizeVertical);
-              break;
-          case Qt::RightButton:
-              maximize(maximizeMode() ^ MaximizeHorizontal);
-              break;
-          default:
-              (maximizeMode() == MaximizeFull) ? maximize(MaximizeRestore)
-                  : maximize(MaximizeFull);
-        }
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// menuButtonPressed()
-// -------------------
-// Menu button was pressed (popup the menu)
-
-void OxygenClient::menuButtonPressed()
-{
-    if (button[ButtonMenu]) {
-        QPoint p(button[ButtonMenu]->rect().bottomLeft().x(),
-                 button[ButtonMenu]->rect().bottomLeft().y());
-        KDecorationFactory* f = factory();
-        showWindowMenu(button[ButtonMenu]->mapToGlobal(p));
-        if (!f->exists(this)) return; // decoration was destroyed
-        button[ButtonMenu]->setDown(false);
-    }
 }
 
 } //namespace Oxygen

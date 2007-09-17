@@ -58,10 +58,11 @@ extern int DECOSIZE;*/
 // Constructor
 
 OxygenButton::OxygenButton(OxygenClient *parent,
-                             const QString& tip, ButtonType type,
-                             const unsigned char *bitmap)
-    : QAbstractButton(parent->widget()), client_(parent), type_(type),
-      lastmouse_(0)
+                             const QString& tip, ButtonType type)
+    : KCommonDecorationButton((::ButtonType)type,(KCommonDecoration*) parent)
+    , client_(parent)
+    , type_(type)
+    , lastmouse_(0)
 {
     setAutoFillBackground(false);
     setAttribute(Qt::WA_OpaquePaintEvent, false);
@@ -117,7 +118,6 @@ void OxygenButton::leaveEvent(QEvent *e)
 
 void OxygenButton::pressSlot()
 {
-    kDebug() << "Pressed ";
     status_ = Oxygen::Pressed;
     update();
 }
@@ -150,6 +150,8 @@ void OxygenButton::paintEvent(QPaintEvent *)
     switch(type_)
     {
         case ButtonSticky:
+                    painter.drawPoint(9,9);
+            break;
         case ButtonHelp:
             break;
         case ButtonMin:
@@ -157,12 +159,24 @@ void OxygenButton::paintEvent(QPaintEvent *)
             painter.drawLine(9,11,12,8);
             break;
         case ButtonMax:
-            painter.drawLine(9,8,12,11);
-            painter.drawLine(6,11,9,8);
+            switch(client_->maximizeMode())
+            {
+                case OxygenClient::MaximizeRestore:
+                case OxygenClient::MaximizeVertical:
+                case OxygenClient::MaximizeHorizontal:
+                    painter.drawLine(9,8,12,11);
+                    painter.drawLine(6,11,9,8);
+                    break;
+                case OxygenClient::MaximizeFull:
+                    painter.drawLine(6,9,12,9);
+                    break;
+            }
             break;
         case ButtonClose:
             painter.drawLine(6,6,12,12);
             painter.drawLine(12,6,6,12);
+            break;
+        default:
             break;
     }
 }

@@ -27,7 +27,7 @@
 #ifndef OXYGENBUTTON_H
 #define OXYGENBUTTON_H
 
-#include <QAbstractButton>
+#include <kcommondecoration.h>
 
 #include "oxygen.h"
 
@@ -42,18 +42,17 @@ enum ButtonStatus {
 
 Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
 
-class OxygenButton : public QAbstractButton
+class OxygenButton : public KCommonDecorationButton
 {
 public:
     explicit OxygenButton(OxygenClient *parent=0,
                   const QString &tip=NULL,
-                  ButtonType type=ButtonHelp,
-                  const unsigned char *bitmap=0);
+                  ButtonType type=ButtonHelp);
     ~OxygenButton();
 
     QSize sizeHint() const;
     const int lastMousePress(){return lastmouse_;}
-    void reset(){repaint();}
+    void reset(long unsigned int){repaint();}
 
 private:
     void enterEvent(QEvent *e);

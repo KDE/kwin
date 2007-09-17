@@ -28,75 +28,34 @@
 #ifndef OXYGENCLIENT_H
 #define OXYGENCLIENT_H
 
-// #include <q3button.h>
-#include <qlayout.h>
-//Added by qt3to4:
-#include <QResizeEvent>
-#include <QShowEvent>
-#include <QEvent>
-#include <QMouseEvent>
-#include <QPaintEvent>
-#include <kdecoration.h>
-#include <kdecorationfactory.h>
+
+#include <kcommondecoration.h>
 
 #include "oxygenbutton.h"
-// #include "oxygen.h"
 
-class QSpacerItem;
 class QPoint;
 
 namespace Oxygen {
 
-// class OxygenClient;
-class OxygenButton;
-// OxygenButton //////////////////////////////////////////////////////////////
-
-
-
-// inline int OxygenButton::lastMousePress() const
-//     { return lastmouse_; }
-// 
-// inline void OxygenButton::reset()
-//     { repaint(); }
-
-// OxygenClient //////////////////////////////////////////////////////////////
-
-class OxygenClient : public KDecoration
+class OxygenClient : public KCommonDecoration
 {
     Q_OBJECT
 public:
     OxygenClient(KDecorationBridge *b, KDecorationFactory *f);
     virtual ~OxygenClient();
 
+    virtual QString visibleName() const;
+    virtual QString defaultButtonsLeft() const;
+    virtual QString defaultButtonsRight() const;
+    virtual KCommonDecorationButton *createButton(::ButtonType type);
+    virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+    virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+
     virtual void init();
 
-    virtual void activeChange();
-    virtual void desktopChange();
-    virtual void captionChange();
-    virtual void iconChange();
-    virtual void maximizeChange();
-    virtual void shadeChange();
-
-    virtual void borders(int &l, int &r, int &t, int &b) const;
-    virtual void resize(const QSize &size);
-    virtual QSize minimumSize() const;
-    virtual Position mousePosition(const QPoint &point) const;
-
 private:
-    void addButtons(QHBoxLayout* layout, const QString& buttons);
-
-    bool eventFilter(QObject *obj, QEvent *e);
-    void mouseDoubleClickEvent(QMouseEvent *e);
     void paintEvent(QPaintEvent *e);
-    void showEvent(QShowEvent *);
     void doShape();
-private slots:
-    void maxButtonPressed();
-    void menuButtonPressed();
-
-private:
-    OxygenButton *button[ButtonTypeCount];
-    QSpacerItem *titlebar_;
 };
 
 
