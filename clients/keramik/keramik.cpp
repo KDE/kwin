@@ -575,47 +575,15 @@ void KeramikHandler::readConfig()
 
 QPixmap *KeramikHandler::composite( QImage *over, QImage *under )
 {
-	QImage dest( over->width(), over->height(), QImage::Format_RGB32 );
-	int width = over->width(), height = over->height();
+	QImage dest( over->width(), over->height(), QImage::Format_ARGB32_Premultiplied );
 
-	// Clear the destination image
-	quint32 *data = reinterpret_cast<quint32*>( dest.bits() );
-	for (int i = 0; i < width * height; i++)
-		*(data++) = 0;
-
-	// Copy the under image (bottom aligned) to the destination image
-	for (int y1 = height - under->height(), y2 = 0; y1 < height; y1++, y2++ )
-	{
-		register quint32 *dst = reinterpret_cast<quint32*>( dest.scanLine(y1) );
-		register quint32 *src = reinterpret_cast<quint32*>( under->scanLine(y2) );
-
-		for ( int x = 0; x < width; x++ )
-			*(dst++) = *(src++);
-	}
-
-	// Blend the over image onto the destination
-	register quint32 *dst = reinterpret_cast<quint32*>( dest.bits() );
-	register quint32 *src = reinterpret_cast<quint32*>( over->bits() );
-	for ( int i = 0; i < width * height; i++ )
-	{
-		int r1 = qRed( *dst ), g1 = qGreen( *dst ), b1 = qBlue( *dst );
-		int r2 = qRed( *src ), g2 = qGreen( *src ), b2 = qBlue( *src );
-		int a  = qAlpha( *src );
-
-		if ( a == 0xff )
-			*dst = *src;
-
-		else if ( a != 0x00 )
-			*dst = qRgba( quint8( r1 + (((r2 - r1) * a) >> 8) ),
-		                  quint8( g1 + (((g2 - g1) * a) >> 8) ),
-		                  quint8( b1 + (((b2 - b1) * a) >> 8) ),
-		                  0xff );
-
-		else if ( qAlpha(*dst) == 0x00 )
-			*dst = 0;
-
-		src++; dst++;
-	}
+	QPainter p( &dest );
+	p.setCompositionMode( QPainter::CompositionMode_Source );
+	p.fillRect( dest.rect(), Qt::transparent );
+	p.drawImage( 0, dest.height() - under->height(), *under );
+	p.setCompositionMode( QPainter::CompositionMode_SourceOver );
+	p.drawImage( 0, 0, *over );
+	p.end();
 
 	// Create the final pixmap and return it
 	return new QPixmap( QPixmap::fromImage( dest ) );
@@ -751,7 +719,7 @@ QList< KeramikHandler::BorderSize > KeramikHandler::borderSizes() const
 
 
 KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, const QString &tip, const int realizeBtns )
-		: Q3Button( c->widget(), name ),
+		: QAbstractButton( c->widget() ),
 		client( c ), button( btn ), hover( false ), lastbutton( Qt::NoButton )
 {
 	realizeButtons = realizeBtns;
@@ -774,7 +742,7 @@ KeramikButton::~KeramikButton()
 
 void KeramikButton::enterEvent( QEvent *e )
 {
-	Q3Button::enterEvent( e );
+	QAbstractButton::enterEvent( e );
 
 	hover = true;
 	repaint();
@@ -783,7 +751,7 @@ void KeramikButton::enterEvent( QEvent *e )
 
 void KeramikButton::leaveEvent( QEvent *e )
 {
-	Q3Button::leaveEvent( e );
+	QAbstractButton::leaveEvent( e );
 
 	hover = false;
 	repaint();
@@ -797,7 +765,7 @@ void KeramikButton::mousePressEvent( QMouseEvent *e )
                    (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton,
                    (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton,
                     e->modifiers() );
-	Q3Button::mousePressEvent( &me );
+	QAbstractButton::mousePressEvent( &me );
 }
 
 
@@ -808,15 +776,17 @@ void KeramikButton::mouseReleaseEvent( QMouseEvent *e )
                    (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton,
                    (e->button()&realizeButtons)?Qt::LeftButton : Qt::NoButton,
                     e->modifiers() );
-	Q3Button::mouseReleaseEvent( &me );
+	QAbstractButton::mouseReleaseEvent( &me );
 }
 
 
-void KeramikButton::drawButton( QPainter *p )
+void KeramikButton::paintEvent( QPaintEvent * )
 {
 	const QPixmap *pix;
 	const QBitmap *deco;
 	int size = clientHandler->roundButton()->height();
+
+	QPainter p( this );
 
 	// Get the bevel from the client handler
 	if ( button == MenuButton || button == OnAllDesktopsButton || button == HelpButton )
@@ -826,19 +796,19 @@ void KeramikButton::drawButton( QPainter *p )
 
 	// Draw the button background
 	const QPixmap *background = clientHandler->tile( TitleCenter, client->isActive() );
-	p->drawPixmap( 0, 0, *background,
+	p.drawPixmap( 0, 0, *background,
 			0, (background->height()-size+1)/2, size, size );
 
 	if ( isDown() ) {
 		// Pressed
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(2*size, 0, size, size), pix->rect() ) );
-		p->translate( QApplication::isRightToLeft() ? -1 : 1, 1 );
+		p.drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::layoutDirection(), pix->rect(), QRect(2*size, 0, size, size) ) );
+		p.translate( QApplication::isRightToLeft() ? -1 : 1, 1 );
 	} else if ( hover )
 		// Mouse over
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(size, 0, size, size), pix->rect() ) );
+		p.drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::layoutDirection(), pix->rect(), QRect(size, 0, size, size) ) );
 	else
 		// Normal
-		p->drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(0, 0, size, size), pix->rect() ) );
+		p.drawPixmap( QPoint(), *pix, QStyle::visualRect( QApplication::layoutDirection(), pix->rect(), QRect(0, 0, size, size) ) );
 
 
 	// Draw the button deco on the bevel
@@ -857,7 +827,7 @@ void KeramikButton::drawButton( QPainter *p )
 			//  shift it to the right to compensate for the button shadow
 			//  being on the left side of the button in RTL mode.
 			if ( QApplication::isRightToLeft() )
-				p->translate( 2, 0 );
+				p.translate( 2, 0 );
 			break;
 
 		case MinButton:
@@ -888,9 +858,9 @@ void KeramikButton::drawButton( QPainter *p )
 			deco = NULL;
 	}
 
-	p->setPen( Qt::black ); // ### hardcoded color
+	p.setPen( Qt::black ); // ### hardcoded color
 	if (deco)
-		p->drawPixmap( (size-17)/2, (size-17)/2, *deco );
+		p.drawPixmap( (size-17)/2, (size-17)/2, *deco );
 }
 
 
@@ -928,9 +898,16 @@ void KeramikClient::createLayout()
 
 	QVBoxLayout *mainLayout   = new QVBoxLayout( widget() );
 	QBoxLayout *titleLayout   = new QBoxLayout( QBoxLayout::LeftToRight );
+	QHBoxLayout *windowLayout = new QHBoxLayout();
+
+	mainLayout->setMargin( 0 );
+	mainLayout->setSpacing( 0 );
+
 	titleLayout->setMargin( 0 );
 	titleLayout->setSpacing( 0 );
-	QHBoxLayout *windowLayout = new QHBoxLayout();
+
+	windowLayout->setMargin( 0 );
+	windowLayout->setSpacing( 0 );
 
 	largeTitlebar = ( !maximizedVertical() && clientHandler->largeCaptionBubbles() );
 	largeCaption = ( isActive() && largeTitlebar );
@@ -1269,8 +1246,8 @@ void KeramikClient::updateCaptionBuffer()
 		( clientHandler->showAppIcons() ? 16 + iconSpacing : 0 );
 
 	int xpos = qMax( (captionRect.width() - tw) / 3, 8 );
-	QRect tr = QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(xpos, 1, captionRect.width() - xpos - 10,
-				captionRect.height() - 4), captionBuffer.rect() );
+	QRect tr = QStyle::visualRect( QApplication::layoutDirection(), captionBuffer.rect(),
+	            QRect(xpos, 1, captionRect.width() - xpos - 10, captionRect.height() - 4) );
 
 	//p.setPen( Qt::red ); // debug
 	//p.drawRect( tr );    // debug
@@ -1278,8 +1255,8 @@ void KeramikClient::updateCaptionBuffer()
 	// Application icon
 	if ( clientHandler->showAppIcons() )
 	{
-		QRect iconRect = QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(tr.x(),
-					1 + (captionRect.height() - 4 - 16) / 2, 16, 16), tr );
+		QRect iconRect = QStyle::visualRect( QApplication::layoutDirection(), tr,
+		            QRect(tr.x(), 1 + (captionRect.height() - 4 - 16) / 2, 16, 16) );
 		QRect r( icon->rect() );
 		r.moveCenter( iconRect.center() );
 
@@ -1338,9 +1315,9 @@ void KeramikClient::calculateCaptionRect()
 		cw += 16 + 4; // icon width + space
 
 	cw = qMin( cw, titlebar->geometry().width() );
-	captionRect = QStyle::visualRect( QApplication::isRightToLeft() ? Qt::RightToLeft : Qt::LeftToRight, QRect(titlebar->geometry().x(), (largeCaption ? 0 : titleBaseY),
-				cw, clientHandler->titleBarHeight(largeCaption) ),
-				titlebar->geometry() );
+	captionRect = QStyle::visualRect( QApplication::layoutDirection(), titlebar->geometry(),
+	            QRect(titlebar->geometry().x(), (largeCaption ? 0 : titleBaseY),
+				cw, clientHandler->titleBarHeight(largeCaption) ) );
 }
 
 

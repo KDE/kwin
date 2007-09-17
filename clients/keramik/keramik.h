@@ -24,7 +24,7 @@
 #ifndef __KERAMIK_H
 #define __KERAMIK_H
 
-#include <Q3Button>
+#include <QAbstractButton>
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
@@ -108,7 +108,7 @@ namespace Keramik {
 	}; // class KeramikHandler
 
 	class KeramikClient;
-	class KeramikButton : public Q3Button
+	class KeramikButton : public QAbstractButton
 	{
 		public:
 			KeramikButton( KeramikClient *, const char *, Button, const QString &, const int realizeBtns = Qt::LeftButton );
@@ -121,7 +121,7 @@ namespace Keramik {
 			void leaveEvent( QEvent * );
 			void mousePressEvent( QMouseEvent * );
 			void mouseReleaseEvent( QMouseEvent * );
-			void drawButton( QPainter * );
+			void paintEvent( QPaintEvent * );
 
 		private:
 			KeramikClient *client;
