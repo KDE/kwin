@@ -43,6 +43,7 @@ ConfirmDialog::ConfirmDialog() :
     setCaption( i18n( "Compositing settings changed" ));
     setButtons( KDialog::Yes | KDialog::No | KDialog::Cancel );
     setDefaultButton(KDialog::No);
+    setButtonFocus(KDialog::No);
     setEscapeButton(KDialog::Cancel);
 
     mTextLabel = new QLabel(this);
