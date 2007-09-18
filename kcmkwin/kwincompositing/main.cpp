@@ -133,7 +133,6 @@ void KWinCompositingConfig::showConfirmDialog()
 {
     ConfirmDialog confirm;
     int result = confirm.exec();
-    kDebug() << "result:" << result;
     if(result != KDialog::Yes)
     {
         // Revert settings
