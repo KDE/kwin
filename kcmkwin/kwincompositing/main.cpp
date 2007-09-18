@@ -23,6 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kservice.h>
 
 #include <QtDBus/QtDBus>
+#include <QTimer>
 #include <KPluginFactory>
 #include <KPluginLoader>
 
@@ -33,6 +34,32 @@ K_EXPORT_PLUGIN(KWinCompositingConfigFactory("kcmkwincompositing"))
 
 namespace KWin
 {
+
+
+ConfirmDialog::ConfirmDialog() :
+        QMessageBox(QMessageBox::Question, i18n("Compositing settings changed"), "",
+                    QMessageBox::Yes | QMessageBox::No)
+    {
+    mSecondsToLive = 10+1;
+    advanceTimer();
+    }
+
+void ConfirmDialog::advanceTimer()
+    {
+    mSecondsToLive--;
+    if(mSecondsToLive > 0)
+    {
+        QString text = i18n("Compositing settings have changed.\n"
+                "Do you want to keep the new settings?\n"
+                "They will be automatically reverted in %1 seconds", mSecondsToLive);
+        setText(text);
+        QTimer::singleShot(1000, this, SLOT(advanceTimer()));
+    }
+    else
+    {
+        reject();
+    }
+}
 
 
 KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList &)
@@ -93,6 +120,26 @@ void KWinCompositingConfig::showAdvancedOptions()
     connect(dialog, SIGNAL(configSaved()), this, SLOT(configChanged()));
 }
 
+void KWinCompositingConfig::showConfirmDialog()
+{
+    ConfirmDialog confirm;
+    int result = confirm.exec();
+    kDebug() << "result:" << result;
+    if(result != QMessageBox::Yes)
+    {
+        // Revert settings
+        KConfigGroup config(mKWinConfig, "Compositing");
+        config.deleteGroup();
+        QMap<QString, QString>::const_iterator i = mPreviousConfig.constBegin();
+        while (i != mPreviousConfig.constEnd()) {
+            config.writeEntry(i.key(), i.value());
+            ++i;
+        }
+        config.sync();
+        load();
+    }
+}
+
 void KWinCompositingConfig::initEffectSelector()
 {
     // Find all .desktop files of the effects
@@ -138,6 +185,13 @@ void KWinCompositingConfig::save()
     kDebug() ;
 
     KConfigGroup config(mKWinConfig, "Compositing");
+    // Save current config. We'll use this for restoring in case something
+    //  goes wrong.
+    mPreviousConfig = config.entryMap();
+    // Check if any critical settings that need confirmation have changed
+    bool confirm = false;
+    confirm |= (ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.enableCompositing()));
+
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
 
     // Save effects
@@ -158,6 +212,11 @@ void KWinCompositingConfig::save()
     emit changed( false );
 
     configChanged();
+
+    if(confirm)
+    {
+        showConfirmDialog();
+    }
 }
 
 void KWinCompositingConfig::configChanged()

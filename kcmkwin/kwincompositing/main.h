@@ -16,6 +16,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <ksharedconfig.h>
 
+#include <QMessageBox>
+
 #include "ui_main.h"
 #include "compositingprefs.h"
 
@@ -23,6 +25,19 @@ class KPluginSelector;
 
 namespace KWin
 {
+
+class ConfirmDialog : public QMessageBox
+{
+Q_OBJECT
+public:
+    ConfirmDialog();
+
+protected slots:
+    void advanceTimer();
+
+private:
+    int mSecondsToLive;
+};
 
 class KWinCompositingConfig : public KCModule
     {
@@ -36,6 +51,7 @@ class KWinCompositingConfig : public KCModule
     public slots:
         virtual void compositingEnabled(bool enabled);
         virtual void showAdvancedOptions();
+        virtual void showConfirmDialog();
 
         virtual void load();
         virtual void save();
@@ -45,12 +61,12 @@ class KWinCompositingConfig : public KCModule
         void configChanged();
         void initEffectSelector();
 
-    protected:
-
     private:
         KSharedConfigPtr mKWinConfig;
         Ui::KWinCompositingConfig ui;
         CompositingPrefs mDefaultPrefs;
+
+        QMap<QString, QString> mPreviousConfig;
     };
 
 } // namespace
