@@ -456,15 +456,12 @@ void KFocusConfig::load( void )
     k = cg.readEntry(KWIN_DELAYFOCUS_INTERVAL,750);
     setDelayFocusInterval(k);
 
-    key = cg.readEntry(KWIN_AUTORAISE);
-    setAutoRaise(key == "on");
-    key = cg.readEntry(KWIN_DELAYFOCUS);
-    setDelayFocus(key == "on");
-    key = cg.readEntry(KWIN_CLICKRAISE);
-    setClickRaise(key != "off");
+    setAutoRaise( cg.readEntry(KWIN_AUTORAISE, false));
+    setDelayFocus( cg.readEntry(KWIN_DELAYFOCUS, false));
+    setClickRaise( cg.readEntry(KWIN_CLICKRAISE, true));
     setAutoRaiseEnabled();      // this will disable/hide the auto raise delay widget if focus==click
     setDelayFocusEnabled();
-    
+
     setSeparateScreenFocus( cg.readEntry(KWIN_SEPARATE_SCREEN_FOCUS, true));
     // on by default for non click to focus policies
     setActiveMouseScreen( cg.readEntry(KWIN_ACTIVE_MOUSE_SCREEN, focusCombo->currentIndex() != 0 ));
@@ -505,20 +502,11 @@ void KFocusConfig::save( void )
     if (v <0) v = 0;
     cg.writeEntry(KWIN_DELAYFOCUS_INTERVAL,v);
 
-    if (autoRaiseOn->isChecked())
-        cg.writeEntry(KWIN_AUTORAISE, "on");
-    else
-        cg.writeEntry(KWIN_AUTORAISE, "off");
+    cg.writeEntry(KWIN_AUTORAISE, autoRaiseOn->isChecked());
 
-    if (delayFocusOn->isChecked())
-        cg.writeEntry(KWIN_DELAYFOCUS, "on");
-    else
-        cg.writeEntry(KWIN_DELAYFOCUS, "off");
+    cg.writeEntry(KWIN_DELAYFOCUS, delayFocusOn->isChecked());
 
-    if (clickRaiseOn->isChecked())
-        cg.writeEntry(KWIN_CLICKRAISE, "on");
-    else
-        cg.writeEntry(KWIN_CLICKRAISE, "off");
+    cg.writeEntry(KWIN_CLICKRAISE, clickRaiseOn->isChecked());
 
     cg.writeEntry(KWIN_SEPARATE_SCREEN_FOCUS, separateScreenFocus->isChecked());
     cg.writeEntry(KWIN_ACTIVE_MOUSE_SCREEN, activeMouseScreen->isChecked());
@@ -751,10 +739,7 @@ void KAdvancedConfig::save( void )
 
     KConfigGroup cg(config, "Windows");
     cg.writeEntry(KWIN_ANIMSHADE, animateShade->isChecked());
-    if (shadeHoverOn->isChecked())
-        cg.writeEntry(KWIN_SHADEHOVER, "on");
-    else
-        cg.writeEntry(KWIN_SHADEHOVER, "off");
+    cg.writeEntry(KWIN_SHADEHOVER, shadeHoverOn->isChecked());
 
     v = getShadeHoverInterval();
     if (v<0) v = 0;
