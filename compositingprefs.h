@@ -67,8 +67,10 @@ private:
     bool mEnableVSync;
     bool mEnableDirectRendering;
 
+#ifdef HAVE_OPENGL
     GLXContext mGLContext;
     Window mGLWindow;
+#endif
 };
 
 }
