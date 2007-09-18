@@ -42,6 +42,10 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.setupUi(this);
     ui.tabWidget->setCurrentIndex(0);
 
+    // Driver-specific config detection
+    mDefaultPrefs.detect();
+
+
     connect(ui.advancedOptions, SIGNAL(clicked()), this, SLOT(showAdvancedOptions()));
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
 
@@ -83,7 +87,7 @@ void KWinCompositingConfig::compositingEnabled(bool enabled)
 
 void KWinCompositingConfig::showAdvancedOptions()
 {
-    KWinAdvancedCompositingOptions* dialog = new KWinAdvancedCompositingOptions(this, mKWinConfig);
+    KWinAdvancedCompositingOptions* dialog = new KWinAdvancedCompositingOptions(this, mKWinConfig, &mDefaultPrefs);
 
     dialog->show();
     connect(dialog, SIGNAL(configSaved()), this, SLOT(configChanged()));
@@ -110,7 +114,7 @@ void KWinCompositingConfig::load()
     mKWinConfig->reparseConfiguration();
 
     KConfigGroup config(mKWinConfig, "Compositing");
-    ui.useCompositing->setChecked(config.readEntry("Enabled", false));
+    ui.useCompositing->setChecked(config.readEntry("Enabled", mDefaultPrefs.enableCompositing()));
 
     // Load effect settings
     config.changeGroup("Plugins");
@@ -169,7 +173,7 @@ void KWinCompositingConfig::configChanged()
 void KWinCompositingConfig::defaults()
 {
     kDebug() ;
-    ui.useCompositing->setChecked(false);
+    ui.useCompositing->setChecked(mDefaultPrefs.enableCompositing());
     ui.effectWinManagement->setChecked(true);
     ui.effectShadows->setChecked(true);
     ui.effectAnimations->setChecked(true);

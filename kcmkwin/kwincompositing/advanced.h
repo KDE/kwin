@@ -20,11 +20,13 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+class CompositingPrefs;
+
 class KWinAdvancedCompositingOptions : public KDialog
 {
     Q_OBJECT
     public:
-        KWinAdvancedCompositingOptions(QWidget* parent, KSharedConfigPtr config);
+        KWinAdvancedCompositingOptions(QWidget* parent, KSharedConfigPtr config, CompositingPrefs* defaults);
         virtual ~KWinAdvancedCompositingOptions();
 
         void load();
@@ -40,6 +42,7 @@ class KWinAdvancedCompositingOptions : public KDialog
     private:
         KSharedConfigPtr mKWinConfig;
         Ui::KWinAdvancedCompositingOptions ui;
+        CompositingPrefs* mDefaultPrefs;
 };
 
 } // namespace

@@ -17,6 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <ksharedconfig.h>
 
 #include "ui_main.h"
+#include "compositingprefs.h"
 
 class KPluginSelector;
 
@@ -49,6 +50,7 @@ class KWinCompositingConfig : public KCModule
     private:
         KSharedConfigPtr mKWinConfig;
         Ui::KWinCompositingConfig ui;
+        CompositingPrefs mDefaultPrefs;
     };
 
 } // namespace

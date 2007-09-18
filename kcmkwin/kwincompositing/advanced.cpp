@@ -12,13 +12,16 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "advanced.moc"
 #include <klocale.h>
 
+#include "compositingprefs.h"
+
 namespace KWin
 {
 
-KWinAdvancedCompositingOptions::KWinAdvancedCompositingOptions(QWidget* parent, KSharedConfigPtr config) :
+KWinAdvancedCompositingOptions::KWinAdvancedCompositingOptions(QWidget* parent, KSharedConfigPtr config, CompositingPrefs* defaults) :
         KDialog(parent)
 {
     mKWinConfig = config;
+    mDefaultPrefs = defaults;
 
     setCaption(i18n("Advanced compositing options"));
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Apply);
@@ -66,8 +69,8 @@ void KWinAdvancedCompositingOptions::load()
     QString glMode = config.readEntry("GLMode", "TFP");
     ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
     ui.glTextureFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 1));
-    ui.glDirect->setChecked(config.readEntry("GLDirect", true));
-    ui.glVSync->setChecked(config.readEntry("GLVSync", true));
+    ui.glDirect->setChecked(config.readEntry("GLDirect", mDefaultPrefs->enableDirectRendering()));
+    ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs->enableVSync()));
 }
 
 void KWinAdvancedCompositingOptions::save()
