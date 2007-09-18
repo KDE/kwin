@@ -16,17 +16,18 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <ksharedconfig.h>
 
-#include <QMessageBox>
+#include <kdialog.h>
 
 #include "ui_main.h"
 #include "compositingprefs.h"
 
 class KPluginSelector;
+class QLabel;
 
 namespace KWin
 {
 
-class ConfirmDialog : public QMessageBox
+class ConfirmDialog : public KDialog
 {
 Q_OBJECT
 public:
@@ -37,6 +38,7 @@ protected slots:
 
 private:
     int mSecondsToLive;
+    QLabel* mTextLabel;
 };
 
 class KWinCompositingConfig : public KCModule

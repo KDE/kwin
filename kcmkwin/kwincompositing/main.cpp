@@ -24,6 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <QtDBus/QtDBus>
 #include <QTimer>
+#include <QLabel>
 #include <KPluginFactory>
 #include <KPluginLoader>
 
@@ -37,9 +38,16 @@ namespace KWin
 
 
 ConfirmDialog::ConfirmDialog() :
-        QMessageBox(QMessageBox::Question, i18n("Compositing settings changed"), "",
-                    QMessageBox::Yes | QMessageBox::No)
+        KDialog()
     {
+    setCaption( i18n( "Compositing settings changed" ));
+    setButtons( KDialog::Yes | KDialog::No );
+    setDefaultButton(KDialog::No);
+    setEscapeButton(KDialog::No);
+
+    mTextLabel = new QLabel(this);
+    setMainWidget(mTextLabel);
+
     mSecondsToLive = 10+1;
     advanceTimer();
     }
@@ -52,12 +60,12 @@ void ConfirmDialog::advanceTimer()
         QString text = i18n("Compositing settings have changed.\n"
                 "Do you want to keep the new settings?\n"
                 "They will be automatically reverted in %1 seconds", mSecondsToLive);
-        setText(text);
+        mTextLabel->setText(text);
         QTimer::singleShot(1000, this, SLOT(advanceTimer()));
     }
     else
     {
-        reject();
+        slotButtonClicked(KDialog::No);
     }
 }
 
@@ -125,7 +133,7 @@ void KWinCompositingConfig::showConfirmDialog()
     ConfirmDialog confirm;
     int result = confirm.exec();
     kDebug() << "result:" << result;
-    if(result != QMessageBox::Yes)
+    if(result != KDialog::Yes)
     {
         // Revert settings
         KConfigGroup config(mKWinConfig, "Compositing");
