@@ -23,6 +23,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QDesktopWidget>
 
 #include "client.h"
+#include "compositingprefs.h"
 
 #endif
 
@@ -177,25 +178,6 @@ unsigned long Options::updateSettings()
     CmdAll3 = mouseCommand(config.readEntry("CommandAll3","Resize"), false );
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
 
-    // Compositing settings
-    config.changeGroup("Compositing");
-    useCompositing = config.readEntry("Enabled", false);
-    QString compositingBackend = config.readEntry("Backend", "OpenGL");
-    if( compositingBackend == "XRender" )
-        compositingMode = XRenderCompositing;
-    else
-        compositingMode = OpenGLCompositing;
-    QString glmode = config.readEntry("GLMode", "TFP" ).toUpper();
-    if( glmode == "TFP" )
-        glMode = GLTFP;
-    else if( glmode == "SHM" )
-        glMode = GLSHM;
-    else
-        glMode = GLFallback;
-    glDirect = config.readEntry("GLDirect", true );
-    glVSync = config.readEntry("GLVSync", true );
-    smoothScale = qBound( -1, config.readEntry( "GLTextureFilter", -1 ), 2 );
-
     config.changeGroup("Translucency");
     refreshRate = config.readEntry( "RefreshRate", 0 );
     glStrictBinding = config.readEntry( "GLStrictBinding", false );
@@ -220,6 +202,30 @@ unsigned long Options::updateSettings()
 // KDE4 this probably needs to be done manually in clients
 
     return changed;
+    }
+
+void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
+    {
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup config(_config, "Compositing");
+
+    // Compositing settings
+    useCompositing = config.readEntry("Enabled", prefs.enableCompositing());
+    QString compositingBackend = config.readEntry("Backend", "OpenGL");
+    if( compositingBackend == "XRender" )
+        compositingMode = XRenderCompositing;
+    else
+        compositingMode = OpenGLCompositing;
+    QString glmode = config.readEntry("GLMode", "TFP" ).toUpper();
+    if( glmode == "TFP" )
+        glMode = GLTFP;
+    else if( glmode == "SHM" )
+        glMode = GLSHM;
+    else
+        glMode = GLFallback;
+    glDirect = config.readEntry("GLDirect", prefs.enableDirectRendering() );
+    glVSync = config.readEntry("GLVSync", prefs.enableVSync() );
+    smoothScale = qBound( -1, config.readEntry( "GLTextureFilter", -1 ), 2 );
     }
 
 

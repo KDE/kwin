@@ -56,6 +56,7 @@ set(kwin_KDEINIT_SRCS
    scene_opengl.cpp
    deleted.cpp
    effects.cpp
+   compositingprefs.cpp
    )
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )

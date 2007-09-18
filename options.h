@@ -24,6 +24,7 @@ namespace KWin
 {
 
 class Client;
+class CompositingPrefs;
 
 class Options : public KDecorationOptions 
     {
@@ -33,6 +34,7 @@ class Options : public KDecorationOptions
         ~Options();
 
         virtual unsigned long updateSettings();
+        void reloadCompositingSettings(const CompositingPrefs& prefs);
 
         /*!
           Different focus policies:

@@ -37,6 +37,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "scene_basic.h"
 #include "scene_xrender.h"
 #include "scene_opengl.h"
+#include "compositingprefs.h"
 
 #include <stdio.h>
 
@@ -65,6 +66,11 @@ namespace KWin
 void Workspace::setupCompositing()
     {
 #if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+    // Driver-specific config detection
+    CompositingPrefs prefs;
+    prefs.detect();
+    options->reloadCompositingSettings( prefs );
+
     if( !options->useCompositing )
         {
         kDebug( 1212 ) << "Compositing is turned off in options";
