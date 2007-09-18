@@ -5,112 +5,158 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>515</width>
-    <height>334</height>
+    <width>607</width>
+    <height>661</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
    <item>
-    <widget class="QCheckBox" name="useCompositing" >
-     <property name="text" >
-      <string>Enable desktop effects</string>
+    <widget class="QTabWidget" name="tabWidget" >
+     <property name="currentIndex" >
+      <number>1</number>
      </property>
-     <property name="checked" >
-      <bool>true</bool>
-     </property>
+     <widget class="QWidget" name="tab" >
+      <attribute name="title" >
+       <string>General</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="QCheckBox" name="useCompositing" >
+         <property name="text" >
+          <string>Enable desktop effects</string>
+         </property>
+         <property name="checked" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" native="1" name="compositingOptionsContainer" >
+         <layout class="QVBoxLayout" >
+          <item>
+           <widget class="QGroupBox" name="groupBox" >
+            <property name="title" >
+             <string>Common effects</string>
+            </property>
+            <layout class="QVBoxLayout" >
+             <item>
+              <widget class="QCheckBox" name="effectWinManagement" >
+               <property name="text" >
+                <string>Improved window management</string>
+               </property>
+               <property name="checked" >
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="effectShadows" >
+               <property name="text" >
+                <string>Shadows</string>
+               </property>
+               <property name="checked" >
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="effectAnimations" >
+               <property name="text" >
+                <string>Various animations</string>
+               </property>
+               <property name="checked" >
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label" >
+               <property name="text" >
+                <string>You can find more effects in the All effects tab</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" >
+            <item>
+             <spacer>
+              <property name="orientation" >
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" >
+               <size>
+                <width>101</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="advancedOptions" >
+              <property name="text" >
+               <string>Advanced options...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>20</width>
+           <height>21</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2" >
+      <attribute name="title" >
+       <string>All effects</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="QLabel" name="label_2" >
+         <property name="text" >
+          <string>Hint: to find out or configure how to activate an effect, look at effect's options</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KPluginSelector" native="1" name="effectSelector" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
-   </item>
-   <item>
-    <widget class="QWidget" native="1" name="compositingOptionsContainer" >
-     <layout class="QVBoxLayout" >
-      <item>
-       <widget class="QGroupBox" name="groupBox" >
-        <property name="title" >
-         <string>Common effects</string>
-        </property>
-        <layout class="QVBoxLayout" >
-         <item>
-          <widget class="QCheckBox" name="effectWinManagement" >
-           <property name="text" >
-            <string>Improved window management</string>
-           </property>
-           <property name="checked" >
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="effectShadows" >
-           <property name="text" >
-            <string>Shadows</string>
-           </property>
-           <property name="checked" >
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="effectAnimations" >
-           <property name="text" >
-            <string>Various animations</string>
-           </property>
-           <property name="checked" >
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label" >
-           <property name="text" >
-            <string>You can find more effects in the Effects config module</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" >
-        <item>
-         <spacer>
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" >
-           <size>
-            <width>101</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="advancedOptions" >
-          <property name="text" >
-           <string>Advanced options...</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" >
-      <size>
-       <width>20</width>
-       <height>21</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KPluginSelector</class>
+   <extends>QWidget</extends>
+   <header>kpluginselector.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

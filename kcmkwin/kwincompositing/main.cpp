@@ -17,6 +17,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kconfiggroup.h>
 #include <kdebug.h>
 #include <ksettings/dispatcher.h>
+#include <kpluginselector.h>
+#include <kservicetypetrader.h>
+#include <kplugininfo.h>
+#include <kservice.h>
 
 #include <QtDBus/QtDBus>
 #include <KPluginFactory>
@@ -36,14 +40,21 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
         mKWinConfig(KSharedConfig::openConfig("kwinrc"))
 {
     ui.setupUi(this);
+    ui.tabWidget->setCurrentIndex(0);
 
     connect(ui.advancedOptions, SIGNAL(clicked()), this, SLOT(showAdvancedOptions()));
-    connect(ui.useCompositing, SIGNAL(toggled(bool)), ui.compositingOptionsContainer, SLOT(setEnabled(bool)));
+    connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.effectWinManagement, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.effectShadows, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.effectAnimations, SIGNAL(toggled(bool)), this, SLOT(changed()));
+
+    connect(ui.effectSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
+    connect(ui.effectSelector, SIGNAL(configCommitted(const QByteArray&)),
+            this, SLOT(reparseConfiguration(const QByteArray&)));
+
+    initEffectSelector();
 
     // Load config
     load();
@@ -61,7 +72,13 @@ KWinCompositingConfig::~KWinCompositingConfig()
 
 void KWinCompositingConfig::reparseConfiguration(const QByteArray&conf)
 {
-  KSettings::Dispatcher::reparseConfiguration(conf);
+    KSettings::Dispatcher::reparseConfiguration(conf);
+}
+
+void KWinCompositingConfig::compositingEnabled(bool enabled)
+{
+    ui.compositingOptionsContainer->setEnabled(enabled);
+    ui.tabWidget->setTabEnabled(1, enabled);
 }
 
 void KWinCompositingConfig::showAdvancedOptions()
@@ -70,6 +87,21 @@ void KWinCompositingConfig::showAdvancedOptions()
 
     dialog->show();
     connect(dialog, SIGNAL(configSaved()), this, SLOT(configChanged()));
+}
+
+void KWinCompositingConfig::initEffectSelector()
+{
+    // Find all .desktop files of the effects
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+    QList<KPluginInfo> effectinfos = KPluginInfo::fromServices(offers);
+
+    // Add them to the plugin selector
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mKWinConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Accessibility"), "Accessibility", mKWinConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mKWinConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mKWinConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mKWinConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Misc"), "Misc", mKWinConfig);
 }
 
 void KWinCompositingConfig::load()
@@ -90,6 +122,8 @@ void KWinCompositingConfig::load()
     ui.effectWinManagement->setChecked(winManagementEnabled);
     ui.effectShadows->setChecked(LOAD_EFFECT_CONFIG("shadow"));
     ui.effectAnimations->setChecked(LOAD_EFFECT_CONFIG("minimizeanimation"));
+
+    ui.effectSelector->load();
 
     emit changed( false );
 }
@@ -115,6 +149,8 @@ void KWinCompositingConfig::save()
     WRITE_EFFECT_CONFIG("minimizeanimation", ui.effectAnimations);
 #undef WRITE_EFFECT_CONFIG
 
+    ui.effectSelector->save();
+
     emit changed( false );
 
     configChanged();
@@ -137,6 +173,8 @@ void KWinCompositingConfig::defaults()
     ui.effectWinManagement->setChecked(true);
     ui.effectShadows->setChecked(true);
     ui.effectAnimations->setChecked(true);
+
+    ui.effectSelector->defaults();
 }
 
 QString KWinCompositingConfig::quickHelp() const

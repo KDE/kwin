@@ -33,6 +33,7 @@ class KWinCompositingConfig : public KCModule
         virtual QString quickHelp() const;
 
     public slots:
+        virtual void compositingEnabled(bool enabled);
         virtual void showAdvancedOptions();
 
         virtual void load();
@@ -41,6 +42,9 @@ class KWinCompositingConfig : public KCModule
         void reparseConfiguration(const QByteArray&conf);
 
         void configChanged();
+        void initEffectSelector();
+
+    protected:
 
     private:
         KSharedConfigPtr mKWinConfig;
