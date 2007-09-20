@@ -84,6 +84,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.advancedOptions, SIGNAL(clicked()), this, SLOT(showAdvancedOptions()));
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
+    connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.effectWinManagement, SIGNAL(toggled(bool)), this, SLOT(changed()));
@@ -93,6 +94,13 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.effectSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
     connect(ui.effectSelector, SIGNAL(configCommitted(const QByteArray&)),
             this, SLOT(reparseConfiguration(const QByteArray&)));
+
+    // Open the temporary config file
+    // Temporary conf file is used to syncronize effect checkboxes with effect
+    //  selector by loading/saving effects from/to temp config when active tab
+    //  changes.
+    mTmpConfigFile.open();
+    mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
 
     initEffectSelector();
 
@@ -155,25 +163,38 @@ void KWinCompositingConfig::initEffectSelector()
     QList<KPluginInfo> effectinfos = KPluginInfo::fromServices(offers);
 
     // Add them to the plugin selector
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mKWinConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Accessibility"), "Accessibility", mKWinConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mKWinConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mKWinConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mKWinConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Misc"), "Misc", mKWinConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Accessibility"), "Accessibility", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Misc"), "Misc", mTmpConfig);
 }
 
-void KWinCompositingConfig::load()
+void KWinCompositingConfig::currentTabChanged(int tab)
 {
-    kDebug() ;
-    mKWinConfig->reparseConfiguration();
+    if (tab == 0)
+    {
+        // General tab was activated
+        saveEffectsTab();
+        loadGeneralTab();
+    }
+    else
+    {
+        // Effects tab was activated
+        saveGeneralTab();
+        loadEffectsTab();
+    }
+}
 
+void KWinCompositingConfig::loadGeneralTab()
+{
     KConfigGroup config(mKWinConfig, "Compositing");
     ui.useCompositing->setChecked(config.readEntry("Enabled", mDefaultPrefs.enableCompositing()));
 
     // Load effect settings
-    config.changeGroup("Plugins");
-#define LOAD_EFFECT_CONFIG(effectname)  config.readEntry("kwin4_effect_" effectname "Enabled", true)
+    KConfigGroup effectconfig(mTmpConfig, "Plugins");
+#define LOAD_EFFECT_CONFIG(effectname)  effectconfig.readEntry("kwin4_effect_" effectname "Enabled", true)
     bool winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows");
     winManagementEnabled &= LOAD_EFFECT_CONFIG("boxswitch");
     winManagementEnabled &= LOAD_EFFECT_CONFIG("desktopgrid");
@@ -181,17 +202,37 @@ void KWinCompositingConfig::load()
     ui.effectWinManagement->setChecked(winManagementEnabled);
     ui.effectShadows->setChecked(LOAD_EFFECT_CONFIG("shadow"));
     ui.effectAnimations->setChecked(LOAD_EFFECT_CONFIG("minimizeanimation"));
+#undef LOAD_EFFECT_CONFIG
+}
 
+void KWinCompositingConfig::loadEffectsTab()
+{
     ui.effectSelector->load();
+}
+
+void KWinCompositingConfig::load()
+{
+    kDebug() ;
+    mKWinConfig->reparseConfiguration();
+
+    // Copy Plugins group to temp config file
+    QMap<QString, QString> entries = mKWinConfig->entryMap("Plugins");
+    QMap<QString, QString>::const_iterator it = entries.constBegin();
+    KConfigGroup tmpconfig(mTmpConfig, "Plugins");
+    tmpconfig.deleteGroup();
+    for(; it != entries.constEnd(); ++it)
+    {
+        tmpconfig.writeEntry(it.key(), it.value());
+    }
+
+    loadGeneralTab();
+    loadEffectsTab();
 
     emit changed( false );
 }
 
-
-void KWinCompositingConfig::save()
+bool KWinCompositingConfig::saveGeneralTab()
 {
-    kDebug() ;
-
     KConfigGroup config(mKWinConfig, "Compositing");
     // Save current config. We'll use this for restoring in case something
     //  goes wrong.
@@ -203,8 +244,8 @@ void KWinCompositingConfig::save()
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
 
     // Save effects
-    config.changeGroup("Plugins");
-#define WRITE_EFFECT_CONFIG(effectname, widget)  config.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
+    KConfigGroup effectconfig(mTmpConfig, "Plugins");
+#define WRITE_EFFECT_CONFIG(effectname, widget)  effectconfig.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
     WRITE_EFFECT_CONFIG("presentwindows", ui.effectWinManagement);
     WRITE_EFFECT_CONFIG("boxswitch", ui.effectWinManagement);
     WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
@@ -215,7 +256,30 @@ void KWinCompositingConfig::save()
     WRITE_EFFECT_CONFIG("minimizeanimation", ui.effectAnimations);
 #undef WRITE_EFFECT_CONFIG
 
+    return confirm;
+}
+
+void KWinCompositingConfig::saveEffectsTab()
+{
     ui.effectSelector->save();
+}
+
+void KWinCompositingConfig::save()
+{
+    kDebug() ;
+
+    bool confirm = saveGeneralTab();
+    saveEffectsTab();
+
+    // Copy Plugins group from temp config to real config
+    QMap<QString, QString> entries = mTmpConfig->entryMap("Plugins");
+    QMap<QString, QString>::const_iterator it = entries.constBegin();
+    KConfigGroup realconfig(mKWinConfig, "Plugins");
+    realconfig.deleteGroup();
+    for(; it != entries.constEnd(); ++it)
+    {
+        realconfig.writeEntry(it.key(), it.value());
+    }
 
     emit changed( false );
 

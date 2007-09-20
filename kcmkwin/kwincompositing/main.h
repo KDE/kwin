@@ -15,7 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kcmodule.h>
 
 #include <ksharedconfig.h>
-
+#include <ktemporaryfile.h>
 #include <kdialog.h>
 
 #include "ui_main.h"
@@ -54,11 +54,17 @@ class KWinCompositingConfig : public KCModule
         virtual void compositingEnabled(bool enabled);
         virtual void showAdvancedOptions();
         virtual void showConfirmDialog();
+        void currentTabChanged(int tab);
 
         virtual void load();
         virtual void save();
         virtual void defaults();
         void reparseConfiguration(const QByteArray&conf);
+
+        void loadGeneralTab();
+        void loadEffectsTab();
+        bool saveGeneralTab();
+        void saveEffectsTab();
 
         void configChanged();
         void initEffectSelector();
@@ -69,6 +75,8 @@ class KWinCompositingConfig : public KCModule
         CompositingPrefs mDefaultPrefs;
 
         QMap<QString, QString> mPreviousConfig;
+        KTemporaryFile mTmpConfigFile;
+        KSharedConfigPtr mTmpConfig;
     };
 
 } // namespace
