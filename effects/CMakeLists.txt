@@ -99,7 +99,7 @@ if(OPENGL_FOUND)
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
     # config modules
-    KWIN4_ADD_EFFECT_CONFIG( builtins presentwindows_config.cpp shadow_config.cpp )
+    KWIN4_ADD_EFFECT_CONFIG( builtins presentwindows_config.cpp shadow_config.cpp configs_builtins.cpp)
     install( FILES
         presentwindows_config.desktop
         shadow_config.desktop

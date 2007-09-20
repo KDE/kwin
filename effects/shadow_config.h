@@ -17,7 +17,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 class QSpinBox;
 
-
 namespace KWin
 {
 
@@ -25,7 +24,7 @@ class ShadowEffectConfig : public KCModule
     {
     Q_OBJECT
     public:
-        explicit ShadowEffectConfig(QWidget* parent = 0, const QStringList& args = QStringList());
+        explicit ShadowEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
         ~ShadowEffectConfig();
 
         virtual void save();

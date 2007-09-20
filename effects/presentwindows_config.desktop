@@ -4,8 +4,8 @@ Type=Service
 ServiceTypes=KCModule
 
 X-KDE-Library=kcm_kwin4_effect_builtins
-X-KDE-FactoryName=kcm_kwineffect_presentwindows
 X-KDE-ParentComponents=kwin4_effect_presentwindows
+X-KDE-PluginKeyword=presentwindows
 
 Name=Present Windows
 Name[ar]=نوافذ حديثة

@@ -24,6 +24,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QtCore/QList>
 #include <QtCore/QHash>
 
+#include <KPluginFactory> 
+
 #include <assert.h>
 
 class KLibrary;
@@ -159,9 +161,13 @@ class KWIN_EXPORT Effect
  * E.g.  KWIN_EFFECT_CONFIG( flames, MyFlameEffectConfig )
  **/
 #define KWIN_EFFECT_CONFIG( name, classname ) \
-    K_EXPORT_COMPONENT_FACTORY( \
-        kcm_kwineffect_##name, \
-        KGenericFactory<classname>( "kcm_kwineffect_" #name ) )
+    K_PLUGIN_FACTORY(name##_factory, registerPlugin<classname>();) \
+    K_EXPORT_PLUGIN(name##_factory("kcm_kwineffect_" #name))
+
+/**
+ * The declaration of the factory to export the effect
+ **/
+K_PLUGIN_FACTORY_DECLARATION(EffectFactory)    
 
 
 class KWIN_EXPORT EffectsHandler

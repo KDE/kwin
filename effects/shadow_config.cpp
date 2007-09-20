@@ -12,7 +12,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kwineffects.h>
 
-#include <kgenericfactory.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -21,13 +20,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QLabel>
 #include <QSpinBox>
 
-KWIN_EFFECT_CONFIG( shadow, KWin::ShadowEffectConfig )
 
 namespace KWin
 {
 
-ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QStringList& args) :
-        KCModule(KGenericFactory<ShadowEffectConfig>::componentData(), parent, args)
+ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QVariantList& args) :
+        KCModule(EffectFactory::componentData(), parent, args)
     {
     kDebug() ;
 

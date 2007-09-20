@@ -12,7 +12,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kwineffects.h>
 
-#include <kgenericfactory.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -21,13 +20,12 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QLabel>
 #include <QComboBox>
 
-KWIN_EFFECT_CONFIG( presentwindows, KWin::PresentWindowsEffectConfig )
 
 namespace KWin
 {
 
-PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QStringList& args) :
-        KCModule(KGenericFactory<PresentWindowsEffectConfig>::componentData(), parent, args)
+PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
+        KCModule(EffectFactory::componentData(), parent, args)
     {
     kDebug() ;
 

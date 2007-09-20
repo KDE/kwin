@@ -4,8 +4,8 @@ Type=Service
 ServiceTypes=KCModule
 
 X-KDE-Library=kcm_kwin4_effect_builtins
-X-KDE-FactoryName=kcm_kwineffect_shadow
 X-KDE-ParentComponents=kwin4_effect_shadow
+X-KDE-PluginKeyword=shadow
 
 Name=Shadow
 Name[be]=Цень

@@ -17,7 +17,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 class QComboBox;
 
-
 namespace KWin
 {
 
@@ -25,7 +24,7 @@ class PresentWindowsEffectConfig : public KCModule
     {
     Q_OBJECT
     public:
-        explicit PresentWindowsEffectConfig(QWidget* parent = 0, const QStringList& args = QStringList());
+        explicit PresentWindowsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
         ~PresentWindowsEffectConfig();
 
         virtual void save();
