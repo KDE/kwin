@@ -15,6 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <KPluginLoader>
 
+KWIN_EFFECT_CONFIG_FACTORY
 K_PLUGIN_FACTORY_DEFINITION(EffectFactory, registerPlugin<KWin::ShadowEffectConfig>("shadow");
                                 registerPlugin<KWin::PresentWindowsEffectConfig>("presentwindows");)
 K_EXPORT_PLUGIN(EffectFactory("kcm_kwineffect"))

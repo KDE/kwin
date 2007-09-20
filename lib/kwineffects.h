@@ -167,7 +167,7 @@ class KWIN_EXPORT Effect
 /**
  * The declaration of the factory to export the effect
  **/
-K_PLUGIN_FACTORY_DECLARATION(EffectFactory)    
+#define KWIN_EFFECT_CONFIG_FACTORY K_PLUGIN_FACTORY_DECLARATION(EffectFactory)
 
 
 class KWIN_EXPORT EffectsHandler

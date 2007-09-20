@@ -20,6 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QLabel>
 #include <QSpinBox>
 
+KWIN_EFFECT_CONFIG_FACTORY
 
 namespace KWin
 {
