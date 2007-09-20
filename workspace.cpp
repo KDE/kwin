@@ -135,6 +135,7 @@ Workspace::Workspace( bool restore )
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject("/KWin", this);
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
+    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing", this, SLOT(slotReinitCompositing()));
     _self = this;
     mgr = new PluginMgr;
     QX11Info info;
@@ -1047,6 +1048,19 @@ void Workspace::slotReconfigure()
         (*it)->applyWindowRules();
         discardUsedWindowRules( *it, false );
         }
+    }
+
+void Workspace::slotReinitCompositing()
+    {
+    // Reparse config. Config options will be reloaded by setupCompositing()
+    KGlobal::config()->reparseConfiguration();
+
+    // Stop any current compositing
+    finishCompositing();
+    // And start new one
+    setupCompositing();
+    if( effects ) // setupCompositing() may fail
+        effects->reconfigure();
     }
 
 void Workspace::loadDesktopSettings()

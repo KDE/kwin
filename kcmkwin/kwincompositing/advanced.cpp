@@ -12,6 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "advanced.moc"
 #include <klocale.h>
 
+#include <QtDBus/QtDBus>
+
 #include "compositingprefs.h"
 
 namespace KWin
@@ -89,7 +91,12 @@ void KWinAdvancedCompositingOptions::save()
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
 
     enableButtonApply(false);
-    emit configSaved();
+
+    // Send signal to kwin
+    mKWinConfig->sync();
+    // Send signal to all kwin instances
+    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reinitCompositing");
+    QDBusConnection::sessionBus().send(message);
 }
 
 } // namespace

@@ -34,6 +34,7 @@
     <method name="previousDesktop"/>
     <method name="circulateDesktopApplications"/>
     <signal name="reloadConfig"/>
+    <signal name="reinitCompositing"/>
     <method name="loadEffect">
     <arg name="name" type="s" direction="in"/>
     </method>

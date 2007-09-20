@@ -36,9 +36,6 @@ class KWinAdvancedCompositingOptions : public KDialog
         void save();
         void compositingModeChanged();
 
-    signals:
-        void configSaved();
-
     private:
         KSharedConfigPtr mKWinConfig;
         Ui::KWinAdvancedCompositingOptions ui;

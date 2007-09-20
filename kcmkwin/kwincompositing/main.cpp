@@ -134,7 +134,6 @@ void KWinCompositingConfig::showAdvancedOptions()
     KWinAdvancedCompositingOptions* dialog = new KWinAdvancedCompositingOptions(this, mKWinConfig, &mDefaultPrefs);
 
     dialog->show();
-    connect(dialog, SIGNAL(configSaved()), this, SLOT(configChanged()));
 }
 
 void KWinCompositingConfig::showConfirmDialog()
