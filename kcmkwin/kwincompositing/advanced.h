@@ -35,11 +35,15 @@ class KWinAdvancedCompositingOptions : public KDialog
         void changed();
         void save();
         void compositingModeChanged();
+        void showConfirmDialog();
+
+        void reinitKWinCompositing();
 
     private:
         KSharedConfigPtr mKWinConfig;
         Ui::KWinAdvancedCompositingOptions ui;
         CompositingPrefs* mDefaultPrefs;
+        QMap<QString, QString> mPreviousConfig;
 };
 
 } // namespace

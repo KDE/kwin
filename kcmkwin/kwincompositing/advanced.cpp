@@ -15,6 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QtDBus/QtDBus>
 
 #include "compositingprefs.h"
+#include "main.h"
 
 namespace KWin
 {
@@ -63,6 +64,26 @@ void KWinAdvancedCompositingOptions::compositingModeChanged()
     ui.glGroup->setEnabled(ui.compositingType->currentIndex() == 0);
 }
 
+void KWinAdvancedCompositingOptions::showConfirmDialog()
+{
+    ConfirmDialog confirm;
+    int result = confirm.exec();
+    if(result != KDialog::Yes)
+    {
+        // Revert settings
+        KConfigGroup config(mKWinConfig, "Compositing");
+        config.deleteGroup();
+        QMap<QString, QString>::const_iterator it = mPreviousConfig.constBegin();
+        for(; it != mPreviousConfig.constEnd(); ++it)
+        {
+            config.writeEntry(it.key(), it.value());
+        }
+        // Reinit KWin compositing and reload (old) settings
+        reinitKWinCompositing();
+        load();
+    }
+}
+
 void KWinAdvancedCompositingOptions::load()
 {
     KConfigGroup config(mKWinConfig, "Compositing");
@@ -83,6 +104,8 @@ void KWinAdvancedCompositingOptions::save()
     }
 
     KConfigGroup config(mKWinConfig, "Compositing");
+    mPreviousConfig = config.entryMap();
+
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
     QString glModes[] = { "TFP", "SHM", "Fallback" };
     config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
@@ -92,6 +115,12 @@ void KWinAdvancedCompositingOptions::save()
 
     enableButtonApply(false);
 
+    reinitKWinCompositing();
+    showConfirmDialog();
+}
+
+void KWinAdvancedCompositingOptions::reinitKWinCompositing()
+{
     // Send signal to kwin
     mKWinConfig->sync();
     // Send signal to all kwin instances
