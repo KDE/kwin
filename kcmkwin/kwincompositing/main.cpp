@@ -151,7 +151,8 @@ void KWinCompositingConfig::showConfirmDialog()
             config.writeEntry(i.key(), i.value());
             ++i;
         }
-        config.sync();
+        // Sync with KWin and reload
+        configChanged();
         load();
     }
 }
