@@ -27,24 +27,19 @@ KDE 4.0 TODO
     - need to be faster (300ms at most)
     - global setting?
 
-/ configure dialog
-?   - when enabling compositing, have a confirmation msgbox with 10-sec delay
-      as with resolution changes: if you don't click ok before timeout then
-      fall back to non-composited mode.
-
 - shortcut configuration
     - configurable per effect (in the options dialog)
 
-- different handling of differeng gfx cards
-    - check that nvidia/ati/intel work and add specific hacks if needed
-    - the same about driver versions
+/ different handling of differeng gfx cards
+    / check that nvidia/ati/intel work and add specific hacks if needed
+    / the same about driver versions
 
 - default effects and their settings
 
 - effects (to do)
-    - add configuration options (dialogs)
+    / add configuration options (dialogs)
     - add generic support to use effect only for certain window types [Seli]
-    - split effects to groups (eyecandy, accessibility, whatever)
+    / split effects to groups (eyecandy, accessibility, whatever)
     - login effect, e.g. fade to desktop
     - logout effect [Seli]
     - effect for windows demanding attention
@@ -61,8 +56,6 @@ KDE 4.0 TODO
     - make transparent
         - make windows that are moved/resized by the user slightly transparent
     - hide all testing, demo etc. effects in final builds
-    - presentwindows
-        / should show window icon, title (like boxswitch)
     - boxswitch
         - should share some features (next/previous, etc.) with presentwindows
 ?           - duplicate code or try to share it?
@@ -78,7 +71,7 @@ KDE 4.0 TODO
 
 - fix inclusion of config-X11.h in installed headers [Seli]
 
-- IHV database - set config settings according to card/driver
+/ IHV database - set config settings according to card/driver
 ?   - some sort of performance slider
 
 ? - unredirect fullscreen windows
@@ -91,12 +84,9 @@ KDE 4.0 TODO
 ? generic dbus scripting support
 
 / check effects' dependencies when loading [rivo]
-/ correct ordering for effects [rivo]
-    would be nice if isn't too strict
 
-/ vertex redesign [Seli]
-
-- handling of window pixmaps for unmapped windows [Seli]
+/ handling of window pixmaps for unmapped windows [Seli]
+  - config option?
 - strict binding
 
 - shm mode needs support for more data formats than GL_BGRA
