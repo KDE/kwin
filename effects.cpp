@@ -84,7 +84,7 @@ void EffectsHandlerImpl::reconfigure()
     }
 
 // the idea is that effects call this function again which calls the next one
-void EffectsHandlerImpl::cprePaintScreen( ScreenPrePaintData& data, int time )
+void EffectsHandlerImpl::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( current_paint_screen < loaded_effects.size())
         {
