@@ -149,9 +149,9 @@ void CompositingPrefs::applyDriverSpecificOptions()
         }
     else if( mDriver == "nvidia" )
         {
-        if( mVersion <= Version( "100.14.11" ))
+        if( mVersion <= Version( "100.14.19" ))
             {
-            kDebug() << "nvidia <= 100.14.11, disabling vsync";
+            kDebug() << "nvidia <= 100.14.19, disabling vsync";
             mEnableVSync = false;
             }
         if( mVersion >= Version( "96.39" ))
