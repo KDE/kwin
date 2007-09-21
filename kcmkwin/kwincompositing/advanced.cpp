@@ -62,6 +62,7 @@ void KWinAdvancedCompositingOptions::changed()
 void KWinAdvancedCompositingOptions::compositingModeChanged()
 {
     ui.glGroup->setEnabled(ui.compositingType->currentIndex() == 0);
+    ui.xrenderGroup->setEnabled(ui.compositingType->currentIndex() == 1);
 }
 
 void KWinAdvancedCompositingOptions::showConfirmDialog()
@@ -89,11 +90,16 @@ void KWinAdvancedCompositingOptions::load()
     KConfigGroup config(mKWinConfig, "Compositing");
     QString backend = config.readEntry("Backend", "OpenGL");
     ui.compositingType->setCurrentIndex((backend == "XRender") ? 1 : 0);
+
     QString glMode = config.readEntry("GLMode", "TFP");
     ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
     ui.glTextureFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 1));
     ui.glDirect->setChecked(config.readEntry("GLDirect", mDefaultPrefs->enableDirectRendering()));
     ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs->enableVSync()));
+
+    ui.xrenderSmoothScale->setChecked(config.readEntry("XRenderSmoothScale", false));
+
+    compositingModeChanged();
 }
 
 void KWinAdvancedCompositingOptions::save()
@@ -108,10 +114,13 @@ void KWinAdvancedCompositingOptions::save()
 
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
     QString glModes[] = { "TFP", "SHM", "Fallback" };
+
     config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
     config.writeEntry("GLTextureFilter", ui.glTextureFilter->currentIndex());
     config.writeEntry("GLDirect", ui.glDirect->isChecked());
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
+
+    config.writeEntry("XRenderSmoothScale", ui.xrenderSmoothScale->isChecked());
 
     enableButtonApply(false);
 

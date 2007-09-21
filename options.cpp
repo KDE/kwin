@@ -226,6 +226,8 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
     glDirect = config.readEntry("GLDirect", prefs.enableDirectRendering() );
     glVSync = config.readEntry("GLVSync", prefs.enableVSync() );
     smoothScale = qBound( -1, config.readEntry( "GLTextureFilter", -1 ), 2 );
+
+    xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false );
     }
 
 

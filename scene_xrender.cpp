@@ -453,7 +453,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     if( pic == None ) // The render format can be null for GL and/or Xv visuals
         return;
     // set picture filter
-    if( options->smoothScale > 0 ) // only when forced, it's slow
+    if( options->xrenderSmoothScale ) // only when forced, it's slow
         {
         if( mask & PAINT_WINDOW_TRANSFORMED )
             filter = ImageFilterGood;

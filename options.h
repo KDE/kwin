@@ -297,9 +297,12 @@ class Options : public KDecorationOptions
         HiddenPreviews hiddenPreviews;
         
         uint refreshRate;
+        // This is for OpenGL mode
         int smoothScale; // 0 = no, 1 = yes when transformed,
                          // 2 = try trilinear when transformed; else 1,
                          // -1 = auto
+        // This is for XRender mode
+        bool xrenderSmoothScale;
         
         enum GLMode { GLTFP, GLSHM, GLFallback };
         GLMode glMode;

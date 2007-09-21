@@ -119,6 +119,22 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="xrenderGroup" >
+     <property name="title" >
+      <string>XRender options</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <item>
+       <widget class="QCheckBox" name="xrenderSmoothScale" >
+        <property name="text" >
+         <string>Smooth scaling (slower)</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
