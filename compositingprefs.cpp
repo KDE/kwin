@@ -135,12 +135,9 @@ void CompositingPrefs::applyDriverSpecificOptions()
     {
     if( mDriver == "intel")
         {
-        if( mVersion <= Version( "20061017" ))
-            {
-            kDebug() << "intel <= 20061017, disabling vsync, enabling direct";
-            mEnableVSync = false;
-            mEnableDirectRendering = true;
-            }
+        kDebug() << "intel driver, disabling vsync, enabling direct";
+        mEnableVSync = false;
+        mEnableDirectRendering = true;
         if( mVersion >= Version( "20061017" ))
             {
             kDebug() << "intel >= 20061017, enabling compositing";
@@ -149,11 +146,8 @@ void CompositingPrefs::applyDriverSpecificOptions()
         }
     else if( mDriver == "nvidia" )
         {
-        if( mVersion <= Version( "100.14.19" ))
-            {
-            kDebug() << "nvidia <= 100.14.19, disabling vsync";
-            mEnableVSync = false;
-            }
+        kDebug() << "nvidia driver, disabling vsync";
+        mEnableVSync = false;
         if( mVersion >= Version( "96.39" ))
             {
             kDebug() << "nvidia >= 96.39, enabling compositing";
