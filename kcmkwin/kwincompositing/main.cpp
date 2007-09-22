@@ -40,7 +40,7 @@ namespace KWin
 ConfirmDialog::ConfirmDialog() :
         KDialog()
     {
-    setCaption( i18n( "Compositing settings changed" ));
+    setCaption( i18n( "Desktop effects settings changed" ));
     setButtons( KDialog::Yes | KDialog::No | KDialog::Cancel );
     setDefaultButton(KDialog::No);
     setButtonFocus(KDialog::No);
@@ -58,7 +58,7 @@ void ConfirmDialog::advanceTimer()
     mSecondsToLive--;
     if(mSecondsToLive > 0)
     {
-        QString text = i18n("Compositing settings have changed.\n"
+        QString text = i18n("Desktop effects settings have changed.\n"
                 "Do you want to keep the new settings?\n"
                 "They will be automatically reverted in %1 seconds", mSecondsToLive);
         mTextLabel->setText(text);
