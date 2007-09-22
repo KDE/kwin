@@ -33,16 +33,16 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     QGridLayout* layout = new QGridLayout(this);
 
     layout->addWidget(new QLabel(i18n("Activate when cursor is at a specific edge "
-            "or corner of the screen:")), 0, 0, 1, 3);
+            "or corner of the screen:"), this), 0, 0, 1, 3);
     layout->addItem(new QSpacerItem(20, 20, QSizePolicy::Fixed), 1, 0, 2, 1);
 
-    layout->addWidget(new QLabel("for windows on current desktop: "), 1, 1);
+    layout->addWidget(new QLabel(i18n("for windows on current desktop: "), this), 1, 1);
     mActivateCombo = new QComboBox;
     addItems(mActivateCombo);
     connect(mActivateCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     layout->addWidget(mActivateCombo, 1, 2);
 
-    layout->addWidget(new QLabel("for windows all desktop: "), 2, 1);
+    layout->addWidget(new QLabel(i18n("for windows all desktop: "), this), 2, 1);
     mActivateAllCombo = new QComboBox;
     addItems(mActivateAllCombo);
     connect(mActivateAllCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
