@@ -42,13 +42,20 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     connect(mActivateCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     layout->addWidget(mActivateCombo, 1, 2);
 
-    layout->addWidget(new QLabel(i18n("for windows all desktop: "), this), 2, 1);
+    layout->addWidget(new QLabel(i18n("for windows on all desktops: "), this), 2, 1);
     mActivateAllCombo = new QComboBox;
     addItems(mActivateAllCombo);
     connect(mActivateAllCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     layout->addWidget(mActivateAllCombo, 2, 2);
 
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 3, 0, 1, 3);
+    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Expanding), 3, 0, 1, 3);
+
+    layout->addWidget(new QLabel(i18n("Activation shortcuts:"), this), 4, 0, 1, 3);
+    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed), 5, 0, 2, 1);
+    layout->addWidget(new QLabel(i18n("for windows on current desktop: Ctrl+F10"), this), 5, 1, 1, 2);
+    layout->addWidget(new QLabel(i18n("for windows on all desktops: Ctrl+F11"), this), 6, 1, 1, 2);
+
+    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 7, 0, 1, 3);
 
     load();
     }
