@@ -41,10 +41,9 @@ ConfirmDialog::ConfirmDialog() :
         KDialog()
     {
     setCaption( i18n( "Desktop effects settings changed" ));
-    setButtons( KDialog::Yes | KDialog::No | KDialog::Cancel );
+    setButtons( KDialog::Yes | KDialog::No );
     setDefaultButton(KDialog::No);
     setButtonFocus(KDialog::No);
-    setEscapeButton(KDialog::Cancel);
 
     mTextLabel = new QLabel(this);
     setMainWidget(mTextLabel);
