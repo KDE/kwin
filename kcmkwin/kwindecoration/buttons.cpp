@@ -430,7 +430,7 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 			buttonItem = m_selected;
 
 			// If we're inserting to the right of oldPos, in the same list, 
-            // better adjust the index..
+			// better adjust the index..
 			if (buttonList == oldList && buttonPosition > oldPos)
 				--buttonPosition;
 		} else {
