@@ -177,7 +177,7 @@ class ButtonDropSite: public QFrame
 		void dropEvent( QDropEvent* e );
 		void mousePressEvent( QMouseEvent* e ); ///< Starts dragging a button...
 
-		void drawContents( QPainter* p );
+		void paintEvent( QPaintEvent* p );
 		ButtonDropSiteItem *buttonAt(QPoint p);
 		bool removeButton(ButtonDropSiteItem *item);
 		int calcButtonListWidth(const ButtonList& buttons); ///< Computes the total space the buttons will take in the titlebar

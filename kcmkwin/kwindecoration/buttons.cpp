@@ -600,8 +600,9 @@ void ButtonDropSite::drawButtonList(QPainter *p, const ButtonList& btns, int off
 	}
 }
 
-void ButtonDropSite::drawContents( QPainter* p )
+void ButtonDropSite::paintEvent( QPaintEvent* pe )
 {
+	QPainter p( this );
 	int leftoffset = calcButtonListWidth( buttonsLeft );
 	int rightoffset = calcButtonListWidth( buttonsRight );
 	int offset = 3;
@@ -613,20 +614,20 @@ void ButtonDropSite::drawContents( QPainter* p )
 	r.setWidth( r.width() - 2 - leftoffset - rightoffset );
 	r.setHeight( r.height() - 2 );
 
-	drawButtonList( p, buttonsLeft, offset );
+	drawButtonList( &p, buttonsLeft, offset );
 
 	QColor c1( 0x0A, 0x5F, 0x89 );		// KDE 2 titlebar default colour
-	p->fillRect( r, c1 );
-	p->setPen( Qt::white );
-	p->setFont( QFont( KGlobalSettings::generalFont().family(), 12, QFont::Bold) );
-	p->drawText( r, Qt::AlignLeft | Qt::AlignVCenter, i18n("KDE") );
+	p.fillRect( r, c1 );
+	p.setPen( Qt::white );
+	p.setFont( QFont( KGlobalSettings::generalFont().family(), 12, QFont::Bold) );
+	p.drawText( r, Qt::AlignLeft | Qt::AlignVCenter, i18n("KDE") );
 
 	offset = geometry().width() - 3 - rightoffset;
-	drawButtonList( p, buttonsRight, offset );
+	drawButtonList( &p, buttonsRight, offset );
 
 	if (m_oldDropVisualizer.isValid() )
 	{
-		p->fillRect(m_oldDropVisualizer, Qt::Dense4Pattern);
+		p.fillRect(m_oldDropVisualizer, Qt::Dense4Pattern);
 	}
 }
 
