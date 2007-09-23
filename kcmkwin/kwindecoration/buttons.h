@@ -188,9 +188,9 @@ class ButtonDropSite: public QFrame
 
 	private:
 		/**
-		 * Try to find the item. If found, set its list and iterator and return true, else return false
+		 * Try to find the item. If found, set its list and index and return true, else return false
 		 */
-		bool getItemIterator(ButtonDropSiteItem *item, ButtonList* &list, ButtonList::iterator &iterator);
+		bool getItemPos(ButtonDropSiteItem *item, ButtonList* &list, int &pos);
 
 		void cleanDropVisualizer();
 		QRect m_oldDropVisualizer;

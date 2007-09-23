@@ -382,21 +382,21 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 
 	// collect information where to insert the dropped button
 	ButtonList *buttonList = 0;
-	ButtonList::iterator buttonPosition;
+	int         buttonPosition;
 
 	if (leftDropArea().contains(p) ) {
 		buttonList = &buttonsLeft;
-		buttonPosition = buttonsLeft.end();
+		buttonPosition = buttonsLeft.size();
 	} else if (rightDropArea().contains(p) ) {
 		buttonList = &buttonsRight;
-		buttonPosition = buttonsRight.begin();
+		buttonPosition = 0;
 	} else {
 		ButtonDropSiteItem *aboveItem = buttonAt(p);
 		if (!aboveItem)
 			return; // invalid drop. hasn't occurred _over_ a button (or left/right dropArea), return...
 
-		ButtonList::iterator it;
-		if (!getItemIterator(aboveItem, buttonList, it) ) {
+		int pos;
+		if (!getItemPos(aboveItem, buttonList, pos) ) {
 			// didn't find the aboveItem. unlikely to happen since buttonAt() already seems to have found
 			// something valid. anyway...
 			return;
@@ -410,12 +410,9 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 
 		if (p.x() < aboveItemRect.left()+aboveItemRect.width()/2 ) {
 			// insert before the item
-			buttonPosition = it;
+			buttonPosition = pos;
 		} else {
-			if (it != buttonList->end() )
-				buttonPosition = ++it;
-			else
-				buttonPosition = it; // already at the end(), can't increment the iterator!
+			buttonPosition = pos + 1;
 		}
 	}
 
@@ -424,13 +421,18 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 	ButtonDropSiteItem *buttonItem = 0;
 	if (e->source() == this && m_selected) {
 		ButtonList *oldList = 0;
-		ButtonList::iterator oldPos;
-		if (getItemIterator(m_selected, oldList, oldPos) ) {
-			if (oldPos == buttonPosition)
+		int oldPos;
+		if (getItemPos(m_selected, oldList, oldPos) ) {
+			if (oldPos == buttonPosition && oldList == buttonList)
 				return; // button didn't change its position during the drag...
 
-			oldList->erase(oldPos);
+			oldList->removeAt(oldPos);
 			buttonItem = m_selected;
+
+			// If we're inserting to the right of oldPos, in the same list, 
+            // better adjust the index..
+			if (buttonList == oldList && buttonPosition > oldPos)
+				--buttonPosition;
 		} else {
 			return; // m_selected not found, return...
 		}
@@ -452,26 +454,26 @@ void ButtonDropSite::dropEvent( QDropEvent* e )
 	update();
 }
 
-bool ButtonDropSite::getItemIterator(ButtonDropSiteItem *item, ButtonList* &list, ButtonList::iterator &iterator)
+bool ButtonDropSite::getItemPos(ButtonDropSiteItem *item, ButtonList* &list, int &pos)
 {
 	if (!item)
 		return false;
 
-	int ind = buttonsLeft.indexOf(item); // try the left list first...
-	if (ind < 0  ) {
-		ind = buttonsRight.indexOf(item); // try the right list...
-		if ( ind < 0 ) {
-			return false; // item hasn't been found in one of the list, return...
-		} else {
-			list = &buttonsRight;
-			iterator = buttonsRight.begin()+ind;
-		}
-	} else {
+	pos = buttonsLeft.indexOf(item); // try the left list first...
+	if (pos >= 0) {
 		list = &buttonsLeft;
-		buttonsLeft.begin()+ind;
+		return true;
 	}
 
-	return true;
+	pos = buttonsRight.indexOf(item); // try the right list...
+	if (pos >= 0) {
+		list = &buttonsRight;
+		return true;
+	}
+
+	list = 0;
+	pos  = -1;
+	return false;
 }
 
 QRect ButtonDropSite::leftDropArea()
@@ -600,7 +602,7 @@ void ButtonDropSite::drawButtonList(QPainter *p, const ButtonList& btns, int off
 	}
 }
 
-void ButtonDropSite::paintEvent( QPaintEvent* pe )
+void ButtonDropSite::paintEvent( QPaintEvent* /*pe*/ )
 {
 	QPainter p( this );
 	int leftoffset = calcButtonListWidth( buttonsLeft );
