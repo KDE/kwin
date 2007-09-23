@@ -64,14 +64,6 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
     p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// OxygenClient Class                                                      //
-//////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////
-// OxygenClient()
-// ---------------
-// Constructor
 
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
     : KCommonDecoration(b, f) { ; }
@@ -211,11 +203,6 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
 }
 
 
-//////////////////////////////////////////////////////////////////////////////
-// paintEvent()
-// ------------
-// Repaint the window
-
 void OxygenClient::paintEvent(QPaintEvent *e)
 {
     Q_UNUSED(e)
@@ -276,10 +263,9 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     // draw title text
     painter.setFont(options()->font(isActive(), false));
-    painter.setBrush(palette.windowText());
+    painter.setPen(palette.windowText());
     painter.drawText(titleLeft, titleTop, titleWidth, titleHeight,
               OxygenFactory::titleAlign() | Qt::AlignVCenter, caption());
-
 
     painter.setRenderHint(QPainter::Antialiasing);
 
