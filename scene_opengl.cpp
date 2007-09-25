@@ -765,7 +765,6 @@ void SceneOpenGL::Texture::init()
 void SceneOpenGL::Texture::createTexture()
     {
     glGenTextures( 1, &mTexture );
-    glBindTexture( mTarget, mTexture );
     if( hasGLVersion( 1, 4, 0 ))
         {
         // Lod bias makes the trilinear-filtered texture look a bit sharper
