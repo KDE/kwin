@@ -67,6 +67,10 @@ Sources and other compositing managers:
 #include <sys/shm.h>
 #include <math.h>
 
+// turns on checks for opengl errors in various places (for easier finding of them)
+// normally only few of them are enabled
+//#define CHECK_GL_ERROR
+
 #ifdef HAVE_OPENGL
 
 namespace KWin
@@ -557,7 +561,13 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     glXWaitX();
     glPushMatrix();
     int mask = 0;
+#ifdef CHECK_GL_ERROR
+    checkGLError( "Paint1" );
+#endif
     paintScreen( &mask, &damage ); // call generic implementation
+#ifdef CHECK_GL_ERROR
+    checkGLError( "Paint2" );
+#endif
     glPopMatrix();
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     flushBuffer( mask, damage );
@@ -834,6 +844,9 @@ QRegion SceneOpenGL::Texture::optimizeBindDamage( const QRegion& reg, int limit 
 bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
     int depth, QRegion region )
     {
+#ifdef CHECK_GL_ERROR
+    checkGLError( "TextureLoad1" );
+#endif
     if( pix == None || size.isEmpty() || depth < 1 )
         return false;
     if( tfp_mode )
@@ -852,6 +865,9 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         setDirty();
         }
 
+#ifdef CHECK_GL_ERROR
+    checkGLError( "TextureLoad2" );
+#endif
     if( tfp_mode )
         { // tfp mode, simply bind the pixmap to texture
         if( mTexture == None )
@@ -869,10 +885,16 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             // the GLXPixmap will reference the X pixmap, so it will be freed automatically
             // when no longer needed
             bound_glxpixmap = glXCreatePixmap( display(), fbcdrawableinfo[ depth ].fbconfig, pix, attrs );
+#ifdef CHECK_GL_ERROR
+            checkGLError( "TextureLoadTFP1" );
+#endif
             findTarget();
             y_inverted = fbcdrawableinfo[ depth ].y_inverted ? true : false;
             can_use_mipmaps = fbcdrawableinfo[ depth ].mipmap ? true : false;
             glBindTexture( mTarget, mTexture );
+#ifdef CHECK_GL_ERROR
+            checkGLError( "TextureLoadTFP2" );
+#endif
             if( !options->glStrictBinding )
                 glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
             }
@@ -892,6 +914,9 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             type = GL_UNSIGNED_SHORT_5_6_5;
             }
         findTarget();
+#ifdef CHECK_GL_ERROR
+            checkGLError( "TextureLoadSHM1" );
+#endif
         if( mTexture == None )
             {
             createTexture();
@@ -925,6 +950,9 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             XFreePixmap( display(), p );
             XFreeGC( display(), gc );
             }
+#ifdef CHECK_GL_ERROR
+        checkGLError( "TextureLoadSHM2" );
+#endif
         y_inverted = true;
         can_use_mipmaps = true;
 #endif
@@ -973,6 +1001,9 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         y_inverted = false;
         can_use_mipmaps = true;
         }
+#ifdef CHECK_GL_ERROR
+    checkGLError( "TextureLoad0" );
+#endif
     return true;
     }
 
