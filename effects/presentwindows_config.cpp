@@ -17,6 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <KActionCollection>
 #include <kaction.h>
 #include <KShortcutsEditor>
+#include <KGlobalAccel>
 
 #include <QWidget>
 #include <QGridLayout>
@@ -54,14 +55,15 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Expanding), 3, 0, 1, 3);
 
     // Shortcut config
-    mActionCollection = new KActionCollection( this );
-    KAction* a = (KAction*)mActionCollection->addAction( "Expose" );
+    KGlobalAccel::self()->overrideMainComponentData(componentData());
+    KActionCollection* actionCollection = new KActionCollection( this );
+    KAction* a = (KAction*)actionCollection->addAction( "Expose" );
     a->setText( i18n("Toggle Expose effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
-    KAction* b = (KAction*)mActionCollection->addAction( "ExposeAll" );
+    KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
     b->setText( i18n("Toggle Expose effect (incl other desktops)" ));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
-    KShortcutsEditor* shortcutEditor = new KShortcutsEditor(mActionCollection, this,
+    KShortcutsEditor* shortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     connect(shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
     layout->addWidget(shortcutEditor, 4, 0, 1, 3);
@@ -106,8 +108,6 @@ void PresentWindowsEffectConfig::load()
         activateAllBorder--;
     mActivateAllCombo->setCurrentIndex(activateAllBorder);
 
-    mActionCollection->readSettings(&conf);
-
     emit changed(false);
     }
 
@@ -127,8 +127,6 @@ void PresentWindowsEffectConfig::save()
     if(activateAllBorder == (int)ELECTRIC_COUNT)
         activateAllBorder = (int)ElectricNone;
     conf.writeEntry("BorderActivateAll", activateAllBorder);
-
-    mActionCollection->writeSettings(&conf);
 
     conf.sync();
 

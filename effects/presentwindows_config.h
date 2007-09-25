@@ -16,7 +16,6 @@ License. See the file "COPYING" for the exact licensing terms.
 #undef KDE3_SUPPORT
 
 class QComboBox;
-class KActionCollection;
 
 namespace KWin
 {
@@ -38,7 +37,6 @@ class PresentWindowsEffectConfig : public KCModule
     private:
         QComboBox* mActivateCombo;
         QComboBox* mActivateAllCombo;
-        KActionCollection* mActionCollection;
     };
 
 } // namespace
