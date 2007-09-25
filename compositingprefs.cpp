@@ -32,6 +32,10 @@ CompositingPrefs::~CompositingPrefs()
 void CompositingPrefs::detect()
     {
 #ifdef HAVE_OPENGL
+    // remember and later restore active context
+    GLXContext oldcontext = glXGetCurrentContext();
+    GLXDrawable olddrawable = glXGetCurrentDrawable();
+    GLXDrawable oldreaddrawable = glXGetCurrentReadDrawable();
     if( createGLXContext() )
         {
         detectDriverAndVersion();
@@ -39,6 +43,8 @@ void CompositingPrefs::detect()
 
         deleteGLXContext();
         }
+    if( oldcontext != NULL )
+        glXMakeContextCurrent( display(), olddrawable, oldreaddrawable, oldcontext );
 #endif
     }
 
