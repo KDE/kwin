@@ -1054,6 +1054,7 @@ void Workspace::slotReinitCompositing()
     {
     // Reparse config. Config options will be reloaded by setupCompositing()
     KGlobal::config()->reparseConfiguration();
+    options->updateSettings();
 
     // Stop any current compositing
     finishCompositing();
