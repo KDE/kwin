@@ -66,11 +66,6 @@ namespace KWin
 void Workspace::setupCompositing()
     {
 #if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
-    // Driver-specific config detection
-    CompositingPrefs prefs;
-    prefs.detect();
-    options->reloadCompositingSettings( prefs );
-
     if( !options->useCompositing )
         {
         kDebug( 1212 ) << "Compositing is turned off in options";

@@ -201,6 +201,11 @@ unsigned long Options::updateSettings()
 //    QToolTip::setGloballyEnabled( d->show_tooltips );
 // KDE4 this probably needs to be done manually in clients
 
+    // Driver-specific config detection
+    CompositingPrefs prefs;
+    prefs.detect();
+    reloadCompositingSettings( prefs );
+
     return changed;
     }
 

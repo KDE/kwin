@@ -34,7 +34,6 @@ class Options : public KDecorationOptions
         ~Options();
 
         virtual unsigned long updateSettings();
-        void reloadCompositingSettings(const CompositingPrefs& prefs);
 
         /*!
           Different focus policies:
@@ -339,6 +338,7 @@ class Options : public KDecorationOptions
         QStringList ignoreFocusStealingClasses;
 
         MouseCommand wheelToMouseCommand( MouseWheelCommand com, int delta );
+        void reloadCompositingSettings(const CompositingPrefs& prefs);
     };
 
 extern Options* options;
