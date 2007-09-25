@@ -14,6 +14,9 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <KActionCollection>
+#include <kaction.h>
+#include <KShortcutsEditor>
 
 #include <QWidget>
 #include <QGridLayout>
@@ -50,12 +53,21 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
 
     layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Expanding), 3, 0, 1, 3);
 
-    layout->addWidget(new QLabel(i18n("Activation shortcuts:"), this), 4, 0, 1, 3);
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed), 5, 0, 2, 1);
-    layout->addWidget(new QLabel(i18n("for windows on current desktop: Ctrl+F10"), this), 5, 1, 1, 2);
-    layout->addWidget(new QLabel(i18n("for windows on all desktops: Ctrl+F11"), this), 6, 1, 1, 2);
+    // Shortcut config
+    mActionCollection = new KActionCollection( this );
+    KAction* a = (KAction*)mActionCollection->addAction( "Expose" );
+    a->setText( i18n("Toggle Expose effect" ));
+    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
+    KAction* b = (KAction*)mActionCollection->addAction( "ExposeAll" );
+    b->setText( i18n("Toggle Expose effect (incl other desktops)" ));
+    b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
+    KShortcutsEditor* shortcutEditor = new KShortcutsEditor(mActionCollection, this,
+            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
+    connect(shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
+    layout->addWidget(shortcutEditor, 4, 0, 1, 3);
 
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 7, 0, 1, 3);
+    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 5, 0, 1, 3);
+
 
     load();
     }
@@ -93,6 +105,9 @@ void PresentWindowsEffectConfig::load()
     if(activateAllBorder == (int)ElectricNone)
         activateAllBorder--;
     mActivateAllCombo->setCurrentIndex(activateAllBorder);
+
+    mActionCollection->readSettings(&conf);
+
     emit changed(false);
     }
 
@@ -112,6 +127,9 @@ void PresentWindowsEffectConfig::save()
     if(activateAllBorder == (int)ELECTRIC_COUNT)
         activateAllBorder = (int)ElectricNone;
     conf.writeEntry("BorderActivateAll", activateAllBorder);
+
+    mActionCollection->writeSettings(&conf);
+
     conf.sync();
 
     emit changed(false);
