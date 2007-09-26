@@ -77,10 +77,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.setupUi(this);
     ui.tabWidget->setCurrentIndex(0);
 
-    // Driver-specific config detection
-    mDefaultPrefs.detect();
-
-
     connect(ui.advancedOptions, SIGNAL(clicked()), this, SLOT(showAdvancedOptions()));
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
@@ -101,10 +97,22 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     mTmpConfigFile.open();
     mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
 
-    initEffectSelector();
+    if( CompositingPrefs::compositingPossible() )
+    {
+        // Driver-specific config detection
+        mDefaultPrefs.detect();
 
-    // Load config
-    load();
+        initEffectSelector();
+
+        // Load config
+        load();
+    }
+    else
+    {
+        ui.useCompositing->setEnabled(false);
+        ui.useCompositing->setChecked(false);
+        compositingEnabled(false);
+    }
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
             ki18n("KWin Desktop Effects Configuration Module"),
