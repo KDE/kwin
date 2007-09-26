@@ -765,11 +765,6 @@ void SceneOpenGL::Texture::init()
 void SceneOpenGL::Texture::createTexture()
     {
     glGenTextures( 1, &mTexture );
-    if( hasGLVersion( 1, 4, 0 ))
-        {
-        // Lod bias makes the trilinear-filtered texture look a bit sharper
-        glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, -1.0f );
-        }
     }
 
 void SceneOpenGL::Texture::discard()
@@ -1038,10 +1033,19 @@ void SceneOpenGL::Texture::bind()
         glXBindTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT, NULL );
         }
     enableFilter();
+    if( hasGLVersion( 1, 4, 0 ))
+        {
+        // Lod bias makes the trilinear-filtered texture look a bit sharper
+        glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, -1.0f );
+        }
     }
 
 void SceneOpenGL::Texture::unbind()
     {
+    if( hasGLVersion( 1, 4, 0 ))
+        {
+        glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 0.0f );
+        }
     if( tfp_mode && options->glStrictBinding )
         {
         assert( bound_glxpixmap != None );
