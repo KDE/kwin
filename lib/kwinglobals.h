@@ -95,6 +95,41 @@ KWIN_EXPORT int displayHeight()
     return XDisplayHeight( display(), DefaultScreen( display()));
     }
 
+class KWIN_EXPORT Extensions
+    {
+    public:
+        static void init();
+        static bool shapeAvailable() { return shape_version > 0; }
+        static bool shapeInputAvailable();
+        static int shapeNotifyEvent();
+        static bool hasShape( Window w );
+        static bool randrAvailable() { return has_randr; }
+        static int randrNotifyEvent();
+        static bool damageAvailable() { return has_damage; }
+        static int damageNotifyEvent();
+        static bool compositeAvailable() { return composite_version > 0; }
+        static bool compositeOverlayAvailable();
+        static bool renderAvailable() { return render_version > 0; }
+        static bool fixesAvailable() { return fixes_version > 0; }
+        static bool fixesRegionAvailable();
+        static bool glxAvailable() { return has_glx; }
+        static bool syncAvailable() { return has_sync; }
+        static int syncAlarmNotifyEvent();
+    private:
+        static int shape_version;
+        static int shape_event_base;
+        static bool has_randr;
+        static int randr_event_base;
+        static bool has_damage;
+        static int damage_event_base;
+        static int composite_version;
+        static int render_version;
+        static int fixes_version;
+        static bool has_glx;
+        static bool has_sync;
+        static int sync_event_base;
+    };
+
 } // namespace
 
 #endif
