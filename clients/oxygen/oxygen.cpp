@@ -42,7 +42,7 @@ namespace Oxygen
 //////////////////////////////////////////////////////////////////////////////
 
 bool OxygenFactory::initialized_ = false;
-Qt::Alignment OxygenFactory::titlealign_ = Qt::AlignHCenter;
+Qt::Alignment OxygenFactory::titlealign_ = Qt::AlignLeft;
 
 //////////////////////////////////////////////////////////////////////////////
 // OxygenFactory()
@@ -107,7 +107,7 @@ bool OxygenFactory::readConfig()
 
     // grab settings
     Qt::Alignment oldalign = titlealign_;
-    QString value = group.readEntry("TitleAlignment", "AlignHCenter");
+    QString value = group.readEntry("TitleAlignment", "AlignLeft");
     if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
     else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
