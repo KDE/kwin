@@ -71,16 +71,11 @@ void Workspace::setupCompositing()
         kDebug( 1212 ) << "Compositing is turned off in options";
         return;
         }
-    if( !Extensions::compositeAvailable())
-        {
-        kDebug( 1212 ) << "No composite extension available";
+    else if( !CompositingPrefs::compositingPossible() )
+    {
+        kDebug( 1212 ) << "Compositing isn't possible";
         return;
-        }
-    if( !Extensions::damageAvailable())
-        {
-        kDebug( 1212 ) << "No damage extension available";
-        return;
-        }
+    }
     if( scene != NULL )
         return;
     char selection_name[ 100 ];

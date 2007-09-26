@@ -10,8 +10,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "compositingprefs.h"
 
-#include "options.h"
-#include "utils.h"
+#include "kwinglobals.h"
 
 #include <kdebug.h>
 #include <kxerrorhandler.h>
@@ -30,8 +29,34 @@ CompositingPrefs::~CompositingPrefs()
     {
     }
 
+bool CompositingPrefs::compositingPossible()
+    {
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+    Extensions::init();
+    if( !Extensions::compositeAvailable())
+        {
+        kDebug( 1212 ) << "No composite extension available";
+        return false;
+        }
+    if( !Extensions::damageAvailable())
+        {
+        kDebug( 1212 ) << "No damage extension available";
+        return false;
+        }
+
+    return true;
+#else
+    return false;
+#endif
+    }
+
 void CompositingPrefs::detect()
     {
+    if( !compositingPossible())
+        {
+        return;
+        }
+
 #ifdef HAVE_OPENGL
     // remember and later restore active context
     GLXContext oldcontext = glXGetCurrentContext();

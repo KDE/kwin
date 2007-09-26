@@ -40,6 +40,7 @@ public:
         bool operator>=( const Version& v ) const  { return ( compare( v ) != -1 ); }
     };
 
+    static bool compositingPossible();
     bool enableCompositing() const  { return mEnableCompositing; }
     bool enableVSync() const  { return mEnableVSync; }
     bool enableDirectRendering() const  { return mEnableDirectRendering; }
