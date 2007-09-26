@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "utils.h"
 
 #include <kdebug.h>
+#include <kxerrorhandler.h>
 
 
 namespace KWin
@@ -51,6 +52,7 @@ void CompositingPrefs::detect()
 bool CompositingPrefs::createGLXContext()
 {
 #ifdef HAVE_OPENGL
+    KXErrorHandler handler;
     // Most of this code has been taken from glxinfo.c
     QVector<int> attribs;
     attribs << GLX_RGBA;
@@ -92,7 +94,7 @@ bool CompositingPrefs::createGLXContext()
                        0, visinfo->depth, InputOutput,
                        visinfo->visual, mask, &attr );
 
-    return glXMakeCurrent( display(), mGLWindow, mGLContext );
+    return glXMakeCurrent( display(), mGLWindow, mGLContext ) && !handler.error( true );
 #else
    return false;
 #endif
