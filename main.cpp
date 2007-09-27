@@ -19,6 +19,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdlib.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
+#include <kcrash.h>
 #include <unistd.h>
 #include <signal.h>
 #include <fcntl.h>
@@ -84,6 +85,8 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
     return 0;
     }
 
+int Application::crashes = 0;
+
 Application::Application( )
 : KApplication( ), owner( screen_number )
     {
@@ -105,6 +108,18 @@ Application::Application( )
         ::exit(1);
         }
     connect( &owner, SIGNAL( lostOwnership()), SLOT( lostSelection()));
+
+    KCrash::setEmergencySaveFunction( Application::crashHandler );
+    crashes = args->getOption("crashes").toInt();
+    // Disable compositing if we have had too many crashes
+    if( crashes >= 2 )
+    {
+        kDebug() << "Too many crashes recently, disabling compositing";
+        KConfigGroup compgroup( config, "Compositing" );
+        compgroup.writeEntry( "Enabled", false );
+    }
+    // Reset crashes count if we stay up for more that 15 seconds
+    QTimer::singleShot( 15*1000, this, SLOT( resetCrashesCount() ));
 
     // if there was already kwin running, it saved its configuration after loosing the selection -> reread
     config->reparseConfiguration();
@@ -176,6 +191,23 @@ bool Application::notify( QObject* o, QEvent* e )
 static void sighandler(int)
     {
     QApplication::exit();
+    }
+
+void Application::crashHandler(int signal)
+    {
+    crashes++;
+
+    fprintf( stderr, "Application::crashHandler() called with signal %d; recent crashes: %d\n", signal, crashes );
+    char cmd[1024];
+    sprintf( cmd, "kwin --crashes %d &", crashes );
+
+    sleep( 1 );
+    system( cmd );
+    }
+
+void Application::resetCrashesCount()
+    {
+    crashes = 0;
     }
 
 
@@ -267,6 +299,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     KCmdLineOptions args;
     args.add("lock", ki18n("Disable configuration options"));
     args.add("replace", ki18n("Replace already-running ICCCM2.0-compliant window manager"));
+    args.add("crashes <n>", ki18n("Indicate that KWin has recently crashed n times"));
     KCmdLineArgs::addCmdLineOptions( args );
 
     if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
