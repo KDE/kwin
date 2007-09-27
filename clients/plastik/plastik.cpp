@@ -26,7 +26,6 @@
 
 #include <kconfig.h>
 #include <QPixmap>
-#include <kpixmapeffect.h>
 
 #include "misc.h"
 #include "plastik.h"
@@ -239,18 +238,14 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
             const int gradientHeight = 2 + titleBarTileHeight-1;
             QPixmap gradient(1, gradientHeight);
             QPainter painter(&gradient);
-            QPixmap tempPixmap( 1, 4 );
-            KPixmapEffect::gradient(tempPixmap,
-                                    getColor(TitleGradient1, active),
-                                    getColor(TitleGradient2, active),
-                                    KPixmapEffect::VerticalGradient);
-            painter.drawPixmap(0,0, tempPixmap);
-            tempPixmap = QPixmap(1, gradientHeight-4);
-            KPixmapEffect::gradient(tempPixmap,
-                                    getColor(TitleGradient2, active),
-                                    getColor(TitleGradient3, active),
-                                    KPixmapEffect::VerticalGradient);
-            painter.drawPixmap(0,4, tempPixmap);
+            painter.setPen(Qt::NoPen);
+            QLinearGradient grad(0, 0, 0, gradientHeight);
+            grad.setColorAt(0.0,                                  getColor(TitleGradient1, active));
+            grad.setColorAt(4.0 / (double)gradientHeight,         getColor(TitleGradient2, active));
+            grad.setColorAt(1.0 - (4.0 / (double)gradientHeight), getColor(TitleGradient2, active));
+            grad.setColorAt(1.0,                                  getColor(TitleGradient3, active));
+            painter.setBrush(grad);
+            painter.drawRect(0, 0, 1, gradientHeight);
             painter.end();
 
             // actual titlebar tiles

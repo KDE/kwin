@@ -29,7 +29,6 @@
 #include <QBitmap>
 #include <QPainter>
 #include <QPixmap>
-#include <kpixmapeffect.h>
 #include <QTimer>
 
 #include "plastikbutton.moc"
@@ -212,49 +211,22 @@ void PlastikButton::drawButton(QPainter *painter)
     bP.drawTiledPixmap(0, 0, width(), width(), m_client->getTitleBarTile(active) );
 
     if (type() != MenuButton || hover || animProgress != 0) {
+        int rx = 200/width();
+        int ry = 200/height();
+        bP.setPen(Qt::NoPen);
+        bP.setRenderHints(QPainter::Antialiasing);
         // contour
-        bP.setPen(contourTop);
-        bP.drawLine(r.x()+2, r.y(), r.right()-2, r.y() );
-        bP.drawPoint(r.x()+1, r.y()+1);
-        bP.drawPoint(r.right()-1, r.y()+1);
-        bP.setPen(contourBottom);
-        bP.drawLine(r.x()+2, r.bottom(), r.right()-2, r.bottom() );
-        bP.drawPoint(r.x()+1, r.bottom()-1);
-        bP.drawPoint(r.right()-1, r.bottom()-1);
-        // sides of the contour
-        tempPixmap = QPixmap( 1, r.height()-2*2 );
-        KPixmapEffect::gradient(tempPixmap,
-                                contourTop,
-                                contourBottom,
-                                KPixmapEffect::VerticalGradient);
-        bP.drawPixmap(r.x(), r.y()+2, tempPixmap);
-        bP.drawPixmap(r.right(), r.y()+2, tempPixmap);
-        // sort of anti-alias for the contour
-        bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradient2, active),
-                contourTop, 150) );
-        bP.drawPoint(r.x()+1, r.y());
-        bP.drawPoint(r.right()-1, r.y());
-        bP.drawPoint(r.x(), r.y()+1);
-        bP.drawPoint(r.right(), r.y()+1);
-        bP.setPen(alphaBlendColors(Handler()->getColor(TitleGradient3, active),
-                contourBottom, 150) );
-        bP.drawPoint(r.x()+1, r.bottom());
-        bP.drawPoint(r.right()-1, r.bottom());
-        bP.drawPoint(r.x(), r.bottom()-1);
-        bP.drawPoint(r.right(), r.bottom()-1);
-        // sourface
-        // fill top and bottom
-        bP.setPen(sourfaceTop);
-        bP.drawLine(r.x()+2, r.y()+1, r.right()-2, r.y()+1 );
-        bP.setPen(sourfaceBottom);
-        bP.drawLine(r.x()+2, r.bottom()-1, r.right()-2, r.bottom()-1 );
-        // fill the rest! :)
-        tempPixmap = QPixmap(1, r.height()-2*2);
-        KPixmapEffect::gradient(tempPixmap,
-                                sourfaceTop,
-                                sourfaceBottom,
-                                KPixmapEffect::VerticalGradient);
-        bP.drawTiledPixmap(r.x()+1, r.y()+2, r.width()-2, r.height()-4, tempPixmap);
+        QLinearGradient outlineGradient(0, 0, 0, r.height());
+        outlineGradient.setColorAt(0.0, contourTop);
+        outlineGradient.setColorAt(1.0, contourBottom);
+        bP.setBrush(outlineGradient);
+        bP.drawRoundRect(r, rx, ry);
+        // surface
+        QLinearGradient surfaceGradient(0, 0, 0, r.height());
+        surfaceGradient.setColorAt(0.0, sourfaceTop);
+        surfaceGradient.setColorAt(1.0, sourfaceBottom);
+        bP.setBrush(surfaceGradient);
+        bP.drawRoundRect(r.adjusted(1,1,-1,-1), rx, ry);
     }
 
     if (type() == MenuButton)
