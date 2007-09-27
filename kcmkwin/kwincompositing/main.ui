@@ -13,7 +13,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <property name="currentIndex" >
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
       <attribute name="title" >
@@ -105,6 +105,9 @@
           </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="statusLabel" />
        </item>
        <item>
         <spacer>

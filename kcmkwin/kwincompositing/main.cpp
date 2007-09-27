@@ -76,6 +76,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 {
     ui.setupUi(this);
     ui.tabWidget->setCurrentIndex(0);
+    ui.statusLabel->hide();
 
     connect(ui.advancedOptions, SIGNAL(clicked()), this, SLOT(showAdvancedOptions()));
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
@@ -112,6 +113,9 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
         ui.useCompositing->setEnabled(false);
         ui.useCompositing->setChecked(false);
         compositingEnabled(false);
+
+        ui.statusLabel->setText(i18n("Compositing is not supported on your system.\n"));
+        ui.statusLabel->show();
     }
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
