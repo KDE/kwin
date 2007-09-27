@@ -28,6 +28,11 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <fixx11h.h>
 #include <QtDBus/QtDBus>
 
+#include <kdialog.h>
+#include <QLabel>
+#include <QComboBox>
+#include <QVBoxLayout>
+
 #include "atoms.h"
 #include "options.h"
 #include "sm.h"
@@ -85,6 +90,46 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
     return 0;
     }
 
+
+class AlternativeWMDialog : public KDialog
+{
+    public:
+        AlternativeWMDialog() : KDialog()
+        {
+            setButtons( KDialog::Ok );
+
+            QWidget* mainWidget = new QWidget( this );
+            QVBoxLayout* layout = new QVBoxLayout( mainWidget );
+            QString text = i18n("KWin is unstable.\n"
+                                "It seems to have crashed several times in a row.\n"
+                                "You can select another window manager to run:");
+            QLabel* textLabel = new QLabel( text, mainWidget );
+            layout->addWidget( textLabel );
+            wmList = new QComboBox( mainWidget );
+            wmList->setEditable( true );
+            layout->addWidget( wmList );
+
+            addWM( "metacity" );
+            addWM( "openbox" );
+            addWM( "fvwm2" );
+            addWM( "kwin" );
+
+            setMainWidget(mainWidget);
+
+            raise();
+            centerOnScreen( this );
+        }
+        void addWM( const QString& wm )
+        {
+            // TODO: check if wm is installed
+            wmList->addItem( wm );
+        }
+        QString selectedWM() const  { return wmList->currentText(); }
+
+    private:
+        QComboBox* wmList;
+};
+
 int Application::crashes = 0;
 
 Application::Application( )
@@ -111,6 +156,23 @@ Application::Application( )
 
     KCrash::setEmergencySaveFunction( Application::crashHandler );
     crashes = args->getOption("crashes").toInt();
+    if(crashes >= 4)
+    {
+        // Something has gone seriously wrong
+        AlternativeWMDialog dialog;
+        dialog.exec();
+        QString cmd = dialog.selectedWM();
+        if( cmd.length() > 500 )
+        {
+            kDebug() << "Command is too long, truncating";
+            cmd = cmd.left(500);
+        }
+        kDebug() << "Starting" << cmd << "and exiting";
+        char buf[1024];
+        sprintf(buf, "%s &", cmd.toAscii().data());
+        system(buf);
+        ::exit(1);
+    }
     // Disable compositing if we have had too many crashes
     if( crashes >= 2 )
     {
@@ -176,7 +238,7 @@ void Application::lostSelection()
 
 bool Application::x11EventFilter( XEvent *e )
     {
-    if ( Workspace::self()->workspaceEvent( e ) )
+    if ( Workspace::self() && Workspace::self()->workspaceEvent( e ) )
              return true;
     return KApplication::x11EventFilter( e );
     }
