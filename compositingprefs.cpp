@@ -58,6 +58,12 @@ void CompositingPrefs::detect()
         }
 
 #ifdef HAVE_OPENGL
+    if( !Extensions::glxAvailable())
+        {
+        kDebug( 1212 ) << "No GLX available";
+        return;
+        }
+
     // remember and later restore active context
     GLXContext oldcontext = glXGetCurrentContext();
     GLXDrawable olddrawable = glXGetCurrentDrawable();
