@@ -161,7 +161,7 @@ Application::Application( )
         // Something has gone seriously wrong
         AlternativeWMDialog dialog;
         QString cmd = "kwin";
-        if( dialog.exec() == KDialog::Ok )
+        if( dialog.exec() == QDialog::Accepted )
         {
             cmd = dialog.selectedWM();
         }
