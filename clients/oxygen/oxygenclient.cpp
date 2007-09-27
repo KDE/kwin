@@ -302,14 +302,14 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     qreal posX = frame.width() - 2.5;
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(0, 0, 0, 66));
-    renderDot(&painter, QPointF(posX, cenY - 5), 2.5);
-    renderDot(&painter, QPointF(posX, cenY), 2.5);
-    renderDot(&painter, QPointF(posX, cenY + 5), 2.5);
+    renderDot(&painter, QPointF(posX, cenY - 3), 1.8);
+    renderDot(&painter, QPointF(posX, cenY), 1.8);
+    renderDot(&painter, QPointF(posX, cenY + 3), 1.8);
 
     painter.translate(frame.width()-9, frame.height()-9);
-    renderDot(&painter, QPointF(0.5, 6.5), 2.5);
-    renderDot(&painter, QPointF(5.5, 5.5), 2.5);
-    renderDot(&painter, QPointF(6.5, 0.5), 2.5);
+    renderDot(&painter, QPointF(2.5, 6.5), 1.8);
+    renderDot(&painter, QPointF(5.5, 5.5), 1.8);
+    renderDot(&painter, QPointF(6.5, 2.5), 1.8);
 }
 
 void OxygenClient::doShape()
