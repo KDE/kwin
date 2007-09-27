@@ -910,7 +910,7 @@ void KDE2Client::paintEvent( QPaintEvent* )
 
 	// Draw an outer black frame
 	p.setPen(Qt::black);
-	p.drawRect(x,y,w,h);
+	p.drawRect(x,y,w-1,h-1);
 
         // Draw part of the frame that is the titlebar color
 	g = options()->palette(ColorTitleBar, isActive());
@@ -959,16 +959,16 @@ void KDE2Client::paintEvent( QPaintEvent* )
 	{
 		if(w > 50)
 		{
-			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+2, 2*borderWidth+12, grabBorderWidth-2,
+			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+3, 2*borderWidth+12, grabBorderWidth-2,
 							g, false, 1, &g.brush(QPalette::Mid));
-			qDrawShadePanel(&p, x+2*borderWidth+13, y2-grabBorderWidth+2, w-4*borderWidth-26, grabBorderWidth-2,
+			qDrawShadePanel(&p, x+2*borderWidth+13, y2-grabBorderWidth+3, w-4*borderWidth-26, grabBorderWidth-2,
 							g, false, 1, isActive() ?
 							&g.brush(QPalette::Background) :
 							&g.brush(QPalette::Mid));
-			qDrawShadePanel(&p, x2-2*borderWidth-12, y2-grabBorderWidth+2, 2*borderWidth+12, grabBorderWidth-2,
+			qDrawShadePanel(&p, x2-2*borderWidth-12, y2-grabBorderWidth+3, 2*borderWidth+12, grabBorderWidth-2,
 							g, false, 1, &g.brush(QPalette::Mid));
 		} else
-			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+2, w-2, grabBorderWidth-2,
+			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+3, w-2, grabBorderWidth-2,
 							g, false, 1, isActive() ?
 							&g.brush(QPalette::Background) :
 							&g.brush(QPalette::Mid));
@@ -982,7 +982,7 @@ void KDE2Client::paintEvent( QPaintEvent* )
 
     // Draw a frame around the wrapped widget.
     p.setPen( g.color( QPalette::Dark ) );
-    p.drawRect( x+borderWidth-1, y+titleHeight+3, w-2*borderWidth+2, h-titleHeight-offset-2 );
+    p.drawRect( x+borderWidth-1, y+titleHeight+3, w-2*borderWidth+1, h-titleHeight-offset-2 );
 
     // Draw the title bar.
 	r = titleRect();
