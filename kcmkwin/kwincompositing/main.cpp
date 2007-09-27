@@ -114,7 +114,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
         ui.useCompositing->setChecked(false);
         compositingEnabled(false);
 
-        ui.statusLabel->setText(i18n("Compositing is not supported on your system.\n"));
+        ui.statusLabel->setText(i18n("Compositing is not supported on your system."));
         ui.statusLabel->show();
     }
 
