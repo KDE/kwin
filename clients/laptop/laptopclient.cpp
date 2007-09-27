@@ -8,15 +8,12 @@
 
 #include <kconfig.h> // up here to avoid X11 header conflict :P
 #include "laptopclient.h"
-#include <qdrawutil.h>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QPaintEvent>
-#include <kpixmapeffect.h>
-#include <kglobal.h>
-#include <klocale.h>
 #include <QBitmap>
 #include <QPainter>
+#include <kglobal.h>
+#include <klocale.h>
 
 namespace Laptop {
 
@@ -78,6 +75,16 @@ extern "C" KDE_EXPORT KDecorationFactory* create_factory()
 static inline const KDecorationOptions* options()
 {
     return KDecoration::options();
+}
+
+static void gradientFill(QPixmap *pixmap, const QColor &color1, const QColor &color2, bool diagonal = false)
+{
+	QPainter p(pixmap);
+	QLinearGradient gradient(0, 0, diagonal ? pixmap->width() : 0, pixmap->height());
+	gradient.setColorAt(0.0, color1);
+	gradient.setColorAt(1.0, color2);
+	QBrush brush(gradient);
+	p.fillRect(pixmap->rect(), brush);
 }
 
 static void drawButtonFrame(QPixmap *pix, const QPalette &g, bool sunken)
@@ -147,15 +154,9 @@ static void create_pixmaps()
         aUpperGradient = new QPixmap(32, titleHeight+2);
         iUpperGradient = new QPixmap(32, titleHeight+2);
         QColor bgColor = options()->color(KDecoration::ColorTitleBar, true);
-        KPixmapEffect::gradient(*aUpperGradient,
-                                bgColor.light(120),
-                                bgColor.dark(120),
-                                KPixmapEffect::VerticalGradient);
+	gradientFill(aUpperGradient, bgColor.light(120), bgColor.dark(120));
         bgColor = options()->color(KDecoration::ColorTitleBar, false);
-        KPixmapEffect::gradient(*iUpperGradient,
-                                bgColor.light(120),
-                                bgColor.dark(120),
-                                KPixmapEffect::VerticalGradient);
+	gradientFill(iUpperGradient, bgColor.light(120), bgColor.dark(120));
     }
     // buttons (active/inactive, sunken/unsunken, 2 sizes each)
     QPalette g = options()->palette(KDecoration::ColorButtonBg, true);
@@ -170,25 +171,17 @@ static void create_pixmaps()
     iBtnPix2 = new QPixmap(btnWidth2, titleHeight);
     iBtnDownPix2 = new QPixmap(btnWidth2, titleHeight);
     if(QPixmap::defaultDepth() > 8){
-        KPixmapEffect::gradient(*btnPix1, c.light(120), c.dark(130),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*btnDownPix1, c.dark(130), c.light(120),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*btnPix2, c.light(120), c.dark(130),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*btnDownPix2, c.dark(130), c.light(120),
-                                KPixmapEffect::DiagonalGradient);
+        gradientFill(btnPix1, c.light(120), c.dark(130), true);
+        gradientFill(btnPix2, c.light(120), c.dark(130), true);
+        gradientFill(btnDownPix1, c.light(120), c.dark(130), true);
+        gradientFill(btnDownPix2, c.light(120), c.dark(130), true);
         g = options()->palette(KDecoration::ColorButtonBg, false);
         g.setCurrentColorGroup( QPalette::Active );
         c = g.color(QPalette::Background);
-        KPixmapEffect::gradient(*iBtnPix1, c.light(120), c.dark(130),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*iBtnDownPix1, c.dark(130), c.light(120),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*iBtnPix2, c.light(120), c.dark(130),
-                                KPixmapEffect::DiagonalGradient);
-        KPixmapEffect::gradient(*iBtnDownPix2, c.dark(130), c.light(120),
-                                KPixmapEffect::DiagonalGradient);
+        gradientFill(iBtnPix1, c.light(120), c.dark(130), true);
+        gradientFill(iBtnPix2, c.light(120), c.dark(130), true);
+        gradientFill(iBtnDownPix1, c.light(120), c.dark(130), true);
+        gradientFill(iBtnDownPix2, c.light(120), c.dark(130), true);
     }
     else{
         btnPix1->fill(c.rgb());
