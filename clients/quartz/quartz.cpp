@@ -19,7 +19,6 @@
 #include <kconfig.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kpixmapeffect.h>
 #include <QBitmap>
 #include <QImage>
 #include <QPixmap>
@@ -269,7 +268,13 @@ void QuartzHandler::drawBlocks( QPixmap *pi, QPixmap &p, const QColor &c1, const
 	px.begin( pi );
 
 	// Draw a background gradient first
-	KPixmapEffect::gradient(p, c1, c2, KPixmapEffect::HorizontalGradient);
+    QPainter gp(&p);
+    QLinearGradient grad(0, 0, p.width(), 0);
+    grad.setColorAt(0.0, c1);
+    grad.setColorAt(1.0, c2);
+    gp.setPen(Qt::NoPen);
+    gp.setBrush(grad);
+    gp.drawRect(p.rect());
 
 	int factor = (pi->height()-2)/4;
 	int square = factor - (factor+2)/4;
