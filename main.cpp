@@ -29,6 +29,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QtDBus/QtDBus>
 
 #include <kdialog.h>
+#include <kstandarddirs.h>
 #include <QLabel>
 #include <QComboBox>
 #include <QVBoxLayout>
@@ -122,7 +123,10 @@ class AlternativeWMDialog : public KDialog
         void addWM( const QString& wm )
         {
             // TODO: check if wm is installed
-            wmList->addItem( wm );
+            if( !KStandardDirs::findExe( wm ).isEmpty() )
+            {
+                wmList->addItem( wm );
+            }
         }
         QString selectedWM() const  { return wmList->currentText(); }
 
