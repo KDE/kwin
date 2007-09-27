@@ -8,7 +8,7 @@ set(kwin3_kde2_PART_SRCS kde2.cpp)
 
 kde4_add_plugin(kwin3_kde2 ${kwin3_kde2_PART_SRCS})
 
-target_link_libraries(kwin3_kde2 ${KDE4_KDEFX_LIBS} kdecorations ${QT_QTGUI_LIBRARY})
+target_link_libraries(kwin3_kde2 kdecorations ${QT_QTGUI_LIBRARY})
 
 install(TARGETS kwin3_kde2  DESTINATION ${PLUGIN_INSTALL_DIR})
 

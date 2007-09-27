@@ -17,7 +17,6 @@
 
 #include <kconfig.h>
 #include <kglobal.h>
-#include <kpixmapeffect.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -274,6 +273,15 @@ unsigned long KDE2Handler::readConfig( bool update )
         return changed;
 }
 
+static void gradientFill(QPixmap *pixmap, const QColor &color1, const QColor &color2)
+{
+	QPainter p(pixmap);
+	QLinearGradient gradient(0, 0, 0, pixmap->height());
+	gradient.setColorAt(0.0, color1);
+	gradient.setColorAt(1.0, color2);
+	QBrush brush(gradient);
+	p.fillRect(pixmap->rect(), brush);
+}
 
 // This paints the button pixmaps upon loading the style.
 void KDE2Handler::createPixmaps()
@@ -321,24 +329,19 @@ void KDE2Handler::createPixmaps()
 
 	if(highcolor)
 	{
+		QSize s(128, normalTitleHeight + 2);
 		// Create the titlebar gradients
 		if (activeTitleColor1 != activeTitleColor2)
 		{
-			aUpperGradient = new QPixmap(128, normalTitleHeight+2);
-			KPixmapEffect::gradient(*aUpperGradient,
-				activeTitleColor1,
-				activeTitleColor2,
-				KPixmapEffect::VerticalGradient);
+
+			aUpperGradient = new QPixmap(s);
+			gradientFill(aUpperGradient, activeTitleColor1, activeTitleColor2);
 		}
 
 		if (inactiveTitleColor1 != inactiveTitleColor2)
 		{
-			iUpperGradient = new QPixmap(128, normalTitleHeight+2);
-
-			KPixmapEffect::gradient(*iUpperGradient,
-					inactiveTitleColor1,
-					inactiveTitleColor2,
-			KPixmapEffect::VerticalGradient);
+			iUpperGradient = new QPixmap(s);
+			gradientFill(iUpperGradient, inactiveTitleColor1, inactiveTitleColor2);
 		}
 	}
 
@@ -500,8 +503,7 @@ void KDE2Handler::drawButtonBackground(QPixmap *pix,
 
 	// Fill the background with a gradient if possible
 	if (highcolor)
-		KPixmapEffect::gradient(*pix, c.light(130), c.dark(130),
-								KPixmapEffect::VerticalGradient);
+		gradientFill(pix, c.light(130), c.dark(130));
 	else
 		pix->fill(c);
 
@@ -514,7 +516,7 @@ void KDE2Handler::drawButtonBackground(QPixmap *pix,
     p.drawLine(x2, 0, x2, y2);
     p.drawLine(0, x2, y2, x2);
     p.setPen(g.color( QPalette::Dark ));
-    p.drawRect(1, 1, w-2, h-2);
+    p.drawRect(1, 1, w-3, h-3);
     p.setPen(sunken ? g.color( QPalette::Mid ) : g.color( QPalette::Light ));
     p.drawLine(2, 2, x2-2, 2);
     p.drawLine(2, 2, 2, y2-2);
@@ -703,7 +705,8 @@ void KDE2Button::drawButton(QPainter *p)
 
 		// Intensify the image if required
 		if (isMouseOver) {
-                    btnpix = KPixmapEffect::intensity(btnpix, 0.8);
+			// XXX Find a suitable substitute for this.
+			// btnpix = KPixmapEffect::intensity(btnpix, 0.8);
 		}
 
 		// Smooth scale the pixmap for small titlebars
@@ -1067,5 +1070,5 @@ extern "C" KDE_EXPORT KDecorationFactory* create_factory()
     return new KDE2::KDE2Handler();
 }
 
-// vim: ts=4
-// kate: space-indent off; tab-width 4;
+// vim: ts=4 sw=4
+// kate: space-indent off; tab-width 4; 
