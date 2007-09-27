@@ -96,7 +96,7 @@ class AlternativeWMDialog : public KDialog
     public:
         AlternativeWMDialog() : KDialog()
         {
-            setButtons( KDialog::Ok );
+            setButtons( KDialog::Ok | KDialog::Cancel );
 
             QWidget* mainWidget = new QWidget( this );
             QVBoxLayout* layout = new QVBoxLayout( mainWidget );
@@ -160,8 +160,11 @@ Application::Application( )
     {
         // Something has gone seriously wrong
         AlternativeWMDialog dialog;
-        dialog.exec();
-        QString cmd = dialog.selectedWM();
+        QString cmd = "kwin";
+        if( dialog.exec() == KDialog::Ok )
+        {
+            cmd = dialog.selectedWM();
+        }
         if( cmd.length() > 500 )
         {
             kDebug() << "Command is too long, truncating";
