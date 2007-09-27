@@ -959,16 +959,16 @@ void KDE2Client::paintEvent( QPaintEvent* )
 	{
 		if(w > 50)
 		{
-			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+3, 2*borderWidth+12, grabBorderWidth-2,
+			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+3, 2*borderWidth+12, grabBorderWidth-3,
 							g, false, 1, &g.brush(QPalette::Mid));
-			qDrawShadePanel(&p, x+2*borderWidth+13, y2-grabBorderWidth+3, w-4*borderWidth-26, grabBorderWidth-2,
+			qDrawShadePanel(&p, x+2*borderWidth+13, y2-grabBorderWidth+3, w-4*borderWidth-26, grabBorderWidth-3,
 							g, false, 1, isActive() ?
 							&g.brush(QPalette::Background) :
 							&g.brush(QPalette::Mid));
-			qDrawShadePanel(&p, x2-2*borderWidth-12, y2-grabBorderWidth+3, 2*borderWidth+12, grabBorderWidth-2,
+			qDrawShadePanel(&p, x2-2*borderWidth-12, y2-grabBorderWidth+3, 2*borderWidth+12, grabBorderWidth-3,
 							g, false, 1, &g.brush(QPalette::Mid));
 		} else
-			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+3, w-2, grabBorderWidth-2,
+			qDrawShadePanel(&p, x+1, y2-grabBorderWidth+3, w-2, grabBorderWidth-3,
 							g, false, 1, isActive() ?
 							&g.brush(QPalette::Background) :
 							&g.brush(QPalette::Mid));
