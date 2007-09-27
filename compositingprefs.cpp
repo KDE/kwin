@@ -136,23 +136,23 @@ void CompositingPrefs::deleteGLXContext()
 void CompositingPrefs::detectDriverAndVersion()
     {
 #ifdef HAVE_OPENGL
-    QString glvendor = QString((const char*)glGetString( GL_VENDOR ));
-    QString glrenderer = QString((const char*)glGetString( GL_RENDERER ));
-    QString glversion = QString((const char*)glGetString( GL_VERSION ));
-    kDebug() << "GL vendor is" << glvendor;
-    kDebug() << "GL renderer is" << glrenderer;
-    kDebug() << "GL version is" << glversion;
+    mGLVendor = QString((const char*)glGetString( GL_VENDOR ));
+    mGLRenderer = QString((const char*)glGetString( GL_RENDERER ));
+    mGLVersion = QString((const char*)glGetString( GL_VERSION ));
+    kDebug() << "GL vendor is" << mGLVendor;
+    kDebug() << "GL renderer is" << mGLRenderer;
+    kDebug() << "GL version is" << mGLVersion;
 
-    if( glrenderer.contains( "Intel" ))
+    if( mGLRenderer.contains( "Intel" ))
     {
         mDriver = "intel";
-        QStringList words = glrenderer.split(" ");
+        QStringList words = mGLRenderer.split(" ");
         mVersion = Version( words[ words.count() - 2 ] );
     }
-    else if( glvendor.contains( "NVIDIA" ))
+    else if( mGLVendor.contains( "NVIDIA" ))
     {
         mDriver = "nvidia";
-        QStringList words = glversion.split(" ");
+        QStringList words = mGLVersion.split(" ");
         mVersion = Version( words[ words.count() - 1 ] );
     }
     else
@@ -171,9 +171,9 @@ void CompositingPrefs::applyDriverSpecificOptions()
         kDebug() << "intel driver, disabling vsync, enabling direct";
         mEnableVSync = false;
         mEnableDirectRendering = true;
-        if( mVersion >= Version( "20061017" ))
+        if( mVersion >= Version( "20061017" ) && mGLRenderer.contains( "945GM" ))
             {
-            kDebug() << "intel >= 20061017, enabling compositing";
+            kDebug() << "intel >= 20061017 and whitelisted card, enabling compositing";
             mEnableCompositing = true;
             }
         }

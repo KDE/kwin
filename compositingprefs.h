@@ -61,6 +61,9 @@ protected:
 
 
 private:
+    QString mGLVendor;
+    QString mGLRenderer;
+    QString mGLVersion;
     QString mDriver;
     Version mVersion;
 
