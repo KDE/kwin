@@ -23,6 +23,7 @@ Name[pt_BR]=Grade de Desktop
 Name[sv]=Skrivbordsrutnät
 Name[th]=เส้นกริดพื้นที่ทำงาน
 Name[vi]=Lưới màn hình nền
+Name[x-test]=xxDesktop Gridxx
 Name[zh_TW]=桌面格
 Icon=kwin-effect-desktopgrid
 Comment=Desktop switcher that lays the desktops out in a grid
@@ -43,6 +44,7 @@ Comment[pt_BR]=Alternador de áreas de trabalho que coloca as áreas de trabalho
 Comment[sv]=Skrivbordsbyte som placerar skrivborden i ett rutnät
 Comment[th]=ตัวสลับพื้นที่ทำงานที่วางพื้นที่ทำงานในเส้นกริด
 Comment[vi]=Bộ chuyển đổi màn hình nền có sắp đặt các màn hình nền theo lưới
+Comment[x-test]=xxDesktop switcher that lays the desktops out in a gridxx
 Comment[zh_TW]=將桌面以格狀佈局呈現的桌面切換器
 
 Type=Service

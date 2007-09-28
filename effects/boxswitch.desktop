@@ -15,6 +15,7 @@ Name[pa]=ਬਾਕਸ ਸਵਿੱਚ
 Name[pt]=Mudança em Caixa
 Name[sv]=Byte med ruta
 Name[vi]=Chuyển đổi hộp
+Name[x-test]=xxBox Switchxx
 Name[zh_TW]=盒切換
 Icon=kwin-effect-boxswitch
 Comment=Improved Alt-tab window switcher
@@ -35,6 +36,7 @@ Comment[pt_BR]=Alternador de Janelas Alt-tab melhorado
 Comment[sv]=Förbättrat fönsterbyte med Alt+Tabulator
 Comment[th]=ตัวสลับหน้าต่าง Alt-tab รุ่นปรับปรุง
 Comment[vi]=Bộ chuyển đổi cửa sổ Alt-tab cải tiến
+Comment[x-test]=xxImproved Alt-tab window switcherxx
 Comment[zh_TW]=Alt-tab 視窗切換加強版
 
 Type=Service

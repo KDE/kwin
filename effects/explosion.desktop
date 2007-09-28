@@ -20,6 +20,7 @@ Name[pt_BR]=Explosão
 Name[sl]=Eksplozija
 Name[th]=ระเบิด
 Name[vi]=Nổ bung
+Name[x-test]=xxExplosionxx
 Name[zh_TW]=爆炸
 Icon=kwin-effect-explosion
 Comment=Makes windows explode when they're closed
@@ -42,6 +43,7 @@ Comment[pt_BR]=Faz as janelas explodirem quando são fechadas
 Comment[sv]=Gör att fönster exploderar när de stängs
 Comment[th]=ทำให้หน้าต่างระเบิดออก เมื่อปิดหน้าต่าง
 Comment[vi]=Làm cho cửa sổ nổ bung khi được đóng
+Comment[x-test]=xxMakes windows explode when they're closedxx
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 
 Type=Service

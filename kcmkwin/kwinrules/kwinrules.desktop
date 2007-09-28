@@ -128,6 +128,7 @@ Comment[uz]=Ойнага оид бўлган мосламаларни мосла
 Comment[vi]=Thiết lập cài đặt dành riêng cho cửa sổ
 Comment[wa]=Apontiaedjes specifikes po on purnea
 Comment[x-test]=xxConfigure settings specifically for a windowxx
+Comment[zh_CN]=配置一个窗口的设置
 Comment[zh_TW]=設定特定視窗設定值
 
 Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
@@ -181,4 +182,5 @@ Keywords[uk]=розмір,позиція,стан,поведінка вікна,
 Keywords[uz]=ўлчам,жой,ҳолат,ойнанинг хусусиятлари,ойналар,махсус,эслаб қолиш,қоидалар
 Keywords[vi]=kích cỡ,vị trí,trạng thái,ứng xử cửa sổ,cửa sổ,dành riêng,cách chữa chạy,nhớ,quy tắc
 Keywords[x-test]=xxsize,position,state,window behavior,windows,specific,workarounds,remember,rulesxx
+Keywords[zh_CN]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,大小,位置,状态,窗口行为,窗口,特定,工作区,记住,规则
 Keywords[zh_TW]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,大小,位置,狀態,視窗行為,視窗,指定,記憶,規則

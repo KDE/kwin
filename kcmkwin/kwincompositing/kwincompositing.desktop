@@ -32,6 +32,7 @@ Name[pt]=Efeitos do Ecrã
 Name[pt_BR]=Efeitos de Área de Trabalho
 Name[sl]=Učinki namizja
 Name[sv]=Skrivbordseffekter
+Name[x-test]=xxDesktop Effectsxx
 Name[zh_TW]=桌面效果
 
 Comment=Configure desktop effects
@@ -56,6 +57,7 @@ Comment[pt]=Configuração dos efeitos do ecrã
 Comment[pt_BR]=Configurar efeitos de área de trabalho
 Comment[sl]=Nastavi učinke namizja
 Comment[sv]=Anpassa skrivbordseffekter
+Comment[x-test]=xxConfigure desktop effectsxx
 Comment[zh_TW]=設定桌面效果
 
 Keywords=kwin,window,manager,compositing,effect
@@ -74,3 +76,4 @@ Keywords[nl]=kwin,window,venster,window manager,effect,3D,compositing
 Keywords[pt]=kwin,janela,gestor,efeito,composição
 Keywords[pt_BR]=kwin,janela,gerenciador,composição,efeito
 Keywords[sv]=kwin,fönster,hantera,sammansättning,effekt
+Keywords[x-test]=xxkwin,window,manager,compositing,effectxx

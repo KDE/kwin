@@ -136,6 +136,7 @@ Comment[uz]=Ойнанинг хусусиятларини мослаш
 Comment[vi]=Cấu hình cách cửa sổ ứng xử
 Comment[wa]=Apontyî l' dujhance des purneas
 Comment[x-test]=xxConfigure the window behaviorxx
+Comment[zh_CN]=配置窗口行为
 Comment[zh_TW]=設定視窗行為
 
 Keywords=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick
@@ -190,6 +191,7 @@ Keywords[uk]=фокус,розташовування,поведінка вікн
 Keywords[uz]=фокуслаш,жойлашиш,ойнанинг хусусиятлари,анимация,олдинга,авто-олдинга,ойналар,фрейм,сарлавҳа,икки марта босиш
 Keywords[vi]=chọn,dịch chuyển,ứng xử cửa sổ,hoạt hình,nâng lên,tự nâng lên,cửa sổ,khung,thanh tiêu đề,nhấn đúp
 Keywords[x-test]=xxfocus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx
+Keywords[zh_CN]=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick,焦点,放置,窗口行为,动画,升起,自动升起,窗口,框架,标题栏,双击
 Keywords[zh_TW]=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick,焦點,放置,視窗行為,動畫,抬升,自動抬升,視窗,框架,標題列,雙擊
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;

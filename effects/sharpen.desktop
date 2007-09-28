@@ -19,6 +19,7 @@ Name[pt]=Aumento de Detalhe
 Name[pt_BR]=Nitidez
 Name[sl]=Izostri
 Name[sv]=Skärpa
+Name[x-test]=xxSharpenxx
 Name[zh_TW]=讓輪廓更分明
 Comment=Makes your desktop look sharper
 Comment[bg]=Прави работния плот по-отчетлив
@@ -38,6 +39,7 @@ Comment[pa]=ਆਪਣੇ ਡੈਸਕਟਾਪ ਦਿੱਖ ਸੁਧਾਰੋ
 Comment[pt]=Faz o seu ecrã parecer mais definido
 Comment[pt_BR]=Faz com que sua área de trabalho pareça mais nítida
 Comment[sv]=Gör att skrivbordet ser skarpare ut
+Comment[x-test]=xxMakes your desktop look sharperxx
 Comment[zh_TW]=讓您的桌面看起來更輪廓分明
 
 Type=Service

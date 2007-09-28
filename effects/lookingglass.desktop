@@ -12,6 +12,7 @@ Name[pa]=ਸ਼ੀਸ਼ਾ ਵੇਖਣਾ
 Name[pt]=Aparência de Vidro
 Name[pt_BR]=Espelho
 Name[sv]=Spegel
+Name[x-test]=xxLooking Glassxx
 Name[zh_TW]=鏡射
 Comment=Looking Glass enhanced magnifier
 Comment[bg]=Лупа
@@ -28,6 +29,7 @@ Comment[nl]=Vergrootglas
 Comment[pt]=Ampliação melhorada com Aparência de Vidro
 Comment[pt_BR]=Espelho, uma lente de aumento melhorada
 Comment[sv]=Spegel förbättrat förstoringsglas
+Comment[x-test]=xxLooking Glass enhanced magnifierxx
 Comment[zh_TW]=鏡面放大
 
 Type=Service

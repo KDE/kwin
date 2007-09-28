@@ -16,6 +16,7 @@ Name[pt]=Miniaturas Lado-a-Lado
 Name[pt_BR]=Miniatura de Lado
 Name[sv]=Miniatyrbild vid sidan om
 Name[vi]=Hình nhỏ ra bên
+Name[x-test]=xxThumbnail Asidexx
 Icon=kwin-effect-thumbnailaside
 
 Type=Service

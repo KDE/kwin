@@ -21,6 +21,7 @@ Name[pt_BR]=Inverter
 Name[sl]=Obrni
 Name[sv]=Invertera
 Name[th]=กลับสี
+Name[x-test]=xxInvertxx
 Name[zh_TW]=反轉
 Comment=Inverts (negates) colors of the desktop
 Comment[bg]=Инвертира цветовете на работния плот
@@ -40,6 +41,7 @@ Comment[pt]=Inverte (nega) as cores no ecrã
 Comment[pt_BR]=Inverte (nega) as cores da área de trabalho
 Comment[sv]=Inverterar (vänder på) skrivbordets färger
 Comment[th]=กลับสีของพื้นที่ทำงาน
+Comment[x-test]=xxInverts (negates) colors of the desktopxx
 Comment[zh_TW]=將桌面上的顏色反轉
 
 Type=Service

@@ -22,6 +22,7 @@ Name[pt_BR]=Animação de Minimização
 Name[sv]=Minimera animering
 Name[vi]=Thu nhỏ hoạt ảnh
 Name[wa]=Animåcion å pus ptit
+Name[x-test]=xxMinimize Animationxx
 Name[zh_TW]=縮小動畫
 Icon=kwin-effect-minimiseanimation
 Comment=Animates minimizing of windows
@@ -43,6 +44,7 @@ Comment[pt]=Anima a minimização das janelas
 Comment[pt_BR]=Anima a minimização das janelas
 Comment[sv]=Animerar minimering av fönster
 Comment[vi]=Hoạt ảnh việc thu nhỏ cửa sổ
+Comment[x-test]=xxAnimates minimizing of windowsxx
 Comment[zh_TW]=動畫最小化視窗
 
 Type=Service
