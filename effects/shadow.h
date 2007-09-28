@@ -38,6 +38,7 @@ class ShadowEffect
         double shadowOpacity;
         int shadowFuzzyness;
         int shadowSize;
+        bool intensifyActiveShadow;
         GLTexture* mShadowTexture;
     };
 

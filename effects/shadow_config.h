@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #undef KDE3_SUPPORT
 
 class QSpinBox;
+class QCheckBox;
 
 namespace KWin
 {
@@ -37,6 +38,7 @@ class ShadowEffectConfig : public KCModule
         QSpinBox* mShadowOpacity;
         QSpinBox* mShadowFuzzyness;
         QSpinBox* mShadowSize;
+        QCheckBox* mIntensifyActiveShadow;
     };
 
 } // namespace

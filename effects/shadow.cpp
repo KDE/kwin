@@ -28,6 +28,7 @@ ShadowEffect::ShadowEffect()
     shadowOpacity = conf.readEntry( "Opacity", 0.2 );
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
     shadowSize = conf.readEntry( "Size", 5 );
+    intensifyActiveShadow = conf.readEntry( "IntensifyActiveShadow", true );
 
     QString shadowtexture =  KGlobal::dirs()->findResource("data", "kwin/shadow-texture.png");
     mShadowTexture = new GLTexture(shadowtexture);
@@ -127,7 +128,12 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     mShadowTexture->bind();
     // Take the transparency settings and window's transparency into account.
     // Also make the shadow more transparent if we've made it bigger
-    glColor4f(0, 0, 0, shadowOpacity * data.opacity * (window->width() / (double)w) * (window->height() / (double)h));
+    float opacity = shadowOpacity;
+    if( intensifyActiveShadow && window == effects->activeWindow() )
+    {
+        opacity = 1 - (1 - shadowOpacity)*(1 - shadowOpacity);
+    }
+    glColor4f(0, 0, 0, opacity * data.opacity * (window->width() / (double)w) * (window->height() / (double)h));
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     // We have two elements per vertex in the verts array
     int verticesCount = verts.count() / 2;
