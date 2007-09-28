@@ -89,8 +89,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     glPushMatrix();
     if( mask & PAINT_WINDOW_TRANSFORMED )
         glTranslatef( data.xTranslate, data.yTranslate, 0 );
-    glTranslatef( window->x() + shadowXOffset - shadowSize - qMax(0, w - window->width()) / 2.0,
-                  window->y() + shadowYOffset - shadowSize - qMax(0, h - window->height()) / 2.0, 0 );
+    glTranslatef( window->x() + shadowXOffset - qMax(0, w - window->width()) / 2.0,
+                  window->y() + shadowYOffset - qMax(0, h - window->height()) / 2.0, 0 );
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
 
