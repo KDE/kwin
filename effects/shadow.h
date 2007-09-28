@@ -37,6 +37,7 @@ class ShadowEffect
         int shadowXOffset, shadowYOffset;
         double shadowOpacity;
         int shadowFuzzyness;
+        int shadowSize;
         GLTexture* mShadowTexture;
     };
 

@@ -36,6 +36,7 @@ class ShadowEffectConfig : public KCModule
         QSpinBox* mShadowYOffset;
         QSpinBox* mShadowOpacity;
         QSpinBox* mShadowFuzzyness;
+        QSpinBox* mShadowSize;
     };
 
 } // namespace

@@ -27,6 +27,7 @@ ShadowEffect::ShadowEffect()
     shadowYOffset = conf.readEntry( "YOffset", 10 );
     shadowOpacity = conf.readEntry( "Opacity", 0.2 );
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
+    shadowSize = conf.readEntry( "Size", 5 );
 
     QString shadowtexture =  KGlobal::dirs()->findResource("data", "kwin/shadow-texture.png");
     mShadowTexture = new GLTexture(shadowtexture);
@@ -34,8 +35,9 @@ ShadowEffect::ShadowEffect()
 
 QRect ShadowEffect::shadowRectangle(const QRect& windowRectangle) const
     {
-    return windowRectangle.adjusted( shadowXOffset - shadowFuzzyness - 20, shadowYOffset - shadowFuzzyness - 20,
-            shadowXOffset + shadowFuzzyness + 20, shadowYOffset + shadowFuzzyness + 20);
+    int shadowGrow = shadowFuzzyness + shadowSize + 20;
+    return windowRectangle.adjusted( shadowXOffset - shadowGrow, shadowYOffset - shadowGrow,
+            shadowXOffset + shadowGrow, shadowYOffset + shadowGrow);
     }
 void ShadowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
@@ -80,14 +82,14 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
 
     int fuzzy = shadowFuzzyness;
     // Shadow's size must be a least 2*fuzzy in both directions (or the corners will be broken)
-    int w = qMax(fuzzy*2, window->width());
-    int h = qMax(fuzzy*2, window->height());
+    int w = qMax(fuzzy*2, window->width() + 2*shadowSize);
+    int h = qMax(fuzzy*2, window->height() + 2*shadowSize);
 
     glPushMatrix();
     if( mask & PAINT_WINDOW_TRANSFORMED )
         glTranslatef( data.xTranslate, data.yTranslate, 0 );
-    glTranslatef( window->x() + shadowXOffset - qMax(0, w - window->width()) / 2.0,
-                  window->y() + shadowYOffset - qMax(0, h - window->height()) / 2.0, 0 );
+    glTranslatef( window->x() + shadowXOffset - shadowSize - qMax(0, w - window->width()) / 2.0,
+                  window->y() + shadowYOffset - shadowSize - qMax(0, h - window->height()) / 2.0, 0 );
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
 
