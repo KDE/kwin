@@ -23,11 +23,11 @@ KWIN_EFFECT( shadow, ShadowEffect )
 ShadowEffect::ShadowEffect()
     {
     KConfigGroup conf = effects->effectConfig("Shadow");
-    shadowXOffset = conf.readEntry( "XOffset", 10 );
-    shadowYOffset = conf.readEntry( "YOffset", 10 );
+    shadowXOffset = conf.readEntry( "XOffset", 5 );
+    shadowYOffset = conf.readEntry( "YOffset", 5 );
     shadowOpacity = conf.readEntry( "Opacity", 0.2 );
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
-    shadowSize = conf.readEntry( "Size", 5 );
+    shadowSize = conf.readEntry( "Size", 4 );
     intensifyActiveShadow = conf.readEntry( "IntensifyActiveShadow", true );
 
     QString shadowtexture =  KGlobal::dirs()->findResource("data", "kwin/shadow-texture.png");

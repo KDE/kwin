@@ -84,11 +84,11 @@ void ShadowEffectConfig::load()
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Shadow");
-    mShadowXOffset->setValue( conf.readEntry( "XOffset", 10 ) );
-    mShadowYOffset->setValue( conf.readEntry( "YOffset", 10 ) );
+    mShadowXOffset->setValue( conf.readEntry( "XOffset", 5 ) );
+    mShadowYOffset->setValue( conf.readEntry( "YOffset", 5 ) );
     mShadowOpacity->setValue( (int)( conf.readEntry( "Opacity", 0.2 ) * 100 ) );
     mShadowFuzzyness->setValue( conf.readEntry( "Fuzzyness", 10 ) );
-    mShadowSize->setValue( conf.readEntry( "Size", 5 ) );
+    mShadowSize->setValue( conf.readEntry( "Size", 4 ) );
     mIntensifyActiveShadow->setChecked( conf.readEntry( "IntensifyActiveShadow", true ) );
 
     emit changed(false);
@@ -115,11 +115,11 @@ void ShadowEffectConfig::save()
 void ShadowEffectConfig::defaults()
     {
     kDebug() ;
-    mShadowXOffset->setValue( 10 );
-    mShadowYOffset->setValue( 10 );
+    mShadowXOffset->setValue( 5 );
+    mShadowYOffset->setValue( 5 );
     mShadowOpacity->setValue( 20 );
     mShadowFuzzyness->setValue( 10 );
-    mShadowSize->setValue( 5 );
+    mShadowSize->setValue( 4 );
     mIntensifyActiveShadow->setChecked( true );
     emit changed(true);
     }
