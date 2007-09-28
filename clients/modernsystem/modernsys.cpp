@@ -28,7 +28,6 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QPaintEvent>
-#include <kpixmapeffect.h>
 #include <QPainter>
 #include <QBitmap>
 
@@ -165,6 +164,15 @@ static void make_button_fx(const QPalette &g, QPixmap *pix, bool light=false)
     }
 }
 
+static void gradientFill(QPixmap *pixmap, const QColor &color1, const QColor &color2)
+{
+	QPainter p(pixmap);
+	QLinearGradient gradient(0, 0, 0, pixmap->height());
+	gradient.setColorAt(0.0, color1);
+	gradient.setColorAt(1.0, color2);
+	QBrush brush(gradient);
+	p.fillRect(pixmap->rect(), brush);
+}
 
 static void create_pixmaps()
 {
@@ -181,14 +189,12 @@ static void create_pixmaps()
     if(QPixmap::defaultDepth() > 8){
         aUpperGradient = new QPixmap( 32, title_height+2 );
         iUpperGradient = new QPixmap( 32, title_height+2);;
-        KPixmapEffect::gradient(*aUpperGradient,
-                                options()->color(KDecoration::ColorTitleBar, true).light(130),
-                                options()->color(KDecoration::ColorTitleBlend, true),
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*iUpperGradient,
-                                options()->color(KDecoration::ColorTitleBar, false).light(130),
-                                options()->color(KDecoration::ColorTitleBlend, false),
-                                KPixmapEffect::VerticalGradient);
+        gradientFill(aUpperGradient,
+                     options()->color(KDecoration::ColorTitleBar, true).light(130),
+                     options()->color(KDecoration::ColorTitleBlend, true));
+        gradientFill(iUpperGradient,
+                     options()->color(KDecoration::ColorTitleBar, false).light(130),
+                     options()->color(KDecoration::ColorTitleBlend, false));
     }
     // buttons
     QPalette btnColor(options()->palette(KDecoration::ColorButtonBg, true) );
