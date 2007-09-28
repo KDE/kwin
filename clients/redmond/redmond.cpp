@@ -19,8 +19,6 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QPaintEvent>
-#include <kpixmapeffect.h>
-#include <kimageeffect.h>
 #include <klocale.h>
 
 #include <QBitmap>
@@ -131,6 +129,18 @@ static void drawButtonFrame( QPixmap *pix, const QPalette &g, bool sunken )
     p.drawLine(x2, 0, x2, y2);
 }
 
+static void gradientFill(QPixmap *pixmap, 
+		const QColor &color1, const QColor &color2, bool horizontal = false)
+{
+	QPainter p(pixmap);
+	QLinearGradient gradient(0, 0, 
+							 horizontal ? pixmap->width() : 0, 
+							 horizontal ? 0 : pixmap->height());
+	gradient.setColorAt(0.0, color1);
+	gradient.setColorAt(1.0, color2);
+	QBrush brush(gradient);
+	p.fillRect(pixmap->rect(), brush);
+}
 
 static void create_pixmaps ()
 {
@@ -165,27 +175,18 @@ static void create_pixmaps ()
     *iMiniBtnDownPix1 = QPixmap(toolTitleHeight, toolTitleHeight);
 
     if (highcolor && false) {
-        KPixmapEffect::gradient(*btnPix1, c.light(130), c.dark(130),
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*btnDownPix1, c.dark(130), c.light(130),
-                                KPixmapEffect::VerticalGradient);
-
-        KPixmapEffect::gradient(*miniBtnPix1, c.light(130), c.dark(130),
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*miniBtnDownPix1, c.dark(130), c.light(130),
-                                KPixmapEffect::VerticalGradient);
+        gradientFill(btnPix1, c.light(130), c.dark(130));
+        gradientFill(btnDownPix1, c.dark(130), c.light(130));
+        gradientFill(miniBtnPix1, c.light(130), c.dark(130));
+        gradientFill(miniBtnDownPix1, c.dark(130), c.light(130));
 
         g = options()->palette(KDecoration::ColorButtonBg, false);
         g.setCurrentColorGroup( QPalette::Active );
         c = g.background();
-        KPixmapEffect::gradient(*iBtnPix1, c.light(130), c.dark(130),
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*iBtnDownPix1, c.dark(130), c.light(130),
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*iMiniBtnPix1, c.light(130), c.dark(130),
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*iMiniBtnDownPix1, c.dark(130), c.light(130),
-                                KPixmapEffect::VerticalGradient);
+        gradientFill(iBtnPix1, c.light(130), c.dark(130));
+        gradientFill(iBtnDownPix1, c.dark(130), c.light(130));
+        gradientFill(iMiniBtnPix1, c.light(130), c.dark(130));
+        gradientFill(iMiniBtnDownPix1, c.dark(130), c.light(130));
     } else {
         btnPix1->fill(c.rgb());
         btnDownPix1->fill(c.rgb());
@@ -509,7 +510,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
 
     // Fill out the border edges
     for (int i = 1; i < borderWidth; i++)
-        p.drawRect( x+i, y+i, w-2*i, h-2*i );
+        p.drawRect( x+i, y+i, x2-2*i, y2-2*i );
 
     // Draw highlights and lowlights
     p.setPen(g.color( QPalette::Light ));
@@ -554,15 +555,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
         *titleBuffer = QPixmap(w-2*modBorderWidth, titleHeight);
 
         if (titleBuffer->depth() > 16) {
-            KPixmapEffect::gradient(*titleBuffer, c1, c2,
-                                    KPixmapEffect::HorizontalGradient);
-        } else {
-            // This enables dithering on 15 and 16bit displays, preventing
-            // some pretty horrible banding effects
-            QImage image = KImageEffect::gradient(titleBuffer->size(), c1, c2,
-                                    KImageEffect::HorizontalGradient);
-
-            titleBuffer->convertFromImage(image, Qt::OrderedDither);
+            gradientFill(titleBuffer, c1, c2, true);
         }
 
         QPainter p2( titleBuffer );
@@ -697,5 +690,5 @@ extern "C" KDE_EXPORT KDecorationFactory *create_factory()
 
 
 #include "redmond.moc"
-// vim: ts=4
+// vim: ts=4 sw=4
 // kate: space-indent off; tab-width 4;
