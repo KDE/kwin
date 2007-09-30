@@ -250,7 +250,11 @@ bool KWinCompositingConfig::saveGeneralTab()
     mPreviousConfig = config.entryMap();
     // Check if any critical settings that need confirmation have changed
     bool confirm = false;
-    confirm |= (ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.enableCompositing()));
+    if(ui.useCompositing->isChecked()
+        && ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.enableCompositing()))
+        {
+        confirm = true;
+        }
 
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
 
