@@ -104,7 +104,8 @@ Comment[ta]=மெய்நிகர் மேல்மேசை ஒன்று
 Comment[tr]=Sanal masaüstü bir seçili
 Comment[uz]=Биринчи виртуал иш столи танланган
 Comment[x-test]=xxVirtual desktop one is selectedxx
-Sound=KDE_Desktop_1.ogg
+Action=Sound
+sound=KDE_Desktop_1.ogg
 
 
 [Event/desktop2]
@@ -175,7 +176,8 @@ Comment[ta]=மெய்நிகர் மேல்மேசை இரண்ட
 Comment[tr]=Sanal masaüstü iki seçili
 Comment[uz]=Иккинчи виртуал иш столи танланган
 Comment[x-test]=xxVirtual desktop two is selectedxx
-Sound=KDE_Desktop_2.ogg
+Action=Sound
+sound=KDE_Desktop_2.ogg
 
 
 [Event/desktop3]
@@ -246,7 +248,8 @@ Comment[ta]=மெய்நிகர் மேல்மேசை மூன்ற
 Comment[tr]=Sanal masaüstü üç seçili
 Comment[uz]=Учинчи виртуал иш столи танланган
 Comment[x-test]=xxVirtual desktop three is selectedxx
-Sound=KDE_Desktop_3.ogg
+Action=Sound
+sound=KDE_Desktop_3.ogg
 
 
 [Event/desktop4]
@@ -317,7 +320,8 @@ Comment[ta]=மெய்நிகர் மேல்மேசை நான்க
 Comment[tr]=Sanal masaüstü dört seçili
 Comment[uz]=Тўртинчи виртуал иш столи танланган
 Comment[x-test]=xxVirtual desktop four is selectedxx
-Sound=KDE_Desktop_4.ogg
+Action=Sound
+sound=KDE_Desktop_4.ogg
 
 
 [Event/desktop5]
@@ -388,7 +392,8 @@ Comment[ta]=மெய்நிகர் மேல்மேசை ஐந்து
 Comment[tr]=Sanal masaüstü beş seçili
 Comment[uz]=Бешинчи виртуал иш столи танланган
 Comment[x-test]=xxVirtual desktop five is selectedxx
-Sound=KDE_Desktop_5.ogg
+Action=Sound
+sound=KDE_Desktop_5.ogg
 
 
 [Event/desktop6]
@@ -438,7 +443,8 @@ Comment[ro]=Ecranul virtual 6 este selectat
 Comment[sv]=Virtuellt skrivbord sex är valt
 Comment[ta]=மெய்நிகர் மேல்மேசை ஆறு தேர்ந்தெடுக்கப்பட்டது
 Comment[x-test]=xxVirtual desktop six is selectedxx
-Sound=KDE_Desktop_6.ogg
+Action=Sound
+sound=KDE_Desktop_6.ogg
 
 
 [Event/desktop7]
@@ -509,7 +515,8 @@ Comment[ta]=மெய்நிகர் மேல்மேசை ஏழு த�
 Comment[tr]=Sanal masaüstü yedi seçili
 Comment[uz]=Еттинчи виртуал иш столи танланган
 Comment[x-test]=xxVirtual desktop seven is selectedxx
-Sound=KDE_Desktop_7.ogg
+Action=Sound
+sound=KDE_Desktop_7.ogg
 
 
 [Event/desktop8]
@@ -580,7 +587,8 @@ Comment[ta]=மெய்நிகர் மேல்மேசை எட்டு
 Comment[tr]=Sanal masaüstü sekiz seçili
 Comment[uz]=Саккизинчи виртуал иш столи танланган
 Comment[x-test]=xxVirtual desktop eight is selectedxx
-Sound=KDE_Desktop_8.ogg
+Action=Sound
+sound=KDE_Desktop_8.ogg
 
 
 [Event/desktop9]
@@ -1495,7 +1503,8 @@ Comment[nds]=Nieg Finster
 Comment[pt_BR]=Nova janela
 Comment[sv]=Nytt fönster
 Comment[x-test]=xxNew windowxx
-Sound=KDE_Window_Open.ogg
+Action=Sound
+sound=KDE_Window_Open.ogg
 
 
 [Event/delete]
@@ -1585,7 +1594,8 @@ Comment[ta]=சாளரம் மூடுகிறது
 Comment[tr]=Bir pencere kapatıldı
 Comment[uz]=Ойна ёпилмоқда
 Comment[x-test]=xxA window closesxx
-Sound=KDE_Window_Close.ogg
+Action=Sound
+sound=KDE_Window_Close.ogg
 
 
 [Event/shadeup]
@@ -1648,7 +1658,8 @@ Comment[sv]=Ett fönster rullas upp
 Comment[ta]=சாளரம் நிழலிடப்பட்டுள்ளது.
 Comment[tr]=Pencere yukarı gizlendi
 Comment[x-test]=xxA window is shaded upxx
-Sound=KDE_Window_Shade_Up.ogg
+Action=Sound
+sound=KDE_Window_Shade_Up.ogg
 
 
 [Event/shadedown]
@@ -1711,7 +1722,8 @@ Comment[sv]=Ett fönster rullas ner
 Comment[ta]=சாளரமொன்று நிழலிடப்பட்டது
 Comment[tr]=Pencere aşağı gizlendi
 Comment[x-test]=xxA window is shaded downxx
-Sound=KDE_Window_Shade_Down.ogg
+Action=Sound
+sound=KDE_Window_Shade_Down.ogg
 
 
 [Event/minimize]
@@ -1780,7 +1792,8 @@ Comment[ta]=சாளரம் சிறிதாக்கப்பட்டு�
 Comment[tr]=Bir pencere simge haline getirildi
 Comment[uz]=Ойна йиғилган
 Comment[x-test]=xxA window is minimizedxx
-Sound=KDE_Window_Iconify.ogg
+Action=Sound
+sound=KDE_Window_Iconify.ogg
 
 
 [Event/unminimize]
@@ -1844,7 +1857,8 @@ Comment[ta]=சாளரமொன்று மீளமைக்கப்பட�
 Comment[tr]=Bir pencere eski boyutuna getirildi
 Comment[uz]=Ойна тикланган
 Comment[x-test]=xxA Window is restoredxx
-Sound=KDE_Window_DeIconify.ogg
+Action=Sound
+sound=KDE_Window_DeIconify.ogg
 
 
 [Event/maximize]
@@ -1915,7 +1929,8 @@ Comment[ta]=சாளரம் பெரிதாக்கப்பட்டு�
 Comment[tr]=Bir pencere büyütüldü
 Comment[uz]=Ойна ёйилган
 Comment[x-test]=xxA window is maximizedxx
-Sound=KDE_Window_UnHide.ogg
+Action=Sound
+sound=KDE_Window_UnHide.ogg
 
 
 [Event/unmaximize]
@@ -1983,7 +1998,8 @@ Comment[sv]=Ett fönster förlorar maximering
 Comment[ta]=சாளரம் பெரிதாவதை இழந்தது
 Comment[tr]=Bir pencere büyümesini kaybetti
 Comment[x-test]=xxA window loses maximizationxx
-Sound=KDE_Window_Hide.ogg
+Action=Sound
+sound=KDE_Window_Hide.ogg
 
 
 [Event/on_all_desktops]
@@ -2025,7 +2041,8 @@ Comment[ta]=சாளரத்தை அனைத்து மேல்மேச
 Comment[tr]=Bir pencere tüm masaüstlerinde görünür hale getirildi
 Comment[uz]=Ойна ҳамма иш столларида кўринадиган қилинди
 Comment[x-test]=xxA window is made visible on all desktopsxx
-Sound=KDE_Window_Sticky.ogg
+Action=Sound
+sound=KDE_Window_Sticky.ogg
 
 
 [Event/not_on_all_desktops]
@@ -2067,7 +2084,7 @@ Comment[tr]=Bir pencere tüm masaüstlerinde gizli hale getirildi
 Comment[uz]=Ойна ҳамма иш столларида кўринмайдиган қилинди
 Comment[x-test]=xxA Window is no longer visible on all desktopsxx
 Action=Sound
-Sound=KDE_Window_UnSticky.ogg
+sound=KDE_Window_UnSticky.ogg
 
 [Event/transnew]
 Name=New Dialog
@@ -2112,7 +2129,8 @@ Comment[nds]=En temporeer Finster (en Dialoog) dukt op
 Comment[pt_BR]=Janela temporária (um diálogo) aparece
 Comment[sv]=Ett tillfälligt fönster (en dialogruta) dyker upp
 Comment[x-test]=xxTransient window (a dialog) appearsxx
-Sound=KDE_Dialog_Appear.ogg
+Action=Sound
+sound=KDE_Dialog_Appear.ogg
 
 
 [Event/transdelete]
@@ -2180,7 +2198,8 @@ Comment[ta]=தற்காலிக சாளரம்(உரையாடல்
 Comment[tr]=Bir iletişim kutusu kaldırıldı
 Comment[uz]=Мулоқат ойнаси ёпилди
 Comment[x-test]=xxTransient window (a dialog) is removedxx
-Sound=KDE_Dialog_Disappear.ogg
+Action=Sound
+sound=KDE_Dialog_Disappear.ogg
 
 
 [Event/movestart]
