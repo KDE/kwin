@@ -63,11 +63,20 @@ void CompositingPrefs::detect()
         kDebug( 1212 ) << "No GLX available";
         return;
         }
+    int glxmajor, glxminor;
+    glXQueryVersion( display(), &glxmajor, &glxminor );
+    kDebug() << "glx version is " << glxmajor << "." << glxminor;
+    bool hasglx13 = ( glxmajor > 1 || ( glxmajor == 1 && glxminor >= 3 ));
 
     // remember and later restore active context
     GLXContext oldcontext = glXGetCurrentContext();
     GLXDrawable olddrawable = glXGetCurrentDrawable();
-    GLXDrawable oldreaddrawable = glXGetCurrentReadDrawable();
+    GLXDrawable oldreaddrawable;
+    if( hasglx13 )
+    {
+        oldreaddrawable = glXGetCurrentReadDrawable();
+    }
+
     if( createGLXContext() )
         {
         detectDriverAndVersion();
@@ -76,7 +85,16 @@ void CompositingPrefs::detect()
         deleteGLXContext();
         }
     if( oldcontext != NULL )
-        glXMakeContextCurrent( display(), olddrawable, oldreaddrawable, oldcontext );
+    {
+        if( hasglx13 )
+        {
+            glXMakeContextCurrent( display(), olddrawable, oldreaddrawable, oldcontext );
+        }
+        else
+        {
+            glXMakeCurrent( display(), olddrawable, oldcontext );
+        }
+    }
 #endif
     }
 
