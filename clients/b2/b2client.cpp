@@ -1104,11 +1104,11 @@ static void redraw_pixmaps()
     for (int i = 0; i < P_NUM_BUTTON_TYPES; i++) {
 	int offset = i * NumStates;
 	hilighted = ie.apply(*pixmap[offset + Norm],
-		K3Icon::Small, K3Icon::ActiveState);
+		KIconLoader::Small, KIconLoader::ActiveState);
 	*pixmap[offset + Hover] = hilighted;
 
 	hilighted = ie.apply(*pixmap[offset + INorm],
-		K3Icon::Small, K3Icon::ActiveState);
+		KIconLoader::Small, KIconLoader::ActiveState);
 	*pixmap[offset + IHover] = hilighted;
     }
 
