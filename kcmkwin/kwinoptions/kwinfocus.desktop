@@ -62,6 +62,7 @@ Name[uk]=Фокус
 Name[uz]=Фокус
 Name[vi]=Tiêu điểm
 Name[x-test]=xxFocusxx
+Name[zh_CN]=焦点
 Name[zh_TW]=焦點
 
 Comment=Configure the window focus policy
@@ -122,6 +123,7 @@ Comment[uz]=Ойнани фокуслаш қоидасини мослаш
 Comment[vi]=Cấu hình chính sách về tiêu điểm trên cửa sổ
 Comment[x-test]=xxConfigure the window focus policyxx
 Comment[xh]=Qwalasela inkqubo yobekiso lwe window
+Comment[zh_CN]=配置窗口焦点策略
 Comment[zh_TW]=設定視窗焦點政策
 
 Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop
@@ -176,4 +178,5 @@ Keywords[uz]=авто-олдинга,олдинга,босиб олдинга,CD
 Keywords[vi]=chọn,di chuyển,tự nâng lên,nâng lên,nhấn nâng lên,bàn phím,CDE,alt-tab,tất cả màn hình nền
 Keywords[x-test]=xxfocus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktopxx
 Keywords[xh]=ucaco,ubuyiselo,phakamisa ngokuzenzekelayo,phakamisa,nqakraza phakamisa, ibhodi yezitshixho,CDE,alt-tab,zonke ii desktop
+Keywords[zh_CN]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,焦点,放置,自动升起,升起,单击升起,键盘,全部桌面
 Keywords[zh_TW]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,焦點,佈置,自動抬升,抬升,單擊抬升,鍵盤,全部桌面

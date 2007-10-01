@@ -131,6 +131,7 @@ Comment[vi]=Cấu hình cách di chuyển cửa sổ
 Comment[wa]=Apontyî l' manire di bodjî des purneas
 Comment[x-test]=xxConfigure the way that windows are movedxx
 Comment[xh]=Qwalasela iindlela ii windows ezshukunyiswa ngayo
+Comment[zh_CN]=配置窗口移动的方式
 Comment[zh_TW]=設定視窗移動的方式
 
 Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border
@@ -183,4 +184,5 @@ Keywords[uz]=snap zone,snap,border,кўчириш,ихчам,ойналарни 
 Keywords[vi]=di chuyển,thông minh,tầng,phóng to,phóng to,vùng thả,thả,bờ
 Keywords[x-test]=xxmoving,smart,cascade,maximize,maximise,snap zone,snap,borderxx
 Keywords[xh]=iyashukuma,iyabukeka,cascade,yenza nkulu,yenza nkulu,yandisa,snap zone,snap,umda
+Keywords[zh_CN]=moving,smart,cascade,maximize,maximise,snap zone,snap,border,移动,智能,层叠,最大化,最小化,吸附区域,边框
 Keywords[zh_TW]=moving,smart,cascade,maximize,maximise,snap zone,snap,border,移動,聰明,最大化,邊框

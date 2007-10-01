@@ -132,6 +132,7 @@ Comment[vi]=Cấu hình thiết lập bàn phím và con chuột
 Comment[wa]=Apontiaedjes del sori eyet del taprece
 Comment[x-test]=xxConfigure keyboard and mouse settingsxx
 Comment[xh]=Qwalasela izicwangciso zebhodi yezitshixho neze mouse
+Comment[zh_CN]=配置键盘和鼠标设置
 Comment[zh_TW]=設定鍵盤與滑鼠的設定值
 
 Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
@@ -186,4 +187,5 @@ Keywords[uz]=соялаш,ёйиш,йиғиш,орқага,амаллар мен
 Keywords[vi]=bóng,phóng to,phóng to,thu nhỏ,thu nhỏ,hạ thấp,các thao tác trên trình đơn,tên thanh,thay đổi cỡ
 Keywords[x-test]=xxshade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resizexx
 Keywords[xh]=umthunzi,yandisa,yandisa,ncipisa nciphisa,yehlisa,menu zemisebenzi,iba yewonga,yenza ubungakanani kwakhona
+Keywords[zh_CN]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize,卷起,最大化,最小化,降低,操作菜单,标题栏,缩放
 Keywords[zh_TW]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize,收起,最大化,最小化,降下,操作選單,標題列,重設大小

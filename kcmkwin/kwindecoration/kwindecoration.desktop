@@ -72,6 +72,7 @@ Name[vi]=Trang trí Cửa sổ
 Name[wa]=Gåliotaedjes des purneas
 Name[x-test]=xxWindow Decorationsxx
 Name[xh]=Izihombiso zeWindow 
+Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 
 Comment=Configure the look and feel of window titles
@@ -134,6 +135,7 @@ Comment[vi]=Cấu hình giao diện và cảm nhận cho tên cửa sổ
 Comment[wa]=Apontyî li rivnance eyet l' dujhance des tites des purneas
 Comment[x-test]=xxConfigure the look and feel of window titlesxx
 Comment[xh]=Qwalasela inkangeleko nemvakalelo yezihloko zeWindow
+Comment[zh_CN]=配置窗口标题的观感
 Comment[zh_TW]=設定視窗標題列的外觀與感覺
 
 Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
@@ -189,6 +191,7 @@ Keywords[uz]=kwin,kwm,безак,ойна,бошқарувчи,усул,ташқ
 Keywords[vi]=kwin,cửa sổ,quản lý,bờ,kiểu,sắc thái,ngoại hình,cảm nhận,sắp xếp,nút,điều khiển,cạnh,kwm,trang trí
 Keywords[x-test]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decorationxx
 Keywords[xh]=kwin,window,umphathi,umda,uhlobo,umxholo wokuxoxwa,jonga,yiva,beka,iqhosha,umqheba,umda,kwm,uhombiso
+Keywords[zh_CN]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,窗口,管理器,边框,样式,主题,观感,布局,按钮,处理,边缘,装饰
 Keywords[zh_TW]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,視窗,管理員,邊框,風格,佈景主題,外觀,感覺,佈局,按鈕,邊緣,裝飾
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;

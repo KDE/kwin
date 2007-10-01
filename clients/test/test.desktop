@@ -52,5 +52,6 @@ Name[uk]=Тест KWin
 Name[uz]=KWin синаш
 Name[vi]=Thử KWin
 Name[x-test]=xxKWin testxx
+Name[zh_CN]=KWin 测试
 Name[zh_TW]=KWin 測試
 X-KDE-Library=kwin3_test

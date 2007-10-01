@@ -71,6 +71,7 @@ Name[vi]=Nâng cao
 Name[wa]=Sipepieus
 Name[x-test]=xxAdvancedxx
 Name[xh]=Ebhekisa phambili
+Name[zh_CN]=高级
 Name[zh_TW]=進階
 
 Comment=Configure advanced window management features
@@ -132,6 +133,7 @@ Comment[vi]=Cấu hình các tính năng quản lý cửa sổ nâng cao
 Comment[wa]=Apontiaedje des spepieusès fonccionålités do manaedjaedje des purneas
 Comment[x-test]=xxConfigure advanced window management featuresxx
 Comment[xh]=Qwalasela imisebenzi esemqoka ebhekisa phambili yophatho lwe window
+Comment[zh_CN]=配置高级窗口管理特性
 Comment[zh_TW]=設定進階視窗管理功能
 
 Keywords=shading,border,hover,active borders
@@ -186,4 +188,5 @@ Keywords[uz]=соялаш,чегара,актив чегаралар,hover
 Keywords[vi]=che phủ,bờ,lượn,bờ hoạt động
 Keywords[x-test]=xxshading,border,hover,active bordersxx
 Keywords[xh]=ulwenziwo lwesithuba,umda,ixhonyiwe,imida esebenzayo
+Keywords[zh_CN]=shading,border,hover,active borders,卷起,边框,悬停,激活边框
 Keywords[zh_TW]=shading,border,hover,active borders,收起,邊框,停留,作用中邊框

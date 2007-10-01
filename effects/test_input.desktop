@@ -9,9 +9,11 @@ Name[he]=בדיקת קלט
 Name[kk]=Кірісті_сынау
 Name[nds]=Test: Ingaav
 Name[ne]=आगत परीक्षण गर्नुहोस्
+Name[nn]=Test_inndata
 Name[sv]=Testa inmatning
 Name[vi]=Thử_vào
 Name[x-test]=xxTest_Inputxx
+Name[zh_CN]=测试_输入
 Name[zh_TW]=測試_輸入
 
 Type=Service
