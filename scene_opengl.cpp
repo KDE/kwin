@@ -287,7 +287,7 @@ bool SceneOpenGL::initRenderingContext()
     KXErrorHandler errs;
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL,
         direct_rendering ? GL_TRUE : GL_FALSE );
-    if( ctxbuffer == NULL || !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer )
+    if( ctxbuffer == NULL || !glXMakeCurrent( display(), glxbuffer, ctxbuffer )
         || errs.error( true ))
         { // failed
         if( !direct_rendering )
@@ -298,7 +298,7 @@ bool SceneOpenGL::initRenderingContext()
         glXDestroyContext( display(), ctxbuffer );
         direct_rendering = false; // try again
         ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
-        if( ctxbuffer == NULL || !glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer ))
+        if( ctxbuffer == NULL || !glXMakeCurrent( display(), glxbuffer, ctxbuffer ))
             {
             kDebug( 1212 ) << "Couldn't initialize rendering context";
             return false;
@@ -957,7 +957,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         // not work (however, it does seem to work with nvidia)
         findTarget();
         GLXDrawable pixmap = glXCreatePixmap( display(), fbcdrawableinfo[ QX11Info::appDepth() ].fbconfig, pix, NULL );
-        glXMakeContextCurrent( display(), pixmap, pixmap, ctxdrawable );
+        glXMakeCurrent( display(), pixmap, ctxdrawable );
         if( last_pixmap != None )
             glXDestroyPixmap( display(), last_pixmap );
         // workaround for ATI - it leaks/crashes when the pixmap is destroyed immediately
@@ -990,7 +990,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         glXWaitGL();
         if( db )
             glDrawBuffer( GL_BACK );
-        glXMakeContextCurrent( display(), glxbuffer, glxbuffer, ctxbuffer );
+        glXMakeCurrent( display(), glxbuffer, ctxbuffer );
         glBindTexture( mTarget, mTexture );
         y_inverted = false;
         can_use_mipmaps = true;
