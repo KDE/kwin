@@ -65,7 +65,7 @@ qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Works
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin  ${KDE4_KDEUI_LIBS} kdecorations kwineffects ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
+target_link_libraries(kdeinit_kwin  ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KDEUI_LIBS} kdecorations kwineffects ${X11_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
 if(OPENGL_FOUND)
   target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
