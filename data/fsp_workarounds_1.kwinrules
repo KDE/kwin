@@ -20,6 +20,7 @@ Description[sv]=(Förval) Inaktivera möjlighet att förhindra stöld av fokus f
 Description[th]=(ค่าปริยาย) ปิดการป้องกันการขโมยโฟกัสสำหรับ XV
 Description[vi]=(Mặc định) Tắt khả năng ngăn cản bắt tiêu điểm cho XV
 Description[x-test]=xx(Default) Disable focus stealing prevention for XVxx
+Description[zh_CN]=(默认)禁用 XV 中的预防焦点被偷
 Description[zh_TW]=（預設）為 XV 關閉避免焦點被偷的功能
 fsplevel=0
 fsplevelrule=2

@@ -41,6 +41,7 @@ Comment[sv]=Förbättrat fönsterbyte med Alt+Tabulator
 Comment[th]=ตัวสลับหน้าต่าง Alt-tab รุ่นปรับปรุง
 Comment[vi]=Bộ chuyển đổi cửa sổ Alt-tab cải tiến
 Comment[x-test]=xxImproved Alt-tab window switcherxx
+Comment[zh_CN]=增强的 Alt-Tab 窗口切换器
 Comment[zh_TW]=Alt-tab 視窗切換加強版
 
 Type=Service

@@ -55,6 +55,7 @@ Comment[sl]=Doda senco pod okna
 Comment[sv]=Lägger till en skugga under fönster
 Comment[vi]=Thêm bóng bên dưới cửa sổ
 Comment[x-test]=xxAdds shadow under the windowsxx
+Comment[zh_CN]=在窗口下面添加阴影
 Comment[zh_TW]=在視窗底下加上陰影
 
 Type=Service

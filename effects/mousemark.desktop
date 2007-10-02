@@ -48,6 +48,7 @@ Comment[pt_BR]=Permite que você desenhe linhas na sua área de trabalho
 Comment[sv]=Låter dig rita linjer på skrivbordet
 Comment[vi]=Cho bạn có khả năng vẽ đường trên màn hình nền
 Comment[x-test]=xxLet's you draw lines onto your desktopxx
+Comment[zh_CN]=让您在桌面上画线
 Comment[zh_TW]=讓您在您的桌面上畫線
 
 Type=Service

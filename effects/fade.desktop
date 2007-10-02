@@ -45,6 +45,7 @@ Comment[sv]=Gör att fönster mjukt tonas in eller ut när de visas eller döljs
 Comment[th]=ทำให้หน้าต่างจางเข้าหรือจางหายเมื่อมีการแสดงหรือซ่อนหน้าต่าง
 Comment[vi]=Làm cho cửa sổ mờ/giảm dần mịn khi được hiển thị hay bị ẩn
 Comment[x-test]=xxMakes windows smoothly fade in/out when they're shown or hiddenxx
+Comment[zh_CN]=当窗口被显示或者隐藏时，使窗口平滑地淡入淡出
 Comment[zh_TW]=顯示或隱藏視窗時以淡入/淡出方式呈現
 
 Type=Service

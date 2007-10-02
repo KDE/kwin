@@ -50,6 +50,7 @@ Comment[sl]=Prikaže okna drug ob drugem
 Comment[sv]=Visar alla fönster sida vid sida
 Comment[vi]=Hiển thị mọi cửa sổ cạnh nhau
 Comment[x-test]=xxShows all windows side-by-sidexx
+Comment[zh_CN]=一个挨一个地显示所有窗口
 Comment[zh_TW]=讓所有視窗排排站
 
 Type=Service

@@ -20,6 +20,7 @@ Name[sv]=Dämpa inaktiva
 Name[th]=ลดความสว่างหน้าต่างที่ไม่ได้ใช้
 Name[vi]=Mờ đi bị động
 Name[x-test]=xxDim Inactivexx
+Name[zh_CN]=暗淡非激活
 Icon=kwin-effect-diminactive
 Comment=Darkens inactive windows
 Comment[bg]=Потъмнява неактивните прозорци
@@ -43,6 +44,7 @@ Comment[sv]=Gör inaktiva fönster mörkare
 Comment[th]=ทำให้หน้าต่างที่ไม่ได้ใช้มืดลง
 Comment[vi]=Làm tối các cửa sổ không hoạt động
 Comment[x-test]=xxDarkens inactive windowsxx
+Comment[zh_CN]=将非激活窗口变暗
 Comment[zh_TW]=將不使用的視窗變暗
 
 Type=Service
