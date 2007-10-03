@@ -39,8 +39,9 @@
 
 namespace Oxygen
 {
+#ifndef KDE_USE_FINAL
 K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("OxygenDeco"))
-
+#endif
 // class OxygenClient;
 /*
 extern int BUTTONSIZE;
