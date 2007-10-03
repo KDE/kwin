@@ -202,10 +202,14 @@ Application::Application( )
     XSelectInput(display(), rootWindow(), SubstructureRedirectMask  );
     syncX(); // trigger error now
 
-    options = new Options;
     atoms = new Atoms;
 
     initting = false; // TODO
+
+    // This tries to detect compositing options and can use GLX. GLX problems
+    //  (X errors) shouldn't cause kwin to abort, so this is out of the
+    //  critical startup section where x errors cause kwin to abort.
+    options = new Options;
 
     // create workspace.
     (void) new Workspace( isSessionRestored() );
