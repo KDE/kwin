@@ -21,9 +21,9 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <QVBoxLayout>
 #include <QCheckBox>
-
+#ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
-
+#endif
 namespace KWin
 {
 

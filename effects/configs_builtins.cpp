@@ -15,8 +15,9 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kwineffects.h>
 
 #include <KPluginLoader>
-
+#ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
+#endif
 K_PLUGIN_FACTORY_DEFINITION(EffectFactory, registerPlugin<KWin::ShadowEffectConfig>("shadow");
                                 registerPlugin<KWin::PresentWindowsEffectConfig>("presentwindows");
                                 registerPlugin<KWin::DesktopGridEffectConfig>("desktopgrid");
