@@ -16,6 +16,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <assert.h>
 #include <qobject.h>
 #include <kdecoration.h>
+#include <kdebug.h>
 
 #include "utils.h"
 #include "workspace.h"

@@ -16,7 +16,7 @@
  *	  Copyright (C) 1999 Daniel M. Duley <mosfet@kde.org>
  */
 
-#include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <QBitmap>

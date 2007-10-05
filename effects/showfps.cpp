@@ -12,7 +12,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <config-X11.h>
 
-#include <kconfig.h>
+#include <kconfiggroup.h>
+#include <kglobal.h>
 #include <ksharedconfig.h>
 
 #ifdef HAVE_OPENGL

@@ -18,7 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 //#define QT_CLEAN_NAMESPACE
 
 #include "group.h"
-
+#include <QTextStream>
 #include "workspace.h"
 #include "client.h"
 #include "effects.h"

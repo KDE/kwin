@@ -27,6 +27,8 @@
 #include <QResizeEvent>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QUrl>
+#include <QTextStream>
 #include <kicontheme.h>
 #include <kiconeffect.h>
 //#include <kdrawutil.h>
@@ -37,6 +39,8 @@
 
 #include <X11/Xlib.h>
 #include <QX11Info>
+#include <KUrl>
+#include <KConfigGroup>
 #include <KDebug>
 
 namespace B2 {

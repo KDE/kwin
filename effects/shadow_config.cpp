@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kconfiggroup.h>
 
 #include <QWidget>
 #include <QGridLayout>

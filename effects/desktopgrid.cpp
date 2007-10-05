@@ -15,6 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
+#include <kconfiggroup.h>
 #include <netwm_def.h>
 #include <qevent.h>
 

@@ -11,6 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 //#define QT_CLEAN_NAMESPACE
 #include "tabbox.h"
+#include <QTextStream>
 #include "workspace.h"
 #include "effects.h"
 #include "client.h"

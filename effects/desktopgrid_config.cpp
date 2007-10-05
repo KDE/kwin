@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kaction.h>
 #include <KShortcutsEditor>
 #include <KGlobalAccel>
+#include <kconfiggroup.h>
 
 #include <QVBoxLayout>
 #include <QCheckBox>

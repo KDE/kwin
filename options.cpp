@@ -85,7 +85,7 @@ unsigned long Options::updateSettings()
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
 
-    KConfig *gc = new KConfig("kdeglobals", KConfig::NoGlobals);
+    KConfig *gc = new KConfig("kdeglobals", KConfig::CascadeConfig);
     bool isVirtual = KApplication::desktop()->isVirtualDesktop();
     KConfigGroup gWindowsConfig(gc, "Windows");
     xineramaEnabled = gWindowsConfig.readEntry ("XineramaEnabled", isVirtual) &&

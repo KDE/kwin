@@ -74,87 +74,87 @@ int main(int argc, char **argv)
     if(!tmpStr.isEmpty()){
         copy(srcStr+tmpStr, localDirStr+tmpStr);
     }
-    output->writeEntry("wm_top", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("wm_top", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("shapePixmapBottom");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("wm_bottom", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("wm_bottom", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("shapePixmapLeft");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("wm_left", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("wm_left", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("shapePixmapRight");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("wm_right", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("wm_right", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("shapePixmapTopLeft");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("wm_topleft", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("wm_topleft", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("shapePixmapTopRight");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("wm_topright", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("wm_topright", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("shapePixmapBottomLeft");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("wm_bottomleft", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("wm_bottomleft", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("shapePixmapBottomRight");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("wm_bottomright", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("wm_bottomright", tmpStr, KConfig::Normal|KConfig::Global);
 
 
     input.setGroup("Window Titlebar");
-    output->writeEntry("TitleAlignment", input.readEntry("TitleAlignment"), KConfigBase::Normal|KConfigBase::Global);
-    output->writeEntry("PixmapUnderTitleText", input.readEntry("PixmapUnderTitleText"), KConfigBase::Normal|KConfigBase::Global);
-    output->writeEntry("TitleFrameShaded", input.readEntry("TitleFrameShaded"), KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("TitleAlignment", input.readEntry("TitleAlignment"), KConfig::Normal|KConfig::Global);
+    output->writeEntry("PixmapUnderTitleText", input.readEntry("PixmapUnderTitleText"), KConfig::Normal|KConfig::Global);
+    output->writeEntry("TitleFrameShaded", input.readEntry("TitleFrameShaded"), KConfig::Normal|KConfig::Global);
 
     tmpStr = input.readEntry("MenuButton");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("menu", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("menu", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("PinUpButton");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("pinup", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("pinup", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("PinDownButton");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("pindown", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("pindown", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("CloseButton");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("close", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("close", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("MaximizeButton");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("maximize", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("maximize", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("MaximizeDownButton");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("maximizedown", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("maximizedown", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("MinimizeButton");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("iconify", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("iconify", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("TitlebarPixmapActive");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("TitlebarPixmapActive", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("TitlebarPixmapActive", tmpStr, KConfig::Normal|KConfig::Global);
     tmpStr = input.readEntry("TitlebarPixmapInactive");
     if(!tmpStr.isEmpty())
         copy(srcStr+tmpStr, localDirStr+tmpStr);
-    output->writeEntry("TitlebarPixmapInactive", tmpStr, KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("TitlebarPixmapInactive", tmpStr, KConfig::Normal|KConfig::Global);
 
     input.setGroup("Window Button Layout");
     output->setGroup("Buttons");
-    output->writeEntry("ButtonA", input.readEntry("ButtonA"), KConfigBase::Normal|KConfigBase::Global);
-    output->writeEntry("ButtonB", input.readEntry("ButtonB"), KConfigBase::Normal|KConfigBase::Global);
-    output->writeEntry("ButtonC", input.readEntry("ButtonC"), KConfigBase::Normal|KConfigBase::Global);
-    output->writeEntry("ButtonD", input.readEntry("ButtonD"), KConfigBase::Normal|KConfigBase::Global);
-    output->writeEntry("ButtonE", input.readEntry("ButtonE"), KConfigBase::Normal|KConfigBase::Global);
-    output->writeEntry("ButtonF", input.readEntry("ButtonF"), KConfigBase::Normal|KConfigBase::Global);
+    output->writeEntry("ButtonA", input.readEntry("ButtonA"), KConfig::Normal|KConfig::Global);
+    output->writeEntry("ButtonB", input.readEntry("ButtonB"), KConfig::Normal|KConfig::Global);
+    output->writeEntry("ButtonC", input.readEntry("ButtonC"), KConfig::Normal|KConfig::Global);
+    output->writeEntry("ButtonD", input.readEntry("ButtonD"), KConfig::Normal|KConfig::Global);
+    output->writeEntry("ButtonE", input.readEntry("ButtonE"), KConfig::Normal|KConfig::Global);
+    output->writeEntry("ButtonF", input.readEntry("ButtonF"), KConfig::Normal|KConfig::Global);
 
     output->sync();
 

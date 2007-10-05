@@ -30,6 +30,7 @@
 #include <QBitmap>
 
 #include <kdecoration.h>
+#include <kglobal.h>
 
 #include "oxygenclient.h"
 #include "oxygenbutton.h"

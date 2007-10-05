@@ -21,6 +21,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kdebug.h>
 #include <ksharedconfig.h>
+#include <kconfiggroup.h>
 
 #include <assert.h>
 
@@ -281,7 +282,7 @@ void EffectsHandler::sendReloadMessage( const QString& effectname )
 
 KConfigGroup EffectsHandler::effectConfig( const QString& effectname )
     {
-    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig( "kwinrc", KConfig::NoGlobals );
+    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig( "kwinrc", KConfig::CascadeConfig );
     return kwinconfig->group( "Effect-" + effectname );
     }
 

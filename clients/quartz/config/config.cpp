@@ -9,7 +9,7 @@
 
 #include "config.h"
 #include <kglobal.h>
-
+#include <kconfiggroup.h>
 #include <klocale.h>
 #include <kvbox.h>
 

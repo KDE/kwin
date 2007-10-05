@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <kconfig.h>
+#include <kconfiggroup.h>
 #include <klocale.h>
 #include <kiconeffect.h>
 

@@ -30,6 +30,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kdialog.h>
 #include <kstandarddirs.h>
+#include <kdebug.h>
 #include <QLabel>
 #include <QComboBox>
 #include <QVBoxLayout>

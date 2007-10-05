@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <netwm_def.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kcomponentdata.h>
 #include <QRect>
 #include <QByteArray>

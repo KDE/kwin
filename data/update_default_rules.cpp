@@ -11,6 +11,7 @@ License. See the file "COPYING" for the exact licensing terms.
 // read additional window rules and add them to kwinrulesrc
 
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>

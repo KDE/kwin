@@ -15,6 +15,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QRect>
 #include <assert.h>
 
+#include <QTextStream>
+
 #ifndef KCMRULES
 #include "workspace.h"
 #include "client.h"

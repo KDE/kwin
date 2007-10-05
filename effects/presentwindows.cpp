@@ -15,6 +15,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kaction.h>
 #include <klocale.h>
 #include <kcolorscheme.h>
+#include <kconfiggroup.h>
+#include <kdebug.h>
 
 #include <QMouseEvent>
 #include <qpainter.h>

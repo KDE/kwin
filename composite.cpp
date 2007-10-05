@@ -28,6 +28,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <config-X11.h>
 
 #include "utils.h"
+#include <QTextStream>
 #include "workspace.h"
 #include "client.h"
 #include "unmanaged.h"

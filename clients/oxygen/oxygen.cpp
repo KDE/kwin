@@ -26,6 +26,8 @@
 
 #include "oxygenclient.h"
 #include "oxygen.h"
+#include <kconfiggroup.h>
+
 extern "C"
 {
 KDE_EXPORT KDecorationFactory* create_factory()

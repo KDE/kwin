@@ -74,7 +74,7 @@ Rules::Rules( const QString& str, bool temporary )
         file.write( s.data(), s.length());
         }
     file.flush();
-    KConfig cfg( file.fileName(), KConfig::OnlyLocal);
+    KConfig cfg( file.fileName(), KConfig::SimpleConfig);
     readFromCfg( cfg.group( QString() ) );
     if( description.isEmpty())
         description = "temporary";

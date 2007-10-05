@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 //#define QT_CLEAN_NAMESPACE
 #include "popupinfo.h"
+#include <QTextStream>
 #include "workspace.h"
 #include "client.h"
 #include <QPainter>

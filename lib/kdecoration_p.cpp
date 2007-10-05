@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration_p.h"
 
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kglobalsettings.h>
 #include <QPalette>
 #include <QApplication>

@@ -20,7 +20,7 @@
 // Daniel M. DULEY <mosfet@kde.org>               original work
 // Melchior FRANZ  <a8603365@unet.univie.ac.at>   configuration options
 
-#include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <QLayout>

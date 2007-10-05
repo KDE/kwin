@@ -24,7 +24,7 @@
 #include <QPainter>
 #include <QImage>
 
-#include <kconfig.h>
+#include <kconfiggroup.h>
 #include <QPixmap>
 
 #include "misc.h"
@@ -33,6 +33,7 @@
 #include "plastikclient.h"
 #include "plastikbutton.h"
 #include <QApplication>
+#include <kconfig.h>
 
 namespace KWinPlastik
 {

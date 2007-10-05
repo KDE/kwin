@@ -15,7 +15,7 @@
 
 #include "kde2.h"
 
-#include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
