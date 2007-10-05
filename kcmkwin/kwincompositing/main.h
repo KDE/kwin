@@ -16,10 +16,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <ksharedconfig.h>
 #include <ktemporaryfile.h>
-#include <kdialog.h>
 
 #include "ui_main.h"
 #include "compositingprefs.h"
+#include "ktimerdialog.h"
 
 class KPluginSelector;
 class QLabel;
@@ -27,18 +27,11 @@ class QLabel;
 namespace KWin
 {
 
-class ConfirmDialog : public KDialog
+class ConfirmDialog : public KTimerDialog
 {
 Q_OBJECT
 public:
     ConfirmDialog();
-
-protected slots:
-    void advanceTimer();
-
-private:
-    int mSecondsToLive;
-    QLabel* mTextLabel;
 };
 
 class KWinCompositingConfig : public KCModule

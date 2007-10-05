@@ -68,8 +68,7 @@ void KWinAdvancedCompositingOptions::compositingModeChanged()
 void KWinAdvancedCompositingOptions::showConfirmDialog()
 {
     ConfirmDialog confirm;
-    int result = confirm.exec();
-    if(result != KDialog::Yes)
+    if(!confirm.exec())
     {
         // Revert settings
         KConfigGroup config(mKWinConfig, "Compositing");

@@ -38,36 +38,19 @@ namespace KWin
 
 
 ConfirmDialog::ConfirmDialog() :
-        KDialog()
+        KTimerDialog(10000, KTimerDialog::CountDown, 0, "mainKTimerDialog", true,
+                     i18n("Confirm Desktop Effects Change"), KTimerDialog::Ok|KTimerDialog::Cancel,
+                     KTimerDialog::Cancel)
     {
-    setCaption( i18n( "Desktop effects settings changed" ));
-    setButtons( KDialog::Yes | KDialog::No );
-    setDefaultButton(KDialog::No);
-    setButtonFocus(KDialog::No);
+    setButtonGuiItem( KDialog::Ok, KGuiItem( i18n( "&Accept Configuration" ), "dialog-ok" ));
+    setButtonGuiItem( KDialog::Cancel, KGuiItem( i18n( "&Return to Previous Configuration" ), "dialog-cancel" ));
 
-    mTextLabel = new QLabel(this);
-    setMainWidget(mTextLabel);
-
-    mSecondsToLive = 10+1;
-    advanceTimer();
+    QLabel *label = new QLabel( i18n( "Desktop effects settings have changed.\n"
+            "Do you want to keep the new settings?\n"
+            "They will be automatically reverted in 10 seconds." ), this );
+    label->setWordWrap( true );
+    setMainWidget( label );
     }
-
-void ConfirmDialog::advanceTimer()
-    {
-    mSecondsToLive--;
-    if(mSecondsToLive > 0)
-    {
-        QString text = i18n("Desktop effects settings have changed.\n"
-                "Do you want to keep the new settings?\n"
-                "They will be automatically reverted in %1 seconds", mSecondsToLive);
-        mTextLabel->setText(text);
-        QTimer::singleShot(1000, this, SLOT(advanceTimer()));
-    }
-    else
-    {
-        slotButtonClicked(KDialog::No);
-    }
-}
 
 
 KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList &)
@@ -150,8 +133,7 @@ void KWinCompositingConfig::showAdvancedOptions()
 void KWinCompositingConfig::showConfirmDialog()
 {
     ConfirmDialog confirm;
-    int result = confirm.exec();
-    if(result != KDialog::Yes)
+    if(!confirm.exec())
     {
         // Revert settings
         KConfigGroup config(mKWinConfig, "Compositing");

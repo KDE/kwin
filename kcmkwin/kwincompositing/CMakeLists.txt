@@ -5,6 +5,7 @@ include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin )
 set(kcm_kwincompositing_PART_SRCS
     advanced.cpp
     main.cpp
+    ktimerdialog.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/compositingprefs.cpp
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib/kwinglobals.cpp
     )
