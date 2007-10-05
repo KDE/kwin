@@ -39,6 +39,15 @@ glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
 glXGetVideoSync_func glXGetVideoSync;
 glXWaitVideoSync_func glXWaitVideoSync;
+// GLX_SGIX_fbconfig
+glXGetFBConfigAttrib_func glXGetFBConfigAttrib;
+glXGetVisualFromFBConfig_func glXGetVisualFromFBConfig;
+glXCreateWindow_func glXCreateWindow;
+glXDestroyWindow_func glXDestroyWindow;
+glXCreatePixmap_func glXCreatePixmap;
+glXDestroyPixmap_func glXDestroyPixmap;
+glXGetFBConfigs_func glXGetFBConfigs;
+
 // glActiveTexture
 glActiveTexture_func glActiveTexture;
 // framebuffer_object extension functions
@@ -124,6 +133,14 @@ void glxResolveFunctions()
         glXGetVideoSync = NULL;
         glXWaitVideoSync = NULL;
         }
+
+    GL_RESOLVE_WITH_EXT( glXGetFBConfigAttrib, glXGetFBConfigAttribSGIX );
+    GL_RESOLVE_WITH_EXT( glXGetVisualFromFBConfig, glXGetVisualFromFBConfigSGIX );
+    GL_RESOLVE( glXGetFBConfigs );
+    GL_RESOLVE( glXCreateWindow );
+    GL_RESOLVE( glXDestroyWindow );
+    GL_RESOLVE( glXCreatePixmap );
+    GL_RESOLVE( glXDestroyPixmap );
     }
 
 void glResolveFunctions()

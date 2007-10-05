@@ -110,9 +110,11 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         }
     initGLX();
     // check for FBConfig support
-    if( !hasGLXVersion( 1, 3 ) && !hasGLExtension( "GLX_SGIX_fbconfig" ))
+    if( !hasGLExtension( "GLX_SGIX_fbconfig" ) || !glXGetFBConfigAttrib || !glXGetFBConfigs ||
+            !glXGetVisualFromFBConfig || !glXCreatePixmap || !glXDestroyPixmap ||
+            !glXCreateWindow || !glXDestroyWindow )
         {
-        kDebug( 1212 ) << "GLX1.3 or GLX_SGIX_fbconfig missing";
+        kDebug( 1212 ) << "GLX_SGIX_fbconfig or required GLX functions missing";
         return; // error
         }
     if( !selectMode())
