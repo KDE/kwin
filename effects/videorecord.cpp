@@ -37,6 +37,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <kdebug.h>
 #include <klocale.h>
 #include <qdir.h>
 #include <qfile.h>
