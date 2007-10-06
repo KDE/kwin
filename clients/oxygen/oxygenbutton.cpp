@@ -48,7 +48,6 @@ K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("OxygenDeco"))
 extern int BUTTONSIZE;
 extern int DECOSIZE;*/
 
-static const int OXYGEN_BUTTONSIZE      = 21;
 // static const int DECOSIZE        = 8;
 //////////////////////////////////////////////////////////////////////////////
 // OxygenButton Class                                                      //
@@ -141,7 +140,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     }
 
     QColor bg = globalHelper->backgroundTopColor(palette().window());
-    painter.drawPixmap(-1, -1, globalHelper->windecoButton(palette().button()));
+    painter.drawPixmap(0, 0, globalHelper->windecoButton(palette().button()));
 
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);

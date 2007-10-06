@@ -158,9 +158,9 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_TitleHeight:
         {
             if (respectWindowState && isToolWindow()) {
-                return BUTTONSIZE;
+                return OXYGEN_BUTTONSIZE;
             } else {
-                return BUTTONSIZE;
+                return OXYGEN_BUTTONSIZE;
             }
         }
 

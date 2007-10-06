@@ -33,11 +33,13 @@ namespace Oxygen
 {
 // OxygenFactory /////////////////////////////////////////////////////////////
 
+static const int OXYGEN_BUTTONSIZE      = 21;
+
 enum ButtonType {
     ButtonHelp=0,
     ButtonMax,
     ButtonMin,
-    ButtonClose, 
+    ButtonClose,
     ButtonMenu,
     ButtonSticky,
     ButtonTypeCount
