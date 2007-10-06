@@ -48,7 +48,7 @@ K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("OxygenDeco"))
 extern int BUTTONSIZE;
 extern int DECOSIZE;*/
 
-// static const int BUTTONSIZE      = 18;
+static const int OXYGEN_BUTTONSIZE      = 21;
 // static const int DECOSIZE        = 8;
 //////////////////////////////////////////////////////////////////////////////
 // OxygenButton Class                                                      //
@@ -68,7 +68,7 @@ OxygenButton::OxygenButton(OxygenClient *parent,
 {
     setAutoFillBackground(false);
     setAttribute(Qt::WA_OpaquePaintEvent, false);
-    setFixedSize(BUTTONSIZE, BUTTONSIZE);
+    setFixedSize(OXYGEN_BUTTONSIZE, OXYGEN_BUTTONSIZE);
     setCursor(Qt::ArrowCursor);
     setToolTip(tip);
 }
@@ -84,7 +84,7 @@ OxygenButton::~OxygenButton()
 
 QSize OxygenButton::sizeHint() const
 {
-    return QSize(BUTTONSIZE, BUTTONSIZE);
+    return QSize(OXYGEN_BUTTONSIZE, OXYGEN_BUTTONSIZE);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     }
 
     QColor bg = globalHelper->backgroundTopColor(palette().window());
-    painter.drawPixmap(0, 0, globalHelper->windecoButton(palette().button(), BUTTONSIZE));
+    painter.drawPixmap(-1, -1, globalHelper->windecoButton(palette().button()));
 
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);
