@@ -24,7 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QtCore/QList>
 #include <QtCore/QHash>
 
-#include <KPluginFactory> 
+#include <KDE/KPluginFactory> 
 
 #include <assert.h>
 
