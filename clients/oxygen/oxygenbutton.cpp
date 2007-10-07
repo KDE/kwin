@@ -142,6 +142,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     QColor bg = globalHelper->backgroundTopColor(palette().window());
     painter.drawPixmap(0, 0, globalHelper->windecoButton(palette().button()));
 
+    painter.translate(1,1);
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);
     QLinearGradient lg(0, 6, 0, 12);
