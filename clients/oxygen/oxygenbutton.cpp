@@ -152,9 +152,12 @@ void OxygenButton::paintEvent(QPaintEvent *)
     switch(type_)
     {
         case ButtonSticky:
-                    painter.drawPoint(9,9);
+            painter.drawPoint(9,9);
             break;
         case ButtonHelp:
+            painter.drawArc(7,5,4,4,135*16, -180*16);
+            painter.drawArc(9,8,4,4,135*16,45*16);
+            painter.drawPoint(9,12);
             break;
         case ButtonMin:
             painter.drawLine(6,8,9,11);
@@ -170,8 +173,12 @@ void OxygenButton::paintEvent(QPaintEvent *)
                     painter.drawLine(6,11,9,8);
                     break;
                 case OxygenClient::MaximizeFull:
-                    painter.drawLine(6,9,12,9);
+                {
+                    painter.setBrush(lg);
+                    QPoint points[4] = {QPoint(9, 6), QPoint(12, 9), QPoint(9, 12), QPoint(6, 9)};
+                    painter.drawPolygon(points, 4);
                     break;
+                }
             }
             break;
         case ButtonClose:
