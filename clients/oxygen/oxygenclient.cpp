@@ -269,35 +269,30 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // shadows of the frame
+    // Draw shadows of the frame
     frame = widget()->rect();
     frame.getRect(&x, &y, &w, &h);
 
     painter.setBrush(Qt::NoBrush);
-    QLinearGradient lg(0, 0, 0, 10);
-    QGradientStops stops;
-    stops << QGradientStop( 0, QColor(255,255,255, 110) )
-           << QGradientStop( 1, QColor(128,128,128, 60) );
-    lg.setStops(stops);
-    painter.setPen(QPen(QBrush(lg),1));
-    painter.drawLine(QPointF(6.3, 0.5), QPointF(w-6.3, 0.5));
-    painter.drawArc(QRectF(0.5, 0.5, 9.5, 9.5),90*16, 90*16);
-    painter.drawArc(QRectF(w-9.5-0.5, 0.5, 9.5, 9.5), 0, 90*16);
-
+    painter.setPen(QColor(255,255,255, 120));
+    painter.drawLine(QPointF(0, 0.5), QPointF(w, 0.5));
     painter.setPen(QColor(128,128,128, 60));
-    painter.drawLine(QPointF(0.5, 6.3), QPointF(0.5, h-6.3));
-    painter.drawLine(QPointF(w-0.5, 6.3), QPointF(w-0.5, h-6.3));
+    painter.drawLine(QPointF(0.5, 0), QPointF(0.5, h));
+    painter.drawLine(QPointF(w-0.5, 0), QPointF(w-0.5, h));
+    painter.setPen(QColor(0,0,0, 60));
+    painter.drawLine(QPointF(0, h-0.5), QPointF(w, h-0.5));
 
-    lg = QLinearGradient(0, h-10, 0, h);
-    stops.clear();
-    stops << QGradientStop( 0, QColor(128,128,128, 60) )
-           << QGradientStop( 1, QColor(0,0,0, 50) );
-    lg.setStops(stops);
-    painter.setPen(QPen(QBrush(lg),1));
-    painter.drawArc(QRectF(0.5, h-9.5-0.5, 9.5, 9.5),180*16, 90*16);
-    painter.drawArc(QRectF(w-9.5-0.5, h-9.5-0.5, 9.5, 9.5), 270*16, 90*16);
-    painter.drawLine(QPointF(6.3, h-0.5), QPointF(w-6.3, h-0.5));
+    painter.setPen(QColor(0,0,0, 40));
+    painter.drawPoint(QPointF(1.5, 1.5)); // top middle point
+    painter.drawPoint(QPointF(w-1.5, 1.5));
+    painter.drawPoint(QPointF(3.5, 0.5)); // top away points
+    painter.drawPoint(QPointF(w-3.5, 0.5));
+    painter.drawPoint(QPointF(0.5, 3.5));
+    painter.drawPoint(QPointF(w-0.5, 3.5));
+    painter.drawPoint(QPointF(1.5, h-1.5)); // bottom middle point
+    painter.drawPoint(QPointF(w-1.5, h-1.5));
 
+    // Draw the 3-dots resize handles
     qreal cenY = frame.height() / 2 + 0.5;
     qreal posX = frame.width() - 2.5;
     painter.setPen(Qt::NoPen);
@@ -319,22 +314,22 @@ void OxygenClient::doShape()
 QRegion mask(0,0,r,b);
     // Remove top-left corner.
     mask -= QRegion(0, 0, 3, 1);
-    mask -= QRegion(0, 1, 2, 1);
+    mask -= QRegion(0, 1, 1, 1);
     mask -= QRegion(0, 2, 1, 1);
 
     // Remove top-right corner.
     mask -= QRegion(r - 3, 0, 3, 1);
-    mask -= QRegion(r - 2, 1, 2, 1);
+    mask -= QRegion(r - 1, 1, 1, 1);
     mask -= QRegion(r - 1, 2, 1, 1);
 
     // Remove bottom-left corner.
     mask -= QRegion(0, b-1-0, 3, b-1-1);
-    mask -= QRegion(0, b-1-1, 2, b-1-1);
+    mask -= QRegion(0, b-1-1, 1, b-1-1);
     mask -= QRegion(0, b-1-2, 1, b-1-1);
 
     // Remove bottom-right corner.
     mask -= QRegion(r - 3, b-1-0, 3, b-1-1);
-    mask -= QRegion(r - 2, b-1-1, 2, b-1-1);
+    mask -= QRegion(r - 1, b-1-1, 1, b-1-1);
     mask -= QRegion(r - 1, b-1-2, 1, b-1-1);
 
     setMask(mask);
