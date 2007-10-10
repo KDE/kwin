@@ -211,10 +211,9 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     QPalette palette = widget()->palette();
     QPainter painter(widget());
 
-    // ### - This feels like a kwin bug; the palette we get back always seems
-    // to be (incorrectly) using the Inactive group, which is wrong; active
-    // windows should have currentColorGroup() == Active. So, hack around it...
-    // I don't think a window can be disabled?
+    // Set palette to the right group. Lubos disagrees with this being a kwin
+    // bug, but anyway, we need the palette group to match the current window.
+    // Since kwin doesn't set it correctly, we have to do it ourselves.
     if (isActive())
         palette.setCurrentColorGroup(QPalette::Active);
     else

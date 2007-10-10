@@ -127,6 +127,7 @@ void OxygenButton::pressSlot()
 void OxygenButton::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
+    QPalette pal = palette(); // de-const-ify
 
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
@@ -136,15 +137,21 @@ void OxygenButton::paintEvent(QPaintEvent *)
         return;
     }
 
-    QColor bg = helper_.backgroundTopColor(palette().window());
-    painter.drawPixmap(0, 0, helper_.windecoButton(palette().button()));
+    // Set palette to the right group. Lubos disagrees with this being a kwin
+    // bug, but anyway, we need the palette group to match the current window.
+    // Since kwin doesn't set it correctly, we have to do it ourselves.
+    if (client_.isActive())
+        pal.setCurrentColorGroup(QPalette::Active);
+    else
+        pal.setCurrentColorGroup(QPalette::Inactive);
+
+    QColor bg = helper_.backgroundTopColor(pal.window());
+    painter.drawPixmap(0, 0, helper_.windecoButton(pal.button()));
 
     painter.translate(1.5,1.5);
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);
-    QLinearGradient lg(0, 6, 0, 12);
-    lg.setColorAt(0.45, QColor(0,0,0,150));
-    lg.setColorAt(0.80, QColor(0,0,0,80));
+    QLinearGradient lg = helper_.decoGradient(QRect(2,2,17,17), pal.color(QPalette::ButtonText));
     painter.setPen(QPen(lg, 2));
     switch(type_)
     {
