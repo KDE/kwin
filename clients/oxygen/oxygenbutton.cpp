@@ -151,7 +151,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);
     QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), pal.color(QPalette::ButtonText));
-    painter.setPen(QPen(lg, 2.5));
+    painter.setPen(QPen(lg, 2.5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     switch(type_)
     {
         case ButtonSticky:
