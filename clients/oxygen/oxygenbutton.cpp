@@ -148,24 +148,24 @@ void OxygenButton::paintEvent(QPaintEvent *)
     QColor bg = helper_.backgroundTopColor(pal.window());
     painter.drawPixmap(0, 0, helper_.windecoButton(pal.button()));
 
-    painter.translate(1.5,1.5);
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);
-    QLinearGradient lg = helper_.decoGradient(QRect(2,2,17,17), pal.color(QPalette::ButtonText));
-    painter.setPen(QPen(lg, 2));
+    QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), pal.color(QPalette::ButtonText));
+    painter.setPen(QPen(lg, 2.5));
     switch(type_)
     {
         case ButtonSticky:
-            painter.drawPoint(9,9);
+            painter.drawPoint(QPointF(10.5,10.5));
             break;
         case ButtonHelp:
+            painter.translate(1.5, 1.5);
             painter.drawArc(7,5,4,4,135*16, -180*16);
             painter.drawArc(9,8,4,4,135*16,45*16);
             painter.drawPoint(9,12);
             break;
         case ButtonMin:
-            painter.drawLine(6,8,9,11);
-            painter.drawLine(9,11,12,8);
+            painter.drawLine(QPointF( 7.5, 9.5), QPointF(10.5,12.5));
+            painter.drawLine(QPointF(10.5,12.5), QPointF(13.5, 9.5));
             break;
         case ButtonMax:
             switch(client_.maximizeMode())
@@ -173,11 +173,12 @@ void OxygenButton::paintEvent(QPaintEvent *)
                 case OxygenClient::MaximizeRestore:
                 case OxygenClient::MaximizeVertical:
                 case OxygenClient::MaximizeHorizontal:
-                    painter.drawLine(9,8,12,11);
-                    painter.drawLine(6,11,9,8);
+                    painter.drawLine(QPointF( 7.5,11.5), QPointF(10.5, 8.5));
+                    painter.drawLine(QPointF(10.5, 8.5), QPointF(13.5,11.5));
                     break;
                 case OxygenClient::MaximizeFull:
                 {
+                    painter.translate(1.5, 1.5);
                     painter.setBrush(lg);
                     QPoint points[4] = {QPoint(9, 6), QPoint(12, 9), QPoint(9, 12), QPoint(6, 9)};
                     painter.drawPolygon(points, 4);
@@ -186,8 +187,8 @@ void OxygenButton::paintEvent(QPaintEvent *)
             }
             break;
         case ButtonClose:
-            painter.drawLine(6,6,12,12);
-            painter.drawLine(12,6,6,12);
+            painter.drawLine(QPointF( 7.5,7.5), QPointF(13.5,13.5));
+            painter.drawLine(QPointF(13.5,7.5), QPointF( 7.5,13.5));
             break;
         default:
             break;
