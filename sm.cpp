@@ -205,45 +205,54 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
     // First search ``session''
     if (! sessionId.isEmpty() ) 
         {
-			// look for a real session managed client (algorithm suggested by ICCCM)
-			foreach( SessionInfo* info, session ) {
-				if ( realInfo )
-					break;
-				if ( info->sessionId == sessionId && sessionInfoWindowTypeMatch( c, info )) 
-				{
-				if ( ! windowRole.isEmpty() ) 
-					{
-					if ( info->windowRole == windowRole )
-						realInfo = info;
-						session.removeAll(info);
-					}
-				else 
-					{
-					if ( info->windowRole.isEmpty() &&
-						 info->resourceName == resourceName &&
-						 info->resourceClass == resourceClass )
-						realInfo = info;
-						session.removeAll(info);
-					}
-				}
-			}
+        // look for a real session managed client (algorithm suggested by ICCCM)
+        foreach( SessionInfo* info, session )
+            {
+            if( realInfo )
+                break;
+            if( info->sessionId == sessionId && sessionInfoWindowTypeMatch( c, info )) 
+                {
+                if( ! windowRole.isEmpty() ) 
+                    {
+                    if( info->windowRole == windowRole )
+                        {
+                        realInfo = info;
+                        session.removeAll(info);
+                        }
+                    }
+                else 
+                    {
+                    if( info->windowRole.isEmpty()
+                        && info->resourceName == resourceName
+                        && info->resourceClass == resourceClass )
+                        {
+                        realInfo = info;
+                        session.removeAll(info);
+                        }
+                    }
+                }
+            }
         }
     else 
         {
-			// look for a sessioninfo with matching features.
-			foreach( SessionInfo* info, session ) {
-				if ( realInfo ) break;
-				if ( info->resourceName == resourceName &&
-						info->resourceClass == resourceClass &&
-						info->wmClientMachine == wmClientMachine &&
-						sessionInfoWindowTypeMatch( c, info ))
-					if ( wmCommand.isEmpty() || info->wmCommand == wmCommand ) {
-						realInfo = info;
-						session.removeAll( info );
-					}
-			}
+        // look for a sessioninfo with matching features.
+        foreach( SessionInfo* info, session )
+            {
+            if( realInfo )
+                break;
+            if( info->resourceName == resourceName
+                && info->resourceClass == resourceClass
+                && info->wmClientMachine == wmClientMachine
+                && sessionInfoWindowTypeMatch( c, info ))
+                {
+                if ( wmCommand.isEmpty() || info->wmCommand == wmCommand )
+                    {
+                    realInfo = info;
+                    session.removeAll( info );
+                    }
+                }
+            }
         }
-
     return realInfo;
     }
 
