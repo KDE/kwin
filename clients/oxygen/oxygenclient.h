@@ -31,7 +31,7 @@
 
 #include <kcommondecoration.h>
 
-#include "oxygenbutton.h"
+#include "lib/helper.h"
 
 class QPoint;
 
@@ -56,6 +56,10 @@ public:
 private:
     void paintEvent(QPaintEvent *e);
     void doShape();
+
+protected:
+    friend class OxygenButton;
+    OxygenHelper &helper_;
 };
 
 

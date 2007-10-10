@@ -36,13 +36,9 @@
 #include "oxygenbutton.h"
 #include "oxygen.h"
 #include "definitions.cpp"
-#include "lib/helper.h"
 
 namespace Oxygen
 {
-#ifndef KDE_USE_FINAL
-K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("OxygenDeco"))
-#endif
 // class OxygenClient;
 /*
 extern int BUTTONSIZE;
@@ -58,10 +54,11 @@ extern int DECOSIZE;*/
 // ---------------
 // Constructor
 
-OxygenButton::OxygenButton(OxygenClient *parent,
+OxygenButton::OxygenButton(OxygenClient &parent,
                              const QString& tip, ButtonType type)
-    : KCommonDecorationButton((::ButtonType)type,(KCommonDecoration*) parent)
+    : KCommonDecorationButton((::ButtonType)type, &parent)
     , client_(parent)
+    , helper_(parent.helper_)
     , type_(type)
     , lastmouse_(0)
 {
@@ -135,12 +132,12 @@ void OxygenButton::paintEvent(QPaintEvent *)
         // we paint the mini icon (which is 16 pixels high)
         int dx = (width() - 16) / 2;
         int dy = (height() - 16) / 2;
-        painter.drawPixmap(dx, dy, client_->icon().pixmap(16));
+        painter.drawPixmap(dx, dy, client_.icon().pixmap(16));
         return;
     }
 
-    QColor bg = globalHelper->backgroundTopColor(palette().window());
-    painter.drawPixmap(0, 0, globalHelper->windecoButton(palette().button()));
+    QColor bg = helper_.backgroundTopColor(palette().window());
+    painter.drawPixmap(0, 0, helper_.windecoButton(palette().button()));
 
     painter.translate(1.5,1.5);
     painter.setRenderHints(QPainter::Antialiasing);
@@ -148,7 +145,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     QLinearGradient lg(0, 6, 0, 12);
     lg.setColorAt(0.45, QColor(0,0,0,150));
     lg.setColorAt(0.80, QColor(0,0,0,80));
-    painter.setPen(QPen(lg,2));
+    painter.setPen(QPen(lg, 2));
     switch(type_)
     {
         case ButtonSticky:
@@ -164,7 +161,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
             painter.drawLine(9,11,12,8);
             break;
         case ButtonMax:
-            switch(client_->maximizeMode())
+            switch(client_.maximizeMode())
             {
                 case OxygenClient::MaximizeRestore:
                 case OxygenClient::MaximizeVertical:

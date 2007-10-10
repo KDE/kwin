@@ -30,6 +30,7 @@
 #include <kcommondecoration.h>
 
 #include "oxygen.h"
+#include "oxygenclient.h"
 
 namespace Oxygen
 {
@@ -45,7 +46,7 @@ Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
 class OxygenButton : public KCommonDecorationButton
 {
 public:
-    explicit OxygenButton(OxygenClient *parent=0,
+    explicit OxygenButton(OxygenClient &parent,
                   const QString &tip=NULL,
                   ButtonType type=ButtonHelp);
     ~OxygenButton();
@@ -63,7 +64,8 @@ private Q_SLOTS:
     void pressSlot();
 
 private:
-    OxygenClient *client_;
+    OxygenClient &client_;
+    OxygenHelper &helper_;
     ButtonType type_;
     ButtonState status_;
     int lastmouse_;

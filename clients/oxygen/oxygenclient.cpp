@@ -34,8 +34,6 @@
 #include <QTimer>
 #include <QCache>
 
-#include "lib/helper.h"
-
 #include "oxygenclient.h"
 #include "oxygenclient.moc"
 #include "oxygenbutton.h"
@@ -66,7 +64,7 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 
 
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
-    : KCommonDecoration(b, f) { ; }
+    : KCommonDecoration(b, f), helper_(*globalHelper) { ; }
 
 OxygenClient::~OxygenClient()
 {
@@ -92,7 +90,7 @@ void OxygenClient::init()
 
     widget()->setAutoFillBackground(false);
     widget()->setAttribute(Qt::WA_OpaquePaintEvent);
-    widget()->setAttribute( Qt::WA_PaintOnScreen, false);
+    widget()->setAttribute(Qt::WA_PaintOnScreen, false);
 }
 
 bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
@@ -183,19 +181,19 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
 {
     switch (type) {
         case MenuButton:
-            return new OxygenButton(this, i18n("Menu"), ButtonMenu);
+            return new OxygenButton(*this, i18n("Menu"), ButtonMenu);
 
         case HelpButton:
-            return new OxygenButton(this, i18n("Help"), ButtonHelp);
+            return new OxygenButton(*this, i18n("Help"), ButtonHelp);
 
         case MinButton:
-            return new OxygenButton(this, i18n("Minimize"), ButtonMin);
+            return new OxygenButton(*this, i18n("Minimize"), ButtonMin);
 
         case MaxButton:
-            return new OxygenButton(this, i18n("Minimize"), ButtonMax);
+            return new OxygenButton(*this, i18n("Minimize"), ButtonMax);
 
         case CloseButton:
-            return new OxygenButton(this, i18n("Minimize"), ButtonClose);
+            return new OxygenButton(*this, i18n("Minimize"), ButtonClose);
 
         default:
             return 0;
@@ -241,21 +239,21 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     int splitY = qMin(300, 3*frame.height()/4);
 
-    QPixmap tile = globalHelper->verticalGradient(color, splitY);
+    QPixmap tile = helper_.verticalGradient(color, splitY);
     painter.drawTiledPixmap(QRect(0, 0, frame.width(), titleHeight + TFRAMESIZE), tile);
 
     painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, splitY), tile);
-    painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, globalHelper->backgroundBottomColor(color));
+    painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, helper_.backgroundBottomColor(color));
 
     painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
                                                         RFRAMESIZE, splitY), tile,
                                                         QPoint(frame.width()-RFRAMESIZE, 0));
-    painter.fillRect(frame.width()-RFRAMESIZE, splitY, RFRAMESIZE, frame.height() - splitY, globalHelper->backgroundBottomColor(color));
+    painter.fillRect(frame.width()-RFRAMESIZE, splitY, RFRAMESIZE, frame.height() - splitY, helper_.backgroundBottomColor(color));
 
-    painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, globalHelper->backgroundBottomColor(color));
+    painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, helper_.backgroundBottomColor(color));
 
     int radialW = qMin(600, frame.width());
-    tile = globalHelper->radialGradient(color, radialW);
+    tile = helper_.radialGradient(color, radialW);
     QRect radialRect = QRect((frame.width() - radialW) / 2, 0, radialW, 64);
     painter.drawPixmap(radialRect, tile);
 
