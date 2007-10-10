@@ -395,8 +395,8 @@ SessionSaveDoneHelper::SessionSaveDoneHelper()
     props[ 2 ].type = const_cast< char* >( SmLISTofARRAY8 );
     props[ 2 ].num_vals = 1;
     props[ 2 ].vals = &propvalue[ 2 ];
-    propvalue[ 3 ].length = 0;
-    propvalue[ 3 ].value = qApp->argv()[ 0 ];
+    propvalue[ 3 ].length = strlen( "kwinsmhelper" );
+    propvalue[ 3 ].value = (SmPointer)"kwinsmhelper";
     props[ 3 ].name = const_cast< char* >( SmProgram );
     props[ 3 ].type = const_cast< char* >( SmARRAY8 );
     props[ 3 ].num_vals = 1;
