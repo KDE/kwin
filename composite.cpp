@@ -268,8 +268,9 @@ void Workspace::performCompositing()
     // repaints can seriously impact performance of everything else, therefore throttle
     // them - leave at least 5msec time after one repaint is finished and next one
     // is started.
-    if( lastCompositePaint.elapsed() < 5 )
-        return;
+    // Disabled now, it decreases smoothness of animations.
+//    if( lastCompositePaint.elapsed() < 5 )
+//        return;
     checkCursorPos();
     if( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
         {
