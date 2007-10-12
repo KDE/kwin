@@ -13,9 +13,9 @@
  */
 
 #include "b2client.h"
+
 #include <QApplication>
 #include <QLayout>
-#include <qdrawutil.h>
 #include <QPixmap>
 #include <QPaintEvent>
 #include <QPolygon>
@@ -31,7 +31,6 @@
 #include <QTextStream>
 #include <kicontheme.h>
 #include <kiconeffect.h>
-//#include <kdrawutil.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <QBitmap>
@@ -115,7 +114,7 @@ static void read_config(B2ClientFactory *f)
 {
     // Force button size to be in a reasonable range.
     // If the frame width is large, the button size must be large too.
-    buttonSize = (QFontMetrics(options()->font(true)).height() + 1) & 0x3e;
+    buttonSize = (QFontMetrics(options()->font(true)).height() - 1) & 0x3e;
     if (buttonSize < 16) buttonSize = 16;
 
     KConfig _conf( "kwinb2rc" );
@@ -215,6 +214,7 @@ static void create_pixmaps()
 	    break;
 	case P_SHADE:
 	case P_CLOSE:
+	case P_HELP:
 	    pixmap[i] = new QPixmap(bsize, bsize);
 	    break;
 	default:
@@ -236,11 +236,9 @@ static void create_pixmaps()
     QBitmap pinupMask = QBitmap::fromData(QSize(16, 16), pinup_mask_bits);
     QBitmap pindownMask = QBitmap::fromData(QSize(16, 16), pindown_mask_bits);
     QBitmap menuMask = QBitmap::fromData(QSize(16, 16), menu_mask_bits);
-    QBitmap helpMask = QBitmap::fromData(QSize(16, 16), help_mask_bits);
     for (i = 0; i < NumStates; i++) {
 	bool isDown = (i == Down) || (i == IDown);
 	pixmap[P_MENU * NumStates + i]->setMask(menuMask);
-	pixmap[P_HELP * NumStates + i]->setMask(helpMask);
 	pixmap[P_PINUP * NumStates + i]->setMask(isDown ? pindownMask: pinupMask);
     }
 
@@ -382,10 +380,9 @@ void B2Client::init()
     // Check this early, otherwise the preview will be rendered badly.
     resizable = isResizable();
 
-    createMainWidget(Qt::WResizeNoErase | Qt::WRepaintNoErase);
-    widget()->installEventFilter(this);
-
+    createMainWidget();
     widget()->setAttribute(Qt::WA_NoSystemBackground);
+    widget()->installEventFilter(this);
 
     // Set button pointers to NULL so we know what has been created
     for (int i = 0; i < BtnCount; i++)
@@ -1038,7 +1035,7 @@ static void redraw_pixmaps()
 
     QPainter p;
     // x for close + menu + help
-    for (int j = 0; j < 3; j++) {
+    for (int j = 0; j < 2; j++) {
         int pix;
         unsigned const char *light, *dark;
         switch (j) {
@@ -1049,7 +1046,6 @@ static void redraw_pixmaps()
             pix = P_MENU; light = menu_white_bits; dark = menu_dgray_bits;
             break;
         default:
-            pix = P_HELP; light = help_light_bits; dark = help_dark_bits;
             break;
         }
 	int off = (pixmap[pix * NumStates]->width() - 16) / 2;
@@ -1063,7 +1059,7 @@ static void redraw_pixmaps()
 
         for (int i = 0; i < NumStates; i++) {
 	    bool isAct = (i < 3);
-	    QPixmap *pixm = pixmap[pix* NumStates + i];
+	    QPixmap *pixm = pixmap[pix * NumStates + i];
 	    p.begin(pixm);
 	    QColor color = isAct ? activeColor : inactiveColor;
 	    p.setPen(color.light(150));
@@ -1073,6 +1069,33 @@ static void redraw_pixmaps()
 	    p.end();
         }
     }
+
+#if 1
+    // Help button: a question mark.
+    {
+	QFont font = options()->font(true);
+	font.setWeight(QFont::Black);
+	font.setStretch(110);
+	for (int i = 0; i < NumStates; i++) {
+	    bool isAct = (i < 3);
+	    QPixmap *pixm = pixmap[P_HELP * NumStates + i];
+	    pixm->fill(QColor(qRgba(0, 0, 0, 0)));
+	    pixm->setAlphaChannel(*pixm);
+	    p.begin(pixm);
+	    QColor color = isAct ? activeColor : inactiveColor;
+	    QRect r = QRect(0, 0, pixm->width(), pixm->height());
+	    p.setFont(font);
+	    QString label = i18nc("Help button label, one character", "?");
+	    r.moveTo(1, 2);
+	    p.setPen(color.light(150));
+	    p.drawText(r, Qt::AlignCenter | Qt::AlignVCenter, label);
+	    r.moveTo(0, 1);
+	    p.setPen(color.dark(150));
+	    p.drawText(r, Qt::AlignCenter | Qt::AlignVCenter, label);
+	    p.end();
+	}
+    }
+#endif
 
     // pin
     for (int i = 0; i < NumStates; i++) {
@@ -1171,9 +1194,9 @@ void B2Client::positionButtons()
 }
 
 // Transparent bound stuff.
-
 static QRect *visible_bound;
 static QPolygon bound_shape;
+
 
 bool B2Client::drawbound(const QRect& geom, bool clear)
 {
@@ -1210,13 +1233,16 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
     } else {
 	*visible_bound = geom;
     }
-/**
- * TODO: Replace by QRubberBand
- *   QPainter p(workspaceWidget());
- *   p.setPen(QPen(Qt::white, 5));
- *   p.setRasterOp(Qt::XorROP);
- *   p.drawPolygon(bound_shape);
- */
+    if (!workspaceWidget()) {
+	kDebug() << "workspaceWidget is null";
+    } else {
+	kDebug() << "workspaceWidget is " << workspaceWidget();
+    }
+
+    QPainter p(workspaceWidget());
+    p.setPen(QPen(Qt::white, 5));
+    p.setCompositionMode(QPainter::CompositionMode_Xor);
+    p.drawPolygon(bound_shape);
     if (clear) {
 	delete visible_bound;
 	visible_bound = 0;
@@ -1367,7 +1393,7 @@ B2Titlebar::B2Titlebar(B2Client *parent)
       set_x11mask(false), isfullyobscured(false), shift_move(false)
 {
     setAttribute(Qt::WA_NoSystemBackground);
-    captionSpacer = new QSpacerItem(buttonSize, buttonSize + 4,
+    captionSpacer = new QSpacerItem(buttonSize, buttonSize + 3,
 	    QSizePolicy::Expanding, QSizePolicy::Fixed);
 }
 
@@ -1423,7 +1449,7 @@ void B2Titlebar::drawTitlebar(QPainter &p, bool state)
     p.setPen(options()->color(KDecoration::ColorFont, state));
     p.setFont(options()->font(state));
     t = captionSpacer->geometry();
-    p.drawText(t, Qt::AlignCenter | Qt::AlignVCenter, client->caption());
+    p.drawText(t.translated(0, 1), Qt::AlignCenter | Qt::AlignVCenter, client->caption());
 }
 
 void B2Titlebar::recalcBuffer()
