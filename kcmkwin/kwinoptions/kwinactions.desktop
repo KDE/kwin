@@ -3,7 +3,7 @@ Encoding=UTF-8
 Icon=kcmkwm
 Type=Service
 ServiceTypes=KCModule
-Exec=kcmshell kwinactions
+Exec=kcmshell4 kwinactions
 DocPath=kcontrol/windowmanagement/index.html#action-actions
 
 X-KDE-Library=kcm_kwinoptions

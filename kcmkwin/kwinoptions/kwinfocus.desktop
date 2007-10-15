@@ -3,7 +3,7 @@ Encoding=UTF-8
 Icon=kcmkwm
 Type=Service
 ServiceTypes=KCModule
-Exec=kcmshell kwinfocus
+Exec=kcmshell4 kwinfocus
 DocPath=kcontrol/windowmanagement/index.html#action-focus
 
 X-KDE-Library=kcm_kwinoptions

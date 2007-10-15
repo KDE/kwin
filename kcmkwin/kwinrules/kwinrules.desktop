@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Exec=kcmshell kwinrules
+Exec=kcmshell4 kwinrules
 Icon=preferences-system-windows-specific
 Type=Service
 ServiceTypes=KCModule

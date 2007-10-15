@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Exec=kcmshell kwindecoration
+Exec=kcmshell4 kwindecoration
 Icon=preferences-system-windows-decoration
 Type=Service
 ServiceTypes=KCModule

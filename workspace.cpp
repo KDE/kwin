@@ -1140,7 +1140,7 @@ QStringList Workspace::configModules(bool controlCenter)
 
 void Workspace::configureWM()
     {
-	KToolInvocation::kdeinitExec( "kcmshell", configModules(false) );
+	KToolInvocation::kdeinitExec( "kcmshell4", configModules(false) );
     }
 
 /*!
