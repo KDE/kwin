@@ -205,7 +205,7 @@ static void create_pixmaps()
     for (i = 0; i < NUM_PIXMAPS; i++) {
 
         switch (i / NumStates) {
-	case P_MAX: // will be initialized by copying P_CLOSE
+	case P_CLOSE: // will be initialized by copying P_CLOSE
 	case P_RESIZE:
 	    pixmap[i] = new QPixmap();
 	    break;
@@ -213,7 +213,7 @@ static void create_pixmaps()
 	    pixmap[i] = new QPixmap(10, 10);
 	    break;
 	case P_SHADE:
-	case P_CLOSE:
+	case P_MAX:
 	case P_HELP:
 	    pixmap[i] = new QPixmap(bsize, bsize);
 	    break;
@@ -973,14 +973,14 @@ static void redraw_pixmaps()
     QColor inactiveColor = iPal.color(QPalette::Button);
     QColor activeColor = aPal.color(QPalette::Button);
 
-    // close
-    drawB2Rect(PIXMAP_A(P_CLOSE), activeColor, false);
-    drawB2Rect(PIXMAP_AH(P_CLOSE), activeColor, true);
-    drawB2Rect(PIXMAP_AD(P_CLOSE), activeColor, true);
+    // maximize
+    drawB2Rect(PIXMAP_A(P_MAX), activeColor, false);
+    drawB2Rect(PIXMAP_AH(P_MAX), activeColor, true);
+    drawB2Rect(PIXMAP_AD(P_MAX), activeColor, true);
 
-    drawB2Rect(PIXMAP_I(P_CLOSE), inactiveColor, false);
-    drawB2Rect(PIXMAP_IH(P_CLOSE), inactiveColor, true);
-    drawB2Rect(PIXMAP_ID(P_CLOSE), inactiveColor, true);
+    drawB2Rect(PIXMAP_I(P_MAX), inactiveColor, false);
+    drawB2Rect(PIXMAP_IH(P_MAX), inactiveColor, true);
+    drawB2Rect(PIXMAP_ID(P_MAX), inactiveColor, true);
 
     // shade
     QPixmap thinBox(buttonSize - 2, 6);
@@ -995,15 +995,9 @@ static void redraw_pixmaps()
 		0, 0, thinBox.width(), thinBox.height());
     }
 
-    // maximize
-    for (int i = 0; i < NumStates; i++) {
-	*pixmap[P_MAX * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
-	pixmap[P_MAX * NumStates + i]->detach();
-    }
-
     // normalize + iconify
-    QPixmap smallBox( 10, 10 );
-    QPixmap largeBox( 12, 12 );
+    QPixmap smallBox(10, 10);
+    QPixmap largeBox(12, 12);
 
     for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
@@ -1032,34 +1026,47 @@ static void redraw_pixmaps()
 		0, 0, &smallBox, 0, 0, 10, 10);
     }
 
-
     QPainter p;
-    // x for close + menu + help
-    for (int j = 0; j < 2; j++) {
-        int pix;
-        unsigned const char *light, *dark;
-        switch (j) {
-        case 0:
-            pix = P_CLOSE; light = close_white_bits; dark = close_dgray_bits;
-            break;
-        case 1:
-            pix = P_MENU; light = menu_white_bits; dark = menu_dgray_bits;
-            break;
-        default:
-            break;
-        }
-	int off = (pixmap[pix * NumStates]->width() - 16) / 2;
+    // close: copy the maximize image, then add the X
+    for (int i = 0; i < NumStates; i++) {
+	*pixmap[P_CLOSE * NumStates + i] = *pixmap[P_MAX * NumStates + i];
+	pixmap[P_CLOSE * NumStates + i]->detach();
+    }
+
+    for (int i = 0; i < NumStates; i++) {
+	bool isAct = (i < 3);
+	QPixmap *pixm = pixmap[P_CLOSE * NumStates + i];
+	p.begin(pixm);
+	QColor color = isAct ? activeColor : inactiveColor;
+	QRect r = QRect(3, 3, pixm->width() - 6, pixm->height() - 6);
+	for (int j = 0; j < 2; j++) {
+	    r.moveTo(j + 3, 3);
+	    p.setPen(j == 0 ? color.light(150) : color.dark(150));
+	    p.drawLine(r.left(), r.top(), r.right() - 1, r.bottom() - 1);
+	    p.drawLine(r.left(), r.top() + 1, r.right() - 1, r.bottom());
+	    p.drawLine(r.right() - 1, r.top(), r.left(), r.bottom() - 1);
+	    p.drawLine(r.right() - 1, r.top() + 1, r.left(), r.bottom());
+	}
+	p.end();
+    }
+    for (int i = 0; i < 2; i++) {
+	
+    }
+
+    // menu 
+    {
+	int off = (pixmap[P_MENU * NumStates]->width() - 16) / 2;
 	QSize bSize(16, 16);
 	QBitmap lightBitmap = QBitmap::fromData(bSize, 
-		    light, QImage::Format_MonoLSB);
+		    menu_white_bits, QImage::Format_MonoLSB);
 	//lightBitmap.setMask(lightBitmap);
 	QBitmap darkBitmap = QBitmap::fromData(bSize, 
-		    dark, QImage::Format_MonoLSB);
+		    menu_dgray_bits, QImage::Format_MonoLSB);
 	//darkBitmap.setMask(darkBitmap);
 
         for (int i = 0; i < NumStates; i++) {
 	    bool isAct = (i < 3);
-	    QPixmap *pixm = pixmap[pix * NumStates + i];
+	    QPixmap *pixm = pixmap[P_MENU * NumStates + i];
 	    p.begin(pixm);
 	    QColor color = isAct ? activeColor : inactiveColor;
 	    p.setPen(color.light(150));
@@ -1070,12 +1077,12 @@ static void redraw_pixmaps()
         }
     }
 
-#if 1
     // Help button: a question mark.
     {
 	QFont font = options()->font(true);
 	font.setWeight(QFont::Black);
 	font.setStretch(110);
+	font.setPointSizeF(font.pointSizeF() * 1.1);
 	for (int i = 0; i < NumStates; i++) {
 	    bool isAct = (i < 3);
 	    QPixmap *pixm = pixmap[P_HELP * NumStates + i];
@@ -1095,7 +1102,6 @@ static void redraw_pixmaps()
 	    p.end();
 	}
     }
-#endif
 
     // pin
     for (int i = 0; i < NumStates; i++) {
