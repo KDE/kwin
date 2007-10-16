@@ -45,7 +45,7 @@ PresentWindowsEffect::PresentWindowsEffect()
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Expose" );
-    a->setText( i18n("Toggle Expose effect" ));
+    a->setText( i18n("Toggle Expose Effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );

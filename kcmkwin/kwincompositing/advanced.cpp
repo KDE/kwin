@@ -26,7 +26,7 @@ KWinAdvancedCompositingOptions::KWinAdvancedCompositingOptions(QWidget* parent, 
     mKWinConfig = config;
     mDefaultPrefs = defaults;
 
-    setCaption(i18n("Advanced compositing options"));
+    setCaption(i18n("Advanced Compositing Options"));
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Apply);
     setModal(true);
 

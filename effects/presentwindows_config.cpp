@@ -59,7 +59,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     KGlobalAccel::self()->overrideMainComponentData(componentData());
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Expose" );
-    a->setText( i18n("Toggle Expose effect" ));
+    a->setText( i18n("Toggle Expose Effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
     b->setText( i18n("Toggle Expose effect (incl other desktops)" ));

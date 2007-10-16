@@ -97,7 +97,7 @@
             <item>
              <widget class="QPushButton" name="advancedOptions" >
               <property name="text" >
-               <string>Advanced options...</string>
+               <string>Advanced Options...</string>
               </property>
              </widget>
             </item>
@@ -126,7 +126,7 @@
      </widget>
      <widget class="QWidget" name="tab_2" >
       <attribute name="title" >
-       <string>All effects</string>
+       <string>All Effects</string>
       </attribute>
       <layout class="QVBoxLayout" >
        <item>

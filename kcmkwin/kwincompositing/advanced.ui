@@ -38,7 +38,7 @@
    <item>
     <widget class="QGroupBox" name="glGroup" >
      <property name="title" >
-      <string>OpenGL options</string>
+      <string>OpenGL Options</string>
      </property>
      <layout class="QVBoxLayout" >
       <item>
@@ -121,7 +121,7 @@
    <item>
     <widget class="QGroupBox" name="xrenderGroup" >
      <property name="title" >
-      <string>XRender options</string>
+      <string>XRender Options</string>
      </property>
      <layout class="QVBoxLayout" >
       <item>
