@@ -3,6 +3,7 @@ Description=(Default) Disable focus stealing prevention for XV
 Description[bg]=(По подразбиране) Изключване открадването на фокуса за XV
 Description[de]=(Standard) Aktivierungsübernahme verhindern für XV
 Description[el]=(Προκαθορισμένο) Αποτροπή κλεψίματος εστίασης για το XV
+Description[et]=(Vaikimisi) Fookuse röövimise vältimise keelamine XV puhul
 Description[fy]=(standert) Foarkomme fan ôfpakke fan toetseboerdfokus foar XV
 Description[he]=(ברירת מחדל) אל תאפשר מניעת גניבת התמקדות עבור XV
 Description[it]=(Predefinita) Disabilita la prevenzione della cattura del fuoco per XV
