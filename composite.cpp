@@ -266,11 +266,10 @@ void Workspace::performCompositing()
     // The event loop apparently tries to fire a QTimer as often as possible, even
     // at the expense of not processing many X events. This means that the composite
     // repaints can seriously impact performance of everything else, therefore throttle
-    // them - leave at least 5msec time after one repaint is finished and next one
+    // them - leave at least 1msec time after one repaint is finished and next one
     // is started.
-    // Disabled now, it decreases smoothness of animations.
-//    if( lastCompositePaint.elapsed() < 5 )
-//        return;
+    if( lastCompositePaint.elapsed() < 1 )
+        return;
     checkCursorPos();
     if( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
         {
