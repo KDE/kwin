@@ -178,7 +178,7 @@ unsigned long Options::updateSettings()
     CmdAll3 = mouseCommand(config.readEntry("CommandAll3","Resize"), false );
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
 
-    config.changeGroup("Translucency");
+    config.changeGroup("Compositing");
     refreshRate = config.readEntry( "RefreshRate", 0 );
     const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
     hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 3 ), 3 ) ];
