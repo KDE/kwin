@@ -306,9 +306,16 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
 void OxygenClient::doShape()
 {
+    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
   int r=widget()->width();
   int b=widget()->height();
 QRegion mask(0,0,r,b);
+
+    if(maximized) {
+        setMask(mask);
+        return;
+    }
+
     // Remove top-left corner.
     mask -= QRegion(0, 0, 3, 1);
     mask -= QRegion(0, 1, 1, 1);
