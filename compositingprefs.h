@@ -44,17 +44,20 @@ public:
     bool enableCompositing() const  { return mEnableCompositing; }
     bool enableVSync() const  { return mEnableVSync; }
     bool enableDirectRendering() const  { return mEnableDirectRendering; }
+    bool strictBinding() const { return mStrictBinding; }
 
     void detect();
 
     QString driver() const  { return mDriver; }
     Version version() const  { return mVersion; }
+    bool xgl() const { return mXgl; }
 
 
 protected:
 
     void detectDriverAndVersion();
     void applyDriverSpecificOptions();
+    static bool detectXgl();
 
     bool createGLXContext();
     void deleteGLXContext();
@@ -66,10 +69,12 @@ private:
     QString mGLVersion;
     QString mDriver;
     Version mVersion;
+    bool mXgl;
 
     bool mEnableCompositing;
     bool mEnableVSync;
     bool mEnableDirectRendering;
+    bool mStrictBinding;
 
 #ifdef HAVE_OPENGL
     GLXContext mGLContext;

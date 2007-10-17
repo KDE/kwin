@@ -20,11 +20,14 @@ namespace KWin
 {
 
 CompositingPrefs::CompositingPrefs()
+    : mXgl( false )
+    , mEnableCompositing( false )
+    , mEnableVSync( true )
+    , mEnableDirectRendering( true )
+    , mStrictBinding( true )
     {
-    mEnableCompositing = false;
-    mEnableVSync = true;
-    mEnableDirectRendering = true;
     }
+
 CompositingPrefs::~CompositingPrefs()
     {
     }
@@ -163,26 +166,28 @@ void CompositingPrefs::detectDriverAndVersion()
     mGLVendor = QString((const char*)glGetString( GL_VENDOR ));
     mGLRenderer = QString((const char*)glGetString( GL_RENDERER ));
     mGLVersion = QString((const char*)glGetString( GL_VERSION ));
+    mXgl = detectXgl();
     kDebug() << "GL vendor is" << mGLVendor;
     kDebug() << "GL renderer is" << mGLRenderer;
     kDebug() << "GL version is" << mGLVersion;
+    kDebug() << "XGL:" << ( mXgl ? "yes" : "no" );
 
     if( mGLRenderer.contains( "Intel" ))
-    {
+        {
         mDriver = "intel";
         QStringList words = mGLRenderer.split(" ");
         mVersion = Version( words[ words.count() - 2 ] );
-    }
+        }
     else if( mGLVendor.contains( "NVIDIA" ))
-    {
+        {
         mDriver = "nvidia";
         QStringList words = mGLVersion.split(" ");
         mVersion = Version( words[ words.count() - 1 ] );
-    }
+        }
     else
-    {
+        {
         mDriver = "unknown";
-    }
+        }
 
     kDebug() << "Detected driver" << mDriver << ", version" << mVersion.join(".");
 #endif
@@ -190,7 +195,13 @@ void CompositingPrefs::detectDriverAndVersion()
 
 void CompositingPrefs::applyDriverSpecificOptions()
     {
-    if( mDriver == "intel")
+    if( mXgl )
+        {
+        kDebug() << "xgl, enabling";
+        mEnableCompositing = true;
+        mStrictBinding = false;
+        }
+    else if( mDriver == "intel")
         {
         kDebug() << "intel driver, disabling vsync, enabling direct";
         mEnableVSync = false;
@@ -205,6 +216,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
         {
         kDebug() << "nvidia driver, disabling vsync";
         mEnableVSync = false;
+        mStrictBinding = false;
         if( mVersion >= Version( "96.39" ))
             {
             kDebug() << "nvidia >= 96.39, enabling compositing";
@@ -213,6 +225,11 @@ void CompositingPrefs::applyDriverSpecificOptions()
         }
     }
 
+
+bool CompositingPrefs::detectXgl()
+    { // Xgl apparently uses only this specific X version
+    return VendorRelease(display()) == 70000001;
+    }
 
 CompositingPrefs::Version::Version( const QString& str ) :
         QStringList()

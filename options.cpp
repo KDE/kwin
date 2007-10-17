@@ -180,7 +180,6 @@ unsigned long Options::updateSettings()
 
     config.changeGroup("Translucency");
     refreshRate = config.readEntry( "RefreshRate", 0 );
-    glStrictBinding = config.readEntry( "GLStrictBinding", false );
     const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
     hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 3 ), 3 ) ];
 
@@ -231,6 +230,7 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
     glDirect = config.readEntry("GLDirect", prefs.enableDirectRendering() );
     glVSync = config.readEntry("GLVSync", prefs.enableVSync() );
     smoothScale = qBound( -1, config.readEntry( "GLTextureFilter", -1 ), 2 );
+    glStrictBinding = config.readEntry( "GLStrictBinding", prefs.strictBinding());
 
     xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false );
     }
