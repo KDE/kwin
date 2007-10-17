@@ -870,7 +870,9 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             createTexture();
         // when the pixmap is bound to the texture, they share the same data, so the texture
         // updates automatically - no need to do anything in such case
-        if( bound_glxpixmap == None )
+        if( bound_glxpixmap != None )
+            glBindTexture( mTarget, mTexture );
+        else
             {
             int attrs[] =
                 {
@@ -911,11 +913,12 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             }
         findTarget();
 #ifdef CHECK_GL_ERROR
-            checkGLError( "TextureLoadSHM1" );
+        checkGLError( "TextureLoadSHM1" );
 #endif
         if( mTexture == None )
             {
             createTexture();
+            glBindTexture( mTarget, mTexture );
             y_inverted = false;
             glTexImage2D( mTarget, 0, depth == 32 ? GL_RGBA : GL_RGB,
                 mSize.width(), mSize.height(), 0,
@@ -970,6 +973,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
         if( mTexture == None )
             {
             createTexture();
+            glBindTexture( mTarget, mTexture );
             y_inverted = false;
             glCopyTexImage2D( mTarget, 0,
                 depth == 32 ? GL_RGBA : GL_RGB,
