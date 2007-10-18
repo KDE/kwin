@@ -12,10 +12,11 @@
 // #ifndef OXYGENCLIENT_H
 // #define OXYGENCLIENT_H
 
-#include <kconfig.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <kdebug.h>
+#include <KConfig>
+#include <KGlobal>
+#include <KLocale>
+#include <KDebug>
+#include <KColorUtils>
 
 #include <qbitmap.h>
 #include <qlabel.h>
@@ -33,6 +34,8 @@
 #include <QPainterPath>
 #include <QTimer>
 #include <QCache>
+
+#include "math.h"
 
 #include "oxygenclient.h"
 #include "oxygenclient.moc"
@@ -201,6 +204,49 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
 }
 
 
+// c0 - background
+// c1 - foreground
+// t - target contrast ratio
+QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
+{
+    double s = KColorUtils::contrastRatio(c0, c1);
+    printf("initial = %.2f, target = %.2f", s, t);
+    if (s < t)
+        return c1;
+
+    double l = 0.0, h = 1.0;
+    double x = s, a;
+    QColor r = c1;
+    for (int maxiter = 16; maxiter; --maxiter) {
+        a = 0.5 * (l + h);
+        r = KColorUtils::mix(c0, c1, a);
+        x = KColorUtils::contrastRatio(c0, r);
+        if (fabs(x - t) < 0.01)
+            break;
+        if (x > t)
+            h = a;
+        else
+            l = a;
+    }
+    printf(" --> a = %.3f\n", a);
+    return r;
+}
+
+
+QColor OxygenClient::titlebarTextColor(const QPalette &palette)
+{
+    if (isActive())
+        return palette.color(QPalette::Active, QPalette::WindowText);
+    else {
+        QColor ab = palette.color(QPalette::Active, QPalette::Window);
+        QColor af = palette.color(QPalette::Active, QPalette::WindowText);
+        QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
+        QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
+        return reduceContrast(nb, nf, KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af)));
+    }
+}
+
+
 void OxygenClient::paintEvent(QPaintEvent *e)
 {
     Q_UNUSED(e)
@@ -260,7 +306,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     // draw title text
     painter.setFont(options()->font(isActive(), false));
-    painter.setPen(palette.windowText());
+    painter.setPen(titlebarTextColor(palette));
     painter.drawText(titleLeft, titleTop, titleWidth, titleHeight,
               OxygenFactory::titleAlign() | Qt::AlignVCenter, caption());
 

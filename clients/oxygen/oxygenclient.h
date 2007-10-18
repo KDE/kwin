@@ -56,6 +56,7 @@ public:
 private:
     void paintEvent(QPaintEvent *e);
     void doShape();
+    QColor titlebarTextColor(const QPalette &palette);
 
 protected:
     friend class OxygenButton;
