@@ -87,7 +87,6 @@ KDE 4.0 TODO
 
 / handling of window pixmaps for unmapped windows [Seli]
   - config option?
-- strict binding
 
 - shm mode needs support for more data formats than GL_BGRA
 
