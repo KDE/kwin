@@ -31,6 +31,7 @@
 
 #include <kdecoration.h>
 #include <kglobal.h>
+#include <KColorUtils>
 
 #include "oxygenclient.h"
 #include "oxygenbutton.h"
@@ -61,6 +62,7 @@ OxygenButton::OxygenButton(OxygenClient &parent,
     , helper_(parent.helper_)
     , type_(type)
     , lastmouse_(0)
+    , colorCacheInvalid_(true)
 {
     setAutoFillBackground(false);
     setAttribute(Qt::WA_OpaquePaintEvent, false);
@@ -71,6 +73,28 @@ OxygenButton::OxygenButton(OxygenClient &parent,
 
 OxygenButton::~OxygenButton()
 {
+}
+
+//declare function from oxygenclient.cpp
+QColor reduceContrast(const QColor &c0, const QColor &c1, double t);
+
+
+QColor OxygenButton::buttonDetailColor(const QPalette &palette)
+{
+    if (client_.isActive())
+        return palette.color(QPalette::Active, QPalette::ButtonText);
+    else {
+        if (colorCacheInvalid_) {
+            QColor ab = palette.color(QPalette::Active, QPalette::Button);
+            QColor af = palette.color(QPalette::Active, QPalette::ButtonText);
+            QColor nb = palette.color(QPalette::Inactive, QPalette::Button);
+            QColor nf = palette.color(QPalette::Inactive, QPalette::ButtonText);
+
+            colorCacheInvalid_ = false;
+            cachedButtonDetailColor_ = reduceContrast(nb, nf, qMax(2.5, KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
+        }
+        return cachedButtonDetailColor_;
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -150,7 +174,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
 
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);
-    QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), pal.color(QPalette::ButtonText));
+    QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), buttonDetailColor(pal));
     painter.setPen(QPen(lg, 2.2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     switch(type_)
     {
@@ -179,8 +203,9 @@ void OxygenButton::paintEvent(QPaintEvent *)
                 case OxygenClient::MaximizeFull:
                 {
                     painter.translate(1.5, 1.5);
-                    painter.setBrush(lg);
+                    //painter.setBrush(lg);
                     QPoint points[4] = {QPoint(9, 6), QPoint(12, 9), QPoint(9, 12), QPoint(6, 9)};
+                    //QPoint points[4] = {QPoint(9, 5), QPoint(13, 9), QPoint(9, 13), QPoint(5, 9)};
                     painter.drawPolygon(points, 4);
                     break;
                 }

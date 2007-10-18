@@ -59,6 +59,7 @@ private:
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
     void paintEvent(QPaintEvent *e);
+    QColor buttonDetailColor(const QPalette &palette);
 
 private Q_SLOTS:
     void pressSlot();
@@ -69,6 +70,8 @@ private:
     ButtonType type_;
     ButtonState status_;
     int lastmouse_;
+    bool colorCacheInvalid_;
+    QColor cachedButtonDetailColor_;
 };
 
 } //namespace Oxygen

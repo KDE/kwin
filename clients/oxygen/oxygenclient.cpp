@@ -67,7 +67,11 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 
 
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
-    : KCommonDecoration(b, f), helper_(*globalHelper) { ; }
+    : KCommonDecoration(b, f)
+    , helper_(*globalHelper)
+    , colorCacheInvalid_(true)
+{
+}
 
 OxygenClient::~OxygenClient()
 {
@@ -236,11 +240,16 @@ QColor OxygenClient::titlebarTextColor(const QPalette &palette)
     if (isActive())
         return palette.color(QPalette::Active, QPalette::WindowText);
     else {
-        QColor ab = palette.color(QPalette::Active, QPalette::Window);
-        QColor af = palette.color(QPalette::Active, QPalette::WindowText);
-        QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
-        QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
-        return reduceContrast(nb, nf, qMax(2.5, KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
+        if(colorCacheInvalid_) {
+            QColor ab = palette.color(QPalette::Active, QPalette::Window);
+            QColor af = palette.color(QPalette::Active, QPalette::WindowText);
+            QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
+            QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
+
+            colorCacheInvalid_ = false;
+            cachedTitlebarTextColor_ = reduceContrast(nb, nf, qMax(2.5, KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
+        }
+        return cachedTitlebarTextColor_;
     }
 }
 

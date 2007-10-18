@@ -57,6 +57,8 @@ private:
     void paintEvent(QPaintEvent *e);
     void doShape();
     QColor titlebarTextColor(const QPalette &palette);
+    bool colorCacheInvalid_;
+    QColor cachedTitlebarTextColor_;
 
 protected:
     friend class OxygenButton;
