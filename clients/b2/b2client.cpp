@@ -117,7 +117,7 @@ static void read_config(B2ClientFactory *f)
     buttonSize = (QFontMetrics(options()->font(true)).height() - 1) & 0x3e;
     if (buttonSize < 16) buttonSize = 16;
 
-    KConfig _conf( "kwinb2rc" );
+    KConfig _conf("kwinb2rc");
     KConfigGroup conf(&_conf, "General");
     colored_frame = conf.readEntry("UseTitleBarBorderColors", false);
     do_draw_handle = conf.readEntry("DrawGrabHandle", true);
@@ -205,7 +205,7 @@ static void create_pixmaps()
     for (i = 0; i < NUM_PIXMAPS; i++) {
 
         switch (i / NumStates) {
-	case P_CLOSE: // will be initialized by copying P_CLOSE
+	case P_CLOSE: // will be initialized by copying P_MAX
 	case P_RESIZE:
 	    pixmap[i] = new QPixmap();
 	    break;
@@ -317,21 +317,22 @@ bool B2ClientFactory::reset(unsigned long changed)
 bool B2ClientFactory::supports(Ability ability)
 {
     switch (ability) {
-        case AbilityAnnounceButtons:
-        case AbilityButtonMenu:
-        case AbilityButtonOnAllDesktops:
-        case AbilityButtonSpacer:
-        case AbilityButtonHelp:
-        case AbilityButtonMinimize:
-        case AbilityButtonMaximize:
-        case AbilityButtonClose:
-        case AbilityButtonAboveOthers:
-        case AbilityButtonBelowOthers:
-        case AbilityButtonShade:
-        case AbilityButtonResize:
-            return true;
-        default:
-            return false;
+    case AbilityAnnounceButtons:
+    case AbilityButtonMenu:
+    case AbilityButtonOnAllDesktops:
+    case AbilityButtonSpacer:
+    case AbilityButtonHelp:
+    case AbilityButtonMinimize:
+    case AbilityButtonMaximize:
+    case AbilityButtonClose:
+    case AbilityButtonShade:
+    case AbilityButtonResize:
+	return true;
+    // These are not (yet) supported.
+    case AbilityButtonAboveOthers:
+    case AbilityButtonBelowOthers:
+    default:
+	return false;
     };
 }
 
@@ -974,13 +975,13 @@ static void redraw_pixmaps()
     QColor activeColor = aPal.color(QPalette::Button);
 
     // maximize
-    drawB2Rect(PIXMAP_A(P_MAX), activeColor, false);
-    drawB2Rect(PIXMAP_AH(P_MAX), activeColor, true);
-    drawB2Rect(PIXMAP_AD(P_MAX), activeColor, true);
-
-    drawB2Rect(PIXMAP_I(P_MAX), inactiveColor, false);
-    drawB2Rect(PIXMAP_IH(P_MAX), inactiveColor, true);
-    drawB2Rect(PIXMAP_ID(P_MAX), inactiveColor, true);
+    for (int i = 0; i < NumStates; i++) {
+	bool is_act = (i < 2);
+	bool is_down = ((i & 1) == 1);
+	QPixmap *pix = pixmap[P_MAX * NumStates + i];
+	QColor color = is_act ? activeColor : inactiveColor;
+	drawB2Rect(pix, color, is_down);
+    }
 
     // shade
     QPixmap thinBox(buttonSize - 2, 6);
@@ -1019,7 +1020,7 @@ static void redraw_pixmaps()
     for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
 	bool is_down = (i == Down || i == IDown);
-	*pixmap[P_RESIZE * NumStates + i] = *pixmap[P_CLOSE * NumStates + i];
+	*pixmap[P_RESIZE * NumStates + i] = *pixmap[P_MAX * NumStates + i];
 	pixmap[P_RESIZE * NumStates + i]->detach();
 	drawB2Rect(&smallBox, is_act ? activeColor : inactiveColor, is_down);
 	bitBlt(pixmap[P_RESIZE * NumStates + i],
@@ -1103,6 +1104,7 @@ static void redraw_pixmaps()
 	}
     }
 
+    // Help button: a question mark.
     // pin
     for (int i = 0; i < NumStates; i++) {
 	const bool isDown = (i == Down || i == IDown);
@@ -1144,7 +1146,6 @@ static void redraw_pixmaps()
 		KIconLoader::Small, KIconLoader::ActiveState);
 	*pixmap[offset + IHover] = hilighted;
     }
-
 
     // Create the titlebar gradients
     if (QPixmap::defaultDepth() > 8) {
@@ -1243,16 +1244,19 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
 	kDebug() << "workspaceWidget is null";
     } else {
 	kDebug() << "workspaceWidget is " << workspaceWidget();
+	QPainter p;
+	if (p.begin(workspaceWidget())) {
+	    p.setPen(QPen(Qt::white, 5));
+	    p.setCompositionMode(QPainter::CompositionMode_Xor);
+	    p.drawPolygon(bound_shape);
+	    if (clear) {
+		delete visible_bound;
+		visible_bound = 0;
+	    }
+	    p.end();
+	}
     }
 
-    QPainter p(workspaceWidget());
-    p.setPen(QPen(Qt::white, 5));
-    p.setCompositionMode(QPainter::CompositionMode_Xor);
-    p.drawPolygon(bound_shape);
-    if (clear) {
-	delete visible_bound;
-	visible_bound = 0;
-    }
     return true;
 }
 
