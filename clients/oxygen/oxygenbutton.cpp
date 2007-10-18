@@ -169,6 +169,9 @@ void OxygenButton::paintEvent(QPaintEvent *)
     else
         pal.setCurrentColorGroup(QPalette::Inactive);
 
+    if(client_.maximizeMode() == OxygenClient::MaximizeRestore)
+        painter.translate(0,-2);
+
     QColor bg = helper_.backgroundTopColor(pal.window());
     painter.drawPixmap(0, 0, helper_.windecoButton(pal.button()));
 

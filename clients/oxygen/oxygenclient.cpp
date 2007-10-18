@@ -314,14 +314,45 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     // draw title text
     painter.setFont(options()->font(isActive(), false));
     painter.setPen(titlebarTextColor(palette));
-    painter.drawText(titleLeft, titleTop, titleWidth, titleHeight,
+    painter.drawText(titleLeft, titleTop-2, titleWidth, titleHeight,  // -2 is to go into top risizearea
               OxygenFactory::titleAlign() | Qt::AlignVCenter, caption());
 
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // Draw shadows of the frame
+    // Draw dividing line
     frame = widget()->rect();
     frame.getRect(&x, &y, &w, &h);
+
+    QColor light = helper_.calcLightColor(palette.window());
+    QColor dark = helper_.calcDarkColor(palette.window());
+    dark.setAlpha(120);
+
+    if(!isActive()) {
+        light.setAlpha(120);
+        dark.setAlpha(50);
+    }
+
+    QLinearGradient lg(x,0,x+w,0);
+    lg.setColorAt(0.5, dark);
+    dark.setAlpha(0);
+    lg.setColorAt(0.0, dark);
+    lg.setColorAt(1.0, dark);
+    painter.setPen(QPen(lg,1));
+
+    painter.drawLine(QPointF(x, titleTop+titleHeight-1.5),
+                            QPointF(x+w, titleTop+titleHeight-1.5));
+
+    lg = QLinearGradient(x,0,x+w,0);
+    lg.setColorAt(0.5, light);
+    light.setAlpha(0);
+    lg.setColorAt(0.0, light);
+    lg.setColorAt(1.0, light);
+    painter.setPen(QPen(lg,1));
+
+    painter.drawLine(QPointF(x, titleTop+titleHeight-0.5),
+                           QPointF(x+w, titleTop+titleHeight-0.5));
+
+    // Draw shadows of the frame
 
     painter.setBrush(Qt::NoBrush);
     painter.setPen(QColor(255,255,255, 120));
