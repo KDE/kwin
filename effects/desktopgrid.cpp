@@ -403,8 +403,16 @@ void DesktopGridEffect::slideDesktopChanged( int old )
         else // current position is not on current desktop, do full progress
             progress = 0;
         diffPos = rect.topLeft() - currentPos;
-        // Compute starting point for this new move (given current and end positions)
-        slide_start_pos = rect.topLeft() - diffPos * 1 / ( 1 - progress );
+        if( progress <= 0 )
+            {
+            // Compute starting point for this new move (given current and end positions)
+            slide_start_pos = rect.topLeft() - diffPos * 1 / ( 1 - progress );
+            }
+        else
+            { // at the end, stop
+            slide = false;
+            progress = 0;
+            }
         }
     else
         {
