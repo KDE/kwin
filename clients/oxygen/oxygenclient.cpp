@@ -210,7 +210,6 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
 QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
 {
     double s = KColorUtils::contrastRatio(c0, c1);
-    printf("initial = %.2f, target = %.2f", s, t);
     if (s < t)
         return c1;
 
@@ -228,7 +227,6 @@ QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
         else
             l = a;
     }
-    printf(" --> a = %.3f\n", a);
     return r;
 }
 
