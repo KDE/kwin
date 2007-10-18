@@ -715,6 +715,7 @@ class Workspace : public QObject, public KDecorationDefines
         int compositeRate;
         QRegion repaints_region;
         Window overlay; // XComposite overlay window
+        bool overlay_visible;
         QSlider *transSlider;
         QPushButton *transButton;
 

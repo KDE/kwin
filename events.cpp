@@ -455,8 +455,16 @@ bool Workspace::workspaceEvent( XEvent * e )
                 return true;
             break;
         case Expose:
-            if( e->xexpose.window == rootWindow() && compositing())  // root window needs repainting
+            if( compositing()
+                && ( e->xexpose.window == rootWindow()  // root window needs repainting
+                    || overlay != None && e->xexpose.window == overlay )) // overlay needs repainting
+                {
                 addRepaint( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );
+                }
+            break;
+        case VisibilityNotify:
+            if( compositing() && overlay != None && e->xvisibility.window == overlay )
+                overlay_visible = ( e->xvisibility.state != VisibilityFullyObscured );
             break;
         default:
             if( e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable() )

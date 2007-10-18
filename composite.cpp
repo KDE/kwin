@@ -271,7 +271,8 @@ void Workspace::performCompositing()
     if( lastCompositePaint.elapsed() < 1 )
         return;
     checkCursorPos();
-    if( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
+    if(( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
+        || !overlay_visible ) // nothing is visible anyway
         {
         scene->idle();
         return;
@@ -365,6 +366,7 @@ void Workspace::setupOverlay( Window w )
         XMapWindow( display(), w );
         }
     XMapRaised( display(), overlay );
+    XSelectInput( display(), overlay, VisibilityChangeMask );
     }
 
 void Workspace::destroyOverlay()
