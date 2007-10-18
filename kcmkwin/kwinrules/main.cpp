@@ -41,7 +41,7 @@ static void loadRules( QList< Rules* >& rules )
          i <= count;
          ++i )
         {
-        cfg.changeGroup( QString::number( i ));
+        cfg = KConfigGroup(&_cfg,QString::number( i ));
         Rules* rule = new Rules( cfg );
         rules.append( rule );
         }

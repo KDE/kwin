@@ -161,7 +161,7 @@ void KCMRulesList::load()
          i <= count;
          ++i )
         {
-        cfg.changeGroup( QString::number( i ));
+        cfg = KConfigGroup(&_cfg,QString::number( i ));
         Rules* rule = new Rules( cfg );
         rules.append( rule );
         rules_listbox->addItem( rule->description );

@@ -161,7 +161,7 @@ unsigned long Options::updateSettings()
     showDesktopIsMinimizeAll = config.readEntry( "ShowDesktopIsMinimizeAll", false );
 
     // Mouse bindings
-    config.changeGroup("MouseBindings");
+    config = KConfigGroup(_config,"MouseBindings");
     CmdActiveTitlebar1 = mouseCommand(config.readEntry("CommandActiveTitlebar1","Raise"), true );
     CmdActiveTitlebar2 = mouseCommand(config.readEntry("CommandActiveTitlebar2","Lower"), true );
     CmdActiveTitlebar3 = mouseCommand(config.readEntry("CommandActiveTitlebar3","Operations menu"), true );
@@ -178,7 +178,7 @@ unsigned long Options::updateSettings()
     CmdAll3 = mouseCommand(config.readEntry("CommandAll3","Resize"), false );
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
 
-    config.changeGroup("Compositing");
+    config=KConfigGroup(_config,"Compositing");
     refreshRate = config.readEntry( "RefreshRate", 0 );
     const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
     hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 3 ), 3 ) ];
