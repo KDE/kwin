@@ -240,7 +240,7 @@ QColor OxygenClient::titlebarTextColor(const QPalette &palette)
         QColor af = palette.color(QPalette::Active, QPalette::WindowText);
         QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
         QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
-        return reduceContrast(nb, nf, KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af)));
+        return reduceContrast(nb, nf, qMax(2.5, KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
     }
 }
 
