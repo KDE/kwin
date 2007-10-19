@@ -92,8 +92,6 @@ KDE 4.0 TODO
 
 ? __GL_YIELD=NOTHING
 
-? libIndirectGL.so
-
 - check what works with XRender
 
 - more notification functions for effects
@@ -211,10 +209,6 @@ OpenGL TODO
 
 % __GL_YIELD=NOTHING for NVidia reportedly improves perceived performance
     - it needs to be set somehow (http://lists.kde.org/?l=kwin&m=117794153720348&w=2)
-
-% LD_PRELOAD=/usr/lib/libIndirectGL.so.1 seems to noticeably improve smoothness
-    - (http://lists.kde.org/?t=119186684900004&r=1&w=2)
-
 
 XRender TODO
 ==============================
