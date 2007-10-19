@@ -5,7 +5,6 @@ set(kwin_oxy_SRCS
      oxygenclient.cpp
      oxygenbutton.cpp
      oxygen.cpp
-     definitions.cpp
    )
 
 

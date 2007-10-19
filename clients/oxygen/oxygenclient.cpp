@@ -42,21 +42,8 @@
 #include "oxygenbutton.h"
 #include "oxygen.h"
 
-#include "definitions.cpp"
-
 namespace Oxygen
 {
-
-// global constants
-
-// static const int BUTTONSIZE      = 18;
-// static const int DECOSIZE        = 8;
-// static const int TITLESIZE       = 18;
-// static const int TFRAMESIZE       = 8;
-// static const int BFRAMESIZE       = 7;
-// static const int LFRAMESIZE       = 8;
-// static const int RFRAMESIZE       = 7;BUTTONSIZE
-// static const int FRAMEBUTTONSPACE       = 67;
 
 K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("OxygenDeco"))
 
@@ -314,7 +301,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     // draw title text
     painter.setFont(options()->font(isActive(), false));
     painter.setPen(titlebarTextColor(palette));
-    painter.drawText(titleLeft, titleTop-2, titleWidth, titleHeight,  // -2 is to go into top risizearea
+    painter.drawText(titleLeft, titleTop-1, titleWidth, titleHeight,  // -1 is to go into top resizearea
               OxygenFactory::titleAlign() | Qt::AlignVCenter, caption());
 
     painter.setRenderHint(QPainter::Antialiasing);

@@ -32,11 +32,12 @@
 #include <kdecoration.h>
 #include <kglobal.h>
 #include <KColorUtils>
+#include <kdebug.h>
+#include <KColorScheme>
 
 #include "oxygenclient.h"
 #include "oxygenbutton.h"
 #include "oxygen.h"
-#include "definitions.cpp"
 
 namespace Oxygen
 {
@@ -114,11 +115,11 @@ QSize OxygenButton::sizeHint() const
 
 void OxygenButton::enterEvent(QEvent *e)
 {
-    // if we wanted to do mouseovers, we would keep track of it here
+    KCommonDecorationButton::enterEvent(e);
     if (status_ != Oxygen::Pressed) {
         status_ = Oxygen::Hovered;
     }
-    QAbstractButton::enterEvent(e);
+    update();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -128,9 +129,10 @@ void OxygenButton::enterEvent(QEvent *e)
 
 void OxygenButton::leaveEvent(QEvent *e)
 {
+    KCommonDecorationButton::leaveEvent(e);
     // if we wanted to do mouseovers, we would keep track of it here
     status_ = Oxygen::Normal;
-    QAbstractButton::leaveEvent(e);
+    update();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -170,14 +172,28 @@ void OxygenButton::paintEvent(QPaintEvent *)
         pal.setCurrentColorGroup(QPalette::Inactive);
 
     if(client_.maximizeMode() == OxygenClient::MaximizeRestore)
-        painter.translate(0,-2);
+        painter.translate(0,-1);
 
     QColor bg = helper_.backgroundTopColor(pal.window());
-    painter.drawPixmap(0, 0, helper_.windecoButton(pal.button()));
+
+    QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), buttonDetailColor(pal));
+
+    if(status_ == Oxygen::Hovered) {
+        if(type_ == ButtonClose) {
+            QColor color = KColorScheme(pal.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
+            lg = helper_.decoGradient(QRect(4,4,13,13), color);
+            painter.drawPixmap(0, 0, helper_.windecoButtonFocused(pal.button(), color,7));
+        }
+        else{
+            QColor color = KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
+            painter.drawPixmap(0, 0, helper_.windecoButtonFocused(pal.button(), color, 7));
+        }
+    }
+    else
+        painter.drawPixmap(0, 0, helper_.windecoButton(pal.button()));
 
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);
-    QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), buttonDetailColor(pal));
     painter.setPen(QPen(lg, 2.2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     switch(type_)
     {
