@@ -188,10 +188,10 @@ void KWinCompositingConfig::loadGeneralTab()
     // Load effect settings
     KConfigGroup effectconfig(mTmpConfig, "Plugins");
 #define LOAD_EFFECT_CONFIG(effectname)  effectconfig.readEntry("kwin4_effect_" effectname "Enabled", true)
-    bool winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows");
-    winManagementEnabled &= LOAD_EFFECT_CONFIG("boxswitch");
-    winManagementEnabled &= LOAD_EFFECT_CONFIG("desktopgrid");
-    winManagementEnabled &= LOAD_EFFECT_CONFIG("dialogparent");
+    bool winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows")
+        && LOAD_EFFECT_CONFIG("boxswitch")
+        && LOAD_EFFECT_CONFIG("desktopgrid")
+        && LOAD_EFFECT_CONFIG("dialogparent");
     ui.effectWinManagement->setChecked(winManagementEnabled);
     ui.effectShadows->setChecked(LOAD_EFFECT_CONFIG("shadow"));
     ui.effectAnimations->setChecked(LOAD_EFFECT_CONFIG("minimizeanimation"));
