@@ -179,7 +179,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     autoRaise = new KIntNumInput(500, fcsBox);
     autoRaise->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
-    autoRaise->setRange(0, 3000, 100, true);
+    autoRaise->setRange(0, 3000, 100);
     autoRaise->setSteps(100,100);
     autoRaise->setSuffix(i18n(" msec"));
     fLay->addWidget(autoRaise);
@@ -192,7 +192,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     delayFocus = new KIntNumInput(500, fcsBox);
     delayFocus->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
-    delayFocus->setRange(0, 3000, 100, true);
+    delayFocus->setRange(0, 3000, 100);
     delayFocus->setSteps(100,100);
     delayFocus->setSuffix(i18n(" msec"));
     fLay->addWidget(delayFocus);
@@ -590,7 +590,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     shadeHover = new KIntNumInput(500, shBox);
     shadeHover->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
-    shadeHover->setRange(0, 3000, 100, true);
+    shadeHover->setRange(0, 3000, 100);
     shadeHover->setSteps(100, 100);
     shadeHover->setSuffix(i18n(" msec"));
 
@@ -619,7 +619,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     active_always  = new QRadioButton(i18n("A&lways enabled"), electricBox);
 
     delays = new KIntNumInput(10, electricBox);
-    delays->setRange(0, MAX_EDGE_RES, 50, true);
+    delays->setRange(0, MAX_EDGE_RES, 50);
     delays->setSuffix(i18n(" msec"));
     delays->setLabel(i18n("Desktop &switch delay:"));
     delays->setWhatsThis( i18n("Here you can set a delay for switching desktops using the active"
