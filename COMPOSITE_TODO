@@ -23,12 +23,8 @@ TODO
 KDE 4.0 TODO
 =================================
 
-- animations
-    - need to be faster (300ms at most)
-    - global setting?
-
-- shortcut configuration
-    - configurable per effect (in the options dialog)
+/ shortcut configuration
+    / configurable per effect (in the options dialog)
 
 / different handling of differeng gfx cards
     / check that nvidia/ati/intel work and add specific hacks if needed
@@ -42,8 +38,6 @@ KDE 4.0 TODO
     / split effects to groups (eyecandy, accessibility, whatever)
     - login effect, e.g. fade to desktop
     - logout effect [Seli]
-    - effect for windows demanding attention
-        - rays? ripples?
     - explosion
 ?       - use for forcible killing (add support to windowClosed())
     - diminactive
@@ -157,6 +151,11 @@ General TODO
     - not very likely though, so is this worth bothering at all?
 
 + hidden preview has two modes unimplemented
+
+- global setting for animation speed?
+- effects (to do)
+    - effect for windows demanding attention
+        - rays? ripples?
 
 
 OpenGL TODO
