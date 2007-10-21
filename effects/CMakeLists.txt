@@ -53,6 +53,18 @@ install( FILES
     zoom.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
+# config modules
+KWIN4_ADD_EFFECT_CONFIG( builtins
+    presentwindows_config.cpp
+    shadow_config.cpp
+    desktopgrid_config.cpp
+    configs_builtins.cpp)
+install( FILES
+    presentwindows_config.desktop
+    shadow_config.desktop
+    desktopgrid_config.desktop
+    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+
 if(OPENGL_FOUND)
     # opengl-based effects
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
@@ -97,20 +109,6 @@ if(OPENGL_FOUND)
         data/circle.png
         data/circle-edgy.png
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
-
-    # config modules
-    KWIN4_ADD_EFFECT_CONFIG( builtins
-        presentwindows_config.cpp
-        shadow_config.cpp
-        desktopgrid_config.cpp
-        configs_builtins.cpp)
-    install( FILES
-        presentwindows_config.desktop
-        shadow_config.desktop
-        desktopgrid_config.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-
 endif(OPENGL_FOUND)
 
 # showfps - need both xrender and opengl
