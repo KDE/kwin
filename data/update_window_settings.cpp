@@ -41,9 +41,9 @@ struct SessionInfo
     bool skipTaskbar;
     bool skipPager;
     bool userNoBorder;
-    NET::WindowType windowType;
     bool active; // means 'was active in the saved session', not used otherwise
     bool fake; // fake session, i.e. 'save window settings', not SM restored
+    NET::WindowType windowType;
     };
 
 QList<SessionInfo*> fakeSession;
