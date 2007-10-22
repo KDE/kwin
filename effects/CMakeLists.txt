@@ -58,11 +58,13 @@ KWIN4_ADD_EFFECT_CONFIG( builtins
     presentwindows_config.cpp
     shadow_config.cpp
     desktopgrid_config.cpp
+    maketransparent_config.cpp
     configs_builtins.cpp)
 install( FILES
     presentwindows_config.desktop
     shadow_config.desktop
     desktopgrid_config.desktop
+    maketransparent_config.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 if(OPENGL_FOUND)

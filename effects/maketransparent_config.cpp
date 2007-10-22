@@ -1,0 +1,105 @@
+/*****************************************************************
+ KWin - the KDE window manager
+ This file is part of the KDE project.
+
+Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+
+You can Freely distribute this program under the GNU General Public
+License. See the file "COPYING" for the exact licensing terms.
+******************************************************************/
+
+#include "maketransparent_config.h"
+
+#include <kwineffects.h>
+
+#include <klocale.h>
+#include <kdebug.h>
+#include <kconfiggroup.h>
+
+#include <QGridLayout>
+#include <QLabel>
+#include <QSpinBox>
+
+#ifndef KDE_USE_FINAL
+KWIN_EFFECT_CONFIG_FACTORY
+#endif
+
+namespace KWin
+{
+
+MakeTransparentEffectConfig::MakeTransparentEffectConfig(QWidget* parent, const QVariantList& args) :
+        KCModule(EffectFactory::componentData(), parent, args)
+    {
+    kDebug() ;
+
+    QGridLayout* layout = new QGridLayout(this);
+
+    layout->addWidget(new QLabel(i18n("Changes opacity of following elements:"), this), 0, 0, 1, 2);
+
+    layout->addWidget(new QLabel(i18n("Decorations:"), this), 1, 0);
+    mDecoration = new QSpinBox(this);
+    mDecoration->setRange(0, 100);
+    mDecoration->setSuffix("%");
+    connect(mDecoration, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    layout->addWidget(mDecoration, 1, 1);
+
+    layout->addWidget(new QLabel(i18n("Moved/resized windows:"), this), 2, 0);
+    mMoveResize = new QSpinBox(this);
+    mMoveResize->setRange(0, 100);
+    mMoveResize->setSuffix("%");
+    connect(mMoveResize, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    layout->addWidget(mMoveResize, 2, 1);
+
+    layout->addWidget(new QLabel(i18n("Dialogs:"), this), 3, 0);
+    mDialogs = new QSpinBox(this);
+    mDialogs->setRange(0, 100);
+    mDialogs->setSuffix("%");
+    connect(mDialogs, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    layout->addWidget(mDialogs, 3, 1);
+
+    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 4, 0, 1, 2);
+
+    load();
+    }
+
+void MakeTransparentEffectConfig::load()
+    {
+    kDebug() ;
+    KCModule::load();
+
+    KConfigGroup conf = EffectsHandler::effectConfig("MakeTransparent");
+    mDecoration->setValue( (int)( conf.readEntry( "Decoration", 0.7 ) * 100 ) );
+    mMoveResize->setValue( (int)( conf.readEntry( "MoveResize", 0.8 ) * 100 ) );
+    mDialogs->setValue( (int)( conf.readEntry( "Dialogs", 1.0 ) * 100 ) );
+
+    emit changed(false);
+    }
+
+void MakeTransparentEffectConfig::save()
+    {
+    kDebug() ;
+    KCModule::save();
+
+    KConfigGroup conf = EffectsHandler::effectConfig("MakeTransparent");
+    conf.writeEntry( "Decoration", mDecoration->value() / 100.0 );
+    conf.writeEntry( "MoveResize", mMoveResize->value() / 100.0 );
+    conf.writeEntry( "Dialogs", mDialogs->value() / 100.0 );
+    conf.sync();
+
+    emit changed(false);
+    EffectsHandler::sendReloadMessage( "translucentdecorations" );
+    }
+
+void MakeTransparentEffectConfig::defaults()
+    {
+    kDebug() ;
+    mDecoration->setValue( 70 );
+    mMoveResize->setValue( 80 );
+    mDialogs->setValue( 100 );
+    emit changed(true);
+    }
+
+
+} // namespace
+
+#include "maketransparent_config.moc"

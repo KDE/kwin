@@ -10,6 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "maketransparent.h"
 
+#include <kconfiggroup.h>
+
 namespace KWin
 {
 
@@ -17,10 +19,10 @@ KWIN_EFFECT( maketransparent, MakeTransparentEffect )
 
 MakeTransparentEffect::MakeTransparentEffect()
     {
-    // TODO options
-    decoration = 0.7;
-    moveresize = 0.5;
-    dialogs = 1.0;
+    KConfigGroup conf = effects->effectConfig("MakeTransparent");
+    decoration = conf.readEntry( "Decoration", 0.7 );
+    moveresize = conf.readEntry( "MoveResize", 0.8 );
+    dialogs = conf.readEntry( "Dialogs", 1.0 );
     }
 
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
