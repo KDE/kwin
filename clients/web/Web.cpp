@@ -224,8 +224,8 @@ WebClient::paintEvent(QPaintEvent * pe)
   const int titleEdgeBottom = layoutMetric(LM_TitleEdgeBottom);
   const int ttlHeight = layoutMetric(LM_TitleHeight);
   const int titleEdgeBottomBottom = r_y+titleEdgeTop+ttlHeight+titleEdgeBottom-1;
-  QRect titleRect = QRect(r_x+titleEdgeLeft+buttonsLeftWidth(), r_y+titleEdgeTop,
-            r_x2-titleEdgeRight-buttonsRightWidth()-(r_x+titleEdgeLeft+buttonsLeftWidth()),
+  QRect titleRect = QRect(r_x+titleEdgeLeft+buttonsLeftWidth()+1, r_y+titleEdgeTop,
+            r_x2-titleEdgeRight-buttonsRightWidth()-(r_x+titleEdgeLeft+buttonsLeftWidth()+1),
             titleEdgeBottomBottom-(r_y+titleEdgeTop) );
   titleRect.setTop(1);
 
