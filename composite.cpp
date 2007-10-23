@@ -548,6 +548,8 @@ void Toplevel::addWorkspaceRepaint( const QRect& r2 )
     {
     if( !compositing())
         return;
+    if( effectWindow() == NULL ) // TODO - this can happen during window destruction
+        return workspace()->addRepaint( r2 );
     QRect r = effects->transformWindowDamage( effectWindow(), r2 );
     workspace()->addRepaint( r );
     }
