@@ -113,13 +113,15 @@ if(OPENGL_FOUND)
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 endif(OPENGL_FOUND)
 
-# showfps - need both xrender and opengl
+# showfps, showpaint - need both xrender and opengl
 if( OPENGL_FOUND AND X11_Xrender_FOUND )
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         showfps.cpp
+        showpaint.cpp
         )
     install( FILES
         showfps.desktop
+        showpaint.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif( OPENGL_FOUND AND X11_Xrender_FOUND )
 

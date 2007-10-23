@@ -1,0 +1,16 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Show Paint
+Comment=Shows areas painted by KWin
+
+Type=Service
+ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Luboš Luňák
+X-KDE-PluginInfo-Email=l.lunak@kde.org
+X-KDE-PluginInfo-Name=kwin4_effect_showpaint
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Misc
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
