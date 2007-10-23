@@ -33,6 +33,7 @@ class ShadowEffect
         void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const;
         // transforms window rect -> shadow rect
         QRect shadowRectangle(const QRect& windowRectangle) const;
+        bool useShadow( EffectWindow* w ) const;
 
         int shadowXOffset, shadowYOffset;
         double shadowOpacity;

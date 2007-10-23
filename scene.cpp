@@ -227,6 +227,8 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         if( !w->isPaintingEnabled())
             continue;
         data.paint -= allclips; // make sure to avoid already clipped areas
+        // no painting outside visible screen (and no transformations)
+        data.paint &= QRect( 0, 0, displayWidth(), displayHeight());
         if( data.paint.isEmpty()) // completely clipped
             continue;
         if( data.paint != region ) // prepaint added area to draw

@@ -40,16 +40,20 @@ QRect ShadowEffect::shadowRectangle(const QRect& windowRectangle) const
     return windowRectangle.adjusted( shadowXOffset - shadowGrow, shadowYOffset - shadowGrow,
             shadowXOffset + shadowGrow, shadowYOffset + shadowGrow);
     }
+
 void ShadowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    data.mask |= PAINT_WINDOW_TRANSLUCENT;
-    data.paint |= QRegion( shadowRectangle( ( QRegion( w->geometry()) & data.paint ).boundingRect() ));
+    if( useShadow( w ))
+        {
+        data.mask |= PAINT_WINDOW_TRANSLUCENT;
+        data.paint |= QRegion( shadowRectangle( ( QRegion( w->geometry()) & data.paint ).boundingRect() ));
+        }
     effects->prePaintWindow( w, data, time );
     }
 
 void ShadowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( !w->isDeleted() && !w->isDesktop() && !w->isDock() )
+    if( useShadow( w ))
         drawShadow( w, mask, region, data );
     effects->paintWindow( w, mask, region, data );
     }
@@ -61,8 +65,15 @@ void ShadowEffect::postPaintWindow( EffectWindow* w )
 
 QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
     {
+    if( !useShadow( w ))
+        return effects->transformWindowDamage( w, r );
     QRect r2 = r | shadowRectangle( r );
     return effects->transformWindowDamage( w, r2 );
+    }
+
+bool ShadowEffect::useShadow( EffectWindow* w ) const
+    {
+    return !w->isDeleted() && !w->isDesktop() && !w->isDock();
     }
 
 void ShadowEffect::addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const
