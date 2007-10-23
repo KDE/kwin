@@ -214,13 +214,17 @@ void CompositingPrefs::applyDriverSpecificOptions()
         }
     else if( mDriver == "nvidia" )
         {
-        kDebug() << "nvidia driver, disabling vsync";
-        mEnableVSync = false;
         mStrictBinding = false;
-        if( mVersion >= Version( "96.39" ))
+        if( mVersion >= Version( "100.14.23" ))
             {
-            kDebug() << "nvidia >= 96.39, enabling compositing";
+            kDebug() << "nvidia >= 100.14.23, enabling compositing";
             mEnableCompositing = true;
+            }
+        else if( mVersion >= Version( "96.39" ))
+            {
+            kDebug() << "nvidia >= 96.39, enabling compositing, disabling vsync";
+            mEnableCompositing = true;
+            mEnableVSync = false;
             }
         }
     }
