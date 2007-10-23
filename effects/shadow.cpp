@@ -13,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kwinglutils.h>
 
 #include <kconfiggroup.h>
+#include <kdebug.h>
 #include <KStandardDirs>
 
 namespace KWin
@@ -46,7 +47,9 @@ void ShadowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, in
     if( useShadow( w ))
         {
         data.mask |= PAINT_WINDOW_TRANSLUCENT;
-        data.paint |= QRegion( shadowRectangle( ( QRegion( w->geometry()) & data.paint ).boundingRect() ));
+        QRect r = ( QRegion( w->geometry()) & data.paint ).boundingRect();
+        if( !r.isEmpty())
+            data.paint |= shadowRectangle( r );
         }
     effects->prePaintWindow( w, data, time );
     }
