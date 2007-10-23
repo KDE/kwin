@@ -141,6 +141,7 @@ Client::Client( Workspace *ws )
     ignore_focus_stealing = false;
     demands_attention = false;
     hidden_preview = false;
+    raw_shown = false;
     check_active_modal = false;
 
     Pdeletewindow = 0;
@@ -866,6 +867,9 @@ void Client::setMappingState(int s)
  */
 void Client::rawShow()
     {
+    if( raw_shown ) // this flag is used to purely avoid repeated calls to rawShow(),
+        return;     // it doesn't say anything more about the state
+    raw_shown = true;
     if( decoration != NULL )
         decoration->widget()->show(); // not really necessary, but let it know the state
     XMapWindow( display(), frameId());
@@ -896,6 +900,9 @@ void Client::rawShow()
 */
 void Client::rawHide()
     {
+    if( !raw_shown )
+        return;
+    raw_shown = false;
     StackingUpdatesBlocker blocker( workspace());
     addWorkspaceRepaint( geometry());
     if( options->hiddenPreviews == HiddenPreviewsNever )

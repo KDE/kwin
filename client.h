@@ -449,6 +449,7 @@ class Client
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         uint demands_attention : 1;
         uint hidden_preview : 1; // mapped only to get a window pixmap for compositing
+        uint raw_shown : 1; // for use in rawShow()/rawHide()
         WindowRules client_rules;
         void getWMHints();
         void readIcons();
