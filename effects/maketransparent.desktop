@@ -22,13 +22,17 @@ Name[mk]=Провидност
 Name[nds]=Dörschienen
 Name[ne]=पारभासकता
 Name[pl]=Przezroczystość
+Name[pt]=Translucidez
+Name[pt_BR]=Transparência
 Name[ro]=Translucenţă
 Name[ru]=Полупрозрачность
+Name[sv]=Genomskinlighet
 Name[ta]=ஒளிகசிவு
 Name[tr]=Şeffaflık
 Name[uk]=Прозорість
 Name[uz]=Шаффофлик
 Name[vi]=Trong mờ
+Name[zh_TW]=半透明
 Icon=kwin-effect-maketransparent
 
 Type=Service
