@@ -548,6 +548,7 @@ void KFocusConfig::defaults()
     setTraverseAll( false );
     setRollOverDesktops(true);
     setShowPopupinfo(false);
+    setDelayFocusEnabled();
     emit KCModule::changed(true);
 }
 
