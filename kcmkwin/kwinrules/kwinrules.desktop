@@ -12,6 +12,10 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=Window-Specific
+Name[pt]=Específicas da Janela
+Name[pt_BR]=Específica da Janela
+Name[sv]=Fönsterspecifikt
+Name[zh_TW]=特定視窗
 
 Comment=Configure settings specifically for a window
 Comment[af]=Stel spesifieke venster instellings op
