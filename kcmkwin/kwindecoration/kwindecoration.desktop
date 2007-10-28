@@ -12,9 +12,12 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=appearance
 
 Name=Windows
+Name[ja]=ウィンドウ
+Name[nds]=Finstern
 Name[pt]=Janelas
 Name[pt_BR]=Janelas
 Name[sv]=Fönster
+Name[zh_CN]=窗口
 
 Comment=Configure the look and feel of window titles
 Comment[af]=Stel die uitdrukking en gevoek van venster titels op
