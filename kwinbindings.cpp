@@ -169,7 +169,7 @@
         a = actionCollection->addAction( "Group:Miscellaneous" );
         a->setText( i18n("Miscellaneous") );
 	DEF( I18N_NOOP("Mouse Emulation"),                    Qt::ALT+Qt::Key_F12, slotMouseEmulation() );
-	DEF( I18N_NOOP("Kill Window"),                        Qt::CTRL+Qt::Key_Delete, slotKillWindow() );
+	DEF( I18N_NOOP("Kill Window"),                        Qt::CTRL+Qt::ALT+Qt::Key_Escape, slotKillWindow() );
 	DEF( I18N_NOOP("Window Screenshot To Clipboard"),     Qt::ALT+Qt::Key_Print, slotGrabWindow() );
 	DEF( I18N_NOOP("Desktop Screenshot To Clipboard"),    Qt::CTRL+Qt::Key_Print, slotGrabDesktop() );
         DEF( I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
