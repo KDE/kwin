@@ -12,7 +12,9 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=appearance
 
 Name=Windows
+Name[el]=Παράθυρα
 Name[ja]=ウィンドウ
+Name[nb]=Vinduer
 Name[nds]=Finstern
 Name[pt]=Janelas
 Name[pt_BR]=Janelas

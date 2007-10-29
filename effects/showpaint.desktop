@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Show Paint
+Name[el]=Εμφάνιση σχεδίασης
 Name[et]=Joonistatud alade näitamine
 Name[ga]=Taispeáin Péint
+Name[nb]=Vis opptegning
 Name[nds]=Klöör wiesen
 Name[pt]=Mostrar a Pintura
 Name[pt_BR]=Mostrar Pintura
@@ -10,7 +12,9 @@ Name[sv]=Visa uppritning
 Name[zh_CN]=显示绘图
 Name[zh_TW]=顯示繪製
 Comment=Shows areas painted by KWin
+Comment[el]=Εμφάνιση σχεδιασμένων περιοχών από το KWin
 Comment[et]=KWini joonistatud alade näitamine
+Comment[nb]=Viser områder som KWIn tegner opp
 Comment[nds]=Wiest de Rebeden, de KWin infarvt
 Comment[pt]=Mostra as áreas pintadas pelo KWin
 Comment[pt_BR]=Mostra áreas pintadas pelo KWin
