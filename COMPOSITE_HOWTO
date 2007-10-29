@@ -33,6 +33,7 @@ Issues:
 
 When switching away from the X session KWin freezes in nvidia's OpenGL library
     - turn off GLVSync option (see below)
+    - fixed with 100.14.23 drivers
 TFP mode (see GLMode below) doesn't work with windows with certain sizes (32x32)
     - already fixed in latest drivers
 Refresh rate is slower than it should be
