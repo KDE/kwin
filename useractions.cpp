@@ -109,6 +109,7 @@ QMenu* Workspace::clientPopup()
         action = popup->addMenu( advanced_popup );
         action->setText( i18n("Ad&vanced") );
 
+        trans_popup = 0;
         if (compositing()){
             trans_popup = new QMenu( popup );
             trans_popup->setFont(KGlobalSettings::menuFont());
