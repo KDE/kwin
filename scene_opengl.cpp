@@ -189,6 +189,7 @@ SceneOpenGL::~SceneOpenGL()
             glXDestroyPixmap( display(), last_pixmap );
         glXDestroyContext( display(), ctxdrawable );
         }
+    glXMakeCurrent( display(), None, NULL );
     glXDestroyContext( display(), ctxbuffer );
     checkGLError( "Cleanup" );
     }
@@ -297,10 +298,11 @@ bool SceneOpenGL::initRenderingContext()
             kDebug( 1212 ) << "Couldn't initialize rendering context";
             return false;
             }
+	glXMakeCurrent( display(), None, NULL );
         glXDestroyContext( display(), ctxbuffer );
         direct_rendering = false; // try again
         ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
-        if( ctxbuffer == NULL || !glXMakeCurrent( display(), glxbuffer, ctxbuffer ))
+        if( ctxbuffer == NULL || !glXMakeCurrent( display(), glxbuffer, ctxbuffer ) || errs.error( true ))
             {
             kDebug( 1212 ) << "Couldn't initialize rendering context";
             return false;

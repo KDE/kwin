@@ -76,9 +76,7 @@ void CompositingPrefs::detect()
     GLXDrawable olddrawable = glXGetCurrentDrawable();
     GLXDrawable oldreaddrawable;
     if( hasglx13 )
-    {
         oldreaddrawable = glXGetCurrentReadDrawable();
-    }
 
     if( createGLXContext() )
         {
@@ -87,17 +85,14 @@ void CompositingPrefs::detect()
 
         deleteGLXContext();
         }
-    if( oldcontext != NULL )
-    {
-        if( hasglx13 )
+    if( hasglx13 )
         {
-            glXMakeContextCurrent( display(), olddrawable, oldreaddrawable, oldcontext );
+        glXMakeContextCurrent( display(), olddrawable, oldreaddrawable, oldcontext );
         }
-        else
+    else
         {
-            glXMakeCurrent( display(), olddrawable, oldcontext );
+        glXMakeCurrent( display(), olddrawable, oldcontext );
         }
-    }
 #endif
     }
 
@@ -201,7 +196,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
         mEnableCompositing = true;
         mStrictBinding = false;
         }
-    else if( mDriver == "intel")
+    else if( mDriver == "intel" )
         {
         kDebug() << "intel driver, disabling vsync, enabling direct";
         mEnableVSync = false;
