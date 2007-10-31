@@ -46,7 +46,7 @@ ATI:
 ========
 
 The radeon driver should work for R200 chips, it's worse with R300 chips.
-TODO - fglrx - no idea
+The fglrx driver requires XGL for versions older than 8.42.3.
 
 You need in xorg.conf the XComposite extension enabled:
 
@@ -68,7 +68,45 @@ running kwin may be necessary).
 Intel:
 =======
 
-TODO - no idea. Possibly similar to ATI.
+It should work with both the i810 and intel drivers.
+
+You need in xorg.conf the XComposite extension enabled:
+
+Section "Extensions"
+ Option "Composite" "Enable"
+EndSection
+
+Also in xorg.conf, you need the DRI module loaded, and AIGLX needs to be enabled:
+
+Section "Module"
+ Load "dri"
+EndSection
+Section "ServerFlags"
+ Option "AIGLX"
+EndSection
+
+DRI also needs some options in xorg.conf (they should be there by default):
+
+Section "DRI"
+ Group "video"
+ Mode 0660
+EndSection
+
+For the TFP mode AIGLX needs to work. With AIGLX direct rendering should be disabled
+(see GLDirect below, with X.org older than 7.2 "export LIBGL_ALWAYS_INDIRECT=1" before
+running kwin may be necessary).
+
+Issues:
+-------
+
+With the i810 driver, DRI works only on the first running X (if you use second X session,
+    compositing won't work there), the intel driver doesn't seem to have this problem.
+You may get only white rectangles if DRI is not enabled or fails to initialize
+    - check your X log (/var/log/X*) and your xorg.conf
+
+
+XGL:
+=====
 
 
 Configuration options:

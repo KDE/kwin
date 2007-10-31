@@ -188,6 +188,10 @@ the "fix-before-submit" thing).
 
 - there is not space before (, i.e. it's "foo(", not "foo (". Rationale: This makes it simpler to grep for functions.
 
+- a null pointer is NULL, not a zero. Not that I really insist on this one, but the only reason for using 0
+is being way too lazy to type. Rationale: NULL says it's a pointer, and with many compilers it actually is a pointer,
+making it possible to detect some mistakes.
+
 That's all. Bonus points if you try to follow the existing coding style in general, but I don't think
 I really care about the rest, as long as these rules are followed. If I find out I care about more,
 I'll add them here.
