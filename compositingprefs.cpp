@@ -108,8 +108,7 @@ bool CompositingPrefs::createGLXContext()
     attribs << GLX_BLUE_SIZE << 1;
     attribs << None;
 
-    int scrnum = 0;  // correct?
-    XVisualInfo* visinfo = glXChooseVisual( display(), scrnum, attribs.data() );
+    XVisualInfo* visinfo = glXChooseVisual( display(), DefaultScreen( display()), attribs.data() );
     if( !visinfo )
         {
         attribs.last() = GLX_DOUBLEBUFFER;
