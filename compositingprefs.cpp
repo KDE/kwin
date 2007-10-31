@@ -113,7 +113,7 @@ bool CompositingPrefs::createGLXContext()
         {
         attribs.last() = GLX_DOUBLEBUFFER;
         attribs << None;
-        visinfo = glXChooseVisual( display(), scrnum, attribs.data() );
+        visinfo = glXChooseVisual( display(), DefaultScreen( display()), attribs.data() );
         if (!visinfo)
             {
             kError() << "Error: couldn't find RGB GLX visual";
