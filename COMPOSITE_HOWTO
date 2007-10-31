@@ -18,11 +18,13 @@ nVidia:
 8xxx drivers and newer work, only 9xxx and later drivers provide TFP (texture_from_pixmap)
 functionality.
 
-You need in xorg.conf
+You need in xorg.conf (add to existing sections if they already exist)
 
-Option "AddARGBGLXVisuals" "True"
+Section "Screen"
+ Option "AddARGBGLXVisuals" "True"
+EndSection
 
-in 'Section "Screen"' and also the XComposite extension enabled:
+and also the XComposite extension enabled:
 
 Section "Extensions"
  Option "Composite" "Enable"
@@ -42,35 +44,13 @@ Refresh rate is slower than it should be
     - should(?) be fixed with drivers updated for xrandr1.2
 
 
-ATI:
-========
-
-The radeon driver should work for R200 chips, it's worse with R300 chips.
-The fglrx driver requires XGL for versions older than 8.42.3.
-
-You need in xorg.conf the XComposite extension enabled:
-
-Section "Extensions"
- Option "Composite" "Enable"
-EndSection
-
-Also using
-
-Option "XaaNoOffscreenPixmaps" "true"
-
-in 'Section "Screen"' may improve performance for non-TFP (texture_from_pixmap) modes.
-
-For the TFP mode AIGLX needs to work. With AIGLX direct rendering should be disabled
-(see GLDirect below, with X.org older than 7.2 "export LIBGL_ALWAYS_INDIRECT=1" before
-running kwin may be necessary).
-
-
 Intel:
 =======
 
 It should work with both the i810 and intel drivers.
 
-You need in xorg.conf the XComposite extension enabled:
+You need in xorg.conf the XComposite extension enabled
+(add to existing sections if they already exist):
 
 Section "Extensions"
  Option "Composite" "Enable"
@@ -92,9 +72,15 @@ Section "DRI"
  Mode 0660
 EndSection
 
-For the TFP mode AIGLX needs to work. With AIGLX direct rendering should be disabled
-(see GLDirect below, with X.org older than 7.2 "export LIBGL_ALWAYS_INDIRECT=1" before
-running kwin may be necessary).
+For the TFP mode AIGLX needs to work. Also, it seems necessary to do
+"export LIBGL_ALWAYS_INDIRECT=1" before running kwin, otherwise SHM mode is used.
+
+For SHM, the following in xorg.conf may improve performance:
+
+Section "Screen"
+ Option "XaaNoOffscreenPixmaps" "true"
+EndSection
+
 
 Issues:
 -------
@@ -105,20 +91,22 @@ You may get only white rectangles if DRI is not enabled or fails to initialize
     - check your X log (/var/log/X*) and your xorg.conf
 
 
-XGL:
-=====
+ATI:
+========
+
+The radeon driver should work for R200 chips, it's worse with R300 chips.
+The fglrx driver requires XGL for versions older than 8.42.3.
+
+Refer to the Intel section, setting up should be similar.
+
 
 
 Configuration options:
 ======================
 
-All general configuration option are in group [Translucency] in kwinrc config file:
-
-UseTranslucency=<true|false> - enables/disables compositing support
-GLMode=<TFP|SHM|Fallback> - selects texture creating mode
-RefreshRate=<number> - manually specified refresh rate, should be usually automatically detected
-GLDirect=<true|false> - enables/disables direct rendering
-GLVSync=<true|false> - enables/disables synchronizing with monitor refresh
+There is configuration module for most options. If you need to manually disable compositing,
+use the following command:
+kwriteconfig --file kwinrc --group Compositing --key Enabled --type bool false
 
 ShowFPSEffect:
 Options are in group [EffectShowFps] in kwinrc config file:
