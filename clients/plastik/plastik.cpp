@@ -136,7 +136,7 @@ KDecoration* PlastikHandler::createDecoration( KDecorationBridge* bridge )
         return new PlastikClient( bridge, this );
 }
 
-bool PlastikHandler::supports( Ability ability )
+bool PlastikHandler::supports( Ability ability ) const
 {
     switch( ability )
     {

@@ -32,7 +32,7 @@ class KDE2Handler: public KDecorationFactory
                 KDecoration* createDecoration( KDecorationBridge* b );
 		bool reset( unsigned long changed );
 		virtual QList< BorderSize > borderSizes() const;
-		virtual bool supports( Ability ability );
+		virtual bool supports( Ability ability ) const;
 
 	private:
 		unsigned long readConfig( bool update );

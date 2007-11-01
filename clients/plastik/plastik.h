@@ -80,7 +80,7 @@ public:
     virtual bool reset( unsigned long changed );
 
     virtual KDecoration* createDecoration( KDecorationBridge* );
-    virtual bool supports( Ability ability );
+    virtual bool supports( Ability ability ) const;
 
     const QPixmap &pixmap(Pixmaps type, bool active, bool toolWindow);
     const QBitmap &buttonBitmap(ButtonIcon type, const QSize &size, bool toolWindow);

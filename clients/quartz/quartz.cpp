@@ -192,7 +192,7 @@ bool QuartzHandler::reset(unsigned long changed)
 }
 
 
-bool QuartzHandler::supports( Ability ability )
+bool QuartzHandler::supports( Ability ability ) const
 {
     switch( ability )
     {

@@ -658,7 +658,7 @@ bool RedmondDecoFactory::reset( unsigned long changed )
 	}
 }
 
-bool RedmondDecoFactory::supports( Ability ability )
+bool RedmondDecoFactory::supports( Ability ability ) const
 {
 	switch( ability )
 	{

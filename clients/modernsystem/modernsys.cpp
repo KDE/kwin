@@ -783,7 +783,7 @@ bool ModernSysFactory::reset( unsigned long changed )
     }
 }
 
-bool ModernSysFactory::supports( Ability ability )
+bool ModernSysFactory::supports( Ability ability ) const
 {
     switch( ability )
     {

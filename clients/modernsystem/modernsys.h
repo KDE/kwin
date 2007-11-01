@@ -59,7 +59,7 @@ public:
     virtual ~ModernSysFactory();
     virtual KDecoration* createDecoration( KDecorationBridge* );
     virtual bool reset( unsigned long changed );
-    virtual bool supports( Ability ability );
+    virtual bool supports( Ability ability ) const;
     QList< BorderSize > borderSizes() const;
 private:
     void read_config();

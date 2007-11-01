@@ -314,7 +314,7 @@ bool B2ClientFactory::reset(unsigned long changed)
     return needsReset;
 }
 
-bool B2ClientFactory::supports(Ability ability)
+bool B2ClientFactory::supports(Ability ability) const
 {
     switch (ability) {
     case AbilityAnnounceButtons:

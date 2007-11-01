@@ -164,7 +164,7 @@ public:
     virtual ~B2ClientFactory();
     virtual KDecoration *createDecoration(KDecorationBridge *);
     virtual bool reset(unsigned long changed);
-    virtual bool supports( Ability ability );
+    virtual bool supports( Ability ability ) const;
     QList< B2ClientFactory::BorderSize > borderSizes() const;
 };
 

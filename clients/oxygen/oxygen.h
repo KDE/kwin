@@ -57,6 +57,7 @@ public:
     virtual ~OxygenFactory();
     virtual KDecoration *createDecoration(KDecorationBridge *b);
     virtual bool reset(unsigned long changed);
+    virtual bool supports( Ability ability ) const;
 
     static bool initialized();
     static Qt::Alignment titleAlign();

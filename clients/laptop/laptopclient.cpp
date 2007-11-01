@@ -709,7 +709,7 @@ bool LaptopClientFactory::reset(unsigned long changed)
     }
 }
 
-bool LaptopClientFactory::supports( Ability ability )
+bool LaptopClientFactory::supports( Ability ability ) const
 {
     switch( ability )
     {

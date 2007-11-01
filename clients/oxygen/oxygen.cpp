@@ -120,6 +120,21 @@ bool OxygenFactory::readConfig()
         return true;
 }
 
+bool OxygenFactory::supports( Ability ability ) const
+{
+    switch( ability )
+        {
+        case AbilityAnnounceButtons:
+        case AbilityButtonMenu:
+        case AbilityButtonHelp:
+        case AbilityButtonMinimize:
+        case AbilityButtonMaximize:
+        case AbilityButtonClose:
+            return true;
+        default:
+            return false;
+        };
+}
 
 
 } //namespace Oxygen

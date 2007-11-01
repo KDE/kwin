@@ -354,7 +354,7 @@ bool WebFactory::reset(unsigned long changed)
   }
 }
 
-bool WebFactory::supports( Ability ability )
+bool WebFactory::supports( Ability ability ) const
 {
     switch( ability )
     {

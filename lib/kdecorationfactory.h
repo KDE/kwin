@@ -70,7 +70,7 @@ class KWIN_EXPORT KDecorationFactory
          */        
         virtual QList< BorderSize > borderSizes() const;
 
-        virtual bool supports( Ability ability );
+        virtual bool supports( Ability ability ) const = 0;
         
         virtual void checkRequirements( KDecorationProvides* provides );
 	/**

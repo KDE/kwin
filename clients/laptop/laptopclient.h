@@ -68,7 +68,7 @@ public:
     virtual ~LaptopClientFactory();
     virtual KDecoration* createDecoration( KDecorationBridge* );
     virtual bool reset( unsigned long changed );
-    virtual bool supports( Ability ability );
+    virtual bool supports( Ability ability ) const;
     virtual QList< BorderSize > borderSizes() const;
 private:
     void findPreferredHandleSize();

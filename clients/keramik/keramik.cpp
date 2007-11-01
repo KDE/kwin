@@ -675,7 +675,7 @@ bool KeramikHandler::reset( unsigned long changed )
 }
 
 
-bool KeramikHandler::supports( Ability ability )
+bool KeramikHandler::supports( Ability ability ) const
 {
     switch( ability )
     {

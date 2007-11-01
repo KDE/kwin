@@ -531,7 +531,7 @@ QList< KDE2Handler::BorderSize > KDE2Handler::borderSizes() const
       BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
-bool KDE2Handler::supports( Ability ability )
+bool KDE2Handler::supports( Ability ability ) const
 {
     switch( ability )
         {

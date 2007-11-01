@@ -42,11 +42,6 @@ bool KDecorationFactory::reset( unsigned long )
     return true;
     }
     
-bool KDecorationFactory::supports( Ability )
-    {
-    return false;
-    }
-
 void KDecorationFactory::checkRequirements( KDecorationProvides* )
     {
     }
