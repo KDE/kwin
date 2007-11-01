@@ -39,6 +39,7 @@ namespace KWin
 EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     : EffectsHandler(type)
     , keyboard_grab_effect( NULL )
+    , fullscreen_effect( 0 )
     {
     reconfigure();
     }
@@ -256,6 +257,16 @@ void EffectsHandlerImpl::tabBoxUpdated()
     {
     foreach( EffectPair ep, loaded_effects )
         ep.second->tabBoxUpdated();
+    }
+
+void EffectsHandlerImpl::setActiveFullScreenEffect( Effect* e )
+    {
+    fullscreen_effect = e;
+    }
+
+Effect* EffectsHandlerImpl::activeFullScreenEffect() const
+    {
+    return fullscreen_effect;
     }
 
 bool EffectsHandlerImpl::borderActivated( ElectricBorder border )
@@ -723,6 +734,10 @@ void EffectsHandlerImpl::unloadEffect( const QString& name )
         if ( it.value().first == name )
             {
             kDebug( 1212 ) << "EffectsHandler::unloadEffect : Unloading Effect : " << name;
+            if( activeFullScreenEffect() == it.value().second )
+                {
+                setActiveFullScreenEffect( 0 );
+                }
             delete it.value().second;
             effect_order.erase(it);
             effectsChanged();

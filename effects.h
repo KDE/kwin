@@ -66,6 +66,9 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual int currentTabBoxDesktop() const;
         virtual EffectWindow* currentTabBoxWindow() const;
 
+        virtual void setActiveFullScreenEffect( Effect* e );
+        virtual Effect* activeFullScreenEffect() const;
+
         virtual void pushRenderTarget(GLRenderTarget* target);
         virtual GLRenderTarget* popRenderTarget();
 
@@ -125,6 +128,7 @@ class EffectsHandlerImpl : public EffectsHandler
 
         Effect* keyboard_grab_effect;
         QStack<GLRenderTarget*> render_targets;
+        Effect* fullscreen_effect;
         ToplevelList elevated_windows;
         QMultiMap< int, EffectPair > effect_order;
 };

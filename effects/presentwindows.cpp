@@ -286,6 +286,8 @@ void PresentWindowsEffect::windowClosed( EffectWindow* w )
 
 void PresentWindowsEffect::setActive(bool active)
     {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return;
     if( mActivated == active )
         return;
     mActivated = active;
@@ -326,6 +328,7 @@ void PresentWindowsEffect::effectActivated()
     // Create temporary input window to catch mouse events
     mInput = effects->createFullScreenInputWindow( this, Qt::PointingHandCursor );
     hasKeyboardGrab = effects->grabKeyboard( this );
+    effects->setActiveFullScreenEffect( this );
     }
 
 void PresentWindowsEffect::effectTerminated()
@@ -335,6 +338,7 @@ void PresentWindowsEffect::effectTerminated()
     if( hasKeyboardGrab )
         effects->ungrabKeyboard();
     hasKeyboardGrab = false;
+    effects->setActiveFullScreenEffect( 0 );
     }
 
 void PresentWindowsEffect::rearrangeWindows()
@@ -731,6 +735,8 @@ bool PresentWindowsEffect::canRearrangeClosest(EffectWindowList windowlist)
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
     {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return false;
     if( border == borderActivate && !mActivated )
         {
         toggleActive();

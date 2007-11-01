@@ -350,6 +350,8 @@ EffectWindow* DesktopGridEffect::windowAt( const QPoint& pos, QRect* rect ) cons
 
 void DesktopGridEffect::desktopChanged( int old )
     {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return;
     if( activated )
         setActive( false );
     else
@@ -430,6 +432,8 @@ void DesktopGridEffect::toggle()
     
 void DesktopGridEffect::setActive( bool active )
     {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return;
     if( activated == active )
         return;
     activated = active;
@@ -443,6 +447,7 @@ void DesktopGridEffect::setup()
     keyboard_grab = effects->grabKeyboard( this );
     input = effects->createInputWindow( this, 0, 0, displayWidth(), displayHeight(),
         Qt::PointingHandCursor );
+    effects->setActiveFullScreenEffect( this );
     hover_desktop = effects->currentDesktop();
     }
 
@@ -455,6 +460,7 @@ void DesktopGridEffect::finish()
         effects->setElevatedWindow( window_move, false );
     window_move = NULL;
     effects->destroyInputWindow( input );
+    effects->setActiveFullScreenEffect( 0 );
     effects->addRepaintFull(); // to get rid of hover
     }
 

@@ -229,6 +229,9 @@ class KWIN_EXPORT EffectsHandler
         virtual int currentTabBoxDesktop() const = 0;
         virtual EffectWindow* currentTabBoxWindow() const = 0;
 
+        virtual void setActiveFullScreenEffect( Effect* e ) = 0;
+        virtual Effect* activeFullScreenEffect() const = 0;
+
         virtual void pushRenderTarget(GLRenderTarget* target) = 0;
         virtual GLRenderTarget* popRenderTarget() = 0;
 
