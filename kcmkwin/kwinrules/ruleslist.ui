@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>KWin::KCMRulesListBase</class>
-  <widget class="QWidget" name="KWin::KCMRulesListBase" >
+  <class>KWin::KCMRulesList</class>
+  <widget class="QWidget" name="KWin::KCMRulesList" >
     <property name="geometry" >
       <rect>
         <x>0</x>

@@ -22,10 +22,10 @@
 
 #include <kdialog.h>
 #include <kwindowsystem.h>
-//#include <kshortcutdialog.h>
+#include <kshortcutwidget.h>
 
 #include "ruleswidgetbase.h"
-#include "editshortcutbase.h"
+#include "ui_editshortcut.h"
 
 namespace KWin
 {
@@ -110,17 +110,13 @@ class RulesDialog
         Rules* rules;
     };
 
-#ifdef __GNUC__
-#warning KShortcutDialog is gone
-#endif //__GNUC__
-#if 0
 class EditShortcut
-    : public EditShortcutBase
+    : public QWidget, public Ui_EditShortcut
     {
     Q_OBJECT
     public:
         EditShortcut( QWidget* parent = NULL );
-    protected:
+    protected slots:
         void editShortcut();
         void clearShortcut();
     };
@@ -139,14 +135,17 @@ class EditShortcutDialog
 
 // slightly duped from utils.cpp
 class ShortcutDialog
-    : public KShortcutDialog
+    : public KDialog
     {
     Q_OBJECT
     public:
         ShortcutDialog( const KShortcut& cut, QWidget* parent = NULL );
         virtual void accept();
+        KShortcut shortcut() const;
+    private:
+        KShortcutWidget* widget;
     };
-#endif //0
+
 } // namespace
 
 #endif

@@ -30,8 +30,9 @@ namespace KWin
 {
 
 KCMRulesList::KCMRulesList( QWidget* parent)
-: KCMRulesListBase( parent)
+    : QWidget( parent)
     {
+    setupUi( this );
     // connect both current/selected, so that current==selected (stupid QListBox :( )
     connect( rules_listbox, SIGNAL(itemChanged(QListWidgetItem*)),
         SLOT(activeChanged()));

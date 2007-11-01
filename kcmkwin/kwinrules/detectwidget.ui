@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>KWin::DetectWidgetBase</class>
-  <widget class="QWidget" name="KWin::DetectWidgetBase" >
+  <class>KWin::DetectWidget</class>
+  <widget class="QWidget" name="KWin::DetectWidget" >
     <property name="geometry" >
       <rect>
         <x>0</x>

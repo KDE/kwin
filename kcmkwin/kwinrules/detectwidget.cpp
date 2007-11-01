@@ -41,8 +41,9 @@ namespace KWin
 {
 
 DetectWidget::DetectWidget( QWidget* parent )
-: DetectWidgetBase( parent )
+    : QWidget( parent )
     {
+    setupUi( this );
     }
 
 DetectDialog::DetectDialog( QWidget* parent, const char* name )

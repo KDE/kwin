@@ -20,8 +20,6 @@
 #ifndef __DETECTWIDGET_H__
 #define __DETECTWIDGET_H__
 
-#include "ui_detectwidgetbase.h"
-
 #include <KDialog>
 #include <kwindowsystem.h>
 
@@ -30,24 +28,17 @@
 #include <QEvent>
 #include <QByteArray>
 
+#include "ui_detectwidget.h"
+
 namespace KWin
 {
 
-class DetectWidgetBase : public QWidget, public Ui::DetectWidgetBase
-{
-public:
-  DetectWidgetBase( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
-
-
 class DetectWidget
-    : public DetectWidgetBase
+    : public QWidget, public Ui_DetectWidget
     {
     Q_OBJECT
     public:
-        DetectWidget( QWidget* parent = NULL );
+        explicit DetectWidget( QWidget* parent = NULL );
     };
 
 class DetectDialog

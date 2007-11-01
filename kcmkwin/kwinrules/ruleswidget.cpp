@@ -48,8 +48,8 @@ namespace KWin
     rule_##var->setWhatsThis( type##RuleDesc );
 
 RulesWidget::RulesWidget( QWidget* parent )
-: RulesWidgetBase( parent )
-, detect_dlg( NULL )
+    : RulesWidgetBase( parent )
+    , detect_dlg( NULL )
     {
     QString enableDesc =
         i18n( "Enable this checkbox to alter this window property for the specified window(s)." );
@@ -679,15 +679,10 @@ void RulesWidget::prepareWindowSpecific( WId window )
 
 void RulesWidget::shortcutEditClicked()
     {
-#ifdef __GNUC__
-#warning KShortcutDialog is gone, and it is a good opportunity to clean up here
-#endif
-#if 0
     EditShortcutDialog dlg( topLevelWidget());
     dlg.setShortcut( shortcut->text());
     if( dlg.exec() == QDialog::Accepted )
         shortcut->setText( dlg.shortcut());
-#endif
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
@@ -737,13 +732,10 @@ void RulesDialog::accept()
     KDialog::accept();
     }
 
-#ifdef __GNUC__
-#warning KShortcutDialog is gone
-#endif
-#if 0
 EditShortcut::EditShortcut( QWidget* parent )
-: EditShortcutBase( parent )
+    : QWidget( parent )
     {
+    setupUi( this );
     }
 
 void EditShortcut::editShortcut()
@@ -761,13 +753,13 @@ void EditShortcut::clearShortcut()
 EditShortcutDialog::EditShortcutDialog( QWidget* parent, const char* name )
 : KDialog( parent )
     {
-      setObjectName( name );
-      setModal( true );
-      setCaption( i18n( "Edit Shortcut" ) );
-      setButtons( Ok | Cancel );
+    setObjectName( name );
+    setModal( true );
+    setCaption( i18n( "Edit Shortcut" ) );
+    setButtons( Ok | Cancel );
 
-      widget = new EditShortcut( this );
-      setMainWidget( widget );
+    widget = new EditShortcut( this );
+    setMainWidget( widget );
     }
 
 void EditShortcutDialog::setShortcut( const QString& cut )
@@ -781,14 +773,20 @@ QString EditShortcutDialog::shortcut() const
     }
 
 ShortcutDialog::ShortcutDialog( const KShortcut& cut, QWidget* parent )
-    : KShortcutDialog( cut, parent )
+    : KDialog( parent )
+    , widget( new KShortcutWidget( this ))
     {
+    widget->setShortcut( cut );
+    setMainWidget( widget );
     }
 
 void ShortcutDialog::accept()
     {
-    foreach( const QKeySequence &seq, shortcut() )
+    for( int i = 0;
+         i < 2;
+         ++i )
         {
+        QKeySequence seq = i == 0 ? shortcut().primary() : shortcut().alternate();
         if( seq.isEmpty())
             break;
         if( seq[0] == Qt::Key_Escape )
@@ -798,21 +796,26 @@ void ShortcutDialog::accept()
             }
         if( seq[0] == Qt::Key_Space )
             { // clear
-            setShortcut( KShortcut());
-            KShortcutDialog::accept();
+            widget->setShortcut( KShortcut());
+            KDialog::accept();
             return;
             }
         if( (seq[0] & Qt::KeyboardModifierMask) == 0 )
             { // no shortcuts without modifiers
             KShortcut cut = shortcut();
             cut.remove( seq );
-            setShortcut( cut );
+            widget->setShortcut( cut );
             return;
             }
         }
-    KShortcutDialog::accept();
+    KDialog::accept();
     }
-#endif
+
+KShortcut ShortcutDialog::shortcut() const
+    {
+    return widget->shortcut();
+    }
+
 } // namespace
 
 #include "ruleswidget.moc"

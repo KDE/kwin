@@ -20,27 +20,15 @@
 #ifndef __RULESLIST_H__
 #define __RULESLIST_H__
 
-#include "ui_ruleslistbase.h"
-
-
-
 #include "../../rules.h"
 
+#include "ui_ruleslist.h"
 
 namespace KWin
 {
 
-class KCMRulesListBase : public QWidget, public Ui::KCMRulesListBase
-{
-public:
-  KCMRulesListBase( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
-
-
 class KCMRulesList
-    : public KCMRulesListBase
+    : public QWidget, Ui_KCMRulesList
     {
     Q_OBJECT
     public:
