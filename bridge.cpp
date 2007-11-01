@@ -69,10 +69,9 @@ NET::WindowType Bridge::windowType( unsigned long supported_types ) const
 
 QIcon Bridge::icon() const
     {
-#ifdef __GNUC__
-#warning KDE4 drop me ?
-#endif	    
-    return QIcon( /*c->miniIcon(),*/ c->icon());
+    QIcon ret( c->icon());
+    ret.addPixmap( c->miniIcon());
+    return ret;
     }
 
 bool Bridge::isSetShade() const

@@ -382,10 +382,6 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
         signal(SIGINT, SIG_IGN);
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
-#ifdef __GNUC__
-#warning D-BUS TODO
-//    KApplication::disableAutoDcopRegistration();
-#endif
     KWin::Application a;
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
