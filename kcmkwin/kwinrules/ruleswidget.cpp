@@ -740,7 +740,7 @@ EditShortcut::EditShortcut( QWidget* parent )
 
 void EditShortcut::editShortcut()
     {
-    ShortcutDialog dlg( KShortcut( shortcut->text()), topLevelWidget());
+    ShortcutDialog dlg( QKeySequence( shortcut->text()), topLevelWidget());
     if( dlg.exec() == QDialog::Accepted )
         shortcut->setText( dlg.shortcut().toString());
     }
@@ -772,48 +772,38 @@ QString EditShortcutDialog::shortcut() const
     return widget->shortcut->text();
     }
 
-ShortcutDialog::ShortcutDialog( const KShortcut& cut, QWidget* parent )
+ShortcutDialog::ShortcutDialog( const QKeySequence& cut, QWidget* parent )
     : KDialog( parent )
-    , widget( new KShortcutWidget( this ))
+    , widget( new KKeySequenceWidget( this ))
     {
-    widget->setShortcut( cut );
+    widget->setKeySequence( cut );
     setMainWidget( widget );
     }
 
 void ShortcutDialog::accept()
     {
-    for( int i = 0;
-         i < 2;
-         ++i )
+    QKeySequence seq = shortcut();
+    if( !seq.isEmpty())
         {
-        QKeySequence seq = i == 0 ? shortcut().primary() : shortcut().alternate();
-        if( seq.isEmpty())
-            break;
         if( seq[0] == Qt::Key_Escape )
             {
             reject();
             return;
             }
-        if( seq[0] == Qt::Key_Space )
+        if( seq[0] == Qt::Key_Space
+            || (seq[0] & Qt::KeyboardModifierMask) == 0 )
             { // clear
-            widget->setShortcut( KShortcut());
+            widget->clearKeySequence();
             KDialog::accept();
-            return;
-            }
-        if( (seq[0] & Qt::KeyboardModifierMask) == 0 )
-            { // no shortcuts without modifiers
-            KShortcut cut = shortcut();
-            cut.remove( seq );
-            widget->setShortcut( cut );
             return;
             }
         }
     KDialog::accept();
     }
 
-KShortcut ShortcutDialog::shortcut() const
+QKeySequence ShortcutDialog::shortcut() const
     {
-    return widget->shortcut();
+    return widget->keySequence();
     }
 
 } // namespace

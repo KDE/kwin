@@ -22,7 +22,7 @@
 
 #include <kdialog.h>
 #include <kwindowsystem.h>
-#include <kshortcutwidget.h>
+#include <kkeysequencewidget.h>
 
 #include "ruleswidgetbase.h"
 #include "ui_editshortcut.h"
@@ -139,11 +139,11 @@ class ShortcutDialog
     {
     Q_OBJECT
     public:
-        ShortcutDialog( const KShortcut& cut, QWidget* parent = NULL );
+        ShortcutDialog( const QKeySequence& cut, QWidget* parent = NULL );
         virtual void accept();
-        KShortcut shortcut() const;
+        QKeySequence shortcut() const;
     private:
-        KShortcutWidget* widget;
+        KKeySequenceWidget* widget;
     };
 
 } // namespace
