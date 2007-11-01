@@ -23,9 +23,10 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QWidget>
 #include <kmanagerselection.h>
 #include <netwm_def.h>
-//#include <kshortcutdialog.h> //you really want to use KKeySequenceWidget
+#include <kkeysequencewidget.h>
 #include <limits.h>
 #include <QX11Info>
+#include <kdialog.h>
 
 #include <kwinglobals.h>
 
@@ -291,24 +292,22 @@ void checkNonExistentClients();
 
 #ifndef KCMRULES
 // Qt dialogs emit no signal when closed :(
-
-// KShortcutDialog is gone, and K(Shortcut/KeySequence)Widget should replace it and be
-// good enough to not need any further hacks here. If they aren't, CONTACT ME before
-// you add hacks again. --ahartmetz
-#if 0
 class ShortcutDialog
-    : public KShortcutDialog
+    : public KDialog
     {
     Q_OBJECT
     public:
-        ShortcutDialog( const KShortcut& cut );
+        ShortcutDialog( const QKeySequence& cut );
         virtual void accept();
+        QKeySequence shortcut() const;
     signals:
         void dialogDone( bool ok );
     protected:
-        virtual void done( int r ) { KShortcutDialog::done( r ); emit dialogDone( r == Accepted ); }
+        virtual void done( int r );
+    private:
+        KKeySequenceWidget* widget;
     };
-#endif //0
+
 #endif //KCMRULES
 
 } // namespace

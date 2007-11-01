@@ -309,6 +309,9 @@ void Workspace::initShortcuts()
     // a separate KActionCollection is needed for the shortcut for disabling global shortcuts,
     // otherwise it would also disable itself
     disable_shortcuts_keys = new KActionCollection( this );
+#ifdef __GNUC__
+#warning TODO PORT ME (KGlobalAccel related)
+#endif
     // FIXME KAccel port... needed?
     //disable_shortcuts_keys->disableBlocking( true );
 #define IN_KWIN
@@ -355,15 +358,14 @@ void Workspace::readShortcuts()
 
 void Workspace::setupWindowShortcut( Client* c )
     {
-#ifdef __GNUC__
-#warning ifdefed out, KShortcutDialog is 0xDEAD
-#endif //__GNUC__
-#if 0
     assert( client_keys_dialog == NULL );
-    keys->setEnabled( false );
-    disable_shortcuts_keys->setEnabled( false );
-    client_keys->setEnabled( false );
-    client_keys_dialog = new ShortcutDialog( c->shortcut());
+#ifdef __GNUC__
+#warning TODO PORT ME (KGlobalAccel related)
+#endif
+//    keys->setEnabled( false );
+//    disable_shortcuts_keys->setEnabled( false );
+//    client_keys->setEnabled( false );
+    client_keys_dialog = new ShortcutDialog( c->shortcut().primary());
     client_keys_client = c;
     connect( client_keys_dialog, SIGNAL( dialogDone( bool )), SLOT( setupWindowShortcutDone( bool )));
     QRect r = clientArea( ScreenArea, c );
@@ -377,24 +379,19 @@ void Workspace::setupWindowShortcut( Client* c )
     client_keys_dialog->show();
     active_popup = client_keys_dialog;
     active_popup_client = c;
-#endif
     }
 
 void Workspace::setupWindowShortcutDone( bool ok )
     {
-#if 0 //see above
-    keys->setEnabled( true );
-    disable_shortcuts_keys->setEnabled( true );
-    client_keys->setEnabled( true );
+//    keys->setEnabled( true );
+//    disable_shortcuts_keys->setEnabled( true );
+//    client_keys->setEnabled( true );
     if( ok )
-        {
         client_keys_client->setShortcut( KShortcut( client_keys_dialog->shortcut()).toString());
-        }
     closeActivePopup();
     delete client_keys_dialog;
     client_keys_dialog = NULL;
     client_keys_client = NULL;
-#endif
     }
 
 void Workspace::clientShortcutUpdated( Client* c )

@@ -646,7 +646,7 @@ class Workspace : public QObject, public KDecorationDefines
         QAction *mNoBorderOpAction;
         QAction *mMinimizeOpAction;
         QAction *mCloseOpAction;
-//        ShortcutDialog* client_keys_dialog;
+        ShortcutDialog* client_keys_dialog;
         Client* client_keys_client;
         KActionCollection *disable_shortcuts_keys;
         bool global_shortcuts_disabled;

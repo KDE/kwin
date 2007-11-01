@@ -415,13 +415,10 @@ bool isLocalMachine( const QByteArray& host )
     }
 
 #ifndef KCMRULES
-#ifdef __GNUC__
-#warning KShortcutDialog is gone
-#endif //__GNUC__
-#if 0
-ShortcutDialog::ShortcutDialog( const KShortcut& cut )
-    : KShortcutDialog( cut, false /*TODO: ???*/ )
+ShortcutDialog::ShortcutDialog( const QKeySequence& cut )
+    : widget( new KKeySequenceWidget( this ))
     {
+    widget->setKeySequence( cut );
     // make it a popup, so that it has the grab
     XSetWindowAttributes attrs;
     attrs.override_redirect = True;
@@ -431,32 +428,36 @@ ShortcutDialog::ShortcutDialog( const KShortcut& cut )
 
 void ShortcutDialog::accept()
     {
-    foreach( const QKeySequence &seq, shortcut() )
+    QKeySequence seq = shortcut();
+    if( !seq.isEmpty())
         {
-        if( seq.isEmpty())
-            break;
         if( seq[0] == Qt::Key_Escape )
             {
             reject();
             return;
             }
-        if( seq[0] == Qt::Key_Space )
+        if( seq[0] == Qt::Key_Space
+            || (seq[0] & Qt::KeyboardModifierMask) == 0 )
             { // clear
-            setShortcut( KShortcut());
-            KShortcutDialog::accept();
-            return;
-            }
-        if( (seq[0] & Qt::KeyboardModifierMask) == 0 )
-            { // no shortcuts without modifiers
-            KShortcut cut = shortcut();
-            cut.remove( seq );
-            setShortcut( cut );
+            widget->clearKeySequence();
+            KDialog::accept();
             return;
             }
         }
-    KShortcutDialog::accept();
+    KDialog::accept();
     }
-#endif //0
+
+void ShortcutDialog::done( int r )
+    {
+    KDialog::done( r );
+    emit dialogDone( r == Accepted );
+    }
+
+QKeySequence ShortcutDialog::shortcut() const
+    {
+    return widget->keySequence();
+    }
+
 #endif //KCMRULES
 } // namespace
 

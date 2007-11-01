@@ -105,7 +105,7 @@ Workspace::Workspace( bool restore )
     desk_popup        (0),
     keys              (0),
     client_keys       ( NULL ),
-//    client_keys_dialog ( NULL ),
+    client_keys_dialog ( NULL ),
     client_keys_client ( NULL ),
     disable_shortcuts_keys ( NULL ),
     global_shortcuts_disabled( false ),
@@ -469,7 +469,7 @@ Workspace::~Workspace()
     delete topmenu_watcher;
     delete topmenu_selection;
     delete topmenu_space;
-//    delete client_keys_dialog;
+    delete client_keys_dialog;
     while( !rules.isEmpty())
         {
         delete rules.front();
