@@ -57,6 +57,10 @@ Atoms* atoms;
 int screen_number = -1;
 
 static bool initting = false;
+// Whether to run Xlib in synchronous mode and print backtraces for X errors.
+// Note that you most probably need to configure cmake with "-D__KDE_HAVE_GCC_VISIBILITY=0"
+// and -rdynamic in CXXFLAGS for kBacktrace() to work.
+static bool kwin_sync = false;
 
 static
 int x11ErrorHandler(Display *d, XErrorEvent *e)
@@ -83,6 +87,9 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
     XGetErrorDatabaseText(d, "XRequest", number, "<unknown>", req, sizeof(req));
 
     fprintf(stderr, "kwin: %s(0x%lx): %s\n", req, e->resourceid, msg);
+
+    if( kwin_sync )
+	kDebug() << kBacktrace();
 
     if (initting)
         {
@@ -140,6 +147,12 @@ int Application::crashes = 0;
 Application::Application( )
 : KApplication( ), owner( screen_number )
     {
+    if( KCmdLineArgs::parsedArgs( "qt" )->isSet( "sync" ))
+	{
+	kwin_sync = true;
+	XSynchronize( display(), True );
+	kDebug() << "Running KWin in sync mode";
+	}
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     KSharedConfig::Ptr config = KGlobal::config();
     if (!config->isImmutable() && args->isSet("lock"))
