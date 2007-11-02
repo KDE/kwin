@@ -3,7 +3,7 @@
 // -------------------
 // Oxygen window decoration for KDE.
 // -------------------
-// Copyright (c) 2006, 2007 Riccardo Iaconelli <ruphy@fsfe.org>
+// Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -120,21 +120,6 @@ bool OxygenFactory::readConfig()
         return true;
 }
 
-bool OxygenFactory::supports( Ability ability ) const
-{
-    switch( ability )
-        {
-        case AbilityAnnounceButtons:
-        case AbilityButtonMenu:
-        case AbilityButtonHelp:
-        case AbilityButtonMinimize:
-        case AbilityButtonMaximize:
-        case AbilityButtonClose:
-            return true;
-        default:
-            return false;
-        };
-}
 
 
 } //namespace Oxygen

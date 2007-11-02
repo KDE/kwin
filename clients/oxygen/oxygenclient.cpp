@@ -5,7 +5,7 @@
 // -------------------
 // Copyright (c) 2003, 2004 David Johnson
 // Copyright (c) 2006, 2007 Casper Boemann <cbr@boemann.dk>
-// Copyright (c) 2006, 2007 Riccardo Iaconelli <ruphy@fsfe.org>
+// Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
 //
 // Please see the header file for copyright and license information.
 //////////////////////////////////////////////////////////////////////////////
@@ -55,8 +55,8 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
     : KCommonDecoration(b, f)
-    , colorCacheInvalid_(true)
     , helper_(*globalHelper)
+    , colorCacheInvalid_(true)
 {
 }
 
@@ -184,10 +184,10 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
             return new OxygenButton(*this, i18n("Minimize"), ButtonMin);
 
         case MaxButton:
-            return new OxygenButton(*this, i18n("Maximize"), ButtonMax);
+            return new OxygenButton(*this, i18n("Minimize"), ButtonMax);
 
         case CloseButton:
-            return new OxygenButton(*this, i18n("Close"), ButtonClose);
+            return new OxygenButton(*this, i18n("Minimize"), ButtonClose);
 
         default:
             return 0;

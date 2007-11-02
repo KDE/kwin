@@ -3,7 +3,7 @@
 // -------------------
 // Oxygen window decoration for KDE. Buttons.
 // -------------------
-// Copyright (c) 2006, 2007 Riccardo Iaconelli <ruphy@fsfe.org>
+// Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
 // Copyright (c) 2006, 2007 Casper Boemann <cbr@boemann.dk>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
