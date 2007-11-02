@@ -1,3 +1,7 @@
+# Uncomment to have the test effects built
+#add_subdirectory( test )
+
+
 # Adds effect plugin with given name. Sources are given after the name
 macro(KWIN4_ADD_EFFECT name)
     kde4_add_plugin(kwin4_effect_${name} ${ARGN})
@@ -15,20 +19,17 @@ include_directories(
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib
     )
 
-install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
-
-
 
 ### builtins - most important, ready-to-use effects
 # sources
 SET(kwin4_effect_builtins_sources
     boxswitch.cpp
+    demo_taskbarthumbnail.cpp
     desktopgrid.cpp
     dialogparent.cpp
     diminactive.cpp
     fade.cpp
     fallapart.cpp
-    flame.cpp
     maketransparent.cpp
     minimizeanimation.cpp
     presentwindows.cpp
@@ -39,12 +40,12 @@ SET(kwin4_effect_builtins_sources
 # their .desktop files
 install( FILES
     boxswitch.desktop
+    demo_taskbarthumbnail.desktop
     desktopgrid.desktop
     dialogparent.desktop
     diminactive.desktop
     fade.desktop
     fallapart.desktop
-    flame.desktop
     maketransparent.desktop
     minimizeanimation.desktop
     presentwindows.desktop
@@ -133,52 +134,6 @@ if (X11_Xrender_FOUND)
   target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB})
 endif (X11_Xrender_FOUND)
 
-
-
-### tests - meant to test/demo certain functionality, not really usable for end-users
-SET(kwin4_effect_tests_sources
-    demo_shakymove.cpp
-    demo_shiftworkspaceup.cpp
-    demo_taskbarthumbnail.cpp
-    drunken.cpp
-    howto.cpp
-    test_input.cpp
-    test_thumbnail.cpp
-    )
-install( FILES
-    demo_shakymove.desktop
-    demo_shiftworkspaceup.desktop
-    demo_taskbarthumbnail.desktop
-    drunken.desktop
-    howto.desktop
-    test_input.desktop
-    test_thumbnail.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-if(OPENGL_FOUND)
-    # opengl test/demo stuff
-    SET(kwin4_effect_tests_sources ${kwin4_effect_tests_sources}
-        demo_liquid.cpp
-        demo_showpicture.cpp
-        demo_wavywindows.cpp
-        test_fbo.cpp
-        )
-
-    install( FILES
-        demo_liquid.desktop
-        demo_showpicture.desktop
-        demo_wavywindows.desktop
-        test_fbo.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-    install( FILES
-        data/liquid.frag
-        data/liquid.vert
-        DESTINATION  ${DATA_INSTALL_DIR}/kwin )
-endif(OPENGL_FOUND)
-
-# add the plugin
-KWIN4_ADD_EFFECT(tests ${kwin4_effect_tests_sources})
 
 
 
