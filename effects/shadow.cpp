@@ -24,11 +24,11 @@ KWIN_EFFECT( shadow, ShadowEffect )
 ShadowEffect::ShadowEffect()
     {
     KConfigGroup conf = effects->effectConfig("Shadow");
-    shadowXOffset = conf.readEntry( "XOffset", 5 );
-    shadowYOffset = conf.readEntry( "YOffset", 5 );
-    shadowOpacity = conf.readEntry( "Opacity", 0.2 );
+    shadowXOffset = conf.readEntry( "XOffset", 0 );
+    shadowYOffset = conf.readEntry( "YOffset", 3 );
+    shadowOpacity = conf.readEntry( "Opacity", 0.25 );
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
-    shadowSize = conf.readEntry( "Size", 4 );
+    shadowSize = conf.readEntry( "Size", 5 );
     intensifyActiveShadow = conf.readEntry( "IntensifyActiveShadow", true );
 
     QString shadowtexture =  KGlobal::dirs()->findResource("data", "kwin/shadow-texture.png");
@@ -80,12 +80,12 @@ bool ShadowEffect::useShadow( EffectWindow* w ) const
     }
 
 void ShadowEffect::addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const
-{
+    {
     verts << x1 << y1;
     verts << x1 << y2;
     verts << x2 << y2;
     verts << x2 << y1;
-}
+    }
 
 void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, WindowPaintData& data )
     {
