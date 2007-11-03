@@ -532,6 +532,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 effects->calcDesktopLayout( &x, &y, &orientation );
                 effects->moveWindow( window_move, QPoint( rect.x() * x, rect.y() * y ));
                 effects->windowToDesktop( window_move, desktop );
+                effects->setElevatedWindow( window_move, false );
                 window_move = NULL;
                 }
             }
