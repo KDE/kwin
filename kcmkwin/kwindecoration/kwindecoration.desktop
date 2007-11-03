@@ -20,6 +20,7 @@ Name[nds]=Finstern
 Name[pt]=Janelas
 Name[pt_BR]=Janelas
 Name[sv]=Fönster
+Name[x-test]=xxWindowsxx
 Name[zh_CN]=窗口
 
 Comment=Configure the look and feel of window titles
