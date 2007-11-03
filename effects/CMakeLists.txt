@@ -19,6 +19,7 @@ include_directories(
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib
     )
 
+ install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 ### builtins - most important, ready-to-use effects
 # sources
