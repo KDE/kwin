@@ -26,7 +26,7 @@ void ScaleInEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, i
     {
     if( windows.contains( w ))
         {
-        windows[ w ] += time / 300.; // complete change in 500ms
+        windows[ w ] += time / 300.; // complete change in 300ms
         if( windows[ w ] < 1 )
             data.setTransformed();
         else
