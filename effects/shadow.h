@@ -28,6 +28,7 @@ class ShadowEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
         virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
+        virtual void windowClosed( EffectWindow* c );
     private:
         void drawShadow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const;

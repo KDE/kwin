@@ -73,6 +73,11 @@ QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
     QRect r2 = r | shadowRectangle( r );
     return effects->transformWindowDamage( w, r2 );
     }
+    
+void ShadowEffect::windowClosed( EffectWindow* c )
+    {
+    effects->addRepaint( shadowRectangle( c->geometry() ));
+    }
 
 bool ShadowEffect::useShadow( EffectWindow* w ) const
     {
