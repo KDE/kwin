@@ -449,7 +449,7 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
 
 	oldLibraryName = currentLibraryName;
 	currentLibraryName = conf.readEntry("PluginLib",
-					((QPixmap::defaultDepth() > 8) ? "kwin_plastik" : "kwin_quartz"));
+					((QPixmap::defaultDepth() > 8) ? "kwin_oxygen" : "kwin_plastik"));
 	QString decoName = decorationName( currentLibraryName );
 
 	// If we are using the "default" kde client, use the "default" entry.
