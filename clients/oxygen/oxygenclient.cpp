@@ -251,9 +251,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     QPalette palette = widget()->palette();
     QPainter painter(widget());
 
-    // Set palette to the right group. Lubos disagrees with this being a kwin
-    // bug, but anyway, we need the palette group to match the current window.
-    // Since kwin doesn't set it correctly, we have to do it ourselves.
+    // Set palette to the right group.
+    // TODO - fix KWin to do this for us :-).
     if (isActive())
         palette.setCurrentColorGroup(QPalette::Active);
     else
