@@ -55,8 +55,8 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
     : KCommonDecoration(b, f)
-    , helper_(*globalHelper)
     , colorCacheInvalid_(true)
+    , helper_(*globalHelper)
 {
 }
 
@@ -184,10 +184,10 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
             return new OxygenButton(*this, i18n("Minimize"), ButtonMin);
 
         case MaxButton:
-            return new OxygenButton(*this, i18n("Minimize"), ButtonMax);
+            return new OxygenButton(*this, i18n("Maximize"), ButtonMax);
 
         case CloseButton:
-            return new OxygenButton(*this, i18n("Minimize"), ButtonClose);
+            return new OxygenButton(*this, i18n("Close"), ButtonClose);
 
         default:
             return 0;
