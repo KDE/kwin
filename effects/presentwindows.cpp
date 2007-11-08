@@ -53,8 +53,8 @@ PresentWindowsEffect::PresentWindowsEffect()
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
 
-    borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricTopRight);
-    borderActivateAll = (ElectricBorder)conf.readEntry("BorderActivateAll", (int)ElectricNone);
+    borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricNone);
+    borderActivateAll = (ElectricBorder)conf.readEntry("BorderActivateAll", (int)ElectricTopLeft);
 
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );

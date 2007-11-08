@@ -99,12 +99,12 @@ void PresentWindowsEffectConfig::load()
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("PresentWindows");
-    int activateBorder = conf.readEntry("BorderActivate", (int)ElectricTopRight);
+    int activateBorder = conf.readEntry("BorderActivate", (int)ElectricNone);
     if(activateBorder == (int)ElectricNone)
         activateBorder--;
     mActivateCombo->setCurrentIndex(activateBorder);
 
-    int activateAllBorder = conf.readEntry("BorderActivateAll", (int)ElectricNone);
+    int activateAllBorder = conf.readEntry("BorderActivateAll", (int)ElectricTopLeft);
     if(activateAllBorder == (int)ElectricNone)
         activateAllBorder--;
     mActivateAllCombo->setCurrentIndex(activateAllBorder);
@@ -138,8 +138,8 @@ void PresentWindowsEffectConfig::save()
 void PresentWindowsEffectConfig::defaults()
     {
     kDebug() ;
-    mActivateCombo->setCurrentIndex( (int)ElectricTopRight );
-    mActivateAllCombo->setCurrentIndex( (int)ElectricNone - 1 );
+    mActivateCombo->setCurrentIndex( (int)ElectricNone - 1 );
+    mActivateAllCombo->setCurrentIndex( (int)ElectricTopLeft );
     emit changed(true);
     }
 
