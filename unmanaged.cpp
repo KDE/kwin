@@ -43,7 +43,7 @@ bool Unmanaged::track( Window w )
         return false;
         }
     setWindowHandles( w, w ); // the window is also the frame
-    XSelectInput( display(), w, StructureNotifyMask );
+    XSelectInput( display(), w, attr.your_event_mask | StructureNotifyMask );
     geom = QRect( attr.x, attr.y, attr.width, attr.height );
     vis = attr.visual;
     bit_depth = attr.depth;
@@ -77,9 +77,12 @@ void Unmanaged::release()
         }
     finishCompositing();
     workspace()->removeUnmanaged( this, Allowed );
-    if( Extensions::shapeAvailable())
-        XShapeSelectInput( display(), window(), NoEventMask );
-    XSelectInput( display(), window(), NoEventMask );
+    if( !QWidget::find( window())) // don't affect our own windows
+        {
+        if( Extensions::shapeAvailable())
+            XShapeSelectInput( display(), window(), NoEventMask );
+        XSelectInput( display(), window(), NoEventMask );
+        }
     addWorkspaceRepaint( geometry());
     disownDataPassedToDeleted();
     del->unrefWindow();

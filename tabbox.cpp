@@ -686,10 +686,10 @@ void TabBox::delayedShow()
 
 void TabBox::handleMouseEvent( XEvent* e )
     {
-    XAllowEvents( display(), AsyncPointer, xTime() );
+    XAllowEvents( display(), AsyncPointer, xTime());
     if( !isVisible() && isDisplayed())
         { // tabbox has been replaced, check effects
-            if( effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent( e ))
+        if( effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent( e ))
             return;
         }
     if( e->type != ButtonPress )
