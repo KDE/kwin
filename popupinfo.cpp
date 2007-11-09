@@ -85,6 +85,7 @@ void PopupInfo::paintEvent( QPaintEvent* )
     QStyleOptionFrame *so = new QStyleOptionFrame;
     so->rect = QRect( 0, 0, width(), height() );
     so->palette = palette();
+    so->palette.setCurrentColorGroup( QPalette::Active );
     so->state = QStyle::State_None;
     style()->drawPrimitive( QStyle::PE_Frame, so, &p );
     paintContents();
@@ -100,7 +101,7 @@ void PopupInfo::paintContents()
     QPainter p( this );
     QRect r( 6, 6, width()-12, height()-12 );
 
-    p.fillRect( r, palette().brush( QPalette::Background ) );
+    p.fillRect( r, palette().brush( QPalette::Active, QPalette::Background ) );
 
     /*
     p.setPen(Qt::white);

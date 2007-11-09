@@ -455,7 +455,7 @@ void TabBox::paintEvent( QPaintEvent* e )
                   {
                   // draw highlight background
                   if ( (*it) == currentClient() )
-                    p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Highlight ));
+                    p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Active, QPalette::Highlight ));
 
                   // draw icon
                   QPixmap icon;
@@ -492,11 +492,11 @@ void TabBox::paintEvent( QPaintEvent* e )
 
                   // draw text
                   if ( (*it) == currentClient() )
-                    p.setPen(palette().color( QPalette::HighlightedText ));
+                    p.setPen(palette().color( QPalette::Active, QPalette::HighlightedText ));
                   else if( (*it)->isMinimized())
                     {
-                    QColor c1 = palette().color( QPalette::Text );
-                    QColor c2 = palette().color( QPalette::Background );
+                    QColor c1 = palette().color( QPalette::Active, QPalette::Text );
+                    QColor c2 = palette().color( QPalette::Active, QPalette::Background );
                     // from kicker's TaskContainer::blendColors()
                     int r1, g1, b1;
                     int r2, g2, b2;
@@ -511,7 +511,7 @@ void TabBox::paintEvent( QPaintEvent* e )
                     p.setPen(QColor( r1, g1, b1 ));
                     }
                   else
-                    p.setPen(palette().color( QPalette::Text ));
+                    p.setPen(palette().color( QPalette::Active, QPalette::Text ));
 
                   p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
                               Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, s);
@@ -546,13 +546,13 @@ void TabBox::paintEvent( QPaintEvent* e )
             {
             // draw highlight background
             if ( it == desk )  // current desktop
-              p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Highlight ));
+              p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Active, QPalette::Highlight ));
 
             p.save();
 
             // draw "icon" (here: number of desktop)
-            p.fillRect(x+5, y+2, iconWidth, iconHeight, palette().brush( QPalette::Base ));
-            p.setPen(palette().color( QPalette::Text ));
+            p.fillRect(x+5, y+2, iconWidth, iconHeight, palette().brush( QPalette::Active, QPalette::Base ));
+            p.setPen(palette().color( QPalette::Active, QPalette::Text ));
             p.drawRect(x+5, y+2, iconWidth, iconHeight);
 
             // draw desktop-number
@@ -564,9 +564,9 @@ void TabBox::paintEvent( QPaintEvent* e )
 
             // draw desktop name text
             if ( it == desk )
-              p.setPen(palette().color( QPalette::HighlightedText ));
+              p.setPen(palette().color( QPalette::Active, QPalette::HighlightedText ));
             else
-              p.setPen(palette().color( QPalette::Text ));
+              p.setPen(palette().color( QPalette::Active, QPalette::Text ));
 
             p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
                        Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine,

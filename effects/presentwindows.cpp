@@ -135,7 +135,7 @@ void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintDat
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         // First render the frame
-        QColor color = QPalette().color( QPalette::Highlight );
+        QColor color = QPalette().color( QPalette::Active, QPalette::Highlight );
         glColor4f( color.redF(), color.greenF(), color.blueF(), 0.75f );
         renderRoundBoxWithEdge( filterFrameRect );
         // And then the text on top of it
@@ -823,7 +823,7 @@ void PresentWindowsEffect::updateFilterTexture()
     // Paint the filter text to it
     QPainter p( &im );
     p.setFont( font );
-    p.setPen( QPalette().color( QPalette::HighlightedText ) );
+    p.setPen( QPalette().color( QPalette::Active, QPalette::HighlightedText ) );
     p.drawText( rect, Qt::AlignCenter, translatedString );
     p.end();
     // Create GL texture
