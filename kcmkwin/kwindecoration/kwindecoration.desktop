@@ -12,6 +12,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=appearance
 
 Name=Windows
+Name[ca]=Finestres
 Name[el]=Παράθυρα
 Name[ga]=Fuinneoga
 Name[ja]=ウィンドウ

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Dim Inactive
 Name[bg]=Замъгляване на неактивния
+Name[ca]=Apaga les inactives
 Name[de]=Inaktive abdunkeln
 Name[el]=Θαμπάδα ανενεργού
 Name[et]=Tuhm mitteaktiivne
@@ -28,6 +29,7 @@ Name[zh_CN]=暗淡非激活
 Icon=preferences-system-windows-effect-dim-inactive
 Comment=Darkens inactive windows
 Comment[bg]=Потъмнява неактивните прозорци
+Comment[ca]=Enfosqueix les finestres inactives
 Comment[cs]=Ztmavuje neaktivní okna
 Comment[de]=Dunkelt inaktive Fenster ab
 Comment[el]=Σκίαση μη ενεργών παραθύρων

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Blur
 Name[bg]=Замъгляване
+Name[ca]=Desdibuixa
 Name[de]=Verwischen
 Name[el]=Θόλωμα
 Name[et]=Hägu
@@ -32,6 +33,7 @@ Name[zh_TW]=模糊
 Icon=preferences-system-windows-effect-blur
 Comment=Blurs background of semi-transparent windows
 Comment[bg]=Замъгляване на фона на полупрозрачни прозорци
+Comment[ca]=Desdibuixa el fons de les finestres semitransparents
 Comment[de]=Verwischt den Hintergrund halbtransparenter Fenster
 Comment[el]=Θόλωμα φόντου των ημιδιαφανών παραθύρων
 Comment[et]=Poolläbipaistvate akende tausta hägustamine
