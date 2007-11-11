@@ -31,7 +31,7 @@ Name[vi]=Ngọn lửa
 Name[x-test]=xxFlamexx
 Name[zh_CN]=火焰
 Name[zh_TW]=火燄
-Icon=kwin-effect-flame
+Icon=preferences-system-windows-effect-flame
 
 Type=Service
 ServiceTypes=KWin/Effect

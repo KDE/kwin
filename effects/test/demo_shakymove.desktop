@@ -21,7 +21,7 @@ Name[th]=สาธิตการย้ายแบบสั่นๆ
 Name[x-test]=xxDemo Shaky Movexx
 Name[zh_CN]=演示 - 晃动
 Name[zh_TW]=示範_搖晃
-Icon=kwin-effect-shakymove
+Icon=preferences-system-windows-effect-shakymove
 
 Type=Service
 ServiceTypes=KWin/Effect

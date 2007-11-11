@@ -23,7 +23,7 @@ Name[sv]=Miniatyrbild vid sidan om
 Name[vi]=Hình nhỏ ra bên
 Name[x-test]=xxThumbnail Asidexx
 Name[zh_CN]=旁边缩略图
-Icon=kwin-effect-thumbnailaside
+Icon=preferences-system-windows-effect-thumbnailaside
 
 Type=Service
 ServiceTypes=KWin/Effect

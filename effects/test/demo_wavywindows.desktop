@@ -25,7 +25,7 @@ Name[th]=สาธิตหน้าต่างรอยคลื่น
 Name[x-test]=xxDemo Wavy Windowsxx
 Name[zh_CN]=演示 - 波浪窗口
 Name[zh_TW]=示範_波浪狀視窗
-Icon=kwin-effect-wavywindows
+Icon=preferences-system-windows-effect-wavywindows
 
 Type=Service
 ServiceTypes=KWin/Effect

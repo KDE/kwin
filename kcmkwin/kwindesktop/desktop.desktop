@@ -3,7 +3,7 @@ Encoding=UTF-8
 Type=Service
 ServiceTypes=KCModule
 DocPath=kcontrol/desktop/index.html#desktop-number
-Icon=desktop
+Icon=preferences-desktop-multiple
 Exec=kcmshell4 desktop
 
 X-KDE-Library=kcm_kwindesktop

@@ -23,7 +23,7 @@ Name[sv]=Drucken
 Name[vi]=Say rượu
 Name[x-test]=xxDrunkenxx
 Name[zh_CN]=醉酒
-Icon=kwin-effect-drunken
+Icon=preferences-system-windows-effect-drunken
 
 Type=Service
 ServiceTypes=KWin/Effect

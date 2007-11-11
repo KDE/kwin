@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Icon=kcmkwm
+Icon=preferences-system-windows-movement
 Type=Service
 ServiceTypes=KCModule
 Exec=kcmshell4 kwinmoving

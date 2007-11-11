@@ -25,7 +25,7 @@ Name[vi]=Co dãn vào
 Name[x-test]=xxScale Inxx
 Name[zh_CN]=拉近
 Name[zh_TW]=縮放
-Icon=kwin-effect-scalein
+Icon=preferences-system-windows-effect-scale-in
 
 Type=Service
 ServiceTypes=KWin/Effect

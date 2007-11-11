@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Exec=kcmshell4 kwindecoration
-Icon=preferences-system-windows-decoration
+Icon=preferences-system-windows-action
 Type=Service
 ServiceTypes=KCModule
 DocPath=kcontrol/kwindecoration/index.html
