@@ -41,6 +41,7 @@ public:
     };
 
     static bool compositingPossible();
+    static QString compositingNotPossibleReason();
     bool enableCompositing() const  { return mEnableCompositing; }
     bool enableVSync() const  { return mEnableVSync; }
     bool enableDirectRendering() const  { return mEnableDirectRendering; }

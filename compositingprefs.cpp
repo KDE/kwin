@@ -14,6 +14,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kdebug.h>
 #include <kxerrorhandler.h>
+#include <klocale.h>
 
 
 namespace KWin
@@ -50,6 +51,22 @@ bool CompositingPrefs::compositingPossible()
     return true;
 #else
     return false;
+#endif
+    }
+
+QString CompositingPrefs::compositingNotPossibleReason()
+    {
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+    Extensions::init();
+    if( !Extensions::compositeAvailable() || Extensions::damageAvailable())
+        {
+        return i18n("Required X extensions (XComposite and XDamage) are not available.");
+        }
+
+    return QString();
+#else
+    return i18n("Compositing was disabled at compile time.\n"
+            "Probably Xorg development headers were not installed.");
 #endif
     }
 
