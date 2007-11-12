@@ -138,11 +138,11 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
 
   KSharedConfig::Ptr config = KSharedConfig::openConfig( "kwinrc" );
 
-  QByteArray groupname;
+  QString groupname;
   if (kwin_screen_number == 0)
      groupname = "Desktops";
   else
-     groupname = "Desktops-screen-" + QByteArray::number ( kwin_screen_number );
+     groupname = "Desktops-screen-" + QString::number ( kwin_screen_number );
 
   if (config->isGroupImmutable(groupname))
   {
