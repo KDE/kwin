@@ -12,6 +12,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "presentwindows_config.h"
 #include "desktopgrid_config.h"
 #include "maketransparent_config.h"
+#include "zoom_config.h"
 
 #include <kwineffects.h>
 
@@ -23,6 +24,7 @@ K_PLUGIN_FACTORY_DEFINITION(EffectFactory, registerPlugin<KWin::ShadowEffectConf
                                 registerPlugin<KWin::PresentWindowsEffectConfig>("presentwindows");
                                 registerPlugin<KWin::DesktopGridEffectConfig>("desktopgrid");
                                 registerPlugin<KWin::MakeTransparentEffectConfig>("maketransparent");
+                                registerPlugin<KWin::ZoomEffectConfig>("zoom");
                            )
 K_EXPORT_PLUGIN(EffectFactory("kwin"))
 
