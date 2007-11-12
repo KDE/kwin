@@ -151,7 +151,7 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   }
   else
   {
-     KConfigGroup cfgGroup(config.data(), groupname.constData());
+     KConfigGroup cfgGroup(config.data(), groupname);
      if (cfgGroup.isEntryImmutable("Number"))
      {
         number_group->setEnabled(false);
