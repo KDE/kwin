@@ -25,6 +25,7 @@ Name[vi]=Hình nhỏ ra bên
 Name[x-test]=xxThumbnail Asidexx
 Name[zh_CN]=旁边缩略图
 Icon=preferences-system-windows-effect-thumbnailaside
+Comment=Shows window's thumbnail at the edge of the screen
 
 Type=Service
 ServiceTypes=KWin/Effect
