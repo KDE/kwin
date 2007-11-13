@@ -99,6 +99,7 @@ void Workspace::setupCompositing()
                 break;
             default:
                 kDebug( 1212 ) << "No compositing";
+                delete cm_selection;
                 return;
             }
         }
@@ -126,7 +127,8 @@ void Workspace::setupCompositing()
           break;
 #endif
         default:
-          kDebug( 1212 ) << "No compositing";
+            kDebug( 1212 ) << "No compositing";
+            delete cm_selection;
           return;
         }
     if( scene == NULL || scene->initFailed())
