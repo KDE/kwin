@@ -45,6 +45,7 @@ Name[x-test]=xxTranslucencyxx
 Name[zh_CN]=半透明
 Name[zh_TW]=半透明
 Icon=preferences-system-windows-effect-maketransparent
+Comment=Makes decorations or entire windows translucent
 
 Type=Service
 ServiceTypes=KWin/Effect

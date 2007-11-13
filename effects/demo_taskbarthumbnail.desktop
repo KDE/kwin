@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Demo TaskbarThumbnail
+Name=Taskbar Thumbnails
 Name[bg]=Демо на TaskbarThumbnail
 Name[de]=Demo: Vorschaubild in der Fensterleiste
 Name[el]=Επίδειξη της εικόνας επισκόπησης της Γραμμής εργασιών
@@ -21,6 +21,8 @@ Name[th]=สาธิตการแสดงภาพย่อที่แถ�
 Name[x-test]=xxDemo TaskbarThumbnailxx
 Name[zh_CN]=演示 - 任务栏缩略图
 Name[zh_TW]=示範_工作列縮圖
+
+Comment=Shows window thumbnails when cursor is on their taskbar entry
 
 Type=Service
 ServiceTypes=KWin/Effect

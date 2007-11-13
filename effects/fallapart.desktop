@@ -26,6 +26,7 @@ Name[x-test]=xxFall Apartxx
 Name[zh_CN]=崩溃
 Name[zh_TW]=破裂
 Icon=preferences-system-windows-effect-fallapart
+Comment=Closed windows fall into pieces
 
 Type=Service
 ServiceTypes=KWin/Effect

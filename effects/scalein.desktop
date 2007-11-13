@@ -27,6 +27,7 @@ Name[x-test]=xxScale Inxx
 Name[zh_CN]=拉近
 Name[zh_TW]=縮放
 Icon=preferences-system-windows-effect-scale-in
+Comment=Animates appearing of windows
 
 Type=Service
 ServiceTypes=KWin/Effect

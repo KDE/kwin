@@ -29,6 +29,7 @@ Name[x-test]=xxTrack Mousexx
 Name[zh_CN]=跟踪鼠标
 Name[zh_TW]=追蹤滑鼠
 Icon=preferences-system-windows-effect-mouse-track
+Comment=Shows mouse cursor's position when activated
 
 Type=Service
 ServiceTypes=KWin/Effect
