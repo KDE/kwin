@@ -1,0 +1,37 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KCModule
+
+X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-ParentComponents=kwin4_effect_trackmouse
+X-KDE-PluginKeyword=trackmouse
+
+Name=Track Mouse
+Name[be]=Адследжваць мыш
+Name[bg]=Мишка
+Name[de]=Mausspur
+Name[el]=Ανίχνευση ποντικιού
+Name[es]=Seguir el ratón
+Name[et]=Hiire jälgimine
+Name[fa]=ردگیری موشی
+Name[he]=עקבות עכבר
+Name[ja]=トラックマウス
+Name[kk]=Тышқандың ізі
+Name[km]=ដាន​កណ្តុរ​
+Name[ko]=마우스 추적
+Name[nb]=Spor mus
+Name[nds]=Muusspoor
+Name[ne]=ट्रयाक माउस
+Name[nl]=Muis volgen
+Name[nn]=Følg mus
+Name[pa]=ਮਾਊਸ ਟਰੈਕ
+Name[pt]=Seguir o Rato
+Name[pt_BR]=Seguir o Mouse
+Name[sr]=Праћење миша
+Name[sr@latin]=Praćenje miša
+Name[sv]=Musspår
+Name[vi]=Vết chuột
+Name[x-test]=xxTrack Mousexx
+Name[zh_CN]=跟踪鼠标
+Name[zh_TW]=追蹤滑鼠

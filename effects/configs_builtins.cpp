@@ -25,6 +25,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "mousemark_config.h"
 #include "magnifier_config.h"
 #include "sharpen_config.h"
+#include "trackmouse_config.h"
 #endif
 
 #include <kwineffects.h>
@@ -47,6 +48,7 @@ K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
     registerPlugin<KWin::MouseMarkEffectConfig>("mousemark");
     registerPlugin<KWin::MagnifierEffectConfig>("magnifier");
     registerPlugin<KWin::SharpenEffectConfig>("sharpen");
+    registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse");
 #endif
     )
 K_EXPORT_PLUGIN(EffectFactory("kwin"))

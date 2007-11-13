@@ -140,6 +140,7 @@ if(OPENGL_FOUND)
         mousemark_config.cpp
         mousemark_config.ui
         sharpen_config.cpp
+        trackmouse_config.cpp
         )
     install( FILES
         invert_config.desktop
@@ -147,6 +148,7 @@ if(OPENGL_FOUND)
         magnifier_config.desktop
         mousemark_config.desktop
         sharpen_config.desktop
+        trackmouse_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif(OPENGL_FOUND)
 
