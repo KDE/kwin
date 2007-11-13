@@ -54,6 +54,7 @@ Comment[th]=กลับสีของพื้นที่ทำงาน
 Comment[x-test]=xxInverts (negates) colors of the desktopxx
 Comment[zh_CN]=反转(求反)桌面颜色
 Comment[zh_TW]=將桌面上的顏色反轉
+Icon=preferences-system-windows-effect-invert
 
 Type=Service
 ServiceTypes=KWin/Effect

@@ -40,6 +40,7 @@ Comment[sv]=Spegel förbättrat förstoringsglas
 Comment[x-test]=xxLooking Glass enhanced magnifierxx
 Comment[zh_CN]=镜面放大
 Comment[zh_TW]=鏡面放大
+Icon=preferences-system-windows-effect-lookingglass
 
 Type=Service
 ServiceTypes=KWin/Effect
