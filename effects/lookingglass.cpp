@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
 
 You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
@@ -15,9 +16,11 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kactioncollection.h>
 #include <kaction.h>
+#include <kconfiggroup.h>
 #include <klocale.h>
 #include <kdebug.h>
 
+#include <kmessagebox.h>
 
 namespace KWin
 {
@@ -31,7 +34,11 @@ LookingGlassEffect::LookingGlassEffect() : QObject(), ShaderEffect("lookingglass
     zoom = 1.0f;
     target_zoom = 1.0f;
 
-    KActionCollection* actionCollection = new KActionCollection( this );
+    KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
+    actionCollection = new KActionCollection( this );
+    actionCollection->setConfigGlobal(true);
+    actionCollection->setConfigGroup("LookingGlass");
+
     KAction* a;
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomIn, this, SLOT( zoomIn())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Plus));
@@ -39,7 +46,15 @@ LookingGlassEffect::LookingGlassEffect() : QObject(), ShaderEffect("lookingglass
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ActualSize, this, SLOT( toggle())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
-    radius = 200; // TODO config option
+    radius = conf.readEntry("Radius", 200);
+
+    kDebug(1212) << QString("Radius from config: %1").arg(radius) << endl;
+
+    actionCollection->readSettings();
+    }
+
+LookingGlassEffect::~LookingGlassEffect()
+    {
     }
 
 void LookingGlassEffect::toggle()

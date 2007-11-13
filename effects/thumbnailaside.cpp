@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
 
 You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
@@ -12,6 +13,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kactioncollection.h>
 #include <kaction.h>
+#include <kconfiggroup.h>
 #include <klocale.h>
 
 namespace KWin
@@ -21,14 +23,17 @@ KWIN_EFFECT( thumbnailaside, ThumbnailAsideEffect )
 
 ThumbnailAsideEffect::ThumbnailAsideEffect()
     {
+    KConfigGroup conf = EffectsHandler::effectConfig("ThumbnailAside");
+
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "ToggleCurrentThumbnail" );
     a->setText( i18n("Toggle Thumbnail for Current Window" ));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F9));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleCurrentThumbnail()));
-    maxwidth = 200;
-    spacing = 10; // TODO config options?
-    opacity = 0.5;
+
+    maxwidth = conf.readEntry("MaxWidth", 200);
+    spacing = conf.readEntry("Spacing", 10);
+    opacity = conf.readEntry("Opacity", 50) / 100.0;
     }
 
 void ThumbnailAsideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

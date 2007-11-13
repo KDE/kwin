@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
 
 You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
@@ -14,6 +15,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <kconfiggroup.h>
 #include <kstandardaction.h>
 
 #ifdef HAVE_OPENGL
@@ -31,6 +33,8 @@ MagnifierEffect::MagnifierEffect()
     : zoom( 1 )
     , target_zoom( 1 )
     {
+    KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
+
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a;
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomIn, this, SLOT( zoomIn())));
@@ -39,7 +43,11 @@ MagnifierEffect::MagnifierEffect()
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ActualSize, this, SLOT( toggle())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
-    magnifier_size = QSize( 200, 200 ); // TODO config option
+
+    int width, height;
+    width = conf.readEntry("Width", 200);
+    height = conf.readEntry("Height", 200);
+    magnifier_size = QSize( width, height );
     }
 
 void MagnifierEffect::prePaintScreen( ScreenPrePaintData& data, int time )

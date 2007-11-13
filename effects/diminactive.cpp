@@ -3,11 +3,13 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
 
 You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
+#include <kconfiggroup.h>
 
 #include "diminactive.h"
 
@@ -18,8 +20,11 @@ KWIN_EFFECT( diminactive, DimInactiveEffect )
 
 DimInactiveEffect::DimInactiveEffect()
     {
-    dim_panels = false; // TODO config option
-    dim_by_group = true; // TODO config option
+    KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
+
+    dim_panels = conf.readEntry("DimPanels", false);
+    dim_by_group = conf.readEntry("DimByGroup", true);
+    dim_strength = conf.readEntry("Strength", 25);
     active = effects->activeWindow();
     }
 
@@ -43,8 +48,8 @@ void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
         dim = true;
     if( dim )
         {
-        data.brightness *= 0.75;
-        data.saturation *= 0.75;
+        data.brightness *= (1.0 - (dim_strength / 100.0));
+        data.saturation *= (1.0 - (dim_strength / 100.0));
         }
     effects->paintWindow( w, mask, region, data );
     }

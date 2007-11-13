@@ -10,7 +10,17 @@ macro(KWIN4_ADD_EFFECT name)
 endmacro(KWIN4_ADD_EFFECT)
 
 macro(KWIN4_ADD_EFFECT_CONFIG name)
-    kde4_add_plugin(kcm_kwin4_effect_${name} ${ARGN})
+    set(kwin4_effect_ui ) #empty
+    set(kwin4_effect_src ) #empty
+    foreach(file ${ARGN})
+        if(file MATCHES \\.ui)
+            set(kwin4_effect_ui ${kwin4_effect_ui} ${file})
+        else(file MATCHES \\.ui)
+            set(kwin4_effect_src ${kwin4_effect_src} ${file})
+        endif(file MATCHES \\.ui)
+    endforeach(file)
+    kde4_add_ui_files(kwin4_effect_src ${kwin4_effect_ui})
+    kde4_add_plugin(kcm_kwin4_effect_${name} ${kwin4_effect_src})
     target_link_libraries(kcm_kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS})
     install(TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
 endmacro(KWIN4_ADD_EFFECT_CONFIG)
@@ -19,7 +29,7 @@ include_directories(
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib
     )
 
- install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 ### builtins - most important, ready-to-use effects
 # sources
@@ -56,18 +66,24 @@ install( FILES
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 # config modules
-KWIN4_ADD_EFFECT_CONFIG( builtins
+SET(kwin4_effect_builtins_config_sources
+    desktopgrid_config.cpp
+    diminactive_config.cpp
+    diminactive_config.ui
+    maketransparent_config.cpp
     presentwindows_config.cpp
     shadow_config.cpp
-    desktopgrid_config.cpp
-    maketransparent_config.cpp
+    thumbnailaside_config.cpp
+    thumbnailaside_config.ui
     zoom_config.cpp
     configs_builtins.cpp)
 install( FILES
+    desktopgrid_config.desktop
+    diminactive_config.desktop
+    maketransparent_config.desktop
     presentwindows_config.desktop
     shadow_config.desktop
-    desktopgrid_config.desktop
-    maketransparent_config.desktop
+    thumbnailaside_config.desktop
     zoom_config.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
@@ -115,6 +131,19 @@ if(OPENGL_FOUND)
         data/circle.png
         data/circle-edgy.png
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
+    SET(kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
+        lookingglass_config.cpp
+        lookingglass_config.ui
+        magnifier_config.cpp
+        magnifier_config.ui
+        mousemark_config.cpp
+        mousemark_config.ui
+        )
+    install( FILES
+        lookingglass_config.desktop
+        magnifier_config.desktop
+        mousemark_config.desktop
+        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif(OPENGL_FOUND)
 
 # showfps, showpaint - need both xrender and opengl
@@ -131,6 +160,7 @@ endif( OPENGL_FOUND AND X11_Xrender_FOUND )
 
 # add the plugin
 KWIN4_ADD_EFFECT(builtins ${kwin4_effect_builtins_sources})
+KWIN4_ADD_EFFECT_CONFIG(builtins ${kwin4_effect_builtins_config_sources})
 # link to xrender if necessary
 # note that libkwineffects already links to opengl, so no need to add this here
 if (X11_Xrender_FOUND)

@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
 
 You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
@@ -12,6 +13,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #define KWIN_LOOKINGGLASS_H
 
 #include <kwinshadereffect.h>
+
+class KActionCollection;
 
 namespace KWin
 {
@@ -24,6 +27,7 @@ class LookingGlassEffect : public QObject, public ShaderEffect
     Q_OBJECT
     public:
         LookingGlassEffect();
+        virtual ~LookingGlassEffect();
 
         virtual void mouseChanged( const QPoint& pos, const QPoint& old,
             Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
@@ -39,6 +43,7 @@ class LookingGlassEffect : public QObject, public ShaderEffect
         double zoom;
         double target_zoom;
         int radius;
+        KActionCollection* actionCollection;
     };
 
 } // namespace

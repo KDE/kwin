@@ -1,0 +1,110 @@
+<ui version="4.0" >
+ <class>KWin::DimInactiveEffectConfigForm</class>
+ <widget class="QWidget" name="KWin::DimInactiveEffectConfigForm" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>250</width>
+    <height>200</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <item>
+    <layout class="QHBoxLayout" >
+     <item>
+      <widget class="QLabel" name="label" >
+       <property name="text" >
+        <string>&amp;Strength</string>
+       </property>
+       <property name="buddy" >
+        <cstring>spinStrength</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="sliderStrength" >
+       <property name="minimum" >
+        <number>1</number>
+       </property>
+       <property name="maximum" >
+        <number>100</number>
+       </property>
+       <property name="value" >
+        <number>25</number>
+       </property>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="spinStrength" >
+       <property name="minimum" >
+        <number>1</number>
+       </property>
+       <property name="maximum" >
+        <number>100</number>
+       </property>
+       <property name="value" >
+        <number>25</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="checkPanel" >
+     <property name="text" >
+      <string>Apply effect to &amp;Panels</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="checkGroup" >
+     <property name="text" >
+      <string>Apply effect to &amp;Groups</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>spinStrength</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sliderStrength</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>193</x>
+     <y>52</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>128</x>
+     <y>46</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderStrength</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinStrength</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>69</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>200</x>
+     <y>42</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
