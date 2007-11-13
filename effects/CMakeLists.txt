@@ -139,12 +139,14 @@ if(OPENGL_FOUND)
         magnifier_config.ui
         mousemark_config.cpp
         mousemark_config.ui
+        sharpen_config.cpp
         )
     install( FILES
         invert_config.desktop
         lookingglass_config.desktop
         magnifier_config.desktop
         mousemark_config.desktop
+        sharpen_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif(OPENGL_FOUND)
 

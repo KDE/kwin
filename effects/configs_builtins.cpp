@@ -24,6 +24,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "lookingglass_config.h"
 #include "mousemark_config.h"
 #include "magnifier_config.h"
+#include "sharpen_config.h"
 #endif
 
 #include <kwineffects.h>
@@ -45,6 +46,7 @@ K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
     registerPlugin<KWin::LookingGlassEffectConfig>("lookingglass");
     registerPlugin<KWin::MouseMarkEffectConfig>("mousemark");
     registerPlugin<KWin::MagnifierEffectConfig>("magnifier");
+    registerPlugin<KWin::SharpenEffectConfig>("sharpen");
 #endif
     )
 K_EXPORT_PLUGIN(EffectFactory("kwin"))
