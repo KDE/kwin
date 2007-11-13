@@ -56,7 +56,10 @@ bool Unmanaged::track( Window w )
         NET::WM2Opacity |
         0;
     info = new NETWinInfo( display(), w, rootWindow(), properties, 2 );
-
+    getResourceClass();
+    getWindowRole();
+    getWmClientLeader();
+    getWmClientMachine();
     if( Extensions::shapeAvailable())
         XShapeSelectInput( display(), w, ShapeNotifyMask );
     detectShape( w );
