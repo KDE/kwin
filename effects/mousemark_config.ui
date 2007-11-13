@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>399</width>
     <height>300</height>
    </rect>
   </property>
@@ -63,6 +63,16 @@
    </item>
    <item>
     <widget class="KShortcutsEditor" native="1" name="editor" />
+   </item>
+   <item>
+    <widget class="QLabel" name="label_3" >
+     <property name="text" >
+      <string>Draw with the mouse by holding Shift+Meta keys and moving the mouse.</string>
+     </property>
+     <property name="wordWrap" >
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
