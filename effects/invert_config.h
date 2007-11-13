@@ -8,8 +8,8 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef KWIN__CONFIG_H
-#define KWIN__CONFIG_H
+#ifndef KWIN_INVERT_CONFIG_H
+#define KWIN_INVERT_CONFIG_H
 
 #define KDE3_SUPPORT
 #include <kcmodule.h>
