@@ -57,6 +57,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     : KCModule( KWinCompositingConfigFactory::componentData(), parent),
         mKWinConfig(KSharedConfig::openConfig("kwinrc"))
 {
+    KGlobal::locale()->insertCatalog( "kwin_effects" );
     ui.setupUi(this);
     ui.tabWidget->setCurrentIndex(0);
     ui.statusLabel->hide();

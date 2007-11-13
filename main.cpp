@@ -398,6 +398,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     KWin::Application a;
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
+    KGlobal::locale()->insertCatalog( "kwin_effects" );
 
     fcntl(XConnectionNumber(KWin::display()), F_SETFD, 1);
 
