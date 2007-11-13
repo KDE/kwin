@@ -132,6 +132,7 @@ if(OPENGL_FOUND)
         data/circle-edgy.png
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
     SET(kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
+        invert_config.cpp
         lookingglass_config.cpp
         lookingglass_config.ui
         magnifier_config.cpp
@@ -140,6 +141,7 @@ if(OPENGL_FOUND)
         mousemark_config.ui
         )
     install( FILES
+        invert_config.desktop
         lookingglass_config.desktop
         magnifier_config.desktop
         mousemark_config.desktop

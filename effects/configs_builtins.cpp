@@ -20,6 +20,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "zoom_config.h"
 
 #ifdef HAVE_OPENGL
+#include "invert_config.h"
 #include "lookingglass_config.h"
 #include "mousemark_config.h"
 #include "magnifier_config.h"
@@ -40,6 +41,7 @@ K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
     registerPlugin<KWin::ThumbnailAsideEffectConfig>("thumbnailaside");
     registerPlugin<KWin::ZoomEffectConfig>("zoom");
 #ifdef HAVE_OPENGL
+    registerPlugin<KWin::InvertEffectConfig>("invert");
     registerPlugin<KWin::LookingGlassEffectConfig>("lookingglass");
     registerPlugin<KWin::MouseMarkEffectConfig>("mousemark");
     registerPlugin<KWin::MagnifierEffectConfig>("magnifier");

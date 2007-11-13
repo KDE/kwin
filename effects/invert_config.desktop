@@ -1,0 +1,39 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+ServiceTypes=KCModule
+
+X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-ParentComponents=kwin4_effect_invert
+X-KDE-PluginKeyword=invert
+
+Name=Invert
+Name[be]=Інвертаваць
+Name[bg]=Инвертиране
+Name[ca]=Inverteix
+Name[de]=Invertieren
+Name[el]=Αντιστροφή
+Name[es]=Invertir
+Name[et]=Teistpidi
+Name[fa]=وارونه
+Name[he]=הפוך צבעים
+Name[ja]=色調反転
+Name[kk]=Терістеу
+Name[km]=ដាក់​បញ្ច្រាស
+Name[nb]=Snu om
+Name[nds]=Ümdreihen
+Name[ne]=उल्टाउनुहोस्
+Name[nl]=Omkeren
+Name[nn]=Inverter
+Name[pa]=ਉਲਟ
+Name[pt]=Inverter
+Name[pt_BR]=Inverter
+Name[sl]=Obrni
+Name[sr]=Извртање
+Name[sr@latin]=Izvrtanje
+Name[sv]=Invertera
+Name[th]=กลับสี
+Name[x-test]=xxInvertxx
+Name[zh_CN]=反转
+Name[zh_TW]=反轉
+
