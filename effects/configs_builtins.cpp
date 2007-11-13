@@ -16,11 +16,14 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "desktopgrid_config.h"
 #include "maketransparent_config.h"
 #include "diminactive_config.h"
-#include "magnifier_config.h"
-#include "mousemark_config.h"
-#include "lookingglass_config.h"
 #include "thumbnailaside_config.h"
 #include "zoom_config.h"
+
+#ifdef HAVE_OPENGL
+#include "lookingglass_config.h"
+#include "mousemark_config.h"
+#include "magnifier_config.h"
+#endif
 
 #include <kwineffects.h>
 
