@@ -186,7 +186,8 @@ macro_log_feature(CAPTURY_FOUND "Capseo framework" "libcaptury is a framework re
 macro_bool_to_01( CAPTURY_FOUND HAVE_CAPTURY )
 if( HAVE_CAPTURY )
     KWIN4_ADD_EFFECT(videorecord videorecord.cpp)
+    KWIN4_ADD_EFFECT_CONFIG(videorecord videorecord_config.cpp)
     target_link_libraries(kwin4_effect_videorecord ${CAPTURY_LDFLAGS})
-    install( FILES videorecord.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+    install( FILES videorecord.desktop videorecord_config.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif( HAVE_CAPTURY )
 
