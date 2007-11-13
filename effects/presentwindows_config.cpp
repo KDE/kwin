@@ -64,10 +64,10 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
     b->setText( i18n("Toggle Expose effect (incl other desktops)" ));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
-    KShortcutsEditor* shortcutEditor = new KShortcutsEditor(actionCollection, this,
+    mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
-    connect(shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
-    layout->addWidget(shortcutEditor, 4, 0, 1, 3);
+    connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
+    layout->addWidget(mShortcutEditor, 4, 0, 1, 3);
 
     layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 5, 0, 1, 3);
 
@@ -140,6 +140,7 @@ void PresentWindowsEffectConfig::defaults()
     kDebug() ;
     mActivateCombo->setCurrentIndex( (int)ElectricNone - 1 );
     mActivateAllCombo->setCurrentIndex( (int)ElectricTopLeft );
+    mShortcutEditor->allDefault();
     emit changed(true);
     }
 
