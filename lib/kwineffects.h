@@ -28,6 +28,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <assert.h>
 
+#define KWIN_EFFECT_API_VERSION 0x000100
+
 class KLibrary;
 class KConfigGroup;
 class QKeyEvent;
