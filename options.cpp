@@ -180,8 +180,6 @@ unsigned long Options::updateSettings()
 
     config=KConfigGroup(_config,"Compositing");
     refreshRate = config.readEntry( "RefreshRate", 0 );
-    const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
-    hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 0 ), 3 ) ];
 
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
@@ -233,6 +231,9 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
     glStrictBinding = config.readEntry( "GLStrictBinding", prefs.strictBinding());
 
     xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false );
+
+    const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
+    hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 0 ), 3 ) ];
     }
 
 

@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>305</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -34,6 +34,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="updateThumbnails" >
+     <property name="text" >
+      <string>Keep thumbnails of hidden windows up to date</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="glGroup" >
