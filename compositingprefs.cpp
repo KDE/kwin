@@ -217,25 +217,25 @@ void CompositingPrefs::applyDriverSpecificOptions()
         kDebug() << "intel driver, disabling vsync, enabling direct";
         mEnableVSync = false;
         mEnableDirectRendering = true;
-        if( mVersion >= Version( "20061017" ) && mGLRenderer.contains( "945GM" ))
+        // Enable compositing by default only on 900-series cards
+        if( mVersion >= Version( "20061017" ) && mGLRenderer.contains( "Intel(R) 9" ))
             {
-            kDebug() << "intel >= 20061017 and whitelisted card, enabling compositing";
+            kDebug() << "intel >= 20061017 and 900-series card, enabling compositing";
             mEnableCompositing = true;
             }
         }
     else if( mDriver == "nvidia" )
         {
         mStrictBinding = false;
-        if( mVersion >= Version( "100.14.23" ))
+        if( mVersion <= Version( "100.14.23" ))
             {
-            kDebug() << "nvidia >= 100.14.23, enabling compositing";
-            mEnableCompositing = true;
-            }
-        else if( mVersion >= Version( "96.39" ))
-            {
-            kDebug() << "nvidia >= 96.39, enabling compositing, disabling vsync";
-            mEnableCompositing = true;
+            kDebug() << "nvidia <= 100.14.23, disabling vsync";
             mEnableVSync = false;
+            }
+        if( mVersion >= Version( "96.39" ))
+            {
+            kDebug() << "nvidia >= 96.39, enabling compositing";
+            mEnableCompositing = true;
             }
         }
     }
