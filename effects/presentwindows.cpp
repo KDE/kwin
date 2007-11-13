@@ -354,7 +354,8 @@ void PresentWindowsEffect::rearrangeWindows()
         foreach( EffectWindow* w, mWindowsToPresent )
             {
             if( w->caption().contains( windowFilter, Qt::CaseInsensitive )
-                || w->windowClass().contains( windowFilter, Qt::CaseInsensitive ))
+                || w->windowClass().contains( windowFilter, Qt::CaseInsensitive )
+                || w->windowRole().contains( windowFilter, Qt::CaseInsensitive ))
                 windowlist.append( w );
             }
         }
