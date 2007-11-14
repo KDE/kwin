@@ -26,10 +26,7 @@ LogoutEffect::LogoutEffect()
 void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( logout_window != NULL )
-        {
         progress = qBound( 0., progress + time / 1000., 1. );
-        data.mask &= ~Effect::PAINT_SCREEN_REGION;
-        }
     effects->prePaintScreen( data, time );
     }
 
