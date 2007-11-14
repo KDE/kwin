@@ -41,6 +41,7 @@ SET(kwin4_effect_builtins_sources
     diminactive.cpp
     fade.cpp
     fallapart.cpp
+    logout.cpp
     maketransparent.cpp
     minimizeanimation.cpp
     presentwindows.cpp
@@ -57,6 +58,7 @@ install( FILES
     diminactive.desktop
     fade.desktop
     fallapart.desktop
+    logout.desktop
     maketransparent.desktop
     minimizeanimation.desktop
     presentwindows.desktop
