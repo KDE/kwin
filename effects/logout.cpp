@@ -28,7 +28,7 @@ LogoutEffect::LogoutEffect()
 void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( logout_window != NULL )
-        progress = qBound( 0., progress + time / 4000., 1. );
+        progress = qBound( 0., progress + time / 2000., 1. );
     else if( progress != 0 )
         progress = qBound( 0., progress - time / 500., 1. );
     effects->prePaintScreen( data, time );
@@ -82,8 +82,11 @@ void LogoutEffect::windowClosed( EffectWindow* w )
 
 bool LogoutEffect::isLogoutDialog( EffectWindow* w )
     { // TODO there should be probably a better way (window type?)
-    if( w->windowClass() == "ksmserver ksmserver" && w->windowRole() == "logoutdialog" )
+    if( w->windowClass() == "ksmserver ksmserver"
+        && ( w->windowRole() == "logoutdialog" || w->windowRole() == "logouteffect" ))
+        {
         return true;
+        }
     return false;
     }
 
