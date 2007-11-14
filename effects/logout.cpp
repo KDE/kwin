@@ -43,11 +43,11 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
     effects->paintWindow( w, mask, region, data );
     }
 
-void LogoutEffect::postPaintWindow( EffectWindow* w )
+void LogoutEffect::postPaintScreen()
     {
-    if( logout_window != NULL && w != logout_window && progress != 1 )
-        w->addRepaintFull();
-    effects->postPaintWindow( w );
+    if( logout_window != NULL && progress != 1 )
+        effects->addRepaintFull();
+    effects->postPaintScreen();
     }
 
 void LogoutEffect::windowAdded( EffectWindow* w )

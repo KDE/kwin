@@ -23,8 +23,8 @@ class LogoutEffect
     public:
         LogoutEffect();
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
+        virtual void postPaintScreen();
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
         virtual void windowAdded( EffectWindow* w );
         virtual void windowClosed( EffectWindow* w );
     private:
