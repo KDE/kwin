@@ -173,6 +173,11 @@ void FadeEffect::windowDeleted( EffectWindow* w )
 
 bool FadeEffect::isFadeWindow( EffectWindow* w )
     {
+    if( w->windowClass() == "ksplashx ksplashx"
+        || w->windowClass() == "ksplashsimple ksplashsimple" )
+        { // see login effect
+        return false;
+        }
     return !w->isDesktop();
     }
 

@@ -101,6 +101,7 @@ void LoginEffect::windowClosed( EffectWindow* w )
 
 bool LoginEffect::isLoginSplash( EffectWindow* w )
     { // TODO there should be probably a better way (window type?)
+    // see also fade effect
     if( w->windowClass() == "ksplashx ksplashx"
         || w->windowClass() == "ksplashsimple ksplashsimple" )
         {
