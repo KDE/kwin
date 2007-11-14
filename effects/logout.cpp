@@ -10,6 +10,8 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "logout.h"
 
+#include "kwinglutils.h"
+
 #include <kdebug.h>
 
 namespace KWin
@@ -36,8 +38,18 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
     {
     if( w != logout_window && progress != 0 )
         {
-        data.saturation *= ( 1 - progress * 0.8 );
-        data.brightness *= ( 1 - progress * 0.3 );
+        // When saturation isn't supported then reduce brightness a bit more
+#ifdef HAVE_OPENGL
+        if( effects->compositingType() == OpenGLCompositing && GLTexture::saturationSupported() )
+            {
+            data.saturation *= ( 1 - progress * 0.8 );
+            data.brightness *= ( 1 - progress * 0.3 );
+            }
+        else
+#endif
+            {
+            data.brightness *= ( 1 - progress * 0.6 );
+            }
         }
     effects->paintWindow( w, mask, region, data );
     }
