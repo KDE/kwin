@@ -26,7 +26,9 @@ LogoutEffect::LogoutEffect()
 void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( logout_window != NULL )
-        progress = qBound( 0., progress + time / 1000., 1. );
+        progress = qBound( 0., progress + time / 4000., 1. );
+    else if( progress != 0 )
+        progress = qBound( 0., progress - time / 500., 1. );
     effects->prePaintScreen( data, time );
     }
 
@@ -34,15 +36,15 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
     {
     if( w != logout_window && progress != 0 )
         {
-        data.saturation *= ( 1 - progress * 0.6 );
-        data.brightness *= ( 1 - progress * 0.6 ); // otherwise saturation doesn't work ???
+        data.saturation *= ( 1 - progress * 0.8 );
+        data.brightness *= ( 1 - progress * 0.3 );
         }
     effects->paintWindow( w, mask, region, data );
     }
 
 void LogoutEffect::postPaintScreen()
     {
-    if( logout_window != NULL && progress != 1 )
+    if( progress != 0 && progress != 1 )
         effects->addRepaintFull();
     effects->postPaintScreen();
     }
@@ -62,7 +64,6 @@ void LogoutEffect::windowClosed( EffectWindow* w )
     if( w == logout_window )
         {
         logout_window = NULL;
-        progress = 0;
         effects->addRepaintFull();
         }
     }
