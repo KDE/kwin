@@ -12,6 +12,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=appearance
 
 Name=Windows
+Name[be]=Вокны
 Name[ca]=Finestres
 Name[de]=Fenster
 Name[el]=Παράθυρα

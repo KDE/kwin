@@ -1,6 +1,30 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Logout
+Name[be]=Выйсці
+Name[ca]=Sortida
+Name[de]=Abmeldung
+Name[el]=Αποσύνδεση
+Name[et]=Väljalogimine
+Name[ga]=Logáil Amach
+Name[hu]=Elrendezés
+Name[ja]=ログアウト
+Name[km]=ចេញ
+Name[ko]=로그아웃
+Name[nb]=Logg ut
+Name[nds]=Afmellen
+Name[ne]=लगआउट
+Name[nl]=Afmelden
+Name[nn]=Utlogging
+Name[pt]=Encerramento
+Name[sl]=Odjava
+Name[sr]=Одјава
+Name[sr@latin]=Odjava
+Name[sv]=Utloggning
+Name[th]=ล็อกเอาท์
+Name[x-test]=xxLogoutxx
+Name[zh_CN]=布局
+Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Logout visual effect
 

@@ -1,26 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Taskbar Thumbnails
-Name[bg]=Демо на TaskbarThumbnail
-Name[de]=Demo: Vorschaubild in der Fensterleiste
-Name[el]=Επίδειξη της εικόνας επισκόπησης της Γραμμής εργασιών
-Name[he]=הדגמה - דוגמית בשורת המשימות
-Name[hu]=Feladatsáv-gyorsnéző (demó)
-Name[kk]=Панель нобайының мысалы
-Name[km]=បង្ហាញ​រូបភាព​តូចៗ​​​សាកល្បង​លើ​របារ​ភារកិច្ច​
-Name[nb]=Demo Oppgavelinje-minibilde
-Name[nds]=Demo: Programmbalken-Vöransicht
-Name[ne]=डेमो कार्यपट्टी थम्बनेल
-Name[nl]=Demo Taakbalkminiatuur
-Name[nn]=Demo Oppgåvelinjeminiatyr
-Name[pa]=ਡੈਮੋ ਟਾਸਕਬਾਰ ਥੰਮਨੇਲ
-Name[sr]=Демо сличице у траци задатака
-Name[sr@latin]=Demo sličice u traci zadataka
-Name[sv]=Demonstration av miniatyrbild i aktivitetsfält
-Name[th]=สาธิตการแสดงภาพย่อที่แถบหน้าต่างงาน
-Name[x-test]=xxDemo TaskbarThumbnailxx
-Name[zh_CN]=演示 - 任务栏缩略图
-Name[zh_TW]=示範_工作列縮圖
 Icon=preferences-system-windows-effect-taskbarthumbnail
 Comment=Shows window thumbnails when cursor is on their taskbar entry
 

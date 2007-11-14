@@ -1,6 +1,30 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Login
+Name[be]=Уваход
+Name[ca]=Entrada
+Name[de]=Anmeldung
+Name[el]=Σύνδεση
+Name[et]=Sisselogimine
+Name[ga]=Logáil Isteach
+Name[hu]=Bejelentkezés
+Name[ja]=ログイン
+Name[km]=ចូល
+Name[ko]=로그인
+Name[nb]=Logg inn
+Name[nds]=Anmellen
+Name[ne]=लगइन गर्नुहोस्
+Name[nl]=Aanmelden
+Name[nn]=Innlogging
+Name[pt]=Arranque
+Name[sl]=Prijava
+Name[sr]=Пријава
+Name[sr@latin]=Prijava
+Name[sv]=Inloggning
+Name[th]=ล็อกอิน
+Name[x-test]=xxLoginxx
+Name[zh_CN]=登录
+Name[zh_TW]=登入
 Icon=preferences-system-windows-effect-login
 Comment=Login visual effect
 
