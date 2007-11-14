@@ -54,21 +54,8 @@ void LoginEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int
 
 void LoginEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( login_window != NULL )
-        {
-        if( progress == 1 )
-            {
-            if( w != login_window )
-                data.brightness = 0; // not visible
-            }
-        else
-            {
-            if( w == login_window )
-                data.opacity *= ( 1 - progress );
-            else
-                data.brightness *= progress;
-            }
-        }
+    if( w == login_window && progress != 1 )
+        data.opacity *= ( 1 - progress );
     effects->paintWindow( w, mask, region, data );
     }
 
