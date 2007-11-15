@@ -24,6 +24,7 @@ MinimizeAnimationEffect::MinimizeAnimationEffect()
 
 void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
+    mActiveAnimations = mAnimationProgress.count();
     if( mActiveAnimations > 0 )
         // We need to mark the screen windows as transformed. Otherwise the
         //  whole screen won't be repainted, resulting in artefacts
@@ -58,9 +59,6 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintDat
             data.setTransformed();
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
             }
-        else
-            // Animation just finished
-            mActiveAnimations--;
         }
 
     effects->prePaintWindow( w, data, time );
@@ -94,6 +92,7 @@ void MinimizeAnimationEffect::postPaintScreen()
     if( mActiveAnimations > 0 )
         // Repaint the workspace so that everything would be repainted next time
         effects->addRepaintFull();
+    mActiveAnimations = mAnimationProgress.count();
 
     // Call the next effect.
     effects->postPaintScreen();
@@ -104,7 +103,6 @@ void MinimizeAnimationEffect::windowMinimized( EffectWindow* w )
     if( !mAnimationProgress.contains(w) )
         {
         mAnimationProgress[w] = 0.0f;
-        mActiveAnimations++;
         }
     }
 
@@ -113,7 +111,6 @@ void MinimizeAnimationEffect::windowUnminimized( EffectWindow* w )
     if( !mAnimationProgress.contains(w) )
         {
         mAnimationProgress[w] = 1.0f;
-        mActiveAnimations++;
         }
     }
 
