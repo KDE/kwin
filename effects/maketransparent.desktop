@@ -46,6 +46,10 @@ Name[zh_CN]=半透明
 Name[zh_TW]=半透明
 Icon=preferences-system-windows-effect-maketransparent
 Comment=Makes decorations or entire windows translucent
+Comment[et]=Dekoratsioonid või terved aknad muudetakse läbipaistvaks
+Comment[nds]=Maakt dörschienen Finstern oder Finsterdelen
+Comment[sv]=Gör dekorationer eller hela fönster halvgenomskinliga
+Comment[zh_TW]=讓裝飾或整個視窗變半透明
 
 Type=Service
 ServiceTypes=KWin/Effect

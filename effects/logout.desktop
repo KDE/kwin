@@ -27,6 +27,10 @@ Name[zh_CN]=布局
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Logout visual effect
+Comment[et]=Väljalogimise visuaalne efekt
+Comment[nds]=Effekt bi't Afmellen
+Comment[sv]=Visuell effekt vid utloggning
+Comment[zh_TW]=登出視覺效果
 
 Type=Service
 ServiceTypes=KWin/Effect

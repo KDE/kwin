@@ -1,8 +1,18 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Taskbar Thumbnails
+Name[el]=Εικόνες επισκόπησης της Γραμμής εργασιών
+Name[et]=Tegumiriba pisipildid
+Name[nds]=Programmbalken-Vöransichten
+Name[sv]=Miniatyrbilder i aktivitetsfält
+Name[zh_TW]=工作列縮圖
 Icon=preferences-system-windows-effect-taskbarthumbnail
 Comment=Shows window thumbnails when cursor is on their taskbar entry
+Comment[el]=Εμφάνιση εικόνας επισκόπησης παραθύρου όταν το ποντίκι περνάει πάνω από την καταχώρησή του στη γραμμή εργασιών
+Comment[et]=Akende pisipiltide näitamine, kui kursor on nende tegumiriba kirje kohal
+Comment[nds]=Wiest Vöransichten vun de Finstern, wenn Du mit de Muus op ehr Programmbalken-Indrääg wiest.
+Comment[sv]=Visar miniatyrbilder av fönster när markören är över deras post i aktivitetsfältet
+Comment[zh_TW]=當游標停在工作列的按鈕上面時，顯示視窗的縮圖
 
 Type=Service
 ServiceTypes=KWin/Effect

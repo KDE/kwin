@@ -32,6 +32,10 @@ Name[zh_CN]=缩放
 Name[zh_TW]=縮放
 Icon=preferences-system-windows-effect-zoom
 Comment=Magnifies the entire desktop
+Comment[et]=Terve töölaua suurendamine
+Comment[nds]=Wiest den helen Schriefdisch grötter
+Comment[sv]=Förstorar hela skrivbordet
+Comment[zh_TW]=放大整個桌面
 
 Type=Service
 ServiceTypes=KWin/Effect

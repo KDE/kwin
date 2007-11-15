@@ -26,6 +26,10 @@ Name[x-test]=xxThumbnail Asidexx
 Name[zh_CN]=旁边缩略图
 Icon=preferences-system-windows-effect-thumbnailaside
 Comment=Shows window's thumbnail at the edge of the screen
+Comment[et]=Ekraani serval näidatakse akende pisipilte
+Comment[nds]=Wiest Finster-Vöransichten an de Schirmkant
+Comment[sv]=Visar miniatyrbilder för fönster vid skärmkanten
+Comment[zh_TW]=在螢幕的邊緣顯示視窗縮圖
 
 Type=Service
 ServiceTypes=KWin/Effect

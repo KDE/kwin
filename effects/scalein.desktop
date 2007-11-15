@@ -28,6 +28,11 @@ Name[zh_CN]=拉近
 Name[zh_TW]=縮放
 Icon=preferences-system-windows-effect-scale-in
 Comment=Animates appearing of windows
+Comment[el]=Κίνηση στα παράθυρα που εμφανίζονται
+Comment[et]=Animeerib akende ilmumise
+Comment[nds]=Animeert dat Opduken vun Finstern
+Comment[sv]=Animerar visning av fönster
+Comment[zh_TW]=動畫顯示視窗
 
 Type=Service
 ServiceTypes=KWin/Effect

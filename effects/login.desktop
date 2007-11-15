@@ -27,6 +27,10 @@ Name[zh_CN]=登录
 Name[zh_TW]=登入
 Icon=preferences-system-windows-effect-login
 Comment=Login visual effect
+Comment[et]=Sisselogimise visuaalne efekt
+Comment[nds]=Effekt bi't Anmellen
+Comment[sv]=Visuell effekt vid inloggning
+Comment[zh_TW]=登入視覺效果
 
 Type=Service
 ServiceTypes=KWin/Effect
