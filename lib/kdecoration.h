@@ -244,6 +244,10 @@ public:
     */
     QString titleButtonsLeft() const;
     /**
+     * Returns the default left button sequence
+     */
+    static QString defaultTitleButtonsLeft();
+    /**
     * If customButtonPositions() returns true, titleButtonsRight
     * returns which buttons should be on the right side of the titlebar from left
     * to right. Characters in the return string have the same meaning like
@@ -255,7 +259,10 @@ public:
     * The changed flags for this setting is SettingButtons.
     */
     QString titleButtonsRight() const;
-
+    /**
+     * Returns the default right button sequence.
+     */
+    static QString defaultTitleButtonsRight();
     /**
     * @returns true if the style should use tooltips for window buttons
     * The changed flags for this setting is SettingTooltips.

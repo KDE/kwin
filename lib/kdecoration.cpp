@@ -428,9 +428,19 @@ QString KDecorationOptions::titleButtonsLeft() const
     return d->title_buttons_left;
 }
 
+QString KDecorationOptions::defaultTitleButtonsLeft()
+{
+    return "MS"; //aseigo: proposed new default "AIS__HM";
+}
+
 QString KDecorationOptions::titleButtonsRight() const
 {
     return d->title_buttons_right;
+}
+
+QString KDecorationOptions::defaultTitleButtonsRight()
+{
+    return "HIAX"; //aseigo: proposed new default "X"
 }
 
 bool KDecorationOptions::showTooltips() const
