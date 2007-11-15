@@ -52,8 +52,8 @@ KDecorationOptionsPrivate::~KDecorationOptionsPrivate()
 
 void KDecorationOptionsPrivate::defaultKWinSettings()
     {
-    title_buttons_left = "MS";
-    title_buttons_right = "HIAX";
+    title_buttons_left = KDecorationOptions::defaultTitleButtonsLeft();
+    title_buttons_right = KDecorationOptions::defaultTitleButtonsRight();
     custom_button_positions = false;
     show_tooltips = true;
     border_size = BorderNormal;
@@ -172,13 +172,13 @@ unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
     custom_button_positions = styleConfig.readEntry("CustomButtonPositions", false);
     if (custom_button_positions)
         {
-        title_buttons_left  = styleConfig.readEntry("ButtonsOnLeft", "MS");
-        title_buttons_right = styleConfig.readEntry("ButtonsOnRight", "HIAX");
+        title_buttons_left  = styleConfig.readEntry("ButtonsOnLeft", KDecorationOptions::defaultTitleButtonsLeft());
+        title_buttons_right = styleConfig.readEntry("ButtonsOnRight", KDecorationOptions::defaultTitleButtonsRight());
         }
     else
         {
-        title_buttons_left  = "MS";
-        title_buttons_right = "HIAX";
+        title_buttons_left  = KDecorationOptions::defaultTitleButtonsLeft();
+        title_buttons_right = KDecorationOptions::defaultTitleButtonsRight();
         }
     if( old_custom_button_positions != custom_button_positions
         || ( custom_button_positions &&

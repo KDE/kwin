@@ -58,6 +58,16 @@ KCommonDecoration::~KCommonDecoration()
     delete m_previewWidget;
 }
 
+QString KCommonDecoration::defaultButtonsLeft()
+{
+    return KDecorationOptions::defaultTitleButtonsLeft();
+}
+
+QString KCommonDecoration::defaultButtonsRight()
+{
+    return KDecorationOptions::defaultTitleButtonsRight();
+}
+
 bool KCommonDecoration::decorationBehaviour(DecorationBehaviour behaviour) const
 {
     switch (behaviour) {
