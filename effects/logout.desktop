@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Logout
 Name[be]=Выйсці
 Name[ca]=Sortida
@@ -33,7 +32,7 @@ Comment[sv]=Visuell effekt vid utloggning
 Comment[zh_TW]=登出視覺效果
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Lubos Lunak
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_logout

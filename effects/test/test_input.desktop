@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Test_Input
 Name[be]=Праверка_уводу
 Name[csb]=Test_Wpisania
@@ -17,7 +16,7 @@ Name[zh_CN]=测试_输入
 Name[zh_TW]=測試_輸入
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_test_input

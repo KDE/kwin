@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Translucency
 Name[af]=Deursigtigheid
 Name[be]=Празрыстасць
@@ -52,7 +51,7 @@ Comment[sv]=Gör dekorationer eller hela fönster halvgenomskinliga
 Comment[zh_TW]=讓裝飾或整個視窗變半透明
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_maketransparent

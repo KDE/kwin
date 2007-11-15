@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Box Switch
 Name[bg]=Превключване между прозорци
 Name[de]=Würfel-Fensterwechsel
@@ -53,7 +52,7 @@ Comment[zh_CN]=增强的 Alt-Tab 窗口切换器
 Comment[zh_TW]=Alt-tab 視窗切換加強版
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Philip Falkner
 X-KDE-PluginInfo-Email=philip.falkner@gmail.com
 X-KDE-PluginInfo-Name=kwin4_effect_boxswitch

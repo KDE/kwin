@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Invert
 Name[be]=Інвертаваць
 Name[bg]=Инвертиране
@@ -57,7 +56,7 @@ Comment[zh_TW]=將桌面上的顏色反轉
 Icon=preferences-system-windows-effect-invert
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Rivo Laks
 X-KDE-PluginInfo-Email=rivolaks@hot.ee
 X-KDE-PluginInfo-Name=kwin4_effect_invert

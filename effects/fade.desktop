@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Fade
 Name[be]=Павольнае знікненне
 Name[ca]=Apagat gradual
@@ -57,7 +56,7 @@ Comment[zh_CN]=当窗口被显示或者隐藏时，使窗口平滑地淡入淡�
 Comment[zh_TW]=顯示或隱藏視窗時以淡入/淡出方式呈現
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Philip Falkner
 X-KDE-PluginInfo-Email=philip.falkner@gmail.com
 X-KDE-PluginInfo-Name=kwin4_effect_fade

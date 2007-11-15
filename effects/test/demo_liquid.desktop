@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Demo Liquid
 Name[bg]=Демо на Liquid
 Name[ca]=Demostració del Liquid
@@ -25,7 +24,7 @@ Name[zh_CN]=演示 - 液体
 Name[zh_TW]=示範ˍ液體
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Rivo Laks
 X-KDE-PluginInfo-Email=rivolaks@hot.ee
 X-KDE-PluginInfo-Name=kwin4_effect_demo_liquid

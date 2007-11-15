@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Scale In
 Name[bg]=Увеличаване
 Name[ca]=Apropa
@@ -35,7 +34,7 @@ Comment[sv]=Animerar visning av fönster
 Comment[zh_TW]=動畫顯示視窗
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_scalein

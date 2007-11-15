@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Minimize Animation
 Name[be]=Анімацыя змяншэння
 Name[bg]=Минимизиране на анимацията
@@ -59,7 +58,7 @@ Comment[zh_CN]=窗口最小化的动画
 Comment[zh_TW]=動畫最小化視窗
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Rivo Laks
 X-KDE-PluginInfo-Email=rivolaks@hot.ee
 X-KDE-PluginInfo-Name=kwin4_effect_minimizeanimation

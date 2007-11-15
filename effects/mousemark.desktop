@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Mouse Mark
 Name[be]=Адметка мышы
 Name[bg]=Чертане с мишка
@@ -59,7 +58,7 @@ Comment[zh_CN]=让您在桌面上画线
 Comment[zh_TW]=讓您在您的桌面上畫線
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_mousemark

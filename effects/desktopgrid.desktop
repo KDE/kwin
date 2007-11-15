@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Desktop Grid
 Name[ar]=شبكية سطح المكتب
 Name[be]=Сетка на працоўны стол
@@ -61,7 +60,7 @@ Comment[zh_CN]=把桌面放置在栅格中的桌面切换器
 Comment[zh_TW]=將桌面以格狀佈局呈現的桌面切換器
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_desktopgrid

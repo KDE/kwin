@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Drunken
 Name[de]=Betrunken
 Name[el]=Κούνημα
@@ -26,7 +25,7 @@ Name[zh_CN]=醉酒
 Icon=preferences-system-windows-effect-drunken
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_drunken

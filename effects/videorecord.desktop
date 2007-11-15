@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Video Record
 Name[ar]=تسجيل المرئيات
 Name[be]=Відэазапіс
@@ -64,7 +63,7 @@ Comment[zh_CN]=让您可以录制您的桌面视频
 Comment[zh_TW]=讓您錄下您桌面的影像
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_videorecord

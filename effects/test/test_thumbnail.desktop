@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Test_Thumbnail
 Name[be]=Праверка_мініяцюр
 Name[csb]=Test_Miniaturczi
@@ -18,7 +17,7 @@ Name[zh_CN]=测试_缩略图
 Name[zh_TW]=測試_縮圖
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Rivo Laks
 X-KDE-PluginInfo-Email=rivolaks@hot.ee
 X-KDE-PluginInfo-Name=kwin4_effect_test_thumbnail

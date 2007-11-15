@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Zoom
 Name[ar]=تكبير
 Name[be]=Маштабаванне
@@ -38,7 +37,7 @@ Comment[sv]=Förstorar hela skrivbordet
 Comment[zh_TW]=放大整個桌面
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_zoom

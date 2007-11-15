@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Fall Apart
 Name[de]=Auseinanderfallen
 Name[el]=Κατάρρευση
@@ -33,7 +32,7 @@ Comment[sv]=Stängda fönster faller i bitar
 Comment[zh_TW]=已關閉的視窗會被切割
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_fallapart

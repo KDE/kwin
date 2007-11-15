@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 # Name of the effect
 Name=Howto
 Name[csb]=Jak to zrobic
@@ -24,7 +23,7 @@ Name[x-test]=xxHowtoxx
 
 # This is KWin effect
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 # Author and email of the author
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org

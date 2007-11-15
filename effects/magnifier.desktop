@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Magnifier
 Name[be]=Павелічальная лупа
 Name[ca]=Lupa
@@ -60,7 +59,7 @@ Comment[zh_CN]=放大鼠标下面的部分屏幕
 Comment[zh_TW]=將滑鼠底下的部份視窗放大
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_magnifier

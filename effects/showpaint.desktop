@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Show Paint
 Name[ca]=Mostra una imatge
 Name[el]=Εμφάνιση σχεδίασης
@@ -35,7 +34,7 @@ Comment[zh_CN]=显示 KWin 绘制的区域
 Comment[zh_TW]=顯示 KWin 繪製的區域
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_showpaint

@@ -1,5 +1,4 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Thumbnail Aside
 Name[bg]=Манипулатор на мини изображения
 Name[ca]=Miniatures de costat
@@ -32,7 +31,7 @@ Comment[sv]=Visar miniatyrbilder för fönster vid skärmkanten
 Comment[zh_TW]=在螢幕的邊緣顯示視窗縮圖
 
 Type=Service
-ServiceTypes=KWin/Effect
+X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Luboš Luňák
 X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_thumbnailaside
