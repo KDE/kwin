@@ -56,16 +56,6 @@ QString PlastikClient::visibleName() const
     return i18n("Plastik");
 }
 
-QString PlastikClient::defaultButtonsLeft() const
-{
-    return "M";
-}
-
-QString PlastikClient::defaultButtonsRight() const
-{
-    return "HIAX";
-}
-
 bool PlastikClient::decorationBehaviour(DecorationBehaviour behaviour) const
 {
     switch (behaviour) {

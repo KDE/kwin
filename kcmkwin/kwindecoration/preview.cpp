@@ -473,8 +473,8 @@ unsigned long KDecorationPreviewOptions::updateSettings()
         if (!customTitleButtonsRight.isNull() )
             d->title_buttons_right = customTitleButtonsRight;
     } else {
-        d->title_buttons_left = "MS";
-        d->title_buttons_right = "HIAX";
+        d->title_buttons_left = KDecorationOptions::defaultTitleButtonsLeft();
+        d->title_buttons_right = KDecorationOptions::defaultTitleButtonsRight();
     }
 
     return changed;

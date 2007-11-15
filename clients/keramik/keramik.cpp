@@ -61,10 +61,6 @@ namespace Keramik
 	const int buttonSpacing    =  4;  // Spacing between the titlebar buttons
 	const int iconSpacing      =  5;  // Spacing between the icon and the text label
 
-	// Default button layout
-	const char default_left[]  = "M";
-	const char default_right[] = "HIAX";
-
 	// Titlebar button bitmaps
 	const unsigned char menu_bits[] = {
 	   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -929,7 +925,7 @@ void KeramikClient::createLayout()
 
 	titleLayout->addSpacing( buttonMargin );      // Left button margin
 	addButtons( titleLayout, options()->customButtonPositions() ?
-			options()->titleButtonsLeft() : QString(default_left) );
+			options()->titleButtonsLeft() : KDecorationOptions::defaultTitleButtonsLeft() );
 
 	titlebar = new QSpacerItem( 10, clientHandler->titleBarHeight(largeTitlebar)
 			- topSpacing, QSizePolicy::Expanding, QSizePolicy::Minimum );
@@ -937,7 +933,7 @@ void KeramikClient::createLayout()
 
 	titleLayout->addSpacing( buttonSpacing );
 	addButtons( titleLayout, options()->customButtonPositions() ?
-				options()->titleButtonsRight() : QString(default_right) );
+				options()->titleButtonsRight() : KDecorationOptions::defaultTitleButtonsRight() );
 	titleLayout->addSpacing( buttonMargin - 1 );  // Right button margin
 
 	windowLayout->addSpacing( leftBorderWidth );                // Left border

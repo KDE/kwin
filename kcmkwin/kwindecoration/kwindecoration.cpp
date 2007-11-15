@@ -472,9 +472,9 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
 	cbUseCustomButtonPositions->setChecked( customPositions );
 	buttonPositionWidget->setEnabled( customPositions );
 	// Menu and onAllDesktops buttons are default on LHS
-	buttonPositionWidget->setButtonsLeft( conf.readEntry("ButtonsOnLeft", "MS") );
+	buttonPositionWidget->setButtonsLeft( conf.readEntry("ButtonsOnLeft", KDecorationOptions::defaultTitleButtonsLeft()) );
 	// Help, Minimize, Maximize and Close are default on RHS
-	buttonPositionWidget->setButtonsRight( conf.readEntry("ButtonsOnRight", "HIAX") );
+	buttonPositionWidget->setButtonsRight( conf.readEntry("ButtonsOnRight", KDecorationOptions::defaultTitleButtonsRight()) );
 
         int bsize = conf.readEntry( "BorderSize", (int)BorderNormal );
         if( bsize >= BorderTiny && bsize < BordersCount )
@@ -555,8 +555,8 @@ void KWinDecorationModule::defaults()
 //	decorationList->setSelected(
 //		decorationList->findItem( i18n("KDE 2") ), true );  // KDE classic client
 
-	buttonPositionWidget->setButtonsLeft("MS");
-	buttonPositionWidget->setButtonsRight("HIAX");
+	buttonPositionWidget->setButtonsLeft(KDecorationOptions::defaultTitleButtonsLeft());
+	buttonPositionWidget->setButtonsRight(KDecorationOptions::defaultTitleButtonsRight());
 
         border_size = BorderNormal;
         checkSupportedBorderSizes();

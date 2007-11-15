@@ -68,16 +68,6 @@ QString OxygenClient::visibleName() const
     return i18n("Oxygen");
 }
 
-QString OxygenClient::defaultButtonsLeft() const
-{
-    return "M";
-}
-
-QString OxygenClient::defaultButtonsRight() const
-{
-    return "HIAX";
-}
-
 void OxygenClient::init()
 {
     KCommonDecoration::init();
