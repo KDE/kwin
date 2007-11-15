@@ -117,7 +117,7 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
 
-    titleHeight = QFontMetrics(options()->font(true)).height() + 2;
+    titleHeight = QFontMetrics(options()->font(true)).height();
     if (titleHeight < handleSize) titleHeight = handleSize;
     titleHeight &= ~1; // Make title height even
     if (titleHeight < 14) titleHeight = 14;
@@ -562,7 +562,7 @@ void LaptopClient::paintEvent( QPaintEvent* )
         p.drawLine(r.right(), r.y(), r.right(), r.bottom());
         p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
         p.setPen(options()->color(KDecoration::ColorFont, false));
-        p.drawText(r.x(), r.y(), r.width(), r.height()-1,
+        p.drawText(r.x(), r.y()+1, r.width(), r.height()-1,
                    Qt::AlignCenter, caption() );
         g = options()->palette(KDecoration::ColorFrame, true);
         g.setCurrentColorGroup( QPalette::Active );
@@ -646,7 +646,7 @@ void LaptopClient::updateActiveBuffer( )
     p.drawLine(r.right(), r.y(), r.right(), r.bottom());
     p.drawLine(r.x(), r.bottom(), r.right(), r.bottom());
     p.setPen(options()->color(KDecoration::ColorFont, true));
-    p.drawText(r.x(), r.y(), r.width(), r.height()-1,
+    p.drawText(r.x(), r.y()+1, r.width(), r.height()-1,
                Qt::AlignCenter, caption() );
     g = options()->palette(KDecoration::ColorFrame, true);
     g.setCurrentColorGroup( QPalette::Active );
