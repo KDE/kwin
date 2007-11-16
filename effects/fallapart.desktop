@@ -27,7 +27,10 @@ Name[zh_TW]=破裂
 Icon=preferences-system-windows-effect-fallapart
 Comment=Closed windows fall into pieces
 Comment[et]=Suletud aknad lagunevad tükkideks
+Comment[ja]=閉じられたウィンドウがバラバラになります
 Comment[nds]=Tomaakt Finstern breekt uteneen
+Comment[pt]=As janelas fechadas caem em pedaços
+Comment[pt_BR]=Janelas fechadas caem em pedaços
 Comment[sv]=Stängda fönster faller i bitar
 Comment[zh_TW]=已關閉的視窗會被切割
 
