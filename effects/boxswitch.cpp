@@ -50,11 +50,6 @@ BoxSwitchEffect::~BoxSwitchEffect()
     {
     }
 
-void BoxSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
-    {
-    effects->prePaintScreen( data, time );
-    }
-
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( mActivated )
