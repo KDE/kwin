@@ -25,12 +25,14 @@ Name[x-test]=xxThumbnail Asidexx
 Name[zh_CN]=旁边缩略图
 Icon=preferences-system-windows-effect-thumbnailaside
 Comment=Shows window's thumbnail at the edge of the screen
+Comment[de]=Zeigt Vorschaubilder von Fenstern in einer Bildschirmecke an
 Comment[et]=Ekraani serval näidatakse akende pisipilte
 Comment[ja]=ウィンドウのサムネイルをスクリーンの端に表示します
 Comment[nds]=Wiest Finster-Vöransichten an de Schirmkant
 Comment[pt]=Mostra a miniatura da janela do extremo do ecrã
 Comment[pt_BR]=Mostra miniatura da janela na margem da tela
 Comment[sv]=Visar miniatyrbilder för fönster vid skärmkanten
+Comment[zh_CN]=在屏幕边缘显示窗口的缩略图
 Comment[zh_TW]=在螢幕的邊緣顯示視窗縮圖
 
 Type=Service

@@ -27,12 +27,14 @@ Name[zh_CN]=登录
 Name[zh_TW]=登入
 Icon=preferences-system-windows-effect-login
 Comment=Login visual effect
+Comment[de]=Visueller Anmeldeeffekt
 Comment[et]=Sisselogimise visuaalne efekt
 Comment[ja]=ログイン時の視覚効果
 Comment[nds]=Effekt bi't Anmellen
 Comment[pt]=Efeito visual do início de sessão
 Comment[pt_BR]=Efeito visual do início de sessão
 Comment[sv]=Visuell effekt vid inloggning
+Comment[zh_CN]=登录视觉效果
 Comment[zh_TW]=登入視覺效果
 
 Type=Service

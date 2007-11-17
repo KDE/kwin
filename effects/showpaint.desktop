@@ -18,7 +18,6 @@ Name[x-test]=xxShow Paintxx
 Name[zh_CN]=显示绘图
 Name[zh_TW]=顯示繪製
 Comment=Shows areas painted by KWin
-Comment[de]=Bereiche anzeigen, die von KWin gezeichnet werden
 Comment[el]=Εμφάνιση σχεδιασμένων περιοχών από το KWin
 Comment[et]=KWini joonistatud alade näitamine
 Comment[nb]=Viser områder som KWIn tegner opp

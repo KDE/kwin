@@ -35,6 +35,7 @@ Comment[nds]=Wiest de Steed vun den Muuswieser, wenn anmaakt
 Comment[pt]=Mostra a posição do cursor do rato quando activada
 Comment[pt_BR]=Mostra a posição do cursor do mouse quando ativada
 Comment[sv]=Visar muspekarens position om aktiverad
+Comment[zh_CN]=激活时显示鼠标指针位置
 Comment[zh_TW]=啟動時顯示滑鼠游標的位置
 
 Type=Service
