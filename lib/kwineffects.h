@@ -55,51 +55,168 @@ typedef QPair< Effect*, Window > InputWindowPair;
 typedef QList< EffectWindow* > EffectWindowList;
 
 
+/**
+ * @short Base class for all KWin effects
+ *
+ * This is the base class for all effects. By reimplementing virtual methods
+ *  of this class, you can customize how the windows are painted.
+ *
+ * The virtual methods of this class can broadly be divided into two
+ *  categories: the methods used for painting and those you can use to be
+ *  notified and react to certain events, e.g. that a window was closed.
+ *
+ * @section Chaining
+ * Most methods of this class are called in chain style. This means that when
+ *  effects A and B area active then first e.g. A::paintWindow() is called and
+ *  then from within that method B::paintWindow() is called (although
+ *  indirectly). To achieve this, you need to make sure to call corresponding
+ *  method in EffectsHandler class from each such method (using @ref effects
+ *  pointer):
+ * @code
+ *  void MyEffect::postPaintScreen()
+ *  {
+ *      // Do your own processing here
+ *      ...
+ *      // Call corresponding EffectsHandler method
+ *      effects->postPaintScreen();
+ *  }
+ * @endcode
+ *
+ * @section Effectsptr Effects pointer
+ * @ref effects pointer points to the global EffectsHandler object that you can
+ *  use to interact with the windows.
+ *
+ * @section painting Painting stages
+ * Painting of windows is done in three stages:
+ * @li First, the prepaint pass.<br>
+ *  Here you can specify how the windows will be painted, e.g. that they will
+ *  be translucent and transformed.
+ * @li Second, the paint pass.<br>
+ *  Here the actual painting takes place. You can change attributes such as
+ *  opacity of windows as well as apply transformations to them. You can also
+ *  paint something onto the screen yourself.
+ * @li Finally, the postpaint pass.<br>
+ *  Here you can mark windows, part of windows or even the entire screen for
+ *  repainting to create animations.
+ *
+ * For each stage there are *Screen() and *Window() methods. The window method
+ *  is called for every window which the screen method is usually called just
+ *  once.
+ **/
 class KWIN_EXPORT Effect
     {
     public:
-        // Flags controlling how painting is done.
+        /** Flags controlling how painting is done. */
         // TODO: is that ok here?
         enum
         {
-            // Window (or at least part of it) will be painted opaque.
+            /**
+             * Window (or at least part of it) will be painted opaque.
+             **/
             PAINT_WINDOW_OPAQUE         = 1 << 0,
-            // Window (or at least part of it) will be painted translucent.
+            /**
+             * Window (or at least part of it) will be painted translucent.
+             **/
             PAINT_WINDOW_TRANSLUCENT    = 1 << 1,
-            // Window will be painted with transformed geometry.
+            /**
+             * Window will be painted with transformed geometry.
+             **/
             PAINT_WINDOW_TRANSFORMED    = 1 << 2,
-            // Paint only a region of the screen (can be optimized, cannot
-            // be used together with TRANSFORMED flags).
+            /**
+             * Paint only a region of the screen (can be optimized, cannot
+             * be used together with TRANSFORMED flags).
+             **/
             PAINT_SCREEN_REGION         = 1 << 3,
-            // Whole screen will be painted with transformed geometry.
+            /**
+             * The whole screen will be painted with transformed geometry.
+             * Forces the entire screen to be painted.
+             **/
             PAINT_SCREEN_TRANSFORMED    = 1 << 4,
-            // At least one window will be painted with transformed geometry.
+            /**
+             * At least one window will be painted with transformed geometry.
+             * Forces the entire screen to be painted.
+             **/
             PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 5,
-            // Clear whole background as the very first step, without optimizing it
+            /**
+             * Clear whole background as the very first step, without optimizing it
+             **/
             PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6
         };
 
+        /**
+         * Constructs new Effect object.
+         **/
         Effect();
+        /**
+         * Destructs the Effect object.
+         **/
         virtual ~Effect();
 
+        /**
+         * Called before starting to paint the screen.
+         * In this method you can:
+         * @li set whether the windows or the entire screen will be transformed
+         * @li change the region of the screen that will be painted
+         * @li do various housekeeping tasks such as initing your effect's variables
+                for the upcoming paint pass or updating animation's progress
+        **/
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
+        /**
+         * In this method you can:
+         * @li paint something on top of the windows (by painting after calling
+         *      effects->paintScreen())
+         * @li paint multiple desktops and/or multiple copies of the same desktop
+         *      by calling effects->paintScreen() multiple times
+         **/
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+        /**
+         * Called after all the painting has been finished.
+         * In this method you can:
+         * @li schedule next repaint in case of animations
+         * You shouldn't paint anything here.
+         **/
         virtual void postPaintScreen();
+
+        /**
+         * Called for every window before the actual paint pass
+         * In this method you can:
+         * @li enable or disable painting of the window (e.g. enable paiting of minimized window)
+         * @li set window to be painted with translucency
+         * @li set window to be transformed
+         * @li request the window to be divided into multiple parts
+         **/
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        // paintWindow() can do various transformations
+        /**
+         * This is the main method for painting windows.
+         * In this method you can:
+         * @li do various transformations
+         * @li change opacity of the window
+         * @li change brightness and/or saturation, if it's supported
+         **/
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        /**
+         * Called for every window after all painting has been finished.
+         * In this method you can:
+         * @li schedule next repaint for individual window(s) in case of animations
+         * You shouldn't paint anything here.
+         **/
         virtual void postPaintWindow( EffectWindow* w );
 
-        // drawWindow() is used even for thumbnails etc. - it can alter the window itself where it
-        // makes sense (e.g.darkening out unresponsive windows), but it cannot do transformations
+        /**
+         * Can be called to draw multiple copies (e.g. thumbnails) of a window.
+         * You can change window's opacity/brightness/etc here, but you can't
+         *  do any transformations
+         **/
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        // This function is used e.g. by the shadow effect which adds area around windows
-        // that needs to be painted as well - e.g. when a window is hidden and the workspace needs
-        // to be repainted at that area, shadow's transformWindowDamage() adds the shadow area
-        // to it, so that it is repainted as well.
+        /**
+         * This function is used e.g. by the shadow effect which adds area around windows
+         * that needs to be painted as well - e.g. when a window is hidden and the workspace needs
+         * to be repainted at that area, shadow's transformWindowDamage() adds the shadow area
+         * to it, so that it is repainted as well.
+         **/
         virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
 
-        // called when moved/resized or once after it's finished
+        /** called when moved/resized or once after it's finished */
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
         virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
         virtual void windowAdded( EffectWindow* c );
@@ -125,13 +242,18 @@ class KWIN_EXPORT Effect
         static int displayHeight();
         static QPoint cursorPos();
 
-        // Interpolates between x and y
+        /**
+         * Linearly interpolates between @p x and @p y.
+         *
+         * Returns @p x when @p a = 0; returns @p y when @p a = 1.
+         **/
         static double interpolate(double x, double y, double a)
             {
             return x * (1 - a) + y * a;
             }
-        // helper to set WindowPaintData and QRegion to necessary transformations so that
-        // a following drawWindow() would put the window at the requested geometry (useful for thumbnails)
+        /** Helper to set WindowPaintData and QRegion to necessary transformations so that
+         * a following drawWindow() would put the window at the requested geometry (useful for thumbnails)
+         **/
         static void setPositionTransformations( WindowPaintData& data, QRect& region, EffectWindow* w,
             const QRect& r, Qt::AspectRatioMode aspect );
     };
@@ -172,6 +294,16 @@ class KWIN_EXPORT Effect
 #define KWIN_EFFECT_CONFIG_FACTORY K_PLUGIN_FACTORY_DECLARATION(EffectFactory)
 
 
+/**
+ * @short Manager class that handles all the effects.
+ *
+ * This class creates Effect objects and calls it's appropriate methods.
+ *
+ * Effect objects can call methods of this class to interact with the
+ *  workspace, e.g. to activate or move a specific window, change current
+ *  desktop or create a special input window to receive mouse and keyboard
+ *  events.
+ **/
 class KWIN_EXPORT EffectsHandler
     {
     friend class Effect;
@@ -237,7 +369,11 @@ class KWIN_EXPORT EffectsHandler
         virtual void pushRenderTarget(GLRenderTarget* target) = 0;
         virtual GLRenderTarget* popRenderTarget() = 0;
 
-        // Repaints the entire workspace
+        /**
+         * Schedules the entire workspace to be repainted next time.
+         * If you call it during painting (including prepaint) then it does not
+         *  affect the current painting.
+         **/
         virtual void addRepaintFull() = 0;
         virtual void addRepaint( const QRect& r ) = 0;
         virtual void addRepaint( int x, int y, int w, int h ) = 0;
@@ -286,22 +422,25 @@ class KWIN_EXPORT EffectsHandler
     };
 
 
-// This class is a representation of a window used by/for Effect classes.
-// The purpose is to hide internal data and also to serve as a single
-// representation for the case when Client/Unmanaged becomes Deleted.
+/**
+ * @short Representation of a window used by/for Effect classes.
+ *
+ * The purpose is to hide internal data and also to serve as a single
+ *  representation for the case when Client/Unmanaged becomes Deleted.
+ **/
 class KWIN_EXPORT EffectWindow
     {
     public:
-        // Flags explaining why painting should be disabled
+        /**  Flags explaining why painting should be disabled  */
         enum
         {
-            // Window will not be painted
+            /**  Window will not be painted  */
             PAINT_DISABLED              = 1 << 0,
-            // Window will not be painted because it is deleted
+            /**  Window will not be painted because it is deleted  */
             PAINT_DISABLED_BY_DELETE    = 1 << 1,
-            // Window will not be painted because of which desktop it's on
+            /**  Window will not be painted because of which desktop it's on  */
             PAINT_DISABLED_BY_DESKTOP   = 1 << 2,
-            // Window will not be painted because it is minimized
+            /**  Window will not be painted because it is minimized  */
             PAINT_DISABLED_BY_MINIMIZE  = 1 << 3
         };
 
@@ -385,6 +524,7 @@ class KWIN_EXPORT EffectWindowGroup
 
 /**
  * @short Vertex class
+ *
  * A vertex is one position in a window. WindowQuad consists of four WindowVertex objects
  * and represents one part of a window.
  **/
@@ -417,6 +557,7 @@ enum WindowQuadType
 
 /**
  * @short Class representing one area of a window.
+ *
  * WindowQuads consists of four WindowVertex objects and represents one part of a window.
  */
 // NOTE: This class expects the (original) vertices to be in the clockwise order starting from topleft.
@@ -528,6 +669,9 @@ class KWIN_EXPORT ScreenPrePaintData
         QRegion paint;
     };
 
+/**
+ * Pointer to the global EffectsHandler object.
+ **/
 extern KWIN_EXPORT EffectsHandler* effects;
 
 /***************************************************************
