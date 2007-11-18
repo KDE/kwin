@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Fall Apart
+Name[ca]=Trencament
 Name[de]=Auseinanderfallen
 Name[el]=Κατάρρευση
 Name[es]=Desmenuzar
@@ -26,13 +27,17 @@ Name[zh_CN]=坠落
 Name[zh_TW]=破裂
 Icon=preferences-system-windows-effect-fallapart
 Comment=Closed windows fall into pieces
+Comment[ca]=Les finestres tancades es trenquen en peces
 Comment[de]=Geschlossene Fenster fallen auseinander
+Comment[el]=Τα παράθυρα που κλείνουν διαλύονται
 Comment[et]=Suletud aknad lagunevad tükkideks
 Comment[ja]=閉じられたウィンドウがバラバラになります
+Comment[nb]=Vinduer som lukkes ramler i småbiter
 Comment[nds]=Tomaakt Finstern breekt uteneen
 Comment[pt]=As janelas fechadas caem em pedaços
 Comment[pt_BR]=Janelas fechadas caem em pedaços
 Comment[sv]=Stängda fönster faller i bitar
+Comment[x-test]=xxClosed windows fall into piecesxx
 Comment[zh_CN]=关闭的窗口以碎片掉落
 Comment[zh_TW]=已關閉的視窗會被切割
 

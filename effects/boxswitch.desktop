@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Box Switch
 Name[bg]=Превключване между прозорци
+Name[ca]=Canvi de caixa
 Name[de]=Würfel-Fensterwechsel
 Name[el]=Εναλλαγή πλαισίου
 Name[et]=Aknavahetaja
@@ -25,6 +26,7 @@ Name[zh_TW]=盒切換
 Icon=preferences-system-windows-effect-boxswitch
 Comment=Improved Alt-tab window switcher
 Comment[bg]=Подобрено превключване между прозорците с Alt-табулация
+Comment[ca]=Commutador millorat de finestres amb Alt+Tab
 Comment[de]=Verbesserter Fensterwechsel mittels Alt-Tabulator
 Comment[el]=Βελτιωμένη εναλλαγή παραθύρου Alt-tab
 Comment[et]=Täiustatud Alt+TAB akende vahetaja

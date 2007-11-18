@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Looking Glass
+Name[ca]=Aparença de vidre
 Name[es]=Espejo
 Name[et]=Suurendusklaas
 Name[he]=מראה
@@ -19,6 +20,7 @@ Name[zh_CN]=镜射
 Name[zh_TW]=鏡射
 Comment=Looking Glass enhanced magnifier
 Comment[bg]=Лупа
+Comment[ca]=Ampliació millorada amb aparença de vidre
 Comment[de]=Looking Glass erweiterte Lupe
 Comment[el]=Βελτιωμένος μεγεθυντικός φακός Looking Glass
 Comment[es]=Lupa de espejo mejorada

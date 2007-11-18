@@ -34,6 +34,7 @@ Name[zh_TW]=桌面格
 Icon=preferences-system-windows-effect-desktop-grid
 Comment=Desktop switcher that lays the desktops out in a grid
 Comment[bg]=Превключване между работните плотове в мрежа
+Comment[ca]=Commutador d'escriptori que disposa els escriptoris en una graella
 Comment[de]=Arbeitsflächenumschaltung (Fensteranordnung in einem Raster)
 Comment[el]=Εναλλαγή επιφάνειας εργασίας με τοποθέτηση των επιφανειών σε έναν κάνναβο
 Comment[et]=Töölauavahetaja, mis näitab töölaudu võrgustikus

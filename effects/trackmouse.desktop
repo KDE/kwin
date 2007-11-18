@@ -2,6 +2,7 @@
 Name=Track Mouse
 Name[be]=Адследжваць мыш
 Name[bg]=Мишка
+Name[ca]=Seguiment del ratolí
 Name[de]=Mausspur
 Name[el]=Ανίχνευση ποντικιού
 Name[es]=Seguir el ratón
@@ -29,12 +30,17 @@ Name[zh_CN]=跟踪鼠标
 Name[zh_TW]=追蹤滑鼠
 Icon=preferences-system-windows-effect-mouse-track
 Comment=Shows mouse cursor's position when activated
+Comment[ca]=Mostra la posició del cursor del ratolí quan està activat
+Comment[de]=Zeigt bei der Aktivierung die Position des Mauszeigers an
+Comment[el]=Όταν ενεργοποιηθεί, εμφανίζει τη θέση του δρομέα
 Comment[et]=Aktiveerimisel näidatakse hiirekursori asukohta
 Comment[ja]=マウスカーソルの位置を表示します
+Comment[nb]=Viser musepekerens posisjon når dette er slått på
 Comment[nds]=Wiest de Steed vun den Muuswieser, wenn anmaakt
 Comment[pt]=Mostra a posição do cursor do rato quando activada
 Comment[pt_BR]=Mostra a posição do cursor do mouse quando ativada
 Comment[sv]=Visar muspekarens position om aktiverad
+Comment[x-test]=xxShows mouse cursor's position when activatedxx
 Comment[zh_CN]=激活时显示鼠标指针位置
 Comment[zh_TW]=啟動時顯示滑鼠游標的位置
 
