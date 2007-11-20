@@ -107,10 +107,6 @@ unsigned long Options::updateSettings()
     xineramaPlacementScreen = qBound( -1, config.readEntry( "XineramaPlacementScreen", -1 ),
         qApp->desktop()->numScreens() - 1 );
 
-    animateShade = config.readEntry("AnimateShade", true);
-    animateMinimize = config.readEntry("AnimateMinimize", true);
-    animateMinimizeSpeed = config.readEntry("AnimateMinimizeSpeed", 5 );
-
     if( focusPolicy == ClickToFocus )
         {
         autoRaise = false;

@@ -36,15 +36,12 @@
   <entry key="MoveMode" type="String" />
   <entry key="ResizeMode" type="String" />
   <entry key="TitlebarDoubleClickCommand" type="String" />
-  <entry key="AnimateMinimize" type="Bool" />
-  <entry key="AnimateShade" type="Bool" />
   <entry key="IgnoreFocusStealingClasses" type="StringList" />
   <entry key="MoveResizeMaximizedWindows" type="Bool" />
   <entry key="ShadeHover" type="Bool" />
   <entry key="GeometryTip" type="Bool" />
   <entry key="RollOverDesktops" type="Bool" />
   <entry key="FocusStealingPreventionLevel" type="Int" />
-  <entry key="AnimateMinimizeSpeed" type="Int" />
   <entry key="Placement" type="String" />
   <entry key="AutoRaise" type="Bool" />
   <entry key="AutoRaiseInterval" type="Int" />

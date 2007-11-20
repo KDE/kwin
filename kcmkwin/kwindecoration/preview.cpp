@@ -425,10 +425,6 @@ int KDecorationPreviewBridge::currentDesktop() const
     return 1;
     }
 
-void KDecorationPreviewBridge::helperShowHide( bool )
-    {
-    }
-
 void KDecorationPreviewBridge::grabXServer( bool )
     {
     }

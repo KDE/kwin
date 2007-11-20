@@ -162,11 +162,6 @@ class Options : public KDecorationOptions
             }
 
         /**
-         * whether we animate the shading of windows to titlebar or not
-         */
-        bool animateShade;
-
-        /**
          * the size of the zone that triggers snapping on desktop borders
          */
         int borderSnapZone;
@@ -182,16 +177,6 @@ class Options : public KDecorationOptions
          */
         bool snapOnlyWhenOverlapping;
 
-        /**
-         * whether we animate the minimization of windows or not
-         */
-        bool  animateMinimize;
-
-        /**
-         * Animation speed (0 .. 10 )
-        */
-        int animateMinimizeSpeed;
-        
         bool showDesktopIsMinimizeAll;
 
         /**

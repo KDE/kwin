@@ -110,7 +110,6 @@ class KDecorationPreviewBridge
         virtual int currentDesktop() const;
         virtual QWidget* initialParentWidget() const;
         virtual Qt::WFlags initialWFlags() const;
-        virtual void helperShowHide( bool show );
         virtual void grabXServer( bool grab );
     private:
         KDecorationPreview* preview;

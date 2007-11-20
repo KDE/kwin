@@ -662,18 +662,6 @@ class KWIN_EXPORT KDecoration
 	 * @see geometry()
 	 */
         virtual bool drawbound( const QRect& geom, bool clear );
-	/**
-	 * This function may be reimplemented to provide custom minimize/restore animations
-	 * The reimplementation is allowed to perform X server grabs if necessary
-         * (only using the functions provided by this API, no direct Xlib calls), but no
-	 * futher event processing is allowed (i.e. no kapp->processEvents()).
-	 * @a False should be returned if the default implementation should be used.
-	 * Note that you should not use this function to force disabling of the animation.
-         * See @p drawbound() for details on how to do the painting.
-	 *
-	 * @see geometry() and helperShowHide().
-	 */
-        virtual bool animateMinimize( bool minimize );
         /**
          * @internal Reserved.
          */
@@ -717,13 +705,6 @@ class KWIN_EXPORT KDecoration
 	 * or WStyle_NoBorder are forbidden.
 	 */
 	Qt::WFlags initialWFlags() const;
-	/**
-	 * This function is only allowed to be called once from animateMinimize().
-	 * It can be used if the window should be shown or hidden at a specific
-	 * time during the animation. It is forbidden to use this function
-	 * for other purposes.
-	 */
-        void helperShowHide( bool show );
 	/**
 	 * Returns the main widget for the decoration.
 	 */

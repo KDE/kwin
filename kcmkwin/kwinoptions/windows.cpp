@@ -61,8 +61,6 @@
 #define KWIN_FOCUS                 "FocusPolicy"
 #define KWIN_PLACEMENT             "Placement"
 #define KWIN_MOVE                  "MoveMode"
-#define KWIN_MINIMIZE_ANIM         "AnimateMinimize"
-#define KWIN_MINIMIZE_ANIM_SPEED   "AnimateMinimizeSpeed"
 #define KWIN_RESIZE_OPAQUE         "ResizeMode"
 #define KWIN_GEOMETRY              "GeometryTip"
 #define KWIN_AUTORAISE_INTERVAL    "AutoRaiseInterval"
@@ -70,7 +68,6 @@
 #define KWIN_DELAYFOCUS_INTERVAL   "DelayFocusInterval"
 #define KWIN_DELAYFOCUS            "DelayFocus"
 #define KWIN_CLICKRAISE            "ClickRaise"
-#define KWIN_ANIMSHADE             "AnimateShade"
 #define KWIN_MOVE_RESIZE_MAXIMIZED "MoveResizeMaximizedWindows"
 #define KWIN_ALTTABMODE            "AltTabStyle"
 #define KWIN_TRAVERSE_ALL          "TraverseAll"
@@ -581,10 +578,6 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     shBox = new Q3VButtonGroup(i18n("Shading"), this);
 
-    animateShade = new QCheckBox(i18n("Anima&te"), shBox);
-    animateShade->setWhatsThis( i18n("Animate the action of reducing the window to its titlebar (shading)"
-                                       " as well as the expansion of a shaded window") );
-
     shadeHoverOn = new QCheckBox(i18n("&Enable hover"), shBox);
 
     connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
@@ -605,7 +598,6 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     lay->addWidget(shBox);
 
     // Any changes goes to slotChanged()
-    connect(animateShade, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
 
@@ -702,10 +694,6 @@ void KAdvancedConfig::shadeHoverChanged(bool a) {
     shadeHover->setEnabled(a);
 }
 
-void KAdvancedConfig::setAnimateShade(bool a) {
-    animateShade->setChecked(a);
-}
-
 void KAdvancedConfig::setFocusStealing(int l) {
     l = qMax( 0, qMin( 4, l ));
     focusStealing->setCurrentIndex(l);
@@ -719,7 +707,6 @@ void KAdvancedConfig::load( void )
 {
     KConfigGroup cg(config, "Windows");
 
-    setAnimateShade(cg.readEntry(KWIN_ANIMSHADE, true));
     setShadeHover(cg.readEntry(KWIN_SHADEHOVER, false));
     setShadeHoverInterval(cg.readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
 
@@ -739,7 +726,6 @@ void KAdvancedConfig::save( void )
     int v;
 
     KConfigGroup cg(config, "Windows");
-    cg.writeEntry(KWIN_ANIMSHADE, animateShade->isChecked());
     cg.writeEntry(KWIN_SHADEHOVER, shadeHoverOn->isChecked());
 
     v = getShadeHoverInterval();
@@ -766,7 +752,6 @@ void KAdvancedConfig::save( void )
 
 void KAdvancedConfig::defaults()
 {
-    setAnimateShade(true);
     setShadeHover(false);
     setShadeHoverInterval(250);
     setElectricBorders(0);
@@ -860,38 +845,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     bLay->addLayout(rLay);
     rLay->setColumnStretch(0,0);
     rLay->setColumnStretch(1,1);
-
-    minimizeAnimOn = new QCheckBox(i18n("Animate minimi&ze and restore"),
-                                   windowsBox);
-    minimizeAnimOn->setWhatsThis( i18n("Enable this option if you want an animation shown when"
-                                          " windows are minimized or restored." ) );
-    rLay->addWidget(minimizeAnimOn,0,0);
-
-    minimizeAnimSlider = new QSlider(windowsBox);
-    minimizeAnimSlider->setRange( 0, 10 );
-    minimizeAnimSlider->setSingleStep( 1 );
-    minimizeAnimSlider->setPageStep( 1 );
-    minimizeAnimSlider->setValue( 0 );
-    minimizeAnimSlider->setOrientation( Qt::Horizontal );
-    minimizeAnimSlider->setTickPosition(QSlider::TicksBelow);
-    rLay->addWidget(minimizeAnimSlider,0,1,1,2);
-
-    connect(minimizeAnimOn, SIGNAL(toggled(bool)), this, SLOT(setMinimizeAnim(bool)));
-    connect(minimizeAnimSlider, SIGNAL(valueChanged(int)), this, SLOT(setMinimizeAnimSpeed(int)));
-
-    minimizeAnimSlowLabel= new QLabel(i18n("Slow"),windowsBox);
-    minimizeAnimSlowLabel->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    rLay->addWidget(minimizeAnimSlowLabel,1,1);
-
-    minimizeAnimFastLabel= new QLabel(i18n("Fast"),windowsBox);
-    minimizeAnimFastLabel->setAlignment(Qt::AlignTop|Qt::AlignRight);
-    rLay->addWidget(minimizeAnimFastLabel,1,2);
-
-    wtstr = i18n("Here you can set the speed of the animation shown when windows are"
-                 " minimized and restored. ");
-    minimizeAnimSlider->setWhatsThis( wtstr );
-    minimizeAnimSlowLabel->setWhatsThis( wtstr );
-    minimizeAnimFastLabel->setWhatsThis( wtstr );
 
     moveResizeMaximized = new QCheckBox( i18n("Allow moving and resizing o&f maximized windows"), windowsBox);
     bLay->addWidget(moveResizeMaximized);
@@ -992,8 +945,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     connect( opaque, SIGNAL(clicked()), SLOT(changed()));
     connect( resizeOpaqueOn, SIGNAL(clicked()), SLOT(changed()));
     connect( geometryTipOn, SIGNAL(clicked()), SLOT(changed()));
-    connect( minimizeAnimOn, SIGNAL(clicked() ), SLOT(changed()));
-    connect( minimizeAnimSlider, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect( moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
     connect( placementCombo, SIGNAL(activated(int)), SLOT(changed()));
     connect( BrdrSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -1038,29 +989,6 @@ void KMovingConfig::setPlacement(int plac)
     placementCombo->setCurrentIndex(plac);
 }
 
-bool KMovingConfig::getMinimizeAnim()
-{
-    return minimizeAnimOn->isChecked();
-}
-
-int KMovingConfig::getMinimizeAnimSpeed()
-{
-    return minimizeAnimSlider->value();
-}
-
-void KMovingConfig::setMinimizeAnim(bool anim)
-{
-    minimizeAnimOn->setChecked( anim );
-    minimizeAnimSlider->setEnabled( anim );
-    minimizeAnimSlowLabel->setEnabled( anim );
-    minimizeAnimFastLabel->setEnabled( anim );
-}
-
-void KMovingConfig::setMinimizeAnimSpeed(int speed)
-{
-    minimizeAnimSlider->setValue(speed);
-}
-
 int KMovingConfig::getResizeOpaque()
 {
     return (resizeOpaqueOn->isChecked())? RESIZE_OPAQUE : RESIZE_TRANSPARENT;
@@ -1094,14 +1022,6 @@ void KMovingConfig::load( void )
         setMove(TRANSPARENT);
     else if( key == "Opaque")
         setMove(OPAQUE);
-
-    //CT 17Jun1998 - variable animation speed from 0 (none!!) to 10 (max)
-    bool anim = cg.readEntry(KWIN_MINIMIZE_ANIM, true);
-    int animSpeed = cg.readEntry(KWIN_MINIMIZE_ANIM_SPEED, 5);
-    if( animSpeed < 1 ) animSpeed = 0;
-    if( animSpeed > 10 ) animSpeed = 10;
-    setMinimizeAnim( anim );
-    setMinimizeAnimSpeed( animSpeed );
 
     // DF: please keep the default consistent with kwin (options.cpp line 145)
     key = cg.readEntry(KWIN_RESIZE_OPAQUE, "Opaque");
@@ -1203,9 +1123,6 @@ void KMovingConfig::save( void )
     else
         cg.writeEntry(KWIN_PLACEMENT, "Smart");
 
-    cg.writeEntry(KWIN_MINIMIZE_ANIM, getMinimizeAnim());
-    cg.writeEntry(KWIN_MINIMIZE_ANIM_SPEED, getMinimizeAnimSpeed());
-
     v = getResizeOpaque();
     if (v == RESIZE_OPAQUE)
         cg.writeEntry(KWIN_RESIZE_OPAQUE, "Opaque");
@@ -1243,8 +1160,6 @@ void KMovingConfig::defaults()
     setBorderSnapZone(KWM_BRDR_SNAP_ZONE_DEFAULT);
     OverlapSnap->setChecked(false);
 
-    setMinimizeAnim( true );
-    setMinimizeAnimSpeed( 5 );
     emit KCModule::changed(true);
 }
 

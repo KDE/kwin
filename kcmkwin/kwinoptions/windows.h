@@ -141,16 +141,12 @@ public:
   void defaults();
 
 private slots:
-  void setMinimizeAnim( bool );
-  void setMinimizeAnimSpeed( int );
-	void changed() { emit KCModule::changed(true); }
+  void changed() { emit KCModule::changed(true); }
   void slotBrdrSnapChanged( int );
   void slotWndwSnapChanged( int );
 
 private:
   int getMove( void );
-  bool getMinimizeAnim( void );
-  int getMinimizeAnimSpeed( void );
   int getResizeOpaque ( void );
   bool getGeometryTip( void ); //KS
   int getPlacement( void ); //CT
@@ -165,9 +161,6 @@ private:
   QCheckBox *opaque;
   QCheckBox *resizeOpaqueOn;
   QCheckBox *geometryTipOn;
-  QCheckBox* minimizeAnimOn;
-  QSlider *minimizeAnimSlider;
-  QLabel *minimizeAnimSlowLabel, *minimizeAnimFastLabel;
   QCheckBox *moveResizeMaximized;
 
   QComboBox *placementCombo;
@@ -208,11 +201,9 @@ private slots:
 private:
 
   int getShadeHoverInterval (void );
-  void setAnimateShade(bool);
   void setShadeHover(bool);
   void setShadeHoverInterval(int);
 
-  QCheckBox *animateShade;
   Q3ButtonGroup *shBox;
   QCheckBox *shadeHoverOn;
   KIntNumInput *shadeHover;

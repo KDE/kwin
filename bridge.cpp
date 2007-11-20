@@ -145,14 +145,6 @@ Qt::WFlags Bridge::initialWFlags() const
     return 0;
     }
 
-void Bridge::helperShowHide( bool show )
-    {
-    if( show )
-        c->rawShow();
-    else
-        c->rawHide();
-    }
-
 QRegion Bridge::unobscuredRegion( const QRegion& r ) const
     {
     QRegion reg( r );

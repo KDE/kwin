@@ -308,19 +308,9 @@ bool KDecoration::drawbound( const QRect&, bool )
     return false;
     }
 
-bool KDecoration::animateMinimize( bool )
-    {
-    return false;
-    }
-
 bool KDecoration::windowDocked( Position )
     {
     return false;
-    }
-
-void KDecoration::helperShowHide( bool show )
-    {
-    bridge_->helperShowHide( show );
     }
 
 void KDecoration::reset( unsigned long )
