@@ -1240,6 +1240,7 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
     } else {
 	*visible_bound = geom;
     }
+#if 0
     if (!workspaceWidget()) {
 	kDebug() << "workspaceWidget is null";
     } else {
@@ -1256,7 +1257,7 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
 	    p.end();
 	}
     }
-
+#endif
     return true;
 }
 

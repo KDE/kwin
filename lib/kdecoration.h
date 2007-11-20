@@ -522,11 +522,6 @@ class KWIN_EXPORT KDecoration
          * @param r The region you want to check for holes
          */
         QRegion unobscuredRegion( const QRegion& r ) const;
-	/**
-	 * Returns the main workspace widget. The main purpose of this function is to
-	 * allow painting the minimize animation or the transparent move bound on it.
-	 */
-        QWidget* workspaceWidget() const;
         /**
          * Returns the handle of the window that is being decorated. It is possible
          * the returned value will be 0.
@@ -645,11 +640,26 @@ class KWIN_EXPORT KDecoration
          * Note that if you e.g. paint the outline using a 5 pixels wide line,
          * you should compensate for the 2 pixels that would make the window
          * look larger.
+         * It is the decoration's responsibility to do the painting, using
+         * e.g. code like:
+         * @code
+         *     Display* dpy = QX11Info::display();
+         *     XGCValues xgc;
+         *     xgc.function = GXxor;
+         *     xgc.foreground = WhitePixel( dpy, DefaultScreen( dpy ));
+         *     xgc.line_width = width;
+         *     xgc.subwindow_mode = IncludeInferiors;
+         *     GC gc = XCreateGC( dpy, DefaultRootWindow( dpy ),
+         *         GCFunction | GCForeground | GCLineWidth | GCSubwindowMode, &xgc );
+         *     XDrawRectangle( dpy, DefaultRootWindow( dpy ), gc, r.x(), r.y(), r.width(), r.height());
+         *     XFreeGC( dpy, gc );
+         * @endcode
 	 *
 	 * @param geom  The geometry at this the bound should be drawn
-	 * @param clear @a true if the bound should be cleared
+	 * @param clear @a true if the bound should be cleared (when doing the usual XOR
+         *              painting this argument can be simply ignored)
 	 *
-	 * @see workspaceWidget() and geometry().
+	 * @see geometry()
 	 */
         virtual bool drawbound( const QRect& geom, bool clear );
 	/**
@@ -659,8 +669,9 @@ class KWIN_EXPORT KDecoration
 	 * futher event processing is allowed (i.e. no kapp->processEvents()).
 	 * @a False should be returned if the default implementation should be used.
 	 * Note that you should not use this function to force disabling of the animation.
+         * See @p drawbound() for details on how to do the painting.
 	 *
-	 * @see workspaceWidget(), geometry() and helperShowHide().
+	 * @see geometry() and helperShowHide().
 	 */
         virtual bool animateMinimize( bool minimize );
         /**
@@ -705,7 +716,7 @@ class KWIN_EXPORT KDecoration
 	 * that affect widget drawing are allowed. Window type flags like WX11BypassWM
 	 * or WStyle_NoBorder are forbidden.
 	 */
-		Qt::WFlags initialWFlags() const;
+	Qt::WFlags initialWFlags() const;
 	/**
 	 * This function is only allowed to be called once from animateMinimize().
 	 * It can be used if the window should be shown or hidden at a specific

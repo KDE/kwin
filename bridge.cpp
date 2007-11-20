@@ -110,11 +110,6 @@ QRect Bridge::iconGeometry() const
     return QRect( r.pos.x, r.pos.y, r.size.width, r.size.height );
     }
 
-QWidget* Bridge::workspaceWidget() const
-    {
-    return c->workspace()->desktopWidget();
-    }
-
 WId Bridge::windowId() const
     {
     return c->window();

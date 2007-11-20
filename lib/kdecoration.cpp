@@ -31,6 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #if defined Q_WS_X11 && ! defined K_WS_QTONLY
 #include <X11/Xlib.h>
 #include <fixx11h.h>
+#include <QX11Info>
 #endif
 
 #include "kdecoration_p.h"
@@ -224,11 +225,6 @@ QRegion KDecoration::unobscuredRegion( const QRegion& r ) const
     return bridge_->unobscuredRegion( r );
     }
 
-QWidget* KDecoration::workspaceWidget() const
-    {
-    return bridge_->workspaceWidget();
-    }
-        
 WId KDecoration::windowId() const
     {
     return bridge_->windowId();
@@ -340,7 +336,7 @@ void KDecoration::ungrabXServer()
     {
     bridge_->grabXServer( false );
     }
-    
+
 KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
 {
     const int range = 16;

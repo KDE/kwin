@@ -156,7 +156,6 @@ class Workspace : public QObject, public KDecorationDefines
         void setActiveScreenMouse( const QPoint &mousepos );
         QRect screenGeometry( int screen ) const;
         int screenNumber( const QPoint &pos ) const;
-        QWidget* desktopWidget();
 
     // for TabBox
         Client* currentTabBoxClient() const;
@@ -558,8 +557,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         QWidget* active_popup;
         Client* active_popup_client;
-
-        QWidget* desktop_widget;
 
         void loadSessionInfo();
         void loadWindowRules();

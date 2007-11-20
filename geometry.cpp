@@ -2218,9 +2218,13 @@ void Client::doDrawbound( const QRect& geom, bool clear )
     {
     if( decoration != NULL && decoration->drawbound( geom, clear ))
         return; // done by decoration
-    QPainter p ( workspace()->desktopWidget() );
-    p.setPen( QPen( Qt::white, 5 ) );
-    p.setCompositionMode( QPainter::CompositionMode_Xor );
+    XGCValues xgc;
+    xgc.function = GXxor;
+    xgc.foreground = WhitePixel( display(), DefaultScreen( display()));
+    xgc.line_width = 5;
+    xgc.subwindow_mode = IncludeInferiors;
+    GC gc = XCreateGC( display(), DefaultRootWindow( display()),
+        GCFunction | GCForeground | GCLineWidth | GCSubwindowMode, &xgc );
     // the line is 5 pixel thick, so compensate for the extra two pixels
     // on outside (#88657)
     QRect g = geom;
@@ -2234,7 +2238,8 @@ void Client::doDrawbound( const QRect& geom, bool clear )
         g.setTop( g.top() + 2 );
         g.setBottom( g.bottom() - 2 );
         }
-    p.drawRect( g );
+    XDrawRectangle( display(), DefaultRootWindow( display()), gc, g.x(), g.y(), g.width(), g.height());
+    XFreeGC( display(), gc );
     }
 
 void Client::positionGeometryTip()

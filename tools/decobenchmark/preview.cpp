@@ -328,11 +328,6 @@ QRegion KDecorationPreviewBridge::unobscuredRegion( const QRegion& r ) const
     return preview->unobscuredRegion( active, r );
     }
 
-QWidget* KDecorationPreviewBridge::workspaceWidget() const
-    {
-    return preview;
-    }
-
 WId KDecorationPreviewBridge::windowId() const
     {
     return 0; // no decorated window

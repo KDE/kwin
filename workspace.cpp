@@ -78,7 +78,6 @@ Workspace::Workspace( bool restore )
     number_of_desktops(0),
     active_popup( NULL ),
     active_popup_client( NULL ),
-    desktop_widget    (0),
     temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false ),
     rules_updates_disabled( false ),
     active_client     (0),
@@ -165,10 +164,6 @@ Workspace::Workspace( bool restore )
     loadWindowRules();
 
     (void) QApplication::desktop(); // trigger creation of desktop widget
-
-    desktop_widget = new QWidget( 0, Qt::Desktop );
-    desktop_widget->setObjectName( "desktop_widget" );
-    desktop_widget->setAttribute( Qt::WA_PaintUnclipped );
 
     // call this before XSelectInput() on the root window
     startup = new KStartupInfo(
@@ -450,7 +445,6 @@ Workspace::~Workspace()
          it != unmanaged.end();
          ++it )
         (*it)->release();
-    delete desktop_widget;
     delete tab_box;
     delete popupinfo;
     delete popup;
@@ -2040,16 +2034,6 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
         mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuMove, 0, mouse_emulation_state );
     return true;
 
-    }
-
-/*!
-  Returns the workspace's desktop widget. The desktop widget is
-  sometimes required by clients to draw on it, for example outlines on
-  moving or resizing.
- */
-QWidget* Workspace::desktopWidget()
-    {
-    return desktop_widget;
     }
 
 //Delayed focus functions

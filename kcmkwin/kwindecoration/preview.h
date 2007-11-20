@@ -96,7 +96,6 @@ class KDecorationPreviewBridge
         virtual QRect geometry() const;
         virtual QRect iconGeometry() const;
         virtual QRegion unobscuredRegion( const QRegion& r ) const;
-        virtual QWidget* workspaceWidget() const;
         virtual WId windowId() const;
 	virtual void closeWindow();
 	virtual void maximize( MaximizeMode mode );
