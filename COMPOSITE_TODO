@@ -57,8 +57,11 @@ KDE 4.0 TODO
 - shm mode needs support for more data formats than GL_BGRA
 
 ? __GL_YIELD=NOTHING
+? LIBGL_ALWAYS_INDIRECT
 
 - check what works with XRender
+
+- should OpenGL fall back to XRender if OpenGL initialization fails?
 
 - more notification functions for effects
 
