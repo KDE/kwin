@@ -23,9 +23,6 @@ TODO
 KDE 4.0 TODO
 =================================
 
-/ shortcut configuration
-    / configurable per effect (in the options dialog)
-
 / different handling of differeng gfx cards
     / check that nvidia/ati/intel work and add specific hacks if needed
     / the same about driver versions
@@ -35,49 +32,24 @@ KDE 4.0 TODO
 - effects (to do)
     / add configuration options (dialogs)
     - add generic support to use effect only for certain window types [Seli]
-    / split effects to groups (eyecandy, accessibility, whatever)
-    - login effect, e.g. fade to desktop
-    - logout effect [Seli]
     - explosion
 ?       - use for forcible killing (add support to windowClosed())
     - diminactive
 *       - needs grouping for unmanaged windows [Seli]
-        - trailfocus (windows keep getting darker over time)
-*   - inactive window notification (when it stops responding) [Seli]
     - shadow
         - xrender mode
         - needs to follow the window shape
-    - make transparent
-        - make windows that are moved/resized by the user slightly transparent
-    - hide all testing, demo etc. effects in final builds
-    - boxswitch
-        - should share some features (next/previous, etc.) with presentwindows
-?           - duplicate code or try to share it?
     - desktopgrid
         - should preserve aspect ratio (as an option?)
     - taskbar thumbnail [Seli]
-        - define protocol (with _KDE prefix for now?)
-        - add support to taskbar
-    - rollup animation when shading/unshading window  [Seli]
-        - also use it for comboboxes
-    - select a region to zoom
-        - needs mouse to be warped
+        - we'll go with the hacky one, fix performance problems
 
 - fix inclusion of config-X11.h in installed headers [Seli]
-
-/ IHV database - set config settings according to card/driver
-?   - some sort of performance slider
-
-? - unredirect fullscreen windows
 
 - fix shading
 - window-specific rules need to apply to unmanaged windows as well (where applicable)
 - some window-specific rules also related to compositing
     - opacity
-
-? generic dbus scripting support
-
-/ check effects' dependencies when loading [rivo]
 
 / handling of window pixmaps for unmapped windows [Seli]
   - config option?
