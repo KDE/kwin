@@ -550,6 +550,11 @@ bool SceneOpenGL::initDrawableConfigs()
         kDebug( 1212 ) << "Couldn't find framebuffer configuration for default depth!";
         return false;
         }
+    if( fbcdrawableinfo[ 32 ].fbconfig == NULL )
+        {
+        kDebug( 1212 ) << "Couldn't find framebuffer configuration for depth 32!";
+        return false;
+        }
     return true;
     }
 
