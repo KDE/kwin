@@ -413,7 +413,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
     int rows = windowlist.count() / 4 + 1;
     int cols = windowlist.count() / rows + windowlist.count() % rows;
     // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect placementRect = effects->clientArea( PlacementArea, QPoint( 0, 0 ), 0 );
+    QRect placementRect = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
     // Size of one cell
     int cellwidth = placementRect.width() / cols;
     int cellheight = placementRect.height() / rows;
@@ -459,7 +459,7 @@ int PresentWindowsEffect::windowHeightForWidth(EffectWindow* c, int w)
 void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowList windowlist)
     {
      // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect availRect = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    QRect availRect = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
 
@@ -597,7 +597,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
 
 void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowList windowlist)
     {
-    QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
     int columns = int( ceil( sqrt( windowlist.count())));
     int rows = int( ceil( windowlist.count() / double( columns )));
     foreach( EffectWindow* w, windowlist )
@@ -726,7 +726,7 @@ void PresentWindowsEffect::getBestAssignments()
 
 bool PresentWindowsEffect::canRearrangeClosest(EffectWindowList windowlist)
     {
-    QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
     int columns = int( ceil( sqrt( windowlist.count())));
     int rows = int( ceil( windowlist.count() / double( columns )));
     int old_columns = int( ceil( sqrt( mWindowData.count())));
@@ -817,7 +817,7 @@ void PresentWindowsEffect::updateFilterTexture()
     QRect rect;
     QString translatedString = i18n( "Filter:\n%1", windowFilter );
     rect.setSize( fm.size( 0, translatedString ));
-    QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
     // Create image
     QImage im( rect.width(), rect.height(), QImage::Format_ARGB32 );
     im.fill( Qt::transparent );

@@ -53,6 +53,7 @@ class ThumbnailAsideEffect
         int maxwidth;
         int spacing;
         double opacity;
+        int screen;
     };
 
 } // namespace

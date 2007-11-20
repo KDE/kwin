@@ -345,6 +345,9 @@ class KWIN_EXPORT EffectsHandler
         virtual int numberOfDesktops() const = 0;
         virtual void setCurrentDesktop( int desktop ) = 0;
         virtual QString desktopName( int desktop ) const = 0;
+        virtual int activeScreen() const = 0; // Xinerama
+        virtual QRect clientArea( clientAreaOption, int screen, int desktop ) const = 0;
+        virtual QRect clientArea( clientAreaOption, const EffectWindow* c ) const = 0;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const = 0;
         virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const = 0;
         virtual bool optionRollOverDesktops() const = 0;

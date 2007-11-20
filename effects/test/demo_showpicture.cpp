@@ -55,7 +55,7 @@ void ShowPictureEffect::loadPicture()
     if( file.isEmpty())
         return;
     QImage im( file );
-    QRect area = effects->clientArea( PlacementArea, QPoint( 0, 0 ), effects->currentDesktop());
+    QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
     picture = new GLTexture( im );
     pictureRect = QRect( area.x() + ( area.width() - im.width()) / 2,
         area.y() + ( area.height() - im.height()) / 2, im.width(), im.height());

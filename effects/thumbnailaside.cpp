@@ -34,6 +34,7 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     maxwidth = conf.readEntry("MaxWidth", 200);
     spacing = conf.readEntry("Spacing", 10);
     opacity = conf.readEntry("Opacity", 50) / 100.0;
+    screen = conf.readEntry("Screen",-1); // Xinerama screen TODO add gui option
     }
 
 void ThumbnailAsideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -131,7 +132,7 @@ void ThumbnailAsideEffect::arrange()
         mwidth = qMax( mwidth, d.window->width());
         pos[ d.index ] = d.window->height();
         }
-    QRect area = effects->clientArea( WorkArea, QPoint(), effects->currentDesktop());
+    QRect area = effects->clientArea( WorkArea, screen, effects->currentDesktop());
     double scale = area.height() / double( height );
     scale = qMin( scale, maxwidth / double( mwidth )); // don't be wider than maxwidth pixels
     int add = 0;

@@ -75,7 +75,10 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void addRepaintFull();
         virtual void addRepaint( const QRect& r );
         virtual void addRepaint( int x, int y, int w, int h );
-        virtual QRect clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const;
+        virtual int activeScreen() const;
+        virtual QRect clientArea( clientAreaOption, int screen, int desktop ) const;
+        virtual QRect clientArea( clientAreaOption, const EffectWindow* c ) const;
+        virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
         virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const;
         virtual bool optionRollOverDesktops() const;
         virtual int desktopToLeft( int desktop, bool wrap ) const;

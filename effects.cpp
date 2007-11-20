@@ -504,6 +504,25 @@ void EffectsHandlerImpl::addRepaint( int x, int y, int w, int h )
     Workspace::self()->addRepaint( x, y, w, h );
     }
 
+int EffectsHandlerImpl::activeScreen() const
+    {
+    return Workspace::self()->activeScreen();
+    }
+
+QRect EffectsHandlerImpl::clientArea( clientAreaOption opt, int screen, int desktop ) const
+    {
+    return Workspace::self()->clientArea( opt, screen, desktop );
+    }
+
+QRect EffectsHandlerImpl::clientArea( clientAreaOption opt, const EffectWindow* c ) const
+    {
+    const Toplevel* t = static_cast< const EffectWindowImpl* >(c)->window();
+    if( const Client* cl = dynamic_cast< const Client* >( t ))
+        return Workspace::self()->clientArea( opt, cl );
+    else
+        return Workspace::self()->clientArea( opt, t->geometry().center(), Workspace::self()->currentDesktop());
+    }
+
 QRect EffectsHandlerImpl::clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const
     {
     return Workspace::self()->clientArea( opt, p, desktop );
