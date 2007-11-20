@@ -84,6 +84,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual int desktopDown( int desktop, bool wrap ) const;
 
         virtual Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor );
+        using EffectsHandler::createInputWindow;
         virtual void destroyInputWindow( Window w );
         virtual bool checkInputWindowEvent( XEvent* e );
         virtual void checkInputWindowStacking();

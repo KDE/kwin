@@ -323,7 +323,7 @@ class KWIN_EXPORT EffectsHandler
         // covering the whole screen is created and all mouse events will be intercepted by it.
         // The effect's windowInputMouseEvent() will get called with such events.
         virtual Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor ) = 0;
-        virtual Window createInputWindow( Effect* e, const QRect& r, const QCursor& cursor );
+        Window createInputWindow( Effect* e, const QRect& r, const QCursor& cursor );
         virtual Window createFullScreenInputWindow( Effect* e, const QCursor& cursor );
         virtual void destroyInputWindow( Window w ) = 0;
         virtual QPoint cursorPos() const = 0;
