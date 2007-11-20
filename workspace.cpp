@@ -1387,7 +1387,7 @@ void Workspace::previousDesktop()
     setCurrentDesktop(desktop > 0 ? desktop : numberOfDesktops());
     }
 
-int Workspace::desktopToRight( int desktop ) const
+int Workspace::desktopToRight( int desktop, bool wrap ) const
     {
     int x,y;
     Qt::Orientation orientation;
@@ -1398,7 +1398,7 @@ int Workspace::desktopToRight( int desktop ) const
         dt += y;
         if ( dt >= numberOfDesktops() )
             {
-            if ( options->rollOverDesktops )
+            if ( wrap )
               dt -= numberOfDesktops();
             else
               return desktop;
@@ -1409,7 +1409,7 @@ int Workspace::desktopToRight( int desktop ) const
         int d = (dt % x) + 1;
         if ( d >= x )
             {
-            if ( options->rollOverDesktops )
+            if ( wrap )
               d -= x;
             else
               return desktop;
@@ -1419,7 +1419,7 @@ int Workspace::desktopToRight( int desktop ) const
     return dt+1;
     }
 
-int Workspace::desktopToLeft( int desktop ) const
+int Workspace::desktopToLeft( int desktop, bool wrap ) const
     {
     int x,y;
     Qt::Orientation orientation;
@@ -1430,7 +1430,7 @@ int Workspace::desktopToLeft( int desktop ) const
         dt -= y;
         if ( dt < 0 )
             {
-            if ( options->rollOverDesktops )
+            if ( wrap )
               dt += numberOfDesktops();
             else
               return desktop;
@@ -1441,7 +1441,7 @@ int Workspace::desktopToLeft( int desktop ) const
         int d = (dt % x) - 1;
         if ( d < 0 )
             {
-            if ( options->rollOverDesktops )
+            if ( wrap )
               d += x;
             else
               return desktop;
@@ -1451,7 +1451,7 @@ int Workspace::desktopToLeft( int desktop ) const
     return dt+1;
     }
 
-int Workspace::desktopUp( int desktop ) const
+int Workspace::desktopUp( int desktop, bool wrap ) const
     {
     int x,y;
     Qt::Orientation orientation;
@@ -1462,7 +1462,7 @@ int Workspace::desktopUp( int desktop ) const
         dt -= x;
         if ( dt < 0 )
             {
-            if ( options->rollOverDesktops )
+            if ( wrap )
               dt += numberOfDesktops();
             else
               return desktop;
@@ -1473,7 +1473,7 @@ int Workspace::desktopUp( int desktop ) const
         int d = (dt % y) - 1;
         if ( d < 0 )
             {
-            if ( options->rollOverDesktops )
+            if ( wrap )
               d += y;
             else
               return desktop;
@@ -1483,7 +1483,7 @@ int Workspace::desktopUp( int desktop ) const
     return dt+1;
     }
 
-int Workspace::desktopDown( int desktop ) const
+int Workspace::desktopDown( int desktop, bool wrap ) const
     {
     int x,y;
     Qt::Orientation orientation;
@@ -1494,7 +1494,7 @@ int Workspace::desktopDown( int desktop ) const
         dt += x;
         if ( dt >= numberOfDesktops() )
             {
-            if ( options->rollOverDesktops )
+            if ( wrap )
               dt -= numberOfDesktops();
             else
               return desktop;
@@ -1505,7 +1505,7 @@ int Workspace::desktopDown( int desktop ) const
         int d = (dt % y) + 1;
         if ( d >= y )
             {
-            if ( options->rollOverDesktops )
+            if ( wrap )
               d -= y;
             else
               return desktop;
@@ -2237,22 +2237,22 @@ void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint
     const int OFFSET = 2;
     if( border == ElectricLeft || border == ElectricTopLeft || border == ElectricBottomLeft )
         {
-        desk = desktopToLeft( desk );
+        desk = desktopToLeft( desk, options->rollOverDesktops );
         pos.setX( displayWidth() - 1 - OFFSET );
         }
     if( border == ElectricRight || border == ElectricTopRight || border == ElectricBottomRight )
         {
-        desk = desktopToRight( desk );
+        desk = desktopToRight( desk, options->rollOverDesktops );
         pos.setX( OFFSET );
         }
     if( border == ElectricTop || border == ElectricTopLeft || border == ElectricTopRight )
         {
-        desk = desktopUp( desk );
+        desk = desktopUp( desk, options->rollOverDesktops );
         pos.setY( displayHeight() - 1 - OFFSET );
         }
     if( border == ElectricBottom || border == ElectricBottomLeft || border == ElectricBottomRight )
         {
-        desk = desktopDown( desk );
+        desk = desktopDown( desk, options->rollOverDesktops );
         pos.setY( OFFSET );
         }
     int desk_before = currentDesktop();

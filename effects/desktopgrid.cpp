@@ -70,13 +70,6 @@ void DesktopGridEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         if( !activated && progress == 0 )
             finish();
-        int d = posToDesktop( cursorPos());
-        if( d != hover_desktop )
-            {
-            data.paint |= desktopRect( hover_desktop, true );
-            hover_desktop = d;
-            data.paint |= desktopRect( hover_desktop, true );
-            }
         }
     effects->prePaintScreen( data, time );
     }
@@ -249,7 +242,7 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
             data.xTranslate += window_move_pos.x() * x - ( desktop.x() + w->x());
             data.yTranslate += window_move_pos.y() * y - ( desktop.y() + w->y());
             }
-        else if( painting_desktop != hover_desktop )
+        else if( painting_desktop != highlighted_desktop )
             data.brightness *= 0.7;
         }
     effects->paintWindow( w, mask, region, data );    
@@ -448,7 +441,7 @@ void DesktopGridEffect::setup()
     input = effects->createInputWindow( this, 0, 0, displayWidth(), displayHeight(),
         Qt::PointingHandCursor );
     effects->setActiveFullScreenEffect( this );
-    hover_desktop = effects->currentDesktop();
+    setHighlightedDesktop( effects->currentDesktop());
     }
 
 void DesktopGridEffect::finish()
@@ -461,7 +454,7 @@ void DesktopGridEffect::finish()
     window_move = NULL;
     effects->destroyInputWindow( input );
     effects->setActiveFullScreenEffect( 0 );
-    effects->addRepaintFull(); // to get rid of hover
+    effects->addRepaintFull(); // to get rid of highlight
     }
 
 void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
@@ -475,12 +468,8 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
         {
         // highlight desktop under mouse
         int d = posToDesktop( me->pos());
-        if( d != hover_desktop )
-            {
-            effects->addRepaint( desktopRect( hover_desktop, true ));
-            hover_desktop = d;
-            effects->addRepaint( desktopRect( hover_desktop, true ));
-            }
+        if( d != highlighted_desktop )
+            setHighlightedDesktop( d );
         if( window_move != NULL ) // handle window moving
             {
             was_window_move = true;
@@ -556,9 +545,73 @@ void DesktopGridEffect::windowClosed( EffectWindow* w )
 
 void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )
     {
-    // TODO
+    if( e->type() == QEvent::KeyPress )
+        {
+        switch( e->key())
+            { // wrap only on autorepeat
+            case Qt::Key_Left:
+                setHighlightedDesktop( effects->desktopToLeft( highlighted_desktop,
+                    !e->isAutoRepeat()));
+                break;
+            case Qt::Key_Right:
+                setHighlightedDesktop( effects->desktopToRight( highlighted_desktop,
+                    !e->isAutoRepeat()));
+                break;
+            case Qt::Key_Up:
+                setHighlightedDesktop( effects->desktopUp( highlighted_desktop,
+                    !e->isAutoRepeat()));
+                break;
+            case Qt::Key_Down:
+                setHighlightedDesktop( effects->desktopDown( highlighted_desktop,
+                    !e->isAutoRepeat()));
+                break;
+            default:
+                break;
+            }
+        }
+    else if( e->type() == QEvent::KeyRelease )
+        {
+        int desktop = -1;
+        // switch by F<number> or just <number>
+        if( e->key() >= Qt::Key_F1 && e->key() <= Qt::Key_F35 )
+            desktop = e->key() - Qt::Key_F1 + 1;
+        else if( e->key() >= Qt::Key_0 && e->key() <= Qt::Key_9 )
+            desktop = e->key() == Qt::Key_0 ? 10 : e->key() - Qt::Key_0;
+        if( desktop != -1 )
+            {
+            if( desktop <= effects->numberOfDesktops())
+                {
+                setHighlightedDesktop( desktop );
+                effects->setCurrentDesktop( desktop );
+                setActive( false );
+                }
+            return;
+            }
+        switch( e->key())
+            {
+            case Qt::Key_Escape:
+                setActive( false );
+                return;
+            case Qt::Key_Enter:
+            case Qt::Key_Return:
+            case Qt::Key_Space:
+                effects->setCurrentDesktop( highlighted_desktop );
+                setActive( false );
+                return;
+            default:
+                break;
+            }
+        }
     }
 
+void DesktopGridEffect::setHighlightedDesktop( int d )
+    {
+    if( d == highlighted_desktop || d <= 0 || d > effects->numberOfDesktops())
+        return;
+    effects->addRepaint( desktopRect( highlighted_desktop, true ));
+    highlighted_desktop = d;
+    effects->addRepaint( desktopRect( highlighted_desktop, true ));
+    }
 
 } // namespace
 

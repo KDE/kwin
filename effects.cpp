@@ -369,6 +369,26 @@ bool EffectsHandlerImpl::optionRollOverDesktops() const
     return options->rollOverDesktops;
     }
 
+int EffectsHandlerImpl::desktopToLeft( int desktop, bool wrap ) const
+    {
+    return Workspace::self()->desktopToLeft( desktop, wrap );
+    }
+
+int EffectsHandlerImpl::desktopToRight( int desktop, bool wrap ) const
+    {
+    return Workspace::self()->desktopToRight( desktop, wrap );
+    }
+
+int EffectsHandlerImpl::desktopUp( int desktop, bool wrap ) const
+    {
+    return Workspace::self()->desktopUp( desktop, wrap );
+    }
+
+int EffectsHandlerImpl::desktopDown( int desktop, bool wrap ) const
+    {
+    return Workspace::self()->desktopDown( desktop, wrap );
+    }
+
 int EffectsHandlerImpl::displayWidth() const
     {
     return KWin::displayWidth();

@@ -348,6 +348,10 @@ class KWIN_EXPORT EffectsHandler
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const = 0;
         virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const = 0;
         virtual bool optionRollOverDesktops() const = 0;
+        virtual int desktopToLeft( int desktop, bool wrap ) const = 0;
+        virtual int desktopToRight( int desktop, bool wrap ) const = 0;
+        virtual int desktopUp( int desktop, bool wrap ) const = 0;
+        virtual int desktopDown( int desktop, bool wrap ) const = 0;
 
         virtual EffectWindowList stackingOrder() const = 0;
         // window will be temporarily painted as if being at the top of the stack

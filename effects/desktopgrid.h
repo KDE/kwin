@@ -45,10 +45,11 @@ class DesktopGridEffect
         void paintSlide( int mask, QRegion region, const ScreenPaintData& data );
         void paintScreenDesktop( int desktop, int mask, QRegion region, ScreenPaintData data );
         void slideDesktopChanged( int old );
+        void setHighlightedDesktop( int desktop );
         double progress;
         bool activated;
         int painting_desktop;
-        int hover_desktop;
+        int highlighted_desktop;
         Window input;
         bool keyboard_grab;
         bool was_window_move;

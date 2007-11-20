@@ -78,6 +78,10 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual QRect clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const;
         virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const;
         virtual bool optionRollOverDesktops() const;
+        virtual int desktopToLeft( int desktop, bool wrap ) const;
+        virtual int desktopToRight( int desktop, bool wrap ) const;
+        virtual int desktopUp( int desktop, bool wrap ) const;
+        virtual int desktopDown( int desktop, bool wrap ) const;
 
         virtual Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor );
         virtual void destroyInputWindow( Window w );

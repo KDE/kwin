@@ -149,6 +149,10 @@ class Workspace : public QObject, public KDecorationDefines
         int numberOfDesktops() const;
         void setNumberOfDesktops( int n );
         void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const;
+        int desktopToRight( int desktop, bool wrap ) const;
+        int desktopToLeft( int desktop, bool wrap ) const;
+        int desktopUp( int desktop, bool wrap ) const;
+        int desktopDown( int desktop, bool wrap ) const;
 
         int activeScreen() const;
         int numScreens() const;
@@ -491,10 +495,6 @@ class Workspace : public QObject, public KDecorationDefines
         void oneStepThroughDesktopList( bool forward );
         bool establishTabBoxGrab();
         void removeTabBoxGrab();
-        int desktopToRight( int desktop ) const;
-        int desktopToLeft( int desktop ) const;
-        int desktopUp( int desktop ) const;
-        int desktopDown( int desktop ) const;
 
         void updateStackingOrder( bool propagate_new_clients = false );
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
