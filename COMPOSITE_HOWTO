@@ -85,10 +85,11 @@ EndSection
 Issues:
 -------
 
-With the i810 driver, DRI works only on the first running X (if you use second X session,
+With the i810 driver, DRI works only on the first running X (if you use secondary X session,
     compositing won't work there), the intel driver doesn't seem to have this problem.
 You may get only white rectangles if DRI is not enabled or fails to initialize
     - check your X log (/var/log/X*) and your xorg.conf
+Window contents updating may not work properly in secondary X session (likely X/driver bug)
 
 
 ATI:
