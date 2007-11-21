@@ -56,8 +56,12 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
         {
         if( mMode == TabBoxWindowsMode )
             {
-            if( windows.contains( w ) && w != selected_window )
-                data.setTranslucent();
+            if( windows.contains( w ))
+                {
+                if( w != selected_window )
+                    data.setTranslucent();
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
+                }
             }
         else
             {
@@ -308,8 +312,7 @@ void BoxSwitchEffect::setActive()
         {
         foreach( EffectWindow* w, windows.keys())
             {
-            if( w != selected_window )
-                w->addRepaintFull();
+            w->addRepaintFull();
             }
         }
     }
