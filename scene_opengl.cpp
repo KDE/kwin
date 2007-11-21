@@ -701,6 +701,7 @@ void SceneOpenGL::windowAdded( Toplevel* c )
     {
     assert( !windows.contains( c ));
     windows[ c ] = new Window( c );
+    c->effectWindow()->setSceneWindow( windows[ c ]);
     }
 
 void SceneOpenGL::windowClosed( Toplevel* c, Deleted* deleted )

@@ -316,6 +316,7 @@ void SceneXrender::windowAdded( Toplevel* c )
     {
     assert( !windows.contains( c ));
     windows[ c ] = new Window( c );
+    c->effectWindow()->setSceneWindow( windows[ c ]);
     }
 
 // Convert QRegion to XserverRegion. This code uses XserverRegion
