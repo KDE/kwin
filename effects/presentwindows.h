@@ -73,6 +73,10 @@ class PresentWindowsEffect
 
         void paintWindowIcon( EffectWindow* w, WindowPaintData& data );
 
+        void setHighlightedWindow( EffectWindow* w );
+        EffectWindow* relativeWindow( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const;
+        EffectWindow* findFirstWindow() const;
+
         // Called once the effect is activated (and wasn't activated before)
         void effectActivated();
         // Called once the effect has terminated
@@ -98,8 +102,9 @@ class PresentWindowsEffect
             QRect old_area; // when rearranging, otherwise unset
             double scale;
             double old_scale; // when rearranging, otherwise unset
-            double hover;
+            double highlight;
             int slot;
+            int x, y; // position of the slot in the grid
             int slot_distance;
             QPixmap icon;
 #ifdef HAVE_OPENGL
@@ -111,7 +116,7 @@ class PresentWindowsEffect
             };
         typedef QHash<EffectWindow*, WindowData> DataHash;
         DataHash mWindowData;
-        EffectWindow* mHoverWindow;
+        EffectWindow* mHighlightedWindow;
         
         QString windowFilter;
 #ifdef HAVE_OPENGL

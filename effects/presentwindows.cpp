@@ -36,7 +36,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , mActiveness( 0.0 )
     , mRearranging( 1.0 )
     , hasKeyboardGrab( false )
-    , mHoverWindow( NULL )
+    , mHighlightedWindow( NULL )
 #ifdef HAVE_OPENGL
     , filterTexture( NULL )
 #endif
@@ -111,13 +111,13 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
             //  fully active, then apply some transparency
             if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
                 data.setTranslucent();
-            // Change window's hover according to cursor pos
+            // Change window's highlight
             WindowData& windata = mWindowData[w];
-            const double hoverchangetime = 200;
-            if( windata.area.contains(cursorPos()) )
-                windata.hover = qMin(1.0, windata.hover + time / hoverchangetime);
+            const double highlightchangetime = 200;
+            if( w == mHighlightedWindow )
+                windata.highlight = qMin(1.0, windata.highlight + time / highlightchangetime);
             else
-                windata.hover = qMax(0.0, windata.hover - time / hoverchangetime);
+                windata.highlight = qMax(0.0, windata.highlight - time / highlightchangetime);
             }
         else if( !w->isDesktop())
             w->disablePainting( EffectWindow::PAINT_DISABLED );
@@ -181,7 +181,7 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
             data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->y(), mActiveness);
             }
         // Darken all windows except for the one under the cursor
-        data.brightness *= interpolate(1.0, 0.7, mActiveness * (1.0f - windata.hover));
+        data.brightness *= interpolate(1.0, 0.7, mActiveness * (1.0f - windata.highlight));
         // If it's minimized window or on another desktop and effect is not
         //  fully active, then apply some transparency
         if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
@@ -200,7 +200,7 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         double centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
         double centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
         int maxwidth = (int)(w->width() * data.xScale - 20);
-        double opacity = (0.7 + 0.2*windata.hover) * data.opacity * mActiveness;
+        double opacity = (0.7 + 0.2*windata.highlight) * data.opacity * mActiveness;
         QColor textcolor( 255, 255, 255, (int)(255*opacity) );
         QColor bgcolor( 0, 0, 0, (int)(255*opacity) );
         QFont f;
@@ -221,7 +221,7 @@ void PresentWindowsEffect::postPaintScreen()
         effects->addRepaintFull();
     foreach( const WindowData& d, mWindowData )
         {
-        if( d.hover > 0 && d.hover < 1 ) // changing highlight
+        if( d.highlight > 0 && d.highlight < 1 ) // changing highlight
             effects->addRepaintFull();
         }
     // Call the next effect.
@@ -232,7 +232,7 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
     {
     assert( w == mInput );
     if( e->type() == QEvent::MouseMove )
-        { // Repaint if the hovered-over window changed.
+        { // Repaint if the highlighted window changed.
           // (No need to use cursorMoved(), this takes care of it as well)
         for( DataHash::ConstIterator it = mWindowData.begin();
              it != mWindowData.end();
@@ -240,11 +240,8 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
             {
             if( (*it).area.contains( cursorPos()))
                 {
-                if( mHoverWindow != it.key())
-                    {
-                    mHoverWindow = it.key();
-                    effects->addRepaintFull(); // screen is transformed, so paint all
-                    }
+                if( mHighlightedWindow != it.key())
+                    setHighlightedWindow( it.key());
                 return;
                 }
             }
@@ -278,8 +275,8 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
 
 void PresentWindowsEffect::windowClosed( EffectWindow* w )
     {
-    if( mHoverWindow == w )
-        mHoverWindow = NULL;
+    if( mHighlightedWindow == w )
+        setHighlightedWindow( findFirstWindow());
     mWindowsToPresent.removeAll( w );
     rearrangeWindows();
     }
@@ -291,7 +288,6 @@ void PresentWindowsEffect::setActive(bool active)
     if( mActivated == active )
         return;
     mActivated = active;
-    mHoverWindow = NULL;
     if( mActivated )
         {
         mWindowData.clear();
@@ -312,6 +308,7 @@ void PresentWindowsEffect::setActive(bool active)
             mWindowsToPresent.append(window);
             }
         rearrangeWindows();
+        setHighlightedWindow( effects->activeWindow());
         }
     else
         {
@@ -319,6 +316,7 @@ void PresentWindowsEffect::setActive(bool active)
         mRearranging = 1; // turn off
         mActiveness = 1; // go back from arranged position
         discardFilterTexture();
+        mHighlightedWindow = NULL;
         }
     effects->addRepaintFull(); // trigger next animation repaint
     }
@@ -329,6 +327,7 @@ void PresentWindowsEffect::effectActivated()
     mInput = effects->createFullScreenInputWindow( this, Qt::PointingHandCursor );
     hasKeyboardGrab = effects->grabKeyboard( this );
     effects->setActiveFullScreenEffect( this );
+    setHighlightedWindow( effects->activeWindow());
     }
 
 void PresentWindowsEffect::effectTerminated()
@@ -339,6 +338,7 @@ void PresentWindowsEffect::effectTerminated()
         effects->ungrabKeyboard();
     hasKeyboardGrab = false;
     effects->setActiveFullScreenEffect( 0 );
+    effects->addRepaintFull(); // to get rid of highlight
     }
 
 void PresentWindowsEffect::rearrangeWindows()
@@ -362,6 +362,7 @@ void PresentWindowsEffect::rearrangeWindows()
     if( windowlist.isEmpty())
         {
         mWindowData.clear();
+        setHighlightedWindow( NULL );
         effects->addRepaintFull();
         return;
         }
@@ -382,6 +383,8 @@ void PresentWindowsEffect::rearrangeWindows()
         mWindowData = newdata;
         if( !rearrange && newlist == oldlist )
             return;
+        if( mHighlightedWindow != NULL && !mWindowData.contains( mHighlightedWindow ))
+            setHighlightedWindow( NULL );
         for( DataHash::Iterator it = mWindowData.begin();
              it != mWindowData.end();
              ++it )
@@ -393,7 +396,7 @@ void PresentWindowsEffect::rearrangeWindows()
         foreach( EffectWindow* w, windowlist )
             if( !mWindowData.contains( w ))
                 {
-                mWindowData[ w ].hover = 0;
+                mWindowData[ w ].highlight = 0;
                 }
         mRearranging = 0; // start animation again
         }
@@ -402,6 +405,9 @@ void PresentWindowsEffect::rearrangeWindows()
 //    calculateWindowTransformationsDumb( windowlist );
 //    calculateWindowTransformationsKompose( windowlist );
     calculateWindowTransformationsClosest( windowlist );
+
+    if( !mWindowData.isEmpty() && mHighlightedWindow == NULL )
+        setHighlightedWindow( findFirstWindow());
 
     // Schedule entire desktop to be repainted
     effects->addRepaintFull();
@@ -427,7 +433,10 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
         // Row/Col of this window
         int r = i / cols;
         int c = i % cols;
-        mWindowData[window].hover = 0.0f;
+        mWindowData[window].slot = i;
+        mWindowData[window].x = c;
+        mWindowData[window].y = r;
+        mWindowData[window].highlight = 0.0f;
         mWindowData[window].scale = qMin(cellwidth / (double)window->width(), cellheight / (double)window->height());
         mWindowData[window].area.setLeft(placementRect.left() + cellwidth * c);
         mWindowData[window].area.setTop(placementRect.top() + cellheight * r);
@@ -582,9 +591,12 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             EffectWindow* window = windowlist[pos];
             QRect geom = geometryRects[pos];
             geom.setY( geom.y() + topOffset );
+            mWindowData[window].slot = pos;
+            mWindowData[window].x = j;
+            mWindowData[window].y = i;
             mWindowData[window].area = geom;
             mWindowData[window].scale = geom.width() / (double)window->width();
-            mWindowData[window].hover = 0.0f;
+            mWindowData[window].highlight = 0.0f;
 
             kDebug() << "Window '" << window->caption() << "' gets moved to (" <<
                     mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
@@ -699,6 +711,8 @@ void PresentWindowsEffect::assignSlots( const QRect& area, int columns, int rows
                     {
                     distance = dist;
                     (*it).slot = slot;
+                    (*it).x = x;
+                    (*it).y = y;
                     (*it).slot_distance = distance;
                     }
                 }
@@ -753,45 +767,204 @@ bool PresentWindowsEffect::borderActivated( ElectricBorder border )
 
 void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent* e )
     {
-    if( e->type() != QEvent::KeyPress )
-        return;
-    if( e->key() == Qt::Key_Escape )
+    if( e->type() == QEvent::KeyPress )
         {
-        setActive( false );
-        return;
-        }
-    if( e->key() == Qt::Key_Backspace )
-        {
-        if( !windowFilter.isEmpty())
-            {
-            windowFilter.remove( windowFilter.length() - 1, 1 );
-            updateFilterTexture();
-            rearrangeWindows();
+        switch( e->key())
+            { // wrap only on autorepeat
+            case Qt::Key_Left:
+                setHighlightedWindow( relativeWindow( mHighlightedWindow, -1, 0, !e->isAutoRepeat()));
+                break;
+            case Qt::Key_Right:
+                setHighlightedWindow( relativeWindow( mHighlightedWindow, 1, 0, !e->isAutoRepeat()));
+                break;
+            case Qt::Key_Up:
+                setHighlightedWindow( relativeWindow( mHighlightedWindow, 0, -1, !e->isAutoRepeat()));
+                break;
+            case Qt::Key_Down:
+                setHighlightedWindow( relativeWindow( mHighlightedWindow, 0, 1, !e->isAutoRepeat()));
+                break;
+            case Qt::Key_Home:
+                setHighlightedWindow( relativeWindow( mHighlightedWindow, -1000, 0, false ));
+                break;
+            case Qt::Key_End:
+                setHighlightedWindow( relativeWindow( mHighlightedWindow, 1000, 0, false ));
+                break;
+            case Qt::Key_PageUp:
+                setHighlightedWindow( relativeWindow( mHighlightedWindow, 0, -1000, false ));
+                break;
+            case Qt::Key_PageDown:
+                setHighlightedWindow( relativeWindow( mHighlightedWindow, 0, 1000, false ));
+                break;
+            case Qt::Key_Backspace:
+                if( !windowFilter.isEmpty())
+                    {
+                    windowFilter.remove( windowFilter.length() - 1, 1 );
+                    updateFilterTexture();
+                    rearrangeWindows();
+                    }
+                return;
+            case Qt::Key_Escape:
+            case Qt::Key_Return:
+            case Qt::Key_Enter:
+                break;
+            default:
+                if( !e->text().isEmpty())
+                    {
+                    windowFilter.append( e->text());
+                    updateFilterTexture();
+                    rearrangeWindows();
+                    return;
+                    }
+                break;
             }
-        return;
         }
-    if( e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter )
+    else if( e->type() == QEvent::KeyRelease )
         {
-        if( mHoverWindow != NULL )
+        switch( e->key())
             {
-            effects->activateWindow( mHoverWindow );
-            setActive( false );
-            return;
+            case Qt::Key_Escape:
+                setActive( false );
+                return;
+            case Qt::Key_Return:
+            case Qt::Key_Enter:
+                if( mHighlightedWindow != NULL )
+                    {
+                    effects->activateWindow( mHighlightedWindow );
+                    setActive( false );
+                    return;
+                    }
+                if( mWindowData.count() == 1 ) // only one window shown
+                    {
+                    effects->activateWindow( mWindowData.begin().key());
+                    setActive( false );
+                    }
+                return;
+            default:
+                break;
             }
-        if( mWindowData.count() == 1 ) // only one window shown
-            {
-            effects->activateWindow( mWindowData.begin().key());
-            setActive( false );
-            }
-        return;
         }
-    if( !e->text().isEmpty())
+    }
+
+void PresentWindowsEffect::setHighlightedWindow( EffectWindow* w )
+    {
+    if( w == mHighlightedWindow || ( w != NULL && !mWindowData.contains( w )))
+        return;
+    effects->addRepaintFull(); // everything is transformed anyway
+    mHighlightedWindow = w;
+    }
+
+// returns a window which is to relative position <xdiff,ydiff> from the given window
+EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const
+    {
+    if( mWindowData.count() == 0 )
+        return NULL;
+    if( w == NULL )
+        return findFirstWindow();
+    int columns = int( ceil( sqrt( mWindowData.count())));
+    int rows = int( ceil( mWindowData.count() / double( columns )));
+    QVector< QVector< EffectWindow* > > grid;
+    grid.resize( columns );
+    for( int i = 0;
+         i < columns;
+         ++i )
+        grid[ i ].resize( rows );
+    for( DataHash::ConstIterator it = mWindowData.begin();
+         it != mWindowData.end();
+         ++it )
+        grid[ it->x ][ it->y ] = it.key();
+    int x = mWindowData[ w ].x;
+    int y = mWindowData[ w ].y;
+    while( xdiff > 0 )
         {
-        windowFilter.append( e->text());
-        updateFilterTexture();
-        rearrangeWindows();
-        return;
+        ++x;
+        if( x == columns )
+            {
+            if( !wrap )
+                { // make sure to find the leftmost (or 'w', which is guaranteed)
+                --x;
+                while( x >= 0 && grid[ x ][ y ] == NULL )
+                    --x;
+                break;
+                }
+            else
+                x = 0;
+            }
+        if( grid[ x ][ y ] != NULL )
+            --xdiff;
         }
+    while( xdiff < 0 )
+        {
+        --x;
+        if( x < 0 )
+            {
+            if( !wrap )
+                {
+                ++x;
+                while( x <= columns - 1 && grid[ x ][ y ] == NULL )
+                    ++x;
+                break;
+                }
+            else
+                x = columns - 1;
+            }
+        if( grid[ x ][ y ] != NULL )
+            ++xdiff;
+        }
+    while( ydiff > 0 )
+        {
+        ++y;
+        if( y == rows )
+            {
+            if( !wrap )
+                {
+                --y;
+                while( y >= 0 && grid[ x ][ y ] == NULL )
+                    --y;
+                break;
+                }
+            else
+                y = 0;
+            }
+        if( grid[ x ][ y ] != NULL )
+            --ydiff;
+        }
+    while( ydiff < 0 )
+        {
+        --y;
+        if( y < 0 )
+            {
+            if( !wrap )
+                {
+                ++y;
+                while( y <= rows - 1 && grid[ x ][ y ] == NULL )
+                    ++y;
+                break;
+                }
+            else
+                y = rows - 1;
+            }
+        if( grid[ x ][ y ] != NULL )
+            ++ydiff;
+        }
+    return grid[ x ][ y ];
+    }
+
+// returns the window that is the most to the topleft, if any
+EffectWindow* PresentWindowsEffect::findFirstWindow() const
+    {
+    int minslot = INT_MAX;
+    EffectWindow* ret = NULL;
+    for( DataHash::ConstIterator it = mWindowData.begin();
+         it != mWindowData.end();
+         ++it )
+        {
+        if( (*it).slot < minslot )
+            {
+            minslot = (*it).slot;
+            ret = it.key();
+            }
+        }
+    return ret;
     }
 
 void PresentWindowsEffect::discardFilterTexture()
