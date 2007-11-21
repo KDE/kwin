@@ -48,6 +48,10 @@ bool CompositingPrefs::compositingPossible()
         return false;
         }
 
+#if !(defined(HAVE_OPENGL) || (defined(HAVE_XRENDER) && defined(HAVE_XFIXES)))
+    kDebug( 1212 ) << "Not compiled with OpenGL/XRender support";
+    return false;
+#endif
     return true;
 #else
     return false;
@@ -56,7 +60,7 @@ bool CompositingPrefs::compositingPossible()
 
 QString CompositingPrefs::compositingNotPossibleReason()
     {
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE ) && (defined(HAVE_OPENGL) || (defined(HAVE_XRENDER) && defined(HAVE_XFIXES)))
     Extensions::init();
     if( !Extensions::compositeAvailable() || Extensions::damageAvailable())
         {

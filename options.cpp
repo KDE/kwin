@@ -73,7 +73,7 @@ unsigned long Options::updateSettings()
     if ( val == "CDE" )
         altTabStyle = CDE;
         
-    separateScreenFocus = config.readEntry( "SeparateScreenFocus", true );
+    separateScreenFocus = config.readEntry( "SeparateScreenFocus", false );
     activeMouseScreen = config.readEntry( "ActiveMouseScreen", focusPolicy != ClickToFocus );
 
     rollOverDesktops = config.readEntry("RollOverDesktops", true);

@@ -128,6 +128,7 @@ void Workspace::setupCompositing()
 #endif
         default:
 // this is the inverse of the two above tests, to have a different message
+// it is also used in compositingprefs.cpp
 #if !(defined(HAVE_OPENGL) || (defined(HAVE_XRENDER) && defined(HAVE_XFIXES)))
             kDebug( 1212 ) << "Compositing was not available at compile time";
 #else
