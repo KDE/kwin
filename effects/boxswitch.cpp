@@ -387,7 +387,8 @@ void BoxSwitchEffect::calculateFrameSize()
     const int separator_height = 6;
     // Shrink the size until all windows/desktops can fit onscreen
     frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
-    while( frame_area.width() > displayWidth())
+    QRect screenr = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
+    while( frame_area.width() > screenr.width())
         {
         item_max_size /= 2;
         frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
@@ -396,7 +397,8 @@ void BoxSwitchEffect::calculateFrameSize()
             separator_height + text_area.height());
     text_area.setWidth( frame_area.width() - frame_margin * 2 );
 
-    frame_area.moveTo(( displayWidth() - frame_area.width()) / 2, ( displayHeight() - frame_area.height()) / 2 );
+    frame_area.moveTo( screenr.x() + ( screenr.width() - frame_area.width()) / 2,
+        screenr.y() + ( screenr.height() - frame_area.height()) / 2 );
     text_area.moveTo( frame_area.x() + frame_margin,
                       frame_area.y() + frame_margin + item_max_size.height() + separator_height);
     }
