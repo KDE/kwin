@@ -218,8 +218,8 @@ unsigned long KDE2Handler::readConfig( bool update )
 	bool new_showGrabBar 		= conf.readEntry("ShowGrabBar", true);
 	bool new_showTitleBarStipple = conf.readEntry("ShowTitleBarStipple", true);
 	bool new_useGradients 		= conf.readEntry("UseGradients", true);
-	int  new_titleHeight 		= QFontMetrics(options()->font(true)).height();
-	int  new_toolTitleHeight 	= QFontMetrics(options()->font(true, true)).height()-2;
+	int  new_titleHeight 		= QFontMetrics(options()->font(true)).height() - 2;
+	int  new_toolTitleHeight 	= QFontMetrics(options()->font(true, true)).height() - 4;
 
 	int new_borderWidth;
 	switch(options()->preferredBorderSize(this)) {
@@ -351,30 +351,34 @@ void KDE2Handler::createPixmaps()
 
 	// Active pins
 	g = options()->palette( ColorButtonBg, true );
-	pinUpPix  = new QPixmap(16, 16);
-	p.begin( pinUpPix );
+	QImage pinUpImg  = QImage(16, 16, QImage::Format_ARGB32_Premultiplied);
+	p.begin( &pinUpImg );
     drawColorBitmaps( &p, g, 0, 0, 16, 16, pinup_white_bits, pinup_gray_bits, pinup_dgray_bits );
 	p.end();
+	pinUpPix = new QPixmap(QPixmap::fromImage(pinUpImg));
 	pinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
-	pinDownPix = new QPixmap(16, 16);
-	p.begin( pinDownPix );
+	QImage pinDownImg  = QImage(16, 16, QImage::Format_ARGB32_Premultiplied);
+	p.begin( &pinDownImg );
     drawColorBitmaps( &p, g, 0, 0, 16, 16, pindown_white_bits, pindown_gray_bits, pindown_dgray_bits );
 	p.end();
+	pinDownPix = new QPixmap(QPixmap::fromImage(pinDownImg));
 	pinDownPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits) );
 
 	// Inactive pins
 	g = options()->palette( ColorButtonBg, false );
-	ipinUpPix = new QPixmap(16, 16);
-	p.begin( ipinUpPix );
+	QImage ipinUpImg  = QImage(16, 16, QImage::Format_ARGB32_Premultiplied);
+	p.begin( &ipinUpImg );
     drawColorBitmaps( &p, g, 0, 0, 16, 16, pinup_white_bits, pinup_gray_bits, pinup_dgray_bits );
 	p.end();
+	ipinUpPix = new QPixmap(QPixmap::fromImage(ipinUpImg));
 	ipinUpPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pinup_mask_bits) );
 
-	ipinDownPix = new QPixmap(16, 16);
-	p.begin( ipinDownPix );
+	QImage ipinDownImg  = QImage(16, 16, QImage::Format_ARGB32_Premultiplied);
+	p.begin( &ipinDownImg );
     drawColorBitmaps( &p, g, 0, 0, 16, 16, pindown_white_bits, pindown_gray_bits, pindown_dgray_bits );
 	p.end();
+	ipinDownPix = new QPixmap(QPixmap::fromImage(ipinDownImg));
 	ipinDownPix->setMask( QBitmap::fromData(QSize( 16, 16 ), pindown_mask_bits) );
 
 	// Create a title buffer for flicker-free painting
