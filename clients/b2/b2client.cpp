@@ -54,26 +54,31 @@ enum {
 
 enum {
     P_CLOSE = 0,
-    P_MAX, P_NORMALIZE, P_ICONIFY, P_PINUP, P_MENU, P_HELP, P_SHADE, P_RESIZE,
-    P_NUM_BUTTON_TYPES
+    P_MAX = NumStates, 
+    P_NORMALIZE = P_MAX + NumStates, 
+    P_ICONIFY = P_NORMALIZE + NumStates, 
+    P_PINUP = P_ICONIFY + NumStates, 
+    P_MENU = P_PINUP + NumStates, 
+    P_HELP = P_MENU + NumStates, 
+    P_SHADE = P_HELP + NumStates, 
+    P_RESIZE = P_SHADE + NumStates,
+    P_NUM_PIXMAPS = P_RESIZE + NumStates
 };
 
-#define NUM_PIXMAPS (P_NUM_BUTTON_TYPES * NumStates)
-
-static QPixmap *pixmap[NUM_PIXMAPS];
+static QPixmap *pixmap[P_NUM_PIXMAPS];
 
 // active
-#define PIXMAP_A(i)  (pixmap[(i) * NumStates + Norm])
+#define PIXMAP_A(i)  (pixmap[(i) + Norm])
 // active, hover
-#define PIXMAP_AH(i) (pixmap[(i) * NumStates + Hover])
+#define PIXMAP_AH(i) (pixmap[(i) + Hover])
 // active, down
-#define PIXMAP_AD(i) (pixmap[(i) * NumStates + Down])
+#define PIXMAP_AD(i) (pixmap[(i) + Down])
 // inactive
-#define PIXMAP_I(i)  (pixmap[(i) * NumStates + INorm])
+#define PIXMAP_I(i)  (pixmap[(i) + INorm])
 // inactive, hover
-#define PIXMAP_IH(i) (pixmap[(i) * NumStates + IHover])
+#define PIXMAP_IH(i) (pixmap[(i) + IHover])
 // inactive, down
-#define PIXMAP_ID(i) (pixmap[(i) * NumStates + IDown])
+#define PIXMAP_ID(i) (pixmap[(i) + IDown])
 
 static QPixmap* titleGradient[2] = {0, 0};
 
@@ -202,9 +207,8 @@ static void create_pixmaps()
     int bsize = buttonSize - 2;
     if (bsize < 16) bsize = 16;
 
-    for (i = 0; i < NUM_PIXMAPS; i++) {
-
-        switch (i / NumStates) {
+    for (i = 0; i < P_NUM_PIXMAPS; i++) {
+        switch (NumStates *(i / NumStates)) {
 	case P_CLOSE: // will be initialized by copying P_MAX
 	case P_RESIZE:
 	    pixmap[i] = new QPixmap();
@@ -238,8 +242,8 @@ static void create_pixmaps()
     QBitmap menuMask = QBitmap::fromData(QSize(16, 16), menu_mask_bits);
     for (i = 0; i < NumStates; i++) {
 	bool isDown = (i == Down) || (i == IDown);
-	pixmap[P_MENU * NumStates + i]->setMask(menuMask);
-	pixmap[P_PINUP * NumStates + i]->setMask(isDown ? pindownMask: pinupMask);
+	pixmap[P_MENU + i]->setMask(menuMask);
+	pixmap[P_PINUP + i]->setMask(isDown ? pindownMask: pinupMask);
     }
 
     QBitmap normalizeMask(16, 16);
@@ -256,7 +260,7 @@ static void create_pixmaps()
     mask.end();
 
     for (i = 0; i < NumStates; i++)
-	pixmap[P_NORMALIZE * NumStates + i]->setMask(normalizeMask);
+	pixmap[P_NORMALIZE + i]->setMask(normalizeMask);
 
     QBitmap shadeMask(bsize, bsize);
     shadeMask.clear();
@@ -264,12 +268,12 @@ static void create_pixmaps()
     mask.fillRect(0, 0, bsize, 6, one);
     mask.end();
     for (i = 0; i < NumStates; i++)
-	pixmap[P_SHADE * NumStates + i]->setMask(shadeMask);
+	pixmap[P_SHADE + i]->setMask(shadeMask);
 }
 
 static void delete_pixmaps()
 {
-    for (int i = 0; i < NUM_PIXMAPS; i++) {
+    for (int i = 0; i < P_NUM_PIXMAPS; i++) {
     	delete pixmap[i];
 	pixmap[i] = 0;
     }
@@ -978,7 +982,7 @@ static void redraw_pixmaps()
     for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 2);
 	bool is_down = ((i & 1) == 1);
-	QPixmap *pix = pixmap[P_MAX * NumStates + i];
+	QPixmap *pix = pixmap[P_MAX + i];
 	QColor color = is_act ? activeColor : inactiveColor;
 	drawB2Rect(pix, color, is_down);
     }
@@ -988,7 +992,7 @@ static void redraw_pixmaps()
     for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 2);
 	bool is_down = ((i & 1) == 1);
-	QPixmap *pix = pixmap[P_SHADE * NumStates + i];
+	QPixmap *pix = pixmap[P_SHADE + i];
 	QColor color = is_act ? activeColor : inactiveColor;
 	drawB2Rect(&thinBox, color, is_down);
 	pix->fill(Qt::black);
@@ -1003,7 +1007,7 @@ static void redraw_pixmaps()
     for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
 	bool is_down = (i == Down || i == IDown);
-	QPixmap *pix = pixmap[P_NORMALIZE * NumStates + i];
+	QPixmap *pix = pixmap[P_NORMALIZE + i];
 	QColor color = is_act ? activeColor : inactiveColor;
 	drawB2Rect(&smallBox, color, is_down);
 	drawB2Rect(&largeBox, color, is_down);
@@ -1012,7 +1016,7 @@ static void redraw_pixmaps()
 	       0, 0, 12, 12);
 	bitBlt(pix, 0, 0, &smallBox, 0, 0, 10, 10);
 
-	bitBlt(pixmap[P_ICONIFY * NumStates + i], 0, 0,
+	bitBlt(pixmap[P_ICONIFY + i], 0, 0,
 	       &smallBox, 0, 0, 10, 10);
     }
 
@@ -1020,23 +1024,22 @@ static void redraw_pixmaps()
     for (int i = 0; i < NumStates; i++) {
 	bool is_act = (i < 3);
 	bool is_down = (i == Down || i == IDown);
-	*pixmap[P_RESIZE * NumStates + i] = *pixmap[P_MAX * NumStates + i];
-	pixmap[P_RESIZE * NumStates + i]->detach();
+	*pixmap[P_RESIZE + i] = *pixmap[P_MAX + i];
+	pixmap[P_RESIZE + i]->detach();
 	drawB2Rect(&smallBox, is_act ? activeColor : inactiveColor, is_down);
-	bitBlt(pixmap[P_RESIZE * NumStates + i],
-		0, 0, &smallBox, 0, 0, 10, 10);
+	bitBlt(pixmap[P_RESIZE + i], 0, 0, &smallBox, 0, 0, 10, 10);
     }
 
     QPainter p;
     // close: copy the maximize image, then add the X
     for (int i = 0; i < NumStates; i++) {
-	*pixmap[P_CLOSE * NumStates + i] = *pixmap[P_MAX * NumStates + i];
-	pixmap[P_CLOSE * NumStates + i]->detach();
+	*pixmap[P_CLOSE + i] = *pixmap[P_MAX + i];
+	pixmap[P_CLOSE + i]->detach();
     }
 
     for (int i = 0; i < NumStates; i++) {
 	bool isAct = (i < 3);
-	QPixmap *pixm = pixmap[P_CLOSE * NumStates + i];
+	QPixmap *pixm = pixmap[P_CLOSE + i];
 	p.begin(pixm);
 	QColor color = isAct ? activeColor : inactiveColor;
 	QRect r = QRect(3, 3, pixm->width() - 6, pixm->height() - 6);
@@ -1056,7 +1059,7 @@ static void redraw_pixmaps()
 
     // menu 
     {
-	int off = (pixmap[P_MENU * NumStates]->width() - 16) / 2;
+	int off = (pixmap[P_MENU]->width() - 16) / 2;
 	QSize bSize(16, 16);
 	QBitmap lightBitmap = QBitmap::fromData(bSize, 
 		    menu_white_bits, QImage::Format_MonoLSB);
@@ -1067,7 +1070,7 @@ static void redraw_pixmaps()
 
         for (int i = 0; i < NumStates; i++) {
 	    bool isAct = (i < 3);
-	    QPixmap *pixm = pixmap[P_MENU * NumStates + i];
+	    QPixmap *pixm = pixmap[P_MENU + i];
 	    p.begin(pixm);
 	    QColor color = isAct ? activeColor : inactiveColor;
 	    p.setPen(color.light(150));
@@ -1086,7 +1089,7 @@ static void redraw_pixmaps()
 	font.setPointSizeF(font.pointSizeF() * 1.1);
 	for (int i = 0; i < NumStates; i++) {
 	    bool isAct = (i < 3);
-	    QPixmap *pixm = pixmap[P_HELP * NumStates + i];
+	    QPixmap *pixm = pixmap[P_HELP + i];
 	    pixm->fill(QColor(qRgba(0, 0, 0, 0)));
 	    pixm->setAlphaChannel(*pixm);
 	    p.begin(pixm);
@@ -1111,40 +1114,42 @@ static void redraw_pixmaps()
 	bool isAct = (i < 3);
 
 	QSize pinSize(16, 16);
-	QBitmap white = QBitmap::fromData(pinSize, 
-		    isDown ? pindown_white_bits : pinup_white_bits, 
-		    QImage::Format_MonoLSB);
-	QBitmap gray = QBitmap::fromData(pinSize, 
-		    isDown ? pindown_gray_bits : pinup_gray_bits, 
-		    QImage::Format_MonoLSB);
-	QBitmap dgray = QBitmap::fromData(pinSize, 
-		    isDown ? pindown_dgray_bits : pinup_dgray_bits, 
-		    QImage::Format_MonoLSB);
+	QBitmap white = QBitmap::fromData(pinSize,
+		isDown ? pindown_white_bits : pinup_white_bits, 
+		QImage::Format_MonoLSB);
+	QBitmap gray = QBitmap::fromData(pinSize,
+		isDown ? pindown_gray_bits : pinup_gray_bits, 
+		QImage::Format_MonoLSB);
+	QBitmap dgray = QBitmap::fromData(pinSize,
+		isDown ? pindown_dgray_bits : pinup_dgray_bits, 
+		QImage::Format_MonoLSB);
 
-	QPixmap *pix = pixmap[P_PINUP * NumStates + i];
+	QPixmap *pix = pixmap[P_PINUP + i];
 	QColor color = isAct ? activeColor : inactiveColor;
-        p.begin(pix);
+	QPoint origin(0, 0);
+	QImage pin(16, 16, QImage::Format_ARGB32_Premultiplied);
+        p.begin(&pin);
 	p.setPen(color.light(150));
-	p.drawPixmap(0, 0, white);
+	p.drawPixmap(origin, white);
 	p.setPen(color);
-	p.drawPixmap(0, 0, gray);
+	p.drawPixmap(origin, gray);
 	p.setPen(color.dark(150));
-	p.drawPixmap(0, 0, dgray);
+	p.drawPixmap(origin, dgray);
 	p.end();
+	*pix = QPixmap::fromImage(pin);
     }
 
     // Apply the hilight effect to the 'Hover' icons
     KIconEffect ie;
     QPixmap hilighted;
-    for (int i = 0; i < P_NUM_BUTTON_TYPES; i++) {
-	int offset = i * NumStates;
-	hilighted = ie.apply(*pixmap[offset + Norm],
+    for (int i = 0; i < P_NUM_PIXMAPS; i += NumStates) {
+	hilighted = ie.apply(*pixmap[i + Norm],
 		KIconLoader::Small, KIconLoader::ActiveState);
-	*pixmap[offset + Hover] = hilighted;
+	*pixmap[i + Hover] = hilighted;
 
-	hilighted = ie.apply(*pixmap[offset + INorm],
+	hilighted = ie.apply(*pixmap[i + INorm],
 		KIconLoader::Small, KIconLoader::ActiveState);
-	*pixmap[offset + IHover] = hilighted;
+	*pixmap[i + IHover] = hilighted;
     }
 
     // Create the titlebar gradients
@@ -1207,6 +1212,9 @@ static QPolygon bound_shape;
 
 bool B2Client::drawbound(const QRect& geom, bool clear)
 {
+    // Let kwin draw the bounds, for now.
+    return false;
+#if 0
     if (clear) {
 	if (!visible_bound) return true;
     }
@@ -1214,18 +1222,13 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
     if (!visible_bound) {
 	visible_bound = new QRect(geom);
 	QRect t = titlebar->geometry();
-	int frameTop = geom.top() + t.bottom();
-	int barLeft = geom.left() + bar_x_ofs;
+        QRect g = geom;
+        // line width is 5 pixels, so compensate for the 2 outer pixels (#88657)
+	g.adjust(2, 2, -2, -2);
+	int frameTop = geom.top() + t.bottom() + 2;
+	int barLeft = geom.left() + bar_x_ofs + 2;
 	int barRight = barLeft + t.width() - 1;
 	if (barRight > geom.right()) barRight = geom.right();
-        // line width is 5 pixels, so compensate for the 2 outer pixels (#88657)
-        QRect g = geom;
-        g.setLeft(g.left() + 2);
-        g.setTop(g.top() + 2);
-        g.setRight(g.right() - 2);
-        g.setBottom(g.bottom() - 2);
-        frameTop += 2;
-        barLeft += 2;
         barRight -= 2;
 
 	bound_shape.putPoints(0, 8,
@@ -1240,22 +1243,16 @@ bool B2Client::drawbound(const QRect& geom, bool clear)
     } else {
 	*visible_bound = geom;
     }
-#if 0
-    if (!workspaceWidget()) {
-	kDebug() << "workspaceWidget is null";
-    } else {
-	kDebug() << "workspaceWidget is " << workspaceWidget();
-	QPainter p;
-	if (p.begin(workspaceWidget())) {
-	    p.setPen(QPen(Qt::white, 5));
-	    p.setCompositionMode(QPainter::CompositionMode_Xor);
-	    p.drawPolygon(bound_shape);
-	    if (clear) {
-		delete visible_bound;
-		visible_bound = 0;
-	    }
-	    p.end();
+    QPainter p;
+    if (p.begin(workspaceWidget())) {
+	p.setPen(QPen(Qt::white, 5));
+	p.setCompositionMode(QPainter::CompositionMode_Xor);
+	p.drawPolygon(bound_shape);
+	if (clear) {
+	    delete visible_bound;
+	    visible_bound = 0;
 	}
+	p.end();
     }
 #endif
     return true;
@@ -1355,7 +1352,6 @@ void B2Button::paintEvent(QPaintEvent *)
 
 void B2Button::setPixmaps(int button_id)
 {
-    button_id *= NumStates;
     for (int i = 0; i < NumStates; i++) {
 	icon[i] = B2::pixmap[button_id + i];
     }
