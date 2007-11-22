@@ -34,21 +34,32 @@ License. See the file "COPYING" for the exact licensing terms.
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
-K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
-    registerPlugin<KWin::DesktopGridEffectConfig>("desktopgrid");
-    registerPlugin<KWin::DimInactiveEffectConfig>("diminactive");
-    registerPlugin<KWin::MakeTransparentEffectConfig>("maketransparent");
-    registerPlugin<KWin::PresentWindowsEffectConfig>("presentwindows");
-    registerPlugin<KWin::ShadowEffectConfig>("shadow");
-    registerPlugin<KWin::ThumbnailAsideEffectConfig>("thumbnailaside");
+
+#define NON_GL_PLUGINS \
+    registerPlugin<KWin::DesktopGridEffectConfig>("desktopgrid"); \
+    registerPlugin<KWin::DimInactiveEffectConfig>("diminactive"); \
+    registerPlugin<KWin::MakeTransparentEffectConfig>("maketransparent"); \
+    registerPlugin<KWin::PresentWindowsEffectConfig>("presentwindows");   \
+    registerPlugin<KWin::ShadowEffectConfig>("shadow"); \
+    registerPlugin<KWin::ThumbnailAsideEffectConfig>("thumbnailaside"); \
     registerPlugin<KWin::ZoomEffectConfig>("zoom");
+
+#define GL_PLUGINS \
+    registerPlugin<KWin::InvertEffectConfig>("invert"); \
+    registerPlugin<KWin::LookingGlassEffectConfig>("lookingglass"); \
+    registerPlugin<KWin::MouseMarkEffectConfig>("mousemark"); \
+    registerPlugin<KWin::MagnifierEffectConfig>("magnifier"); \
+    registerPlugin<KWin::SharpenEffectConfig>("sharpen"); \
+    registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse"); \
+
 #ifdef HAVE_OPENGL
-    registerPlugin<KWin::InvertEffectConfig>("invert");
-    registerPlugin<KWin::LookingGlassEffectConfig>("lookingglass");
-    registerPlugin<KWin::MouseMarkEffectConfig>("mousemark");
-    registerPlugin<KWin::MagnifierEffectConfig>("magnifier");
-    registerPlugin<KWin::SharpenEffectConfig>("sharpen");
-    registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse");
-#endif
+K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
+    NON_GL_PLUGINS
+    GL_PLUGINS
     )
+#else
+K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
+    NON_GL_PLUGINS
+    )
+#endif
 K_EXPORT_PLUGIN(EffectFactory("kwin"))
