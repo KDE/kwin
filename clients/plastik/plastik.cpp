@@ -234,7 +234,7 @@ const QPixmap &PlastikHandler::pixmap(Pixmaps type, bool active, bool toolWindow
         case TitleBarTileTop:
         case TitleBarTile:
         {
-            const int titleBarTileHeight = (toolWindow ? m_titleHeightTool : m_titleHeight) + 2;
+            const int titleBarTileHeight = (toolWindow ? m_titleHeightTool : m_titleHeight);
             // gradient used as well in TitleBarTileTop as TitleBarTile
             const int gradientHeight = 2 + titleBarTileHeight-1;
             QPixmap gradient(1, gradientHeight);

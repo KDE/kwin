@@ -462,9 +462,9 @@ void RedmondDeco::init()
 {
 //	Finally, toolwindows look small
 	if ( isToolWindow() ) {
-		titleHeight = toolTitleHeight+2;
+		titleHeight = toolTitleHeight;
 	} else {
-		titleHeight = normalTitleHeight+2;
+		titleHeight = normalTitleHeight;
 	}
 
     KCommonDecoration::init();

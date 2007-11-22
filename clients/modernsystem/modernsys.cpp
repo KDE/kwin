@@ -329,7 +329,7 @@ void ModernSysFactory::read_config()
           bwidth = 4;
     }
 
-    theight = QFontMetrics(options()->font(true)).height() + 2;
+    theight = QFontMetrics(options()->font(true)).height();
     if (theight < 16)
         theight = 16;
     if (theight < bwidth)

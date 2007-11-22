@@ -247,13 +247,13 @@ void QuartzHandler::readConfig()
 		borderWidth = extraSlim?2:4;
 	}
 
-	normalTitleHeight = QFontMetrics(options()->font(true)).height();
+	normalTitleHeight = QFontMetrics(options()->font(true)).height() - 2;
 	int nTH_limit=extraSlim?14:18;
 	normalTitleHeight = QFontMetrics(options()->font(true)).height()-(extraSlim?1:0);
 	if (normalTitleHeight < nTH_limit) normalTitleHeight = nTH_limit;
 	if (normalTitleHeight < borderWidth) normalTitleHeight = borderWidth;
 
-	toolTitleHeight = QFontMetrics(options()->font(true, true)).height();
+	toolTitleHeight = QFontMetrics(options()->font(true, true)).height() - 2;
 	if (toolTitleHeight < 12) toolTitleHeight = 12;
 	if (toolTitleHeight < borderWidth) toolTitleHeight = borderWidth;
 }
@@ -342,18 +342,18 @@ void QuartzHandler::createPixmaps()
 	g2 = options()->palette( ColorButtonBg, true );
         g2.setCurrentColorGroup( QPalette::Active );
 
-	pinUpPix = new QPixmap(16, 16);
-	p.begin( pinUpPix );
+	QImage pinImg = QImage(16, 16, QImage::Format_ARGB32_Premultiplied);
+	p.begin(&pinImg);
 	p.fillRect( 0, 0, 16, 16, c);
     drawColorBitmaps( &p, g2, 0, 1, 16, 16, pinup_white_bits, pinup_gray_bits, pinup_dgray_bits );
 	p.end();
+	pinUpPix = new QPixmap(QPixmap::fromImage(pinImg));
 
-	pinDownPix = new QPixmap(16, 16);
-	p.begin( pinDownPix );
+	p.begin(&pinImg);
 	p.fillRect( 0, 0, 16, 16, c);
     drawColorBitmaps( &p, g2, 0, 1, 16, 16, pindown_white_bits, pindown_gray_bits, pindown_dgray_bits );
 	p.end();
-
+	pinDownPix = new QPixmap(QPixmap::fromImage(pinImg));
 
 	// Inactive pins
 	g = options()->palette( onAllDesktopsButtonOnLeft ? ColorTitleBar : ColorTitleBlend, false );
@@ -362,17 +362,17 @@ void QuartzHandler::createPixmaps()
 	g2 = options()->palette( ColorButtonBg, false );
         g2.setCurrentColorGroup( QPalette::Active );
 
-	ipinUpPix = new QPixmap(16, 16);
-	p.begin( ipinUpPix );
+	p.begin(&pinImg);
 	p.fillRect( 0, 0, 16, 16, c);
     drawColorBitmaps( &p, g2, 0, 1, 16, 16, pinup_white_bits, pinup_gray_bits, pinup_dgray_bits );
 	p.end();
+	ipinUpPix = new QPixmap(QPixmap::fromImage(pinImg));
 
-	ipinDownPix = new QPixmap(16, 16);
-	p.begin( ipinDownPix );
+	p.begin(&pinImg);
 	p.fillRect( 0, 0, 16, 16, c);
     drawColorBitmaps( &p, g2, 0, 1, 16, 16, pindown_white_bits, pindown_gray_bits, pindown_dgray_bits );
 	p.end();
+	ipinDownPix = new QPixmap(QPixmap::fromImage(pinImg));
 }
 
 

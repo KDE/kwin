@@ -482,7 +482,7 @@ const QPixmap &PlastikClient::captionPixmap() const
                             Handler()->pixmap(TitleBarTile, active, isToolWindow()) );
 
     painter.setFont(s_titleFont);
-    QPoint tp(1, captionHeight-1);
+    QPoint tp(1, captionHeight - 3);
     if(Handler()->titleShadow())
     {
         QColor shadowColor;
