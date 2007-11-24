@@ -46,7 +46,8 @@ LookingGlassEffect::LookingGlassEffect() : QObject(), ShaderEffect("lookingglass
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ActualSize, this, SLOT( toggle())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
-    radius = conf.readEntry("Radius", 200);
+    initialradius = conf.readEntry("Radius", 200);
+    radius = initialradius;
 
     kDebug(1212) << QString("Radius from config: %1").arg(radius) << endl;
 
@@ -94,7 +95,7 @@ void LookingGlassEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         else
             zoom = qMax( zoom * qMin( 1.0 - diff, 0.8 ), target_zoom );
         kDebug() << "zoom is now " << zoom;
-        radius = qBound(200.0, 200.0 * zoom, 500.0);
+        radius = qBound((double)initialradius, initialradius * zoom, 3.5*initialradius);
 
         if( zoom > 1.0f )
             {

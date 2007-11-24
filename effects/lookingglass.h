@@ -43,6 +43,7 @@ class LookingGlassEffect : public QObject, public ShaderEffect
         double zoom;
         double target_zoom;
         int radius;
+        int initialradius;
         KActionCollection* actionCollection;
     };
 
