@@ -59,7 +59,7 @@
     </widget>
    </item>
    <item>
-    <widget class="KShortcutsEditor" native="1" name="editor" />
+    <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" />
    </item>
    <item>
     <widget class="QLabel" name="label_3" >
@@ -75,9 +75,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KShortcutsEditor</class>
+   <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global" >kshortcutseditor.h</header>
+   <header location="global" >kwineffects.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
