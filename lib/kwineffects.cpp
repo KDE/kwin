@@ -422,6 +422,15 @@ EffectWindowGroup::~EffectWindowGroup()
     {
     }
 
+//****************************************
+// GlobalShortcutsEditor
+//****************************************
+
+GlobalShortcutsEditor::GlobalShortcutsEditor( QWidget *parent ) :
+        KShortcutsEditor( parent, GlobalAction )
+    {
+    }
+
 /***************************************************************
  WindowQuad
 ***************************************************************/

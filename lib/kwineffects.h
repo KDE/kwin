@@ -24,7 +24,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QtCore/QList>
 #include <QtCore/QHash>
 
-#include <KDE/KPluginFactory> 
+#include <KDE/KPluginFactory>
+#include <KDE/KShortcutsEditor>
 
 #include <assert.h>
 
@@ -32,6 +33,7 @@ License. See the file "COPYING" for the exact licensing terms.
 
 class KLibrary;
 class KConfigGroup;
+class KActionCollection;
 class QKeyEvent;
 
 namespace KWin
@@ -527,6 +529,12 @@ class KWIN_EXPORT EffectWindowGroup
     public:
         virtual ~EffectWindowGroup();
         virtual EffectWindowList members() const = 0;
+    };
+
+class KWIN_EXPORT GlobalShortcutsEditor : public KShortcutsEditor
+    {
+    public:
+        GlobalShortcutsEditor( QWidget *parent );
     };
 
 /**
