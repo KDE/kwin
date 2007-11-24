@@ -278,7 +278,9 @@ void renderRoundBox( const QRect& area, float roundness, GLTexture* texture )
 
     glPushMatrix();
 
-    QVector<float> verts(80), texcoords(80);
+    QVector<float> verts, texcoords;
+    verts.reserve(80);
+    texcoords.reserve(80);
     // center
     addQuadVertices(verts, area.left() + roundness, area.top() + roundness, area.right() - roundness, area.bottom() - roundness);
     addQuadVertices(texcoords, 0.5, 0.5, 0.5, 0.5);
