@@ -113,7 +113,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
         glScalef( data.xScale, data.yScale, 1 );
 
-    QVector<float> verts, texcoords;
+    QVector<float> verts(80), texcoords(80);
     // center
     addQuadVertices(verts, 0 + fuzzy, 0 + fuzzy, w - fuzzy, h - fuzzy);
     addQuadVertices(texcoords, 0.5, 0.5, 0.5, 0.5);
