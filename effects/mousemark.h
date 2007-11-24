@@ -33,6 +33,7 @@ class MouseMarkEffect
         QVector< Mark > marks;
         Mark drawing;
         int width;
+        QColor color;
     };
 
 } // namespace

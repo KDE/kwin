@@ -48,6 +48,7 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
     connect(m_ui->spinWidth, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->comboColors, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     // Shortcut config
     KGlobalAccel::self()->overrideMainComponentData(componentData());
@@ -69,9 +70,9 @@ void MouseMarkEffectConfig::load()
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
 
     int width = conf.readEntry("LineWidth", 3);
-    QColor color = conf.readEntry("Color", QColor(255, 0, 0));
+    QColor color = conf.readEntry("Color", QColor(Qt::red));
     m_ui->spinWidth->setValue(width);
-    //m_ui->spinHeight->setValue(height);
+    m_ui->comboColors->setColor(color);
 
     emit changed(false);
     }
@@ -84,7 +85,7 @@ void MouseMarkEffectConfig::save()
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
 
     conf.writeEntry("LineWidth", m_ui->spinWidth->value());
-    //conf.writeEntry("Color", m_ui->spinHeight->value());
+    conf.writeEntry("Color", m_ui->comboColors->color());
 
     conf.sync();
 
@@ -96,7 +97,7 @@ void MouseMarkEffectConfig::defaults()
     {
     kDebug() ;
     m_ui->spinWidth->setValue(3);
-    //m_ui->spinHeight->setValue(200);
+    m_ui->comboColors->setColor(Qt::red);
     emit changed(true);
     }
 

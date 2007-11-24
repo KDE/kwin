@@ -43,6 +43,7 @@ MouseMarkEffect::MouseMarkEffect()
 
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
     width = conf.readEntry( "LineWidth", 3 );
+    color = conf.readEntry( "Color", QColor( Qt::red ));
     }
 
 void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -51,7 +52,7 @@ void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     if( marks.isEmpty() && drawing.isEmpty())
         return;
     glPushAttrib( GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LINE_BIT );
-    glColor4f( 1, 0, 0, 1 ); // red
+    glColor4f( color.redF(), color.greenF(), color.blueF(), 1 );
     glEnable( GL_LINE_SMOOTH );
     glLineWidth( width );
     foreach( const Mark& mark, marks )
