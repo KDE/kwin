@@ -31,19 +31,14 @@ DimInactiveEffect::DimInactiveEffect()
 void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     bool dim = false;
-    if( active == NULL )
-        {
-        if( !w->isDock() || dim_panels )
-            dim = true;
-        else
-            dim = false;
-        }
-    else if( dim_by_group && active->group() == w->group())
+    if( active && dim_by_group && active->group() == w->group())
         dim = false;
-    else if( !dim_by_group && active == w )
+    else if( active && !dim_by_group && active == w )
         dim = false;
     else if( w->isDock())
         dim = dim_panels;
+    else if( !w->isNormalWindow() && !w->isDialog())
+        dim = false;
     else
         dim = true;
     if( dim )
