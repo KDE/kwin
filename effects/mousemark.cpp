@@ -18,6 +18,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kconfiggroup.h>
 
 #include <math.h>
 
@@ -36,9 +37,12 @@ MouseMarkEffect::MouseMarkEffect()
     {
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = static_cast< KAction* >( actionCollection->addAction( "ClearMouseMarks" ));
-    a->setText( i18n( "ClearMouseMarks" ));
+    a->setText( i18n( "Clear Mouse Marks" ));
     a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F11 ));
     connect( a, SIGNAL( triggered( bool )), this, SLOT( clear()));
+
+    KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
+    width = conf.readEntry( "LineWidth", 3 );
     }
 
 void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -49,7 +53,7 @@ void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     glPushAttrib( GL_ENABLE_BIT | GL_CURRENT_BIT | GL_LINE_BIT );
     glColor4f( 1, 0, 0, 1 ); // red
     glEnable( GL_LINE_SMOOTH );
-    glLineWidth( 3 );
+    glLineWidth( width );
     foreach( const Mark& mark, marks )
         {
         glBegin( GL_LINE_STRIP );
@@ -78,8 +82,10 @@ void MouseMarkEffect::mouseChanged( const QPoint& pos, const QPoint&,
             return;
         QPoint pos2 = drawing.last();
         drawing.append( pos );
-        effects->addRepaint( QRect( qMin( pos.x(), pos2.x()), qMin( pos.y(), pos2.y()),
-            qMax( pos.x(), pos2.x()), qMax( pos.y(), pos2.y())));
+        QRect repaint = QRect( qMin( pos.x(), pos2.x()), qMin( pos.y(), pos2.y()),
+                               qMax( pos.x(), pos2.x()), qMax( pos.y(), pos2.y()));
+        repaint.adjust( -width, -width, width, width );
+        effects->addRepaint( repaint );
         }
     else if( !drawing.isEmpty())
         {

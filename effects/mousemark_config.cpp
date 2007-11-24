@@ -52,12 +52,11 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
     // Shortcut config
     KGlobalAccel::self()->overrideMainComponentData(componentData());
     m_actionCollection = new KActionCollection( this, componentData() );
-    m_actionCollection->setConfigGroup("MouseMark");
-    m_actionCollection->setConfigGlobal(true);
 
     KAction* a = static_cast< KAction* >( m_actionCollection->addAction( "ClearMouseMarks" ));
     a->setText( i18n( "Clear Mouse Marks" ));
     a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F11 ));
+    m_ui->editor->addCollection(m_actionCollection);
 
     load();
     }
@@ -69,13 +68,10 @@ void MouseMarkEffectConfig::load()
 
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
 
-    int width = conf.readEntry("LineWidth", 200);
+    int width = conf.readEntry("LineWidth", 3);
     QColor color = conf.readEntry("Color", QColor(255, 0, 0));
     m_ui->spinWidth->setValue(width);
     //m_ui->spinHeight->setValue(height);
-
-    m_actionCollection->readSettings();
-    m_ui->editor->addCollection(m_actionCollection);
 
     emit changed(false);
     }
@@ -90,12 +86,10 @@ void MouseMarkEffectConfig::save()
     conf.writeEntry("LineWidth", m_ui->spinWidth->value());
     //conf.writeEntry("Color", m_ui->spinHeight->value());
 
-    m_actionCollection->writeSettings();
-
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "magnifier" );
+    EffectsHandler::sendReloadMessage( "mousemark" );
     }
 
 void MouseMarkEffectConfig::defaults()

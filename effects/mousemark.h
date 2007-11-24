@@ -32,6 +32,7 @@ class MouseMarkEffect
         typedef QVector< QPoint > Mark;
         QVector< Mark > marks;
         Mark drawing;
+        int width;
     };
 
 } // namespace
