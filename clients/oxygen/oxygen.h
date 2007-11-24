@@ -35,9 +35,9 @@ namespace Oxygen
 
 static const int OXYGEN_BUTTONSIZE      = 22;
 #define TFRAMESIZE 3
-#define BFRAMESIZE 4
-#define LFRAMESIZE 4
-#define RFRAMESIZE 4
+#define BFRAMESIZE 5
+#define LFRAMESIZE 5
+#define RFRAMESIZE 5
 
 enum ButtonType {
     ButtonHelp=0,

@@ -297,6 +297,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     // Draw dividing line
     frame = widget()->rect();
+    frame.adjust(1,1,-1,-1);
     frame.getRect(&x, &y, &w, &h);
 
     QColor light = helper_.calcLightColor(palette.window());
@@ -329,36 +330,59 @@ void OxygenClient::paintEvent(QPaintEvent *e)
                            QPointF(x+w, titleTop+titleHeight-0.5));
 
     // Draw shadows of the frame
+    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+
+    if(maximized)
+        return;
+
+    light = helper_.calcLightColor(helper_.backgroundTopColor(palette.window()));
+    dark = helper_.calcDarkColor(palette.window());
 
     painter.setBrush(Qt::NoBrush);
-    painter.setPen(QColor(255,255,255, 120));
-    painter.drawLine(QPointF(0, 0.5), QPointF(w, 0.5));
-    painter.setPen(QColor(128,128,128, 60));
-    painter.drawLine(QPointF(0.5, 0), QPointF(0.5, h));
-    painter.drawLine(QPointF(w-0.5, 0), QPointF(w-0.5, h));
-    painter.setPen(QColor(0,0,0, 60));
-    painter.drawLine(QPointF(0, h-0.5), QPointF(w, h-0.5));
 
-    painter.setPen(QColor(0,0,0, 40));
-    painter.drawPoint(QPointF(1.5, 1.5)); // top middle point
-    painter.drawPoint(QPointF(w-1.5, 1.5));
-    painter.drawPoint(QPointF(3.5, 0.5)); // top away points
-    painter.drawPoint(QPointF(w-3.5, 0.5));
-    painter.drawPoint(QPointF(0.5, 3.5));
-    painter.drawPoint(QPointF(w-0.5, 3.5));
-    painter.drawPoint(QPointF(1.5, h-1.5)); // bottom middle point
-    painter.drawPoint(QPointF(w-1.5, h-1.5));
+    painter.setPen(QColor(210,210,210));
+    painter.drawLine(QPointF(x+4, y-0.5), QPointF(x+w-4, y-0.5));
+    painter.drawArc(QRectF(x-0.5, y-0.5, 11, 11),90*16, 90*16);
+    painter.drawArc(QRectF(x+w-11+0.5, y-0.5, 11, 11), 0, 90*16);
+    painter.setPen(QColor(180,180,180));
+    painter.drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h));
+    painter.drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h));
+    painter.setPen(QColor(150,150,150));
+    painter.drawArc(QRectF(0.5, y+h-11+0.5, 11, 11),180*16, 90*16);
+    painter.drawArc(QRectF(x+w-11+0.5, y+h-11+0.5, 11, 11),270*16, 90*16);
+    painter.setPen(QColor(130,130,130));
+    painter.drawLine(QPointF(x+4, y+h+0.5), QPointF(x+w-4, y+h+0.5));
+
+    painter.setPen(QPen(light, 1.2));
+    painter.drawLine(QPointF(x+4, y+0.6), QPointF(x+w-4, y+0.6));
+    lg = QLinearGradient(0.0, 1.5, 0.0, 4.5);
+    lg.setColorAt(0, light);
+    light = helper_.calcLightColor(helper_.backgroundBottomColor(palette.window()));
+    lg.setColorAt(1, light);
+    painter.setPen(QPen(lg, 1.2));
+    painter.drawArc(QRectF(x+0.6, y+0.6, 9, 9),90*16, 90*16);
+    painter.drawArc(QRectF(x+w-9-0.6, y+0.6, 9, 9), 0, 90*16);
+    painter.drawLine(QPointF(x+0.6, y+4), QPointF(x+0.6, y+h-4));
+    painter.drawLine(QPointF(x+w-0.6, y+4), QPointF(x+w-0.6, y+h-4));
+
+    lg = QLinearGradient(0.0, y+h-4.5, 0.0, y+h-0.5);
+    lg.setColorAt(0, light);
+    lg.setColorAt(1, dark);
+    painter.setPen(QPen(lg, 1.2));
+    painter.drawArc(QRectF(x+0.6, y+h-9-0.6, 9, 9),180*16, 90*16);
+    painter.drawArc(QRectF(x+w-9-0.6, y+h-9-0.6, 9, 9), 270*16, 90*16);
+    painter.drawLine(QPointF(x+4, y+h-0.6), QPointF(x+w-4, y+h-0.6));
 
     // Draw the 3-dots resize handles
-    qreal cenY = frame.height() / 2 + 0.5;
-    qreal posX = frame.width() - 2.5;
+    qreal cenY = frame.height() / 2 + x + 0.5;
+    qreal posX = frame.width() + y - 2.5;
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(0, 0, 0, 66));
     renderDot(&painter, QPointF(posX, cenY - 3), 1.8);
     renderDot(&painter, QPointF(posX, cenY), 1.8);
     renderDot(&painter, QPointF(posX, cenY + 3), 1.8);
 
-    painter.translate(frame.width()-9, frame.height()-9);
+    painter.translate(x + frame.width()-9, y + frame.height()-9);
     renderDot(&painter, QPointF(2.5, 6.5), 1.8);
     renderDot(&painter, QPointF(5.5, 5.5), 1.8);
     renderDot(&painter, QPointF(6.5, 2.5), 1.8);
@@ -377,24 +401,28 @@ QRegion mask(0,0,r,b);
     }
 
     // Remove top-left corner.
-    mask -= QRegion(0, 0, 3, 1);
-    mask -= QRegion(0, 1, 1, 1);
+    mask -= QRegion(0, 0, 4, 1);
+    mask -= QRegion(0, 1, 2, 1);
     mask -= QRegion(0, 2, 1, 1);
+    mask -= QRegion(0, 3, 1, 1);
 
     // Remove top-right corner.
-    mask -= QRegion(r - 3, 0, 3, 1);
-    mask -= QRegion(r - 1, 1, 1, 1);
+    mask -= QRegion(r - 4, 0, 4, 1);
+    mask -= QRegion(r - 2, 1, 2, 1);
     mask -= QRegion(r - 1, 2, 1, 1);
+    mask -= QRegion(r - 1, 3, 1, 1);
 
     // Remove bottom-left corner.
-    mask -= QRegion(0, b-1-0, 3, b-1-1);
-    mask -= QRegion(0, b-1-1, 1, b-1-1);
-    mask -= QRegion(0, b-1-2, 1, b-1-1);
+    mask -= QRegion(0, b-1-3, 1, 1);
+    mask -= QRegion(0, b-1-2, 1, 1);
+    mask -= QRegion(0, b-1-1, 2, 1);
+    mask -= QRegion(0, b-1-0, 4, 1);
 
     // Remove bottom-right corner.
-    mask -= QRegion(r - 3, b-1-0, 3, b-1-1);
-    mask -= QRegion(r - 1, b-1-1, 1, b-1-1);
-    mask -= QRegion(r - 1, b-1-2, 1, b-1-1);
+    mask -= QRegion(r - 1, b-1-3, 1, 1);
+    mask -= QRegion(r - 1, b-1-2, 1, 1);
+    mask -= QRegion(r - 2, b-1-1, 2, 1);
+    mask -= QRegion(r - 4, b-1-0, 4, 1);
 
     setMask(mask);
 }
