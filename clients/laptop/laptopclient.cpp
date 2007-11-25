@@ -351,12 +351,12 @@ QString LaptopClient::visibleName() const
     return i18n("Laptop");
 }
 
-QString LaptopClient::defaultButtonsLeft() const
+QString LaptopClient::defaultButtonsLeft()
 {
     return "X";
 }
 
-QString LaptopClient::defaultButtonsRight() const
+QString LaptopClient::defaultButtonsRight()
 {
     return "HSIA";
 }

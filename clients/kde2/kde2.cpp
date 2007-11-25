@@ -754,12 +754,12 @@ QString KDE2Client::visibleName() const
 	return i18n("KDE 2");
 }
 
-QString KDE2Client::defaultButtonsLeft() const
+QString KDE2Client::defaultButtonsLeft()
 {
 	return "MS";
 }
 
-QString KDE2Client::defaultButtonsRight() const
+QString KDE2Client::defaultButtonsRight()
 {
 	return "HIAX";
 }
