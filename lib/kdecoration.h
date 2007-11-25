@@ -30,7 +30,6 @@ DEALINGS IN THE SOFTWARE.
 #include <QtCore/QObject>
 #include <QtGui/QIcon>
 #include <netwm_def.h>
-#include <kdeversion.h>
 #include <QtGui/QMouseEvent>
 
 class KDecorationOptionsPrivate;
