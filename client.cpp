@@ -15,13 +15,13 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <QPainter>
 #include <QDateTime>
 #include <QProcess>
-#include <k3process.h>
 #include <unistd.h>
 #include <kstandarddirs.h>
 #include <QWhatsThis>
 #include <kwindowsystem.h>
 #include <kiconloader.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #include "bridge.h"
 #include "group.h"
@@ -1105,21 +1105,15 @@ void Client::killProcess( bool ask, Time timestamp )
         }
     else
         {
-        process_killer = new K3Process( this );
-        *process_killer << KStandardDirs::findExe( "kwin_killer_helper" )
-            << "--pid" << QByteArray().setNum( pid ) << "--hostname" << machine
+        process_killer = new QProcess( this );
+        connect( process_killer, SIGNAL( error( QProcess::ProcessError )), SLOT( processKillerExited()));
+        connect( process_killer, SIGNAL( finished( int, QProcess::ExitStatus )), SLOT( processKillerExited()));
+        process_killer->start( KStandardDirs::findExe( "kwin_killer_helper" ),
+            QStringList() << "--pid" << QByteArray().setNum( pid ) << "--hostname" << machine
             << "--windowname" << caption().toUtf8()
             << "--applicationname" << resourceClass()
             << "--wid" << QString::number( window() )
-            << "--timestamp" << QString::number( timestamp );
-        connect( process_killer, SIGNAL( processExited( K3Process* )),
-            SLOT( processKillerExited()));
-        if( !process_killer->start( K3Process::NotifyOnExit ))
-            {
-            delete process_killer;
-            process_killer = NULL;
-            return;
-            }
+            << "--timestamp" << QString::number( timestamp ));
         }
     }
 

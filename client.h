@@ -36,8 +36,8 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <X11/extensions/sync.h>
 #endif
 
+class QProcess;
 class QTimer;
-class K3Process;
 class KStartupInfoData;
 
 namespace KWin
@@ -475,7 +475,7 @@ class Client
         Window window_group;
         Layer in_layer;
         QTimer* ping_timer;
-        K3Process* process_killer;
+        QProcess* process_killer;
         Time ping_timestamp;
         Time user_time;
         unsigned long allowed_actions;

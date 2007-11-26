@@ -1034,9 +1034,9 @@ void KDE2Client::paintEvent( QPaintEvent* )
 		(caption().isRightToLeft() ? Qt::AlignRight : Qt::AlignLeft) | Qt::AlignVCenter,
 		caption() );
 
-	bitBlt( widget(), 2, 2, titleBuffer );
-
     p2.end();
+
+    p.drawPixmap( 2, 2, *titleBuffer );
 
 	// Ensure a shaded window has no unpainted areas
 	// Is this still needed?

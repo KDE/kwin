@@ -17,6 +17,7 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <ksessionmanager.h>
 #include <X11/SM/SMlib.h>
 #include <netwm_def.h>
+#include <qrect.h>
 
 class QSocketNotifier;
 

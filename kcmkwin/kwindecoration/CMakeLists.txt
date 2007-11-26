@@ -1,3 +1,5 @@
+add_definitions (-DQT3_SUPPORT)
+
 ########### next target ###############
 
 set(kcm_kwindecoration_PART_SRCS kwindecoration.cpp buttons.cpp preview.cpp )

@@ -1,3 +1,4 @@
+add_definitions (-DQT3_SUPPORT)
 
 add_subdirectory( config ) 
 

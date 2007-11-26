@@ -1,3 +1,5 @@
+add_definitions (-DQT3_SUPPORT)
+
 ########### next target ###############
 
 set(kwin_oxygen_SRCS

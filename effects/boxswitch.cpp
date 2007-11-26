@@ -39,11 +39,11 @@ BoxSwitchEffect::BoxSwitchEffect()
 #ifdef HAVE_XRENDER
     alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
 #endif
-    color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background();
+    color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
     color_frame.setAlphaF( 0.9 );
-    color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background();
+    color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
     color_highlight.setAlphaF( 0.9 );
-    color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground();
+    color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
     }
 
 BoxSwitchEffect::~BoxSwitchEffect()

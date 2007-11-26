@@ -427,7 +427,7 @@ void Workspace::restackClientUnderActive( Client* c )
     if( Client::belongToSameApplication( active_client, c ))
         { // put it below the active window if it's the same app
         unconstrained_stacking_order.removeAll( c );
-        unconstrained_stacking_order.insert( unconstrained_stacking_order.find( active_client ), c );
+        unconstrained_stacking_order.insert( unconstrained_stacking_order.indexOf( active_client ), c );
         }
     else
         { // put in the stacking order below _all_ windows belonging to the active application
@@ -456,7 +456,7 @@ void Workspace::restackClientUnderActive( Client* c )
             if( Client::belongToSameApplication( active_client, c ))
                 { // put it after the active window if it's the same app
                 focus_chain[ desktop ].removeAll( c );
-                focus_chain[ desktop ].insert( focus_chain[ desktop ].find( active_client ), c );
+                focus_chain[ desktop ].insert( focus_chain[ desktop ].indexOf( active_client ), c );
                 }
             else
                 { // put it in focus_chain[currentDesktop()] after all windows belonging to the active applicationa
@@ -480,7 +480,7 @@ void Workspace::restackClientUnderActive( Client* c )
         if( Client::belongToSameApplication( active_client, c ))
             {
             global_focus_chain.removeAll( c );
-            global_focus_chain.insert( global_focus_chain.find( active_client ), c );
+            global_focus_chain.insert( global_focus_chain.indexOf( active_client ), c );
             }
         else
             {

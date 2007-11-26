@@ -1,4 +1,4 @@
-ADD_DEFINITIONS(-DKCMRULES)
+ADD_DEFINITIONS(-DKCMRULES -DQT3_SUPPORT)
 ########### next target ###############
 
 set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp)
