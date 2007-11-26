@@ -250,7 +250,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     int x,y,w,h;
     QRect frame = widget()->frameGeometry();
-    QColor color = palette.window();
+    QColor color = palette.window().color();
 
     const int titleHeight = layoutMetric(LM_TitleHeight);
     const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top();
@@ -300,8 +300,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     frame.adjust(1,1,-1,-1);
     frame.getRect(&x, &y, &w, &h);
 
-    QColor light = helper_.calcLightColor(palette.window());
-    QColor dark = helper_.calcDarkColor(palette.window());
+    QColor light = helper_.calcLightColor(color);
+    QColor dark = helper_.calcDarkColor(color);
     dark.setAlpha(120);
 
     if(!isActive()) {
@@ -335,8 +335,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     if(maximized)
         return;
 
-    light = helper_.calcLightColor(helper_.backgroundTopColor(palette.window()));
-    dark = helper_.calcDarkColor(palette.window());
+    light = helper_.calcLightColor(helper_.backgroundTopColor(color));
+    dark = helper_.calcDarkColor(color);
 
     painter.setBrush(Qt::NoBrush);
 
@@ -357,7 +357,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.drawLine(QPointF(x+4, y+0.6), QPointF(x+w-4, y+0.6));
     lg = QLinearGradient(0.0, 1.5, 0.0, 4.5);
     lg.setColorAt(0, light);
-    light = helper_.calcLightColor(helper_.backgroundBottomColor(palette.window()));
+    light = helper_.calcLightColor(helper_.backgroundBottomColor(color));
     lg.setColorAt(1, light);
     painter.setPen(QPen(lg, 1.2));
     painter.drawArc(QRectF(x+0.6, y+0.6, 9, 9),90*16, 90*16);
