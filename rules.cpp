@@ -673,12 +673,10 @@ void Rules::discardUsed( bool withdrawn )
 
 #endif
 
-#ifndef NDEBUG
 kdbgstream& operator<<( kdbgstream& stream, const Rules* r )
     {
     return stream << "[" << r->description << ":" << r->wmclass << "]" ;
     }
-#endif
 
 #ifndef KCMRULES
 void WindowRules::discardTemporary()

@@ -299,12 +299,7 @@ void WindowRules::remove( Rules* rule )
 
 #endif
 
-#ifdef NDEBUG
-inline
-kndbgstream& operator<<( kndbgstream& stream, const Rules* ) { return stream; }
-#else
 kdbgstream& operator<<( kdbgstream& stream, const Rules* );
-#endif
 
 } // namespace
 

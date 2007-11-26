@@ -45,7 +45,6 @@ Toplevel::~Toplevel()
     delete info;
     }
 
-#ifndef NDEBUG
 kdbgstream& operator<<( kdbgstream& stream, const Toplevel* cl )
     {
     if( cl == NULL )
@@ -87,7 +86,6 @@ kdbgstream& operator<<( kdbgstream& stream, const ConstToplevelList& list )
     stream << ")";
     return stream;
     }
-#endif
 
 void Toplevel::detectShape( Window id )
     {

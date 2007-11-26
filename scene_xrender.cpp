@@ -52,10 +52,6 @@ struct RegionDebug
    XserverRegion rr;   
    };   
 
-#ifdef NDEBUG
-inline
-kndbgstream& operator<<( kndbgstream& stream, RegionDebug ) { return stream; }
-#else
 kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
     {       
     if( r.rr == None )
@@ -70,7 +66,6 @@ kdbgstream& operator<<( kdbgstream& stream, RegionDebug r )
        stream << "[" << rects[ i ].x << "+" << rects[ i ].y << " " << rects[ i ].width << "x" << rects[ i ].height << "]";
     return stream;
     }
-#endif
 
 Picture SceneXrender::buffer = None;
 ScreenPaintData SceneXrender::screen_paint;

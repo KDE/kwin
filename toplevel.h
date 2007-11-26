@@ -382,18 +382,9 @@ inline pid_t Toplevel::pid() const
     return info->pid();
     }
 
-#ifdef NDEBUG
-inline
-kndbgstream& operator<<( kndbgstream& stream, const Toplevel* ) { return stream; }
-inline
-kndbgstream& operator<<( kndbgstream& stream, const ToplevelList& ) { return stream; }
-inline
-kndbgstream& operator<<( kndbgstream& stream, const ConstToplevelList& ) { return stream; }
-#else
 kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
 kdbgstream& operator<<( kdbgstream& stream, const ToplevelList& );
 kdbgstream& operator<<( kdbgstream& stream, const ConstToplevelList& );
-#endif
 
 KWIN_COMPARE_PREDICATE( WindowMatchPredicate, Toplevel, Window, cl->window() == value );
 KWIN_COMPARE_PREDICATE( FrameIdMatchPredicate, Toplevel, Window, cl->frameId() == value );
