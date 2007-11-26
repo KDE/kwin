@@ -455,12 +455,12 @@ QString ModernSys::visibleName() const
     return i18n("Modern System");
 }
 
-QString ModernSys::defaultButtonsLeft()
+QString ModernSys::defaultButtonsLeft() const
 {
     return "X";
 }
 
-QString ModernSys::defaultButtonsRight()
+QString ModernSys::defaultButtonsRight() const
 {
     return "HSIA";
 }

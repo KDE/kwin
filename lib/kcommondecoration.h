@@ -138,13 +138,13 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
          * @see KDecoration::titleButtonsLeft()
          * @see KDecoration::titleButtonsRight()
          */
-        virtual QString defaultButtonsLeft();
+        virtual QString defaultButtonsLeft() const;
         /**
          * The default title button order on the left.
          * @see KDecoration::titleButtonsLeft()
          * @see KDecoration::titleButtonsRight()
          */
-        virtual QString defaultButtonsRight();
+        virtual QString defaultButtonsRight() const;
 
         /**
          * This controls whether some specific behaviour should be enabled or not.

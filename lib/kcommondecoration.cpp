@@ -58,12 +58,12 @@ KCommonDecoration::~KCommonDecoration()
     delete m_previewWidget;
 }
 
-QString KCommonDecoration::defaultButtonsLeft()
+QString KCommonDecoration::defaultButtonsLeft() const
 {
     return KDecorationOptions::defaultTitleButtonsLeft();
 }
 
-QString KCommonDecoration::defaultButtonsRight()
+QString KCommonDecoration::defaultButtonsRight() const
 {
     return KDecorationOptions::defaultTitleButtonsRight();
 }

@@ -537,12 +537,12 @@ QString QuartzClient::visibleName() const
 	return i18n("Quartz");
 }
 
-QString QuartzClient::defaultButtonsLeft()
+QString QuartzClient::defaultButtonsLeft() const
 {
 	return "M";
 }
 
-QString QuartzClient::defaultButtonsRight()
+QString QuartzClient::defaultButtonsRight() const
 {
 	return "HIAX";
 }

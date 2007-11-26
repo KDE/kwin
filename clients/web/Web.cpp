@@ -55,12 +55,12 @@ QString WebClient::visibleName() const
     return i18n("Web");
 }
 
-QString WebClient::defaultButtonsLeft()
+QString WebClient::defaultButtonsLeft() const
 {
     return "S";
 }
 
-QString WebClient::defaultButtonsRight()
+QString WebClient::defaultButtonsRight() const
 {
     return "HIAX";
 }
