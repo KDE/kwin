@@ -53,6 +53,8 @@ KDE 4.0 TODO
 
 / handling of window pixmaps for unmapped windows [Seli]
   - config option?
+  - switching virtual desktops can be slow because of this as well, maybe HiddenPreviews
+      option should consider this (and be renamed to something more suitable)
 
 - shm mode needs support for more data formats than GL_BGRA
 
