@@ -174,8 +174,8 @@ class KDecorationProvides
     : public KDecorationDefines
     {
     public:
-        virtual  ~KDecorationProvides(){}
-		virtual bool provides( Requirement req ) = 0;
+        virtual ~KDecorationProvides(){}
+        virtual bool provides( Requirement req ) = 0;
     };
 
 /**
@@ -291,7 +291,7 @@ public:
     /**
      * @internal
      */
-		WindowOperation operationMaxButtonClick( Qt::MouseButtons button ) const;
+    WindowOperation operationMaxButtonClick( Qt::MouseButtons button ) const;
 
     /**
      * @internal
