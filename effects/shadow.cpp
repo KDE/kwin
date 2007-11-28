@@ -47,7 +47,7 @@ ShadowEffect::ShadowEffect()
 
 QRect ShadowEffect::shadowRectangle(const QRect& windowRectangle) const
     {
-    int shadowGrow = shadowFuzzyness + shadowSize + 20;
+    int shadowGrow = shadowFuzzyness + shadowSize;
     return windowRectangle.adjusted( shadowXOffset - shadowGrow, shadowYOffset - shadowGrow,
             shadowXOffset + shadowGrow, shadowYOffset + shadowGrow);
     }
