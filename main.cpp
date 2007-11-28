@@ -193,6 +193,8 @@ Application::Application( )
         {
             cmd = dialog.selectedWM();
         }
+        else
+            ::exit(1);
         if( cmd.length() > 500 )
         {
             kDebug() << "Command is too long, truncating";
