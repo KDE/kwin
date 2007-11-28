@@ -279,6 +279,10 @@ void KWinCompositingConfig::save()
 {
     kDebug() ;
 
+    // Sync tabs. Otherwise effect tab will overwrite changes of general tab
+    //  unless user manually switches tabs before saving
+    currentTabChanged(ui.tabWidget->currentIndex() == 0 ? 1 : 0);
+
     bool confirm = saveGeneralTab();
     saveEffectsTab();
 
