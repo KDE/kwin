@@ -1687,9 +1687,15 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         {
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
         }
-    if( force == NormalGeometrySet && geom == QRect( x, y, w, h ) && pending_geometry_update == PendingGeometryNone )
+    QRect g( x, y, w, h );
+    if( g != rules()->checkGeometry( g ))
+        {
+        kDebug() << "forced geometry fail:" << g << ":" << rules()->checkGeometry( g );
+        kDebug() << kBacktrace();
+        }
+    if( force == NormalGeometrySet && geom == g && pending_geometry_update == PendingGeometryNone )
         return;
-    geom = QRect( x, y, w, h );
+    geom = g;
     if( block_geometry_updates != 0 )
         {
         if( pending_geometry_update == PendingGeometryForced )
@@ -1757,16 +1763,17 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         {
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
         }
-    if( QSize( w, h ) != rules()->checkSize( QSize( w, h )))
+    QSize s( w, h );
+    if( s != rules()->checkSize( s ))
         {
-        kDebug() << "forced size fail:" << QSize( w,h ) << ":" << rules()->checkSize( QSize( w, h ));
+        kDebug() << "forced size fail:" << s << ":" << rules()->checkSize( s );
         kDebug() << kBacktrace();
         }
     // resuming geometry updates is handled only in setGeometry()
     assert( pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0 );
-    if( force == NormalGeometrySet && geom.size() == QSize( w, h ))
+    if( force == NormalGeometrySet && geom.size() == s )
         return;
-    geom.setSize( QSize( w, h ));
+    geom.setSize( s );
     if( block_geometry_updates != 0 )
         {
         if( pending_geometry_update == PendingGeometryForced )
@@ -1777,9 +1784,9 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
             pending_geometry_update = PendingGeometryNormal;
         return;
         }
-    resizeDecoration( QSize( w, h ));
+    resizeDecoration( s );
     XResizeWindow( display(), frameId(), w, h );
-//     resizeDecoration( QSize( w, h ));
+//     resizeDecoration( s );
     if( !isShade())
         {
         QSize cs = clientSize();
@@ -1809,9 +1816,15 @@ void Client::move( int x, int y, ForceGeometry_t force )
     {
     // resuming geometry updates is handled only in setGeometry()
     assert( pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0 );
-    if( force == NormalGeometrySet && geom.topLeft() == QPoint( x, y ))
+    QPoint p( x, y );
+    if( p != rules()->checkPosition( p ))
+        {
+        kDebug() << "forced position fail:" << p << ":" << rules()->checkPosition( p );
+        kDebug() << kBacktrace();
+        }
+    if( force == NormalGeometrySet && geom.topLeft() == p )
         return;
-    geom.moveTopLeft( QPoint( x, y ));
+    geom.moveTopLeft( p );
     if( block_geometry_updates != 0 )
         {
         if( pending_geometry_update == PendingGeometryForced )
