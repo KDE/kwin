@@ -1739,6 +1739,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
             static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geom_before_block );
         }
     addWorkspaceRepaint( geom_before_block );
+    addWorkspaceRepaint( geom );
     geom_before_block = geom;
     }
 
@@ -1807,6 +1808,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     if( effects != NULL )
         static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geom_before_block );
     addWorkspaceRepaint( geom_before_block );
+    addWorkspaceRepaint( geom );
     geom_before_block = geom;
     }
 
