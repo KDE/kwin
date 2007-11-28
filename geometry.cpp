@@ -1427,7 +1427,8 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
             nw = rw;
         if ( value_mask & CWHeight )
             nh = rh;
-        QSize ns = sizeForClientSize( QSize( nw, nh ) );
+        QSize ns = sizeForClientSize( QSize( nw, nh ) ); // enforces size if needed
+        new_pos = rules()->checkPosition( new_pos );
 
         // TODO what to do with maximized windows?
         if ( maximizeMode() != MaximizeFull
@@ -1688,7 +1689,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
         }
     QRect g( x, y, w, h );
-    if( g != rules()->checkGeometry( g ))
+    if( block_geometry_updates == 0 && g != rules()->checkGeometry( g ))
         {
         kDebug() << "forced geometry fail:" << g << ":" << rules()->checkGeometry( g );
         kDebug() << kBacktrace();
@@ -1764,7 +1765,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         client_size = QSize( w - border_left - border_right, h - border_top - border_bottom );
         }
     QSize s( w, h );
-    if( s != rules()->checkSize( s ))
+    if( block_geometry_updates == 0 && s != rules()->checkSize( s ))
         {
         kDebug() << "forced size fail:" << s << ":" << rules()->checkSize( s );
         kDebug() << kBacktrace();
@@ -1817,7 +1818,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     // resuming geometry updates is handled only in setGeometry()
     assert( pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0 );
     QPoint p( x, y );
-    if( p != rules()->checkPosition( p ))
+    if( block_geometry_updates == 0 && p != rules()->checkPosition( p ))
         {
         kDebug() << "forced position fail:" << p << ":" << rules()->checkPosition( p );
         kDebug() << kBacktrace();
