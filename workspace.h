@@ -108,7 +108,7 @@ class Workspace : public QObject, public KDecorationDefines
         void requestFocus( Client* c, bool force = false );
         void takeActivity( Client* c, int flags, bool handled ); // flags are ActivityFlags
         void handleTakeActivity( Client* c, Time timestamp, int flags ); // flags are ActivityFlags
-        bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false );
+        bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false, bool ignore_desktop = false );
         void restoreFocus();
         void gotFocusIn( const Client* );
         void setShouldGetFocus( Client* );

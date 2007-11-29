@@ -505,8 +505,9 @@ void Workspace::setShouldGetFocus( Client* c )
     }
 
 // focus_in -> the window got FocusIn event
-// session_active -> the window was active when saving session
-bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in )
+// ignore_desktop - call comes from _NET_ACTIVE_WINDOW message, don't refuse just because of window
+//     is on a different desktop
+bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in, bool ignore_desktop )
     {
     // options->focusStealingPreventionLevel :
     // 0 - none    - old KWin behaviour, new windows always get focus
@@ -538,7 +539,7 @@ bool Workspace::allowClientActivation( const Client* c, Time time, bool focus_in
         return true;
     if( level == 4 ) // extreme
         return false;
-    if( !c->isOnCurrentDesktop())
+    if( !ignore_desktop && !c->isOnCurrentDesktop())
         return false; // allow only with level == 0
     if( c->ignoreFocusStealing())
         return true;

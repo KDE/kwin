@@ -140,14 +140,16 @@ void RootInfo::changeActiveWindow( Window w, NET::RequestSource src, Time timest
         else // NET::FromApplication
             {
             Client* c2;
-            if( workspace->allowClientActivation( c, timestamp ))
+            if( workspace->allowClientActivation( c, timestamp, false, true ))
                 workspace->activateClient( c );
             // if activation of the requestor's window would be allowed, allow activation too
             else if( active_window != None
                 && ( c2 = workspace->findClient( WindowMatchPredicate( active_window ))) != NULL
                 && workspace->allowClientActivation( c2,
-                    timestampCompare( timestamp, c2->userTime() > 0 ? timestamp : c2->userTime())))
+                    timestampCompare( timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true ))
+                {
                 workspace->activateClient( c );
+                }
             else
                 c->demandAttention();
             }
