@@ -1,14 +1,27 @@
-/*
- *
- *	KDE2 Default KWin client
- *
- *	Copyright (C) 1999, 2001 Daniel Duley <mosfet@kde.org>
- *	Matthias Ettrich <ettrich@kde.org>
- *	Karol Szwed <gallium@kde.org>
- *
- *	Draws mini titlebars for tool windows.
- *	Many features are now customizable.
- */
+/*********************************************************************
+ 
+ 	KDE2 Default KWin client
+ 
+ 	Copyright (C) 1999, 2001 Daniel Duley <mosfet@kde.org>
+ 	Matthias Ettrich <ettrich@kde.org>
+ 	Karol Szwed <gallium@kde.org>
+ 
+ 	Draws mini titlebars for tool windows.
+ 	Many features are now customizable.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*********************************************************************/
 
 #ifndef KDE2_H
 #define KDE2_H
