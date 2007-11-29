@@ -472,7 +472,4 @@ KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick(
            button == Qt::MidButton?   d->OpMaxButtonMiddleClick :
                                       d->OpMaxButtonLeftClick;
     }
-#ifdef __GNUC__
-#warning Redo all the XYZChange() virtuals as signals.
-#endif
 #include "kdecoration.moc"
