@@ -358,7 +358,10 @@ bool WebFactory::supports( Ability ability ) const
 {
     switch( ability )
     {
+        // announce
         case AbilityAnnounceButtons:
+        case AbilityAnnounceColors:
+        // buttons
         case AbilityButtonOnAllDesktops:
         case AbilityButtonHelp:
         case AbilityButtonMinimize:
@@ -368,6 +371,9 @@ bool WebFactory::supports( Ability ability ) const
         case AbilityButtonAboveOthers:
         case AbilityButtonBelowOthers:
         case AbilityButtonShade:
+        // colors:
+        case AbilityColorTitleBack:
+        case AbilityColorTitleFore:
             return true;
         default:
             return false;

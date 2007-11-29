@@ -675,7 +675,10 @@ bool KeramikHandler::supports( Ability ability ) const
 {
     switch( ability )
     {
+        // announce
         case AbilityAnnounceButtons:
+        case AbilityAnnounceColors:
+        // buttons
         case AbilityButtonMenu:
         case AbilityButtonOnAllDesktops:
         case AbilityButtonSpacer:
@@ -686,6 +689,10 @@ bool KeramikHandler::supports( Ability ability ) const
         case AbilityButtonAboveOthers:
         case AbilityButtonBelowOthers:
         case AbilityButtonShade:
+        // colors
+        case AbilityColorTitleBack:
+        case AbilityColorTitleBlend:
+        case AbilityColorTitleFore:
             return true;
         default:
             return false;

@@ -209,7 +209,10 @@ bool QuartzHandler::supports( Ability ability ) const
 {
     switch( ability )
     {
+        // announce
         case AbilityAnnounceButtons:
+        case AbilityAnnounceColors:
+        // buttons
         case AbilityButtonMenu:
         case AbilityButtonOnAllDesktops:
         case AbilityButtonHelp:
@@ -220,6 +223,11 @@ bool QuartzHandler::supports( Ability ability ) const
         case AbilityButtonBelowOthers:
         case AbilityButtonShade:
 		case AbilityButtonSpacer:
+        // colors
+        case AbilityColorTitleBack:
+        case AbilityColorTitleBlend:
+        case AbilityColorTitleFore:
+        case AbilityColorButtonBack:
             return true;
         default:
             return false;

@@ -335,7 +335,10 @@ bool B2ClientFactory::reset(unsigned long changed)
 bool B2ClientFactory::supports(Ability ability) const
 {
     switch (ability) {
+    // announce
     case AbilityAnnounceButtons:
+    case AbilityAnnounceColors:
+    // buttons
     case AbilityButtonMenu:
     case AbilityButtonOnAllDesktops:
     case AbilityButtonSpacer:
@@ -345,6 +348,12 @@ bool B2ClientFactory::supports(Ability ability) const
     case AbilityButtonClose:
     case AbilityButtonShade:
     case AbilityButtonResize:
+    // colors
+    case AbilityColorTitleBack:
+    case AbilityColorTitleBlend:
+    case AbilityColorTitleFore:
+    case AbilityColorFrame:
+    case AbilityColorButtonBack:
 	return true;
     // These are not (yet) supported.
     case AbilityButtonAboveOthers:

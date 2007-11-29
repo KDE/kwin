@@ -726,12 +726,19 @@ bool LaptopClientFactory::supports( Ability ability ) const
 {
     switch( ability )
     {
+        // announce
         case AbilityAnnounceButtons:
+        case AbilityAnnounceColors:
+        // buttons
         case AbilityButtonOnAllDesktops:
         case AbilityButtonHelp:
         case AbilityButtonMinimize:
         case AbilityButtonMaximize:
         case AbilityButtonClose:
+        // colors
+        case AbilityColorTitleBack:
+        case AbilityColorTitleFore:
+        case AbilityColorButtonBack:
             return true;
         default:
             return false;

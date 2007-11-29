@@ -674,13 +674,20 @@ bool RedmondDecoFactory::supports( Ability ability ) const
 {
 	switch( ability )
 	{
+		// announce
 		case AbilityAnnounceButtons:
+		case AbilityAnnounceColors:
+		// buttons
 		case AbilityButtonMenu:
 		case AbilityButtonHelp:
 		case AbilityButtonMinimize:
 		case AbilityButtonMaximize:
 		case AbilityButtonClose:
 		case AbilityButtonSpacer:
+		// colors
+		case AbilityColorTitleBack:
+		case AbilityColorTitleBlend:
+		case AbilityColorTitleFore:
 			return true;
 		default:
 			return false;

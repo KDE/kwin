@@ -787,7 +787,10 @@ bool ModernSysFactory::supports( Ability ability ) const
 {
     switch( ability )
     {
+        // announce
         case AbilityAnnounceButtons:
+        case AbilityAnnounceColors:
+        // buttons
         case AbilityButtonOnAllDesktops:
         case AbilityButtonSpacer:
         case AbilityButtonHelp:
@@ -798,6 +801,10 @@ bool ModernSysFactory::supports( Ability ability ) const
         case AbilityButtonBelowOthers:
         case AbilityButtonShade:
         case AbilityButtonMenu:
+        // colors
+        case AbilityColorTitleBack:
+        case AbilityColorTitleBlend:
+        case AbilityColorTitleFore:
             return true;
         default:
             return false;

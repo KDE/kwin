@@ -552,7 +552,10 @@ bool KDE2Handler::supports( Ability ability ) const
 {
     switch( ability )
         {
+        // announce
         case AbilityAnnounceButtons:
+        case AbilityAnnounceColors:
+        // buttons
         case AbilityButtonMenu:
         case AbilityButtonOnAllDesktops:
         case AbilityButtonSpacer:
@@ -563,6 +566,12 @@ bool KDE2Handler::supports( Ability ability ) const
         case AbilityButtonAboveOthers:
         case AbilityButtonBelowOthers:
         case AbilityButtonShade:
+        // colors
+        case AbilityColorTitleBack:
+        case AbilityColorTitleBlend:
+        case AbilityColorTitleFore:
+        case AbilityColorFrame:
+        case AbilityColorButtonBack:
             return true;
         default:
             return false;
