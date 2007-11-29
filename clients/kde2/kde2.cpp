@@ -835,10 +835,6 @@ int KDE2Client::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCo
 		case LM_ButtonSpacing:
 			return 0;
 
-		case LM_ExplicitButtonSpacer:
-			if ( !isToolWindow() )
-				return borderWidth/2;
-			// fall through
 		default:
 			return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
 	}

@@ -623,9 +623,6 @@ int QuartzClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
 		case LM_ButtonSpacing:
 			return 1;
 
-		case LM_ExplicitButtonSpacer:
-			return 3;
-
 		default:
 			return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
 	}

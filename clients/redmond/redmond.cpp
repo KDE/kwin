@@ -443,9 +443,6 @@ int RedmondDeco::layoutMetric(LayoutMetric lm, bool respectWindowState, const KC
 		case LM_ButtonSpacing:
 			return 0;
 
-		case LM_ExplicitButtonSpacer:
-			return 2;
-
 		default:
 			return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
 	}

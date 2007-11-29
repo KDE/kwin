@@ -91,7 +91,7 @@ bool KCommonDecoration::decorationBehaviour(DecorationBehaviour behaviour) const
     return false;
 }
 
-int KCommonDecoration::layoutMetric(LayoutMetric lm, bool, const KCommonDecorationButton *) const
+int KCommonDecoration::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *button) const
 {
     switch (lm) {
         case LM_BorderLeft:
@@ -118,7 +118,7 @@ int KCommonDecoration::layoutMetric(LayoutMetric lm, bool, const KCommonDecorati
             return 0;
 
         case LM_ExplicitButtonSpacer:
-            return 5;
+            return layoutMetric(LM_ButtonWidth, respectWindowState, button )/2; // half button width by default
 
         default:
             return 0;

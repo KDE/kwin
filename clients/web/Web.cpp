@@ -110,9 +110,6 @@ int WebClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCom
     case LM_ButtonSpacing:
       return 0;
 
-    case LM_ExplicitButtonSpacer:
-      return 0;
-
     default:
       return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
   }
