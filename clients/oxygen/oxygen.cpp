@@ -132,6 +132,7 @@ bool OxygenFactory::supports( Ability ability ) const
         case AbilityButtonMinimize:
         case AbilityButtonMaximize:
         case AbilityButtonClose:
+        case AbilityButtonSpacer:
             return true;
         // no colors supported at this time
         default:

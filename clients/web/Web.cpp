@@ -368,6 +368,7 @@ bool WebFactory::supports( Ability ability ) const
         case AbilityButtonAboveOthers:
         case AbilityButtonBelowOthers:
         case AbilityButtonShade:
+        case AbilityButtonSpacer:
         // colors:
         case AbilityColorTitleBack:
         case AbilityColorTitleFore:

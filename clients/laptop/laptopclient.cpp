@@ -732,6 +732,7 @@ bool LaptopClientFactory::supports( Ability ability ) const
         case AbilityButtonMinimize:
         case AbilityButtonMaximize:
         case AbilityButtonClose:
+        case AbilityButtonSpacer:
         // colors
         case AbilityColorTitleBack:
         case AbilityColorTitleFore:
