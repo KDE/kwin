@@ -123,13 +123,17 @@ bool OxygenFactory::readConfig()
 bool OxygenFactory::supports( Ability ability ) const
 {
     switch( ability ) {
+        // announce
         case AbilityAnnounceButtons:
+        case AbilityAnnounceColors:
+        // buttons
         case AbilityButtonMenu:
         case AbilityButtonHelp:
         case AbilityButtonMinimize:
         case AbilityButtonMaximize:
         case AbilityButtonClose:
             return true;
+        // no colors supported at this time
         default:
             return false;
     };
