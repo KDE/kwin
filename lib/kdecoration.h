@@ -71,7 +71,7 @@ public:
 	MaximizeVertical   = 1, ///< The window is maximized vertically.
 	MaximizeHorizontal = 2, ///< The window is maximized horizontally.
 	/// Equal to @p MaximizeVertical | @p MaximizeHorizontal
-	MaximizeFull = MaximizeVertical | MaximizeHorizontal 
+	MaximizeFull = MaximizeVertical | MaximizeHorizontal
         };
 
     enum WindowOperation
@@ -115,7 +115,7 @@ public:
 	ColorHandle,     ///< The color for the resize handle
 	NUM_COLORS
 	};
-    
+
     /**
      * These flags specify which settings changed when rereading settings.
      * Each setting in class KDecorationOptions specifies its matching flag.
@@ -129,7 +129,7 @@ public:
         SettingTooltips   = 1 << 4, ///< The tooltip setting was changed
         SettingBorder     = 1 << 5  ///< The border size setting was changed
         };
-        
+
     /**
      * Border size. KDecorationOptions::preferredBorderSize() returns
      * one of these values.
@@ -168,7 +168,7 @@ public:
         };
 
     enum Requirement { REQUIREMENT_DUMMY = 1000000 };
-};    
+};
 
 class KDecorationProvides
     : public KDecorationDefines
@@ -267,7 +267,7 @@ public:
     * The changed flags for this setting is SettingTooltips.
     */
     bool showTooltips() const;
-    
+
     /**
      * The preferred border size selected by the user, e.g. for accessibility
      * reasons, or when using high resolution displays. It's up to the decoration
@@ -327,9 +327,9 @@ class KWIN_EXPORT KDecoration
 	 * Destroys the KDecoration.
 	 */
 	virtual ~KDecoration();
-	
+
 	// requests from decoration
-	
+
 	/**
 	 * Returns the KDecorationOptions object, which is used to access
 	 * configuration settings for the decoration.
@@ -422,7 +422,7 @@ class KWIN_EXPORT KDecoration
 	 * to support older code). For a description of all window types,
 	 * see the definition of the NET::WindowType type. Note that
 	 * some window types never have decorated windows.
-	 * 
+	 *
 	 * An example of usage:
 	 * @code
 	 * const unsigned long supported_types = NET::NormalMask | NET::DesktopMask
@@ -447,12 +447,12 @@ class KWIN_EXPORT KDecoration
 	 */
 	QString caption() const;
 	/**
-	 * This function invokes the window operations menu. 
+	 * This function invokes the window operations menu.
 	 * \param pos specifies the place on the screen where the menu should
 	 * show up. The menu pops up at the bottom-left corner of the specified
 	 * rectangle, unless there is no space, in which case the menu is
 	 * displayed above the rectangle.
-	 * 
+	 *
 	 * \note Decorations that enable a double-click operation for the menu
 	 * button must ensure to call \a showWindowMenu() with the \a pos
 	 * rectangle set to the menu button geometry.
@@ -475,7 +475,7 @@ class KWIN_EXPORT KDecoration
 	void showWindowMenu( const QRect &pos );
 
 	/**
-	 * Overloaded version of the above. 
+	 * Overloaded version of the above.
 	 */
 	void showWindowMenu( QPoint pos );
         /**
@@ -557,7 +557,7 @@ class KWIN_EXPORT KDecoration
 	 * instead of in the constructor.
 	 */
         virtual void init() = 0; // called once right after created
-	
+
         /**
          * This function should return mouse cursor position in the decoration.
          * Positions at the edge will result in window resizing with mouse button
@@ -669,7 +669,7 @@ class KWIN_EXPORT KDecoration
 	/**
 	 * This function is called to reset the decoration on settings changes.
 	 * It is usually invoked by calling KDecorationFactory::resetDecorations().
-	 * 
+	 *
 	 * @param changed Specifies which settings were changed, given by the SettingXXX masks
 	 */
         virtual void reset( unsigned long changed );
@@ -681,7 +681,7 @@ class KWIN_EXPORT KDecoration
 	 * the main widget of the decoration. The widget should be created
 	 * with parent specified by initialParentWidget() and flags
 	 * specified by initialWFlags().
-	 */	
+	 */
         void setMainWidget( QWidget* );
 	/**
 	 * Convenience functions that creates and sets a main widget as necessary.
@@ -728,7 +728,7 @@ class KWIN_EXPORT KDecoration
 	// requests from decoration
 
 	/**
-	 * This function can be called by the decoration to request 
+	 * This function can be called by the decoration to request
 	 * closing of the decorated window. Note that closing the window
 	 * also involves destroying the decoration.
          * IMPORTANT: This function may destroy the current decoration object,
@@ -849,10 +849,10 @@ inline int KDecoration::width() const
     {
     return geometry().width();
     }
-    
+
 inline int KDecoration::height() const
     {
     return geometry().height();
     }
-    
+
 #endif
