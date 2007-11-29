@@ -152,7 +152,10 @@ public:
      */
     enum Ability
         {
+        // announce
         AbilityAnnounceButtons = 0, ///< decoration supports AbilityButton* values (always use)
+        AbilityAnnounceColors = 1, ///< decoration supports AbilityColor* values (always use)
+        // buttons
         AbilityButtonMenu = 1000,   ///< decoration supports the menu button
         AbilityButtonOnAllDesktops = 1001, ///< decoration supports the on all desktops button
         AbilityButtonSpacer = 1002, ///< decoration supports inserting spacers between buttons
@@ -164,6 +167,15 @@ public:
         AbilityButtonBelowOthers = 1008, ///< decoration supports a below button
         AbilityButtonShade = 1009, ///< decoration supports a shade button
         AbilityButtonResize = 1010, ///< decoration supports a resize button
+        // colors
+        AbilityColorTitleBack = 2000, ///< decoration supports titlebar background color
+        AbilityColorTitleFore = 2001, ///< decoration supports titlebar foreground color
+        AbilityColorTitleBlend = 2002, ///< decoration supports second titlebar background color
+        AbilityColorFrame = 2010, ///< decoration supports frame color
+        AbilityColorHandle = 2011, ///< decoration supports resize handle color
+        AbilityColorButtonBack = 2020, ///< decoration supports button background color
+        AbilityColorButtonFore = 2021, ///< decoration supports button foreground color
+        // TODO colors for individual button types
         ABILITY_DUMMY = 10000000
         };
 
