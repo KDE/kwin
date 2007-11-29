@@ -71,7 +71,7 @@ OxygenFactory::~OxygenFactory() { initialized_ = false; }
 
 KDecoration* OxygenFactory::createDecoration(KDecorationBridge* b)
 {
-    return new OxygenClient(b, this);
+    return (new OxygenClient(b, this))->decoration();
 }
 
 //////////////////////////////////////////////////////////////////////////////

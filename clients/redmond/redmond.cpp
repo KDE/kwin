@@ -640,7 +640,7 @@ RedmondDecoFactory::~RedmondDecoFactory()
 
 KDecoration *RedmondDecoFactory::createDecoration( KDecorationBridge *b )
 {
-	return new RedmondDeco(b, this);
+	return (new RedmondDeco(b, this))->decoration();
 }
 
 bool RedmondDecoFactory::reset( unsigned long changed )

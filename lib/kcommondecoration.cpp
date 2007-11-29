@@ -22,6 +22,8 @@
   DEALINGS IN THE SOFTWARE.
  */
 
+#include "kcommondecoration.h"
+
 #include <QApplication>
 #include <QCursor>
 #include <QDateTime>
@@ -36,18 +38,22 @@
 #include <klocale.h>
 #include <QDesktopWidget>
 
-#include "kcommondecoration.h"
+#include "kcommondecoration_p.h"
+
 #include "kcommondecoration.moc"
 
 KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
-    : KDecoration (bridge, factory),
-        m_previewWidget(0),
+    :   m_previewWidget(0),
         btnHideMinWidth(200),
         btnHideLastWidth(0),
-        closing(false)
+        closing(false),
+        wrapper( new KCommonDecorationWrapper( this, bridge, factory ))
+        
 {
     // sizeof(...) is calculated at compile time
     memset(m_button, 0, sizeof(KCommonDecorationButton *) * NumButtons);
+    connect( wrapper, SIGNAL( keepAboveChanged( bool )), this, SIGNAL( keepAboveChanged( bool )));
+    connect( wrapper, SIGNAL( keepBelowChanged( bool )), this, SIGNAL( keepBelowChanged( bool )));
 }
 
 KCommonDecoration::~KCommonDecoration()
@@ -56,6 +62,7 @@ KCommonDecoration::~KCommonDecoration()
         if (m_button[n]) delete m_button[n];
     }
     delete m_previewWidget;
+//    delete wrapper; - do not do this, this object is actually owned and deleted by the wrapper
 }
 
 QString KCommonDecoration::defaultButtonsLeft() const
@@ -648,7 +655,7 @@ void KCommonDecoration::menuButtonPressed()
         QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight())+QPoint(0,2);
         KDecorationFactory* f = factory();
         showWindowMenu(QRect(menutop, menubottom));
-        if( !f->exists( this )) // 'this' was deleted
+        if( !f->exists( decoration())) // 'this' was deleted
             return;
         m_button[MenuButton]->setDown(false);
     }
@@ -972,6 +979,244 @@ void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent* e)
     QMouseEvent me(e->type(), e->pos(), (e->button()&m_realizeButtons)?Qt::LeftButton : Qt::NoButton, e->buttons(), e->modifiers() );
 
     QAbstractButton::mouseReleaseEvent(&me);
+}
+
+
+
+// *** wrap everything from KDecoration *** //
+bool KCommonDecoration::drawbound( const QRect&, bool )
+{
+    return false;
+}
+bool KCommonDecoration::windowDocked( Position )
+{
+    return false;
+}
+const KDecorationOptions* KCommonDecoration::options()
+{
+    return KDecoration::options();
+}
+bool KCommonDecoration::isActive() const
+{
+    return wrapper->isActive();
+}
+bool KCommonDecoration::isCloseable() const
+{
+    return wrapper->isCloseable();
+}
+bool KCommonDecoration::isMaximizable() const
+{
+    return wrapper->isMaximizable();
+}
+KCommonDecoration::MaximizeMode KCommonDecoration::maximizeMode() const
+{
+    return wrapper->maximizeMode();
+}
+bool KCommonDecoration::isMinimizable() const
+{
+    return wrapper->isMinimizable();
+}
+bool KCommonDecoration::providesContextHelp() const
+{
+    return wrapper->providesContextHelp();
+}
+int KCommonDecoration::desktop() const
+{
+    return wrapper->desktop();
+}
+bool KCommonDecoration::isOnAllDesktops() const
+{
+    return wrapper->isOnAllDesktops();
+}
+bool KCommonDecoration::isModal() const
+{
+    return wrapper->isModal();
+}
+bool KCommonDecoration::isShadeable() const
+{
+    return wrapper->isShadeable();
+}
+bool KCommonDecoration::isShade() const
+{
+    return wrapper->isShade();
+}
+bool KCommonDecoration::isSetShade() const
+{
+    return wrapper->isSetShade();
+}
+bool KCommonDecoration::keepAbove() const
+{
+    return wrapper->keepAbove();
+}
+bool KCommonDecoration::keepBelow() const
+{
+    return wrapper->keepBelow();
+}
+bool KCommonDecoration::isMovable() const
+{
+    return wrapper->isMovable();
+}
+bool KCommonDecoration::isResizable() const
+{
+    return wrapper->isResizable();
+}
+NET::WindowType KCommonDecoration::windowType( unsigned long supported_types ) const
+{
+    return wrapper->windowType( supported_types );
+}
+QIcon KCommonDecoration::icon() const
+{
+    return wrapper->icon();
+}
+QString KCommonDecoration::caption() const
+{
+    return wrapper->caption();
+}
+void KCommonDecoration::showWindowMenu( const QRect &pos )
+{
+    return wrapper->showWindowMenu( pos );
+}
+void KCommonDecoration::showWindowMenu( QPoint pos )
+{
+    return wrapper->showWindowMenu( pos );
+}
+void KCommonDecoration::performWindowOperation( WindowOperation op )
+{
+    return wrapper->performWindowOperation( op );
+}
+void KCommonDecoration::setMask( const QRegion& reg, int mode )
+{
+    return wrapper->setMask( reg, mode );
+}
+void KCommonDecoration::clearMask()
+{
+    return wrapper->clearMask();
+}
+bool KCommonDecoration::isPreview() const
+{
+    return wrapper->isPreview();
+}
+QRect KCommonDecoration::geometry() const
+{
+    return wrapper->geometry();
+}
+QRect KCommonDecoration::iconGeometry() const
+{
+    return wrapper->iconGeometry();
+}
+QRegion KCommonDecoration::unobscuredRegion( const QRegion& r ) const
+{
+    return wrapper->unobscuredRegion( r );
+}
+WId KCommonDecoration::windowId() const
+{
+    return wrapper->windowId();
+}
+int KCommonDecoration::width() const
+{
+    return wrapper->width();
+}
+int KCommonDecoration::height() const
+{
+    return wrapper->height();
+}
+void KCommonDecoration::processMousePressEvent( QMouseEvent* e )
+{
+    return wrapper->processMousePressEvent( e );
+}
+void KCommonDecoration::setMainWidget( QWidget* w )
+{
+    return wrapper->setMainWidget( w );
+}
+void KCommonDecoration::createMainWidget( Qt::WFlags flags )
+{
+    return wrapper->createMainWidget( flags );
+}
+QWidget* KCommonDecoration::initialParentWidget() const
+{
+    return wrapper->initialParentWidget();
+}
+Qt::WFlags KCommonDecoration::initialWFlags() const
+{
+    return wrapper->initialWFlags();
+}
+QWidget* KCommonDecoration::widget()
+{
+    return wrapper->widget();
+}
+const QWidget* KCommonDecoration::widget() const
+{
+    return wrapper->widget();
+}
+KDecorationFactory* KCommonDecoration::factory() const
+{
+    return wrapper->factory();
+}
+void KCommonDecoration::grabXServer()
+{
+    return wrapper->grabXServer();
+}
+void KCommonDecoration::ungrabXServer()
+{
+    return wrapper->ungrabXServer();
+}
+void KCommonDecoration::closeWindow()
+{
+    return wrapper->closeWindow();
+}
+void KCommonDecoration::maximize( Qt::MouseButtons button )
+{
+    return wrapper->maximize( button );
+}
+void KCommonDecoration::maximize( MaximizeMode mode )
+{
+    return wrapper->maximize( mode );
+}
+void KCommonDecoration::minimize()
+{
+    return wrapper->minimize();
+}
+void KCommonDecoration::showContextHelp()
+{
+    return wrapper->showContextHelp();
+}
+void KCommonDecoration::setDesktop( int desktop )
+{
+    return wrapper->setDesktop( desktop );
+}
+void KCommonDecoration::toggleOnAllDesktops()
+{
+    return wrapper->toggleOnAllDesktops();
+}
+void KCommonDecoration::titlebarDblClickOperation()
+{
+    return wrapper->titlebarDblClickOperation();
+}
+void KCommonDecoration::titlebarMouseWheelOperation( int delta )
+{
+    return wrapper->titlebarMouseWheelOperation( delta );
+}
+void KCommonDecoration::setShade( bool set )
+{
+    return wrapper->setShade( set );
+}
+void KCommonDecoration::setKeepAbove( bool set )
+{
+    return wrapper->setKeepAbove( set );
+}
+void KCommonDecoration::setKeepBelow( bool set )
+{
+    return wrapper->setKeepBelow( set );
+}
+// *** end of wrapping of everything from KDecoration *** //
+
+const KDecoration* KCommonDecoration::decoration() const
+{
+    return wrapper;
+}
+KDecoration* KCommonDecoration::decoration()
+{
+    return wrapper;
 }
 
 // kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle;

@@ -334,7 +334,7 @@ void WebClient::updateWindowShape()
 
 KDecoration* WebFactory::createDecoration( KDecorationBridge* b )
 {
-  return(new WebClient(b, this));
+  return(new WebClient(b, this))->decoration();
 }
 
 bool WebFactory::reset(unsigned long changed)

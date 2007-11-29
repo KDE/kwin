@@ -163,7 +163,7 @@ QuartzHandler::~QuartzHandler()
 
 KDecoration* QuartzHandler::createDecoration( KDecorationBridge* bridge )
 {
-	return new QuartzClient( bridge, this );
+	return ( new QuartzClient( bridge, this ))->decoration();
 }
 
 

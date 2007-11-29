@@ -8,7 +8,8 @@ set(kdecorations_LIB_SRCS
    kdecoration_p.cpp 
    kdecoration_plugins_p.cpp 
    kdecorationfactory.cpp 
-   kcommondecoration.cpp )
+   kcommondecoration.cpp
+   kcommondecoration_p.cpp )
 
 
 kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
@@ -21,7 +22,7 @@ install(TARGETS kdecorations  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kdecoration.h kdecoration_p.h kdecoration_plugins_p.h kdecorationfactory.h kcommondecoration.h DESTINATION ${INCLUDE_INSTALL_DIR})
+install( FILES kdecoration.h kdecorationfactory.h kcommondecoration.h DESTINATION ${INCLUDE_INSTALL_DIR})
 
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS

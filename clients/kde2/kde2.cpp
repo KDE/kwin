@@ -187,7 +187,7 @@ KDE2Handler::~KDE2Handler()
 
 KDecoration* KDE2Handler::createDecoration( KDecorationBridge* b )
 {
-	return new KDE2Client( b, this );
+	return ( new KDE2Client( b, this ))->decoration();
 }
 
 bool KDE2Handler::reset( unsigned long changed )

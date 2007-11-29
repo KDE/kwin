@@ -37,6 +37,24 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration_p.h"
 #include "kdecorationfactory.h"
 
+
+/*
+
+Extending KDecoration:
+======================
+
+If KDecoration will ever need to be extended in a way that'd break binary compatibility
+(i.e. adding new virtual methods most probably), new class KDecoration2 should be
+inherited from KDecoration and those methods added there. Code that would depend
+on the new functionality could then dynamic_cast<> to KDecoration2 to check whether
+it is available and use it.
+
+KCommonDecoration would have to be extended the same way, adding KCommonDecoration2
+inheriting KCommonDecoration and adding the new API matching KDecoration2.
+
+*/
+
+
 KDecorationOptions* KDecoration::options_;
 
 KDecoration::KDecoration( KDecorationBridge* bridge, KDecorationFactory* factory )

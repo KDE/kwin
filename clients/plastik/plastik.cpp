@@ -133,7 +133,7 @@ bool PlastikHandler::reset(unsigned long changed)
 
 KDecoration* PlastikHandler::createDecoration( KDecorationBridge* bridge )
 {
-        return new PlastikClient( bridge, this );
+        return ( new PlastikClient( bridge, this ))->decoration();
 }
 
 bool PlastikHandler::supports( Ability ability ) const

@@ -683,7 +683,7 @@ LaptopClientFactory::~LaptopClientFactory()
 KDecoration *LaptopClientFactory::createDecoration(KDecorationBridge *b)
 {
     findPreferredHandleSize();
-    return new Laptop::LaptopClient(b, this);
+    return (new Laptop::LaptopClient(b, this))->decoration();
 }
 
 bool LaptopClientFactory::reset(unsigned long changed)

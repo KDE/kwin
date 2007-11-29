@@ -758,7 +758,7 @@ ModernSysFactory::~ModernSysFactory()
 
 KDecoration* ModernSysFactory::createDecoration( KDecorationBridge* b )
 {
-    return(new ModernSys(b, this));
+    return(new ModernSys(b, this))->decoration();
 }
 
 bool ModernSysFactory::reset( unsigned long changed )

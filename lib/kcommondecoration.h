@@ -48,13 +48,18 @@ class KCommonDecorationButton;
 
 class KCommonDecorationButtonPrivate;
 class KCommonDecorationPrivate;
+class KCommonDecorationWrapper;
 
 /**
  * This class eases development of decorations by implementing parts of KDecoration
  * which are error prone and common for most decorations.
  * It takes care of the window layout, button/action handling, and window mask creation.
+ * Note that for technical reasons KCommonDecoration does not inherit KDecoration but
+ * only provides the same API. If in rare cases you need to convert to KDecoration,
+ * use the decoration() function.
+ * See KDecoration documentation for all the wrapped functions.
  */
-class KWIN_EXPORT KCommonDecoration : public KDecoration
+class KWIN_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
 {
     Q_OBJECT
 
@@ -255,6 +260,76 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         virtual void mouseDoubleClickEvent(QMouseEvent *e);
         virtual void wheelEvent(QWheelEvent *e);
 
+        // *** wrap everything from KDecoration *** //
+        // reimplementing from KDecoration (wrapped)
+        virtual bool drawbound( const QRect& geom, bool clear );
+        virtual bool windowDocked( Position side );
+        // wrap everything KDecoration provides
+        static const KDecorationOptions* options();
+        bool isActive() const;
+        bool isCloseable() const;
+        bool isMaximizable() const;
+        MaximizeMode maximizeMode() const;
+        bool isMinimizable() const;
+        bool providesContextHelp() const;
+        int desktop() const;
+        bool isOnAllDesktops() const; // convenience
+        bool isModal() const;
+        bool isShadeable() const;
+        bool isShade() const;
+        bool isSetShade() const;
+        bool keepAbove() const;
+        bool keepBelow() const;
+        bool isMovable() const;
+        bool isResizable() const;
+        NET::WindowType windowType( unsigned long supported_types ) const;
+        QIcon icon() const;
+        QString caption() const;
+        void showWindowMenu( const QRect &pos );
+        void showWindowMenu( QPoint pos );
+        void performWindowOperation( WindowOperation op );
+        void setMask( const QRegion& reg, int mode = 0 );
+        void clearMask(); // convenience
+        bool isPreview() const;
+        QRect geometry() const;
+        QRect iconGeometry() const;
+        QRegion unobscuredRegion( const QRegion& r ) const;
+        WId windowId() const;
+        int width() const; // convenience
+        int height() const;  // convenience
+        void processMousePressEvent( QMouseEvent* e );
+    Q_SIGNALS:
+        void keepAboveChanged( bool );
+        void keepBelowChanged( bool );
+    public:
+        void setMainWidget( QWidget* );
+        void createMainWidget( Qt::WFlags flags = 0 );
+        QWidget* initialParentWidget() const;
+        Qt::WFlags initialWFlags() const;
+        QWidget* widget();
+        const QWidget* widget() const;
+        KDecorationFactory* factory() const;
+        void grabXServer();
+        void ungrabXServer();
+    public Q_SLOTS:
+        void closeWindow();
+        void maximize( Qt::MouseButtons button );
+        void maximize( MaximizeMode mode );
+        void minimize();
+        void showContextHelp();
+        void setDesktop( int desktop );
+        void toggleOnAllDesktops(); // convenience
+        void titlebarDblClickOperation();
+        void titlebarMouseWheelOperation( int delta );
+        void setShade( bool set );
+        void setKeepAbove( bool set );
+        void setKeepBelow( bool set );
+        // *** end of wrapping of everything from KDecoration *** //
+    public:
+        // access the KDecoration wrapper
+        const KDecoration* decoration() const;
+        KDecoration* decoration();
+
     private:
         void resetLayout();
 
@@ -278,6 +353,8 @@ class KWIN_EXPORT KCommonDecoration : public KDecoration
         int btnHideLastWidth;
 
         bool closing; // for menu doubleclick closing...
+
+        KCommonDecorationWrapper* wrapper;
 
         KCommonDecorationPrivate *d;
 };
