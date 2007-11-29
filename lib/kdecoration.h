@@ -113,7 +113,7 @@ public:
 	ColorButtonBg,   ///< The color to use for the titlebar buttons
 	ColorFrame,      ///< The color for the window frame (border)
 	ColorHandle,     ///< The color for the resize handle
-	NUM_COLORS
+	NUM_COLORS       ///< @internal This value may change, do not use
 	};
 
     /**
