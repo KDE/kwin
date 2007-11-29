@@ -86,8 +86,6 @@ class KDE2Client : public KCommonDecoration
 		~KDE2Client() {;}
 
 		virtual QString visibleName() const;
-		virtual QString defaultButtonsLeft() const;
-		virtual QString defaultButtonsRight() const;
 		virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
 		virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
 		virtual KCommonDecorationButton *createButton(ButtonType type);

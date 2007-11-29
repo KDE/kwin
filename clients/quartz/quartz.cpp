@@ -565,7 +565,7 @@ QString QuartzClient::defaultButtonsLeft() const
 
 QString QuartzClient::defaultButtonsRight() const
 {
-	return "HIAX";
+	return "HIA__X";
 }
 
 bool QuartzClient::decorationBehaviour(DecorationBehaviour behaviour) const

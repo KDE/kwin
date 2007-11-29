@@ -434,7 +434,7 @@ QString KDecorationOptions::titleButtonsLeft() const
 
 QString KDecorationOptions::defaultTitleButtonsLeft()
 {
-    return "MS"; //aseigo: proposed new default "AIS__HM";
+    return "MS";
 }
 
 QString KDecorationOptions::titleButtonsRight() const
@@ -444,7 +444,7 @@ QString KDecorationOptions::titleButtonsRight() const
 
 QString KDecorationOptions::defaultTitleButtonsRight()
 {
-    return "HIAX"; //aseigo: proposed new default "X"
+    return "HIA__X";
 }
 
 bool KDecorationOptions::showTooltips() const

@@ -62,7 +62,7 @@ QString WebClient::defaultButtonsLeft() const
 
 QString WebClient::defaultButtonsRight() const
 {
-    return "HIAX";
+    return "HIA__X";
 }
 
 bool WebClient::decorationBehaviour(DecorationBehaviour behaviour) const

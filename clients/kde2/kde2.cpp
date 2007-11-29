@@ -776,16 +776,6 @@ QString KDE2Client::visibleName() const
 	return i18n("KDE 2");
 }
 
-QString KDE2Client::defaultButtonsLeft() const
-{
-	return "MS";
-}
-
-QString KDE2Client::defaultButtonsRight() const
-{
-	return "HIAX";
-}
-
 bool KDE2Client::decorationBehaviour(DecorationBehaviour behaviour) const
 {
 	switch (behaviour) {
