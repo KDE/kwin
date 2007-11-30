@@ -11,6 +11,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=Window-Specific
+Name[be]=Настаўленні для асобных вокнаў
 Name[ca]=Específic de finestra
 Name[de]=Fensterspezifische Einstellungen
 Name[el]=Σχετικές με παράθυρα
