@@ -8,6 +8,8 @@ X-DocPath=kcontrol/kwincompositing/index.html
 X-KDE-Library=kcm_kwincompositing
 X-KDE-ParentApp=kcontrol
 
+X-KDE-System-Settings-Parent-Category=desktop
+
 Name=Desktop Effects
 Name[ar]=تأثيرات سطح المكتب
 Name[be]=Эфекты працоўнага стала
