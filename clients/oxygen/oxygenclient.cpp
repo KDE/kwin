@@ -404,6 +404,9 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.drawArc(QRectF(x+w-9-0.6, y+h-9-0.6, 9, 9), 270*16, 90*16);
     painter.drawLine(QPointF(x+4, y+h-0.6), QPointF(x+w-4, y+h-0.6));
 
+    if(!isResizable())
+        return;
+
     // Draw the 3-dots resize handles
     qreal cenY = frame.height() / 2 + x + 0.5;
     qreal posX = frame.width() + y - 2.5;
