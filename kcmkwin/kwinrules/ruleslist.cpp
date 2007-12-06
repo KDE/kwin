@@ -168,12 +168,10 @@ void KCMRulesList::load()
         rules_listbox->addItem( rule->description );
         }
     if( rules.count() > 0 )
-        rules_listbox->item(0)->setSelected( true );
+        rules_listbox->setCurrentItem( rules_listbox->item( 0 ));
     else
-    {
-       rules_listbox->setCurrentItem(0L);
-       activeChanged();
-    }
+        rules_listbox->setCurrentItem( NULL );
+    activeChanged();
     }
 
 void KCMRulesList::save()
