@@ -80,7 +80,7 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
 
   QLabel *label = new QLabel(i18n("N&umber of desktops: "), number_group);
   _numInput = new KIntNumInput(4, number_group);
-  _numInput->setRange(1, maxDesktops, 1, true);
+  _numInput->setRange(1, maxDesktops, 1);
   connect(_numInput, SIGNAL(valueChanged(int)), SLOT(slotValueChanged(int)));
   connect(_numInput, SIGNAL(valueChanged(int)), SLOT( changed() ));
   label->setBuddy( _numInput );
