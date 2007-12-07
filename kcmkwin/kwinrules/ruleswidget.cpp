@@ -630,7 +630,7 @@ void RulesWidget::prefillUnusedValues( const KWindowInfo& info )
     //LINEEDIT_PREFILL( shortcut, );
     //COMBOBOX_PREFILL( fsplevel, );
     //COMBOBOX_PREFILL( moveresizemode, moveresizeToCombo );
-    COMBOBOX_PREFILL( type, typeToCombo, info.windowType( SUPPORTED_WINDOW_TYPES_MASK ) );
+    COMBOBOX_PREFILL( type, typeToCombo, info.windowType( SUPPORTED_MANAGED_WINDOW_TYPES_MASK ) );
     //CHECKBOX_PREFILL( ignoreposition, );
     LINEEDIT_PREFILL( minsize, sizeToStr, info.frameGeometry().size() );
     LINEEDIT_PREFILL( maxsize, sizeToStr, info.frameGeometry().size() );

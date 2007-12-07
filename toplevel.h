@@ -63,8 +63,9 @@ class Toplevel
         virtual QPoint clientPos() const = 0; // inside of geometry()
         virtual QSize clientSize() const = 0;
 
-    // prefer isXXX() instead
-        NET::WindowType windowType( bool direct = false, int supported_types = SUPPORTED_WINDOW_TYPES_MASK ) const;
+        // prefer isXXX() instead
+        // 0 for supported types means default for managed/unmanaged types
+        NET::WindowType windowType( bool direct = false, int supported_types = 0 ) const;
         bool hasNETSupport() const;
         bool isDesktop() const;
         bool isDock() const;

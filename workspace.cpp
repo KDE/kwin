@@ -272,6 +272,7 @@ void Workspace::init()
         NET::TopMenuMask |
         NET::UtilityMask |
         NET::SplashMask |
+    // No compositing window types here unless we support them also as managed window types
         0
         ,
         NET::Modal |

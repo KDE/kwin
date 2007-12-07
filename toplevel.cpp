@@ -142,6 +142,9 @@ void Toplevel::disownDataPassedToDeleted()
 
 NET::WindowType Toplevel::windowType( bool direct, int supported_types ) const
     {
+    if( supported_types == 0 )
+        supported_types = dynamic_cast< const Client* >( this ) != NULL
+            ? SUPPORTED_MANAGED_WINDOW_TYPES_MASK : SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
     NET::WindowType wt = info->windowType( supported_types );
     if( direct )
         return wt;
