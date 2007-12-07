@@ -981,6 +981,11 @@ QRect EffectWindowImpl::geometry() const
     return toplevel->geometry();
     }
 
+QRegion EffectWindowImpl::shape() const
+    {
+    return sw ? sw->shape() : geometry();
+    }
+
 QSize EffectWindowImpl::size() const
     {
     return toplevel->size();

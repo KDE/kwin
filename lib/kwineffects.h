@@ -490,6 +490,7 @@ class KWIN_EXPORT EffectWindow
         virtual int width() const = 0;
         virtual int height() const = 0;
         virtual QRect geometry() const = 0;
+        virtual QRegion shape() const = 0;
         virtual QPoint pos() const = 0;
         virtual QSize size() const = 0;
         virtual QRect rect() const = 0;
@@ -627,7 +628,14 @@ class KWIN_EXPORT WindowPrePaintData
     {
     public:
         int mask;
+        /**
+         * Region that will be painted, in screen coordinates.
+         **/
         QRegion paint;
+        /**
+         * The clip region will be substracted from paint region of following windows.
+         * I.e. window will definitely cover it's clip region
+         **/
         QRegion clip;
         WindowQuadList quads;
         /**
