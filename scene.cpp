@@ -195,7 +195,7 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
 #endif
         if( !w->isPaintingEnabled())
             continue;
-        phase2.append( Phase2Data( w, infiniteRegion(), data.mask, data.quads ));
+        phase2.append( Phase2Data( w, infiniteRegion(), data.clip, data.mask, data.quads ));
         }
 
     foreach( Phase2Data d, phase2 )
@@ -211,9 +211,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
     // perhaps the two enums should be separated
     assert(( orig_mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED
         | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_OPAQUE )) == 0 );
-    QList< Phase2Data > phase2opaque;
-    QList< Phase2Data > phase2translucent;
-    QRegion allclips;
+    QHash< Window*, Phase2Data > phase2data;
     // Draw each opaque window top to bottom, subtracting the bounding rect of
     // each window from the clip region after it's been drawn.
     for( int i = stacking_order.count() - 1; // top to bottom
@@ -236,49 +234,60 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
 #endif
         if( !w->isPaintingEnabled())
             continue;
-        data.paint -= allclips; // make sure to avoid already clipped areas
-        // no painting outside visible screen (and no transformations)
-        data.paint &= QRect( 0, 0, displayWidth(), displayHeight());
-        if( data.paint.isEmpty()) // completely clipped
-            continue;
         if( data.paint != region ) // prepaint added area to draw
-            {
-            region |= data.paint; // make sure other windows in that area get painted too
             painted_region |= data.paint; // make sure it makes it to the screen
-            }
-        // If the window is transparent, the transparent part will be done
-        // in the 2nd pass.
-        if( data.mask & PAINT_WINDOW_TRANSLUCENT )
-            phase2translucent.prepend( Phase2Data( w, data.paint, data.mask, data.quads ));
-        if( data.mask & PAINT_WINDOW_OPAQUE )
-            {
-            phase2opaque.append( Phase2Data( w, data.paint, data.mask, data.quads ));
-            // The window can clip by its opaque parts the windows below.
-            region -= data.clip;
-            allclips |= data.clip;
-            }
+        // Schedule the window for painting
+        phase2data[w] = Phase2Data( w, data.paint, data.clip, data.mask, data.quads );
         }
     // Do the actual painting
     // First opaque windows, top to bottom
-    foreach( Phase2Data d, phase2opaque )
-        paintWindow( d.window, d.mask, d.region, d.quads );
-    if( !( orig_mask & PAINT_SCREEN_BACKGROUND_FIRST ))
-        paintBackground( region ); // Fill any areas of the root window not covered by windows
-    // Now walk the list bottom to top, drawing translucent windows.
-    // That we draw bottom to top is important now since we're drawing translucent objects
-    // and also are clipping only by opaque windows.
-    QRegion add_paint;
-    foreach( Phase2Data d, phase2translucent )
+    // This also calculates correct paint regions for windows, also taking
+    //  care of clipping
+    QRegion allclips;
+    for( int i = stacking_order.count() - 1; i >= 0; --i )
         {
-        paintWindow( d.window, d.mask, d.region | add_paint, d.quads );
-        // It is necessary to also add paint regions of windows below, because their
-        // pre-paint's might have extended the paint area, so those areas need to be painted too.
-        add_paint |= d.region;
+        Window* w = stacking_order[ i ];
+        if( !phase2data.contains( w ))
+            continue;
+        Phase2Data d = phase2data[w];
+        // Calculate correct paint region and take the clip region into account
+        d.region = painted_region - allclips;
+        allclips |= d.clip;
+        if( d.mask & PAINT_WINDOW_TRANSLUCENT )
+            {
+            // For translucent windows, the paint region must contain the
+            //  entire painted area, except areas clipped by opaque windows
+            //  above the translucent window
+            phase2data[w].region = d.region;
+            }
+        else
+            {
+            // Paint the opaque window
+            paintWindow( d.window, d.mask, d.region, d.quads );
+            }
+        }
+    // Fill any areas of the root window not covered by windows
+    if( !( orig_mask & PAINT_SCREEN_BACKGROUND_FIRST ))
+        paintBackground( painted_region - allclips );
+    // Now walk the list bottom to top, drawing translucent windows.
+    for( int i = 0; i < stacking_order.count(); i++ )
+        {
+        Window* w = stacking_order[ i ];
+        if( !phase2data.contains( w ))
+            continue;
+        Phase2Data d = phase2data[w];
+        if( d.mask & PAINT_WINDOW_TRANSLUCENT )
+            paintWindow( d.window, d.mask, d.region, d.quads );
         }
     }
 
 void Scene::paintWindow( Window* w, int mask, QRegion region, WindowQuadList quads )
     {
+    // no painting outside visible screen (and no transformations)
+    region &= QRect( 0, 0, displayWidth(), displayHeight());
+    if( region.isEmpty()) // completely clipped
+        return;
+
     WindowPaintData data( w->window()->effectWindow());
     data.quads = quads;
     effects->paintWindow( effectWindow( w ), mask, region, data );

@@ -112,10 +112,12 @@ class Scene
         // saved data for 2nd pass of optimized screen painting
         struct Phase2Data
             {
-            Phase2Data( Window* w, QRegion r, int m, const WindowQuadList& q )
-                : window( w ), region( r ), mask( m ), quads( q ) {}
+            Phase2Data( Window* w, QRegion r, QRegion c, int m, const WindowQuadList& q )
+                : window( w ), region( r ), clip( c ), mask( m ), quads( q ) {}
+            Phase2Data()  { window = 0; mask = 0; }
             Window* window;
             QRegion region;
+            QRegion clip;
             int mask;
             WindowQuadList quads;
             };

@@ -237,7 +237,7 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
         // If the window is transparent, the transparent part will be done
         // in the 2nd pass.
         if( data.mask & PAINT_WINDOW_TRANSLUCENT )
-            phase2.prepend( Phase2Data( w, data.paint, data.mask, data.quads ));
+            phase2.prepend( Phase2Data( w, data.paint, data.clip, data.mask, data.quads ));
         if( data.mask & PAINT_WINDOW_OPAQUE )
             {
             w->setTransformedShape( QRegion());
