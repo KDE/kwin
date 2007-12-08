@@ -557,6 +557,22 @@ void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )
     {
     if( e->type() == QEvent::KeyPress )
         {
+        int desktop = -1;
+        // switch by F<number> or just <number>
+        if( e->key() >= Qt::Key_F1 && e->key() <= Qt::Key_F35 )
+            desktop = e->key() - Qt::Key_F1 + 1;
+        else if( e->key() >= Qt::Key_0 && e->key() <= Qt::Key_9 )
+            desktop = e->key() == Qt::Key_0 ? 10 : e->key() - Qt::Key_0;
+        if( desktop != -1 )
+            {
+            if( desktop <= effects->numberOfDesktops())
+                {
+                setHighlightedDesktop( desktop );
+                effects->setCurrentDesktop( desktop );
+                setActive( false );
+                }
+            return;
+            }
         switch( e->key())
             { // wrap only on autorepeat
             case Qt::Key_Left:
@@ -575,30 +591,6 @@ void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )
                 setHighlightedDesktop( effects->desktopDown( highlighted_desktop,
                     !e->isAutoRepeat()));
                 break;
-            default:
-                break;
-            }
-        }
-    else if( e->type() == QEvent::KeyRelease )
-        {
-        int desktop = -1;
-        // switch by F<number> or just <number>
-        if( e->key() >= Qt::Key_F1 && e->key() <= Qt::Key_F35 )
-            desktop = e->key() - Qt::Key_F1 + 1;
-        else if( e->key() >= Qt::Key_0 && e->key() <= Qt::Key_9 )
-            desktop = e->key() == Qt::Key_0 ? 10 : e->key() - Qt::Key_0;
-        if( desktop != -1 )
-            {
-            if( desktop <= effects->numberOfDesktops())
-                {
-                setHighlightedDesktop( desktop );
-                effects->setCurrentDesktop( desktop );
-                setActive( false );
-                }
-            return;
-            }
-        switch( e->key())
-            {
             case Qt::Key_Escape:
                 setActive( false );
                 return;

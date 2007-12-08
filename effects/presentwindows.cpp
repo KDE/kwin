@@ -813,25 +813,6 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent* e )
                     }
                 return;
             case Qt::Key_Escape:
-            case Qt::Key_Return:
-            case Qt::Key_Enter:
-                break;
-            default:
-                if( !e->text().isEmpty())
-                    {
-                    windowFilter.append( e->text());
-                    updateFilterTexture();
-                    rearrangeWindows();
-                    return;
-                    }
-                break;
-            }
-        }
-    else if( e->type() == QEvent::KeyRelease )
-        {
-        switch( e->key())
-            {
-            case Qt::Key_Escape:
                 setActive( false );
                 return;
             case Qt::Key_Return:
@@ -849,6 +830,13 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent* e )
                     }
                 return;
             default:
+                if( !e->text().isEmpty())
+                    {
+                    windowFilter.append( e->text());
+                    updateFilterTexture();
+                    rearrangeWindows();
+                    return;
+                    }
                 break;
             }
         }
