@@ -66,11 +66,11 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
     m_actionCollection->setConfigGlobal(true);
 
     KAction* a;
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ZoomIn, this, SLOT( zoomIn())));
+    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ZoomIn));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Plus));
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ZoomOut, this, SLOT( zoomOut())));
+    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ZoomOut));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
-    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ActualSize, this, SLOT( toggle())));
+    a = static_cast< KAction* >( m_actionCollection->addAction( KStandardAction::ActualSize));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
     load();
