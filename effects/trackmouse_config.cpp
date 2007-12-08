@@ -45,6 +45,7 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     QLabel* label = new QLabel(i18n("Hold Ctrl+Meta keys to see where the mouse cursor is."), this);
+    label->setWordWrap(true);
     layout->addWidget(label);
 
     layout->addStretch();
