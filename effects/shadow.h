@@ -35,16 +35,16 @@ class ShadowEffect
     public:
         ShadowEffect();
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w );
-        virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
+        virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void windowClosed( EffectWindow* c );
     private:
-        void drawShadow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        void drawShadow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data, bool clip );
         void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const;
         // transforms window rect -> shadow rect
         QRect shadowRectangle(const QRect& windowRectangle) const;
         bool useShadow( EffectWindow* w ) const;
+        void drawQueuedShadows( EffectWindow* behindWindow );
 
         int shadowXOffset, shadowYOffset;
         double shadowOpacity;
@@ -52,6 +52,18 @@ class ShadowEffect
         int shadowSize;
         bool intensifyActiveShadow;
         GLTexture* mShadowTexture;
+
+        struct ShadowData
+        {
+            ShadowData(EffectWindow* _w, WindowPaintData& _data) : w(_w), data(_data) {}
+            EffectWindow* w;
+            QRegion clip;
+            int mask;
+            QRegion region;
+            WindowPaintData data;
+        };
+
+        QList<ShadowData> shadowDatas;
     };
 
 } // namespace

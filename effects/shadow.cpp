@@ -52,38 +52,63 @@ QRect ShadowEffect::shadowRectangle(const QRect& windowRectangle) const
             shadowXOffset + shadowGrow, shadowYOffset + shadowGrow);
     }
 
+void ShadowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
+    {
+    shadowDatas.clear();
+
+    // Draw windows
+    effects->paintScreen( mask, region, data );
+
+    // Draw shadows
+    drawQueuedShadows( 0 );
+    }
+
 void ShadowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( useShadow( w ))
         {
-        data.mask |= PAINT_WINDOW_TRANSLUCENT;
-        QRect r = ( QRegion( w->geometry()) & data.paint ).boundingRect();
-        if( !r.isEmpty())
-            data.paint |= shadowRectangle( r );
+        data.paint |= shadowRectangle( data.paint.boundingRect() );
         }
     effects->prePaintWindow( w, data, time );
     }
 
-void ShadowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
+    // Whether the shadow drawing can be delayed or not.
+    bool optimize = !( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED |
+            PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_WINDOW_TRANSLUCENT ));
+    if( !optimize )
+        {
+        // Transformed or translucent windows are drawn bottom-to-top, so
+        //  first we need to draw all queued shadows.
+        drawQueuedShadows( w );
+        }
     if( useShadow( w ))
-        drawShadow( w, mask, region, data );
-    effects->paintWindow( w, mask, region, data );
+        {
+        if( !optimize )
+            {
+            // For translucent windows, shadow needs to be drawn before the
+            //  window itself.
+            drawShadow( w, mask, region, data, false );
+            }
+        else
+            {
+            // For opaque windows, just schedule the shadow to be drawn later
+            ShadowData d(w, data);
+            d.clip = w->shape().translated( w->x(), w->y());
+            if( !shadowDatas.isEmpty())
+                d.clip |= shadowDatas.last().clip;
+            d.mask = mask;
+            foreach(QRect r, region.rects())
+                d.region |= shadowRectangle(r);
+            d.region &= region;
+            shadowDatas.append(d);
+            }
+        }
+
+    effects->drawWindow( w, mask, region, data );
     }
 
-void ShadowEffect::postPaintWindow( EffectWindow* w )
-    {
-    effects->postPaintWindow( w );
-    }
-
-QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
-    {
-    if( !useShadow( w ))
-        return effects->transformWindowDamage( w, r );
-    QRect r2 = r | shadowRectangle( r );
-    return effects->transformWindowDamage( w, r2 );
-    }
-    
 void ShadowEffect::windowClosed( EffectWindow* c )
     {
     effects->addRepaint( shadowRectangle( c->geometry() ));
@@ -102,10 +127,28 @@ void ShadowEffect::addQuadVertices(QVector<float>& verts, float x1, float y1, fl
     verts << x2 << y1;
     }
 
-void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, WindowPaintData& data )
+void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
     {
-    if(( mask & PAINT_WINDOW_TRANSLUCENT ) == 0 )
-        return;
+    QList<ShadowData> newShadowDatas;
+    EffectWindowList stack = effects->stackingOrder();
+    foreach( ShadowData d, shadowDatas )
+        {
+        // If behindWindow is given then only render shadows of the windows
+        //  that are behind that window.
+        if( !behindWindow || stack.indexOf(d.w) < stack.indexOf(behindWindow))
+            {
+            drawShadow( d.w, d.mask, d.region.subtracted( d.clip ), d.data, true );
+            }
+        else
+            {
+            newShadowDatas.append(d);
+            }
+        }
+    shadowDatas = newShadowDatas;
+    }
+
+void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, WindowPaintData& data, bool clip )
+    {
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -168,7 +211,10 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     // We have two elements per vertex in the verts array
     int verticesCount = verts.count() / 2;
-    renderGLGeometry( mask, region, verticesCount, verts.data(), texcoords.data() );
+    if( clip )
+        renderGLGeometry( true, region, verticesCount, verts.data(), texcoords.data() );
+    else
+        renderGLGeometry( mask, region, verticesCount, verts.data(), texcoords.data() );
     mShadowTexture->unbind();
 
     glPopMatrix();
