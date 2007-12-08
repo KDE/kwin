@@ -271,7 +271,7 @@ void SceneXrender::paintBackground( QRegion region )
         XFixesSetPictureClipRegion( display(), buffer, 0, 0, background_region );
         XFixesDestroyRegion( display(), background_region );
         }
-    XRenderColor col = { 0xffff, 0xffff, 0xffff, 0xffff };
+    XRenderColor col = { 0, 0, 0, 0xffff }; // black
     XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
     XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }

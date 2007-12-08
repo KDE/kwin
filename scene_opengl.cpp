@@ -690,12 +690,12 @@ void SceneOpenGL::paintBackground( QRegion region )
     {
     if( region == infiniteRegion())
         {
-        glClearColor( 1, 1, 1, 1 ); // white
+        glClearColor( 0, 0, 0, 1 ); // black
         glClear( GL_COLOR_BUFFER_BIT );
         }
     else
         {
-        glColor4f( 1, 1, 1, 1 ); // white
+        glColor4f( 0, 0, 0, 1 ); // black
         glBegin( GL_QUADS );
         foreach( QRect r, region.rects())
             {
