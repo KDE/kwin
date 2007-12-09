@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Show Paint
 Name[ca]=Mostra la pintura
+Name[csb]=Pòkôżë Paint
 Name[de]=Zeichnungsbereich anzeigen
 Name[el]=Εμφάνιση σχεδίασης
 Name[eo]=Montri farbon
@@ -29,6 +30,7 @@ Comment=Shows areas painted by KWin
 Comment[ca]=Mostra les àrees pintades pel KWin
 Comment[de]=Zeigt die Bereiche an, die von KWin (der Fensterverwaltung) gezeichnet werden
 Comment[el]=Εμφάνιση σχεδιασμένων περιοχών από το KWin
+Comment[eo]=Montras partojn desegnitajn per KWin
 Comment[es]=Muestra areas pintadas por KWin
 Comment[et]=KWini joonistatud alade näitamine
 Comment[hu]=Megmutatja, mely területeket rajzolja éppen a KWin

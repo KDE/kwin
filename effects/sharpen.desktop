@@ -2,6 +2,7 @@
 Name=Sharpen
 Name[bg]=Отчетливост
 Name[ca]=Aguditza
+Name[csb]=Wëòstrzëc
 Name[de]=Schärfen
 Name[el]=Όξυνση
 Name[eo]=Akrigi
@@ -38,6 +39,7 @@ Comment[bg]=Прави работния плот по-отчетлив
 Comment[ca]=Fa que l'escriptori sembli més definit
 Comment[de]=Lässt Ihre Arbeitsfläche schärfer erscheinen
 Comment[el]=Κάνει την επιφάνεια εργασίας σας να δείχνει πιο οξεία
+Comment[eo]=Akrigas la labortablon
 Comment[es]=Agudiza su escritorio
 Comment[et]=Muudab töölaua välimuse teravamaks
 Comment[eu]=Zure mahaiagaina enfokatzen du
