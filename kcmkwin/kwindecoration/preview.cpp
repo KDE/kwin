@@ -326,7 +326,7 @@ NET::WindowType KDecorationPreviewBridge::windowType( unsigned long ) const
 
 QIcon KDecorationPreviewBridge::icon() const
     {
-    return KIcon( "xapp" );
+    return KIcon( "x" );
     }
 
 QString KDecorationPreviewBridge::caption() const
