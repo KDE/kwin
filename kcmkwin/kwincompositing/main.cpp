@@ -202,11 +202,17 @@ void KWinCompositingConfig::loadGeneralTab()
     // Load effect settings
     KConfigGroup effectconfig(mTmpConfig, "Plugins");
 #define LOAD_EFFECT_CONFIG(effectname)  effectconfig.readEntry("kwin4_effect_" effectname "Enabled", true)
-    bool winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows")
-        && LOAD_EFFECT_CONFIG("boxswitch")
-        && LOAD_EFFECT_CONFIG("desktopgrid")
-        && LOAD_EFFECT_CONFIG("dialogparent");
-    ui.effectWinManagement->setChecked(winManagementEnabled);
+    int winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows")
+        + LOAD_EFFECT_CONFIG("boxswitch")
+        + LOAD_EFFECT_CONFIG("desktopgrid")
+        + LOAD_EFFECT_CONFIG("dialogparent");
+qDebug() << "winManagementEnabled" << winManagementEnabled;
+    if (winManagementEnabled > 0 && winManagementEnabled < 4) {
+        ui.effectWinManagement->setTristate(true);
+        ui.effectWinManagement->setCheckState(Qt::PartiallyChecked);
+    }
+    else
+        ui.effectWinManagement->setChecked(winManagementEnabled);
     ui.effectShadows->setChecked(LOAD_EFFECT_CONFIG("shadow"));
     ui.effectAnimations->setChecked(LOAD_EFFECT_CONFIG("minimizeanimation"));
 #undef LOAD_EFFECT_CONFIG
@@ -257,10 +263,13 @@ bool KWinCompositingConfig::saveGeneralTab()
     // Save effects
     KConfigGroup effectconfig(mTmpConfig, "Plugins");
 #define WRITE_EFFECT_CONFIG(effectname, widget)  effectconfig.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
-    WRITE_EFFECT_CONFIG("presentwindows", ui.effectWinManagement);
-    WRITE_EFFECT_CONFIG("boxswitch", ui.effectWinManagement);
-    WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
-    WRITE_EFFECT_CONFIG("dialogparent", ui.effectWinManagement);
+    if (ui.effectWinManagement->checkState() != Qt::PartiallyChecked) {
+qDebug() << "partial!";
+        WRITE_EFFECT_CONFIG("presentwindows", ui.effectWinManagement);
+        WRITE_EFFECT_CONFIG("boxswitch", ui.effectWinManagement);
+        WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
+        WRITE_EFFECT_CONFIG("dialogparent", ui.effectWinManagement);
+    }
     WRITE_EFFECT_CONFIG("shadow", ui.effectShadows);
     // TODO: maybe also do some effect-specific configuration here, e.g.
     //  enable/disable desktopgrid's animation according to this setting
