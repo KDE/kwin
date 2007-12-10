@@ -1119,7 +1119,7 @@ void Client::killProcess( bool ask, Time timestamp )
         connect( process_killer, SIGNAL( error( QProcess::ProcessError )), SLOT( processKillerExited()));
         connect( process_killer, SIGNAL( finished( int, QProcess::ExitStatus )), SLOT( processKillerExited()));
         process_killer->start( KStandardDirs::findExe( "kwin_killer_helper" ),
-            QStringList() << "--pid" << QByteArray().setNum( pid ) << "--hostname" << machine
+            QStringList() << "--pid" << QByteArray().setNum( (unsigned)pid ) << "--hostname" << machine
             << "--windowname" << caption().toUtf8()
             << "--applicationname" << resourceClass()
             << "--wid" << QString::number( window() )

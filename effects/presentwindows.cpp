@@ -487,12 +487,12 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
     // Use more columns than rows when parent's width > parent's height
     if ( parentRatio > 1 )
     {
-        columns = (int)ceil( sqrt(windowlist.count()) );
+        columns = (int)ceil( sqrt((double)windowlist.count()) );
         rows = (int)ceil( (double)windowlist.count() / (double)columns );
     }
     else
     {
-        rows = (int)ceil( sqrt(windowlist.count()) );
+        rows = (int)ceil( sqrt((double)windowlist.count()) );
         columns = (int)ceil( (double)windowlist.count() / (double)rows );
     }
     kDebug() << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
@@ -619,7 +619,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
 void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowList windowlist)
     {
     QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
-    int columns = int( ceil( sqrt( windowlist.count())));
+    int columns = int( ceil( sqrt( (double)windowlist.count())));
     int rows = int( ceil( windowlist.count() / double( columns )));
     foreach( EffectWindow* w, windowlist )
         mWindowData[ w ].slot = -1;
@@ -715,7 +715,7 @@ void PresentWindowsEffect::assignSlots( const QRect& area, int columns, int rows
                     continue;
                 int xdiff = pos.x() - ( area.x() + slotwidth * x + slotwidth / 2 ); // slotwidth/2 for center
                 int ydiff = pos.y() - ( area.y() + slotheight * y + slotheight / 2 );
-                int dist = int( sqrt( xdiff * xdiff + ydiff * ydiff ));
+                int dist = int( sqrt( (double)(xdiff * xdiff + ydiff * ydiff) ));
                 if( dist < distance )
                     {
                     distance = dist;
@@ -750,9 +750,9 @@ void PresentWindowsEffect::getBestAssignments()
 bool PresentWindowsEffect::canRearrangeClosest(EffectWindowList windowlist)
     {
     QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
-    int columns = int( ceil( sqrt( windowlist.count())));
+    int columns = int( ceil( sqrt( (double)windowlist.count())));
     int rows = int( ceil( windowlist.count() / double( columns )));
-    int old_columns = int( ceil( sqrt( mWindowData.count())));
+    int old_columns = int( ceil( sqrt( (double)mWindowData.count())));
     int old_rows = int( ceil( mWindowData.count() / double( columns )));
     return old_columns != columns || old_rows != rows;
     }
@@ -857,7 +857,7 @@ EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow* w, int xdiff, 
         return NULL;
     if( w == NULL )
         return findFirstWindow();
-    int columns = int( ceil( sqrt( mWindowData.count())));
+    int columns = int( ceil( sqrt( (double)mWindowData.count())));
     int rows = int( ceil( mWindowData.count() / double( columns )));
     QVector< QVector< EffectWindow* > > grid;
     grid.resize( columns );
