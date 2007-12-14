@@ -237,7 +237,7 @@ QColor OxygenClient::titlebarTextColor(const QPalette &palette)
             QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
 
             colorCacheInvalid_ = false;
-            cachedTitlebarTextColor_ = reduceContrast(nb, nf, qMax(2.5, KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
+            cachedTitlebarTextColor_ = reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
         }
         return cachedTitlebarTextColor_;
     }

@@ -92,7 +92,7 @@ QColor OxygenButton::buttonDetailColor(const QPalette &palette)
             QColor nf = palette.color(QPalette::Inactive, QPalette::ButtonText);
 
             colorCacheInvalid_ = false;
-            cachedButtonDetailColor_ = reduceContrast(nb, nf, qMax(2.5, KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
+            cachedButtonDetailColor_ = reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
         }
         return cachedButtonDetailColor_;
     }
