@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Include with base class for effects.
 #include <kwineffects.h>
 
+#include <QRegion>
+
 template< class T > class QVector;
 
 
@@ -44,9 +46,10 @@ class BlurEffect : public Effect
         ~BlurEffect();
 
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
 
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
         static bool supported();
 
@@ -55,6 +58,8 @@ class BlurEffect : public Effect
         GLShader* loadShader(const QString& name);
         void updateBlurTexture(const QVector<QRect>& rects);
         void updateBlurTexture(const QRegion& region);
+
+        QRegion expandedRegion( const QRegion& r ) const;
 
     private:
         GLTexture* mSceneTexture;
@@ -69,7 +74,11 @@ class BlurEffect : public Effect
         int mBlurRadius;
 
         int mTransparentWindows;
-        int mTime;
+
+        QRegion mBlurDirty;
+        QRegion mScreenDirty;
+
+        QRegion mBlurMask;
     };
 
 } // namespace

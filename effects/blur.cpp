@@ -47,12 +47,17 @@ BlurEffect::BlurEffect() : Effect()
     mWindowShader = 0;
 
     mBlurRadius = 4;
-    mTime = 0;
     mValid = loadData();
+    if( !mValid )
+        {
+        kWarning() << "Loading failed";
+        }
+    effects->addRepaintFull();
     }
 
 BlurEffect::~BlurEffect()
-{
+    {
+    effects->addRepaintFull();
     delete mSceneTexture;
     delete mTmpTexture;
     delete mBlurTexture;
@@ -61,7 +66,7 @@ BlurEffect::~BlurEffect()
     delete mBlurTarget;
     delete mBlurShader;
     delete mWindowShader;
-}
+    }
 
 
 bool BlurEffect::loadData()
@@ -140,44 +145,123 @@ bool BlurEffect::supported()
             (effects->compositingType() == OpenGLCompositing);
     }
 
+QRegion BlurEffect::expandedRegion( const QRegion& region ) const
+    {
+    QRegion expandedregion;
+    foreach( QRect r, region.rects() )
+        {
+        r.adjust( -mBlurRadius, -mBlurRadius, mBlurRadius, mBlurRadius );
+        expandedregion += r;
+        }
+    return expandedregion;
+    }
 
 void BlurEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     mTransparentWindows = 0;
-    mTime += time;
+    mScreenDirty = QRegion();
+    mBlurDirty = QRegion();
+    mBlurMask = QRegion();
 
     effects->prePaintScreen(data, time);
     }
 
 void BlurEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-{
+    {
+    // Expand the painted area
+    mBlurMask |= expandedRegion( data.paint );
+    data.paint |= expandedRegion( mBlurMask );
     effects->prePaintWindow( w, data, time );
 
     if( w->isPaintingEnabled() && ( data.mask & PAINT_WINDOW_TRANSLUCENT ))
         mTransparentWindows++;
-}
+    data.setTranslucent();
+    }
 
-void BlurEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
-{
-    if( mValid && mTransparentWindows )
+void BlurEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-        if( mask & PAINT_WINDOW_TRANSLUCENT )
+    // TODO: prePaintWindow() gets called _after_ paintScreen(), so we have no
+    //  way of knowing here whether there will be any translucent windows or
+    //  not. If we'd know that there's no translucent windows then we could
+    //  render straight onto screen, saving some time.
+    if( mValid /*&& mTransparentWindows*/ )
         {
+        // rendering everything onto render target
+        effects->pushRenderTarget(mSceneTarget);
+        effects->paintScreen( mask, region, data );
+        effects->popRenderTarget();
+
+        // Copy changed areas back onto screen
+        mScreenDirty &= mBlurMask;
+        if( !mScreenDirty.isEmpty() )
+            {
+            if( mask & PAINT_SCREEN_TRANSFORMED )
+                {
+                // We don't want any transformations when working with our own
+                //  textures, so load an identity matrix
+                glMatrixMode( GL_MODELVIEW );
+                glPushMatrix();
+                glLoadIdentity();
+                }
+
+            GLTexture* tex = mSceneTexture;
+            int pixels = 0;
+            tex->bind();
+            tex->enableUnnormalizedTexCoords();
+            foreach( QRect r, mScreenDirty.rects() )
+                {
+                r.adjust(0, -1, 0, -1);
+                int rx2 = r.x() + r.width();
+                int ry2 = r.y() + r.height();
+                glBegin(GL_QUADS);
+                    glTexCoord2f( r.x(), ry2 );   glVertex2f( r.x(), ry2 );
+                    glTexCoord2f( rx2  , ry2 );   glVertex2f( rx2  , ry2 );
+                    glTexCoord2f( rx2  , r.y() ); glVertex2f( rx2  , r.y() );
+                    glTexCoord2f( r.x(), r.y() ); glVertex2f( r.x(), r.y() );
+                glEnd();
+                pixels += r.width()*r.height();
+                }
+            tex->disableUnnormalizedTexCoords();
+            tex->unbind();
+
+            if( mask & PAINT_SCREEN_TRANSFORMED )
+                {
+                // Restore the original matrix
+                glPopMatrix();
+                }
+//             kDebug() << "Copied" << mScreenDirty.rects().count() << "rects,    pixels:" << pixels;
+            }
+
+        }
+    else
+        {
+        effects->paintScreen( mask, region, data );
+        }
+    }
+
+void BlurEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    if( mValid /*&& mTransparentWindows*/ )
+        {
+            if( mask & PAINT_WINDOW_TRANSLUCENT &&
+                (data.opacity != 1.0 || data.contents_opacity != 1.0 || data.decoration_opacity != 1.0 ))
+            {
             // Make sure the blur texture is up to date
             if( mask & PAINT_SCREEN_TRANSFORMED )
-            {
+                {
                 // We don't want any transformations when working with our own
                 //  textures, so load an identity matrix
                 glPushMatrix();
                 glLoadIdentity();
-            }
+                }
             // If we're having transformations, we don't know the window's
             //  transformed position on the screen and thus have to update the
             //  entire screen
             if( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS ) )
                 updateBlurTexture( QRegion(0, 0, displayWidth(), displayHeight()) );
             else
-                updateBlurTexture(region);
+                updateBlurTexture( mBlurDirty );
+            mBlurDirty = QRegion();
             if( mask & PAINT_SCREEN_TRANSFORMED )
                 // Restore the original matrix
                 glPopMatrix();
@@ -191,97 +275,87 @@ void BlurEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             glActiveTexture(GL_TEXTURE0);
 
             // Paint
-            effects->paintWindow( w, mask, region, data );
-            if(mTransparentWindows > 1)
-            {
-                // If we have multiple translucent windows on top of each
-                //  other, we need to paint those onto the scene rendertarget
-                //  as well
-                effects->pushRenderTarget(mSceneTarget);
-                effects->paintWindow( w, mask, region, data );
-                effects->popRenderTarget();
-            }
+            effects->drawWindow( w, mask, region, data );
 
             // Disable blur texture and shader
             glActiveTexture(GL_TEXTURE4);
             mBlurTexture->unbind();
             glActiveTexture(GL_TEXTURE0);
             mWindowShader->unbind();
-        }
+            }
         else
-        {
+            {
             // Opaque window
-            // Paint to the screen...
-            effects->paintWindow( w, mask, region, data );
-            // ...and to the rendertarget as well
-            effects->pushRenderTarget(mSceneTarget);
-            effects->paintWindow( w, mask, region, data );
-            effects->popRenderTarget();
+            // Paint to the rendertarget (which is already being used)
+            effects->drawWindow( w, mask, region, data );
+            }
+        // Mark the window's region as dirty
+        mScreenDirty += region;
+        mBlurDirty += region & mBlurMask;
         }
-    }
     else
         // If there are no translucent windows then paint as usual
-        effects->paintWindow( w, mask, region, data );
-}
+        effects->drawWindow( w, mask, region, data );
+    }
 
 void BlurEffect::updateBlurTexture(const QRegion& region)
-{
+    {
     QRect bounding = region.boundingRect();
     QVector<QRect> rects = region.rects();
     int totalarea = 0;
     foreach( QRect r, rects )
         totalarea += r.width() * r.height();
     if( (int)(totalarea * 1.33 + 100 ) < bounding.width() * bounding.height() )
-    {
+        {
         // Use small rects
         updateBlurTexture(rects);
-    }
+        }
     else
-    {
+        {
         // Bounding rect is probably cheaper
         QVector<QRect> tmp( 1, bounding );
         updateBlurTexture( tmp );
+        }
     }
-}
 
 void BlurEffect::updateBlurTexture(const QVector<QRect>& rects)
-{
+    {
     // Blur
     // First pass (vertical)
-    effects->pushRenderTarget(mTmpTarget);
     mBlurShader->bind();
-    mSceneTexture->bind();
+    effects->pushRenderTarget(mTmpTarget);
+    mBlurShader->setAttribute("xBlur", 0.0f);
+    mBlurShader->setAttribute("yBlur", 1.0f);
 
-    mBlurShader->setAttribute("xBlur", 0);
-    mBlurShader->setAttribute("yBlur", 1);
+    mSceneTexture->bind();
 
     foreach( QRect r, rects )
         {
-        r.adjust(-mBlurRadius, -mBlurRadius, mBlurRadius, mBlurRadius);
+        // We change x coordinates here because horizontal blur pass (which
+        //  comes after this one) also uses pixels that are horizontally edging
+        //  the blurred area. Thus we need to make sure that those pixels are
+        //  also updated.
         glBegin(GL_QUADS);
-            glVertex2f( r.x()            , r.y() + r.height() );
-            glVertex2f( r.x() + r.width(), r.y() + r.height() );
-            glVertex2f( r.x() + r.width(), r.y() );
-            glVertex2f( r.x()            , r.y() );
+            glVertex2f( r.x()-mBlurRadius            , r.y() + r.height() );
+            glVertex2f( r.x() + r.width()+mBlurRadius, r.y() + r.height() );
+            glVertex2f( r.x() + r.width()+mBlurRadius, r.y() );
+            glVertex2f( r.x()-mBlurRadius            , r.y() );
         glEnd();
         }
 
 
     mSceneTexture->unbind();
-    mBlurShader->unbind();
     effects->popRenderTarget();
 
     // Second pass (horizontal)
     effects->pushRenderTarget(mBlurTarget);
-    mBlurShader->bind();
-    mTmpTexture->bind();
+    mBlurShader->setAttribute("xBlur", 1.0f);
+    mBlurShader->setAttribute("yBlur", 0.0f);
 
-    mBlurShader->setAttribute("xBlur", 1);
-    mBlurShader->setAttribute("yBlur", 0);
+    mTmpTexture->bind();
 
     foreach( QRect r, rects )
         {
-        r.adjust(-mBlurRadius, -mBlurRadius, mBlurRadius, mBlurRadius);
         glBegin(GL_QUADS);
             glVertex2f( r.x()            , r.y() + r.height() );
             glVertex2f( r.x() + r.width(), r.y() + r.height() );
@@ -292,9 +366,9 @@ void BlurEffect::updateBlurTexture(const QVector<QRect>& rects)
 
 
     mTmpTexture->unbind();
-    mBlurShader->unbind();
     effects->popRenderTarget();
-}
+    mBlurShader->unbind();
+    }
 
 } // namespace
 
