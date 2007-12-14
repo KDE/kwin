@@ -834,7 +834,7 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
         if( pos == NULL )
             break;
         loop_pos = pos->transient_for_id;
-        if( --count == 0 )
+        if( --count == 0 || pos == this )
             {
             kWarning( 1216 ) << "Client " << this << " caused WM_TRANSIENT_FOR loop." ;
             new_transient_for = rootWindow();
