@@ -977,7 +977,10 @@ void PresentWindowsEffect::updateFilterTexture()
 #ifdef HAVE_OPENGL
     discardFilterTexture();
     if( windowFilter.isEmpty())
+        {
+        effects->addRepaint( filterTextureRect );
         return;
+        }
     // Create font for filter text
     QFont font;
     font.setPointSize( font.pointSize() * 2 );
