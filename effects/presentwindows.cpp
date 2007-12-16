@@ -1022,7 +1022,8 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
         }
 
     WindowData& data = mWindowData[ w ];
-    if( data.icon.serialNumber() != w->icon().serialNumber())
+    // TODO: find out why this doesn't work properly
+    // if( data.icon.cacheKey() != w->icon().cacheKey())
         { // make sure data.icon is the right QPixmap, and rebind
         data.icon = w->icon();
 #ifdef HAVE_OPENGL
