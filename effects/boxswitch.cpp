@@ -565,7 +565,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         return;
         }
 
-    if( windows[ w ]->icon.serialNumber() != w->icon().serialNumber())
+    if( windows[ w ]->icon.cacheKey() != w->icon().cacheKey())
         { // make sure windows[ w ]->icon is the right QPixmap, and rebind
         windows[ w ]->icon = w->icon();
 #ifdef HAVE_OPENGL
