@@ -76,9 +76,6 @@ Section "DRI"
  Mode 0660
 EndSection
 
-For the TFP mode AIGLX needs to work. Also, it seems necessary to do
-"export LIBGL_ALWAYS_INDIRECT=1" before running kwin, otherwise SHM mode is used.
-
 For SHM, the following in xorg.conf may improve performance:
 
 Section "Screen"
