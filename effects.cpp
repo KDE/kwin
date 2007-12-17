@@ -344,7 +344,8 @@ void EffectsHandlerImpl::moveWindow( EffectWindow* w, const QPoint& pos )
 
 void EffectsHandlerImpl::windowToDesktop( EffectWindow* w, int desktop )
     {
-    if( Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window()))
+    Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window());
+    if( cl && !cl->isDesktop() && !cl->isDock() && !cl->isTopMenu())
         Workspace::self()->sendClientToDesktop( cl, desktop, true );
     }
 
