@@ -49,7 +49,7 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
     if( w != logout_window && progress != 0 )
         {
         // When saturation isn't supported then reduce brightness a bit more
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         if( effects->compositingType() == OpenGLCompositing && GLTexture::saturationSupported() )
             {
             data.saturation *= ( 1 - progress * 0.8 );

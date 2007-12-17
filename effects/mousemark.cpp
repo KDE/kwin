@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mousemark.h"
 
-#include <config-X11.h>
+#include <kwinconfig.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <GL/gl.h>
 #endif
 

@@ -480,7 +480,7 @@ EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
 
 void EffectsHandlerImpl::pushRenderTarget(GLRenderTarget* target)
 {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     target->enable();
     render_targets.push(target);
 #endif
@@ -488,7 +488,7 @@ void EffectsHandlerImpl::pushRenderTarget(GLRenderTarget* target)
 
 GLRenderTarget* EffectsHandlerImpl::popRenderTarget()
 {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     GLRenderTarget* ret = render_targets.pop();
     ret->disable();
     if( !render_targets.isEmpty() )
@@ -654,7 +654,7 @@ void EffectsHandlerImpl::reserveElectricBorderSwitching( bool reserve )
 
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()
     {
-#if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( SceneXrender* s = dynamic_cast< SceneXrender* >( scene ))
         return s->bufferPicture();
 #endif

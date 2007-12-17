@@ -1,4 +1,5 @@
 
+configure_file(kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h )
 
 
 ########### next target ###############

@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include <config-X11.h>
+#include <kwinconfig.h>
 
 #include "boxswitch.h"
 
@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kapplication.h>
 #include <kcolorscheme.h>
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <GL/gl.h>
 #endif
 
@@ -46,7 +46,7 @@ BoxSwitchEffect::BoxSwitchEffect()
     {
     frame_margin = 10;
     highlight_margin = 5;
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
 #endif
     color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
@@ -345,7 +345,7 @@ void BoxSwitchEffect::setInactive()
             }
         foreach( ItemInfo* i, windows )
             {
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if( effects->compositingType() == XRenderCompositing )
                 {
                 if( i->iconPicture != None )
@@ -449,7 +449,7 @@ void BoxSwitchEffect::calculateItemSizes()
 
 void BoxSwitchEffect::paintFrame()
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT );
@@ -458,7 +458,7 @@ void BoxSwitchEffect::paintFrame()
         glPopAttrib();
         }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
         {
         Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
@@ -482,7 +482,7 @@ void BoxSwitchEffect::paintFrame()
 
 void BoxSwitchEffect::paintHighlight( QRect area )
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT );
@@ -491,7 +491,7 @@ void BoxSwitchEffect::paintHighlight( QRect area )
         glPopAttrib();
         }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
         {
         Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
@@ -568,14 +568,14 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     if( windows[ w ]->icon.cacheKey() != w->icon().cacheKey())
         { // make sure windows[ w ]->icon is the right QPixmap, and rebind
         windows[ w ]->icon = w->icon();
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         if( effects->compositingType() == OpenGLCompositing )
             {
             windows[ w ]->iconTexture.load( windows[ w ]->icon );
             windows[ w ]->iconTexture.setFilter( GL_LINEAR );
             }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if( effects->compositingType() == XRenderCompositing )
             {
             if( windows[ w ]->iconPicture != None )
@@ -589,7 +589,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     int height = windows[ w ]->icon.height();
     int x = windows[ w ]->area.x() + windows[ w ]->area.width() - width - highlight_margin;
     int y = windows[ w ]->area.y() + windows[ w ]->area.height() - height - highlight_margin;
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
@@ -620,7 +620,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         glPopAttrib();
         }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
         {
         XRenderComposite( display(),

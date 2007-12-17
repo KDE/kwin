@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include <config-X11.h> // HAVE_OPENGL
+#include <kwinconfig.h>
 
 #include "magnifier.h"
 
@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <kstandardaction.h>
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <GL/gl.h>
 #endif
 
@@ -81,7 +81,7 @@ void MagnifierEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     effects->paintScreen( mask, region, data ); // paint normal screen
     if( zoom != 1.0 )
         { // paint magnifier
-// ## TODO this should be inside HAVE_OPENGL
+// ## TODO this should be inside KWIN_HAVE_OPENGL_COMPOSITING
         glPushAttrib( GL_ENABLE_BIT );
         QRect area = magnifierArea();
         glEnable( GL_SCISSOR_TEST );

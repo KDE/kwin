@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   if( !function ) \
     function = (function ## _func)getProcAddress( #backup );
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL
 
 namespace KWin
 {

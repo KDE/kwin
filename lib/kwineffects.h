@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWINEFFECTS_H
 #define KWINEFFECTS_H
 
+#include <kwinconfig.h>
 #include <kwinglobals.h>
 
 #include <QtCore/QPair>

@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-X11.h>
 #include <config-kwin.h>
 
+#include <kwinconfig.h>
+
 #include <X11/Xlib.h>
 
 #include <fixx11h.h>

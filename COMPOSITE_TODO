@@ -44,8 +44,6 @@ KDE 4.0 TODO
     - taskbar thumbnail [Seli]
         - we'll go with the hacky one, fix performance problems
 
-- fix inclusion of config-X11.h in installed headers [Seli]
-
 - fix shading
 - window-specific rules need to apply to unmanaged windows as well (where applicable)
 - some window-specific rules also related to compositing

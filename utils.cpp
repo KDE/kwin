@@ -42,28 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xatom.h>
 #include <QX11Info>
 
-#ifdef HAVE_XRENDER
-#include <X11/extensions/Xrender.h>
-#endif
-#ifdef HAVE_XFIXES
-#include <X11/extensions/Xfixes.h>
-#endif
-#ifdef HAVE_XDAMAGE
-#include <X11/extensions/Xdamage.h>
-#endif
-#ifdef HAVE_XRANDR
-#include <X11/extensions/Xrandr.h>
-#endif
-#ifdef HAVE_XCOMPOSITE
-#include <X11/extensions/Xcomposite.h>
-#endif
-#ifdef HAVE_OPENGL
-#include <GL/glx.h>
-#endif
-#ifdef HAVE_XSYNC
-#include <X11/extensions/sync.h>
-#endif
-
 #include <stdio.h>
 
 #include "atoms.h"

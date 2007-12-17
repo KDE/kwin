@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <kxerrorhandler.h>
 #include <klocale.h>
+#include <kdeversion.h>
 
 
 namespace KWin
@@ -45,7 +46,7 @@ CompositingPrefs::~CompositingPrefs()
 
 bool CompositingPrefs::compositingPossible()
     {
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+#ifdef KWIN_HAVE_COMPOSITING
     Extensions::init();
     if( !Extensions::compositeAvailable())
         {
@@ -57,12 +58,16 @@ bool CompositingPrefs::compositingPossible()
         kDebug( 1212 ) << "No damage extension available";
         return false;
         }
-
-#if !(defined(HAVE_OPENGL) || (defined(HAVE_XRENDER) && defined(HAVE_XFIXES)))
-    kDebug( 1212 ) << "Not compiled with OpenGL/XRender support";
-    return false;
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( Extensions::glxAvailable())
+        return true;
 #endif
-    return true;
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( Extensions::renderAvailable() && Extensions::fixesAvailable())
+        return true;
+#endif
+    kDebug( 1212 ) << "No OpenGL or XRender/XFixes support";
+    return false;
 #else
     return false;
 #endif
@@ -70,13 +75,32 @@ bool CompositingPrefs::compositingPossible()
 
 QString CompositingPrefs::compositingNotPossibleReason()
     {
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE ) && (defined(HAVE_OPENGL) || (defined(HAVE_XRENDER) && defined(HAVE_XFIXES)))
+#ifdef KWIN_HAVE_COMPOSITING
     Extensions::init();
-    if( !Extensions::compositeAvailable() || Extensions::damageAvailable())
+    if( !Extensions::compositeAvailable() || !Extensions::damageAvailable())
         {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
         }
-
+#if KDE_IS_VERSION( 4, 0, 90 )
+#ifdef __GNUC__
+#warning Uncomment
+#endif
+#endif
+//#if defined( KWIN_HAVE_OPENGL_COMPOSITING ) && !defined( KWIN_HAVE_XRENDER_COMPOSITING )
+//    if( !Extensions::glxAvailable())
+//        return i18n( "GLX/OpenGL are not available and only OpenGL support is compiled." );
+//#endif
+//#elseif !defined( KWIN_HAVE_OPENGL_COMPOSITING ) && defined( KWIN_HAVE_XRENDER_COMPOSITING )
+//    if( !Extensions::glxAvailable())
+//        return i18n( "XRender/XFixes extensions are not available and only XRender support"
+//            " is compiled." );
+//#else
+//    if( !( Extensions::glxAvailable()
+//            || ( Extensions::renderAvailable() && Extensions::fixesAvailable())))
+//        {
+//        return i18n( "GLX/OpenGL and XRender/XFixes are not available." );
+//        }
+//#endif
     return QString();
 #else
     return i18n("Compositing was disabled at compile time.\n"
@@ -91,7 +115,7 @@ void CompositingPrefs::detect()
         return;
         }
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( !Extensions::glxAvailable())
         {
         kDebug( 1212 ) << "No GLX available";
@@ -129,7 +153,7 @@ void CompositingPrefs::detect()
 
 bool CompositingPrefs::createGLXContext()
 {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     KXErrorHandler handler;
     // Most of this code has been taken from glxinfo.c
     QVector<int> attribs;
@@ -179,7 +203,7 @@ bool CompositingPrefs::createGLXContext()
 
 void CompositingPrefs::deleteGLXContext()
 {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     glXDestroyContext( display(), mGLContext );
     XDestroyWindow( display(), mGLWindow );
 #endif
@@ -187,7 +211,7 @@ void CompositingPrefs::deleteGLXContext()
 
 void CompositingPrefs::detectDriverAndVersion()
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     mGLVendor = QString((const char*)glGetString( GL_VENDOR ));
     mGLRenderer = QString((const char*)glGetString( GL_RENDERER ));
     mGLVersion = QString((const char*)glGetString( GL_VERSION ));

@@ -87,7 +87,7 @@ private:
     bool mEnableDirectRendering;
     bool mStrictBinding;
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     GLXContext mGLContext;
     Window mGLWindow;
 #endif

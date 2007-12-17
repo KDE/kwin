@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglutils.h>
 
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/extensions/Xrender.h>
 #endif
 
@@ -94,7 +94,7 @@ class BoxSwitchEffect
 
         int painting_desktop;
 
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         XRenderPictFormat* alphaFormat;
 #endif
     };
@@ -106,10 +106,10 @@ class BoxSwitchEffect::ItemInfo
         QRegion clickable;
         QRect thumbnail;
         QPixmap icon;
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         GLTexture iconTexture;
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         Picture iconPicture;
 #endif
     };

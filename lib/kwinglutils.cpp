@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglutils.h"
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL
 
 #include "kwinglobals.h"
 #include "kwineffects.h"

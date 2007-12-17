@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scene_xrender.h"
 
-#if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
 #include "toplevel.h"
 #include "client.h"

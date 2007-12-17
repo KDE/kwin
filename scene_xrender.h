@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scene.h"
 
-#if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 

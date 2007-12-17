@@ -76,7 +76,7 @@ namespace KWin
 
 void Workspace::setupCompositing()
     {
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+#ifdef KWIN_HAVE_COMPOSITING
     if( !options->useCompositing )
         {
         kDebug( 1212 ) << "Compositing is turned off in options";
@@ -120,7 +120,7 @@ void Workspace::setupCompositing()
             kDebug( 1212 ) << "X compositing";
             scene = new SceneBasic( this );
           break; // don't fall through (this is a testing one) */
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         case OpenGLCompositing:
             kDebug( 1212 ) << "OpenGL compositing";
             scene = new SceneOpenGL( this );
@@ -130,16 +130,14 @@ void Workspace::setupCompositing()
             scene = NULL;
             // fall through, try XRender
 #endif
-#if defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         case XRenderCompositing:
             kDebug( 1212 ) << "XRender compositing";
             scene = new SceneXrender( this );
           break;
 #endif
         default:
-// this is the inverse of the two above tests, to have a different message
-// it is also used in compositingprefs.cpp
-#if !(defined(HAVE_OPENGL) || (defined(HAVE_XRENDER) && defined(HAVE_XFIXES)))
+#ifndef KWIN_HAVE_COMPOSITING
             kDebug( 1212 ) << "Compositing was not available at compile time";
 #else
             kDebug( 1212 ) << "No compositing";
@@ -209,7 +207,7 @@ void Workspace::setupCompositing()
 
 void Workspace::finishCompositing()
     {
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+#ifdef KWIN_HAVE_COMPOSITING
     if( scene == NULL )
         return;
     delete cm_selection;
@@ -280,7 +278,7 @@ void Workspace::addRepaintFull()
 
 void Workspace::performCompositing()
     {
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+#ifdef KWIN_HAVE_COMPOSITING
     // The event loop apparently tries to fire a QTimer as often as possible, even
     // at the expense of not processing many X events. This means that the composite
     // repaints can seriously impact performance of everything else, therefore throttle
@@ -403,7 +401,7 @@ void Workspace::destroyOverlay()
 
 void Toplevel::setupCompositing()
     {
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+#ifdef KWIN_HAVE_COMPOSITING
     if( !compositing())
         return;
     if( damage_handle != None )
@@ -417,7 +415,7 @@ void Toplevel::setupCompositing()
 
 void Toplevel::finishCompositing()
     {
-#if defined( HAVE_XCOMPOSITE ) && defined( HAVE_XDAMAGE )
+#ifdef KWIN_HAVE_COMPOSITING
     if( damage_handle == None )
         return;
     if( effect_window->window() == this ) // otherwise it's already passed to Deleted, don't free data
@@ -446,7 +444,7 @@ void Toplevel::discardWindowPixmap()
 
 Pixmap Toplevel::createWindowPixmap()
     {
-#ifdef HAVE_XCOMPOSITE
+#ifdef KWIN_HAVE_COMPOSITING
     assert( compositing());
     grabXServer();
     KXErrorHandler err;

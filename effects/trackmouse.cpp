@@ -20,14 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "trackmouse.h"
 
-#include <config-X11.h>
+#include <kwinconfig.h>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
 
 #include <math.h>
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <GL/gl.h>
 #endif
 
@@ -65,7 +65,7 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
     effects->paintScreen( mask, region, data ); // paint normal screen
     if( !active )
         return;
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( texture )
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
@@ -140,7 +140,7 @@ QRect TrackMouseEffect::starRect( int num ) const
 
 void TrackMouseEffect::loadTexture()
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     QString file = KGlobal::dirs()->findResource( "appdata", "trackmouse.png" );
     if( file.isEmpty())
         return;

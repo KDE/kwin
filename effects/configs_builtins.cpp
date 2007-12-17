@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include <config-X11.h>
+#include <kwinconfig.h>
 
 #include "shadow_config.h"
 #include "presentwindows_config.h"
@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "thumbnailaside_config.h"
 #include "zoom_config.h"
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include "invert_config.h"
 #include "lookingglass_config.h"
 #include "mousemark_config.h"
@@ -62,7 +62,7 @@ KWIN_EFFECT_CONFIG_FACTORY
     registerPlugin<KWin::SharpenEffectConfig>("sharpen"); \
     registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse"); \
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
     NON_GL_PLUGINS
     GL_PLUGINS

@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QPixmap>
 
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/extensions/Xrender.h>
 #endif
 
@@ -117,10 +117,10 @@ class PresentWindowsEffect
             int x, y; // position of the slot in the grid
             int slot_distance;
             QPixmap icon;
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
             GLTexture iconTexture;
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
             Picture iconPicture;
 #endif
             };
@@ -129,7 +129,7 @@ class PresentWindowsEffect
         EffectWindow* mHighlightedWindow;
         
         QString windowFilter;
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         GLTexture* filterTexture;
         QRect filterTextureRect;
         QRect filterFrameRect;
@@ -138,7 +138,7 @@ class PresentWindowsEffect
         ElectricBorder borderActivate;
         ElectricBorder borderActivateAll;
 
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         XRenderPictFormat* alphaFormat;
 #endif
     };

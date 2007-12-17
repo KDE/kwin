@@ -41,8 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <config-workspace.h>
-
 #include "videorecord.h"
 
 #include <kaction.h>

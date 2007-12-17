@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "showpaint.h"
 
-#include <config-X11.h>
+#include <kwinconfig.h>
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <GL/gl.h>
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
 #endif
@@ -51,11 +51,11 @@ void ShowPaintEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     {
     painted = QRegion();
     effects->paintScreen( mask, region, data );
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing)
         paintGL();
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing)
         paintXrender();
 #endif
@@ -72,7 +72,7 @@ void ShowPaintEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 // TODO I think we need some kind of generic paintRect()
 void ShowPaintEffect::paintGL()
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -94,7 +94,7 @@ void ShowPaintEffect::paintGL()
 
 void ShowPaintEffect::paintXrender()
     {
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     XRenderColor col;
     int alpha = 0.2;
     const QColor& color = colors[ color_index ];

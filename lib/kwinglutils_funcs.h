@@ -25,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define KWIN_EXPORT KDE_EXPORT
 
-#include <config-X11.h> // HAVE_OPENGL
+#include <kwinconfig.h> // KWIN_HAVE_OPENGL
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL
 
 // gcc-3.3.3 apparently cannot resolve KWin's namespaced versions properly,
 // so hide possible global functions

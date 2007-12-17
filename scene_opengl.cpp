@@ -82,7 +82,7 @@ Sources and other compositing managers:
 // normally only few of them are enabled
 //#define CHECK_GL_ERROR
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 
 namespace KWin
 {

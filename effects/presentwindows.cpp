@@ -46,7 +46,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , mRearranging( 1.0 )
     , hasKeyboardGrab( false )
     , mHighlightedWindow( NULL )
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , filterTexture( NULL )
 #endif
     {
@@ -68,7 +68,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );
 
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
 #endif
     }
@@ -137,7 +137,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
 void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     effects->paintScreen( mask, region, data );
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( filterTexture && region.intersects( filterFrameRect ))
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
@@ -966,7 +966,7 @@ EffectWindow* PresentWindowsEffect::findFirstWindow() const
 
 void PresentWindowsEffect::discardFilterTexture()
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete filterTexture;
     filterTexture = NULL;
 #endif
@@ -974,7 +974,7 @@ void PresentWindowsEffect::discardFilterTexture()
 
 void PresentWindowsEffect::updateFilterTexture()
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     discardFilterTexture();
     if( windowFilter.isEmpty())
         {
@@ -1026,14 +1026,14 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
     // if( data.icon.cacheKey() != w->icon().cacheKey())
         { // make sure data.icon is the right QPixmap, and rebind
         data.icon = w->icon();
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         if( effects->compositingType() == OpenGLCompositing )
             {
             data.iconTexture.load( data.icon );
             data.iconTexture.setFilter( GL_LINEAR );
             }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if( effects->compositingType() == XRenderCompositing )
             {
             if( data.iconPicture != None )
@@ -1048,7 +1048,7 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
     int height = data.icon.height();
     int x = w->x() + paintdata.xTranslate + w->width() * paintdata.xScale * 0.95 - width - icon_margin;
     int y = w->y() + paintdata.yTranslate + w->height() * paintdata.yScale * 0.95 - height - icon_margin;
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
@@ -1080,7 +1080,7 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
         glPopAttrib();
         }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
         {
         XRenderComposite( display(),

@@ -21,9 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLUTILS_H
 #define KWIN_GLUTILS_H
 
-#include <config-X11.h> // HAVE_OPENGL
+#include <kwinconfig.h> // KWIN_HAVE_OPENGL
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils_funcs.h>
 
 #include <QPixmap>

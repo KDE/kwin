@@ -20,16 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "showfps.h"
 
-#include <config-X11.h>
+#include <kwinconfig.h>
 
 #include <kconfiggroup.h>
 #include <kglobal.h>
 #include <ksharedconfig.h>
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <GL/gl.h>
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
 #endif
@@ -115,14 +115,14 @@ void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data
             ++fps; // count all frames in the last second
     if( fps > MAX_TIME )
         fps = MAX_TIME; // keep it the same height
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing)
         {
         paintGL( fps );
         glFinish(); // make sure all rendering is done
         }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing)
         {
         paintXrender( fps );
@@ -133,7 +133,7 @@ void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data
 
 void ShowFpsEffect::paintGL( int fps )
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     int x = this->x;
     int y = this->y;
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
@@ -189,7 +189,7 @@ void ShowFpsEffect::paintGL( int fps )
 */
 void ShowFpsEffect::paintXrender( int fps )
     {
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), FPS_WIDTH, MAX_TIME, 32 );
     XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardARGB32 );
     Picture p = XRenderCreatePicture( display(), pixmap, format, 0, NULL );
@@ -277,7 +277,7 @@ void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
 
 void ShowFpsEffect::paintGraph( int x, int y, QList<int> values, QList<int> lines, bool colorize)
     {
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing)
         {
         glColor4f( 0, 0, 0, alpha ); // black
@@ -310,7 +310,7 @@ void ShowFpsEffect::paintGraph( int x, int y, QList<int> values, QList<int> line
         glEnd();
         }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing)
         {
         Pixmap pixmap = XCreatePixmap( display(), rootWindow(), values.count(), MAX_TIME, 32 );

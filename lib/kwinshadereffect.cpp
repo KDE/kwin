@@ -52,7 +52,7 @@ ShaderEffect::~ShaderEffect()
 
 bool ShaderEffect::loadData(const QString& shadername)
 {
-#ifndef HAVE_OPENGL
+#ifndef KWIN_HAVE_OPENGL_COMPOSITING
     return false;
 #else
     // If NPOT textures are not supported, use nearest power-of-two sized
@@ -100,7 +100,7 @@ bool ShaderEffect::loadData(const QString& shadername)
 
 bool ShaderEffect::supported()
 {
-#ifndef HAVE_OPENGL
+#ifndef KWIN_HAVE_OPENGL_COMPOSITING
     return false;
 #else
     return GLRenderTarget::supported() &&
@@ -129,7 +129,7 @@ GLShader* ShaderEffect::shader() const
 void ShaderEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 {
     mTime += time / 1000.0f;
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( mValid && mEnabled )
     {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
@@ -146,7 +146,7 @@ void ShaderEffect::postPaintScreen()
     // Call the next effect.
     effects->postPaintScreen();
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( mValid && mEnabled )
     {
         // Disable render texture

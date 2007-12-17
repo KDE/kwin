@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER
 #include <X11/extensions/Xrender.h>
 #endif
 
@@ -321,7 +321,7 @@ bool EffectsHandler::paintText( const QString& text, const QPoint& center, int m
     QRect area( center.x() - textrect.width() / 2, center.y() - textrect.height() / 2,
                  textrect.width(), textrect.height() );
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
         GLTexture textTexture( textPixmap, GL_TEXTURE_RECTANGLE_ARB );
@@ -349,7 +349,7 @@ bool EffectsHandler::paintText( const QString& text, const QPoint& center, int m
         return true;
         }
 #endif
-#ifdef HAVE_XRENDER
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
         {
         static XRenderPictFormat* alphaFormat = 0;
@@ -379,7 +379,7 @@ bool EffectsHandler::paintTextWithBackground( const QString& text, const QPoint&
     QRect area( center.x() - textrect.width() / 2, center.y() - textrect.height() / 2,
                 textrect.width(), textrect.height() );
 
-#ifdef HAVE_OPENGL
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
     {
         glColor4f( bgcolor.redF(), bgcolor.greenF(), bgcolor.blueF(), bgcolor.alphaF() );
