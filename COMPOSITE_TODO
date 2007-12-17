@@ -56,9 +56,6 @@ KDE 4.0 TODO
 
 - shm mode needs support for more data formats than GL_BGRA
 
-? __GL_YIELD=NOTHING
-? LIBGL_ALWAYS_INDIRECT
-
 - check what works with XRender
 
 - should OpenGL fall back to XRender if OpenGL initialization fails?
@@ -151,10 +148,6 @@ OpenGL TODO
 
 % AIGLX support
     - should work
-+   - it needs indirect rendering, should be autodetected and disabled somehow
-%   - may require LIBGL_ALWAYS_INDIRECT set with older X.org
-        (http://lists.kde.org/?l=kwin&m=116439615124838&w=2)
-        (http://lists.freedesktop.org/archives/xorg/2006-December/020323.html)
 
 / GL_ARB_texture_rectangle vs GL_ARB_texture_non_power_of_two
 %   - works; bugs in tfp_mode with power_of_two textures
@@ -181,8 +174,11 @@ OpenGL TODO
     - this now works for 16bpp, but maybe not 15bpp or less
     - endian issues?
 
-% __GL_YIELD=NOTHING for NVidia reportedly improves perceived performance
-    - it needs to be set somehow (http://lists.kde.org/?l=kwin&m=117794153720348&w=2)
++ support for __GL_YIELD=NOTHING and LIBGL_ALWAYS_INDIRECT should be possibly less hacky
+    - or at least not hardcoded (although, does that matter?)
+    - (http://lists.kde.org/?l=kwin&m=116439615124838&w=2)
+    - (http://lists.freedesktop.org/archives/xorg/2006-December/020323.html)
+
 
 XRender TODO
 ==============================

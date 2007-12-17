@@ -69,6 +69,8 @@ if(OPENGL_FOUND)
   if (DL_LIBRARY)
     target_link_libraries(kdeinit_kwin ${DL_LIBRARY})
   endif(DL_LIBRARY)
+  # must be after opengl, to be initialized first by the linker
+  target_link_libraries(kdeinit_kwin kwinnvidiahack)
 endif(OPENGL_FOUND)
 if (X11_Xrandr_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xrandr_LIB})
@@ -90,6 +92,18 @@ install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
 
 target_link_libraries( kwin kdeinit_kwin )
 install(TARGETS kwin DESTINATION ${BIN_INSTALL_DIR})
+
+
+########### next target ###############
+
+set( kwinnvidiahack_LIB_SRCS 
+    nvidiahack.cpp )
+
+
+kde4_add_library(kwinnvidiahack SHARED ${kwinnvidiahack_LIB_SRCS})
+
+set_target_properties(kwinnvidiahack PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}  )
+install(TARGETS kwinnvidiahack  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
