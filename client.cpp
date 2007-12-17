@@ -532,6 +532,8 @@ void Client::updateInputShape()
           // that after the second step there's a hole in the input shape
           // until the real shape of the client is added and that can make
           // the window lose focus (which is a problem with mouse focus policies)
+          
+          // TODO it seems there is, after all - XShapeGetRectangles()
         static Window helper_window = None;
         if( helper_window == None )
             helper_window = XCreateSimpleWindow( display(), rootWindow(),
