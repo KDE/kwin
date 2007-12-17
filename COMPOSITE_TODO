@@ -23,14 +23,11 @@ TODO
 KDE 4.0 TODO
 =================================
 
-/ different handling of differeng gfx cards
-    / check that nvidia/ati/intel work and add specific hacks if needed
-    / the same about driver versions
-
 - default effects and their settings
 
+- shortcuts - sane defaults, not conflicts
+
 - effects (to do)
-    / add configuration options (dialogs)
     - add generic support to use effect only for certain window types [Seli]
     - explosion
 ?       - use for forcible killing (add support to windowClosed())
@@ -44,7 +41,6 @@ KDE 4.0 TODO
     - taskbar thumbnail [Seli]
         - we'll go with the hacky one, fix performance problems
 
-- fix shading
 - window-specific rules need to apply to unmanaged windows as well (where applicable)
 - some window-specific rules also related to compositing
     - opacity
@@ -60,8 +56,6 @@ KDE 4.0 TODO
 
 - should OpenGL fall back to XRender if OpenGL initialization fails?
 
-- more notification functions for effects
-
 - documentation
 
 - disable application effects when kwin can provide them, e.g. shadow/transparency
@@ -72,21 +66,12 @@ KDE 4.0 TODO
 General TODO
 =================================
 
-? alpha clear hack
-    - some decorations have parts transparent, probably because they don't expect
-        to have an alpha channel
-    - should be probably simply fixed in the decorations
-    - if not feasible, code that makes non-alpha windows opaque (SceneOpenGL::Window::prepareRenderStates())
-        could be used to also ignore alpha channel of the decoration
-
 ? wait for decoration repaints
     - it is sometimes visible that the window contents are painted first and the decoration
         only afterwards with a small delay
 ?       - this has been already greatly improved by r632378, so it's maybe not worth it anymore
     - maybe posted paint events need to be processed immediatelly, or maybe the compositing
         code should not update the window until the decoration is finished painting
-
-? Expose events for overlay window - is it necessary to track it, like with root window?
 
 % paint throttling
     - there's 5ms grace period per repaint to avoid overloading the system with just compositing
@@ -106,18 +91,11 @@ General TODO
 / handling of window pixmap for unmapped windows
     - currently it's kept around after a window is unmapped
 *       - but it's still discarded on e.g. resize - how to solve this?
-*   - perhaps there should be an option not to unmap windows in order to always have live thumbnails
-*       - another option could be to unmap but quickly map when a live thumbnail is needed
-
-* cursorPos() does not work reliably now (not from e.g. timers, it needs events), so it's disabled
+*   - windows could be unmapped but quickly mapped back when a live thumbnail is needed
 
 * window grouping is not implemented for unmanaged windows (used e.g. by DimInactive)
 
 % clean up and sort out shortcuts so that they don't conflict and make sense
-    - also make configurable etc.
-
-% installed headers currently include config.h files to find out about e.g. OpenGL
-    - this needs to be sorted out somehow, installed headers shouldn't do this
 
 ? hidden previews currently needs input shape extension, otherwise the window can possibly interfere
     - not very likely though, so is this worth bothering at all?
@@ -125,6 +103,7 @@ General TODO
 + hidden preview has two modes unimplemented
 
 - global setting for animation speed?
+
 - effects (to do)
     - effect for windows demanding attention
         - rays? ripples?
@@ -153,11 +132,6 @@ OpenGL TODO
 %   - works; bugs in tfp_mode with power_of_two textures
         - ati (others?): power_of_two windows are drawn white unless non-tfp_mode
             is forced in findTextureTarget()
-
-+ strict binding
-    - there is code to support strict binding as required by AIGLX, but it's disabled, because
-        copy_buffer in bindTexture() ensures strict binding as a side-effect
-    - http://lists.kde.org/?l=kwin&m=116363084129170&w=2
 
 % bindTexture() optimize copied areas
     - right now bindTexture() updates every damaged area and resets the window damage
@@ -204,14 +178,6 @@ Effects framework TODO
     - during some more complicated effects, input (at least mouse) should be disabled,
         because currently there is no way to do input redirection
 
-* PAINT_DISABLED turning off from effects needs some improvement
-    - a window may have painting disabled for various reasons and their numbers may increase
-        over time
-        - so e.g. an effect showing minimized windows cannot simply turn off DISABLED
-            for minimized windows, because it may be disabled also for other reasons
-        - there should be some utility function that will be called by the effect
-            with arguments saying which disabled windows it wants enabled
-
 + EffectWindow should be completely opaque when kept as the only API for effects
     - no inlines, etc.
 
@@ -224,7 +190,6 @@ Effects framework TODO
 % consider using http://lists.kde.org/?l=kwin&m=118094888517415&w=2 for notification functions
 
 % API cleanups and making sure it will stay backwards compatible
-?   - should we try at all for 4.0? it will be probably still too "unstable" at that point
 
 
 Effects TODO
@@ -246,27 +211,13 @@ Effects TODO
 + effects to replace widget effects (the ones in the Effects tab in "kcmshell style")
 
 / showfps effect
-    - for debugging, just shows transparent fps in some corner
-    - just painting the number in paintScreen() should do, with glPushMatrix() and glLoadIdentity()
-        to avoid all transformations
-+   - needs bindPixmapToTexture() or something like that, for displaying the text
     - should also detect kwin being idle - it probably should detect in pre-paint that the only
         damage is its own area and avoid damaging for the next round in post-paint
-    - should also have a graph showing how much of the screen is redraw, to detect too big redraws
-
-+ debugpaint effect
-    - should show what is damaged during each repaint step
-    - probably just e.g. paint a red almost transparent area over damaged areas
-    - needs special care to avoid causing infinite loops by its own damage (i.e. it damages
-        part of screen to clear its own painting, that triggers itself again next repaint)
 
 ? other effects
 
 + virtual desktop change effects
 +   - ... yes, you guessed it, the cube
-/   - something that presents all virtual desktops as being in grid (as in pager)
-        and zooms out of the old one and into the new one
-    - or whatever
 
 / present windows
 +    - option to show windows with relative sizes to each other
@@ -277,7 +228,5 @@ Effects TODO
 + effect for drawing attention to windows demanding attention
 
 * DimInactive flickers when switching between windows (temporarily no window becomes active)
-
-+ generic class for shader effects
 
 - focus effect (windows waves a little when it gets focus)
