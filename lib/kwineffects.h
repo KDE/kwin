@@ -18,8 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-// TODO MIT or some other license, perhaps move to some lib
-
 #ifndef KWINEFFECTS_H
 #define KWINEFFECTS_H
 
