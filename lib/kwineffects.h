@@ -39,7 +39,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 
-#define KWIN_EFFECT_API_VERSION 0x000100
+#define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor )) 
+#define KWIN_EFFECT_API_VERSION_MAJOR 0
+#define KWIN_EFFECT_API_VERSION_MINOR 1
+#define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
+    KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
 class KLibrary;
 class KConfigGroup;
@@ -283,6 +287,7 @@ class KWIN_EXPORT Effect
 #define KWIN_EFFECT( name, classname ) \
     extern "C" { \
         KWIN_EXPORT Effect* effect_create_kwin4_effect_##name() { return new classname; } \
+        KWIN_EXPORT int effect_version_kwin4_effect_##name() { return KWIN_EFFECT_API_VERSION; } \
     }
 /**
  * Defines the function used to check whether an effect is supported

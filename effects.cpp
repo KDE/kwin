@@ -723,6 +723,22 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
         return false;
         }
 
+    QString version_symbol = "effect_version_" + name;
+    KLibrary::void_function_ptr version_func = library->resolveFunction(version_symbol.toAscii());
+    if( version_func == NULL )
+        {
+        kWarning( 1212 ) << "Effect " << name << " does not provide required API version, ignoring.";
+        return false;
+        }
+    typedef int (*t_versionfunc)();
+    int version = reinterpret_cast< t_versionfunc >( version_func )(); // call it
+    // version must be the same or less, but major must be the same
+    if( version > KWIN_EFFECT_API_VERSION
+        || ( version >> 8 ) != KWIN_EFFECT_API_VERSION_MAJOR )
+        {
+        kWarning( 1212 ) << "Effect " << name << " requires unsupported API version " << version;
+        return false;
+        }
     QString supported_symbol = "effect_supported_" + name;
     KLibrary::void_function_ptr supported_func = library->resolveFunction(supported_symbol.toAscii().data());
     QString create_symbol = "effect_create_" + name;

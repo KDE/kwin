@@ -71,8 +71,6 @@ KDE 4.0 TODO
 
 - disable application effects when kwin can provide them, e.g. shadow/transparency
 
-- since API won't be stable, a version check for modules is needed
-
 - Plasma taskbar doesn't set icon geometry
 
 - Plasma pager doesn't set desktop layout
