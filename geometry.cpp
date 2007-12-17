@@ -1719,8 +1719,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
                 cs.width(), cs.height());
             XMoveResizeWindow( display(), window(), 0, 0, cs.width(), cs.height());
             }
-        if( shape())
-            updateShape();
+        updateShape();
         }
     else
         XMoveWindow( display(), frameId(), x, y );
