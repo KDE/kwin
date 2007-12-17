@@ -503,10 +503,10 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 effects->setElevatedWindow( window_move, true );
                 }
             }
-        else if( me->buttons() == Qt::MidButton && window_move == NULL )
+        else if(( me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton ) && window_move == NULL )
             {
             EffectWindow* w = windowAt( me->pos());
-            if( w != NULL && w->isMovable())
+            if( w != NULL )
                 {
                 if( w->isOnAllDesktops())
                     effects->windowToDesktop( w, posToDesktop( me->pos()));
