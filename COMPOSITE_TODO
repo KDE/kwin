@@ -60,8 +60,6 @@ KDE 4.0 TODO
 
 - disable application effects when kwin can provide them, e.g. shadow/transparency
 
-- Plasma taskbar doesn't set icon geometry
-
 
 General TODO
 =================================
