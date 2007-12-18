@@ -39,6 +39,7 @@ X-KDE-PluginInfo-Name=kwin4_effect_howto
 # Category of the effect, for config dialog
 X-KDE-PluginInfo-Category=Demos
 X-KDE-PluginInfo-Category[el]=Παρουσιάσεις
+X-KDE-PluginInfo-Category[hu]=Demók
 X-KDE-PluginInfo-Category[ja]=デモ
 X-KDE-PluginInfo-Category[lv]=Piemēri
 X-KDE-PluginInfo-Category[pt]=Demonstrações
