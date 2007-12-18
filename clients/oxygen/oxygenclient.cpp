@@ -293,12 +293,13 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, helper_.backgroundBottomColor(color));
 
-    int radialW = qMin(600, frame.width());
+    int radialW = qMin(600, frame.width() - LFRAMESIZE - RFRAMESIZE);
     tile = helper_.radialGradient(color, radialW);
-    QRect radialRect = QRect((frame.width() - radialW) / 2, 0, radialW, 64);
+    // In the style we assume the top frame to have a height of 32 this we need offset here with the
+    // actual value
+    int frameTopFixer = titleTop+titleHeight - 32;
+    QRect radialRect = QRect((frame.width() - radialW) / 2, frameTopFixer, radialW, 64);
     painter.drawPixmap(radialRect, tile);
-
-    //painter.setRenderHint(QPainter::Antialiasing,true);
 
     // draw title text
     painter.setFont(options()->font(isActive(), false));
@@ -425,38 +426,19 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 void OxygenClient::doShape()
 {
     bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
-  int r=widget()->width();
-  int b=widget()->height();
-QRegion mask(0,0,r,b);
+    int w=widget()->width();
+    int h=widget()->height();
 
     if(maximized) {
+        QRegion mask(0,0,w,h);
         setMask(mask);
         return;
     }
 
-    // Remove top-left corner.
-    mask -= QRegion(0, 0, 4, 1);
-    mask -= QRegion(0, 1, 2, 1);
-    mask -= QRegion(0, 2, 1, 1);
-    mask -= QRegion(0, 3, 1, 1);
-
-    // Remove top-right corner.
-    mask -= QRegion(r - 4, 0, 4, 1);
-    mask -= QRegion(r - 2, 1, 2, 1);
-    mask -= QRegion(r - 1, 2, 1, 1);
-    mask -= QRegion(r - 1, 3, 1, 1);
-
-    // Remove bottom-left corner.
-    mask -= QRegion(0, b-1-3, 1, 1);
-    mask -= QRegion(0, b-1-2, 1, 1);
-    mask -= QRegion(0, b-1-1, 2, 1);
-    mask -= QRegion(0, b-1-0, 4, 1);
-
-    // Remove bottom-right corner.
-    mask -= QRegion(r - 1, b-1-3, 1, 1);
-    mask -= QRegion(r - 1, b-1-2, 1, 1);
-    mask -= QRegion(r - 2, b-1-1, 2, 1);
-    mask -= QRegion(r - 4, b-1-0, 4, 1);
+    QRegion mask(4, 0, w-8, h);
+    mask += QRegion(0, 4, w, h-8);
+    mask += QRegion(2, 1, w-4, h-2);
+    mask += QRegion(1, 2, w-2, h-4);
 
     setMask(mask);
 }
