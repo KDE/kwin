@@ -40,6 +40,8 @@ KDE 4.0 TODO
         - should preserve aspect ratio (as an option?)
     - taskbar thumbnail [Seli]
         - we'll go with the hacky one, fix performance problems
+    - zoom
+        - it should react on Meta+wheel ?
 
 - window-specific rules need to apply to unmanaged windows as well (where applicable)
 - some window-specific rules also related to compositing
