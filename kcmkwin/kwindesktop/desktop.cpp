@@ -21,13 +21,13 @@
 #include "desktop.h"
 
 // Qt
-#include <Qt3Support/Q3GroupBox>
 #include <QtDBus/QDBusInterface>
 #include <QtGui/QBoxLayout>
 #include <QtGui/QCheckBox>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QSlider>
+#include <QGroupBox>
 
 #ifdef Q_WS_X11
 #include <QX11Info>
@@ -72,7 +72,7 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   layout->setSpacing(KDialog::spacingHint());
 
   // number group
-  Q3GroupBox *number_group = new Q3GroupBox(this);
+  QGroupBox *number_group = new QGroupBox(this);
 
   QHBoxLayout *lay = new QHBoxLayout(number_group);
   lay->setMargin(KDialog::marginHint());
@@ -95,16 +95,20 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   layout->addWidget(number_group);
 
   // name group
-  Q3GroupBox *name_group = new Q3GroupBox(i18n("Desktop &Names"), this);
-
-  name_group->setColumnLayout(4, Qt::Horizontal);
-
+  QGroupBox *name_group = new QGroupBox(i18n("Desktop &Names"), this);
+  QVBoxLayout *vhoxlayout = new QVBoxLayout;
+  name_group->setLayout(vhoxlayout);
   for(int i = 0; i < (maxDesktops/2); i++)
     {
+      QHBoxLayout *hboxLayout = new QHBoxLayout;
       _nameLabel[i] = new QLabel(i18n("Desktop %1:", i+1), name_group);
+      hboxLayout->addWidget(_nameLabel[i]);
       _nameInput[i] = new KLineEdit(name_group);
+      hboxLayout->addWidget(_nameInput[i]);
       _nameLabel[i+(maxDesktops/2)] = new QLabel(i18n("Desktop %1:", i+(maxDesktops/2)+1), name_group);
+      hboxLayout->addWidget(_nameLabel[i+(maxDesktops/2)]);
       _nameInput[i+(maxDesktops/2)] = new KLineEdit(name_group);
+      hboxLayout->addWidget(_nameInput[i+(maxDesktops/2)]);
       _nameLabel[i]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+1 ) );
       _nameInput[i]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+1 ) );
       _nameLabel[i+(maxDesktops/2)]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+(maxDesktops/2)+1 ) );
@@ -114,6 +118,7 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
            SLOT( changed() ));
       connect(_nameInput[i+(maxDesktops/2)], SIGNAL(textChanged(const QString&)),
            SLOT( changed() ));
+      vhoxlayout->addLayout(hboxLayout);
     }
 
   for(int i = 1; i < maxDesktops; i++)
