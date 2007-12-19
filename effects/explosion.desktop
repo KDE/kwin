@@ -11,6 +11,7 @@ Name[fa]=انفجار
 Name[fi]=Räjähdys
 Name[fy]=Ekplosy
 Name[he]=התפוצצות
+Name[hi]=विस्फोटक
 Name[hu]=Robbanás
 Name[it]=Esplosione
 Name[ja]=爆発
@@ -49,6 +50,7 @@ Comment[fa]=پنجره‌ها وقتی که بسته می‌شوند، منفج�
 Comment[fi]=Räjäyttää suljetut ikkunat
 Comment[fy]=Eksplodearret finsters as se sluten wurde
 Comment[he]=פיצוץ חלונות בעת סגירתם
+Comment[hi]=विंडो को विस्फोट से उड़ाता है जब उन्हें बंद किया जाता है
 Comment[hu]=Bezáráskor az ablakok 'felrobbannak'
 Comment[it]=Fa esplodere le finestre alla chiusura
 Comment[ja]=ウィンドウを閉じるときに爆発させます
