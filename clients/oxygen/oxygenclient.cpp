@@ -3,7 +3,6 @@
 // -------------------
 // Oxygen window decoration for KDE
 // -------------------
-// Copyright (c) 2003, 2004 David Johnson
 // Copyright (c) 2006, 2007 Casper Boemann <cbr@boemann.dk>
 // Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
 //
