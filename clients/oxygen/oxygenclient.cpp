@@ -191,7 +191,10 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
 
         case CloseButton:
             return new OxygenButton(*this, i18n("Close"), ButtonClose);
-
+/*
+        case OnAllDesktopsButton:
+            return new OxygenButton(*this, i18n("All Desktops"), ButtonSticky);
+*/
         default:
             return 0;
     }
@@ -349,61 +352,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     if(maximized)
         return;
 
-    light = helper_.calcLightColor(helper_.backgroundTopColor(color));
-    dark = helper_.calcDarkColor(color);
-
-    painter.setBrush(Qt::NoBrush);
-
-    if (0) { // TODO make option
-        QColor shadow = helper_.calcShadowColor(color); // wrong, use kwin shadow color
-        painter.setPen(OxygenHelper::alphaColor(shadow, 0.1));
-        painter.drawLine(QPointF(x+4, y-0.5), QPointF(x+w-4, y-0.5));
-        painter.drawArc(QRectF(x-0.5, y-0.5, 11, 11),90*16, 90*16);
-        painter.drawArc(QRectF(x+w-11+0.5, y-0.5, 11, 11), 0, 90*16);
-        painter.setPen(OxygenHelper::alphaColor(shadow, 0.3));
-        painter.drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h));
-        painter.drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h));
-        painter.setPen(OxygenHelper::alphaColor(shadow, 0.4));
-        painter.drawArc(QRectF(0.5, y+h-11+0.5, 11, 11),180*16, 90*16);
-        painter.drawArc(QRectF(x+w-11+0.5, y+h-11+0.5, 11, 11),270*16, 90*16);
-        painter.setPen(OxygenHelper::alphaColor(shadow, 0.55));
-        painter.drawLine(QPointF(x+4, y+h+0.5), QPointF(x+w-4, y+h+0.5));
-    }
-    else if (1) { // TODO make option
-        QColor shadow = KColorUtils::darken(color, 0.0, 0.0); // fully desaturate
-        painter.setPen(KColorUtils::darken(shadow, 0.1));
-        painter.drawLine(QPointF(x+4, y-0.5), QPointF(x+w-4, y-0.5));
-        painter.drawArc(QRectF(x-0.5, y-0.5, 11, 11),90*16, 90*16);
-        painter.drawArc(QRectF(x+w-11+0.5, y-0.5, 11, 11), 0, 90*16);
-        painter.setPen(KColorUtils::darken(shadow, 0.3));
-        painter.drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h));
-        painter.drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h));
-        painter.setPen(KColorUtils::darken(shadow, 0.4));
-        painter.drawArc(QRectF(0.5, y+h-11+0.5, 11, 11),180*16, 90*16);
-        painter.drawArc(QRectF(x+w-11+0.5, y+h-11+0.5, 11, 11),270*16, 90*16);
-        painter.setPen(KColorUtils::darken(shadow, 0.55));
-        painter.drawLine(QPointF(x+4, y+h+0.5), QPointF(x+w-4, y+h+0.5));
-    }
-
-    painter.setPen(QPen(light, 1.2));
-    painter.drawLine(QPointF(x+4, y+0.6), QPointF(x+w-4, y+0.6));
-    lg = QLinearGradient(0.0, 1.5, 0.0, 4.5);
-    lg.setColorAt(0, light);
-    light = helper_.calcLightColor(helper_.backgroundBottomColor(color));
-    lg.setColorAt(1, light);
-    painter.setPen(QPen(lg, 1.2));
-    painter.drawArc(QRectF(x+0.6, y+0.6, 9, 9),90*16, 90*16);
-    painter.drawArc(QRectF(x+w-9-0.6, y+0.6, 9, 9), 0, 90*16);
-    painter.drawLine(QPointF(x+0.6, y+4), QPointF(x+0.6, y+h-4));
-    painter.drawLine(QPointF(x+w-0.6, y+4), QPointF(x+w-0.6, y+h-4));
-
-    lg = QLinearGradient(0.0, y+h-4.5, 0.0, y+h-0.5);
-    lg.setColorAt(0, light);
-    lg.setColorAt(1, dark);
-    painter.setPen(QPen(lg, 1.2));
-    painter.drawArc(QRectF(x+0.6, y+h-9-0.6, 9, 9),180*16, 90*16);
-    painter.drawArc(QRectF(x+w-9-0.6, y+h-9-0.6, 9, 9), 270*16, 90*16);
-    painter.drawLine(QPointF(x+4, y+h-0.6), QPointF(x+w-4, y+h-0.6));
+    helper_.drawFloatFrame(&painter, widget()->rect(), color);
 
     if(!isResizable())
         return;
