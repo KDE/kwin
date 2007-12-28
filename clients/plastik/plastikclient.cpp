@@ -34,7 +34,6 @@
 
 #include "plastikclient.h"
 #include "plastikbutton.h"
-#include "misc.h"
 
 #include <KColorScheme>
 

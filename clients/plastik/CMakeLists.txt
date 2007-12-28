@@ -3,11 +3,11 @@ add_subdirectory( config )
 
 ########### next target ###############
 
-set(kwin3_plastik_PART_SRCS 
-   plastik.cpp 
-   plastikclient.cpp 
-   plastikbutton.cpp 
-   misc.cpp )
+set(kwin3_plastik_PART_SRCS
+   plastik.cpp
+   plastikclient.cpp
+   plastikbutton.cpp
+   )
 
 
 kde4_add_plugin(kwin3_plastik ${kwin3_plastik_PART_SRCS})

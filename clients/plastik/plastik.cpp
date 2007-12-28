@@ -25,7 +25,6 @@
 #include <QImage>
 #include <QPixmap>
 
-#include "misc.h"
 #include "plastik.h"
 #include "plastik.moc"
 #include "plastikclient.h"

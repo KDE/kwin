@@ -33,9 +33,10 @@
 
 #include "plastikbutton.moc"
 #include "plastikclient.h"
-#include "misc.h"
 
+#include <KGlobalSettings>
 #include <KColorScheme>
+#include <KColorUtils>
 
 namespace KWinPlastik
 {
@@ -176,34 +177,34 @@ void PlastikButton::drawButton(QPainter *painter)
     bool active = m_client->isActive();
     QPixmap tempPixmap;
 
-    QColor highlightColor;
-    if(type() == CloseButton) {
-        highlightColor = QColor(255,64,0);
-    } else {
-        highlightColor = Qt::white;
+
+    double c = KGlobalSettings::contrastF();
+    QColor titleBar = KDecoration::options()->color(KDecoration::ColorTitleBar, active);
+    QColor contourTop = KColorScheme::shade(titleBar, KColorScheme::DarkShade, c - 0.4);
+    QColor contourBottom = KColorScheme::shade(titleBar, KColorScheme::MidShade, c);
+    QColor surfaceTop = KColorScheme::shade(titleBar, KColorScheme::MidlightShade, c - 0.4);
+    QColor surfaceBottom = KColorScheme::shade(titleBar, KColorScheme::LightShade, c - 0.4);
+
+    QColor highlightColor = titleBar;
+    double alpha;
+    if (type() == CloseButton) {
+        KColorScheme kcs(active ? QPalette::Active : QPalette::Inactive, KColorScheme::Button);
+        highlightColor = kcs.foreground(KColorScheme::NegativeText).color();
+    }
+    if (isDown()) {
+        highlightColor = KColorScheme::shade(highlightColor, KColorScheme::ShadowShade);
+        alpha = 0.3;
+    }
+    else if (animProgress > 0) {
+        alpha = 0.6 * (double)animProgress / (double)ANIMATIONSTEPS;
+        highlightColor = KColorScheme::shade(highlightColor, KColorScheme::LightShade, qMin(1.0, c + 0.4));
     }
 
-    QColor contourTop = alphaBlendColors(Handler()->getColor(TitleGradient2, active),
-            Qt::black, 215);
-    QColor contourBottom = alphaBlendColors(Handler()->getColor(TitleGradient3, active),
-            Qt::black, 215);
-    QColor sourfaceTop = alphaBlendColors(Handler()->getColor(TitleGradient2, active),
-            Qt::white, 210);
-    QColor sourfaceBottom = alphaBlendColors(Handler()->getColor(TitleGradient3, active),
-            Qt::white, 210);
-
-    int highlightAlpha = static_cast<int>(255-((60/static_cast<double>(ANIMATIONSTEPS))*
-                                          static_cast<double>(animProgress) ) );
-    contourTop = alphaBlendColors(contourTop, highlightColor, highlightAlpha );
-    contourBottom = alphaBlendColors(contourBottom, highlightColor, highlightAlpha);
-    sourfaceTop = alphaBlendColors(sourfaceTop, highlightColor, highlightAlpha);
-    sourfaceBottom = alphaBlendColors(sourfaceBottom, highlightColor, highlightAlpha);
-
-    if (isDown() ) {
-        contourTop = alphaBlendColors(contourTop, Qt::black, 200);
-        contourBottom = alphaBlendColors(contourBottom, Qt::black, 200);
-        sourfaceTop = alphaBlendColors(sourfaceTop, Qt::black, 200);
-        sourfaceBottom = alphaBlendColors(sourfaceBottom, Qt::black, 200);
+    if (alpha > 0.0) {
+        contourTop    = KColorUtils::mix(contourTop,    highlightColor, alpha);
+        contourBottom = KColorUtils::mix(contourBottom, highlightColor, alpha);
+        surfaceTop    = KColorUtils::mix(surfaceTop,    highlightColor, alpha);
+        surfaceBottom = KColorUtils::mix(surfaceBottom, highlightColor, alpha);
     }
 
     QPixmap buffer(width(), height());
@@ -225,8 +226,8 @@ void PlastikButton::drawButton(QPainter *painter)
         bP.drawRoundRect(r, rx, ry);
         // surface
         QLinearGradient surfaceGradient(0, 0, 0, r.height());
-        surfaceGradient.setColorAt(0.0, sourfaceTop);
-        surfaceGradient.setColorAt(1.0, sourfaceBottom);
+        surfaceGradient.setColorAt(0.0, surfaceTop);
+        surfaceGradient.setColorAt(1.0, surfaceBottom);
         bP.setBrush(surfaceGradient);
         bP.drawRoundRect(r.adjusted(1,1,-1,-1), rx, ry);
     }
