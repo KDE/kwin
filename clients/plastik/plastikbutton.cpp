@@ -214,8 +214,10 @@ void PlastikButton::drawButton(QPainter *painter)
     bP.drawTiledPixmap(0, 0, width(), width(), m_client->getTitleBarTile(active) );
 
     if (type() != MenuButton || hover || animProgress != 0) {
-        int rx = 200/width();
-        int ry = 200/height();
+        int rxo = 600/width();
+        int ryo = 600/height();
+        int rxi = 500/width();
+        int ryi = 500/height();
         bP.setPen(Qt::NoPen);
         bP.setRenderHints(QPainter::Antialiasing);
         // contour
@@ -223,13 +225,13 @@ void PlastikButton::drawButton(QPainter *painter)
         outlineGradient.setColorAt(0.0, contourTop);
         outlineGradient.setColorAt(1.0, contourBottom);
         bP.setBrush(outlineGradient);
-        bP.drawRoundRect(r, rx, ry);
+        bP.drawRoundRect(r, rxo, ryo);
         // surface
         QLinearGradient surfaceGradient(0, 0, 0, r.height());
         surfaceGradient.setColorAt(0.0, surfaceTop);
         surfaceGradient.setColorAt(1.0, surfaceBottom);
         bP.setBrush(surfaceGradient);
-        bP.drawRoundRect(r.adjusted(1,1,-1,-1), rx, ry);
+        bP.drawRoundRect(r.adjusted(1,1,-1,-1), rxi, ryi);
     }
 
     if (type() == MenuButton)
