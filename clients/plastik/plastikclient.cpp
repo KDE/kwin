@@ -36,6 +36,16 @@
 #include "plastikbutton.h"
 #include "misc.h"
 
+#include <KColorScheme>
+
+QColor alphaColor(QColor color, double alpha)
+{
+    if (alpha >= 1.0)
+        return color;
+    color.setAlphaF(qMax(0.0, alpha) * color.alphaF());
+    return color;
+}
+
 namespace KWinPlastik
 {
 
@@ -480,22 +490,20 @@ const QPixmap &PlastikClient::captionPixmap() const
 
     painter.setFont(s_titleFont);
     QPoint tp(1, captionHeight - 3);
+    QColor fontColor = Handler()->getColor(TitleFont,active);
     if(Handler()->titleShadow())
     {
-        QColor shadowColor;
-        if (qGray(Handler()->getColor(TitleFont,active).rgb()) < 100)
-            shadowColor = QColor(255, 255, 255);
-        else
-            shadowColor = QColor(0,0,0);
+        QColor shadowColor = KColorScheme::shade(fontColor, KColorScheme::ShadowShade);
 
-        painter.setPen(alphaBlendColors(options()->color(ColorTitleBar, active), shadowColor, 205) );
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        painter.setPen(alphaColor(shadowColor, 0.3) );
         painter.drawText(tp+QPoint(1,2), c);
-        painter.setPen(alphaBlendColors(options()->color(ColorTitleBar, active), shadowColor, 225) );
+        painter.setPen(alphaColor(shadowColor, 0.2) );
         painter.drawText(tp+QPoint(2,2), c);
-        painter.setPen(alphaBlendColors(options()->color(ColorTitleBar, active), shadowColor, 165) );
+        painter.setPen(alphaColor(shadowColor, 0.5) );
         painter.drawText(tp+QPoint(1,1), c);
     }
-    painter.setPen(Handler()->getColor(TitleFont,active) );
+    painter.setPen(fontColor );
     painter.drawText(tp, c );
     painter.end();
 

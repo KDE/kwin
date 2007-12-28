@@ -35,6 +35,8 @@
 #include "plastikclient.h"
 #include "misc.h"
 
+#include <KColorScheme>
+
 namespace KWinPlastik
 {
 
@@ -247,17 +249,15 @@ void PlastikButton::drawButton(QPainter *painter)
             dY++;
         }
 
+        QColor fontColor = Handler()->getColor(TitleFont,active);
         if(!isDown() && Handler()->titleShadow() ) {
-            QColor shadowColor;
-            if (qGray(Handler()->getColor(TitleFont,active).rgb()) < 100)
-                shadowColor = QColor(255, 255, 255, 75);
-            else
-                shadowColor = QColor(0,0,0,75);
+            QColor shadowColor = KColorScheme::shade(fontColor, KColorScheme::ShadowShade);
+            shadowColor.setAlphaF(shadowColor.alphaF() * 0.3);
             bP.setPen(shadowColor);
             bP.drawPixmap(dX+1, dY+1, icon);
         }
 
-        bP.setPen(Handler()->getColor(TitleFont,active) );
+        bP.setPen(fontColor );
         bP.drawPixmap(dX, dY, icon);
     }
 
