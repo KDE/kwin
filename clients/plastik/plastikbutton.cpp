@@ -201,8 +201,8 @@ void PlastikButton::drawButton(QPainter *painter)
     }
 
     if (alpha > 0.0) {
-        contourTop    = KColorUtils::mix(contourTop,    highlightColor, alpha);
-        contourBottom = KColorUtils::mix(contourBottom, highlightColor, alpha);
+        contourTop    = KColorUtils::mix(contourTop,    highlightColor, alpha*0.4);
+        contourBottom = KColorUtils::mix(contourBottom, highlightColor, alpha*0.4);
         surfaceTop    = KColorUtils::mix(surfaceTop,    highlightColor, alpha);
         surfaceBottom = KColorUtils::mix(surfaceBottom, highlightColor, alpha);
     }
