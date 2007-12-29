@@ -63,5 +63,5 @@ if (X11_Xfixes_FOUND)
 endif (X11_Xfixes_FOUND)
 
 
-install( FILES kwinglobals.h kwineffects.h DESTINATION ${INCLUDE_INSTALL_DIR})
+install( FILES kwinglobals.h kwineffects.h ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h DESTINATION ${INCLUDE_INSTALL_DIR})
 
