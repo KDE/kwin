@@ -835,10 +835,10 @@ bool EffectsHandlerImpl::isEffectLoaded( const QString& name )
 void EffectsHandlerImpl::effectsChanged()
     {
     loaded_effects.clear();
-    kDebug() << "Recreating effects' list:";
+    kDebug(1212) << "Recreating effects' list:";
     foreach( EffectPair effect, effect_order )
         {
-        kDebug() << effect.first;
+        kDebug(1212) << effect.first;
         loaded_effects.append( effect );
         }
     }
