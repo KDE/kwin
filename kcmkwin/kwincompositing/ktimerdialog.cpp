@@ -64,7 +64,7 @@ KTimerDialog::KTimerDialog( int msec, TimerStyle style, QWidget *parent,
     msecTotal = msecRemaining = msec;
     updateInterval = 1000;
     tStyle = style;
-	KWindowSystem::setIcons( winId(), DesktopIcon("randr"), SmallIcon("randr") );
+    KWindowSystem::setIcons( winId(), DesktopIcon("randr"), SmallIcon("randr") );
     // default to canceling the dialog on timeout
     if ( buttonMask & Cancel )
         buttonOnTimeout = Cancel;
@@ -75,6 +75,7 @@ KTimerDialog::KTimerDialog( int msec, TimerStyle style, QWidget *parent,
     // create the widgets
     mainWidget = new KVBox( this );
     timerWidget = new KHBox( mainWidget );
+    timerWidget->setSpacing(KDialog::spacingHint());
     timerLabel = new QLabel( timerWidget );
     timerProgress = new QProgressBar( timerWidget );
     timerProgress->setRange( 0, msecTotal );
