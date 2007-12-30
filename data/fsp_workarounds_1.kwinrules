@@ -34,6 +34,7 @@ Description[sr]=(Подразумевано) Искључи заштиту од 
 Description[sr@latin]=(Podrazumevano) Isključi zaštitu od krađe fokusa za XV
 Description[sv]=(Förval) Inaktivera möjlighet att förhindra stöld av fokus för XV
 Description[th]=(ค่าปริยาย) ปิดการป้องกันการขโมยโฟกัสสำหรับ XV
+Description[uk]=(Типове) Вимкнути запобігання викрадання фокусу для XV
 Description[vi]=(Mặc định) Tắt khả năng ngăn cản bắt tiêu điểm cho XV
 Description[x-test]=xx(Default) Disable focus stealing prevention for XVxx
 Description[zh_CN]=(默认)禁用 XV 中的预防焦点被偷
