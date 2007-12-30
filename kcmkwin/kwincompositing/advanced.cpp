@@ -87,6 +87,8 @@ void KWinAdvancedCompositingOptions::showConfirmDialog()
         QMap<QString, QString>::const_iterator it = mPreviousConfig.constBegin();
         for(; it != mPreviousConfig.constEnd(); ++it)
         {
+            if (it.value().isEmpty())
+                continue;
             config.writeEntry(it.key(), it.value());
         }
         // Reinit KWin compositing and reload (old) settings

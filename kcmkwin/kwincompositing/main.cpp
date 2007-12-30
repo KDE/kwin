@@ -65,7 +65,8 @@ ConfirmDialog::ConfirmDialog() :
 
 KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList &)
     : KCModule( KWinCompositingConfigFactory::componentData(), parent),
-        mKWinConfig(KSharedConfig::openConfig("kwinrc"))
+        mKWinConfig(KSharedConfig::openConfig("kwinrc")),
+        m_showConfirmDialog (false)
 {
     KGlobal::locale()->insertCatalog( "kwin_effects" );
     ui.setupUi(this);
@@ -153,10 +154,11 @@ void KWinCompositingConfig::showConfirmDialog()
         // Revert settings
         KConfigGroup config(mKWinConfig, "Compositing");
         config.deleteGroup();
-        QMap<QString, QString>::const_iterator i = mPreviousConfig.constBegin();
-        while (i != mPreviousConfig.constEnd()) {
-            config.writeEntry(i.key(), i.value());
-            ++i;
+        QMap<QString, QString>::const_iterator it = mPreviousConfig.constBegin();
+        for(; it != mPreviousConfig.constEnd(); ++it) {
+            if (it.value().isEmpty())
+                continue;
+            config.writeEntry(it.key(), it.value());
         }
         // Sync with KWin and reload
         configChanged();
@@ -207,7 +209,6 @@ void KWinCompositingConfig::loadGeneralTab()
         + LOAD_EFFECT_CONFIG("boxswitch")
         + LOAD_EFFECT_CONFIG("desktopgrid")
         + LOAD_EFFECT_CONFIG("dialogparent");
-qDebug() << "winManagementEnabled" << winManagementEnabled;
     if (winManagementEnabled > 0 && winManagementEnabled < 4) {
         ui.effectWinManagement->setTristate(true);
         ui.effectWinManagement->setCheckState(Qt::PartiallyChecked);
@@ -226,7 +227,6 @@ void KWinCompositingConfig::loadEffectsTab()
 
 void KWinCompositingConfig::load()
 {
-    kDebug() ;
     mKWinConfig->reparseConfiguration();
 
     // Copy Plugins group to temp config file
@@ -245,18 +245,17 @@ void KWinCompositingConfig::load()
     emit changed( false );
 }
 
-bool KWinCompositingConfig::saveGeneralTab()
+void KWinCompositingConfig::saveGeneralTab()
 {
     KConfigGroup config(mKWinConfig, "Compositing");
     // Save current config. We'll use this for restoring in case something
     //  goes wrong.
     mPreviousConfig = config.entryMap();
     // Check if any critical settings that need confirmation have changed
-    bool confirm = false;
     if(ui.useCompositing->isChecked()
         && ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.enableCompositing()))
         {
-        confirm = true;
+        m_showConfirmDialog = true;
         }
 
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
@@ -265,7 +264,6 @@ bool KWinCompositingConfig::saveGeneralTab()
     KConfigGroup effectconfig(mTmpConfig, "Plugins");
 #define WRITE_EFFECT_CONFIG(effectname, widget)  effectconfig.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
     if (ui.effectWinManagement->checkState() != Qt::PartiallyChecked) {
-qDebug() << "partial!";
         WRITE_EFFECT_CONFIG("presentwindows", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("boxswitch", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
@@ -276,8 +274,6 @@ qDebug() << "partial!";
     //  enable/disable desktopgrid's animation according to this setting
     WRITE_EFFECT_CONFIG("minimizeanimation", ui.effectAnimations);
 #undef WRITE_EFFECT_CONFIG
-
-    return confirm;
 }
 
 void KWinCompositingConfig::saveEffectsTab()
@@ -287,13 +283,7 @@ void KWinCompositingConfig::saveEffectsTab()
 
 void KWinCompositingConfig::save()
 {
-    kDebug() ;
-
-    // Sync tabs. Otherwise effect tab will overwrite changes of general tab
-    //  unless user manually switches tabs before saving
-    currentTabChanged(ui.tabWidget->currentIndex() == 0 ? 1 : 0);
-
-    bool confirm = saveGeneralTab();
+    saveGeneralTab();
     saveEffectsTab();
 
     // Copy Plugins group from temp config to real config
@@ -310,8 +300,9 @@ void KWinCompositingConfig::save()
 
     configChanged();
 
-    if(confirm)
+    if(m_showConfirmDialog)
     {
+        m_showConfirmDialog = false;
         showConfirmDialog();
     }
 }
@@ -328,7 +319,6 @@ void KWinCompositingConfig::configChanged()
 
 void KWinCompositingConfig::defaults()
 {
-    kDebug() ;
     ui.useCompositing->setChecked(mDefaultPrefs.enableCompositing());
     ui.effectWinManagement->setChecked(true);
     ui.effectShadows->setChecked(true);
@@ -339,7 +329,6 @@ void KWinCompositingConfig::defaults()
 
 QString KWinCompositingConfig::quickHelp() const
 {
-    kDebug() ;
     return i18n("<h1>Desktop Effects</h1>");
 }
 

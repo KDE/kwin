@@ -65,7 +65,7 @@ class KWinCompositingConfig : public KCModule
 
         void loadGeneralTab();
         void loadEffectsTab();
-        bool saveGeneralTab();
+        void saveGeneralTab();
         void saveEffectsTab();
 
         void configChanged();
@@ -79,6 +79,7 @@ class KWinCompositingConfig : public KCModule
         QMap<QString, QString> mPreviousConfig;
         KTemporaryFile mTmpConfigFile;
         KSharedConfigPtr mTmpConfig;
+        bool m_showConfirmDialog;
     };
 
 } // namespace
