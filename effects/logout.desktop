@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Logout
 Name[be]=Выйсці
+Name[bg]=Изход
 Name[ca]=Sortida
 Name[csb]=Wëlogòwanié
 Name[de]=Abmeldung
@@ -83,10 +84,12 @@ X-KDE-PluginInfo-Email=l.lunak@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_logout
 X-KDE-PluginInfo-Version=0.1.0
 X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Category[bg]=Изглед
 X-KDE-PluginInfo-Category[ca]=Aparença
 X-KDE-PluginInfo-Category[de]=Erscheinungsbild
 X-KDE-PluginInfo-Category[el]=Εμφάνιση
 X-KDE-PluginInfo-Category[eo]=Aspekto
+X-KDE-PluginInfo-Category[es]=Aspecto
 X-KDE-PluginInfo-Category[et]=Välimus
 X-KDE-PluginInfo-Category[ga]=Cuma
 X-KDE-PluginInfo-Category[hu]=Megjelenés
