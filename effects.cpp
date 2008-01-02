@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "scene_xrender.h"
 #include "scene_opengl.h"
+#include "unmanaged.h"
 #include "workspace.h"
 #include "kwinglutils.h"
 
@@ -427,6 +428,15 @@ int EffectsHandlerImpl::displayWidth() const
 int EffectsHandlerImpl::displayHeight() const
     {
     return KWin::displayWidth();
+    }
+
+EffectWindow* EffectsHandlerImpl::findWindow( WId id ) const
+    {
+    if( Client* w = Workspace::self()->findClient( WindowMatchPredicate( id )))
+        return w->effectWindow();
+    if( Unmanaged* w = Workspace::self()->findUnmanaged( WindowMatchPredicate( id )))
+        return w->effectWindow();
+    return NULL;
     }
 
 EffectWindowList EffectsHandlerImpl::stackingOrder() const

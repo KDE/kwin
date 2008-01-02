@@ -63,6 +63,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual QPoint cursorPos() const;
         virtual bool grabKeyboard( Effect* effect );
         virtual void ungrabKeyboard();
+        virtual EffectWindow* findWindow( WId id ) const;
         virtual EffectWindowList stackingOrder() const;
         virtual void setElevatedWindow( EffectWindow* w, bool set );
 

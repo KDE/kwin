@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor )) 
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 4
+#define KWIN_EFFECT_API_VERSION_MINOR 5
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -381,6 +381,7 @@ class KWIN_EXPORT EffectsHandler
         virtual int desktopUp( int desktop, bool wrap ) const = 0;
         virtual int desktopDown( int desktop, bool wrap ) const = 0;
 
+        virtual EffectWindow* findWindow( WId id ) const = 0;
         virtual EffectWindowList stackingOrder() const = 0;
         // window will be temporarily painted as if being at the top of the stack
         virtual void setElevatedWindow( EffectWindow* w, bool set ) = 0;
