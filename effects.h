@@ -109,6 +109,7 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual unsigned long xrenderBufferPicture();
         virtual void reconfigure();
+        virtual void registerPropertyType( long atom, bool reg );
 
         // internal (used by kwin core or compositing code)
         void startPaint();
@@ -131,6 +132,7 @@ class EffectsHandlerImpl : public EffectsHandler
             Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
         void grabbedKeyboardEvent( QKeyEvent* e );
         bool hasKeyboardGrab() const;
+        void propertyNotify( EffectWindow* c, long atom );
 
         bool loadEffect( const QString& name );
         void toggleEffect( const QString& name );
@@ -149,6 +151,7 @@ class EffectsHandlerImpl : public EffectsHandler
         Effect* fullscreen_effect;
         ToplevelList elevated_windows;
         QMultiMap< int, EffectPair > effect_order;
+        QHash< long, int > registered_atoms;
 };
 
 class EffectWindowImpl : public EffectWindow
@@ -192,6 +195,7 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isUserResize() const;
         virtual QRect iconGeometry() const;
         virtual QRect contentsRect() const;
+        virtual QByteArray readProperty( long atom, long type, int format ) const;
 
         virtual bool isDesktop() const;
         virtual bool isDock() const;

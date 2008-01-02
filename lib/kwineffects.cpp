@@ -131,6 +131,10 @@ void Effect::grabbedKeyboardEvent( QKeyEvent* )
     {
     }
 
+void Effect::propertyNotify( EffectWindow* , long )
+    {
+    }
+
 void Effect::desktopChanged( int )
     {
     }

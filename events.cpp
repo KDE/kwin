@@ -1724,6 +1724,8 @@ void Toplevel::propertyNotifyEvent( XPropertyEvent* e )
                 getWindowRole();
             break;
         }
+    if( effects )
+        static_cast< EffectsHandlerImpl* >( effects )->propertyNotify( effectWindow(), e->atom );
     }
 
 // ****************************************

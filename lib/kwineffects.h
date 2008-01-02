@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor )) 
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 2
+#define KWIN_EFFECT_API_VERSION_MINOR 3
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -247,6 +247,14 @@ class KWIN_EXPORT Effect
         virtual void mouseChanged( const QPoint& pos, const QPoint& old,
             Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
+        /**
+         Receives events registered for using EffectsHandler::registerPropertyType().
+         Use readProperty() to get the property data.
+         Note that the property may be already set on the window, so doing the same
+         processing from windowAdded() (e.g. simply calling propertyNotify() from it)
+         is usually needed.
+         */
+        virtual void propertyNotify( EffectWindow* w, long atom );
 
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxClosed();
@@ -406,6 +414,14 @@ class KWIN_EXPORT EffectsHandler
         virtual void reconfigure() = 0;
 
         /**
+         Makes KWin core watch PropertyNotify events for the given atom,
+         or stops watching if reg is false (must be called the same number
+         of times as registering). Events are sent using Effect::propertyNotify().
+         Note that even events that haven't been registered for can be received.
+        */
+        virtual void registerPropertyType( long atom, bool reg ) = 0;
+
+        /**
          * Paints given text onto screen, possibly in elided form
          * @param text
          * @param center center point of the painted text
@@ -507,6 +523,7 @@ class KWIN_EXPORT EffectWindow
          */
         virtual QRect contentsRect() const = 0;
         bool hasDecoration() const;
+        virtual QByteArray readProperty( long atom, long type, int format ) const = 0;
 
         virtual QString caption() const = 0;
         virtual QPixmap icon() const = 0;

@@ -324,6 +324,25 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
     return keyboard_grab_effect != NULL;
     }
 
+void EffectsHandlerImpl::propertyNotify( EffectWindow* c, long atom )
+    {
+    if( !registered_atoms.contains( atom ))
+        return;
+    foreach( EffectPair ep, loaded_effects )
+        ep.second->propertyNotify( c, atom );
+    }
+
+void EffectsHandlerImpl::registerPropertyType( long atom, bool reg )
+    {
+    if( reg )
+        ++registered_atoms[ atom ]; // initialized to 0 if not present yet
+    else
+        {
+        if( --registered_atoms[ atom ] == 0 )
+            registered_atoms.remove( atom );
+        }
+    }
+
 void EffectsHandlerImpl::activateWindow( EffectWindow* c )
     {
     if( Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(c)->window()))
@@ -1022,6 +1041,42 @@ QRect EffectWindowImpl::rect() const
 QRect EffectWindowImpl::contentsRect() const
     {
     return QRect( toplevel->clientPos(), toplevel->clientSize());
+    }
+
+QByteArray EffectWindowImpl::readProperty( long atom, long type, int format ) const
+    {
+    int len = 32768;
+    for(;;)
+        {
+        unsigned char* data;
+        Atom rtype;
+        int rformat;
+        unsigned long nitems, after;
+        if( XGetWindowProperty( QX11Info::display(), window()->window(),
+            atom, 0, len, False, AnyPropertyType,
+            &rtype, &rformat, &nitems, &after, &data ) == Success )
+            {
+            if( after > 0 )
+                {
+                XFree( data );
+                len *= 2;
+                continue;
+                }
+            if( long( rtype ) == type && rformat == format )
+                {
+                QByteArray ret( reinterpret_cast< const char* >( data ), nitems * ( format / 8 ));
+                XFree( data );
+                return ret;
+                }
+            else // wrong format, type or something
+                {
+                XFree( data );
+                return QByteArray();
+                }
+            }
+        else // XGetWindowProperty() failed
+            return QByteArray();
+        }
     }
 
 bool EffectWindowImpl::isMovable() const
