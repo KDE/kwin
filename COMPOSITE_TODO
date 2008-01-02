@@ -64,6 +64,10 @@ KDE 4.0 TODO
 General TODO
 =================================
 
++ suspend repaints if not visible or dpms is active
+    - there is already 'overlay_visible', but it still polls the mouse in such case
+    - it should turn off the timer
+
 ? wait for decoration repaints
     - it is sometimes visible that the window contents are painted first and the decoration
         only afterwards with a small delay
