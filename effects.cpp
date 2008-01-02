@@ -733,8 +733,10 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
     typedef int (*t_versionfunc)();
     int version = reinterpret_cast< t_versionfunc >( version_func )(); // call it
     // Version must be the same or less, but major must be the same.
+    // With major 0 minor must match exactly.
     if( version > KWIN_EFFECT_API_VERSION
-        || ( version >> 8 ) != KWIN_EFFECT_API_VERSION_MAJOR )
+        || ( version >> 8 ) != KWIN_EFFECT_API_VERSION_MAJOR
+        || ( KWIN_EFFECT_API_VERSION_MAJOR == 0 && version != KWIN_EFFECT_API_VERSION ))
         {
         kWarning( 1212 ) << "Effect " << name << " requires unsupported API version " << version;
         return false;
