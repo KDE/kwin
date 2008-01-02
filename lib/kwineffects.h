@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor )) 
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 1
+#define KWIN_EFFECT_API_VERSION_MINOR 2
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -530,7 +530,8 @@ class KWIN_EXPORT EffectWindow
         virtual bool isNotification() const = 0;
         virtual bool isComboBox() const = 0;
         virtual bool isDNDIcon() const = 0;
-        
+        virtual bool isManaged() const = 0; // whether it's managed or override-redirect
+
         virtual bool isModal() const = 0;
         virtual EffectWindow* findModal() = 0;
         virtual EffectWindowList mainWindows() const = 0;

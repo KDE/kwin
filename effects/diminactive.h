@@ -37,6 +37,7 @@ class DimInactiveEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowActivated( EffectWindow* c );
     private:
+        bool dimWindow( const EffectWindow* w ) const;
         EffectWindow* active;
         int dim_strength; // reduce saturation and brightness by this percentage
         bool dim_panels; // do/don't dim also all panels

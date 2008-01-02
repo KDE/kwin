@@ -31,8 +31,6 @@ KDE 4.0 TODO
     - add generic support to use effect only for certain window types [Seli]
     - explosion
 ?       - use for forcible killing (add support to windowClosed())
-    - diminactive
-*       - needs grouping for unmanaged windows [Seli]
     - shadow
         - xrender mode
         - needs to follow the window shape

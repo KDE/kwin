@@ -732,7 +732,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
         }
     typedef int (*t_versionfunc)();
     int version = reinterpret_cast< t_versionfunc >( version_func )(); // call it
-    // version must be the same or less, but major must be the same
+    // Version must be the same or less, but major must be the same.
     if( version > KWIN_EFFECT_API_VERSION
         || ( version >> 8 ) != KWIN_EFFECT_API_VERSION_MAJOR )
         {
@@ -1085,7 +1085,7 @@ bool EffectWindowImpl::isSpecialWindow() const
     if( Client* c = dynamic_cast<Client*>( toplevel ))
         return c->isSpecialWindow();
     else
-        return false;
+        return true;
     }
 
 bool EffectWindowImpl::isDialog() const
@@ -1131,6 +1131,11 @@ bool EffectWindowImpl::isComboBox() const
 bool EffectWindowImpl::isDNDIcon() const
     {
     return toplevel->isDNDIcon();
+    }
+
+bool EffectWindowImpl::isManaged() const
+    {
+    return dynamic_cast< const Client* >( toplevel ) != NULL;
     }
 
 bool EffectWindowImpl::isModal() const

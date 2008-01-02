@@ -209,6 +209,7 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isNotification() const;
         virtual bool isComboBox() const;
         virtual bool isDNDIcon() const;
+        virtual bool isManaged() const; // managed or override-redirect
 
         virtual bool isModal() const;
         virtual EffectWindow* findModal();

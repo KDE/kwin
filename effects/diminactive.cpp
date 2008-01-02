@@ -40,23 +40,29 @@ DimInactiveEffect::DimInactiveEffect()
 
 void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    bool dim = false;
-    if( active && dim_by_group && active->group() == w->group())
-        dim = false;
-    else if( active && !dim_by_group && active == w )
-        dim = false;
-    else if( w->isDock())
-        dim = dim_panels;
-    else if( !w->isNormalWindow() && !w->isDialog())
-        dim = false;
-    else
-        dim = true;
-    if( dim )
+    if( dimWindow( w ))
         {
         data.brightness *= (1.0 - (dim_strength / 100.0));
         data.saturation *= (1.0 - (dim_strength / 100.0));
         }
     effects->paintWindow( w, mask, region, data );
+    }
+
+bool DimInactiveEffect::dimWindow( const EffectWindow* w ) const
+    {
+    if( active == w )
+        return false; // never dim active window
+    if( active && dim_by_group && active->group() == w->group())
+        return false; // don't dim in active group if configured so
+    if( w->isDock() && !dim_panels )
+        return false; // don't dim panels if configured so
+    if( !w->isNormalWindow() && !w->isDialog() && !w->isDock())
+        return false; // don't dim more special window types
+    // don't dim unmanaged windows, grouping doesn't work for them and maybe dimming
+    // them doesn't make sense in general (they should be short-lived anyway)
+    if( !w->isManaged())
+        return false;
+    return true; // dim the rest
     }
 
 void DimInactiveEffect::windowActivated( EffectWindow* w )
@@ -66,7 +72,7 @@ void DimInactiveEffect::windowActivated( EffectWindow* w )
         if( dim_by_group )
             {
             if(( w == NULL || w->group() != active->group()) && active->group() != NULL )
-                { // repaint windows that are not longer in active group
+                { // repaint windows that are no longer in the active group
                 foreach( EffectWindow* tmp, active->group()->members())
                     tmp->addRepaintFull();
                 }
