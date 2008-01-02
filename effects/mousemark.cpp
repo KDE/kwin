@@ -83,7 +83,8 @@ void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     }
 
 void MouseMarkEffect::mouseChanged( const QPoint& pos, const QPoint&,
-    Qt::MouseButtons, Qt::KeyboardModifiers modifiers )
+    Qt::MouseButtons, Qt::MouseButtons,
+    Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers )
     {
     if( modifiers == ( Qt::META | Qt::SHIFT )) // activated
         {

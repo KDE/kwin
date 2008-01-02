@@ -163,7 +163,8 @@ bool Effect::borderActivated( ElectricBorder )
     return false;
     }
 
-void Effect::mouseChanged( const QPoint&, const QPoint&, Qt::MouseButtons, Qt::KeyboardModifiers )
+void Effect::mouseChanged( const QPoint&, const QPoint&, Qt::MouseButtons,
+    Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers )
     {
     }
 

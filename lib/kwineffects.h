@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor )) 
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 3
+#define KWIN_EFFECT_API_VERSION_MINOR 4
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -244,8 +244,9 @@ class KWIN_EXPORT Effect
         virtual void desktopChanged( int old );
         virtual void windowDamaged( EffectWindow* w, const QRect& r );
         virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
-        virtual void mouseChanged( const QPoint& pos, const QPoint& old,
-            Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
+        virtual void mouseChanged( const QPoint& pos, const QPoint& oldpos,
+            Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+            Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
         /**
          Receives events registered for using EffectsHandler::registerPropertyType().

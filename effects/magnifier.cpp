@@ -160,7 +160,8 @@ void MagnifierEffect::toggle()
     effects->addRepaint( magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
     }
 
-void MagnifierEffect::mouseChanged( const QPoint& pos, const QPoint& old, Qt::MouseButtons, Qt::KeyboardModifiers )
+void MagnifierEffect::mouseChanged( const QPoint& pos, const QPoint& old,
+    Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers )
     {
     if( pos != old && zoom != 1 )
         effects->addRepaint( magnifierArea( old ).adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));

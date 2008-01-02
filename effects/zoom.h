@@ -36,7 +36,8 @@ class ZoomEffect
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
         virtual void mouseChanged( const QPoint& pos, const QPoint& old,
-            Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
+            Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+            Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
     private slots:
         void zoomIn();
         void zoomOut();

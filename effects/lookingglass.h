@@ -40,7 +40,8 @@ class LookingGlassEffect : public QObject, public ShaderEffect
         virtual ~LookingGlassEffect();
 
         virtual void mouseChanged( const QPoint& pos, const QPoint& old,
-            Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
+            Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+            Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
 
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
 

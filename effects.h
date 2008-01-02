@@ -128,8 +128,9 @@ class EffectsHandlerImpl : public EffectsHandler
         void tabBoxClosed();
         void tabBoxUpdated();
         bool borderActivated( ElectricBorder border );
-        void mouseChanged( const QPoint& pos, const QPoint& old,
-            Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers );
+        void mouseChanged( const QPoint& pos, const QPoint& oldpos,
+            Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+            Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
         void grabbedKeyboardEvent( QKeyEvent* e );
         bool hasKeyboardGrab() const;
         void propertyNotify( EffectWindow* c, long atom );

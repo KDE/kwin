@@ -99,7 +99,8 @@ void ZoomEffect::actualSize()
     effects->addRepaintFull();
     }
 
-void ZoomEffect::mouseChanged( const QPoint& pos, const QPoint& old, Qt::MouseButtons, Qt::KeyboardModifiers )
+void ZoomEffect::mouseChanged( const QPoint& pos, const QPoint& old, Qt::MouseButtons,
+    Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers )
     {
     if( pos != old && zoom != 1 )
         effects->addRepaintFull();

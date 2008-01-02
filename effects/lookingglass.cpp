@@ -124,7 +124,8 @@ void LookingGlassEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     ShaderEffect::prePaintScreen( data, time );
     }
 
-void LookingGlassEffect::mouseChanged( const QPoint& pos, const QPoint& old, Qt::MouseButtons, Qt::KeyboardModifiers )
+void LookingGlassEffect::mouseChanged( const QPoint& pos, const QPoint& old, Qt::MouseButtons,
+    Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers )
     {
     if( pos != old && isEnabled() )
         {

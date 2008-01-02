@@ -98,7 +98,7 @@ void TrackMouseEffect::postPaintScreen()
     }
 
 void TrackMouseEffect::mouseChanged( const QPoint&, const QPoint&, Qt::MouseButtons,
-    Qt::KeyboardModifiers modifiers )
+    Qt::MouseButtons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers )
     {
     if( modifiers == ( Qt::CTRL | Qt::META ))
         {

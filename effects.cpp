@@ -288,11 +288,12 @@ bool EffectsHandlerImpl::borderActivated( ElectricBorder border )
     return ret;
     }
 
-void EffectsHandlerImpl::mouseChanged( const QPoint& pos, const QPoint& old,
-    Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers )
+void EffectsHandlerImpl::mouseChanged( const QPoint& pos, const QPoint& oldpos,
+    Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
+    Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers )
     {
     foreach( EffectPair ep, loaded_effects )
-        ep.second->mouseChanged( pos, old, buttons, modifiers );
+        ep.second->mouseChanged( pos, oldpos, buttons, oldbuttons, modifiers, oldmodifiers );
     }
 
 bool EffectsHandlerImpl::grabKeyboard( Effect* effect )
