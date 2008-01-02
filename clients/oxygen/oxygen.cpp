@@ -104,8 +104,8 @@ bool OxygenFactory::reset(unsigned long changed)
 bool OxygenFactory::readConfig()
 {
     // create a config object
-    KConfig config("kwinexamplerc");
-    KConfigGroup group = config.group("General");
+    KConfig config("oxygenrc");
+    KConfigGroup group = config.group("Windeco");
 
     // grab settings
     Qt::Alignment oldalign = titlealign_;
