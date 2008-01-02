@@ -1229,7 +1229,7 @@ void KeramikClient::updateCaptionBuffer()
 
 	if ( clientHandler->showAppIcons() )
 	{
-		QStyle *style = button[ 0 ]->style();
+		QStyle *style = QApplication::style();
 		if ( active ) {
 			if ( ! activeIcon )
 				activeIcon = new QPixmap( this->icon().pixmap( style->pixelMetric( QStyle::PM_SmallIconSize ), QIcon::Normal )); // FRAME
