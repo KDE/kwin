@@ -52,7 +52,7 @@ public:
 
     static bool compositingPossible();
     static QString compositingNotPossibleReason();
-    bool enableCompositing() const  { return mEnableCompositing; }
+    bool enableCompositing() const;
     bool enableVSync() const  { return mEnableVSync; }
     bool enableDirectRendering() const  { return mEnableDirectRendering; }
     bool strictBinding() const { return mStrictBinding; }

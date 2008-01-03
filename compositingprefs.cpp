@@ -44,6 +44,12 @@ CompositingPrefs::~CompositingPrefs()
     {
     }
 
+bool CompositingPrefs::enableCompositing() const
+    {
+    return false; // disabled by default, for the time being, until support becomes better
+    return mEnableCompositing;
+    }
+
 bool CompositingPrefs::compositingPossible()
     {
 #ifdef KWIN_HAVE_COMPOSITING
