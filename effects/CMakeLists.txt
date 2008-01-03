@@ -187,8 +187,9 @@ if( CAPTURY_LDFLAGS )
     SET( CAPTURY_FOUND TRUE )
 endif( CAPTURY_LDFLAGS )
 
-macro_log_feature(CAPTURY_FOUND "Capseo framework" "libcaptury is a framework realtime video capturing for e.g. screen casts" "http://rm-rf.in/captury")
+macro_log_feature(CAPTURY_FOUND "Captury framework" "libcaptury is a framework realtime video capturing for e.g. screen casts" "http://rm-rf.in/captury")
 
+# HAVE_CAPTURY doesn't work for some reason, but it's not used now anyway
 macro_bool_to_01( CAPTURY_FOUND HAVE_CAPTURY )
 if( HAVE_CAPTURY )
     KWIN4_ADD_EFFECT(videorecord videorecord.cpp)
