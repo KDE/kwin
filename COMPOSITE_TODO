@@ -25,10 +25,6 @@ KDE 4.0 TODO
 
 - release notes document
 
-- default effects and their settings
-
-- shortcuts - sane defaults, not conflicts
-
 - effects (to do)
     - add generic support to use effect only for certain window types [Seli]
     - explosion
@@ -53,8 +49,6 @@ KDE 4.0 TODO
 - shm mode needs support for more data formats than GL_BGRA
 
 - check what works with XRender
-
-- should OpenGL fall back to XRender if OpenGL initialization fails?
 
 - documentation
 
