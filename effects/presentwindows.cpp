@@ -55,11 +55,11 @@ PresentWindowsEffect::PresentWindowsEffect()
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Expose" );
     a->setText( i18n("Toggle Expose Effect" ));
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
+    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
     b->setText( i18n("Toggle Expose effect (incl other desktops)" ));
-    b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
+    b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
 
     borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricNone);
