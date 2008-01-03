@@ -35,7 +35,6 @@ install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 # sources
 SET(kwin4_effect_builtins_sources
     boxswitch.cpp
-    demo_taskbarthumbnail.cpp
     desktopgrid.cpp
     dialogparent.cpp
     diminactive.cpp
@@ -47,13 +46,13 @@ SET(kwin4_effect_builtins_sources
     minimizeanimation.cpp
     presentwindows.cpp
     scalein.cpp
+    taskbarthumbnail.cpp
     thumbnailaside.cpp
     zoom.cpp
     )
 # their .desktop files
 install( FILES
     boxswitch.desktop
-    demo_taskbarthumbnail.desktop
     desktopgrid.desktop
     dialogparent.desktop
     diminactive.desktop
@@ -65,6 +64,7 @@ install( FILES
     minimizeanimation.desktop
     presentwindows.desktop
     scalein.desktop
+    taskbarthumbnail.desktop
     thumbnailaside.desktop
     zoom.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )

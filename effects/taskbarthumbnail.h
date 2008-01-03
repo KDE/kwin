@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,42 +19,35 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef KWIN_DEMO_TASKBARTHUMBNAIL_H
-#define KWIN_DEMO_TASKBARTHUMBNAIL_H
+#ifndef KWIN_TASKBARTHUMBNAIL_H
+#define KWIN_TASKBARTHUMBNAIL_H
 
-// Include with base class for effects.
 #include <kwineffects.h>
-
 
 namespace KWin
 {
 
-/**
- * Render small thumbnail of window next to it's taskbar entry when the cursor
- *  is above the taskbar entry.
- * Note that this functionality will be replaced in the future so that taskbar
- *  itself can request a thumbnail to be rendered in a give location with a
- *  given size.
- **/
 class TaskbarThumbnailEffect
     : public Effect
     {
     public:
         TaskbarThumbnailEffect();
-
+        virtual ~TaskbarThumbnailEffect();
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void postPaintScreen();
-        virtual void mouseChanged( const QPoint& pos, const QPoint& old,
-            Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-            Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
-
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void windowAdded( EffectWindow* w );
+        virtual void windowRemoved( EffectWindow* w );
+        virtual void propertyNotify( EffectWindow* w, long atom );
     protected:
-        QRect getThumbnailPosition( EffectWindow* c, int* space ) const;
-
     private:
-        QList< EffectWindow* > mThumbnails;
-        QPoint mLastCursorPos;
+        struct Data
+            {
+            Window window; // thumbnail of this window
+            QRect rect;
+            };
+        long atom;
+        QMultiHash< EffectWindow*, Data > thumbnails;
     };
 
 } // namespace
