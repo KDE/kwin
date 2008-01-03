@@ -7,6 +7,14 @@ This document is for creating the 4.0 release notes. There are 3 parts:
 =================
 
 
+- Performance/smoothness with nVidia cards: Smoothness of KWin rendering
+  can be improved by setting env.variable KWIN_NVIDIA_HACK to 1 (e.g. append
+  "export KWIN_NVIDIA_HACK=1" to your ~/.profile file). This sets __GL_YIELD=NOTHING
+  for KWin, letting KWin use more CPU time for OpenGL operations, however
+  at the expense of affecting performance of other applications. This is
+  therefore disabled by default. This setting may be removed in the future
+  if the negative impact becomes insignificant. See section "OPENGL YIELD BEHAVIOR"
+  in README.txt for nVidia cards.
 
 Comments
 ========

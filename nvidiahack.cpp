@@ -32,7 +32,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class kwinnvidiahack
     {
     public:
-        kwinnvidiahack() { setenv( "__GL_YIELD", "NOTHING", true ); }
+        kwinnvidiahack();
     };
+
+kwinnvidiahack::kwinnvidiahack()
+    {
+    const char* env = getenv( "KWIN_NVIDIA_HACK" );
+    if( env != NULL && env[ 0 ] != '0' )
+        setenv( "__GL_YIELD", "NOTHING", true );
+    }
 
 kwinnvidiahack kwinnvidiahackinst;
