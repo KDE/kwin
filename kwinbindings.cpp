@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         a = actionCollection->addAction( "Group:Navigation" );
         a->setText( i18n("Navigation") );
 	DEF( I18N_NOOP("Walk Through Windows"),               Qt::ALT+Qt::Key_Tab, slotWalkThroughWindows() );
-	DEF( I18N_NOOP("Walk Through Windows (Reverse)"),     Qt::ALT+Qt::SHIFT+Qt::Key_Tab, slotWalkBackThroughWindows() );
+	DEF( I18N_NOOP("Walk Through Windows (Reverse)"),     Qt::ALT+Qt::SHIFT+Qt::Key_Backtab, slotWalkBackThroughWindows() );
 	DEF( I18N_NOOP("Walk Through Desktops"),              0, slotWalkThroughDesktops() );
 	DEF( I18N_NOOP("Walk Through Desktops (Reverse)"),    0, slotWalkBackThroughDesktops() );
 	DEF( I18N_NOOP("Walk Through Desktop List"),          0, slotWalkThroughDesktopList() );
