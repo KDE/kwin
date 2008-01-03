@@ -27,11 +27,8 @@ KDE 4.0 TODO
 
 - effects (to do)
     - add generic support to use effect only for certain window types [Seli]
-    - explosion
-?       - use for forcible killing (add support to windowClosed())
     - shadow
         - xrender mode
-        - needs to follow the window shape
     - desktopgrid
         - should preserve aspect ratio (as an option?)
     - zoom
