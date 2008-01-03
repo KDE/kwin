@@ -109,6 +109,14 @@ void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
     effects->drawWindow( w, mask, region, data );
     }
 
+QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
+    {
+    if( !useShadow( w ))
+        return effects->transformWindowDamage( w, r );
+    QRect r2 = r | shadowRectangle( r );
+    return effects->transformWindowDamage( w, r2 );
+    }
+
 void ShadowEffect::windowClosed( EffectWindow* c )
     {
     effects->addRepaint( shadowRectangle( c->geometry() ));
