@@ -91,7 +91,7 @@ install( FILES
     zoom_config.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
-if(OPENGL_FOUND)
+if(KWIN_HAVE_OPENGL_COMPOSITING)
     # opengl-based effects
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         blur.cpp
@@ -154,10 +154,10 @@ if(OPENGL_FOUND)
         sharpen_config.desktop
         trackmouse_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-endif(OPENGL_FOUND)
+endif(KWIN_HAVE_OPENGL_COMPOSITING)
 
 # showfps, showpaint - need both xrender and opengl
-if( OPENGL_FOUND AND X11_Xrender_FOUND )
+if(KWIN_HAVE_OPENGL_COMPOSITING AND KWIN_HAVE_XRENDER_COMPOSITING)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         showfps.cpp
         showpaint.cpp
@@ -166,16 +166,16 @@ if( OPENGL_FOUND AND X11_Xrender_FOUND )
         showfps.desktop
         showpaint.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-endif( OPENGL_FOUND AND X11_Xrender_FOUND )
+endif(KWIN_HAVE_OPENGL_COMPOSITING AND KWIN_HAVE_XRENDER_COMPOSITING)
 
 # add the plugin
 KWIN4_ADD_EFFECT(builtins ${kwin4_effect_builtins_sources})
 KWIN4_ADD_EFFECT_CONFIG(builtins ${kwin4_effect_builtins_config_sources})
 # link to xrender if necessary
 # note that libkwineffects already links to opengl, so no need to add this here
-if (X11_Xrender_FOUND)
+if (KWIN_HAVE_XRENDER_COMPOSITING)
   target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB})
-endif (X11_Xrender_FOUND)
+endif (KWIN_HAVE_XRENDER_COMPOSITING)
 
 
 

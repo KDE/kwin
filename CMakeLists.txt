@@ -1,4 +1,36 @@
-add_subdirectory( lib ) 
+########### configure tests ###############
+
+# KWIN_HAVE_COMPOSITING - whether any compositing support is available
+if( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
+    set( KWIN_HAVE_COMPOSITING 1 )
+endif( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
+
+# KWIN_HAVE_OPENGL_COMPOSITING - whether OpenGL-based compositing support is available
+if( KWIN_HAVE_COMPOSITING AND OPENGL_FOUND )
+    set( KWIN_HAVE_OPENGL_COMPOSITING 1 )
+endif( KWIN_HAVE_COMPOSITING AND OPENGL_FOUND )
+
+# KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available
+if( KWIN_HAVE_COMPOSITING AND X11_Xrender_FOUND AND X11_Xfixes_FOUND )
+    set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
+endif( KWIN_HAVE_COMPOSITING AND X11_Xrender_FOUND AND X11_Xfixes_FOUND )
+
+# safety
+if( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
+    # ok
+else( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
+    set( KWIN_HAVE_COMPOSITING ) # unset
+endif( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
+
+macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
+
+# for things that are also used by kwin libraries
+configure_file(lib/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/lib/kwinconfig.h )
+# for kwin internal things
+configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
+
+
+########### global ###############
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/lib
@@ -7,15 +39,13 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
     )
 
+
+add_subdirectory( lib ) 
 add_subdirectory( killer )
 add_subdirectory( kcmkwin )
 add_subdirectory( clients )
 add_subdirectory( effects )
 add_subdirectory( data )
-
-configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 
 ########### next target ###############
 
