@@ -22,6 +22,8 @@ else( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
     set( KWIN_HAVE_COMPOSITING ) # unset
 endif( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
 
+macro_log_feature(KWIN_HAVE_COMPOSITING "Compositing support" "XComposite and XDamage extensions and OpenGL or XRender with XFixes are required for KWin compositing support" "http://www.x.org/")
+
 macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
 
 # for things that are also used by kwin libraries
@@ -142,14 +144,3 @@ install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
-
-# cmake apparently doesn't allow nested ()'s in if(), so write as multiple if()'s
-if( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
-  if( OPENGL_FOUND )
-    SET(KWIN_COMPOSITE_ENABLED TRUE)
-  endif( OPENGL_FOUND )
-  if( X11_Xrender_FOUND AND X11_Xfixes_FOUND )
-    SET(KWIN_COMPOSITE_ENABLED TRUE)
-  endif( X11_Xrender_FOUND AND X11_Xfixes_FOUND )
-endif( X11_Xcomposite_FOUND AND X11_Xdamage_FOUND )
-macro_log_feature(KWIN_COMPOSITE_ENABLED "Compositing support" "XComposite and XDamage extensions and OpenGL or XRender with XFixes are required for KWin compositing support" "http://www.x.org/")
