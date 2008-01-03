@@ -189,6 +189,7 @@ class EffectWindowImpl : public EffectWindow
         virtual int height() const;
         virtual QRect geometry() const;
         virtual QRegion shape() const;
+        virtual bool hasOwnShape() const;
         virtual QPoint pos() const;
         virtual QSize size() const;
         virtual QRect rect() const;

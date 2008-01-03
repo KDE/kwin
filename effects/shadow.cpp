@@ -116,7 +116,7 @@ void ShadowEffect::windowClosed( EffectWindow* c )
 
 bool ShadowEffect::useShadow( EffectWindow* w ) const
     {
-    return !w->isDeleted() && !w->isDesktop() && !w->isDock();
+    return !w->isDeleted() && !w->isDesktop() && !w->isDock() && !w->hasOwnShape();
     }
 
 void ShadowEffect::addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const

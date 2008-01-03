@@ -226,3 +226,7 @@ Effects TODO
 * DimInactive flickers when switching between windows (temporarily no window becomes active)
 
 - focus effect (windows waves a little when it gets focus)
+
++ shadow
++   - make work with xrender
++   - follow the shape of the window (currently is disabled completely using the hasOwnShadow() hack)

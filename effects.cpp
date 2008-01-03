@@ -1034,6 +1034,11 @@ QRegion EffectWindowImpl::shape() const
     return sw ? sw->shape() : geometry();
     }
 
+bool EffectWindowImpl::hasOwnShape() const
+    {
+    return toplevel->shape();
+    }
+
 QSize EffectWindowImpl::size() const
     {
     return toplevel->size();
