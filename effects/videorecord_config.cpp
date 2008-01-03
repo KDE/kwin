@@ -51,7 +51,7 @@ VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariant
     KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "VideoRecord" ));
     a->setText( i18n("Toggle Video Recording" ));
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
+    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_V));
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);

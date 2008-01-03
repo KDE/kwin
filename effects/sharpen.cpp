@@ -38,7 +38,7 @@ SharpenEffect::SharpenEffect() : QObject(), ShaderEffect("sharpen")
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Sharpen" );
     a->setText( i18n("Toggle Sharpen effect" ));
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F7));
+    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_S));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
     }
 

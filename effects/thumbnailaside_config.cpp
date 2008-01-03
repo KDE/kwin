@@ -69,7 +69,7 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
 
     KAction* a = (KAction*)m_actionCollection->addAction( "ToggleCurrentThumbnail" );
     a->setText( i18n("Toggle Thumbnail for Current Window" ));
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F9));
+    a->setGlobalShortcut(KShortcut(Qt::META + Qt::CTRL + Qt::Key_T));
 
     load();
     }

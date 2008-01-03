@@ -37,7 +37,7 @@ InvertEffect::InvertEffect() : QObject(), ShaderEffect("invert")
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Invert" );
     a->setText( i18n("Toggle Invert effect" ));
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F6));
+    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
     }
 

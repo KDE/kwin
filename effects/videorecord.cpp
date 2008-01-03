@@ -61,7 +61,7 @@ VideoRecordEffect::VideoRecordEffect()
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = static_cast< KAction* >( actionCollection->addAction( "VideoRecord" ));
     a->setText( i18n("Toggle Video Recording" ));
-    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_V ));
     connect( a, SIGNAL( triggered( bool )), this, SLOT( toggleRecording()));
     area = QRect( 0, 0, displayWidth(), displayHeight());
     }
