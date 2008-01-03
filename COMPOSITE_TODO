@@ -38,8 +38,6 @@ KDE 4.0 TODO
         - needs to follow the window shape
     - desktopgrid
         - should preserve aspect ratio (as an option?)
-    - taskbar thumbnail [Seli]
-        - we'll go with the hacky one, fix performance problems
     - zoom
         - it should react on Meta+wheel ?
 
