@@ -16,6 +16,13 @@ This document is for creating the 4.0 release notes. There are 3 parts:
   if the negative impact becomes insignificant. See section "OPENGL YIELD BEHAVIOR"
   in README.txt for nVidia cards.
 
+- XRender mode: It is possible to use XRender for compositing instead of the default OpenGL.
+  XRender mode in general has less features, however at the moment it is also considered
+  unstable - it has not received as much testing as OpenGL mode, some features may be incomplete
+  and it is recommended to use the OpenGL mode if possible. Also note that current XRender
+  implementations often perform rather poorly.
+
+
 Comments
 ========
 

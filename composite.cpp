@@ -128,7 +128,7 @@ void Workspace::setupCompositing()
                 break; // -->
             delete scene;
             scene = NULL;
-            // fall through, try XRender
+            break; // do not fall back to XRender for now, maybe in the future
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         case XRenderCompositing:
