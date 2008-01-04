@@ -182,7 +182,7 @@ Comment[x-test]=xxVirtual desktop one is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 1
 Comment[zh_TW]=已選擇虛擬桌面 1 號
 Action=Sound
-Sound=KDE_Desktop_1.ogg
+Sound=KDE-Sys-Special.ogg
 
 
 [Event/desktop2]
@@ -305,7 +305,7 @@ Comment[x-test]=xxVirtual desktop two is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 2
 Comment[zh_TW]=已選擇虛擬桌面 2 號
 Action=Sound
-Sound=KDE_Desktop_2.ogg
+Sound=KDE-Sys-Special.ogg
 
 
 [Event/desktop3]
@@ -428,7 +428,7 @@ Comment[x-test]=xxVirtual desktop three is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 3
 Comment[zh_TW]=已選擇虛擬桌面 3 號
 Action=Sound
-Sound=KDE_Desktop_3.ogg
+Sound=KDE-Sys-Special.ogg
 
 
 [Event/desktop4]
@@ -550,7 +550,7 @@ Comment[x-test]=xxVirtual desktop four is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 4
 Comment[zh_TW]=已選擇虛擬桌面 4 號
 Action=Sound
-Sound=KDE_Desktop_4.ogg
+Sound=KDE-Sys-Special.ogg
 
 
 [Event/desktop5]
@@ -673,7 +673,7 @@ Comment[x-test]=xxVirtual desktop five is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 5
 Comment[zh_TW]=已選擇虛擬桌面 5 號
 Action=Sound
-Sound=KDE_Desktop_5.ogg
+Sound=KDE-Sys-Special.ogg
 
 
 [Event/desktop6]
@@ -785,7 +785,7 @@ Comment[x-test]=xxVirtual desktop six is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 6
 Comment[zh_TW]=已選擇虛擬桌面 6 號
 Action=Sound
-Sound=KDE_Desktop_6.ogg
+Sound=KDE-Sys-Special.ogg
 
 
 [Event/desktop7]
@@ -909,7 +909,7 @@ Comment[x-test]=xxVirtual desktop seven is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 7
 Comment[zh_TW]=已選擇虛擬桌面 7 號
 Action=Sound
-Sound=KDE_Desktop_7.ogg
+Sound=KDE-Sys-Special.ogg
 
 
 [Event/desktop8]
@@ -1032,7 +1032,7 @@ Comment[x-test]=xxVirtual desktop eight is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 8
 Comment[zh_TW]=已選擇虛擬桌面 8 號
 Action=Sound
-Sound=KDE_Desktop_8.ogg
+Sound=KDE-Sys-Special.ogg
 
 
 [Event/desktop9]
@@ -2676,7 +2676,7 @@ Comment[x-test]=xxNew windowxx
 Comment[zh_CN]=新建窗口
 Comment[zh_TW]=新視窗
 Action=Sound
-Sound=KDE_Window_Open.ogg
+Sound=KDE-Sys-Message.ogg
 
 
 [Event/delete]
@@ -2894,7 +2894,7 @@ Comment[x-test]=xxA window closesxx
 Comment[zh_CN]=窗口关闭了
 Comment[zh_TW]=一個視窗已關閉
 Action=Sound
-Sound=KDE_Window_Close.ogg
+Sound=KDE-Window-Close.ogg
 
 
 [Event/shadeup]
@@ -3004,7 +3004,7 @@ Comment[x-test]=xxA window is shaded upxx
 Comment[zh_CN]=窗口被卷起
 Comment[zh_TW]=視窗層級往上
 Action=Sound
-Sound=KDE_Window_Shade_Up.ogg
+Sound=KDE-Window-Shade-Up.ogg
 
 
 [Event/shadedown]
@@ -3111,7 +3111,7 @@ Comment[x-test]=xxA window is shaded downxx
 Comment[zh_CN]=窗口被展开
 Comment[zh_TW]=視窗層級往下
 Action=Sound
-Sound=KDE_Window_Shade_Down.ogg
+Sound=KDE-Window-Shade-Down.ogg
 
 
 [Event/minimize]
@@ -3226,7 +3226,7 @@ Comment[x-test]=xxA window is minimizedxx
 Comment[zh_CN]=窗口被最小化
 Comment[zh_TW]=視窗已縮到最小
 Action=Sound
-Sound=KDE_Window_Iconify.ogg
+Sound=KDE-Window-Minimize.ogg
 
 
 [Event/unminimize]
@@ -3337,7 +3337,7 @@ Comment[x-test]=xxA Window is restoredxx
 Comment[zh_CN]=窗口被恢复
 Comment[zh_TW]=視窗已還原
 Action=Sound
-Sound=KDE_Window_DeIconify.ogg
+Sound=KDE-Window-Maximize.ogg
 
 
 [Event/maximize]
@@ -3456,7 +3456,7 @@ Comment[x-test]=xxA window is maximizedxx
 Comment[zh_CN]=窗口被最大化
 Comment[zh_TW]=視窗已放到最大
 Action=Sound
-Sound=KDE_Window_UnHide.ogg
+Sound=KDE-Window-Maximize.ogg
 
 
 [Event/unmaximize]
@@ -3572,7 +3572,7 @@ Comment[x-test]=xxA window loses maximizationxx
 Comment[zh_CN]=窗口不再最大化
 Comment[zh_TW]=視窗已解除最大化
 Action=Sound
-Sound=KDE_Window_Hide.ogg
+Sound=KDE-Window-Minimize.ogg
 
 
 [Event/on_all_desktops]
@@ -3671,7 +3671,7 @@ Comment[x-test]=xxA window is made visible on all desktopsxx
 Comment[zh_CN]=窗口出现在全部桌面上
 Comment[zh_TW]=將視窗放在所有桌面上
 Action=Sound
-Sound=KDE_Window_Sticky.ogg
+Sound=KDE-Window-All-Desktops.ogg
 
 
 [Event/not_on_all_desktops]
@@ -3766,7 +3766,7 @@ Comment[x-test]=xxA Window is no longer visible on all desktopsxx
 Comment[zh_CN]=窗口不再出现在全部桌面上
 Comment[zh_TW]=讓視窗不再在所有桌面上顯示
 Action=Sound
-Sound=KDE_Window_UnSticky.ogg
+Sound=KDE-Window-All-Desktops-Not.ogg
 
 [Event/transnew]
 Name=New Dialog
@@ -3871,7 +3871,7 @@ Comment[x-test]=xxTransient window (a dialog) appearsxx
 Comment[zh_CN]=出现了临时窗口(对话框)
 Comment[zh_TW]=顯示新的對話框
 Action=Sound
-Sound=KDE_Dialog_Appear.ogg
+Sound=KDE-Sys-Message.ogg
 
 
 [Event/transdelete]
@@ -3986,7 +3986,7 @@ Comment[x-test]=xxTransient window (a dialog) is removedxx
 Comment[zh_CN]=删除了临时窗口(对话框)
 Comment[zh_TW]=對話框已移除
 Action=Sound
-Sound=KDE_Dialog_Disappear.ogg
+Sound=KDE-Window-Close.ogg
 
 
 [Event/movestart]
