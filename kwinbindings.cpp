@@ -192,8 +192,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         a->setText( i18n("Miscellaneous") );
 	DEF( I18N_NOOP("Mouse Emulation"),                    Qt::ALT+Qt::Key_F12, slotMouseEmulation() );
 	DEF( I18N_NOOP("Kill Window"),                        Qt::CTRL+Qt::ALT+Qt::Key_Escape, slotKillWindow() );
-	DEF( I18N_NOOP("Window Screenshot To Clipboard"),     Qt::ALT+Qt::Key_Print, slotGrabWindow() );
-	DEF( I18N_NOOP("Desktop Screenshot To Clipboard"),    Qt::CTRL+Qt::Key_Print, slotGrabDesktop() );
+	DEF( I18N_NOOP("Window Screenshot to Clipboard"),     Qt::ALT+Qt::Key_Print, slotGrabWindow() );
+	DEF( I18N_NOOP("Desktop Screenshot to Clipboard"),    Qt::CTRL+Qt::Key_Print, slotGrabDesktop() );
         DEF( I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 
 /*This belongs in taskbar rather than here, so it'll have to wait until after 2.2 is done.

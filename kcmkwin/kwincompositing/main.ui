@@ -72,7 +72,7 @@
              <item>
               <widget class="QLabel" name="label" >
                <property name="text" >
-                <string>You can find more effects in the All effects tab</string>
+                <string>You can find more effects in the 'All Effects' tab</string>
                </property>
               </widget>
              </item>
@@ -97,7 +97,7 @@
             <item>
              <widget class="QPushButton" name="advancedOptions" >
               <property name="text" >
-               <string>Advanced Options...</string>
+               <string>Advanced Options</string>
               </property>
              </widget>
             </item>

@@ -15,7 +15,7 @@
      <item>
       <widget class="QLabel" name="label" >
        <property name="text" >
-        <string>&amp;Strength</string>
+        <string>&amp;Strength:</string>
        </property>
        <property name="buddy" >
         <cstring>spinStrength</cstring>
@@ -56,14 +56,14 @@
    <item>
     <widget class="QCheckBox" name="checkPanel" >
      <property name="text" >
-      <string>Apply effect to &amp;Panels</string>
+      <string>Apply effect to &amp;panels</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="checkGroup" >
      <property name="text" >
-      <string>Apply effect to &amp;Groups</string>
+      <string>Apply effect to &amp;groups</string>
      </property>
     </widget>
    </item>

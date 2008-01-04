@@ -72,7 +72,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     a->setText( i18n("Toggle Expose Effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
-    b->setText( i18n("Toggle Expose effect (incl other desktops)" ));
+    b->setText( i18n("Toggle Expose Effect (incl other desktops)" ));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);

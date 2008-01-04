@@ -13,7 +13,7 @@
    <item row="0" column="0" >
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string>&amp;Radius</string>
+      <string>&amp;Radius:</string>
      </property>
      <property name="buddy" >
       <cstring>radiusSpin</cstring>

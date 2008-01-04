@@ -58,7 +58,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
-    b->setText( i18n("Toggle Expose effect (incl other desktops)" ));
+    b->setText( i18n("Toggle Expose Effect (incl other desktops)" ));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
 

@@ -45,7 +45,7 @@ SharpenEffectConfig::SharpenEffectConfig(QWidget* parent, const QVariantList& ar
     QVBoxLayout* layout = new QVBoxLayout(this);
     KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "Sharpen" ));
-    a->setText( i18n("Toggle Sharpen effect" ));
+    a->setText( i18n("Toggle Sharpen Effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_S));
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
