@@ -100,7 +100,7 @@ void TaskbarThumbnailEffect::propertyNotify( EffectWindow* w, long a )
     if( data.length() < 1 )
         return;
     long* d = reinterpret_cast< long* >( data.data());
-    int len = data.length() / 4;
+    int len = data.length() / sizeof( d[ 0 ] );
     int pos = 0;
     int cnt = d[ 0 ];
     ++pos;

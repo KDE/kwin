@@ -1080,7 +1080,8 @@ QByteArray EffectWindowImpl::readProperty( long atom, long type, int format ) co
                 }
             if( long( rtype ) == type && rformat == format )
                 {
-                QByteArray ret( reinterpret_cast< const char* >( data ), nitems * ( format / 8 ));
+                int bytelen = format == 8 ? nitems : format == 16 ? nitems * sizeof( short ) : nitems * sizeof( long );
+                QByteArray ret( reinterpret_cast< const char* >( data ), bytelen );
                 XFree( data );
                 return ret;
                 }
