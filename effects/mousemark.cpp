@@ -41,6 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+#define NULL_POINT (QPoint( -1, -1 )) // null point is (0,0), which is valid :-/
+
 KWIN_EFFECT( mousemark, MouseMarkEffect )
 
 MouseMarkEffect::MouseMarkEffect()
@@ -54,6 +56,8 @@ MouseMarkEffect::MouseMarkEffect()
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
     width = conf.readEntry( "LineWidth", 3 );
     color = conf.readEntry( "Color", QColor( Qt::red ));
+    
+    arrow_start = NULL_POINT;
     }
 
 void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
@@ -86,6 +90,20 @@ void MouseMarkEffect::mouseChanged( const QPoint& pos, const QPoint&,
     Qt::MouseButtons, Qt::MouseButtons,
     Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers )
     {
+    if( modifiers == ( Qt::META | Qt::SHIFT | Qt::CTRL )) // start/finish arrow
+        {
+        if( arrow_start != NULL_POINT )
+            {
+            marks.append( createArrow( arrow_start, pos ));
+            arrow_start = NULL_POINT;
+            effects->addRepaintFull();
+            return;
+            }
+        else
+            arrow_start = pos;
+        }
+    if( arrow_start != NULL_POINT )
+        return;
     if( modifiers == ( Qt::META | Qt::SHIFT )) // activated
         {
         if( drawing.isEmpty())
@@ -113,6 +131,20 @@ void MouseMarkEffect::clear()
     effects->addRepaintFull();
     }
 
+MouseMarkEffect::Mark MouseMarkEffect::createArrow( QPoint arrow_start, QPoint arrow_end )
+    {
+    Mark ret;
+    double angle = atan2( arrow_end.y() - arrow_start.y(), arrow_end.x() - arrow_start.x());
+    ret += arrow_start + QPoint( 50 * cos( angle + M_PI / 6 ),
+        50 * sin( angle + M_PI / 6 )); // right one
+    ret += arrow_start;
+    ret += arrow_end;
+    ret += arrow_start; // it's connected lines, so go back with the middle one
+    ret += arrow_start + QPoint( 50 * cos( angle - M_PI / 6 ),
+        50 * sin( angle - M_PI / 6 )); // left one
+    return ret;
+    }
+    
 } // namespace
 
 #include "mousemark.moc"

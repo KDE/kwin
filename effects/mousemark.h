@@ -41,8 +41,10 @@ class MouseMarkEffect
         void clear();
     private:
         typedef QVector< QPoint > Mark;
+        static Mark createArrow( QPoint arrow_start, QPoint arrow_end );
         QVector< Mark > marks;
         Mark drawing;
+        QPoint arrow_start;
         int width;
         QColor color;
     };
