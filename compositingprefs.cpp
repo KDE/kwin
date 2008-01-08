@@ -87,26 +87,20 @@ QString CompositingPrefs::compositingNotPossibleReason()
         {
         return i18n("Required X extensions (XComposite and XDamage) are not available.");
         }
-#if KDE_IS_VERSION( 4, 0, 90 )
-#ifdef __GNUC__
-#warning Uncomment
+#if defined( KWIN_HAVE_OPENGL_COMPOSITING ) && !defined( KWIN_HAVE_XRENDER_COMPOSITING )
+    if( !Extensions::glxAvailable())
+        return i18n( "GLX/OpenGL are not available and only OpenGL support is compiled." );
+#elif !defined( KWIN_HAVE_OPENGL_COMPOSITING ) && defined( KWIN_HAVE_XRENDER_COMPOSITING )
+    if( !Extensions::glxAvailable())
+        return i18n( "XRender/XFixes extensions are not available and only XRender support"
+            " is compiled." );
+#else
+    if( !( Extensions::glxAvailable()
+            || ( Extensions::renderAvailable() && Extensions::fixesAvailable())))
+        {
+        return i18n( "GLX/OpenGL and XRender/XFixes are not available." );
+        }
 #endif
-#endif
-//#if defined( KWIN_HAVE_OPENGL_COMPOSITING ) && !defined( KWIN_HAVE_XRENDER_COMPOSITING )
-//    if( !Extensions::glxAvailable())
-//        return i18n( "GLX/OpenGL are not available and only OpenGL support is compiled." );
-//#endif
-//#elseif !defined( KWIN_HAVE_OPENGL_COMPOSITING ) && defined( KWIN_HAVE_XRENDER_COMPOSITING )
-//    if( !Extensions::glxAvailable())
-//        return i18n( "XRender/XFixes extensions are not available and only XRender support"
-//            " is compiled." );
-//#else
-//    if( !( Extensions::glxAvailable()
-//            || ( Extensions::renderAvailable() && Extensions::fixesAvailable())))
-//        {
-//        return i18n( "GLX/OpenGL and XRender/XFixes are not available." );
-//        }
-//#endif
     return QString();
 #else
     return i18n("Compositing was disabled at compile time.\n"
