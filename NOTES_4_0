@@ -3,9 +3,147 @@ This document is for creating the 4.0 release notes. There are 3 parts:
 - comments and todo's about what should be added to them
 - comments about what should be in the accompanying kwin 4.0 video
 
+TODO - check all XXX notes
+
 4.0 release notes
 =================
 
+= Introduction =
+
+KWin, the standard KDE window manager, in KDE4.0 ships with the first version
+of built-in support for compositing, making it also a compositing manager.
+This allows KWin to provide advanced graphical effects, like for example with Compiz,
+while also providing all the features from previous KDE releases (such as very good
+intergration with the rest of KDE, advanced configurability, well-tested window manager, etc.).
+Unlike Compiz, KWin still functions even when no system support for compositing is
+available, with only compositing features not being available in such case.
+
+Previous KWin versions in later KDE3.x releases included a standalone compositing
+manager called kompmgr, based on the xcompmgr compositing manager. Kompmgr was only
+loosely tied with KWin, used only XRender for rendering and provided only basic
+features like transparency, shadows and fade in/out animations. Compositing manager
+in KWin in KDE4.0 is integrated with the rest of KWin, can use either OpenGL or XRender
+for rendering and has a framework for compositing effects, all these allowing KWin
+to provide a much wider range of features.
+
+Note, however, that compositing support in KWin in KDE4.0 is still considered experimental,
+for several reasons. System support for compositing is often being problematic (various bugs
+in X, drivers or other parts of the system), manual configuration of X may be required
+for proper results (see below), some applications may not be prepared and work well
+with compositing, the performance may not be adequate, and other problems.
+Also, while KWin's compositing support is considered usable and reasonably stable, it
+is relatively new code and has been tested only on a limited range of hardware.
+
+Therefore, compositing support in KWin is disabled by default, and needs to be explicitly
+enabled. If there will be any problems, you can disable it again (see below for troubleshooting)
+and report a bug with all relevant information about the problem.
+
+
+= Setting up =
+
+Compositing support is enabled in KWin's configuration. Press Alt+F3 and select 'Configure Window
+Behavior'. In the configuration module, select page 'Desktop Effects' and enable checkbox
+'Enable desktop effects'. After accepting the changes, a dialog with a timeout will appear,
+asking to confirm enabling of compositing support. If you do not confirm within the timeout,
+compositing support will be disabled again, therefore, if enabling compositing triggers
+any problems, it should be sufficient to wait several seconds before the changes are reverted.
+Note that after enabling or disabling compositing it is recommended to restart your KDE
+session in order to ensure that all applications detect the change.
+
+If you cannot enable desktop effects, it may be because either your KDE is not built
+with necessary support, or more probably because your system is not capable of providing
+compositing support. See file
+XXX http://websvn.kde.org/*checkout*/trunk/KDE/kdebase/workspace/kwin/COMPOSITE_HOWTO
+for some instructions on setting up your system. Note that there may be other factors
+affecting whether you do or do not have compositing support.
+
+
+= Usage =
+
+A quick overview of features provided by compositing manager in KWin:
+
+- Ctrl+F9 (and Ctrl+F10 for windows from all desktops) shows an overview of all windows
+  and allows activating one of them. The feature can be also activated by moving the mouse
+  into the top-left screen corner. A window can be activated by clicking it or by using arrows
+  and Enter key. You can also type text to filter the list of windows.
+- Ctrl+F8 shotcut activates a desktop grid - all your virtual desktops will be arranged
+  on the screen (as an enlarged pager) - you can select and activate desktops using
+  a number, a function key, by clicking on it or by using arrows and Enter key,
+  you can move windows by dragging them or by right-clicking on them.
+- The DesktopGrid effect also provides animations when switching between virtual desktops (can
+  be turned off).
+- The window switcher (Alt+Tab by default) provides live thumbnails of windows.
+- Windows blocked by modal dialogs are dimmed.
+- Screen can be zoomed in and out using Win+<equals>, Win+<minus> and reset using Win+0 (
+  it is currently not possible to use mouse wheel, but this feature is planned). Note that
+  because of input transformation not being yet available in X the zoomed screen has to move
+  around to keep the mouse pointer at the same place like it would be when not zoomed.
+- Screen can be shown with inverted colors by pressing Ctrl+Win+I (accessibility feature,
+  Invert effect is not enabled by default).
+- There are fade animations during login and logout.
+- Windows fade in and out.
+- Minimize animation to/from taskbar.
+- Windows have shadows.
+
+There are more features that are not enabled by default and need to be explicitly enabled
+in the configuration.
+
+XXX link to 4.0 kwin video
+
+
+= Troubleshooting =
+
+As already said, compositing support in KWin is considered usable and reasonably stable,
+but due to several reasons it may not work properly for you.
+
+If there are any problems with compositing support, the simplest option is to disable
+it again. KWin will normally continue functioning, only not providing compositing features.
+If you cannot normally turn off compositing support (for example because the screen
+is corrupted), you can turn it off using one of these ways:
+- run command 'kwriteconfig --file kwinrc --group Compositing --key Enabled false' from
+  the command line
+- set environment variable 'KWIN_COMPOSE' to 'N' (append 'export KWIN_COMPOSE=N' at the end
+  of your ~/.profile), this affects compositing only temporarily
+You will probably need to switch to text mode or start failsafe session from KDM to be
+able to perform this.
+
+See file
+XXX http://websvn.kde.org/*checkout*/trunk/KDE/kdebase/workspace/kwin/COMPOSITE_HOWTO
+for some issues with various graphics cards.
+
+See other sections below for further possible problems.
+
+
+= XRender mode =
+
+It is possible to use XRender for compositing instead of the default OpenGL.
+XRender mode in general has less features, however at the moment it is also considered
+unstable - it has not received as much testing as OpenGL mode, some features may be incomplete
+and it is recommended to use the OpenGL mode if possible. Also note that current XRender
+implementations (in X/drivers) often perform rather poorly.
+
+
+= Developers =
+
+KWin provides support for writing compositing effects that may be loaded into KWin as
+plugins. These effects communicate with KWin core using C++ API specially designed for this
+purpose, making effects not directly dependent on KWin core and changes in it.
+
+At the time of the KDE4.0 release, since compositing support is still under heavy development,
+this API is considered unstable and subject to change. If you write your own effect plugin,
+you may need to recompile it after KWin update. KWin will however detect incompatible
+versions and will not load such plugins (automatic, you do not need to provide any code for it).
+As the compositing support will become more stabilized, this API will be kept backwards and
+binary compatible, just like with other KDE libraries.
+
+At the time of the KDE4.0 release, API for compositing effects is unfortunately only sparsely
+documented. Developers interested in writing compositing effects for KWin are suggested
+to use source code of effects shipped with KWin (the Howto effect as the starting point)
+XXX link to kwin sources?
+and/or ask on the KWin mailing list XXX link.
+
+
+= Various =
 
 - Performance/smoothness with nVidia cards: Smoothness of KWin rendering
   can be improved by setting env.variable KWIN_NVIDIA_HACK to 1 (e.g. append
@@ -16,20 +154,9 @@ This document is for creating the 4.0 release notes. There are 3 parts:
   if the negative impact becomes insignificant. See section "OPENGL YIELD BEHAVIOR"
   in README.txt for nVidia cards.
 
-- XRender mode: It is possible to use XRender for compositing instead of the default OpenGL.
-  XRender mode in general has less features, however at the moment it is also considered
-  unstable - it has not received as much testing as OpenGL mode, some features may be incomplete
-  and it is recommended to use the OpenGL mode if possible. Also note that current XRender
-  implementations often perform rather poorly.
-
 
 Comments
 ========
-
-- mention how to turn it on
-- refer to COMPOSITE_HOWTO?
-- mention API is unstable, work in progress and whatnot
-- hmm, better mention compositing as a whole is still somewhat experimental :)
 
 
 Video
