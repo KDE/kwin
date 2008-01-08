@@ -39,6 +39,7 @@ class MouseMarkEffect
             Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
     private slots:
         void clear();
+        void clearLast();
     private:
         typedef QVector< QPoint > Mark;
         static Mark createArrow( QPoint arrow_start, QPoint arrow_end );

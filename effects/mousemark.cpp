@@ -49,9 +49,13 @@ MouseMarkEffect::MouseMarkEffect()
     {
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = static_cast< KAction* >( actionCollection->addAction( "ClearMouseMarks" ));
-    a->setText( i18n( "Clear Mouse Marks" ));
+    a->setText( i18n( "Clear All Mouse Marks" ));
     a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F11 ));
     connect( a, SIGNAL( triggered( bool )), this, SLOT( clear()));
+    a = static_cast< KAction* >( actionCollection->addAction( "ClearLastMouseMark" ));
+    a->setText( i18n( "Clear Last Mouse Mark" ));
+    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F12 ));
+    connect( a, SIGNAL( triggered( bool )), this, SLOT( clearLast()));
 
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
     width = conf.readEntry( "LineWidth", 3 );
@@ -104,6 +108,7 @@ void MouseMarkEffect::mouseChanged( const QPoint& pos, const QPoint&,
         }
     if( arrow_start != NULL_POINT )
         return;
+    // TODO the shortcuts now trigger this right before they're activated
     if( modifiers == ( Qt::META | Qt::SHIFT )) // activated
         {
         if( drawing.isEmpty())
@@ -129,6 +134,24 @@ void MouseMarkEffect::clear()
     drawing.clear();
     marks.clear();
     effects->addRepaintFull();
+    }
+
+void MouseMarkEffect::clearLast()
+    {
+    if( arrow_start != NULL_POINT )
+        {
+        arrow_start = NULL_POINT;
+        }
+    else if( !drawing.isEmpty())
+        {
+        drawing.clear();
+        effects->addRepaintFull();
+        }
+    else if( !marks.isEmpty())
+        {
+        marks.pop_back();
+        effects->addRepaintFull();
+        }
     }
 
 MouseMarkEffect::Mark MouseMarkEffect::createArrow( QPoint arrow_start, QPoint arrow_end )
