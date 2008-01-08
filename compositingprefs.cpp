@@ -91,7 +91,7 @@ QString CompositingPrefs::compositingNotPossibleReason()
     if( !Extensions::glxAvailable())
         return i18n( "GLX/OpenGL are not available and only OpenGL support is compiled." );
 #elif !defined( KWIN_HAVE_OPENGL_COMPOSITING ) && defined( KWIN_HAVE_XRENDER_COMPOSITING )
-    if( !Extensions::glxAvailable())
+    if( !( Extensions::renderAvailable() && Extensions::fixesAvailable()))
         return i18n( "XRender/XFixes extensions are not available and only XRender support"
             " is compiled." );
 #else
