@@ -102,6 +102,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         mousemark.cpp
         shadow.cpp
         sharpen.cpp
+        snow.cpp
         trackmouse.cpp
         )
     install( FILES
@@ -113,6 +114,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         mousemark.desktop
         shadow.desktop
         sharpen.desktop
+        snow.desktop
         trackmouse.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
     install( FILES
@@ -132,6 +134,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         data/lookingglass.frag
         data/lookingglass.vert
         data/shadow-texture.png
+        data/snowflake.png
         data/circle.png
         data/circle-edgy.png
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
@@ -144,6 +147,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         mousemark_config.cpp
         mousemark_config.ui
         sharpen_config.cpp
+        snow_config.cpp
+        snow_config.ui
         trackmouse_config.cpp
         )
     install( FILES
@@ -152,6 +157,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         magnifier_config.desktop
         mousemark_config.desktop
         sharpen_config.desktop
+        snow_config.desktop
         trackmouse_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif(KWIN_HAVE_OPENGL_COMPOSITING)

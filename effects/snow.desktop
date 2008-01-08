@@ -1,0 +1,28 @@
+[Desktop Entry]
+# Name of the effect
+Name=Snow
+Comment=Let it snow on the desktop
+Icon=preferences-system-windows-effect-snow
+
+# This is KWin effect
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+# Author and email of the author
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Email=ubuntu@martin-graesslin.com
+# Internal name of the effect
+X-KDE-PluginInfo-Name=kwin4_effect_snow
+# Category of the effect, for config dialog
+X-KDE-PluginInfo-Category=Appearance
+# Version and license
+X-KDE-PluginInfo-Version=0.1.2
+X-KDE-PluginInfo-License=GPL
+# If the effect depends on any other effect(s) to be active, then internal
+#  names of those effects can be given here
+X-KDE-PluginInfo-Depends=
+# Whether this effect should be enabled by default
+X-KDE-PluginInfo-EnabledByDefault=false
+# The plugin (library) which contains the effect. One library may contain more effects.
+X-KDE-Library=kwin4_effect_builtins
+# The order in which this effect is loaded.  Lower numbers are loaded first.
+X-Ordering=90

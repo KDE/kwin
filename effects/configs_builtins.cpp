@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mousemark_config.h"
 #include "magnifier_config.h"
 #include "sharpen_config.h"
+#include "snow_config.h"
 #include "trackmouse_config.h"
 #endif
 
@@ -60,6 +61,7 @@ KWIN_EFFECT_CONFIG_FACTORY
     registerPlugin<KWin::MouseMarkEffectConfig>("mousemark"); \
     registerPlugin<KWin::MagnifierEffectConfig>("magnifier"); \
     registerPlugin<KWin::SharpenEffectConfig>("sharpen"); \
+    registerPlugin<KWin::SnowEffectConfig>("snow"); \
     registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse"); \
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
