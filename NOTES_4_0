@@ -18,6 +18,8 @@ intergration with the rest of KDE, advanced configurability, well-tested window 
 Unlike Compiz, KWin still functions even when no system support for compositing is
 available, with only compositing features not being available in such case.
 
+XXX probably stress more the various strengths of KWin, to reduce the 'why not Compiz' nonsense
+
 Previous KWin versions in later KDE3.x releases included a standalone compositing
 manager called kompmgr, based on the xcompmgr compositing manager. Kompmgr was only
 loosely tied with KWin, used only XRender for rendering and provided only basic
