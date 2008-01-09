@@ -94,6 +94,36 @@ XXX link to 4.0 kwin video
 XXX note the kwin_composite tag at youtube
 
 
+= Performance =
+
+Compositing internally works by redirecting window drawing to offscreen memory and composing
+it on the screen in an additional drawing pass. This means that in general composited desktop
+on average has worse performance that non-composited desktop (although in some cases it
+may perform better, be that real improvement or just perceived one due to animations, better
+synchronization or similar factors). For example, binding window pixmaps to OpenGL textures
+(that is, preparing window contents for drawing) can be a relatively costly operation
+with large windows, making things like animations in Plasma desktop window or page scrolling
+in a maximized browser window jerky. Heavy system load can also cause the compositing manager
+not repaint often enough, resulting in lagging or jerky screen redrawing.
+
+KWin in KDE4.0 is also relatively new code and has not been extensively optimized yet,
+therefore its performance may not be in some areas comparable with performance of other
+compositing managers. In such cases performance should be improved with newer versions.
+
+Note that current XRender implementations (in X/drivers) often perform rather poorly and
+therefore the OpenGL mode usually should have much better performance. See below for notes
+on XRender mode.
+
+Tip: Performance/smoothness with nVidia cards: Smoothness of KWin rendering
+can be improved by setting env.variable KWIN_NVIDIA_HACK to 1 (e.g. append
+"export KWIN_NVIDIA_HACK=1" to your ~/.profile file). This sets __GL_YIELD=NOTHING
+for KWin, letting KWin use more CPU time for OpenGL operations, however
+at the expense of affecting performance of other applications. This is
+therefore disabled by default. This setting may be removed in the future
+if the negative impact becomes insignificant. See section "OPENGL YIELD BEHAVIOR"
+in README.txt for nVidia cards.
+
+
 = Troubleshooting =
 
 As already said, compositing support in KWin is considered usable and reasonably stable,
@@ -114,7 +144,7 @@ See file
 XXX http://websvn.kde.org/*checkout*/trunk/KDE/kdebase/workspace/kwin/COMPOSITE_HOWTO
 for some issues with various graphics cards.
 
-See other sections below for further possible problems.
+XXX See other sections below for further possible problems.
 
 
 = XRender mode =
@@ -145,17 +175,9 @@ to use source code of effects shipped with KWin (the Howto effect as the startin
 XXX link to kwin sources?
 and/or ask on the KWin mailing list XXX link.
 
+Links to various KWin-related documents are available at XXX http://techbase.kde.org/Projects/KWin .
 
-= Various =
 
-- Performance/smoothness with nVidia cards: Smoothness of KWin rendering
-  can be improved by setting env.variable KWIN_NVIDIA_HACK to 1 (e.g. append
-  "export KWIN_NVIDIA_HACK=1" to your ~/.profile file). This sets __GL_YIELD=NOTHING
-  for KWin, letting KWin use more CPU time for OpenGL operations, however
-  at the expense of affecting performance of other applications. This is
-  therefore disabled by default. This setting may be removed in the future
-  if the negative impact becomes insignificant. See section "OPENGL YIELD BEHAVIOR"
-  in README.txt for nVidia cards.
 
 
 Comments
