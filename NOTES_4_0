@@ -1,10 +1,3 @@
-This document is for creating the 4.0 release notes. There are 3 parts:
-- the notes themselves
-- comments and todo's about what should be added to them
-- comments about what should be in the accompanying kwin 4.0 video
-
-TODO - check all XXX notes
-
 4.0 release notes
 =================
 
@@ -14,11 +7,10 @@ KWin, the standard KDE window manager, in KDE4.0 ships with the first version
 of built-in support for compositing, making it also a compositing manager.
 This allows KWin to provide advanced graphical effects, like for example with Compiz,
 while also providing all the features from previous KDE releases (such as very good
-intergration with the rest of KDE, advanced configurability, well-tested window manager, etc.).
+intergration with the rest of KDE, advanced configurability, focus stealing prevention,
+well-tested window manager, robust handling of misbehaving applications/toolkits, etc.).
 Unlike Compiz, KWin still functions even when no system support for compositing is
 available, with only compositing features not being available in such case.
-
-XXX probably stress more the various strengths of KWin, to reduce the 'why not Compiz' nonsense
 
 Previous KWin versions in later KDE3.x releases included a standalone compositing
 manager called kompmgr, based on the xcompmgr compositing manager. Kompmgr was only
@@ -55,7 +47,7 @@ session in order to ensure that all applications detect the change.
 If you cannot enable desktop effects, it may be because either your KDE is not built
 with necessary support, or more probably because your system is not capable of providing
 compositing support. See file
-XXX http://websvn.kde.org/*checkout*/trunk/KDE/kdebase/workspace/kwin/COMPOSITE_HOWTO
+http://websvn.kde.org/*checkout*/trunk/KDE/kdebase/workspace/kwin/COMPOSITE_HOWTO
 for some instructions on setting up your system. Note that there may be other factors
 affecting whether you do or do not have compositing support.
 
@@ -90,8 +82,9 @@ A quick overview of features provided by compositing manager in KWin:
 There are more features that are not enabled by default and need to be explicitly enabled
 in the configuration.
 
-XXX link to 4.0 kwin video
-XXX note the kwin_composite tag at youtube
+There are various videos showing various compositing features of KWin. For example,
+search for 'kwin_composite' at youtube.com (please keep in mind that many of those windows
+are old and show testing or demo effects).
 
 
 = Performance =
@@ -140,11 +133,8 @@ is corrupted), you can turn it off using one of these ways:
 You will probably need to switch to text mode or start failsafe session from KDM to be
 able to perform this.
 
-See file
-XXX http://websvn.kde.org/*checkout*/trunk/KDE/kdebase/workspace/kwin/COMPOSITE_HOWTO
+See file http://websvn.kde.org/*checkout*/trunk/KDE/kdebase/workspace/kwin/COMPOSITE_HOWTO
 for some issues with various graphics cards.
-
-XXX See other sections below for further possible problems.
 
 
 = XRender mode =
@@ -172,17 +162,6 @@ binary compatible, just like with other KDE libraries.
 At the time of the KDE4.0 release, API for compositing effects is unfortunately only sparsely
 documented. Developers interested in writing compositing effects for KWin are suggested
 to use source code of effects shipped with KWin (the Howto effect as the starting point)
-XXX link to kwin sources?
-and/or ask on the KWin mailing list XXX link.
+and/or ask on the KWin mailing list.
 
-Links to various KWin-related documents are available at XXX http://techbase.kde.org/Projects/KWin .
-
-
-
-
-Comments
-========
-
-
-Video
-=====
+Links to various KWin-related documents are available at http://techbase.kde.org/Projects/KWin .
