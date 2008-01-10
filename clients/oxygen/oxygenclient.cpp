@@ -190,6 +190,15 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
 
         case CloseButton:
             return new OxygenButton(*this, i18n("Close"), ButtonClose);
+
+/*
+        case AboveButton:
+            return new OxygenButton(*this, i18n("Keep above others"), ButtonAbove);
+
+        case BelowButton:
+            return new OxygenButton(*this, i18n("Keep below others"), ButtonBelow);
+*/
+
 /*
         case OnAllDesktopsButton:
             return new OxygenButton(*this, i18n("All Desktops"), ButtonSticky);

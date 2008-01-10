@@ -27,6 +27,7 @@
 #include <math.h>
 #include <QPainterPath>
 #include <QPainter>
+#include <QPen>
 #include <QBitmap>
 
 #include <kdecoration.h>
@@ -232,6 +233,30 @@ void OxygenButton::paintEvent(QPaintEvent *)
         case ButtonClose:
             painter.drawLine(QPointF( 7.5,7.5), QPointF(13.5,13.5));
             painter.drawLine(QPointF(13.5,7.5), QPointF( 7.5,13.5));
+            break;
+        case ButtonAbove:
+            if(isChecked()) {
+                QPen newPen = painter.pen();
+                newPen.setColor(KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color());
+                painter.setPen(newPen);
+            }
+
+            painter.drawLine(QPointF( 7.5,14), QPointF(10.5,11));
+            painter.drawLine(QPointF(10.5,11), QPointF(13.5,14));
+            painter.drawLine(QPointF( 7.5,10), QPointF(10.5, 7));
+            painter.drawLine(QPointF(10.5, 7), QPointF(13.5,10));
+            break;
+        case ButtonBelow:
+            if(isChecked()) {
+                QPen newPen = painter.pen();
+                newPen.setColor(KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color());
+                painter.setPen(newPen);
+            }
+
+            painter.drawLine(QPointF( 7.5,11), QPointF(10.5,14));
+            painter.drawLine(QPointF(10.5,14), QPointF(13.5,11));
+            painter.drawLine(QPointF( 7.5, 7), QPointF(10.5,10));
+            painter.drawLine(QPointF(10.5,10), QPointF(13.5, 7));
             break;
         default:
             break;

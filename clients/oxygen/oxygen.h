@@ -46,6 +46,8 @@ enum ButtonType {
     ButtonClose,
     ButtonMenu,
     ButtonSticky,
+    ButtonAbove,
+    ButtonBelow,
     ButtonTypeCount
 };
 Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
