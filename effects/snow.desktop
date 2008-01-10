@@ -1,7 +1,13 @@
 [Desktop Entry]
 # Name of the effect
 Name=Snow
+Name[ga]=Sneachta
+Name[km]=ធ្លាក់​ព្រឹល
+Name[zh_CN]=雪飘
 Comment=Let it snow on the desktop
+Comment[ga]=Sneachta ar an deasc
+Comment[km]=អនុញ្ញាត​ឲ្យ​វា​ធ្លាក់​ព្រឹល​នៅលើ​ផ្ទៃតុ
+Comment[zh_CN]=在桌面上展现雪飘效果
 Icon=preferences-system-windows-effect-snow
 
 # This is KWin effect
