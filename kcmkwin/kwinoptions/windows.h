@@ -109,7 +109,7 @@ private:
   void setRollOverDesktops(bool);
   void setShowPopupinfo(bool);
 
-  Q3ButtonGroup *fcsBox;
+  QGroupBox *fcsBox;
   QComboBox *focusCombo;
   QCheckBox *autoRaiseOn;
   QCheckBox *delayFocusOn;

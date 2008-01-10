@@ -28,6 +28,7 @@
 #include <QSlider>
 
 #include <Q3ButtonGroup>
+#include <QButtonGroup>
 #include <QCheckBox>
 #include <QRadioButton>
 #include <QLabel>
@@ -124,12 +125,11 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     //lay->addWidget(plcBox);
 
     // focus policy
-    fcsBox = new Q3ButtonGroup(i18n("Focus"),this);
-    fcsBox->setColumnLayout( 0, Qt::Horizontal );
+    fcsBox = new QGroupBox(i18n("Focus"),this);
 
     QBoxLayout *fLay = new QVBoxLayout();
     fLay->setSpacing(KDialog::spacingHint());
-    fcsBox->layout()->addItem( fLay );
+    fcsBox->setLayout( fLay );
 
     QBoxLayout *cLay = new QHBoxLayout();
     fLay->addLayout( cLay );
@@ -288,7 +288,9 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     // Any changes goes to slotChanged()
     connect(focusCombo, SIGNAL(activated(int)), SLOT(changed()));
-    connect(fcsBox, SIGNAL(clicked(int)), SLOT(changed()));
+    connect(autoRaiseOn,SIGNAL(clicked()), SLOT(changed()));
+    connect(delayFocusOn, SIGNAL(clicked()), SLOT(changed()));
+    connect(clickRaiseOn, SIGNAL(clicked()), SLOT(changed()));
     connect(autoRaise, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(delayFocus, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(separateScreenFocus, SIGNAL(clicked()), SLOT(changed()));
