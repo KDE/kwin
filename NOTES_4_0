@@ -87,6 +87,19 @@ search for 'kwin_composite' at youtube.com (please keep in mind that many of tho
 are old and show testing or demo effects).
 
 
+= Using KWin without KDE desktop =
+
+Just like with older KWin versions it is possible to use KWin also with other desktop
+environments or even as a standalone window manager, as long as required KDE libraries
+are installed. Please note that KWin is a pure window manager and does not provide a panel
+or handle desktop background like some window managers do. KWin's compositing features
+work in the standalone mode, with some functionality missing (because of missing taskbar,
+for example), and, while this has not been tested, it is expected that compositing
+features will work also when running in other desktop environments, possibly with some
+functionality missing again. Reports on using KWin with other desktop environments
+are welcome.
+
+
 = Performance =
 
 Compositing internally works by redirecting window drawing to offscreen memory and composing
