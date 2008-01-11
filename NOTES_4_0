@@ -183,7 +183,7 @@ Links to various KWin-related documents are available at http://techbase.kde.org
 
 == Why not Compiz? ==
 
-Is it possible to use Compiz instead of KWin with KDE, however KWin remains the default window manager.
+It is possible to use Compiz instead of KWin with KDE, however KWin remains the default window manager.
 The option of replacing KWin with Compiz had been evaluated before work on compositing features
 of KWin started and the conclusion was, in short, that it would lead to a lot of work and duplicated
 effort.
@@ -237,3 +237,12 @@ that this is technically almost impossible. Compiz plugins appear to be merely p
 that are separated from its core, but which still heavily depend on it - there are even plugins
 that appear to copy and paste parts of Compiz core and modify it. Making it possible to use such
 plugins from KWin would essentially require KWin to become Compiz.
+
+
+== Why add compositing support to KWin when Compiz is better ? ==
+
+There can be different ideas about what better means, but regardless of that, to main aim of KWin
+is not to replace Compiz. Many users have asked for compositing support in KDE, and, for reasons
+listed in 'Why not Compiz?', the best way to achieve that has been considered to be adding compositing
+support to KWin. KWin aims to provide compositing support, focusing on providing useful compositing
+features and basic visual effects, while keeping its other strengths.
