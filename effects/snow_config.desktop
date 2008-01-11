@@ -7,6 +7,8 @@ X-KDE-ParentComponents=kwin4_effect_snow
 X-KDE-PluginKeyword=snow
 
 Name=Snow
+Name[eo]=Neĝo
 Name[ga]=Sneachta
 Name[km]=ធ្លាក់​ព្រឹល
 Name[zh_CN]=雪飘
+Name[zh_TW]=下雪
