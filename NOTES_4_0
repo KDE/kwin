@@ -178,3 +178,62 @@ to use source code of effects shipped with KWin (the Howto effect as the startin
 and/or ask on the KWin mailing list.
 
 Links to various KWin-related documents are available at http://techbase.kde.org/Projects/KWin .
+
+= FAQ =
+
+== Why not Compiz? ==
+
+Is it possible to use Compiz instead of KWin with KDE, however KWin remains the default window manager.
+The option of replacing KWin with Compiz had been evaluated before work on compositing features
+of KWin started and the conclusion was, in short, that it would lead to a lot of work and duplicated
+effort.
+
+To answer in more detail, several technical things need to be explained. Both KWin and Compiz
+are a combined window manager and compositing manager. Window manager functionality takes care
+of all aspects of handling windows, such as their placement, selecting the active one as so on.
+This functionality is crucial for a desktop - without a window manager it would be very difficult
+to perform most operations with windows. Compositing manager functionality, on the other hand,
+can be considered optional - while it brings many new features, it is still possible very well
+to use a desktop (such as with KWin in KDE3).
+
+The reasons to add compositing support to KWin instead of using Compiz include:
+
+- Compiz at the present time is very likely the most advanced compositing manager with many features,
+with a headstart when compared with KWin, however, this cannot be said about Compiz as the window manager,
+where KWin has the advantage of being a much more tested codebase, providing more stable, well-tested
+and robust window manager, with many features. Given that, as said above, window manager functionality
+is considered to be more important, it would be unwise to force all KDE users to a change that
+would likely mean regressions in many aspects.
+
+These regressions would include lesser integration with KDE, visual and behavioral changes
+(the 'KDE window decorator' shipped with Compiz only mimics the look of KWin's decorations,
+but does not provide the same functionality, even the Alt+F3 popup menu visibly differs),
+possible introduction of problems that have already been fixed in KWin, missing features
+that have already been implemented in KWin, and so on. Developing, testing and bugfixing a window
+manager can be a very demanding work and repeating all the work done on KWin again for Compiz would
+presumably require a lot of effort. As such, claims that KWin is 'reinventing the wheel' are missing
+the point, since Compiz, being a relatively new window manager, is reinventing at least as much,
+if not more, from other window managers including KWin,
+
+Also, given that there can be only one window manager and one compositing manager at a time,
+there would not be possibly a way to remedy these problems by somehow running Compiz and KWin together.
+
+- Compiz currently does not work at all when compositing is not possible, thus requiring a fallback
+window manager for such case. This in practice would mean that KDE developers would be required
+to work on improving Compiz and would have to keep KWin at least for maintenance as the fallback
+for Compiz, thus having two window managers for KDE. Besides the developer work of taking care
+of two window managers this would also bring many user problems resulting from two different
+window managers, with differences in the look and feel, feature sets and bugs.
+
+It should be also noted that Metacity, GNOME's window manager, has not been dropped in favour of Compiz
+either, but is still, to our knowledge, under development and adding compositing features to it
+is a work in progress.
+
+
+== Why not use plugins from Compiz? ==
+
+This option was considered in the past as well. After examination of Compiz code the conclusion was
+that this is technically almost impossible. Compiz plugins appear to be merely parts of Compiz
+that are separated from its core, but which still heavily depend on it - there are even plugins
+that appear to copy and paste parts of Compiz core and modify it. Making it possible to use such
+plugins from KWin would essentially require KWin to become Compiz.
