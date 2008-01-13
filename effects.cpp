@@ -203,7 +203,7 @@ void EffectsHandlerImpl::windowDeleted( EffectWindow* c )
     foreach( EffectPair ep, loaded_effects )
         ep.second->windowDeleted( c );
     Toplevel* c2 = static_cast< EffectWindowImpl* >( c )->window();
-    elevated_windows.removeAll( c2 );
+    elevated_windows.removeAll( c );
     }
 
 void EffectsHandlerImpl::windowClosed( EffectWindow* c )
@@ -450,10 +450,9 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
 
 void EffectsHandlerImpl::setElevatedWindow( EffectWindow* w, bool set )
     {
-    Toplevel* c = static_cast< EffectWindowImpl* >( w )->window();
-    elevated_windows.removeAll( c );
+    elevated_windows.removeAll( w );
     if( set )
-        elevated_windows.append( c );
+        elevated_windows.append( w );
     }
 
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)

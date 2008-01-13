@@ -142,7 +142,7 @@ class EffectsHandlerImpl : public EffectsHandler
         void reloadEffect( const QString& name );
         bool isEffectLoaded( const QString& name );
 
-        ToplevelList elevatedWindows() const;
+        QList<EffectWindow*> elevatedWindows() const;
 
     protected:
         KLibrary* findEffectLibrary( KService* service );
@@ -151,7 +151,7 @@ class EffectsHandlerImpl : public EffectsHandler
         Effect* keyboard_grab_effect;
         QStack<GLRenderTarget*> render_targets;
         Effect* fullscreen_effect;
-        ToplevelList elevated_windows;
+        QList<EffectWindow*> elevated_windows;
         QMultiMap< int, EffectPair > effect_order;
         QHash< long, int > registered_atoms;
 };
@@ -248,7 +248,7 @@ class EffectWindowGroupImpl
 
 
 inline
-ToplevelList EffectsHandlerImpl::elevatedWindows() const
+QList<EffectWindow*> EffectsHandlerImpl::elevatedWindows() const
     {
     return elevated_windows;
     }

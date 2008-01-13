@@ -301,10 +301,11 @@ void Workspace::performCompositing()
         windows.append( c );
     foreach( Deleted* c, deleted ) // TODO remember stacking order somehow
         windows.append( c );
-    foreach( Toplevel* c, static_cast< EffectsHandlerImpl* >( effects )->elevatedWindows())
+    foreach( EffectWindow* c, static_cast< EffectsHandlerImpl* >( effects )->elevatedWindows())
         {
-        windows.removeAll( c );
-        windows.append( c );
+        Toplevel* t = static_cast< EffectWindowImpl* >( c )->window();
+        windows.removeAll( t );
+        windows.append( t );
         }
     foreach( Toplevel* c, windows )
         { // This could be possibly optimized WRT obscuring, but that'd need being already
