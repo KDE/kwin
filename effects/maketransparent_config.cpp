@@ -97,7 +97,7 @@ void MakeTransparentEffectConfig::save()
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "translucentdecorations" );
+    EffectsHandler::sendReloadMessage( "maketransparent" );
     }
 
 void MakeTransparentEffectConfig::defaults()
