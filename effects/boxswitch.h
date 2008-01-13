@@ -56,6 +56,7 @@ class BoxSwitchEffect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
+        virtual void windowClosed( EffectWindow* w );
     private:
         class ItemInfo;
         void setActive();
@@ -63,6 +64,7 @@ class BoxSwitchEffect
         void moveResizeInputWindow( int x, int y, int width, int height );
         void calculateFrameSize();
         void calculateItemSizes();
+        void setSelectedWindow( EffectWindow* w );
 
         void paintFrame();
         void paintHighlight( QRect area );

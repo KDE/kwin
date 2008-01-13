@@ -42,6 +42,7 @@ KWIN_EFFECT( boxswitch, BoxSwitchEffect )
 BoxSwitchEffect::BoxSwitchEffect()
     : mActivated( 0 )
     , mMode( 0 )
+    , selected_window( 0 )
     , painting_desktop( 0 )
     {
     frame_margin = 10;
@@ -271,7 +272,7 @@ void BoxSwitchEffect::tabBoxUpdated()
                     effects->addRepaint( windows.value( selected_window )->area );
                 selected_window->addRepaintFull();
                 }
-            selected_window = effects->currentTabBoxWindow();
+            setSelectedWindow( effects->currentTabBoxWindow());
             if( windows.contains( selected_window ))
                 effects->addRepaint( windows.value( selected_window )->area );
             selected_window->addRepaintFull();
@@ -306,7 +307,7 @@ void BoxSwitchEffect::setActive()
     if( mMode == TabBoxWindowsMode )
         {
         original_windows = effects->currentTabBoxWindowList();
-        selected_window = effects->currentTabBoxWindow();
+        setSelectedWindow( effects->currentTabBoxWindow());
         }
     else
         {
@@ -356,6 +357,7 @@ void BoxSwitchEffect::setInactive()
             delete i;
             }
         windows.clear();
+        setSelectedWindow( 0 );
         }
     else
         { // DesktopMode
@@ -365,6 +367,27 @@ void BoxSwitchEffect::setInactive()
         }
     effects->addRepaint( frame_area );
     frame_area = QRect();
+    }
+
+void BoxSwitchEffect::setSelectedWindow( EffectWindow* w )
+    {
+    if( selected_window )
+        {
+        effects->setElevatedWindow( selected_window, false );
+        }
+    selected_window = w;
+    if( w )
+        {
+        effects->setElevatedWindow( selected_window, true );
+        }
+    }
+
+void BoxSwitchEffect::windowClosed( EffectWindow* w )
+    {
+    if( w == selected_window )
+        {
+        setSelectedWindow( 0 );
+        }
     }
 
 void BoxSwitchEffect::moveResizeInputWindow( int x, int y, int width, int height )
