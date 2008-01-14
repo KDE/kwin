@@ -171,7 +171,7 @@ bool CompositingPrefs::createGLXContext()
         visinfo = glXChooseVisual( display(), DefaultScreen( display()), attribs.data() );
         if (!visinfo)
             {
-            kError() << "Error: couldn't find RGB GLX visual";
+            kDebug( 1212 ) << "Error: couldn't find RGB GLX visual";
             return false;
             }
         }
@@ -179,7 +179,7 @@ bool CompositingPrefs::createGLXContext()
     mGLContext = glXCreateContext( display(), visinfo, NULL, True );
     if ( !mGLContext )
     {
-        kError() << "glXCreateContext failed";
+        kDebug( 1212 ) << "glXCreateContext failed";
         XDestroyWindow( display(), mGLWindow );
         return false;
     }
