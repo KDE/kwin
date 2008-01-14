@@ -241,7 +241,7 @@ plugins from KWin would essentially require KWin to become Compiz.
 
 == Why add compositing support to KWin when Compiz is better ? ==
 
-There can be different ideas about what better means, but regardless of that, to main aim of KWin
+There can be different ideas about what better means, but regardless of that, the main aim of KWin
 is not to replace Compiz. Many users have asked for compositing support in KDE, and, as explained
 in 'Why not Compiz?', the best way to achieve that is considered to be adding compositing
 support to KWin. KWin aims to provide compositing support, focusing on providing useful compositing
