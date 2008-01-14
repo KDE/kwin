@@ -44,6 +44,7 @@ class MakeTransparentEffectConfig : public KCModule
         QSpinBox* mDecoration;
         QSpinBox* mMoveResize;
         QSpinBox* mDialogs;
+        QSpinBox* mInactive;
     };
 
 } // namespace

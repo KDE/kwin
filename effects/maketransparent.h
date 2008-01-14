@@ -34,10 +34,15 @@ class MakeTransparentEffect
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void windowActivated( EffectWindow* w );
     private:
+        bool isInactive( const EffectWindow *w ) const;
+
         double decoration;
         double moveresize;
         double dialogs;
+        double inactive;
+        EffectWindow* active;
     };
 
 } // namespace

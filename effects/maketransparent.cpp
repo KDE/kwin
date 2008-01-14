@@ -33,6 +33,8 @@ MakeTransparentEffect::MakeTransparentEffect()
     decoration = conf.readEntry( "Decoration", 0.7 );
     moveresize = conf.readEntry( "MoveResize", 0.8 );
     dialogs = conf.readEntry( "Dialogs", 1.0 );
+    inactive = conf.readEntry( "Inactive", 1.0 );
+    active = effects->activeWindow();
     }
 
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
@@ -53,19 +55,71 @@ void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData&
 
 void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( decoration != 1.0 && w->hasDecoration())
-        data.decoration_opacity *= decoration;
-    if( dialogs != 1.0 && w->isDialog())
-        data.opacity *= dialogs;
-    if( moveresize != 1.0 && ( w->isUserMove() || w->isUserResize()))
-        data.opacity *= moveresize;
+    if( inactive != 1.0 && isInactive(w) )
+        {
+        data.opacity *= inactive;
+        }
+    else
+        {
+        if( decoration != 1.0 && w->hasDecoration())
+            data.decoration_opacity *= decoration;
+        if( dialogs != 1.0 && w->isDialog())
+            data.opacity *= dialogs;
+        if( moveresize != 1.0 && ( w->isUserMove() || w->isUserResize()))
+            data.opacity *= moveresize;
+        }
     effects->paintWindow( w, mask, region, data );
+    }
+
+bool MakeTransparentEffect::isInactive( const EffectWindow* w ) const
+    {
+    if( active == w || w->isDock() || !w->isManaged() )
+        return false;
+    if( NULL != active && NULL != active->group() )
+        if (active->group() == w->group() )
+            return false;
+    if( !w->isNormalWindow() && !w->isDialog() && !w->isDock() )
+        return false;
+    return true;
     }
 
 void MakeTransparentEffect::windowUserMovedResized( EffectWindow* w, bool first, bool last )
     {
     if( moveresize != 1.0 && ( first || last ))
         w->addRepaintFull();
+    }
+
+void MakeTransparentEffect::windowActivated( EffectWindow* w )
+    {
+    if( inactive != 1.0 )
+        {
+        if( NULL != active && active != w )
+            {
+            if( ( NULL == w || w->group() != active->group() ) &&
+                NULL != active->group() )
+                {
+                // Active group has changed. so repaint old group
+                foreach( EffectWindow *tmp, active->group()->members() )
+                    tmp->addRepaintFull();
+                }
+            else
+                active->addRepaintFull();
+            }
+
+        if( NULL != w )
+            {
+            if (NULL != w->group() )
+                {
+                // Repaint windows in new group
+                foreach( EffectWindow *tmp, w->group()->members() )
+                    tmp->addRepaintFull();
+                }
+            else
+                w->addRepaintFull();
+            }
+        }
+
+    active = w;
     }
 
 } // namespace

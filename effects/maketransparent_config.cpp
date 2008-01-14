@@ -48,24 +48,31 @@ MakeTransparentEffectConfig::MakeTransparentEffectConfig(QWidget* parent, const 
 
     layout->addWidget(new QLabel(i18n("Decorations:"), this), 1, 0);
     mDecoration = new QSpinBox(this);
-    mDecoration->setRange(0, 100);
+    mDecoration->setRange(10, 100);
     mDecoration->setSuffix("%");
     connect(mDecoration, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     layout->addWidget(mDecoration, 1, 1);
 
-    layout->addWidget(new QLabel(i18n("Moved/resized windows:"), this), 2, 0);
+    layout->addWidget(new QLabel(i18n("Inactive windows:"), this), 2, 0);
+    mInactive = new QSpinBox(this);
+    mInactive->setRange(10, 100);
+    mInactive->setSuffix("%");
+    connect(mInactive, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    layout->addWidget(mInactive, 2, 1);
+
+    layout->addWidget(new QLabel(i18n("Moved/resized windows:"), this), 3, 0);
     mMoveResize = new QSpinBox(this);
-    mMoveResize->setRange(0, 100);
+    mMoveResize->setRange(10, 100);
     mMoveResize->setSuffix("%");
     connect(mMoveResize, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mMoveResize, 2, 1);
+    layout->addWidget(mMoveResize, 3, 1);
 
-    layout->addWidget(new QLabel(i18n("Dialogs:"), this), 3, 0);
+    layout->addWidget(new QLabel(i18n("Dialogs:"), this), 4, 0);
     mDialogs = new QSpinBox(this);
-    mDialogs->setRange(0, 100);
+    mDialogs->setRange(10, 100);
     mDialogs->setSuffix("%");
     connect(mDialogs, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mDialogs, 3, 1);
+    layout->addWidget(mDialogs, 4, 1);
 
     layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 4, 0, 1, 2);
 
@@ -78,9 +85,10 @@ void MakeTransparentEffectConfig::load()
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("MakeTransparent");
-    mDecoration->setValue( (int)( conf.readEntry( "Decoration", 0.7 ) * 100 ) );
+    mDecoration->setValue( (int)( conf.readEntry( "Decoration", 1.0 ) * 100 ) );
     mMoveResize->setValue( (int)( conf.readEntry( "MoveResize", 0.8 ) * 100 ) );
     mDialogs->setValue( (int)( conf.readEntry( "Dialogs", 1.0 ) * 100 ) );
+    mInactive->setValue( (int)( conf.readEntry( "Inactive", 0.6 ) * 100 ) );
 
     emit changed(false);
     }
@@ -94,6 +102,7 @@ void MakeTransparentEffectConfig::save()
     conf.writeEntry( "Decoration", mDecoration->value() / 100.0 );
     conf.writeEntry( "MoveResize", mMoveResize->value() / 100.0 );
     conf.writeEntry( "Dialogs", mDialogs->value() / 100.0 );
+    conf.writeEntry( "Inactive", mInactive->value() / 100.0 );
     conf.sync();
 
     emit changed(false);
@@ -106,6 +115,7 @@ void MakeTransparentEffectConfig::defaults()
     mDecoration->setValue( 70 );
     mMoveResize->setValue( 80 );
     mDialogs->setValue( 100 );
+    mInactive->setValue( 100 );
     emit changed(true);
     }
 
