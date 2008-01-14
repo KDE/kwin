@@ -178,7 +178,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     autoRaise->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     autoRaise->setRange(0, 3000, 100);
     autoRaise->setSteps(100,100);
-    autoRaise->setSuffix(i18n(" msec"));
+    autoRaise->setSuffix(i18n(" ms"));
     fLay->addWidget(autoRaise);
 
     connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()) );
@@ -191,7 +191,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     delayFocus->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     delayFocus->setRange(0, 3000, 100);
     delayFocus->setSteps(100,100);
-    delayFocus->setSuffix(i18n(" msec"));
+    delayFocus->setSuffix(i18n(" ms"));
     fLay->addWidget(delayFocus);
 
     clickRaiseOn = new QCheckBox(i18n("C&lick raise active window"), fcsBox);
@@ -588,7 +588,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     shadeHover->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     shadeHover->setRange(0, 3000, 100);
     shadeHover->setSteps(100, 100);
-    shadeHover->setSuffix(i18n(" msec"));
+    shadeHover->setSuffix(i18n(" ms"));
 
     shadeHoverOn->setWhatsThis( i18n("If Shade Hover is enabled, a shaded window will un-shade automatically "
                                        "when the mouse pointer has been over the title bar for some time."));
@@ -615,7 +615,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     delays = new KIntNumInput(10, electricBox);
     delays->setRange(0, MAX_EDGE_RES, 50);
-    delays->setSuffix(i18n(" msec"));
+    delays->setSuffix(i18n(" ms"));
     delays->setLabel(i18n("Desktop &switch delay:"));
     delays->setWhatsThis( i18n("Here you can set a delay for switching desktops using the active"
        " borders feature. Desktops will be switched after the mouse has been pushed against a screen border"
