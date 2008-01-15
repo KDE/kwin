@@ -476,7 +476,10 @@ bool Workspace::workspaceEvent( XEvent * e )
             break;
         case VisibilityNotify:
             if( compositing() && overlay != None && e->xvisibility.window == overlay )
+                {
                 overlay_visible = ( e->xvisibility.state != VisibilityFullyObscured );
+                addRepaintFull();
+                }
             break;
         default:
             if( e->type == Extensions::randrNotifyEvent() && Extensions::randrAvailable() )

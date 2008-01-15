@@ -1041,6 +1041,7 @@ void Workspace::slotReconfigure()
         setupCompositing();
         if( effects ) // setupCompositing() may fail
             effects->reconfigure();
+        addRepaintFull();
     }
     else
         finishCompositing();
