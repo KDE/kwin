@@ -1249,11 +1249,13 @@ void Client::takeActivity( int flags, bool handled, allowed_t )
 #ifndef NDEBUG
     static Time previous_activity_timestamp;
     static Client* previous_client;
+#if 0
     if( previous_activity_timestamp == xTime() && previous_client != this )
         {
         kDebug( 1212 ) << "Repeated use of the same X timestamp for activity";
         kDebug( 1212 ) << kBacktrace();
         }
+#endif
     previous_activity_timestamp = xTime();
     previous_client = this;
 #endif
@@ -1266,11 +1268,13 @@ void Client::takeFocus( allowed_t )
 #ifndef NDEBUG
     static Time previous_focus_timestamp;
     static Client* previous_client;
+#if 0
     if( previous_focus_timestamp == xTime() && previous_client != this )
         {
         kDebug( 1212 ) << "Repeated use of the same X timestamp for focus";
         kDebug( 1212 ) << kBacktrace();
         }
+#endif
     previous_focus_timestamp = xTime();
     previous_client = this;
 #endif
