@@ -84,7 +84,7 @@ void Workspace::setupCompositing()
         }
     else if( !CompositingPrefs::compositingPossible() )
         {
-        kDebug( 1212 ) << "Compositing isn't possible";
+        kWarning( 1212 ) << "Compositing is not possible";
         return;
         }
     if( scene != NULL )
@@ -147,7 +147,7 @@ void Workspace::setupCompositing()
         }
     if( scene == NULL || scene->initFailed())
         {
-        kDebug( 1212 ) << "Failed to create Scene object. Compositing disabled" << endl;
+        kError( 1212 ) << "Failed to initialize compositing, compositing disabled" << endl;
         delete scene;
         scene = NULL;
         delete cm_selection;

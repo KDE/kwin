@@ -61,7 +61,7 @@ bool KWIN_EXPORT hasGLXVersion(int major, int minor, int release = 0);
 bool KWIN_EXPORT hasGLExtension(const QString& extension);
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
-void KWIN_EXPORT checkGLError( const char* txt );
+bool KWIN_EXPORT checkGLError( const char* txt );
 
 inline bool KWIN_EXPORT isPowerOfTwo( int x ) { return (( x & ( x - 1 )) == 0 ); }
 /**

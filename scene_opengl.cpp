@@ -125,7 +125,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             !glXGetVisualFromFBConfig || !glXCreatePixmap || !glXDestroyPixmap ||
             !glXCreateWindow || !glXDestroyWindow )
         {
-        kDebug( 1212 ) << "GLX_SGIX_fbconfig or required GLX functions missing";
+        kWarning( 1212 ) << "GLX_SGIX_fbconfig or required GLX functions missing";
         return; // error
         }
     if( !selectMode())
@@ -162,7 +162,11 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glOrtho( 0, displayWidth(), displayHeight(), 0, 0, 65535 );
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
-    checkGLError( "Init" );
+    if( checkGLError( "Init" ))
+        {
+        kWarning( 1212 ) << "OpenGL compositing setup failed";
+        return; // error
+        }
     kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
         << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
     init_ok = true;
@@ -363,7 +367,7 @@ bool SceneOpenGL::initBuffer()
         }
     else
         {
-        kDebug( 1212 ) << "Couldn't create output buffer (failed to create overlay window?) !";
+        kWarning( 1212 ) << "Couldn't create output buffer (failed to create overlay window?) !";
         return false; // error
         }
     return true;
@@ -445,7 +449,7 @@ bool SceneOpenGL::initBufferConfigs()
         XFree( fbconfigs );
     if( fbcbuffer_db == NULL && fbcbuffer_nondb == NULL )
         {
-        kDebug( 1212 ) << "Couldn't find framebuffer configuration for buffer!";
+        kWarning( 1212 ) << "Couldn't find framebuffer configuration for buffer!";
         return false;
         }
     return true;
@@ -558,12 +562,12 @@ bool SceneOpenGL::initDrawableConfigs()
         XFree( fbconfigs );
     if( fbcdrawableinfo[ DefaultDepth( display(), DefaultScreen( display())) ].fbconfig == NULL )
         {
-        kDebug( 1212 ) << "Couldn't find framebuffer configuration for default depth!";
+        kWarning( 1212 ) << "Couldn't find framebuffer configuration for default depth!";
         return false;
         }
     if( fbcdrawableinfo[ 32 ].fbconfig == NULL )
         {
-        kDebug( 1212 ) << "Couldn't find framebuffer configuration for depth 32!";
+        kWarning( 1212 ) << "Couldn't find framebuffer configuration for depth 32!";
         return false;
         }
     return true;

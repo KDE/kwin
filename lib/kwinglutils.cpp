@@ -99,11 +99,15 @@ bool hasGLExtension(const QString& extension)
     return glExtensions.contains(extension) || glxExtensions.contains(extension);
     }
 
-void checkGLError( const char* txt )
+bool checkGLError( const char* txt )
     {
     GLenum err = glGetError();
     if( err != GL_NO_ERROR )
+        {
         kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) ;
+        return true;
+        }
+    return false;
     }
 
 int nearestPowerOfTwo( int x )
