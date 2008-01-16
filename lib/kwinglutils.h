@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QSize>
 
+/** @addtogroup kwineffects */
+/** @{ */
 
 
 template< class K, class V > class QHash;
@@ -251,5 +253,7 @@ class KWIN_EXPORT GLRenderTarget
 } // namespace
 
 #endif
+
+/** @} */
 
 #endif

@@ -27,6 +27,9 @@ DEALINGS IN THE SOFTWARE.
 
 #include "kdecoration.h"
 
+/** @addtogroup kdecoration */
+/** @{ */
+
 class KDecoration;
 class KDecorationBridge;
 class KDecorationFactoryPrivate;
@@ -116,5 +119,7 @@ inline const KDecorationOptions* KDecorationFactory::options()
     {
     return KDecoration::options();
     }
+
+/** @} */
     
 #endif

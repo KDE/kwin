@@ -38,6 +38,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 
+/** @addtogroup kwineffects */
+/** @{ */
+
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor )) 
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
 #define KWIN_EFFECT_API_VERSION_MINOR 6
@@ -48,6 +51,8 @@ class KLibrary;
 class KConfigGroup;
 class KActionCollection;
 class QKeyEvent;
+
+/** @defgroup kwineffects KWin effects library */
 
 namespace KWin
 {
@@ -881,5 +886,7 @@ double WindowQuad::originalBottom() const
     }
 
 } // namespace
+
+/** @} */
 
 #endif // KWINEFFECTS_H

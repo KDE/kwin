@@ -73,4 +73,6 @@ class KWIN_EXPORT KDecorationPlugins
 
 */
 
+/** @} */
+
 #endif

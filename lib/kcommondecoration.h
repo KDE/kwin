@@ -28,6 +28,9 @@
 #include <QtGui/QAbstractButton>
 #include "kdecoration.h"
 
+/** @addtogroup kdecoration */
+/** @{ */
+
 class KDecorationBridge;
 class KDecorationFactory;
 
@@ -440,6 +443,8 @@ class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
 
         KCommonDecorationButtonPrivate *d;
 };
+
+/** @} */
 
 #endif // KCOMMONDECORATION_H
 

@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+/** @addtogroup kwineffects */
+/** @{ */
 
 namespace KWin
 {
@@ -62,5 +64,7 @@ class KWIN_EXPORT ShaderEffect : public Effect
 };
 
 } // namespace
+
+/** @} */
 
 #endif

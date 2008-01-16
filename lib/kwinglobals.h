@@ -32,10 +32,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 
+#define KWIN_EXPORT KDE_EXPORT
+
 namespace KWin
 {
-
-#define KWIN_EXPORT KDE_EXPORT
 
 
 enum CompositingType
@@ -107,6 +107,7 @@ KWIN_EXPORT int displayHeight()
     return XDisplayHeight( display(), DefaultScreen( display()));
     }
 
+/** @internal */
 class KWIN_EXPORT Extensions
     {
     public:

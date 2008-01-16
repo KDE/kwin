@@ -106,4 +106,6 @@ class KDecorationBridge : public KDecorationDefines
         virtual void grabXServer( bool grab ) = 0;
     };
 
+/** @} */
+
 #endif

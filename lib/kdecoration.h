@@ -32,12 +32,17 @@ DEALINGS IN THE SOFTWARE.
 #include <netwm_def.h>
 #include <QtGui/QMouseEvent>
 
+#define KWIN_EXPORT KDE_EXPORT
+
+/** @defgroup kdecoration KWin decorations library */
+
+/** @addtogroup kdecoration */
+/** @{ */
+
 class KDecorationOptionsPrivate;
 class KDecorationBridge;
 class KDecorationPrivate;
 class KDecorationFactory;
-
-#define KWIN_EXPORT KDE_EXPORT
 
 /**
  * This class provides a namespace for all decoration related classes.
@@ -866,5 +871,7 @@ inline int KDecoration::height() const
     {
     return geometry().height();
     }
+
+/** @} */
 
 #endif

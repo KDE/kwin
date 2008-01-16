@@ -42,6 +42,9 @@
 
 #include "kcommondecoration.moc"
 
+/** @addtogroup kdecoration */
+/** @{ */
+
 KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
     :   m_previewWidget(0),
         btnHideMinWidth(200),

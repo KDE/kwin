@@ -1,11 +1,11 @@
 /** @mainpage KWin Libraries
 
-There are two libraries provided: libkdecorations and libkwineffects.
+There are two libraries provided:
 <p>
-libkdecorations is a library for implementing window decoration plugins
+@ref kdecoration is a library for implementing window decoration plugins
 for KWin.
 
-libkwineffects is a library for implementing window transition effect
+@ref kwineffects is a library for implementing window transition effect
 plugins for KWin.
 
 @authors
