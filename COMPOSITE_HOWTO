@@ -42,8 +42,8 @@ Refresh rate is slower than it should be
     - nvidia drivers use refresh rate to work around some X limitations
     - disable DynamicTwinView (see nvidia README)
     - should(?) be fixed with drivers updated for xrandr1.2
-AddARGBGLXVisuals options seems to work only with depth 24
-    - change your xorg.conf to use depth 24 (or you a configuration tool)
+AddARGBGLXVisuals option seems to work only with depth 24
+    - change your xorg.conf to use depth 24 (or use a configuration tool)
 
 check your X log (/var/log/X*.log) for warnings and errors if there are other problems
 
