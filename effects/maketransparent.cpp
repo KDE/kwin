@@ -30,7 +30,7 @@ KWIN_EFFECT( maketransparent, MakeTransparentEffect )
 MakeTransparentEffect::MakeTransparentEffect()
     {
     KConfigGroup conf = effects->effectConfig("MakeTransparent");
-    decoration = conf.readEntry( "Decoration", 0.7 );
+    decoration = conf.readEntry( "Decoration", 1.0 );
     moveresize = conf.readEntry( "MoveResize", 0.8 );
     dialogs = conf.readEntry( "Dialogs", 1.0 );
     inactive = conf.readEntry( "Inactive", 1.0 );

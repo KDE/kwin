@@ -88,7 +88,7 @@ void MakeTransparentEffectConfig::load()
     mDecoration->setValue( (int)( conf.readEntry( "Decoration", 1.0 ) * 100 ) );
     mMoveResize->setValue( (int)( conf.readEntry( "MoveResize", 0.8 ) * 100 ) );
     mDialogs->setValue( (int)( conf.readEntry( "Dialogs", 1.0 ) * 100 ) );
-    mInactive->setValue( (int)( conf.readEntry( "Inactive", 0.6 ) * 100 ) );
+    mInactive->setValue( (int)( conf.readEntry( "Inactive", 1.0 ) * 100 ) );
 
     emit changed(false);
     }
@@ -112,7 +112,7 @@ void MakeTransparentEffectConfig::save()
 void MakeTransparentEffectConfig::defaults()
     {
     kDebug() ;
-    mDecoration->setValue( 70 );
+    mDecoration->setValue( 100 );
     mMoveResize->setValue( 80 );
     mDialogs->setValue( 100 );
     mInactive->setValue( 100 );
