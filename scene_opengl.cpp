@@ -134,9 +134,14 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         return; // error
     if( !initRenderingContext())
         return; // error
-
     // Initialize OpenGL
     initGL();
+    if( !hasGLExtension( "GL_ARB_texture_non_power_of_two" )
+        && !hasGLExtension( "GL_ARB_texture_rectangle" ))
+        {
+        kdWarning( 1212 ) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
+        return; // error
+        }
     if( db )
         glDrawBuffer( GL_BACK );
     // Check whether certain features are supported
