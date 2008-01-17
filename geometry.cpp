@@ -1910,9 +1910,14 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 
     GeometryUpdatesBlocker blocker( this );
 
-    // maximing one way and unmaximizing the other way shouldn't happen
-    Q_ASSERT( !( vertical && horizontal )
-        || ((( max_mode & MaximizeVertical ) != 0 ) == (( max_mode & MaximizeHorizontal ) != 0 )));
+    // maximing one way and unmaximizing the other way shouldn't happen,
+    // so restore first and then maximize the other way
+    if( ( old_mode == MaximizeVertical && max_mode == MaximizeHorizontal )
+        || ( old_mode == MaximizeHorizontal && max_mode == MaximizeVertical ))
+        {
+        changeMaximize( false, false, false ); // restore
+        }
+        
 
     QRect clientArea = workspace()->clientArea( MaximizeArea, this );
 
