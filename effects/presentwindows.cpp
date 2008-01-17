@@ -326,6 +326,7 @@ void PresentWindowsEffect::setActive(bool active)
         mActiveness = 1; // go back from arranged position
         discardFilterTexture();
         mHighlightedWindow = NULL;
+        windowFilter.clear();
         }
     effects->addRepaintFull(); // trigger next animation repaint
     }
@@ -341,6 +342,7 @@ void PresentWindowsEffect::effectActivated()
 
 void PresentWindowsEffect::effectTerminated()
     {
+    mWindowData.clear();
     // Destroy the temporary input window
     effects->destroyInputWindow( mInput );
     if( hasKeyboardGrab )
