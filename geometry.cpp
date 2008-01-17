@@ -1964,7 +1964,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.width() == 0 )
                     { // needs placement
-                    plainResize( adjustedSize(QSize(width(), clientArea.height()), SizemodeFixedH ));
+                    plainResize( adjustedSize( QSize( width() * 2 / 3, clientArea.height()), SizemodeFixedH ));
                     workspace()->placeSmart( this, clientArea );
                     }
                 else
@@ -1984,7 +1984,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.height() == 0 )
                     { // needs placement
-                    plainResize( adjustedSize(QSize(clientArea.width(), height()), SizemodeFixedW ));
+                    plainResize( adjustedSize( QSize( clientArea.width(), height() * 2 / 3 ), SizemodeFixedW ));
                     workspace()->placeSmart( this, clientArea );
                     }
                 else
