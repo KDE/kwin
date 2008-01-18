@@ -111,7 +111,7 @@ namespace Keramik {
 	class KeramikButton : public QAbstractButton
 	{
 		public:
-			KeramikButton( KeramikClient *, const char *, Button, const QString &, const int realizeBtns = Qt::LeftButton );
+			KeramikButton( KeramikClient *, Button, const QString &, const int realizeBtns = Qt::LeftButton );
 			~KeramikButton();
 
 			Qt::MouseButtons lastButton() const { return lastbutton; }

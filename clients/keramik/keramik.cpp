@@ -721,7 +721,7 @@ QList< KeramikHandler::BorderSize > KeramikHandler::borderSizes() const
 
 
 
-KeramikButton::KeramikButton( KeramikClient* c, const char *name, Button btn, const QString &tip, const int realizeBtns )
+KeramikButton::KeramikButton( KeramikClient* c, Button btn, const QString &tip, const int realizeBtns )
 		: QAbstractButton( c->widget() ),
 		client( c ), button( btn ), hover( false ), lastbutton( Qt::NoButton )
 {
@@ -883,7 +883,7 @@ void KeramikClient::init()
 	connect( this, SIGNAL( keepAboveChanged( bool )), SLOT( keepAboveChange( bool )));
 	connect( this, SIGNAL( keepBelowChanged( bool )), SLOT( keepBelowChange( bool )));
 
-	createMainWidget( Qt::WResizeNoErase );
+	createMainWidget();
 	widget()->setAttribute( Qt::WA_StaticContents );
 	widget()->installEventFilter( this );
 
@@ -1021,7 +1021,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Menu button
 			case 'M' :
 				if ( !button[MenuButton] ) {
-					button[MenuButton] = new KeramikButton( this, "menu", MenuButton, i18n("Menu"), Qt::LeftButton|Qt::RightButton );
+					button[MenuButton] = new KeramikButton( this, MenuButton, i18n("Menu"), Qt::LeftButton|Qt::RightButton );
 					connect( button[MenuButton], SIGNAL( pressed() ), SLOT( menuButtonPressed() ) );
 					layout->addWidget( button[MenuButton] );
 				}
@@ -1030,7 +1030,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// OnAllDesktops button
 			case 'S' :
 				if ( !button[OnAllDesktopsButton] ) {
-					button[OnAllDesktopsButton] = new KeramikButton( this, "on_all_desktops",
+					button[OnAllDesktopsButton] = new KeramikButton( this,
 							OnAllDesktopsButton, isOnAllDesktops()?i18n("Not on all desktops"):i18n("On all desktops") );
 					if(isOnAllDesktops())
 						button[OnAllDesktopsButton]->toggle();
@@ -1042,7 +1042,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Help button
 			case 'H' :
 				if ( !button[HelpButton] && providesContextHelp() ) {
-					button[HelpButton] = new KeramikButton( this, "help", HelpButton, i18n("Help") );
+					button[HelpButton] = new KeramikButton( this, HelpButton, i18n("Help") );
 					connect( button[HelpButton], SIGNAL( clicked() ), SLOT( showContextHelp() ) );
 					layout->addWidget( button[HelpButton] );
 				}
@@ -1051,7 +1051,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Minimize button
 			case 'I' :
 				if ( !button[MinButton] && isMinimizable() ) {
-					button[MinButton] = new KeramikButton( this, "minimize", MinButton, i18n("Minimize") );
+					button[MinButton] = new KeramikButton( this, MinButton, i18n("Minimize") );
 					connect( button[MinButton], SIGNAL( clicked() ), SLOT( minimize() ) );
 					layout->addWidget( button[MinButton] );
 				}
@@ -1060,7 +1060,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Maximize button
 			case 'A' :
 				if ( !button[MaxButton] && isMaximizable() ) {
-					button[MaxButton] = new KeramikButton( this, "maximize", MaxButton, i18n("Maximize"), Qt::LeftButton|Qt::MidButton|Qt::RightButton );
+					button[MaxButton] = new KeramikButton( this, MaxButton, i18n("Maximize"), Qt::LeftButton|Qt::MidButton|Qt::RightButton );
 					connect( button[MaxButton], SIGNAL( clicked() ), SLOT( slotMaximize() ) );
 					layout->addWidget( button[MaxButton] );
 				}
@@ -1069,7 +1069,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Close button
 			case 'X' :
 				if ( !button[CloseButton] && isCloseable() ) {
-					button[CloseButton] = new KeramikButton( this, "close", CloseButton, i18n("Close") );
+					button[CloseButton] = new KeramikButton( this, CloseButton, i18n("Close") );
 					connect( button[CloseButton], SIGNAL( clicked() ), SLOT( closeWindow() ) );
 					layout->addWidget( button[CloseButton] );
 				}
@@ -1078,7 +1078,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Above button
 			case 'F' :
 				if ( !button[AboveButton]) {
-					button[AboveButton] = new KeramikButton( this, "above", AboveButton, i18n("Keep Above Others") );
+					button[AboveButton] = new KeramikButton( this, AboveButton, i18n("Keep Above Others") );
 					connect( button[AboveButton], SIGNAL( clicked() ), SLOT( slotAbove() ) );
 					layout->addWidget( button[AboveButton] );
 				}
@@ -1087,7 +1087,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Below button
 			case 'B' :
 				if ( !button[BelowButton]) {
-					button[BelowButton] = new KeramikButton( this, "below", BelowButton, i18n("Keep Below Others") );
+					button[BelowButton] = new KeramikButton( this, BelowButton, i18n("Keep Below Others") );
 					connect( button[BelowButton], SIGNAL( clicked() ), SLOT( slotBelow() ) );
 					layout->addWidget( button[BelowButton] );
 				}
@@ -1096,7 +1096,7 @@ void KeramikClient::addButtons( QBoxLayout *layout, const QString &s )
 			// Shade button
 			case 'L' :
 				if ( !button[ShadeButton] && isShadeable() ) {
-					button[ShadeButton] = new KeramikButton( this, "shade", ShadeButton,
+					button[ShadeButton] = new KeramikButton( this, ShadeButton,
                                             isSetShade() ? i18n("Unshade") : i18n( "Shade" ));
 					connect( button[ShadeButton], SIGNAL( clicked() ), SLOT( slotShade() ) );
 					layout->addWidget( button[ShadeButton] );
