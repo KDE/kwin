@@ -289,29 +289,47 @@ void SceneOpenGL::cleanupShm()
 #endif
     }
 
+// TODO replace with just KXErrorHandler::errorCode() for 4.1
+static int xerror = 0;
+static bool xerrorhandler( int, int error, unsigned long )
+    {
+    if( xerror == 0 )
+        xerror = error;
+    return true;
+    }
+
 bool SceneOpenGL::initRenderingContext()
     {
     bool direct_rendering = options->glDirect;
     if( !tfp_mode && !shm_mode )
         direct_rendering = false; // fallback doesn't seem to work with direct rendering
-    KXErrorHandler errs;
+    xerror = 0;
+    KXErrorHandler errs1( xerrorhandler );
     ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL,
         direct_rendering ? GL_TRUE : GL_FALSE );
-    if( ctxbuffer == NULL || !glXMakeCurrent( display(), glxbuffer, ctxbuffer )
-        || errs.error( true ))
-        { // failed
+    bool failed = ( ctxbuffer == NULL || !glXMakeCurrent( display(), glxbuffer, ctxbuffer ));
+    if( errs1.error( true )) // always check for error( having it all in one if() could skip
+        failed = true;       // it due to evaluation short-circuiting
+    if( failed )
+        {
         if( !direct_rendering )
             {
-            kDebug( 1212 ) << "Couldn't initialize rendering context";
+            kDebug( 1212 ).nospace() << "Couldn't initialize rendering context (0x" << hex << xerror << ")";
             return false;
             }
 	glXMakeCurrent( display(), None, NULL );
-        glXDestroyContext( display(), ctxbuffer );
+        if( ctxbuffer != NULL )
+            glXDestroyContext( display(), ctxbuffer );
         direct_rendering = false; // try again
+        xerror = 0;
+        KXErrorHandler errs2( xerrorhandler );
         ctxbuffer = glXCreateNewContext( display(), fbcbuffer, GLX_RGBA_TYPE, NULL, GL_FALSE );
-        if( ctxbuffer == NULL || !glXMakeCurrent( display(), glxbuffer, ctxbuffer ) || errs.error( true ))
+        bool failed = ( ctxbuffer == NULL || !glXMakeCurrent( display(), glxbuffer, ctxbuffer ));
+        if( errs2.error( true ))
+            failed = true;
+        if( failed )
             {
-            kDebug( 1212 ) << "Couldn't initialize rendering context";
+            kDebug( 1212 ).nospace() << "Couldn't initialize rendering context (0x" << hex << xerror << ")";
             return false;
             }
         }
