@@ -139,7 +139,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     if( !hasGLExtension( "GL_ARB_texture_non_power_of_two" )
         && !hasGLExtension( "GL_ARB_texture_rectangle" ))
         {
-        kdWarning( 1212 ) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
+        kWarning( 1212 ) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         return; // error
         }
     if( db )
