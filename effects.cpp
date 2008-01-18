@@ -202,7 +202,6 @@ void EffectsHandlerImpl::windowDeleted( EffectWindow* c )
     {
     foreach( EffectPair ep, loaded_effects )
         ep.second->windowDeleted( c );
-    Toplevel* c2 = static_cast< EffectWindowImpl* >( c )->window();
     elevated_windows.removeAll( c );
     }
 
