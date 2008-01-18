@@ -147,19 +147,6 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     // Check whether certain features are supported
     has_waitSync = glXGetVideoSync ? true : false;
 
-    int vis_buffer, vis_drawable;
-    glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
-    XVisualInfo* visinfo_buffer = glXGetVisualFromFBConfig( display(), fbcbuffer );
-    kDebug( 1212 ) << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number( vis_buffer, 16 );
-    XFree( visinfo_buffer );
-    for( int i = 0; i <= 32; i++ )
-        {
-        if( fbcdrawableinfo[ i ].fbconfig == NULL )
-            continue;
-        glXGetFBConfigAttrib( display(), fbcdrawableinfo[ i ].fbconfig, GLX_VISUAL_ID, &vis_drawable );
-        kDebug( 1212 ) << "Drawable visual (depth " << i << "): 0x" << QString::number( vis_drawable, 16 );
-        }
-
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
@@ -375,6 +362,11 @@ bool SceneOpenGL::initBuffer()
         kWarning( 1212 ) << "Couldn't create output buffer (failed to create overlay window?) !";
         return false; // error
         }
+    int vis_buffer;
+    glXGetFBConfigAttrib( display(), fbcbuffer, GLX_VISUAL_ID, &vis_buffer );
+    XVisualInfo* visinfo_buffer = glXGetVisualFromFBConfig( display(), fbcbuffer );
+    kDebug( 1212 ) << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number( vis_buffer, 16 );
+    XFree( visinfo_buffer );
     return true;
     }
 
@@ -456,6 +448,14 @@ bool SceneOpenGL::initBufferConfigs()
         {
         kWarning( 1212 ) << "Couldn't find framebuffer configuration for buffer!";
         return false;
+        }
+    for( int i = 0; i <= 32; i++ )
+        {
+        if( fbcdrawableinfo[ i ].fbconfig == NULL )
+            continue;
+        int vis_drawable = 0;
+        glXGetFBConfigAttrib( display(), fbcdrawableinfo[ i ].fbconfig, GLX_VISUAL_ID, &vis_drawable );
+        kDebug( 1212 ) << "Drawable visual (depth " << i << "): 0x" << QString::number( vis_drawable, 16 );
         }
     return true;
     }
