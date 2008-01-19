@@ -840,7 +840,7 @@ Layer Client::belongsToLayer() const
     // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
     // i.e. the window set to be topmost by the user (also includes transients of the fullscreen window)
     const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
-    const Client* top = workspace()->topClientOnDesktop( desktop(), true );
+    const Client* top = workspace()->topClientOnDesktop( desktop(), true, false );
     if( isFullScreen() && ac != NULL && top != NULL
         && ( ac == this || this->group() == ac->group())
         && ( top == this || this->group() == top->group()))
