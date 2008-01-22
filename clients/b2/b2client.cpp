@@ -165,8 +165,10 @@ static void read_config(B2ClientFactory *f)
 	break;
     case KDecoration::BorderHuge:
 	thickness = 9;
+        break;
     case KDecoration::BorderVeryHuge:
 	thickness = 11;
+        break;
     case KDecoration::BorderOversized:
 	thickness = 14;
 	break;
