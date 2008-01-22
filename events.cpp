@@ -1661,6 +1661,7 @@ bool Unmanaged::windowEvent( XEvent* e )
             break;
         case PropertyNotify:
             propertyNotifyEvent( &e->xproperty );
+            break;
         default:
             {
             if( e->type == Extensions::shapeNotifyEvent() )
