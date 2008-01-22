@@ -75,16 +75,17 @@ void ThumbnailAsideEffect::windowDamaged( EffectWindow* w, const QRect& )
 
 void ThumbnailAsideEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& old )
     {
-    if( w->size() == old.size())
+    foreach( const Data& d, windows )
         {
-        foreach( const Data& d, windows )
+        if( d.window == w )
             {
-            if( d.window == w )
+            if( w->size() == old.size())
                 effects->addRepaint( d.rect );
+            else
+                arrange();
+            return;
             }
         }
-    else
-        arrange();
     }
 
 void ThumbnailAsideEffect::windowClosed( EffectWindow* w )
@@ -133,6 +134,8 @@ void ThumbnailAsideEffect::removeThumbnail( EffectWindow* w )
 
 void ThumbnailAsideEffect::arrange()
     {
+    if( windows.size() == 0 )
+        return;
     int height = 0;
     QVector< int > pos( windows.size());
     int mwidth = 0;
