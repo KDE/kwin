@@ -133,27 +133,23 @@ void CompositingPrefs::detect()
     if( hasglx13 )
         oldreaddrawable = glXGetCurrentReadDrawable();
 
-    if( createGLXContext() )
+    if( initGLXContext() )
         {
         detectDriverAndVersion();
         applyDriverSpecificOptions();
-
-        deleteGLXContext();
         }
     if( hasglx13 )
-        {
         glXMakeContextCurrent( display(), olddrawable, oldreaddrawable, oldcontext );
-        }
     else
-        {
         glXMakeCurrent( display(), olddrawable, oldcontext );
-        }
+    deleteGLXContext();
 #endif
     }
 
-bool CompositingPrefs::createGLXContext()
+bool CompositingPrefs::initGLXContext()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    mGLContext = NULL;
     KXErrorHandler handler;
     // Most of this code has been taken from glxinfo.c
     QVector<int> attribs;
@@ -204,6 +200,8 @@ bool CompositingPrefs::createGLXContext()
 void CompositingPrefs::deleteGLXContext()
 {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( mGLContext == NULL )
+        return;
     glXDestroyContext( display(), mGLContext );
     XDestroyWindow( display(), mGLWindow );
 #endif

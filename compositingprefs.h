@@ -70,7 +70,7 @@ protected:
     void applyDriverSpecificOptions();
     static bool detectXgl();
 
-    bool createGLXContext();
+    bool initGLXContext();
     void deleteGLXContext();
 
 
