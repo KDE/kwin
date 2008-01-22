@@ -186,7 +186,7 @@ void PlastikButton::drawButton(QPainter *painter)
     QColor surfaceBottom = KColorScheme::shade(titleBar, KColorScheme::LightShade, c - 0.4);
 
     QColor highlightColor = titleBar;
-    double alpha;
+    double alpha = 0;
     if (type() == CloseButton) {
         KColorScheme kcs(active ? QPalette::Active : QPalette::Inactive, KColorScheme::Button);
         highlightColor = kcs.foreground(KColorScheme::NegativeText).color();
