@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Looking Glass
 Name[ca]=Aparença de vidre
+Name[da]=Kikkert
 Name[es]=Espejo
 Name[et]=Suurendusklaas
 Name[fi]=Suurennuslasi
@@ -31,6 +32,7 @@ Name[zh_TW]=鏡射
 Comment=Looking Glass enhanced magnifier
 Comment[bg]=Лупа
 Comment[ca]=Ampliació millorada amb aparença de vidre
+Comment[da]=Forbedret forstørrelsesglas til kikkert
 Comment[de]=Looking Glass erweiterte Lupe
 Comment[el]=Βελτιωμένος μεγεθυντικός φακός Looking Glass
 Comment[eo]=Looking Glass-kapabla pligrandigilo
@@ -62,6 +64,7 @@ Comment[se]=Čállinbeavddi stuoridanláse
 Comment[sr]=Побољшано увеличавање лупом
 Comment[sr@latin]=Poboljšano uveličavanje lupom
 Comment[sv]=Spegel förbättrat förstoringsglas
+Comment[uk]=Вдосконалений збільшувач Looking Glass
 Comment[x-test]=xxLooking Glass enhanced magnifierxx
 Comment[zh_CN]=镜面放大
 Comment[zh_TW]=鏡面放大
