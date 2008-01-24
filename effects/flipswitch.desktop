@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Flip Switch
+Icon=preferences-system-windows-effect-flipswitch
+Comment=Alt-tab window switcher flipping through windows on a stack
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Email=ubuntu@martin-graesslin.com
+X-KDE-PluginInfo-Name=kwin4_effect_flipswitch
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Window Management
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
+X-Ordering=50
