@@ -70,6 +70,8 @@ void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion reg
         foreach( const Data thumb, thumbnails.values( w ))
             {
             EffectWindow* thumbw = effects->findWindow( thumb.window );
+            if( thumbw == NULL )
+                continue;
             WindowPaintData data( thumbw );
             QRect r;
             setPositionTransformations( data, r,
