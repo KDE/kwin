@@ -227,3 +227,8 @@ Effects TODO
 + shadow
 +   - make work with xrender
 +   - follow the shape of the window (currently is disabled completely using the hasOwnShadow() hack)
+
+/ desktopgrid
++   - there's a bug that causes overlapping windows be shown also on desktops painted sooner than the window's desktop
+        - needs clipping (and that probably needs support for cumulating clipping)
+!   - make desktop borders distrinctive (i.e. paint a grid), to make it more visible that desktops are still separate
