@@ -422,6 +422,10 @@ bool SceneOpenGL::initBufferConfigs()
                                   GLX_BUFFER_SIZE, &value );
             if( value != visual_depth && ( value - alpha ) != visual_depth )
                 continue;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_RENDER_TYPE, &value );
+            if( !( value & GLX_RGBA_BIT ))
+                continue;
             int back_value;
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_DOUBLEBUFFER, &back_value );
@@ -514,6 +518,10 @@ bool SceneOpenGL::initDrawableConfigs()
             glXGetFBConfigAttrib( display(), fbconfigs[ j ],
                                   GLX_BUFFER_SIZE, &value );
             if( value != i && ( value - alpha ) != i )
+                continue;
+            glXGetFBConfigAttrib( display(), fbconfigs[ j ],
+                                  GLX_RENDER_TYPE, &value );
+            if( !( value & GLX_RGBA_BIT ))
                 continue;
             if( tfp_mode )
                 {
