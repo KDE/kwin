@@ -2,6 +2,7 @@
 Name=Flip Switch
 Icon=preferences-system-windows-effect-flipswitch
 Comment=Alt-tab window switcher flipping through windows on a stack
+Comment[ga]=Malartóir fuinneog Alt-Táb a ransaíonn fuinneoga i gcruach
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
