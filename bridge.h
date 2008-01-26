@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_BRIDGE_H
 #define KWIN_BRIDGE_H
 
-#include <kdecoration_p.h>
+#include <kdecorationbridge.h>
 
 namespace KWin
 {

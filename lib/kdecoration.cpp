@@ -36,7 +36,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "kdecoration_p.h"
 #include "kdecorationfactory.h"
-
+#include "kdecorationbridge.h"
 
 /*
 

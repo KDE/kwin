@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <assert.h>
 
-#include "kdecoration_p.h"
+#include "kdecorationbridge.h"
 
 KDecorationFactory::KDecorationFactory()
     {
