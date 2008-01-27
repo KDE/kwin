@@ -7,3 +7,5 @@ X-KDE-ParentComponents=kwin4_effect_flipswitch
 X-KDE-PluginKeyword=flipswitch
 
 Name=Flip Switch
+Name[nds]=Dreihwesseln
+Name[zh_TW]=翻轉切換

@@ -1,8 +1,12 @@
 [Desktop Entry]
 Name=Flip Switch
+Name[nds]=Dreihwesseln
+Name[zh_TW]=翻轉切換
 Icon=preferences-system-windows-effect-flipswitch
 Comment=Alt-tab window switcher flipping through windows on a stack
 Comment[ga]=Malartóir fuinneog Alt-Táb a ransaíonn fuinneoga i gcruach
+Comment[nds]=Mit Alt+Tab den Finsterstapel dreihen
+Comment[zh_TW]=Alt+Tab 視窗切換器在堆疊內翻轉視窗
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
