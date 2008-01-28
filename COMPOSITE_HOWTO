@@ -44,6 +44,7 @@ Refresh rate is slower than it should be
     - should(?) be fixed with drivers updated for xrandr1.2
 AddARGBGLXVisuals option seems to work only with depth 24
     - change your xorg.conf to use depth 24 (or use a configuration tool)
+Xinerama works only when using TwinView, the Xinerama implementation provided by X.Org prevents compositing
 
 check your X log (/var/log/X*.log) for warnings and errors if there are other problems
 
@@ -91,6 +92,8 @@ With the i810 driver, DRI works only on the first running X (if you use secondar
 You may get only white rectangles if DRI is not enabled or fails to initialize
     - check your X log (/var/log/X*.log) and your xorg.conf
 Window contents updating may not work properly in secondary X session (likely X/driver bug)
+Xinerama does not work with the Xinerama implementation in X.Org
+    - you need to use solutions like MergedFB
 
 check your X log (/var/log/X*.log) for warnings and errors if there are other problems
 
