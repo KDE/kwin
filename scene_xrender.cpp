@@ -87,12 +87,12 @@ SceneXrender::SceneXrender( Workspace* ws )
     {
     if( !Extensions::renderAvailable())
         {
-        kWarning( 1212 ) << "No XRender extension available";
+        kError( 1212 ) << "No XRender extension available";
         return;
         }
     if( !Extensions::fixesRegionAvailable())
         {
-        kWarning( 1212 ) << "No XFixes v3+ extension available";
+        kError( 1212 ) << "No XFixes v3+ extension available";
         return;
         }
     KXErrorHandler xerr;
@@ -114,7 +114,7 @@ SceneXrender::SceneXrender( Workspace* ws )
     createBuffer();
     init_ok = !xerr.error( true );
     if( !init_ok )
-        kWarning( 1212 ) << "XRender compositing setup failed";
+        kError( 1212 ) << "XRender compositing setup failed";
     }
 
 SceneXrender::~SceneXrender()

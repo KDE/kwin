@@ -84,7 +84,7 @@ void Workspace::setupCompositing()
         }
     else if( !CompositingPrefs::compositingPossible() )
         {
-        kWarning( 1212 ) << "Compositing is not possible";
+        kError( 1212 ) << "Compositing is not possible";
         return;
         }
     if( scene != NULL )
@@ -147,7 +147,8 @@ void Workspace::setupCompositing()
         }
     if( scene == NULL || scene->initFailed())
         {
-        kError( 1212 ) << "Failed to initialize compositing, compositing disabled" << endl;
+        kError( 1212 ) << "Failed to initialize compositing, compositing disabled";
+        kError( 1212 ) << "Consult http://techbase.kde.org/Projects/KWin/4.0-release-notes#Setting_up";
         delete scene;
         scene = NULL;
         delete cm_selection;

@@ -125,7 +125,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
             !glXGetVisualFromFBConfig || !glXCreatePixmap || !glXDestroyPixmap ||
             !glXCreateWindow || !glXDestroyWindow )
         {
-        kWarning( 1212 ) << "GLX_SGIX_fbconfig or required GLX functions missing";
+        kError( 1212 ) << "GLX_SGIX_fbconfig or required GLX functions missing";
         return; // error
         }
     if( !selectMode())
@@ -139,7 +139,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     if( !hasGLExtension( "GL_ARB_texture_non_power_of_two" )
         && !hasGLExtension( "GL_ARB_texture_rectangle" ))
         {
-        kWarning( 1212 ) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
+        kError( 1212 ) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         return; // error
         }
     if( db )
@@ -156,7 +156,7 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glLoadIdentity();
     if( checkGLError( "Init" ))
         {
-        kWarning( 1212 ) << "OpenGL compositing setup failed";
+        kError( 1212 ) << "OpenGL compositing setup failed";
         return; // error
         }
     kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
@@ -377,7 +377,7 @@ bool SceneOpenGL::initBuffer()
         }
     else
         {
-        kWarning( 1212 ) << "Couldn't create output buffer (failed to create overlay window?) !";
+        kError( 1212 ) << "Couldn't create output buffer (failed to create overlay window?) !";
         return false; // error
         }
     int vis_buffer;
@@ -468,7 +468,7 @@ bool SceneOpenGL::initBufferConfigs()
         XFree( fbconfigs );
     if( fbcbuffer_db == NULL && fbcbuffer_nondb == NULL )
         {
-        kWarning( 1212 ) << "Couldn't find framebuffer configuration for buffer!";
+        kError( 1212 ) << "Couldn't find framebuffer configuration for buffer!";
         return false;
         }
     for( int i = 0; i <= 32; i++ )
@@ -593,12 +593,12 @@ bool SceneOpenGL::initDrawableConfigs()
         XFree( fbconfigs );
     if( fbcdrawableinfo[ DefaultDepth( display(), DefaultScreen( display())) ].fbconfig == NULL )
         {
-        kWarning( 1212 ) << "Couldn't find framebuffer configuration for default depth!";
+        kError( 1212 ) << "Couldn't find framebuffer configuration for default depth!";
         return false;
         }
     if( fbcdrawableinfo[ 32 ].fbconfig == NULL )
         {
-        kWarning( 1212 ) << "Couldn't find framebuffer configuration for depth 32!";
+        kError( 1212 ) << "Couldn't find framebuffer configuration for depth 32 (no ARGB GLX visual)!";
         return false;
         }
     return true;
