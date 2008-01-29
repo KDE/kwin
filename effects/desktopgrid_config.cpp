@@ -31,7 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QCheckBox>
+#include <QComboBox>
+#include <QLabel>
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
@@ -49,6 +52,25 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     connect(mSlide, SIGNAL(toggled(bool)), this, SLOT(changed()));
     layout->addWidget(mSlide);
 
+    QHBoxLayout* comboLayout = new QHBoxLayout();
+    QLabel* label = new QLabel(i18n("Activate when cursor is at a specific edge "
+            "or corner of the screen:"), this);
+
+    mActivateCombo = new QComboBox;
+    mActivateCombo->addItem(i18n("Top"));
+    mActivateCombo->addItem(i18n("Top-right"));
+    mActivateCombo->addItem(i18n("Right"));
+    mActivateCombo->addItem(i18n("Bottom-right"));
+    mActivateCombo->addItem(i18n("Bottom"));
+    mActivateCombo->addItem(i18n("Bottom-left"));
+    mActivateCombo->addItem(i18n("Left"));
+    mActivateCombo->addItem(i18n("Top-left"));
+    mActivateCombo->addItem(i18n("None"));
+    connect(mActivateCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    comboLayout->addWidget(label);
+    comboLayout->addWidget(mActivateCombo);
+    layout->addLayout(comboLayout);
+    
     KGlobalAccel::self()->overrideMainComponentData(componentData());
     KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
     KAction* show = static_cast<KAction*>(actionCollection->addAction( "ShowDesktopGrid" ));
@@ -78,6 +100,11 @@ void DesktopGridEffectConfig::load()
     KConfigGroup conf = EffectsHandler::effectConfig("DesktopGrid");
     mSlide->setChecked(conf.readEntry("Slide", true));
 
+    int activateBorder = conf.readEntry("BorderActivate", (int)ElectricNone);
+    if(activateBorder == (int)ElectricNone)
+        activateBorder--;
+    mActivateCombo->setCurrentIndex(activateBorder);
+
     emit changed(false);
     }
 
@@ -89,6 +116,10 @@ void DesktopGridEffectConfig::save()
     KConfigGroup conf = EffectsHandler::effectConfig("DesktopGrid");
     conf.writeEntry("Slide", mSlide->isChecked());
 
+    int activateBorder = mActivateCombo->currentIndex();
+    if(activateBorder == (int)ELECTRIC_COUNT)
+        activateBorder = (int)ElectricNone;
+    conf.writeEntry("BorderActivate", activateBorder);
     conf.sync();
 
     emit changed(false);
@@ -99,9 +130,9 @@ void DesktopGridEffectConfig::defaults()
     {
     kDebug() ;
     mSlide->setChecked(true);
+    mActivateCombo->setCurrentIndex( (int)ElectricNone );
     emit changed(true);
     }
-
 
 } // namespace
 

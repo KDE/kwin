@@ -33,6 +33,7 @@ class DesktopGridEffect
     Q_OBJECT
     public:
         DesktopGridEffect();
+        ~DesktopGridEffect();
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
@@ -42,6 +43,7 @@ class DesktopGridEffect
         virtual void desktopChanged( int old );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
+        virtual bool borderActivated( ElectricBorder border );
     private slots:
         void toggle();
     private:
@@ -71,6 +73,7 @@ class DesktopGridEffect
         QPoint slide_start_pos;
         bool slide_painting_sticky;
         QPoint slide_painting_diff;
+        ElectricBorder borderActivate;
     };
 
 } // namespace

@@ -51,6 +51,14 @@ DesktopGridEffect::DesktopGridEffect()
     connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
     KConfigGroup conf = effects->effectConfig("DesktopGrid");
     slideEnabled = conf.readEntry( "Slide", true );
+
+    borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricNone);
+    effects->reserveElectricBorder( borderActivate );
+    }
+
+DesktopGridEffect::~DesktopGridEffect()
+    {
+    effects->unreserveElectricBorder( borderActivate );
     }
 
 void DesktopGridEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -613,6 +621,18 @@ void DesktopGridEffect::setHighlightedDesktop( int d )
     effects->addRepaint( desktopRect( highlighted_desktop, true ));
     highlighted_desktop = d;
     effects->addRepaint( desktopRect( highlighted_desktop, true ));
+    }
+
+bool DesktopGridEffect::borderActivated( ElectricBorder border )
+    {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return false;
+    if( border == borderActivate && !activated )
+        {
+        toggle();
+        return true;
+        }
+    return false;
     }
 
 } // namespace
