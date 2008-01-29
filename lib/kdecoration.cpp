@@ -346,7 +346,7 @@ void KDecoration::ungrabXServer()
     }
 
 KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
-{
+    {
     const int range = 16;
     int bleft, bright, btop, bbottom;
     borders( bleft, bright, btop, bbottom );
@@ -378,9 +378,10 @@ KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
     else
         m = PositionCenter;
     return m;
-}
+    }
 
 KDecorationOptions::KDecorationOptions()
+    : d( new KDecorationOptionsPrivate )
     {
     assert( KDecoration::options_ == NULL );
     KDecoration::options_ = this;
@@ -390,23 +391,24 @@ KDecorationOptions::~KDecorationOptions()
     {
     assert( KDecoration::options_ == this );
     KDecoration::options_ = NULL;
+    delete d;
     }
 
 QColor KDecorationOptions::color(ColorType type, bool active) const
-{
+    {
     return(d->colors[type + (active ? 0 : NUM_COLORS)]);
-}
+    }
 
 QFont KDecorationOptions::font(bool active, bool small) const
-{
+    {
     if ( small )
         return(active ? d->activeFontSmall : d->inactiveFontSmall);
     else
         return(active ? d->activeFont : d->inactiveFont);
-}
+    }
 
 QPalette KDecorationOptions::palette(ColorType type, bool active) const
-{
+    {
     int idx = type + (active ? 0 : NUM_COLORS);
     if(d->pal[idx])
         return(*d->pal[idx]);
@@ -420,56 +422,98 @@ QPalette KDecorationOptions::palette(ColorType type, bool active) const
 //                               base());
     d->pal[idx] = new QPalette(d->colors[idx]);
     return(*d->pal[idx]);
-}
+    }
+
+unsigned long KDecorationOptions::updateSettings( KConfig* config )
+    {
+    return d->updateSettings( config );
+    }
 
 bool KDecorationOptions::customButtonPositions() const
-{
+    {
     return d->custom_button_positions;
-}
+    }
 
 QString KDecorationOptions::titleButtonsLeft() const
-{
+    {
     return d->title_buttons_left;
-}
+    }
 
 QString KDecorationOptions::defaultTitleButtonsLeft()
-{
+    {
     return "MS";
-}
+    }
 
 QString KDecorationOptions::titleButtonsRight() const
-{
+    {
     return d->title_buttons_right;
-}
+    }
 
 QString KDecorationOptions::defaultTitleButtonsRight()
-{
+    {
     return "HIA__X";
-}
+    }
 
 bool KDecorationOptions::showTooltips() const
-{
+    {
     return d->show_tooltips;
-}
+    }
 
 KDecorationOptions::BorderSize KDecorationOptions::preferredBorderSize( KDecorationFactory* factory ) const
-{
+    {
     assert( factory != NULL );
     if( d->cached_border_size == BordersCount ) // invalid
         d->cached_border_size = d->findPreferredBorderSize( d->border_size,
             factory->borderSizes());
     return d->cached_border_size;
-}
+    }
 
 bool KDecorationOptions::moveResizeMaximizedWindows() const
-{
+    {
     return d->move_resize_maximized_windows;
-}
+    }
 
 KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick( Qt::MouseButtons button ) const
     {
-    return button == Qt::RightButton? d->OpMaxButtonRightClick : 
-           button == Qt::MidButton?   d->OpMaxButtonMiddleClick :
-                                      d->OpMaxButtonLeftClick;
+    return button == Qt::RightButton? d->opMaxButtonRightClick : 
+           button == Qt::MidButton?   d->opMaxButtonMiddleClick :
+                                      d->opMaxButtonLeftClick;
     }
+
+void KDecorationOptions::setOpMaxButtonLeftClick( WindowOperation op )
+    {
+    d->opMaxButtonLeftClick = op;
+    }
+
+void KDecorationOptions::setOpMaxButtonRightClick( WindowOperation op )
+    {
+    d->opMaxButtonRightClick = op;
+    }
+
+void KDecorationOptions::setOpMaxButtonMiddleClick( WindowOperation op )
+    {
+    d->opMaxButtonMiddleClick = op;
+    }
+
+void KDecorationOptions::setBorderSize( BorderSize bs )
+    {
+    d->border_size = bs;
+    d->cached_border_size = BordersCount; // invalid
+    }
+
+void KDecorationOptions::setCustomButtonPositions( bool b )
+    {
+    d->custom_button_positions = b;
+    }
+
+void KDecorationOptions::setTitleButtonsLeft( const QString& b )
+    {
+    d->title_buttons_left = b;
+    }
+
+void KDecorationOptions::setTitleButtonsRight( const QString& b )
+    {
+    d->title_buttons_right = b;
+    }
+
 #include "kdecoration.moc"

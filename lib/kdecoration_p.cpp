@@ -32,6 +32,16 @@ DEALINGS IN THE SOFTWARE.
 #include <assert.h>
 
 KDecorationOptionsPrivate::KDecorationOptionsPrivate()
+    : title_buttons_left( KDecorationOptions::defaultTitleButtonsLeft())
+    , title_buttons_right( KDecorationOptions::defaultTitleButtonsRight())
+    , custom_button_positions( false )
+    , show_tooltips( true )
+    , border_size( BorderNormal )
+    , cached_border_size( BordersCount ) // invalid
+    , move_resize_maximized_windows( true )
+    , opMaxButtonRightClick( MaximizeOp )
+    , opMaxButtonMiddleClick( VMaximizeOp )
+    , opMaxButtonLeftClick( HMaximizeOp )
     {
     for(int i=0; i < NUM_COLORS*2; ++i)
         pal[i] = NULL;
@@ -50,21 +60,7 @@ KDecorationOptionsPrivate::~KDecorationOptionsPrivate()
         }
     }
 
-void KDecorationOptionsPrivate::defaultKWinSettings()
-    {
-    title_buttons_left = KDecorationOptions::defaultTitleButtonsLeft();
-    title_buttons_right = KDecorationOptions::defaultTitleButtonsRight();
-    custom_button_positions = false;
-    show_tooltips = true;
-    border_size = BorderNormal;
-    cached_border_size = BordersCount; // invalid
-    move_resize_maximized_windows = true;
-    OpMaxButtonRightClick = MaximizeOp;
-    OpMaxButtonMiddleClick = VMaximizeOp;
-    OpMaxButtonLeftClick = HMaximizeOp;
-    }
-
-unsigned long KDecorationOptionsPrivate::updateKWinSettings( KConfig* config )
+unsigned long KDecorationOptionsPrivate::updateSettings( KConfig* config )
     {
     unsigned long changed = 0;
     KConfigGroup wmConfig(config, "WM");

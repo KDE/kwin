@@ -34,13 +34,12 @@ DEALINGS IN THE SOFTWARE.
 
 class KConfig;
 
-class KWIN_EXPORT KDecorationOptionsPrivate : public KDecorationDefines
+class KDecorationOptionsPrivate : public KDecorationDefines
     {
     public:
         KDecorationOptionsPrivate();
-        virtual ~KDecorationOptionsPrivate();
-        void defaultKWinSettings(); // shared implementation
-        unsigned long updateKWinSettings( KConfig* ); // shared implementation
+        ~KDecorationOptionsPrivate();
+        unsigned long updateSettings( KConfig* ); // shared implementation
         BorderSize findPreferredBorderSize( BorderSize size, QList< BorderSize > ) const; // shared implementation
 
         QColor colors[NUM_COLORS*2];
@@ -52,9 +51,9 @@ class KWIN_EXPORT KDecorationOptionsPrivate : public KDecorationDefines
         bool show_tooltips;
         BorderSize border_size, cached_border_size;
         bool move_resize_maximized_windows;
-        WindowOperation OpMaxButtonRightClick;
-        WindowOperation OpMaxButtonMiddleClick;
-        WindowOperation OpMaxButtonLeftClick;
+        WindowOperation opMaxButtonRightClick;
+        WindowOperation opMaxButtonMiddleClick;
+        WindowOperation opMaxButtonLeftClick;
     };
 
 #endif

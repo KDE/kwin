@@ -25,7 +25,7 @@
 #include <QMouseEvent>
 #include <QLabel>
 #include <QResizeEvent>
-#include <kdecoration_p.h>
+#include <kdecoration.h>
 #include <kdecorationbridge.h>
 #include <kdecoration_plugins_p.h>
 

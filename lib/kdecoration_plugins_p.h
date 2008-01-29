@@ -30,6 +30,7 @@ DEALINGS IN THE SOFTWARE.
 // This header file is internal. I mean it.
 // 
 
+// This private header is used by KWin core.
 
 #include <QtGui/QWidget>
 #include <ksharedconfig.h>

@@ -27,6 +27,10 @@
 
 #include "kdecoration.h"
 
+//
+// This header file is internal. I mean it.
+// 
+
 class KCommonDecoration;
 class KDecorationBridge;
 class KDecorationFactory;

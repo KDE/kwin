@@ -46,21 +46,18 @@ Options::Options()
     :   electric_borders( 0 ),
         electric_border_delay(0)
     {
-    d = new KDecorationOptionsPrivate;
-    d->defaultKWinSettings();
     updateSettings();
     }
 
 Options::~Options()
     {
-    delete d;
     }
 
 unsigned long Options::updateSettings()
     {
     KSharedConfig::Ptr _config = KGlobal::config();
     unsigned long changed = 0;
-    changed |= d->updateKWinSettings( _config.data() ); // read decoration settings
+    changed |= KDecorationOptions::updateSettings( _config.data() ); // read decoration settings
 
     KConfigGroup config(_config, "Windows");
     moveMode = stringToMoveResizeMode( config.readEntry("MoveMode", "Opaque" ));
@@ -145,9 +142,9 @@ unsigned long Options::updateSettings()
     electric_border_delay = config.readEntry("ElectricBorderDelay", 150);
 
     OpTitlebarDblClick = windowOperation( config.readEntry("TitlebarDoubleClickCommand", "Shade"), true );
-    d->OpMaxButtonLeftClick = windowOperation( config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true );
-    d->OpMaxButtonMiddleClick = windowOperation( config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true );
-    d->OpMaxButtonRightClick = windowOperation( config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true );
+    setOpMaxButtonLeftClick( windowOperation( config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true ));
+    setOpMaxButtonMiddleClick( windowOperation( config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true ));
+    setOpMaxButtonRightClick( windowOperation( config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true ));
 
     ignorePositionClasses = config.readEntry("IgnorePositionClasses",QStringList());
     ignoreFocusStealingClasses = config.readEntry("IgnoreFocusStealingClasses",QStringList());

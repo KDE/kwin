@@ -34,6 +34,8 @@ DEALINGS IN THE SOFTWARE.
 
 #define KWIN_EXPORT KDE_EXPORT
 
+class KConfig;
+
 /** @defgroup kdecoration KWin decorations library */
 
 /** @addtogroup kdecoration */
@@ -206,6 +208,12 @@ public:
     KDecorationOptions();
     virtual ~KDecorationOptions();
     /**
+     * Call to update settings when the config changes. Return value is
+     * a combination of Setting* (SettingColors, etc.) that have changed.
+     * @since 4.0.1
+     */
+    unsigned long updateSettings( KConfig* config );
+    /**
      * Returns the color that should be used for the given part of the decoration.
      * The changed flags for this setting is SettingColors.
      *
@@ -316,6 +324,21 @@ public:
     virtual unsigned long updateSettings() = 0; // returns SettingXYZ mask
 
 protected:
+    /** @internal */
+    void setOpMaxButtonLeftClick( WindowOperation op );
+    /** @internal */
+    void setOpMaxButtonRightClick( WindowOperation op );
+    /** @internal */
+    void setOpMaxButtonMiddleClick( WindowOperation op );
+    /** @internal */
+    void setBorderSize( BorderSize bs );
+    /** @internal */
+    void setCustomButtonPositions( bool b );
+    /** @internal */
+    void setTitleButtonsLeft( const QString& b );
+    /** @internal */
+    void setTitleButtonsRight( const QString& b );
+private:
     /**
      * @internal
      */

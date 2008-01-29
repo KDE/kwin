@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QFont>
 #include <QPalette>
-#include <kdecoration_p.h>
+#include <kdecoration.h>
 
 #include "placement.h"
 #include "utils.h"

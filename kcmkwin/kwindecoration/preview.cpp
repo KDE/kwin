@@ -436,36 +436,32 @@ KDecorationPreviewOptions::KDecorationPreviewOptions()
     customButtons = true;
     customTitleButtonsLeft.clear(); // invalid
     customTitleButtonsRight.clear(); // invalid
-
-    d = new KDecorationOptionsPrivate;
-    d->defaultKWinSettings();
     updateSettings();
     }
 
 KDecorationPreviewOptions::~KDecorationPreviewOptions()
     {
-    delete d;
     }
 
 unsigned long KDecorationPreviewOptions::updateSettings()
     {
     KConfig cfg( "kwinrc" );
     unsigned long changed = 0;
-    changed |= d->updateKWinSettings( &cfg );
+    changed |= KDecorationOptions::updateSettings( &cfg );
 
     // set custom border size/buttons
     if (customBorderSize != BordersCount)
-        d->border_size = customBorderSize;
+        setBorderSize( customBorderSize );
     if (customButtonsChanged)
-        d->custom_button_positions = customButtons;
+        setCustomButtonPositions( customButtons );
     if (customButtons) {
         if (!customTitleButtonsLeft.isNull() )
-            d->title_buttons_left = customTitleButtonsLeft;
+            setTitleButtonsLeft( customTitleButtonsLeft );
         if (!customTitleButtonsRight.isNull() )
-            d->title_buttons_right = customTitleButtonsRight;
+            setTitleButtonsRight( customTitleButtonsRight );
     } else {
-        d->title_buttons_left = KDecorationOptions::defaultTitleButtonsLeft();
-        d->title_buttons_right = KDecorationOptions::defaultTitleButtonsRight();
+        setTitleButtonsLeft( KDecorationOptions::defaultTitleButtonsLeft());
+        setTitleButtonsRight( KDecorationOptions::defaultTitleButtonsRight());
     }
 
     return changed;

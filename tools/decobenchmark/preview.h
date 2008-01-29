@@ -21,7 +21,7 @@
 #define KWINDECORATION_PREVIEW_H
 
 #include <QWidget>
-#include <kdecoration_p.h>
+#include <kdecoration.h>
 #include <kdecoration_plugins_p.h>
 
 

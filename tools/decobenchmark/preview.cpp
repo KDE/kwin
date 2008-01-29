@@ -384,21 +384,19 @@ void KDecorationPreviewBridge::grabXServer( bool )
 
 KDecorationPreviewOptions::KDecorationPreviewOptions()
     {
-    d = new KDecorationOptionsPrivate;
-    d->defaultKWinSettings();
+    defaultKWinSettings();
     updateSettings();
     }
 
 KDecorationPreviewOptions::~KDecorationPreviewOptions()
     {
-    delete d;
     }
 
 unsigned long KDecorationPreviewOptions::updateSettings()
 {
     KConfig cfg( "kwinrc", true );
     unsigned long changed = 0;
-    changed |= d->updateKWinSettings( &cfg );
+    changed |= KDecorationOptions::updateKWinSettings( &cfg );
 
     return changed;
 }
