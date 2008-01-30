@@ -138,6 +138,7 @@ class Workspace : public QObject, public KDecorationDefines
         void raiseOrLowerClient( Client * );
         void restoreSessionStackingOrder( Client* c );
         void restackUnmanaged( Unmanaged* c, Window above );
+        void reconfigure();
         void forceRestacking();
 
         void clientHidden( Client*  );
@@ -472,7 +473,7 @@ class Workspace : public QObject, public KDecorationDefines
         void cleanupTemporaryRules();
         void writeWindowRules();
         void slotBlockShortcuts(int data);
-        void reconfigure();
+        void slotReloadConfig();
         void setPopupClientOpacity( QAction* action );
         void setupCompositing();
         void performCompositing();

@@ -178,6 +178,6 @@ int main()
     dest_cfg.sync();
     // Send signal to all kwin instances
     QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
     }

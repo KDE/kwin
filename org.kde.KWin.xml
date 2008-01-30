@@ -8,6 +8,9 @@
     <method name="unclutterDesktop">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
+    <method name="reconfigure">
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
     <method name="killWindow">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
@@ -30,7 +33,7 @@
     <method name="nextDesktop"/>
     <method name="previousDesktop"/>
     <method name="circulateDesktopApplications"/>
-    <signal name="reconfigure"/>
+    <signal name="reloadConfig"/>
     <signal name="reinitCompositing"/>
     <method name="loadEffect">
       <arg name="name" type="s" direction="in"/>

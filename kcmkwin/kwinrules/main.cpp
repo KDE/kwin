@@ -257,7 +257,7 @@ static int edit( Window wid, bool whole_app )
     saveRules( rules );
     // Send signal to all kwin instances
     QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
     return 0;
     }

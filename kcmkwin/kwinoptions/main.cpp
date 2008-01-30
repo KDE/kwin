@@ -152,7 +152,7 @@ void KWinOptions::save()
   mConfig->sync();
   // Send signal to all kwin instances
   QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
   QDBusConnection::sessionBus().send(message);
 
 
@@ -229,7 +229,7 @@ void KActionsOptions::save()
   mConfig->sync();
   // Send signal to all kwin instances
   QDBusMessage message =
-       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
+       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
   QDBusConnection::sessionBus().send(message);
 
 }

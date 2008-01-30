@@ -323,7 +323,7 @@ void KWinCompositingConfig::configChanged()
     // Send signal to kwin
     mKWinConfig->sync();
     // Send signal to all kwin instances
-    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
+    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
 }
 
