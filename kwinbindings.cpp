@@ -196,31 +196,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	DEF( I18N_NOOP("Desktop Screenshot to Clipboard"),    Qt::CTRL+Qt::Key_Print, slotGrabDesktop() );
         DEF( I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 
-/*This belongs in taskbar rather than here, so it'll have to wait until after 2.2 is done.
-  -- ellis
-DEF( I18N_NOOP("Switch to Window 1", Qt::META+Qt::Key_1"));
-DEF( I18N_NOOP("Switch to Window 2", Qt::META+Qt::Key_2"));
-DEF( I18N_NOOP("Switch to Window 3", Qt::META+Qt::Key_3"));
-DEF( I18N_NOOP("Switch to Window 4", Qt::META+Qt::Key_4"));
-DEF( I18N_NOOP("Switch to Window 5", Qt::META+Qt::Key_5"));
-DEF( I18N_NOOP("Switch to Window 6", Qt::META+Qt::Key_6"));
-DEF( I18N_NOOP("Switch to Window 7", Qt::META+Qt::Key_7"));
-DEF( I18N_NOOP("Switch to Window 8", Qt::META+Qt::Key_8"));
-DEF( I18N_NOOP("Switch to Window 9", Qt::META+Qt::Key_9"));
-
-#ifdef WITH_LABELS
-DEF( I18N_NOOP("Window & Taskbar"Group:Window Desktop", 0);
-#endif
-DEF( I18N_NOOP("Window to Taskbar Position 1", Qt::META+Qt::Key_Alt+1"));
-DEF( I18N_NOOP("Window to Taskbar Position 2", Qt::META+Qt::Key_Alt+2"));
-DEF( I18N_NOOP("Window to Taskbar Position 3", Qt::META+Qt::Key_Alt+3"));
-DEF( I18N_NOOP("Window to Taskbar Position 4", Qt::META+Qt::Key_Alt+4"));
-DEF( I18N_NOOP("Window to Taskbar Position 5", Qt::META+Qt::Key_Alt+5"));
-DEF( I18N_NOOP("Window to Taskbar Position 6", Qt::META+Qt::Key_Alt+6"));
-DEF( I18N_NOOP("Window to Taskbar Position 7", Qt::META+Qt::Key_Alt+7"));
-DEF( I18N_NOOP("Window to Taskbar Position 8", Qt::META+Qt::Key_Alt+8"));
-DEF( I18N_NOOP("Window to Taskbar Position 9", Qt::META+Qt::Key_Alt+9"));
-*/
-
 #undef DEF
 #undef DEF2
