@@ -14,6 +14,7 @@ Name[sr]=Снег
 Name[sr@latin]=Sneg
 Name[sv]=Snö
 Name[tr]=Kar
+Name[zh_CN]=雪飘
 Name[zh_TW]=下雪
 Comment=Let it snow on the desktop
 Comment[el]=Χιόνι στην επιφάνεια εργασίας
@@ -28,6 +29,7 @@ Comment[sr]=Да снежи по радној површи
 Comment[sr@latin]=Da sneži po radnoj površi
 Comment[sv]=Låt det snöa på skrivbordet
 Comment[tr]=Masaüstünde kar yağdır
+Comment[zh_CN]=让桌面飘雪
 Comment[zh_TW]=在桌面上下雪
 Icon=preferences-system-windows-effect-snow
 
