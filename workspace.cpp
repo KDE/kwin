@@ -144,7 +144,7 @@ Workspace::Workspace( bool restore )
     (void) new KWinAdaptor( this );
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject("/KWin", this);
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
+    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reconfigure", this, SLOT(reconfigure()));
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing", this, SLOT(slotReinitCompositing()));
     _self = this;
     mgr = new PluginMgr;
@@ -951,11 +951,6 @@ void Workspace::updateColormap()
         installed_colormap = cmap;
         }
     }
-
-void Workspace::slotReloadConfig()
-{
-  reconfigure();
-}
 
 void Workspace::reconfigure()
     {

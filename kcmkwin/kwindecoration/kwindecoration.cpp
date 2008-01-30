@@ -538,7 +538,7 @@ void KWinDecorationModule::save()
 	kwinConfig.sync();
     // Send signal to all kwin instances
     QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
     QDBusConnection::sessionBus().send(message);
 
 }

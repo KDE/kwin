@@ -526,7 +526,7 @@ void KFocusConfig::save( void )
         config->sync();
        // Send signal to all kwin instances
        QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
        QDBusConnection::sessionBus().send(message);
     }
     emit KCModule::changed(false);
@@ -745,7 +745,7 @@ void KAdvancedConfig::save( void )
         config->sync();
        // Send signal to all kwin instances
        QDBusMessage message =
-       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+       QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
        QDBusConnection::sessionBus().send(message);
 
     }
@@ -1143,7 +1143,7 @@ void KMovingConfig::save( void )
         config->sync();
         // Send signal to all kwin instances
         QDBusMessage message =
-           QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+           QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reconfigure");
         QDBusConnection::sessionBus().send(message);
     }
     emit KCModule::changed(false);
