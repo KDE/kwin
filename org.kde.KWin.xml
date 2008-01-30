@@ -3,32 +3,32 @@
 <node>
   <interface name="org.kde.KWin">
     <method name="cascadeDesktop">
-    <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="unclutterDesktop">
-    <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="reconfigure">
-    <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="killWindow">
-    <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="refresh"/>
     <method name="doNotManage">
-    <arg name="name" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
     </method>
     <method name="showWindowMenuAt">
-    <arg name="winId" type="x" direction="in"/>
-    <arg name="x" type="i" direction="in"/>
-    <arg name="y" type="i" direction="in"/>
+      <arg name="winId" type="x" direction="in"/>
+      <arg name="x" type="i" direction="in"/>
+      <arg name="y" type="i" direction="in"/>
     </method>
     <method name="setCurrentDesktop">
-    <arg name="desktop" type="i" direction="in"/>
-    <arg type="b" direction="out"/>
+      <arg name="desktop" type="i" direction="in"/>
+      <arg type="b" direction="out"/>
     </method>
     <method name="currentDesktop">
-    <arg type="i" direction="out"/>
+      <arg type="i" direction="out"/>
     </method>
     <method name="nextDesktop"/>
     <method name="previousDesktop"/>
@@ -36,16 +36,16 @@
     <signal name="reloadConfig"/>
     <signal name="reinitCompositing"/>
     <method name="loadEffect">
-    <arg name="name" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
     </method>
     <method name="unloadEffect">
-    <arg name="name" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
     </method>
     <method name="toggleEffect">
-    <arg name="name" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
     </method>
     <method name="reloadEffect">
-    <arg name="name" type="s" direction="in"/>
+      <arg name="name" type="s" direction="in"/>
     </method>
   </interface>
 </node>
