@@ -918,7 +918,7 @@ void Workspace::loadWindowRules()
         delete rules.front();
         rules.pop_front();
         }
-    KConfig cfg( "kwinrulesrc" );
+    KConfig cfg( "kwinrulesrc", KConfig::NoGlobals );
     int count = cfg.group("General").readEntry( "count",0 );
     for( int i = 1;
          i <= count;
@@ -933,7 +933,7 @@ void Workspace::loadWindowRules()
 void Workspace::writeWindowRules()
     {
     rulesUpdatedTimer.stop();
-    KConfig cfg( "kwinrulesrc" );
+    KConfig cfg( "kwinrulesrc", KConfig::NoGlobals );
     QStringList groups = cfg.groupList();
     for( QStringList::ConstIterator it = groups.begin();
          it != groups.end();
