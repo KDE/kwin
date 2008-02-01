@@ -19,7 +19,12 @@ install(TARGETS kdecorations  DESTINATION ${LIB_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES kdecoration.h kdecorationfactory.h kcommondecoration.h DESTINATION ${INCLUDE_INSTALL_DIR})
+install( FILES
+    kdecoration.h
+    kdecorationfactory.h
+    kcommondecoration.h
+    kdecorationbridge.h
+    DESTINATION ${INCLUDE_INSTALL_DIR})
 
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS
@@ -59,5 +64,11 @@ if (X11_Xfixes_FOUND)
 endif (X11_Xfixes_FOUND)
 
 
-install( FILES kwinglobals.h kwineffects.h ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h DESTINATION ${INCLUDE_INSTALL_DIR})
-
+install( FILES
+    kwinglobals.h
+    kwineffects.h
+    kwinglutils.h
+    kwinglutils_funcs.h
+    kwinshadereffect.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
+    DESTINATION ${INCLUDE_INSTALL_DIR})
