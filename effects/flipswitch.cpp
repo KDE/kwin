@@ -449,12 +449,13 @@ void FlipSwitchEffect::tabBoxUpdated()
             // determine the switch direction
             int index = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
             bool direction = false;
+            int windowCount = effects->currentTabBoxWindowList().count();
             if( index > selectedWindow )
                 {
-                if( index == effects->currentTabBoxWindowList().count()-1 && selectedWindow == 0 ) forward = false;
+                if( index == windowCount-1 && selectedWindow == 0 ) forward = false;
                 else direction = true;
                 }
-            else if( index == 0 && ( selectedWindow == effects->currentTabBoxWindowList().count()-1 ) )
+            else if( index == 0 && ( selectedWindow == windowCount-1 ) )
                 {
                 direction = true;
                 }
@@ -474,6 +475,8 @@ void FlipSwitchEffect::tabBoxUpdated()
                 {
                 if( direction ) rearrangeWindows--;
                 else rearrangeWindows++;
+                if( rearrangeWindows >= windowCount ) rearrangeWindows = rearrangeWindows % windowCount;
+                else if( (-1*rearrangeWindows) >= windowCount ) rearrangeWindows = -1*((-1*rearrangeWindows) % windowCount);
                 }
             }
         effects->addRepaintFull();
