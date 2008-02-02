@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "redmond.h"
 
-#include <qdrawutil.h>
+#include <QtGui/qdrawutil.h>
 #include <QDateTime>
 //Added by qt3to4:
 #include <QPixmap>

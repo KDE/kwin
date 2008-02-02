@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <klocale.h>
 #include <QApplication>
-#include <qdesktopwidget.h>
+#include <QDesktopWidget>
 #include <kstringhandler.h>
 #include <kglobalsettings.h>
 #include <QX11Info>

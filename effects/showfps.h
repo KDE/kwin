@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 namespace KWin
 {

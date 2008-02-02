@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DESKTOPGRID_H
 
 #include <kwineffects.h>
-#include <qobject.h>
+#include <QObject>
 
 namespace KWin
 {

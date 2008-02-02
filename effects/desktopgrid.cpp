@@ -27,7 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <klocale.h>
 #include <kconfiggroup.h>
 #include <netwm_def.h>
-#include <qevent.h>
+#include <QEvent>
+#include <QMouseEvent>
 
 namespace KWin
 {

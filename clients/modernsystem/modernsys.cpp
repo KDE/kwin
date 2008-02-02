@@ -24,7 +24,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <QLayout>
-#include <qdrawutil.h>
+#include <QtGui/qdrawutil.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QPaintEvent>

@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCursor>
 #include <netwm.h>
 #include <kxmessages.h>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <kmanagerselection.h>
 
 #include "utils.h"

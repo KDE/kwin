@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksessionmanager.h>
 #include <X11/SM/SMlib.h>
 #include <netwm_def.h>
-#include <qrect.h>
+#include <QRect>
 
 class QSocketNotifier;
 

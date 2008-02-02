@@ -33,11 +33,11 @@
 #include <KDebug>
 #include <KColorUtils>
 
-#include <qbitmap.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpainter.h>
-#include <qtooltip.h>
+#include <QBitmap>
+#include <QLabel>
+#include <QLayout>
+#include <QPainter>
+#include <QToolTip>
 //Added by qt3to4:
 #include <QBoxLayout>
 #include <QGridLayout>

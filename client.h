@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <config-X11.h>
 
-#include <qframe.h>
+#include <QFrame>
 #include <QPixmap>
 #include <netwm.h>
 #include <kdebug.h>

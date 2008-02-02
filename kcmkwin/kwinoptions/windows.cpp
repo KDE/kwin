@@ -33,14 +33,16 @@
 #include <QRadioButton>
 #include <QLabel>
 #include <QComboBox>
-#include <qdesktopwidget.h>
+#include <QDesktopWidget>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QBoxLayout>
 #include <QVBoxLayout>
-#include <kmessagebox.h>
+#include <QTabWidget>
+#include <QtDBus/QtDBus>
 
+#include <kmessagebox.h>
 #include <klocale.h>
 #include <kcolorbutton.h>
 #include <kconfig.h>
@@ -49,8 +51,6 @@
 #include <kdialog.h>
 #include <kglobal.h>
 #include <kprocess.h>
-#include <QTabWidget>
-#include <QtDBus/QtDBus>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
