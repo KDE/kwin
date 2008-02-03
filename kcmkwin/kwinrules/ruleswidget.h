@@ -24,7 +24,7 @@
 #include <kwindowsystem.h>
 #include <kkeysequencewidget.h>
 
-#include "ruleswidgetbase.h"
+#include "ui_ruleswidgetbase.h"
 #include "ui_editshortcut.h"
 
 namespace KWin
@@ -34,7 +34,7 @@ class Rules;
 class DetectDialog;
 
 class RulesWidget
-    : public RulesWidgetBase
+    : public QWidget, public Ui::RulesWidgetBase
     {
     Q_OBJECT
     public:
@@ -46,13 +46,13 @@ class RulesWidget
     signals:
         void changed( bool state );
     protected slots:
-        virtual void detectClicked();
-        virtual void wmclassMatchChanged();
-        virtual void roleMatchChanged();
-        virtual void titleMatchChanged();
-        virtual void extraMatchChanged();
-        virtual void machineMatchChanged();
-        virtual void shortcutEditClicked();
+        void detectClicked();
+        void wmclassMatchChanged();
+        void roleMatchChanged();
+        void titleMatchChanged();
+        void extraMatchChanged();
+        void machineMatchChanged();
+        void shortcutEditClicked();
     private slots:
         // geometry tab
         void updateEnableposition();

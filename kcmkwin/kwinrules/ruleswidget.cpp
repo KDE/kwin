@@ -48,9 +48,10 @@ namespace KWin
     rule_##var->setWhatsThis( type##RuleDesc );
 
 RulesWidget::RulesWidget( QWidget* parent )
-    : RulesWidgetBase( parent )
-    , detect_dlg( NULL )
+    : detect_dlg( NULL )
     {
+    setupUi(this);
+
     QString enableDesc =
         i18n( "Enable this checkbox to alter this window property for the specified window(s)." );
     QString setRuleDesc =
@@ -122,7 +123,7 @@ RulesWidget::RulesWidget( QWidget* parent )
 void RulesWidget::updateEnable##var() \
     { \
     /* leave the label readable label_##var->setEnabled( enable_##var->isChecked() && rule_##var->currentIndex() != 0 );*/ \
-    Ui_RulesWidgetBase::var->setEnabled( enable_##var->isChecked() && rule_##var->currentIndex() != 0 ); \
+    Ui::RulesWidgetBase::var->setEnabled( enable_##var->isChecked() && rule_##var->currentIndex() != 0 ); \
     }
 
 // geometry tab
@@ -352,14 +353,14 @@ static NET::WindowType comboToType( int val )
         { \
         enable_##var->setChecked( false ); \
         rule_##var->setCurrentIndex( 0 ); \
-        Ui_RulesWidgetBase::var->uimethod0; \
+        Ui::RulesWidgetBase::var->uimethod0;    \
         updateEnable##var(); \
         } \
     else \
         { \
         enable_##var->setChecked( true ); \
         rule_##var->setCurrentIndex( type##_rule_to_combo[ rules->var##rule ] ); \
-        Ui_RulesWidgetBase::var->uimethod( func( rules->var )); \
+        Ui::RulesWidgetBase::var->uimethod( func( rules->var )); \
         updateEnable##var(); \
         }
 
@@ -443,7 +444,7 @@ void RulesWidget::setRules( Rules* rules )
     if( enable_##var->isChecked() && rule_##var->currentIndex() >= 0) \
         { \
         rules->var##rule = combo_to_##type##_rule[ rule_##var->currentIndex() ]; \
-        rules->var = func( Ui_RulesWidgetBase::var->uimethod()); \
+        rules->var = func( Ui::RulesWidgetBase::var->uimethod()); \
         } \
     else \
         rules->var##rule = Rules::Unused##Type##Rule;
@@ -599,7 +600,7 @@ void RulesWidget::detected( bool ok )
 #define GENERIC_PREFILL( var, func, info, uimethod ) \
     if( !enable_##var->isChecked()) \
         { \
-        Ui_RulesWidgetBase::var->uimethod( func( info )); \
+        Ui::RulesWidgetBase::var->uimethod( func( info )); \
         }
 
 #define CHECKBOX_PREFILL( var, func, info ) GENERIC_PREFILL( var, func, info, setChecked )
