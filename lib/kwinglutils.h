@@ -26,10 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_HAVE_OPENGL
 #include <kwinglutils_funcs.h>
 
-#include <QPixmap>
+#include <QtGui/QPixmap>
 
-#include <QImage>
-#include <QSize>
+#include <QtGui/QImage>
+#include <QtCore/QSize>
 
 /** @addtogroup kwineffects */
 /** @{ */
