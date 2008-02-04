@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef KDE3_SUPPORT
 
 class KShortcutsEditor;
+class KUrlRequester;
 
 namespace KWin
 {
@@ -44,6 +45,7 @@ class VideoRecordEffectConfig : public KCModule
 
     private:
         KShortcutsEditor* mShortcutEditor;
+        KUrlRequester *saveVideo;
     };
 
 } // namespace

@@ -21,9 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*
 
  This effect allows recording a video from the session.
- 
+
  Requires libcaptury:
- 
+
  - svn co svn://77.74.232.49/captury/trunk/capseo
  - you may want to remove 1.10 from AUTOMAKE_OPTIONS in Makefile.am
  - ./autogen.sh
@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  - you may want to remove 1.10 from AUTOMAKE_OPTIONS in Makefile.am
  - ./autogen.sh
  - the usual configure && make && make install procedure
- 
+
  Video is saved to $HOME/kwin_video.cps, use
  "cpsrecode -i kwin_video.cps  -o - | mplayer -" to play,
  use mencoder the same way to create a video.
@@ -49,6 +49,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <klocale.h>
 #include <qdir.h>
 #include <qfile.h>
+#include <kio/netaccess.h>
+#include <KConfigGroup>
+#include <KGlobalSettings>
 
 namespace KWin
 {
@@ -122,9 +125,13 @@ void VideoRecordEffect::startRecording()
         kDebug( 1212 ) << "Video recording init failed";
         return;
         }
-    // TODO
-    if( CapturySetOutputFileName( client, QFile::encodeName(QDir::homePath()+
-                    "/kwin_video.cps").constData() ) != CAPTURY_SUCCESS )
+    KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
+    QString videoPath =conf.readEntry( "videopath", KGlobalSettings::documentPath() );
+    QString videoName(videoPath +"/kwin_video1.cps" );
+    while(QFile::exists( videoName )) {
+        autoincFilename( videoName );
+    }
+    if( CapturySetOutputFileName( client, QFile::encodeName( videoName ).constData() ) != CAPTURY_SUCCESS )
         {
         kDebug( 1212 ) << "Video recording file open failed";
         return;
@@ -133,6 +140,21 @@ void VideoRecordEffect::startRecording()
     kDebug( 1212 ) << "Video recording start";
     }
 
+void VideoRecordEffect::autoincFilename(QString & name)
+    {
+        // If the name contains a number then increment it
+        QRegExp numSearch( "(^|[^\\d])(\\d+)" ); // we want to match as far left as possible, and when the number is at the start of the name
+        // Does it have a number?
+        int start = numSearch.lastIndexIn( name );
+        if (start != -1) {
+            // It has a number, increment it
+            start = numSearch.pos( 2 ); // we are only interested in the second group
+            QString numAsStr = numSearch.capturedTexts()[ 2 ];
+            QString number = QString::number( numAsStr.toInt() + 1 );
+            number = number.rightJustified( numAsStr.length(), '0' );
+            name.replace( start, number.length(), number );
+        }
+    }
 void VideoRecordEffect::stopRecording()
     {
     if( client == NULL )

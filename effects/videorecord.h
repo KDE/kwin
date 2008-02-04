@@ -42,6 +42,7 @@ class VideoRecordEffect
     private:
         void startRecording();
         void stopRecording();
+        void autoincFilename(QString & url);
         captury_config_t config;
         captury_t* client;
         QRect area;

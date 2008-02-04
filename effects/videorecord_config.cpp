@@ -28,8 +28,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 #include <KShortcutsEditor>
 #include <KGlobalAccel>
+#include <KUrlRequester>
+#include <QLabel>
+#include <KGlobalSettings>
+#include <KConfigGroup>
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
@@ -48,6 +53,13 @@ VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariant
     kDebug() ;
 
     QVBoxLayout* layout = new QVBoxLayout(this);
+    QHBoxLayout* hlayout = new QHBoxLayout( this );
+    QLabel *label = new QLabel( i18n( "Path to save video:" ), this );
+    hlayout->addWidget( label );
+    saveVideo = new KUrlRequester( this );
+    saveVideo->setMode( KFile::Directory | KFile::LocalOnly );
+    hlayout->addWidget( saveVideo );
+    layout->addLayout( hlayout );
     KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "VideoRecord" ));
     a->setText( i18n("Toggle Video Recording" ));
@@ -73,6 +85,8 @@ void VideoRecordEffectConfig::load()
     kDebug() ;
     KCModule::load();
 
+    KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
+    saveVideo->setPath( conf.readEntry( "videopath", KGlobalSettings::documentPath() ) );
     emit changed(false);
     }
 
@@ -81,6 +95,12 @@ void VideoRecordEffectConfig::save()
     kDebug() ;
     KCModule::save();
 
+    KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
+
+    conf.writeEntry("videopath", saveVideo->url().path());
+
+    conf.sync();
+
     emit changed(false);
     EffectsHandler::sendReloadMessage( "videorecord" );
     }
@@ -88,6 +108,7 @@ void VideoRecordEffectConfig::save()
 void VideoRecordEffectConfig::defaults()
     {
     kDebug() ;
+    saveVideo->setPath(KGlobalSettings::documentPath() );
     mShortcutEditor->allDefault();
     emit changed(true);
     }
