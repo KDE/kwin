@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sharpen_config.h"
 #include "snow_config.h"
 #include "trackmouse_config.h"
+#include "showfps_config.h"
 #endif
 
 #include <kwineffects.h>
@@ -65,6 +66,7 @@ KWIN_EFFECT_CONFIG_FACTORY
     registerPlugin<KWin::SharpenEffectConfig>("sharpen"); \
     registerPlugin<KWin::SnowEffectConfig>("snow"); \
     registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse"); \
+    registerPlugin<KWin::ShowFpsEffectConfig> ("showfps"); \
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 K_PLUGIN_FACTORY_DEFINITION(EffectFactory,

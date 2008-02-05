@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <math.h>
-
+#include <QPainter>
 
 namespace KWin
 {
@@ -48,6 +48,7 @@ const int MAX_TIME = 100;
 ShowFpsEffect::ShowFpsEffect()
     : paints_pos( 0 )
     , frames_pos( 0 )
+    , fpsText(0)
     {
     for( int i = 0;
          i < NUM_PAINTS;
@@ -73,8 +74,46 @@ ShowFpsEffect::ShowFpsEffect()
     else if ( y < 0 )
         y = displayHeight() - MAX_TIME - y;
     fps_rect = QRect( x, y, FPS_WIDTH + 2*NUM_PAINTS, MAX_TIME );
+    
+    config = effects->effectConfig("ShowFps");
+    int textPosition = config.readEntry("TextPosition", int(INSIDE_GRAPH));
+    textFont = config.readEntry("TextFont", QFont());
+    textColor = config.readEntry("TextColor", QColor());
+    double textAlpha = config.readEntry("TextAlpha", 1.0);
+    
+    if(!textColor.isValid())
+        textColor = QPalette().color(QPalette::Active, QPalette::WindowText);
+    textColor.setAlphaF(textAlpha);
+    
+    switch(textPosition)
+        {
+        case TOP_LEFT:
+            fpsTextRect = QRect(0, 0, 100, 100);
+            textAlign = Qt::AlignTop|Qt::AlignLeft;
+            break;
+        case TOP_RIGHT:
+            fpsTextRect = QRect(displayWidth()-100, 0, 100, 100);
+            textAlign = Qt::AlignTop|Qt::AlignRight;
+            break;
+        case BOTTOM_LEFT:
+            fpsTextRect = QRect(0, displayHeight()-100, 100, 100);
+            textAlign = Qt::AlignBottom|Qt::AlignLeft;
+            break;
+        case BOTTOM_RIGHT:
+            fpsTextRect = QRect(displayWidth()-100, displayHeight()-100, 100, 100);
+            textAlign = Qt::AlignBottom|Qt::AlignRight;
+            break;
+        case NOWHERE:
+            fpsTextRect = QRect();
+            break;
+        case INSIDE_GRAPH:
+        default:
+            fpsTextRect = QRect(x, y, FPS_WIDTH + NUM_PAINTS, MAX_TIME);
+            textAlign = Qt::AlignTop|Qt::AlignRight;
+            break;
+        }
     }
-
+    
 void ShowFpsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( time == 0 ) {
@@ -176,6 +215,9 @@ void ShowFpsEffect::paintGL( int fps )
 
     // Paint amount of rendered pixels graph
     paintDrawSizeGraph( x, y );
+    
+    // Paint FPS numerical value
+    paintFPSText(fps);
 
     // Paint paint sizes
     glPopAttrib();
@@ -380,6 +422,27 @@ void ShowFpsEffect::postPaintScreen()
     if( ++paints_pos == NUM_PAINTS )
         paints_pos = 0;
     effects->addRepaint( fps_rect );
+    }
+
+void ShowFpsEffect::paintFPSText(int fps)
+    {
+    if( !fpsTextRect.isValid())
+        return;
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    QImage im(100, 100, QImage::Format_ARGB32);
+    im.fill(Qt::transparent);
+    QPainter painter(&im);
+    painter.setFont(textFont);
+    painter.setPen(textColor);
+    painter.drawText(QRect(0, 0, 100, 100), textAlign, QString::number(fps));
+    if(fpsText)
+        delete fpsText;
+    fpsText = new GLTexture(im);
+    fpsText->bind();
+    fpsText->render(false, QRegion(fpsTextRect), fpsTextRect);
+    fpsText->unbind();
+    effects->addRepaint(fpsTextRect);
+#endif
     }
 
 } // namespace

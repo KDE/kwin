@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SHOWFPS_H
 
 #include <kwineffects.h>
+#include <kwinglutils.h>
 
 #include <QDateTime>
 
@@ -37,12 +38,14 @@ class ShowFpsEffect
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintScreen();
+        enum { INSIDE_GRAPH, NOWHERE, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }; // fps text position
     private:
         void paintGL( int fps );
         void paintXrender( int fps );
         void paintFPSGraph(int x, int y);
         void paintDrawSizeGraph(int x, int y);
         void paintGraph( int x, int y, QList<int> values, QList<int> lines, bool colorize);
+        void paintFPSText(int fps);
         QTime t;
         enum { NUM_PAINTS = 100 }; // remember time needed to paint this many paints
         int paints[ NUM_PAINTS ]; // time needed to paint
@@ -55,6 +58,12 @@ class ShowFpsEffect
         int x;
         int y;
         QRect fps_rect;
+        GLTexture *fpsText;
+        int textPosition;
+        QFont textFont;
+        QColor textColor;
+        QRect fpsTextRect;
+        int textAlign;
     };
 
 } // namespace

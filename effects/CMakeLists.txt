@@ -162,6 +162,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         magnifier_config.desktop
         mousemark_config.desktop
         sharpen_config.desktop
+        showfps_config.desktop
         snow_config.desktop
         trackmouse_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
@@ -176,6 +177,13 @@ if(KWIN_HAVE_OPENGL_COMPOSITING AND KWIN_HAVE_XRENDER_COMPOSITING)
     install( FILES
         showfps.desktop
         showpaint.desktop
+        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+    SET(kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
+        showfps_config.cpp
+        showfps_config.ui
+       )
+    install( FILES 
+        showfps_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif(KWIN_HAVE_OPENGL_COMPOSITING AND KWIN_HAVE_XRENDER_COMPOSITING)
 
