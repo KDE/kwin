@@ -309,7 +309,7 @@ void ShowFpsEffect::paintDrawSizeGraph(int x, int y)
         int h = 0;
         if( value > 0)
             {
-            h = (int)(( log10( value ) - min_pixels_log ) * drawscale );
+            h = (int)(( log10( (double)value ) - min_pixels_log ) * drawscale );
             h = qMin( qMax( 0, h ) + minh, MAX_TIME );
             }
         drawvalues.append( h );
