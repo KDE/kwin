@@ -444,7 +444,7 @@ void FlipSwitchEffect::tabBoxUpdated()
     {
     if( mActivated )
         {
-        if( mAnimation )
+        if( mAnimation && effects->currentTabBoxWindowList().count() > 1 )
             {
             // determine the switch direction
             int index = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
