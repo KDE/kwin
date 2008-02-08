@@ -77,7 +77,9 @@ namespace KWin
 void Workspace::setupCompositing()
     {
 #ifdef KWIN_HAVE_COMPOSITING
-    if( !options->useCompositing )
+    if( scene != NULL )
+        return;
+    if( !options->useCompositing && getenv( "KWIN_COMPOSE") == NULL )
         {
         kDebug( 1212 ) << "Compositing is turned off in options";
         return;
@@ -87,14 +89,6 @@ void Workspace::setupCompositing()
         kError( 1212 ) << "Compositing is not possible";
         return;
         }
-    if( scene != NULL )
-        return;
-    char selection_name[ 100 ];
-    sprintf( selection_name, "_NET_WM_CM_S%d", DefaultScreen( display()));
-    cm_selection = new KSelectionOwner( selection_name );
-    connect( cm_selection, SIGNAL( lostOwnership()), SLOT( lostCMSelection()));
-    cm_selection->claim( true ); // force claiming
-
     CompositingType type = options->compositingMode;
     if( getenv( "KWIN_COMPOSE" ))
         {
@@ -109,10 +103,15 @@ void Workspace::setupCompositing()
                 break;
             default:
                 kDebug( 1212 ) << "No compositing";
-                delete cm_selection;
                 return;
             }
         }
+
+    char selection_name[ 100 ];
+    sprintf( selection_name, "_NET_WM_CM_S%d", DefaultScreen( display()));
+    cm_selection = new KSelectionOwner( selection_name );
+    connect( cm_selection, SIGNAL( lostOwnership()), SLOT( lostCMSelection()));
+    cm_selection->claim( true ); // force claiming
 
     switch( type )
         {
