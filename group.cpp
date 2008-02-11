@@ -681,8 +681,8 @@ void Client::cleanGrouping()
         {
         if( (*it)->transientFor() == this )
             {
-            ClientList::ConstIterator it2 = it++;
-            removeTransient( *it2 );
+            removeTransient( *it );
+            it = transients_list.begin(); // restart, just in case something more has changed with the list
             }
         else
             ++it;
