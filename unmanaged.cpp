@@ -53,7 +53,7 @@ bool Unmanaged::track( Window w )
         return false;
         }
     setWindowHandles( w, w ); // the window is also the frame
-    XSelectInput( display(), w, attr.your_event_mask | StructureNotifyMask );
+    XSelectInput( display(), w, attr.your_event_mask | StructureNotifyMask | PropertyChangeMask);
     geom = QRect( attr.x, attr.y, attr.width, attr.height );
     vis = attr.visual;
     bit_depth = attr.depth;
