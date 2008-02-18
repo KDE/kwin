@@ -102,7 +102,7 @@ QMenu* Workspace::clientPopup()
         mNoBorderOpAction->setData( Options::NoBorderOp );
 
         QAction *action = advanced_popup->addAction( i18n("Window &Shortcut...") );
-        action->setIcon( KIcon("key_bindings") );
+        action->setIcon( KIcon("configure-shortcuts") );
         kaction = qobject_cast<KAction*>( keys->action("Setup Window Shortcut") );
         if ( kaction!=0 )
             action->setShortcut( kaction->globalShortcut().primary() );
@@ -138,7 +138,7 @@ QMenu* Workspace::clientPopup()
         }
 
         mMoveOpAction = popup->addAction( i18n("&Move") );
-        mMoveOpAction->setIcon( KIcon( "move" ) );
+        mMoveOpAction->setIcon( KIcon( "transform-move" ) );
         kaction = qobject_cast<KAction*>( keys->action("Window Move") );
         if ( kaction!=0 )
             mMoveOpAction->setShortcut( kaction->globalShortcut().primary() );
