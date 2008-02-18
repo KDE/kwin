@@ -661,7 +661,7 @@ bool RulesWidget::finalCheck()
             all_types = false;
     if( wmclass_match->currentIndex() == Rules::UnimportantMatch && all_types )
         {
-        if( KMessageBox::warningContinueCancel( topLevelWidget(),
+        if( KMessageBox::warningContinueCancel( window(),
             i18n( "You have specified the window class as unimportant.\n"
                   "This means the settings will possibly apply to windows from all applications. "
                   "If you really want to create a generic setting, it is recommended you at least "
@@ -680,7 +680,7 @@ void RulesWidget::prepareWindowSpecific( WId window )
 
 void RulesWidget::shortcutEditClicked()
     {
-    EditShortcutDialog dlg( topLevelWidget());
+    EditShortcutDialog dlg( window());
     dlg.setShortcut( shortcut->text());
     if( dlg.exec() == QDialog::Accepted )
         shortcut->setText( dlg.shortcut());
@@ -741,7 +741,7 @@ EditShortcut::EditShortcut( QWidget* parent )
 
 void EditShortcut::editShortcut()
     {
-    ShortcutDialog dlg( QKeySequence( shortcut->text()), topLevelWidget());
+    ShortcutDialog dlg( QKeySequence( shortcut->text()), window());
     if( dlg.exec() == QDialog::Accepted )
         shortcut->setText( dlg.shortcut().toString());
     }
