@@ -118,25 +118,25 @@ void Workspace::updateClientArea( bool force )
                         i <= numberOfDesktops();
                         ++i )
                     {
-                        new_wareas[ i ] = new_wareas[ i ].intersect( r );
+                        new_wareas[ i ] = new_wareas[ i ].intersected( r );
                         for( int iS = 0;
                                 iS < nscreens;
                                 iS ++ )
                             new_sareas[ i ][ iS ] =
-                                new_sareas[ i ][ iS ].intersect(
+                                new_sareas[ i ][ iS ].intersected(
                                         (*it)->adjustedClientArea( desktopArea, screens[ iS ] )
                                     );
                     }
             else
                 {
-                    new_wareas[ (*it)->desktop() ] = new_wareas[ (*it)->desktop() ].intersect( r );
+                    new_wareas[ (*it)->desktop() ] = new_wareas[ (*it)->desktop() ].intersected( r );
                     for( int iS = 0;
                             iS < nscreens;
                             iS ++ )
                         {
 //                            kDebug () << "adjusting new_sarea: " << screens[ iS ];
                             new_sareas[ (*it)->desktop() ][ iS ] =
-                                new_sareas[ (*it)->desktop() ][ iS ].intersect(
+                                new_sareas[ (*it)->desktop() ][ iS ].intersected(
                                         (*it)->adjustedClientArea( desktopArea, screens[ iS ] )
                                         );
                         }
@@ -161,7 +161,7 @@ void Workspace::updateClientArea( bool force )
         for( int i = 1;
              i <= numberOfDesktops();
              ++i )
-            new_wareas[ i ] = new_wareas[ i ].intersect( topmenu_area );
+            new_wareas[ i ] = new_wareas[ i ].intersected( topmenu_area );
         }
 
     bool changed = force;

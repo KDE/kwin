@@ -54,7 +54,7 @@ void SceneBasic::paint( QRegion, ToplevelList windows )
          it != windows.end();
          ++it )
         {
-        QRect r = (*it)->geometry().intersect( QRect( 0, 0, displayWidth(), displayHeight()));
+        QRect r = (*it)->geometry().intersected( QRect( 0, 0, displayWidth(), displayHeight()));
         if( !r.isEmpty())
             {
             Pixmap pix = (*it)->windowPixmap();

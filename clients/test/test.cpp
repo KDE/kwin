@@ -268,7 +268,7 @@ bool Decoration::animateMinimize(bool iconify)
 
         for (int step = 0; step < stepCount; step++) {
 
-          r.moveBy(dx, dy);
+          r.translate(dx, dy);
           r.setWidth(r.width() - 2 * dx);
           r.setHeight(r.height() - 2 * dy);
 

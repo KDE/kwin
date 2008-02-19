@@ -371,7 +371,7 @@ bool Scene::Window::isVisible() const
     return true; // Unmanaged is always visible
     // TODO there may be transformations, so ignore this for now
     return !toplevel->geometry()
-        .intersect( QRect( 0, 0, displayWidth(), displayHeight()))
+        .intersected( QRect( 0, 0, displayWidth(), displayHeight()))
         .isEmpty();
     }
 

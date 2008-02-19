@@ -117,9 +117,9 @@ void PopupInfo::paintContents()
     p.setPen(Qt::white);
     p.drawText( r, AlignCenter, m_infoString );
     p.setPen(Qt::black);
-    r.moveBy( -1, -1 );
+    r.translate( -1, -1 );
     p.drawText( r, AlignCenter, m_infoString );
-    r.moveBy( -1, 0 );
+    r.translate( -1, 0 );
     */
     p.drawText( r, Qt::AlignCenter, m_infoString );
     }
