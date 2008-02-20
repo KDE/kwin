@@ -105,7 +105,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 	decorationList->setWhatsThis( whatsThis);
 	pluginLayout->addWidget(decorationList);
 
-	QGroupBox *pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
+	pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
     QGridLayout *pluginSettingsLayout = new QGridLayout();
 	pluginSettingsGrp->setFlat( true );
 	pluginSettingsLayout->setMargin( 0 );
@@ -415,7 +415,6 @@ void KWinDecorationModule::resetPlugin( KConfigGroup& conf, const QString& curre
 	if (library != NULL)
 	{
                 KLibrary::void_function_ptr alloc_ptr = library->resolveFunction("allocate_config");
-
 		if (alloc_ptr != NULL)
 		{
 			allocatePlugin = (QObject* (*)(KConfigGroup& conf, QWidget* parent))alloc_ptr;
@@ -426,12 +425,14 @@ void KWinDecorationModule::resetPlugin( KConfigGroup& conf, const QString& curre
 			connect( this, SIGNAL(pluginLoad(const KConfigGroup&)), pluginObject, SLOT(load(const KConfigGroup&)) );
 			connect( this, SIGNAL(pluginSave(KConfigGroup &)), pluginObject, SLOT(save(KConfigGroup &)) );
 			connect( this, SIGNAL(pluginDefaults()), pluginObject, SLOT(defaults()) );
-			pluginConfigWidget->show();
+                        pluginSettingsGrp->show();
 			return;
 		}
 	}
-
-	pluginConfigWidget->hide();
+        if ( cBorder->isHidden() )
+            pluginSettingsGrp->hide();
+        else if (pluginSettingsGrp->isHidden() )
+            pluginSettingsGrp->show();
 }
 
 

@@ -124,6 +124,7 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 		// Page 2
 		ButtonPositionWidget *buttonPositionWidget;
 		KVBox*	 buttonPage;
+                QGroupBox *pluginSettingsGrp;
 };
 
 
