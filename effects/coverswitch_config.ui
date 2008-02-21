@@ -1,0 +1,118 @@
+<ui version="4.0" >
+ <class>KWin::CoverSwitchEffectConfigForm</class>
+ <widget class="QWidget" name="KWin::CoverSwitchEffectConfigForm" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>359</width>
+    <height>431</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Appearance</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="0" column="0" colspan="2" >
+       <widget class="QCheckBox" name="checkAnimateSwitch" >
+        <property name="text" >
+         <string>Animate &amp;Switch</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2" >
+       <widget class="QCheckBox" name="checkAnimateStart" >
+        <property name="text" >
+         <string>Animation on Tab Box &amp;open</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QCheckBox" name="checkAnimateStop" >
+        <property name="text" >
+         <string>Animation on Tab Box &amp;close</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2" >
+       <widget class="QCheckBox" name="checkReflection" >
+        <property name="text" >
+         <string>&amp;Reflections</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" >
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>&amp;Animation Duration:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>spinDuration</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" >
+       <widget class="QSpinBox" name="spinDuration" >
+        <property name="suffix" >
+         <string> msec</string>
+        </property>
+        <property name="maximum" >
+         <number>5000</number>
+        </property>
+        <property name="value" >
+         <number>300</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" >
+       <widget class="QLabel" name="label_4" >
+        <property name="text" >
+         <string>Slow &amp;Motion Factor:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>spinDuration</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" >
+       <widget class="QSpinBox" name="spinSlowMotionFactor" >
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+        <property name="maximum" >
+         <number>10</number>
+        </property>
+        <property name="value" >
+         <number>4</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" />
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KWin::GlobalShortcutsEditor</class>
+   <extends>QWidget</extends>
+   <header location="global" >kwineffects.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>checkAnimateSwitch</tabstop>
+  <tabstop>checkAnimateStart</tabstop>
+  <tabstop>checkAnimateStop</tabstop>
+  <tabstop>checkReflection</tabstop>
+  <tabstop>spinDuration</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

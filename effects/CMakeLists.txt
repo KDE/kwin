@@ -95,6 +95,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
     # opengl-based effects
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         blur.cpp
+        coverswitch.cpp
         explosioneffect.cpp
         flipswitch.cpp
         invert.cpp
@@ -108,6 +109,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         )
     install( FILES
         blur.desktop
+        coverswitch.desktop
         explosion.desktop
         flipswitch.desktop
         invert.desktop
@@ -141,6 +143,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         data/circle-edgy.png
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
     SET(kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
+        coverswitch_config.cpp
+        coverswitch_config.ui
         flipswitch_config.cpp
         flipswitch_config.ui
         invert_config.cpp
@@ -156,6 +160,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         trackmouse_config.cpp
         )
     install( FILES
+        coverswitch_config.desktop
         flipswitch_config.desktop
         invert_config.desktop
         lookingglass_config.desktop

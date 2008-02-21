@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "zoom_config.h"
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#include "coverswitch_config.h"
 #include "flipswitch_config.h"
 #include "invert_config.h"
 #include "lookingglass_config.h"
@@ -58,6 +59,7 @@ KWIN_EFFECT_CONFIG_FACTORY
     registerPlugin<KWin::ZoomEffectConfig>("zoom");
 
 #define GL_PLUGINS \
+    registerPlugin<KWin::CoverSwitchEffectConfig>("coverswitch"); \
     registerPlugin<KWin::FlipSwitchEffectConfig>("flipswitch"); \
     registerPlugin<KWin::InvertEffectConfig>("invert"); \
     registerPlugin<KWin::LookingGlassEffectConfig>("lookingglass"); \
