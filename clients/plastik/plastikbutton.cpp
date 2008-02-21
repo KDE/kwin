@@ -225,13 +225,13 @@ void PlastikButton::drawButton(QPainter *painter)
         outlineGradient.setColorAt(0.0, contourTop);
         outlineGradient.setColorAt(1.0, contourBottom);
         bP.setBrush(outlineGradient);
-        bP.drawRoundedRect(r, rxo, ryo);
+        bP.drawRoundRect(r, rxo, ryo);
         // surface
         QLinearGradient surfaceGradient(0, 0, 0, r.height());
         surfaceGradient.setColorAt(0.0, surfaceTop);
         surfaceGradient.setColorAt(1.0, surfaceBottom);
         bP.setBrush(surfaceGradient);
-        bP.drawRoundedRect(r.adjusted(1,1,-1,-1), rxi, ryi);
+        bP.drawRoundRect(r.adjusted(1,1,-1,-1), rxi, ryi);
     }
 
     if (type() == MenuButton)
