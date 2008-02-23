@@ -7,3 +7,5 @@ X-KDE-ParentComponents=kwin4_effect_coverswitch
 X-KDE-PluginKeyword=coverswitch
 
 Name=Cover Switch
+Name[pt]=Mudança de Capas
+Name[pt_BR]=Mudança de Capas
