@@ -133,6 +133,7 @@ class Client
 
     // !isMinimized() && not hidden, i.e. normally visible on some virtual desktop
         bool isShown( bool shaded_is_shown ) const;
+        bool isHiddenInternal() const; // for compositing
 
         bool isShade() const; // true only for ShadeNormal
         ShadeMode shadeMode() const; // prefer isShade()
@@ -616,6 +617,12 @@ inline
 bool Client::isShown( bool shaded_is_shown ) const
     {
     return !isMinimized() && ( !isShade() || shaded_is_shown ) && !hidden;
+    }
+
+inline
+bool Client::isHiddenInternal() const
+    {
+    return hidden;
     }
 
 inline
