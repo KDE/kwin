@@ -128,7 +128,9 @@ class KWIN_EXPORT Extensions
         static bool glxAvailable() { return has_glx; }
         static bool syncAvailable() { return has_sync; }
         static int syncAlarmNotifyEvent();
+        static void fillExtensionsData( const char**& extensions, int& nextensions, int*&majors, int*& error_bases );
     private:
+        static void addData( const char* name );
         static int shape_version;
         static int shape_event_base;
         static bool has_randr;
@@ -141,6 +143,10 @@ class KWIN_EXPORT Extensions
         static bool has_glx;
         static bool has_sync;
         static int sync_event_base;
+        static const char* data_extensions[ 32 ];
+        static int data_nextensions;
+        static int data_opcodes[ 32 ];
+        static int data_error_bases[ 32 ];
     };
 
 } // namespace

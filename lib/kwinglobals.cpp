@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-workspace.h>
 #include <config-X11.h>
 
+#include <assert.h>
+
 #include <kdebug.h>
 
 #include <X11/Xlib.h>
@@ -65,76 +67,115 @@ int Extensions::render_version = 0;
 bool Extensions::has_glx = false;
 bool Extensions::has_sync = false;
 int Extensions::sync_event_base = 0;
+// for fillExtensionsData()
+const char* Extensions::data_extensions[ 32 ];
+int Extensions::data_nextensions;
+int Extensions::data_opcodes[ 32 ];
+int Extensions::data_error_bases[ 32 ];
+
+void Extensions::addData( const char* name )
+    {
+    assert( data_nextensions < 32 );
+    int opcode, event_base, error_base;
+    XQueryExtension( display(), name, &opcode, &event_base, &error_base );
+    data_extensions[ data_nextensions ] = name;
+    data_opcodes[ data_nextensions ] = opcode;
+    data_error_bases[ data_nextensions ] = error_base;
+    ++data_nextensions;
+    }
 
 void Extensions::init()
     {
-    int dummy;
+    int event_base, error_base;
+    data_nextensions = 0;
     shape_version = 0;
-    if( XShapeQueryExtension( display(), &shape_event_base, &dummy ))
+    if( XShapeQueryExtension( display(), &shape_event_base, &error_base ))
         {
         int major, minor;
         if( XShapeQueryVersion( display(), &major, &minor ))
+            {
             shape_version = major * 0x10 + minor;
+            addData( "SHAPE" );
+            }
         }
 #ifdef HAVE_XRANDR
-    has_randr = XRRQueryExtension( display(), &randr_event_base, &dummy );
+    has_randr = XRRQueryExtension( display(), &randr_event_base, &error_base );
     if( has_randr )
         {
         int major, minor;
         XRRQueryVersion( display(), &major, &minor );
         has_randr = ( major > 1 || ( major == 1 && minor >= 1 ) );
+        addData( "RANDR" );
         }
 #else
     has_randr = false;
 #endif
 #ifdef HAVE_XDAMAGE
-    has_damage = XDamageQueryExtension( display(), &damage_event_base, &dummy );
+    has_damage = XDamageQueryExtension( display(), &damage_event_base, &error_base );
+    if( has_damage )
+        addData( "DAMAGE" );
 #else
     has_damage = false;
 #endif
     composite_version = 0;
 #ifdef HAVE_XCOMPOSITE
-    if( XCompositeQueryExtension( display(), &dummy, &dummy ))
+    if( XCompositeQueryExtension( display(), &event_base, &error_base ))
         {
         int major = 0, minor = 0;
         XCompositeQueryVersion( display(), &major, &minor );
         composite_version = major * 0x10 + minor;
+        addData( "Composite" );
         }
 #endif
     fixes_version = 0;
 #ifdef HAVE_XFIXES
-    if( XFixesQueryExtension( display(), &dummy, &dummy ))
+    if( XFixesQueryExtension( display(), &event_base, &error_base ))
         {
         int major = 0, minor = 0;
         XFixesQueryVersion( display(), &major, &minor );
         fixes_version = major * 0x10 + minor;
+        addData( "XFIXES" );
         }
 #endif
     render_version = 0;
 #ifdef HAVE_XRENDER
-    if( XRenderQueryExtension( display(), &dummy, &dummy ))
+    if( XRenderQueryExtension( display(), &event_base, &error_base ))
         {
         int major = 0, minor = 0;
         XRenderQueryVersion( display(), &major, &minor );
         render_version = major * 0x10 + minor;
+        addData( "RENDER" );
         }
 #endif
     has_glx = false;
 #ifdef HAVE_OPENGL
-    has_glx = glXQueryExtension( display(), &dummy, &dummy );
+    has_glx = glXQueryExtension( display(), &event_base, &error_base );
+    if( has_glx )
+        addData( "GLX" );
 #endif
 #ifdef HAVE_XSYNC
-    if( XSyncQueryExtension( display(), &sync_event_base, &dummy ))
+    if( XSyncQueryExtension( display(), &sync_event_base, &error_base ))
         {
         int major = 0, minor = 0;
         if( XSyncInitialize( display(), &major, &minor ))
+            {
             has_sync = true;
+            addData( "SYNC" );
+            }
         }
 #endif
     kDebug( 1212 ) << "Extensions: shape: 0x" << QString::number( shape_version, 16 )
         << " composite: 0x" << QString::number( composite_version, 16 )
         << " render: 0x" << QString::number( render_version, 16 )
         << " fixes: 0x" << QString::number( fixes_version, 16 ) << endl;
+    }
+
+void Extensions::fillExtensionsData( const char**& extensions, int& nextensions, int*&opcodes, int*& error_bases )
+    {
+    extensions = data_extensions;
+    nextensions = data_nextensions;
+    opcodes = data_opcodes;
+    error_bases = data_error_bases;
     }
 
 int Extensions::shapeNotifyEvent()

@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QX11Info>
 #include <stdio.h>
 #include <fixx11h.h>
+#include <kxerrorhandler.h>
 #include <QtDBus/QtDBus>
 
 #include <kdialog.h>
@@ -72,10 +73,93 @@ static bool initting = false;
 // and -rdynamic in CXXFLAGS for kBacktrace() to work.
 static bool kwin_sync = false;
 
+// this is copied from KXErrorHandler and modified to explicitly use known extensions
+static QByteArray errorMessage( const XErrorEvent& event, Display* dpy )
+    { // "Error: <error> (<value>), Request: <request>(<value>), Resource: <value>"
+    QByteArray ret;
+    char tmp[ 256 ];
+    char num[ 256 ];
+    if( event.request_code < 128 ) // core request
+        {
+        XGetErrorText( dpy, event.error_code, tmp, 255 );
+        if( char* paren = strchr( tmp, '(' )) // the explanation in parentheses just makes
+            *paren = '\0';                     // it more verbose and is not really useful
+        // the various casts are to get overloads non-ambiguous :-/
+        ret = QByteArray( "error: " ) + (const char*)tmp + '[' + QByteArray::number( event.error_code ) + ']';
+        sprintf( num, "%d", event.request_code );
+        XGetErrorDatabaseText( dpy, "XRequest", num, "<unknown>", tmp, 256 );
+        ret += QByteArray( ", request: " ) + (const char*)tmp + '[' + QByteArray::number( event.request_code ) + ']';
+        if( event.resourceid != 0 )
+            ret += QByteArray( ", resource: 0x" ) + QByteArray::number( (qlonglong)event.resourceid, 16 );
+        }
+    else // extensions
+        {
+        // XGetErrorText() currently has a bug that makes it fail to find text
+        // for some errors (when error==error_base), also XGetErrorDatabaseText()
+        // requires the right extension name, so it is needed to get info about
+        // all extensions. However that is almost impossible:
+        // - Xlib itself has it, but in internal data.
+        // - Opening another X connection now can cause deadlock with server grabs.
+        // - Fetching it at startup means a bunch of roundtrips.
+
+        // KWin here explicitly uses known extensions.        
+        int nextensions;
+        const char** extensions;
+        int* majors;
+        int* error_bases;
+        Extensions::fillExtensionsData( extensions, nextensions, majors, error_bases );
+        XGetErrorText( dpy, event.error_code, tmp, 255 );
+        int index = -1;
+        int base = 0;
+        for( int i = 0;
+             i < nextensions;
+             ++i )
+            if( error_bases[ i ] != 0
+                && event.error_code >= error_bases[ i ] && ( index == -1 || error_bases[ i ] > base ))
+                {
+                index = i;
+                base = error_bases[ i ];
+                }
+        if( tmp == QString::number( event.error_code )) // XGetErrorText() failed,
+            { // or it has a bug that causes not finding all errors, check ourselves
+            if( index != -1 )
+                {
+                snprintf( num, 255, "%s.%d", extensions[ index ], event.error_code - base );
+                XGetErrorDatabaseText( dpy, "XProtoError", num, "<unknown>", tmp, 255 );
+                }
+            else
+                strcpy( tmp, "<unknown>" );
+            }
+        if( char* paren = strchr( tmp, '(' ))
+            *paren = '\0';
+        if( index != -1 )
+            ret = QByteArray( "error: " ) + (const char*)tmp + '[' + (const char*)extensions[ index ]
+                + '+' + QByteArray::number( event.error_code - base ) + ']';
+        else
+            ret = QByteArray( "error: " ) + (const char*)tmp + '[' + QByteArray::number( event.error_code ) + ']';
+        tmp[ 0 ] = '\0';
+        for( int i = 0;
+             i < nextensions;
+             ++i )
+            if( majors[ i ] == event.request_code )
+                {
+                snprintf( num, 255, "%s.%d", extensions[ i ], event.minor_code );
+                XGetErrorDatabaseText( dpy, "XRequest", num, "<unknown>", tmp, 255 );
+                ret += QByteArray( ", request: " ) + (const char*)tmp + '[' + (const char*)extensions[ i ] + '+'
+                    + QByteArray::number( event.minor_code ) + ']';
+                }
+        if( tmp[ 0 ] == '\0' ) // not found???
+            ret += QByteArray( ", request <unknown> [" ) + QByteArray::number( event.request_code ) + ':'
+                + QByteArray::number( event.minor_code ) + ']';
+        if( event.resourceid != 0 )
+            ret += QByteArray( ", resource: 0x" ) + QByteArray::number( (qlonglong)event.resourceid, 16 );
+        }
+    return ret;
+    }
+
 static
 int x11ErrorHandler(Display *d, XErrorEvent *e)
     {
-    char msg[80], req[80], number[80];
     bool ignore_badwindow = true; //maybe temporary
 
     if (initting &&
@@ -92,11 +176,8 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
     if (ignore_badwindow && (e->error_code == BadWindow || e->error_code == BadColor))
         return 0;
 
-    XGetErrorText(d, e->error_code, msg, sizeof(msg));
-    sprintf(number, "%d", e->request_code);
-    XGetErrorDatabaseText(d, "XRequest", number, "<unknown>", req, sizeof(req));
-
-    fprintf(stderr, "kwin: %s(0x%lx): %s\n", req, e->resourceid, msg);
+//    fprintf( stderr, "kwin: X Error (%s)\n", KXErrorHandler::errorMessage( *e, d ).data());
+    fprintf( stderr, "kwin: X Error (%s)\n", errorMessage( *e, d ).data());
 
     if( kwin_sync )
 	kDebug() << kBacktrace();
