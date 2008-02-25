@@ -58,4 +58,4 @@ X-KDE-PluginInfo-EnabledByDefault=false
 # The plugin (library) which contains the effect. One library may contain more effects.
 X-KDE-Library=kwin4_effect_tests
 # The order in which this effect is loaded.  Lower numbers are loaded first.
-X-Ordering=100
+X-KDE-Ordering=100

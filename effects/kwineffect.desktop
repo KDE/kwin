@@ -55,5 +55,5 @@ Comment[x-test]=xxKWin Effectxx
 Comment[zh_CN]=KWin 效果
 Comment[zh_TW]=KWin 效果
 
-[PropertyDef::X-Ordering]
+[PropertyDef::X-KDE-Ordering]
 Type=int

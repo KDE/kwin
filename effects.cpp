@@ -809,7 +809,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
 
     Effect* e = create();
 
-    effect_order.insert( service->property( "X-Ordering" ).toInt(), EffectPair( name, e ));
+    effect_order.insert( service->property( "X-KDE-Ordering" ).toInt(), EffectPair( name, e ));
     effectsChanged();
     effect_libraries[ name ] = library;
 
