@@ -146,11 +146,19 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
          ++desktop )
         {
         if( desktop != desktop_with_move )
+            {
+            PaintClipper pc( desktopRect( desktop, true ));
             paintScreenDesktop( desktop, mask, region, data );
+            }
         }
     // paint the desktop with the window being moved as the last one, i.e. on top of others
     if( desktop_with_move != -1 )
+        {
+        QRegion paintreg = desktopRect( desktop_with_move, true ); // paint only the desktop
+        paintreg |= windowRect( window_move ); // and wherever the moved window is
+        PaintClipper pc( paintreg );
         paintScreenDesktop( desktop_with_move, mask, region, data );
+        }
     }
 
 void DesktopGridEffect::paintScreenDesktop( int desktop, int mask, QRegion region, ScreenPaintData data )

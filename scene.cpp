@@ -135,6 +135,8 @@ void Scene::paintScreen( int* mask, QRegion* region )
     *region |= painted_region;
     // make sure not to go outside of the screen area
     *region &= QRegion( 0, 0, displayWidth(), displayHeight());
+    // make sure all clipping is restored
+    Q_ASSERT( !PaintClipper::clip());
     }
 
 // Compute time since the last painting pass.

@@ -89,7 +89,7 @@ void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
             {
             // For translucent windows, shadow needs to be drawn before the
             //  window itself.
-            drawShadow( w, mask, region, data, false );
+            drawShadow( w, mask, region, data );
             }
         else
             {
@@ -145,7 +145,7 @@ void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
         //  that are behind that window.
         if( !behindWindow || stack.indexOf(d.w) < stack.indexOf(behindWindow))
             {
-            drawShadow( d.w, d.mask, d.region.subtracted( d.clip ), d.data, true );
+            drawShadow( d.w, d.mask, d.region.subtracted( d.clip ), d.data );
             }
         else
             {
@@ -155,7 +155,7 @@ void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
     shadowDatas = newShadowDatas;
     }
 
-void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, WindowPaintData& data, bool clip )
+void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, WindowPaintData& data )
     {
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
     glEnable( GL_BLEND );
@@ -219,10 +219,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     // We have two elements per vertex in the verts array
     int verticesCount = verts.count() / 2;
-    if( clip )
-        renderGLGeometry( true, region, verticesCount, verts.data(), texcoords.data() );
-    else
-        renderGLGeometry( mask, region, verticesCount, verts.data(), texcoords.data() );
+    renderGLGeometry( region, verticesCount, verts.data(), texcoords.data() );
     mShadowTexture->unbind();
 
     glPopMatrix();

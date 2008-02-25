@@ -149,7 +149,7 @@ void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintDat
         renderRoundBoxWithEdge( filterFrameRect );
         // And then the text on top of it
         filterTexture->bind();
-        filterTexture->render( mask, region, filterTextureRect );
+        filterTexture->render( region, filterTextureRect );
         filterTexture->unbind();
         glPopAttrib();
         }

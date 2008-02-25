@@ -105,8 +105,6 @@ class Scene
         virtual void paintWindow( Window* w, int mask, QRegion region, WindowQuadList quads );
         // called after all effects had their drawWindow() called
         void finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data );
-        // infinite region, i.e. everything
-        static QRegion infiniteRegion();
         // compute time since the last repaint
         void updateTimeDiff();
         // saved data for 2nd pass of optimized screen painting
@@ -196,12 +194,6 @@ class Scene::Window
     };
 
 extern Scene* scene;
-
-inline
-QRegion Scene::infiniteRegion()
-    { // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
-    return QRegion( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
-    }
 
 inline
 int Scene::Window::x() const

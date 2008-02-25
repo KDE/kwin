@@ -723,22 +723,24 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
 
 void SceneOpenGL::paintBackground( QRegion region )
     {
-    if( region == infiniteRegion())
+    PaintClipper pc( region );
+    if( !PaintClipper::clip())
         {
         glClearColor( 0, 0, 0, 1 ); // black
         glClear( GL_COLOR_BUFFER_BIT );
+        return;
         }
-    else
+    glColor4f( 0, 0, 0, 1 ); // black
+    for( PaintClipper::Iterator iterator;
+         !iterator.isDone();
+         iterator.next())
         {
-        glColor4f( 0, 0, 0, 1 ); // black
         glBegin( GL_QUADS );
-        foreach( QRect r, region.rects())
-            {
-            glVertex2i( r.x(), r.y());
-            glVertex2i( r.x() + r.width(), r.y());
-            glVertex2i( r.x() + r.width(), r.y() + r.height());
-            glVertex2i( r.x(), r.y() + r.height());
-            }
+        QRect r = iterator.boundingRect();
+        glVertex2i( r.x(), r.y());
+        glVertex2i( r.x() + r.width(), r.y());
+        glVertex2i( r.x() + r.width(), r.y() + r.height());
+        glVertex2i( r.x(), r.y() + r.height());
         glEnd();
         }
     }
@@ -1257,7 +1259,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     glPopMatrix();
     }
 
-void SceneOpenGL::Window::renderQuads( int mask, const QRegion& region, const WindowQuadList& quads )
+void SceneOpenGL::Window::renderQuads( int, const QRegion& region, const WindowQuadList& quads )
     {
     if( quads.isEmpty())
         return;
@@ -1265,7 +1267,7 @@ void SceneOpenGL::Window::renderQuads( int mask, const QRegion& region, const Wi
     float* vertices;
     float* texcoords;
     quads.makeArrays( &vertices, &texcoords );
-    renderGLGeometry( mask, region, quads.count() * 4,
+    renderGLGeometry( region, quads.count() * 4,
             vertices, texcoords, NULL, 2, 0 );
     delete[] vertices;
     delete[] texcoords;

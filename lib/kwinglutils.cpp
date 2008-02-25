@@ -128,18 +128,10 @@ int nearestPowerOfTwo( int x )
 void renderGLGeometry( int count, const float* vertices, const float* texture, const float* color,
     int dim, int stride )
     {
-    return renderGLGeometry( false, QRegion(), count, vertices, texture, color, dim, stride );
+    return renderGLGeometry( infiniteRegion(), count, vertices, texture, color, dim, stride );
     }
 
-void renderGLGeometry( int mask, const QRegion& region, int count,
-    const float* vertices, const float* texture, const float* color,
-    int dim, int stride )
-    {
-    return renderGLGeometry( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
-        region, count, vertices, texture, color, dim, stride );
-    }
-
-void renderGLGeometry( bool clip, const QRegion& region, int count,
+void renderGLGeometry( const QRegion& region, int count,
     const float* vertices, const float* texture, const float* color,
     int dim, int stride )
     {
@@ -166,39 +158,16 @@ void renderGLGeometry( bool clip, const QRegion& region, int count,
             }
         }
 
-    // Render
-    if( !clip )
+    // Clip using scissoring
+    PaintClipper pc( region );
+    for( PaintClipper::Iterator iterator;
+         !iterator.isDone();
+         iterator.next())
         {
-        // Just draw the entire window, no clipping
         if( use_arrays )
             glDrawArrays( GL_QUADS, 0, count );
         else
             renderGLGeometryImmediate( count, vertices, texture, color, dim, stride );
-        }
-    else
-        {
-        // Make sure there's only a single quad (no transformed vertices)
-        // Clip using scissoring
-        glEnable( GL_SCISSOR_TEST );
-        int dh = displayHeight();
-        if( use_arrays )
-            {
-            foreach( QRect r, region.rects())
-                {
-                // Scissor rect has to be given in OpenGL coords
-                glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
-                glDrawArrays( GL_QUADS, 0, count );
-                }
-            }
-        else
-            {
-            foreach( QRect r, region.rects())
-                {
-                // Scissor rect has to be given in OpenGL coords
-                glScissor(r.x(), dh - r.y() - r.height(), r.width(), r.height());
-                renderGLGeometryImmediate( count, vertices, texture, color, dim, stride );
-                }
-            }
         }
 
     if( use_arrays )
@@ -500,13 +469,7 @@ void GLTexture::unbind()
     glDisable( mTarget );
     }
 
-void GLTexture::render( int mask, QRegion region, const QRect& rect )
-    {
-    return render( !( mask & ( Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED )),
-        region, rect );
-    }
-
-void GLTexture::render( bool clip, QRegion region, const QRect& rect )
+void GLTexture::render( QRegion region, const QRect& rect )
     {
     const float verts[ 4 * 2 ] =
         {
@@ -522,7 +485,7 @@ void GLTexture::render( bool clip, QRegion region, const QRect& rect )
         1, 0,
         1, 1
         };
-    renderGLGeometry( clip, region, 4, verts, texcoords );
+    renderGLGeometry( region, 4, verts, texcoords );
     }
 
 void GLTexture::enableUnnormalizedTexCoords()

@@ -439,7 +439,7 @@ void ShowFpsEffect::paintFPSText(int fps)
         delete fpsText;
     fpsText = new GLTexture(im);
     fpsText->bind();
-    fpsText->render(false, QRegion(fpsTextRect), fpsTextRect);
+    fpsText->render(QRegion(fpsTextRect), fpsTextRect);
     fpsText->unbind();
     effects->addRepaint(fpsTextRect);
 #endif

@@ -267,15 +267,14 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
 // fill the screen background
 void SceneXrender::paintBackground( QRegion region )
     {
-    if( region != infiniteRegion())
+    PaintClipper pc( region );
+    for( PaintClipper::Iterator iterator;
+         !iterator.isDone();
+         iterator.next())
         {
-        XserverRegion background_region = toXserverRegion( region );
-        XFixesSetPictureClipRegion( display(), buffer, 0, 0, background_region );
-        XFixesDestroyRegion( display(), background_region );
+        XRenderColor col = { 0, 0, 0, 0xffff }; // black
+        XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
         }
-    XRenderColor col = { 0, 0, 0, 0xffff }; // black
-    XRenderFillRectangle( display(), PictOpSrc, buffer, &col, 0, 0, displayWidth(), displayHeight());
-    XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }
 
 void SceneXrender::windowGeometryShapeChanged( Toplevel* c )
@@ -324,27 +323,6 @@ void SceneXrender::windowAdded( Toplevel* c )
     assert( !windows.contains( c ));
     windows[ c ] = new Window( c );
     c->effectWindow()->setSceneWindow( windows[ c ]);
-    }
-
-// Convert QRegion to XserverRegion. This code uses XserverRegion
-// only when really necessary as the shared implementation uses
-// QRegion.
-XserverRegion SceneXrender::toXserverRegion( QRegion region )
-    {
-    QVector< QRect > rects = region.rects();
-    XRectangle* xr = new XRectangle[ rects.count() ];
-    for( int i = 0;
-         i < rects.count();
-         ++i )
-        {
-        xr[ i ].x = rects[ i ].x();
-        xr[ i ].y = rects[ i ].y();
-        xr[ i ].width = rects[ i ].width();
-        xr[ i ].height = rects[ i ].height();
-        }
-    XserverRegion ret = XFixesCreateRegion( display(), xr, rects.count());
-    delete[] xr;
-    return ret;
     }
 
 //****************************************
@@ -451,12 +429,6 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         if( opaque )
             return;
         }
-    if( region != infiniteRegion())
-        {
-        XserverRegion clip_region = toXserverRegion( region );
-        XFixesSetPictureClipRegion( display(), buffer, 0, 0, clip_region );
-        XFixesDestroyRegion( display(), clip_region );
-        }
     Picture pic = picture(); // get XRender picture
     if( pic == None ) // The render format can be null for GL and/or Xv visuals
         return;
@@ -522,17 +494,23 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         }
     if( x != toplevel->x() || y != toplevel->y())
         transformed_shape.translate( x, y );
-    if( opaque )
+    PaintClipper pc( region );
+    for( PaintClipper::Iterator iterator;
+         !iterator.isDone();
+         iterator.next())
         {
-        XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
-            x, y, width, height);
-        }
-    else
-        {
-        Picture alpha = alphaMask( data.opacity );
-        XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
-            x, y, width, height);
-        transformed_shape = QRegion();
+        if( opaque )
+            {
+            XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
+                x, y, width, height);
+            }
+        else
+            {
+            Picture alpha = alphaMask( data.opacity );
+            XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
+                x, y, width, height);
+            transformed_shape = QRegion();
+            }
         }
     if( xscale != 1 || yscale != 1 )
         {
@@ -545,7 +523,6 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         if( filter == ImageFilterGood )
             XRenderSetPictureFilter( display(), pic, const_cast< char* >( "fast" ), NULL, 0 );
         }
-    XFixesSetPictureClipRegion( display(), buffer, 0, 0, None );
     }
 
 } // namespace

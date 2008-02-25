@@ -142,7 +142,7 @@ void SnowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
             for (int i=0; i<flakes->count(); i++)
                 {
-                texture->render( false, region, flakes->at(i));
+                texture->render( region, flakes->at(i));
                 }
             texture->unbind();
             glPopAttrib();

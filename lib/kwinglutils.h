@@ -82,21 +82,16 @@ int KWIN_EXPORT nearestPowerOfTwo( int x );
  * @param stride byte offset of consecutive elements in arrays. If 0, then
  *  arrays must be tighly packed. Stride must be a multiple of sizeof(float)!
  **/
-KWIN_EXPORT void renderGLGeometry( bool clip, const QRegion& region, int count,
+KWIN_EXPORT void renderGLGeometry( const QRegion& region, int count,
     const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
 /**
- * Same as above, sets clip parameter according to mask.
- **/
-KWIN_EXPORT void renderGLGeometry( int mask, const QRegion& region, int count,
-    const float* vertices, const float* texture = 0, const float* color = 0,
-    int dim = 2, int stride = 0 );
-/**
- * Same as above, renders without clipping
+ * Same as above, renders without specified region
  **/
 KWIN_EXPORT void renderGLGeometry( int count,
     const float* vertices, const float* texture = 0, const float* color = 0,
     int dim = 2, int stride = 0 );
+
 
 KWIN_EXPORT void renderGLGeometryImmediate( int count,
     const float* vertices, const float* texture = 0, const float* color = 0,
@@ -125,8 +120,7 @@ class KWIN_EXPORT GLTexture
         virtual void discard();
         virtual void bind();
         virtual void unbind();
-        void render( bool clip, QRegion region, const QRect& rect );
-        void render( int mask, QRegion region, const QRect& rect );
+        void render( QRegion region, const QRect& rect );
         void enableUnnormalizedTexCoords();
         void disableUnnormalizedTexCoords();
 

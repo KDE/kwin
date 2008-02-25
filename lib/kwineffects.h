@@ -32,12 +32,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QVector>
 #include <QtCore/QList>
 #include <QtCore/QHash>
+#include <QtCore/QStack>
 
 #include <KDE/KPluginFactory>
 #include <KDE/KShortcutsEditor>
 
 #include <assert.h>
+#include <limits.h>
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#include <X11/extensions/Xfixes.h>
+#endif
 
 class KLibrary;
 class KConfigGroup;
@@ -160,9 +165,25 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 6
+#define KWIN_EFFECT_API_VERSION_MINOR 7
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
+
+/**
+ * Infinite region (i.e. a special region type saying that everything needs to be painted).
+ */
+KWIN_EXPORT inline
+QRect infiniteRegion()
+    { // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
+    return QRect( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
+    }
+
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+/**
+ * Convert QRegion to XserverRegion.
+ */
+KWIN_EXPORT XserverRegion toXserverRegion( QRegion region );
+#endif
 
 /**
  * @short Base class for all KWin effects
@@ -820,6 +841,71 @@ class KWIN_EXPORT ScreenPrePaintData
     public:
         int mask;
         QRegion paint;
+    };
+
+/**
+ * @short Helper class for restricting painting area only to allowed area.
+ *
+ * This helper class helps specifying areas that should be painted, clipping
+ * out the rest. The simplest usage is creating an object on the stack
+ * and giving it the area that is allowed to be painted to. When the object
+ * is destroyed, the restriction will be removed.
+ * Note that all painting code must use paintArea() to actually perform the clipping.
+ */
+class KWIN_EXPORT PaintClipper
+    {
+    public:
+        /**
+         * Calls push().
+         */
+        PaintClipper( const QRegion& allowed_area );
+        /**
+         * Calls pop().
+         */
+        ~PaintClipper();
+        /**
+         * Allows painting only in the given area. When areas have been already
+         * specified, painting is allowed only in the intersection of all areas.
+         */
+        static void push( const QRegion& allowed_area );
+        /**
+         * Removes the given area. It must match the top item in the stack.
+         */
+        static void pop( const QRegion& allowed_area );
+        /**
+         * Returns true if any clipping should be performed.
+         */
+        static bool clip();
+        /**
+         * If clip() returns true, this function gives the resulting area in which
+         * painting is allowed. It is usually simpler to use the helper Iterator class.
+         */
+        static QRegion paintArea();
+        /**
+         * Helper class to perform the clipped painting. The usage is:
+         * @code
+         * for( PaintClipper::Iterator iterator;
+         *      !iterator.isDone();
+         *      iterator.next())
+         *     { // do the painting, possibly use iterator.boundingRect()
+         *     }
+         * @endcode
+         */
+        class Iterator
+            {
+            public:
+                Iterator();
+                ~Iterator();
+                bool isDone();
+                void next();
+                QRect boundingRect() const;
+            private:
+                struct Data;
+                Data* data;
+            };
+    private:
+        QRegion area;
+        static QStack< QRegion >* areas;
     };
 
 /**

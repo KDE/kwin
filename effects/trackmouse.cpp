@@ -77,7 +77,7 @@ void TrackMouseEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
              ++i )
             {
             QRect r = starRect( i );
-            texture->render( mask, region, r );
+            texture->render( region, r );
             }
         texture->unbind();
         glPopAttrib();

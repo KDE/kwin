@@ -677,4 +677,168 @@ bool WindowQuadList::smoothNeeded() const
     return false;
     }
 
+/***************************************************************
+ PaintClipper
+***************************************************************/
+
+QStack< QRegion >* PaintClipper::areas = NULL;
+
+PaintClipper::PaintClipper( const QRegion& allowed_area )
+    : area( allowed_area )
+    {
+    push( area );
+    }
+
+PaintClipper::~PaintClipper()
+    {
+    pop( area );
+    }
+
+void PaintClipper::push( const QRegion& allowed_area )
+    {
+    if( allowed_area == infiniteRegion()) // don't push these
+        return;
+    if( areas == NULL )
+        areas = new QStack< QRegion >;
+    areas->push( allowed_area );
+    }
+
+void PaintClipper::pop( const QRegion& allowed_area )
+    {
+    if( allowed_area == infiniteRegion())
+        return;
+    Q_ASSERT( areas != NULL );
+    Q_ASSERT( areas->top() == allowed_area );
+    areas->pop();
+    if( areas->isEmpty())
+        {
+        delete areas;
+        areas = NULL;
+        }
+    }
+
+bool PaintClipper::clip()
+    {
+    return areas != NULL;
+    }
+
+QRegion PaintClipper::paintArea()
+    {
+    QRegion ret = QRegion( 0, 0, displayWidth(), displayHeight());
+    foreach( QRegion r, *areas )
+        ret &= r;
+    return ret;
+    }
+
+struct PaintClipper::Iterator::Data
+    {
+    Data() : index( 0 ) {}
+    int index;
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    QVector< QRect > rects;
+#endif
+    };
+
+PaintClipper::Iterator::Iterator()
+    : data( new Data )
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( clip() && effects->compositingType() == OpenGLCompositing )
+        {
+        glPushAttrib( GL_SCISSOR_BIT );
+        glEnable( GL_SCISSOR_TEST );
+        data->rects = paintArea().rects();
+        data->index = -1;
+        next(); // move to the first one
+        }
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( clip() && effects->compositingType() == XRenderCompositing )
+        {
+        XserverRegion region = toXserverRegion( paintArea());
+        XFixesSetPictureClipRegion( display(), effects->xrenderBufferPicture(), 0, 0, region );
+        XFixesDestroyRegion( display(), region ); // it's ref-counted
+        }
+#endif
+    }
+
+PaintClipper::Iterator::~Iterator()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( clip() && effects->compositingType() == OpenGLCompositing )
+        glPopAttrib();
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( clip() && effects->compositingType() == XRenderCompositing )
+        XFixesSetPictureClipRegion( display(), effects->xrenderBufferPicture(), 0, 0, None );
+#endif
+    delete data;
+    }
+
+bool PaintClipper::Iterator::isDone()
+    {
+    if( !clip())
+        return data->index == 1; // run once
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( effects->compositingType() == OpenGLCompositing )
+        return data->index >= data->rects.count(); // run once per each area
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( effects->compositingType() == XRenderCompositing )
+        return data->index == 1; // run once
+#endif
+    assert( false );
+    }
+
+void PaintClipper::Iterator::next()
+    {
+    data->index++;
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( clip() && effects->compositingType() == OpenGLCompositing && data->index < data->rects.count())
+        {
+        const QRect& r = data->rects[ data->index ];
+        // Scissor rect has to be given in OpenGL coords
+        glScissor( r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
+        }
+#endif
+    }
+
+QRect PaintClipper::Iterator::boundingRect() const
+    {
+    if( !clip())
+        return infiniteRegion();
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( effects->compositingType() == OpenGLCompositing )
+        return data->rects[ data->index ];
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( effects->compositingType() == XRenderCompositing )
+        return paintArea().boundingRect();
+#endif
+    assert( false );
+    }
+
+
+// Convert QRegion to XserverRegion. All code uses XserverRegion
+// only when really necessary as the shared implementation uses
+// QRegion.
+XserverRegion toXserverRegion( QRegion region )
+    {
+    QVector< QRect > rects = region.rects();
+    XRectangle* xr = new XRectangle[ rects.count() ];
+    for( int i = 0;
+         i < rects.count();
+         ++i )
+        {
+        xr[ i ].x = rects[ i ].x();
+        xr[ i ].y = rects[ i ].y();
+        xr[ i ].width = rects[ i ].width();
+        xr[ i ].height = rects[ i ].height();
+        }
+    XserverRegion ret = XFixesCreateRegion( display(), xr, rects.count());
+    delete[] xr;
+    return ret;
+    }
+
+
 } // namespace
