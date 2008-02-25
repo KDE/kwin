@@ -891,7 +891,7 @@ class KWIN_EXPORT PaintClipper
          *     }
          * @endcode
          */
-        class Iterator
+        class KWIN_EXPORT Iterator
             {
             public:
                 Iterator();
