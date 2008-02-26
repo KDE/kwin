@@ -7,6 +7,9 @@ X-KDE-ParentComponents=kwin4_effect_coverswitch
 X-KDE-PluginKeyword=coverswitch
 
 Name=Cover Switch
+Name[gu]=ફેરફાર ઢાંકો
+Name[km]=ប្ដូរ​​គម្រប​
 Name[pt]=Mudança de Capas
 Name[pt_BR]=Mudança de Capas
+Name[zh_CN]=罩面切换
 Name[zh_TW]=覆蓋切換
