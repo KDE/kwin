@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xrender.h>
 #endif
 
+#include <X11/extensions/Xfixes.h>
 
 namespace KWin
 {
