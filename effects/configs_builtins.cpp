@@ -39,7 +39,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sharpen_config.h"
 #include "snow_config.h"
 #include "trackmouse_config.h"
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include "showfps_config.h"
+#endif
 #endif
 
 #include <kwineffects.h>
