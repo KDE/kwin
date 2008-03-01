@@ -1,6 +1,7 @@
 [Desktop Entry]
 # Name of the effect
 Name=Snow
+Name[ca]=Neu
 Name[el]=Χιόνι
 Name[eo]=Neĝo
 Name[es]=Nieve
@@ -22,6 +23,7 @@ Name[tr]=Kar
 Name[zh_CN]=雪飘
 Name[zh_TW]=下雪
 Comment=Let it snow on the desktop
+Comment[ca]=Posa neu a l'escriptori
 Comment[el]=Χιόνι στην επιφάνεια εργασίας
 Comment[eo]=Neĝu sur la labortablo
 Comment[es]=Nieva en los escritorios
