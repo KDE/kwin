@@ -43,7 +43,7 @@ void ShowPictureEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         picture->bind();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        picture->render( mask, region, pictureRect );
+        picture->render( region, pictureRect );
         picture->unbind();
         glPopAttrib();
         }
