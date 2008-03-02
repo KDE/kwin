@@ -614,6 +614,52 @@ WindowQuadList WindowQuadList::makeGrid( int maxquadsize ) const
     return ret;
     }
 
+WindowQuadList WindowQuadList::makeRegularGrid( int xSubdivisions, int ySubdivisions ) const
+    {
+    if( empty())
+        return *this;
+    // find the bounding rectangle
+    double left = first().left();
+    double right = first().right();
+    double top = first().top();
+    double bottom = first().bottom();
+    foreach( WindowQuad quad, *this )
+        {
+#ifndef NDEBUG
+        if( quad.isTransformed())
+            kFatal( 1212 ) << "Splitting quads is allowed only in pre-paint calls!" ;
+#endif
+        left = qMin( left, quad.left());
+        right = qMax( right, quad.right());
+        top = qMin( top, quad.top());
+        bottom = qMax( bottom, quad.bottom());
+        }
+
+    double xincrement = (right - left) / xSubdivisions;
+    double yincrement = (bottom - top) / ySubdivisions;
+    WindowQuadList ret;
+    for( double y = top;
+         y < bottom;
+         y += yincrement )
+        {
+        for( double x = left;
+             x < right;
+             x +=  xincrement)
+            {
+            foreach( WindowQuad quad, *this )
+                {
+                if( QRectF( QPointF( quad.left(), quad.top()), QPointF( quad.right(), quad.bottom()))
+                    .intersects( QRectF( x, y, xincrement, yincrement )))
+                    {
+                    ret.append( quad.makeSubQuad( qMax( x, quad.left()), qMax( y, quad.top()),
+                        qMin( quad.right(), x + xincrement ), qMin( quad.bottom(), y + yincrement )));
+                    }
+                }
+            }
+        }
+    return ret;
+    }
+
 void WindowQuadList::makeArrays( float** vertices, float** texcoords ) const
     {
     *vertices = new float[ count() * 4 * 2 ];

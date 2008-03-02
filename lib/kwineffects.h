@@ -759,6 +759,7 @@ class KWIN_EXPORT WindowQuadList
         WindowQuadList splitAtX( double x ) const;
         WindowQuadList splitAtY( double y ) const;
         WindowQuadList makeGrid( int maxquadsize ) const;
+        WindowQuadList makeRegularGrid( int xSubdivisions, int ySubdivisions ) const;
         WindowQuadList select( WindowQuadType type ) const;
         WindowQuadList filterOut( WindowQuadType type ) const;
         bool smoothNeeded() const;
