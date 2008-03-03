@@ -37,9 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/extensions/Xrender.h>
-#endif
-
 #include <X11/extensions/Xfixes.h>
+#endif
 
 namespace KWin
 {
@@ -866,6 +865,7 @@ QRect PaintClipper::Iterator::boundingRect() const
     }
 
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 // Convert QRegion to XserverRegion. All code uses XserverRegion
 // only when really necessary as the shared implementation uses
 // QRegion.
@@ -886,6 +886,6 @@ XserverRegion toXserverRegion( QRegion region )
     delete[] xr;
     return ret;
     }
-
+#endif
 
 } // namespace
