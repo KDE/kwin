@@ -353,7 +353,7 @@ QRegion Scene::Window::shape() const
                 XFree(rects);
                 }
             else
-                shape_region = QRegion( 0, 0, width(), height());
+                shape_region = QRegion();
             }
         else
             shape_region = QRegion( 0, 0, width(), height());
