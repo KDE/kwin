@@ -770,6 +770,7 @@ bool PaintClipper::clip()
 
 QRegion PaintClipper::paintArea()
     {
+    assert( areas != NULL ); // can be called only with clip() == true
     QRegion ret = QRegion( 0, 0, displayWidth(), displayHeight());
     foreach( QRegion r, *areas )
         ret &= r;
