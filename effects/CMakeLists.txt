@@ -38,6 +38,7 @@ SET(kwin4_effect_builtins_sources
     desktopgrid.cpp
     dialogparent.cpp
     diminactive.cpp
+    dimscreen.cpp
     fade.cpp
     fallapart.cpp
     login.cpp
@@ -56,6 +57,7 @@ install( FILES
     desktopgrid.desktop
     dialogparent.desktop
     diminactive.desktop
+    dimscreen.desktop
     fade.desktop
     fallapart.desktop
     login.desktop
