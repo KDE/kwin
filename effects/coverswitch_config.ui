@@ -19,21 +19,21 @@
       <item row="0" column="0" colspan="2" >
        <widget class="QCheckBox" name="checkAnimateSwitch" >
         <property name="text" >
-         <string>Animate &amp;Switch</string>
+         <string>Animate &amp;switch</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" colspan="2" >
        <widget class="QCheckBox" name="checkAnimateStart" >
         <property name="text" >
-         <string>Animation on Tab Box &amp;open</string>
+         <string>Animation on tab box &amp;open</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0" colspan="2" >
        <widget class="QCheckBox" name="checkAnimateStop" >
         <property name="text" >
-         <string>Animation on Tab Box &amp;close</string>
+         <string>Animation on tab box &amp;close</string>
         </property>
        </widget>
       </item>
@@ -47,7 +47,7 @@
       <item row="4" column="0" >
        <widget class="QLabel" name="label_3" >
         <property name="text" >
-         <string>&amp;Animation Duration:</string>
+         <string>&amp;Animation duration:</string>
         </property>
         <property name="buddy" >
          <cstring>spinDuration</cstring>

@@ -19,14 +19,14 @@
       <item row="0" column="0" colspan="2" >
        <widget class="QCheckBox" name="checkAnimateFlip" >
         <property name="text" >
-         <string>Animate &amp;Flip</string>
+         <string>Animate &amp;flip</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="label_3" >
         <property name="text" >
-         <string>F&amp;lip Animation Duration:</string>
+         <string>F&amp;lip Animation duration:</string>
         </property>
         <property name="buddy" >
          <cstring>spinFlipDuration</cstring>
