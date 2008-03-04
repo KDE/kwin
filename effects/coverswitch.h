@@ -28,9 +28,8 @@ namespace KWin
 {
 
 class CoverSwitchEffect
-    : public QObject, public Effect
+    : public Effect
     {
-    Q_OBJECT
     public:
         CoverSwitchEffect();
         ~CoverSwitchEffect();
@@ -43,8 +42,6 @@ class CoverSwitchEffect
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
 
-    private slots:
-        void slowMotion();
     private:
         void paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows, QList< EffectWindow* >* rightWindows,
             float timeFactor, bool reflectedWindows = false );
@@ -65,8 +62,6 @@ class CoverSwitchEffect
         int animationDuration;
         int selectedWindow;
         int rearrangeWindows;
-        bool slowMotionMode;
-        int slowMotionFactor;
         bool stopRequested;
         bool startRequested;
     };

@@ -53,7 +53,6 @@ class CoverSwitchEffectConfig : public KCModule
 
     private:
         CoverSwitchEffectConfigForm* m_ui;
-        KActionCollection* m_actionCollection;
     };
 
 } // namespace

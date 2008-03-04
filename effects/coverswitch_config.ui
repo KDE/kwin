@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>359</width>
-    <height>431</height>
+    <width>289</width>
+    <height>237</height>
    </rect>
   </property>
   <layout class="QGridLayout" >
@@ -67,45 +67,11 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0" >
-       <widget class="QLabel" name="label_4" >
-        <property name="text" >
-         <string>Slow &amp;Motion Factor:</string>
-        </property>
-        <property name="buddy" >
-         <cstring>spinDuration</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" >
-       <widget class="QSpinBox" name="spinSlowMotionFactor" >
-        <property name="minimum" >
-         <number>1</number>
-        </property>
-        <property name="maximum" >
-         <number>10</number>
-        </property>
-        <property name="value" >
-         <number>4</number>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" >
-    <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" />
-   </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KWin::GlobalShortcutsEditor</class>
-   <extends>QWidget</extends>
-   <header location="global" >kwineffects.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>checkAnimateSwitch</tabstop>
   <tabstop>checkAnimateStart</tabstop>

@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopWidget>
 #include <QFont>
 #include <QBitmap>
-#include <kaction.h>
-#include <kactioncollection.h>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kcolorscheme.h>
@@ -52,7 +50,6 @@ CoverSwitchEffect::CoverSwitchEffect()
     , stop( false )
     , forward( true )
     , rearrangeWindows( 0 )
-    , slowMotionMode( false )
     , stopRequested( false )
     , startRequested( false )
     {
@@ -62,13 +59,6 @@ CoverSwitchEffect::CoverSwitchEffect()
     animateStart      = conf.readEntry( "AnimateStart", true );
     animateStop       = conf.readEntry( "AnimateStop", true );
     reflection        = conf.readEntry( "Reflection", true );
-    slowMotionFactor   = conf.readEntry( "SlowMotionFactor", 4 );
-
-    KActionCollection* actionCollection = new KActionCollection( this );
-    KAction* a = static_cast< KAction* >( actionCollection->addAction( "SlowMotion" ));
-    a->setText( i18n( "Slow Motion" ));
-    a->setGlobalShortcut( KShortcut( Qt::META + Qt::Key_S ));
-    connect( a, SIGNAL( triggered( bool )), this, SLOT( slowMotion()));
     }
 
 CoverSwitchEffect::~CoverSwitchEffect()
@@ -800,19 +790,6 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, float tim
         glPopMatrix();
         }
     glPopMatrix();
-    }
-
-void CoverSwitchEffect::slowMotion()
-    {
-    slowMotionMode = !slowMotionMode;
-    if( slowMotionMode )
-        {
-        animationDuration *= slowMotionFactor;
-        }
-    else
-        {
-        animationDuration /= slowMotionFactor;
-        }
     }
 
 } // namespace
