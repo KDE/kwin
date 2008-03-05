@@ -1,19 +1,26 @@
 [Desktop Entry]
 Name=Cover Switch
+Name[eo]=Kovra ŝanĝilo
 Name[gu]=ફેરફાર ઢાંકો
 Name[km]=ប្ដូរ​​គម្រប​
 Name[pt]=Mudança de Capas
 Name[pt_BR]=Mudança de Capas
+Name[sr]=Покровно пребацивање
+Name[sr@latin]=Pokrovno prebacivanje
 Name[zh_CN]=罩面切换
 Name[zh_TW]=覆蓋切換
 Icon=preferences-system-windows-effect-coverswitch
 Comment=Cover Switch - an alternative alt+tab window switcher
 Comment[ca]=Cover Switch - un commutador de finestres alt+tab alternatiu
 Comment[el]=Cover Switch - μία εναλλακτική μέθοδος αλλαγής παραθύρων με το alt+tab
+Comment[eo]=Alternativa alt+taba ŝanĝilo inter fenestroj
+Comment[ga]=Cover Switch - malartóir fuinneog Alt+Tab mar mhalairt
 Comment[gu]=ફેરફાર ઢાંકો - વૈકલ્પિક alt+tab વિન્ડો બદલનાર
 Comment[km]=ប្ដូរ​គម្រប - កម្មវិធី​ប្ដូរ​បង្អួច​ជា​ជម្រើស​គឺ ជំនួស(alt)+ថេប(tab)
 Comment[pt]=Mudança de Capas - Um selector de janelas alternativo para o Alt+Tab
 Comment[pt_BR]=Mudança de Capas - um alternador de janelas alternativo para o alt+tab
+Comment[sr]=Покровно пребацивање — алтернатива промени прозора алт+табом
+Comment[sr@latin]=Pokrovno prebacivanje — alternativa promeni prozora Alt+Tabom
 Comment[zh_CN]=罩面切换 - 备选的 Alt+Tab 窗口切换器
 Comment[zh_TW]=覆蓋切換─另一種 alt+tab 視窗切換器
 
