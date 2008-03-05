@@ -260,8 +260,6 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     Q_UNUSED(e)
     if (!OxygenFactory::initialized()) return;
 
-    doShape();
-
     QPalette palette = widget()->palette();
     QPainter painter(widget());
 
@@ -380,7 +378,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     renderDot(&painter, QPointF(6.5, 2.5), 1.8);
 }
 
-void OxygenClient::doShape()
+void OxygenClient::updateWindowShape()
 {
     bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
     int w=widget()->width();

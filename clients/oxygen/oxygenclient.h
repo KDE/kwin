@@ -48,12 +48,11 @@ public:
     virtual KCommonDecorationButton *createButton(::ButtonType type);
     virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
     virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
-
+    virtual void updateWindowShape();
     virtual void init();
 
 private:
     void paintEvent(QPaintEvent *e);
-    void doShape();
     QColor titlebarTextColor(const QPalette &palette);
     bool colorCacheInvalid_;
     QColor cachedTitlebarTextColor_;
