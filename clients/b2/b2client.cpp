@@ -1116,7 +1116,7 @@ static void redraw_pixmaps()
 	    bool isAct = (i < 3);
 	    QPixmap *pixm = pixmap[P_HELP + i];
 	    pixm->fill(QColor(qRgba(0, 0, 0, 0)));
-	    pixm->setAlphaChannel(*pixm);
+	    pixm->setAlphaChannel(QPixmap(*pixm));
 	    p.begin(pixm);
 	    QColor color = isAct ? activeColor : inactiveColor;
 	    QRect r = QRect(0, 0, pixm->width(), pixm->height());
