@@ -1089,7 +1089,7 @@ void Client::gotPing( Time timestamp )
 void Client::pingTimeout()
     {
     kDebug( 1212 ) << "Ping timeout:" << caption();
-    delete ping_timer;
+    ping_timer->deleteLater();
     ping_timer = NULL;
     killProcess( true, ping_timestamp );
     }
