@@ -477,8 +477,13 @@ bool Workspace::workspaceEvent( XEvent * e )
         case VisibilityNotify:
             if( compositing() && overlay != None && e->xvisibility.window == overlay )
                 {
+                bool was_visible = overlay_visible;
                 overlay_visible = ( e->xvisibility.state != VisibilityFullyObscured );
-                addRepaintFull();
+                if( !was_visible && overlay_visible )
+                    { // hack for #154825
+                    addRepaintFull();
+                    QTimer::singleShot( 2000, this, SLOT( addRepaintFull()));
+                    }
                 }
             break;
         default:

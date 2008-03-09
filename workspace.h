@@ -314,7 +314,6 @@ class Workspace : public QObject, public KDecorationDefines
         // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
         void addRepaint( const QRect& r );
         void addRepaint( int x, int y, int w, int h );
-        void addRepaintFull();
         // creates XComposite overlay window, call initOverlay() afterwards
         bool createOverlay();
         // init overlay and the destination window in it
@@ -324,6 +323,7 @@ class Workspace : public QObject, public KDecorationDefines
         Window overlayWindow();
 
     public slots:
+        void addRepaintFull();
         void refresh();
     // keybindings
         void slotSwitchDesktopNext();
