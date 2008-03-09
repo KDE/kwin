@@ -3,12 +3,16 @@ Name=Dim Screen for Administrator Mode
 Name[ga]=Doiléirigh an Scáileán i Mód an Riarthóra
 Name[pt]=Escurecer o Ecrã para o Modo de Administração
 Name[pt_BR]=Escurecer o Ecrã para o Modo de Administração
+Name[sr]=Пригуши екран за администраторски режим
+Name[sr@latin]=Priguši ekran za administratorski režim
 Name[zh_TW]=在管理者模式下將螢幕變暗
 Icon=preferences-system-windows-effect-dimscreen
 Comment=Dims the screen if a window asks for root password
 Comment[ga]=Doiléirigh an scáileán nuair a iarrann fuinneog focal faire an fhorúsáideora
 Comment[pt]=Escurece o ecrã se alguma janela pedir a senha do 'root'
 Comment[pt_BR]=Escurece o ecrã se alguma janela pedir a senha do 'root'
+Comment[sr]=Пригушује екран ако прозор затражи корену лозинку
+Comment[sr@latin]=Prigušuje ekran ako prozor zatraži korenu lozinku
 Comment[zh_TW]=如果有某視窗詢問 root 密碼時將螢幕變暗
 
 Type=Service
