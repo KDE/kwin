@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_COVERSWITCH_H
 
 #include <kwineffects.h>
-#include <QTime>
 
 namespace KWin
 {
@@ -44,10 +43,10 @@ class CoverSwitchEffect
 
     private:
         void paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows, QList< EffectWindow* >* rightWindows,
-            float timeFactor, bool reflectedWindows = false );
+            bool reflectedWindows = false );
         void paintWindowCover( EffectWindow* w, QRect windowRect, bool reflectedWindow, float opacity = 1.0 );
-        void paintFrontWindow( EffectWindow* frontWindow, float timeFactor, int width, int leftWindows, int rightWindows, bool reflectedWindow  );
-        void paintWindows( QList< EffectWindow* >* windows, float timeFactor, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
+        void paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow  );
+        void paintWindows( QList< EffectWindow* >* windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
         bool mActivated;
         float angle;
         bool animateSwitch;
@@ -58,12 +57,12 @@ class CoverSwitchEffect
         bool stop;
         bool forward;
         bool reflection;
-        QTime animationTime;
         int animationDuration;
         int selectedWindow;
         int rearrangeWindows;
         bool stopRequested;
         bool startRequested;
+        double progress;
     };
 
 } // namespace

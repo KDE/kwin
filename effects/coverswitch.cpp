@@ -52,6 +52,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , rearrangeWindows( 0 )
     , stopRequested( false )
     , startRequested( false )
+    , progress( 0.0 )
     {
     KConfigGroup conf = effects->effectConfig( "CoverSwitch" );
     animationDuration = conf.readEntry( "Duration", 300 );
@@ -70,6 +71,10 @@ void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     if( mActivated || stop || stopRequested )
         {
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        if( animation || start || stop )
+            {
+            progress = qMin( 1.0, progress + time / double( animationDuration ));
+            }
         }
     effects->prePaintScreen(data, time);
     }
@@ -81,8 +86,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         {
         glMatrixMode( GL_PROJECTION );
         glPushMatrix();
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT );
-        glEnable( GL_DEPTH_TEST );
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glLoadIdentity();
         glFrustum(-QApplication::desktop()->geometry().width()*0.5f,
             QApplication::desktop()->geometry().width()*0.5f,
@@ -147,47 +151,36 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 tempIndex = tempList.count() + tempIndex;
             rightWindows.prepend( tempList[ tempIndex ] );
             }
-    
-        // time since last animation
-        int elapsed = 0;
-        float timeFactor = 0.0;
-        if( animation || start || stop )
-            {
-            elapsed = animationTime.elapsed();
-            timeFactor = (float)((float)elapsed/(float)animationDuration);
-            if( timeFactor >= 1.0 )
-                timeFactor = 1.0;
-            }
 
         if( reflection )
             {
             // no reflections during start and stop animation
             if( !start && !stop )
-                paintScene( frontWindow, &leftWindows, &rightWindows, timeFactor, true );
+                paintScene( frontWindow, &leftWindows, &rightWindows, true );
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA );
             glPolygonMode( GL_FRONT, GL_FILL );
             glBegin( GL_POLYGON );
             float alpha = 0.9;
             if( start )
-                alpha = 0.9 * timeFactor;
+                alpha = 0.9 * progress;
             else if( stop )
-                alpha = 0.9 - 0.9 * timeFactor;
+                alpha = 0.9 - 0.9 * progress;
             glColor4f( 0.3, 0.3, 0.3, alpha );
             glVertex3f( 0.0, QApplication::desktop()->geometry().height(), 0.0 );
             glVertex3f( QApplication::desktop()->geometry().width(), QApplication::desktop()->geometry().height(), 0.0 );
             alpha = 1.0;
             if( start )
-                alpha = timeFactor;
+                alpha = progress;
             else if( stop )
-                alpha = 1.0 - timeFactor;
+                alpha = 1.0 - progress;
             glColor4f( 0.19, 0.19, 0.19, alpha );
             glVertex3f( QApplication::desktop()->geometry().width() * 5, QApplication::desktop()->geometry().height(), -60 );
             glVertex3f( -QApplication::desktop()->geometry().width() * 4, QApplication::desktop()->geometry().height(), -60 );
             glEnd();
             glDisable( GL_BLEND );
             }
-        paintScene( frontWindow, &leftWindows, &rightWindows, timeFactor );
+        paintScene( frontWindow, &leftWindows, &rightWindows );
         
         glPopMatrix();
         glPopAttrib();
@@ -203,13 +196,13 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
         if( start )
             {
-            color_frame.setAlphaF( 0.9 * timeFactor );
-            color_text.setAlphaF( timeFactor );
+            color_frame.setAlphaF( 0.9 * progress );
+            color_text.setAlphaF( progress );
             }
         else if( stop )
             {
-            color_frame.setAlphaF( 0.9 - 0.9 * timeFactor );
-            color_text.setAlphaF( 1.0 - timeFactor );
+            color_frame.setAlphaF( 0.9 - 0.9 * progress );
+            color_text.setAlphaF( 1.0 - progress );
             }
         QFont text_font;
         text_font.setBold( true );
@@ -231,7 +224,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         QPixmap iconPixmap = effects->currentTabBoxWindow()->icon();
         if( start || stop )
             {
-            int alpha = 255.0f * timeFactor;
+            int alpha = 255.0f * progress;
             if( stop )
                 {
                 alpha = 255.0f - alpha;
@@ -262,11 +255,13 @@ void CoverSwitchEffect::postPaintScreen()
     {
     if( ( mActivated && ( animation || start ) ) || stop || stopRequested )
         {        
-        if( animationTime.elapsed() >= animationDuration )
+        if( progress == 1.0 )
             {
+            progress = 0.0;
             if( stop )
                 {
                 stop = false;
+                effects->setActiveFullScreenEffect( 0 );
                 if( startRequested )
                     {
                     startRequested = false;
@@ -276,7 +271,6 @@ void CoverSwitchEffect::postPaintScreen()
                     if( animateStart )
                         {
                         start = true;
-                        animationTime.restart();
                         }
                     }
                 }
@@ -286,7 +280,6 @@ void CoverSwitchEffect::postPaintScreen()
                     rearrangeWindows++;
                 else
                     rearrangeWindows--;
-                animationTime.restart();
                 if( start )
                     {
                     animation = true;
@@ -301,7 +294,6 @@ void CoverSwitchEffect::postPaintScreen()
                     {
                     stopRequested = false;
                     stop = true;
-                    animationTime.restart();
                     }
                 }
             }
@@ -310,8 +302,8 @@ void CoverSwitchEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
-void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows, QList< EffectWindow* >* rightWindows, 
-    float timeFactor, bool reflectedWindows )
+void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows,
+    QList< EffectWindow* >* rightWindows, bool reflectedWindows )
     {
     // LAYOUT
     // one window in the front. Other windows left and right rotated
@@ -342,9 +334,9 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
     if( start || stop )
         {
         // start or stop animation
-        float radian = angle * timeFactor * ( 2 * M_PI / 360 );
+        float radian = angle * progress * ( 2 * M_PI / 360 );
         if( stop )
-            radian = ( angle - angle * timeFactor ) * ( 2 * M_PI / 360 );
+            radian = ( angle - angle * progress ) * ( 2 * M_PI / 360 );
         int x, y;
         // left windows
         for( int i=0; i< leftWindowCount; i++ )
@@ -363,9 +355,9 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
             float distance = -width*0.25f + ( width * 0.25f * i )/leftWindowCount - x;
             float distanceY = height - windowHeight - y;
             if( start )
-                glTranslatef( distance*timeFactor + x, distanceY * timeFactor + y, -5 * timeFactor - 2.5);
+                glTranslatef( distance*progress + x, distanceY * progress + y, -5 * progress - 2.5);
             else if( stop )
-                glTranslatef( distance*( 1.0 - timeFactor ) + x, distanceY * ( 1.0 -timeFactor ) + y, -5 * ( 1.0 - timeFactor ) - 2.5);
+                glTranslatef( distance*( 1.0 - progress ) + x, distanceY * ( 1.0 -progress ) + y, -5 * ( 1.0 - progress ) - 2.5);
             glRotatef( radian, 0.0, 1.0, 0.0 );
             int windowWidth = window->geometry().width() * cos( radian );
             QRect windowRect = QRect( 0, 0, windowWidth, windowHeight );
@@ -391,9 +383,9 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
             float distance = width*1.25f - ( width * 0.25f * i )/rightWindowCount - x - windowWidth;
             float distanceY = height - windowHeight - y;
             if( start )
-                glTranslatef( distance*timeFactor + x + windowWidth, distanceY * timeFactor + y, -5 * timeFactor - 2.5);
+                glTranslatef( distance*progress + x + windowWidth, distanceY * progress + y, -5 * progress - 2.5);
             else if( stop )
-                glTranslatef( distance*( 1.0 - timeFactor ) + x + windowWidth, distanceY * ( 1.0 - timeFactor ) + y, -5 * ( 1.0 - timeFactor ) - 2.5);
+                glTranslatef( distance*( 1.0 - progress ) + x + windowWidth, distanceY * ( 1.0 - progress ) + y, -5 * ( 1.0 - progress ) - 2.5);
             glRotatef( -radian, 0.0, 1.0, 0.0 );
             QRect windowRect = QRect( -windowWidth, 0, windowWidth, windowHeight );
             paintWindowCover( window, windowRect, reflectedWindows );
@@ -414,56 +406,56 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
         float distance = (width - frontWindow->geometry().width())*0.5f - x;
         float distanceY = height - windowHeight - y;
         if( start )
-            glTranslatef( distance * timeFactor + x, distanceY * timeFactor + y, -5*timeFactor - 2.5 );
+            glTranslatef( distance * progress + x, distanceY * progress + y, -5*progress - 2.5 );
         else if( stop )
-            glTranslatef( distance * ( 1.0 - timeFactor ) + x, distanceY * ( 1.0 - timeFactor ) + y, -5 * ( 1.0 - timeFactor ) - 2.5 );
+            glTranslatef( distance * ( 1.0 - progress ) + x, distanceY * ( 1.0 - progress ) + y, -5 * ( 1.0 - progress ) - 2.5 );
         QRect windowRect = QRect( 0, 0, frontWindow->geometry().width(), windowHeight );
         paintWindowCover( frontWindow, windowRect, reflectedWindows );
         glPopMatrix();
         }
     else if( !animation )
         {
-        paintWindows( leftWindows, timeFactor, true, reflectedWindows );
-        paintWindows( rightWindows, timeFactor, false, reflectedWindows );
-        paintFrontWindow( frontWindow, timeFactor, width, leftWindowCount, rightWindowCount, reflectedWindows );
+        paintWindows( leftWindows, true, reflectedWindows );
+        paintWindows( rightWindows, false, reflectedWindows );
+        paintFrontWindow( frontWindow, width, leftWindowCount, rightWindowCount, reflectedWindows );
         }
     else
         {
         if( forward )
             {
-            if( timeFactor < 0.5 )
+            if( progress < 0.5 )
                 {
                 // paint in normal way
-                paintWindows( leftWindows, timeFactor, true, reflectedWindows );
-                paintWindows( rightWindows, timeFactor, false, reflectedWindows );
-                paintFrontWindow( frontWindow, timeFactor, width, leftWindowCount, rightWindowCount, reflectedWindows );
+                paintWindows( leftWindows, true, reflectedWindows );
+                paintWindows( rightWindows, false, reflectedWindows );
+                paintFrontWindow( frontWindow, width, leftWindowCount, rightWindowCount, reflectedWindows );
                 }
             else
                 {
-                paintWindows( rightWindows, timeFactor, false, reflectedWindows );
+                paintWindows( rightWindows, false, reflectedWindows );
                 EffectWindow* rightWindow;
                 if( rightWindowCount > 0)
                     {
                     rightWindow = rightWindows->at( 0 );
-                    paintFrontWindow( frontWindow, timeFactor, width, leftWindowCount, rightWindowCount, reflectedWindows );
+                    paintFrontWindow( frontWindow, width, leftWindowCount, rightWindowCount, reflectedWindows );
                     }
                 else
                     rightWindow = frontWindow;
-                paintWindows( leftWindows, timeFactor, true, reflectedWindows, rightWindow );
+                paintWindows( leftWindows, true, reflectedWindows, rightWindow );
                 }
             }
         else
             {
-            paintWindows( leftWindows, timeFactor, true, reflectedWindows );
-            if( timeFactor < 0.5 )
+            paintWindows( leftWindows, true, reflectedWindows );
+            if( progress < 0.5 )
                 {
-                paintWindows( rightWindows, timeFactor, false, reflectedWindows );
-                paintFrontWindow( frontWindow, timeFactor, width, leftWindowCount, rightWindowCount, reflectedWindows );
+                paintWindows( rightWindows, false, reflectedWindows );
+                paintFrontWindow( frontWindow, width, leftWindowCount, rightWindowCount, reflectedWindows );
                 }
             else
                 {
-                paintFrontWindow( frontWindow, timeFactor, width, leftWindowCount, rightWindowCount, reflectedWindows );
-                paintWindows( rightWindows, timeFactor, false, reflectedWindows, leftWindows->at( 0 ) );
+                paintFrontWindow( frontWindow, width, leftWindowCount, rightWindowCount, reflectedWindows );
+                paintWindows( rightWindows, false, reflectedWindows, leftWindows->at( 0 ) );
                 }
             }
         }
@@ -477,13 +469,9 @@ void CoverSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
             {
             if( ( start || stop ) && w->isDock() )
                 {
-                int elapsed = animationTime.elapsed();
-                float timeFactor = (float)((float)elapsed/(float)animationDuration);
-                if( timeFactor >= 1.0 )
-                    timeFactor = 1.0;
-                data.opacity = 1.0 - timeFactor;
+                data.opacity = 1.0 - progress;
                 if( stop )
-                    data.opacity = timeFactor;
+                    data.opacity = progress;
                 }
             else
                 return;
@@ -494,6 +482,8 @@ void CoverSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
   
 void CoverSwitchEffect::tabBoxAdded( int mode )
     {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return;
     if( !mActivated )
         {
         // only for windows mode
@@ -502,12 +492,12 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
             if( !stop && !stopRequested )
                 {
                 effects->refTabBox();
+                effects->setActiveFullScreenEffect( this );
                 selectedWindow = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
                 mActivated = true;
                 if( animateStart )
                     {
                     start = true;
-                    animationTime.restart();
                     }
                 effects->addRepaintFull();
                 }
@@ -528,13 +518,14 @@ void CoverSwitchEffect::tabBoxClosed()
             if( !animation && !start )
                 {
                 stop = true;
-                animationTime.restart();
                 }
             else
                 {
                 stopRequested = true;
                 }
             }
+        else
+            effects->setActiveFullScreenEffect( 0 );
         mActivated = false;
         effects->unrefTabBox();
         effects->addRepaintFull();
@@ -577,7 +568,6 @@ void CoverSwitchEffect::tabBoxUpdated()
                 {
                 forward = direction;
                 animation = true;
-                animationTime.restart();
                 }
             else
                 {
@@ -601,11 +591,12 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, QRect windowRect, boo
 
     data.opacity = opacity;
 
-    QRect thumbnail;
+    QRect thumbnail = infiniteRegion();
     setPositionTransformations( data,
         thumbnail, w,
         windowRect,
         Qt::IgnoreAspectRatio );
+    thumbnail = infiniteRegion();
 
     if( reflectedWindow )
         {
@@ -625,7 +616,7 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, QRect windowRect, boo
         }
     }
 
-void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, float timeFactor, int width, int leftWindows, int rightWindows, bool reflectedWindow )
+void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow )
     {
     glPushMatrix();
     glTranslatef((width - frontWindow->geometry().width())*0.5f, 0.0, -7.5);
@@ -645,9 +636,7 @@ void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, float timeF
     if( animation )
         {
         float radian = 0.0;
-        if( specialHandlingForward )
-            timeFactor *= 2;
-        radian = angle * timeFactor * ( 2 * M_PI / 360 );
+        radian = angle * progress * ( 2 * M_PI / 360 );
         windowWidth = frontWindow->geometry().width() * cos( radian );
         if( forward )
             {
@@ -658,7 +647,7 @@ void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, float timeF
             // we want to: width*1.25 - ( width * 0.25 *  (rightWindowCount -1) )/rightWindowCount
             distance = width*1.25 - ( width * 0.25 *  ( rightWindows - 1 ) )/rightWindows -
                 (width + frontWindow->geometry().width())*0.5f;
-            glTranslatef( distance * timeFactor, 0.0, 0.0 );
+            glTranslatef( distance * progress, 0.0, 0.0 );
             glRotatef(-radian, 0.0, 1.0, 0.0);
             }
         else
@@ -668,19 +657,19 @@ void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, float timeF
             // we want to: -width*0.25 + ( width * 0.25 * leftWindowCount - 1 )/leftWindowCount
             distance = ( width - frontWindow->geometry().width() ) * 0.5f +
                 width*0.25 - ( width * 0.25 * ( leftWindows - 1 ) )/leftWindows;
-            glTranslatef( - distance * timeFactor, 0.0, 0.0 );
+            glTranslatef( - distance * progress, 0.0, 0.0 );
             glRotatef(radian, 0.0, 1.0, 0.0);
             }
         }
     QRect windowRect = QRect( x, height - windowHeight, windowWidth, windowHeight );
     if( specialHandlingForward )
-        paintWindowCover( frontWindow, windowRect, reflectedWindow, 1.0 - timeFactor );
+        paintWindowCover( frontWindow, windowRect, reflectedWindow, 1.0 - progress * 2 );
     else
         paintWindowCover( frontWindow, windowRect, reflectedWindow );
     glPopMatrix();
     }
 
-void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, float timeFactor, bool left, bool reflectedWindows, EffectWindow* additionalWindow )
+void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow )
     {
     int width = QApplication::desktop()->geometry().width();
     int height = QApplication::desktop()->geometry().height();
@@ -705,7 +694,7 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, float tim
     glTranslatef( width*widthFactor, 0.0, -7.5 );
     // handling for additional window from other side
     // has to appear on this side after half of the time
-    if( animation && timeFactor >= 0.5 && additionalWindow != NULL )
+    if( animation && progress >= 0.5 && additionalWindow != NULL )
         {
         // window has to appear on left side
         glPushMatrix();
@@ -718,7 +707,7 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, float tim
             x = -windowWidth;
             }
         windowRect = QRect( x, height - windowHeight, windowWidth, windowHeight );
-        paintWindowCover( additionalWindow, windowRect, reflectedWindows, ( timeFactor - 0.5 ) * 2 );
+        paintWindowCover( additionalWindow, windowRect, reflectedWindows, ( progress - 0.5 ) * 2 );
         glPopMatrix();
         }
     // normal behaviour
@@ -737,15 +726,15 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, float tim
                     // we are at: -width*0.25 + ( width * 0.25 * i )/leftWindowCount
                     // we want to: (width - leftWindow->geometry().width())*0.5f
                     float distance = (width - window->geometry().width())*0.5f + width*(-widthFactor) - ( width * widthFactorSingle * i )/windowCount;
-                    glTranslatef( distance * timeFactor , 0.0, 0.0 );
-                    radian = ( angle - angle * timeFactor )  * ( 2 * M_PI / 360 );
+                    glTranslatef( distance * progress , 0.0, 0.0 );
+                    radian = ( angle - angle * progress )  * ( 2 * M_PI / 360 );
                     }
                 // right most window does not have to be moved
                 else if( !left && ( i == 0 ) ); // do nothing
                 else
                     {
                     // all other windows - move to next position
-                    glTranslatef( ( width * 0.25 * timeFactor )/windowCount, 0.0, 0.0 );
+                    glTranslatef( ( width * 0.25 * progress )/windowCount, 0.0, 0.0 );
                     }
                 }
             else
@@ -757,15 +746,15 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, float tim
                     // we want to: (width + rightWindow->geometry().width())*0.5f
                     float distance = width*1.25 - ( width * 0.25 *  i )/windowCount - 
                         (width + window->geometry().width())*0.5f;
-                    glTranslatef( - distance * timeFactor, 0.0, 0.0 );
-                    radian = ( angle - angle * timeFactor ) * ( 2 * M_PI / 360 );
+                    glTranslatef( - distance * progress, 0.0, 0.0 );
+                    radian = ( angle - angle * progress ) * ( 2 * M_PI / 360 );
                     }
                 // left most window does not have to be moved
                 else if( i==0 && left); // do nothing
                 else
                     {
                     // all other windows - move to next position
-                    glTranslatef( - ( width * 0.25 * timeFactor )/windowCount, 0.0, 0.0 );
+                    glTranslatef( - ( width * 0.25 * progress )/windowCount, 0.0, 0.0 );
                     }
                 }
             }
@@ -782,8 +771,8 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, float tim
         if( animation && i == 0 && ( ( !forward && left ) || ( forward && !left ) ) )
             {
             // only for the first half of the animation
-            if( timeFactor < 0.5 )
-                paintWindowCover( window, windowRect, reflectedWindows, 1.0 - timeFactor * 2 );
+            if( progress < 0.5 )
+                paintWindowCover( window, windowRect, reflectedWindows, 1.0 - progress * 2 );
             }
         else
             paintWindowCover( window, windowRect, reflectedWindows );

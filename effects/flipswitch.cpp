@@ -48,6 +48,7 @@ FlipSwitchEffect::FlipSwitchEffect()
     , rearrangeWindows( 0 )
     , stopRequested( false )
     , startRequested( false )
+    , progress( 0.0 )
     {
     KConfigGroup conf = effects->effectConfig( "FlipSwitch" );
     mFlipDuration = conf.readEntry( "FlipDuration", 300 );
@@ -63,6 +64,8 @@ void FlipSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     if( mActivated || stopRequested || stop )
         {
          data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+        if( mAnimation )
+            progress = qMin( 1.0, progress + time / double( mFlipDuration ));
         }
     effects->prePaintScreen(data, time);
     }
@@ -75,8 +78,7 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         glMatrixMode( GL_PROJECTION );
         glPushMatrix();
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable( GL_DEPTH_TEST );
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glLoadIdentity();
@@ -128,7 +130,6 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         // do we have a start or stop animation
         if( ( start || stop ) && mAnimation )
             {
-            int elapsed = animationTime.elapsed();
             for( int i=0; i<windowList.count(); i++)
                 {
                 glPushMatrix();
@@ -148,10 +149,6 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                 float stackY = -QApplication::desktop()->geometry().height()*0.5f;
                 float stackZ = (-1*zOffset*windowList.count()) -12.5+zOffset*(i+1);
 
-                float timeFactor = (float)((float)elapsed/(float)mFlipDuration);
-                // limit animation to final position
-                if( timeFactor > 1.0 ) timeFactor = 1.0;
-
                 float animateXOffset;
                 float animateYOffset;
                 float animateZOffset;
@@ -159,17 +156,17 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                 // if start move to stack, if stop move from stack
                 if( start )
                     {
-                    animateXOffset = x+timeFactor*(stackX-x);
-                    animateYOffset = y+timeFactor*(stackY-y);
-                    animateZOffset = z+timeFactor*(stackZ-z);
-                    rotation = timeFactor*0.25;
+                    animateXOffset = x+progress*(stackX-x);
+                    animateYOffset = y+progress*(stackY-y);
+                    animateZOffset = z+progress*(stackZ-z);
+                    rotation = progress*0.25;
                     }
                 else if( stop )
                     {
-                    animateXOffset = stackX+timeFactor*(x-stackX);
-                    animateYOffset = stackY+timeFactor*(y-stackY);
-                    animateZOffset = stackZ+timeFactor*(z-stackZ);
-                    rotation = 0.25-timeFactor*0.25;
+                    animateXOffset = stackX+progress*(x-stackX);
+                    animateYOffset = stackY+progress*(y-stackY);
+                    animateZOffset = stackZ+progress*(z-stackZ);
+                    rotation = 0.25-progress*0.25;
                     }
 
                 // go to current position and rotate by the time based factor
@@ -185,8 +182,9 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                 glPopMatrix();
                 }
             // time elapsed - so no more animation
-            if( elapsed >= mFlipDuration )
+            if( progress == 1.0 )
                 {
+                progress = 0.0;
                 if( start )
                     {
                     start = false;
@@ -194,7 +192,6 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                     if( rearrangeWindows != 0 )
                         {
                         animateFlip = true;
-                        animationTime.restart();
                         if( rearrangeWindows < 0 )
                             {
                             forward = true;
@@ -211,7 +208,6 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                         // no more animations but effect has to stop
                         stop = true;
                         stopRequested = false;
-                        animationTime.restart();
                         }
                     }
                 else if( stop )
@@ -223,7 +219,6 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                         start = true;
                         startRequested = false;
                         mActivated = true;
-                        animationTime.restart();
                         }
                     else
                         {
@@ -237,18 +232,17 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         // normal behaviour - no start or stop animation
         else
             {
+            double localProgress = progress;
             glPushMatrix();
             glTranslatef(-QApplication::desktop()->geometry().width()*0.25f-(xOffset*windowList.count()),
                 -QApplication::desktop()->geometry().height()*0.5f,
                 (-1*zOffset*windowList.count()) -12.5);
-            int elapsed = animationTime.elapsed();
-            float timeFactor = (float)((float)elapsed/(float)mFlipDuration);
             if( animateFlip && windowList.count() > 1 )
                 {
-                if( elapsed <= mFlipDuration)
+                if( progress < 1.0 )
                     {
-                    float animateXOffset = timeFactor*xOffset;
-                    float animateZOffset = timeFactor*zOffset;
+                    float animateXOffset = progress*xOffset;
+                    float animateZOffset = progress*zOffset;
                     if( forward )
                         {
                         if( animateXOffset > xOffset ) animateXOffset = xOffset;
@@ -269,21 +263,21 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                     }
                 else
                     {
+                    progress = 0.0;
                     if( rearrangeWindows != 0 )
                         {
                         animateFlip = true;
-                        animationTime.restart();
                         if( rearrangeWindows < 0 )
                             {
                             forward = true;
                             rearrangeWindows++;
-                            timeFactor = 0.0;
+                            localProgress = 0.0;
                             }
                         else
                             {
                             forward = false;
                             rearrangeWindows--;
-                            timeFactor = 1.0;
+                            localProgress = 1.0;
                             }
                         }
                     else
@@ -293,7 +287,6 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                             {
                             stop = true;
                             stopRequested = false;
-                            animationTime.restart();
                             }
                         }
                     }
@@ -314,8 +307,8 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                     float opacity = 0.8;
                     if( animateFlip && windowList.count() > 1 )
                         {
-                        if( forward ) opacity = opacity - timeFactor*opacity;
-                        else opacity = timeFactor*opacity;
+                        if( forward ) opacity = opacity - localProgress*opacity;
+                        else opacity = localProgress*opacity;
                         }
                     paintWindowFlip( windowList[i], false, opacity);
                     }
@@ -378,6 +371,7 @@ void FlipSwitchEffect::postPaintScreen()
     if( addFullRepaint )
         {
         addFullRepaint = false;
+        effects->setActiveFullScreenEffect( 0 );
         effects->addRepaintFull();
         }
     effects->postPaintScreen();
@@ -397,18 +391,20 @@ void FlipSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, W
   
 void FlipSwitchEffect::tabBoxAdded( int mode )
     {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return;
     if( !mActivated )
         {
         // only for windows mode
         if( mode == TabBoxWindowsMode && effects->currentTabBoxWindowList().count() > 0 )
             {
             effects->refTabBox();
+            effects->setActiveFullScreenEffect( this );
             selectedWindow = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
             if( !stop && !stopRequested )
                 {
                 mActivated = true;
                 start = true;
-                animationTime.restart();
                 effects->addRepaintFull();
                 }
             else
@@ -432,10 +428,11 @@ void FlipSwitchEffect::tabBoxClosed()
             else
                 {
                 stop = true;
-                animationTime.restart();
                 effects->addRepaintFull();
                 }
             }
+        else
+            effects->setActiveFullScreenEffect( 0 );
         }
     }
 
@@ -468,7 +465,6 @@ void FlipSwitchEffect::tabBoxUpdated()
                 {
                 forward = direction;
                 animateFlip = true;
-                animationTime.restart();
                 }
             else
                 {
@@ -495,6 +491,7 @@ void FlipSwitchEffect::paintWindowFlip( EffectWindow* w, bool draw, float opacit
         Qt::KeepAspectRatio );
 
     data.opacity = opacity;
+    thumbnail = infiniteRegion();
     // if paintWindow() is used the window behind the initial selected window is not painted on the stack,
     // but painted when it is selected
     // if drawWindow() is used the front window does not glide through the monitor during animation

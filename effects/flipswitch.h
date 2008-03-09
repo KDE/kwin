@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_FLIPSWITCH_H
 
 #include <kwineffects.h>
-#include <QTime>
 
 namespace KWin
 {
@@ -48,7 +47,6 @@ class FlipSwitchEffect
         int mFlipDuration;
         bool animateFlip;
         bool forward;
-        QTime animationTime;
         int selectedWindow;
         bool start;
         bool stop;
@@ -56,6 +54,7 @@ class FlipSwitchEffect
         int rearrangeWindows;
         bool stopRequested;
         bool startRequested;
+        double progress;
     };
 
 } // namespace
