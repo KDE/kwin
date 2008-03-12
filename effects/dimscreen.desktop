@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Dim Screen for Administrator Mode
 Name[ga]=Doiléirigh an Scáileán i Mód an Riarthóra
+Name[km]=បន្ថយ​ពន្លឺ​អេក្រង់ សម្រាប់​របៀប​ជា​អ្នក​គ្រប់គ្រង
 Name[pt]=Escurecer o Ecrã para o Modo de Administração
 Name[pt_BR]=Escurecer o Ecrã para o Modo de Administração
 Name[sr]=Пригуши екран за администраторски режим
@@ -9,6 +10,7 @@ Name[zh_TW]=在管理者模式下將螢幕變暗
 Icon=preferences-system-windows-effect-dimscreen
 Comment=Dims the screen if a window asks for root password
 Comment[ga]=Doiléirigh an scáileán nuair a iarrann fuinneog focal faire an fhorúsáideora
+Comment[km]=បន្ថយ​ពន្លឺ​អេក្រង់ នៅពេល​ដែល​បង្អួច​សួររក​ពាក្យ​សម្ងាត់ root
 Comment[pt]=Escurece o ecrã se alguma janela pedir a senha do 'root'
 Comment[pt_BR]=Escurece o ecrã se alguma janela pedir a senha do 'root'
 Comment[sr]=Пригушује екран ако прозор затражи корену лозинку
