@@ -650,22 +650,94 @@ class KWIN_EXPORT EffectWindow
         virtual QString windowRole() const = 0;
         virtual const EffectWindowGroup* group() const = 0;
 
+        /**
+         * Returns whether the window is a desktop background window (the one with wallpaper).
+         * See _NET_WM_WINDOW_TYPE_DESKTOP at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isDesktop() const = 0;
+        /**
+         * Returns whether the window is a dock (i.e. a panel).
+         * See _NET_WM_WINDOW_TYPE_DOCK at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isDock() const = 0;
+        /**
+         * Returns whether the window is a standalone (detached) toolbar window.
+         * See _NET_WM_WINDOW_TYPE_TOOLBAR at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isToolbar() const = 0;
+        /**
+         * Returns whether the window is standalone menubar (AKA macmenu).
+         * This window type is a KDE extension.
+         */
         virtual bool isTopMenu() const = 0;
+        /**
+         * Returns whether the window is a torn-off menu.
+         * See _NET_WM_WINDOW_TYPE_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isMenu() const = 0;
+        /**
+         * Returns whether the window is a "normal" window, i.e. an application or any other window
+         * for which none of the specialized window types fit.
+         * See _NET_WM_WINDOW_TYPE_NORMAL at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isNormalWindow() const = 0; // normal as in 'NET::Normal or NET::Unknown non-transient'
+        /**
+         * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
+         * i.e. window types that usually don't have a window frame and the user does not use window
+         * management (moving, raising,...) on them.
+         */
         virtual bool isSpecialWindow() const = 0;
+        /**
+         * Returns whether the window is a dialog window.
+         * See _NET_WM_WINDOW_TYPE_DIALOG at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isDialog() const = 0;
+        /**
+         * Returns whether the window is a splashscreen. Note that many (especially older) applications
+         * do not support marking their splash windows with this type.
+         * See _NET_WM_WINDOW_TYPE_SPLASH at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isSplash() const = 0;
+        /**
+         * Returns whether the window is a utility window, such as a tool window.
+         * See _NET_WM_WINDOW_TYPE_UTILITY at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isUtility() const = 0;
+        /**
+         * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
+         * from the applications menubar).
+         * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isDropdownMenu() const = 0;
+        /**
+         * Returns whether the window is a popup menu (that is not a torn-off or dropdown menu).
+         * See _NET_WM_WINDOW_TYPE_POPUP_MENU at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isPopupMenu() const = 0; // a context popup, not dropdown, not torn-off
+        /**
+         * Returns whether the window is a tooltip.
+         * See _NET_WM_WINDOW_TYPE_TOOLTIP at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isTooltip() const = 0;
+        /**
+         * Returns whether the window is a window with a notification.
+         * See _NET_WM_WINDOW_TYPE_NOTIFICATION at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isNotification() const = 0;
+        /**
+         * Returns whether the window is a combobox popup.
+         * See _NET_WM_WINDOW_TYPE_COMBO at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isComboBox() const = 0;
+        /**
+         * Returns whether the window is a Drag&Drop icon.
+         * See _NET_WM_WINDOW_TYPE_DND at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
+         */
         virtual bool isDNDIcon() const = 0;
+        /**
+         * Returns whether the window is managed by KWin (it has control over its placement and other
+         * aspects, as opposed to override-redirect windows that are entirely handled by the application).
+         */
         virtual bool isManaged() const = 0; // whether it's managed or override-redirect
 
         virtual bool isModal() const = 0;
