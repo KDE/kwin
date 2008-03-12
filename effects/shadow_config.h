@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QSpinBox;
 class QCheckBox;
+class KColorButton;
 
 namespace KWin
 {
@@ -48,6 +49,7 @@ class ShadowEffectConfig : public KCModule
         QSpinBox* mShadowOpacity;
         QSpinBox* mShadowFuzzyness;
         QSpinBox* mShadowSize;
+        KColorButton* mShadowColor;
         QCheckBox* mIntensifyActiveShadow;
     };
 

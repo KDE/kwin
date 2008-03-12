@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <klocale.h>
 #include <kdebug.h>
 #include <kconfiggroup.h>
+#include <kcolorbutton.h>
+#include <kcolorscheme.h>
 
 #include <QWidget>
 #include <QGridLayout>
@@ -35,6 +37,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
+
+// Save some typing
+static QColor schemeShadowColor()
+{
+    return KColorScheme::shade(Qt::white, KColorScheme::ShadowShade);
+}
 
 namespace KWin
 {
@@ -77,9 +85,15 @@ ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QVariantList& args
     connect(mShadowSize, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     layout->addWidget(mShadowSize, 4, 1);
 
+    layout->addWidget(new QLabel(i18n("Shadow color:"), this), 5, 0);
+    mShadowColor = new KColorButton(this);
+    mShadowColor->setDefaultColor(schemeShadowColor());
+    connect(mShadowColor, SIGNAL(changed(QColor)), this, SLOT(changed()));
+    layout->addWidget(mShadowColor, 5, 1);
+
     mIntensifyActiveShadow = new QCheckBox(i18n("Active window has stronger shadow"), this);
     connect(mIntensifyActiveShadow, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    layout->addWidget(mIntensifyActiveShadow, 5, 0, 1, 2);
+    layout->addWidget(mIntensifyActiveShadow, 6, 0, 1, 2);
 
     layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 6, 0, 1, 2);
 
@@ -102,6 +116,7 @@ void ShadowEffectConfig::load()
     mShadowOpacity->setValue( (int)( conf.readEntry( "Opacity", 0.25 ) * 100 ) );
     mShadowFuzzyness->setValue( conf.readEntry( "Fuzzyness", 10 ) );
     mShadowSize->setValue( conf.readEntry( "Size", 5 ) );
+    mShadowColor->setColor( conf.readEntry( "Color", schemeShadowColor() ) );
     mIntensifyActiveShadow->setChecked( conf.readEntry( "IntensifyActiveShadow", true ) );
 
     emit changed(false);
@@ -118,6 +133,14 @@ void ShadowEffectConfig::save()
     conf.writeEntry( "Opacity", mShadowOpacity->value() / 100.0 );
     conf.writeEntry( "Fuzzyness", mShadowFuzzyness->value() );
     conf.writeEntry( "Size", mShadowSize->value() );
+    QColor userColor = mShadowColor->color();
+    if (userColor == schemeShadowColor()) {
+        // If the user has reset the color to the default we want to start
+        // picking up color scheme changes again in the shadow effect
+        conf.deleteEntry( "Color" );
+    } else {
+        conf.writeEntry( "Color", userColor );
+    }
     conf.writeEntry( "IntensifyActiveShadow", mIntensifyActiveShadow->isChecked() );
     conf.sync();
 
@@ -134,6 +157,7 @@ void ShadowEffectConfig::defaults()
     mShadowFuzzyness->setValue( 10 );
     mShadowSize->setValue( 5 );
     mIntensifyActiveShadow->setChecked( true );
+    mShadowColor->setColor( schemeShadowColor() );
     emit changed(true);
     }
 

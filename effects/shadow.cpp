@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <kdebug.h>
 #include <KStandardDirs>
+#include <kcolorscheme.h>
 
 namespace KWin
 {
@@ -39,6 +40,7 @@ ShadowEffect::ShadowEffect()
     shadowOpacity = conf.readEntry( "Opacity", 0.25 );
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
     shadowSize = conf.readEntry( "Size", 5 );
+    shadowColor = conf.readEntry( "Color",  KColorScheme::shade( Qt::white, KColorScheme::ShadowShade ) );
     intensifyActiveShadow = conf.readEntry( "IntensifyActiveShadow", true );
 
     QString shadowtexture =  KGlobal::dirs()->findResource("data", "kwin/shadow-texture.png");
@@ -215,7 +217,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     {
         opacity = 1 - (1 - shadowOpacity)*(1 - shadowOpacity);
     }
-    glColor4f(0, 0, 0, opacity * data.opacity * (window->width() / (double)w) * (window->height() / (double)h));
+    glColor4f(shadowColor.redF(), shadowColor.greenF(), shadowColor.blueF(), opacity * data.opacity * (window->width() / (double)w) * (window->height() / (double)h));
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     // We have two elements per vertex in the verts array
     int verticesCount = verts.count() / 2;

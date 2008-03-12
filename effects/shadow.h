@@ -52,6 +52,7 @@ class ShadowEffect
         int shadowFuzzyness;
         int shadowSize;
         bool intensifyActiveShadow;
+        QColor shadowColor;
         GLTexture* mShadowTexture;
 
         struct ShadowData
