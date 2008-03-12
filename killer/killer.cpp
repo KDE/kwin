@@ -67,7 +67,7 @@ int main( int argc, char* argv[] )
 	"<p>Window with title \"<b>%2</b>\" is not responding. "
 	"This window belongs to application <b>%1</b> (PID=%3, hostname=%4).</p>"
 	"<p>Do you wish to terminate this application? (All unsaved data in this application will be lost.)</p>" ,
-	  appname, caption, pid, QString( hostname ) );
+	  appname, caption, QString::number( pid ), QString( hostname ) );
     app.updateUserTimestamp( timestamp );
     if( KMessageBox::warningYesNoWId( id, question, QString(), KGuiItem(i18n("Terminate")), KGuiItem(i18n("Keep Running")) ) == KMessageBox::Yes )
         {    
