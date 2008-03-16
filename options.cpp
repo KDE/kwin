@@ -92,8 +92,7 @@ unsigned long Options::updateSettings()
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
 
-    KConfig gc("kdeglobals", KConfig::NoGlobals);
-    KConfigGroup gWindowsConfig(&gc, "Windows");
+    KConfigGroup gWindowsConfig( _config, "Windows"); // from kdeglobals
     xineramaEnabled = gWindowsConfig.readEntry ("XineramaEnabled", true);
     xineramaPlacementEnabled = gWindowsConfig.readEntry ("XineramaPlacementEnabled", true);
     xineramaMovementEnabled = gWindowsConfig.readEntry ("XineramaMovementEnabled", true);
