@@ -92,23 +92,13 @@ unsigned long Options::updateSettings()
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
 
-    KConfig *gc = new KConfig("kdeglobals", KConfig::NoGlobals);
-    bool isVirtual = KApplication::desktop()->isVirtualDesktop();
-    KConfigGroup gWindowsConfig(gc, "Windows");
-    xineramaEnabled = gWindowsConfig.readEntry ("XineramaEnabled", isVirtual) &&
-                      isVirtual;
-    if (xineramaEnabled)
-        {
-        xineramaPlacementEnabled = gWindowsConfig.readEntry ("XineramaPlacementEnabled", true);
-        xineramaMovementEnabled = gWindowsConfig.readEntry ("XineramaMovementEnabled", true);
-        xineramaMaximizeEnabled = gWindowsConfig.readEntry ("XineramaMaximizeEnabled", true);
-        xineramaFullscreenEnabled = gWindowsConfig.readEntry ("XineramaFullscreenEnabled", true);
-        }
-    else
-        {
-        xineramaPlacementEnabled = xineramaMovementEnabled = xineramaMaximizeEnabled = xineramaFullscreenEnabled = false;
-        }
-    delete gc;
+    KConfig gc("kdeglobals", KConfig::NoGlobals);
+    KConfigGroup gWindowsConfig(&gc, "Windows");
+    xineramaEnabled = gWindowsConfig.readEntry ("XineramaEnabled", true);
+    xineramaPlacementEnabled = gWindowsConfig.readEntry ("XineramaPlacementEnabled", true);
+    xineramaMovementEnabled = gWindowsConfig.readEntry ("XineramaMovementEnabled", true);
+    xineramaMaximizeEnabled = gWindowsConfig.readEntry ("XineramaMaximizeEnabled", true);
+    xineramaFullscreenEnabled = gWindowsConfig.readEntry ("XineramaFullscreenEnabled", true);
 
     placement = Placement::policyFromString( config.readEntry("Placement"), true );
     xineramaPlacementScreen = qBound( -1, config.readEntry( "XineramaPlacementScreen", -1 ),
