@@ -161,7 +161,7 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                     animateZOffset = z+progress*(stackZ-z);
                     rotation = progress*0.25;
                     }
-                else if( stop )
+                else // = if( stop )
                     {
                     animateXOffset = stackX+progress*(x-stackX);
                     animateYOffset = stackY+progress*(y-stackY);
