@@ -9,6 +9,7 @@ Name[pt]=Mudança em Pilha
 Name[pt_BR]=Mudança em Pilha
 Name[sr]=Преклопно пребацивање
 Name[sr@latin]=Preklopno prebacivanje
+Name[tr]=Dönen Seçici
 Name[zh_CN]=翻转切换
 Name[zh_TW]=翻轉切換
 Icon=preferences-system-windows-effect-flipswitch
@@ -24,6 +25,7 @@ Comment[pt]=Selector de janelas do Alt-Tab que percorre as janelas numa pilha
 Comment[pt_BR]=Seletor de janelas Alt-Tab que percorre as janelas em uma pilha
 Comment[sr]=Пребацивање прозора алт+табом кроз прозоре на стеку
 Comment[sr@latin]=Prebacivanje prozora Alt+Tabom kroz prozore na steku
+Comment[tr]=Aynı küme içerisindeki pencereleri değiştiren Alt-tab pencere seçici
 Comment[zh_CN]=Alt-tab 窗口切换器可在您的窗口间作翻转式切换
 Comment[zh_TW]=Alt+Tab 視窗切換器在堆疊內翻轉視窗
 
