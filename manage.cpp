@@ -345,6 +345,22 @@ bool Client::manage( Window w, bool isMapped )
             if( (*it)->isShown( true ))
                 init_minimize = false; // SELI even e.g. for NET::Utility?
         }
+    // if a dialog is shown for minimized window, minimize it too
+    if( !init_minimize && isTransient() && mainClients().count() > 0 )
+        {
+        bool visible_parent = false;
+        ClientList mainclients = mainClients();
+        for( ClientList::ConstIterator it = mainclients.begin();
+             it != mainclients.end();
+             ++it )
+            if( (*it)->isShown( true ))
+                visible_parent = true;
+        if( !visible_parent )
+            {
+            init_minimize = true;
+            demandAttention();
+            }
+        }
 
     if( init_minimize )
         minimize( true ); // no animation
