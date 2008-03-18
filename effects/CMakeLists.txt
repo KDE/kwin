@@ -41,6 +41,7 @@ SET(kwin4_effect_builtins_sources
     dimscreen.cpp
     fade.cpp
     fallapart.cpp
+    flipout.cpp
     login.cpp
     logout.cpp
     maketransparent.cpp
@@ -60,6 +61,7 @@ install( FILES
     dimscreen.desktop
     fade.desktop
     fallapart.desktop
+    flipout.desktop
     login.desktop
     logout.desktop
     maketransparent.desktop
