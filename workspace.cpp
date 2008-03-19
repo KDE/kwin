@@ -2598,6 +2598,7 @@ void Workspace::slotBlockShortcuts( int data )
 static QPoint last_cursor_pos;
 static int last_buttons = 0;
 static Time last_cursor_timestamp = CurrentTime;
+static QTimer* last_cursor_timer;
 
 QPoint Workspace::cursorPos() const
     {
@@ -2613,7 +2614,14 @@ QPoint Workspace::cursorPos() const
             &root_x, &root_y, &win_x, &win_y, &state );
         last_cursor_pos = QPoint( root_x, root_y );
         last_buttons = state;
-        QTimer::singleShot( 0, const_cast< Workspace* >( this ), SLOT( resetCursorPosTime()));
+        if( last_cursor_timer == NULL )
+            {
+            Workspace* ws = const_cast< Workspace* >( this );
+            last_cursor_timer = new QTimer( ws );
+            last_cursor_timer->setSingleShot( true );
+            connect( last_cursor_timer, SIGNAL( timeout()), ws, SLOT( resetCursorPosTime()));
+            }
+        last_cursor_timer->start( 0 );
         }
     return last_cursor_pos;
     }
