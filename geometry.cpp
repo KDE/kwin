@@ -1942,8 +1942,12 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
             Notify::raise( Notify::UnMaximize );
         }
 
+    ForceGeometry_t geom_mode = NormalGeometrySet;
     if( decoration != NULL ) // decorations may turn off some borders when maximized
-        decoration->borders( border_left, border_right, border_top, border_bottom );
+        {
+        if( checkBorderSizes( false )) // only query, don't resize
+            geom_mode = ForceGeometrySet;
+        }
 
     // restore partial maximizations
     if ( old_mode==MaximizeFull && max_mode==MaximizeRestore )
@@ -1969,16 +1973,20 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.width() == 0 )
                     { // needs placement
-                    plainResize( adjustedSize( QSize( width() * 2 / 3, clientArea.height()), SizemodeFixedH ));
+                    plainResize( adjustedSize( QSize( width() * 2 / 3, clientArea.height()), SizemodeFixedH ), geom_mode );
                     workspace()->placeSmart( this, clientArea );
                     }
                 else
+                    {
                     setGeometry( QRect(QPoint( geom_restore.x(), clientArea.top()),
-                              adjustedSize(QSize( geom_restore.width(), clientArea.height()), SizemodeFixedH )));
+                        adjustedSize(QSize( geom_restore.width(), clientArea.height()), SizemodeFixedH )), geom_mode );
+                    }
                 }
             else
+                {
                 setGeometry( QRect(QPoint(x(), clientArea.top()),
-                              adjustedSize(QSize(width(), clientArea.height()), SizemodeFixedH )));
+                    adjustedSize(QSize(width(), clientArea.height()), SizemodeFixedH )), geom_mode );
+                }
             info->setState( NET::MaxVert, NET::Max );
             break;
             }
@@ -1989,16 +1997,20 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 {
                 if( geom_restore.height() == 0 )
                     { // needs placement
-                    plainResize( adjustedSize( QSize( clientArea.width(), height() * 2 / 3 ), SizemodeFixedW ));
+                    plainResize( adjustedSize( QSize( clientArea.width(), height() * 2 / 3 ), SizemodeFixedW ), geom_mode );
                     workspace()->placeSmart( this, clientArea );
                     }
                 else
+                    {
                     setGeometry( QRect( QPoint(clientArea.left(), geom_restore.y()),
-                              adjustedSize(QSize(clientArea.width(), geom_restore.height()), SizemodeFixedW )));
+                        adjustedSize(QSize(clientArea.width(), geom_restore.height()), SizemodeFixedW )), geom_mode );
+                    }
                 }
             else
+                {
                 setGeometry( QRect( QPoint(clientArea.left(), y()),
-                              adjustedSize(QSize(clientArea.width(), height()), SizemodeFixedW )));
+                    adjustedSize(QSize(clientArea.width(), height()), SizemodeFixedW )), geom_mode );
+                }
             info->setState( NET::MaxHoriz, NET::Max );
             break;
             }
@@ -2032,7 +2044,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 if( geom_restore.height() > 0 )
                     restore.moveTop( geom_restore.y());
                 }
-            setGeometry( restore );
+            setGeometry( restore, geom_mode );
             info->setState( 0, NET::Max );
             break;
             }
@@ -2048,7 +2060,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                 }
             QSize adjSize = adjustedSize(clientArea.size(), SizemodeMax );
             QRect r = QRect(clientArea.topLeft(), adjSize);
-            setGeometry( r );
+            setGeometry( r, geom_mode );
             info->setState( NET::Max, NET::Max );
             break;
             }

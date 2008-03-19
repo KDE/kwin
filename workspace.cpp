@@ -973,7 +973,7 @@ void Workspace::slotSettingsChanged(int category)
 /*!
   Reread settings
  */
-KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes() );
+KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes( true ) );
 
 void Workspace::slotReconfigure()
     {

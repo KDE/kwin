@@ -195,7 +195,7 @@ class Client
         QRegion mask() const;
 
         void updateDecoration( bool check_workspace_pos, bool force = false );
-        void checkBorderSizes();
+        bool checkBorderSizes( bool also_resize );
 
         void updateShape();
         
