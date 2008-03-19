@@ -396,10 +396,6 @@ void Client::checkBorderSizes()
     border_right = new_right;
     border_top = new_top;
     border_bottom = new_bottom;
-    if (border_left != new_left ||
-        border_right != new_right ||
-        border_top != new_top ||
-        border_bottom != new_bottom)
     move( calculateGravitation( false ));
     plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
     checkWorkspacePosition();
