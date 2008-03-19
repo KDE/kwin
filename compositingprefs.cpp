@@ -129,7 +129,7 @@ void CompositingPrefs::detect()
     // remember and later restore active context
     GLXContext oldcontext = glXGetCurrentContext();
     GLXDrawable olddrawable = glXGetCurrentDrawable();
-    GLXDrawable oldreaddrawable;
+    GLXDrawable oldreaddrawable = None;
     if( hasglx13 )
         oldreaddrawable = glXGetCurrentReadDrawable();
 
