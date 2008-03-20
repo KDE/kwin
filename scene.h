@@ -190,6 +190,7 @@ class Scene::Window
         int disable_painting;
         mutable QRegion shape_region;
         mutable bool shape_valid;
+        mutable WindowQuadList* cached_quad_list;
         Q_DISABLE_COPY(Window)
     };
 

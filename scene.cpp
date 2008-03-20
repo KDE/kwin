@@ -316,11 +316,13 @@ Scene::Window::Window( Toplevel * c )
     , filter( ImageFilterFast )
     , disable_painting( 0 )
     , shape_valid( false )
+    , cached_quad_list( NULL )
     {
     }
 
 Scene::Window::~Window()
     {
+    delete cached_quad_list;
     }
 
 void Scene::Window::discardShape()
@@ -328,6 +330,8 @@ void Scene::Window::discardShape()
     // it is created on-demand and cached, simply
     // reset the flag
     shape_valid = false;
+    delete cached_quad_list;
+    cached_quad_list = NULL;
     }
 
 // Find out the shape of the window using the XShape extension
@@ -415,12 +419,19 @@ void Scene::Window::disablePainting( int reason )
 
 WindowQuadList Scene::Window::buildQuads() const
     {
+    if( cached_quad_list != NULL )
+        return *cached_quad_list;
+    WindowQuadList ret;
     if( toplevel->clientPos() == QPoint( 0, 0 ) && toplevel->clientSize() == toplevel->size())
-        return makeQuads( WindowQuadContents, shape()); // has no decoration
-    QRegion contents = shape() & QRect( toplevel->clientPos(), toplevel->clientSize());
-    QRegion decoration = shape() - contents;
-    WindowQuadList ret = makeQuads( WindowQuadContents, contents );
-    ret += makeQuads( WindowQuadDecoration, decoration );
+        ret = makeQuads( WindowQuadContents, shape()); // has no decoration
+    else
+        {
+        QRegion contents = shape() & QRect( toplevel->clientPos(), toplevel->clientSize());
+        QRegion decoration = shape() - contents;
+        ret = makeQuads( WindowQuadContents, contents );
+        ret += makeQuads( WindowQuadDecoration, decoration );
+        }
+    cached_quad_list = new WindowQuadList( ret );
     return ret;
     }
 

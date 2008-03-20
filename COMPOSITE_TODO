@@ -232,3 +232,11 @@ Effects TODO
 +   - there's a bug that causes overlapping windows be shown also on desktops painted sooner than the window's desktop
         - needs clipping (and that probably needs support for cumulating clipping)
 !   - make desktop borders distinctive (i.e. paint a grid), to make it more visible that desktops are still separate
+
+
+Performance
+==================
+
++ various caching - there are many things that usually don't change and could gain few fps (is it worth it?)
+    - Workspace::performCompositing()
+    - WindowQuadList could perhaps cache quads split by contents/decoration (for select())
