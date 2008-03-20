@@ -180,7 +180,7 @@ int x11ErrorHandler(Display *d, XErrorEvent *e)
     fprintf( stderr, "kwin: X Error (%s)\n", errorMessage( *e, d ).data());
 
     if( kwin_sync )
-	kDebug() << kBacktrace();
+	fprintf( stderr, "%s\n", kBacktrace().toLocal8Bit().data());
 
     if (initting)
         {
