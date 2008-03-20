@@ -196,4 +196,9 @@ That's all. Bonus points if you try to follow the existing coding style in gener
 I really care about the rest, as long as these rules are followed. If I find out I care about more,
 I'll add them here.
 
-kwin@kde.org
+
+Branches:
+=========
+
+In revision history, there is a commit (r251608) saying 'Merging kwin core from kwin_iii back to HEAD.' ,
+but SVN doesn't give any simple way to find this branch. It is in branches/kwin/kwin_iii.
