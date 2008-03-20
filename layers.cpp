@@ -554,6 +554,10 @@ ClientList Workspace::constrainedStackingOrder()
 
 #if 0
     kDebug() << "stacking1:";
+    for( ClientList::ConstIterator it = unconstrained_stacking_order.begin();
+         it != unconstrained_stacking_order.end();
+         ++it )
+        kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // build the order from layers
     QHash< Group*, Layer > minimum_layer;
@@ -584,7 +588,7 @@ ClientList Workspace::constrainedStackingOrder()
     for( ClientList::ConstIterator it = stacking.begin();
          it != stacking.end();
          ++it )
-        kDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+        kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
@@ -652,7 +656,7 @@ ClientList Workspace::constrainedStackingOrder()
     for( ClientList::ConstIterator it = stacking.begin();
          it != stacking.end();
          ++it )
-        kDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+        kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
     kDebug() << "\n\n";
 #endif
     return stacking;
