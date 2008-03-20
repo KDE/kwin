@@ -38,8 +38,13 @@ class kwinnvidiahack
 kwinnvidiahack::kwinnvidiahack()
     {
     const char* env = getenv( "KWIN_NVIDIA_HACK" );
+#if 1 // turned on by default
+    if( env == NULL || env[ 0 ] != '0' )
+        setenv( "__GL_YIELD", "NOTHING", true );
+#else // turned off by default
     if( env != NULL && env[ 0 ] != '0' )
         setenv( "__GL_YIELD", "NOTHING", true );
+#endif
     }
 
 kwinnvidiahack kwinnvidiahackinst;
