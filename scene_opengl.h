@@ -132,6 +132,7 @@ class SceneOpenGL::Window
         virtual void pixmapDiscarded();
         bool bindTexture();
         void discardTexture();
+        void checkTextureSize();
 
     protected:
         void renderQuads( int mask, const QRegion& region, const WindowQuadList& quads );

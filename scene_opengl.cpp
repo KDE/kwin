@@ -781,7 +781,7 @@ void SceneOpenGL::windowGeometryShapeChanged( Toplevel* c )
         return;                 // by default
     Window* w = windows[ c ];
     w->discardShape();
-    w->discardTexture();
+    w->checkTextureSize();
     }
 
 void SceneOpenGL::windowOpacityChanged( Toplevel* )
@@ -1157,6 +1157,18 @@ bool SceneOpenGL::Window::bindTexture()
 void SceneOpenGL::Window::discardTexture()
     {
     texture.discard();
+    }
+
+// This call is used in SceneOpenGL::windowGeometryShapeChanged(),
+// which originally called discardTexture(), however this was causing performance
+// problems with the launch feedback icon - large number of texture rebinds.
+// Since the launch feedback icon does not resize, only changes shape, it
+// is not necessary to rebind the texture (with no strict binding), therefore
+// discard the texture only if size changes.
+void SceneOpenGL::Window::checkTextureSize()
+    {
+    if( texture.size() != size())
+        discardTexture();
     }
 
 // when the window's composite pixmap is discarded, undo binding it to the texture
