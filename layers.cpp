@@ -289,7 +289,7 @@ void Workspace::raiseOrLowerClient( Client *c)
     }
 
 
-void Workspace::lowerClient( Client* c )
+void Workspace::lowerClient( Client* c, bool nogroup )
     {
     if ( !c )
         return;
@@ -302,14 +302,17 @@ void Workspace::lowerClient( Client* c )
 
     unconstrained_stacking_order.removeAll( c );
     unconstrained_stacking_order.prepend( c );
-    if( c->isTransient())
+    if( !nogroup && c->isTransient() )
         {
-        // lower also mainclients, in their reversed stacking order
-        ClientList mainclients = ensureStackingOrder( c->mainClients());
-        for( int i = mainclients.size() - 1;
+        // lower also all windows in the group, in their reversed stacking order
+        ClientList wins = ensureStackingOrder( c->group()->members());
+        for( int i = wins.size() - 1;
              i >= 0;
              --i )
-            lowerClient( mainclients[ i ] );
+            {
+            if( wins[ i ] != c )
+                lowerClient( wins[ i ], true );
+            }
         }
 
     if ( c == most_recently_raised )
@@ -344,7 +347,7 @@ void Workspace::lowerClientWithinApplication( Client* c )
     // ignore mainwindows
     }
 
-void Workspace::raiseClient( Client* c )
+void Workspace::raiseClient( Client* c, bool nogroup )
     {
     if ( !c )
         return;
@@ -355,13 +358,12 @@ void Workspace::raiseClient( Client* c )
 
     StackingUpdatesBlocker blocker( this );
 
-    if( c->isTransient())
+    if( !nogroup && c->isTransient())
         {
-        ClientList mainclients = ensureStackingOrder( c->mainClients());
-        for( ClientList::ConstIterator it = mainclients.begin();
-             it != mainclients.end();
-             ++it )
-            raiseClient( *it );
+        ClientList wins = ensureStackingOrder( c->group()->members());
+        foreach( Client* c2, wins )
+            if( c2 != c )
+                raiseClient( c2, true );
         }
 
     unconstrained_stacking_order.removeAll( c );

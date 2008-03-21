@@ -129,8 +129,8 @@ class Workspace : public QObject, public KDecorationDefines
 
         QPoint adjustClientPosition( Client* c, QPoint pos );
         QRect adjustClientSize( Client* c, QRect moveResizeGeom, int mode );
-        void raiseClient( Client* c );
-        void lowerClient( Client* c );
+        void raiseClient( Client* c, bool nogroup = false );
+        void lowerClient( Client* c, bool nogroup = false );
         void raiseClientRequest( Client* c, NET::RequestSource src, Time timestamp );
         void lowerClientRequest( Client* c, NET::RequestSource src, Time timestamp );
         void restackClientUnderActive( Client* );
