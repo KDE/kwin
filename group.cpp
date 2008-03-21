@@ -765,9 +765,9 @@ void Client::checkGroupTransients()
                 if( (*it2)->hasTransient( *it1, false ) && (*it3)->hasTransient( *it1, false ))
                     {
                     if( (*it2)->hasTransient( *it3, true ))
-                        (*it3)->transients_list.removeAll( *it1 );
-                    if( (*it3)->hasTransient( *it2, true ))
                         (*it2)->transients_list.removeAll( *it1 );
+                    if( (*it3)->hasTransient( *it2, true ))
+                        (*it3)->transients_list.removeAll( *it1 );
                     }
                 }
             }
