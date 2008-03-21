@@ -244,6 +244,7 @@ class Workspace : public QObject, public KDecorationDefines
         void cascadeDesktop();
         void unclutterDesktop();
         void doNotManage( const QString & );
+        QList< int > decorationSupportedColors() const;
         bool setCurrentDesktop( int new_desktop );
         void nextDesktop();
         void previousDesktop();

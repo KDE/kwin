@@ -57,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "deleted.h"
 #include "effects.h"
+#include "kdecorationfactory.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -2404,6 +2405,22 @@ int Workspace::topMenuHeight() const
 KDecoration* Workspace::createDecoration( KDecorationBridge* bridge )
     {
     return mgr->createDecoration( bridge );
+    }
+
+// returns a list of all colors (KDecorationDefines::ColorType) the current
+// decoration supports
+QList< int > Workspace::decorationSupportedColors() const
+    {
+    KDecorationFactory* factory = mgr->factory();
+    QList< int > ret;
+    for( Ability ab = ABILITYCOLOR_FIRST;
+         ab < ABILITYCOLOR_END;
+         ab = static_cast< Ability>( ab + 1 ))
+        {
+        if( factory->supports( ab ))
+            ret << ab;
+        }
+    return ret;
     }
 
 QString Workspace::desktopName( int desk ) const

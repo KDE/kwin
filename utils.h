@@ -42,6 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglobals.h>
 
+// needed by the DBUS interface
+Q_DECLARE_METATYPE(QList<int>)
 
 namespace KWin
 {

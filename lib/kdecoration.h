@@ -176,12 +176,14 @@ public:
         AbilityButtonResize = 1010, ///< decoration supports a resize button
         // colors
         AbilityColorTitleBack = 2000, ///< decoration supports titlebar background color
+        ABILITYCOLOR_FIRST = AbilityColorTitleBack, ///< @internal
         AbilityColorTitleFore = 2001, ///< decoration supports titlebar foreground color
         AbilityColorTitleBlend = 2002, ///< decoration supports second titlebar background color
         AbilityColorFrame = 2010, ///< decoration supports frame color
         AbilityColorHandle = 2011, ///< decoration supports resize handle color
         AbilityColorButtonBack = 2020, ///< decoration supports button background color
         AbilityColorButtonFore = 2021, ///< decoration supports button foreground color
+        ABILITYCOLOR_END, ///< @internal
         // TODO colors for individual button types
         ABILITY_DUMMY = 10000000
         };
