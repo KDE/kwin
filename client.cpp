@@ -410,6 +410,12 @@ bool Client::checkBorderSizes( bool also_resize )
     return true;
     }
 
+void Client::repaintDecoration()
+    {
+    if( decoration != NULL )
+        decoration->widget()->update();
+    }
+
 void Client::detectNoBorder()
     {
     if( shape())

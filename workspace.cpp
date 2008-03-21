@@ -1011,6 +1011,8 @@ void Workspace::slotReconfigure()
     else
         {
         forEachClient( CheckBorderSizesProcedure());
+        foreach( Client* c, clients )
+            c->repaintDecoration();
         }
 
     if( options->electricBorders() == Options::ElectricAlways )

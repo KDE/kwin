@@ -196,6 +196,7 @@ class Client
 
         void updateDecoration( bool check_workspace_pos, bool force = false );
         bool checkBorderSizes( bool also_resize );
+        void repaintDecoration();
 
         void updateShape();
         
