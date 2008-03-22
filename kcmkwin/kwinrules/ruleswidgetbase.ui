@@ -6,20 +6,11 @@
     <x>0</x>
     <y>0</y>
     <width>685</width>
-    <height>410</height>
+    <height>441</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="leftMargin" >
-    <number>0</number>
-   </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin" >
     <number>0</number>
    </property>
    <item>
@@ -28,6 +19,14 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>681</width>
+        <height>416</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>&amp;Window</string>
       </attribute>
@@ -108,22 +107,6 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="2" colspan="2" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>381</width>
-           <height>47</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="5" column="0" colspan="4" >
         <widget class="QLabel" name="textLabel3" >
          <property name="text" >
@@ -174,24 +157,21 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="2" colspan="2" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>391</width>
-           <height>47</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="8" column="0" colspan="4" >
+       <item row="9" column="0" colspan="4" >
         <layout class="QHBoxLayout" >
+         <item>
+          <spacer name="horizontalSpacer_6" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
          <item>
           <widget class="KPushButton" name="detect" >
            <property name="text" >
@@ -204,7 +184,7 @@
            <property name="orientation" >
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeHint" >
+           <property name="sizeHint" stdset="0" >
             <size>
              <width>40</width>
              <height>20</height>
@@ -214,7 +194,7 @@
          </item>
         </layout>
        </item>
-       <item row="9" column="2" >
+       <item row="10" column="2" >
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -222,7 +202,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>40</height>
@@ -230,9 +210,50 @@
          </property>
         </spacer>
        </item>
+       <item row="4" column="2" >
+        <spacer name="horizontalSpacer_4" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="7" column="2" >
+        <spacer name="horizontalSpacer_5" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="8" column="0" colspan="4" >
+        <widget class="Line" name="line" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>681</width>
+        <height>416</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>Window &amp;Extra</string>
       </attribute>
@@ -360,22 +381,6 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="2" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>391</width>
-           <height>30</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
        <item row="5" column="0" colspan="3" >
         <widget class="QLabel" name="textLabel6" >
          <property name="text" >
@@ -428,22 +433,6 @@
           <string/>
          </property>
         </widget>
-       </item>
-       <item row="7" column="2" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>391</width>
-           <height>30</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item row="8" column="0" colspan="3" >
         <widget class="QLabel" name="textLabel7" >
@@ -498,18 +487,54 @@
          </property>
         </widget>
        </item>
+       <item row="4" column="2" >
+        <spacer name="horizontalSpacer" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="7" column="2" >
+        <spacer name="horizontalSpacer_2" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="10" column="2" >
-        <spacer>
+        <spacer name="horizontalSpacer_3" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="11" column="1" >
+        <spacer name="verticalSpacer" >
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
-           <width>391</width>
-           <height>30</height>
+           <width>20</width>
+           <height>0</height>
           </size>
          </property>
         </spacer>
@@ -517,6 +542,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="TabPage" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>681</width>
+        <height>416</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>&amp;Geometry</string>
       </attribute>
@@ -563,7 +596,7 @@
          <property name="enabled" >
           <bool>false</bool>
          </property>
-         <property name="validChars" >
+         <property name="validChars" stdset="0" >
           <string>0123456789-+,xX:</string>
          </property>
         </widget>
@@ -587,7 +620,7 @@
          <property name="enabled" >
           <bool>false</bool>
          </property>
-         <property name="validChars" >
+         <property name="validChars" stdset="0" >
           <string>0123456789-+,xX:</string>
          </property>
         </widget>
@@ -1007,7 +1040,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>16</height>
@@ -1055,6 +1088,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="TabPage" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>681</width>
+        <height>416</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>&amp;Preferences</string>
       </attribute>
@@ -1142,138 +1183,10 @@
          <property name="enabled" >
           <bool>false</bool>
          </property>
-         <property name="validChars" >
+         <property name="validChars" stdset="0" >
           <string>0123456789</string>
          </property>
         </widget>
-       </item>
-       <item row="7" column="4" colspan="2" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>171</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="6" column="3" colspan="3" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>290</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="5" column="3" colspan="3" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>290</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="4" column="3" colspan="3" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>290</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="3" column="3" colspan="3" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>290</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="3" colspan="3" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>290</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="3" colspan="3" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>290</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="0" column="3" colspan="3" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>290</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item row="0" column="2" >
         <widget class="QCheckBox" name="above" >
@@ -1582,7 +1495,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>80</height>
@@ -1617,26 +1530,10 @@
          <property name="enabled" >
           <bool>false</bool>
          </property>
-         <property name="validChars" >
+         <property name="validChars" stdset="0" >
           <string>0123456789</string>
          </property>
         </widget>
-       </item>
-       <item row="8" column="4" colspan="2" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType" >
-          <enum>QSizePolicy::Expanding</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>181</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
        <item row="8" column="0" >
         <widget class="QCheckBox" name="enable_opacityinactive" >
@@ -1709,6 +1606,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="TabPage" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>681</width>
+        <height>416</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>W&amp;orkarounds</string>
       </attribute>
@@ -1911,7 +1816,7 @@
          <property name="enabled" >
           <bool>false</bool>
          </property>
-         <property name="validChars" >
+         <property name="validChars" stdset="0" >
           <string>0123456789-+,xX:</string>
          </property>
         </widget>
@@ -1957,7 +1862,7 @@
          <property name="enabled" >
           <bool>false</bool>
          </property>
-         <property name="validChars" >
+         <property name="validChars" stdset="0" >
           <string>0123456789-+,xX:</string>
          </property>
         </widget>
@@ -2031,7 +1936,7 @@
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>20</width>
            <height>160</height>
