@@ -135,7 +135,6 @@ Client::Client( Workspace *ws )
     deleting = false;
     keep_above = false;
     keep_below = false;
-    motif_noborder = false;
     motif_may_move = true;
     motif_may_resize = true;
     motif_may_close = true;
@@ -479,7 +478,7 @@ void Client::resizeDecoration( const QSize& s )
 
 bool Client::noBorder() const
     {
-    return noborder || isFullScreen() || user_noborder || motif_noborder;
+    return noborder || isFullScreen() || user_noborder;
     }
 
 bool Client::userCanSetNoBorder() const
@@ -1446,7 +1445,8 @@ void Client::getMotifHints()
     {
     bool mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
     Motif::readFlags( client, mnoborder, mresize, mmove, mminimize, mmaximize, mclose );
-    motif_noborder = mnoborder;
+    if( mnoborder )
+        noborder = true;
     if( !hasNETSupport()) // NETWM apps should set type and size constraints
         {
         motif_may_resize = mresize; // this should be set using minsize==maxsize, but oh well

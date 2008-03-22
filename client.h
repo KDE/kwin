@@ -447,7 +447,6 @@ class Client
         uint Pping : 1; // does it support _NET_WM_PING?
         uint input :1; // does the window want input in its wm_hints
         uint skip_pager : 1;
-        uint motif_noborder : 1;
         uint motif_may_resize : 1;
         uint motif_may_move :1;
         uint motif_may_close : 1;
