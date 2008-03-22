@@ -174,6 +174,7 @@ void DetectDialog::selectWindow()
     // grab only mouse, so that keyboard can be used e.g. for switching windows
     grabber = new KDialog( 0, Qt::X11BypassWindowManagerHint );
     grabber->move( -1000, -1000 );
+    grabber->setModal( true );
     grabber->show();
     grabber->grabMouse( Qt::CrossCursor );
     grabber->installEventFilter( this );
