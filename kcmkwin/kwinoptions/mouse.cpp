@@ -550,7 +550,7 @@ const char* KTitleBarActionsConfig::functionMax( int i )
 void KTitleBarActionsConfig::load()
 {
   KConfigGroup windowsConfig(config, "Windows");
-  setComboText(coTiDbl, windowsConfig.readEntry("TitlebarDoubleClickCommand","Shade").toAscii());
+  setComboText(coTiDbl, windowsConfig.readEntry("TitlebarDoubleClickCommand","Maximize").toAscii());
   for (int t = 0; t < 3; ++t)
     setComboText(coMax[t],windowsConfig.readEntry(cnf_Max[t], tbl_Max[t]).toAscii());
 

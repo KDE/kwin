@@ -130,7 +130,7 @@ unsigned long Options::updateSettings()
     electric_borders = config.readEntry("ElectricBorders", 0);
     electric_border_delay = config.readEntry("ElectricBorderDelay", 150);
 
-    OpTitlebarDblClick = windowOperation( config.readEntry("TitlebarDoubleClickCommand", "Shade"), true );
+    OpTitlebarDblClick = windowOperation( config.readEntry("TitlebarDoubleClickCommand", "Maximize"), true );
     setOpMaxButtonLeftClick( windowOperation( config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true ));
     setOpMaxButtonMiddleClick( windowOperation( config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true ));
     setOpMaxButtonRightClick( windowOperation( config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true ));
