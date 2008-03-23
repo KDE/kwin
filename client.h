@@ -156,10 +156,9 @@ class Client
         QRect geometryFSRestore() const { return geom_fs_restore; } // only for session saving
         int fullScreenMode() const { return fullscreen_mode; } // only for session saving
 
-        bool isUserNoBorder() const;
-        void setUserNoBorder( bool set );
-        bool userCanSetNoBorder() const;
         bool noBorder() const;
+        void setNoBorder( bool set );
+        bool userCanSetNoBorder() const;
 
         bool skipTaskbar( bool from_outside = false ) const;
         void setSkipTaskbar( bool set, bool from_outside );
@@ -455,7 +454,7 @@ class Client
         uint hidden : 1; // forcibly hidden by calling hide()
         uint modal : 1; // NET::Modal
         uint noborder : 1;
-        uint user_noborder : 1;
+        uint app_noborder : 1; // the app requested no border using something (window type, motif hints)
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         uint demands_attention : 1;

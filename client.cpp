@@ -145,7 +145,7 @@ Client::Client( Workspace *ws )
     hidden = false;
     modal = false;
     noborder = false;
-    user_noborder = false;
+    app_noborder = false;
     urgency = false;
     ignore_focus_stealing = false;
     demands_attention = false;
@@ -420,6 +420,7 @@ void Client::detectNoBorder()
     if( shape())
         {
         noborder = true;
+        app_noborder = true;
         return;
         }
     switch( windowType())
@@ -429,6 +430,7 @@ void Client::detectNoBorder()
         case NET::TopMenu :
         case NET::Splash :
             noborder = true;
+            app_noborder = true;
           break;
         case NET::Unknown :
         case NET::Normal :
@@ -445,7 +447,10 @@ void Client::detectNoBorder()
     // just meaning "noborder", so let's treat it only as such flag, and ignore it as
     // a window type otherwise (SUPPORTED_WINDOW_TYPES_MASK doesn't include it)
     if( info->windowType( SUPPORTED_MANAGED_WINDOW_TYPES_MASK | NET::OverrideMask ) == NET::Override )
+        {
         noborder = true;
+        app_noborder = true;
+        }
     }
 
 void Client::updateFrameExtents()
@@ -478,27 +483,22 @@ void Client::resizeDecoration( const QSize& s )
 
 bool Client::noBorder() const
     {
-    return noborder || isFullScreen() || user_noborder;
+    return noborder || isFullScreen();
     }
 
 bool Client::userCanSetNoBorder() const
     {
-    return !noborder && !isFullScreen() && !isShade();
+    return !isFullScreen() && !isShade();
     }
 
-bool Client::isUserNoBorder() const
-    {
-    return user_noborder;
-    }
-
-void Client::setUserNoBorder( bool set )
+void Client::setNoBorder( bool set )
     {
     if( !userCanSetNoBorder())
         return;
     set = rules()->checkNoBorder( set );
-    if( user_noborder == set )
+    if( noborder == set )
         return;
-    user_noborder = set;
+    noborder = set;
     updateDecoration( true, false );
     updateWindowRules();
     }
@@ -506,19 +506,20 @@ void Client::setUserNoBorder( bool set )
 void Client::updateShape()
     {
     // workaround for #19644 - shaped windows shouldn't have decoration
-    if( shape() && !noBorder()) 
-        {
-        noborder = true;
-        updateDecoration( true );
-        }
     if( shape())
         {
-        XShapeCombineShape(display(), frameId(), ShapeBounding,
-                           clientPos().x(), clientPos().y(),
-                           window(), ShapeBounding, ShapeSet);
+        if( !app_noborder ) // only when shape is detected for the first time,
+            {               // still let the user to override
+            app_noborder = true;
+            noborder = true;
+            updateDecoration( true );
+            }
         }
-    // !shape() mask setting is done in setMask() when the decoration
-    // calls it or when the decoration is created/destroyed
+    if( shape() && noBorder())
+        XShapeCombineShape( display(), frameId(), ShapeBounding,
+            clientPos().x(), clientPos().y(), window(), ShapeBounding, ShapeSet );
+    // Decoration mask (i.e. 'else' here) setting is done in setMask()
+    // when the decoration calls it or when the decoration is created/destroyed
     updateInputShape();
     if( compositing())
         addDamageFull();
@@ -527,6 +528,8 @@ void Client::updateShape()
     if( effects != NULL )
         static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geometry());
     }
+
+static Window shape_helper_window = None;
 
 void Client::updateInputShape()
     {
@@ -542,34 +545,43 @@ void Client::updateInputShape()
           // that after the second step there's a hole in the input shape
           // until the real shape of the client is added and that can make
           // the window lose focus (which is a problem with mouse focus policies)
-          
-          // TODO it seems there is, after all - XShapeGetRectangles()
-        static Window helper_window = None;
-        if( helper_window == None )
-            helper_window = XCreateSimpleWindow( display(), rootWindow(),
+          // TODO it seems there is, after all - XShapeGetRectangles() - but maybe this is better
+        if( shape_helper_window == None )
+            shape_helper_window = XCreateSimpleWindow( display(), rootWindow(),
                 0, 0, 1, 1, 0, 0, 0 );
-        XResizeWindow( display(), helper_window, width(), height());
-        XShapeCombineShape( display(), helper_window, ShapeInput, 0, 0,
+        XResizeWindow( display(), shape_helper_window, width(), height());
+        XShapeCombineShape( display(), shape_helper_window, ShapeInput, 0, 0,
                            frameId(), ShapeBounding, ShapeSet );
-        XShapeCombineShape( display(), helper_window, ShapeInput,
+        XShapeCombineShape( display(), shape_helper_window, ShapeInput,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeBounding, ShapeSubtract );
-        XShapeCombineShape( display(), helper_window, ShapeInput,
+        XShapeCombineShape( display(), shape_helper_window, ShapeInput,
                            clientPos().x(), clientPos().y(),
                            window(), ShapeInput, ShapeUnion );
         XShapeCombineShape( display(), frameId(), ShapeInput, 0, 0,
-                           helper_window, ShapeInput, ShapeSet );
+                           shape_helper_window, ShapeInput, ShapeSet );
         }
     }
 
 void Client::setMask( const QRegion& reg, int mode )
     {
+    if( _mask == reg )
+        return;
     _mask = reg;
+    Window shape_window = frameId();
+    if( shape())
+        {
+        // the same way of applying a shape without strange intermediate states like above
+        if( shape_helper_window == None )
+            shape_helper_window = XCreateSimpleWindow( display(), rootWindow(),
+                0, 0, 1, 1, 0, 0, 0 );
+        shape_window = shape_helper_window;
+        }
     if( reg.isEmpty())
-        XShapeCombineMask( display(), frameId(), ShapeBounding, 0, 0,
+        XShapeCombineMask( display(), shape_window, ShapeBounding, 0, 0,
             None, ShapeSet );
     else if( mode == X::Unsorted )
-        XShapeCombineRegion( display(), frameId(), ShapeBounding, 0, 0,
+        XShapeCombineRegion( display(), shape_window, ShapeBounding, 0, 0,
             reg.handle(), ShapeSet );
     else
         {
@@ -584,9 +596,20 @@ void Client::setMask( const QRegion& reg, int mode )
             xrects[ i ].width = rects[ i ].width();
             xrects[ i ].height = rects[ i ].height();
             }
-        XShapeCombineRectangles( display(), frameId(), ShapeBounding, 0, 0,
+        XShapeCombineRectangles( display(), shape_window, ShapeBounding, 0, 0,
             xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
+        }
+    if( shape())
+        { // the rest of the applyign using a temporary window
+        XRectangle rec = { 0, 0, clientSize().width(), clientSize().height() };
+        XShapeCombineRectangles( display(), shape_helper_window, ShapeBounding,
+                           clientPos().x(), clientPos().y(), &rec, 1, ShapeSubtract, Unsorted );
+        XShapeCombineShape( display(), shape_helper_window, ShapeBounding,
+                           clientPos().x(), clientPos().y(),
+                           window(), ShapeBounding, ShapeUnion );
+        XShapeCombineShape( display(), frameId(), ShapeBounding, 0, 0,
+                           shape_helper_window, ShapeBounding, ShapeSet );
         }
     if( compositing())
         addDamageFull();
@@ -1446,7 +1469,10 @@ void Client::getMotifHints()
     bool mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
     Motif::readFlags( client, mnoborder, mresize, mmove, mminimize, mmaximize, mclose );
     if( mnoborder )
+        {
         noborder = true;
+        app_noborder =  true;
+        }
     if( !hasNETSupport()) // NETWM apps should set type and size constraints
         {
         motif_may_resize = mresize; // this should be set using minsize==maxsize, but oh well

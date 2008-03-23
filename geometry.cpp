@@ -2199,7 +2199,7 @@ void Client::setFullScreen( bool set, bool user )
 int Client::checkFullScreenHack( const QRect& geom ) const
     {
     // if it's noborder window, and has size of one screen or the whole desktop geometry, it's fullscreen hack
-    if( noBorder() && !isUserNoBorder() && isFullScreenable( true ))
+    if( noBorder() && app_noborder && isFullScreenable( true ))
         {
         if( geom.size() == workspace()->clientArea( FullArea, geom.center(), desktop()).size())
             return 2; // full area fullscreen hack

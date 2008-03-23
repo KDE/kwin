@@ -495,8 +495,8 @@ bool Rules::update( Client* c )
         }
     if( noborderrule == ( SetRule )Remember)
         {
-        updated = updated || noborder != c->isUserNoBorder();
-        noborder = c->isUserNoBorder();
+        updated = updated || noborder != c->noBorder();
+        noborder = c->noBorder();
         }
     if (opacityactiverule == ( ForceRule )Force)
         {
@@ -838,7 +838,7 @@ void Client::applyWindowRules()
     setKeepAbove( keepAbove());
     setKeepBelow( keepBelow());
     setFullScreen( isFullScreen(), true );
-    setUserNoBorder( isUserNoBorder());
+    setNoBorder( noBorder());
     // FSP
     // AcceptFocus :
     if( workspace()->mostRecentlyActivatedClient() == this

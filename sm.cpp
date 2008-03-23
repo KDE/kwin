@@ -121,7 +121,8 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             cg.writeEntry( QString("keepBelow")+n, c->keepBelow() );
             cg.writeEntry( QString("skipTaskbar")+n, c->skipTaskbar( true ) );
             cg.writeEntry( QString("skipPager")+n, c->skipPager() );
-            cg.writeEntry( QString("userNoBorder")+n, c->isUserNoBorder() );
+            // not really just set by user, but name kept for back. comp. reasons
+            cg.writeEntry( QString("userNoBorder")+n, c->noBorder() );
             cg.writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
             cg.writeEntry( QString("shortcut")+n, c->shortcut().toString());
             cg.writeEntry( QString("stackingOrder")+n, unconstrained_stacking_order.indexOf( c ));
@@ -185,7 +186,7 @@ void Workspace::loadSessionInfo()
         info->keepBelow = cg.readEntry( QString("keepBelow")+n, false  );
         info->skipTaskbar = cg.readEntry( QString("skipTaskbar")+n, false  );
         info->skipPager = cg.readEntry( QString("skipPager")+n, false  );
-        info->userNoBorder = cg.readEntry( QString("userNoBorder")+n, false  );
+        info->noBorder = cg.readEntry( QString("userNoBorder")+n, false  );
         info->windowType = txtToWindowType( cg.readEntry( QString("windowType")+n, QString() ).toLatin1());
         info->shortcut = cg.readEntry( QString("shortcut")+n, QString() );
         info->active = ( active_client == i );

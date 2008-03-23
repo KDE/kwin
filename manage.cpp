@@ -140,20 +140,16 @@ bool Client::manage( Window w, bool isMapped )
     workspace()->updateClientLayer( this );
 
     SessionInfo* session = workspace()->takeSessionInfo( this );
-    
-    if ( session )
+    if( session )
         {
-        if ( session->minimized )
-            init_minimize = true;
-        if( session->userNoBorder )
-            setUserNoBorder( true );
+        init_minimize = session->minimized;
+        noborder = session->noBorder;
         }
 
     setShortcut( rules()->checkShortcut( session ? session->shortcut : QString(), true ));
 
     init_minimize = rules()->checkMinimize( init_minimize, !isMapped );
-    if( rules()->checkNoBorder( false, !isMapped ))
-        setUserNoBorder( true );
+    noborder = rules()->checkNoBorder( noborder, !isMapped );
     
     // initial desktop placement
     if ( session ) 

@@ -499,7 +499,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             c->setFullScreen( !c->isFullScreen(), true );
             break;
         case Options::NoBorderOp:
-            c->setUserNoBorder( !c->isUserNoBorder());
+            c->setNoBorder( !c->noBorder());
             break;
         case Options::KeepAboveOp:
             {

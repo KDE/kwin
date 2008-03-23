@@ -56,7 +56,7 @@ struct SessionInfo
     bool keepBelow;
     bool skipTaskbar;
     bool skipPager;
-    bool userNoBorder;
+    bool noBorder;
     NET::WindowType windowType;
     QString shortcut;
     bool active; // means 'was active in the saved session'
