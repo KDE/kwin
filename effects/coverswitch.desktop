@@ -9,6 +9,7 @@ Name[sr]=Покровно пребацивање
 Name[sr@latin]=Pokrovno prebacivanje
 Name[th]=สลับหน้าต่างแบบปกเทป
 Name[tr]=Kapak Pencere Seçici
+Name[x-test]=xxCover Switchxx
 Name[zh_CN]=罩面切换
 Name[zh_TW]=覆蓋切換
 Icon=preferences-system-windows-effect-coverswitch
@@ -25,6 +26,7 @@ Comment[sr]=Покровно пребацивање — алтернатива �
 Comment[sr@latin]=Pokrovno prebacivanje — alternativa promeni prozora Alt+Tabom
 Comment[th]=สลับหน้าต่างแบบปกเทป - ทางเลือกใหม่สำหรับการสลับหน้าต่างทำงานเมื่อกดปุ่มพิมพ์ alt+tab
 Comment[tr]=Kapak Seçici - alternatif alt-tab pencere seçici
+Comment[x-test]=xxCover Switch - an alternative alt+tab window switcherxx
 Comment[zh_CN]=罩面切换 - 备选的 Alt+Tab 窗口切换器
 Comment[zh_TW]=覆蓋切換─另一種 alt+tab 視窗切換器
 
