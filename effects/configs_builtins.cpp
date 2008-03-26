@@ -70,12 +70,17 @@ KWIN_EFFECT_CONFIG_FACTORY
     registerPlugin<KWin::SharpenEffectConfig>("sharpen"); \
     registerPlugin<KWin::SnowEffectConfig>("snow"); \
     registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse"); \
+
+#define GL_RENDER_PLUGINS \
     registerPlugin<KWin::ShowFpsEffectConfig> ("showfps"); \
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
     NON_GL_PLUGINS
     GL_PLUGINS
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    GL_RENDER_PLUGINS
+#endif
     )
 #else
 K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
