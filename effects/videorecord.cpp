@@ -24,20 +24,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  Requires libcaptury:
 
- - svn co svn://77.74.232.49/captury/trunk/capseo
+ - git clone git://gitorious.org/capseo/mainline.git capseo
  - you may want to remove 1.10 from AUTOMAKE_OPTIONS in Makefile.am
  - ./autogen.sh
  - the usual configure && make && make install procedure
    (you may want to pass --enable-theora --with-accel=x86 [or amd64])
 
- - svn co svn://77.74.232.49/captury/trunk/libcaptury
+ - git clone git://gitorious.org/libcaptury/mainline.git libcaptury
  - you may want to remove 1.10 from AUTOMAKE_OPTIONS in Makefile.am
  - ./autogen.sh
  - the usual configure && make && make install procedure
 
  Video is saved to $HOME/kwin_video.cps, use
  "cpsrecode -i kwin_video.cps  -o - | mplayer -" to play,
- use mencoder the same way to create a video.
+ to create a video use "cpsrecode -c theora -i kwin_video.cps -o screen.ogg"
+ or use mencoder in a similar way as mplayer.
 
 */
 
