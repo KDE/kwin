@@ -64,6 +64,7 @@ PresentWindowsEffect::PresentWindowsEffect()
 
     borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricNone);
     borderActivateAll = (ElectricBorder)conf.readEntry("BorderActivateAll", (int)ElectricTopLeft);
+    drawWindowCaptions = conf.readEntry("DrawWindowCaptions", false);
 
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );
@@ -84,7 +85,7 @@ PresentWindowsEffect::~PresentWindowsEffect()
 void PresentWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     // How long does it take for the effect to get it's full strength (in ms)
-    const double changeTime = 300;
+    const double changeTime = 125;
     if(mActivated)
         {
         mActiveness = qMin(1.0, mActiveness + time/changeTime);
@@ -122,7 +123,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
                 data.setTranslucent();
             // Change window's highlight
             WindowData& windata = mWindowData[w];
-            const double highlightchangetime = 200;
+            const double highlightchangetime = 100;
             if( w == mHighlightedWindow )
                 windata.highlight = qMin(1.0, windata.highlight + time / highlightchangetime);
             else
@@ -205,18 +206,21 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         const WindowData& windata = mWindowData[w];
         paintWindowIcon( w, data );
 
-        QString text = w->caption();
-        double centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
-        double centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
-        int maxwidth = (int)(w->width() * data.xScale - 20);
-        double opacity = (0.7 + 0.2*windata.highlight) * data.opacity * mActiveness;
-        QColor textcolor( 255, 255, 255, (int)(255*opacity) );
-        QColor bgcolor( 0, 0, 0, (int)(255*opacity) );
-        QFont f;
-        f.setBold( true );
-        f.setPointSize( 12 );
-        effects->paintTextWithBackground( text, QPoint( (int)centerx, (int)centery ), maxwidth,
-                                        textcolor, bgcolor, f);
+        if (drawWindowCaptions)
+            {
+            QString text = w->caption();
+            double centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
+            double centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
+            int maxwidth = (int)(w->width() * data.xScale - 20);
+            double opacity = (0.7 + 0.2*windata.highlight) * data.opacity * mActiveness;
+            QColor textcolor( 255, 255, 255, (int)(255*opacity) );
+            QColor bgcolor( 0, 0, 0, (int)(255*opacity) );
+            QFont f;
+            f.setBold( true );
+            f.setPointSize( 12 );
+            effects->paintTextWithBackground( text, QPoint( (int)centerx, (int)centery ), maxwidth,
+                                            textcolor, bgcolor, f);
+            }
         }
     }
 

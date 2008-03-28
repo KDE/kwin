@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmodule.h>
 #undef KDE3_SUPPORT
 
+class QCheckBox;
 class QComboBox;
 class KShortcutsEditor;
 
@@ -46,6 +47,7 @@ class PresentWindowsEffectConfig : public KCModule
         void addItems(QComboBox* combo);
 
     private:
+        QCheckBox* mDrawWindowText;
         QComboBox* mActivateCombo;
         QComboBox* mActivateAllCombo;
         KShortcutsEditor* mShortcutEditor;

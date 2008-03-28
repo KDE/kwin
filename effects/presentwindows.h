@@ -137,6 +137,7 @@ class PresentWindowsEffect
 
         ElectricBorder borderActivate;
         ElectricBorder borderActivateAll;
+        bool drawWindowCaptions;
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         XRenderPictFormat* alphaFormat;
