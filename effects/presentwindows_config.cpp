@@ -124,7 +124,7 @@ void PresentWindowsEffectConfig::load()
         activateAllBorder--;
     mActivateAllCombo->setCurrentIndex(activateAllBorder);
 
-    bool drawWindowCaptions = conf.readEntry("DrawWindowCaptions", false);
+    bool drawWindowCaptions = conf.readEntry("DrawWindowCaptions", true);
     mDrawWindowText->setChecked(drawWindowCaptions);
 
     emit changed(false);
@@ -161,7 +161,7 @@ void PresentWindowsEffectConfig::defaults()
     kDebug() ;
     mActivateCombo->setCurrentIndex( (int)ElectricNone - 1 );
     mActivateAllCombo->setCurrentIndex( (int)ElectricTopLeft );
-    mDrawWindowText->setChecked(false);
+    mDrawWindowText->setChecked(true);
     mShortcutEditor->allDefault();
     emit changed(true);
     }

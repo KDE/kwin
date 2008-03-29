@@ -64,7 +64,7 @@ PresentWindowsEffect::PresentWindowsEffect()
 
     borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricNone);
     borderActivateAll = (ElectricBorder)conf.readEntry("BorderActivateAll", (int)ElectricTopLeft);
-    drawWindowCaptions = conf.readEntry("DrawWindowCaptions", false);
+    drawWindowCaptions = conf.readEntry("DrawWindowCaptions", true);
 
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );
