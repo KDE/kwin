@@ -120,7 +120,7 @@ if (X11_Xfixes_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xfixes_LIB})
 endif (X11_Xfixes_FOUND)
 
-install(TARGETS kdeinit_kwin  DESTINATION ${LIB_INSTALL_DIR} )
+install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 target_link_libraries( kwin kdeinit_kwin )
 install(TARGETS kwin DESTINATION ${BIN_INSTALL_DIR})
@@ -135,7 +135,7 @@ set( kwinnvidiahack_LIB_SRCS
 kde4_add_library(kwinnvidiahack SHARED ${kwinnvidiahack_LIB_SRCS})
 
 set_target_properties(kwinnvidiahack PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}  )
-install(TARGETS kwinnvidiahack  DESTINATION ${LIB_INSTALL_DIR} )
+install(TARGETS kwinnvidiahack ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
