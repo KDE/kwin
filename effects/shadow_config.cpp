@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "shadow_config.h"
+#include "shadow_helper.h"
 
 #include <kwineffects.h>
 
@@ -37,12 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
-
-// Save some typing
-static QColor schemeShadowColor()
-{
-    return KColorScheme::shade(Qt::white, KColorScheme::ShadowShade);
-}
 
 namespace KWin
 {

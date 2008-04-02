@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "shadow.h"
+#include "shadow_helper.h"
 
 #include <kwinglutils.h>
 
@@ -26,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <KStandardDirs>
 #include <kcolorscheme.h>
+#include <KGlobalSettings>
 
 namespace KWin
 {
@@ -40,11 +42,20 @@ ShadowEffect::ShadowEffect()
     shadowOpacity = conf.readEntry( "Opacity", 0.25 );
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
     shadowSize = conf.readEntry( "Size", 5 );
-    shadowColor = conf.readEntry( "Color",  KColorScheme::shade( Qt::white, KColorScheme::ShadowShade ) );
     intensifyActiveShadow = conf.readEntry( "IntensifyActiveShadow", true );
 
     QString shadowtexture =  KGlobal::dirs()->findResource("data", "kwin/shadow-texture.png");
     mShadowTexture = new GLTexture(shadowtexture);
+
+    updateShadowColor();
+    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+             this, SLOT(updateShadowColor()));
+    }
+
+void ShadowEffect::updateShadowColor()
+    {
+    KConfigGroup conf = effects->effectConfig("Shadow");
+    shadowColor = conf.readEntry( "Color",  schemeShadowColor() );
     }
 
 QRect ShadowEffect::shadowRectangle(const QRect& windowRectangle) const
@@ -229,3 +240,5 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
     }
 
 } // namespace
+
+#include "shadow.h"
