@@ -24,3 +24,6 @@ This document lists changed needed for porting KWin decoration clients from KDE3
 - KDecoration::animateMinimize() and KDecoration::helperShowHide() have been removed,
     animations are now implemented only by KWin's compositing code
 - there are new AbilityColor* abilities you should add to supports()
+- Qt::WA_PaintOnScreen attribute is enabled for KDecoration::widget() in order to avoid
+    extensive and unnecessary memory usage caused by the backing store. Double-buffer
+    manually if necessary using a temporary QPixmap in paintEvent().
