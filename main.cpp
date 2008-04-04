@@ -490,6 +490,8 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
         signal(SIGHUP, SIG_IGN);
     // HACK this is needed for AIGLX
     setenv( "LIBGL_ALWAYS_INDIRECT","1", true );
+    // HACK this is needed to work around a Qt4.4.0RC1 bug (#157659)
+    setenv( "QT_SLOW_TOPLEVEL_RESIZE", "1", true );
     KWin::Application a;
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
