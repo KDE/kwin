@@ -34,6 +34,21 @@ MakeTransparentEffect::MakeTransparentEffect()
     moveresize = conf.readEntry( "MoveResize", 0.8 );
     dialogs = conf.readEntry( "Dialogs", 1.0 );
     inactive = conf.readEntry( "Inactive", 1.0 );
+    comboboxpopups = conf.readEntry( "ComboboxPopups", 1.0 );
+    menus = conf.readEntry( "Menus", 1.0 );
+    individualmenuconfig = conf.readEntry( "IndividualMenuConfig", false );
+    if( individualmenuconfig )
+        {
+        dropdownmenus = conf.readEntry( "DropdownMenus", 1.0 );
+        popupmenus = conf.readEntry( "PopupMenus", 1.0 );
+        tornoffmenus = conf.readEntry( "TornOffMenus", 1.0 );
+        }
+    else
+        {
+        dropdownmenus = menus;
+        popupmenus = menus;
+        tornoffmenus = menus;
+        }
     active = effects->activeWindow();
     }
 
@@ -50,6 +65,14 @@ void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData&
         {
         data.setTranslucent();
         }
+    if( ( dropdownmenus != 1.0 && w->isDropdownMenu() )
+        || ( popupmenus != 1.0 && w->isPopupMenu() )
+        || ( tornoffmenus != 1.0 && w->isMenu() )
+        || ( comboboxpopups != 1.0 && w->isComboBox() ) )
+        {
+        data.setTranslucent();
+        }
+
     effects->prePaintWindow( w, data, time );
     }
 
@@ -67,6 +90,14 @@ void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion regi
             data.opacity *= dialogs;
         if( moveresize != 1.0 && ( w->isUserMove() || w->isUserResize()))
             data.opacity *= moveresize;
+        if( dropdownmenus != 1.0 && w->isDropdownMenu() )
+            data.opacity *= dropdownmenus;
+        if( popupmenus != 1.0 && w->isPopupMenu() )
+            data.opacity *= popupmenus;
+        if( tornoffmenus != 1.0 && w->isMenu() )
+            data.opacity *= tornoffmenus;
+        if( comboboxpopups != 1.0 && w->isComboBox() )
+            data.opacity *= comboboxpopups;
         }
     effects->paintWindow( w, mask, region, data );
     }

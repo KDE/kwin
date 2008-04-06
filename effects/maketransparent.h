@@ -42,6 +42,13 @@ class MakeTransparentEffect
         double moveresize;
         double dialogs;
         double inactive;
+        double comboboxpopups;
+        double menus;
+        bool individualmenuconfig;
+        double dropdownmenus;
+        double popupmenus;
+        double tornoffmenus;
+        
         EffectWindow* active;
     };
 

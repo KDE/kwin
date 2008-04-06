@@ -25,10 +25,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmodule.h>
 #undef KDE3_SUPPORT
 
-class QSpinBox;
+#include "ui_maketransparent_config.h"
 
 namespace KWin
 {
+
+class MakeTransparentEffectConfigForm : public QWidget, public Ui::MakeTransparentEffectConfigForm
+{
+    Q_OBJECT
+    public:
+        explicit MakeTransparentEffectConfigForm(QWidget* parent);
+};
 
 class MakeTransparentEffectConfig : public KCModule
     {
@@ -40,11 +47,11 @@ class MakeTransparentEffectConfig : public KCModule
         virtual void load();
         virtual void defaults();
 
+    public slots:
+        void setIndividualMenuConfig(int);
+
     private:
-        QSpinBox* mDecoration;
-        QSpinBox* mMoveResize;
-        QSpinBox* mDialogs;
-        QSpinBox* mInactive;
+        MakeTransparentEffectConfigForm* m_ui;
     };
 
 } // namespace

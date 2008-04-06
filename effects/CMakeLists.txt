@@ -77,6 +77,7 @@ SET(kwin4_effect_builtins_config_sources
     diminactive_config.cpp
     diminactive_config.ui
     maketransparent_config.cpp
+    maketransparent_config.ui
     presentwindows_config.cpp
     shadow_config.cpp
     thumbnailaside_config.cpp
