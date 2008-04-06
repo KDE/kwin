@@ -132,7 +132,7 @@
        <item>
         <widget class="QLabel" name="label_2" >
          <property name="text" >
-          <string>Hint: to find out or configure how to activate an effect, look at effect's settings</string>
+          <string>Hint: To find out or configure how to activate an effect, look at the effect's settings.</string>
          </property>
         </widget>
        </item>
