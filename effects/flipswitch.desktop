@@ -2,6 +2,7 @@
 Name=Flip Switch
 Name[eo]=Turna ŝanĝilo
 Name[es]=Alternar conmutador
+Name[fi]=Kääntövaihtaja
 Name[km]=ប្ដូរ​ការ​ត្រឡប់​
 Name[ko]=플립 전환기
 Name[nds]=Dreihwesseln
@@ -17,6 +18,8 @@ Name[zh_CN]=翻转切换
 Name[zh_TW]=翻轉切換
 Icon=preferences-system-windows-effect-flipswitch
 Comment=Alt-Tab window switcher flipping through windows on a stack
+Comment[fi]=Alt+Tab-ikkunavaihtaja pinossa olevien ikkunoiden vaihtamiseksi
+Comment[ga]=Malartóir fuinneog Alt-Táb a ransaíonn fuinneoga i gcruach
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect

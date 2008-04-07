@@ -2,6 +2,7 @@
 Name=Dim Screen for Administrator Mode
 Name[de]=Systemverwaltungsmodus-Bildschirm abdunkeln
 Name[es]=Aclarar la pantalla en el modo administrador
+Name[fi]=Tummena näyttö pääkäyttäjätilassa
 Name[ga]=Doiléirigh an Scáileán i Mód an Riarthóra
 Name[km]=បន្ថយ​ពន្លឺ​អេក្រង់ សម្រាប់​របៀប​ជា​អ្នក​គ្រប់គ្រង
 Name[pt]=Escurecer o Ecrã para o Modo de Administração
@@ -17,6 +18,7 @@ Icon=preferences-system-windows-effect-dimscreen
 Comment=Dims the screen if a window asks for root password
 Comment[de]=Dunkelt den Bildschirm ab, wenn ein Fenster nach dem Systemverwalter-Kennwort fragt
 Comment[es]=Aclara la pantalla si una ventana pide la contraseña de administrador
+Comment[fi]=Tummentaa näytön, jos ikkuna kysyy pääkäyttäjän salasanaa
 Comment[ga]=Doiléirigh an scáileán nuair a iarrann fuinneog focal faire an fhorúsáideora
 Comment[km]=បន្ថយ​ពន្លឺ​អេក្រង់ នៅពេល​ដែល​បង្អួច​សួររក​ពាក្យ​សម្ងាត់ root
 Comment[pt]=Escurece o ecrã se alguma janela pedir a senha do 'root'

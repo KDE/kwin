@@ -51,6 +51,8 @@ Name[zh_CN]=淡入淡出
 Name[zh_TW]=淡出
 Icon=preferences-system-windows-effect-fade
 Comment=Makes windows smoothly fade in/out when they are shown or hidden
+Comment[fi]=Ikkunat tulevat näkyviin tai poistuvat näkyvistä pehmeästi häivyttäen
+Comment[ga]=Leis seo, céimneoidh fuinneoga isteach/amach agus iad á dtaispeáint nó á bhfolú
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect

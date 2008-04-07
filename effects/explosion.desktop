@@ -48,6 +48,8 @@ Name[zh_CN]=爆炸
 Name[zh_TW]=爆炸
 Icon=preferences-system-windows-effect-explosion
 Comment=Makes windows explode when they are closed
+Comment[fi]=Räjäyttää ikkunat suljettaessa
+Comment[ga]=Leis seo, pléascfaidh fuinneoga nuair a dhúntar iad
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect

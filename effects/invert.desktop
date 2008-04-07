@@ -51,6 +51,9 @@ Name[x-test]=xxInvertxx
 Name[zh_CN]=反转
 Name[zh_TW]=反轉
 Comment=Inverts (negates) desktop colors
+Comment[en_GB]=Inverts (negates) desktop colours
+Comment[fi]=Kääntää työpöydän värit
+Comment[ga]=Inbhéartaigh dathanna na deisce
 Icon=preferences-system-windows-effect-invert
 
 Type=Service
