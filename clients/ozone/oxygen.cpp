@@ -47,6 +47,7 @@ namespace Oxygen
 
 bool OxygenFactory::initialized_ = false;
 Qt::Alignment OxygenFactory::titlealign_ = Qt::AlignLeft;
+bool OxygenFactory::blendTitlebarColors_ = true;
 
 //////////////////////////////////////////////////////////////////////////////
 // OxygenFactory()
@@ -116,7 +117,10 @@ bool OxygenFactory::readConfig()
     else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 
-    if (oldalign == titlealign_)
+    bool oldblend = blendTitlebarColors;    
+    blendTitlebarColors_ = group.readEntry( "BlendTitlebarColors", true );
+
+    if (oldalign == titlealign_ && oldblend == blendTitlebarColors_)
         return false;
     else
         return true;

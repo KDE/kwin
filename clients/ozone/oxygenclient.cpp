@@ -237,6 +237,8 @@ QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
 
 QColor OxygenClient::titlebarTextColor(const QPalette &palette)
 {
+    if( !OxygenFactory::blendTitlebarColors())
+        return options()->color(ColorFont, isActive());
     if (isActive())
         return palette.color(QPalette::Active, QPalette::WindowText);
     else {
@@ -271,7 +273,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     int x,y,w,h;
     QRect frame = widget()->frameGeometry();
-    QColor color = palette.window().color();
+    QColor color = OxygenFactory::blendTitlebarColors() ? palette.window().color() : options()->color( ColorTitleBar, isActive());
 
     const int titleHeight = layoutMetric(LM_TitleHeight);
     const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top();

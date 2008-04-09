@@ -65,6 +65,7 @@ public:
 
     static bool initialized();
     static Qt::Alignment titleAlign();
+    static bool blendTitlebarColors();
 
 private:
     bool readConfig();
@@ -72,6 +73,7 @@ private:
 private:
     static bool initialized_;
     static Qt::Alignment titlealign_;
+    static bool blendTitlebarColors_;
 };
 
 inline bool OxygenFactory::initialized()
@@ -79,6 +81,9 @@ inline bool OxygenFactory::initialized()
 
 inline Qt::Alignment OxygenFactory::titleAlign()
     { return titlealign_; }
+
+inline bool OxygenFactory::blendTitlebarColors()
+    { return blendTitlebarColors_; }
 
 } //namespace Oxygen
 } //namespace Ozone

@@ -176,23 +176,26 @@ void OxygenButton::paintEvent(QPaintEvent *)
     if(client_.maximizeMode() == OxygenClient::MaximizeRestore)
         painter.translate(0,-1);
 
-    QColor bg = helper_.backgroundTopColor(pal.window());
+    QColor bg = helper_.backgroundTopColor(OxygenFactory::blendTitlebarColors()?pal.window().color()
+        :client_.options()->color(KDecorationDefines::ColorTitleBar,client_.isActive()));
 
     QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), buttonDetailColor(pal));
 
+    QColor bt = OxygenFactory::blendTitlebarColors()?pal.button().color()
+            :client_.options()->color(KDecorationDefines::ColorButtonBg,client_.isActive());
     if(status_ == Oxygen::Hovered) {
         if(type_ == ButtonClose) {
             QColor color = KColorScheme(pal.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
             lg = helper_.decoGradient(QRect(4,4,13,13), color);
-            painter.drawPixmap(0, 0, helper_.windecoButtonFocused(pal.button(), color,7));
+            painter.drawPixmap(0, 0, helper_.windecoButtonFocused(bt, color,7));
         }
         else{
             QColor color = KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
-            painter.drawPixmap(0, 0, helper_.windecoButtonFocused(pal.button(), color, 7));
+            painter.drawPixmap(0, 0, helper_.windecoButtonFocused(bt, color, 7));
         }
     }
     else
-        painter.drawPixmap(0, 0, helper_.windecoButton(pal.button()));
+        painter.drawPixmap(0, 0, helper_.windecoButton(bt));
 
     painter.setRenderHints(QPainter::Antialiasing);
     painter.setBrush(Qt::NoBrush);
