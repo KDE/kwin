@@ -20,6 +20,10 @@ Icon=preferences-system-windows-effect-flipswitch
 Comment=Alt-Tab window switcher flipping through windows on a stack
 Comment[fi]=Alt+Tab-ikkunavaihtaja pinossa olevien ikkunoiden vaihtamiseksi
 Comment[ga]=Malartóir fuinneog Alt-Táb a ransaíonn fuinneoga i gcruach
+Comment[km]=ជំនួស(Alt)-ថេប(tab) កម្មវិធី​ប្ដូរ​បង្អួច​ត្រឡប់​តាមរយៈ​បង្អួច​នៅ​លើ​ជង់
+Comment[pt_BR]=Seletor de janelas Alt-Tab que percorre as janelas em uma pilha
+Comment[th]=ตัวสลับหน้าต่างผ่านทางการกดแป้น Alt-tab โดยใช้การพลิกหน้าต่างผ่านชั้นหน้าต่าง
+Comment[zh_TW]=Alt+Tab 視窗切換器在堆疊內翻轉視窗
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect

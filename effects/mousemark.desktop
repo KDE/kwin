@@ -54,6 +54,11 @@ Icon=preferences-system-windows-effect-mouse-mark
 Comment=Lets you draw lines on your desktop
 Comment[fi]=Voit piirtää viivoja työpöydälle
 Comment[ga]=Uirlis a cheadaíonn duit línte a dhearadh ar do dheasc
+Comment[gu]=તમારા ડેસ્કટોપ પર લીટીઓ દોરવા દે છે
+Comment[km]=អនុញ្ញាត​ឲ្យ​អ្នក​គូស​បន្ទាត់​ច្រើន​នៅ​លើ​ផ្ទៃតុ​របស់​អ្នក
+Comment[pt_BR]=Permite que você desenhe linhas na sua área de trabalho
+Comment[th]=ให้คุณได้วาดเส้นบนพื้นที่ทำงานของคุณ
+Comment[zh_TW]=讓您在您的桌面上畫線
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
