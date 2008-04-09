@@ -1,0 +1,9 @@
+This decoration is a fork of the Oxygen decoration, for reasons stated
+in bug #152030 (comment #70 and others), namely Oxygen developers not
+willing to accept widely-requested patches because of not fitting
+the Oxygen vision and instead preferring a fork that's not branded
+as Oxygen.
+
+Everything is put into extra namespace called Ozone to make syncing easier.
+All visible strings have Oxygen changed to Ozone.
+Other things are not renamed to minimize conflicts as much as possible.

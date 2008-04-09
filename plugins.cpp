@@ -33,7 +33,7 @@ PluginMgr::PluginMgr()
     : KDecorationPlugins( KGlobal::config())
     {
     defaultPlugin = (QPixmap::defaultDepth() > 8) ?
-            "kwin3_oxygen" : "kwin3_plastik";
+            "kwin3_ozone" : "kwin3_plastik";
     loadPlugin( "" ); // load the plugin specified in cfg file
     }
 
