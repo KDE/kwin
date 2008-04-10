@@ -34,9 +34,11 @@ set(kwin_EFFECTSLIB_SRCS
     kwinglutils_funcs.cpp
     kwinshadereffect.cpp
     )
+
 kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 target_link_libraries(kwineffects ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${X11_LIBRARIES})
 set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+
 install(TARGETS kwineffects ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if(OPENGL_FOUND)
