@@ -35,10 +35,11 @@ extern "C"
 {
     KDE_EXPORT QObject* allocate_config( KConfig* conf, QWidget* parent )
     {
-        return ( new Oxygen::OxygenConfig( conf, parent ) );
+        return ( new Ozone::Oxygen::OxygenConfig( conf, parent ) );
     }
 }
 
+namespace Ozone {
 namespace Oxygen {
 
 OxygenConfig::OxygenConfig( KConfig*, QWidget* parent )
@@ -89,3 +90,4 @@ void OxygenConfig::defaults()
 }
 
 } //namespace Oxygen
+} //namespace Ozone

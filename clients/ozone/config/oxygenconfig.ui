@@ -1,5 +1,5 @@
 <ui version="4.0" >
- <class>OxygenConfigUI</class>
+ <class>Ozone::OxygenConfigUI</class>
  <widget class="QWidget" name="OxygenConfigUI" >
   <property name="geometry" >
    <rect>

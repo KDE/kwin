@@ -29,6 +29,7 @@
 
 #include "ui_oxygenconfig.h"
 
+namespace Ozone {
 namespace Oxygen {
 
 class OxygenConfigUI : public QWidget, public Ui::OxygenConfigUI
@@ -60,5 +61,6 @@ private:
 };
 
 } //namespace Oxygen
+} //namespace Ozone
 
 #endif
