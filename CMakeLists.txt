@@ -121,9 +121,7 @@ if (X11_Xfixes_FOUND)
 endif (X11_Xfixes_FOUND)
 
 install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
-target_link_libraries( kwin kdeinit_kwin )
-install(TARGETS kwin DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### next target ###############
