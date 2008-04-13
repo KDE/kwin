@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Dim Screen for Administrator Mode
+Name[ca]=Apaga la pantalla pel mode administrador
 Name[de]=Systemverwaltungsmodus-Bildschirm abdunkeln
+Name[el]=Θάμπωμα οθόνης σε λειτουργία διαχειριστή
 Name[es]=Aclarar la pantalla en el modo administrador
 Name[fi]=Tummena näyttö pääkäyttäjätilassa
 Name[ga]=Doiléirigh an Scáileán i Mód an Riarthóra
@@ -16,7 +18,9 @@ Name[zh_CN]=进入管理员模式时暗淡屏幕
 Name[zh_TW]=在管理者模式下將螢幕變暗
 Icon=preferences-system-windows-effect-dimscreen
 Comment=Dims the screen if a window asks for root password
+Comment[ca]=Apaga la pantalla si una finestra demana la contrasenya del «root»
 Comment[de]=Dunkelt den Bildschirm ab, wenn ein Fenster nach dem Systemverwalter-Kennwort fragt
+Comment[el]=Θάμπωμα της οθόνης αν κάποιο παράθυρο ζητήσει κωδικό ριζικού χρήστη
 Comment[es]=Aclara la pantalla si una ventana pide la contraseña de administrador
 Comment[fi]=Tummentaa näytön, jos ikkuna kysyy pääkäyttäjän salasanaa
 Comment[ga]=Doiléirigh an scáileán nuair a iarrann fuinneog focal faire an fhorúsáideora

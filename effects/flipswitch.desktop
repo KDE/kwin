@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Flip Switch
+Name[el]=Εναλλαγή πλαισίου
 Name[eo]=Turna ŝanĝilo
 Name[es]=Alternar conmutador
 Name[fi]=Kääntövaihtaja
@@ -18,9 +19,12 @@ Name[zh_CN]=翻转切换
 Name[zh_TW]=翻轉切換
 Icon=preferences-system-windows-effect-flipswitch
 Comment=Alt-Tab window switcher flipping through windows on a stack
+Comment[ca]=Commutador de finestres amb Alt-Tab que intercanvia les finestres en un pila
+Comment[el]=Εναλλαγή παραθύρων Alt-Tab με τα παράθυρα ως στοίβα
 Comment[fi]=Alt+Tab-ikkunavaihtaja pinossa olevien ikkunoiden vaihtamiseksi
 Comment[ga]=Malartóir fuinneog Alt-Táb a ransaíonn fuinneoga i gcruach
 Comment[km]=ជំនួស(Alt)-ថេប(tab) កម្មវិធី​ប្ដូរ​បង្អួច​ត្រឡប់​តាមរយៈ​បង្អួច​នៅ​លើ​ជង់
+Comment[pt]=Selector de janelas do Alt-Tab que percorre as janelas numa pilha
 Comment[pt_BR]=Seletor de janelas Alt-Tab que percorre as janelas em uma pilha
 Comment[th]=ตัวสลับหน้าต่างผ่านทางการกดแป้น Alt-tab โดยใช้การพลิกหน้าต่างผ่านชั้นหน้าต่าง
 Comment[zh_TW]=Alt+Tab 視窗切換器在堆疊內翻轉視窗
