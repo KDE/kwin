@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
- Copyright (C) 2008 Martin Gräßlin <ubuntu@martin-graesslin.com
+ Copyright (C) 2008 Martin Gräßlin <ubuntu@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , progress( 0.0 )
     {
     KConfigGroup conf = effects->effectConfig( "CoverSwitch" );
-    animationDuration = conf.readEntry( "Duration", 300 );
+    animationDuration = conf.readEntry( "Duration", 200 );
     animateSwitch     = conf.readEntry( "AnimateSwitch", true );
     animateStart      = conf.readEntry( "AnimateStart", true );
     animateStop       = conf.readEntry( "AnimateStop", true );
@@ -82,6 +82,7 @@ void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     effects->paintScreen( mask, region, data );
+
     if( mActivated || stop || stopRequested )
         {
         glMatrixMode( GL_PROJECTION );
@@ -161,20 +162,18 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glBlendFunc( GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA );
             glPolygonMode( GL_FRONT, GL_FILL );
             glBegin( GL_POLYGON );
-            float alpha = 0.9;
-            if( start )
-                alpha = 0.9 * progress;
-            else if( stop )
-                alpha = 0.9 - 0.9 * progress;
-            glColor4f( 0.3, 0.3, 0.3, alpha );
-            glVertex3f( 0.0, QApplication::desktop()->geometry().height(), 0.0 );
-            glVertex3f( QApplication::desktop()->geometry().width(), QApplication::desktop()->geometry().height(), 0.0 );
-            alpha = 1.0;
+            // foreground
+            float alpha = 1.0;
             if( start )
                 alpha = progress;
             else if( stop )
                 alpha = 1.0 - progress;
-            glColor4f( 0.19, 0.19, 0.19, alpha );
+            glColor4f( 0.0, 0.0, 0.0, alpha );
+            glVertex3f( 0.0, QApplication::desktop()->geometry().height(), 0.0 );
+            glVertex3f( QApplication::desktop()->geometry().width(), QApplication::desktop()->geometry().height(), 0.0 );
+            // rearground
+            alpha = -1.0;
+            glColor4f( 0.0, 0.0, 0.0, alpha );
             glVertex3f( QApplication::desktop()->geometry().width() * 5, QApplication::desktop()->geometry().height(), -60 );
             glVertex3f( -QApplication::desktop()->geometry().width() * 4, QApplication::desktop()->geometry().height(), -60 );
             glEnd();
