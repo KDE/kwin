@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "trackmouse.h"
 
+#include <QTime>
+
 #include <kwinconfig.h>
 
 #include <kglobal.h>
@@ -55,8 +57,10 @@ TrackMouseEffect::~TrackMouseEffect()
 
 void TrackMouseEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    if( active )
-        angle = ( angle + time / 10 ) % 360;
+    if( active ) {
+        QTime t = QTime::currentTime();
+        angle = ((t.second() % 4) * 90.0) + (t.msec() / 1000.0 * 90.0);
+    }
     effects->prePaintScreen( data, time );
     }
 
