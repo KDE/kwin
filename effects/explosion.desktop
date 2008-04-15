@@ -57,6 +57,7 @@ Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​ផុស​ចេ�
 Comment[pt]=Faz com que as janelas expludam quando são fechadas
 Comment[pt_BR]=Faz as janelas explodirem quando são fechadas
 Comment[th]=ทำให้หน้าต่างระเบิดออก เมื่อปิดหน้าต่าง
+Comment[zh_CN]=当窗口被关闭时，让它们呈现爆炸效果
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 
 Type=Service

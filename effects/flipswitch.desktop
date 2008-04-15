@@ -27,6 +27,7 @@ Comment[km]=ជំនួស(Alt)-ថេប(tab) កម្មវិធី​ប�
 Comment[pt]=Selector de janelas do Alt-Tab que percorre as janelas numa pilha
 Comment[pt_BR]=Seletor de janelas Alt-Tab que percorre as janelas em uma pilha
 Comment[th]=ตัวสลับหน้าต่างผ่านทางการกดแป้น Alt-tab โดยใช้การพลิกหน้าต่างผ่านชั้นหน้าต่าง
+Comment[zh_CN]=Alt-tab 窗口切换器可在您的窗口间作翻转式切换
 Comment[zh_TW]=Alt+Tab 視窗切換器在堆疊內翻轉視窗
 
 Type=Service

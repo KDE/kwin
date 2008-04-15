@@ -1,5 +1,8 @@
 # KDE Desktop Entry
 [Desktop Entry]
 Name=Ozone
+Name[gu]=ઓઝોન
+Name[th]=โอโซน
 Name[uk]=Озон
+Name[zh_CN]=臭氧
 X-KDE-Library=kwin3_ozone

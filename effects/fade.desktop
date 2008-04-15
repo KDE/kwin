@@ -60,6 +60,7 @@ Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​លេច​បន�
 Comment[pt]=Faz com que as janelas apareçam/desapareçam suavemente quando aparecem ou ficam escondidas
 Comment[pt_BR]=Faz as janelas aparecerem/desaparecerem suavemente quando são exibidas ou ocultadas
 Comment[th]=ทำให้หน้าต่างค่อย ๆ ชัดหรือค่อย ๆ จางหายเมื่อมีการแสดงหรือซ่อนหน้าต่าง
+Comment[zh_CN]=当窗口被显示或者隐藏时，使窗口平滑地淡入淡出
 Comment[zh_TW]=顯示或隱藏視窗時以淡入/淡出方式呈現
 
 Type=Service
