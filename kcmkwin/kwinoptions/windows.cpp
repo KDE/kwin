@@ -224,9 +224,9 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     activeMouseScreen = new QCheckBox( i18n( "Active &mouse screen" ), fcsBox );
     fLay->addWidget( activeMouseScreen );
-    wtstr = i18n( "When this option is enabled, active Xinerama screen (where for example new windows appear)"
-                  " is the screen with the mouse pointer. When disabled, the active Xinerama screen is the screen"
-                  " with the focused window. This option is by default disabled for Click to focus and"
+    wtstr = i18n( "When this option is enabled, the active Xinerama screen (where new windows appear, for example)"
+                  " is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the "
+                  " screen containing the focused window. By default this option is disabled for Click to focus and"
                   " enabled for other focus policies." );
     activeMouseScreen->setWhatsThis( wtstr );
     connect(focusCombo, SIGNAL(activated(int)), this, SLOT(updateActiveMouseScreen()));
