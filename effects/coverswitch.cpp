@@ -20,8 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coverswitch.h"
 
 #include <kwinconfig.h>
-#include <QApplication>
-#include <QDesktopWidget>
 #include <QFont>
 #include <QBitmap>
 #include <klocale.h>
@@ -53,6 +51,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , stopRequested( false )
     , startRequested( false )
     , progress( 0.0 )
+    , twinview( false )
     {
     KConfigGroup conf = effects->effectConfig( "CoverSwitch" );
     animationDuration = conf.readEntry( "Duration", 200 );
@@ -89,17 +88,65 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         glPushMatrix();
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glLoadIdentity();
-        glFrustum(-QApplication::desktop()->geometry().width()*0.5f,
-            QApplication::desktop()->geometry().width()*0.5f,
-            QApplication::desktop()->geometry().height()*0.5f,
-            -QApplication::desktop()->geometry().height()*0.5f, 10, 50);
+        int viewport[4];
+        glGetIntegerv( GL_VIEWPORT, viewport );
+        int yPos = area.y();
+        QRect fullArea = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+        if( twinview )
+            {
+            if( effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop()).x() == 0 
+                && effects->clientArea( FullScreenArea, effects->activeScreen()==0?1:0, effects->currentDesktop()).x() == 0 )
+                {
+                // top <-> bottom
+                // have to correct the yPos for top bottom constellation
+                yPos = area.height()-area.y();
+                if( ( area.height() * 2 != fullArea.height() ) ||
+                    ( effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop()).width() !=  
+                    effects->clientArea( FullScreenArea, effects->activeScreen()==0?1:0, effects->currentDesktop()).width() ) )
+                    {
+                    // different resolutions
+                    if( area.y() > 0 )
+                        yPos = 0;
+                    else
+                        yPos = fullArea.height() - area.height();
+                    }
+                }
+            else
+                {
+                // left <-> right
+                if( ( area.width() * 2 != fullArea.width() ) ||
+                    ( effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop()).height() !=  
+                    effects->clientArea( FullScreenArea, effects->activeScreen()==0?1:0, effects->currentDesktop()).height() ) )
+                    {
+                    // different resolutions
+                    yPos = area.y() + fullArea.height() - area.height();
+                    }
+                }
+            }
+        float left, right, top, bottom;
+        left = -area.width() * 0.5f;
+        right = area.width() * 0.5f;
+        top = area.height()*0.5f;
+        bottom = -area.height()*0.5f;
+        if( twinview && ( start || stop ) )
+            {
+            // special handling for start and stop animation in twin view setup
+            glViewport( fullArea.x(), fullArea.y(), fullArea.width(), fullArea.height() );
+            left = -(area.x() + area.width() * 0.5f);
+            right = fullArea.width() + left;
+            bottom = -(area.y() + area.height() * 0.5f);
+            top = fullArea.height() + bottom;
+            }
+        else
+            {
+            glViewport( area.x(), yPos, area.width(), area.height() );
+            }
+        glFrustum( left, right, top, bottom, 10, 50 );
         
         glMatrixMode( GL_MODELVIEW );
         glLoadIdentity();
         glPushMatrix();
-        glTranslatef(-QApplication::desktop()->geometry().width()*0.5f,
-            -QApplication::desktop()->geometry().height()*0.5f,
-            -7.5);
+        glTranslatef(left, bottom, -7.5);
     
         QList< EffectWindow* > tempList = effects->currentTabBoxWindowList();
         int index = tempList.indexOf( effects->currentTabBoxWindow() );
@@ -161,7 +208,22 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA );
             glPolygonMode( GL_FRONT, GL_FILL );
-            glBegin( GL_POLYGON );
+            glPushMatrix();
+            float leftVertex = 0.0;
+            if( twinview && ( start || stop ) )
+                {
+                leftVertex = area.x();
+                glTranslatef( 0.0, area.y() + area.height(), 7.5);
+                }
+            else
+                {
+                glTranslatef( 0.0, area.height(), 7.5);
+                }
+            float vertices[] = {
+                leftVertex, 0.0, -10.0,
+                leftVertex + area.width(), 0.0, -10.0,
+                leftVertex + area.width()*3, 0.0, -50.0,
+                leftVertex - area.width()*2, 0.0, -50.0 };
             // foreground
             float alpha = 1.0;
             if( start )
@@ -169,14 +231,16 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             else if( stop )
                 alpha = 1.0 - progress;
             glColor4f( 0.0, 0.0, 0.0, alpha );
-            glVertex3f( 0.0, QApplication::desktop()->geometry().height(), 0.0 );
-            glVertex3f( QApplication::desktop()->geometry().width(), QApplication::desktop()->geometry().height(), 0.0 );
+            glBegin( GL_POLYGON );
+            glVertex3f( vertices[0], vertices[1], vertices[2] );
+            glVertex3f( vertices[3], vertices[4], vertices[5] );
             // rearground
             alpha = -1.0;
             glColor4f( 0.0, 0.0, 0.0, alpha );
-            glVertex3f( QApplication::desktop()->geometry().width() * 5, QApplication::desktop()->geometry().height(), -60 );
-            glVertex3f( -QApplication::desktop()->geometry().width() * 4, QApplication::desktop()->geometry().height(), -60 );
+            glVertex3f( vertices[6], vertices[7], vertices[8] );
+            glVertex3f( vertices[9], vertices[10], vertices[11] );
             glEnd();
+            glPopMatrix();
             glDisable( GL_BLEND );
             }
         paintScene( frontWindow, &leftWindows, &rightWindows );
@@ -186,6 +250,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         glMatrixMode( GL_PROJECTION );
         glPopMatrix();
         glMatrixMode( GL_MODELVIEW );
+        glViewport( viewport[0], viewport[1], viewport[2], viewport[3] );
 
         // caption of selected window
         QColor color_frame;
@@ -208,9 +273,9 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         text_font.setPointSize( 20 );
         glPushAttrib( GL_CURRENT_BIT );
         glColor4f( color_frame.redF(), color_frame.greenF(), color_frame.blueF(), color_frame.alphaF());
-        QRect frameRect = QRect( QApplication::desktop()->geometry().width()*0.25f,
-            QApplication::desktop()->geometry().height()*0.9f,
-            QApplication::desktop()->geometry().width()*0.5f,
+        QRect frameRect = QRect( area.width()*0.25f + area.x(),
+            area.height()*0.9f + area.y(),
+            area.width()*0.5f,
             QFontMetrics( text_font ).height() * 1.2f );
         renderRoundBoxWithEdge( frameRect );
         effects->paintText( effects->currentTabBoxWindow()->caption(),
@@ -318,8 +383,8 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
     // last right window becomes totally transparent in half the time
     // appears transparent on left side and becomes totally opaque again
     // backward (alt+shift+tab) same as forward but opposite direction
-    int width = QApplication::desktop()->geometry().width();
-    int height = QApplication::desktop()->geometry().height();
+    int width = area.width();
+    int height = area.height();
     int leftWindowCount = leftWindows->count();
     int rightWindowCount = rightWindows->count();
 
@@ -351,8 +416,8 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
                 }
             glPushMatrix();
             int windowHeight = window->geometry().height();
-            float distance = -width*0.25f + ( width * 0.25f * i )/leftWindowCount - x;
-            float distanceY = height - windowHeight - y;
+            float distance = -width*0.25f + ( width * 0.25f * i )/leftWindowCount - x + area.x();
+            float distanceY = height - windowHeight - y + area.y();
             if( start )
                 glTranslatef( distance*progress + x, distanceY * progress + y, -5 * progress - 2.5);
             else if( stop )
@@ -379,8 +444,8 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
             glPushMatrix();
             int windowWidth = window->geometry().width() * cos( radian );
             int windowHeight = window->geometry().height();
-            float distance = width*1.25f - ( width * 0.25f * i )/rightWindowCount - x - windowWidth;
-            float distanceY = height - windowHeight - y;
+            float distance = width*1.25f - ( width * 0.25f * i )/rightWindowCount - x - windowWidth + area.x();
+            float distanceY = height - windowHeight - y + area.y();
             if( start )
                 glTranslatef( distance*progress + x + windowWidth, distanceY * progress + y, -5 * progress - 2.5);
             else if( stop )
@@ -402,8 +467,8 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
             y = frontWindow->iconGeometry().y();
             }
         int windowHeight = frontWindow->geometry().height();
-        float distance = (width - frontWindow->geometry().width())*0.5f - x;
-        float distanceY = height - windowHeight - y;
+        float distance = (width - frontWindow->geometry().width())*0.5f - x + area.x();
+        float distanceY = height - windowHeight - y + area.y();
         if( start )
             glTranslatef( distance * progress + x, distanceY * progress + y, -5*progress - 2.5 );
         else if( stop )
@@ -498,6 +563,16 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                     {
                     start = true;
                     }
+
+                // Calculation of correct area
+                area = effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop());
+                QRect fullArea = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+                // twinview?
+                if( area.height() != fullArea.height() || area.width() != fullArea.width() )
+                    twinview = true;
+                else
+                    twinview = false;
+
                 effects->addRepaintFull();
                 }
             else
@@ -601,7 +676,7 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, QRect windowRect, boo
         {
         glPushMatrix();
         glScalef( 1.0, -1.0, 1.0 );
-        glTranslatef( 0.0, - QApplication::desktop()->geometry().height() - windowRect.y() - windowRect.height(), 0.0 );
+        glTranslatef( 0.0, - area.height() - windowRect.y() - windowRect.height(), 0.0 );
         effects->paintWindow( w,
             PAINT_WINDOW_TRANSFORMED,
             thumbnail, data );
@@ -622,7 +697,7 @@ void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, int width, 
     int windowWidth = frontWindow->geometry().width();
     int windowHeight = frontWindow->geometry().height();;
     float distance = 0.0;
-    int height = QApplication::desktop()->geometry().height();
+    int height = area.height();
     int x = 0;
     bool specialHandlingForward = false;
     if( leftWindows == 0 )
@@ -670,8 +745,8 @@ void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, int width, 
 
 void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow )
     {
-    int width = QApplication::desktop()->geometry().width();
-    int height = QApplication::desktop()->geometry().height();
+    int width = area.width();
+    int height = area.height();
     float radian = angle * ( 2 * M_PI / 360 );
     int windowCount = windows->count();
     int windowWidth = 0;

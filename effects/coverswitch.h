@@ -63,6 +63,8 @@ class CoverSwitchEffect
         bool stopRequested;
         bool startRequested;
         double progress;
+        QRect area;
+        bool twinview;
     };
 
 } // namespace
