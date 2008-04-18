@@ -1,7 +1,6 @@
 [Desktop Entry]
-Encoding=UTF-8
 Name=Wobbly Windows
-Icon=kwin-effect-wavywindows
+Icon=preferences-system-windows-effect-wobblywindows
 
 Type=Service
 ServiceTypes=KWin/Effect
