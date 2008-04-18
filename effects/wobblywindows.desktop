@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Wobbly Windows
+Icon=kwin-effect-wavywindows
+
+Type=Service
+ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Cédric Borgese
+X-KDE-PluginInfo-Email=cedric.borgese@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_wobblywindows
+X-KDE-PluginInfo-Version=0.0.1
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
+X-KDE-Ordering=80

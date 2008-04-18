@@ -109,6 +109,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         sharpen.cpp
         snow.cpp
         trackmouse.cpp
+        wobblywindows.cpp
         )
     install( FILES
         blur.desktop
@@ -123,6 +124,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         sharpen.desktop
         snow.desktop
         trackmouse.desktop
+        wobblywindows.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
     install( FILES
         data/trackmouse.png
@@ -161,6 +163,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         snow_config.cpp
         snow_config.ui
         trackmouse_config.cpp
+        wobblywindows_config.cpp
+        wobblywindows_config.ui
         )
     install( FILES
         coverswitch_config.desktop
@@ -173,6 +177,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         showfps_config.desktop
         snow_config.desktop
         trackmouse_config.desktop
+        wobblywindows_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif(KWIN_HAVE_OPENGL_COMPOSITING)
 

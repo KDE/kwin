@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sharpen_config.h"
 #include "snow_config.h"
 #include "trackmouse_config.h"
+#include "wobblywindows_config.h"
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include "showfps_config.h"
 #endif
@@ -73,6 +74,7 @@ KWIN_EFFECT_CONFIG_FACTORY
 
 #define GL_RENDER_PLUGINS \
     registerPlugin<KWin::ShowFpsEffectConfig> ("showfps"); \
+    registerPlugin<KWin::WobblyWindowsEffectConfig> ("wobblywindows"); \
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
