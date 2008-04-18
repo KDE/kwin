@@ -72,6 +72,7 @@ class Client
         bool groupTransient() const;
         bool wasOriginallyGroupTransient() const;
         ClientList mainClients() const; // call once before loop , is not indirect
+        ClientList allMainClients() const; // call once before loop , is indirect
         bool hasTransient( const Client* c, bool indirect ) const;
         const ClientList& transients() const; // is not indirect
         void checkTransient( Window w );

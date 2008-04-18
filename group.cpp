@@ -951,6 +951,14 @@ ClientList Client::mainClients() const
     return result;
     }
 
+ClientList Client::allMainClients() const
+    {
+    ClientList result = mainClients();
+    foreach( const Client* cl, result )
+        result += cl->allMainClients();
+    return result;
+    }
+
 Client* Client::findModal( bool allow_itself )
     {
     for( ClientList::ConstIterator it = transients().begin();

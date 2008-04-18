@@ -345,7 +345,9 @@ bool Client::manage( Window w, bool isMapped )
     if( !init_minimize && isTransient() && mainClients().count() > 0 )
         {
         bool visible_parent = false;
-        ClientList mainclients = mainClients();
+        // use allMainClients(), to include also main clients of group transients
+        // that have been optimized out in Client::checkGroupTransients()
+        ClientList mainclients = allMainClients();
         for( ClientList::ConstIterator it = mainclients.begin();
              it != mainclients.end();
              ++it )
