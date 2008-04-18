@@ -96,6 +96,9 @@ class WobblyWindowsEffect : public Effect
             unsigned int bezierCount;
 
             WindowStatus status;
+
+            // for closing
+            QRectF closeRect;
         };
 
         QHash< const EffectWindow*,  WindowWobblyInfos > windows;
@@ -122,10 +125,14 @@ class WobblyWindowsEffect : public Effect
         qreal m_maxAcceleration;
         qreal m_stopAcceleration;
 
+        bool m_moveEffectEnabled;
+        bool m_openEffectEnabled;
+        bool m_closeEffectEnabled;
+
         void initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry) const;
         void freeWobblyInfo(WindowWobblyInfos& wwi) const;
         void wobblyOpenInit(WindowWobblyInfos& wwi) const;
-        void wobblyCloseInit(WindowWobblyInfos& wwi) const;
+        void wobblyCloseInit(WindowWobblyInfos& wwi, EffectWindow* w) const;
 
         WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const;
 
