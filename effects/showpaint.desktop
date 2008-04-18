@@ -42,6 +42,7 @@ Name[uk]=Показати намальоване
 Name[x-test]=xxShow Paintxx
 Name[zh_CN]=显示绘图
 Name[zh_TW]=顯示繪製
+Icon=preferences-system-windows-effect-paint-show
 Comment=Shows areas painted by KWin
 Comment[ca]=Mostra les àrees pintades pel KWin
 Comment[da]=Viser områder som er tegnet af KWin
