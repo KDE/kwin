@@ -298,7 +298,10 @@ bool grabXKeyboard( Window w )
 
 void ungrabXKeyboard()
     {
-    assert( keyboard_grabbed );
+    if( !keyboard_grabbed )
+        { // grabXKeyboard() may fail sometimes, so don't fail, but at least warn anyway
+        kDebug() << "ungrabXKeyboard() called but keyboard not grabbed!";
+        }
     keyboard_grabbed = false;
     XUngrabKeyboard( display(), xTime());
     }
