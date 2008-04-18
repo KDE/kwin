@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QList>
 #include <QtCore/QHash>
 #include <QtCore/QStack>
+#include <QtCore/QTimeLine>
 
 #include <KDE/KPluginFactory>
 #include <KDE/KShortcutsEditor>
@@ -979,6 +980,120 @@ class KWIN_EXPORT PaintClipper
     private:
         QRegion area;
         static QStack< QRegion >* areas;
+    };
+
+
+/**
+ * @short Wrapper class for using timelines in KWin effects.
+ *
+ * This class provides an easy and specialised interface for
+ * effects that want a non-linear timeline. Currently, most
+ * it does is wrapping QTimeLine. In the future, this class
+ * could help using physics animations in KWin.
+ */
+class KWIN_EXPORT TimeLine
+    {
+
+    Q_ENUMS( CurveShape )
+
+    public:
+        /**
+         * The CurveShape describes the relationship between time
+         * and values. We can pass some of them through to QTimeLine
+         * but also invent our own ones.
+         */
+        enum CurveShape
+        {
+            EaseInCurve = 0,
+            EaseOutCurve,
+            EaseInOutCurve,
+            LinearCurve,
+            SineCurve
+        };
+
+        /**
+         * Creates a TimeLine and computes the progress data. The default
+         * duration can be overridden from the Effect. Usually, for larger
+         * animations you want to choose values more towards 300 milliseconds.
+         * For small animations, values around 150 milliseconds are sensible.
+         */
+        explicit TimeLine(const int duration = 250);
+
+        /**
+         * Creates a copy of the TimeLine so we can have the state copied
+         * as well.
+         */
+        TimeLine(const TimeLine &other);
+        /**
+         * Cleans up.
+         */
+        ~TimeLine();
+        /**
+         * Returns the duration of the timeline in msec.
+         */
+        int duration() const;
+        /**
+         * Set the duration of the TimeLine.
+         */
+        void setDuration(const int msec);
+        /**
+         * Returns the Value at the time set, this method will
+         * usually be used to get the progress in the paintWindow()
+         * and related methods.
+         */
+        double value() const;
+        /**
+         * Returns the Value at the time provided, this method will
+         * usually be used to get the progress in the paintWindow()
+         * and related methods, the y value of the current state x.
+         */
+        double valueForTime(const int msec) const;
+        /**
+         * Returns the progress of the TimeLine, between 0 and 1,
+         * it's equivalent to the y-axis on a curve.
+         */
+        double progress() const;
+        /**
+         * Increases the internal progress accounting of the timeline.
+         */
+        void addProgress(const double progress);
+        /**
+         * Increases the internal counter, this is usually done in
+         * prePaintWindow().
+         */
+        void addTime(const int msec);
+        /**
+         * Decreases the internal counter, this is usually done in
+         * prePaintWindow(). This function comes handy for reverse
+         * animations.
+         */
+        void removeTime(const int msec);
+        /**
+         * Set the time to progress * duration. This will change the
+         * internal time in the TimeLine. It's usually used in
+         * prePaintWindow() or prePaintScreen() so the value()
+         * taken in paint* is increased.
+         */
+        void setProgress(const double progress);
+        /**
+         * Set the CurveShape. The CurveShape describes the relation
+         * between the value and the time. progress is between 0 and 1
+         * It's used as input for the timeline, the x axis of the curve.
+         */
+        void setCurveShape(CurveShape curveShape);
+        /**
+         * Set the CurveShape. The CurveShape describes the relation
+         * between the value and the time.
+         */
+        //void setCurveShape(CurveShape curveShape);
+
+    private:
+        QTimeLine* m_TimeLine;
+        int m_Time;
+        double m_Progress;
+        int m_Duration;
+        CurveShape m_CurveShape;
+        //Q_DISABLE_COPY(TimeLine)
     };
 
 /**

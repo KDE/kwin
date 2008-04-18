@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 #include <QVariant>
 #include <QList>
+#include <QtCore/QTimeLine>
 #include <QtGui/QFontMetrics>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
@@ -865,6 +866,110 @@ QRect PaintClipper::Iterator::boundingRect() const
     assert( false );
     }
 
+
+/***************************************************************
+ TimeLine
+***************************************************************/
+
+TimeLine::TimeLine(const int duration)
+    {
+    m_Time = 0;
+    m_CurveShape = TimeLine::EaseInCurve;
+    m_Duration = duration;
+    m_TimeLine = new QTimeLine(m_Duration);
+    m_TimeLine->setFrameRange(0, m_Duration);
+    m_TimeLine->setCurveShape(QTimeLine::EaseInCurve);
+    }
+
+TimeLine::TimeLine(const TimeLine &other)
+    {
+    m_Time = other.m_Time;
+    m_CurveShape = other.m_CurveShape;
+    m_Duration = other.m_Duration;
+    m_TimeLine = new QTimeLine(m_Duration);
+    m_TimeLine->setFrameRange(0, m_Duration);
+    setProgress(m_Progress);
+    setCurveShape(m_CurveShape);
+    }
+
+TimeLine::~TimeLine()
+    {
+    delete m_TimeLine;
+    }
+
+int TimeLine::duration() const
+    {
+    return m_Duration;
+    }
+
+void TimeLine::setDuration(const int msec)
+    {
+    m_Duration = msec;
+    m_TimeLine->setDuration(msec);
+    }
+
+double TimeLine::value() const
+    {
+    return valueForTime(m_Time);
+    }
+
+double TimeLine::valueForTime(const int msec) const
+    {
+    // Catch non QTimeLine CurveShapes here, (but there are none right now)
+
+
+    // else use QTimeLine ...
+    return m_TimeLine->valueForTime(msec);
+    }
+
+void TimeLine::addTime(const int msec)
+    {
+    m_Time = qMin(m_Duration, m_Time + msec);
+    }
+
+void TimeLine::removeTime(const int msec)
+    {
+    m_Time = qMax(0, m_Time - msec);
+    }
+
+void TimeLine::setProgress(const double progress)
+    {
+    m_Progress = progress;
+    m_Time = (int)(m_Duration * progress);
+    }
+
+double TimeLine::progress() const
+    {
+    return m_Progress;
+    }
+
+void TimeLine::addProgress(const double progress)
+    {
+    m_Progress += progress;
+    }
+
+void TimeLine::setCurveShape(CurveShape curveShape)
+    {
+    switch (curveShape)
+        {
+        case EaseInCurve:
+            m_TimeLine->setCurveShape(QTimeLine::EaseInCurve);
+            break;
+        case EaseOutCurve:
+            m_TimeLine->setCurveShape(QTimeLine::EaseOutCurve);
+            break;
+        case EaseInOutCurve:
+            m_TimeLine->setCurveShape(QTimeLine::EaseInOutCurve);
+            break;
+        case LinearCurve:
+            m_TimeLine->setCurveShape(QTimeLine::LinearCurve);
+            break;
+        case SineCurve:
+            m_TimeLine->setCurveShape(QTimeLine::SineCurve);
+            break;
+        }
+        m_CurveShape = curveShape;
+    }
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 // Convert QRegion to XserverRegion. All code uses XserverRegion
