@@ -117,7 +117,7 @@ WobblyWindowsEffect::WobblyWindowsEffect()
 
 WobblyWindowsEffect::~WobblyWindowsEffect()
 {
-    if (windows.empty())
+    if (!windows.empty())
     {
         // we should be empty at this point...
         // emit a warning and clean the list.
@@ -129,6 +129,7 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
         }
     }
 }
+
 void WobblyWindowsEffect::setVelocityThreshold(qreal m_minVelocity)
 {
     this->m_minVelocity = m_minVelocity;
