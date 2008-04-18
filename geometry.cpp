@@ -87,9 +87,9 @@ void Workspace::updateClientArea( bool force )
     QDesktopWidget *desktopwidget = KApplication::desktop();
     int nscreens = desktopwidget -> numScreens ();
 //    kDebug () << "screens: " << nscreens;
-    QRect* new_wareas = new QRect[ numberOfDesktops() + 1 ];
-    QRect** new_sareas = new QRect*[ numberOfDesktops() + 1];
-    QRect* screens = new QRect [ nscreens ];
+    QVector< QRect > new_wareas( numberOfDesktops() + 1 );
+    QVector< QVector< QRect > > new_sareas( numberOfDesktops() + 1 );
+    QVector< QRect > screens( nscreens );
     QRect desktopArea = desktopwidget -> geometry ();
     for( int iS = 0;
             iS < nscreens;
@@ -102,7 +102,7 @@ void Workspace::updateClientArea( bool force )
             ++i )
         {
             new_wareas[ i ] = desktopArea;
-            new_sareas[ i ] = new QRect [ nscreens ];
+            new_sareas[ i ].resize( nscreens );
             for( int iS = 0;
                     iS < nscreens;
                     iS ++ )
@@ -166,7 +166,7 @@ void Workspace::updateClientArea( bool force )
 
     bool changed = force;
 
-    if (! screenarea)
+    if(screenarea.isEmpty())
         changed = true;
 
     for( int i = 1;
@@ -184,12 +184,8 @@ void Workspace::updateClientArea( bool force )
 
     if ( changed )
         {
-        delete[] workarea;
         workarea = new_wareas;
-        new_wareas = NULL;
-        delete[] screenarea;
         screenarea = new_sareas;
-        new_sareas = NULL;
         NETRect r;
         for( int i = 1; i <= numberOfDesktops(); i++)
             {
@@ -210,9 +206,6 @@ void Workspace::updateClientArea( bool force )
              ++it)
             (*it)->checkWorkspacePosition();
         }
-    delete[] screens;
-    delete[] new_sareas;
-    delete[] new_wareas;
     }
 
 void Workspace::updateClientArea()
@@ -233,7 +226,7 @@ QRect Workspace::clientArea( clientAreaOption opt, int screen, int desktop ) con
     if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
     QDesktopWidget *desktopwidget = KApplication::desktop();
-    QRect sarea = screenarea // may be NULL during KWin initialization
+    QRect sarea = !screenarea.isEmpty() // may be empty during KWin initialization
         ? screenarea[ desktop ][ screen ]
         : desktopwidget->screenGeometry( screen );
     QRect warea = workarea[ desktop ].isNull()

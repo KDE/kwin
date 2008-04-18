@@ -125,8 +125,6 @@ Workspace::Workspace( bool restore )
     layoutOrientation(Qt::Vertical),
     layoutX(-1),
     layoutY(2),
-    workarea(NULL),
-    screenarea(NULL),
     managing_topmenus( false ),
     topmenu_selection( NULL ),
     topmenu_watcher( NULL ),
@@ -468,8 +466,6 @@ Workspace::~Workspace()
     delete rootInfo;
     delete supportWindow;
     delete mgr;
-    delete[] workarea;
-    delete[] screenarea;
     delete startup;
     delete initPositioning;
     delete topmenu_watcher;
@@ -1086,10 +1082,9 @@ void Workspace::loadDesktopSettings()
 
     int n = group.readEntry("Number", 4);
     number_of_desktops = n;
-    delete workarea;
-    workarea = new QRect[ n + 1 ];
-    delete screenarea;
-    screenarea = NULL;
+    workarea.clear();
+    workarea.resize( n + 1 );
+    screenarea.clear();
     rootInfo->setNumberOfDesktops( number_of_desktops );
     desktop_focus_chain.resize( n );
     // make it +1, so that it can be accessed as [1..numberofdesktops]
