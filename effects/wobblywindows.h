@@ -41,7 +41,8 @@ class WobblyWindowsEffect : public Effect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintScreen();
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
-        virtual void windowClosed( EffectWindow* c );
+        virtual void windowAdded( EffectWindow* w );
+        virtual void windowClosed( EffectWindow* w );
 
         // Wobbly model parameters
         void setRaideur(qreal raideur);
@@ -63,6 +64,14 @@ class WobblyWindowsEffect : public Effect
     private:
 
         bool updateWindowWobblyDatas(EffectWindow* w, qreal time);
+
+        enum WindowStatus
+        {
+            Free,
+            Moving,
+            Openning,
+            Closing
+        };
 
         struct WindowWobblyInfos
         {
@@ -86,7 +95,7 @@ class WobblyWindowsEffect : public Effect
             unsigned int bezierHeight;
             unsigned int bezierCount;
 
-            bool onConstrain;
+            WindowStatus status;
         };
 
         QHash< const EffectWindow*,  WindowWobblyInfos > windows;
@@ -115,6 +124,8 @@ class WobblyWindowsEffect : public Effect
 
         void initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry) const;
         void freeWobblyInfo(WindowWobblyInfos& wwi) const;
+        void wobblyOpenInit(WindowWobblyInfos& wwi) const;
+        void wobblyCloseInit(WindowWobblyInfos& wwi) const;
 
         WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const;
 

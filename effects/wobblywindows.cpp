@@ -258,7 +258,7 @@ void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bo
         }
 
         WindowWobblyInfos& wwi = windows[w];
-        wwi.onConstrain = true;
+        wwi.status = Moving;
         const QRectF& rect = w->geometry();
 
         qreal x_increment = rect.width() / (wwi.width-1.0);
@@ -288,8 +288,25 @@ void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bo
         if (windows.contains(w))
         {
             WindowWobblyInfos& wwi = windows[w];
-            wwi.onConstrain = false;
+            wwi.status = Moving;
         }
+    }
+}
+
+void WobblyWindowsEffect::windowAdded(EffectWindow* w)
+{
+    if(windows.contains(w))
+    {
+        // could this happen ??
+        WindowWobblyInfos& wwi = windows[w];
+        wobblyOpenInit(wwi);
+    }
+    else
+    {
+        WindowWobblyInfos new_wwi;
+        initWobblyInfo(new_wwi, w->geometry());
+        wobblyOpenInit(new_wwi);
+        windows[w] = new_wwi;
     }
 }
 
@@ -300,7 +317,52 @@ void WobblyWindowsEffect::windowClosed(EffectWindow* w)
         WindowWobblyInfos& wwi = windows[w];
         freeWobblyInfo(wwi);
         windows.remove(w);
+    //    wobblyCloseInit(new_wwi);
+    //    w->refWindow();
     }
+    //else
+    //{
+    //    WindowWobblyInfos new_wwi;
+    //    initWobblyInfo(new_wwi, w->geometry());
+    //    wobblyCloseInit(new_wwi);
+    //    windows[w] = new_wwi;
+    //    w->refWindow();
+    //}
+}
+
+void WobblyWindowsEffect::wobblyOpenInit(WindowWobblyInfos& wwi) const
+{
+    Pair middle = wwi.origin[0];
+    middle.x += wwi.origin[15].x;
+    middle.y += wwi.origin[15].y;
+    middle.x /= 2;
+    middle.y /= 2;
+
+    for (unsigned int j=0; j<4; ++j)
+    {
+        for (unsigned int i=0; i<4; ++i)
+        {
+            unsigned int idx = j*4 + i;
+            wwi.constraint[idx] = false;
+            wwi.position[idx].x = (wwi.position[idx].x + 3*middle.x)/4;
+            wwi.position[idx].y = (wwi.position[idx].y + 3*middle.y)/4;
+        }
+    }
+    wwi.status = Openning;
+}
+
+void WobblyWindowsEffect::wobblyCloseInit(WindowWobblyInfos& wwi) const
+{
+    // for closing, not yet used...
+    for (unsigned int j=0; j<4; ++j)
+    {
+        for (unsigned int i=0; i<4; ++i)
+        {
+            unsigned int idx = j*4 + i;
+            wwi.constraint[idx] = false;
+        }
+    }
+    wwi.status = Closing;
 }
 
 void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry) const
@@ -322,7 +384,7 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry)
 
     wwi.bezierSurface = new Pair[wwi.bezierCount];
 
-    wwi.onConstrain = true;
+    wwi.status = Moving;
 
     qreal x = geometry.x(), y = geometry.y();
     qreal width = geometry.width(), height = geometry.height();
@@ -907,7 +969,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
     kDebug() << "sum_acc : " << acc_sum << "  ***  sum_vel :" << vel_sum;
 #endif
 
-    if (!wwi.onConstrain && acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity)
+    if (wwi.status != Moving && acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity)
     {
         freeWobblyInfo(wwi);
         windows.remove(w);
