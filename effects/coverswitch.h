@@ -43,7 +43,7 @@ class CoverSwitchEffect
 
     private:
         void paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows, QList< EffectWindow* >* rightWindows,
-            bool reflectedWindows = false );
+        bool reflectedWindows = false );
         void paintWindowCover( EffectWindow* w, QRect windowRect, bool reflectedWindow, float opacity = 1.0 );
         void paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow  );
         void paintWindows( QList< EffectWindow* >* windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
@@ -62,7 +62,7 @@ class CoverSwitchEffect
         int rearrangeWindows;
         bool stopRequested;
         bool startRequested;
-        double progress;
+        TimeLine timeLine;
         QRect area;
         bool twinview;
     };
