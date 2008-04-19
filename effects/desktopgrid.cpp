@@ -35,11 +35,8 @@ namespace KWin
 
 KWIN_EFFECT( desktopgrid, DesktopGridEffect )
 
-const int PROGRESS_TIME = 300; // ms
-
 DesktopGridEffect::DesktopGridEffect()
-    : progress( 0 )
-    , activated( false )
+    : activated( false )
     , keyboard_grab( false )
     , was_window_move( false )
     , window_move( NULL )
@@ -55,6 +52,7 @@ DesktopGridEffect::DesktopGridEffect()
 
     borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricNone);
     effects->reserveElectricBorder( borderActivate );
+    mTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
     }
 
 DesktopGridEffect::~DesktopGridEffect()
@@ -66,28 +64,29 @@ void DesktopGridEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( slide )
         {
-        progress = qMin( 1.0, progress + time / double( PROGRESS_TIME ));
+        mTimeLine.addTime(time);
+
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
-        if( progress != 1 )
+        if( mTimeLine.value() != 1 )
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         else
             {
             slide = false;
-            progress = 0;
+            mTimeLine.setProgress(0);
             }
         }
-    else if( progress != 0 || activated )
+    else if( mTimeLine.value() != 0 || activated )
         {
         if( activated )
-            progress = qMin( 1.0, progress + time / double( PROGRESS_TIME ));
+            mTimeLine.addTime(time);
         else
-            progress = qMax( 0.0, progress - time / double( PROGRESS_TIME ));
+            mTimeLine.removeTime(time);
         // PAINT_SCREEN_BACKGROUND_FIRST is needed because screen will be actually painted more than once,
         // so with normal screen painting second screen paint would erase parts of the first paint
-        if( progress != 0 )
+        if( mTimeLine.value() != 0 )
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
-        if( !activated && progress == 0 )
+        if( !activated && mTimeLine.value() == 0 )
             finish();
         }
     effects->prePaintScreen( data, time );
@@ -109,7 +108,7 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& dat
         else
             w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         }
-    else if( progress != 0 )
+    else if( mTimeLine.value() != 0 )
         {
         if( w->isOnDesktop( painting_desktop ))
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
@@ -127,7 +126,7 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& dat
 
 void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( progress == 0 )
+    if( mTimeLine.value() == 0 )
         {
         effects->paintScreen( mask, region, data );
         return;
@@ -206,7 +205,7 @@ void DesktopGridEffect::paintSlide( int mask, QRegion region, const ScreenPaintD
         if( diffPos.y() < 0 && abs( diffPos.y()) > h / 2 )
             diffPos.setY( diffPos.y() + h );
         }
-    QPoint currentPos = slide_start_pos + progress * diffPos;
+    QPoint currentPos = slide_start_pos + mTimeLine.value() * diffPos;
     QSize displaySize( displayWidth(), displayHeight());
     QRegion currentRegion = QRect( currentPos, displaySize );
     if( effects->optionRollOverDesktops())
@@ -258,7 +257,7 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
             data.yTranslate -= slide_painting_diff.y();
             }
         }
-    else if( progress != 0 )
+    else if( mTimeLine.value() != 0 )
         {
         if( w == window_move )
             {
@@ -279,7 +278,7 @@ void DesktopGridEffect::postPaintScreen()
     {
     if( slide )
         effects->addRepaintFull();
-    if( activated ? progress != 1 : progress != 0 )
+    if( activated ? mTimeLine.value() != 1 : mTimeLine.value() != 0 )
         effects->addRepaintFull(); // trigger next animation repaint
     effects->postPaintScreen();
     }
@@ -301,6 +300,7 @@ QRect DesktopGridEffect::desktopRect( int desktop, bool scaled ) const
     if( !scaled )
         return rect;
     QRect current = desktopRect( effects->currentDesktop(), false );
+    double progress = mTimeLine.value();
     rect = QRect( qRound( interpolate( rect.x() - current.x(), rect.x() / double( x ), progress )),
         qRound( interpolate( rect.y() - current.y(), rect.y() / double( y ), progress )),
         qRound( interpolate( rect.width(), displayWidth() / double( x ), progress )),
@@ -404,7 +404,7 @@ void DesktopGridEffect::slideDesktopChanged( int old )
             if( diffPos.y() < 0 && abs( diffPos.y()) > h / 2 )
                 diffPos.setY( diffPos.y() + h );
             }
-        QPoint currentPos = slide_start_pos + progress * diffPos;
+        QPoint currentPos = slide_start_pos + mTimeLine.value() * diffPos;
         QRegion currentRegion = QRect( currentPos, QSize( displayWidth(), displayHeight()));
         if( effects->optionRollOverDesktops())
             {
@@ -418,27 +418,27 @@ void DesktopGridEffect::slideDesktopChanged( int old )
             { // current position is in new current desktop (e.g. quickly changing back),
               // don't do full progress
             if( abs( currentPos.x() - rect.x()) > abs( currentPos.y() - rect.y()))
-                progress = 1 - abs( currentPos.x() - rect.x()) / double( displayWidth());
+                mTimeLine.setProgress(1 - abs( currentPos.x() - rect.x()) / double( displayWidth()));
             else
-                progress = 1 - abs( currentPos.y() - rect.y()) / double( displayHeight());
+                mTimeLine.setProgress(1 - abs( currentPos.y() - rect.y()) / double( displayHeight()));
             }
         else // current position is not on current desktop, do full progress
-            progress = 0;
+            mTimeLine.setProgress(0);
         diffPos = rect.topLeft() - currentPos;
-        if( progress <= 0 )
+        if( mTimeLine.value() <= 0 )
             {
             // Compute starting point for this new move (given current and end positions)
-            slide_start_pos = rect.topLeft() - diffPos * 1 / ( 1 - progress );
+            slide_start_pos = rect.topLeft() - diffPos * 1 / ( 1 - mTimeLine.value() );
             }
         else
             { // at the end, stop
             slide = false;
-            progress = 0;
+            mTimeLine.setProgress(0);
             }
         }
     else
         {
-        progress = 0;
+        mTimeLine.setProgress(0);
         slide_start_pos = desktopRect( old, false ).topLeft();
         slide = true;
         }
@@ -457,7 +457,7 @@ void DesktopGridEffect::setActive( bool active )
     if( activated == active )
         return;
     activated = active;
-    if( activated && progress == 0 )
+    if( activated && mTimeLine.value() == 0 )
         setup();
     effects->addRepaintFull();
     }

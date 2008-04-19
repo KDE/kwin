@@ -58,8 +58,8 @@ class DesktopGridEffect
         void paintScreenDesktop( int desktop, int mask, QRegion region, ScreenPaintData data );
         void slideDesktopChanged( int old );
         void setHighlightedDesktop( int desktop );
-        double progress;
         bool activated;
+        TimeLine mTimeLine;
         int painting_desktop;
         int highlighted_desktop;
         Window input;
@@ -74,6 +74,7 @@ class DesktopGridEffect
         bool slide_painting_sticky;
         QPoint slide_painting_diff;
         ElectricBorder borderActivate;
+
     };
 
 } // namespace
