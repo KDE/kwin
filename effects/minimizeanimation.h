@@ -46,7 +46,7 @@ class MinimizeAnimationEffect
         virtual void windowUnminimized( EffectWindow* c );
 
     private:
-        QHash< EffectWindow*, TimeLine > mTimeLine;
+        QHash< EffectWindow*, TimeLine > mTimeLineWindows;
         int mActiveAnimations;
     };
 

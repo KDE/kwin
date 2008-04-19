@@ -33,7 +33,7 @@ MinimizeAnimationEffect::MinimizeAnimationEffect()
 
 void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    mActiveAnimations = mTimeLine.count();
+    mActiveAnimations = mTimeLineWindows.count();
     if( mActiveAnimations > 0 )
         // We need to mark the screen windows as transformed. Otherwise the
         //  whole screen won't be repainted, resulting in artefacts
@@ -44,24 +44,24 @@ void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time
 
 void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( mTimeLine.contains( w ))
+    if( mTimeLineWindows.contains( w ))
         {
         if( w->isMinimized() )
             {
-            mTimeLine[w].addTime(time);
-            if( mTimeLine[w].progress() >= 1.0f )
-                mTimeLine.remove( w );
+            mTimeLineWindows[w].addTime(time);
+            if( mTimeLineWindows[w].progress() >= 1.0f )
+                mTimeLineWindows.remove( w );
             }
         else
             {
-            mTimeLine[w].removeTime(time);
-            if( mTimeLine[w].progress() <= 0.0f )
-                mTimeLine.remove( w );
+            mTimeLineWindows[w].removeTime(time);
+            if( mTimeLineWindows[w].progress() <= 0.0f )
+                mTimeLineWindows.remove( w );
             }
 
         // Schedule window for transformation if the animation is still in
         //  progress
-        if( mTimeLine.contains( w ))
+        if( mTimeLineWindows.contains( w ))
             {
             // We'll transform this window
             data.setTransformed();
@@ -74,10 +74,10 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintDat
 
 void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( mTimeLine.contains( w ))
+    if( mTimeLineWindows.contains( w ))
     {
         // 0 = not minimized, 1 = fully minimized
-        double progress = mTimeLine[w].value();
+        double progress = mTimeLineWindows[w].value();
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
@@ -100,7 +100,7 @@ void MinimizeAnimationEffect::postPaintScreen()
     if( mActiveAnimations > 0 )
         // Repaint the workspace so that everything would be repainted next time
         effects->addRepaintFull();
-    mActiveAnimations = mTimeLine.count();
+    mActiveAnimations = mTimeLineWindows.count();
 
     // Call the next effect.
     effects->postPaintScreen();
@@ -108,14 +108,14 @@ void MinimizeAnimationEffect::postPaintScreen()
 
 void MinimizeAnimationEffect::windowMinimized( EffectWindow* w )
     {
-    mTimeLine[w].setCurveShape(TimeLine::EaseInCurve);
-    mTimeLine[w].setProgress(0.0f);
+    mTimeLineWindows[w].setCurveShape(TimeLine::EaseInCurve);
+    mTimeLineWindows[w].setProgress(0.0f);
     }
 
 void MinimizeAnimationEffect::windowUnminimized( EffectWindow* w )
     {
-    mTimeLine[w].setCurveShape(TimeLine::EaseOutCurve);
-    mTimeLine[w].setProgress(1.0f);
+    mTimeLineWindows[w].setCurveShape(TimeLine::EaseOutCurve);
+    mTimeLineWindows[w].setProgress(1.0f);
     }
 
 } // namespace
