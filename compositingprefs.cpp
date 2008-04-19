@@ -104,7 +104,7 @@ QString CompositingPrefs::compositingNotPossibleReason()
     return QString();
 #else
     return i18n("Compositing was disabled at compile time.\n"
-            "Probably Xorg development headers were not installed.");
+            "It is likely Xorg development headers were not installed.");
 #endif
     }
 

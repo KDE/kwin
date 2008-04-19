@@ -48,7 +48,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
 
     QGridLayout* layout = new QGridLayout(this);
 
-    mDrawWindowText = new QCheckBox(i18n("Draw window caption on top of window."), this);
+    mDrawWindowText = new QCheckBox(i18n("Draw window caption on top of window"), this);
     connect(mDrawWindowText, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     layout->addWidget(mDrawWindowText, 0, 0);
 
@@ -77,7 +77,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     a->setText( i18n("Toggle Expose Effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
-    b->setText( i18n("Toggle Expose Effect (incl other desktops)" ));
+    b->setText( i18n("Toggle Expose Effect (incl. other desktops)" ));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);

@@ -38,12 +38,12 @@ int main( int argc, char* argv[] )
 	ki18n( "KWin helper utility" ));
 
     KCmdLineOptions options;
-    options.add("pid <pid>", ki18n("PID of the application to terminate."));
-    options.add("hostname <hostname>", ki18n("Hostname on which the application is running."));
-    options.add("windowname <caption>", ki18n("Caption of the window to be terminated."));
-    options.add("applicationname <name>", ki18n("Name of the application to be terminated."));
-    options.add("wid <id>", ki18n("ID of resource belonging to the application."));
-    options.add("timestamp <time>", ki18n("Time of user action causing killing."));
+    options.add("pid <pid>", ki18n("PID of the application to terminate"));
+    options.add("hostname <hostname>", ki18n("Hostname on which the application is running"));
+    options.add("windowname <caption>", ki18n("Caption of the window to be terminated"));
+    options.add("applicationname <name>", ki18n("Name of the application to be terminated"));
+    options.add("wid <id>", ki18n("ID of resource belonging to the application"));
+    options.add("timestamp <time>", ki18n("Time of user action causing termination"));
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();

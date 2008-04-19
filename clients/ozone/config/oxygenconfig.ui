@@ -19,10 +19,10 @@
    <item>
     <widget class="QCheckBox" name="blendTitlebarColors" >
      <property name="whatsThis" >
-      <string>When enabled, this option makes the window titlebar use same colors as window contents, instead of using system titlebar colors.</string>
+      <string>When enabled, this option makes the window title bar use the same colors as the window contents, instead of using the system title bar colors.</string>
      </property>
      <property name="text" >
-      <string>Blend titlebar colors with window contents</string>
+      <string>Blend title bar colors with window contents</string>
      </property>
     </widget>
    </item>

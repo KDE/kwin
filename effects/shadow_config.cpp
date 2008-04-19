@@ -68,7 +68,7 @@ ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QVariantList& args
     connect(mShadowOpacity, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     layout->addWidget(mShadowOpacity, 2, 1);
 
-    layout->addWidget(new QLabel(i18n("Shadow fuzzyness:"), this), 3, 0);
+    layout->addWidget(new QLabel(i18n("Shadow fuzziness:"), this), 3, 0);
     mShadowFuzzyness = new QSpinBox(this);
     mShadowFuzzyness->setRange(0, 20);
     connect(mShadowFuzzyness, SIGNAL(valueChanged(int)), this, SLOT(changed()));
