@@ -89,6 +89,7 @@ void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion re
         data.yScale *= interpolate(1.0, icon.height() / (double)geo.height(), progress);
         data.xTranslate = (int)interpolate(data.xTranslate, icon.x() - geo.x(), progress);
         data.yTranslate = (int)interpolate(data.yTranslate, icon.y() - geo.y(), progress);
+        data.opacity *= 0.1 + (1-progress)*0.9;
     }
 
     // Call the next effect.
