@@ -74,7 +74,6 @@ void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             double progress = qMin( 1.0, timeLine.value() + time / double( animationDuration ));
             timeLine.setProgress(progress);
             timeLine.setCurveShape(TimeLine::EaseInOutCurve);
-            timeLine.setCurveShape(TimeLine::LinearCurve);
             }
         }
     effects->prePaintScreen(data, time);
