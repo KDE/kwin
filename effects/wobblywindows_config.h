@@ -55,10 +55,10 @@ private:
 
 private slots:
 
-    void slotSpRaideur(double);
-    void slotSlRaideur(int);
-    void slotSpAmortissement(double);
-    void slotSlAmortissement(int);
+    void slotSpStiffness(double);
+    void slotSlStiffness(int);
+    void slotSpDrag(double);
+    void slotSlDrag(int);
     void slotSpMovFactor(double);
     void slotSlMovFactor(int);
 

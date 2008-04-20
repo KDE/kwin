@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtGlobal>
 
-static const qreal RAIDEUR = 0.06;
-static const qreal AMORTISSEMENT = 0.92;
+static const qreal STIFFNESS = 0.06;
+static const qreal DRAG = 0.92;
 static const qreal MOVEFACTOR = 0.1;
 
 static const int XTESSELATION = 20;

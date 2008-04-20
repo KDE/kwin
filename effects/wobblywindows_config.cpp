@@ -43,10 +43,10 @@ KCModule(EffectFactory::componentData(), parent, args)
 {
     m_ui.setupUi(this);
 
-    connect(m_ui.spRaideur, SIGNAL(valueChanged(double)), this, SLOT(slotSpRaideur(double)));
-    connect(m_ui.slRaideur, SIGNAL(sliderMoved(int)), this, SLOT(slotSlRaideur(int)));
-    connect(m_ui.spAmortissement, SIGNAL(valueChanged(double)), this, SLOT(slotSpAmortissement(double)));
-    connect(m_ui.slAmortissement, SIGNAL(sliderMoved(int)), this, SLOT(slotSlAmortissement(int)));
+    connect(m_ui.spStiffness, SIGNAL(valueChanged(double)), this, SLOT(slotSpStiffness(double)));
+    connect(m_ui.slStiffness, SIGNAL(sliderMoved(int)), this, SLOT(slotSlStiffness(int)));
+    connect(m_ui.spDrag, SIGNAL(valueChanged(double)), this, SLOT(slotSpDrag(double)));
+    connect(m_ui.slDrag, SIGNAL(sliderMoved(int)), this, SLOT(slotSlDrag(int)));
     connect(m_ui.spMovFactor, SIGNAL(valueChanged(double)), this, SLOT(slotSpMovFactor(double)));
     connect(m_ui.slMovFactor, SIGNAL(sliderMoved(int)), this, SLOT(slotSlMovFactor(int)));
 
@@ -82,15 +82,15 @@ void WobblyWindowsEffectConfig::load()
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Wobbly");
-    qreal raideur = conf.readEntry("Raideur", RAIDEUR);
-    qreal amortissement = conf.readEntry("Amortissement", AMORTISSEMENT);
+    qreal stiffness = conf.readEntry("Stiffness", STIFFNESS);
+    qreal drag = conf.readEntry("Drag", DRAG);
     qreal move_factor = conf.readEntry("MoveFactor", MOVEFACTOR);
 
-    m_ui.spRaideur->setValue(raideur);
-    m_ui.slRaideur->setSliderPosition(raideur*50);    
+    m_ui.spStiffness->setValue(stiffness);
+    m_ui.slStiffness->setSliderPosition(stiffness*50);
 
-    m_ui.spAmortissement->setValue(amortissement);
-    m_ui.slAmortissement->setSliderPosition(amortissement*100);
+    m_ui.spDrag->setValue(drag);
+    m_ui.slDrag->setSliderPosition(drag*100);
 
     m_ui.spMovFactor->setValue(move_factor);
     m_ui.slMovFactor->setValue(move_factor*100);
@@ -177,8 +177,8 @@ void WobblyWindowsEffectConfig::save()
 {
     KConfigGroup conf = EffectsHandler::effectConfig("Wobbly");
 
-    conf.writeEntry("Raideur", m_ui.spRaideur->value());
-    conf.writeEntry("Amortissement", m_ui.spAmortissement->value());
+    conf.writeEntry("Stiffness", m_ui.spStiffness->value());
+    conf.writeEntry("Drag", m_ui.spDrag->value());
     conf.writeEntry("MoveFactor", m_ui.spMovFactor->value());
 
     conf.writeEntry("XTesselation", m_ui.spHNodes->value());
@@ -237,11 +237,11 @@ void WobblyWindowsEffectConfig::save()
 
 void WobblyWindowsEffectConfig::defaults()
 {
-    m_ui.spRaideur->setValue(RAIDEUR);
-    m_ui.slRaideur->setSliderPosition(RAIDEUR*50);    
+    m_ui.spStiffness->setValue(STIFFNESS);
+    m_ui.slStiffness->setSliderPosition(STIFFNESS*50);    
 
-    m_ui.spAmortissement->setValue(AMORTISSEMENT);
-    m_ui.slAmortissement->setSliderPosition(AMORTISSEMENT*100);
+    m_ui.spDrag->setValue(DRAG);
+    m_ui.slDrag->setSliderPosition(DRAG*100);
 
     m_ui.spMovFactor->setValue(MOVEFACTOR);
     m_ui.slMovFactor->setValue(MOVEFACTOR*100);
@@ -274,27 +274,27 @@ void WobblyWindowsEffectConfig::defaults()
     emit changed(true);
 }
 
-void WobblyWindowsEffectConfig::slotSpRaideur(double value)
+void WobblyWindowsEffectConfig::slotSpStiffness(double value)
 {
-    m_ui.slRaideur->setSliderPosition(value*50);
+    m_ui.slStiffness->setSliderPosition(value*50);
     emit changed(true);
 }
 
-void WobblyWindowsEffectConfig::slotSlRaideur(int value)
+void WobblyWindowsEffectConfig::slotSlStiffness(int value)
 {
-    m_ui.spRaideur->setValue(value/50.0);
+    m_ui.spStiffness->setValue(value/50.0);
     emit changed(true);
 }
 
-void WobblyWindowsEffectConfig::slotSpAmortissement(double value)
+void WobblyWindowsEffectConfig::slotSpDrag(double value)
 {
-    m_ui.slAmortissement->setSliderPosition(value*100);
+    m_ui.slDrag->setSliderPosition(value*100);
     emit changed(true);
 }
 
-void WobblyWindowsEffectConfig::slotSlAmortissement(int value)
+void WobblyWindowsEffectConfig::slotSlDrag(int value)
 {
-    m_ui.spAmortissement->setValue(qreal(value)/100.0);
+    m_ui.spDrag->setValue(qreal(value)/100.0);
     emit changed(true);
 }
 

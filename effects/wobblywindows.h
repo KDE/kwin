@@ -45,8 +45,8 @@ class WobblyWindowsEffect : public Effect
         virtual void windowClosed( EffectWindow* w );
 
         // Wobbly model parameters
-        void setRaideur(qreal raideur);
-        void setAmortissement(qreal amortissement);
+        void setStiffness(qreal stiffness);
+        void setDrag(qreal drag);
         void setVelocityThreshold(qreal velocityThreshold);
         void setMoveFactor(qreal factor);
 
@@ -105,8 +105,8 @@ class WobblyWindowsEffect : public Effect
 
         QRect m_updateRegion;
 
-        qreal m_raideur;
-        qreal m_amortissement;
+        qreal m_stiffness;
+        qreal m_drag;
         qreal m_move_factor;
 
         // the default tesselation for windows

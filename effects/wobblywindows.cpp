@@ -45,8 +45,8 @@ WobblyWindowsEffect::WobblyWindowsEffect()
 {
     KConfigGroup conf = effects->effectConfig("Wobbly");
 
-    m_raideur = conf.readEntry("Raideur", RAIDEUR);
-    m_amortissement = conf.readEntry("Amortissement", AMORTISSEMENT);
+    m_stiffness = conf.readEntry("Stiffness", STIFFNESS);
+    m_drag = conf.readEntry("Drag", DRAG);
     m_move_factor = conf.readEntry("MoveFactor", MOVEFACTOR);
 
     m_xTesselation = conf.readEntry("XTesselation", XTESSELATION);
@@ -115,7 +115,7 @@ WobblyWindowsEffect::WobblyWindowsEffect()
 #if defined VERBOSE_MODE
     kDebug() << "Parameters :\n" <<
         "move : " << m_moveEffectEnabled << ", open : " << m_openEffectEnabled << ", close : " << m_closeEffectEnabled << "\n"
-        "grid(" << m_raideur << ", " << m_amortissement << ", " << m_move_factor << ")\n" <<
+        "grid(" << m_stiffness << ", " << m_drag << ", " << m_move_factor << ")\n" <<
         "velocity(" << m_minVelocity << ", " << m_maxVelocity << ", " << m_stopVelocity << ")\n" <<
         "acceleration(" << m_minAcceleration << ", " << m_maxAcceleration << ", " << m_stopAcceleration << ")\n" <<
         "tesselation(" << m_xTesselation <<  ", " << m_yTesselation << ")";
@@ -147,9 +147,9 @@ void WobblyWindowsEffect::setMoveFactor(qreal factor)
     m_move_factor = factor;
 }
 
-void WobblyWindowsEffect::setRaideur(qreal m_raideur)
+void WobblyWindowsEffect::setStiffness(qreal stiffness)
 {
-    this->m_raideur = m_raideur;
+    m_stiffness = stiffness;
 }
 
 void WobblyWindowsEffect::setVelocityFilter(GridFilter filter)
@@ -172,9 +172,9 @@ WobblyWindowsEffect::GridFilter WobblyWindowsEffect::accelerationFilter() const
     return m_accelerationFilter;
 }
 
-void WobblyWindowsEffect::setAmortissement(qreal m_amortissement)
+void WobblyWindowsEffect::setDrag(qreal drag)
 {
-    this->m_amortissement = m_amortissement;
+    m_drag = drag;
 }
 
 void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
@@ -629,7 +629,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         Pair window_pos = wwi.origin[0];
         Pair current_pos = wwi.position[0];
         Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-        Pair accel = {move.x*m_raideur, move.y*m_raideur};
+        Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
         wwi.acceleration[0] = accel;
     }
     else
@@ -638,8 +638,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         neibourgs[0] = wwi.position[1];
         neibourgs[1] = wwi.position[wwi.width];
 
-        acceleration.x = ((neibourgs[0].x - pos.x) - x_length)*m_raideur + (neibourgs[1].x - pos.x)*m_raideur;
-        acceleration.y = ((neibourgs[1].y - pos.y) - y_length)*m_raideur + (neibourgs[0].y - pos.y)*m_raideur;
+        acceleration.x = ((neibourgs[0].x - pos.x) - x_length)*m_stiffness + (neibourgs[1].x - pos.x)*m_stiffness;
+        acceleration.y = ((neibourgs[1].y - pos.y) - y_length)*m_stiffness + (neibourgs[0].y - pos.y)*m_stiffness;
 
         acceleration.x /= 2;
         acceleration.y /= 2;
@@ -654,7 +654,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         Pair window_pos = wwi.origin[wwi.width-1];
         Pair current_pos = wwi.position[wwi.width-1];
         Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-        Pair accel = {move.x*m_raideur, move.y*m_raideur};
+        Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
         wwi.acceleration[wwi.width-1] = accel;
     }
     else
@@ -663,8 +663,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         neibourgs[0] = wwi.position[wwi.width-2];
         neibourgs[1] = wwi.position[2*wwi.width-1];
 
-        acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_raideur + (neibourgs[1].x - pos.x)*m_raideur;
-        acceleration.y = ((neibourgs[1].y - pos.y) - y_length)*m_raideur + (neibourgs[0].y - pos.y)*m_raideur;
+        acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_stiffness + (neibourgs[1].x - pos.x)*m_stiffness;
+        acceleration.y = ((neibourgs[1].y - pos.y) - y_length)*m_stiffness + (neibourgs[0].y - pos.y)*m_stiffness;
 
         acceleration.x /= 2;
         acceleration.y /= 2;
@@ -679,7 +679,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         Pair window_pos = wwi.origin[wwi.width*(wwi.height-1)];
         Pair current_pos = wwi.position[wwi.width*(wwi.height-1)];
         Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-        Pair accel = {move.x*m_raideur, move.y*m_raideur};
+        Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
         wwi.acceleration[wwi.width*(wwi.height-1)] = accel;
     }
     else
@@ -688,8 +688,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         neibourgs[0] = wwi.position[wwi.width*(wwi.height-1)+1];
         neibourgs[1] = wwi.position[wwi.width*(wwi.height-2)];
 
-        acceleration.x = ((neibourgs[0].x - pos.x) - x_length)*m_raideur + (neibourgs[1].x - pos.x)*m_raideur;
-        acceleration.y = (y_length - (pos.y - neibourgs[1].y))*m_raideur + (neibourgs[0].y - pos.y)*m_raideur;
+        acceleration.x = ((neibourgs[0].x - pos.x) - x_length)*m_stiffness + (neibourgs[1].x - pos.x)*m_stiffness;
+        acceleration.y = (y_length - (pos.y - neibourgs[1].y))*m_stiffness + (neibourgs[0].y - pos.y)*m_stiffness;
 
         acceleration.x /= 2;
         acceleration.y /= 2;
@@ -704,7 +704,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         Pair window_pos = wwi.origin[wwi.count-1];
         Pair current_pos = wwi.position[wwi.count-1];
         Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-        Pair accel = {move.x*m_raideur, move.y*m_raideur};
+        Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
         wwi.acceleration[wwi.count-1] = accel;
     }
     else
@@ -713,8 +713,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         neibourgs[0] = wwi.position[wwi.count-2];
         neibourgs[1] = wwi.position[wwi.width*(wwi.height-1)-1];
 
-        acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_raideur + (neibourgs[1].x - pos.x)*m_raideur;
-        acceleration.y = (y_length - (pos.y - neibourgs[1].y))*m_raideur + (neibourgs[0].y - pos.y)*m_raideur;
+        acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_stiffness + (neibourgs[1].x - pos.x)*m_stiffness;
+        acceleration.y = (y_length - (pos.y - neibourgs[1].y))*m_stiffness + (neibourgs[0].y - pos.y)*m_stiffness;
 
         acceleration.x /= 2;
         acceleration.y /= 2;
@@ -733,7 +733,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             Pair window_pos = wwi.origin[i];
             Pair current_pos = wwi.position[i];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_raideur, move.y*m_raideur};
+            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
             wwi.acceleration[i] = accel;
         }
         else
@@ -743,8 +743,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             neibourgs[1] = wwi.position[i+1];
             neibourgs[2] = wwi.position[i+wwi.width];
 
-            acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_raideur + ((neibourgs[1].x - pos.x) - x_length)*m_raideur + (neibourgs[2].x - pos.x)*m_raideur;
-            acceleration.y = ((neibourgs[2].y - pos.y) - y_length)*m_raideur + (neibourgs[0].y - pos.y)*m_raideur + (neibourgs[1].y - pos.y)*m_raideur;
+            acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_stiffness + ((neibourgs[1].x - pos.x) - x_length)*m_stiffness + (neibourgs[2].x - pos.x)*m_stiffness;
+            acceleration.y = ((neibourgs[2].y - pos.y) - y_length)*m_stiffness + (neibourgs[0].y - pos.y)*m_stiffness + (neibourgs[1].y - pos.y)*m_stiffness;
 
             acceleration.x /= 3;
             acceleration.y /= 3;
@@ -761,7 +761,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             Pair window_pos = wwi.origin[i];
             Pair current_pos = wwi.position[i];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_raideur, move.y*m_raideur};
+            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
             wwi.acceleration[i] = accel;
         }
         else
@@ -771,8 +771,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             neibourgs[1] = wwi.position[i+1];
             neibourgs[2] = wwi.position[i-wwi.width];
 
-            acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_raideur + ((neibourgs[1].x - pos.x) - x_length)*m_raideur + (neibourgs[2].x - pos.x)*m_raideur;
-            acceleration.y = (y_length - (pos.y - neibourgs[2].y))*m_raideur + (neibourgs[0].y - pos.y)*m_raideur + (neibourgs[1].y - pos.y)*m_raideur;
+            acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_stiffness + ((neibourgs[1].x - pos.x) - x_length)*m_stiffness + (neibourgs[2].x - pos.x)*m_stiffness;
+            acceleration.y = (y_length - (pos.y - neibourgs[2].y))*m_stiffness + (neibourgs[0].y - pos.y)*m_stiffness + (neibourgs[1].y - pos.y)*m_stiffness;
 
             acceleration.x /= 3;
             acceleration.y /= 3;
@@ -789,7 +789,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             Pair window_pos = wwi.origin[i];
             Pair current_pos = wwi.position[i];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_raideur, move.y*m_raideur};
+            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
             wwi.acceleration[i] = accel;
         }
         else
@@ -799,8 +799,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             neibourgs[1] = wwi.position[i-wwi.width];
             neibourgs[2] = wwi.position[i+wwi.width];
 
-            acceleration.x = ((neibourgs[0].x - pos.x) - x_length)*m_raideur + (neibourgs[1].x - pos.x)*m_raideur + (neibourgs[2].x - pos.x)*m_raideur;
-            acceleration.y = (y_length - (pos.y - neibourgs[1].y))*m_raideur + ((neibourgs[2].y - pos.y) - y_length)*m_raideur + (neibourgs[0].y - pos.y)*m_raideur;
+            acceleration.x = ((neibourgs[0].x - pos.x) - x_length)*m_stiffness + (neibourgs[1].x - pos.x)*m_stiffness + (neibourgs[2].x - pos.x)*m_stiffness;
+            acceleration.y = (y_length - (pos.y - neibourgs[1].y))*m_stiffness + ((neibourgs[2].y - pos.y) - y_length)*m_stiffness + (neibourgs[0].y - pos.y)*m_stiffness;
 
             acceleration.x /= 3;
             acceleration.y /= 3;
@@ -817,7 +817,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             Pair window_pos = wwi.origin[i];
             Pair current_pos = wwi.position[i];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_raideur, move.y*m_raideur};
+            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
             wwi.acceleration[i] = accel;
         }
         else
@@ -827,8 +827,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             neibourgs[1] = wwi.position[i-wwi.width];
             neibourgs[2] = wwi.position[i+wwi.width];
 
-            acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_raideur + (neibourgs[1].x - pos.x)*m_raideur + (neibourgs[2].x - pos.x)*m_raideur;
-            acceleration.y = (y_length - (pos.y - neibourgs[1].y))*m_raideur + ((neibourgs[2].y - pos.y) - y_length)*m_raideur + (neibourgs[0].y - pos.y)*m_raideur;
+            acceleration.x = (x_length - (pos.x - neibourgs[0].x))*m_stiffness + (neibourgs[1].x - pos.x)*m_stiffness + (neibourgs[2].x - pos.x)*m_stiffness;
+            acceleration.y = (y_length - (pos.y - neibourgs[1].y))*m_stiffness + ((neibourgs[2].y - pos.y) - y_length)*m_stiffness + (neibourgs[0].y - pos.y)*m_stiffness;
 
             acceleration.x /= 3;
             acceleration.y /= 3;
@@ -849,7 +849,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
             Pair window_pos = wwi.origin[index];
             Pair current_pos = wwi.position[index];
             Pair move = {window_pos.x - current_pos.x, window_pos.y - current_pos.y};
-            Pair accel = {move.x*m_raideur, move.y*m_raideur};
+            Pair accel = {move.x*m_stiffness, move.y*m_stiffness};
             wwi.acceleration[index] = accel;
             }
             else
@@ -860,14 +860,14 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
                 neibourgs[2] = wwi.position[index-wwi.width];
                 neibourgs[3] = wwi.position[index+wwi.width];
 
-                acceleration.x = ((neibourgs[0].x - pos.x) - x_length)*m_raideur +
-                                 (x_length - (pos.x - neibourgs[1].x))*m_raideur +
-                                 (neibourgs[2].x - pos.x)*m_raideur +
-                                 (neibourgs[3].x - pos.x)*m_raideur;
-                acceleration.y = (y_length - (pos.y - neibourgs[2].y))*m_raideur +
-                                 ((neibourgs[3].y - pos.y) - y_length)*m_raideur +
-                                 (neibourgs[0].y - pos.y)*m_raideur +
-                                 (neibourgs[1].y - pos.y)*m_raideur;
+                acceleration.x = ((neibourgs[0].x - pos.x) - x_length)*m_stiffness +
+                                 (x_length - (pos.x - neibourgs[1].x))*m_stiffness +
+                                 (neibourgs[2].x - pos.x)*m_stiffness +
+                                 (neibourgs[3].x - pos.x)*m_stiffness;
+                acceleration.y = (y_length - (pos.y - neibourgs[2].y))*m_stiffness +
+                                 ((neibourgs[3].y - pos.y) - y_length)*m_stiffness +
+                                 (neibourgs[0].y - pos.y)*m_stiffness +
+                                 (neibourgs[1].y - pos.y)*m_stiffness;
 
                 acceleration.x /= 4;
                 acceleration.y /= 4;
@@ -914,8 +914,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 #endif
 
         Pair& vel = wwi.velocity[i];
-        vel.x = acc.x*time + vel.x*m_amortissement;
-        vel.y = acc.y*time + vel.y*m_amortissement;
+        vel.x = acc.x*time + vel.x*m_drag;
+        vel.y = acc.y*time + vel.y*m_drag;
 
         acc_sum += fabs(acc.x) + fabs(acc.y);
     }
