@@ -58,6 +58,8 @@ CoverSwitchEffect::CoverSwitchEffect()
     animateStart      = conf.readEntry( "AnimateStart", true );
     animateStop       = conf.readEntry( "AnimateStop", true );
     reflection        = conf.readEntry( "Reflection", true );
+    timeLine.setCurveShape( TimeLine::EaseInOutCurve );
+    timeLine.setDuration( animationDuration );
     }
 
 CoverSwitchEffect::~CoverSwitchEffect()
@@ -71,9 +73,7 @@ void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         if( animation || start || stop )
             {
-            double progress = qMin( 1.0, timeLine.value() + time / double( animationDuration ));
-            timeLine.setProgress(progress);
-            timeLine.setCurveShape(TimeLine::EaseInOutCurve);
+            timeLine.addTime( (double)time );
             }
         }
     effects->prePaintScreen(data, time);
