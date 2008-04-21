@@ -115,7 +115,7 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     }
 
     m_moveEffectEnabled = conf.readEntry("MoveEffect", true);
-    m_openEffectEnabled = conf.readEntry("OpenEffect", true);
+    m_openEffectEnabled = conf.readEntry("OpenEffect", false);
     // disable close effect by default for now as it doesn't do what I want.
     m_closeEffectEnabled = conf.readEntry("CloseEffect", false);
 
@@ -229,7 +229,7 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
 
 void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if(windows.contains(w) && w->isNormalWindow())
+    if(windows.contains(w))
     {
         WindowWobblyInfos& wwi = windows[w];
         int tx = w->geometry().x();
