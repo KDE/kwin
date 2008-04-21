@@ -68,6 +68,10 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     {
         m_velocityFilter = FourRingLinearMean;
     }
+    else if (velFilter == "HeightRingLinearMean")
+    {
+        m_velocityFilter = HeightRingLinearMean;
+    }
     else if (velFilter == "MeanWithMean")
     {
         m_velocityFilter = MeanWithMean;
@@ -91,6 +95,10 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     else if (accFilter == "FourRingLinearMean")
     {
         m_accelerationFilter = FourRingLinearMean;
+    }
+    else if (accFilter == "HeightRingLinearMean")
+    {
+        m_accelerationFilter = HeightRingLinearMean;
     }
     else if (accFilter == "MeanWithMean")
     {
@@ -295,7 +303,7 @@ void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bo
         if (windows.contains(w))
         {
             WindowWobblyInfos& wwi = windows[w];
-            wwi.status = Moving;
+            wwi.status = Free;
         }
     }
 }
@@ -886,6 +894,10 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         fourRingLinearMean(&wwi.acceleration, wwi);
         break;
 
+    case HeightRingLinearMean:
+        heightRingLinearMean(&wwi.acceleration, wwi);
+        break;
+
     case MeanWithMean:
         meanWithMean(&wwi.acceleration, wwi);
         break;
@@ -928,6 +940,10 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
     case FourRingLinearMean:
         fourRingLinearMean(&wwi.velocity, wwi);
+        break;
+
+    case HeightRingLinearMean:
+        heightRingLinearMean(&wwi.velocity, wwi);
         break;
 
     case MeanWithMean:
@@ -1210,6 +1226,155 @@ void WobblyWindowsEffect::meanWithMedian(Pair** datas_pointer, WindowWobblyInfos
     {
         wwi.buffer[i].x = (datas[i].x + median.x) / 2.0;
         wwi.buffer[i].y = (datas[i].y + median.y) / 2.0;
+    }
+
+    Pair* tmp = datas;
+    *datas_pointer = wwi.buffer;
+    wwi.buffer = tmp;
+}
+
+void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobblyInfos& wwi)
+{
+    Pair* datas = *datas_pointer;
+    Pair neibourgs[8];
+
+    // for corners
+
+    // top-left
+    {
+        Pair& res = wwi.buffer[0];
+        Pair vit = datas[0];
+        neibourgs[0] = datas[1];
+        neibourgs[1] = datas[wwi.width];
+        neibourgs[2] = datas[wwi.width+1];
+
+        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
+        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
+    }
+
+
+    // top-right
+    {
+        Pair& res = wwi.buffer[wwi.width-1];
+        Pair vit = datas[wwi.width-1];
+        neibourgs[0] = datas[wwi.width-2];
+        neibourgs[1] = datas[2*wwi.width-1];
+        neibourgs[2] = datas[2*wwi.width-2];
+
+        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
+        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
+    }
+
+
+    // bottom-left
+   {
+        Pair& res = wwi.buffer[wwi.width*(wwi.height-1)];
+        Pair vit = datas[wwi.width*(wwi.height-1)];
+        neibourgs[0] = datas[wwi.width*(wwi.height-1)+1];
+        neibourgs[1] = datas[wwi.width*(wwi.height-2)];
+        neibourgs[2] = datas[wwi.width*(wwi.height-2)+1];
+
+        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
+        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
+    }
+
+
+    // bottom-right
+    {
+        Pair& res = wwi.buffer[wwi.count-1];
+        Pair vit = datas[wwi.count-1];
+        neibourgs[0] = datas[wwi.count-2];
+        neibourgs[1] = datas[wwi.width*(wwi.height-1)-1];
+        neibourgs[2] = datas[wwi.width*(wwi.height-1)-2];
+
+        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
+        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
+    }
+
+
+    // for borders
+
+    // top border
+    for (unsigned int i=1; i<wwi.width-1; ++i)
+    {
+        Pair& res = wwi.buffer[i];
+        Pair vit = datas[i];
+        neibourgs[0] = datas[i-1];
+        neibourgs[1] = datas[i+1];
+        neibourgs[2] = datas[i+wwi.width];
+        neibourgs[3] = datas[i+wwi.width-1];
+        neibourgs[4] = datas[i+wwi.width+1];
+
+        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0*vit.x) / 10.0;
+        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0*vit.y) / 10.0;
+    }
+
+    // bottom border
+    for (unsigned int i=wwi.width*(wwi.height-1)+1; i<wwi.count-1; ++i)
+    {
+        Pair& res = wwi.buffer[i];
+        Pair vit = datas[i];
+        neibourgs[0] = datas[i-1];
+        neibourgs[1] = datas[i+1];
+        neibourgs[2] = datas[i-wwi.width];
+        neibourgs[3] = datas[i-wwi.width-1];
+        neibourgs[4] = datas[i-wwi.width+1];
+
+        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0*vit.x) / 10.0;
+        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0*vit.y) / 10.0;
+    }
+
+    // left border
+    for (unsigned int i=wwi.width; i<wwi.width*(wwi.height-1); i+=wwi.width)
+    {
+        Pair& res = wwi.buffer[i];
+        Pair vit = datas[i];
+        neibourgs[0] = datas[i+1];
+        neibourgs[1] = datas[i-wwi.width];
+        neibourgs[2] = datas[i+wwi.width];
+        neibourgs[3] = datas[i-wwi.width+1];
+        neibourgs[4] = datas[i+wwi.width+1];
+
+        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0*vit.x) / 10.0;
+        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0*vit.y) / 10.0;
+    }
+
+    // right border
+    for (unsigned int i=2*wwi.width-1; i<wwi.count-1; i+=wwi.width)
+    {
+        Pair& res = wwi.buffer[i];
+        Pair vit = datas[i];
+        neibourgs[0] = datas[i-1];
+        neibourgs[1] = datas[i-wwi.width];
+        neibourgs[2] = datas[i+wwi.width];
+        neibourgs[3] = datas[i-wwi.width-1];
+        neibourgs[4] = datas[i+wwi.width-1];
+
+        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0*vit.x) / 10.0;
+        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0*vit.y) / 10.0;
+    }
+
+    // for the inner points
+    for (unsigned int j=1; j<wwi.height-1; ++j)
+    {
+        for (unsigned int i=1; i<wwi.width-1; ++i)
+        {
+            unsigned int index = i+j*wwi.width;
+
+            Pair& res = wwi.buffer[index];
+            Pair& vit = datas[index];
+            neibourgs[0] = datas[index-1];
+            neibourgs[1] = datas[index+1];
+            neibourgs[2] = datas[index-wwi.width];
+            neibourgs[3] = datas[index+wwi.width];
+            neibourgs[4] = datas[index-wwi.width-1];
+            neibourgs[5] = datas[index-wwi.width+1];
+            neibourgs[6] = datas[index+wwi.width-1];
+            neibourgs[7] = datas[index+wwi.width+1];
+
+            res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + neibourgs[5].x + neibourgs[6].x + neibourgs[7].x + 8.0*vit.x) / 16.0;
+            res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + neibourgs[5].y + neibourgs[6].y + neibourgs[7].y + 8.0*vit.y) / 16.0;
+        }
     }
 
     Pair* tmp = datas;

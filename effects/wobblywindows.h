@@ -28,6 +28,7 @@ class WobblyWindowsEffect : public Effect
         {
             NoFilter,
             FourRingLinearMean,
+            HeightRingLinearMean,
             MeanWithMean,
             MeanWithMedian
         };
@@ -137,6 +138,7 @@ class WobblyWindowsEffect : public Effect
         WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const;
 
         static void fourRingLinearMean(Pair** datas, WindowWobblyInfos& wwi);
+        static void heightRingLinearMean(Pair** datas, WindowWobblyInfos& wwi);
         static void meanWithMean(Pair** datas, WindowWobblyInfos& wwi);
         static void meanWithMedian(Pair** datas, WindowWobblyInfos& wwi);
 };

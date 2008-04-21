@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>553</width>
-    <height>383</height>
+    <height>368</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -23,8 +23,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>533</width>
-        <height>338</height>
+        <width>531</width>
+        <height>321</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -284,12 +284,19 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="rbRingMean" >
+           <widget class="QRadioButton" name="rbFourRingMean" >
             <property name="text" >
-             <string>Ring Mean</string>
+             <string>Ring Mean (4 ways)</string>
             </property>
             <property name="checked" >
              <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rbHeightRingMean" >
+            <property name="text" >
+             <string>Ring Mean (8 ways)</string>
             </property>
            </widget>
           </item>

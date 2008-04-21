@@ -49,6 +49,7 @@ private:
     {
         NoFilter,
         FourRingLinearMean,
+        HeightRingLinearMean,
         MeanWithMean,
         MeanWithMedian
     };
@@ -64,7 +65,8 @@ private slots:
 
     void slotGridParameterSelected(int);
     void slotRbNone(bool);
-    void slotRbRingMean(bool);
+    void slotRbFourRingMean(bool);
+    void slotRbHeightRingMean(bool);
     void slotRbMeanMean(bool);
     void slotRbMeanMedian(bool);
 

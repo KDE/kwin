@@ -53,7 +53,8 @@ KCModule(EffectFactory::componentData(), parent, args)
     connect(m_ui.cbGridFilter, SIGNAL(activated(int)), this, SLOT(slotGridParameterSelected(int)));
 
     connect(m_ui.rbNone, SIGNAL(toggled(bool)), this, SLOT(slotRbNone(bool)));
-    connect(m_ui.rbRingMean, SIGNAL(toggled(bool)), this, SLOT(slotRbRingMean(bool)));
+    connect(m_ui.rbFourRingMean, SIGNAL(toggled(bool)), this, SLOT(slotRbFourRingMean(bool)));
+    connect(m_ui.rbHeightRingMean, SIGNAL(toggled(bool)), this, SLOT(slotRbHeightRingMean(bool)));
     connect(m_ui.rbMeanMean, SIGNAL(toggled(bool)), this, SLOT(slotRbMeanMean(bool)));
     connect(m_ui.rbMeanMedian, SIGNAL(toggled(bool)), this, SLOT(slotRbMeanMedian(bool)));
 
@@ -112,6 +113,10 @@ void WobblyWindowsEffectConfig::load()
     {
         velocityFilter = FourRingLinearMean;
     }
+    else if (velFilter == "HeightRingLinearMean")
+    {
+        velocityFilter = HeightRingLinearMean;
+    }
     else if (velFilter == "MeanWithMean")
     {
         velocityFilter = MeanWithMean;
@@ -135,6 +140,10 @@ void WobblyWindowsEffectConfig::load()
     else if (accFilter == "FourRingLinearMean")
     {
         accelerationFilter = FourRingLinearMean;
+    }
+    else if (accFilter == "HeightRingLinearMean")
+    {
+        accelerationFilter = HeightRingLinearMean;
     }
     else if (accFilter == "MeanWithMean")
     {
@@ -194,6 +203,10 @@ void WobblyWindowsEffectConfig::save()
         conf.writeEntry("VelocityFilter", "FourRingLinearMean");
         break;
 
+    case HeightRingLinearMean:
+        conf.writeEntry("VelocityFilter", "HeightRingLinearMean");
+        break;
+
     case MeanWithMean:
         conf.writeEntry("VelocityFilter", "MeanWithMean");
         break;
@@ -211,6 +224,10 @@ void WobblyWindowsEffectConfig::save()
 
     case FourRingLinearMean:
         conf.writeEntry("AccelerationFilter", "FourRingLinearMean");
+        break;
+
+    case HeightRingLinearMean:
+        conf.writeEntry("AccelerationFilter", "HeightRingLinearMean");
         break;
 
     case MeanWithMean:
@@ -328,7 +345,7 @@ void WobblyWindowsEffectConfig::slotRbNone(bool toggled)
     emit changed(true);
 }
 
-void WobblyWindowsEffectConfig::slotRbRingMean(bool toggled)
+void WobblyWindowsEffectConfig::slotRbFourRingMean(bool toggled)
 {
     if (toggled)
     {
@@ -343,6 +360,24 @@ void WobblyWindowsEffectConfig::slotRbRingMean(bool toggled)
     }
     emit changed(true);
 }
+
+
+void WobblyWindowsEffectConfig::slotRbHeightRingMean(bool toggled)
+{
+    if (toggled)
+    {
+        if (m_ui.cbGridFilter->currentIndex() == 0) // velocity
+        {
+            velocityFilter = HeightRingLinearMean;
+        }
+        else if (m_ui.cbGridFilter->currentIndex() == 1) // acceleration
+        {
+            accelerationFilter = HeightRingLinearMean;
+        }
+    }
+    emit changed(true);
+}
+
 
 void WobblyWindowsEffectConfig::slotRbMeanMean(bool toggled)
 {
@@ -387,7 +422,11 @@ void WobblyWindowsEffectConfig::slotGridParameterSelected(int index)
             break;
 
         case FourRingLinearMean:
-            m_ui.rbRingMean->setChecked(true);
+            m_ui.rbFourRingMean->setChecked(true);
+            break;
+
+        case HeightRingLinearMean:
+            m_ui.rbHeightRingMean->setChecked(true);
             break;
 
         case MeanWithMean:
@@ -408,7 +447,11 @@ void WobblyWindowsEffectConfig::slotGridParameterSelected(int index)
             break;
 
         case FourRingLinearMean:
-            m_ui.rbRingMean->setChecked(true);
+            m_ui.rbFourRingMean->setChecked(true);
+            break;
+
+        case HeightRingLinearMean:
+            m_ui.rbHeightRingMean->setChecked(true);
             break;
 
         case MeanWithMean:
