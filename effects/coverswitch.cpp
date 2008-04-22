@@ -594,6 +594,12 @@ void CoverSwitchEffect::tabBoxClosed()
                 {
                 stop = true;
                 }
+            else if( start && rearrangeWindows == 0 )
+                {
+                start = false;
+                stop = true;
+                timeLine.setProgress( 1.0 - timeLine.value() );
+                }
             else
                 {
                 stopRequested = true;
