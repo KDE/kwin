@@ -74,10 +74,10 @@ class Workspace : public QObject, public KDecorationDefines
 
         bool hasClient( const Client * );
 
-        template< typename T > Client* findClient( T predicate );
+        template< typename T > Client* findClient( T predicate ) const;
         template< typename T1, typename T2 > void forEachClient( T1 procedure, T2 predicate );
         template< typename T > void forEachClient( T procedure );
-        template< typename T > Unmanaged* findUnmanaged( T predicate );
+        template< typename T > Unmanaged* findUnmanaged( T predicate ) const;
         template< typename T1, typename T2 > void forEachUnmanaged( T1 procedure, T2 predicate );
         template< typename T > void forEachUnmanaged( T procedure );
 
@@ -137,7 +137,6 @@ class Workspace : public QObject, public KDecorationDefines
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client * );
         void restoreSessionStackingOrder( Client* c );
-        void restackUnmanaged( Unmanaged* c, Window above );
         void reconfigure();
         void forceRestacking();
 
@@ -508,6 +507,7 @@ class Workspace : public QObject, public KDecorationDefines
         void removeTabBoxGrab();
 
         void updateStackingOrder( bool propagate_new_clients = false );
+        ToplevelList rootStackingOrder() const;
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
         ClientList constrainedStackingOrder();
         void raiseClientWithinApplication( Client* c );
@@ -601,7 +601,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         ClientList unconstrained_stacking_order; // topmost last
         ClientList stacking_order; // topmost last
-        UnmanagedList unmanaged_stacking_order;
         bool force_restacking;
         QVector< ClientList > focus_chain; // currently ative last
         ClientList global_focus_chain; // this one is only for things like tabbox's MRU
@@ -896,7 +895,7 @@ QPoint Workspace::focusMousePosition() const
     }
 
 template< typename T >
-inline Client* Workspace::findClient( T predicate )
+inline Client* Workspace::findClient( T predicate ) const
     {
     if( Client* ret = findClientInList( clients, predicate ))
         return ret;
@@ -923,7 +922,7 @@ inline void Workspace::forEachClient( T procedure )
     }
 
 template< typename T >
-inline Unmanaged* Workspace::findUnmanaged( T predicate )
+inline Unmanaged* Workspace::findUnmanaged( T predicate ) const
     {
     return findUnmanagedInList( unmanaged, predicate );
     }

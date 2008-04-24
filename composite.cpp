@@ -294,13 +294,7 @@ void Workspace::performCompositing()
         return;
         }
     // create a list of all windows in the stacking order
-    ToplevelList windows;
-    foreach( Client* c, stacking_order )
-        windows.append( c );
-    foreach( Unmanaged* c, unmanaged_stacking_order )
-        windows.append( c );
-    foreach( Deleted* c, deleted ) // TODO remember stacking order somehow
-        windows.append( c );
+    ToplevelList windows = rootStackingOrder();
     foreach( EffectWindow* c, static_cast< EffectsHandlerImpl* >( effects )->elevatedWindows())
         {
         Toplevel* t = static_cast< EffectWindowImpl* >( c )->window();

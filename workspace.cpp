@@ -564,7 +564,6 @@ void Workspace::addClient( Client* c, allowed_t )
 void Workspace::addUnmanaged( Unmanaged* c, allowed_t )
     {
     unmanaged.append( c );
-    unmanaged_stacking_order.append( c );
     }
 
 /*
@@ -632,7 +631,6 @@ void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
     {
     assert( unmanaged.contains( c ));
     unmanaged.removeAll( c );
-    unmanaged_stacking_order.removeAll( c );
     }
 
 void Workspace::addDeleted( Deleted* c, allowed_t )

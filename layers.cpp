@@ -83,6 +83,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "rules.h"
 #include "unmanaged.h"
+#include "deleted.h"
 #include <QX11Info>
 
 namespace KWin
@@ -719,42 +720,27 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
     return true;
     }
 
-void Workspace::restackUnmanaged( Unmanaged* c, Window above )
+// Returns all windows in their stacking order on the root window, used only by compositing.
+// TODO This possibly should be optimized to avoid the X roundtrip and building it every pass.
+ToplevelList Workspace::rootStackingOrder() const
     {
-    if( above == None )
-        {
-        unmanaged_stacking_order.removeAll( c );
-        unmanaged_stacking_order.prepend( c );
-        addRepaint( c->geometry());
-        return;
-        }
-    bool was_below = false;
-    for( int i = 0;
-         i < unmanaged_stacking_order.size();
+    Window dummy;
+    Window* windows;
+    unsigned int count = 0;
+    XQueryTree( display(), rootWindow(), &dummy, &dummy, &windows, &count );
+    ToplevelList ret;
+    for( unsigned int i = 0;
+         i < count;
          ++i )
         {
-        if( unmanaged_stacking_order.at( i )->window() == above )
-            {
-            if( i + 1 < unmanaged_stacking_order.size()
-                && unmanaged_stacking_order.at( i + 1 ) == c )
-                {
-                // it is already there, do nothing
-                return;
-                }
-            unmanaged_stacking_order.removeAll( c );
-            if( was_below )
-                --i;
-            unmanaged_stacking_order.insert( i + 1, c );
-            addRepaint( c->geometry());
-            return;
-            }
-        if( unmanaged_stacking_order.at( i ) == c )
-            was_below = true;
+        if( Client* c = findClient( FrameIdMatchPredicate( windows[ i ] )))
+            ret.append( c );
+        else if( Unmanaged* c = findUnmanaged( WindowMatchPredicate( windows[ i ] )))
+            ret.append( c );
         }
-    // TODO not found?
-    unmanaged_stacking_order.removeAll( c );
-    unmanaged_stacking_order.append( c );
-    addRepaint( c->geometry());
+    foreach( Deleted* c, deleted )
+        ret.append( c );
+    return ret;
     }
 
 //*******************************

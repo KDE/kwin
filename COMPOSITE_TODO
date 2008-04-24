@@ -240,3 +240,6 @@ Performance
 + various caching - there are many things that usually don't change and could gain few fps (is it worth it?)
     - Workspace::performCompositing()
     - WindowQuadList could perhaps cache quads split by contents/decoration (for select())
+
++ avoiding X roundtrips each compositing pass
+    - right now it at least always polls the mouse position and the current stacking order
