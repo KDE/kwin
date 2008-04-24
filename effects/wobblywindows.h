@@ -17,6 +17,8 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+struct ParameterSet;
+
 /**
  * Effect which wobble windows
  **/
@@ -62,10 +64,6 @@ class WobblyWindowsEffect : public Effect
             qreal y;
         };
 
-    private:
-
-        bool updateWindowWobblyDatas(EffectWindow* w, qreal time);
-
         enum WindowStatus
         {
             Free,
@@ -73,6 +71,10 @@ class WobblyWindowsEffect : public Effect
             Openning,
             Closing
         };
+
+    private:
+
+        bool updateWindowWobblyDatas(EffectWindow* w, qreal time);
 
         struct WindowWobblyInfos
         {
@@ -141,6 +143,8 @@ class WobblyWindowsEffect : public Effect
         static void heightRingLinearMean(Pair** datas, WindowWobblyInfos& wwi);
         static void meanWithMean(Pair** datas, WindowWobblyInfos& wwi);
         static void meanWithMedian(Pair** datas, WindowWobblyInfos& wwi);
+
+        void setParameterSet(ParameterSet& pset);
 };
 
 } // namespace KWin

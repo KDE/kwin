@@ -39,86 +39,225 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
+struct ParameterSet
+{
+    qreal stiffness;
+    qreal drag;
+    qreal move_factor;
+
+    qreal xTesselation;
+    qreal yTesselation;
+
+    WobblyWindowsEffect::GridFilter velocityFilter;
+    WobblyWindowsEffect::GridFilter accelerationFilter;
+
+    qreal minVelocity;
+    qreal maxVelocity;
+    qreal stopVelocity;
+    qreal minAcceleration;
+    qreal maxAcceleration;
+    qreal stopAcceleration;
+
+    bool moveEffectEnabled;
+    bool openEffectEnabled;
+    bool closeEffectEnabled;
+};
+
+ParameterSet set_0 =
+{
+    0.1,
+    0.8,
+    0.1,
+    20.0,
+    20.0,
+    WobblyWindowsEffect::FourRingLinearMean,
+    WobblyWindowsEffect::HeightRingLinearMean,
+    0.0,
+    1000.0,
+    1.0,
+    0.0,
+    1000.0,
+    2.0,
+    true,
+    false,
+    false
+};
+
+ParameterSet set_1 =
+{
+    0.15,
+    0.85,
+    0.1,
+    20.0,
+    20.0,
+    WobblyWindowsEffect::HeightRingLinearMean,
+    WobblyWindowsEffect::MeanWithMean,
+    0.0,
+    1000.0,
+    1.0,
+    0.0,
+    1000.0,
+    2.0,
+    true,
+    false,
+    false
+};
+
+ParameterSet set_2 =
+{
+    0.06,
+    0.9,
+    0.1,
+    20.0,
+    20.0,
+    WobblyWindowsEffect::HeightRingLinearMean,
+    WobblyWindowsEffect::NoFilter,
+    0.0,
+    1000.0,
+    1.0,
+    0.0,
+    1000.0,
+    2.0,
+    true,
+    false,
+    false
+};
+
+ParameterSet set_3 =
+{
+    0.03,
+    0.92,
+    0.1,
+    20.0,
+    20.0,
+    WobblyWindowsEffect::HeightRingLinearMean,
+    WobblyWindowsEffect::HeightRingLinearMean,
+    0.0,
+    1000.0,
+    1.0,
+    0.0,
+    1000.0,
+    2.0,
+    true,
+    false,
+    false
+};
+
+ParameterSet set_4 =
+{
+    0.03,
+    0.92,
+    0.1,
+    20.0,
+    20.0,
+    WobblyWindowsEffect::HeightRingLinearMean,
+    WobblyWindowsEffect::HeightRingLinearMean,
+    0.0,
+    1000.0,
+    1.0,
+    0.0,
+    1000.0,
+    2.0,
+    true,
+    false,
+    false
+};
+
+ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
+
 KWIN_EFFECT(wobblywindows, WobblyWindowsEffect)
 
 WobblyWindowsEffect::WobblyWindowsEffect()
 {
     KConfigGroup conf = effects->effectConfig("Wobbly");
 
-    m_stiffness = conf.readEntry("Stiffness", STIFFNESS);
-    m_drag = conf.readEntry("Drag", DRAG);
-    m_move_factor = conf.readEntry("MoveFactor", MOVEFACTOR);
 
-    m_xTesselation = conf.readEntry("XTesselation", XTESSELATION);
-    m_yTesselation = conf.readEntry("YTesselation", YTESSELATION);
+    QString settingsMode = conf.readEntry("Settings", "Auto");
+    if (settingsMode != "Custom")
+    {
+        unsigned int wobblynessLevel = conf.readEntry("WobblynessLevel", 2);
+        if (wobblynessLevel > 4)
+        {
+            kDebug() << "Wrong value for \"WobblynessLevel\" : " << wobblynessLevel;
+            wobblynessLevel = 4;
+        }
+        setParameterSet(pset[wobblynessLevel]);
+    }
+    else // Custom method, read all values from config file.
+    {
+        m_stiffness = conf.readEntry("Stiffness", STIFFNESS);
+        m_drag = conf.readEntry("Drag", DRAG);
+        m_move_factor = conf.readEntry("MoveFactor", MOVEFACTOR);
 
-    m_minVelocity = conf.readEntry("MinVelocity", MINVELOCITY);
-    m_maxVelocity = conf.readEntry("MaxVelocity", MAXVELOCITY);
-    m_stopVelocity = conf.readEntry("StopVelocity", STOPVELOCITY);
-    m_minAcceleration = conf.readEntry("MinAcceleration", MINACCELERATION);
-    m_maxAcceleration = conf.readEntry("MaxAcceleration", MAXACCELERATION);
-    m_stopAcceleration = conf.readEntry("StopAcceleration", STOPACCELERATION);
+        m_xTesselation = conf.readEntry("XTesselation", XTESSELATION);
+        m_yTesselation = conf.readEntry("YTesselation", YTESSELATION);
 
-    QString velFilter = conf.readEntry("VelocityFilter", VELOCITYFILTER);
-    if (velFilter == "NoFilter")
-    {
-        m_velocityFilter = NoFilter;
-    }
-    else if (velFilter == "FourRingLinearMean")
-    {
-        m_velocityFilter = FourRingLinearMean;
-    }
-    else if (velFilter == "HeightRingLinearMean")
-    {
-        m_velocityFilter = HeightRingLinearMean;
-    }
-    else if (velFilter == "MeanWithMean")
-    {
-        m_velocityFilter = MeanWithMean;
-    }
-    else if (velFilter == "MeanWithMedian")
-    {
-        m_velocityFilter = MeanWithMedian;
-    }
-    else
-    {
-        m_velocityFilter = FourRingLinearMean;
-        kDebug() << "Unknown config value for VelocityFilter : " << velFilter;
-    }
+        m_minVelocity = conf.readEntry("MinVelocity", MINVELOCITY);
+        m_maxVelocity = conf.readEntry("MaxVelocity", MAXVELOCITY);
+        m_stopVelocity = conf.readEntry("StopVelocity", STOPVELOCITY);
+        m_minAcceleration = conf.readEntry("MinAcceleration", MINACCELERATION);
+        m_maxAcceleration = conf.readEntry("MaxAcceleration", MAXACCELERATION);
+        m_stopAcceleration = conf.readEntry("StopAcceleration", STOPACCELERATION);
 
+        QString velFilter = conf.readEntry("VelocityFilter", VELOCITYFILTER);
+        if (velFilter == "NoFilter")
+        {
+            m_velocityFilter = NoFilter;
+        }
+        else if (velFilter == "FourRingLinearMean")
+        {
+            m_velocityFilter = FourRingLinearMean;
+        }
+        else if (velFilter == "HeightRingLinearMean")
+        {
+            m_velocityFilter = HeightRingLinearMean;
+        }
+        else if (velFilter == "MeanWithMean")
+        {
+            m_velocityFilter = MeanWithMean;
+        }
+        else if (velFilter == "MeanWithMedian")
+        {
+            m_velocityFilter = MeanWithMedian;
+        }
+        else
+        {
+            m_velocityFilter = FourRingLinearMean;
+            kDebug() << "Unknown config value for VelocityFilter : " << velFilter;
+        }
 
-    QString accFilter = conf.readEntry("AccelerationFilter", ACCELERATIONFILTER);
-    if (accFilter == "NoFilter")
-    {
-        m_accelerationFilter = NoFilter;
-    }
-    else if (accFilter == "FourRingLinearMean")
-    {
-        m_accelerationFilter = FourRingLinearMean;
-    }
-    else if (accFilter == "HeightRingLinearMean")
-    {
-        m_accelerationFilter = HeightRingLinearMean;
-    }
-    else if (accFilter == "MeanWithMean")
-    {
-        m_accelerationFilter = MeanWithMean;
-    }
-    else if (accFilter == "MeanWithMedian")
-    {
-        m_accelerationFilter = MeanWithMedian;
-    }
-    else
-    {
-        m_accelerationFilter = NoFilter;
-        kDebug() << "Unknown config value for accelerationFilter : " << accFilter;
-    }
+        QString accFilter = conf.readEntry("AccelerationFilter", ACCELERATIONFILTER);
+        if (accFilter == "NoFilter")
+        {
+            m_accelerationFilter = NoFilter;
+        }
+        else if (accFilter == "FourRingLinearMean")
+        {
+            m_accelerationFilter = FourRingLinearMean;
+        }
+        else if (accFilter == "HeightRingLinearMean")
+        {
+            m_accelerationFilter = HeightRingLinearMean;
+        }
+        else if (accFilter == "MeanWithMean")
+        {
+            m_accelerationFilter = MeanWithMean;
+        }
+        else if (accFilter == "MeanWithMedian")
+        {
+            m_accelerationFilter = MeanWithMedian;
+        }
+        else
+        {
+            m_accelerationFilter = NoFilter;
+            kDebug() << "Unknown config value for accelerationFilter : " << accFilter;
+        }
 
-    m_moveEffectEnabled = conf.readEntry("MoveEffect", true);
-    m_openEffectEnabled = conf.readEntry("OpenEffect", false);
-    // disable close effect by default for now as it doesn't do what I want.
-    m_closeEffectEnabled = conf.readEntry("CloseEffect", false);
-
+        m_moveEffectEnabled = conf.readEntry("MoveEffect", true);
+        m_openEffectEnabled = conf.readEntry("OpenEffect", false);
+        // disable close effect by default for now as it doesn't do what I want.
+        m_closeEffectEnabled = conf.readEntry("CloseEffect", false);
+    }
 
 #if defined VERBOSE_MODE
     kDebug() << "Parameters :\n" <<
@@ -143,6 +282,30 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
             freeWobblyInfo(i.value());
         }
     }
+}
+
+void WobblyWindowsEffect::setParameterSet(ParameterSet& pset)
+{
+    m_stiffness = pset.stiffness;
+    m_drag = pset.drag;
+    m_move_factor = pset.move_factor;
+
+    m_xTesselation = pset.xTesselation;
+    m_yTesselation = pset.yTesselation;
+
+    m_velocityFilter = pset.velocityFilter ;
+    m_accelerationFilter =  pset.accelerationFilter;
+
+    m_minVelocity =  pset.minVelocity;
+    m_maxVelocity =  pset.maxVelocity;
+    m_stopVelocity =  pset.stopVelocity;
+    m_minAcceleration =  pset.minAcceleration;
+    m_maxAcceleration =  pset.maxAcceleration;
+    m_stopAcceleration =  pset.stopAcceleration;
+
+    m_moveEffectEnabled =  pset.moveEffectEnabled;
+    m_openEffectEnabled =  pset.openEffectEnabled;
+    m_closeEffectEnabled =  pset.closeEffectEnabled;
 }
 
 void WobblyWindowsEffect::setVelocityThreshold(qreal m_minVelocity)

@@ -44,50 +44,11 @@ public slots:
     virtual void load();
     virtual void defaults();
 
-private:
-    enum GridFilter
-    {
-        NoFilter,
-        FourRingLinearMean,
-        HeightRingLinearMean,
-        MeanWithMean,
-        MeanWithMedian
-    };
-
 private slots:
-
-    void slotSpStiffness(double);
-    void slotSlStiffness(int);
-    void slotSpDrag(double);
-    void slotSlDrag(int);
-    void slotSpMovFactor(double);
-    void slotSlMovFactor(int);
-
-    void slotGridParameterSelected(int);
-    void slotRbNone(bool);
-    void slotRbFourRingMean(bool);
-    void slotRbHeightRingMean(bool);
-    void slotRbMeanMean(bool);
-    void slotRbMeanMedian(bool);
-
-    void slotSpMinVel(double);
-    void slotSlMinVel(int);
-    void slotSpMaxVel(double);
-    void slotSlMaxVel(int);
-    void slotSpStopVel(double);
-    void slotSlStopVel(int);
-    void slotSpMinAcc(double);
-    void slotSlMinAcc(int);
-    void slotSpMaxAcc(double);
-    void slotSlMaxAcc(int);
-    void slotSpStopAcc(double);
-    void slotSlStopAcc(int);
+    void slotSlWobblyness(int);
 
 private:
-    Ui::WobblyWindowsEffectConfigForm m_ui;
-
-    GridFilter velocityFilter;
-    GridFilter accelerationFilter;
+    ::Ui::WobblyWindowsEffectConfigForm m_ui;
 };
 
 } // namespace
