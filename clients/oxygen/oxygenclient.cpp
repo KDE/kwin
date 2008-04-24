@@ -89,6 +89,10 @@ void OxygenClient::init()
 
     widget()->setAutoFillBackground(false);
     widget()->setAttribute(Qt::WA_OpaquePaintEvent);
+#ifdef __GNUC__
+#warning This wastes quite a lot of memory.
+#endif
+    widget()->setAttribute(Qt::WA_PaintOnScreen, false);
 }
 
 bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
