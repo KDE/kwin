@@ -536,7 +536,7 @@ bool Client::sameAppWindowRoleMatch( const Client* c1, const Client* c2, bool ac
         ||
     // hacks here
         // Mozilla has resourceName() and resourceClass() swapped
-        c1->resourceName() == "mozilla" && c2->resourceName() == "mozilla" )
+        ( c1->resourceName() == "mozilla" && c2->resourceName() == "mozilla" ))
         {
         if( !active_hack )   // without the active hack for focus stealing prevention,
             return c1 == c2; // different mainwindows are always different apps
