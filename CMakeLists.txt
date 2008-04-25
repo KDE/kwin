@@ -94,6 +94,7 @@ qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Works
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} kdecorations kwineffects ${X11_LIBRARIES})
+
 if(OPENGL_FOUND)
   target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
@@ -104,6 +105,7 @@ if(OPENGL_FOUND)
   # must be after opengl, to be initialized first by the linker
   target_link_libraries(kdeinit_kwin kwinnvidiahack)
 endif(OPENGL_FOUND)
+
 if (X11_Xrandr_FOUND)
   target_link_libraries(kdeinit_kwin ${X11_Xrandr_LIB})
 endif (X11_Xrandr_FOUND)
