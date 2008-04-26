@@ -59,9 +59,9 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
     {
     if( keyboard_grab_effect != NULL )
         ungrabKeyboard();
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         unloadEffect( ep.first );
-    foreach( InputWindowPair pos, input_windows )
+    foreach( const InputWindowPair &pos, input_windows )
         XDestroyWindow( display(), pos.second );
     }
 
@@ -73,7 +73,7 @@ void EffectsHandlerImpl::reconfigure()
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     QStringList effectsToBeLoaded;
     // First unload necessary effects
-    foreach( KService::Ptr service, offers )
+    foreach( const KService::Ptr &service, offers )
         {
         KPluginInfo plugininfo( service );
         plugininfo.load( conf );
@@ -86,7 +86,7 @@ void EffectsHandlerImpl::reconfigure()
             effectsToBeLoaded.append( plugininfo.pluginName() );
         }
     // Then load those that should be loaded
-    foreach( QString effectName, effectsToBeLoaded )
+    foreach( const QString &effectName, effectsToBeLoaded )
         {
         if( !isEffectLoaded( effectName ))
             {
@@ -180,7 +180,7 @@ void EffectsHandlerImpl::startPaint()
 
 void EffectsHandlerImpl::windowUserMovedResized( EffectWindow* c, bool first, bool last )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowUserMovedResized( c, first, last );
     }
 
@@ -188,50 +188,50 @@ void EffectsHandlerImpl::windowOpacityChanged( EffectWindow* c, double old_opaci
     {
     if( static_cast<EffectWindowImpl*>(c)->window()->opacity() == old_opacity )
         return;
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowOpacityChanged( c, old_opacity );
     }
 
 void EffectsHandlerImpl::windowAdded( EffectWindow* c )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowAdded( c );
     }
 
 void EffectsHandlerImpl::windowDeleted( EffectWindow* c )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowDeleted( c );
     elevated_windows.removeAll( c );
     }
 
 void EffectsHandlerImpl::windowClosed( EffectWindow* c )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowClosed( c );
     }
 
 void EffectsHandlerImpl::windowActivated( EffectWindow* c )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowActivated( c );
     }
 
 void EffectsHandlerImpl::windowMinimized( EffectWindow* c )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowMinimized( c );
     }
 
 void EffectsHandlerImpl::windowUnminimized( EffectWindow* c )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowUnminimized( c );
     }
 
 void EffectsHandlerImpl::desktopChanged( int old )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->desktopChanged( old );
     }
 
@@ -239,7 +239,7 @@ void EffectsHandlerImpl::windowDamaged( EffectWindow* w, const QRect& r )
     {
     if( w == NULL )
         return;
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowDamaged( w, r );
     }
 
@@ -247,25 +247,25 @@ void EffectsHandlerImpl::windowGeometryShapeChanged( EffectWindow* w, const QRec
     {
     if( w == NULL ) // during late cleanup effectWindow() may be already NULL
         return;     // in some functions that may still call this
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->windowGeometryShapeChanged( w, old );
     }
 
 void EffectsHandlerImpl::tabBoxAdded( int mode )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->tabBoxAdded( mode );
     }
 
 void EffectsHandlerImpl::tabBoxClosed()
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->tabBoxClosed();
     }
 
 void EffectsHandlerImpl::tabBoxUpdated()
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->tabBoxUpdated();
     }
 
@@ -282,7 +282,7 @@ Effect* EffectsHandlerImpl::activeFullScreenEffect() const
 bool EffectsHandlerImpl::borderActivated( ElectricBorder border )
     {
     bool ret = false;
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         if( ep.second->borderActivated( border ))
             ret = true; // bail out or tell all?
     return ret;
@@ -292,7 +292,7 @@ void EffectsHandlerImpl::mouseChanged( const QPoint& pos, const QPoint& oldpos,
     Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
     Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers )
     {
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->mouseChanged( pos, oldpos, buttons, oldbuttons, modifiers, oldmodifiers );
     }
 
@@ -329,7 +329,7 @@ void EffectsHandlerImpl::propertyNotify( EffectWindow* c, long atom )
     {
     if( !registered_atoms.contains( atom ))
         return;
-    foreach( EffectPair ep, loaded_effects )
+    foreach( const EffectPair &ep, loaded_effects )
         ep.second->propertyNotify( c, atom );
     }
 
@@ -583,7 +583,7 @@ Window EffectsHandlerImpl::createInputWindow( Effect* e, int x, int y, int w, in
 
 void EffectsHandlerImpl::destroyInputWindow( Window w )
     {
-    foreach( InputWindowPair pos, input_windows )
+    foreach( const InputWindowPair &pos, input_windows )
         {
         if( pos.second == w )
             {
@@ -599,7 +599,7 @@ bool EffectsHandlerImpl::checkInputWindowEvent( XEvent* e )
     {
     if( e->type != ButtonPress && e->type != ButtonRelease && e->type != MotionNotify )
         return false;
-    foreach( InputWindowPair pos, input_windows )
+    foreach( const InputWindowPair &pos, input_windows )
         {
         if( pos.second == e->xany.window )
             {
@@ -648,7 +648,7 @@ void EffectsHandlerImpl::checkInputWindowStacking()
         return;
     Window* wins = new Window[ input_windows.count() ];
     int pos = 0;
-    foreach( InputWindowPair it, input_windows )
+    foreach( const InputWindowPair &it, input_windows )
         wins[ pos++ ] = it.second;
     XRaiseWindow( display(), wins[ 0 ] );
     XRestackWindows( display(), wins, pos );
@@ -797,7 +797,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
     // TODO: detect circular deps
     KPluginInfo plugininfo( service );
     QStringList dependencies = plugininfo.dependencies();
-    foreach( QString depName, dependencies )
+    foreach( const QString &depName, dependencies )
         {
         if( !loadEffect(depName))
             {
@@ -866,7 +866,7 @@ void EffectsHandlerImpl::effectsChanged()
     {
     loaded_effects.clear();
 //    kDebug(1212) << "Recreating effects' list:";
-    foreach( EffectPair effect, effect_order )
+    foreach( const EffectPair &effect, effect_order )
         {
 //        kDebug(1212) << effect.first;
         loaded_effects.append( effect );

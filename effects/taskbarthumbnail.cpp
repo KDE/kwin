@@ -67,7 +67,7 @@ void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion reg
     effects->paintWindow( w, mask, region, data ); // paint window first
     if( thumbnails.contains( w ))
         { // paint thumbnails on it
-        foreach( const Data thumb, thumbnails.values( w ))
+        foreach( const Data &thumb, thumbnails.values( w ))
             {
             EffectWindow* thumbw = effects->findWindow( thumb.window );
             if( thumbw == NULL )

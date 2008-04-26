@@ -51,7 +51,7 @@ void FlameEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Window
         {
         WindowQuadList new_quads;
         double ylimit = windows[ w ] * w->height(); // parts above this are already away
-        foreach( WindowQuad quad, data.quads )
+        foreach( const WindowQuad &quad, data.quads )
             {
             if( quad.bottom() <= ylimit )
                 continue;

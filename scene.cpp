@@ -191,7 +191,7 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
 #ifndef NDEBUG
-        foreach( WindowQuad q, data.quads )
+        foreach( const WindowQuad &q, data.quads )
             if( q.isTransformed())
                 kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" ;
 #endif
@@ -200,7 +200,7 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
         phase2.append( Phase2Data( w, infiniteRegion(), data.clip, data.mask, data.quads ));
         }
 
-    foreach( Phase2Data d, phase2 )
+    foreach( const Phase2Data &d, phase2 )
         paintWindow( d.window, d.mask, d.region, d.quads );
     }
 
@@ -230,7 +230,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
 #ifndef NDEBUG
-        foreach( WindowQuad q, data.quads )
+        foreach( const WindowQuad &q, data.quads )
             if( q.isTransformed())
                 kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" ;
 #endif
@@ -438,7 +438,7 @@ WindowQuadList Scene::Window::buildQuads() const
 WindowQuadList Scene::Window::makeQuads( WindowQuadType type, const QRegion& reg ) const
     {
     WindowQuadList ret;
-    foreach( QRect r, reg.rects())
+    foreach( const QRect &r, reg.rects())
         {
         WindowQuad quad( type );
         // TODO asi mam spatne pravy dolni roh - bud tady, nebo v jinych castech

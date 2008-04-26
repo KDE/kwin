@@ -112,7 +112,7 @@ void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
             if( !shadowDatas.isEmpty())
                 d.clip |= shadowDatas.last().clip;
             d.mask = mask;
-            foreach(QRect r, region.rects())
+            foreach(const QRect &r, region.rects())
                 d.region |= shadowRectangle(r);
             d.region &= region;
             shadowDatas.append(d);

@@ -92,7 +92,7 @@ void VideoRecordEffect::postPaintScreen()
         if( CapturyProcessRegionStart( client ) == CAPTURY_SUCCESS )
             {
             capture_region &= QRect( 0, 0, displayWidth(), displayHeight()); // limit to screen
-            foreach( QRect r, capture_region.rects())
+            foreach( const QRect &r, capture_region.rects())
                 {
                 int gly = displayHeight() - r.y() - r.height(); // opengl coords
                 CapturyProcessRegion( client, r.x(), gly, r.width(), r.height());

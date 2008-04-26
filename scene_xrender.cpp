@@ -222,7 +222,7 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
 #ifndef NDEBUG
-        foreach( WindowQuad q, data.quads )
+        foreach( const WindowQuad &q, data.quads )
             if( q.isTransformed())
                 kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" ;
 #endif
@@ -254,7 +254,7 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
     // That we draw bottom to top is important now since we're drawing translucent objects
     // and also are clipping only by opaque windows.
     QRegion add_paint;
-    foreach( Phase2Data d, phase2 )
+    foreach( const Phase2Data &d, phase2 )
         {
         Scene::Window* w = d.window;
         paintWindow( w, d.mask, d.region | add_paint, d.quads );

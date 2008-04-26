@@ -303,7 +303,7 @@ void BlurEffect::updateBlurTexture(const QRegion& region)
     QRect bounding = region.boundingRect();
     QVector<QRect> rects = region.rects();
     int totalarea = 0;
-    foreach( QRect r, rects )
+    foreach( const QRect &r, rects )
         totalarea += r.width() * r.height();
     if( (int)(totalarea * 1.33 + 100 ) < bounding.width() * bounding.height() )
         {
@@ -329,7 +329,7 @@ void BlurEffect::updateBlurTexture(const QVector<QRect>& rects)
 
     mSceneTexture->bind();
 
-    foreach( QRect r, rects )
+    foreach( const QRect &r, rects )
         {
         // We change x coordinates here because horizontal blur pass (which
         //  comes after this one) also uses pixels that are horizontally edging
@@ -354,7 +354,7 @@ void BlurEffect::updateBlurTexture(const QVector<QRect>& rects)
 
     mTmpTexture->bind();
 
-    foreach( QRect r, rects )
+    foreach( const QRect &r, rects )
         {
         glBegin(GL_QUADS);
             glVertex2f( r.x()            , r.y() + r.height() );

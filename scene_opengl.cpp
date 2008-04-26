@@ -645,7 +645,7 @@ void SceneOpenGL::flushBuffer( int mask, QRegion damage )
             waitSync();
             if( glXCopySubBuffer )
                 {
-                foreach( QRect r, damage.rects())
+                foreach( const QRect &r, damage.rects())
                     {
                     // convert to OpenGL coordinates
                     int y = displayHeight() - r.y() - r.height();
@@ -658,7 +658,7 @@ void SceneOpenGL::flushBuffer( int mask, QRegion damage )
                 glDrawBuffer( GL_FRONT );
                 int xpos = 0;
                 int ypos = 0;
-                foreach( QRect r, damage.rects())
+                foreach( const QRect &r, damage.rects())
                     {
                     // convert to OpenGL coordinates
                     int y = displayHeight() - r.y() - r.height();
@@ -691,7 +691,7 @@ void SceneOpenGL::flushBuffer( int mask, QRegion damage )
         glXWaitGL();
         waitSync();
         if( mask & PAINT_SCREEN_REGION )
-            foreach( QRect r, damage.rects())
+            foreach( const QRect &r, damage.rects())
                 XCopyArea( display(), buffer, rootWindow(), gcroot, r.x(), r.y(), r.width(), r.height(), r.x(), r.y());
         else
             XCopyArea( display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0 );
@@ -877,7 +877,7 @@ QRegion SceneOpenGL::Texture::optimizeBindDamage( const QRegion& reg, int limit 
     // between all the areas and the bounding rectangle is small, simply use
     // only the bounding rectangle
     int size = 0;
-    foreach( QRect r, reg.rects())
+    foreach( const QRect &r, reg.rects())
         size += r.width() * r.height();
     if( reg.boundingRect().width() * reg.boundingRect().height() - size < limit )
         return reg.boundingRect();
@@ -983,7 +983,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
                 mSize.width(), mSize.height(), depth );
             QRegion damage = optimizeBindDamage( region, 100 * 100 );
             glPixelStorei( GL_UNPACK_ROW_LENGTH, mSize.width());
-            foreach( QRect r, damage.rects())
+            foreach( const QRect &r, damage.rects())
                 { // TODO for small areas it might be faster to not use SHM to avoid the XSync()
                 XCopyArea( display(), pix, p, gc, r.x(), r.y(), r.width(), r.height(), 0, 0 );
                 glXWaitX();
@@ -1030,7 +1030,7 @@ bool SceneOpenGL::Texture::load( const Pixmap& pix, const QSize& size,
             {
             glBindTexture( mTarget, mTexture );
             QRegion damage = optimizeBindDamage( region, 30 * 30 );
-            foreach( QRect r, damage.rects())
+            foreach( const QRect &r, damage.rects())
                 {
                 // convert to OpenGL coordinates (this is mapping
                 // the pixmap to a texture, this is not affected
