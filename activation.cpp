@@ -416,16 +416,16 @@ bool Workspace::activateNextClient( Client* c )
     if( focusChangeEnabled())
         {
         if ( options->focusPolicyIsReasonable())
-            { // search the focus_chain for a client to transfer focus to
-              // if 'c' is transient, transfer focus to the first suitable mainwindow
+            { // search the focus_chain for a client to transfer focus to,
+              // first try to transfer focus to the first suitable window in the group
             Client* get_focus = NULL;
-            const ClientList mainwindows = ( c != NULL ? c->mainClients() : ClientList());
+            const ClientList windows = ( c != NULL ? c->group()->members() : ClientList());
 	    for ( int i = focus_chain[ currentDesktop() ].size() - 1;
                   i >= 0;
                   --i )
                 {
                 Client* ci = focus_chain[ currentDesktop() ].at( i );
-                if( !ci->isShown( false )
+                if( c == ci || !ci->isShown( false )
                     || !ci->isOnCurrentDesktop())
                     continue;
                 if( options->separateScreenFocus )
@@ -435,7 +435,7 @@ bool Workspace::activateNextClient( Client* c )
                     if( c == NULL && !ci->isOnScreen( activeScreen()))
                         continue;
                     }
-                if( mainwindows.contains( ci ))
+                if( windows.contains( ci ))
                     {
                     get_focus = ci;
                     break;
