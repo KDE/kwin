@@ -407,6 +407,8 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
         for( int i=0; i< leftWindowCount; i++ )
             {
             EffectWindow* window = leftWindows->at( i );
+            if( window == NULL )
+                continue;
             x = window->x();
             y = window->y();
             if( window->isMinimized() )
@@ -434,6 +436,8 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
         for( int i=0; i < rightWindowCount; i++ )
             {
             EffectWindow* window = rightWindows->at( i );
+            if( window == NULL )
+                continue;
             x = window->x();
             y = window->y();
             if( window->isMinimized() )
@@ -458,6 +462,8 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
             }
 
         // front window
+        if( frontWindow == NULL )
+            return;
         glPushMatrix();
         x = frontWindow->x();
         y = frontWindow->y();
@@ -699,6 +705,8 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, QRect windowRect, boo
 
 void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow )
     {
+    if( frontWindow == NULL )
+        return;
     glPushMatrix();
     glTranslatef((width - frontWindow->geometry().width())*0.5f, 0.0, -7.5);
     int windowWidth = frontWindow->geometry().width();
@@ -795,6 +803,8 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, bool left
     for( int i=0; i < windowCount; i++ )
         {
         window = windows->at( i );
+        if( window == NULL )
+            continue;
         glPushMatrix();
         glTranslatef( ( width * widthFactorSingle * i )/windowCount, 0.0, 0.0 );
         if( animation )
