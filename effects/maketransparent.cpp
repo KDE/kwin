@@ -50,10 +50,17 @@ MakeTransparentEffect::MakeTransparentEffect()
         tornoffmenus = menus;
         }
     active = effects->activeWindow();
+    moveresize_timeline.setCurveShape( TimeLine::EaseOutCurve );
+    moveresize_timeline.setDuration( conf.readEntry( "Duration", 1500 ) );
+    activeinactive_timeline.setCurveShape( TimeLine::EaseInOutCurve );
+    activeinactive_timeline.setDuration( conf.readEntry( "Duration", 1500 ) );
     }
 
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
+    moveresize_timeline.addTime(time);
+    activeinactive_timeline.addTime(time);
+
     if( decoration != 1.0 && w->hasDecoration())
         {
         data.mask |= PAINT_WINDOW_TRANSLUCENT;
@@ -78,18 +85,78 @@ void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData&
 
 void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
+    // We keep track of the windows that was last active so we know
+    // which one to fade out and which ones to paint as fully inactive
+    if ( w == active && w != current )
+        {
+        previous = current;
+        current = w;
+        }
+
+    if ( w->isDesktop() || w->isDock() )
+        {
+        effects->paintWindow( w, mask, region, data );
+        return;
+        }
+    // Handling active and inactive windows
     if( inactive != 1.0 && isInactive(w) )
         {
         data.opacity *= inactive;
+
+        if ( w == previous )
+            {
+            data.opacity *= (inactive + ((1.0 - inactive) * (1.0 - activeinactive_timeline.value())));
+            if ( activeinactive_timeline.value() < 1.0 )
+                w->addRepaintFull();
+            }
         }
     else
         {
+        // Fading in
+        if ( !isInactive(w) && !w->isDesktop() )
+            {
+            data.opacity *= (inactive + ((1.0 - inactive) * activeinactive_timeline.value()));
+            if ( activeinactive_timeline.value() < 1.0 )
+                w->addRepaintFull();
+            }
+        // decoration and dialogs
         if( decoration != 1.0 && w->hasDecoration())
             data.decoration_opacity *= decoration;
         if( dialogs != 1.0 && w->isDialog())
             data.opacity *= dialogs;
-        if( moveresize != 1.0 && ( w->isUserMove() || w->isUserResize()))
-            data.opacity *= moveresize;
+
+        // Handling moving and resizing
+        if( moveresize != 1.0 && !isInactive(w) && !w->isDesktop() && !w->isDock())
+            {
+            double progress = moveresize_timeline.value();
+            if ( w->isUserMove() || w->isUserResize() )
+                { // Fading to translucent
+                if ( w == active )
+                    {
+                    data.opacity *= (moveresize + ((1.0 - moveresize) * ( 1.0 - progress )));
+                    if (progress < 1.0)
+                        {
+                        w->addRepaintFull();
+                        if ( fadeout != w )
+                            fadeout = w;
+                        }
+                    }
+                }
+            else
+                { // Fading back to more opaque
+                if ( w == active && (w == fadeout) && !w->isUserMove() && !w->isUserResize() )
+                    {
+                    data.opacity *= (moveresize + ((1.0 - moveresize) * (progress)));
+                    if ( progress == 1.0 )
+                        fadeout = NULL;
+                    else
+                        w->addRepaintFull();
+
+                    }
+                }
+            }
+
+        // Menues and combos
         if( dropdownmenus != 1.0 && w->isDropdownMenu() )
             data.opacity *= dropdownmenus;
         if( popupmenus != 1.0 && w->isPopupMenu() )
@@ -98,6 +165,7 @@ void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion regi
             data.opacity *= tornoffmenus;
         if( comboboxpopups != 1.0 && w->isComboBox() )
             data.opacity *= comboboxpopups;
+
         }
     effects->paintWindow( w, mask, region, data );
     }
@@ -117,13 +185,17 @@ bool MakeTransparentEffect::isInactive( const EffectWindow* w ) const
 void MakeTransparentEffect::windowUserMovedResized( EffectWindow* w, bool first, bool last )
     {
     if( moveresize != 1.0 && ( first || last ))
+        {
+        moveresize_timeline.setProgress(0.0);
         w->addRepaintFull();
+        }
     }
 
 void MakeTransparentEffect::windowActivated( EffectWindow* w )
     {
     if( inactive != 1.0 )
         {
+        activeinactive_timeline.setProgress(0.0);
         if( NULL != active && active != w )
             {
             if( ( NULL == w || w->group() != active->group() ) &&
@@ -149,7 +221,6 @@ void MakeTransparentEffect::windowActivated( EffectWindow* w )
                 w->addRepaintFull();
             }
         }
-
     active = w;
     }
 

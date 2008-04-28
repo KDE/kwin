@@ -5,246 +5,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>318</width>
-    <height>423</height>
+    <width>497</width>
+    <height>634</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Translucency</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3" >
-   <item row="0" column="0" >
-    <widget class="QGroupBox" name="m_opacityGroupBox" >
-     <property name="title" >
-      <string>General opacity settings:</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <item row="0" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout" >
-        <item>
-         <widget class="QLabel" name="decorations_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Decorations:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="decorations" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
-          <property name="minimum" >
-           <number>10</number>
-          </property>
-          <property name="maximum" >
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="1" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout_2" >
-        <item>
-         <widget class="QLabel" name="inactive_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Inactive windows:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="inactive" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
-          <property name="minimum" >
-           <number>10</number>
-          </property>
-          <property name="maximum" >
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout_3" >
-        <item>
-         <widget class="QLabel" name="moveresize_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Moved or resized windows:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="moveresize" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
-          <property name="minimum" >
-           <number>10</number>
-          </property>
-          <property name="maximum" >
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="3" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout_4" >
-        <item>
-         <widget class="QLabel" name="dialogs_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Dialogs:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="dialogs" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
-          <property name="minimum" >
-           <number>10</number>
-          </property>
-          <property name="maximum" >
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="4" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout_5" >
-        <item>
-         <widget class="QLabel" name="comboboxpopup_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Combobox Popups:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="comboboxpopup" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
-          <property name="minimum" >
-           <number>10</number>
-          </property>
-          <property name="maximum" >
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="5" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout_6" >
-        <item>
-         <widget class="QLabel" name="menus_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Menus:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="menus" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
-          <property name="minimum" >
-           <number>10</number>
-          </property>
-          <property name="maximum" >
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="1" column="0" >
     <widget class="QGroupBox" name="groupBox" >
      <property name="title" >
       <string>Advanced opacity settings for menus:</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2" >
-      <item row="0" column="0" >
+      <item row="0" column="0" colspan="2" >
        <widget class="QCheckBox" name="individualmenuconfig" >
         <property name="text" >
          <string>Set individual opacity for different menu types</string>
@@ -252,112 +27,362 @@
        </widget>
       </item>
       <item row="1" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout_7" >
-        <item>
-         <widget class="QLabel" name="dropdownmenus_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Dropdown menus:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="dropdownmenus" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
-          <property name="minimum" >
-           <number>10</number>
-          </property>
-          <property name="maximum" >
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QLabel" name="dropdownmenus_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Dropdown menus:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QSpinBox" name="dropdownmenus" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout_8" >
+       <widget class="QLabel" name="popupmenus_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Popup menus:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QSpinBox" name="popupmenus" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" >
+       <widget class="QLabel" name="tornoffmenus_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Torn-off menus:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" >
+       <widget class="QSpinBox" name="tornoffmenus" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0" >
+    <widget class="QGroupBox" name="m_opacityGroupBox" >
+     <property name="title" >
+      <string>General opacity settings:</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout" >
+      <item row="0" column="0" colspan="2" >
+       <widget class="QLabel" name="decorations_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Decorations:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QSpinBox" name="decorations" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2" >
+       <widget class="QLabel" name="inactive_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Inactive windows:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QSpinBox" name="inactive" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2" >
+       <widget class="QLabel" name="moveresize_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Moved or resized windows:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" >
+       <widget class="QSpinBox" name="moveresize" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2" >
+       <widget class="QLabel" name="dialogs_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Dialogs:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2" >
+       <widget class="QSpinBox" name="dialogs" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2" >
+       <widget class="QLabel" name="comboboxpopup_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Combobox Popups:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2" >
+       <widget class="QSpinBox" name="comboboxpopup" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2" >
+       <widget class="QLabel" name="menus_label" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Menus:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2" >
+       <widget class="QSpinBox" name="menus" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="suffix" >
+         <string>%</string>
+        </property>
+        <property name="minimum" >
+         <number>10</number>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" >
+       <layout class="QHBoxLayout" name="horizontalLayout" >
         <item>
-         <widget class="QLabel" name="popupmenus_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+         <widget class="QLabel" name="label" >
           <property name="text" >
-           <string>Popup menus:</string>
+           <string>Fading duration:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="popupmenus" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
+         <widget class="QSlider" name="durationSlider" >
           <property name="minimum" >
-           <number>10</number>
+           <number>0</number>
           </property>
           <property name="maximum" >
+           <number>5000</number>
+          </property>
+          <property name="singleStep" >
            <number>100</number>
+          </property>
+          <property name="pageStep" >
+           <number>100</number>
+          </property>
+          <property name="value" >
+           <number>1500</number>
+          </property>
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="tickPosition" >
+           <enum>QSlider::TicksBothSides</enum>
+          </property>
+          <property name="tickInterval" >
+           <number>500</number>
           </property>
          </widget>
         </item>
        </layout>
       </item>
-      <item row="3" column="0" >
-       <layout class="QHBoxLayout" name="horizontalLayout_9" >
-        <item>
-         <widget class="QLabel" name="tornoffmenus_label" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Torn-off menus:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="tornoffmenus" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="suffix" >
-           <string>%</string>
-          </property>
-          <property name="minimum" >
-           <number>10</number>
-          </property>
-          <property name="maximum" >
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="6" column="2" >
+       <widget class="QSpinBox" name="duration" >
+        <property name="minimumSize" >
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="suffix" >
+         <string>msec</string>
+        </property>
+        <property name="maximum" >
+         <number>5000</number>
+        </property>
+        <property name="singleStep" >
+         <number>100</number>
+        </property>
+        <property name="value" >
+         <number>1500</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -365,5 +390,38 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>duration</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>durationSlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>433</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>246</x>
+     <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>durationSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>duration</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>246</x>
+     <y>283</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>433</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

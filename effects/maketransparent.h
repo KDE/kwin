@@ -37,6 +37,7 @@ class MakeTransparentEffect
         virtual void windowActivated( EffectWindow* w );
     private:
         bool isInactive( const EffectWindow *w ) const;
+        bool individualmenuconfig;
 
         double decoration;
         double moveresize;
@@ -44,12 +45,17 @@ class MakeTransparentEffect
         double inactive;
         double comboboxpopups;
         double menus;
-        bool individualmenuconfig;
         double dropdownmenus;
         double popupmenus;
         double tornoffmenus;
-        
+
+        EffectWindow* fadeout;
+        EffectWindow* current;
+        EffectWindow* previous;
         EffectWindow* active;
+
+        TimeLine moveresize_timeline;
+        TimeLine activeinactive_timeline;
     };
 
 } // namespace
