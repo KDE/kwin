@@ -60,7 +60,7 @@ void FlipSwitchEffectConfig::load()
 
     KConfigGroup conf = EffectsHandler::effectConfig( "FlipSwitch" );
 
-    int flipDuration = conf.readEntry( "FlipDuration", 300 );
+    int flipDuration = conf.readEntry( "FlipDuration", 200 );
     bool animateFlip = conf.readEntry( "AnimateFlip", true );
     m_ui->spinFlipDuration->setValue( flipDuration );
     if( animateFlip )
@@ -90,7 +90,7 @@ void FlipSwitchEffectConfig::save()
 
 void FlipSwitchEffectConfig::defaults()
     {
-    m_ui->spinFlipDuration->setValue( 300 );
+    m_ui->spinFlipDuration->setValue( 200 );
     m_ui->checkAnimateFlip->setCheckState( Qt::Checked );
     emit changed(true);
     }

@@ -20,8 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "flipswitch.h"
 
 #include <kwinconfig.h>
-#include <QApplication>
-#include <QDesktopWidget>
 #include <QFont>
 #include <kapplication.h>
 #include <kcolorscheme.h>
@@ -48,11 +46,13 @@ FlipSwitchEffect::FlipSwitchEffect()
     , rearrangeWindows( 0 )
     , stopRequested( false )
     , startRequested( false )
-    , progress( 0.0 )
+    , twinview( false )
     {
     KConfigGroup conf = effects->effectConfig( "FlipSwitch" );
-    mFlipDuration = conf.readEntry( "FlipDuration", 300 );
+    mFlipDuration = conf.readEntry( "FlipDuration", 200 );
     mAnimation    = conf.readEntry( "AnimateFlip", true );
+    timeLine.setCurveShape( TimeLine::EaseInOutCurve );
+    timeLine.setDuration( mFlipDuration );
     }
 
 FlipSwitchEffect::~FlipSwitchEffect()
@@ -65,7 +65,7 @@ void FlipSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         {
          data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         if( mAnimation )
-            progress = qMin( 1.0, progress + time / double( mFlipDuration ));
+            timeLine.addTime( (double)time );
         }
     effects->prePaintScreen(data, time);
     }
@@ -82,14 +82,64 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glLoadIdentity();
-        glFrustum(-QApplication::desktop()->geometry().width()*0.5f,
-            QApplication::desktop()->geometry().width()*0.5f,
-            QApplication::desktop()->geometry().height()*0.5f,
-            -QApplication::desktop()->geometry().height()*0.5f, 10, 50);
+        int viewport[4];
+        glGetIntegerv( GL_VIEWPORT, viewport );
+        int yPos = area.y();
+        QRect fullArea = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+        if( twinview )
+            {
+            if( effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop()).x() == 0 
+                && effects->clientArea( FullScreenArea, effects->activeScreen()==0?1:0, effects->currentDesktop()).x() == 0 )
+                {
+                // top <-> bottom
+                // have to correct the yPos for top bottom constellation
+                yPos = area.height()-area.y();
+                if( ( area.height() * 2 != fullArea.height() ) ||
+                    ( effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop()).width() !=  
+                    effects->clientArea( FullScreenArea, effects->activeScreen()==0?1:0, effects->currentDesktop()).width() ) )
+                    {
+                    // different resolutions
+                    if( area.y() > 0 )
+                        yPos = 0;
+                    else
+                        yPos = fullArea.height() - area.height();
+                    }
+                }
+            else
+                {
+                // left <-> right
+                if( ( area.width() * 2 != fullArea.width() ) ||
+                    ( effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop()).height() !=  
+                    effects->clientArea( FullScreenArea, effects->activeScreen()==0?1:0, effects->currentDesktop()).height() ) )
+                    {
+                    // different resolutions
+                    yPos = area.y() + fullArea.height() - area.height();
+                    }
+                }
+            }
+        float left, right, top, bottom;
+        left = -area.width() * 0.5f;
+        right = area.width() * 0.5f;
+        top = area.height()*0.5f;
+        bottom = -area.height()*0.5f;
+        if( twinview && ( start || stop ) )
+            {
+            // special handling for start and stop animation in twin view setup
+            glViewport( fullArea.x(), fullArea.y(), fullArea.width(), fullArea.height() );
+            left = -(area.x() + area.width() * 0.5f);
+            right = fullArea.width() + left;
+            bottom = -(area.y() + area.height() * 0.5f);
+            top = fullArea.height() + bottom;
+            }
+        else
+            {
+            glViewport( area.x(), yPos, area.width(), area.height() );
+            }
+        glFrustum( left, right, top, bottom, 10, 50 );
 
         glMatrixMode( GL_MODELVIEW );
         glLoadIdentity();
-        float xOffset = QApplication::desktop()->geometry().width()*0.33f;
+        float xOffset = area.width()*0.33f;
         float zOffset = 10.0;
 
         // bring the selected window to the back of the list
@@ -135,18 +185,18 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                 glPushMatrix();
                 EffectWindow *w = windowList[ i ];        
                 // Position of the window in OpenGL
-                float x = w->x()-QApplication::desktop()->geometry().width()*0.5f;
-                float y = -QApplication::desktop()->geometry().height()*1.5f+w->y()+w->height();
+                float x = w->x()+left;
+                float y = bottom-area.height()+w->y()+w->height();
                 float z = -10.0;
                 if( w->isMinimized() )
                     {
                     // use icon instead of window
-                    x = w->iconGeometry().x()-QApplication::desktop()->geometry().width()*0.5f;
-                    y = -QApplication::desktop()->geometry().height()*1.5f+w->iconGeometry().y()+w->height();
+                    x = w->iconGeometry().x()+left;
+                    y = bottom-area.height()+w->iconGeometry().y()+w->height();
                     }
                 // Position of the window in the stack
-                float stackX = -QApplication::desktop()->geometry().width()*0.25f-(xOffset*windowList.count())+xOffset*(i+1);
-                float stackY = -QApplication::desktop()->geometry().height()*0.5f;
+                float stackX = -area.width()*0.25f-(xOffset*windowList.count())+xOffset*(i+1);
+                float stackY = -area.height()*0.5f;
                 float stackZ = (-1*zOffset*windowList.count()) -12.5+zOffset*(i+1);
 
                 float animateXOffset;
@@ -156,17 +206,17 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                 // if start move to stack, if stop move from stack
                 if( start )
                     {
-                    animateXOffset = x+progress*(stackX-x);
-                    animateYOffset = y+progress*(stackY-y);
-                    animateZOffset = z+progress*(stackZ-z);
-                    rotation = progress*0.25;
+                    animateXOffset = x+timeLine.value()*(stackX-x);
+                    animateYOffset = y+timeLine.value()*(stackY-y);
+                    animateZOffset = z+timeLine.value()*(stackZ-z);
+                    rotation = timeLine.value()*0.25;
                     }
                 else // = if( stop )
                     {
-                    animateXOffset = stackX+progress*(x-stackX);
-                    animateYOffset = stackY+progress*(y-stackY);
-                    animateZOffset = stackZ+progress*(z-stackZ);
-                    rotation = 0.25-progress*0.25;
+                    animateXOffset = stackX+timeLine.value()*(x-stackX);
+                    animateYOffset = stackY+timeLine.value()*(y-stackY);
+                    animateZOffset = stackZ+timeLine.value()*(z-stackZ);
+                    rotation = 0.25-timeLine.value()*0.25;
                     }
 
                 // go to current position and rotate by the time based factor
@@ -182,9 +232,9 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                 glPopMatrix();
                 }
             // time elapsed - so no more animation
-            if( progress == 1.0 )
+            if( timeLine.value() == 1.0 )
                 {
-                progress = 0.0;
+                timeLine.setProgress( 0.0 );
                 if( start )
                     {
                     start = false;
@@ -232,17 +282,17 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         // normal behaviour - no start or stop animation
         else
             {
-            double localProgress = progress;
+            double localProgress = timeLine.value();
             glPushMatrix();
-            glTranslatef(-QApplication::desktop()->geometry().width()*0.25f-(xOffset*windowList.count()),
-                -QApplication::desktop()->geometry().height()*0.5f,
+            glTranslatef(-area.width()*0.25f-(xOffset*windowList.count()),
+                -area.height()*0.5f,
                 (-1*zOffset*windowList.count()) -12.5);
             if( animateFlip && windowList.count() > 1 )
                 {
-                if( progress < 1.0 )
+                if( timeLine.value() < 1.0 )
                     {
-                    float animateXOffset = progress*xOffset;
-                    float animateZOffset = progress*zOffset;
+                    float animateXOffset = timeLine.value()*xOffset;
+                    float animateZOffset = timeLine.value()*zOffset;
                     if( forward )
                         {
                         if( animateXOffset > xOffset ) animateXOffset = xOffset;
@@ -263,7 +313,7 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
                     }
                 else
                     {
-                    progress = 0.0;
+                    timeLine.setProgress( 0.0 );
                     if( rearrangeWindows != 0 )
                         {
                         animateFlip = true;
@@ -320,6 +370,7 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         glMatrixMode( GL_PROJECTION );
         glPopMatrix();
         glMatrixMode( GL_MODELVIEW );
+        glViewport( viewport[0], viewport[1], viewport[2], viewport[3] );
 
         // caption of selected window
         QColor color_frame;
@@ -327,14 +378,30 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
         color_frame.setAlphaF( 0.9 );
         color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
+        if( start )
+            {
+            color_frame.setAlphaF( 0.9 * timeLine.value() );
+            color_text.setAlphaF( timeLine.value() );
+            }
+        else if( stop )
+            {
+            color_frame.setAlphaF( 0.9 - 0.9 * timeLine.value() );
+            color_text.setAlphaF( 1.0 - timeLine.value() );
+            }
+        else if( addFullRepaint )
+            {
+            // special case: timeLine was reset, but actual frame will be painted
+            color_frame.setAlphaF( 0.0 );
+            color_text.setAlphaF( 0.0 );
+            }
         QFont text_font;
         text_font.setBold( true );
         text_font.setPointSize( 20 );
         glPushAttrib( GL_CURRENT_BIT );
         glColor4f( color_frame.redF(), color_frame.greenF(), color_frame.blueF(), color_frame.alphaF());
-        QRect frameRect = QRect( QApplication::desktop()->geometry().width()*0.25f,
-            QApplication::desktop()->geometry().height()*0.9f,
-            QApplication::desktop()->geometry().width()*0.5f,
+        QRect frameRect = QRect( area.width()*0.25f + area.x(),
+            area.height()*0.9f + area.y(),
+            area.width()*0.5f,
             QFontMetrics( text_font ).height() * 1.2 );
         renderRoundBoxWithEdge( frameRect );
         effects->paintText( effects->currentTabBoxWindow()->caption(),
@@ -344,7 +411,23 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
             text_font );
         glPopAttrib();
         // icon of selected window
-        GLTexture* icon = new GLTexture( effects->currentTabBoxWindow()->icon() );
+        QPixmap iconPixmap = effects->currentTabBoxWindow()->icon();
+        if( start || stop || addFullRepaint )
+            {
+            int alpha = 255.0f * timeLine.value();
+            if( stop )
+                {
+                alpha = 255.0f - alpha;
+                }
+            else if( addFullRepaint )
+                {
+                alpha = 0.0f;
+                }
+            QPixmap transparency = iconPixmap.copy( iconPixmap.rect() );
+            transparency.fill( QColor( 255, 255, 255, alpha ) );
+            iconPixmap.setAlphaChannel( transparency.alphaChannel()  );
+            }
+        GLTexture* icon = new GLTexture( iconPixmap );
         icon->bind();
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         icon->bind();
@@ -383,7 +466,14 @@ void FlipSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, W
         {
         if( !( mask & PAINT_WINDOW_TRANSFORMED ) && ( !w->isDesktop() ) )
             {
-            return;
+            if( ( start || stop ) && w->isDock() )
+                {
+                data.opacity = 1.0 - timeLine.value();
+                if( stop )
+                    data.opacity = timeLine.value();
+                }
+            else
+                return;
             }
         }
     effects->paintWindow( w, mask, region, data );
@@ -412,6 +502,15 @@ void FlipSwitchEffect::tabBoxAdded( int mode )
                 // last tabbox effect still running - schedule start effect
                 startRequested = true;
                 }
+                
+            // Calculation of correct area
+            area = effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop());
+            QRect fullArea = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+            // twinview?
+            if( area.height() != fullArea.height() || area.width() != fullArea.width() )
+                twinview = true;
+            else
+                twinview = false;
             }
         }
     }
@@ -424,7 +523,14 @@ void FlipSwitchEffect::tabBoxClosed()
         effects->unrefTabBox();
         if( mAnimation )
             {
-            if ( start || animateFlip ) stopRequested = true;
+            if( start && rearrangeWindows == 0 )
+                {
+                stop = true;
+                start = false;
+                timeLine.setProgress( 1.0 - timeLine.value() );
+                }
+            else if( start || animateFlip )
+                stopRequested = true;
             else
                 {
                 stop = true;
@@ -483,7 +589,7 @@ void FlipSwitchEffect::paintWindowFlip( EffectWindow* w, bool draw, float opacit
     WindowPaintData data( w );
 
     int x = 0;
-    int y = QApplication::desktop()->geometry().height() - w->geometry().height();
+    int y = area.height() - w->geometry().height();
     QRect thumbnail;
     setPositionTransformations( data,                                             
         thumbnail, w,

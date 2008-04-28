@@ -54,7 +54,9 @@ class FlipSwitchEffect
         int rearrangeWindows;
         bool stopRequested;
         bool startRequested;
-        double progress;
+        bool twinview;
+        QRect area;
+        TimeLine timeLine;
     };
 
 } // namespace
