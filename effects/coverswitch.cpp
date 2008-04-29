@@ -172,11 +172,11 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         int leftIndex = index +1;
         if( leftIndex == tempList.count() )
             leftIndex = 0;
-        
+
         EffectWindow* frontWindow = tempList[ index ];
         QList< EffectWindow* > leftWindows;
         QList< EffectWindow* > rightWindows;
-    
+
         bool evenWindows = ( tempList.count() % 2 == 0 ) ? true : false;
         int leftWindowCount = 0;
         if( evenWindows )
@@ -245,7 +245,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glDisable( GL_BLEND );
             }
         paintScene( frontWindow, &leftWindows, &rightWindows );
-        
+
         glPopMatrix();
         glPopAttrib();
         glMatrixMode( GL_PROJECTION );
@@ -319,7 +319,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 void CoverSwitchEffect::postPaintScreen()
     {
     if( ( mActivated && ( animation || start ) ) || stop || stopRequested )
-        {        
+        {
         if( timeLine.value() == 1.0 )
             {
             timeLine.setProgress(0.0);
@@ -531,7 +531,7 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
             }
         }
     }
-  
+
 void CoverSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( mActivated || stop || stopRequested )
@@ -548,9 +548,16 @@ void CoverSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
                 return;
             }
         }
+    if ( ( start || stop ) && !w->isOnCurrentDesktop() )
+        {
+        if (stop) // Fade out windows not on the current desktop
+            data.opacity = (1.0 - timeLine.value());
+        else // Fade in Windows from other desktops when animation is started
+            data.opacity = timeLine.value();
+        }
     effects->paintWindow( w, mask, region, data );
     }
-  
+
 void CoverSwitchEffect::tabBoxAdded( int mode )
     {
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
