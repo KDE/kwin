@@ -47,7 +47,7 @@ void ScaleInEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, i
 
 void ScaleInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( windows.contains( w ))
+    if( windows.contains( w ) && isScaleWindow( w ) )
         {
         data.xScale *= windows[ w ];
         data.yScale *= windows[ w ];
@@ -55,6 +55,14 @@ void ScaleInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wind
         data.yTranslate += int( w->height() / 2 * ( 1 - windows[ w ] ));
         }
     effects->paintWindow( w, mask, region, data );
+    }
+
+bool ScaleInEffect::isScaleWindow( EffectWindow* w )
+    {
+    // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
+    if ( w->isPopupMenu() || w->isSpecialWindow() )
+        return false;
+    return true;
     }
 
 void ScaleInEffect::postPaintWindow( EffectWindow* w )
