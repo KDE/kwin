@@ -990,6 +990,40 @@ class KWIN_EXPORT PaintClipper
  * effects that want a non-linear timeline. Currently, most
  * it does is wrapping QTimeLine. In the future, this class
  * could help using physics animations in KWin.
+ *
+ * KWin effects will usually use this feature by keeping one
+ * TimeLine per animation, for example per effect (when only
+ * one animation is done by the effect) or per windows (in
+ * the case that multiple animations can take place at the
+ * same time (such as minizing multiple windows with a short
+ * time offset. Increasing the internal time state of the
+ * TimeLine is done either by changing the 'current' time in
+ * the TimeLine, which is an int value between 0 and the
+ * duration set (defaulting to 250msec). The current time
+ * can also be changed by setting the 'progress' of the
+ * TimeLine, a double between 0.0 and 1.0. setProgress(),
+ * addProgress(), addTime(), removeTime() can all be used to
+ * manipulate the 'current' time (and at the same time
+ * progress) of the TimeLine.
+ *
+ * The internal state of the TimeLine is determined by the
+ * duration of the TimeLine, int in milliseconds, defaulting.
+ * the 'current' time and the current 'progress' are
+ * interchangeable, both determine the x-axis of a graph
+ * of a TimeLine. The value() returned represents the y-axis
+ * in this graph.
+ *
+ * m_TimeLine.setProgress(0.5) would change the 'current'
+ * time of a default TimeLine to 125 msec. m_TimeLine.value()
+ * would then return the progress value (a double between 0.0
+ * and 1.0), which can be lower than 0.5 in case the animation
+ * should start slowly, such as for the EaseInCurve.
+ * In KWin effect, the prePaintWindow() or prePaintScreen()
+ * methods have int time as one of their arguments. This int
+ * can be used to increase the 'current' time in the TimeLine.
+ * The double the is subsequently returned by value() (usually
+ * in paintWindow() or paintScreen() methods can then be used
+ * to manipulate windows, or their positions.
  */
 class KWIN_EXPORT TimeLine
     {
@@ -1039,7 +1073,9 @@ class KWIN_EXPORT TimeLine
         /**
          * Returns the Value at the time set, this method will
          * usually be used to get the progress in the paintWindow()
-         * and related methods.
+         * and related methods. The value represents the y-axis' value
+         * corresponding to the current progress (or time) set by
+         * setProgress(), addProgress(), addTime(), removeTime()
          */
         double value() const;
         /**
@@ -1049,8 +1085,8 @@ class KWIN_EXPORT TimeLine
          */
         double valueForTime(const int msec) const;
         /**
-         * Returns the progress of the TimeLine, between 0 and 1,
-         * it's equivalent to the y-axis on a curve.
+         * Returns the progress of the TimeLine, between 0.0 and 1.0.
+         * The value returned is equivalent to the y-axis on a curve.
          */
         double progress() const;
         /**
