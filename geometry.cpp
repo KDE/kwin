@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kapplication.h>
 #include <kglobal.h>
 #include <QPainter>
+#include <QDesktopWidget>
 #include <kwindowsystem.h>
 
 #include "placement.h"
@@ -875,6 +876,11 @@ void Client::checkWorkspacePosition()
     {
     if( isDesktop())
         {
+        if (geometry() == workspace()->clientArea( ScreenArea, this ))
+            {
+            return;
+            }
+            
         QRect area = workspace()->clientArea( FullArea, this );
         if( geometry() != area )
             setGeometry( area );
