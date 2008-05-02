@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kapplication.h>
 #include <kglobal.h>
 #include <QPainter>
-#include <QDesktopWidget>
 #include <kwindowsystem.h>
 
 #include "placement.h"

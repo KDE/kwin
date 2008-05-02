@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "notifications.h"
 #include <QX11Info>
-#include <QDesktopWidget>
 #include "rules.h"
 #include "group.h"
 
@@ -239,8 +238,8 @@ bool Client::manage( Window w, bool isMapped )
         if (geom != workspace()->clientArea( ScreenArea, geom.center(), desktop()))
             {
             geom = workspace()->clientArea( FullArea, geom.center(), desktop());
-            placementDone = true;
             }
+        placementDone = true;
         }
 
     bool usePosition = false;
