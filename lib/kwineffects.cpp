@@ -925,11 +925,13 @@ double TimeLine::valueForTime(const int msec) const
 void TimeLine::addTime(const int msec)
     {
     m_Time = qMin(m_Duration, m_Time + msec);
+    m_Progress = m_Time / m_Duration;
     }
 
 void TimeLine::removeTime(const int msec)
     {
     m_Time = qMax(0, m_Time - msec);
+    m_Progress = m_Time / m_Duration;
     }
 
 void TimeLine::setProgress(const double progress)
@@ -946,6 +948,7 @@ double TimeLine::progress() const
 void TimeLine::addProgress(const double progress)
     {
     m_Progress += progress;
+    m_Time = (int)(m_Duration * m_Progress);
     }
 
 void TimeLine::setCurveShape(CurveShape curveShape)
