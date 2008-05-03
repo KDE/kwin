@@ -51,9 +51,9 @@ MakeTransparentEffect::MakeTransparentEffect()
         }
     active = effects->activeWindow();
     moveresize_timeline.setCurveShape( TimeLine::EaseOutCurve );
-    moveresize_timeline.setDuration( conf.readEntry( "Duration", 1500 ) );
+    moveresize_timeline.setDuration( conf.readEntry( "Duration", 1000 ) );
     activeinactive_timeline.setCurveShape( TimeLine::EaseInOutCurve );
-    activeinactive_timeline.setDuration( conf.readEntry( "Duration", 1500 ) );
+    activeinactive_timeline.setDuration( conf.readEntry( "Duration", 1000 ) );
     }
 
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
@@ -134,7 +134,7 @@ void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion regi
                 if ( w == active )
                     {
                     data.opacity *= (moveresize + ((1.0 - moveresize) * ( 1.0 - progress )));
-                    if (progress < 1.0)
+                    if (progress < 1.0 && progress > 0.0)
                         {
                         w->addRepaintFull();
                         if ( fadeout != w )
@@ -147,7 +147,7 @@ void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion regi
                 if ( w == active && (w == fadeout) && !w->isUserMove() && !w->isUserResize() )
                     {
                     data.opacity *= (moveresize + ((1.0 - moveresize) * (progress)));
-                    if ( progress == 1.0 )
+                    if ( progress == 1.0 || progress == 0.0)
                         fadeout = NULL;
                     else
                         w->addRepaintFull();
