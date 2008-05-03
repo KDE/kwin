@@ -157,7 +157,16 @@ void OxygenButton::paintEvent(QPaintEvent *)
     QPalette pal = palette(); // de-const-ify
 
 
-    helper_.renderWindowBackground(&painter, this->rect(), this);
+    // Set palette to the right group.
+    // TODO - fix KWin to do this for us :-).
+    if (client_.isActive())
+        pal.setCurrentColorGroup(QPalette::Active);
+    else
+        pal.setCurrentColorGroup(QPalette::Inactive);
+
+//    widget->window()setPalette(pal);
+
+    helper_.renderWindowBackground(&painter, this->rect(), this, pal);
 
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
@@ -167,12 +176,6 @@ void OxygenButton::paintEvent(QPaintEvent *)
         return;
     }
 
-    // Set palette to the right group.
-    // TODO - fix KWin to do this for us :-).
-    if (client_.isActive())
-        pal.setCurrentColorGroup(QPalette::Active);
-    else
-        pal.setCurrentColorGroup(QPalette::Inactive);
 
     if(client_.maximizeMode() == OxygenClient::MaximizeRestore)
         painter.translate(0,-1);
