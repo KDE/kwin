@@ -156,6 +156,9 @@ void OxygenButton::paintEvent(QPaintEvent *)
     QPainter painter(this);
     QPalette pal = palette(); // de-const-ify
 
+
+    helper_.renderWindowBackground(&painter, this->rect(), this);
+
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
         int dx = (width() - 16) / 2;
