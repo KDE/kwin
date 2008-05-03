@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmodule.h>
 #undef KDE3_SUPPORT
 
-class KShortcutsEditor;
 
 namespace KWin
 {

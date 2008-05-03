@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ui_wobblywindows_config.h"
 
-class KActionCollection;
 
 namespace KWin
 {
