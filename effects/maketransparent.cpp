@@ -51,9 +51,9 @@ MakeTransparentEffect::MakeTransparentEffect()
         }
     active = effects->activeWindow();
     moveresize_timeline.setCurveShape( TimeLine::EaseOutCurve );
-    moveresize_timeline.setDuration( conf.readEntry( "Duration", 1000 ) );
+    moveresize_timeline.setDuration( conf.readEntry( "Duration", 800 ) );
     activeinactive_timeline.setCurveShape( TimeLine::EaseInOutCurve );
-    activeinactive_timeline.setDuration( conf.readEntry( "Duration", 1000 ) );
+    activeinactive_timeline.setDuration( conf.readEntry( "Duration", 800 ) );
     }
 
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
