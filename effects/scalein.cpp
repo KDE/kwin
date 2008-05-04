@@ -50,7 +50,7 @@ void ScaleInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wind
     {
     if( mTimeLineWindows.contains( w ) && isScaleWindow( w ) )
         {
-        data.opacity *= 0.0 + ( 1 * mTimeLineWindows[ w ].value() );
+        data.opacity *= mTimeLineWindows[ w ].value();
         data.xScale *= mTimeLineWindows[ w ].value();
         data.yScale *= mTimeLineWindows[ w ].value();
         data.xTranslate += int( w->width() / 2 * ( 1 - mTimeLineWindows[ w ].value() ) );
