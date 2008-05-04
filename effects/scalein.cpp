@@ -27,32 +27,34 @@ KWIN_EFFECT( scalein, ScaleInEffect )
 
 void ScaleInEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    if( !windows.isEmpty())
+    if( !mTimeLineWindows.isEmpty() )
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     effects->prePaintScreen( data, time );
     }
 
 void ScaleInEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( windows.contains( w ))
+    if( mTimeLineWindows.contains( w ) )
         {
-        windows[ w ] += time / 300.; // complete change in 300ms
-        if( windows[ w ] < 1 )
+        mTimeLineWindows[ w ].setCurveShape( TimeLine::EaseOutCurve );
+        mTimeLineWindows[ w ].addTime( time );
+        if( mTimeLineWindows[ w ].value() < 1 )
             data.setTransformed();
         else
-            windows.remove( w );
+            mTimeLineWindows.remove( w );
         }
     effects->prePaintWindow( w, data, time );
     }
 
 void ScaleInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( windows.contains( w ) && isScaleWindow( w ) )
+    if( mTimeLineWindows.contains( w ) && isScaleWindow( w ) )
         {
-        data.xScale *= windows[ w ];
-        data.yScale *= windows[ w ];
-        data.xTranslate += int( w->width() / 2 * ( 1 - windows[ w ] ));
-        data.yTranslate += int( w->height() / 2 * ( 1 - windows[ w ] ));
+        data.opacity *= 0.0 + ( 1 * mTimeLineWindows[ w ].value() );
+        data.xScale *= mTimeLineWindows[ w ].value();
+        data.yScale *= mTimeLineWindows[ w ].value();
+        data.xTranslate += int( w->width() / 2 * ( 1 - mTimeLineWindows[ w ].value() ) );
+        data.yTranslate += int( w->height() / 2 * ( 1 - mTimeLineWindows[ w ].value() ) );
         }
     effects->paintWindow( w, mask, region, data );
     }
@@ -67,7 +69,7 @@ bool ScaleInEffect::isScaleWindow( EffectWindow* w )
 
 void ScaleInEffect::postPaintWindow( EffectWindow* w )
     {
-    if( windows.contains( w ))
+    if( mTimeLineWindows.contains( w ) )
         w->addRepaintFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
     }
@@ -76,14 +78,14 @@ void ScaleInEffect::windowAdded( EffectWindow* c )
     {
     if( c->isOnCurrentDesktop())
         {
-        windows[ c ] = 0;
+        mTimeLineWindows[ c ].setProgress( 0.0 );
         c->addRepaintFull();
         }
     }
 
 void ScaleInEffect::windowClosed( EffectWindow* c )
     {
-    windows.remove( c );
+    mTimeLineWindows.remove( c );
     }
 
 } // namespace

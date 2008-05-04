@@ -39,7 +39,7 @@ class ScaleInEffect
         virtual void windowClosed( EffectWindow* c );
     private:
         bool isScaleWindow ( EffectWindow* w );
-        QHash< const EffectWindow*, double > windows;
+        QHash< const EffectWindow*, TimeLine > mTimeLineWindows;
     };
 
 } // namespace
