@@ -725,7 +725,7 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
 ToplevelList Workspace::rootStackingOrder() const
     {
     Window dummy;
-    Window* windows;
+    Window* windows = NULL;
     unsigned int count = 0;
     XQueryTree( display(), rootWindow(), &dummy, &dummy, &windows, &count );
     ToplevelList ret;
@@ -740,6 +740,8 @@ ToplevelList Workspace::rootStackingOrder() const
         }
     foreach( Deleted* c, deleted )
         ret.append( c );
+    if( windows != NULL )
+        XFree( windows );
     return ret;
     }
 
