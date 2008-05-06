@@ -1085,6 +1085,11 @@ class KWIN_EXPORT TimeLine
          */
         double valueForTime(const int msec) const;
         /**
+         * Returns the current time of the TimeLine, between 0 and duration()
+         * The value returned is equivalent to the x-axis on a curve.
+         */
+        int time() const;
+        /**
          * Returns the progress of the TimeLine, between 0.0 and 1.0.
          * The value returned is equivalent to the y-axis on a curve.
          */
