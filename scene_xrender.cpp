@@ -183,13 +183,14 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
 void SceneXrender::paintGenericScreen( int mask, ScreenPaintData data )
     {
     screen_paint = data; // save, transformations will be done when painting windows
-    if( false ) // TODO never needed?
+    if( true ) // as long as paintTransformedScreen() doesn't work properly
         Scene::paintGenericScreen( mask, data );
     else
         paintTransformedScreen( mask );
     }
 
 /*
+ TODO currently broken
  Try to do optimized painting even with transformations. Since only scaling
  and translation are supported by the painting code, clipping can be done
  manually to avoid having to paint everything in every pass. Whole screen
