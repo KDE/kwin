@@ -1033,15 +1033,14 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
         }
 
     WindowData& data = mWindowData[ w ];
-    // TODO: find out why this doesn't work properly
-    // if( data.icon.cacheKey() != w->icon().cacheKey())
+    if( data.icon.cacheKey() != w->icon().cacheKey())
         { // make sure data.icon is the right QPixmap, and rebind
         data.icon = w->icon();
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         if( effects->compositingType() == OpenGLCompositing )
             {
-            data.iconTexture.load( data.icon );
-            data.iconTexture.setFilter( GL_LINEAR );
+            data.iconTexture = new GLTexture( data.icon );
+            data.iconTexture->setFilter( GL_LINEAR );
             }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -1071,7 +1070,7 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
         // Render the icon
         glColor4f( 1, 1, 1, 1 * mActiveness );
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        data.iconTexture.bind();
+        data.iconTexture->bind();
         const float verts[ 4 * 2 ] =
             {
             x, y,
@@ -1087,7 +1086,7 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
             1, 1
             };
         renderGLGeometry( 4, verts, texcoords );
-        data.iconTexture.unbind();
+        data.iconTexture->unbind();
         glPopAttrib();
         }
 #endif

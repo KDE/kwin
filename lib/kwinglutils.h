@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtGui/QImage>
 #include <QtCore/QSize>
+#include <QtCore/QSharedData>
 
 /** @addtogroup kwineffects */
 /** @{ */
@@ -103,6 +104,7 @@ KWIN_EXPORT void renderRoundBoxWithEdge( const QRect& area, float roundness = 10
 
 
 class KWIN_EXPORT GLTexture
+    : public QSharedData
     {
     public:
         GLTexture();
@@ -159,6 +161,7 @@ class KWIN_EXPORT GLTexture
         static bool mNPOTTextureSupported;
         static bool mFramebufferObjectSupported;
         static bool mSaturationSupported;
+        Q_DISABLE_COPY( GLTexture )
     };
 
 class KWIN_EXPORT GLShader

@@ -118,7 +118,7 @@ class PresentWindowsEffect
             int slot_distance;
             QPixmap icon;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-            GLTexture iconTexture;
+            KSharedPtr< GLTexture > iconTexture;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             Picture iconPicture;
