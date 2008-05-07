@@ -53,6 +53,7 @@ Icon=preferences-system-windows-effect-fade
 Comment=Makes windows smoothly fade in/out when they are shown or hidden
 Comment[ca]=Fa que les finestres s'encenguin/apaguin de manera gradual quan es mostren o s'oculten
 Comment[el]=Κάνει τα παράθυρα να εμφανίζονται/αποκρύπτονται ομαλά
+Comment[et]=Paneb aknad sujuvalt hääbuma või tugevnema, kui need peidetakse või nähtavale tuuakse
 Comment[fi]=Ikkunat tulevat näkyviin tai poistuvat näkyvistä pehmeästi häivyttäen
 Comment[ga]=Leis seo, céimneoidh fuinneoga isteach/amach agus iad á dtaispeáint nó á bhfolú
 Comment[gu]=જ્યારે વિન્ડો બતાવવામાં અથવા છુપાવવામાં આવે છે ત્યારે તેમને સરળતાથી ઝાંખી અથવા પ્રકાશિત કરે છે
@@ -65,6 +66,7 @@ Comment[ro]=Face ferestrele să se (de)coloreze cînd sînt afișate sau ascunse
 Comment[sv]=Gör att fönster mjukt tonas in eller ut när de visas eller döljs
 Comment[th]=ทำให้หน้าต่างค่อย ๆ ชัดหรือค่อย ๆ จางหายเมื่อมีการแสดงหรือซ่อนหน้าต่าง
 Comment[uk]=Робить так, щоб вікна плавно з'являлись / зникали, коли вони показуються або ховаються
+Comment[x-test]=xxMakes windows smoothly fade in/out when they are shown or hiddenxx
 Comment[zh_CN]=当窗口被显示或者隐藏时，使窗口平滑地淡入淡出
 Comment[zh_TW]=顯示或隱藏視窗時以淡入/淡出方式呈現
 

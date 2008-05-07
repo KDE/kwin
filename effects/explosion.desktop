@@ -50,6 +50,7 @@ Icon=preferences-system-windows-effect-explosion
 Comment=Makes windows explode when they are closed
 Comment[ca]=Provoca l'explosió de les finestres quan es tanquen
 Comment[el]=Έκρηξη των παραθύρων κατά το κλείσιμο
+Comment[et]=Paneb aknad sulgemisel plahvatama
 Comment[fi]=Räjäyttää ikkunat suljettaessa
 Comment[ga]=Leis seo, pléascfaidh fuinneoga nuair a dhúntar iad
 Comment[gu]=જ્યારે વિન્ડો બંધ થાય છે ત્યારે તેમને ધડાકાભેર બંધ કરે છે
@@ -64,6 +65,7 @@ Comment[sv]=Gör att fönster exploderar när de stängs
 Comment[th]=ทำให้หน้าต่างระเบิดออก เมื่อปิดหน้าต่าง
 Comment[tr]=Pencereler kapatılırken patlama efekti verir
 Comment[uk]=Робить так, щоб вікна при закритті вибухали
+Comment[x-test]=xxMakes windows explode when they are closedxx
 Comment[zh_CN]=当窗口被关闭时，让它们呈现爆炸效果
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 
