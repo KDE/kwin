@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFont>
 
 #include <kwinglutils.h>
+#include <kwinxrenderutils.h>
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <X11/extensions/Xrender.h>
@@ -112,7 +113,7 @@ class BoxSwitchEffect::ItemInfo
         GLTexture iconTexture;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        Picture iconPicture;
+        XRenderPicture iconPicture;
 #endif
     };
 

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwineffects.h"
 
 #include "kwinglutils.h"
+#include "kwinxrenderutils.h"
 
 #include <QtDBus/QtDBus>
 #include <QVariant>
@@ -978,28 +979,5 @@ void TimeLine::setCurveShape(CurveShape curveShape)
         }
         m_CurveShape = curveShape;
     }
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-// Convert QRegion to XserverRegion. All code uses XserverRegion
-// only when really necessary as the shared implementation uses
-// QRegion.
-XserverRegion toXserverRegion( QRegion region )
-    {
-    QVector< QRect > rects = region.rects();
-    XRectangle* xr = new XRectangle[ rects.count() ];
-    for( int i = 0;
-         i < rects.count();
-         ++i )
-        {
-        xr[ i ].x = rects[ i ].x();
-        xr[ i ].y = rects[ i ].y();
-        xr[ i ].width = rects[ i ].width();
-        xr[ i ].height = rects[ i ].height();
-        }
-    XserverRegion ret = XFixesCreateRegion( display(), xr, rects.count());
-    delete[] xr;
-    return ret;
-    }
-#endif
 
 } // namespace

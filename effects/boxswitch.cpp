@@ -344,25 +344,13 @@ void BoxSwitchEffect::setInactive()
             if( w != selected_window )
                 w->addRepaintFull();
             }
-        foreach( ItemInfo* i, windows )
-            {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        if( effects->compositingType() == XRenderCompositing )
-                {
-                if( i->iconPicture != None )
-                    XRenderFreePicture( display(), i->iconPicture );
-                i->iconPicture = None;
-                }
-#endif
-            delete i;
-            }
+        qDeleteAll( windows );
         windows.clear();
         setSelectedWindow( 0 );
         }
     else
         { // DesktopMode
-        foreach( ItemInfo* i, desktops )
-            delete i;
+        qDeleteAll( windows );
         desktops.clear();
         }
     effects->addRepaint( frame_area );
@@ -601,8 +589,6 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if( effects->compositingType() == XRenderCompositing )
             {
-            if( windows[ w ]->iconPicture != None )
-                XRenderFreePicture( display(), windows[ w ]->iconPicture );
             windows[ w ]->iconPicture = XRenderCreatePicture( display(),
                 windows[ w ]->icon.handle(), alphaFormat, 0, NULL );
             }

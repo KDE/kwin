@@ -33,6 +33,7 @@ set(kwin_EFFECTSLIB_SRCS
     kwinglutils.cpp
     kwinglutils_funcs.cpp
     kwinshadereffect.cpp
+    kwinxrenderutils.cpp
     )
 
 kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
@@ -72,5 +73,6 @@ install( FILES
     kwinglutils.h
     kwinglutils_funcs.h
     kwinshadereffect.h
+    kwinxrenderutils.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
     DESTINATION ${INCLUDE_INSTALL_DIR})

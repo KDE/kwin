@@ -1046,8 +1046,6 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if( effects->compositingType() == XRenderCompositing )
             {
-            if( data.iconPicture != None )
-                XRenderFreePicture( display(), data.iconPicture );
             data.iconPicture = XRenderCreatePicture( display(),
                 data.icon.handle(), alphaFormat, 0, NULL );
             }

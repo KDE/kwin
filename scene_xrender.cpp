@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
+#include "kwinxrenderutils.h"
 
 #include <kxerrorhandler.h>
 

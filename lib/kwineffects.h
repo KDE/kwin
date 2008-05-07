@@ -41,10 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include <limits.h>
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <X11/extensions/Xfixes.h>
-#endif
-
 class KLibrary;
 class KConfigGroup;
 class KActionCollection;
@@ -178,13 +174,6 @@ QRect infiniteRegion()
     { // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
     return QRect( INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX );
     }
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-/**
- * Convert QRegion to XserverRegion.
- */
-KWIN_EXPORT XserverRegion toXserverRegion( QRegion region );
-#endif
 
 /**
  * @short Base class for all KWin effects

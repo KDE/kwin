@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Include with base class for effects.
 #include <kwineffects.h>
 #include <kwinglutils.h>
+#include <kwinxrenderutils.h>
 
 #include <QPixmap>
 
@@ -121,7 +122,7 @@ class PresentWindowsEffect
             KSharedPtr< GLTexture > iconTexture;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            Picture iconPicture;
+            XRenderPicture iconPicture;
 #endif
             };
         typedef QHash<EffectWindow*, WindowData> DataHash;
