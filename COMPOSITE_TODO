@@ -175,6 +175,9 @@ Effects framework TODO
 + EffectWindow should be completely opaque when kept as the only API for effects
     - no inlines, etc.
 
++ EffectsHandler should not have virtuals but should instead use an internal object
+    for communication with KWin core, so that adding new functions doesn't break BC all the time
+
 + API for tabbox for effects should be cleaned up
 
 * check Scene::updateTimeDiff() - should the time be 0 or 1?
@@ -184,7 +187,6 @@ Effects framework TODO
 % consider using http://lists.kde.org/?l=kwin&m=118094888517415&w=2 for notification functions
 
 % API cleanups and making sure it will stay backwards compatible
-
 
 Effects TODO
 ===============================
