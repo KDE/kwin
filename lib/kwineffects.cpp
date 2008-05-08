@@ -359,15 +359,10 @@ bool EffectsHandler::paintText( const QString& text, const QPoint& center, int m
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
         {
-        static XRenderPictFormat* alphaFormat = 0;
-        if( !alphaFormat)
-            alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
-        Picture textPicture;
-        textPicture = XRenderCreatePicture( display(), textPixmap.handle(), alphaFormat, 0, NULL );
+        XRenderPicture textPicture( textPixmap );
         XRenderComposite( display(), textPixmap.depth() == 32 ? PictOpOver : PictOpSrc,
-        textPicture, None, effects->xrenderBufferPicture(),
-        0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
-        XRenderFreePicture( display(), textPicture );
+            textPicture, None, effects->xrenderBufferPicture(),
+            0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
         return true;
         }
 #endif

@@ -33,10 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <X11/extensions/Xrender.h>
-#endif
-
 namespace KWin
 {
 
@@ -96,10 +92,6 @@ class BoxSwitchEffect
         int selected_desktop;
 
         int painting_desktop;
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        XRenderPictFormat* alphaFormat;
-#endif
     };
 
 class BoxSwitchEffect::ItemInfo

@@ -47,9 +47,6 @@ BoxSwitchEffect::BoxSwitchEffect()
     {
     frame_margin = 10;
     highlight_margin = 5;
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
-#endif
     color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
     color_frame.setAlphaF( 0.9 );
     color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
@@ -474,7 +471,7 @@ void BoxSwitchEffect::paintFrame()
         {
         Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
             frame_area.width(), frame_area.height(), 32 );
-        Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
+        XRenderPicture pic( pixmap, 32 );
         XFreePixmap( display(), pixmap );
         XRenderColor col;
         col.alpha = int( color_frame.alphaF() * 0xffff );
@@ -486,7 +483,6 @@ void BoxSwitchEffect::paintFrame()
         XRenderComposite( display(), color_frame.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
             pic, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, frame_area.x(), frame_area.y(), frame_area.width(), frame_area.height());
-        XRenderFreePicture( display(), pic );
         }
 #endif
     }
@@ -507,7 +503,7 @@ void BoxSwitchEffect::paintHighlight( QRect area )
         {
         Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
             area.width(), area.height(), 32 );
-        Picture pic = XRenderCreatePicture( display(), pixmap, alphaFormat, 0, NULL );
+        XRenderPicture pic( pixmap, 32 );
         XFreePixmap( display(), pixmap );
         XRenderColor col;
         col.alpha = int( color_highlight.alphaF() * 0xffff );
@@ -519,7 +515,6 @@ void BoxSwitchEffect::paintHighlight( QRect area )
         XRenderComposite( display(), color_highlight.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
             pic, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
-        XRenderFreePicture( display(), pic );
         }
 #endif
     }
@@ -588,10 +583,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if( effects->compositingType() == XRenderCompositing )
-            {
-            windows[ w ]->iconPicture = XRenderCreatePicture( display(),
-                windows[ w ]->icon.handle(), alphaFormat, 0, NULL );
-            }
+            windows[ w ]->iconPicture = XRenderPicture( windows[ w ]->icon );
 #endif
         }
     int width = windows[ w ]->icon.width();

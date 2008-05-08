@@ -34,6 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xrender.h>
 #endif
 
+#include <kwinxrenderutils.h>
+
 #include <math.h>
 #include <QPainter>
 
@@ -233,8 +235,7 @@ void ShowFpsEffect::paintXrender( int fps )
     {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), FPS_WIDTH, MAX_TIME, 32 );
-    XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardARGB32 );
-    Picture p = XRenderCreatePicture( display(), pixmap, format, 0, NULL );
+    XRenderPicture p( pixmap, 32 );
     XFreePixmap( display(), pixmap );
     XRenderColor col;
     col.alpha = int( alpha * 0xffff );
@@ -257,7 +258,6 @@ void ShowFpsEffect::paintXrender( int fps )
         }
     XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc, p, None,
         effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, FPS_WIDTH, MAX_TIME );
-    XRenderFreePicture( display(), p );
 
     // Paint FPS graph
     paintFPSGraph( x + FPS_WIDTH, y );
@@ -356,8 +356,7 @@ void ShowFpsEffect::paintGraph( int x, int y, QList<int> values, QList<int> line
     if( effects->compositingType() == XRenderCompositing)
         {
         Pixmap pixmap = XCreatePixmap( display(), rootWindow(), values.count(), MAX_TIME, 32 );
-        XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardARGB32 );
-        Picture p = XRenderCreatePicture( display(), pixmap, format, 0, NULL );
+        XRenderPicture p( pixmap, 32 );
         XFreePixmap( display(), pixmap );
         XRenderColor col;
         col.alpha = int( alpha * 0xffff );
@@ -410,7 +409,6 @@ void ShowFpsEffect::paintGraph( int x, int y, QList<int> values, QList<int> line
         // Finally render the pixmap onto screen
         XRenderComposite( display(), alpha != 1.0 ? PictOpOver : PictOpSrc, p, None,
             effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, values.count(), MAX_TIME );
-        XRenderFreePicture( display(), p );
         }
 #endif
     }

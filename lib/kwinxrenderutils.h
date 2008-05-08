@@ -60,13 +60,16 @@ class KWIN_EXPORT XRenderPictureData
 /**
  * @short Wrapper around XRender Picture.
  *
- * This class wraps XRender's Picture, providing proper initialization
- * and freeing of resources. It should otherwise act exactly like the Picture type.
+ * This class wraps XRender's Picture, providing proper initialization,
+ * convenience constructors and freeing of resources.
+ * It should otherwise act exactly like the Picture type.
  */
 class KWIN_EXPORT XRenderPicture
     {
     public:
         XRenderPicture( Picture pic = None );
+        XRenderPicture( QPixmap pix );
+        XRenderPicture( Pixmap pix, int depth );
         operator Picture();
     private:
         KSharedPtr< XRenderPictureData > d;
