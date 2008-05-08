@@ -536,7 +536,7 @@ void CoverSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
     {
     if( mActivated || stop || stopRequested )
         {
-        if( !( mask & PAINT_WINDOW_TRANSFORMED ) && ( !w->isDesktop() ) )
+        if( !( mask & PAINT_WINDOW_TRANSFORMED ) && !w->isDesktop() )
             {
             if( ( start || stop ) && w->isDock() )
                 {
@@ -548,7 +548,7 @@ void CoverSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
                 return;
             }
         }
-    if ( ( start || stop ) && !w->isOnCurrentDesktop() )
+    if ( ( start || stop ) && (!w->isOnCurrentDesktop() || w->isMinimized() ) )
         {
         if (stop) // Fade out windows not on the current desktop
             data.opacity = (1.0 - timeLine.value());
