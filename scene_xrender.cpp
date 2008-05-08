@@ -494,16 +494,9 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
             }
         transformed_shape.setRects( rects.constData(), rects.count());
         }
-    if( x != toplevel->x() || y != toplevel->y())
-        transformed_shape.translate( x, y );
-    QRegion sh = shape();
-    if( sh != rect()) // is shaped, need additional clipping
-        {
-        XserverRegion clip = toXserverRegion( sh );
-        XFixesSetPictureClipRegion( display(), pic, 0, 0, clip );
-        XFixesDestroyRegion( display(), clip );
-        }
-    PaintClipper pc( region );
+    transformed_shape.translate( x, y );
+    PaintClipper pcreg( region ); // clip by the region to paint
+    PaintClipper pc( transformed_shape ); // clip by window's shape
     for( PaintClipper::Iterator iterator;
          !iterator.isDone();
          iterator.next())
@@ -532,7 +525,6 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         if( filter == ImageFilterGood )
             XRenderSetPictureFilter( display(), pic, const_cast< char* >( "fast" ), NULL, 0 );
         }
-    XFixesSetPictureClipRegion( display(), pic, 0, 0, None );
     }
 
 } // namespace
