@@ -97,17 +97,28 @@ SceneXrender::SceneXrender( Workspace* ws )
         return;
         }
     KXErrorHandler xerr;
-    // create XRender picture for the root window
-    format = XRenderFindVisualFormat( display(), DefaultVisual( display(), DefaultScreen( display())));
-    if( format == NULL )
-        return; // error
     if( wspace->createOverlay())
         {
         wspace->setupOverlay( None );
+        XWindowAttributes attrs;
+        XGetWindowAttributes( display(), wspace->overlayWindow(), &attrs );
+        format = XRenderFindVisualFormat( display(), attrs.visual );
+        if( format == NULL )
+            {
+            kError( 1212 ) << "Failed to find XRender format for overlay window";
+            return;
+            }
         front = XRenderCreatePicture( display(), wspace->overlayWindow(), format, 0, NULL );
         }
     else
         {
+        // create XRender picture for the root window
+        format = XRenderFindVisualFormat( display(), DefaultVisual( display(), DefaultScreen( display())));
+        if( format == NULL )
+            {
+            kError( 1212 ) << "Failed to find XRender format for root window";
+            return; // error
+            }
         XRenderPictureAttributes pa;
         pa.subwindow_mode = IncludeInferiors;
         front = XRenderCreatePicture( display(), rootWindow(), format, CPSubwindowMode, &pa );
