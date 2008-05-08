@@ -516,12 +516,18 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
             {
             XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
                 x, y, width, height);
+            // fake brightness change by overlaying black
+            XRenderColor col = { 0, 0, 0, 0xffff * ( 1 - data.brightness ) };
+            XRenderFillRectangle( display(), PictOpOver, buffer, &col, x, y, width, height );
             }
         else
             {
             Picture alpha = alphaMask( data.opacity );
             XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
                 x, y, width, height);
+            // fake brightness change by overlaying black
+            XRenderColor col = { 0, 0, 0, 0xffff * ( 1 - data.brightness ) * data.opacity };
+            XRenderFillRectangle( display(), PictOpOver, buffer, &col, x, y, width, height );
             transformed_shape = QRegion();
             }
         }

@@ -150,8 +150,6 @@ OpenGL TODO
 XRender TODO
 ==============================
 
-+ SceneXrender::Window::performPaint() doesn't use brightness
-
 + SceneXrender::paintTransformedScreen() doesn't handle properly extending of painted area
     in window's pre-paint - see the transformedShape() comment
     - and currently seems to be generally broken
