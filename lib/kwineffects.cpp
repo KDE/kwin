@@ -290,6 +290,19 @@ CompositingType EffectsHandler::compositingType() const
     return compositing_type;
     }
 
+bool EffectsHandler::saturationSupported() const
+    {
+    switch( compositing_type )
+        {
+        case OpenGLCompositing:
+            return GLTexture::saturationSupported();
+        case XRenderCompositing:
+            return false; // never
+        default:
+            abort();
+        }
+    }
+
 void EffectsHandler::sendReloadMessage( const QString& effectname )
     {
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reloadEffect");

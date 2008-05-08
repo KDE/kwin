@@ -150,7 +150,6 @@ OpenGL TODO
 XRender TODO
 ==============================
 
-+ SceneXrender::Window::performPaint() doesn't use saturation
 + SceneXrender::Window::performPaint() doesn't use brightness
 
 + SceneXrender::paintTransformedScreen() doesn't handle properly extending of painted area

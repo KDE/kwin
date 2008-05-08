@@ -518,6 +518,7 @@ class KWIN_EXPORT EffectsHandler
 
         CompositingType compositingType() const;
         virtual unsigned long xrenderBufferPicture() = 0;
+        bool saturationSupported() const;
         virtual void reconfigure() = 0;
 
         /**
@@ -874,6 +875,8 @@ class KWIN_EXPORT WindowPaintData
          * 1 means that the window is unchanged, 0 means that it's completely
          *  unsaturated (greyscale). 0.5 would make the colors less intense,
          *  but not completely grey
+         * Use EffectsHandler::saturationSupported() to find out whether saturation
+         * is supported by the system, otherwise this value has no effect.
          **/
         double saturation;
         /**
