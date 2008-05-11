@@ -192,8 +192,8 @@ extern KWIN_EXPORT glXBindTexImageEXT_func glXBindTexImageEXT;
 typedef void (*glXCopySubBuffer_func) ( Display* , GLXDrawable, int, int, int, int );
 extern KWIN_EXPORT glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
-typedef void (*glXGetVideoSync_func)( unsigned int *count );
-typedef void (*glXWaitVideoSync_func)( int divisor, int remainder, unsigned int *count );
+typedef int (*glXGetVideoSync_func)( unsigned int *count );
+typedef int (*glXWaitVideoSync_func)( int divisor, int remainder, unsigned int *count );
 extern KWIN_EXPORT glXGetVideoSync_func glXGetVideoSync;
 extern KWIN_EXPORT glXWaitVideoSync_func glXWaitVideoSync;
 // GLX_SGIX_fbconfig and misc GLX 1.3 stuff
@@ -219,13 +219,13 @@ extern KWIN_EXPORT glXGetFBConfigs_func glXGetFBConfigs;
 typedef void (*glActiveTexture_func)(GLenum);
 extern KWIN_EXPORT glActiveTexture_func glActiveTexture;
 // framebuffer_object extension functions
-typedef bool (*glIsRenderbuffer_func)( GLuint renderbuffer );
+typedef GLboolean (*glIsRenderbuffer_func)( GLuint renderbuffer );
 typedef void (*glBindRenderbuffer_func)( GLenum target, GLuint renderbuffer );
 typedef void (*glDeleteRenderbuffers_func)( GLsizei n, const GLuint *renderbuffers );
 typedef void (*glGenRenderbuffers_func)( GLsizei n, GLuint *renderbuffers );
 typedef void (*glRenderbufferStorage_func)( GLenum target, GLenum internalformat, GLsizei width, GLsizei height );
 typedef void (*glGetRenderbufferParameteriv_func)( GLenum target, GLenum pname, GLint *params );
-typedef bool (*glIsFramebuffer_func)( GLuint framebuffer );
+typedef GLboolean (*glIsFramebuffer_func)( GLuint framebuffer );
 typedef void (*glBindFramebuffer_func)( GLenum target, GLuint framebuffer );
 typedef void (*glDeleteFramebuffers_func)( GLsizei n, const GLuint *framebuffers );
 typedef void (*glGenFramebuffers_func)( GLsizei n, GLuint *framebuffers );
