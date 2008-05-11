@@ -145,7 +145,16 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     if( db )
         glDrawBuffer( GL_BACK );
     // Check whether certain features are supported
-    has_waitSync = glXGetVideoSync ? true : false;
+    has_waitSync = false;
+    if( glXGetVideoSync && glXIsDirect( display(), ctxbuffer ) && options->glVSync )
+        {
+        unsigned int sync;
+        if( glXGetVideoSync( &sync ) == 0 )
+            {
+            if( glXWaitVideoSync( 1, 0, &sync ) == 0 )
+                has_waitSync = true;
+            }
+        }
 
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
@@ -625,7 +634,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
 // wait for vblank signal before painting
 void SceneOpenGL::waitSync()
     { // NOTE that vsync has no effect with indirect rendering
-    if( waitSyncAvailable() && options->glVSync )
+    if( waitSyncAvailable())
         {
         unsigned int sync;
 

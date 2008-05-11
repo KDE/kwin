@@ -175,8 +175,7 @@ void Workspace::setupCompositing()
     if( rate <= 0 )
         rate = 50;
     // QTimer gives us 1msec (1000Hz) at best, so we ignore anything higher;
-    // however, since compositing is limited to no more than once per 5msec,
-    // 200Hz to 1000Hz are effectively identical
+    // however, additional throttling makes prevents very high rates from taking place anyway
     else if( rate > 1000 )
         rate = 1000;
     kDebug( 1212 ) << "Refresh rate " << rate << "Hz";
@@ -318,15 +317,12 @@ void Workspace::performCompositing()
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
     scene->paint( repaints, windows );
-    if( scene->waitSyncAvailable() && options->glVSync )
-        { // if we're using vsync, then time the next paint pass to
-          // before the next available sync
-        int paintTime = ( lastCompositePaint.elapsed() % compositeRate ) +
-                        ( compositeRate / 2 );
-        if( paintTime >= compositeRate )
-            compositeTimer.start( paintTime );
-        else if( paintTime < compositeRate )
-            compositeTimer.start( compositeRate - paintTime );
+    if( scene->waitSyncAvailable())
+        {
+        // if vsync is used, schedule the next repaint slightly in advance of the next sync,
+        // so that there is still time for the drawing to take place
+        int untilNextSync = compositeRate - ( lastCompositePaint.elapsed() % compositeRate );
+        compositeTimer.start( qMax( 1, untilNextSync - 10 )); // 10 ms in advance - TODO maybe less?
         }
     lastCompositePaint.start();
 #endif
