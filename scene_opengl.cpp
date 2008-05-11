@@ -638,6 +638,8 @@ void SceneOpenGL::waitSync()
 // actually paint to the screen (double-buffer swap or copy from pixmap buffer)
 void SceneOpenGL::flushBuffer( int mask, QRegion damage )
     {
+    if( wspace->overlayWindow()) // show the window only after the first pass, since
+        wspace->showOverlay();   // that pass may take long
     if( db )
         {
         if( mask & PAINT_SCREEN_REGION )

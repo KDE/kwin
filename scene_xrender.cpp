@@ -170,6 +170,8 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         }
     int mask = 0;
     paintScreen( &mask, &damage );
+    if( wspace->overlayWindow()) // show the window only after the first pass, since
+        wspace->showOverlay();   // that pass may take long
     if( mask & PAINT_SCREEN_REGION )
         {
         // Use the damage region as the clip region for the root window

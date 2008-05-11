@@ -137,6 +137,7 @@ Workspace::Workspace( bool restore )
     compositeRate( 0 ),
     overlay( None ),
     overlay_visible( true ),
+    overlay_shown( false ),
     transSlider( NULL ),
     transButton( NULL )
     {

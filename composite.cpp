@@ -372,12 +372,18 @@ void Workspace::setupOverlay( Window w )
     assert( Extensions::shapeInputAvailable());
     XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
     if( w != None )
-        {
         XShapeCombineRectangles( display(), w, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
-        XMapWindow( display(), w );
-        }
-    XMapRaised( display(), overlay );
     XSelectInput( display(), overlay, VisibilityChangeMask );
+    }
+
+void Workspace::showOverlay()
+    {
+    assert( overlay != None );
+    if( overlay_shown )
+        return;
+    XMapSubwindows( display(), overlay );
+    XMapWindow( display(), overlay );
+    overlay_shown = true;
     }
 
 void Workspace::destroyOverlay()
@@ -388,6 +394,7 @@ void Workspace::destroyOverlay()
     XCompositeReleaseOverlayWindow( display(), overlay );
 #endif
     overlay = None;
+    overlay_shown = false;
     }
 
 //****************************************

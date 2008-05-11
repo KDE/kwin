@@ -318,6 +318,7 @@ class Workspace : public QObject, public KDecorationDefines
         bool createOverlay();
         // init overlay and the destination window in it
         void setupOverlay( Window window );
+        void showOverlay();
         // destroys XComposite overlay window
         void destroyOverlay();
         Window overlayWindow();
@@ -723,6 +724,7 @@ class Workspace : public QObject, public KDecorationDefines
         QRegion repaints_region;
         Window overlay; // XComposite overlay window
         bool overlay_visible;
+        bool overlay_shown; // for showOverlay()
         QSlider *transSlider;
         QPushButton *transButton;
 
