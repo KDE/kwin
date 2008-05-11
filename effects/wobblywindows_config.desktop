@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_wobblywindows
 X-KDE-PluginKeyword=wobblywindows
 
 Name=Wobbly Windows
+Name[ca]=Finestres sacsejades
 Name[el]=Ταλαντευόμενα παράθυρα
 Name[et]=Võbisevad aknad
 Name[fi]=Heiluvat ikkunat
@@ -17,6 +18,7 @@ Name[nds]=Wabbelig Finstern
 Name[pt]=Janelas Trémulas
 Name[pt_BR]=Janelas Instáveis
 Name[ro]=Ferestre tremurătoare
+Name[sl]=Želatinsta okna
 Name[sv]=Ostadiga fönster
 Name[th]=หน้าต่างพริ้วไหว
 Name[tr]=Sallanan Pencereler
