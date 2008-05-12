@@ -6,31 +6,22 @@
     <x>0</x>
     <y>0</y>
     <width>541</width>
-    <height>170</height>
+    <height>176</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Config Dialog</string>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="leftMargin" >
-    <number>0</number>
-   </property>
-   <property name="topMargin" >
-    <number>0</number>
-   </property>
-   <property name="rightMargin" >
-    <number>0</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin" >
     <number>0</number>
    </property>
    <item>
-    <widget class="Q3ButtonGroup" name="titleAlign" >
+    <widget class="KButtonGroup" name="titleAlign" >
      <property name="title" >
       <string>Title &amp;Alignment</string>
      </property>
-     <layout class="QHBoxLayout" >
+     <layout class="QHBoxLayout" name="horizontalLayout" >
       <item>
        <widget class="QRadioButton" name="AlignLeft" >
         <property name="text" >
@@ -53,6 +44,10 @@
        </widget>
       </item>
      </layout>
+     <zorder>AlignLeft</zorder>
+     <zorder>AlignHCenter</zorder>
+     <zorder>titleAlign_</zorder>
+     <zorder>AlignRight</zorder>
     </widget>
    </item>
    <item>
@@ -104,16 +99,13 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>Q3ButtonGroup</class>
-   <extends>Q3GroupBox</extends>
-   <header>Qt3Support/Q3ButtonGroup</header>
+   <class>KButtonGroup</class>
+   <extends>QGroupBox</extends>
+   <header>kbuttongroup.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>AlignLeft</tabstop>
-  <tabstop>AlignHCenter</tabstop>
-  <tabstop>AlignRight</tabstop>
   <tabstop>animateButtons</tabstop>
   <tabstop>titleShadow</tabstop>
  </tabstops>
