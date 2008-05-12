@@ -19,8 +19,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef __KKWMWINDOWS_H__
-#define __KKWMWINDOWS_H__
+#ifndef KKWMWINDOWS_H
+#define KKWMWINDOWS_H
 
 #include <QWidget>
 #include <kcmodule.h>
@@ -33,9 +33,8 @@ class QComboBox;
 class QGroupBox;
 class QLabel;
 class QSlider;
-class Q3ButtonGroup;
+class KButtonGroup;
 class QSpinBox;
-class Q3VButtonGroup;
 
 class KColorButton;
 class KIntNumInput;
@@ -119,7 +118,7 @@ private:
   QCheckBox *separateScreenFocus;
   QCheckBox *activeMouseScreen;
 
-  Q3ButtonGroup *kbdBox;
+  KButtonGroup *kbdBox;
   QCheckBox    *altTabPopup;
   QCheckBox    *traverseAll;
   QCheckBox    *rollOverDesktops;
@@ -157,7 +156,7 @@ private:
   void setPlacement(int); //CT
   void setMoveResizeMaximized(bool);
 
-  Q3ButtonGroup *windowsBox;
+  KButtonGroup *windowsBox;
   QCheckBox *opaque;
   QCheckBox *resizeOpaqueOn;
   QCheckBox *geometryTipOn;
@@ -173,7 +172,7 @@ private:
   int getWindowSnapZone();
   void setWindowSnapZone( int );
 
-  Q3VButtonGroup *MagicBox;
+  KButtonGroup *MagicBox;
   KIntNumInput *BrdrSnap, *WndwSnap;
   QCheckBox *OverlapSnap;
 
@@ -204,7 +203,7 @@ private:
   void setShadeHover(bool);
   void setShadeHoverInterval(int);
 
-  Q3ButtonGroup *shBox;
+  KButtonGroup *shBox;
   QCheckBox *shadeHoverOn;
   KIntNumInput *shadeHover;
 
@@ -216,7 +215,7 @@ private:
   void setElectricBorders( int );
   void setElectricBorderDelay( int );
 
-  Q3VButtonGroup *electricBox;
+  KButtonGroup *electricBox;
   QRadioButton *active_disable;
   QRadioButton *active_move;
   QRadioButton *active_always;
@@ -229,4 +228,4 @@ private:
   QCheckBox* hideUtilityWindowsForInactive;
 };
 
-#endif // __KKWMWINDOWS_H__
+#endif // KKWMWINDOWS_H

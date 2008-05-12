@@ -23,34 +23,19 @@
 
 #include <config-workspace.h>
 
-#include <QDir>
-#include <QLayout>
-#include <QSlider>
-
-#include <Q3ButtonGroup>
-#include <QButtonGroup>
+#include <QApplication>
 #include <QCheckBox>
 #include <QRadioButton>
 #include <QLabel>
 #include <QComboBox>
-#include <QDesktopWidget>
-//Added by qt3to4:
-#include <QGridLayout>
 #include <QHBoxLayout>
-#include <QBoxLayout>
-#include <QVBoxLayout>
-#include <QTabWidget>
 #include <QtDBus/QtDBus>
+#include <QDesktopWidget>
 
-#include <kmessagebox.h>
+#include <KButtonGroup>
 #include <klocale.h>
-#include <kcolorbutton.h>
-#include <kconfig.h>
 #include <knuminput.h>
-#include <kapplication.h>
 #include <kdialog.h>
-#include <kglobal.h>
-#include <kprocess.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -108,8 +93,6 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout(this);
-    lay->setMargin(0);
-    lay->setSpacing(KDialog::spacingHint());
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -128,7 +111,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     fcsBox = new QGroupBox(i18n("Focus"),this);
 
     QBoxLayout *fLay = new QVBoxLayout();
-    fLay->setSpacing(KDialog::spacingHint());
+
     fcsBox->setLayout( fLay );
 
     QBoxLayout *cLay = new QHBoxLayout();
@@ -240,11 +223,9 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     lay->addWidget(fcsBox);
 
-    kbdBox = new Q3ButtonGroup(i18n("Navigation"), this);
-    kbdBox->setColumnLayout( 0, Qt::Horizontal );
-    QVBoxLayout *kLay = new QVBoxLayout();
-    kLay->setSpacing(KDialog::spacingHint());
-    kbdBox->layout()->addItem( kLay );
+    kbdBox = new KButtonGroup(this);
+    kbdBox->setTitle(i18n("Navigation"));
+    QVBoxLayout *kLay = new QVBoxLayout(kbdBox);
 
     altTabPopup = new QCheckBox( i18n("Show window list while switching windows"), kbdBox );
     kLay->addWidget( altTabPopup );
@@ -260,6 +241,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
                  " activated window will be sent to the back in this mode.");
     altTabPopup->setWhatsThis( wtstr );
     connect(focusCombo, SIGNAL(activated(int)), this, SLOT(updateAltTabMode()));
+    kLay->addWidget(altTabPopup);
 
     traverseAll = new QCheckBox( i18n( "&Traverse windows on all desktops" ), kbdBox );
     kLay->addWidget( traverseAll );
@@ -267,6 +249,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     wtstr = i18n( "Leave this option disabled if you want to limit walking through"
                   " windows to the current desktop." );
     traverseAll->setWhatsThis( wtstr );
+    kLay->addWidget(traverseAll);
 
     rollOverDesktops = new QCheckBox( i18n("Desktop navi&gation wraps around"), kbdBox );
     kLay->addWidget(rollOverDesktops);
@@ -274,6 +257,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     wtstr = i18n( "Enable this option if you want keyboard or active desktop border navigation beyond"
                   " the edge of a desktop to take you to the opposite edge of the new desktop." );
     rollOverDesktops->setWhatsThis( wtstr );
+    kLay->addWidget(rollOverDesktops);
 
     showPopupinfo = new QCheckBox( i18n("Popup desktop name on desktop &switch"), kbdBox );
     kLay->addWidget(showPopupinfo);
@@ -281,6 +265,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     wtstr = i18n( "Enable this option if you wish to see the current desktop"
                   " name popup whenever the current desktop is changed." );
     showPopupinfo->setWhatsThis( wtstr );
+    kLay->addWidget(showPopupinfo);
 
     lay->addWidget(kbdBox);
 
@@ -562,8 +547,6 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this);
-    lay->setMargin(0);
-    lay->setSpacing(KDialog::spacingHint());
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -578,11 +561,14 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     //lay->addWidget(plcBox);
 
-    shBox = new Q3VButtonGroup(i18n("Shading"), this);
+    shBox = new KButtonGroup(this);
+    shBox->setTitle(i18n("Shading"));
+    QVBoxLayout *kLay = new QVBoxLayout(shBox);
 
     shadeHoverOn = new QCheckBox(i18n("&Enable hover"), shBox);
 
     connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
+    kLay->addWidget(shadeHoverOn);
 
     shadeHover = new KIntNumInput(500, shBox);
     shadeHover->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
@@ -596,6 +582,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     wtstr = i18n("Sets the time in milliseconds before the window unshades "
                 "when the mouse pointer goes over the shaded window.");
     shadeHover->setWhatsThis( wtstr);
+    kLay->addWidget(shadeHover);
 
     lay->addWidget(shBox);
 
@@ -603,15 +590,19 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
 
-    electricBox = new Q3VButtonGroup(i18n("Active Desktop Borders"), this);
-    electricBox->layout()->setMargin(15);
+    electricBox = new KButtonGroup(this);
+    electricBox->setTitle(i18n("Active Desktop Borders"));
+    QVBoxLayout *bLay = new QVBoxLayout(electricBox);
 
     electricBox->setWhatsThis( i18n("If this option is enabled, moving the mouse to a screen border"
        " will change your desktop. This is e.g. useful if you want to drag windows from one desktop"
        " to the other.") );
     active_disable = new QRadioButton(i18n("D&isabled"), electricBox);
+    bLay->addWidget(active_disable);
     active_move    = new QRadioButton(i18n("Only &when moving windows"), electricBox);
+    bLay->addWidget(active_move);
     active_always  = new QRadioButton(i18n("A&lways enabled"), electricBox);
+    bLay->addWidget(active_always);
 
     delays = new KIntNumInput(10, electricBox);
     delays->setRange(0, MAX_EDGE_RES, 50);
@@ -620,6 +611,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     delays->setWhatsThis( i18n("Here you can set a delay for switching desktops using the active"
        " borders feature. Desktops will be switched after the mouse has been pushed against a screen border"
        " for the specified number of milliseconds.") );
+    bLay->addWidget(delays);
 
     connect( electricBox, SIGNAL(clicked(int)), this, SLOT(setEBorders()));
 
@@ -630,7 +622,6 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     lay->addWidget(electricBox);
 
     QHBoxLayout* focusStealingLayout = new QHBoxLayout();
-    focusStealingLayout->setSpacing(KDialog::spacingHint());
     lay->addLayout( focusStealingLayout );
     QLabel* focusStealingLabel = new QLabel( i18n( "Focus stealing prevention level:" ), this );
     focusStealing = new QComboBox( this );
@@ -811,15 +802,11 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout (this);
-    lay->setMargin(0);
-    lay->setSpacing(KDialog::spacingHint());
 
-    windowsBox = new Q3ButtonGroup(i18n("Windows"), this);
-    windowsBox->setColumnLayout( 0, Qt::Horizontal );
+    windowsBox = new KButtonGroup(this);
+    windowsBox->setTitle(i18n("Windows"));
 
-    QBoxLayout *wLay = new QVBoxLayout ();
-    wLay->setSpacing(KDialog::spacingHint());
-    windowsBox->layout()->addItem( wLay );
+    QBoxLayout *wLay = new QVBoxLayout (windowsBox);
 
     QBoxLayout *bLay = new QVBoxLayout;
     wLay->addLayout(bLay);
@@ -912,8 +899,9 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
 
 
     //CT 15mar98 - add EdgeResistance, BorderAttractor, WindowsAttractor config
-    MagicBox = new Q3VButtonGroup(i18n("Snap Zones"), this);
-    MagicBox->layout()->setMargin(15);
+    MagicBox = new KButtonGroup(this);
+    MagicBox->setTitle(i18n("Snap Zones"));
+    QVBoxLayout *kLay = new QVBoxLayout(MagicBox);
 
     BrdrSnap = new KIntNumInput(10, MagicBox);
     BrdrSnap->setSpecialValueText( i18n("none") );
@@ -923,6 +911,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     BrdrSnap->setWhatsThis( i18n("Here you can set the snap zone for screen borders, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the border when"
                                     " moved near it.") );
+    kLay->addWidget(BrdrSnap);
 
     WndwSnap = new KIntNumInput(10, MagicBox);
     WndwSnap->setSpecialValueText( i18n("none") );
@@ -932,11 +921,13 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
                                     " they are moved near another window.") );
+    kLay->addWidget(WndwSnap);
 
     OverlapSnap=new QCheckBox(i18n("Snap windows onl&y when overlapping"),MagicBox);
     OverlapSnap->setWhatsThis( i18n("Here you can set that windows will be only"
                                        " snapped if you try to overlap them, i.e. they will not be snapped if the windows"
                                        " comes only near another window or border.") );
+    kLay->addWidget(OverlapSnap);
 
     lay->addWidget(MagicBox);
     lay->addStretch();
