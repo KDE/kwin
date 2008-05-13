@@ -728,10 +728,15 @@ void SceneOpenGL::paintBackground( QRegion region )
     PaintClipper pc( region );
     if( !PaintClipper::clip())
         {
+        glPushAttrib( GL_COLOR_BUFFER_BIT );
         glClearColor( 0, 0, 0, 1 ); // black
         glClear( GL_COLOR_BUFFER_BIT );
+        glPopAttrib();
         return;
         }
+    if( clip() && pc.paintArea().isEmpty())
+        return; // no background to paint
+    glPushAttrib( GL_CURRENT_BIT );
     glColor4f( 0, 0, 0, 1 ); // black
     for( PaintClipper::Iterator iterator;
          !iterator.isDone();
@@ -745,6 +750,7 @@ void SceneOpenGL::paintBackground( QRegion region )
         glVertex2i( r.x(), r.y() + r.height());
         glEnd();
         }
+    glPopAttrib();
     }
 
 void SceneOpenGL::windowAdded( Toplevel* c )
