@@ -734,7 +734,7 @@ void SceneOpenGL::paintBackground( QRegion region )
         glPopAttrib();
         return;
         }
-    if( clip() && pc.paintArea().isEmpty())
+    if( pc.clip() && pc.paintArea().isEmpty())
         return; // no background to paint
     glPushAttrib( GL_CURRENT_BIT );
     glColor4f( 0, 0, 0, 1 ); // black
