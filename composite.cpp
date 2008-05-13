@@ -300,6 +300,12 @@ void Workspace::performCompositing()
         windows.removeAll( t );
         windows.append( t );
         }
+    // skip windows that are not yet ready for being painted
+    ToplevelList tmp = windows;
+    windows.clear();
+    foreach( Toplevel* c, tmp )
+        if( c->readyForPainting())
+            windows.append( c );
     foreach( Toplevel* c, windows )
         { // This could be possibly optimized WRT obscuring, but that'd need being already
           // past prePaint() phase - probably not worth it.
@@ -308,11 +314,6 @@ void Workspace::performCompositing()
         repaints_region |= c->repaints().translated( c->pos());
         c->resetRepaints( c->rect());
         }
-    ToplevelList tmp = windows;
-    windows.clear();
-    foreach( Toplevel* c, tmp )
-        if( c->readyForPainting())
-            windows.append( c );
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
