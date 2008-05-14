@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  XDamage (again the protocol):
  http://gitweb.freedesktop.org/?p=xorg/proto/damageproto.git;a=blob_plain;hb=HEAD;f=damageproto.txt
 
+ Paper including basics on compositing, XGL vs AIGLX, XRender vs OpenGL, etc.:
+ http://www.vis.uni-stuttgart.de/~hopf/pub/LinuxTag2007_compiz_NextGenerationDesktop_Paper.pdf
+ 
  Composite HOWTO from Fredrik:
  http://ktown.kde.org/~fredrik/composite_howto.html
 
