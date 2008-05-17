@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Dialog Parent
+Name[af]=Voorafgaande dialoog
 Name[be]=Бацькоўскае акно
 Name[bg]=Редактор на диалози
 Name[ca]=Diàleg principal
@@ -53,6 +54,7 @@ Name[zh_CN]=上层对话框
 Name[zh_TW]=上層對話框
 Icon=preferences-system-windows-effect-dialog-parent
 Comment=Darkens parent windows of active dialogs
+Comment[af]=Verdonker ouer-vensters van aktiewe dialoogvenster
 Comment[bg]=Потъмнение на главните от активните прозорци
 Comment[ca]=Enfosqueix les finestres mares dels diàlegs actius
 Comment[da]=Gør forældrevinduer til aktive dialoger mørke

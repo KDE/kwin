@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_invert
 X-KDE-PluginKeyword=invert
 
 Name=Invert
+Name[af]=Keer om
 Name[be]=Інвертаваць
 Name[bg]=Инвертиране
 Name[ca]=Inverteix

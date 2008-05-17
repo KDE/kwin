@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_magnifier
 X-KDE-PluginKeyword=magnifier
 
 Name=Magnifier
+Name[af]=Vergroter
 Name[be]=Павелічальная лупа
 Name[ca]=Lupa
 Name[csb]=Zwikszanié

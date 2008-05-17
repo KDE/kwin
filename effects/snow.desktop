@@ -1,6 +1,7 @@
 [Desktop Entry]
 # Name of the effect
 Name=Snow
+Name[af]=Sneeu
 Name[ca]=Neu
 Name[de]=Schnee
 Name[el]=Χιόνι
@@ -8,9 +9,9 @@ Name[eo]=Neĝo
 Name[es]=Nieve
 Name[et]=Lumi
 Name[fi]=Lumisade
+Name[fr]=Neige
 Name[ga]=Sneachta
 Name[gu]=બરફ
-Name[hu]=Hóesés
 Name[km]=ធ្លាក់​ព្រឹល
 Name[ko]=눈
 Name[ku]=Berf
@@ -32,6 +33,7 @@ Name[x-test]=xxSnowxx
 Name[zh_CN]=雪飘
 Name[zh_TW]=下雪
 Comment=Let it snow on the desktop
+Comment[af]=Laat dit op die werkskerm sneeu
 Comment[ca]=Posa neu a l'escriptori
 Comment[de]=Lässt Schnee auf Ihre Arbeitsfläche fallen
 Comment[el]=Χιόνι στην επιφάνεια εργασίας
@@ -39,9 +41,9 @@ Comment[eo]=Neĝu sur la labortablo
 Comment[es]=Nieva en los escritorios
 Comment[et]=Lumesadu töölaual
 Comment[fi]=Näyttää lumisadetta työpöydällä
+Comment[fr]=Il neige sur votre bureau
 Comment[ga]=Sneachta ar an deasc
 Comment[gu]=ડેસ્કટોપ પર બરફ પડવા દો
-Comment[hu]=Hóesés effekt az asztal felületén
 Comment[ja]=デスクトップに雪を降らせます
 Comment[km]=អនុញ្ញាត​ឲ្យ​វា​ធ្លាក់​ព្រឹល​នៅលើ​ផ្ទៃតុ
 Comment[ko]=데스크톱에 눈이 오도록 합니다

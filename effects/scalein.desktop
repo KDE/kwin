@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Scale In
+Name[af]=Rek-verskyn
 Name[bg]=Увеличаване
 Name[ca]=Escalat
 Name[da]=Skalér ind
@@ -51,6 +52,7 @@ Name[zh_CN]=拉近
 Name[zh_TW]=縮放
 Icon=preferences-system-windows-effect-scale-in
 Comment=Animates appearing of windows
+Comment[af]=Animeer die verskyning van vensters
 Comment[bg]=Анимирано показване на прозорците
 Comment[ca]=Anima l'aparició de finestres
 Comment[da]=Animerer vinduers fremkomst

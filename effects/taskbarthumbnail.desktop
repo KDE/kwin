@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Taskbar Thumbnails
+Name[af]=Taakbalk duimnaels
 Name[ca]=Miniatures a la barra de tasques
 Name[csb]=Miniaturczi listwë dzejaniów
 Name[da]=Opgavelinjeminiaturer
@@ -45,6 +46,7 @@ Name[zh_CN]=任务栏缩略图
 Name[zh_TW]=工作列縮圖
 Icon=preferences-system-windows-effect-taskbarthumbnail
 Comment=Shows window thumbnails when cursor is on their taskbar entry
+Comment[af]=Wys vensters se duimnaels wanneer die wyser oor die taakbalk is
 Comment[bg]=Показване на умалени копия, когато курсора е върху лентата с инструменти
 Comment[ca]=Mostra una miniatura de la finestra quan el cursor està sobre la seva entrada de la barra de tasques
 Comment[da]=Viser miniaturer af vinduer når markøren er i deres opgavelinjeindgang

@@ -11,6 +11,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=window-behaviour
 
 Name=Window-Specific
+Name[af]=Vensterspesifike instellings
 Name[be]=Настаўленні для асобных вокнаў
 Name[bg]=Потребителски
 Name[ca]=Específic de finestra
@@ -117,7 +118,8 @@ Comment[ta]=KDE செயல்திறனை அதிகப்படுத்
 Comment[th]=ปรับแต่งหน้าต่างเฉพาะตามที่ค่าต่าง ๆ ที่เจาะจง
 Comment[tr]=Bir pencere için özel olan seçenekleri yapılandır
 Comment[uk]=Налаштування параметрів для окремого типу вікон
-Comment[uz]=Ойнага оид бўлган мосламаларни мослаш
+Comment[uz]=Oynaga oid boʻlgan moslamalarni moslash
+Comment[uz@cyrillic]=Ойнага оид бўлган мосламаларни мослаш
 Comment[vi]=Thiết lập cài đặt dành riêng cho cửa sổ
 Comment[wa]=Apontiaedjes specifikes po on purnea
 Comment[x-test]=xxConfigure settings specifically for a windowxx

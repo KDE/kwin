@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Fade
+Name[af]=Vervaag
 Name[be]=Павольнае знікненне
 Name[ca]=Apagat gradual
 Name[da]=Udtone
@@ -51,10 +52,12 @@ Name[zh_CN]=淡入淡出
 Name[zh_TW]=淡出
 Icon=preferences-system-windows-effect-fade
 Comment=Makes windows smoothly fade in/out when they are shown or hidden
+Comment[af]=Laat vensters egalig vervaag/verhelder met verberging of vertoning
 Comment[ca]=Fa que les finestres s'encenguin/apaguin de manera gradual quan es mostren o s'oculten
 Comment[el]=Κάνει τα παράθυρα να εμφανίζονται/αποκρύπτονται ομαλά
 Comment[et]=Paneb aknad sujuvalt hääbuma või tugevnema, kui need peidetakse või nähtavale tuuakse
 Comment[fi]=Ikkunat tulevat näkyviin tai poistuvat näkyvistä pehmeästi häivyttäen
+Comment[fr]=Les fenêtres s'estompent ou apparaissent en fondu lorsqu'elles sont affichées ou cachées
 Comment[ga]=Leis seo, céimneoidh fuinneoga isteach/amach agus iad á dtaispeáint nó á bhfolú
 Comment[gu]=જ્યારે વિન્ડો બતાવવામાં અથવા છુપાવવામાં આવે છે ત્યારે તેમને સરળતાથી ઝાંખી અથવા પ્રકાશિત કરે છે
 Comment[ja]=ウィンドウの表示/非表示を切り替えるときに滑らかにフェードイン/フェードアウトします

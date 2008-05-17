@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Magnifier
+Name[af]=Vergroter
 Name[be]=Павелічальная лупа
 Name[ca]=Lupa
 Name[csb]=Zwikszanié
@@ -54,6 +55,7 @@ Name[zh_CN]=放大镜
 Name[zh_TW]=放大鏡
 Icon=preferences-system-windows-effect-magnifier
 Comment=Magnifies the part of the screen that is under the mouse
+Comment[af]=Vergroot die deel van die skerm wat onder die muiswyser is
 Comment[bg]=Увеличава частта от екрана под мишката
 Comment[ca]=Amplia la part de la pantalla que està sota el ratolí
 Comment[da]=Forstørrer den del af skærmen som er under musen

@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=Flip Switch
+Name[af]=Wissel skakelaar
 Name[el]=Εναλλαγή πλαισίου
 Name[eo]=Turna ŝanĝilo
 Name[es]=Alternar conmutador
 Name[et]=Aknalehitseja
 Name[fi]=Kääntövaihtaja
+Name[fr]=Changement en boîte
 Name[gu]=ફ્લિપ સ્વિચ
 Name[km]=ប្ដូរ​ការ​ត្រឡប់​
 Name[ko]=플립 전환기
@@ -23,10 +25,12 @@ Name[zh_CN]=翻转切换
 Name[zh_TW]=翻轉切換
 Icon=preferences-system-windows-effect-flipswitch
 Comment=Alt-Tab window switcher flipping through windows on a stack
+Comment[af]=Alt-Tab vensterwisselling blaai deur vensters op 'n stapel
 Comment[ca]=Commutador de finestres amb Alt-Tab que intercanvia les finestres en un pila
 Comment[el]=Εναλλαγή παραθύρων Alt-Tab με τα παράθυρα ως στοίβα
 Comment[et]=Alt+TAB akende lülitaja, mis lappab pinus olevaid aknaid
 Comment[fi]=Alt+Tab-ikkunavaihtaja pinossa olevien ikkunoiden vaihtamiseksi
+Comment[fr]=Sélecteur de fenêtre « Alt + Tab » qui organise les fenêtres en piles
 Comment[ga]=Malartóir fuinneog Alt-Táb a ransaíonn fuinneoga i gcruach
 Comment[gu]=અલ્ટ-ટેબ વિન્ડો બદલનાર વિન્ડોને એક પછી એક બદલે છે
 Comment[km]=ជំនួស(Alt)-ថេប(tab) កម្មវិធី​ប្ដូរ​បង្អួច​ត្រឡប់​តាមរយៈ​បង្អួច​នៅ​លើ​ជង់

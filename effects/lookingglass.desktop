@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Looking Glass
+Name[af]=Vergrootglas
 Name[ca]=Aparença de vidre
 Name[da]=Kikkert
 Name[es]=Espejo
@@ -35,6 +36,7 @@ Name[x-test]=xxLooking Glassxx
 Name[zh_CN]=镜射
 Name[zh_TW]=鏡射
 Comment=Looking Glass enhanced magnifier
+Comment[af]=Vergrootglas om beter te sien
 Comment[bg]=Лупа
 Comment[ca]=Ampliació millorada amb aparença de vidre
 Comment[da]=Forbedret forstørrelsesglas til kikkert

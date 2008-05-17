@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Fall Apart
+Name[af]=Val uitmekaar
 Name[ca]=Trencament
 Name[da]=Gå i stykker
 Name[de]=Auseinanderfallen
@@ -45,6 +46,7 @@ Name[zh_CN]=坠落
 Name[zh_TW]=破裂
 Icon=preferences-system-windows-effect-fallapart
 Comment=Closed windows fall into pieces
+Comment[af]=Toegemaakte venster val in stukke uitmekaar
 Comment[ca]=Les finestres tancades es trenquen en peces
 Comment[da]=Lukkede vinduer falder i små stykker
 Comment[de]=Geschlossene Fenster fallen auseinander

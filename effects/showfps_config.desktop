@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_showfps
 X-KDE-PluginKeyword=showfps
 
 Name=Show FPS
+Name[af]=Wys FPS
 Name[ar]=أظهر FPS
 Name[bg]=Показване на к/с
 Name[ca]=Mostra els FPS

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Thumbnail Aside
+Name[af]=Duimnael langsaan
 Name[bg]=Манипулатор на мини изображения
 Name[ca]=Miniatures de costat
 Name[da]=Væk med miniature
@@ -48,6 +49,7 @@ Name[x-test]=xxThumbnail Asidexx
 Name[zh_CN]=旁边缩略图
 Icon=preferences-system-windows-effect-thumbnailaside
 Comment=Shows window's thumbnail at the edge of the screen
+Comment[af]=Vertoon die venster se duimnael aan die kant van die skerm
 Comment[ca]=Mostra les miniatures de les finestres a la vora de la pantalla
 Comment[da]=Viser miniaturer af vinduer ved kanten af skærmen
 Comment[de]=Zeigt Vorschaubilder von Fenstern in einer Bildschirmecke an

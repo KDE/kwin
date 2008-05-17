@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_videorecord
 X-KDE-PluginKeyword=videorecord
 
 Name=Video Record
+Name[af]=Video-opneem
 Name[ar]=تسجيل المرئيات
 Name[be]=Відэазапіс
 Name[bg]=Запис на звук

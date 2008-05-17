@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Logout
+Name[af]=Afteken
 Name[be]=Выйсці
 Name[bg]=Изход
 Name[ca]=Sortida
@@ -53,6 +54,7 @@ Name[zh_CN]=注销
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Logout visual effect
+Comment[af]=Visuele effek tydens afteken
 Comment[ca]=Efecte visual en finalitzar la sessió
 Comment[da]=Visuel effekt på log ud
 Comment[de]=Visueller Abmeldeeffekt

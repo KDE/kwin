@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Explosion
+Name[af]=Ontploffing
 Name[br]=Tarzhad
 Name[ca]=Explosió
 Name[csb]=Wëbùch
@@ -48,10 +49,12 @@ Name[zh_CN]=爆炸
 Name[zh_TW]=爆炸
 Icon=preferences-system-windows-effect-explosion
 Comment=Makes windows explode when they are closed
+Comment[af]=Laat vensters ontplof wanneer hulle toegemaak word
 Comment[ca]=Provoca l'explosió de les finestres quan es tanquen
 Comment[el]=Έκρηξη των παραθύρων κατά το κλείσιμο
 Comment[et]=Paneb aknad sulgemisel plahvatama
 Comment[fi]=Räjäyttää ikkunat suljettaessa
+Comment[fr]=Fait exploser les fenêtres lorsqu'elles sont fermées
 Comment[ga]=Leis seo, pléascfaidh fuinneoga nuair a dhúntar iad
 Comment[gu]=જ્યારે વિન્ડો બંધ થાય છે ત્યારે તેમને ધડાકાભેર બંધ કરે છે
 Comment[ja]=ウィンドウを閉じるときに爆発させます

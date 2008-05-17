@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Shadow
+Name[af]=Skaduwee
 Name[be]=Цень
 Name[bg]=Сянка
 Name[ca]=Ombra
@@ -54,6 +55,7 @@ Name[zh_CN]=阴影
 Name[zh_TW]=陰影
 Icon=preferences-system-windows-effect-shadow
 Comment=Adds shadow under the windows
+Comment[af]=Voeg skaduwees onderaan vensters
 Comment[ar]=يضيف الظل تحت النوافذ
 Comment[bg]=Добавяне на сянка под прозорците
 Comment[ca]=Afegeix ombra a sota les finestres

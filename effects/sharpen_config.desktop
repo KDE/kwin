@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_sharpen
 X-KDE-PluginKeyword=sharpen
 
 Name=Sharpen
+Name[af]=Verskerp
 Name[bg]=Отчетливост
 Name[ca]=Aguditza
 Name[csb]=Wëòstrzëc

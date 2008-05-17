@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Invert
+Name[af]=Keer om
 Name[be]=Інвертаваць
 Name[bg]=Инвертиране
 Name[ca]=Inverteix
@@ -51,11 +52,13 @@ Name[x-test]=xxInvertxx
 Name[zh_CN]=反转
 Name[zh_TW]=反轉
 Comment=Inverts (negates) desktop colors
+Comment[af]=Keer werkskermkleure om (maak negatief)
 Comment[ca]=Inverteix (converteix en negatiu) els colors de l'escriptori
 Comment[el]=Αντιστρέφει τα χρώματα της επιφάνειας εργασίας
 Comment[en_GB]=Inverts (negates) desktop colours
 Comment[et]=Muudab töölaua värvid vastupidiseks
 Comment[fi]=Kääntää työpöydän värit
+Comment[fr]=Inverse (met en négatif) les couleurs du bureau
 Comment[ga]=Inbhéartaigh dathanna na deisce
 Comment[gu]=ડેસ્કટોપ રંગને ઉલ્ટો (ઋણ) કરે છે
 Comment[ja]=デスクトップの色を反転させます

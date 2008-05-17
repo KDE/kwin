@@ -11,6 +11,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=appearance
 
 Name=Windows
+Name[af]=Vensters
 Name[be]=Вокны
 Name[bg]=Прозорци
 Name[ca]=Finestres
@@ -61,7 +62,7 @@ Name[x-test]=xxWindowsxx
 Name[zh_CN]=窗口
 
 Comment=Configure the look and feel of window titles
-Comment[af]=Stel die uitdrukking en gevoek van venster titels op
+Comment[af]=Stel die lyk-en-gevoel van venstertitels
 Comment[ar]=اضبط المظهر والسمِة لعناوين النوافذ
 Comment[be]=Настаўленні вонкавага выгляду загалоўкаў вокнаў
 Comment[bg]=Настройване външния вид на прозорците
@@ -121,7 +122,8 @@ Comment[tg]=Танзими намо ва ҳиси унвони тиреза
 Comment[th]=ปรับแต่งลักษณะรูปลักษณ์ของแถบหัวเรื่องหน้าต่าง
 Comment[tr]=Pencere başlıklarını görünümlerini yapılandır
 Comment[uk]=Налаштування вигляду та поведінки заголовків вікон
-Comment[uz]=Ойна сарлавҳасининг ташқи кўринишини мослаш
+Comment[uz]=Oyna sarlavhasining tashqi koʻrinishini moslash
+Comment[uz@cyrillic]=Ойна сарлавҳасининг ташқи кўринишини мослаш
 Comment[vi]=Cấu hình giao diện và cảm nhận cho tên cửa sổ
 Comment[wa]=Apontyî li rivnance eyet l' dujhance des tites des purneas
 Comment[x-test]=xxConfigure the look and feel of window titlesxx

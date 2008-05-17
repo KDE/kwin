@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_lookingglass
 X-KDE-PluginKeyword=lookingglass
 
 Name=Looking Glass
+Name[af]=Vergrootglas
 Name[ca]=Aparença de vidre
 Name[da]=Kikkert
 Name[es]=Espejo

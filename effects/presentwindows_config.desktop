@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_presentwindows
 X-KDE-PluginKeyword=presentwindows
 
 Name=Present Windows
+Name[af]=Wys vensters
 Name[ar]=نوافذ حديثة
 Name[be]=Існуючыя вокны
 Name[bg]=Представяне на прозорци

@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_diminactive
 X-KDE-PluginKeyword=diminactive
 
 Name=Dim Inactive
+Name[af]=Verdof wanneer onaktief
 Name[bg]=Замъгляване на неактивния
 Name[ca]=Apaga les inactives
 Name[da]=Gør inaktiv mat

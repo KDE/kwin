@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sharpen
+Name[af]=Verskerp
 Name[bg]=Отчетливост
 Name[ca]=Aguditza
 Name[csb]=Wëòstrzëc
@@ -50,6 +51,7 @@ Name[x-test]=xxSharpenxx
 Name[zh_CN]=锐化
 Name[zh_TW]=讓輪廓更分明
 Comment=Makes your desktop look sharper
+Comment[af]=Laat jou werkskerm skerper vertoon
 Comment[bg]=Прави работния плот по-отчетлив
 Comment[ca]=Fa que l'escriptori sembli més definit
 Comment[da]=Får din desktop til at se skarpere ud

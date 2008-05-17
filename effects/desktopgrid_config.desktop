@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_desktopgrid
 X-KDE-PluginKeyword=desktopgrid
 
 Name=Desktop Grid
+Name[af]=Werkskerm rooster
 Name[ar]=شبكية سطح المكتب
 Name[be]=Сетка на працоўны стол
 Name[bg]=Работен плот

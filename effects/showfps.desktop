@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Show FPS
+Name[af]=Wys FPS
 Name[ar]=أظهر FPS
 Name[bg]=Показване на к/с
 Name[ca]=Mostra els FPS
@@ -53,6 +54,7 @@ Name[zh_CN]=显示 FPS
 Name[zh_TW]=顯示每秒幾張
 Icon=preferences-system-windows-effect-fps-show
 Comment=Shows KWin's performance
+Comment[af]=Wys KWin se werkverrigting
 Comment[ar]=أظهر أداء KWin's
 Comment[be]=Паказаць хуткасць працы KWin
 Comment[bg]=Производителност

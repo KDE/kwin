@@ -11,6 +11,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=desktop
 
 Name=Desktop Effects
+Name[af]=Werkskerm-effekte
 Name[ar]=تأثيرات سطح المكتب
 Name[be]=Эфекты працоўнага стала
 Name[bg]=Ефекти на работните плотове
@@ -66,6 +67,7 @@ Name[zh_CN]=桌面效果
 Name[zh_TW]=桌面效果
 
 Comment=Configure desktop effects
+Comment[af]=Konfigureer die werkskerm-effekte
 Comment[ar]=اضبط تأثيرات سطح المكتب
 Comment[be]=Настаўленні эфектаў стала
 Comment[bg]=Настройване активирането на прозорците

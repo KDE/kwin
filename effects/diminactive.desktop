@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Dim Inactive
+Name[af]=Verdof wanneer onaktief
 Name[bg]=Замъгляване на неактивния
 Name[ca]=Apaga les inactives
 Name[da]=Gør inaktiv mat
@@ -47,6 +48,7 @@ Name[x-test]=xxDim Inactivexx
 Name[zh_CN]=暗淡未激活
 Icon=preferences-system-windows-effect-dim-inactive
 Comment=Darkens inactive windows
+Comment[af]=Verdonker onaktiewe vensters
 Comment[bg]=Потъмнява неактивните прозорци
 Comment[ca]=Enfosqueix les finestres inactives
 Comment[cs]=Ztmavuje neaktivní okna

@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_mousemark
 X-KDE-PluginKeyword=mousemark
 
 Name=Mouse Mark
+Name[af]=Muismerk
 Name[be]=Адметка мышы
 Name[bg]=Чертане с мишка
 Name[ca]=Marca amb el ratolí

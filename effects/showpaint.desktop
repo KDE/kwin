@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Show Paint
+Name[af]=Wys inkleur
 Name[ca]=Mostra la pintura
 Name[csb]=Pòkôżë Paint
 Name[da]=Vis tegning
@@ -44,6 +45,7 @@ Name[zh_CN]=显示绘图
 Name[zh_TW]=顯示繪製
 Icon=preferences-system-windows-effect-paint-show
 Comment=Shows areas painted by KWin
+Comment[af]=Wys areas waar KWin ingekleur het
 Comment[ca]=Mostra les àrees pintades pel KWin
 Comment[da]=Viser områder som er tegnet af KWin
 Comment[de]=Zeigt die Bereiche an, die von KWin (der Fensterverwaltung) gezeichnet werden
