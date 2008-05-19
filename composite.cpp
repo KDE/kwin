@@ -87,6 +87,11 @@ void Workspace::setupCompositing()
         kDebug( 1212 ) << "Compositing is turned off in options";
         return;
         }
+    else if( compositingSuspended )
+        {
+        kDebug( 1212 ) << "Compositing is suspended";
+        return;
+        }
     else if( !CompositingPrefs::compositingPossible() )
         {
         kError( 1212 ) << "Compositing is not possible";
@@ -255,6 +260,14 @@ void Workspace::lostCMSelection()
     {
     kDebug( 1212 ) << "Lost compositing manager selection";
     finishCompositing();
+    }
+
+// for the shortcut
+void Workspace::slotToggleCompositing()
+    {
+    compositingSuspended = !compositingSuspended;
+    finishCompositing();
+    setupCompositing(); // will do nothing if suspended
     }
 
 void Workspace::addRepaint( int x, int y, int w, int h )

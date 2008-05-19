@@ -456,6 +456,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         void slotSetupWindowShortcut();
         void setupWindowShortcutDone( bool );
+        void slotToggleCompositing();
 
         void updateClientArea();
 
@@ -718,6 +719,7 @@ class Workspace : public QObject, public KDecorationDefines
         friend class StackingUpdatesBlocker;
 
         KSelectionOwner* cm_selection;
+        bool compositingSuspended;
         QTimer compositeTimer;
         QTime lastCompositePaint;
         int compositeRate;

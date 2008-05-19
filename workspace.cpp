@@ -134,6 +134,7 @@ Workspace::Workspace( bool restore )
     block_stacking_updates( 0 ),
     forced_global_mouse_grab( false ),
     cm_selection( NULL ),
+    compositingSuspended( false ),
     compositeRate( 0 ),
     overlay( None ),
     overlay_visible( true ),
@@ -1034,7 +1035,7 @@ void Workspace::slotReconfigure()
         updateCurrentTopMenu();
         }
 
-    if( options->useCompositing )
+    if( options->useCompositing && !compositingSuspended )
     {
         setupCompositing();
         if( effects ) // setupCompositing() may fail
