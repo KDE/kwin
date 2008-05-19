@@ -225,6 +225,8 @@ QRect Workspace::clientArea( clientAreaOption opt, int screen, int desktop ) con
     {
     if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
+    if( screen == -1 )
+        screen = activeScreen();
     QDesktopWidget *desktopwidget = KApplication::desktop();
     QRect sarea = !screenarea.isEmpty() // may be empty during KWin initialization
         ? screenarea[ desktop ][ screen ]
