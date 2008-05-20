@@ -621,14 +621,14 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry)
 
 void WobblyWindowsEffect::freeWobblyInfo(WindowWobblyInfos& wwi) const
 {
-    delete wwi.origin;
-    delete wwi.position;
-    delete wwi.velocity;
-    delete wwi.acceleration;
-    delete wwi.buffer;
-    delete wwi.constraint;
+    delete[] wwi.origin;
+    delete[] wwi.position;
+    delete[] wwi.velocity;
+    delete[] wwi.acceleration;
+    delete[] wwi.buffer;
+    delete[] wwi.constraint;
 
-    delete wwi.bezierSurface;
+    delete[] wwi.bezierSurface;
 }
 
 WobblyWindowsEffect::Pair WobblyWindowsEffect::computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const
@@ -1175,12 +1175,12 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
     if (wwi.status != Moving && acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity)
     {
-        freeWobblyInfo(wwi);
-        windows.remove(w);
         if (wwi.status == Closing)
         {
             w->unrefWindow();
         }
+        freeWobblyInfo(wwi);
+        windows.remove(w);
         return false;
     }
 
