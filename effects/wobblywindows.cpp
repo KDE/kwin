@@ -10,7 +10,6 @@ License. See the file "COPYING" for the exact licensing terms.
 
 
 #include "wobblywindows.h"
-#include "wobblywindows_constants.h"
 
 #include <kdebug.h>
 #include <kconfiggroup.h>
@@ -38,6 +37,23 @@ License. See the file "COPYING" for the exact licensing terms.
 
 namespace KWin
 {
+
+static const qreal STIFFNESS = 0.06;
+static const qreal DRAG = 0.92;
+static const qreal MOVEFACTOR = 0.1;
+
+static const int XTESSELATION = 20;
+static const int YTESSELATION = 20;
+
+static const qreal MINVELOCITY = 0.0;
+static const qreal MAXVELOCITY = 1000.0;
+static const qreal STOPVELOCITY = 3.0;
+static const qreal MINACCELERATION = 0.0;
+static const qreal MAXACCELERATION = 1000.0;
+static const qreal STOPACCELERATION = 5.0;
+
+static const char* VELOCITYFILTER = "HeightRingLinearMean";
+static const char* ACCELERATIONFILTER = "HeightRingLinearMean";
 
 struct ParameterSet
 {
