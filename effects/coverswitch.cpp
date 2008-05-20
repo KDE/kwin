@@ -311,6 +311,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             frameRect.height()*0.8f );
         icon->render( region, iconRect);
         icon->unbind();
+        delete icon;
         glDisable( GL_BLEND );
         glPopAttrib();
         }
