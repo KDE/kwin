@@ -85,7 +85,7 @@ void WobblyWindowsEffectConfig::save()
     conf.writeEntry("WobblynessLevel", m_ui.slWobblyness->value());
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage("kwin4_effect_wobblywindows");
+    EffectsHandler::sendReloadMessage("wobblywindows");
 }
 
 void WobblyWindowsEffectConfig::defaults()
