@@ -52,6 +52,11 @@ ShadowEffect::ShadowEffect()
              this, SLOT(updateShadowColor()));
     }
 
+ShadowEffect::~ShadowEffect()
+    {
+    delete mShadowTexture;
+    }
+
 void ShadowEffect::updateShadowColor()
     {
     KConfigGroup conf = effects->effectConfig("Shadow");

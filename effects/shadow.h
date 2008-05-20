@@ -35,6 +35,7 @@ class ShadowEffect
     Q_OBJECT
     public:
         ShadowEffect();
+        virtual ~ShadowEffect();
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
