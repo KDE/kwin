@@ -141,6 +141,7 @@ class Toplevel
         void copyToDeleted( Toplevel* c );
         void disownDataPassedToDeleted();
         friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
+        void deleteEffectWindow();
         QRect geom;
         Visual* vis;
         int bit_depth;
@@ -391,6 +392,12 @@ inline QByteArray Toplevel::windowRole() const
 inline pid_t Toplevel::pid() const
     {
     return info->pid();
+    }
+
+inline void Toplevel::deleteEffectWindow()
+    {
+    delete effect_window;
+    effect_window = NULL;
     }
 
 kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );

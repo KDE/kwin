@@ -37,7 +37,7 @@ Deleted::~Deleted()
     {
     assert( delete_refcount == 0 );
     workspace()->removeDeleted( this, Allowed );
-    delete effectWindow();
+    deleteEffectWindow();
     }
 
 Deleted* Deleted::create( Toplevel* c )
