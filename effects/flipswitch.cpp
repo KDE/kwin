@@ -440,6 +440,8 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
             frameRect.height()*0.8f );
         icon->render( region, iconRect);
         icon->unbind();
+        delete icon;
+        glDisable( GL_BLEND );
         glPopAttrib();
 #endif
         }
