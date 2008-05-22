@@ -181,8 +181,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif(KWIN_HAVE_OPENGL_COMPOSITING)
 
-# showfps, showpaint - need both xrender and opengl
-if(KWIN_HAVE_OPENGL_COMPOSITING AND KWIN_HAVE_XRENDER_COMPOSITING)
+# showfps, showpaint - need xrender or opengl
+if(KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         showfps.cpp
         showpaint.cpp
@@ -198,7 +198,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING AND KWIN_HAVE_XRENDER_COMPOSITING)
     install( FILES 
         showfps_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-endif(KWIN_HAVE_OPENGL_COMPOSITING AND KWIN_HAVE_XRENDER_COMPOSITING)
+endif(KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING)
 
 # add the plugin
 KWIN4_ADD_EFFECT(builtins ${kwin4_effect_builtins_sources})
