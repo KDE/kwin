@@ -2830,7 +2830,7 @@ Comment[x-test]=xxNew windowxx
 Comment[zh_CN]=新建窗口
 Comment[zh_TW]=新視窗
 Action=Sound
-Sound=KDE-Sys-Message.ogg
+Sound=KDE-Sys-App-Message.ogg
 
 
 [Event/delete]
@@ -4128,7 +4128,7 @@ Comment[x-test]=xxTransient window (a dialog) appearsxx
 Comment[zh_CN]=出现了临时窗口(对话框)
 Comment[zh_TW]=顯示新的對話框
 Action=Sound
-Sound=KDE-Sys-Message.ogg
+Sound=KDE-Sys-App-Message.ogg
 
 
 [Event/transdelete]
