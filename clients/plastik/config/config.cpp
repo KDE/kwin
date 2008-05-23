@@ -89,8 +89,13 @@ void PlastikConfig::save(KConfigGroup&)
 {
     KConfigGroup cg(m_config, "General");
 
-    QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->selected();
-    if (button) cg.writeEntry("TitleAlignment", QString(button->objectName()));
+    QList<QRadioButton *> buttons = m_dialog->titleAlign->findChildren<QRadioButton *>();
+    for(QList<QRadioButton *>::ConstIterator it = buttons.begin(); it != buttons.end(); ++it)
+    {
+        if((*it)->isChecked())
+            cg.writeEntry("TitleAlignment", QString((*it)->objectName()));
+    }
+
     cg.writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
     cg.writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked() );
     cg.writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
