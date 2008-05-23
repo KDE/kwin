@@ -328,6 +328,12 @@ void Toplevel::setOpacity( double new_opacity )
         }
     }
 
+void Toplevel::deleteEffectWindow()
+    {
+    delete effect_window;
+    effect_window = NULL;
+    }
+
 } // namespace
 
 #include "toplevel.moc"

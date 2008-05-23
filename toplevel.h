@@ -394,12 +394,6 @@ inline pid_t Toplevel::pid() const
     return info->pid();
     }
 
-inline void Toplevel::deleteEffectWindow()
-    {
-    delete effect_window;
-    effect_window = NULL;
-    }
-
 kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
 kdbgstream& operator<<( kdbgstream& stream, const ToplevelList& );
 kdbgstream& operator<<( kdbgstream& stream, const ConstToplevelList& );
