@@ -294,8 +294,10 @@ bool EffectsHandler::saturationSupported() const
     {
     switch( compositing_type )
         {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         case OpenGLCompositing:
             return GLTexture::saturationSupported();
+#endif
         case XRenderCompositing:
             return false; // never
         default:
