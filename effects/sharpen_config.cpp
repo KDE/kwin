@@ -39,14 +39,14 @@ namespace KWin
 SharpenEffectConfig::SharpenEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
-    kDebug() ;
+    kDebug();
 
     QVBoxLayout* layout = new QVBoxLayout(this);
-    KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "Sharpen" ));
     a->setText( i18n("Toggle Sharpen Effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_S));
+    a->setProperty("isConfigurationAction", true);
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
@@ -60,12 +60,14 @@ SharpenEffectConfig::SharpenEffectConfig(QWidget* parent, const QVariantList& ar
 
 SharpenEffectConfig::~SharpenEffectConfig()
     {
-    kDebug() ;
+    kDebug();
+    // Undo (only) unsaved changes to global key shortcuts
+    mShortcutEditor->undoChanges();
     }
 
 void SharpenEffectConfig::load()
     {
-    kDebug() ;
+    kDebug();
     KCModule::load();
 
     emit changed(false);
@@ -75,6 +77,8 @@ void SharpenEffectConfig::save()
     {
     kDebug() ;
     KCModule::save();
+
+    mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
     EffectsHandler::sendReloadMessage( "sharpen" );

@@ -44,7 +44,7 @@ namespace KWin
 PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug() ;
+    kDebug();
 
     QGridLayout* layout = new QGridLayout(this);
 
@@ -71,14 +71,17 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Expanding), 4, 0, 1, 3);
 
     // Shortcut config
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
-    KActionCollection* actionCollection = new KActionCollection( this );
+    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* a = (KAction*)actionCollection->addAction( "Expose" );
     a->setText( i18n("Toggle Expose Effect" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
+    a->setProperty("isConfigurationAction", true);
+
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
     b->setText( i18n("Toggle Expose Effect (incl. other desktops)" ));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
+    b->setProperty("isConfigurationAction", true);
+
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
@@ -86,13 +89,14 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
 
     layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 6, 0, 1, 3);
 
-
     load();
     }
 
 PresentWindowsEffectConfig::~PresentWindowsEffectConfig()
     {
-    kDebug() ;
+    kDebug();
+    // Undo (only) unsaved changes to global key shortcuts
+    mShortcutEditor->undoChanges();
     }
 
 void PresentWindowsEffectConfig::addItems(QComboBox* combo)
@@ -151,6 +155,8 @@ void PresentWindowsEffectConfig::save()
     conf.writeEntry("DrawWindowCaptions", drawWindowCaptions);
 
     conf.sync();
+
+    mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
     EffectsHandler::sendReloadMessage( "presentwindows" );

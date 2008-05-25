@@ -49,8 +49,7 @@ namespace KWin
 VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
-    kDebug() ;
+    kDebug();
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     QHBoxLayout* hlayout = new QHBoxLayout( this );
@@ -60,10 +59,12 @@ VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariant
     saveVideo->setMode( KFile::Directory | KFile::LocalOnly );
     hlayout->addWidget( saveVideo );
     layout->addLayout( hlayout );
-    KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
+
+    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "VideoRecord" ));
     a->setText( i18n("Toggle Video Recording" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_V));
+    a->setProperty("isConfigurationAction", true);
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
@@ -77,7 +78,9 @@ VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariant
 
 VideoRecordEffectConfig::~VideoRecordEffectConfig()
     {
-    kDebug() ;
+    kDebug();
+    // Undo (only) unsaved changes to global key shortcuts
+    mShortcutEditor->undoChanges();
     }
 
 void VideoRecordEffectConfig::load()
@@ -98,6 +101,9 @@ void VideoRecordEffectConfig::save()
     KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
 
     conf.writeEntry("videopath", saveVideo->url().path());
+    
+    m_actionCollection->writeSettings();
+    m_ui->editor->save();   // undo() will restore to this state from now on
 
     conf.sync();
 

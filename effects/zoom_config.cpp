@@ -39,18 +39,22 @@ namespace KWin
 ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
-    kDebug() ;
+    kDebug();
 
     QVBoxLayout* layout = new QVBoxLayout(this);
-    KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* a;
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomIn ));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Equal));
+    a->setProperty("isConfigurationAction", true);
+
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomOut ));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
+    a->setProperty("isConfigurationAction", true);
+
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ActualSize ));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
+    a->setProperty("isConfigurationAction", true);
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
@@ -65,6 +69,8 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
 ZoomEffectConfig::~ZoomEffectConfig()
     {
     kDebug() ;
+    // Undo (only) unsaved changes to global key shortcuts
+    mShortcutEditor->undoChanges();
     }
 
 void ZoomEffectConfig::load()
@@ -79,6 +85,8 @@ void ZoomEffectConfig::save()
     {
     kDebug() ;
     KCModule::save();
+
+    mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
     EffectsHandler::sendReloadMessage( "zoom" );

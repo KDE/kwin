@@ -53,10 +53,6 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
     load();
     }
 
-CoverSwitchEffectConfig::~CoverSwitchEffectConfig()
-    {
-    }
-
 void CoverSwitchEffectConfig::load()
     {
     KCModule::load();

@@ -40,7 +40,6 @@ namespace KWin
 TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
     kDebug() ;
 
     QVBoxLayout* layout = new QVBoxLayout(this);

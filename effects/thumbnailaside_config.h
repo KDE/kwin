@@ -41,7 +41,8 @@ class ThumbnailAsideEffectConfig : public KCModule
     {
     Q_OBJECT
     public:
-      explicit ThumbnailAsideEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+        explicit ThumbnailAsideEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+        virtual ~ThumbnailAsideEffectConfig();
 
         virtual void save();
         virtual void load();

@@ -62,7 +62,6 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     connect(m_ui->spinOpacity, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     // Shortcut config
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
     m_actionCollection = new KActionCollection( this, componentData() );
     m_actionCollection->setConfigGroup("ThumbnailAside");
     m_actionCollection->setConfigGlobal(true);
@@ -70,8 +69,16 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     KAction* a = (KAction*)m_actionCollection->addAction( "ToggleCurrentThumbnail" );
     a->setText( i18n("Toggle Thumbnail for Current Window" ));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::CTRL + Qt::Key_T));
+    a->setProperty("isConfigurationAction", true);
 
     load();
+    }
+
+ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
+    {
+    // Undo (only) unsaved changes to global key shortcuts
+    m_ui->editor->undoChanges();
+    kDebug() ;
     }
 
 void ThumbnailAsideEffectConfig::load()
@@ -106,6 +113,7 @@ void ThumbnailAsideEffectConfig::save()
     conf.writeEntry("Opacity", m_ui->spinOpacity->value());
 
     m_actionCollection->writeSettings();
+    m_ui->editor->save();   // undo() will restore to this state from now on
 
     conf.sync();
 

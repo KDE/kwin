@@ -41,7 +41,6 @@ class CoverSwitchEffectConfig : public KCModule
     Q_OBJECT
     public:
         explicit CoverSwitchEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
-        ~CoverSwitchEffectConfig();
 
     public slots:
         virtual void save();

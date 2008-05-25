@@ -71,16 +71,16 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     comboLayout->addWidget(mActivateCombo);
     layout->addLayout(comboLayout);
     
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
-    KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
+    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* show = static_cast<KAction*>(actionCollection->addAction( "ShowDesktopGrid" ));
     show->setText( i18n("Show Desktop Grid" ));
     show->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F8 ));
+    show->setProperty("isConfigurationAction", true);
 
-    KShortcutsEditor* shortcutEditor = new KShortcutsEditor(actionCollection, this,
+    mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
-    connect(shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
-    layout->addWidget(shortcutEditor);
+    connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
+    layout->addWidget(mShortcutEditor);
 
     layout->addStretch();
 
@@ -89,12 +89,14 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
 
 DesktopGridEffectConfig::~DesktopGridEffectConfig()
     {
-    kDebug() ;
+    kDebug();
+    // Undo (only) unsaved changes to global key shortcuts
+    mShortcutEditor->undoChanges();
     }
 
 void DesktopGridEffectConfig::load()
     {
-    kDebug() ;
+    kDebug();
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("DesktopGrid");
@@ -121,6 +123,8 @@ void DesktopGridEffectConfig::save()
         activateBorder = (int)ElectricNone;
     conf.writeEntry("BorderActivate", activateBorder);
     conf.sync();
+
+    mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
     EffectsHandler::sendReloadMessage( "desktopgrid" );

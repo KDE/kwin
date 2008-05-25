@@ -56,7 +56,6 @@ SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->minSizeFlake, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->maxSizeFlake, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
     m_actionCollection = new KActionCollection( this, componentData() );
     m_actionCollection->setConfigGroup("Snow");
     m_actionCollection->setConfigGlobal(true);
@@ -64,12 +63,15 @@ SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
     KAction* a = (KAction*)m_actionCollection->addAction( "Snow" );
     a->setText( i18n("Toggle Snow on Desktop" ));
     a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F12 ));
+    a->setProperty("isConfigurationAction", true);
 
     load();
     }
 
 SnowEffectConfig::~SnowEffectConfig()
     {
+    // Undo (only) unsaved changes to global key shortcuts
+    m_ui->editor->undoChanges();
     kDebug() ;
     }
 
@@ -103,6 +105,7 @@ void SnowEffectConfig::save()
     conf.writeEntry("MaxFlakes", m_ui->maxSizeFlake->value());
 
     m_actionCollection->writeSettings();
+    m_ui->editor->save();   // undo() will restore to this state from now on
 
     conf.sync();
 

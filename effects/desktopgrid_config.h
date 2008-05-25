@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QComboBox;
 class QCheckBox;
+class KShortcutsEditor;
 
 namespace KWin
 {
@@ -44,6 +45,7 @@ class DesktopGridEffectConfig : public KCModule
     private:
         QCheckBox* mSlide;
         QComboBox* mActivateCombo;
+        KShortcutsEditor *mShortcutEditor;
     };
 
 } // namespace

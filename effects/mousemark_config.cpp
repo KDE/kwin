@@ -61,18 +61,27 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
     connect(m_ui->comboColors, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     // Shortcut config
-    KGlobalAccel::self()->overrideMainComponentData(componentData());
     m_actionCollection = new KActionCollection( this, componentData() );
 
     KAction* a = static_cast< KAction* >( m_actionCollection->addAction( "ClearMouseMarks" ));
     a->setText( i18n( "Clear Mouse Marks" ));
     a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F11 ));
+    a->setProperty("isConfigurationAction", true);
+
     a = static_cast< KAction* >( m_actionCollection->addAction( "ClearLastMouseMark" ));
     a->setText( i18n( "Clear Last Mouse Mark" ));
     a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F12 ));
+    a->setProperty("isConfigurationAction", true);
+
     m_ui->editor->addCollection(m_actionCollection);
 
     load();
+    }
+
+MouseMarkEffectConfig::~MouseMarkEffectConfig()
+    {
+    // Undo (only) unsaved changes to global key shortcuts
+    m_ui->editor->undoChanges();
     }
 
 void MouseMarkEffectConfig::load()
@@ -99,6 +108,9 @@ void MouseMarkEffectConfig::save()
 
     conf.writeEntry("LineWidth", m_ui->spinWidth->value());
     conf.writeEntry("Color", m_ui->comboColors->color());
+
+    m_actionCollection->writeSettings();
+    m_ui->editor->save();   // undo() will restore to this state from now on
 
     conf.sync();
 
