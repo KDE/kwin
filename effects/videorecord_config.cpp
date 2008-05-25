@@ -101,9 +101,6 @@ void VideoRecordEffectConfig::save()
     KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
 
     conf.writeEntry("videopath", saveVideo->url().path());
-    
-    m_actionCollection->writeSettings();
-    m_ui->editor->save();   // undo() will restore to this state from now on
 
     conf.sync();
 
