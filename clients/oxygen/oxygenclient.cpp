@@ -360,12 +360,12 @@ void OxygenClient::paintEvent(QPaintEvent *e)
         if (align & Qt::AlignLeft) {
             int left = titleLeft + QFontMetrics(options()->font(isActive(), false)).width(caption());
             int right = titleLeft + titleWidth;
-            drawScratch(&painter, palette, left, right);
+            drawScratch(&painter, palette, left, right, titleTop+6);
         }
         if (align & Qt::AlignRight) {
             int left = titleLeft;
             int right = titleLeft + titleWidth - QFontMetrics(options()->font(isActive(), false)).width(caption());
-            drawScratch(&painter, palette, right, left);
+            drawScratch(&painter, palette, right, left, titleTop+6);
         }
         if (align & Qt::AlignHCenter) {
             int textWidth = QFontMetrics(options()->font(isActive(), false)).width(caption());
@@ -373,8 +373,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
             int centerLeft = titleLeft + titleWidth/2 - textWidth/2;
             int centerRight = titleLeft + titleWidth/2 + textWidth/2;
             int right = titleLeft + titleWidth;
-            drawScratch(&painter, palette, centerLeft, left);
-            drawScratch(&painter, palette, centerRight, right);
+            drawScratch(&painter, palette, centerLeft, left, titleTop+6);
+            drawScratch(&painter, palette, centerRight, right, titleTop+6);
         }
     }
 
@@ -404,7 +404,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     renderDot(&painter, QPointF(6.5, 2.5), 1.8);
 }
 
-void OxygenClient::drawScratch(QPainter *p, QPalette &palette, int start, int end)
+void OxygenClient::drawScratch(QPainter *p, QPalette &palette, const int start, const int end, const int topMargin)
 {
     QLinearGradient scratchlg(QPoint(start,0), QPoint(end,0));
     scratchlg.setColorAt(0.0, Qt::transparent);
@@ -423,9 +423,9 @@ void OxygenClient::drawScratch(QPainter *p, QPalette &palette, int start, int en
     for (int i = 0; i < 3; ++i)
     {
         p->setPen(pen1);
-        p->drawLine(QPointF(start, 9+4*i), QPointF(end, 9+4*i));
+        p->drawLine(QPointF(start, topMargin+4*i), QPointF(end, topMargin+4*i));
         p->setPen(pen2);
-        p->drawLine(QPointF(start, 9+4*i+1), QPointF(end, 9+4*i+1));
+        p->drawLine(QPointF(start, topMargin+4*i+1), QPointF(end, topMargin+4*i+1));
     }
     p->setRenderHint(QPainter::Antialiasing, antialiasing);
 }
