@@ -59,6 +59,7 @@ private:
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
     void paintEvent(QPaintEvent *e);
+    void drawIcon(QPainter *p, QPalette &pal, ButtonType &type);
     QColor buttonDetailColor(const QPalette &palette);
 
 private Q_SLOTS:

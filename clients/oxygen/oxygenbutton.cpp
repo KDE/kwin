@@ -140,7 +140,7 @@ void OxygenButton::leaveEvent(QEvent *e)
 // pressSlot()
 // ------------
 // Mouse has pressed the button
-
+// TODO: never called?
 void OxygenButton::pressSlot()
 {
     status_ = Oxygen::Pressed;
@@ -182,39 +182,58 @@ void OxygenButton::paintEvent(QPaintEvent *)
 
     QColor bg = helper_.backgroundTopColor(pal.window());
 
-    QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), buttonDetailColor(pal));
 
-    if(status_ == Oxygen::Hovered) {
-        if(type_ == ButtonClose) {
-            QColor color = KColorScheme(pal.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
-            lg = helper_.decoGradient(QRect(4,4,13,13), color);
-            painter.drawPixmap(0, 0, helper_.windecoButtonFocused(pal.button(), color,7));
-        }
-        else{
-            QColor color = KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
-            painter.drawPixmap(0, 0, helper_.windecoButtonFocused(pal.button(), color, 7));
-        }
+    QColor color = buttonDetailColor(pal);
+    if(status_ == Oxygen::Hovered || status_ == Oxygen::Pressed) {
+        if(type_ == ButtonClose)
+            color = KColorScheme(pal.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
+        else
+            color = KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
+
     }
-    else
-        painter.drawPixmap(0, 0, helper_.windecoButton(pal.button()));
+    QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), color);
+    painter.drawPixmap(0, 0, helper_.windecoButton(pal.button(), status_ == Oxygen::Pressed));
 
-    painter.setRenderHints(QPainter::Antialiasing);
-    painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(lg, 2.2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    switch(type_)
+    if (client_.isActive()) {
+        painter.setRenderHints(QPainter::Antialiasing);
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(QPen(lg, 2.2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        drawIcon(&painter, pal, type_);
+    }
+    else {
+        // outlined mode
+        QPixmap pixmap(size());
+        pixmap.fill(Qt::transparent);
+        QPainter pp(&pixmap);
+        pp.setRenderHints(QPainter::Antialiasing);
+        pp.setBrush(Qt::NoBrush);
+        pp.setPen(QPen(color, 3.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        drawIcon(&pp, pal, type_);
+
+        pp.setCompositionMode(QPainter::CompositionMode_DestinationOut);
+        pp.setPen(QPen(color, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        drawIcon(&pp, pal, type_);
+
+        painter.drawPixmap(QPoint(0,0), pixmap);
+    }
+}
+
+void OxygenButton::drawIcon(QPainter *p, QPalette &pal, ButtonType &type)
+{
+    switch(type)
     {
         case ButtonSticky:
-            painter.drawPoint(QPointF(10.5,10.5));
+            p->drawPoint(QPointF(10.5,10.5));
             break;
         case ButtonHelp:
-            painter.translate(1.5, 1.5);
-            painter.drawArc(7,5,4,4,135*16, -180*16);
-            painter.drawArc(9,8,4,4,135*16,45*16);
-            painter.drawPoint(9,12);
+            p->translate(1.5, 1.5);
+            p->drawArc(7,5,4,4,135*16, -180*16);
+            p->drawArc(9,8,4,4,135*16,45*16);
+            p->drawPoint(9,12);
             break;
         case ButtonMin:
-            painter.drawLine(QPointF( 7.5, 9.5), QPointF(10.5,12.5));
-            painter.drawLine(QPointF(10.5,12.5), QPointF(13.5, 9.5));
+            p->drawLine(QPointF( 7.5, 9.5), QPointF(10.5,12.5));
+            p->drawLine(QPointF(10.5,12.5), QPointF(13.5, 9.5));
             break;
         case ButtonMax:
             switch(client_.maximizeMode())
@@ -222,47 +241,47 @@ void OxygenButton::paintEvent(QPaintEvent *)
                 case OxygenClient::MaximizeRestore:
                 case OxygenClient::MaximizeVertical:
                 case OxygenClient::MaximizeHorizontal:
-                    painter.drawLine(QPointF( 7.5,11.5), QPointF(10.5, 8.5));
-                    painter.drawLine(QPointF(10.5, 8.5), QPointF(13.5,11.5));
+                    p->drawLine(QPointF( 7.5,11.5), QPointF(10.5, 8.5));
+                    p->drawLine(QPointF(10.5, 8.5), QPointF(13.5,11.5));
                     break;
                 case OxygenClient::MaximizeFull:
                 {
-                    painter.translate(1.5, 1.5);
-                    //painter.setBrush(lg);
+                    p->translate(1.5, 1.5);
+                    //p->setBrush(lg);
                     QPoint points[4] = {QPoint(9, 6), QPoint(12, 9), QPoint(9, 12), QPoint(6, 9)};
                     //QPoint points[4] = {QPoint(9, 5), QPoint(13, 9), QPoint(9, 13), QPoint(5, 9)};
-                    painter.drawPolygon(points, 4);
+                    p->drawPolygon(points, 4);
                     break;
                 }
             }
             break;
         case ButtonClose:
-            painter.drawLine(QPointF( 7.5,7.5), QPointF(13.5,13.5));
-            painter.drawLine(QPointF(13.5,7.5), QPointF( 7.5,13.5));
+            p->drawLine(QPointF( 7.5,7.5), QPointF(13.5,13.5));
+            p->drawLine(QPointF(13.5,7.5), QPointF( 7.5,13.5));
             break;
         case ButtonAbove:
             if(isChecked()) {
-                QPen newPen = painter.pen();
+                QPen newPen = p->pen();
                 newPen.setColor(KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color());
-                painter.setPen(newPen);
+                p->setPen(newPen);
             }
 
-            painter.drawLine(QPointF( 7.5,14), QPointF(10.5,11));
-            painter.drawLine(QPointF(10.5,11), QPointF(13.5,14));
-            painter.drawLine(QPointF( 7.5,10), QPointF(10.5, 7));
-            painter.drawLine(QPointF(10.5, 7), QPointF(13.5,10));
+            p->drawLine(QPointF( 7.5,14), QPointF(10.5,11));
+            p->drawLine(QPointF(10.5,11), QPointF(13.5,14));
+            p->drawLine(QPointF( 7.5,10), QPointF(10.5, 7));
+            p->drawLine(QPointF(10.5, 7), QPointF(13.5,10));
             break;
         case ButtonBelow:
             if(isChecked()) {
-                QPen newPen = painter.pen();
+                QPen newPen = p->pen();
                 newPen.setColor(KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color());
-                painter.setPen(newPen);
+                p->setPen(newPen);
             }
 
-            painter.drawLine(QPointF( 7.5,11), QPointF(10.5,14));
-            painter.drawLine(QPointF(10.5,14), QPointF(13.5,11));
-            painter.drawLine(QPointF( 7.5, 7), QPointF(10.5,10));
-            painter.drawLine(QPointF(10.5,10), QPointF(13.5, 7));
+            p->drawLine(QPointF( 7.5,11), QPointF(10.5,14));
+            p->drawLine(QPointF(10.5,14), QPointF(13.5,11));
+            p->drawLine(QPointF( 7.5, 7), QPointF(10.5,10));
+            p->drawLine(QPointF(10.5,10), QPointF(13.5, 7));
             break;
         default:
             break;

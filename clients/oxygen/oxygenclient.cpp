@@ -270,6 +270,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     int x,y,w,h;
     QRect frame = widget()->frameGeometry();
     QColor color = palette.window().color();
+    QColor light = helper_.calcLightColor( color );
+    QColor dark = helper_.calcDarkColor( color );
 
     const int titleHeight = layoutMetric(LM_TitleHeight);
     const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top();
@@ -320,34 +322,61 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     frame.adjust(1,1,-1,-1);
     frame.getRect(&x, &y, &w, &h);
 
-    QColor light = helper_.calcLightColor(color);
-    QColor dark = helper_.calcDarkColor(color);
     dark.setAlpha(120);
 
-    if(!isActive()) {
-        light.setAlpha(120);
-        dark.setAlpha(50);
+    if(isActive()) {
+        QLinearGradient lg(x,0,x+w,0);
+        lg.setColorAt(0.5, dark);
+        dark.setAlpha(0);
+        lg.setColorAt(0.0, dark);
+        lg.setColorAt(1.0, dark);
+        painter.setPen(QPen(lg,1));
+
+        painter.drawLine(QPointF(x, titleTop+titleHeight-1.5),
+                                QPointF(x+w, titleTop+titleHeight-1.5));
+
+        lg = QLinearGradient(x,0,x+w,0);
+        lg.setColorAt(0.5, light);
+        light.setAlpha(0);
+        lg.setColorAt(0.0, light);
+        lg.setColorAt(1.0, light);
+        painter.setPen(QPen(lg,1));
+
+        painter.drawLine(QPointF(x, titleTop+titleHeight-0.5),
+                               QPointF(x+w, titleTop+titleHeight-0.5));
     }
 
-    QLinearGradient lg(x,0,x+w,0);
-    lg.setColorAt(0.5, dark);
-    dark.setAlpha(0);
-    lg.setColorAt(0.0, dark);
-    lg.setColorAt(1.0, dark);
-    painter.setPen(QPen(lg,1));
+    // draw "scratches" as indicator for active windows
+    if (isActive()) {
+        Qt::Alignment align = OxygenFactory::titleAlign();
+        if (widget()->layoutDirection() == Qt::RightToLeft)
+        {
+            if (align == Qt::AlignLeft)
+                align = Qt::AlignRight;
+            else if (align == Qt::AlignRight)
+                align = Qt::AlignLeft;
+        }
 
-    painter.drawLine(QPointF(x, titleTop+titleHeight-1.5),
-                            QPointF(x+w, titleTop+titleHeight-1.5));
-
-    lg = QLinearGradient(x,0,x+w,0);
-    lg.setColorAt(0.5, light);
-    light.setAlpha(0);
-    lg.setColorAt(0.0, light);
-    lg.setColorAt(1.0, light);
-    painter.setPen(QPen(lg,1));
-
-    painter.drawLine(QPointF(x, titleTop+titleHeight-0.5),
-                           QPointF(x+w, titleTop+titleHeight-0.5));
+        if (align & Qt::AlignLeft) {
+            int left = titleLeft + QFontMetrics(options()->font(isActive(), false)).width(caption());
+            int right = titleLeft + titleWidth;
+            drawScratch(&painter, palette, left, right);
+        }
+        if (align & Qt::AlignRight) {
+            int left = titleLeft;
+            int right = titleLeft + titleWidth - QFontMetrics(options()->font(isActive(), false)).width(caption());
+            drawScratch(&painter, palette, right, left);
+        }
+        if (align & Qt::AlignHCenter) {
+            int textWidth = QFontMetrics(options()->font(isActive(), false)).width(caption());
+            int left = titleLeft;
+            int centerLeft = titleLeft + titleWidth/2 - textWidth/2;
+            int centerRight = titleLeft + titleWidth/2 + textWidth/2;
+            int right = titleLeft + titleWidth;
+            drawScratch(&painter, palette, centerLeft, left);
+            drawScratch(&painter, palette, centerRight, right);
+        }
+    }
 
     // Draw shadows of the frame
     bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
@@ -374,6 +403,33 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     renderDot(&painter, QPointF(5.5, 5.5), 1.8);
     renderDot(&painter, QPointF(6.5, 2.5), 1.8);
 }
+
+void OxygenClient::drawScratch(QPainter *p, QPalette &palette, int start, int end)
+{
+    QLinearGradient scratchlg(QPoint(start,0), QPoint(end,0));
+    scratchlg.setColorAt(0.0, Qt::transparent);
+    scratchlg.setColorAt(0.05, palette.color(QPalette::Highlight));
+    scratchlg.setColorAt(1.0, Qt::transparent);
+    QPen pen1(scratchlg, 0.5);
+
+    QLinearGradient scratchlg2(QPoint(start,0), QPoint(end,0));
+    scratchlg2.setColorAt(0.0, Qt::transparent);
+    scratchlg2.setColorAt(0.05, helper_.calcLightColor(palette.color(QPalette::Window)));
+    scratchlg2.setColorAt(1.0, Qt::transparent);
+    QPen pen2(scratchlg2, 0.5);
+
+    bool antialiasing = p->testRenderHint(QPainter::Antialiasing);
+    p->setRenderHint(QPainter::Antialiasing, false);
+    for (int i = 0; i < 3; ++i)
+    {
+        p->setPen(pen1);
+        p->drawLine(QPointF(start, 9+4*i), QPointF(end, 9+4*i));
+        p->setPen(pen2);
+        p->drawLine(QPointF(start, 9+4*i+1), QPointF(end, 9+4*i+1));
+    }
+    p->setRenderHint(QPainter::Antialiasing, antialiasing);
+}
+
 
 void OxygenClient::updateWindowShape()
 {

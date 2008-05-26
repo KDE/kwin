@@ -53,6 +53,7 @@ public:
 
 private:
     void paintEvent(QPaintEvent *e);
+    void drawScratch(QPainter *p, QPalette &palette, int start, int end);
     QColor titlebarTextColor(const QPalette &palette);
     bool colorCacheInvalid_;
     QColor cachedTitlebarTextColor_;
