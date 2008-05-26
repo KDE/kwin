@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_coverswitch
 X-KDE-PluginKeyword=coverswitch
 
 Name=Cover Switch
+Name[de]=Überdecken-Fensterwechsel
 Name[eo]=Kovra ŝanĝilo
 Name[es]=Cubre interruptor
 Name[et]=Aknalülitaja
@@ -14,6 +15,7 @@ Name[fi]=Levykansivaihtaja
 Name[gu]=ફેરફાર ઢાંકો
 Name[ja]=カバースイッチ
 Name[km]=ប្ដូរ​​គម្រប​
+Name[lv]=Vāku pārslēdzējs
 Name[pt]=Mudança de Capas
 Name[pt_BR]=Mudança de Capas
 Name[ro]=Comutare Copertă
