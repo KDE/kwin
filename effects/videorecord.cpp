@@ -54,6 +54,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KGlobalSettings>
 
+#include <strings.h>
+
 namespace KWin
 {
 
