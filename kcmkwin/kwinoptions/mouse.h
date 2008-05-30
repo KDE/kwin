@@ -26,7 +26,7 @@ class KConfig;
 
 #include <kcmodule.h>
 #include <QComboBox>
-
+#include <klocale.h>
 
 
 class ToolTipComboBox: public QComboBox

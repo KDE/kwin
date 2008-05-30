@@ -24,6 +24,9 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
+
+#include "oxygenbutton.h"
+
 #include <math.h>
 #include <QPainterPath>
 #include <QPainter>
@@ -37,7 +40,6 @@
 #include <KColorScheme>
 
 #include "oxygenclient.h"
-#include "oxygenbutton.h"
 #include "oxygen.h"
 
 namespace Oxygen

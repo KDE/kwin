@@ -20,6 +20,8 @@
 // Daniel M. DULEY <mosfet@kde.org>               original work
 // Melchior FRANZ  <a8603365@unet.univie.ac.at>   configuration options
 
+#include "modernsys.h"
+
 #include <kconfiggroup.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -33,7 +35,6 @@
 
 #include <QApplication>
 #include <QLabel>
-#include "modernsys.h"
 
 #include "buttondata.h"
 #include "btnhighcolor.h"

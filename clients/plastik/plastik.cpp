@@ -20,12 +20,13 @@
   Boston, MA 02110-1301, USA.
  */
 
+#include "plastik.h"
+
 #include <QBitmap>
 #include <QPainter>
 #include <QImage>
 #include <QPixmap>
 
-#include "plastik.h"
 #include "plastik.moc"
 #include "plastikclient.h"
 #include "plastikbutton.h"

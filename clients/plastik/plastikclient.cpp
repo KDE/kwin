@@ -20,6 +20,7 @@
   Boston, MA 02110-1301, USA.
  */
 
+#include "plastikclient.h"
 #include <klocale.h>
 
 #include <QBitmap>
@@ -32,7 +33,6 @@
 #include <QPixmap>
 #include <QDesktopWidget>
 
-#include "plastikclient.h"
 #include "plastikbutton.h"
 
 #include <KColorScheme>

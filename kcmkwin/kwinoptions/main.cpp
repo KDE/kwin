@@ -17,6 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#include "main.h"
+
 #include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
@@ -34,7 +36,6 @@
 
 #include "mouse.h"
 #include "windows.h"
-#include "main.h"
 
 K_PLUGIN_FACTORY_DECLARATION(KWinOptionsFactory)
 

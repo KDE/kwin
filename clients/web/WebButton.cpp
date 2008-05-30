@@ -19,11 +19,11 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include "WebButton.h"
 #include <QPainter>
 //Added by qt3to4:
 #include <QEvent>
 
-#include "WebButton.h"
 #include "Web.h"
 
 namespace Web {

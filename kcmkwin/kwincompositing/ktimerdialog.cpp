@@ -19,6 +19,7 @@
  *
  */
 
+#include "ktimerdialog.h"
 
 #include <QLabel>
 #include <QLayout>
@@ -34,7 +35,6 @@
 #include <kdebug.h>
 #include <kvbox.h>
 
-#include "ktimerdialog.h"
 #include "ktimerdialog.moc"
 
 KTimerDialog::KTimerDialog( int msec, TimerStyle style, QWidget *parent,

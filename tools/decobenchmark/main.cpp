@@ -18,6 +18,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#include "main.h"
+
 #include <QTimer>
 
 #include <kdebug.h>
@@ -35,7 +37,6 @@
 #include <kcmdlineargs.h>
 
 #include "preview.h"
-#include "main.h"
 
 DecoBenchApplication::DecoBenchApplication(const QString &library, Tests tests, int count) :
 		m_tests(tests),

@@ -18,9 +18,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include <kwinconfig.h>
-
 #include "boxswitch.h"
+
+#include <kwinconfig.h>
 
 #include <QCursor>
 #include <QMouseEvent>

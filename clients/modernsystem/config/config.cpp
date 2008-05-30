@@ -15,6 +15,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Melchior FRANZ  <mfranz@kde.org>	-- 2001-04-22
 
+#include "config.h"
+
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kdialog.h>
@@ -27,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <kvbox.h>
-#include "config.h"
 
 
 extern "C"

@@ -33,6 +33,7 @@ class KFocusConfig;
 class KTitleBarActionsConfig;
 class KWindowActionsConfig;
 class KAdvancedConfig;
+class KMovingConfig;
 
 class KWinOptions : public KCModule
 {

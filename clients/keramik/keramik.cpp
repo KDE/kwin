@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "keramik.h"
+
 #include <kconfiggroup.h>
 #include <klocale.h>
 #include <kiconeffect.h>
@@ -35,7 +37,6 @@
 
 #include <X11/Xlib.h>
 
-#include "keramik.h"
 #include "keramik.moc"
 
 // -------------------------------------------------------------------------------------------

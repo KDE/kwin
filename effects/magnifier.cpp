@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include <kwinconfig.h>
-
 #include "magnifier.h"
+
+#include <kwinconfig.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>

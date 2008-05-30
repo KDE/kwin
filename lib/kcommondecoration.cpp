@@ -23,6 +23,7 @@
  */
 
 #include "kcommondecoration.h"
+#include "kcommondecoration_p.h"
 
 #include <QApplication>
 #include <QCursor>
@@ -37,8 +38,6 @@
 #include "kdecorationfactory.h"
 #include <klocale.h>
 #include <QDesktopWidget>
-
-#include "kcommondecoration_p.h"
 
 #include "kcommondecoration.moc"
 

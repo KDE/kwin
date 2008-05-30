@@ -29,6 +29,7 @@
 #include <kdecorationfactory.h>
 
 class QSpacerItem;
+class QBoxLayout;
 
 namespace Keramik {
 

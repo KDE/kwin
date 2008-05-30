@@ -20,13 +20,14 @@
   Boston, MA 02110-1301, USA.
 */
 
+#include "Web.h"
+
 #include <QPainter>
 //Added by qt3to4:
 #include <QPaintEvent>
 
 #include <kconfiggroup.h>
 
-#include "Web.h"
 #include "WebButton.h"
 
 extern "C"

@@ -24,8 +24,8 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "oxygenclient.h"
 #include "oxygen.h"
+#include "oxygenclient.h"
 #include <kconfiggroup.h>
 
 extern "C"

@@ -17,6 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#include "mouse.h"
+
 #include <QLabel>
 #include <QComboBox>
 
@@ -29,7 +31,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include <klocale.h>
 #include <kconfig.h>
 #include <kdialog.h>
 #include <kglobalsettings.h>
@@ -43,7 +44,6 @@
 
 #include <stdlib.h>
 
-#include "mouse.h"
 #include "mouse.moc"
 
 namespace {

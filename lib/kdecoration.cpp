@@ -23,6 +23,7 @@ DEALINGS IN THE SOFTWARE.
 ******************************************************************/
 
 #include "kdecoration.h"
+#include "kdecoration_p.h"
 
 #include <kdebug.h>
 #include <QApplication>
@@ -34,7 +35,6 @@ DEALINGS IN THE SOFTWARE.
 #include <QX11Info>
 #endif
 
-#include "kdecoration_p.h"
 #include "kdecorationfactory.h"
 #include "kdecorationbridge.h"
 
