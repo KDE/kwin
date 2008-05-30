@@ -700,6 +700,11 @@ void Client::keepInArea( QRect area, bool partial )
         area.setRight( qMax( area.right() + width() - 100, area.right()));
         area.setBottom( qMax( area.bottom() + height() - 100, area.bottom()));
         }
+    if( !partial )
+        { // resize to fit into area
+        if( area.width() < width() || area.height() < height())
+            resizeWithChecks( qMin( area.width(), width()), qMin( area.height(), height()));
+        }
     if ( geometry().right() > area.right() && width() < area.width() )
         move( area.right() - width(), y() );
     if ( geometry().bottom() > area.bottom() && height() < area.height() )
