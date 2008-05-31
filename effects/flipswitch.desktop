@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Flip Switch
 Name[af]=Wissel skakelaar
+Name[de]=3D-Fensterstapel
 Name[el]=Εναλλαγή πλαισίου
 Name[eo]=Turna ŝanĝilo
 Name[es]=Alternar conmutador
@@ -28,7 +29,9 @@ Icon=preferences-system-windows-effect-flipswitch
 Comment=Alt-Tab window switcher flipping through windows on a stack
 Comment[af]=Alt-Tab vensterwisselling blaai deur vensters op 'n stapel
 Comment[ca]=Commutador de finestres amb Alt-Tab que intercanvia les finestres en un pila
+Comment[de]=Geht Fenster in einem 3D-Stapel der Reihe nach durch.
 Comment[el]=Εναλλαγή παραθύρων Alt-Tab με τα παράθυρα ως στοίβα
+Comment[eo]=Alt-taba fenestra ŝanĝilo kiu permesas al vi turni la fenestrojn en stako
 Comment[et]=Alt+TAB akende lülitaja, mis lappab pinus olevaid aknaid
 Comment[fi]=Alt+Tab-ikkunavaihtaja pinossa olevien ikkunoiden vaihtamiseksi
 Comment[fr]=Sélecteur de fenêtre « Alt + Tab » qui organise les fenêtres en piles

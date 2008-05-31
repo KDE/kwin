@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Cover Switch
-Name[de]=Überdecken-Fensterwechsel
+Name[de]=3D-Fenstergalerie
 Name[eo]=Kovra ŝanĝilo
 Name[es]=Cubre interruptor
 Name[et]=Aknalülitaja
@@ -24,7 +24,7 @@ Name[zh_TW]=覆蓋切換
 Icon=preferences-system-windows-effect-coverswitch
 Comment=Cover Switch - an alternative alt+tab window switcher
 Comment[ca]=Cover Switch - un commutador de finestres alt+tab alternatiu
-Comment[de]=Überdecken-Fensterwechsel - eine Alternative Methode für den Fensterwechsel mit Alt+Tabulator
+Comment[de]=3D-Fenstergalerie - Fenster laufen von Links nach Rechts durch
 Comment[el]=Cover Switch - μία εναλλακτική μέθοδος αλλαγής παραθύρων με το alt+tab
 Comment[eo]=Alternativa alt+taba ŝanĝilo inter fenestroj
 Comment[es]=Cubre interruptor - un conmutador de ventanas alternativo a alt+tab
