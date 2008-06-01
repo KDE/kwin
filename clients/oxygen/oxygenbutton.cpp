@@ -225,6 +225,11 @@ void OxygenButton::drawIcon(QPainter *p, QPalette &pal, ButtonType &type)
     switch(type)
     {
         case ButtonSticky:
+            if(isChecked()) {
+                QPen newPen = p->pen();
+                newPen.setColor(KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color());
+                p->setPen(newPen);
+            }
             p->drawPoint(QPointF(10.5,10.5));
             break;
         case ButtonHelp:
