@@ -399,7 +399,7 @@ void Workspace::setupWindowShortcutDone( bool ok )
     if( ok )
         client_keys_client->setShortcut( KShortcut( client_keys_dialog->shortcut()).toString());
     closeActivePopup();
-    delete client_keys_dialog;
+    client_keys_dialog->deleteLater();
     client_keys_dialog = NULL;
     client_keys_client = NULL;
     }
@@ -410,8 +410,15 @@ void Workspace::clientShortcutUpdated( Client* c )
     QAction* action = client_keys->action( key.toLatin1().constData() );
     if( !c->shortcut().isEmpty())
         {
-        action->setShortcuts(c->shortcut());
-        connect(action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()));
+        if( action == NULL ) // new shortcut
+            {
+            action = client_keys->addAction( key );
+            connect( action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()));
+            }
+        // no autoloading, since it's configured explicitly here and is not meant to be reused
+        // (the key is the window id anyway, which is kind of random)
+        qobject_cast< KAction* >( action )->setGlobalShortcut(
+            c->shortcut(), KAction::ActiveShortcut, KAction::NoAutoloading );
         action->setEnabled( true );
         }
     else
