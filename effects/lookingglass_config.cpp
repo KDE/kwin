@@ -119,6 +119,7 @@ void LookingGlassEffectConfig::defaults()
     {
     kDebug() ;
     m_ui->radiusSpin->setValue(200);
+    m_ui->editor->allDefault();
     emit changed(true);
     }
 

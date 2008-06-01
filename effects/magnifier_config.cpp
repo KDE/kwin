@@ -125,6 +125,7 @@ void MagnifierEffectConfig::defaults()
     kDebug() ;
     m_ui->spinWidth->setValue(200);
     m_ui->spinHeight->setValue(200);
+    m_ui->editor->allDefault();
     emit changed(true);
     }
 
