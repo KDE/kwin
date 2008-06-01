@@ -70,7 +70,7 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     comboLayout->addWidget(label);
     comboLayout->addWidget(mActivateCombo);
     layout->addLayout(comboLayout);
-    
+
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* show = static_cast<KAction*>(actionCollection->addAction( "ShowDesktopGrid" ));
     show->setText( i18n("Show Desktop Grid" ));
@@ -83,8 +83,6 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     layout->addWidget(mShortcutEditor);
 
     layout->addStretch();
-
-    load();
     }
 
 DesktopGridEffectConfig::~DesktopGridEffectConfig()
@@ -135,6 +133,7 @@ void DesktopGridEffectConfig::defaults()
     kDebug() ;
     mSlide->setChecked(true);
     mActivateCombo->setCurrentIndex( (int)ElectricNone );
+    mShortcutEditor->allDefault();
     emit changed(true);
     }
 
