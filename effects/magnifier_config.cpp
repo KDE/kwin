@@ -77,7 +77,7 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
     a->setProperty("isConfigurationAction", true);
 
-    load();
+    m_ui->editor->addCollection(m_actionCollection);
     }
 
 MagnifierEffectConfig::~MagnifierEffectConfig()
@@ -98,8 +98,6 @@ void MagnifierEffectConfig::load()
     m_ui->spinWidth->setValue(width);
     m_ui->spinHeight->setValue(height);
 
-    m_actionCollection->readSettings();
-    m_ui->editor->addCollection(m_actionCollection);
 
     emit changed(false);
     }
@@ -114,7 +112,6 @@ void MagnifierEffectConfig::save()
     conf.writeEntry("Width", m_ui->spinWidth->value());
     conf.writeEntry("Height", m_ui->spinHeight->value());
 
-    m_actionCollection->writeSettings();
     m_ui->editor->save();   // undo() will restore to this state from now on
 
     conf.sync();
