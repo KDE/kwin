@@ -78,8 +78,6 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
     a->setProperty("isConfigurationAction", true);
 
     m_ui->editor->addCollection(m_actionCollection);
-
-    load();
     }
 
 LookingGlassEffectConfig::~LookingGlassEffectConfig()
@@ -95,14 +93,8 @@ void LookingGlassEffectConfig::load()
 
     KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
 
-//    m_ui->editor->readSettings(&conf);
-
     int radius = conf.readEntry("Radius", 200);
     m_ui->radiusSpin->setValue(radius);
-
-    m_actionCollection->readSettings();
-    m_ui->editor->addCollection(m_actionCollection);
-
     emit changed(false);
     }
 
@@ -115,7 +107,6 @@ void LookingGlassEffectConfig::save()
 
     conf.writeEntry("Radius", m_ui->radiusSpin->value());
 
-    m_actionCollection->writeSettings();
     m_ui->editor->save();   // undo() will restore to this state from now on
 
     conf.sync();
