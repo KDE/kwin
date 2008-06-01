@@ -8,6 +8,8 @@ Exec=kcmshell4 desktop
 X-KDE-Library=kcm_kwindesktop
 X-KDE-ParentApp=kcontrol
 
+X-KDE-System-Settings-Parent-Category=desktop
+
 Name=Multiple Desktops
 Name[af]=Veelvuldige Werkskerms
 Name[ar]=أسطح مكتب متعددة
