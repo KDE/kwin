@@ -71,7 +71,8 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::CTRL + Qt::Key_T));
     a->setProperty("isConfigurationAction", true);
 
-    load();
+    m_ui->editor->addCollection(m_actionCollection);
+
     }
 
 ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
@@ -94,9 +95,6 @@ void ThumbnailAsideEffectConfig::load()
     m_ui->spinWidth->setValue(width);
     m_ui->spinSpacing->setValue(spacing);
     m_ui->spinOpacity->setValue(opacity);
-
-    m_actionCollection->readSettings();
-    m_ui->editor->addCollection(m_actionCollection);
 
     emit changed(false);
     }
@@ -127,7 +125,10 @@ void ThumbnailAsideEffectConfig::defaults()
     m_ui->spinWidth->setValue(200);
     m_ui->spinSpacing->setValue(10);
     m_ui->spinOpacity->setValue(50);
+    m_ui->editor->allDefault();
     emit changed(true);
+
+    
     }
 
 
