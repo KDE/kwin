@@ -65,7 +65,7 @@ SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
     a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F12 ));
     a->setProperty("isConfigurationAction", true);
 
-    load();
+    m_ui->editor->addCollection(m_actionCollection);
     }
 
 SnowEffectConfig::~SnowEffectConfig()
@@ -89,8 +89,6 @@ void SnowEffectConfig::load()
     m_ui->minSizeFlake->setValue( minFlake );
     m_ui->maxSizeFlake->setValue( maxFlake );
 
-    m_actionCollection->readSettings();
-    m_ui->editor->addCollection(m_actionCollection);
 
     emit changed(false);
     }
@@ -104,7 +102,6 @@ void SnowEffectConfig::save()
     conf.writeEntry("MinFlakes", m_ui->minSizeFlake->value());
     conf.writeEntry("MaxFlakes", m_ui->maxSizeFlake->value());
 
-    m_actionCollection->writeSettings();
     m_ui->editor->save();   // undo() will restore to this state from now on
 
     conf.sync();
