@@ -742,6 +742,15 @@ QStringList Workspace::loadedModules() const
         return listModulesLoaded;
     }
 
+QStringList Workspace::listOfModulesEffect() const
+    {
+        QStringList listModules;
+        if ( effects )
+            listModules = static_cast<EffectsHandlerImpl*>(effects)->listOfModulesEffect();
+        return listModules;
+    }
+
+
 void Workspace::slotActivateAttentionWindow()
     {
     if( attention_chain.count() > 0 )

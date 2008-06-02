@@ -721,6 +721,21 @@ QStringList EffectsHandlerImpl::loadedModules() const
         return listModules;
     }
 
+
+QStringList EffectsHandlerImpl::listOfModulesEffect() const
+    {
+        KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+        QStringList listOfModules;
+        // First unload necessary effects
+        foreach( const KService::Ptr &service, offers )
+        {
+            KPluginInfo plugininfo( service );
+            listOfModules<<plugininfo.pluginName();
+        }
+        return listOfModules;
+    }
+
+
 bool EffectsHandlerImpl::loadEffect( const QString& name )
     {
     Workspace::self()->addRepaintFull();
