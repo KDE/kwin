@@ -454,7 +454,7 @@ void Workspace::clientPopupActivated( QAction *action )
     }
 
 
-void Workspace::performWindowOperation( Client* c, Options::WindowOperation op ) 
+void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     {
     if ( !c )
         return;
@@ -463,7 +463,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
         QCursor::setPos( c->geometry().center() );
     if (op == Options::ResizeOp || op == Options::UnrestrictedResizeOp )
         QCursor::setPos( c->geometry().bottomRight());
-    switch ( op ) 
+    switch ( op )
         {
         case Options::MoveOp:
             c->performMouseCommand( Options::MouseMove, cursorPos() );
@@ -552,7 +552,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
 bool Client::performMouseCommand( Options::MouseCommand command, const QPoint &globalPos, bool handled )
     {
     bool replay = false;
-    switch (command) 
+    switch (command)
         {
         case Options::MouseRaise:
             workspace()->raiseClient( this );
@@ -734,6 +734,14 @@ void Workspace::reloadEffect( const QString& name )
         static_cast<EffectsHandlerImpl*>(effects)->reloadEffect( name );
     }
 
+QStringList Workspace::loadedModules() const
+    {
+        QStringList listModulesLoaded;
+        if ( effects )
+            listModulesLoaded = static_cast<EffectsHandlerImpl*>(effects)->loadedModules();
+        return listModulesLoaded;
+    }
+
 void Workspace::slotActivateAttentionWindow()
     {
     if( attention_chain.count() > 0 )
@@ -743,13 +751,13 @@ void Workspace::slotActivateAttentionWindow()
 void Workspace::slotSwitchDesktopNext()
     {
     int d = currentDesktop() + 1;
-     if ( d > numberOfDesktops() ) 
+     if ( d > numberOfDesktops() )
         {
-        if ( options->rollOverDesktops ) 
+        if ( options->rollOverDesktops )
             {
             d = 1;
             }
-        else 
+        else
             {
             return;
             }
@@ -760,7 +768,7 @@ void Workspace::slotSwitchDesktopNext()
 void Workspace::slotSwitchDesktopPrevious()
     {
     int d = currentDesktop() - 1;
-    if ( d <= 0 ) 
+    if ( d <= 0 )
         {
         if ( options->rollOverDesktops )
           d = numberOfDesktops();
@@ -979,7 +987,7 @@ void Workspace::slotWindowToNextDesktop()
     {
     windowToNextDesktop( active_popup_client ? active_popup_client : active_client );
     }
-    
+
 void Workspace::windowToNextDesktop( Client* c )
     {
     int d = currentDesktop() + 1;
@@ -1001,7 +1009,7 @@ void Workspace::slotWindowToPreviousDesktop()
     {
     windowToPreviousDesktop( active_popup_client ? active_popup_client : active_client );
     }
-    
+
 void Workspace::windowToPreviousDesktop( Client* c )
     {
     int d = currentDesktop() - 1;
@@ -1096,7 +1104,7 @@ void Workspace::slotSendToDesktop( QAction *action )
       int desk = action->data().toInt();
     if ( !active_popup_client )
         return;
-    if ( desk == 0 ) 
+    if ( desk == 0 )
         { // the 'on_all_desktops' menu entry
         active_popup_client->setOnAllDesktops( !active_popup_client->isOnAllDesktops());
         return;
@@ -1255,7 +1263,7 @@ bool Workspace::shortcutAvailable( const KShortcut& cut, Client* ignore ) const
          ++it )
         {
         if( (*it) != ignore && (*it)->shortcut() == cut )
-            return false;    
+            return false;
         }
     return true;
     }

@@ -711,6 +711,16 @@ void EffectsHandlerImpl::toggleEffect( const QString& name )
         loadEffect( name );
     }
 
+QStringList EffectsHandlerImpl::loadedModules() const
+    {
+        QStringList listModules;
+        for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
+        {
+            listModules <<(*it).first;
+        }
+        return listModules;
+    }
+
 bool EffectsHandlerImpl::loadEffect( const QString& name )
     {
     Workspace::self()->addRepaintFull();
@@ -1262,7 +1272,7 @@ EffectWindow* effectWindow( Scene::Window* w )
 // EffectWindowGroupImpl
 //****************************************
 
- 
+
 EffectWindowList EffectWindowGroupImpl::members() const
     {
     EffectWindowList ret;

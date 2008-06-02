@@ -47,6 +47,9 @@
     <method name="reloadEffect">
       <arg name="name" type="s" direction="in"/>
     </method>
+    <method name="loadedModules">
+      <arg type="as" direction="out"/>
+    </method>    
     <method name="decorationSupportedColors">
       <arg type="ai" direction="out"/>
       <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList&lt;int>"/>

@@ -141,6 +141,7 @@ class EffectsHandlerImpl : public EffectsHandler
         void unloadEffect( const QString& name );
         void reloadEffect( const QString& name );
         bool isEffectLoaded( const QString& name );
+        QStringList loadedModules() const;
 
         QList<EffectWindow*> elevatedWindows() const;
 

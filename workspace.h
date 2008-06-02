@@ -66,7 +66,7 @@ class Workspace : public QObject, public KDecorationDefines
         virtual ~Workspace();
 
         static Workspace * self() { return _self; }
-        
+
         bool workspaceEvent( XEvent * );
         bool workspaceEvent( QEvent * );
 
@@ -212,6 +212,9 @@ class Workspace : public QObject, public KDecorationDefines
         void reloadEffect( const QString& name );
 
         void unloadEffect( const QString& name );
+
+        QStringList loadedModules() const;
+
 
         /**
 	 * Shows the menu operations menu for the client and makes it active if
@@ -560,7 +563,7 @@ class Workspace : public QObject, public KDecorationDefines
         void closeActivePopup();
 
         void updateClientArea( bool force );
-        
+
         void finishCompositing();
         bool windowRepaintsPending() const;
 
