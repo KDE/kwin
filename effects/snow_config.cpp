@@ -116,6 +116,7 @@ void SnowEffectConfig::defaults()
     m_ui->numberFlakes->setValue( 50 );
     m_ui->minSizeFlake->setValue( 10 );
     m_ui->maxSizeFlake->setValue( 50 );
+    m_ui->editor->allDefault();
     emit changed(true);
     }
 
