@@ -142,7 +142,9 @@ void ShadowEffect::windowClosed( EffectWindow* c )
 
 bool ShadowEffect::useShadow( EffectWindow* w ) const
     {
-    return !w->isDeleted() && !w->isDesktop() && !w->isDock() && !w->hasOwnShape();
+    return !w->isDeleted() && !w->isDesktop() && !w->isDock()
+        // popups may have shadow even if shaped, their shape is almost rectangular
+        && ( !w->hasOwnShape() || w->isDropdownMenu() || w->isPopupMenu() || w->isComboBox());
     }
 
 void ShadowEffect::addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const
