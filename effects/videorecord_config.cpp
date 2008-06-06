@@ -104,6 +104,8 @@ void VideoRecordEffectConfig::save()
 
     conf.sync();
 
+    mShortcutEditor->save();    // undo() will restore to this state from now on
+
     emit changed(false);
     EffectsHandler::sendReloadMessage( "videorecord" );
     }
