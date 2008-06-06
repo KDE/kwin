@@ -62,8 +62,8 @@ SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
 
     KAction* a = (KAction*)m_actionCollection->addAction( "Snow" );
     a->setText( i18n("Toggle Snow on Desktop" ));
-    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F12 ));
     a->setProperty("isConfigurationAction", true);
+    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F12 ));
 
     m_ui->editor->addCollection(m_actionCollection);
     }

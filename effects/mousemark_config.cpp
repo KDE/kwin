@@ -65,13 +65,13 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
 
     KAction* a = static_cast< KAction* >( m_actionCollection->addAction( "ClearMouseMarks" ));
     a->setText( i18n( "Clear Mouse Marks" ));
-    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F11 ));
     a->setProperty("isConfigurationAction", true);
+    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F11 ));
 
     a = static_cast< KAction* >( m_actionCollection->addAction( "ClearLastMouseMark" ));
     a->setText( i18n( "Clear Last Mouse Mark" ));
-    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F12 ));
     a->setProperty("isConfigurationAction", true);
+    a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F12 ));
 
     m_ui->editor->addCollection(m_actionCollection);
 

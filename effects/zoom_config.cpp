@@ -45,16 +45,16 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* a;
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomIn ));
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Equal));
     a->setProperty("isConfigurationAction", true);
+    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Equal));
 
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomOut ));
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a->setProperty("isConfigurationAction", true);
+    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
 
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ActualSize ));
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
     a->setProperty("isConfigurationAction", true);
+    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);

@@ -45,8 +45,8 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "Invert" ));
     a->setText( i18n("Toggle Invert Effect" ));
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
     a->setProperty("isConfigurationAction", true);
+    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);

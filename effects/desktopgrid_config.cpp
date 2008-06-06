@@ -74,8 +74,8 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* show = static_cast<KAction*>(actionCollection->addAction( "ShowDesktopGrid" ));
     show->setText( i18n("Show Desktop Grid" ));
-    show->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F8 ));
     show->setProperty("isConfigurationAction", true);
+    show->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F8 ));
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
