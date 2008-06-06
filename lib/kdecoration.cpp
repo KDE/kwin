@@ -82,6 +82,7 @@ void KDecoration::createMainWidget( Qt::WFlags flags )
     QWidget *w = new QWidget( initialParentWidget(), initialWFlags() | flags );
     w->setObjectName("decoration widget");
     w->setAttribute( Qt::WA_PaintOnScreen );
+    w->setAttribute( Qt::WA_AlwaysShowToolTips );
     setMainWidget(w);
     }
 
