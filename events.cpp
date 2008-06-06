@@ -1238,7 +1238,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             }
         else
             { // inactive inner window
-            if( !isActive() && w == wrapperId())
+            if( !isActive() && w == wrapperId() && button < 4 )
                 {
                 was_action = true;
                 perform_handled = true;
@@ -1253,8 +1253,6 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
                     case Button3:
                         com = options->commandWindow3();
                         break;
-                    default:
-                        com = Options::MouseActivateAndPassClick;
                     }
                 }
             // active inner window
