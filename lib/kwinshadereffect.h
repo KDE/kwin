@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+
 /** @addtogroup kwineffects */
 /** @{ */
 
@@ -66,5 +68,7 @@ class KWIN_EXPORT ShaderEffect : public Effect
 } // namespace
 
 /** @} */
+
+#endif
 
 #endif

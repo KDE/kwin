@@ -47,6 +47,9 @@ SET(kwin4_effect_builtins_sources
     minimizeanimation.cpp
     presentwindows.cpp
     scalein.cpp
+    shadow.cpp
+    showfps.cpp
+    showpaint.cpp
     taskbarthumbnail.cpp
     thumbnailaside.cpp
     zoom.cpp
@@ -66,6 +69,9 @@ install( FILES
     minimizeanimation.desktop
     presentwindows.desktop
     scalein.desktop
+    shadow.desktop
+    showfps.desktop
+    showpaint.desktop
     taskbarthumbnail.desktop
     thumbnailaside.desktop
     zoom.desktop
@@ -80,6 +86,8 @@ SET(kwin4_effect_builtins_config_sources
     maketransparent_config.ui
     presentwindows_config.cpp
     shadow_config.cpp
+    showfps_config.cpp
+    showfps_config.ui
     thumbnailaside_config.cpp
     thumbnailaside_config.ui
     zoom_config.cpp
@@ -90,6 +98,7 @@ install( FILES
     maketransparent_config.desktop
     presentwindows_config.desktop
     shadow_config.desktop
+    showfps_config.desktop
     thumbnailaside_config.desktop
     zoom_config.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
@@ -105,7 +114,6 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         lookingglass.cpp
         magnifier.cpp
         mousemark.cpp
-        shadow.cpp
         sharpen.cpp
         snow.cpp
         trackmouse.cpp
@@ -120,7 +128,6 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         lookingglass.desktop
         magnifier.desktop
         mousemark.desktop
-        shadow.desktop
         sharpen.desktop
         snow.desktop
         trackmouse.desktop
@@ -174,31 +181,11 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         magnifier_config.desktop
         mousemark_config.desktop
         sharpen_config.desktop
-        showfps_config.desktop
         snow_config.desktop
         trackmouse_config.desktop
         wobblywindows_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 endif(KWIN_HAVE_OPENGL_COMPOSITING)
-
-# showfps, showpaint - need xrender or opengl
-if(KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING)
-    SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-        showfps.cpp
-        showpaint.cpp
-        )
-    install( FILES
-        showfps.desktop
-        showpaint.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-    SET(kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-        showfps_config.cpp
-        showfps_config.ui
-       )
-    install( FILES 
-        showfps_config.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-endif(KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING)
 
 # add the plugin
 KWIN4_ADD_EFFECT(builtins ${kwin4_effect_builtins_sources})

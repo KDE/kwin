@@ -46,8 +46,11 @@ add_subdirectory( lib )
 add_subdirectory( killer )
 add_subdirectory( kcmkwin )
 add_subdirectory( clients )
-add_subdirectory( effects )
 add_subdirectory( data )
+
+if( KWIN_HAVE_COMPOSITING )
+add_subdirectory( effects )
+endif( KWIN_HAVE_COMPOSITING )
 
 ########### next target ###############
 

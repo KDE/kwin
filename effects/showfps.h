@@ -40,8 +40,12 @@ class ShowFpsEffect
         virtual void postPaintScreen();
         enum { INSIDE_GRAPH, NOWHERE, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }; // fps text position
     private:
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         void paintGL( int fps );
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         void paintXrender( int fps );
+#endif
         void paintFPSGraph(int x, int y);
         void paintDrawSizeGraph(int x, int y);
         void paintGraph( int x, int y, QList<int> values, QList<int> lines, bool colorize);
@@ -58,7 +62,9 @@ class ShowFpsEffect
         int x;
         int y;
         QRect fps_rect;
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         GLTexture *fpsText;
+#endif
         int textPosition;
         QFont textFont;
         QColor textColor;

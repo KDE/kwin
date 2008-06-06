@@ -29,6 +29,7 @@ namespace KWin
 
 class GLTexture;
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 class ShadowTiles
     {
     public:
@@ -38,6 +39,7 @@ class ShadowTiles
                         btmLeft, btm, btmRight;
         QSize cornerSize;
     };
+#endif
 
 class ShadowEffect
     : public QObject, public Effect
@@ -69,8 +71,12 @@ class ShadowEffect
         int shadowSize;
         bool intensifyActiveShadow;
         QColor shadowColor;
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
         GLTexture* mShadowTexture;
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         ShadowTiles *mShadowPics;
+#endif
 
         struct ShadowData
         {

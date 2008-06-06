@@ -21,13 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 
-#include "shadow_config.h"
-#include "presentwindows_config.h"
 #include "desktopgrid_config.h"
-#include "maketransparent_config.h"
 #include "diminactive_config.h"
+#include "maketransparent_config.h"
+#include "presentwindows_config.h"
+#include "shadow_config.h"
+#include "showfps_config.h"
 #include "thumbnailaside_config.h"
 #include "zoom_config.h"
+
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include "coverswitch_config.h"
@@ -40,9 +42,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "snow_config.h"
 #include "trackmouse_config.h"
 #include "wobblywindows_config.h"
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include "showfps_config.h"
 #endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+// xrender-only here if any
+#endif
+#ifdef HAVE_CAPTURY
+#include "videorecord_config.h"
 #endif
 
 #include <kwineffects.h>
@@ -52,16 +57,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
 
-#define NON_GL_PLUGINS \
+#define COMMON_PLUGINS \
     registerPlugin<KWin::DesktopGridEffectConfig>("desktopgrid"); \
     registerPlugin<KWin::DimInactiveEffectConfig>("diminactive"); \
     registerPlugin<KWin::MakeTransparentEffectConfig>("maketransparent"); \
     registerPlugin<KWin::PresentWindowsEffectConfig>("presentwindows");   \
     registerPlugin<KWin::ShadowEffectConfig>("shadow"); \
+    registerPlugin<KWin::ShowFpsEffectConfig> ("showfps"); \
     registerPlugin<KWin::ThumbnailAsideEffectConfig>("thumbnailaside"); \
     registerPlugin<KWin::ZoomEffectConfig>("zoom");
 
-#define GL_PLUGINS \
+#define OPENGL_PLUGINS \
     registerPlugin<KWin::CoverSwitchEffectConfig>("coverswitch"); \
     registerPlugin<KWin::FlipSwitchEffectConfig>("flipswitch"); \
     registerPlugin<KWin::InvertEffectConfig>("invert"); \
@@ -71,22 +77,27 @@ KWIN_EFFECT_CONFIG_FACTORY
     registerPlugin<KWin::SharpenEffectConfig>("sharpen"); \
     registerPlugin<KWin::SnowEffectConfig>("snow"); \
     registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse"); \
+    registerPlugin<KWin::WobblyWindowsEffectConfig> ("wobblywindows");
 
-#define GL_RENDER_PLUGINS \
-    registerPlugin<KWin::ShowFpsEffectConfig> ("showfps"); \
-    registerPlugin<KWin::WobblyWindowsEffectConfig> ("wobblywindows"); \
+#define XRENDER_PLUGINS
+#define CAPTURY_PLUGINS \
+    registerPlugin<KWin::VideoRecordEffectConfig> ("videorecord");
 
+K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
+    COMMON_PLUGINS
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
-    NON_GL_PLUGINS
-    GL_PLUGINS
+    OPENGL_PLUGINS
+#endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    GL_RENDER_PLUGINS
+    XRENDER_PLUGINS
+#endif
+#ifdef HAVE_CAPTURY
+    CAPTURY_PLUGINS
 #endif
     )
-#else
-K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
-    NON_GL_PLUGINS
-    )
-#endif
 K_EXPORT_PLUGIN(EffectFactory("kwin"))
+
+#undef COMMON_PLUGINS
+#undef OPENGL_PLUGINS
+#undef XRENDER_PLUGINS
+#undef CAPTURY_PLUGINS

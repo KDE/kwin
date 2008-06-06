@@ -39,6 +39,7 @@ namespace KWin
 
 KWIN_EFFECT( shadow, ShadowEffect )
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 ShadowTiles::ShadowTiles(const QPixmap& shadow)
     {
     int w = shadow.width() / 2, h = shadow.height() / 2;
@@ -72,6 +73,8 @@ ShadowTiles::ShadowTiles(const QPixmap& shadow)
 
 #undef DUMP_CNR
 #undef DUMP_TILE
+
+#endif
 
 ShadowEffect::ShadowEffect()
     {

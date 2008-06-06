@@ -50,7 +50,9 @@ const int MAX_TIME = 100;
 ShowFpsEffect::ShowFpsEffect()
     : paints_pos( 0 )
     , frames_pos( 0 )
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , fpsText(0)
+#endif
     {
     for( int i = 0;
          i < NUM_PAINTS;
@@ -172,9 +174,9 @@ void ShowFpsEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data
 #endif
     }
 
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 void ShowFpsEffect::paintGL( int fps )
     {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     int x = this->x;
     int y = this->y;
     glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
@@ -223,9 +225,10 @@ void ShowFpsEffect::paintGL( int fps )
 
     // Paint paint sizes
     glPopAttrib();
-#endif
     }
+#endif
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 /*
  Differences between OpenGL and XRender:
  - differently specified rectangles (X: width/height, O: x2,y2)
@@ -233,7 +236,6 @@ void ShowFpsEffect::paintGL( int fps )
 */
 void ShowFpsEffect::paintXrender( int fps )
     {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     Pixmap pixmap = XCreatePixmap( display(), rootWindow(), FPS_WIDTH, MAX_TIME, 32 );
     XRenderPicture p( pixmap, 32 );
     XFreePixmap( display(), pixmap );
@@ -264,9 +266,8 @@ void ShowFpsEffect::paintXrender( int fps )
 
     // Paint amount of rendered pixels graph
     paintDrawSizeGraph( x + FPS_WIDTH + MAX_TIME, y );
-
-#endif
     }
+#endif
 
 void ShowFpsEffect::paintFPSGraph(int x, int y)
     {
