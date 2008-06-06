@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <qvector.h>
 #include <qpixmap.h>
+#include <qpainter.h>
 #include <kdebug.h>
 
 namespace KWin
@@ -49,6 +50,97 @@ XserverRegion toXserverRegion( QRegion region )
     delete[] xr;
     return ret;
     }
+
+// adapted from Qt, because this really sucks ;)
+XRenderColor preMultiply(const QColor &c, float opacity)
+{
+    XRenderColor color;
+    const uint A = c.alpha() * opacity,
+               R = c.red(),
+               G = c.green(),
+               B = c.blue();
+    color.alpha = (A | A << 8);
+    color.red   = (R | R << 8) * color.alpha / 0x10000;
+    color.green = (G | G << 8) * color.alpha / 0x10000;
+    color.blue  = (B | B << 8) * color.alpha / 0x10000;
+    return color;
+}
+
+XRenderPicture xRenderFill( const XRenderColor *xc )
+    {
+    Pixmap pixmap = XCreatePixmap( display(), rootWindow(), 1, 1, 32 );
+    XRenderPictureAttributes pa; pa.repeat = True;
+    XRenderPicture fill( pixmap, 32 );
+    XFreePixmap( display(), pixmap );
+    XRenderChangePicture (display(), fill, CPRepeat, &pa);
+    XRenderFillRectangle( display(), PictOpSrc, fill, xc, 0, 0, 1, 1 );
+    return fill;
+    }
+
+XRenderPicture xRenderFill( const QColor &c )
+    {
+    XRenderColor xc = preMultiply(c);
+    return xRenderFill( &xc );
+    }
+
+
+static XRenderPicture *_circle[4] = {NULL, NULL, NULL, NULL};
+
+#define DUMP_CNR(_SECT_, _W_, _H_, _XOFF_, _YOFF_)\
+    dump = QPixmap(_W_, _H_);\
+    dump.fill(Qt::transparent);\
+    p.begin(&dump);\
+    p.drawPixmap( 0, 0, tmp, _XOFF_, _YOFF_, _W_, _H_ );\
+    p.end();\
+    _circle[_SECT_] = new XRenderPicture(dump);
+
+#define CS 8
+    
+static XRenderPicture *circle(int i)
+    {
+    if (!_circle[0])
+        {
+        QPixmap tmp(2*CS, 2*CS);
+        tmp.fill(Qt::transparent);
+        QPainter p(&tmp);
+        p.setRenderHint(QPainter::Antialiasing);
+        p.setPen(Qt::NoPen); p.setBrush(Qt::black);
+        p.drawEllipse(tmp.rect());
+        p.end();
+        QPixmap dump;
+        DUMP_CNR(0, CS, CS, 0, 0);
+        DUMP_CNR(1, CS, CS, CS, 0);
+        DUMP_CNR(2, CS, CS, CS, CS);
+        DUMP_CNR(3, CS, CS, 0, CS);
+        }
+    return _circle[i];
+    }
+
+void xRenderRoundBox( Picture pict, const QRect &rect, int , const QColor &c )
+    {
+    XRenderPicture fill = xRenderFill(c);
+    int op = c.alpha() == 255 ? PictOpSrc : PictOpOver;
+    // TODO: implement second paramenter "roundness"
+    // so rather use ?? XRenderCompositeTriFan (dpy, op, src, dst, maskFormat, xSrc, ySrc,
+                                                    //XPointFixed *points, npoint);
+    // this will require "points on a circle" calculation, however...
+    
+    int s = qMin(CS, qMin(rect.height()/2, rect.width()/2));
+    int x,y,b,r;
+    rect.getCoords(&x,&y,&r,&b);
+    r -= (s - 1);
+    b -= (s - 1);
+    XRenderComposite( display(), PictOpOver, fill, *circle(0), pict, 0, 0, 0, 0, x, y, CS, CS );
+    XRenderComposite( display(), PictOpOver, fill, *circle(1), pict, 0, 0, CS-s, 0, r, y, s, s );
+    XRenderComposite( display(), PictOpOver, fill, *circle(2), pict, 0, 0, CS-s, CS-s, r, b, s, s );
+    XRenderComposite( display(), PictOpOver, fill, *circle(3), pict, 0, 0, 0, CS-s, x, b, s, s );
+    XRenderComposite( display(), op, fill, 0, pict, 0, 0, 0, 0, x+s, y, rect.width()-2*s, s);
+    XRenderComposite( display(), op, fill, 0, pict, 0, 0, 0, 0, x, y+s, rect.width(), rect.height()-2*s);
+    XRenderComposite( display(), op, fill, 0, pict, 0, 0, 0, 0, x+s, b, rect.width()-2*s, s);
+    }
+
+#undef CS
+#undef DUMP_CNR
 
 // XRenderFind(Standard)Format() is a roundtrip, so cache the results
 static XRenderPictFormat* renderformats[ 33 ];

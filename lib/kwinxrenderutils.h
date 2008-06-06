@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
 #include <QtCore/QSharedData>
+#include <QtGui/QColor>
 #include <ksharedptr.h>
 
 #include <kwinglobals.h>
@@ -43,6 +44,14 @@ namespace KWin
  * Convert QRegion to XserverRegion.
  */
 KWIN_EXPORT XserverRegion toXserverRegion( QRegion region );
+/**
+ * draws a round box on the renderscene
+ */
+KWIN_EXPORT void xRenderRoundBox( Picture pict, const QRect &rect, int round, const QColor &c );
+/**
+ * dumps a QColor into a XRenderColor
+ */
+KWIN_EXPORT XRenderColor preMultiply(const QColor &c, float opacity = 1.0);
 
 /** @internal */
 class KWIN_EXPORT XRenderPictureData
@@ -105,6 +114,12 @@ XRenderPicture::operator Picture()
     {
     return d->value();
     }
+
+/**
+ * Creates a 1x1 Picture filled with c
+ */
+KWIN_EXPORT XRenderPicture xRenderFill( const XRenderColor *c );
+KWIN_EXPORT XRenderPicture xRenderFill( const QColor &c );
 
 } // namespace
 

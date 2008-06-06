@@ -405,7 +405,13 @@ bool EffectsHandler::paintTextWithBackground( const QString& text, const QPoint&
         return paintText( text, center, maxwidth, color, font );
     }
 #endif
-    // TODO: render at least a simple background rect in XRender mode
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( effects->compositingType() == XRenderCompositing )
+    {
+        xRenderRoundBox( effects->xrenderBufferPicture(), area.adjusted( -8, -3, 8, 3 ), 5, bgcolor );
+        return paintText( text, center, maxwidth, color, font );
+    }
+#endif
     return false;
 }
 
