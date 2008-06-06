@@ -51,7 +51,7 @@ Name[uk]=Показ вікон
 Name[vi]=Sắp xếp cửa sổ
 Name[wa]=Prezint purnea
 Name[x-test]=xxPresent Windowsxx
-Name[zh_CN]=呈现窗口
+Name[zh_CN]=窗口轮转
 Name[zh_TW]=展示視窗
 Icon=preferences-system-windows-effect-presentwindows
 Comment=Shows all windows side-by-side
@@ -102,7 +102,7 @@ Comment[tr]=Tüm pencereleri yan yana gösterir
 Comment[uk]=Показує всі вікна одне біля одного
 Comment[vi]=Hiển thị mọi cửa sổ cạnh nhau
 Comment[x-test]=xxShows all windows side-by-sidexx
-Comment[zh_CN]=一个挨一个地显示所有窗口
+Comment[zh_CN]=一个接一个显示所有窗口
 Comment[zh_TW]=讓所有視窗排排站
 
 Type=Service

@@ -93,7 +93,7 @@ Comment[th]=การปรากฎตัวของหน้าต่าง�
 Comment[tr]=Pencerelerin ortaya çıkışını canlandırır
 Comment[uk]=Анімація появи вікон
 Comment[x-test]=xxAnimates appearing of windowsxx
-Comment[zh_CN]=窗口的动画出现
+Comment[zh_CN]=呈现窗口动画
 Comment[zh_TW]=動畫顯示視窗
 
 Type=Service

@@ -4,6 +4,7 @@ Name[af]=Keer om
 Name[be]=Інвертаваць
 Name[bg]=Инвертиране
 Name[ca]=Inverteix
+Name[cs]=Invertovat
 Name[csb]=Inwertëje
 Name[da]=Invertér
 Name[de]=Invertieren
@@ -81,7 +82,7 @@ Comment[th]=กลับสีของพื้นที่ทำงาน
 Comment[tr]=Masaüstünün renklerini negatifleştirir
 Comment[uk]=Інвертує (обертає) кольори стільниці
 Comment[x-test]=xxInverts (negates) desktop colorsxx
-Comment[zh_CN]=反转(求反)桌面颜色
+Comment[zh_CN]=桌面颜色反转
 Comment[zh_TW]=將桌面上的顏色反轉
 Icon=preferences-system-windows-effect-invert
 
