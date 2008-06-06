@@ -22,12 +22,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SHADOW_H
 
 #include <kwineffects.h>
-
+#include <kwinxrenderutils.h>
 
 namespace KWin
 {
 
 class GLTexture;
+
+class ShadowTiles
+    {
+    public:
+        ShadowTiles(const QPixmap& shadow);
+        XRenderPicture  topLeft, top, topRight,
+                        left, center, right,
+                        btmLeft, btm, btmRight;
+        QSize cornerSize;
+    };
 
 class ShadowEffect
     : public QObject, public Effect
@@ -60,6 +70,7 @@ class ShadowEffect
         bool intensifyActiveShadow;
         QColor shadowColor;
         GLTexture* mShadowTexture;
+        ShadowTiles *mShadowPics;
 
         struct ShadowData
         {
