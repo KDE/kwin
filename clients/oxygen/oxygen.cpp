@@ -45,6 +45,7 @@ namespace Oxygen
 
 bool OxygenFactory::initialized_ = false;
 Qt::Alignment OxygenFactory::titlealign_ = Qt::AlignLeft;
+bool OxygenFactory::showStripes_ = true;
 
 //////////////////////////////////////////////////////////////////////////////
 // OxygenFactory()
@@ -114,7 +115,10 @@ bool OxygenFactory::readConfig()
     else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
     else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
 
-    if (oldalign == titlealign_)
+    bool oldstripes = showStripes;    
+    showStripes_ = group.readEntry( "ShowStripes", true );
+
+    if (oldalign == titlealign_ && oldstripes == showStripes_)
         return false;
     else
         return true;

@@ -346,8 +346,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
                                QPointF(x+w, titleTop+titleHeight-0.5));
     }
 
-    // draw "scratches" as indicator for active windows
-    if (isActive()) {
+    // draw stripes as indicator for active windows
+    if (isActive() && OxygenFactory::showStripes()) {
         Qt::Alignment align = OxygenFactory::titleAlign();
         if (widget()->layoutDirection() == Qt::RightToLeft)
         {

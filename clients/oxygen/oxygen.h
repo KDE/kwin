@@ -63,6 +63,7 @@ public:
 
     static bool initialized();
     static Qt::Alignment titleAlign();
+    static bool showStripes();
 
 private:
     bool readConfig();
@@ -70,6 +71,7 @@ private:
 private:
     static bool initialized_;
     static Qt::Alignment titlealign_;
+    static bool showStripes_;
 };
 
 inline bool OxygenFactory::initialized()
@@ -77,6 +79,9 @@ inline bool OxygenFactory::initialized()
 
 inline Qt::Alignment OxygenFactory::titleAlign()
     { return titlealign_; }
+
+inline bool OxygenFactory::showStripes()
+    { return showStripes_; }
 
 } //namespace Oxygen
 
