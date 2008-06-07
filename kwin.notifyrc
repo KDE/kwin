@@ -192,7 +192,7 @@ Comment[uz@cyrillic]=Биринчи виртуал иш столи танлан�
 Comment[x-test]=xxVirtual desktop one is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 1
 Comment[zh_TW]=已選擇虛擬桌面 1 號
-Action=Sound
+Action=None
 Sound=KDE-Sys-Special.ogg
 
 
@@ -323,7 +323,7 @@ Comment[wa]=Forveyou scribanne deus est tchoezi
 Comment[x-test]=xxVirtual desktop two is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 2
 Comment[zh_TW]=已選擇虛擬桌面 2 號
-Action=Sound
+Action=None
 Sound=KDE-Sys-Special.ogg
 
 
@@ -454,7 +454,7 @@ Comment[wa]=Forveyou scribanne troes est tchoezi
 Comment[x-test]=xxVirtual desktop three is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 3
 Comment[zh_TW]=已選擇虛擬桌面 3 號
-Action=Sound
+Action=None
 Sound=KDE-Sys-Special.ogg
 
 
@@ -583,7 +583,7 @@ Comment[uz@cyrillic]=Тўртинчи виртуал иш столи танла�
 Comment[x-test]=xxVirtual desktop four is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 4
 Comment[zh_TW]=已選擇虛擬桌面 4 號
-Action=Sound
+Action=None
 Sound=KDE-Sys-Special.ogg
 
 
@@ -714,7 +714,7 @@ Comment[wa]=Forveyou scribanne cénk est tchoezi
 Comment[x-test]=xxVirtual desktop five is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 5
 Comment[zh_TW]=已選擇虛擬桌面 5 號
-Action=Sound
+Action=None
 Sound=KDE-Sys-Special.ogg
 
 
@@ -839,7 +839,7 @@ Comment[wa]=Forveyou scribanne chijh est tchoezi
 Comment[x-test]=xxVirtual desktop six is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 6
 Comment[zh_TW]=已選擇虛擬桌面 6 號
-Action=Sound
+Action=None
 Sound=KDE-Sys-Special.ogg
 
 
@@ -970,7 +970,7 @@ Comment[wa]=Forveyou scribanne sete est tchoezi
 Comment[x-test]=xxVirtual desktop seven is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 7
 Comment[zh_TW]=已選擇虛擬桌面 7 號
-Action=Sound
+Action=None
 Sound=KDE-Sys-Special.ogg
 
 
@@ -1101,7 +1101,7 @@ Comment[wa]=Forveyou scribanne ût est tchoezi
 Comment[x-test]=xxVirtual desktop eight is selectedxx
 Comment[zh_CN]=选择了虚拟桌面 8
 Comment[zh_TW]=已選擇虛擬桌面 8 號
-Action=Sound
+Action=None
 Sound=KDE-Sys-Special.ogg
 
 
@@ -2873,7 +2873,7 @@ Comment[wa]=Novea purnea
 Comment[x-test]=xxNew windowxx
 Comment[zh_CN]=新建窗口
 Comment[zh_TW]=新視窗
-Action=Sound
+Action=None
 Sound=KDE-Sys-App-Message.ogg
 
 
@@ -3124,7 +3124,7 @@ Comment[wa]=On purnea s' clôt
 Comment[x-test]=xxA window closesxx
 Comment[zh_CN]=窗口关闭了
 Comment[zh_TW]=一個視窗已關閉
-Action=Sound
+Action=None
 Sound=KDE-Window-Close.ogg
 
 
@@ -3242,7 +3242,7 @@ Comment[wa]=On purnea est a l' ombion
 Comment[x-test]=xxA window is shaded upxx
 Comment[zh_CN]=窗口被卷起
 Comment[zh_TW]=視窗層級往上
-Action=Sound
+Action=None
 Sound=KDE-Window-Shade-Up.ogg
 
 
@@ -3359,7 +3359,7 @@ Comment[uk]=Вікно згорнене вниз
 Comment[x-test]=xxA window is shaded downxx
 Comment[zh_CN]=窗口被展开
 Comment[zh_TW]=視窗層級往下
-Action=Sound
+Action=None
 Sound=KDE-Window-Shade-Down.ogg
 
 
@@ -3487,7 +3487,7 @@ Comment[wa]=On purnea est å pus ptit
 Comment[x-test]=xxA window is minimizedxx
 Comment[zh_CN]=窗口被最小化
 Comment[zh_TW]=視窗已縮到最小
-Action=Sound
+Action=None
 Sound=KDE-Window-Minimize.ogg
 
 
@@ -3608,7 +3608,7 @@ Comment[wa]=On purnea est rassonré
 Comment[x-test]=xxA Window is restoredxx
 Comment[zh_CN]=窗口被恢复
 Comment[zh_TW]=視窗已還原
-Action=Sound
+Action=None
 Sound=KDE-Window-Maximize.ogg
 
 
@@ -3738,7 +3738,7 @@ Comment[wa]=On purnea est å pus grand
 Comment[x-test]=xxA window is maximizedxx
 Comment[zh_CN]=窗口被最大化
 Comment[zh_TW]=視窗已放到最大
-Action=Sound
+Action=None
 Sound=KDE-Window-Maximize.ogg
 
 
@@ -3859,7 +3859,7 @@ Comment[uk]=Максимізацію вікна скасовано
 Comment[x-test]=xxA window loses maximizationxx
 Comment[zh_CN]=窗口不再最大化
 Comment[zh_TW]=視窗已解除最大化
-Action=Sound
+Action=None
 Sound=KDE-Window-Minimize.ogg
 
 
@@ -3971,7 +3971,7 @@ Comment[wa]=On purnea est veyåve so tos les scribannes
 Comment[x-test]=xxA window is made visible on all desktopsxx
 Comment[zh_CN]=窗口出现在全部桌面上
 Comment[zh_TW]=將視窗放在所有桌面上
-Action=Sound
+Action=None
 Sound=KDE-Window-All-Desktops.ogg
 
 
@@ -4079,7 +4079,7 @@ Comment[wa]=On purnea n' est pu veyåve so tos les scribannes
 Comment[x-test]=xxA Window is no longer visible on all desktopsxx
 Comment[zh_CN]=窗口不再出现在全部桌面上
 Comment[zh_TW]=讓視窗不再在所有桌面上顯示
-Action=Sound
+Action=None
 Sound=KDE-Window-All-Desktops-Not.ogg
 
 [Event/transnew]
@@ -4322,7 +4322,7 @@ Comment[uz@cyrillic]=Мулоқат ойнаси ёпилди
 Comment[x-test]=xxTransient window (a dialog) is removedxx
 Comment[zh_CN]=删除了临时窗口(对话框)
 Comment[zh_TW]=對話框已移除
-Action=Sound
+Action=None
 Sound=KDE-Window-Close.ogg
 
 
