@@ -98,10 +98,13 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   QGroupBox *name_group = new QGroupBox(i18n("Desktop &Names"), this);
   QVBoxLayout *vhoxlayout = new QVBoxLayout;
   name_group->setLayout(vhoxlayout);
+  QFontMetrics fm(label->font());
+  int labelWidth = fm.width(i18n("Desktop %1:", 10)); // be sure that all label will have the same width (with one or two numbers, e.g. 1, 99)
   for(int i = 0; i < (maxDesktops/2); i++)
     {
       QHBoxLayout *hboxLayout = new QHBoxLayout;
       _nameLabel[i] = new QLabel(i18n("Desktop %1:", i+1), name_group);
+      _nameLabel[i]->setMinimumWidth(labelWidth);
       hboxLayout->addWidget(_nameLabel[i]);
       _nameInput[i] = new KLineEdit(name_group);
       hboxLayout->addWidget(_nameInput[i]);
