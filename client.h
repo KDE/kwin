@@ -129,9 +129,6 @@ class Client
         void setDesktop( int );
         void setOnAllDesktops( bool set );
         
-        bool isOnScreen( int screen ) const; // true if it's at least partially there
-        int screen() const; // the screen where the center is
-
     // !isMinimized() && not hidden, i.e. normally visible on some virtual desktop
         bool isShown( bool shaded_is_shown ) const;
         bool isHiddenInternal() const; // for compositing

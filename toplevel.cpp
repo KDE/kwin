@@ -334,6 +334,21 @@ void Toplevel::deleteEffectWindow()
     effect_window = NULL;
     }
 
+int Toplevel::screen() const
+    {
+    if( !options->xineramaEnabled )
+        return 0;
+    return workspace()->screenNumber( geometry().center());
+    }
+
+bool Toplevel::isOnScreen( int screen ) const
+    {
+    if( !options->xineramaEnabled )
+        return screen == 0;
+    return workspace()->screenGeometry( screen ).intersects( geometry());
+    }
+
+
 } // namespace
 
 #include "toplevel.moc"

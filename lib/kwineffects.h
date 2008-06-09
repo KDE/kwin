@@ -162,7 +162,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 20
+#define KWIN_EFFECT_API_VERSION_MINOR 21
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -476,6 +476,7 @@ class KWIN_EXPORT EffectsHandler
         virtual void setCurrentDesktop( int desktop ) = 0;
         virtual QString desktopName( int desktop ) const = 0;
         virtual int activeScreen() const = 0; // Xinerama
+        virtual int numScreens() const = 0; // Xinerama
         virtual QRect clientArea( clientAreaOption, int screen, int desktop ) const = 0;
         virtual QRect clientArea( clientAreaOption, const EffectWindow* c ) const = 0;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const = 0;
@@ -619,6 +620,7 @@ class KWIN_EXPORT EffectWindow
         virtual int height() const = 0;
         virtual QRect geometry() const = 0;
         virtual QRegion shape() const = 0;
+        virtual int screen() const = 0;
         /** @internal Do not use */
         virtual bool hasOwnShape() const = 0; // only for shadow effect, for now
         virtual QPoint pos() const = 0;

@@ -547,6 +547,11 @@ int EffectsHandlerImpl::activeScreen() const
     return Workspace::self()->activeScreen();
     }
 
+int EffectsHandlerImpl::numScreens() const
+    {
+    return Workspace::self()->numScreens();
+    }
+
 QRect EffectsHandlerImpl::clientArea( clientAreaOption opt, int screen, int desktop ) const
     {
     return Workspace::self()->clientArea( opt, screen, desktop );
@@ -1055,6 +1060,11 @@ QRect EffectWindowImpl::geometry() const
 QRegion EffectWindowImpl::shape() const
     {
     return sw ? sw->shape() : geometry();
+    }
+
+int EffectWindowImpl::screen() const
+    {
+    return toplevel->screen();
     }
 
 bool EffectWindowImpl::hasOwnShape() const

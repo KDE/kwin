@@ -87,6 +87,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void addRepaint( const QRect& r );
         virtual void addRepaint( int x, int y, int w, int h );
         virtual int activeScreen() const;
+        virtual int numScreens() const;
         virtual QRect clientArea( clientAreaOption, int screen, int desktop ) const;
         virtual QRect clientArea( clientAreaOption, const EffectWindow* c ) const;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
@@ -191,6 +192,7 @@ class EffectWindowImpl : public EffectWindow
         virtual int height() const;
         virtual QRect geometry() const;
         virtual QRegion shape() const;
+        virtual int screen() const;
         virtual bool hasOwnShape() const;
         virtual QPoint pos() const;
         virtual QSize size() const;

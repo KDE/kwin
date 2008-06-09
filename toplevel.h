@@ -60,6 +60,8 @@ class Toplevel
         int y() const;
         int width() const;
         int height() const;
+        bool isOnScreen( int screen ) const; // true if it's at least partially there
+        int screen() const; // the screen where the center is
         virtual QPoint clientPos() const = 0; // inside of geometry()
         virtual QSize clientSize() const = 0;
 
