@@ -26,6 +26,16 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="QCheckBox" name="showStripes" >
+     <property name="whatsThis" >
+      <string>When enabled, this option increases the visibility of the window titlebar by showing stripes</string>
+     </property>
+     <property name="text" >
+      <string>Show stripes next to the title</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11" />

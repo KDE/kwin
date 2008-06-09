@@ -65,6 +65,7 @@ public:
 
     static bool initialized();
     static Qt::Alignment titleAlign();
+    static bool showStripes();
     static bool blendTitlebarColors();
 
 private:
@@ -73,6 +74,7 @@ private:
 private:
     static bool initialized_;
     static Qt::Alignment titlealign_;
+    static bool showStripes_;
     static bool blendTitlebarColors_;
 };
 
@@ -84,6 +86,9 @@ inline Qt::Alignment OxygenFactory::titleAlign()
 
 inline bool OxygenFactory::blendTitlebarColors()
     { return blendTitlebarColors_; }
+
+inline bool OxygenFactory::showStripes()
+    { return showStripes_; }
 
 } //namespace Oxygen
 } //namespace Ozone

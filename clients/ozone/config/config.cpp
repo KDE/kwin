@@ -49,6 +49,7 @@ OxygenConfig::OxygenConfig( KConfig*, QWidget* parent )
 	c = new KConfig( "oxygenrc" );
 	KConfigGroup cg(c, "Windeco");
 	ui = new OxygenConfigUI( parent );
+	connect( ui->showStripes,   SIGNAL(clicked()), SIGNAL(changed()) );
 	connect( ui->blendTitlebarColors,   SIGNAL(clicked()), SIGNAL(changed()) );
 
 	load( cg );
@@ -68,6 +69,7 @@ OxygenConfig::~OxygenConfig()
 void OxygenConfig::load( const KConfigGroup&  )
 {
 	KConfigGroup cg(c, "Windeco");
+	ui->showStripes->setChecked( cg.readEntry("ShowStripes", true) );
 	ui->blendTitlebarColors->setChecked( cg.readEntry("BlendTitlebarColors", true) );
 }
 
@@ -76,6 +78,7 @@ void OxygenConfig::load( const KConfigGroup&  )
 void OxygenConfig::save( KConfigGroup& )
 {
 	KConfigGroup cg(c, "Windeco");
+	cg.writeEntry( "ShowStripes", ui->showStripes->isChecked() );
 	cg.writeEntry( "BlendTitlebarColors", ui->blendTitlebarColors->isChecked() );
 	c->sync();
 }
@@ -84,6 +87,7 @@ void OxygenConfig::save( KConfigGroup& )
 // Sets UI widget defaults which must correspond to style defaults
 void OxygenConfig::defaults()
 {
+	ui->showStripes->setChecked( true );
 	ui->blendTitlebarColors->setChecked( true );
 	
 	emit changed();
