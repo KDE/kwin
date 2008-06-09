@@ -387,17 +387,24 @@ void PresentWindowsEffect::rearrangeWindows()
         {
         bool rearrange = canRearrangeClosest( windowlist ); // called before manipulating mWindowData
         DataHash newdata;
-        EffectWindowList newlist = windowlist;
-        EffectWindowList oldlist = mWindowData.keys();
-        qSort( newlist );
-        qSort( oldlist );
+        int oldcount = mWindowData.count();
         for( DataHash::ConstIterator it = mWindowData.begin();
              it != mWindowData.end();
              ++it )
             if( windowlist.contains( it.key())) // remove windows that are not in the window list
                 newdata[ it.key() ] = *it;
         mWindowData = newdata;
-        if( !rearrange && newlist == oldlist )
+        // Initialize new entries
+        foreach( EffectWindow* w, windowlist )
+            if( !mWindowData.contains( w ))
+                {
+                mWindowData[ w ].highlight = 0;
+                }
+        // Do not rearrange if filtering only removed windows, so that the remaining ones don't possibly
+        // jump into the freed slots if they'd be a better match.
+        // This can probably still lead to such things when removing the filter again, but that'd need
+        // more complex remembering of window positions.
+        if( !rearrange && oldcount >= mWindowData.count())
             return;
         if( mHighlightedWindow != NULL && !mWindowData.contains( mHighlightedWindow ))
             setHighlightedWindow( NULL );
@@ -408,12 +415,6 @@ void PresentWindowsEffect::rearrangeWindows()
             (*it).old_area = (*it).area;
             (*it).old_scale = (*it).scale;
             }
-        // Initialize new entries
-        foreach( EffectWindow* w, windowlist )
-            if( !mWindowData.contains( w ))
-                {
-                mWindowData[ w ].highlight = 0;
-                }
         mRearranging = 0; // start animation again
         }
 
