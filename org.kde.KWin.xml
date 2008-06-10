@@ -47,10 +47,10 @@
     <method name="reloadEffect">
       <arg name="name" type="s" direction="in"/>
     </method>
-    <method name="loadedModules">
+    <method name="loadedEffects">
       <arg type="as" direction="out"/>
     </method>    
-    <method name="listOfModulesEffect">
+    <method name="listOfEffects">
       <arg type="as" direction="out"/>
     </method>
     <method name="decorationSupportedColors">

@@ -213,8 +213,8 @@ class Workspace : public QObject, public KDecorationDefines
 
         void unloadEffect( const QString& name );
 
-        QStringList loadedModules() const;
-        QStringList listOfModulesEffect() const;
+        QStringList loadedEffects() const;
+        QStringList listOfEffects() const;
 
 
         /**

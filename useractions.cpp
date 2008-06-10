@@ -734,22 +734,21 @@ void Workspace::reloadEffect( const QString& name )
         static_cast<EffectsHandlerImpl*>(effects)->reloadEffect( name );
     }
 
-QStringList Workspace::loadedModules() const
+QStringList Workspace::loadedEffects() const
     {
-        QStringList listModulesLoaded;
-        if ( effects )
-            listModulesLoaded = static_cast<EffectsHandlerImpl*>(effects)->loadedModules();
-        return listModulesLoaded;
+    QStringList listModulesLoaded;
+    if ( effects )
+        listModulesLoaded = static_cast<EffectsHandlerImpl*>(effects)->loadedEffects();
+    return listModulesLoaded;
     }
 
-QStringList Workspace::listOfModulesEffect() const
+QStringList Workspace::listOfEffects() const
     {
-        QStringList listModules;
-        if ( effects )
-            listModules = static_cast<EffectsHandlerImpl*>(effects)->listOfModulesEffect();
-        return listModules;
+    QStringList listModules;
+    if ( effects )
+        listModules = static_cast<EffectsHandlerImpl*>(effects)->listOfEffects();
+    return listModules;
     }
-
 
 void Workspace::slotActivateAttentionWindow()
     {

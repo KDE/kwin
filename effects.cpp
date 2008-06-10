@@ -716,30 +716,28 @@ void EffectsHandlerImpl::toggleEffect( const QString& name )
         loadEffect( name );
     }
 
-QStringList EffectsHandlerImpl::loadedModules() const
+QStringList EffectsHandlerImpl::loadedEffects() const
     {
-        QStringList listModules;
-        for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
+    QStringList listModules;
+    for(QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
         {
-            listModules <<(*it).first;
+        listModules <<(*it).first;
         }
-        return listModules;
+    return listModules;
     }
 
-
-QStringList EffectsHandlerImpl::listOfModulesEffect() const
+QStringList EffectsHandlerImpl::listOfEffects() const
     {
-        KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
-        QStringList listOfModules;
-        // First unload necessary effects
-        foreach( const KService::Ptr &service, offers )
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+    QStringList listOfModules;
+    // First unload necessary effects
+    foreach( const KService::Ptr &service, offers )
         {
-            KPluginInfo plugininfo( service );
-            listOfModules<<plugininfo.pluginName();
+        KPluginInfo plugininfo( service );
+        listOfModules<<plugininfo.pluginName();
         }
-        return listOfModules;
+    return listOfModules;
     }
-
 
 bool EffectsHandlerImpl::loadEffect( const QString& name )
     {
