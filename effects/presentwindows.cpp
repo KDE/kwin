@@ -343,6 +343,11 @@ void PresentWindowsEffect::effectActivated()
     hasKeyboardGrab = effects->grabKeyboard( this );
     effects->setActiveFullScreenEffect( this );
     setHighlightedWindow( effects->activeWindow());
+
+    screenGridSizes.clear();
+    for( int i = 0; i < effects->numScreens(); i++ )
+        screenGridSizes.append( GridSize() );
+    numOfWindows.fill( 0, effects->numScreens() );
     }
 
 void PresentWindowsEffect::effectTerminated()
@@ -363,8 +368,16 @@ void PresentWindowsEffect::rearrangeWindows()
         return;
 
     EffectWindowList windowlist;
+    QVector<EffectWindowList> windowlists;
+    for( int i = 0; i < effects->numScreens(); i++ )
+        windowlists.append( EffectWindowList() );
+
     if( windowFilter.isEmpty())
+        {
         windowlist = mWindowsToPresent;
+        foreach( EffectWindow* w, mWindowsToPresent )
+            windowlists[ w->screen() ].append( w );
+        }
     else
         {
         foreach( EffectWindow* w, mWindowsToPresent )
@@ -372,7 +385,10 @@ void PresentWindowsEffect::rearrangeWindows()
             if( w->caption().contains( windowFilter, Qt::CaseInsensitive )
                 || w->windowClass().contains( windowFilter, Qt::CaseInsensitive )
                 || w->windowRole().contains( windowFilter, Qt::CaseInsensitive ))
+                {
                 windowlist.append( w );
+                windowlists[ w->screen() ].append( w );
+                }
             }
         }
     if( windowlist.isEmpty())
@@ -383,11 +399,11 @@ void PresentWindowsEffect::rearrangeWindows()
         return;
         }
 
-    if( !mWindowData.isEmpty()) // this is not the first arranging
+    // Check for changes if not the first arranging
+    bool firstTime = false;
+    if( !mWindowData.isEmpty())
         {
-        bool rearrange = canRearrangeClosest( windowlist ); // called before manipulating mWindowData
         DataHash newdata;
-        int oldcount = mWindowData.count();
         for( DataHash::ConstIterator it = mWindowData.begin();
              it != mWindowData.end();
              ++it )
@@ -400,34 +416,62 @@ void PresentWindowsEffect::rearrangeWindows()
                 {
                 mWindowData[ w ].highlight = 0;
                 }
+        }
+    else
+        firstTime = true;
+
+    bool rearranging = false;
+    QVector<int> newNumOfWindows( effects->numScreens(), 0 );
+    QVector<GridSize> newScreenGridSizes( effects->numScreens() );
+    for( int i = 0; i < effects->numScreens(); i++ )
+        {
+        newScreenGridSizes.append( GridSize() );
+
         // Do not rearrange if filtering only removed windows, so that the remaining ones don't possibly
         // jump into the freed slots if they'd be a better match.
         // This can probably still lead to such things when removing the filter again, but that'd need
         // more complex remembering of window positions.
-        if( !rearrange && oldcount >= mWindowData.count())
-            return;
-        if( mHighlightedWindow != NULL && !mWindowData.contains( mHighlightedWindow ))
-            setHighlightedWindow( NULL );
-        for( DataHash::Iterator it = mWindowData.begin();
-             it != mWindowData.end();
-             ++it )
+        newNumOfWindows[i] = windowlists[i].count();
+        newScreenGridSizes[i].columns = int( ceil( sqrt( (double)windowlists[i].count())));
+        newScreenGridSizes[i].rows = int( ceil( windowlists[i].count() / double( newScreenGridSizes[i].columns )));
+        if( newNumOfWindows[i] && ( firstTime || newNumOfWindows[i] > numOfWindows[i] ||
+          ( newNumOfWindows[i] < numOfWindows[i] && ( newScreenGridSizes[i].rows != screenGridSizes[i].rows ||
+            newScreenGridSizes[i].columns != screenGridSizes[i].columns ))))
             {
-            (*it).old_area = (*it).area;
-            (*it).old_scale = (*it).scale;
+            if( !firstTime && !rearranging )
+                {
+                rearranging = true;
+                prepareToRearrange();
+                }
+            // Calculate new positions and scales for windows
+//            calculateWindowTransformationsDumb( windowlist ); // Haven't added screen support to these yet
+//            calculateWindowTransformationsKompose( windowlist );
+            calculateWindowTransformationsClosest( windowlists[i], i );
             }
-        mRearranging = 0; // start animation again
         }
 
-    // Calculate new positions and scales for windows
-//    calculateWindowTransformationsDumb( windowlist );
-//    calculateWindowTransformationsKompose( windowlist );
-    calculateWindowTransformationsClosest( windowlist );
+    numOfWindows = newNumOfWindows;
+    screenGridSizes = newScreenGridSizes;
 
     if( !mWindowData.isEmpty() && mHighlightedWindow == NULL )
         setHighlightedWindow( findFirstWindow());
 
     // Schedule entire desktop to be repainted
     effects->addRepaintFull();
+    }
+
+void PresentWindowsEffect::prepareToRearrange()
+    {
+    if( mHighlightedWindow != NULL && !mWindowData.contains( mHighlightedWindow ))
+        setHighlightedWindow( NULL );
+    for( DataHash::Iterator it = mWindowData.begin();
+         it != mWindowData.end();
+         ++it )
+        {
+        (*it).old_area = (*it).area;
+        (*it).old_scale = (*it).scale;
+        }
+    mRearranging = 0; // start animation again
     }
 
 void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList windowlist)
@@ -440,7 +484,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
     // Size of one cell
     int cellwidth = placementRect.width() / cols;
     int cellheight = placementRect.height() / rows;
-    kDebug() << "Got " << windowlist.count() << " clients, using " << rows << "x" << cols << " grid";
+    kDebug(1212) << "Got " << windowlist.count() << " clients, using " << rows << "x" << cols << " grid";
 
     // Calculate position and scale factor for each window
     int i = 0;
@@ -460,7 +504,7 @@ void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList w
         mWindowData[window].area.setWidth((int)(window->width() * mWindowData[window].scale));
         mWindowData[window].area.setHeight((int)(window->height() * mWindowData[window].scale));
 
-        kDebug() << "Window '" << window->caption() << "' gets moved to (" <<
+        kDebug(1212) << "Window '" << window->caption() << "' gets moved to (" <<
             mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
             "), scale: " << mWindowData[window].scale << endl;
         i++;
@@ -503,7 +547,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
         rows = (int)ceil( sqrt((double)windowlist.count()) );
         columns = (int)ceil( (double)windowlist.count() / (double)rows );
     }
-    kDebug() << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
+    kDebug(1212) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
     // Calculate width & height
     int w = (availRect.width() - (columns+1) * spacing ) / columns;
@@ -615,7 +659,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             mWindowData[window].scale = geom.width() / (double)window->width();
             mWindowData[window].highlight = 0.0f;
 
-            kDebug() << "Window '" << window->caption() << "' gets moved to (" <<
+            kDebug(1212) << "Window '" << window->caption() << "' gets moved to (" <<
                     mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
                     "), scale: " << mWindowData[window].scale << endl;
             }
@@ -624,9 +668,9 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
         }
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowList windowlist)
+void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowList windowlist, int screen)
     {
-    QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
+    QRect area = effects->clientArea( PlacementArea, screen, effects->currentDesktop());
     int columns = int( ceil( sqrt( (double)windowlist.count())));
     int rows = int( ceil( windowlist.count() / double( columns )));
     foreach( EffectWindow* w, windowlist )
@@ -634,9 +678,9 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
     for(;;)
         {
         // Assign each window to the closest available slot
-        assignSlots( area, columns, rows );
+        assignSlots( windowlist, area, columns, rows );
         // Leave only the closest window in each slot, remove further conflicts
-        getBestAssignments();
+        getBestAssignments( windowlist );
         bool all_assigned = true;
         foreach( EffectWindow* w, windowlist )
             if( mWindowData[ w ].slot == -1 )
@@ -649,16 +693,14 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
         }
     int slotwidth = area.width() / columns;
     int slotheight = area.height() / rows;
-    for( DataHash::Iterator it = mWindowData.begin();
-         it != mWindowData.end();
-         ++it )
+    foreach( EffectWindow* w, windowlist )
         {
-        QRect geom( area.x() + ((*it).slot % columns ) * slotwidth,
-            area.y() + ((*it).slot / columns ) * slotheight,
+        WindowData *windowData = &mWindowData[ w ];
+        QRect geom( area.x() + (windowData->slot % columns ) * slotwidth,
+            area.y() + (windowData->slot / columns ) * slotheight,
             slotwidth, slotheight );
         geom.adjust( 10, 10, -10, -10 ); // borders
         double scale;
-        EffectWindow* w = it.key();
         if( geom.width() / double( w->width()) < geom.height() / double( w->height()))
             { // center vertically
             scale = geom.width() / double( w->width());
@@ -679,29 +721,28 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
             geom = QRect( geom.center().x() - w->width(), geom.center().y() - w->height(),
                           2 * w->width(), 2 * w->height() );
         }
-        (*it).area = geom;
-        (*it).scale = scale;
+        windowData->area = geom;
+        windowData->scale = scale;
         }
     }
 
-void PresentWindowsEffect::assignSlots( const QRect& area, int columns, int rows )
+void PresentWindowsEffect::assignSlots( EffectWindowList windowlist, const QRect& area, int columns, int rows )
     {
     QVector< bool > taken;
     taken.fill( false, columns * rows );
-    foreach( const WindowData& d, mWindowData )
+    foreach( EffectWindow* w, windowlist )
         {
-        if( d.slot != -1 )
-            taken[ d.slot ] = true;
+        if( mWindowData[ w ].slot != -1 )
+            taken[ mWindowData[ w ].slot ] = true;
         }
     int slotwidth = area.width() / columns;
     int slotheight = area.height() / rows;
-    for( DataHash::Iterator it = mWindowData.begin();
-         it != mWindowData.end();
-         ++it )
+    foreach( EffectWindow* w, windowlist )
         {
-        if( (*it).slot != -1 )
+        WindowData *windowData = &mWindowData[ w ];
+        if( windowData->slot != -1 )
             continue; // it already has a slot
-        QPoint pos = it.key()->geometry().center();
+        QPoint pos = w->geometry().center();
         if( pos.x() < area.left())
             pos.setX( area.left());
         if( pos.x() > area.right())
@@ -727,42 +768,30 @@ void PresentWindowsEffect::assignSlots( const QRect& area, int columns, int rows
                 if( dist < distance )
                     {
                     distance = dist;
-                    (*it).slot = slot;
-                    (*it).x = x;
-                    (*it).y = y;
-                    (*it).slot_distance = distance;
+                    windowData->slot = slot;
+                    windowData->x = x;
+                    windowData->y = y;
+                    windowData->slot_distance = distance;
                     }
                 }
         }
     }
 
-void PresentWindowsEffect::getBestAssignments()
+void PresentWindowsEffect::getBestAssignments( EffectWindowList windowlist )
     {
-    for( DataHash::Iterator it1 = mWindowData.begin();
-         it1 != mWindowData.end();
-         ++it1 )
+    foreach( EffectWindow* w1, windowlist )
         {
-        for( DataHash::ConstIterator it2 = mWindowData.begin();
-             it2 != mWindowData.end();
-             ++it2 )
+        WindowData *windowData1 = &mWindowData[ w1 ];
+        foreach( EffectWindow* w2, windowlist )
             {
-            if( it1.key() != it2.key() && (*it1).slot == (*it2).slot
-                && (*it1).slot_distance >= (*it2).slot_distance )
+            WindowData *windowData2 = &mWindowData[ w2 ];
+            if( w1 != w2 && windowData1->slot == windowData2->slot
+                && windowData1->slot_distance >= windowData2->slot_distance )
                 {
-                (*it1).slot = -1;
+                windowData1->slot = -1;
                 }
             }
         }
-    }
-
-bool PresentWindowsEffect::canRearrangeClosest(EffectWindowList windowlist)
-    {
-    QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
-    int columns = int( ceil( sqrt( (double)windowlist.count())));
-    int rows = int( ceil( windowlist.count() / double( columns )));
-    int old_columns = int( ceil( sqrt( (double)mWindowData.count())));
-    int old_rows = int( ceil( mWindowData.count() / double( columns )));
-    return old_columns != columns || old_rows != rows;
     }
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )

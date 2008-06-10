@@ -62,18 +62,18 @@ class PresentWindowsEffect
     protected:
         // Updates window tranformations, i.e. destination pos and scale of the window
         void rearrangeWindows();
+        void prepareToRearrange();
         void calculateWindowTransformationsDumb(EffectWindowList windowlist);
         void calculateWindowTransformationsKompose(EffectWindowList windowlist);
-        void calculateWindowTransformationsClosest(EffectWindowList windowlist);
-        bool canRearrangeClosest(EffectWindowList windowlist);
+        void calculateWindowTransformationsClosest(EffectWindowList windowlist, int screen);
 
         // Helper methods for layout calculation
         double windowAspectRatio(EffectWindow* c);
         int windowWidthForHeight(EffectWindow* c, int h);
         int windowHeightForWidth(EffectWindow* c, int w);
 
-        void assignSlots( const QRect& area, int columns, int rows );
-        void getBestAssignments();
+        void assignSlots( EffectWindowList windowlist, const QRect& area, int columns, int rows );
+        void getBestAssignments( EffectWindowList windowlist );
 
         void updateFilterTexture();
         void discardFilterTexture();
@@ -124,7 +124,15 @@ class PresentWindowsEffect
         typedef QHash<EffectWindow*, WindowData> DataHash;
         DataHash mWindowData;
         EffectWindow* mHighlightedWindow;
-        
+        // Grid and window remembering
+        struct GridSize
+            {
+            int columns;
+            int rows;
+            };
+        QVector<GridSize> screenGridSizes;
+        QVector<int> numOfWindows;
+
         QString windowFilter;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         GLTexture* filterTexture;
