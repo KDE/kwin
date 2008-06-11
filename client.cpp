@@ -1114,7 +1114,10 @@ void Client::gotPing( Time timestamp )
     if( process_killer != NULL )
         {
         process_killer->kill();
-        delete process_killer;
+        // recycle when the process manager has noticed that the process exited
+        // a delete process_killer here sometimes causes a hang in waitForFinished
+        connect(process_killer, SIGNAL(finished(int, QProcess::ExitStatus)), process_killer,
+                SLOT(deleteLater()));
         process_killer = NULL;
         }
     }
