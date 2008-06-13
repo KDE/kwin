@@ -126,25 +126,22 @@ void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion regi
             data.opacity *= dialogs;
 
         // Handling moving and resizing
-        if( moveresize != 1.0 && !isInactive(w) && !w->isDesktop() && !w->isDock())
+        if( moveresize != 1.0 && !w->isDesktop() && !w->isDock())
             {
             double progress = moveresize_timeline.value();
             if ( w->isUserMove() || w->isUserResize() )
                 { // Fading to translucent
-                if ( w == active )
+                data.opacity *= (moveresize + ((1.0 - moveresize) * ( 1.0 - progress )));
+                if (progress < 1.0 && progress > 0.0)
                     {
-                    data.opacity *= (moveresize + ((1.0 - moveresize) * ( 1.0 - progress )));
-                    if (progress < 1.0 && progress > 0.0)
-                        {
-                        w->addRepaintFull();
-                        if ( fadeout != w )
-                            fadeout = w;
-                        }
+                    w->addRepaintFull();
+                    if ( fadeout != w )
+                        fadeout = w;
                     }
                 }
             else
                 { // Fading back to more opaque
-                if ( w == active && (w == fadeout) && !w->isUserMove() && !w->isUserResize() )
+                if( w == fadeout && !w->isUserMove() && !w->isUserResize() )
                     {
                     data.opacity *= (moveresize + ((1.0 - moveresize) * (progress)));
                     if ( progress == 1.0 || progress == 0.0)
