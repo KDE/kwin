@@ -2,6 +2,7 @@
 Name=Show Paint
 Name[af]=Wys inkleur
 Name[ca]=Mostra la pintura
+Name[cs]=Zobrazit kreslení
 Name[csb]=Pòkôżë Paint
 Name[da]=Vis tegning
 Name[de]=Zeichnungsbereich anzeigen
@@ -47,6 +48,7 @@ Icon=preferences-system-windows-effect-paint-show
 Comment=Shows areas painted by KWin
 Comment[af]=Wys areas waar KWin ingekleur het
 Comment[ca]=Mostra les àrees pintades pel KWin
+Comment[cs]=Zobrazit oblasti vykreslované KWin
 Comment[da]=Viser områder som er tegnet af KWin
 Comment[de]=Zeigt die Bereiche an, die von KWin (der Fensterverwaltung) gezeichnet werden
 Comment[el]=Εμφάνιση σχεδιασμένων περιοχών από το KWin

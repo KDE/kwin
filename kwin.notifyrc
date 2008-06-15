@@ -3978,6 +3978,7 @@ Sound=KDE-Window-All-Desktops.ogg
 [Event/not_on_all_desktops]
 Name=Window Not on All Desktops
 Name[ca]=Finestra no a tots els escriptoris
+Name[cs]=Okno ne na všech plochách
 Name[csb]=Òkno nié na wszëtczich pùltach
 Name[da]=Vindue ikke på alle desktoppe
 Name[de]=Fenster nicht auf allen Arbeitsflächen
@@ -4027,6 +4028,7 @@ Comment=A Window is no longer visible on all desktops
 Comment[af]='n Venster is nie meer op al die werkskerms sigbaar nie
 Comment[bn]=একটি উইণ্ডো আর সব ডেস্কটপে দেখা যাচ্ছে না
 Comment[ca]=Una finestra no serà visible en tots els escriptoris
+Comment[cs]=Okno již není na všech plochách
 Comment[csb]=Òkno nié ma sã pòkôzac na wszëtczich pùltach
 Comment[da]=Et vindue er ikke længere synligt på alle desktoppe
 Comment[de]=Ein Fenster soll nicht auf allen Arbeitsflächen erscheinen
