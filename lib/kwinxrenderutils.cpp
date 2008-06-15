@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
-#include <qvector.h>
-#include <qpixmap.h>
-#include <qpainter.h>
+#include <QVector>
+#include <QPixmap>
+#include <QPainter>
 #include <kdebug.h>
 
 namespace KWin
