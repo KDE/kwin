@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
 
 /** @addtogroup kwineffects */
 /** @{ */
