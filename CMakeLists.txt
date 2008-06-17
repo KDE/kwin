@@ -22,7 +22,7 @@ else( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
     set( KWIN_HAVE_COMPOSITING ) # unset
 endif( KWIN_HAVE_OPENGL_COMPOSITING OR KWIN_HAVE_XRENDER_COMPOSITING )
 
-macro_log_feature(KWIN_HAVE_COMPOSITING "Compositing support" "XComposite and XDamage extensions and OpenGL or XRender with XFixes are required for KWin compositing support" "http://www.x.org/")
+macro_log_feature(KWIN_HAVE_COMPOSITING "Compositing support" "X11 Compositing support"  "http://www.x.org/" FALSE "" "XComposite and XDamage extensions and OpenGL or XRender with XFixes are required for KWin compositing support")
 
 macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
 
