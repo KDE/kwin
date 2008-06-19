@@ -317,6 +317,7 @@ class Workspace : public QObject, public KDecorationDefines
         // when adding repaints caused by a window, you probably want to use
         // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
         void addRepaint( const QRect& r );
+        void addRepaint( const QRegion& r );
         void addRepaint( int x, int y, int w, int h );
         // creates XComposite overlay window, call initOverlay() afterwards
         bool createOverlay();

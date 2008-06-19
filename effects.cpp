@@ -537,6 +537,11 @@ void EffectsHandlerImpl::addRepaint( const QRect& r )
     Workspace::self()->addRepaint( r );
     }
 
+void EffectsHandlerImpl::addRepaint( const QRegion& r )
+    {
+    Workspace::self()->addRepaint( r );
+    }
+
 void EffectsHandlerImpl::addRepaint( int x, int y, int w, int h )
     {
     Workspace::self()->addRepaint( x, y, w, h );
@@ -550,6 +555,11 @@ int EffectsHandlerImpl::activeScreen() const
 int EffectsHandlerImpl::numScreens() const
     {
     return Workspace::self()->numScreens();
+    }
+
+int EffectsHandlerImpl::screenNumber( const QPoint& pos ) const
+    {
+    return Workspace::self()->screenNumber( pos );
     }
 
 QRect EffectsHandlerImpl::clientArea( clientAreaOption opt, int screen, int desktop ) const

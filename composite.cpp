@@ -284,6 +284,13 @@ void Workspace::addRepaint( const QRect& r )
     repaints_region += r;
     }
     
+void Workspace::addRepaint( const QRegion& r )
+    {
+    if( !compositing())
+        return;
+    repaints_region += r;
+    }
+    
 void Workspace::addRepaintFull()
     {
     if( !compositing())

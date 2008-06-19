@@ -477,6 +477,7 @@ class KWIN_EXPORT EffectsHandler
         virtual QString desktopName( int desktop ) const = 0;
         virtual int activeScreen() const = 0; // Xinerama
         virtual int numScreens() const = 0; // Xinerama
+        virtual int screenNumber( const QPoint& pos ) const = 0; // Xinerama
         virtual QRect clientArea( clientAreaOption, int screen, int desktop ) const = 0;
         virtual QRect clientArea( clientAreaOption, const EffectWindow* c ) const = 0;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const = 0;
@@ -515,6 +516,7 @@ class KWIN_EXPORT EffectsHandler
          **/
         virtual void addRepaintFull() = 0;
         virtual void addRepaint( const QRect& r ) = 0;
+        virtual void addRepaint( const QRegion& r ) = 0;
         virtual void addRepaint( int x, int y, int w, int h ) = 0;
 
         CompositingType compositingType() const;
