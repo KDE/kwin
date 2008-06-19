@@ -9,6 +9,7 @@ X-KDE-Library=kcm_kwinrules
 X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=window-behaviour
+X-KDE-Weight=120
 
 Name=Window-Specific
 Name[af]=Vensterspesifike instellings

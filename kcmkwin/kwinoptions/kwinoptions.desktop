@@ -10,6 +10,7 @@ X-KDE-PluginKeyword=kwinoptions
 X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=window-behaviour
+X-KDE-Weight=90
 
 Name=Window Behavior
 Name[af]=Venstergedrag

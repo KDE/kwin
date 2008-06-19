@@ -9,6 +9,7 @@ X-KDE-Library=kcm_kwindesktop
 X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=desktop
+X-KDE-Weight=60
 
 Name=Multiple Desktops
 Name[af]=Veelvuldige Werkskerms

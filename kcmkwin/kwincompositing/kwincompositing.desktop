@@ -9,6 +9,7 @@ X-KDE-Library=kcm_kwincompositing
 X-KDE-ParentApp=kcontrol
 
 X-KDE-System-Settings-Parent-Category=desktop
+X-KDE-Weight=50
 
 Name=Desktop Effects
 Name[af]=Werkskerm-effekte
