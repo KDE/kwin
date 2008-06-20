@@ -714,12 +714,12 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
             geom.setWidth( int( w->width() * scale ));
             }
         // Don't scale the windows too much
-        if( scale > 2.0 )
+        if( scale > 2.0 || ( scale > 1.0 && ( w->width() > 300 || w->height() > 300 )))
         {
-            scale = 2.0;
+            scale = ( w->width() > 300 || w->height() > 300 ) ? 1.0 : 2.0;
             QPoint center = geom.center();
-            geom = QRect( geom.center().x() - w->width(), geom.center().y() - w->height(),
-                          2 * w->width(), 2 * w->height() );
+            geom = QRect( geom.center().x() - int( w->width() * scale ) / 2, geom.center().y() - int( w->height() * scale ) / 2,
+                          scale * w->width(), scale * w->height() );
         }
         windowData->area = geom;
         windowData->scale = scale;
