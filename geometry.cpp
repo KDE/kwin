@@ -2308,10 +2308,8 @@ void Client::positionGeometryTip()
             wgeom.setHeight( 0 );
         geometryTip->setGeometry( wgeom );
         if( !geometryTip->isVisible())
-            {
             geometryTip->show();
-            geometryTip->raise();
-            }
+        geometryTip->raise();
         }
     }
 

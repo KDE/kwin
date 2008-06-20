@@ -27,7 +27,7 @@ namespace KWin
 GeometryTip::GeometryTip( const XSizeHints* xSizeHints, bool save_under ):
     QLabel( 0 )
     {
-      setObjectName( "kwingeometry" );
+    setObjectName( "kwingeometry" );
     setMargin(1);
     setIndent(0);
     setLineWidth(1);
