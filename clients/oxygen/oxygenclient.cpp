@@ -408,7 +408,7 @@ void OxygenClient::drawScratch(QPainter *p, QPalette &palette, const int start, 
 {
     QLinearGradient scratchlg(QPoint(start,0), QPoint(end,0));
     scratchlg.setColorAt(0.0, Qt::transparent);
-    scratchlg.setColorAt(0.05, palette.color(QPalette::Highlight));
+    scratchlg.setColorAt(0.05, KDecoration::options()->color(ColorTitleBar));
     scratchlg.setColorAt(1.0, Qt::transparent);
     QPen pen1(scratchlg, 0.5);
 
