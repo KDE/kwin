@@ -57,6 +57,7 @@ Icon=preferences-system-windows-effect-fade
 Comment=Makes windows smoothly fade in/out when they are shown or hidden
 Comment[af]=Laat vensters egalig vervaag/verhelder met verberging of vertoning
 Comment[ca]=Fa que les finestres s'encenguin/apaguin de manera gradual quan es mostren o s'oculten
+Comment[da]=Får vinduer til blidt at tone ud og ind når de vises eller skjules
 Comment[de]=Blendet Fenster beim Öffnen/Schließen langsam ein bzw. aus.
 Comment[el]=Κάνει τα παράθυρα να εμφανίζονται/αποκρύπτονται ομαλά
 Comment[eo]=Fenestroj glate maldissolvi/fordissolvi kiam ili videbliĝas aŭ kaŝiĝas
