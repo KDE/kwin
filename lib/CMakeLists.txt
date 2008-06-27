@@ -24,7 +24,7 @@ install( FILES
     kdecorationfactory.h
     kcommondecoration.h
     kdecorationbridge.h
-    DESTINATION ${INCLUDE_INSTALL_DIR})
+    DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel )
 
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS
@@ -75,4 +75,4 @@ install( FILES
     kwinshadereffect.h
     kwinxrenderutils.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
-    DESTINATION ${INCLUDE_INSTALL_DIR})
+    DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
