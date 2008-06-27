@@ -852,7 +852,7 @@ bool PaintClipper::Iterator::isDone()
     if( effects->compositingType() == XRenderCompositing )
         return data->index == 1; // run once
 #endif
-    assert( false );
+    abort();
     }
 
 void PaintClipper::Iterator::next()
@@ -880,7 +880,7 @@ QRect PaintClipper::Iterator::boundingRect() const
     if( effects->compositingType() == XRenderCompositing )
         return paintArea().boundingRect();
 #endif
-    assert( false );
+    abort();
     }
 
 
