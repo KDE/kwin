@@ -274,7 +274,7 @@
        <item row="1" column="0" colspan="3" >
         <widget class="QListWidget" name="types" >
          <property name="selectionMode" >
-          <enum>QAbstractItemView::SingleSelection</enum>
+          <enum>QAbstractItemView::ExtendedSelection</enum>
          </property>
          <item>
           <property name="text" >
