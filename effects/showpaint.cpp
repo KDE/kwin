@@ -96,7 +96,7 @@ void ShowPaintEffect::paintXrender()
     {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     XRenderColor col;
-    int alpha = 0.2;
+    float alpha = 0.2;
     const QColor& color = colors[ color_index ];
     col.alpha = int( alpha * 0xffff );
     col.red = int( alpha * 0xffff * color.red() / 255 );
