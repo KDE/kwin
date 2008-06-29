@@ -326,9 +326,17 @@ void Workspace::performCompositing()
     // skip windows that are not yet ready for being painted
     ToplevelList tmp = windows;
     windows.clear();
+#if 0
+    // There is a bug somewhere that prevents this from working properly (#160393), but additionally
+    // this cannot be used so carelessly - needs protections against broken clients, the window
+    // should not get focus before it's displayed and so on.
     foreach( Toplevel* c, tmp )
         if( c->readyForPainting())
             windows.append( c );
+#else
+    foreach( Toplevel* c, tmp )
+        windows.append( c );
+#endif
     foreach( Toplevel* c, windows )
         { // This could be possibly optimized WRT obscuring, but that'd need being already
           // past prePaint() phase - probably not worth it.
