@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_coverswitch
 X-KDE-PluginKeyword=coverswitch
 
 Name=Cover Switch
+Name[bg]=Превключване между прозорци
 Name[da]=Cover-skifter
 Name[de]=3D-Fenstergalerie
 Name[eo]=Kovra ŝanĝilo

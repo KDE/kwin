@@ -51,6 +51,7 @@ Name[zh_TW]=爆炸
 Icon=preferences-system-windows-effect-explosion
 Comment=Makes windows explode when they are closed
 Comment[af]=Laat vensters ontplof wanneer hulle toegemaak word
+Comment[bg]=Създава ефект на експлозия при затваряне на прозорците
 Comment[ca]=Provoca l'explosió de les finestres quan es tanquen
 Comment[da]=Får vinduer til at eksplodere når de lukkes
 Comment[de]=Lässt Fenster beim Schließen explodieren

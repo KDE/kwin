@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_wobblywindows
 X-KDE-PluginKeyword=wobblywindows
 
 Name=Wobbly Windows
+Name[bg]=Прозорци Wobbly
 Name[ca]=Finestres sacsejades
 Name[cs]=Chvějící se okna
 Name[da]=Blævrende vinduer

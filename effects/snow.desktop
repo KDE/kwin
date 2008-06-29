@@ -2,6 +2,7 @@
 # Name of the effect
 Name=Snow
 Name[af]=Sneeu
+Name[bg]=Сняг
 Name[ca]=Neu
 Name[cs]=Sníh
 Name[da]=Sne
@@ -45,6 +46,7 @@ Name[zh_CN]=雪飘
 Name[zh_TW]=下雪
 Comment=Let it snow on the desktop
 Comment[af]=Laat dit op die werkskerm sneeu
+Comment[bg]=Сняг върху работния плот
 Comment[ca]=Posa neu a l'escriptori
 Comment[cs]=A bude sněžit na ploše :)
 Comment[da]=Lad det sne på desktoppen

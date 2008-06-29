@@ -56,6 +56,7 @@ Name[zh_TW]=淡出
 Icon=preferences-system-windows-effect-fade
 Comment=Makes windows smoothly fade in/out when they are shown or hidden
 Comment[af]=Laat vensters egalig vervaag/verhelder met verberging of vertoning
+Comment[bg]=Постепенно избледняване при показване/скриване на прозорците
 Comment[ca]=Fa que les finestres s'encenguin/apaguin de manera gradual quan es mostren o s'oculten
 Comment[da]=Får vinduer til blidt at tone ud og ind når de vises eller skjules
 Comment[de]=Blendet Fenster beim Öffnen/Schließen langsam ein bzw. aus.
