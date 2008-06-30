@@ -64,7 +64,7 @@ void FlipSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     if( mActivated || stopRequested || stop )
         {
          data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-        if( mAnimation )
+        if( mAnimation && ( start || stop || animateFlip ) )
             timeLine.addTime( (double)time );
         }
     effects->prePaintScreen(data, time);
