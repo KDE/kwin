@@ -132,7 +132,7 @@ void DesktopGridEffectConfig::defaults()
     {
     kDebug() ;
     mSlide->setChecked(true);
-    mActivateCombo->setCurrentIndex( (int)ElectricNone );
+    mActivateCombo->setCurrentIndex( (int)ElectricNone -1 );
     mShortcutEditor->allDefault();
     emit changed(true);
     }
