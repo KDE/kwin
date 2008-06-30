@@ -572,6 +572,7 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                 {
                 effects->refTabBox();
                 effects->setActiveFullScreenEffect( this );
+                input = effects->createFullScreenInputWindow( this, Qt::BlankCursor );
                 selectedWindow = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
                 mActivated = true;
                 if( animateStart )
@@ -623,6 +624,7 @@ void CoverSwitchEffect::tabBoxClosed()
             effects->setActiveFullScreenEffect( 0 );
         mActivated = false;
         effects->unrefTabBox();
+        effects->destroyInputWindow( input );
         effects->addRepaintFull();
         }
     }

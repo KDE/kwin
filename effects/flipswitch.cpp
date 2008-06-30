@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
- Copyright (C) 2008 Martin Gräßlin <ubuntu@martin-graesslin.com
+ Copyright (C) 2008 Martin Gräßlin <ubuntu@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -457,6 +457,7 @@ void FlipSwitchEffect::postPaintScreen()
         {
         addFullRepaint = false;
         effects->setActiveFullScreenEffect( 0 );
+        effects->destroyInputWindow( input );
         effects->addRepaintFull();
         }
     effects->postPaintScreen();
@@ -492,6 +493,7 @@ void FlipSwitchEffect::tabBoxAdded( int mode )
             {
             effects->refTabBox();
             effects->setActiveFullScreenEffect( this );
+            input = effects->createFullScreenInputWindow( this, Qt::BlankCursor );
             selectedWindow = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
             if( !stop && !stopRequested )
                 {
@@ -540,7 +542,10 @@ void FlipSwitchEffect::tabBoxClosed()
                 }
             }
         else
-            effects->setActiveFullScreenEffect( 0 );
+            {
+            effects->setActiveFullScreenEffect( 0 );            
+            effects->destroyInputWindow( input );
+            }
         }
     }
 
