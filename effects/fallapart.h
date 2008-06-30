@@ -38,6 +38,8 @@ class FallApartEffect
         virtual void windowDeleted( EffectWindow* c );
     private:
         QHash< const EffectWindow*, double > windows;
+        bool isRealWindow ( EffectWindow* w );
+
     };
 
 } // namespace

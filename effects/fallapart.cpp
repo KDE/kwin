@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "fallapart.h"
-
+#include <kdebug.h>
 #include <assert.h>
 #include <math.h>
 
@@ -37,7 +37,7 @@ void FallApartEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 
 void FallApartEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( windows.contains( w ))
+    if( windows.contains( w ) && isRealWindow( w ))
         {
         if( windows[ w ] < 1 )
             {
@@ -58,7 +58,7 @@ void FallApartEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
 
 void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( windows.contains( w ))
+    if( windows.contains( w ) && isRealWindow( w ) )
         {
         WindowQuadList new_quads;
         int cnt = 0;
@@ -119,8 +119,29 @@ void FallApartEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
+bool FallApartEffect::isRealWindow( EffectWindow* w )
+    {
+    // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
+    /*
+    kDebug() << "--" << w->caption() << "--------------------------------";
+    kDebug() << "Tooltip:" << w->isTooltip();
+    kDebug() << "Toolbar:" << w->isToolbar();
+    kDebug() << "Desktop:" << w->isDesktop();
+    kDebug() << "Special:" << w->isSpecialWindow();
+    kDebug() << "TopMenu:" << w->isTopMenu();
+    kDebug() << "Notific:" << w->isNotification();
+    kDebug() << "Splash:" << w->isSplash();
+    kDebug() << "Normal:" << w->isNormalWindow();
+    */
+    if ( !w->isNormalWindow() )
+        return false;
+    return true;
+    }
+
 void FallApartEffect::windowClosed( EffectWindow* c )
     {
+    if ( !isRealWindow( c ) )
+        return;
     windows[ c ] = 0;
     c->refWindow();
     }
