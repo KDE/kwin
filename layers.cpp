@@ -615,7 +615,7 @@ ClientList Workspace::constrainedStackingOrder()
                     {
                     if( stacking[ i2 ] == stacking[ i ] )
                         {
-                        i2 = -1; // don't reorder
+                        i2 = -1; // don't reorder, already the topmost in the group
                         break;
                         }
                     if( stacking[ i2 ]->hasTransient( stacking[ i ], true )
@@ -632,7 +632,7 @@ ClientList Workspace::constrainedStackingOrder()
                 {
                 if( stacking[ i2 ] == stacking[ i ] )
                     {
-                    i2 = -1; // don't reorder
+                    i2 = -1; // don't reorder, already on top of its mainwindow
                     break;
                     }
                 if( stacking[ i2 ] == stacking[ i ]->transientFor()
@@ -640,7 +640,6 @@ ClientList Workspace::constrainedStackingOrder()
                     break;
                 }
             }
-//        kDebug() << "STACK:" << stacking[ i ] << ":" << ( i2 == -1 ? ((Client*)0) : stacking[ i2 ] );
         if( i2 == -1 )
             {
             --i;
@@ -648,10 +647,11 @@ ClientList Workspace::constrainedStackingOrder()
             }
         Client* current = stacking[ i ];
         stacking.removeAt( i );
-        --i;
+        --i; // move onto the next item (for next for() iteration)
+        --i2; // adjust index of the mainwindow after the remove above
         if( !current->transients().isEmpty())  // this one now can be possibly above its transients,
             i = i2; // so go again higher in the stack order and possibly move those transients again
-        ++i2; // insert after the mainwindow, it's ok if it2 is now stacking.end()
+        ++i2; // insert after (on top of) the mainwindow, it's ok if it2 is now stacking.end()
         stacking.insert( i2, current );
         }
 #if 0
