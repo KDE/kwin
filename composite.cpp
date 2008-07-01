@@ -478,7 +478,7 @@ Pixmap Toplevel::createWindowPixmap()
     assert( compositing());
     grabXServer();
     KXErrorHandler err;
-    window_pix = XCompositeNameWindowPixmap( display(), frameId());
+    Pixmap pix = XCompositeNameWindowPixmap( display(), frameId());
     // check that the received pixmap is valid and actually matches what we
     // know about the window (i.e. size)
     XWindowAttributes attrs;
@@ -489,8 +489,13 @@ Pixmap Toplevel::createWindowPixmap()
     if( attrs.width != width() || attrs.height != height() || attrs.map_state != IsViewable )
         window_pix = None;
     ungrabXServer();
-    if( window_pix == None )
+    if( window_pix == None || pix == None )
+        {
         kDebug( 1212 ) << "Creating window pixmap failed: " << this;
+        if( pix != None )
+            XFreePixmap( display(), pix );
+        }
+    window_pix = pix;
     return window_pix;
 #else
     return None;
