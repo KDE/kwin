@@ -58,11 +58,11 @@ void WobblyWindowsEffectConfig::load()
     KConfigGroup conf = EffectsHandler::effectConfig("Wobbly");
     bool change = true;
 
-    unsigned int wobblynessLevel = 2;
+    unsigned int wobblynessLevel = 1;
     QString settingsMode = conf.readEntry("Settings", "Auto");
     if (settingsMode != "Custom")
     {
-        wobblynessLevel = conf.readEntry("WobblynessLevel", 2);
+        wobblynessLevel = conf.readEntry("WobblynessLevel", 1);
         change = false;
     }
 

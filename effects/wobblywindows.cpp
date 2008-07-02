@@ -191,7 +191,7 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     QString settingsMode = conf.readEntry("Settings", "Auto");
     if (settingsMode != "Custom")
     {
-        unsigned int wobblynessLevel = conf.readEntry("WobblynessLevel", 2);
+        unsigned int wobblynessLevel = conf.readEntry("WobblynessLevel", 1);
         if (wobblynessLevel > 4)
         {
             kDebug() << "Wrong value for \"WobblynessLevel\" : " << wobblynessLevel;
