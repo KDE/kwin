@@ -50,7 +50,7 @@ SET(kwin4_effect_builtins_sources
     shadow.cpp
     showfps.cpp
     showpaint.cpp
-    taskbarthumbnail.cpp
+    #taskbarthumbnail.cpp # Enable when plasma has tooltips again
     thumbnailaside.cpp
     zoom.cpp
     )
@@ -72,7 +72,7 @@ install( FILES
     shadow.desktop
     showfps.desktop
     showpaint.desktop
-    taskbarthumbnail.desktop
+    #taskbarthumbnail.desktop # Enable when plasma has tooltips again
     thumbnailaside.desktop
     zoom.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
