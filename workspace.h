@@ -514,7 +514,7 @@ class Workspace : public QObject, public KDecorationDefines
         void removeTabBoxGrab();
 
         void updateStackingOrder( bool propagate_new_clients = false );
-        ToplevelList rootStackingOrder() const;
+        ToplevelList compositingStackingOrder() const;
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
         ClientList constrainedStackingOrder();
         void raiseClientWithinApplication( Client* c );
