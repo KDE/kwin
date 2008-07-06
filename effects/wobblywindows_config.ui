@@ -42,7 +42,7 @@
      <item>
       <widget class="QSlider" name="slWobblyness" >
        <property name="maximum" >
-        <number>6</number>
+        <number>4</number>
        </property>
        <property name="orientation" >
         <enum>Qt::Horizontal</enum>
