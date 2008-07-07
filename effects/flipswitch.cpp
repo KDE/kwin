@@ -603,7 +603,7 @@ void FlipSwitchEffect::paintWindowFlip( EffectWindow* w, bool draw, float opacit
         QRect( x, y, w->geometry().width(), w->geometry().height() ),
         Qt::KeepAspectRatio );
 
-    data.opacity = opacity;
+    data.opacity *= opacity;
     thumbnail = infiniteRegion();
     // if paintWindow() is used the window behind the initial selected window is not painted on the stack,
     // but painted when it is selected

@@ -686,7 +686,7 @@ void CoverSwitchEffect::paintWindowCover( EffectWindow* w, QRect windowRect, boo
     {
     WindowPaintData data( w );
 
-    data.opacity = opacity;
+    data.opacity *= opacity;
 
     QRect thumbnail = infiniteRegion();
     setPositionTransformations( data,
