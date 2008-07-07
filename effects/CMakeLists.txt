@@ -191,9 +191,8 @@ endif(KWIN_HAVE_OPENGL_COMPOSITING)
 KWIN4_ADD_EFFECT(builtins ${kwin4_effect_builtins_sources})
 KWIN4_ADD_EFFECT_CONFIG(builtins ${kwin4_effect_builtins_config_sources})
 # link to xrender if necessary
-# note that libkwineffects already links to opengl, so no need to add this here
 if (KWIN_HAVE_XRENDER_COMPOSITING)
-  target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB})
+  target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB} ${X11_LIBRARIES})
 endif (KWIN_HAVE_XRENDER_COMPOSITING)
 
 

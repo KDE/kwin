@@ -881,6 +881,7 @@ QRect PaintClipper::Iterator::boundingRect() const
         return paintArea().boundingRect();
 #endif
     abort();
+    return infiniteRegion();
     }
 
 

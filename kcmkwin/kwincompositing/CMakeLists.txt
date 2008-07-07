@@ -11,7 +11,7 @@ set(kcm_kwincompositing_PART_SRCS
     )
 kde4_add_ui_files(kcm_kwincompositing_PART_SRCS advanced.ui main.ui)
 kde4_add_plugin(kcm_kwincompositing ${kcm_kwincompositing_PART_SRCS})
-target_link_libraries(kcm_kwincompositing ${KDE4_KUTILS_LIBS})
+target_link_libraries(kcm_kwincompositing ${KDE4_KUTILS_LIBS} ${KDE4_KDEUI_LIBS} ${X11_LIBRARIES})
 install(TARGETS kcm_kwincompositing  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 # CompositingPrefs uses OpenGL
