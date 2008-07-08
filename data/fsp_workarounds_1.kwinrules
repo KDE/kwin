@@ -2,6 +2,7 @@
 Description=(Default) Disable focus stealing prevention for XV
 Description[bg]=(По подразбиране) Изключване открадването на фокуса за XV
 Description[ca]=(Per omissió) Desactiva la prevenció de robatori del focus a l'XV
+Description[cs]=(Výchozí) Zakázat prevenci ukradění zaměření pro XV
 Description[da]=(Standard) Deaktivér forhindring af fokustyveri for XV
 Description[de]=(Standard) Aktivierungsübernahme verhindern für XV
 Description[el]=(Προκαθορισμένο) Αποτροπή κλεψίματος εστίασης για το XV

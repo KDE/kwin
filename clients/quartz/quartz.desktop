@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Quartz
 Name[bn]=কোয়ার্ট্‌জ
+Name[bn_IN]=Quartz (কোয়ার্টজ)
 Name[csb]=Kwarc
 Name[cy]=Cwarts
 Name[es]=Cuarzo
@@ -31,6 +32,7 @@ Name[uk]=Кварц
 Name[uz]=Chaqmoqtosh
 Name[uz@cyrillic]=Чақмоқтош
 Name[vi]=Thạch anh
+Name[wa]=Blanc cayô
 Name[x-test]=xxQuartzxx
 Name[zh_TW]=石英
 X-KDE-Library=kwin3_quartz
