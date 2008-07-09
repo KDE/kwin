@@ -297,7 +297,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
    //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
    //CT adapted for kwin on 25Nov1999
    //aleXXX 02Nov2000 added second snapping mode
-    if (options->windowSnapZone || options->borderSnapZone )
+    if (options->windowSnapZone || options->borderSnapZone || options->centerSnapZone )
         {
         const bool sOWO=options->snapOnlyWhenOverlapping;
         const QRect maxRect = clientArea(MovementArea, pos+c->rect().center(), c->desktop());
@@ -397,6 +397,35 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
                     }
                 }
             }
+
+      // center snap
+        snap = options->centerSnapZone; //snap trigger
+        if (snap)
+            {
+            int diffX = qAbs( (xmin + xmax)/2 - (cx + cw/2) );
+            int diffY = qAbs( (ymin + ymax)/2 - (cy + ch/2) );
+            if (diffX < snap && diffY < snap)
+                { // Snap to center of screen
+                deltaX = diffX;
+                deltaY = diffY;
+                nx = (xmin + xmax)/2 - cw/2;
+                ny = (ymin + ymax)/2 - ch/2;
+                }
+            else if ( options->borderSnapZone )
+                { // Enhance border snap
+                if( ( nx == xmin || nx == xmax - cw ) && diffY < snap)
+                    { // Snap to vertical center on screen edge
+                    deltaY = diffY;
+                    ny = (ymin + ymax)/2 - ch/2;
+                    }
+                else if ( ( ( ny <= ymin && ny > ymin - snap ) || ny == ymax - ch ) && diffX < snap) // Extra snap on the top of screen to prevent misses
+                    { // Snap to horizontal center on screen edge
+                    deltaX = diffX;
+                    nx = (xmin + xmax)/2 - cw/2;
+                    }
+                }
+            }
+
         pos = QPoint(nx, ny);
         }
     return pos;
@@ -407,7 +436,7 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
    //adapted from adjustClientPosition on 29May2004
    //this function is called when resizing a window and will modify
    //the new dimensions to snap to other windows/borders if appropriate
-    if ( options->windowSnapZone || options->borderSnapZone  )
+    if ( options->windowSnapZone || options->borderSnapZone ) // || options->centerSnapZone )
         {
         const bool sOWO=options->snapOnlyWhenOverlapping;
 
@@ -593,6 +622,17 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
                     }
                 }
             }
+
+      // center snap
+        //snap = options->centerSnapZone;
+        //if (snap)
+        //    {
+        //    // Don't resize snap to center as it interferes too much
+        //    // There are two ways of implementing this if wanted:
+        //    // 1) Snap only to the same points that the move snap does, and
+        //    // 2) Snap to the horizontal and vertical center lines of the screen
+        //    }
+
        moveResizeGeom = QRect(QPoint(newcx, newcy), QPoint(newrx, newry));
        }
     return moveResizeGeom;

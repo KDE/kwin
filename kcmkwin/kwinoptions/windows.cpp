@@ -75,9 +75,12 @@
 #define KWM_BRDR_SNAP_ZONE_DEFAULT           10
 #define KWM_WNDW_SNAP_ZONE                   "WindowSnapZone"
 #define KWM_WNDW_SNAP_ZONE_DEFAULT           10
+#define KWM_CNTR_SNAP_ZONE                   "CenterSnapZone"
+#define KWM_CNTR_SNAP_ZONE_DEFAULT           0
 
 #define MAX_BRDR_SNAP                          100
 #define MAX_WNDW_SNAP                          100
+#define MAX_CNTR_SNAP                          100
 #define MAX_EDGE_RES                          1000
 
 
@@ -917,11 +920,21 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     WndwSnap->setSpecialValueText( i18n("none") );
     WndwSnap->setRange( 0, MAX_WNDW_SNAP);
     WndwSnap->setLabel(i18n("&Window snap zone:"));
-    BrdrSnap->setSteps(1,10);
+    WndwSnap->setSteps(1,10);
     WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
                                     " they are moved near another window.") );
     kLay->addWidget(WndwSnap);
+
+    CntrSnap = new KIntNumInput(10, MagicBox);
+    CntrSnap->setSpecialValueText( i18n("none") );
+    CntrSnap->setRange( 0, MAX_CNTR_SNAP);
+    CntrSnap->setLabel(i18n("&Center snap zone:"));
+    CntrSnap->setSteps(1,10);
+    CntrSnap->setWhatsThis( i18n("Here you can set the snap zone for the screen center, i.e."
+                                    " the 'strength' of the magnetic field which will make windows snap to the center of"
+                                    " the screen when moved near it.") );
+    kLay->addWidget(CntrSnap);
 
     OverlapSnap=new QCheckBox(i18n("Snap windows onl&y when overlapping"),MagicBox);
     OverlapSnap->setWhatsThis( i18n("Here you can set that windows will be only"
@@ -944,11 +957,14 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     connect( BrdrSnap, SIGNAL(valueChanged(int)), SLOT(slotBrdrSnapChanged(int)));
     connect( WndwSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect( WndwSnap, SIGNAL(valueChanged(int)), SLOT(slotWndwSnapChanged(int)));
+    connect( CntrSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect( CntrSnap, SIGNAL(valueChanged(int)), SLOT(slotCntrSnapChanged(int)));
     connect( OverlapSnap, SIGNAL(clicked()), SLOT(changed()));
 
-    // To get suffix to BrdrSnap and WndwSnap inputs with default values.
+    // To get suffix to BrdrSnap, WndwSnap and CntrSnap inputs with default values.
     slotBrdrSnapChanged(BrdrSnap->value());
     slotWndwSnapChanged(WndwSnap->value());
+    slotCntrSnapChanged(CntrSnap->value());
 }
 
 int KMovingConfig::getMove()
@@ -1002,6 +1018,10 @@ void KMovingConfig::slotBrdrSnapChanged(int value) {
 
 void KMovingConfig::slotWndwSnapChanged(int value) {
     WndwSnap->setSuffix(i18np(" pixel", " pixels", value));
+}
+
+void KMovingConfig::slotCntrSnapChanged(int value) {
+    CntrSnap->setSuffix(i18np(" pixel", " pixels", value));
 }
 
 void KMovingConfig::load( void )
@@ -1076,6 +1096,11 @@ void KMovingConfig::load( void )
     else if (v < 0) setWindowSnapZone (0);
     else setWindowSnapZone(v);
 
+    v = cg.readEntry(KWM_CNTR_SNAP_ZONE, KWM_CNTR_SNAP_ZONE_DEFAULT);
+    if (v > MAX_CNTR_SNAP) setCenterSnapZone(MAX_CNTR_SNAP);
+    else if (v < 0) setCenterSnapZone (0);
+    else setCenterSnapZone(v);
+
     OverlapSnap->setChecked(cg.readEntry("SnapOnlyWhenOverlapping", false));
     emit KCModule::changed(false);
 }
@@ -1127,6 +1152,7 @@ void KMovingConfig::save( void )
 
     cg.writeEntry(KWM_BRDR_SNAP_ZONE,getBorderSnapZone());
     cg.writeEntry(KWM_WNDW_SNAP_ZONE,getWindowSnapZone());
+    cg.writeEntry(KWM_CNTR_SNAP_ZONE,getCenterSnapZone());
     cg.writeEntry("SnapOnlyWhenOverlapping",OverlapSnap->isChecked());
 
     if (standAlone)
@@ -1151,6 +1177,7 @@ void KMovingConfig::defaults()
     //copied from kcontrol/konq/kwindesktop, aleXXX
     setWindowSnapZone(KWM_WNDW_SNAP_ZONE_DEFAULT);
     setBorderSnapZone(KWM_BRDR_SNAP_ZONE_DEFAULT);
+    setCenterSnapZone(KWM_CNTR_SNAP_ZONE_DEFAULT);
     OverlapSnap->setChecked(false);
 
     emit KCModule::changed(true);
@@ -1170,6 +1197,14 @@ int KMovingConfig::getWindowSnapZone() {
 
 void KMovingConfig::setWindowSnapZone(int pxls) {
   WndwSnap->setValue(pxls);
+}
+
+int KMovingConfig::getCenterSnapZone() {
+  return CntrSnap->value();
+}
+
+void KMovingConfig::setCenterSnapZone(int pxls) {
+  CntrSnap->setValue(pxls);
 }
 
 #include "windows.moc"

@@ -177,9 +177,14 @@ class Options : public KDecorationOptions
         int borderSnapZone;
 
         /**
-         * the number of animation steps (would this be general?)
+         * the size of the zone that triggers snapping with other windows
          */
         int windowSnapZone;
+
+        /**
+         * the size of the zone that triggers snapping on the screen center
+         */
+        int centerSnapZone;
 
 
         /**

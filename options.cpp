@@ -126,6 +126,7 @@ unsigned long Options::updateSettings()
 
     borderSnapZone = config.readEntry("BorderSnapZone", 10);
     windowSnapZone = config.readEntry("WindowSnapZone", 10);
+    centerSnapZone = config.readEntry("CenterSnapZone", 0);
     snapOnlyWhenOverlapping = config.readEntry("SnapOnlyWhenOverlapping", false);
     electric_borders = config.readEntry("ElectricBorders", 0);
     electric_border_delay = config.readEntry("ElectricBorderDelay", 150);

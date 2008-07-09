@@ -143,6 +143,7 @@ private slots:
   void changed() { emit KCModule::changed(true); }
   void slotBrdrSnapChanged( int );
   void slotWndwSnapChanged( int );
+  void slotCntrSnapChanged( int );
 
 private:
   int getMove( void );
@@ -171,9 +172,11 @@ private:
   void setBorderSnapZone( int );
   int getWindowSnapZone();
   void setWindowSnapZone( int );
+  int getCenterSnapZone();
+  void setCenterSnapZone( int );
 
   KButtonGroup *MagicBox;
-  KIntNumInput *BrdrSnap, *WndwSnap;
+  KIntNumInput *BrdrSnap, *WndwSnap, *CntrSnap;
   QCheckBox *OverlapSnap;
 
 };
