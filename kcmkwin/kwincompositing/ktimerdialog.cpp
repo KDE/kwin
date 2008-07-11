@@ -52,6 +52,7 @@ KTimerDialog::KTimerDialog( int msec, TimerStyle style, QWidget *parent,
     setCaption( caption );
     setButtons( (ButtonCodes)buttonMask );
     setDefaultButton( defaultButton );
+    setButtonFocus( defaultButton ); // setDefaultButton() doesn't do this
     showButtonSeparator( separator );
     setButtonGuiItem( User1, user1 );
     setButtonGuiItem( User2, user2 );
