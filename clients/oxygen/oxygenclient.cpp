@@ -90,6 +90,7 @@ void OxygenClient::init()
 
     widget()->setAutoFillBackground(false);
     widget()->setAttribute(Qt::WA_OpaquePaintEvent);
+    widget()->setAttribute(Qt::WA_PaintOnScreen, false); //TODO: remove this to save memory
 }
 
 bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
