@@ -20,6 +20,8 @@ Name[km]=បន្ថយ​ពន្លឺ​អេក្រង់ សម្រ�
 Name[ko]=관리자 모드에서 화면 어둡게 하기
 Name[lt]=Užtemdyti ekraną administratoriaus veiksenai
 Name[lv]=Aptumšināt ekrānu, pieprasot administratora tiesības
+Name[ml]=അഡ്മിനിസ്ട്രേറ്റര്‍ മോഡില്‍ സ്ക്രീന്‍ തെളിച്ചം കുറയ്ക്കല്‍
+Name[mr]=प्रशासक पद्धती करीता मंद पडदा
 Name[nds]=In Systeemplegerbedrief Schirm bedüüstern
 Name[nl]=Scherm dimmen voor administratormodus
 Name[nn]=Demp skjerm i administratormodus
@@ -60,6 +62,8 @@ Comment[km]=បន្ថយ​ពន្លឺ​អេក្រង់ នៅព�
 Comment[ko]=루트 암호가 필요할 때 화면 어둡게 하기
 Comment[lt]=Užtemdo ekraną jei langas paprašo root slaptažodžio
 Comment[lv]=Aptumšina ekrānu, ja parādās root paroles ievadīšanas logs
+Comment[ml]=റൂട്ട് അടയാളവാക്കു് ചോദിക്കുമ്പോള്‍ സ്ക്രീന്‍ തെളിച്ചം കുറയ്ക്കന്നു.
+Comment[mr]=चौकट रूट गुप्तशब्द विचारत असल्यास पडद्यास मंद करतो
 Comment[nds]=Maakt den Schirm düüster, wenn en Programm na't Systeempleger-Passwoort fraagt
 Comment[nl]=Dimt het scherm als een venster om het wachtwoord van de systeembeheerder vraagt
 Comment[nn]=Demp skjerm når eit vindauge ber om «root»-tilgang
