@@ -55,15 +55,16 @@ public:
     const int lastMousePress(){return lastmouse_;}
     void reset(long unsigned int){repaint();}
 
+protected:
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+
 private:
     void enterEvent(QEvent *e);
     void leaveEvent(QEvent *e);
     void paintEvent(QPaintEvent *e);
     void drawIcon(QPainter *p, QPalette &pal, ButtonType &type);
     QColor buttonDetailColor(const QPalette &palette);
-
-private Q_SLOTS:
-    void pressSlot();
 
 private:
     OxygenClient &client_;

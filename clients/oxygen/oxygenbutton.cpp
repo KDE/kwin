@@ -139,15 +139,31 @@ void OxygenButton::leaveEvent(QEvent *e)
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// pressSlot()
+// mousePressEvent()
 // ------------
 // Mouse has pressed the button
-// TODO: never called?
-void OxygenButton::pressSlot()
+
+void OxygenButton::mousePressEvent(QMouseEvent *e)
 {
     status_ = Oxygen::Pressed;
     update();
+
+    KCommonDecorationButton::mousePressEvent(e);
 }
+
+//////////////////////////////////////////////////////////////////////////////
+// mouseReleaseEvent()
+// ------------
+// Mouse has released the button
+
+void OxygenButton::mouseReleaseEvent(QMouseEvent *e)
+{
+    status_ = Oxygen::Normal;
+    update();
+
+    KCommonDecorationButton::mouseReleaseEvent(e);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // drawButton()
 // ------------
@@ -182,17 +198,15 @@ void OxygenButton::paintEvent(QPaintEvent *)
 
     QColor bg = helper_.backgroundTopColor(pal.window());
 
-
     QColor color = buttonDetailColor(pal);
     if(status_ == Oxygen::Hovered || status_ == Oxygen::Pressed) {
         if(type_ == ButtonClose)
             color = KColorScheme(pal.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
         else
             color = KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
-
     }
     QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), color);
-    painter.drawPixmap(0, 0, helper_.windecoButton(pal.button(), status_ == Oxygen::Pressed));
+    painter.drawPixmap(0, 0, helper_.windecoButton(pal.window(), status_ == Oxygen::Pressed));
 
     if (client_.isActive()) {
         painter.setRenderHints(QPainter::Antialiasing);
