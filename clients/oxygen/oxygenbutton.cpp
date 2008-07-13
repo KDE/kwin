@@ -270,6 +270,7 @@ void OxygenButton::drawIcon(QPainter *p, QPalette &pal, ButtonType &type)
                     QPoint points[4] = {QPoint(9, 6), QPoint(12, 9), QPoint(9, 12), QPoint(6, 9)};
                     //QPoint points[4] = {QPoint(9, 5), QPoint(13, 9), QPoint(9, 13), QPoint(5, 9)};
                     p->drawPolygon(points, 4);
+                    p->translate(-1.5, -1.5);
                     break;
                 }
             }
