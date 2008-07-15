@@ -1,0 +1,249 @@
+<ui version="4.0" >
+ <class>KWin::CubeEffectConfigForm</class>
+ <widget class="QWidget" name="KWin::CubeEffectConfigForm" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>396</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" >
+   <item>
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Appearance</string>
+     </property>
+     <layout class="QGridLayout" >
+      <item row="2" column="0" >
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>Rotation &amp;duration:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>rotationDurationSpin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QSpinBox" name="rotationDurationSpin" >
+        <property name="suffix" >
+         <string> msec</string>
+        </property>
+        <property name="maximum" >
+         <number>5000</number>
+        </property>
+        <property name="value" >
+         <number>500</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" >
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>Cube &amp;opacity:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>cubeOpacitySpin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QComboBox" name="screenEdgeCombo" />
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>Screen &amp;edge:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>screenEdgeCombo</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" >
+       <layout class="QVBoxLayout" name="verticalLayout" >
+        <item>
+         <widget class="QSlider" name="cubeOpacitySlider" >
+          <property name="maximum" >
+           <number>100</number>
+          </property>
+          <property name="singleStep" >
+           <number>1</number>
+          </property>
+          <property name="value" >
+           <number>100</number>
+          </property>
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="tickPosition" >
+           <enum>QSlider::TicksBelow</enum>
+          </property>
+          <property name="tickInterval" >
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout" >
+          <item>
+           <widget class="QLabel" name="label_4" >
+            <property name="text" >
+             <string>Fully transparent</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer" >
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0" >
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5" >
+            <property name="text" >
+             <string>Fully opaque</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item row="5" column="1" >
+       <widget class="QSpinBox" name="cubeOpacitySpin" >
+        <property name="suffix" >
+         <string> %</string>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+        <property name="value" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" >
+       <widget class="QCheckBox" name="displayDesktopNameBox" >
+        <property name="text" >
+         <string>Display desktop &amp;name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0" >
+       <widget class="QCheckBox" name="reflectionBox" >
+        <property name="text" >
+         <string>&amp;Reflection</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0" >
+       <widget class="QLabel" name="label_6" >
+        <property name="text" >
+         <string>&amp;Background Color:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>backgroundColorButton</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1" >
+       <widget class="KColorButton" name="backgroundColorButton" />
+      </item>
+      <item row="10" column="0" >
+       <widget class="QCheckBox" name="cubeCapsBox" >
+        <property name="text" >
+         <string>Cube &amp;Caps</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0" >
+       <widget class="QLabel" name="capColorLabel" >
+        <property name="text" >
+         <string>C&amp;ap Color:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>capColorButton</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1" >
+       <widget class="KColorButton" name="capColorButton" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" />
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KWin::GlobalShortcutsEditor</class>
+   <extends>QWidget</extends>
+   <header location="global" >kwineffects.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>screenEdgeCombo</tabstop>
+  <tabstop>rotationDurationSpin</tabstop>
+  <tabstop>cubeOpacitySpin</tabstop>
+  <tabstop>cubeOpacitySlider</tabstop>
+  <tabstop>displayDesktopNameBox</tabstop>
+  <tabstop>reflectionBox</tabstop>
+  <tabstop>backgroundColorButton</tabstop>
+  <tabstop>cubeCapsBox</tabstop>
+  <tabstop>capColorButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>cubeOpacitySpin</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>cubeOpacitySlider</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>386</x>
+     <y>175</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>235</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cubeOpacitySlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>cubeOpacitySpin</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>133</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>386</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
