@@ -108,6 +108,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
     SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
         blur.cpp
         coverswitch.cpp
+        cube.cpp
+        cylinder.cpp
         explosioneffect.cpp
         flipswitch.cpp
         invert.cpp
@@ -122,6 +124,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
     install( FILES
         blur.desktop
         coverswitch.desktop
+        cube.desktop
+        cylinder.desktop
         explosion.desktop
         flipswitch.desktop
         invert.desktop
@@ -153,10 +157,14 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         data/snowflake.png
         data/circle.png
         data/circle-edgy.png
+        data/cylinder.frag
+        data/cylinder.vert
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
     SET(kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
         coverswitch_config.cpp
         coverswitch_config.ui
+        cube_config.cpp
+        cube_config.ui
         flipswitch_config.cpp
         flipswitch_config.ui
         invert_config.cpp
@@ -175,6 +183,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         )
     install( FILES
         coverswitch_config.desktop
+        cube_config.desktop
         flipswitch_config.desktop
         invert_config.desktop
         lookingglass_config.desktop
