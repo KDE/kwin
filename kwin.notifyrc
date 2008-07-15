@@ -4342,7 +4342,7 @@ Comment[wa]=On purnea d' passaedje (ene divize) aparet
 Comment[x-test]=xxTransient window (a dialog) appearsxx
 Comment[zh_CN]=出现了临时窗口(对话框)
 Comment[zh_TW]=顯示新的對話框
-Action=Sound
+Action=None
 Sound=KDE-Sys-App-Message.ogg
 
 
