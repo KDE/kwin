@@ -90,7 +90,6 @@ void OxygenClient::init()
 
     widget()->setAutoFillBackground(false);
     widget()->setAttribute(Qt::WA_OpaquePaintEvent);
-    widget()->setAttribute(Qt::WA_PaintOnScreen, false); //TODO: remove this to save memory
 }
 
 bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
@@ -286,29 +285,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
             buttonsLeftWidth() - buttonsRightWidth() -
             marginLeft - marginRight;
 
-
-    int splitY = qMin(300, 3*frame.height()/4);
-
-    QPixmap tile = helper_.verticalGradient(color, splitY);
-    painter.drawTiledPixmap(QRect(0, 0, frame.width(), titleHeight + TFRAMESIZE), tile);
-
-    painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, splitY), tile);
-    painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, helper_.backgroundBottomColor(color));
-
-    painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
-                                                        RFRAMESIZE, splitY), tile,
-                                                        QPoint(frame.width()-RFRAMESIZE, 0));
-    painter.fillRect(frame.width()-RFRAMESIZE, splitY, RFRAMESIZE, frame.height() - splitY, helper_.backgroundBottomColor(color));
-
-    painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, helper_.backgroundBottomColor(color));
-
-    int radialW = qMin(600, frame.width() - LFRAMESIZE - RFRAMESIZE);
-    tile = helper_.radialGradient(color, radialW);
-    // In the style we assume the top frame to have a height of 32 this we need offset here with the
-    // actual value
-    int frameTopFixer = titleTop+titleHeight - 32;
-    QRect radialRect = QRect((frame.width() - radialW) / 2, frameTopFixer, radialW, 64);
-    painter.drawPixmap(radialRect, tile);
+    // draw window background
+    helper_.renderWindowBackground(&painter, frame, this->widget(), palette, 0);
 
     // draw title text
     painter.setFont(options()->font(isActive(), false));

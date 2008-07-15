@@ -26,6 +26,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenbutton.h"
+#include <kcommondecoration.h>
 
 #include <math.h>
 #include <QPainterPath>
@@ -174,7 +175,6 @@ void OxygenButton::paintEvent(QPaintEvent *)
     QPainter painter(this);
     QPalette pal = palette(); // de-const-ify
 
-
     // Set palette to the right group.
     // TODO - fix KWin to do this for us :-).
     if (client_.isActive())
@@ -182,8 +182,46 @@ void OxygenButton::paintEvent(QPaintEvent *)
     else
         pal.setCurrentColorGroup(QPalette::Inactive);
 
-//    widget->window()setPalette(pal);
+    // fill the grey square
+    helper_.renderWindowBackground(&painter, this->rect(), this, pal, 0);
+    painter.setClipRect(this->rect());
 
+    // draw dividing line
+    painter.setRenderHints(QPainter::Antialiasing);
+    QRect frame = client_.widget()->rect();
+    int x = -this->geometry().x()+1;
+    int w = frame.width()-2;
+
+    const int titleHeight = client_.layoutMetric(KCommonDecoration::LM_TitleHeight);
+
+    QColor color = pal.window().color();
+    QColor light = helper_.calcLightColor( color );
+    QColor dark = helper_.calcDarkColor( color );
+
+    dark.setAlpha(120);
+
+    if(client_.isActive()) {
+        QLinearGradient lg(x,0,x+w,0);
+        lg.setColorAt(0.5, dark);
+        dark.setAlpha(0);
+        lg.setColorAt(0.0, dark);
+        lg.setColorAt(1.0, dark);
+        painter.setPen(QPen(lg,1));
+
+        painter.drawLine(QPointF(x, titleHeight-1.5),
+                                QPointF(x+w, titleHeight-1.5));
+
+        lg = QLinearGradient(x,0,x+w,0);
+        lg.setColorAt(0.5, light);
+        light.setAlpha(0);
+        lg.setColorAt(0.0, light);
+        lg.setColorAt(1.0, light);
+        painter.setPen(QPen(lg,1));
+
+        painter.drawLine(QPointF(x, titleHeight-0.5),
+                               QPointF(x+w, titleHeight-0.5));
+    }
+    
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
         int dx = (width() - 16) / 2;
@@ -198,7 +236,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
 
     QColor bg = helper_.backgroundTopColor(pal.window());
 
-    QColor color = buttonDetailColor(pal);
+    color = buttonDetailColor(pal);
     if(status_ == Oxygen::Hovered || status_ == Oxygen::Pressed) {
         if(type_ == ButtonClose)
             color = KColorScheme(pal.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
