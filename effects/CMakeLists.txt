@@ -50,7 +50,7 @@ SET(kwin4_effect_builtins_sources
     shadow.cpp
     showfps.cpp
     showpaint.cpp
-    #taskbarthumbnail.cpp # Enable when plasma has tooltips again
+    taskbarthumbnail.cpp
     thumbnailaside.cpp
     zoom.cpp
     )
