@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <kaction.h>
 #include <KShortcutsEditor>
-#include <KGlobalAccel>
 
 #include <QWidget>
 #include <QGridLayout>

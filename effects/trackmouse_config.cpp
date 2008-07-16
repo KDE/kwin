@@ -24,10 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <KActionCollection>
 #include <kaction.h>
 #include <KShortcutsEditor>
-#include <KGlobalAccel>
 
 #include <QVBoxLayout>
 #include <QLabel>

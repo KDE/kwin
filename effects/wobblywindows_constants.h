@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include <QtGlobal>
 
 static const qreal STIFFNESS = 0.06;
 static const qreal DRAG = 0.92;

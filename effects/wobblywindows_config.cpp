@@ -24,12 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <KActionCollection>
 #include <kaction.h>
-#include <KGlobalAccel>
 #include <kconfiggroup.h>
 
-#include <QGridLayout>
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif

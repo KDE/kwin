@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <QFont>
-#include <QBitmap>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kcolorscheme.h>

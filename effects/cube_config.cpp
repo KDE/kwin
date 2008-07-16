@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcolorscheme.h>
 #include <KActionCollection>
 #include <kaction.h>
-#include <KGlobalAccel>
 
 #include <QGridLayout>
 #include <QColor>
