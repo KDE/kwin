@@ -210,7 +210,7 @@ void KWinCompositingConfig::loadGeneralTab()
         + LOAD_EFFECT_CONFIG("desktopgrid")
         + LOAD_EFFECT_CONFIG("dialogparent")
         + LOAD_EFFECT_CONFIG("trackmouse");
-    if (winManagementEnabled > 0 && winManagementEnabled < 4) {
+    if (winManagementEnabled > 0 && winManagementEnabled < 5) {
         ui.effectWinManagement->setTristate(true);
         ui.effectWinManagement->setCheckState(Qt::PartiallyChecked);
     }
