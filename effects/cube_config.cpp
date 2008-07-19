@@ -78,6 +78,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->backgroundColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
+    connect(m_ui->capsImageBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->capColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
 
     load();
@@ -96,6 +97,7 @@ void CubeEffectConfig::load()
     int activateBorder = conf.readEntry( "BorderActivate", (int)ElectricNone );
     QColor background  = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
     QColor capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
+    bool texturedCaps = conf.readEntry( "TexturedCaps", true );
     bool caps = conf.readEntry( "Caps", true );
     if( activateBorder == (int)ElectricNone )
         activateBorder--;
@@ -128,6 +130,14 @@ void CubeEffectConfig::load()
         {
         m_ui->cubeCapsBox->setCheckState( Qt::Unchecked );
         }
+    if( texturedCaps )
+        {
+        m_ui->capsImageBox->setCheckState( Qt::Checked );
+        }
+    else
+        {
+        m_ui->capsImageBox->setCheckState( Qt::Unchecked );
+        }
     m_ui->backgroundColorButton->setColor( background );
     m_ui->capColorButton->setColor( capColor );
     capsSelectionChanged();
@@ -146,6 +156,7 @@ void CubeEffectConfig::save()
     conf.writeEntry( "BackgroundColor", m_ui->backgroundColorButton->color() );
     conf.writeEntry( "Caps", m_ui->cubeCapsBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CapColor", m_ui->capColorButton->color() );
+    conf.writeEntry( "TexturedCaps", m_ui->capsImageBox->checkState() == Qt::Checked ? true : false );
 
     int activateBorder = m_ui->screenEdgeCombo->currentIndex();
     if( activateBorder == (int)ELECTRIC_COUNT )
@@ -171,6 +182,7 @@ void CubeEffectConfig::defaults()
     m_ui->backgroundColorButton->setColor( QColor( Qt::black ) );
     m_ui->cubeCapsBox->setCheckState( Qt::Checked );
     m_ui->capColorButton->setColor( KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
+    m_ui->capsImageBox->setCheckState( Qt::Checked );
     m_ui->editor->allDefault();
     emit changed(true);
     }
@@ -182,12 +194,14 @@ void CubeEffectConfig::capsSelectionChanged()
         // activate cap color
         m_ui->capColorButton->setEnabled( true );
         m_ui->capColorLabel->setEnabled( true );
+        m_ui->capsImageBox->setEnabled( true );
         }
     else
         {
         // deactivate cap color
         m_ui->capColorButton->setEnabled( false );
         m_ui->capColorLabel->setEnabled( false );
+        m_ui->capsImageBox->setEnabled( false );
         }
     }
 

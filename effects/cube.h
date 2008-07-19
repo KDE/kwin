@@ -64,7 +64,7 @@ class CubeEffect
             Down
             };
         void paintScene( int mask, QRegion region, ScreenPaintData& data );
-        void paintCap( float left, float right, float z );
+        void paintCap( float left, float right, float z, float zTexture );
         void rotateToDesktop( int desktop );
         void setActive( bool active );
         bool activated;
@@ -92,6 +92,8 @@ class CubeEffect
         QColor backgroundColor;
         QColor capColor;
         GLTexture* wallpaper;
+        bool texturedCaps;
+        GLTexture* capTexture;
         float manualAngle;
         float manualVerticalAngle;
         TimeLine::CurveShape currentShape;

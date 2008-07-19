@@ -157,6 +157,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         data/snowflake.png
         data/circle.png
         data/circle-edgy.png
+        data/cubecap.png
         data/cylinder.frag
         data/cylinder.vert
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )

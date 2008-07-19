@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
 #include <kcolorscheme.h>
+#include <kglobal.h>
+#include <kstandarddirs.h>
 #include <kdebug.h>
 
 #include <QColor>
@@ -57,6 +59,8 @@ CubeEffect::CubeEffect()
     , verticalRotationDirection( Upwards )
     , verticalPosition( Normal )
     , wallpaper( NULL )
+    , texturedCaps( true )
+    , capTexture( NULL )
     , manualAngle( 0.0 )
     , manualVerticalAngle( 0.0 )
     , currentShape( TimeLine::EaseInOutCurve )
@@ -83,6 +87,26 @@ CubeEffect::CubeEffect()
         if( !img.isNull() )
             {
             wallpaper = new GLTexture( img );
+            }
+        }
+    texturedCaps = conf.readEntry( "TexturedCaps", true );
+    if( texturedCaps )
+        {
+        QImage img = QImage( KGlobal::dirs()->findResource( "appdata", "cubecap.png" ) );
+        if( !img.isNull() )
+            {
+            // change the alpha value of each pixel
+            for( int x=0; x<img.width(); x++ )
+                {
+                for( int y=0; y<img.height(); y++ )
+                    {
+                    QRgb pixel = img.pixel( x, y );
+                    img.setPixel( x, y, qRgba( qRed(pixel), qGreen(pixel), qBlue(pixel), ((float)qAlpha(pixel))*cubeOpacity ) );
+                    }
+                }
+            capTexture = new GLTexture( img );
+            capTexture->setFilter( GL_LINEAR );
+            capTexture->setWrapMode( GL_CLAMP );
             }
         }
 
@@ -119,6 +143,7 @@ CubeEffect::~CubeEffect()
     {
     effects->unreserveElectricBorder( borderActivate );
     delete wallpaper;
+    delete capTexture;
     }
 
 void CubeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -335,6 +360,7 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
     // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
     float point = xmax*scaleFactor*tan(cubeAngle*0.5f*M_PI/180.0f);
+    float zTexture = xmax*scaleFactor*tan(45.0f*M_PI/180.0f);
     if( verticalRotating || verticalPosition != Normal || manualVerticalAngle != 0.0 )
         {
         // change the verticalPosition if manualVerticalAngle > 90 or < -90 degrees
@@ -512,14 +538,14 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
             {
             // paint the bottom cap
             glTranslatef( 0.0, -yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point );
+            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
             glTranslatef( 0.0, yTranslate, 0.0 );
             }
         if( (topCapBefore && !reflectionPainting) || (topCapAfter && reflectionPainting) )
             {
             // paint the top cap
             glTranslatef( 0.0, yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point );
+            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
             glTranslatef( 0.0, -yTranslate, 0.0 );
             }
         }
@@ -530,11 +556,11 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
             {
             // paint the bottom cap
             glTranslatef( 0.0, -yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point );
+            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
             glTranslatef( 0.0, yTranslate, 0.0 );
             // paint the top cap
             glTranslatef( 0.0, yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point );
+            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
             glTranslatef( 0.0, -yTranslate, 0.0 );
             }
         if( i%2 == 0 &&  i != effects->numberOfDesktops() -1)
@@ -570,14 +596,14 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
             {
             // paint the top cap
             glTranslatef( 0.0, yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point );
+            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
             glTranslatef( 0.0, -yTranslate, 0.0 );
             }
         if( (topCapBefore && !reflectionPainting) || (topCapAfter && reflectionPainting) )
             {
             // paint the bottom cap
             glTranslatef( 0.0, -yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point );
+            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
             glTranslatef( 0.0, yTranslate, 0.0 );
             }
         }
@@ -585,7 +611,7 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
     painting_desktop = effects->currentDesktop();
     }
 
-void CubeEffect::paintCap( float left, float right, float z )
+void CubeEffect::paintCap( float left, float right, float z, float zTexture )
     {
     if( ( !paintCaps ) || effects->numberOfDesktops() <= 2 )
         return;
@@ -607,6 +633,27 @@ void CubeEffect::paintCap( float left, float right, float z )
         glVertex3f(right, 0.0, z );
         glVertex3f( 0.0, 0.0, 0.0 );
         glEnd();
+        glPopMatrix();
+        }
+
+    // textured caps
+    // only works for more than three desktops
+    if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
+        {
+        glPushMatrix();
+        glRotatef( (effects->currentDesktop()-frontDesktop)*angle, 0.0, 1.0, 0.0 );
+        capTexture->bind();
+        glBegin( GL_QUADS );
+        glTexCoord2f( 0.0, 0.0 );
+        glVertex3f( left, 0.0, zTexture );
+        glTexCoord2f( 1.0, 0.0 );
+        glVertex3f( right, 0.0, zTexture );
+        glTexCoord2f( 1.0, 1.0 );
+        glVertex3f( right, 0.0, -zTexture );
+        glTexCoord2f( 0.0, 1.0 );
+        glVertex3f( left, 0.0, -zTexture );
+        glEnd( );
+        capTexture->unbind();
         glPopMatrix();
         }
     glPopMatrix();
