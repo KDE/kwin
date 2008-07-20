@@ -101,6 +101,7 @@ class CubeEffect
         bool stop;
         bool reflectionPainting;
         bool slide;
+        int oldDesktop;
 
         // variables for defining the projection matrix
         float fovy;
