@@ -257,6 +257,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     Q_UNUSED(e)
     if (!OxygenFactory::initialized()) return;
 
+    updateButtons();
+
     QPalette palette = widget()->palette();
     QPainter painter(widget());
 
