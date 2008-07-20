@@ -19,7 +19,7 @@ set_target_properties(kdecorations PROPERTIES
    )
 install(TARGETS kdecorations ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-kde4_target_link_interface_libraries(kdecorations  "${KDE4_KDEUI_LIBS};")
+_kde4_target_link_interface_libraries(kdecorations  "${KDE4_KDEUI_LIBS};")
 
 ########### install files ###############
 
@@ -53,7 +53,7 @@ if(OPENGL_FOUND)
   if (DL_LIBRARY)
     target_link_libraries(kwineffects ${DL_LIBRARY})
   endif(DL_LIBRARY)
-  kde4_target_link_interface_libraries(kwineffects "${OPENGL_gl_LIBRARY};")
+  _kde4_target_link_interface_libraries(kwineffects "${OPENGL_gl_LIBRARY};")
 endif(OPENGL_FOUND)
 if (X11_Xrender_FOUND)
   target_link_libraries(kwineffects ${X11_Xrender_LIB})
