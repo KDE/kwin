@@ -336,6 +336,8 @@ void KWinCompositingConfig::configChanged()
 
 void KWinCompositingConfig::defaults()
 {
+    ui.tabWidget->setCurrentIndex(0);
+
     ui.useCompositing->setChecked(mDefaultPrefs.enableCompositing());
     ui.effectWinManagement->setChecked(true);
     ui.effectShadows->setChecked(true);
