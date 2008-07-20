@@ -183,6 +183,9 @@ void KWinCompositingConfig::initEffectSelector()
 
 void KWinCompositingConfig::currentTabChanged(int tab)
 {
+    // block signals to don't emit the changed()-signal by just switching the current tab
+    blockSignals(true);
+    // write possible changes done to synchronize effect checkboxes and selector
     if (tab == 0)
     {
         // General tab was activated
@@ -195,6 +198,7 @@ void KWinCompositingConfig::currentTabChanged(int tab)
         saveGeneralTab();
         loadEffectsTab();
     }
+    blockSignals(false);
 }
 
 void KWinCompositingConfig::loadGeneralTab()
