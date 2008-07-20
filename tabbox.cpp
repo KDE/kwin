@@ -61,11 +61,11 @@ TabBox::TabBox( Workspace *ws )
     , display_refcount( 0 )
     {
     setFrameStyle(QFrame::StyledPanel);
-    setFrameShadow(QFrame::Plain);
+    setFrameShadow(QFrame::Raised);
     setBackgroundRole(QPalette::Base);
-    setLineWidth(2);
-    setMidLineWidth(2);
-    setContentsMargins( 2, 2, 2, 2 );
+    setLineWidth(3);
+    setMidLineWidth(3);
+    setContentsMargins( 3, 3, 3, 3 );
 
     showMiniIcon = false;
 
