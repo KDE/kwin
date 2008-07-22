@@ -500,8 +500,9 @@ Pixmap Toplevel::createWindowPixmap()
 #ifdef HAVE_XDAMAGE
 void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
     {
-    addDamage( e->area.x, e->area.y, e->area.width, e->area.height );
+    QRegion damage( e->area.x, e->area.y, e->area.width, e->area.height );
     // compress
+    int cnt = 1;
     while( XPending( display()))
         {
         XEvent e2;
@@ -509,12 +510,37 @@ void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
             && e2.xany.window == frameId())
             {
             XNextEvent( display(), &e2 );
+            if( cnt > 200 )
+                {
+                // If there are way too many damage events in the queue, just discard them
+                // and damage the whole window. Otherwise the X server can just overload
+                // us with a flood of damage events. Should be probably optimized
+                // in the X server, as this is rather lame.
+                damage = rect();
+                continue;
+                }
             XDamageNotifyEvent* e = reinterpret_cast< XDamageNotifyEvent* >( &e2 );
-            addDamage( e->area.x, e->area.y, e->area.width, e->area.height );
+            QRect r( e->area.x, e->area.y, e->area.width, e->area.height );
+            ++cnt;
+            // If there are too many damaged rectangles, increase them
+            // to be multiples of 100x100 px grid, since QRegion get quite
+            // slow with many rectangles, and there is little to gain by using
+            // many small rectangles (rather the opposite, several large should
+            // be often faster).
+            if( cnt > 50 )
+                {
+                r.setLeft( r.left() / 100 * 100 );
+                r.setRight(( r.right() + 99 ) / 100 * 100 );
+                r.setTop( r.top() / 100 * 100 );
+                r.setBottom(( r.bottom() + 99 ) / 100 * 100 );
+                }
+            damage += r;
             continue;
             }
         break;
         }
+    foreach( QRect r, damage.rects())
+        addDamage( r ); 
     }
 
 void Client::damageNotifyEvent( XDamageNotifyEvent* e )
