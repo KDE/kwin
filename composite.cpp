@@ -398,9 +398,13 @@ void Workspace::setupOverlay( Window w )
     {
     assert( overlay != None );
     assert( Extensions::shapeInputAvailable());
+    XSetWindowBackgroundPixmap( display(), overlay, None );
     XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
     if( w != None )
+        {
+        XSetWindowBackgroundPixmap( display(), w, None );
         XShapeCombineRectangles( display(), w, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
+        }
     XSelectInput( display(), overlay, VisibilityChangeMask );
     }
 
