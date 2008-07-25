@@ -1721,6 +1721,20 @@ bool Client::isMovable() const
     }
 
 /*!
+  Returns whether the window is moveable across Xinerama screens
+ */
+bool Client::isMovableAcrossScreens() const
+    {
+    if( !motif_may_move )
+        return false;
+    if( isSpecialWindow() && !isSplash() && !isToolbar()) // allow moving of splashscreens :)
+        return false;
+    if( rules()->checkPosition( invalidPoint ) != invalidPoint ) // forced position
+        return false;
+    return true;
+    }
+
+/*!
   Returns whether the window is resizable or has a fixed size.
  */
 bool Client::isResizable() const
@@ -2607,7 +2621,7 @@ void Client::delayedMoveResize()
 
 void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     {
-    if(( mode == PositionCenter && !isMovable())
+    if(( mode == PositionCenter && !isMovableAcrossScreens() )
         || ( mode != PositionCenter && ( isShade() || !isResizable())))
         return;
 
@@ -2760,20 +2774,28 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     else if( isMove())
         {
         assert( mode == PositionCenter );
-        // first move, then snap, then check bounds
-        moveResizeGeom.moveTopLeft( topleft );
-        moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft(),
-                                                                       unrestrictedMoveResize ) );
-        // NOTE: This is duped in checkUnrestrictedMoveResize().
-        if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1 ) // titlebar mustn't go out
-            moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge - 1 );
-        // no need to check top_marge, titlebar_marge already handles it
-        if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
-            moveResizeGeom.moveTop( desktopArea.bottom() - bottom_marge );
-        if( moveResizeGeom.right() < desktopArea.left() + left_marge )
-            moveResizeGeom.moveRight( desktopArea.left() + left_marge );
-        if( moveResizeGeom.left() > desktopArea.right() - right_marge )
-            moveResizeGeom.moveLeft(desktopArea.right() - right_marge );
+        if( !isMovable() ) // isMovableAcrossScreens() must have been true to get here
+            { // Special moving of maximized windows on Xinerama screens
+            int screen = workspace()->screenNumber( globalPos );
+            moveResizeGeom = workspace()->clientArea( MaximizeArea, screen, 0 );
+            }
+        else
+            {
+            // first move, then snap, then check bounds
+            moveResizeGeom.moveTopLeft( topleft );
+            moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft(),
+                                                                           unrestrictedMoveResize ));
+            // NOTE: This is duped in checkUnrestrictedMoveResize().
+            if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1 ) // titlebar mustn't go out
+                moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge - 1 );
+            // no need to check top_marge, titlebar_marge already handles it
+            if( moveResizeGeom.top() > desktopArea.bottom() - bottom_marge )
+                moveResizeGeom.moveTop( desktopArea.bottom() - bottom_marge );
+            if( moveResizeGeom.right() < desktopArea.left() + left_marge )
+                moveResizeGeom.moveRight( desktopArea.left() + left_marge );
+            if( moveResizeGeom.left() > desktopArea.right() - right_marge )
+                moveResizeGeom.moveLeft(desktopArea.right() - right_marge );
+            }
         if( moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
             update = true;
         }

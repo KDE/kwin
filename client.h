@@ -182,6 +182,7 @@ class Client
 
         bool isResizable() const;
         bool isMovable() const;
+        bool isMovableAcrossScreens() const;
         bool isCloseable() const; // may be closed by the user (may have a close button)
 
         void takeActivity( int flags, bool handled, allowed_t ); // takes ActivityFlags as arg (in utils.h)

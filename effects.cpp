@@ -1144,6 +1144,13 @@ bool EffectWindowImpl::isMovable() const
     return false;
     }
 
+bool EffectWindowImpl::isMovableAcrossScreens() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c->isMovableAcrossScreens();
+    return false;
+    }
+
 bool EffectWindowImpl::isUserMove() const
     {
     if( Client* c = dynamic_cast< Client* >( toplevel ))

@@ -200,6 +200,7 @@ class EffectWindowImpl : public EffectWindow
         virtual QSize size() const;
         virtual QRect rect() const;
         virtual bool isMovable() const;
+        virtual bool isMovableAcrossScreens() const;
         virtual bool isUserMove() const;
         virtual bool isUserResize() const;
         virtual QRect iconGeometry() const;

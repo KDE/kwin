@@ -220,7 +220,7 @@ void Workspace::clientPopupAboutToShow()
         }
 
     mResizeOpAction->setEnabled( active_popup_client->isResizable() );
-    mMoveOpAction->setEnabled( active_popup_client->isMovable() );
+    mMoveOpAction->setEnabled( active_popup_client->isMovableAcrossScreens() );
     mMaximizeOpAction->setEnabled( active_popup_client->isMaximizable() );
     mMaximizeOpAction->setChecked( active_popup_client->maximizeMode() == Client::MaximizeFull );
     mShadeOpAction->setEnabled( active_popup_client->isShadeable() );
@@ -610,13 +610,13 @@ bool Client::performMouseCommand( Options::MouseCommand command, const QPoint &g
             workspace()->raiseClient( this );
             workspace()->requestFocus( this );
             workspace()->setActiveScreenMouse( globalPos );
-            if( options->moveMode == Options::Transparent && isMovable())
+            if( options->moveMode == Options::Transparent && isMovableAcrossScreens())
                 move_faked_activity = workspace()->fakeRequestedActivity( this );
         // fallthrough
         case Options::MouseMove:
         case Options::MouseUnrestrictedMove:
             {
-            if (!isMovable())
+            if (!isMovableAcrossScreens())
                 break;
             if( moveResizeMode )
                 finishMoveResize( false );
