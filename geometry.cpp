@@ -292,7 +292,7 @@ QRect Workspace::clientArea( clientAreaOption opt, const Client* c ) const
   workspace the opportunity to interveniate and to implement
   snap-to-windows functionality.
  */
-QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
+QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted )
     {
    //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
    //CT adapted for kwin on 25Nov1999
@@ -404,7 +404,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
             {
             int diffX = qAbs( (xmin + xmax)/2 - (cx + cw/2) );
             int diffY = qAbs( (ymin + ymax)/2 - (cy + ch/2) );
-            if (diffX < snap && diffY < snap)
+            if (diffX < snap && diffY < snap && diffX < deltaX && diffY < deltaY)
                 { // Snap to center of screen
                 deltaX = diffX;
                 deltaY = diffY;
@@ -413,12 +413,13 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos )
                 }
             else if ( options->borderSnapZone )
                 { // Enhance border snap
-                if( ( nx == xmin || nx == xmax - cw ) && diffY < snap)
+                if( ( nx == xmin || nx == xmax - cw ) && diffY < snap && diffY < deltaY)
                     { // Snap to vertical center on screen edge
                     deltaY = diffY;
                     ny = (ymin + ymax)/2 - ch/2;
                     }
-                else if ( ( ( ny <= ymin && ny > ymin - snap ) || ny == ymax - ch ) && diffX < snap) // Extra snap on the top of screen to prevent misses
+                else if ( (( unrestricted ? ny == ymin : ny <= ymin) || ny == ymax - ch ) &&
+                          diffX < snap && diffX < deltaX)
                     { // Snap to horizontal center on screen edge
                     deltaX = diffX;
                     nx = (xmin + xmax)/2 - cw/2;
@@ -926,7 +927,7 @@ void Client::checkWorkspacePosition()
             {
             return;
             }
-            
+
         QRect area = workspace()->clientArea( FullArea, this );
         if( geometry() != area )
             setGeometry( area );
@@ -1948,7 +1949,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
         if( horizontal )
             max_mode = MaximizeMode( max_mode ^ MaximizeHorizontal );
         }
-        
+
     max_mode = rules()->checkMaximize( max_mode );
     if( !adjust && max_mode == old_mode )
         return;
@@ -1962,7 +1963,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
         {
         changeMaximize( false, false, false ); // restore
         }
-        
+
 
     QRect clientArea = workspace()->clientArea( MaximizeArea, this );
 
@@ -2006,9 +2007,9 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
 	    {
 	    max_mode = MaximizeHorizontal;
 	    maxmode_restore = MaximizeRestore;
-	    }	
+	    }
 	}
-    
+
     switch (max_mode)
         {
 
@@ -2474,7 +2475,7 @@ void Client::checkUnrestrictedMoveResize()
         return;
     QRect desktopArea = workspace()->clientArea( WorkArea, moveResizeGeom.center(), desktop());
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
-    // restricted move/resize - keep at least part of the titlebar always visible 
+    // restricted move/resize - keep at least part of the titlebar always visible
     // how much must remain visible when moved away in that direction
     left_marge = qMin( 100 + border_right, moveResizeGeom.width());
     right_marge = qMin( 100 + border_left, moveResizeGeom.width());
@@ -2578,8 +2579,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
     if( unrestrictedMoveResize ) // unrestricted, just don't let it go out completely
         left_marge = right_marge = top_marge = bottom_marge = titlebar_marge = 5;
-    else // restricted move/resize - keep at least part of the titlebar always visible 
-        {        
+    else // restricted move/resize - keep at least part of the titlebar always visible
+        {
         // how much must remain visible when moved away in that direction
         left_marge = qMin( 100 + border_right, moveResizeGeom.width());
         right_marge = qMin( 100 + border_left, moveResizeGeom.width());
@@ -2693,7 +2694,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         assert( mode == PositionCenter );
         // first move, then snap, then check bounds
         moveResizeGeom.moveTopLeft( topleft );
-        moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft() ) );
+        moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft(),
+                                                                       unrestrictedMoveResize ) );
         // NOTE: This is duped in checkUnrestrictedMoveResize().
         if( moveResizeGeom.bottom() < desktopArea.top() + titlebar_marge - 1 ) // titlebar mustn't go out
             moveResizeGeom.moveBottom( desktopArea.top() + titlebar_marge - 1 );
@@ -2726,7 +2728,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     }
 
 void Client::performMoveResize()
-    {    
+    {
 #ifdef HAVE_XSYNC
     if( isResize() && sync_counter != None )
         {
