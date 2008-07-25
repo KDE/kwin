@@ -394,6 +394,34 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted
                             ny = ly - ch;
                             }
                         }
+
+                    // Corner snapping
+                    if( nx == lrx || nx+cw == lx )
+                        {
+                        if ((sOWO?(ry>lry):true) && (qAbs(lry-ry)<snap) && (qAbs(lry-ry) < deltaY))
+                            {
+                            deltaY = qAbs( lry - ry );
+                            ny = lry - ch;
+                            }
+                        if ((sOWO?(cy<ly):true) && (qAbs(cy-ly)<snap) && (qAbs(cy-ly) < deltaY))
+                            {
+                            deltaY = qAbs( cy - ly );
+                            ny = ly;
+                            }
+                        }
+                    if( ny == lry || ny+ch == ly )
+                        {
+                        if ((sOWO?(rx>lrx):true) && (qAbs(lrx-rx)<snap) && (qAbs(lrx-rx) < deltaX))
+                            {
+                            deltaX = qAbs( lrx - rx );
+                            nx = lrx - cw;
+                            }
+                        if ((sOWO?(cx<lx):true) && (qAbs(cx-lx)<snap) && (qAbs(cx-lx) < deltaX))
+                            {
+                            deltaX = qAbs( cx - lx );
+                            nx = lx;
+                            }
+                        }
                     }
                 }
             }
@@ -586,35 +614,75 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
                     newrx=lx;  \
                     }
 
+#define SNAP_WINDOW_C_TOP  if ( (sOWO?(newcy<ly):true)  \
+                  && (newcx == lrx || newrx == lx)  \
+                  && qAbs(ly-newcy) < deltaY ) {  \
+                  deltaY = qAbs( ly - newcy ); \
+                  newcy=ly; \
+                  }
+
+#define SNAP_WINDOW_C_BOTTOM  if ( (sOWO?(newry>lry):true)  \
+                  && (newcx == lrx || newrx == lx)  \
+                  && qAbs(lry-newry) < deltaY ) {  \
+                  deltaY = qAbs( lry - newry ); \
+                  newry=lry; \
+                  }
+
+#define SNAP_WINDOW_C_LEFT  if ( (sOWO?(newcx<lx):true)  \
+                  && (newcy == lry || newry == ly)  \
+                  && qAbs(lx-newcx) < deltaX ) {  \
+                  deltaX = qAbs( lx - newcx ); \
+                  newcx=lx; \
+                  }
+
+#define SNAP_WINDOW_C_RIGHT  if ( (sOWO?(newrx>lrx):true)  \
+                  && (newcy == lry || newry == ly)  \
+                  && qAbs(lrx-newrx) < deltaX ) {  \
+                  deltaX = qAbs( lrx - newrx ); \
+                  newrx=lrx; \
+                  }
+
                     switch ( mode )
                       {
                       case PositionBottomRight:
                         SNAP_WINDOW_BOTTOM
                         SNAP_WINDOW_RIGHT
+                        SNAP_WINDOW_C_BOTTOM
+                        SNAP_WINDOW_C_RIGHT
                         break;
                       case PositionRight:
                         SNAP_WINDOW_RIGHT
+                        SNAP_WINDOW_C_RIGHT
                         break;
                       case PositionBottom:
                         SNAP_WINDOW_BOTTOM
+                        SNAP_WINDOW_C_BOTTOM
                         break;
                       case PositionTopLeft:
                         SNAP_WINDOW_TOP
                         SNAP_WINDOW_LEFT
+                        SNAP_WINDOW_C_TOP
+                        SNAP_WINDOW_C_LEFT
                         break;
                       case PositionLeft:
                         SNAP_WINDOW_LEFT
+                        SNAP_WINDOW_C_LEFT
                         break;
                       case PositionTop:
                         SNAP_WINDOW_TOP
+                        SNAP_WINDOW_C_TOP
                         break;
                       case PositionTopRight:
                         SNAP_WINDOW_TOP
                         SNAP_WINDOW_RIGHT
+                        SNAP_WINDOW_C_TOP
+                        SNAP_WINDOW_C_RIGHT
                         break;
                       case PositionBottomLeft:
                         SNAP_WINDOW_BOTTOM
                         SNAP_WINDOW_LEFT
+                        SNAP_WINDOW_C_BOTTOM
+                        SNAP_WINDOW_C_LEFT
                         break;
                       default:
                         assert( false );
