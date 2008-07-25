@@ -410,6 +410,7 @@ ShortcutDialog::ShortcutDialog( const QKeySequence& cut )
     : widget( new KKeySequenceWidget( this ))
     {
     widget->setKeySequence( cut );
+    setMainWidget( widget );
     // make it a popup, so that it has the grab
     XSetWindowAttributes attrs;
     attrs.override_redirect = True;
