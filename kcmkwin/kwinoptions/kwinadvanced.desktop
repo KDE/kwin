@@ -3,7 +3,7 @@ Icon=preferences-system-windows-advanced
 Type=Service
 X-KDE-ServiceTypes=KCModule
 Exec=kcmshell4 kwinadvanced
-X-DocPath=kcontrol/windowmanagement/index.html#action-advanced
+X-DocPath=kcontrol/windowbehaviour/index.html#action-advanced
 
 X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinadvanced

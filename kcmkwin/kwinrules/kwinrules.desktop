@@ -3,7 +3,7 @@ Exec=kcmshell4 kwinrules
 Icon=preferences-system-windows-specific
 Type=Service
 X-KDE-ServiceTypes=KCModule
-X-DocPath=kcontrol/windowmanagement/index.html
+X-DocPath=kcontrol/windowspecific/index.html
 
 X-KDE-Library=kcm_kwinrules
 X-KDE-ParentApp=kcontrol

@@ -3,7 +3,7 @@ Exec=kcmshell4 kwinoptions
 Icon=preferences-system-windows-behaviour
 Type=Service
 X-KDE-ServiceTypes=KCModule
-X-DocPath=kcontrol/windowmanagement/index.html
+X-DocPath=kcontrol/windowbehaviour/index.html
 
 X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinoptions

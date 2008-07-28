@@ -3,7 +3,7 @@ Icon=preferences-system-windows-action
 Type=Service
 X-KDE-ServiceTypes=KCModule
 Exec=kcmshell4 kwinactions
-X-DocPath=kcontrol/windowmanagement/index.html#action-actions
+X-DocPath=kcontrol/windowbehaviour/index.html#titlebar-actions
 
 X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinactions
