@@ -48,6 +48,13 @@ Deleted* Deleted::create( Toplevel* c )
     return d;
     }
 
+// to be used only from Workspace::finishCompositing()
+void Deleted::discard( allowed_t )
+    {
+    delete_refcount = 0;
+    delete this;
+    }
+
 void Deleted::copyToDeleted( Toplevel* c )
     {
     assert( dynamic_cast< Deleted* >( c ) == NULL );

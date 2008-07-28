@@ -35,6 +35,7 @@ class Deleted
         // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
         void refWindow();
         void unrefWindow( bool delay = false );
+        void discard( allowed_t );
         virtual int desktop() const;
         virtual QPoint clientPos() const;
         virtual QSize clientSize() const;
