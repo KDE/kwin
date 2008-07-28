@@ -394,7 +394,7 @@ void Application::resetCrashesCount()
 
 } // namespace
 
-static const char version[] = "4.0";
+static const char version[] = KDE_VERSION_STRING;
 static const char description[] = I18N_NOOP( "KDE window manager" );
 
 extern "C"
