@@ -253,6 +253,9 @@ void Workspace::finishCompositing()
         }
     delete popup; // force re-creation of the Alt+F3 popup (opacity option)
     popup = NULL;
+    // discard all Deleted windows (#152914)
+    while( !deleted.isEmpty())
+        deleted.first()->discard( Allowed );
 #endif
     }
 
