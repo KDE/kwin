@@ -175,8 +175,10 @@ void Workspace::updateClientArea( bool force )
         {
             if( workarea[ i ] != new_wareas[ i ] )
                 changed = true;
+            if( screenarea[ i ].size() != new_sareas[ i ].size())
+                changed = true;
             for( int iS = 0;
-                    iS < nscreens;
+                    !changed && iS < nscreens;
                     iS ++ )
                 if (new_sareas[ i ][ iS ] != screenarea [ i ][ iS ])
                     changed = true;
