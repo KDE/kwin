@@ -95,62 +95,63 @@ void Workspace::updateClientArea( bool force )
             iS < nscreens;
             iS ++ )
         {
-            screens [iS] = desktopwidget -> screenGeometry (iS);
+        screens [iS] = desktopwidget -> screenGeometry (iS);
         }
     for( int i = 1;
             i <= numberOfDesktops();
             ++i )
         {
-            new_wareas[ i ] = desktopArea;
-            new_sareas[ i ].resize( nscreens );
-            for( int iS = 0;
-                    iS < nscreens;
-                    iS ++ )
-                new_sareas[ i ][ iS ] = screens[ iS ];
+        new_wareas[ i ] = desktopArea;
+        new_sareas[ i ].resize( nscreens );
+        for( int iS = 0;
+             iS < nscreens;
+             iS ++ )
+            new_sareas[ i ][ iS ] = screens[ iS ];
         }
     for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
         {
-            if( !(*it)->hasStrut())
-                continue;
-            QRect r = (*it)->adjustedClientArea( desktopArea, desktopArea );
-            if( (*it)->isOnAllDesktops())
-                for( int i = 1;
-                        i <= numberOfDesktops();
-                        ++i )
-                    {
-                        new_wareas[ i ] = new_wareas[ i ].intersected( r );
-                        for( int iS = 0;
-                                iS < nscreens;
-                                iS ++ )
-                            new_sareas[ i ][ iS ] =
-                                new_sareas[ i ][ iS ].intersected(
-                                        (*it)->adjustedClientArea( desktopArea, screens[ iS ] )
-                                    );
-                    }
-            else
+        if( !(*it)->hasStrut())
+            continue;
+        QRect r = (*it)->adjustedClientArea( desktopArea, desktopArea );
+        if( (*it)->isOnAllDesktops())
+            {
+            for( int i = 1;
+                 i <= numberOfDesktops();
+                 ++i )
                 {
-                    new_wareas[ (*it)->desktop() ] = new_wareas[ (*it)->desktop() ].intersected( r );
-                    for( int iS = 0;
-                            iS < nscreens;
-                            iS ++ )
-                        {
-//                            kDebug () << "adjusting new_sarea: " << screens[ iS ];
-                            new_sareas[ (*it)->desktop() ][ iS ] =
-                                new_sareas[ (*it)->desktop() ][ iS ].intersected(
-                                        (*it)->adjustedClientArea( desktopArea, screens[ iS ] )
-                                        );
-                        }
+                new_wareas[ i ] = new_wareas[ i ].intersected( r );
+                for( int iS = 0;
+                     iS < nscreens;
+                     iS ++ )
+                    {
+                    new_sareas[ i ][ iS ] = new_sareas[ i ][ iS ].intersected(
+                        (*it)->adjustedClientArea( desktopArea, screens[ iS ] ));
+                    }
                 }
+            }
+        else
+            {
+            new_wareas[ (*it)->desktop() ] = new_wareas[ (*it)->desktop() ].intersected( r );
+            for( int iS = 0;
+                 iS < nscreens;
+                 iS ++ )
+                {
+//                            kDebug () << "adjusting new_sarea: " << screens[ iS ];
+                new_sareas[ (*it)->desktop() ][ iS ]
+                    = new_sareas[ (*it)->desktop() ][ iS ].intersected(
+                        (*it)->adjustedClientArea( desktopArea, screens[ iS ] ));
+                }
+            }
         }
 #if 0
     for( int i = 1;
             i <= numberOfDesktops();
             ++i )
         {
-            for( int iS = 0;
-                    iS < nscreens;
-                    iS ++ )
-                kDebug () << "new_sarea: " << new_sareas[ i ][ iS ];
+        for( int iS = 0;
+             iS < nscreens;
+             iS ++ )
+            kDebug () << "new_sarea: " << new_sareas[ i ][ iS ];
         }
 #endif
     // TODO topmenu update for screenarea changes?
@@ -173,15 +174,15 @@ void Workspace::updateClientArea( bool force )
          !changed && i <= numberOfDesktops();
          ++i )
         {
-            if( workarea[ i ] != new_wareas[ i ] )
+        if( workarea[ i ] != new_wareas[ i ] )
+            changed = true;
+        if( screenarea[ i ].size() != new_sareas[ i ].size())
+            changed = true;
+        for( int iS = 0;
+             !changed && iS < nscreens;
+             iS ++ )
+            if (new_sareas[ i ][ iS ] != screenarea [ i ][ iS ])
                 changed = true;
-            if( screenarea[ i ].size() != new_sareas[ i ].size())
-                changed = true;
-            for( int iS = 0;
-                    !changed && iS < nscreens;
-                    iS ++ )
-                if (new_sareas[ i ][ iS ] != screenarea [ i ][ iS ])
-                    changed = true;
         }
 
     if ( changed )
