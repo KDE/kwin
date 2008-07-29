@@ -215,7 +215,7 @@ if( CAPTURY_LDFLAGS )
     SET( CAPTURY_FOUND TRUE )
 endif( CAPTURY_LDFLAGS )
 
-macro_log_feature(CAPTURY_FOUND "Captury framework library" "Realtime video capturing framework e.g. screen casts" "http://rm-rf.in/captury" FALSE "0.3.0" "Provides for video recording desktop effects.")
+macro_log_feature(CAPTURY_FOUND "Captury framework library" "Realtime video capturing framework e.g. screen casts" "http://ninchens.de/projects/captury" FALSE "0.3.0" "Provides for video recording desktop effects.")
 
 macro_bool_to_01( CAPTURY_FOUND HAVE_CAPTURY )
 if( CAPTURY_FOUND )
