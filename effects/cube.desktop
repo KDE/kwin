@@ -3,11 +3,13 @@ Name=Desktop Cube
 Name[pt]=Cubo de Ecrãs
 Name[pt_BR]=Cubo de Ecrãs
 Name[uk]=Куб стільниць
+Name[zh_TW]=桌面立方體
 Icon=preferences-system-windows-effect-cube
 Comment=Map virtual desktops on a cube
 Comment[pt]=Mapear os ecrãs virtuais sobre um cubo
 Comment[pt_BR]=Mapear os ecrãs virtuais sobre um cubo
 Comment[uk]=Призначити віртуальні стільниці до сторін куба
+Comment[zh_TW]=將虛擬桌面映射到一立方體
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect

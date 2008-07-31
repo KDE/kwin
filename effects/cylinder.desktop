@@ -3,11 +3,13 @@ Name=Desktop Cylinder
 Name[pt]=Cilindro de Ecrãs
 Name[pt_BR]=Cilindro de Ecrãs
 Name[uk]=Циліндр стільниць
+Name[zh_TW]=桌面圓柱
 Icon=preferences-system-windows-effect-cylinder
 Comment=Map virtual desktops on a cylinder
 Comment[pt]=Mapear os ecrãs virtuais sobre um cilindro
 Comment[pt_BR]=Mapear os ecrãs virtuais sobre um cilindro
 Comment[uk]=Призначити віртуальні стільниці до циліндра
+Comment[zh_TW]=將虛擬桌面映射到一圓柱
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
