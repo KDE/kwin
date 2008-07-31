@@ -246,6 +246,21 @@ void BlurEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPa
             if( mask & PAINT_WINDOW_TRANSLUCENT &&
                 (data.opacity != 1.0 || data.contents_opacity != 1.0 || data.decoration_opacity != 1.0 ))
             {
+
+            double blurAmount = data.opacity;
+            if( blurAmount >= 1.0 )
+            {
+                blurAmount = data.contents_opacity;
+                if( blurAmount >= 1.0 )
+                    {
+                    blurAmount = data.decoration_opacity;
+                    if( blurAmount >= 1.0 )
+                        blurAmount = 1.0;
+                    }
+            }
+            // Round to nearest 0.05
+            blurAmount = double( qRound( blurAmount * 20.0 )) / 20.0;
+
             // Make sure the blur texture is up to date
             if( mask & PAINT_SCREEN_TRANSFORMED )
                 {
@@ -258,9 +273,9 @@ void BlurEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPa
             //  transformed position on the screen and thus have to update the
             //  entire screen
             if( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS ) )
-                updateBlurTexture( QRegion(0, 0, displayWidth(), displayHeight()) );
+                updateBlurTexture( QRegion(0, 0, displayWidth(), displayHeight()) , blurAmount );
             else
-                updateBlurTexture( mBlurDirty );
+                updateBlurTexture( mBlurDirty , blurAmount );
             mBlurDirty = QRegion();
             if( mask & PAINT_SCREEN_TRANSFORMED )
                 // Restore the original matrix
@@ -298,7 +313,7 @@ void BlurEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPa
         effects->drawWindow( w, mask, region, data );
     }
 
-void BlurEffect::updateBlurTexture(const QRegion& region)
+void BlurEffect::updateBlurTexture(const QRegion& region, double blurAmount )
     {
     QRect bounding = region.boundingRect();
     QVector<QRect> rects = region.rects();
@@ -308,24 +323,24 @@ void BlurEffect::updateBlurTexture(const QRegion& region)
     if( (int)(totalarea * 1.33 + 100 ) < bounding.width() * bounding.height() )
         {
         // Use small rects
-        updateBlurTexture(rects);
+        updateBlurTexture(rects, blurAmount);
         }
     else
         {
         // Bounding rect is probably cheaper
         QVector<QRect> tmp( 1, bounding );
-        updateBlurTexture( tmp );
+        updateBlurTexture( tmp , blurAmount );
         }
     }
 
-void BlurEffect::updateBlurTexture(const QVector<QRect>& rects)
+void BlurEffect::updateBlurTexture(const QVector<QRect>& rects, double blurAmount )
     {
     // Blur
     // First pass (vertical)
     mBlurShader->bind();
     effects->pushRenderTarget(mTmpTarget);
     mBlurShader->setAttribute("xBlur", 0.0f);
-    mBlurShader->setAttribute("yBlur", 1.0f);
+    mBlurShader->setAttribute("yBlur", float(blurAmount) );
 
     mSceneTexture->bind();
 
@@ -349,7 +364,7 @@ void BlurEffect::updateBlurTexture(const QVector<QRect>& rects)
 
     // Second pass (horizontal)
     effects->pushRenderTarget(mBlurTarget);
-    mBlurShader->setAttribute("xBlur", 1.0f);
+    mBlurShader->setAttribute("xBlur", float(blurAmount) );
     mBlurShader->setAttribute("yBlur", 0.0f);
 
     mTmpTexture->bind();

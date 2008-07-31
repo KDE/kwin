@@ -56,8 +56,8 @@ class BlurEffect : public Effect
     protected:
         bool loadData();
         GLShader* loadShader(const QString& name);
-        void updateBlurTexture(const QVector<QRect>& rects);
-        void updateBlurTexture(const QRegion& region);
+        void updateBlurTexture(const QVector<QRect>& rects, double blurAmount );
+        void updateBlurTexture(const QRegion& region , double blurAmount );
 
         QRegion expandedRegion( const QRegion& r ) const;
 
