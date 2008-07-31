@@ -72,7 +72,7 @@ install( FILES
     shadow.desktop
     showfps.desktop
     showpaint.desktop
-    #taskbarthumbnail.desktop # Enable when plasma has tooltips again
+    taskbarthumbnail.desktop
     thumbnailaside.desktop
     zoom.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
