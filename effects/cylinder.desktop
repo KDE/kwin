@@ -1,13 +1,21 @@
 [Desktop Entry]
 Name=Desktop Cylinder
+Name[gu]=ડેસ્કટોપ સિલિન્ડર
+Name[km]=ស៊ីឡាំង​ផ្ទៃតុ
+Name[nds]=Zylinner-Schriefdisch
 Name[pt]=Cilindro de Ecrãs
 Name[pt_BR]=Cilindro de Ecrãs
+Name[sv]=Skrivbordscylinder
 Name[uk]=Циліндр стільниць
 Name[zh_TW]=桌面圓柱
 Icon=preferences-system-windows-effect-cylinder
 Comment=Map virtual desktops on a cylinder
+Comment[gu]=વર્ચ્યુઅલ ડેસ્કટોપને સિલિન્ડર પર જોડો
+Comment[km]=ផ្ទៃតុ​និម្មិត​ផែនទី​នៅ​លើស៊ីឡាំង
+Comment[nds]=Schriefdischen op en Zylinner afbillen
 Comment[pt]=Mapear os ecrãs virtuais sobre um cilindro
 Comment[pt_BR]=Mapear os ecrãs virtuais sobre um cilindro
+Comment[sv]=Avbilda virtuella skrivbord på en cylinder
 Comment[uk]=Призначити віртуальні стільниці до циліндра
 Comment[zh_TW]=將虛擬桌面映射到一圓柱
 

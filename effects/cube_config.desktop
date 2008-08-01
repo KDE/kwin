@@ -7,7 +7,11 @@ X-KDE-ParentComponents=kwin4_effect_cube
 X-KDE-PluginKeyword=cube
 
 Name=Desktop Cube
+Name[gu]=ડેસ્કટોપ ટ્યુબ
+Name[km]=គូប​ផ្ទៃតុ​
+Name[nds]=Wörpel-Schriefdisch
 Name[pt]=Cubo de Ecrãs
 Name[pt_BR]=Cubo de Ecrãs
+Name[sv]=Skrivbordskub
 Name[uk]=Куб стільниць
 Name[zh_TW]=桌面立方體
