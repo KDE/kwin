@@ -620,29 +620,29 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
 #define SNAP_WINDOW_C_TOP  if ( (sOWO?(newcy<ly):true)  \
                   && (newcx == lrx || newrx == lx)  \
                   && qAbs(ly-newcy) < deltaY ) {  \
-                  deltaY = qAbs( ly - newcy ); \
-                  newcy=ly; \
+                  deltaY = qAbs( ly - newcy + 1 ); \
+                  newcy = ly + 1; \
                   }
 
 #define SNAP_WINDOW_C_BOTTOM  if ( (sOWO?(newry>lry):true)  \
                   && (newcx == lrx || newrx == lx)  \
                   && qAbs(lry-newry) < deltaY ) {  \
-                  deltaY = qAbs( lry - newry ); \
-                  newry=lry; \
+                  deltaY = qAbs( lry - newry - 1 ); \
+                  newry = lry - 1; \
                   }
 
 #define SNAP_WINDOW_C_LEFT  if ( (sOWO?(newcx<lx):true)  \
                   && (newcy == lry || newry == ly)  \
                   && qAbs(lx-newcx) < deltaX ) {  \
-                  deltaX = qAbs( lx - newcx ); \
-                  newcx=lx; \
+                  deltaX = qAbs( lx - newcx + 1 ); \
+                  newcx = lx + 1; \
                   }
 
 #define SNAP_WINDOW_C_RIGHT  if ( (sOWO?(newrx>lrx):true)  \
                   && (newcy == lry || newry == ly)  \
                   && qAbs(lrx-newrx) < deltaX ) {  \
-                  deltaX = qAbs( lrx - newrx ); \
-                  newrx=lrx; \
+                  deltaX = qAbs( lrx - newrx - 1 ); \
+                  newrx = lrx - 1; \
                   }
 
                     switch ( mode )
