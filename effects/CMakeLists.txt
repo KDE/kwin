@@ -43,6 +43,7 @@ SET(kwin4_effect_builtins_sources
     fallapart.cpp
     login.cpp
     logout.cpp
+    magiclamp.cpp
     maketransparent.cpp
     minimizeanimation.cpp
     presentwindows.cpp
@@ -65,6 +66,7 @@ install( FILES
     fallapart.desktop
     login.desktop
     logout.desktop
+    magiclamp.desktop
     maketransparent.desktop
     minimizeanimation.desktop
     presentwindows.desktop
