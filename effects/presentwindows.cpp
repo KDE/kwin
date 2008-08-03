@@ -81,7 +81,7 @@ PresentWindowsEffect::~PresentWindowsEffect()
 void PresentWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     // How long does it take for the effect to get it's full strength (in ms)
-    const double changeTime = 125;
+    const double changeTime = 250;
     if(mActivated)
         {
         mActiveness = qMin(1.0, mActiveness + time/changeTime);
