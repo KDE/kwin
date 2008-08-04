@@ -1309,7 +1309,7 @@ void SceneOpenGL::Window::prepareShaderRenderStates( double opacity, double brig
     if( !opaque )
         {
         glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA ); // TODO: GL_ONE like below?
         }
     shader->setUniform("opacity", (float)opacity);
     shader->setUniform("saturation", (float)saturation);
@@ -1324,7 +1324,7 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
     if( !opaque )
         {
         glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
         }
     if( saturation != 1.0 && texture.saturationSupported())
         {
@@ -1387,12 +1387,12 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
             glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
             glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PRIMARY_COLOR );
             glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+            // The color has to be multiplied by both opacity and brightness
+            float opacityByBrightness = opacity * brightness;
+            glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity );
             if( toplevel->hasAlpha() )
                 {
-                // The color has to be multiplied by both opacity and brightness
-                float opacityByBrightness = opacity * brightness;
-                glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity );
-                // Also multiply original texture's alpha by our opacity
+                // Multiply original texture's alpha by our opacity
                 glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE );
                 glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE0 );
                 glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
@@ -1401,8 +1401,6 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
                 }
             else
                 {
-                // Color has to be multiplied only by brightness
-                glColor4f( brightness, brightness, brightness, opacity );
                 // Alpha will be taken from previous stage
                 glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
                 glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS );
@@ -1417,9 +1415,9 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         {
         // the window is additionally configured to have its opacity adjusted,
         // do it
+        float opacityByBrightness = opacity * brightness;
         if( toplevel->hasAlpha())
             {
-            float opacityByBrightness = opacity * brightness;
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
             glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness,
                 opacity);
@@ -1427,7 +1425,7 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         else
             {
             // Multiply color by brightness and replace alpha by opacity
-            float constant[] = { brightness, brightness, brightness, opacity };
+            float constant[] = { opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity };
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
             glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE );
             glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
