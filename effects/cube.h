@@ -41,7 +41,6 @@ class CubeEffect
         virtual void postPaintScreen();
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintWindow( EffectWindow* w);
         virtual bool borderActivated( ElectricBorder border );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
         virtual void mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, 
@@ -103,6 +102,8 @@ class CubeEffect
         bool slide;
         int oldDesktop;
         int rotationDuration;
+        QList<EffectWindow*> windowsOnOtherScreens;
+        int activeScreen;
     };
 
 } // namespace

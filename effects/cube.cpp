@@ -69,6 +69,7 @@ CubeEffect::CubeEffect()
     , reflectionPainting( false )
     , slide( false )
     , oldDesktop( 0 )
+    , activeScreen( 0 )
     {
     KConfigGroup conf = effects->effectConfig( "Cube" );
     borderActivate = (ElectricBorder)conf.readEntry( "BorderActivate", (int)ElectricNone );
@@ -155,7 +156,8 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     if( activated )
         {
         //kDebug();
-        QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+        QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+        QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
         // background
         float clearColor[4];
@@ -165,7 +167,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         glClearColor( clearColor[0], clearColor[1], clearColor[2], clearColor[3] );
 
         // wallpaper
-        if( wallpaper )
+        if( wallpaper && !slide )
             {            
             wallpaper->bind();
             wallpaper->render( region, rect );
@@ -176,11 +178,66 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
+        if( effects->numScreens() > 1 )
+            {
+            windowsOnOtherScreens.clear();
+            // unfortunatelly we have to change the projection matrix in dual screen mode
+            glMatrixMode( GL_PROJECTION );
+            glPushMatrix();
+            glLoadIdentity();
+            float fovy = 60.0f;
+            float aspect = 1.0f;
+            float zNear = 0.1f;
+            float zFar = 100.0f;
+            float ymax = zNear * tan( fovy  * M_PI / 360.0f );
+            float ymin = -ymax;
+            float xmin =  ymin * aspect;
+            float xmax = ymax * aspect;
+            float xTranslate = 0.0;
+            float yTranslate = 0.0;
+            bool projectionSet = false;
+            if( rect.x() == 0 && rect.width() != fullRect.width() )
+                {
+                // horizontal layout: left screen
+                glFrustum( xmin*0.5, xmax*1.5, ymin, ymax, zNear, zFar );
+                xTranslate = rect.width()*0.5;
+                projectionSet = true;
+                }
+            if( rect.x() != 0 && rect.width() != fullRect.width() )
+                {
+                // horizontal layout: right screen
+                glFrustum( xmin*1.5, xmax*0.5, ymin, ymax, zNear, zFar );
+                xTranslate = rect.width()*0.5;
+                projectionSet = true;
+                }
+            if( rect.y() == 0 && rect.height() != fullRect.height() )
+                {
+                glFrustum( xmin, xmax, ymin*1.5, ymax*0.5, zNear, zFar );
+                yTranslate = rect.height()*0.5;
+                projectionSet = true;
+                }
+            if( rect.y() != 0 && rect.height() != fullRect.height() )
+                {
+                glFrustum( xmin, xmax, ymin*0.5, ymax*1.5, zNear, zFar );
+                yTranslate = rect.height()*0.5;
+                projectionSet = true;
+                }
+            if( !projectionSet )
+                {
+                // this should never happen; nevertheless reset the projection to the default
+                glPopMatrix();
+                glPushMatrix();
+                }
+            glMatrixMode( GL_MODELVIEW );
+            glPushMatrix();
+            glTranslatef( xTranslate, yTranslate, 0.0 );
+            }
+
         // reflection
         if( reflection && (!slide) )
             {
             glPushMatrix();
-            float scaleFactor = 6100 * tan( 60.0 * M_PI / 360.0f )/rect.height();
+            float scaleFactor = 10000 * tan( 60.0 * M_PI / 360.0f )/rect.height();
             glScalef( 1.0, -1.0, 1.0 );
             glTranslatef( 0.0, -rect.height()*2, 0.0 );
 
@@ -193,11 +250,16 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glPopMatrix();
             glPushMatrix();
             glTranslatef( 0.0, rect.height(), 0.0 );
+            if( effects->numScreens() > 1 && rect.width() != fullRect.width() )
+                {
+                // have to change the reflection area in horizontal layout and right screen
+                glTranslatef( -rect.width(), 0.0, 0.0 );
+                }
             float vertices[] = {
-                0.0, 0.0, 0.0,
-                rect.width(), 0.0, 0.0,
-                rect.width()*scaleFactor, 0.0, -5000,
-                -rect.width()*scaleFactor, 0.0, -5000 };
+                rect.x(), 0.0, 0.0,
+                rect.x()+rect.width(), 0.0, 0.0,
+                (rect.x()+rect.width())*scaleFactor, 0.0, -5000,
+                (-rect.x()-rect.width())*scaleFactor, 0.0, -5000 };
             // foreground
             float alpha = 0.7;
             if( start )
@@ -219,6 +281,15 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         glPushMatrix();
         paintScene( mask, region, data );
         glPopMatrix();
+
+        if( effects->numScreens() > 1 )
+            {
+            glPopMatrix();
+            // revert change of projection matrix
+            glMatrixMode( GL_PROJECTION );
+            glPopMatrix();
+            glMatrixMode( GL_MODELVIEW );
+            }
 
         glDisable( GL_BLEND );
         glPopAttrib();
@@ -262,6 +333,18 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             {
             effects->paintScreen( mask, region, data );
             }
+        if( effects->numScreens() > 1 )
+            {
+            foreach( EffectWindow* w, windowsOnOtherScreens )
+                {
+                WindowPaintData wData( w );
+                if( start && !w->isDesktop() && !w->isDock() )
+                    wData.opacity *= (1.0 - timeLine.value());
+                if( stop && !w->isDesktop() && !w->isDock() )
+                    wData.opacity *= timeLine.value();
+                effects->paintWindow( w, 0, QRegion( w->x(), w->y(), w->width(), w->height() ), wData );
+                }
+            }
         }
     else
         {
@@ -271,7 +354,35 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
 void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
     {
-    QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+    float xScale = 1.0;
+    float yScale = 1.0;
+    if( effects->numScreens() > 1 )
+        {
+        QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+        xScale = (float)rect.width()/(float)fullRect.width();
+        yScale = (float)rect.height()/(float)fullRect.height();
+        if( start )
+            {
+            xScale = xScale + (1.0 - xScale) * (1.0 - timeLine.value());
+            yScale = yScale + (1.0 - yScale) * (1.0 - timeLine.value());
+            if( rect.x() > 0 )
+                glTranslatef( -rect.x()*(1.0 - timeLine.value()), 0.0, 0.0 );
+            if( rect.y() > 0 )
+                glTranslatef( 0.0, -rect.y()*(1.0 - timeLine.value()), 0.0 );
+            }
+        if( stop )
+            {
+            xScale = xScale + (1.0 - xScale) * timeLine.value();
+            yScale = yScale + (1.0 - yScale) * timeLine.value();
+            if( rect.x() > 0 )
+                glTranslatef( -rect.x()*timeLine.value(), 0.0, 0.0 );
+            if( rect.y() > 0 )
+                glTranslatef( 0.0, -rect.y()*timeLine.value(), 0.0 );
+            }
+        glScalef( xScale, yScale, 1.0 );
+        rect = fullRect;
+        }
     int rightSteps = effects->numberOfDesktops()/2;
     int leftSteps = rightSteps+1;
     int rightSideCounter = 0;
@@ -576,7 +687,7 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
 
 void CubeEffect::paintCap( float z, float zTexture )
     {
-    QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop());
     if( ( !paintCaps ) || effects->numberOfDesktops() <= 2 )
         return;
     float opacity = cubeOpacity;
@@ -795,9 +906,18 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
         //kDebug();
         if( cube_painting )
             {
+            if( ( w->isDesktop() || w->isDock() ) && w->screen() != activeScreen && w->isOnDesktop( effects->currentDesktop() ) )
+                {
+                windowsOnOtherScreens.append( w );
+                }
+            if( (start || stop) && w->screen() != activeScreen && w->isOnDesktop( effects->currentDesktop() )
+                && !w->isDesktop() && !w->isDock() )
+                {
+                windowsOnOtherScreens.append( w );
+                }
             if( w->isOnDesktop( painting_desktop ))
                 {
-                QRect rect = effects->clientArea( FullArea, effects->activeScreen(), painting_desktop );
+                QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
                 if( w->x() < rect.x() )
                     {
                     data.quads = data.quads.splitAtX( -w->x() );
@@ -824,7 +944,7 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                     prev_desktop = effects->numberOfDesktops();
                 if( w->isOnDesktop( prev_desktop ) )
                     {
-                    QRect rect = effects->clientArea( FullArea, effects->activeScreen(), prev_desktop);
+                    QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
                     if( w->x()+w->width() > rect.x() + rect.width() )
                         {
                         w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
@@ -848,7 +968,7 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                     next_desktop = 1;
                 if( w->isOnDesktop( next_desktop ) )
                     {
-                    QRect rect = effects->clientArea( FullArea, effects->activeScreen(), next_desktop);
+                    QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
                     if( w->x() < rect.x() )
                         {
                         w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
@@ -919,7 +1039,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             next_desktop = 1;
         if( w->isOnDesktop( prev_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
             {
-            QRect rect = effects->clientArea( FullArea, effects->activeScreen(), prev_desktop);
+            QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
             data.xTranslate = -rect.width();
             WindowQuadList new_quads;
             foreach( WindowQuad quad, data.quads )
@@ -933,7 +1053,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             }
         if( w->isOnDesktop( next_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
             {
-            QRect rect = effects->clientArea( FullArea, effects->activeScreen(), next_desktop);
+            QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
             data.xTranslate = rect.width();
             WindowQuadList new_quads;
             foreach( WindowQuad quad, data.quads )
@@ -945,7 +1065,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 }
             data.quads = new_quads;
             }
-        QRect rect = effects->clientArea( FullArea, effects->activeScreen(), painting_desktop );
+        QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
 
         if( start || stop )
             {
@@ -1018,17 +1138,6 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             }
         }
     effects->paintWindow( w, mask, region, data );
-    }
-
-void CubeEffect::postPaintWindow( EffectWindow* w )
-    {
-    if( activated && !cube_painting )
-        {
-        // a window was updated which has not been handled by cube_painting.
-        // trigger full repaint, so that this window will be updated
-        //effects->addRepaintFull();
-        }
-    effects->postPaintWindow( w );
     }
 
 bool CubeEffect::borderActivated( ElectricBorder border )
@@ -1246,6 +1355,7 @@ void CubeEffect::setActive( bool active )
     if( active )
         {
         activated = true;
+        activeScreen = effects->activeScreen();
         if( !slide )
             {
             keyboard_grab = effects->grabKeyboard( this );
@@ -1265,7 +1375,7 @@ void CubeEffect::setActive( bool active )
             // clip parts above the reflection area
             double eqn[4] = {0.0, 1.0, 0.0, 0.0};
             glPushMatrix();
-            QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+            QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
             glTranslatef( 0.0, rect.height(), 0.0 );
             glClipPlane( GL_CLIP_PLANE0, eqn );
             glPopMatrix();
@@ -1287,7 +1397,7 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
         return;
     if( stop || slide )
         return;
-    QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
     if( buttons.testFlag( Qt::LeftButton ) )
         {
         bool repaint = false;
