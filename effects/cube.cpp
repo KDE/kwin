@@ -103,7 +103,24 @@ CubeEffect::CubeEffect()
                 for( int y=0; y<img.height(); y++ )
                     {
                     QRgb pixel = img.pixel( x, y );
-                    img.setPixel( x, y, qRgba( qRed(pixel), qGreen(pixel), qBlue(pixel), ((float)qAlpha(pixel))*cubeOpacity ) );
+                    if( x == 0 || x == img.width()-1 || y == 0 || y == img.height()-1 )
+                        img.setPixel( x, y, qRgba( capColor.red(), capColor.green(), capColor.blue(), 255*cubeOpacity ) );
+                    else
+                        {
+                        if( qAlpha(pixel) < 255 )
+                            {
+                            // Pixel is transparent - has to be blended with cap color
+                            int red   = (qAlpha(pixel)/255)*(qRed(pixel)/255) + (1 - qAlpha(pixel)/255 )*capColor.red();
+                            int green = (qAlpha(pixel)/255)*(qGreen(pixel)/255) + (1 - qAlpha(pixel)/255 )*capColor.green();
+                            int blue  = (qAlpha(pixel)/255)*(qBlue(pixel)/255) + (1 - qAlpha(pixel)/255 )*capColor.blue();
+                            int alpha = qAlpha(pixel) + (255 - qAlpha(pixel))*cubeOpacity;
+                            img.setPixel( x, y, qRgba( red, green, blue, alpha ) );
+                            }
+                        else
+                            {
+                            img.setPixel( x, y, qRgba( qRed(pixel), qGreen(pixel), qBlue(pixel), ((float)qAlpha(pixel))*cubeOpacity ) );
+                            }
+                        }
                     }
                 }
             capTexture = new GLTexture( img );
@@ -704,39 +721,127 @@ void CubeEffect::paintCap( float z, float zTexture )
     if( stop )
         zTranslate *= ( 1.0 - timeLine.value() );
     glTranslatef( rect.width()/2, 0.0, -z-zTranslate );
-    for( int i=0; i<effects->numberOfDesktops(); i++ )
-        {
-        glPushMatrix();
-        glRotatef( i*angle, 0.0, 1.0, 0.0 );
-        glBegin( GL_POLYGON );
-        glVertex3f( -rect.width()/2, 0.0, z );
-        glVertex3f( rect.width()/2, 0.0, z );
-        glVertex3f( 0.0, 0.0, 0.0 );
-        glEnd();
-        glPopMatrix();
-        }
+    glRotatef( (1-frontDesktop)*angle, 0.0, 1.0, 0.0 );
 
-    // textured caps
-    // only works for more than three desktops
+    bool texture = false;
     if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
         {
-        glPushMatrix();
-        glRotatef( (1-frontDesktop)*angle, 0.0, 1.0, 0.0 );
-        capTexture->bind();
-        glBegin( GL_QUADS );
-        glTexCoord2f( 0.0, 0.0 );
-        glVertex3f( -rect.width()/2, 0.0, zTexture );
-        glTexCoord2f( 1.0, 0.0 );
-        glVertex3f( rect.width()/2, 0.0, zTexture );
-        glTexCoord2f( 1.0, 1.0 );
-        glVertex3f( rect.width()/2, 0.0, -zTexture );
-        glTexCoord2f( 0.0, 1.0 );
-        glVertex3f( -rect.width()/2, 0.0, -zTexture );
-        glEnd( );
-        capTexture->unbind();
-        glPopMatrix();
+        texture = true;
+        paintCapStep( z, zTexture, true );
         }
+    else
+        paintCapStep( z, zTexture, false );
     glPopMatrix();
+    }
+
+void CubeEffect::paintCapStep( float z, float zTexture, bool texture )
+    {
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop());
+    float angle = 360.0f/effects->numberOfDesktops();
+    if( texture )
+        capTexture->bind();
+    for( int i=0; i<effects->numberOfDesktops(); i++ )
+        {
+        int triangleRows = effects->numberOfDesktops()*5;
+        float zTriangleDistance = z/(float)triangleRows;
+        float widthTriangle = tan( angle*0.5 * M_PI/180.0 ) * zTriangleDistance;
+        float currentWidth = 0.0;
+        glBegin( GL_TRIANGLES );
+        float cosValue = cos( i*angle  * M_PI/180.0 );
+        float sinValue = sin( i*angle  * M_PI/180.0 );
+        for( int j=0; j<triangleRows; j++ )
+            {
+            float previousWidth = currentWidth;
+            currentWidth = tan( angle*0.5 * M_PI/180.0 ) * zTriangleDistance * (j+1);
+            int evenTriangles = 0;
+            int oddTriangles = 0;
+            for( int k=0; k<floor(currentWidth/widthTriangle*2-1+0.5f); k++ )
+                {
+                float x1 = -previousWidth;
+                float x2 = -currentWidth;
+                float x3 = 0.0;
+                float z1 = 0.0;
+                float z2 = 0.0;
+                float z3 = 0.0;
+                if( k%2 == 0 )
+                    {
+                    x1 += evenTriangles*widthTriangle*2;
+                    x2 += evenTriangles*widthTriangle*2;
+                    x3 = x2+widthTriangle*2;
+                    z1 = j*zTriangleDistance;
+                    z2 = (j+1)*zTriangleDistance;
+                    z3 = (j+1)*zTriangleDistance;
+                    float xRot = cosValue * x1 - sinValue * z1;
+                    float zRot = sinValue * x1 + cosValue * z1;
+                    x1 = xRot;
+                    z1 = zRot;
+                    xRot = cosValue * x2 - sinValue * z2;
+                    zRot = sinValue * x2 + cosValue * z2;
+                    x2 = xRot;
+                    z2 = zRot;
+                    xRot = cosValue * x3 - sinValue * z3;
+                    zRot = sinValue * x3 + cosValue * z3;
+                    x3 = xRot;
+                    z3 = zRot;
+                    evenTriangles++;
+                    }
+                else
+                    {
+                    x1 += oddTriangles*widthTriangle*2;
+                    x2 += (oddTriangles+1)*widthTriangle*2;
+                    x3 = x1+widthTriangle*2;
+                    z1 = j*zTriangleDistance;
+                    z2 = (j+1)*zTriangleDistance;
+                    z3 = j*zTriangleDistance;
+                    float xRot = cosValue * x1 - sinValue * z1;
+                    float zRot = sinValue * x1 + cosValue * z1;
+                    x1 = xRot;
+                    z1 = zRot;
+                    xRot = cosValue * x2 - sinValue * z2;
+                    zRot = sinValue * x2 + cosValue * z2;
+                    x2 = xRot;
+                    z2 = zRot;
+                    xRot = cosValue * x3 - sinValue * z3;
+                    zRot = sinValue * x3 + cosValue * z3;
+                    x3 = xRot;
+                    z3 = zRot;
+                    oddTriangles++;
+                    }
+                float texX1 = 0.0;
+                float texX2 = 0.0;
+                float texX3 = 0.0;
+                float texY1 = 0.0;
+                float texY2 = 0.0;
+                float texY3 = 0.0;
+                if( texture )
+                    {
+                    texX1 = x1/(rect.width())+0.5;
+                    texY1 = 0.5 - z1/zTexture * 0.5;
+                    texX2 = x2/(rect.width())+0.5;
+                    texY2 = 0.5 - z2/zTexture * 0.5;
+                    texX3 = x3/(rect.width())+0.5;
+                    texY3 = 0.5 - z3/zTexture * 0.5;
+                    glTexCoord2f( texX1, texY1 );
+                    }
+                glVertex3f( x1, 0.0, z1 );
+                if( texture )
+                    {
+                    glTexCoord2f( texX2, texY2 );
+                    }
+                glVertex3f( x2, 0.0, z2 );
+                if( texture )
+                    {
+                    glTexCoord2f( texX3, texY3 );
+                    }
+                glVertex3f( x3, 0.0, z3 );
+                }
+            }
+        glEnd();
+        }
+    if( texture )
+        {
+        capTexture->unbind();
+        }
     }
 
 void CubeEffect::postPaintScreen()

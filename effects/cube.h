@@ -64,6 +64,7 @@ class CubeEffect
             };
         virtual void paintScene( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintCap( float z, float zTexture );
+        virtual void paintCapStep( float z, float zTexture, bool texture );
         void rotateToDesktop( int desktop );
         void setActive( bool active );
         bool activated;
