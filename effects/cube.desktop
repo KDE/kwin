@@ -6,6 +6,7 @@ Name[nds]=Wörpel-Schriefdisch
 Name[pt]=Cubo de Ecrãs
 Name[pt_BR]=Cubo de Ecrãs
 Name[sv]=Skrivbordskub
+Name[tr]=Masaüstü Küpü
 Name[uk]=Куб стільниць
 Name[zh_TW]=桌面立方體
 Icon=preferences-system-windows-effect-cube
@@ -16,6 +17,7 @@ Comment[nds]=Schriefdischen op Wörpelflagen afbillen
 Comment[pt]=Mapear os ecrãs virtuais sobre um cubo
 Comment[pt_BR]=Mapear os ecrãs virtuais sobre um cubo
 Comment[sv]=Avbilda virtuella skrivbord på en kub
+Comment[tr]=Sanal masaüstlerini bir küp olarak göster
 Comment[uk]=Призначити віртуальні стільниці до сторін куба
 Comment[zh_TW]=將虛擬桌面映射到一立方體
 

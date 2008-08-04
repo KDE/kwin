@@ -6,6 +6,7 @@ Name[nds]=Zylinner-Schriefdisch
 Name[pt]=Cilindro de Ecrãs
 Name[pt_BR]=Cilindro de Ecrãs
 Name[sv]=Skrivbordscylinder
+Name[tr]=Masaüstü Silindiri
 Name[uk]=Циліндр стільниць
 Name[zh_TW]=桌面圓柱
 Icon=preferences-system-windows-effect-cylinder
@@ -16,6 +17,7 @@ Comment[nds]=Schriefdischen op en Zylinner afbillen
 Comment[pt]=Mapear os ecrãs virtuais sobre um cilindro
 Comment[pt_BR]=Mapear os ecrãs virtuais sobre um cilindro
 Comment[sv]=Avbilda virtuella skrivbord på en cylinder
+Comment[tr]=Sanal masaüstlerini bir silindir olarak göster
 Comment[uk]=Призначити віртуальні стільниці до циліндра
 Comment[zh_TW]=將虛擬桌面映射到一圓柱
 
