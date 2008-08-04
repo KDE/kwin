@@ -67,9 +67,8 @@ bool CylinderEffect::loadData()
         mShader->bind();
         mShader->setUniform( "winTexture", 0 );
         mShader->setUniform( "opacity", cubeOpacity );
-        QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+        QRect rect = effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop());
         mShader->setUniform( "width", (float)rect.width() );
-        mShader->setUniform( "origWidth", (float) (2.0 * xmax * ( zNear*2+1 + 1.0f * 0.8f ) * tan( fovy * M_PI / 360.0f )/ymax) );
         mShader->unbind();
         }
     return true;

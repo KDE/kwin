@@ -64,7 +64,7 @@ class CubeEffect
             Down
             };
         void paintScene( int mask, QRegion region, ScreenPaintData& data );
-        void paintCap( float left, float right, float z, float zTexture );
+        void paintCap( float z, float zTexture );
         void rotateToDesktop( int desktop );
         void setActive( bool active );
         bool activated;
@@ -102,16 +102,6 @@ class CubeEffect
         bool reflectionPainting;
         bool slide;
         int oldDesktop;
-
-        // variables for defining the projection matrix
-        float fovy;
-        float aspect;
-        float ymax;
-        float ymin;
-        float xmax;
-        float xmin;
-        float zNear;
-        float zFar;
     };
 
 } // namespace

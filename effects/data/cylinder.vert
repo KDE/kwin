@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 uniform float width;
 uniform float cubeAngle;
 uniform float xCoord;
-uniform float origWidth;
 
 void main()
 {
@@ -28,9 +27,9 @@ void main()
     vec4 vertex = gl_Vertex.xyzw;
     float radian = radians(cubeAngle*0.5);
     // height of the triangle compound of  one side of the cube and the two bisecting lines
-    float midpoint = origWidth*0.5*tan(radian);
+    float midpoint = width*0.5*tan(radian);
     // radius of the circle
-    float radius = (origWidth*0.5)/cos(radian);
+    float radius = (width*0.5)/cos(radian);
 
     // the calculation does the following:
     // At every x position we move on to the circle und create a new circular segment
@@ -47,8 +46,6 @@ void main()
         {
         distance = (vertex.x+xCoord) - width*0.5;
         }
-    // distance in correct format
-    distance = distance/(width*0.5)*origWidth*0.5;
     float angle = acos( distance/radius );
     float h = radius;
     // if distance == 0 -> angle=90 -> tan(90) singularity

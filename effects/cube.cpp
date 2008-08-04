@@ -122,22 +122,6 @@ CubeEffect::CubeEffect()
     a->setText( i18n("Desktop Cube" ));
     a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
     connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
-
-    // calculate values for projection matrix
-    // we use the projection matrix as in compiz (see Compiz: screen.c)
-    // with following values:
-    // fovy = 60.0
-    // acpect = 1.0
-    // zNear = 0.1
-    // zFar = 100.0
-    fovy = 60.0f;
-    aspect = 1.0f;
-    zNear = 0.1f;
-    zFar = 100.0f;
-    ymax = zNear * tan( fovy  * M_PI / 360.0f );
-    ymin = -ymax;
-    xmin =  ymin * aspect;
-    xmax = ymax * aspect;
     }
 
 CubeEffect::~CubeEffect()
@@ -188,25 +172,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             wallpaper->unbind();
             }
 
-        glMatrixMode( GL_PROJECTION );
-        glPushMatrix();
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-        glLoadIdentity();
-
-        glFrustum( xmin, xmax, ymin, ymax, zNear, zFar );
-        
-        glMatrixMode( GL_MODELVIEW );
-        glLoadIdentity();
-
-        glPushMatrix();
-        float zTranslate = -zNear*2.0-2.0;
-        if( start )
-            zTranslate = -zNear - (zNear + 2.0)*timeLine.value();
-        if( stop )
-            zTranslate = -zNear - (zNear + 2.0)*( 1.0 - timeLine.value() );
-        if( slide )
-            zTranslate = -zNear*2;
-        glTranslatef( 0.0, 0.0, zTranslate );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
@@ -214,45 +180,26 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         if( reflection && (!slide) )
             {
             glPushMatrix();
-            float zValue = -1.0f;
-            float scaleFactor = ( zNear*2+1 - zValue * 0.8f ) * tan( fovy * M_PI / 360.0f )/ymax;
-            float scaleFactor2 = zFar*0.3* tan( fovy * M_PI / 360.0f )/ymax;
-            if( start )
-                {
-                zValue = zValue * timeLine.value();
-                scaleFactor = ( zNear + (zNear+1.0)*timeLine.value() - zValue * 0.8f) * tan( fovy * M_PI / 360.0f )/ymax;
-                }
-            if( stop )
-                {
-                zValue = zValue * ( 1.0 - timeLine.value() );
-                scaleFactor = ( zNear + (zNear+1.0)*( 1.0 - timeLine.value() ) - zValue * 0.8f) * tan( fovy * M_PI / 360.0f )/ymax;
-                }
+            float scaleFactor = 6100 * tan( 60.0 * M_PI / 360.0f )/rect.height();
             glScalef( 1.0, -1.0, 1.0 );
-            glTranslatef( 0.0, ymax*scaleFactor*2, 0.0 );
+            glTranslatef( 0.0, -rect.height()*2, 0.0 );
             reflectionPainting = true;
             paintScene( mask, region, data );
             reflectionPainting = false;
             glPopMatrix();
             glPushMatrix();
-            if( start || stop )
-                {
-                zValue = -1.0f;
-                scaleFactor = ( zNear*2+1 - zValue * 0.8f ) * tan( fovy * M_PI / 360.0f )/ymax;
-                glPushMatrix();
-                glTranslatef( 0.0, 0.0, -zTranslate + (-zNear*2.0-2.0) );
-                }
-            glTranslatef( 0.0, ymin*scaleFactor, 0.0 );
+            glTranslatef( 0.0, rect.height(), 0.0 );
             float vertices[] = {
-                xmin*scaleFactor, 0.0, zNear*2+2,
-                xmax*scaleFactor, 0.0, zNear*2+2,
-                xmax*scaleFactor2, 0.0, -zFar*0.3+zNear*2+2,
-                xmin*scaleFactor2, 0.0, -zFar*0.3+zNear*2+2 };
+                0.0, 0.0, 0.0,
+                rect.width(), 0.0, 0.0,
+                rect.width()*scaleFactor, 0.0, -5000,
+                -rect.width()*scaleFactor, 0.0, -5000 };
             // foreground
-            float alpha = 0.9;
+            float alpha = 0.7;
             if( start )
-                alpha = 0.5 + 0.4 * timeLine.value();
+                alpha = 0.3 + 0.4 * timeLine.value();
             if( stop )
-                alpha = 0.5 + 0.4 * ( 1.0 - timeLine.value() );
+                alpha = 0.3 + 0.4 * ( 1.0 - timeLine.value() );
             glColor4f( 0.0, 0.0, 0.0, alpha );
             glBegin( GL_POLYGON );
             glVertex3f( vertices[0], vertices[1], vertices[2] );
@@ -263,20 +210,14 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glVertex3f( vertices[6], vertices[7], vertices[8] );
             glVertex3f( vertices[9], vertices[10], vertices[11] );
             glEnd();
-            if( start || stop )
-                {
-                glPopMatrix();
-                }
             glPopMatrix();
             }
+        glPushMatrix();
         paintScene( mask, region, data );
-
         glPopMatrix();
+
         glDisable( GL_BLEND );
         glPopAttrib();
-        glMatrixMode( GL_PROJECTION );
-        glPopMatrix();
-        glMatrixMode( GL_MODELVIEW );
 
         // desktop name box - inspired from coverswitch
         if( displayDesktopName && (!slide) )
@@ -327,41 +268,28 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
     {
     QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
-    float zValue = -1.0f;
-    float scaleFactor = ( zNear*2+1 - zValue * 0.8f ) * tan( fovy * M_PI / 360.0f )/ymax;
-    if( start )
-        {
-        zValue = zValue * timeLine.value();
-        scaleFactor = ( zNear + (zNear+1)*timeLine.value() - zValue * 0.8f) * tan( fovy * M_PI / 360.0f )/ymax;
-        }
-    if( stop )
-        {
-        zValue = zValue * ( 1.0 - timeLine.value() );
-        scaleFactor = ( zNear + (zNear+1)*( 1.0 - timeLine.value() ) - zValue * 0.8f) * tan( fovy * M_PI / 360.0f )/ymax;
-        }
-    if( slide )
-        {
-        scaleFactor = zNear * 2 * tan( fovy * M_PI / 360.0f )/ymax;
-        }
     int rightSteps = effects->numberOfDesktops()/2;
     int leftSteps = rightSteps+1;
     int rightSideCounter = 0;
     int leftSideCounter = 0;
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     cube_painting = true;
-    float xTranslate = xmin*scaleFactor;
-    float xRight = (xmax-xmin)*scaleFactor;
-    float yTranslate = ymax*scaleFactor;
-    float yTop = (ymax-ymin)*scaleFactor;
     int desktopIndex = 0;
+    float zTranslate = 100.0;
+    if( start )
+        zTranslate *= timeLine.value();
+    if( stop )
+        zTranslate *= ( 1.0 - timeLine.value() );
+    if( slide )
+        zTranslate = 0.0;
 
     bool topCapAfter = false;
     bool topCapBefore = false;
 
     // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-    float point = xmax*scaleFactor*tan(cubeAngle*0.5f*M_PI/180.0f);
-    float zTexture = xmax*scaleFactor*tan(45.0f*M_PI/180.0f);
+    float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+    float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
     if( verticalRotating || verticalPosition != Normal || manualVerticalAngle != 0.0 )
         {
         // change the verticalPosition if manualVerticalAngle > 90 or < -90 degrees
@@ -419,9 +347,9 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
             }
         if( stop )
             angle *= (1.0 - timeLine.value());
-        glTranslatef( 0.0, 0.0, -point);
+        glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
         glRotatef( angle, 1.0, 0.0, 0.0 );
-        glTranslatef( 0.0, 0.0, point);
+        glTranslatef( -rect.width()/2, -rect.height()/2, point+zTranslate );
 
         // calculate if the caps have to be painted before/after or during desktop painting
         if( paintCaps )
@@ -434,20 +362,20 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
             glGetFloatv( GL_VIEWPORT, V );
 
             // calculate y coordinate of the top of front desktop
-            float X = M[0]*xTranslate + M[4]*yTranslate + M[8]*0 + M[12]*1;
-            float Y = M[1]*xTranslate + M[5]*yTranslate + M[9]*0 + M[13]*1;
-            float Z = M[2]*xTranslate + M[6]*yTranslate + M[10]*0 + M[14]*1;
-            float W = M[3]*xTranslate + M[7]*yTranslate + M[11]*0 + M[15]*1;
+            float X = M[0]*0.0 + M[4]*0.0 + M[8]*(-zTranslate) + M[12]*1;
+            float Y = M[1]*0.0 + M[5]*0.0 + M[9]*(-zTranslate) + M[13]*1;
+            float Z = M[2]*0.0 + M[6]*0.0 + M[10]*(-zTranslate) + M[14]*1;
+            float W = M[3]*0.0 + M[7]*0.0 + M[11]*(-zTranslate) + M[15]*1;
             float clipY = P[1]*X + P[5]*Y + P[9]*Z + P[13]*W;
             float clipW = P[3]*X + P[7]*Y + P[11]*Z + P[15]*W;
             float normY = clipY/clipW;
             float yFront = (V[3]/2)*normY+(V[3]-V[1])/2;
 
             // calculate y coordinate of the bottom of front desktop
-            X = M[0]*xTranslate + M[4]*(-yTranslate) + M[8]*0 + M[12]*1;
-            Y = M[1]*xTranslate + M[5]*(-yTranslate) + M[9]*0 + M[13]*1;
-            Z = M[2]*xTranslate + M[6]*(-yTranslate) + M[10]*0 + M[14]*1;
-            W = M[3]*xTranslate + M[7]*(-yTranslate) + M[11]*0 + M[15]*1;
+            X = M[0]*0.0 + M[4]*rect.height() + M[8]*(-zTranslate) + M[12]*1;
+            Y = M[1]*0.0 + M[5]*rect.height() + M[9]*(-zTranslate) + M[13]*1;
+            Z = M[2]*0.0 + M[6]*rect.height() + M[10]*(-zTranslate) + M[14]*1;
+            W = M[3]*0.0 + M[7]*rect.height() + M[11]*(-zTranslate) + M[15]*1;
             clipY = P[1]*X + P[5]*Y + P[9]*Z + P[13]*W;
             clipW = P[3]*X + P[7]*Y + P[11]*Z + P[15]*W;
             normY = clipY/clipW;
@@ -455,10 +383,10 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
 
             // change matrix to a rear position
             glPushMatrix();
-            glTranslatef( 0.0, 0.0, -point);
+            glTranslatef( 0.0, 0.0, -point-zTranslate );
             float desktops = (effects->numberOfDesktops()/2.0);
             glRotatef( desktops*internalCubeAngle, 1.0, 0.0, 0.0 );
-            glTranslatef( xTranslate, -yTranslate, point );
+            glTranslatef( 0.0, 0.0, point );
             glGetFloatv(GL_MODELVIEW_MATRIX, M);
             // calculate y coordinate of the top of rear desktop
             X = M[0]*0.0 + M[4]*0.0 + M[8]*0.0 + M[12]*1;
@@ -471,7 +399,7 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
             float yBack = (V[3]/2)*normY+(V[3]-V[1])/2;
 
             // calculate y coordniate of the bottom of rear desktop
-            glTranslatef( 0.0, yTranslate*2, 0.0 );
+            glTranslatef( 0.0, -rect.height(), 0.0 );
             glGetFloatv(GL_MODELVIEW_MATRIX, M);
             X = M[0]*0.0 + M[4]*0.0 + M[8]*0.0 + M[12]*1;
             Y = M[1]*0.0 + M[5]*0.0 + M[9]*0.0 + M[13]*1;
@@ -533,9 +461,9 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
             rotationAngle = manualAngle * (1.0 - timeLine.value());
         else
             rotationAngle += manualAngle * (1.0 - timeLine.value());
-        glTranslatef( 0.0, 0.0, -point);
+        glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
         glRotatef( rotationAngle, 0.0, 1.0, 0.0 );
-        glTranslatef( 0.0, 0.0, point);
+        glTranslatef( -rect.width()/2, -rect.height()/2, point+zTranslate );
         }
 
     if( topCapBefore || topCapAfter )
@@ -543,16 +471,14 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         if( (topCapAfter && !reflectionPainting) || (topCapBefore && reflectionPainting) )
             {
             // paint the bottom cap
-            glTranslatef( 0.0, -yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
-            glTranslatef( 0.0, yTranslate, 0.0 );
+            glTranslatef( 0.0, rect.height(), 0.0 );
+            paintCap( point, zTexture );
+            glTranslatef( 0.0, -rect.height(), 0.0 );
             }
         if( (topCapBefore && !reflectionPainting) || (topCapAfter && reflectionPainting) )
             {
             // paint the top cap
-            glTranslatef( 0.0, yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
-            glTranslatef( 0.0, -yTranslate, 0.0 );
+            paintCap( point, zTexture );
             }
         }
 
@@ -561,13 +487,11 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         if( !topCapAfter && !topCapBefore && i == effects->numberOfDesktops()/2 -1 && !slide )
             {
             // paint the bottom cap
-            glTranslatef( 0.0, -yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
-            glTranslatef( 0.0, yTranslate, 0.0 );
+            glTranslatef( 0.0, rect.height(), 0.0 );
+            paintCap( point, zTexture );
+            glTranslatef( 0.0, -rect.height(), 0.0 );
             // paint the top cap
-            glTranslatef( 0.0, yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
-            glTranslatef( 0.0, -yTranslate, 0.0 );
+            paintCap( point, zTexture );
             }
         if( i%2 == 0 &&  i != effects->numberOfDesktops() -1)
             {
@@ -617,37 +541,38 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
                     }
                 }
             }
-        glPushMatrix();
-        glTranslatef( 0.0, 0.0, -point );
-        glRotatef( internalCubeAngle * desktopIndex, 0.0, 1.0, 0.0 );
-        glTranslatef( xTranslate, yTranslate, point );
-        glScalef( xRight/rect.width(), -yTop/rect.height(), 1.0 );
-        effects->paintScreen( mask, region, data );
-        glPopMatrix();
+        ScreenPaintData newData = data;
+        RotationData rot = RotationData();
+        rot.axis = RotationData::YAxis;
+        rot.angle = internalCubeAngle * desktopIndex;
+        rot.xRotationPoint = rect.width()/2;
+        rot.zRotationPoint = -point;
+        newData.rotation = &rot;
+        newData.zTranslate = -zTranslate;
+        effects->paintScreen( mask, region, newData );
         }
     if( topCapBefore || topCapAfter )
         {
         if( (topCapAfter && !reflectionPainting) || (topCapBefore && reflectionPainting) )
             {
             // paint the top cap
-            glTranslatef( 0.0, yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
-            glTranslatef( 0.0, -yTranslate, 0.0 );
+            paintCap( point, zTexture );
             }
         if( (topCapBefore && !reflectionPainting) || (topCapAfter && reflectionPainting) )
             {
             // paint the bottom cap
-            glTranslatef( 0.0, -yTranslate, 0.0 );
-            paintCap( xmin*scaleFactor, xmax*scaleFactor, point, zTexture );
-            glTranslatef( 0.0, yTranslate, 0.0 );
+            glTranslatef( 0.0, rect.height(), 0.0 );
+            paintCap( point, zTexture );
+            glTranslatef( 0.0, -rect.height(), 0.0 );
             }
         }
     cube_painting = false;
     painting_desktop = effects->currentDesktop();
     }
 
-void CubeEffect::paintCap( float left, float right, float z, float zTexture )
+void CubeEffect::paintCap( float z, float zTexture )
     {
+    QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
     if( ( !paintCaps ) || effects->numberOfDesktops() <= 2 )
         return;
     float opacity = cubeOpacity;
@@ -658,14 +583,19 @@ void CubeEffect::paintCap( float left, float right, float z, float zTexture )
     glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), opacity );
     float angle = 360.0f/effects->numberOfDesktops();
     glPushMatrix();
-    glTranslatef( 0.0, 0.0, -z );
+    float zTranslate = 100.0;
+    if( start )
+        zTranslate *= timeLine.value();
+    if( stop )
+        zTranslate *= ( 1.0 - timeLine.value() );
+    glTranslatef( rect.width()/2, 0.0, -z-zTranslate );
     for( int i=0; i<effects->numberOfDesktops(); i++ )
         {
         glPushMatrix();
         glRotatef( i*angle, 0.0, 1.0, 0.0 );
         glBegin( GL_POLYGON );
-        glVertex3f( left, 0.0, z );
-        glVertex3f(right, 0.0, z );
+        glVertex3f( -rect.width()/2, 0.0, z );
+        glVertex3f( rect.width()/2, 0.0, z );
         glVertex3f( 0.0, 0.0, 0.0 );
         glEnd();
         glPopMatrix();
@@ -680,13 +610,13 @@ void CubeEffect::paintCap( float left, float right, float z, float zTexture )
         capTexture->bind();
         glBegin( GL_QUADS );
         glTexCoord2f( 0.0, 0.0 );
-        glVertex3f( left, 0.0, zTexture );
+        glVertex3f( -rect.width()/2, 0.0, zTexture );
         glTexCoord2f( 1.0, 0.0 );
-        glVertex3f( right, 0.0, zTexture );
+        glVertex3f( rect.width()/2, 0.0, zTexture );
         glTexCoord2f( 1.0, 1.0 );
-        glVertex3f( right, 0.0, -zTexture );
+        glVertex3f( rect.width()/2, 0.0, -zTexture );
         glTexCoord2f( 0.0, 1.0 );
-        glVertex3f( left, 0.0, -zTexture );
+        glVertex3f( -rect.width()/2, 0.0, -zTexture );
         glEnd( );
         capTexture->unbind();
         glPopMatrix();
