@@ -104,14 +104,14 @@ void MagicLampEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                 ((quadFactor*quadFactor*quadFactor)/(geo.height()*geo.height()*geo.height()));
             // top and bottom progress is the factor which defines how far the x values have to be changed
             // factor is the current moved y value diveded by the distance between icon and window
-            float topProgress = qMin( yOffsetTop/(icon.y() - geo.y()-(float)(quad[0].y()/geo.height()*geo.height())), 1.0f );
-            float bottomProgress = qMin( yOffsetBottom/(icon.y() - geo.y()-(float)(quad[2].y()/geo.height()*geo.height())), 1.0f );
+            float topProgress = qMin( yOffsetTop/(icon.y()+icon.height() - geo.y()-(float)(quad[0].y()/geo.height()*geo.height())), 1.0f );
+            float bottomProgress = qMin( yOffsetBottom/(icon.y()+icon.height() - geo.y()-(float)(quad[2].y()/geo.height()*geo.height())), 1.0f );
 
             // x values are moved towards the center of the icon
-            quad[0].setX( (icon.x() + icon.width()*0.5 - (quad[0].x() + geo.x()))*topProgress + quad[0].x() );
-            quad[1].setX( (icon.x() + icon.width()*0.5 - (quad[1].x() + geo.x()))*topProgress + quad[1].x() );
-            quad[2].setX( (icon.x() + icon.width()*0.5 - (quad[2].x() + geo.x()))*bottomProgress + quad[2].x() );
-            quad[3].setX( (icon.x() + icon.width()*0.5 - (quad[3].x() + geo.x()))*bottomProgress + quad[3].x() );
+            quad[0].setX( (icon.x() + icon.width()*(quad[0].x()/geo.width()) - (quad[0].x() + geo.x()))*topProgress + quad[0].x() );
+            quad[1].setX( (icon.x() + icon.width()*(quad[1].x()/geo.width()) - (quad[1].x() + geo.x()))*topProgress + quad[1].x() );
+            quad[2].setX( (icon.x() + icon.width()*(quad[2].x()/geo.width()) - (quad[2].x() + geo.x()))*bottomProgress + quad[2].x() );
+            quad[3].setX( (icon.x() + icon.width()*(quad[3].x()/geo.width()) - (quad[3].x() + geo.x()))*bottomProgress + quad[3].x() );
 
             quad[0].setY( quad[0].y() + yOffsetTop );
             quad[1].setY( quad[1].y() + yOffsetTop );
