@@ -77,7 +77,7 @@ CubeEffect::CubeEffect()
     cubeOpacity = (float)conf.readEntry( "Opacity", 80 )/100.0f;
     displayDesktopName = conf.readEntry( "DisplayDesktopName", true );
     reflection = conf.readEntry( "Reflection", true );
-    int rotationDuration = conf.readEntry( "RotationDuration", 500 );
+    rotationDuration = conf.readEntry( "RotationDuration", 500 );
     backgroundColor = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
     capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     paintCaps = conf.readEntry( "Caps", true );
@@ -183,9 +183,13 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             float scaleFactor = 6100 * tan( 60.0 * M_PI / 360.0f )/rect.height();
             glScalef( 1.0, -1.0, 1.0 );
             glTranslatef( 0.0, -rect.height()*2, 0.0 );
+
+            glEnable( GL_CLIP_PLANE0 );
             reflectionPainting = true;
             paintScene( mask, region, data );
             reflectionPainting = false;
+            glDisable( GL_CLIP_PLANE0 );
+
             glPopMatrix();
             glPushMatrix();
             glTranslatef( 0.0, rect.height(), 0.0 );
@@ -776,6 +780,7 @@ void CubeEffect::postPaintScreen()
                 {
                 activated = false;
                 slide = false;
+                timeLine.setDuration( rotationDuration );
                 effects->setActiveFullScreenEffect( 0 );
                 }
             effects->addRepaintFull();
@@ -1230,6 +1235,9 @@ void CubeEffect::rotateToDesktop( int desktop )
         {
         currentShape = TimeLine::EaseInCurve;
         timeLine.setCurveShape( currentShape );
+        // change timeline duration in slide mode
+        if( slide )
+            timeLine.setDuration( rotationDuration / (rotations.count()+1) );
         }
     }
 
@@ -1252,6 +1260,16 @@ void CubeEffect::setActive( bool active )
         verticalRotating = false;
         manualAngle = 0.0;
         manualVerticalAngle = 0.0;
+        if( reflection && !slide )
+            {
+            // clip parts above the reflection area
+            double eqn[4] = {0.0, 1.0, 0.0, 0.0};
+            glPushMatrix();
+            QRect rect = effects->clientArea( FullArea, effects->activeScreen(), effects->currentDesktop());
+            glTranslatef( 0.0, rect.height(), 0.0 );
+            glClipPlane( GL_CLIP_PLANE0, eqn );
+            glPopMatrix();
+            }
         effects->addRepaintFull();
         }
     else

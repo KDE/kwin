@@ -102,6 +102,7 @@ class CubeEffect
         bool reflectionPainting;
         bool slide;
         int oldDesktop;
+        int rotationDuration;
     };
 
 } // namespace
