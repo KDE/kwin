@@ -56,6 +56,7 @@ class Effect;
 class WindowQuad;
 class GLRenderTarget;
 class GLShader;
+class RotationData;
 class WindowQuadList;
 class WindowPrePaintData;
 class WindowPaintData;
@@ -162,7 +163,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 50
+#define KWIN_EFFECT_API_VERSION_MINOR 51
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -873,8 +874,10 @@ class KWIN_EXPORT WindowPaintData
         double decoration_opacity;
         double xScale;
         double yScale;
+        double zScale;
         int xTranslate;
         int yTranslate;
+        double zTranslate;
         /**
          * Saturation of the window, in range [0; 1]
          * 1 means that the window is unchanged, 0 means that it's completely
@@ -895,6 +898,7 @@ class KWIN_EXPORT WindowPaintData
          * Shader to be used for rendering, if any.
          */
         GLShader* shader;
+        RotationData* rotation;
     };
 
 class KWIN_EXPORT ScreenPaintData
@@ -903,8 +907,11 @@ class KWIN_EXPORT ScreenPaintData
         ScreenPaintData();
         double xScale;
         double yScale;
+        double zScale;
         int xTranslate;
         int yTranslate;
+        double zTranslate;
+        RotationData* rotation;
     };
 
 class KWIN_EXPORT ScreenPrePaintData
@@ -912,6 +919,23 @@ class KWIN_EXPORT ScreenPrePaintData
     public:
         int mask;
         QRegion paint;
+    };
+
+class KWIN_EXPORT RotationData
+    {
+    public:
+        RotationData();
+        enum RotationAxis
+            {
+            XAxis,
+            YAxis,
+            ZAxis
+            };
+        RotationAxis axis;
+        float angle;
+        float xRotationPoint;
+        float yRotationPoint;
+        float zRotationPoint;
     };
 
 /**

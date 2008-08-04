@@ -64,11 +64,14 @@ WindowPaintData::WindowPaintData( EffectWindow* w )
     , decoration_opacity( 1.0 )
     , xScale( 1 )
     , yScale( 1 )
+    , zScale( 1 )
     , xTranslate( 0 )
     , yTranslate( 0 )
+    , zTranslate( 0 )
     , saturation( 1 )
     , brightness( 1 )
     , shader( NULL )
+    , rotation( NULL )
     {
     quads = w->buildQuads();
     }
@@ -76,8 +79,20 @@ WindowPaintData::WindowPaintData( EffectWindow* w )
 ScreenPaintData::ScreenPaintData()
     : xScale( 1 )
     , yScale( 1 )
+    , zScale( 1 )
     , xTranslate( 0 )
     , yTranslate( 0 )
+    , zTranslate( 0 )
+    , rotation( NULL )
+    {
+    }
+
+RotationData::RotationData()
+    : axis( ZAxis )
+    , angle( 0.0 )
+    , xRotationPoint( 0.0 )
+    , yRotationPoint( 0.0 )
+    , zRotationPoint( 0.0 )
     {
     }
 

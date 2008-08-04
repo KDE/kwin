@@ -159,8 +159,16 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     // OpenGL scene setup
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
+    float fovy = 60.0f;
+    float aspect = 1.0f;
+    float zNear = 0.1f;
+    float zFar = 100.0f;
+    float ymax = zNear * tan( fovy  * M_PI / 360.0f );
+    float ymin = -ymax;
+    float xmin =  ymin * aspect;
+    float xmax = ymax * aspect;
     // swap top and bottom to have OpenGL coordinate system match X system
-    glOrtho( 0, displayWidth(), displayHeight(), 0, 0, 65535 );
+    glFrustum( xmin, xmax, ymin, ymax, zNear, zFar );
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     if( checkGLError( "Init" ))
@@ -171,6 +179,9 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
         << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
     init_ok = true;
+    float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+    glTranslatef( xmin*scaleFactor, ymax*scaleFactor, -1.1 );
+    glScalef( (xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001 );
     }
 
 SceneOpenGL::~SceneOpenGL()
@@ -715,8 +726,30 @@ void SceneOpenGL::paintGenericScreen( int mask, ScreenPaintData data )
     if( mask & PAINT_SCREEN_TRANSFORMED )
         { // apply screen transformations
         glPushMatrix();
-        glTranslatef( data.xTranslate, data.yTranslate, 0 );
-        glScalef( data.xScale, data.yScale, 1 );
+        glTranslatef( data.xTranslate, data.yTranslate, data.zTranslate );
+        if( data.rotation )
+            {
+            // translate to rotation point, rotate, translate back
+            glTranslatef( data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint );
+            float xAxis = 0.0;
+            float yAxis = 0.0;
+            float zAxis = 0.0;
+            switch( data.rotation->axis )
+                {
+                case RotationData::XAxis:
+                    xAxis = 1.0;
+                    break;
+                case RotationData::YAxis:
+                    yAxis = 1.0;
+                    break;
+                case RotationData::ZAxis:
+                    zAxis = 1.0;
+                    break;
+                }
+            glRotatef( data.rotation->angle, xAxis, yAxis, zAxis );
+            glTranslatef( -data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint );
+            }
+        glScalef( data.xScale, data.yScale, data.zScale );
         }
     Scene::paintGenericScreen( mask, data );
     if( mask & PAINT_SCREEN_TRANSFORMED )
@@ -1243,14 +1276,37 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     // do required transformations
     int x = toplevel->x();
     int y = toplevel->y();
+    double z = 0.0;
     if( mask & PAINT_WINDOW_TRANSFORMED )
         {
         x += data.xTranslate;
         y += data.yTranslate;
+        z += data.zTranslate;
         }
-    glTranslatef( x, y, 0 );
-    if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
-        glScalef( data.xScale, data.yScale, 1 );
+    glTranslatef( x, y, z );
+    if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 || data.zScale != 1 ))
+        glScalef( data.xScale, data.yScale, data.zScale );
+    if(( mask & PAINT_WINDOW_TRANSFORMED ) && data.rotation )
+        {
+        glTranslatef( data.rotation->xRotationPoint, data.rotation->yRotationPoint, data.rotation->zRotationPoint );
+        float xAxis = 0.0;
+        float yAxis = 0.0;
+        float zAxis = 0.0;
+        switch( data.rotation->axis )
+            {
+            case RotationData::XAxis:
+                xAxis = 1.0;
+                break;
+            case RotationData::YAxis:
+                yAxis = 1.0;
+                break;
+            case RotationData::ZAxis:
+                zAxis = 1.0;
+                break;
+            }
+        glRotatef( data.rotation->angle, xAxis, yAxis, zAxis );
+        glTranslatef( -data.rotation->xRotationPoint, -data.rotation->yRotationPoint, -data.rotation->zRotationPoint );
+        }
     region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
 
     texture.bind();
