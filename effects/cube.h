@@ -62,8 +62,8 @@ class CubeEffect
             Normal,
             Down
             };
-        void paintScene( int mask, QRegion region, ScreenPaintData& data );
-        void paintCap( float z, float zTexture );
+        virtual void paintScene( int mask, QRegion region, ScreenPaintData& data );
+        virtual void paintCap( float z, float zTexture );
         void rotateToDesktop( int desktop );
         void setActive( bool active );
         bool activated;

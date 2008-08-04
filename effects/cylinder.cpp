@@ -67,12 +67,29 @@ bool CylinderEffect::loadData()
         mShader->bind();
         mShader->setUniform( "winTexture", 0 );
         mShader->setUniform( "opacity", cubeOpacity );
-        QRect rect = effects->clientArea( FullScreenArea, effects->activeScreen(), effects->currentDesktop());
+        QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
         mShader->setUniform( "width", (float)rect.width() );
         mShader->unbind();
         }
     return true;
     }
+
+void CylinderEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
+    {
+    glPushMatrix();
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+
+    float cubeAngle = (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f;
+    float radian = (cubeAngle*0.5)*M_PI/180;
+    // height of the triangle compound of  one side of the cube and the two bisecting lines
+    float midpoint = rect.width()*0.5*tan(radian);
+    // radius of the circle
+    float radius = (rect.width()*0.5)/cos(radian);
+    glTranslatef( 0.0, 0.0, midpoint - radius );
+    CubeEffect::paintScene( mask, region, data );
+    glPopMatrix();
+    }
+
 void CylinderEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( activated )
@@ -82,6 +99,9 @@ void CylinderEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, 
             if( w->isOnDesktop( painting_desktop ))
                 {
                 data.quads = data.quads.makeGrid( 40 );
+                QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
+                if( w->x() < rect.width()/2 && w->x() + w->width() > rect.width()/ 2 )
+                    data.quads = data.quads.splitAtX( rect.width()/2 - w->x() );
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
                 }
             else
@@ -117,6 +137,68 @@ void CylinderEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Win
         }
     else
         effects->paintWindow( w, mask, region, data );
+    }
+
+void CylinderEffect::desktopChanged( int old )
+    {
+    // cylinder effect is not useful to slide
+    }
+
+void CylinderEffect::paintCap( float z, float zTexture )
+    {
+    if( ( !paintCaps ) || effects->numberOfDesktops() <= 2 )
+        return;
+    CubeEffect::paintCap( z, zTexture );
+    QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
+
+    float cubeAngle = (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f;
+    float radian = (cubeAngle*0.5)*M_PI/180;
+    // height of the triangle compound of  one side of the cube and the two bisecting lines
+    float midpoint = rect.width()*0.5*tan(radian);
+    // radius of the circle
+    float radius = (rect.width()*0.5)/cos(radian);
+    
+    // paint round part of the cap
+    glPushMatrix();
+    float zTranslate = 100.0;
+    if( start )
+        zTranslate *= timeLine.value();
+    if( stop )
+        zTranslate *= ( 1.0 - timeLine.value() );
+    glTranslatef( 0.0, 0.0, -zTranslate );
+    float triangleWidth = 40.0;
+
+    for( int i=0; i<effects->numberOfDesktops(); i++ )
+        {
+        glPushMatrix();
+        glTranslatef( rect.width()/2, 0.0, -z );
+        glRotatef(  i*(360.0f/effects->numberOfDesktops()), 0.0, 1.0, 0.0 );
+        glTranslatef( -rect.width()/2, 0.0, z );
+        glBegin( GL_TRIANGLE_STRIP );
+        for( int j=0; j<rect.width()/triangleWidth; j++ )
+            {
+            float zValue = 0.0;
+            // distance from midpoint of desktop to x coord
+            // calculation is same as in shader -> see comments
+            float distance = rect.width()*0.5 - (j*triangleWidth);
+            if( (j*triangleWidth) > rect.width()*0.5 )
+                {
+                distance = (j*triangleWidth) - rect.width()*0.5;
+                }
+            // distance in correct format
+            float angle = acos( distance/radius );
+            float h = radius;
+            // if distance == 0 -> angle=90 -> tan(90) singularity
+            if( distance != 0.0 )
+                h = tan( angle ) * distance;
+            zValue = h - midpoint;
+            glVertex3f( j*triangleWidth, 0.0, zValue );
+            glVertex3f( (j+1)*triangleWidth, 0.0, 0.0 );
+            }
+        glEnd();
+        glPopMatrix();
+        }
+    glPopMatrix();
     }
 
 } // namespace
