@@ -142,6 +142,7 @@ bool OxygenFactory::supports( Ability ability ) const
         case AbilityButtonMinimize:
         case AbilityButtonMaximize:
         case AbilityButtonClose:
+        case AbilityButtonOnAllDesktops:
         case AbilityButtonAboveOthers:
         case AbilityButtonBelowOthers:
         case AbilityButtonSpacer:
