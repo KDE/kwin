@@ -27,6 +27,8 @@
 // #ifndef OXYGENCLIENT_H
 // #define OXYGENCLIENT_H
 
+#include "oxygenclient.h"
+
 #include <KConfig>
 #include <KGlobal>
 #include <KLocale>
@@ -52,7 +54,6 @@
 
 #include "math.h"
 
-#include "oxygenclient.h"
 #include "oxygenclient.moc"
 #include "oxygenbutton.h"
 #include "oxygen.h"
