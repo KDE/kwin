@@ -186,14 +186,12 @@ void OxygenButton::paintEvent(QPaintEvent *)
 
 //    widget->window()setPalette(pal);
 
-    if( OxygenFactory::blendTitlebarColors())
-        helper_.renderWindowBackground(&painter, this->rect(), this, pal);
-    else {
-        QPalette pal2( pal );
+    QPalette pal2( pal );
+    if( !OxygenFactory::blendTitlebarColors()) {
         pal2.setColor( window()->backgroundRole(), client_.options()->color(
             KDecorationDefines::ColorTitleBar, client_.isActive()));
-        helper_.renderWindowBackground(&painter, this->rect(), this, pal2);
     }
+    helper_.renderWindowBackground(&painter, this->rect(), this, pal2);
 
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
