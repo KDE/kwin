@@ -212,7 +212,7 @@ void KWinCompositingConfig::loadGeneralTab()
     int winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows")
         + LOAD_EFFECT_CONFIG("boxswitch")
         + LOAD_EFFECT_CONFIG("desktopgrid")
-        + LOAD_EFFECT_CONFIG("dialogparent")
+        + LOAD_EFFECT_CONFIG("dialogparent");
     if (winManagementEnabled > 0 && winManagementEnabled < 4) {
         ui.effectWinManagement->setTristate(true);
         ui.effectWinManagement->setCheckState(Qt::PartiallyChecked);
