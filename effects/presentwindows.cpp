@@ -205,17 +205,16 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         if (drawWindowCaptions)
             {
             QString text = w->caption();
-            double centerx = w->x() + data.xTranslate + w->width() * data.xScale * 0.5f;
-            double centery = w->y() + data.yTranslate + w->height() * data.yScale * 0.5f;
-            int maxwidth = (int)(w->width() * data.xScale - 20);
+            QRect textArea( w->x() + data.xTranslate, w->y() + data.yTranslate,
+                w->width() * data.xScale, w->height() * data.yScale );
+            textArea.adjust( 10, 10, -10, -10 );
             double opacity = (0.7 + 0.2*windata.highlight) * data.opacity * mActiveness;
             QColor textcolor( 255, 255, 255, (int)(255*opacity) );
             QColor bgcolor( 0, 0, 0, (int)(255*opacity) );
             QFont f;
             f.setBold( true );
             f.setPointSize( 12 );
-            effects->paintTextWithBackground( text, QPoint( (int)centerx, (int)centery ), maxwidth,
-                                            textcolor, bgcolor, f);
+            effects->paintTextWithBackground( text, textArea, textcolor, bgcolor, f );
             }
         }
     }

@@ -333,13 +333,13 @@ KConfigGroup EffectsHandler::effectConfig( const QString& effectname )
     return kwinconfig->group( "Effect-" + effectname );
     }
 
-bool EffectsHandler::paintText( const QString& text, const QPoint& center, int maxwidth,
-        const QColor& color, const QFont& font )
+bool EffectsHandler::paintText( const QString& text, const QRect& rect, const QColor& color,
+        const QFont& font, const Qt::Alignment& alignment )
 {
     QPainter p;
     // Calculate size of the text
     QFontMetrics fm( font );
-    QString painttext = fm.elidedText( text, Qt::ElideRight, maxwidth );
+    QString painttext = fm.elidedText( text, Qt::ElideRight, rect.width() );
     QRect textrect = fm.boundingRect( painttext );
 
     // Create temporary QPixmap where the text will be drawn onto
@@ -355,8 +355,20 @@ bool EffectsHandler::paintText( const QString& text, const QPoint& center, int m
     p.end();
 
     // Area covered by text
-    QRect area( center.x() - textrect.width() / 2, center.y() - textrect.height() / 2,
-                 textrect.width(), textrect.height() );
+    int rectX, rectY;
+    if( alignment & Qt::AlignLeft )
+        rectX = rect.x();
+    else if( alignment & Qt::AlignRight )
+        rectX = rect.right() - textrect.width();
+    else
+        rectX = rect.center().x() - textrect.width() / 2;
+    if( alignment & Qt::AlignTop )
+        rectY = rect.y();
+    else if( alignment & Qt::AlignBottom )
+        rectY = rect.bottom() - textrect.height();
+    else
+        rectY = rect.center().y() - textrect.height() / 2;
+    QRect area( rectX, rectY, textrect.width(), textrect.height() );
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
@@ -399,17 +411,29 @@ bool EffectsHandler::paintText( const QString& text, const QPoint& center, int m
     return false;
 }
 
-bool EffectsHandler::paintTextWithBackground( const QString& text, const QPoint& center, int maxwidth,
-        const QColor& color, const QColor& bgcolor, const QFont& font )
+bool EffectsHandler::paintTextWithBackground( const QString& text, const QRect& rect, const QColor& color,
+        const QColor& bgcolor, const QFont& font, const Qt::Alignment& alignment )
 {
     // Calculate size of the text
     QFontMetrics fm( font );
-    QString painttext = fm.elidedText( text, Qt::ElideRight, maxwidth );
+    QString painttext = fm.elidedText( text, Qt::ElideRight, rect.width() );
     QRect textrect = fm.boundingRect( painttext );
 
     // Area covered by text
-    QRect area( center.x() - textrect.width() / 2, center.y() - textrect.height() / 2,
-                textrect.width(), textrect.height() );
+    int rectX, rectY;
+    if( alignment & Qt::AlignLeft )
+        rectX = rect.x();
+    else if( alignment & Qt::AlignRight )
+        rectX = rect.right() - textrect.width();
+    else
+        rectX = rect.center().x() - textrect.width() / 2;
+    if( alignment & Qt::AlignTop )
+        rectY = rect.y();
+    else if( alignment & Qt::AlignBottom )
+        rectY = rect.bottom() - textrect.height();
+    else
+        rectY = rect.center().y() - textrect.height() / 2;
+    QRect area( rectX, rectY, textrect.width(), textrect.height() );
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
@@ -417,14 +441,14 @@ bool EffectsHandler::paintTextWithBackground( const QString& text, const QPoint&
         glColor4f( bgcolor.redF(), bgcolor.greenF(), bgcolor.blueF(), bgcolor.alphaF() );
         renderRoundBox( area.adjusted( -8, -3, 8, 3 ), 5 );
 
-        return paintText( text, center, maxwidth, color, font );
+        return paintText( text, rect, color, font, alignment );
     }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
     {
         xRenderRoundBox( effects->xrenderBufferPicture(), area.adjusted( -8, -3, 8, 3 ), 5, bgcolor );
-        return paintText( text, center, maxwidth, color, font );
+        return paintText( text, rect, color, font, alignment );
     }
 #endif
     return false;

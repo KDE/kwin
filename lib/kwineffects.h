@@ -163,7 +163,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 51
+#define KWIN_EFFECT_API_VERSION_MINOR 52
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -543,9 +543,14 @@ class KWIN_EXPORT EffectsHandler
          **/
         bool paintText( const QString& text, const QPoint& center, int maxwidth,
                         const QColor& color, const QFont& font = QFont() );
+        bool paintText( const QString& text, const QRect& rect, const QColor& color,
+                        const QFont& font = QFont(), const Qt::Alignment& alignment = Qt::AlignCenter );
         bool paintTextWithBackground( const QString& text, const QPoint& center, int maxwidth,
                                       const QColor& color, const QColor& bgcolor,
                                       const QFont& font = QFont() );
+        bool paintTextWithBackground( const QString& text, const QRect& rect, const QColor& color,
+                                      const QColor& bgcolor, const QFont& font = QFont(),
+                                      const Qt::Alignment& alignment = Qt::AlignCenter );
 
 
         /**
@@ -1162,6 +1167,27 @@ class KWIN_EXPORT TimeLine
  * Pointer to the global EffectsHandler object.
  **/
 extern KWIN_EXPORT EffectsHandler* effects;
+
+/***************************************************************
+ EffectsHandler
+***************************************************************/
+
+inline
+bool EffectsHandler::paintText( const QString& text, const QPoint& center, int maxwidth,
+        const QColor& color, const QFont& font )
+{
+    return paintText( text, QRect( center.x() - maxwidth / 2, center.y() - 5000, maxwidth, 10000 ),
+        color, font, Qt::AlignCenter );
+}
+
+inline
+bool EffectsHandler::paintTextWithBackground( const QString& text, const QPoint& center, int maxwidth,
+        const QColor& color, const QColor& bgcolor, const QFont& font )
+{
+    return paintTextWithBackground( text,
+        QRect( center.x() - maxwidth / 2, center.y() - 5000, maxwidth, 10000 ),
+        color, bgcolor, font, Qt::AlignCenter );
+}
 
 /***************************************************************
  WindowVertex
