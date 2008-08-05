@@ -213,8 +213,7 @@ void KWinCompositingConfig::loadGeneralTab()
         + LOAD_EFFECT_CONFIG("boxswitch")
         + LOAD_EFFECT_CONFIG("desktopgrid")
         + LOAD_EFFECT_CONFIG("dialogparent")
-        + LOAD_EFFECT_CONFIG("trackmouse");
-    if (winManagementEnabled > 0 && winManagementEnabled < 5) {
+    if (winManagementEnabled > 0 && winManagementEnabled < 4) {
         ui.effectWinManagement->setTristate(true);
         ui.effectWinManagement->setCheckState(Qt::PartiallyChecked);
     }
@@ -273,7 +272,6 @@ void KWinCompositingConfig::saveGeneralTab()
         WRITE_EFFECT_CONFIG("boxswitch", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("dialogparent", ui.effectWinManagement);
-        WRITE_EFFECT_CONFIG("trackmouse", ui.effectWinManagement);
     }
     WRITE_EFFECT_CONFIG("shadow", ui.effectShadows);
     // TODO: maybe also do some effect-specific configuration here, e.g.
