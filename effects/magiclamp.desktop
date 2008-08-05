@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Magic Lamp
+Name[et]=Võlulatern
 Name[nds]=Töverlamp
 Name[pt]=Lâmpada Mágica
 Name[pt_BR]=Lâmpada Mágica
@@ -7,6 +8,8 @@ Name[uk]=Чарівна лампа
 Name[zh_TW]=魔法燈
 Icon=preferences-system-windows-effect-magic-lamp
 Comment=Animates minimizing of windows with a magic lamp
+Comment[et]=Animeerib akende minimeerimise võlulaternaga
+Comment[ga]=Déan beochan le lampa draíochta agus fuinneog á híoslaghdú
 Comment[nds]=Animeert dat Minimeren vun Finstern mit en Töverlamp
 Comment[pt]=Anima a minimização das janelas com uma lâmpada mágica
 Comment[pt_BR]=Anima a minimização das janelas com uma lâmpada mágica

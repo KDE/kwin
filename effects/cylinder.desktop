@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Desktop Cylinder
+Name[et]=Töölauasilinder
 Name[gu]=ડેસ્કટોપ સિલિન્ડર
 Name[km]=ស៊ីឡាំង​ផ្ទៃតុ
 Name[nds]=Zylinner-Schriefdisch
@@ -11,6 +12,7 @@ Name[uk]=Циліндр стільниць
 Name[zh_TW]=桌面圓柱
 Icon=preferences-system-windows-effect-cylinder
 Comment=Map virtual desktops on a cylinder
+Comment[et]=Virtuaalsete töölaudade asetamine silindrile
 Comment[gu]=વર્ચ્યુઅલ ડેસ્કટોપને સિલિન્ડર પર જોડો
 Comment[km]=ផ្ទៃតុ​និម្មិត​ផែនទី​នៅ​លើស៊ីឡាំង
 Comment[nds]=Schriefdischen op en Zylinner afbillen

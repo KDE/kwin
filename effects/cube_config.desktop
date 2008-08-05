@@ -7,6 +7,8 @@ X-KDE-ParentComponents=kwin4_effect_cube
 X-KDE-PluginKeyword=cube
 
 Name=Desktop Cube
+Name[et]=Töölauakuubik
+Name[ga]=Ciúb Deisce
 Name[gu]=ડેસ્કટોપ ટ્યુબ
 Name[km]=គូប​ផ្ទៃតុ​
 Name[nds]=Wörpel-Schriefdisch
