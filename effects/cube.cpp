@@ -70,6 +70,7 @@ CubeEffect::CubeEffect()
     , slide( false )
     , oldDesktop( 0 )
     , activeScreen( 0 )
+    , animateDesktopChange( false )
     {
     KConfigGroup conf = effects->effectConfig( "Cube" );
     borderActivate = (ElectricBorder)conf.readEntry( "BorderActivate", (int)ElectricNone );
@@ -80,6 +81,7 @@ CubeEffect::CubeEffect()
     reflection = conf.readEntry( "Reflection", true );
     rotationDuration = conf.readEntry( "RotationDuration", 500 );
     backgroundColor = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
+    animateDesktopChange = conf.readEntry( "AnimateDesktopChange", false );
     capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     paintCaps = conf.readEntry( "Caps", true );
     QString file = conf.readEntry( "Wallpaper", QString("") );
@@ -1549,6 +1551,8 @@ void CubeEffect::desktopChanged( int old )
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return;
     if( activated )
+        return;
+    if( !animateDesktopChange )
         return;
     slide = true;
     oldDesktop = old;

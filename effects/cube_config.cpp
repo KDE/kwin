@@ -76,6 +76,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->displayDesktopNameBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->reflectionBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->backgroundColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
+    connect(m_ui->animateDesktopChangeBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
     connect(m_ui->capsImageBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
@@ -99,6 +100,7 @@ void CubeEffectConfig::load()
     QColor capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     bool texturedCaps = conf.readEntry( "TexturedCaps", true );
     bool caps = conf.readEntry( "Caps", true );
+    bool animateChange = conf.readEntry( "AnimateDesktopChange", false );
     if( activateBorder == (int)ElectricNone )
         activateBorder--;
     m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
@@ -138,6 +140,14 @@ void CubeEffectConfig::load()
         {
         m_ui->capsImageBox->setCheckState( Qt::Unchecked );
         }
+    if( animateChange )
+        {
+        m_ui->animateDesktopChangeBox->setCheckState( Qt::Checked );
+        }
+    else
+        {
+        m_ui->animateDesktopChangeBox->setCheckState( Qt::Unchecked );
+        }
     m_ui->backgroundColorButton->setColor( background );
     m_ui->capColorButton->setColor( capColor );
     capsSelectionChanged();
@@ -157,6 +167,7 @@ void CubeEffectConfig::save()
     conf.writeEntry( "Caps", m_ui->cubeCapsBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CapColor", m_ui->capColorButton->color() );
     conf.writeEntry( "TexturedCaps", m_ui->capsImageBox->checkState() == Qt::Checked ? true : false );
+    conf.writeEntry( "AnimateDesktopChange", m_ui->animateDesktopChangeBox->checkState() == Qt::Checked ? true : false );
 
     int activateBorder = m_ui->screenEdgeCombo->currentIndex();
     if( activateBorder == (int)ELECTRIC_COUNT )
@@ -183,6 +194,7 @@ void CubeEffectConfig::defaults()
     m_ui->cubeCapsBox->setCheckState( Qt::Checked );
     m_ui->capColorButton->setColor( KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     m_ui->capsImageBox->setCheckState( Qt::Checked );
+    m_ui->animateDesktopChangeBox->setCheckState( Qt::Unchecked );
     m_ui->editor->allDefault();
     emit changed(true);
     }

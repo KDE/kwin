@@ -105,6 +105,7 @@ class CubeEffect
         int rotationDuration;
         QList<EffectWindow*> windowsOnOtherScreens;
         int activeScreen;
+        bool animateDesktopChange;
     };
 
 } // namespace
