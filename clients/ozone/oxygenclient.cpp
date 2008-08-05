@@ -90,7 +90,6 @@ void OxygenClient::init()
     KCommonDecoration::init();
 
     widget()->setAutoFillBackground(false);
-    widget()->setAttribute(Qt::WA_OpaquePaintEvent);
 }
 
 bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
@@ -289,33 +288,17 @@ void OxygenClient::paintEvent(QPaintEvent *e)
             buttonsLeftWidth() - buttonsRightWidth() -
             marginLeft - marginRight;
 
-
-    int splitY = qMin(300, 3*frame.height()/4);
-
-    QPixmap tile = helper_.verticalGradient(color, splitY);
-    painter.drawTiledPixmap(QRect(0, 0, frame.width(), titleHeight + TFRAMESIZE), tile);
-
-    painter.drawTiledPixmap(QRect(0, 0, LFRAMESIZE, splitY), tile);
-    painter.fillRect(0, splitY, LFRAMESIZE, frame.height() - splitY, helper_.backgroundBottomColor(color));
-
-    painter.drawTiledPixmap(QRect(frame.width()-RFRAMESIZE, 0,
-                                                        RFRAMESIZE, splitY), tile,
-                                                        QPoint(frame.width()-RFRAMESIZE, 0));
-    painter.fillRect(frame.width()-RFRAMESIZE, splitY, RFRAMESIZE, frame.height() - splitY, helper_.backgroundBottomColor(color));
-
-    painter.fillRect(0, frame.height() - BFRAMESIZE, frame.width(), BFRAMESIZE, helper_.backgroundBottomColor(color));
-
-    int radialW = qMin(600, frame.width() - LFRAMESIZE - RFRAMESIZE);
-    tile = helper_.radialGradient(color, radialW);
-    // In the style we assume the top frame to have a height of 32 this we need offset here with the
-    // actual value
-    int frameTopFixer = titleTop+titleHeight - 32;
-    QRect radialRect = QRect((frame.width() - radialW) / 2, frameTopFixer, radialW, 64);
-    painter.drawPixmap(radialRect, tile);
-
+    QPalette pal2( palette );
+    if( !OxygenFactory::blendTitlebarColors()) {
+        pal2.setColor( QPalette::Window, options()->color(
+            KDecorationDefines::ColorTitleBar, isActive()));
+    }
+    // draw window background
+    helper_.renderWindowBackground(&painter, frame, this->widget(), pal2, 0);
+    
     // draw title text
     painter.setFont(options()->font(isActive(), false));
-    painter.setPen(titlebarTextColor(palette));
+    painter.setPen(titlebarTextColor(pal2));
     painter.drawText(titleLeft, titleTop-1, titleWidth, titleHeight,  // -1 is to go into top resizearea
               OxygenFactory::titleAlign() | Qt::AlignVCenter, caption());
 
