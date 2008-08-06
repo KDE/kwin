@@ -106,6 +106,7 @@ class CubeEffect
         QList<EffectWindow*> windowsOnOtherScreens;
         int activeScreen;
         bool animateDesktopChange;
+        bool bigCube;
     };
 
 } // namespace

@@ -71,6 +71,7 @@ CubeEffect::CubeEffect()
     , oldDesktop( 0 )
     , activeScreen( 0 )
     , animateDesktopChange( false )
+    , bigCube( false )
     {
     KConfigGroup conf = effects->effectConfig( "Cube" );
     borderActivate = (ElectricBorder)conf.readEntry( "BorderActivate", (int)ElectricNone );
@@ -82,6 +83,7 @@ CubeEffect::CubeEffect()
     rotationDuration = conf.readEntry( "RotationDuration", 500 );
     backgroundColor = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
     animateDesktopChange = conf.readEntry( "AnimateDesktopChange", false );
+    bigCube = conf.readEntry( "BigCube", false );
     capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     paintCaps = conf.readEntry( "Caps", true );
     QString file = conf.readEntry( "Wallpaper", QString("") );
@@ -176,6 +178,8 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         {
         //kDebug();
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+        if( effects->numScreens() > 1 && (slide || bigCube ) )
+            rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
         // background
@@ -197,7 +201,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-        if( effects->numScreens() > 1 )
+        if( effects->numScreens() > 1 && !slide && !bigCube )
             {
             windowsOnOtherScreens.clear();
             // unfortunatelly we have to change the projection matrix in dual screen mode
@@ -269,7 +273,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glPopMatrix();
             glPushMatrix();
             glTranslatef( 0.0, rect.height(), 0.0 );
-            if( effects->numScreens() > 1 && rect.width() != fullRect.width() )
+            if( effects->numScreens() > 1 && rect.width() != fullRect.width() && !slide && !bigCube )
                 {
                 // have to change the reflection area in horizontal layout and right screen
                 glTranslatef( -rect.width(), 0.0, 0.0 );
@@ -301,7 +305,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         paintScene( mask, region, data );
         glPopMatrix();
 
-        if( effects->numScreens() > 1 )
+        if( effects->numScreens() > 1 && !slide && !bigCube  )
             {
             glPopMatrix();
             // revert change of projection matrix
@@ -352,7 +356,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             {
             effects->paintScreen( mask, region, data );
             }
-        if( effects->numScreens() > 1 )
+        if( effects->numScreens() > 1 && !slide && !bigCube  )
             {
             foreach( EffectWindow* w, windowsOnOtherScreens )
                 {
@@ -374,9 +378,11 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+    if( effects->numScreens() > 1 && (slide || bigCube ) )
+        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float xScale = 1.0;
     float yScale = 1.0;
-    if( effects->numScreens() > 1 )
+    if( effects->numScreens() > 1 && !slide && !bigCube  )
         {
         QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         xScale = (float)rect.width()/(float)fullRect.width();
@@ -1483,6 +1489,8 @@ void CubeEffect::setActive( bool active )
             double eqn[4] = {0.0, 1.0, 0.0, 0.0};
             glPushMatrix();
             QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+            if( effects->numScreens() > 1 && bigCube )
+                rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
             glTranslatef( 0.0, rect.height(), 0.0 );
             glClipPlane( GL_CLIP_PLANE0, eqn );
             glPopMatrix();
@@ -1505,6 +1513,8 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
     if( stop || slide )
         return;
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+    if( effects->numScreens() > 1 && (slide || bigCube ) )
+        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     if( buttons.testFlag( Qt::LeftButton ) )
         {
         bool repaint = false;
