@@ -119,6 +119,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         magnifier.cpp
         mousemark.cpp
         sharpen.cpp
+        sphere.cpp
         snow.cpp
         trackmouse.cpp
         wobblywindows.cpp
@@ -135,6 +136,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         magnifier.desktop
         mousemark.desktop
         sharpen.desktop
+        sphere.desktop
         snow.desktop
         trackmouse.desktop
         wobblywindows.desktop
@@ -162,6 +164,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         data/cubecap.png
         data/cylinder.frag
         data/cylinder.vert
+        data/sphere.vert
         DESTINATION  ${DATA_INSTALL_DIR}/kwin )
     SET(kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
         coverswitch_config.cpp
