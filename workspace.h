@@ -496,6 +496,7 @@ class Workspace : public QObject, public KDecorationDefines
         void initShortcuts();
         void readShortcuts();
         void initDesktopPopup();
+        void discardPopup();
         void setupWindowShortcut( Client* c );
         void checkCursorPos();
 

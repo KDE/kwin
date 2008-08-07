@@ -191,6 +191,13 @@ QMenu* Workspace::clientPopup()
     return popup;
     }
 
+void Workspace::discardPopup()
+    {
+    delete popup;
+    popup = NULL; 
+    desk_popup = NULL;
+    }
+
 void Workspace::setPopupClientOpacity( QAction* action )
     {
     if( active_popup_client == NULL )
@@ -359,10 +366,7 @@ void Workspace::readShortcuts()
     kaction = qobject_cast<KAction*>( keys->action("Walk Through Windows (Reverse)") );
     if ( kaction!=0 )
         cutWalkThroughWindowsReverse = kaction->globalShortcut();
-
-    delete popup;
-    popup = NULL; // so that it's recreated next time
-    desk_popup = NULL;
+    discardPopup(); // so that it's recreated next time
     }
 
 
