@@ -25,13 +25,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
+#include <kglobal.h>
 #include <QtDBus/QtDBus>
 
 int main( int argc, char* argv[] )
     {
     if( argc != 2 )
         return 1;
-    KComponentData inst( "kwin_update_default_rules" );
+    KAboutData about( "kwin_update_default_rules", "kwin", KLocalizedString(), 0 );
+    KCmdLineArgs::init( argc, argv, &about );
+    KComponentData inst( &about );
+    Q_UNUSED( KGlobal::locale() ); // jump-start locales to get to translated desriptions
     QString file = KStandardDirs::locate( "data", QString( "kwin/default_rules/" ) + argv[ 1 ] );
     if( file.isEmpty())
         {
