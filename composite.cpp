@@ -205,8 +205,7 @@ void Workspace::setupCompositing()
         scene->windowAdded( c );
     foreach( Unmanaged* c, unmanaged )
         scene->windowAdded( c );
-    delete popup; // force re-creation of the Alt+F3 popup (opacity option)
-    popup = NULL;
+    discardPopup(); // force re-creation of the Alt+F3 popup (opacity option)
 #else
     kDebug( 1212 ) << "Compositing was not available at compile time";
 #endif
@@ -251,8 +250,7 @@ void Workspace::finishCompositing()
             i.setOpacity( static_cast< unsigned long >((*it)->opacity() * 0xffffffff ));
             }
         }
-    delete popup; // force re-creation of the Alt+F3 popup (opacity option)
-    popup = NULL;
+    discardPopup(); // force re-creation of the Alt+F3 popup (opacity option)
     // discard all Deleted windows (#152914)
     while( !deleted.isEmpty())
         deleted.first()->discard( Allowed );

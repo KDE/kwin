@@ -459,7 +459,7 @@ Workspace::~Workspace()
         (*it)->release();
     delete tab_box;
     delete popupinfo;
-    delete popup;
+    discardPopup();
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
     writeWindowRules();
