@@ -249,7 +249,9 @@ Application::Application( )
     KSharedConfig::Ptr config = KGlobal::config();
     if (!config->isImmutable() && args->isSet("lock"))
         {
+#ifdef __GNUC__
 #warning this shouldn not be necessary
+#endif
         //config->setReadOnly(true);
         config->reparseConfiguration();
         }
