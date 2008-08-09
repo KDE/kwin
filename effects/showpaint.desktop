@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Show Paint
 Name[af]=Wys inkleur
+Name[ar]=اظهر الطلاء
 Name[bn_IN]=Paint প্রদর্শন করা হবে
 Name[ca]=Mostra la pintura
 Name[cs]=Zobrazit kreslení
@@ -53,6 +54,7 @@ Name[zh_TW]=顯示繪製
 Icon=preferences-system-windows-effect-paint-show
 Comment=Shows areas painted by KWin
 Comment[af]=Wys areas waar KWin ingekleur het
+Comment[ar]=اظهر المنطقة الملونة بواسطة KWin
 Comment[ca]=Mostra les àrees pintades pel KWin
 Comment[cs]=Zobrazit oblasti vykreslované KWin
 Comment[csb]=Wëskrzëniô pòla céchòwóné przez KWin

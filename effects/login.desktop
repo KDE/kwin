@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Login
 Name[af]=Aanteken
+Name[ar]=دخول
 Name[be]=Уваход
 Name[bg]=Вход
 Name[bn_IN]=লগ-ইন করুন
@@ -64,6 +65,7 @@ Name[zh_TW]=登入
 Icon=preferences-system-windows-effect-login
 Comment=Login visual effect
 Comment[af]=Visuele effek tydens aanteken
+Comment[ar]=الدخول إلى المؤثرات البصرية
 Comment[ca]=Efecte visual en iniciar la sessió
 Comment[cs]=Vizuální efekt přihlášení
 Comment[csb]=Efektë przë logòwaniô

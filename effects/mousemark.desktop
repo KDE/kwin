@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Mouse Mark
 Name[af]=Muismerk
+Name[ar]=علامة الفأرة
 Name[be]=Адметка мышы
 Name[bg]=Чертане с мишка
 Name[ca]=Marca amb el ratolí
@@ -59,6 +60,7 @@ Name[zh_TW]=滑鼠標記
 Icon=preferences-system-windows-effect-mouse-mark
 Comment=Lets you draw lines on your desktop
 Comment[af]=Laat jou strepe trek oor jou werkskerm
+Comment[ar]=يتيح لك رسم خطوط على سطح المكتب
 Comment[bg]=Можете да чертаете линии на работния плот
 Comment[ca]=Us permet dibuixar línies a l'escriptori
 Comment[cs]=Umožní kreslit čáry na ploše

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Flip Switch
 Name[af]=Wissel skakelaar
+Name[ar]=مفتاح التقلب
 Name[bg]=Превключване между прозорци
 Name[da]=Vippeskifter
 Name[de]=3D-Fensterstapel
@@ -41,6 +42,7 @@ Name[zh_TW]=翻轉切換
 Icon=preferences-system-windows-effect-flipswitch
 Comment=Alt-Tab window switcher flipping through windows on a stack
 Comment[af]=Alt-Tab vensterwisselling blaai deur vensters op 'n stapel
+Comment[ar]=محول النوافذ Alt-Tab يحول النوافذ إلى كومه
 Comment[ca]=Commutador de finestres amb Alt-Tab que intercanvia les finestres en un pila
 Comment[da]=Alt+tab vinduesskifter som vipper gennem vinduerne i en stak
 Comment[de]=Geht Fenster in einem 3D-Stapel der Reihe nach durch.

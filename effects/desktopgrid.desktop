@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Desktop Grid
 Name[af]=Werkskerm rooster
-Name[ar]=شبكية سطح المكتب
+Name[ar]=شبكة سطح المكتب
 Name[be]=Сетка на працоўны стол
 Name[bg]=Работен плот
 Name[ca]=Graella de l'escriptori
@@ -61,6 +61,7 @@ Name[zh_CN]=桌面栅格
 Name[zh_TW]=桌面格
 Icon=preferences-system-windows-effect-desktop-grid
 Comment=Desktop switcher that lays the desktops out in a grid
+Comment[ar]=التحويل لسطح مكتب شبكي
 Comment[bg]=Превключване между работните плотове в мрежа
 Comment[ca]=Commutador d'escriptori que disposa els escriptoris en una graella
 Comment[da]=Desktop-skifter som ligger desktoppe ud i et gitter

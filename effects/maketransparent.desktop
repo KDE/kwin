@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Translucency
 Name[af]=Deursigtigheid
+Name[ar]=شبه شفاف
 Name[be]=Празрыстасць
 Name[bg]=Прозрачност
 Name[bn]=সমস্বচ্ছতা
@@ -65,6 +66,7 @@ Name[zh_TW]=半透明
 Icon=preferences-system-windows-effect-maketransparent
 Comment=Makes decorations or entire windows translucent
 Comment[af]=Maak versierings of volledige vensters deursigtig
+Comment[ar]=ديكور النافذه شبه شفاف
 Comment[bg]=Прозрачност на отделни части или целия прозорец
 Comment[ca]=Converteix en translúcides les decoracions o les finestres senceres
 Comment[cs]=Zprůhlední dekorace nebo celá okna

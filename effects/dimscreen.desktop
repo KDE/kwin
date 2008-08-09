@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Dim Screen for Administrator Mode
 Name[af]=Verdof vir Administrateurmodus
+Name[ar]=نافذة مدير النظام قاتمة
 Name[ca]=Apaga la pantalla pel mode administrador
 Name[cs]=Ztmavit obrazovku v administrátorském režimu
 Name[da]=Dæmp skærmen til administratortilstand
@@ -45,6 +46,7 @@ Name[zh_TW]=在管理者模式下將螢幕變暗
 Icon=preferences-system-windows-effect-dimscreen
 Comment=Dims the screen if a window asks for root password
 Comment[af]=Verdof die skerm wanneer gevra word vir oorskakel na Administrateurmodus
+Comment[ar]=نافذه قاتمة عند السؤال عن كلمة السر
 Comment[ca]=Apaga la pantalla si una finestra demana la contrasenya del «root»
 Comment[cs]=Ztmaví obrazovku, pokud okno požádá o heslo uživatele root
 Comment[da]=Dæmper skærmen hvis et vindue beder om root-kodeordet

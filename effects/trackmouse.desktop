@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Track Mouse
 Name[af]=Volg die Muis
+Name[ar]=تتبع الفارة
 Name[be]=Адследжваць мыш
 Name[bg]=Мишка
 Name[ca]=Seguiment del ratolí
@@ -59,6 +60,7 @@ Name[zh_TW]=追蹤滑鼠
 Icon=preferences-system-windows-effect-mouse-track
 Comment=Shows mouse cursor's position when activated
 Comment[af]=Wys die muiswyser se koördinate
+Comment[ar]=اعرض موقع الفارة عند التفعيل
 Comment[ca]=Mostra la posició del cursor del ratolí quan està activat
 Comment[cs]=Zobrazí pozici kurzoru myši při aktivaci
 Comment[da]=Når aktiveret vises markørens position

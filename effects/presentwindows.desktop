@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Present Windows
 Name[af]=Wys vensters
-Name[ar]=نوافذ حديثة
+Name[ar]=نوافذ محسنة
 Name[be]=Існуючыя вокны
 Name[bg]=Представяне на прозорци
 Name[ca]=Presenta les finestres
@@ -60,6 +60,7 @@ Name[zh_TW]=展示視窗
 Icon=preferences-system-windows-effect-presentwindows
 Comment=Shows all windows side-by-side
 Comment[af]=Wys alle vensters langs mekaar
+Comment[ar]=اعرض كل النوافذ جنباً إلى جنب
 Comment[bg]=Показване на прозорците един до друг
 Comment[ca]=Mostra totes les finestres juntes lateralment
 Comment[cs]=Zobrazí všechna okna vedle sebe

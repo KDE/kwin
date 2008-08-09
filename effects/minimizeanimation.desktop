@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Minimize Animation
 Name[af]=Minimeer-animasie
+Name[ar]=حركة بطيئة
 Name[be]=Анімацыя змяншэння
 Name[bg]=Минимизиране на анимацията
 Name[ca]=Animació de minimització
@@ -61,6 +62,7 @@ Name[zh_TW]=縮小動畫
 Icon=preferences-system-windows-effect-minimize-animation
 Comment=Animates minimizing of windows
 Comment[af]=Gebruik animasie tydens minimering van vensters
+Comment[ar]=تقليل حركة النوافذ
 Comment[bg]=Анимирана минимизация на прозорците
 Comment[ca]=Anima la minimització de les finestres
 Comment[cs]=Animuje minimalizaci okne

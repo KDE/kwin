@@ -59,6 +59,7 @@ Name[zh_TW]=上層對話框
 Icon=preferences-system-windows-effect-dialog-parent
 Comment=Darkens parent windows of active dialogs
 Comment[af]=Verdonker ouer-vensters van aktiewe dialoogvenster
+Comment[ar]=ضلل الوندوز عند تفعيل الحوار
 Comment[bg]=Потъмнение на главните от активните прозорци
 Comment[ca]=Enfosqueix les finestres mares dels diàlegs actius
 Comment[cs]=Ztmaví okna předka pro aktivních dialogů

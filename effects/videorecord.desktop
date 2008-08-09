@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Video Record
 Name[af]=Video-opneem
-Name[ar]=تسجيل المرئيات
+Name[ar]=تسجيل الفيديو
 Name[be]=Відэазапіс
 Name[bg]=Запис на звук
 Name[bn_IN]=ভিডিও রেকর্ড
@@ -64,6 +64,7 @@ Name[zh_TW]=影像錄影
 Icon=preferences-system-windows-effect-video-record
 Comment=Lets you record videos of your desktop
 Comment[af]=Laat jou toe om videos van jou werkskerm te maak
+Comment[ar]=يسمح لك بتسجيل فيديو لسطح مكتبك
 Comment[be]=Дазваляе вам запісваць відэа з вашага экрана
 Comment[bg]=Запис на видео върху работния плот
 Comment[bn_IN]=ডেস্কটপের ভিডিও রেকর্ড করার সুবিধা উপলব্ধ করা হয়
