@@ -2,12 +2,14 @@
 Name=Desktop Sphere
 Name[pt]=Esfera de Ecrãs
 Name[pt_BR]=Esfera de Ecrãs
+Name[sv]=Skrivbordssfär
 Name[uk]=Стільнична сфера
 Name[zh_TW]=桌面球體
 Icon=preferences-system-windows-effect-sphere
 Comment=Map virtual desktops on a sphere
 Comment[pt]=Mapear os ecrãs virtuais sobre uma esfera
 Comment[pt_BR]=Mapear os ecrãs virtuais sobre uma esfera
+Comment[sv]=Avbilda virtuella skrivbord på en sfär
 Comment[uk]=Відобразити віртуальні стільниці на сфері
 Comment[zh_TW]=將虛擬桌面映射到一球體
 

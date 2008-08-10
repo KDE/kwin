@@ -2,6 +2,7 @@
 Name=Desktop Cube
 Name[et]=Töölauakuubik
 Name[ga]=Ciúb Deisce
+Name[gl]=Cubo do escritorio
 Name[gu]=ડેસ્કટોપ ટ્યુબ
 Name[km]=គូប​ផ្ទៃតុ​
 Name[nds]=Wörpel-Schriefdisch
@@ -15,6 +16,7 @@ Name[zh_TW]=桌面立方體
 Icon=preferences-system-windows-effect-cube
 Comment=Map virtual desktops on a cube
 Comment[et]=Virtuaalsete töölaudade asetamine kuubikule
+Comment[gl]=Mostra os escritorios virtuais nun cubo
 Comment[gu]=વર્ચ્યુઅલ ડેસ્કટોપને ક્યુબ સાથે જોડો
 Comment[km]=ផ្ទៃតុ​និម្មិត​ផែនទី​នៅ​លើ​គូប
 Comment[nds]=Schriefdischen op Wörpelflagen afbillen

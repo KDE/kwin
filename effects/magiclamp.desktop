@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=Magic Lamp
 Name[et]=Võlulatern
+Name[gl]=Lámpara máxica
 Name[km]=អំពូល​មន្តអាគមន៍
 Name[nds]=Töverlamp
 Name[pt]=Lâmpada Mágica
 Name[pt_BR]=Lâmpada Mágica
+Name[sv]=Magisk lanterna
 Name[te]=మాజిక్ లాంప్
 Name[tr]=Sihirli Lamba
 Name[uk]=Чарівна лампа
@@ -13,10 +15,12 @@ Icon=preferences-system-windows-effect-magic-lamp
 Comment=Animates minimizing of windows with a magic lamp
 Comment[et]=Animeerib akende minimeerimise võlulaternaga
 Comment[ga]=Déan beochan le lampa draíochta agus fuinneog á híoslaghdú
+Comment[gl]=Anima a minimización das fiestras cunha lámpara máxica
 Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​អប្បបរមា​ជា​មួយ​នឹង​អំពូល​មន្តអាគម
 Comment[nds]=Animeert dat Minimeren vun Finstern mit en Töverlamp
 Comment[pt]=Anima a minimização das janelas com uma lâmpada mágica
 Comment[pt_BR]=Anima a minimização das janelas com uma lâmpada mágica
+Comment[sv]=Animerar minimering av fönster med en magisk lanterna
 Comment[te]=మాజిక్ లాంప్‌లతో విండోలు చిన్నవిచేయునప్పుడు యానిమేట్‌చేయుము
 Comment[tr]=Pencereleri panele küçültme eylemini sihirli lamba görünümünde canlandırır
 Comment[uk]=Оживляє мінімізацію вікон у вигляді чарівної лампи
