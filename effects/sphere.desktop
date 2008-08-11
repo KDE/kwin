@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=Desktop Sphere
+Name[ga]=Sféar Deisce
+Name[gl]=Escritorio en esfera
+Name[nds]=Schriefdischkugel
 Name[pt]=Esfera de Ecrãs
 Name[pt_BR]=Esfera de Ecrãs
 Name[sv]=Skrivbordssfär
@@ -7,6 +10,9 @@ Name[uk]=Стільнична сфера
 Name[zh_TW]=桌面球體
 Icon=preferences-system-windows-effect-sphere
 Comment=Map virtual desktops on a sphere
+Comment[ga]=Taispeáin deasca fíorúla ar sféar
+Comment[gl]=Mostra os escritorios virtuais nunha esfera
+Comment[nds]=Schriefdischen op en Kugel afbillen
 Comment[pt]=Mapear os ecrãs virtuais sobre uma esfera
 Comment[pt_BR]=Mapear os ecrãs virtuais sobre uma esfera
 Comment[sv]=Avbilda virtuella skrivbord på en sfär
