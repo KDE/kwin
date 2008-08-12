@@ -1,21 +1,27 @@
 [Desktop Entry]
 Name=Desktop Sphere
+Name[et]=Töölauasfäär
 Name[ga]=Sféar Deisce
 Name[gl]=Escritorio en esfera
+Name[km]=ស៊្វែរ​ផ្ទៃតុ
 Name[nds]=Schriefdischkugel
 Name[pt]=Esfera de Ecrãs
 Name[pt_BR]=Esfera de Ecrãs
 Name[sv]=Skrivbordssfär
+Name[te]=డెస్క్ టాప్ గొళం
 Name[uk]=Стільнична сфера
 Name[zh_TW]=桌面球體
 Icon=preferences-system-windows-effect-sphere
 Comment=Map virtual desktops on a sphere
+Comment[et]=Virtuaalsete töölaudade asetamine sfäärile
 Comment[ga]=Taispeáin deasca fíorúla ar sféar
 Comment[gl]=Mostra os escritorios virtuais nunha esfera
+Comment[km]=ផ្គូផ្គង​ផ្ទៃតុ​និម្មិត​នៅ​លើ​ស៊្វែរ
 Comment[nds]=Schriefdischen op en Kugel afbillen
 Comment[pt]=Mapear os ecrãs virtuais sobre uma esfera
 Comment[pt_BR]=Mapear os ecrãs virtuais sobre uma esfera
 Comment[sv]=Avbilda virtuella skrivbord på en sfär
+Comment[te]=గోళంపైన వర్చ్యువల్ డెస్క్ టాప్లను మాప్‌చేయుము
 Comment[uk]=Відобразити віртуальні стільниці на сфері
 Comment[zh_TW]=將虛擬桌面映射到一球體
 
