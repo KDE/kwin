@@ -228,7 +228,7 @@ void Workspace::init()
 //     topDock = 0L;
 //     maximizedWindowCounter = 0;
 
-    supportWindow = new QWidget;
+    supportWindow = new QWidget( NULL, Qt::X11BypassWindowManagerHint );
     XLowerWindow( display(), supportWindow->winId()); // see usage in layers.cpp
 
     XSetWindowAttributes attr;
@@ -1178,7 +1178,7 @@ bool Workspace::isNotManaged( const QString& title )
  */
 void Workspace::refresh()
     {
-    QWidget w;
+    QWidget w( NULL, Qt::X11BypassWindowManagerHint );
     w.setGeometry( QApplication::desktop()->geometry() );
     w.show();
     w.hide();
@@ -2375,7 +2375,7 @@ void Workspace::setupTopMenuHandling()
     connect( topmenu_selection, SIGNAL( lostOwnership()), this, SLOT( lostTopMenuSelection()));
     disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     managing_topmenus = true;
-    topmenu_space = new QWidget;
+    topmenu_space = new QWidget( NULL, Qt::X11BypassWindowManagerHint );
     Window stack[ 2 ];
     stack[ 0 ] = supportWindow->winId();
     stack[ 1 ] = topmenu_space->winId();
