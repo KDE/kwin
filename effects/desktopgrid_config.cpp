@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,109 +20,147 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "desktopgrid_config.h"
-
 #include <kwineffects.h>
 
-#include <klocale.h>
-#include <kdebug.h>
+#include <kconfiggroup.h>
 #include <KActionCollection>
 #include <kaction.h>
-#include <KShortcutsEditor>
-#include <kconfiggroup.h>
 
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QCheckBox>
-#include <QComboBox>
-#include <QLabel>
+#include <QColor>
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
+
 namespace KWin
 {
 
-DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
+DesktopGridEffectConfigForm::DesktopGridEffectConfigForm(QWidget* parent) : QWidget(parent)
+{
+  setupUi(this);
+}
+
+DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariantList& args)
+    :   KCModule( EffectFactory::componentData(), parent, args )
     {
-    kDebug() ;
+    m_ui = new DesktopGridEffectConfigForm( this );
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout( this );
 
-    mSlide = new QCheckBox(i18n("Animate desktop changes"), this);
-    connect(mSlide, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    layout->addWidget(mSlide);
+    layout->addWidget( m_ui );
 
-    QHBoxLayout* comboLayout = new QHBoxLayout();
-    QLabel* label = new QLabel(i18n("Activate when cursor is at a specific edge "
-            "or corner of the screen:"), this);
+    m_actionCollection = new KActionCollection( this, componentData() );
+    m_actionCollection->setConfigGroup( "DesktopGrid" );
+    m_actionCollection->setConfigGlobal( true );
 
-    mActivateCombo = new QComboBox;
-    mActivateCombo->addItem(i18n("Top"));
-    mActivateCombo->addItem(i18n("Top-right"));
-    mActivateCombo->addItem(i18n("Right"));
-    mActivateCombo->addItem(i18n("Bottom-right"));
-    mActivateCombo->addItem(i18n("Bottom"));
-    mActivateCombo->addItem(i18n("Bottom-left"));
-    mActivateCombo->addItem(i18n("Left"));
-    mActivateCombo->addItem(i18n("Top-left"));
-    mActivateCombo->addItem(i18n("None"));
-    connect(mActivateCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    comboLayout->addWidget(label);
-    comboLayout->addWidget(mActivateCombo);
-    layout->addLayout(comboLayout);
+    KAction* a = (KAction*) m_actionCollection->addAction( "ShowDesktopGrid" );
+    a->setText( i18n( "Show Desktop Grid" ));
+    a->setProperty( "isConfigurationAction", true );
+    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F8 ));
 
-    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
-    KAction* show = static_cast<KAction*>(actionCollection->addAction( "ShowDesktopGrid" ));
-    show->setText( i18n("Show Desktop Grid" ));
-    show->setProperty("isConfigurationAction", true);
-    show->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F8 ));
+    m_ui->shortcutEditor->addCollection( m_actionCollection );
 
-    mShortcutEditor = new KShortcutsEditor(actionCollection, this,
-            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
-    connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
-    layout->addWidget(mShortcutEditor);
+    m_ui->screenEdgeCombo->addItem( i18n( "Top" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Top-right" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Right" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Bottom-right" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Bottom" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Bottom-left" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Left" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Top-left" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "None" ));
 
-    layout->addStretch();
+    m_alignmentItems.append( Qt::Alignment( 0 ));
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Disabled" ));
+    m_alignmentItems.append( Qt::AlignHCenter | Qt::AlignTop );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top" ));
+    m_alignmentItems.append( Qt::AlignRight | Qt::AlignTop );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top-right" ));
+    m_alignmentItems.append( Qt::AlignRight | Qt::AlignVCenter );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Right" ));
+    m_alignmentItems.append( Qt::AlignRight | Qt::AlignBottom );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Bottom-right" ));
+    m_alignmentItems.append( Qt::AlignHCenter | Qt::AlignBottom );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Bottom" ));
+    m_alignmentItems.append( Qt::AlignLeft | Qt::AlignBottom );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Bottom-left" ));
+    m_alignmentItems.append( Qt::AlignLeft | Qt::AlignVCenter );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Left" ));
+    m_alignmentItems.append( Qt::AlignLeft | Qt::AlignTop );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top-left" ));
+    m_alignmentItems.append( Qt::AlignCenter );
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Center" ));
+
+    connect( m_ui->screenEdgeCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->zoomDurationSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->borderWidthSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->desktopNameAlignmentCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->layoutBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->layoutBox, SIGNAL( stateChanged( int )), this, SLOT( layoutSelectionChanged() ));
+    connect( m_ui->layoutRowsSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->shortcutEditor, SIGNAL( keyChange() ), this, SLOT( changed() ));
+
+    load();
     }
 
 DesktopGridEffectConfig::~DesktopGridEffectConfig()
     {
-    kDebug();
-    // Undo (only) unsaved changes to global key shortcuts
-    mShortcutEditor->undoChanges();
+    // If save() is called undoChanges() has no effect
+    m_ui->shortcutEditor->undoChanges();
     }
 
 void DesktopGridEffectConfig::load()
     {
-    kDebug();
     KCModule::load();
 
-    KConfigGroup conf = EffectsHandler::effectConfig("DesktopGrid");
-    mSlide->setChecked(conf.readEntry("Slide", true));
-
-    int activateBorder = conf.readEntry("BorderActivate", (int)ElectricNone);
-    if(activateBorder == (int)ElectricNone)
+    KConfigGroup conf = EffectsHandler::effectConfig( "DesktopGrid" );
+    
+    int activateBorder = conf.readEntry( "BorderActivate", int( ElectricNone ));
+    if( activateBorder == int( ElectricNone ))
         activateBorder--;
-    mActivateCombo->setCurrentIndex(activateBorder);
+    m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
+
+    m_ui->zoomDurationSpin->setValue( conf.readEntry( "ZoomDuration", 500 ));
+    m_ui->borderWidthSpin->setValue( conf.readEntry( "BorderWidth", 10 ));
+
+    Qt::Alignment alignment = Qt::Alignment( conf.readEntry( "DesktopNameAlignment", 0 ));
+    m_ui->desktopNameAlignmentCombo->setCurrentIndex( m_alignmentItems.indexOf( alignment ));
+
+    if( conf.readEntry( "CustomLayout", false ))
+        m_ui->layoutBox->setCheckState( Qt::Checked );
+    else
+        m_ui->layoutBox->setCheckState( Qt::Unchecked );
+    layoutSelectionChanged();
+
+    m_ui->layoutRowsSpin->setValue( conf.readEntry( "CustomLayoutRows", 2 ));
 
     emit changed(false);
     }
 
 void DesktopGridEffectConfig::save()
     {
-    kDebug() ;
     KCModule::save();
 
-    KConfigGroup conf = EffectsHandler::effectConfig("DesktopGrid");
-    conf.writeEntry("Slide", mSlide->isChecked());
+    KConfigGroup conf = EffectsHandler::effectConfig( "DesktopGrid" );
 
-    int activateBorder = mActivateCombo->currentIndex();
-    if(activateBorder == (int)ELECTRIC_COUNT)
-        activateBorder = (int)ElectricNone;
-    conf.writeEntry("BorderActivate", activateBorder);
+    int activateBorder = m_ui->screenEdgeCombo->currentIndex();
+    if( activateBorder == int( ELECTRIC_COUNT ))
+        activateBorder = int( ElectricNone );
+    conf.writeEntry( "BorderActivate", activateBorder );
+
+    conf.writeEntry( "ZoomDuration", m_ui->zoomDurationSpin->value() );
+    conf.writeEntry( "BorderWidth", m_ui->borderWidthSpin->value() );
+
+    int alignment = m_ui->desktopNameAlignmentCombo->currentIndex();
+    alignment = int( m_alignmentItems[alignment] );
+    conf.writeEntry( "DesktopNameAlignment", alignment );
+
+    conf.writeEntry( "CustomLayout", m_ui->layoutBox->checkState() == Qt::Checked ? 1 : 0 );
+    conf.writeEntry( "CustomLayoutRows", m_ui->layoutRowsSpin->value() );
+
+    m_ui->shortcutEditor->save();
+
     conf.sync();
-
-    mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
     EffectsHandler::sendReloadMessage( "desktopgrid" );
@@ -129,11 +168,28 @@ void DesktopGridEffectConfig::save()
 
 void DesktopGridEffectConfig::defaults()
     {
-    kDebug() ;
-    mSlide->setChecked(true);
-    mActivateCombo->setCurrentIndex( (int)ElectricNone -1 );
-    mShortcutEditor->allDefault();
+    m_ui->screenEdgeCombo->setCurrentIndex( int( ElectricNone - 1 ));
+    m_ui->zoomDurationSpin->setValue( 500 );
+    m_ui->borderWidthSpin->setValue( 10 );
+    m_ui->desktopNameAlignmentCombo->setCurrentIndex( 0 );
+    m_ui->layoutBox->setCheckState( Qt::Unchecked );
+    m_ui->layoutRowsSpin->setValue( 2 );
+    m_ui->shortcutEditor->allDefault();
     emit changed(true);
+    }
+
+void DesktopGridEffectConfig::layoutSelectionChanged()
+    {
+    if( m_ui->layoutBox->checkState() == Qt::Checked )
+        {
+        m_ui->layoutRowsLabel->setEnabled( true );
+        m_ui->layoutRowsSpin->setEnabled( true );
+        }
+    else
+        {
+        m_ui->layoutRowsLabel->setEnabled( false );
+        m_ui->layoutRowsSpin->setEnabled( false );
+        }
     }
 
 } // namespace

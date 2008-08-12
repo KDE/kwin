@@ -1,0 +1,178 @@
+<ui version="4.0" >
+ <class>KWin::DesktopGridEffectConfigForm</class>
+ <widget class="QWidget" name="KWin::DesktopGridEffectConfigForm" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>508</width>
+    <height>221</height>
+   </rect>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_2" >
+   <item>
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Appearance</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3" >
+      <item row="2" column="0" >
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>Zoom &amp;duration:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>zoomDurationSpin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QSpinBox" name="zoomDurationSpin" >
+        <property name="suffix" >
+         <string> msec</string>
+        </property>
+        <property name="maximum" >
+         <number>5000</number>
+        </property>
+        <property name="value" >
+         <number>500</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" >
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>&amp;Border width:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>borderWidthSpin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" >
+       <widget class="QSpinBox" name="borderWidthSpin" >
+        <property name="suffix" >
+         <string> pixels</string>
+        </property>
+        <property name="maximum" >
+         <number>100</number>
+        </property>
+        <property name="value" >
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" >
+       <widget class="QLabel" name="label_6" >
+        <property name="text" >
+         <string>Desktop &amp;name alignment:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>desktopNameAlignmentCombo</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" >
+       <widget class="QComboBox" name="desktopNameAlignmentCombo" />
+      </item>
+      <item row="7" column="0" >
+       <widget class="QCheckBox" name="layoutBox" >
+        <property name="text" >
+         <string>Custom grid &amp;layout</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0" >
+       <widget class="QLabel" name="layoutRowsLabel" >
+        <property name="text" >
+         <string>Number of &amp;rows:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>layoutRowsSpin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1" >
+       <widget class="QSpinBox" name="layoutRowsSpin" >
+        <property name="suffix" >
+         <string> rows</string>
+        </property>
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+        <property name="maximum" >
+         <number>20</number>
+        </property>
+        <property name="value" >
+         <number>2</number>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0" colspan="2" >
+       <spacer name="verticalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2" >
+     <property name="title" >
+      <string>Activation</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2" >
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>Active screen &amp;edge:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>screenEdgeCombo</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QComboBox" name="screenEdgeCombo" />
+      </item>
+      <item row="1" column="0" colspan="2" >
+       <widget class="KWin::GlobalShortcutsEditor" native="1" name="shortcutEditor" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KWin::GlobalShortcutsEditor</class>
+   <extends>QWidget</extends>
+   <header location="global" >kwineffects.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>zoomDurationSpin</tabstop>
+  <tabstop>borderWidthSpin</tabstop>
+  <tabstop>desktopNameAlignmentCombo</tabstop>
+  <tabstop>layoutBox</tabstop>
+  <tabstop>layoutRowsSpin</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

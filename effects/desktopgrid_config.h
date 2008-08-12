@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,12 +24,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kcmodule.h>
 
-class QComboBox;
-class QCheckBox;
-class KShortcutsEditor;
+#include "ui_desktopgrid_config.h"
 
 namespace KWin
 {
+
+class DesktopGridEffectConfigForm : public QWidget, public Ui::DesktopGridEffectConfigForm
+{
+    Q_OBJECT
+    public:
+        explicit DesktopGridEffectConfigForm(QWidget* parent);
+};
 
 class DesktopGridEffectConfig : public KCModule
     {
@@ -42,10 +48,13 @@ class DesktopGridEffectConfig : public KCModule
         virtual void load();
         virtual void defaults();
 
+    private slots:
+        void layoutSelectionChanged();
+
     private:
-        QCheckBox* mSlide;
-        QComboBox* mActivateCombo;
-        KShortcutsEditor *mShortcutEditor;
+        DesktopGridEffectConfigForm* m_ui;
+        KActionCollection* m_actionCollection;
+        QList<Qt::Alignment> m_alignmentItems;
     };
 
 } // namespace

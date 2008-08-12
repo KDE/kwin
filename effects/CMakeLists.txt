@@ -51,6 +51,7 @@ SET(kwin4_effect_builtins_sources
     shadow.cpp
     showfps.cpp
     showpaint.cpp
+    slide.cpp
     taskbarthumbnail.cpp
     thumbnailaside.cpp
     zoom.cpp
@@ -74,6 +75,7 @@ install( FILES
     shadow.desktop
     showfps.desktop
     showpaint.desktop
+    slide.desktop
     taskbarthumbnail.desktop
     thumbnailaside.desktop
     zoom.desktop
@@ -82,6 +84,7 @@ install( FILES
 # config modules
 SET(kwin4_effect_builtins_config_sources
     desktopgrid_config.cpp
+    desktopgrid_config.ui
     diminactive_config.cpp
     diminactive_config.ui
     maketransparent_config.cpp

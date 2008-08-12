@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,40 +41,50 @@ class DesktopGridEffect
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowClosed( EffectWindow* w );
-        virtual void desktopChanged( int old );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
         virtual bool borderActivated( ElectricBorder border );
     private slots:
         void toggle();
     private:
-        QRect desktopRect( int desktop, bool scaled ) const;
+        QPointF scalePos( const QPoint& pos, int desktop, int screen = -1 ) const;
+        QPoint unscalePos( const QPoint& pos, int* desktop = NULL ) const;
         int posToDesktop( const QPoint& pos ) const;
-        QRect windowRect( EffectWindow* w ) const; // returns always scaled
-        EffectWindow* windowAt( const QPoint& pos, QRect* rect = NULL ) const;
+        EffectWindow* windowAt( QPoint pos ) const;
+        void setCurrentDesktop( int desktop );
+        void setHighlightedDesktop( int desktop );
         void setActive( bool active );
         void setup();
         void finish();
-        void paintSlide( int mask, QRegion region, const ScreenPaintData& data );
-        void paintScreenDesktop( int desktop, int mask, QRegion region, ScreenPaintData data );
-        void slideDesktopChanged( int old );
-        void setHighlightedDesktop( int desktop );
-        bool activated;
-        TimeLine mTimeLine;
-        int painting_desktop;
-        int highlighted_desktop;
-        Window input;
-        bool keyboard_grab;
-        bool was_window_move;
-        EffectWindow* window_move;
-        QPoint window_move_diff;
-        QPoint window_move_pos;
-        bool slideEnabled;
-        bool slide;
-        QPoint slide_start_pos;
-        bool slide_painting_sticky;
-        QPoint slide_painting_diff;
+        
         ElectricBorder borderActivate;
+        int zoomDuration;
+        int border;
+        Qt::Alignment desktopNameAlignment;
+        bool customLayout;
+        int customLayoutRows;
+        
+        bool activated;
+        TimeLine timeline;
+        int paintingDesktop;
+        int highlightedDesktop;
+        Window input;
+        bool keyboardGrab;
+        bool wasWindowMove;
+        EffectWindow* windowMove;
+        QPoint windowMoveDiff;
+        
+        // Soft highlighting
+        QList<TimeLine> hoverTimeline;
+        
+        QSize gridSize;
+        Qt::Orientation orientation;
+        QPoint activeCell;
+        // Per screen variables
+        QList<double> scale; // Because the border isn't a ratio each screen is different
+        QList<double> unscaledBorder;
+        QList<QSizeF> scaledSize;
+        QList<QPointF> scaledOffset;
 
     };
 
