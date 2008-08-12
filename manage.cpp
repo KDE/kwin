@@ -66,8 +66,6 @@ bool Client::manage( Window w, bool isMapped )
     vis = attr.visual;
     bit_depth = attr.depth;
 
-    setupCompositing();
-
     // SELI order all these things in some sane manner
 
     bool init_minimize = false;
@@ -132,6 +130,8 @@ bool Client::manage( Window w, bool isMapped )
 
     original_skip_taskbar = skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
     skip_pager = ( info->state() & NET::SkipPager) != 0;
+
+    setupCompositing();
 
     KStartupInfoId asn_id;
     KStartupInfoData asn_data;
@@ -530,9 +530,9 @@ bool Client::manage( Window w, bool isMapped )
     else // doNotShow
         { // SELI HACK !!!
         hideClient( true );
-        setMappingState( IconicState );
         }
-    assert( mappingState() != WithdrawnState );
+    assert( mapping_state != Withdrawn );
+    blockGeometryUpdates( false );
 
     if( user_time == CurrentTime || user_time == -1U ) // no known user time, set something old
         {

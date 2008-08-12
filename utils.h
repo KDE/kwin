@@ -145,12 +145,19 @@ enum ShadeMode
     ShadeActivated // "shaded", but visible due to alt+tab to the window
     };
 
-enum HiddenPreviews // whether to keep all windows mapped when compositing
-    { // do not reorder (config file)
-    HiddenPreviewsNever, // don't keep pixmaps of unmapped windows at all
-/**/    HiddenPreviewsKeep, // only keep pixmaps, but unmap windows
-/**/    HiddenPreviewUpdate, // unmap, keep, but when needed map back and wait
-    HiddenPreviewsActive // keep windows mapped
+// Whether to keep all windows mapped when compositing (i.e. whether to have
+// actively updated window pixmaps).
+enum HiddenPreviews
+    { 
+    // The normal mode with regard to mapped windows. Hidden (minimized, etc.)
+    // and windows on inactive virtual desktops are not mapped, their pixmaps
+    // are only their icons.
+    HiddenPreviewsNever,
+    // Like normal mode, but shown windows (i.e. on inactive virtual desktops)
+    // are kept mapped, only hidden windows are unmapped.
+    HiddenPreviewsShown,
+    // All windows are kept mapped regardless of their state.
+    HiddenPreviewsAlways
     };
 
 // compile with XShape older than 1.0

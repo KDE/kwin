@@ -231,6 +231,9 @@ class Client
         void hideClient( bool hide );
         bool hiddenPreview() const; // window is mapped in order to get a window pixmap
 
+        virtual void setupCompositing();
+        virtual void finishCompositing();
+
         QString caption( bool full = true ) const;
         void updateCaption();
 
@@ -333,10 +336,7 @@ class Client
         void syncTimeout();
 
     private:
-        void setMappingState( int s ); // ICCCM 4.1.3.1, 4.1.4 , NETWM 2.5.1
-        int mappingState() const;
-        bool isIconicState() const;
-        bool isNormalState() const;
+        void exportMappingState( int s ); // ICCCM 4.1.3.1, 4.1.4 , NETWM 2.5.1
         bool isManaged() const; // returns false if this client is not yet managed
         void updateAllowedActions( bool force = false );
         QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny, bool noframe = false ) const;
@@ -390,9 +390,13 @@ class Client
         void destroyDecoration();
         void updateFrameExtents();
 
-        void rawShow(); // just shows it
-        void rawHide(); // just hides it
-        void setHiddenPreview( bool set, allowed_t );
+        void internalShow( allowed_t );
+        void internalHide( allowed_t );
+        void internalKeep( allowed_t );
+        void map( allowed_t );
+        void unmap( allowed_t );
+        void updateHiddenPreview();
+
         void updateInputShape();
 
         Time readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
@@ -419,7 +423,14 @@ class Client
         QRect initialMoveResizeGeom;
         XSizeHints  xSizeHint;
         void sendSyntheticConfigureNotify();
-        int mapping_state;
+        enum MappingState
+            {
+            Withdrawn, // not handled, as per ICCCM WithdrawnState
+            Mapped, // the frame is mapped
+            Unmapped, // the frame is not mapped
+            Kept // the frame should be unmapped, but is kept (for compositing)
+            };
+        MappingState mapping_state;
         void readTransient();
         Window verifyTransientFor( Window transient_for, bool set );
         void addTransient( Client* cl );
@@ -457,8 +468,6 @@ class Client
         uint urgency : 1; // XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; // don't apply focus stealing prevention to this client
         uint demands_attention : 1;
-        uint hidden_preview : 1; // mapped only to get a window pixmap for compositing
-        uint raw_shown : 1; // for use in rawShow()/rawHide()
         WindowRules client_rules;
         void getWMHints();
         void readIcons();
@@ -595,11 +604,6 @@ inline Group* Client::group()
     return in_group;
     }
 
-inline int Client::mappingState() const
-    {
-    return mapping_state;
-    }
-
 inline
 bool Client::isMinimized() const
     {
@@ -710,19 +714,9 @@ inline int Client::sessionStackingOrder() const
     return sm_stacking_order;
     }
 
-inline bool Client::isIconicState() const
-    {
-    return mapping_state == IconicState;
-    }
-
-inline bool Client::isNormalState() const
-    {
-    return mapping_state == NormalState;
-    }
-
 inline bool Client::isManaged() const
     {
-    return mapping_state != WithdrawnState;
+    return mapping_state != Withdrawn;
     }
 
 inline QPoint Client::clientPos() const
@@ -789,7 +783,7 @@ inline void Client::removeRule( Rules* rule )
 
 inline bool Client::hiddenPreview() const
     {
-    return hidden_preview;
+    return mapping_state == Kept;
     }
 
 KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value );

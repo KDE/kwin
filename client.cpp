@@ -121,7 +121,7 @@ Client::Client( Workspace *ws )
     {
 
     // set the initial mapping state
-    mapping_state = WithdrawnState;
+    mapping_state = Withdrawn;
     desk = 0; // no desktop yet
 
     mode = PositionCenter;
@@ -149,8 +149,6 @@ Client::Client( Workspace *ws )
     urgency = false;
     ignore_focus_stealing = false;
     demands_attention = false;
-    hidden_preview = false;
-    raw_shown = false;
     check_active_modal = false;
 
     Pdeletewindow = 0;
@@ -225,7 +223,7 @@ void Client::releaseWindow( bool on_shutdown )
     // grab X during the release to make removing of properties, setting to withdrawn state
     // and repareting to root an atomic operation (http://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
     grabXServer();
-    setMappingState( WithdrawnState );
+    exportMappingState( WithdrawnState );
     setModal( false ); // otherwise its mainwindow wouldn't get focus
     hidden = true; // so that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if( !on_shutdown )
@@ -533,7 +531,7 @@ static Window shape_helper_window = None;
 
 void Client::updateInputShape()
     {
-    if( hidden_preview ) // sets it to none, don't change
+    if( hiddenPreview()) // sets it to none, don't change
         return;
     if( Extensions::shapeInputAvailable())
         { // There appears to be no way to find out if a window has input
@@ -828,68 +826,58 @@ void Client::updateVisibility()
     {
     if( deleting )
         return;
-    bool show = true;
     if( hidden )
         {
-        setMappingState( IconicState );
         info->setState( NET::Hidden, NET::Hidden );
         setSkipTaskbar( true, false ); // also hide from taskbar
-        rawHide();
-        show = false;
+        if( compositing() && options->hiddenPreviews == HiddenPreviewsAlways )
+            internalKeep( Allowed );
+        else
+            internalHide( Allowed );
+        return;
         }
-    else
-        {
-        setSkipTaskbar( original_skip_taskbar, false );
-        }
+    setSkipTaskbar( original_skip_taskbar, false ); // reset from 'hidden'
     if( minimized )
         {
-        setMappingState( IconicState );
         info->setState( NET::Hidden, NET::Hidden );
-        rawHide();
-        show = false;
+        if( compositing() && options->hiddenPreviews == HiddenPreviewsAlways )
+            internalKeep( Allowed );
+        else
+            internalHide( Allowed );
+        return;
         }
-    if( show )
-        info->setState( 0, NET::Hidden );
+    info->setState( 0, NET::Hidden );
     if( !isOnCurrentDesktop())
         {
-        setMappingState( IconicState );
-        rawHide();
-        show = false;
-        }
-    if( show )
-        {
-        bool belongs_to_desktop = false;
-        for( ClientList::ConstIterator it = group()->members().begin();
-             it != group()->members().end();
-             ++it )
-            if( (*it)->isDesktop())
-                {
-                belongs_to_desktop = true;
-                break;
-                }
-        if( !belongs_to_desktop && workspace()->showingDesktop())
-            workspace()->resetShowingDesktop( true );
-        if( isShade())
-            setMappingState( IconicState );
+        if( compositing() && options->hiddenPreviews != HiddenPreviewsNever )
+            internalKeep( Allowed );
         else
-            setMappingState( NormalState );
-        rawShow();
+            internalHide( Allowed );
+        return;
         }
+    bool belongs_to_desktop = false;
+    for( ClientList::ConstIterator it = group()->members().begin();
+         it != group()->members().end();
+         ++it )
+        if( (*it)->isDesktop())
+            {
+            belongs_to_desktop = true;
+            break;
+            }
+    if( !belongs_to_desktop && workspace()->showingDesktop())
+        workspace()->resetShowingDesktop( true );
+    internalShow( Allowed );
     }
 
 /*!
   Sets the client window's mapping state. Possible values are
   WithdrawnState, IconicState, NormalState.
  */
-void Client::setMappingState(int s)
+void Client::exportMappingState(int s)
     {
     assert( client != None );
     assert( !deleting || s == WithdrawnState );
-    if( mapping_state == s )
-        return;
-    bool was_unmanaged = ( mapping_state == WithdrawnState );
-    mapping_state = s;
-    if( mapping_state == WithdrawnState )
+    if( s == WithdrawnState )
         {
         XDeleteProperty( display(), window(), atoms->wm_state );
         return;
@@ -901,20 +889,60 @@ void Client::setMappingState(int s)
     data[1] = (unsigned long) None;
     XChangeProperty(display(), window(), atoms->wm_state, atoms->wm_state, 32,
         PropModeReplace, (unsigned char *)data, 2);
+    }
 
-    if( was_unmanaged ) // manage() did block_geometry_updates = 1, now it's ok to finally set the geometry
-        blockGeometryUpdates( false );
+void Client::internalShow( allowed_t )
+    {
+    if( mapping_state == Mapped )
+        return;
+    MappingState old = mapping_state;
+    mapping_state = Mapped;
+    if( old == Unmapped || old == Withdrawn )
+        map( Allowed );
+    if( old == Kept )
+        updateHiddenPreview();
+    }
+
+void Client::internalHide( allowed_t )
+    {
+    if( mapping_state == Unmapped )
+        return;
+    MappingState old = mapping_state;
+    mapping_state = Unmapped;
+    if( old == Mapped || old == Kept )
+        unmap( Allowed );
+    if( old == Kept )
+        updateHiddenPreview();
+    addWorkspaceRepaint( geometry());
+    workspace()->clientHidden( this );
+    }
+
+void Client::internalKeep( allowed_t )
+    {
+    assert( compositing());
+    if( mapping_state == Kept )
+        return;
+    MappingState old = mapping_state;
+    mapping_state = Kept;
+    if( old == Unmapped || old == Withdrawn )
+        map( Allowed );
+    updateHiddenPreview();
+    addWorkspaceRepaint( geometry());
+    workspace()->clientHidden( this );
     }
 
 /*!
-  Reimplemented to map the managed window in the window wrapper.
-  Proper mapping state should be set before showing the client.
+  Maps (shows) the client. Note that it is mapping state of the frame,
+  not necessarily the client window itself (i.e. a shaded window is here
+  considered mapped, even though it is in IconicState).
  */
-void Client::rawShow()
+void Client::map( allowed_t )
     {
-    if( raw_shown ) // this flag is used to purely avoid repeated calls to rawShow(),
-        return;     // it doesn't say anything more about the state
-    raw_shown = true;
+    // XComposite invalidates backing pixmaps on unmap (minimize, different
+    // virtual desktop, etc.).  We kept the last known good pixmap around
+    // for use in effects, but now we want to have access to the new pixmap
+    if( compositing() )
+        discardWindowPixmap();
     if( decoration != NULL )
         decoration->widget()->show(); // not really necessary, but let it know the state
     XMapWindow( display(), frameId());
@@ -922,67 +950,31 @@ void Client::rawShow()
         {
         XMapWindow( display(), wrapper );
         XMapWindow( display(), client );
-        }
-    if( options->hiddenPreviews == HiddenPreviewsNever )
-        {
-        // XComposite invalidates backing pixmaps on unmap (minimize, different
-        // virtual desktop, etc.).  We kept the last known good pixmap around
-        // for use in effects, but now we want to have access to the new pixmap
-        if( compositing() )
-            discardWindowPixmap();
+        exportMappingState( NormalState );
         }
     else
-        {
-        if( hidden_preview )
-            setHiddenPreview( false, Allowed );
-        }
+        exportMappingState( IconicState );
     }
 
 /*!
-  Reimplemented to unmap the managed window in the window wrapper.
-  Also informs the workspace.
-  Proper mapping state should be set before hiding the client.
+  Unmaps the client. Again, this is about the frame.
 */
-void Client::rawHide()
+void Client::unmap( allowed_t )
     {
-    if( !raw_shown )
-        return;
-    raw_shown = false;
-    StackingUpdatesBlocker blocker( workspace());
-    addWorkspaceRepaint( geometry());
-    if( options->hiddenPreviews == HiddenPreviewsNever )
-        {
-        // Here it may look like a race condition, as some other client might try to unmap
-        // the window between these two XSelectInput() calls. However, they're supposed to
-        // use XWithdrawWindow(), which also sends a synthetic event to the root window,
-        // which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
-        // will be missed is also very minimal, so I don't think it's needed to grab the server
-        // here.
-            XSelectInput( display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
-            XUnmapWindow( display(), frameId());
-            XUnmapWindow( display(), wrapper );
-            XUnmapWindow( display(), client );
-            XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
-            if( decoration != NULL )
-                decoration->widget()->hide(); // not really necessary, but let it know the state
-        }
-    else
-        {
-        if( !hidden_preview )
-            {
-            setHiddenPreview( true, Allowed );
-            // actually keep the window mapped (taken from rawShow())
-            if( decoration != NULL )
-                decoration->widget()->show(); // not really necessary, but let it know the state
-            XMapWindow( display(), frameId());
-            if( !isShade())
-                {
-                XMapWindow( display(), wrapper );
-                XMapWindow( display(), client );
-                }
-            }
-        }
-    workspace()->clientHidden( this );
+    // Here it may look like a race condition, as some other client might try to unmap
+    // the window between these two XSelectInput() calls. However, they're supposed to
+    // use XWithdrawWindow(), which also sends a synthetic event to the root window,
+    // which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
+    // will be missed is also very minimal, so I don't think it's needed to grab the server
+    // here.
+    XSelectInput( display(), wrapper, ClientWinMask ); // avoid getting UnmapNotify
+    XUnmapWindow( display(), frameId());
+    XUnmapWindow( display(), wrapper );
+    XUnmapWindow( display(), client );
+    XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
+    if( decoration != NULL )
+        decoration->widget()->hide(); // not really necessary, but let it know the state
+    exportMappingState( IconicState );
     }
 
 // XComposite doesn't keep window pixmaps of unmapped windows, which means
@@ -994,18 +986,16 @@ void Client::rawHide()
 // then it's hoped that there will be some other desktop above it *shrug*.
 // Using normal shape would be better, but that'd affect other things, e.g. painting
 // of the actual preview.
-void Client::setHiddenPreview( bool set, allowed_t )
+void Client::updateHiddenPreview()
     {
-    if( set && !hidden_preview )
-        { // set
-        hidden_preview = true;
+    if( hiddenPreview())
+        {
         workspace()->forceRestacking();
         if( Extensions::shapeInputAvailable())
             XShapeCombineRectangles( display(), frameId(), ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
         }
-    else if( !set && hidden_preview )
-        { // unset
-        hidden_preview = false;
+    else
+        {
         workspace()->forceRestacking();
         updateInputShape();
         }

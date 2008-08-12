@@ -631,4 +631,20 @@ void Toplevel::addWorkspaceRepaint( const QRect& r2 )
     workspace()->addRepaint( r );
     }
 
+//****************************************
+// Client
+//****************************************
+
+void Client::setupCompositing()
+    {
+    Toplevel::setupCompositing();
+    updateVisibility(); // for internalKeep()
+    }
+
+void Client::finishCompositing()
+    {
+    Toplevel::finishCompositing();
+    updateVisibility();
+    }
+
 } // namespace

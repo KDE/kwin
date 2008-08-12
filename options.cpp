@@ -225,8 +225,14 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
 
     xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false );
 
-    const HiddenPreviews hps[] = { HiddenPreviewsNever, HiddenPreviewsKeep, HiddenPreviewUpdate, HiddenPreviewsActive };
-    hiddenPreviews = hps[ qBound( 0, config.readEntry( "HiddenPreviews", 0 ), 3 ) ];
+    hiddenPreviews = HiddenPreviewsShown;
+    int hps = config.readEntry( "HiddenPreviews", int(HiddenPreviewsShown) );
+    if( hps == 0 )
+        hiddenPreviews = HiddenPreviewsNever;
+    else if( hps == 3 )
+        hiddenPreviews = HiddenPreviewsShown;
+    else if( hps == 1 )
+        hiddenPreviews = HiddenPreviewsAlways;
     }
 
 

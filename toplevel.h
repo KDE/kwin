@@ -108,8 +108,8 @@ class Toplevel
         double opacity() const;
         int depth() const;
         bool hasAlpha() const;
-        void setupCompositing();
-        void finishCompositing();
+        virtual void setupCompositing();
+        virtual void finishCompositing();
         void addRepaint( const QRect& r );
         void addRepaint( int x, int y, int w, int h );
         void addRepaintFull();

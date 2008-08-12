@@ -750,29 +750,17 @@ bool Client::mapRequestEvent( XMapRequestEvent* e )
         }
     if( isTopMenu() && workspace()->managingTopMenus())
         return true; // kwin controls these
-    switch ( mappingState() )
+    // also copied in clientMessage()
+    if( isMinimized())
+        unminimize();
+    if( isShade())
+        setShade( ShadeNone );
+    if( !isOnCurrentDesktop())
         {
-        case WithdrawnState:
-            assert( false ); // WMs are not supposed to manage clients in Withdrawn state,
-//        manage();      // after initial mapping manage() is called from createClient()
-            break;
-        case IconicState:
-	// also copied in clientMessage()
-            if( isMinimized())
-                unminimize();
-            if( isShade())
-                setShade( ShadeNone );
-            if( !isOnCurrentDesktop())
-                {
-                if( workspace()->allowClientActivation( this ))
-                    workspace()->activateClient( this );
-                else
-                    demandAttention();
-                }
-            break;
-        case NormalState:
-	    // TODO fake MapNotify?
-            break;
+        if( workspace()->allowClientActivation( this ))
+            workspace()->activateClient( this );
+        else
+            demandAttention();
         }
     return true;
     }
@@ -792,25 +780,7 @@ void Client::unmapNotifyEvent( XUnmapEvent* e )
         if( ignore )
             return;
         }
-    switch( mappingState())
-        {
-        case IconicState:
-            releaseWindow();
-          return;
-        case NormalState:
-            // maybe we will be destroyed soon. Check this first.
-            XEvent ev;
-            if( XCheckTypedWindowEvent (display(), window(),
-                DestroyNotify, &ev) ) // TODO I don't like this much
-                {
-                destroyClient(); // deletes this
-                return;
-                }
-            releaseWindow();
-          break;
-    default:
-        assert( false );
-        }
+    releaseWindow();
     }
 
 void Client::destroyNotifyEvent( XDestroyWindowEvent* e )

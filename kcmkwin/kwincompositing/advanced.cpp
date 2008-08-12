@@ -47,7 +47,7 @@ KWinAdvancedCompositingOptions::KWinAdvancedCompositingOptions(QWidget* parent, 
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(compositingModeChanged()));
 
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(ui.updateThumbnails, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.windowThumbnails, SIGNAL(activated(int)), this, SLOT(changed()));
     connect(ui.glMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glTextureFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
@@ -104,7 +104,13 @@ void KWinAdvancedCompositingOptions::load()
     KConfigGroup config(mKWinConfig, "Compositing");
     QString backend = config.readEntry("Backend", "OpenGL");
     ui.compositingType->setCurrentIndex((backend == "XRender") ? 1 : 0);
-    ui.updateThumbnails->setChecked(config.readEntry("HiddenPreviews", 0) == 3);
+    int hps = config.readEntry("HiddenPreviews", 0);
+    if( hps == 1 ) // always
+        ui.windowThumbnails->setCurrentIndex( 0 );
+    else if( hps == 0 ) // never
+        ui.windowThumbnails->setCurrentIndex( 2 );
+    else // shown, or default
+        ui.windowThumbnails->setCurrentIndex( 1 );
 
     QString glMode = config.readEntry("GLMode", "TFP");
     ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
@@ -128,7 +134,8 @@ void KWinAdvancedCompositingOptions::save()
     mPreviousConfig = config.entryMap();
 
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
-    config.writeEntry("HiddenPreviews", ui.updateThumbnails->isChecked() ? 3 : 0);
+    static const int hps[] = { 1 /*always*/, 3 /*shown*/,  0 /*never*/ };
+    config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
     QString glModes[] = { "TFP", "SHM", "Fallback" };
 
     config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
