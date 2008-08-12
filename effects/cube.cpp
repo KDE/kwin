@@ -72,6 +72,8 @@ CubeEffect::CubeEffect()
     , activeScreen( 0 )
     , animateDesktopChange( false )
     , bigCube( false )
+    , capListCreated( false )
+    , capList( 0 )
     {
     KConfigGroup conf = effects->effectConfig( "Cube" );
     borderActivate = (ElectricBorder)conf.readEntry( "BorderActivate", (int)ElectricNone );
@@ -731,14 +733,22 @@ void CubeEffect::paintCap( float z, float zTexture )
     glTranslatef( rect.width()/2, 0.0, -z-zTranslate );
     glRotatef( (1-frontDesktop)*angle, 0.0, 1.0, 0.0 );
 
-    bool texture = false;
-    if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
+    if( !capListCreated )
         {
-        texture = true;
-        paintCapStep( z, zTexture, true );
+        capListCreated = true;
+        glNewList( capList, GL_COMPILE_AND_EXECUTE );
+        bool texture = false;
+        if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
+            {
+            texture = true;
+            paintCapStep( z, zTexture, true );
+            }
+        else
+            paintCapStep( z, zTexture, false );
+        glEndList();
         }
     else
-        paintCapStep( z, zTexture, false );
+        glCallList( capList );
     glPopMatrix();
     }
 
@@ -912,6 +922,9 @@ void CubeEffect::postPaintScreen()
                 effects->destroyInputWindow( input );
 
                 effects->setActiveFullScreenEffect( 0 );
+
+                // delete the GL lists
+                glDeleteLists( capList, 1 );
                 }
             effects->addRepaintFull();
             }
@@ -1495,6 +1508,10 @@ void CubeEffect::setActive( bool active )
             glClipPlane( GL_CLIP_PLANE0, eqn );
             glPopMatrix();
             }
+        // create the needed GL lists
+        capList = glGenLists(1);
+        capListCreated = false;
+        
         effects->addRepaintFull();
         }
     else

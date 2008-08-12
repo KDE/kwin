@@ -107,6 +107,10 @@ class CubeEffect
         int activeScreen;
         bool animateDesktopChange;
         bool bigCube;
+
+        // GL lists
+        bool capListCreated;
+        GLuint capList;
     };
 
 } // namespace
