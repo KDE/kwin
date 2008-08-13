@@ -131,7 +131,7 @@ CubeEffect::CubeEffect()
                 }
             capTexture = new GLTexture( img );
             capTexture->setFilter( GL_LINEAR );
-            capTexture->setWrapMode( GL_CLAMP );
+            capTexture->setWrapMode( GL_CLAMP_TO_EDGE );
             }
         }
 
