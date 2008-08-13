@@ -51,23 +51,27 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     connect(mDrawWindowText, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     layout->addWidget(mDrawWindowText, 0, 0);
 
+    mTabBoxCheck = new QCheckBox(i18n("Use for window switching"), this);
+    connect(mTabBoxCheck, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    layout->addWidget(mTabBoxCheck, 1, 0 );
+
     layout->addWidget(new QLabel(i18n("Activate when cursor is at a specific edge "
-            "or corner of the screen:"), this), 1, 0, 1, 3);
+            "or corner of the screen:"), this), 2, 0, 1, 3);
     layout->addItem(new QSpacerItem(20, 20, QSizePolicy::Fixed), 2, 0, 2, 1);
 
-    layout->addWidget(new QLabel(i18n("for windows on current desktop: "), this), 2, 1);
+    layout->addWidget(new QLabel(i18n("for windows on current desktop: "), this), 3, 1);
     mActivateCombo = new QComboBox;
     addItems(mActivateCombo);
     connect(mActivateCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mActivateCombo, 2, 2);
+    layout->addWidget(mActivateCombo, 3, 2);
 
-    layout->addWidget(new QLabel(i18n("for windows on all desktops: "), this), 3, 1);
+    layout->addWidget(new QLabel(i18n("for windows on all desktops: "), this), 4, 1);
     mActivateAllCombo = new QComboBox;
     addItems(mActivateAllCombo);
     connect(mActivateAllCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mActivateAllCombo, 3, 2);
+    layout->addWidget(mActivateAllCombo, 4, 2);
 
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Expanding), 4, 0, 1, 3);
+    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Expanding), 5, 0, 1, 3);
 
     // Shortcut config
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
@@ -84,9 +88,9 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
-    layout->addWidget(mShortcutEditor, 5, 0, 1, 3);
+    layout->addWidget(mShortcutEditor, 6, 0, 1, 3);
 
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 6, 0, 1, 3);
+    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 7, 0, 1, 3);
 
     load();
     }
@@ -130,6 +134,9 @@ void PresentWindowsEffectConfig::load()
     bool drawWindowCaptions = conf.readEntry("DrawWindowCaptions", true);
     mDrawWindowText->setChecked(drawWindowCaptions);
 
+    bool tabBox = conf.readEntry("TabBox", false);
+    mTabBoxCheck->setChecked(tabBox);
+
     emit changed(false);
     }
 
@@ -153,6 +160,9 @@ void PresentWindowsEffectConfig::save()
     bool drawWindowCaptions = mDrawWindowText->isChecked();
     conf.writeEntry("DrawWindowCaptions", drawWindowCaptions);
 
+    bool tabBox = mTabBoxCheck->isChecked();
+    conf.writeEntry("TabBox", tabBox);
+
     conf.sync();
 
     mShortcutEditor->save();    // undo() will restore to this state from now on
@@ -167,6 +177,7 @@ void PresentWindowsEffectConfig::defaults()
     mActivateCombo->setCurrentIndex( (int)ElectricNone - 1 );
     mActivateAllCombo->setCurrentIndex( (int)ElectricTopLeft );
     mDrawWindowText->setChecked(true);
+    mTabBoxCheck->setChecked(false);
     mShortcutEditor->allDefault();
     emit changed(true);
     }

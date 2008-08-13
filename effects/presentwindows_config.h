@@ -46,6 +46,7 @@ class PresentWindowsEffectConfig : public KCModule
 
     private:
         QCheckBox* mDrawWindowText;
+        QCheckBox* mTabBoxCheck;
         QComboBox* mActivateCombo;
         QComboBox* mActivateAllCombo;
         KShortcutsEditor* mShortcutEditor;

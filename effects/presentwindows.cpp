@@ -49,6 +49,7 @@ PresentWindowsEffect::PresentWindowsEffect()
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     , filterTexture( NULL )
 #endif
+    , mTabBoxMode( false )
     {
     KConfigGroup conf = effects->effectConfig("PresentWindows");
 
@@ -65,6 +66,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricNone);
     borderActivateAll = (ElectricBorder)conf.readEntry("BorderActivateAll", (int)ElectricTopLeft);
     drawWindowCaptions = conf.readEntry("DrawWindowCaptions", true);
+    tabBox = conf.readEntry("TabBox", false);
 
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );
@@ -238,6 +240,8 @@ void PresentWindowsEffect::postPaintScreen()
 
 void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
     {
+    if( mTabBoxMode )
+        return;
     assert( w == mInput );
     if( e->type() == QEvent::MouseMove )
         { // Repaint if the highlighted window changed.
@@ -302,16 +306,32 @@ void PresentWindowsEffect::setActive(bool active)
         windowFilter.clear();
         mWindowsToPresent.clear();
         const EffectWindowList& originalwindowlist = effects->stackingOrder();
-        // Filter out special windows such as panels and taskbars
-        foreach( EffectWindow* window, originalwindowlist )
+        if( mTabBoxMode )
             {
-            if( window->isSpecialWindow() )
-                continue;
-            if( window->isDeleted())
-                continue;
-            if( !mShowWindowsFromAllDesktops && !window->isOnCurrentDesktop() )
-                continue;
-            mWindowsToPresent.append(window);
+            EffectWindowList tabBoxWindows = effects->currentTabBoxWindowList();
+            int selectedWindow = tabBoxWindows.indexOf( effects->currentTabBoxWindow() );
+            for( int i=selectedWindow; i<tabBoxWindows.count(); i++ )
+                {
+                mWindowsToPresent.append( tabBoxWindows[ i ] );
+                }
+            for( int i=selectedWindow-1; i>=0; i-- )
+                {
+                mWindowsToPresent.append( tabBoxWindows[ i ] );
+                }
+            }
+        else
+            {
+            // Filter out special windows such as panels and taskbars
+            foreach( EffectWindow* window, originalwindowlist )
+                {
+                if( window->isSpecialWindow() )
+                    continue;
+                if( window->isDeleted())
+                    continue;
+                if( !mShowWindowsFromAllDesktops && !window->isOnCurrentDesktop() )
+                    continue;
+                mWindowsToPresent.append(window);
+                }
             }
         if( mWindowsToPresent.isEmpty())
             {
@@ -321,7 +341,10 @@ void PresentWindowsEffect::setActive(bool active)
         mActiveness = 0;
         effectActivated();
         rearrangeWindows();
-        setHighlightedWindow( effects->activeWindow());
+        if( mTabBoxMode )
+            setHighlightedWindow( effects->currentTabBoxWindow() );
+        else
+            setHighlightedWindow( effects->activeWindow() );
         }
     else
         {
@@ -736,43 +759,75 @@ void PresentWindowsEffect::assignSlots( EffectWindowList windowlist, const QRect
         }
     int slotwidth = area.width() / columns;
     int slotheight = area.height() / rows;
-    foreach( EffectWindow* w, windowlist )
+    if( mTabBoxMode )
         {
-        WindowData *windowData = &mWindowData[ w ];
-        if( windowData->slot != -1 )
-            continue; // it already has a slot
-        QPoint pos = w->geometry().center();
-        if( pos.x() < area.left())
-            pos.setX( area.left());
-        if( pos.x() > area.right())
-            pos.setX( area.right());
-        if( pos.y() < area.top())
-            pos.setY( area.top());
-        if( pos.y() > area.bottom())
-            pos.setY( area.bottom());
-        int distance = INT_MAX;
-        for( int x = 0;
-             x < columns;
-             ++x )
-            for( int y = 0;
-                 y < rows;
-                 ++y )
-                {
-                int slot = x + y * columns;
-                if( taken[ slot ] )
-                    continue;
-                int xdiff = pos.x() - ( area.x() + slotwidth * x + slotwidth / 2 ); // slotwidth/2 for center
-                int ydiff = pos.y() - ( area.y() + slotheight * y + slotheight / 2 );
-                int dist = int( sqrt( (double)(xdiff * xdiff + ydiff * ydiff) ));
-                if( dist < distance )
+        for( int i=0; i<windowlist.count(); i++ )
+            {
+            EffectWindow *w = windowlist[ i ];
+            WindowData *windowData = &mWindowData[ w ];
+            if( windowData->slot != -1 )
+                continue; // it already has a slot
+            int x = i%columns;
+            int y = i/columns;
+            QPoint pos = w->geometry().center();
+            if( pos.x() < area.left())
+                pos.setX( area.left());
+            if( pos.x() > area.right())
+                pos.setX( area.right());
+            if( pos.y() < area.top())
+                pos.setY( area.top());
+            if( pos.y() > area.bottom())
+                pos.setY( area.bottom());
+            int distance = INT_MAX;
+            int xdiff = pos.x() - ( area.x() + slotwidth * x + slotwidth / 2 ); // slotwidth/2 for center
+            int ydiff = pos.y() - ( area.y() + slotheight * y + slotheight / 2 );
+            int dist = int( sqrt( (double)(xdiff * xdiff + ydiff * ydiff) ));
+            windowData->slot = i;
+            windowData->x = x;
+            windowData->y = y;
+            windowData->slot_distance = dist;
+            }
+        }
+    else
+        {
+        foreach( EffectWindow* w, windowlist )
+            {
+            WindowData *windowData = &mWindowData[ w ];
+            if( windowData->slot != -1 )
+                continue; // it already has a slot
+            QPoint pos = w->geometry().center();
+            if( pos.x() < area.left())
+                pos.setX( area.left());
+            if( pos.x() > area.right())
+                pos.setX( area.right());
+            if( pos.y() < area.top())
+                pos.setY( area.top());
+            if( pos.y() > area.bottom())
+                pos.setY( area.bottom());
+            int distance = INT_MAX;
+            for( int x = 0;
+                x < columns;
+                ++x )
+                for( int y = 0;
+                    y < rows;
+                    ++y )
                     {
-                    distance = dist;
-                    windowData->slot = slot;
-                    windowData->x = x;
-                    windowData->y = y;
-                    windowData->slot_distance = distance;
+                    int slot = x + y * columns;
+                    if( taken[ slot ] )
+                        continue;
+                    int xdiff = pos.x() - ( area.x() + slotwidth * x + slotwidth / 2 ); // slotwidth/2 for center
+                    int ydiff = pos.y() - ( area.y() + slotheight * y + slotheight / 2 );
+                    int dist = int( sqrt( (double)(xdiff * xdiff + ydiff * ydiff) ));
+                    if( dist < distance )
+                        {
+                        distance = dist;
+                        windowData->slot = slot;
+                        windowData->x = x;
+                        windowData->y = y;
+                        windowData->slot_distance = distance;
+                        }
                     }
-                }
+            }
         }
     }
 
@@ -1120,6 +1175,41 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
             0, 0, 0, 0, x, y, width, height );
         }
 #endif
+    }
+
+void PresentWindowsEffect::tabBoxAdded( int mode )
+    {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return;
+    if( mActivated )
+        return;
+    if( !tabBox )
+        return;
+    if( mode == TabBoxWindowsMode && effects->currentTabBoxWindowList().count() > 0 )
+        {
+        mTabBoxMode = true;
+        setActive( true );
+        if( mActivated )
+            effects->refTabBox();
+        }
+    }
+
+void PresentWindowsEffect::tabBoxClosed()
+    {
+    if( mActivated )
+        {
+        mTabBoxMode = false;
+        effects->unrefTabBox();
+        setActive( false );
+        }
+    }
+
+void PresentWindowsEffect::tabBoxUpdated()
+    {
+    if( mActivated )
+        {
+        setHighlightedWindow( effects->currentTabBoxWindow() );
+        }
     }
 
 } // namespace

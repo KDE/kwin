@@ -54,6 +54,10 @@ class PresentWindowsEffect
         virtual bool borderActivated( ElectricBorder border );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
 
+        virtual void tabBoxAdded( int mode );
+        virtual void tabBoxClosed();
+        virtual void tabBoxUpdated();
+
     public slots:
         void setActive(bool active);
         void toggleActive()  { mShowWindowsFromAllDesktops = false; setActive(!mActivated); }
@@ -143,6 +147,8 @@ class PresentWindowsEffect
         ElectricBorder borderActivate;
         ElectricBorder borderActivateAll;
         bool drawWindowCaptions;
+        bool mTabBoxMode;
+        bool tabBox;
     };
 
 } // namespace
