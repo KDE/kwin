@@ -1347,6 +1347,15 @@ QString Client::readName() const
     
 KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, Client, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
 
+// The list is taken from http://www.unicode.org/reports/tr9/
+QChar LRM(0x200E);
+QChar RLM(0x200F);
+QChar LRE(0x202A);
+QChar RLE(0x202B);
+QChar LRO(0x202D);
+QChar RLO(0x202E);
+QChar PDF(0x202C);
+
 void Client::setCaption( const QString& _s, bool force )
     {
 	QString s = _s;
@@ -1362,7 +1371,12 @@ void Client::setCaption( const QString& _s, bool force )
         bool was_suffix = ( !cap_suffix.isEmpty());
         QString machine_suffix;
         if( wmClientMachine( false ) != "localhost" && !isLocalMachine( wmClientMachine( false )))
+	{	// how come doen't it compile in one line? what am i missing...?
+		// machine_suffix = " <@" + wmClientMachine( true ) + '>' + LRM;
             machine_suffix = " <@" + wmClientMachine( true ) + '>';
+	    // this is used to fix issue: http://bugs.kde.org/show_bug.cgi?id=154840
+            machine_suffix = machine_suffix + LRM;
+	}
         QString shortcut_suffix = !shortcut().isEmpty() ? ( " {" + shortcut().toString() + '}' ) : QString();
         cap_suffix = machine_suffix + shortcut_suffix;
         if ( ( !isSpecialWindow() || isToolbar()) && workspace()->findClient( FetchNameInternalPredicate( this ))) 
@@ -1370,7 +1384,7 @@ void Client::setCaption( const QString& _s, bool force )
             int i = 2;
             do 
                 {
-                cap_suffix = machine_suffix + " <" + QString::number(i) + '>' + shortcut_suffix;
+                cap_suffix = machine_suffix + " <" + QString::number(i) + '>' + LRM + shortcut_suffix;
                 i++;
                 } while ( workspace()->findClient( FetchNameInternalPredicate( this )));
             info->setVisibleName( caption().toUtf8() );
