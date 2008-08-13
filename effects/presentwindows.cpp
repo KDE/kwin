@@ -182,7 +182,7 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
         else
             {
             data.xScale = interpolate(data.xScale, windata.scale, mActiveness);
-            data.yScale = interpolate(data.xScale, windata.scale, mActiveness);
+            data.yScale = interpolate(data.yScale, windata.scale, mActiveness);
             data.xTranslate = (int)interpolate(data.xTranslate, windata.area.left() - w->x(), mActiveness);
             data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->y(), mActiveness);
             }
