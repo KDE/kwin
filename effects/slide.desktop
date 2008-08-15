@@ -1,16 +1,20 @@
 [Desktop Entry]
 Name=Slide
+Name[ga]=Sleamhnaigh
 Name[nds]=Glieden
 Name[pt]=Deslize
 Name[pt_BR]=Deslize
 Name[sl]=Drsenje
+Name[sv]=Glidning
 Name[uk]=Ковзання
 Icon=preferences-system-windows-effect-slide
 Comment=Slide windows when switching desktops
+Comment[ga]=Sleamhnaigh fuinneoga agus an deasc reatha á hathrú
 Comment[nds]=Bi't Wesseln vun den Schriefdisch Finstern glieden laten
 Comment[pt]=Deslizar as janelas ao mudar de ecrã
 Comment[pt_BR]=Deslizar as janelas ao mudar de ecrã
 Comment[sl]=Med preklapljanjem med namizji naj okna drsijo
+Comment[sv]=Låt fönster glida vid byte av skrivbord
 Comment[uk]=Під час перемикання стільниць вікна ковзають
 
 Type=Service
