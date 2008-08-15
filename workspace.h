@@ -137,7 +137,6 @@ class Workspace : public QObject, public KDecorationDefines
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client * );
         void restoreSessionStackingOrder( Client* c );
-        void reconfigure();
         void forceRestacking();
 
         void clientHidden( Client*  );
@@ -252,6 +251,9 @@ class Workspace : public QObject, public KDecorationDefines
         void nextDesktop();
         void previousDesktop();
         void circulateDesktopApplications();
+        bool compositingActive();
+        bool waitForCompositingSetup();
+        
         void setCurrentScreen( int new_screen );
 
         QString desktopName( int desk ) const;
@@ -451,6 +453,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         void slotSettingsChanged( int category );
 
+        void reconfigure();
         void slotReconfigure();
         void slotReinitCompositing();
 

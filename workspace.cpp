@@ -348,7 +348,7 @@ void Workspace::init()
     connect( &compositeTimer, SIGNAL( timeout()), SLOT( performCompositing()));
 
     connect(KGlobalSettings::self(), SIGNAL(appearanceChanged()), this,
-            SLOT(slotReconfigure()));
+            SLOT(reconfigure()));
     connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)), this,
             SLOT(slotSettingsChanged(int)));
     connect(KGlobalSettings::self(), SIGNAL(blockShortcuts(int)), this,
@@ -959,6 +959,18 @@ void Workspace::reconfigure()
     reconfigureTimer.start( 200 );
     }
 
+// This DBUS call is used by the compositing kcm. Since the reconfigure()
+// DBUS call delays the actual reconfiguring, it is not possible to immediately
+// call compositingActive(). Therefore the kcm will instead call this to ensure
+// the reconfiguring has already happened.
+bool Workspace::waitForCompositingSetup()
+    {
+    if( !reconfigureTimer.isActive())
+        return false;
+    reconfigureTimer.stop();
+    slotReconfigure();
+    return compositingActive();
+    }
 
 void Workspace::slotSettingsChanged(int category)
     {

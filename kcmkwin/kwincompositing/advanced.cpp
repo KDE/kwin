@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <klocale.h>
 
 #include <QtDBus/QtDBus>
+#include <kmessagebox.h>
 
 #include "compositingprefs.h"
 #include "main.h"
+#include "kwin_interface.h"
 
 namespace KWin
 {
@@ -80,8 +82,26 @@ void KWinAdvancedCompositingOptions::compositingModeChanged()
 
 void KWinAdvancedCompositingOptions::showConfirmDialog()
 {
-    ConfirmDialog confirm;
-    if(!confirm.exec())
+    bool revert = false;
+    // Feel free to extend this to support several kwin instances (multihead) if you
+    // think it makes sense.
+    OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    if( !kwin.compositingActive().value())
+    {
+        KMessageBox::sorry( this, i18n(
+            "Failed to activate desktop effects using the given "
+            "configuration options. Settings will be reverted to their previous values.\n\n"
+            "Check your X configuration. You may also consider changing advanced options, "
+            "especially changing the compositing type." ));
+        revert = true;
+    }
+    else
+    {
+        ConfirmDialog confirm;
+        if( !confirm.exec())
+            revert = true;
+    }
+    if( revert )
     {
         // Revert settings
         KConfigGroup config(mKWinConfig, "Compositing");
@@ -156,6 +176,8 @@ void KWinAdvancedCompositingOptions::reinitKWinCompositing()
     // Send signal to kwin
     mKWinConfig->sync();
     // Send signal to all kwin instances
+    // If this ever changes to using the 'reconfigure' DBUS call, change the compositingActive()
+    // check above.
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reinitCompositing");
     QDBusConnection::sessionBus().send(message);
 }

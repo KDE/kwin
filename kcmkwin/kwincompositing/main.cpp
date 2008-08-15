@@ -21,11 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 
 #include "advanced.h"
+#include "kwin_interface.h"
 
 #include <kaboutdata.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
+#include <kmessagebox.h>
 #include <ksettings/dispatcher.h>
 #include <kpluginselector.h>
 #include <kservicetypetrader.h>
@@ -148,8 +150,26 @@ void KWinCompositingConfig::showAdvancedOptions()
 
 void KWinCompositingConfig::showConfirmDialog()
 {
-    ConfirmDialog confirm;
-    if(!confirm.exec())
+    bool revert = false;
+    // Feel free to extend this to support several kwin instances (multihead) if you
+    // think it makes sense.
+    OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    if( !kwin.waitForCompositingSetup().value())
+    {
+        KMessageBox::sorry( this, i18n(
+            "Failed to activate desktop effects using the given "
+            "configuration options. Settings will be reverted to their previous values.\n\n"
+            "Check your X configuration. You may also consider changing advanced options, "
+            "especially changing the compositing type." ));
+        revert = true;
+    }
+    else
+    {
+        ConfirmDialog confirm;
+        if( !confirm.exec())
+            revert = true;
+    }
+    if( revert )
     {
         // Revert settings
         KConfigGroup config(mKWinConfig, "Compositing");

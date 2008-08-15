@@ -430,6 +430,11 @@ void Workspace::destroyOverlay()
     overlay_shown = false;
     }
 
+bool Workspace::compositingActive()
+    {
+    return compositing();
+    }
+
 //****************************************
 // Toplevel
 //****************************************
