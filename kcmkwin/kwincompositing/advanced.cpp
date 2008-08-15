@@ -152,11 +152,22 @@ void KWinAdvancedCompositingOptions::save()
 
     KConfigGroup config(mKWinConfig, "Compositing");
     mPreviousConfig = config.entryMap();
+    bool showConfirm = false;
+    QString glModes[] = { "TFP", "SHM", "Fallback" };
+    
+    if( config.readEntry("Backend", "OpenGL")
+            != ((ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender")
+        || config.readEntry("GLMode", "TFP") != glModes[ui.glMode->currentIndex()]
+        || config.readEntry("GLDirect", mDefaultPrefs->enableDirectRendering())
+            != ui.glDirect->isChecked()
+        || config.readEntry("GLVSync", mDefaultPrefs->enableVSync()) != ui.glVSync->isChecked())
+        {
+        showConfirm = true;
+        }
 
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
     static const int hps[] = { 1 /*always*/, 3 /*shown*/,  0 /*never*/ };
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
-    QString glModes[] = { "TFP", "SHM", "Fallback" };
 
     config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
     config.writeEntry("GLTextureFilter", ui.glTextureFilter->currentIndex());
@@ -168,7 +179,8 @@ void KWinAdvancedCompositingOptions::save()
     enableButtonApply(false);
 
     reinitKWinCompositing();
-    showConfirmDialog();
+    if( showConfirm )
+        showConfirmDialog();
 }
 
 void KWinAdvancedCompositingOptions::reinitKWinCompositing()
