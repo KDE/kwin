@@ -38,6 +38,8 @@ SphereEffect::SphereEffect()
     , mValid( true )
     , mShader( 0 )
     {
+    reflection = false;
+    animateDesktopChange = false;
     }
 
 SphereEffect::~SphereEffect()
@@ -78,15 +80,12 @@ bool SphereEffect::loadData()
 void SphereEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
     {
     glPushMatrix();
-    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-
-    float cubeAngle = (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f;
-    float radian = (cubeAngle*0.5)*M_PI/180;
-    // height of the triangle compound of  one side of the cube and the two bisecting lines
-    float midpoint = rect.width()*0.5*tan(radian);
-    // radius of the circle
-    float radius = (rect.width()*0.5)/cos(radian);
-    //glTranslatef( 0.0, 0.0, midpoint - radius );
+    float zTranslate = -350.0;
+    if( start )
+        zTranslate *= timeLine.value();
+    if( stop )
+        zTranslate *= ( 1.0 - timeLine.value() );
+    glTranslatef( 0.0, 0.0, zTranslate );
     CubeEffect::paintScene( mask, region, data );
     glPopMatrix();
     }
@@ -141,14 +140,66 @@ void SphereEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
         effects->paintWindow( w, mask, region, data );
     }
 
-void SphereEffect::desktopChanged( int old )
-    {
-    // cylinder effect is not useful to slide
-    }
-
 void SphereEffect::paintCap( float z, float zTexture )
     {
-    // TODO: caps
+    if( bottomCap )
+        {
+        glPushMatrix();
+        glScalef( 1.0, -1.0, 1.0 );
+        }
+    CubeEffect::paintCap( z, zTexture );
+    if( bottomCap )
+        glPopMatrix();
+    }
+
+void SphereEffect::paintCapStep( float z, float zTexture, bool texture )
+    {
+    QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
+    float cubeAngle = (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f;
+    float radius = (rect.width()*0.5)/cos(cubeAngle*0.5*M_PI/180.0);
+    float angle = acos( (rect.height()*0.5)/radius )*180.0/M_PI;
+    angle /= 30;
+    if( texture )
+        capTexture->bind();
+    glPushMatrix();
+    glTranslatef( 0.0, -rect.height()*0.5, 0.0 );
+    glBegin( GL_QUADS );
+    for( int i=0; i<30; i++ )
+        {
+        float topAngle = angle*i*M_PI/180.0;
+        float bottomAngle = angle*(i+1)*M_PI/180.0;
+        float yTop = rect.height() - radius * cos( topAngle );
+        float yBottom = rect.height() -radius * cos( bottomAngle );
+        for( int j=0; j<36; j++ )
+            {
+            float x = radius * sin( topAngle ) * sin( (90.0+j*10.0)*M_PI/180.0 );
+            float z = radius * sin( topAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
+            if( texture )
+                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
+            glVertex3f( x, yTop, z );
+            x = radius * sin( bottomAngle ) * sin( (90.0+j*10.0)*M_PI/180.00 );
+            z = radius * sin( bottomAngle ) * cos( (90.0+j*10.0)*M_PI/180.0 );
+            if( texture )
+                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
+            glVertex3f( x, yBottom, z );
+            x = radius * sin( bottomAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            z = radius * sin( bottomAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            if( texture )
+                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
+            glVertex3f( x, yBottom, z );
+            x = radius * sin( topAngle ) * sin( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            z = radius * sin( topAngle ) * cos( (90.0+(j+1)*10.0)*M_PI/180.0 );
+            if( texture )
+                glTexCoord2f( x/(rect.width())+0.5, 0.5 - z/zTexture * 0.5 );
+            glVertex3f( x, yTop, z );            
+            }
+        }
+    glEnd();
+    glPopMatrix();
+    if( texture )
+        {
+        capTexture->unbind();
+        }
     }
 
 

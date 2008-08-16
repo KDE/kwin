@@ -107,6 +107,7 @@ class CubeEffect
         int activeScreen;
         bool animateDesktopChange;
         bool bigCube;
+        bool bottomCap;
 
         // GL lists
         bool capListCreated;

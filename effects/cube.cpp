@@ -72,6 +72,7 @@ CubeEffect::CubeEffect()
     , activeScreen( 0 )
     , animateDesktopChange( false )
     , bigCube( false )
+    , bottomCap( false )
     , capListCreated( false )
     , capList( 0 )
     {
@@ -613,9 +614,11 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         if( (topCapAfter && !reflectionPainting) || (topCapBefore && reflectionPainting) )
             {
             // paint the bottom cap
+            bottomCap = true;
             glTranslatef( 0.0, rect.height(), 0.0 );
             paintCap( point, zTexture );
             glTranslatef( 0.0, -rect.height(), 0.0 );
+            bottomCap = false;
             }
         if( (topCapBefore && !reflectionPainting) || (topCapAfter && reflectionPainting) )
             {
@@ -629,9 +632,11 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         if( !topCapAfter && !topCapBefore && i == effects->numberOfDesktops()/2 -1 && !slide )
             {
             // paint the bottom cap
+            bottomCap = true;
             glTranslatef( 0.0, rect.height(), 0.0 );
             paintCap( point, zTexture );
             glTranslatef( 0.0, -rect.height(), 0.0 );
+            bottomCap = false;
             // paint the top cap
             paintCap( point, zTexture );
             }
@@ -703,9 +708,11 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         if( (topCapBefore && !reflectionPainting) || (topCapAfter && reflectionPainting) )
             {
             // paint the bottom cap
+            bottomCap = true;
             glTranslatef( 0.0, rect.height(), 0.0 );
             paintCap( point, zTexture );
             glTranslatef( 0.0, -rect.height(), 0.0 );
+            bottomCap = false;
             }
         }
     cube_painting = false;

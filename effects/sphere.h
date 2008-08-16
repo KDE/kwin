@@ -35,10 +35,10 @@ class SphereEffect
         ~SphereEffect();
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void desktopChanged( int old );
     protected:
         virtual void paintScene( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintCap( float z, float zTexture );
+        virtual void paintCapStep( float z, float zTexture, bool texture );
     private:
         bool loadData();
         bool mInited;
