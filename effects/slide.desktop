@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Slide
 Name[ga]=Sleamhnaigh
+Name[gl]=Deslizar
 Name[nds]=Glieden
 Name[pt]=Deslize
 Name[pt_BR]=Deslize
@@ -10,6 +11,7 @@ Name[uk]=Ковзання
 Icon=preferences-system-windows-effect-slide
 Comment=Slide windows when switching desktops
 Comment[ga]=Sleamhnaigh fuinneoga agus an deasc reatha á hathrú
+Comment[gl]=Desliza as fiestras ao trocar de escritorio
 Comment[nds]=Bi't Wesseln vun den Schriefdisch Finstern glieden laten
 Comment[pt]=Deslizar as janelas ao mudar de ecrã
 Comment[pt_BR]=Deslizar as janelas ao mudar de ecrã
