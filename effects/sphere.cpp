@@ -38,6 +38,9 @@ SphereEffect::SphereEffect()
     , mValid( true )
     , mShader( 0 )
     {
+    if( wallpaper )
+        wallpaper->discard();
+    loadConfig( "Sphere" );
     reflection = false;
     animateDesktopChange = false;
     }

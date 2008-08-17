@@ -76,7 +76,18 @@ CubeEffect::CubeEffect()
     , capListCreated( false )
     , capList( 0 )
     {
-    KConfigGroup conf = effects->effectConfig( "Cube" );
+    loadConfig( "Cube" );
+
+    KActionCollection* actionCollection = new KActionCollection( this );
+    KAction* a = static_cast< KAction* >( actionCollection->addAction( "Cube" ));
+    a->setText( i18n("Desktop Cube" ));
+    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+    connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
+    }
+
+void CubeEffect::loadConfig( QString config )
+    {
+    KConfigGroup conf = effects->effectConfig( config );
     borderActivate = (ElectricBorder)conf.readEntry( "BorderActivate", (int)ElectricNone );
     effects->reserveElectricBorder( borderActivate );
 
@@ -141,12 +152,6 @@ CubeEffect::CubeEffect()
 
     verticalTimeLine.setCurveShape( TimeLine::EaseInOutCurve );
     verticalTimeLine.setDuration( rotationDuration );
-
-    KActionCollection* actionCollection = new KActionCollection( this );
-    KAction* a = static_cast< KAction* >( actionCollection->addAction( "Cube" ));
-    a->setText( i18n("Desktop Cube" ));
-    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
-    connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
     }
 
 CubeEffect::~CubeEffect()

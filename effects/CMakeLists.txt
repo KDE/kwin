@@ -174,6 +174,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         coverswitch_config.ui
         cube_config.cpp
         cube_config.ui
+        cylinder_config.cpp
+        cylinder_config.ui
         flipswitch_config.cpp
         flipswitch_config.ui
         invert_config.cpp
@@ -186,6 +188,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         sharpen_config.cpp
         snow_config.cpp
         snow_config.ui
+        sphere_config.cpp
+        sphere_config.ui
         trackmouse_config.cpp
         wobblywindows_config.cpp
         wobblywindows_config.ui
@@ -193,6 +197,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
     install( FILES
         coverswitch_config.desktop
         cube_config.desktop
+        cylinder_config.desktop
         flipswitch_config.desktop
         invert_config.desktop
         lookingglass_config.desktop
@@ -200,6 +205,7 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         mousemark_config.desktop
         sharpen_config.desktop
         snow_config.desktop
+        sphere_config.desktop
         trackmouse_config.desktop
         wobblywindows_config.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )

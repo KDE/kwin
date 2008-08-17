@@ -38,6 +38,10 @@ CylinderEffect::CylinderEffect()
     , mValid( true )
     , mShader( 0 )
     {
+    if( wallpaper )
+        wallpaper->discard();
+    loadConfig( "Cylinder" );
+    animateDesktopChange = false;
     }
 
 CylinderEffect::~CylinderEffect()

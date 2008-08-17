@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include "coverswitch_config.h"
 #include "cube_config.h"
+#include "cylinder_config.h"
 #include "flipswitch_config.h"
 #include "invert_config.h"
 #include "lookingglass_config.h"
@@ -41,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "magnifier_config.h"
 #include "sharpen_config.h"
 #include "snow_config.h"
+#include "sphere_config.h"
 #include "trackmouse_config.h"
 #include "wobblywindows_config.h"
 #endif
@@ -71,6 +73,7 @@ KWIN_EFFECT_CONFIG_FACTORY
 #define OPENGL_PLUGINS \
     registerPlugin<KWin::CoverSwitchEffectConfig>("coverswitch"); \
     registerPlugin<KWin::CubeEffectConfig>("cube"); \
+    registerPlugin<KWin::CylinderEffectConfig>("cylinder"); \
     registerPlugin<KWin::FlipSwitchEffectConfig>("flipswitch"); \
     registerPlugin<KWin::InvertEffectConfig>("invert"); \
     registerPlugin<KWin::LookingGlassEffectConfig>("lookingglass"); \
@@ -78,6 +81,7 @@ KWIN_EFFECT_CONFIG_FACTORY
     registerPlugin<KWin::MagnifierEffectConfig>("magnifier"); \
     registerPlugin<KWin::SharpenEffectConfig>("sharpen"); \
     registerPlugin<KWin::SnowEffectConfig>("snow"); \
+    registerPlugin<KWin::SphereEffectConfig>("sphere"); \
     registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse"); \
     registerPlugin<KWin::WobblyWindowsEffectConfig> ("wobblywindows");
 
