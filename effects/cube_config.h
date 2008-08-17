@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ui_cube_config.h"
 
+class KFileDialog;
 
 namespace KWin
 {
@@ -49,10 +50,12 @@ class CubeEffectConfig : public KCModule
 
     private slots:
         void capsSelectionChanged();
-
+        void showFileDialog();
+        void wallpaperSelected();
     private:
         CubeEffectConfigForm* m_ui;
         KActionCollection* m_actionCollection;
+        KFileDialog* m_dialog;
     };
 
 } // namespace

@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcolorscheme.h>
 #include <KActionCollection>
 #include <kaction.h>
+#include <KFileDialog>
+#include <KImageFilePreview>
 
 #include <QGridLayout>
 #include <QColor>
@@ -69,6 +71,9 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
 
     m_ui->editor->addCollection(m_actionCollection);
 
+    m_ui->wallpaperButton->setIcon(KIcon("document-open"));
+    connect(m_ui->wallpaperButton, SIGNAL(clicked()), this, SLOT(showFileDialog()));
+
     connect(m_ui->screenEdgeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(m_ui->rotationDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeOpacitySlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
@@ -82,6 +87,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
     connect(m_ui->capsImageBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->capColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
+    connect(m_ui->wallpaperLineEdit, SIGNAL(textChanged(QString)), this, SLOT(changed()));
 
     load();
     }
@@ -103,6 +109,7 @@ void CubeEffectConfig::load()
     bool caps = conf.readEntry( "Caps", true );
     bool animateChange = conf.readEntry( "AnimateDesktopChange", false );
     bool bigCube = conf.readEntry( "BigCube", false );
+    m_ui->wallpaperLineEdit->setText( conf.readEntry( "Wallpaper", "" ) );
     if( activateBorder == (int)ElectricNone )
         activateBorder--;
     m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
@@ -179,6 +186,7 @@ void CubeEffectConfig::save()
     conf.writeEntry( "TexturedCaps", m_ui->capsImageBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "AnimateDesktopChange", m_ui->animateDesktopChangeBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "BigCube", m_ui->bigCubeBox->checkState() == Qt::Checked ? true : false );
+    conf.writeEntry( "Wallpaper", m_ui->wallpaperLineEdit->text() );
 
     int activateBorder = m_ui->screenEdgeCombo->currentIndex();
     if( activateBorder == (int)ELECTRIC_COUNT )
@@ -207,6 +215,7 @@ void CubeEffectConfig::defaults()
     m_ui->capsImageBox->setCheckState( Qt::Checked );
     m_ui->animateDesktopChangeBox->setCheckState( Qt::Unchecked );
     m_ui->bigCubeBox->setCheckState( Qt::Unchecked );
+    m_ui->wallpaperLineEdit->setText( "" );
     m_ui->editor->allDefault();
     emit changed(true);
     }
@@ -228,6 +237,36 @@ void CubeEffectConfig::capsSelectionChanged()
         m_ui->capsImageBox->setEnabled( false );
         }
     }
+
+void CubeEffectConfig::showFileDialog()
+    {
+    m_dialog = new KFileDialog( KUrl(), "*.png *.jpeg *.jpg ", m_ui );
+    KImageFilePreview *previewWidget = new KImageFilePreview( m_dialog );
+    m_dialog->setPreviewWidget( previewWidget );
+    m_dialog->setOperationMode( KFileDialog::Opening );
+    m_dialog->setCaption( i18n("Select Wallpaper Image File") );
+    m_dialog->setModal( false );
+    m_dialog->show();
+    m_dialog->raise();
+    m_dialog->activateWindow();
+
+    connect(m_dialog, SIGNAL(okClicked()), this, SLOT(wallpaperSelected()));
+    }
+
+void CubeEffectConfig::wallpaperSelected()
+    {
+    QString wallpaper = m_dialog->selectedFile();
+    disconnect(m_dialog, SIGNAL(okClicked()), this, SLOT(wallpaperSelected()));
+
+    m_dialog->deleteLater();
+
+    if (wallpaper.isEmpty()) {
+        return;
+    }
+
+    m_ui->wallpaperLineEdit->setText( wallpaper );
+    }
+  
 
 } // namespace
 

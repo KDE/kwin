@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>438</height>
+    <height>490</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -51,16 +51,6 @@
       </item>
       <item row="1" column="1" >
        <widget class="QComboBox" name="screenEdgeCombo" />
-      </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_2" >
-        <property name="text" >
-         <string>Screen &amp;edge:</string>
-        </property>
-        <property name="buddy" >
-         <cstring>screenEdgeCombo</cstring>
-        </property>
-       </widget>
       </item>
       <item row="5" column="0" >
        <layout class="QVBoxLayout" name="verticalLayout" >
@@ -159,14 +149,14 @@
       <item row="10" column="1" >
        <widget class="KColorButton" name="backgroundColorButton" />
       </item>
-      <item row="11" column="0" >
+      <item row="13" column="0" >
        <widget class="QCheckBox" name="cubeCapsBox" >
         <property name="text" >
          <string>Cube &amp;Caps</string>
         </property>
        </widget>
       </item>
-      <item row="12" column="0" >
+      <item row="14" column="0" >
        <widget class="QLabel" name="capColorLabel" >
         <property name="text" >
          <string>C&amp;ap Color:</string>
@@ -176,29 +166,63 @@
         </property>
        </widget>
       </item>
-      <item row="12" column="1" >
+      <item row="14" column="1" >
        <widget class="KColorButton" name="capColorButton" />
       </item>
-      <item row="13" column="0" >
+      <item row="15" column="0" >
        <widget class="QCheckBox" name="capsImageBox" >
         <property name="text" >
          <string>Display &amp;image on cube caps</string>
         </property>
        </widget>
       </item>
-      <item row="14" column="0" >
+      <item row="16" column="0" >
        <widget class="QCheckBox" name="animateDesktopChangeBox" >
         <property name="text" >
          <string>&amp;Show cube when desktop changed</string>
         </property>
        </widget>
       </item>
-      <item row="15" column="0" >
+      <item row="17" column="0" >
        <widget class="QCheckBox" name="bigCubeBox" >
         <property name="text" >
          <string>S&amp;pan cube on all screens</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>Screen &amp;edge:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>screenEdgeCombo</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0" >
+       <widget class="QLabel" name="label_7" >
+        <property name="text" >
+         <string>&amp;Wallpaper:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>wallpaperLineEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="0" colspan="2" >
+       <layout class="QHBoxLayout" name="horizontalLayout_3" >
+        <item>
+         <widget class="QLineEdit" name="wallpaperLineEdit" />
+        </item>
+        <item>
+         <widget class="QPushButton" name="wallpaperButton" >
+          <property name="text" >
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -229,8 +253,13 @@
   <tabstop>displayDesktopNameBox</tabstop>
   <tabstop>reflectionBox</tabstop>
   <tabstop>backgroundColorButton</tabstop>
+  <tabstop>wallpaperLineEdit</tabstop>
+  <tabstop>wallpaperButton</tabstop>
   <tabstop>cubeCapsBox</tabstop>
   <tabstop>capColorButton</tabstop>
+  <tabstop>capsImageBox</tabstop>
+  <tabstop>animateDesktopChangeBox</tabstop>
+  <tabstop>bigCubeBox</tabstop>
  </tabstops>
  <resources/>
  <connections>
