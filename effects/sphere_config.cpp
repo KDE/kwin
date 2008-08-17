@@ -176,7 +176,7 @@ void SphereEffectConfig::save()
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "cube" );
+    EffectsHandler::sendReloadMessage( "sphere" );
     }
 
 void SphereEffectConfig::defaults()

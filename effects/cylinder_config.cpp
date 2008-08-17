@@ -187,7 +187,7 @@ void CylinderEffectConfig::save()
     conf.sync();
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage( "cube" );
+    EffectsHandler::sendReloadMessage( "cylinder" );
     }
 
 void CylinderEffectConfig::defaults()
