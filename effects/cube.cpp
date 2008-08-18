@@ -1341,7 +1341,8 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
                     }
                 else
                     {
-                    rotations.enqueue( Left );
+                    if( rotations.count() < effects->numberOfDesktops() )
+                        rotations.enqueue( Left );
                     }
                 break;
             case Qt::Key_Right:
@@ -1354,7 +1355,8 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
                     }
                 else
                     {
-                    rotations.enqueue( Right );
+                    if( rotations.count() < effects->numberOfDesktops() )
+                        rotations.enqueue( Right );
                     }
                 break;
             case Qt::Key_Up:
@@ -1551,7 +1553,7 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
         if( !verticalRotating )
             {
             // display height corresponds to 180*
-            int deltaY = oldpos.y() - pos.y();
+            int deltaY = pos.y() - oldpos.y();
             float deltaVerticalDegrees = (float)deltaY/rect.height()*180.0f;
             manualVerticalAngle -= deltaVerticalDegrees;
             if( deltaVerticalDegrees != 0.0 )
