@@ -31,6 +31,7 @@ namespace KWin
 {
 
 KWIN_EFFECT( sphere, SphereEffect )
+KWIN_EFFECT_SUPPORTED( sphere, SphereEffect::supported() )
 
 SphereEffect::SphereEffect()
     : CubeEffect()
@@ -48,6 +49,13 @@ SphereEffect::SphereEffect()
 SphereEffect::~SphereEffect()
     {
     delete mShader;
+    }
+
+bool SphereEffect::supported()
+    {
+    return GLRenderTarget::supported() &&
+            GLShader::fragmentShaderSupported() &&
+            (effects->compositingType() == OpenGLCompositing);
     }
 
 bool SphereEffect::loadData()

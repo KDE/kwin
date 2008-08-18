@@ -31,6 +31,7 @@ namespace KWin
 {
 
 KWIN_EFFECT( cylinder, CylinderEffect )
+KWIN_EFFECT_SUPPORTED( cylinder, CylinderEffect::supported() )
 
 CylinderEffect::CylinderEffect()
     : CubeEffect()
@@ -47,6 +48,13 @@ CylinderEffect::CylinderEffect()
 CylinderEffect::~CylinderEffect()
     {
     delete mShader;
+    }
+
+bool CylinderEffect::supported()
+    {
+    return GLRenderTarget::supported() &&
+            GLShader::fragmentShaderSupported() &&
+            (effects->compositingType() == OpenGLCompositing);
     }
 
 bool CylinderEffect::loadData()
