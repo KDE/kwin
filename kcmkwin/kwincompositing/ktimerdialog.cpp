@@ -172,51 +172,5 @@ void KTimerDialog::slotUpdateTime( bool update )
 void KTimerDialog::slotInternalTimeout()
 {
     emit timerTimeout();
-    switch ( buttonOnTimeout ) {
-        case Help:
-            slotButtonClicked(KDialog::Help);
-            break;
-        case Default:
-            slotButtonClicked(KDialog::Default);
-            break;
-        case Ok:
-            slotButtonClicked(KDialog::Ok);
-            break;
-        case Apply:
-            slotButtonClicked(KDialog::Apply);
-            break;
-        case Try:
-            slotButtonClicked(KDialog::Try);
-            break;
-        case Cancel:
-            slotButtonClicked(KDialog::Cancel);
-            break;
-        case Close:
-            slotButtonClicked(KDialog::Close);
-            break;
-        case User1:
-            slotButtonClicked(KDialog::User1);
-            break;
-        case User2:
-            slotButtonClicked(KDialog::User2);
-            break;
-        case User3:
-            slotButtonClicked(KDialog::User3);
-            break;
-        case No:
-            slotButtonClicked(KDialog::No);
-            break;
-        case Yes:
-            slotButtonClicked(KDialog::Cancel);
-            break;
-        case Details:
-            slotButtonClicked(KDialog::Details);
-            break;
-        case None:
-            slotButtonClicked(KDialog::None);
-            break;
-        case NoDefault:
-            slotButtonClicked(KDialog::NoDefault);
-            break;     
-    }
+    slotButtonClicked( buttonOnTimeout );
 }
