@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Slide
+Name[et]=Liuglemine
 Name[ga]=Sleamhnaigh
 Name[gl]=Deslizar
 Name[gu]=સ્લાઇડ
+Name[km]=ស្លាយ
 Name[nds]=Glieden
 Name[pt]=Deslize
 Name[pt_BR]=Deslize
@@ -11,9 +13,11 @@ Name[sv]=Glidning
 Name[uk]=Ковзання
 Icon=preferences-system-windows-effect-slide
 Comment=Slide windows when switching desktops
+Comment[et]=Akende liuglemine töölaudade vahetamisel
 Comment[ga]=Sleamhnaigh fuinneoga agus an deasc reatha á hathrú
 Comment[gl]=Desliza as fiestras ao trocar de escritorio
 Comment[gu]=ડેસ્ટોપ્સ બદલતી વખતે વિન્ડોને સરકાવો
+Comment[km]=បង្កើត​ជា​​​បង្អួច​បញ្ចាំ​ង​ស្លាយ​នៅ​ពេល​ប្ដូរ​ផ្ទៃតុ
 Comment[nds]=Bi't Wesseln vun den Schriefdisch Finstern glieden laten
 Comment[pt]=Deslizar as janelas ao mudar de ecrã
 Comment[pt_BR]=Deslizar as janelas ao mudar de ecrã
