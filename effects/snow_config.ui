@@ -21,6 +21,9 @@
         <property name="text" >
          <string>&amp;Number of snowflakes:</string>
         </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
         <property name="buddy" >
          <cstring>numberFlakes</cstring>
         </property>
@@ -40,6 +43,9 @@
        <widget class="QLabel" name="label_2" >
         <property name="text" >
          <string>M&amp;inimum size of snowflake:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>minSizeFlake</cstring>
@@ -63,6 +69,9 @@
        <widget class="QLabel" name="label_3" >
         <property name="text" >
          <string>M&amp;aximum size of snowflake:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>maxSizeFlake</cstring>
