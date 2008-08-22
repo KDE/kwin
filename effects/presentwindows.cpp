@@ -42,8 +42,8 @@ KWIN_EFFECT( presentwindows, PresentWindowsEffect )
 PresentWindowsEffect::PresentWindowsEffect()
     : mShowWindowsFromAllDesktops ( false )
     , mActivated( false )
-    , mActiveness( 0.0 )
-    , mRearranging( 1.0 )
+    , mActiveness()
+    , mRearranging()
     , hasKeyboardGrab( false )
     , mHighlightedWindow( NULL )
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
@@ -70,6 +70,12 @@ PresentWindowsEffect::PresentWindowsEffect()
 
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );
+
+    mActiveness.setCurveShape( TimeLine::EaseInOutCurve );
+    mActiveness.setDuration( 250 );
+    mRearranging.setCurveShape( TimeLine::EaseInOutCurve );
+    mRearranging.setDuration( 250 );
+    mRearranging.setProgress( 1.0 );
     }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -82,24 +88,21 @@ PresentWindowsEffect::~PresentWindowsEffect()
 
 void PresentWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    // How long does it take for the effect to get it's full strength (in ms)
-    const double changeTime = 250;
     if(mActivated)
         {
-        mActiveness = qMin(1.0, mActiveness + time/changeTime);
-        if( mRearranging < 1 )
-            mRearranging = qMin(1.0, mRearranging + time/changeTime);
+        mActiveness.addTime(time);
+        mRearranging.addTime(time);
         }
-    else if(mActiveness > 0.0)
+    else if(mActiveness.value() > 0.0)
         {
-        mActiveness = qMax(0.0, mActiveness - time/changeTime);
-        if(mActiveness <= 0.0)
+        mActiveness.removeTime(time);
+        if(mActiveness.value() <= 0.0)
             effectTerminated();
         }
 
     // We need to mark the screen windows as transformed. Otherwise the whole
     //  screen won't be repainted, resulting in artefacts
-    if( mActiveness > 0.0f )
+    if( mActiveness.value() > 0.0 )
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(data, time);
@@ -107,7 +110,7 @@ void PresentWindowsEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 
 void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( mActiveness > 0.0f )
+    if( mActiveness.value() > 0.0 )
         {
         if( mWindowData.contains(w) )
             {
@@ -117,7 +120,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             // If it's minimized window or on another desktop and effect is not
             //  fully active, then apply some transparency
-            if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
+            if( mActiveness.value() < 1.0 && (w->isMinimized() || !w->isOnCurrentDesktop() ))
                 data.setTranslucent();
             // Change window's highlight
             WindowData& windata = mWindowData[w];
@@ -157,11 +160,11 @@ void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintDat
 
 void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if(mActiveness > 0.0f && mWindowData.contains(w))
+    if(mActiveness.value() > 0.0 && mWindowData.contains(w))
         {
         // Change window's position and scale
         const WindowData& windata = mWindowData[w];
-        if( mRearranging < 1 ) // rearranging
+        if( mRearranging.value() < 1.0 ) // rearranging
             {
             if( windata.old_area.isEmpty()) // no old position
                 {
@@ -169,37 +172,37 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
                 data.yScale = windata.scale;
                 data.xTranslate = windata.area.left() - w->x();
                 data.yTranslate = windata.area.top() - w->y();
-                data.opacity *= interpolate(0.0, 1.0, mRearranging);
+                data.opacity *= interpolate(0.0, 1.0, mRearranging.value());
                 }
             else
                 {
-                data.xScale = interpolate(windata.old_scale, windata.scale, mRearranging);
-                data.yScale = interpolate(windata.old_scale, windata.scale, mRearranging);
+                data.xScale = interpolate(windata.old_scale, windata.scale, mRearranging.value());
+                data.yScale = interpolate(windata.old_scale, windata.scale, mRearranging.value());
                 data.xTranslate = (int)interpolate(windata.old_area.left() - w->x(),
-                    windata.area.left() - w->x(), mRearranging);
+                    windata.area.left() - w->x(), mRearranging.value());
                 data.yTranslate = (int)interpolate(windata.old_area.top() - w->y(),
-                    windata.area.top() - w->y(), mRearranging);
+                    windata.area.top() - w->y(), mRearranging.value());
                 }
             }
         else
             {
-            data.xScale = interpolate(data.xScale, windata.scale, mActiveness);
-            data.yScale = interpolate(data.yScale, windata.scale, mActiveness);
-            data.xTranslate = (int)interpolate(data.xTranslate, windata.area.left() - w->x(), mActiveness);
-            data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->y(), mActiveness);
+            data.xScale = interpolate(data.xScale, windata.scale, mActiveness.value());
+            data.yScale = interpolate(data.yScale, windata.scale, mActiveness.value());
+            data.xTranslate = (int)interpolate(data.xTranslate, windata.area.left() - w->x(), mActiveness.value());
+            data.yTranslate = (int)interpolate(data.yTranslate, windata.area.top() - w->y(), mActiveness.value());
             }
         // Darken all windows except for the one under the cursor
-        data.brightness *= interpolate(1.0, 0.7, mActiveness * (1.0f - windata.highlight));
+        data.brightness *= interpolate(1.0, 0.7, mActiveness.value() * (1.0f - windata.highlight));
         // If it's minimized window or on another desktop and effect is not
         //  fully active, then apply some transparency
-        if( mActiveness < 1.0f && (w->isMinimized() || !w->isOnCurrentDesktop() ))
-            data.opacity *= interpolate(0.0, 1.0, mActiveness);
+        if( mActiveness.value() < 1.0 && (w->isMinimized() || !w->isOnCurrentDesktop() ))
+            data.opacity *= interpolate(0.0, 1.0, mActiveness.value());
         }
 
     // Call the next effect.
     effects->paintWindow( w, mask, region, data );
 
-    if(mActiveness > 0.0f && mWindowData.contains(w))
+    if(mActiveness.value() > 0.0 && mWindowData.contains(w))
         {
         const WindowData& windata = mWindowData[w];
         paintWindowIcon( w, data );
@@ -210,7 +213,7 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
             QRect textArea( w->x() + data.xTranslate, w->y() + data.yTranslate,
                 w->width() * data.xScale, w->height() * data.yScale );
             textArea.adjust( 10, 10, -10, -10 );
-            double opacity = (0.7 + 0.2*windata.highlight) * data.opacity * mActiveness;
+            double opacity = (0.7 + 0.2*windata.highlight) * data.opacity * mActiveness.value();
             QColor textcolor( 255, 255, 255, (int)(255*opacity) );
             QColor bgcolor( 0, 0, 0, (int)(255*opacity) );
             QFont f;
@@ -223,11 +226,11 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
 
 void PresentWindowsEffect::postPaintScreen()
     {
-    if( mActivated && mActiveness < 1.0 ) // activating effect
+    if( mActivated && mActiveness.value() < 1.0 ) // activating effect
         effects->addRepaintFull();
-    if( mActivated && mRearranging < 1.0 ) // rearranging
+    if( mActivated && mRearranging.value() < 1.0 ) // rearranging
         effects->addRepaintFull();
-    if( !mActivated && mActiveness > 0.0 ) // deactivating effect
+    if( !mActivated && mActiveness.value() > 0.0 ) // deactivating effect
         effects->addRepaintFull();
     foreach( const WindowData& d, mWindowData )
         {
@@ -338,7 +341,7 @@ void PresentWindowsEffect::setActive(bool active)
             mActivated = false; // don't activate with nothing to show
             return;
             }
-        mActiveness = 0;
+        mActiveness.setProgress(0.0);
         effectActivated();
         rearrangeWindows();
         if( mTabBoxMode )
@@ -349,8 +352,8 @@ void PresentWindowsEffect::setActive(bool active)
     else
         {
         mWindowsToPresent.clear();
-        mRearranging = 1; // turn off
-        mActiveness = 1; // go back from arranged position
+        mRearranging.setProgress(1.0); // turn off
+        mActiveness.setProgress(1.0); // go back from arranged position
         discardFilterTexture();
         mHighlightedWindow = NULL;
         windowFilter.clear();
@@ -493,7 +496,7 @@ void PresentWindowsEffect::prepareToRearrange()
         (*it).old_area = (*it).area;
         (*it).old_scale = (*it).scale;
         }
-    mRearranging = 0; // start animation again
+    mRearranging.setProgress(0.0); // start animation again
     }
 
 void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList windowlist)
@@ -1140,10 +1143,10 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         // Render some background
-        glColor4f( 0, 0, 0, 0.5 * mActiveness );
+        glColor4f( 0, 0, 0, 0.5 * mActiveness.value() );
         renderRoundBox( QRect( x-3, y-3, width+6, height+6 ), 3 );
         // Render the icon
-        glColor4f( 1, 1, 1, 1 * mActiveness );
+        glColor4f( 1, 1, 1, 1 * mActiveness.value() );
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         data.iconTexture->bind();
         const float verts[ 4 * 2 ] =

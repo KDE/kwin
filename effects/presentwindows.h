@@ -99,9 +99,9 @@ class PresentWindowsEffect
         // Whether the effect is currently activated by the user
         bool mActivated;
         // 0 = not active, 1 = fully active
-        double mActiveness;
+        TimeLine mActiveness;
         // 0 = start of rearranging (old_area), 1 = done
-        double mRearranging;
+        TimeLine mRearranging;
 
         Window mInput;
         bool hasKeyboardGrab;
