@@ -43,6 +43,14 @@ class MagicLampEffect
     private:
         QHash< EffectWindow*, TimeLine > mTimeLineWindows;
         int mActiveAnimations;
+
+        enum IconPosition
+            {
+            Top,
+            Bottom,
+            Left,
+            Right
+            };
     };
 
 } // namespace
