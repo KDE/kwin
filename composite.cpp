@@ -314,6 +314,11 @@ void Workspace::performCompositing()
         || !overlay_visible ) // nothing is visible anyway
         {
         scene->idle();
+        // With vsync, next repaint is scheduled dynamically at the end of this function,
+        // and it can have a very short timeout. If we now idle here, make sure the idling
+        // does not actually caused heavy load by firing the timer often too quickly.
+        if( compositeTimer.interval() != compositeRate )
+            compositeTimer.start( compositeRate );
         return;
         }
     // create a list of all windows in the stacking order
