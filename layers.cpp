@@ -224,8 +224,8 @@ void Workspace::propagateClients( bool propagate_new_clients )
   or of any other special kind are excluded. Also if the window
   doesn't accept focus it's excluded.
  */
-// TODO misleading name for this method
-Client* Workspace::topClientOnDesktop( int desktop, bool unconstrained, bool only_normal ) const
+// TODO misleading name for this method, too many slightly different ways to use it
+Client* Workspace::topClientOnDesktop( int desktop, int screen, bool unconstrained, bool only_normal ) const
     {
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     ClientList list;
@@ -239,6 +239,8 @@ Client* Workspace::topClientOnDesktop( int desktop, bool unconstrained, bool onl
         {
         if( list.at( i )->isOnDesktop( desktop ) && list.at( i )->isShown( false ))
             {
+            if( screen != -1 && list.at( i )->screen() != screen )
+                continue;
             if( !only_normal )
                 return list.at( i );
             if( list.at( i )->wantsTabFocus() && !list.at( i )->isSpecialWindow())
@@ -281,7 +283,8 @@ void Workspace::raiseOrLowerClient( Client *c)
          most_recently_raised->isShown( true ) && c->isOnCurrentDesktop())
         topmost = most_recently_raised;
     else
-        topmost = topClientOnDesktop( c->isOnAllDesktops() ? currentDesktop() : c->desktop());
+        topmost = topClientOnDesktop( c->isOnAllDesktops() ? currentDesktop() : c->desktop(),
+            options->separateScreenFocus ? c->screen() : -1 );
 
     if( c == topmost)
         lowerClient(c);
@@ -832,17 +835,22 @@ Layer Client::belongsToLayer() const
         return DockLayer;
     if( isTopMenu())
         return DockLayer;
-    // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
-    // i.e. the window set to be topmost by the user (also includes transients of the fullscreen window)
-    const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
-    const Client* top = workspace()->topClientOnDesktop( desktop(), true, false );
-    if( isFullScreen() && ac != NULL && top != NULL
-        && ( ac == this || this->group() == ac->group())
-        && ( top == this || this->group() == top->group()))
+    if( isActiveFullScreen())
         return ActiveLayer;
     if( keepAbove())
         return AboveLayer;
     return NormalLayer;
+    }
+
+bool Client::isActiveFullScreen() const
+    {
+    // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
+    // i.e. the window set to be topmost by the user (also includes transients of the fullscreen window)
+    const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
+    const Client* top = workspace()->topClientOnDesktop( desktop(), screen(), true, false );
+    return( isFullScreen() && ac != NULL && top != NULL
+// not needed, for xinerama  && ( ac == this || this->group() == ac->group())
+        && ( top == this || this->group() == top->group()));
     }
 
 } // namespace

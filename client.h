@@ -150,6 +150,7 @@ class Client
         void setFullScreen( bool set, bool user );
         bool isFullScreen() const;
         bool isFullScreenable( bool fullscreen_hack = false ) const;
+        bool isActiveFullScreen() const;
         bool userCanSetFullScreen() const;
         QRect geometryFSRestore() const { return geom_fs_restore; } // only for session saving
         int fullScreenMode() const { return fullscreen_mode; } // only for session saving

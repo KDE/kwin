@@ -1860,6 +1860,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     workspace()->checkActiveScreen( this );
+    workspace()->updateStackingOrder();
     if( resized )
         {
         discardWindowPixmap();
@@ -1932,6 +1933,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     workspace()->checkActiveScreen( this );
+    workspace()->updateStackingOrder();
     discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
@@ -1974,6 +1976,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     updateWindowRules();
     checkMaximizeGeometry();
     workspace()->checkActiveScreen( this );
+    workspace()->updateStackingOrder();
     // client itself is not damaged
     addWorkspaceRepaint( geom_before_block );
     addWorkspaceRepaint( geom ); // trigger repaint of window's new location

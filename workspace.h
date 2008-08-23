@@ -137,6 +137,7 @@ class Workspace : public QObject, public KDecorationDefines
         void updateClientLayer( Client* c );
         void raiseOrLowerClient( Client * );
         void restoreSessionStackingOrder( Client* c );
+        void updateStackingOrder( bool propagate_new_clients = false );
         void forceRestacking();
 
         void clientHidden( Client*  );
@@ -196,7 +197,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         ClientList ensureStackingOrder( const ClientList& clients ) const;
 
-        Client* topClientOnDesktop( int desktop, bool unconstrained = false, bool only_normal = true ) const;
+        Client* topClientOnDesktop( int desktop, int screen, bool unconstrained = false, bool only_normal = true ) const;
         Client* findDesktop( bool topmost, int desktop ) const;
         void sendClientToDesktop( Client* c, int desktop, bool dont_activate );
         void windowToPreviousDesktop( Client* c );
@@ -517,7 +518,6 @@ class Workspace : public QObject, public KDecorationDefines
         bool establishTabBoxGrab();
         void removeTabBoxGrab();
 
-        void updateStackingOrder( bool propagate_new_clients = false );
         ToplevelList compositingStackingOrder() const;
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
         ClientList constrainedStackingOrder();
