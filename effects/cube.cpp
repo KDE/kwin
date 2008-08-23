@@ -73,6 +73,7 @@ CubeEffect::CubeEffect()
     , animateDesktopChange( false )
     , bigCube( false )
     , bottomCap( false )
+    , closeOnMouseRelease( false )
     , capListCreated( false )
     , capList( 0 )
     {
@@ -100,6 +101,7 @@ void CubeEffect::loadConfig( QString config )
     bigCube = conf.readEntry( "BigCube", false );
     capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     paintCaps = conf.readEntry( "Caps", true );
+    closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
     QString file = conf.readEntry( "Wallpaper", QString("") );
     if( !file.isEmpty() )
         {
@@ -1579,6 +1581,8 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
     if( oldbuttons.testFlag( Qt::LeftButton) && !buttons.testFlag( Qt::LeftButton ) )
         {
         XDefineCursor( display(), input, QCursor( Qt::OpenHandCursor).handle() );
+        if( closeOnMouseRelease )
+            setActive( false );
         }
     if( oldbuttons.testFlag( Qt::RightButton) && !buttons.testFlag( Qt::RightButton ) )
         {

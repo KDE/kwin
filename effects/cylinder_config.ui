@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>490</height>
+    <height>585</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -216,6 +216,13 @@
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="17" column="0" >
+       <widget class="QCheckBox" name="closeOnMouseReleaseBox" >
+        <property name="text" >
+         <string>Close after mouse dra&amp;gging</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

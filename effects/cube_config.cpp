@@ -88,6 +88,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->capsImageBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->capColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
     connect(m_ui->wallpaperLineEdit, SIGNAL(textChanged(QString)), this, SLOT(changed()));
+    connect(m_ui->closeOnMouseReleaseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -109,6 +110,7 @@ void CubeEffectConfig::load()
     bool caps = conf.readEntry( "Caps", true );
     bool animateChange = conf.readEntry( "AnimateDesktopChange", false );
     bool bigCube = conf.readEntry( "BigCube", false );
+    bool closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
     m_ui->wallpaperLineEdit->setText( conf.readEntry( "Wallpaper", "" ) );
     if( activateBorder == (int)ElectricNone )
         activateBorder--;
@@ -165,6 +167,14 @@ void CubeEffectConfig::load()
         {
         m_ui->bigCubeBox->setCheckState( Qt::Unchecked );
         }
+    if( closeOnMouseRelease )
+        {
+        m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Checked );
+        }
+    else
+        {
+        m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
+        }
     m_ui->backgroundColorButton->setColor( background );
     m_ui->capColorButton->setColor( capColor );
     capsSelectionChanged();
@@ -186,6 +196,7 @@ void CubeEffectConfig::save()
     conf.writeEntry( "TexturedCaps", m_ui->capsImageBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "AnimateDesktopChange", m_ui->animateDesktopChangeBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "BigCube", m_ui->bigCubeBox->checkState() == Qt::Checked ? true : false );
+    conf.writeEntry( "CloseOnMouseRelease", m_ui->closeOnMouseReleaseBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "Wallpaper", m_ui->wallpaperLineEdit->text() );
 
     int activateBorder = m_ui->screenEdgeCombo->currentIndex();
@@ -215,6 +226,7 @@ void CubeEffectConfig::defaults()
     m_ui->capsImageBox->setCheckState( Qt::Checked );
     m_ui->animateDesktopChangeBox->setCheckState( Qt::Unchecked );
     m_ui->bigCubeBox->setCheckState( Qt::Unchecked );
+    m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
     m_ui->wallpaperLineEdit->setText( "" );
     m_ui->editor->allDefault();
     emit changed(true);

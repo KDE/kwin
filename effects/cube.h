@@ -109,6 +109,7 @@ class CubeEffect
         bool animateDesktopChange;
         bool bigCube;
         bool bottomCap;
+        bool closeOnMouseRelease;
 
         // GL lists
         bool capListCreated;
