@@ -723,30 +723,32 @@ bool Workspace::keepTransientAbove( const Client* mainwindow, const Client* tran
     return true;
     }
 
-// Returns all windows in their stacking order on the root window, used only by compositing.
-// TODO This possibly should be optimized to avoid the X roundtrip and building it every pass.
-ToplevelList Workspace::compositingStackingOrder() const
+// Returns all windows in their stacking order on the root window.
+ToplevelList Workspace::xStackingOrder() const
     {
+    if( !x_stacking_dirty )
+        return x_stacking;
+    x_stacking_dirty = false;
+    x_stacking.clear();
     Window dummy;
     Window* windows = NULL;
     unsigned int count = 0;
     XQueryTree( display(), rootWindow(), &dummy, &dummy, &windows, &count );
-    ToplevelList ret;
     // use our own stacking order, not the X one, as they may differ
     foreach( Client* c, stacking_order )
-        ret.append( c );
+        x_stacking.append( c );
     for( unsigned int i = 0;
          i < count;
          ++i )
         {
         if( Unmanaged* c = findUnmanaged( WindowMatchPredicate( windows[ i ] )))
-            ret.append( c );
+            x_stacking.append( c );
         }
     foreach( Deleted* c, deleted )
-        ret.append( c );
+        x_stacking.append( c );
     if( windows != NULL )
         XFree( windows );
-    return ret;
+    return x_stacking;
     }
 
 //*******************************

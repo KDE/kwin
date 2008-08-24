@@ -518,7 +518,7 @@ class Workspace : public QObject, public KDecorationDefines
         bool establishTabBoxGrab();
         void removeTabBoxGrab();
 
-        ToplevelList compositingStackingOrder() const;
+        ToplevelList xStackingOrder() const;
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
         ClientList constrainedStackingOrder();
         void raiseClientWithinApplication( Client* c );
@@ -613,6 +613,8 @@ class Workspace : public QObject, public KDecorationDefines
         ClientList unconstrained_stacking_order; // topmost last
         ClientList stacking_order; // topmost last
         bool force_restacking;
+        mutable ToplevelList x_stacking; // from XQueryTree()
+        mutable bool x_stacking_dirty;
         QVector< ClientList > focus_chain; // currently ative last
         ClientList global_focus_chain; // this one is only for things like tabbox's MRU
         ClientList should_get_focus; // last is most recent

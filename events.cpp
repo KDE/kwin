@@ -279,6 +279,10 @@ bool Workspace::workspaceEvent( XEvent * e )
                 return true;
                 }
             break;
+        case ConfigureNotify:
+            if( e->xconfigure.event == rootWindow())
+                x_stacking_dirty = true;
+            break;
         };
 
     if( Client* c = findClient( WindowMatchPredicate( e->xany.window )))

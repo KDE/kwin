@@ -99,6 +99,7 @@ Workspace::Workspace( bool restore )
     active_screen     (0),
     delayfocus_client (0),
     force_restacking( false ),
+    x_stacking_dirty( true ),
     showing_desktop( false ),
     block_showing_desktop( 0 ),
     was_user_interaction (false),
@@ -544,6 +545,7 @@ void Workspace::addClient( Client* c, allowed_t )
         stacking_order.append( c );    // c to be in stacking_order
     if( c->isTopMenu())
         addTopMenu( c );
+    x_stacking_dirty = true;
     updateClientArea(); // this cannot be in manage(), because the client got added only now
     updateClientLayer( c );
     if( c->isDesktop())
@@ -566,6 +568,7 @@ void Workspace::addClient( Client* c, allowed_t )
 void Workspace::addUnmanaged( Unmanaged* c, allowed_t )
     {
     unmanaged.append( c );
+    x_stacking_dirty = true;
     }
 
 /*
@@ -597,6 +600,7 @@ void Workspace::removeClient( Client* c, allowed_t )
     desktops.removeAll( c );
     unconstrained_stacking_order.removeAll( c );
     stacking_order.removeAll( c );
+    x_stacking_dirty = true;
     for( int i = 1;
          i <= numberOfDesktops();
          ++i )
@@ -633,12 +637,14 @@ void Workspace::removeUnmanaged( Unmanaged* c, allowed_t )
     {
     assert( unmanaged.contains( c ));
     unmanaged.removeAll( c );
+    x_stacking_dirty = true;
     }
 
 void Workspace::addDeleted( Deleted* c, allowed_t )
     {
     assert( !deleted.contains( c ));
     deleted.append( c );
+    x_stacking_dirty = true;
     }
 
 void Workspace::removeDeleted( Deleted* c, allowed_t )
@@ -649,6 +655,7 @@ void Workspace::removeDeleted( Deleted* c, allowed_t )
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->windowDeleted( c->effectWindow());
     deleted.removeAll( c );
+    x_stacking_dirty = true;
     }
 
 void Workspace::updateFocusChains( Client* c, FocusChainChange change )
