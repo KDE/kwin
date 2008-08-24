@@ -329,6 +329,7 @@ class Client
 
     protected:
         virtual void debug( kdbgstream& stream ) const;
+        virtual bool shouldUnredirect() const;
 
     private slots:
         void pingTimeout();

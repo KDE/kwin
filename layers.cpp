@@ -748,6 +748,7 @@ ToplevelList Workspace::xStackingOrder() const
         x_stacking.append( c );
     if( windows != NULL )
         XFree( windows );
+    const_cast< Workspace* >( this )->checkUnredirect();
     return x_stacking;
     }
 

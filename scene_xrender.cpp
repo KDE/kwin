@@ -261,6 +261,8 @@ void SceneXrender::paintTransformedScreen( int orig_mask )
             // The window can clip by its opaque parts the windows below.
             region -= w->transformedShape();
             }
+        // translucency or window transformed require window pixmap
+        w->suspendUnredirect( data.mask & ( PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED )); 
         }
     if( !( orig_mask & PAINT_SCREEN_BACKGROUND_FIRST ))
         paintBackground( region ); // Fill any areas of the root window not covered by windows

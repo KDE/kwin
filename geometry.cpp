@@ -1861,6 +1861,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     checkMaximizeGeometry();
     workspace()->checkActiveScreen( this );
     workspace()->updateStackingOrder();
+    workspace()->checkUnredirect();
     if( resized )
         {
         discardWindowPixmap();
@@ -1934,6 +1935,7 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     checkMaximizeGeometry();
     workspace()->checkActiveScreen( this );
     workspace()->updateStackingOrder();
+    workspace()->checkUnredirect();
     discardWindowPixmap();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
@@ -1977,6 +1979,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     checkMaximizeGeometry();
     workspace()->checkActiveScreen( this );
     workspace()->updateStackingOrder();
+    workspace()->checkUnredirect();
     // client itself is not damaged
     addWorkspaceRepaint( geom_before_block );
     addWorkspaceRepaint( geom ); // trigger repaint of window's new location
@@ -2328,6 +2331,7 @@ void Client::setFullScreen( bool set, bool user )
             }
         }
     updateWindowRules();
+    workspace()->checkUnredirect();
     }
 
 int Client::checkFullScreenHack( const QRect& geom ) const

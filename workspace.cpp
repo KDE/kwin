@@ -141,7 +141,8 @@ Workspace::Workspace( bool restore )
     overlay_visible( true ),
     overlay_shown( false ),
     transSlider( NULL ),
-    transButton( NULL )
+    transButton( NULL ),
+    forceUnredirectCheck( true )
     {
     (void) new KWinAdaptor( this );
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -165,6 +166,8 @@ Workspace::Workspace( bool restore )
     connect( &temporaryRulesMessages, SIGNAL( gotMessage( const QString& )),
         this, SLOT( gotTemporaryRulesMessage( const QString& )));
     connect( &rulesUpdatedTimer, SIGNAL( timeout()), this, SLOT( writeWindowRules()));
+    connect( &unredirectTimer, SIGNAL( timeout()), this, SLOT( delayedCheckUnredirect()));
+    unredirectTimer.setSingleShot( true );
 
     updateXTime(); // needed for proper initialization of user_time in Client ctor
 

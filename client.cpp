@@ -901,6 +901,7 @@ void Client::internalShow( allowed_t )
         map( Allowed );
     if( old == Kept )
         updateHiddenPreview();
+    workspace()->checkUnredirect();
     }
 
 void Client::internalHide( allowed_t )
@@ -915,6 +916,7 @@ void Client::internalHide( allowed_t )
         updateHiddenPreview();
     addWorkspaceRepaint( geometry());
     workspace()->clientHidden( this );
+    workspace()->checkUnredirect();
     }
 
 void Client::internalKeep( allowed_t )
@@ -929,6 +931,7 @@ void Client::internalKeep( allowed_t )
     updateHiddenPreview();
     addWorkspaceRepaint( geometry());
     workspace()->clientHidden( this );
+    workspace()->checkUnredirect();
     }
 
 /*!

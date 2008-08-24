@@ -319,6 +319,10 @@ void Workspace::performCompositing()
         // does not actually caused heavy load by firing the timer often too quickly.
         if( compositeTimer.interval() != compositeRate )
             compositeTimer.start( compositeRate );
+        // Note: It would seem here we should undo suspended unredirect, but when scenes need
+        // it for some reason, e.g. transformations or translucency, the next pass that does not
+        // need this anymore and paints normally will also reset the suspended unredirect.
+        // Otherwise the window would not be painted normally anyway.
         return;
         }
     // create a list of all windows in the stacking order
@@ -335,7 +339,7 @@ void Workspace::performCompositing()
 #if 0
     // There is a bug somewhere that prevents this from working properly (#160393), but additionally
     // this cannot be used so carelessly - needs protections against broken clients, the window
-    // should not get focus before it's displayed and so on.
+    // should not get focus before it's displayed, handle unredirected windows properly and so on.
     foreach( Toplevel* c, tmp )
         if( c->readyForPainting())
             windows.append( c );
@@ -406,6 +410,8 @@ void Workspace::setupOverlay( Window w )
     assert( Extensions::shapeInputAvailable());
     XSetWindowBackgroundPixmap( display(), overlay, None );
     XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
+    XRectangle rec = { 0, 0, displayWidth(), displayHeight() };
+    XShapeCombineRectangles( display(), overlay, ShapeBounding, 0, 0, &rec, 1, ShapeSet, Unsorted );
     if( w != None )
         {
         XSetWindowBackgroundPixmap( display(), w, None );
@@ -428,6 +434,10 @@ void Workspace::destroyOverlay()
     {
     if( overlay == None )
         return;
+    // reset the overlay shape
+    XRectangle rec = { 0, 0, displayWidth(), displayHeight() };
+    XShapeCombineRectangles( display(), overlay, ShapeBounding, 0, 0, &rec, 1, ShapeSet, Unsorted );
+    XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, &rec, 1, ShapeSet, Unsorted );
 #ifdef HAVE_XCOMPOSITE_OVERLAY
     XCompositeReleaseOverlayWindow( display(), overlay );
 #endif
@@ -438,6 +448,58 @@ void Workspace::destroyOverlay()
 bool Workspace::compositingActive()
     {
     return compositing();
+    }
+
+// force is needed when the list of windows changes (e.g. a window goes away)
+void Workspace::checkUnredirect( bool force )
+    {
+    if( !compositing() || overlay == None || !options->unredirectFullscreen )
+        return;
+    if( force )
+        forceUnredirectCheck = true;
+    if( !unredirectTimer.isActive())
+        unredirectTimer.start( 0 );
+    }
+
+void Workspace::delayedCheckUnredirect()
+    {
+    ToplevelList list;
+    bool changed = forceUnredirectCheck;
+    foreach( Client* c, clients )
+        list.append( c );
+    foreach( Unmanaged* c, unmanaged )
+        list.append( c );
+    foreach( Toplevel* c, list )
+        {
+        if( c->updateUnredirectedState())
+            changed = true;
+        }
+    // no desktops, no Deleted ones
+    if( !changed )
+        return;
+    forceUnredirectCheck = false;
+    // Cut out parts from the overlay window where unredirected windows are,
+    // so that they are actually visible.
+    QRegion reg( 0, 0, displayWidth(), displayHeight());
+    foreach( Toplevel* c, list )
+        {
+        if( c->unredirected())
+            reg -= c->geometry();
+        }
+    QVector< QRect > rects = reg.rects();
+    XRectangle* xrects = new XRectangle[ rects.count() ];
+    for( int i = 0;
+         i < rects.count();
+         ++i )
+        {
+        xrects[ i ].x = rects[ i ].x();
+        xrects[ i ].y = rects[ i ].y();
+        xrects[ i ].width = rects[ i ].width();
+        xrects[ i ].height = rects[ i ].height();
+        }
+    XShapeCombineRectangles( display(), overlay, ShapeBounding, 0, 0,
+        xrects, rects.count(), ShapeSet, Unsorted );
+    delete[] xrects;
     }
 
 //****************************************
@@ -455,6 +517,8 @@ void Toplevel::setupCompositing()
     damage_region = QRegion( 0, 0, width(), height());
     effect_window = new EffectWindowImpl();
     effect_window->setWindow( this );
+    unredirect = false;
+    workspace()->checkUnredirect( true );
 #endif
     }
 
@@ -463,6 +527,7 @@ void Toplevel::finishCompositing()
 #ifdef KWIN_HAVE_COMPOSITING
     if( damage_handle == None )
         return;
+    workspace()->checkUnredirect( true );
     if( effect_window->window() == this ) // otherwise it's already passed to Deleted, don't free data
         {
         discardWindowPixmap();
@@ -491,6 +556,8 @@ Pixmap Toplevel::createWindowPixmap()
     {
 #ifdef KWIN_HAVE_COMPOSITING
     assert( compositing());
+    if( unredirected())
+        return None;
     grabXServer();
     KXErrorHandler err;
     Pixmap pix = XCompositeNameWindowPixmap( display(), frameId());
@@ -641,6 +708,34 @@ void Toplevel::addWorkspaceRepaint( const QRect& r2 )
     workspace()->addRepaint( r );
     }
 
+bool Toplevel::updateUnredirectedState()
+    {
+    assert( compositing());
+    bool should = shouldUnredirect() && !unredirectSuspend && !shape() && !hasAlpha() && opacity() == 1.0;
+    if( should && !unredirect )
+        {
+        unredirect = true;
+        kDebug( 1212 ) << "Unredirecting:" << this;
+        XCompositeUnredirectWindow( display(), frameId(), CompositeRedirectManual );
+        return true;
+        }
+    else if( !should && unredirect )
+        {
+        unredirect = false;
+        kDebug( 1212 ) << "Redirecting:" << this;
+        XCompositeRedirectWindow( display(), frameId(), CompositeRedirectManual );
+        discardWindowPixmap();
+        return true;
+        }
+    return false;
+    }
+
+void Toplevel::suspendUnredirect( bool suspend )
+    {
+    unredirectSuspend = suspend;
+    workspace()->checkUnredirect();
+    }
+
 //****************************************
 // Client
 //****************************************
@@ -655,6 +750,61 @@ void Client::finishCompositing()
     {
     Toplevel::finishCompositing();
     updateVisibility();
+    }
+
+bool Client::shouldUnredirect() const
+    {
+    if( isActiveFullScreen())
+        {
+        ToplevelList stacking = workspace()->xStackingOrder();
+        for( int pos = stacking.count() - 1;
+             pos >= 0;
+             --pos )
+            {
+            Toplevel* c = stacking.at( pos );
+            if( c == this ) // is not covered by any other window, ok to unredirect
+                return true;
+            if( c->geometry().intersects( geometry()))
+                return false;
+            }
+        abort();
+        }
+    return false;
+    }
+
+//****************************************
+// Unmanaged
+//****************************************
+
+bool Unmanaged::shouldUnredirect() const
+    {
+// it must cover whole display or one xinerama screen, and be the topmost there
+    if( geometry() == workspace()->clientArea( FullArea, geometry().center(), workspace()->currentDesktop())
+        || geometry() == workspace()->clientArea( ScreenArea, geometry().center(), workspace()->currentDesktop()))
+        {
+        ToplevelList stacking = workspace()->xStackingOrder();
+        for( int pos = stacking.count() - 1;
+             pos >= 0;
+             --pos )
+            {
+            Toplevel* c = stacking.at( pos );
+            if( c == this ) // is not covered by any other window, ok to unredirect
+                return true;
+            if( c->geometry().intersects( geometry()))
+                return false;
+            }
+        abort();
+        }
+    return false;
+    }
+
+//****************************************
+// Deleted
+//****************************************
+
+bool Deleted::shouldUnredirect() const
+    {
+    return false;
     }
 
 } // namespace

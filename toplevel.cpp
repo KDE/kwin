@@ -43,6 +43,8 @@ Toplevel::Toplevel( Workspace* ws )
     , is_shape( false )
     , effect_window( NULL )
     , wmClientLeaderWin( 0 )
+    , unredirect( false )
+    , unredirectSuspend( false )
     {
     }
 

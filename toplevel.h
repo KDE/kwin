@@ -110,6 +110,9 @@ class Toplevel
         bool hasAlpha() const;
         virtual void setupCompositing();
         virtual void finishCompositing();
+        bool updateUnredirectedState();
+        bool unredirected() const;
+        void suspendUnredirect( bool suspend );
         void addRepaint( const QRect& r );
         void addRepaint( int x, int y, int w, int h );
         void addRepaintFull();
@@ -144,6 +147,7 @@ class Toplevel
         void disownDataPassedToDeleted();
         friend kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );
         void deleteEffectWindow();
+        virtual bool shouldUnredirect() const = 0;
         QRect geom;
         Visual* vis;
         int bit_depth;
@@ -172,6 +176,8 @@ class Toplevel
         QByteArray client_machine;
         WId wmClientLeaderWin;
         QByteArray window_role;
+        bool unredirect;
+        bool unredirectSuspend; // when unredirected, but pixmap is needed temporarily
         // when adding new data members, check also copyToDeleted()
     };
 
@@ -394,6 +400,11 @@ inline QByteArray Toplevel::windowRole() const
 inline pid_t Toplevel::pid() const
     {
     return info->pid();
+    }
+
+inline bool Toplevel::unredirected() const
+    {
+    return unredirect;
     }
 
 kdbgstream& operator<<( kdbgstream& stream, const Toplevel* );

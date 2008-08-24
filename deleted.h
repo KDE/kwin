@@ -41,6 +41,7 @@ class Deleted
         virtual QSize clientSize() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
+        virtual bool shouldUnredirect() const;
     private:
         Deleted( Workspace *ws ); // use create()
         void copyToDeleted( Toplevel* c );

@@ -116,7 +116,7 @@ void Scene::paintScreen( int* mask, QRegion* region )
         *mask &= ~PAINT_SCREEN_REGION;
         *region = infiniteRegion();
         }
-    else if(  *mask & PAINT_SCREEN_REGION )
+    else if( *mask & PAINT_SCREEN_REGION )
         { // make sure not to go outside visible screen
         *region &= QRegion( 0, 0, displayWidth(), displayHeight());
         }
@@ -198,6 +198,9 @@ void Scene::paintGenericScreen( int orig_mask, ScreenPaintData )
         if( !w->isPaintingEnabled())
             continue;
         phase2.append( Phase2Data( w, infiniteRegion(), data.clip, data.mask, data.quads ));
+        // transformations require window pixmap
+        w->suspendUnredirect( data.mask
+            & ( PAINT_WINDOW_TRANSLUCENT | PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED )); 
         }
 
     foreach( const Phase2Data &d, phase2 )
@@ -212,6 +215,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
     // TODO PAINT_WINDOW_* flags don't belong here, that's why it's in the assert,
     // perhaps the two enums should be separated
     assert(( orig_mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED
+        | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS
         | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_OPAQUE )) == 0 );
     QHash< Window*, Phase2Data > phase2data;
     // Draw each opaque window top to bottom, subtracting the bounding rect of
@@ -221,6 +225,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
          --i )
         {
         Window* w = stacking_order[ i ];
+        w->suspendUnredirect( true );
         WindowPrePaintData data;
         data.mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
@@ -233,6 +238,8 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         foreach( const WindowQuad &q, data.quads )
             if( q.isTransformed())
                 kFatal( 1212 ) << "Pre-paint calls are not allowed to transform quads!" ;
+        if( data.mask & PAINT_WINDOW_TRANSFORMED )
+            kFatal( 1212 ) << "PAINT_WINDOW_TRANSFORMED without PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS!";
 #endif
         if( !w->isPaintingEnabled())
             continue;
@@ -240,6 +247,8 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
             painted_region |= data.paint; // make sure it makes it to the screen
         // Schedule the window for painting
         phase2data[w] = Phase2Data( w, data.paint, data.clip, data.mask, data.quads );
+        // no transformations, but translucency requires window pixmap
+        w->suspendUnredirect( data.mask & PAINT_WINDOW_TRANSLUCENT );
         }
     // Do the actual painting
     // First opaque windows, top to bottom

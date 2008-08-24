@@ -43,6 +43,7 @@ class Unmanaged
         virtual QSize clientSize() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
+        virtual bool shouldUnredirect() const;
     private:
         virtual ~Unmanaged(); // use release()
     // handlers for X11 events

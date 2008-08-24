@@ -233,6 +233,8 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
         hiddenPreviews = HiddenPreviewsShown;
     else if( hps == 1 )
         hiddenPreviews = HiddenPreviewsAlways;
+    
+    unredirectFullscreen = config.readEntry( "UnredirectFullscreen", true );
     }
 
 

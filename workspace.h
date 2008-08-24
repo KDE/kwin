@@ -194,7 +194,7 @@ class Workspace : public QObject, public KDecorationDefines
          * at the last position
          */
         const ClientList& stackingOrder() const;
-
+        ToplevelList xStackingOrder() const;
         ClientList ensureStackingOrder( const ClientList& clients ) const;
 
         Client* topClientOnDesktop( int desktop, int screen, bool unconstrained = false, bool only_normal = true ) const;
@@ -330,6 +330,7 @@ class Workspace : public QObject, public KDecorationDefines
         // destroys XComposite overlay window
         void destroyOverlay();
         Window overlayWindow();
+        void checkUnredirect( bool force = false );
 
     public slots:
         void addRepaintFull();
@@ -491,6 +492,7 @@ class Workspace : public QObject, public KDecorationDefines
         void lostCMSelection();
         void updateElectricBorders();
         void resetCursorPosTime();
+        void delayedCheckUnredirect();
 
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
@@ -518,7 +520,6 @@ class Workspace : public QObject, public KDecorationDefines
         bool establishTabBoxGrab();
         void removeTabBoxGrab();
 
-        ToplevelList xStackingOrder() const;
         void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
         ClientList constrainedStackingOrder();
         void raiseClientWithinApplication( Client* c );
@@ -740,6 +741,8 @@ class Workspace : public QObject, public KDecorationDefines
         bool overlay_shown; // for showOverlay()
         QSlider *transSlider;
         QPushButton *transButton;
+        QTimer unredirectTimer;
+        bool forceUnredirectCheck;
 
     private:
         friend bool performTransiencyCheck();

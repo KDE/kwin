@@ -182,6 +182,7 @@ class Scene::Window
         void updateToplevel( Toplevel* c );
         // creates initial quad list for the window
         virtual WindowQuadList buildQuads() const;
+        void suspendUnredirect( bool suspend );
     protected:
         WindowQuadList makeQuads( WindowQuadType type, const QRegion& reg ) const;
         Toplevel* toplevel;
@@ -254,6 +255,12 @@ inline
 void Scene::Window::updateToplevel( Toplevel* c )
     {
     toplevel = c;
+    }
+
+inline
+void Scene::Window::suspendUnredirect( bool suspend )
+    {
+    toplevel->suspendUnredirect( suspend );
     }
 
 } // namespace
