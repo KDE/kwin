@@ -209,7 +209,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     wtstr = i18n( "When this option is enabled, focus operations are limited only to the active Xinerama screen" );
     separateScreenFocus->setWhatsThis( wtstr );
 
-    activeMouseScreen = new QCheckBox( i18n( "Active &mouse screen" ), fcsBox );
+    activeMouseScreen = new QCheckBox( i18n( "Active screen follows &mouse" ), fcsBox );
     fLay->addWidget( activeMouseScreen );
     wtstr = i18n( "When this option is enabled, the active Xinerama screen (where new windows appear, for example)"
                   " is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the "
