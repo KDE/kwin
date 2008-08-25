@@ -90,6 +90,7 @@ SET(kwin4_effect_builtins_config_sources
     maketransparent_config.cpp
     maketransparent_config.ui
     presentwindows_config.cpp
+    presentwindows_config.ui
     shadow_config.cpp
     showfps_config.cpp
     showfps_config.ui

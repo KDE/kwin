@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,26 +56,30 @@ PresentWindowsEffect::PresentWindowsEffect()
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "Expose" );
-    a->setText( i18n("Toggle Expose Effect" ));
+    a->setText( i18n("Toggle Present Windows (Current desktop)" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
     KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
-    b->setText( i18n("Toggle Expose Effect (incl. other desktops)" ));
+    b->setText( i18n("Toggle Present Windows (All desktops)" ));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
 
     borderActivate = (ElectricBorder)conf.readEntry("BorderActivate", (int)ElectricNone);
     borderActivateAll = (ElectricBorder)conf.readEntry("BorderActivateAll", (int)ElectricTopLeft);
+    layoutMode = conf.readEntry( "LayoutMode", int( LayoutNatural ));
     drawWindowCaptions = conf.readEntry("DrawWindowCaptions", true);
+    drawWindowIcons = conf.readEntry("DrawWindowIcons", true);
     tabBox = conf.readEntry("TabBox", false);
+    accuracy = conf.readEntry("Accuracy", 1) * 20;
+    fillGaps = conf.readEntry("FillGaps", true);
 
     effects->reserveElectricBorder( borderActivate );
     effects->reserveElectricBorder( borderActivateAll );
 
     mActiveness.setCurveShape( TimeLine::EaseInOutCurve );
-    mActiveness.setDuration( 250 );
+    mActiveness.setDuration( conf.readEntry( "RearrangeDuration", 250 ));
     mRearranging.setCurveShape( TimeLine::EaseInOutCurve );
-    mRearranging.setDuration( 250 );
+    mRearranging.setDuration( conf.readEntry( "RearrangeDuration", 250 ));
     mRearranging.setProgress( 1.0 );
     }
 
@@ -205,7 +210,8 @@ void PresentWindowsEffect::paintWindow( EffectWindow* w, int mask, QRegion regio
     if(mActiveness.value() > 0.0 && mWindowData.contains(w))
         {
         const WindowData& windata = mWindowData[w];
-        paintWindowIcon( w, data );
+        if (drawWindowIcons)
+            paintWindowIcon( w, data );
 
         if (drawWindowCaptions)
             {
@@ -453,25 +459,39 @@ void PresentWindowsEffect::rearrangeWindows()
         newScreenGridSizes.append( GridSize() );
 
         // Do not rearrange if filtering only removed windows, so that the remaining ones don't possibly
-        // jump into the freed slots if they'd be a better match.
+        // jump into the freed slots if they'd be a better match. This only works with the regular grid
         // This can probably still lead to such things when removing the filter again, but that'd need
         // more complex remembering of window positions.
-        newNumOfWindows[i] = windowlists[i].count();
-        newScreenGridSizes[i].columns = int( ceil( sqrt( (double)windowlists[i].count())));
-        newScreenGridSizes[i].rows = int( ceil( windowlists[i].count() / double( newScreenGridSizes[i].columns )));
-        if( newNumOfWindows[i] && ( firstTime || newNumOfWindows[i] > numOfWindows[i] ||
-          ( newNumOfWindows[i] < numOfWindows[i] && ( newScreenGridSizes[i].rows != screenGridSizes[i].rows ||
-            newScreenGridSizes[i].columns != screenGridSizes[i].columns ))))
+        bool doRearrange = false;
+        if( layoutMode != LayoutRegularGrid )
+            doRearrange = true;
+        else
+            {
+            newNumOfWindows[i] = windowlists[i].count();
+            newScreenGridSizes[i].columns = int( ceil( sqrt( (double)windowlists[i].count())));
+            newScreenGridSizes[i].rows = int( ceil( windowlists[i].count() / double( newScreenGridSizes[i].columns )));
+            if( newNumOfWindows[i] && ( firstTime || newNumOfWindows[i] > numOfWindows[i] ||
+              ( newNumOfWindows[i] < numOfWindows[i] && ( newScreenGridSizes[i].rows != screenGridSizes[i].rows ||
+                newScreenGridSizes[i].columns != screenGridSizes[i].columns ))))
+                doRearrange = true;
+            }
+        if( doRearrange )
             {
             if( !firstTime && !rearranging )
                 {
                 rearranging = true;
                 prepareToRearrange();
                 }
+            // No point calculating if there is no windows
+            if( !windowlists[i].size() )
+                continue;
             // Calculate new positions and scales for windows
-//            calculateWindowTransformationsDumb( windowlist ); // Haven't added screen support to these yet
-//            calculateWindowTransformationsKompose( windowlist );
-            calculateWindowTransformationsClosest( windowlists[i], i );
+            if( layoutMode == LayoutRegularGrid )
+                calculateWindowTransformationsClosest( windowlists[i], i );
+            else if( layoutMode == LayoutFlexibleGrid )
+                calculateWindowTransformationsKompose( windowlists[i], i );
+            else
+                calculateWindowTransformationsNatural( windowlists[i], i );
             }
         }
 
@@ -499,43 +519,6 @@ void PresentWindowsEffect::prepareToRearrange()
     mRearranging.setProgress(0.0); // start animation again
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsDumb(EffectWindowList windowlist)
-    {
-    // Calculate number of rows/cols
-    int rows = windowlist.count() / 4 + 1;
-    int cols = windowlist.count() / rows + windowlist.count() % rows;
-    // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect placementRect = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
-    // Size of one cell
-    int cellwidth = placementRect.width() / cols;
-    int cellheight = placementRect.height() / rows;
-    kDebug(1212) << "Got " << windowlist.count() << " clients, using " << rows << "x" << cols << " grid";
-
-    // Calculate position and scale factor for each window
-    int i = 0;
-    foreach( EffectWindow* window, windowlist )
-        {
-
-        // Row/Col of this window
-        int r = i / cols;
-        int c = i % cols;
-        mWindowData[window].slot = i;
-        mWindowData[window].x = c;
-        mWindowData[window].y = r;
-        mWindowData[window].highlight = 0.0f;
-        mWindowData[window].scale = qMin(cellwidth / (double)window->width(), cellheight / (double)window->height());
-        mWindowData[window].area.setLeft(placementRect.left() + cellwidth * c);
-        mWindowData[window].area.setTop(placementRect.top() + cellheight * r);
-        mWindowData[window].area.setWidth((int)(window->width() * mWindowData[window].scale));
-        mWindowData[window].area.setHeight((int)(window->height() * mWindowData[window].scale));
-
-        kDebug(1212) << "Window '" << window->caption() << "' gets moved to (" <<
-            mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
-            "), scale: " << mWindowData[window].scale << endl;
-        i++;
-        }
-    }
-
 double PresentWindowsEffect::windowAspectRatio(EffectWindow* c)
     {
     return c->width() / (double)c->height();
@@ -551,10 +534,10 @@ int PresentWindowsEffect::windowHeightForWidth(EffectWindow* c, int w)
     return (int)((w / (double)c->width()) * c->height());
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowList windowlist)
+void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowList windowlist, int screen)
     {
-     // Get rect which we can use on current desktop. This excludes e.g. panels
-    QRect availRect = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
+    QRect availRect = effects->clientArea( ScreenArea, screen, effects->currentDesktop());
+    qSort( windowlist ); // The location of the windows should not depend on the stacking order
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
 
@@ -572,7 +555,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
         rows = (int)ceil( sqrt((double)windowlist.count()) );
         columns = (int)ceil( (double)windowlist.count() / (double)rows );
     }
-    kDebug(1212) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
+    //kDebug(1212) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
     // Calculate width & height
     int w = (availRect.width() - (columns+1) * spacing ) / columns;
@@ -641,6 +624,12 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
                     widgeth = usableH;
                     widgetw = (int)widthForHeight;
                     }
+                // Don't upscale large-ish windows
+                if( widgetw > window->width() && ( window->width() > 300 || window->height() > 300 ))
+                    {
+                    widgetw = window->width();
+                    widgeth = window->height();
+                    }
                 }
 
             // Set the Widget's size
@@ -684,9 +673,9 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
             mWindowData[window].scale = geom.width() / (double)window->width();
             mWindowData[window].highlight = 0.0f;
 
-            kDebug(1212) << "Window '" << window->caption() << "' gets moved to (" <<
-                    mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
-                    "), scale: " << mWindowData[window].scale << endl;
+            //kDebug(1212) << "Window '" << window->caption() << "' gets moved to (" <<
+            //        mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
+            //        "), scale: " << mWindowData[window].scale << endl;
             }
         if ( maxRowHeights[i]-h > 0 )
             topOffset += maxRowHeights[i]-h;
@@ -695,7 +684,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
 
 void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowList windowlist, int screen)
     {
-    QRect area = effects->clientArea( PlacementArea, screen, effects->currentDesktop());
+    QRect area = effects->clientArea( ScreenArea, screen, effects->currentDesktop());
     int columns = int( ceil( sqrt( (double)windowlist.count())));
     int rows = int( ceil( windowlist.count() / double( columns )));
     foreach( EffectWindow* w, windowlist )
@@ -742,7 +731,6 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
         if( scale > 2.0 || ( scale > 1.0 && ( w->width() > 300 || w->height() > 300 )))
         {
             scale = ( w->width() > 300 || w->height() > 300 ) ? 1.0 : 2.0;
-            QPoint center = geom.center();
             geom = QRect( geom.center().x() - int( w->width() * scale ) / 2, geom.center().y() - int( w->height() * scale ) / 2,
                           scale * w->width(), scale * w->height() );
         }
@@ -781,7 +769,7 @@ void PresentWindowsEffect::assignSlots( EffectWindowList windowlist, const QRect
                 pos.setY( area.top());
             if( pos.y() > area.bottom())
                 pos.setY( area.bottom());
-            int distance = INT_MAX;
+            //int distance = INT_MAX;
             int xdiff = pos.x() - ( area.x() + slotwidth * x + slotwidth / 2 ); // slotwidth/2 for center
             int ydiff = pos.y() - ( area.y() + slotheight * y + slotheight / 2 );
             int dist = int( sqrt( (double)(xdiff * xdiff + ydiff * ydiff) ));
@@ -849,6 +837,254 @@ void PresentWindowsEffect::getBestAssignments( EffectWindowList windowlist )
                 }
             }
         }
+    }
+
+void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowList windowlist, int screen)
+    {
+    // As we are using pseudo-random movement (See "slot") we need to make sure the list
+    // is always sorted the same way no matter which window is currently active.
+    qSort( windowlist );
+
+    QRect area = effects->clientArea( ScreenArea, screen, effects->currentDesktop());
+    QRect bounds = area;//mWindowData[0].area;
+    int direction = 0;
+    foreach( EffectWindow* w, windowlist )
+        {
+        bounds = bounds.united( w->geometry() );
+        mWindowData[ w ].area = w->geometry();
+        mWindowData[ w ].scale = 1.0;
+        // Reuse the unused "slot" as a preferred direction attribute. This is used when the window
+        // is on the edge of the screen to try to use as much screen real estate as possible.
+        mWindowData[ w ].slot = direction;
+        direction++;
+        if( direction == 4 )
+            direction = 0;
+        }
+    
+    // Iterate over all windows, if two overlap push them apart _slightly_ as we try to
+    // brute-force the most optimal positions over many iterations.
+    bool overlap;
+    do
+        {
+        overlap = false;
+        foreach( EffectWindow* w, windowlist )
+            {
+            foreach( EffectWindow* e, windowlist )
+                {
+                if( w != e && mWindowData[ w ].area.adjusted( -5, -5, 5, 5 ).intersects(
+                              mWindowData[ e ].area.adjusted( -5, -5, 5, 5 )))
+                    {
+                    overlap = true;
+
+                    // Determine pushing direction
+                    QPoint diff( mWindowData[ e ].area.center() - mWindowData[ w ].area.center() );
+                    // Prevent dividing by zero and non-movement
+                    if( diff.x() == 0 && diff.y() == 0 )
+                        diff.setX( 1 );
+                    // Try to keep screen aspect ratio
+                    //if( bounds.height() / bounds.width() > area.height() / area.width() )
+                    //    diff.setY( diff.y() / 2 );
+                    //else
+                    //    diff.setX( diff.x() / 2 );
+                    // Approximate a vector of between 10px and 20px in magnitude in the same direction
+                    diff *= accuracy / double( diff.manhattanLength() );
+                    // Move both windows apart
+                    mWindowData[ w ].area.translate( -diff );
+                    mWindowData[ e ].area.translate( diff );
+
+                    // Try to keep the bounding rect the same aspect as the screen so that more
+                    // screen real estate is utilised. We do this by splitting the screen into nine
+                    // equal sections, if the window center is in any of the corner sections pull the
+                    // window towards the outer corner. If it is in any of the other edge sections
+                    // alternate between each corner on that edge. We don't want to determine it
+                    // randomly as it will not produce consistant locations when using the filter.
+                    // Only move one window so we don't cause large amounts of unnecessary zooming
+                    // in some situations. We only need to do this if we are not expanding later.
+                    // (We are using an old bounding rect for this, hopefully it doesn't matter)
+                    if( !fillGaps )
+                        {
+                        int xSection = ( mWindowData[ w ].area.x() - bounds.x() ) / ( bounds.width() / 3 );
+                        int ySection = ( mWindowData[ w ].area.y() - bounds.y() ) / ( bounds.height() / 3 );
+                        diff = QPoint( 0, 0 );
+                        if( xSection != 1 || ySection != 1 ) // Remove this if you want the center to pull as well
+                            {
+                            if( xSection == 1 )
+                                xSection = ( mWindowData[ w ].slot / 2 ? 2 : 0 );
+                            if( ySection == 1 )
+                                ySection = ( mWindowData[ w ].slot % 2 ? 2 : 0 );
+                            }
+                        if( xSection == 0 && ySection == 0 )
+                            diff = QPoint( bounds.topLeft() - mWindowData[ w ].area.center() );
+                        if( xSection == 2 && ySection == 0 )
+                            diff = QPoint( bounds.topRight() - mWindowData[ w ].area.center() );
+                        if( xSection == 2 && ySection == 2 )
+                            diff = QPoint( bounds.bottomRight() - mWindowData[ w ].area.center() );
+                        if( xSection == 0 && ySection == 2 )
+                            diff = QPoint( bounds.bottomLeft() - mWindowData[ w ].area.center() );
+                        if( diff.x() != 0 || diff.y() != 0 )
+                            {
+                            diff *= accuracy / double( diff.manhattanLength() );
+                            mWindowData[ w ].area.translate( diff );
+                            }
+                        }
+    
+                    // Update bounding rect
+                    bounds = bounds.united( mWindowData[ w ].area );
+                    bounds = bounds.united( mWindowData[ e ].area );
+                    }
+                }
+            }
+        } while( overlap );
+
+    // Work out scaling by getting the most top-left and most bottom-right window coords.
+    // The 20's and 10's are so that the windows don't touch the edge of the screen.
+    double scale;
+    if( bounds == area )
+        scale = 1.0; // Don't add borders to the screen
+    else if( area.width() / double( bounds.width() ) < area.height() / double( bounds.height() ))
+        scale = ( area.width() - 20 ) / double( bounds.width() );
+    else
+        scale = ( area.height() - 20 ) / double( bounds.height() );
+    // Make bounding rect fill the screen size for later steps
+    bounds = QRect(
+        bounds.x() - ( area.width() - 20 - bounds.width() * scale ) / 2 - 10 / scale,
+        bounds.y() - ( area.height() - 20 - bounds.height() * scale ) / 2 - 10 / scale,
+        area.width() / scale,
+        area.height() / scale
+        );
+
+    // Move all windows back onto the screen and set their scale
+    foreach( EffectWindow* w, windowlist )
+        {
+        mWindowData[ w ].scale = scale;
+        mWindowData[ w ].area = QRect(
+            ( mWindowData[ w ].area.x() - bounds.x() ) * scale + area.x(),
+            ( mWindowData[ w ].area.y() - bounds.y() ) * scale + area.y(),
+            mWindowData[ w ].area.width() * scale,
+            mWindowData[ w ].area.height() * scale
+            );
+        }
+
+    // Try to fill the gaps by enlarging windows if they have the space
+    if( fillGaps )
+        {
+        // Don't expand onto or over the border
+        QRegion borderRegion( area.adjusted( -200, -200, 200, 200 ));
+        borderRegion ^= area.adjusted( 10 / scale, 10 / scale, -10 / scale, -10 / scale );
+        
+        bool moved;
+        do
+            {
+            moved = false;
+            foreach( EffectWindow* w, windowlist )
+                {
+                QRect oldRect;
+                // This may cause some slight distortion if the windows are enlarged a large amount
+                int widthDiff = accuracy;
+                int heightDiff = windowHeightForWidth( w, mWindowData[ w ].area.width() + widthDiff ) - mWindowData[ w ].area.height();
+                int xDiff = widthDiff / 2;  // Also move a bit in the direction of the enlarge, allows the
+                int yDiff = heightDiff / 2; // center windows to be enlarged if there is gaps on the side.
+        
+                // Attempt enlarging to the top-right
+                oldRect = mWindowData[ w ].area;
+                mWindowData[ w ].area = QRect(
+                    mWindowData[ w ].area.x() + xDiff,
+                    mWindowData[ w ].area.y() - yDiff - heightDiff,
+                    mWindowData[ w ].area.width() + widthDiff,
+                    mWindowData[ w ].area.height() + heightDiff
+                    );
+                if( isOverlappingAny( w, windowlist, borderRegion ))
+                    mWindowData[ w ].area = oldRect;
+                else
+                    {
+                    mWindowData[ w ].scale = mWindowData[ w ].area.width() / double( w->width() );
+                    moved = true;
+                    }
+                
+                // Attempt enlarging to the bottom-right
+                oldRect = mWindowData[ w ].area;
+                mWindowData[ w ].area = QRect(
+                    mWindowData[ w ].area.x() + xDiff,
+                    mWindowData[ w ].area.y() + yDiff,
+                    mWindowData[ w ].area.width() + widthDiff,
+                    mWindowData[ w ].area.height() + heightDiff
+                    );
+                if( isOverlappingAny( w, windowlist, borderRegion ))
+                    mWindowData[ w ].area = oldRect;
+                else
+                    {
+                    mWindowData[ w ].scale = mWindowData[ w ].area.width() / double( w->width() );
+                    moved = true;
+                    }
+                
+                // Attempt enlarging to the bottom-left
+                oldRect = mWindowData[ w ].area;
+                mWindowData[ w ].area = QRect(
+                    mWindowData[ w ].area.x() - xDiff - widthDiff,
+                    mWindowData[ w ].area.y() + yDiff,
+                    mWindowData[ w ].area.width() + widthDiff,
+                    mWindowData[ w ].area.height() + heightDiff
+                    );
+                if( isOverlappingAny( w, windowlist, borderRegion ))
+                    mWindowData[ w ].area = oldRect;
+                else
+                    {
+                    mWindowData[ w ].scale = mWindowData[ w ].area.width() / double( w->width() );
+                    moved = true;
+                    }
+                
+                // Attempt enlarging to the top-left
+                oldRect = mWindowData[ w ].area;
+                mWindowData[ w ].area = QRect(
+                    mWindowData[ w ].area.x() - xDiff - widthDiff,
+                    mWindowData[ w ].area.y() - yDiff - heightDiff,
+                    mWindowData[ w ].area.width() + widthDiff,
+                    mWindowData[ w ].area.height() + heightDiff
+                    );
+                if( isOverlappingAny( w, windowlist, borderRegion ))
+                    mWindowData[ w ].area = oldRect;
+                else
+                    {
+                    mWindowData[ w ].scale = mWindowData[ w ].area.width() / double( w->width() );
+                    moved = true;
+                    }
+                }
+            } while( moved );
+
+        // The expanding code above can actually enlarge windows over 1.0/2.0 scale, we don't like this
+        // We can't add this to the loop above as it would cause a never-ending loop so we have to make
+        // do with the less-than-optimal space usage with using this method.
+        foreach( EffectWindow* w, windowlist )
+            {
+            if( mWindowData[ w ].scale > 2.0 ||
+              ( mWindowData[ w ].scale > 1.0 && ( w->width() > 300 || w->height() > 300 )))
+                {
+                    mWindowData[ w ].scale = ( w->width() > 300 || w->height() > 300 ) ? 1.0 : 2.0;
+                    mWindowData[ w ].area = QRect(
+                        mWindowData[ w ].area.center().x() - int( w->width() * mWindowData[ w ].scale ) / 2,
+                        mWindowData[ w ].area.center().y() - int( w->height() * mWindowData[ w ].scale ) / 2,
+                        w->width() * mWindowData[ w ].scale,
+                        w->height() * mWindowData[ w ].scale
+                        );
+                }
+            }
+        }
+    }
+
+bool PresentWindowsEffect::isOverlappingAny( EffectWindow* w, const EffectWindowList& windowlist, const QRegion& border )
+    {
+    if( border.intersects( mWindowData[ w ].area ))
+        return true;
+    // Is there a better way to do this?
+    foreach( EffectWindow* e, windowlist )
+        {
+        if( w == e )
+            continue;
+        if( mWindowData[ w ].area.adjusted( -5, -5, 5, 5 ).intersects(
+            mWindowData[ e ].area.adjusted( -5, -5, 5, 5 )))
+            return true;
+        }
+    return false;
     }
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
@@ -947,6 +1183,140 @@ void PresentWindowsEffect::setHighlightedWindow( EffectWindow* w )
 // returns a window which is to relative position <xdiff,ydiff> from the given window
 EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const
     {
+    // Using the grid to determine the window only works on grid layouts and only have one screen.
+    // On multi-screen setups the grid coords are reused on each screen and each screen may also
+    // have a different grid size.
+    if( layoutMode != LayoutNatural && effects->numScreens() < 2 )
+        return relativeWindowGrid( w, xdiff, ydiff, wrap );
+
+    // Attempt to find the window from its rect instead
+    EffectWindow* next;
+    QRect area = effects->clientArea( FullArea, 0, effects->currentDesktop() );
+    QRect detectRect;
+
+    // Detect across the width of the desktop
+    if( xdiff != 0 )
+        {
+        if( xdiff > 0 )
+            { // Detect right
+            for( int i = 0; i < xdiff; i++ )
+                {
+                detectRect = QRect( 0, mWindowData[ w ].area.y(), area.width(), mWindowData[ w ].area.height() );
+                next = NULL;
+                foreach( EffectWindow* e, mWindowsToPresent )
+                    {
+                    if( mWindowData[ e ].area.intersects( detectRect ) &&
+                        mWindowData[ e ].area.x() > mWindowData[ w ].area.x() )
+                        {
+                        if( next == NULL )
+                            next = e;
+                        else if( mWindowData[ e ].area.x() < mWindowData[ next ].area.x() )
+                            next = e;
+                        }
+                    }
+                if( next == NULL )
+                    {
+                    if( wrap ) // We are at the right-most window, now get the left-most one to wrap
+                        return relativeWindow( w, -1000, 0, false );
+                    break; // No more windows to the right
+                    }
+                w = next;
+                }
+            return w;
+            }
+        else
+            { // Detect left
+            for( int i = 0; i < -xdiff; i++ )
+                {
+                detectRect = QRect( 0, mWindowData[ w ].area.y(), area.width(), mWindowData[ w ].area.height() );
+                next = NULL;
+                foreach( EffectWindow* e, mWindowsToPresent )
+                    {
+                    if( mWindowData[ e ].area.intersects( detectRect ) &&
+                        mWindowData[ e ].area.x() + mWindowData[ e ].area.width() < mWindowData[ w ].area.x() + mWindowData[ w ].area.width() )
+                        {
+                        if( next == NULL )
+                            next = e;
+                        else if( mWindowData[ e ].area.x() + mWindowData[ e ].area.width() > mWindowData[ next ].area.x() + mWindowData[ next ].area.width() )
+                            next = e;
+                        }
+                    }
+                if( next == NULL )
+                    {
+                    if( wrap ) // We are at the left-most window, now get the right-most one to wrap
+                        return relativeWindow( w, 1000, 0, false );
+                    break; // No more windows to the left
+                    }
+                w = next;
+                }
+            return w;
+            }
+        }
+
+    // Detect across the height of the desktop
+    if( ydiff != 0 )
+        {
+        if( ydiff > 0 )
+            { // Detect down
+            for( int i = 0; i < ydiff; i++ )
+                {
+                detectRect = QRect( mWindowData[ w ].area.x(), 0, mWindowData[ w ].area.width(), area.height() );
+                next = NULL;
+                foreach( EffectWindow* e, mWindowsToPresent )
+                    {
+                    if( mWindowData[ e ].area.intersects( detectRect ) &&
+                        mWindowData[ e ].area.y() > mWindowData[ w ].area.y() )
+                        {
+                        if( next == NULL )
+                            next = e;
+                        else if( mWindowData[ e ].area.y() < mWindowData[ next ].area.y() )
+                            next = e;
+                        }
+                    }
+                if( next == NULL )
+                    {
+                    if( wrap ) // We are at the bottom-most window, now get the top-most one to wrap
+                        return relativeWindow( w, 0, -1000, false );
+                    break; // No more windows to the bottom
+                    }
+                w = next;
+                }
+            return w;
+            }
+        else
+            { // Detect up
+            for( int i = 0; i < -ydiff; i++ )
+                {
+                detectRect = QRect( mWindowData[ w ].area.x(), 0, mWindowData[ w ].area.width(), area.height() );
+                next = NULL;
+                foreach( EffectWindow* e, mWindowsToPresent )
+                    {
+                    if( mWindowData[ e ].area.intersects( detectRect ) &&
+                        mWindowData[ e ].area.y() + mWindowData[ e ].area.height() < mWindowData[ w ].area.y() + mWindowData[ w ].area.height() )
+                        {
+                        if( next == NULL )
+                            next = e;
+                        else if( mWindowData[ e ].area.y() + mWindowData[ e ].area.height() > mWindowData[ next ].area.y() + mWindowData[ next ].area.height() )
+                            next = e;
+                        }
+                    }
+                if( next == NULL )
+                    {
+                    if( wrap ) // We are at the top-most window, now get the bottom-most one to wrap
+                        return relativeWindow( w, 0, 1000, false );
+                    break; // No more windows to the top
+                    }
+                w = next;
+                }
+            return w;
+            }
+        }
+
+    assert( false ); // Should never get here
+    }
+
+EffectWindow* PresentWindowsEffect::relativeWindowGrid( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const
+    {
     if( mWindowData.count() == 0 )
         return NULL;
     if( w == NULL )
@@ -1043,11 +1413,26 @@ EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow* w, int xdiff, 
 // returns the window that is the most to the topleft, if any
 EffectWindow* PresentWindowsEffect::findFirstWindow() const
     {
+    if( layoutMode == LayoutNatural || effects->numScreens() > 1 )
+        {
+        EffectWindow* topLeft = NULL;
+        foreach( EffectWindow* w, mWindowsToPresent )
+            {
+            if( topLeft == NULL )
+                topLeft = w;
+            else if( w->x() < topLeft->x() || w->y() < topLeft->y() )
+                topLeft = w;
+            }
+        return topLeft;
+        }
+
+    // The following only works on grid layouts on a single screen
+
     int minslot = INT_MAX;
     EffectWindow* ret = NULL;
     for( DataHash::ConstIterator it = mWindowData.begin();
-         it != mWindowData.end();
-         ++it )
+        it != mWindowData.end();
+        ++it )
         {
         if( (*it).slot < minslot )
             {

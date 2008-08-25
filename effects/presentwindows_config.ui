@@ -1,0 +1,243 @@
+<ui version="4.0" >
+ <class>KWin::PresentWindowsEffectConfigForm</class>
+ <widget class="QWidget" name="KWin::PresentWindowsEffectConfigForm" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>430</width>
+    <height>306</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" >
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
+      <string>Appearance</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3" >
+      <item row="2" column="0" >
+       <widget class="QLabel" name="label" >
+        <property name="text" >
+         <string>Rearrange &amp;duration:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>rearrangeDurationSpin</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QSpinBox" name="rearrangeDurationSpin" >
+        <property name="suffix" >
+         <string> msec</string>
+        </property>
+        <property name="maximum" >
+         <number>5000</number>
+        </property>
+        <property name="value" >
+         <number>250</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2" >
+       <widget class="QCheckBox" name="displayTitleBox" >
+        <property name="text" >
+         <string>Display window &amp;titles</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2" >
+       <widget class="QCheckBox" name="displayIconBox" >
+        <property name="text" >
+         <string>Display window &amp;icons</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="2" >
+       <widget class="QCheckBox" name="switchingBox" >
+        <property name="text" >
+         <string>Use for window &amp;switching</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" >
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>Layout mode:</string>
+        </property>
+        <property name="buddy" >
+         <cstring>layoutCombo</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" >
+       <widget class="QComboBox" name="layoutCombo" >
+        <item>
+         <property name="text" >
+          <string>Natural</string>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string>Regular grid</string>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string>Flexible grid</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2" >
+    <widget class="QGroupBox" name="groupBox_2" >
+     <property name="title" >
+      <string>Activation</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2" >
+      <item row="5" column="0" colspan="2" >
+       <widget class="KWin::GlobalShortcutsEditor" native="1" name="shortcutEditor" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>Active screen &amp;edge (Current desktop):</string>
+        </property>
+        <property name="buddy" >
+         <cstring>screenEdgeCombo</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QComboBox" name="screenEdgeCombo" />
+      </item>
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label_4" >
+        <property name="text" >
+         <string>Active screen &amp;edge (All desktops):</string>
+        </property>
+        <property name="buddy" >
+         <cstring>screenEdgeAllCombo</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QComboBox" name="screenEdgeAllCombo" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="QGroupBox" name="groupBox_3" >
+     <property name="title" >
+      <string>Natural Layout Settings</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4" >
+      <item row="5" column="0" >
+       <widget class="QCheckBox" name="fillGapsBox" >
+        <property name="text" >
+         <string>Fill &amp;gaps</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" >
+       <spacer name="verticalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="0" >
+       <layout class="QHBoxLayout" name="horizontalLayout" >
+        <item>
+         <widget class="QLabel" name="label_6" >
+          <property name="text" >
+           <string>Faster</string>
+          </property>
+          <property name="buddy" >
+           <cstring></cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="accuracySlider" >
+          <property name="minimum" >
+           <number>1</number>
+          </property>
+          <property name="maximum" >
+           <number>8</number>
+          </property>
+          <property name="singleStep" >
+           <number>1</number>
+          </property>
+          <property name="pageStep" >
+           <number>1</number>
+          </property>
+          <property name="value" >
+           <number>1</number>
+          </property>
+          <property name="tracking" >
+           <bool>true</bool>
+          </property>
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="invertedAppearance" >
+           <bool>true</bool>
+          </property>
+          <property name="invertedControls" >
+           <bool>false</bool>
+          </property>
+          <property name="tickPosition" >
+           <enum>QSlider::TicksBelow</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5" >
+          <property name="text" >
+           <string>Nicer</string>
+          </property>
+          <property name="buddy" >
+           <cstring></cstring>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KWin::GlobalShortcutsEditor</class>
+   <extends>QWidget</extends>
+   <header location="global" >kwineffects.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>rearrangeDurationSpin</tabstop>
+  <tabstop>displayTitleBox</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

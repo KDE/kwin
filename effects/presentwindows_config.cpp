@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,153 +20,163 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "presentwindows_config.h"
-
 #include <kwineffects.h>
 
-#include <klocale.h>
-#include <kdebug.h>
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <kaction.h>
-#include <KShortcutsEditor>
 
-#include <QWidget>
-#include <QGridLayout>
-#include <QLabel>
-#include <QComboBox>
-#include <QCheckBox>
-
+#include <QVBoxLayout>
+#include <QColor>
+#ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
+#endif
 
 namespace KWin
 {
 
-PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
+PresentWindowsEffectConfigForm::PresentWindowsEffectConfigForm(QWidget* parent) : QWidget(parent)
+{
+  setupUi(this);
+}
+
+PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QVariantList& args)
+    :   KCModule( EffectFactory::componentData(), parent, args )
     {
-    kDebug();
+    m_ui = new PresentWindowsEffectConfigForm( this );
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout( this );
 
-    mDrawWindowText = new QCheckBox(i18n("Draw window caption on top of window"), this);
-    connect(mDrawWindowText, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mDrawWindowText, 0, 0);
+    layout->addWidget( m_ui );
 
-    mTabBoxCheck = new QCheckBox(i18n("Use for window switching"), this);
-    connect(mTabBoxCheck, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mTabBoxCheck, 1, 0 );
+    m_actionCollection = new KActionCollection( this, componentData() );
+    m_actionCollection->setConfigGroup( "PresentWindows" );
+    m_actionCollection->setConfigGlobal( true );
 
-    layout->addWidget(new QLabel(i18n("Activate when cursor is at a specific edge "
-            "or corner of the screen:"), this), 2, 0, 1, 3);
-    layout->addItem(new QSpacerItem(20, 20, QSizePolicy::Fixed), 2, 0, 2, 1);
+    KAction* a = (KAction*) m_actionCollection->addAction( "ExposeAll" );
+    a->setText( i18n( "Toggle Present Windows (All desktops)" ));
+    a->setProperty( "isConfigurationAction", true );
+    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F10 ));
 
-    layout->addWidget(new QLabel(i18n("for windows on current desktop: "), this), 3, 1);
-    mActivateCombo = new QComboBox;
-    addItems(mActivateCombo);
-    connect(mActivateCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mActivateCombo, 3, 2);
+    KAction* b = (KAction*) m_actionCollection->addAction( "Expose" );
+    b->setText( i18n( "Toggle Present Windows (Current desktop)" ));
+    b->setProperty( "isConfigurationAction", true );
+    b->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F9 ));
 
-    layout->addWidget(new QLabel(i18n("for windows on all desktops: "), this), 4, 1);
-    mActivateAllCombo = new QComboBox;
-    addItems(mActivateAllCombo);
-    connect(mActivateAllCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mActivateAllCombo, 4, 2);
+    m_ui->shortcutEditor->addCollection( m_actionCollection );
 
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Expanding), 5, 0, 1, 3);
+    m_ui->screenEdgeAllCombo->addItem( i18n( "Top" ));
+    m_ui->screenEdgeAllCombo->addItem( i18n( "Top-right" ));
+    m_ui->screenEdgeAllCombo->addItem( i18n( "Right" ));
+    m_ui->screenEdgeAllCombo->addItem( i18n( "Bottom-right" ));
+    m_ui->screenEdgeAllCombo->addItem( i18n( "Bottom" ));
+    m_ui->screenEdgeAllCombo->addItem( i18n( "Bottom-left" ));
+    m_ui->screenEdgeAllCombo->addItem( i18n( "Left" ));
+    m_ui->screenEdgeAllCombo->addItem( i18n( "Top-left" ));
+    m_ui->screenEdgeAllCombo->addItem( i18n( "None" ));
 
-    // Shortcut config
-    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
-    KAction* a = (KAction*)actionCollection->addAction( "Expose" );
-    a->setText( i18n("Toggle Expose Effect" ));
-    a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
+    m_ui->screenEdgeCombo->addItem( i18n( "Top" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Top-right" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Right" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Bottom-right" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Bottom" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Bottom-left" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Left" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "Top-left" ));
+    m_ui->screenEdgeCombo->addItem( i18n( "None" ));
 
-    KAction* b = (KAction*)actionCollection->addAction( "ExposeAll" );
-    b->setText( i18n("Toggle Expose Effect (incl. other desktops)" ));
-    b->setProperty("isConfigurationAction", true);
-    b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
-
-    mShortcutEditor = new KShortcutsEditor(actionCollection, this,
-            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
-    connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
-    layout->addWidget(mShortcutEditor, 6, 0, 1, 3);
-
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 7, 0, 1, 3);
+    connect( m_ui->layoutCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->rearrangeDurationSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->displayTitleBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->displayIconBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->switchingBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->accuracySlider, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->fillGapsBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->screenEdgeAllCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->screenEdgeCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->shortcutEditor, SIGNAL( keyChange() ), this, SLOT( changed() ));
 
     load();
     }
 
 PresentWindowsEffectConfig::~PresentWindowsEffectConfig()
     {
-    kDebug();
-    // Undo (only) unsaved changes to global key shortcuts
-    mShortcutEditor->undoChanges();
-    }
-
-void PresentWindowsEffectConfig::addItems(QComboBox* combo)
-    {
-    combo->addItem(i18n("Top"));
-    combo->addItem(i18n("Top-right"));
-    combo->addItem(i18n("Right"));
-    combo->addItem(i18n("Bottom-right"));
-    combo->addItem(i18n("Bottom"));
-    combo->addItem(i18n("Bottom-left"));
-    combo->addItem(i18n("Left"));
-    combo->addItem(i18n("Top-left"));
-    combo->addItem(i18n("None"));
+    // If save() is called undoChanges() has no effect
+    m_ui->shortcutEditor->undoChanges();
     }
 
 void PresentWindowsEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
-    KConfigGroup conf = EffectsHandler::effectConfig("PresentWindows");
-    int activateBorder = conf.readEntry("BorderActivate", (int)ElectricNone);
-    if(activateBorder == (int)ElectricNone)
-        activateBorder--;
-    mActivateCombo->setCurrentIndex(activateBorder);
+    KConfigGroup conf = EffectsHandler::effectConfig( "PresentWindows" );
+    
+    int layoutMode = conf.readEntry( "LayoutMode", int( PresentWindowsEffect::LayoutNatural ));
+    m_ui->layoutCombo->setCurrentIndex( layoutMode );
 
-    int activateAllBorder = conf.readEntry("BorderActivateAll", (int)ElectricTopLeft);
-    if(activateAllBorder == (int)ElectricNone)
+    m_ui->rearrangeDurationSpin->setValue( conf.readEntry( "RearrangeDuration", 250 ));
+
+    bool displayTitle = conf.readEntry( "DrawWindowCaptions", true );
+    m_ui->displayTitleBox->setChecked( displayTitle );
+
+    bool displayIcon = conf.readEntry( "DrawWindowIcons", true );
+    m_ui->displayIconBox->setChecked( displayIcon );
+
+    bool switching = conf.readEntry( "TabBox", false );
+    m_ui->switchingBox->setChecked( switching );
+
+    int accuracy = conf.readEntry( "Accuracy", 1 );
+    m_ui->accuracySlider->setSliderPosition( accuracy );
+
+    bool fillGaps = conf.readEntry( "FillGaps", true );
+    m_ui->fillGapsBox->setChecked( fillGaps );
+
+    int activateAllBorder = conf.readEntry( "BorderActivateAll", int( ElectricTopLeft ));
+    if( activateAllBorder == int( ElectricNone ))
         activateAllBorder--;
-    mActivateAllCombo->setCurrentIndex(activateAllBorder);
+    m_ui->screenEdgeAllCombo->setCurrentIndex( activateAllBorder );
 
-    bool drawWindowCaptions = conf.readEntry("DrawWindowCaptions", true);
-    mDrawWindowText->setChecked(drawWindowCaptions);
-
-    bool tabBox = conf.readEntry("TabBox", false);
-    mTabBoxCheck->setChecked(tabBox);
+    int activateBorder = conf.readEntry( "BorderActivate", int( ElectricNone ));
+    if( activateBorder == int( ElectricNone ))
+        activateBorder--;
+    m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
 
     emit changed(false);
     }
 
 void PresentWindowsEffectConfig::save()
     {
-    kDebug() ;
     KCModule::save();
 
-    KConfigGroup conf = EffectsHandler::effectConfig("PresentWindows");
+    KConfigGroup conf = EffectsHandler::effectConfig( "PresentWindows" );
 
-    int activateBorder = mActivateCombo->currentIndex();
-    if(activateBorder == (int)ELECTRIC_COUNT)
-        activateBorder = (int)ElectricNone;
-    conf.writeEntry("BorderActivate", activateBorder);
+    int layoutMode = m_ui->layoutCombo->currentIndex();
+    conf.writeEntry( "LayoutMode", layoutMode );
 
-    int activateAllBorder = mActivateAllCombo->currentIndex();
-    if(activateAllBorder == (int)ELECTRIC_COUNT)
-        activateAllBorder = (int)ElectricNone;
-    conf.writeEntry("BorderActivateAll", activateAllBorder);
+    conf.writeEntry( "RearrangeDuration", m_ui->rearrangeDurationSpin->value() );
 
-    bool drawWindowCaptions = mDrawWindowText->isChecked();
-    conf.writeEntry("DrawWindowCaptions", drawWindowCaptions);
+    conf.writeEntry( "DrawWindowCaptions", m_ui->displayTitleBox->isChecked() );
+    conf.writeEntry( "DrawWindowIcons", m_ui->displayIconBox->isChecked() );
+    conf.writeEntry( "TabBox", m_ui->switchingBox->isChecked() );
 
-    bool tabBox = mTabBoxCheck->isChecked();
-    conf.writeEntry("TabBox", tabBox);
+    int accuracy = m_ui->accuracySlider->value();
+    conf.writeEntry( "Accuracy", accuracy );
+
+    conf.writeEntry( "FillGaps", m_ui->fillGapsBox->isChecked() );
+
+    int activateAllBorder = m_ui->screenEdgeAllCombo->currentIndex();
+    if( activateAllBorder == int( ELECTRIC_COUNT ))
+        activateAllBorder = int( ElectricNone );
+    conf.writeEntry( "BorderActivateAll", activateAllBorder );
+
+    int activateBorder = m_ui->screenEdgeCombo->currentIndex();
+    if( activateBorder == int( ELECTRIC_COUNT ))
+        activateBorder = int( ElectricNone );
+    conf.writeEntry( "BorderActivate", activateBorder );
+
+    m_ui->shortcutEditor->save();
 
     conf.sync();
-
-    mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
     EffectsHandler::sendReloadMessage( "presentwindows" );
@@ -173,15 +184,18 @@ void PresentWindowsEffectConfig::save()
 
 void PresentWindowsEffectConfig::defaults()
     {
-    kDebug() ;
-    mActivateCombo->setCurrentIndex( (int)ElectricNone - 1 );
-    mActivateAllCombo->setCurrentIndex( (int)ElectricTopLeft );
-    mDrawWindowText->setChecked(true);
-    mTabBoxCheck->setChecked(false);
-    mShortcutEditor->allDefault();
+    m_ui->layoutCombo->setCurrentIndex( int( PresentWindowsEffect::LayoutNatural ));
+    m_ui->rearrangeDurationSpin->setValue( 250 );
+    m_ui->displayTitleBox->setChecked( true );
+    m_ui->displayIconBox->setChecked( true );
+    m_ui->switchingBox->setChecked( false );
+    m_ui->accuracySlider->setSliderPosition( 1 );
+    m_ui->fillGapsBox->setChecked( true );
+    m_ui->screenEdgeAllCombo->setCurrentIndex( int( ElectricTopLeft ));
+    m_ui->screenEdgeCombo->setCurrentIndex( int( ElectricNone - 1 ));
+    m_ui->shortcutEditor->allDefault();
     emit changed(true);
     }
-
 
 } // namespace
 

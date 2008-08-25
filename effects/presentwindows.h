@@ -58,6 +58,8 @@ class PresentWindowsEffect
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
 
+        enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
+
     public slots:
         void setActive(bool active);
         void toggleActive()  { mShowWindowsFromAllDesktops = false; setActive(!mActivated); }
@@ -67,9 +69,9 @@ class PresentWindowsEffect
         // Updates window tranformations, i.e. destination pos and scale of the window
         void rearrangeWindows();
         void prepareToRearrange();
-        void calculateWindowTransformationsDumb(EffectWindowList windowlist);
-        void calculateWindowTransformationsKompose(EffectWindowList windowlist);
+        void calculateWindowTransformationsKompose(EffectWindowList windowlist, int screen);
         void calculateWindowTransformationsClosest(EffectWindowList windowlist, int screen);
+        void calculateWindowTransformationsNatural(EffectWindowList windowlist, int screen);
 
         // Helper methods for layout calculation
         double windowAspectRatio(EffectWindow* c);
@@ -79,6 +81,8 @@ class PresentWindowsEffect
         void assignSlots( EffectWindowList windowlist, const QRect& area, int columns, int rows );
         void getBestAssignments( EffectWindowList windowlist );
 
+        bool isOverlappingAny( EffectWindow* w, const EffectWindowList& windowlist, const QRegion& border );
+
         void updateFilterTexture();
         void discardFilterTexture();
 
@@ -86,6 +90,7 @@ class PresentWindowsEffect
 
         void setHighlightedWindow( EffectWindow* w );
         EffectWindow* relativeWindow( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const;
+        EffectWindow* relativeWindowGrid( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const;
         EffectWindow* findFirstWindow() const;
 
         // Called once the effect is activated (and wasn't activated before)
@@ -146,9 +151,13 @@ class PresentWindowsEffect
 
         ElectricBorder borderActivate;
         ElectricBorder borderActivateAll;
+        int layoutMode;
         bool drawWindowCaptions;
+        bool drawWindowIcons;
         bool mTabBoxMode;
         bool tabBox;
+        int accuracy;
+        bool fillGaps;
     };
 
 } // namespace

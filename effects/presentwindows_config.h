@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,12 +24,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kcmodule.h>
 
-class QCheckBox;
-class QComboBox;
-class KShortcutsEditor;
+#include "ui_presentwindows_config.h"
+#include "presentwindows.h"
 
 namespace KWin
 {
+
+class PresentWindowsEffectConfigForm : public QWidget, public Ui::PresentWindowsEffectConfigForm
+{
+    Q_OBJECT
+    public:
+        explicit PresentWindowsEffectConfigForm(QWidget* parent);
+};
 
 class PresentWindowsEffectConfig : public KCModule
     {
@@ -37,19 +44,14 @@ class PresentWindowsEffectConfig : public KCModule
         explicit PresentWindowsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
         ~PresentWindowsEffectConfig();
 
+    public slots:
         virtual void save();
         virtual void load();
         virtual void defaults();
 
-    protected:
-        void addItems(QComboBox* combo);
-
     private:
-        QCheckBox* mDrawWindowText;
-        QCheckBox* mTabBoxCheck;
-        QComboBox* mActivateCombo;
-        QComboBox* mActivateAllCombo;
-        KShortcutsEditor* mShortcutEditor;
+        PresentWindowsEffectConfigForm* m_ui;
+        KActionCollection* m_actionCollection;
     };
 
 } // namespace
