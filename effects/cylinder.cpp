@@ -43,6 +43,7 @@ CylinderEffect::CylinderEffect()
         wallpaper->discard();
     loadConfig( "Cylinder" );
     animateDesktopChange = false;
+    bigCube = true;
     }
 
 CylinderEffect::~CylinderEffect()
@@ -80,6 +81,8 @@ bool CylinderEffect::loadData()
         mShader->setUniform( "winTexture", 0 );
         mShader->setUniform( "opacity", cubeOpacity );
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+        if( effects->numScreens() > 1 && (slide || bigCube ) )
+            rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         mShader->setUniform( "width", (float)rect.width() );
         mShader->unbind();
         }
@@ -89,7 +92,7 @@ bool CylinderEffect::loadData()
 void CylinderEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
     {
     glPushMatrix();
-    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop());
 
     float cubeAngle = (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f;
     float radian = (cubeAngle*0.5)*M_PI/180;
