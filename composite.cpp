@@ -463,6 +463,8 @@ void Workspace::checkUnredirect( bool force )
 
 void Workspace::delayedCheckUnredirect()
     {
+    if( !compositing() || overlay == None || !options->unredirectFullscreen )
+        return;
     ToplevelList list;
     bool changed = forceUnredirectCheck;
     foreach( Client* c, clients )
