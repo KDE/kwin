@@ -1652,7 +1652,7 @@ int Workspace::activeScreen() const
     if( !options->activeMouseScreen )
         {
         if( activeClient() != NULL && !activeClient()->isOnScreen( active_screen ))
-            return qApp->desktop()->screenNumber( activeClient()->geometry().center());
+            return activeClient()->screen();
         return active_screen;
         }
     return qApp->desktop()->screenNumber( cursorPos());
