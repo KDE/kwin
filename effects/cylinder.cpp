@@ -172,7 +172,7 @@ void CylinderEffect::paintCap( float z, float zTexture )
     
     // paint round part of the cap
     glPushMatrix();
-    float zTranslate = 100.0;
+    float zTranslate = zPosition + zoom;
     if( start )
         zTranslate *= timeLine.value();
     if( stop )

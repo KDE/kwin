@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 #include <KStandardDirs>
+#include <kconfiggroup.h>
 
 #include <math.h>
 
@@ -44,6 +45,8 @@ SphereEffect::SphereEffect()
     loadConfig( "Sphere" );
     reflection = false;
     animateDesktopChange = false;
+    KConfigGroup conf = effects->effectConfig( "Sphere" );
+    zPosition = conf.readEntry( "ZPosition", 450.0 );
     }
 
 SphereEffect::~SphereEffect()
@@ -86,19 +89,6 @@ bool SphereEffect::loadData()
         mShader->unbind();
         }
     return true;
-    }
-
-void SphereEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
-    {
-    glPushMatrix();
-    float zTranslate = -350.0;
-    if( start )
-        zTranslate *= timeLine.value();
-    if( stop )
-        zTranslate *= ( 1.0 - timeLine.value() );
-    glTranslatef( 0.0, 0.0, zTranslate );
-    CubeEffect::paintScene( mask, region, data );
-    glPopMatrix();
     }
 
 void SphereEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )

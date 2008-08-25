@@ -74,6 +74,8 @@ CubeEffect::CubeEffect()
     , bigCube( false )
     , bottomCap( false )
     , closeOnMouseRelease( false )
+    , zoom( 0.0 )
+    , zPosition( 0.0 )
     , capListCreated( false )
     , capList( 0 )
     {
@@ -102,6 +104,7 @@ void CubeEffect::loadConfig( QString config )
     capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     paintCaps = conf.readEntry( "Caps", true );
     closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
+    zPosition = conf.readEntry( "ZPosition", 100.0 );
     QString file = conf.readEntry( "Wallpaper", QString("") );
     if( !file.isEmpty() )
         {
@@ -425,7 +428,7 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     cube_painting = true;
     int desktopIndex = 0;
-    float zTranslate = 100.0;
+    float zTranslate = zPosition + zoom;
     if( start )
         zTranslate *= timeLine.value();
     if( stop )
@@ -739,7 +742,7 @@ void CubeEffect::paintCap( float z, float zTexture )
     glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), opacity );
     float angle = 360.0f/effects->numberOfDesktops();
     glPushMatrix();
-    float zTranslate = 100.0;
+    float zTranslate = zPosition + zoom;
     if( start )
         zTranslate *= timeLine.value();
     if( stop )
@@ -1424,6 +1427,13 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
             case Qt::Key_Space:
                 setActive( false );
                 return;
+            case Qt::Key_Plus:
+                zoom -= 10.0;
+                zoom = qMax( -zPosition, zoom );
+                break;
+            case Qt::Key_Minus:
+                zoom += 10.0f;
+                break;
             default:
                 break;
             }
@@ -1504,6 +1514,7 @@ void CubeEffect::setActive( bool active )
             input = effects->createInputWindow( this, 0, 0, displayWidth(), displayHeight(),
                 Qt::OpenHandCursor );
             frontDesktop = effects->currentDesktop();
+            zoom = 0.0;
             start = true;
             }
         effects->setActiveFullScreenEffect( this );

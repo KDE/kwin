@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>490</height>
+    <height>662</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -216,6 +216,71 @@
          <string>Close after mouse dra&amp;gging</string>
         </property>
        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2" >
+     <property name="title" >
+      <string>Zoom</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2" >
+      <item>
+       <widget class="QSlider" name="zPositionSlider" >
+        <property name="toolTip" >
+         <string>Define how far away the object should appear</string>
+        </property>
+        <property name="maximum" >
+         <number>3000</number>
+        </property>
+        <property name="singleStep" >
+         <number>10</number>
+        </property>
+        <property name="pageStep" >
+         <number>100</number>
+        </property>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition" >
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval" >
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2" >
+        <item>
+         <widget class="QLabel" name="label_8" >
+          <property name="text" >
+           <string>Near</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2" >
+          <property name="orientation" >
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0" >
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_9" >
+          <property name="text" >
+           <string>Far</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>

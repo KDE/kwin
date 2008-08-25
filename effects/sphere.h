@@ -38,7 +38,6 @@ class SphereEffect
 
         static bool supported();
     protected:
-        virtual void paintScene( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintCap( float z, float zTexture );
         virtual void paintCapStep( float z, float zTexture, bool texture );
     private:

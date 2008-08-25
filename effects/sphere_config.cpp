@@ -87,6 +87,7 @@ SphereEffectConfig::SphereEffectConfig(QWidget* parent, const QVariantList& args
     connect(m_ui->capColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
     connect(m_ui->wallpaperLineEdit, SIGNAL(textChanged(QString)), this, SLOT(changed()));
     connect(m_ui->closeOnMouseReleaseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->zPositionSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -107,6 +108,7 @@ void SphereEffectConfig::load()
     bool caps = conf.readEntry( "Caps", true );
     bool bigCube = conf.readEntry( "BigCube", false );
     bool closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
+    m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 450 ) );
     m_ui->wallpaperLineEdit->setText( conf.readEntry( "Wallpaper", "" ) );
     if( activateBorder == (int)ElectricNone )
         activateBorder--;
@@ -176,6 +178,7 @@ void SphereEffectConfig::save()
     conf.writeEntry( "BigCube", m_ui->bigCubeBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CloseOnMouseRelease", m_ui->closeOnMouseReleaseBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "Wallpaper", m_ui->wallpaperLineEdit->text() );
+    conf.writeEntry( "ZPosition", m_ui->zPositionSlider->value() );
 
     int activateBorder = m_ui->screenEdgeCombo->currentIndex();
     if( activateBorder == (int)ELECTRIC_COUNT )
@@ -204,6 +207,7 @@ void SphereEffectConfig::defaults()
     m_ui->bigCubeBox->setCheckState( Qt::Unchecked );
     m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
     m_ui->wallpaperLineEdit->setText( "" );
+    m_ui->zPositionSlider->setValue( 450 );
     m_ui->editor->allDefault();
     emit changed(true);
     }

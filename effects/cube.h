@@ -110,6 +110,8 @@ class CubeEffect
         bool bigCube;
         bool bottomCap;
         bool closeOnMouseRelease;
+        float zoom;
+        float zPosition;
 
         // GL lists
         bool capListCreated;
