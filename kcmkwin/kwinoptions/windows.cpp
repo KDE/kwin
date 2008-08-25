@@ -29,6 +29,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QHBoxLayout>
+#include <QFormLayout>
 #include <QtDBus/QtDBus>
 #include <QDesktopWidget>
 
@@ -610,7 +611,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     delays = new KIntNumInput(10, electricBox);
     delays->setRange(0, MAX_EDGE_RES, 50);
     delays->setSuffix(i18n(" ms"));
-    delays->setLabel(i18n("Desktop &switch delay:"));
+    delays->setLabel(i18n("Desktop &switch delay:"), Qt::AlignVCenter|Qt::AlignLeft);
     delays->setWhatsThis( i18n("Here you can set a delay for switching desktops using the active"
        " borders feature. Desktops will be switched after the mouse has been pushed against a screen border"
        " for the specified number of milliseconds.") );
@@ -901,6 +902,9 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     //lay->addWidget(plcBox);
 
 
+
+
+
     //CT 15mar98 - add EdgeResistance, BorderAttractor, WindowsAttractor config
     MagicBox = new KButtonGroup(this);
     MagicBox->setTitle(i18n("Snap Zones"));
@@ -909,7 +913,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     BrdrSnap = new KIntNumInput(10, MagicBox);
     BrdrSnap->setSpecialValueText( i18n("none") );
     BrdrSnap->setRange( 0, MAX_BRDR_SNAP);
-    BrdrSnap->setLabel(i18n("&Border snap zone:"));
+    BrdrSnap->setLabel(i18n("&Border snap zone:"), Qt::AlignVCenter|Qt::AlignLeft);
     BrdrSnap->setSteps(1,10);
     BrdrSnap->setWhatsThis( i18n("Here you can set the snap zone for screen borders, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the border when"
@@ -919,7 +923,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     WndwSnap = new KIntNumInput(10, MagicBox);
     WndwSnap->setSpecialValueText( i18n("none") );
     WndwSnap->setRange( 0, MAX_WNDW_SNAP);
-    WndwSnap->setLabel(i18n("&Window snap zone:"));
+    WndwSnap->setLabel(i18n("&Window snap zone:"), Qt::AlignVCenter|Qt::AlignLeft);
     WndwSnap->setSteps(1,10);
     WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
@@ -929,7 +933,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     CntrSnap = new KIntNumInput(10, MagicBox);
     CntrSnap->setSpecialValueText( i18n("none") );
     CntrSnap->setRange( 0, MAX_CNTR_SNAP);
-    CntrSnap->setLabel(i18n("&Center snap zone:"));
+    CntrSnap->setLabel(i18n("&Center snap zone:"), Qt::AlignVCenter|Qt::AlignLeft);
     CntrSnap->setSteps(1,10);
     CntrSnap->setWhatsThis( i18n("Here you can set the snap zone for the screen center, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the center of"

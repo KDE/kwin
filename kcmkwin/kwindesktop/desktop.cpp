@@ -25,7 +25,7 @@
 #include <QtGui/QBoxLayout>
 #include <QtGui/QCheckBox>
 #include <QtGui/QLabel>
-#include <QtGui/QLayout>
+#include <QtGui/QFormLayout>
 #include <QtGui/QSlider>
 #include <QGroupBox>
 
@@ -96,32 +96,20 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
 
   // name group
   QGroupBox *name_group = new QGroupBox(i18n("Desktop &Names"), this);
-  QVBoxLayout *vhoxlayout = new QVBoxLayout;
-  name_group->setLayout(vhoxlayout);
+  QFormLayout *namesLayout = new QFormLayout;
+  name_group->setLayout(namesLayout);
   QFontMetrics fm(label->font());
   int labelWidth = fm.width(i18n("Desktop %1:", 10)); // be sure that all label will have the same width (with one or two numbers, e.g. 1, 99)
-  for(int i = 0; i < (maxDesktops/2); i++)
+  for(int i = 0; i < maxDesktops; i++)
     {
-      QHBoxLayout *hboxLayout = new QHBoxLayout;
       _nameLabel[i] = new QLabel(i18n("Desktop %1:", i+1), name_group);
-      _nameLabel[i]->setMinimumWidth(labelWidth);
-      hboxLayout->addWidget(_nameLabel[i]);
       _nameInput[i] = new KLineEdit(name_group);
-      hboxLayout->addWidget(_nameInput[i]);
-      _nameLabel[i+(maxDesktops/2)] = new QLabel(i18n("Desktop %1:", i+(maxDesktops/2)+1), name_group);
-      hboxLayout->addWidget(_nameLabel[i+(maxDesktops/2)]);
-      _nameInput[i+(maxDesktops/2)] = new KLineEdit(name_group);
-      hboxLayout->addWidget(_nameInput[i+(maxDesktops/2)]);
       _nameLabel[i]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+1 ) );
       _nameInput[i]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+1 ) );
-      _nameLabel[i+(maxDesktops/2)]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+(maxDesktops/2)+1 ) );
-      _nameInput[i+(maxDesktops/2)]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+(maxDesktops/2)+1 ) );
 
       connect(_nameInput[i], SIGNAL(textChanged(const QString&)),
            SLOT( changed() ));
-      connect(_nameInput[i+(maxDesktops/2)], SIGNAL(textChanged(const QString&)),
-           SLOT( changed() ));
-      vhoxlayout->addLayout(hboxLayout);
+      namesLayout->addRow(_nameLabel[i],_nameInput[i]);
     }
 
   for(int i = 1; i < maxDesktops; i++)
@@ -186,7 +174,10 @@ void KDesktopConfig::load()
   }
 
   for(int i = 1; i <= maxDesktops; i++)
-    _nameInput[i-1]->setEnabled(i <= n);
+  {
+    _nameLabel[i-1]->setVisible(i <= n);
+    _nameInput[i-1]->setVisible(i <= n);
+  }
   emit changed(false);
 
 #if 0
@@ -253,7 +244,10 @@ void KDesktopConfig::defaults()
     _nameInput[i]->setText(i18n("Desktop %1", i+1));
 
   for(int i = 0; i < maxDesktops; i++)
-    _nameInput[i]->setEnabled(i < n);
+  {
+    _nameLabel[i]->setVisible(i < n);
+    _nameInput[i]->setVisible(i < n);
+  }
 
 #if 0
   _wheelOption->setChecked(false);
@@ -268,7 +262,8 @@ void KDesktopConfig::slotValueChanged(int n)
 {
   for(int i = 0; i < maxDesktops; i++)
   {
-    _nameInput[i]->setEnabled(i < n);
+    _nameLabel[i]->setVisible(i < n);
+    _nameInput[i]->setVisible(i < n);
     if(i<n && _nameInput[i]->text().isEmpty())
       _nameInput[i]->setText(i18n("Desktop %1", i+1));
   }

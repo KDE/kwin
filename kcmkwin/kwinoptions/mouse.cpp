@@ -30,9 +30,11 @@
 #include <QPixmap>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QFormLayout>
 
 #include <kconfig.h>
 #include <kdialog.h>
+#include <kdebug.h>
 #include <kglobalsettings.h>
 #include <kcolorscheme.h>
 #include <kseparator.h>
@@ -617,7 +619,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   QString txtButton1, txtButton3;
   QStringList items;
   bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
-  
+
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setMargin(0);
   layout->setSpacing(KDialog::spacingHint());
@@ -630,9 +632,9 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   box->setWhatsThis( i18n("Here you can customize mouse click behavior when clicking on an inactive"
                              " inner window ('inner' means: not titlebar, not frame).") );
 
-  grid = new QGridLayout(box);
-  grid->setMargin(KDialog::marginHint());
-  grid->setSpacing(KDialog::spacingHint());
+  QFormLayout *formLayout = new QFormLayout(box);
+  formLayout->setMargin(KDialog::marginHint());
+  formLayout->setSpacing(KDialog::spacingHint());
 
   strMouseButton1 = i18n("Left button:");
   txtButton1 = i18n("In this row you can customize left click behavior when clicking into"
@@ -651,25 +653,14 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   strWin1 = i18n("In this row you can customize left click behavior when clicking into"
      " an inactive inner window ('inner' means: not titlebar, not frame).");
 
+  strWin2 = i18n("In this row you can customize middle click behavior when clicking into"
+     " an inactive inner window ('inner' means: not titlebar, not frame).");
+
   strWin3 = i18n("In this row you can customize right click behavior when clicking into"
      " an inactive inner window ('inner' means: not titlebar, not frame).");
 
   // Be nice to lefties
   if ( leftHandedMouse ) qSwap(strWin1, strWin3);
-
-  label = new QLabel(strMouseButton1, box);
-  grid->addWidget(label, 0, 0);
-  label->setWhatsThis( strWin1 );
-
-  label = new QLabel(i18n("Middle button:"), box);
-  grid->addWidget(label, 1, 0);
-  strWin2 = i18n("In this row you can customize middle click behavior when clicking into"
-     " an inactive inner window ('inner' means: not titlebar, not frame).");
-  label->setWhatsThis( strWin2 );
-
-  label = new QLabel(strMouseButton3, box);
-  grid->addWidget(label, 2, 0);
-  label->setWhatsThis( strWin3 );
 
   items.clear();
   items   << i18n("Activate, Raise & Pass Click")
@@ -678,25 +669,25 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
           << i18n("Activate & Raise");
 
   QComboBox* combo = new QComboBox(box);
-  grid->addWidget(combo, 0, 1);
+  coWin1 = combo;
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-  coWin1 = combo;
   combo->setWhatsThis( strWin1 );
+  formLayout->addRow(strMouseButton1, combo);
 
   combo = new QComboBox(box);
-  grid->addWidget(combo, 1, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin2 = combo;
   combo->setWhatsThis( strWin2 );
+  formLayout->addRow(i18n("Middle button:"), combo);
 
   combo = new QComboBox(box);
-  grid->addWidget(combo, 2, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin3 = combo;
   combo->setWhatsThis( strWin3 );
+  formLayout->addRow(strMouseButton3, combo);
 
 
 /** Inner window, titlebar and frame **************/
@@ -707,19 +698,11 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   box->setWhatsThis( i18n("Here you can customize KDE's behavior when clicking somewhere into"
                              " a window while pressing a modifier key."));
 
-  grid = new QGridLayout(box);
-  grid->setMargin(KDialog::marginHint());
-  grid->setSpacing(KDialog::spacingHint());
+  formLayout = new QFormLayout(box);
+  formLayout->setMargin(KDialog::marginHint());
+  formLayout->setSpacing(KDialog::spacingHint());
 
   // Labels
-  label = new QLabel(i18n("Modifier key:"), box);
-  grid->addWidget(label, 0, 0);
-
-  strAllKey = i18n("Here you select whether holding the Meta key or Alt key "
-    "will allow you to perform the following actions.");
-  label->setWhatsThis( strAllKey );
-
-
   strMouseButton1 = i18n("Modifier key + left button:");
   strAll1 = i18n("In this row you can customize left click behavior when clicking into"
                  " the titlebar or the frame.");
@@ -734,34 +717,15 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
      qSwap(strAll1, strAll3);
   }
 
-  label = new QLabel(strMouseButton1, box);
-  grid->addWidget(label, 1, 0);
-  label->setWhatsThis( strAll1);
-
-  label = new QLabel(i18n("Modifier key + middle button:"), box);
-  grid->addWidget(label, 2, 0);
-  strAll2 = i18n("Here you can customize KDE's behavior when middle clicking into a window"
-                 " while pressing the modifier key.");
-  label->setWhatsThis( strAll2 );
-
-  label = new QLabel(strMouseButton3, box);
-  grid->addWidget(label, 3, 0);
-  label->setWhatsThis( strAll3);
-
-  label = new QLabel(i18n("Modifier key + mouse wheel:"), box);
-  grid->addWidget(label, 4, 0);
-  strAllW = i18n("Here you can customize KDE's behavior when scrolling with the mouse wheel"
-      "  in a window while pressing the modifier key.");
-  label->setWhatsThis( strAllW);
-
   // Combo's
   combo = new QComboBox(box);
-  grid->addWidget(combo, 0, 1);
   combo->addItem(i18n("Meta"));
   combo->addItem(i18n("Alt"));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAllKey = combo;
-  combo->setWhatsThis( strAllKey );
+  combo->setWhatsThis( i18n("Here you select whether holding the Meta key or Alt key "
+                            "will allow you to perform the following actions.") );
+  formLayout->addRow(i18n("Modifier key:"), combo);
 
   items.clear();
   items << i18n("Move")
@@ -774,28 +738,30 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
         << i18n("Nothing");
 
   combo = new QComboBox(box);
-  grid->addWidget(combo, 1, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll1 = combo;
   combo->setWhatsThis( strAll1 );
+  formLayout->addRow(strMouseButton1, combo);
+
 
   combo = new QComboBox(box);
-  grid->addWidget(combo, 2, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll2 = combo;
-  combo->setWhatsThis( strAll2 );
+  combo->setWhatsThis( i18n("Here you can customize KDE's behavior when middle clicking into a window"
+                            " while pressing the modifier key.") );
+  formLayout->addRow(i18n("Modifier key + middle button:"), combo);
 
   combo = new QComboBox(box);
-  grid->addWidget(combo, 3, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll3 =  combo;
   combo->setWhatsThis( strAll3 );
+  formLayout->addRow(strMouseButton3, combo);
+
 
   combo = new QComboBox(box);
-  grid->addWidget(combo, 4, 1);
   combo->addItem(i18n("Raise/Lower"));
   combo->addItem(i18n("Shade/Unshade"));
   combo->addItem(i18n("Maximize/Restore"));
@@ -805,10 +771,12 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   combo->addItem(i18n("Nothing"));  
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAllW =  combo;
-  combo->setWhatsThis( strAllW );
+  combo->setWhatsThis( i18n("Here you can customize KDE's behavior when scrolling with the mouse wheel"
+                            " in a window while pressing the modifier key.") );
+  formLayout->addRow(i18n("Modifier key + mouse wheel:"), combo);
+
 
   layout->addStretch();
-
   load();
 }
 
