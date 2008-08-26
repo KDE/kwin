@@ -249,8 +249,6 @@ void PresentWindowsEffect::postPaintScreen()
 
 void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
     {
-    if( mTabBoxMode )
-        return;
     assert( w == mInput );
     if( e->type() == QEvent::MouseMove )
         { // Repaint if the highlighted window changed.
@@ -314,6 +312,11 @@ void PresentWindowsEffect::setActive(bool active)
         return;
     if( mActivated == active )
         return;
+    if( mTabBoxMode && mActivated )
+        {
+        effects->closeTabBox();
+        return;
+        }
     mActivated = active;
     if( mActivated )
         {
@@ -1184,6 +1187,8 @@ void PresentWindowsEffect::setHighlightedWindow( EffectWindow* w )
         return;
     effects->addRepaintFull(); // everything is transformed anyway
     mHighlightedWindow = w;
+    if( mTabBoxMode )
+        effects->setTabBoxWindow( w );
     }
 
 // returns a window which is to relative position <xdiff,ydiff> from the given window
