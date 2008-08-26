@@ -89,6 +89,9 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.effectSelector, SIGNAL(configCommitted(const QByteArray&)),
             this, SLOT(reparseConfiguration(const QByteArray&)));
 
+    connect(ui.windowSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(ui.desktopSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+
     // Open the temporary config file
     // Temporary conf file is used to syncronize effect checkboxes with effect
     //  selector by loading/saving effects from/to temp config when active tab
@@ -124,6 +127,41 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
             0, KLocalizedString(), KAboutData::License_GPL, ki18n("(c) 2007 Rivo Laks"));
     about->addAuthor(ki18n("Rivo Laks"), KLocalizedString(), "rivolaks@hot.ee");
     setAboutData(about);
+
+    // search the effect names
+    KServiceTypeTrader* trader = KServiceTypeTrader::self();
+    KService::List services;
+    QString boxswitch, presentwindows, coverswitch, flipswitch, slide, cube;
+    // window switcher
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_boxswitch'");
+    if( !services.isEmpty() )
+        boxswitch = services.first()->name();
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_presentwindows'");
+    if( !services.isEmpty() )
+        presentwindows = services.first()->name();
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_coverswitch'");
+    if( !services.isEmpty() )
+        coverswitch = services.first()->name();
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_flipswitch'");
+    if( !services.isEmpty() )
+        flipswitch = services.first()->name();
+    // desktop switcher
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_slide'");
+    if( !services.isEmpty() )
+        slide = services.first()->name();
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cube'");
+    if( !services.isEmpty() )
+        cube = services.first()->name();
+    // init the combo boxes
+    ui.windowSwitchingCombo->addItem(i18n("No Effect"));
+    ui.windowSwitchingCombo->addItem(boxswitch);
+    ui.windowSwitchingCombo->addItem(presentwindows);
+    ui.windowSwitchingCombo->addItem(coverswitch);
+    ui.windowSwitchingCombo->addItem(flipswitch);
+
+    ui.desktopSwitchingCombo->addItem(i18n("No Effect"));
+    ui.desktopSwitchingCombo->addItem(slide);
+    ui.desktopSwitchingCombo->addItem(cube);
 }
 
 KWinCompositingConfig::~KWinCompositingConfig()
@@ -230,10 +268,9 @@ void KWinCompositingConfig::loadGeneralTab()
     KConfigGroup effectconfig(mTmpConfig, "Plugins");
 #define LOAD_EFFECT_CONFIG(effectname)  effectconfig.readEntry("kwin4_effect_" effectname "Enabled", true)
     int winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows")
-        + LOAD_EFFECT_CONFIG("boxswitch")
         + LOAD_EFFECT_CONFIG("desktopgrid")
         + LOAD_EFFECT_CONFIG("dialogparent");
-    if (winManagementEnabled > 0 && winManagementEnabled < 4) {
+    if (winManagementEnabled > 0 && winManagementEnabled < 3) {
         ui.effectWinManagement->setTristate(true);
         ui.effectWinManagement->setCheckState(Qt::PartiallyChecked);
     }
@@ -242,6 +279,25 @@ void KWinCompositingConfig::loadGeneralTab()
     ui.effectShadows->setChecked(LOAD_EFFECT_CONFIG("shadow"));
     ui.effectAnimations->setChecked(LOAD_EFFECT_CONFIG("minimizeanimation"));
 #undef LOAD_EFFECT_CONFIG
+
+    // window switching
+    if( effectconfig.readEntry("kwin4_effect_boxswitchEnabled", false) )
+        ui.windowSwitchingCombo->setCurrentIndex( 1 );
+    if( effectconfig.readEntry("kwin4_effect_coverswitchEnabled", false) )
+        ui.windowSwitchingCombo->setCurrentIndex( 3 );
+    if( effectconfig.readEntry("kwin4_effect_flipswitchEnabled", false) )
+        ui.windowSwitchingCombo->setCurrentIndex( 4 );
+    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
+    if( effectconfig.readEntry("kwin4_effect_presentwindowsEnabled", false) && presentwindowsconfig.readEntry("TabBox", false) )
+        ui.windowSwitchingCombo->setCurrentIndex( 2 );
+
+    // desktop switching
+    if( effectconfig.readEntry("kwin4_effect_slideEnabled", false) )
+        ui.desktopSwitchingCombo->setCurrentIndex( 1 );
+    KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
+    if( effectconfig.readEntry("kwin4_effect_cubeEnabled", false) && cubeconfig.readEntry("AnimateDesktopChange", false) )
+        ui.desktopSwitchingCombo->setCurrentIndex( 2 );
+    
 }
 
 void KWinCompositingConfig::loadEffectsTab()
@@ -289,7 +345,6 @@ void KWinCompositingConfig::saveGeneralTab()
 #define WRITE_EFFECT_CONFIG(effectname, widget)  effectconfig.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
     if (ui.effectWinManagement->checkState() != Qt::PartiallyChecked) {
         WRITE_EFFECT_CONFIG("presentwindows", ui.effectWinManagement);
-        WRITE_EFFECT_CONFIG("boxswitch", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("dialogparent", ui.effectWinManagement);
     }
@@ -298,6 +353,68 @@ void KWinCompositingConfig::saveGeneralTab()
     //  enable/disable desktopgrid's animation according to this setting
     WRITE_EFFECT_CONFIG("minimizeanimation", ui.effectAnimations);
 #undef WRITE_EFFECT_CONFIG
+
+    int windowSwitcher = ui.windowSwitchingCombo->currentIndex();
+    bool presentWindowSwitching = false;
+    switch( windowSwitcher )
+        {
+        case 0:
+            // no effect
+            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", false);
+            break;
+        case 1:
+            // box switch
+            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", true);
+            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", false);
+            break;
+        case 2:
+            // present windows
+            presentWindowSwitching = true;
+            effectconfig.writeEntry("kwin4_effect_presentwindowsEnabled", true);
+            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", false);
+            break;
+        case 3:
+            // coverswitch
+            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", true);
+            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", false);
+            break;
+        case 4:
+            // flipswitch
+            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", true);
+            break;
+        }
+    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
+    presentwindowsconfig.writeEntry("TabBox", presentWindowSwitching);
+
+    int desktopSwitcher = ui.desktopSwitchingCombo->currentIndex();
+    bool cubeDesktopSwitching = false;
+    switch( desktopSwitcher )
+        {
+        case 0:
+            // no effect
+            effectconfig.writeEntry("kwin4_effect_slideEnabled", false);
+            break;
+        case 1:
+            // slide
+            effectconfig.writeEntry("kwin4_effect_slideEnabled", true);
+            break;
+        case 2:
+            // cube
+            cubeDesktopSwitching = true;
+            effectconfig.writeEntry("kwin4_effect_slideEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_cubeEnabled", true);
+            break;
+        }
+    KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
+    cubeconfig.writeEntry("AnimateDesktopChange", cubeDesktopSwitching);
 }
 
 void KWinCompositingConfig::saveEffectsTab()
@@ -349,6 +466,14 @@ void KWinCompositingConfig::configChanged()
     // Send signal to all kwin instances
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
+    // present windows effect has to be reloaded
+    message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reloadEffect");
+    message << QString("kwin4_effect_presentwindows");
+    QDBusConnection::sessionBus().send(message);
+    // cube effect has to be reloaded
+    message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reloadEffect");
+    message << QString("kwin4_effect_cube");
+    QDBusConnection::sessionBus().send(message);
 }
 
 
@@ -360,6 +485,9 @@ void KWinCompositingConfig::defaults()
     ui.effectWinManagement->setChecked(true);
     ui.effectShadows->setChecked(true);
     ui.effectAnimations->setChecked(true);
+
+    ui.windowSwitchingCombo->setCurrentIndex( 1 );
+    ui.desktopSwitchingCombo->setCurrentIndex( 1 );
 
     ui.effectSelector->defaults();
 }

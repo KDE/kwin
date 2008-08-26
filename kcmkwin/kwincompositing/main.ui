@@ -13,15 +13,15 @@
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <property name="currentIndex" >
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
       <property name="geometry" >
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>585</width>
-        <height>617</height>
+        <width>591</width>
+        <height>619</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -46,8 +46,8 @@
             <property name="title" >
              <string>Common Effects</string>
             </property>
-            <layout class="QVBoxLayout" >
-             <item>
+            <layout class="QGridLayout" name="gridLayout" >
+             <item row="0" column="0" colspan="2" >
               <widget class="QCheckBox" name="effectWinManagement" >
                <property name="text" >
                 <string>Improved window management</string>
@@ -57,7 +57,7 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="1" column="0" colspan="2" >
               <widget class="QCheckBox" name="effectShadows" >
                <property name="text" >
                 <string>Shadows</string>
@@ -67,7 +67,7 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="2" column="0" colspan="2" >
               <widget class="QCheckBox" name="effectAnimations" >
                <property name="text" >
                 <string>Various animations</string>
@@ -77,7 +77,33 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="3" column="0" >
+              <widget class="QLabel" name="label_3" >
+               <property name="text" >
+                <string>Effect for window switching</string>
+               </property>
+               <property name="buddy" >
+                <cstring>windowSwitchingCombo</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1" >
+              <widget class="QComboBox" name="windowSwitchingCombo" />
+             </item>
+             <item row="4" column="0" >
+              <widget class="QLabel" name="label_4" >
+               <property name="text" >
+                <string>Effect for desktop switching</string>
+               </property>
+               <property name="buddy" >
+                <cstring>desktopSwitchingCombo</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1" >
+              <widget class="QComboBox" name="desktopSwitchingCombo" />
+             </item>
+             <item row="5" column="0" colspan="2" >
               <widget class="QLabel" name="label" >
                <property name="text" >
                 <string>You can find more effects in the 'All Effects' tab</string>
@@ -137,8 +163,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>585</width>
-        <height>617</height>
+        <width>591</width>
+        <height>619</height>
        </rect>
       </property>
       <attribute name="title" >
