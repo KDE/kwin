@@ -294,6 +294,12 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
     setActive(false);
     }
 
+void PresentWindowsEffect::windowAdded( EffectWindow* w )
+    {
+    mWindowsToPresent.append( w );
+    rearrangeWindows();
+    }
+
 void PresentWindowsEffect::windowClosed( EffectWindow* w )
     {
     if( mHighlightedWindow == w )

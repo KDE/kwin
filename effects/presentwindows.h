@@ -49,6 +49,7 @@ class PresentWindowsEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintScreen();
 
+        virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual bool borderActivated( ElectricBorder border );
