@@ -854,6 +854,7 @@ SceneOpenGL::Texture::Texture( const Pixmap& pix, const QSize& size, int depth )
 
 SceneOpenGL::Texture::~Texture()
     {
+    discard();
     }
 
 void SceneOpenGL::Texture::init()
