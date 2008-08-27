@@ -1,6 +1,6 @@
 void main()
 {
-    gl_TexCoord[0].xy = gl_Vertex.xy;
+    gl_TexCoord[0] = gl_MultiTexCoord0;
     gl_Position = ftransform();
 }
 

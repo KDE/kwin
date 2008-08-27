@@ -42,10 +42,16 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
+
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "Invert" ));
     a->setText( i18n("Toggle Invert Effect" ));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
+
+    KAction* b = static_cast<KAction*>(actionCollection->addAction( "InvertWindow" ));
+    b->setText( i18n("Toggle Invert Effect On Window" ));
+    b->setProperty("isConfigurationAction", true);
+    b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_U));
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
             KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);

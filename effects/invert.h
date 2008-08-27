@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,22 +22,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_INVERT_H
 #define KWIN_INVERT_H
 
-#include <kwinshadereffect.h>
+#include <kwineffects.h>
 
 namespace KWin
 {
 
+class GLShader;
+
 /**
  * Inverts desktop's colors
  **/
-class InvertEffect : public QObject, public ShaderEffect
+class InvertEffect
+    : public QObject, public Effect
     {
     Q_OBJECT
     public:
         InvertEffect();
+        ~InvertEffect();
+
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void windowClosed( EffectWindow* w );
 
     public slots:
         void toggle();
+        void toggleWindow();
+
+    protected:
+        bool loadData();
+
+    private:
+        bool m_inited;
+        bool m_valid;
+        GLShader* m_shader;
+        bool m_allWindows;
+        QList<EffectWindow*> m_windows;
     };
 
 } // namespace
