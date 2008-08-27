@@ -329,13 +329,9 @@ void PresentWindowsEffect::setActive(bool active)
             EffectWindowList tabBoxWindows = effects->currentTabBoxWindowList();
             int selectedWindow = tabBoxWindows.indexOf( effects->currentTabBoxWindow() );
             for( int i=selectedWindow; i<tabBoxWindows.count(); i++ )
-                {
                 mWindowsToPresent.append( tabBoxWindows[ i ] );
-                }
             for( int i=selectedWindow-1; i>=0; i-- )
-                {
                 mWindowsToPresent.append( tabBoxWindows[ i ] );
-                }
             }
         else
             {
@@ -382,7 +378,6 @@ void PresentWindowsEffect::effectActivated()
     mInput = effects->createFullScreenInputWindow( this, Qt::PointingHandCursor );
     hasKeyboardGrab = effects->grabKeyboard( this );
     effects->setActiveFullScreenEffect( this );
-    setHighlightedWindow( effects->activeWindow());
 
     screenGridSizes.clear();
     for( int i = 0; i < effects->numScreens(); i++ )
@@ -453,18 +448,30 @@ void PresentWindowsEffect::rearrangeWindows()
         // Initialize new entries
         foreach( EffectWindow* w, windowlist )
             if( !mWindowData.contains( w ))
-                {
                 mWindowData[ w ].highlight = 0;
-                }
         }
     else
         firstTime = true;
 
     bool rearranging = false;
+    int iterations = mTabBoxMode ? 1 : effects->numScreens(); // Only use one screen for window switching
     QVector<int> newNumOfWindows( effects->numScreens(), 0 );
     QVector<GridSize> newScreenGridSizes( effects->numScreens() );
-    for( int i = 0; i < effects->numScreens(); i++ )
+    for( int i = 0; i < iterations; i++ )
         {
+        int screen;
+        EffectWindowList screenList;
+        if( mTabBoxMode )
+            {
+            screen = effects->activeScreen();
+            screenList = windowlist;
+            }
+        else
+            {
+            screen = i;
+            screenList = windowlists[i];
+            }
+
         newScreenGridSizes.append( GridSize() );
 
         // Do not rearrange if filtering only removed windows, so that the remaining ones don't possibly
@@ -476,12 +483,12 @@ void PresentWindowsEffect::rearrangeWindows()
             doRearrange = true;
         else
             {
-            newNumOfWindows[i] = windowlists[i].count();
-            newScreenGridSizes[i].columns = int( ceil( sqrt( (double)windowlists[i].count())));
-            newScreenGridSizes[i].rows = int( ceil( windowlists[i].count() / double( newScreenGridSizes[i].columns )));
-            if( newNumOfWindows[i] && ( firstTime || newNumOfWindows[i] > numOfWindows[i] ||
-              ( newNumOfWindows[i] < numOfWindows[i] && ( newScreenGridSizes[i].rows != screenGridSizes[i].rows ||
-                newScreenGridSizes[i].columns != screenGridSizes[i].columns ))))
+            newNumOfWindows[screen] = screenList.count();
+            newScreenGridSizes[screen].columns = int( ceil( sqrt( (double)screenList.count())));
+            newScreenGridSizes[screen].rows = int( ceil( screenList.count() / double( newScreenGridSizes[screen].columns )));
+            if( newNumOfWindows[screen] && ( firstTime || newNumOfWindows[screen] > numOfWindows[screen] ||
+              ( newNumOfWindows[screen] < numOfWindows[screen] && ( newScreenGridSizes[screen].rows != screenGridSizes[screen].rows ||
+                newScreenGridSizes[screen].columns != screenGridSizes[screen].columns ))))
                 doRearrange = true;
             }
         if( doRearrange )
@@ -492,22 +499,22 @@ void PresentWindowsEffect::rearrangeWindows()
                 prepareToRearrange();
                 }
             // No point calculating if there is no windows
-            if( !windowlists[i].size() )
+            if( !screenList.size() )
                 continue;
             // Calculate new positions and scales for windows
-            if( layoutMode == LayoutRegularGrid )
-                calculateWindowTransformationsClosest( windowlists[i], i );
+            if( layoutMode == LayoutRegularGrid || mTabBoxMode ) // Force the grid for window switching
+                calculateWindowTransformationsClosest( screenList, screen );
             else if( layoutMode == LayoutFlexibleGrid )
-                calculateWindowTransformationsKompose( windowlists[i], i );
+                calculateWindowTransformationsKompose( screenList, screen );
             else
-                calculateWindowTransformationsNatural( windowlists[i], i );
+                calculateWindowTransformationsNatural( screenList, screen );
             }
         }
 
     numOfWindows = newNumOfWindows;
     screenGridSizes = newScreenGridSizes;
 
-    if( !mWindowData.isEmpty() && mHighlightedWindow == NULL )
+    if( !mWindowData.isEmpty() && mHighlightedWindow == NULL && !mTabBoxMode ) // Tab box takes care of this itself
         setHighlightedWindow( findFirstWindow());
 
     // Schedule entire desktop to be repainted
@@ -1606,9 +1613,7 @@ void PresentWindowsEffect::tabBoxClosed()
 void PresentWindowsEffect::tabBoxUpdated()
     {
     if( mActivated )
-        {
         setHighlightedWindow( effects->currentTabBoxWindow() );
-        }
     }
 
 } // namespace
