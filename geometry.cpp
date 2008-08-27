@@ -2108,7 +2108,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
             {
             if( old_mode & MaximizeHorizontal ) // actually restoring from MaximizeFull
                 {
-                if( geom_restore.width() == 0 )
+                if( geom_restore.width() == 0 || !clientArea.contains( geom_restore.center() ))
                     { // needs placement
                     plainResize( adjustedSize( QSize( width() * 2 / 3, clientArea.height()), SizemodeFixedH ), geom_mode );
                     workspace()->placeSmart( this, clientArea );
@@ -2132,7 +2132,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
             {
             if( old_mode & MaximizeVertical ) // actually restoring from MaximizeFull
                 {
-                if( geom_restore.height() == 0 )
+                if( geom_restore.height() == 0 || !clientArea.contains( geom_restore.center() ) )
                     { // needs placement
                     plainResize( adjustedSize( QSize( clientArea.width(), height() * 2 / 3 ), SizemodeFixedW ), geom_mode );
                     workspace()->placeSmart( this, clientArea );
@@ -2182,6 +2182,8 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
                     restore.moveTop( geom_restore.y());
                 }
             setGeometry( restore, geom_mode );
+            if( !clientArea.contains( geom_restore.center() )) // Not restoring to the same screen
+                workspace()->place( this, clientArea );
             info->setState( 0, NET::Max );
             break;
             }
