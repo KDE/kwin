@@ -45,6 +45,7 @@ class SphereEffect
         bool mInited;
         bool mValid;
         GLShader* mShader;
+        float capDeformationFactor;
     };
 
 } // namespace

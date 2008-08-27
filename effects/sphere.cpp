@@ -47,6 +47,7 @@ SphereEffect::SphereEffect()
     animateDesktopChange = false;
     KConfigGroup conf = effects->effectConfig( "Sphere" );
     zPosition = conf.readEntry( "ZPosition", 450.0 );
+    capDeformationFactor = conf.readEntry( "CapDeformation", 0 )/100.0f;
     bigCube = true;
     }
 
@@ -173,7 +174,9 @@ void SphereEffect::paintCapStep( float z, float zTexture, bool texture )
         float topAngle = angle*i*M_PI/180.0;
         float bottomAngle = angle*(i+1)*M_PI/180.0;
         float yTop = rect.height() - radius * cos( topAngle );
+        yTop -= (yTop-rect.height()*0.5)*capDeformationFactor;
         float yBottom = rect.height() -radius * cos( bottomAngle );
+        yBottom -= (yBottom-rect.height()*0.5)*capDeformationFactor;
         for( int j=0; j<36; j++ )
             {
             float x = radius * sin( topAngle ) * sin( (90.0+j*10.0)*M_PI/180.0 );
