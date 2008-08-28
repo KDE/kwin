@@ -230,6 +230,9 @@ Effects TODO
 +   - there's a bug that causes overlapping windows be shown also on desktops painted sooner than the window's desktop
         - needs clipping (and that probably needs support for cumulating clipping)
 
++ window thumbnails directly in panel
+    - i.e. the panel (taskbar?) could show window previews directly, without tooltips
+
 
 Performance
 ==================
