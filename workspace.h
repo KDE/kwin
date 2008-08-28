@@ -739,6 +739,7 @@ class Workspace : public QObject, public KDecorationDefines
         Window overlay; // XComposite overlay window
         bool overlay_visible;
         bool overlay_shown; // for showOverlay()
+        QRegion overlay_shape;
         QSlider *transSlider;
         QPushButton *transButton;
         QTimer unredirectTimer;
