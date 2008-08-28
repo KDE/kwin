@@ -50,12 +50,9 @@ class CubeEffectConfig : public KCModule
 
     private slots:
         void capsSelectionChanged();
-        void showFileDialog();
-        void wallpaperSelected();
     private:
         CubeEffectConfigForm* m_ui;
         KActionCollection* m_actionCollection;
-        KFileDialog* m_dialog;
     };
 
 } // namespace

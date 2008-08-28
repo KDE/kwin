@@ -50,6 +50,9 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
 
     layout->addWidget(m_ui, 0, 0);
 
+    m_ui->tabWidget->setTabText( 0, i18n("Basic") );
+    m_ui->tabWidget->setTabText( 1, i18n("Advanced") );
+
     m_ui->screenEdgeCombo->addItem(i18n("Top"));
     m_ui->screenEdgeCombo->addItem(i18n("Top-right"));
     m_ui->screenEdgeCombo->addItem(i18n("Right"));
@@ -71,8 +74,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
 
     m_ui->editor->addCollection(m_actionCollection);
 
-    m_ui->wallpaperButton->setIcon(KIcon("document-open"));
-    connect(m_ui->wallpaperButton, SIGNAL(clicked()), this, SLOT(showFileDialog()));
+    m_ui->wallpaperRequester->setFilter("*.png *.jpeg *.jpg ");
 
     connect(m_ui->screenEdgeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(m_ui->rotationDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
@@ -87,7 +89,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
     connect(m_ui->capsImageBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->capColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
-    connect(m_ui->wallpaperLineEdit, SIGNAL(textChanged(QString)), this, SLOT(changed()));
+    connect(m_ui->wallpaperRequester, SIGNAL(textChanged(QString)), this, SLOT(changed()));
     connect(m_ui->closeOnMouseReleaseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->zPositionSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
@@ -113,7 +115,7 @@ void CubeEffectConfig::load()
     bool bigCube = conf.readEntry( "BigCube", false );
     bool closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
     m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 100 ) );
-    m_ui->wallpaperLineEdit->setText( conf.readEntry( "Wallpaper", "" ) );
+    m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
     if( activateBorder == (int)ElectricNone )
         activateBorder--;
     m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
@@ -199,7 +201,7 @@ void CubeEffectConfig::save()
     conf.writeEntry( "AnimateDesktopChange", m_ui->animateDesktopChangeBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "BigCube", m_ui->bigCubeBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CloseOnMouseRelease", m_ui->closeOnMouseReleaseBox->checkState() == Qt::Checked ? true : false );
-    conf.writeEntry( "Wallpaper", m_ui->wallpaperLineEdit->text() );
+    conf.writeEntry( "Wallpaper", m_ui->wallpaperRequester->url().path() );
     conf.writeEntry( "ZPosition", m_ui->zPositionSlider->value() );
 
     int activateBorder = m_ui->screenEdgeCombo->currentIndex();
@@ -230,7 +232,7 @@ void CubeEffectConfig::defaults()
     m_ui->animateDesktopChangeBox->setCheckState( Qt::Unchecked );
     m_ui->bigCubeBox->setCheckState( Qt::Unchecked );
     m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
-    m_ui->wallpaperLineEdit->setText( "" );
+    m_ui->wallpaperRequester->setPath( "" );
     m_ui->zPositionSlider->setValue( 100 );
     m_ui->editor->allDefault();
     emit changed(true);
@@ -252,37 +254,7 @@ void CubeEffectConfig::capsSelectionChanged()
         m_ui->capColorLabel->setEnabled( false );
         m_ui->capsImageBox->setEnabled( false );
         }
-    }
-
-void CubeEffectConfig::showFileDialog()
-    {
-    m_dialog = new KFileDialog( KUrl(), "*.png *.jpeg *.jpg ", m_ui );
-    KImageFilePreview *previewWidget = new KImageFilePreview( m_dialog );
-    m_dialog->setPreviewWidget( previewWidget );
-    m_dialog->setOperationMode( KFileDialog::Opening );
-    m_dialog->setCaption( i18n("Select Wallpaper Image File") );
-    m_dialog->setModal( false );
-    m_dialog->show();
-    m_dialog->raise();
-    m_dialog->activateWindow();
-
-    connect(m_dialog, SIGNAL(okClicked()), this, SLOT(wallpaperSelected()));
-    }
-
-void CubeEffectConfig::wallpaperSelected()
-    {
-    QString wallpaper = m_dialog->selectedFile();
-    disconnect(m_dialog, SIGNAL(okClicked()), this, SLOT(wallpaperSelected()));
-
-    m_dialog->deleteLater();
-
-    if (wallpaper.isEmpty()) {
-        return;
-    }
-
-    m_ui->wallpaperLineEdit->setText( wallpaper );
-    }
-  
+    }  
 
 } // namespace
 
