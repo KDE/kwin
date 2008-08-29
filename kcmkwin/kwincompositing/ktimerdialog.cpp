@@ -38,7 +38,6 @@
 #include "ktimerdialog.moc"
 
 KTimerDialog::KTimerDialog( int msec, TimerStyle style, QWidget *parent,
-                 const char *name, bool modal,
                  const QString &caption,
                  int buttonMask, ButtonCode defaultButton,
                  bool separator,
@@ -47,8 +46,6 @@ KTimerDialog::KTimerDialog( int msec, TimerStyle style, QWidget *parent,
                  const KGuiItem &user3 )
     : KDialog( parent )
 {
-    setObjectName( name );
-    setModal( modal );
     setCaption( caption );
     setButtons( (ButtonCodes)buttonMask );
     setDefaultButton( defaultButton );
