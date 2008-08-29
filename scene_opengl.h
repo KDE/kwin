@@ -64,6 +64,8 @@ class SceneOpenGL
         bool initDrawableConfigs();
         void waitSync();
         void flushBuffer( int mask, QRegion damage );
+        void selfCheckSetup( QRegion& damage );
+        void selfCheckFinish();
         GC gcroot;
         class FBConfigInfo
         {
@@ -90,6 +92,7 @@ class SceneOpenGL
         static XShmSegmentInfo shm;
 #endif
         bool init_ok;
+        bool selfCheckDone;
     };
 
 class SceneOpenGL::Texture

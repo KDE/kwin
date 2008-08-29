@@ -84,6 +84,10 @@ Sources and other compositing managers:
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 
+#include <X11/extensions/Xcomposite.h>
+
+#include <qpainter.h>
+
 namespace KWin
 {
 
@@ -113,6 +117,7 @@ XShmSegmentInfo SceneOpenGL::shm;
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     , init_ok( false )
+    , selfCheckDone( false )
     {
     if( !Extensions::glxAvailable())
         {
@@ -615,6 +620,61 @@ bool SceneOpenGL::initDrawableConfigs()
     return true;
     }
 
+// Test if compositing actually _really_ works, by creating a texture from a testing
+// window, drawing it on the screen, reading the contents back and comparing. This
+// should test whether compositing really works.
+// It would be still nice to check somehow if compositing is not awfully slow.
+void SceneOpenGL::selfCheckSetup( QRegion& damage )
+    {
+    QImage img( 5, 1, QImage::Format_RGB32 );
+    img.setPixel( 0, 0, QColor( Qt::red ).rgb());
+    img.setPixel( 1, 0, QColor( Qt::green ).rgb());
+    img.setPixel( 2, 0, QColor( Qt::blue ).rgb());
+    img.setPixel( 3, 0, QColor( Qt::white ).rgb());
+    img.setPixel( 4, 0, QColor( Qt::black ).rgb());
+    XSetWindowAttributes wa;
+    wa.override_redirect = True;
+    ::Window window = XCreateWindow( display(), rootWindow(), 0, 0, 5, 1, 0, QX11Info::appDepth(),
+        CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa );
+    QPixmap pix = QPixmap::fromImage( img );
+    XSetWindowBackgroundPixmap( display(), window, pix.handle());
+    XClearWindow( display(), window );
+    XMapWindow( display(), window );
+    XSync( display(), False );
+    Pixmap wpix = XCompositeNameWindowPixmap( display(), window );
+    XDestroyWindow( display(), window );
+    glXWaitX();
+    Texture texture;
+    texture.load( wpix, QSize( 5, 1 ), QX11Info::appDepth());
+    texture.bind();
+    QRect rect( 0, 0, 5, 1 );
+    texture.render( rect, rect );
+    Workspace::self()->addRepaint( rect );
+    texture.unbind();
+    texture.discard();
+    XFreePixmap( display(), wpix );
+    damage |= rect;
+    }
+
+void SceneOpenGL::selfCheckFinish()
+    {
+    glXWaitGL();
+    selfCheckDone = true;
+    QPixmap pix = QPixmap::grabWindow( rootWindow(), 0, 0, 5, 1 );
+    QImage img = pix.toImage();
+    if( img.pixel( 0, 0 ) != QColor( Qt::red ).rgb()
+        || img.pixel( 1, 0 ) != QColor( Qt::green ).rgb()
+        || img.pixel( 2, 0 ) != QColor( Qt::blue ).rgb()
+        || img.pixel( 3, 0 ) != QColor( Qt::white ).rgb()
+        || img.pixel( 4, 0 ) != QColor( Qt::black ).rgb())
+        {
+        kError( 1212 ) << "Compositing self-check failed, disabling compositing.";
+        QTimer::singleShot( 0, Workspace::self(), SLOT( finishCompositing()));
+        }
+    else
+        kDebug( 1212 ) << "Compositing self-check passed.";
+    }
+
 // the entry function for painting
 void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     {
@@ -636,7 +696,13 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
 #endif
     glPopMatrix();
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
+    if( wspace->overlayWindow()) // show the window only after the first pass, since
+        wspace->showOverlay();   // that pass may take long
+    if( !selfCheckDone )
+        selfCheckSetup( damage );
     flushBuffer( mask, damage );
+    if( !selfCheckDone )
+        selfCheckFinish();
     // do cleanup
     stacking_order.clear();
     checkGLError( "PostPaint" );
@@ -658,8 +724,6 @@ void SceneOpenGL::waitSync()
 // actually paint to the screen (double-buffer swap or copy from pixmap buffer)
 void SceneOpenGL::flushBuffer( int mask, QRegion damage )
     {
-    if( wspace->overlayWindow()) // show the window only after the first pass, since
-        wspace->showOverlay();   // that pass may take long
     if( db )
         {
         if( mask & PAINT_SCREEN_REGION )
