@@ -88,6 +88,7 @@ SphereEffectConfig::SphereEffectConfig(QWidget* parent, const QVariantList& args
     connect(m_ui->closeOnMouseReleaseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->zPositionSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->capDeformationSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->walkThroughDesktopBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -107,6 +108,7 @@ void SphereEffectConfig::load()
     bool texturedCaps = conf.readEntry( "TexturedCaps", true );
     bool caps = conf.readEntry( "Caps", true );
     bool closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
+    bool walkThroughDesktop = conf.readEntry( "TabBox", false );
     m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 450 ) );
     m_ui->capDeformationSlider->setValue( conf.readEntry( "CapDeformation", 0 ) );
     m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
@@ -149,6 +151,14 @@ void SphereEffectConfig::load()
         {
         m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
         }
+    if( walkThroughDesktop )
+        {
+        m_ui->walkThroughDesktopBox->setCheckState( Qt::Checked );
+        }
+    else
+        {
+        m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
+        }
     m_ui->backgroundColorButton->setColor( background );
     m_ui->capColorButton->setColor( capColor );
     capsSelectionChanged();
@@ -171,6 +181,7 @@ void SphereEffectConfig::save()
     conf.writeEntry( "Wallpaper", m_ui->wallpaperRequester->url().path() );
     conf.writeEntry( "ZPosition", m_ui->zPositionSlider->value() );
     conf.writeEntry( "CapDeformation", m_ui->capDeformationSlider->value() );
+    conf.writeEntry( "TabBox", m_ui->walkThroughDesktopBox->checkState() == Qt::Checked ? true : false );
 
     int activateBorder = m_ui->screenEdgeCombo->currentIndex();
     if( activateBorder == (int)ELECTRIC_COUNT )
@@ -200,6 +211,7 @@ void SphereEffectConfig::defaults()
     m_ui->wallpaperRequester->setPath( "" );
     m_ui->zPositionSlider->setValue( 450 );
     m_ui->capDeformationSlider->setValue( 0 );
+    m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
     m_ui->editor->allDefault();
     emit changed(true);
     }

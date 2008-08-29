@@ -447,6 +447,13 @@ Otherwise sphere will stay in the position.</string>
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="walkThroughDesktopBox" >
+            <property name="text" >
+             <string>Use for walk through desktop list</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

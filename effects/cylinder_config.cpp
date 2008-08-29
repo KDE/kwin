@@ -88,6 +88,7 @@ CylinderEffectConfig::CylinderEffectConfig(QWidget* parent, const QVariantList& 
     connect(m_ui->wallpaperRequester, SIGNAL(textChanged(QString)), this, SLOT(changed()));
     connect(m_ui->closeOnMouseReleaseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->zPositionSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->walkThroughDesktopBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -108,6 +109,7 @@ void CylinderEffectConfig::load()
     bool texturedCaps = conf.readEntry( "TexturedCaps", true );
     bool caps = conf.readEntry( "Caps", true );
     bool closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
+    bool walkThroughDesktop = conf.readEntry( "TabBox", false );
     m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 100 ) );
     m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
     if( activateBorder == (int)ElectricNone )
@@ -157,6 +159,14 @@ void CylinderEffectConfig::load()
         {
         m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
         }
+    if( walkThroughDesktop )
+        {
+        m_ui->walkThroughDesktopBox->setCheckState( Qt::Checked );
+        }
+    else
+        {
+        m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
+        }
     m_ui->backgroundColorButton->setColor( background );
     m_ui->capColorButton->setColor( capColor );
     capsSelectionChanged();
@@ -179,6 +189,7 @@ void CylinderEffectConfig::save()
     conf.writeEntry( "CloseOnMouseRelease", m_ui->closeOnMouseReleaseBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "Wallpaper", m_ui->wallpaperRequester->url().path() );
     conf.writeEntry( "ZPosition", m_ui->zPositionSlider->value() );
+    conf.writeEntry( "TabBox", m_ui->walkThroughDesktopBox->checkState() == Qt::Checked ? true : false );
 
     int activateBorder = m_ui->screenEdgeCombo->currentIndex();
     if( activateBorder == (int)ELECTRIC_COUNT )
@@ -208,6 +219,7 @@ void CylinderEffectConfig::defaults()
     m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
     m_ui->wallpaperRequester->setPath( "" );
     m_ui->zPositionSlider->setValue( 100 );
+    m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
     m_ui->editor->allDefault();
     emit changed(true);
     }

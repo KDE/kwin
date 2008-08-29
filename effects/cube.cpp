@@ -76,6 +76,8 @@ CubeEffect::CubeEffect()
     , closeOnMouseRelease( false )
     , zoom( 0.0 )
     , zPosition( 0.0 )
+    , useForTabBox( false )
+    , tabBoxMode( false )
     , capListCreated( false )
     , capList( 0 )
     {
@@ -105,6 +107,7 @@ void CubeEffect::loadConfig( QString config )
     paintCaps = conf.readEntry( "Caps", true );
     closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
     zPosition = conf.readEntry( "ZPosition", 100.0 );
+    useForTabBox = conf.readEntry( "TabBox", false );
     QString file = conf.readEntry( "Wallpaper", QString("") );
     if( !file.isEmpty() )
         {
@@ -1554,6 +1557,8 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
     {
     if( !activated )
         return;
+    if( tabBoxMode )
+        return;
     if( stop || slide )
         return;
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
@@ -1616,6 +1621,38 @@ void CubeEffect::desktopChanged( int old )
     frontDesktop = old;
     rotateToDesktop( effects->currentDesktop() );
     setActive( false );
+    }
+
+
+void CubeEffect::tabBoxAdded( int mode )
+    {
+    if( activated )
+        return;
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return;
+    if( useForTabBox && mode != TabBoxWindowsMode )
+        {
+        effects->refTabBox();
+        tabBoxMode = true;
+        setActive( true );
+        rotateToDesktop( effects->currentTabBoxDesktop() );
+        }
+    }
+
+void CubeEffect::tabBoxUpdated()
+    {
+    if( activated )
+        rotateToDesktop( effects->currentTabBoxDesktop() );
+    }
+
+void CubeEffect::tabBoxClosed()
+    {
+    if( activated )
+        {
+        effects->unrefTabBox();
+        tabBoxMode = false;
+        setActive( false );
+        }
     }
 
 } // namespace

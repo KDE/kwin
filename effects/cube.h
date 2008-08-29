@@ -46,6 +46,9 @@ class CubeEffect
         virtual void mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, 
             Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
         virtual void desktopChanged( int old );
+        virtual void tabBoxAdded( int mode );
+        virtual void tabBoxUpdated();
+        virtual void tabBoxClosed();
     protected slots:
         void toggle();
     protected:
@@ -112,6 +115,8 @@ class CubeEffect
         bool closeOnMouseRelease;
         float zoom;
         float zPosition;
+        bool useForTabBox;
+        bool tabBoxMode;
 
         // GL lists
         bool capListCreated;
