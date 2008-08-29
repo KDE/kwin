@@ -66,6 +66,7 @@ class SceneOpenGL
         void flushBuffer( int mask, QRegion damage );
         void selfCheckSetup( QRegion& damage );
         void selfCheckFinish();
+        QList< QPoint > selfCheckPoints() const;
         GC gcroot;
         class FBConfigInfo
         {

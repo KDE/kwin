@@ -87,6 +87,7 @@ Sources and other compositing managers:
 #include <X11/extensions/Xcomposite.h>
 
 #include <qpainter.h>
+#include <qdesktopwidget.h>
 
 namespace KWin
 {
@@ -640,39 +641,58 @@ void SceneOpenGL::selfCheckSetup( QRegion& damage )
     XSetWindowBackgroundPixmap( display(), window, pix.handle());
     XClearWindow( display(), window );
     XMapWindow( display(), window );
-    XSync( display(), False );
-    Pixmap wpix = XCompositeNameWindowPixmap( display(), window );
+    foreach( const QPoint& p, selfCheckPoints())
+        {
+        XMoveWindow( display(), window, p.x(), p.y());
+        Pixmap wpix = XCompositeNameWindowPixmap( display(), window );
+        glXWaitX();
+        Texture texture;
+        texture.load( wpix, QSize( 5, 1 ), QX11Info::appDepth());
+        texture.bind();
+        QRect rect( p.x(), p.y(), 5, 1 );
+        texture.render( infiniteRegion(), rect );
+        Workspace::self()->addRepaint( rect );
+        texture.unbind();
+        XFreePixmap( display(), wpix );
+        damage |= rect;
+        }
     XDestroyWindow( display(), window );
-    glXWaitX();
-    Texture texture;
-    texture.load( wpix, QSize( 5, 1 ), QX11Info::appDepth());
-    texture.bind();
-    QRect rect( 0, 0, 5, 1 );
-    texture.render( rect, rect );
-    Workspace::self()->addRepaint( rect );
-    texture.unbind();
-    texture.discard();
-    XFreePixmap( display(), wpix );
-    damage |= rect;
     }
 
 void SceneOpenGL::selfCheckFinish()
     {
     glXWaitGL();
     selfCheckDone = true;
-    QPixmap pix = QPixmap::grabWindow( rootWindow(), 0, 0, 5, 1 );
-    QImage img = pix.toImage();
-    if( img.pixel( 0, 0 ) != QColor( Qt::red ).rgb()
-        || img.pixel( 1, 0 ) != QColor( Qt::green ).rgb()
-        || img.pixel( 2, 0 ) != QColor( Qt::blue ).rgb()
-        || img.pixel( 3, 0 ) != QColor( Qt::white ).rgb()
-        || img.pixel( 4, 0 ) != QColor( Qt::black ).rgb())
+    foreach( const QPoint& p, selfCheckPoints())
         {
-        kError( 1212 ) << "Compositing self-check failed, disabling compositing.";
-        QTimer::singleShot( 0, Workspace::self(), SLOT( finishCompositing()));
+        QPixmap pix = QPixmap::grabWindow( rootWindow(), p.x(), p.y(), 5, 1 );
+        QImage img = pix.toImage();
+        if( img.pixel( 0, 0 ) != QColor( Qt::red ).rgb()
+            || img.pixel( 1, 0 ) != QColor( Qt::green ).rgb()
+            || img.pixel( 2, 0 ) != QColor( Qt::blue ).rgb()
+            || img.pixel( 3, 0 ) != QColor( Qt::white ).rgb()
+            || img.pixel( 4, 0 ) != QColor( Qt::black ).rgb())
+            {
+            kError( 1212 ) << "Compositing self-check failed, disabling compositing.";
+            QTimer::singleShot( 0, Workspace::self(), SLOT( finishCompositing()));
+            return;
+            }
         }
-    else
-        kDebug( 1212 ) << "Compositing self-check passed.";
+    kDebug( 1212 ) << "Compositing self-check passed.";
+    }
+
+QList< QPoint > SceneOpenGL::selfCheckPoints() const
+    {
+    QList< QPoint > ret;
+    // Use QDesktopWidget directly, we're interested in "real" screens, not depending on our config.
+    for( int screen = 0;
+         screen < qApp->desktop()->numScreens();
+         ++screen )
+        { // test top-left and bottom-right of every screen
+        ret.append( qApp->desktop()->screenGeometry( screen ).topLeft());
+        ret.append( qApp->desktop()->screenGeometry( screen ).bottomRight() + QPoint( -5 + 1, -1 + 1 ));
+        }
+    return ret;
     }
 
 // the entry function for painting
