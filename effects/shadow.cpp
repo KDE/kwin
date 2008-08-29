@@ -333,7 +333,9 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, W
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         // We have two elements per vertex in the verts array
         int verticesCount = verts.count() / 2;
+        mShadowTexture->enableNormalizedTexCoords();
         renderGLGeometry( region, verticesCount, verts.data(), texcoords.data() );
+        mShadowTexture->disableNormalizedTexCoords();
         mShadowTexture->unbind();
 
         glPopMatrix();

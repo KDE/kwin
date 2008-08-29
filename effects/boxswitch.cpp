@@ -600,21 +600,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         // Render the icon
         glColor4f( 1, 1, 1, 1 );
         windows[ w ]->iconTexture.bind();
-        const float verts[ 4 * 2 ] =
-            {
-            x, y,
-            x, y + height,
-            x + width, y + height,
-            x + width, y
-            };
-        const float texcoords[ 4 * 2 ] =
-            {
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1
-            };
-        renderGLGeometry( 4, verts, texcoords );
+        windows[ w ]->iconTexture.render( infiniteRegion(), QRect( x, y, width, height ));
         windows[ w ]->iconTexture.unbind();
         glPopAttrib();
         }

@@ -1552,21 +1552,7 @@ void PresentWindowsEffect::paintWindowIcon( EffectWindow* w, WindowPaintData& pa
         glColor4f( 1, 1, 1, 1 * mActiveness.value() );
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         data.iconTexture->bind();
-        const float verts[ 4 * 2 ] =
-            {
-            x, y,
-            x, y + height,
-            x + width, y + height,
-            x + width, y
-            };
-        const float texcoords[ 4 * 2 ] =
-            {
-            0, 1,
-            0, 0,
-            1, 0,
-            1, 1
-            };
-        renderGLGeometry( 4, verts, texcoords );
+        data.iconTexture->render( infiniteRegion(), QRect( x, y, width, height ));
         data.iconTexture->unbind();
         glPopAttrib();
         }

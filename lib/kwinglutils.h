@@ -77,6 +77,8 @@ int KWIN_EXPORT nearestPowerOfTwo( int x );
  * Renders quads using given vertices.
  * If texture is not 0, each texture coordinate much have two components (st).
  * If color is not 0, each color much have four components (rgba).
+ * Note that texture coordinates must match texture type (normalized/unnormalized
+ * for GL_TEXTURE_2D/GL_TEXTURE_ARB).
  *
  * @param count number of vertices to use.
  * @param dim number of components per vertex coordinate in vertices array.
@@ -124,8 +126,32 @@ class KWIN_EXPORT GLTexture
         virtual void bind();
         virtual void unbind();
         void render( QRegion region, const QRect& rect );
+        /**
+         * Set up texture transformation matrix to automatically map unnormalized
+         * texture coordinates (i.e. 0 to width, 0 to height, (0,0) is top-left)
+         * to OpenGL coordinates. Automatically adjusts for different texture
+         * types. This can be done only for one texture at a time, repeated
+         * calls for the same texture are allowed though, requiring the same
+         * amount of calls to disableUnnormalizedTexCoords().
+         */
         void enableUnnormalizedTexCoords();
+        /**
+         * Disables transformation set up using enableUnnormalizedTexCoords().
+         */
         void disableUnnormalizedTexCoords();
+        /**
+         * Set up texture transformation matrix to automatically map normalized
+         * texture coordinates (i.e. 0 to 1, 0 to 1, (0,0) is bottom-left)
+         * to OpenGL coordinates. Automatically adjusts for different texture
+         * types. This can be done only for one texture at a time, repeated
+         * calls for the same texture are allowed though, requiring the same
+         * amount of calls to disableNormalizedTexCoords().
+         */
+        void enableNormalizedTexCoords();
+        /**
+         * Disables transformation set up using enableNormalizedTexCoords().
+         */
+        void disableNormalizedTexCoords();
 
         GLuint texture() const;
         GLenum target() const;
@@ -157,6 +183,8 @@ class KWIN_EXPORT GLTexture
 
     private:
         void init();
+        int mUnnormalizeActive; // 0 - no, otherwise refcount
+        int mNormalizeActive; // 0 - no, otherwise refcount
 
         static bool mNPOTTextureSupported;
         static bool mFramebufferObjectSupported;

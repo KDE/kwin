@@ -298,7 +298,9 @@ void renderRoundBox( const QRect& area, float roundness, GLTexture* texture )
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     // We have two elements per vertex in the verts array
     int verticesCount = verts.count() / 2;
+    texture->enableNormalizedTexCoords();
     renderGLGeometry( verticesCount, verts.data(), texcoords.data() );
+    texture->disableNormalizedTexCoords();
     texture->unbind();
 
     glPopMatrix();
@@ -368,6 +370,8 @@ GLTexture::GLTexture( int width, int height )
 GLTexture::~GLTexture()
     {
     discard();
+    assert( mUnnormalizeActive == 0 );
+    assert( mNormalizeActive == 0 );
     }
 
 void GLTexture::init()
@@ -378,6 +382,8 @@ void GLTexture::init()
     y_inverted = false;
     can_use_mipmaps = false;
     has_valid_mipmaps = false;
+    mUnnormalizeActive = 0;
+    mNormalizeActive = 0;
     }
 
 void GLTexture::initStatic()
@@ -485,16 +491,21 @@ void GLTexture::render( QRegion region, const QRect& rect )
         };
     const float texcoords[ 4 * 2 ] =
         {
-        0, 1,
+        0, 1, // y needs to be swapped (normalized coords)
         0, 0,
         1, 0,
         1, 1
         };
+    enableNormalizedTexCoords();
     renderGLGeometry( region, 4, verts, texcoords );
+    disableNormalizedTexCoords();
     }
 
 void GLTexture::enableUnnormalizedTexCoords()
     {
+    assert( mNormalizeActive == 0 );
+    if( mUnnormalizeActive++ != 0 )
+        return;
     // update texture matrix to handle GL_TEXTURE_2D and GL_TEXTURE_RECTANGLE
     glMatrixMode( GL_TEXTURE );
     glPushMatrix();
@@ -512,6 +523,38 @@ void GLTexture::enableUnnormalizedTexCoords()
 
 void GLTexture::disableUnnormalizedTexCoords()
     {
+    if( --mUnnormalizeActive != 0 )
+        return;
+    // Restore texture matrix
+    glMatrixMode( GL_TEXTURE );
+    glPopMatrix();
+    glMatrixMode( GL_MODELVIEW );
+    }
+
+void GLTexture::enableNormalizedTexCoords()
+    {
+    assert( mUnnormalizeActive == 0 );
+    if( mNormalizeActive++ != 0 )
+        return;
+    // update texture matrix to handle GL_TEXTURE_2D and GL_TEXTURE_RECTANGLE
+    glMatrixMode( GL_TEXTURE );
+    glPushMatrix();
+    glLoadIdentity();
+    glScalef( mSize.width() * mScale.width(), mSize.height() * mScale.height(), 1 );
+    if( y_inverted )
+        {
+        // Modify texture matrix so that we could always use non-opengl
+        //  coordinates for textures
+        glScalef( 1, -1, 1 );
+        glTranslatef( 0, -mSize.height(), 0 );
+        }
+    glMatrixMode( GL_MODELVIEW );
+    }
+
+void GLTexture::disableNormalizedTexCoords()
+    {
+    if( --mNormalizeActive != 0 )
+        return;
     // Restore texture matrix
     glMatrixMode( GL_TEXTURE );
     glPopMatrix();

@@ -378,21 +378,7 @@ bool EffectsHandler::paintText( const QString& text, const QRect& rect, const QC
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         textTexture.bind();
-        const float verts[ 4 * 2 ] =
-            {
-            area.x(), area.y(),
-            area.x(), area.y() + area.height(),
-            area.x() + area.width(), area.y() + area.height(),
-            area.x() + area.width(), area.y()
-            };
-        const float texcoords[ 4 * 2 ] =
-            {
-            0, textPixmap.height(),
-            0, 0,
-            textPixmap.width(), 0,
-            textPixmap.width(), textPixmap.height()
-            };
-        renderGLGeometry( 4, verts, texcoords );
+        textTexture.render( infiniteRegion(), area );
         textTexture.unbind();
         glPopAttrib();
         return true;
