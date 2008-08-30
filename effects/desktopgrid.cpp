@@ -65,7 +65,7 @@ DesktopGridEffect::DesktopGridEffect()
     borderActivate = ElectricBorder( conf.readEntry( "BorderActivate", int( ElectricNone )));
     effects->reserveElectricBorder( borderActivate );
 
-    zoomDuration = animationTime( conf, "ZoomDuration", 500 );
+    zoomDuration = animationTime( conf, "ZoomDuration", 300 );
     timeline.setCurveShape( TimeLine::EaseInOutCurve );
     timeline.setDuration( zoomDuration );
 
