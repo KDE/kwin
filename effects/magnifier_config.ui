@@ -34,6 +34,9 @@
         <property name="maximum" >
          <number>500</number>
         </property>
+        <property name="singleStep" >
+         <number>10</number>
+        </property>
        </widget>
       </item>
       <item row="1" column="0" >
@@ -53,6 +56,9 @@
         </property>
         <property name="maximum" >
          <number>500</number>
+        </property>
+        <property name="singleStep" >
+         <number>10</number>
         </property>
        </widget>
       </item>
