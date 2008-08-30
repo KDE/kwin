@@ -331,6 +331,7 @@ class Workspace : public QObject, public KDecorationDefines
         void destroyOverlay();
         Window overlayWindow();
         void checkUnredirect( bool force = false );
+        void checkCompositeTimer();
 
     public slots:
         void addRepaintFull();
@@ -573,6 +574,7 @@ class Workspace : public QObject, public KDecorationDefines
         void updateClientArea( bool force );
 
         bool windowRepaintsPending() const;
+        void setCompositeTimer();
 
         int current_desktop;
         int number_of_desktops;
@@ -734,6 +736,7 @@ class Workspace : public QObject, public KDecorationDefines
         bool compositingSuspended;
         QTimer compositeTimer;
         QTime lastCompositePaint;
+        QTime nextPaintReference;
         int compositeRate;
         QRegion repaints_region;
         Window overlay; // XComposite overlay window
@@ -964,6 +967,13 @@ KWIN_COMPARE_PREDICATE( ClientMatchPredicate, Client, const Client*, cl == value
 inline bool Workspace::hasClient( const Client* c )
     {
     return findClient( ClientMatchPredicate( c ));
+    }
+
+inline
+void Workspace::checkCompositeTimer()
+    {
+    if( !compositeTimer.isActive())
+        setCompositeTimer();
     }
 
 } // namespace

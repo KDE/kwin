@@ -188,8 +188,11 @@ void Workspace::setupCompositing()
         rate = 1000;
     kDebug( 1212 ) << "Refresh rate " << rate << "Hz";
     compositeRate = 1000 / rate;
-    compositeTimer.start( compositeRate );
     lastCompositePaint.start();
+    // fake a previous paint, so that the next starts right now
+    nextPaintReference = QTime::currentTime().addMSecs( -compositeRate );
+    compositeTimer.setSingleShot( true );
+    checkCompositeTimer();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     new EffectsHandlerImpl( scene->compositingType() ); // sets also the 'effects' pointer
     addRepaintFull();
@@ -234,11 +237,11 @@ void Workspace::finishCompositing()
     foreach( Deleted* c, deleted )
         c->finishCompositing();
     XCompositeUnredirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
-    compositeTimer.stop();
     delete effects;
     effects = NULL;
     delete scene;
     scene = NULL;
+    compositeTimer.stop();
     repaints_region = QRegion();
     for( ClientList::ConstIterator it = clients.begin();
          it != clients.end();
@@ -276,6 +279,7 @@ void Workspace::addRepaint( int x, int y, int w, int h )
     if( !compositing())
         return;
     repaints_region += QRegion( x, y, w, h );
+    checkCompositeTimer();
     }
 
 void Workspace::addRepaint( const QRect& r )
@@ -283,6 +287,7 @@ void Workspace::addRepaint( const QRect& r )
     if( !compositing())
         return;
     repaints_region += r;
+    checkCompositeTimer();
     }
     
 void Workspace::addRepaint( const QRegion& r )
@@ -290,6 +295,7 @@ void Workspace::addRepaint( const QRegion& r )
     if( !compositing())
         return;
     repaints_region += r;
+    checkCompositeTimer();
     }
     
 void Workspace::addRepaintFull()
@@ -297,6 +303,7 @@ void Workspace::addRepaintFull()
     if( !compositing())
         return;
     repaints_region = QRegion( 0, 0, displayWidth(), displayHeight());
+    checkCompositeTimer();
     }
 
 void Workspace::performCompositing()
@@ -308,17 +315,17 @@ void Workspace::performCompositing()
     // them - leave at least 1msec time after one repaint is finished and next one
     // is started.
     if( lastCompositePaint.elapsed() < 1 )
+        {
+        compositeTimer.start( 1 );
         return;
+        }
+    if( !scene->waitSyncAvailable())
+        nextPaintReference = QTime::currentTime();
     checkCursorPos();
     if(( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
         || !overlay_visible ) // nothing is visible anyway
         {
         scene->idle();
-        // With vsync, next repaint is scheduled dynamically at the end of this function,
-        // and it can have a very short timeout. If we now idle here, make sure the idling
-        // does not actually caused heavy load by firing the timer often too quickly.
-        if( compositeTimer.interval() != compositeRate )
-            compositeTimer.start( compositeRate );
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
         // need this anymore and paints normally will also reset the suspended unredirect.
@@ -361,11 +368,19 @@ void Workspace::performCompositing()
     scene->paint( repaints, windows );
     if( scene->waitSyncAvailable())
         {
-        // if vsync is used, schedule the next repaint slightly in advance of the next sync,
-        // so that there is still time for the drawing to take place
-        int untilNextSync = compositeRate - ( lastCompositePaint.elapsed() % compositeRate );
-        compositeTimer.start( qMax( 1, untilNextSync - 10 )); // 10 ms in advance - TODO maybe less?
+        // If vsync is used, schedule the next repaint slightly in advance of the next sync,
+        // so that there is still time for the drawing to take place. We have just synced, and
+        // nextPaintReference is time from which multiples of compositeRate should be added,
+        // so set it 10ms back (meaning next paint will be in 'compositeRate - 10').
+        // However, make sure the reserve is smaller than the composite rate.
+        int reserve = compositeRate <= 10 ? compositeRate - 1 : 10;
+        nextPaintReference = QTime::currentTime().addMSecs( -reserve );
         }
+    // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
+    // is called the next time. If there would be nothing pending, it will not restart the timer and
+    // checkCompositeTime() would restart it again somewhen later, called from functions that
+    // would again add something pending.
+    checkCompositeTimer();
     lastCompositePaint.start();
 #endif
     }
@@ -385,6 +400,15 @@ bool Workspace::windowRepaintsPending() const
         if( !c->repaints().isEmpty())
             return true;
     return false;
+    }
+
+void Workspace::setCompositeTimer()
+    {
+    if( !compositing()) // should not really happen, but there may be e.g. some damage events still pending
+        return;
+    // Last paint set nextPaintReference as a reference time from which multiples of compositeRate
+    // should be added for the next paint.
+    compositeTimer.start( nextPaintReference.msecsTo( QTime::currentTime()) % compositeRate );
     }
 
 bool Workspace::createOverlay()
@@ -661,6 +685,7 @@ void Toplevel::addDamage( int x, int y, int w, int h )
     damage_region += r;
     repaints_region += r;
     static_cast<EffectsHandlerImpl*>(effects)->windowDamaged( effectWindow(), r );
+    workspace()->checkCompositeTimer();
     }
 
 void Toplevel::addDamageFull()
@@ -670,6 +695,7 @@ void Toplevel::addDamageFull()
     damage_region = rect();
     repaints_region = rect();
     static_cast<EffectsHandlerImpl*>(effects)->windowDamaged( effectWindow(), rect());
+    workspace()->checkCompositeTimer();
     }
 
 void Toplevel::resetDamage( const QRect& r )
@@ -689,11 +715,13 @@ void Toplevel::addRepaint( int x, int y, int w, int h )
     QRect r( x, y, w, h );
     r &= rect();
     repaints_region += r;
+    workspace()->checkCompositeTimer();
     }
 
 void Toplevel::addRepaintFull()
     {
     repaints_region = rect();
+    workspace()->checkCompositeTimer();
     }
 
 void Toplevel::resetRepaints( const QRect& r )

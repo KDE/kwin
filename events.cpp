@@ -488,6 +488,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                     addRepaintFull();
                     QTimer::singleShot( 2000, this, SLOT( addRepaintFull()));
                     }
+                checkCompositeTimer();
                 }
             break;
         default:
