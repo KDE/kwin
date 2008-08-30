@@ -92,6 +92,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.windowSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.desktopSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(ui.animationSpeedCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     // Open the temporary config file
     // Temporary conf file is used to syncronize effect checkboxes with effect
@@ -264,6 +265,7 @@ void KWinCompositingConfig::loadGeneralTab()
 {
     KConfigGroup config(mKWinConfig, "Compositing");
     ui.useCompositing->setChecked(config.readEntry("Enabled", mDefaultPrefs.enableCompositing()));
+    ui.animationSpeedCombo->setCurrentIndex(config.readEntry("AnimationSpeed", 3 ));
 
     // Load effect settings
     KConfigGroup effectconfig(mTmpConfig, "Plugins");
@@ -340,6 +342,7 @@ void KWinCompositingConfig::saveGeneralTab()
         }
 
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
+    config.writeEntry("AnimationSpeed", ui.animationSpeedCombo->currentIndex());
 
     // Save effects
     KConfigGroup effectconfig(mTmpConfig, "Plugins");
@@ -489,6 +492,7 @@ void KWinCompositingConfig::defaults()
 
     ui.windowSwitchingCombo->setCurrentIndex( 1 );
     ui.desktopSwitchingCombo->setCurrentIndex( 1 );
+    ui.animationSpeedCombo->setCurrentIndex( 3 );
 
     ui.effectSelector->defaults();
 }

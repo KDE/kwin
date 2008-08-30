@@ -163,7 +163,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 53
+#define KWIN_EFFECT_API_VERSION_MINOR 54
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -373,6 +373,22 @@ class KWIN_EXPORT Effect
         static QPoint cursorPos();
 
         /**
+         * Read animation time from the configuration and possibly adjust using animationTimeFactor().
+         * The configuration value in the effect should also have special value 'default' (set using
+         * QSpinBox::setSpecialValueText()) with the value 0. This special value is adjusted
+         * using the global animation speed, otherwise the exact time configured is returned.
+         * @param cfg configuration group to read value from
+         * @param key configuration key to read value from
+         * @param defaultTime default animation time in milliseconds
+         */
+        // return type is intentionally double so that one can divide using it without losing data
+        static double animationTime( const KConfigGroup& cfg, const QString& key, int defaultTime );
+        /**
+         * @overload Use this variant if the animation time is hardcoded and not configurable
+         * in the effect itself.
+         */
+        static double animationTime( int defaultTime );
+        /**
          * Linearly interpolates between @p x and @p y.
          *
          * Returns @p x when @p a = 0; returns @p y when @p a = 1.
@@ -488,6 +504,14 @@ class KWIN_EXPORT EffectsHandler
         virtual int desktopToRight( int desktop, bool wrap ) const = 0;
         virtual int desktopUp( int desktop, bool wrap ) const = 0;
         virtual int desktopDown( int desktop, bool wrap ) const = 0;
+        /**
+         * Factor by which animation speed in the effect should be modified (multiplied).
+         * If configurable in the effect itself, the option should have also 'default'
+         * animation speed. The actual value should be determined using animationTime().
+         * Note: The factor can be also 0, so make sure your code can cope with 0ms time
+         * if used manually.
+         */
+        virtual double animationTimeFactor() const = 0;
 
         virtual EffectWindow* findWindow( WId id ) const = 0;
         virtual EffectWindowList stackingOrder() const = 0;
@@ -1072,12 +1096,12 @@ class KWIN_EXPORT TimeLine
         };
 
         /**
-         * Creates a TimeLine and computes the progress data. The default
-         * duration can be overridden from the Effect. Usually, for larger
+         * Creates a TimeLine and computes the progress data. Usually, for larger
          * animations you want to choose values more towards 300 milliseconds.
          * For small animations, values around 150 milliseconds are sensible.
+         * Note that duration 0 is not valid.
          */
-        explicit TimeLine(const int duration = 250);
+        explicit TimeLine(int duration = 0);
 
         /**
          * Creates a copy of the TimeLine so we can have the state copied

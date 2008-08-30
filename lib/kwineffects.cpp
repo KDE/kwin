@@ -256,6 +256,17 @@ QPoint Effect::cursorPos()
     return effects->cursorPos();
     }
 
+double Effect::animationTime( const KConfigGroup& cfg, const QString& key, int defaultTime )
+    {
+    int time = cfg.readEntry( key, 0 );
+    return time != 0 ? time : qMax( defaultTime * effects->animationTimeFactor(), 1. );
+    }
+
+double Effect::animationTime( int defaultTime )
+    { // at least 1ms, otherwise 0ms times can break some things
+    return qMax( defaultTime * effects->animationTimeFactor(), 1. );
+    }
+
 //****************************************
 // EffectsHandler
 //****************************************

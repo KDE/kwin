@@ -247,14 +247,14 @@ void MagicLampEffect::postPaintScreen()
 void MagicLampEffect::windowMinimized( EffectWindow* w )
     {
     mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
-    mTimeLineWindows[w].setDuration( 250 );
+    mTimeLineWindows[w].setDuration( animationTime( 250 ));
     mTimeLineWindows[w].setProgress(0.0f);
     }
 
 void MagicLampEffect::windowUnminimized( EffectWindow* w )
     {
     mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
-    mTimeLineWindows[w].setDuration( 250 );
+    mTimeLineWindows[w].setDuration( animationTime( 250 ));
     mTimeLineWindows[w].setProgress(1.0f);
     }
 

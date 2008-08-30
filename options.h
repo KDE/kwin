@@ -309,6 +309,7 @@ class Options : public KDecorationOptions
         bool glDirect;
         bool glVSync;
         bool glStrictBinding;
+        double animationTimeFactor() const;
 
     private:
         WindowOperation OpTitlebarDblClick;
@@ -337,6 +338,7 @@ class Options : public KDecorationOptions
         bool desktop_topmenu;
         // List of window classes for which not to use focus stealing prevention
         QStringList ignoreFocusStealingClasses;
+        int animationSpeed; // 0 - instant, 5 - very slow
 
         MouseCommand wheelToMouseCommand( MouseWheelCommand com, int delta );
         void reloadCompositingSettings(const CompositingPrefs& prefs);

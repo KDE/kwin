@@ -20,12 +20,12 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>591</width>
-        <height>619</height>
+        <width>585</width>
+        <height>618</height>
        </rect>
       </property>
       <attribute name="title" >
-       <string comment="@option:check">General</string>
+       <string>General</string>
       </attribute>
       <layout class="QVBoxLayout" >
        <item>
@@ -103,10 +103,59 @@
              <item row="4" column="1" >
               <widget class="QComboBox" name="desktopSwitchingCombo" />
              </item>
-             <item row="5" column="0" colspan="2" >
+             <item row="6" column="0" colspan="2" >
               <widget class="QLabel" name="label" >
                <property name="text" >
                 <string>You can find more effects in the 'All Effects' tab</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1" >
+              <widget class="QComboBox" name="animationSpeedCombo" >
+               <property name="currentIndex" >
+                <number>3</number>
+               </property>
+               <item>
+                <property name="text" >
+                 <string>Instant</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Very fast</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Fast</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Normal</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Slow</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Very slow</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Extremely slow</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="5" column="0" >
+              <widget class="QLabel" name="label_5" >
+               <property name="text" >
+                <string>Animation speed</string>
                </property>
               </widget>
              </item>

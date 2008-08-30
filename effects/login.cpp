@@ -39,7 +39,7 @@ void LoginEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         {
         if( progress != 1 )
             {
-            progress = qBound( 0., progress + time / 2000., 1. );
+            progress = qBound( 0., progress + time / animationTime( 2000. ), 1. );
             if( progress == 1 )
                 {
                 login_window->unrefWindow();

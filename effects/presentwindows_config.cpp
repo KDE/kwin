@@ -114,7 +114,7 @@ void PresentWindowsEffectConfig::load()
     int layoutMode = conf.readEntry( "LayoutMode", int( PresentWindowsEffect::LayoutNatural ));
     m_ui->layoutCombo->setCurrentIndex( layoutMode );
 
-    m_ui->rearrangeDurationSpin->setValue( conf.readEntry( "RearrangeDuration", 250 ));
+    m_ui->rearrangeDurationSpin->setValue( conf.readEntry( "RearrangeDuration", 0 ));
 
     bool displayTitle = conf.readEntry( "DrawWindowCaptions", true );
     m_ui->displayTitleBox->setChecked( displayTitle );
@@ -185,7 +185,7 @@ void PresentWindowsEffectConfig::save()
 void PresentWindowsEffectConfig::defaults()
     {
     m_ui->layoutCombo->setCurrentIndex( int( PresentWindowsEffect::LayoutNatural ));
-    m_ui->rearrangeDurationSpin->setValue( 250 );
+    m_ui->rearrangeDurationSpin->setValue( 0 );
     m_ui->displayTitleBox->setChecked( true );
     m_ui->displayIconBox->setChecked( true );
     m_ui->switchingBox->setChecked( false );

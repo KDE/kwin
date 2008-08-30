@@ -49,7 +49,7 @@ FlipSwitchEffect::FlipSwitchEffect()
     , twinview( false )
     {
     KConfigGroup conf = effects->effectConfig( "FlipSwitch" );
-    mFlipDuration = conf.readEntry( "FlipDuration", 200 );
+    mFlipDuration = animationTime( conf, "FlipDuration", 200 );
     mAnimation    = conf.readEntry( "AnimateFlip", true );
     timeLine.setCurveShape( TimeLine::EaseInOutCurve );
     timeLine.setDuration( mFlipDuration );

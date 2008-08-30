@@ -120,7 +120,7 @@ void DesktopGridEffectConfig::load()
         activateBorder--;
     m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
 
-    m_ui->zoomDurationSpin->setValue( conf.readEntry( "ZoomDuration", 500 ));
+    m_ui->zoomDurationSpin->setValue( conf.readEntry( "ZoomDuration", 0 ));
     m_ui->borderWidthSpin->setValue( conf.readEntry( "BorderWidth", 10 ));
 
     Qt::Alignment alignment = Qt::Alignment( conf.readEntry( "DesktopNameAlignment", 0 ));
@@ -169,7 +169,7 @@ void DesktopGridEffectConfig::save()
 void DesktopGridEffectConfig::defaults()
     {
     m_ui->screenEdgeCombo->setCurrentIndex( int( ElectricNone - 1 ));
-    m_ui->zoomDurationSpin->setValue( 500 );
+    m_ui->zoomDurationSpin->setValue( 0 );
     m_ui->borderWidthSpin->setValue( 10 );
     m_ui->desktopNameAlignmentCombo->setCurrentIndex( 0 );
     m_ui->layoutBox->setCheckState( Qt::Unchecked );

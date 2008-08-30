@@ -65,7 +65,7 @@ DesktopGridEffect::DesktopGridEffect()
     borderActivate = ElectricBorder( conf.readEntry( "BorderActivate", int( ElectricNone )));
     effects->reserveElectricBorder( borderActivate );
 
-    zoomDuration = conf.readEntry( "ZoomDuration", 500 );
+    zoomDuration = animationTime( conf, "ZoomDuration", 500 );
     timeline.setCurveShape( TimeLine::EaseInOutCurve );
     timeline.setDuration( zoomDuration );
 
@@ -595,7 +595,7 @@ void DesktopGridEffect::setup()
     hoverTimeline.clear();
     for( int i = 0; i < effects->numberOfDesktops(); i++ )
         {
-        TimeLine newTimeline;
+        TimeLine newTimeline( animationTime( 250 ));
         newTimeline.setCurveShape( TimeLine::EaseInOutCurve );
         hoverTimeline.append( newTimeline );
         }

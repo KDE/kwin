@@ -52,7 +52,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , twinview( false )
     {
     KConfigGroup conf = effects->effectConfig( "CoverSwitch" );
-    animationDuration = conf.readEntry( "Duration", 200 );
+    animationDuration = animationTime( conf, "Duration", 200 );
     animateSwitch     = conf.readEntry( "AnimateSwitch", true );
     animateStart      = conf.readEntry( "AnimateStart", true );
     animateStop       = conf.readEntry( "AnimateStop", true );

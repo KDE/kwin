@@ -32,6 +32,7 @@ SlideEffect::SlideEffect()
     : slide( false )
     {
     mTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    mTimeLine.setDuration( animationTime( 250 ));
     }
 
 void SlideEffect::prePaintScreen( ScreenPrePaintData& data, int time )

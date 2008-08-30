@@ -47,7 +47,7 @@ void ZoomEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( zoom != target_zoom )
         {
-        double diff = time / 500.0;
+        double diff = time / animationTime( 500.0 );
         if( target_zoom > zoom )
             zoom = qMin( zoom * qMax( 1 + diff, 1.2 ), target_zoom );
         else

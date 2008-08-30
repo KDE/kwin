@@ -59,7 +59,7 @@ void CoverSwitchEffectConfig::load()
 
     KConfigGroup conf = EffectsHandler::effectConfig( "CoverSwitch" );
 
-    int duration       = conf.readEntry( "Duration", 200 );
+    int duration       = conf.readEntry( "Duration", 0 );
     bool animateSwitch = conf.readEntry( "AnimateSwitch", true );
     bool animateStart  = conf.readEntry( "AnimateStart", true );
     bool animateStop   = conf.readEntry( "AnimateStop", true );
@@ -119,7 +119,7 @@ void CoverSwitchEffectConfig::save()
 
 void CoverSwitchEffectConfig::defaults()
     {
-    m_ui->spinDuration->setValue( 200 );
+    m_ui->spinDuration->setValue( 0 );
     m_ui->checkAnimateSwitch->setCheckState( Qt::Checked );
     m_ui->checkAnimateStart->setCheckState( Qt::Checked );
     m_ui->checkAnimateStop->setCheckState( Qt::Checked );

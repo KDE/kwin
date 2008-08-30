@@ -78,6 +78,7 @@ void ScaleInEffect::windowAdded( EffectWindow* c )
     {
     if( c->isOnCurrentDesktop())
         {
+        mTimeLineWindows[ c ].setDuration( animationTime( 250 ));
         mTimeLineWindows[ c ].setProgress( 0.0 );
         c->addRepaintFull();
         }

@@ -99,7 +99,7 @@ void SphereEffectConfig::load()
 
     KConfigGroup conf = EffectsHandler::effectConfig( "Sphere" );
 
-    int duration       = conf.readEntry( "RotationDuration", 500 );
+    int duration       = conf.readEntry( "RotationDuration", 0 );
     float opacity      = conf.readEntry( "Opacity", 80 );
     bool desktopName   = conf.readEntry( "DisplayDesktopName", true );
     int activateBorder = conf.readEntry( "BorderActivate", (int)ElectricNone );
@@ -198,7 +198,7 @@ void SphereEffectConfig::save()
 
 void SphereEffectConfig::defaults()
     {
-    m_ui->rotationDurationSpin->setValue( 500 );
+    m_ui->rotationDurationSpin->setValue( 0 );
     m_ui->displayDesktopNameBox->setCheckState( Qt::Checked );
     m_ui->cubeOpacitySpin->setValue( 80 );
     m_ui->cubeOpacitySlider->setValue( 80 );

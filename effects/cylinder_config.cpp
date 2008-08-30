@@ -99,7 +99,7 @@ void CylinderEffectConfig::load()
 
     KConfigGroup conf = EffectsHandler::effectConfig( "Cylinder" );
 
-    int duration       = conf.readEntry( "RotationDuration", 500 );
+    int duration       = conf.readEntry( "RotationDuration", 0 );
     float opacity      = conf.readEntry( "Opacity", 80 );
     bool desktopName   = conf.readEntry( "DisplayDesktopName", true );
     bool reflection    = conf.readEntry( "Reflection", true );
@@ -206,7 +206,7 @@ void CylinderEffectConfig::save()
 
 void CylinderEffectConfig::defaults()
     {
-    m_ui->rotationDurationSpin->setValue( 500 );
+    m_ui->rotationDurationSpin->setValue( 0 );
     m_ui->displayDesktopNameBox->setCheckState( Qt::Checked );
     m_ui->reflectionBox->setCheckState( Qt::Checked );
     m_ui->cubeOpacitySpin->setValue( 80 );

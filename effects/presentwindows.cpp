@@ -77,9 +77,9 @@ PresentWindowsEffect::PresentWindowsEffect()
     effects->reserveElectricBorder( borderActivateAll );
 
     mActiveness.setCurveShape( TimeLine::EaseInOutCurve );
-    mActiveness.setDuration( conf.readEntry( "RearrangeDuration", 250 ));
+    mActiveness.setDuration( animationTime( conf, "RearrangeDuration", 250 ));
     mRearranging.setCurveShape( TimeLine::EaseInOutCurve );
-    mRearranging.setDuration( conf.readEntry( "RearrangeDuration", 250 ));
+    mRearranging.setDuration( animationTime( conf, "RearrangeDuration", 250 ));
     mRearranging.setProgress( 1.0 );
     }
 
@@ -129,7 +129,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
                 data.setTranslucent();
             // Change window's highlight
             WindowData& windata = mWindowData[w];
-            const double highlightchangetime = 100;
+            const double highlightchangetime = animationTime( 100 );
             if( w == mHighlightedWindow )
                 windata.highlight = qMin(1.0, windata.highlight + time / highlightchangetime);
             else

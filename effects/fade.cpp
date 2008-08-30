@@ -30,8 +30,8 @@ KWIN_EFFECT( fade, FadeEffect )
 FadeEffect::FadeEffect()
     {
     KConfigGroup conf = effects->effectConfig( "Fade" );
-    fadeInTime = qMax( conf.readEntry( "FadeInTime", 150 ), 1 );
-    fadeOutTime = qMax( conf.readEntry( "FadeOutTime", 150 ), 1 );
+    fadeInTime = animationTime( conf, "FadeInTime", 150 );
+    fadeOutTime = animationTime( conf, "FadeOutTime", 150 );
     fadeWindows = conf.readEntry( "FadeWindows", true );
     }
 

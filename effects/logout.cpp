@@ -45,9 +45,9 @@ LogoutEffect::LogoutEffect()
 void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( logout_window != NULL )
-        progress = qBound( 0., progress + time / 2000., 1. );
+        progress = qBound( 0., progress + time / animationTime( 2000. ), 1. );
     else if( progress != 0 )
-        progress = qBound( 0., progress - time / 500., 1. );
+        progress = qBound( 0., progress - time / animationTime( 500. ), 1. );
     effects->prePaintScreen( data, time );
     }
 

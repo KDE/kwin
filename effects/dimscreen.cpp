@@ -32,7 +32,7 @@ KWIN_EFFECT( dimscreen, DimScreenEffect )
 
 DimScreenEffect::DimScreenEffect()
     : mActivated( false )
-    , animationDuration( 300 )
+    , animationDuration( Effect::animationTime( 300 ))
     , animation( false )
     , deactivate( false )
     {

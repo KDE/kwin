@@ -235,6 +235,7 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
         hiddenPreviews = HiddenPreviewsAlways;
     
     unredirectFullscreen = config.readEntry( "UnredirectFullscreen", true );
+    animationSpeed = qBound( 0, config.readEntry( "AnimationSpeed", 3 ), 6 );
     }
 
 
@@ -353,6 +354,12 @@ Options::MoveResizeMode Options::stringToMoveResizeMode( const QString& s )
 const char* Options::moveResizeModeToString( MoveResizeMode mode )
     {
     return mode == Opaque ? "Opaque" : "Transparent";
+    }
+
+double Options::animationTimeFactor() const
+    {
+    const double factors[] = { 0, 0.2, 0.5, 1, 2, 4, 20 };
+    return factors[ animationSpeed ];
     }
 
 } // namespace

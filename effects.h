@@ -99,6 +99,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual int desktopToRight( int desktop, bool wrap ) const;
         virtual int desktopUp( int desktop, bool wrap ) const;
         virtual int desktopDown( int desktop, bool wrap ) const;
+        virtual double animationTimeFactor() const;
 
         virtual Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor );
         using EffectsHandler::createInputWindow;

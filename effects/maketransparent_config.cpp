@@ -93,7 +93,7 @@ void MakeTransparentEffectConfig::load()
     m_ui->dropdownmenus->setValue( (int)( conf.readEntry( "DropdownMenus", 1.0) * 100 ) );
     m_ui->popupmenus->setValue( (int)( conf.readEntry( "PopupMenus", 1.0) * 100 ) );
     m_ui->tornoffmenus->setValue( (int)( conf.readEntry( "TornOffMenus", 1.0) * 100 ) );
-    m_ui->duration->setValue( conf.readEntry( "Duration", 1800) );
+    m_ui->duration->setValue( conf.readEntry( "Duration", 0) );
 
     setIndividualMenuConfig( m_ui->individualmenuconfig->isChecked() ? Qt::Checked : Qt::Unchecked );
     emit changed(false);
@@ -135,7 +135,7 @@ void MakeTransparentEffectConfig::defaults()
     m_ui->dropdownmenus->setValue( 100 );
     m_ui->popupmenus->setValue( 100 );
     m_ui->tornoffmenus->setValue( 100 );
-    m_ui->duration->setValue( 1500 );
+    m_ui->duration->setValue( 0 );
     emit changed(true);
     }
 

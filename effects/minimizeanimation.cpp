@@ -110,12 +110,14 @@ void MinimizeAnimationEffect::postPaintScreen()
 void MinimizeAnimationEffect::windowMinimized( EffectWindow* w )
     {
     mTimeLineWindows[w].setCurveShape(TimeLine::EaseInCurve);
+    mTimeLineWindows[w].setDuration( animationTime( 250 ));
     mTimeLineWindows[w].setProgress(0.0f);
     }
 
 void MinimizeAnimationEffect::windowUnminimized( EffectWindow* w )
     {
     mTimeLineWindows[w].setCurveShape(TimeLine::EaseOutCurve);
+    mTimeLineWindows[w].setDuration( animationTime( 250 ));
     mTimeLineWindows[w].setProgress(1.0f);
     }
 

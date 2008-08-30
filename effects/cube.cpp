@@ -99,7 +99,7 @@ void CubeEffect::loadConfig( QString config )
     cubeOpacity = (float)conf.readEntry( "Opacity", 80 )/100.0f;
     displayDesktopName = conf.readEntry( "DisplayDesktopName", true );
     reflection = conf.readEntry( "Reflection", true );
-    rotationDuration = conf.readEntry( "RotationDuration", 500 );
+    rotationDuration = animationTime( conf, "RotationDuration", 500 );
     backgroundColor = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
     animateDesktopChange = conf.readEntry( "AnimateDesktopChange", false );
     bigCube = conf.readEntry( "BigCube", false );

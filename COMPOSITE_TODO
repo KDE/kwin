@@ -188,6 +188,9 @@ Effects framework TODO
 Effects TODO
 ===============================
 
+! add reloadConfig() to effects
+    - currently changing the global animation speed in the kcm does not change effect
+
 + minimize/shade effects
     - to replace the ones from KWin core
 /       - minimizing

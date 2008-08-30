@@ -127,7 +127,7 @@ void ExplosionEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
             mValid = loadData();
         if( mValid )
             {
-            mWindows[ w  ] += time / 700.0; // complete change in 700ms
+            mWindows[ w  ] += time / animationTime( 700.0 ); // complete change in 700ms
             if( mWindows[ w  ] < 1 )
                 {
                 data.setTranslucent();

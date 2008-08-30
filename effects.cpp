@@ -419,6 +419,11 @@ int EffectsHandlerImpl::desktopDown( int desktop, bool wrap ) const
     return Workspace::self()->desktopDown( desktop, wrap );
     }
 
+double EffectsHandlerImpl::animationTimeFactor() const
+    {
+    return options->animationTimeFactor();
+    }
+
 int EffectsHandlerImpl::displayWidth() const
     {
     return KWin::displayWidth();
