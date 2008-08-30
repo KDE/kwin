@@ -14,6 +14,7 @@ Name[sr]=Сфера површи
 Name[sr@latin]=Sfera površi
 Name[sv]=Skrivbordssfär
 Name[te]=డెస్క్ టాప్ గొళం
+Name[tr]=Masaüstü Küresi
 Name[uk]=Стільнична сфера
 Name[zh_TW]=桌面球體
 Icon=preferences-system-windows-effect-sphere
@@ -33,6 +34,7 @@ Comment[sr]=Слика виртуелне површи на сферу
 Comment[sr@latin]=Slika virtuelne površi na sferu
 Comment[sv]=Avbilda virtuella skrivbord på en sfär
 Comment[te]=గోళంపైన వర్చ్యువల్ డెస్క్ టాప్లను మాప్‌చేయుము
+Comment[tr]=Sanal masaüstlerini bir küre olarak göster
 Comment[uk]=Відобразити віртуальні стільниці на сфері
 Comment[zh_TW]=將虛擬桌面映射到一球體
 

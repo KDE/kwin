@@ -11,6 +11,7 @@ Name[pt]=Deslize
 Name[pt_BR]=Deslize
 Name[sl]=Drsenje
 Name[sv]=Glidning
+Name[tr]=Kaydır
 Name[uk]=Ковзання
 Name[zh_TW]=滑動
 Icon=preferences-system-windows-effect-slide
@@ -26,6 +27,7 @@ Comment[pt]=Deslizar as janelas ao mudar de ecrã
 Comment[pt_BR]=Deslizar as janelas ao mudar de ecrã
 Comment[sl]=Med preklapljanjem med namizji naj okna drsijo
 Comment[sv]=Låt fönster glida vid byte av skrivbord
+Comment[tr]=Masaüstü değiştirildiğinde pencereleri kaydır
 Comment[uk]=Під час перемикання стільниць вікна ковзають
 Comment[zh_TW]=切換桌面時滑動視窗
 
