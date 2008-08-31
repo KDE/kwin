@@ -28,6 +28,9 @@ namespace KWin
 KWIN_EFFECT( maketransparent, MakeTransparentEffect )
 
 MakeTransparentEffect::MakeTransparentEffect()
+    : fadeout( NULL )
+    , current( NULL )
+    , previous( NULL )
     {
     KConfigGroup conf = effects->effectConfig("MakeTransparent");
     decoration = conf.readEntry( "Decoration", 1.0 );
