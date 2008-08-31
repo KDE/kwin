@@ -543,7 +543,7 @@ WindowQuadList WindowQuadList::splitAtX( double x ) const
             {
             if( quad[ i ].x() < x )
                 wholeright = false;
-            if( quad[ i ].x() >= x )
+            if( quad[ i ].x() > x )
                 wholeleft = false;
             }
         if( wholeleft || wholeright ) // is whole in one split part
@@ -574,7 +574,7 @@ WindowQuadList WindowQuadList::splitAtY( double y ) const
             {
             if( quad[ i ].y() < y )
                 wholebottom = false;
-            if( quad[ i ].y() >= y )
+            if( quad[ i ].y() > y )
                 wholetop = false;
             }
         if( wholetop || wholebottom ) // is whole in one split part
