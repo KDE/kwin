@@ -294,6 +294,8 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent* e )
 
 void PresentWindowsEffect::windowAdded( EffectWindow* w )
     {
+    if( w->isSpecialWindow() || w->isUtility() )
+        return;
     mWindowsToPresent.append( w );
     rearrangeWindows();
     }
@@ -338,7 +340,7 @@ void PresentWindowsEffect::setActive(bool active)
             // Filter out special windows such as panels and taskbars
             foreach( EffectWindow* window, originalwindowlist )
                 {
-                if( window->isSpecialWindow() )
+                if( window->isSpecialWindow() || window->isUtility() )
                     continue;
                 if( window->isDeleted())
                     continue;
