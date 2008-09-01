@@ -188,7 +188,7 @@ bool FadeEffect::isFadeWindow( EffectWindow* w )
         { // see login effect
         return false;
         }
-    return !w->isDesktop();
+    return ( !w->isDesktop() && !w->isUtility() );
     }
 
 } // namespace
