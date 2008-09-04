@@ -81,6 +81,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     mRearranging.setCurveShape( TimeLine::EaseInOutCurve );
     mRearranging.setDuration( animationTime( conf, "RearrangeDuration", 250 ));
     mRearranging.setProgress( 1.0 );
+    highlightChangeTime = animationTime( 100 );
     }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -129,11 +130,10 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& 
                 data.setTranslucent();
             // Change window's highlight
             WindowData& windata = mWindowData[w];
-            const double highlightchangetime = animationTime( 100 );
             if( w == mHighlightedWindow )
-                windata.highlight = qMin(1.0, windata.highlight + time / highlightchangetime);
+                windata.highlight = qMin(1.0, windata.highlight + time / highlightChangeTime);
             else
-                windata.highlight = qMax(0.0, windata.highlight - time / highlightchangetime);
+                windata.highlight = qMax(0.0, windata.highlight - time / highlightChangeTime);
             }
         else if( !w->isDesktop())
             w->disablePainting( EffectWindow::PAINT_DISABLED );

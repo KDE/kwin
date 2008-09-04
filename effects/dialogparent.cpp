@@ -25,11 +25,14 @@ namespace KWin
 
 KWIN_EFFECT( dialogparent, DialogParentEffect )
 
-void DialogParentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
+DialogParentEffect::DialogParentEffect()
     {
     // How long does it take for the effect to get it's full strength (in ms)
-    const double changeTime = animationTime( 200 );
+    changeTime = animationTime( 200 );
+    }
 
+void DialogParentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
+    {
     // Check if this window has a modal dialog and change the window's
     //  effect's strength accordingly
     bool hasDialog = w->findModal() != NULL;

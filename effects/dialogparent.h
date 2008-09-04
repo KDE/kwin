@@ -38,6 +38,8 @@ class DialogParentEffect
     : public Effect
     {
     public:
+        DialogParentEffect();
+
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintWindow( EffectWindow* w );
@@ -50,6 +52,7 @@ class DialogParentEffect
     private:
         // The progress of the fading.
         QHash<EffectWindow*, double> effectStrength;
+        double changeTime;
     };
 
 } // namespace
