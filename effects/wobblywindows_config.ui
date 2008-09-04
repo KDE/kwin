@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>274</width>
-    <height>66</height>
+    <width>279</width>
+    <height>113</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout" >
@@ -58,21 +58,27 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="1" >
-    <spacer name="verticalSpacer" >
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
+   <item row="2" column="0" colspan="2" >
+    <widget class="QCheckBox" name="moveBox" >
+     <property name="text" >
+      <string>Wobble when &amp;moving</string>
      </property>
-     <property name="sizeHint" stdset="0" >
-      <size>
-       <width>20</width>
-       <height>4</height>
-      </size>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2" >
+    <widget class="QCheckBox" name="resizeBox" >
+     <property name="text" >
+      <string>Wobble when &amp;resizing</string>
      </property>
-    </spacer>
+    </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>slWobblyness</tabstop>
+  <tabstop>moveBox</tabstop>
+  <tabstop>resizeBox</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

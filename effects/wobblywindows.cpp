@@ -275,6 +275,9 @@ WobblyWindowsEffect::WobblyWindowsEffect()
         m_closeEffectEnabled = conf.readEntry("CloseEffect", false);
     }
 
+    m_moveWobble = conf.readEntry("MoveWobble", true);
+    m_resizeWobble = conf.readEntry("ResizeWobble", true);
+
 #if defined VERBOSE_MODE
     kDebug() << "Parameters :\n" <<
         "move : " << m_moveEffectEnabled << ", open : " << m_openEffectEnabled << ", close : " << m_closeEffectEnabled << "\n"
@@ -442,7 +445,8 @@ void WobblyWindowsEffect::postPaintScreen()
 
 void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
 {
-    if (m_moveEffectEnabled && first && !w->isSpecialWindow())
+    if (m_moveEffectEnabled && first && !w->isSpecialWindow() &&
+       ((w->isUserMove() && m_moveWobble) || (w->isUserResize() && m_resizeWobble)))
     {
         if (!windows.contains(w))
         {

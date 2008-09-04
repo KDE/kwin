@@ -132,6 +132,9 @@ class WobblyWindowsEffect : public Effect
         bool m_openEffectEnabled;
         bool m_closeEffectEnabled;
 
+        bool m_moveWobble; // Expands m_moveEffectEnabled
+        bool m_resizeWobble;
+
         void initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry) const;
         void freeWobblyInfo(WindowWobblyInfos& wwi) const;
         void wobblyOpenInit(WindowWobblyInfos& wwi) const;

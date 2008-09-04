@@ -40,6 +40,8 @@ KCModule(EffectFactory::componentData(), parent, args)
     m_ui.setupUi(this);
 
     connect(m_ui.slWobblyness, SIGNAL(valueChanged(int)), this, SLOT(slotSlWobblyness(int)));
+    connect(m_ui.moveBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui.resizeBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
 }
@@ -71,6 +73,12 @@ void WobblyWindowsEffectConfig::load()
 
     m_ui.slWobblyness->setSliderPosition(wobblynessLevel);
 
+    bool moving = conf.readEntry("MoveWobble", true);
+    m_ui.moveBox->setChecked(moving);
+
+    bool resizing = conf.readEntry("ResizeWobble", true);
+    m_ui.resizeBox->setChecked(resizing);
+
     emit changed(change);
 }
 
@@ -81,6 +89,9 @@ void WobblyWindowsEffectConfig::save()
     conf.writeEntry("Settings", "Auto");
     conf.writeEntry("WobblynessLevel", m_ui.slWobblyness->value());
 
+    conf.writeEntry("MoveWobble", m_ui.moveBox->isChecked());
+    conf.writeEntry("ResizeWobble", m_ui.resizeBox->isChecked());
+
     emit changed(false);
     EffectsHandler::sendReloadMessage("wobblywindows");
 }
@@ -88,6 +99,8 @@ void WobblyWindowsEffectConfig::save()
 void WobblyWindowsEffectConfig::defaults()
 {
     m_ui.slWobblyness->setSliderPosition(2);
+    m_ui.moveBox->setChecked( true );
+    m_ui.resizeBox->setChecked( true );
 
     emit changed(true);
 }
