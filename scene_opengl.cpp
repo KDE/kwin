@@ -633,16 +633,16 @@ void SceneOpenGL::selfCheckSetup( QRegion& damage )
     img.setPixel( 2, 0, QColor( Qt::blue ).rgb());
     img.setPixel( 3, 0, QColor( Qt::white ).rgb());
     img.setPixel( 4, 0, QColor( Qt::black ).rgb());
-    XSetWindowAttributes wa;
-    wa.override_redirect = True;
-    ::Window window = XCreateWindow( display(), rootWindow(), 0, 0, 5, 1, 0, QX11Info::appDepth(),
-        CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa );
     QPixmap pix = QPixmap::fromImage( img );
-    XSetWindowBackgroundPixmap( display(), window, pix.handle());
-    XClearWindow( display(), window );
-    XMapWindow( display(), window );
     foreach( const QPoint& p, selfCheckPoints())
         {
+        XSetWindowAttributes wa;
+        wa.override_redirect = True;
+        ::Window window = XCreateWindow( display(), rootWindow(), 0, 0, 5, 1, 0, QX11Info::appDepth(),
+            CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa );
+        XSetWindowBackgroundPixmap( display(), window, pix.handle());
+        XClearWindow( display(), window );
+        XMapWindow( display(), window );
         XMoveWindow( display(), window, p.x(), p.y());
         Pixmap wpix = XCompositeNameWindowPixmap( display(), window );
         glXWaitX();
@@ -653,10 +653,11 @@ void SceneOpenGL::selfCheckSetup( QRegion& damage )
         texture.render( infiniteRegion(), rect );
         Workspace::self()->addRepaint( rect );
         texture.unbind();
+        glXWaitGL();
         XFreePixmap( display(), wpix );
         damage |= rect;
+        XDestroyWindow( display(), window );
         }
-    XDestroyWindow( display(), window );
     }
 
 void SceneOpenGL::selfCheckFinish()
