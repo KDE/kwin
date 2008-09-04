@@ -44,8 +44,12 @@ class DesktopGridEffect
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
         virtual bool borderActivated( ElectricBorder border );
+
+        enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
+
     private slots:
         void toggle();
+
     private:
         QPointF scalePos( const QPoint& pos, int desktop, int screen = -1 ) const;
         QPoint unscalePos( const QPoint& pos, int* desktop = NULL ) const;
@@ -61,7 +65,7 @@ class DesktopGridEffect
         int zoomDuration;
         int border;
         Qt::Alignment desktopNameAlignment;
-        bool customLayout;
+        int layoutMode;
         int customLayoutRows;
         
         bool activated;

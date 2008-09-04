@@ -71,7 +71,7 @@ DesktopGridEffect::DesktopGridEffect()
 
     border = conf.readEntry( "BorderWidth", 10 );
     desktopNameAlignment = Qt::Alignment( conf.readEntry( "DesktopNameAlignment", 0 ));
-    customLayout = conf.readEntry( "CustomLayout", 0 ) ? true : false;
+    layoutMode = conf.readEntry( "LayoutMode", int( LayoutPager ));
     customLayoutRows = conf.readEntry( "CustomLayoutRows", 2 );
     }
 
@@ -602,11 +602,28 @@ void DesktopGridEffect::setup()
     hoverTimeline[effects->currentDesktop() - 1].setProgress( 1.0 );
 
     // We need these variables for every paint so lets cache them
-    effects->calcDesktopLayout( &gridSize.rwidth(), &gridSize.rheight(), &orientation );
-    if( customLayout )
+    int x, y;
+    int numDesktops = effects->numberOfDesktops();
+    switch( layoutMode )
         {
-        gridSize.setWidth( ceil( effects->numberOfDesktops() / double( customLayoutRows )));
-        gridSize.setHeight( customLayoutRows );
+        default:
+        case LayoutPager:
+            effects->calcDesktopLayout( &gridSize.rwidth(), &gridSize.rheight(), &orientation );
+            break;
+        case LayoutAutomatic:
+            y = sqrt( numDesktops ) + 0.5;
+            x = float( numDesktops ) / float( y ) + 0.5;
+            if( x * y < numDesktops )
+                x++;
+            orientation = Qt::Horizontal;
+            gridSize.setWidth( x );
+            gridSize.setHeight( y );
+            break;
+        case LayoutCustom:
+            effects->calcDesktopLayout( &gridSize.rwidth(), &gridSize.rheight(), &orientation );
+            gridSize.setWidth( ceil( effects->numberOfDesktops() / double( customLayoutRows )));
+            gridSize.setHeight( customLayoutRows );
+            break;
         }
     setCurrentDesktop( effects->currentDesktop() );
     scale.clear();

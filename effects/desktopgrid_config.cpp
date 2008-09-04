@@ -95,8 +95,8 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     connect( m_ui->zoomDurationSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->borderWidthSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->desktopNameAlignmentCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->layoutBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->layoutBox, SIGNAL( stateChanged( int )), this, SLOT( layoutSelectionChanged() ));
+    connect( m_ui->layoutCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->layoutCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( layoutSelectionChanged() ));
     connect( m_ui->layoutRowsSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->shortcutEditor, SIGNAL( keyChange() ), this, SLOT( changed() ));
 
@@ -126,10 +126,8 @@ void DesktopGridEffectConfig::load()
     Qt::Alignment alignment = Qt::Alignment( conf.readEntry( "DesktopNameAlignment", 0 ));
     m_ui->desktopNameAlignmentCombo->setCurrentIndex( m_alignmentItems.indexOf( alignment ));
 
-    if( conf.readEntry( "CustomLayout", false ))
-        m_ui->layoutBox->setCheckState( Qt::Checked );
-    else
-        m_ui->layoutBox->setCheckState( Qt::Unchecked );
+    int layoutMode = conf.readEntry( "LayoutMode", int( DesktopGridEffect::LayoutPager ));
+    m_ui->layoutCombo->setCurrentIndex( layoutMode );
     layoutSelectionChanged();
 
     m_ui->layoutRowsSpin->setValue( conf.readEntry( "CustomLayoutRows", 2 ));
@@ -155,7 +153,9 @@ void DesktopGridEffectConfig::save()
     alignment = int( m_alignmentItems[alignment] );
     conf.writeEntry( "DesktopNameAlignment", alignment );
 
-    conf.writeEntry( "CustomLayout", m_ui->layoutBox->checkState() == Qt::Checked ? 1 : 0 );
+    int layoutMode = m_ui->layoutCombo->currentIndex();
+    conf.writeEntry( "LayoutMode", layoutMode );
+
     conf.writeEntry( "CustomLayoutRows", m_ui->layoutRowsSpin->value() );
 
     m_ui->shortcutEditor->save();
@@ -172,7 +172,7 @@ void DesktopGridEffectConfig::defaults()
     m_ui->zoomDurationSpin->setValue( 0 );
     m_ui->borderWidthSpin->setValue( 10 );
     m_ui->desktopNameAlignmentCombo->setCurrentIndex( 0 );
-    m_ui->layoutBox->setCheckState( Qt::Unchecked );
+    m_ui->layoutCombo->setCurrentIndex( int( DesktopGridEffect::LayoutPager ));
     m_ui->layoutRowsSpin->setValue( 2 );
     m_ui->shortcutEditor->allDefault();
     emit changed(true);
@@ -180,7 +180,7 @@ void DesktopGridEffectConfig::defaults()
 
 void DesktopGridEffectConfig::layoutSelectionChanged()
     {
-    if( m_ui->layoutBox->checkState() == Qt::Checked )
+    if( m_ui->layoutCombo->currentIndex() == DesktopGridEffect::LayoutCustom )
         {
         m_ui->layoutRowsLabel->setEnabled( true );
         m_ui->layoutRowsSpin->setEnabled( true );
