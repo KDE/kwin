@@ -41,6 +41,7 @@ class DimInactiveEffect
         EffectWindow* active;
         int dim_strength; // reduce saturation and brightness by this percentage
         bool dim_panels; // do/don't dim also all panels
+        bool dim_desktop; // do/don't dim the desktop
         bool dim_by_group; // keep visible all windows from the active window's group or only the active window
     };
 

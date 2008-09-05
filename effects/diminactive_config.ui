@@ -61,6 +61,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="checkDesktop" >
+     <property name="text" >
+      <string>Apply effect to the desk&amp;top</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QCheckBox" name="checkGroup" >
      <property name="text" >
       <string>Apply effect to &amp;groups</string>

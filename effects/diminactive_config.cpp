@@ -54,6 +54,7 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariant
 
     connect(m_ui->spinStrength, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkPanel, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(m_ui->checkDesktop, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(m_ui->checkGroup, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
     load();
@@ -68,9 +69,11 @@ void DimInactiveEffectConfig::load()
 
     int strength = conf.readEntry("Strength", 25);
     bool panel = conf.readEntry("DimPanels", false);
+    bool desktop = conf.readEntry("DimDesktop", false);
     bool group = conf.readEntry("DimByGroup", true);
     m_ui->spinStrength->setValue(strength);
     m_ui->checkPanel->setChecked(panel);
+    m_ui->checkDesktop->setChecked(desktop);
     m_ui->checkGroup->setChecked(group);
 
     emit changed(false);
@@ -84,6 +87,7 @@ void DimInactiveEffectConfig::save()
 
     conf.writeEntry("Strength", m_ui->spinStrength->value());
     conf.writeEntry("DimPanels", m_ui->checkPanel->isChecked());
+    conf.writeEntry("DimDesktop", m_ui->checkDesktop->isChecked());
     conf.writeEntry("DimByGroup", m_ui->checkGroup->isChecked());
 
     conf.sync();
@@ -98,6 +102,7 @@ void DimInactiveEffectConfig::defaults()
     kDebug() ;
     m_ui->spinStrength->setValue(25);
     m_ui->checkPanel->setChecked(false);
+    m_ui->checkDesktop->setChecked(false);
     m_ui->checkGroup->setChecked(true);
     emit changed(true);
     }

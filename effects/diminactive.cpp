@@ -33,6 +33,7 @@ DimInactiveEffect::DimInactiveEffect()
     KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
 
     dim_panels = conf.readEntry("DimPanels", false);
+    dim_desktop = conf.readEntry("DimDesktop", false);
     dim_by_group = conf.readEntry("DimByGroup", true);
     dim_strength = conf.readEntry("Strength", 25);
     active = effects->activeWindow();
@@ -56,7 +57,9 @@ bool DimInactiveEffect::dimWindow( const EffectWindow* w ) const
         return false; // don't dim in active group if configured so
     if( w->isDock() && !dim_panels )
         return false; // don't dim panels if configured so
-    if( !w->isNormalWindow() && !w->isDialog() && !w->isDock())
+    if( w->isDesktop() && !dim_desktop )
+        return false; // don't dim the desktop if configured so
+    if( !w->isNormalWindow() && !w->isDialog() && !w->isDock() && !w->isDesktop())
         return false; // don't dim more special window types
     // don't dim unmanaged windows, grouping doesn't work for them and maybe dimming
     // them doesn't make sense in general (they should be short-lived anyway)
