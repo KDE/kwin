@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 
+#include "boxswitch_config.h"
 #include "desktopgrid_config.h"
 #include "diminactive_config.h"
 #include "maketransparent_config.h"
@@ -61,6 +62,7 @@ KWIN_EFFECT_CONFIG_FACTORY
 #endif
 
 #define COMMON_PLUGINS \
+    registerPlugin<KWin::BoxSwitchEffectConfig>("boxswitch"); \
     registerPlugin<KWin::DesktopGridEffectConfig>("desktopgrid"); \
     registerPlugin<KWin::DimInactiveEffectConfig>("diminactive"); \
     registerPlugin<KWin::MakeTransparentEffectConfig>("maketransparent"); \

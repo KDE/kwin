@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kapplication.h>
 #include <kcolorscheme.h>
+#include <kconfiggroup.h>
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
 #include <GL/gl.h>
@@ -43,6 +44,10 @@ BoxSwitchEffect::BoxSwitchEffect()
     , selected_window( 0 )
     , painting_desktop( 0 )
     {
+    KConfigGroup conf = effects->effectConfig( "BoxSwitch" );
+
+    bg_opacity = conf.readEntry( "BackgroundOpacity", 25 ) / 100.0;
+
     frame_margin = 10;
     highlight_margin = 5;
     color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
@@ -133,7 +138,7 @@ void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
             {
             if( windows.contains( w ) && w != selected_window )
                 {
-                data.opacity *= 0.2;
+                data.opacity *= bg_opacity;
                 }
             }
         }

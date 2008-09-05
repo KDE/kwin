@@ -83,6 +83,8 @@ install( FILES
 
 # config modules
 SET(kwin4_effect_builtins_config_sources
+    boxswitch_config.cpp
+    boxswitch_config.ui
     desktopgrid_config.cpp
     desktopgrid_config.ui
     diminactive_config.cpp
@@ -99,6 +101,7 @@ SET(kwin4_effect_builtins_config_sources
     zoom_config.cpp
     configs_builtins.cpp)
 install( FILES
+    boxswitch_config.desktop
     desktopgrid_config.desktop
     diminactive_config.desktop
     maketransparent_config.desktop
