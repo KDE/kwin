@@ -46,6 +46,7 @@ BoxSwitchEffectConfig::BoxSwitchEffectConfig(QWidget* parent, const QVariantList
     layout->addWidget( m_ui );
 
     connect( m_ui->opacitySpin, SIGNAL( valueChanged(int) ), this, SLOT( changed() ));
+    connect( m_ui->elevateBox, SIGNAL( stateChanged(int) ), this, SLOT( changed() ));
 
     load();
     }
@@ -63,6 +64,9 @@ void BoxSwitchEffectConfig::load()
     int opacity = conf.readEntry( "BackgroundOpacity", 25 );
     m_ui->opacitySpin->setValue( opacity );
 
+    bool elevate = conf.readEntry( "ElevateSelected", true );
+    m_ui->elevateBox->setChecked( elevate );
+
     emit changed(false);
     }
 
@@ -74,6 +78,8 @@ void BoxSwitchEffectConfig::save()
 
     conf.writeEntry( "BackgroundOpacity", m_ui->opacitySpin->value() );
 
+    conf.writeEntry( "ElevateSelected", m_ui->elevateBox->isChecked() );
+
     conf.sync();
 
     emit changed(false);
@@ -83,6 +89,7 @@ void BoxSwitchEffectConfig::save()
 void BoxSwitchEffectConfig::defaults()
     {
     m_ui->opacitySpin->setValue( 25 );
+    m_ui->elevateBox->setChecked( true );
     emit changed(true);
     }
 

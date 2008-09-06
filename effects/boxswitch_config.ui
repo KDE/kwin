@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>175</width>
-    <height>59</height>
+    <height>86</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -53,8 +53,20 @@
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="QCheckBox" name="elevateBox" >
+     <property name="text" >
+      <string>&amp;Elevate selected window</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>opacitySlider</tabstop>
+  <tabstop>opacitySpin</tabstop>
+  <tabstop>elevateBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

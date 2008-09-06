@@ -85,6 +85,7 @@ class BoxSwitchEffect
         QColor color_text;
 
         float bg_opacity;
+        bool elevate_window;
 
         QHash< EffectWindow*, ItemInfo* > windows;
         EffectWindowList original_windows;

@@ -47,6 +47,7 @@ BoxSwitchEffect::BoxSwitchEffect()
     KConfigGroup conf = effects->effectConfig( "BoxSwitch" );
 
     bg_opacity = conf.readEntry( "BackgroundOpacity", 25 ) / 100.0;
+    elevate_window = conf.readEntry( "ElevateSelected", true );
 
     frame_margin = 10;
     highlight_margin = 5;
@@ -359,12 +360,12 @@ void BoxSwitchEffect::setInactive()
 
 void BoxSwitchEffect::setSelectedWindow( EffectWindow* w )
     {
-    if( selected_window )
+    if( elevate_window && selected_window )
         {
         effects->setElevatedWindow( selected_window, false );
         }
     selected_window = w;
-    if( w )
+    if( elevate_window && w )
         {
         effects->setElevatedWindow( selected_window, true );
         }
