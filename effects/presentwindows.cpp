@@ -81,7 +81,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     mRearranging.setCurveShape( TimeLine::EaseInOutCurve );
     mRearranging.setDuration( animationTime( conf, "RearrangeDuration", 250 ));
     mRearranging.setProgress( 1.0 );
-    highlightChangeTime = animationTime( 100 );
+    highlightChangeTime = double( animationTime( 150 ));
     }
 
 PresentWindowsEffect::~PresentWindowsEffect()
