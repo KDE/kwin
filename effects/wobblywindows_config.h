@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
  Copyright (C) 2008 Cédric Borgese <cedric.borgese@gmail.com>
+ Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmodule.h>
 
 #include "ui_wobblywindows_config.h"
+#include "wobblywindows.h"
 
 
 namespace KWin
@@ -42,7 +44,8 @@ public slots:
     virtual void defaults();
 
 private slots:
-    void slotSlWobblyness(int);
+    void advancedChanged();
+    void wobblinessChanged();
 
 private:
     ::Ui::WobblyWindowsEffectConfigForm m_ui;

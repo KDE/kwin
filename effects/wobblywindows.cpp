@@ -198,6 +198,16 @@ WobblyWindowsEffect::WobblyWindowsEffect()
             wobblynessLevel = 4;
         }
         setParameterSet(pset[wobblynessLevel]);
+        
+        if (conf.readEntry("AdvancedMode", false))
+        {
+            m_stiffness = conf.readEntry("Stiffness", STIFFNESS * 100.0) / 100.0;
+            m_drag = conf.readEntry("Drag", DRAG * 100.0) / 100.0;
+            m_move_factor = conf.readEntry("MoveFactor", MOVEFACTOR * 100.0) / 100.0;
+
+            m_velocityFilter = GridFilter(conf.readEntry("VelocityFilterEnum", int(HeightRingLinearMean)));
+            m_accelerationFilter = GridFilter(conf.readEntry("AccelerationFilterEnum", int(HeightRingLinearMean)));
+        }
     }
     else // Custom method, read all values from config file.
     {
