@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Desktop Cylinder
+Name[el]=Κύλινδρος επιφάνειας εργασίας
 Name[et]=Töölauasilinder
 Name[gl]=Escritorio cilíndrico
 Name[gu]=ડેસ્કટોપ સિલિન્ડર
@@ -19,6 +20,7 @@ Name[uk]=Циліндр стільниць
 Name[zh_TW]=桌面圓柱
 Icon=preferences-system-windows-effect-cylinder
 Comment=Map virtual desktops on a cylinder
+Comment[el]=Αντιστοίχιση εικονικών επιφανειών εργασίας σε έναν κύλινδρο
 Comment[et]=Virtuaalsete töölaudade asetamine silindrile
 Comment[gl]=Mostra os escritorios virtuais nun cilindro
 Comment[gu]=વર્ચ્યુઅલ ડેસ્કટોપને સિલિન્ડર પર જોડો

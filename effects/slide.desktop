@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Slide
+Name[el]=Κύλιση
 Name[et]=Liuglemine
 Name[ga]=Sleamhnaigh
 Name[gl]=Deslizar
@@ -16,6 +17,7 @@ Name[uk]=Ковзання
 Name[zh_TW]=滑動
 Icon=preferences-system-windows-effect-slide
 Comment=Slide windows when switching desktops
+Comment[el]=Κύλιση παραθύρων κατά την εναλλαγή επιφανειών εργασίας
 Comment[et]=Akende liuglemine töölaudade vahetamisel
 Comment[ga]=Sleamhnaigh fuinneoga agus an deasc reatha á hathrú
 Comment[gl]=Desliza as fiestras ao trocar de escritorio

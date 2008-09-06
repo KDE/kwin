@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Magic Lamp
+Name[el]=Μαγικό λυχνάρι
 Name[et]=Võlulatern
 Name[gl]=Lámpara máxica
 Name[gu]=જાદુઇ દિવો
@@ -18,6 +19,7 @@ Name[uk]=Чарівна лампа
 Name[zh_TW]=魔法燈
 Icon=preferences-system-windows-effect-magic-lamp
 Comment=Animates minimizing of windows with a magic lamp
+Comment[el]=Κίνηση ελαχιστοποίηση παραθύρων με ένα μαγικό λυχνάρι
 Comment[et]=Animeerib akende minimeerimise võlulaternaga
 Comment[ga]=Déan beochan le lampa draíochta agus fuinneog á híoslaghdú
 Comment[gl]=Anima a minimización das fiestras cunha lámpara máxica
