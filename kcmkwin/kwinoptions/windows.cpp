@@ -112,24 +112,21 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     //lay->addWidget(plcBox);
 
     // focus policy
-    fcsBox = new QGroupBox(i18n("Focus"),this);
+    //fcsBox = new QGroupBox(i18n("Focus"),this);
+    fcsBox = new QWidget(this);
 
-    QBoxLayout *fLay = new QVBoxLayout();
+    QFormLayout *fLay = new QFormLayout();
 
     fcsBox->setLayout( fLay );
 
-    QBoxLayout *cLay = new QHBoxLayout();
-    fLay->addLayout( cLay );
-    QLabel *fLabel = new QLabel(i18n("&Policy:"), fcsBox);
-    cLay->addWidget(fLabel, 0);
     focusCombo =  new QComboBox(fcsBox);
     focusCombo->setEditable( false );
     focusCombo->addItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
     focusCombo->addItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
     focusCombo->addItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
     focusCombo->addItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
-    cLay->addWidget(focusCombo,1 ,Qt::AlignLeft);
-    fLabel->setBuddy(focusCombo);
+    fLay->addRow( i18n("&Policy:"), focusCombo);
+
 
     // FIXME, when more policies have been added to KWin
     wtstr = i18n("The focus policy is used to determine the active window, i.e."
@@ -152,41 +149,31 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
                                       " from working properly."
                          );
     focusCombo->setWhatsThis( wtstr);
-    fLabel->setWhatsThis( wtstr);
 
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setAutoRaiseEnabled()) );
+    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(focusPolicyChanged()) );
 
     // autoraise delay
-    autoRaiseOn = new QCheckBox(i18n("Auto &raise"), fcsBox);
-    fLay->addWidget(autoRaiseOn);
+    autoRaiseOn = new QCheckBox(i18n("&Raise, with the following delay:"), fcsBox);
     connect(autoRaiseOn,SIGNAL(toggled(bool)), this, SLOT(autoRaiseOnTog(bool)));
-
     autoRaise = new KIntNumInput(500, fcsBox);
-    autoRaise->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     autoRaise->setRange(0, 3000, 100);
     autoRaise->setSteps(100,100);
     autoRaise->setSuffix(i18n(" ms"));
-    fLay->addWidget(autoRaise);
+    fLay->addRow( autoRaiseOn, autoRaise);
 
     connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()) );
 
-    delayFocusOn = new QCheckBox(i18n("Delay focus"), fcsBox);
-    fLay->addWidget(delayFocusOn);
+    delayFocusOn = new QCheckBox(i18n("Delay focus by:"), fcsBox);
     connect(delayFocusOn,SIGNAL(toggled(bool)), this, SLOT(delayFocusOnTog(bool)));
-
     delayFocus = new KIntNumInput(500, fcsBox);
-    delayFocus->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     delayFocus->setRange(0, 3000, 100);
     delayFocus->setSteps(100,100);
     delayFocus->setSuffix(i18n(" ms"));
-    fLay->addWidget(delayFocus);
+    fLay->addRow( delayFocusOn, delayFocus);
 
-    clickRaiseOn = new QCheckBox(i18n("C&lick raise active window"), fcsBox);
+    clickRaiseOn = new QCheckBox(i18n("C&lick raises active window"), fcsBox);
     connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
-    fLay->addWidget(clickRaiseOn);
-
-//     fLay->addColSpacing(0,qMax(autoRaiseOn->sizeHint().width(),
-//                                clickRaiseOn->sizeHint().width()) + 15);
+    fLay->addRow(clickRaiseOn);
 
     autoRaiseOn->setWhatsThis( i18n("When this option is enabled, a window in the background will automatically"
                                        " come to the front when the mouse pointer has been over it for some time.") );
@@ -205,12 +192,12 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
                                        " will automatically receive focus.") );
 
     separateScreenFocus = new QCheckBox( i18n( "S&eparate screen focus" ), fcsBox );
-    fLay->addWidget( separateScreenFocus );
+    fLay->addRow( separateScreenFocus );
     wtstr = i18n( "When this option is enabled, focus operations are limited only to the active Xinerama screen" );
     separateScreenFocus->setWhatsThis( wtstr );
 
     activeMouseScreen = new QCheckBox( i18n( "Active screen follows &mouse" ), fcsBox );
-    fLay->addWidget( activeMouseScreen );
+    fLay->addRow( activeMouseScreen );
     wtstr = i18n( "When this option is enabled, the active Xinerama screen (where new windows appear, for example)"
                   " is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the "
                   " screen containing the focused window. By default this option is disabled for Click to focus and"
@@ -225,10 +212,43 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
         activeMouseScreen->hide();
     }
 
+    focusStealing = new QComboBox( this );
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "None" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Low" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Normal" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "High" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Extreme" ));
+    wtstr = i18n( "<p>This option specifies how much KWin will try to prevent unwanted focus stealing "
+                  "caused by unexpected activation of new windows. (Note: This feature does not "
+                  "work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)"
+                  "<ul>"
+                  "<li><em>None:</em> Prevention is turned off "
+                  "and new windows always become activated.</li>"
+                  "<li><em>Low:</em> Prevention is enabled; when some window does not have support "
+                  "for the underlying mechanism and KWin cannot reliably decide whether to "
+                  "activate the window or not, it will be activated. This setting may have both "
+                  "worse and better results than normal level, depending on the applications.</li>"
+                  "<li><em>Normal:</em> Prevention is enabled.</li>"
+                  "<li><em>High:</em> New windows get activated only if no window is currently active "
+                  "or if they belong to the currently active application. This setting is probably "
+                  "not really usable when not using mouse focus policy.</li>"
+                  "<li><em>Extreme:</em> All windows must be explicitly activated by the user.</li>"
+                  "</ul></p>"
+                  "<p>Windows that are prevented from stealing focus are marked as demanding attention, "
+                  "which by default means their taskbar entry will be highlighted. This can be changed "
+                  "in the Notifications control module.</p>" );
+    focusStealing->setWhatsThis( wtstr );
+    connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
+    fLay->addRow(i18n( "Focus stealing prevention level:" ), focusStealing);
+
     lay->addWidget(fcsBox);
 
+
+
+
+
     kbdBox = new KButtonGroup(this);
-    kbdBox->setTitle(i18n("Navigation"));
+    kbdBox->setTitle(i18nc("@title:group", "Window Switching"));
     QVBoxLayout *kLay = new QVBoxLayout(kbdBox);
 
     altTabPopup = new QCheckBox( i18n("Show window list while switching windows"), kbdBox );
@@ -303,7 +323,7 @@ void KFocusConfig::setFocus(int foc)
     focusCombo->setCurrentIndex(foc);
 
     // this will disable/hide the auto raise delay widget if focus==click
-    setAutoRaiseEnabled();
+    focusPolicyChanged();
     updateAltTabMode();
 }
 
@@ -348,34 +368,25 @@ void KFocusConfig::setClickRaise(bool on)
     clickRaiseOn->setChecked(on);
 }
 
-void KFocusConfig::setAutoRaiseEnabled()
+void KFocusConfig::focusPolicyChanged()
 {
+    int policyIndex=focusCombo->currentIndex();
+
     // the auto raise related widgets are: autoRaise
-    if ( focusCombo->currentIndex() != CLICK_TO_FOCUS )
-    {
-        autoRaiseOn->setEnabled(true);
-        autoRaiseOnTog(autoRaiseOn->isChecked());
-    }
-    else
-    {
-        autoRaiseOn->setEnabled(false);
-        autoRaiseOnTog(false);
-    }
+    autoRaiseOn->setEnabled(policyIndex != CLICK_TO_FOCUS);
+    autoRaiseOnTog(policyIndex != CLICK_TO_FOCUS && autoRaiseOn->isChecked());
+
+    focusStealing->setDisabled(policyIndex == FOCUS_UNDER_MOUSE || policyIndex == FOCUS_STRICTLY_UNDER_MOUSE);
+
 }
 
 void KFocusConfig::setDelayFocusEnabled()
 {
+    int policyIndex=focusCombo->currentIndex();
+
     // the delayed focus related widgets are: delayFocus
-    if ( focusCombo->currentIndex() != CLICK_TO_FOCUS )
-    {
-        delayFocusOn->setEnabled(true);
-        delayFocusOnTog(delayFocusOn->isChecked());
-    }
-    else
-    {
-        delayFocusOn->setEnabled(false);
-        delayFocusOnTog(false);
-    }
+    delayFocusOn->setEnabled(policyIndex != CLICK_TO_FOCUS);
+    delayFocusOnTog(policyIndex != CLICK_TO_FOCUS && delayFocusOn->isChecked());
 }
 
 void KFocusConfig::autoRaiseOnTog(bool a) {
@@ -388,6 +399,11 @@ void KFocusConfig::delayFocusOnTog(bool a) {
 }
 
 void KFocusConfig::clickRaiseOnTog(bool ) {
+}
+
+void KFocusConfig::setFocusStealing(int l) {
+    l = qMax( 0, qMin( 4, l ));
+    focusStealing->setCurrentIndex(l);
 }
 
 void KFocusConfig::setSeparateScreenFocus(bool s) {
@@ -447,7 +463,7 @@ void KFocusConfig::load( void )
     setAutoRaise( cg.readEntry(KWIN_AUTORAISE, false));
     setDelayFocus( cg.readEntry(KWIN_DELAYFOCUS, false));
     setClickRaise( cg.readEntry(KWIN_CLICKRAISE, true));
-    setAutoRaiseEnabled();      // this will disable/hide the auto raise delay widget if focus==click
+    focusPolicyChanged();      // this will disable/hide the auto raise delay widget if focus==click
     setDelayFocusEnabled();
 
     setSeparateScreenFocus( cg.readEntry(KWIN_SEPARATE_SCREEN_FOCUS, false));
@@ -462,6 +478,11 @@ void KFocusConfig::load( void )
     setShowPopupinfo( config->group("PopupInfo").readEntry(KWIN_SHOW_POPUP, false));
 
     setTraverseAll( config->group("TabBox").readEntry(KWIN_TRAVERSE_ALL, false));
+
+
+//    setFocusStealing( cg.readEntry(KWIN_FOCUS_STEALING, 2 ));
+    // TODO default to low for now
+    setFocusStealing( cg.readEntry(KWIN_FOCUS_STEALING, 1 ));
 
     emit KCModule::changed(false);
 }
@@ -510,6 +531,9 @@ void KFocusConfig::save( void )
 
     config->group("TabBox").writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
 
+    cg.writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentIndex());
+
+
     if (standAlone)
     {
         config->sync();
@@ -530,6 +554,11 @@ void KFocusConfig::defaults()
     setDelayFocus(false);
     setClickRaise(true);
     setSeparateScreenFocus( false );
+
+//    setFocusStealing(2);
+    // TODO default to low for now
+    setFocusStealing(1);
+
     // on by default for non click to focus policies
     setActiveMouseScreen( focusCombo->currentIndex() != 0 );
     setAltTabMode(true);
@@ -625,40 +654,42 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     lay->addWidget(electricBox);
 
-    QHBoxLayout* focusStealingLayout = new QHBoxLayout();
-    lay->addLayout( focusStealingLayout );
-    QLabel* focusStealingLabel = new QLabel( i18n( "Focus stealing prevention level:" ), this );
-    focusStealing = new QComboBox( this );
-    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "None" ));
-    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Low" ));
-    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Normal" ));
-    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "High" ));
-    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Extreme" ));
-    focusStealingLabel->setBuddy( focusStealing );
-    focusStealingLayout->addWidget( focusStealingLabel );
-    focusStealingLayout->addWidget( focusStealing, Qt::AlignLeft );
-    wtstr = i18n( "<p>This option specifies how much KWin will try to prevent unwanted focus stealing "
-                  "caused by unexpected activation of new windows. (Note: This feature does not "
-                  "work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)"
-                  "<ul>"
-                  "<li><em>None:</em> Prevention is turned off "
-                  "and new windows always become activated.</li>"
-                  "<li><em>Low:</em> Prevention is enabled; when some window does not have support "
-                  "for the underlying mechanism and KWin cannot reliably decide whether to "
-                  "activate the window or not, it will be activated. This setting may have both "
-                  "worse and better results than normal level, depending on the applications.</li>"
-                  "<li><em>Normal:</em> Prevention is enabled.</li>"
-                  "<li><em>High:</em> New windows get activated only if no window is currently active "
-                  "or if they belong to the currently active application. This setting is probably "
-                  "not really usable when not using mouse focus policy.</li>"
-                  "<li><em>Extreme:</em> All windows must be explicitly activated by the user.</li>"
-                  "</ul></p>"
-                  "<p>Windows that are prevented from stealing focus are marked as demanding attention, "
-                  "which by default means their taskbar entry will be highlighted. This can be changed "
-                  "in the Notifications control module.</p>" );
-    focusStealing->setWhatsThis( wtstr );
-    focusStealingLabel->setWhatsThis( wtstr );
-    connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
+
+    QFormLayout *vLay = new QFormLayout();
+    lay->addLayout( vLay );
+
+    placementCombo = new QComboBox(this);
+    placementCombo->setEditable( false );
+    placementCombo->addItem(i18n("Smart"), SMART_PLACEMENT);
+    placementCombo->addItem(i18n("Maximizing"), MAXIMIZING_PLACEMENT);
+    placementCombo->addItem(i18n("Cascade"), CASCADE_PLACEMENT);
+    placementCombo->addItem(i18n("Random"), RANDOM_PLACEMENT);
+    placementCombo->addItem(i18n("Centered"), CENTERED_PLACEMENT);
+    placementCombo->addItem(i18n("Zero-Cornered"), ZEROCORNERED_PLACEMENT);
+    // CT: disabling is needed as long as functionality misses in kwin
+    //placementCombo->addItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
+    //placementCombo->addItem(i18n("Manual"), MANUAL_PLACEMENT);
+    placementCombo->setCurrentIndex(SMART_PLACEMENT);
+
+    // FIXME, when more policies have been added to KWin
+    wtstr = i18n("The placement policy determines where a new window"
+                 " will appear on the desktop."
+                 " <ul>"
+                 " <li><em>Smart</em> will try to achieve a minimum overlap of windows</li>"
+                 " <li><em>Maximizing</em> will try to maximize every window to fill the whole screen."
+                 " It might be useful to selectively affect placement of some windows using"
+                 " the window-specific settings.</li>"
+                 " <li><em>Cascade</em> will cascade the windows</li>"
+                 " <li><em>Random</em> will use a random position</li>"
+                 " <li><em>Centered</em> will place the window centered</li>"
+                 " <li><em>Zero-Cornered</em> will place the window in the top-left corner</li>"
+                 "</ul>") ;
+
+    placementCombo->setWhatsThis( wtstr);
+
+    vLay->addRow(i18n("&Placement:"), placementCombo);
+
+    connect( placementCombo, SIGNAL(activated(int)), SLOT(changed()));
 
     hideUtilityWindowsForInactive = new QCheckBox( i18n( "Hide utility windows for inactive applications" ), this );
     hideUtilityWindowsForInactive->setWhatsThis(
@@ -666,7 +697,8 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
               " hidden and will be shown only when the application becomes active. Note that applications"
               " have to mark the windows with the proper window type for this feature to work." ));
     connect(hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
-    lay->addWidget( hideUtilityWindowsForInactive );
+    vLay->addRow( hideUtilityWindowsForInactive );
+
 
     lay->addStretch();
     load();
@@ -691,14 +723,6 @@ void KAdvancedConfig::shadeHoverChanged(bool a) {
     shadeHover->setEnabled(a);
 }
 
-void KAdvancedConfig::setFocusStealing(int l) {
-    l = qMax( 0, qMin( 4, l ));
-    focusStealing->setCurrentIndex(l);
-}
-
-void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
-    hideUtilityWindowsForInactive->setChecked( s );
-}
 
 void KAdvancedConfig::load( void )
 {
@@ -710,9 +734,42 @@ void KAdvancedConfig::load( void )
     setElectricBorders(cg.readEntry(KWM_ELECTRIC_BORDER, 0));
     setElectricBorderDelay(cg.readEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
 
-//    setFocusStealing( cg.readEntry(KWIN_FOCUS_STEALING, 2 ));
-    // TODO default to low for now
-    setFocusStealing( cg.readEntry(KWIN_FOCUS_STEALING, 1 ));
+    QString key;
+    // placement policy --- CT 19jan98 ---
+    key = cg.readEntry(KWIN_PLACEMENT);
+    //CT 13mar98 interactive placement
+//   if( key.left(11) == "interactive") {
+//     setPlacement(INTERACTIVE_PLACEMENT);
+//     int comma_pos = key.find(',');
+//     if (comma_pos < 0)
+//       interactiveTrigger->setValue(0);
+//     else
+//       interactiveTrigger->setValue (key.right(key.length()
+//                           - comma_pos).toUInt(0));
+//     iTLabel->setEnabled(true);
+//     interactiveTrigger->show();
+//   }
+//   else {
+//     interactiveTrigger->setValue(0);
+//     iTLabel->setEnabled(false);
+//     interactiveTrigger->hide();
+    if( key == "Random")
+        setPlacement(RANDOM_PLACEMENT);
+    else if( key == "Cascade")
+        setPlacement(CASCADE_PLACEMENT); //CT 31jan98
+    //CT 31mar98 manual placement
+    else if( key == "manual")
+        setPlacement(MANUAL_PLACEMENT);
+    else if( key == "Centered")
+        setPlacement(CENTERED_PLACEMENT);
+    else if( key == "ZeroCornered")
+        setPlacement(ZEROCORNERED_PLACEMENT);
+    else if( key == "Maximizing")
+        setPlacement(MAXIMIZING_PLACEMENT);
+    else
+        setPlacement(SMART_PLACEMENT);
+//  }
+
     setHideUtilityWindowsForInactive( cg.readEntry( KWIN_HIDE_UTILITY, true));
 
     emit KCModule::changed(false);
@@ -732,7 +789,28 @@ void KAdvancedConfig::save( void )
     cg.writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
     cg.writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
 
-    cg.writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentIndex());
+    // placement policy --- CT 31jan98 ---
+    v =getPlacement();
+    if (v == RANDOM_PLACEMENT)
+        cg.writeEntry(KWIN_PLACEMENT, "Random");
+    else if (v == CASCADE_PLACEMENT)
+        cg.writeEntry(KWIN_PLACEMENT, "Cascade");
+    else if (v == CENTERED_PLACEMENT)
+        cg.writeEntry(KWIN_PLACEMENT, "Centered");
+    else if (v == ZEROCORNERED_PLACEMENT)
+        cg.writeEntry(KWIN_PLACEMENT, "ZeroCornered");
+    else if (v == MAXIMIZING_PLACEMENT)
+        cg.writeEntry(KWIN_PLACEMENT, "Maximizing");
+//CT 13mar98 manual and interactive placement
+//   else if (v == MANUAL_PLACEMENT)
+//     cg.writeEntry(KWIN_PLACEMENT, "Manual");
+//   else if (v == INTERACTIVE_PLACEMENT) {
+//       QString tmpstr = QString("Interactive,%1").arg(interactiveTrigger->value());
+//       cg.writeEntry(KWIN_PLACEMENT, tmpstr);
+//   }
+    else
+        cg.writeEntry(KWIN_PLACEMENT, "Smart");
+
     cg.writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
 
     if (standAlone)
@@ -753,12 +831,22 @@ void KAdvancedConfig::defaults()
     setShadeHoverInterval(250);
     setElectricBorders(0);
     setElectricBorderDelay(150);
-//    setFocusStealing(2);
-    // TODO default to low for now
-    setFocusStealing(1);
+    setPlacement(SMART_PLACEMENT);
     setHideUtilityWindowsForInactive( true );
     emit KCModule::changed(true);
 }
+
+// placement policy --- CT 31jan98 ---
+int KAdvancedConfig::getPlacement()
+{
+    return placementCombo->currentIndex();
+}
+
+void KAdvancedConfig::setPlacement(int plac)
+{
+    placementCombo->setCurrentIndex(plac);
+}
+
 
 void KAdvancedConfig::setEBorders()
 {
@@ -794,6 +882,9 @@ void KAdvancedConfig::setElectricBorderDelay(int delay)
     delays->setValue(delay);
 }
 
+void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
+    hideUtilityWindowsForInactive->setChecked( s );
+}
 
 KMovingConfig::~KMovingConfig ()
 {
@@ -845,44 +936,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
                                               " and allows you to move or resize them,"
                                               " just like for normal windows"));
 
-    QBoxLayout *vLay = new QHBoxLayout();
-    bLay->addLayout( vLay );
-
-    QLabel *plcLabel = new QLabel(i18n("&Placement:"),windowsBox);
-
-    placementCombo = new QComboBox(windowsBox);
-    placementCombo->setEditable( false );
-    placementCombo->addItem(i18n("Smart"), SMART_PLACEMENT);
-    placementCombo->addItem(i18n("Maximizing"), MAXIMIZING_PLACEMENT);
-    placementCombo->addItem(i18n("Cascade"), CASCADE_PLACEMENT);
-    placementCombo->addItem(i18n("Random"), RANDOM_PLACEMENT);
-    placementCombo->addItem(i18n("Centered"), CENTERED_PLACEMENT);
-    placementCombo->addItem(i18n("Zero-Cornered"), ZEROCORNERED_PLACEMENT);
-    // CT: disabling is needed as long as functionality misses in kwin
-    //placementCombo->addItem(i18n("Interactive"), INTERACTIVE_PLACEMENT);
-    //placementCombo->addItem(i18n("Manual"), MANUAL_PLACEMENT);
-    placementCombo->setCurrentIndex(SMART_PLACEMENT);
-
-    // FIXME, when more policies have been added to KWin
-    wtstr = i18n("The placement policy determines where a new window"
-                 " will appear on the desktop."
-                 " <ul>"
-                 " <li><em>Smart</em> will try to achieve a minimum overlap of windows</li>"
-                 " <li><em>Maximizing</em> will try to maximize every window to fill the whole screen."
-                 " It might be useful to selectively affect placement of some windows using"
-                 " the window-specific settings.</li>"
-                 " <li><em>Cascade</em> will cascade the windows</li>"
-                 " <li><em>Random</em> will use a random position</li>"
-                 " <li><em>Centered</em> will place the window centered</li>"
-                 " <li><em>Zero-Cornered</em> will place the window in the top-left corner</li>"
-                 "</ul>") ;
-
-    plcLabel->setWhatsThis( wtstr);
-    placementCombo->setWhatsThis( wtstr);
-
-    plcLabel->setBuddy(placementCombo);
-    vLay->addWidget(plcLabel, 0);
-    vLay->addWidget(placementCombo, 1, Qt::AlignLeft);
 
     bLay->addSpacing(10);
 
@@ -956,7 +1009,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     connect( resizeOpaqueOn, SIGNAL(clicked()), SLOT(changed()));
     connect( geometryTipOn, SIGNAL(clicked()), SLOT(changed()));
     connect( moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
-    connect( placementCombo, SIGNAL(activated(int)), SLOT(changed()));
     connect( BrdrSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect( BrdrSnap, SIGNAL(valueChanged(int)), SLOT(slotBrdrSnapChanged(int)));
     connect( WndwSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -989,17 +1041,6 @@ void KMovingConfig::setGeometryTip(bool showGeometryTip)
 bool KMovingConfig::getGeometryTip()
 {
     return geometryTipOn->isChecked();
-}
-
-// placement policy --- CT 31jan98 ---
-int KMovingConfig::getPlacement()
-{
-    return placementCombo->currentIndex();
-}
-
-void KMovingConfig::setPlacement(int plac)
-{
-    placementCombo->setCurrentIndex(plac);
 }
 
 int KMovingConfig::getResizeOpaque()
@@ -1051,40 +1092,6 @@ void KMovingConfig::load( void )
     bool showGeomTip = cg.readEntry(KWIN_GEOMETRY, false);
     setGeometryTip( showGeomTip );
 
-    // placement policy --- CT 19jan98 ---
-    key = cg.readEntry(KWIN_PLACEMENT);
-    //CT 13mar98 interactive placement
-//   if( key.left(11) == "interactive") {
-//     setPlacement(INTERACTIVE_PLACEMENT);
-//     int comma_pos = key.find(',');
-//     if (comma_pos < 0)
-//       interactiveTrigger->setValue(0);
-//     else
-//       interactiveTrigger->setValue (key.right(key.length()
-//                           - comma_pos).toUInt(0));
-//     iTLabel->setEnabled(true);
-//     interactiveTrigger->show();
-//   }
-//   else {
-//     interactiveTrigger->setValue(0);
-//     iTLabel->setEnabled(false);
-//     interactiveTrigger->hide();
-    if( key == "Random")
-        setPlacement(RANDOM_PLACEMENT);
-    else if( key == "Cascade")
-        setPlacement(CASCADE_PLACEMENT); //CT 31jan98
-    //CT 31mar98 manual placement
-    else if( key == "manual")
-        setPlacement(MANUAL_PLACEMENT);
-    else if( key == "Centered")
-        setPlacement(CENTERED_PLACEMENT);
-    else if( key == "ZeroCornered")
-        setPlacement(ZEROCORNERED_PLACEMENT);
-    else if( key == "Maximizing")
-        setPlacement(MAXIMIZING_PLACEMENT);
-    else
-        setPlacement(SMART_PLACEMENT);
-//  }
 
     setMoveResizeMaximized(cg.readEntry(KWIN_MOVE_RESIZE_MAXIMIZED, false));
 
@@ -1123,28 +1130,6 @@ void KMovingConfig::save( void )
 
     cg.writeEntry(KWIN_GEOMETRY, getGeometryTip());
 
-    // placement policy --- CT 31jan98 ---
-    v =getPlacement();
-    if (v == RANDOM_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "Random");
-    else if (v == CASCADE_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "Cascade");
-    else if (v == CENTERED_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "Centered");
-    else if (v == ZEROCORNERED_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "ZeroCornered");
-    else if (v == MAXIMIZING_PLACEMENT)
-        cg.writeEntry(KWIN_PLACEMENT, "Maximizing");
-//CT 13mar98 manual and interactive placement
-//   else if (v == MANUAL_PLACEMENT)
-//     cg.writeEntry(KWIN_PLACEMENT, "Manual");
-//   else if (v == INTERACTIVE_PLACEMENT) {
-//       QString tmpstr = QString("Interactive,%1").arg(interactiveTrigger->value());
-//       cg.writeEntry(KWIN_PLACEMENT, tmpstr);
-//   }
-    else
-        cg.writeEntry(KWIN_PLACEMENT, "Smart");
-
     v = getResizeOpaque();
     if (v == RESIZE_OPAQUE)
         cg.writeEntry(KWIN_RESIZE_OPAQUE, "Opaque");
@@ -1175,7 +1160,6 @@ void KMovingConfig::defaults()
     setMove(OPAQUE);
     setResizeOpaque(RESIZE_TRANSPARENT);
     setGeometryTip(false);
-    setPlacement(SMART_PLACEMENT);
     setMoveResizeMaximized(false);
 
     //copied from kcontrol/konq/kwindesktop, aleXXX

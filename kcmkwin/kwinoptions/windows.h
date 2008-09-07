@@ -80,7 +80,7 @@ public:
 
 private slots:
   void setDelayFocusEnabled();
-  void setAutoRaiseEnabled();
+  void focusPolicyChanged();
   void autoRaiseOnTog(bool);//CT 23Oct1998
   void delayFocusOnTog(bool);
   void clickRaiseOnTog(bool);
@@ -108,7 +108,11 @@ private:
   void setRollOverDesktops(bool);
   void setShowPopupinfo(bool);
 
-  QGroupBox *fcsBox;
+  void setFocusStealing( int );
+  QComboBox* focusStealing;
+
+  //QGroupBox *fcsBox;
+  QWidget* fcsBox;
   QComboBox *focusCombo;
   QCheckBox *autoRaiseOn;
   QCheckBox *delayFocusOn;
@@ -149,12 +153,10 @@ private:
   int getMove( void );
   int getResizeOpaque ( void );
   bool getGeometryTip( void ); //KS
-  int getPlacement( void ); //CT
 
   void setMove(int);
   void setResizeOpaque(int);
   void setGeometryTip(bool); //KS
-  void setPlacement(int); //CT
   void setMoveResizeMaximized(bool);
 
   KButtonGroup *windowsBox;
@@ -162,8 +164,6 @@ private:
   QCheckBox *resizeOpaqueOn;
   QCheckBox *geometryTipOn;
   QCheckBox *moveResizeMaximized;
-
-  QComboBox *placementCombo;
 
   KConfig *config;
   bool     standAlone;
@@ -223,12 +223,13 @@ private:
   QRadioButton *active_move;
   QRadioButton *active_always;
   KIntNumInput *delays;
-  
-  void setFocusStealing( int );
-  void setHideUtilityWindowsForInactive( bool );
 
-  QComboBox* focusStealing;
+  void setHideUtilityWindowsForInactive( bool );
   QCheckBox* hideUtilityWindowsForInactive;
+
+  int getPlacement( void ); //CT
+  void setPlacement(int); //CT
+  QComboBox *placementCombo;
 };
 
 #endif // KKWMWINDOWS_H

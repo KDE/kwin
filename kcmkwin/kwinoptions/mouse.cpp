@@ -141,7 +141,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   QGridLayout *grid;
   QGroupBox *box;
   QLabel *label;
-  QString strMouseButton1, strMouseButton3, strMouseWheel;
+  QString strMouseButton1, strMouseButton3;
   QString txtButton1, txtButton3, txtButton4;
   QStringList items;
   bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
@@ -152,13 +152,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
 /** Titlebar doubleclick ************/
 
-  QHBoxLayout *hlayout = new QHBoxLayout();
-  layout->addLayout( hlayout );
-
-  label = new QLabel(i18n("&Titlebar double-click:"), this);
-  hlayout->addWidget(label);
-  label->setWhatsThis( i18n("Here you can customize mouse click behavior when double clicking on the"
-    " titlebar of a window.") );
+  QFormLayout *fLayout = new QFormLayout();
+  layout->addLayout( fLayout );
 
   QComboBox* combo = new QComboBox(this);
   combo->addItem(i18n("Maximize"));
@@ -171,21 +166,12 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->addItem(i18n("Nothing"));
   combo->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
-  hlayout->addWidget(combo);
   coTiDbl = combo;
   combo->setWhatsThis( i18n("Behavior on <em>double</em> click into the titlebar."));
 
-  label->setBuddy(combo);
+  fLayout->addRow(i18n("&Titlebar double-click:"),combo);
 
 /** Mouse Wheel Events  **************/
-  QHBoxLayout *hlayoutW = new QHBoxLayout();
-  layout->addLayout( hlayoutW );
-  strMouseWheel = i18n("Titlebar wheel event:");
-  label = new QLabel(strMouseWheel, this);
-  hlayoutW->addWidget(label);
-  txtButton4 = i18n("Handle mouse wheel events");
-  label->setWhatsThis( txtButton4);
-  
   // Titlebar and frame mouse Wheel  
   QComboBox* comboW = new QComboBox(this);
   comboW->addItem(i18n("Raise/Lower"));
@@ -197,11 +183,11 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   comboW->addItem(i18n("Nothing"));  
   comboW->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
   connect(comboW, SIGNAL(activated(int)), SLOT(changed()));
-  hlayoutW->addWidget(comboW);
   coTiAct4 = comboW;
-  comboW->setWhatsThis( txtButton4);
-  label->setBuddy(comboW);
-  
+  comboW->setWhatsThis( i18n("Handle mouse wheel events"));
+
+  fLayout->addRow(i18n("Titlebar wheel event:"),comboW);
+
 /** Titlebar and frame  **************/
 
   box = new QGroupBox(i18n("Titlebar && Frame"), this);
@@ -349,7 +335,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   box->setWhatsThis(
     i18n("Here you can customize behavior when clicking on the maximize button.") );
 
-  hlayout = new QHBoxLayout(box);
+  QHBoxLayout* hlayout = new QHBoxLayout(box);
   hlayout->setMargin(KDialog::marginHint());
   hlayout->setSpacing(KDialog::spacingHint());
 
@@ -612,9 +598,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3, strAllW;
-  QGridLayout *grid;
   QGroupBox *box;
-  QLabel *label;
   QString strMouseButton1, strMouseButton3;
   QString txtButton1, txtButton3;
   QStringList items;
@@ -698,16 +682,24 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   box->setWhatsThis( i18n("Here you can customize KDE's behavior when clicking somewhere into"
                              " a window while pressing a modifier key."));
 
-  formLayout = new QFormLayout(box);
+  QHBoxLayout* innerLay=new QHBoxLayout(box);
+  innerLay->setContentsMargins(0,0,0,0);
+  innerLay->setSpacing(KDialog::spacingHint());
+  QHBoxLayout* fLay=new QHBoxLayout;
+  fLay->setMargin(KDialog::marginHint());
+  fLay->setSpacing(KDialog::spacingHint());
+  formLayout = new QFormLayout;
   formLayout->setMargin(KDialog::marginHint());
   formLayout->setSpacing(KDialog::spacingHint());
+  innerLay->addLayout(fLay);
+  innerLay->addLayout(formLayout);
 
   // Labels
-  strMouseButton1 = i18n("Modifier key + left button:");
+  strMouseButton1 = i18n("Left button:");
   strAll1 = i18n("In this row you can customize left click behavior when clicking into"
                  " the titlebar or the frame.");
 
-  strMouseButton3 = i18n("Modifier key + right button:");
+  strMouseButton3 = i18n("Right button:");
   strAll3 = i18n("In this row you can customize right click behavior when clicking into"
                  " the titlebar or the frame." );
 
@@ -725,7 +717,10 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   coAllKey = combo;
   combo->setWhatsThis( i18n("Here you select whether holding the Meta key or Alt key "
                             "will allow you to perform the following actions.") );
-  formLayout->addRow(i18n("Modifier key:"), combo);
+  fLay->addWidget(new QLabel(i18n("Modifier key:"), this));
+  fLay->addWidget(combo);
+  fLay->addWidget(new QLabel("  +", this));
+
 
   items.clear();
   items << i18n("Move")
@@ -751,7 +746,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   coAll2 = combo;
   combo->setWhatsThis( i18n("Here you can customize KDE's behavior when middle clicking into a window"
                             " while pressing the modifier key.") );
-  formLayout->addRow(i18n("Modifier key + middle button:"), combo);
+  formLayout->addRow(i18n("Middle button:"), combo);
 
   combo = new QComboBox(box);
   combo->addItems(items);
@@ -773,7 +768,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   coAllW =  combo;
   combo->setWhatsThis( i18n("Here you can customize KDE's behavior when scrolling with the mouse wheel"
                             " in a window while pressing the modifier key.") );
-  formLayout->addRow(i18n("Modifier key + mouse wheel:"), combo);
+  formLayout->addRow(i18n("Mouse wheel:"), combo);
 
 
   layout->addStretch();
