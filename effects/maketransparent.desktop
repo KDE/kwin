@@ -2,7 +2,7 @@
 Name=Translucency
 Name[af]=Deursigtigheid
 Name[be]=Празрыстасць
-Name[be@latin]=Празрыстасць
+Name[be@latin]=Prazrystaść
 Name[bg]=Прозрачност
 Name[bn]=সমস্বচ্ছতা
 Name[bn_IN]=সমস্বচ্ছতা
@@ -67,6 +67,7 @@ Name[zh_TW]=半透明
 Icon=preferences-system-windows-effect-maketransparent
 Comment=Makes decorations or entire windows translucent
 Comment[af]=Maak versierings of volledige vensters deursigtig
+Comment[be@latin]=Robić azdobu ci ŭsio akno prazrystym.
 Comment[bg]=Прозрачност на отделни части или целия прозорец
 Comment[ca]=Converteix en translúcides les decoracions o les finestres senceres
 Comment[cs]=Zprůhlední dekorace nebo celá okna

@@ -2,7 +2,7 @@
 Name=Shadow
 Name[af]=Skaduwee
 Name[be]=Цень
-Name[be@latin]=Цень
+Name[be@latin]=Cień
 Name[bg]=Сянка
 Name[bn_IN]=ছায়া
 Name[ca]=Ombra
@@ -69,6 +69,7 @@ Icon=preferences-system-windows-effect-shadow
 Comment=Adds shadow under the windows
 Comment[af]=Voeg skaduwees onderaan vensters
 Comment[ar]=يضيف الظل تحت النوافذ
+Comment[be@latin]=Dadaje cień pad aknom.
 Comment[bg]=Добавяне на сянка под прозорците
 Comment[ca]=Afegeix ombra a sota les finestres
 Comment[cs]=Přidává stíny pod okna

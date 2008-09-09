@@ -2,6 +2,7 @@
 Name=Show FPS
 Name[af]=Wys FPS
 Name[ar]=أظهر FPS
+Name[be@latin]=Vyjaŭleńnie „FPS”
 Name[bg]=Показване на к/с
 Name[bn_IN]=FPS প্রদর্শন করা হবে
 Name[ca]=Mostra els FPS
@@ -66,7 +67,7 @@ Comment=Shows KWin's performance
 Comment[af]=Wys KWin se werkverrigting
 Comment[ar]=أظهر أداء KWin's
 Comment[be]=Паказаць хуткасць працы KWin
-Comment[be@latin]=Паказаць хуткасць працы KWin
+Comment[be@latin]=Pakazvaje chutkaść akońnika „KWin”.
 Comment[bg]=Производителност
 Comment[ca]=Mostra el rendiment del KWin
 Comment[cs]=Zobrazuje výkon KWin

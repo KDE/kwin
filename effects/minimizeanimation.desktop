@@ -2,7 +2,7 @@
 Name=Minimize Animation
 Name[af]=Minimeer-animasie
 Name[be]=Анімацыя змяншэння
-Name[be@latin]=Анімацыя змяншэння
+Name[be@latin]=Animacyja minimalizacyi akna
 Name[bg]=Минимизиране на анимацията
 Name[ca]=Animació de minimització
 Name[cs]=Animace minimalizace
@@ -63,6 +63,7 @@ Name[zh_TW]=縮小動畫
 Icon=preferences-system-windows-effect-minimize-animation
 Comment=Animates minimizing of windows
 Comment[af]=Gebruik animasie tydens minimering van vensters
+Comment[be@latin]=Animuje minimalizacyju akna.
 Comment[bg]=Анимирана минимизация на прозорците
 Comment[ca]=Anima la minimització de les finestres
 Comment[cs]=Animuje minimalizaci okne

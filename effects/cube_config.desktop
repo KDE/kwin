@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_cube
 X-KDE-PluginKeyword=cube
 
 Name=Desktop Cube
+Name[be@latin]=Rabočy kub
 Name[el]=Κύβος επιφάνειας εργασίας
 Name[et]=Töölauakuubik
 Name[ga]=Ciúb Deisce

@@ -2,7 +2,7 @@
 Name=Invert
 Name[af]=Keer om
 Name[be]=Інвертаваць
-Name[be@latin]=Інвертаваць
+Name[be@latin]=Invercyja
 Name[bg]=Инвертиране
 Name[ca]=Inverteix
 Name[cs]=Invertovat
@@ -65,6 +65,7 @@ Name[zh_CN]=反转
 Name[zh_TW]=反轉
 Comment=Inverts (negates) desktop colors
 Comment[af]=Keer werkskermkleure om (maak negatief)
+Comment[be@latin]=Invertuje kolery rabočaha stała, jak u nehatyŭnym zdymku)
 Comment[bg]=Инвертира цветовете на работния плот
 Comment[ca]=Inverteix (converteix en negatiu) els colors de l'escriptori
 Comment[cs]=Invertuje (obrátí) barvy na ploše
