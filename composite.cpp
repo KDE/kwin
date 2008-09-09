@@ -183,7 +183,7 @@ void Workspace::setupCompositing()
     if( rate <= 0 )
         rate = 50;
     // QTimer gives us 1msec (1000Hz) at best, so we ignore anything higher;
-    // however, additional throttling makes prevents very high rates from taking place anyway
+    // however, additional throttling prevents very high rates from taking place anyway
     else if( rate > 1000 )
         rate = 1000;
     kDebug( 1212 ) << "Refresh rate " << rate << "Hz";
@@ -406,9 +406,9 @@ void Workspace::setCompositeTimer()
     {
     if( !compositing()) // should not really happen, but there may be e.g. some damage events still pending
         return;
-    // Last paint set nextPaintReference as a reference time from which multiples of compositeRate
-    // should be added for the next paint.
-    compositeTimer.start( nextPaintReference.msecsTo( QTime::currentTime()) % compositeRate );
+    // The last paint set nextPaintReference as a reference time to which multiples of compositeRate
+    // should be added for the next paint. qMax() is a guard against negative moduli when the day changes.
+    compositeTimer.start( qMax ( 0, nextPaintReference.msecsTo( QTime::currentTime()) % compositeRate ) );
     }
 
 bool Workspace::createOverlay()
