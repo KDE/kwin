@@ -407,8 +407,8 @@ void Workspace::setCompositeTimer()
     if( !compositing()) // should not really happen, but there may be e.g. some damage events still pending
         return;
     // The last paint set nextPaintReference as a reference time to which multiples of compositeRate
-    // should be added for the next paint. qMax() is a guard against negative moduli when the day changes.
-    compositeTimer.start( qMax ( 0, nextPaintReference.msecsTo( QTime::currentTime()) % compositeRate ) );
+    // should be added for the next paint. qBound() for protection; system time can change without notice.
+    compositeTimer.start( qBound( 0, nextPaintReference.msecsTo( QTime::currentTime() ), 250 ) % compositeRate );
     }
 
 bool Workspace::createOverlay()
