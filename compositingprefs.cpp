@@ -46,7 +46,6 @@ CompositingPrefs::~CompositingPrefs()
 
 bool CompositingPrefs::enableCompositing() const
     {
-    return false; // disabled by default, for the time being, until support becomes better
     return mEnableCompositing;
     }
 
