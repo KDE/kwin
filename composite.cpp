@@ -433,10 +433,7 @@ void Workspace::setupOverlay( Window w )
     assert( overlay != None );
     assert( Extensions::shapeInputAvailable());
     XSetWindowBackgroundPixmap( display(), overlay, None );
-    XRectangle rec = { 0, 0, displayWidth(), displayHeight() };
-    XShapeCombineRectangles( display(), overlay, ShapeBounding, 0, 0, &rec, 1, ShapeSet, Unsorted );
-    XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
-    overlay_shape = QRegion( 0, 0, displayWidth(), displayHeight());    
+    setOverlayShape( QRect( 0, 0, displayWidth(), displayHeight()));
     if( w != None )
         {
         XSetWindowBackgroundPixmap( display(), w, None );
@@ -453,6 +450,34 @@ void Workspace::showOverlay()
     XMapSubwindows( display(), overlay );
     XMapWindow( display(), overlay );
     overlay_shown = true;
+    }
+
+void Workspace::hideOverlay()
+    {
+    assert( overlay != None );
+    XUnmapWindow( display(), overlay );
+    overlay_shown = false;
+    setOverlayShape( QRect( 0, 0, displayWidth(), displayHeight()));
+    }
+
+void Workspace::setOverlayShape( const QRegion& reg )
+    {
+    QVector< QRect > rects = reg.rects();
+    XRectangle* xrects = new XRectangle[ rects.count() ];
+    for( int i = 0;
+         i < rects.count();
+         ++i )
+        {
+        xrects[ i ].x = rects[ i ].x();
+        xrects[ i ].y = rects[ i ].y();
+        xrects[ i ].width = rects[ i ].width();
+        xrects[ i ].height = rects[ i ].height();
+        }
+    XShapeCombineRectangles( display(), overlay, ShapeBounding, 0, 0,
+        xrects, rects.count(), ShapeSet, Unsorted );
+    delete[] xrects;
+    XShapeCombineRectangles( display(), overlay, ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
+    overlay_shape = reg;
     }
 
 void Workspace::destroyOverlay()

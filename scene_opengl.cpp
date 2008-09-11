@@ -118,7 +118,6 @@ XShmSegmentInfo SceneOpenGL::shm;
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     , init_ok( false )
-    , selfCheckDone( false )
     {
     if( !Extensions::glxAvailable())
         {
@@ -177,17 +176,19 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
     glFrustum( xmin, xmax, ymin, ymax, zNear, zFar );
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
+    float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
+    glTranslatef( xmin*scaleFactor, ymax*scaleFactor, -1.1 );
+    glScalef( (xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001 );
     if( checkGLError( "Init" ))
         {
         kError( 1212 ) << "OpenGL compositing setup failed";
         return; // error
         }
+    if( !selfCheck())
+        return;
     kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
         << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
     init_ok = true;
-    float scaleFactor = 1.1 * tan( fovy * M_PI / 360.0f )/ymax;
-    glTranslatef( xmin*scaleFactor, ymax*scaleFactor, -1.1 );
-    glScalef( (xmax-xmin)*scaleFactor/displayWidth(), -(ymax-ymin)*scaleFactor/displayHeight(), 0.001 );
     }
 
 SceneOpenGL::~SceneOpenGL()
@@ -625,7 +626,7 @@ bool SceneOpenGL::initDrawableConfigs()
 // window, drawing it on the screen, reading the contents back and comparing. This
 // should test whether compositing really works.
 // It would be still nice to check somehow if compositing is not awfully slow.
-void SceneOpenGL::selfCheckSetup( QRegion& damage )
+bool SceneOpenGL::selfCheck()
     {
     QImage img( 5, 1, QImage::Format_RGB32 );
     img.setPixel( 0, 0, QColor( Qt::red ).rgb());
@@ -634,7 +635,16 @@ void SceneOpenGL::selfCheckSetup( QRegion& damage )
     img.setPixel( 3, 0, QColor( Qt::white ).rgb());
     img.setPixel( 4, 0, QColor( Qt::black ).rgb());
     QPixmap pix = QPixmap::fromImage( img );
-    foreach( const QPoint& p, selfCheckPoints())
+    QList< QPoint > points = selfCheckPoints();
+    QRegion reg;
+    foreach( const QPoint& p, points )
+        reg |= QRect( p, pix.size());
+    if( wspace->overlayWindow())
+        { // avoid covering the whole screen too soon
+        wspace->setOverlayShape( reg );
+        wspace->showOverlay();
+        }
+    foreach( const QPoint& p, points )
         {
         XSetWindowAttributes wa;
         wa.override_redirect = True;
@@ -643,7 +653,10 @@ void SceneOpenGL::selfCheckSetup( QRegion& damage )
         XSetWindowBackgroundPixmap( display(), window, pix.handle());
         XClearWindow( display(), window );
         XMapWindow( display(), window );
-        XMoveWindow( display(), window, p.x(), p.y());
+        // move the window one down to where the result will be rendered too, just in case
+        // the render would fail completely and eventual check would try to read this window's contents
+        XMoveWindow( display(), window, p.x() + 1, p.y());
+        XCompositeRedirectWindow( display(), window, CompositeRedirectManual );
         Pixmap wpix = XCompositeNameWindowPixmap( display(), window );
         glXWaitX();
         Texture texture;
@@ -651,23 +664,23 @@ void SceneOpenGL::selfCheckSetup( QRegion& damage )
         texture.bind();
         QRect rect( p.x(), p.y(), 5, 1 );
         texture.render( infiniteRegion(), rect );
-        Workspace::self()->addRepaint( rect );
         texture.unbind();
         glXWaitGL();
         XFreePixmap( display(), wpix );
-        damage |= rect;
         XDestroyWindow( display(), window );
         }
-    }
-
-void SceneOpenGL::selfCheckFinish()
-    {
+    flushBuffer( PAINT_SCREEN_REGION, reg );
     glXWaitGL();
-    selfCheckDone = true;
-    foreach( const QPoint& p, selfCheckPoints())
+    bool ok = true;
+    foreach( const QPoint& p, points )
         {
         QPixmap pix = QPixmap::grabWindow( rootWindow(), p.x(), p.y(), 5, 1 );
         QImage img = pix.toImage();
+//        kdDebug() << "P:" << QColor( img.pixel( 0, 0 )).name();
+//        kdDebug() << "P:" << QColor( img.pixel( 1, 0 )).name();
+//        kdDebug() << "P:" << QColor( img.pixel( 2, 0 )).name();
+//        kdDebug() << "P:" << QColor( img.pixel( 3, 0 )).name();
+//        kdDebug() << "P:" << QColor( img.pixel( 4, 0 )).name();
         if( img.pixel( 0, 0 ) != QColor( Qt::red ).rgb()
             || img.pixel( 1, 0 ) != QColor( Qt::green ).rgb()
             || img.pixel( 2, 0 ) != QColor( Qt::blue ).rgb()
@@ -675,11 +688,15 @@ void SceneOpenGL::selfCheckFinish()
             || img.pixel( 4, 0 ) != QColor( Qt::black ).rgb())
             {
             kError( 1212 ) << "Compositing self-check failed, disabling compositing.";
-            QTimer::singleShot( 0, Workspace::self(), SLOT( finishCompositing()));
-            return;
+            ok = false;
+            break;
             }
         }
-    kDebug( 1212 ) << "Compositing self-check passed.";
+    if( wspace->overlayWindow())
+        wspace->hideOverlay();
+    if( ok )
+        kDebug( 1212 ) << "Compositing self-check passed.";
+    return ok;
     }
 
 QList< QPoint > SceneOpenGL::selfCheckPoints() const
@@ -691,7 +708,8 @@ QList< QPoint > SceneOpenGL::selfCheckPoints() const
          ++screen )
         { // test top-left and bottom-right of every screen
         ret.append( qApp->desktop()->screenGeometry( screen ).topLeft());
-        ret.append( qApp->desktop()->screenGeometry( screen ).bottomRight() + QPoint( -5 + 1, -1 + 1 ));
+        ret.append( qApp->desktop()->screenGeometry( screen ).bottomRight() + QPoint( -5 + 1, -1 + 1 )
+            + QPoint( -1, 0 )); // intentionally moved one up, since the source windows will be one down
         }
     return ret;
     }
@@ -719,11 +737,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     if( wspace->overlayWindow()) // show the window only after the first pass, since
         wspace->showOverlay();   // that pass may take long
-    if( !selfCheckDone )
-        selfCheckSetup( damage );
     flushBuffer( mask, damage );
-    if( !selfCheckDone )
-        selfCheckFinish();
     // do cleanup
     stacking_order.clear();
     checkGLError( "PostPaint" );

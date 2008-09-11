@@ -327,6 +327,8 @@ class Workspace : public QObject, public KDecorationDefines
         // init overlay and the destination window in it
         void setupOverlay( Window window );
         void showOverlay();
+        void hideOverlay(); // hides and resets overlay window
+        void setOverlayShape( const QRegion& reg );
         // destroys XComposite overlay window
         void destroyOverlay();
         Window overlayWindow();
@@ -489,7 +491,6 @@ class Workspace : public QObject, public KDecorationDefines
         void slotReloadConfig();
         void setPopupClientOpacity( QAction* action );
         void setupCompositing();
-        void finishCompositing();
         void performCompositing();
         void lostCMSelection();
         void updateElectricBorders();
@@ -573,6 +574,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         void updateClientArea( bool force );
 
+        void finishCompositing();
         bool windowRepaintsPending() const;
         void setCompositeTimer();
 
