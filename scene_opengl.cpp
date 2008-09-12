@@ -696,6 +696,11 @@ bool SceneOpenGL::selfCheck()
         wspace->hideOverlay();
     if( ok )
         kDebug( 1212 ) << "Compositing self-check passed.";
+    if( !ok && options->disableCompositingChecks )
+        {
+        kWarning( 1212 ) << "Compositing checks disabled, proceeding regardless of self-check failure.";
+        return true;
+        }
     return ok;
     }
 

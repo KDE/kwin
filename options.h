@@ -295,6 +295,7 @@ class Options : public KDecorationOptions
         CompositingType compositingMode;
         HiddenPreviews hiddenPreviews;
         bool unredirectFullscreen;
+        bool disableCompositingChecks;
         
         uint refreshRate;
         // This is for OpenGL mode

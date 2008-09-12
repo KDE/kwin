@@ -211,6 +211,7 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
         compositingMode = XRenderCompositing;
     else
         compositingMode = OpenGLCompositing;
+    disableCompositingChecks = config.readEntry("DisableChecks", false);
     QString glmode = config.readEntry("GLMode", "TFP" ).toUpper();
     if( glmode == "TFP" )
         glMode = GLTFP;

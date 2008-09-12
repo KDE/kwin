@@ -66,6 +66,17 @@
     </layout>
    </item>
    <item>
+    <widget class="QCheckBox" name="disableChecks" >
+     <property name="whatsThis" >
+      <string>Enabling this option allows compositing to be activated even if some of the internal checks fail. Doing so may make the whole desktop unusable and its use is not recommened. Use only if KWin refuses to activate compositing on a system that should be capable of compositing.
+</string>
+     </property>
+     <property name="text" >
+      <string>Disable functionality checks</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="glGroup" >
      <property name="title" >
       <string>OpenGL Options</string>

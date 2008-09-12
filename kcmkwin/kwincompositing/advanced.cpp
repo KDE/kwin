@@ -50,6 +50,7 @@ KWinAdvancedCompositingOptions::KWinAdvancedCompositingOptions(QWidget* parent, 
 
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.windowThumbnails, SIGNAL(activated(int)), this, SLOT(changed()));
+    connect(ui.disableChecks, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glTextureFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
@@ -131,6 +132,7 @@ void KWinAdvancedCompositingOptions::load()
         ui.windowThumbnails->setCurrentIndex( 2 );
     else // shown, or default
         ui.windowThumbnails->setCurrentIndex( 1 );
+    ui.disableChecks->setChecked( config.readEntry( "DisableChecks", false ));
 
     QString glMode = config.readEntry("GLMode", "TFP");
     ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
@@ -160,7 +162,8 @@ void KWinAdvancedCompositingOptions::save()
         || config.readEntry("GLMode", "TFP") != glModes[ui.glMode->currentIndex()]
         || config.readEntry("GLDirect", mDefaultPrefs->enableDirectRendering())
             != ui.glDirect->isChecked()
-        || config.readEntry("GLVSync", mDefaultPrefs->enableVSync()) != ui.glVSync->isChecked())
+        || config.readEntry("GLVSync", mDefaultPrefs->enableVSync()) != ui.glVSync->isChecked()
+        || config.readEntry("DisableChecks", false ) != ui.disableChecks->isChecked())
         {
         showConfirm = true;
         }
@@ -168,6 +171,7 @@ void KWinAdvancedCompositingOptions::save()
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
     static const int hps[] = { 1 /*always*/, 3 /*shown*/,  0 /*never*/ };
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
+    config.writeEntry("DisableChecks", ui.disableChecks->isChecked());
 
     config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
     config.writeEntry("GLTextureFilter", ui.glTextureFilter->currentIndex());
