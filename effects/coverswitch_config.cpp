@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfiggroup.h>
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
@@ -40,9 +40,9 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
     {
     m_ui = new CoverSwitchEffectConfigForm(this);
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    layout->addWidget(m_ui, 0, 0);
+    layout->addWidget(m_ui);
 
     connect(m_ui->checkAnimateSwitch, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkAnimateStart, SIGNAL(stateChanged(int)), this, SLOT(changed()));

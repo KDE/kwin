@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 #include <kconfiggroup.h>
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
@@ -46,9 +46,9 @@ SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
 
     m_ui = new SnowEffectConfigForm(this);
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    layout->addWidget(m_ui, 0, 0);
+    layout->addWidget(m_ui);
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
     connect(m_ui->numberFlakes, SIGNAL(valueChanged(int)), this, SLOT(changed()));

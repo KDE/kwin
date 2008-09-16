@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KFileDialog>
 #include <KImageFilePreview>
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QColor>
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
@@ -46,7 +46,7 @@ CylinderEffectConfig::CylinderEffectConfig(QWidget* parent, const QVariantList& 
     {
     m_ui = new CylinderEffectConfigForm(this);
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
     layout->addWidget(m_ui, 0, 0);
 

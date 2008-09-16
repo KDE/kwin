@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KShortcutsEditor>
 
 #include <QWidget>
-#include <QGridLayout>
+#include <QVBoxLayout>
 
 KWIN_EFFECT_CONFIG_FACTORY
 
@@ -48,9 +48,9 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariant
 
     m_ui = new DimInactiveEffectConfigForm(this);
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    layout->addWidget(m_ui, 0, 0);
+    layout->addWidget(m_ui);
 
     connect(m_ui->spinStrength, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkPanel, SIGNAL(toggled(bool)), this, SLOT(changed()));

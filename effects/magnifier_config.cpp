@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KShortcutsEditor>
 
 #include <QWidget>
-#include <QGridLayout>
+#include <QVBoxLayout>
 
 KWIN_EFFECT_CONFIG_FACTORY
 
@@ -49,9 +49,9 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
 
     m_ui = new MagnifierEffectConfigForm(this);
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    layout->addWidget(m_ui, 0, 0);
+    layout->addWidget(m_ui);
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
     connect(m_ui->spinWidth, SIGNAL(valueChanged(int)), this, SLOT(changed()));

@@ -49,9 +49,9 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
 
     m_ui = new MouseMarkEffectConfigForm(this);
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    layout->addWidget(m_ui, 0, 0);
+    layout->addWidget(m_ui);
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
     connect(m_ui->spinWidth, SIGNAL(valueChanged(int)), this, SLOT(changed()));

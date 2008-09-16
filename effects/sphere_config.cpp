@@ -46,9 +46,9 @@ SphereEffectConfig::SphereEffectConfig(QWidget* parent, const QVariantList& args
     {
     m_ui = new SphereEffectConfigForm(this);
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout(this);
 
-    layout->addWidget(m_ui, 0, 0);
+    layout->addWidget(m_ui);
 
     m_ui->tabWidget->setTabText( 0, i18n("Basic") );
     m_ui->tabWidget->setTabText( 1, i18n("Advanced") );

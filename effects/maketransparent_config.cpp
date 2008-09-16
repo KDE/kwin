@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <kconfiggroup.h>
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QCheckBox>
 
 #ifndef KDE_USE_FINAL
@@ -45,8 +45,8 @@ MakeTransparentEffectConfig::MakeTransparentEffectConfig(QWidget* parent, const 
     {
     kDebug() ;
     m_ui = new MakeTransparentEffectConfigForm(this);
-    QGridLayout* layout = new QGridLayout(this);
-    layout->addWidget(m_ui, 0, 0);
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    layout->addWidget(m_ui);
 
     connect(m_ui->decorations, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->inactive, SIGNAL(valueChanged(int)), this, SLOT(changed()));
