@@ -101,7 +101,10 @@ void VideoRecordEffectConfig::save()
 
     KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
 
-    conf.writeEntry("videopath", saveVideo->url().path());
+    if( saveVideo->url().isEmpty() )
+       conf.writeEntry("videopath", KGlobalSettings::documentPath());
+    else
+       conf.writeEntry("videopath", saveVideo->url().path());
 
     conf.sync();
 
