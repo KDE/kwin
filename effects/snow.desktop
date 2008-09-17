@@ -122,7 +122,7 @@ X-KDE-PluginInfo-Email=ubuntu@martin-graesslin.com
 # Internal name of the effect
 X-KDE-PluginInfo-Name=kwin4_effect_snow
 # Category of the effect, for config dialog
-X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Category=Candy
 # Version and license
 X-KDE-PluginInfo-Version=0.1.2
 X-KDE-PluginInfo-License=GPL
