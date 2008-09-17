@@ -917,33 +917,31 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                     // alternate between each corner on that edge. We don't want to determine it
                     // randomly as it will not produce consistant locations when using the filter.
                     // Only move one window so we don't cause large amounts of unnecessary zooming
-                    // in some situations. We only need to do this if we are not expanding later.
+                    // in some situations. We need to do this even when expanding later just in case
+                    // all windows are the same size.
                     // (We are using an old bounding rect for this, hopefully it doesn't matter)
-                    if( !fillGaps )
+                    int xSection = ( mWindowData[ w ].area.x() - bounds.x() ) / ( bounds.width() / 3 );
+                    int ySection = ( mWindowData[ w ].area.y() - bounds.y() ) / ( bounds.height() / 3 );
+                    diff = QPoint( 0, 0 );
+                    if( xSection != 1 || ySection != 1 ) // Remove this if you want the center to pull as well
                         {
-                        int xSection = ( mWindowData[ w ].area.x() - bounds.x() ) / ( bounds.width() / 3 );
-                        int ySection = ( mWindowData[ w ].area.y() - bounds.y() ) / ( bounds.height() / 3 );
-                        diff = QPoint( 0, 0 );
-                        if( xSection != 1 || ySection != 1 ) // Remove this if you want the center to pull as well
-                            {
-                            if( xSection == 1 )
-                                xSection = ( mWindowData[ w ].slot / 2 ? 2 : 0 );
-                            if( ySection == 1 )
-                                ySection = ( mWindowData[ w ].slot % 2 ? 2 : 0 );
-                            }
-                        if( xSection == 0 && ySection == 0 )
-                            diff = QPoint( bounds.topLeft() - mWindowData[ w ].area.center() );
-                        if( xSection == 2 && ySection == 0 )
-                            diff = QPoint( bounds.topRight() - mWindowData[ w ].area.center() );
-                        if( xSection == 2 && ySection == 2 )
-                            diff = QPoint( bounds.bottomRight() - mWindowData[ w ].area.center() );
-                        if( xSection == 0 && ySection == 2 )
-                            diff = QPoint( bounds.bottomLeft() - mWindowData[ w ].area.center() );
-                        if( diff.x() != 0 || diff.y() != 0 )
-                            {
-                            diff *= accuracy / double( diff.manhattanLength() );
-                            mWindowData[ w ].area.translate( diff );
-                            }
+                        if( xSection == 1 )
+                            xSection = ( mWindowData[ w ].slot / 2 ? 2 : 0 );
+                        if( ySection == 1 )
+                            ySection = ( mWindowData[ w ].slot % 2 ? 2 : 0 );
+                        }
+                    if( xSection == 0 && ySection == 0 )
+                        diff = QPoint( bounds.topLeft() - mWindowData[ w ].area.center() );
+                    if( xSection == 2 && ySection == 0 )
+                        diff = QPoint( bounds.topRight() - mWindowData[ w ].area.center() );
+                    if( xSection == 2 && ySection == 2 )
+                        diff = QPoint( bounds.bottomRight() - mWindowData[ w ].area.center() );
+                    if( xSection == 0 && ySection == 2 )
+                        diff = QPoint( bounds.bottomLeft() - mWindowData[ w ].area.center() );
+                    if( diff.x() != 0 || diff.y() != 0 )
+                        {
+                        diff *= accuracy / double( diff.manhattanLength() );
+                        mWindowData[ w ].area.translate( diff );
                         }
     
                     // Update bounding rect
