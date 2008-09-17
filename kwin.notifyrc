@@ -5485,3 +5485,7 @@ Comment[x-test]=xxA window on an inactive virtual desktop demands attentionxx
 Comment[zh_CN]=未激活的虚拟桌面上的窗口请求注意
 Comment[zh_TW]=在其他虛擬桌面上的視窗要求注意
 
+[Event/compositingslow]
+Name=Compositing Performance Is Slow
+Comment=The compositing performance was too slow and compositing has been suspended
+Action=Popup

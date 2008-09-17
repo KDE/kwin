@@ -27,9 +27,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-QString Notify::eventToName( Event e )
+static bool forgetIt = false;
+QList< Notify::EventData > Notify::pending_events;
+
+bool Notify::raise( Event e, const QString& message, Client* c )
     {
+    if ( forgetIt )
+        return false; // no connection was possible, don't try each time
+
     QString event;
+    KNotification::NotificationFlags flags = KNotification::CloseOnTimeout;
     switch ( e ) 
         {
         case Activate:
@@ -92,6 +99,10 @@ QString Notify::eventToName( Event e )
         case DemandAttentionOther:
             event = "demandsattentionother";
             break;
+        case CompositingSlow:
+            event = "compositingslow";
+            flags = KNotification::Persistent;
+            break;
         default:
             if ((e > DesktopChange) && (e <= DesktopChange+20))
             {
@@ -99,18 +110,6 @@ QString Notify::eventToName( Event e )
             }
         break;
         }
-    return event;
-    }
-
-static bool forgetIt = false;
-QList< Notify::EventData > Notify::pending_events;
-
-bool Notify::raise( Event e, const QString& message, Client* c )
-    {
-    if ( forgetIt )
-        return false; // no connection was possible, don't try each time
-
-    QString event = eventToName( e );
     if ( event.isNull() )
         return false;
 
@@ -124,12 +123,13 @@ bool Notify::raise( Event e, const QString& message, Client* c )
         data.event = event;
         data.message = message;
         data.window = c ? c->window() : 0;
+        data.flags = flags;
         pending_events.append( data );
         return true;
         }
 
     
-    return KNotification::event( event, message /*, QPixmap() , c ? c->window() : 0*/ ); //FIXME get the widget ?
+    return KNotification::event( event, message, QPixmap(), NULL /* TODO c ? c->window() : 0*/, flags );
     }
 
 void Notify::sendPendingEvents()
@@ -139,7 +139,7 @@ void Notify::sendPendingEvents()
         EventData data = pending_events.first();
         pending_events.pop_front();
         if( !forgetIt )
-            KNotification::event( data.event, data.message /*  , QPixmap() , data.window  */ );
+            KNotification::event( data.event, data.message, QPixmap(), NULL /* TODO data.window*/, data.flags );
         }
     }
 

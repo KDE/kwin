@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_NOTIFICATIONS_H
 #define KWIN_NOTIFICATIONS_H
 
+#include <knotification.h>
 #include <stdlib.h>
 #include <QString>
 #include <QList>
@@ -57,18 +58,19 @@ class Notify
             ResizeEnd,
             DemandAttentionCurrent,
             DemandAttentionOther,
+            CompositingSlow,
             DesktopChange = 100
             };
 
         static bool raise( Event, const QString& message = QString(), Client* c = NULL );
         static void sendPendingEvents();
     private:
-        static QString eventToName( Event );
         struct EventData
             {
             QString event;
             QString message;
             long window;
+            KNotification::NotificationFlags flags;
             };
         static QList< EventData > pending_events;
     };

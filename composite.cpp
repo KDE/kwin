@@ -52,10 +52,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 #include "compositingprefs.h"
+#include "notifications.h"
 
 #include <stdio.h>
 
 #include <QMenu>
+#include <kaction.h>
+#include <kactioncollection.h>
+#include <klocale.h>
 #include <kxerrorhandler.h>
 
 #include <X11/extensions/shape.h>
@@ -193,6 +197,7 @@ void Workspace::setupCompositing()
     nextPaintReference = QTime::currentTime().addMSecs( -compositeRate );
     compositeTimer.setSingleShot( true );
     checkCompositeTimer();
+    composite_paint_times.clear();
     XCompositeRedirectSubwindows( display(), rootWindow(), CompositeRedirectManual );
     new EffectsHandlerImpl( scene->compositingType() ); // sets also the 'effects' pointer
     addRepaintFull();
@@ -269,7 +274,17 @@ void Workspace::lostCMSelection()
 // for the shortcut
 void Workspace::slotToggleCompositing()
     {
-    compositingSuspended = !compositingSuspended;
+    suspendCompositing( !compositingSuspended );
+    }
+    
+void Workspace::suspendCompositing()
+    {
+    suspendCompositing( true );
+    }
+
+void Workspace::suspendCompositing( bool suspend )
+    {
+    compositingSuspended = suspend;
     finishCompositing();
     setupCompositing(); // will do nothing if suspended
     }
@@ -365,6 +380,7 @@ void Workspace::performCompositing()
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint
     repaints_region = QRegion();
+    QTime t = QTime::currentTime();
     scene->paint( repaints, windows );
     if( scene->waitSyncAvailable())
         {
@@ -381,6 +397,7 @@ void Workspace::performCompositing()
     // checkCompositeTime() would restart it again somewhen later, called from functions that
     // would again add something pending.
     checkCompositeTimer();
+    checkCompositePaintTime( t.elapsed());
     lastCompositePaint.start();
 #endif
     }
@@ -426,6 +443,35 @@ bool Workspace::createOverlay()
 #else
     return false;
 #endif
+    }
+
+void Workspace::checkCompositePaintTime( int msec )
+    {
+    if( options->disableCompositingChecks )
+        return;
+    composite_paint_times.enqueue( msec );
+    if( composite_paint_times.count() > 3 )
+        composite_paint_times.dequeue();
+    if( composite_paint_times.count() < 3 )
+        return;
+    // If last 3 paints were way too slow, disable and warn.
+    // 1 second seems reasonable, it's not that difficult to get relatively high times
+    // with high system load.
+    const int MAX_TIME = 1000;
+    if( composite_paint_times[ 0 ] > MAX_TIME && composite_paint_times[ 1 ] > MAX_TIME
+        && composite_paint_times[ 2 ] > MAX_TIME )
+        {
+        kDebug( 1212 ) << "Too long paint times, suspending";
+        QTimer::singleShot( 0, this, SLOT( suspendCompositing()));
+        QString shortcut = i18n( "Empty" );
+        if( KAction* action = qobject_cast<KAction*>( keys->action("Suspend Compositing")))
+            shortcut = action->globalShortcut().primary().toString();
+        QString message = i18n( "Compositing was too slow and has been suspended.\n"
+            "If this was only a temporary problem, you can resume using the '%1' shortcut.\n"
+            "You can also disable functionality checks in advanced compositing settings.", shortcut );
+        Notify::raise( Notify::CompositingSlow, message );
+        compositeTimer.start( 1000 ); // so that it doesn't trigger sooner than suspendCompositing()
+        }
     }
 
 void Workspace::setupOverlay( Window w )
