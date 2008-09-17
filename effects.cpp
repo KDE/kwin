@@ -612,7 +612,7 @@ void EffectsHandlerImpl::destroyInputWindow( Window w )
             return;
             }
         }
-    assert( false );
+    abort();
     }
 
 bool EffectsHandlerImpl::checkInputWindowEvent( XEvent* e )

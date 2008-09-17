@@ -1330,7 +1330,7 @@ EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow* w, int xdiff, 
             }
         }
 
-    assert( false ); // Should never get here
+    abort(); // Should never get here
     }
 
 EffectWindow* PresentWindowsEffect::relativeWindowGrid( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const

@@ -439,7 +439,7 @@ void Client::detectNoBorder()
             noborder = false;
           break;
         default:
-            assert( false );
+            abort();
         }
     // NET::Override is some strange beast without clear definition, usually
     // just meaning "noborder", so let's treat it only as such flag, and ignore it as

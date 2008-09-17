@@ -175,7 +175,7 @@ static void checkTransiency()
             {
             kdDebug() << "BT:" << transiencyCheckStartBt << endl;
             kdDebug() << "CLIENT:" << transiencyCheckClient << endl;
-            assert( false );
+            abort();
             }
         transiencyCheckNonExistent = false;
         }

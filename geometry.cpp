@@ -271,8 +271,7 @@ QRect Workspace::clientArea( clientAreaOption opt, int screen, int desktop ) con
         case ScreenArea:
             return desktopwidget->screenGeometry( screen );
         }
-    assert( false );
-    return QRect();
+    abort();
     }
 
 QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const
@@ -555,7 +554,7 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
                         SNAP_BORDER_LEFT
                         break;
                       default:
-                        assert( false );
+                        abort();
                         break;
                       }
 
@@ -688,7 +687,7 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
                         SNAP_WINDOW_C_LEFT
                         break;
                       default:
-                        assert( false );
+                        abort();
                         break;
                       }
                     }
@@ -1611,9 +1610,8 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
 
 void Client::resizeWithChecks( int w, int h, ForceGeometry_t force )
     {
-    if( shade_geometry_change )
-        assert( false );
-    else if( isShade())
+    assert( !shade_geometry_change );
+    if( isShade())
         {
         if( h == border_top + border_bottom )
             {
@@ -2722,7 +2720,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                 break;
             case PositionCenter:
             default:
-                assert( false );
+                abort();
                 break;
             }
 
@@ -2777,7 +2775,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                 break;
             case PositionCenter:
             default:
-                assert( false );
+                abort();
                 break;
             }
         if( moveResizeGeom.size() != previousMoveResizeGeom.size())
@@ -2812,7 +2810,7 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             update = true;
         }
     else
-        assert( false );
+        abort();
 
     if( isResize())
         {

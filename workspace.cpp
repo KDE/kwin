@@ -2466,7 +2466,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
     if( message == "noborderaltf3" )
         {
         KAction* action = qobject_cast<KAction*>(keys->action( "Window Operations Menu" ));
-        if (action==0) assert( false );
+        assert( action != NULL );
         QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
             .arg( action->globalShortcut().primary().toString());
         args << "--msgbox" <<
@@ -2480,7 +2480,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
     else if( message == "fullscreenaltf3" )
         {
         KAction* action = qobject_cast<KAction*>(keys->action( "Window Operations Menu" ));
-        if (action==0) assert( false );
+        assert( action != NULL );
         QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
             .arg( action->globalShortcut().primary().toString());
         args << "--msgbox" <<
@@ -2493,7 +2493,7 @@ void Workspace::helperDialog( const QString& message, const Client* c )
         type = "altf3warning";
         }
     else
-        assert( false );
+        abort();
     if( !type.isEmpty())
         {
         KConfig cfg( "kwin_dialogsrc" );

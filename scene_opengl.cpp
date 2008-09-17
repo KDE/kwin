@@ -1019,7 +1019,7 @@ void SceneOpenGL::Texture::findTarget()
             mScale.setHeight( 1.0f );
           break;
         default:
-            assert( false );
+            abort();
         }
     }
 
