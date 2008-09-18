@@ -39,7 +39,7 @@ Name[th]=สาธิตการเลื่อนพื้นที่ทำ�
 Name[uk]=Демонстрація ShiftWorkspaceUp
 Name[x-test]=xxDemo ShiftWorkspaceUpxx
 Name[zh_CN]=演示 - 工作空间上移
-Name[zh_TW]=示範_將工作空間上移
+Name[zh_TW]=示範：將工作空間上移
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect

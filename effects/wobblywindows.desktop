@@ -43,6 +43,11 @@ Name[x-test]=xxWobbly Windowsxx
 Name[zh_CN]=摆动窗口
 Name[zh_TW]=不穩定的 Windows
 Comment=Deform windows while they are moving
+Comment[nds]=Finstern bi't Verschuven weihen laten
+Comment[pt]=Deformar as janelas enquanto mudam de posição
+Comment[pt_BR]=Deformar as janelas enquanto mudam de posição
+Comment[uk]=Деформує вікна під час їх пересування
+Comment[zh_TW]=移動視窗時讓視窗「變形」
 Icon=preferences-system-windows-effect-wobblywindows
 
 Type=Service

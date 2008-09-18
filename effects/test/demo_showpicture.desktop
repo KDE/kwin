@@ -40,7 +40,7 @@ Name[tr]=Demo Resim Göster
 Name[uk]=Демонстрація ShowPicture
 Name[x-test]=xxDemo ShowPicturexx
 Name[zh_CN]=演示 - 显示图片
-Name[zh_TW]=示範_顯示圖片
+Name[zh_TW]=示範：顯示圖片
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect

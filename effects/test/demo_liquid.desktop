@@ -44,7 +44,7 @@ Name[uk]=Демонстрація Liquid
 Name[wa]=Mostraedje Liquid
 Name[x-test]=xxDemo Liquidxx
 Name[zh_CN]=演示 - 液体
-Name[zh_TW]=示範ˍ液體
+Name[zh_TW]=示範：液體
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
