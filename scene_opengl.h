@@ -65,16 +65,15 @@ class SceneOpenGL
         void waitSync();
         void flushBuffer( int mask, QRegion damage );
         bool selfCheck();
-        QList< QPoint > selfCheckPoints() const;
         GC gcroot;
         class FBConfigInfo
-        {
+            {
             public:
                 GLXFBConfig fbconfig;
                 int bind_texture_format;
                 int y_inverted;
                 int mipmap;
-        };
+            };
         Drawable buffer;
         GLXFBConfig fbcbuffer;
         static bool db;

@@ -47,6 +47,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "kwinxrenderutils.h"
 
+#include <X11/extensions/Xcomposite.h>
+
 #include <kxerrorhandler.h>
 
 namespace KWin
@@ -127,6 +129,8 @@ SceneXrender::SceneXrender( Workspace* ws )
     init_ok = !xerr.error( true );
     if( !init_ok )
         kError( 1212 ) << "XRender compositing setup failed";
+    if( !selfCheck())
+        return;
     }
 
 SceneXrender::~SceneXrender()
@@ -159,6 +163,84 @@ void SceneXrender::createBuffer()
     XFreePixmap( display(), pixmap ); // The picture owns the pixmap now
     }
 
+// Just like SceneOpenGL::selfCheck()
+bool SceneXrender::selfCheck()
+    {
+    QImage img( 5, 1, QImage::Format_RGB32 );
+    img.setPixel( 0, 0, QColor( Qt::red ).rgb());
+    img.setPixel( 1, 0, QColor( Qt::green ).rgb());
+    img.setPixel( 2, 0, QColor( Qt::blue ).rgb());
+    img.setPixel( 3, 0, QColor( Qt::white ).rgb());
+    img.setPixel( 4, 0, QColor( Qt::black ).rgb());
+    QPixmap pix = QPixmap::fromImage( img );
+    QList< QPoint > points = selfCheckPoints();
+    QRegion reg;
+    foreach( const QPoint& p, points )
+        reg |= QRect( p, pix.size());
+    if( wspace->overlayWindow())
+        { // avoid covering the whole screen too soon
+        wspace->setOverlayShape( reg );
+        wspace->showOverlay();
+        }
+    foreach( const QPoint& p, points )
+        {
+        XSetWindowAttributes wa;
+        wa.override_redirect = True;
+        ::Window window = XCreateWindow( display(), rootWindow(), 0, 0, 5, 1, 0, QX11Info::appDepth(),
+            CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa );
+        XSetWindowBackgroundPixmap( display(), window, pix.handle());
+        XClearWindow( display(), window );
+        XMapWindow( display(), window );
+        // move the window one down to where the result will be rendered too, just in case
+        // the render would fail completely and eventual check would try to read this window's contents
+        XMoveWindow( display(), window, p.x() + 1, p.y());
+        XCompositeRedirectWindow( display(), window, CompositeRedirectManual );
+        Pixmap wpix = XCompositeNameWindowPixmap( display(), window );
+        XWindowAttributes attrs;
+        XGetWindowAttributes( display(), window, &attrs );
+        XRenderPictFormat* format = XRenderFindVisualFormat( display(), attrs.visual );
+        Picture pic = XRenderCreatePicture( display(), wpix, format, 0, 0 );
+        QRect rect( p.x(), p.y(), 5, 1 );
+        XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
+            rect.x(), rect.y(), rect.width(), rect.height());
+        XFreePixmap( display(), wpix );
+        XDestroyWindow( display(), window );
+        }
+    flushBuffer( PAINT_SCREEN_REGION, reg );
+    bool ok = true;
+    foreach( const QPoint& p, points )
+        {
+        QPixmap pix = QPixmap::grabWindow( rootWindow(), p.x(), p.y(), 5, 1 );
+        QImage img = pix.toImage();
+//        kdDebug() << "P:" << QColor( img.pixel( 0, 0 )).name();
+//        kdDebug() << "P:" << QColor( img.pixel( 1, 0 )).name();
+//        kdDebug() << "P:" << QColor( img.pixel( 2, 0 )).name();
+//        kdDebug() << "P:" << QColor( img.pixel( 3, 0 )).name();
+//        kdDebug() << "P:" << QColor( img.pixel( 4, 0 )).name();
+        if( img.pixel( 0, 0 ) != QColor( Qt::red ).rgb()
+            || img.pixel( 1, 0 ) != QColor( Qt::green ).rgb()
+            || img.pixel( 2, 0 ) != QColor( Qt::blue ).rgb()
+            || img.pixel( 3, 0 ) != QColor( Qt::white ).rgb()
+            || img.pixel( 4, 0 ) != QColor( Qt::black ).rgb())
+            {
+            kError( 1212 ) << "Compositing self-check failed, disabling compositing.";
+            ok = false;
+            break;
+            }
+        }
+    if( wspace->overlayWindow())
+        wspace->hideOverlay();
+    if( ok )
+        kDebug( 1212 ) << "Compositing self-check passed.";
+    if( !ok && options->disableCompositingChecks )
+        {
+        kWarning( 1212 ) << "Compositing checks disabled, proceeding regardless of self-check failure.";
+        return true;
+        }
+    return ok;
+    }
+
+
 // the entry point for painting
 void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
     {
@@ -171,6 +253,13 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
     paintScreen( &mask, &damage );
     if( wspace->overlayWindow()) // show the window only after the first pass, since
         wspace->showOverlay();   // that pass may take long
+    flushBuffer( mask, damage );
+    // do cleanup
+    stacking_order.clear();
+    }
+
+void SceneXrender::flushBuffer( int mask, QRegion damage )
+    {
     if( mask & PAINT_SCREEN_REGION )
         {
         // Use the damage region as the clip region for the root window
@@ -189,8 +278,6 @@ void SceneXrender::paint( QRegion damage, ToplevelList toplevels )
         XRenderComposite( display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
         XFlush( display());
         }
-    // do cleanup
-    stacking_order.clear();
     }
 
 void SceneXrender::paintGenericScreen( int mask, ScreenPaintData data )

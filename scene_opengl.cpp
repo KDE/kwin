@@ -87,7 +87,6 @@ Sources and other compositing managers:
 #include <X11/extensions/Xcomposite.h>
 
 #include <qpainter.h>
-#include <qdesktopwidget.h>
 
 namespace KWin
 {
@@ -702,21 +701,6 @@ bool SceneOpenGL::selfCheck()
         return true;
         }
     return ok;
-    }
-
-QList< QPoint > SceneOpenGL::selfCheckPoints() const
-    {
-    QList< QPoint > ret;
-    // Use QDesktopWidget directly, we're interested in "real" screens, not depending on our config.
-    for( int screen = 0;
-         screen < qApp->desktop()->numScreens();
-         ++screen )
-        { // test top-left and bottom-right of every screen
-        ret.append( qApp->desktop()->screenGeometry( screen ).topLeft());
-        ret.append( qApp->desktop()->screenGeometry( screen ).bottomRight() + QPoint( -5 + 1, -1 + 1 )
-            + QPoint( -1, 0 )); // intentionally moved one up, since the source windows will be one down
-        }
-    return ret;
     }
 
 // the entry function for painting

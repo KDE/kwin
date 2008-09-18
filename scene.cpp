@@ -77,6 +77,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 
+#include <qdesktopwidget.h>
+
 namespace KWin
 {
 
@@ -314,6 +316,21 @@ void Scene::finalPaintWindow( EffectWindowImpl* w, int mask, QRegion region, Win
 void Scene::finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data )
     {
     w->sceneWindow()->performPaint( mask, region, data );
+    }
+
+QList< QPoint > Scene::selfCheckPoints() const
+    {
+    QList< QPoint > ret;
+    // Use QDesktopWidget directly, we're interested in "real" screens, not depending on our config.
+    for( int screen = 0;
+         screen < qApp->desktop()->numScreens();
+         ++screen )
+        { // test top-left and bottom-right of every screen
+        ret.append( qApp->desktop()->screenGeometry( screen ).topLeft());
+        ret.append( qApp->desktop()->screenGeometry( screen ).bottomRight() + QPoint( -5 + 1, -1 + 1 )
+            + QPoint( -1, 0 )); // intentionally moved one up, since the source windows will be one down
+        }
+    return ret;
     }
 
 //****************************************

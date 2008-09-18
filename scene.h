@@ -107,6 +107,7 @@ class Scene
         void finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data );
         // compute time since the last repaint
         void updateTimeDiff();
+        QList< QPoint > selfCheckPoints() const;
         // saved data for 2nd pass of optimized screen painting
         struct Phase2Data
             {

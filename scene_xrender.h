@@ -54,6 +54,8 @@ class SceneXrender
     private:
         void paintTransformedScreen( int mask );
         void createBuffer();
+        void flushBuffer( int mask, QRegion damage );
+        bool selfCheck();
         XRenderPictFormat* format;
         Picture front;
         static Picture buffer;
