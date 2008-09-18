@@ -741,6 +741,14 @@ bool WindowQuadList::smoothNeeded() const
     return false;
     }
 
+bool WindowQuadList::isTransformed() const
+    {
+    foreach( WindowQuad q, *this )
+        if( q.isTransformed())
+            return true;
+    return false;
+    }
+
 /***************************************************************
  PaintClipper
 ***************************************************************/

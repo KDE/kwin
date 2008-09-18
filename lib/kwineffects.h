@@ -831,6 +831,7 @@ class KWIN_EXPORT WindowQuadList
         WindowQuadList filterOut( WindowQuadType type ) const;
         bool smoothNeeded() const;
         void makeArrays( float** vertices, float** texcoords ) const;
+        bool isTransformed() const;
     };
 
 class KWIN_EXPORT WindowPrePaintData

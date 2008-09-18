@@ -174,7 +174,7 @@ void ShadowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
 
 void ShadowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( useShadow( w ))
+    if( useShadow( w ) && !data.quads.isTransformed())
         {
         data.paint |= shadowRectangle( data.paint.boundingRect() );
         }
@@ -192,7 +192,7 @@ void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
         //  first we need to draw all queued shadows.
         drawQueuedShadows( w );
         }
-    if( useShadow( w ))
+    if( useShadow( w ) && !data.quads.isTransformed())
         {
         if( !optimize )
             {
