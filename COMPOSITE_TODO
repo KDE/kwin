@@ -23,16 +23,8 @@ TODO
 KDE 4.0 TODO
 =================================
 
-- release notes document
-
 - effects (to do)
     - add generic support to use effect only for certain window types [Seli]
-    - shadow
-        - xrender mode
-    - desktopgrid
-        - should preserve aspect ratio (as an option?)
-    - zoom
-        - it should react on Meta+wheel ?
 
 - window-specific rules need to apply to unmanaged windows as well (where applicable)
 - some window-specific rules also related to compositing
@@ -91,14 +83,6 @@ General TODO
 ? hidden previews currently needs input shape extension, otherwise the window can possibly interfere
     - not very likely though, so is this worth bothering at all?
 
-+ hidden preview has two modes unimplemented
-
-- global setting for animation speed?
-
-- effects (to do)
-    - effect for windows demanding attention
-        - rays? ripples?
-
 
 OpenGL TODO
 =================================
@@ -152,8 +136,6 @@ XRender TODO
     in window's pre-paint - see the transformedShape() comment
     - and currently seems to be generally broken
 
-+ implement self-check (SceneOpenGL::selfCheckSetup() etc.) also for XRender, possibly share some code
-
 
 Effects framework TODO
 ==============================
@@ -162,8 +144,6 @@ Effects framework TODO
     - currently there are only very few notification functions (windowAdded, windowActivated,...)
 !   - window state changes
     ? more
-
-/ shadows
 
 / support for grabbing input
     - during some more complicated effects, input (at least mouse) should be disabled,
@@ -200,6 +180,7 @@ Effects TODO
 
 / zoom effect
     - enlarge a portion of the screen
+    - Should it react to meta+wheel?
 
 + logout effect
 *   - should be triggered by ksmserver somehow
@@ -210,30 +191,18 @@ Effects TODO
     - should also detect kwin being idle - it probably should detect in pre-paint that the only
         damage is its own area and avoid damaging for the next round in post-paint
 
-? other effects
-
-+ virtual desktop change effects
-+   - ... yes, you guessed it, the cube
-
-/ present windows
-+    - option to show windows with relative sizes to each other
-
 / scalein
 +    - should scale in from e.g. 80%, not 0%, to just "pop up"
 
 + effect for drawing attention to windows demanding attention
+    - Rays? Ripples?
 
 * DimInactive flickers when switching between windows (temporarily no window becomes active)
 
 - focus effect (windows waves a little when it gets focus)
 
 + shadow
-+   - make work with xrender
 +   - follow the shape of the window (currently is disabled completely using the hasOwnShadow() hack)
-
-/ desktopgrid
-+   - there's a bug that causes overlapping windows be shown also on desktops painted sooner than the window's desktop
-        - needs clipping (and that probably needs support for cumulating clipping)
 
 + window thumbnails directly in panel
     - i.e. the panel (taskbar?) could show window previews directly, without tooltips
