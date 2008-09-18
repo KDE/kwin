@@ -126,11 +126,14 @@ SceneXrender::SceneXrender( Workspace* ws )
         front = XRenderCreatePicture( display(), rootWindow(), format, CPSubwindowMode, &pa );
         }
     createBuffer();
-    init_ok = !xerr.error( true );
-    if( !init_ok )
+    if( xerr.error( true ))
+        {
         kError( 1212 ) << "XRender compositing setup failed";
+        return;
+        }
     if( !selfCheck())
         return;
+    init_ok = true;
     }
 
 SceneXrender::~SceneXrender()
