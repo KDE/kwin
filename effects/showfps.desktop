@@ -64,6 +64,7 @@ Name[zh_CN]=显示 FPS
 Name[zh_TW]=顯示每秒幾張
 Icon=preferences-system-windows-effect-fps-show
 Comment=Display KWin's performance in the corner of the screen
+Comment[km]=បង្ហាញ​ការ​អនុវត្ត​របស់ KWin នៅ​​ក្នុងជ្រុង​របស់​អេក្រង់
 Comment[nds]=KWin sien Leisten in't Schirmhuuk wiesen
 Comment[pt]=Mostrar a performance do KWin no canto do ecrã
 Comment[pt_BR]=Mostrar a performance do KWin no canto do ecrã

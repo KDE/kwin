@@ -40,6 +40,7 @@ Name[zh_CN]=罩面切换
 Name[zh_TW]=覆蓋切換
 Icon=preferences-system-windows-effect-coverswitch
 Comment=Display a Cover Flow effect for the alt+tab window switcher
+Comment[km]=បង្ហាញ​បែបផែន​លំហូ​សម្រាប់កម្មវិធី​ប្ដូរ​បង្អួច​ជំនួស+ថេប
 Comment[nds]=En Fleeteffekt bi't Wesseln vun Finstern mit Alt+Tabtast wiesen
 Comment[pt]=Mostrar um efeito de Capas com o selector de janelas com o Alt+Tab
 Comment[pt_BR]=Mostrar um efeito de Capas com o selector de janelas com o Alt+Tab

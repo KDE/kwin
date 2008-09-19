@@ -60,6 +60,7 @@ Name[zh_CN]=暗化父级对话框
 Name[zh_TW]=上層對話框
 Icon=preferences-system-windows-effect-dialog-parent
 Comment=Darkens the parent window of the currently active dialog
+Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​មេ​របស់​ប្រអប់​សកម្ម​បច្ចុប្បន្ន​ងងឹត​
 Comment[nds]=Maakt dat Moderfinstern vun den aktiven Dialoog düüsterer
 Comment[pt]=Escurece a janela-mãe da janela activa de momento
 Comment[pt_BR]=Escurece a janela-mãe da janela activa de momento

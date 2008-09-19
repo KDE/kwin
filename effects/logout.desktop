@@ -66,6 +66,7 @@ Name[zh_CN]=注销
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Desaturate the desktop when displaying the logout dialog
+Comment[km]=ជ្រាប​ផ្ទៃតុ​នៅពេល​បង្ហាញ​ប្រអប់​ចេញ
 Comment[nds]=De Sattheit vun de Schriefdischklören bi't Wiesen vun den Afmelldialoog daalsetten
 Comment[pt]=Reduzir a saturação do ecrã ao mostrar a janela de fim de sessão
 Comment[pt_BR]=Reduzir a saturação do ecrã ao mostrar a janela de fim de sessão

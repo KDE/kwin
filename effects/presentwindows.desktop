@@ -61,6 +61,7 @@ Name[zh_CN]=窗口轮转
 Name[zh_TW]=展示視窗
 Icon=preferences-system-windows-effect-presentwindows
 Comment=Zoom out until all opened windows can be displayed side-by-side
+Comment[km]=បង្រួម​រហូត​ទាល់​តែ​បង្អួច​ដែល​បើក​ទាំងអស់​អាច​ត្រូវ​បាន​បង្ហាញ​ម្ដង​មួយផ្នែកៗ
 Comment[nds]=Ansicht so grötter maken, dat sik all Finstern blangenanner wiesen laat
 Comment[pt]=Reduzir até que todas as janelas abertas possam aparecer lado-a-lado
 Comment[pt_BR]=Reduzir até que todas as janelas abertas possam aparecer lado-a-lado

@@ -53,6 +53,7 @@ Name[x-test]=xxDim Inactivexx
 Name[zh_CN]=暗淡未激活窗口
 Icon=preferences-system-windows-effect-dim-inactive
 Comment=Darken inactive windows
+Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​អសកម្ម​ងងឹត​
 Comment[nds]=Nich aktive Finstern düüsterer maken
 Comment[pt]=Escurecer as janelas inactivas
 Comment[pt_BR]=Escurecer as janelas inactivas

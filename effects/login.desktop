@@ -65,6 +65,7 @@ Name[zh_CN]=登录
 Name[zh_TW]=登入
 Icon=preferences-system-windows-effect-login
 Comment=Smoothly fade to the desktop when logging in
+Comment[km]=លិច​​បន្តិចម្ដងៗ​ទៅ​ផ្ទៃតុ​នៅពេល​ចូល
 Comment[nds]=Bi't Anmellen week na den Schriefdisch överblennen
 Comment[pt]=Desvanecer suavemente para o ecrã ao ligar-se
 Comment[pt_BR]=Desvanecer suavemente para o ecrã ao ligar-se

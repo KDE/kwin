@@ -66,6 +66,7 @@ Name[zh_CN]=半透明
 Name[zh_TW]=半透明
 Icon=preferences-system-windows-effect-maketransparent
 Comment=Make windows translucent under different conditions
+Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​ថ្លា​ក្រោមលក្ខខណ្ឌ​ផ្សេងៗ​គ្នា
 Comment[nds]=Finstern bi verscheden Bedingen dörschienen maken
 Comment[pt]=Torna as janelas translúcidas sob determinadas condições
 Comment[pt_BR]=Torna as janelas translúcidas sob determinadas condições
