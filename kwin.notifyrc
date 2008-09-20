@@ -5487,10 +5487,12 @@ Comment[zh_TW]=在其他虛擬桌面上的視窗要求注意
 
 [Event/compositingslow]
 Name=Compositing Performance Is Slow
+Name[nds]=Tosamensett-Leisten is siet
 Name[pt]=A Performance da Composição está Lenta
 Name[pt_BR]=A Performance da Composição está Lenta
 Name[uk]=Швидкодія композитного показу мала
 Comment=The compositing performance was too slow and compositing has been suspended
+Comment[nds]=Dat Tosamensetten weer to langsam un wöör utmaakt
 Comment[pt]=A performance da composição estava demasiado lenta, pelo que esta foi suspensa
 Comment[pt_BR]=A performance da composição estava demasiado lenta, pelo que esta foi suspensa
 Comment[uk]=Швидкодія композитного показу була замалою, тому композитний показ було призупинено

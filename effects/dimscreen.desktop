@@ -46,6 +46,7 @@ Name[zh_CN]=进入管理员模式时暗淡屏幕
 Name[zh_TW]=在管理者模式下將螢幕變暗
 Icon=preferences-system-windows-effect-dimscreen
 Comment=Darkens the entire screen when requesting root privileges
+Comment[gl]=Escurece toda a pantalla cando se piden os privilexios de root
 Comment[km]=ធ្វើ​ឲ្យ​អេក្រង់ទាំងមូល​ងងឹត​នៅពេល​បង្ហាញ​សិទ្ធិជា​ root
 Comment[nds]=Maakt den helen Schirm düüsterer, wenn na Systeempleger-Verlöven fraagt warrt
 Comment[pt]=Escurece o ecrã inteiro ao pedir permissões de administração
