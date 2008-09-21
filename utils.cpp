@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 #include <assert.h>
 #include <kdebug.h>
+#include <kglobalaccel.h>
 #include <kshortcut.h>
 #include <kkeyserver.h>
 
@@ -41,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/shape.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
+#include <QtGui/QKeySequence>
 
 #include <stdio.h>
 
@@ -408,9 +410,21 @@ bool isLocalMachine( const QByteArray& host )
 #ifndef KCMRULES
 ShortcutDialog::ShortcutDialog( const QKeySequence& cut )
     : widget( new KKeySequenceWidget( this ))
+     ,_shortcut(cut)
     {
     widget->setKeySequence( cut );
+
+    // To not check for conflicting shortcuts. The widget would use a message
+    // box which brings down kwin.
+    widget->setCheckForConflictsAgainst(KKeySequenceWidget::None);
+
+    // Listen to changed shortcuts
+    connect(
+        widget, SIGNAL(keySequenceChanged(const QKeySequence&)),
+        SLOT(keySequenceChanged(const QKeySequence&)));
+
     setMainWidget( widget );
+
     // make it a popup, so that it has the grab
     XSetWindowAttributes attrs;
     attrs.override_redirect = True;
@@ -445,9 +459,20 @@ void ShortcutDialog::done( int r )
     emit dialogDone( r == Accepted );
     }
 
+void ShortcutDialog::keySequenceChanged(const QKeySequence &seq)
+    {
+    // Check if the key sequence is used currently
+    QStringList conflicting = KGlobalAccel::findActionNameSystemwide(seq);
+    if (!conflicting.isEmpty()) {
+        // TODO: Inform the user somehow instead of just ignoring his wish
+        widget->setKeySequence(shortcut());
+        }
+    _shortcut = seq;
+    }
+
 QKeySequence ShortcutDialog::shortcut() const
     {
-    return widget->keySequence();
+    return _shortcut;
     }
 
 #endif //KCMRULES

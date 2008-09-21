@@ -326,12 +326,15 @@ class ShortcutDialog
         ShortcutDialog( const QKeySequence& cut );
         virtual void accept();
         QKeySequence shortcut() const;
+    public Q_SLOTS:
+        void keySequenceChanged(const QKeySequence &seq);
     signals:
         void dialogDone( bool ok );
     protected:
         virtual void done( int r );
     private:
         KKeySequenceWidget* widget;
+        QKeySequence _shortcut;
     };
 
 #endif //KCMRULES
