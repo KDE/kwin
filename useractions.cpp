@@ -416,7 +416,8 @@ void Workspace::clientShortcutUpdated( Client* c )
         {
         if( action == NULL ) // new shortcut
             {
-            action = client_keys->addAction( key );
+            action = client_keys->addAction(QString("session:clientShortcut %1").arg(key));
+            action->setText(i18n("Activate Window (%1)", key));  // TODO: Add window title if possible?
             connect( action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()));
             }
         // no autoloading, since it's configured explicitly here and is not meant to be reused
