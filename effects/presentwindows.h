@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,90 +40,14 @@ class PresentWindowsEffect
     : public QObject, public Effect
     {
     Q_OBJECT
-    public:
-        PresentWindowsEffect();
-        virtual ~PresentWindowsEffect();
-
-        virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void postPaintScreen();
-
-        virtual void windowAdded( EffectWindow* c );
-        virtual void windowClosed( EffectWindow* c );
-        virtual void windowInputMouseEvent( Window w, QEvent* e );
-        virtual bool borderActivated( ElectricBorder border );
-        virtual void grabbedKeyboardEvent( QKeyEvent* e );
-
-        virtual void tabBoxAdded( int mode );
-        virtual void tabBoxClosed();
-        virtual void tabBoxUpdated();
-
-        enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
-
-    public slots:
-        void setActive(bool active);
-        void toggleActive()  { mShowWindowsFromAllDesktops = false; setActive(!mActivated); }
-        void toggleActiveAllDesktops()  { mShowWindowsFromAllDesktops = true; setActive(!mActivated); }
-
-    protected:
-        // Updates window tranformations, i.e. destination pos and scale of the window
-        void rearrangeWindows();
-        void prepareToRearrange();
-        void calculateWindowTransformationsKompose(EffectWindowList windowlist, int screen);
-        void calculateWindowTransformationsClosest(EffectWindowList windowlist, int screen);
-        void calculateWindowTransformationsNatural(EffectWindowList windowlist, int screen);
-
-        // Helper methods for layout calculation
-        double windowAspectRatio(EffectWindow* c);
-        int windowWidthForHeight(EffectWindow* c, int h);
-        int windowHeightForWidth(EffectWindow* c, int w);
-
-        void assignSlots( EffectWindowList windowlist, const QRect& area, int columns, int rows );
-        void getBestAssignments( EffectWindowList windowlist );
-
-        bool isOverlappingAny( EffectWindow* w, const EffectWindowList& windowlist, const QRegion& border );
-
-        void updateFilterTexture();
-        void discardFilterTexture();
-
-        void paintWindowIcon( EffectWindow* w, WindowPaintData& data );
-
-        void setHighlightedWindow( EffectWindow* w );
-        EffectWindow* relativeWindow( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const;
-        EffectWindow* relativeWindowGrid( EffectWindow* w, int xdiff, int ydiff, bool wrap ) const;
-        EffectWindow* findFirstWindow() const;
-
-        // Called once the effect is activated (and wasn't activated before)
-        void effectActivated();
-        // Called once the effect has terminated
-        void effectTerminated();
-
     private:
-        bool mShowWindowsFromAllDesktops;
-
-        // Whether the effect is currently activated by the user
-        bool mActivated;
-        // 0 = not active, 1 = fully active
-        TimeLine mActiveness;
-        // 0 = start of rearranging (old_area), 1 = done
-        TimeLine mRearranging;
-        double highlightChangeTime;
-
-        Window mInput;
-        bool hasKeyboardGrab;
-
-        EffectWindowList mWindowsToPresent;
+        // Structures
         struct WindowData
             {
-            QRect area;
-            QRect old_area; // when rearranging, otherwise unset
-            double scale;
-            double old_scale; // when rearranging, otherwise unset
+            bool visible;
+            double opacity;
             double highlight;
             int slot;
-            int x, y; // position of the slot in the grid
             int slot_distance;
             QPixmap icon;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
@@ -133,33 +58,109 @@ class PresentWindowsEffect
 #endif
             };
         typedef QHash<EffectWindow*, WindowData> DataHash;
-        DataHash mWindowData;
-        EffectWindow* mHighlightedWindow;
-        // Grid and window remembering
         struct GridSize
             {
             int columns;
             int rows;
             };
-        QVector<GridSize> screenGridSizes;
-        QVector<int> numOfWindows;
 
-        QString windowFilter;
+    public:
+        PresentWindowsEffect();
+        virtual ~PresentWindowsEffect();
+
+        // Screen painting
+        virtual void prePaintScreen( ScreenPrePaintData &data, int time );
+        virtual void paintScreen( int mask, QRegion region, ScreenPaintData &data );
+        virtual void postPaintScreen();
+
+        // Window painting
+        virtual void prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time );
+        virtual void paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data );
+
+        // User interaction
+        virtual void windowAdded( EffectWindow *w );
+        virtual void windowClosed( EffectWindow *w );
+        virtual bool borderActivated( ElectricBorder border );
+        virtual void windowInputMouseEvent( Window w, QEvent *e );
+        virtual void grabbedKeyboardEvent( QKeyEvent *e );
+
+        // Tab box
+        virtual void tabBoxAdded( int mode );
+        virtual void tabBoxClosed();
+        virtual void tabBoxUpdated();
+
+        enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
+
+    public slots:
+        void setActive( bool active );
+        void toggleActive()  { m_allDesktops = false; setActive( !m_activated ); }
+        void toggleActiveAllDesktops()  { m_allDesktops = true; setActive( !m_activated ); }
+
+    protected:
+        // Window rearranging
+        void rearrangeWindows();
+        void calculateWindowTransformationsClosest( EffectWindowList windowlist, int screen );
+        void calculateWindowTransformationsKompose( EffectWindowList windowlist, int screen );
+        void calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen );
+
+        // Helper functions for window rearranging
+        inline double aspectRatio( EffectWindow *w )
+            { return w->width() / double( w->height() ); }
+        inline int widthForHeight( EffectWindow *w, int height )
+            { return int(( height / double( w->height() )) * w->width() ); }
+        inline int heightForWidth( EffectWindow *w, int width )
+            { return int(( width / double( w->width() )) * w->height() ); }
+        void assignSlots( EffectWindowList windowlist, const QRect &area, int columns, int rows );
+        void getBestAssignments( EffectWindowList windowlist );
+        bool isOverlappingAny( EffectWindow *w, const QHash<EffectWindow*, QRect> &targets, const QRegion &border );
+
+        // Filter box
+        void updateFilterTexture();
+        void discardFilterTexture();
+
+        // Helper functions
+        bool isSelectableWindow( EffectWindow *w );
+        bool isVisibleWindow( EffectWindow *w );
+        void setHighlightedWindow( EffectWindow *w );
+        EffectWindow* relativeWindow( EffectWindow *w, int xdiff, int ydiff, bool wrap ) const;
+        EffectWindow* findFirstWindow() const;
+        void paintWindowIcon( EffectWindow *w, WindowPaintData &data ); // TODO: Do we need this?
+
+    private:
+        // User configuration settings
+        ElectricBorder m_borderActivate;
+        ElectricBorder m_borderActivateAll;
+        int m_layoutMode;
+        bool m_showCaptions;
+        bool m_showIcons;
+        bool m_tabBoxAllowed;
+        int m_accuracy;
+        bool m_fillGaps;
+        double m_fadeDuration;
+
+        // Activation
+        bool m_activated;
+        bool m_allDesktops;
+        double m_decalOpacity;
+        Window m_input;
+        bool m_hasKeyboardGrab;
+        bool m_tabBoxEnabled;
+
+        // Window data
+        WindowMotionManager m_motionManager;
+        DataHash m_windowData;
+        EffectWindow *m_highlightedWindow;
+
+        // Grid layout info
+        QList<GridSize> m_gridSizes;
+
+        // Filter box
+        QString m_windowFilter;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        GLTexture* filterTexture;
-        QRect filterTextureRect;
-        QRect filterFrameRect;
+        GLTexture *m_filterTexture;
+        QRect m_filterTextureRect;
+        QRect m_filterFrameRect;
 #endif
-
-        ElectricBorder borderActivate;
-        ElectricBorder borderActivateAll;
-        int layoutMode;
-        bool drawWindowCaptions;
-        bool drawWindowIcons;
-        bool mTabBoxMode;
-        bool tabBox;
-        int accuracy;
-        bool fillGaps;
     };
 
 } // namespace

@@ -163,7 +163,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 54
+#define KWIN_EFFECT_API_VERSION_MINOR 55
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1189,6 +1189,199 @@ class KWIN_EXPORT TimeLine
     };
 
 /**
+ * @short A single motion dynamics object.
+ *
+ * This class represents a single object that can be moved around a
+ * n-dimensional space. Although it can be used directly by itself
+ * it is recommended to use a motion manager instead.
+ * 
+ * To create a 1D motion object use Motion<double>
+ * To create a 2D motion object use Motion<QRectF>
+ */
+template <typename T>
+class KWIN_EXPORT Motion
+    {
+    public:
+        /**
+         * Creates a new motion object. "Strength" is the amount of
+         * acceleration that is applied to the object when the target
+         * changes and "decay" relates to the amount of overshoot
+         * once the object reaches the target. A decay of 1.0 will
+         * cause never-ending oscillation and while a decay of 0.0
+         * will cause no overshoot.
+         */
+        explicit Motion( T initial = T(), double strength = 7.5, double decay = 0.5 );
+        /**
+         * Creates an exact copy of another motion object, including
+         * position, target and velocity.
+         */
+        Motion( const Motion<T> &other );
+        ~Motion();
+
+        inline T value() const { return m_value; }
+        inline void setValue( const T value ) { m_value = value; }
+        inline T target() const { return m_target; }
+        inline void setTarget( const T target ) { m_target = target; }
+        inline T velocity() const { return m_velocity; }
+        inline void setVelocity( const T velocity ) { m_velocity = velocity; }
+
+        inline double strength() const { return m_strength; }
+        inline void setStrength( const double strength ) { m_strength = strength; }
+        inline double decay() const { return m_decay; }
+        inline void setDecay( const double decay ) { m_decay = decay; }
+        inline void setStrengthDecay( const double strength, const double decay )
+            { m_strength = strength; m_decay = decay; }
+
+        /**
+         * The distance between the current position and the target.
+         */
+        inline T distance() const { return m_target - m_value; }
+
+        /**
+         * Calculates the new position if not at the target. Called
+         * once per frame only.
+         */
+        void calculate( const int msec );
+        /**
+         * Place the object on top of the target immediately,
+         * bypassing all movement calculation.
+         */
+        void finish();
+
+    private:
+        T m_value;
+
+        T m_target;
+        T m_velocity;
+        double m_strength;
+        double m_decay;
+    };
+
+/**
+ * @short Helper class for motion dynamics in KWin effects.
+ *
+ * This motion manager class is intended to help KWin effect authors
+ * move windows across the screen smoothly and naturally. Once
+ * windows are registered by the manager the effect can issue move
+ * commands with the moveWindow() methods. The position of any
+ * managed window can be determined in realtime by the
+ * transformedGeometry() method. As the manager knows if any windows
+ * are moving at any given time it can also be used as a notifier as
+ * to see whether the effect is active or not.
+ */
+class KWIN_EXPORT WindowMotionManager
+    {
+    public:
+        /**
+         * Creates a new window manager object.
+         */
+        explicit WindowMotionManager( bool useGlobalAnimationModifier = true );
+        ~WindowMotionManager();
+
+        /**
+         * Register a window for managing.
+         */
+        void manage( EffectWindow *w );
+        /**
+         * Register a list of windows for managing.
+         */
+        inline void manage( EffectWindowList list )
+            {
+            for( int i = 0; i < list.size(); i++ )
+                manage( list.at( i ));
+            }
+        /**
+         * Deregister a window. All transformations applied to the
+         * window will be permanently removed and cannot be recovered.
+         */
+        void unmanage( EffectWindow *w );
+        /**
+         * Deregister all windows, returning the manager to it's
+         * originally initiated state.
+         */
+        void unmanageAll();
+        /**
+         * Determine the new positions for windows that have not
+         * reached their target. Called once per frame, usually in
+         * prePaintScreen(). Remember to set the
+         * Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS flag.
+         */
+        void calculate( int time );
+        /**
+         * Modify a registered window's paint data to make it appear
+         * at it's real location on the screen. Usually called in
+         * paintWindow(). Remember to flag the window as having been
+         * transformed in prePaintWindow() by calling
+         * WindowPrePaintData::setTransformed()
+         */
+        void apply( EffectWindow *w, WindowPaintData &data );
+
+        /**
+         * As the manager to move the window to the target position
+         * with the specified scale. If `yScale` is not provided or
+         * set to 0.0, `scale` will be used as the scale in the
+         * vertical direction as well as in the horizontal direction.
+         */
+        void moveWindow( EffectWindow *w, QPoint target, double scale = 1.0, double yScale = 0.0 );
+        /**
+         * This is an overloaded method, provided for convenience.
+         * 
+         * Ask the manager to move the window to the target rectangle.
+         * Automatically determines scale.
+         */
+        inline void moveWindow( EffectWindow *w, QRect target )
+            {
+            // TODO: Scale might be slightly different in the comparison due to rounding
+            moveWindow( w, target.topLeft(),
+                target.width() / double( w->width() ), target.height() / double( w->height() ));
+            }
+
+        /**
+         * Retrieve the current tranformed geometry of a registered
+         * window.
+         */
+        QRectF transformedGeometry( EffectWindow *w ) const;
+        /**
+         * Return the window that has it's transformed geometry under
+         * the specified point. It is recommended to use the stacking
+         * order as it's what the user sees, but it is slightly
+         * slower to process.
+         */
+        EffectWindow* windowAtPoint( QPoint point, bool useStackingOrder = true ) const;
+
+        /**
+         * Return a list of all currently registered windows.
+         */
+        inline EffectWindowList managedWindows() const { return m_managedWindows.keys(); }
+        /**
+         * Returns whether or not a specified window is being managed
+         * by this manager object.
+         */
+        inline bool isManaging( EffectWindow *w ) { return m_managedWindows.contains( w ); }
+        /**
+         * Returns whether or not this manager object is actually
+         * managing any windows or not.
+         */
+        inline bool managingWindows() { return !m_managedWindows.empty(); }
+        /**
+         * Returns whether all windows have reached their targets yet
+         * or not. Can be used to see if an effect should be
+         * processed and displayed or not.
+         */
+        inline bool areWindowsMoving() { return m_movingWindows > 0; }
+
+    private:
+        bool m_useGlobalAnimationModifier;
+        struct WindowMotion
+            { // TODO: Rotation, etc?
+            Motion<QPointF> translation; // Absolute position
+            Motion<QPointF> scale; // xScale and yScale
+            };
+        QHash<EffectWindow*, WindowMotion> m_managedWindows;
+        uint m_movingWindows;
+    };
+
+/**
  * Pointer to the global EffectsHandler object.
  **/
 extern KWIN_EXPORT EffectsHandler* effects;
@@ -1359,6 +1552,54 @@ inline
 double WindowQuad::originalBottom() const
     {
     return verts[ 2 ].oy;
+    }
+
+/***************************************************************
+ Motion
+***************************************************************/
+
+template <typename T>
+Motion<T>::Motion( T initial, double strength, double decay )
+    :   m_value( initial )
+    ,   m_target( initial )
+    ,   m_velocity()
+    ,   m_strength( strength )
+    ,   m_decay( decay )
+    {
+    }
+
+template <typename T>
+Motion<T>::Motion( const Motion &other )
+    :   m_value( other.value() )
+    ,   m_target( other.target() )
+    ,   m_velocity( other.velocity() )
+    ,   m_strength( other.strength() )
+    ,   m_decay( other.decay() )
+    {
+    }
+
+template <typename T>
+Motion<T>::~Motion()
+    {
+    }
+
+template <typename T>
+void Motion<T>::calculate( const int msec )
+    {
+    if( m_value == m_target && m_velocity == T() ) // At target and not moving
+        return;
+
+    T diff = m_target - m_value;
+    T strength = diff * m_strength;
+    m_velocity = m_decay * m_velocity + strength;
+    m_value += m_velocity * double( msec ) / 1000.0; // Only to give us more sane numbers
+    }
+
+template <typename T>
+void Motion<T>::finish()
+    {
+    m_value = m_target;
+    m_velocity = T();
     }
 
 } // namespace
