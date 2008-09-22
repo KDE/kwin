@@ -21,6 +21,7 @@ Comment[nds]=Bi't Wesseln vun den Schriefdisch Finstern över den Schirm glieden
 Comment[pt]=Deslizar as janelas pelo ecrã ao mudar de ecrãs virtuais
 Comment[pt_BR]=Deslizar as janelas pelo ecrã ao mudar de ecrãs virtuais
 Comment[uk]=Ковзання вікон вздовж стільниці, під час перемикання стільниць
+Comment[zh_TW]=切換虛擬桌面時讓視窗滑過螢幕
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
