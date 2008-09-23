@@ -225,7 +225,7 @@ class KWIN_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
          * Convenience method.
          * @returns the title rect.
          */
-         QRect titleRect() const;
+        QRect titleRect() const;
 
     public:
         /**

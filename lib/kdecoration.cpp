@@ -59,7 +59,7 @@ KDecorationOptions* KDecoration::options_;
 
 KDecoration::KDecoration( KDecorationBridge* bridge, KDecorationFactory* factory )
     :   bridge_( bridge ),
-	w_( NULL ),
+        w_( NULL ),
         factory_( factory )
     {
     factory->addDecoration( this );
@@ -417,7 +417,7 @@ QPalette KDecorationOptions::palette(ColorType type, bool active) const
 #ifdef __GNUC__
 #warning KDE4 : why construct the palette this way?
 #endif    
-		// TODO: Is this worth 'porting' to Qt4?
+                // TODO: Is this worth 'porting' to Qt4?
 //     d->pal[idx] = new QPalette(Qt::black, d->colors[idx], d->colors[idx].light(150),
 //                               d->colors[idx].dark(), d->colors[idx].dark(120),
 //                               Qt::black, QApplication::palette().active().

@@ -43,12 +43,12 @@ DEALINGS IN THE SOFTWARE.
 class KDecorationBridge : public KDecorationDefines
     {
     public:
-	virtual ~KDecorationBridge(){}
-	virtual bool isActive() const = 0;
-	virtual bool isCloseable() const = 0;
-	virtual bool isMaximizable() const = 0;
-	virtual MaximizeMode maximizeMode() const = 0;
-	virtual bool isMinimizable() const = 0;
+        virtual ~KDecorationBridge(){}
+        virtual bool isActive() const = 0;
+        virtual bool isCloseable() const = 0;
+        virtual bool isMaximizable() const = 0;
+        virtual MaximizeMode maximizeMode() const = 0;
+        virtual bool isMinimizable() const = 0;
         virtual bool providesContextHelp() const = 0;
         virtual int desktop() const = 0;
         virtual bool isModal() const = 0;
@@ -60,21 +60,21 @@ class KDecorationBridge : public KDecorationDefines
         virtual bool isMovable() const = 0;
         virtual bool isResizable() const = 0;
         virtual NET::WindowType windowType( unsigned long supported_types ) const = 0;
-	virtual QIcon icon() const = 0;
-	virtual QString caption() const = 0;
-	virtual void processMousePressEvent( QMouseEvent* ) = 0;
-	virtual void showWindowMenu( const QRect &) = 0;
-	virtual void showWindowMenu( const QPoint & ) = 0;
-	virtual void performWindowOperation( WindowOperation ) = 0;
+        virtual QIcon icon() const = 0;
+        virtual QString caption() const = 0;
+        virtual void processMousePressEvent( QMouseEvent* ) = 0;
+        virtual void showWindowMenu( const QRect &) = 0;
+        virtual void showWindowMenu( const QPoint & ) = 0;
+        virtual void performWindowOperation( WindowOperation ) = 0;
         virtual void setMask( const QRegion&, int ) = 0;
         virtual bool isPreview() const = 0;
         virtual QRect geometry() const = 0;
         virtual QRect iconGeometry() const = 0;
         virtual QRegion unobscuredRegion( const QRegion& r ) const = 0;
         virtual WId windowId() const = 0;
-	virtual void closeWindow() = 0;
-	virtual void maximize( MaximizeMode mode ) = 0;
-	virtual void minimize() = 0;
+        virtual void closeWindow() = 0;
+        virtual void maximize( MaximizeMode mode ) = 0;
+        virtual void minimize() = 0;
         virtual void showContextHelp() = 0;
         virtual void setDesktop( int desktop ) = 0;
         virtual void titlebarDblClickOperation() = 0;

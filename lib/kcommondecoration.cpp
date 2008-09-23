@@ -343,116 +343,116 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
         for (int n=0; n < s.length(); n++) {
             KCommonDecorationButton *btn = 0;
             switch (s[n].toAscii()) {
-              case 'M': // Menu button
-                  if (!m_button[MenuButton]){
-                      btn = createButton(MenuButton);
-                      if (!btn) break;
-                      btn->setTipText(i18n("Menu") );
-                      btn->setRealizeButtons(Qt::LeftButton|Qt::RightButton);
-                      connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
-                      connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
+                case 'M': // Menu button
+                    if (!m_button[MenuButton]){
+                        btn = createButton(MenuButton);
+                        if (!btn) break;
+                        btn->setTipText(i18n("Menu") );
+                        btn->setRealizeButtons(Qt::LeftButton|Qt::RightButton);
+                        connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
+                        connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
 
-                      m_button[MenuButton] = btn;
-                  }
-                  break;
-              case 'S': // OnAllDesktops button
-                  if (!m_button[OnAllDesktopsButton]){
-                      btn = createButton(OnAllDesktopsButton);
-                      if (!btn) break;
-                      const bool oad = isOnAllDesktops();
-                      btn->setTipText(oad?i18n("Not on all desktops"):i18n("On all desktops") );
-                      btn->setToggleButton(true);
-                      btn->setOn( oad );
-                      connect(btn, SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
+                        m_button[MenuButton] = btn;
+                    }
+                    break;
+                case 'S': // OnAllDesktops button
+                    if (!m_button[OnAllDesktopsButton]){
+                        btn = createButton(OnAllDesktopsButton);
+                        if (!btn) break;
+                        const bool oad = isOnAllDesktops();
+                        btn->setTipText(oad?i18n("Not on all desktops"):i18n("On all desktops") );
+                        btn->setToggleButton(true);
+                        btn->setOn( oad );
+                        connect(btn, SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
 
-                      m_button[OnAllDesktopsButton] = btn;
-                  }
-                  break;
-              case 'H': // Help button
-                  if ((!m_button[HelpButton]) && providesContextHelp()){
-                      btn = createButton(HelpButton);
-                      if (!btn) break;
-                      btn->setTipText(i18n("Help") );
-                      connect(btn, SIGNAL(clicked()), SLOT(showContextHelp()));
+                        m_button[OnAllDesktopsButton] = btn;
+                    }
+                    break;
+                case 'H': // Help button
+                    if ((!m_button[HelpButton]) && providesContextHelp()){
+                        btn = createButton(HelpButton);
+                        if (!btn) break;
+                        btn->setTipText(i18n("Help") );
+                        connect(btn, SIGNAL(clicked()), SLOT(showContextHelp()));
 
-                      m_button[HelpButton] = btn;
-                  }
-                  break;
-              case 'I': // Minimize button
-                  if ((!m_button[MinButton]) && isMinimizable()){
-                      btn = createButton(MinButton);
-                      if (!btn) break;
-                      btn->setTipText(i18n("Minimize") );
-                      connect(btn, SIGNAL(clicked()), SLOT(minimize()));
+                        m_button[HelpButton] = btn;
+                    }
+                    break;
+                case 'I': // Minimize button
+                    if ((!m_button[MinButton]) && isMinimizable()){
+                        btn = createButton(MinButton);
+                        if (!btn) break;
+                        btn->setTipText(i18n("Minimize") );
+                        connect(btn, SIGNAL(clicked()), SLOT(minimize()));
 
-                      m_button[MinButton] = btn;
-                  }
-                  break;
-              case 'A': // Maximize button
-                  if ((!m_button[MaxButton]) && isMaximizable()){
-                      btn = createButton(MaxButton);
-                      if (!btn) break;
-                      btn->setRealizeButtons(Qt::LeftButton|Qt::MidButton|Qt::RightButton);
-                      const bool max = maximizeMode()==MaximizeFull;
-                      btn->setTipText(max?i18n("Restore"):i18n("Maximize") );
-                      btn->setToggleButton(true);
-                      btn->setOn( max );
-                      connect(btn, SIGNAL(clicked()), SLOT(slotMaximize()));
+                        m_button[MinButton] = btn;
+                    }
+                    break;
+                case 'A': // Maximize button
+                    if ((!m_button[MaxButton]) && isMaximizable()){
+                        btn = createButton(MaxButton);
+                        if (!btn) break;
+                        btn->setRealizeButtons(Qt::LeftButton|Qt::MidButton|Qt::RightButton);
+                        const bool max = maximizeMode()==MaximizeFull;
+                        btn->setTipText(max?i18n("Restore"):i18n("Maximize") );
+                        btn->setToggleButton(true);
+                        btn->setOn( max );
+                        connect(btn, SIGNAL(clicked()), SLOT(slotMaximize()));
 
-                      m_button[MaxButton] = btn;
-                  }
-                  break;
-              case 'X': // Close button
-                  if ((!m_button[CloseButton]) && isCloseable()){
-                      btn = createButton(CloseButton);
-                      if (!btn) break;
-                      btn->setTipText(i18n("Close") );
-                      connect(btn, SIGNAL(clicked()), SLOT(closeWindow()));
+                        m_button[MaxButton] = btn;
+                    }
+                    break;
+                case 'X': // Close button
+                    if ((!m_button[CloseButton]) && isCloseable()){
+                        btn = createButton(CloseButton);
+                        if (!btn) break;
+                        btn->setTipText(i18n("Close") );
+                        connect(btn, SIGNAL(clicked()), SLOT(closeWindow()));
 
-                      m_button[CloseButton] = btn;
-                  }
-                  break;
-              case 'F': // AboveButton button
-                  if (!m_button[AboveButton]){
-                      btn = createButton(AboveButton);
-                      if (!btn) break;
-                      bool above = keepAbove();
-                      btn->setTipText(above?i18n("Do not keep above others"):i18n("Keep above others") );
-                      btn->setToggleButton(true);
-                      btn->setOn( above );
-                      connect(btn, SIGNAL(clicked()), SLOT(slotKeepAbove()));
+                        m_button[CloseButton] = btn;
+                    }
+                    break;
+                case 'F': // AboveButton button
+                    if (!m_button[AboveButton]){
+                        btn = createButton(AboveButton);
+                        if (!btn) break;
+                        bool above = keepAbove();
+                        btn->setTipText(above?i18n("Do not keep above others"):i18n("Keep above others") );
+                        btn->setToggleButton(true);
+                        btn->setOn( above );
+                        connect(btn, SIGNAL(clicked()), SLOT(slotKeepAbove()));
 
-                      m_button[AboveButton] = btn;
-                  }
-                  break;
-              case 'B': // BelowButton button
-                  if (!m_button[BelowButton]){
-                      btn = createButton(BelowButton);
-                      if (!btn) break;
-                      bool below = keepBelow();
-                      btn->setTipText(below?i18n("Do not keep below others"):i18n("Keep below others") );
-                      btn->setToggleButton(true);
-                      btn->setOn( below );
-                      connect(btn, SIGNAL(clicked()), SLOT(slotKeepBelow()));
+                        m_button[AboveButton] = btn;
+                    }
+                    break;
+                case 'B': // BelowButton button
+                    if (!m_button[BelowButton]){
+                        btn = createButton(BelowButton);
+                        if (!btn) break;
+                        bool below = keepBelow();
+                        btn->setTipText(below?i18n("Do not keep below others"):i18n("Keep below others") );
+                        btn->setToggleButton(true);
+                        btn->setOn( below );
+                        connect(btn, SIGNAL(clicked()), SLOT(slotKeepBelow()));
 
-                      m_button[BelowButton] = btn;
-                  }
-                  break;
-              case 'L': // Shade button
-                  if ((!m_button[ShadeButton]) && isShadeable()){
-                      btn = createButton(ShadeButton);
-                      if (!btn) break;
-                      bool shaded = isSetShade();
-                      btn->setTipText(shaded?i18n("Unshade"):i18n("Shade") );
-                      btn->setToggleButton(true);
-                      btn->setOn( shaded );
-                      connect(btn, SIGNAL(clicked()), SLOT(slotShade()));
+                        m_button[BelowButton] = btn;
+                    }
+                    break;
+                case 'L': // Shade button
+                    if ((!m_button[ShadeButton]) && isShadeable()){
+                        btn = createButton(ShadeButton);
+                        if (!btn) break;
+                        bool shaded = isSetShade();
+                        btn->setTipText(shaded?i18n("Unshade"):i18n("Shade") );
+                        btn->setToggleButton(true);
+                        btn->setOn( shaded );
+                        connect(btn, SIGNAL(clicked()), SLOT(slotShade()));
 
-                      m_button[ShadeButton] = btn;
-                  }
-                  break;
-              case '_': // Spacer item
-                  btnContainer.append(0);
+                        m_button[ShadeButton] = btn;
+                    }
+                    break;
+                case '_': // Spacer item
+                    btnContainer.append(0);
             }
 
 
