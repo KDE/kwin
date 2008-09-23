@@ -884,6 +884,7 @@ void Client::setActive( bool act )
         decoration->activeChange();
     updateMouseGrab();
     updateUrgency(); // demand attention again if it's still urgent
+    workspace()->checkUnredirect();
     }
 
 void Client::startupIdChanged()
