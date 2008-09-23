@@ -1060,13 +1060,13 @@ void WindowMotionManager::manage( EffectWindow *w )
     if( m_managedWindows.contains( w ))
         return;
 
-    double strength = 7.5;
-    double decay = 0.5;
+    double strength = 0.9;
+    double decay = 0.75;
     if( m_useGlobalAnimationModifier )
         {
         if( effects->animationTimeFactor() ) // If == 0 we just skip the calculation
-            strength = 7.5 * 1.0 / effects->animationTimeFactor();
-        decay = effects->animationTimeFactor() / ( effects->animationTimeFactor() + 1.0 );
+            strength = 0.9 / effects->animationTimeFactor();
+        decay = effects->animationTimeFactor() / ( effects->animationTimeFactor() + 0.3333333 );
         }
 
     m_managedWindows[ w ] = WindowMotion();

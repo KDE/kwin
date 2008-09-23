@@ -1589,10 +1589,12 @@ void Motion<T>::calculate( const int msec )
     if( m_value == m_target && m_velocity == T() ) // At target and not moving
         return;
 
+    double delta = qMin( 1.0, double( msec ) / 100.0 );
     T diff = m_target - m_value;
     T strength = diff * m_strength;
-    m_velocity = m_decay * m_velocity + strength;
-    m_value += m_velocity * double( msec ) / 1000.0; // Only to give us more sane numbers
+    m_velocity = m_decay * m_velocity * ( 1.0 - delta ) * ( 1.0 - delta )
+               + strength * delta; // TODO/HACK: Need to work out correct formula
+    m_value += m_velocity;
     }
 
 template <typename T>
