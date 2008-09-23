@@ -839,6 +839,8 @@ bool Toplevel::updateUnredirectedState()
 
 void Toplevel::suspendUnredirect( bool suspend )
     {
+    if( unredirectSuspend == suspend )
+        return;
     unredirectSuspend = suspend;
     workspace()->checkUnredirect();
     }

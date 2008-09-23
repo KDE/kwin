@@ -227,7 +227,6 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
          --i )
         {
         Window* w = stacking_order[ i ];
-        w->suspendUnredirect( true );
         WindowPrePaintData data;
         data.mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
@@ -244,7 +243,10 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
             kFatal( 1212 ) << "PAINT_WINDOW_TRANSFORMED without PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS!";
 #endif
         if( !w->isPaintingEnabled())
+            {
+            w->suspendUnredirect( true );
             continue;
+            }
         if( data.paint != region ) // prepaint added area to draw
             painted_region |= data.paint; // make sure it makes it to the screen
         // Schedule the window for painting
