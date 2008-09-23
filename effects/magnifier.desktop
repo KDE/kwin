@@ -70,7 +70,9 @@ Comment[km]=ពង្រីក​ផ្នែក​នៃ​អេក្រង�
 Comment[nds]=Den Deel vun den Schirm rund den Muuswieser grötter maken
 Comment[pt]=Ampliar a parte do ecrã que está sob o rato
 Comment[pt_BR]=Ampliar a parte do ecrã que está sob o rato
+Comment[sv]=Förstorar den del av skärmen som är nära muspekaren
 Comment[uk]=Збільшує частину екрана, що знаходиться поруч з вказівником
+Comment[x-test]=xxMagnify the section of the screen that is near the mouse cursorxx
 Comment[zh_TW]=將滑鼠游標附近的部份視窗放大
 
 Type=Service

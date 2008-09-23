@@ -64,7 +64,9 @@ Comment[km]=បង្ហាញ​ទីតាំង​របស់ទស្ស�
 Comment[nds]=Wenn anmaakt, de Steed vun den Muuswieser rutheven
 Comment[pt]=Mostrar um efeito de localização do cursor quando activado
 Comment[pt_BR]=Mostrar um efeito de localização do cursor quando activado
+Comment[sv]=Visa en lokaliseringseffekt för muspekaren om aktiverad
 Comment[uk]=Після активації показує позицію курсора мишки
+Comment[x-test]=xxDisplay a mouse cursor locating effect when activatedxx
 Comment[zh_TW]=啟動時顯示滑鼠游標定位效果
 
 Type=Service

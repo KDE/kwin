@@ -51,7 +51,9 @@ Comment[km]=ធ្វើ​ឲ្យ​អេក្រង់ទាំងមូ�
 Comment[nds]=Maakt den helen Schirm düüsterer, wenn na Systeempleger-Verlöven fraagt warrt
 Comment[pt]=Escurece o ecrã inteiro ao pedir permissões de administração
 Comment[pt_BR]=Escurece o ecrã inteiro ao pedir permissões de administração
+Comment[sv]=Gör hela skärmen mörkare när administratörsrättigheter begärs
 Comment[uk]=Робить тьмяним весь екран, якщо надходить запит на привілеї адміністратора
+Comment[x-test]=xxDarkens the entire screen when requesting root privilegesxx
 Comment[zh_TW]=當請求 root 權限時把整個螢幕變暗
 
 Type=Service

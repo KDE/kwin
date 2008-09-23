@@ -53,7 +53,9 @@ Comment[km]=បង្ហាញ​រូបភាព​តូចៗ​របស�
 Comment[nds]=Finster-Vöransichten bi't Wesseln vun Finstern mit Alt+Tabtast wiesen
 Comment[pt]=Mostrar miniaturas das janelas na mudança de janelas com o Alt+Tab
 Comment[pt_BR]=Mostrar miniaturas das janelas na mudança de janelas com o Alt+Tab
+Comment[sv]=Visar miniatyrbilder av fönster vid fönsterbyte med Alt+Tabulator
 Comment[uk]=Показує мініатюри вікон у перемикачі вікон за alt+tab
+Comment[x-test]=xxDisplay thumbnails of windows in the alt+tab window switcherxx
 Comment[zh_TW]=在 alt+tab 視窗切換時顯示縮圖
 
 Type=Service

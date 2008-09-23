@@ -18,6 +18,7 @@ Name[sv]=Skrivbordsklot
 Name[te]=డెస్క్ టాప్ గొళం
 Name[tr]=Masaüstü Küresi
 Name[uk]=Стільнична сфера
+Name[x-test]=xxDesktop Spherexx
 Name[zh_TW]=桌面球體
 Icon=preferences-system-windows-effect-sphere
 Comment=Display each virtual desktop on the side of a sphere
@@ -26,7 +27,9 @@ Comment[km]=ផ្គូផ្គង​ផ្ទៃតុ​និម្មិ�
 Comment[nds]=Elkeen Schriefdisch op de Siet vun en Kugel wiesen
 Comment[pt]=Mostrar cada ecrã virtual como uma face de uma esfera
 Comment[pt_BR]=Mostrar cada ecrã virtual como uma face de uma esfera
+Comment[sv]=Visa varje virtuellt skrivbord på sidan av ett klot
 Comment[uk]=Показувати всі стільниці на поверхні сфери
+Comment[x-test]=xxDisplay each virtual desktop on the side of a spherexx
 Comment[zh_TW]=將每個虛擬桌面顯示在球體上
 
 Type=Service

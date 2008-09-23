@@ -67,7 +67,9 @@ Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​លេច​បន�
 Comment[nds]=Finstern bi't Wiesen oder Versteken week in- oder utblennen
 Comment[pt]=Fazer com que as janelas apareçam/desapareçam suavemente quando aparecem ou ficam escondidas
 Comment[pt_BR]=Fazer com que as janelas apareçam/desapareçam suavemente quando aparecem ou ficam escondidas
+Comment[sv]=Gör att fönster mjukt tonas in eller ut när de visas eller döljs
 Comment[uk]=Робить так, щоб вікна плавно з'являлись / зникали, коли вони показуються або ховаються
+Comment[x-test]=xxMake windows smoothly fade in and out when they are shown or hiddenxx
 Comment[zh_TW]=顯示或隱藏視窗時以淡入、淡出方式呈現
 
 Type=Service

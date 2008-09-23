@@ -71,7 +71,9 @@ Comment[km]=ជ្រាប​ផ្ទៃតុ​នៅពេល​បង្�
 Comment[nds]=De Sattheit vun de Schriefdischklören bi't Wiesen vun den Afmelldialoog daalsetten
 Comment[pt]=Reduzir a saturação do ecrã ao mostrar a janela de fim de sessão
 Comment[pt_BR]=Reduzir a saturação do ecrã ao mostrar a janela de fim de sessão
+Comment[sv]=Försvaga färger på skrivbordet när utloggningsdialogrutan visas
 Comment[uk]=Зменшення насиченості кольорів стільниці під час показу вікна виходу
+Comment[x-test]=xxDesaturate the desktop when displaying the logout dialogxx
 Comment[zh_TW]=顯示登出視窗時將桌面淡化
 
 Type=Service

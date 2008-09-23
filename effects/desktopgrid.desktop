@@ -68,7 +68,9 @@ Comment[km]=បង្រួម​ផ្ទៃតុ​ទាំងអស់​�
 Comment[nds]=Ansicht grötter maken, so dat all Schriefdischen blangenanner in en Gadder wiest warrt
 Comment[pt]=Reduzir de modo a que todos os ecrãs apareçam lado-a-lado numa grelha
 Comment[pt_BR]=Reduzir de modo a que todos os ecrãs apareçam lado-a-lado numa grelha
+Comment[sv]=Zooma ut så att alla skrivbord visas sida vid sida i ett rutnät
 Comment[uk]=Зменшити так, щоб всі стільниці було показано поруч у вигляді таблиці
+Comment[x-test]=xxZoom out so all desktops are display side-by-side in a gridxx
 Comment[zh_TW]=縮放所有桌面，讓它們排排站
 
 Type=Service

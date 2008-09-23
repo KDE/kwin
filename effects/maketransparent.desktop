@@ -70,7 +70,9 @@ Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​ថ្លា​ក�
 Comment[nds]=Finstern bi verscheden Bedingen dörschienen maken
 Comment[pt]=Torna as janelas translúcidas sob determinadas condições
 Comment[pt_BR]=Torna as janelas translúcidas sob determinadas condições
+Comment[sv]=Gör fönster halvgenomskinliga enligt olika villkor
 Comment[uk]=Робить вікна прозорими за різних умов
+Comment[x-test]=xxMake windows translucent under different conditionsxx
 Comment[zh_TW]=在不同的情況下讓視窗變半透明
 
 Type=Service

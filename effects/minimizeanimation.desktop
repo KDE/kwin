@@ -67,7 +67,9 @@ Comment[km]=ធ្វើ​ឲ្យ​​ការ​​បង្រួម​�
 Comment[nds]=Dat Minimeren vun Finstern animeren
 Comment[pt]=Animar a minimização das janelas
 Comment[pt_BR]=Animar a minimização das janelas
+Comment[sv]=Animera minimering av fönster
 Comment[uk]=Оживляє мінімізацію вікон
+Comment[x-test]=xxAnimate the minimizing of windowsxx
 Comment[zh_TW]=動畫最小化視窗
 
 Type=Service

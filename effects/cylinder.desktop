@@ -18,6 +18,7 @@ Name[sv]=Skrivbordscylinder
 Name[te]=డెస్‍క్ టాప్ సిలెండర్
 Name[tr]=Masaüstü Silindiri
 Name[uk]=Циліндр стільниць
+Name[x-test]=xxDesktop Cylinderxx
 Name[zh_TW]=桌面圓柱
 Icon=preferences-system-windows-effect-cylinder
 Comment=Display each virtual desktop on the side of a cylinder
@@ -27,7 +28,9 @@ Comment[km]=បង្ហាញ​ផ្ទៃតុ​និម្មិត​�
 Comment[nds]=Elkeen Schriefdisch op en Zylinnersiet wiesen
 Comment[pt]=Mostrar cada ecrã virtual como uma face de um cilindro
 Comment[pt_BR]=Mostrar cada ecrã virtual como uma face de um cilindro
+Comment[sv]=Visar varje virtuellt skrivbord på sidan av en cylinder
 Comment[uk]=Показувати всі стільниці на поверхні циліндра
+Comment[x-test]=xxDisplay each virtual desktop on the side of a cylinderxx
 Comment[zh_TW]=將虛擬桌面顯示在圓柱的邊邊
 
 Type=Service

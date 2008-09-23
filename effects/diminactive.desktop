@@ -58,7 +58,9 @@ Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​អសកម្ម�
 Comment[nds]=Nich aktive Finstern düüsterer maken
 Comment[pt]=Escurecer as janelas inactivas
 Comment[pt_BR]=Escurecer as janelas inactivas
+Comment[sv]=Gör inaktiva fönster mörkare
 Comment[uk]=Затемнює неактивні вікна
+Comment[x-test]=xxDarken inactive windowsxx
 Comment[zh_TW]=將不使用的視窗變暗
 
 Type=Service

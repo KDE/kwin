@@ -46,7 +46,9 @@ Comment[km]=ត្រឡប់​កាត់​តាម​បង្អួច�
 Comment[nds]=Dör de Finstern gahn, de för't Wesseln mit Alt+Tabtast opstapelt sünd
 Comment[pt]=Circular pelas janelas empilhadas no selector de janelas do Alt+Tab
 Comment[pt_BR]=Circular pelas janelas empilhadas no selector de janelas do Alt+Tab
+Comment[sv]=Bläddra igenom fönster som ligger i en hög vid fönsterbyte med Alt+Tabulator
 Comment[uk]=Тасування вікон у стосі для перемикача вікон за alt+tab
+Comment[x-test]=xxFlip through windows that are in a stack for the alt+tab window switcherxx
 Comment[zh_TW]=在 alt+tab 視窗切換時翻轉在堆疊中的視窗
 
 Type=Service

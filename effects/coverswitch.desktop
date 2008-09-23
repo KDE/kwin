@@ -45,7 +45,9 @@ Comment[km]=បង្ហាញ​បែបផែន​លំហូ​សម្�
 Comment[nds]=En Fleeteffekt bi't Wesseln vun Finstern mit Alt+Tabtast wiesen
 Comment[pt]=Mostrar um efeito de Capas com o selector de janelas com o Alt+Tab
 Comment[pt_BR]=Mostrar um efeito de Capas com o selector de janelas com o Alt+Tab
+Comment[sv]=Visar en flytande omslagseffekt vid fönsterbyte med Alt+Tabulator
 Comment[uk]=Демонструє ефект поверхневої течії для перемикача вікон за alt+tab
+Comment[x-test]=xxDisplay a Cover Flow effect for the alt+tab window switcherxx
 Comment[zh_TW]=在 alt+tab 視窗切換器中顯示覆蓋流效果
 
 Type=Service

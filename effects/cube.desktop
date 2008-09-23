@@ -19,6 +19,7 @@ Name[sv]=Skrivbordskub
 Name[te]=‍డెస్‍క్ టాప్ క్యూబ్
 Name[tr]=Masaüstü Küpü
 Name[uk]=Куб стільниць
+Name[x-test]=xxDesktop Cubexx
 Name[zh_TW]=桌面立方體
 Icon=preferences-system-windows-effect-cube
 Comment=Display each virtual desktop on a side of a cube
@@ -28,7 +29,9 @@ Comment[km]=បង្ហាញ​ផ្ទៃតុ​និម្មិត​�
 Comment[nds]=Elkeen Schriefdisch op en Wörpelsiet wiesen
 Comment[pt]=Mostrar cada ecrã virtual como uma face de um cubo
 Comment[pt_BR]=Mostrar cada ecrã virtual como uma face de um cubo
+Comment[sv]=Visar varje virtuellt skrivbord på sidan av en kub
 Comment[uk]=Показувати всі віртуальні стільниці на поверхні куба
+Comment[x-test]=xxDisplay each virtual desktop on a side of a cubexx
 Comment[zh_TW]=將每個虛擬桌面顯示在立方體的某一邊
 
 Type=Service

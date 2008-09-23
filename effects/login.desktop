@@ -70,7 +70,9 @@ Comment[km]=លិច​​បន្តិចម្ដងៗ​ទៅ​ផ្�
 Comment[nds]=Bi't Anmellen week na den Schriefdisch överblennen
 Comment[pt]=Desvanecer suavemente para o ecrã ao ligar-se
 Comment[pt_BR]=Desvanecer suavemente para o ecrã ao ligar-se
+Comment[sv]=Tona mjukt till skrivbordet vid inloggning
 Comment[uk]=Плавне тьмянішання стільниці під час входу
+Comment[x-test]=xxSmoothly fade to the desktop when logging inxx
 Comment[zh_TW]=登入時平順地淡入桌面
 
 Type=Service

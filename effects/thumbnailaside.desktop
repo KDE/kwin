@@ -59,7 +59,9 @@ Comment[km]=បង្ហាញ​រូបភាព​តូចៗ​របស�
 Comment[nds]=Finster-Vöransichten an de Schirmkant wiesen
 Comment[pt]=Mostrar as miniaturas das janelas no extremo do ecrã
 Comment[pt_BR]=Mostrar as miniaturas das janelas no extremo do ecrã
+Comment[sv]=Visa miniatyrbilder av fönster vid skärmkanten
 Comment[uk]=Показує мініатюри вікон на краю екрана
+Comment[x-test]=xxDisplay window thumbnails on the edge of the screenxx
 Comment[zh_TW]=在螢幕的邊緣顯示視窗縮圖
 
 Type=Service

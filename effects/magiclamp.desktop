@@ -18,6 +18,7 @@ Name[sv]=Magisk lanterna
 Name[te]=మాజిక్ లాంప్
 Name[tr]=Sihirli Lamba
 Name[uk]=Чарівна лампа
+Name[x-test]=xxMagic Lampxx
 Name[zh_TW]=魔法燈
 Icon=preferences-system-windows-effect-magic-lamp
 Comment=Simulate a magic lamp when minimizing windows
@@ -26,7 +27,9 @@ Comment[km]=ក្លែង​ធ្វើ​អំពូល​មន្តអ�
 Comment[nds]=Simuleert bi't Minimeren vun Finstern en Wunnerlamp
 Comment[pt]=Simular uma lâmpada mágica ao minimizar as janelas
 Comment[pt_BR]=Simular uma lâmpada mágica ao minimizar as janelas
+Comment[sv]=Simulera en magisk lanterna vid minimering av fönster
 Comment[uk]=Імітує ефект чарівної лампи під час мінімізації вікон
+Comment[x-test]=xxSimulate a magic lamp when minimizing windowsxx
 Comment[zh_TW]=最小化視窗時模擬神燈將精靈收進去的樣子
 
 Type=Service
