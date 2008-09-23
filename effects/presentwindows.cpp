@@ -151,8 +151,6 @@ void PresentWindowsEffect::postPaintScreen()
     // Update windows that are changing brightness or opacity
     foreach( EffectWindow *w, m_windowData.keys() )
         {
-        if( !w )
-            continue;
         if( m_windowData[w].opacity > 0.0 && m_windowData[w].opacity < 1.0 )
             w->addRepaintFull();
         if( m_windowData[w].highlight > 0.0 && m_windowData[w].highlight < 1.0 )
@@ -259,6 +257,11 @@ void PresentWindowsEffect::windowClosed( EffectWindow *w )
     m_windowData[w].visible = false; // TODO: Fix this so they do actually fade out
     m_motionManager.unmanage( w );
     rearrangeWindows();
+    }
+
+void PresentWindowsEffect::windowDeleted( EffectWindow *w )
+    {
+    m_windowData.remove( w );
     }
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
