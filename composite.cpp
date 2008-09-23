@@ -479,6 +479,7 @@ void Workspace::setupOverlay( Window w )
     assert( overlay != None );
     assert( Extensions::shapeInputAvailable());
     XSetWindowBackgroundPixmap( display(), overlay, None );
+    overlay_shape = QRegion();
     setOverlayShape( QRect( 0, 0, displayWidth(), displayHeight()));
     if( w != None )
         {
@@ -508,6 +509,10 @@ void Workspace::hideOverlay()
 
 void Workspace::setOverlayShape( const QRegion& reg )
     {
+    // Avoid setting the same shape again, it causes flicker (apparently it is not a no-op
+    // and triggers something).
+    if( reg == overlay_shape )
+        return;
     QVector< QRect > rects = reg.rects();
     XRectangle* xrects = new XRectangle[ rects.count() ];
     for( int i = 0;
@@ -584,25 +589,7 @@ void Workspace::delayedCheckUnredirect()
         if( c->unredirected())
             reg -= c->geometry();
         }
-    // Avoid setting the same shape again, it causes flicker (apparently it is not a no-op
-    // and triggers something).
-    if( reg == overlay_shape )
-        return;
-    overlay_shape = reg;
-    QVector< QRect > rects = reg.rects();
-    XRectangle* xrects = new XRectangle[ rects.count() ];
-    for( int i = 0;
-         i < rects.count();
-         ++i )
-        {
-        xrects[ i ].x = rects[ i ].x();
-        xrects[ i ].y = rects[ i ].y();
-        xrects[ i ].width = rects[ i ].width();
-        xrects[ i ].height = rects[ i ].height();
-        }
-    XShapeCombineRectangles( display(), overlay, ShapeBounding, 0, 0,
-        xrects, rects.count(), ShapeSet, Unsorted );
-    delete[] xrects;
+    setOverlayShape( reg );
     }
 
 //****************************************
