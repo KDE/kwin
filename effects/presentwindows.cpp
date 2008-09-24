@@ -255,13 +255,13 @@ void PresentWindowsEffect::windowClosed( EffectWindow *w )
     if( m_highlightedWindow == w )
         setHighlightedWindow( findFirstWindow() );
     m_windowData[w].visible = false; // TODO: Fix this so they do actually fade out
-    m_motionManager.unmanage( w );
     rearrangeWindows();
     }
 
 void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     {
     m_windowData.remove( w );
+    m_motionManager.unmanage( w );
     }
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
@@ -456,12 +456,17 @@ void PresentWindowsEffect::rearrangeWindows()
         }
     if( windowlist.isEmpty() )
         {
-        setHighlightedWindow( NULL );
+        setHighlightedWindow( NULL ); // TODO: Having a NULL highlighted window isn't really safe
         return;
         }
 
     // We filtered out the highlighted window
-    if( m_windowData[m_highlightedWindow].visible == false )
+    if( m_highlightedWindow )
+        {
+        if( m_windowData[m_highlightedWindow].visible == false )
+            setHighlightedWindow( findFirstWindow() );
+        }
+    else
         setHighlightedWindow( findFirstWindow() );
 
     int screens = m_tabBoxEnabled ? 1 : effects->numScreens();
@@ -949,10 +954,8 @@ void PresentWindowsEffect::assignSlots( EffectWindowList windowlist, const QRect
     QVector< bool > taken;
     taken.fill( false, columns * rows );
     foreach( EffectWindow* w, windowlist )
-        {
         if( m_windowData[w].slot != -1 )
             taken[ m_windowData[w].slot ] = true;
-        }
     int slotWidth = area.width() / columns;
     int slotHeight = area.height() / rows;
     if( m_tabBoxEnabled )
