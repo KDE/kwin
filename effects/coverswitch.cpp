@@ -568,11 +568,11 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
         // only for windows mode
         if( mode == TabBoxWindowsMode && effects->currentTabBoxWindowList().count() > 0 )
             {
+            input = effects->createFullScreenInputWindow( this, Qt::BlankCursor );
             if( !stop && !stopRequested )
                 {
                 effects->refTabBox();
                 effects->setActiveFullScreenEffect( this );
-                input = effects->createFullScreenInputWindow( this, Qt::BlankCursor );
                 selectedWindow = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
                 mActivated = true;
                 if( animateStart )
