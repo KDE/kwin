@@ -218,17 +218,27 @@ void CompositingPrefs::detectDriverAndVersion()
     kDebug( 1212 ) << "GL version is" << mGLVersion;
     kDebug( 1212 ) << "XGL:" << ( mXgl ? "yes" : "no" );
 
-    if( mGLRenderer.contains( "Intel" ))
+    if( mGLRenderer.startsWith( "Mesa DRI Intel" ))
         {
         mDriver = "intel";
         QStringList words = mGLRenderer.split(" ");
         mVersion = Version( words[ words.count() - 2 ] );
         }
-    else if( mGLVendor.contains( "NVIDIA" ))
+    else if( mGLVendor == "NVIDIA Corporation" )
         {
         mDriver = "nvidia";
         QStringList words = mGLVersion.split(" ");
         mVersion = Version( words[ words.count() - 1 ] );
+        }
+    else if( mGLVendor == "ATI Technologies Inc." )
+        {
+        mDriver = "fglrx";
+        mVersion = Version( mGLVersion.split(" ").first());
+        }
+    else if( mGLRenderer.startsWith( "Mesa DRI R200" ))
+        { // radeon r200 only ?
+        mDriver = "radeon";
+        mVersion = Version( mGLRenderer.split(" ")[ 3 ] );
         }
     else
         {
