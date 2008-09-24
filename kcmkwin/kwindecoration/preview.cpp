@@ -66,7 +66,7 @@ KDecorationPreview::~KDecorationPreview()
         {
         delete deco[i];
         delete bridge[i];
-	}
+        }
     delete options;
     }
 
@@ -128,7 +128,7 @@ void KDecorationPreview::positionPreviews()
 
     titleBarHeight = qMin( int( titleBarHeight * .9 ), 30 );
     xoffset = qMin( qMax( 10, QApplication::isRightToLeft()
-			    ? leftBorder : rightBorder ), 30 );
+                            ? leftBorder : rightBorder ), 30 );
 
     // Resize the active window
     size = QSize( width() - xoffset, height() - titleBarHeight )
@@ -167,7 +167,7 @@ void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode, bool acti
             xrects[ i ].height = rects[ i ].height();
             }
         XShapeCombineRectangles( QX11Info::display(), widget->winId(), ShapeBounding, 0, 0,
-	    xrects, rects.count(), ShapeSet, mode );
+            xrects, rects.count(), ShapeSet, mode );
         delete[] xrects;
         }
     if( active )

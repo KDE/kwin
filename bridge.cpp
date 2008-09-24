@@ -176,18 +176,18 @@ QRegion Bridge::unobscuredRegion( const QRegion& r ) const
                 continue;
             }
         /* the clients all have their mask-regions in local coords
-	   so we have to translate them to a shared coord system
-	   we choose ours */
-	int dx = stacking_order[ pos ]->x() - c->x();
-	int dy = stacking_order[ pos ]->y() - c->y();
-	QRegion creg = stacking_order[ pos ]->mask();
-	creg.translate(dx, dy);
-	reg -= creg;
-	if (reg.isEmpty())
+           so we have to translate them to a shared coord system
+           we choose ours */
+        int dx = stacking_order[ pos ]->x() - c->x();
+        int dy = stacking_order[ pos ]->y() - c->y();
+        QRegion creg = stacking_order[ pos ]->mask();
+        creg.translate(dx, dy);
+        reg -= creg;
+        if (reg.isEmpty())
             {
-	    // early out, we are completely obscured
-	    break;
-	    }
+            // early out, we are completely obscured
+            break;
+            }
         }
     return reg;
     }
