@@ -1264,7 +1264,7 @@ int Workspace::previousDesktopStatic( int iDesktop ) const
     }
 
 /*!
-  auxiliary functions to travers all clients according the focus
+  auxiliary functions to travers all clients according to the focus
   order. Useful for kwms Alt-tab feature.
 */
 Client* Workspace::nextClientFocusChain( Client* c ) const
@@ -1281,7 +1281,7 @@ Client* Workspace::nextClientFocusChain( Client* c ) const
     }
 
 /*!
-  auxiliary functions to travers all clients according the focus
+  auxiliary functions to travers all clients according to the focus
   order. Useful for kwms Alt-tab feature.
 */
 Client* Workspace::previousClientFocusChain( Client* c ) const
@@ -1298,7 +1298,7 @@ Client* Workspace::previousClientFocusChain( Client* c ) const
     }
 
 /*!
-  auxiliary functions to travers all clients according the static
+  auxiliary functions to travers all clients according to the static
   order. Useful for the CDE-style Alt-tab feature.
 */
 Client* Workspace::nextClientStatic( Client* c ) const
@@ -1314,7 +1314,7 @@ Client* Workspace::nextClientStatic( Client* c ) const
     return clients[ pos ];
     }
 /*!
-  auxiliary functions to travers all clients according the static
+  auxiliary functions to travers all clients according to the static
   order. Useful for the CDE-style Alt-tab feature.
 */
 Client* Workspace::previousClientStatic( Client* c ) const
