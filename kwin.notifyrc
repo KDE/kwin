@@ -5487,6 +5487,7 @@ Comment[zh_TW]=在其他虛擬桌面上的視窗要求注意
 
 [Event/compositingslow]
 Name=Compositing Performance Is Slow
+Name[gl]=O rendimento da composición é pobre
 Name[km]=តែង​ការ​អនុវត្ត​គឺ​យឺត
 Name[nds]=Tosamensett-Leisten is siet
 Name[pt]=A Performance da Composição está Lenta
@@ -5496,6 +5497,7 @@ Name[uk]=Швидкодія композитного показу мала
 Name[x-test]=xxCompositing Performance Is Slowxx
 Name[zh_TW]=組合效能過慢
 Comment=The compositing performance was too slow and compositing has been suspended
+Comment[gl]=O rendimento da composición era baixo de máis polo que se detivo a composición
 Comment[km]=ការ​តែង​ការ​អនុវត្ត​យឺត​ណាស់ និង​ការ​តែង​ត្រូវបាន​ផ្អាក
 Comment[nds]=Dat Tosamensetten weer to langsam un wöör utmaakt
 Comment[pt]=A performance da composição estava demasiado lenta, pelo que esta foi suspensa
