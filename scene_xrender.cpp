@@ -523,18 +523,10 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     setTransformedShape( QRegion()); // maybe nothing will be painted
     // check if there is something to paint
     bool opaque = isOpaque() && data.opacity == 1.0;
-    if( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT ))
-        {}
-    else if( mask & PAINT_WINDOW_OPAQUE )
-        {
-        if( !opaque )
-            return;
-        }
-    else if( mask & PAINT_WINDOW_TRANSLUCENT )
-        {
-        if( opaque )
-            return;
-        }
+    if( opaque && ( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT )) == PAINT_WINDOW_TRANSLUCENT )
+        return;
+    if( !opaque && ( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT )) == PAINT_WINDOW_OPAQUE )
+        return;
     Picture pic = picture(); // get XRender picture
     if( pic == None ) // The render format can be null for GL and/or Xv visuals
         return;
