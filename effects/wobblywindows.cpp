@@ -38,22 +38,19 @@ License. See the file "COPYING" for the exact licensing terms.
 namespace KWin
 {
 
-static const qreal STIFFNESS = 0.06;
-static const qreal DRAG = 0.92;
-static const qreal MOVEFACTOR = 0.1;
+static const qreal STIFFNESS = 0.15;
+static const qreal DRAG = 0.80;
+static const qreal MOVEFACTOR = 0.10;
 
 static const int XTESSELATION = 20;
 static const int YTESSELATION = 20;
 
 static const qreal MINVELOCITY = 0.0;
 static const qreal MAXVELOCITY = 1000.0;
-static const qreal STOPVELOCITY = 3.0;
+static const qreal STOPVELOCITY = 0.5;
 static const qreal MINACCELERATION = 0.0;
 static const qreal MAXACCELERATION = 1000.0;
 static const qreal STOPACCELERATION = 5.0;
-
-static const char* VELOCITYFILTER = "HeightRingLinearMean";
-static const char* ACCELERATIONFILTER = "HeightRingLinearMean";
 
 struct ParameterSet
 {
@@ -63,9 +60,6 @@ struct ParameterSet
 
     qreal xTesselation;
     qreal yTesselation;
-
-    WobblyWindowsEffect::GridFilter velocityFilter;
-    WobblyWindowsEffect::GridFilter accelerationFilter;
 
     qreal minVelocity;
     qreal maxVelocity;
@@ -81,13 +75,11 @@ struct ParameterSet
 
 ParameterSet set_0 =
 {
-    0.1,
-    0.8,
-    0.1,
+    0.15,
+    0.80,
+    0.10,
     20.0,
     20.0,
-    WobblyWindowsEffect::FourRingLinearMean,
-    WobblyWindowsEffect::HeightRingLinearMean,
     0.0,
     1000.0,
     0.5,
@@ -101,13 +93,11 @@ ParameterSet set_0 =
 
 ParameterSet set_1 =
 {
-    0.15,
+    0.10,
     0.85,
-    0.1,
+    0.10,
     20.0,
     20.0,
-    WobblyWindowsEffect::HeightRingLinearMean,
-    WobblyWindowsEffect::MeanWithMean,
     0.0,
     1000.0,
     0.5,
@@ -122,12 +112,10 @@ ParameterSet set_1 =
 ParameterSet set_2 =
 {
     0.06,
-    0.9,
-    0.1,
+    0.90,
+    0.10,
     20.0,
     20.0,
-    WobblyWindowsEffect::HeightRingLinearMean,
-    WobblyWindowsEffect::NoFilter,
     0.0,
     1000.0,
     0.5,
@@ -143,11 +131,9 @@ ParameterSet set_3 =
 {
     0.03,
     0.92,
-    0.2,
+    0.20,
     20.0,
     20.0,
-    WobblyWindowsEffect::HeightRingLinearMean,
-    WobblyWindowsEffect::HeightRingLinearMean,
     0.0,
     1000.0,
     0.5,
@@ -166,8 +152,6 @@ ParameterSet set_4 =
     0.25,
     20.0,
     20.0,
-    WobblyWindowsEffect::HeightRingLinearMean,
-    WobblyWindowsEffect::HeightRingLinearMean,
     0.0,
     1000.0,
     0.5,
@@ -191,7 +175,7 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     QString settingsMode = conf.readEntry("Settings", "Auto");
     if (settingsMode != "Custom")
     {
-        unsigned int wobblynessLevel = conf.readEntry("WobblynessLevel", 1);
+        unsigned int wobblynessLevel = conf.readEntry("WobblynessLevel", 0);
         if (wobblynessLevel > 4)
         {
             kDebug() << "Wrong value for \"WobblynessLevel\" : " << wobblynessLevel;
@@ -204,9 +188,6 @@ WobblyWindowsEffect::WobblyWindowsEffect()
             m_stiffness = conf.readEntry("Stiffness", STIFFNESS * 100.0) / 100.0;
             m_drag = conf.readEntry("Drag", DRAG * 100.0) / 100.0;
             m_move_factor = conf.readEntry("MoveFactor", MOVEFACTOR * 100.0) / 100.0;
-
-            m_velocityFilter = GridFilter(conf.readEntry("VelocityFilterEnum", int(HeightRingLinearMean)));
-            m_accelerationFilter = GridFilter(conf.readEntry("AccelerationFilterEnum", int(HeightRingLinearMean)));
         }
     }
     else // Custom method, read all values from config file.
@@ -224,60 +205,6 @@ WobblyWindowsEffect::WobblyWindowsEffect()
         m_minAcceleration = conf.readEntry("MinAcceleration", MINACCELERATION);
         m_maxAcceleration = conf.readEntry("MaxAcceleration", MAXACCELERATION);
         m_stopAcceleration = conf.readEntry("StopAcceleration", STOPACCELERATION);
-
-        QString velFilter = conf.readEntry("VelocityFilter", VELOCITYFILTER);
-        if (velFilter == "NoFilter")
-        {
-            m_velocityFilter = NoFilter;
-        }
-        else if (velFilter == "FourRingLinearMean")
-        {
-            m_velocityFilter = FourRingLinearMean;
-        }
-        else if (velFilter == "HeightRingLinearMean")
-        {
-            m_velocityFilter = HeightRingLinearMean;
-        }
-        else if (velFilter == "MeanWithMean")
-        {
-            m_velocityFilter = MeanWithMean;
-        }
-        else if (velFilter == "MeanWithMedian")
-        {
-            m_velocityFilter = MeanWithMedian;
-        }
-        else
-        {
-            m_velocityFilter = FourRingLinearMean;
-            kDebug() << "Unknown config value for VelocityFilter : " << velFilter;
-        }
-
-        QString accFilter = conf.readEntry("AccelerationFilter", ACCELERATIONFILTER);
-        if (accFilter == "NoFilter")
-        {
-            m_accelerationFilter = NoFilter;
-        }
-        else if (accFilter == "FourRingLinearMean")
-        {
-            m_accelerationFilter = FourRingLinearMean;
-        }
-        else if (accFilter == "HeightRingLinearMean")
-        {
-            m_accelerationFilter = HeightRingLinearMean;
-        }
-        else if (accFilter == "MeanWithMean")
-        {
-            m_accelerationFilter = MeanWithMean;
-        }
-        else if (accFilter == "MeanWithMedian")
-        {
-            m_accelerationFilter = MeanWithMedian;
-        }
-        else
-        {
-            m_accelerationFilter = NoFilter;
-            kDebug() << "Unknown config value for accelerationFilter : " << accFilter;
-        }
 
         m_moveEffectEnabled = conf.readEntry("MoveEffect", true);
         m_openEffectEnabled = conf.readEntry("OpenEffect", false);
@@ -322,9 +249,6 @@ void WobblyWindowsEffect::setParameterSet(ParameterSet& pset)
     m_xTesselation = pset.xTesselation;
     m_yTesselation = pset.yTesselation;
 
-    m_velocityFilter = pset.velocityFilter ;
-    m_accelerationFilter =  pset.accelerationFilter;
-
     m_minVelocity =  pset.minVelocity;
     m_maxVelocity =  pset.maxVelocity;
     m_stopVelocity =  pset.stopVelocity;
@@ -350,26 +274,6 @@ void WobblyWindowsEffect::setMoveFactor(qreal factor)
 void WobblyWindowsEffect::setStiffness(qreal stiffness)
 {
     m_stiffness = stiffness;
-}
-
-void WobblyWindowsEffect::setVelocityFilter(GridFilter filter)
-{
-    m_velocityFilter = filter;
-}
-
-void WobblyWindowsEffect::setAccelerationFilter(GridFilter filter)
-{
-    m_accelerationFilter = filter;
-}
-
-WobblyWindowsEffect::GridFilter WobblyWindowsEffect::velocityFilter() const
-{
-    return m_velocityFilter;
-}
-
-WobblyWindowsEffect::GridFilter WobblyWindowsEffect::accelerationFilter() const
-{
-    return m_accelerationFilter;
 }
 
 void WobblyWindowsEffect::setDrag(qreal drag)
@@ -1078,30 +982,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         }
     }
 
-    switch (m_accelerationFilter)
-    {
-    case NoFilter:
-        break;
-
-    case FourRingLinearMean:
-        fourRingLinearMean(&wwi.acceleration, wwi);
-        break;
-
-    case HeightRingLinearMean:
-        heightRingLinearMean(&wwi.acceleration, wwi);
-        break;
-
-    case MeanWithMean:
-        meanWithMean(&wwi.acceleration, wwi);
-        break;
-
-    case MeanWithMedian:
-        meanWithMedian(&wwi.acceleration, wwi);
-        break;
-
-    default:
-        ASSERT1(false);
-    }
+    heightRingLinearMean(&wwi.acceleration, wwi);
 
 #if defined COMPUTE_STATS
     Pair accBound = {m_maxAcceleration, m_minAcceleration};
@@ -1125,31 +1006,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         acc_sum += fabs(acc.x) + fabs(acc.y);
     }
 
-
-    switch (m_velocityFilter)
-    {
-    case NoFilter:
-        break;
-
-    case FourRingLinearMean:
-        fourRingLinearMean(&wwi.velocity, wwi);
-        break;
-
-    case HeightRingLinearMean:
-        heightRingLinearMean(&wwi.velocity, wwi);
-        break;
-
-    case MeanWithMean:
-        meanWithMean(&wwi.velocity, wwi);
-        break;
-
-    case MeanWithMedian:
-        meanWithMedian(&wwi.velocity, wwi);
-        break;
-
-    default:
-        ASSERT1(false);
-    }
+    heightRingLinearMean(&wwi.velocity, wwi);
 
     Pair topLeftCorner = {-10000.0, -10000.0};
     Pair bottomRightCorner = {10000.0, 10000.0};
@@ -1226,204 +1083,6 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
     }
 
     return true;
-}
-
-void WobblyWindowsEffect::fourRingLinearMean(Pair** datas_pointer, WindowWobblyInfos& wwi)
-{
-    Pair* datas = *datas_pointer;
-    Pair neibourgs[4];
-
-    // for corners
-
-    // top-left
-    {
-        Pair& res = wwi.buffer[0];
-        Pair vit = datas[0];
-        neibourgs[0] = datas[1];
-        neibourgs[1] = datas[wwi.width];
-
-        res.x = (neibourgs[0].x + neibourgs[1].x + 2.0*vit.x) / 4.0;
-        res.y = (neibourgs[0].y + neibourgs[1].y + 2.0*vit.y) / 4.0;
-    }
-
-
-    // top-right
-    {
-        Pair& res = wwi.buffer[wwi.width-1];
-        Pair vit = datas[wwi.width-1];
-        neibourgs[0] = datas[wwi.width-2];
-        neibourgs[1] = datas[2*wwi.width-1];
-
-        res.x = (neibourgs[0].x + neibourgs[1].x + 2.0*vit.x) / 4.0;
-        res.y = (neibourgs[0].y + neibourgs[1].y + 2.0*vit.y) / 4.0;
-    }
-
-
-    // bottom-left
-    {
-        Pair& res = wwi.buffer[wwi.width*(wwi.height-1)];
-        Pair vit = datas[wwi.width*(wwi.height-1)];
-        neibourgs[0] = datas[wwi.width*(wwi.height-1)+1];
-        neibourgs[1] = datas[wwi.width*(wwi.height-2)];
-
-        res.x = (neibourgs[0].x + neibourgs[1].x + 2.0*vit.x) / 4.0;
-        res.y = (neibourgs[0].y + neibourgs[1].y + 2.0*vit.y) / 4.0;
-    }
-
-
-    // bottom-right
-    {
-        Pair& res = wwi.buffer[wwi.count-1];
-        Pair vit = datas[wwi.count-1];
-        neibourgs[0] = datas[wwi.count-2];
-        neibourgs[1] = datas[wwi.width*(wwi.height-1)-1];
-
-        res.x = (neibourgs[0].x + neibourgs[1].x + 2.0*vit.x) / 4.0;
-        res.y = (neibourgs[0].y + neibourgs[1].y + 2.0*vit.y) / 4.0;
-    }
-
-
-    // for borders
-
-    // top border
-    for (unsigned int i=1; i<wwi.width-1; ++i)
-    {
-        Pair& res = wwi.buffer[i];
-        Pair vit = datas[i];
-        neibourgs[0] = datas[i-1];
-        neibourgs[1] = datas[i+1];
-        neibourgs[2] = datas[i+wwi.width];
-
-        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
-        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
-    }
-
-    // bottom border
-    for (unsigned int i=wwi.width*(wwi.height-1)+1; i<wwi.count-1; ++i)
-    {
-        Pair& res = wwi.buffer[i];
-        Pair vit = datas[i];
-        neibourgs[0] = datas[i-1];
-        neibourgs[1] = datas[i+1];
-        neibourgs[2] = datas[i-wwi.width];
-
-        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
-        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
-    }
-
-    // left border
-    for (unsigned int i=wwi.width; i<wwi.width*(wwi.height-1); i+=wwi.width)
-    {
-        Pair& res = wwi.buffer[i];
-        Pair vit = datas[i];
-        neibourgs[0] = datas[i+1];
-        neibourgs[1] = datas[i-wwi.width];
-        neibourgs[2] = datas[i+wwi.width];
-
-        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
-        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
-    }
-
-    // right border
-    for (unsigned int i=2*wwi.width-1; i<wwi.count-1; i+=wwi.width)
-    {
-        Pair& res = wwi.buffer[i];
-        Pair vit = datas[i];
-        neibourgs[0] = datas[i-1];
-        neibourgs[1] = datas[i-wwi.width];
-        neibourgs[2] = datas[i+wwi.width];
-
-        res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
-        res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
-    }
-
-    // for the inner points
-    for (unsigned int j=1; j<wwi.height-1; ++j)
-    {
-        for (unsigned int i=1; i<wwi.width-1; ++i)
-        {
-            unsigned int index = i+j*wwi.width;
-
-            Pair& res = wwi.buffer[index];
-            Pair& vit = datas[index];
-            neibourgs[0] = datas[index-1];
-            neibourgs[1] = datas[index+1];
-            neibourgs[2] = datas[index-wwi.width];
-            neibourgs[3] = datas[index+wwi.width];
-
-            res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + 4.0*vit.x) / 8.0;
-            res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + 4.0*vit.y) / 8.0;
-        }
-    }
-
-    Pair* tmp = datas;
-    *datas_pointer = wwi.buffer;
-    wwi.buffer = tmp;
-}
-
-void WobblyWindowsEffect::meanWithMean(Pair** datas_pointer, WindowWobblyInfos& wwi)
-{
-    Pair* datas = *datas_pointer;
-
-    Pair mean = {0.0, 0.0};
-    for (unsigned int i = 0; i < wwi.count; ++i)
-    {
-        mean.x += datas[i].x;
-        mean.y += datas[i].y;
-    }
-
-    mean.x /= wwi.count;
-    mean.y /= wwi.count;
-
-    for (unsigned int i = 0; i < wwi.count; ++i)
-    {
-        wwi.buffer[i].x = (datas[i].x + mean.x) / 2.0;
-        wwi.buffer[i].y = (datas[i].y + mean.y) / 2.0;
-    }
-
-    Pair* tmp = datas;
-    *datas_pointer = wwi.buffer;
-    wwi.buffer = tmp;
-}
-
-void WobblyWindowsEffect::meanWithMedian(Pair** datas_pointer, WindowWobblyInfos& wwi)
-{
-    Pair* datas = *datas_pointer;
-
-    qreal xmin = datas[0].x, ymin = datas[0].y;
-    qreal xmax = datas[0].x, ymax = datas[0].y;
-    for (unsigned int i = 1; i < wwi.count; ++i)
-    {
-        if (datas[i].x < xmin)
-        {
-            xmin = datas[i].x;
-        }
-        if (datas[i].x > xmax)
-        {
-            xmax = datas[i].x;
-        }
-
-        if (datas[i].y < ymin)
-        {
-            ymin = datas[i].y;
-        }
-        if (datas[i].y > ymax)
-        {
-            ymax = datas[i].y;
-        }
-    }
-
-    Pair median = {(xmin + xmax)/2.0, (ymin + ymax)/2.0};
-
-    for (unsigned int i = 0; i < wwi.count; ++i)
-    {
-        wwi.buffer[i].x = (datas[i].x + median.x) / 2.0;
-        wwi.buffer[i].y = (datas[i].y + median.y) / 2.0;
-    }
-
-    Pair* tmp = datas;
-    *datas_pointer = wwi.buffer;
-    wwi.buffer = tmp;
 }
 
 void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobblyInfos& wwi)

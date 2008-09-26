@@ -43,54 +43,41 @@ struct ParameterSet
     int stiffness;
     int drag;
     int move_factor;
-
-    WobblyWindowsEffect::GridFilter velocityFilter;
-    WobblyWindowsEffect::GridFilter accelerationFilter;
 };
 
 ParameterSet set_0 =
 {
-    10,
+    15,
     80,
-    10,
-    WobblyWindowsEffect::FourRingLinearMean,
-    WobblyWindowsEffect::HeightRingLinearMean,
+    10
 };
 
 ParameterSet set_1 =
 {
-    15,
-    85,
     10,
-    WobblyWindowsEffect::HeightRingLinearMean,
-    WobblyWindowsEffect::MeanWithMean,
+    85,
+    10
 };
 
 ParameterSet set_2 =
 {
     6,
     90,
-    10,
-    WobblyWindowsEffect::HeightRingLinearMean,
-    WobblyWindowsEffect::NoFilter,
+    10
 };
 
 ParameterSet set_3 =
 {
     3,
     92,
-    20,
-    WobblyWindowsEffect::HeightRingLinearMean,
-    WobblyWindowsEffect::HeightRingLinearMean,
+    20
 };
 
 ParameterSet set_4 =
 {
     1,
     97,
-    25,
-    WobblyWindowsEffect::HeightRingLinearMean,
-    WobblyWindowsEffect::HeightRingLinearMean,
+    25
 };
 
 ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
@@ -111,8 +98,6 @@ KCModule(EffectFactory::componentData(), parent, args)
     connect(m_ui.stiffnessSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui.dragSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui.moveFactorSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui.velocityCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(m_ui.accelerationCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     load();
 }
@@ -128,11 +113,11 @@ void WobblyWindowsEffectConfig::load()
     KConfigGroup conf = EffectsHandler::effectConfig("Wobbly");
     bool change = true;
 
-    unsigned int wobblynessLevel = 1;
+    unsigned int wobblynessLevel = 0;
     QString settingsMode = conf.readEntry("Settings", "Auto");
     if (settingsMode != "Custom")
     {
-        wobblynessLevel = conf.readEntry("WobblynessLevel", 1);
+        wobblynessLevel = conf.readEntry("WobblynessLevel", 0);
         change = false;
     }
     if (wobblynessLevel > 4)
@@ -146,12 +131,9 @@ void WobblyWindowsEffectConfig::load()
     m_ui.resizeBox->setChecked(conf.readEntry("ResizeWobble", true));
     m_ui.advancedBox->setChecked(conf.readEntry("AdvancedMode", false));
 
-    m_ui.stiffnessSlider->setValue(conf.readEntry("Stiffness", pset[1].stiffness));
-    m_ui.dragSlider->setValue(conf.readEntry("Drag", pset[1].drag));
-    m_ui.moveFactorSlider->setValue(conf.readEntry("MoveFactor", pset[1].move_factor));
-
-    m_ui.velocityCombo->setCurrentIndex(conf.readEntry("VelocityFilterEnum", int(WobblyWindowsEffect::HeightRingLinearMean)));
-    m_ui.accelerationCombo->setCurrentIndex(conf.readEntry("AccelerationFilterEnum", int(WobblyWindowsEffect::MeanWithMean)));
+    m_ui.stiffnessSlider->setValue(conf.readEntry("Stiffness", pset[0].stiffness));
+    m_ui.dragSlider->setValue(conf.readEntry("Drag", pset[0].drag));
+    m_ui.moveFactorSlider->setValue(conf.readEntry("MoveFactor", pset[0].move_factor));
 
     advancedChanged();
 
@@ -173,27 +155,21 @@ void WobblyWindowsEffectConfig::save()
     conf.writeEntry("Drag", m_ui.dragSpin->value());
     conf.writeEntry("MoveFactor", m_ui.moveFactorSpin->value());
 
-    conf.writeEntry("VelocityFilterEnum", m_ui.velocityCombo->currentIndex());
-    conf.writeEntry("AccelerationFilterEnum", m_ui.accelerationCombo->currentIndex());
-
     emit changed(false);
     EffectsHandler::sendReloadMessage("wobblywindows");
 }
 
 void WobblyWindowsEffectConfig::defaults()
 {
-    m_ui.wobblinessSlider->setSliderPosition(1);
+    m_ui.wobblinessSlider->setSliderPosition(0);
 
     m_ui.moveBox->setChecked(true);
     m_ui.resizeBox->setChecked(true);
     m_ui.advancedBox->setChecked(false);
 
-    m_ui.stiffnessSlider->setValue(pset[1].stiffness);
-    m_ui.dragSlider->setValue(pset[1].drag);
-    m_ui.moveFactorSlider->setValue(pset[1].move_factor);
-
-    m_ui.velocityCombo->setCurrentIndex(int(WobblyWindowsEffect::HeightRingLinearMean));
-    m_ui.accelerationCombo->setCurrentIndex(int(WobblyWindowsEffect::MeanWithMean));
+    m_ui.stiffnessSlider->setValue(pset[0].stiffness);
+    m_ui.dragSlider->setValue(pset[0].drag);
+    m_ui.moveFactorSlider->setValue(pset[0].move_factor);
 
     emit changed(true);
 }
@@ -213,9 +189,6 @@ void WobblyWindowsEffectConfig::wobblinessChanged()
     m_ui.stiffnessSlider->setValue(preset.stiffness);
     m_ui.dragSlider->setValue(preset.drag);
     m_ui.moveFactorSlider->setValue(preset.move_factor);
-
-    m_ui.velocityCombo->setCurrentIndex(preset.velocityFilter);
-    m_ui.accelerationCombo->setCurrentIndex(preset.accelerationFilter);
     }
 
 } // namespace

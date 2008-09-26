@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>300</height>
+    <height>240</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout" >
@@ -82,102 +82,6 @@
       <string>Advanced</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3" >
-      <item row="5" column="0" >
-       <widget class="QLabel" name="label_7" >
-        <property name="enabled" >
-         <bool>true</bool>
-        </property>
-        <property name="text" >
-         <string>&amp;Velocity filter:</string>
-        </property>
-        <property name="scaledContents" >
-         <bool>false</bool>
-        </property>
-        <property name="textInteractionFlags" >
-         <set>Qt::LinksAccessibleByMouse</set>
-        </property>
-        <property name="buddy" >
-         <cstring>velocityCombo</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" >
-       <widget class="QComboBox" name="velocityCombo" >
-        <item>
-         <property name="text" >
-          <string>None</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Four Ring Linear Mean</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Height Ring Linear Mean</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Mean With Mean</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Mean With Median</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="6" column="0" >
-       <widget class="QLabel" name="label_8" >
-        <property name="enabled" >
-         <bool>true</bool>
-        </property>
-        <property name="text" >
-         <string>Acceleration &amp;filter:</string>
-        </property>
-        <property name="scaledContents" >
-         <bool>false</bool>
-        </property>
-        <property name="textInteractionFlags" >
-         <set>Qt::LinksAccessibleByMouse</set>
-        </property>
-        <property name="buddy" >
-         <cstring>velocityCombo</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1" >
-       <widget class="QComboBox" name="accelerationCombo" >
-        <item>
-         <property name="text" >
-          <string>None</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Four Ring Linear Mean</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Height Ring Linear Mean</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Mean With Mean</string>
-         </property>
-        </item>
-        <item>
-         <property name="text" >
-          <string>Mean With Median</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="1" column="0" colspan="2" >
        <layout class="QGridLayout" name="gridLayout_4" >
         <item row="0" column="0" >
@@ -349,8 +253,6 @@
   <tabstop>dragSpin</tabstop>
   <tabstop>moveFactorSlider</tabstop>
   <tabstop>moveFactorSpin</tabstop>
-  <tabstop>velocityCombo</tabstop>
-  <tabstop>accelerationCombo</tabstop>
  </tabstops>
  <resources/>
  <connections>

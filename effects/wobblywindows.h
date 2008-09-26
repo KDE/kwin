@@ -26,16 +26,6 @@ class WobblyWindowsEffect : public Effect
 {
     public:
 
-        enum GridFilter
-        {
-            NoFilter,
-            FourRingLinearMean,
-            HeightRingLinearMean,
-            MeanWithMean,
-            MeanWithMedian
-        };
-
-
         WobblyWindowsEffect();
         virtual ~WobblyWindowsEffect();
 
@@ -52,11 +42,6 @@ class WobblyWindowsEffect : public Effect
         void setDrag(qreal drag);
         void setVelocityThreshold(qreal velocityThreshold);
         void setMoveFactor(qreal factor);
-
-        void setVelocityFilter(GridFilter filter);
-        void setAccelerationFilter(GridFilter filter);
-        GridFilter velocityFilter() const;
-        GridFilter accelerationFilter() const;
 
         struct Pair
         {
@@ -118,9 +103,6 @@ class WobblyWindowsEffect : public Effect
         qreal m_xTesselation;
         qreal m_yTesselation;
 
-        GridFilter m_velocityFilter;
-        GridFilter m_accelerationFilter;
-
         qreal m_minVelocity;
         qreal m_maxVelocity;
         qreal m_stopVelocity;
@@ -142,10 +124,7 @@ class WobblyWindowsEffect : public Effect
 
         WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const;
 
-        static void fourRingLinearMean(Pair** datas, WindowWobblyInfos& wwi);
         static void heightRingLinearMean(Pair** datas, WindowWobblyInfos& wwi);
-        static void meanWithMean(Pair** datas, WindowWobblyInfos& wwi);
-        static void meanWithMedian(Pair** datas, WindowWobblyInfos& wwi);
 
         void setParameterSet(ParameterSet& pset);
 };
