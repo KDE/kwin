@@ -1313,10 +1313,13 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     // check if there is something to paint (e.g. don't paint if the window
     // is only opaque and only PAINT_WINDOW_TRANSLUCENT is requested)
     bool opaque = isOpaque() && data.opacity == 1.0;
-    if( opaque && ( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT )) == PAINT_WINDOW_TRANSLUCENT )
-        return;
-    if( !opaque && ( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT )) == PAINT_WINDOW_OPAQUE )
-        return;
+    if( !( mask & ( PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT )))
+        { // We are only painting either opaque OR translucent windows, not both
+        if( mask & PAINT_WINDOW_OPAQUE && !opaque )
+            return; // Only painting opaque and window is translucent
+        if( mask & PAINT_WINDOW_TRANSLUCENT && opaque )
+            return; // Only painting translucent and window is opaque
+        }
     // paint only requested areas
     if( region != infiniteRegion()) // avoid integer overflow
         region.translate( -x(), -y());
