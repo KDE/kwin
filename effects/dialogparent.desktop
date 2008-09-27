@@ -61,6 +61,7 @@ Name[zh_TW]=上層對話框
 Icon=preferences-system-windows-effect-dialog-parent
 Comment=Darkens the parent window of the currently active dialog
 Comment[gl]=Escurece a fiestra pai do diálogo activo
+Comment[gu]=સક્રિય સંવાદની મુખ્ય વિન્ડોને ઘાટી બનાવે છે
 Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​មេ​របស់​ប្រអប់​សកម្ម​បច្ចុប្បន្ន​ងងឹត​
 Comment[nds]=Maakt dat Moderfinstern vun den aktiven Dialoog düüsterer
 Comment[pt]=Escurece a janela-mãe da janela activa de momento
