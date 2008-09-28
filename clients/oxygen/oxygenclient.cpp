@@ -303,28 +303,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     frame.adjust(1,1,-1,-1);
     frame.getRect(&x, &y, &w, &h);
 
-    dark.setAlpha(120);
-
     if(isActive()) {
-        QLinearGradient lg(x,0,x+w,0);
-        lg.setColorAt(0.5, dark);
-        dark.setAlpha(0);
-        lg.setColorAt(0.0, dark);
-        lg.setColorAt(1.0, dark);
-        painter.setPen(QPen(lg,1));
-
-        painter.drawLine(QPointF(x, titleTop+titleHeight-1.5),
-                                QPointF(x+w, titleTop+titleHeight-1.5));
-
-        lg = QLinearGradient(x,0,x+w,0);
-        lg.setColorAt(0.5, light);
-        light.setAlpha(0);
-        lg.setColorAt(0.0, light);
-        lg.setColorAt(1.0, light);
-        painter.setPen(QPen(lg,1));
-
-        painter.drawLine(QPointF(x, titleTop+titleHeight-0.5),
-                               QPointF(x+w, titleTop+titleHeight-0.5));
+        helper_.drawSeparator(&painter, QRect(x, titleTop+titleHeight-1.5, w, 2), color, Qt::Horizontal);
     }
 
     // draw stripes as indicator for active windows
