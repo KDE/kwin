@@ -201,25 +201,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     dark.setAlpha(120);
 
     if(client_.isActive()) {
-        QLinearGradient lg(x,0,x+w,0);
-        lg.setColorAt(0.5, dark);
-        dark.setAlpha(0);
-        lg.setColorAt(0.0, dark);
-        lg.setColorAt(1.0, dark);
-        painter.setPen(QPen(lg,1));
-
-        painter.drawLine(QPointF(x, titleHeight-1.5),
-                                QPointF(x+w, titleHeight-1.5));
-
-        lg = QLinearGradient(x,0,x+w,0);
-        lg.setColorAt(0.5, light);
-        light.setAlpha(0);
-        lg.setColorAt(0.0, light);
-        lg.setColorAt(1.0, light);
-        painter.setPen(QPen(lg,1));
-
-        painter.drawLine(QPointF(x, titleHeight-0.5),
-                               QPointF(x+w, titleHeight-0.5));
+        helper_.drawSeparator(&painter, QRect(x, titleHeight-1.5, w, 2), color, Qt::Horizontal);
     }
     
     if (type_ == ButtonMenu) {
