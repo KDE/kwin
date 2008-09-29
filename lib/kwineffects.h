@@ -1315,6 +1315,17 @@ class KWIN_EXPORT WindowMotionManager
          * WindowPrePaintData::setTransformed()
          */
         void apply( EffectWindow *w, WindowPaintData &data );
+        /**
+         * Set all motion targets and values back to where the
+         * windows were before transformations. The same as
+         * unmanaging then remanaging all windows.
+         */
+        void reset();
+        /**
+         * Resets the motion target and current value of a single
+         * window.
+         */
+        void reset( EffectWindow *w );
 
         /**
          * As the manager to move the window to the target position

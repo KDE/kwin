@@ -1153,6 +1153,34 @@ void WindowMotionManager::calculate( int time )
         }
     }
 
+void WindowMotionManager::reset()
+    {
+    if( !m_managedWindows.count() )
+        return;
+
+    EffectWindowList windows = m_managedWindows.keys();
+
+    for( int i = 0; i < windows.size(); i++ )
+        {
+        EffectWindow *w = windows.at( i );
+        m_managedWindows[ w ].translation.setTarget( w->pos() );
+        m_managedWindows[ w ].translation.finish();
+        m_managedWindows[ w ].scale.setTarget( QPointF( 1.0, 1.0 ));
+        m_managedWindows[ w ].scale.finish();
+        }
+    }
+
+void WindowMotionManager::reset( EffectWindow *w )
+    {
+    if( !m_managedWindows.contains( w ))
+        return;
+
+    m_managedWindows[ w ].translation.setTarget( w->pos() );
+    m_managedWindows[ w ].translation.finish();
+    m_managedWindows[ w ].scale.setTarget( QPointF( 1.0, 1.0 ));
+    m_managedWindows[ w ].scale.finish();
+    }
+
 void WindowMotionManager::apply( EffectWindow *w, WindowPaintData &data )
     {
     if( !m_managedWindows.contains( w ))
