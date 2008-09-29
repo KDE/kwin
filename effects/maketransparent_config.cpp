@@ -54,27 +54,13 @@ MakeTransparentEffectConfig::MakeTransparentEffectConfig(QWidget* parent, const 
     connect(m_ui->dialogs, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->comboboxpopup, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->menus, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->individualmenuconfig, SIGNAL(stateChanged(int)), this, SLOT(setIndividualMenuConfig(int)));
-    connect(m_ui->individualmenuconfig, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->individualmenuconfig, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(m_ui->dropdownmenus, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->popupmenus, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->tornoffmenus, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->duration, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     load();
-    }
-
-void MakeTransparentEffectConfig::setIndividualMenuConfig(int state)
-    {
-        m_ui->menus->setEnabled( state == Qt::Checked ? false : true );
-        m_ui->menus_label->setEnabled( state == Qt::Checked ? false : true );
-
-        m_ui->dropdownmenus->setEnabled( state == Qt::Checked ? true : false );
-        m_ui->dropdownmenus_label->setEnabled( state == Qt::Checked ? true : false );
-        m_ui->popupmenus->setEnabled( state == Qt::Checked ? true : false );
-        m_ui->popupmenus_label->setEnabled( state == Qt::Checked ? true : false );
-        m_ui->tornoffmenus->setEnabled( state == Qt::Checked ? true : false );
-        m_ui->tornoffmenus_label->setEnabled( state == Qt::Checked ? true : false );
     }
 
 void MakeTransparentEffectConfig::load()
@@ -95,7 +81,6 @@ void MakeTransparentEffectConfig::load()
     m_ui->tornoffmenus->setValue( (int)( conf.readEntry( "TornOffMenus", 1.0) * 100 ) );
     m_ui->duration->setValue( conf.readEntry( "Duration", 0) );
 
-    setIndividualMenuConfig( m_ui->individualmenuconfig->isChecked() ? Qt::Checked : Qt::Unchecked );
     emit changed(false);
     }
 

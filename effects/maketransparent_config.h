@@ -45,9 +45,6 @@ class MakeTransparentEffectConfig : public KCModule
         virtual void load();
         virtual void defaults();
 
-    public slots:
-        void setIndividualMenuConfig(int);
-
     private:
         MakeTransparentEffectConfigForm* m_ui;
     };
