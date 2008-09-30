@@ -410,24 +410,31 @@ void Workspace::setupWindowShortcutDone( bool ok )
 
 void Workspace::clientShortcutUpdated( Client* c )
     {
-    QString key = QString::number( c->window());
+    QString key = QString( "_k_session:%1" ).arg(c->window());
     QAction* action = client_keys->action( key.toLatin1().constData() );
     if( !c->shortcut().isEmpty())
         {
         if( action == NULL ) // new shortcut
             {
-            action = client_keys->addAction(QString("session:clientShortcut %1").arg(key));
-            action->setText(i18n("Activate Window (%1)", c->caption()));
-            connect( action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()));
+            action = client_keys->addAction(QString( key ));
+            action->setText( i18n("Activate Window (%1)", c->caption()) );
+            connect( action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()) );
             }
+
+        KAction *kaction = qobject_cast<KAction*>( action );
         // no autoloading, since it's configured explicitly here and is not meant to be reused
         // (the key is the window id anyway, which is kind of random)
-        qobject_cast< KAction* >( action )->setGlobalShortcut(
-            c->shortcut(), KAction::ActiveShortcut, KAction::NoAutoloading );
-        action->setEnabled( true );
+        kaction->setGlobalShortcut(
+                c->shortcut(), KAction::ActiveShortcut, KAction::NoAutoloading );
+        kaction->setEnabled( true );
         }
     else
         {
+        KAction *kaction = qobject_cast<KAction*>( action );
+        if( kaction )
+            {
+            kaction->forgetGlobalShortcut();
+            }
         delete action;
         }
     }
