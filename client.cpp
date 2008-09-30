@@ -520,7 +520,10 @@ void Client::updateShape()
     // when the decoration calls it or when the decoration is created/destroyed
     updateInputShape();
     if( compositing())
-        addDamageFull();
+        {
+        addRepaintFull();
+        addWorkspaceRepaint( geometry()); // in case shape change removes part of this window
+        }
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
     if( effects != NULL )
@@ -609,8 +612,6 @@ void Client::setMask( const QRegion& reg, int mode )
         XShapeCombineShape( display(), frameId(), ShapeBounding, 0, 0,
                            shape_helper_window, ShapeBounding, ShapeSet );
         }
-    if( compositing())
-        addDamageFull();
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
     if( effects != NULL )

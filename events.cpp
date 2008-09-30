@@ -1646,7 +1646,8 @@ bool Unmanaged::windowEvent( XEvent* e )
             if( e->type == Extensions::shapeNotifyEvent() )
                 {
                 detectShape( window());
-                addDamageFull();
+                addRepaintFull();
+                addWorkspaceRepaint( geometry()); // in case shape change removes part of this window
                 if( scene != NULL )
                     scene->windowGeometryShapeChanged( this );
                 if( effects != NULL )
