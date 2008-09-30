@@ -1264,6 +1264,18 @@ void Client::setShortcutInternal( const KShortcut& cut )
         return;
     _shortcut = cut;
     updateCaption();
+#if 0
+    workspace()->clientShortcutUpdated( this );
+#else
+    // Workaround for kwin<->kglobalaccel deadlock, when KWin has X grab and the kded
+    // kglobalaccel module tries to create the key grab. KWin should preferably grab
+    // they keys itself anyway :(.
+    QTimer::singleShot( 0, this, SLOT( delayedSetShortcut()));
+#endif
+    }
+
+void Client::delayedSetShortcut()
+    {
     workspace()->clientShortcutUpdated( this );
     }
 

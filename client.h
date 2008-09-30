@@ -330,6 +330,7 @@ class Client
         void processKillerExited();
         void demandAttentionKNotify();
         void syncTimeout();
+        void delayedSetShortcut();
 
     private:
         void setMappingState( int s ); // ICCCM 4.1.3.1, 4.1.4 , NETWM 2.5.1
