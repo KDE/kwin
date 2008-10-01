@@ -938,7 +938,7 @@ TimeLine::TimeLine(const int duration)
     m_Time = 0;
     m_CurveShape = TimeLine::EaseInCurve;
     m_Duration = duration;
-    m_TimeLine = new QTimeLine(m_Duration);
+    m_TimeLine = new QTimeLine(m_Duration ? m_Duration : 1); // (avoid QTimeLine warning)
     m_TimeLine->setFrameRange(0, m_Duration);
     m_TimeLine->setCurveShape(QTimeLine::EaseInCurve);
     }
@@ -972,11 +972,13 @@ void TimeLine::setDuration(const int msec)
 
 double TimeLine::value() const
     {
+    Q_ASSERT( m_Duration != 0 );
     return valueForTime(m_Time);
     }
 
 double TimeLine::valueForTime(const int msec) const
     {
+    Q_ASSERT( m_Duration != 0 );
     // Catch non QTimeLine CurveShapes here, (but there are none right now)
 
 
@@ -986,34 +988,40 @@ double TimeLine::valueForTime(const int msec) const
 
 void TimeLine::addTime(const int msec)
     {
+    Q_ASSERT( m_Duration != 0 );
     m_Time = qMin(m_Duration, m_Time + msec);
     m_Progress = (double)m_Time / m_Duration;
     }
 
 void TimeLine::removeTime(const int msec)
     {
+    Q_ASSERT( m_Duration != 0 );
     m_Time = qMax(0, m_Time - msec);
     m_Progress = (double)m_Time / m_Duration;
     }
 
 void TimeLine::setProgress(const double progress)
     {
+    Q_ASSERT( m_Duration != 0 );
     m_Progress = progress;
     m_Time = qRound(m_Duration * progress);
     }
 
 double TimeLine::progress() const
     {
+    Q_ASSERT( m_Duration != 0 );
     return m_Progress;
     }
 
 int TimeLine::time() const
     {
+    Q_ASSERT( m_Duration != 0 );
     return m_Time;
     }
 
 void TimeLine::addProgress(const double progress)
     {
+    Q_ASSERT( m_Duration != 0 );
     m_Progress += progress;
     m_Time = (int)(m_Duration * m_Progress);
     }
