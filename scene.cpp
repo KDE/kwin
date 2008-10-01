@@ -383,6 +383,8 @@ QRegion Scene::Window::shape() const
                     shape_region += QRegion( rects[ i ].x, rects[ i ].y,
                         rects[ i ].width, rects[ i ].height );
                 XFree(rects);
+                // make sure the shape is sane (X is async, maybe even XShape is broken)
+                shape_region &= QRegion( 0, 0, width(), height());
                 }
             else
                 shape_region = QRegion();
