@@ -1682,6 +1682,7 @@ void Unmanaged::configureNotifyEvent( XConfigureEvent* e )
         addWorkspaceRepaint( geometry()); // damage old area
         QRect old = geom;
         geom = newgeom;
+        addRepaintFull();
         if( old.size() != geom.size())
             discardWindowPixmap();
         if( scene != NULL )
