@@ -286,23 +286,33 @@ void KWinCompositingConfig::loadGeneralTab()
 #undef LOAD_EFFECT_CONFIG
 
     // window switching
-    if( effectconfig.readEntry("kwin4_effect_boxswitchEnabled", false) )
+    if( effectEnabled( "boxswitch", effectconfig ))
         ui.windowSwitchingCombo->setCurrentIndex( 1 );
-    if( effectconfig.readEntry("kwin4_effect_coverswitchEnabled", false) )
+    if( effectEnabled( "coverswitch", effectconfig ))
         ui.windowSwitchingCombo->setCurrentIndex( 3 );
-    if( effectconfig.readEntry("kwin4_effect_flipswitchEnabled", false) )
+    if( effectEnabled( "flipswitch", effectconfig ))
         ui.windowSwitchingCombo->setCurrentIndex( 4 );
     KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
-    if( effectconfig.readEntry("kwin4_effect_presentwindowsEnabled", false) && presentwindowsconfig.readEntry("TabBox", false) )
+    if( effectEnabled( "presentwindows", effectconfig ) && presentwindowsconfig.readEntry("TabBox", false) )
         ui.windowSwitchingCombo->setCurrentIndex( 2 );
 
     // desktop switching
-    if( effectconfig.readEntry("kwin4_effect_slideEnabled", false) )
+    if( effectEnabled( "slide", effectconfig ))
         ui.desktopSwitchingCombo->setCurrentIndex( 1 );
     KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
-    if( effectconfig.readEntry("kwin4_effect_cubeEnabled", false) && cubeconfig.readEntry("AnimateDesktopChange", false) )
+    if( effectEnabled( "cube", effectconfig ) && cubeconfig.readEntry("AnimateDesktopChange", false))
         ui.desktopSwitchingCombo->setCurrentIndex( 2 );
     
+}
+
+bool KWinCompositingConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
+{
+    KService::List services = KServiceTypeTrader::self()->query(
+        "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + "'");
+    if( services.isEmpty())
+        return false;
+    QVariant v = services.first()->property("X-KDE-PluginInfo-EnabledByDefault");
+    return cfg.readEntry("kwin4_effect_" + effect + "Enabled", v.toBool());
 }
 
 void KWinCompositingConfig::loadEffectsTab()

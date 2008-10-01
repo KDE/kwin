@@ -72,6 +72,8 @@ class KWinCompositingConfig : public KCModule
         void initEffectSelector();
 
     private:
+        bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;
+
         KSharedConfigPtr mKWinConfig;
         Ui::KWinCompositingConfig ui;
         CompositingPrefs mDefaultPrefs;
