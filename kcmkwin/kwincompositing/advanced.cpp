@@ -125,10 +125,11 @@ void KWinAdvancedCompositingOptions::load()
     KConfigGroup config(mKWinConfig, "Compositing");
     QString backend = config.readEntry("Backend", "OpenGL");
     ui.compositingType->setCurrentIndex((backend == "XRender") ? 1 : 0);
-    int hps = config.readEntry("HiddenPreviews", 3);
-    if( hps == 1 ) // always
+    // 4 - off, 5 - shown, 6 - always, other are old values
+    int hps = config.readEntry("HiddenPreviews", 5);
+    if( hps == 6 ) // always
         ui.windowThumbnails->setCurrentIndex( 0 );
-    else if( hps == 0 ) // never
+    else if( hps == 4 ) // never
         ui.windowThumbnails->setCurrentIndex( 2 );
     else // shown, or default
         ui.windowThumbnails->setCurrentIndex( 1 );
@@ -169,7 +170,7 @@ void KWinAdvancedCompositingOptions::save()
         }
 
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
-    static const int hps[] = { 1 /*always*/, 3 /*shown*/,  0 /*never*/ };
+    static const int hps[] = { 6 /*always*/, 5 /*shown*/,  4 /*never*/ };
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
     config.writeEntry("DisableChecks", ui.disableChecks->isChecked());
 

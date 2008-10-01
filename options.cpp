@@ -227,12 +227,13 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
     xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false );
 
     hiddenPreviews = HiddenPreviewsShown;
-    int hps = config.readEntry( "HiddenPreviews", 3 );
-    if( hps == 0 )
+    // 4 - off, 5 - shown, 6 - always, other are old values
+    int hps = config.readEntry( "HiddenPreviews", 5 );
+    if( hps == 4 )
         hiddenPreviews = HiddenPreviewsNever;
-    else if( hps == 3 )
+    else if( hps == 5 )
         hiddenPreviews = HiddenPreviewsShown;
-    else if( hps == 1 )
+    else if( hps == 6 )
         hiddenPreviews = HiddenPreviewsAlways;
     
     unredirectFullscreen = config.readEntry( "UnredirectFullscreen", true );
