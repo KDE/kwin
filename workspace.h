@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxmessages.h>
 #include <QDateTime>
 #include <kmanagerselection.h>
-#include <qqueue.h>
 
 #include "utils.h"
 #include "kdecoration.h"
@@ -753,7 +752,7 @@ class Workspace : public QObject, public KDecorationDefines
         QPushButton *transButton;
         QTimer unredirectTimer;
         bool forceUnredirectCheck;
-        QQueue< int > composite_paint_times;
+        QList< int > composite_paint_times;
 
     private:
         friend bool performTransiencyCheck();

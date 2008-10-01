@@ -449,19 +449,40 @@ void Workspace::checkCompositePaintTime( int msec )
     {
     if( options->disableCompositingChecks )
         return;
-    composite_paint_times.enqueue( msec );
-    if( composite_paint_times.count() > 3 )
-        composite_paint_times.dequeue();
-    if( composite_paint_times.count() < 3 )
-        return;
+    composite_paint_times.prepend( msec );
+    bool tooslow = false;
     // If last 3 paints were way too slow, disable and warn.
     // 1 second seems reasonable, it's not that difficult to get relatively high times
     // with high system load.
-    const int MAX_TIME = 1000;
-    if( composite_paint_times[ 0 ] > MAX_TIME && composite_paint_times[ 1 ] > MAX_TIME
-        && composite_paint_times[ 2 ] > MAX_TIME )
+    const int MAX_LONG_PAINT = 1000;
+    if( composite_paint_times.count() >= 3 && composite_paint_times[ 0 ] > MAX_LONG_PAINT
+        && composite_paint_times[ 1 ] > MAX_LONG_PAINT && composite_paint_times[ 2 ] > MAX_LONG_PAINT )
         {
         kDebug( 1212 ) << "Too long paint times, suspending";
+        tooslow = true;
+        }
+    // If last 15 seconds all paints (all of them) were quite slow, disable and warn too. Quite slow being 0,1s
+    // should be reasonable, that's 10fps and having constant 10fps is bad.
+    // This may possibly trigger also when activating an expensive effect, so this may need tweaking.
+    const int MAX_SHORT_PAINT = 100;
+    const int SHORT_TIME = 15000; // 15 sec
+    int time = 0;
+    foreach( int t, composite_paint_times )
+        {
+        if( t < MAX_SHORT_PAINT )
+            break;
+        time += t;
+        if( time > SHORT_TIME ) // all paints in the given time were long
+            {
+            kDebug( 1212 ) << "Long paint times for long time, suspending";
+            tooslow = true;
+            break;
+            }
+        }
+    if( composite_paint_times.count() > 1000 )
+        composite_paint_times.removeLast();
+    if( tooslow )
+        {
         QTimer::singleShot( 0, this, SLOT( suspendCompositing()));
         QString shortcut = i18n( "Empty" );
         if( KAction* action = qobject_cast<KAction*>( keys->action("Suspend Compositing")))
