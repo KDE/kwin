@@ -125,7 +125,7 @@ void KWinAdvancedCompositingOptions::load()
     KConfigGroup config(mKWinConfig, "Compositing");
     QString backend = config.readEntry("Backend", "OpenGL");
     ui.compositingType->setCurrentIndex((backend == "XRender") ? 1 : 0);
-    int hps = config.readEntry("HiddenPreviews", 0);
+    int hps = config.readEntry("HiddenPreviews", 3);
     if( hps == 1 ) // always
         ui.windowThumbnails->setCurrentIndex( 0 );
     else if( hps == 0 ) // never
