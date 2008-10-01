@@ -359,6 +359,8 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
                     effects->activateWindow( m_highlightedWindow );
                 setActive( false );
                 return;
+            case Qt::Key_Tab:
+                return; // Nothing at the moment
             default:
                 if( !e->text().isEmpty() )
                     {
@@ -1133,8 +1135,13 @@ void PresentWindowsEffect::setActive( bool active )
         {
         // Fade in/out all windows
         foreach( EffectWindow *w, effects->stackingOrder() )
+            {
             // TODO: w->isOnCurrentDesktop(); doesn't seem to be updated immediately
-            m_windowData[w].visible = ( w->desktop() == m_highlightedWindow->desktop() || w->isOnAllDesktops() );
+            if( m_highlightedWindow )
+                m_windowData[w].visible = ( w->desktop() == m_highlightedWindow->desktop() || w->isOnAllDesktops() );
+            else // Only called when cancelling the effect, so isOnCurrentDesktop() is fine
+                m_windowData[w].visible = w->isOnCurrentDesktop();
+            }
 
         // Move all windows back to their original position
         foreach( EffectWindow *w, m_motionManager.managedWindows() )
