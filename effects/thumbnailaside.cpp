@@ -33,18 +33,22 @@ KWIN_EFFECT( thumbnailaside, ThumbnailAsideEffect )
 
 ThumbnailAsideEffect::ThumbnailAsideEffect()
     {
-    KConfigGroup conf = EffectsHandler::effectConfig("ThumbnailAside");
-
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = (KAction*)actionCollection->addAction( "ToggleCurrentThumbnail" );
     a->setText( i18n("Toggle Thumbnail for Current Window" ));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_T));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleCurrentThumbnail()));
+    reconfigure( ReconfigureAll );
+    }
 
+void ThumbnailAsideEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = EffectsHandler::effectConfig("ThumbnailAside");
     maxwidth = conf.readEntry("MaxWidth", 200);
     spacing = conf.readEntry("Spacing", 10);
     opacity = conf.readEntry("Opacity", 50) / 100.0;
     screen = conf.readEntry("Screen",-1); // Xinerama screen TODO add gui option
+    arrange();
     }
 
 void ThumbnailAsideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

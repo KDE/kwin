@@ -169,6 +169,26 @@ KWIN_EFFECT(wobblywindows, WobblyWindowsEffect)
 
 WobblyWindowsEffect::WobblyWindowsEffect()
 {
+    reconfigure( ReconfigureAll );
+}
+
+WobblyWindowsEffect::~WobblyWindowsEffect()
+{
+    if (!windows.empty())
+    {
+        // we should be empty at this point...
+        // emit a warning and clean the list.
+        kDebug() << "Windows list not empty. Left items : " << windows.count();
+        QHash< const EffectWindow*,  WindowWobblyInfos >::iterator i;
+        for (i = windows.begin(); i != windows.end(); ++i)
+        {
+            freeWobblyInfo(i.value());
+        }
+    }
+}
+
+void WobblyWindowsEffect::reconfigure( ReconfigureFlags )
+{
     KConfigGroup conf = effects->effectConfig("Wobbly");
 
 
@@ -225,20 +245,6 @@ WobblyWindowsEffect::WobblyWindowsEffect()
 #endif
 }
 
-WobblyWindowsEffect::~WobblyWindowsEffect()
-{
-    if (!windows.empty())
-    {
-        // we should be empty at this point...
-        // emit a warning and clean the list.
-        kDebug() << "Windows list not empty. Left items : " << windows.count();
-        QHash< const EffectWindow*,  WindowWobblyInfos >::iterator i;
-        for (i = windows.begin(); i != windows.end(); ++i)
-        {
-            freeWobblyInfo(i.value());
-        }
-    }
-}
 
 void WobblyWindowsEffect::setParameterSet(const ParameterSet& pset)
 {

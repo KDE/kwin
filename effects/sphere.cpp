@@ -42,6 +42,16 @@ SphereEffect::SphereEffect()
     {
     if( wallpaper )
         wallpaper->discard();
+    reconfigure( ReconfigureAll );
+    }
+
+SphereEffect::~SphereEffect()
+    {
+    delete mShader;
+    }
+
+void SphereEffect::reconfigure( ReconfigureFlags )
+    {
     loadConfig( "Sphere" );
     reflection = false;
     animateDesktopChange = false;
@@ -49,11 +59,6 @@ SphereEffect::SphereEffect()
     zPosition = conf.readEntry( "ZPosition", 450.0 );
     capDeformationFactor = conf.readEntry( "CapDeformation", 0 )/100.0f;
     bigCube = true;
-    }
-
-SphereEffect::~SphereEffect()
-    {
-    delete mShader;
     }
 
 bool SphereEffect::supported()

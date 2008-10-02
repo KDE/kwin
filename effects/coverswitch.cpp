@@ -51,6 +51,15 @@ CoverSwitchEffect::CoverSwitchEffect()
     , startRequested( false )
     , twinview( false )
     {
+    reconfigure( ReconfigureAll );
+    }
+
+CoverSwitchEffect::~CoverSwitchEffect()
+    {
+    }
+
+void CoverSwitchEffect::reconfigure( ReconfigureFlags )
+    {
     KConfigGroup conf = effects->effectConfig( "CoverSwitch" );
     animationDuration = animationTime( conf, "Duration", 200 );
     animateSwitch     = conf.readEntry( "AnimateSwitch", true );
@@ -59,10 +68,6 @@ CoverSwitchEffect::CoverSwitchEffect()
     reflection        = conf.readEntry( "Reflection", true );
     timeLine.setCurveShape( TimeLine::EaseInOutCurve );
     timeLine.setDuration( animationDuration );
-    }
-
-CoverSwitchEffect::~CoverSwitchEffect()
-    {
     }
 
 void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )

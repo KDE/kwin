@@ -32,6 +32,12 @@ MakeTransparentEffect::MakeTransparentEffect()
     , current( NULL )
     , previous( NULL )
     {
+    reconfigure( ReconfigureAll );
+    active = effects->activeWindow();
+    }
+
+void MakeTransparentEffect::reconfigure( ReconfigureFlags )
+    {
     KConfigGroup conf = effects->effectConfig("MakeTransparent");
     decoration = conf.readEntry( "Decoration", 1.0 );
     moveresize = conf.readEntry( "MoveResize", 0.8 );
@@ -52,7 +58,6 @@ MakeTransparentEffect::MakeTransparentEffect()
         popupmenus = menus;
         tornoffmenus = menus;
         }
-    active = effects->activeWindow();
     moveresize_timeline.setCurveShape( TimeLine::EaseOutCurve );
     moveresize_timeline.setDuration( animationTime( conf, "Duration", 800 ) );
     activeinactive_timeline.setCurveShape( TimeLine::EaseInOutCurve );

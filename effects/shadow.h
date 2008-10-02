@@ -48,6 +48,7 @@ class ShadowEffect
     public:
         ShadowEffect();
         virtual ~ShadowEffect();
+        virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );

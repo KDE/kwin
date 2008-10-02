@@ -41,14 +41,19 @@ CylinderEffect::CylinderEffect()
     {
     if( wallpaper )
         wallpaper->discard();
-    loadConfig( "Cylinder" );
-    animateDesktopChange = false;
-    bigCube = true;
+    reconfigure( ReconfigureAll );
     }
 
 CylinderEffect::~CylinderEffect()
     {
     delete mShader;
+    }
+
+void CylinderEffect::reconfigure( ReconfigureFlags )
+    {
+    loadConfig( "Cylinder" );
+    animateDesktopChange = false;
+    bigCube = true;
     }
 
 bool CylinderEffect::supported()

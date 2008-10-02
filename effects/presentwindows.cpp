@@ -41,7 +41,9 @@ namespace KWin
 KWIN_EFFECT( presentwindows, PresentWindowsEffect )
 
 PresentWindowsEffect::PresentWindowsEffect()
-    :   m_activated( false )
+    : m_borderActivate( ElectricNone )
+    , m_borderActivateAll( ElectricNone )
+    ,   m_activated( false )
     ,   m_allDesktops( false )
     ,   m_decalOpacity( 0.0 )
     //,   m_input()
@@ -58,8 +60,6 @@ PresentWindowsEffect::PresentWindowsEffect()
     //,   m_filterFrameRect()
 #endif
     {
-    KConfigGroup conf = effects->effectConfig("PresentWindows");
-
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = ( KAction* )actionCollection->addAction( "Expose" );
     a->setText( i18n( "Toggle Present Windows (Current desktop)" ));
@@ -69,20 +69,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     b->setText( i18n( "Toggle Present Windows (All desktops)" ));
     b->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F10 ));
     connect( b, SIGNAL( triggered(bool) ), this, SLOT( toggleActiveAllDesktops() ));
-
-    m_borderActivate = ElectricBorder( conf.readEntry( "BorderActivate", int( ElectricNone )));
-    m_borderActivateAll = ElectricBorder( conf.readEntry( "BorderActivateAll", int( ElectricTopLeft )));
-    m_layoutMode = conf.readEntry( "LayoutMode", int( LayoutNatural ));
-    m_showCaptions = conf.readEntry( "DrawWindowCaptions", true );
-    m_showIcons = conf.readEntry( "DrawWindowIcons", true );
-    m_tabBoxAllowed = conf.readEntry( "TabBox", false );
-    m_accuracy = conf.readEntry( "Accuracy", 1 ) * 20;
-    m_fillGaps = conf.readEntry( "FillGaps", true );
-
-    m_fadeDuration = double( animationTime( 150 ));
-
-    effects->reserveElectricBorder( m_borderActivate );
-    effects->reserveElectricBorder( m_borderActivateAll );
+    reconfigure( ReconfigureAll );
     }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -90,6 +77,24 @@ PresentWindowsEffect::~PresentWindowsEffect()
     effects->unreserveElectricBorder( m_borderActivate );
     effects->unreserveElectricBorder( m_borderActivateAll );
     discardFilterTexture();
+    }
+
+void PresentWindowsEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = effects->effectConfig("PresentWindows");
+    effects->unreserveElectricBorder( m_borderActivate );
+    effects->unreserveElectricBorder( m_borderActivateAll );
+    m_borderActivate = ElectricBorder( conf.readEntry( "BorderActivate", int( ElectricNone )));
+    m_borderActivateAll = ElectricBorder( conf.readEntry( "BorderActivateAll", int( ElectricTopLeft )));
+    effects->reserveElectricBorder( m_borderActivate );
+    effects->reserveElectricBorder( m_borderActivateAll );
+    m_layoutMode = conf.readEntry( "LayoutMode", int( LayoutNatural ));
+    m_showCaptions = conf.readEntry( "DrawWindowCaptions", true );
+    m_showIcons = conf.readEntry( "DrawWindowIcons", true );
+    m_tabBoxAllowed = conf.readEntry( "TabBox", false );
+    m_accuracy = conf.readEntry( "Accuracy", 1 ) * 20;
+    m_fillGaps = conf.readEntry( "FillGaps", true );
+    m_fadeDuration = double( animationTime( 150 ));
     }
 
 //-----------------------------------------------------------------------------

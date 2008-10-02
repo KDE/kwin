@@ -33,6 +33,7 @@ class CoverSwitchEffect
         CoverSwitchEffect();
         ~CoverSwitchEffect();
 
+        virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();

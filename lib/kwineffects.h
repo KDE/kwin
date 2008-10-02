@@ -163,7 +163,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 55
+#define KWIN_EFFECT_API_VERSION_MINOR 56
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -272,6 +272,20 @@ class KWIN_EXPORT Effect
          * Destructs the Effect object.
          **/
         virtual ~Effect();
+
+        /**
+         * Flags describing which parts of configuration have changed.
+         */
+        enum ReconfigureFlag
+            {
+            ReconfigureAll = 1 << 0 /// Everything needs to be reconfigured.
+            };
+        Q_DECLARE_FLAGS( ReconfigureFlags, ReconfigureFlag )
+
+        /**
+         * Called when configuration changes (either the effect's or KWin's global).
+         */
+        virtual void reconfigure( ReconfigureFlags flags );
 
         /**
          * Called before starting to paint the screen.

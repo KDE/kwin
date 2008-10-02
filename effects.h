@@ -143,7 +143,7 @@ class EffectsHandlerImpl : public EffectsHandler
         bool loadEffect( const QString& name );
         void toggleEffect( const QString& name );
         void unloadEffect( const QString& name );
-        void reloadEffect( const QString& name );
+        void reconfigureEffect( const QString& name );
         bool isEffectLoaded( const QString& name );
         QStringList loadedEffects() const;
         QStringList listOfEffects() const;

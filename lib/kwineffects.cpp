@@ -108,6 +108,10 @@ Effect::~Effect()
     {
     }
 
+void Effect::reconfigure( ReconfigureFlags )
+    {
+    }
+
 void Effect::windowUserMovedResized( EffectWindow* , bool, bool )
     {
     }
@@ -333,7 +337,7 @@ bool EffectsHandler::saturationSupported() const
 
 void EffectsHandler::sendReloadMessage( const QString& effectname )
     {
-    QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reloadEffect");
+    QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reconfigureEffect");
     message << QString("kwin4_effect_" + effectname);
     QDBusConnection::sessionBus().send(message);
     }

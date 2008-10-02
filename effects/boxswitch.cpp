@@ -51,15 +51,20 @@ BoxSwitchEffect::BoxSwitchEffect()
 
     frame_margin = 10;
     highlight_margin = 5;
+    reconfigure( ReconfigureAll );
+    }
+
+BoxSwitchEffect::~BoxSwitchEffect()
+    {
+    }
+
+void BoxSwitchEffect::reconfigure( ReconfigureFlags )
+    {
     color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
     color_frame.setAlphaF( 0.9 );
     color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
     color_highlight.setAlphaF( 0.9 );
     color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
-    }
-
-BoxSwitchEffect::~BoxSwitchEffect()
-    {
     }
 
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )

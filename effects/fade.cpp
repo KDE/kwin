@@ -29,6 +29,11 @@ KWIN_EFFECT( fade, FadeEffect )
 
 FadeEffect::FadeEffect()
     {
+    reconfigure( ReconfigureAll );
+    }
+
+void FadeEffect::reconfigure( ReconfigureFlags )
+    {
     KConfigGroup conf = effects->effectConfig( "Fade" );
     fadeInTime = animationTime( conf, "FadeInTime", 150 );
     fadeOutTime = animationTime( conf, "FadeOutTime", 150 );

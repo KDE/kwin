@@ -44,7 +44,7 @@
     <method name="toggleEffect">
       <arg name="name" type="s" direction="in"/>
     </method>
-    <method name="reloadEffect">
+    <method name="reconfigureEffect">
       <arg name="name" type="s" direction="in"/>
     </method>
     <method name="loadedEffects">

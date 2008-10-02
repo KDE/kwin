@@ -77,6 +77,30 @@ ShadowTiles::ShadowTiles(const QPixmap& shadow)
 #endif
 
 ShadowEffect::ShadowEffect()
+    : shadowSize( 0 )
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    , mShadowTexture( NULL )
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    , mShadowPics( NULL )
+#endif
+    {
+    reconfigure( ReconfigureAll );
+    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+             this, SLOT(updateShadowColor()));
+    }
+
+ShadowEffect::~ShadowEffect()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete mShadowTexture;
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    delete mShadowPics;
+#endif
+    }
+
+void ShadowEffect::reconfigure( ReconfigureFlags )
     {
     KConfigGroup conf = effects->effectConfig("Shadow");
     shadowXOffset = conf.readEntry( "XOffset", 0 );
@@ -86,15 +110,17 @@ ShadowEffect::ShadowEffect()
     shadowSize = conf.readEntry( "Size", 5 );
     intensifyActiveShadow = conf.readEntry( "IntensifyActiveShadow", true );
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete mShadowTexture;
+    mShadowTexture = NULL;
     if ( effects->compositingType() == OpenGLCompositing)
         {
         QString shadowtexture =  KGlobal::dirs()->findResource("data", "kwin/shadow-texture.png");
         mShadowTexture = new GLTexture(shadowtexture);
         }
-    else
-        mShadowTexture = NULL;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    delete mShadowPics;
+    mShadowPics = NULL;
     if ( effects->compositingType() == XRenderCompositing)
         {
         qreal size = 2*(shadowFuzzyness+shadowSize)+1;
@@ -116,23 +142,8 @@ ShadowEffect::ShadowEffect()
         mShadowPics = new ShadowTiles(*shadow);
         delete shadow;
         }
-    else
-        mShadowPics = NULL;
 #endif
-
     updateShadowColor();
-    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-             this, SLOT(updateShadowColor()));
-    }
-
-ShadowEffect::~ShadowEffect()
-    {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    delete mShadowTexture;
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    delete mShadowPics;
-#endif
     }
 
 void ShadowEffect::updateShadowColor()

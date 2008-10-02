@@ -42,6 +42,7 @@ class ThumbnailAsideEffect
     Q_OBJECT
     public:
         ThumbnailAsideEffect();
+        virtual void reconfigure( ReconfigureFlags );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void windowDamaged( EffectWindow* w, const QRect& damage );
         virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );

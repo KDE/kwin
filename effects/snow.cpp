@@ -53,22 +53,26 @@ SnowEffect::SnowEffect()
     srandom( std::time( NULL ) );
     lastFlakeTime = QTime::currentTime();
     nextFlakeMillis = 0;
-    KConfigGroup conf = effects->effectConfig("Snow");
-    mNumberFlakes = conf.readEntry("Number", 50);
-    mMinFlakeSize = conf.readEntry("MinFlakes", 10);
-    mMaxFlakeSize = conf.readEntry("MaxFlakes", 50);
-
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = static_cast< KAction* >( actionCollection->addAction( "Snow" ));
     a->setText( i18n("Snow" ));
     a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F12 ));
     connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
+    reconfigure( ReconfigureAll );
     }
 
 SnowEffect::~SnowEffect()
     {
     delete texture;
     delete flakes;
+    }
+
+void SnowEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = effects->effectConfig("Snow");
+    mNumberFlakes = conf.readEntry("Number", 50);
+    mMinFlakeSize = conf.readEntry("MinFlakes", 10);
+    mMaxFlakeSize = conf.readEntry("MaxFlakes", 50);
     }
 
 void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )

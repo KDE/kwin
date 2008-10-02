@@ -43,7 +43,6 @@ LookingGlassEffect::LookingGlassEffect() : QObject(), ShaderEffect("lookingglass
     zoom = 1.0f;
     target_zoom = 1.0f;
 
-    KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
     actionCollection = new KActionCollection( this );
     actionCollection->setConfigGlobal(true);
     actionCollection->setConfigGroup("LookingGlass");
@@ -55,16 +54,20 @@ LookingGlassEffect::LookingGlassEffect() : QObject(), ShaderEffect("lookingglass
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ActualSize, this, SLOT( toggle())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
-    initialradius = conf.readEntry("Radius", 200);
-    radius = initialradius;
-
-    kDebug(1212) << QString("Radius from config: %1").arg(radius) << endl;
-
-    actionCollection->readSettings();
+    reconfigure( ReconfigureAll );
     }
 
 LookingGlassEffect::~LookingGlassEffect()
     {
+    }
+
+void LookingGlassEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
+    initialradius = conf.readEntry("Radius", 200);
+    radius = initialradius;
+    kDebug(1212) << QString("Radius from config: %1").arg(radius) << endl;
+    actionCollection->readSettings();
     }
 
 void LookingGlassEffect::toggle()

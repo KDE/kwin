@@ -482,14 +482,6 @@ void KWinCompositingConfig::configChanged()
     // Send signal to all kwin instances
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
-    // present windows effect has to be reloaded
-    message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reloadEffect");
-    message << QString("kwin4_effect_presentwindows");
-    QDBusConnection::sessionBus().send(message);
-    // cube effect has to be reloaded
-    message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reloadEffect");
-    message << QString("kwin4_effect_cube");
-    QDBusConnection::sessionBus().send(message);
 }
 
 

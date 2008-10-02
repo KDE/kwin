@@ -32,10 +32,10 @@ KWIN_EFFECT( dimscreen, DimScreenEffect )
 
 DimScreenEffect::DimScreenEffect()
     : mActivated( false )
-    , animationDuration( Effect::animationTime( 300 ))
     , animation( false )
     , deactivate( false )
     {
+    reconfigure( ReconfigureAll );
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     alphaFormat = XRenderFindStandardFormat( display(), PictStandardARGB32 );
 #endif
@@ -43,6 +43,11 @@ DimScreenEffect::DimScreenEffect()
 
 DimScreenEffect::~DimScreenEffect()
     {
+    }
+
+void DimScreenEffect::reconfigure( ReconfigureFlags )
+    {
+    animationDuration = Effect::animationTime( 300 );
     }
 
 void DimScreenEffect::prePaintScreen( ScreenPrePaintData& data, int time )

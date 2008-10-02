@@ -42,7 +42,8 @@ class BoxSwitchEffect
     public:
         BoxSwitchEffect();
         ~BoxSwitchEffect();
-
+        
+        virtual void reconfigure( ReconfigureFlags );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );

@@ -43,8 +43,6 @@ MagnifierEffect::MagnifierEffect()
     : zoom( 1 )
     , target_zoom( 1 )
     {
-    KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
-
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a;
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomIn, this, SLOT( zoomIn())));
@@ -53,7 +51,12 @@ MagnifierEffect::MagnifierEffect()
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ActualSize, this, SLOT( toggle())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
+    reconfigure( ReconfigureAll );
+    }
 
+void MagnifierEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
     int width, height;
     width = conf.readEntry("Width", 200);
     height = conf.readEntry("Height", 200);

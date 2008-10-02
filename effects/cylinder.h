@@ -33,6 +33,7 @@ class CylinderEffect
     public:
         CylinderEffect();
         ~CylinderEffect();
+        virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void desktopChanged( int old );

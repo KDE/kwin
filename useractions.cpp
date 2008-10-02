@@ -740,10 +740,10 @@ void Workspace::unloadEffect( const QString& name )
         static_cast<EffectsHandlerImpl*>(effects)->unloadEffect( name );
     }
 
-void Workspace::reloadEffect( const QString& name )
+void Workspace::reconfigureEffect( const QString& name )
     {
     if( effects )
-        static_cast<EffectsHandlerImpl*>(effects)->reloadEffect( name );
+        static_cast<EffectsHandlerImpl*>(effects)->reconfigureEffect( name );
     }
 
 QStringList Workspace::loadedEffects() const

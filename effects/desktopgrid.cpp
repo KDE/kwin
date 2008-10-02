@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <kdebug.h>
 #include <klocale.h>
 #include <kconfiggroup.h>
 #include <netwm_def.h>
@@ -37,7 +38,8 @@ namespace KWin
 KWIN_EFFECT( desktopgrid, DesktopGridEffect )
 
 DesktopGridEffect::DesktopGridEffect()
-    : activated( false )
+    : borderActivate( ElectricNone )
+    , activated( false )
     , timeline()
     , keyboardGrab( false )
     , wasWindowMove( false )
@@ -59,9 +61,19 @@ DesktopGridEffect::DesktopGridEffect()
     connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle() ));
 
     // Load all other configuration details
+    reconfigure( ReconfigureAll );
+    }
 
+DesktopGridEffect::~DesktopGridEffect()
+    {
+    effects->unreserveElectricBorder( borderActivate );
+    }
+
+void DesktopGridEffect::reconfigure( ReconfigureFlags )
+    {
     KConfigGroup conf = effects->effectConfig( "DesktopGrid" );
 
+    effects->unreserveElectricBorder( borderActivate );
     borderActivate = ElectricBorder( conf.readEntry( "BorderActivate", int( ElectricNone )));
     effects->reserveElectricBorder( borderActivate );
 
@@ -73,11 +85,6 @@ DesktopGridEffect::DesktopGridEffect()
     desktopNameAlignment = Qt::Alignment( conf.readEntry( "DesktopNameAlignment", 0 ));
     layoutMode = conf.readEntry( "LayoutMode", int( LayoutPager ));
     customLayoutRows = conf.readEntry( "CustomLayoutRows", 2 );
-    }
-
-DesktopGridEffect::~DesktopGridEffect()
-    {
-    effects->unreserveElectricBorder( borderActivate );
     }
 
 //-----------------------------------------------------------------------------

@@ -48,15 +48,20 @@ FlipSwitchEffect::FlipSwitchEffect()
     , startRequested( false )
     , twinview( false )
     {
+    reconfigure( ReconfigureAll );
+    }
+
+FlipSwitchEffect::~FlipSwitchEffect()
+    {
+    }
+
+void FlipSwitchEffect::reconfigure( ReconfigureFlags )
+    {
     KConfigGroup conf = effects->effectConfig( "FlipSwitch" );
     mFlipDuration = animationTime( conf, "FlipDuration", 200 );
     mAnimation    = conf.readEntry( "AnimateFlip", true );
     timeLine.setCurveShape( TimeLine::EaseInOutCurve );
     timeLine.setDuration( mFlipDuration );
-    }
-
-FlipSwitchEffect::~FlipSwitchEffect()
-    {
     }
 
 void FlipSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )

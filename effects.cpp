@@ -85,13 +85,20 @@ void EffectsHandlerImpl::reconfigure()
         if( shouldbeloaded )
             effectsToBeLoaded.append( plugininfo.pluginName() );
         }
+    QStringList newLoaded;
     // Then load those that should be loaded
     foreach( const QString &effectName, effectsToBeLoaded )
         {
         if( !isEffectLoaded( effectName ))
             {
             loadEffect( effectName );
+            newLoaded.append( effectName );
             }
+        }
+    foreach( const EffectPair &ep, loaded_effects )
+        {
+        if( !newLoaded.contains( ep.first )) // don't reconfigure newly loaded effects
+            ep.second->reconfigure( Effect::ReconfigureAll );
         }
     }
 
@@ -887,13 +894,14 @@ void EffectsHandlerImpl::unloadEffect( const QString& name )
     kDebug( 1212 ) << "EffectsHandler::unloadEffect : Effect not loaded : " << name;
     }
 
-void EffectsHandlerImpl::reloadEffect( const QString& name )
+void EffectsHandlerImpl::reconfigureEffect( const QString& name )
     {
-    if( isEffectLoaded( name ))
-        {
-        unloadEffect( name );
-        loadEffect( name );
-        }
+    for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it)
+        if ( (*it).first == name )
+            {
+            (*it).second->reconfigure( Effect::ReconfigureAll );
+            return;
+            }
     }
 
 bool EffectsHandlerImpl::isEffectLoaded( const QString& name )

@@ -34,6 +34,7 @@ class DimInactiveEffect
     {
     public:
         DimInactiveEffect();
+        virtual void reconfigure( ReconfigureFlags );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowActivated( EffectWindow* c );
     private:

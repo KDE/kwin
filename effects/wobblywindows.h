@@ -29,6 +29,7 @@ class WobblyWindowsEffect : public Effect
         WobblyWindowsEffect();
         virtual ~WobblyWindowsEffect();
 
+        virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );

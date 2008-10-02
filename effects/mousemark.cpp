@@ -56,12 +56,15 @@ MouseMarkEffect::MouseMarkEffect()
     a->setText( i18n( "Clear Last Mouse Mark" ));
     a->setGlobalShortcut( KShortcut( Qt::SHIFT + Qt::META + Qt::Key_F12 ));
     connect( a, SIGNAL( triggered( bool )), this, SLOT( clearLast()));
+    reconfigure( ReconfigureAll );
+    arrow_start = NULL_POINT;
+    }
 
+void MouseMarkEffect::reconfigure( ReconfigureFlags )
+    {
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
     width = conf.readEntry( "LineWidth", 3 );
     color = conf.readEntry( "Color", QColor( Qt::red ));
-    
-    arrow_start = NULL_POINT;
     }
 
 void MouseMarkEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )

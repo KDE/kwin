@@ -32,6 +32,7 @@ class MagnifierEffect
     Q_OBJECT
     public:
         MagnifierEffect();
+        virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();

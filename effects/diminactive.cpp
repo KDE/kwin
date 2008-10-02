@@ -30,13 +30,17 @@ KWIN_EFFECT( diminactive, DimInactiveEffect )
 
 DimInactiveEffect::DimInactiveEffect()
     {
-    KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
+    reconfigure( ReconfigureAll );
+    active = effects->activeWindow();
+    }
 
+void DimInactiveEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = EffectsHandler::effectConfig("DimInactive");
     dim_panels = conf.readEntry("DimPanels", false);
     dim_desktop = conf.readEntry("DimDesktop", false);
     dim_by_group = conf.readEntry("DimByGroup", true);
     dim_strength = conf.readEntry("Strength", 25);
-    active = effects->activeWindow();
     }
 
 void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )

@@ -39,6 +39,7 @@ class LookingGlassEffect : public QObject, public ShaderEffect
         LookingGlassEffect();
         virtual ~LookingGlassEffect();
 
+        virtual void reconfigure( ReconfigureFlags );
         virtual void mouseChanged( const QPoint& pos, const QPoint& old,
             Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
             Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );

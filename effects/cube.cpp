@@ -48,6 +48,7 @@ CubeEffect::CubeEffect()
     , cube_painting( false )
     , keyboard_grab( false )
     , schedule_close( false )
+    , borderActivate( ElectricNone )
     , frontDesktop( 0 )
     , cubeOpacity( 1.0 )
     , displayDesktopName( true )
@@ -81,7 +82,7 @@ CubeEffect::CubeEffect()
     , capListCreated( false )
     , capList( 0 )
     {
-    loadConfig( "Cube" );
+    reconfigure( ReconfigureAll );
 
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = static_cast< KAction* >( actionCollection->addAction( "Cube" ));
@@ -90,9 +91,15 @@ CubeEffect::CubeEffect()
     connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
     }
 
+void CubeEffect::reconfigure( ReconfigureFlags )
+    {
+    loadConfig( "Cube" );
+    }
+
 void CubeEffect::loadConfig( QString config )
     {
     KConfigGroup conf = effects->effectConfig( config );
+    effects->unreserveElectricBorder( borderActivate );
     borderActivate = (ElectricBorder)conf.readEntry( "BorderActivate", (int)ElectricNone );
     effects->reserveElectricBorder( borderActivate );
 
@@ -109,6 +116,8 @@ void CubeEffect::loadConfig( QString config )
     zPosition = conf.readEntry( "ZPosition", 100.0 );
     useForTabBox = conf.readEntry( "TabBox", false );
     QString file = conf.readEntry( "Wallpaper", QString("") );
+    delete wallpaper;
+    wallpaper = NULL;
     if( !file.isEmpty() )
         {
         QImage img = QImage( file );
@@ -117,6 +126,8 @@ void CubeEffect::loadConfig( QString config )
             wallpaper = new GLTexture( img );
             }
         }
+    delete capTexture;
+    capTexture = NULL;
     texturedCaps = conf.readEntry( "TexturedCaps", true );
     if( texturedCaps )
         {

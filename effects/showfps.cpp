@@ -65,6 +65,11 @@ ShowFpsEffect::ShowFpsEffect()
          i < MAX_FPS;
          ++i )
         frames[ i ] = 0;
+    reconfigure( ReconfigureAll );
+    }
+
+void ShowFpsEffect::reconfigure( ReconfigureFlags )
+    {
     KConfigGroup config( KGlobal::config(), "EffectShowFps" );
     alpha = config.readEntry( "Alpha", 0.5 );
     x = config.readEntry( "X", -10000 );
