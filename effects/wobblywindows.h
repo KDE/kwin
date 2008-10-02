@@ -126,7 +126,7 @@ class WobblyWindowsEffect : public Effect
 
         static void heightRingLinearMean(Pair** datas, WindowWobblyInfos& wwi);
 
-        void setParameterSet(ParameterSet& pset);
+        void setParameterSet(const ParameterSet& pset);
 };
 
 } // namespace KWin

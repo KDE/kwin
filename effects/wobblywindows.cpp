@@ -73,7 +73,7 @@ struct ParameterSet
     bool closeEffectEnabled;
 };
 
-ParameterSet set_0 =
+static const ParameterSet set_0 =
 {
     0.15,
     0.80,
@@ -91,7 +91,7 @@ ParameterSet set_0 =
     false
 };
 
-ParameterSet set_1 =
+static const ParameterSet set_1 =
 {
     0.10,
     0.85,
@@ -109,7 +109,7 @@ ParameterSet set_1 =
     false
 };
 
-ParameterSet set_2 =
+static const ParameterSet set_2 =
 {
     0.06,
     0.90,
@@ -127,7 +127,7 @@ ParameterSet set_2 =
     false
 };
 
-ParameterSet set_3 =
+static const ParameterSet set_3 =
 {
     0.03,
     0.92,
@@ -145,7 +145,7 @@ ParameterSet set_3 =
     false
 };
 
-ParameterSet set_4 =
+static const ParameterSet set_4 =
 {
     0.01,
     0.97,
@@ -163,7 +163,7 @@ ParameterSet set_4 =
     false
 };
 
-ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
+static const ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
 
 KWIN_EFFECT(wobblywindows, WobblyWindowsEffect)
 
@@ -240,7 +240,7 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
     }
 }
 
-void WobblyWindowsEffect::setParameterSet(ParameterSet& pset)
+void WobblyWindowsEffect::setParameterSet(const ParameterSet& pset)
 {
     m_stiffness = pset.stiffness;
     m_drag = pset.drag;
