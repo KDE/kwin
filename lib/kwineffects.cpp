@@ -936,7 +936,6 @@ QRect PaintClipper::Iterator::boundingRect() const
 TimeLine::TimeLine(const int duration)
     {
     m_Time = 0;
-    m_CurveShape = TimeLine::EaseInCurve;
     m_Duration = duration;
     m_TimeLine = new QTimeLine(m_Duration ? m_Duration : 1); // (avoid QTimeLine warning)
     m_TimeLine->setFrameRange(0, m_Duration);
@@ -946,12 +945,12 @@ TimeLine::TimeLine(const int duration)
 TimeLine::TimeLine(const TimeLine &other)
     {
     m_Time = other.m_Time;
-    m_CurveShape = other.m_CurveShape;
     m_Duration = other.m_Duration;
-    m_TimeLine = new QTimeLine(m_Duration);
+    m_TimeLine = new QTimeLine(m_Duration ? m_Duration : 1);
     m_TimeLine->setFrameRange(0, m_Duration);
-    setProgress(m_Progress);
     setCurveShape(m_CurveShape);
+    if( m_Duration != 0 )
+        setProgress(m_Progress);
     }
 
 TimeLine::~TimeLine()
@@ -967,7 +966,8 @@ int TimeLine::duration() const
 void TimeLine::setDuration(const int msec)
     {
     m_Duration = msec;
-    m_TimeLine->setDuration(msec);
+    m_TimeLine->setDuration(m_Duration);
+    m_TimeLine->setFrameRange(0, m_Duration);
     }
 
 double TimeLine::value() const
