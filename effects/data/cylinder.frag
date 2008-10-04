@@ -11,5 +11,4 @@ vec2 pix2tex(vec2 pix)
 void main()
 {
     gl_FragColor.rgba = texture2D(winTexture, pix2tex(gl_TexCoord[0].xy)).rgba;
-    gl_FragColor.a *= opacity;
 }
