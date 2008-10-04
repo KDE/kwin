@@ -41,6 +41,7 @@ Name[zh_CN]=罩面切换
 Name[zh_TW]=覆蓋切換
 Icon=preferences-system-windows-effect-coverswitch
 Comment=Display a Cover Flow effect for the alt+tab window switcher
+Comment[el]=Εμφάνιση ενός εφέ ροής εξωφύλλου για την εναλλαγή παραθύρων alt+tab
 Comment[gl]=Mostra un efeito de fluxo da cuberta no alternador de fiestra alt+tab
 Comment[gu]=alt+tab વિન્ડો બદલનારમાં કવર ફ્લો અસર બતાવે છે
 Comment[kk]=Alt+tab терезе ауыстырғышында Cover Flow эффектін көрсету
