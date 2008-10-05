@@ -46,11 +46,6 @@ BoxSwitchEffect::BoxSwitchEffect()
     , animation( false )
     , highlight_is_set( false )
     {
-    KConfigGroup conf = effects->effectConfig( "BoxSwitch" );
-
-    bg_opacity = conf.readEntry( "BackgroundOpacity", 25 ) / 100.0;
-    elevate_window = conf.readEntry( "ElevateSelected", true );
-    mAnimateSwitch = conf.readEntry( "AnimateSwitch", false );
 
     frame_margin = 10;
     highlight_margin = 5;
@@ -69,6 +64,11 @@ void BoxSwitchEffect::reconfigure( ReconfigureFlags )
     color_highlight.setAlphaF( 0.9 );
     color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
     timeLine.setDuration( animationTime( 150 ));
+    KConfigGroup conf = effects->effectConfig( "BoxSwitch" );
+
+    bg_opacity = conf.readEntry( "BackgroundOpacity", 25 ) / 100.0;
+    elevate_window = conf.readEntry( "ElevateSelected", true );
+    mAnimateSwitch = conf.readEntry( "AnimateSwitch", false );
     }
 
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
