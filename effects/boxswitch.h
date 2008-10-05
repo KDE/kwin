@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRegion>
 #include <QSize>
 #include <QFont>
+#include <QQueue>
 
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
@@ -42,9 +43,10 @@ class BoxSwitchEffect
     public:
         BoxSwitchEffect();
         ~BoxSwitchEffect();
-        
         virtual void reconfigure( ReconfigureFlags );
+        virtual void prePaintScreen( ScreenPrePaintData &data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+        virtual void postPaintScreen();
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
@@ -96,6 +98,21 @@ class BoxSwitchEffect
         int selected_desktop;
 
         int painting_desktop;
+
+        bool mAnimateSwitch;
+        TimeLine timeLine;
+        bool animation;
+        QRect highlight_area;
+        bool highlight_is_set;
+        enum Direction
+            {
+            Left,
+            Right
+            };
+        Direction direction;
+        QQueue<Direction> scheduled_directions;
+        EffectWindow* edge_window;
+        EffectWindow* right_window;
     };
 
 class BoxSwitchEffect::ItemInfo

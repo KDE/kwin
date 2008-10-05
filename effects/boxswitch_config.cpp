@@ -47,6 +47,7 @@ BoxSwitchEffectConfig::BoxSwitchEffectConfig(QWidget* parent, const QVariantList
 
     connect( m_ui->opacitySpin, SIGNAL( valueChanged(int) ), this, SLOT( changed() ));
     connect( m_ui->elevateBox, SIGNAL( stateChanged(int) ), this, SLOT( changed() ));
+    connect( m_ui->animateBox, SIGNAL( stateChanged(int) ), this, SLOT( changed() ));
 
     load();
     }
@@ -67,6 +68,9 @@ void BoxSwitchEffectConfig::load()
     bool elevate = conf.readEntry( "ElevateSelected", true );
     m_ui->elevateBox->setChecked( elevate );
 
+    bool animate = conf.readEntry( "AnimateSwitch", false );
+    m_ui->animateBox->setChecked( animate );
+
     emit changed(false);
     }
 
@@ -80,6 +84,8 @@ void BoxSwitchEffectConfig::save()
 
     conf.writeEntry( "ElevateSelected", m_ui->elevateBox->isChecked() );
 
+    conf.writeEntry( "AnimateSwitch", m_ui->animateBox->isChecked() );
+
     conf.sync();
 
     emit changed(false);
@@ -90,6 +96,7 @@ void BoxSwitchEffectConfig::defaults()
     {
     m_ui->opacitySpin->setValue( 25 );
     m_ui->elevateBox->setChecked( true );
+    m_ui->animateBox->setChecked( false );
     emit changed(true);
     }
 

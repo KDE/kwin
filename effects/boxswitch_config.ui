@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>175</width>
-    <height>86</height>
+    <width>256</width>
+    <height>117</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -57,6 +57,13 @@
     <widget class="QCheckBox" name="elevateBox" >
      <property name="text" >
       <string>&amp;Elevate selected window</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="animateBox" >
+     <property name="text" >
+      <string>&amp;Animate walk through windows</string>
      </property>
     </widget>
    </item>

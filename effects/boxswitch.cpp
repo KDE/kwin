@@ -43,11 +43,14 @@ BoxSwitchEffect::BoxSwitchEffect()
     , mMode( 0 )
     , selected_window( 0 )
     , painting_desktop( 0 )
+    , animation( false )
+    , highlight_is_set( false )
     {
     KConfigGroup conf = effects->effectConfig( "BoxSwitch" );
 
     bg_opacity = conf.readEntry( "BackgroundOpacity", 25 ) / 100.0;
     elevate_window = conf.readEntry( "ElevateSelected", true );
+    mAnimateSwitch = conf.readEntry( "AnimateSwitch", false );
 
     frame_margin = 10;
     highlight_margin = 5;
@@ -65,6 +68,7 @@ void BoxSwitchEffect::reconfigure( ReconfigureFlags )
     color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
     color_highlight.setAlphaF( 0.9 );
     color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
+    timeLine.setDuration( animationTime( 150 ));
     }
 
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
@@ -94,6 +98,16 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
     effects->prePaintWindow( w, data, time );
     }
 
+void BoxSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
+    {
+    if( mActivated && animation )
+        {
+        timeLine.addTime( time );
+        calculateItemSizes();
+        }
+    effects->prePaintScreen( data, time );
+    }
+
 void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     effects->paintScreen( mask, region, data );
@@ -103,14 +117,29 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
             {
             paintFrame();
 
-            foreach( EffectWindow* w, windows.keys())
+            if( mAnimateSwitch )
                 {
-                if( w == selected_window )
+                // HACK: PaintClipper is used because window split is somehow wrong if the height is greater than width
+                PaintClipper::push( frame_area.adjusted( frame_margin, frame_margin, -frame_margin, -frame_margin ));
+                paintHighlight( highlight_area );
+                foreach( EffectWindow* w, windows.keys())
                     {
-                    paintHighlight( windows[ w ]->area );
+                    paintWindowThumbnail( w );
+                    paintWindowIcon( w );
                     }
-                paintWindowThumbnail( w );
-                paintWindowIcon( w );
+                PaintClipper::pop( frame_area.adjusted( frame_margin, frame_margin, -frame_margin, -frame_margin ) );
+                }
+            else
+                {
+                foreach( EffectWindow* w, windows.keys())
+                    {
+                    if( w == selected_window )
+                        {
+                        paintHighlight( windows[ w ]->area );
+                        }
+                    paintWindowThumbnail( w );
+                    paintWindowIcon( w );
+                    }
                 }
             paintText( selected_window->caption() );
             }
@@ -134,6 +163,29 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 }
             }
         }
+    }
+
+void BoxSwitchEffect::postPaintScreen()
+    {
+    if( mActivated && animation )
+        {
+        if( timeLine.value() == 1.0 )
+            {
+            timeLine.setProgress( 0.0 );
+            animation = false;
+            if( !scheduled_directions.isEmpty() )
+                {
+                direction = scheduled_directions.dequeue();
+                animation = true;
+                }
+            }
+        QRect repaint = QRect( frame_area.x() - item_max_size.width()*0.5,
+            frame_area.y(),
+            frame_area.width() + item_max_size.width(),
+            frame_area.height() );
+        effects->addRepaint( repaint );
+        }
+    effects->postPaintScreen();
     }
 
 void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
@@ -167,6 +219,17 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
             if( windows[ w ]->clickable.contains( pos ))
                 {
                 effects->setTabBoxWindow( w );
+                }
+            }
+        // special handling for second half of window in case of animation and even number of windows
+        if( mAnimateSwitch && ( windows.size() % 2 == 0 ) )
+            {
+            QRect additionalRect = QRect( frame_area.x() + frame_margin,
+                frame_area.y() + frame_margin,
+                item_max_size.width()*0.5, item_max_size.height());
+            if( additionalRect.contains( pos ))
+                {
+                effects->setTabBoxWindow( right_window );
                 }
             }
         }
@@ -244,6 +307,10 @@ void BoxSwitchEffect::tabBoxAdded( int mode )
                 {
                 mMode = mode;
                 effects->refTabBox();
+                highlight_is_set = false;
+                animation = false;
+                scheduled_directions.clear();
+                right_window = 0;
                 setActive();
                 }
             }
@@ -270,10 +337,49 @@ void BoxSwitchEffect::tabBoxUpdated()
     {
     if( mActivated )
         {
-        if( mMode == TabBoxWindowsMode )
+        if( mMode == TabBoxWindowsMode && selected_window != effects->currentTabBoxWindow() )
             {
             if( selected_window != NULL )
                 {
+                if( mAnimateSwitch )
+                    {
+                    int old_index = effects->currentTabBoxWindowList().indexOf( selected_window );
+                    int new_index = effects->currentTabBoxWindowList().indexOf( effects->currentTabBoxWindow() );
+                    Direction new_direction;
+                    int distance = new_index - old_index;
+                    if( distance > 0 )
+                        new_direction = Left;
+                    if( distance < 0 )
+                        new_direction = Right;
+                    if( distance != 0 )
+                        {
+                        distance = abs( distance );
+                        int tempDistance = effects->currentTabBoxWindowList().count() - distance;
+                        if( tempDistance < abs( distance ) )
+                            {
+                            distance = tempDistance;
+                            if( new_direction == Left )
+                                new_direction = Right;
+                            else
+                                new_direction = Left;
+                            }
+                        if( !animation )
+                            {
+                            animation = true;
+                            direction = new_direction;
+                            distance--;
+                            }
+                        for( int i=0; i<distance; i++ )
+                            {
+                            if( !scheduled_directions.isEmpty() && scheduled_directions.last() != new_direction )
+                                scheduled_directions.pop_back();
+                            else
+                                scheduled_directions.enqueue( new_direction );
+                            if( scheduled_directions.count() == effects->currentTabBoxWindowList().count() )
+                                scheduled_directions.clear();
+                            }
+                        }
+                    }
                 if( windows.contains( selected_window ))
                     effects->addRepaint( windows.value( selected_window )->area );
                 selected_window->addRepaintFull();
@@ -283,8 +389,6 @@ void BoxSwitchEffect::tabBoxUpdated()
                 effects->addRepaint( windows.value( selected_window )->area );
             selected_window->addRepaintFull();
             effects->addRepaint( text_area );
-            if( effects->currentTabBoxWindowList() == original_windows )
-                return;
             original_windows = effects->currentTabBoxWindowList();
             }
         else
@@ -435,16 +539,120 @@ void BoxSwitchEffect::calculateItemSizes()
     if( mMode == TabBoxWindowsMode )
         {
         windows.clear();
-        for( int i = 0; i < original_windows.count(); i++ )
+        if( mAnimateSwitch )
             {
-            EffectWindow* w = original_windows.at( i );
-            windows[ w ] = new ItemInfo();
+            int index = original_windows.indexOf( effects->currentTabBoxWindow() );
+            int leftIndex = index;
+            int rightIndex = index + 1;
+            if( rightIndex == original_windows.count() )
+                rightIndex = 0;
+            EffectWindowList ordered_windows;
 
-            windows[ w ]->area = QRect( frame_area.x() + frame_margin
-                + i * item_max_size.width(),
-                frame_area.y() + frame_margin,
-                item_max_size.width(), item_max_size.height());
-            windows[ w ]->clickable = windows[ w ]->area;
+            int leftWindowCount = original_windows.count()/2;
+            int rightWindowCount = leftWindowCount;
+            if( original_windows.count()%2 == 1 )
+                leftWindowCount++;
+            for( int i=0; i < leftWindowCount; i++ )
+                {
+                int tempIndex = ( leftIndex - i );
+                if( tempIndex < 0 )
+                    tempIndex = original_windows.count() + tempIndex;
+                ordered_windows.prepend( original_windows[ tempIndex ] );
+                }
+            for( int i=0; i < rightWindowCount; i++ )
+                {
+                int tempIndex = ( rightIndex + i ) % original_windows.count();
+                ordered_windows.append( original_windows[ tempIndex ] );
+                }
+            // move items cause of schedule
+            for( int i=0; i < scheduled_directions.count(); i++ )
+                {
+                Direction actual = scheduled_directions[ i ];
+                if( actual == Left )
+                    {
+                    EffectWindow* w = ordered_windows.takeLast();
+                    ordered_windows.prepend( w );
+                    }
+                else
+                    {
+                    EffectWindow* w = ordered_windows.takeFirst();
+                    ordered_windows.append( w );
+                    }
+                }
+            if( animation && timeLine.value() < 0.5 )
+                {
+                if( direction == Left )
+                    {
+                    EffectWindow* w = ordered_windows.takeLast();
+                    edge_window = w;
+                    ordered_windows.prepend( w );
+                    }
+                else
+                    {
+                    EffectWindow* w = ordered_windows.takeFirst();
+                    edge_window = w;
+                    ordered_windows.append( w );
+                    }
+                }
+            else if( animation && timeLine.value() >= 0.5 )
+                {
+                if( animation && direction == Left )
+                    edge_window = ordered_windows.last();
+                if( animation && direction == Right )
+                    edge_window = ordered_windows.first();
+                }
+            int offset = 0;
+            if( animation )
+                {
+                if( direction == Left )
+                    offset = (float)item_max_size.width()*(1.0-timeLine.value());
+                else
+                    offset = -(float)item_max_size.width()*(1.0-timeLine.value());
+                }
+            for( int i = 0; i < ordered_windows.count(); i++ )
+                {
+                EffectWindow* w = ordered_windows.at( i );
+                windows[ w ] = new ItemInfo();
+
+                float moveIndex = i;
+                if( animation && timeLine.value() < 0.5 )
+                    {
+                    if( direction == Left )
+                        moveIndex--;
+                    else
+                        moveIndex++;
+                    }
+                if( ordered_windows.count()%2 == 0 )
+                    moveIndex += 0.5;
+                windows[ w ]->area = QRect( frame_area.x() + frame_margin
+                    + moveIndex * item_max_size.width() + offset,
+                    frame_area.y() + frame_margin,
+                    item_max_size.width(), item_max_size.height());
+                windows[ w ]->clickable = windows[ w ]->area;
+                }
+            if( ordered_windows.count()%2 == 0 )
+                {
+                right_window = ordered_windows.last();
+                }
+            if( !highlight_is_set )
+                {
+                highlight_area = windows[ selected_window ]->area;
+                highlight_is_set = true;
+                }
+            }
+        else
+            {
+            for( int i = 0; i < original_windows.count(); i++ )
+                {
+                EffectWindow* w = original_windows.at( i );
+                windows[ w ] = new ItemInfo();
+
+                windows[ w ]->area = QRect( frame_area.x() + frame_margin
+                    + i * item_max_size.width(),
+                    frame_area.y() + frame_margin,
+                    item_max_size.width(), item_max_size.height());
+                windows[ w ]->clickable = windows[ w ]->area;
+                }
             }
         }
     else
@@ -539,9 +747,171 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
         windows[ w ]->area.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
         Qt::KeepAspectRatio );
 
-    effects->drawWindow( w,
-        PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
-        windows[ w ]->thumbnail, data );
+    if( animation && ( w == edge_window ) && ( windows.size() % 2 == 1 ) )
+        {
+        // in case of animation:
+        // the window which has to change the side will be split and painted on both sides of the edge
+        double splitPoint = 0.0;
+        if( direction == Left )
+            {
+            splitPoint = w->geometry().width()*timeLine.value();
+            }
+        else
+            {
+            splitPoint = w->geometry().width() - w->geometry().width()*timeLine.value();
+            }
+        data.quads = data.quads.splitAtX( splitPoint );
+        WindowQuadList left_quads;
+        WindowQuadList right_quads;
+        foreach( WindowQuad quad, data.quads )
+            {
+            if( quad.left() >= splitPoint )
+                left_quads << quad;
+            if( quad.right() <= splitPoint )
+                right_quads << quad;
+            }
+        // the base position of the window is changed after half of the animation
+        if( timeLine.value() < 0.5 )
+            {
+            if( direction == Left )
+                data.quads = left_quads;
+            else
+                data.quads = right_quads;
+            }
+        else
+            {
+            if( direction == Left )
+                data.quads = right_quads;
+            else
+                data.quads = left_quads;
+            }
+
+        // paint one part of the thumbnail
+        effects->drawWindow( w,
+            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
+            windows[ w ]->thumbnail, data );
+
+        QRect secondThumbnail;
+        
+        // paint the second part of the thumbnail:
+        // the other window quads are needed and a new rect for transformation has to be calculated
+        if( direction == Left )
+            {
+            if( timeLine.value() < 0.5 )
+                {
+                data.quads = right_quads;
+                secondThumbnail = QRect( frame_area.x() + frame_area.width() - frame_margin 
+                    - (float)item_max_size.width()*timeLine.value(),
+                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                }
+            else
+                {
+                data.quads = left_quads;
+                secondThumbnail = QRect( frame_area.x() + frame_margin - (float)item_max_size.width()*timeLine.value(),
+                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                if( right_window )
+                    secondThumbnail = QRect( frame_area.x() + frame_margin -
+                        (float)item_max_size.width()*(timeLine.value()-0.5),
+                        frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                }
+            }
+        else
+            {
+            if( timeLine.value() < 0.5 )
+                {
+                data.quads = left_quads;
+                secondThumbnail = QRect( frame_area.x() + frame_margin -
+                    (float)item_max_size.width()*(1.0 - timeLine.value()),
+                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                }
+            else
+                {
+                data.quads = right_quads;
+                secondThumbnail = QRect( frame_area.x() + frame_area.width() - frame_margin 
+                    - (float)item_max_size.width()*(1.0 - timeLine.value()),
+                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                }
+            }
+        setPositionTransformations( data,
+            windows[ w ]->thumbnail, w,
+            secondThumbnail.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
+            Qt::KeepAspectRatio );
+        effects->drawWindow( w,
+            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
+            windows[ w ]->thumbnail, data );
+        }
+    else if( ( windows.size() % 2 == 0 ) && ( w == right_window ) )
+        {
+        // in case of even number of thumbnails:
+        // the window on the right is painted one half on left and on half on the right side
+        float animationOffset = 0.0f;
+        double splitPoint = w->geometry().width()*0.5;
+        if( animation && timeLine.value() <= 0.5 )
+            {
+            // in case of animation the right window has only to be split during first half of animation
+            if( direction == Left )
+                {
+                splitPoint += w->geometry().width()*timeLine.value();
+                animationOffset = -(float)item_max_size.width()*timeLine.value();
+                }
+            else
+                {
+                splitPoint -= w->geometry().width()*timeLine.value();
+                animationOffset = (float)item_max_size.width()*timeLine.value();
+                }
+            }
+        if( animation && timeLine.value() > 0.5 )
+            {
+            // at half of animation a different window has become the right window
+            // we have to adjust the splitting again
+            if( direction == Left )
+                {
+                splitPoint -= w->geometry().width()*(1.0-timeLine.value());
+                animationOffset = (float)item_max_size.width()*(1.0-timeLine.value());
+                }
+            else
+                {
+                splitPoint += w->geometry().width()*(1.0-timeLine.value());
+                animationOffset = -(float)item_max_size.width()*(1.0-timeLine.value());
+                }
+            }
+        data.quads = data.quads.splitAtX( splitPoint );
+        WindowQuadList rightQuads;
+        WindowQuadList leftQuads;
+        foreach( WindowQuad quad, data.quads )
+            {
+            if( quad.right() <= splitPoint )
+                leftQuads << quad;
+            else
+                rightQuads << quad;
+            }
+
+        // left quads are painted on right side of frame
+        data.quads = leftQuads;
+        effects->drawWindow( w,
+            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
+            windows[ w ]->thumbnail, data );
+
+        // right quads are painted on left side of frame
+        data.quads = rightQuads;
+        QRect secondThumbnail;
+        secondThumbnail = QRect( frame_area.x() + frame_margin -
+            (float)item_max_size.width()*0.5 + animationOffset,
+            frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+        setPositionTransformations( data,
+            windows[ w ]->thumbnail, w,
+            secondThumbnail.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
+            Qt::KeepAspectRatio );
+        effects->drawWindow( w,
+            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
+            windows[ w ]->thumbnail, data );        
+        }
+    else
+        {
+        effects->drawWindow( w,
+            PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
+            windows[ w ]->thumbnail, data );
+        }
     }
 
 void BoxSwitchEffect::paintDesktopThumbnail( int iDesktop )
@@ -583,6 +953,17 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     if( windows[ w ]->icon.cacheKey() != w->icon().cacheKey())
         { // make sure windows[ w ]->icon is the right QPixmap, and rebind
         windows[ w ]->icon = w->icon();
+        if( ( windows.size() % 2 == 1 ) && animation && w == edge_window )
+            {
+            int alpha;
+            if( timeLine.value() < 0.5 )
+                alpha = 255.0f * (1.0 - timeLine.value()*2.0);
+            else
+                alpha = 255.0f * (timeLine.value()*2.0 - 1.0);
+            QPixmap transparency = windows[ w ]->icon.copy( windows[ w ]->icon.rect() );
+            transparency.fill( QColor( 255, 255, 255, alpha ) );
+            windows[ w ]->icon.setAlphaChannel( transparency.alphaChannel() );
+            }
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         if( effects->compositingType() == OpenGLCompositing )
             {
@@ -599,6 +980,58 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
     int height = windows[ w ]->icon.height();
     int x = windows[ w ]->area.x() + windows[ w ]->area.width() - width - highlight_margin;
     int y = windows[ w ]->area.y() + windows[ w ]->area.height() - height - highlight_margin;
+    if( ( windows.size() % 2 == 0 ) )
+        {
+        if( w == right_window )
+            {
+            // in case of right window the icon has to be painted on the left side of the frame
+            x = frame_area.x() + windows[ w ]->area.width()*0.5 - width - highlight_margin;
+            if( animation )
+                {
+                if( timeLine.value() <= 0.5 )
+                    {
+                    if( direction == Left )
+                        {
+                        x -= windows[ w ]->area.width()*timeLine.value();
+                        x = qMax( x, frame_area.x() + frame_margin );
+                        }
+                    else
+                        x += windows[ w ]->area.width()*timeLine.value();
+                    }
+                else
+                    {
+                    if( direction == Left )
+                        x += windows[ w ]->area.width()*(1.0-timeLine.value());
+                    else
+                        {
+                        x -= windows[ w ]->area.width()*(1.0-timeLine.value());
+                        x = qMax( x, frame_area.x() + frame_margin );
+                        }
+                    }
+                }
+            }
+        }
+    else
+        {
+        // during animation the icon of the edge window has to change position
+        if( animation && w == edge_window )
+            {
+            if( timeLine.value() < 0.5 )
+                {
+                if( direction == Left )
+                    x += windows[ w ]->area.width()*timeLine.value();
+                else
+                    x -= windows[ w ]->area.width()*timeLine.value();
+                }
+            else
+                {
+                if( direction == Left )
+                    x -= windows[ w ]->area.width()*(1.0 - timeLine.value());
+                else
+                    x += windows[ w ]->area.width()*(1.0 - timeLine.value());
+                }
+            }
+        }
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
@@ -606,7 +1039,15 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         // Render some background
-        glColor4f( 0, 0, 0, 0.5 );
+        float alpha = 0.5;
+        if( ( windows.size() % 2 == 1 ) && animation && w == edge_window )
+            {
+            if( timeLine.value() < 0.5 )
+                alpha *= (1.0 - timeLine.value()*2.0);
+            else
+                alpha *= (timeLine.value()*2.0 - 1.0);
+            }
+        glColor4f( 0, 0, 0, alpha );
         renderRoundBox( QRect( x-3, y-3, width+6, height+6 ), 3 );
         // Render the icon
         glColor4f( 1, 1, 1, 1 );
