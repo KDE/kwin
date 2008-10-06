@@ -67,6 +67,7 @@ Name[zh_CN]=登录
 Name[zh_TW]=登入
 Icon=preferences-system-windows-effect-login
 Comment=Smoothly fade to the desktop when logging in
+Comment[el]=Ομαλή εμφάνιση της επιφάνειας εργασίας κατά τη σύνδεση
 Comment[gl]=Esvai suavemente para o escritorio cando de acede ao sistema
 Comment[kk]=Кіргенде үстелге біртіндеп ауысу
 Comment[km]=លិច​​បន្តិចម្ដងៗ​ទៅ​ផ្ទៃតុ​នៅពេល​ចូល

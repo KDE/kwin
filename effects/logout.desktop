@@ -68,6 +68,7 @@ Name[zh_CN]=注销
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Desaturate the desktop when displaying the logout dialog
+Comment[el]=Αποχρωματισμός της επιφάνειας εργασίας κατά την εμφάνιση του διαλόγου αποσύνδεσης
 Comment[gl]=Desatura o escritorio ao mostrar o diálogo de saída
 Comment[kk]=Шығу диалогын көрсеткенде үстелді ертіп жіберу
 Comment[km]=ជ្រាប​ផ្ទៃតុ​នៅពេល​បង្ហាញ​ប្រអប់​ចេញ
