@@ -28,7 +28,7 @@ namespace KWin
 KWIN_EFFECT( login, LoginEffect )
 
 LoginEffect::LoginEffect()
-    : progress( 1 )
+    : progress( 1.0 )
     , login_window( NULL )
     {
     }
@@ -37,10 +37,10 @@ void LoginEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( login_window != NULL )
         {
-        if( progress != 1 )
+        if( progress != 1.0 )
             {
-            progress = qBound( 0., progress + time / animationTime( 2000. ), 1. );
-            if( progress == 1 )
+            progress = qBound( 0.0, progress + time / animationTime( 2000 ), 1.0 );
+            if( progress == 1.0 )
                 {
                 login_window->unrefWindow();
                 login_window = NULL;
@@ -54,7 +54,7 @@ void LoginEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 
 void LoginEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( progress != 1 && w == login_window )
+    if( progress != 1.0 && w == login_window )
         {
         w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
         data.setTranslucent();
@@ -64,14 +64,14 @@ void LoginEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int
 
 void LoginEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( w == login_window && progress != 1 )
-        data.opacity *= ( 1 - progress );
+    if( w == login_window && progress != 1.0 )
+        data.opacity *= ( 1.0 - progress );
     effects->paintWindow( w, mask, region, data );
     }
 
 void LoginEffect::postPaintScreen()
     {
-    if( login_window != NULL && progress != 1 )
+    if( login_window != NULL && progress != 1.0 )
         effects->addRepaintFull();
     effects->postPaintScreen();
     }
@@ -81,7 +81,7 @@ void LoginEffect::windowAdded( EffectWindow* w )
     if( isLoginSplash( w ))
         {
         login_window = w;
-        progress = 1;
+        progress = 1.0;
         effects->addRepaintFull();
         }
     }
@@ -91,7 +91,7 @@ void LoginEffect::windowClosed( EffectWindow* w )
     if( w == login_window )
         {
         login_window->refWindow();
-        progress = 0;
+        progress = 0.0;
         effects->addRepaintFull();
         }
     }
