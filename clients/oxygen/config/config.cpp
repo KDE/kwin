@@ -42,23 +42,26 @@ extern "C"
 namespace Oxygen {
 
 OxygenConfig::OxygenConfig( KConfig*, QWidget* parent )
-	: QObject( parent )
+    : QObject( parent )
 {
-	KGlobal::locale()->insertCatalog("kwin_clients");
-	c = new KConfig( "oxygenrc" );
-	KConfigGroup cg(c, "Windeco");
-	ui = new OxygenConfigUI( parent );
-	connect( ui->showStripes,   SIGNAL(clicked()), SIGNAL(changed()) );
+    KGlobal::locale()->insertCatalog("kwin_clients");
+    c = new KConfig( "oxygenrc" );
+    KConfigGroup cg(c, "Windeco");
+    ui = new OxygenConfigUI( parent );
+    connect( ui->showStripes,   SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->titleAlignmentLeft,   SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->titleAlignmentCenter,   SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->titleAlignmentRight,   SIGNAL(clicked()), SIGNAL(changed()) );
 
-	load( cg );
-	ui->show();
+    load( cg );
+    ui->show();
 }
 
 
 OxygenConfig::~OxygenConfig()
 {
-	delete ui;
-	delete c;
+    delete ui;
+    delete c;
 }
 
 
@@ -66,26 +69,43 @@ OxygenConfig::~OxygenConfig()
 // It is passed the open config from kwindecoration to improve efficiency
 void OxygenConfig::load( const KConfigGroup&  )
 {
-	KConfigGroup cg(c, "Windeco");
-	ui->showStripes->setChecked( cg.readEntry("ShowStripes", true) );
+    KConfigGroup cg(c, "Windeco");
+    ui->showStripes->setChecked( cg.readEntry("ShowStripes", true) );
+
+    QString titleAlignment = cg.readEntry("TitleAlignment", "Left");
+    ui->titleAlignmentLeft->setChecked( titleAlignment == "Left" );
+    ui->titleAlignmentCenter->setChecked( titleAlignment == "Center" );
+    ui->titleAlignmentRight->setChecked( titleAlignment == "Right" );
 }
 
 
 // Saves the configurable options to the kwinrc config file
 void OxygenConfig::save( KConfigGroup& )
 {
-	KConfigGroup cg(c, "Windeco");
-	cg.writeEntry( "ShowStripes", ui->showStripes->isChecked() );
-	c->sync();
+    KConfigGroup cg(c, "Windeco");
+    cg.writeEntry( "ShowStripes", ui->showStripes->isChecked() );
+
+    QString titleAlignment = "Left";
+    if (ui->titleAlignmentCenter->isChecked())
+    {
+        titleAlignment = "Center";
+    }
+    else if (ui->titleAlignmentRight->isChecked())
+    {
+        titleAlignment = "Right";
+    }
+    cg.writeEntry( "TitleAlignment", titleAlignment);
+    c->sync();
 }
 
 
 // Sets UI widget defaults which must correspond to style defaults
 void OxygenConfig::defaults()
 {
-	ui->showStripes->setChecked( true );
-	
-	emit changed();
+    ui->showStripes->setChecked( true );
+    ui->titleAlignmentLeft->setChecked( true );
+    
+    emit changed();
 }
 
 } //namespace Oxygen
