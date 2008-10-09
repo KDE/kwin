@@ -32,6 +32,11 @@ SlideEffect::SlideEffect()
     : slide( false )
     {
     mTimeLine.setCurveShape(TimeLine::EaseInOutCurve);
+    reconfigure( ReconfigureAll );
+    }
+
+void SlideEffect::reconfigure( ReconfigureFlags )
+    {
     mTimeLine.setDuration( animationTime( 250 ));
     }
 
