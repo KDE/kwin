@@ -27,6 +27,11 @@ KWIN_EFFECT( dialogparent, DialogParentEffect )
 
 DialogParentEffect::DialogParentEffect()
     {
+    reconfigure( ReconfigureAll );
+    }
+
+void DialogParentEffect::reconfigure( ReconfigureFlags )
+    {
     // How long does it take for the effect to get it's full strength (in ms)
     changeTime = animationTime( 200 );
     }
