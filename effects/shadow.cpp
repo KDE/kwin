@@ -261,7 +261,7 @@ void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
     {
     QList<ShadowData> newShadowDatas;
     EffectWindowList stack = effects->stackingOrder();
-    foreach( ShadowData d, shadowDatas )
+    foreach( const ShadowData &d, shadowDatas )
         {
         // If behindWindow is given then only render shadows of the windows
         //  that are behind that window.
@@ -277,7 +277,7 @@ void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
     shadowDatas = newShadowDatas;
     }
 
-void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, WindowPaintData& data )
+void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, const WindowPaintData& data )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing)

@@ -220,7 +220,7 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
 
             // Display all quads on the same screen on the same pass
             WindowQuadList screenQuads;
-            foreach( WindowQuad quad, data.quads )
+            foreach( const WindowQuad &quad, data.quads )
                 {
                 QRect quadRect(
                     w->x() + quad.left(), w->y() + quad.top(),

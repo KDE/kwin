@@ -732,7 +732,7 @@ void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
             }
         break;
         }
-    foreach( QRect r, damage.rects())
+    foreach( const QRect& r, damage.rects())
         addDamage( r ); 
     }
 

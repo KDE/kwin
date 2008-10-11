@@ -763,7 +763,7 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
         data.quads = data.quads.splitAtX( splitPoint );
         WindowQuadList left_quads;
         WindowQuadList right_quads;
-        foreach( WindowQuad quad, data.quads )
+        foreach( const WindowQuad &quad, data.quads )
             {
             if( quad.left() >= splitPoint )
                 left_quads << quad;
@@ -878,7 +878,7 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
         data.quads = data.quads.splitAtX( splitPoint );
         WindowQuadList rightQuads;
         WindowQuadList leftQuads;
-        foreach( WindowQuad quad, data.quads )
+        foreach( const WindowQuad &quad, data.quads )
             {
             if( quad.right() <= splitPoint )
                 leftQuads << quad;

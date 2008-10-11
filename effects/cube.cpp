@@ -1199,7 +1199,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
             data.xTranslate = -rect.width();
             WindowQuadList new_quads;
-            foreach( WindowQuad quad, data.quads )
+            foreach( const WindowQuad &quad, data.quads )
                 {
                 if( quad.right() > rect.width() - w->x() )
                     {
@@ -1213,7 +1213,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
             data.xTranslate = rect.width();
             WindowQuadList new_quads;
-            foreach( WindowQuad quad, data.quads )
+            foreach( const WindowQuad &quad, data.quads )
                 {
                 if( w->x() + quad.right() <= rect.x() )
                     {
@@ -1248,7 +1248,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         if( w->isOnDesktop(painting_desktop) && w->x() < rect.x() )
             {
             WindowQuadList new_quads;
-            foreach( WindowQuad quad, data.quads )
+            foreach( const WindowQuad &quad, data.quads )
                 {
                 if( quad.right() > -w->x() )
                     {
@@ -1260,7 +1260,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         if( w->isOnDesktop(painting_desktop) && w->x() + w->width() > rect.x() + rect.width() )
             {
             WindowQuadList new_quads;
-            foreach( WindowQuad quad, data.quads )
+            foreach( const WindowQuad &quad, data.quads )
                 {
                 if( quad.right() <= rect.width() - w->x() )
                     {
@@ -1272,7 +1272,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         if( w->y() < rect.y() )
             {
             WindowQuadList new_quads;
-            foreach( WindowQuad quad, data.quads )
+            foreach( const WindowQuad &quad, data.quads )
                 {
                 if( quad.bottom() > -w->y() )
                     {
@@ -1284,7 +1284,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         if( w->y() + w->height() > rect.y() + rect.height() )
             {
             WindowQuadList new_quads;
-            foreach( WindowQuad quad, data.quads )
+            foreach( const WindowQuad &quad, data.quads )
                 {
                 if( quad.bottom() <= rect.height() - w->y() )
                     {

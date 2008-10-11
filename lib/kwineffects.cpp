@@ -569,7 +569,7 @@ bool WindowQuad::smoothNeeded() const
 WindowQuadList WindowQuadList::splitAtX( double x ) const
     {
     WindowQuadList ret;
-    foreach( WindowQuad quad, *this )
+    foreach( const WindowQuad &quad, *this )
         {
 #ifndef NDEBUG
         if( quad.isTransformed())
@@ -600,7 +600,7 @@ WindowQuadList WindowQuadList::splitAtX( double x ) const
 WindowQuadList WindowQuadList::splitAtY( double y ) const
     {
     WindowQuadList ret;
-    foreach( WindowQuad quad, *this )
+    foreach( const WindowQuad &quad, *this )
         {
 #ifndef NDEBUG
         if( quad.isTransformed())
@@ -637,7 +637,7 @@ WindowQuadList WindowQuadList::makeGrid( int maxquadsize ) const
     double right = first().right();
     double top = first().top();
     double bottom = first().bottom();
-    foreach( WindowQuad quad, *this )
+    foreach( const WindowQuad &quad, *this )
         {
 #ifndef NDEBUG
         if( quad.isTransformed())
@@ -657,7 +657,7 @@ WindowQuadList WindowQuadList::makeGrid( int maxquadsize ) const
              y < bottom;
              y += maxquadsize )
             {
-            foreach( WindowQuad quad, *this )
+            foreach( const WindowQuad &quad, *this )
                 {
                 if( QRectF( QPointF( quad.left(), quad.top()), QPointF( quad.right(), quad.bottom()))
                     .intersects( QRectF( x, y, maxquadsize, maxquadsize )))
@@ -680,7 +680,7 @@ WindowQuadList WindowQuadList::makeRegularGrid( int xSubdivisions, int ySubdivis
     double right = first().right();
     double top = first().top();
     double bottom = first().bottom();
-    foreach( WindowQuad quad, *this )
+    foreach( const WindowQuad &quad, *this )
         {
 #ifndef NDEBUG
         if( quad.isTransformed())
@@ -703,7 +703,7 @@ WindowQuadList WindowQuadList::makeRegularGrid( int xSubdivisions, int ySubdivis
              x < right;
              x +=  xincrement)
             {
-            foreach( WindowQuad quad, *this )
+            foreach( const WindowQuad &quad, *this )
                 {
                 if( QRectF( QPointF( quad.left(), quad.top()), QPointF( quad.right(), quad.bottom()))
                     .intersects( QRectF( x, y, xincrement, yincrement )))
@@ -739,12 +739,12 @@ void WindowQuadList::makeArrays( float** vertices, float** texcoords ) const
 
 WindowQuadList WindowQuadList::select( WindowQuadType type ) const
     {
-    foreach( WindowQuad q, *this )
+    foreach( const WindowQuad &q, *this )
         {
         if( q.type != type ) // something else than ones to select, make a copy and filter
             {
             WindowQuadList ret;
-            foreach( WindowQuad q, *this )
+            foreach( const WindowQuad &q, *this )
                 {
                 if( q.type == type )
                     ret.append( q );
@@ -757,12 +757,12 @@ WindowQuadList WindowQuadList::select( WindowQuadType type ) const
 
 WindowQuadList WindowQuadList::filterOut( WindowQuadType type ) const
     {
-    foreach( WindowQuad q, *this )
+    foreach( const WindowQuad &q, *this )
         {
         if( q.type == type ) // something to filter out, make a copy and filter
             {
             WindowQuadList ret;
-            foreach( WindowQuad q, *this )
+            foreach( const WindowQuad &q, *this )
                 {
                 if( q.type != type )
                     ret.append( q );
@@ -775,7 +775,7 @@ WindowQuadList WindowQuadList::filterOut( WindowQuadType type ) const
 
 bool WindowQuadList::smoothNeeded() const
     {
-    foreach( WindowQuad q, *this )
+    foreach( const WindowQuad &q, *this )
         if( q.smoothNeeded())
             return true;
     return false;
@@ -783,7 +783,7 @@ bool WindowQuadList::smoothNeeded() const
 
 bool WindowQuadList::isTransformed() const
     {
-    foreach( WindowQuad q, *this )
+    foreach( const WindowQuad &q, *this )
         if( q.isTransformed())
             return true;
     return false;
@@ -838,7 +838,7 @@ QRegion PaintClipper::paintArea()
     {
     assert( areas != NULL ); // can be called only with clip() == true
     QRegion ret = QRegion( 0, 0, displayWidth(), displayHeight());
-    foreach( QRegion r, *areas )
+    foreach( const QRegion &r, *areas )
         ret &= r;
     return ret;
     }

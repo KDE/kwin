@@ -80,7 +80,7 @@ void ShowPaintEffect::paintGL()
     const QColor& color = colors[ color_index ];
     glColor4f( color.red() / 255., color.green() / 255., color.blue() / 255., alpha );
     glBegin( GL_QUADS );
-    foreach( QRect r, painted.rects())
+    foreach( const QRect &r, painted.rects())
         {
         glVertex2i( r.x(), r.y());
         glVertex2i( r.x() + r.width(), r.y());
@@ -102,7 +102,7 @@ void ShowPaintEffect::paintXrender()
     col.red = int( alpha * 0xffff * color.red() / 255 );
     col.green = int( alpha * 0xffff * color.green() / 255 );
     col.blue= int( alpha * 0xffff * color.blue() / 255 );
-    foreach( QRect r, painted.rects())
+    foreach( const QRect &r, painted.rects())
         XRenderFillRectangle( display(), PictOpOver, effects->xrenderBufferPicture(),
             &col, r.x(), r.y(), r.width(), r.height());
 #endif
