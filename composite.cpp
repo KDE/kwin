@@ -831,14 +831,18 @@ bool Toplevel::updateUnredirectedState()
         {
         unredirect = true;
         kDebug( 1212 ) << "Unredirecting:" << this;
+#ifdef HAVE_XCOMPOSITE
         XCompositeUnredirectWindow( display(), frameId(), CompositeRedirectManual );
+#endif
         return true;
         }
     else if( !should && unredirect )
         {
         unredirect = false;
         kDebug( 1212 ) << "Redirecting:" << this;
+#ifdef HAVE_XCOMPOSITE
         XCompositeRedirectWindow( display(), frameId(), CompositeRedirectManual );
+#endif
         discardWindowPixmap();
         return true;
         }
