@@ -54,6 +54,8 @@ SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->numberFlakes, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->minSizeFlake, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->maxSizeFlake, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->maxVSpeed, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->maxHSpeed, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     m_actionCollection = new KActionCollection( this, componentData() );
     m_actionCollection->setConfigGroup("Snow");
@@ -81,12 +83,16 @@ void SnowEffectConfig::load()
 
     KConfigGroup conf = EffectsHandler::effectConfig("Snow");
 
-    int number = conf.readEntry("Number", 50);
+    int number = conf.readEntry("Number", 200);
     int minFlake = conf.readEntry("MinFlakes", 10);
     int maxFlake = conf.readEntry("MaxFlakes", 50);
+    int maxVSpeed = conf.readEntry("MaxVSpeed", 2);
+    int maxHSpeed = conf.readEntry("MaxHSpeed", 1);
     m_ui->numberFlakes->setValue( number );
     m_ui->minSizeFlake->setValue( minFlake );
     m_ui->maxSizeFlake->setValue( maxFlake );
+    m_ui->maxVSpeed->setValue( maxVSpeed );
+    m_ui->maxHSpeed->setValue( maxHSpeed );
 
 
     emit changed(false);
@@ -100,6 +106,8 @@ void SnowEffectConfig::save()
     conf.writeEntry("Number", m_ui->numberFlakes->value());
     conf.writeEntry("MinFlakes", m_ui->minSizeFlake->value());
     conf.writeEntry("MaxFlakes", m_ui->maxSizeFlake->value());
+    conf.writeEntry("MaxVSpeed", m_ui->maxVSpeed->value());
+    conf.writeEntry("MaxHSpeed", m_ui->maxHSpeed->value());
 
     m_ui->editor->save();   // undo() will restore to this state from now on
 
@@ -112,9 +120,11 @@ void SnowEffectConfig::save()
 void SnowEffectConfig::defaults()
     {
     kDebug() ;
-    m_ui->numberFlakes->setValue( 50 );
+    m_ui->numberFlakes->setValue( 200 );
     m_ui->minSizeFlake->setValue( 10 );
     m_ui->maxSizeFlake->setValue( 50 );
+    m_ui->maxVSpeed->setValue( 2 );
+    m_ui->maxHSpeed->setValue( 1 );
     m_ui->editor->allDefault();
     emit changed(true);
     }

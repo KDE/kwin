@@ -2,7 +2,8 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
- Copyright (C) 2007 Martin Gräßlin <ubuntu@martin-graesslin.com
+ Copyright (C) 2007 Martin Gräßlin <ubuntu@martin-graesslin.com>
+ Copyright (C) 2008 Torgny Johansson <torgny.johansson@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,6 +33,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class SnowFlake
+    {
+    public:
+        SnowFlake(int x, int y, int width, int height, int maxVSpeed, int maxHSpeed);
+        virtual ~SnowFlake();
+        int getHSpeed();
+        int getVSpeed();
+        float getRotationAngle();
+        void updateSpeedAndRotation();
+        int getHeight();
+        int getWidth();
+        int getX();
+        int getY();
+        QRect getRect();
+        void setHeight(int height);
+        void setWidth(int width);
+        void setX(int x);
+        void setY(int y);
+
+    private:
+        QRect rect;
+        int vSpeed;
+        int hSpeed;
+        float rotationAngle;
+        float rotationSpeed;
+    };
+
 class SnowEffect
     : public QObject, public Effect
     {
@@ -49,12 +77,14 @@ class SnowEffect
     private:
         void loadTexture();
         GLTexture* texture;
-        QList<QRect>* flakes;
+        QList<SnowFlake>* flakes;
         QTime lastFlakeTime;
         long nextFlakeMillis;
         int mNumberFlakes;
         int mMinFlakeSize;
         int mMaxFlakeSize;
+        int mMaxVSpeed;
+        int mMaxHSpeed;
         bool active;
     };
 

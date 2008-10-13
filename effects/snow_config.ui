@@ -35,7 +35,7 @@
          <number>1000</number>
         </property>
         <property name="value" >
-         <number>50</number>
+         <number>200</number>
         </property>
        </widget>
       </item>
@@ -87,9 +87,69 @@
          <number>1000</number>
         </property>
         <property name="value" >
-         <number>50</number>
+         <number>200</number>
         </property>
        </widget>
+      </item>
+      
+      
+      <item row="3" column="0" >
+          <widget class="QLabel" name="label_4" >
+              <property name="text" >
+                  <string>Maximum &amp;vertical speed:</string>
+              </property>
+              <property name="alignment" >
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="buddy" >
+                  <cstring>maxVSpeed</cstring>
+              </property>
+          </widget>
+      </item>
+      <item row="3" column="1" >
+          <widget class="QSpinBox" name="maxVSpeed" >
+              <property name="suffix" >
+                  <string> px/frame</string>
+              </property>
+              <property name="maximum" >
+                  <number>30</number>
+              </property>
+              <property name="minimum" >
+                  <number>1</number>
+              </property>
+              <property name="value" >
+                  <number>2</number>
+              </property>
+          </widget>
+      </item>
+      <item row="4" column="0" >
+          <widget class="QLabel" name="label_5" >
+              <property name="text" >
+                  <string>Maximum &amp;horizontal speed:</string>
+              </property>
+              <property name="alignment" >
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="buddy" >
+                  <cstring>maxHSpeed</cstring>
+              </property>
+          </widget>
+      </item>
+      <item row="4" column="1" >
+          <widget class="QSpinBox" name="maxHSpeed" >
+              <property name="suffix" >
+                  <string> px/frame</string>
+              </property>
+              <property name="maximum" >
+                  <number>30</number>
+              </property>
+              <property name="minimum" >
+                  <number>0</number>
+              </property>
+              <property name="value" >
+                  <number>1</number>
+              </property>
+          </widget>
       </item>
      </layout>
     </widget>

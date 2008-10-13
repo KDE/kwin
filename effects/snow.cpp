@@ -2,7 +2,8 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
- Copyright (C) 2007 Martin Gräßlin <ubuntu@martin-graesslin.com
+ Copyright (C) 2007 Martin Gräßlin <ubuntu@martin-graesslin.com>
+ Copyright (C) 2008 Torgny Johansson <torgny.johansson@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <GL/gl.h>
 #endif
 
-
 namespace KWin
 {
 
@@ -70,9 +70,11 @@ SnowEffect::~SnowEffect()
 void SnowEffect::reconfigure( ReconfigureFlags )
     {
     KConfigGroup conf = effects->effectConfig("Snow");
-    mNumberFlakes = conf.readEntry("Number", 50);
+    mNumberFlakes = conf.readEntry("Number", 200);
     mMinFlakeSize = conf.readEntry("MinFlakes", 10);
     mMaxFlakeSize = conf.readEntry("MaxFlakes", 50);
+    mMaxVSpeed = conf.readEntry("MaxVSpeed", 2);
+    mMaxHSpeed = conf.readEntry("MaxHSpeed", 1);
     }
 
 void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -81,29 +83,30 @@ void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         {
         if (! flakes )
             {
-            flakes = new QList<QRect>();
+            flakes = new QList<SnowFlake>();
             lastFlakeTime.start();
             }
         int count = flakes->count();
         for (int i=0; i<count; i++)
             {
-            // move flake to bottom. Therefore pop the flake, change y and push
+            // move flake to bottom. Therefore pop the flake, change x and y and push
             // flake back to QVector
-            QRect flake = flakes->first();
+            SnowFlake flake = flakes->first();
             flakes->pop_front();
-            int size = flake.height();
-            int y = flake.y();
-            // if flake has reached bottom, don't push it back
-            if ( y >= QApplication::desktop()->geometry().bottom() )
+            // if flake has reached bottom, left or right don't push it back
+            if ( flake.getY() >= QApplication::desktop()->geometry().bottom() )
                 {
                 continue;
                 }
-            int speed;
-            float factor = (float)(size-mMinFlakeSize) / (float)(mMaxFlakeSize-mMinFlakeSize);
-            if (factor >= 0.5) speed = 2;
-            else speed = 1;
-            flake.setY(y + speed);
-            flake.setHeight(size);
+            else if (flake.getX()+flake.getWidth() <= QApplication::desktop()->geometry().left() )
+                {
+                continue;
+                }
+            else if (flake.getX() >= QApplication::desktop()->geometry().right() )
+                {
+                continue;
+                }
+            flake.updateSpeedAndRotation();
             flakes->append(flake);
             }
             // if number of active snowflakes is smaller than maximum number
@@ -113,17 +116,13 @@ void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 int size = 0;
                 while ( size < mMinFlakeSize )
                     size = random() % mMaxFlakeSize;
-                QRect flake = QRect( random() % (QApplication::desktop()->geometry().right() - size), -1 * size, size, size );
+                SnowFlake flake = SnowFlake( random() % (QApplication::desktop()->geometry().right() - size), -1 * size, size, size, mMaxVSpeed, mMaxHSpeed );
                 flakes->append( flake );
 
                 // calculation of next time of snowflake
                 // depends on the time the flow needs to get to the bottom (screen size)
                 // and the fps
-                int speed;
-                float factor = (float)(size-mMinFlakeSize) / (float)(mMaxFlakeSize-mMinFlakeSize);
-                if (factor >= 0.5) speed = 4;
-                else speed = 2;
-                long next = ((1000/(time+5))*(Effect::displayHeight()/speed))/mNumberFlakes;
+                long next = ((500/(time+5))*(Effect::displayHeight()/flake.getVSpeed()))/mNumberFlakes;
                 nextFlakeMillis = next;
                 lastFlakeTime.restart();
                 }
@@ -144,9 +143,28 @@ void SnowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             texture->bind();
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
             for (int i=0; i<flakes->count(); i++)
                 {
-                texture->render( region, flakes->at(i));
+                SnowFlake flake = flakes->at(i);
+                
+                // save the matrix
+                glPushMatrix();
+                
+                // translate to the center of the flake
+                glTranslatef(flake.getWidth()/2 + flake.getX(), flake.getHeight()/2 + flake.getY(), 0);
+                
+                // rotate around the Z-axis
+                glRotatef(flake.getRotationAngle(), 0.0, 0.0, 1.0);
+                
+                // translate back to the starting point
+                glTranslatef(-flake.getWidth()/2 - flake.getX(), -flake.getHeight()/2 - flake.getY(), 0);
+                
+                // paint the snowflake
+                texture->render( region, flake.getRect());
+                
+                // restore the matrix
+                glPopMatrix();
                 }
             texture->unbind();
             glPopAttrib();
@@ -181,5 +199,91 @@ void SnowEffect::loadTexture()
 #endif
     }
 
+
+// the snowflake class
+SnowFlake::SnowFlake(int x, int y, int width, int height, int maxVSpeed, int maxHSpeed)
+    {
+    int minVSpeed = maxVSpeed - 8; // 8 gives a nice difference in speed
+    if(minVSpeed < 1) minVSpeed = 1;
+    vSpeed = random()%maxVSpeed + minVSpeed;
+    
+    hSpeed = random()%(maxHSpeed+1);
+    if(random()%2 < 1) hSpeed = -hSpeed; // to create negativ hSpeeds at random
+    
+    rotationAngle = 0;
+    rotationSpeed = random()%4 - 2;
+    if(rotationSpeed == 0) rotationSpeed = 0.5;
+    rect = QRect(x, y, width, height);
+    }
+
+SnowFlake::~SnowFlake()
+    {
+    }
+
+int SnowFlake::getHSpeed()
+    {
+    return hSpeed;
+    }
+
+QRect SnowFlake::getRect()
+    {
+    return rect;
+    }
+
+void SnowFlake::updateSpeedAndRotation()
+    {
+    rotationAngle = rotationAngle+rotationSpeed;
+    rect.translate(hSpeed, vSpeed);
+    }
+
+float SnowFlake::getRotationAngle()
+    {
+    return rotationAngle;
+    }
+
+int SnowFlake::getVSpeed()
+    {
+    return vSpeed;
+    }
+
+int SnowFlake::getHeight()
+    {
+    return rect.height();
+    }
+
+int SnowFlake::getWidth()
+    {
+    return rect.width();
+    }
+
+int SnowFlake::getX()
+    {
+    return rect.x();
+    }
+
+int SnowFlake::getY()
+    {
+    return rect.y();
+    }
+
+void SnowFlake::setHeight(int height)
+    {
+    rect.setHeight(height);
+    }
+
+void SnowFlake::setWidth(int width)
+    {
+    rect.setWidth(width);
+    }
+
+void SnowFlake::setX(int x)
+    {
+    rect.setX(x);
+    }
+
+void SnowFlake::setY(int y)
+    {
+    rect.setY(y);
+    }
 
 } // namespace
