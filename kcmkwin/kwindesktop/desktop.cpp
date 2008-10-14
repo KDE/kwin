@@ -71,15 +71,12 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   layout->setMargin(0);
   layout->setSpacing(KDialog::spacingHint());
 
-  // number group
-  QGroupBox *number_group = new QGroupBox(this);
-
-  QHBoxLayout *lay = new QHBoxLayout(number_group);
+  QHBoxLayout *lay = new QHBoxLayout();
   lay->setMargin(KDialog::marginHint());
   lay->setSpacing(KDialog::spacingHint());
 
-  QLabel *label = new QLabel(i18n("N&umber of desktops: "), number_group);
-  _numInput = new KIntNumInput(4, number_group);
+  QLabel *label = new QLabel(i18n("N&umber of desktops: "), this);
+  _numInput = new KIntNumInput(4, this);
   _numInput->setRange(1, maxDesktops, 1);
   connect(_numInput, SIGNAL(valueChanged(int)), SLOT(slotValueChanged(int)));
   connect(_numInput, SIGNAL(valueChanged(int)), SLOT( changed() ));
@@ -87,29 +84,31 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   QString wtstr = i18n( "Here you can set how many virtual desktops you want on your KDE desktop. Move the slider to change the value." );
   label->setWhatsThis( wtstr );
   _numInput->setWhatsThis( wtstr );
+  QSpacerItem *horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
   lay->addWidget(label);
   lay->addWidget(_numInput);
-  lay->setStretchFactor( _numInput, 2 );
+  lay->addItem(horizontalSpacer);
+  //lay->setStretchFactor( _numInput, 2 );
 
-  layout->addWidget(number_group);
+  layout->addLayout(lay);
 
   // name group
   QGroupBox *name_group = new QGroupBox(i18n("Desktop &Names"), this);
-  QFormLayout *namesLayout = new QFormLayout;
+  QGridLayout *namesLayout = new QGridLayout;
   name_group->setLayout(namesLayout);
-  QFontMetrics fm(label->font());
-  int labelWidth = fm.width(i18n("Desktop %1:", 10)); // be sure that all label will have the same width (with one or two numbers, e.g. 1, 99)
   for(int i = 0; i < maxDesktops; i++)
     {
       _nameLabel[i] = new QLabel(i18n("Desktop %1:", i+1), name_group);
       _nameInput[i] = new KLineEdit(name_group);
+      _nameLabel[i]->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
       _nameLabel[i]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+1 ) );
       _nameInput[i]->setWhatsThis( i18n( "Here you can enter the name for desktop %1", i+1 ) );
 
       connect(_nameInput[i], SIGNAL(textChanged(const QString&)),
            SLOT( changed() ));
-      namesLayout->addRow(_nameLabel[i],_nameInput[i]);
+      namesLayout->addWidget(_nameLabel[i], i, 0, 1, 1);
+      namesLayout->addWidget(_nameInput[i], i, 1, 1, 1);
     }
 
   for(int i = 1; i < maxDesktops; i++)
@@ -143,14 +142,18 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   if (config->isGroupImmutable(groupname))
   {
      name_group->setEnabled(false);
-     number_group->setEnabled(false);
+     //number of desktops widgets
+     label->setEnabled(false);
+     _numInput->setEnabled(false);
   }
   else
   {
      KConfigGroup cfgGroup(config.data(), groupname.constData());
      if (cfgGroup.isEntryImmutable("Number"))
      {
-        number_group->setEnabled(false);
+        //number of desktops widgets
+        label->setEnabled(false);
+        _numInput->setEnabled(false);
      }
   }
   // End check for immutable

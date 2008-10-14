@@ -16,18 +16,13 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>585</width>
-        <height>618</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>General</string>
       </attribute>
-      <layout class="QVBoxLayout" >
+      <layout class="QVBoxLayout" name="verticalLayout" >
+       <item>
+        <widget class="KTitleWidget" name="statusTitleWidget" />
+       </item>
        <item>
         <widget class="QCheckBox" name="useCompositing" >
          <property name="text" >
@@ -80,7 +75,10 @@
              <item row="3" column="0" >
               <widget class="QLabel" name="label_3" >
                <property name="text" >
-                <string>Effect for window switching</string>
+                <string>Effect for window switching:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
                <property name="buddy" >
                 <cstring>windowSwitchingCombo</cstring>
@@ -88,12 +86,22 @@
               </widget>
              </item>
              <item row="3" column="1" >
-              <widget class="QComboBox" name="windowSwitchingCombo" />
+              <widget class="QComboBox" name="windowSwitchingCombo" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
              </item>
              <item row="4" column="0" >
               <widget class="QLabel" name="label_4" >
                <property name="text" >
-                <string>Effect for desktop switching</string>
+                <string>Effect for desktop switching:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
                <property name="buddy" >
                 <cstring>desktopSwitchingCombo</cstring>
@@ -101,9 +109,16 @@
               </widget>
              </item>
              <item row="4" column="1" >
-              <widget class="QComboBox" name="desktopSwitchingCombo" />
+              <widget class="QComboBox" name="desktopSwitchingCombo" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
              </item>
-             <item row="6" column="0" colspan="2" >
+             <item row="7" column="0" colspan="2" >
               <widget class="QLabel" name="label" >
                <property name="text" >
                 <string>You can find more effects in the 'All Effects' tab</string>
@@ -112,6 +127,12 @@
              </item>
              <item row="5" column="1" >
               <widget class="QComboBox" name="animationSpeedCombo" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="currentIndex" >
                 <number>3</number>
                </property>
@@ -155,11 +176,41 @@
              <item row="5" column="0" >
               <widget class="QLabel" name="label_5" >
                <property name="text" >
-                <string>Animation speed</string>
+                <string>Animation speed:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
+             <item row="6" column="0" >
+              <spacer name="verticalSpacer" >
+               <property name="orientation" >
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType" >
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>20</width>
+                 <height>5</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
             </layout>
+            <zorder>effectWinManagement</zorder>
+            <zorder>effectShadows</zorder>
+            <zorder>effectAnimations</zorder>
+            <zorder>label_3</zorder>
+            <zorder>windowSwitchingCombo</zorder>
+            <zorder>label_4</zorder>
+            <zorder>desktopSwitchingCombo</zorder>
+            <zorder>label</zorder>
+            <zorder>animationSpeedCombo</zorder>
+            <zorder>label_5</zorder>
+            <zorder>verticalSpacer</zorder>
            </widget>
           </item>
           <item>
@@ -190,9 +241,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="statusLabel" />
-       </item>
-       <item>
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -208,14 +256,6 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>591</width>
-        <height>619</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>All Effects</string>
       </attribute>
@@ -242,8 +282,14 @@
     </widget>
    </item>
   </layout>
+  <zorder>tabWidget</zorder>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KTitleWidget</class>
+   <extends>QWidget</extends>
+   <header>ktitlewidget.h</header>
+  </customwidget>
   <customwidget>
    <class>KPluginSelector</class>
    <extends>QWidget</extends>

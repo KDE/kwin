@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kservicetypetrader.h>
 #include <kplugininfo.h>
 #include <kservice.h>
+#include <ktitlewidget.h>
 
 #include <QtDBus/QtDBus>
 #include <QTimer>
@@ -75,7 +76,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.setupUi(this);
     layout()->setMargin(0);
     ui.tabWidget->setCurrentIndex(0);
-    ui.statusLabel->hide();
+    ui.statusTitleWidget->hide();
 
     connect(ui.advancedOptions, SIGNAL(clicked()), this, SLOT(showAdvancedOptions()));
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
@@ -118,10 +119,11 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
         compositingEnabled(false);
 
         QString text = i18n("Compositing is not supported on your system.");
-        text += "<br><br>";
+        text += "<br>";
         text += CompositingPrefs::compositingNotPossibleReason();
-        ui.statusLabel->setText(text);
-        ui.statusLabel->show();
+        ui.statusTitleWidget->setText(text);
+        ui.statusTitleWidget->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
+        ui.statusTitleWidget->show();
     }
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
