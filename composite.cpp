@@ -899,6 +899,10 @@ bool Client::shouldUnredirect() const
 
 bool Unmanaged::shouldUnredirect() const
     {
+    // the pixmap is needed for the login effect, a nicer solution would be the login effect increasing
+    // refcount for the window pixmap (which would prevent unredirect), avoiding this hack
+    if( resourceClass() == "ksplashx" || resourceClass() == "ksplashsimple" )
+        return false;
 // it must cover whole display or one xinerama screen, and be the topmost there
     if( geometry() == workspace()->clientArea( FullArea, geometry().center(), workspace()->currentDesktop())
         || geometry() == workspace()->clientArea( ScreenArea, geometry().center(), workspace()->currentDesktop()))
