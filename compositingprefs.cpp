@@ -257,8 +257,8 @@ void CompositingPrefs::detectDriverAndVersion()
         mDriver = "fglrx";
         mVersion = Version( mGLVersion.split(" ").first());
         }
-    else if( mGLRenderer.startsWith( "Mesa DRI R200" ))
-        { // radeon r200 only ?
+    else if( mGLRenderer.startsWith( "Mesa DRI" ))
+        {
         mDriver = "radeon";
         mVersion = Version( mGLRenderer.split(" ")[ 3 ] );
         }
@@ -277,6 +277,7 @@ void CompositingPrefs::detectDriverAndVersion()
 #endif
     }
 
+// See http://techbase.kde.org/Projects/KWin/HW for a list of some cards that are known to work.
 void CompositingPrefs::applyDriverSpecificOptions()
     {
     if( mXgl )
@@ -290,11 +291,18 @@ void CompositingPrefs::applyDriverSpecificOptions()
         kDebug( 1212 ) << "intel driver, disabling vsync, enabling direct";
         mEnableVSync = false;
         mEnableDirectRendering = true;
-        // Enable compositing by default only on 900-series cards
-        if( mVersion >= Version( "20061017" ) && mGLRenderer.contains( "Intel(R) 9" ))
-            {
-            kDebug( 1212 ) << "intel >= 20061017 and 900-series card, enabling compositing";
-            mEnableCompositing = true;
+        if( mVersion >= Version( "20061017" ))
+            { 
+            if( mGLRenderer.contains( "Intel(R) 9" ))
+                { // Enable compositing by default on 900-series cards
+                kDebug( 1212 ) << "intel >= 20061017 and 900-series card, enabling compositing";
+                mEnableCompositing = true;
+                }
+            if( mGLRenderer.contains( "Mesa DRI Intel(R) G" ))
+                { // e.g. G43 chipset
+                kDebug( 1212 ) << "intel >= 20061017 and Gxx-series card, enabling compositing";
+                mEnableCompositing = true;
+                }
             }
         }
     else if( mDriver == "nvidia" )
@@ -308,6 +316,22 @@ void CompositingPrefs::applyDriverSpecificOptions()
         if( mVersion >= Version( "96.39" ))
             {
             kDebug( 1212 ) << "nvidia >= 96.39, enabling compositing";
+            mEnableCompositing = true;
+            }
+        }
+    else if( mDriver == "radeon" )
+        { // radeon r200 only ?
+        if( mGLRenderer.startsWith( "Mesa DRI R200" ) && mVersion >= Version( "20060602" ))
+            {
+            kDebug( 1212 ) << "radeon r200 >= 20060602, enabling compositing";
+            mEnableCompositing = true;
+            }
+        }
+    else if( mDriver == "fglrx" )
+        { // radeon r200 only ?
+        if( mVersion >= Version( "2.1.7412" ))
+            {
+            kDebug( 1212 ) << "fglrx >= 2.1.7412, enabling compositing";
             mEnableCompositing = true;
             }
         }
