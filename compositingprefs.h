@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 
 #include "kwinglutils.h"
+#include "kwinglobals.h"
 
 
 namespace KWin
@@ -52,6 +53,7 @@ public:
 
     static bool compositingPossible();
     static QString compositingNotPossibleReason();
+    bool validateSetup( CompositingType compositingType ) const;
     bool enableCompositing() const;
     bool enableVSync() const  { return mEnableVSync; }
     bool enableDirectRendering() const  { return mEnableDirectRendering; }

@@ -107,6 +107,28 @@ QString CompositingPrefs::compositingNotPossibleReason()
 #endif
     }
 
+// This function checks selected compositing setup and returns false if it should not
+// be used even if explicitly configured (unless checks are overriden).
+// More checks like broken XRender setups etc. should be added here.
+bool CompositingPrefs::validateSetup( CompositingType compositingType ) const
+    {
+    switch( compositingType )
+        {
+        case NoCompositing:
+            return false;
+        case OpenGLCompositing:
+            if( mDriver == "software" )
+                {
+                kDebug( 1212 ) << "Software GL renderer detected, forcing compositing off.";
+                return false;
+                }
+            return true; // allow
+        case XRenderCompositing:
+            return true; // xrender - always allow?
+        }
+    abort();
+    }
+
 void CompositingPrefs::detect()
     {
     if( !compositingPossible())
@@ -239,6 +261,12 @@ void CompositingPrefs::detectDriverAndVersion()
         { // radeon r200 only ?
         mDriver = "radeon";
         mVersion = Version( mGLRenderer.split(" ")[ 3 ] );
+        }
+    else if( mGLRenderer == "Software Rasterizer" )
+        {
+        mDriver = "software";
+        QStringList words = mGLVersion.split(" ");
+        mVersion = Version( words[ words.count() - 1 ] );
         }
     else
         {

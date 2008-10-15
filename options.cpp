@@ -239,6 +239,9 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
     
     unredirectFullscreen = config.readEntry( "UnredirectFullscreen", true );
     animationSpeed = qBound( 0, config.readEntry( "AnimationSpeed", 3 ), 6 );
+    
+    if( !disableCompositingChecks && !prefs.validateSetup( compositingMode ))
+        useCompositing = false;
     }
 
 
