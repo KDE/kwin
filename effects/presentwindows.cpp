@@ -1143,9 +1143,9 @@ void PresentWindowsEffect::setActive( bool active )
             {
             // TODO: w->isOnCurrentDesktop(); doesn't seem to be updated immediately
             if( m_highlightedWindow )
-                m_windowData[w].visible = ( w->desktop() == m_highlightedWindow->desktop() || w->isOnAllDesktops() );
+                m_windowData[w].visible = ( w->desktop() == m_highlightedWindow->desktop() || w->isOnAllDesktops() ) && !w->isMinimized();
             else // Only called when cancelling the effect, so isOnCurrentDesktop() is fine
-                m_windowData[w].visible = w->isOnCurrentDesktop();
+                m_windowData[w].visible = w->isOnCurrentDesktop() && !w->isMinimized();
             }
 
         // Move all windows back to their original position
