@@ -323,6 +323,18 @@ void OxygenButton::drawIcon(QPainter *p, QPalette &pal, ButtonType &type)
             p->drawLine(QPointF( 7.5, 7), QPointF(10.5,10));
             p->drawLine(QPointF(10.5,10), QPointF(13.5, 7));
             break;
+        case ButtonShade:
+            if (!isChecked()) // shade button
+            {
+                p->drawLine(QPointF( 7.5, 7.5), QPointF(10.5,10.5));
+                p->drawLine(QPointF(10.5,10.5), QPointF(13.5, 7.5));
+                p->drawLine(QPointF( 7.5,13.0), QPointF(13.5,13.0));
+            } else { // unshade button
+                p->drawLine(QPointF( 7.5,10.5), QPointF(10.5, 7.5));
+                p->drawLine(QPointF(10.5, 7.5), QPointF(13.5,10.5));
+                p->drawLine(QPointF( 7.5,13.0), QPointF(13.5,13.0));
+            }
+            break;
         default:
             break;
     }

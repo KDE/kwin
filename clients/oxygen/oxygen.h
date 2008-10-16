@@ -48,6 +48,7 @@ enum ButtonType {
     ButtonSticky,
     ButtonAbove,
     ButtonBelow,
+    ButtonShade,
     ButtonTypeCount
 };
 Q_DECLARE_FLAGS(ButtonTypes, ButtonType)

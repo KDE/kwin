@@ -200,6 +200,9 @@ KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
         case OnAllDesktopsButton:
             return new OxygenButton(*this, i18n("On All Desktops"), ButtonSticky);
 
+        case ShadeButton:
+            return new OxygenButton(*this, i18n("Shade Button"), ButtonShade);
+
         default:
             return 0;
     }
