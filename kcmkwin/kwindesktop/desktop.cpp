@@ -84,12 +84,12 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   QString wtstr = i18n( "Here you can set how many virtual desktops you want on your KDE desktop. Move the slider to change the value." );
   label->setWhatsThis( wtstr );
   _numInput->setWhatsThis( wtstr );
-  QSpacerItem *horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+  //QSpacerItem *horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
   lay->addWidget(label);
   lay->addWidget(_numInput);
-  lay->addItem(horizontalSpacer);
-  //lay->setStretchFactor( _numInput, 2 );
+  //lay->addItem(horizontalSpacer);
+  lay->setStretchFactor( _numInput, 2 );
 
   layout->addLayout(lay);
 
