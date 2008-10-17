@@ -165,15 +165,15 @@ void ShadowEffect::reconfigure( ReconfigureFlags )
             int hw = shadowTexture.width() / 2;
             int hh = shadowTexture.height() / 2;
             QList<GLTexture*> textures;
-            textures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, hh )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  hh )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, hh )));
-            textures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, 1 )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  1 )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, 1 )));
             textures.append( new GLTexture( shadowTexture.copy( 0,  0,  hw, hh )));
             textures.append( new GLTexture( shadowTexture.copy( hw, 0,  1,  hh )));
             textures.append( new GLTexture( shadowTexture.copy( hw, 0,  hw, hh )));
+            textures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, 1 )));
+            textures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  1 )));
+            textures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, 1 )));
+            textures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, hh )));
+            textures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  hh )));
+            textures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, hh )));
             mShadowTextures.append( textures );
             }
         }
@@ -503,10 +503,10 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
             verts << quad[1].x() << quad[1].y();
             verts << quad[2].x() << quad[2].y();
             verts << quad[3].x() << quad[3].y();
-            texcoords << quad[0].textureX() << quad[0].textureY();
-            texcoords << quad[1].textureX() << quad[1].textureY();
-            texcoords << quad[2].textureX() << quad[2].textureY();
             texcoords << quad[3].textureX() << quad[3].textureY();
+            texcoords << quad[2].textureX() << quad[2].textureY();
+            texcoords << quad[1].textureX() << quad[1].textureY();
+            texcoords << quad[0].textureX() << quad[0].textureY();
 
             // Work out which texture to use
             int texture = mShadowQuadTypes.indexOf( quad.type() );
