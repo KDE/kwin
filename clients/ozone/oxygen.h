@@ -55,7 +55,7 @@ enum ButtonType {
 };
 Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
 
-class OxygenFactory: public KDecorationFactory
+class OxygenFactory: public KDecorationFactory2
 {
 public:
     OxygenFactory();
@@ -63,6 +63,11 @@ public:
     virtual KDecoration *createDecoration(KDecorationBridge *b);
     virtual bool reset(unsigned long changed);
     virtual bool supports( Ability ability ) const;
+
+    virtual QList< QList<QImage> > shadowTextures();
+    virtual int shadowTextureList( ShadowType type ) const;
+    virtual QList<QRect> shadowQuads( ShadowType type, QSize size ) const;
+    virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
 
     static bool initialized();
     static Qt::Alignment titleAlignment();
