@@ -46,7 +46,7 @@ namespace Oxygen
 //////////////////////////////////////////////////////////////////////////////
 
 bool OxygenFactory::initialized_ = false;
-Qt::Alignment OxygenFactory::titlealign_ = Qt::AlignLeft;
+Qt::Alignment OxygenFactory::titleAlignment_ = Qt::AlignLeft;
 bool OxygenFactory::showStripes_ = true;
 bool OxygenFactory::blendTitlebarColors_ = true;
 
@@ -112,11 +112,14 @@ bool OxygenFactory::readConfig()
     KConfigGroup group = config.group("Windeco");
 
     // grab settings
-    Qt::Alignment oldalign = titlealign_;
-    QString value = group.readEntry("TitleAlignment", "AlignLeft");
-    if (value == "AlignLeft") titlealign_ = Qt::AlignLeft;
-    else if (value == "AlignHCenter") titlealign_ = Qt::AlignHCenter;
-    else if (value == "AlignRight") titlealign_ = Qt::AlignRight;
+    Qt::Alignment oldalign = titleAlignment_;
+    QString value = group.readEntry("TitleAlignment", "Left");
+    if (value == "Left")
+        titleAlignment_ = Qt::AlignLeft;
+    else if (value == "Center")
+        titleAlignment_ = Qt::AlignHCenter;
+    else if (value == "Right")
+        titleAlignment_ = Qt::AlignRight;
 
     bool oldstripes = showStripes;    
     showStripes_ = group.readEntry( "ShowStripes", true );
@@ -124,7 +127,7 @@ bool OxygenFactory::readConfig()
     bool oldblend = blendTitlebarColors;    
     blendTitlebarColors_ = group.readEntry( "BlendTitlebarColors", true );
 
-    if (oldalign == titlealign_ && oldstripes == showStripes_ && oldblend == blendTitlebarColors_)
+    if (oldalign == titleAlignment_ && oldstripes == showStripes_ && oldblend == blendTitlebarColors_)
         return false;
     else
         return true;

@@ -64,7 +64,7 @@ public:
     virtual bool supports( Ability ability ) const;
 
     static bool initialized();
-    static Qt::Alignment titleAlign();
+    static Qt::Alignment titleAlignment();
     static bool showStripes();
     static bool blendTitlebarColors();
 
@@ -73,7 +73,7 @@ private:
 
 private:
     static bool initialized_;
-    static Qt::Alignment titlealign_;
+    static Qt::Alignment titleAlignment_;
     static bool showStripes_;
     static bool blendTitlebarColors_;
 };
@@ -81,8 +81,8 @@ private:
 inline bool OxygenFactory::initialized()
     { return initialized_; }
 
-inline Qt::Alignment OxygenFactory::titleAlign()
-    { return titlealign_; }
+inline Qt::Alignment OxygenFactory::titleAlignment()
+    { return titleAlignment_; }
 
 inline bool OxygenFactory::blendTitlebarColors()
     { return blendTitlebarColors_; }

@@ -303,7 +303,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.setFont(options()->font(isActive(), false));
     painter.setPen(titlebarTextColor(pal2));
     painter.drawText(titleLeft, titleTop-1, titleWidth, titleHeight,  // -1 is to go into top resizearea
-              OxygenFactory::titleAlign() | Qt::AlignVCenter, caption());
+              OxygenFactory::titleAlignment() | Qt::AlignVCenter, caption());
 
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -318,7 +318,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     // draw stripes as indicator for active windows
     if (isActive() && OxygenFactory::showStripes()) {
-        Qt::Alignment align = OxygenFactory::titleAlign();
+        Qt::Alignment align = OxygenFactory::titleAlignment();
         if (widget()->layoutDirection() == Qt::RightToLeft)
         {
             if (align == Qt::AlignLeft)
