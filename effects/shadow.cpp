@@ -265,6 +265,8 @@ void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
 
 void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
     {
+    if( effects->compositingType() == XRenderCompositing )
+        return; // TODO: Disable quad-based shadows in XRender mode for the moment
     if( effects->hasDecorationShadows() )
         {
         // TODO: shadowQuads() is allowed to return different quads for
