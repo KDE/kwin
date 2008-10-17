@@ -184,12 +184,26 @@ public:
         AbilityColorButtonBack = 2020, ///< decoration supports button background color
         AbilityColorButtonFore = 2021, ///< decoration supports button foreground color
         ABILITYCOLOR_END, ///< @internal
+        // compositing
+        AbilityCompositingShadow = 3000, ///< decoration supports window shadows
         // TODO colors for individual button types
         ABILITY_DUMMY = 10000000
         };
 
     enum Requirement { REQUIREMENT_DUMMY = 1000000 };
 };
+
+/**
+ * Decoration shadow type.
+ */
+enum ShadowType
+    {
+    ShadowBorderedActive = 0, ///< Active shadow of decorated windows
+    ShadowBorderedInactive, ///< Inctive shadow of decorated windows
+    ShadowBorderlessActive, ///< Active shadow of undecorated windows
+    ShadowBorderlessInactive, ///< Inctive shadow of undecorated windows
+    ShadowOther ///< Shadow of all other windows (Menus, comboboxes, tooltips, etc.)
+    };
 
 class KDecorationProvides
     : public KDecorationDefines
@@ -845,8 +859,57 @@ class KWIN_EXPORT KDecoration
         QWidget* w_;
         KDecorationFactory* factory_;
         friend class KDecorationOptions; // for options_
+        friend class KDecoration2; // for bridge_
         static KDecorationOptions* options_;
         KDecorationPrivate* d;
+    };
+
+class KWIN_EXPORT KDecoration2
+    : public KDecoration
+    {
+    Q_OBJECT
+    public:
+        KDecoration2( KDecorationBridge* bridge, KDecorationFactory* factory );
+        virtual ~KDecoration2();
+
+        /**
+         * This function should return the positions of the shadow quads to be rendered.
+         * All positions are relative to the window's top-left corner. Only "bordered"
+         * windows will call this method.
+         */
+        virtual QList<QRect> shadowQuads( ShadowType type ) const;
+        /**
+         * This function should return the opacity of the shadow. This is not multiplied
+         * with the opacity of the window afterwards but is instead provided as \a dataOpacity
+         */
+        virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
+        /**
+         * This function should return the desired brightness of the shadow.
+         */
+        virtual double shadowBrightness( ShadowType type ) const;
+        /**
+         * This function should return the desired saturation of the shadow.
+         */
+        virtual double shadowSaturation( ShadowType type ) const;
+
+        /**
+         * Force a repaint of the shadow. Automatically called when the window changes states.
+         */
+        void repaintShadow();
+        /**
+         * Returns @a true if compositing is enabled (Currently useless to decorations,
+         * use \a shadowsActive() instead).
+         */
+        bool compositingActive() const;
+        /**
+         * Returns @a true if compositing is enabled and the shadow effect is activated
+         * by the current user.
+         */
+        bool shadowsActive() const;
+        /**
+         * Returns the opacity that the decoration will be rendered at.
+         */
+        double opacity() const;
     };
 
 inline

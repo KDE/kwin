@@ -28,7 +28,7 @@ namespace KWin
 
 class Client;
 
-class Bridge : public KDecorationBridge
+class Bridge : public KDecorationBridge2
     {
     public:
         Bridge( Client* cl );
@@ -74,6 +74,11 @@ class Bridge : public KDecorationBridge
         virtual QWidget* initialParentWidget() const;
         virtual Qt::WFlags initialWFlags() const;
         virtual void grabXServer( bool grab );
+
+        virtual void repaintShadow();
+        virtual bool compositingActive() const;
+        virtual bool shadowsActive() const;
+        virtual double opacity() const;
     private:
         Client* c;
     };

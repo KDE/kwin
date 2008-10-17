@@ -31,8 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <kmanagerselection.h>
 
+#include "plugins.h"
 #include "utils.h"
 #include "kdecoration.h"
+#include "kdecorationfactory.h"
 #include "sm.h"
 
 #include <X11/Xlib.h>
@@ -241,6 +243,14 @@ class Workspace : public QObject, public KDecorationDefines
         void discardUsedWindowRules( Client* c, bool withdraw );
         void disableRulesUpdates( bool disable );
         bool rulesUpdatesDisabled() const;
+
+        bool hasDecorationShadows() const;
+        QList< QList<QImage> > decorationShadowTextures();
+        int decorationShadowTextureList( ShadowType type ) const;
+        QList<QRect> decorationShadowQuads( ShadowType type, QSize size ) const;
+        double decorationShadowOpacity( ShadowType type, double dataOpacity ) const;
+        double decorationShadowBrightness( ShadowType type ) const;
+        double decorationShadowSaturation( ShadowType type ) const;
 
     // dcop interface
         void cascadeDesktop();
@@ -979,6 +989,60 @@ void Workspace::checkCompositeTimer()
     {
     if( !compositeTimer.isActive())
         setCompositeTimer();
+    }
+
+inline
+bool Workspace::hasDecorationShadows() const
+    {
+    return mgr->factory()->supports( AbilityCompositingShadow );
+    }
+
+inline
+QList< QList<QImage> > Workspace::decorationShadowTextures()
+    {
+    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+        return factory->shadowTextures();
+    return QList< QList<QImage> >();
+    }
+
+inline
+int Workspace::decorationShadowTextureList( ShadowType type ) const
+    {
+    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+        return factory->shadowTextureList( type );
+    return -1;
+    }
+
+inline
+QList<QRect> Workspace::decorationShadowQuads( ShadowType type, QSize size ) const
+    {
+    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+        return factory->shadowQuads( type, size );
+    return QList<QRect>();
+    }
+
+inline
+double Workspace::decorationShadowOpacity( ShadowType type, double dataOpacity ) const
+    {
+    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+        return factory->shadowOpacity( type, dataOpacity );
+    return dataOpacity;
+    }
+
+inline
+double Workspace::decorationShadowBrightness( ShadowType type ) const
+    {
+    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+        return factory->shadowBrightness( type );
+    return 1.0;
+    }
+
+inline
+double Workspace::decorationShadowSaturation( ShadowType type ) const
+    {
+    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+        return factory->shadowSaturation( type );
+    return 1.0;
     }
 
 } // namespace

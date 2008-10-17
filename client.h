@@ -284,6 +284,12 @@ class Client
             return moveResizeMode && mode != PositionCenter;
             }
         
+        // Decorations <-> Effects
+        QList<QRect> shadowQuads( ShadowType type ) const;
+        double shadowOpacity( ShadowType type, double dataOpacity ) const;
+        double shadowBrightness( ShadowType type ) const;
+        double shadowSaturation( ShadowType type ) const;
+
     private slots:
         void autoRaise();
         void shadeHover();
@@ -787,6 +793,34 @@ inline void Client::removeRule( Rules* rule )
 inline bool Client::hiddenPreview() const
     {
     return mapping_state == Kept;
+    }
+
+inline QList<QRect> Client::shadowQuads( ShadowType type ) const
+    {
+    if( KDecoration2* decoration2 = dynamic_cast< KDecoration2* >( decoration ))
+        return decoration2->shadowQuads( type );
+    return QList<QRect>();
+    }
+
+inline double Client::shadowOpacity( ShadowType type, double dataOpacity ) const
+    {
+    if( KDecoration2* decoration2 = dynamic_cast< KDecoration2* >( decoration ))
+        return decoration2->shadowOpacity( type, dataOpacity );
+    return dataOpacity;
+    }
+
+inline double Client::shadowBrightness( ShadowType type ) const
+    {
+    if( KDecoration2* decoration2 = dynamic_cast< KDecoration2* >( decoration ))
+        return decoration2->shadowBrightness( type );
+    return 1.0;
+    }
+
+inline double Client::shadowSaturation( ShadowType type ) const
+    {
+    if( KDecoration2* decoration2 = dynamic_cast< KDecoration2* >( decoration ))
+        return decoration2->shadowSaturation( type );
+    return 1.0;
     }
 
 KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value );

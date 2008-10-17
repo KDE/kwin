@@ -51,6 +51,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     : EffectsHandler(type)
     , keyboard_grab_effect( NULL )
     , fullscreen_effect( 0 )
+    , next_window_quad_type( EFFECT_QUAD_TYPE_START )
     {
     reconfigure();
     }
@@ -176,12 +177,37 @@ void EffectsHandlerImpl::drawWindow( EffectWindow* w, int mask, QRegion region, 
         scene->finalDrawWindow( static_cast<EffectWindowImpl*>( w ), mask, region, data );
     }
 
+void EffectsHandlerImpl::buildQuads( EffectWindow* w, WindowQuadList& quadList )
+    {
+    if( current_build_quads < loaded_effects.size())
+        {
+        loaded_effects[current_build_quads++].second->buildQuads( w, quadList );
+        --current_build_quads;
+        }
+    }
+
+bool EffectsHandlerImpl::hasDecorationShadows() const
+    {
+    return Workspace::self()->hasDecorationShadows();
+    }
+
+QList< QList<QImage> > EffectsHandlerImpl::shadowTextures()
+    {
+    return Workspace::self()->decorationShadowTextures();
+    }
+
+int EffectsHandlerImpl::shadowTextureList( ShadowType type ) const
+    {
+    return Workspace::self()->decorationShadowTextureList( type );
+    }
+
 // start another painting pass
 void EffectsHandlerImpl::startPaint()
     {
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );
+    assert( current_build_quads == 0 );
     assert( current_transform == 0 );
     }
 
@@ -429,6 +455,11 @@ int EffectsHandlerImpl::desktopDown( int desktop, bool wrap ) const
 double EffectsHandlerImpl::animationTimeFactor() const
     {
     return options->animationTimeFactor();
+    }
+
+WindowQuadType EffectsHandlerImpl::newWindowQuadType()
+    {
+    return WindowQuadType( next_window_quad_type++ );
     }
 
 int EffectsHandlerImpl::displayWidth() const
@@ -767,6 +798,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );
+    assert( current_build_quads == 0 );
     assert( current_transform == 0 );
 
     if( !name.startsWith("kwin4_effect_") )
@@ -872,6 +904,7 @@ void EffectsHandlerImpl::unloadEffect( const QString& name )
     assert( current_paint_screen == 0 );
     assert( current_paint_window == 0 );
     assert( current_draw_window == 0 );
+    assert( current_build_quads == 0 );
     assert( current_transform == 0 );
 
     for( QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it)
@@ -1301,6 +1334,51 @@ EffectWindowList EffectWindowImpl::mainWindows() const
         return ret;
         }
     return EffectWindowList();
+    }
+
+QList<QRect> EffectWindowImpl::shadowQuads( ShadowType type ) const
+    {
+    if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
+        {
+        if( Client* c = dynamic_cast< Client* >( toplevel ))
+            return c->shadowQuads( type );
+        return QList<QRect>();
+        }
+    return toplevel->workspace()->decorationShadowQuads( type, toplevel->size() );
+    }
+
+double EffectWindowImpl::shadowOpacity( ShadowType type, double dataOpacity ) const
+    {
+    dataOpacity *= opacity();
+    if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
+        {
+        if( Client* c = dynamic_cast< Client* >( toplevel ))
+            return c->shadowOpacity( type, dataOpacity );
+        return dataOpacity;
+        }
+    return toplevel->workspace()->decorationShadowOpacity( type, dataOpacity );
+    }
+
+double EffectWindowImpl::shadowBrightness( ShadowType type ) const
+    {
+    if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
+        {
+        if( Client* c = dynamic_cast< Client* >( toplevel ))
+            return c->shadowBrightness( type );
+        return 1.0;
+        }
+    return toplevel->workspace()->decorationShadowBrightness( type );
+    }
+
+double EffectWindowImpl::shadowSaturation( ShadowType type ) const
+    {
+    if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
+        {
+        if( Client* c = dynamic_cast< Client* >( toplevel ))
+            return c->shadowSaturation( type );
+        return 1.0;
+        }
+    return toplevel->workspace()->decorationShadowSaturation( type );
     }
 
 WindowQuadList EffectWindowImpl::buildQuads() const

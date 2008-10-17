@@ -37,7 +37,7 @@ class QPoint;
 
 namespace Oxygen {
 
-class OxygenClient : public KCommonDecoration
+class OxygenClient : public KCommonDecoration2
 {
     Q_OBJECT
 public:
@@ -50,6 +50,9 @@ public:
     virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
     virtual void updateWindowShape();
     virtual void init();
+
+    virtual QList<QRect> shadowQuads( ShadowType type ) const;
+    virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
 
 private:
     void paintEvent(QPaintEvent *e);

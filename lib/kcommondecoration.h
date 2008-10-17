@@ -362,6 +362,23 @@ class KWIN_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
         KCommonDecorationPrivate *d;
 };
 
+class KWIN_EXPORT KCommonDecoration2
+    : public KCommonDecoration
+    {
+    Q_OBJECT
+    public:
+        KCommonDecoration2(KDecorationBridge* bridge, KDecorationFactory* factory);
+        virtual ~KCommonDecoration2();
+        virtual QList<QRect> shadowQuads( ShadowType type ) const;
+        virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
+        virtual double shadowBrightness( ShadowType type ) const;
+        virtual double shadowSaturation( ShadowType type ) const;
+        void repaintShadow();
+        bool compositingActive() const;
+        bool shadowsActive() const;
+        double opacity() const;
+    };
+
 /**
  * Title bar buttons of KCommonDecoration need to inherit this class.
  */

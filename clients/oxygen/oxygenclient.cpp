@@ -70,7 +70,7 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 
 
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
-    : KCommonDecoration(b, f)
+    : KCommonDecoration2(b, f)
     , colorCacheInvalid_(true)
     , helper_(*globalHelper)
 {
@@ -413,6 +413,41 @@ void OxygenClient::updateWindowShape()
     mask += QRegion(1, 2, w-2, h-4);
 
     setMask(mask);
+}
+
+QList<QRect> OxygenClient::shadowQuads( ShadowType type ) const
+{
+    QSize size = widget()->size();
+#define shadowFuzzyness 15
+
+    // These are slightly under the decoration so the corners look nicer
+    QList<QRect> quads;
+    quads.append( QRect( -shadowFuzzyness+5, -shadowFuzzyness+5, shadowFuzzyness, shadowFuzzyness ));
+    quads.append( QRect( 0+5,                -shadowFuzzyness+5, size.width()-10, shadowFuzzyness ));
+    quads.append( QRect( size.width()-5,     -shadowFuzzyness+5, shadowFuzzyness, shadowFuzzyness ));
+    quads.append( QRect( -shadowFuzzyness+5, 0+5,                shadowFuzzyness, size.height()-10 ));
+    //quads.append( QRect( 0+5,                0+5,                size.width()-10, size.height()-10 ));
+    quads.append( QRect( size.width()-5,     0+5,                shadowFuzzyness, size.height()-10 ));
+    quads.append( QRect( -shadowFuzzyness+5, size.height()-5,    shadowFuzzyness, shadowFuzzyness ));
+    quads.append( QRect( 0+5,                size.height()-5,    size.width()-10, shadowFuzzyness ));
+    quads.append( QRect( size.width()-5,     size.height()-5,    shadowFuzzyness, shadowFuzzyness ));
+
+    return quads;
+}
+
+double OxygenClient::shadowOpacity( ShadowType type, double dataOpacity ) const
+{
+    switch( type ) {
+        case ShadowBorderedActive:
+            if( isActive() )
+                return dataOpacity;
+            return 0.0;
+        case ShadowBorderedInactive:
+            if( isActive() )
+                return 0.0;
+            return dataOpacity * 0.25;
+    }
+    abort(); // Should never be reached
 }
 
 } //namespace Oxygen

@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <QtDBus/QtDBus>
 
-#include "plugins.h"
 #include "client.h"
 #include "popupinfo.h"
 #include "tabbox.h"
@@ -57,7 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "deleted.h"
 #include "effects.h"
-#include "kdecorationfactory.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>

@@ -1221,5 +1221,58 @@ KDecoration* KCommonDecoration::decoration()
     return wrapper;
 }
 
+
+KCommonDecoration2::KCommonDecoration2(KDecorationBridge* bridge, KDecorationFactory* factory)
+    : KCommonDecoration( bridge, factory )
+    {
+    Q_ASSERT( dynamic_cast<const KDecoration2*>( decoration() ));
+    }
+
+KCommonDecoration2::~KCommonDecoration2()
+    {
+    }
+
+// All copied from kdecoration.cpp
+QList<QRect> KCommonDecoration2::shadowQuads( ShadowType type ) const
+    {
+    Q_UNUSED( type );
+    return QList<QRect>();
+    }
+double KCommonDecoration2::shadowOpacity( ShadowType type, double dataOpacity ) const
+    {
+    if( isActive() && type == ShadowBorderedActive )
+        return dataOpacity;
+    else if( !isActive() && type == ShadowBorderedInactive )
+        return dataOpacity;
+    return 0.0;
+    }
+double KCommonDecoration2::shadowBrightness( ShadowType type ) const
+    {
+    Q_UNUSED( type );
+    return 1.0;
+    }
+double KCommonDecoration2::shadowSaturation( ShadowType type ) const
+    {
+    Q_UNUSED( type );
+    return 1.0;
+    }
+
+void KCommonDecoration2::repaintShadow()
+    {
+    return static_cast<const KDecoration2*>( decoration() )->repaintShadow();
+    }
+bool KCommonDecoration2::compositingActive() const
+    {
+    return static_cast<const KDecoration2*>( decoration() )->compositingActive();
+    }
+bool KCommonDecoration2::shadowsActive() const
+    {
+    return static_cast<const KDecoration2*>( decoration() )->shadowsActive();
+    }
+double KCommonDecoration2::opacity() const
+    {
+    return static_cast<const KDecoration2*>( decoration() )->opacity();
+    }
+
 // kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle;
 

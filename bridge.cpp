@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "options.h"
+#include "effects.h"
 
 namespace KWin
 {
@@ -199,5 +200,30 @@ void Bridge::grabXServer( bool grab )
     else
         KWin::ungrabXServer();
     }
+
+void Bridge::repaintShadow()
+    {
+    // TODO
+    }
+
+bool Bridge::compositingActive() const
+    {
+    return c->workspace()->compositingActive();
+    }
+
+bool Bridge::shadowsActive() const
+    {
+    if( !c->workspace()->compositingActive() )
+        return false;
+    if( effects && static_cast<EffectsHandlerImpl*>( effects )->isEffectLoaded( "kwin4_effect_shadow" ))
+        return true;
+    return false;
+    }
+
+double Bridge::opacity() const
+    {
+    return c->opacity();
+    }
+
 
 } // namespace

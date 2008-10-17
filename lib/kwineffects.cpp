@@ -224,6 +224,11 @@ void Effect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintD
     effects->drawWindow( w, mask, region, data );
     }
 
+void Effect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
+    {
+    effects->buildQuads( w, quadList );
+    }
+
 QRect Effect::transformWindowDamage( EffectWindow* w, const QRect& r )
     {
     return effects->transformWindowDamage( w, r );
@@ -279,6 +284,7 @@ EffectsHandler::EffectsHandler(CompositingType type)
     : current_paint_screen( 0 )
     , current_paint_window( 0 )
     , current_draw_window( 0 )
+    , current_build_quads( 0 )
     , current_transform( 0 )
     , compositing_type( type )
     {
@@ -741,12 +747,12 @@ WindowQuadList WindowQuadList::select( WindowQuadType type ) const
     {
     foreach( const WindowQuad &q, *this )
         {
-        if( q.type != type ) // something else than ones to select, make a copy and filter
+        if( q.type() != type ) // something else than ones to select, make a copy and filter
             {
             WindowQuadList ret;
             foreach( const WindowQuad &q, *this )
                 {
-                if( q.type == type )
+                if( q.type() == type )
                     ret.append( q );
                 }
             return ret;
@@ -759,12 +765,12 @@ WindowQuadList WindowQuadList::filterOut( WindowQuadType type ) const
     {
     foreach( const WindowQuad &q, *this )
         {
-        if( q.type == type ) // something to filter out, make a copy and filter
+        if( q.type() == type ) // something to filter out, make a copy and filter
             {
             WindowQuadList ret;
             foreach( const WindowQuad &q, *this )
                 {
-                if( q.type != type )
+                if( q.type() != type )
                     ret.append( q );
                 }
             return ret;

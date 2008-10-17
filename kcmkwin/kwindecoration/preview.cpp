@@ -429,6 +429,25 @@ void KDecorationPreviewBridge::grabXServer( bool )
     {
     }
 
+void KDecorationPreviewBridge::repaintShadow()
+    {
+    }
+
+bool KDecorationPreviewBridge::compositingActive() const
+    {
+    return false;
+    }
+
+bool KDecorationPreviewBridge::shadowsActive() const
+    {
+    return false;
+    }
+
+double KDecorationPreviewBridge::opacity() const
+    {
+    return 1.0;
+    }
+
 KDecorationPreviewOptions::KDecorationPreviewOptions()
     {
     customBorderSize = BordersCount; // invalid

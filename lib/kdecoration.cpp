@@ -382,6 +382,65 @@ KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
     return m;
     }
 
+
+KDecoration2::KDecoration2( KDecorationBridge* bridge, KDecorationFactory* factory )
+    : KDecoration( bridge, factory )
+    {
+    Q_ASSERT( dynamic_cast< KDecorationBridge2* >( bridge ));
+    }
+
+KDecoration2::~KDecoration2()
+    {
+    }
+
+QList<QRect> KDecoration2::shadowQuads( ShadowType type ) const
+    {
+    Q_UNUSED( type );
+    return QList<QRect>();
+    }
+
+double KDecoration2::shadowOpacity( ShadowType type, double dataOpacity ) const
+    {
+    if( isActive() && type == ShadowBorderedActive )
+        return dataOpacity;
+    else if( !isActive() && type == ShadowBorderedInactive )
+        return dataOpacity;
+    return 0.0;
+    }
+
+double KDecoration2::shadowBrightness( ShadowType type ) const
+    {
+    Q_UNUSED( type );
+    return 1.0;
+    }
+
+double KDecoration2::shadowSaturation( ShadowType type ) const
+    {
+    Q_UNUSED( type );
+    return 1.0;
+    }
+
+void KDecoration2::repaintShadow()
+    {
+    static_cast< KDecorationBridge2* >( bridge_ )->repaintShadow();
+    }
+
+bool KDecoration2::compositingActive() const
+    {
+    return static_cast< KDecorationBridge2* >( bridge_ )->compositingActive();
+    }
+
+bool KDecoration2::shadowsActive() const
+    {
+    return static_cast< KDecorationBridge2* >( bridge_ )->shadowsActive();
+    }
+
+double KDecoration2::opacity() const
+    {
+    return static_cast< KDecorationBridge2* >( bridge_ )->opacity();
+    }
+
+
 KDecorationOptions::KDecorationOptions()
     : d( new KDecorationOptionsPrivate )
     {

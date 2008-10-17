@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <kwinglobals.h>
+#include "kdecoration.h"
 
 #include <QtCore/QPair>
 #include <QtCore/QRect>
@@ -166,6 +167,14 @@ X-KDE-Library=kwin4_effect_cooleffect
 #define KWIN_EFFECT_API_VERSION_MINOR 56
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
+
+enum WindowQuadType
+    {
+    WindowQuadError, // for the stupid default ctor
+    WindowQuadContents,
+    WindowQuadDecoration,
+    EFFECT_QUAD_TYPE_START = 100 ///< @internal
+    };
 
 /**
  * Infinite region (i.e. a special region type saying that everything needs to be painted).
@@ -343,6 +352,13 @@ class KWIN_EXPORT Effect
          *  do any transformations
          **/
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+
+        /**
+         * Define new window quads so that they can be transformed by other effects.
+         * It's up to the effect to keep track of them.
+         **/
+        virtual void buildQuads( EffectWindow* w, WindowQuadList& quadList );
+
         /**
          * This function is used e.g. by the shadow effect which adds area around windows
          * that needs to be painted as well - e.g. when a window is hidden and the workspace needs
@@ -479,6 +495,7 @@ class KWIN_EXPORT EffectsHandler
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) = 0;
         virtual void postPaintWindow( EffectWindow* w ) = 0;
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) = 0;
+        virtual void buildQuads( EffectWindow* w, WindowQuadList& quadList ) = 0;
         virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
         // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
         // covering the whole screen is created and all mouse events will be intercepted by it.
@@ -526,6 +543,7 @@ class KWIN_EXPORT EffectsHandler
          * if used manually.
          */
         virtual double animationTimeFactor() const = 0;
+        virtual WindowQuadType newWindowQuadType() = 0;
 
         virtual EffectWindow* findWindow( WId id ) const = 0;
         virtual EffectWindowList stackingOrder() const = 0;
@@ -572,6 +590,22 @@ class KWIN_EXPORT EffectsHandler
         virtual void registerPropertyType( long atom, bool reg ) = 0;
 
         /**
+         * Returns @a true if the active window decoration has shadow API hooks.
+         */
+        virtual bool hasDecorationShadows() const = 0;
+        /**
+         * Returns the textures to be used in the shadow. Textures are mapped
+         * to the quad that has the same list offset. E.g. texture[2] is
+         * rendered where the third QRect that EffectWindow::shadowQuads()
+         * returns is.
+         */
+        virtual QList< QList<QImage> > shadowTextures() = 0;
+        /**
+         * Returns the texture list offset for the requested type.
+         */
+        virtual int shadowTextureList( ShadowType type ) const = 0;
+
+        /**
          * Paints given text onto screen, possibly in elided form
          * @param text
          * @param center center point of the painted text
@@ -611,6 +645,7 @@ class KWIN_EXPORT EffectsHandler
         int current_paint_screen;
         int current_paint_window;
         int current_draw_window;
+        int current_build_quads;
         int current_transform;
         CompositingType compositing_type;
     };
@@ -784,6 +819,25 @@ class KWIN_EXPORT EffectWindow
         virtual EffectWindow* findModal() = 0;
         virtual EffectWindowList mainWindows() const = 0;
 
+        /**
+         * Returns the positions of the shadow quads to be rendered. All positions
+         * are relative to the window's top-left corner.
+         */
+        virtual QList<QRect> shadowQuads( ShadowType type ) const = 0;
+        /**
+         * Returns the opacity of the shadow. This has already been pre-multiplied by
+         * the window's opacity if the decoration desires so.
+         */
+        virtual double shadowOpacity( ShadowType type, double dataOpacity ) const = 0;
+        /**
+         * Returns the desired brightness of the shadow.
+         */
+        virtual double shadowBrightness( ShadowType type ) const = 0;
+        /**
+         * Returns the desired saturation of the shadow.
+         */
+        virtual double shadowSaturation( ShadowType type ) const = 0;
+
         // TODO internal?
         virtual WindowQuadList buildQuads() const = 0;
     };
@@ -817,6 +871,8 @@ class KWIN_EXPORT WindowVertex
         void setY( double y );
         double originalX() const;
         double originalY() const;
+        double textureX() const;
+        double textureY() const;
         WindowVertex();
         WindowVertex( double x, double y, double tx, double ty );
     private:
@@ -825,13 +881,6 @@ class KWIN_EXPORT WindowVertex
         double px, py; // position
         double ox, oy; // origional position
         double tx, ty; // texture coords
-    };
-
-enum WindowQuadType
-    {
-    WindowQuadError, // for the stupid default ctor
-    WindowQuadContents,
-    WindowQuadDecoration
     };
 
 /**
@@ -843,11 +892,14 @@ enum WindowQuadType
 class KWIN_EXPORT WindowQuad
     {
     public:
-        explicit WindowQuad( WindowQuadType type );
+        explicit WindowQuad( WindowQuadType type, int id = -1 );
         WindowQuad makeSubQuad( double x1, double y1, double x2, double y2 ) const;
         WindowVertex& operator[]( int index );
         const WindowVertex& operator[]( int index ) const;
+        WindowQuadType type() const;
+        int id() const;
         bool decoration() const;
+        bool effect() const;
         double left() const;
         double right() const;
         double top() const;
@@ -861,7 +913,8 @@ class KWIN_EXPORT WindowQuad
     private:
         friend class WindowQuadList;
         WindowVertex verts[ 4 ];
-        WindowQuadType type; // 0 - contents, 1 - decoration
+        WindowQuadType quadType; // 0 - contents, 1 - decoration
+        int quadID;
     };
 
 class KWIN_EXPORT WindowQuadList
@@ -1473,6 +1526,18 @@ double WindowVertex::originalY() const
     }
 
 inline
+double WindowVertex::textureX() const
+    {
+    return tx;
+    }
+
+inline
+double WindowVertex::textureY() const
+    {
+    return ty;
+    }
+
+inline
 void WindowVertex::move( double x, double y )
     {
     px = x;
@@ -1496,8 +1561,9 @@ void WindowVertex::setY( double y )
 ***************************************************************/
 
 inline
-WindowQuad::WindowQuad( WindowQuadType t )
-    : type( t )
+WindowQuad::WindowQuad( WindowQuadType t, int id )
+    : quadType( t )
+    , quadID( id )
     {
     }
 
@@ -1516,10 +1582,30 @@ const WindowVertex& WindowQuad::operator[]( int index ) const
     }
 
 inline
+WindowQuadType WindowQuad::type() const
+    {
+    assert( quadType != WindowQuadError );
+    return quadType;
+    }
+
+inline
+int WindowQuad::id() const
+    {
+    return quadID;
+    }
+
+inline
 bool WindowQuad::decoration() const
     {
-    assert( type != WindowQuadError );
-    return type == WindowQuadDecoration;
+    assert( quadType != WindowQuadError );
+    return quadType == WindowQuadDecoration;
+    }
+
+inline
+bool WindowQuad::effect() const
+    {
+    assert( quadType != WindowQuadError );
+    return quadType >= EFFECT_QUAD_TYPE_START;
     }
 
 inline

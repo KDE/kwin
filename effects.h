@@ -49,6 +49,8 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
+        virtual void buildQuads( EffectWindow* w, WindowQuadList& quadList );
+
         virtual void activateWindow( EffectWindow* c );
         virtual EffectWindow* activeWindow() const;
         virtual void moveWindow( EffectWindow* w, const QPoint& pos );
@@ -100,6 +102,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual int desktopUp( int desktop, bool wrap ) const;
         virtual int desktopDown( int desktop, bool wrap ) const;
         virtual double animationTimeFactor() const;
+        virtual WindowQuadType newWindowQuadType();
 
         virtual Window createInputWindow( Effect* e, int x, int y, int w, int h, const QCursor& cursor );
         using EffectsHandler::createInputWindow;
@@ -115,6 +118,10 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual unsigned long xrenderBufferPicture();
         virtual void reconfigure();
         virtual void registerPropertyType( long atom, bool reg );
+
+        virtual bool hasDecorationShadows() const;
+        virtual QList< QList<QImage> > shadowTextures();
+        virtual int shadowTextureList( ShadowType type ) const;
 
         // internal (used by kwin core or compositing code)
         void startPaint();
@@ -160,6 +167,7 @@ class EffectsHandlerImpl : public EffectsHandler
         QList<EffectWindow*> elevated_windows;
         QMultiMap< int, EffectPair > effect_order;
         QHash< long, int > registered_atoms;
+        int next_window_quad_type;
 };
 
 class EffectWindowImpl : public EffectWindow
@@ -229,6 +237,11 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isModal() const;
         virtual EffectWindow* findModal();
         virtual EffectWindowList mainWindows() const;
+
+        virtual QList<QRect> shadowQuads( ShadowType type ) const;
+        virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
+        virtual double shadowBrightness( ShadowType type ) const;
+        virtual double shadowSaturation( ShadowType type ) const;
 
         virtual WindowQuadList buildQuads() const;
 

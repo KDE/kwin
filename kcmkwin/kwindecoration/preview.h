@@ -66,7 +66,7 @@ class KDecorationPreview
     };
 
 class KDecorationPreviewBridge
-    : public KDecorationBridge
+    : public KDecorationBridge2
     {
     public:
         KDecorationPreviewBridge( KDecorationPreview* preview, bool active );
@@ -112,6 +112,11 @@ class KDecorationPreviewBridge
         virtual QWidget* initialParentWidget() const;
         virtual Qt::WFlags initialWFlags() const;
         virtual void grabXServer( bool grab );
+
+        virtual void repaintShadow();
+        virtual bool compositingActive() const;
+        virtual bool shadowsActive() const;
+        virtual double opacity() const;
     private:
         KDecorationPreview* preview;
         bool active;

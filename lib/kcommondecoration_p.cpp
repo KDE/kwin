@@ -25,11 +25,14 @@
 #include "kcommondecoration_p.h"
 
 #include "kcommondecoration.h"
+#include "kdecorationbridge.h"
+
+#include <assert.h>
 
 #include "kcommondecoration_p.moc"
 
 KCommonDecorationWrapper::KCommonDecorationWrapper( KCommonDecoration* deco, KDecorationBridge* bridge, KDecorationFactory* factory )
-    : KDecoration( bridge, factory )
+    : KDecoration2( bridge, factory )
     , decoration( deco )
     {
     }
@@ -108,4 +111,32 @@ bool KCommonDecorationWrapper::windowDocked( Position side )
 void KCommonDecorationWrapper::reset( unsigned long changed )
     {
     return decoration->reset( changed );
+    }
+
+QList<QRect> KCommonDecorationWrapper::shadowQuads( ShadowType type ) const
+    {
+    if( KCommonDecoration2 *decoration2 = dynamic_cast<KCommonDecoration2*>( decoration ))
+        return decoration2->shadowQuads( type );
+    return QList<QRect>();
+    }
+
+double KCommonDecorationWrapper::shadowOpacity( ShadowType type, double dataOpacity ) const
+    {
+    if( KCommonDecoration2 *decoration2 = dynamic_cast<KCommonDecoration2*>( decoration ))
+        return decoration2->shadowOpacity( type, dataOpacity );
+    return dataOpacity;
+    }
+
+double KCommonDecorationWrapper::shadowBrightness( ShadowType type ) const
+    {
+    if( KCommonDecoration2 *decoration2 = dynamic_cast<KCommonDecoration2*>( decoration ))
+        return decoration2->shadowBrightness( type );
+    return 1.0;
+    }
+
+double KCommonDecorationWrapper::shadowSaturation( ShadowType type ) const
+    {
+    if( KCommonDecoration2 *decoration2 = dynamic_cast<KCommonDecoration2*>( decoration ))
+        return decoration2->shadowSaturation( type );
+    return 1.0;
     }

@@ -32,12 +32,13 @@
 // 
 
 class KCommonDecoration;
+class KCommonDecoration2;
 class KDecorationBridge;
 class KDecorationFactory;
 
 // wrapper all functionality that needs reimplementing in KDecoration and forward it to KCommonDecoration
 class KCommonDecorationWrapper
-    : public KDecoration
+    : public KDecoration2
     {
     Q_OBJECT
     public:
@@ -57,6 +58,11 @@ class KCommonDecorationWrapper
         virtual bool drawbound( const QRect& geom, bool clear );
         virtual bool windowDocked( Position side );
         virtual void reset( unsigned long changed );
+
+        virtual QList<QRect> shadowQuads( ShadowType type ) const;
+        virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
+        virtual double shadowBrightness( ShadowType type ) const;
+        virtual double shadowSaturation( ShadowType type ) const;
     private:
         KCommonDecoration* decoration;
     };

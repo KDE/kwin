@@ -89,6 +89,16 @@ class KDecorationBridge : public KDecorationDefines
         virtual void grabXServer( bool grab ) = 0;
     };
 
+class KWIN_EXPORT KDecorationBridge2
+    : public KDecorationBridge
+    {
+    public:
+        virtual void repaintShadow() = 0;
+        virtual bool compositingActive() const = 0;
+        virtual bool shadowsActive() const = 0;
+        virtual double opacity() const = 0;
+    };
+
 /** @} */
 
 #endif

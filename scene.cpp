@@ -461,6 +461,7 @@ WindowQuadList Scene::Window::buildQuads() const
         ret = makeQuads( WindowQuadContents, contents );
         ret += makeQuads( WindowQuadDecoration, decoration );
         }
+    effects->buildQuads( static_cast<Client*>( toplevel )->effectWindow(), ret );
     cached_quad_list = new WindowQuadList( ret );
     return ret;
     }
