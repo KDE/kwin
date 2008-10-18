@@ -316,15 +316,15 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         // Make our own shadow as the decoration doesn't support it
         int fuzzy = shadowFuzzyness;
         // Shadow's size must be a least 2*fuzzy in both directions (or the corners will be broken)
-        int width = qMax(fuzzy*2, w->width());
-        int height = qMax(fuzzy*2, w->height());
+        int width = qMax( fuzzy * 2, w->width() + 2 * shadowSize );
+        int height = qMax( fuzzy * 2, w->height() + 2 * shadowSize );
         double x1, y1, x2, y2;
         int id = 0;
         // top-left
-        x1 = 0 - fuzzy;
-        y1 = 0 - fuzzy;
-        x2 = 0;
-        y2 = 0;
+        x1 = shadowXOffset - shadowSize + 0 - fuzzy;
+        y1 = shadowYOffset - shadowSize + 0 - fuzzy;
+        x2 = shadowXOffset - shadowSize + 0 + fuzzy;
+        y2 = shadowYOffset - shadowSize + 0 + fuzzy;
         WindowQuad topLeftQuad( mShadowQuadTypes.at( 0 ), id++ );
         topLeftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         topLeftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -332,10 +332,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         topLeftQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
         quadList.append( topLeftQuad );
         // top
-        x1 = 0;
-        y1 = 0 - fuzzy;
-        x2 = width;
-        y2 = 0;
+        x1 = shadowXOffset - shadowSize + 0 + fuzzy;
+        y1 = shadowYOffset - shadowSize + 0 - fuzzy;
+        x2 = shadowXOffset - shadowSize + width - fuzzy;
+        y2 = shadowYOffset - shadowSize + 0 + fuzzy;
         WindowQuad topQuad( mShadowQuadTypes.at( 0 ), id++ );
         topQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         topQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -343,10 +343,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         topQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
         quadList.append( topQuad );
         // top-right
-        x1 = width;
-        y1 = 0 - fuzzy;
-        x2 = width + fuzzy;
-        y2 = 0;
+        x1 = shadowXOffset - shadowSize + width - fuzzy;
+        y1 = shadowYOffset - shadowSize + 0 - fuzzy;
+        x2 = shadowXOffset - shadowSize + width + fuzzy;
+        y2 = shadowYOffset - shadowSize + 0 + fuzzy;
         WindowQuad topRightQuad( mShadowQuadTypes.at( 0 ), id++ );
         topRightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         topRightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -354,10 +354,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         topRightQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
         quadList.append( topRightQuad );
         // left
-        x1 = 0 - fuzzy;
-        y1 = 0;
-        x2 = 0;
-        y2 = height;
+        x1 = shadowXOffset - shadowSize + 0 - fuzzy;
+        y1 = shadowYOffset - shadowSize + 0 + fuzzy;
+        x2 = shadowXOffset - shadowSize + 0 + fuzzy;
+        y2 = shadowYOffset - shadowSize + height - fuzzy;
         WindowQuad leftQuad( mShadowQuadTypes.at( 0 ), id++ );
         leftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         leftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -365,10 +365,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         leftQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
         quadList.append( leftQuad );
         // center
-        x1 = 0;
-        y1 = 0;
-        x2 = width;
-        y2 = height;
+        x1 = shadowXOffset - shadowSize + 0 + fuzzy;
+        y1 = shadowYOffset - shadowSize + 0 + fuzzy;
+        x2 = shadowXOffset - shadowSize + width - fuzzy;
+        y2 = shadowYOffset - shadowSize + height - fuzzy;
         WindowQuad contentsQuad( mShadowQuadTypes.at( 0 ), id++ );
         contentsQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         contentsQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -376,10 +376,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         contentsQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
         quadList.append( contentsQuad );
         // right
-        x1 = width;
-        y1 = 0;
-        x2 = width + fuzzy;
-        y2 = height;
+        x1 = shadowXOffset - shadowSize + width - fuzzy;
+        y1 = shadowYOffset - shadowSize + 0 + fuzzy;
+        x2 = shadowXOffset - shadowSize + width + fuzzy;
+        y2 = shadowYOffset - shadowSize + height - fuzzy;
         WindowQuad rightQuad( mShadowQuadTypes.at( 0 ), id++ );
         rightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         rightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -387,10 +387,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         rightQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
         quadList.append( rightQuad );
         // bottom-left
-        x1 = 0 - fuzzy;
-        y1 = height;
-        x2 = 0;
-        y2 = height + fuzzy;
+        x1 = shadowXOffset - shadowSize + 0 - fuzzy;
+        y1 = shadowYOffset - shadowSize + height - fuzzy;
+        x2 = shadowXOffset - shadowSize + 0 + fuzzy;
+        y2 = shadowYOffset - shadowSize + height + fuzzy;
         WindowQuad bottomLeftQuad( mShadowQuadTypes.at( 0 ), id++ );
         bottomLeftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         bottomLeftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -398,10 +398,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         bottomLeftQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
         quadList.append( bottomLeftQuad );
         // bottom
-        x1 = 0;
-        y1 = height;
-        x2 = width;
-        y2 = height + fuzzy;
+        x1 = shadowXOffset - shadowSize + 0 + fuzzy;
+        y1 = shadowYOffset - shadowSize + height - fuzzy;
+        x2 = shadowXOffset - shadowSize + width - fuzzy;
+        y2 = shadowYOffset - shadowSize + height + fuzzy;
         WindowQuad bottomQuad( mShadowQuadTypes.at( 0 ), id++ );
         bottomQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         bottomQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -409,10 +409,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         bottomQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
         quadList.append( bottomQuad );
         // bottom-right
-        x1 = width;
-        y1 = height;
-        x2 = width + fuzzy;
-        y2 = height + fuzzy;
+        x1 = shadowXOffset - shadowSize + width - fuzzy;
+        y1 = shadowYOffset - shadowSize + height - fuzzy;
+        x2 = shadowXOffset - shadowSize + width + fuzzy;
+        y2 = shadowYOffset - shadowSize + height + fuzzy;
         WindowQuad bottomRightQuad( mShadowQuadTypes.at( 0 ), id++ );
         bottomRightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         bottomRightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
@@ -514,49 +514,65 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                 {
                 // Render it!
                 // Cheat a little, assume the active and inactive shadows have identical quads
-                // TODO: Opacity, saturation, brightness, etc.
-                if( window->hasDecoration() &&
-                    effects->shadowTextureList( ShadowBorderedActive ) == texture )
-                    { // Decorated windows
-                    // Active shadow
-                    mShadowTextures.at( texture ).at( quad.id() )->bind();
-                    glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderedActive, data.opacity ));
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                    mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
-                    renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                    mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
-                    mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                if( effects->hasDecorationShadows() )
+                    {
+                    if( window->hasDecoration() &&
+                        effects->shadowTextureList( ShadowBorderedActive ) == texture )
+                        { // Decorated windows
+                        // Active shadow
+                        mShadowTextures.at( texture ).at( quad.id() )->bind();
+                        glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderedActive, data.opacity ));
+                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                        mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
+                        renderGLGeometry( region, 4, verts.data(), texcoords.data() );
+                        mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
+                        mShadowTextures.at( texture ).at( quad.id() )->unbind();
 
-                    // Inactive shadow
-                    texture = effects->shadowTextureList( ShadowBorderedInactive );
-                    mShadowTextures.at( texture ).at( quad.id() )->bind();
-                    glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderedInactive, data.opacity ));
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                    mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
-                    renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                    mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
-                    mShadowTextures.at( texture ).at( quad.id() )->unbind();
-                    }
-                else if( effects->shadowTextureList( ShadowBorderlessActive ) == texture )
-                    { // Decoration-less normal windows
-                    if( effects->activeWindow() == window )
-                        glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderlessActive, data.opacity ));
-                    else
-                        {
-                        texture = effects->shadowTextureList( ShadowBorderlessInactive );
-                        glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderlessInactive, data.opacity ));
+                        // Inactive shadow
+                        texture = effects->shadowTextureList( ShadowBorderedInactive );
+                        mShadowTextures.at( texture ).at( quad.id() )->bind();
+                        glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderedInactive, data.opacity ));
+                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                        mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
+                        renderGLGeometry( region, 4, verts.data(), texcoords.data() );
+                        mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
+                        mShadowTextures.at( texture ).at( quad.id() )->unbind();
                         }
-                    mShadowTextures.at( texture ).at( quad.id() )->bind();
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                    mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
-                    renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                    mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
-                    mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                    else if( effects->shadowTextureList( ShadowBorderlessActive ) == texture )
+                        { // Decoration-less normal windows
+                        if( effects->activeWindow() == window )
+                            glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderlessActive, data.opacity ));
+                        else
+                            {
+                            texture = effects->shadowTextureList( ShadowBorderlessInactive );
+                            glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderlessInactive, data.opacity ));
+                            }
+                        mShadowTextures.at( texture ).at( quad.id() )->bind();
+                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                        mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
+                        renderGLGeometry( region, 4, verts.data(), texcoords.data() );
+                        mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
+                        mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                        }
+                    else
+                        { // Other windows
+                        mShadowTextures.at( texture ).at( quad.id() )->bind();
+                        glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowOther, data.opacity ));
+                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                        mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
+                        renderGLGeometry( region, 4, verts.data(), texcoords.data() );
+                        mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
+                        mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                        }
                     }
                 else
-                    { // Other windows
+                    { // Default shadow
                     mShadowTextures.at( texture ).at( quad.id() )->bind();
-                    glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowOther, data.opacity ));
+                    float opacity = shadowOpacity;
+                    if( intensifyActiveShadow && window == effects->activeWindow() )
+                        opacity = 1 - ( 1 - shadowOpacity ) * ( 1 - shadowOpacity );
+                    glColor4f( shadowColor.redF(), shadowColor.greenF(), shadowColor.blueF(),
+                               opacity * data.opacity);
                     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                     mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                     renderGLGeometry( region, 4, verts.data(), texcoords.data() );
