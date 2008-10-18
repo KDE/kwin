@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>322</height>
+    <width>332</width>
+    <height>326</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
@@ -40,7 +40,7 @@
      <item>
       <widget class="QLabel" name="label_4" >
        <property name="text" >
-        <string>Keep window thumbnails</string>
+        <string>Keep window thumbnails:</string>
        </property>
       </widget>
      </item>
@@ -175,21 +175,18 @@
      </layout>
     </widget>
    </item>
-   <item>
-    <spacer>
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0" >
-      <size>
-       <width>382</width>
-       <height>101</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>compositingType</tabstop>
+  <tabstop>windowThumbnails</tabstop>
+  <tabstop>disableChecks</tabstop>
+  <tabstop>glMode</tabstop>
+  <tabstop>glTextureFilter</tabstop>
+  <tabstop>glDirect</tabstop>
+  <tabstop>glVSync</tabstop>
+  <tabstop>xrenderSmoothScale</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
