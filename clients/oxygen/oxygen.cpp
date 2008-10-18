@@ -205,15 +205,15 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
     p.end(); \
     textures.append( dump.toImage() );
 
-    MAKE_TEX( w, h, 0, h );
-    MAKE_TEX( 1, h, w, h );
-    MAKE_TEX( w, h, w, h );
-    MAKE_TEX( w, 1, 0, h );
-    //MAKE_TEX( 1, 1, w, h );
-    MAKE_TEX( w, 1, w, h );
     MAKE_TEX( w, h, 0, 0 );
     MAKE_TEX( 1, h, w, 0 );
     MAKE_TEX( w, h, w, 0 );
+    MAKE_TEX( w, 1, 0, h );
+    //MAKE_TEX( 1, 1, w, h );
+    MAKE_TEX( w, 1, w, h );
+    MAKE_TEX( w, h, 0, h );
+    MAKE_TEX( 1, h, w, h );
+    MAKE_TEX( w, h, w, h );
     delete shadow;
 
     textureLists.append( textures );
