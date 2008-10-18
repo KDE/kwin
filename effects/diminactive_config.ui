@@ -76,6 +76,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>sliderStrength</tabstop>
+  <tabstop>spinStrength</tabstop>
+  <tabstop>checkPanel</tabstop>
+  <tabstop>checkDesktop</tabstop>
+  <tabstop>checkGroup</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>430</width>
+    <width>476</width>
     <height>306</height>
    </rect>
   </property>
@@ -20,6 +20,9 @@
        <widget class="QLabel" name="label" >
         <property name="text" >
          <string>Rearrange &amp;duration:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>rearrangeDurationSpin</cstring>
@@ -71,6 +74,9 @@
         <property name="text" >
          <string>Layout mode:</string>
         </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
         <property name="buddy" >
          <cstring>layoutCombo</cstring>
         </property>
@@ -119,6 +125,9 @@
         <property name="text" >
          <string>Active screen &amp;edge (Current desktop):</string>
         </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
         <property name="buddy" >
          <cstring>screenEdgeCombo</cstring>
         </property>
@@ -131,6 +140,9 @@
        <widget class="QLabel" name="label_4" >
         <property name="text" >
          <string>Active screen &amp;edge (All desktops):</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>screenEdgeAllCombo</cstring>
@@ -183,6 +195,12 @@
         </item>
         <item>
          <widget class="QSlider" name="accuracySlider" >
+          <property name="minimumSize" >
+           <size>
+            <width>130</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="minimum" >
            <number>1</number>
           </property>
@@ -242,7 +260,14 @@
  </customwidgets>
  <tabstops>
   <tabstop>rearrangeDurationSpin</tabstop>
+  <tabstop>layoutCombo</tabstop>
   <tabstop>displayTitleBox</tabstop>
+  <tabstop>displayIconBox</tabstop>
+  <tabstop>switchingBox</tabstop>
+  <tabstop>accuracySlider</tabstop>
+  <tabstop>fillGapsBox</tabstop>
+  <tabstop>screenEdgeAllCombo</tabstop>
+  <tabstop>screenEdgeCombo</tabstop>
  </tabstops>
  <resources/>
  <connections/>

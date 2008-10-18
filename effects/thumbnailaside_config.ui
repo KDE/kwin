@@ -15,7 +15,10 @@
      <property name="title" >
       <string>Appearance</string>
      </property>
-     <layout class="QGridLayout" >
+     <layout class="QFormLayout" name="formLayout" >
+      <property name="labelAlignment" >
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
       <item row="0" column="0" >
        <widget class="QLabel" name="label" >
         <property name="text" >

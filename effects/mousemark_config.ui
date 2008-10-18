@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>399</width>
-    <height>300</height>
+    <width>264</width>
+    <height>226</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -15,7 +15,10 @@
      <property name="title" >
       <string>Appearance</string>
      </property>
-     <layout class="QGridLayout" >
+     <layout class="QFormLayout" name="formLayout" >
+      <property name="labelAlignment" >
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
       <item row="0" column="0" >
        <widget class="QLabel" name="label" >
         <property name="text" >
@@ -53,7 +56,98 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="KColorCombo" name="comboColors" />
+       <widget class="KColorCombo" name="comboColors" >
+        <item>
+         <property name="text" >
+          <string>Custom...</string>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -66,6 +160,9 @@
      <property name="text" >
       <string>Draw with the mouse by holding Shift+Meta keys and moving the mouse.</string>
      </property>
+     <property name="alignment" >
+      <set>Qt::AlignCenter</set>
+     </property>
      <property name="wordWrap" >
       <bool>true</bool>
      </property>
@@ -75,15 +172,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>KColorCombo</class>
+   <extends>QComboBox</extends>
+   <header>kcolorcombo.h</header>
+  </customwidget>
+  <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>
    <header location="global" >kwineffects.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>KColorCombo</class>
-   <extends>QComboBox</extends>
-   <header location="global" >kcolorcombo.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

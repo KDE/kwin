@@ -6,28 +6,35 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>369</height>
    </rect>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
-    <widget class="QLabel" name="label" >
-     <property name="text" >
-      <string>&amp;Radius:</string>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <layout class="QFormLayout" name="formLayout" >
+     <property name="labelAlignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
-     <property name="buddy" >
-      <cstring>radiusSpin</cstring>
-     </property>
-    </widget>
+     <item row="0" column="0" >
+      <widget class="QLabel" name="label" >
+       <property name="text" >
+        <string>&amp;Radius:</string>
+       </property>
+       <property name="buddy" >
+        <cstring>radiusSpin</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QSpinBox" name="radiusSpin" >
+       <property name="maximum" >
+        <number>500</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="0" column="1" >
-    <widget class="QSpinBox" name="radiusSpin" >
-     <property name="maximum" >
-      <number>500</number>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2" >
+   <item>
     <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" />
    </item>
   </layout>

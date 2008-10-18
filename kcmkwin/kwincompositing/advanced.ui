@@ -11,15 +11,24 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
-    <layout class="QHBoxLayout" >
-     <item>
+    <layout class="QFormLayout" name="formLayout" >
+     <property name="fieldGrowthPolicy" >
+      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+     </property>
+     <property name="labelAlignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <item row="0" column="0" >
       <widget class="QLabel" name="label_2" >
        <property name="text" >
         <string>Compositing type:</string>
        </property>
+       <property name="buddy" >
+        <cstring>compositingType</cstring>
+       </property>
       </widget>
      </item>
-     <item>
+     <item row="0" column="1" >
       <widget class="QComboBox" name="compositingType" >
        <item>
         <property name="text" >
@@ -33,18 +42,17 @@
        </item>
       </widget>
      </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" >
-     <item>
+     <item row="1" column="0" >
       <widget class="QLabel" name="label_4" >
        <property name="text" >
         <string>Keep window thumbnails:</string>
        </property>
+       <property name="buddy" >
+        <cstring>windowThumbnails</cstring>
+       </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="1" >
       <widget class="QComboBox" name="windowThumbnails" >
        <item>
         <property name="text" >
@@ -83,15 +91,21 @@
      </property>
      <layout class="QVBoxLayout" >
       <item>
-       <layout class="QHBoxLayout" >
-        <item>
+       <layout class="QFormLayout" name="formLayout_2" >
+        <property name="labelAlignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <item row="0" column="0" >
          <widget class="QLabel" name="label" >
           <property name="text" >
            <string>OpenGL mode:</string>
           </property>
+          <property name="buddy" >
+           <cstring>glMode</cstring>
+          </property>
          </widget>
         </item>
-        <item>
+        <item row="0" column="1" >
          <widget class="QComboBox" name="glMode" >
           <item>
            <property name="text" >
@@ -110,18 +124,17 @@
           </item>
          </widget>
         </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" >
-        <item>
+        <item row="1" column="0" >
          <widget class="QLabel" name="label_3" >
           <property name="text" >
            <string>Texture filter:</string>
           </property>
+          <property name="buddy" >
+           <cstring>glTextureFilter</cstring>
+          </property>
          </widget>
         </item>
-        <item>
+        <item row="1" column="1" >
          <widget class="QComboBox" name="glTextureFilter" >
           <item>
            <property name="text" >
@@ -175,7 +188,29 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <spacer name="verticalSpacer" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
+  <zorder>glGroup</zorder>
+  <zorder>xrenderGroup</zorder>
+  <zorder>formLayoutWidget</zorder>
+  <zorder>label_2</zorder>
+  <zorder>verticalSpacer</zorder>
+  <zorder>disableChecks</zorder>
+  <zorder>gridLayoutWidget</zorder>
+  <zorder>disableChecks</zorder>
+  <zorder>disableChecks</zorder>
  </widget>
  <tabstops>
   <tabstop>compositingType</tabstop>
