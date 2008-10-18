@@ -837,9 +837,10 @@ class KWIN_EXPORT EffectWindow
          * Returns the desired saturation of the shadow.
          */
         virtual double shadowSaturation( ShadowType type ) const = 0;
-
-        // TODO internal?
-        virtual WindowQuadList buildQuads() const = 0;
+        /**
+         * Returns the unmodified window quad list. Can also be used to force rebuilding.
+         */
+        virtual WindowQuadList buildQuads( bool force = false ) const = 0;
     };
 
 class KWIN_EXPORT EffectWindowGroup

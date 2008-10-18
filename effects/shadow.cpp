@@ -138,6 +138,9 @@ void ShadowEffect::reconfigure( ReconfigureFlags )
     updateShadowColor();
 
     // Load decoration shadow related things
+    bool reconfiguring = false;
+    if( mShadowQuadTypes.count() )
+        reconfiguring = true;
     mShadowQuadTypes.clear(); // Changed decoration? TODO: Unregister?
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
@@ -178,6 +181,12 @@ void ShadowEffect::reconfigure( ReconfigureFlags )
             }
         }
 #endif
+
+    if( reconfiguring )
+        { // Force rebuild of all quads to clear their caches
+        foreach( EffectWindow *w, effects->stackingOrder() )
+            w->buildQuads( true );
+        }
     }
 
 void ShadowEffect::updateShadowColor()

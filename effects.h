@@ -243,7 +243,7 @@ class EffectWindowImpl : public EffectWindow
         virtual double shadowBrightness( ShadowType type ) const;
         virtual double shadowSaturation( ShadowType type ) const;
 
-        virtual WindowQuadList buildQuads() const;
+        virtual WindowQuadList buildQuads( bool force = false ) const;
 
         const Toplevel* window() const;
         Toplevel* window();

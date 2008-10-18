@@ -182,7 +182,7 @@ class Scene::Window
         void discardShape();
         void updateToplevel( Toplevel* c );
         // creates initial quad list for the window
-        virtual WindowQuadList buildQuads() const;
+        virtual WindowQuadList buildQuads( bool force = false ) const;
         void suspendUnredirect( bool suspend );
     protected:
         WindowQuadList makeQuads( WindowQuadType type, const QRegion& reg ) const;

@@ -447,9 +447,9 @@ void Scene::Window::disablePainting( int reason )
     disable_painting |= reason;
     }
 
-WindowQuadList Scene::Window::buildQuads() const
+WindowQuadList Scene::Window::buildQuads( bool force ) const
     {
-    if( cached_quad_list != NULL )
+    if( cached_quad_list != NULL && !force )
         return *cached_quad_list;
     WindowQuadList ret;
     if( toplevel->clientPos() == QPoint( 0, 0 ) && toplevel->clientSize() == toplevel->size())

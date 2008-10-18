@@ -1381,9 +1381,9 @@ double EffectWindowImpl::shadowSaturation( ShadowType type ) const
     return toplevel->workspace()->decorationShadowSaturation( type );
     }
 
-WindowQuadList EffectWindowImpl::buildQuads() const
+WindowQuadList EffectWindowImpl::buildQuads( bool force ) const
     {
-    return sceneWindow()->buildQuads();
+    return sceneWindow()->buildQuads( force );
     }
 
 EffectWindow* effectWindow( Toplevel* w )
