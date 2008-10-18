@@ -89,7 +89,7 @@ class KDecorationBridge : public KDecorationDefines
         virtual void grabXServer( bool grab ) = 0;
     };
 
-class KWIN_EXPORT KDecorationBridge2
+class KWIN_EXPORT KDecorationBridgeUnstable
     : public KDecorationBridge
     {
     public:

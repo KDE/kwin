@@ -37,7 +37,7 @@ class QPoint;
 
 namespace Oxygen {
 
-class OxygenClient : public KCommonDecoration2
+class OxygenClient : public KCommonDecorationUnstable
 {
     Q_OBJECT
 public:

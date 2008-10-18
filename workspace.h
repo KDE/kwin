@@ -1000,7 +1000,7 @@ bool Workspace::hasDecorationShadows() const
 inline
 QList< QList<QImage> > Workspace::decorationShadowTextures()
     {
-    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
         return factory->shadowTextures();
     return QList< QList<QImage> >();
     }
@@ -1008,7 +1008,7 @@ QList< QList<QImage> > Workspace::decorationShadowTextures()
 inline
 int Workspace::decorationShadowTextureList( ShadowType type ) const
     {
-    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
         return factory->shadowTextureList( type );
     return -1;
     }
@@ -1016,7 +1016,7 @@ int Workspace::decorationShadowTextureList( ShadowType type ) const
 inline
 QList<QRect> Workspace::decorationShadowQuads( ShadowType type, QSize size ) const
     {
-    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
         return factory->shadowQuads( type, size );
     return QList<QRect>();
     }
@@ -1024,7 +1024,7 @@ QList<QRect> Workspace::decorationShadowQuads( ShadowType type, QSize size ) con
 inline
 double Workspace::decorationShadowOpacity( ShadowType type, double dataOpacity ) const
     {
-    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
         return factory->shadowOpacity( type, dataOpacity );
     return dataOpacity;
     }
@@ -1032,7 +1032,7 @@ double Workspace::decorationShadowOpacity( ShadowType type, double dataOpacity )
 inline
 double Workspace::decorationShadowBrightness( ShadowType type ) const
     {
-    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
         return factory->shadowBrightness( type );
     return 1.0;
     }
@@ -1040,7 +1040,7 @@ double Workspace::decorationShadowBrightness( ShadowType type ) const
 inline
 double Workspace::decorationShadowSaturation( ShadowType type ) const
     {
-    if( KDecorationFactory2* factory = dynamic_cast< KDecorationFactory2* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
         return factory->shadowSaturation( type );
     return 1.0;
     }

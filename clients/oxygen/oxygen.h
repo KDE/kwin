@@ -53,7 +53,7 @@ enum ButtonType {
 };
 Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
 
-class OxygenFactory: public KDecorationFactory2
+class OxygenFactory: public KDecorationFactoryUnstable
 {
 public:
     OxygenFactory();

@@ -859,18 +859,21 @@ class KWIN_EXPORT KDecoration
         QWidget* w_;
         KDecorationFactory* factory_;
         friend class KDecorationOptions; // for options_
-        friend class KDecoration2; // for bridge_
+        friend class KDecorationUnstable; // for bridge_
         static KDecorationOptions* options_;
         KDecorationPrivate* d;
     };
 
-class KWIN_EXPORT KDecoration2
+/**
+ * @warning THIS CLASS IS UNSTABLE AND WILL ONLY BE SUPPORTED IN KDE 4.2!
+ */
+class KWIN_EXPORT KDecorationUnstable
     : public KDecoration
     {
     Q_OBJECT
     public:
-        KDecoration2( KDecorationBridge* bridge, KDecorationFactory* factory );
-        virtual ~KDecoration2();
+        KDecorationUnstable( KDecorationBridge* bridge, KDecorationFactory* factory );
+        virtual ~KDecorationUnstable();
 
         /**
          * This function should return the positions of the shadow quads to be rendered.

@@ -797,28 +797,28 @@ inline bool Client::hiddenPreview() const
 
 inline QList<QRect> Client::shadowQuads( ShadowType type ) const
     {
-    if( KDecoration2* decoration2 = dynamic_cast< KDecoration2* >( decoration ))
+    if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
         return decoration2->shadowQuads( type );
     return QList<QRect>();
     }
 
 inline double Client::shadowOpacity( ShadowType type, double dataOpacity ) const
     {
-    if( KDecoration2* decoration2 = dynamic_cast< KDecoration2* >( decoration ))
+    if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
         return decoration2->shadowOpacity( type, dataOpacity );
     return dataOpacity;
     }
 
 inline double Client::shadowBrightness( ShadowType type ) const
     {
-    if( KDecoration2* decoration2 = dynamic_cast< KDecoration2* >( decoration ))
+    if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
         return decoration2->shadowBrightness( type );
     return 1.0;
     }
 
 inline double Client::shadowSaturation( ShadowType type ) const
     {
-    if( KDecoration2* decoration2 = dynamic_cast< KDecoration2* >( decoration ))
+    if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
         return decoration2->shadowSaturation( type );
     return 1.0;
     }

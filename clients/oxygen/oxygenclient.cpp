@@ -70,7 +70,7 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 
 
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
-    : KCommonDecoration2(b, f)
+    : KCommonDecorationUnstable(b, f)
     , colorCacheInvalid_(true)
     , helper_(*globalHelper)
 {

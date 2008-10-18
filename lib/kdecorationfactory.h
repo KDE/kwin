@@ -115,7 +115,10 @@ class KWIN_EXPORT KDecorationFactory
         KDecorationFactoryPrivate* d;
     };
 
-class KWIN_EXPORT KDecorationFactory2
+/**
+ * @warning THIS CLASS IS UNSTABLE AND WILL ONLY BE SUPPORTED IN KDE 4.2!
+ */
+class KWIN_EXPORT KDecorationFactoryUnstable
     : public KDecorationFactory
     {
     public:

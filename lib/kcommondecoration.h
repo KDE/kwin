@@ -362,13 +362,13 @@ class KWIN_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
         KCommonDecorationPrivate *d;
 };
 
-class KWIN_EXPORT KCommonDecoration2
+class KWIN_EXPORT KCommonDecorationUnstable
     : public KCommonDecoration
     {
     Q_OBJECT
     public:
-        KCommonDecoration2(KDecorationBridge* bridge, KDecorationFactory* factory);
-        virtual ~KCommonDecoration2();
+        KCommonDecorationUnstable(KDecorationBridge* bridge, KDecorationFactory* factory);
+        virtual ~KCommonDecorationUnstable();
         virtual QList<QRect> shadowQuads( ShadowType type ) const;
         virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
         virtual double shadowBrightness( ShadowType type ) const;

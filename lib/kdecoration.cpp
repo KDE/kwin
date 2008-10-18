@@ -383,23 +383,23 @@ KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
     }
 
 
-KDecoration2::KDecoration2( KDecorationBridge* bridge, KDecorationFactory* factory )
+KDecorationUnstable::KDecorationUnstable( KDecorationBridge* bridge, KDecorationFactory* factory )
     : KDecoration( bridge, factory )
     {
-    Q_ASSERT( dynamic_cast< KDecorationBridge2* >( bridge ));
+    Q_ASSERT( dynamic_cast< KDecorationBridgeUnstable* >( bridge ));
     }
 
-KDecoration2::~KDecoration2()
+KDecorationUnstable::~KDecorationUnstable()
     {
     }
 
-QList<QRect> KDecoration2::shadowQuads( ShadowType type ) const
+QList<QRect> KDecorationUnstable::shadowQuads( ShadowType type ) const
     {
     Q_UNUSED( type );
     return QList<QRect>();
     }
 
-double KDecoration2::shadowOpacity( ShadowType type, double dataOpacity ) const
+double KDecorationUnstable::shadowOpacity( ShadowType type, double dataOpacity ) const
     {
     if( isActive() && type == ShadowBorderedActive )
         return dataOpacity;
@@ -408,36 +408,36 @@ double KDecoration2::shadowOpacity( ShadowType type, double dataOpacity ) const
     return 0.0;
     }
 
-double KDecoration2::shadowBrightness( ShadowType type ) const
+double KDecorationUnstable::shadowBrightness( ShadowType type ) const
     {
     Q_UNUSED( type );
     return 1.0;
     }
 
-double KDecoration2::shadowSaturation( ShadowType type ) const
+double KDecorationUnstable::shadowSaturation( ShadowType type ) const
     {
     Q_UNUSED( type );
     return 1.0;
     }
 
-void KDecoration2::repaintShadow()
+void KDecorationUnstable::repaintShadow()
     {
-    static_cast< KDecorationBridge2* >( bridge_ )->repaintShadow();
+    static_cast< KDecorationBridgeUnstable* >( bridge_ )->repaintShadow();
     }
 
-bool KDecoration2::compositingActive() const
+bool KDecorationUnstable::compositingActive() const
     {
-    return static_cast< KDecorationBridge2* >( bridge_ )->compositingActive();
+    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->compositingActive();
     }
 
-bool KDecoration2::shadowsActive() const
+bool KDecorationUnstable::shadowsActive() const
     {
-    return static_cast< KDecorationBridge2* >( bridge_ )->shadowsActive();
+    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->shadowsActive();
     }
 
-double KDecoration2::opacity() const
+double KDecorationUnstable::opacity() const
     {
-    return static_cast< KDecorationBridge2* >( bridge_ )->opacity();
+    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->opacity();
     }
 
 

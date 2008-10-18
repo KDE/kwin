@@ -32,7 +32,7 @@
 #include "kcommondecoration_p.moc"
 
 KCommonDecorationWrapper::KCommonDecorationWrapper( KCommonDecoration* deco, KDecorationBridge* bridge, KDecorationFactory* factory )
-    : KDecoration2( bridge, factory )
+    : KDecorationUnstable( bridge, factory )
     , decoration( deco )
     {
     }
@@ -115,28 +115,28 @@ void KCommonDecorationWrapper::reset( unsigned long changed )
 
 QList<QRect> KCommonDecorationWrapper::shadowQuads( ShadowType type ) const
     {
-    if( KCommonDecoration2 *decoration2 = dynamic_cast<KCommonDecoration2*>( decoration ))
+    if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
         return decoration2->shadowQuads( type );
     return QList<QRect>();
     }
 
 double KCommonDecorationWrapper::shadowOpacity( ShadowType type, double dataOpacity ) const
     {
-    if( KCommonDecoration2 *decoration2 = dynamic_cast<KCommonDecoration2*>( decoration ))
+    if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
         return decoration2->shadowOpacity( type, dataOpacity );
     return dataOpacity;
     }
 
 double KCommonDecorationWrapper::shadowBrightness( ShadowType type ) const
     {
-    if( KCommonDecoration2 *decoration2 = dynamic_cast<KCommonDecoration2*>( decoration ))
+    if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
         return decoration2->shadowBrightness( type );
     return 1.0;
     }
 
 double KCommonDecorationWrapper::shadowSaturation( ShadowType type ) const
     {
-    if( KCommonDecoration2 *decoration2 = dynamic_cast<KCommonDecoration2*>( decoration ))
+    if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
         return decoration2->shadowSaturation( type );
     return 1.0;
     }
