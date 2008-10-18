@@ -15,14 +15,14 @@
      <property name="title" >
       <string>Appearance</string>
      </property>
-     <layout class="QFormLayout" name="formLayout" >
-      <property name="labelAlignment" >
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
+     <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="0" >
        <widget class="QLabel" name="label" >
         <property name="text" >
          <string>&amp;Width:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>spinWidth</cstring>
@@ -31,6 +31,12 @@
       </item>
       <item row="0" column="1" >
        <widget class="QSpinBox" name="spinWidth" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="suffix" >
          <string> px</string>
         </property>
@@ -50,6 +56,9 @@
         <property name="text" >
          <string>&amp;Color:</string>
         </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
         <property name="buddy" >
          <cstring>comboColors</cstring>
         </property>
@@ -57,6 +66,102 @@
       </item>
       <item row="1" column="1" >
        <widget class="KColorCombo" name="comboColors" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <item>
+         <property name="text" >
+          <string>Custom...</string>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string/>
+         </property>
+        </item>
         <item>
          <property name="text" >
           <string>Custom...</string>

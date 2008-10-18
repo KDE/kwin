@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>616</width>
-    <height>296</height>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -18,13 +18,7 @@
      <property name="title" >
       <string>General translucency settings:</string>
      </property>
-     <layout class="QFormLayout" name="formLayout_2" >
-      <property name="fieldGrowthPolicy" >
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="labelAlignment" >
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
+     <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="1" >
        <layout class="QHBoxLayout" name="horizontalLayout_4" >
         <property name="sizeConstraint" >
@@ -340,24 +334,20 @@
         </property>
        </widget>
       </item>
+      <item row="8" column="0" colspan="2" >
+       <spacer name="verticalSpacer_2" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
-     <zorder>decorations_label</zorder>
-     <zorder>decorations</zorder>
-     <zorder>inactive_label</zorder>
-     <zorder>inactive</zorder>
-     <zorder>moveresize_label</zorder>
-     <zorder>moveresize</zorder>
-     <zorder>dialogs_label</zorder>
-     <zorder>dialogs</zorder>
-     <zorder>comboboxpopup_label</zorder>
-     <zorder>comboboxpopup</zorder>
-     <zorder>menus_label</zorder>
-     <zorder>menus</zorder>
-     <zorder>horizontalLayoutWidget_2</zorder>
-     <zorder>individualmenuconfig</zorder>
-     <zorder>duration</zorder>
-     <zorder>durationSlider</zorder>
-     <zorder>label</zorder>
     </widget>
    </item>
    <item>
@@ -371,13 +361,7 @@
      <property name="checked" >
       <bool>false</bool>
      </property>
-     <layout class="QFormLayout" name="formLayout" >
-      <property name="fieldGrowthPolicy" >
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="labelAlignment" >
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
+     <layout class="QGridLayout" name="gridLayout_2" >
       <item row="0" column="1" >
        <layout class="QHBoxLayout" name="horizontalLayout_3" >
         <property name="sizeConstraint" >
@@ -543,6 +527,19 @@
          <number>10</number>
         </property>
        </widget>
+      </item>
+      <item row="4" column="0" colspan="2" >
+       <spacer name="verticalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>

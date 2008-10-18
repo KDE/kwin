@@ -41,8 +41,8 @@
             <property name="title" >
              <string>Common Effects</string>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_2" >
-             <item>
+            <layout class="QGridLayout" name="gridLayout" >
+             <item row="0" column="0" colspan="2" >
               <widget class="QCheckBox" name="effectWinManagement" >
                <property name="text" >
                 <string>Improved window management</string>
@@ -52,7 +52,7 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="1" column="0" colspan="2" >
               <widget class="QCheckBox" name="effectShadows" >
                <property name="text" >
                 <string>Shadows</string>
@@ -62,7 +62,7 @@
                </property>
               </widget>
              </item>
-             <item>
+             <item row="2" column="0" colspan="2" >
               <widget class="QCheckBox" name="effectAnimations" >
                <property name="text" >
                 <string>Various animations</string>
@@ -72,121 +72,7 @@
                </property>
               </widget>
              </item>
-             <item>
-              <layout class="QFormLayout" name="formLayout" >
-               <property name="labelAlignment" >
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-               <item row="1" column="0" >
-                <widget class="QLabel" name="label_3" >
-                 <property name="text" >
-                  <string>Effect for window switching:</string>
-                 </property>
-                 <property name="alignment" >
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                 <property name="buddy" >
-                  <cstring>windowSwitchingCombo</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1" >
-                <widget class="QComboBox" name="windowSwitchingCombo" >
-                 <property name="sizePolicy" >
-                  <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0" >
-                <widget class="QLabel" name="label_4" >
-                 <property name="text" >
-                  <string>Effect for desktop switching:</string>
-                 </property>
-                 <property name="alignment" >
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                 <property name="buddy" >
-                  <cstring>desktopSwitchingCombo</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1" >
-                <widget class="QComboBox" name="desktopSwitchingCombo" >
-                 <property name="sizePolicy" >
-                  <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0" >
-                <widget class="QLabel" name="label_5" >
-                 <property name="text" >
-                  <string>Animation speed:</string>
-                 </property>
-                 <property name="alignment" >
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                 <property name="buddy" >
-                  <cstring>animationSpeedCombo</cstring>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1" >
-                <widget class="QComboBox" name="animationSpeedCombo" >
-                 <property name="sizePolicy" >
-                  <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="currentIndex" >
-                  <number>3</number>
-                 </property>
-                 <item>
-                  <property name="text" >
-                   <string>Instant</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Very fast</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Fast</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Normal</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Slow</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Very slow</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Extremely slow</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
+             <item row="6" column="0" colspan="2" >
               <spacer name="verticalSpacer" >
                <property name="orientation" >
                 <enum>Qt::Vertical</enum>
@@ -202,11 +88,118 @@
                </property>
               </spacer>
              </item>
-             <item>
+             <item row="7" column="0" colspan="2" >
               <widget class="QLabel" name="label" >
                <property name="text" >
                 <string>You can find more effects in the 'All Effects' tab</string>
                </property>
+              </widget>
+             </item>
+             <item row="3" column="0" >
+              <widget class="QLabel" name="label_3" >
+               <property name="text" >
+                <string>Effect for window switching:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy" >
+                <cstring>windowSwitchingCombo</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1" >
+              <widget class="QComboBox" name="windowSwitchingCombo" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0" >
+              <widget class="QLabel" name="label_4" >
+               <property name="text" >
+                <string>Effect for desktop switching:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy" >
+                <cstring>desktopSwitchingCombo</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1" >
+              <widget class="QComboBox" name="desktopSwitchingCombo" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0" >
+              <widget class="QLabel" name="label_5" >
+               <property name="text" >
+                <string>Animation speed:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="buddy" >
+                <cstring>animationSpeedCombo</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1" >
+              <widget class="QComboBox" name="animationSpeedCombo" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="currentIndex" >
+                <number>3</number>
+               </property>
+               <item>
+                <property name="text" >
+                 <string>Instant</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Very fast</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Fast</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Normal</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Slow</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Very slow</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Extremely slow</string>
+                </property>
+               </item>
               </widget>
              </item>
             </layout>

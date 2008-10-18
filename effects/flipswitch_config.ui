@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>110</height>
+    <width>267</width>
+    <height>105</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -15,7 +15,7 @@
      <property name="title" >
       <string>Appearance</string>
      </property>
-     <layout class="QGridLayout" >
+     <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="0" colspan="2" >
        <widget class="QCheckBox" name="checkAnimateFlip" >
         <property name="text" >
@@ -38,6 +38,12 @@
       </item>
       <item row="1" column="1" >
        <widget class="QSpinBox" name="spinFlipDuration" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="specialValueText" >
          <string>Default</string>
         </property>
@@ -51,19 +57,6 @@
          <number>10</number>
         </property>
        </widget>
-      </item>
-      <item row="1" column="2" >
-       <spacer name="horizontalSpacer" >
-        <property name="orientation" >
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0" >
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </widget>

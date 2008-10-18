@@ -15,10 +15,7 @@
      <property name="title" >
       <string>Appearance</string>
      </property>
-     <layout class="QFormLayout" name="formLayout" >
-      <property name="labelAlignment" >
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
+     <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="0" >
        <widget class="QLabel" name="label" >
         <property name="text" >
@@ -34,6 +31,12 @@
       </item>
       <item row="0" column="1" >
        <widget class="QSpinBox" name="numberFlakes" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="maximum" >
          <number>1000</number>
         </property>
@@ -57,6 +60,12 @@
       </item>
       <item row="1" column="1" >
        <widget class="QSpinBox" name="minSizeFlake" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="suffix" >
          <string> px</string>
         </property>
@@ -83,6 +92,12 @@
       </item>
       <item row="2" column="1" >
        <widget class="QSpinBox" name="maxSizeFlake" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="suffix" >
          <string> px</string>
         </property>
@@ -109,6 +124,12 @@
       </item>
       <item row="3" column="1" >
        <widget class="QSpinBox" name="maxVSpeed" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="suffix" >
          <string> px/frame</string>
         </property>
@@ -138,6 +159,12 @@
       </item>
       <item row="4" column="1" >
        <widget class="QSpinBox" name="maxHSpeed" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="suffix" >
          <string> px/frame</string>
         </property>

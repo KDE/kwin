@@ -15,11 +15,14 @@
      <property name="title" >
       <string>Size</string>
      </property>
-     <layout class="QFormLayout" name="formLayout" >
+     <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="0" >
        <widget class="QLabel" name="label" >
         <property name="text" >
          <string>&amp;Width:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>spinWidth</cstring>
@@ -28,6 +31,12 @@
       </item>
       <item row="0" column="1" >
        <widget class="QSpinBox" name="spinWidth" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="suffix" >
          <string> px</string>
         </property>
@@ -44,6 +53,9 @@
         <property name="text" >
          <string>&amp;Height:</string>
         </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
         <property name="buddy" >
          <cstring>spinHeight</cstring>
         </property>
@@ -51,6 +63,12 @@
       </item>
       <item row="1" column="1" >
        <widget class="QSpinBox" name="spinHeight" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="suffix" >
          <string> px</string>
         </property>

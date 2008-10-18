@@ -5,74 +5,89 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
-    <height>200</height>
+    <width>249</width>
+    <height>120</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" >
-   <item>
-    <layout class="QHBoxLayout" >
-     <item>
-      <widget class="QLabel" name="label" >
-       <property name="text" >
-        <string>&amp;Strength:</string>
-       </property>
-       <property name="buddy" >
-        <cstring>spinStrength</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSlider" name="sliderStrength" >
-       <property name="minimum" >
-        <number>1</number>
-       </property>
-       <property name="maximum" >
-        <number>100</number>
-       </property>
-       <property name="value" >
-        <number>25</number>
-       </property>
-       <property name="orientation" >
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="spinStrength" >
-       <property name="minimum" >
-        <number>1</number>
-       </property>
-       <property name="maximum" >
-        <number>100</number>
-       </property>
-       <property name="value" >
-        <number>25</number>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="1" column="0" colspan="3" >
     <widget class="QCheckBox" name="checkPanel" >
      <property name="text" >
       <string>Apply effect to &amp;panels</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="2" column="0" colspan="3" >
     <widget class="QCheckBox" name="checkDesktop" >
      <property name="text" >
       <string>Apply effect to the desk&amp;top</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="3" column="0" colspan="3" >
     <widget class="QCheckBox" name="checkGroup" >
      <property name="text" >
       <string>Apply effect to &amp;groups</string>
      </property>
     </widget>
+   </item>
+   <item row="0" column="0" >
+    <widget class="QLabel" name="label" >
+     <property name="text" >
+      <string>&amp;Strength:</string>
+     </property>
+     <property name="buddy" >
+      <cstring>spinStrength</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="QSlider" name="sliderStrength" >
+     <property name="minimumSize" >
+      <size>
+       <width>120</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="minimum" >
+      <number>1</number>
+     </property>
+     <property name="maximum" >
+      <number>100</number>
+     </property>
+     <property name="value" >
+      <number>25</number>
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" >
+    <widget class="QSpinBox" name="spinStrength" >
+     <property name="minimum" >
+      <number>1</number>
+     </property>
+     <property name="maximum" >
+      <number>100</number>
+     </property>
+     <property name="value" >
+      <number>25</number>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="3" >
+    <spacer name="verticalSpacer" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

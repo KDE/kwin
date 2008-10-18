@@ -15,17 +15,14 @@
      <property name="title" >
       <string>Text</string>
      </property>
-     <layout class="QFormLayout" name="formLayout" >
-      <property name="fieldGrowthPolicy" >
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="labelAlignment" >
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
+     <layout class="QGridLayout" name="gridLayout" >
       <item row="0" column="0" >
        <widget class="QLabel" name="label" >
         <property name="text" >
          <string>Text position:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>textPosition</cstring>
@@ -34,6 +31,12 @@
       </item>
       <item row="0" column="1" >
        <widget class="QComboBox" name="textPosition" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <item>
          <property name="text" >
           <string>Inside Graph</string>
@@ -71,15 +74,28 @@
         <property name="text" >
          <string>Text font:</string>
         </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="KFontRequester" name="textFont" />
+       <widget class="KFontRequester" name="textFont" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0" >
        <widget class="QLabel" name="label_3" >
         <property name="text" >
          <string>Text color:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>textColor</cstring>
@@ -87,12 +103,22 @@
        </widget>
       </item>
       <item row="2" column="1" >
-       <widget class="KColorButton" name="textColor" />
+       <widget class="KColorButton" name="textColor" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0" >
        <widget class="QLabel" name="label_4" >
         <property name="text" >
          <string>Text alpha:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy" >
          <cstring>textAlpha</cstring>
@@ -101,6 +127,12 @@
       </item>
       <item row="3" column="1" >
        <widget class="QDoubleSpinBox" name="textAlpha" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="decimals" >
          <number>2</number>
         </property>
