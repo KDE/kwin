@@ -65,7 +65,7 @@ public:
     virtual QList< QList<QImage> > shadowTextures();
     virtual int shadowTextureList( ShadowType type ) const;
     virtual QList<QRect> shadowQuads( ShadowType type, QSize size ) const;
-    virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
+    virtual double shadowOpacity( ShadowType type ) const;
 
     static bool initialized();
     static Qt::Alignment titleAlignment();

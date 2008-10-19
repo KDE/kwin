@@ -1238,12 +1238,12 @@ QList<QRect> KCommonDecorationUnstable::shadowQuads( ShadowType type ) const
     Q_UNUSED( type );
     return QList<QRect>();
     }
-double KCommonDecorationUnstable::shadowOpacity( ShadowType type, double dataOpacity ) const
+double KCommonDecorationUnstable::shadowOpacity( ShadowType type ) const
     {
     if( isActive() && type == ShadowBorderedActive )
-        return dataOpacity;
+        return 1.0;
     else if( !isActive() && type == ShadowBorderedInactive )
-        return dataOpacity;
+        return 1.0;
     return 0.0;
     }
 double KCommonDecorationUnstable::shadowBrightness( ShadowType type ) const

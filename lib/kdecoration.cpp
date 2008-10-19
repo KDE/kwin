@@ -399,12 +399,12 @@ QList<QRect> KDecorationUnstable::shadowQuads( ShadowType type ) const
     return QList<QRect>();
     }
 
-double KDecorationUnstable::shadowOpacity( ShadowType type, double dataOpacity ) const
+double KDecorationUnstable::shadowOpacity( ShadowType type ) const
     {
     if( isActive() && type == ShadowBorderedActive )
-        return dataOpacity;
+        return 1.0;
     else if( !isActive() && type == ShadowBorderedInactive )
-        return dataOpacity;
+        return 1.0;
     return 0.0;
     }
 

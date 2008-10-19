@@ -141,10 +141,9 @@ class KWIN_EXPORT KDecorationFactoryUnstable
          */
         virtual QList<QRect> shadowQuads( ShadowType type, QSize size ) const;
         /**
-         * This function should return the opacity of the shadow. This is not multiplied
-         * with the opacity of the window afterwards but is instead provided as \a dataOpacity
+         * This function should return the desired opacity of the shadow.
          */
-        virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
+        virtual double shadowOpacity( ShadowType type ) const;
         /**
          * This function should return the desired brightness of the shadow.
          */

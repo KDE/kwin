@@ -1347,16 +1347,15 @@ QList<QRect> EffectWindowImpl::shadowQuads( ShadowType type ) const
     return toplevel->workspace()->decorationShadowQuads( type, toplevel->size() );
     }
 
-double EffectWindowImpl::shadowOpacity( ShadowType type, double dataOpacity ) const
+double EffectWindowImpl::shadowOpacity( ShadowType type ) const
     {
-    dataOpacity *= opacity();
     if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
         {
         if( Client* c = dynamic_cast< Client* >( toplevel ))
-            return c->shadowOpacity( type, dataOpacity );
-        return dataOpacity;
+            return c->shadowOpacity( type );
+        return 1.0;
         }
-    return toplevel->workspace()->decorationShadowOpacity( type, dataOpacity );
+    return toplevel->workspace()->decorationShadowOpacity( type );
     }
 
 double EffectWindowImpl::shadowBrightness( ShadowType type ) const

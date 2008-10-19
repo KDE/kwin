@@ -248,7 +248,7 @@ class Workspace : public QObject, public KDecorationDefines
         QList< QList<QImage> > decorationShadowTextures();
         int decorationShadowTextureList( ShadowType type ) const;
         QList<QRect> decorationShadowQuads( ShadowType type, QSize size ) const;
-        double decorationShadowOpacity( ShadowType type, double dataOpacity ) const;
+        double decorationShadowOpacity( ShadowType type ) const;
         double decorationShadowBrightness( ShadowType type ) const;
         double decorationShadowSaturation( ShadowType type ) const;
 
@@ -1022,11 +1022,11 @@ QList<QRect> Workspace::decorationShadowQuads( ShadowType type, QSize size ) con
     }
 
 inline
-double Workspace::decorationShadowOpacity( ShadowType type, double dataOpacity ) const
+double Workspace::decorationShadowOpacity( ShadowType type ) const
     {
     if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
-        return factory->shadowOpacity( type, dataOpacity );
-    return dataOpacity;
+        return factory->shadowOpacity( type );
+    return 1.0;
     }
 
 inline

@@ -52,7 +52,7 @@ public:
     virtual void init();
 
     virtual QList<QRect> shadowQuads( ShadowType type ) const;
-    virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
+    virtual double shadowOpacity( ShadowType type ) const;
 
 private:
     void paintEvent(QPaintEvent *e);

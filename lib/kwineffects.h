@@ -825,10 +825,9 @@ class KWIN_EXPORT EffectWindow
          */
         virtual QList<QRect> shadowQuads( ShadowType type ) const = 0;
         /**
-         * Returns the opacity of the shadow. This has already been pre-multiplied by
-         * the window's opacity if the decoration desires so.
+         * Returns the desired opacity of the shadow.
          */
-        virtual double shadowOpacity( ShadowType type, double dataOpacity ) const = 0;
+        virtual double shadowOpacity( ShadowType type ) const = 0;
         /**
          * Returns the desired brightness of the shadow.
          */

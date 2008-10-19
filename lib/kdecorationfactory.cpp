@@ -97,10 +97,10 @@ QList<QRect> KDecorationFactoryUnstable::shadowQuads( ShadowType type, QSize siz
     return QList<QRect>();
     }
 
-double KDecorationFactoryUnstable::shadowOpacity( ShadowType type, double dataOpacity ) const
+double KDecorationFactoryUnstable::shadowOpacity( ShadowType type ) const
     {
     Q_UNUSED( type );
-    return dataOpacity;
+    return 1.0;
     }
 
 double KDecorationFactoryUnstable::shadowBrightness( ShadowType type ) const

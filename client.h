@@ -286,7 +286,7 @@ class Client
         
         // Decorations <-> Effects
         QList<QRect> shadowQuads( ShadowType type ) const;
-        double shadowOpacity( ShadowType type, double dataOpacity ) const;
+        double shadowOpacity( ShadowType type ) const;
         double shadowBrightness( ShadowType type ) const;
         double shadowSaturation( ShadowType type ) const;
 
@@ -802,11 +802,11 @@ inline QList<QRect> Client::shadowQuads( ShadowType type ) const
     return QList<QRect>();
     }
 
-inline double Client::shadowOpacity( ShadowType type, double dataOpacity ) const
+inline double Client::shadowOpacity( ShadowType type ) const
     {
     if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
-        return decoration2->shadowOpacity( type, dataOpacity );
-    return dataOpacity;
+        return decoration2->shadowOpacity( type );
+    return 1.0;
     }
 
 inline double Client::shadowBrightness( ShadowType type ) const

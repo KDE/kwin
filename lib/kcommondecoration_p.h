@@ -60,7 +60,7 @@ class KCommonDecorationWrapper
         virtual void reset( unsigned long changed );
 
         virtual QList<QRect> shadowQuads( ShadowType type ) const;
-        virtual double shadowOpacity( ShadowType type, double dataOpacity ) const;
+        virtual double shadowOpacity( ShadowType type ) const;
         virtual double shadowBrightness( ShadowType type ) const;
         virtual double shadowSaturation( ShadowType type ) const;
     private:

@@ -530,7 +530,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                         { // Decorated windows
                         // Active shadow
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderedActive, data.opacity ));
+                        glColor4f( 1.0, 1.0, 1.0, data.opacity * window->shadowOpacity( ShadowBorderedActive ));
                         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
@@ -540,7 +540,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                         // Inactive shadow
                         texture = effects->shadowTextureList( ShadowBorderedInactive );
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderedInactive, data.opacity ));
+                        glColor4f( 1.0, 1.0, 1.0, data.opacity * window->shadowOpacity( ShadowBorderedInactive ));
                         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
@@ -550,11 +550,13 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                     else if( effects->shadowTextureList( ShadowBorderlessActive ) == texture )
                         { // Decoration-less normal windows
                         if( effects->activeWindow() == window )
-                            glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderlessActive, data.opacity ));
+                            glColor4f( 1.0, 1.0, 1.0,
+                                       data.opacity * window->shadowOpacity( ShadowBorderlessActive ));
                         else
                             {
                             texture = effects->shadowTextureList( ShadowBorderlessInactive );
-                            glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowBorderlessInactive, data.opacity ));
+                            glColor4f( 1.0, 1.0, 1.0,
+                                       data.opacity * window->shadowOpacity( ShadowBorderlessInactive ));
                             }
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
                         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -566,7 +568,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                     else
                         { // Other windows
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        glColor4f( 1.0, 1.0, 1.0, window->shadowOpacity( ShadowOther, data.opacity ));
+                        glColor4f( 1.0, 1.0, 1.0, data.opacity * window->shadowOpacity( ShadowOther ));
                         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );

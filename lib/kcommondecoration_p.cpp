@@ -120,11 +120,11 @@ QList<QRect> KCommonDecorationWrapper::shadowQuads( ShadowType type ) const
     return QList<QRect>();
     }
 
-double KCommonDecorationWrapper::shadowOpacity( ShadowType type, double dataOpacity ) const
+double KCommonDecorationWrapper::shadowOpacity( ShadowType type ) const
     {
     if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
-        return decoration2->shadowOpacity( type, dataOpacity );
-    return dataOpacity;
+        return decoration2->shadowOpacity( type );
+    return 1.0;
     }
 
 double KCommonDecorationWrapper::shadowBrightness( ShadowType type ) const

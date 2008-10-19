@@ -449,12 +449,12 @@ QList<QRect> OxygenClient::shadowQuads( ShadowType type ) const
     return quads;
 }
 
-double OxygenClient::shadowOpacity( ShadowType type, double dataOpacity ) const
+double OxygenClient::shadowOpacity( ShadowType type ) const
 {
     switch( type ) {
         case ShadowBorderedActive:
             if( isActive() )
-                return dataOpacity;
+                return 1.0;
             return 0.0;
         case ShadowBorderedInactive:
             if( isActive() )

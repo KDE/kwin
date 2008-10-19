@@ -367,9 +367,9 @@ QList<QRect> OxygenFactory::shadowQuads( ShadowType type, QSize size ) const
     return quads;
 }
 
-double OxygenFactory::shadowOpacity( ShadowType type, double dataOpacity ) const
+double OxygenFactory::shadowOpacity( ShadowType type ) const
 {
-    return dataOpacity;
+    return 1.0;
 }
 
 } //namespace Oxygen
