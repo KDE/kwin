@@ -481,6 +481,115 @@ void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
     shadowDatas = newShadowDatas;
     }
 
+// Modified version of SceneOpenGL::Window::prepareRenderStates() from scene_opengl.cpp
+void ShadowEffect::prepareRenderStates( GLTexture *texture, double opacity, double brightness, double saturation )
+    {
+    // setup blending of transparent windows
+    glPushAttrib( GL_ENABLE_BIT );
+    /*if( saturation != 1.0 && texture->saturationSupported() )
+        {
+        // First we need to get the color from [0; 1] range to [0.5; 1] range
+        glActiveTexture( GL_TEXTURE0 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA );
+        const float scale_constant[] = { 1.0, 1.0, 1.0, 0.5 };
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, scale_constant );
+        texture->bind();
+
+        // Then we take dot product of the result of previous pass and
+        //  saturation_constant. This gives us completely unsaturated
+        //  (greyscale) image
+        // Note that both operands have to be in range [0.5; 1] since opengl
+        //  automatically substracts 0.5 from them
+        glActiveTexture( GL_TEXTURE1 );
+        float saturation_constant[] = { 0.5 + 0.5*0.30, 0.5 + 0.5*0.59, 0.5 + 0.5*0.11, saturation };
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant );
+        texture->bind();
+
+        // Finally we need to interpolate between the original image and the
+        //  greyscale image to get wanted level of saturation
+        glActiveTexture( GL_TEXTURE2 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE0 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA );
+        glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant );
+        // Also replace alpha by primary color's alpha here
+        glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+        glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PRIMARY_COLOR );
+        glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+        // And make primary color contain the wanted opacity
+        glColor4f( opacity, opacity, opacity, opacity );
+        texture->bind();
+
+        if( brightness != 1.0 )
+            {
+            glActiveTexture( GL_TEXTURE3 );
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PRIMARY_COLOR );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
+            // The color has to be multiplied by both opacity and brightness
+            float opacityByBrightness = opacity * brightness;
+            glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS );
+            glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
+            texture->bind();
+            }
+
+        glActiveTexture(GL_TEXTURE0 );
+        }
+    else*/ if( opacity != 1.0 || brightness != 1.0 )
+        {
+        // the window is additionally configured to have its opacity adjusted,
+        // do it
+        float opacityByBrightness = opacity * brightness;
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+        glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity);
+        }
+    }
+
+// Modified version of SceneOpenGL::Window::restoreRenderStates() from scene_opengl.cpp
+void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, double brightness, double saturation )
+    {
+    if( opacity != 1.0 || saturation != 1.0 || brightness != 1.0 )
+        {
+        /*if( saturation != 1.0 && texture->saturationSupported())
+            {
+            glActiveTexture(GL_TEXTURE3);
+            glDisable( texture->target() );
+            glActiveTexture(GL_TEXTURE2);
+            glDisable( texture->target() );
+            glActiveTexture(GL_TEXTURE1);
+            glDisable( texture->target() );
+            glActiveTexture(GL_TEXTURE0);
+            }*/
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+        glColor4f( 0, 0, 0, 0 );
+        }
+
+    glPopAttrib();  // ENABLE_BIT
+    }
+
 void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, const WindowPaintData& data )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
@@ -529,136 +638,150 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                         effects->shadowTextureList( ShadowBorderedActive ) == texture )
                         { // Decorated windows
                         // Active shadow
-                        mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        glColor4f( 1.0, 1.0, 1.0, data.opacity * window->shadowOpacity( ShadowBorderedActive ));
+                        glColor4f( 1.0, 1.0, 1.0, 1.0 );
                         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                        prepareRenderStates(
+                            mShadowTextures.at( texture ).at( quad.id() ),
+                            data.opacity * window->shadowOpacity( ShadowBorderedActive ),
+                            data.brightness * window->shadowBrightness( ShadowBorderedActive ),
+                            data.saturation * window->shadowSaturation( ShadowBorderedActive )
+                            );
+                        mShadowTextures.at( texture ).at( quad.id() )->bind();
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                         mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                         mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                        restoreRenderStates(
+                            mShadowTextures.at( texture ).at( quad.id() ),
+                            data.opacity * window->shadowOpacity( ShadowBorderedActive ),
+                            data.brightness * window->shadowBrightness( ShadowBorderedActive ),
+                            data.saturation * window->shadowSaturation( ShadowBorderedActive )
+                            );
 
                         // Inactive shadow
                         texture = effects->shadowTextureList( ShadowBorderedInactive );
-                        mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        glColor4f( 1.0, 1.0, 1.0, data.opacity * window->shadowOpacity( ShadowBorderedInactive ));
+
+                        glColor4f( 1.0, 1.0, 1.0, 1.0 );
                         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                        prepareRenderStates(
+                            mShadowTextures.at( texture ).at( quad.id() ),
+                            data.opacity * window->shadowOpacity( ShadowBorderedInactive ),
+                            data.brightness * window->shadowBrightness( ShadowBorderedInactive ),
+                            data.saturation * window->shadowSaturation( ShadowBorderedInactive )
+                            );
+                        mShadowTextures.at( texture ).at( quad.id() )->bind();
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                         mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                         mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                        restoreRenderStates(
+                            mShadowTextures.at( texture ).at( quad.id() ),
+                            data.opacity * window->shadowOpacity( ShadowBorderedInactive ),
+                            data.brightness * window->shadowBrightness( ShadowBorderedInactive ),
+                            data.saturation * window->shadowSaturation( ShadowBorderedInactive )
+                            );
                         }
                     else if( effects->shadowTextureList( ShadowBorderlessActive ) == texture )
                         { // Decoration-less normal windows
+                        glColor4f( 1.0, 1.0, 1.0, 1.0 );
+                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                         if( effects->activeWindow() == window )
-                            glColor4f( 1.0, 1.0, 1.0,
-                                       data.opacity * window->shadowOpacity( ShadowBorderlessActive ));
+                            {
+                            prepareRenderStates(
+                                mShadowTextures.at( texture ).at( quad.id() ),
+                                data.opacity * window->shadowOpacity( ShadowBorderlessActive ),
+                                data.brightness * window->shadowBrightness( ShadowBorderlessActive ),
+                                data.saturation * window->shadowSaturation( ShadowBorderlessActive )
+                                );
+                            }
                         else
                             {
                             texture = effects->shadowTextureList( ShadowBorderlessInactive );
-                            glColor4f( 1.0, 1.0, 1.0,
-                                       data.opacity * window->shadowOpacity( ShadowBorderlessInactive ));
+                            prepareRenderStates(
+                                mShadowTextures.at( texture ).at( quad.id() ),
+                                data.opacity * window->shadowOpacity( ShadowBorderlessInactive ),
+                                data.brightness * window->shadowBrightness( ShadowBorderlessInactive ),
+                                data.saturation * window->shadowSaturation( ShadowBorderlessInactive )
+                                );
                             }
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                         mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                         mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                        if( effects->activeWindow() == window )
+                            {
+                            restoreRenderStates(
+                                mShadowTextures.at( texture ).at( quad.id() ),
+                                data.opacity * window->shadowOpacity( ShadowBorderlessActive ),
+                                data.brightness * window->shadowBrightness( ShadowBorderlessActive ),
+                                data.saturation * window->shadowSaturation( ShadowBorderlessActive )
+                                );
+                            }
+                        else
+                            {
+                            restoreRenderStates(
+                                mShadowTextures.at( texture ).at( quad.id() ),
+                                data.opacity * window->shadowOpacity( ShadowBorderlessInactive ),
+                                data.brightness * window->shadowBrightness( ShadowBorderlessInactive ),
+                                data.saturation * window->shadowSaturation( ShadowBorderlessInactive )
+                                );
+                            }
                         }
                     else
                         { // Other windows
-                        mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        glColor4f( 1.0, 1.0, 1.0, data.opacity * window->shadowOpacity( ShadowOther ));
+                        glColor4f( 1.0, 1.0, 1.0, 1.0 );
                         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                        prepareRenderStates(
+                            mShadowTextures.at( texture ).at( quad.id() ),
+                            data.opacity * window->shadowOpacity( ShadowOther ),
+                            data.brightness * window->shadowBrightness( ShadowOther ),
+                            data.saturation * window->shadowSaturation( ShadowOther )
+                            );
+                        mShadowTextures.at( texture ).at( quad.id() )->bind();
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                         mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                         mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                        restoreRenderStates(
+                            mShadowTextures.at( texture ).at( quad.id() ),
+                            data.opacity * window->shadowOpacity( ShadowOther ),
+                            data.brightness * window->shadowBrightness( ShadowOther ),
+                            data.saturation * window->shadowSaturation( ShadowOther )
+                            );
                         }
                     }
                 else
                     { // Default shadow
-                    mShadowTextures.at( texture ).at( quad.id() )->bind();
                     float opacity = shadowOpacity;
                     if( intensifyActiveShadow && window == effects->activeWindow() )
                         opacity = 1 - ( 1 - shadowOpacity ) * ( 1 - shadowOpacity );
-                    glColor4f( shadowColor.redF(), shadowColor.greenF(), shadowColor.blueF(),
-                               opacity * data.opacity);
+
+                    glColor4f( 1.0, 1.0, 1.0, 1.0 );
                     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                    prepareRenderStates(
+                        mShadowTextures.at( texture ).at( quad.id() ),
+                        data.opacity * opacity,
+                        data.brightness,
+                        data.saturation
+                        );
+                    mShadowTextures.at( texture ).at( quad.id() )->bind();
                     mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
                     renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                     mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                     mShadowTextures.at( texture ).at( quad.id() )->unbind();
+                    restoreRenderStates(
+                        mShadowTextures.at( texture ).at( quad.id() ),
+                        data.opacity * opacity,
+                        data.brightness,
+                        data.saturation
+                        );
                     }
                 }
 
             glPopMatrix();
             }
 
-/*
-        int fuzzy = shadowFuzzyness;
-        // Shadow's size must be a least 2*fuzzy in both directions (or the corners will be broken)
-        int w = qMax(fuzzy*2, window->width() + 2*shadowSize);
-        int h = qMax(fuzzy*2, window->height() + 2*shadowSize);
-
-        glPushMatrix();
-        if( mask & PAINT_WINDOW_TRANSFORMED )
-            glTranslatef( data.xTranslate, data.yTranslate, 0 );
-        glTranslatef( window->x() + shadowXOffset - qMax(0, w - window->width()) / 2.0,
-                    window->y() + shadowYOffset - qMax(0, h - window->height()) / 2.0, 0 );
-        if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
-            glScalef( data.xScale, data.yScale, 1 );
-
-        QVector<float> verts, texcoords;
-        verts.reserve(80);
-        texcoords.reserve(80);
-        // center
-        addQuadVertices(verts, 0 + fuzzy, 0 + fuzzy, w - fuzzy, h - fuzzy);
-        addQuadVertices(texcoords, 0.5, 0.5, 0.5, 0.5);
-        // sides
-        // left
-        addQuadVertices(verts, 0 - fuzzy, 0 + fuzzy, 0 + fuzzy, h - fuzzy);
-        addQuadVertices(texcoords, 0.0, 0.5, 0.5, 0.5);
-        // top
-        addQuadVertices(verts, 0 + fuzzy, 0 - fuzzy, w - fuzzy, 0 + fuzzy);
-        addQuadVertices(texcoords, 0.5, 0.0, 0.5, 0.5);
-        // right
-        addQuadVertices(verts, w - fuzzy, 0 + fuzzy, w + fuzzy, h - fuzzy);
-        addQuadVertices(texcoords, 0.5, 0.5, 1.0, 0.5);
-        // bottom
-        addQuadVertices(verts, 0 + fuzzy, h - fuzzy, w - fuzzy, h + fuzzy);
-        addQuadVertices(texcoords, 0.5, 0.5, 0.5, 1.0);
-        // corners
-        // top-left
-        addQuadVertices(verts, 0 - fuzzy, 0 - fuzzy, 0 + fuzzy, 0 + fuzzy);
-        addQuadVertices(texcoords, 0.0, 0.0, 0.5, 0.5);
-        // top-right
-        addQuadVertices(verts, w - fuzzy, 0 - fuzzy, w + fuzzy, 0 + fuzzy);
-        addQuadVertices(texcoords, 0.5, 0.0, 1.0, 0.5);
-        // bottom-left
-        addQuadVertices(verts, 0 - fuzzy, h - fuzzy, 0 + fuzzy, h + fuzzy);
-        addQuadVertices(texcoords, 0.0, 0.5, 0.5, 1.0);
-        // bottom-right
-        addQuadVertices(verts, w - fuzzy, h - fuzzy, w + fuzzy, h + fuzzy);
-        addQuadVertices(texcoords, 0.5, 0.5, 1.0, 1.0);
-
-        mShadowTexture->bind();
-        // Take the transparency settings and window's transparency into account.
-        // Also make the shadow more transparent if we've made it bigger
-        float opacity = shadowOpacity;
-        if( intensifyActiveShadow && window == effects->activeWindow() )
-        {
-            opacity = 1 - (1 - shadowOpacity)*(1 - shadowOpacity);
-        }
-        glColor4f(shadowColor.redF(), shadowColor.greenF(), shadowColor.blueF(), opacity * data.opacity * (window->width() / (double)w) * (window->height() / (double)h));
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        // We have two elements per vertex in the verts array
-        int verticesCount = verts.count() / 2;
-        mShadowTexture->enableNormalizedTexCoords();
-        renderGLGeometry( region, verticesCount, verts.data(), texcoords.data() );
-        mShadowTexture->disableNormalizedTexCoords();
-        mShadowTexture->unbind();
-*/
         glPopAttrib();
         }
 #endif
