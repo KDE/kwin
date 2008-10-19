@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>616</width>
-    <height>300</height>
+    <height>295</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -19,52 +19,6 @@
       <string>General translucency settings:</string>
      </property>
      <layout class="QGridLayout" name="gridLayout" >
-      <item row="0" column="1" >
-       <layout class="QHBoxLayout" name="horizontalLayout_4" >
-        <property name="sizeConstraint" >
-         <enum>QLayout::SetDefaultConstraint</enum>
-        </property>
-        <item>
-         <widget class="QLabel" name="label_2" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Transparent</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer" >
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0" >
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_3" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Opaque</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="decorations_label" >
         <property name="sizePolicy" >
@@ -84,7 +38,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
+      <item row="1" column="1" colspan="2" >
        <widget class="QSlider" name="decorations" >
         <property name="minimumSize" >
          <size>
@@ -128,7 +82,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1" >
+      <item row="2" column="1" colspan="2" >
        <widget class="QSlider" name="inactive" >
         <property name="minimum" >
          <number>10</number>
@@ -166,7 +120,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1" >
+      <item row="3" column="1" colspan="2" >
        <widget class="QSlider" name="moveresize" >
         <property name="minimum" >
          <number>10</number>
@@ -204,7 +158,7 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1" >
+      <item row="4" column="1" colspan="2" >
        <widget class="QSlider" name="dialogs" >
         <property name="minimum" >
          <number>10</number>
@@ -242,7 +196,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="1" >
+      <item row="5" column="1" colspan="2" >
        <widget class="QSlider" name="comboboxpopup" >
         <property name="minimum" >
          <number>10</number>
@@ -280,7 +234,7 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="1" >
+      <item row="6" column="1" colspan="2" >
        <widget class="QSlider" name="menus" >
         <property name="minimum" >
          <number>10</number>
@@ -312,7 +266,7 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="1" >
+      <item row="7" column="1" colspan="2" >
        <widget class="QSpinBox" name="duration" >
         <property name="minimumSize" >
          <size>
@@ -347,6 +301,35 @@
         </property>
        </spacer>
       </item>
+      <item row="0" column="1" >
+       <widget class="QLabel" name="label_2" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Transparent</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QLabel" name="label_3" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Opaque</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -362,52 +345,6 @@
       <bool>false</bool>
      </property>
      <layout class="QGridLayout" name="gridLayout_2" >
-      <item row="0" column="1" >
-       <layout class="QHBoxLayout" name="horizontalLayout_3" >
-        <property name="sizeConstraint" >
-         <enum>QLayout::SetDefaultConstraint</enum>
-        </property>
-        <item>
-         <widget class="QLabel" name="label_6" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Transparent</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer" >
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0" >
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_7" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text" >
-           <string>Opaque</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="dropdownmenus_label" >
         <property name="sizePolicy" >
@@ -427,7 +364,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
+      <item row="1" column="1" colspan="2" >
        <widget class="QSlider" name="dropdownmenus" >
         <property name="minimumSize" >
          <size>
@@ -471,7 +408,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1" >
+      <item row="2" column="1" colspan="2" >
        <widget class="QSlider" name="popupmenus" >
         <property name="minimum" >
          <number>10</number>
@@ -509,7 +446,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1" >
+      <item row="3" column="1" colspan="2" >
        <widget class="QSlider" name="tornoffmenus" >
         <property name="minimum" >
          <number>10</number>
@@ -528,7 +465,7 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="2" >
+      <item row="4" column="0" colspan="3" >
        <spacer name="verticalSpacer" >
         <property name="orientation" >
          <enum>Qt::Vertical</enum>
@@ -540,6 +477,35 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QLabel" name="label_6" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Transparent</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QLabel" name="label_7" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text" >
+         <string>Opaque</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
