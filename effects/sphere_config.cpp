@@ -224,8 +224,8 @@ void SphereEffectConfig::capsSelectionChanged()
         m_ui->capColorButton->setEnabled( true );
         m_ui->capColorLabel->setEnabled( true );
         m_ui->capsImageBox->setEnabled( true );
+        m_ui->capDeformationGroupBox->setEnabled( true );
         m_ui->capDeformationSlider->setEnabled( true );
-        m_ui->capDeformationLabel->setEnabled( true );
         m_ui->capDeformationSphereLabel->setEnabled( true );
         m_ui->capDeformationPlaneLabel->setEnabled( true );
         }
@@ -235,8 +235,8 @@ void SphereEffectConfig::capsSelectionChanged()
         m_ui->capColorButton->setEnabled( false );
         m_ui->capColorLabel->setEnabled( false );
         m_ui->capsImageBox->setEnabled( false );
+        m_ui->capDeformationGroupBox->setEnabled( false );
         m_ui->capDeformationSlider->setEnabled( false );
-        m_ui->capDeformationLabel->setEnabled( false );
         m_ui->capDeformationSphereLabel->setEnabled( false );
         m_ui->capDeformationPlaneLabel->setEnabled( false );
         }

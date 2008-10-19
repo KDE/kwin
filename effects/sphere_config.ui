@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>568</width>
-    <height>595</height>
+    <width>546</width>
+    <height>526</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -16,14 +16,6 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>546</width>
-        <height>552</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Tab 1</string>
       </attribute>
@@ -39,26 +31,46 @@
             <property name="text" >
              <string>Background Color:</string>
             </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
             <property name="buddy" >
              <cstring>backgroundColorButton</cstring>
             </property>
            </widget>
           </item>
           <item row="0" column="1" >
-           <widget class="KColorButton" name="backgroundColorButton" />
+           <widget class="KColorButton" name="backgroundColorButton" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0" >
            <widget class="QLabel" name="label_3" >
             <property name="text" >
              <string>Wallpaper:</string>
             </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
             <property name="buddy" >
              <cstring>wallpaperRequester</cstring>
             </property>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2" >
-           <widget class="KUrlRequester" name="wallpaperRequester" />
+          <item row="1" column="1" >
+           <widget class="KUrlRequester" name="wallpaperRequester" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -74,13 +86,23 @@
             <property name="text" >
              <string>Screen edge:</string>
             </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
             <property name="buddy" >
              <cstring>screenEdgeCombo</cstring>
             </property>
            </widget>
           </item>
           <item row="0" column="1" >
-           <widget class="QComboBox" name="screenEdgeCombo" />
+           <widget class="QComboBox" name="screenEdgeCombo" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0" colspan="2" >
            <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" >
@@ -108,18 +130,34 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0" >
+          <item row="1" column="0" colspan="2" >
+           <widget class="QCheckBox" name="reflectionBox" >
+            <property name="text" >
+             <string>Reflection</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" >
            <widget class="QLabel" name="label" >
             <property name="text" >
              <string>Rotation duration:</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="buddy" >
              <cstring>rotationDurationSpin</cstring>
             </property>
            </widget>
           </item>
-          <item row="1" column="1" >
+          <item row="2" column="1" >
            <widget class="QSpinBox" name="rotationDurationSpin" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize" >
              <size>
               <width>100</width>
@@ -140,7 +178,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2" >
+          <item row="3" column="0" colspan="2" >
            <spacer name="verticalSpacer_2" >
             <property name="orientation" >
              <enum>Qt::Vertical</enum>
@@ -148,7 +186,7 @@
             <property name="sizeHint" stdset="0" >
              <size>
               <width>20</width>
-              <height>40</height>
+              <height>0</height>
              </size>
             </property>
            </spacer>
@@ -161,71 +199,36 @@
          <property name="title" >
           <string>Opacity</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3" >
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_5" >
-            <item>
-             <widget class="QSlider" name="cubeOpacitySlider" >
-              <property name="minimumSize" >
-               <size>
-                <width>200</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximum" >
-               <number>100</number>
-              </property>
-              <property name="singleStep" >
-               <number>1</number>
-              </property>
-              <property name="value" >
-               <number>100</number>
-              </property>
-              <property name="orientation" >
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="tickPosition" >
-               <enum>QSlider::TicksBelow</enum>
-              </property>
-              <property name="tickInterval" >
-               <number>10</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_6" >
-              <item>
-               <widget class="QLabel" name="label_4" >
-                <property name="text" >
-                 <string>Transparent</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer" >
-                <property name="orientation" >
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0" >
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_5" >
-                <property name="text" >
-                 <string>Opaque</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
+         <layout class="QGridLayout" name="gridLayout_6" >
+          <item row="1" column="0" colspan="2" >
+           <widget class="QSlider" name="cubeOpacitySlider" >
+            <property name="minimumSize" >
+             <size>
+              <width>200</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximum" >
+             <number>100</number>
+            </property>
+            <property name="singleStep" >
+             <number>1</number>
+            </property>
+            <property name="value" >
+             <number>100</number>
+            </property>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition" >
+             <enum>QSlider::TicksBelow</enum>
+            </property>
+            <property name="tickInterval" >
+             <number>10</number>
+            </property>
+           </widget>
           </item>
-          <item>
+          <item row="1" column="2" >
            <widget class="QSpinBox" name="cubeOpacitySpin" >
             <property name="minimumSize" >
              <size>
@@ -244,31 +247,53 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="0" >
+           <widget class="QLabel" name="label_4" >
+            <property name="text" >
+             <string>Transparent</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" >
+           <widget class="QLabel" name="label_5" >
+            <property name="text" >
+             <string>Opaque</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
+       </item>
+       <item row="4" column="0" colspan="2" >
+        <spacer name="verticalSpacer_3" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>545</width>
-        <height>553</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Tab 2</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3" >
-       <item>
+      <layout class="QGridLayout" name="gridLayout_7" >
+       <item row="0" column="0" >
         <widget class="QGroupBox" name="groupBox_3" >
          <property name="title" >
           <string>Caps</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4" >
-          <item row="0" column="0" >
+          <item row="0" column="0" colspan="2" >
            <widget class="QCheckBox" name="cubeCapsBox" >
             <property name="text" >
              <string>Show caps</string>
@@ -280,101 +305,58 @@
             <property name="text" >
              <string>Cap Color:</string>
             </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
             <property name="buddy" >
              <cstring>capColorButton</cstring>
             </property>
            </widget>
           </item>
           <item row="1" column="1" >
-           <widget class="KColorButton" name="capColorButton" />
+           <widget class="KColorButton" name="capColorButton" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
           </item>
-          <item row="2" column="0" >
+          <item row="2" column="0" colspan="2" >
            <widget class="QCheckBox" name="capsImageBox" >
             <property name="text" >
              <string>Display image on caps</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="0" >
-           <widget class="QLabel" name="capDeformationLabel" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text" >
-             <string>Cap deformation:</string>
-            </property>
-            <property name="alignment" >
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="buddy" >
-             <cstring>capDeformationSlider</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1" >
-           <layout class="QVBoxLayout" name="verticalLayout_4" >
-            <item>
-             <widget class="QSlider" name="capDeformationSlider" >
-              <property name="maximum" >
-               <number>100</number>
-              </property>
-              <property name="orientation" >
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="tickPosition" >
-               <enum>QSlider::TicksBelow</enum>
-              </property>
-              <property name="tickInterval" >
-               <number>25</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout" >
-              <item>
-               <widget class="QLabel" name="capDeformationSphereLabel" >
-                <property name="text" >
-                 <string>Sphere</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_3" >
-                <property name="orientation" >
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0" >
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="capDeformationPlaneLabel" >
-                <property name="text" >
-                 <string>Plane</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
        </item>
-       <item>
+       <item row="4" column="0" colspan="2" >
         <widget class="QGroupBox" name="groupBox_2" >
          <property name="title" >
           <string>Zoom</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2" >
-          <item>
+         <layout class="QGridLayout" name="gridLayout_8" >
+          <item row="1" column="0" >
+           <widget class="QLabel" name="label_8" >
+            <property name="text" >
+             <string>Near</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QLabel" name="label_9" >
+            <property name="text" >
+             <string>Far</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="2" >
            <widget class="QSlider" name="zPositionSlider" >
             <property name="toolTip" >
              <string>Define how far away the object should appear</string>
@@ -399,41 +381,23 @@
             </property>
            </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2" >
-            <item>
-             <widget class="QLabel" name="label_8" >
-              <property name="text" >
-               <string>Near</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_2" >
-              <property name="orientation" >
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0" >
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_9" >
-              <property name="text" >
-               <string>Far</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
        </item>
-       <item>
+       <item row="6" column="0" colspan="2" >
+        <spacer name="verticalSpacer" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="1" >
         <widget class="QGroupBox" name="groupBox_9" >
          <property name="title" >
           <string>Additional options</string>
@@ -442,8 +406,8 @@
           <item>
            <widget class="QCheckBox" name="closeOnMouseReleaseBox" >
             <property name="toolTip" >
-             <string>Sphere is deactivated after rotating the sphere with the mouse.
-Otherwise sphere will stay in the position.</string>
+             <string>If enabled the effect will be deactivated after rotating the sphere with the mouse,
+otherwise it will remain active</string>
             </property>
             <property name="text" >
              <string>Close after mouse dragging</string>
@@ -453,25 +417,70 @@ Otherwise sphere will stay in the position.</string>
           <item>
            <widget class="QCheckBox" name="walkThroughDesktopBox" >
             <property name="text" >
-             <string>Use for walk through desktop list</string>
+             <string>Use this effect for walking through the desktops</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_4" >
+            <property name="orientation" >
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType" >
+             <enum>QSizePolicy::Preferred</enum>
+            </property>
+            <property name="sizeHint" stdset="0" >
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2" >
+        <widget class="QGroupBox" name="capDeformationGroupBox" >
+         <property name="title" >
+          <string>Cap deformation</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_9" >
+          <item row="0" column="0" colspan="2" >
+           <widget class="QSlider" name="capDeformationSlider" >
+            <property name="maximum" >
+             <number>100</number>
+            </property>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition" >
+             <enum>QSlider::TicksBelow</enum>
+            </property>
+            <property name="tickInterval" >
+             <number>25</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="capDeformationSphereLabel" >
+            <property name="text" >
+             <string>Sphere</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QLabel" name="capDeformationPlaneLabel" >
+            <property name="text" >
+             <string>Plane</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
          </layout>
         </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer" >
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0" >
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -501,6 +510,7 @@ Otherwise sphere will stay in the position.</string>
  <tabstops>
   <tabstop>tabWidget</tabstop>
   <tabstop>displayDesktopNameBox</tabstop>
+  <tabstop>reflectionBox</tabstop>
   <tabstop>rotationDurationSpin</tabstop>
   <tabstop>cubeOpacitySlider</tabstop>
   <tabstop>cubeOpacitySpin</tabstop>
@@ -510,9 +520,10 @@ Otherwise sphere will stay in the position.</string>
   <tabstop>cubeCapsBox</tabstop>
   <tabstop>capColorButton</tabstop>
   <tabstop>capsImageBox</tabstop>
+  <tabstop>closeOnMouseReleaseBox</tabstop>
+  <tabstop>walkThroughDesktopBox</tabstop>
   <tabstop>capDeformationSlider</tabstop>
   <tabstop>zPositionSlider</tabstop>
-  <tabstop>closeOnMouseReleaseBox</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -523,12 +534,12 @@ Otherwise sphere will stay in the position.</string>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>386</x>
-     <y>175</y>
+     <x>524</x>
+     <y>96</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>235</x>
-     <y>162</y>
+     <x>433</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -539,12 +550,12 @@ Otherwise sphere will stay in the position.</string>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>133</x>
-     <y>162</y>
+     <x>331</x>
+     <y>97</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>386</x>
-     <y>175</y>
+     <x>524</x>
+     <y>96</y>
     </hint>
    </hints>
   </connection>
