@@ -29,6 +29,7 @@
 #include "oxygen.h"
 #include "oxygenclient.h"
 #include <kconfiggroup.h>
+#include <QApplication>
 
 extern "C"
 {
@@ -39,6 +40,8 @@ KDE_EXPORT KDecorationFactory* create_factory()
 }
 namespace Oxygen
 {
+
+OxygenHelper *oxygenHelper(); // referenced from definition in oxygendclient.cpp
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -160,6 +163,11 @@ bool OxygenFactory::supports( Ability ability ) const
 
 QList< QList<QImage> > OxygenFactory::shadowTextures()
 {
+    QPalette palette = qApp->palette();
+
+    // Set palette to the right group. Which is active right now while drawing the glow
+    palette.setCurrentColorGroup(QPalette::Active);
+
     // TODO: THIS IS ALL VERY UGLY! Not recommended to do it this way.
     // Copied from the shadow effect's XRender picture generator
 
@@ -174,23 +182,53 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
     //---------------------------------------------------------------
     // Active shadow texture
 
-    qreal size = 2 * ( shadowFuzzyness + shadowSize ) + 1;
-    QPixmap *shadow = new QPixmap( size, size );
+    QColor color = palette.window().color();
+    QColor light = oxygenHelper()->calcLightColor(oxygenHelper()->backgroundTopColor(color));
+    QColor dark = oxygenHelper()->calcDarkColor(oxygenHelper()->backgroundBottomColor(color));
+    QColor glow = KDecoration::options()->color(ColorFrame);
+    QColor glow2 = KDecoration::options()->color(ColorTitleBar);
+
+    qreal size = 25.5;
+    QPixmap *shadow = new QPixmap( size*2, size*2 );
     shadow->fill( Qt::transparent );
-    size /= 2.0;
     QRadialGradient rg( size, size, size );
-    QColor c( 150, 234, 255, 255 );
-    rg.setColorAt( 0, c );
-    c.setAlpha( 0.3 * c.alpha() );
-    if( shadowSize > 0 )
-        rg.setColorAt( float( shadowSize ) / ( shadowFuzzyness + shadowSize ), c );
-    c.setAlpha( 0 );
-    rg.setColorAt( 0.8, c );
+    QColor c = color;
+    c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
+    c = glow;
+    c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
+    c.setAlpha( 180 );  rg.setColorAt( 5/size, c );
+    c.setAlpha( 25 );  rg.setColorAt( 5.5/size, c );
+    c.setAlpha( 0 );  rg.setColorAt( 6.5/size, c );
     QPainter p( shadow );
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
     p.setBrush( rg );
     p.drawRect( shadow->rect() );
+
+    rg = QRadialGradient( size, size, size );
+    c = color;
+    c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
+    c = glow2;
+    c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
+    c.setAlpha( 0.43*255 );  rg.setColorAt( 5.5/size, c );
+    c.setAlpha( 0.30*255 );  rg.setColorAt( 6.5/size, c );
+    c.setAlpha( 0.22*255 );  rg.setColorAt( 7.5/size, c );
+    c.setAlpha( 0.15*255 );  rg.setColorAt( 8.5/size, c );
+    c.setAlpha( 0.08*255 );  rg.setColorAt( 11.5/size, c );
+    c.setAlpha( 0);  rg.setColorAt( 14.5/size, c );
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+    p.setBrush( rg );
+    p.drawRect( shadow->rect() );
+    
+    // draw the corner of the window - actually all 4 corners as one circle
+    p.setBrush( Qt::NoBrush );
+    QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
+    lg.setColorAt(0.52, light);
+    lg.setColorAt(1.0, dark);
+    p.setPen(QPen(lg, 0.8));
+    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+
     p.end();
 
     int w = shadow->width() / 2;
@@ -205,31 +243,96 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
     p.end(); \
     textures.append( dump.toImage() );
 
-    MAKE_TEX( w, h, 0, 0 );
-    MAKE_TEX( 1, h, w, 0 );
-    MAKE_TEX( w, h, w, 0 );
+    MAKE_TEX( w, h, 0, h+1 ); // corner
+    MAKE_TEX( 1, h, w, h+1 );
+    MAKE_TEX( w, h, w+1, h+1 );// corner
     MAKE_TEX( w, 1, 0, h );
-    //MAKE_TEX( 1, 1, w, h );
-    MAKE_TEX( w, 1, w, h );
-    MAKE_TEX( w, h, 0, h );
-    MAKE_TEX( 1, h, w, h );
-    MAKE_TEX( w, h, w, h );
-    delete shadow;
+    MAKE_TEX( w, 1, w+1, h );
+    MAKE_TEX( w, h, 0, 0);// corner
+    MAKE_TEX( 1, h, w, 0);
+    MAKE_TEX( w, h, w+1, 0);// corner
 
     textureLists.append( textures );
 
     //---------------------------------------------------------------
     // Inactive shadow texture
 
-    for( int i = 0; i < 8; i++ )
-        {
-        QPainter pi( &textures[i] );
-        pi.fillRect( textures[i].rect(), QColor( 0, 0, 0, 255 ));
-        pi.end();
-        textures[i].setAlphaChannel( textureLists[0][i].alphaChannel() );
-        }
+    textures.clear();
+
+    shadow->fill( Qt::transparent );
+    p.begin(shadow);
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+
+    rg = QRadialGradient( size, size+4, size );
+    c = QColor( Qt::black );
+    c.setAlpha( 0.12*255 );  rg.setColorAt( 4.5/size, c );
+    c.setAlpha( 0.11*255 );  rg.setColorAt( 6.6/size, c );
+    c.setAlpha( 0.075*255 );  rg.setColorAt( 8.5/size, c );
+    c.setAlpha( 0.06*255 );  rg.setColorAt( 11.5/size, c );
+    c.setAlpha( 0.035*255 );  rg.setColorAt( 14.5/size, c );
+    c.setAlpha( 0.025*255 );  rg.setColorAt( 17.5/size, c );
+    c.setAlpha( 0.01*255 );  rg.setColorAt( 21.5/size, c );
+    c.setAlpha( 0.0*255 );  rg.setColorAt( 25.5/size, c );
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+    p.setBrush( rg );
+    p.drawRect( shadow->rect() );
+
+    rg = QRadialGradient( size, size+2, size );
+    c = QColor( Qt::black );
+    c.setAlpha( 0.25*255 );  rg.setColorAt( 4.5/size, c );
+    c.setAlpha( 0.20*255 );  rg.setColorAt( 5.5/size, c );
+    c.setAlpha( 0.13*255 );  rg.setColorAt( 7.5/size, c );
+    c.setAlpha( 0.06*255 );  rg.setColorAt( 8.5/size, c );
+    c.setAlpha( 0.015*255 );  rg.setColorAt( 11.5/size, c );
+    c.setAlpha( 0.0*255 );  rg.setColorAt( 14.5/size, c );
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+    p.setBrush( rg );
+    p.drawRect( shadow->rect() );
+
+    rg = QRadialGradient( size, size+0.2, size );
+    c = color;
+    c = QColor( Qt::black );
+    c.setAlpha( 0.35*255 );  rg.setColorAt( 0/size, c );
+    c.setAlpha( 0.32*255 );  rg.setColorAt( 4.5/size, c );
+    c.setAlpha( 0.22*255 );  rg.setColorAt( 5.0/size, c );
+    c.setAlpha( 0.03*255 );  rg.setColorAt( 5.5/size, c );
+    c.setAlpha( 0.0*255 );  rg.setColorAt( 6.5/size, c );
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+    p.setBrush( rg );
+    p.drawRect( shadow->rect() );
+
+    rg = QRadialGradient( size, size, size );
+    c = color;
+    c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
+    c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+    p.setBrush( rg );
+    p.drawRect( shadow->rect() );
+
+    // draw the corner of the window - actually all 4 corners as one circle
+    p.setBrush( Qt::NoBrush );
+    p.setPen(QPen(lg, 0.8));
+    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+
+    p.end();
+
+    MAKE_TEX( w, h, 0, h+1 ); // corner
+    MAKE_TEX( 1, h, w, h+1 );
+    MAKE_TEX( w, h, w+1, h+1 );// corner
+    MAKE_TEX( w, 1, 0, h );
+    MAKE_TEX( w, 1, w+1, h );
+    MAKE_TEX( w, h, 0, 0);// corner
+    MAKE_TEX( 1, h, w, 0);
+    MAKE_TEX( w, h, w+1, 0);// corner
 
     textureLists.append( textures );
+
+    delete shadow;
 
     return textureLists;
 }
@@ -250,33 +353,23 @@ int OxygenFactory::shadowTextureList( ShadowType type ) const
 
 QList<QRect> OxygenFactory::shadowQuads( ShadowType type, QSize size ) const
 {
-#define shadowFuzzyness 15
-
-    // These are slightly under the decoration so the corners look nicer
+    int outside=20, underlap=5, cornersize=25;
+    // These are underlap under the decoration so the corners look nicer 10px on the outside
     QList<QRect> quads;
-    quads.append( QRect( -shadowFuzzyness+5, -shadowFuzzyness+5, shadowFuzzyness, shadowFuzzyness ));
-    quads.append( QRect( 0+5,                -shadowFuzzyness+5, size.width()-10, shadowFuzzyness ));
-    quads.append( QRect( size.width()-5,     -shadowFuzzyness+5, shadowFuzzyness, shadowFuzzyness ));
-    quads.append( QRect( -shadowFuzzyness+5, 0+5,                shadowFuzzyness, size.height()-10 ));
-    //quads.append( QRect( 0+5,                0+5,                size.width()-10, size.height()-10 ));
-    quads.append( QRect( size.width()-5,     0+5,                shadowFuzzyness, size.height()-10 ));
-    quads.append( QRect( -shadowFuzzyness+5, size.height()-5,    shadowFuzzyness, shadowFuzzyness ));
-    quads.append( QRect( 0+5,                size.height()-5,    size.width()-10, shadowFuzzyness ));
-    quads.append( QRect( size.width()-5,     size.height()-5,    shadowFuzzyness, shadowFuzzyness ));
-
+    quads.append(QRect(-outside, size.height()-underlap, cornersize, cornersize));
+    quads.append(QRect(underlap, size.height()-underlap, size.width()-2*underlap, cornersize));
+    quads.append(QRect(size.width()-underlap, size.height()-underlap, cornersize, cornersize));
+    quads.append(QRect(-outside, underlap, cornersize, size.height()-2*underlap));
+    quads.append(QRect(size.width()-underlap, underlap, cornersize, size.height()-2*underlap));
+    quads.append(QRect(-outside, -outside, cornersize, cornersize));
+    quads.append(QRect(underlap, -outside, size.width()-2*underlap, cornersize));
+    quads.append(QRect(size.width()-underlap,     -outside, cornersize, cornersize));
     return quads;
 }
 
 double OxygenFactory::shadowOpacity( ShadowType type, double dataOpacity ) const
 {
-    switch( type ) {
-        case ShadowBorderlessActive:
-            return dataOpacity;
-        case ShadowBorderlessInactive:
-        case ShadowOther:
-            return dataOpacity * 0.25;
-    }
-    abort(); // Should never be reached
+    return dataOpacity;
 }
 
 } //namespace Oxygen

@@ -63,6 +63,11 @@ namespace Oxygen
 
 K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("OxygenDeco"))
 
+OxygenHelper *oxygenHelper()
+{
+    return globalHelper;
+}
+
 void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 {
     p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
@@ -348,7 +353,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     if(maximized)
         return;
 
-    helper_.drawFloatFrame(&painter, widget()->rect(), color);
+    helper_.drawFloatFrame(&painter, widget()->rect(), color, !shadowsActive(), isActive(),
+                                                                KDecoration::options()->color(ColorTitleBar));
 
     if(!isResizable())
         return;
@@ -407,31 +413,39 @@ void OxygenClient::updateWindowShape()
         return;
     }
 
-    QRegion mask(4, 0, w-8, h);
-    mask += QRegion(0, 4, w, h-8);
-    mask += QRegion(2, 1, w-4, h-2);
-    mask += QRegion(1, 2, w-2, h-4);
+    if (!shadowsActive()) {
+        QRegion mask(4, 0, w-8, h);
+        mask += QRegion(0, 4, w, h-8);
+        mask += QRegion(2, 1, w-4, h-2);
+        mask += QRegion(1, 2, w-2, h-4);
 
-    setMask(mask);
+        setMask(mask);
+    }
+   else {
+        QRegion mask(6, 1, w-12, h-2);
+        mask += QRegion(1, 6, w-2, h-12);
+        mask += QRegion(5, 5, w-10, h-10);
+
+        setMask(mask);
+    }
 }
 
 QList<QRect> OxygenClient::shadowQuads( ShadowType type ) const
 {
+    Q_UNUSED(type)
+
     QSize size = widget()->size();
-#define shadowFuzzyness 15
-
-    // These are slightly under the decoration so the corners look nicer
+    int outside=20, underlap=5, cornersize=25;
+    // These are underlap under the decoration so the corners look nicer 10px on the outside
     QList<QRect> quads;
-    quads.append( QRect( -shadowFuzzyness+5, -shadowFuzzyness+5, shadowFuzzyness, shadowFuzzyness ));
-    quads.append( QRect( 0+5,                -shadowFuzzyness+5, size.width()-10, shadowFuzzyness ));
-    quads.append( QRect( size.width()-5,     -shadowFuzzyness+5, shadowFuzzyness, shadowFuzzyness ));
-    quads.append( QRect( -shadowFuzzyness+5, 0+5,                shadowFuzzyness, size.height()-10 ));
-    //quads.append( QRect( 0+5,                0+5,                size.width()-10, size.height()-10 ));
-    quads.append( QRect( size.width()-5,     0+5,                shadowFuzzyness, size.height()-10 ));
-    quads.append( QRect( -shadowFuzzyness+5, size.height()-5,    shadowFuzzyness, shadowFuzzyness ));
-    quads.append( QRect( 0+5,                size.height()-5,    size.width()-10, shadowFuzzyness ));
-    quads.append( QRect( size.width()-5,     size.height()-5,    shadowFuzzyness, shadowFuzzyness ));
-
+    quads.append(QRect(-outside, size.height()-underlap, cornersize, cornersize));
+    quads.append(QRect(underlap, size.height()-underlap, size.width()-2*underlap, cornersize));
+    quads.append(QRect(size.width()-underlap, size.height()-underlap, cornersize, cornersize));
+    quads.append(QRect(-outside, underlap, cornersize, size.height()-2*underlap));
+    quads.append(QRect(size.width()-underlap, underlap, cornersize, size.height()-2*underlap));
+    quads.append(QRect(-outside, -outside, cornersize, cornersize));
+    quads.append(QRect(underlap, -outside, size.width()-2*underlap, cornersize));
+    quads.append(QRect(size.width()-underlap,     -outside, cornersize, cornersize));
     return quads;
 }
 
@@ -445,9 +459,11 @@ double OxygenClient::shadowOpacity( ShadowType type, double dataOpacity ) const
         case ShadowBorderedInactive:
             if( isActive() )
                 return 0.0;
-            return dataOpacity * 0.25;
+            return 1.0;
+        default:
+            abort(); // Should never be reached
     }
-    abort(); // Should never be reached
+    return 0;
 }
 
 } //namespace Oxygen
