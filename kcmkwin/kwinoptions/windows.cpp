@@ -97,6 +97,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 {
     QString wtstr;
     QBoxLayout *lay = new QVBoxLayout(this);
+    QLabel *label;
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -115,102 +116,13 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     //fcsBox = new QGroupBox(i18n("Focus"),this);
     fcsBox = new QWidget(this);
 
-    QFormLayout *fLay = new QFormLayout();
+    QGridLayout *gLay = new QGridLayout();
 
-    fcsBox->setLayout( fLay );
+    fcsBox->setLayout( gLay );
 
-    focusCombo =  new QComboBox(fcsBox);
-    focusCombo->setEditable( false );
-    focusCombo->addItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
-    focusCombo->addItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
-    focusCombo->addItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
-    focusCombo->addItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
-    fLay->addRow( i18n("&Policy:"), focusCombo);
-
-
-    // FIXME, when more policies have been added to KWin
-    wtstr = i18n("The focus policy is used to determine the active window, i.e."
-                                      " the window you can work in. <ul>"
-                                      " <li><em>Click to focus:</em> A window becomes active when you click into it."
-                                      " This is the behavior you might know from other operating systems.</li>"
-                                      " <li><em>Focus follows mouse:</em> Moving the mouse pointer actively on to a"
-                                      " normal window activates it. New windows will receive the focus,"
-                                      " without you having to point the mouse at them explicitly."
-                                      " Very practical if you are using the mouse a lot.</li>"
-                                      " <li><em>Focus under mouse:</em> The window that happens to be under the"
-                                      " mouse pointer is active. If the mouse points nowhere, the last window"
-                                      " that was under the mouse has focus."
-                                      " New windows will not automatically receive the focus.</li>"
-                                      " <li><em>Focus strictly under mouse:</em> Only the window under the mouse pointer is"
-                                      " active. If the mouse points nowhere, nothing has focus.</li>"
-                                      " </ul>"
-                                      "Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent certain"
-                                      " features such as the Alt+Tab walk through windows dialog in the KDE mode"
-                                      " from working properly."
-                         );
-    focusCombo->setWhatsThis( wtstr);
-
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(focusPolicyChanged()) );
-
-    // autoraise delay
-    autoRaiseOn = new QCheckBox(i18n("&Raise, with the following delay:"), fcsBox);
-    connect(autoRaiseOn,SIGNAL(toggled(bool)), this, SLOT(autoRaiseOnTog(bool)));
-    autoRaise = new KIntNumInput(500, fcsBox);
-    autoRaise->setRange(0, 3000, 100);
-    autoRaise->setSteps(100,100);
-    autoRaise->setSuffix(i18n(" ms"));
-    fLay->addRow( autoRaiseOn, autoRaise);
-
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()) );
-
-    delayFocusOn = new QCheckBox(i18n("Delay focus by:"), fcsBox);
-    connect(delayFocusOn,SIGNAL(toggled(bool)), this, SLOT(delayFocusOnTog(bool)));
-    delayFocus = new KIntNumInput(500, fcsBox);
-    delayFocus->setRange(0, 3000, 100);
-    delayFocus->setSteps(100,100);
-    delayFocus->setSuffix(i18n(" ms"));
-    fLay->addRow( delayFocusOn, delayFocus);
-
-    clickRaiseOn = new QCheckBox(i18n("C&lick raises active window"), fcsBox);
-    connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
-    fLay->addRow(clickRaiseOn);
-
-    autoRaiseOn->setWhatsThis( i18n("When this option is enabled, a window in the background will automatically"
-                                       " come to the front when the mouse pointer has been over it for some time.") );
-    wtstr = i18n("This is the delay after which the window that the mouse pointer is over will automatically"
-                 " come to the front.");
-    autoRaise->setWhatsThis( wtstr );
-
-    clickRaiseOn->setWhatsThis( i18n("When this option is enabled, the active window will be brought to the"
-                                        " front when you click somewhere into the window contents. To change"
-                                        " it for inactive windows, you need to change the settings"
-                                        " in the Actions tab.") );
-
-    delayFocusOn->setWhatsThis( i18n("When this option is enabled, there will be a delay after which the"
-                                        " window the mouse pointer is over will become active (receive focus).") );
-    delayFocus->setWhatsThis( i18n("This is the delay after which the window the mouse pointer is over"
-                                       " will automatically receive focus.") );
-
-    separateScreenFocus = new QCheckBox( i18n( "S&eparate screen focus" ), fcsBox );
-    fLay->addRow( separateScreenFocus );
-    wtstr = i18n( "When this option is enabled, focus operations are limited only to the active Xinerama screen" );
-    separateScreenFocus->setWhatsThis( wtstr );
-
-    activeMouseScreen = new QCheckBox( i18n( "Active screen follows &mouse" ), fcsBox );
-    fLay->addRow( activeMouseScreen );
-    wtstr = i18n( "When this option is enabled, the active Xinerama screen (where new windows appear, for example)"
-                  " is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the "
-                  " screen containing the focused window. By default this option is disabled for Click to focus and"
-                  " enabled for other focus policies." );
-    activeMouseScreen->setWhatsThis( wtstr );
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(updateActiveMouseScreen()));
-
-    if (!QApplication::desktop()->isVirtualDesktop() ||
-        QApplication::desktop()->numScreens() == 1) // No Ximerama 
-    {
-        separateScreenFocus->hide();
-        activeMouseScreen->hide();
-    }
+    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    sizePolicy.setHorizontalStretch(0);
+    sizePolicy.setVerticalStretch(0);
 
     focusStealing = new QComboBox( this );
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "None" ));
@@ -239,7 +151,126 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
                   "in the Notifications control module.</p>" );
     focusStealing->setWhatsThis( wtstr );
     connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
-    fLay->addRow(i18n( "Focus stealing prevention level:" ), focusStealing);
+    sizePolicy.setHeightForWidth(focusStealing->sizePolicy().hasHeightForWidth());
+    focusStealing->setSizePolicy(sizePolicy);
+    label = new QLabel(i18n("Focus stealing prevention level:"), this);
+    label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    label->setBuddy(focusStealing);
+    gLay->addWidget(label, 0, 0, 1, 2);
+    gLay->addWidget(focusStealing, 0, 2);
+
+    focusCombo =  new QComboBox(fcsBox);
+    focusCombo->setEditable( false );
+    focusCombo->addItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
+    focusCombo->addItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
+    focusCombo->addItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
+    focusCombo->addItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
+    sizePolicy.setHeightForWidth(focusCombo->sizePolicy().hasHeightForWidth());
+    focusCombo->setSizePolicy(sizePolicy);
+    label = new QLabel(i18n("&Policy:"), this);
+    label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    label->setBuddy(focusCombo);
+    gLay->addWidget(label, 1, 0, 1, 2);
+    gLay->addWidget(focusCombo, 1, 2);
+
+
+    // FIXME, when more policies have been added to KWin
+    wtstr = i18n("The focus policy is used to determine the active window, i.e."
+                                      " the window you can work in. <ul>"
+                                      " <li><em>Click to focus:</em> A window becomes active when you click into it."
+                                      " This is the behavior you might know from other operating systems.</li>"
+                                      " <li><em>Focus follows mouse:</em> Moving the mouse pointer actively on to a"
+                                      " normal window activates it. New windows will receive the focus,"
+                                      " without you having to point the mouse at them explicitly."
+                                      " Very practical if you are using the mouse a lot.</li>"
+                                      " <li><em>Focus under mouse:</em> The window that happens to be under the"
+                                      " mouse pointer is active. If the mouse points nowhere, the last window"
+                                      " that was under the mouse has focus."
+                                      " New windows will not automatically receive the focus.</li>"
+                                      " <li><em>Focus strictly under mouse:</em> Only the window under the mouse pointer is"
+                                      " active. If the mouse points nowhere, nothing has focus.</li>"
+                                      " </ul>"
+                                      "Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent certain"
+                                      " features such as the Alt+Tab walk through windows dialog in the KDE mode"
+                                      " from working properly."
+                         );
+    focusCombo->setWhatsThis( wtstr);
+
+    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(focusPolicyChanged()) );
+
+    // autoraise delay
+    autoRaiseOn = new QCheckBox(fcsBox);
+    connect(autoRaiseOn,SIGNAL(toggled(bool)), this, SLOT(autoRaiseOnTog(bool)));
+    autoRaise = new KIntNumInput(500, fcsBox);
+    autoRaise->setRange(0, 3000, 100);
+    autoRaise->setSteps(100,100);
+    autoRaise->setSuffix(i18n(" ms"));
+    sizePolicy.setHeightForWidth(autoRaise->sizePolicy().hasHeightForWidth());
+    autoRaise->setSizePolicy(sizePolicy);
+    autoRaiseOnLabel = new QLabel(i18n("&Raise, with the following delay:"), this);
+    autoRaiseOnLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    autoRaiseOnLabel->setBuddy(autoRaise);
+    gLay->addWidget(autoRaiseOn, 2, 0);
+    gLay->addWidget(autoRaiseOnLabel, 2, 1);
+    gLay->addWidget(autoRaise, 2, 2);
+
+    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(setDelayFocusEnabled()) );
+
+    delayFocusOn = new QCheckBox(fcsBox);
+    connect(delayFocusOn,SIGNAL(toggled(bool)), this, SLOT(delayFocusOnTog(bool)));
+    delayFocus = new KIntNumInput(500, fcsBox);
+    delayFocus->setRange(0, 3000, 100);
+    delayFocus->setSteps(100,100);
+    delayFocus->setSuffix(i18n(" ms"));
+    sizePolicy.setHeightForWidth(delayFocus->sizePolicy().hasHeightForWidth());
+    delayFocus->setSizePolicy(sizePolicy);
+    delayFocusOnLabel = new QLabel(i18n("Delay focus by:"), this);
+    delayFocusOnLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    delayFocusOnLabel->setBuddy(delayFocus);
+    gLay->addWidget(delayFocusOn, 3, 0);
+    gLay->addWidget(delayFocusOnLabel, 3, 1);
+    gLay->addWidget(delayFocus, 3, 2);
+
+    clickRaiseOn = new QCheckBox(i18n("C&lick raises active window"), fcsBox);
+    connect(clickRaiseOn,SIGNAL(toggled(bool)), this, SLOT(clickRaiseOnTog(bool)));
+    gLay->addWidget(clickRaiseOn, 4, 0, 1, 3);
+
+    autoRaiseOn->setWhatsThis( i18n("When this option is enabled, a window in the background will automatically"
+                                       " come to the front when the mouse pointer has been over it for some time.") );
+    wtstr = i18n("This is the delay after which the window that the mouse pointer is over will automatically"
+                 " come to the front.");
+    autoRaise->setWhatsThis( wtstr );
+
+    clickRaiseOn->setWhatsThis( i18n("When this option is enabled, the active window will be brought to the"
+                                        " front when you click somewhere into the window contents. To change"
+                                        " it for inactive windows, you need to change the settings"
+                                        " in the Actions tab.") );
+
+    delayFocusOn->setWhatsThis( i18n("When this option is enabled, there will be a delay after which the"
+                                        " window the mouse pointer is over will become active (receive focus).") );
+    delayFocus->setWhatsThis( i18n("This is the delay after which the window the mouse pointer is over"
+                                       " will automatically receive focus.") );
+
+    separateScreenFocus = new QCheckBox( i18n( "S&eparate screen focus" ), fcsBox );
+    gLay->addWidget(separateScreenFocus, 5, 0, 1, 3);
+    wtstr = i18n( "When this option is enabled, focus operations are limited only to the active Xinerama screen" );
+    separateScreenFocus->setWhatsThis( wtstr );
+
+    activeMouseScreen = new QCheckBox( i18n( "Active screen follows &mouse" ), fcsBox );
+    gLay->addWidget(activeMouseScreen, 6, 0, 1, 3);
+    wtstr = i18n( "When this option is enabled, the active Xinerama screen (where new windows appear, for example)"
+                  " is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the "
+                  " screen containing the focused window. By default this option is disabled for Click to focus and"
+                  " enabled for other focus policies." );
+    activeMouseScreen->setWhatsThis( wtstr );
+    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(updateActiveMouseScreen()));
+
+    if (!QApplication::desktop()->isVirtualDesktop() ||
+        QApplication::desktop()->numScreens() == 1) // No Ximerama 
+    {
+        separateScreenFocus->hide();
+        activeMouseScreen->hide();
+    }
 
     lay->addWidget(fcsBox);
 
@@ -374,6 +405,7 @@ void KFocusConfig::focusPolicyChanged()
 
     // the auto raise related widgets are: autoRaise
     autoRaiseOn->setEnabled(policyIndex != CLICK_TO_FOCUS);
+    autoRaiseOnLabel->setEnabled(policyIndex != CLICK_TO_FOCUS);
     autoRaiseOnTog(policyIndex != CLICK_TO_FOCUS && autoRaiseOn->isChecked());
 
     focusStealing->setDisabled(policyIndex == FOCUS_UNDER_MOUSE || policyIndex == FOCUS_STRICTLY_UNDER_MOUSE);
@@ -386,6 +418,7 @@ void KFocusConfig::setDelayFocusEnabled()
 
     // the delayed focus related widgets are: delayFocus
     delayFocusOn->setEnabled(policyIndex != CLICK_TO_FOCUS);
+    delayFocusOnLabel->setEnabled(policyIndex != CLICK_TO_FOCUS);
     delayFocusOnTog(policyIndex != CLICK_TO_FOCUS && delayFocusOn->isChecked());
 }
 
@@ -961,43 +994,62 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     //CT 15mar98 - add EdgeResistance, BorderAttractor, WindowsAttractor config
     MagicBox = new KButtonGroup(this);
     MagicBox->setTitle(i18n("Snap Zones"));
-    QVBoxLayout *kLay = new QVBoxLayout(MagicBox);
+    QGridLayout *kLay = new QGridLayout(MagicBox);
+
+    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    sizePolicy.setHorizontalStretch(0);
+    sizePolicy.setVerticalStretch(0);
 
     BrdrSnap = new KIntNumInput(10, MagicBox);
     BrdrSnap->setSpecialValueText( i18n("none") );
     BrdrSnap->setRange( 0, MAX_BRDR_SNAP);
-    BrdrSnap->setLabel(i18n("&Border snap zone:"), Qt::AlignVCenter|Qt::AlignLeft);
     BrdrSnap->setSteps(1,10);
     BrdrSnap->setWhatsThis( i18n("Here you can set the snap zone for screen borders, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the border when"
                                     " moved near it.") );
-    kLay->addWidget(BrdrSnap);
+    sizePolicy.setHeightForWidth(BrdrSnap->sizePolicy().hasHeightForWidth());
+    BrdrSnap->setSizePolicy(sizePolicy);
+    BrdrSnapLabel = new QLabel(i18n("&Border snap zone:"), this);
+    BrdrSnapLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    BrdrSnapLabel->setBuddy(BrdrSnap);
+    kLay->addWidget(BrdrSnapLabel, 0, 0);
+    kLay->addWidget(BrdrSnap, 0, 1);
 
     WndwSnap = new KIntNumInput(10, MagicBox);
     WndwSnap->setSpecialValueText( i18n("none") );
     WndwSnap->setRange( 0, MAX_WNDW_SNAP);
-    WndwSnap->setLabel(i18n("&Window snap zone:"), Qt::AlignVCenter|Qt::AlignLeft);
     WndwSnap->setSteps(1,10);
     WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
                                     " they are moved near another window.") );
-    kLay->addWidget(WndwSnap);
+    sizePolicy.setHeightForWidth(WndwSnap->sizePolicy().hasHeightForWidth());
+    BrdrSnap->setSizePolicy(sizePolicy);
+    WndwSnapLabel = new QLabel(i18n("&Window snap zone:"), this);
+    WndwSnapLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    WndwSnapLabel->setBuddy(WndwSnap);
+    kLay->addWidget(WndwSnapLabel, 1, 0);
+    kLay->addWidget(WndwSnap, 1, 1);
 
     CntrSnap = new KIntNumInput(10, MagicBox);
     CntrSnap->setSpecialValueText( i18n("none") );
     CntrSnap->setRange( 0, MAX_CNTR_SNAP);
-    CntrSnap->setLabel(i18n("&Center snap zone:"), Qt::AlignVCenter|Qt::AlignLeft);
     CntrSnap->setSteps(1,10);
     CntrSnap->setWhatsThis( i18n("Here you can set the snap zone for the screen center, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the center of"
                                     " the screen when moved near it.") );
-    kLay->addWidget(CntrSnap);
+    sizePolicy.setHeightForWidth(CntrSnap->sizePolicy().hasHeightForWidth());
+    BrdrSnap->setSizePolicy(sizePolicy);
+    CntrSnapLabel = new QLabel(i18n("&Center snap zone:"), this);
+    CntrSnapLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    CntrSnapLabel->setBuddy(CntrSnap);
+    kLay->addWidget(CntrSnapLabel, 2, 0);
+    kLay->addWidget(CntrSnap, 2, 1);
 
     OverlapSnap=new QCheckBox(i18n("Snap windows onl&y when overlapping"),MagicBox);
     OverlapSnap->setWhatsThis( i18n("Here you can set that windows will be only"
                                        " snapped if you try to overlap them, i.e. they will not be snapped if the windows"
                                        " comes only near another window or border.") );
-    kLay->addWidget(OverlapSnap);
+    kLay->addWidget(OverlapSnap, 3, 0, 1, 2);
 
     lay->addWidget(MagicBox);
     lay->addStretch();

@@ -114,7 +114,9 @@ private:
   //QGroupBox *fcsBox;
   QWidget* fcsBox;
   QComboBox *focusCombo;
+  QLabel *autoRaiseOnLabel;
   QCheckBox *autoRaiseOn;
+  QLabel *delayFocusOnLabel;
   QCheckBox *delayFocusOn;
   QCheckBox *clickRaiseOn;
   KIntNumInput *autoRaise;
@@ -176,6 +178,7 @@ private:
   void setCenterSnapZone( int );
 
   KButtonGroup *MagicBox;
+  QLabel *BrdrSnapLabel, *WndwSnapLabel, *CntrSnapLabel;
   KIntNumInput *BrdrSnap, *WndwSnap, *CntrSnap;
   QCheckBox *OverlapSnap;
 

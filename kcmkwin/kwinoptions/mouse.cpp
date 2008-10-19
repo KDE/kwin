@@ -142,7 +142,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   QGroupBox *box;
   QLabel *label;
   QString strMouseButton1, strMouseButton3;
-  QString txtButton1, txtButton3, txtButton4;
+  QString txtButton1, txtButton3;
   QStringList items;
   bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
 
@@ -152,8 +152,12 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
 /** Titlebar doubleclick ************/
 
-  QFormLayout *fLayout = new QFormLayout();
-  layout->addLayout( fLayout );
+  QGridLayout *gLayout = new QGridLayout();
+  layout->addLayout( gLayout );
+
+  QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  sizePolicy.setHorizontalStretch(0);
+  sizePolicy.setVerticalStretch(0);
 
   QComboBox* combo = new QComboBox(this);
   combo->addItem(i18n("Maximize"));
@@ -169,7 +173,13 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   coTiDbl = combo;
   combo->setWhatsThis( i18n("Behavior on <em>double</em> click into the titlebar."));
 
-  fLayout->addRow(i18n("&Titlebar double-click:"),combo);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  label = new QLabel(i18n("&Titlebar double-click:"), this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gLayout->addWidget(label, 0, 0);
+  gLayout->addWidget(combo, 0, 1);
 
 /** Mouse Wheel Events  **************/
   // Titlebar and frame mouse Wheel  
@@ -186,7 +196,13 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   coTiAct4 = comboW;
   comboW->setWhatsThis( i18n("Handle mouse wheel events"));
 
-  fLayout->addRow(i18n("Titlebar wheel event:"),comboW);
+  sizePolicy.setHeightForWidth(comboW->sizePolicy().hasHeightForWidth());
+  comboW->setSizePolicy(sizePolicy);
+  label = new QLabel(i18n("Titlebar wheel event:"), this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(comboW);
+  gLayout->addWidget(label, 1, 0);
+  gLayout->addWidget(comboW, 1, 1);
 
 /** Titlebar and frame  **************/
 
@@ -216,15 +232,18 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   }
 
   label = new QLabel(strMouseButton1, box);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   grid->addWidget(label, 1, 0);
   label->setWhatsThis( txtButton1);
 
   label = new QLabel(i18n("Middle button:"), box);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   grid->addWidget(label, 2, 0);
   label->setWhatsThis( i18n("In this row you can customize middle click behavior when clicking into"
     " the titlebar or the frame.") );
 
   label = new QLabel(strMouseButton3, box);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   grid->addWidget(label, 3, 0);
   label->setWhatsThis( txtButton3);
 
@@ -237,6 +256,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
   // Titlebar and frame, active, mouse button 1
   combo = new QComboBox(box);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
   grid->addWidget(combo, 1, 1);
   combo->addItem(i18n("Raise"));
   combo->addItem(i18n("Lower"));
@@ -267,6 +288,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
         << i18n("Shade");
 
   combo = new QComboBox(box);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
   grid->addWidget(combo, 2, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -275,6 +298,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
   // Titlebar and frame, active, mouse button 3
   combo = new QComboBox(box);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
   grid->addWidget(combo, 3, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -307,6 +332,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
          << i18n("Nothing");
 
   combo = new QComboBox(box);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
   grid->addWidget(combo, 1, 2);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -314,6 +341,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->setWhatsThis( txtButton1);
 
   combo = new QComboBox(box);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
   grid->addWidget(combo, 2, 2);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -321,6 +350,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->setWhatsThis( i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>inactive</em> window."));
 
   combo = new QComboBox(box);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
   grid->addWidget(combo, 3, 2);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -599,14 +630,18 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
 {
   QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3, strAllW;
   QGroupBox *box;
-  QString strMouseButton1, strMouseButton3;
-  QString txtButton1, txtButton3;
+  QString strMouseButton1, strMouseButton2, strMouseButton3;
+  QString txtButton1, txtButton2, txtButton3;
   QStringList items;
   bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
 
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setMargin(0);
   layout->setSpacing(KDialog::spacingHint());
+
+  QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  sizePolicy.setHorizontalStretch(0);
+  sizePolicy.setVerticalStretch(0);
 
 /**  Inactive inner window ******************/
 
@@ -616,13 +651,17 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   box->setWhatsThis( i18n("Here you can customize mouse click behavior when clicking on an inactive"
                              " inner window ('inner' means: not titlebar, not frame).") );
 
-  QFormLayout *formLayout = new QFormLayout(box);
-  formLayout->setMargin(KDialog::marginHint());
-  formLayout->setSpacing(KDialog::spacingHint());
+  QGridLayout *gridLayout = new QGridLayout(box);
+  gridLayout->setMargin(KDialog::marginHint());
+  gridLayout->setSpacing(KDialog::spacingHint());
 
   strMouseButton1 = i18n("Left button:");
   txtButton1 = i18n("In this row you can customize left click behavior when clicking into"
      " the titlebar or the frame.");
+
+  strMouseButton2 = i18n("Middle button:");
+  txtButton2 = i18n("In this row you can customize middle click behavior when clicking into"
+     " the titlebar or the frame." );
 
   strMouseButton3 = i18n("Right button:");
   txtButton3 = i18n("In this row you can customize right click behavior when clicking into"
@@ -657,21 +696,39 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   combo->setWhatsThis( strWin1 );
-  formLayout->addRow(strMouseButton1, combo);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  QLabel* label = new QLabel(strMouseButton1, this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gridLayout->addWidget(label, 0, 0);
+  gridLayout->addWidget(combo, 0, 1);
 
   combo = new QComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin2 = combo;
   combo->setWhatsThis( strWin2 );
-  formLayout->addRow(i18n("Middle button:"), combo);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  label = new QLabel(strMouseButton2, this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gridLayout->addWidget(label, 1, 0);
+  gridLayout->addWidget(combo, 1, 1);
 
   combo = new QComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin3 = combo;
   combo->setWhatsThis( strWin3 );
-  formLayout->addRow(strMouseButton3, combo);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  label = new QLabel(strMouseButton3, this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gridLayout->addWidget(label, 2, 0);
+  gridLayout->addWidget(combo, 2, 1);
 
 
 /** Inner window, titlebar and frame **************/
@@ -688,16 +745,20 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   QHBoxLayout* fLay=new QHBoxLayout;
   fLay->setMargin(KDialog::marginHint());
   fLay->setSpacing(KDialog::spacingHint());
-  formLayout = new QFormLayout;
-  formLayout->setMargin(KDialog::marginHint());
-  formLayout->setSpacing(KDialog::spacingHint());
+  gridLayout = new QGridLayout;
+  gridLayout->setMargin(KDialog::marginHint());
+  gridLayout->setSpacing(KDialog::spacingHint());
   innerLay->addLayout(fLay);
-  innerLay->addLayout(formLayout);
+  innerLay->addLayout(gridLayout);
 
   // Labels
   strMouseButton1 = i18n("Left button:");
   strAll1 = i18n("In this row you can customize left click behavior when clicking into"
                  " the titlebar or the frame.");
+
+  strMouseButton2 = i18n("Middle button:");
+  strAll2 = i18n("In this row you can customize middle click behavior when clicking into"
+                 " the titlebar or the frame." );
 
   strMouseButton3 = i18n("Right button:");
   strAll3 = i18n("In this row you can customize right click behavior when clicking into"
@@ -717,9 +778,14 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   coAllKey = combo;
   combo->setWhatsThis( i18n("Here you select whether holding the Meta key or Alt key "
                             "will allow you to perform the following actions.") );
-  fLay->addWidget(new QLabel(i18n("Modifier key:"), this));
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  label = new QLabel(i18n("Modifier key:"), this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  fLay->addWidget(label);
   fLay->addWidget(combo);
-  fLay->addWidget(new QLabel("  +", this));
+  fLay->addWidget(new QLabel("   + ", this));
 
 
   items.clear();
@@ -737,23 +803,40 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll1 = combo;
   combo->setWhatsThis( strAll1 );
-  formLayout->addRow(strMouseButton1, combo);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  label = new QLabel(strMouseButton1, this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gridLayout->addWidget(label, 0, 0);
+  gridLayout->addWidget(combo, 0, 1);
 
 
   combo = new QComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll2 = combo;
-  combo->setWhatsThis( i18n("Here you can customize KDE's behavior when middle clicking into a window"
-                            " while pressing the modifier key.") );
-  formLayout->addRow(i18n("Middle button:"), combo);
+  combo->setWhatsThis( strAll2 );
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  label = new QLabel(strMouseButton2, this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gridLayout->addWidget(label, 1, 0);
+  gridLayout->addWidget(combo, 1, 1);
 
   combo = new QComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll3 =  combo;
   combo->setWhatsThis( strAll3 );
-  formLayout->addRow(strMouseButton3, combo);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  label = new QLabel(strMouseButton3, this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gridLayout->addWidget(label, 2, 0);
+  gridLayout->addWidget(combo, 2, 1);
 
 
   combo = new QComboBox(box);
@@ -768,7 +851,13 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   coAllW =  combo;
   combo->setWhatsThis( i18n("Here you can customize KDE's behavior when scrolling with the mouse wheel"
                             " in a window while pressing the modifier key.") );
-  formLayout->addRow(i18n("Mouse wheel:"), combo);
+  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
+  combo->setSizePolicy(sizePolicy);
+  label = new QLabel(i18n("Mouse wheel:"), this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gridLayout->addWidget(label, 3, 0);
+  gridLayout->addWidget(combo, 3, 1);
 
 
   layout->addStretch();
