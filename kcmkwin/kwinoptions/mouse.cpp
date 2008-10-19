@@ -155,10 +155,6 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   QGridLayout *gLayout = new QGridLayout();
   layout->addLayout( gLayout );
 
-  QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  sizePolicy.setHorizontalStretch(0);
-  sizePolicy.setVerticalStretch(0);
-
   QComboBox* combo = new QComboBox(this);
   combo->addItem(i18n("Maximize"));
   combo->addItem(i18n("Maximize (vertical only)"));
@@ -168,13 +164,12 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->addItem(i18n("Lower"));
   combo->addItem(i18n("On All Desktops"));
   combo->addItem(i18n("Nothing"));
-  combo->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
+  combo->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiDbl = combo;
   combo->setWhatsThis( i18n("Behavior on <em>double</em> click into the titlebar."));
 
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(i18n("&Titlebar double-click:"), this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);
@@ -191,13 +186,12 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   comboW->addItem(i18n("Move to Previous/Next Desktop"));  
   comboW->addItem(i18n("Change Opacity"));  
   comboW->addItem(i18n("Nothing"));  
-  comboW->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed));
+  comboW->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
   connect(comboW, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct4 = comboW;
   comboW->setWhatsThis( i18n("Handle mouse wheel events"));
 
-  sizePolicy.setHeightForWidth(comboW->sizePolicy().hasHeightForWidth());
-  comboW->setSizePolicy(sizePolicy);
+  comboW->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(i18n("Titlebar wheel event:"), this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(comboW);
@@ -256,8 +250,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
   // Titlebar and frame, active, mouse button 1
   combo = new QComboBox(box);
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 1, 1);
   combo->addItem(i18n("Raise"));
   combo->addItem(i18n("Lower"));
@@ -288,8 +281,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
         << i18n("Shade");
 
   combo = new QComboBox(box);
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 2, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -298,8 +290,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
   // Titlebar and frame, active, mouse button 3
   combo = new QComboBox(box);
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 3, 1);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -332,8 +323,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
          << i18n("Nothing");
 
   combo = new QComboBox(box);
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 1, 2);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -341,8 +331,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->setWhatsThis( txtButton1);
 
   combo = new QComboBox(box);
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 2, 2);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -350,8 +339,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->setWhatsThis( i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>inactive</em> window."));
 
   combo = new QComboBox(box);
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 3, 2);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -394,7 +382,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     QLabel * label = new QLabel(strMouseButton[b], box);
     hlayout->addWidget(label);
     label->setWhatsThis(    txtButton[b] );
-    label   ->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
+    label->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
 
     coMax[b] = new ToolTipComboBox(box, tbl_Max);
     hlayout->addWidget(coMax[b]);
@@ -402,7 +390,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     connect(coMax[b], SIGNAL(activated(int)), SLOT(changed()));
     connect(coMax[b], SIGNAL(activated(int)), coMax[b], SLOT(changed()));
     coMax[b]->setWhatsThis( txtButton[b] );
-    coMax[b]->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum ));
+    coMax[b]->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Minimum );
   }
 
   connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
@@ -639,10 +627,6 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   layout->setMargin(0);
   layout->setSpacing(KDialog::spacingHint());
 
-  QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  sizePolicy.setHorizontalStretch(0);
-  sizePolicy.setVerticalStretch(0);
-
 /**  Inactive inner window ******************/
 
   box = new QGroupBox(i18n("Inactive Inner Window"), this);
@@ -696,8 +680,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   combo->setWhatsThis( strWin1 );
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   QLabel* label = new QLabel(strMouseButton1, this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);
@@ -709,8 +692,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin2 = combo;
   combo->setWhatsThis( strWin2 );
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(strMouseButton2, this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);
@@ -722,8 +704,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin3 = combo;
   combo->setWhatsThis( strWin3 );
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(strMouseButton3, this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);
@@ -778,8 +759,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   coAllKey = combo;
   combo->setWhatsThis( i18n("Here you select whether holding the Meta key or Alt key "
                             "will allow you to perform the following actions.") );
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(i18n("Modifier key:"), this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);
@@ -803,8 +783,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll1 = combo;
   combo->setWhatsThis( strAll1 );
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(strMouseButton1, this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);
@@ -817,8 +796,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll2 = combo;
   combo->setWhatsThis( strAll2 );
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(strMouseButton2, this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);
@@ -830,8 +808,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll3 =  combo;
   combo->setWhatsThis( strAll3 );
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(strMouseButton3, this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);
@@ -851,8 +828,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   coAllW =  combo;
   combo->setWhatsThis( i18n("Here you can customize KDE's behavior when scrolling with the mouse wheel"
                             " in a window while pressing the modifier key.") );
-  sizePolicy.setHeightForWidth(combo->sizePolicy().hasHeightForWidth());
-  combo->setSizePolicy(sizePolicy);
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   label = new QLabel(i18n("Mouse wheel:"), this);
   label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label->setBuddy(combo);

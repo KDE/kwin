@@ -211,6 +211,7 @@ private:
 
   KButtonGroup *shBox;
   QCheckBox *shadeHoverOn;
+  QLabel *shadeHoverLabel;
   KIntNumInput *shadeHover;
 
   KConfig *config;
@@ -225,6 +226,7 @@ private:
   QRadioButton *active_disable;
   QRadioButton *active_move;
   QRadioButton *active_always;
+  QLabel *delaysLabel;
   KIntNumInput *delays;
 
   void setHideUtilityWindowsForInactive( bool );

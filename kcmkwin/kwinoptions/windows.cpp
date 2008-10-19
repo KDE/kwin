@@ -120,10 +120,6 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     fcsBox->setLayout( gLay );
 
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
-
     focusStealing = new QComboBox( this );
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "None" ));
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Low" ));
@@ -151,8 +147,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
                   "in the Notifications control module.</p>" );
     focusStealing->setWhatsThis( wtstr );
     connect(focusStealing, SIGNAL(activated(int)), SLOT(changed()));
-    sizePolicy.setHeightForWidth(focusStealing->sizePolicy().hasHeightForWidth());
-    focusStealing->setSizePolicy(sizePolicy);
+    focusStealing->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     label = new QLabel(i18n("Focus stealing prevention level:"), this);
     label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
     label->setBuddy(focusStealing);
@@ -165,8 +160,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     focusCombo->addItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
     focusCombo->addItem(i18n("Focus Under Mouse"), FOCUS_UNDER_MOUSE);
     focusCombo->addItem(i18n("Focus Strictly Under Mouse"), FOCUS_STRICTLY_UNDER_MOUSE);
-    sizePolicy.setHeightForWidth(focusCombo->sizePolicy().hasHeightForWidth());
-    focusCombo->setSizePolicy(sizePolicy);
+    focusCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     label = new QLabel(i18n("&Policy:"), this);
     label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
     label->setBuddy(focusCombo);
@@ -205,8 +199,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     autoRaise->setRange(0, 3000, 100);
     autoRaise->setSteps(100,100);
     autoRaise->setSuffix(i18n(" ms"));
-    sizePolicy.setHeightForWidth(autoRaise->sizePolicy().hasHeightForWidth());
-    autoRaise->setSizePolicy(sizePolicy);
+    autoRaise->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     autoRaiseOnLabel = new QLabel(i18n("&Raise, with the following delay:"), this);
     autoRaiseOnLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
     autoRaiseOnLabel->setBuddy(autoRaise);
@@ -222,8 +215,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     delayFocus->setRange(0, 3000, 100);
     delayFocus->setSteps(100,100);
     delayFocus->setSuffix(i18n(" ms"));
-    sizePolicy.setHeightForWidth(delayFocus->sizePolicy().hasHeightForWidth());
-    delayFocus->setSizePolicy(sizePolicy);
+    delayFocus->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     delayFocusOnLabel = new QLabel(i18n("Delay focus by:"), this);
     delayFocusOnLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
     delayFocusOnLabel->setBuddy(delayFocus);
@@ -612,7 +604,8 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
     QString wtstr;
-    QBoxLayout *lay = new QVBoxLayout (this);
+    QLabel *label;
+    QGridLayout *lay = new QGridLayout (this);
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -629,15 +622,14 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     shBox = new KButtonGroup(this);
     shBox->setTitle(i18n("Shading"));
-    QVBoxLayout *kLay = new QVBoxLayout(shBox);
+    QGridLayout *kLay = new QGridLayout(shBox);
 
     shadeHoverOn = new QCheckBox(i18n("&Enable hover"), shBox);
 
     connect(shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
-    kLay->addWidget(shadeHoverOn);
+    kLay->addWidget(shadeHoverOn, 0, 0, 1, 2);
 
     shadeHover = new KIntNumInput(500, shBox);
-    shadeHover->setLabel(i18n("Dela&y:"), Qt::AlignVCenter|Qt::AlignLeft);
     shadeHover->setRange(0, 3000, 100);
     shadeHover->setSteps(100, 100);
     shadeHover->setSuffix(i18n(" ms"));
@@ -648,9 +640,15 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     wtstr = i18n("Sets the time in milliseconds before the window unshades "
                 "when the mouse pointer goes over the shaded window.");
     shadeHover->setWhatsThis( wtstr);
-    kLay->addWidget(shadeHover);
+    shadeHover->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    shadeHoverLabel = new QLabel(i18n("Dela&y:"), this);
+    shadeHoverLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    shadeHoverLabel->setBuddy(shadeHover);
+    kLay->addWidget(shadeHoverLabel, 1, 0);
+    kLay->addWidget(shadeHover, 1, 1);
 
-    lay->addWidget(shBox);
+    kLay->setRowStretch(2, 1);
+    lay->addWidget(shBox, 0, 0);
 
     // Any changes goes to slotChanged()
     connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
@@ -658,26 +656,30 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     electricBox = new KButtonGroup(this);
     electricBox->setTitle(i18n("Active Desktop Borders"));
-    QVBoxLayout *bLay = new QVBoxLayout(electricBox);
+    QGridLayout *bLay = new QGridLayout(electricBox);
 
     electricBox->setWhatsThis( i18n("If this option is enabled, moving the mouse to a screen border"
        " will change your desktop. This is e.g. useful if you want to drag windows from one desktop"
        " to the other.") );
     active_disable = new QRadioButton(i18n("D&isabled"), electricBox);
-    bLay->addWidget(active_disable);
+    bLay->addWidget(active_disable, 0, 0, 1, 2);
     active_move    = new QRadioButton(i18n("Only &when moving windows"), electricBox);
-    bLay->addWidget(active_move);
+    bLay->addWidget(active_move, 1, 0, 1, 2);
     active_always  = new QRadioButton(i18n("A&lways enabled"), electricBox);
-    bLay->addWidget(active_always);
+    bLay->addWidget(active_always, 2, 0, 1, 2);
 
     delays = new KIntNumInput(10, electricBox);
     delays->setRange(0, MAX_EDGE_RES, 50);
     delays->setSuffix(i18n(" ms"));
-    delays->setLabel(i18n("Desktop &switch delay:"), Qt::AlignVCenter|Qt::AlignLeft);
     delays->setWhatsThis( i18n("Here you can set a delay for switching desktops using the active"
        " borders feature. Desktops will be switched after the mouse has been pushed against a screen border"
        " for the specified number of milliseconds.") );
-    bLay->addWidget(delays);
+    delays->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    delaysLabel = new QLabel(i18n("Desktop &switch delay:"), this);
+    delaysLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    delaysLabel->setBuddy(delays);
+    bLay->addWidget(delaysLabel, 3, 0);
+    bLay->addWidget(delays, 3, 1);
 
     connect( electricBox, SIGNAL(clicked(int)), this, SLOT(setEBorders()));
 
@@ -685,11 +687,11 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     connect(electricBox, SIGNAL(clicked(int)), SLOT(changed()));
     connect(delays, SIGNAL(valueChanged(int)), SLOT(changed()));
 
-    lay->addWidget(electricBox);
+    lay->addWidget(electricBox, 0, 1);
 
 
-    QFormLayout *vLay = new QFormLayout();
-    lay->addLayout( vLay );
+    QGridLayout *vLay = new QGridLayout();
+    lay->addLayout( vLay, 1, 0, 1, 2 );
 
     placementCombo = new QComboBox(this);
     placementCombo->setEditable( false );
@@ -720,7 +722,12 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     placementCombo->setWhatsThis( wtstr);
 
-    vLay->addRow(i18n("&Placement:"), placementCombo);
+    placementCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    label = new QLabel(i18n("&Placement:"), this);
+    label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+    label->setBuddy(placementCombo);
+    vLay->addWidget(label, 0, 0);
+    vLay->addWidget(placementCombo, 0, 1);
 
     connect( placementCombo, SIGNAL(activated(int)), SLOT(changed()));
 
@@ -730,16 +737,17 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
               " hidden and will be shown only when the application becomes active. Note that applications"
               " have to mark the windows with the proper window type for this feature to work." ));
     connect(hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
-    vLay->addRow( hideUtilityWindowsForInactive );
+    vLay->addWidget( hideUtilityWindowsForInactive, 1, 0, 1, 2 );
 
 
-    lay->addStretch();
+    lay->setRowStretch(2, 1);
     load();
 
 }
 
 void KAdvancedConfig::setShadeHover(bool on) {
     shadeHoverOn->setChecked(on);
+    shadeHoverLabel->setEnabled(on);
     shadeHover->setEnabled(on);
 }
 
@@ -753,6 +761,7 @@ int KAdvancedConfig::getShadeHoverInterval() {
 }
 
 void KAdvancedConfig::shadeHoverChanged(bool a) {
+    shadeHoverLabel->setEnabled(a);
     shadeHover->setEnabled(a);
 }
 
@@ -883,6 +892,7 @@ void KAdvancedConfig::setPlacement(int plac)
 
 void KAdvancedConfig::setEBorders()
 {
+    delaysLabel->setEnabled(!active_disable->isChecked());
     delays->setEnabled(!active_disable->isChecked());
 }
 
@@ -996,10 +1006,6 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     MagicBox->setTitle(i18n("Snap Zones"));
     QGridLayout *kLay = new QGridLayout(MagicBox);
 
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
-
     BrdrSnap = new KIntNumInput(10, MagicBox);
     BrdrSnap->setSpecialValueText( i18n("none") );
     BrdrSnap->setRange( 0, MAX_BRDR_SNAP);
@@ -1007,8 +1013,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     BrdrSnap->setWhatsThis( i18n("Here you can set the snap zone for screen borders, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the border when"
                                     " moved near it.") );
-    sizePolicy.setHeightForWidth(BrdrSnap->sizePolicy().hasHeightForWidth());
-    BrdrSnap->setSizePolicy(sizePolicy);
+    BrdrSnap->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     BrdrSnapLabel = new QLabel(i18n("&Border snap zone:"), this);
     BrdrSnapLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
     BrdrSnapLabel->setBuddy(BrdrSnap);
@@ -1022,8 +1027,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to each other when"
                                     " they are moved near another window.") );
-    sizePolicy.setHeightForWidth(WndwSnap->sizePolicy().hasHeightForWidth());
-    BrdrSnap->setSizePolicy(sizePolicy);
+    BrdrSnap->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     WndwSnapLabel = new QLabel(i18n("&Window snap zone:"), this);
     WndwSnapLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
     WndwSnapLabel->setBuddy(WndwSnap);
@@ -1037,8 +1041,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     CntrSnap->setWhatsThis( i18n("Here you can set the snap zone for the screen center, i.e."
                                     " the 'strength' of the magnetic field which will make windows snap to the center of"
                                     " the screen when moved near it.") );
-    sizePolicy.setHeightForWidth(CntrSnap->sizePolicy().hasHeightForWidth());
-    BrdrSnap->setSizePolicy(sizePolicy);
+    BrdrSnap->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     CntrSnapLabel = new QLabel(i18n("&Center snap zone:"), this);
     CntrSnapLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
     CntrSnapLabel->setBuddy(CntrSnap);
