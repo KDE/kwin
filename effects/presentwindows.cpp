@@ -45,6 +45,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_borderActivateAll( ElectricNone )
     ,   m_activated( false )
     ,   m_allDesktops( false )
+    ,   m_ignoreMinimized( false )
     ,   m_decalOpacity( 0.0 )
     //,   m_input()
     ,   m_hasKeyboardGrab( false )
@@ -92,6 +93,7 @@ void PresentWindowsEffect::reconfigure( ReconfigureFlags )
     m_showCaptions = conf.readEntry( "DrawWindowCaptions", true );
     m_showIcons = conf.readEntry( "DrawWindowIcons", true );
     m_tabBoxAllowed = conf.readEntry( "TabBox", false );
+    m_ignoreMinimized = conf.readEntry( "IgnoreMinimized", false );
     m_accuracy = conf.readEntry( "Accuracy", 1 ) * 20;
     m_fillGaps = conf.readEntry( "FillGaps", true );
     m_fadeDuration = double( animationTime( 150 ));
@@ -1091,6 +1093,8 @@ void PresentWindowsEffect::setActive( bool active )
             {
             m_windowData[w].visible = isVisibleWindow( w );
             m_windowData[w].opacity = w->isOnCurrentDesktop() ? 1.0 : 0.0;
+            if( m_ignoreMinimized && w->isMinimized() )
+                m_windowData[w].opacity = 0.0;
             m_windowData[w].highlight = 1.0;
             }
 
@@ -1224,6 +1228,8 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
     if( w->isDeleted() )
         return false;
     if( !m_allDesktops && !w->isOnCurrentDesktop() )
+        return false;
+    if( m_ignoreMinimized && w->isMinimized() )
         return false;
     return true;
     }

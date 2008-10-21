@@ -143,6 +143,7 @@ class PresentWindowsEffect
         // Activation
         bool m_activated;
         bool m_allDesktops;
+        bool m_ignoreMinimized;
         double m_decalOpacity;
         Window m_input;
         bool m_hasKeyboardGrab;

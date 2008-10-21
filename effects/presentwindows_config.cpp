@@ -90,6 +90,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     connect( m_ui->displayTitleBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->displayIconBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->switchingBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->ignoreMinimizedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->accuracySlider, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->fillGapsBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->screenEdgeAllCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
@@ -125,6 +126,9 @@ void PresentWindowsEffectConfig::load()
     bool switching = conf.readEntry( "TabBox", false );
     m_ui->switchingBox->setChecked( switching );
 
+    bool ignoreMinimized = conf.readEntry( "IgnoreMinimized", false );
+    m_ui->ignoreMinimizedBox->setChecked( ignoreMinimized );
+
     int accuracy = conf.readEntry( "Accuracy", 1 );
     m_ui->accuracySlider->setSliderPosition( accuracy );
 
@@ -158,6 +162,7 @@ void PresentWindowsEffectConfig::save()
     conf.writeEntry( "DrawWindowCaptions", m_ui->displayTitleBox->isChecked() );
     conf.writeEntry( "DrawWindowIcons", m_ui->displayIconBox->isChecked() );
     conf.writeEntry( "TabBox", m_ui->switchingBox->isChecked() );
+    conf.writeEntry( "IgnoreMinimized", m_ui->ignoreMinimizedBox->isChecked() );
 
     int accuracy = m_ui->accuracySlider->value();
     conf.writeEntry( "Accuracy", accuracy );
@@ -189,6 +194,7 @@ void PresentWindowsEffectConfig::defaults()
     m_ui->displayTitleBox->setChecked( true );
     m_ui->displayIconBox->setChecked( true );
     m_ui->switchingBox->setChecked( false );
+    m_ui->ignoreMinimizedBox->setChecked( false );
     m_ui->accuracySlider->setSliderPosition( 1 );
     m_ui->fillGapsBox->setChecked( true );
     m_ui->screenEdgeAllCombo->setCurrentIndex( int( ElectricTopLeft ));
