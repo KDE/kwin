@@ -1093,7 +1093,7 @@ void PresentWindowsEffect::setActive( bool active )
             {
             m_windowData[w].visible = isVisibleWindow( w );
             m_windowData[w].opacity = w->isOnCurrentDesktop() ? 1.0 : 0.0;
-            if( m_ignoreMinimized && w->isMinimized() )
+            if( !m_tabBoxEnabled && m_ignoreMinimized && w->isMinimized() )
                 m_windowData[w].opacity = 0.0;
             m_windowData[w].highlight = 1.0;
             }
@@ -1229,7 +1229,7 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
         return false;
     if( !m_allDesktops && !w->isOnCurrentDesktop() )
         return false;
-    if( m_ignoreMinimized && w->isMinimized() )
+    if( !m_tabBoxEnabled && m_ignoreMinimized && w->isMinimized() )
         return false;
     return true;
     }
