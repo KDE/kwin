@@ -609,9 +609,34 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
             // Use the window's top-left as the origin
             glTranslatef( window->x(), window->y(), 0 );
             if( mask & PAINT_WINDOW_TRANSFORMED )
-                glTranslatef( data.xTranslate, data.yTranslate, 0 );
+                glTranslatef( data.xTranslate, data.yTranslate, data.zTranslate );
             if(( mask & PAINT_WINDOW_TRANSFORMED ) && ( data.xScale != 1 || data.yScale != 1 ))
-                glScalef( data.xScale, data.yScale, 1 );
+                glScalef( data.xScale, data.yScale, data.zScale );
+            if(( mask & PAINT_WINDOW_TRANSFORMED ) && data.rotation )
+                {
+                glTranslatef( data.rotation->xRotationPoint,
+                    data.rotation->yRotationPoint,
+                    data.rotation->zRotationPoint );
+                float xAxis = 0.0;
+                float yAxis = 0.0;
+                float zAxis = 0.0;
+                switch( data.rotation->axis )
+                    {
+                    case RotationData::XAxis:
+                        xAxis = 1.0;
+                        break;
+                    case RotationData::YAxis:
+                        yAxis = 1.0;
+                        break;
+                    case RotationData::ZAxis:
+                        zAxis = 1.0;
+                        break;
+                    }
+                glRotatef( data.rotation->angle, xAxis, yAxis, zAxis );
+                glTranslatef( -data.rotation->xRotationPoint,
+                    -data.rotation->yRotationPoint,
+                    -data.rotation->zRotationPoint );
+                }
 
             // Create our polygon
             QVector<float> verts, texcoords;
