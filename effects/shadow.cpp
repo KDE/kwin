@@ -464,20 +464,35 @@ void ShadowEffect::addQuadVertices(QVector<float>& verts, float x1, float y1, fl
 void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
     {
     QList<ShadowData> newShadowDatas;
+    QList<ShadowData> thisTime;
     EffectWindowList stack = effects->stackingOrder();
     foreach( const ShadowData &d, shadowDatas )
         {
         // If behindWindow is given then only render shadows of the windows
         //  that are behind that window.
         if( !behindWindow || stack.indexOf(d.w) < stack.indexOf(behindWindow))
-            {
-            drawShadow( d.w, d.mask, d.region.subtracted( d.clip ), d.data );
-            }
+            thisTime.append(d);
         else
-            {
             newShadowDatas.append(d);
-            }
         }
+    if( thisTime.count() )
+        { // Render them in stacking order
+        foreach( EffectWindow *w, stack )
+            for( int i = 0; i < thisTime.size(); i++ )
+                { // Cannot use foreach() due to thisTime.removeOne()
+                const ShadowData d = thisTime.at(i);
+                if( d.w == w )
+                    {
+                    drawShadow( d.w, d.mask,
+                        d.region.subtracted( d.clip ), d.data );
+                    thisTime.removeAt( i );
+                    break;
+                    }
+                }
+        }
+    // Render the rest on the top (For menus, etc.)
+    foreach( const ShadowData &d, thisTime )
+        drawShadow( d.w, d.mask, d.region.subtracted( d.clip ), d.data );
     shadowDatas = newShadowDatas;
     }
 
