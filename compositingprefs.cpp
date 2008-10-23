@@ -108,7 +108,7 @@ QString CompositingPrefs::compositingNotPossibleReason()
     }
 
 // This function checks selected compositing setup and returns false if it should not
-// be used even if explicitly configured (unless checks are overriden).
+// be used even if explicitly configured (unless checks are overridden).
 // More checks like broken XRender setups etc. should be added here.
 bool CompositingPrefs::validateSetup( CompositingType compositingType ) const
     {

@@ -308,7 +308,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         icon->bind();
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        // icon takes 80 % of the height of the frame. So each 10 % space left on the top and botton
+        // icon takes 80 % of the height of the frame. So each 10 % space left on the top and bottom
         QRect iconRect = QRect( frameRect.x() + frameRect.height()*0.1f,
             frameRect.y() + frameRect.height()*0.1f,
             frameRect.height()*0.8f,

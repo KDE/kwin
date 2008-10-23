@@ -96,7 +96,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.animationSpeedCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     // Open the temporary config file
-    // Temporary conf file is used to syncronize effect checkboxes with effect
+    // Temporary conf file is used to synchronize effect checkboxes with effect
     //  selector by loading/saving effects from/to temp config when active tab
     //  changes.
     mTmpConfigFile.open();

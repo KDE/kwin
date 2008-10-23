@@ -161,7 +161,7 @@ void MakeTransparentEffect::paintWindow( EffectWindow* w, int mask, QRegion regi
                 }
             }
 
-        // Menues and combos
+        // Menus and combos
         if( dropdownmenus != 1.0 && w->isDropdownMenu() )
             data.opacity *= dropdownmenus;
         if( popupmenus != 1.0 && w->isPopupMenu() )

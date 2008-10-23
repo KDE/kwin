@@ -208,7 +208,7 @@ SnowFlake::SnowFlake(int x, int y, int width, int height, int maxVSpeed, int max
     vSpeed = random()%maxVSpeed + minVSpeed;
     
     hSpeed = random()%(maxHSpeed+1);
-    if(random()%2 < 1) hSpeed = -hSpeed; // to create negativ hSpeeds at random
+    if(random()%2 < 1) hSpeed = -hSpeed; // to create negative hSpeeds at random
     
     rotationAngle = 0;
     rotationSpeed = random()%4 - 2;

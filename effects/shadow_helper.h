@@ -53,7 +53,7 @@ static QColor schemeShadowColor()
     shadowColor = palette.color(shadowRole);
 
     // Some styles might set a weird shadow or light color. Make sure we
-    // dont't end up looping forever or we might lock up the desktop!!
+    // do not end up looping forever or we might lock up the desktop!!
     int iters = 0;
     while (contrastTooLow(shadowColor, windowColor) && iters < MAX_ITERS)
         {

@@ -2253,7 +2253,7 @@ void Workspace::checkElectricBorder(const QPoint &pos, Time now)
         electric_push_point = pos;
         }
 
-    // reset the pointer to find out wether the user is really pushing
+    // reset the pointer to find out whether the user is really pushing
     // (the direction back from which it came, starting from top clockwise)
     const int xdiff[ ELECTRIC_COUNT ] = { 0, -1, -1, -1, 0, 1, 1, 1 };
     const int ydiff[ ELECTRIC_COUNT ] = { 1, 1, 0, -1, -1, -1, 0, 1 };

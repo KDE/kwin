@@ -1104,7 +1104,7 @@ class KWIN_EXPORT PaintClipper
 /**
  * @short Wrapper class for using timelines in KWin effects.
  *
- * This class provides an easy and specialised interface for
+ * This class provides an easy and specialized interface for
  * effects that want a non-linear timeline. Currently, most
  * it does is wrapping QTimeLine. In the future, this class
  * could help using physics animations in KWin.
