@@ -424,7 +424,9 @@ void OxygenClient::updateWindowShape()
    else {
         QRegion mask(6, 1, w-12, h-2);
         mask += QRegion(1, 6, w-2, h-12);
-        mask += QRegion(5, 5, w-10, h-10);
+        mask += QRegion(3, 3, w-6, h-6);
+        mask += QRegion(4, 2, w-8, h-4);
+        mask += QRegion(2, 4, w-4, h-8);
 
         setMask(mask);
     }
