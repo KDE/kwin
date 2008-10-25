@@ -269,6 +269,7 @@ void OxygenButton::drawIcon(QPainter *p, QPalette &pal, ButtonType &type)
             p->drawArc(7,5,4,4,135*16, -180*16);
             p->drawArc(9,8,4,4,135*16,45*16);
             p->drawPoint(9,12);
+            p->translate(-1.5, -1.5);
             break;
         case ButtonMin:
             p->drawLine(QPointF( 7.5, 9.5), QPointF(10.5,12.5));
