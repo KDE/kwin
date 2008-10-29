@@ -58,8 +58,7 @@ void CylinderEffect::reconfigure( ReconfigureFlags )
 
 bool CylinderEffect::supported()
     {
-    return GLRenderTarget::supported() &&
-            GLShader::fragmentShaderSupported() &&
+    return GLShader::fragmentShaderSupported() &&
             (effects->compositingType() == OpenGLCompositing);
     }
 

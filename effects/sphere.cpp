@@ -63,8 +63,7 @@ void SphereEffect::reconfigure( ReconfigureFlags )
 
 bool SphereEffect::supported()
     {
-    return GLRenderTarget::supported() &&
-            GLShader::fragmentShaderSupported() &&
+    return GLShader::fragmentShaderSupported() &&
             (effects->compositingType() == OpenGLCompositing);
     }
 
