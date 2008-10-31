@@ -486,7 +486,7 @@ void Workspace::checkCompositePaintTime( int msec )
         QTimer::singleShot( 0, this, SLOT( suspendCompositing()));
         QString shortcut = i18n( "Empty" );
         if( KAction* action = qobject_cast<KAction*>( keys->action("Suspend Compositing")))
-            shortcut = action->globalShortcut().primary().toString();
+            shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
         QString message = i18n( "Compositing was too slow and has been suspended.\n"
             "If this was only a temporary problem, you can resume using the '%1' shortcut.\n"
             "You can also disable functionality checks in advanced compositing settings.", shortcut );
