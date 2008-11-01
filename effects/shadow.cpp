@@ -693,6 +693,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             );
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                         mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                         mShadowTextures.at( texture ).at( quad.id() )->unbind();
@@ -716,6 +718,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             );
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                         mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                         mShadowTextures.at( texture ).at( quad.id() )->unbind();
@@ -751,6 +755,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             }
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                         mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                         mShadowTextures.at( texture ).at( quad.id() )->unbind();
@@ -785,6 +791,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             );
                         mShadowTextures.at( texture ).at( quad.id() )->bind();
                         mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
                         renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                         mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
                         mShadowTextures.at( texture ).at( quad.id() )->unbind();
@@ -803,8 +811,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                 if( intensifyActiveShadow && window == effects->activeWindow() )
                     opacity = 1 - ( 1 - shadowOpacity ) * ( 1 - shadowOpacity );
 
-                //glColor4f( shadowColor.redF(), shadowColor.greenF(), shadowColor.blueF(), 1.0 );
-                glColor4f( 1.0, 1.0, 1.0, 1.0 );
+                glColor4f( shadowColor.redF(), shadowColor.greenF(), shadowColor.blueF(), opacity * data.opacity );
                 glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                 prepareRenderStates(
                     mDefaultShadowTextures.at( quad.id() ),
@@ -814,6 +821,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                     );
                 mDefaultShadowTextures.at( quad.id() )->bind();
                 mDefaultShadowTextures.at( quad.id() )->enableNormalizedTexCoords();
+                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
                 renderGLGeometry( region, 4, verts.data(), texcoords.data() );
                 mDefaultShadowTextures.at( quad.id() )->disableNormalizedTexCoords();
                 mDefaultShadowTextures.at( quad.id() )->unbind();
