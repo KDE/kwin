@@ -1165,7 +1165,10 @@ QStringList Workspace::configModules(bool controlCenter)
 
 void Workspace::configureWM()
     {
-	KToolInvocation::kdeinitExec( "kcmshell4", configModules(false) );
+        QStringList args;
+        args << "--icon" << "preferences-system-windows"
+             << configModules(false) ;
+        KToolInvocation::kdeinitExec( "kcmshell4", args );
     }
 
 /*!
