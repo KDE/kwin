@@ -1135,6 +1135,7 @@ void Workspace::saveDesktopSettings()
 QStringList Workspace::configModules(bool controlCenter)
     {
     QStringList args;
+    args << "--icon" << "preferences-system-windows";
     args <<  "kwindecoration";
     if (controlCenter)
         args << "kwinoptions";
