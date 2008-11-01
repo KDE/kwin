@@ -161,24 +161,21 @@ void ShadowEffect::reconfigure( ReconfigureFlags )
                 mShadowTextures.append( textures );
                 }
             }
-        else
-            {
-            mShadowQuadTypes.append( effects->newWindowQuadType() );
-            QImage shadowTexture( KGlobal::dirs()->findResource( "data", "kwin/shadow-texture.png" ));
-            int hw = shadowTexture.width() / 2;
-            int hh = shadowTexture.height() / 2;
-            QList<GLTexture*> textures;
-            textures.append( new GLTexture( shadowTexture.copy( 0,  0,  hw, hh )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, 0,  1,  hh )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, 0,  hw, hh )));
-            textures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, 1 )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  1 )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, 1 )));
-            textures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, hh )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  hh )));
-            textures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, hh )));
-            mShadowTextures.append( textures );
-            }
+
+        mDefaultShadowQuadType = effects->newWindowQuadType(); // TODO: Unregister?
+        QImage shadowTexture( KGlobal::dirs()->findResource( "data", "kwin/shadow-texture.png" ));
+        int hw = shadowTexture.width() / 2;
+        int hh = shadowTexture.height() / 2;
+        mDefaultShadowTextures.clear();
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( 0,  0,  hw, hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, 0,  1,  hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, 0,  hw, hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, 1 )));
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  1 )));
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, 1 )));
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, hh )));
         }
 #endif
 
@@ -276,6 +273,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
     {
     if( effects->compositingType() == XRenderCompositing )
         return; // TODO: Disable quad-based shadows in XRender mode for the moment
+    bool shadowDefined = false;
     if( effects->hasDecorationShadows() )
         {
         // TODO: shadowQuads() is allowed to return different quads for
@@ -286,6 +284,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
             { // Decorated windows must be normal windows
             foreach( const QRect &r, w->shadowQuads( ShadowBorderedActive ))
                 {
+                shadowDefined = true;
                 WindowQuad quad( mShadowQuadTypes.at( effects->shadowTextureList( ShadowBorderedActive )), id++ );
                 quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 0 );
                 quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 0 );
@@ -298,6 +297,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
             { // No decoration on a normal window
             foreach( const QRect &r, w->shadowQuads( ShadowBorderlessActive ))
                 {
+                shadowDefined = true;
                 WindowQuad quad( mShadowQuadTypes.at( effects->shadowTextureList( ShadowBorderlessActive )), id++ );
                 quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 0 );
                 quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 0 );
@@ -310,6 +310,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
             { // All other undecorated windows
             foreach( const QRect &r, w->shadowQuads( ShadowOther ))
                 {
+                shadowDefined = true;
                 WindowQuad quad( mShadowQuadTypes.at( effects->shadowTextureList( ShadowOther )), id++ );
                 quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 0 );
                 quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 0 );
@@ -319,7 +320,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
                 }
             }
         }
-    else
+    if( !shadowDefined )
         {
         //TODO: add config option to not have shadows for menus, etc.
         // Make our own shadow as the decoration doesn't support it
@@ -334,7 +335,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + 0 - fuzzy;
         x2 = shadowXOffset - shadowSize + 0 + fuzzy;
         y2 = shadowYOffset - shadowSize + 0 + fuzzy;
-        WindowQuad topLeftQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad topLeftQuad( mDefaultShadowQuadType, id++ );
         topLeftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         topLeftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         topLeftQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -345,7 +346,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + 0 - fuzzy;
         x2 = shadowXOffset - shadowSize + width - fuzzy;
         y2 = shadowYOffset - shadowSize + 0 + fuzzy;
-        WindowQuad topQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad topQuad( mDefaultShadowQuadType, id++ );
         topQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         topQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         topQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -356,7 +357,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + 0 - fuzzy;
         x2 = shadowXOffset - shadowSize + width + fuzzy;
         y2 = shadowYOffset - shadowSize + 0 + fuzzy;
-        WindowQuad topRightQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad topRightQuad( mDefaultShadowQuadType, id++ );
         topRightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         topRightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         topRightQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -367,7 +368,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + 0 + fuzzy;
         x2 = shadowXOffset - shadowSize + 0 + fuzzy;
         y2 = shadowYOffset - shadowSize + height - fuzzy;
-        WindowQuad leftQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad leftQuad( mDefaultShadowQuadType, id++ );
         leftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         leftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         leftQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -378,7 +379,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + 0 + fuzzy;
         x2 = shadowXOffset - shadowSize + width - fuzzy;
         y2 = shadowYOffset - shadowSize + height - fuzzy;
-        WindowQuad contentsQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad contentsQuad( mDefaultShadowQuadType, id++ );
         contentsQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         contentsQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         contentsQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -389,7 +390,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + 0 + fuzzy;
         x2 = shadowXOffset - shadowSize + width + fuzzy;
         y2 = shadowYOffset - shadowSize + height - fuzzy;
-        WindowQuad rightQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad rightQuad( mDefaultShadowQuadType, id++ );
         rightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         rightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         rightQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -400,7 +401,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + height - fuzzy;
         x2 = shadowXOffset - shadowSize + 0 + fuzzy;
         y2 = shadowYOffset - shadowSize + height + fuzzy;
-        WindowQuad bottomLeftQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad bottomLeftQuad( mDefaultShadowQuadType, id++ );
         bottomLeftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         bottomLeftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         bottomLeftQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -411,7 +412,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + height - fuzzy;
         x2 = shadowXOffset - shadowSize + width - fuzzy;
         y2 = shadowYOffset - shadowSize + height + fuzzy;
-        WindowQuad bottomQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad bottomQuad( mDefaultShadowQuadType, id++ );
         bottomQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         bottomQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         bottomQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -422,7 +423,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         y1 = shadowYOffset - shadowSize + height - fuzzy;
         x2 = shadowXOffset - shadowSize + width + fuzzy;
         y2 = shadowYOffset - shadowSize + height + fuzzy;
-        WindowQuad bottomRightQuad( mShadowQuadTypes.at( 0 ), id++ );
+        WindowQuad bottomRightQuad( mDefaultShadowQuadType, id++ );
         bottomRightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
         bottomRightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
         bottomRightQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
@@ -437,6 +438,10 @@ QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
     {
     if( !useShadow( w ))
         return effects->transformWindowDamage( w, r );
+    if( effects->hasDecorationShadows() )
+        // TODO, HACK: We need to get the quads
+        // TODO: It looks like this isn't called on resize
+        return effects->transformWindowDamage( w, r.adjusted( -100, -100, 100, 100 ));
     QRect r2 = r | shadowRectangle( r );
     return effects->transformWindowDamage( w, r2 );
     }
@@ -616,7 +621,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
 
         foreach( const WindowQuad &quad, data.quads )
             {
-            if( !mShadowQuadTypes.contains( quad.type() ))
+            if( !mShadowQuadTypes.contains( quad.type() ) && quad.type() != mDefaultShadowQuadType )
                 continue; // Not a shadow quad
 
             glPushMatrix();
@@ -791,32 +796,33 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             );
                         }
                     }
-                else
-                    { // Default shadow
-                    float opacity = shadowOpacity;
-                    if( intensifyActiveShadow && window == effects->activeWindow() )
-                        opacity = 1 - ( 1 - shadowOpacity ) * ( 1 - shadowOpacity );
+                }
+            if( quad.type() == mDefaultShadowQuadType )
+                { // Default shadow
+                float opacity = shadowOpacity;
+                if( intensifyActiveShadow && window == effects->activeWindow() )
+                    opacity = 1 - ( 1 - shadowOpacity ) * ( 1 - shadowOpacity );
 
-                    glColor4f( 1.0, 1.0, 1.0, 1.0 );
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                    prepareRenderStates(
-                        mShadowTextures.at( texture ).at( quad.id() ),
-                        data.opacity * opacity,
-                        data.brightness,
-                        data.saturation
-                        );
-                    mShadowTextures.at( texture ).at( quad.id() )->bind();
-                    mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
-                    renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                    mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
-                    mShadowTextures.at( texture ).at( quad.id() )->unbind();
-                    restoreRenderStates(
-                        mShadowTextures.at( texture ).at( quad.id() ),
-                        data.opacity * opacity,
-                        data.brightness,
-                        data.saturation
-                        );
-                    }
+                //glColor4f( shadowColor.redF(), shadowColor.greenF(), shadowColor.blueF(), 1.0 );
+                glColor4f( 1.0, 1.0, 1.0, 1.0 );
+                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                prepareRenderStates(
+                    mDefaultShadowTextures.at( quad.id() ),
+                    data.opacity * opacity,
+                    data.brightness,
+                    data.saturation
+                    );
+                mDefaultShadowTextures.at( quad.id() )->bind();
+                mDefaultShadowTextures.at( quad.id() )->enableNormalizedTexCoords();
+                renderGLGeometry( region, 4, verts.data(), texcoords.data() );
+                mDefaultShadowTextures.at( quad.id() )->disableNormalizedTexCoords();
+                mDefaultShadowTextures.at( quad.id() )->unbind();
+                restoreRenderStates(
+                    mDefaultShadowTextures.at( quad.id() ),
+                    data.opacity * opacity,
+                    data.brightness,
+                    data.saturation
+                    );
                 }
 
             glPopMatrix();

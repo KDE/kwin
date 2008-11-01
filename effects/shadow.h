@@ -80,12 +80,14 @@ class ShadowEffect
         QColor shadowColor;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         QList< QList<GLTexture*> > mShadowTextures;
+        QList<GLTexture*> mDefaultShadowTextures;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         ShadowTiles *mShadowPics;
 #endif
 
         QList<WindowQuadType> mShadowQuadTypes;
+        WindowQuadType mDefaultShadowQuadType;
 
         struct ShadowData
         {

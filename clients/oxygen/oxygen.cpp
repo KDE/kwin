@@ -341,11 +341,8 @@ int OxygenFactory::shadowTextureList( ShadowType type ) const
 {
     switch( type ) {
         case ShadowBorderedActive:
-        case ShadowBorderlessActive:
             return 0;
         case ShadowBorderedInactive:
-        case ShadowBorderlessInactive:
-        case ShadowOther:
             return 1;
     }
     abort(); // Should never be reached
@@ -356,14 +353,14 @@ QList<QRect> OxygenFactory::shadowQuads( ShadowType type, QSize size ) const
     int outside=20, underlap=5, cornersize=25;
     // These are underlap under the decoration so the corners look nicer 10px on the outside
     QList<QRect> quads;
-    quads.append(QRect(-outside, size.height()-underlap, cornersize, cornersize));
+    /*quads.append(QRect(-outside, size.height()-underlap, cornersize, cornersize));
     quads.append(QRect(underlap, size.height()-underlap, size.width()-2*underlap, cornersize));
     quads.append(QRect(size.width()-underlap, size.height()-underlap, cornersize, cornersize));
     quads.append(QRect(-outside, underlap, cornersize, size.height()-2*underlap));
     quads.append(QRect(size.width()-underlap, underlap, cornersize, size.height()-2*underlap));
     quads.append(QRect(-outside, -outside, cornersize, cornersize));
     quads.append(QRect(underlap, -outside, size.width()-2*underlap, cornersize));
-    quads.append(QRect(size.width()-underlap,     -outside, cornersize, cornersize));
+    quads.append(QRect(size.width()-underlap,     -outside, cornersize, cornersize));*/
     return quads;
 }
 
