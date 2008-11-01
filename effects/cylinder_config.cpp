@@ -50,8 +50,8 @@ CylinderEffectConfig::CylinderEffectConfig(QWidget* parent, const QVariantList& 
 
     layout->addWidget(m_ui, 0, 0);
 
-    m_ui->tabWidget->setTabText( 0, i18n("Basic") );
-    m_ui->tabWidget->setTabText( 1, i18n("Advanced") );
+    m_ui->tabWidget->setTabText( 0, i18nc("@title:tab Basic Settings", "Basic") );
+    m_ui->tabWidget->setTabText( 1, i18nc("@title:tab Advanced Settings", "Advanced") );
 
     m_ui->screenEdgeCombo->addItem(i18n("Top"));
     m_ui->screenEdgeCombo->addItem(i18n("Top-right"));
