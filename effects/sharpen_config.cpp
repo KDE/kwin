@@ -43,7 +43,7 @@ SharpenEffectConfig::SharpenEffectConfig(QWidget* parent, const QVariantList& ar
     QVBoxLayout* layout = new QVBoxLayout(this);
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "Sharpen" ));
-    a->setText( i18n("Toggle Sharpen Effect" ));
+    a->setText( i18nc("@action Enables/Disables an effect that makes windows more sharp", "Toggle Sharpen Effect" ));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_S));
 
