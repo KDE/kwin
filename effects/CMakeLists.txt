@@ -94,6 +94,7 @@ SET(kwin4_effect_builtins_config_sources
     presentwindows_config.cpp
     presentwindows_config.ui
     shadow_config.cpp
+    shadow_config.ui
     showfps_config.cpp
     showfps_config.ui
     thumbnailaside_config.cpp

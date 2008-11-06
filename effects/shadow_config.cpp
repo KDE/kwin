@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,21 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "shadow_config.h"
 #include "shadow_helper.h"
-
 #include <kwineffects.h>
 
-#include <klocale.h>
-#include <kdebug.h>
-#include <kconfiggroup.h>
-#include <kcolorbutton.h>
 #include <kcolorscheme.h>
 
-#include <QWidget>
-#include <QGridLayout>
-#include <QLabel>
-#include <QSpinBox>
-#include <QCheckBox>
-
+#include <QVBoxLayout>
+#include <QColor>
 #ifndef KDE_USE_FINAL
 KWIN_EFFECT_CONFIG_FACTORY
 #endif
@@ -42,101 +34,84 @@ KWIN_EFFECT_CONFIG_FACTORY
 namespace KWin
 {
 
-ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QVariantList& args) :
-        KCModule(EffectFactory::componentData(), parent, args)
+ShadowEffectConfigForm::ShadowEffectConfigForm(QWidget* parent) : QWidget(parent)
+{
+  setupUi(this);
+}
+
+ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QVariantList& args)
+    :   KCModule( EffectFactory::componentData(), parent, args )
     {
-    kDebug() ;
+    m_ui = new ShadowEffectConfigForm( this );
 
-    QGridLayout* layout = new QGridLayout(this);
+    QVBoxLayout* layout = new QVBoxLayout( this );
 
-    layout->addWidget(new QLabel(i18n("X offset:"), this), 0, 0);
-    mShadowXOffset = new QSpinBox(this);
-    mShadowXOffset->setRange(-20, 20);
-    connect(mShadowXOffset, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mShadowXOffset, 0, 1);
+    layout->addWidget( m_ui );
 
-    layout->addWidget(new QLabel(i18n("Y offset:"), this), 1, 0);
-    mShadowYOffset = new QSpinBox(this);
-    mShadowYOffset->setRange(-20, 20);
-    connect(mShadowYOffset, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mShadowYOffset, 1, 1);
+    connect( m_ui->xOffsetSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->yOffsetSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->opacitySpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->fuzzinessSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->sizeSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->colorButton, SIGNAL( changed( int )), this, SLOT( changed() ));
+    connect( m_ui->strongerActiveBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
 
-    layout->addWidget(new QLabel(i18n("Shadow opacity:"), this), 2, 0);
-    mShadowOpacity = new QSpinBox(this);
-    mShadowOpacity->setRange(0, 100);
-    mShadowOpacity->setSuffix("%");
-    connect(mShadowOpacity, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mShadowOpacity, 2, 1);
-
-    layout->addWidget(new QLabel(i18n("Shadow fuzziness:"), this), 3, 0);
-    mShadowFuzzyness = new QSpinBox(this);
-    mShadowFuzzyness->setRange(0, 20);
-    connect(mShadowFuzzyness, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mShadowFuzzyness, 3, 1);
-
-    layout->addWidget(new QLabel(i18n("Shadow size (relative to window):"), this), 4, 0);
-    mShadowSize = new QSpinBox(this);
-    mShadowSize->setRange(0, 20);
-    connect(mShadowSize, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    layout->addWidget(mShadowSize, 4, 1);
-
-    layout->addWidget(new QLabel(i18n("Shadow color:"), this), 5, 0);
-    mShadowColor = new KColorButton(this);
-    mShadowColor->setDefaultColor(schemeShadowColor());
-    connect(mShadowColor, SIGNAL(changed(QColor)), this, SLOT(changed()));
-    layout->addWidget(mShadowColor, 5, 1);
-
-    mIntensifyActiveShadow = new QCheckBox(i18n("Active window has stronger shadow"), this);
-    connect(mIntensifyActiveShadow, SIGNAL(toggled(bool)), this, SLOT(changed()));
-    layout->addWidget(mIntensifyActiveShadow, 6, 0, 1, 2);
-
-    layout->addItem(new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding), 6, 0, 1, 2);
+    connect( m_ui->forceDecoratedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->forceUndecoratedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->forceOtherBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
 
     load();
     }
 
 ShadowEffectConfig::~ShadowEffectConfig()
     {
-    kDebug() ;
     }
 
 void ShadowEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
-    KConfigGroup conf = EffectsHandler::effectConfig("Shadow");
-    mShadowXOffset->setValue( conf.readEntry( "XOffset", 0 ) );
-    mShadowYOffset->setValue( conf.readEntry( "YOffset", 3 ) );
-    mShadowOpacity->setValue( (int)( conf.readEntry( "Opacity", 0.25 ) * 100 ) );
-    mShadowFuzzyness->setValue( conf.readEntry( "Fuzzyness", 10 ) );
-    mShadowSize->setValue( conf.readEntry( "Size", 5 ) );
-    mShadowColor->setColor( conf.readEntry( "Color", schemeShadowColor() ) );
-    mIntensifyActiveShadow->setChecked( conf.readEntry( "IntensifyActiveShadow", true ) );
+    KConfigGroup conf = EffectsHandler::effectConfig( "Shadow" );
+
+    m_ui->xOffsetSpin->setValue( conf.readEntry( "XOffset", 0 ));
+    m_ui->yOffsetSpin->setValue( conf.readEntry( "YOffset", 3 ));
+    m_ui->opacitySpin->setValue( (int)( conf.readEntry( "Opacity", 0.25 ) * 100 ));
+    m_ui->fuzzinessSpin->setValue( conf.readEntry( "Fuzzyness", 10 ));
+    m_ui->sizeSpin->setValue( conf.readEntry( "Size", 5 ));
+    m_ui->colorButton->setColor( conf.readEntry( "Color", schemeShadowColor() ));
+    m_ui->strongerActiveBox->setChecked( conf.readEntry( "IntensifyActiveShadow", true ));
+
+    m_ui->forceDecoratedBox->setChecked( conf.readEntry( "forceDecoratedToDefault", false ));
+    m_ui->forceUndecoratedBox->setChecked( conf.readEntry( "forceUndecoratedToDefault", false ));
+    m_ui->forceOtherBox->setChecked( conf.readEntry( "forceOtherToDefault", false ));
 
     emit changed(false);
     }
 
 void ShadowEffectConfig::save()
     {
-    kDebug() ;
     KCModule::save();
 
-    KConfigGroup conf = EffectsHandler::effectConfig("Shadow");
-    conf.writeEntry( "XOffset", mShadowXOffset->value() );
-    conf.writeEntry( "YOffset", mShadowYOffset->value() );
-    conf.writeEntry( "Opacity", mShadowOpacity->value() / 100.0 );
-    conf.writeEntry( "Fuzzyness", mShadowFuzzyness->value() );
-    conf.writeEntry( "Size", mShadowSize->value() );
-    QColor userColor = mShadowColor->color();
-    if (userColor == schemeShadowColor()) {
+    KConfigGroup conf = EffectsHandler::effectConfig( "Shadow" );
+
+    conf.writeEntry( "XOffset", m_ui->xOffsetSpin->value() );
+    conf.writeEntry( "YOffset", m_ui->yOffsetSpin->value() );
+    conf.writeEntry( "Opacity", m_ui->opacitySpin->value() / 100.0 );
+    conf.writeEntry( "Fuzzyness", m_ui->fuzzinessSpin->value() );
+    conf.writeEntry( "Size", m_ui->sizeSpin->value() );
+    QColor userColor = m_ui->colorButton->color();
+    if( userColor == schemeShadowColor() )
         // If the user has reset the color to the default we want to start
         // picking up color scheme changes again in the shadow effect
         conf.deleteEntry( "Color" );
-    } else {
+    else
         conf.writeEntry( "Color", userColor );
-    }
-    conf.writeEntry( "IntensifyActiveShadow", mIntensifyActiveShadow->isChecked() );
+    conf.writeEntry( "IntensifyActiveShadow", m_ui->strongerActiveBox->isChecked() );
+
+    conf.writeEntry( "forceDecoratedToDefault", m_ui->forceDecoratedBox->isChecked() );
+    conf.writeEntry( "forceUndecoratedToDefault", m_ui->forceUndecoratedBox->isChecked() );
+    conf.writeEntry( "forceOtherToDefault", m_ui->forceOtherBox->isChecked() );
+
     conf.sync();
 
     emit changed(false);
@@ -145,17 +120,20 @@ void ShadowEffectConfig::save()
 
 void ShadowEffectConfig::defaults()
     {
-    kDebug() ;
-    mShadowXOffset->setValue( 0 );
-    mShadowYOffset->setValue( 3 );
-    mShadowOpacity->setValue( 25 );
-    mShadowFuzzyness->setValue( 10 );
-    mShadowSize->setValue( 5 );
-    mIntensifyActiveShadow->setChecked( true );
-    mShadowColor->setColor( schemeShadowColor() );
+    m_ui->xOffsetSpin->setValue( 0 );
+    m_ui->yOffsetSpin->setValue( 3 );
+    m_ui->opacitySpin->setValue( 25 );
+    m_ui->fuzzinessSpin->setValue( 10 );
+    m_ui->sizeSpin->setValue( 5 );
+    m_ui->colorButton->setColor( schemeShadowColor() );
+    m_ui->strongerActiveBox->setChecked( true );
+
+    m_ui->forceDecoratedBox->setChecked( false );
+    m_ui->forceUndecoratedBox->setChecked( false );
+    m_ui->forceOtherBox->setChecked( false );
+
     emit changed(true);
     }
-
 
 } // namespace
 

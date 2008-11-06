@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,12 +24,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kcmodule.h>
 
-class QSpinBox;
-class QCheckBox;
-class KColorButton;
+#include "ui_shadow_config.h"
 
 namespace KWin
 {
+
+class ShadowEffectConfigForm : public QWidget, public Ui::ShadowEffectConfigForm
+{
+    Q_OBJECT
+    public:
+        explicit ShadowEffectConfigForm(QWidget* parent);
+};
 
 class ShadowEffectConfig : public KCModule
     {
@@ -37,18 +43,13 @@ class ShadowEffectConfig : public KCModule
         explicit ShadowEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
         ~ShadowEffectConfig();
 
+    public slots:
         virtual void save();
         virtual void load();
         virtual void defaults();
 
     private:
-        QSpinBox* mShadowXOffset;
-        QSpinBox* mShadowYOffset;
-        QSpinBox* mShadowOpacity;
-        QSpinBox* mShadowFuzzyness;
-        QSpinBox* mShadowSize;
-        KColorButton* mShadowColor;
-        QCheckBox* mIntensifyActiveShadow;
+        ShadowEffectConfigForm* m_ui;
     };
 
 } // namespace
