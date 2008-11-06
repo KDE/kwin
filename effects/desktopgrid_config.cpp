@@ -60,16 +60,6 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
 
     m_ui->shortcutEditor->addCollection( m_actionCollection );
 
-    m_ui->screenEdgeCombo->addItem( i18n( "Top" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Top-right" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Right" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Bottom-right" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Bottom" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Bottom-left" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Left" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Top-left" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "None" ));
-
     m_alignmentItems.append( Qt::Alignment( 0 ));
     m_ui->desktopNameAlignmentCombo->addItem( i18n( "Disabled" ));
     m_alignmentItems.append( Qt::AlignHCenter | Qt::AlignTop );
@@ -91,7 +81,6 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     m_alignmentItems.append( Qt::AlignCenter );
     m_ui->desktopNameAlignmentCombo->addItem( i18n( "Center" ));
 
-    connect( m_ui->screenEdgeCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
     connect( m_ui->zoomDurationSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->borderWidthSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->desktopNameAlignmentCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
@@ -114,11 +103,6 @@ void DesktopGridEffectConfig::load()
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig( "DesktopGrid" );
-    
-    int activateBorder = conf.readEntry( "BorderActivate", int( ElectricNone ));
-    if( activateBorder == int( ElectricNone ))
-        activateBorder--;
-    m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
 
     m_ui->zoomDurationSpin->setValue( conf.readEntry( "ZoomDuration", 0 ));
     m_ui->borderWidthSpin->setValue( conf.readEntry( "BorderWidth", 10 ));
@@ -140,11 +124,6 @@ void DesktopGridEffectConfig::save()
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig( "DesktopGrid" );
-
-    int activateBorder = m_ui->screenEdgeCombo->currentIndex();
-    if( activateBorder == int( ELECTRIC_COUNT ))
-        activateBorder = int( ElectricNone );
-    conf.writeEntry( "BorderActivate", activateBorder );
 
     conf.writeEntry( "ZoomDuration", m_ui->zoomDurationSpin->value() );
     conf.writeEntry( "BorderWidth", m_ui->borderWidthSpin->value() );
@@ -168,7 +147,6 @@ void DesktopGridEffectConfig::save()
 
 void DesktopGridEffectConfig::defaults()
     {
-    m_ui->screenEdgeCombo->setCurrentIndex( int( ElectricNone - 1 ));
     m_ui->zoomDurationSpin->setValue( 0 );
     m_ui->borderWidthSpin->setValue( 10 );
     m_ui->desktopNameAlignmentCombo->setCurrentIndex( 0 );

@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>497</width>
+    <width>728</width>
     <height>537</height>
    </rect>
   </property>
@@ -42,7 +42,7 @@
              <string>Common Effects</string>
             </property>
             <layout class="QGridLayout" name="gridLayout" >
-             <item row="0" column="0" colspan="2" >
+             <item row="0" column="0" >
               <widget class="QCheckBox" name="effectWinManagement" >
                <property name="text" >
                 <string>Improved window management</string>
@@ -52,7 +52,7 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="0" colspan="2" >
+             <item row="1" column="0" >
               <widget class="QCheckBox" name="effectShadows" >
                <property name="text" >
                 <string>Shadows</string>
@@ -62,7 +62,7 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="0" colspan="2" >
+             <item row="2" column="0" >
               <widget class="QCheckBox" name="effectAnimations" >
                <property name="text" >
                 <string>Various animations</string>
@@ -72,7 +72,7 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="0" colspan="2" >
+             <item row="7" column="0" colspan="2" >
               <spacer name="verticalSpacer" >
                <property name="orientation" >
                 <enum>Qt::Vertical</enum>
@@ -88,14 +88,14 @@
                </property>
               </spacer>
              </item>
-             <item row="7" column="0" colspan="2" >
+             <item row="8" column="0" colspan="2" >
               <widget class="QLabel" name="label" >
                <property name="text" >
                 <string>You can find more effects in the 'All Effects' tab</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="0" >
+             <item row="4" column="0" >
               <widget class="QLabel" name="label_3" >
                <property name="text" >
                 <string>Effect for window switching:</string>
@@ -108,7 +108,7 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="1" >
+             <item row="4" column="1" >
               <widget class="QComboBox" name="windowSwitchingCombo" >
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
@@ -118,7 +118,7 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="0" >
+             <item row="5" column="0" >
               <widget class="QLabel" name="label_4" >
                <property name="text" >
                 <string>Effect for desktop switching:</string>
@@ -131,7 +131,7 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="1" >
+             <item row="5" column="1" >
               <widget class="QComboBox" name="desktopSwitchingCombo" >
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
@@ -141,7 +141,7 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0" >
+             <item row="6" column="0" >
               <widget class="QLabel" name="label_5" >
                <property name="text" >
                 <string>Animation speed:</string>
@@ -154,7 +154,7 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="1" >
+             <item row="6" column="1" >
               <widget class="QComboBox" name="animationSpeedCombo" >
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
@@ -202,6 +202,39 @@
                </item>
               </widget>
              </item>
+             <item rowspan="3" row="1" column="1" >
+              <widget class="KWin::Monitor" native="1" name="edges_monitor" >
+               <property name="focusPolicy" >
+                <enum>Qt::StrongFocus</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" >
+              <spacer name="verticalSpacer_2" >
+               <property name="orientation" >
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="1" >
+              <widget class="QLabel" name="label_6" >
+               <property name="text" >
+                <string>Screen edges:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignCenter</set>
+               </property>
+               <property name="buddy" >
+                <cstring>edges_monitor</cstring>
+               </property>
+              </widget>
+             </item>
             </layout>
            </widget>
           </item>
@@ -246,6 +279,10 @@
         </spacer>
        </item>
       </layout>
+      <zorder>statusTitleWidget</zorder>
+      <zorder>useCompositing</zorder>
+      <zorder>compositingOptionsContainer</zorder>
+      <zorder>groupBox</zorder>
      </widget>
      <widget class="QWidget" name="tab_2" >
       <attribute name="title" >
@@ -274,6 +311,7 @@
     </widget>
    </item>
   </layout>
+  <zorder>tabWidget</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -287,7 +325,25 @@
    <header>kpluginselector.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>KWin::Monitor</class>
+   <extends>QWidget</extends>
+   <header>monitor.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>useCompositing</tabstop>
+  <tabstop>effectWinManagement</tabstop>
+  <tabstop>effectShadows</tabstop>
+  <tabstop>effectAnimations</tabstop>
+  <tabstop>edges_monitor</tabstop>
+  <tabstop>windowSwitchingCombo</tabstop>
+  <tabstop>desktopSwitchingCombo</tabstop>
+  <tabstop>animationSpeedCombo</tabstop>
+  <tabstop>advancedOptions</tabstop>
+  <tabstop>tabWidget</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

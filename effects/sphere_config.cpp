@@ -53,16 +53,6 @@ SphereEffectConfig::SphereEffectConfig(QWidget* parent, const QVariantList& args
     m_ui->tabWidget->setTabText( 0, i18nc("@title:tab Basic Settings", "Basic") );
     m_ui->tabWidget->setTabText( 1, i18nc("@title:tab Advanced Settings", "Advanced") );
 
-    m_ui->screenEdgeCombo->addItem(i18n("Top"));
-    m_ui->screenEdgeCombo->addItem(i18n("Top-right"));
-    m_ui->screenEdgeCombo->addItem(i18n("Right"));
-    m_ui->screenEdgeCombo->addItem(i18n("Bottom-right"));
-    m_ui->screenEdgeCombo->addItem(i18n("Bottom"));
-    m_ui->screenEdgeCombo->addItem(i18n("Bottom-left"));
-    m_ui->screenEdgeCombo->addItem(i18n("Left"));
-    m_ui->screenEdgeCombo->addItem(i18n("Top-left"));
-    m_ui->screenEdgeCombo->addItem(i18n("None"));
-
     m_actionCollection = new KActionCollection( this, componentData() );
     m_actionCollection->setConfigGroup( "Cube" );
     m_actionCollection->setConfigGlobal(true);
@@ -74,7 +64,6 @@ SphereEffectConfig::SphereEffectConfig(QWidget* parent, const QVariantList& args
 
     m_ui->editor->addCollection(m_actionCollection);
 
-    connect(m_ui->screenEdgeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(m_ui->rotationDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeOpacitySlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeOpacitySpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
@@ -102,7 +91,6 @@ void SphereEffectConfig::load()
     int duration       = conf.readEntry( "RotationDuration", 0 );
     float opacity      = conf.readEntry( "Opacity", 80 );
     bool desktopName   = conf.readEntry( "DisplayDesktopName", true );
-    int activateBorder = conf.readEntry( "BorderActivate", (int)ElectricNone );
     QColor background  = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
     QColor capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     bool texturedCaps = conf.readEntry( "TexturedCaps", true );
@@ -112,9 +100,6 @@ void SphereEffectConfig::load()
     m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 450 ) );
     m_ui->capDeformationSlider->setValue( conf.readEntry( "CapDeformation", 0 ) );
     m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
-    if( activateBorder == (int)ElectricNone )
-        activateBorder--;
-    m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
     
     m_ui->rotationDurationSpin->setValue( duration );
     m_ui->cubeOpacitySlider->setValue( opacity );
@@ -183,11 +168,6 @@ void SphereEffectConfig::save()
     conf.writeEntry( "CapDeformation", m_ui->capDeformationSlider->value() );
     conf.writeEntry( "TabBox", m_ui->walkThroughDesktopBox->checkState() == Qt::Checked ? true : false );
 
-    int activateBorder = m_ui->screenEdgeCombo->currentIndex();
-    if( activateBorder == (int)ELECTRIC_COUNT )
-        activateBorder = (int)ElectricNone;
-    conf.writeEntry( "BorderActivate", activateBorder );
-
     m_ui->editor->save();
 
     conf.sync();
@@ -202,7 +182,6 @@ void SphereEffectConfig::defaults()
     m_ui->displayDesktopNameBox->setCheckState( Qt::Checked );
     m_ui->cubeOpacitySpin->setValue( 80 );
     m_ui->cubeOpacitySlider->setValue( 80 );
-    m_ui->screenEdgeCombo->setCurrentIndex( (int)ElectricNone -1 );
     m_ui->backgroundColorButton->setColor( QColor( Qt::black ) );
     m_ui->cubeCapsBox->setCheckState( Qt::Checked );
     m_ui->capColorButton->setColor( KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );

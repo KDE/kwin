@@ -65,26 +65,6 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
 
     m_ui->shortcutEditor->addCollection( m_actionCollection );
 
-    m_ui->screenEdgeAllCombo->addItem( i18n( "Top" ));
-    m_ui->screenEdgeAllCombo->addItem( i18n( "Top-right" ));
-    m_ui->screenEdgeAllCombo->addItem( i18n( "Right" ));
-    m_ui->screenEdgeAllCombo->addItem( i18n( "Bottom-right" ));
-    m_ui->screenEdgeAllCombo->addItem( i18n( "Bottom" ));
-    m_ui->screenEdgeAllCombo->addItem( i18n( "Bottom-left" ));
-    m_ui->screenEdgeAllCombo->addItem( i18n( "Left" ));
-    m_ui->screenEdgeAllCombo->addItem( i18n( "Top-left" ));
-    m_ui->screenEdgeAllCombo->addItem( i18n( "None" ));
-
-    m_ui->screenEdgeCombo->addItem( i18n( "Top" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Top-right" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Right" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Bottom-right" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Bottom" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Bottom-left" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Left" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "Top-left" ));
-    m_ui->screenEdgeCombo->addItem( i18n( "None" ));
-
     connect( m_ui->layoutCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
     connect( m_ui->rearrangeDurationSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->displayTitleBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
@@ -93,8 +73,6 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     connect( m_ui->ignoreMinimizedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->accuracySlider, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->fillGapsBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->screenEdgeAllCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->screenEdgeCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
     connect( m_ui->shortcutEditor, SIGNAL( keyChange() ), this, SLOT( changed() ));
 
     load();
@@ -135,16 +113,6 @@ void PresentWindowsEffectConfig::load()
     bool fillGaps = conf.readEntry( "FillGaps", true );
     m_ui->fillGapsBox->setChecked( fillGaps );
 
-    int activateAllBorder = conf.readEntry( "BorderActivateAll", int( ElectricTopLeft ));
-    if( activateAllBorder == int( ElectricNone ))
-        activateAllBorder--;
-    m_ui->screenEdgeAllCombo->setCurrentIndex( activateAllBorder );
-
-    int activateBorder = conf.readEntry( "BorderActivate", int( ElectricNone ));
-    if( activateBorder == int( ElectricNone ))
-        activateBorder--;
-    m_ui->screenEdgeCombo->setCurrentIndex( activateBorder );
-
     emit changed(false);
     }
 
@@ -169,16 +137,6 @@ void PresentWindowsEffectConfig::save()
 
     conf.writeEntry( "FillGaps", m_ui->fillGapsBox->isChecked() );
 
-    int activateAllBorder = m_ui->screenEdgeAllCombo->currentIndex();
-    if( activateAllBorder == int( ELECTRIC_COUNT ))
-        activateAllBorder = int( ElectricNone );
-    conf.writeEntry( "BorderActivateAll", activateAllBorder );
-
-    int activateBorder = m_ui->screenEdgeCombo->currentIndex();
-    if( activateBorder == int( ELECTRIC_COUNT ))
-        activateBorder = int( ElectricNone );
-    conf.writeEntry( "BorderActivate", activateBorder );
-
     m_ui->shortcutEditor->save();
 
     conf.sync();
@@ -197,8 +155,6 @@ void PresentWindowsEffectConfig::defaults()
     m_ui->ignoreMinimizedBox->setChecked( false );
     m_ui->accuracySlider->setSliderPosition( 1 );
     m_ui->fillGapsBox->setChecked( true );
-    m_ui->screenEdgeAllCombo->setCurrentIndex( int( ElectricTopLeft ));
-    m_ui->screenEdgeCombo->setCurrentIndex( int( ElectricNone - 1 ));
     m_ui->shortcutEditor->allDefault();
     emit changed(true);
     }

@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>546</width>
-    <height>526</height>
+    <width>610</width>
+    <height>542</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -81,30 +81,7 @@
           <string>Activation</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3" >
-          <item row="0" column="0" >
-           <widget class="QLabel" name="label_2" >
-            <property name="text" >
-             <string>Screen edge:</string>
-            </property>
-            <property name="alignment" >
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="buddy" >
-             <cstring>screenEdgeCombo</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" >
-           <widget class="QComboBox" name="screenEdgeCombo" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2" >
+          <item row="0" column="0" colspan="2" >
            <widget class="KWin::GlobalShortcutsEditor" native="1" name="editor" >
             <property name="minimumSize" >
              <size>
@@ -516,7 +493,6 @@ otherwise it will remain active</string>
   <tabstop>cubeOpacitySpin</tabstop>
   <tabstop>backgroundColorButton</tabstop>
   <tabstop>wallpaperRequester</tabstop>
-  <tabstop>screenEdgeCombo</tabstop>
   <tabstop>cubeCapsBox</tabstop>
   <tabstop>capColorButton</tabstop>
   <tabstop>capsImageBox</tabstop>
