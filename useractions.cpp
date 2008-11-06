@@ -410,7 +410,7 @@ void Workspace::setupWindowShortcutDone( bool ok )
 
 void Workspace::clientShortcutUpdated( Client* c )
     {
-    QString key = QString::number( c->window());
+    QString key = QString( "_k_session:%1" ).arg(c->window());
     QAction* action = client_keys->action( key.toLatin1().constData() );
     if( !c->shortcut().isEmpty())
         {
@@ -426,9 +426,7 @@ void Workspace::clientShortcutUpdated( Client* c )
         action->setEnabled( true );
         }
     else
-        {
         delete action;
-        }
     }
 
 void Workspace::clientPopupActivated( QAction *action )
