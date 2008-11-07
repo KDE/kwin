@@ -504,6 +504,7 @@ void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
 // Modified version of SceneOpenGL::Window::prepareRenderStates() from scene_opengl.cpp
 void ShadowEffect::prepareRenderStates( GLTexture *texture, double opacity, double brightness, double saturation )
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
     /*if( saturation != 1.0 && texture->saturationSupported() )
@@ -586,11 +587,13 @@ void ShadowEffect::prepareRenderStates( GLTexture *texture, double opacity, doub
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
         glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity);
         }
+#endif
     }
 
 // Modified version of SceneOpenGL::Window::restoreRenderStates() from scene_opengl.cpp
 void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, double brightness, double saturation )
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( opacity != 1.0 || saturation != 1.0 || brightness != 1.0 )
         {
         /*if( saturation != 1.0 && texture->saturationSupported())
@@ -608,6 +611,7 @@ void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, doub
         }
 
     glPopAttrib();  // ENABLE_BIT
+#endif
     }
 
 void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, const WindowPaintData& data )
