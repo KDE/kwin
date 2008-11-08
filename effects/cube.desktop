@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Desktop Cube
 Name[be@latin]=Rabočy kub
+Name[de]=Arbeitsflächen-Würfel
 Name[el]=Κύβος επιφάνειας εργασίας
 Name[et]=Töölauakuubik
 Name[ga]=Ciúb Deisce
@@ -30,6 +31,7 @@ Name[zh_TW]=桌面立方體
 Icon=preferences-system-windows-effect-cube
 Comment=Display each virtual desktop on a side of a cube
 Comment[be@latin]=Pakazvaje virtualnyja rabočyja stały na bakoch kuba
+Comment[de]=Zeigt jede virtuelle Arbeitsfläche auf einer Würfelseite an
 Comment[el]=Εμφάνιση κάθε εικονικής επιφάνειας εργασίας σε μια πλευρά ενός κύβου
 Comment[gl]=Mostra cada escritorio virtual nunha cara dun cubo
 Comment[gu]=ક્યુબની બાજુએ દરેક વર્ચ્યુઅલ ડેસ્કટોપ બતાવે છે
