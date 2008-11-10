@@ -417,6 +417,8 @@ ShortcutDialog::ShortcutDialog( const QKeySequence& cut )
     // To not check for conflicting shortcuts. The widget would use a message
     // box which brings down kwin.
     widget->setCheckForConflictsAgainst(KKeySequenceWidget::None);
+    // It's a global shortcut so don't allow multikey shortcuts
+    widget->setMultiKeyShortcutsAllowed(false);
 
     // Listen to changed shortcuts
     connect(
@@ -462,8 +464,9 @@ void ShortcutDialog::done( int r )
 void ShortcutDialog::keySequenceChanged(const QKeySequence &seq)
     {
     // Check if the key sequence is used currently
-    QStringList conflicting = KGlobalAccel::findActionNameSystemwide(seq);
+    QList<KGlobalShortcutInfo> conflicting = KGlobalAccel::getGlobalShortcutsByKey(seq);
     if (!conflicting.isEmpty()) {
+        kDebug() << "TODO: Display conflicting shortcuts to user";
         // TODO: Inform the user somehow instead of just ignoring his wish
         widget->setKeySequence(shortcut());
         }

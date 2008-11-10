@@ -778,6 +778,8 @@ ShortcutDialog::ShortcutDialog( const QKeySequence& cut, QWidget* parent )
     , widget( new KKeySequenceWidget( this ))
     {
     widget->setKeySequence( cut );
+    // It's a global shortcut so don't allow multikey shortcuts
+    widget->setMultiKeyShortcutsAllowed(false);
     setMainWidget( widget );
     }
 
