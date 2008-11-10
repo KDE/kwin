@@ -2,7 +2,7 @@
 Name=Dim Inactive
 Name[af]=Verdof wanneer onaktief
 Name[bg]=Замъгляване на неактивния
-Name[ca]=Apaga les inactives
+Name[ca]=Enfosqueix les inactives
 Name[cs]=Ztmavit neaktivní
 Name[da]=Gør inaktiv mat
 Name[de]=Inaktive abdunkeln
@@ -55,6 +55,7 @@ Name[x-test]=xxDim Inactivexx
 Name[zh_CN]=暗淡未激活窗口
 Icon=preferences-system-windows-effect-dim-inactive
 Comment=Darken inactive windows
+Comment[ca]=Enfosqueix les finestres inactives
 Comment[de]=Dunkelt inaktive Fenster ab
 Comment[el]=Σκίαση μη ενεργών παραθύρων
 Comment[gl]=Escurece as fiestras inactivas

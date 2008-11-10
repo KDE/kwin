@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Desktop Cylinder
 Name[be@latin]=Rabočy cylinder
+Name[ca]=Cilindre d'escriptori
 Name[de]=Arbeitsflächen-Zylinder
 Name[el]=Κύλινδρος επιφάνειας εργασίας
 Name[et]=Töölauasilinder
@@ -29,6 +30,7 @@ Name[zh_TW]=桌面圓柱
 Icon=preferences-system-windows-effect-cylinder
 Comment=Display each virtual desktop on the side of a cylinder
 Comment[be@latin]=Pakazvaje virtualnyja rabočyja stały na baku cylindra
+Comment[ca]=Visualitza cada escriptori virtual a la cara d'un cilindre
 Comment[de]=Zeigt jede virtuelle Arbeitsfläche auf einer Zylinderseite an
 Comment[el]=Εμφάνιση κάθε εικονικής επιφάνειας εργασίας στην πλευρά ενός κυλίνδρου
 Comment[gl]=Mostra cada escritorios virtual a un lado dun cilindro

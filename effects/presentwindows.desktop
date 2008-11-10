@@ -62,6 +62,7 @@ Name[zh_CN]=窗口轮转
 Name[zh_TW]=展示視窗
 Icon=preferences-system-windows-effect-presentwindows
 Comment=Zoom out until all opened windows can be displayed side-by-side
+Comment[ca]=Redueix fins que totes les finestres obertes es poden mostrar una al costat de l'altra
 Comment[el]=Σμίκρυνση έως ότου όλα τα ανοιχτά παράθυρα να εμφανίζονται σε παράθεση
 Comment[gl]=Reduce até que poda mostrar lado por lado todas as fiestras
 Comment[kk]=Ашық терезелерді кішірейтіп қатарлап көрсету

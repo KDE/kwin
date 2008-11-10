@@ -61,6 +61,7 @@ Name[zh_CN]=跟踪鼠标
 Name[zh_TW]=追蹤滑鼠
 Icon=preferences-system-windows-effect-mouse-track
 Comment=Display a mouse cursor locating effect when activated
+Comment[ca]=Mostra un efecte de posició del cursor del ratolí quan està activat
 Comment[el]=Εμφάνιση εφέ υπόδειξης της θέσης του ποντικιού όταν ενεργοποιηθεί
 Comment[gl]=Mostra un efeito de localización do cursor cando está activada
 Comment[gu]=જ્યારે સક્રિય થાય ત્યારે માઉસ કર્સરની સ્થિતિની અસર બતાવો

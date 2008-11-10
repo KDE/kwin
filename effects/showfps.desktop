@@ -65,6 +65,7 @@ Name[zh_CN]=显示 FPS
 Name[zh_TW]=顯示每秒幾張
 Icon=preferences-system-windows-effect-fps-show
 Comment=Display KWin's performance in the corner of the screen
+Comment[ca]=Mostra el rendiment del KWin a la cantonada de la pantalla
 Comment[el]=Εμφάνιση επιδόσεων του KWin στη γωνία της οθόνης
 Comment[gl]=Mostra o rendimento de KWin no canto da fiestra
 Comment[gu]=સ્ક્રિનનાં ખૂણાં પર KWinની કાર્યક્ષમતા દર્શાવો
