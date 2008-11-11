@@ -944,10 +944,10 @@ inline Client* Workspace::findClient( T predicate ) const
 template< typename T1, typename T2 >
 inline void Workspace::forEachClient( T1 procedure, T2 predicate )
     {
-    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+    for ( ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
         if ( predicate( const_cast< const Client* >( *it)))
             procedure( *it );
-    for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it)
+    for ( ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it)
         if ( predicate( const_cast< const Client* >( *it)))
             procedure( *it );
     }
@@ -967,7 +967,7 @@ inline Unmanaged* Workspace::findUnmanaged( T predicate ) const
 template< typename T1, typename T2 >
 inline void Workspace::forEachUnmanaged( T1 procedure, T2 predicate )
     {
-    for ( UnmanagedList::ConstIterator it = unmanaged.begin(); it != unmanaged.end(); ++it)
+    for ( UnmanagedList::ConstIterator it = unmanaged.constBegin(); it != unmanaged.constEnd(); ++it)
         if ( predicate( const_cast< const Unmanaged* >( *it)))
             procedure( *it );
     }

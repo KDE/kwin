@@ -178,14 +178,14 @@ void KCMRulesList::save()
     {
     KConfig cfg( QLatin1String("kwinrulesrc") );
     QStringList groups = cfg.groupList();
-    for( QStringList::ConstIterator it = groups.begin();
-         it != groups.end();
+    for( QStringList::ConstIterator it = groups.constBegin();
+         it != groups.constEnd();
          ++it )
         cfg.deleteGroup( *it );
     cfg.group("General").writeEntry( "count", rules.count());
     int i = 1;
-    for( QVector< Rules* >::ConstIterator it = rules.begin();
-         it != rules.end();
+    for( QVector< Rules* >::ConstIterator it = rules.constBegin();
+         it != rules.constEnd();
          ++it )
         {
             KConfigGroup cg( &cfg, QString::number( i ));

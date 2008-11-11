@@ -101,8 +101,8 @@ void Workspace::updateClientLayer( Client* c )
         return;
     StackingUpdatesBlocker blocker( this );
     c->invalidateLayer(); // invalidate, will be updated when doing restacking
-    for( ClientList::ConstIterator it = c->transients().begin();
-         it != c->transients().end();
+    for( ClientList::ConstIterator it = c->transients().constBegin();
+         it != c->transients().constEnd();
          ++it )
         updateClientLayer( *it );
     }
@@ -202,9 +202,9 @@ void Workspace::propagateClients( bool propagate_new_clients )
         cl = new Window[ desktops.count() + clients.count()];
         pos = 0;
 	// TODO this is still not completely in the map order
-        for ( ClientList::ConstIterator it = desktops.begin(); it != desktops.end(); ++it )
+        for ( ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it )
             cl[pos++] =  (*it)->window();
-        for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it )
+        for ( ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it )
             cl[pos++] =  (*it)->window();
         rootInfo->setClientList( cl, pos );
         delete [] cl;
@@ -212,7 +212,7 @@ void Workspace::propagateClients( bool propagate_new_clients )
 
     cl = new Window[ stacking_order.count()];
     pos = 0;
-    for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
+    for ( ClientList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it)
         cl[pos++] =  (*it)->window();
     rootInfo->setClientListStacking( cl, pos );
     delete [] cl;
@@ -571,8 +571,8 @@ ClientList Workspace::constrainedStackingOrder()
 #endif
     // build the order from layers
     QHash< Group*, Layer > minimum_layer;
-    for( ClientList::ConstIterator it = unconstrained_stacking_order.begin();
-         it != unconstrained_stacking_order.end();
+    for( ClientList::ConstIterator it = unconstrained_stacking_order.constBegin();
+         it != unconstrained_stacking_order.constEnd();
          ++it )
         {
         Layer l = (*it)->layer();
@@ -693,8 +693,8 @@ ClientList Workspace::ensureStackingOrder( const ClientList& list ) const
         return list;
     // TODO is this worth optimizing?
     ClientList result = list;
-    for( ClientList::ConstIterator it = stacking_order.begin();
-         it != stacking_order.end();
+    for( ClientList::ConstIterator it = stacking_order.constBegin();
+         it != stacking_order.constEnd();
          ++it )
         if( result.removeAll( *it ) != 0 )
             result.append( *it );

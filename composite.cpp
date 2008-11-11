@@ -248,8 +248,8 @@ void Workspace::finishCompositing()
     scene = NULL;
     compositeTimer.stop();
     repaints_region = QRegion();
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it )
         { // forward all opacity values to the frame in case there'll be other CM running
         if( (*it)->opacity() != 1.0 )

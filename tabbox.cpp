@@ -208,7 +208,7 @@ void TabBox::reset( bool partial_reset )
 
         // calculate maximum caption width
         cw = fontMetrics().width(no_tasks)+20;
-        for (ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
           {
           cw = fontMetrics().width( (*it)->caption() );
           if ( cw > wmax ) wmax = cw;
@@ -460,7 +460,7 @@ void TabBox::paintEvent( QPaintEvent* e )
             }
         else
             {
-            for (ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+            for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
               {
               if ( workspace()->hasClient( *it ) )  // safety
                   {
@@ -719,8 +719,8 @@ void TabBox::handleMouseEvent( XEvent* e )
 
     if( mode() == TabBoxWindowsMode )
         {
-        for( ClientList::ConstIterator it = clients.begin();
-             it != clients.end();
+        for( ClientList::ConstIterator it = clients.constBegin();
+             it != clients.constEnd();
              ++it)
             {
             if( workspace()->hasClient( *it ) && (num == 0) ) // safety

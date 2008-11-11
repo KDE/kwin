@@ -68,8 +68,8 @@ void KDecorationFactory::removeDecoration( KDecoration* deco )
 
 void KDecorationFactory::resetDecorations( unsigned long changed )
     {
-    for( QList< KDecoration* >::ConstIterator it = _decorations.begin();
-         it != _decorations.end();
+    for( QList< KDecoration* >::ConstIterator it = _decorations.constBegin();
+         it != _decorations.constEnd();
          ++it )
         (*it)->reset( changed );
     }

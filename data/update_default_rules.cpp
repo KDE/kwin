@@ -58,8 +58,8 @@ int main( int argc, char* argv[] )
         ++pos;
         dest_cfg.deleteGroup( QString::number( pos ));
 		KConfigGroup dcg2 (&dest_cfg, QString::number( pos ));
-        for( QMap< QString, QString >::ConstIterator it = entries.begin();
-             it != entries.end();
+        for( QMap< QString, QString >::ConstIterator it = entries.constBegin();
+             it != entries.constEnd();
              ++it )
             dcg2.writeEntry( it.key(), *it );
         }

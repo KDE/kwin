@@ -645,8 +645,8 @@ bool Client::isMinimizable() const
         { // #66868 - let other xmms windows be minimized when the mainwindow is minimized
         bool shown_mainwindow = false;
         ClientList mainclients = mainClients();
-        for( ClientList::ConstIterator it = mainclients.begin();
-             it != mainclients.end();
+        for( ClientList::ConstIterator it = mainclients.constBegin();
+             it != mainclients.constEnd();
              ++it )
             {
             if( (*it)->isShown( true ))
@@ -857,8 +857,8 @@ void Client::updateVisibility()
         return;
         }
     bool belongs_to_desktop = false;
-    for( ClientList::ConstIterator it = group()->members().begin();
-         it != group()->members().end();
+    for( ClientList::ConstIterator it = group()->members().constBegin();
+         it != group()->members().constEnd();
          ++it )
         if( (*it)->isDesktop())
             {
@@ -1508,8 +1508,8 @@ void Client::getIcons()
     if( icon_pix.isNull() && isTransient())
         { // then mainclients
         ClientList mainclients = mainClients();
-        for( ClientList::ConstIterator it = mainclients.begin();
-             it != mainclients.end() && icon_pix.isNull();
+        for( ClientList::ConstIterator it = mainclients.constBegin();
+             it != mainclients.constEnd() && icon_pix.isNull();
              ++it )
             {
             icon_pix = (*it)->icon();

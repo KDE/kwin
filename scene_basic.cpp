@@ -50,8 +50,8 @@ void SceneBasic::paint( QRegion, ToplevelList windows )
     val.subwindow_mode = IncludeInferiors;
     GC gc = XCreateGC( display(), composite_pixmap, GCForeground | GCSubwindowMode, &val );
     XFillRectangle( display(), composite_pixmap, gc, 0, 0, displayWidth(), displayHeight());
-    for( ToplevelList::ConstIterator it = windows.begin();
-         it != windows.end();
+    for( ToplevelList::ConstIterator it = windows.constBegin();
+         it != windows.constEnd();
          ++it )
         {
         QRect r = (*it)->geometry().intersected( QRect( 0, 0, displayWidth(), displayHeight()));

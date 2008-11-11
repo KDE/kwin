@@ -108,7 +108,7 @@ void Workspace::updateClientArea( bool force )
              iS ++ )
             new_sareas[ i ][ iS ] = screens[ iS ];
         }
-    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+    for ( ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
         {
         if( !(*it)->hasStrut())
             continue;
@@ -200,12 +200,12 @@ void Workspace::updateClientArea( bool force )
             }
 
         updateTopMenuGeometry();
-        for( ClientList::ConstIterator it = clients.begin();
-             it != clients.end();
+        for( ClientList::ConstIterator it = clients.constBegin();
+             it != clients.constEnd();
              ++it)
             (*it)->checkWorkspacePosition();
-        for( ClientList::ConstIterator it = desktops.begin();
-             it != desktops.end();
+        for( ClientList::ConstIterator it = desktops.constBegin();
+             it != desktops.constEnd();
              ++it)
             (*it)->checkWorkspacePosition();
         }
@@ -353,7 +353,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted
         if (snap)
             {
             QList<Client *>::ConstIterator l;
-            for (l = clients.begin();l != clients.end();++l )
+            for (l = clients.constBegin();l != clients.constEnd();++l )
                 {
                 if ((*l)->isOnDesktop(currentDesktop()) &&
                    !(*l)->isMinimized()
@@ -568,7 +568,7 @@ QRect Workspace::adjustClientSize( Client* c, QRect moveResizeGeom, int mode )
             deltaX = int(snap);
             deltaY = int(snap);
             QList<Client *>::ConstIterator l;
-            for (l = clients.begin();l != clients.end();++l )
+            for (l = clients.constBegin();l != clients.constEnd();++l )
                 {
                 if ((*l)->isOnDesktop(currentDesktop()) &&
                    !(*l)->isMinimized()
@@ -790,8 +790,8 @@ void Workspace::updateTopMenuGeometry( Client* c )
     area = clientArea( MaximizeFullArea, QPoint( 0, 0 ), 1 ); // HACK desktop ?
     area.setHeight( topMenuHeight());
     topmenu_space->setGeometry( area );
-    for( ClientList::ConstIterator it = topmenus.begin();
-         it != topmenus.end();
+    for( ClientList::ConstIterator it = topmenus.constBegin();
+         it != topmenus.constEnd();
          ++it )
         updateTopMenuGeometry( *it );
     }

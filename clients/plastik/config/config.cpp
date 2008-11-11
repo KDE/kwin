@@ -90,7 +90,7 @@ void PlastikConfig::save(KConfigGroup&)
     KConfigGroup cg(m_config, "General");
 
     QList<QRadioButton *> buttons = m_dialog->titleAlign->findChildren<QRadioButton *>();
-    for(QList<QRadioButton *>::ConstIterator it = buttons.begin(); it != buttons.end(); ++it)
+    for(QList<QRadioButton *>::ConstIterator it = buttons.constBegin(); it != buttons.constEnd(); ++it)
     {
         if((*it)->isChecked())
             cg.writeEntry("TitleAlignment", QString((*it)->objectName()));

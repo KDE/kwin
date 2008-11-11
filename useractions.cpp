@@ -1227,8 +1227,8 @@ void Client::setShortcut( const QString& _cut )
         }
     QList< KShortcut > keys;
     QStringList groups = cut.split( ' ');
-    for( QStringList::ConstIterator it = groups.begin();
-         it != groups.end();
+    for( QStringList::ConstIterator it = groups.constBegin();
+         it != groups.constEnd();
          ++it )
         {
         QRegExp reg( "(.*\\+)\\((.*)\\)" );
@@ -1246,15 +1246,15 @@ void Client::setShortcut( const QString& _cut )
                 }
             }
         }
-    for( QList< KShortcut >::ConstIterator it = keys.begin();
-         it != keys.end();
+    for( QList< KShortcut >::ConstIterator it = keys.constBegin();
+         it != keys.constEnd();
          ++it )
         {
         if( _shortcut == *it ) // current one is in the list
             return;
         }
-    for( QList< KShortcut >::ConstIterator it = keys.begin();
-         it != keys.end();
+    for( QList< KShortcut >::ConstIterator it = keys.constBegin();
+         it != keys.constEnd();
          ++it )
         {
         if( workspace()->shortcutAvailable( *it, this ))
@@ -1290,8 +1290,8 @@ void Client::delayedSetShortcut()
 bool Workspace::shortcutAvailable( const KShortcut& cut, Client* ignore ) const
     {
     // TODO check global shortcuts etc.
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it )
         {
         if( (*it) != ignore && (*it)->shortcut() == cut )

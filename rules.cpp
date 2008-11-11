@@ -709,8 +709,8 @@ void WindowRules::discardTemporary()
 void WindowRules::update( Client* c )
     {
     bool updated = false;
-    for( QVector< Rules* >::ConstIterator it = rules.begin();
-         it != rules.end();
+    for( QVector< Rules* >::ConstIterator it = rules.constBegin();
+         it != rules.constEnd();
          ++it )
         if( (*it)->update( c )) // no short-circuiting here
             updated = true;
@@ -724,8 +724,8 @@ type WindowRules::check##rule( type arg, bool init ) const \
     if( rules.count() == 0 ) \
         return arg; \
     type ret = arg; \
-    for( QVector< Rules* >::ConstIterator it = rules.begin(); \
-         it != rules.end(); \
+    for( QVector< Rules* >::ConstIterator it = rules.constBegin(); \
+         it != rules.constEnd(); \
          ++it ) \
         { \
         if( (*it)->apply##rule( ret, init )) \
@@ -935,14 +935,14 @@ void Workspace::writeWindowRules()
     rulesUpdatedTimer.stop();
     KConfig cfg( "kwinrulesrc", KConfig::NoGlobals );
     QStringList groups = cfg.groupList();
-    for( QStringList::ConstIterator it = groups.begin();
-         it != groups.end();
+    for( QStringList::ConstIterator it = groups.constBegin();
+         it != groups.constEnd();
          ++it )
         cfg.deleteGroup( *it );
     cfg.group("General").writeEntry( "count", rules.count());
     int i = 1;
-    for( QList< Rules* >::ConstIterator it = rules.begin();
-         it != rules.end();
+    for( QList< Rules* >::ConstIterator it = rules.constBegin();
+         it != rules.constEnd();
          ++it )
         {
         if( (*it)->isTemporary())
@@ -956,8 +956,8 @@ void Workspace::writeWindowRules()
 void Workspace::gotTemporaryRulesMessage( const QString& message )
     {
     bool was_temporary = false;
-    for( QList< Rules* >::ConstIterator it = rules.begin();
-         it != rules.end();
+    for( QList< Rules* >::ConstIterator it = rules.constBegin();
+         it != rules.constEnd();
          ++it )
         if( (*it)->isTemporary())
             was_temporary = true;

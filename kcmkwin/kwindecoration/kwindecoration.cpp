@@ -217,10 +217,10 @@ KWinDecorationModule::~KWinDecorationModule()
 // And insert these into a DecorationInfo structure
 void KWinDecorationModule::findDecorations()
 {
-	QStringList dirList = KGlobal::dirs()->findDirs("data", "kwin");
+	const QStringList dirList = KGlobal::dirs()->findDirs("data", "kwin");
 	QStringList::ConstIterator it;
 
-	for (it = dirList.begin(); it != dirList.end(); ++it)
+	for (it = dirList.constBegin(); it != dirList.constEnd(); ++it)
 	{
 		QDir d(*it);
 		if (d.exists())
@@ -253,7 +253,7 @@ void KWinDecorationModule::createDecorationList()
 	// Sync with kwin hardcoded KDE2 style which has no desktop item
     QStringList decorationNames;
 //	decorationNames.append( i18n("KDE 2") );
-	for (it = decorations.begin(); it != decorations.end(); ++it)
+	for (it = decorations.constBegin(); it != decorations.constEnd(); ++it)
 	{
 		decorationNames.append((*it).name);
 	}
@@ -293,8 +293,8 @@ static const char* const border_names[ KDecorationDefines::BordersCount ] =
 int KWinDecorationModule::borderSizeToIndex( BorderSize size, QList< BorderSize > sizes )
 {
         int pos = 0;
-        for( QList< BorderSize >::ConstIterator it = sizes.begin();
-             it != sizes.end();
+        for( QList< BorderSize >::ConstIterator it = sizes.constBegin();
+             it != sizes.constEnd();
              ++it, ++pos )
             if( size <= *it )
                 break;
@@ -304,9 +304,9 @@ int KWinDecorationModule::borderSizeToIndex( BorderSize size, QList< BorderSize 
 KDecorationDefines::BorderSize KWinDecorationModule::indexToBorderSize( int index,
     QList< BorderSize > sizes )
 {
-        QList< BorderSize >::ConstIterator it = sizes.begin();
+        QList< BorderSize >::ConstIterator it = sizes.constBegin();
         for(;
-             it != sizes.end();
+             it != sizes.constEnd();
              ++it, --index )
             if( index == 0 )
                 break;
@@ -576,7 +576,7 @@ void KWinDecorationModule::checkSupportedBorderSizes()
 		cBorder->hide();
 	} else {
 		cBorder->clear();
-		for (QList<BorderSize>::const_iterator it = sizes.begin(); it != sizes.end(); ++it) {
+		for (QList<BorderSize>::const_iterator it = sizes.constBegin(); it != sizes.constEnd(); ++it) {
 			BorderSize size = *it;
 			cBorder->addItem(i18n(border_names[size]), borderSizeToIndex(size,sizes) );
 		}

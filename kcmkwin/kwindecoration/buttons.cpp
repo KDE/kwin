@@ -516,7 +516,7 @@ void ButtonDropSite::recalcItemGeometry()
 
 	// update the geometry of the items in the left button list
 	int offset = r.left();
-	for (ButtonList::const_iterator it = buttonsLeft.begin(); it != buttonsLeft.end(); ++it) {
+	for (ButtonList::const_iterator it = buttonsLeft.constBegin(); it != buttonsLeft.constEnd(); ++it) {
 		int w = (*it)->width();
 		(*it)->rect = QRect(offset, r.top(), w, (*it)->height() );
 		offset += w;
@@ -524,7 +524,7 @@ void ButtonDropSite::recalcItemGeometry()
 
 	// the right button list...
 	offset = r.right() - calcButtonListWidth(buttonsRight);
-	for (ButtonList::const_iterator it = buttonsRight.begin(); it != buttonsRight.end(); ++it) {
+	for (ButtonList::const_iterator it = buttonsRight.constBegin(); it != buttonsRight.constEnd(); ++it) {
 		int w = (*it)->width();
 		(*it)->rect = QRect(offset, r.top(), w, (*it)->height() );
 		offset += w;
@@ -533,14 +533,14 @@ void ButtonDropSite::recalcItemGeometry()
 
 ButtonDropSiteItem *ButtonDropSite::buttonAt(QPoint p) {
 	// try to find the item in the left button list
-	for (ButtonList::const_iterator it = buttonsLeft.begin(); it != buttonsLeft.end(); ++it) {
+	for (ButtonList::const_iterator it = buttonsLeft.constBegin(); it != buttonsLeft.constEnd(); ++it) {
 		if ( (*it)->rect.contains(p) ) {
 			return *it;
 		}
 	}
 
 	// try to find the item in the right button list
-	for (ButtonList::const_iterator it = buttonsRight.begin(); it != buttonsRight.end(); ++it) {
+	for (ButtonList::const_iterator it = buttonsRight.constBegin(); it != buttonsRight.constEnd(); ++it) {
 		if ( (*it)->rect.contains(p) ) {
 			return *it;
 		}
@@ -569,7 +569,7 @@ bool ButtonDropSite::removeButton(ButtonDropSiteItem *item) {
 int ButtonDropSite::calcButtonListWidth(const ButtonList& btns)
 {
 	int w = 0;
-	for (ButtonList::const_iterator it = btns.begin(); it != btns.end(); ++it) {
+	for (ButtonList::const_iterator it = btns.constBegin(); it != btns.constEnd(); ++it) {
 		w += (*it)->width();
 	}
 
@@ -593,7 +593,7 @@ bool ButtonDropSite::removeSelectedButton()
 
 void ButtonDropSite::drawButtonList(QPainter *p, const ButtonList& btns, int offset)
 {
-	for (ButtonList::const_iterator it = btns.begin(); it != btns.end(); ++it) {
+	for (ButtonList::const_iterator it = btns.constBegin(); it != btns.constEnd(); ++it) {
 		QRect itemRect = (*it)->rect;
 		if (itemRect.isValid() ) {
 			(*it)->draw(p, palette(), itemRect);
@@ -847,7 +847,7 @@ QString ButtonPositionWidget::buttonsLeft() const
 {
 	ButtonList btns = m_dropSite->buttonsLeft;
 	QString btnString = "";
-	for (ButtonList::const_iterator it = btns.begin(); it != btns.end(); ++it) {
+	for (ButtonList::const_iterator it = btns.constBegin(); it != btns.constEnd(); ++it) {
 		btnString.append( (*it)->button().type );
 	}
 	return btnString;
@@ -857,7 +857,7 @@ QString ButtonPositionWidget::buttonsRight() const
 {
 	ButtonList btns = m_dropSite->buttonsRight;
 	QString btnString = "";
-	for (ButtonList::const_iterator it = btns.begin(); it != btns.end(); ++it) {
+	for (ButtonList::const_iterator it = btns.constBegin(); it != btns.constEnd(); ++it) {
 		btnString.append( (*it)->button().type );
 	}
 	return btnString;

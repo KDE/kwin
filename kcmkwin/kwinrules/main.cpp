@@ -51,14 +51,14 @@ static void saveRules( const QList< Rules* >& rules )
     {
     KConfig cfg( "kwinrulesrc" );
     QStringList groups = cfg.groupList();
-    for( QStringList::ConstIterator it = groups.begin();
-         it != groups.end();
+    for( QStringList::ConstIterator it = groups.constBegin();
+         it != groups.constEnd();
          ++it )
         cfg.deleteGroup( *it );
     cfg.group("General").writeEntry( "count", rules.count());
     int i = 1;
-    for( QList< Rules* >::ConstIterator it = rules.begin();
-         it != rules.end();
+    for( QList< Rules* >::ConstIterator it = rules.constBegin();
+         it != rules.constEnd();
          ++it )
         {
             KConfigGroup cg( &cfg, QString::number( i ));
@@ -85,8 +85,8 @@ static Rules* findRule( const QList< Rules* >& rules, Window wid, bool whole_app
     QByteArray machine = info.clientMachine().toLower();
     Rules* best_match = NULL;
     int match_quality = 0;
-    for( QList< Rules* >::ConstIterator it = rules.begin();
-         it != rules.end();
+    for( QList< Rules* >::ConstIterator it = rules.constBegin();
+         it != rules.constEnd();
          ++it )
         {
         // try to find an exact match, i.e. not a generic rule

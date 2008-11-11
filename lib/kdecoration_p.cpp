@@ -223,8 +223,8 @@ unsigned long KDecorationOptionsPrivate::updateSettings( KConfig* config )
 KDecorationDefines::BorderSize KDecorationOptionsPrivate::findPreferredBorderSize( BorderSize size,
     QList< BorderSize > sizes ) const
     {
-    for( QList< BorderSize >::ConstIterator it = sizes.begin();
-         it != sizes.end();
+    for( QList< BorderSize >::ConstIterator it = sizes.constBegin();
+         it != sizes.constEnd();
          ++it )
         if( size <= *it ) // size is either a supported size, or *it is the closest larger supported
             return *it;

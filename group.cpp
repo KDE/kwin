@@ -65,8 +65,8 @@ bool performTransiencyCheck()
     {
     bool ret = true;
     ClientList clients = Workspace::self()->clients;
-    for( ClientList::ConstIterator it1 = clients.begin();
-         it1 != clients.end();
+    for( ClientList::ConstIterator it1 = clients.constBegin();
+         it1 != clients.constEnd();
          ++it1 )
         {
         if( (*it1)->deleting )
@@ -92,8 +92,8 @@ bool performTransiencyCheck()
         else
             {
             ClientList mains = (*it1)->mainClients();
-            for( ClientList::ConstIterator it2 = mains.begin();
-                 it2 != mains.end();
+            for( ClientList::ConstIterator it2 = mains.constBegin();
+                 it2 != mains.constEnd();
                  ++it2 )
                 {
                 if( transiencyCheckNonExistent
@@ -113,8 +113,8 @@ bool performTransiencyCheck()
                 }
             }
         ClientList trans = (*it1)->transients_list;
-        for( ClientList::ConstIterator it2 = trans.begin();
-             it2 != trans.end();
+        for( ClientList::ConstIterator it2 = trans.constBegin();
+             it2 != trans.constEnd();
              ++it2 )
             {
             if( transiencyCheckNonExistent
@@ -134,13 +134,13 @@ bool performTransiencyCheck()
             }
         }
     GroupList groups = Workspace::self()->groups;
-    for( GroupList::ConstIterator it1 = groups.begin();
-         it1 != groups.end();
+    for( GroupList::ConstIterator it1 = groups.constBegin();
+         it1 != groups.constEnd();
          ++it1 )
         {
         ClientList members = (*it1)->members();
-        for( ClientList::ConstIterator it2 = members.begin();
-             it2 != members.end();
+        for( ClientList::ConstIterator it2 = members.constBegin();
+             it2 != members.constEnd();
              ++it2 )
             {
             if( (*it2)->in_group != *it1 )
@@ -329,8 +329,8 @@ void Group::getIcons()
 Group* Workspace::findGroup( Window leader ) const
     {
     assert( leader != None );
-    for( GroupList::ConstIterator it = groups.begin();
-         it != groups.end();
+    for( GroupList::ConstIterator it = groups.constBegin();
+         it != groups.constEnd();
          ++it )
         if( (*it)->leader() == leader )
             return *it;
@@ -343,8 +343,8 @@ Group* Workspace::findClientLeaderGroup( const Client* c ) const
     {
     TRANSIENCY_CHECK( c );
     Group* ret = NULL;
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it )
         {
         if( *it == c )
@@ -380,8 +380,8 @@ void Workspace::updateMinimizedOfTransients( Client* c )
     // if mainwindow is minimized or shaded, minimize transients too
     if ( c->isMinimized() || c->isShade() )
         {
-        for( ClientList::ConstIterator it = c->transients().begin();
-             it != c->transients().end();
+        for( ClientList::ConstIterator it = c->transients().constBegin();
+             it != c->transients().constEnd();
              ++it )
             {
             if( !(*it)->isMinimized()
@@ -394,8 +394,8 @@ void Workspace::updateMinimizedOfTransients( Client* c )
         }
     else
         { // else unmiminize the transients
-        for( ClientList::ConstIterator it = c->transients().begin();
-             it != c->transients().end();
+        for( ClientList::ConstIterator it = c->transients().constBegin();
+             it != c->transients().constEnd();
              ++it )
             {
             if( (*it)->isMinimized()
@@ -414,8 +414,8 @@ void Workspace::updateMinimizedOfTransients( Client* c )
  */
 void Workspace::updateOnAllDesktopsOfTransients( Client* c )
     {
-    for( ClientList::ConstIterator it = c->transients().begin();
-         it != c->transients().end();
+    for( ClientList::ConstIterator it = c->transients().constBegin();
+         it != c->transients().constEnd();
          ++it)
         {
         if( (*it)->isOnAllDesktops() != c->isOnAllDesktops())
@@ -427,8 +427,8 @@ void Workspace::updateOnAllDesktopsOfTransients( Client* c )
 void Workspace::checkTransients( Window w )
     {
     TRANSIENCY_CHECK( NULL );
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it )
         (*it)->checkTransient( w );
     }
@@ -639,8 +639,8 @@ void Client::removeFromMainClients()
         transientFor()->removeTransient( this );
     if( groupTransient())
         {
-        for( ClientList::ConstIterator it = group()->members().begin();
-             it != group()->members().end();
+        for( ClientList::ConstIterator it = group()->members().constBegin();
+             it != group()->members().constEnd();
              ++it )
             (*it)->removeTransient( this );
         }
@@ -675,14 +675,14 @@ void Client::cleanGrouping()
 //         it != mains.end();
 //         ++it )
 //        kDebug() << "MN2:" << *it;
-    for( ClientList::ConstIterator it = transients_list.begin();
-         it != transients_list.end();
+    for( ClientList::ConstIterator it = transients_list.constBegin();
+         it != transients_list.constEnd();
          )
         {
         if( (*it)->transientFor() == this )
             {
             removeTransient( *it );
-            it = transients_list.begin(); // restart, just in case something more has changed with the list
+            it = transients_list.constBegin(); // restart, just in case something more has changed with the list
             }
         else
             ++it;
@@ -705,8 +705,8 @@ void Client::cleanGrouping()
     ClientList group_members = group()->members();
     group()->removeMember( this );
     in_group = NULL;
-    for( ClientList::ConstIterator it = group_members.begin();
-         it != group_members.end();
+    for( ClientList::ConstIterator it = group_members.constBegin();
+         it != group_members.constEnd();
          ++it )
         (*it)->removeTransient( this );
 //    kDebug() << "CLEANGROUPING4:" << this;
@@ -723,14 +723,14 @@ void Client::cleanGrouping()
 void Client::checkGroupTransients()
     {
     TRANSIENCY_CHECK( this );
-    for( ClientList::ConstIterator it1 = group()->members().begin();
-         it1 != group()->members().end();
+    for( ClientList::ConstIterator it1 = group()->members().constBegin();
+         it1 != group()->members().constEnd();
          ++it1 )
         {
         if( !(*it1)->groupTransient()) // check all group transients in the group
             continue;                  // TODO optimize to check only the changed ones?
-        for( ClientList::ConstIterator it2 = group()->members().begin();
-             it2 != group()->members().end();
+        for( ClientList::ConstIterator it2 = group()->members().constBegin();
+             it2 != group()->members().constEnd();
              ++it2 ) // group transients can be transient only for others in the group,
             {        // so don't make them transient for the ones that are transient for it
             if( *it1 == *it2 )
@@ -756,8 +756,8 @@ void Client::checkGroupTransients()
             // transient for it - the indirect transiency actually shouldn't break anything,
             // but it can lead to exponentially expensive operations (#95231)
             // TODO this is pretty slow as well
-            for( ClientList::ConstIterator it3 = group()->members().begin();
-                 it3 != group()->members().end();
+            for( ClientList::ConstIterator it3 = group()->members().constBegin();
+                 it3 != group()->members().constEnd();
                  ++it3 )
                 {
                 if( *it1 == *it2 || *it2 == *it3 || *it1 == *it3 )
@@ -928,8 +928,8 @@ bool Client::hasTransientInternal( const Client* cl, bool indirect, ConstClientL
     if( set.contains( this ))
         return false;
     set.append( this );
-    for( ClientList::ConstIterator it = transients().begin();
-         it != transients().end();
+    for( ClientList::ConstIterator it = transients().constBegin();
+         it != transients().constEnd();
          ++it )
         if( (*it)->hasTransientInternal( cl, indirect, set ))
             return true;
@@ -943,8 +943,8 @@ ClientList Client::mainClients() const
     if( transientFor() != NULL )
         return ClientList() << const_cast< Client* >( transientFor());
     ClientList result;
-    for( ClientList::ConstIterator it = group()->members().begin();
-         it != group()->members().end();
+    for( ClientList::ConstIterator it = group()->members().constBegin();
+         it != group()->members().constEnd();
          ++it )
         if((*it)->hasTransient( this, false ))
             result.append( *it );
@@ -961,8 +961,8 @@ ClientList Client::allMainClients() const
 
 Client* Client::findModal( bool allow_itself )
     {
-    for( ClientList::ConstIterator it = transients().begin();
-         it != transients().end();
+    for( ClientList::ConstIterator it = transients().constBegin();
+         it != transients().constEnd();
          ++it )
         if( Client* ret = (*it)->findModal( true ))
             return ret;
@@ -1071,14 +1071,14 @@ void Client::checkGroup( Group* set_group, bool force )
             // no longer transient for ones in the old group
             if( old_group != NULL )
                 {
-                for( ClientList::ConstIterator it = old_group->members().begin();
-                     it != old_group->members().end();
+                for( ClientList::ConstIterator it = old_group->members().constBegin();
+                     it != old_group->members().constEnd();
                      ++it )
                     (*it)->removeTransient( this );
                 }
             // and make transient for all in the new group
-            for( ClientList::ConstIterator it = group()->members().begin();
-                 it != group()->members().end();
+            for( ClientList::ConstIterator it = group()->members().constBegin();
+                 it != group()->members().constEnd();
                  ++it )
                 {
                 if( *it == this )
@@ -1088,8 +1088,8 @@ void Client::checkGroup( Group* set_group, bool force )
             }
         // group transient splashscreens should be transient even for windows
         // in group mapped later
-        for( ClientList::ConstIterator it = group()->members().begin();
-             it != group()->members().end();
+        for( ClientList::ConstIterator it = group()->members().constBegin();
+             it != group()->members().constEnd();
              ++it )
             {
             if( !(*it)->isSplash())

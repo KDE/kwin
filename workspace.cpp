@@ -443,8 +443,8 @@ Workspace::~Workspace()
     blockStackingUpdates( true );
 // TODO    grabXServer();
     // use stacking_order, so that kwin --replace keeps stacking order
-    for( ClientList::ConstIterator it = stacking_order.begin();
-         it != stacking_order.end();
+    for( ClientList::ConstIterator it = stacking_order.constBegin();
+         it != stacking_order.constEnd();
          ++it )
         {
 	// only release the window
@@ -455,8 +455,8 @@ Workspace::~Workspace()
         clients.removeAll( *it );
         desktops.removeAll( *it );
         }
-    for( UnmanagedList::ConstIterator it = unmanaged.begin();
-         it != unmanaged.end();
+    for( UnmanagedList::ConstIterator it = unmanaged.constBegin();
+         it != unmanaged.constEnd();
          ++it )
         (*it)->release();
     delete tab_box;
@@ -760,8 +760,8 @@ void Workspace::updateCurrentTopMenu()
             {
             if( menu_client->isFullScreen())
                 block_desktop_menubar = true;
-            for( ClientList::ConstIterator it = menu_client->transients().begin();
-                 it != menu_client->transients().end();
+            for( ClientList::ConstIterator it = menu_client->transients().constBegin();
+                 it != menu_client->transients().constEnd();
                  ++it )
                 if( (*it)->isTopMenu())
                     {
@@ -776,8 +776,8 @@ void Workspace::updateCurrentTopMenu()
             }
         if( !menubar )
             { // try to find any topmenu from the application (#72113)
-            for( ClientList::ConstIterator it = active_client->group()->members().begin();
-                 it != active_client->group()->members().end();
+            for( ClientList::ConstIterator it = active_client->group()->members().constBegin();
+                 it != active_client->group()->members().constEnd();
                  ++it )
                 if( (*it)->isTopMenu())
                     {
@@ -792,8 +792,8 @@ void Workspace::updateCurrentTopMenu()
         Client* desktop = findDesktop( true, currentDesktop());
         if( desktop != NULL )
             {
-            for( ClientList::ConstIterator it = desktop->transients().begin();
-                 it != desktop->transients().end();
+            for( ClientList::ConstIterator it = desktop->transients().constBegin();
+                 it != desktop->transients().constEnd();
                  ++it )
                 if( (*it)->isTopMenu())
                     {
@@ -806,8 +806,8 @@ void Workspace::updateCurrentTopMenu()
         // thus the topmenu is not transient for it :-/.
         if( menubar == NULL )
             {
-            for( ClientList::ConstIterator it = topmenus.begin();
-                 it != topmenus.end();
+            for( ClientList::ConstIterator it = topmenus.constBegin();
+                 it != topmenus.constEnd();
                  ++it )
                 if( (*it)->wasOriginallyGroupTransient()) // kdesktop's topmenu has WM_TRANSIENT_FOR
                     {                                     // set pointing to the root window
@@ -836,7 +836,7 @@ void Workspace::updateCurrentTopMenu()
         }
 
     // ... then hide the other ones. Avoids flickers.
-    for ( ClientList::ConstIterator it = clients.begin(); it != clients.end(); ++it)
+    for ( ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
         {
         if( (*it)->isTopMenu() && (*it) != menubar )
             (*it)->hideClient( true );
@@ -849,8 +849,8 @@ void Workspace::updateToolWindows( bool also_hide )
     // TODO what if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if( !options->hideUtilityWindowsForInactive )
         {
-        for( ClientList::ConstIterator it = clients.begin();
-             it != clients.end();
+        for( ClientList::ConstIterator it = clients.constBegin();
+             it != clients.constEnd();
              ++it )
             (*it)->hideClient( false );
         return;
@@ -875,8 +875,8 @@ void Workspace::updateToolWindows( bool also_hide )
 
     // SELI but maybe it should - what if a new client has been added that's not in stacking order yet?
     ClientList to_show, to_hide;
-    for( ClientList::ConstIterator it = stacking_order.begin();
-         it != stacking_order.end();
+    for( ClientList::ConstIterator it = stacking_order.constBegin();
+         it != stacking_order.constEnd();
          ++it )
         {
         if( (*it)->isUtility() || (*it)->isMenu() || (*it)->isToolbar())
@@ -907,8 +907,8 @@ void Workspace::updateToolWindows( bool also_hide )
                 // have e.g. kicker as mainwindow
                 if( mainclients.isEmpty())
                     show = true;
-                for( ClientList::ConstIterator it2 = mainclients.begin();
-                     it2 != mainclients.end();
+                for( ClientList::ConstIterator it2 = mainclients.constBegin();
+                     it2 != mainclients.constEnd();
                      ++it2 )
                     {
                     if( (*it2)->isSpecialWindow())
@@ -928,8 +928,8 @@ void Workspace::updateToolWindows( bool also_hide )
             to_show.at( i )->hideClient( false );
     if( also_hide )
         {
-        for( ClientList::ConstIterator it = to_hide.begin();
-             it != to_hide.end();
+        for( ClientList::ConstIterator it = to_hide.constBegin();
+             it != to_hide.constEnd();
              ++it ) // from bottommost
             (*it)->hideClient( true );
         updateToolWindowsTimer.stop();
@@ -1020,8 +1020,8 @@ void Workspace::slotReconfigure()
         curtain.setGeometry( QApplication::desktop()->geometry() );
         curtain.show();
 #endif
-        for( ClientList::ConstIterator it = clients.begin();
-                it != clients.end();
+        for( ClientList::ConstIterator it = clients.constBegin();
+                it != clients.constEnd();
                 ++it )
             {
             (*it)->updateDecoration( true, true );
@@ -1269,8 +1269,8 @@ void ObscuringWindows::create( Client* c )
 ObscuringWindows::~ObscuringWindows()
     {
     max_cache_size = qMax( ( int )max_cache_size, obscuring_windows.count() + 4 ) - 1;
-    for( QList<Window>::ConstIterator it = obscuring_windows.begin();
-         it != obscuring_windows.end();
+    for( QList<Window>::ConstIterator it = obscuring_windows.constBegin();
+         it != obscuring_windows.constEnd();
          ++it )
         {
         XUnmapWindow( display(), *it );
@@ -1312,7 +1312,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
         current_desktop = new_desktop; // change the desktop (so that Client::updateVisibility() works)
 
-        for ( ClientList::ConstIterator it = stacking_order.begin(); it != stacking_order.end(); ++it)
+        for ( ClientList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it)
             if ( !(*it)->isOnDesktop( new_desktop ) && (*it) != movingClient )
                 {
                 if( (*it)->isShown( true ) && (*it)->isOnDesktop( old_desktop ))
@@ -1581,8 +1581,8 @@ void Workspace::setNumberOfDesktops( int n )
     // windows that would be hidden to the last visible desktop
     if( old_number_of_desktops > number_of_desktops )
         {
-        for( ClientList::ConstIterator it = clients.begin();
-              it != clients.end();
+        for( ClientList::ConstIterator it = clients.constBegin();
+              it != clients.constEnd();
               ++it)
             {
             if( !(*it)->isOnAllDesktops() && (*it)->desktop() > numberOfDesktops())
@@ -1635,8 +1635,8 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
         }
 
     ClientList transients_stacking_order = ensureStackingOrder( c->transients());
-    for( ClientList::ConstIterator it = transients_stacking_order.begin();
-         it != transients_stacking_order.end();
+    for( ClientList::ConstIterator it = transients_stacking_order.constBegin();
+         it != transients_stacking_order.constEnd();
          ++it )
         sendClientToDesktop( *it, desk, dont_activate );
     updateClientArea();
@@ -1708,8 +1708,8 @@ void Workspace::sendClientToScreen( Client* c, int screen )
         c->size().width(), c->size().height());
     c->checkWorkspacePosition();
     ClientList transients_stacking_order = ensureStackingOrder( c->transients());
-    for( ClientList::ConstIterator it = transients_stacking_order.begin();
-         it != transients_stacking_order.end();
+    for( ClientList::ConstIterator it = transients_stacking_order.constBegin();
+         it != transients_stacking_order.constEnd();
          ++it )
         sendClientToScreen( *it, screen );
     if( c->isActive())
@@ -2374,8 +2374,8 @@ void Workspace::lostTopMenuSelection()
     delete topmenu_space;
     topmenu_space = NULL;
     updateClientArea();
-    for( ClientList::ConstIterator it = topmenus.begin();
-         it != topmenus.end();
+    for( ClientList::ConstIterator it = topmenus.constBegin();
+         it != topmenus.constEnd();
          ++it )
         (*it)->checkWorkspacePosition();
     }
@@ -2523,15 +2523,15 @@ void Workspace::setShowingDesktop( bool showing )
         ClientList cls = stackingOrder();
         // find them first, then minimize, otherwise transients may get minimized with the window
         // they're transient for
-        for( ClientList::ConstIterator it = cls.begin();
-             it != cls.end();
+        for( ClientList::ConstIterator it = cls.constBegin();
+             it != cls.constEnd();
              ++it )
             {
             if( (*it)->isOnCurrentDesktop() && (*it)->isShown( true ) && !(*it)->isSpecialWindow())
                 showing_desktop_clients.prepend( *it ); // topmost first to reduce flicker
             }
-        for( ClientList::ConstIterator it = showing_desktop_clients.begin();
-             it != showing_desktop_clients.end();
+        for( ClientList::ConstIterator it = showing_desktop_clients.constBegin();
+             it != showing_desktop_clients.constEnd();
              ++it )
             (*it)->minimize();
         --block_focus;
@@ -2540,8 +2540,8 @@ void Workspace::setShowingDesktop( bool showing )
         }
     else
         {
-        for( ClientList::ConstIterator it = showing_desktop_clients.begin();
-             it != showing_desktop_clients.end();
+        for( ClientList::ConstIterator it = showing_desktop_clients.constBegin();
+             it != showing_desktop_clients.constEnd();
              ++it )
             (*it)->unminimize();
         if( showing_desktop_clients.count() > 0 )
@@ -2569,8 +2569,8 @@ void Workspace::resetShowingDesktop( bool keep_hidden )
     ++block_showing_desktop;
     if( !keep_hidden )
         {
-        for( ClientList::ConstIterator it = showing_desktop_clients.begin();
-             it != showing_desktop_clients.end();
+        for( ClientList::ConstIterator it = showing_desktop_clients.constBegin();
+             it != showing_desktop_clients.constEnd();
              ++it )
             (*it)->unminimize();
         }
@@ -2627,8 +2627,8 @@ void Workspace::slotBlockShortcuts( int data )
         global_shortcuts_disabled_for_client = false;
         }
     // update also Alt+LMB actions etc.
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it )
         (*it)->updateMouseGrab();
     }

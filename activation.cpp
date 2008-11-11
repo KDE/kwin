@@ -875,8 +875,8 @@ void Client::setActive( bool act )
     StackingUpdatesBlocker blocker( workspace());
     workspace()->updateClientLayer( this ); // active windows may get different layer
     ClientList mainclients = mainClients();
-    for( ClientList::ConstIterator it = mainclients.begin();
-         it != mainclients.end();
+    for( ClientList::ConstIterator it = mainclients.constBegin();
+         it != mainclients.constEnd();
          ++it )
         if( (*it)->isFullScreen()) // fullscreens go high even if their transient is active
             workspace()->updateClientLayer( *it );

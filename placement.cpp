@@ -187,7 +187,7 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/ )
             cxl = x; cxr = x + cw;
             cyt = y; cyb = y + ch;
             ClientList::ConstIterator l;
-            for(l = m_WorkspacePtr->stackingOrder().begin(); l != m_WorkspacePtr->stackingOrder().end() ; ++l) 
+            for(l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) 
                 {
                 if((*l)->isOnDesktop(desktop) &&
                    (*l)->isShown( false ) && (*l) != c) 
@@ -243,7 +243,7 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/ )
 
             // compare to the position of each client on the same desk
             ClientList::ConstIterator l;
-            for(l = m_WorkspacePtr->stackingOrder().begin(); l != m_WorkspacePtr->stackingOrder().end() ; ++l) 
+            for(l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) 
                 {
 
                 if ((*l)->isOnDesktop(desktop) &&
@@ -278,7 +278,7 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/ )
 
             //test the position of each window on the desk
             ClientList::ConstIterator l;
-            for(l = m_WorkspacePtr->stackingOrder().begin(); l != m_WorkspacePtr->stackingOrder().end() ; ++l) 
+            for(l = m_WorkspacePtr->stackingOrder().constBegin(); l != m_WorkspacePtr->stackingOrder().constEnd() ; ++l) 
                 {
                 if((*l)->isOnDesktop(desktop) &&
                     (*l) != c   &&  c->isShown( false )) 
@@ -481,8 +481,8 @@ void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement )
     Client* place_on = NULL;
     Client* place_on2 = NULL;
     int mains_count = 0;
-    for( ClientList::ConstIterator it = mainwindows.begin();
-         it != mainwindows.end();
+    for( ClientList::ConstIterator it = mainwindows.constBegin();
+         it != mainwindows.constEnd();
          ++it )
         {
         if( mainwindows.count() > 1 && (*it)->isSpecialWindow())
@@ -727,8 +727,8 @@ int Workspace::packPositionLeft( const Client* cl, int oldx, bool left_edge ) co
             QPoint( cl->geometry().left() - 1, cl->geometry().center().y()), cl->desktop()).left();
     if( oldx <= newx )
         return oldx;
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it)
         {
         if( !(*it)->isShown( false ) || !(*it)->isOnDesktop( active_client->desktop()))
@@ -750,8 +750,8 @@ int Workspace::packPositionRight( const Client* cl, int oldx, bool right_edge ) 
             QPoint( cl->geometry().right() + 1, cl->geometry().center().y()), cl->desktop()).right();
     if( oldx >= newx )
         return oldx;
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it)
         {
         if( !(*it)->isShown( false ) || !(*it)->isOnDesktop( cl->desktop()))
@@ -773,8 +773,8 @@ int Workspace::packPositionUp( const Client* cl, int oldy, bool top_edge ) const
             QPoint( cl->geometry().center().x(), cl->geometry().top() - 1 ), cl->desktop()).top();
     if( oldy <= newy )
         return oldy;
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it)
         {
         if( !(*it)->isShown( false ) || !(*it)->isOnDesktop( cl->desktop()))
@@ -796,8 +796,8 @@ int Workspace::packPositionDown( const Client* cl, int oldy, bool bottom_edge ) 
             QPoint( cl->geometry().center().x(), cl->geometry().bottom() + 1 ), cl->desktop()).bottom();
     if( oldy >= newy )
         return oldy;
-    for( ClientList::ConstIterator it = clients.begin();
-         it != clients.end();
+    for( ClientList::ConstIterator it = clients.constBegin();
+         it != clients.constEnd();
          ++it)
         {
         if( !(*it)->isShown( false ) || !(*it)->isOnDesktop( cl->desktop()))

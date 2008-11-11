@@ -169,8 +169,8 @@ bool Client::manage( Window w, bool isMapped )
             bool on_current = false;
             Client* maincl = NULL;
             // this is slightly duplicated from Placement::placeOnMainWindow()
-            for( ClientList::ConstIterator it = mainclients.begin();
-                 it != mainclients.end();
+            for( ClientList::ConstIterator it = mainclients.constBegin();
+                 it != mainclients.constEnd();
                  ++it )
                 {
                 if( mainclients.count() > 1 && (*it)->isSpecialWindow())
@@ -338,8 +338,8 @@ bool Client::manage( Window w, bool isMapped )
     if( init_minimize && isTransient())
         {
         ClientList mainclients = mainClients();
-        for( ClientList::ConstIterator it = mainclients.begin();
-             it != mainclients.end();
+        for( ClientList::ConstIterator it = mainclients.constBegin();
+             it != mainclients.constEnd();
              ++it )
             if( (*it)->isShown( true ))
                 init_minimize = false; // SELI even e.g. for NET::Utility?
@@ -351,8 +351,8 @@ bool Client::manage( Window w, bool isMapped )
         // use allMainClients(), to include also main clients of group transients
         // that have been optimized out in Client::checkGroupTransients()
         ClientList mainclients = allMainClients();
-        for( ClientList::ConstIterator it = mainclients.begin();
-             it != mainclients.end();
+        for( ClientList::ConstIterator it = mainclients.constBegin();
+             it != mainclients.constEnd();
              ++it )
             if( (*it)->isShown( true ))
                 visible_parent = true;
@@ -492,8 +492,8 @@ bool Client::manage( Window w, bool isMapped )
             workspace()->setCurrentDesktop( desktop());
 
         bool belongs_to_desktop = false;
-        for( ClientList::ConstIterator it = group()->members().begin();
-             it != group()->members().end();
+        for( ClientList::ConstIterator it = group()->members().constBegin();
+             it != group()->members().constEnd();
              ++it )
             if( (*it)->isDesktop())
                 {
