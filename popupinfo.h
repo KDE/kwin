@@ -38,10 +38,12 @@ class PopupInfo : public QWidget
         ~PopupInfo();
 
         void reset();
-        void hide();
         void showInfo(const QString &infoString);
 
         void reconfigure();
+
+    public slots:
+        void hide();
 
     protected:
         void paintEvent( QPaintEvent* );
