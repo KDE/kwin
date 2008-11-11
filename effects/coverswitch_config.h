@@ -47,6 +47,9 @@ class CoverSwitchEffectConfig : public KCModule
         virtual void load();
         virtual void defaults();
 
+    private slots:
+        void thumbnailsChanged();
+
     private:
         CoverSwitchEffectConfigForm* m_ui;
     };

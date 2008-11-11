@@ -48,7 +48,14 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
     connect(m_ui->checkAnimateStart, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkAnimateStop, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkReflection, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->checkThumbnails, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->checkDynamicThumbnails, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->spinThumbnailWindows, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->spinDuration, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->zPositionSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+
+    connect(m_ui->checkThumbnails, SIGNAL(stateChanged(int)), this, SLOT(thumbnailsChanged()));
+    connect(m_ui->checkDynamicThumbnails, SIGNAL(stateChanged(int)), this, SLOT(thumbnailsChanged()));
 
     load();
     }
@@ -59,44 +66,17 @@ void CoverSwitchEffectConfig::load()
 
     KConfigGroup conf = EffectsHandler::effectConfig( "CoverSwitch" );
 
-    int duration       = conf.readEntry( "Duration", 0 );
-    bool animateSwitch = conf.readEntry( "AnimateSwitch", true );
-    bool animateStart  = conf.readEntry( "AnimateStart", true );
-    bool animateStop   = conf.readEntry( "AnimateStop", true );
-    bool reflection    = conf.readEntry( "Reflection", true );
-    m_ui->spinDuration->setValue( duration );
-    if( animateSwitch )
-        {
-        m_ui->checkAnimateSwitch->setCheckState( Qt::Checked );
-        }
-    else
-        {
-        m_ui->checkAnimateSwitch->setCheckState( Qt::Unchecked );
-        }
-    if( animateStart )
-        {
-        m_ui->checkAnimateStart->setCheckState( Qt::Checked );
-        }
-    else
-        {
-        m_ui->checkAnimateStart->setCheckState( Qt::Unchecked );
-        }
-    if( animateStop )
-        {
-        m_ui->checkAnimateStop->setCheckState( Qt::Checked );
-        }
-    else
-        {
-        m_ui->checkAnimateStop->setCheckState( Qt::Unchecked );
-        }
-    if( reflection )
-        {
-        m_ui->checkReflection->setCheckState( Qt::Checked );
-        }
-    else
-        {
-        m_ui->checkReflection->setCheckState( Qt::Unchecked );
-        }
+    m_ui->spinDuration->setValue( conf.readEntry( "Duration", 0 ) );
+    m_ui->checkAnimateSwitch->setChecked( conf.readEntry( "AnimateSwitch", true ));
+    m_ui->checkAnimateStart->setChecked( conf.readEntry( "AnimateStart", true ));
+    m_ui->checkAnimateStop->setChecked( conf.readEntry( "AnimateStop", true ));
+    m_ui->checkReflection->setChecked( conf.readEntry( "Reflection", true ));
+    m_ui->checkThumbnails->setChecked( conf.readEntry( "Thumbnails", true ));
+    m_ui->checkDynamicThumbnails->setChecked( conf.readEntry( "DynamicThumbnails", true ));
+    m_ui->spinThumbnailWindows->setValue( conf.readEntry( "ThumbnailWindows", 8 ));
+    m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 900 ));
+
+    thumbnailsChanged();
 
     emit changed(false);
     }
@@ -106,10 +86,14 @@ void CoverSwitchEffectConfig::save()
     KConfigGroup conf = EffectsHandler::effectConfig( "CoverSwitch" );
 
     conf.writeEntry( "Duration", m_ui->spinDuration->value() );
-    conf.writeEntry( "AnimateSwitch", m_ui->checkAnimateSwitch->checkState() == Qt::Checked ? true : false );
-    conf.writeEntry( "AnimateStart", m_ui->checkAnimateStart->checkState() == Qt::Checked ? true : false );
-    conf.writeEntry( "AnimateStop", m_ui->checkAnimateStop->checkState() == Qt::Checked ? true : false );
-    conf.writeEntry( "Reflection", m_ui->checkReflection->checkState() == Qt::Checked ? true : false );
+    conf.writeEntry( "AnimateSwitch", m_ui->checkAnimateSwitch->isChecked() );
+    conf.writeEntry( "AnimateStart", m_ui->checkAnimateStart->isChecked() );
+    conf.writeEntry( "AnimateStop", m_ui->checkAnimateStop->isChecked() );
+    conf.writeEntry( "Reflection", m_ui->checkReflection->isChecked() );
+    conf.writeEntry( "Thumbnails", m_ui->checkThumbnails->isChecked() );
+    conf.writeEntry( "DynamicThumbnails", m_ui->checkDynamicThumbnails->isChecked() );
+    conf.writeEntry( "ThumbnailWindows", m_ui->spinThumbnailWindows->value() );
+    conf.writeEntry( "ZPosition", m_ui->zPositionSlider->value() );
 
     conf.sync();
 
@@ -124,9 +108,20 @@ void CoverSwitchEffectConfig::defaults()
     m_ui->checkAnimateStart->setCheckState( Qt::Checked );
     m_ui->checkAnimateStop->setCheckState( Qt::Checked );
     m_ui->checkReflection->setCheckState( Qt::Checked );
+    m_ui->checkThumbnails->setCheckState( Qt::Checked );
+    m_ui->checkDynamicThumbnails->setCheckState( Qt::Checked );
+    m_ui->spinThumbnailWindows->setValue( 8 );
+    m_ui->zPositionSlider->setValue( 900 );
     emit changed(true);
     }
 
+void CoverSwitchEffectConfig::thumbnailsChanged()
+    {
+    bool enabled = m_ui->checkThumbnails->isChecked() && m_ui->checkDynamicThumbnails->isChecked();
+    m_ui->checkDynamicThumbnails->setEnabled( m_ui->checkThumbnails->isChecked() );
+    m_ui->spinThumbnailWindows->setEnabled( enabled );
+    m_ui->labelThumbnailWindows->setEnabled( enabled );
+    }
 
 } // namespace
 

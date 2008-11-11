@@ -21,7 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_COVERSWITCH_H
 #define KWIN_COVERSWITCH_H
 
+#include <QHash>
+#include <QPixmap>
+#include <QRect>
+#include <QRegion>
+#include <QSize>
+#include <QQueue>
+
 #include <kwineffects.h>
+#include <kwinglutils.h>
 
 namespace KWin
 {
@@ -41,13 +49,23 @@ class CoverSwitchEffect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
+        virtual void windowInputMouseEvent( Window w, QEvent* e );
 
     private:
         void paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows, QList< EffectWindow* >* rightWindows,
         bool reflectedWindows = false );
-        void paintWindowCover( EffectWindow* w, QRect windowRect, bool reflectedWindow, float opacity = 1.0 );
+        void paintWindowCover( EffectWindow* w, bool reflectedWindow, WindowPaintData& data );
         void paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow  );
         void paintWindows( QList< EffectWindow* >* windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
+        // thumbnail bar
+        class ItemInfo;
+        void calculateFrameSize();
+        void calculateItemSizes();
+        void paintFrame();
+        void paintHighlight( QRect area );
+        void paintWindowThumbnail( EffectWindow* w );
+        void paintWindowIcon( EffectWindow* w );
+
         bool mActivated;
         float angle;
         bool animateSwitch;
@@ -56,17 +74,54 @@ class CoverSwitchEffect
         bool animation;
         bool start;
         bool stop;
-        bool forward;
         bool reflection;
         int animationDuration;
-        int selectedWindow;
-        int rearrangeWindows;
         bool stopRequested;
         bool startRequested;
         TimeLine timeLine;
         QRect area;
-        bool twinview;
         Window input;
+        float zPosition;
+        float scaleFactor;
+        enum Direction
+            {
+            Left,
+            Right
+            };
+        Direction direction;
+        QQueue<Direction> scheduled_directions;
+        EffectWindow* selected_window;
+        int activeScreen;
+        QList< EffectWindow* > leftWindows;
+        QList< EffectWindow* > rightWindows;
+
+        // thumbnail bar
+        bool thumbnails;
+        bool dynamicThumbnails;
+        int thumbnailWindows;
+        QHash< EffectWindow*, ItemInfo* > windows;
+        QRect frame_area;
+        int frame_margin;
+        int highlight_margin;
+        QSize item_max_size; // maximum item display size (including highlight)
+        QColor color_frame;
+        QColor color_highlight;
+        QColor color_text;
+        EffectWindow* edge_window;
+        EffectWindow* right_window;
+        QRect highlight_area;
+        bool highlight_is_set;
+
+    };
+
+class CoverSwitchEffect::ItemInfo
+    {
+    public:
+        QRect area; // maximal painting area, including any frames/highlights/etc.
+        QRegion clickable;
+        QRect thumbnail;
+        QPixmap icon;
+        GLTexture iconTexture;
     };
 
 } // namespace
