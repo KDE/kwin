@@ -49,6 +49,7 @@ SnowEffect::SnowEffect()
     : texture( NULL )
     , flakes( NULL )
     , active( false)
+    , snowBehindWindows( false )
     {
     srandom( std::time( NULL ) );
     lastFlakeTime = QTime::currentTime();
@@ -75,6 +76,7 @@ void SnowEffect::reconfigure( ReconfigureFlags )
     mMaxFlakeSize = conf.readEntry("MaxFlakes", 50);
     mMaxVSpeed = conf.readEntry("MaxVSpeed", 2);
     mMaxHSpeed = conf.readEntry("MaxHSpeed", 1);
+    snowBehindWindows = conf.readEntry("BehindWindows", false);
     }
 
 void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -133,42 +135,48 @@ void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 void SnowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     effects->paintScreen( mask, region, data ); // paint normal screen
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( active )
-        {
-        if(! texture ) loadTexture();
-        if( texture )
-            {
-            glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-            texture->bind();
-            glEnable( GL_BLEND );
-            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    if( active && !snowBehindWindows )
+        snowing( region );
+    }
 
-            for (int i=0; i<flakes->count(); i++)
-                {
-                SnowFlake flake = flakes->at(i);
-                
-                // save the matrix
-                glPushMatrix();
-                
-                // translate to the center of the flake
-                glTranslatef(flake.getWidth()/2 + flake.getX(), flake.getHeight()/2 + flake.getY(), 0);
-                
-                // rotate around the Z-axis
-                glRotatef(flake.getRotationAngle(), 0.0, 0.0, 1.0);
-                
-                // translate back to the starting point
-                glTranslatef(-flake.getWidth()/2 - flake.getX(), -flake.getHeight()/2 - flake.getY(), 0);
-                
-                // paint the snowflake
-                texture->render( region, flake.getRect());
-                
-                // restore the matrix
-                glPopMatrix();
-                }
-            texture->unbind();
-            glPopAttrib();
+void SnowEffect::snowing( QRegion& region )
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if(! texture ) loadTexture();
+    if( texture )
+        {
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        texture->bind();
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+        glNewList( list, GL_COMPILE_AND_EXECUTE );
+        for (int i=0; i<flakes->count(); i++)
+            {
+            SnowFlake flake = flakes->at(i);
+            
+            // save the matrix
+            glPushMatrix();
+            
+            // translate to the center of the flake
+            glTranslatef(flake.getWidth()/2 + flake.getX(), flake.getHeight()/2 + flake.getY(), 0);
+            
+            // rotate around the Z-axis
+            glRotatef(flake.getRotationAngle(), 0.0, 0.0, 1.0);
+            
+            // translate back to the starting point
+            glTranslatef(-flake.getWidth()/2 - flake.getX(), -flake.getHeight()/2 - flake.getY(), 0);
+            
+            // paint the snowflake
+            texture->render( region, flake.getRect());
+            
+            // restore the matrix
+            glPopMatrix();
             }
+        glEndList();
+        glDisable( GL_BLEND );
+        texture->unbind();
+        glPopAttrib();
         }
 #endif
     }
@@ -182,10 +190,25 @@ void SnowEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
+void SnowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+    {
+    effects->paintWindow( w, mask, region, data );
+    if( active && w->isDesktop() && snowBehindWindows )
+        snowing( region );
+    }
+
 void SnowEffect::toggle()
     {
     active = !active;
-    if (!active) flakes->clear();
+    if( active )
+        {
+        list = glGenLists(1);
+        }
+    else
+        {
+        glDeleteLists( list, 1 );
+        flakes->clear();
+        }
     effects->addRepaintFull();
     }
 

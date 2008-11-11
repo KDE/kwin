@@ -71,11 +71,13 @@ class SnowEffect
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
+        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
     private slots:
         void toggle();
     private:
         void loadTexture();
+        void snowing( QRegion& region );
         GLTexture* texture;
         QList<SnowFlake>* flakes;
         QTime lastFlakeTime;
@@ -86,6 +88,8 @@ class SnowEffect
         int mMaxVSpeed;
         int mMaxHSpeed;
         bool active;
+        GLuint list;
+        bool snowBehindWindows;
     };
 
 } // namespace

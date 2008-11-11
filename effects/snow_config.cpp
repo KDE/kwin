@@ -56,6 +56,7 @@ SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->maxSizeFlake, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->maxVSpeed, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->maxHSpeed, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->snowBehindWindows, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     m_actionCollection = new KActionCollection( this, componentData() );
     m_actionCollection->setConfigGroup("Snow");
@@ -88,6 +89,7 @@ void SnowEffectConfig::load()
     int maxFlake = conf.readEntry("MaxFlakes", 50);
     int maxVSpeed = conf.readEntry("MaxVSpeed", 2);
     int maxHSpeed = conf.readEntry("MaxHSpeed", 1);
+    m_ui->snowBehindWindows->setChecked( conf.readEntry("BehindWindows", false));
     m_ui->numberFlakes->setValue( number );
     m_ui->minSizeFlake->setValue( minFlake );
     m_ui->maxSizeFlake->setValue( maxFlake );
@@ -108,6 +110,7 @@ void SnowEffectConfig::save()
     conf.writeEntry("MaxFlakes", m_ui->maxSizeFlake->value());
     conf.writeEntry("MaxVSpeed", m_ui->maxVSpeed->value());
     conf.writeEntry("MaxHSpeed", m_ui->maxHSpeed->value());
+    conf.writeEntry("BehindWindows", m_ui->snowBehindWindows->isChecked());
 
     m_ui->editor->save();   // undo() will restore to this state from now on
 
@@ -125,6 +128,7 @@ void SnowEffectConfig::defaults()
     m_ui->maxSizeFlake->setValue( 50 );
     m_ui->maxVSpeed->setValue( 2 );
     m_ui->maxHSpeed->setValue( 1 );
+    m_ui->snowBehindWindows->setChecked( false );
     m_ui->editor->allDefault();
     emit changed(true);
     }
