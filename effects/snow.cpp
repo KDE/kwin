@@ -50,6 +50,9 @@ SnowEffect::SnowEffect()
     , flakes( NULL )
     , active( false)
     , snowBehindWindows( false )
+    , mShader( 0 )
+    , mInited( false )
+    , mUseShader( true )
     {
     srandom( std::time( NULL ) );
     lastFlakeTime = QTime::currentTime();
@@ -66,6 +69,7 @@ SnowEffect::~SnowEffect()
     {
     delete texture;
     delete flakes;
+    delete mShader;
     }
 
 void SnowEffect::reconfigure( ReconfigureFlags )
@@ -145,35 +149,73 @@ void SnowEffect::snowing( QRegion& region )
     if(! texture ) loadTexture();
     if( texture )
         {
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+        glActiveTexture(GL_TEXTURE0);
         texture->bind();
+        if( mUseShader && !mInited )
+            mUseShader = loadShader();
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-        glNewList( list, GL_COMPILE_AND_EXECUTE );
+        if( mUseShader )
+            {
+            mShader->bind();
+            glNewList( list, GL_COMPILE_AND_EXECUTE );
+            glBegin( GL_QUADS );
+            }
+        else
+            glNewList( list, GL_COMPILE_AND_EXECUTE );
         for (int i=0; i<flakes->count(); i++)
             {
             SnowFlake flake = flakes->at(i);
-            
-            // save the matrix
-            glPushMatrix();
-            
-            // translate to the center of the flake
-            glTranslatef(flake.getWidth()/2 + flake.getX(), flake.getHeight()/2 + flake.getY(), 0);
-            
-            // rotate around the Z-axis
-            glRotatef(flake.getRotationAngle(), 0.0, 0.0, 1.0);
-            
-            // translate back to the starting point
-            glTranslatef(-flake.getWidth()/2 - flake.getX(), -flake.getHeight()/2 - flake.getY(), 0);
-            
-            // paint the snowflake
-            texture->render( region, flake.getRect());
-            
-            // restore the matrix
-            glPopMatrix();
+            if( snowBehindWindows && !region.contains( flake.getRect() ) )
+                continue;
+
+            if( mUseShader )
+                {
+                // use shader
+                mShader->setAttribute( "angle", flake.getRotationAngle() );
+                mShader->setAttribute( "x", flake.getWidth()/2 + flake.getX() );
+                mShader->setAttribute( "y", flake.getHeight()/2 + flake.getY() );
+                glTexCoord2f( 0.0f, 0.0f );
+                glVertex2i( flake.getRect().x(), flake.getRect().y() );
+                glTexCoord2f( 1.0f, 0.0f );
+                glVertex2i( flake.getRect().x()+flake.getRect().width(), flake.getRect().y() );
+                glTexCoord2f( 1.0f, 1.0f );
+                glVertex2i( flake.getRect().x()+flake.getRect().width(), flake.getRect().y()+flake.getRect().height() );
+                glTexCoord2f( 0.0f, 1.0f );
+                glVertex2i( flake.getRect().x(), flake.getRect().y()+flake.getRect().height() );
+                }
+            else
+                {
+                // no shader
+                // save the matrix
+                glPushMatrix();
+                
+                // translate to the center of the flake
+                glTranslatef(flake.getWidth()/2 + flake.getX(), flake.getHeight()/2 + flake.getY(), 0);
+                
+                // rotate around the Z-axis
+                glRotatef(flake.getRotationAngle(), 0.0, 0.0, 1.0);
+                
+                // translate back to the starting point
+                glTranslatef(-flake.getWidth()/2 - flake.getX(), -flake.getHeight()/2 - flake.getY(), 0);
+                
+                // paint the snowflake
+                texture->render( region, flake.getRect());
+                
+                // restore the matrix
+                glPopMatrix();
+                }
             }
-        glEndList();
+        if( mUseShader )
+            {
+            glEnd();
+            glEndList();
+            mShader->unbind();
+            }
+        else
+            glEndList();
         glDisable( GL_BLEND );
         texture->unbind();
         glPopAttrib();
@@ -210,6 +252,39 @@ void SnowEffect::toggle()
         flakes->clear();
         }
     effects->addRepaintFull();
+    }
+
+bool SnowEffect::loadShader()
+    {
+    mInited = true;
+    if( !(GLShader::fragmentShaderSupported() &&
+        (effects->compositingType() == OpenGLCompositing)) )
+        {
+        kDebug() << "Shaders not supported - waisting CPU cycles" << endl;
+        return false;
+        }
+    QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/snow.frag");
+    QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/snow.vert");
+    if(fragmentshader.isEmpty() || vertexshader.isEmpty())
+        {
+        kDebug() << "Couldn't locate shader files" << endl;
+        return false;
+        }
+
+    mShader = new GLShader(vertexshader, fragmentshader);
+    if(!mShader->isValid())
+        {
+        kDebug() << "The shader failed to load!" << endl;
+        return false;
+        }
+    else
+        {
+        mShader->bind();
+        mShader->setUniform( "snowTexture", 0 );
+        mShader->unbind();
+        }
+    kDebug() << "using shader";
+    return true;
     }
 
 void SnowEffect::loadTexture()

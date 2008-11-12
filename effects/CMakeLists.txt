@@ -166,6 +166,8 @@ if(KWIN_HAVE_OPENGL_COMPOSITING)
         data/lookingglass.frag
         data/lookingglass.vert
         data/shadow-texture.png
+        data/snow.frag
+        data/snow.vert
         data/snowflake.png
         data/circle.png
         data/circle-edgy.png

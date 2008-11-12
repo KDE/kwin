@@ -78,6 +78,7 @@ class SnowEffect
     private:
         void loadTexture();
         void snowing( QRegion& region );
+        bool loadShader();
         GLTexture* texture;
         QList<SnowFlake>* flakes;
         QTime lastFlakeTime;
@@ -90,6 +91,9 @@ class SnowEffect
         bool active;
         GLuint list;
         bool snowBehindWindows;
+        GLShader* mShader;
+        bool mInited;
+        bool mUseShader;
     };
 
 } // namespace
