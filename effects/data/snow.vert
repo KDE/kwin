@@ -17,15 +17,31 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-attribute float angle;
-attribute float x;
-attribute float y;
+uniform float angle;
+uniform int x;
+uniform int width;
+uniform int height;
+varying float discarding;
+uniform int hSpeed;
+uniform int vSpeed;
+uniform int frames;
 
 void main()
 {
-    float radian = radians(angle);
-    mat2 rotation = mat2( cos(radian), sin(radian), -sin(radian), cos(radian) );
-    vec2 vertex = (gl_Vertex.xy-vec2(x, y))*rotation+vec2(x, y);
     gl_TexCoord[0]  = gl_MultiTexCoord0;
+    float radian = radians( angle*float(frames) );
+    mat2 rotation = mat2( cos(radian), sin(radian), -sin(radian), cos(radian) );
+    float xCoord;
+    float yCoord;
+    if( gl_MultiTexCoord0.s == 0.0 )
+        xCoord =  -float(width)*0.5;
+    else
+        xCoord = float(width)*0.5;
+    if( gl_MultiTexCoord0.t == 0.0 )
+        yCoord =  -float(height)*0.5;
+    else
+        yCoord = float(height)*0.5;
+    vec2 vertex = vec2( xCoord, yCoord );
+    vertex = (vertex)*rotation + vec2( float(x), 0.0 ) + vec2(hSpeed, vSpeed)*float(frames);
     gl_Position = gl_ModelViewProjectionMatrix * vec4(vertex, gl_Vertex.zw);
 }

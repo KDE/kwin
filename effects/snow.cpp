@@ -31,8 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kstandarddirs.h>
 
 #include <kdebug.h>
-#include <QApplication>
-#include <QDesktopWidget>
 
 #include <ctime>
 
@@ -47,7 +45,6 @@ KWIN_EFFECT( snow, SnowEffect )
 
 SnowEffect::SnowEffect()
     : texture( NULL )
-    , flakes( NULL )
     , active( false)
     , snowBehindWindows( false )
     , mShader( 0 )
@@ -55,7 +52,6 @@ SnowEffect::SnowEffect()
     , mUseShader( true )
     {
     srandom( std::time( NULL ) );
-    lastFlakeTime = QTime::currentTime();
     nextFlakeMillis = 0;
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = static_cast< KAction* >( actionCollection->addAction( "Snow" ));
@@ -68,8 +64,8 @@ SnowEffect::SnowEffect()
 SnowEffect::~SnowEffect()
     {
     delete texture;
-    delete flakes;
-    delete mShader;
+    if( active )
+        delete mShader;
     }
 
 void SnowEffect::reconfigure( ReconfigureFlags )
@@ -87,57 +83,32 @@ void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if ( active )
         {
-        if (! flakes )
-            {
-            flakes = new QList<SnowFlake>();
-            lastFlakeTime.start();
-            }
-        int count = flakes->count();
-        for (int i=0; i<count; i++)
-            {
-            // move flake to bottom. Therefore pop the flake, change x and y and push
-            // flake back to QVector
-            SnowFlake flake = flakes->first();
-            flakes->pop_front();
-            // if flake has reached bottom, left or right don't push it back
-            if ( flake.getY() >= QApplication::desktop()->geometry().bottom() )
-                {
-                continue;
-                }
-            else if (flake.getX()+flake.getWidth() <= QApplication::desktop()->geometry().left() )
-                {
-                continue;
-                }
-            else if (flake.getX() >= QApplication::desktop()->geometry().right() )
-                {
-                continue;
-                }
-            flake.updateSpeedAndRotation();
-            flakes->append(flake);
-            }
             // if number of active snowflakes is smaller than maximum number
             // create a random new snowflake
-            if ( ( lastFlakeTime.elapsed() >= nextFlakeMillis ) && flakes->count() < mNumberFlakes)
+            nextFlakeMillis -= time;
+            if ( ( nextFlakeMillis <= 0 ) && flakes.count() < mNumberFlakes)
                 {
                 int size = 0;
                 while ( size < mMinFlakeSize )
                     size = random() % mMaxFlakeSize;
-                SnowFlake flake = SnowFlake( random() % (QApplication::desktop()->geometry().right() - size), -1 * size, size, size, mMaxVSpeed, mMaxHSpeed );
-                flakes->append( flake );
+                SnowFlake flake = SnowFlake( random() % (displayWidth() - size), -1 * size, size, size, mMaxVSpeed, mMaxHSpeed );
+                flakes.append( flake );
 
                 // calculation of next time of snowflake
                 // depends on the time the flow needs to get to the bottom (screen size)
                 // and the fps
                 long next = ((500/(time+5))*(Effect::displayHeight()/flake.getVSpeed()))/mNumberFlakes;
                 nextFlakeMillis = next;
-                lastFlakeTime.restart();
                 }
+        data.mask |= PAINT_SCREEN_TRANSFORMED;
         }
     effects->prePaintScreen( data, time );
     }
 
 void SnowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
+    if( active && snowBehindWindows )        
+        repaintRegion = QRegion( 0, 0, displayWidth(), displayHeight() );
     effects->paintScreen( mask, region, data ); // paint normal screen
     if( active && !snowBehindWindows )
         snowing( region );
@@ -145,7 +116,6 @@ void SnowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
 void SnowEffect::snowing( QRegion& region )
     {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if(! texture ) loadTexture();
     if( texture )
         {
@@ -160,34 +130,33 @@ void SnowEffect::snowing( QRegion& region )
         if( mUseShader )
             {
             mShader->bind();
-            glNewList( list, GL_COMPILE_AND_EXECUTE );
-            glBegin( GL_QUADS );
             }
         else
             glNewList( list, GL_COMPILE_AND_EXECUTE );
-        for (int i=0; i<flakes->count(); i++)
+        for (int i=0; i<flakes.count(); i++)
             {
-            SnowFlake flake = flakes->at(i);
-            if( snowBehindWindows && !region.contains( flake.getRect() ) )
+            SnowFlake& flake = flakes[i];
+            if( flake.addFrame() == 0 )
+                {
+                flakes.removeAt( i-- );
                 continue;
+                }
 
             if( mUseShader )
                 {
                 // use shader
-                mShader->setAttribute( "angle", flake.getRotationAngle() );
-                mShader->setAttribute( "x", flake.getWidth()/2 + flake.getX() );
-                mShader->setAttribute( "y", flake.getHeight()/2 + flake.getY() );
-                glTexCoord2f( 0.0f, 0.0f );
-                glVertex2i( flake.getRect().x(), flake.getRect().y() );
-                glTexCoord2f( 1.0f, 0.0f );
-                glVertex2i( flake.getRect().x()+flake.getRect().width(), flake.getRect().y() );
-                glTexCoord2f( 1.0f, 1.0f );
-                glVertex2i( flake.getRect().x()+flake.getRect().width(), flake.getRect().y()+flake.getRect().height() );
-                glTexCoord2f( 0.0f, 1.0f );
-                glVertex2i( flake.getRect().x(), flake.getRect().y()+flake.getRect().height() );
+                mShader->setUniform( "angle", flake.getRotationSpeed() );
+                mShader->setUniform( "x", flake.getX() );
+                mShader->setUniform( "hSpeed", flake.getHSpeed() );
+                mShader->setUniform( "vSpeed", flake.getVSpeed() );
+                mShader->setUniform( "frames", flake.getFrames() );
+                mShader->setUniform( "width", flake.getWidth() );
+                mShader->setUniform( "height", flake.getHeight() );
+                glCallList( list );
                 }
             else
                 {
+                flake.updateSpeedAndRotation();
                 // no shader
                 // save the matrix
                 glPushMatrix();
@@ -210,8 +179,6 @@ void SnowEffect::snowing( QRegion& region )
             }
         if( mUseShader )
             {
-            glEnd();
-            glEndList();
             mShader->unbind();
             }
         else
@@ -220,20 +187,26 @@ void SnowEffect::snowing( QRegion& region )
         texture->unbind();
         glPopAttrib();
         }
-#endif
     }
 
 void SnowEffect::postPaintScreen()
     {
     if( active )
         {
-        effects->addRepaintFull();
+        if( snowBehindWindows )
+            effects->addRepaint( repaintRegion );
+        else
+            effects->addRepaintFull();
         }
     effects->postPaintScreen();
     }
 
 void SnowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
+    if( active && snowBehindWindows && !w->isDesktop() && !w->isDock() )
+        {
+        repaintRegion -= QRegion( w->geometry() );
+        }
     effects->paintWindow( w, mask, region, data );
     if( active && w->isDesktop() && snowBehindWindows )
         snowing( region );
@@ -241,6 +214,7 @@ void SnowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 
 void SnowEffect::toggle()
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     active = !active;
     if( active )
         {
@@ -249,9 +223,16 @@ void SnowEffect::toggle()
     else
         {
         glDeleteLists( list, 1 );
-        flakes->clear();
+        flakes.clear();
+        if( mUseShader )
+            {
+            delete mShader;
+            mInited = false;
+            mUseShader = true;
+            }
         }
     effects->addRepaintFull();
+#endif
     }
 
 bool SnowEffect::loadShader()
@@ -284,17 +265,28 @@ bool SnowEffect::loadShader()
         mShader->unbind();
         }
     kDebug() << "using shader";
+    
+    glNewList( list, GL_COMPILE );
+    glBegin( GL_QUADS );
+    glTexCoord2f( 0.0f, 0.0f );
+    glVertex2i( 0, 0 );
+    glTexCoord2f( 1.0f, 0.0f );
+    glVertex2i( 0, 0 );
+    glTexCoord2f( 1.0f, 1.0f );
+    glVertex2i( 0, 0 );
+    glTexCoord2f( 0.0f, 1.0f );
+    glVertex2i( 0, 0 );
+    glEnd();
+    glEndList();
     return true;
     }
 
 void SnowEffect::loadTexture()
     {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     QString file = KGlobal::dirs()->findResource( "appdata", "snowflake.png" );
     if( file.isEmpty())
         return;
     texture = new GLTexture( file );
-#endif
     }
 
 
@@ -312,6 +304,12 @@ SnowFlake::SnowFlake(int x, int y, int width, int height, int maxVSpeed, int max
     rotationSpeed = random()%4 - 2;
     if(rotationSpeed == 0) rotationSpeed = 0.5;
     rect = QRect(x, y, width, height);
+    frameCounter = 0;
+    maxFrames = displayHeight() / vSpeed;
+    if( hSpeed > 0 )
+        maxFrames = qMin( maxFrames, (displayWidth() - x)/hSpeed );
+    else if( hSpeed < 0 )
+        maxFrames = qMin( maxFrames, (x + width)/(-hSpeed) );
     }
 
 SnowFlake::~SnowFlake()
@@ -337,6 +335,11 @@ void SnowFlake::updateSpeedAndRotation()
 float SnowFlake::getRotationAngle()
     {
     return rotationAngle;
+    }
+
+float SnowFlake::getRotationSpeed()
+    {
+    return rotationSpeed;
     }
 
 int SnowFlake::getVSpeed()
@@ -382,6 +385,16 @@ void SnowFlake::setX(int x)
 void SnowFlake::setY(int y)
     {
     rect.setY(y);
+    }
+
+int SnowFlake::addFrame()
+    {
+    return ( maxFrames - (++frameCounter) );
+    }
+
+int SnowFlake::getFrames()
+    {
+    return frameCounter;
     }
 
 } // namespace

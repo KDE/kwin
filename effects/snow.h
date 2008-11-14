@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <qobject.h>
 
 #include <QList>
-#include <QTime>
 
 namespace KWin
 {
@@ -41,11 +40,14 @@ class SnowFlake
         int getHSpeed();
         int getVSpeed();
         float getRotationAngle();
+        float getRotationSpeed();
         void updateSpeedAndRotation();
+        int addFrame();
         int getHeight();
         int getWidth();
         int getX();
         int getY();
+        int getFrames();
         QRect getRect();
         void setHeight(int height);
         void setWidth(int width);
@@ -56,6 +58,8 @@ class SnowFlake
         QRect rect;
         int vSpeed;
         int hSpeed;
+        int frameCounter;
+        int maxFrames;
         float rotationAngle;
         float rotationSpeed;
     };
@@ -80,8 +84,7 @@ class SnowEffect
         void snowing( QRegion& region );
         bool loadShader();
         GLTexture* texture;
-        QList<SnowFlake>* flakes;
-        QTime lastFlakeTime;
+        QList<SnowFlake> flakes;
         long nextFlakeMillis;
         int mNumberFlakes;
         int mMinFlakeSize;
@@ -94,6 +97,7 @@ class SnowEffect
         GLShader* mShader;
         bool mInited;
         bool mUseShader;
+        QRegion repaintRegion;
     };
 
 } // namespace
