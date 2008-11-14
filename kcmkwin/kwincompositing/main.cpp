@@ -194,6 +194,7 @@ void KWinCompositingConfig::compositingEnabled(bool enabled)
     ui.compositingOptionsContainer->setEnabled(enabled);
     ui.tabWidget->setTabEnabled(1, enabled);
     ui.tabWidget->setTabEnabled(2, enabled);
+    ui.tabWidget->setTabEnabled(3, enabled);
 }
 
 void KWinCompositingConfig::showConfirmDialog(bool reinitCompositing)
