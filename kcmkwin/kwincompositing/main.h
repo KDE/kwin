@@ -54,8 +54,7 @@ class KWinCompositingConfig : public KCModule
 
     public slots:
         virtual void compositingEnabled(bool enabled);
-        virtual void showAdvancedOptions();
-        virtual void showConfirmDialog();
+        virtual void showConfirmDialog(bool reinitCompositing);
         void currentTabChanged(int tab);
 
         virtual void load();
@@ -65,12 +64,14 @@ class KWinCompositingConfig : public KCModule
 
         void loadGeneralTab();
         void loadEffectsTab();
+        void loadAdvancedTab();
         void loadElectricBorders();
         void saveGeneralTab();
         void saveEffectsTab();
+        bool saveAdvancedTab();
         void electricBorderSelectionChanged(int edge, int index);
 
-        void configChanged();
+        void configChanged(bool reinitCompositing);
         void initEffectSelector();
 
     private:

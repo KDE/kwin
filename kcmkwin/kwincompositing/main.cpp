@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "main.h"
 
-#include "advanced.h"
 #include "kwin_interface.h"
 
 #include <kaboutdata.h>
@@ -79,7 +78,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.statusTitleWidget->hide();
     setupElectricBorders();
 
-    connect(ui.advancedOptions, SIGNAL(clicked()), this, SLOT(showAdvancedOptions()));
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 
@@ -98,6 +96,16 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.edges_monitor, SIGNAL(changed()), this, SLOT(changed()));
     connect(ui.edges_monitor, SIGNAL(edgeSelectionChanged(int,int)), this, SLOT(electricBorderSelectionChanged(int,int)));
+
+    connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(compositingModeChanged()));
+    connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(ui.windowThumbnails, SIGNAL(activated(int)), this, SLOT(changed()));
+    connect(ui.disableChecks, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.glMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(ui.glTextureFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.xrenderSmoothScale, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
     // Open the temporary config file
     // Temporary conf file is used to synchronize effect checkboxes with effect
@@ -188,20 +196,13 @@ void KWinCompositingConfig::compositingEnabled(bool enabled)
     ui.tabWidget->setTabEnabled(2, enabled);
 }
 
-void KWinCompositingConfig::showAdvancedOptions()
-{
-    KWinAdvancedCompositingOptions* dialog = new KWinAdvancedCompositingOptions(this, mKWinConfig, &mDefaultPrefs);
-
-    dialog->show();
-}
-
-void KWinCompositingConfig::showConfirmDialog()
+void KWinCompositingConfig::showConfirmDialog(bool reinitCompositing)
 {
     bool revert = false;
     // Feel free to extend this to support several kwin instances (multihead) if you
     // think it makes sense.
     OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
-    if( !kwin.waitForCompositingSetup().value())
+    if( reinitCompositing ? !kwin.compositingActive().value() : !kwin.waitForCompositingSetup().value() )
     {
         KMessageBox::sorry( this, i18n(
             "Failed to activate desktop effects using the given "
@@ -228,7 +229,7 @@ void KWinCompositingConfig::showConfirmDialog()
             config.writeEntry(it.key(), it.value());
         }
         // Sync with KWin and reload
-        configChanged();
+        configChanged(reinitCompositing);
         load();
     }
 }
@@ -328,6 +329,30 @@ void KWinCompositingConfig::loadEffectsTab()
     ui.effectSelector->load();
 }
 
+void KWinCompositingConfig::loadAdvancedTab()
+{
+    KConfigGroup config(mKWinConfig, "Compositing");
+    QString backend = config.readEntry("Backend", "OpenGL");
+    ui.compositingType->setCurrentIndex((backend == "XRender") ? 1 : 0);
+    // 4 - off, 5 - shown, 6 - always, other are old values
+    int hps = config.readEntry("HiddenPreviews", 5);
+    if( hps == 6 ) // always
+        ui.windowThumbnails->setCurrentIndex( 0 );
+    else if( hps == 4 ) // never
+        ui.windowThumbnails->setCurrentIndex( 2 );
+    else // shown, or default
+        ui.windowThumbnails->setCurrentIndex( 1 );
+    ui.disableChecks->setChecked( config.readEntry( "DisableChecks", false ));
+
+    QString glMode = config.readEntry("GLMode", "TFP");
+    ui.glMode->setCurrentIndex((glMode == "TFP") ? 0 : ((glMode == "SHM") ? 1 : 2));
+    ui.glTextureFilter->setCurrentIndex(config.readEntry("GLTextureFilter", 1));
+    ui.glDirect->setChecked(config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering()));
+    ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs.enableVSync()));
+
+    ui.xrenderSmoothScale->setChecked(config.readEntry("XRenderSmoothScale", false));
+}
+
 void KWinCompositingConfig::load()
 {
     mKWinConfig->reparseConfiguration();
@@ -344,6 +369,7 @@ void KWinCompositingConfig::load()
 
     loadGeneralTab();
     loadEffectsTab();
+    loadAdvancedTab();
 
     emit changed( false );
 }
@@ -351,9 +377,6 @@ void KWinCompositingConfig::load()
 void KWinCompositingConfig::saveGeneralTab()
 {
     KConfigGroup config(mKWinConfig, "Compositing");
-    // Save current config. We'll use this for restoring in case something
-    //  goes wrong.
-    mPreviousConfig = config.entryMap();
     // Check if any critical settings that need confirmation have changed
     if(ui.useCompositing->isChecked()
         && ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.enableCompositing()))
@@ -448,8 +471,46 @@ void KWinCompositingConfig::saveEffectsTab()
     ui.effectSelector->save();
 }
 
+bool KWinCompositingConfig::saveAdvancedTab()
+{
+    bool advancedChanged = false;
+
+    KConfigGroup config(mKWinConfig, "Compositing");
+    QString glModes[] = { "TFP", "SHM", "Fallback" };
+
+    if( config.readEntry("Backend", "OpenGL")
+            != ((ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender")
+        || config.readEntry("GLMode", "TFP") != glModes[ui.glMode->currentIndex()]
+        || config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering())
+            != ui.glDirect->isChecked()
+        || config.readEntry("GLVSync", mDefaultPrefs.enableVSync()) != ui.glVSync->isChecked()
+        || config.readEntry("DisableChecks", false ) != ui.disableChecks->isChecked())
+        {
+        m_showConfirmDialog = true;
+        advancedChanged = true;
+        }
+
+    config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
+    static const int hps[] = { 6 /*always*/, 5 /*shown*/,  4 /*never*/ };
+    config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
+    config.writeEntry("DisableChecks", ui.disableChecks->isChecked());
+
+    config.writeEntry("GLMode", glModes[ui.glMode->currentIndex()]);
+    config.writeEntry("GLTextureFilter", ui.glTextureFilter->currentIndex());
+    config.writeEntry("GLDirect", ui.glDirect->isChecked());
+    config.writeEntry("GLVSync", ui.glVSync->isChecked());
+
+    config.writeEntry("XRenderSmoothScale", ui.xrenderSmoothScale->isChecked());
+
+    return advancedChanged;
+}
+
 void KWinCompositingConfig::save()
 {
+    // Save current config. We'll use this for restoring in case something goes wrong.
+    KConfigGroup config(mKWinConfig, "Compositing");
+    mPreviousConfig = config.entryMap();
+
     // bah; tab content being dependent on the other is really bad; and
     // deprecated in the HIG for a reason.  Its confusing!
     // Make sure we only call save on each tab once; as they are stateful due to the revert concept
@@ -463,6 +524,7 @@ void KWinCompositingConfig::save()
         loadGeneralTab();
         saveGeneralTab();
     }
+    bool advancedChanged = saveAdvancedTab();
 
     // Copy Plugins group from temp config to real config
     QMap<QString, QString> entries = mTmpConfig->entryMap("Plugins");
@@ -476,21 +538,22 @@ void KWinCompositingConfig::save()
 
     emit changed( false );
 
-    configChanged();
+    configChanged(advancedChanged);
 
     if(m_showConfirmDialog)
     {
         m_showConfirmDialog = false;
-        showConfirmDialog();
+        showConfirmDialog(advancedChanged);
     }
 }
 
-void KWinCompositingConfig::configChanged()
+void KWinCompositingConfig::configChanged(bool reinitCompositing)
 {
     // Send signal to kwin
     mKWinConfig->sync();
     // Send signal to all kwin instances
-    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin",
+        reinitCompositing ? "reinitCompositing" : "reloadConfig");
     QDBusConnection::sessionBus().send(message);
 }
 
@@ -509,6 +572,15 @@ void KWinCompositingConfig::defaults()
     ui.animationSpeedCombo->setCurrentIndex( 3 );
 
     ui.effectSelector->defaults();
+
+    ui.compositingType->setCurrentIndex( 0 );
+    ui.windowThumbnails->setCurrentIndex( 1 );
+    ui.disableChecks->setChecked( false );
+    ui.glMode->setCurrentIndex( 0 );
+    ui.glTextureFilter->setCurrentIndex( 1 );
+    ui.glDirect->setChecked( mDefaultPrefs.enableDirectRendering() );
+    ui.glVSync->setChecked( mDefaultPrefs.enableVSync() );
+    ui.xrenderSmoothScale->setChecked( false );
 
     for( int i=0; i<8; i++ )
         {

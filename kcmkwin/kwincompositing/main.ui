@@ -221,34 +221,10 @@
             </layout>
            </widget>
           </item>
-          <item row="1" column="0" >
-           <spacer>
-            <property name="orientation" >
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0" >
-             <size>
-              <width>20</width>
-              <height>1</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="1" >
-           <widget class="QPushButton" name="advancedOptions" >
-            <property name="text" >
-             <string>Advanced Options</string>
-            </property>
-           </widget>
-          </item>
          </layout>
          <zorder>groupBox</zorder>
          <zorder></zorder>
-         <zorder>label_5</zorder>
-         <zorder>animationSpeedCombo</zorder>
-         <zorder>checkBox</zorder>
          <zorder>advancedOptions</zorder>
-         <zorder>groupBox_2</zorder>
         </widget>
        </item>
        <item>
@@ -265,9 +241,6 @@
         </spacer>
        </item>
       </layout>
-      <zorder>statusTitleWidget</zorder>
-      <zorder>useCompositing</zorder>
-      <zorder>compositingOptionsContainer</zorder>
      </widget>
      <widget class="QWidget" name="tab_3" >
       <attribute name="title" >
@@ -362,6 +335,253 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="tab_4" >
+      <attribute name="title" >
+       <string>Advanced</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4" >
+       <item row="0" column="0" >
+        <widget class="QLabel" name="label_7" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string>Compositing type:</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy" >
+          <cstring>compositingType</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" >
+        <widget class="QComboBox" name="compositingType" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text" >
+           <string>OpenGL</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>XRender</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0" >
+        <widget class="QLabel" name="label_8" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string>Keep window thumbnails:</string>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy" >
+          <cstring>windowThumbnails</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" >
+        <widget class="QComboBox" name="windowThumbnails" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text" >
+           <string>Always</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Only for shown windows</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Never</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2" >
+        <widget class="QCheckBox" name="disableChecks" >
+         <property name="whatsThis" >
+          <string>Enabling this option allows compositing to be activated even if some of the internal checks fail. Doing so may make the whole desktop unusable and its use is not recommened. Use only if KWin refuses to activate compositing on a system that should be capable of compositing.
+</string>
+         </property>
+         <property name="text" >
+          <string>Disable functionality checks</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2" >
+        <widget class="QGroupBox" name="glGroup" >
+         <property name="title" >
+          <string>OpenGL Options</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5" >
+          <item row="0" column="0" >
+           <widget class="QLabel" name="label_9" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text" >
+             <string>OpenGL mode:</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="buddy" >
+             <cstring>glMode</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QComboBox" name="glMode" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <item>
+             <property name="text" >
+              <string>Texture From Pixmap</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>Shared Memory</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>Fallback</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="label_10" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text" >
+             <string>Texture filter:</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="buddy" >
+             <cstring>glTextureFilter</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QComboBox" name="glTextureFilter" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <item>
+             <property name="text" >
+              <string>Nearest (fastest)</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>Bilinear</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>Trilinear (best quality)</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2" >
+           <widget class="QCheckBox" name="glDirect" >
+            <property name="text" >
+             <string>Enable direct rendering</string>
+            </property>
+            <property name="checked" >
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2" >
+           <widget class="QCheckBox" name="glVSync" >
+            <property name="text" >
+             <string>Use VSync</string>
+            </property>
+            <property name="checked" >
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2" >
+        <widget class="QGroupBox" name="xrenderGroup" >
+         <property name="title" >
+          <string>XRender Options</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6" >
+          <item row="0" column="0" >
+           <widget class="QCheckBox" name="xrenderSmoothScale" >
+            <property name="text" >
+             <string>Smooth scaling (slower)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2" >
+        <spacer name="verticalSpacer_6" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>
@@ -394,7 +614,6 @@
   <tabstop>windowSwitchingCombo</tabstop>
   <tabstop>desktopSwitchingCombo</tabstop>
   <tabstop>animationSpeedCombo</tabstop>
-  <tabstop>advancedOptions</tabstop>
   <tabstop>edges_monitor</tabstop>
  </tabstops>
  <resources/>
