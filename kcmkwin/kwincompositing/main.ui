@@ -93,6 +93,9 @@
                <property name="text" >
                 <string>You can find more effects, as well as effect-specific settings, in the "All Effects" tab above.</string>
                </property>
+               <property name="wordWrap" >
+                <bool>true</bool>
+               </property>
               </widget>
              </item>
              <item row="4" column="0" >
@@ -247,7 +250,7 @@
        <string>Screen Edges</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2" >
-       <item row="5" column="0" >
+       <item row="7" column="0" >
         <spacer name="verticalSpacer_3" >
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -309,6 +312,32 @@
          </property>
         </spacer>
        </item>
+       <item row="6" column="0" >
+        <widget class="QLabel" name="label_11" >
+         <property name="text" >
+          <string>If you are looking for the setting to enable switching of desktops by pushing your mouse cursor against the edge of the screen you can find it in the "Window Behavior" advanced tab under the name of "Active Desktop Borders".</string>
+         </property>
+         <property name="wordWrap" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" >
+        <spacer name="verticalSpacer_7" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2" >
@@ -320,6 +349,9 @@
         <widget class="QLabel" name="label_2" >
          <property name="text" >
           <string>Hint: To find out or configure how to activate an effect, look at the effect's settings.</string>
+         </property>
+         <property name="wordWrap" >
+          <bool>true</bool>
          </property>
         </widget>
        </item>
