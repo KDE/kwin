@@ -475,6 +475,7 @@ void KWinCompositingConfig::saveEffectsTab()
 bool KWinCompositingConfig::saveAdvancedTab()
 {
     bool advancedChanged = false;
+    static const int hps[] = { 6 /*always*/, 5 /*shown*/,  4 /*never*/ };
 
     KConfigGroup config(mKWinConfig, "Compositing");
     QString glModes[] = { "TFP", "SHM", "Fallback" };
@@ -490,9 +491,11 @@ bool KWinCompositingConfig::saveAdvancedTab()
         m_showConfirmDialog = true;
         advancedChanged = true;
         }
+    else if( config.readEntry("HiddenPreviews", 5) != hps[ ui.windowThumbnails->currentIndex() ]
+        || config.readEntry("XRenderSmoothScale", false ) != ui.xrenderSmoothScale->isChecked() )
+        advancedChanged = true;
 
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
-    static const int hps[] = { 6 /*always*/, 5 /*shown*/,  4 /*never*/ };
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
     config.writeEntry("DisableChecks", ui.disableChecks->isChecked());
 
