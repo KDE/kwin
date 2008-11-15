@@ -1,9 +1,5 @@
 ########### next target ###############
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/workspace/libs/kephal
-    )
-
 set(kdecorations_LIB_SRCS 
    kdecoration.cpp 
    kdecoration_p.cpp 
