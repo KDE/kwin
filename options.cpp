@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "compositingprefs.h"
 
+#include <kephal/screens.h>
+
 #endif
 
 namespace KWin
@@ -101,7 +103,7 @@ unsigned long Options::updateSettings()
 
     placement = Placement::policyFromString( config.readEntry("Placement"), true );
     xineramaPlacementScreen = qBound( -1, config.readEntry( "XineramaPlacementScreen", -1 ),
-        qApp->desktop()->numScreens() - 1 );
+        Kephal::ScreenUtils::numScreens() - 1 );
 
     if( focusPolicy == ClickToFocus )
         {

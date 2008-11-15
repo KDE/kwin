@@ -77,7 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 
-#include <qdesktopwidget.h>
+#include <kephal/screens.h>
 
 namespace KWin
 {
@@ -323,13 +323,15 @@ void Scene::finalDrawWindow( EffectWindowImpl* w, int mask, QRegion region, Wind
 QList< QPoint > Scene::selfCheckPoints() const
     {
     QList< QPoint > ret;
-    // Use QDesktopWidget directly, we're interested in "real" screens, not depending on our config.
+    // Use Kephal directly, we're interested in "real" screens, not depending on our config.
+    // TODO: Does Kephal allow fake screens as well? We cannot use QDesktopWidget as it will cause a crash if
+    //       the number of screens is different to what Kephal returns.
     for( int screen = 0;
-         screen < qApp->desktop()->numScreens();
+         screen < Kephal::ScreenUtils::numScreens();
          ++screen )
         { // test top-left and bottom-right of every screen
-        ret.append( qApp->desktop()->screenGeometry( screen ).topLeft());
-        ret.append( qApp->desktop()->screenGeometry( screen ).bottomRight() + QPoint( -5 + 1, -1 + 1 )
+        ret.append( Kephal::ScreenUtils::screenGeometry( screen ).topLeft());
+        ret.append( Kephal::ScreenUtils::screenGeometry( screen ).bottomRight() + QPoint( -5 + 1, -1 + 1 )
             + QPoint( -1, 0 )); // intentionally moved one up, since the source windows will be one down
         }
     return ret;
