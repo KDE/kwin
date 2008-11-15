@@ -39,7 +39,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/lib
     ${CMAKE_CURRENT_SOURCE_DIR}/effects
-    ${CMAKE_SOURCE_DIR}/workspace/libs/kephal
+    ${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/kephal
     )
 
 
