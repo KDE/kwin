@@ -234,11 +234,7 @@ bool Client::manage( Window w, bool isMapped )
 
     if ( isDesktop() ) 
         {
-        // desktops are treated slightly special
-        if (geom != workspace()->clientArea( ScreenArea, geom.center(), desktop()))
-            {
-            geom = workspace()->clientArea( FullArea, geom.center(), desktop());
-            }
+        // kwin doesn't manage desktop windows
         placementDone = true;
         }
 

@@ -40,7 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "effects.h"
 #include <QX11Info>
-#include <QDesktopWidget>
+
+#include <kephal/screens.h>
 
 namespace KWin
 {
@@ -54,7 +55,7 @@ namespace KWin
  */
 void Workspace::desktopResized()
     {
-    QRect geom = QApplication::desktop()->geometry();
+    QRect geom = Kephal::ScreenUtils::desktopGeometry();
     NETSize desktop_geometry;
     desktop_geometry.width = geom.width();
     desktop_geometry.height = geom.height();
@@ -84,18 +85,17 @@ void Workspace::desktopResized()
 
 void Workspace::updateClientArea( bool force )
     {
-    QDesktopWidget *desktopwidget = KApplication::desktop();
-    int nscreens = desktopwidget -> numScreens ();
-//    kDebug () << "screens: " << nscreens;
+    int nscreens = Kephal::ScreenUtils::numScreens();
+    kDebug() << "screens: " << nscreens << "desktops: " << numberOfDesktops();
     QVector< QRect > new_wareas( numberOfDesktops() + 1 );
     QVector< QVector< QRect > > new_sareas( numberOfDesktops() + 1 );
     QVector< QRect > screens( nscreens );
-    QRect desktopArea = desktopwidget -> geometry ();
+    QRect desktopArea = Kephal::ScreenUtils::desktopGeometry();
     for( int iS = 0;
             iS < nscreens;
             iS ++ )
         {
-        screens [iS] = desktopwidget -> screenGeometry (iS);
+        screens [iS] = Kephal::ScreenUtils::screenGeometry( iS );
         }
     for( int i = 1;
             i <= numberOfDesktops();
@@ -230,12 +230,11 @@ QRect Workspace::clientArea( clientAreaOption opt, int screen, int desktop ) con
         desktop = currentDesktop();
     if( screen == -1 )
         screen = activeScreen();
-    QDesktopWidget *desktopwidget = KApplication::desktop();
     QRect sarea = !screenarea.isEmpty() // may be empty during KWin initialization
         ? screenarea[ desktop ][ screen ]
-        : desktopwidget->screenGeometry( screen );
+        : Kephal::ScreenUtils::screenGeometry( screen );
     QRect warea = workarea[ desktop ].isNull()
-        ? QApplication::desktop()->geometry()
+        ? Kephal::ScreenUtils::desktopGeometry()
         : workarea[ desktop ];
     switch (opt)
         {
@@ -246,14 +245,14 @@ QRect Workspace::clientArea( clientAreaOption opt, int screen, int desktop ) con
                 return warea;
         case MaximizeFullArea:
             if (options->xineramaMaximizeEnabled)
-                return desktopwidget->screenGeometry( screen );
+                return Kephal::ScreenUtils::screenGeometry( screen );
             else
-                return desktopwidget->geometry();
+                return Kephal::ScreenUtils::desktopGeometry();
         case FullScreenArea:
             if (options->xineramaFullscreenEnabled)
-                return desktopwidget->screenGeometry( screen );
+                return Kephal::ScreenUtils::screenGeometry( screen );
             else
-                return desktopwidget->geometry();
+                return Kephal::ScreenUtils::desktopGeometry();
         case PlacementArea:
             if (options->xineramaPlacementEnabled)
                 return sarea;
@@ -261,25 +260,22 @@ QRect Workspace::clientArea( clientAreaOption opt, int screen, int desktop ) con
                 return warea;
         case MovementArea:
             if (options->xineramaMovementEnabled)
-                return desktopwidget->screenGeometry( screen );
+                return Kephal::ScreenUtils::screenGeometry( screen );
             else
-                return desktopwidget->geometry();
+                return Kephal::ScreenUtils::desktopGeometry();
         case WorkArea:
             return warea;
         case FullArea:
-            return desktopwidget->geometry();
+            return Kephal::ScreenUtils::desktopGeometry();
         case ScreenArea:
-            return desktopwidget->screenGeometry( screen );
+            return Kephal::ScreenUtils::screenGeometry( screen );
         }
     abort();
     }
 
 QRect Workspace::clientArea( clientAreaOption opt, const QPoint& p, int desktop ) const
     {
-    QDesktopWidget *desktopwidget = KApplication::desktop();
-    int screen = desktopwidget->isVirtualDesktop() ? desktopwidget->screenNumber( p ) : desktopwidget->primaryScreen();
-    if( screen < 0 )
-        screen = desktopwidget->primaryScreen();
+    int screen = Kephal::ScreenUtils::screenId( p );
     return clientArea( opt, screen, desktop );
     }
 
@@ -871,7 +867,7 @@ QRect Client::adjustedClientArea( const QRect &desktopArea, const QRect& area ) 
     // HACK: workarea handling is not xinerama aware, so if this strut
     // reserves place at a xinerama edge that's inside the virtual screen,
     // ignore the strut for workspace setting.
-    if( area == kapp->desktop()->geometry())
+    if( area == Kephal::ScreenUtils::desktopGeometry())
         {
         if( stareaL.left() < screenarea.left())
             stareaL = QRect();
@@ -992,17 +988,7 @@ int Client::computeWorkareaDiff( int left, int right, int a_left, int a_right )
 void Client::checkWorkspacePosition()
     {
     if( isDesktop())
-        {
-        if (geometry() == workspace()->clientArea( ScreenArea, this ))
-            {
-            return;
-            }
-
-        QRect area = workspace()->clientArea( FullArea, this );
-        if( geometry() != area )
-            setGeometry( area );
         return;
-        }
     if( isFullScreen())
         {
         QRect area = workspace()->clientArea( FullScreenArea, this );

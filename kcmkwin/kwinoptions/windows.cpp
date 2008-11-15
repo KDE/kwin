@@ -31,7 +31,6 @@
 #include <QHBoxLayout>
 #include <QFormLayout>
 #include <QtDBus/QtDBus>
-#include <QDesktopWidget>
 
 #include <KButtonGroup>
 #include <klocale.h>
@@ -43,6 +42,8 @@
 #include <X11/Xutil.h>
 
 #include "windows.h"
+
+#include <kephal/screens.h>
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
@@ -257,8 +258,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     activeMouseScreen->setWhatsThis( wtstr );
     connect(focusCombo, SIGNAL(activated(int)), this, SLOT(updateActiveMouseScreen()));
 
-    if (!QApplication::desktop()->isVirtualDesktop() ||
-        QApplication::desktop()->numScreens() == 1) // No Ximerama 
+    if (Kephal::ScreenUtils::numScreens() == 1) // No Ximerama 
     {
         separateScreenFocus->hide();
         activeMouseScreen->hide();

@@ -5,7 +5,7 @@
 # Adds effect plugin with given name. Sources are given after the name
 macro(KWIN4_ADD_EFFECT name)
     kde4_add_plugin(kwin4_effect_${name} ${ARGN})
-    target_link_libraries(kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS})
+    target_link_libraries(kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS} kephal)
     install(TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
 endmacro(KWIN4_ADD_EFFECT)
 
@@ -21,7 +21,7 @@ macro(KWIN4_ADD_EFFECT_CONFIG name)
     endforeach(file)
     kde4_add_ui_files(kwin4_effect_src ${kwin4_effect_ui})
     kde4_add_plugin(kcm_kwin4_effect_${name} ${kwin4_effect_src})
-    target_link_libraries(kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS})
+    target_link_libraries(kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} kephal)
     install(TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
 endmacro(KWIN4_ADD_EFFECT_CONFIG)
 
@@ -223,7 +223,7 @@ KWIN4_ADD_EFFECT(builtins ${kwin4_effect_builtins_sources})
 KWIN4_ADD_EFFECT_CONFIG(builtins ${kwin4_effect_builtins_config_sources})
 # link to xrender if necessary
 if (KWIN_HAVE_XRENDER_COMPOSITING)
-  target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB} ${X11_LIBRARIES})
+  target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB} ${X11_LIBRARIES} kephal)
 endif (KWIN_HAVE_XRENDER_COMPOSITING)
 
 

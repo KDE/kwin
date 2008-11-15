@@ -11,7 +11,7 @@ set(kdecorations_LIB_SRCS
 
 kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 
-target_link_libraries(kdecorations ${KDE4_KDEUI_LIBS})
+target_link_libraries(kdecorations ${KDE4_KDEUI_LIBS} kephal)
 
 set_target_properties(kdecorations PROPERTIES 
    VERSION ${GENERIC_LIB_VERSION}
@@ -40,7 +40,7 @@ set(kwin_EFFECTSLIB_SRCS
     )
 
 kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
-target_link_libraries(kwineffects ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${X11_LIBRARIES})
+target_link_libraries(kwineffects ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${X11_LIBRARIES} kephal)
 set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 
 install(TARGETS kwineffects ${INSTALL_TARGETS_DEFAULT_ARGS})

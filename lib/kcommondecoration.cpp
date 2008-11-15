@@ -37,7 +37,8 @@
 #include <kapplication.h>
 #include "kdecorationfactory.h"
 #include <klocale.h>
-#include <QDesktopWidget>
+
+#include <kephal/screens.h>
 
 #include "kcommondecoration.moc"
 
@@ -799,11 +800,10 @@ void KCommonDecoration::updateWindowShape()
 
     bool tl=true,tr=true,bl=true,br=true; // is there a transparent rounded corner in top-left? etc
 
-    QDesktopWidget *desktop=KApplication::desktop();
     // no transparent rounded corners if this window corner lines up with a screen corner
-    for(int screen=0; screen < desktop->numScreens(); ++screen)
+    for(int screen=0; screen < Kephal::ScreenUtils::numScreens(); ++screen)
     {
-        QRect fullscreen(desktop->screenGeometry(screen));
+        QRect fullscreen(Kephal::ScreenUtils::screenGeometry(screen));
         QRect window = geometry();
 
         if(window.topLeft()    == fullscreen.topLeft() ) tl = false;

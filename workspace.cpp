@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kmenubar.h>
 #include <kprocess.h>
 #include <kglobalaccel.h>
-#include <QDesktopWidget>
 #include <QToolButton>
 #include <kactioncollection.h>
 #include <kaction.h>
@@ -66,6 +65,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kauthorized.h>
 #include <ktoolinvocation.h>
 #include <kglobalsettings.h>
+
+#include <kephal/screens.h>
 
 namespace KWin
 {
@@ -176,8 +177,6 @@ Workspace::Workspace( bool restore )
 
     loadWindowRules();
 
-    (void) QApplication::desktop(); // trigger creation of desktop widget
-
     // call this before XSelectInput() on the root window
     startup = new KStartupInfo(
         KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this );
@@ -217,7 +216,10 @@ Workspace::Workspace( bool restore )
 
     init();
 
-    connect( kapp->desktop(), SIGNAL( resized( int )), SLOT( desktopResized()));
+    connect( Kephal::Screens::self(), SIGNAL( screenAdded( Kephal::Screen *)), SLOT( desktopResized()));
+    connect( Kephal::Screens::self(), SIGNAL( screenRemoved(int)), SLOT( desktopResized()));
+    connect( Kephal::Screens::self(), SIGNAL( screenResized( Kephal::Screen *, QSize, QSize)), SLOT( desktopResized()));
+    connect( Kephal::Screens::self(), SIGNAL( screenMoved( Kephal::Screen *, QPoint, QPoint)), SLOT( desktopResized()));
     }
 
 void Workspace::init()
@@ -405,7 +407,7 @@ void Workspace::init()
         NETPoint* viewports = new NETPoint[ number_of_desktops ];
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
-        QRect geom = QApplication::desktop()->geometry();
+        QRect geom = Kephal::ScreenUtils::desktopGeometry();
         NETSize desktop_geometry;
         desktop_geometry.width = geom.width();
         desktop_geometry.height = geom.height();
@@ -1017,7 +1019,7 @@ void Workspace::slotReconfigure()
 #if 0 // This actually seems to make things worse now
         QWidget curtain;
         curtain.setBackgroundMode( NoBackground );
-        curtain.setGeometry( QApplication::desktop()->geometry() );
+        curtain.setGeometry( Kephal::ScreenUtils::desktopGeometry() );
         curtain.show();
 #endif
         for( ClientList::ConstIterator it = clients.constBegin();
@@ -1205,7 +1207,7 @@ bool Workspace::isNotManaged( const QString& title )
 void Workspace::refresh()
     {
     QWidget w( NULL, Qt::X11BypassWindowManagerHint );
-    w.setGeometry( QApplication::desktop()->geometry() );
+    w.setGeometry( Kephal::ScreenUtils::desktopGeometry() );
     w.show();
     w.hide();
     QApplication::flush();
@@ -1646,7 +1648,7 @@ int Workspace::numScreens() const
     {
     if( !options->xineramaEnabled )
         return 1;
-    return qApp->desktop()->numScreens();
+    return Kephal::ScreenUtils::numScreens();
     }
 
 int Workspace::activeScreen() const
@@ -1659,7 +1661,7 @@ int Workspace::activeScreen() const
             return activeClient()->screen();
         return active_screen;
         }
-    return qApp->desktop()->screenNumber( cursorPos());
+    return Kephal::ScreenUtils::screenId( cursorPos());
     }
 
 // check whether a client moved completely out of what's considered the active screen,
@@ -1680,21 +1682,21 @@ void Workspace::setActiveScreenMouse( const QPoint &mousepos )
     {
     if( !options->xineramaEnabled )
         return;
-    active_screen = qApp->desktop()->screenNumber( mousepos );
+    active_screen = Kephal::ScreenUtils::screenId( mousepos );
     }
 
 QRect Workspace::screenGeometry( int screen ) const
     {
     if( !options->xineramaEnabled )
-        return qApp->desktop()->geometry();
-    return qApp->desktop()->screenGeometry( screen );
+        return Kephal::ScreenUtils::desktopGeometry();
+    return Kephal::ScreenUtils::screenGeometry( screen );
     }
 
 int Workspace::screenNumber( const QPoint &pos ) const
     {
     if( !options->xineramaEnabled )
         return 0;
-    return qApp->desktop()->screenNumber( pos );
+    return Kephal::ScreenUtils::screenId( pos );
     }
 
 void Workspace::sendClientToScreen( Client* c, int screen )
@@ -2106,7 +2108,7 @@ void Workspace::updateElectricBorders()
     electric_time_first = xTime();
     electric_time_last = xTime();
     electric_current_border = ElectricNone;
-    QRect r = QApplication::desktop()->geometry();
+    QRect r = Kephal::ScreenUtils::desktopGeometry();
     electricTop = r.top();
     electricBottom = r.bottom();
     electricLeft = r.left();
