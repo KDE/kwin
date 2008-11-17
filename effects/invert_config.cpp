@@ -47,7 +47,7 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
 
     KAction* b = static_cast<KAction*>(actionCollection->addAction( "InvertWindow" ));
-    b->setText( i18n("Toggle Invert Effect On Window" ));
+    b->setText( i18n("Toggle Invert Effect on Window" ));
     b->setProperty("isConfigurationAction", true);
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_U));
 

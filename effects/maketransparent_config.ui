@@ -16,7 +16,7 @@
    <item>
     <widget class="QGroupBox" name="m_opacityGroupBox" >
      <property name="title" >
-      <string>General translucency settings:</string>
+      <string>General Translucency Settings</string>
      </property>
      <layout class="QGridLayout" name="gridLayout" >
       <item row="1" column="0" >
@@ -186,7 +186,7 @@
          </sizepolicy>
         </property>
         <property name="text" >
-         <string>Combobox Popups:</string>
+         <string>Combobox popups:</string>
         </property>
         <property name="alignment" >
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -336,7 +336,7 @@
    <item>
     <widget class="QGroupBox" name="individualmenuconfig" >
      <property name="title" >
-      <string>Set menu translucency independently:</string>
+      <string>Set menu translucency independently</string>
      </property>
      <property name="checkable" >
       <bool>true</bool>

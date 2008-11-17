@@ -178,7 +178,7 @@
                </item>
                <item>
                 <property name="text" >
-                 <string>Very fast</string>
+                 <string>Very Fast</string>
                 </property>
                </item>
                <item>
@@ -198,12 +198,12 @@
                </item>
                <item>
                 <property name="text" >
-                 <string>Very slow</string>
+                 <string>Very Slow</string>
                 </property>
                </item>
                <item>
                 <property name="text" >
-                 <string>Extremely slow</string>
+                 <string>Extremely Slow</string>
                 </property>
                </item>
               </widget>
@@ -445,7 +445,7 @@
          </item>
          <item>
           <property name="text" >
-           <string>Only for shown windows</string>
+           <string>Only for Shown Windows</string>
           </property>
          </item>
          <item>

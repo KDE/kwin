@@ -49,7 +49,7 @@ InvertEffect::InvertEffect()
     connect(a, SIGNAL( triggered(bool) ), this, SLOT( toggle() ));
 
     KAction* b = (KAction*)actionCollection->addAction( "InvertWindow" );
-    b->setText( i18n( "Toggle Invert Effect On Window" ));
+    b->setText( i18n( "Toggle Invert Effect on Window" ));
     b->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_U ));
     connect(b, SIGNAL( triggered(bool) ), this, SLOT( toggleWindow() ));
     }

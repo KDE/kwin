@@ -82,12 +82,12 @@
         </item>
         <item>
          <property name="text" >
-          <string>Regular grid</string>
+          <string>Regular Grid</string>
          </property>
         </item>
         <item>
          <property name="text" >
-          <string>Flexible grid</string>
+          <string>Flexible Grid</string>
          </property>
         </item>
        </widget>

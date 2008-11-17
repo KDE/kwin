@@ -56,7 +56,7 @@
       <string>Check this option if the window border should be painted in the titlebar color. Otherwise it will be painted in the background color.</string>
      </property>
      <property name="text" >
-      <string>Colored Window Border</string>
+      <string>Colored window border</string>
      </property>
      <property name="shortcut" >
       <string/>

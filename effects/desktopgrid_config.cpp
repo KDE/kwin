@@ -65,19 +65,19 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     m_alignmentItems.append( Qt::AlignHCenter | Qt::AlignTop );
     m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top" ));
     m_alignmentItems.append( Qt::AlignRight | Qt::AlignTop );
-    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top-right" ));
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top-Right" ));
     m_alignmentItems.append( Qt::AlignRight | Qt::AlignVCenter );
     m_ui->desktopNameAlignmentCombo->addItem( i18n( "Right" ));
     m_alignmentItems.append( Qt::AlignRight | Qt::AlignBottom );
-    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Bottom-right" ));
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Bottom-Right" ));
     m_alignmentItems.append( Qt::AlignHCenter | Qt::AlignBottom );
     m_ui->desktopNameAlignmentCombo->addItem( i18n( "Bottom" ));
     m_alignmentItems.append( Qt::AlignLeft | Qt::AlignBottom );
-    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Bottom-left" ));
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Bottom-Left" ));
     m_alignmentItems.append( Qt::AlignLeft | Qt::AlignVCenter );
     m_ui->desktopNameAlignmentCombo->addItem( i18n( "Left" ));
     m_alignmentItems.append( Qt::AlignLeft | Qt::AlignTop );
-    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top-left" ));
+    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top-Left" ));
     m_alignmentItems.append( Qt::AlignCenter );
     m_ui->desktopNameAlignmentCombo->addItem( i18n( "Center" ));
 

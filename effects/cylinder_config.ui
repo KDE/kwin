@@ -29,7 +29,7 @@
           <item row="0" column="0" >
            <widget class="QLabel" name="label_6" >
             <property name="text" >
-             <string>Background Color:</string>
+             <string>Background color:</string>
             </property>
             <property name="alignment" >
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -280,7 +280,7 @@
           <item row="1" column="0" >
            <widget class="QLabel" name="capColorLabel" >
             <property name="text" >
-             <string>Cap Color:</string>
+             <string>Cap color:</string>
             </property>
             <property name="alignment" >
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -377,7 +377,7 @@
        <item row="0" column="1" >
         <widget class="QGroupBox" name="groupBox_9" >
          <property name="title" >
-          <string>Additional options</string>
+          <string>Additional Options</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout" >
           <item>

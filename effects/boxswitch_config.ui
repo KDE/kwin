@@ -13,7 +13,7 @@
    <item row="0" column="0" colspan="2" >
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string>Background Window &amp;Opacity:</string>
+      <string>Background window &amp;opacity:</string>
      </property>
      <property name="buddy" >
       <cstring>opacitySpin</cstring>

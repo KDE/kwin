@@ -611,8 +611,8 @@ void KWinCompositingConfig::setupElectricBorders()
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_presentwindows'");
     if( !services.isEmpty() )
         {
-        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "All desktops" ));
-        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Current desktop" ));
+        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "All Desktops" ));
+        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Current Desktop" ));
         }
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_desktopgrid'");
     if( !services.isEmpty() )
