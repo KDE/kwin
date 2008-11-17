@@ -38,8 +38,6 @@ namespace KWin
 InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug();
-
     QVBoxLayout* layout = new QVBoxLayout(this);
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
 
@@ -65,14 +63,12 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
 
 InvertEffectConfig::~InvertEffectConfig()
     {
-    kDebug();
     // Undo (only) unsaved changes to global key shortcuts
     mShortcutEditor->undoChanges();
     }
 
 void InvertEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     emit changed(false);
@@ -80,7 +76,6 @@ void InvertEffectConfig::load()
 
 void InvertEffectConfig::save()
     {
-    kDebug() ;
     KCModule::save();
 
     mShortcutEditor->save();    // undo() will restore to this state from now on
@@ -91,7 +86,6 @@ void InvertEffectConfig::save()
 
 void InvertEffectConfig::defaults()
     {
-    kDebug() ;
     mShortcutEditor->allDefault();
     emit changed(true);
     }

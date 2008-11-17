@@ -106,7 +106,7 @@ void LookingGlassEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             zoom = qMin( zoom * qMax( 1.0 + diff, 1.2 ), target_zoom );
         else
             zoom = qMax( zoom * qMin( 1.0 - diff, 0.8 ), target_zoom );
-        kDebug() << "zoom is now " << zoom;
+        kDebug(1212) << "zoom is now " << zoom;
         radius = qBound((double)initialradius, initialradius * zoom, 3.5*initialradius);
 
         if( zoom > 1.0f )

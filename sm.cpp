@@ -289,7 +289,7 @@ const char* Workspace::windowTypeToTxt( NET::WindowType type )
         return window_type_names[ type + 1 ]; // +1 (unknown==-1)
     if( type == -2 ) // undefined (not really part of NET::WindowType)
         return "Undefined";
-    kFatal() << "Unknown Window Type" ;
+    kFatal(1212) << "Unknown Window Type" ;
     return NULL;
     }
 

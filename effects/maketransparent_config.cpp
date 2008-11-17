@@ -43,7 +43,6 @@ MakeTransparentEffectConfigForm::MakeTransparentEffectConfigForm(QWidget* parent
 MakeTransparentEffectConfig::MakeTransparentEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug() ;
     m_ui = new MakeTransparentEffectConfigForm(this);
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
@@ -65,7 +64,6 @@ MakeTransparentEffectConfig::MakeTransparentEffectConfig(QWidget* parent, const 
 
 void MakeTransparentEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("MakeTransparent");
@@ -86,7 +84,6 @@ void MakeTransparentEffectConfig::load()
 
 void MakeTransparentEffectConfig::save()
     {
-    kDebug() ;
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("MakeTransparent");
@@ -109,7 +106,6 @@ void MakeTransparentEffectConfig::save()
 
 void MakeTransparentEffectConfig::defaults()
     {
-    kDebug() ;
     m_ui->decorations->setValue( 100 );
     m_ui->moveresize->setValue( 80 );
     m_ui->dialogs->setValue( 100 );

@@ -184,7 +184,6 @@ void CubeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
     if( activated )
         {
-        //kDebug();
         data.mask |= PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
 
         if( rotating || start || stop )
@@ -203,7 +202,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     if( activated )
         {
-        //kDebug();
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
         if( effects->numScreens() > 1 && (slide || bigCube ) )
             rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
@@ -898,7 +896,6 @@ void CubeEffect::postPaintScreen()
     effects->postPaintScreen();
     if( activated )
         {
-        //kDebug();
         if( start )
             {
             if( timeLine.value() == 1.0 )
@@ -1060,7 +1057,6 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
     {
     if( activated )
         {
-        //kDebug();
         if( cube_painting )
             {
             if( ( w->isDesktop() || w->isDock() ) && w->screen() != activeScreen && w->isOnDesktop( effects->currentDesktop() ) )
@@ -1154,7 +1150,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
     {
     if( activated && cube_painting )
         {
-        //kDebug() << w->caption();
+        //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
         if( start )
             {
@@ -1303,7 +1299,7 @@ bool CubeEffect::borderActivated( ElectricBorder border )
         return false;
     if( border == borderActivate && !activated )
         {
-        kDebug() << "border activated";
+        kDebug(1212) << "border activated";
         toggle();
         return true;
         }
@@ -1352,7 +1348,7 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
             { // wrap only on autorepeat
             case Qt::Key_Left:
                 // rotate to previous desktop
-                kDebug() << "left";
+                kDebug(1212) << "left";
                 if( !rotating && !start )
                     {
                     rotating = true;
@@ -1366,7 +1362,7 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
                 break;
             case Qt::Key_Right:
                 // rotate to next desktop
-                kDebug() << "right";
+                kDebug(1212) << "right";
                 if( !rotating && !start )
                     {
                     rotating = true;
@@ -1379,7 +1375,7 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
                     }
                 break;
             case Qt::Key_Up:
-                kDebug() << "up";
+                kDebug(1212) << "up";
                 if( verticalPosition != Up )
                     {
                     if( !verticalRotating )
@@ -1406,7 +1402,7 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
                     }
                 break;
             case Qt::Key_Down:
-                kDebug() << "down";
+                kDebug(1212) << "down";
                 if( verticalPosition != Down )
                     {
                     if( !verticalRotating )
@@ -1532,7 +1528,7 @@ void CubeEffect::setActive( bool active )
             start = true;
             }
         effects->setActiveFullScreenEffect( this );
-        kDebug() << "Cube is activated";
+        kDebug(1212) << "Cube is activated";
         verticalPosition = Normal;
         verticalRotating = false;
         manualAngle = 0.0;

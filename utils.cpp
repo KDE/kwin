@@ -302,7 +302,7 @@ void ungrabXKeyboard()
     {
     if( !keyboard_grabbed )
         { // grabXKeyboard() may fail sometimes, so don't fail, but at least warn anyway
-        kDebug() << "ungrabXKeyboard() called but keyboard not grabbed!";
+        kDebug(1212) << "ungrabXKeyboard() called but keyboard not grabbed!";
         }
     keyboard_grabbed = false;
     XUngrabKeyboard( display(), xTime());
@@ -466,7 +466,7 @@ void ShortcutDialog::keySequenceChanged(const QKeySequence &seq)
     // Check if the key sequence is used currently
     QList<KGlobalShortcutInfo> conflicting = KGlobalAccel::getGlobalShortcutsByKey(seq);
     if (!conflicting.isEmpty()) {
-        kDebug() << "TODO: Display conflicting shortcuts to user";
+        kDebug(1212) << "TODO: Display conflicting shortcuts to user";
         // TODO: Inform the user somehow instead of just ignoring his wish
         widget->setKeySequence(shortcut());
         }

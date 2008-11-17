@@ -243,7 +243,7 @@ Application::Application( )
 	{
 	kwin_sync = true;
 	XSynchronize( display(), True );
-	kDebug() << "Running KWin in sync mode";
+	kDebug(1212) << "Running KWin in sync mode";
 	}
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     KSharedConfig::Ptr config = KGlobal::config();
@@ -281,10 +281,10 @@ Application::Application( )
             ::exit(1);
         if( cmd.length() > 500 )
         {
-            kDebug() << "Command is too long, truncating";
+            kDebug(1212) << "Command is too long, truncating";
             cmd = cmd.left(500);
         }
-        kDebug() << "Starting" << cmd << "and exiting";
+        kDebug(1212) << "Starting" << cmd << "and exiting";
         char buf[1024];
         sprintf(buf, "%s &", cmd.toAscii().data());
         system(buf);
@@ -293,7 +293,7 @@ Application::Application( )
     // Disable compositing if we have had too many crashes
     if( crashes >= 2 )
     {
-        kDebug() << "Too many crashes recently, disabling compositing";
+        kDebug(1212) << "Too many crashes recently, disabling compositing";
         KConfigGroup compgroup( config, "Compositing" );
         compgroup.writeEntry( "Enabled", false );
     }

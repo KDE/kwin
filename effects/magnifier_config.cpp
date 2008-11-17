@@ -45,8 +45,6 @@ MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget* parent) : QWidget(
 MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug() ;
-
     m_ui = new MagnifierEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -85,7 +83,6 @@ MagnifierEffectConfig::~MagnifierEffectConfig()
 
 void MagnifierEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
@@ -101,7 +98,7 @@ void MagnifierEffectConfig::load()
 
 void MagnifierEffectConfig::save()
     {
-    kDebug() << "Saving config of Magnifier" ;
+    kDebug(1212) << "Saving config of Magnifier" ;
     //KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
@@ -119,7 +116,6 @@ void MagnifierEffectConfig::save()
 
 void MagnifierEffectConfig::defaults()
     {
-    kDebug() ;
     m_ui->spinWidth->setValue(200);
     m_ui->spinHeight->setValue(200);
     m_ui->editor->allDefault();

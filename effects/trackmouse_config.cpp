@@ -38,8 +38,6 @@ namespace KWin
 TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug() ;
-
     QVBoxLayout* layout = new QVBoxLayout(this);
     QLabel* label = new QLabel(i18n("Hold Ctrl+Meta keys to see where the mouse cursor is."), this);
     label->setWordWrap(true);
@@ -52,12 +50,10 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
 
 TrackMouseEffectConfig::~TrackMouseEffectConfig()
     {
-    kDebug() ;
     }
 
 void TrackMouseEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     emit changed(false);
@@ -65,7 +61,6 @@ void TrackMouseEffectConfig::load()
 
 void TrackMouseEffectConfig::save()
     {
-    kDebug() ;
     KCModule::save();
 
     emit changed(false);
@@ -74,7 +69,6 @@ void TrackMouseEffectConfig::save()
 
 void TrackMouseEffectConfig::defaults()
     {
-    kDebug() ;
     emit changed(true);
     }
 

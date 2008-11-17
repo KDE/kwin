@@ -42,8 +42,6 @@ SnowEffectConfigForm::SnowEffectConfigForm(QWidget* parent) : QWidget(parent)
 SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug() ;
-
     m_ui = new SnowEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -74,12 +72,10 @@ SnowEffectConfig::~SnowEffectConfig()
     {
     // Undo (only) unsaved changes to global key shortcuts
     m_ui->editor->undoChanges();
-    kDebug() ;
     }
 
 void SnowEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("Snow");
@@ -102,8 +98,6 @@ void SnowEffectConfig::load()
 
 void SnowEffectConfig::save()
     {
-    kDebug() ;
-
     KConfigGroup conf = EffectsHandler::effectConfig("Snow");
     conf.writeEntry("Number", m_ui->numberFlakes->value());
     conf.writeEntry("MinFlakes", m_ui->minSizeFlake->value());
@@ -122,7 +116,6 @@ void SnowEffectConfig::save()
 
 void SnowEffectConfig::defaults()
     {
-    kDebug() ;
     m_ui->numberFlakes->setValue( 200 );
     m_ui->minSizeFlake->setValue( 10 );
     m_ui->maxSizeFlake->setValue( 50 );

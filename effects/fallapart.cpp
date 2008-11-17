@@ -123,15 +123,15 @@ bool FallApartEffect::isRealWindow( EffectWindow* w )
     {
     // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
     /*
-    kDebug() << "--" << w->caption() << "--------------------------------";
-    kDebug() << "Tooltip:" << w->isTooltip();
-    kDebug() << "Toolbar:" << w->isToolbar();
-    kDebug() << "Desktop:" << w->isDesktop();
-    kDebug() << "Special:" << w->isSpecialWindow();
-    kDebug() << "TopMenu:" << w->isTopMenu();
-    kDebug() << "Notific:" << w->isNotification();
-    kDebug() << "Splash:" << w->isSplash();
-    kDebug() << "Normal:" << w->isNormalWindow();
+    kDebug(1212) << "--" << w->caption() << "--------------------------------";
+    kDebug(1212) << "Tooltip:" << w->isTooltip();
+    kDebug(1212) << "Toolbar:" << w->isToolbar();
+    kDebug(1212) << "Desktop:" << w->isDesktop();
+    kDebug(1212) << "Special:" << w->isSpecialWindow();
+    kDebug(1212) << "TopMenu:" << w->isTopMenu();
+    kDebug(1212) << "Notific:" << w->isNotification();
+    kDebug(1212) << "Splash:" << w->isSplash();
+    kDebug(1212) << "Normal:" << w->isNormalWindow();
     */
     if ( !w->isNormalWindow() )
         return false;

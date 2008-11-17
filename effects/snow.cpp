@@ -241,21 +241,21 @@ bool SnowEffect::loadShader()
     if( !(GLShader::fragmentShaderSupported() &&
         (effects->compositingType() == OpenGLCompositing)) )
         {
-        kDebug() << "Shaders not supported - waisting CPU cycles" << endl;
+        kDebug(1212) << "Shaders not supported - waisting CPU cycles" << endl;
         return false;
         }
     QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/snow.frag");
     QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/snow.vert");
     if(fragmentshader.isEmpty() || vertexshader.isEmpty())
         {
-        kDebug() << "Couldn't locate shader files" << endl;
+        kDebug(1212) << "Couldn't locate shader files" << endl;
         return false;
         }
 
     mShader = new GLShader(vertexshader, fragmentshader);
     if(!mShader->isValid())
         {
-        kDebug() << "The shader failed to load!" << endl;
+        kDebug(1212) << "The shader failed to load!" << endl;
         return false;
         }
     else
@@ -264,7 +264,7 @@ bool SnowEffect::loadShader()
         mShader->setUniform( "snowTexture", 0 );
         mShader->unbind();
         }
-    kDebug() << "using shader";
+    kDebug(1212) << "using shader";
     
     glNewList( list, GL_COMPILE );
     glBegin( GL_QUADS );

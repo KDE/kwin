@@ -883,7 +883,7 @@ bool EffectsHandlerImpl::loadEffect( const QString& name )
         {
         if( !loadEffect(depName))
             {
-            kError() << "EffectsHandler::loadEffect : Couldn't load dependencies for effect " << name << endl;
+            kError(1212) << "EffectsHandler::loadEffect : Couldn't load dependencies for effect " << name << endl;
             library->unload();
             return false;
             }

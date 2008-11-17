@@ -120,13 +120,13 @@ void Workspace::updateStackingOrder( bool propagate_new_clients )
     force_restacking = false;
     stacking_order = new_stacking_order;
 #if 0
-    kDebug() << "stacking:" << changed;
+    kDebug(1212) << "stacking:" << changed;
     if( changed || propagate_new_clients )
         {
         for( ClientList::ConstIterator it = stacking_order.begin();
              it != stacking_order.end();
              ++it )
-            kDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+            kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
         }
 #endif
     if( changed || propagate_new_clients )
@@ -563,11 +563,11 @@ ClientList Workspace::constrainedStackingOrder()
     ClientList layer[ NumLayers ];
 
 #if 0
-    kDebug() << "stacking1:";
+    kDebug(1212) << "stacking1:";
     for( ClientList::ConstIterator it = unconstrained_stacking_order.begin();
          it != unconstrained_stacking_order.end();
          ++it )
-        kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+        kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // build the order from layers
     QHash< Group*, Layer > minimum_layer;
@@ -594,11 +594,11 @@ ClientList Workspace::constrainedStackingOrder()
          ++lay )    
         stacking += layer[ lay ];
 #if 0
-    kDebug() << "stacking2:";
+    kDebug(1212) << "stacking2:";
     for( ClientList::ConstIterator it = stacking.begin();
          it != stacking.end();
          ++it )
-        kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+        kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
@@ -662,12 +662,12 @@ ClientList Workspace::constrainedStackingOrder()
         stacking.insert( i2, current );
         }
 #if 0
-    kDebug() << "stacking3:";
+    kDebug(1212) << "stacking3:";
     for( ClientList::ConstIterator it = stacking.begin();
          it != stacking.end();
          ++it )
-        kdDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
-    kDebug() << "\n\n";
+        kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
+    kDebug(1212) << "\n\n";
 #endif
     return stacking;
     }

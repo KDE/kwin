@@ -45,8 +45,6 @@ MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget* parent) : QWidget(
 MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug() ;
-
     m_ui = new MouseMarkEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -83,7 +81,6 @@ MouseMarkEffectConfig::~MouseMarkEffectConfig()
 
 void MouseMarkEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
@@ -98,7 +95,7 @@ void MouseMarkEffectConfig::load()
 
 void MouseMarkEffectConfig::save()
     {
-    kDebug() << "Saving config of MouseMark" ;
+    kDebug(1212) << "Saving config of MouseMark" ;
     //KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("MouseMark");
@@ -117,7 +114,6 @@ void MouseMarkEffectConfig::save()
 
 void MouseMarkEffectConfig::defaults()
     {
-    kDebug() ;
     m_ui->spinWidth->setValue(3);
     m_ui->comboColors->setColor(Qt::red);
     emit changed(true);

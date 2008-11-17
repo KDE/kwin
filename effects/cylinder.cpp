@@ -69,14 +69,14 @@ bool CylinderEffect::loadData()
     QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/cylinder.vert");
     if(fragmentshader.isEmpty() || vertexshader.isEmpty())
         {
-        kError() << "Couldn't locate shader files" << endl;
+        kError(1212) << "Couldn't locate shader files" << endl;
         return false;
         }
 
     mShader = new GLShader(vertexshader, fragmentshader);
     if(!mShader->isValid())
         {
-        kError() << "The shader failed to load!" << endl;
+        kError(1212) << "The shader failed to load!" << endl;
         return false;
         }
     else

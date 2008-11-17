@@ -819,7 +819,7 @@ void Workspace::updateCurrentTopMenu()
             }
         }
 
-//    kDebug() << "CURRENT TOPMENU:" << menubar << ":" << active_client;
+//    kDebug(1212) << "CURRENT TOPMENU:" << menubar << ":" << active_client;
     if ( menubar )
         {
         if( active_client && !menubar->isOnDesktop( active_client->desktop()))
@@ -2348,13 +2348,13 @@ void Workspace::addTopMenu( Client* c )
         updateTopMenuGeometry( c );
         updateCurrentTopMenu();
         }
-//        kDebug() << "NEW TOPMENU:" << c;
+//        kDebug(1212) << "NEW TOPMENU:" << c;
     }
 
 void Workspace::removeTopMenu( Client* c )
     {
 //    if( c->isTopMenu())
-//        kDebug() << "REMOVE TOPMENU:" << c;
+//        kDebug(1212) << "REMOVE TOPMENU:" << c;
     assert( c->isTopMenu());
     assert( topmenus.contains( c ));
     topmenus.removeAll( c );
@@ -2364,7 +2364,7 @@ void Workspace::removeTopMenu( Client* c )
 
 void Workspace::lostTopMenuSelection()
     {
-//    kDebug() << "lost TopMenu selection";
+//    kDebug(1212) << "lost TopMenu selection";
     // make sure this signal is always set when not owning the selection
     disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
     connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
@@ -2386,13 +2386,13 @@ void Workspace::lostTopMenuOwner()
     {
     if( !options->topMenuEnabled())
         return;
-//    kDebug() << "TopMenu selection lost owner";
+//    kDebug(1212) << "TopMenu selection lost owner";
     if( !topmenu_selection->claim( false ))
         {
-//        kDebug() << "Failed to claim TopMenu selection";
+//        kDebug(1212) << "Failed to claim TopMenu selection";
         return;
         }
-//    kDebug() << "claimed TopMenu selection";
+//    kDebug(1212) << "claimed TopMenu selection";
     setupTopMenuHandling();
     }
 

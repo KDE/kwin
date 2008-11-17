@@ -41,7 +41,7 @@ int main( int argc, char* argv[] )
     QString file = KStandardDirs::locate( "data", QString( "kwin/default_rules/" ) + argv[ 1 ] );
     if( file.isEmpty())
         {
-        kWarning() << "File " << argv[ 1 ] << " not found!" ;
+        kWarning(1212) << "File " << argv[ 1 ] << " not found!" ;
         return 1;
         }
     KConfig src_cfg( file );

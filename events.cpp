@@ -1306,7 +1306,7 @@ void Client::processMousePressEvent( QMouseEvent* e )
     {
     if( e->type() != QEvent::MouseButtonPress )
         {
-        kWarning() << "processMousePressEvent()" ;
+        kWarning(1212) << "processMousePressEvent()" ;
         return;
         }
     int button;

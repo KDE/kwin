@@ -45,8 +45,6 @@ LookingGlassEffectConfigForm::LookingGlassEffectConfigForm(QWidget* parent) : QW
 LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug() ;
-
     m_ui = new LookingGlassEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -85,7 +83,6 @@ LookingGlassEffectConfig::~LookingGlassEffectConfig()
 
 void LookingGlassEffectConfig::load()
     {
-    kDebug();
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
@@ -97,7 +94,7 @@ void LookingGlassEffectConfig::load()
 
 void LookingGlassEffectConfig::save()
     {
-    kDebug() << "Saving config of LookingGlass" ;
+    kDebug(1212) << "Saving config of LookingGlass" ;
     //KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("LookingGlass");
@@ -114,7 +111,6 @@ void LookingGlassEffectConfig::save()
 
 void LookingGlassEffectConfig::defaults()
     {
-    kDebug() ;
     m_ui->radiusSpin->setValue(200);
     m_ui->editor->allDefault();
     emit changed(true);

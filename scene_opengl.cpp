@@ -675,11 +675,11 @@ bool SceneOpenGL::selfCheck()
         {
         QPixmap pix = QPixmap::grabWindow( rootWindow(), p.x(), p.y(), 5, 1 );
         QImage img = pix.toImage();
-//        kdDebug() << "P:" << QColor( img.pixel( 0, 0 )).name();
-//        kdDebug() << "P:" << QColor( img.pixel( 1, 0 )).name();
-//        kdDebug() << "P:" << QColor( img.pixel( 2, 0 )).name();
-//        kdDebug() << "P:" << QColor( img.pixel( 3, 0 )).name();
-//        kdDebug() << "P:" << QColor( img.pixel( 4, 0 )).name();
+//        kDebug(1212) << "P:" << QColor( img.pixel( 0, 0 )).name();
+//        kDebug(1212) << "P:" << QColor( img.pixel( 1, 0 )).name();
+//        kDebug(1212) << "P:" << QColor( img.pixel( 2, 0 )).name();
+//        kDebug(1212) << "P:" << QColor( img.pixel( 3, 0 )).name();
+//        kDebug(1212) << "P:" << QColor( img.pixel( 4, 0 )).name();
         if( img.pixel( 0, 0 ) != QColor( Qt::red ).rgb()
             || img.pixel( 1, 0 ) != QColor( Qt::green ).rgb()
             || img.pixel( 2, 0 ) != QColor( Qt::blue ).rgb()

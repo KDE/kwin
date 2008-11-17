@@ -48,8 +48,6 @@ namespace KWin
 VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug();
-
     QVBoxLayout* layout = new QVBoxLayout(this);
     QHBoxLayout* hlayout = new QHBoxLayout( this );
     QLabel *label = new QLabel( i18n( "Path to save video:" ), this );
@@ -79,14 +77,12 @@ VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariant
 
 VideoRecordEffectConfig::~VideoRecordEffectConfig()
     {
-    kDebug();
     // Undo (only) unsaved changes to global key shortcuts
     mShortcutEditor->undoChanges();
     }
 
 void VideoRecordEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
@@ -96,7 +92,6 @@ void VideoRecordEffectConfig::load()
 
 void VideoRecordEffectConfig::save()
     {
-    kDebug() ;
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("VideoRecord");
@@ -116,7 +111,6 @@ void VideoRecordEffectConfig::save()
 
 void VideoRecordEffectConfig::defaults()
     {
-    kDebug() ;
     saveVideo->setPath(KGlobalSettings::documentPath() );
     mShortcutEditor->allDefault();
     emit changed(true);

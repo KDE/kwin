@@ -45,8 +45,6 @@ ThumbnailAsideEffectConfigForm::ThumbnailAsideEffectConfigForm(QWidget* parent) 
 ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug() ;
-
     m_ui = new ThumbnailAsideEffectConfigForm(this);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -76,12 +74,10 @@ ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
     {
     // Undo (only) unsaved changes to global key shortcuts
     m_ui->editor->undoChanges();
-    kDebug() ;
     }
 
 void ThumbnailAsideEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("ThumbnailAside");
@@ -98,7 +94,7 @@ void ThumbnailAsideEffectConfig::load()
 
 void ThumbnailAsideEffectConfig::save()
     {
-    kDebug() << "Saving config of ThumbnailAside" ;
+    kDebug(1212) << "Saving config of ThumbnailAside" ;
     //KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("ThumbnailAside");
@@ -118,7 +114,6 @@ void ThumbnailAsideEffectConfig::save()
 
 void ThumbnailAsideEffectConfig::defaults()
     {
-    kDebug() ;
     m_ui->spinWidth->setValue(200);
     m_ui->spinSpacing->setValue(10);
     m_ui->spinOpacity->setValue(50);

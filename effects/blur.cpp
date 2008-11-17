@@ -50,7 +50,7 @@ BlurEffect::BlurEffect() : Effect()
     mValid = loadData();
     if( !mValid )
         {
-        kWarning() << "Loading failed";
+        kWarning(1212) << "Loading failed";
         }
     effects->addRepaintFull();
     }
@@ -125,13 +125,13 @@ GLShader* BlurEffect::loadShader(const QString& name)
     QString vertexshader =  KGlobal::dirs()->findResource("data", "kwin/" + name + ".vert");
     if(fragmentshader.isEmpty() || vertexshader.isEmpty())
     {
-        kError() << "Couldn't locate shader files for '" << name << "'" << endl;
+        kError(1212) << "Couldn't locate shader files for '" << name << "'" << endl;
         return false;
     }
     GLShader* shader = new GLShader(vertexshader, fragmentshader);
     if(!shader->isValid())
     {
-        kError() << "Shader '" << name << "' failed to load!" << endl;
+        kError(1212) << "Shader '" << name << "' failed to load!" << endl;
         delete shader;
         return 0;
     }
@@ -229,7 +229,7 @@ void BlurEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 // Restore the original matrix
                 glPopMatrix();
                 }
-//             kDebug() << "Copied" << mScreenDirty.rects().count() << "rects,    pixels:" << pixels;
+//             kDebug(1212) << "Copied" << mScreenDirty.rects().count() << "rects,    pixels:" << pixels;
             }
 
         }

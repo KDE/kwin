@@ -38,8 +38,6 @@ namespace KWin
 ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug();
-
     QVBoxLayout* layout = new QVBoxLayout(this);
     KActionCollection* actionCollection = new KActionCollection( this, componentData() );
     KAction* a;
@@ -67,14 +65,12 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
 
 ZoomEffectConfig::~ZoomEffectConfig()
     {
-    kDebug() ;
     // Undo (only) unsaved changes to global key shortcuts
     mShortcutEditor->undoChanges();
     }
 
 void ZoomEffectConfig::load()
     {
-    kDebug() ;
     KCModule::load();
 
     emit changed(false);
@@ -82,7 +78,6 @@ void ZoomEffectConfig::load()
 
 void ZoomEffectConfig::save()
     {
-    kDebug() ;
     KCModule::save();
 
     mShortcutEditor->save();    // undo() will restore to this state from now on
@@ -93,7 +88,6 @@ void ZoomEffectConfig::save()
 
 void ZoomEffectConfig::defaults()
     {
-    kDebug() ;
     mShortcutEditor->allDefault();
     emit changed(true);
     }

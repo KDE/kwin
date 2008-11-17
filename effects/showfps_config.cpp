@@ -35,8 +35,6 @@ namespace KWin
 ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& args) :
     KCModule(EffectFactory::componentData(), parent, args)
     {
-    kDebug();
-
     m_ui = new Ui::ShowFpsEffectConfigForm;
     m_ui->setupUi(this);
 
@@ -51,12 +49,10 @@ ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& ar
 ShowFpsEffectConfig::~ShowFpsEffectConfig()
     {
     delete m_ui;
-    kDebug();
     }
     
 void ShowFpsEffectConfig::load()
     {
-    kDebug();
     KCModule::load();
 
     KConfigGroup conf = EffectsHandler::effectConfig("ShowFps");
@@ -80,7 +76,6 @@ void ShowFpsEffectConfig::load()
     
 void ShowFpsEffectConfig::save()
     {
-    kDebug();
     KCModule::save();
 
     KConfigGroup conf = EffectsHandler::effectConfig("ShowFps");
@@ -105,8 +100,6 @@ void ShowFpsEffectConfig::save()
     
 void ShowFpsEffectConfig::defaults()
     {
-    kDebug();
-
     m_ui->textPosition->setCurrentIndex(0);
     m_ui->textFont->setFont(QFont());
     m_ui->textColor->setColor(QColor());

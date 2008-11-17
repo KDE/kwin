@@ -104,7 +104,7 @@ bool checkGLError( const char* txt )
     GLenum err = glGetError();
     if( err != GL_NO_ERROR )
         {
-        kWarning() << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) ;
+        kWarning(1212) << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) ;
         return true;
         }
     return false;
