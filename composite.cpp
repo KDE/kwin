@@ -254,7 +254,7 @@ void Workspace::finishCompositing()
         { // forward all opacity values to the frame in case there'll be other CM running
         if( (*it)->opacity() != 1.0 )
             {
-            NETWinInfo i( display(), (*it)->frameId(), rootWindow(), 0 );
+            NETWinInfo2 i( display(), (*it)->frameId(), rootWindow(), 0 );
             i.setOpacity( static_cast< unsigned long >((*it)->opacity() * 0xffffffff ));
             }
         }

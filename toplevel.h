@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xdamage.h>
 #endif
 
-class NETWinInfo;
+class NETWinInfo2;
 
 namespace KWin
 {
@@ -151,7 +151,7 @@ class Toplevel
         QRect geom;
         Visual* vis;
         int bit_depth;
-        NETWinInfo* info;
+        NETWinInfo2* info;
         bool ready_for_painting;
     private:
         static QByteArray staticWindowRole(WId);

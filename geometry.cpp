@@ -2305,7 +2305,10 @@ void Client::setFullScreen( bool set, bool user )
     info->setState( isFullScreen() ? NET::FullScreen : 0, NET::FullScreen );
     updateDecoration( false, false );
     if( isFullScreen())
-        setGeometry( workspace()->clientArea( FullScreenArea, this ));
+        if( info->fullscreenMonitors().isSet())
+            setGeometry( fullscreenMonitorsArea( info->fullscreenMonitors()));
+        else
+            setGeometry( workspace()->clientArea( FullScreenArea, this ));
     else
         {
         if( !geom_fs_restore.isNull())
@@ -2319,6 +2322,51 @@ void Client::setFullScreen( bool set, bool user )
     updateWindowRules();
     workspace()->checkUnredirect();
     }
+
+
+void Client::updateFullscreenMonitors( NETFullscreenMonitors topology )
+    {
+    int nscreens = Kephal::ScreenUtils::numScreens();
+
+//    kDebug( 1212 ) << "incoming request with top: " << topology.top << " bottom: " << topology.bottom
+//                   << " left: " << topology.left << " right: " << topology.right
+//                   << ", we have: " << nscreens << " screens.";
+
+    if( topology.top >= nscreens ||
+        topology.bottom >= nscreens ||
+        topology.left >= nscreens ||
+        topology.right >= nscreens )
+        {
+            kWarning( 1212 ) << "fullscreenMonitors update failed. request higher than number of screens.";
+            return;
+        }
+
+    info->setFullscreenMonitors( topology );
+    if( isFullScreen())
+        setGeometry( fullscreenMonitorsArea( topology ));
+    }
+
+
+/*!
+  Calculates the bounding rectangle defined by the 4 monitor indices indicating the
+  top, bottom, left, and right edges of the window when the fullscreen state is enabled.
+ */
+QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) const
+    {
+    QRect top, bottom, left, right, total;
+
+    top = Kephal::ScreenUtils::screenGeometry( requestedTopology.top );
+    bottom = Kephal::ScreenUtils::screenGeometry(requestedTopology.bottom );
+    left = Kephal::ScreenUtils::screenGeometry(requestedTopology.left );
+    right = Kephal::ScreenUtils::screenGeometry(requestedTopology.right );
+    total = top.united( bottom.united( left.united( right ) ) );
+
+//    kDebug( 1212 ) << "top: " << top << " bottom: " << bottom
+//                   << " left: " << left << " right: " << right;
+//    kDebug( 1212 ) << "returning rect: " << total;
+    return total;
+    }
+
 
 int Client::checkFullScreenHack( const QRect& geom ) const
     {

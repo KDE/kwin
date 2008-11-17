@@ -151,6 +151,17 @@ version 1.2
 ? 7.7.
 + 7. (rest of the section)
 
+
++ _NET_WM_FULLSCREEN_MONITORS	Status: Done.
+        +----------------------------------------------------------------+
+	| The Window Manager MUST keep this list updated to reflect the  |
+	| current state of the window. The application window sends this |
+	| in a ClientMessage to the root window. KWin persists this info |
+	| both internally as well as against the application window.     |
+	| This data is used to spread the fullscreen application window  |
+	| across the requested topology, if valid.                       |
+	+----------------------------------------------------------------+
+
 ICCCM spec compliance (whole document):
 version 2.0
 ======================

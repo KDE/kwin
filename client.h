@@ -86,6 +86,7 @@ class Client
         void setupWindowRules( bool ignore_temporary );
         void applyWindowRules();
         void updateWindowRules();
+        void updateFullscreenMonitors( NETFullscreenMonitors topology );
 
     // returns true for "special" windows and false for windows which are "normal"
     // (normal=window which has a border, can be moved by the user, can be closed, etc.)
@@ -349,6 +350,7 @@ class Client
         bool isManaged() const; // returns false if this client is not yet managed
         void updateAllowedActions( bool force = false );
         QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny, bool noframe = false ) const;
+        QRect fullscreenMonitorsArea( NETFullscreenMonitors topology ) const;
         void changeMaximize( bool horizontal, bool vertical, bool adjust );
         void checkMaximizeGeometry();
         int checkFullScreenHack( const QRect& geom ) const; // 0 - none, 1 - one xinerama screen, 2 - full area
@@ -547,7 +549,7 @@ class GeometryUpdatesBlocker
 
 
 // NET WM Protocol handler class
-class WinInfo : public NETWinInfo
+class WinInfo : public NETWinInfo2
     {
     private:
         typedef KWin::Client Client; // because of NET::Client
@@ -555,6 +557,7 @@ class WinInfo : public NETWinInfo
         WinInfo( Client* c, Display * display, Window window,
                 Window rwin, const unsigned long pr[], int pr_size );
         virtual void changeDesktop(int desktop);
+        virtual void changeFullscreenMonitors(NETFullscreenMonitors topology);
         virtual void changeState( unsigned long state, unsigned long mask );
         void disable();
     private:

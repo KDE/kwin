@@ -65,7 +65,7 @@ bool Unmanaged::track( Window w )
     properties[ NETWinInfo::PROTOCOLS2 ] =
         NET::WM2Opacity |
         0;
-    info = new NETWinInfo( display(), w, rootWindow(), properties, 2 );
+    info = new NETWinInfo2( display(), w, rootWindow(), properties, 2 );
     getResourceClass();
     getWindowRole();
     getWmClientLeader();

@@ -62,7 +62,7 @@ class Group
         Client* leader_client;
         Window leader_wid;
         Workspace* _workspace;
-        NETWinInfo* leader_info;
+        NETWinInfo2* leader_info;
         Time user_time;
         int refcount;
         EffectWindowGroupImpl* effect_group;

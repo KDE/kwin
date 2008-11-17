@@ -59,13 +59,18 @@ namespace KWin
 
 WinInfo::WinInfo( Client * c, Display * display, Window window,
     Window rwin, const unsigned long pr[], int pr_size )
-    : NETWinInfo( display, window, rwin, pr, pr_size, NET::WindowManager ), m_client( c )
+    : NETWinInfo2( display, window, rwin, pr, pr_size, NET::WindowManager ), m_client( c )
     {
     }
 
 void WinInfo::changeDesktop(int desktop)
     {
     m_client->workspace()->sendClientToDesktop( m_client, desktop, true );
+    }
+
+void WinInfo::changeFullscreenMonitors( NETFullscreenMonitors topology )
+    {
+    m_client->updateFullscreenMonitors( topology );
     }
 
 void WinInfo::changeState( unsigned long state, unsigned long mask )
@@ -622,7 +627,7 @@ bool Client::windowEvent( XEvent* e )
                 }
             else
                 { // forward to the frame if there's possibly another compositing manager running
-                NETWinInfo i( display(), frameId(), rootWindow(), 0 );
+                NETWinInfo2 i( display(), frameId(), rootWindow(), 0 );
                 i.setOpacity( info->opacity());
                 }
             }
