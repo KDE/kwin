@@ -555,12 +555,14 @@ void KWinDecorationModule::defaults()
 // Don't set default for now
 //	decorationList->setSelected(
 //		decorationList->findItem( i18n("KDE 2") ), true );  // KDE classic client
+	decorationList->setCurrentItem( i18n("Ozone"), true );  // KDE classic client
+	slotChangeDecoration(i18n("Ozone"));
 
 	buttonPositionWidget->setButtonsLeft(KDecorationOptions::defaultTitleButtonsLeft());
 	buttonPositionWidget->setButtonsRight(KDecorationOptions::defaultTitleButtonsRight());
 
-        border_size = BorderNormal;
-        checkSupportedBorderSizes();
+	border_size = BorderNormal;
+	checkSupportedBorderSizes();
 
 	// Set plugin defaults
 	emit pluginDefaults();
