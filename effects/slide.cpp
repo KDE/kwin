@@ -54,6 +54,7 @@ void SlideEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             {
             slide = false;
             mTimeLine.setProgress(0);
+            effects->setActiveFullScreenEffect( NULL );
             }
         }
     effects->prePaintScreen( data, time );
@@ -256,13 +257,17 @@ void SlideEffect::desktopChanged( int old )
             { // at the end, stop
             slide = false;
             mTimeLine.setProgress(0);
+            effects->setActiveFullScreenEffect( NULL );
             }
         }
     else
         {
+        if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+            return;
         mTimeLine.setProgress(0);
         slide_start_pos = desktopRect( old, false ).topLeft();
         slide = true;
+        effects->setActiveFullScreenEffect( this );
         }
     effects->addRepaintFull();
     }
