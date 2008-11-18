@@ -184,7 +184,8 @@ void BlurEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     //  way of knowing here whether there will be any translucent windows or
     //  not. If we'd know that there's no translucent windows then we could
     //  render straight onto screen, saving some time.
-    if( mValid /*&& mTransparentWindows*/ )
+    // HACK disable blur when there is a fullscreen effects. Needed for e.g. cube to work
+    if( mValid && !effects->activeFullScreenEffect() /*&& mTransparentWindows*/ )
         {
         // rendering everything onto render target
         effects->pushRenderTarget(mSceneTarget);
@@ -241,7 +242,8 @@ void BlurEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
 void BlurEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( mValid /*&& mTransparentWindows*/ )
+    // HACK disable blur when there is a fullscreen effects. Needed for e.g. cube to work
+    if( mValid && !effects->activeFullScreenEffect() /*&& mTransparentWindows*/ )
         {
             if( mask & PAINT_WINDOW_TRANSLUCENT &&
                 (data.opacity != 1.0 || data.contents_opacity != 1.0 || data.decoration_opacity != 1.0 ))
