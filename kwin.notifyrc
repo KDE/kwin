@@ -5657,6 +5657,7 @@ Comment[zh_TW]=在其他虛擬桌面上的視窗要求注意
 [Event/compositingslow]
 Name=Compositing Performance Is Slow
 Name[ca]=El rendiment de la composició és lent
+Name[de]=Die Composit-Geschwindigkeit ist niedrig
 Name[el]=Οι επιδόσεις σύνθεσης της εικόνας είναι χαμηλές
 Name[gl]=O rendimento da composición é pobre
 Name[gu]=કોમ્પોઝિટીંગ કાર્યક્ષમતા ધીમી છે
@@ -5677,6 +5678,7 @@ Name[x-test]=xxCompositing Performance Is Slowxx
 Name[zh_TW]=組合效能過慢
 Comment=The compositing performance was too slow and compositing has been suspended
 Comment[ca]=El rendiment de la composició era massa lent i s'ha suspès
+Comment[de]=Die Composit-Geschwindigkeit ist niedrig, daher wurde die Compositing ausgesetzt.
 Comment[el]=Οι επιδόσεις σύνθεσης της εικόνας ήταν πολύ χαμηλές και η σύνθεση εικόνας αναστάλθηκε
 Comment[gl]=O rendimento da composición era baixo de máis polo que se detivo a composición
 Comment[gu]=કોમ્પોઝિંટિંગ કાર્યક્ષમતા બહુ ધીમી છે અને કોમ્પોઝિંટિંગ સસ્પેન્ડ કરવામાં આવ્યું છે

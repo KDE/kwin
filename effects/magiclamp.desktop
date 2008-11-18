@@ -2,6 +2,7 @@
 Name=Magic Lamp
 Name[be@latin]=Mahičnaja lampa
 Name[ca]=Làmpada màgica
+Name[de]=Wunderlampe
 Name[el]=Μαγικό λυχνάρι
 Name[et]=Võlulatern
 Name[gl]=Lámpara máxica
@@ -31,6 +32,7 @@ Icon=preferences-system-windows-effect-magic-lamp
 Comment=Simulate a magic lamp when minimizing windows
 Comment[be@latin]=Minimalizuje vokny ŭ mahičnuju lampu.
 Comment[ca]=Simula una làmpada màgica en minimitzar les finestres
+Comment[de]=Simuliert zum Minimieren von Fenstern den Effekt einer Wunderlampe.
 Comment[el]=Εξομοίωση ενός μαγικού λυχναριού κατά την ελαχιστοποίηση παραθύρων
 Comment[gl]=Simula unha lámpada máxica ao minimizar as fiestras
 Comment[gu]=વિન્ડોને નાની કરતી વખતે જાદુઇ દીવોની અસર આપે છે
