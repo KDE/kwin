@@ -1209,7 +1209,7 @@ void Client::setDesktop( int desktop )
     {
     if( desktop != NET::OnAllDesktops ) // do range check
         desktop = qMax( 1, qMin( workspace()->numberOfDesktops(), desktop ));
-    desktop = rules()->checkDesktop( desktop );
+    desktop = qMax( 1, qMin( workspace()->numberOfDesktops(), rules()->checkDesktop( desktop )));
     if( desk == desktop )
         return;
     int was_desk = desk;
