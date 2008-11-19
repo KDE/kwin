@@ -493,9 +493,9 @@ void FlipSwitchEffect::tabBoxAdded( int mode )
     if( !mActivated )
         {
         // only for windows mode
-        input = effects->createFullScreenInputWindow( this, Qt::BlankCursor );
         if( mode == TabBoxWindowsMode && effects->currentTabBoxWindowList().count() > 0 )
             {
+            input = effects->createFullScreenInputWindow( this, Qt::BlankCursor );
             effects->refTabBox();
             effects->setActiveFullScreenEffect( this );
             selectedWindow = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
@@ -529,7 +529,8 @@ void FlipSwitchEffect::tabBoxClosed()
         // if animation than deactivate after animation
         mActivated = false;
         effects->unrefTabBox();
-        effects->destroyInputWindow( input );
+        if( input )
+            effects->destroyInputWindow( input );
         if( mAnimation )
             {
             if( start && rearrangeWindows == 0 )
