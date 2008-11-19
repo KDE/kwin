@@ -312,6 +312,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 { // Prepare it for moving
                 windowMoveDiff = w->pos() - unscalePos( me->pos(), NULL );
                 windowMove = w;
+                effects->setElevatedWindow( windowMove, true );
                 }
             }
         else if(( me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton ) && windowMove == NULL )
@@ -329,14 +330,17 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
         }
     if( e->type() == QEvent::MouseButtonRelease && me->button() == Qt::LeftButton )
         {
-        if( wasWindowMove )
-            effects->activateWindow( windowMove ); // Just in case it was deactivated
-        else
+        if( !wasWindowMove )
             {
             setCurrentDesktop( highlightedDesktop );
             setActive( false );
             }
-        windowMove = NULL;
+        if( windowMove )
+            {
+            effects->activateWindow( windowMove ); // Just in case it was deactivated
+            effects->setElevatedWindow( windowMove, false );
+            windowMove = NULL;
+            }
         wasWindowMove = false;
         }
     }
