@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Minimize Animation
 Name[af]=Minimeer-animasie
+Name[ar]=حركة بطيئة
 Name[be]=Анімацыя змяншэння
 Name[be@latin]=Animacyja minimalizacyi akna
 Name[bg]=Минимизиране на анимацията
@@ -70,9 +71,11 @@ Comment[el]=Εφέ κίνησης της ελαχιστοποίησης των �
 Comment[gl]=Anima a minimización das fiestras
 Comment[gu]=વિન્ડોને નાની કરતી વખતે એનિમેટ કરો
 Comment[he]=הנפשת מיזעור חלונות
+Comment[it]=Anima la minimizzazione delle finestre
 Comment[kk]=Терезеледі түюді анимациялау
 Comment[km]=ធ្វើ​ឲ្យ​​ការ​​បង្រួម​បង្អួច​អប្បបរមា​​មាន​ចលនា
 Comment[kn]=ಕಿಟಕಿಗಳನ್ನು ಕನಿಷ್ಠೀಕರಿಸುವುದನ್ನು ಸಜೀವನಗೊಳಿಸು (ಅನಿಮೇಟ್)
+Comment[lt]=Animuoja langų sumažinimą
 Comment[ml]=ജാലകങ്ങള്‍ ചെറുതാക്കുന്നതു് രസകരമാക്കുന്നു 
 Comment[nb]=Animer vinduer som minimeres
 Comment[nds]=Dat Minimeren vun Finstern animeren

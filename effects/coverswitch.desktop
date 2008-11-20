@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Cover Switch
+Name[ar]=محول التغطية
 Name[bg]=Превключване между прозорци
 Name[ca]=Canvi de capa
 Name[da]=Cover-skifter
@@ -47,6 +48,7 @@ Comment[ca]=Mostra un efecte de capes en el commutador de finestres amb alt+tab
 Comment[el]=Εμφάνιση ενός εφέ ροής εξωφύλλου για την εναλλαγή παραθύρων alt+tab
 Comment[gl]=Mostra un efeito de fluxo da cuberta no alternador de fiestra alt+tab
 Comment[gu]=alt+tab વિન્ડો બદલનારમાં કવર ફ્લો અસર બતાવે છે
+Comment[it]=Mostra un effetto Cover Flow al posto dello scambiafinestre Alt-Tab
 Comment[kk]=Alt+tab терезе ауыстырғышында Cover Flow эффектін көрсету
 Comment[km]=បង្ហាញ​បែបផែន​លំហូ​សម្រាប់កម្មវិធី​ប្ដូរ​បង្អួច​ជំនួស+ថេប
 Comment[kn]=ಕಿಟಕಿ ಪರಿವರ್ತಕದಲ್ಲಿ (ಸ್ವಿಚ್) ಕವರ್ ಫ್ಲೋ ಪರಿಣಾಮವನ್ನು ತೋರಿಸು

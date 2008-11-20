@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Box Switch
+Name[ar]=محول الصندوق
 Name[bg]=Превключване между прозорци
 Name[ca]=Canvi d'aplicació
 Name[de]=Kasten mit Minibildern
@@ -54,6 +55,7 @@ Comment[de]=Fenstervorschaubilder werden in einem Kasten angezeigt und durchlauf
 Comment[el]=Εμφάνιση επισκοπήσεων των παραθύρων στην εναλλαγή παραθύρων alt+tab
 Comment[gl]=Mostra miniaturas das fiestras no alternador de fiestra alt+tab
 Comment[gu]=alt+tab વિન્ડો બદલનારમાં વિન્ડોની થમ્બનીલ બતાવે છે
+Comment[it]=Mostra miniature delle finestre nello scambiafinestre Alt-Tab
 Comment[kk]=Alt+tab терезе ауыстырғышында терезенің нобайын көрсету
 Comment[km]=បង្ហាញ​រូបភាព​តូចៗ​របស់​បង្អួជ​នៅ​ក្នុង​កម្មវិធី​ប្ដូរ​បង្អួច​ជំនួស+ថេប
 Comment[kn]= alt+tab ಕಿಟಕಿ ಪರಿವರ್ತಕದಲ್ಲಿ (ಸ್ವಿಚ್) ಸೂಚ್ಯಚಿತ್ರಗಳನ್ನು (ಥಂಬ್ ನೇಲ್ಸ್) ತೋರಿಸು

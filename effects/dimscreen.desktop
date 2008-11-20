@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Dim Screen for Administrator Mode
 Name[af]=Verdof vir Administrateurmodus
+Name[ar]=نافذة مدير النظام قاتمة
 Name[ca]=Enfosqueix la pantalla pel mode administrador
 Name[cs]=Ztmavit obrazovku v administrátorském režimu
 Name[da]=Dæmp skærmen til administratortilstand
@@ -55,6 +56,7 @@ Comment[el]=Σκίαση ολόκληρης της οθόνης όταν απα�
 Comment[gl]=Escurece toda a pantalla cando se piden os privilexios de root
 Comment[gu]=જ્યારે રૂટ હક્ક માંગવામાં આવે ત્યારે આખા સ્ક્રિનને ઘેરો બનાવે છે
 Comment[he]=החשך את המסך כולו כאשר מבקשים גישת root
+Comment[it]=Scurisce tutto lo schermo quando vengono richiesti i priviliegi di root
 Comment[kk]=root құқығын сұрағанда бүкіл экранды күңгірттеу
 Comment[km]=ធ្វើ​ឲ្យ​អេក្រង់ទាំងមូល​ងងឹត​នៅពេល​បង្ហាញ​សិទ្ធិជា​ root
 Comment[kn]=ನಿರ್ವಾಹಕ ಸವಲತ್ತುಗಳನ್ನು ಕೇಳುವಾಗ ಇಡೀ ತೆರೆಯನ್ನು ಮಂಕಾಗಿಸುತ್ತದೆ

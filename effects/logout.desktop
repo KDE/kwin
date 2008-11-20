@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Logout
 Name[af]=Afteken
+Name[ar]=سجّل خروج
 Name[be]=Выйсці
 Name[be@latin]=Vychad
 Name[bg]=Изход
@@ -74,6 +75,7 @@ Comment[de]=Entsättigt die Arbeitsfläche, wenn der Abmelde-Dialog erscheint.
 Comment[el]=Αποχρωματισμός της επιφάνειας εργασίας κατά την εμφάνιση του διαλόγου αποσύνδεσης
 Comment[gl]=Desatura o escritorio ao mostrar o diálogo de saída
 Comment[gu]=બહાર નીકળવાનો સંવાદ દર્શાવતી વખતે ડેસ્કટોપ ઝાંખું બનાવો
+Comment[it]=Desatura il desktop quando viene mostrata la finestra di dialogo per terminare la sessione
 Comment[kk]=Шығу диалогын көрсеткенде үстелді ертіп жіберу
 Comment[km]=ជ្រាប​ផ្ទៃតុ​នៅពេល​បង្ហាញ​ប្រអប់​ចេញ
 Comment[kn]=ಹೊರನಡೆಯುವಿಕೆ (ಲಾಗೌಟ್) ಸಂವಾದವನ್ನು ತೋರಿಸುವಾಗ ಗಣಕತೆರೆಯ ಶುಧ್ಧತ್ವವನ್ನು ಕುಂದಿಸು
