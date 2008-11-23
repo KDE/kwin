@@ -342,7 +342,13 @@ int Toplevel::screen() const
     {
     if( !options->xineramaEnabled )
         return 0;
-    return workspace()->screenNumber( geometry().center());
+    int s = workspace()->screenNumber( geometry().center());
+    if( s < 0 )
+        {
+        kDebug() << "center" << geometry().center() << "screen" << s;
+        return 0; 
+        }
+    return s;
     }
 
 bool Toplevel::isOnScreen( int screen ) const
