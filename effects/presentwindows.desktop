@@ -71,6 +71,7 @@ Comment[it]=Zoom indietro finché tutte le finestre aperte possono essere mostra
 Comment[kk]=Ашық терезелерді кішірейтіп қатарлап көрсету
 Comment[km]=បង្រួម​រហូត​ទាល់​តែ​បង្អួច​ដែល​បើក​ទាំងអស់​អាច​ត្រូវ​បាន​បង្ហាញ​ម្ដង​មួយផ្នែកៗ
 Comment[kn]=ಎಲ್ಲಾ ತೆರೆದ ಕಿಟಕಿಗಳೂ ಅಕ್ಕಪಕ್ಕದಲ್ಲಿ ಓರಣಗೊಳ್ಳುವವರೆಗೆ ಗಾತ್ರವನ್ನು ಕುಗ್ಗಿಸು
+Comment[lv]=Attālināt līdz visus atvērtos logus var parādīt blakus
 Comment[ml]=പുറകിലേക്ക് വരുക (സൂം ഔട് ചെയ്യുക) - ഇതു ചെയ്യുംബോള്‍ എല്ലാം ജാലകങ്ങളും ക്രമത്തില്‍ ഓരോന്നായി കാണാന്‍ കഴിയും
 Comment[nb]=Forminsk til alle åpnede vinduer kan vises side ved side
 Comment[nds]=Ansicht so grötter maken, dat sik all Finstern blangenanner wiesen laat
@@ -81,6 +82,7 @@ Comment[sv]=Zooma ut till alla öppnade fönster kan visas sida vid sida
 Comment[tr]=Tüm açık pencereler yan yana gösterilene kadar küçült
 Comment[uk]=Зменшує масштаб вікон так, щоб всі відкриті вікна можна було розташувати поряд
 Comment[x-test]=xxZoom out until all opened windows can be displayed side-by-sidexx
+Comment[zh_CN]=缩小所有打开的窗口，使其可以按次序显示
 Comment[zh_TW]=縮放所有開啟的視窗，讓它們排排站
 
 Type=Service

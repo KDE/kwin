@@ -79,6 +79,7 @@ Comment[it]=Desatura il desktop quando viene mostrata la finestra di dialogo per
 Comment[kk]=Шығу диалогын көрсеткенде үстелді ертіп жіберу
 Comment[km]=ជ្រាប​ផ្ទៃតុ​នៅពេល​បង្ហាញ​ប្រអប់​ចេញ
 Comment[kn]=ಹೊರನಡೆಯುವಿಕೆ (ಲಾಗೌಟ್) ಸಂವಾದವನ್ನು ತೋರಿಸುವಾಗ ಗಣಕತೆರೆಯ ಶುಧ್ಧತ್ವವನ್ನು ಕುಂದಿಸು
+Comment[lv]=Padarīt darbvirsmu pelēktoņu , parādot atteikšanās logu
 Comment[ml]=പുറത്തേക്ക് കടക്കാനുള്ള ഡയലോഗ് കാണിക്കുംബോള്‍ പണിയിടം ഡീ-സാചുറേറ്റ് ചെയ്യുക
 Comment[nb]=Blek ut skrivebordet når utloggingsdialogen vises
 Comment[nds]=De Sattheit vun de Schriefdischklören bi't Wiesen vun den Afmelldialoog daalsetten
@@ -90,6 +91,7 @@ Comment[sv]=Försvaga färger på skrivbordet när utloggningsdialogrutan visas
 Comment[tr]=Çıkış penceresi gösterilirken ekranı soldur
 Comment[uk]=Зменшення насиченості кольорів стільниці під час показу вікна виходу
 Comment[x-test]=xxDesaturate the desktop when displaying the logout dialogxx
+Comment[zh_CN]=显示注销对话框时降低桌面饱和度
 Comment[zh_TW]=顯示登出視窗時將桌面淡化
 
 Type=Service

@@ -73,6 +73,7 @@ Comment[it]=Zoom indietro in modo che tutti i desktop virtuali siano mostrati af
 Comment[kk]=Үстелдерді кішірейтіп торда қатарлап көрсету
 Comment[km]=បង្រួម​ផ្ទៃតុ​ទាំងអស់​បង្ហាញ​ម្ដង​មួយ​ផ្នែក​ៗ​នៅ​ក្នុង​ក្រឡាចត្រង្គ
 Comment[kn]=ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳೂ ಅಕ್ಕಪಕ್ಕದಲ್ಲಿ ಚೌಕಾಕಾರದಲ್ಲಿ ಓರಣಗೊಳ್ಳುವಂತೆ ಗಾತ್ರವನ್ನು ಕುಗ್ಗಿಸು
+Comment[lv]=Attālina, lai visas darbvirsmas ir redzamas blakus - režģī
 Comment[ml]=പുറകിലേക്ക് വരുക (സൂം ഔട് ചെയ്യുക) - ഇതു ചെയ്യുംബോള്‍ എല്ലാം പണിയിടങ്ങളും ഒരു ഗ്രിഡില്‍ ഓരോന്നായി സജ്ജീകരിക്കുന്നു
 Comment[nb]=Forminsk så alle skrivebord vises side om side i et rutenett
 Comment[nds]=Ansicht grötter maken, so dat all Schriefdischen blangenanner in en Gadder wiest warrt
@@ -83,6 +84,7 @@ Comment[sv]=Zooma ut så att alla skrivbord visas sida vid sida i ett rutnät
 Comment[tr]=Tüm masaüstlerini bir ızgara şeklinde yan yana küçült
 Comment[uk]=Зменшити так, щоб всі стільниці було показано поруч у вигляді таблиці
 Comment[x-test]=xxZoom out so all desktops are display side-by-side in a gridxx
+Comment[zh_CN]=缩小所有桌面，使其可以在网格内按次序显示
 Comment[zh_TW]=縮放所有桌面，讓它們排排站
 
 Type=Service

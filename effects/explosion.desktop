@@ -70,6 +70,7 @@ Comment[it]=Fa esplodere le finestre alla chiusura
 Comment[kk]=Жабылатын терезе жарылып кетіріледі
 Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​ផុស​ចេញ​ពេល​បិទ​ពួក​វា​
 Comment[kn]=ಕಿಟಕಿಗಳನ್ನು ಮುಚ್ಚಿದಾಗ ಅವು ಸಿಡಿಯುವಂತೆ ಮಾಡುತ್ತದೆ
+Comment[lv]=Liek logiem eksplodēt, kad tos aizver
 Comment[ml]=അടയ്ക്കുമ്പോള്‍ ജാലകങ്ങള്‍ പൊട്ടിത്തെറിയ്ക്കുന്നു. 
 Comment[nb]=Gjør at vinduer som lukkes, eksploderer
 Comment[nds]=Finstern bi't Tomaken exploderen laten
@@ -81,6 +82,7 @@ Comment[sv]=Gör att fönster exploderar när de stängs
 Comment[tr]=Kapatılırken pencerelere patlama efekti ver
 Comment[uk]=Робить так, щоб вікна при закритті вибухали
 Comment[x-test]=xxMake windows explode when they are closedxx
+Comment[zh_CN]=当窗口被关闭时，使其呈现爆炸效果
 Comment[zh_TW]=視窗關閉時讓視窗「爆炸」
 
 Type=Service

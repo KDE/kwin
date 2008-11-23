@@ -76,6 +76,7 @@ Comment[kk]=Терезеледі түюді анимациялау
 Comment[km]=ធ្វើ​ឲ្យ​​ការ​​បង្រួម​បង្អួច​អប្បបរមា​​មាន​ចលនា
 Comment[kn]=ಕಿಟಕಿಗಳನ್ನು ಕನಿಷ್ಠೀಕರಿಸುವುದನ್ನು ಸಜೀವನಗೊಳಿಸು (ಅನಿಮೇಟ್)
 Comment[lt]=Animuoja langų sumažinimą
+Comment[lv]=Animē logu minimizēšanu
 Comment[ml]=ജാലകങ്ങള്‍ ചെറുതാക്കുന്നതു് രസകരമാക്കുന്നു 
 Comment[nb]=Animer vinduer som minimeres
 Comment[nds]=Dat Minimeren vun Finstern animeren
@@ -87,6 +88,7 @@ Comment[sv]=Animera minimering av fönster
 Comment[tr]=Pencerelerin küçülüşünü canlandır
 Comment[uk]=Оживляє мінімізацію вікон
 Comment[x-test]=xxAnimate the minimizing of windowsxx
+Comment[zh_CN]=窗口最小化的动画
 Comment[zh_TW]=動畫最小化視窗
 
 Type=Service

@@ -67,6 +67,7 @@ Comment[kk]=Белсенді емес терезелерді күңгіртте�
 Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​អសកម្ម​ងងឹត​
 Comment[kn]=ನಿಷ್ಕ್ರಿಯ ಕಿಟಕಿಗಳನ್ನು ಮಂಕಾಗಿಸು
 Comment[lt]=Užtemdo neaktyvius langus
+Comment[lv]=Patumšināt neaktīvos logus
 Comment[ml]=നിര്‍ജ്ജീവ ജാലകങ്ങള്‍ മറയ്ക്കുന്നു 
 Comment[nb]=Mørklegg inaktive vinduer
 Comment[nds]=Nich aktive Finstern düüsterer maken
@@ -78,6 +79,7 @@ Comment[sv]=Gör inaktiva fönster mörkare
 Comment[tr]=Etkin olmayan pencereleri koyulaştır
 Comment[uk]=Затемнює неактивні вікна
 Comment[x-test]=xxDarken inactive windowsxx
+Comment[zh_CN]=将未激活窗口变暗
 Comment[zh_TW]=將不使用的視窗變暗
 
 Type=Service

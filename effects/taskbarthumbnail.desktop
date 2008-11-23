@@ -67,6 +67,7 @@ Comment[it]=Mostra le miniature delle finestre se il cursore è sul relativo ele
 Comment[kk]=Тышқан меңзері тапсырма панеліндегінің үстінен өткенде терезесін көрсету
 Comment[km]=បង្ហាញ​រូបភាព​តូចៗ​របស់​បង្អួច នៅ​ពេល​ទស្សន៍​នៅ​លើ​ធាតុ​របារ​ភារកិច្ច​របស់​ពួកវា
 Comment[kn]=ಸ್ಥಳಸೂಚಿಗಳು (ಕರ್ಸರ್) ಕಾರ್ಯಪಟ್ಟಿ   ನಮೂದುಗಳ ಮೇಲೆ ಬಂದಾಗ ಕಿಟಕಿ ಸೂಚ್ಯಚಿತ್ರಗಳನ್ನು (ಥಂಬ್ ನೇಲ್ಸ್) ತೋರುವಂತೆ ಮಾಡು
+Comment[lv]=Parāda loga sīktēlu, kad kursors atrodas uz uzdevumjoslas ieraksta
 Comment[ml]=ജാലകനഖചിത്രങ്ങള്‍ പണിനിരയില്‍ മൌസ് നീക്കുമ്പോള്‍ കാണിക്കുക
 Comment[nb]=Vis minibilder av vinduene når pekeren er over oppgavelinja
 Comment[nds]=Bi't Wiesen op Programmbalken-Indrääg Vöransichten vun de Finstern wiesen
@@ -78,6 +79,7 @@ Comment[sv]=Visa miniatyrbilder av fönster när pekaren hålls över deras post
 Comment[tr]=Bir pencerenin görev çubuğundaki girdisi üzerine gelindiğinde o pencerenin küçük resmini gösterir
 Comment[uk]=Показує мініатюри вікон, коли курсор знаходиться над елементом панелі задач
 Comment[x-test]=xxDisplay window thumbnails when hovering over taskbar entriesxx
+Comment[zh_CN]=当鼠标悬停在任务栏时显示窗口缩略图
 Comment[zh_TW]=當游標停在工作列的按鈕上面時，顯示視窗的縮圖
 
 Type=Service

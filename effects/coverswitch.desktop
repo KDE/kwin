@@ -52,6 +52,7 @@ Comment[it]=Mostra un effetto Cover Flow al posto dello scambiafinestre Alt-Tab
 Comment[kk]=Alt+tab терезе ауыстырғышында Cover Flow эффектін көрсету
 Comment[km]=បង្ហាញ​បែបផែន​លំហូ​សម្រាប់កម្មវិធី​ប្ដូរ​បង្អួច​ជំនួស+ថេប
 Comment[kn]=ಕಿಟಕಿ ಪರಿವರ್ತಕದಲ್ಲಿ (ಸ್ವಿಚ್) ಕವರ್ ಫ್ಲೋ ಪರಿಣಾಮವನ್ನು ತೋರಿಸು
+Comment[lv]=Parāda 'Vāku plūsmas' efektu Alt+Tab logu pārslēdzējā
 Comment[ml]=ജാലക സ്വിച്ചര്‍  - alt+tab-നായി ഒരു കവര്‍ ഒഴുക്ക് പ്രഭാവം കാണിക്കുക.
 Comment[nb]=Vis omslagsflyt-effekt for alt+tab-vindusbytteren
 Comment[nds]=En Fleeteffekt bi't Wesseln vun Finstern mit Alt+Tabtast wiesen
@@ -63,6 +64,7 @@ Comment[sv]=Visar en flytande omslagseffekt vid fönsterbyte med Alt+Tabulator
 Comment[tr]=Alt-tab pencere seçicideki pencereleri Kapak Akışı efekti ile göster
 Comment[uk]=Демонструє ефект поверхневої течії для перемикача вікон за alt+tab
 Comment[x-test]=xxDisplay a Cover Flow effect for the alt+tab window switcherxx
+Comment[zh_CN]=在 Alt+Tab 窗口切换器中呈现封面流动效果
 Comment[zh_TW]=在 alt+tab 視窗切換器中顯示覆蓋流效果
 
 Type=Service

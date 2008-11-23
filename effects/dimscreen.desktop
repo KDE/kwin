@@ -60,6 +60,7 @@ Comment[it]=Scurisce tutto lo schermo quando vengono richiesti i priviliegi di r
 Comment[kk]=root құқығын сұрағанда бүкіл экранды күңгірттеу
 Comment[km]=ធ្វើ​ឲ្យ​អេក្រង់ទាំងមូល​ងងឹត​នៅពេល​បង្ហាញ​សិទ្ធិជា​ root
 Comment[kn]=ನಿರ್ವಾಹಕ ಸವಲತ್ತುಗಳನ್ನು ಕೇಳುವಾಗ ಇಡೀ ತೆರೆಯನ್ನು ಮಂಕಾಗಿಸುತ್ತದೆ
+Comment[lv]=Aptumšina visu ekrānu, kad pieprasa root privilēģijas
 Comment[ml]=മൂല (റൂട്ട്) വിശേഷാധികാരം അഭ്യര്‍ത്തിക്കുംബോള്‍ സ്ക്രീന്‍ കറുപ്പിക്കുന്നു
 Comment[nb]=Mørklegger hele skjermen når det spørres etter root-privilegier
 Comment[nds]=Maakt den helen Schirm düüsterer, wenn na Systeempleger-Verlöven fraagt warrt
@@ -71,6 +72,7 @@ Comment[sv]=Gör hela skärmen mörkare när administratörsrättigheter begärs
 Comment[tr]=Yönetici hakları isteğinde bulunulduğunda ekranı koyulaştırır
 Comment[uk]=Робить тьмяним весь екран, якщо надходить запит на привілеї адміністратора
 Comment[x-test]=xxDarkens the entire screen when requesting root privilegesxx
+Comment[zh_CN]=在请求 root 权限时暗淡化整个屏幕
 Comment[zh_TW]=當請求 root 權限時把整個螢幕變暗
 
 Type=Service

@@ -74,6 +74,7 @@ Comment[it]=Permette di disegnare delle righe sul desktop
 Comment[kk]=Үстеліңізде сызықтарды салу мүмкіндігін береді
 Comment[km]=អនុញ្ញាត​ឲ្យ​អ្នក​គូស​បន្ទាត់​ច្រើន​នៅ​លើ​ផ្ទៃតុ
 Comment[kn]=ಗಣಕತೆರೆಯಲ್ಲಿ ಗೆರೆಗಳನ್ನೆಳೆಯಲು ಅನುವುಮಾಡಿಕೊಡುತ್ತದೆ
+Comment[lv]=Ļauj ar peli zīmēt līnijas uz darbvirsmas
 Comment[ml]=പണിയിടത്തില്‍ നിങ്ങള്‍ക്കിതുപയോഗിച്ചു് വരകള്‍ വരയ്ക്കാം 
 Comment[nb]=Brukes til å tegne linjer på skrivebordet
 Comment[nds]=Dor kannst Du Streken mit op den Schriefdisch malen
@@ -85,6 +86,7 @@ Comment[sv]=Låter dig rita linjer på skrivbordet
 Comment[tr]=Masaüstünüze çizgiler çizmenizi sağlar
 Comment[uk]=Дає вам змогу малювати лінії на стільниці
 Comment[x-test]=xxAllows you to draw lines on the desktopxx
+Comment[zh_CN]=让您在桌面上画线
 Comment[zh_TW]=讓您在您的桌面上畫線
 
 Type=Service

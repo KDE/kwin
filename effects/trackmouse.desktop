@@ -71,6 +71,7 @@ Comment[it]=Quando è attivato mostra un effetto per localizzare la posizione de
 Comment[kk]=Белсенді тышқынның ізін көрсету
 Comment[km]=បង្ហាញ​ទីតាំង​របស់ទស្សន៍ទ្រនិច​កណ្ដុរ​នៅពេល​បាន​ធ្វើ​ឲ្យ​សកម្ម
 Comment[kn]=ಸಕ್ರಿಯಗೊಳಿಸಿದಾಗ ಮೂಷಕದ ಸ್ಥಳಸೂಚಿಯನ್ನು (ಕರ್ಸರ್) ತೋರಿಸು
+Comment[lv]=Kad aktivizēts, rāda peles kursora atrašanās vietu
 Comment[ml]=സജീവമാക്കുമ്പോള്‍ മൌസ് കര്‍സറിന്റെ സ്ഥാനം കാണിക്കുന്ന എഫക്ട് കാണിക്കുക
 Comment[nb]=Vis en effekt som finner musepekeren når dette er slått på
 Comment[nds]=Wenn anmaakt, de Steed vun den Muuswieser rutheven
@@ -82,6 +83,7 @@ Comment[sv]=Visa en lokaliseringseffekt för muspekaren om aktiverad
 Comment[tr]=Etkinleştirildiğinde fare işaretçisinin konumlandırma efekti gösterir
 Comment[uk]=Після активації показує позицію курсора мишки
 Comment[x-test]=xxDisplay a mouse cursor locating effect when activatedxx
+Comment[zh_CN]=激活时显示鼠标指针定位效果
 Comment[zh_TW]=啟動時顯示滑鼠游標定位效果
 
 Type=Service

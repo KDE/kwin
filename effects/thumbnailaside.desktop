@@ -67,6 +67,7 @@ Comment[it]=Mostra le miniature delle finestre sul fianco dello schermo
 Comment[kk]=Терезе нобайларын экранның шетінде көрсету
 Comment[km]=បង្ហាញ​រូបភាព​តូចៗ​របស់​បង្អួច​នៅគែម​​អេក្រង់
 Comment[kn]=ಕಿಟಕಿಯ ಸೂಚ್ಯಚಿತ್ರವನ್ನು ತೆರೆಯ ಅಂಚಿನಲ್ಲಿ ತೋರುವಂತೆ ಮಾಡು
+Comment[lv]=Rāda logu sīktēlus ekrāna malā
 Comment[ml]=ജാലകത്തിനുള്ള നഖചിത്രം സ്ക്രീനിന്റെ കോണില്‍ കാണിക്കുക
 Comment[nb]=Viser vinduers minibilder ved kanten av skjermen
 Comment[nds]=Finster-Vöransichten an de Schirmkant wiesen
@@ -78,6 +79,7 @@ Comment[sv]=Visa miniatyrbilder av fönster vid skärmkanten
 Comment[tr]=Ekranın kenarında pencerenin küçük resmini gösterir
 Comment[uk]=Показує мініатюри вікон на краю екрана
 Comment[x-test]=xxDisplay window thumbnails on the edge of the screenxx
+Comment[zh_CN]=在屏幕边缘显示窗口的缩略图
 Comment[zh_TW]=在螢幕的邊緣顯示視窗縮圖
 
 Type=Service

@@ -77,6 +77,7 @@ Comment[it]=Inverte i colori del desktop e delle finestre
 Comment[kk]=Үстел мен терезелердің түстерін терістеу
 Comment[km]=បម្លែង​ពណ៌​របស់​ផ្ទៃតុ​ និង​បង្អួច
 Comment[kn]=ಕಿಟಕಿಗಳ ಮತ್ತು ಗಣಕತೆರೆಯ ಬಣ್ಣಗಳನ್ನು ವಿಲೋಮಗೊಳಿಸುತ್ತದೆ (ಇನ್ವರ್ಟ್)
+Comment[lv]=Invertē darbvirsmas un logu krāsas
 Comment[ml]=പണിയിടത്തിന്റെയും ജാലകങ്ങളുടെയും നിറം ഇന്‍വര്‍ട് ചെയ്യുന്നു (വിപരീതം ആക്കുന്നു)
 Comment[nb]=Snur om (vender fortegn på) farger på skrivebordet og vinduene
 Comment[nds]=Dreiht de Klören vun Schriefdisch un Finstern üm
@@ -88,6 +89,7 @@ Comment[sv]=Invertera skrivbordets och fönstrens färg
 Comment[tr]=Masaüstünün ve pencerelerin renklerini tersine çevir
 Comment[uk]=Інвертує кольори стільниці і вікон
 Comment[x-test]=xxInverts the color of the desktop and windowsxx
+Comment[zh_CN]=反转桌面和窗口的颜色
 Comment[zh_TW]=將桌面與視窗的顏色反相
 Icon=preferences-system-windows-effect-invert
 

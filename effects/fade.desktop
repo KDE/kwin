@@ -73,6 +73,7 @@ Comment[it]=Fa svanire e comparire gradualmente le finestre quando sono mostrate
 Comment[kk]=Көрсеткенде/жасырғанда терезелер біртіндеп пайда/ғайып болады
 Comment[km]=ធ្វើ​ឲ្យ​បង្អួច​លេច​បន្តិច​ម្តង​/លិចបន្តិច​ម្តង​យ៉ាង​រលូន ពេល​ពួក​វា​ត្រូវ​បាន​បង្ហាញ ឬ​លាក់
 Comment[kn]=ಕಿಟಕಿಗಳನ್ನು ತೆರೆದಾಗ ಅಥವಾ ಅಡಗಿಸಿದಾಗ ಅವುಗಳು ಸುಗಮವಾಗಿ  ಒಳಮಸುಳು/ಹೊರಮಸುಳುವಂತೆ ಮಾಡುತ್ತದೆ
+Comment[lv]=Liek logiem vienmērīgi izdzist un parādīties, kad tos parāda vai noslēpj 
 Comment[ml]=ജാലകങ്ങള്‍ അടയ്ക്കുകയും തുറക്കുകയും ചെയ്യുമ്പോള്‍ മങ്ങുകയും തെളിയുകയും ചെയ്യുന്നപോലെ തോന്നിയ്ക്കുന്നു.
 Comment[nb]=Gjør at vinduer toner jevnt inn/ut når de vises eller skjules
 Comment[nds]=Finstern bi't Wiesen oder Versteken week in- oder utblennen
@@ -84,6 +85,7 @@ Comment[sv]=Gör att fönster mjukt tonas in eller ut när de visas eller döljs
 Comment[tr]=Pencereler gösterilirken prüzsüz bir şekilde belirginleştir, gizlenirken prüzsüz bir şekilde soldur
 Comment[uk]=Робить так, щоб вікна плавно з'являлись / зникали, коли вони показуються або ховаються
 Comment[x-test]=xxMake windows smoothly fade in and out when they are shown or hiddenxx
+Comment[zh_CN]=当窗口被显示或者隐藏时，使窗口平滑地淡入淡出
 Comment[zh_TW]=顯示或隱藏視窗時以淡入、淡出方式呈現
 
 Type=Service

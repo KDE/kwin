@@ -77,6 +77,7 @@ Comment[it]=Registra un video del desktop
 Comment[kk]=Үстеліңіздің бейнефильмін жазып алу
 Comment[km]=​ថត​វីដេអូ​ផ្ទៃតុ​របស់​អ្នក
 Comment[kn]=ಗಣಕತೆರೆಯ ದೃಶ್ಯಾಂಶದ (ವೀಡಿಯೋ ) ಒಂದನ್ನು ದಾಖಲು ಮಾಡು
+Comment[lv]=Ļauj ierakstīt jūsu darbvirsmu video failā
 Comment[ml]=നിങ്ങളുടെ പണിയിടത്തിന്റെ വീഡിയോ റിക്കോര്‍ഡ് ചെയ്യുക
 Comment[nb]=Ta opp video av skrivebordet
 Comment[nds]=En Video vun Dien Schriefdisch opnehmen
@@ -88,6 +89,7 @@ Comment[sv]=Spela in en video av skrivbordet
 Comment[tr]=Masaüstünüzün videosunu kaydedin
 Comment[uk]=Дає змогу записувати відео зі стільниці
 Comment[x-test]=xxRecord a video of your desktopxx
+Comment[zh_CN]=录制桌面视频
 Comment[zh_TW]=讓您錄下您桌面的影像
 
 Type=Service

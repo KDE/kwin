@@ -57,6 +57,7 @@ Comment[it]=Deforma le finestre quando si stanno muovendo
 Comment[kk]=Терезелер жылжығанда майысқақ болады
 Comment[km]=បង្អួច​ទ្រង់ទ្រាយ​បង្អួច​ខណៈពេល​កំពុង​ផ្លាស់ទី​ពួកវា​
 Comment[kn]=ಕಿಟಕಿಗಳನ್ನು  ಸರಿಸುವಾಗ ಅವುಗಳನ್ನು ವಿಕೃತಿಗೊಳಿಸು
+Comment[lv]=Deformē logus, kad tos pārvieto
 Comment[ml]=അനങ്ങുംബോള്‍ ജാലകങ്ങളുടെ ആക്രതി മാറുന്നു
 Comment[nb]=Deformer vinduer mens de flyttes
 Comment[nds]=Finstern bi't Verschuven weihen laten
@@ -68,6 +69,7 @@ Comment[sv]=Förvräng fönster medan de flyttas
 Comment[tr]=Pencereler taşınırken şekillerini boz
 Comment[uk]=Деформує вікна під час їх пересування
 Comment[x-test]=xxDeform windows while they are movingxx
+Comment[zh_CN]=当窗口被移动时，使其呈现变形效果
 Comment[zh_TW]=移動視窗時讓視窗「變形」
 Icon=preferences-system-windows-effect-wobblywindows
 

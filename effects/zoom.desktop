@@ -67,6 +67,7 @@ Comment[it]=Ingrandisce l'intero desktop
 Comment[kk]=Бүкіл үстелді үлкейту
 Comment[km]=ពង្រីក​ផ្ទៃតុ​ទាំង​មូល
 Comment[kn]=ಇಡೀ ಗಣಕತೆರೆಯನ್ನು ಹಿಗ್ಗಿಸು
+Comment[lv]=Palielina visu darbvirsmu
 Comment[ml]=പണിയിട മൊത്തമായും വലുതാക്കുക
 Comment[nb]=Forstørr hele skrivebordet
 Comment[nds]=Den helen Schriefdisch grötter wiesen
@@ -79,6 +80,7 @@ Comment[sv]=Förstora hela skrivbordet
 Comment[tr]=Geçerli masaüstünü büyüt
 Comment[uk]=Збільшує цілу стільницю
 Comment[x-test]=xxMagnify the entire desktopxx
+Comment[zh_CN]=放大整个桌面
 Comment[zh_TW]=放大整個桌面
 
 Type=Service

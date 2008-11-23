@@ -73,6 +73,7 @@ Comment[kk]=Терезеледің пайда болуын анимацияла�
 Comment[km]=ធ្វើ​ឲ្យ​កា​របង្ហាញ​របស់​បង្អួច​មាន​ចលនា
 Comment[kn]=ಕಿಟಕಿಗಳ ತೋರಿಕೊಳ್ಳುವಿಕೆಯನ್ನು ಸಜೀವನಗೊಳಿಸು
 Comment[lt]=Animuoja langų atsiradimą
+Comment[lv]=Animē logu parādīšanos
 Comment[ml]=ജാലകങ്ങള്‍ കളിച്ചുകൊണ്ടു് വരട്ടെ. 
 Comment[nb]=Animer vinduer som dukker opp
 Comment[nds]=Dat Opduken vun Finstern animeren
@@ -84,6 +85,7 @@ Comment[sv]=Animera när fönster framträder
 Comment[tr]=Pencerelerin açılışını canlandır
 Comment[uk]=Анімація появи вікон
 Comment[x-test]=xxAnimate the appearing of windowsxx
+Comment[zh_CN]=呈现窗口出现的动画
 Comment[zh_TW]=動畫顯示視窗出現
 
 Type=Service

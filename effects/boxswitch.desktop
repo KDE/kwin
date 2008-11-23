@@ -59,6 +59,7 @@ Comment[it]=Mostra miniature delle finestre nello scambiafinestre Alt-Tab
 Comment[kk]=Alt+tab терезе ауыстырғышында терезенің нобайын көрсету
 Comment[km]=បង្ហាញ​រូបភាព​តូចៗ​របស់​បង្អួជ​នៅ​ក្នុង​កម្មវិធី​ប្ដូរ​បង្អួច​ជំនួស+ថេប
 Comment[kn]= alt+tab ಕಿಟಕಿ ಪರಿವರ್ತಕದಲ್ಲಿ (ಸ್ವಿಚ್) ಸೂಚ್ಯಚಿತ್ರಗಳನ್ನು (ಥಂಬ್ ನೇಲ್ಸ್) ತೋರಿಸು
+Comment[lv]=Parāda logu sīktēlus Alt+Tab logu pārslēdzējā
 Comment[ml]=ജാലക സ്വിച്ചര്‍  - alt+tab-ല്‍ ജാലകങ്ങളുടെ നഖചിത്രങ്ങള്‍ കാണിക്കുക
 Comment[nb]=Vis minibilder av vinduer i alt+tab vindusveksleren
 Comment[nds]=Finster-Vöransichten bi't Wesseln vun Finstern mit Alt+Tabtast wiesen
@@ -70,6 +71,7 @@ Comment[sv]=Visar miniatyrbilder av fönster vid fönsterbyte med Alt+Tabulator
 Comment[tr]=Alt-tab pencere seçicide pencerelerin küçük resimlerini göster
 Comment[uk]=Показує мініатюри вікон у перемикачі вікон за alt+tab
 Comment[x-test]=xxDisplay thumbnails of windows in the alt+tab window switcherxx
+Comment[zh_CN]=在 Alt+Tab 窗口切换器中显示各窗口的缩略图
 Comment[zh_TW]=在 alt+tab 視窗切換時顯示縮圖
 
 Type=Service

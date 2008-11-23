@@ -81,6 +81,7 @@ Comment[kk]=Терезелердің астына қолеңкесін қоса�
 Comment[km]=បន្ថែម​ស្រមោល​ក្រោម​បង្អួច​
 Comment[kn]=ಕಿಟಕಿಗಳ ಅಡಿಯಲ್ಲಿ ನೆರಳನ್ನು  ಚಿತ್ರಿಸು
 Comment[lt]=Piešti šešėlius po langais
+Comment[lv]=Zīmē ēnas zem logiem
 Comment[ml]=ജാലകങ്ങള്‍ക്കടിയില്‍ നിഴല്‍ കാണിക്കുക 
 Comment[nb]=Tegner skygge under vinduer
 Comment[nds]=Schaddens nerrn Finstern tofögen
@@ -92,6 +93,7 @@ Comment[sv]=Rita skuggor under fönster
 Comment[tr]=Pencerelerin altına gölge ekle
 Comment[uk]=Додає тіні під вікнами
 Comment[x-test]=xxDraw shadows under windowsxx
+Comment[zh_CN]=在窗口下面绘制阴影
 Comment[zh_TW]=在視窗底下加上陰影
 
 Type=Service
