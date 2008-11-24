@@ -30,9 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KStandardDirs>
 #include <kcolorscheme.h>
 #include <KGlobalSettings>
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <QRadialGradient>
-#endif
 
 #include <cmath>
 
@@ -41,48 +38,8 @@ namespace KWin
 
 KWIN_EFFECT( shadow, ShadowEffect )
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-ShadowTiles::ShadowTiles(const QPixmap& shadow)
-    {
-    int w = shadow.width() / 2, h = shadow.height() / 2;
-    cornerSize = QSize(w, h);
-#define DUMP_CNR(_TILE_, _W_, _H_, _XOFF_, _YOFF_)\
-    dump = QPixmap(_W_, _H_);\
-    dump.fill(Qt::transparent);\
-    p.begin(&dump);\
-    p.drawPixmap( 0, 0, shadow, _XOFF_, _YOFF_, _W_, _H_ );\
-    p.end();\
-    _TILE_ = dump
-
-    QPixmap dump; QPainter p;
-    DUMP_CNR(topLeft, w, h, 0, 0);
-    DUMP_CNR(topRight, w, h, w, 0);
-    DUMP_CNR(btmLeft, w, h, 0, h);
-    DUMP_CNR(btmRight, w, h, w, h);
-
-    XRenderPictureAttributes pa; pa.repeat = True;
-#define DUMP_TILE(_TILE_, _W_, _H_, _XOFF_, _YOFF_)\
-    DUMP_CNR(_TILE_, _W_, _H_, _XOFF_, _YOFF_);\
-    XRenderChangePicture (display(), _TILE_, CPRepeat, &pa)
-
-    DUMP_TILE(top, 1, h, w, 0);
-    DUMP_TILE(btm, 1, h, w, h);
-    DUMP_TILE(left, w, 1, 0, h);
-    DUMP_TILE(right, w, 1, w, h);
-
-    DUMP_TILE(center, 1, 1, w, h);
-    }
-
-#undef DUMP_CNR
-#undef DUMP_TILE
-
-#endif
-
 ShadowEffect::ShadowEffect()
     : shadowSize( 0 )
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    , mShadowPics( NULL )
-#endif
     {
     reconfigure( ReconfigureAll );
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
@@ -95,9 +52,15 @@ ShadowEffect::~ShadowEffect()
     for( int i = 0; i < mShadowTextures.size(); i++ )
         for( int j = 0; j < mShadowTextures.at( i ).size(); j++ )
             delete mShadowTextures.at( i ).at( j );
+    for( int i = 0; i < mDefaultShadowTextures.size(); i++ )
+        delete mDefaultShadowTextures.at( i );
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    delete mShadowPics;
+    for( int i = 0; i < mShadowPics.size(); i++ )
+        for( int j = 0; j < mShadowPics.at( i ).size(); j++ )
+            delete mShadowPics.at( i ).at( j );
+    for( int i = 0; i < mDefaultShadowPics.size(); i++ )
+        delete mDefaultShadowPics.at( i );
 #endif
     }
 
@@ -110,31 +73,6 @@ void ShadowEffect::reconfigure( ReconfigureFlags )
     shadowFuzzyness = conf.readEntry( "Fuzzyness", 10 );
     shadowSize = conf.readEntry( "Size", 5 );
     intensifyActiveShadow = conf.readEntry( "IntensifyActiveShadow", true );
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    delete mShadowPics;
-    mShadowPics = NULL;
-    if ( effects->compositingType() == XRenderCompositing)
-        {
-        qreal size = 2*(shadowFuzzyness+shadowSize)+1;
-        QPixmap *shadow = new QPixmap(size, size); shadow->fill(Qt::transparent);
-        size /= 2.0;
-        QRadialGradient rg(size, size, size);
-        QColor c(0,0,0,255);
-        rg.setColorAt(0, c);
-        c.setAlpha(0.3*c.alpha());
-        if (shadowSize > 0)
-            rg.setColorAt(((float)shadowSize)/(shadowFuzzyness+shadowSize), c);
-        c.setAlpha(0); rg.setColorAt(0.8, c);
-        QPainter p(shadow);
-        p.setRenderHint(QPainter::Antialiasing);
-        p.setPen(Qt::NoPen); p.setBrush(rg);
-        p.drawRect(shadow->rect());
-        p.end();
-
-        mShadowPics = new ShadowTiles(*shadow);
-        delete shadow;
-        }
-#endif
     updateShadowColor();
 
     // Load decoration shadow related things
@@ -145,37 +83,96 @@ void ShadowEffect::reconfigure( ReconfigureFlags )
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
+        // Delete any other textures in memory
         for( int i = 0; i < mShadowTextures.size(); i++ )
             for( int j = 0; j < mShadowTextures.at( i ).size(); j++ )
                 delete mShadowTextures.at( i ).at( j );
         mShadowTextures.clear();
+        for( int i = 0; i < mDefaultShadowTextures.size(); i++ )
+                delete mDefaultShadowTextures.at( i );
+        mDefaultShadowTextures.clear();
+
+        // Create decoration shadows
         if( effects->hasDecorationShadows() )
             {
-            QList< QList<QImage> > shadowTextures = effects->shadowTextures();
-            for( int i = 0; i < shadowTextures.size(); i++ )
+            QList< QList<QImage> > shadowImages = effects->shadowTextures();
+            for( int i = 0; i < shadowImages.size(); i++ )
                 {
                 mShadowQuadTypes.append( effects->newWindowQuadType() );
                 QList<GLTexture*> textures;
-                for( int j = 0; j < shadowTextures.at( i ).size(); j++ )
-                    textures.append( new GLTexture( shadowTextures.at( i ).at( j )));
+                for( int j = 0; j < shadowImages.at( i ).size(); j++ )
+                    textures.append( new GLTexture( shadowImages.at( i ).at( j )));
                 mShadowTextures.append( textures );
                 }
             }
 
+        // Create default textures
         mDefaultShadowQuadType = effects->newWindowQuadType(); // TODO: Unregister?
-        QImage shadowTexture( KGlobal::dirs()->findResource( "data", "kwin/shadow-texture.png" ));
-        int hw = shadowTexture.width() / 2;
-        int hh = shadowTexture.height() / 2;
-        mDefaultShadowTextures.clear();
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( 0,  0,  hw, hh )));
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, 0,  1,  hh )));
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, 0,  hw, hh )));
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, 1 )));
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  1 )));
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, 1 )));
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( 0,  hh, hw, hh )));
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, hh, 1,  hh )));
-        mDefaultShadowTextures.append( new GLTexture( shadowTexture.copy( hw, hh, hw, hh )));
+        QImage shadowImage( KGlobal::dirs()->findResource( "data", "kwin/shadow-texture.png" ));
+        int hw = shadowImage.width() / 2;
+        int hh = shadowImage.height() / 2;
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( 0,  0,  hw, hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( hw, 0,  1,  hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( hw, 0,  hw, hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( 0,  hh, hw, 1 )));
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( hw, hh, 1,  1 )));
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( hw, hh, hw, 1 )));
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( 0,  hh, hw, hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( hw, hh, 1,  hh )));
+        mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( hw, hh, hw, hh )));
+        }
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( effects->compositingType() == XRenderCompositing )
+        {
+        // Delete any other pictures in memory
+        for( int i = 0; i < mShadowPics.size(); i++ )
+            for( int j = 0; j < mShadowPics.at( i ).size(); j++ )
+                delete mShadowPics.at( i ).at( j );
+        mShadowPics.clear();
+        for( int i = 0; i < mDefaultShadowPics.size(); i++ )
+            delete mDefaultShadowPics.at( i );
+        mDefaultShadowPics.clear();
+
+        // Create decoration pictures
+        if( effects->hasDecorationShadows() )
+            {
+            QList< QList<QImage> > shadowImages = effects->shadowTextures();
+            for( int i = 0; i < shadowImages.size(); i++ )
+                {
+                mShadowQuadTypes.append( effects->newWindowQuadType() );
+                QList<XRenderPicture*> pictures;
+                for( int j = 0; j < shadowImages.at( i ).size(); j++ )
+                    pictures.append( new XRenderPicture( QPixmap::fromImage( shadowImages.at( i ).at( j ))));
+                mShadowPics.append( pictures );
+                }
+            }
+
+        // Create default pictures
+        mDefaultShadowQuadType = effects->newWindowQuadType(); // TODO: Unregister?
+        QPixmap shadowPixmap( KGlobal::dirs()->findResource( "data", "kwin/shadow-texture.png" ));
+        shadowPixmap = shadowPixmap.scaled( QSize( shadowFuzzyness * 4, shadowFuzzyness * 4 ),
+            Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+        int hw = shadowPixmap.width() / 2;
+        int hh = shadowPixmap.height() / 2;
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( 0,  0,  hw, hh )));
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( hw, 0,  1,  hh )));
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( hw, 0,  hw, hh )));
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( 0,  hh, hw, 1 )));
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( hw, hh, 1,  1 )));
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( hw, hh, hw, 1 )));
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( 0,  hh, hw, hh )));
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( hw, hh, 1,  hh )));
+        mDefaultShadowPics.append( new XRenderPicture( shadowPixmap.copy( hw, hh, hw, hh )));
+
+        // Apply repeat attribute to all pictures
+        XRenderPictureAttributes pa;
+        pa.repeat = true;
+        for( int i = 0; i < mShadowPics.size(); i++ )
+            for( int j = 0; j < mShadowPics.at( i ).size(); j++ )
+                XRenderChangePicture( display(), *mShadowPics.at( i ).at( j ), CPRepeat, &pa );
+        for( int i = 0; i < mDefaultShadowPics.size(); i++ )
+            XRenderChangePicture( display(), *mDefaultShadowPics.at( i ), CPRepeat, &pa );
         }
 #endif
 
@@ -271,8 +268,6 @@ void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
 
 void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
     {
-    if( effects->compositingType() == XRenderCompositing )
-        return; // TODO: Disable quad-based shadows in XRender mode for the moment
     bool shadowDefined = false;
     if( effects->hasDecorationShadows() )
         {
@@ -614,10 +609,52 @@ void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, doub
 #endif
     }
 
+void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, float xScale, float yScale,
+    QColor color, float opacity, float brightness, float saturation )
+    {
+    XRenderColor xc;
+    if( color.isValid() )
+        xc = preMultiply( color, opacity );
+    else
+        xc = preMultiply( QColor( 255, 255, 255 ), opacity );
+    XRenderPicture fill = xRenderFill( &xc );
+
+    // Scale if required
+    if( xScale != 1.0 || yScale != 1.0 )
+        {
+        XTransform xform = {{
+            { XDoubleToFixed( 1.0 / xScale ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ) },
+            { XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 / yScale ), XDoubleToFixed( 0.0 ) },
+            { XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 ) }
+        }};
+        XRenderSetPictureTransform( display(), *picture, &xform );
+        }
+
+    // Render it
+    // TODO: This always uses the fast filter, detect when to use smooth instead
+    if( color.isValid() )
+        XRenderComposite( display(), PictOpOver, fill, *picture, effects->xrenderBufferPicture(), 0, 0, 0, 0,
+            rect.x(), rect.y(), rect.width(), rect.height() );
+    else
+        XRenderComposite( display(), PictOpOver, *picture, fill, effects->xrenderBufferPicture(), 0, 0, 0, 0,
+            rect.x(), rect.y(), rect.width(), rect.height() );
+
+    // Return to scale to 1.0
+    if( xScale != 1.0 || yScale != 1.0 )
+        {
+        XTransform xform = {{
+            { XDoubleToFixed( 1.0 ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ) },
+            { XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 ), XDoubleToFixed( 0.0 ) },
+            { XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 ) }
+        }};
+        XRenderSetPictureTransform( display(), *picture, &xform );
+        }
+    }
+
 void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, const WindowPaintData& data )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( effects->compositingType() == OpenGLCompositing)
+    if( effects->compositingType() == OpenGLCompositing )
         {
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
         glEnable( GL_BLEND );
@@ -845,74 +882,107 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
         }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if( effects->compositingType() == XRenderCompositing)
+    if( effects->compositingType() == XRenderCompositing )
         {
-        // calculate opacity =================================================
-        float opacity;
-        if( intensifyActiveShadow && window == effects->activeWindow() )
-            {
-            opacity = (1 - (1 - shadowOpacity)*(1 - shadowOpacity)) * data.opacity;
-            }
-        else
-            {
-            opacity = data.opacity * shadowOpacity;
-            }
-            
-        // query rect and translate in case (may have impact on opacity)===========================
-        QRect r = window->geometry();
-        if ( mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED))
-            {
-            float xScale = 1.0, yScale = 1.0, xTranslate = 0.0, yTranslate = 0.0;
-            if ( mask & PAINT_SCREEN_TRANSFORMED)
-                {
-                xScale = gScreenData.xScale; yScale = gScreenData.yScale;
-                xTranslate += (xScale-1.0)*r.x() + gScreenData.xTranslate;
-                yTranslate += (yScale-1.0)*r.y() + gScreenData.yTranslate;
-                }
-                
-            if ( mask & PAINT_WINDOW_TRANSFORMED)
-                {
-                xTranslate += xScale*data.xTranslate;
-                yTranslate += yScale*data.yTranslate;
-                xScale *= data.xScale; yScale *= data.yScale;
-                }
-                
-            r.translate(xTranslate, yTranslate);
-            
-            if (xScale != 1.0 || yScale != 1.0)
-                {
-                r.setWidth(xScale * r.width());
-                r.setHeight(yScale * r.height());
-//                 opacity *= 2.0/(2 - (2 - (xScale + yScale))*(2 - (xScale + yScale)));
-                }
-            }
-        r = shadowRectangle(r);
+        XRenderSetPictureClipRegion( display(), effects->xrenderBufferPicture(), region.handle() );
 
-        // create render mask  ==================================================================
+        foreach( const WindowQuad &quad, data.quads )
+            {
+            if( !mShadowQuadTypes.contains( quad.type() ) && quad.type() != mDefaultShadowQuadType )
+                continue; // Not a shadow quad
 
-        XRenderColor xc = preMultiply(shadowColor, opacity);
-        XRenderPicture fill = xRenderFill(&xc);
+            // Determine transformed quad position
+            QRect windowRect = window->geometry();
+            float xScale = 1.0;
+            float yScale = 1.0;
+            float xTranslate = 0.0;
+            float yTranslate = 0.0;
+            if( mask & PAINT_SCREEN_TRANSFORMED)
+                {
+                xScale = gScreenData.xScale;
+                yScale = gScreenData.yScale;
+                xTranslate += ( xScale - 1.0 ) * windowRect.x() + gScreenData.xTranslate;
+                yTranslate += ( yScale - 1.0 ) * windowRect.y() + gScreenData.yTranslate;
+                }
+            if( mask & PAINT_WINDOW_TRANSFORMED)
+                {
+                xTranslate += xScale * data.xTranslate;
+                yTranslate += yScale * data.yTranslate;
+                xScale *= data.xScale;
+                yScale *= data.yScale;
+                }
+            QRect quadRect(
+                window->x() + quad[0].x() * xScale + xTranslate,
+                window->y() + quad[0].y() * yScale + yTranslate,
+                ( quad[2].x() - quad[0].x() ) * xScale,
+                ( quad[2].y() - quad[0].y() ) * yScale );
 
-        // clip, then paint shadow tiles ========================================================
-        XRenderSetPictureClipRegion (display(), effects->xrenderBufferPicture(),  region.handle());
-#define DRAW_CORNER(_CNR_, _X_, _Y_)\
-XRenderComposite( display(), PictOpOver, fill, mShadowPics->_CNR_, effects->xrenderBufferPicture(), 0, 0, 0, 0, _X_, _Y_, w, h )
-#define DRAW_TILE(_TILE_, _X_, _Y_, _W_, _H_)\
-XRenderComposite( display(), PictOpOver, fill, mShadowPics->_TILE_, effects->xrenderBufferPicture(), 0, 0, 0, 0, _X_, _Y_, _W_, _H_ )
-        int w = qMin(mShadowPics->cornerSize.width(), r.width()/2);
-        int h = qMin(mShadowPics->cornerSize.height(), r.height()/2);
-        DRAW_CORNER(topLeft, r.x(), r.y());
-        DRAW_CORNER(topRight, r.right()-w, r.y());
-        DRAW_CORNER(btmLeft, r.x(), r.bottom()-h);
-        DRAW_CORNER(btmRight, r.right()-w, r.bottom()-h);
-        int w2 = r.width()-2*w-1, h2 = r.height()-2*h-1;
-        DRAW_TILE(top, r.x()+w, r.y(), w2, h);
-        DRAW_TILE(btm, r.x()+w, r.bottom()-h, w2, h);
-        DRAW_TILE(left, r.x(), r.y()+h, w, h2);
-        DRAW_TILE(right, r.right()-w, r.y()+h, w, h2);
-        DRAW_TILE(center, r.x()+w, r.y()+h, w2, h2);
-#undef DRAW_CORNER
-#undef DRAW_TILE
+            // Work out which texture to use
+            int texture = mShadowQuadTypes.indexOf( quad.type() );
+            if( texture != -1 )
+                {
+                // Render it!
+                // Cheat a little, assume the active and inactive shadows have identical quads
+                if( effects->hasDecorationShadows() )
+                    {
+                    if( window->hasDecoration() &&
+                        effects->shadowTextureList( ShadowBorderedActive ) == texture )
+                        { // Decorated windows
+                        // Active shadow
+                        drawShadowQuadXRender( mShadowPics.at( texture ).at( quad.id() ), quadRect,
+                            xScale, yScale, QColor(),
+                            data.opacity * window->shadowOpacity( ShadowBorderedActive ),
+                            data.brightness * window->shadowBrightness( ShadowBorderedActive ),
+                            data.saturation * window->shadowSaturation( ShadowBorderedActive ));
+
+                        // Inactive shadow
+                        texture = effects->shadowTextureList( ShadowBorderedInactive );
+                        drawShadowQuadXRender( mShadowPics.at( texture ).at( quad.id() ), quadRect,
+                            xScale, yScale, QColor(),
+                            data.opacity * window->shadowOpacity( ShadowBorderedInactive ),
+                            data.brightness * window->shadowBrightness( ShadowBorderedInactive ),
+                            data.saturation * window->shadowSaturation( ShadowBorderedInactive ));
+                        }
+                    else if( effects->shadowTextureList( ShadowBorderlessActive ) == texture )
+                        { // Decoration-less normal windows
+                        if( effects->activeWindow() == window )
+                            { // Active shadow
+                            drawShadowQuadXRender( mShadowPics.at( texture ).at( quad.id() ), quadRect,
+                                xScale, yScale, QColor(),
+                                data.opacity * window->shadowOpacity( ShadowBorderlessActive ),
+                                data.brightness * window->shadowBrightness( ShadowBorderlessActive ),
+                                data.saturation * window->shadowSaturation( ShadowBorderlessActive ));
+                            }
+                        else
+                            { // Inactive shadow
+                            texture = effects->shadowTextureList( ShadowBorderedInactive );
+                            drawShadowQuadXRender( mShadowPics.at( texture ).at( quad.id() ), quadRect,
+                                xScale, yScale, QColor(),
+                                data.opacity * window->shadowOpacity( ShadowBorderlessInactive ),
+                                data.brightness * window->shadowBrightness( ShadowBorderlessInactive ),
+                                data.saturation * window->shadowSaturation( ShadowBorderlessInactive ));
+                            }
+                        }
+                    else
+                        { // Other windows
+                        drawShadowQuadXRender( mShadowPics.at( texture ).at( quad.id() ), quadRect,
+                            xScale, yScale, QColor(),
+                            data.opacity * window->shadowOpacity( ShadowOther ),
+                            data.brightness * window->shadowBrightness( ShadowOther ),
+                            data.saturation * window->shadowSaturation( ShadowOther ));
+                        }
+                    }
+                }
+            if( quad.type() == mDefaultShadowQuadType )
+                { // Default shadow
+                float opacity = shadowOpacity;
+                if( intensifyActiveShadow && window == effects->activeWindow() )
+                    opacity = 1 - ( 1 - shadowOpacity ) * ( 1 - shadowOpacity );
+
+                drawShadowQuadXRender( mDefaultShadowPics.at( quad.id() ), quadRect, xScale, yScale,
+                    shadowColor, opacity * data.opacity, data.brightness, data.saturation );
+                }
+            }
         }
 #endif
     }

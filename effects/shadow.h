@@ -31,18 +31,6 @@ namespace KWin
 
 class GLTexture;
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-class ShadowTiles
-    {
-    public:
-        ShadowTiles(const QPixmap& shadow);
-        XRenderPicture  topLeft, top, topRight,
-                        left, center, right,
-                        btmLeft, btm, btmRight;
-        QSize cornerSize;
-    };
-#endif
-
 class ShadowEffect
     : public QObject, public Effect
     {
@@ -65,6 +53,9 @@ class ShadowEffect
         void prepareRenderStates( GLTexture *texture, double opacity, double brightness, double saturation );
         void restoreRenderStates( GLTexture *texture, double opacity, double brightness, double saturation );
 
+        void drawShadowQuadXRender( XRenderPicture *picture, QRect rect, float xScale, float yScale,
+            QColor color, float opacity, float brightness, float saturation );
+
         void drawShadow( EffectWindow* w, int mask, QRegion region, const WindowPaintData& data );
         void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const;
         // transforms window rect -> shadow rect
@@ -83,7 +74,8 @@ class ShadowEffect
         QList<GLTexture*> mDefaultShadowTextures;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        ShadowTiles *mShadowPics;
+        QList< QList<XRenderPicture*> > mShadowPics;
+        QList<XRenderPicture*> mDefaultShadowPics;
 #endif
 
         QList<WindowQuadType> mShadowQuadTypes;
