@@ -345,7 +345,7 @@ int Toplevel::screen() const
     int s = workspace()->screenNumber( geometry().center());
     if( s < 0 )
         {
-        kDebug() << "center" << geometry().center() << "screen" << s;
+        kDebug(1212) << "Invalid screen: Center" << geometry().center() << ", screen" << s;
         return 0; 
         }
     return s;
