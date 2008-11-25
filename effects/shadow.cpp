@@ -653,6 +653,16 @@ void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, f
 
 void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, const WindowPaintData& data )
     {
+    // Don't allow windows to cast shadows on other displays
+    QRegion clipperGeom;
+    for( int screen = 0; screen < effects->numScreens(); screen++ )
+        {
+        QRect screenGeom = effects->clientArea( ScreenArea, screen, 0 );
+        if( !( window->geometry() & screenGeom ).isNull() )
+            clipperGeom |= screenGeom;
+        }
+    PaintClipper pc( clipperGeom );
+
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
