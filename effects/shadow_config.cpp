@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kcolorscheme.h>
 
+#include <QtDBus/QtDBus>
 #include <QVBoxLayout>
 #include <QColor>
 #ifndef KDE_USE_FINAL
@@ -116,6 +117,10 @@ void ShadowEffectConfig::save()
 
     emit changed(false);
     EffectsHandler::sendReloadMessage( "shadow" );
+
+    // We also need to reload decorations
+    QDBusMessage message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "reconfigure" );
+    QDBusConnection::sessionBus().send( message );
     }
 
 void ShadowEffectConfig::defaults()
