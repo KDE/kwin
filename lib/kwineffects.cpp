@@ -363,12 +363,12 @@ bool EffectsHandler::paintText( const QString& text, const QRect& rect, const QC
     QString painttext = fm.elidedText( text, Qt::ElideRight, rect.width() );
     QRect textrect = fm.boundingRect( painttext );
 
-    // Create temporary QPixmap where the text will be drawn onto
-    QPixmap textPixmap( textrect.width(), textrect.height());
-    textPixmap.fill( Qt::transparent );
+    // Create temporary QImage where the text will be drawn onto
+    QImage textImage( textrect.width(), textrect.height(), QImage::Format_ARGB32 );
+    textImage.fill( Qt::transparent );
 
     // Draw the text
-    p.begin( &textPixmap );
+    p.begin( &textImage );
     p.setFont( font );
     p.setRenderHint( QPainter::TextAntialiasing );
     p.setPen( color );
@@ -394,7 +394,7 @@ bool EffectsHandler::paintText( const QString& text, const QRect& rect, const QC
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
-        GLTexture textTexture( textPixmap, GL_TEXTURE_RECTANGLE_ARB );
+        GLTexture textTexture( textImage, GL_TEXTURE_RECTANGLE_ARB );
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
@@ -408,8 +408,8 @@ bool EffectsHandler::paintText( const QString& text, const QRect& rect, const QC
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
         {
-        XRenderPicture textPicture( textPixmap );
-        XRenderComposite( display(), textPixmap.depth() == 32 ? PictOpOver : PictOpSrc,
+        XRenderPicture textPicture( QPixmap::fromImage( textImage ));
+        XRenderComposite( display(), textImage.depth() == 32 ? PictOpOver : PictOpSrc,
             textPicture, None, effects->xrenderBufferPicture(),
             0, 0, 0, 0, area.x(), area.y(), area.width(), area.height());
         return true;
