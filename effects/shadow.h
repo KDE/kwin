@@ -69,6 +69,9 @@ class ShadowEffect
         int shadowSize;
         bool intensifyActiveShadow;
         QColor shadowColor;
+        bool forceDecorated;
+        bool forceUndecorated;
+        bool forceOther;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         QList< QList<GLTexture*> > mShadowTextures;
         QList<GLTexture*> mDefaultShadowTextures;

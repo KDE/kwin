@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "effects.h"
 
+#include <kconfiggroup.h>
+
 namespace KWin
 {
 
@@ -216,7 +218,10 @@ bool Bridge::shadowsActive() const
     if( !c->workspace()->compositingActive() )
         return false;
     if( effects && static_cast<EffectsHandlerImpl*>( effects )->isEffectLoaded( "kwin4_effect_shadow" ))
-        return true;
+        { // The shadow effect has a setting to disable decoration shadows, take it into account.
+        KConfigGroup conf = static_cast<EffectsHandlerImpl*>( effects )->effectConfig( "Shadow" );
+        return !conf.readEntry( "forceDecoratedToDefault", false );
+        }
     return false;
     }
 

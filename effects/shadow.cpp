@@ -74,6 +74,9 @@ void ShadowEffect::reconfigure( ReconfigureFlags )
     shadowSize = conf.readEntry( "Size", 5 );
     intensifyActiveShadow = conf.readEntry( "IntensifyActiveShadow", true );
     updateShadowColor();
+    forceDecorated = conf.readEntry( "forceDecoratedToDefault", false );
+    forceUndecorated = conf.readEntry( "forceUndecoratedToDefault", false );
+    forceOther = conf.readEntry( "forceOtherToDefault", false );
 
     // Load decoration shadow related things
     bool reconfiguring = false;
@@ -275,7 +278,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         //       active and inactive shadows. Is implementing it worth
         //       the performance drop?
         int id = 0;
-        if( w->hasDecoration() )
+        if( w->hasDecoration() && !forceDecorated )
             { // Decorated windows must be normal windows
             foreach( const QRect &r, w->shadowQuads( ShadowBorderedActive ))
                 {
@@ -288,7 +291,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
                 quadList.append( quad );
                 }
             }
-        else if( w->isNormalWindow() )
+        else if( w->isNormalWindow() && !forceUndecorated )
             { // No decoration on a normal window
             foreach( const QRect &r, w->shadowQuads( ShadowBorderlessActive ))
                 {
@@ -301,7 +304,7 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
                 quadList.append( quad );
                 }
             }
-        else
+        else if( !forceOther )
             { // All other undecorated windows
             foreach( const QRect &r, w->shadowQuads( ShadowOther ))
                 {
