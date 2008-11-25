@@ -53,6 +53,7 @@ Comment=Darkens the entire screen when requesting root privileges
 Comment[ca]=Enfosqueix tota la pantalla en demanar privilegis d'administrador
 Comment[de]=Dunkelt den gesamten Bildschirm ab, wenn nach dem Systemverwalter-Passwort gefragt wird.
 Comment[el]=Σκίαση ολόκληρης της οθόνης όταν απαιτούνται διακαιώματα ριζικού χρήστη root
+Comment[et]=Tumendab administraatori õiguste nõudmisel kogu ekraani
 Comment[gl]=Escurece toda a pantalla cando se piden os privilexios de root
 Comment[gu]=જ્યારે રૂટ હક્ક માંગવામાં આવે ત્યારે આખા સ્ક્રિનને ઘેરો બનાવે છે
 Comment[he]=החשך את המסך כולו כאשר מבקשים גישת root
