@@ -44,6 +44,7 @@ class Options : public KDecorationOptions
         ~Options();
 
         virtual unsigned long updateSettings();
+        bool importBackup();
 
         /*!
           Different focus policies:
@@ -313,6 +314,12 @@ class Options : public KDecorationOptions
         double animationTimeFactor() const;
 
     private:
+        unsigned long loadSettings( KSharedConfigPtr configFile );
+        void loadWindowSettings( KSharedConfigPtr configFile );
+        void loadMouseBindings( KSharedConfigPtr configFile );
+        void loadCompositingSettings( KSharedConfigPtr configFile );
+
+
         WindowOperation OpTitlebarDblClick;
 
     // mouse bindings
@@ -342,7 +349,6 @@ class Options : public KDecorationOptions
         int animationSpeed; // 0 - instant, 5 - very slow
 
         MouseCommand wheelToMouseCommand( MouseWheelCommand com, int delta );
-        void reloadCompositingSettings(const CompositingPrefs& prefs);
     };
 
 extern Options* options;

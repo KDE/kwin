@@ -262,8 +262,7 @@ class Workspace : public QObject, public KDecorationDefines
         void previousDesktop();
         void circulateDesktopApplications();
         bool compositingActive();
-        bool waitForCompositingSetup();
-        
+
         void setCurrentScreen( int new_screen );
 
         QString desktopName( int desk ) const;
@@ -469,7 +468,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         void reconfigure();
         void slotReconfigure();
-        void slotReinitCompositing();
 
         void slotKillWindow();
 
@@ -500,6 +498,7 @@ class Workspace : public QObject, public KDecorationDefines
         void writeWindowRules();
         void slotBlockShortcuts(int data);
         void slotReloadConfig();
+        void slotReloadCompositingConfig();
         void setPopupClientOpacity( QAction* action );
         void setupCompositing();
         void performCompositing();

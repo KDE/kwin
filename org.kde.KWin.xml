@@ -34,7 +34,7 @@
     <method name="previousDesktop"/>
     <method name="circulateDesktopApplications"/>
     <signal name="reloadConfig"/>
-    <signal name="reinitCompositing"/>
+    <signal name="reloadCompositingConfig"/>
     <method name="loadEffect">
       <arg name="name" type="s" direction="in"/>
     </method>
@@ -49,14 +49,11 @@
     </method>
     <method name="loadedEffects">
       <arg type="as" direction="out"/>
-    </method>    
+    </method>
     <method name="listOfEffects">
       <arg type="as" direction="out"/>
     </method>
     <method name="compositingActive">
-      <arg type="b" direction="out"/>
-    </method>
-    <method name="waitForCompositingSetup">
       <arg type="b" direction="out"/>
     </method>
     <method name="decorationSupportedColors">

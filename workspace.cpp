@@ -147,7 +147,7 @@ Workspace::Workspace( bool restore )
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject("/KWin", this);
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing", this, SLOT(slotReinitCompositing()));
+    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadCompositingConfig", this, SLOT(slotReloadCompositingConfig()));
     _self = this;
     mgr = new PluginMgr;
     QX11Info info;
@@ -972,19 +972,6 @@ void Workspace::reconfigure()
     reconfigureTimer.start( 200 );
     }
 
-// This DBUS call is used by the compositing kcm. Since the reconfigure()
-// DBUS call delays the actual reconfiguring, it is not possible to immediately
-// call compositingActive(). Therefore the kcm will instead call this to ensure
-// the reconfiguring has already happened.
-bool Workspace::waitForCompositingSetup()
-    {
-    if( !reconfigureTimer.isActive())
-        return false;
-    reconfigureTimer.stop();
-    slotReconfigure();
-    return compositingActive();
-    }
-
 void Workspace::slotSettingsChanged(int category)
     {
     kDebug(1212) << "Workspace::slotSettingsChanged()";
@@ -1065,7 +1052,6 @@ void Workspace::slotReconfigure()
         setupCompositing();
         if( effects ) // setupCompositing() may fail
             effects->reconfigure();
-        addRepaintFull();
     }
     else
         finishCompositing();
@@ -1081,15 +1067,17 @@ void Workspace::slotReconfigure()
         }
     }
 
-void Workspace::slotReinitCompositing()
+void Workspace::slotReloadCompositingConfig()
     {
-    // Reparse config. Config options will be reloaded by setupCompositing()
+    // Load the compositing settings from the test config.
     KGlobal::config()->reparseConfiguration();
     options->updateSettings();
 
-    // Stop any current compositing
+    // Update any settings that can be set in the compositing kcm.
+    updateElectricBorders();
+
+    // Reinitialize compositing.
     finishCompositing();
-    // And start new one
     setupCompositing();
     if( effects ) // setupCompositing() may fail
         effects->reconfigure();

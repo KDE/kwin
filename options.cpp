@@ -23,10 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KCMRULES
 
+#include <QFile>
 #include <QPalette>
 #include <QPixmap>
 #include <kapplication.h>
 #include <kconfig.h>
+#include <kstandarddirs.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
 
@@ -45,9 +47,14 @@ namespace KWin
 #ifndef KCMRULES
 
 Options::Options()
-    :   electric_borders( 0 ),
-        electric_border_delay(0)
     {
+    // If there is any contents in the backup file, it means that KWin crashed
+    // while testing a new config. Revert the config.
+    // TODO: Notify the user?
+    bool backupImported = importBackup();
+    kWarning( 1212, backupImported ) << "The new settings have most likely caused the X server "
+        "to crash. The configuration options have been reverted to their old values.";
+
     updateSettings();
     }
 
@@ -55,13 +62,44 @@ Options::~Options()
     {
     }
 
+
 unsigned long Options::updateSettings()
     {
-    KSharedConfig::Ptr _config = KGlobal::config();
-    unsigned long changed = 0;
-    changed |= KDecorationOptions::updateSettings( _config.data() ); // read decoration settings
+    return loadSettings( KGlobal::config() );
+    }
 
-    KConfigGroup config(_config, "Windows");
+bool Options::importBackup()
+    {
+    QString configFileName = KStandardDirs::locate( "config", KGlobal::config()->name() );
+    QString backupFileName = configFileName + '~';
+
+    if ( !QFile::exists( backupFileName ) )
+        {
+        return false;
+        }
+
+    QFile::remove( configFileName );
+    QFile::rename( backupFileName, configFileName );
+
+    KGlobal::config()->reparseConfiguration();
+    return true;
+    }
+
+unsigned long Options::loadSettings( KSharedConfigPtr configFile )
+    {
+    unsigned long changed = 0;
+    changed |= KDecorationOptions::updateSettings( configFile.data() ); // read decoration settings
+
+    loadWindowSettings( configFile );
+    loadMouseBindings( configFile );
+    loadCompositingSettings( configFile );
+
+    return changed;
+    }
+
+void Options::loadWindowSettings( KSharedConfigPtr configFile )
+    {
+    KConfigGroup config( configFile, "Windows" );
     moveMode = stringToMoveResizeMode( config.readEntry("MoveMode", "Opaque" ));
     resizeMode = stringToMoveResizeMode( config.readEntry("ResizeMode", "Opaque" ));
     show_geometry_tip = config.readEntry("GeometryTip", false);
@@ -94,12 +132,12 @@ unsigned long Options::updateSettings()
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
 
-    KConfigGroup gWindowsConfig( _config, "Windows"); // from kdeglobals
-    xineramaEnabled = gWindowsConfig.readEntry ("XineramaEnabled", true);
-    xineramaPlacementEnabled = gWindowsConfig.readEntry ("XineramaPlacementEnabled", true);
-    xineramaMovementEnabled = gWindowsConfig.readEntry ("XineramaMovementEnabled", true);
-    xineramaMaximizeEnabled = gWindowsConfig.readEntry ("XineramaMaximizeEnabled", true);
-    xineramaFullscreenEnabled = gWindowsConfig.readEntry ("XineramaFullscreenEnabled", true);
+    // This was once loaded from kdeglobals.
+    xineramaEnabled = config.readEntry ("XineramaEnabled", true);
+    xineramaPlacementEnabled = config.readEntry ("XineramaPlacementEnabled", true);
+    xineramaMovementEnabled = config.readEntry ("XineramaMovementEnabled", true);
+    xineramaMaximizeEnabled = config.readEntry ("XineramaMaximizeEnabled", true);
+    xineramaFullscreenEnabled = config.readEntry ("XineramaFullscreenEnabled", true);
 
     placement = Placement::policyFromString( config.readEntry("Placement"), true );
     xineramaPlacementScreen = qBound( -1, config.readEntry( "XineramaPlacementScreen", -1 ),
@@ -155,27 +193,6 @@ unsigned long Options::updateSettings()
     hideUtilityWindowsForInactive = config.readEntry( "HideUtilityWindowsForInactive", true);
     showDesktopIsMinimizeAll = config.readEntry( "ShowDesktopIsMinimizeAll", false );
 
-    // Mouse bindings
-    config = KConfigGroup(_config,"MouseBindings");
-    CmdActiveTitlebar1 = mouseCommand(config.readEntry("CommandActiveTitlebar1","Raise"), true );
-    CmdActiveTitlebar2 = mouseCommand(config.readEntry("CommandActiveTitlebar2","Lower"), true );
-    CmdActiveTitlebar3 = mouseCommand(config.readEntry("CommandActiveTitlebar3","Operations menu"), true );
-    CmdInactiveTitlebar1 = mouseCommand(config.readEntry("CommandInactiveTitlebar1","Activate and raise"), true );
-    CmdInactiveTitlebar2 = mouseCommand(config.readEntry("CommandInactiveTitlebar2","Activate and lower"), true );
-    CmdInactiveTitlebar3 = mouseCommand(config.readEntry("CommandInactiveTitlebar3","Operations menu"), true );
-    CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel","Nothing"));
-    CmdWindow1 = mouseCommand(config.readEntry("CommandWindow1","Activate, raise and pass click"), false );
-    CmdWindow2 = mouseCommand(config.readEntry("CommandWindow2","Activate and pass click"), false );
-    CmdWindow3 = mouseCommand(config.readEntry("CommandWindow3","Activate and pass click"), false );
-    CmdAllModKey = (config.readEntry("CommandAllKey","Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
-    CmdAll1 = mouseCommand(config.readEntry("CommandAll1","Move"), false );
-    CmdAll2 = mouseCommand(config.readEntry("CommandAll2","Toggle raise and lower"), false );
-    CmdAll3 = mouseCommand(config.readEntry("CommandAll3","Resize"), false );
-    CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
-
-    config=KConfigGroup(_config,"Compositing");
-    refreshRate = config.readEntry( "RefreshRate", 0 );
-
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
     // and not kstyle tooltips and vise-versa, we don't read the
@@ -191,23 +208,42 @@ unsigned long Options::updateSettings()
     topmenus = false;
 #endif
 
-//    QToolTip::setGloballyEnabled( d->show_tooltips );
-// KDE4 this probably needs to be done manually in clients
+    //    QToolTip::setGloballyEnabled( d->show_tooltips );
+    // KDE4 this probably needs to be done manually in clients
+    }
 
+void Options::loadMouseBindings( KSharedConfigPtr configFile )
+    {
+    // Mouse bindings
+    KConfigGroup config( configFile, "MouseBindings" );
+    CmdActiveTitlebar1 = mouseCommand(config.readEntry("CommandActiveTitlebar1","Raise"), true );
+    CmdActiveTitlebar2 = mouseCommand(config.readEntry("CommandActiveTitlebar2","Lower"), true );
+    CmdActiveTitlebar3 = mouseCommand(config.readEntry("CommandActiveTitlebar3","Operations menu"), true );
+    CmdInactiveTitlebar1 = mouseCommand(config.readEntry("CommandInactiveTitlebar1","Activate and raise"), true );
+    CmdInactiveTitlebar2 = mouseCommand(config.readEntry("CommandInactiveTitlebar2","Activate and lower"), true );
+    CmdInactiveTitlebar3 = mouseCommand(config.readEntry("CommandInactiveTitlebar3","Operations menu"), true );
+    CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel","Nothing"));
+    CmdWindow1 = mouseCommand(config.readEntry("CommandWindow1","Activate, raise and pass click"), false );
+    CmdWindow2 = mouseCommand(config.readEntry("CommandWindow2","Activate and pass click"), false );
+    CmdWindow3 = mouseCommand(config.readEntry("CommandWindow3","Activate and pass click"), false );
+    CmdAllModKey = (config.readEntry("CommandAllKey","Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
+    CmdAll1 = mouseCommand(config.readEntry("CommandAll1","Move"), false );
+    CmdAll2 = mouseCommand(config.readEntry("CommandAll2","Toggle raise and lower"), false );
+    CmdAll3 = mouseCommand(config.readEntry("CommandAll3","Resize"), false );
+    CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
+    }
+
+void Options::loadCompositingSettings( KSharedConfigPtr configFile )
+    {
     // Driver-specific config detection
     CompositingPrefs prefs;
     prefs.detect();
-    reloadCompositingSettings( prefs );
-
-    return changed;
-    }
-
-void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
-    {
-    KSharedConfig::Ptr _config = KGlobal::config();
-    KConfigGroup config(_config, "Compositing");
 
     // Compositing settings
+    KConfigGroup config( configFile, "Compositing");
+
+    refreshRate = config.readEntry( "RefreshRate", 0 );
+
     useCompositing = config.readEntry("Enabled", prefs.enableCompositing());
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if( compositingBackend == "XRender" )
