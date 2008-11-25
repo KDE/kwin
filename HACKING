@@ -73,7 +73,7 @@ Window manager spec:
 ====================
 
 The EWMH window manager specification, also known as NETWM, is located at the freedesktop.org site,
-http://www.freedesktop.org/wiki/Standards_2fwm_2dspec . It defines how the window manager
+http://standards.freedesktop.org/wm-spec/wm-spec-latest.html . It defines how the window manager
 communicates information with the applications and other desktop utilities such as the taskbar
 or pager.
 
