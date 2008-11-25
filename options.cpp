@@ -119,7 +119,7 @@ void Options::loadWindowSettings( KSharedConfigPtr configFile )
     altTabStyle = KDE; // what a default :-)
     if ( val == "CDE" )
         altTabStyle = CDE;
-        
+
     separateScreenFocus = config.readEntry( "SeparateScreenFocus", false );
     activeMouseScreen = config.readEntry( "ActiveMouseScreen", focusPolicy != ClickToFocus );
 
@@ -274,10 +274,10 @@ void Options::loadCompositingSettings( KSharedConfigPtr configFile )
         hiddenPreviews = HiddenPreviewsShown;
     else if( hps == 6 )
         hiddenPreviews = HiddenPreviewsAlways;
-    
+
     unredirectFullscreen = config.readEntry( "UnredirectFullscreen", true );
     animationSpeed = qBound( 0, config.readEntry( "AnimationSpeed", 3 ), 6 );
-    
+
     if( !disableCompositingChecks && !prefs.validateSetup( compositingMode ))
         useCompositing = false;
     }

@@ -117,23 +117,22 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     // Open the temporary config file
     // Temporary conf file is used to synchronize effect checkboxes with effect
-    //  selector by loading/saving effects from/to temp config when active tab
-    //  changes.
+    // selector by loading/saving effects from/to temp config when active tab
+    // changes.
     mTmpConfigFile.open();
     mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
 
     if( CompositingPrefs::compositingPossible() )
-    {
+        {
         // Driver-specific config detection
         mDefaultPrefs.detect();
-
         initEffectSelector();
 
-        // Load config
+        // Initialize the user interface with the config loaded from kwinrc.
         load();
-    }
+        }
     else
-    {
+        {
         ui.useCompositing->setEnabled(false);
         ui.useCompositing->setChecked(false);
         compositingEnabled(false);
@@ -144,7 +143,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
         ui.statusTitleWidget->setText(text);
         ui.statusTitleWidget->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
         ui.statusTitleWidget->show();
-    }
+        }
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
             ki18n("KWin Desktop Effects Configuration Module"),
@@ -186,7 +185,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.desktopSwitchingCombo->addItem(i18n("No Effect"));
     ui.desktopSwitchingCombo->addItem(slide);
     ui.desktopSwitchingCombo->addItem(cube);
-}
+    }
 
 KWinCompositingConfig::~KWinCompositingConfig()
     {
@@ -196,7 +195,8 @@ KWinCompositingConfig::~KWinCompositingConfig()
     }
 
 void KWinCompositingConfig::compositingEnabled(bool enabled)
-{
+    {
+    // Enable the other configuration tabs only when compositing is enabled.
     ui.compositingOptionsContainer->setEnabled(enabled);
     ui.tabWidget->setTabEnabled(1, enabled);
     ui.tabWidget->setTabEnabled(2, enabled);
@@ -204,7 +204,7 @@ void KWinCompositingConfig::compositingEnabled(bool enabled)
     }
 
 void KWinCompositingConfig::initEffectSelector()
-{
+    {
     // Find all .desktop files of the effects
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     QList<KPluginInfo> effectinfos = KPluginInfo::fromServices(offers);
@@ -218,17 +218,18 @@ void KWinCompositingConfig::initEffectSelector()
     ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mTmpConfig);
     ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mTmpConfig);
     ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tools"), "Tools", mTmpConfig);
-}
+    }
 
 void KWinCompositingConfig::currentTabChanged(int tab)
-{
+    {
     // block signals to don't emit the changed()-signal by just switching the current tab
     blockSignals(true);
+
     // write possible changes done to synchronize effect checkboxes and selector
     // TODO: This segment is prone to fail when the UI is changed;
     // you'll most likely not think of the hard coded numbers here when just changing the order of the tabs.
     if (tab == 0)
-    {
+        {
         // General tab was activated
         saveEffectsTab();
         loadGeneralTab();
@@ -238,9 +239,10 @@ void KWinCompositingConfig::currentTabChanged(int tab)
         // Effects tab was activated
         saveGeneralTab();
         loadEffectsTab();
-    }
+        }
+
     blockSignals(false);
-}
+    }
 
 void KWinCompositingConfig::loadGeneralTab()
     {
@@ -254,10 +256,11 @@ void KWinCompositingConfig::loadGeneralTab()
     int winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows")
         + LOAD_EFFECT_CONFIG("desktopgrid")
         + LOAD_EFFECT_CONFIG("dialogparent");
-    if (winManagementEnabled > 0 && winManagementEnabled < 3) {
+    if (winManagementEnabled > 0 && winManagementEnabled < 3)
+        {
         ui.effectWinManagement->setTristate(true);
         ui.effectWinManagement->setCheckState(Qt::PartiallyChecked);
-    }
+        }
     else
         ui.effectWinManagement->setChecked(winManagementEnabled);
     ui.effectShadows->setChecked(LOAD_EFFECT_CONFIG("shadow"));
@@ -288,19 +291,19 @@ void KWinCompositingConfig::loadGeneralTab()
     }
 
 bool KWinCompositingConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
-{
+    {
     KService::List services = KServiceTypeTrader::self()->query(
         "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + "'");
     if( services.isEmpty())
         return false;
     QVariant v = services.first()->property("X-KDE-PluginInfo-EnabledByDefault");
     return cfg.readEntry("kwin4_effect_" + effect + "Enabled", v.toBool());
-}
+    }
 
 void KWinCompositingConfig::loadEffectsTab()
-{
+    {
     ui.effectSelector->load();
-}
+    }
 
 void KWinCompositingConfig::loadAdvancedTab()
     {
@@ -324,7 +327,7 @@ void KWinCompositingConfig::loadAdvancedTab()
     ui.glVSync->setChecked(config.readEntry("GLVSync", mDefaultPrefs.enableVSync()));
 
     ui.xrenderSmoothScale->setChecked(config.readEntry("XRenderSmoothScale", false));
-}
+    }
 
 void KWinCompositingConfig::load()
     {
@@ -353,11 +356,12 @@ void KWinCompositingConfig::saveGeneralTab()
     // Save effects
     KConfigGroup effectconfig(mTmpConfig, "Plugins");
 #define WRITE_EFFECT_CONFIG(effectname, widget)  effectconfig.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
-    if (ui.effectWinManagement->checkState() != Qt::PartiallyChecked) {
+    if (ui.effectWinManagement->checkState() != Qt::PartiallyChecked)
+        {
         WRITE_EFFECT_CONFIG("presentwindows", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("desktopgrid", ui.effectWinManagement);
         WRITE_EFFECT_CONFIG("dialogparent", ui.effectWinManagement);
-    }
+        }
     WRITE_EFFECT_CONFIG("shadow", ui.effectShadows);
     // TODO: maybe also do some effect-specific configuration here, e.g.
     //  enable/disable desktopgrid's animation according to this setting
@@ -428,9 +432,9 @@ void KWinCompositingConfig::saveGeneralTab()
     }
 
 void KWinCompositingConfig::saveEffectsTab()
-{
+    {
     ui.effectSelector->save();
-}
+    }
 
 void KWinCompositingConfig::saveAdvancedTab()
     {
@@ -456,12 +460,14 @@ void KWinCompositingConfig::save()
     // bah; tab content being dependent on the other is really bad; and
     // deprecated in the HIG for a reason.  Its confusing!
     // Make sure we only call save on each tab once; as they are stateful due to the revert concept
-    if (ui.tabWidget->currentIndex() == 0) { // general was active
+    if ( ui.tabWidget->currentIndex() == 0 ) // "General" tab was active
+        {
         saveGeneralTab();
         loadEffectsTab();
         saveEffectsTab();
-    }
-    else { // effects tab was active
+        }
+    else
+        {
         saveEffectsTab();
         loadGeneralTab();
         saveGeneralTab();
@@ -477,7 +483,7 @@ void KWinCompositingConfig::save()
     }
 
 void KWinCompositingConfig::defaults()
-{
+    {
     ui.tabWidget->setCurrentIndex(0);
 
     ui.useCompositing->setChecked(mDefaultPrefs.enableCompositing());
@@ -507,16 +513,16 @@ void KWinCompositingConfig::defaults()
         }
     // set top left to present windows
     ui.edges_monitor->selectEdgeItem( (int)Monitor::TopLeft, (int)PresentWindowsAll );
-}
+    }
 
 QString KWinCompositingConfig::quickHelp() const
-{
+    {
     return i18n("<h1>Desktop Effects</h1>");
-}
+    }
 
 
 void KWinCompositingConfig::setupElectricBorders()
-{
+    {
     addItemToEdgesMonitor( i18n("No Effect"));
 
     // search the effect names
@@ -548,18 +554,18 @@ void KWinCompositingConfig::setupElectricBorders()
         {
         addItemToEdgesMonitor( services.first()->name());
         }
-}
+    }
 
 void KWinCompositingConfig::addItemToEdgesMonitor(const QString& item)
-{
+    {
     for( int i=0; i<8; i++ )
         {
         ui.edges_monitor->addEdgeItem( i, item );
         }
-}
+    }
 
 void KWinCompositingConfig::electricBorderSelectionChanged(int edge, int index)
-{
+    {
     if( index == (int)NoEffect )
         return;
     for( int i=0; i<8; i++)
@@ -569,11 +575,11 @@ void KWinCompositingConfig::electricBorderSelectionChanged(int edge, int index)
         if( ui.edges_monitor->selectedEdgeItem( i ) == index )
             ui.edges_monitor->selectEdgeItem( i, (int)NoEffect );
         }
-}
+    }
 
 
 void KWinCompositingConfig::loadElectricBorders()
-{
+    {
     // Present Windows
     KConfigGroup presentwindowsconfig(mNewConfig, "Effect-PresentWindows");
     changeElectricBorder( (ElectricBorder)presentwindowsconfig.readEntry( "BorderActivateAll",
@@ -596,10 +602,10 @@ void KWinCompositingConfig::loadElectricBorders()
     KConfigGroup sphereconfig(mNewConfig, "Effect-Sphere");
     changeElectricBorder( (ElectricBorder)sphereconfig.readEntry( "BorderActivate",
         int( ElectricNone )), (int)Sphere );
-}
+    }
 
 void KWinCompositingConfig::changeElectricBorder( ElectricBorder border, int index )
-{
+    {
     switch (border)
         {
         case ElectricTop:
@@ -630,10 +636,10 @@ void KWinCompositingConfig::changeElectricBorder( ElectricBorder border, int ind
             // nothing
             break;
         }
-}
+    }
 
 ElectricBorder KWinCompositingConfig::checkEffectHasElectricBorder( int index )
-{
+    {
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Top ) == index )
         {
         return ElectricTop;
@@ -667,7 +673,7 @@ ElectricBorder KWinCompositingConfig::checkEffectHasElectricBorder( int index )
         return ElectricTopLeft;
         }
     return ElectricNone;
-}
+    }
 
 void KWinCompositingConfig::saveElectricBorders()
     {
@@ -836,6 +842,5 @@ void KWinCompositingConfig::copyPluginsToNewConfig()
     }
 
 } // namespace
-    
+
 #include "main.moc"
-        

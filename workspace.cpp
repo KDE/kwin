@@ -994,6 +994,7 @@ void Workspace::slotReconfigure()
 
     KGlobal::config()->reparseConfiguration();
     unsigned long changed = options->updateSettings();
+
     tab_box->reconfigure();
     popupinfo->reconfigure();
     initPositioning->reinitCascading( 0 );
@@ -2284,7 +2285,7 @@ void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint
     int desk_before = currentDesktop();
     setCurrentDesktop( desk );
     if( currentDesktop() != desk_before )
-        QCursor::setPos( pos ); 
+        QCursor::setPos( pos );
     }
 
 // this function is called when the user entered an electric border
