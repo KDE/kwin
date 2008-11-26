@@ -59,6 +59,7 @@ Icon=preferences-system-windows-effect-taskbarthumbnail
 Comment=Display window thumbnails when hovering over taskbar entries
 Comment[be@latin]=Pakazvaje padhlady akon, kali kursor nad adpaviednym zadańniem u paneli.
 Comment[ca]=Mostra les miniatures de les finestres quan el cursor està sobre les entrades de la barra de tasques
+Comment[cs]=Zobrazí miniatury oken pokud je kurzor nad jejich položkou v pruhu úloh
 Comment[de]=Zeigt Fenster-Vorschaubilder an, wenn sich der Mauszeiger über dem Fensterleisten-Eintrag befindet.
 Comment[el]=Εμφάνιση εικόνας επισκόπησης παραθύρου όταν το ποντίκι περνάει πάνω από την καταχώρησή του στη γραμμή εργασιών
 Comment[et]=Akende pisipiltide näitamine, kui kursor on nende tegumiriba kirje kohal
