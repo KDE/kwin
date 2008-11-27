@@ -70,10 +70,12 @@ class WobblyWindowsEffect : public Effect
             Pair* acceleration;
             Pair* buffer;
 
-            // if true, the point is constraint to its "normal" destination
-            // given by the window position.
-            // if false, the point is free (i.e. use the physics system to move it)
+            // if true, the physics system moves this point based only on it "normal" destination
+            // given by the window position, ignoring neighbour points.
             bool* constraint;
+
+            // if true, the point is locked to its normal destination position.
+            bool* locked;
 
             unsigned int width;
             unsigned int height;
