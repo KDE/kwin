@@ -739,9 +739,16 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose( EffectWindowLi
 
 void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen )
     {
+    // If windows do not overlap they scale into nothingness, fix by resetting. To reproduce
+    // just have a single window on a Xinerama screen or have two windows that do not touch.
+    // TODO: Work out why this happens, is most likely a bug in the manager.
+    foreach( EffectWindow *w, windowlist )
+        if( m_motionManager.transformedGeometry( w ) == w->geometry() )
+            m_motionManager.reset( w );
+
     if( windowlist.count() == 1 )
-        { // We can't use the algorithm as it scales the window into nothingness
-          // Instead just move the window to its original location
+        {
+        // Just move the window to its original location to save time
         m_motionManager.moveWindow( windowlist[0], windowlist[0]->geometry() );
         return;
         }
