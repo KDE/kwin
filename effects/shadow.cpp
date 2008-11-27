@@ -642,6 +642,13 @@ void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, f
         XRenderComposite( display(), PictOpOver, *picture, fill, effects->xrenderBufferPicture(), 0, 0, 0, 0,
             rect.x(), rect.y(), rect.width(), rect.height() );
 
+    // Fake brightness by overlaying black
+    // Cannot use XRenderFillRectangle() due to ARGB
+    XRenderColor col = { 0, 0, 0, 0xffff * ( 1 - brightness ) * opacity };
+    fill = xRenderFill( &col );
+    XRenderComposite( display(), PictOpOver, fill, *picture, effects->xrenderBufferPicture(), 0, 0, 0, 0,
+        rect.x(), rect.y(), rect.width(), rect.height() );
+
     // Return to scale to 1.0
     if( xScale != 1.0 || yScale != 1.0 )
         {
