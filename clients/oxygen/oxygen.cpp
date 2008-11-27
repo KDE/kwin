@@ -193,6 +193,7 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
     shadow->fill( Qt::transparent );
     QRadialGradient rg( size, size, size );
     QColor c = color;
+    c.setAlpha( 0 );  rg.setColorAt( 4/size, c );
     c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
     c = glow;
     c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
@@ -207,6 +208,7 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
 
     rg = QRadialGradient( size, size, size );
     c = color;
+    c.setAlpha( 0 );  rg.setColorAt( 4/size, c );
     c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
     c = glow2;
     c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
@@ -317,6 +319,12 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
     // draw the corner of the window - actually all 4 corners as one circle
     p.setBrush( Qt::NoBrush );
     p.setPen(QPen(lg, 0.8));
+    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+
+    // cut out the part of the texture that is under the window
+    p.setCompositionMode( QPainter::CompositionMode_Xor );
+    p.setBrush( QColor( 0, 0, 0, 255 ));
+    p.setPen( Qt::NoPen );
     p.drawEllipse(QRectF(size-4, size-4, 8, 8));
 
     p.end();
