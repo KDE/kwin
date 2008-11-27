@@ -740,9 +740,9 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose( EffectWindowLi
 void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen )
     {
     if( windowlist.count() == 1 )
-        { // No idea why this is needed but if there is only one window on a Xinerama screen
-          // then the window is scaled into nothingness at (0,0) if its position isn't reset.
-        m_motionManager.reset( windowlist[0] );
+        { // We can't use the algorithm as it scales the window into nothingness
+          // Instead just move the window to its original location
+        m_motionManager.moveWindow( windowlist[0], windowlist[0]->geometry() );
         return;
         }
 
