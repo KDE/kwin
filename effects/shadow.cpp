@@ -612,6 +612,25 @@ void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, doub
 #endif
     }
 
+void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> verts, QVector<float> texCoords,
+    QColor color, QRegion region, float opacity, float brightness, float saturation )
+    {
+    if( color.isValid() )
+        glColor4f( color.redF(), color.greenF(), color.blueF(), opacity );
+    else
+        glColor4f( 1.0, 1.0, 1.0, opacity );
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    prepareRenderStates( texture, opacity, brightness, saturation );
+    texture->bind();
+    texture->enableNormalizedTexCoords();
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+    renderGLGeometry( region, 4, verts.data(), texCoords.data() );
+    texture->disableNormalizedTexCoords();
+    texture->unbind();
+    restoreRenderStates( texture, opacity, brightness, saturation );
+    }
+
 void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, float xScale, float yScale,
     QColor color, float opacity, float brightness, float saturation )
     {
@@ -744,125 +763,47 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                         effects->shadowTextureList( ShadowBorderedActive ) == texture )
                         { // Decorated windows
                         // Active shadow
-                        glColor4f( 1.0, 1.0, 1.0, 1.0 );
-                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                        prepareRenderStates(
-                            mShadowTextures.at( texture ).at( quad.id() ),
+                        drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
+                            verts, texcoords, QColor(), region,
                             data.opacity * window->shadowOpacity( ShadowBorderedActive ),
                             data.brightness * window->shadowBrightness( ShadowBorderedActive ),
-                            data.saturation * window->shadowSaturation( ShadowBorderedActive )
-                            );
-                        mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
-                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
-                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
-                        renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                        mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
-                        mShadowTextures.at( texture ).at( quad.id() )->unbind();
-                        restoreRenderStates(
-                            mShadowTextures.at( texture ).at( quad.id() ),
-                            data.opacity * window->shadowOpacity( ShadowBorderedActive ),
-                            data.brightness * window->shadowBrightness( ShadowBorderedActive ),
-                            data.saturation * window->shadowSaturation( ShadowBorderedActive )
-                            );
+                            data.saturation * window->shadowSaturation( ShadowBorderedActive ));
 
                         // Inactive shadow
                         texture = effects->shadowTextureList( ShadowBorderedInactive );
-
-                        glColor4f( 1.0, 1.0, 1.0, 1.0 );
-                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                        prepareRenderStates(
-                            mShadowTextures.at( texture ).at( quad.id() ),
+                        drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
+                            verts, texcoords, QColor(), region,
                             data.opacity * window->shadowOpacity( ShadowBorderedInactive ),
                             data.brightness * window->shadowBrightness( ShadowBorderedInactive ),
-                            data.saturation * window->shadowSaturation( ShadowBorderedInactive )
-                            );
-                        mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
-                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
-                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
-                        renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                        mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
-                        mShadowTextures.at( texture ).at( quad.id() )->unbind();
-                        restoreRenderStates(
-                            mShadowTextures.at( texture ).at( quad.id() ),
-                            data.opacity * window->shadowOpacity( ShadowBorderedInactive ),
-                            data.brightness * window->shadowBrightness( ShadowBorderedInactive ),
-                            data.saturation * window->shadowSaturation( ShadowBorderedInactive )
-                            );
+                            data.saturation * window->shadowSaturation( ShadowBorderedInactive ));
                         }
                     else if( effects->shadowTextureList( ShadowBorderlessActive ) == texture )
                         { // Decoration-less normal windows
-                        glColor4f( 1.0, 1.0, 1.0, 1.0 );
-                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                         if( effects->activeWindow() == window )
                             {
-                            prepareRenderStates(
-                                mShadowTextures.at( texture ).at( quad.id() ),
+                            drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
+                                verts, texcoords, QColor(), region,
                                 data.opacity * window->shadowOpacity( ShadowBorderlessActive ),
                                 data.brightness * window->shadowBrightness( ShadowBorderlessActive ),
-                                data.saturation * window->shadowSaturation( ShadowBorderlessActive )
-                                );
+                                data.saturation * window->shadowSaturation( ShadowBorderlessActive ));
                             }
                         else
                             {
                             texture = effects->shadowTextureList( ShadowBorderlessInactive );
-                            prepareRenderStates(
-                                mShadowTextures.at( texture ).at( quad.id() ),
+                            drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
+                                verts, texcoords, QColor(), region,
                                 data.opacity * window->shadowOpacity( ShadowBorderlessInactive ),
                                 data.brightness * window->shadowBrightness( ShadowBorderlessInactive ),
-                                data.saturation * window->shadowSaturation( ShadowBorderlessInactive )
-                                );
-                            }
-                        mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
-                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
-                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
-                        renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                        mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
-                        mShadowTextures.at( texture ).at( quad.id() )->unbind();
-                        if( effects->activeWindow() == window )
-                            {
-                            restoreRenderStates(
-                                mShadowTextures.at( texture ).at( quad.id() ),
-                                data.opacity * window->shadowOpacity( ShadowBorderlessActive ),
-                                data.brightness * window->shadowBrightness( ShadowBorderlessActive ),
-                                data.saturation * window->shadowSaturation( ShadowBorderlessActive )
-                                );
-                            }
-                        else
-                            {
-                            restoreRenderStates(
-                                mShadowTextures.at( texture ).at( quad.id() ),
-                                data.opacity * window->shadowOpacity( ShadowBorderlessInactive ),
-                                data.brightness * window->shadowBrightness( ShadowBorderlessInactive ),
-                                data.saturation * window->shadowSaturation( ShadowBorderlessInactive )
-                                );
+                                data.saturation * window->shadowSaturation( ShadowBorderlessInactive ));
                             }
                         }
                     else
                         { // Other windows
-                        glColor4f( 1.0, 1.0, 1.0, 1.0 );
-                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                        prepareRenderStates(
-                            mShadowTextures.at( texture ).at( quad.id() ),
+                        drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
+                            verts, texcoords, QColor(), region,
                             data.opacity * window->shadowOpacity( ShadowOther ),
                             data.brightness * window->shadowBrightness( ShadowOther ),
-                            data.saturation * window->shadowSaturation( ShadowOther )
-                            );
-                        mShadowTextures.at( texture ).at( quad.id() )->bind();
-                        mShadowTextures.at( texture ).at( quad.id() )->enableNormalizedTexCoords();
-                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
-                        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
-                        renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                        mShadowTextures.at( texture ).at( quad.id() )->disableNormalizedTexCoords();
-                        mShadowTextures.at( texture ).at( quad.id() )->unbind();
-                        restoreRenderStates(
-                            mShadowTextures.at( texture ).at( quad.id() ),
-                            data.opacity * window->shadowOpacity( ShadowOther ),
-                            data.brightness * window->shadowBrightness( ShadowOther ),
-                            data.saturation * window->shadowSaturation( ShadowOther )
-                            );
+                            data.saturation * window->shadowSaturation( ShadowOther ));
                         }
                     }
                 }
@@ -872,27 +813,11 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                 if( intensifyActiveShadow && window == effects->activeWindow() )
                     opacity = 1 - ( 1 - shadowOpacity ) * ( 1 - shadowOpacity );
 
-                glColor4f( shadowColor.redF(), shadowColor.greenF(), shadowColor.blueF(), opacity * data.opacity );
-                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                prepareRenderStates(
-                    mDefaultShadowTextures.at( quad.id() ),
+                drawShadowQuadOpenGL( mDefaultShadowTextures.at( quad.id() ),
+                    verts, texcoords, shadowColor, region,
                     data.opacity * opacity,
                     data.brightness,
-                    data.saturation
-                    );
-                mDefaultShadowTextures.at( quad.id() )->bind();
-                mDefaultShadowTextures.at( quad.id() )->enableNormalizedTexCoords();
-                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
-                glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
-                renderGLGeometry( region, 4, verts.data(), texcoords.data() );
-                mDefaultShadowTextures.at( quad.id() )->disableNormalizedTexCoords();
-                mDefaultShadowTextures.at( quad.id() )->unbind();
-                restoreRenderStates(
-                    mDefaultShadowTextures.at( quad.id() ),
-                    data.opacity * opacity,
-                    data.brightness,
-                    data.saturation
-                    );
+                    data.saturation );
                 }
 
             glPopMatrix();
