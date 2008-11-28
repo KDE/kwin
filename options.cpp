@@ -51,9 +51,9 @@ Options::Options()
     // If there is any contents in the backup file, it means that KWin crashed
     // while testing a new config. Revert the config.
     // TODO: Notify the user?
-    bool backupImported = importBackup();
-    kWarning( 1212, backupImported ) << "The new settings have most likely caused the X server "
-        "to crash. The configuration options have been reverted to their old values.";
+    if( importBackup() )
+        kWarning( 1212 ) << "The new settings have most likely caused the X server "
+            "to crash. The configuration options have been reverted to their old values.";
 
     updateSettings();
     }

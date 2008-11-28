@@ -855,6 +855,7 @@ void KWinCompositingConfig::copyPluginsToTmpConfig()
     KConfigGroup newGroup( mNewConfig, "Plugins" );
     KConfigGroup tmpGroup( mTmpConfig, "Plugins" );
     tmpGroup.deleteGroup();
+    mTmpConfig->sync();
     newGroup.copyTo( &tmpGroup );
     }
 
@@ -863,6 +864,7 @@ void KWinCompositingConfig::copyPluginsToNewConfig()
     KConfigGroup newGroup( mNewConfig, "Plugins" );
     KConfigGroup tmpGroup( mTmpConfig, "Plugins" );
     newGroup.deleteGroup();
+    mNewConfig->sync();
     tmpGroup.copyTo( &newGroup );
     }
 
