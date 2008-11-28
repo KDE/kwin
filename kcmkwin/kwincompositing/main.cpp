@@ -791,18 +791,30 @@ bool KWinCompositingConfig::sendKWinReloadSignal()
     QDBusMessage message = QDBusMessage::createSignal( "/KWin", "org.kde.KWin", "reloadCompositingConfig" );
     QDBusConnection::sessionBus().send(message);
 
+    //-------------
     // If we added or removed shadows we need to reload decorations as well
     // We have to do this separately so the settings are in sync
     // HACK: This should really just reload decorations, not do a full reconfigure
-    KConfigGroup effectConfig( mBackupConfig, "Plugins" );
+
+    KConfigGroup effectConfig;
+
+    effectConfig = KConfigGroup( mBackupConfig, "Compositing" );
+    bool enabledBefore = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
+    effectConfig = KConfigGroup( mNewConfig, "Compositing" );
+    bool enabledAfter = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
+
+    effectConfig = KConfigGroup( mBackupConfig, "Plugins" );
     bool shadowBefore = effectEnabled( "shadow", effectConfig );
     effectConfig = KConfigGroup( mNewConfig, "Plugins" );
     bool shadowAfter = effectEnabled( "shadow", effectConfig );
-    if( shadowBefore != shadowAfter )
+
+    if( enabledBefore != enabledAfter || shadowBefore != shadowAfter )
         {
         message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "reconfigure" );
         QDBusConnection::sessionBus().send( message );
         }
+
+    //-------------
 
     // If compositing is enabled, check if it could be started.
     KConfigGroup newGroup( mNewConfig, "Compositing" );
