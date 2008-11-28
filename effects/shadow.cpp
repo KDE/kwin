@@ -616,9 +616,9 @@ void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> vert
     QColor color, QRegion region, float opacity, float brightness, float saturation )
     {
     if( color.isValid() )
-        glColor4f( color.redF(), color.greenF(), color.blueF(), opacity );
+        glColor4f( color.redF(), color.greenF(), color.blueF(), 1.0 );
     else
-        glColor4f( 1.0, 1.0, 1.0, opacity );
+        glColor4f( 1.0, 1.0, 1.0, 1.0 );
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     prepareRenderStates( texture, opacity, brightness, saturation );
     texture->bind();
