@@ -193,7 +193,6 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
     shadow->fill( Qt::transparent );
     QRadialGradient rg( size, size, size );
     QColor c = color;
-    c.setAlpha( 0 );  rg.setColorAt( 4/size, c );
     c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
     c = glow;
     c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
@@ -208,7 +207,6 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
 
     rg = QRadialGradient( size, size, size );
     c = color;
-    c.setAlpha( 0 );  rg.setColorAt( 4/size, c );
     c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
     c = glow2;
     c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
@@ -230,6 +228,14 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
     lg.setColorAt(1.0, dark);
     p.setPen(QPen(lg, 0.8));
     p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+
+    // cut out the part of the texture that is under the window
+    p.setCompositionMode( QPainter::CompositionMode_DestinationOut );
+    p.setBrush( QColor( 0, 0, 0, 255 ));
+    p.setPen( Qt::NoPen );
+    p.drawEllipse(QRectF(size-3, size-3, 6, 6));
+    p.drawRect(QRectF(size-3, size-1, 6, 2));
+    p.drawRect(QRectF(size-1, size-3, 2, 6));
 
     p.end();
 
@@ -322,10 +328,12 @@ QList< QList<QImage> > OxygenFactory::shadowTextures()
     p.drawEllipse(QRectF(size-4, size-4, 8, 8));
 
     // cut out the part of the texture that is under the window
-    p.setCompositionMode( QPainter::CompositionMode_Xor );
+    p.setCompositionMode( QPainter::CompositionMode_DestinationOut );
     p.setBrush( QColor( 0, 0, 0, 255 ));
     p.setPen( Qt::NoPen );
-    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+    p.drawEllipse(QRectF(size-3, size-3, 6, 6));
+    p.drawRect(QRectF(size-3, size-1, 6, 2));
+    p.drawRect(QRectF(size-1, size-3, 2, 6));
 
     p.end();
 
