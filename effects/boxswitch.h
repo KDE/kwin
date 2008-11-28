@@ -100,6 +100,7 @@ class BoxSwitchEffect
         int painting_desktop;
 
         bool mAnimateSwitch;
+        TimeLine activeTimeLine;
         TimeLine timeLine;
         bool animation;
         QRect highlight_area;

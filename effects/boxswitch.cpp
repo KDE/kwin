@@ -63,12 +63,15 @@ void BoxSwitchEffect::reconfigure( ReconfigureFlags )
     color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
     color_highlight.setAlphaF( 0.9 );
     color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
+    activeTimeLine.setDuration( animationTime( 250 ));
+    activeTimeLine.setCurveShape( TimeLine::EaseInOutCurve );
     timeLine.setDuration( animationTime( 150 ));
+    timeLine.setCurveShape( TimeLine::EaseInOutCurve );
     KConfigGroup conf = effects->effectConfig( "BoxSwitch" );
 
     bg_opacity = conf.readEntry( "BackgroundOpacity", 25 ) / 100.0;
     elevate_window = conf.readEntry( "ElevateSelected", true );
-    mAnimateSwitch = conf.readEntry( "AnimateSwitch", false );
+    mAnimateSwitch = conf.readEntry( "AnimateSwitch", true );
     }
 
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
@@ -100,6 +103,10 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
 
 void BoxSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
+    if( mActivated )
+        activeTimeLine.addTime( time );
+    else
+        activeTimeLine.removeTime( time );
     if( mActivated && animation )
         {
         timeLine.addTime( time );
@@ -167,6 +174,10 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
 
 void BoxSwitchEffect::postPaintScreen()
     {
+    if( mActivated && activeTimeLine.value() != 1.0 )
+        effects->addRepaintFull();
+    if( !mActivated && activeTimeLine.value() != 0.0 )
+        effects->addRepaintFull();
     if( mActivated && animation )
         {
         if( timeLine.value() == 1.0 )
@@ -190,14 +201,15 @@ void BoxSwitchEffect::postPaintScreen()
 
 void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( mActivated )
+    if(( mActivated && mMode == TabBoxWindowsMode ) || ( !mActivated && activeTimeLine.value() != 0.0 ))
         {
-        if( mMode == TabBoxWindowsMode )
+        if( windows.contains( w ) && w != selected_window )
             {
-            if( windows.contains( w ) && w != selected_window )
-                {
-                data.opacity *= bg_opacity;
-                }
+            if( w->isMinimized() )
+                // TODO: When deactivating minimized windows are not painted at all
+                data.opacity *= activeTimeLine.value() * bg_opacity;
+            else
+                data.opacity *= 1.0 - activeTimeLine.value() * ( 1.0 - bg_opacity );
             }
         }
     effects->paintWindow( w, mask, region, data );
@@ -414,6 +426,11 @@ void BoxSwitchEffect::tabBoxUpdated()
 void BoxSwitchEffect::setActive()
     {
     mActivated = true;
+
+    // Do this here so we have correct fading on deactivation
+    qDeleteAll( windows );
+    windows.clear();
+
     if( mMode == TabBoxWindowsMode )
         {
         original_windows = effects->currentTabBoxWindowList();
@@ -454,9 +471,10 @@ void BoxSwitchEffect::setInactive()
             if( w != selected_window )
                 w->addRepaintFull();
             }
-        qDeleteAll( windows );
-        windows.clear();
-        setSelectedWindow( 0 );
+        // We don't unset the selected window so we have correct fading
+        // But we do need to remove elevation status
+        if( elevate_window && selected_window )
+            effects->setElevatedWindow( selected_window, false );
         }
     else
         { // DesktopMode
