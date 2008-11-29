@@ -636,6 +636,7 @@ void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> vert
 void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, float xScale, float yScale,
     QColor color, float opacity, float brightness, float saturation )
     {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     XRenderColor xc;
     if( color.isValid() )
         xc = preMultiply( color, opacity );
@@ -680,6 +681,7 @@ void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, f
         }};
         XRenderSetPictureTransform( display(), *picture, &xform );
         }
+#endif
     }
 
 void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, const WindowPaintData& data )
