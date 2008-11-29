@@ -71,7 +71,7 @@ void BoxSwitchEffect::reconfigure( ReconfigureFlags )
 
     bg_opacity = conf.readEntry( "BackgroundOpacity", 25 ) / 100.0;
     elevate_window = conf.readEntry( "ElevateSelected", true );
-    mAnimateSwitch = conf.readEntry( "AnimateSwitch", true );
+    mAnimateSwitch = conf.readEntry( "AnimateSwitch", false );
     }
 
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )

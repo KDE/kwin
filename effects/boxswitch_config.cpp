@@ -68,7 +68,7 @@ void BoxSwitchEffectConfig::load()
     bool elevate = conf.readEntry( "ElevateSelected", true );
     m_ui->elevateBox->setChecked( elevate );
 
-    bool animate = conf.readEntry( "AnimateSwitch", true );
+    bool animate = conf.readEntry( "AnimateSwitch", false );
     m_ui->animateBox->setChecked( animate );
 
     emit changed(false);
@@ -96,7 +96,7 @@ void BoxSwitchEffectConfig::defaults()
     {
     m_ui->opacitySpin->setValue( 25 );
     m_ui->elevateBox->setChecked( true );
-    m_ui->animateBox->setChecked( true );
+    m_ui->animateBox->setChecked( false );
     emit changed(true);
     }
 
