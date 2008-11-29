@@ -615,6 +615,7 @@ void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, doub
 void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> verts, QVector<float> texCoords,
     QColor color, QRegion region, float opacity, float brightness, float saturation )
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( color.isValid() )
         glColor4f( color.redF(), color.greenF(), color.blueF(), 1.0 );
     else
@@ -629,6 +630,7 @@ void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> vert
     texture->disableNormalizedTexCoords();
     texture->unbind();
     restoreRenderStates( texture, opacity, brightness, saturation );
+#endif
     }
 
 void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, float xScale, float yScale,
