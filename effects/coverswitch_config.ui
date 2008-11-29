@@ -5,50 +5,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>608</width>
-    <height>238</height>
+    <width>490</width>
+    <height>236</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2" >
-   <item row="0" column="1" >
-    <widget class="QGroupBox" name="groupBox_3" >
-     <property name="title" >
-      <string>Thumbnail Bar</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout" >
-      <item row="0" column="0" >
-       <widget class="QCheckBox" name="checkThumbnails" >
-        <property name="text" >
-         <string>Use additional thumbnail bar</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" >
-       <widget class="QCheckBox" name="checkDynamicThumbnails" >
-        <property name="toolTip" >
-         <string>Only show thumbnail bar if there are at least specified number of windows</string>
-        </property>
-        <property name="text" >
-         <string>Dynamic mode</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="labelThumbnailWindows" >
-        <property name="text" >
-         <string>Number of windows:</string>
-        </property>
-        <property name="buddy" >
-         <cstring>spinThumbnailWindows</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" >
-       <widget class="QSpinBox" name="spinThumbnailWindows" />
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="1" column="1" >
     <widget class="QGroupBox" name="groupBox_2" >
      <property name="title" >
@@ -81,10 +42,10 @@
          <number>3000</number>
         </property>
         <property name="singleStep" >
-         <number>10</number>
+         <number>100</number>
         </property>
         <property name="pageStep" >
-         <number>100</number>
+         <number>500</number>
         </property>
         <property name="orientation" >
          <enum>Qt::Horizontal</enum>
@@ -93,14 +54,56 @@
          <enum>QSlider::TicksBelow</enum>
         </property>
         <property name="tickInterval" >
-         <number>100</number>
+         <number>200</number>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item rowspan="2" row="0" column="0" >
+   <item row="0" column="1" >
+    <widget class="QGroupBox" name="groupBox_3" >
+     <property name="title" >
+      <string>Thumbnail Bar</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3" >
+      <item row="0" column="0" colspan="2" >
+       <widget class="QCheckBox" name="checkThumbnails" >
+        <property name="text" >
+         <string>Use additional thumbnail bar</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2" >
+       <widget class="QCheckBox" name="checkDynamicThumbnails" >
+        <property name="toolTip" >
+         <string>Only show thumbnail bar if there are at least specified number of windows</string>
+        </property>
+        <property name="text" >
+         <string>Dynamic mode</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="labelThumbnailWindows" >
+        <property name="text" >
+         <string>Number of windows:</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy" >
+         <cstring>spinThumbnailWindows</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QSpinBox" name="spinThumbnailWindows" />
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item rowspan="3" row="0" column="0" >
     <widget class="QGroupBox" name="groupBox" >
      <property name="title" >
       <string>Appearance</string>
@@ -169,12 +172,36 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="0" colspan="2" >
+       <spacer name="verticalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
      </layout>
     </widget>
    </item>
+   <item row="2" column="1" >
+    <spacer name="verticalSpacer_2" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
-  <zorder>groupBox_3</zorder>
-  <zorder>groupBox</zorder>
  </widget>
  <tabstops>
   <tabstop>checkAnimateSwitch</tabstop>
