@@ -256,15 +256,28 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             else if( stop )
                 alpha = 1.0 - timeLine.value();
             glColor4f( 0.0, 0.0, 0.0, alpha );
+
+            // HACK: Use a scissor to only display the reflection area on the correct screen.
+            // All the above code should be converted to use a scissor from the beginning or
+            // get the correct coords and use those instead.
+            QRect screenRect = effects->clientArea( ScreenArea, activeScreen, effects->currentDesktop() );
+            glScissor( screenRect.x(), screenRect.y(), screenRect.width(), screenRect.height() );
+            glEnable( GL_SCISSOR_TEST );
+
             glBegin( GL_POLYGON );
             glVertex3f( vertices[0], vertices[1], vertices[2] );
             glVertex3f( vertices[3], vertices[4], vertices[5] );
             // rearground
             alpha = -1.0;
             glColor4f( 0.0, 0.0, 0.0, alpha );
-            glVertex3f( vertices[6], vertices[7], vertices[8] );
-            glVertex3f( vertices[9], vertices[10], vertices[11] );
+            //glVertex3f( vertices[6], vertices[7], vertices[8] );
+            //glVertex3f( vertices[9], vertices[10], vertices[11] );
+            glVertex3f( vertices[6]*2, vertices[7], vertices[8] );   // } Scissor HACK
+            glVertex3f( vertices[9]*2, vertices[10], vertices[11] ); //
             glEnd();
+
+            glDisable( GL_SCISSOR_TEST ); // Scissor HACK
+
             glPopMatrix();
             glDisable( GL_BLEND );
             }
