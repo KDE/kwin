@@ -98,6 +98,7 @@ class SnowEffect
         bool mInited;
         bool mUseShader;
         QRegion repaintRegion;
+        bool hasSnown;
     };
 
 } // namespace

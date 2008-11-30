@@ -50,6 +50,7 @@ SnowEffect::SnowEffect()
     , mShader( 0 )
     , mInited( false )
     , mUseShader( true )
+    , hasSnown( false )
     {
     srandom( std::time( NULL ) );
     nextFlakeMillis = 0;
@@ -81,7 +82,7 @@ void SnowEffect::reconfigure( ReconfigureFlags )
 
 void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    if ( active )
+    if ( active && effects->activeFullScreenEffect() == NULL )
         {
             // if number of active snowflakes is smaller than maximum number
             // create a random new snowflake
@@ -101,6 +102,7 @@ void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 nextFlakeMillis = next;
                 }
         data.mask |= PAINT_SCREEN_TRANSFORMED;
+        hasSnown = false;
         }
     effects->prePaintScreen( data, time );
     }
@@ -116,6 +118,8 @@ void SnowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
 void SnowEffect::snowing( QRegion& region )
     {
+    if( effects->activeFullScreenEffect() != NULL )
+        return;
     if(! texture ) loadTexture();
     if( texture )
         {
@@ -136,10 +140,14 @@ void SnowEffect::snowing( QRegion& region )
         for (int i=0; i<flakes.count(); i++)
             {
             SnowFlake& flake = flakes[i];
-            if( flake.addFrame() == 0 )
+            if( !hasSnown )
                 {
-                flakes.removeAt( i-- );
-                continue;
+                // only update during first paint in one frame
+                if( flake.addFrame() == 0 )
+                    {
+                    flakes.removeAt( i-- );
+                    continue;
+                    }
                 }
 
             if( mUseShader )
@@ -156,7 +164,11 @@ void SnowEffect::snowing( QRegion& region )
                 }
             else
                 {
-                flake.updateSpeedAndRotation();
+                if( !hasSnown )
+                    {
+                    // only update during first paint in one frame
+                    flake.updateSpeedAndRotation();
+                    }
                 // no shader
                 // save the matrix
                 glPushMatrix();
@@ -186,6 +198,7 @@ void SnowEffect::snowing( QRegion& region )
         glDisable( GL_BLEND );
         texture->unbind();
         glPopAttrib();
+        hasSnown = true;
         }
     }
 
