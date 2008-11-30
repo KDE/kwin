@@ -1239,7 +1239,13 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 }
             }
         if( !slide || (slide && !w->isDesktop()) || slideOpacity )
+            {
+            // HACK set opacity to 0.99 in case of fully opaque to ensure that windows are painted in correct sequence
+            // bug #173214
+            if( opacity > 0.99f )
+                opacity = 0.99f;
             data.opacity *= opacity;
+            }
 
         if( w->isOnDesktop(painting_desktop) && w->x() < rect.x() )
             {
