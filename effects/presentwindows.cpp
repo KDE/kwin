@@ -1124,7 +1124,8 @@ void PresentWindowsEffect::setActive( bool active )
                 if( isSelectableWindow( w ))
                     m_motionManager.manage( w );
             }
-        if( m_motionManager.managedWindows().count() < 2 )
+        if ( m_motionManager.managedWindows().isEmpty() ||
+            ( ( m_motionManager.managedWindows().count() == 1 ) && m_motionManager.managedWindows().first()->isOnCurrentDesktop() ) )
             { // No point triggering if there is nothing to do
             m_activated = false;
             m_windowData.clear();
