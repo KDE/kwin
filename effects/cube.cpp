@@ -243,39 +243,39 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             float xmax = ymax * aspect;
             float xTranslate = 0.0;
             float yTranslate = 0.0;
-            bool projectionSet = false;
+            float xminFactor = 1.0;
+            float xmaxFactor = 1.0;
+            float yminFactor = 1.0;
+            float ymaxFactor = 1.0;
             if( rect.x() == 0 && rect.width() != fullRect.width() )
                 {
                 // horizontal layout: left screen
-                glFrustum( xmin*0.5, xmax*1.5, ymin, ymax, zNear, zFar );
-                xTranslate = rect.width()*0.5;
-                projectionSet = true;
+                xminFactor = (float)rect.width()/(float)fullRect.width();
+                xmaxFactor = ((float)fullRect.width()-(float)rect.width()*0.5f)/((float)fullRect.width()*0.5f);
+                xTranslate = (float)fullRect.width()*0.5f-(float)rect.width()*0.5f;
                 }
             if( rect.x() != 0 && rect.width() != fullRect.width() )
                 {
                 // horizontal layout: right screen
-                glFrustum( xmin*1.5, xmax*0.5, ymin, ymax, zNear, zFar );
-                xTranslate = rect.width()*0.5;
-                projectionSet = true;
+                xminFactor = ((float)fullRect.width()-(float)rect.width()*0.5f)/((float)fullRect.width()*0.5f);
+                xmaxFactor = (float)rect.width()/(float)fullRect.width();
+                xTranslate = (float)fullRect.width()*0.5f-(float)rect.width()*0.5f;
                 }
             if( rect.y() == 0 && rect.height() != fullRect.height() )
                 {
-                glFrustum( xmin, xmax, ymin*1.5, ymax*0.5, zNear, zFar );
-                yTranslate = rect.height()*0.5;
-                projectionSet = true;
+                // vertical layout: top screen
+                yminFactor = ((float)fullRect.height()-(float)rect.height()*0.5f)/((float)fullRect.height()*0.5f);
+                ymaxFactor = (float)rect.height()/(float)fullRect.height();
+                yTranslate = (float)fullRect.height()*0.5f-(float)rect.height()*0.5f;
                 }
             if( rect.y() != 0 && rect.height() != fullRect.height() )
                 {
-                glFrustum( xmin, xmax, ymin*0.5, ymax*1.5, zNear, zFar );
-                yTranslate = rect.height()*0.5;
-                projectionSet = true;
+                // vertical layout: bottom screen
+                yminFactor = (float)rect.height()/(float)fullRect.height();
+                ymaxFactor = ((float)fullRect.height()-(float)rect.height()*0.5f)/((float)fullRect.height()*0.5f);
+                yTranslate = (float)fullRect.height()*0.5f-(float)rect.height()*0.5f;
                 }
-            if( !projectionSet )
-                {
-                // this should never happen; nevertheless reset the projection to the default
-                glPopMatrix();
-                glPushMatrix();
-                }
+            glFrustum( xmin*xminFactor, xmax*xmaxFactor, ymin*yminFactor, ymax*ymaxFactor, zNear, zFar );
             glMatrixMode( GL_MODELVIEW );
             glPushMatrix();
             glTranslatef( xTranslate, yTranslate, 0.0 );
@@ -284,8 +284,12 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         // reflection
         if( reflection && (!slide) )
             {
+            // restrict painting the reflections to the current screen
+            PaintClipper::push( QRegion( rect ));
             glPushMatrix();
-            float scaleFactor = 10000 * tan( 60.0 * M_PI / 360.0f )/rect.height();
+            // we can use a huge scale factor (needed to calculate the rearground vertices)
+            // as we restrict with a PaintClipper painting on the current screen
+            float scaleFactor = 1000000 * tan( 60.0 * M_PI / 360.0f )/rect.height();
             glScalef( 1.0, -1.0, 1.0 );
             glTranslatef( 0.0, -rect.height()*2, 0.0 );
 
@@ -297,17 +301,17 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
             glPopMatrix();
             glPushMatrix();
-            glTranslatef( 0.0, rect.height(), 0.0 );
-            if( effects->numScreens() > 1 && rect.width() != fullRect.width() && !slide && !bigCube )
+            if( effects->numScreens() > 1 && rect.x() != fullRect.x() && !slide && !bigCube )
                 {
                 // have to change the reflection area in horizontal layout and right screen
-                glTranslatef( -rect.width(), 0.0, 0.0 );
+                glTranslatef( -rect.x(), 0.0, 0.0 );
                 }
+            glTranslatef( rect.x() + rect.width()*0.5f, 0.0, 0.0 );
             float vertices[] = {
-                rect.x(), 0.0, 0.0,
-                rect.x()+rect.width(), 0.0, 0.0,
-                (rect.x()+rect.width())*scaleFactor, 0.0, -5000,
-                (-rect.x()-rect.width())*scaleFactor, 0.0, -5000 };
+                -rect.width()*0.5f, rect.height(), 0.0,
+                rect.width()*0.5f, rect.height(), 0.0,
+                (float)rect.width()*scaleFactor, rect.height(), -5000,
+                -(float)rect.width()*scaleFactor, rect.height(), -5000 };
             // foreground
             float alpha = 0.7;
             if( start )
@@ -325,6 +329,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glVertex3f( vertices[9], vertices[10], vertices[11] );
             glEnd();
             glPopMatrix();
+            PaintClipper::pop( QRegion( rect ));
             }
         glPushMatrix();
         paintScene( mask, region, data );
