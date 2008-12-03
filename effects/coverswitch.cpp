@@ -225,10 +225,12 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         if( reflection )
             {
             // restrict painting the reflections to the current screen
-            PaintClipper::push( QRegion( area ));
+            QRegion clip = QRegion( area );
+            PaintClipper::push( clip );
             // no reflections during start and stop animation
             if( !start && !stop )
                 paintScene( frontWindow, &leftWindows, &rightWindows, true );
+            PaintClipper::pop( clip );
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA );
             glPolygonMode( GL_FRONT, GL_FILL );
@@ -256,6 +258,23 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 alpha = 1.0 - timeLine.value();
             glColor4f( 0.0, 0.0, 0.0, alpha );
 
+            int y = 0;
+            // have to adjust the y values to fit OpenGL
+            // in OpenGL y==0 is at bottom, in Qt at top
+            if( effects->numScreens() > 1 )
+                {
+                QRect fullArea = effects->clientArea( FullArea, 0, 1 );
+                if( fullArea.height() != area.height() )
+                    {
+                    if( area.y() == 0 )
+                        y = fullArea.height() - area.height();
+                    else
+                        y = fullArea.height() - area.y() - area.height();
+                    }
+                }
+            // use scissor to restrict painting of the reflection plane to current screen
+            glScissor( area.x(), y, area.width(), area.height() );
+            glEnable( GL_SCISSOR_TEST );
             glBegin( GL_POLYGON );
             glVertex3f( vertices[0], vertices[1], vertices[2] );
             glVertex3f( vertices[3], vertices[4], vertices[5] );
@@ -265,10 +284,10 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glVertex3f( vertices[6], vertices[7], vertices[8] );
             glVertex3f( vertices[9], vertices[10], vertices[11] );
             glEnd();
+            glDisable( GL_SCISSOR_TEST );
 
             glPopMatrix();
             glDisable( GL_BLEND );
-            PaintClipper::pop( QRegion( area ));
             }
         paintScene( frontWindow, &leftWindows, &rightWindows );
 
