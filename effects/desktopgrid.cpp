@@ -216,6 +216,9 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
         
         for( int screen = 0; screen < effects->numScreens(); screen++ )
             {
+            // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
+            if( w->isDesktop() )
+                screen = w->screen();
             QRect screenGeom = effects->clientArea( ScreenArea, screen, 0 );
 
             // Display all quads on the same screen on the same pass
@@ -260,6 +263,9 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
                 PaintClipper pc( effects->clientArea( ScreenArea, screen, 0 ));
                 effects->paintWindow( w, mask, region, d );
                 }
+            // Assume desktop windows can never be on two screens at once (Plasma makes one window per screen)
+            if( w->isDesktop() )
+                break;
             }
         }
     else
