@@ -82,7 +82,7 @@ void SnowEffect::reconfigure( ReconfigureFlags )
 
 void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    if ( active && effects->activeFullScreenEffect() == NULL )
+    if ( active )
         {
             // if number of active snowflakes is smaller than maximum number
             // create a random new snowflake
@@ -118,8 +118,6 @@ void SnowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
 void SnowEffect::snowing( QRegion& region )
     {
-    if( effects->activeFullScreenEffect() != NULL )
-        return;
     if(! texture ) loadTexture();
     if( texture )
         {
@@ -134,6 +132,11 @@ void SnowEffect::snowing( QRegion& region )
         if( mUseShader )
             {
             mShader->bind();
+            QRect rect = region.boundingRect();
+            mShader->setUniform( "left", rect.x() );
+            mShader->setUniform( "right", rect.x() + rect.width() );
+            mShader->setUniform( "top", rect.y() );
+            mShader->setUniform( "bottom", rect.y() + rect.height() );
             }
         else
             glNewList( list, GL_COMPILE_AND_EXECUTE );
@@ -222,7 +225,36 @@ void SnowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         }
     effects->paintWindow( w, mask, region, data );
     if( active && w->isDesktop() && snowBehindWindows )
-        snowing( region );
+        {
+        QRect rect = effects->clientArea( FullScreenArea, w->screen(), effects->currentDesktop());
+        QRegion snowRegion( rect.x() + data.xTranslate, rect.y() + data.yTranslate,
+            (double)rect.width()*data.xScale, (double)rect.height()*data.yScale);
+        if( mUseShader )
+            {
+            // have to adjust the y values to fit OpenGL
+            // in OpenGL y==0 is at bottom, in Qt at top
+            int y = 0;
+            if( effects->numScreens() > 1 )
+                {
+                QRect fullArea = effects->clientArea( FullArea, 0, 1 );
+                if( fullArea.height() != rect.height() )
+                    {
+                    if( rect.y() == 0 )
+                        y = fullArea.height() - rect.height();
+                    else
+                        y = fullArea.height() - rect.y() - rect.height();
+                    }
+                }
+            snowRegion = QRegion( rect.x() + data.xTranslate,
+                y + rect.height() - data.yTranslate - (double)rect.height()*data.yScale,
+                (double)rect.width()*data.xScale, (double)rect.height()*data.yScale);
+            }
+        glPushMatrix();
+        glTranslatef( rect.x() + data.xTranslate, rect.y() + data.yTranslate, 0.0 );
+        glScalef( data.xScale, data.yScale, 1.0 );
+        snowing( snowRegion );
+        glPopMatrix();
+        }
     }
 
 void SnowEffect::toggle()

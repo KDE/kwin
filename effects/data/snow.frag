@@ -18,8 +18,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 uniform sampler2D snowTexture;
+uniform int left;
+uniform int right;
+uniform int top;
+uniform int bottom;
 
 void main()
 {
     gl_FragColor = texture2D( snowTexture, gl_TexCoord[0].st );
+    // manual clipping
+    if( gl_FragCoord.x < float( left ) || gl_FragCoord.x > float( right )
+        || gl_FragCoord.y < float( top ) || gl_FragCoord.y > float( bottom ) )
+        discard;
 }
