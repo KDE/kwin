@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Thumbnail Aside
 Name[af]=Duimnael langsaan
-Name[ar]=مصغرات جنبا إلى جنب
+Name[ar]=مصغرات على الجانب
 Name[be@latin]=Padhlady akon
 Name[bg]=Манипулатор на мини изображения
 Name[ca]=Miniatures de costat
@@ -58,6 +58,7 @@ Name[zh_CN]=缩略图置边
 Name[zh_TW]=縮圖在旁邊
 Icon=preferences-system-windows-effect-thumbnailaside
 Comment=Display window thumbnails on the edge of the screen
+Comment[ar]=تعرض مصغرات النوافذ على حافة الشاشة
 Comment[be@latin]=Pakazvaje padhlady akon na krai ekrana.
 Comment[ca]=Mostra les miniatures de les finestres a la vora de la pantalla
 Comment[de]=Zeigt Vorschaubilder von Fenstern in einer Bildschirmecke an.
@@ -66,6 +67,7 @@ Comment[es]=Muestra las miniaturas de la ventana en el borde de la pantalla
 Comment[et]=Ekraani serval näidatakse akende pisipilte
 Comment[gl]=Mostra miniaturas das fiestras no contorno da pantalla
 Comment[gu]=સ્ક્રિનની કિનારી પર વિન્ડોની થમ્બનીલ બતાવો
+Comment[hi]=स्क्रीन के किनारे विंडो लघुछवि प्रदर्शित करें
 Comment[it]=Mostra le miniature delle finestre sul fianco dello schermo
 Comment[ja]=ウィンドウのサムネイルをスクリーンの端に表示します
 Comment[kk]=Терезе нобайларын экранның шетінде көрсету

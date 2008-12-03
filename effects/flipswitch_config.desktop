@@ -8,7 +8,7 @@ X-KDE-PluginKeyword=flipswitch
 
 Name=Flip Switch
 Name[af]=Wissel skakelaar
-Name[ar]=مفتاح التقلب
+Name[ar]=تبديل بالتقليب
 Name[bg]=Превключване между прозорци
 Name[ca]=Canvi en roda
 Name[da]=Vippeskifter
@@ -22,6 +22,7 @@ Name[fr]=Empilement en perspective
 Name[fy]=Flip wiksel
 Name[gl]=Mudanza en fila
 Name[gu]=ફ્લિપ સ્વિચ
+Name[hi]=स्विच बदलें
 Name[hu]=Billenős váltódoboz
 Name[it]=Cambia ribaltando
 Name[ja]=フリップスイッチ

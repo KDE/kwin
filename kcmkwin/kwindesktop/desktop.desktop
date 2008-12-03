@@ -89,7 +89,7 @@ Name[zh_TW]=多重桌面
 
 Comment=You can configure how many virtual desktops there are.
 Comment[af]=Jy kan opstel hoeveel virtuele werkskerms daar is.
-Comment[ar]=تستطيع ضبط عدد اسطح المكتب التخيلية
+Comment[ar]=تستطيع ضبط عدد اسطح المكتب الافتراضية
 Comment[be]=Тут вы можаце змяніць колькасць віртуальных стальніц.
 Comment[be@latin]=Tut možna naładzić, kolki jość virtualnych rabočych stałoŭ.
 Comment[bg]=Настройване на работните плотове
@@ -152,7 +152,7 @@ Comment[sv]=Anpassa antalet virtuella skrivbord
 Comment[ta]=மெய்நிகர் மேல்மேசைகளின் எண்ணிக்கையை வடிவமைக்கலாம்.
 Comment[te]=అక్కడ ఎన్ని వర్చ్యువల్ డెస్‍క్ టాప్‍స్  ఉన్నాయో మీరు ఆకృతీకరించవచ్చు.
 Comment[th]=คุณสามารถปรับแต่งจำนวนของพื้นที่ทำงานเสมือนได้ที่นี่
-Comment[tr]=Kaç görsel masaüstüne sahip olacağınızı buradan yapılandırabilirsiniz.
+Comment[tr]=Kaç görsel masaüstüne sahip olacağınızı buradan ayarlayabilirsiniz.
 Comment[uk]=Налаштування кількості віртуальних стільниць.
 Comment[uz]=Bu yerda virtual ish stollarning sonini moslashingiz mumkin
 Comment[uz@cyrillic]=Бу ерда виртуал иш столларнинг сонини мослашингиз мумкин

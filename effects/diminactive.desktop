@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Dim Inactive
 Name[af]=Verdof wanneer onaktief
-Name[ar]=خامل وقاتم
+Name[ar]=تعتيم الخامل
 Name[bg]=Замъгляване на неактивния
 Name[ca]=Enfosqueix les inactives
 Name[cs]=Ztmavit neaktivní
@@ -56,6 +56,7 @@ Name[x-test]=xxDim Inactivexx
 Name[zh_CN]=暗淡未激活窗口
 Icon=preferences-system-windows-effect-dim-inactive
 Comment=Darken inactive windows
+Comment[ar]=تعتم النوافذ الخاملة
 Comment[ca]=Enfosqueix les finestres inactives
 Comment[de]=Dunkelt inaktive Fenster ab.
 Comment[el]=Σκίαση μη ενεργών παραθύρων
@@ -64,6 +65,7 @@ Comment[et]=Tumendab mitteaktiivsed aknad
 Comment[gl]=Escurece as fiestras inactivas
 Comment[gu]=અસક્રિય વિન્ડોને ઘાટી બનાવે છે
 Comment[he]=החשך חלונות לא פעילים
+Comment[hi]=असक्रिय विंडो को गाढ़ा करता है
 Comment[it]=Scurisce le finestre inattive
 Comment[ja]=非アクティブなウィンドウを暗くします
 Comment[kk]=Белсенді емес терезелерді күңгірттеп көрсету

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Dialog Parent
 Name[af]=Voorafgaande dialoog
-Name[ar]=والد نافذة الحوار
+Name[ar]=مولدة الحوار
 Name[be]=Бацькоўскае акно
 Name[be@latin]=Бацькоўскае акно
 Name[bg]=Редактор на диалози
@@ -63,6 +63,7 @@ Name[zh_CN]=暗淡父级对话框
 Name[zh_TW]=上層對話框
 Icon=preferences-system-windows-effect-dialog-parent
 Comment=Darkens the parent window of the currently active dialog
+Comment[ar]=تعتم  النافذة المولدة الحوار النشط الحالي
 Comment[ca]=Enfosqueix la finestra principal del diàleg actual actiu
 Comment[de]=Dunkelt das Eltern-Fenster des aktiven Dialogs ab.
 Comment[el]=Σκίαση του γονικού παραθύρου του τρέχοντος ενεργού διαλόγου
@@ -70,6 +71,7 @@ Comment[es]=Oscurece la ventana padre de los diálogos activos
 Comment[et]=Tumendab aktiivse dialoogi eellasakna
 Comment[gl]=Escurece a fiestra pai do diálogo activo
 Comment[gu]=સક્રિય સંવાદની મુખ્ય વિન્ડોને ઘાટી બનાવે છે
+Comment[hi]=वर्तमान सक्रिय संवाद के मुख्य विंडो को गाढ़ा करता है
 Comment[it]=Scurisce la finestra genitore della finestra di dialogo attiva
 Comment[ja]=現在アクティブなダイアログの親ウィンドウを暗くします
 Comment[kk]=Белсенді диалогтың аталық терезесін күңгірттеп көрсету

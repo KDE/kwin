@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Taskbar Thumbnails
 Name[af]=Taakbalk duimnaels
-Name[ar]=مصغّرات شريط الأدوات
+Name[ar]=مصغّرات شريط المهام
 Name[be@latin]=Padhlady dla paneli zadańniaŭ
 Name[bg]=Умаления копия на задачите
 Name[bn_IN]=টাস্ক-বার থাম্‌বনেইল
@@ -21,6 +21,7 @@ Name[fy]=Taakbalke miniatueren
 Name[ga]=Mionsamhlacha sa Tascbharra
 Name[gl]=Miniaturas da barra de tarefas
 Name[gu]=ટાસ્કબાર થમ્બનીલ્સ
+Name[hi]=कार्यपट्टी लघु छवि
 Name[hu]=Feladatsáv-ablaktartalom
 Name[is]=Smámyndir á verkefnaslá
 Name[it]=Miniature per la barra delle applicazioni
@@ -57,6 +58,7 @@ Name[zh_CN]=任务栏缩略图
 Name[zh_TW]=工作列縮圖
 Icon=preferences-system-windows-effect-taskbarthumbnail
 Comment=Display window thumbnails when hovering over taskbar entries
+Comment[ar]=اظهر مصغرات النوافذ عند المرور على شريط المهام
 Comment[be@latin]=Pakazvaje padhlady akon, kali kursor nad adpaviednym zadańniem u paneli.
 Comment[ca]=Mostra les miniatures de les finestres quan el cursor està sobre les entrades de la barra de tasques
 Comment[cs]=Zobrazí miniatury oken pokud je kurzor nad jejich položkou v pruhu úloh

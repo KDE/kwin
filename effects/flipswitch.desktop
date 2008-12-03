@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Flip Switch
 Name[af]=Wissel skakelaar
-Name[ar]=مفتاح التقلب
+Name[ar]=تبديل بالتقليب
 Name[bg]=Превключване между прозорци
 Name[ca]=Canvi en roda
 Name[da]=Vippeskifter
@@ -15,6 +15,7 @@ Name[fr]=Empilement en perspective
 Name[fy]=Flip wiksel
 Name[gl]=Mudanza en fila
 Name[gu]=ફ્લિપ સ્વિચ
+Name[hi]=स्विच बदलें
 Name[hu]=Billenős váltódoboz
 Name[it]=Cambia ribaltando
 Name[ja]=フリップスイッチ
@@ -47,6 +48,7 @@ Name[zh_CN]=翻转切换
 Name[zh_TW]=翻轉切換
 Icon=preferences-system-windows-effect-flipswitch
 Comment=Flip through windows that are in a stack for the alt+tab window switcher
+Comment[ar]=تقلب النوافذ التي في القائمة لمبدل النوافذ alt+tab 
 Comment[ca]=Roda a través de les finestres que estan en una pila en el commutador de finestres alt+tab
 Comment[de]=3D-Fensterstapel - Fenster werden auf einem Stapel durchgeblättert.
 Comment[el]=Εναλλαγή των παραθύρων ως μια στοίβα για την εναλλαγή παραθύρων με το alt+tab

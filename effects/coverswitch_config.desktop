@@ -7,7 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_coverswitch
 X-KDE-PluginKeyword=coverswitch
 
 Name=Cover Switch
-Name[ar]=محول التغطية
+Name[ar]=تبديل الأغلفة
 Name[bg]=Превключване между прозорци
 Name[ca]=Canvi de capa
 Name[da]=Cover-skifter
@@ -20,6 +20,7 @@ Name[fr]=Défilement circulaire
 Name[fy]=Foarplaat wiksel
 Name[gl]=Mudanza en capas
 Name[gu]=ફેરફાર ઢાંકો
+Name[hi]=कवर स्विच
 Name[hu]=Fedett váltódoboz
 Name[it]=Sfoglia copertine
 Name[ja]=カバースイッチ

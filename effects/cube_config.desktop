@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_cube
 X-KDE-PluginKeyword=cube
 
 Name=Desktop Cube
+Name[ar]=مكعب سطح المكتب
 Name[be@latin]=Rabočy kub
 Name[ca]=Cub d'escriptori
 Name[de]=Arbeitsflächen-Würfel
@@ -17,6 +18,7 @@ Name[ga]=Ciúb Deisce
 Name[gl]=Cubo do escritorio
 Name[gu]=ડેસ્કટોપ ટ્યુબ
 Name[he]=שולחן עבודה בקובייה
+Name[hi]=डेस्कटॉप घन
 Name[hsb]=Kóstka
 Name[it]=Cubo desktop
 Name[ja]=デスクトップキューブ

@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_sphere
 X-KDE-PluginKeyword=sphere
 
 Name=Desktop Sphere
+Name[ar]=دائرة سطح المكتب
 Name[be@latin]=Rabočaja kula
 Name[ca]=Esfera d'escriptori
 Name[de]=Arbeitsflächen-Kugel
@@ -17,6 +18,7 @@ Name[ga]=Sféar Deisce
 Name[gl]=Escritorio en esfera
 Name[gu]=ડેસ્કટોપ ગોળો
 Name[he]=שולחן עבודה בספירה
+Name[hi]=डेस्कटॉप गोला
 Name[it]=Sfera Desktop
 Name[ja]=デスクトップ球形
 Name[kk]=Үстел сферасы

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Cover Switch
-Name[ar]=محول التغطية
+Name[ar]=تبديل الأغلفة
 Name[bg]=Превключване между прозорци
 Name[ca]=Canvi de capa
 Name[da]=Cover-skifter
@@ -13,6 +13,7 @@ Name[fr]=Défilement circulaire
 Name[fy]=Foarplaat wiksel
 Name[gl]=Mudanza en capas
 Name[gu]=ફેરફાર ઢાંકો
+Name[hi]=कवर स्विच
 Name[hu]=Fedett váltódoboz
 Name[it]=Sfoglia copertine
 Name[ja]=カバースイッチ
@@ -44,7 +45,9 @@ Name[zh_CN]=罩面切换
 Name[zh_TW]=覆蓋切換
 Icon=preferences-system-windows-effect-coverswitch
 Comment=Display a Cover Flow effect for the alt+tab window switcher
+Comment[ar]=تعرض تأثير تتابع الأغلفة في مبدل النوافذ alt+tab 
 Comment[ca]=Mostra un efecte de capes en el commutador de finestres amb alt+tab
+Comment[de]=3D-Fenstergalerie - Fenster laufen von links nach rechts durch
 Comment[el]=Εμφάνιση ενός εφέ ροής εξωφύλλου για την εναλλαγή παραθύρων alt+tab
 Comment[es]=Muestra un efecto de cover flow en el comutador de ventanas alt+tab
 Comment[et]=Cover Flow efekti näitamine Alt+TAB aknavahetajas

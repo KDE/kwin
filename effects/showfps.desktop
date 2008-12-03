@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Show FPS
 Name[af]=Wys FPS
-Name[ar]=أظهر ( اطار لكل ثانية )
+Name[ar]=أظهر ( إطار لكل ثانية )
 Name[be@latin]=Vyjaŭleńnie „FPS”
 Name[bg]=Показване на к/с
 Name[bn_IN]=FPS প্রদর্শন করা হবে
@@ -65,6 +65,7 @@ Name[zh_CN]=显示 FPS
 Name[zh_TW]=顯示每秒幾張
 Icon=preferences-system-windows-effect-fps-show
 Comment=Display KWin's performance in the corner of the screen
+Comment[ar]=تظهر أداء كوين في زاوية الشاشة
 Comment[ca]=Mostra el rendiment del KWin a la cantonada de la pantalla
 Comment[de]=Zeigt die Leistung von KWin in Bildern pro Sekunde an.
 Comment[el]=Εμφάνιση επιδόσεων του KWin στη γωνία της οθόνης
@@ -72,6 +73,7 @@ Comment[es]=Muestra el rendimiento de KWin en la esquina de la pantalla
 Comment[et]=KWin'i jõudluse näitamine ekraani servas
 Comment[gl]=Mostra o rendimento de KWin no canto da fiestra
 Comment[gu]=સ્ક્રિનનાં ખૂણાં પર KWinની કાર્યક્ષમતા દર્શાવો
+Comment[hi]=स्क्रीन के किनारे के-विन के कार्य को प्रदर्शित करता है
 Comment[it]=Mostra le performance di KWin nell'angolo dello schermo
 Comment[ja]=スクリーンの隅に KWin のパフォーマンスを表示します
 Comment[kk]=Экранның бұрышында KWin жылдамдығын көрсетеді

@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_cylinder
 X-KDE-PluginKeyword=cylinder
 
 Name=Desktop Cylinder
+Name[ar]=أسطوانة سطح المكتب
 Name[be@latin]=Rabočy cylinder
 Name[ca]=Cilindre d'escriptori
 Name[de]=Arbeitsflächen-Zylinder
@@ -16,6 +17,7 @@ Name[et]=Töölauasilinder
 Name[gl]=Escritorio cilíndrico
 Name[gu]=ડેસ્કટોપ સિલિન્ડર
 Name[he]=שולחן עבודה בצילינדר
+Name[hi]=डेस्कटॉप बेलन
 Name[it]=Cilindro desktop
 Name[ja]=デスクトップシリンダー
 Name[kk]=Үстел цилиндірі

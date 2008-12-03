@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Present Windows
 Name[af]=Wys vensters
-Name[ar]=نوافذ محسنة
+Name[ar]=النوافذ الحاضرة
 Name[be]=Існуючыя вокны
 Name[be@latin]=Najaŭnyja vokny
 Name[bg]=Представяне на прозорци
@@ -62,6 +62,7 @@ Name[zh_CN]=窗口轮转
 Name[zh_TW]=展示視窗
 Icon=preferences-system-windows-effect-presentwindows
 Comment=Zoom out until all opened windows can be displayed side-by-side
+Comment[ar]=تصغر جميع النوافذ المفتوحة حتى يمكن عرضها جنب إلى جنب
 Comment[ca]=Redueix fins que totes les finestres obertes es poden mostrar una al costat de l'altra
 Comment[de]=Verkleinert Fenster auf der Arbeitsfläche, sodass sie alle nebeneinander sichtbar sind.
 Comment[el]=Σμίκρυνση έως ότου όλα τα ανοιχτά παράθυρα να εμφανίζονται σε παράθεση
@@ -81,6 +82,7 @@ Comment[nds]=Ansicht so grötter maken, dat sik all Finstern blangenanner wiesen
 Comment[nl]=Zoomt uit totdat alle geopende vensters zij-aan-zij kunnen worden getoond
 Comment[pt]=Reduzir até que todas as janelas abertas possam aparecer lado-a-lado
 Comment[pt_BR]=Reduzir até que todas as janelas abertas possam aparecer lado-a-lado
+Comment[ro]=Îndepărtează astfel încît toate ferestrele deschise să poată fi afișate alăturat
 Comment[sv]=Zooma ut till alla öppnade fönster kan visas sida vid sida
 Comment[th]=ปรับย่อขนาดจนสามารถแสดงหน้าต่างทั้งหมดที่เปิดไว้ได้
 Comment[tr]=Tüm açık pencereler yan yana gösterilene kadar küçült
