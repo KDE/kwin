@@ -224,6 +224,8 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
         if( reflection )
             {
+            // restrict painting the reflections to the current screen
+            PaintClipper::push( QRegion( area ));
             // no reflections during start and stop animation
             if( !start && !stop )
                 paintScene( frontWindow, &leftWindows, &rightWindows, true );
@@ -232,16 +234,13 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glPolygonMode( GL_FRONT, GL_FILL );
             glPushMatrix();
             QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-            float reflectionScaleFactor = 6150 * tan( 60.0 * M_PI / 360.0f )/area.width();
+            // we can use a huge scale factor (needed to calculate the rearground vertices)
+            // as we restrict with a PaintClipper painting on the current screen
+            float reflectionScaleFactor = 100000 * tan( 60.0 * M_PI / 360.0f )/area.width();
             if( effects->numScreens() > 1 && area.x() != fullRect.x() )
                 {
                 // have to change the reflection area in horizontal layout and right screen
                 glTranslatef( -area.x(), 0.0, 0.0 );
-                }
-            if( displayWidth()-area.width() != 0 )
-                {
-                if( area.width() < displayWidth() * 0.5f )
-                    reflectionScaleFactor *= (float)area.width()/(float)(displayWidth()-area.width());
                 }
             glTranslatef( area.x() + area.width()*0.5f, 0.0, 0.0 );
             float vertices[] = {
@@ -257,29 +256,19 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 alpha = 1.0 - timeLine.value();
             glColor4f( 0.0, 0.0, 0.0, alpha );
 
-            // HACK: Use a scissor to only display the reflection area on the correct screen.
-            // All the above code should be converted to use a scissor from the beginning or
-            // get the correct coords and use those instead.
-            QRect screenRect = effects->clientArea( ScreenArea, activeScreen, effects->currentDesktop() );
-            glScissor( screenRect.x(), screenRect.y(), screenRect.width(), screenRect.height() );
-            glEnable( GL_SCISSOR_TEST );
-
             glBegin( GL_POLYGON );
             glVertex3f( vertices[0], vertices[1], vertices[2] );
             glVertex3f( vertices[3], vertices[4], vertices[5] );
             // rearground
             alpha = -1.0;
             glColor4f( 0.0, 0.0, 0.0, alpha );
-            //glVertex3f( vertices[6], vertices[7], vertices[8] );
-            //glVertex3f( vertices[9], vertices[10], vertices[11] );
-            glVertex3f( vertices[6]*2, vertices[7], vertices[8] );   // } Scissor HACK
-            glVertex3f( vertices[9]*2, vertices[10], vertices[11] ); //
+            glVertex3f( vertices[6], vertices[7], vertices[8] );
+            glVertex3f( vertices[9], vertices[10], vertices[11] );
             glEnd();
-
-            glDisable( GL_SCISSOR_TEST ); // Scissor HACK
 
             glPopMatrix();
             glDisable( GL_BLEND );
+            PaintClipper::pop( QRegion( area ));
             }
         paintScene( frontWindow, &leftWindows, &rightWindows );
 
