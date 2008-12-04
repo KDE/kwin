@@ -94,10 +94,7 @@ CubeEffect::CubeEffect()
 
 bool CubeEffect::supported()
     {
-    if( effects->compositingType() == OpenGLCompositing )
-        return true;
-    else
-        return false;
+    return effects->compositingType() == OpenGLCompositing;
     }
 
 void CubeEffect::reconfigure( ReconfigureFlags )

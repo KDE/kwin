@@ -58,10 +58,7 @@ FlipSwitchEffect::~FlipSwitchEffect()
 
 bool FlipSwitchEffect::supported()
     {
-    if( effects->compositingType() == OpenGLCompositing )
-        return true;
-    else
-        return false;
+    return effects->compositingType() == OpenGLCompositing;
     }
 
 void FlipSwitchEffect::reconfigure( ReconfigureFlags )

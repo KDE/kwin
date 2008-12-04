@@ -72,10 +72,7 @@ SnowEffect::~SnowEffect()
 
 bool SnowEffect::supported()
     {
-    if( effects->compositingType() == OpenGLCompositing )
-        return true;
-    else
-        return false;
+    return effects->compositingType() == OpenGLCompositing;
     }
 
 void SnowEffect::reconfigure( ReconfigureFlags )
