@@ -41,6 +41,8 @@ class FlipSwitchEffect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
+
+        static bool supported();
     private:
         void paintWindowFlip( EffectWindow* w, bool draw = true, float opacity = 0.8  );
         bool mActivated;

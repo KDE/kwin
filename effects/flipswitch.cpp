@@ -35,6 +35,7 @@ namespace KWin
 {
 
 KWIN_EFFECT( flipswitch, FlipSwitchEffect )
+KWIN_EFFECT_SUPPORTED( flipswitch, FlipSwitchEffect::supported() )
 
 FlipSwitchEffect::FlipSwitchEffect()
     : mActivated( 0 )
@@ -53,6 +54,14 @@ FlipSwitchEffect::FlipSwitchEffect()
 
 FlipSwitchEffect::~FlipSwitchEffect()
     {
+    }
+
+bool FlipSwitchEffect::supported()
+    {
+    if( effects->compositingType() == OpenGLCompositing )
+        return true;
+    else
+        return false;
     }
 
 void FlipSwitchEffect::reconfigure( ReconfigureFlags )

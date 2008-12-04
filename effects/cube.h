@@ -50,6 +50,8 @@ class CubeEffect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxUpdated();
         virtual void tabBoxClosed();
+
+        static bool supported();
     protected slots:
         void toggle();
     protected:

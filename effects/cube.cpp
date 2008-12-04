@@ -42,6 +42,7 @@ namespace KWin
 {
 
 KWIN_EFFECT( cube, CubeEffect )
+KWIN_EFFECT_SUPPORTED( cube, CubeEffect::supported() )
 
 CubeEffect::CubeEffect()
     : activated( false )
@@ -89,6 +90,14 @@ CubeEffect::CubeEffect()
     a->setText( i18n("Desktop Cube" ));
     a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
     connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
+    }
+
+bool CubeEffect::supported()
+    {
+    if( effects->compositingType() == OpenGLCompositing )
+        return true;
+    else
+        return false;
     }
 
 void CubeEffect::reconfigure( ReconfigureFlags )

@@ -51,6 +51,7 @@ class CoverSwitchEffect
         virtual void tabBoxUpdated();
         virtual void windowInputMouseEvent( Window w, QEvent* e );
 
+        static bool supported();
     private:
         void paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows, QList< EffectWindow* >* rightWindows,
         bool reflectedWindows = false );

@@ -42,6 +42,7 @@ namespace KWin
 {
 
 KWIN_EFFECT( snow, SnowEffect )
+KWIN_EFFECT_SUPPORTED( snow, SnowEffect::supported() )
 
 SnowEffect::SnowEffect()
     : texture( NULL )
@@ -67,6 +68,14 @@ SnowEffect::~SnowEffect()
     delete texture;
     if( active )
         delete mShader;
+    }
+
+bool SnowEffect::supported()
+    {
+    if( effects->compositingType() == OpenGLCompositing )
+        return true;
+    else
+        return false;
     }
 
 void SnowEffect::reconfigure( ReconfigureFlags )

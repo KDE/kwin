@@ -38,6 +38,7 @@ namespace KWin
 {
 
 KWIN_EFFECT( coverswitch, CoverSwitchEffect )
+KWIN_EFFECT_SUPPORTED( coverswitch, CoverSwitchEffect::supported() )
 
 CoverSwitchEffect::CoverSwitchEffect()
     : mActivated( 0 )
@@ -57,6 +58,14 @@ CoverSwitchEffect::CoverSwitchEffect()
 
 CoverSwitchEffect::~CoverSwitchEffect()
     {
+    }
+
+bool CoverSwitchEffect::supported()
+    {
+    if( effects->compositingType() == OpenGLCompositing )
+        return true;
+    else
+        return false;
     }
 
 void CoverSwitchEffect::reconfigure( ReconfigureFlags )

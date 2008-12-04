@@ -77,6 +77,7 @@ class SnowEffect
         virtual void postPaintScreen();
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
+        static bool supported();
     private slots:
         void toggle();
     private:
