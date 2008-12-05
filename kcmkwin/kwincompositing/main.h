@@ -89,16 +89,11 @@ class KWinCompositingConfig : public KCModule
         void resetNewToBackupConfig();
         void deleteBackupConfigFile();
 
-        void copyPluginsToTmpConfig();
-        void copyPluginsToNewConfig();
-
         Ui::KWinCompositingConfig ui;
         CompositingPrefs mDefaultPrefs;
 
         KSharedConfigPtr mNewConfig;
         KConfig* mBackupConfig;
-        KTemporaryFile mTmpConfigFile;
-        KSharedConfigPtr mTmpConfig;
 
         enum ElectricBorderEffects
             {

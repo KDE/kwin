@@ -111,16 +111,10 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     // config. It will be written to disk before a new config is loaded and is deleted after
     // the user has confirmed the new settings.
     mBackupConfig = new KConfig( mNewConfig->name() + '~', KConfig::SimpleConfig );
+    updateBackupWithNewConfig();
     // If the backup file already exists, it is a residue we want to clean up; it would
     // probably be in an invalid state anyway.
     deleteBackupConfigFile();
-
-    // Open the temporary config file
-    // Temporary conf file is used to synchronize effect checkboxes with effect
-    // selector by loading/saving effects from/to temp config when active tab
-    // changes.
-    mTmpConfigFile.open();
-    mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
 
     if( CompositingPrefs::compositingPossible() )
         {
@@ -210,14 +204,14 @@ void KWinCompositingConfig::initEffectSelector()
     QList<KPluginInfo> effectinfos = KPluginInfo::fromServices(offers);
 
     // Add them to the plugin selector
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mTmpConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Accessibility"), "Accessibility", mTmpConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Focus"), "Focus", mTmpConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mTmpConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Candy"), "Candy", mTmpConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mTmpConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mTmpConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tools"), "Tools", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mNewConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Accessibility"), "Accessibility", mNewConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Focus"), "Focus", mNewConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mNewConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Candy"), "Candy", mNewConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mNewConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mNewConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tools"), "Tools", mNewConfig);
     }
 
 void KWinCompositingConfig::currentTabChanged(int tab)
@@ -251,7 +245,7 @@ void KWinCompositingConfig::loadGeneralTab()
     ui.animationSpeedCombo->setCurrentIndex(config.readEntry("AnimationSpeed", 3 ));
 
     // Load effect settings
-    KConfigGroup effectconfig(mTmpConfig, "Plugins");
+    KConfigGroup effectconfig(mNewConfig, "Plugins");
 #define LOAD_EFFECT_CONFIG(effectname)  effectconfig.readEntry("kwin4_effect_" effectname "Enabled", true)
     int winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows")
         + LOAD_EFFECT_CONFIG("desktopgrid")
@@ -331,12 +325,8 @@ void KWinCompositingConfig::loadAdvancedTab()
 
 void KWinCompositingConfig::load()
     {
-    mNewConfig->reparseConfiguration();
-
-    updateBackupWithNewConfig();
-
-    // Copy the plugin settings from the main config file to the temp config.
-    copyPluginsToTmpConfig();
+    // Discard any unsaved changes.
+    resetNewToBackupConfig();
 
     loadGeneralTab();
     loadElectricBorders();
@@ -354,7 +344,7 @@ void KWinCompositingConfig::saveGeneralTab()
     config.writeEntry("AnimationSpeed", ui.animationSpeedCombo->currentIndex());
 
     // Save effects
-    KConfigGroup effectconfig(mTmpConfig, "Plugins");
+    KConfigGroup effectconfig( mNewConfig, "Plugins" );
 #define WRITE_EFFECT_CONFIG(effectname, widget)  effectconfig.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
     if (ui.effectWinManagement->checkState() != Qt::PartiallyChecked)
         {
@@ -472,7 +462,6 @@ void KWinCompositingConfig::save()
         loadGeneralTab();
         saveGeneralTab();
         }
-    copyPluginsToNewConfig();
 
     saveElectricBorders();
     saveAdvancedTab();
@@ -733,7 +722,6 @@ void KWinCompositingConfig::activateNewConfig()
     else
         {
         // Copy back the old config and load it into the ui.
-        resetNewToBackupConfig();
         load();
         // Tell KWin to reload the (old) config.
         sendKWinReloadSignal();
@@ -848,22 +836,6 @@ void KWinCompositingConfig::deleteBackupConfigFile()
     QString backupFileName = KStandardDirs::locate( "config", mBackupConfig->name() );
     // If the file does not exist, QFile::remove() just fails silently.
     QFile::remove( backupFileName );
-    }
-
-void KWinCompositingConfig::copyPluginsToTmpConfig()
-    {
-    KConfigGroup newGroup( mNewConfig, "Plugins" );
-    KConfigGroup tmpGroup( mTmpConfig, "Plugins" );
-    tmpGroup.deleteGroup();
-    newGroup.copyTo( &tmpGroup );
-    }
-
-void KWinCompositingConfig::copyPluginsToNewConfig()
-    {
-    KConfigGroup newGroup( mNewConfig, "Plugins" );
-    KConfigGroup tmpGroup( mTmpConfig, "Plugins" );
-    newGroup.deleteGroup();
-    tmpGroup.copyTo( &newGroup );
     }
 
 } // namespace
