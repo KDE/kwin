@@ -58,6 +58,7 @@ class KWinCompositingConfig : public KCModule
         virtual void defaults();
 
     private slots:
+        void reparseConfiguration( const QByteArray& conf );
         void compositingEnabled(bool enabled);
         void currentTabChanged(int tab);
         void electricBorderSelectionChanged(int edge, int index);

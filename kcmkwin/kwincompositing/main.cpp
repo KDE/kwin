@@ -105,6 +105,10 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.xrenderSmoothScale, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
+    // TODO: Apparently nobody can tell why this slot should be needed. Could possibly be removed.
+    connect( ui.effectSelector, SIGNAL( configCommitted( const QByteArray& ) ),
+            this, SLOT( reparseConfiguration( const QByteArray& ) ) );
+
     // Create the backup config. It will be used as a means to revert the config if
     // the X server crashes and to determine if a confirmation dialog should be shown.
     // After the new settings have been confirmed to be stable, it is updated with the new
@@ -186,6 +190,11 @@ KWinCompositingConfig::~KWinCompositingConfig()
     // Make sure that the backup config is not written to disk.
     mBackupConfig->markAsClean();
     delete mBackupConfig;
+    }
+
+void KWinCompositingConfig::reparseConfiguration( const QByteArray& conf )
+    {
+    KSettings::Dispatcher::reparseConfiguration( conf );
     }
 
 void KWinCompositingConfig::compositingEnabled(bool enabled)
