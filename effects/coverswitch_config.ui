@@ -146,7 +146,7 @@
          </sizepolicy>
         </property>
         <property name="specialValueText" >
-         <string>Default</string>
+         <string comment="Duration of rotation">Default</string>
         </property>
         <property name="suffix" >
          <string> msec</string>

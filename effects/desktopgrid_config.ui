@@ -38,7 +38,7 @@
          </sizepolicy>
         </property>
         <property name="specialValueText" >
-         <string>Default</string>
+         <string comment="Duration of zoom">Default</string>
         </property>
         <property name="suffix" >
          <string> msec</string>
