@@ -566,10 +566,13 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                 scaleFactor = (zPosition+1100) * 2.0 * tan( 60.0 * M_PI / 360.0f )/displayWidth();
                 if( displayWidth()-area.width() != 0 )
                     {
-                    if( area.width() < displayWidth() * 0.5f )
+                    // one of the screens is smaller than the other (horizontal)
+                    if( area.width() < displayWidth() - area.width() )
                         scaleFactor *= (float)area.width()/(float)(displayWidth()-area.width());
-                    else
+                    else if( area.width() != displayWidth() - area.width() )
                         {
+                        // vertical layout with different width
+                        // but we don't want to catch screens with same width and different height
                         if( displayHeight() != area.height() )
                             scaleFactor *= (float)area.width()/(float)(displayWidth());
                         }
