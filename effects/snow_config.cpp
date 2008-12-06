@@ -85,7 +85,7 @@ void SnowEffectConfig::load()
     int maxFlake = conf.readEntry("MaxFlakes", 50);
     int maxVSpeed = conf.readEntry("MaxVSpeed", 2);
     int maxHSpeed = conf.readEntry("MaxHSpeed", 1);
-    m_ui->snowBehindWindows->setChecked( conf.readEntry("BehindWindows", false));
+    m_ui->snowBehindWindows->setChecked( conf.readEntry("BehindWindows", true));
     m_ui->numberFlakes->setValue( number );
     m_ui->minSizeFlake->setValue( minFlake );
     m_ui->maxSizeFlake->setValue( maxFlake );
@@ -121,7 +121,7 @@ void SnowEffectConfig::defaults()
     m_ui->maxSizeFlake->setValue( 50 );
     m_ui->maxVSpeed->setValue( 2 );
     m_ui->maxHSpeed->setValue( 1 );
-    m_ui->snowBehindWindows->setChecked( false );
+    m_ui->snowBehindWindows->setChecked( true );
     m_ui->editor->allDefault();
     emit changed(true);
     }

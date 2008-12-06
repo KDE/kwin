@@ -83,7 +83,7 @@ void SnowEffect::reconfigure( ReconfigureFlags )
     mMaxFlakeSize = conf.readEntry("MaxFlakes", 50);
     mMaxVSpeed = conf.readEntry("MaxVSpeed", 2);
     mMaxHSpeed = conf.readEntry("MaxHSpeed", 1);
-    snowBehindWindows = conf.readEntry("BehindWindows", false);
+    snowBehindWindows = conf.readEntry("BehindWindows", true);
     }
 
 void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
