@@ -150,6 +150,7 @@ void DimScreenEffect::windowActivated( EffectWindow *w )
     QStringList check;
     check << "kdesu kdesu";
     check << "kdesudo kdesudo";
+    check << "polkit-kde-manager polkit-kde-manager";
     bool before = mActivated;
     if( check.contains( w->windowClass() ) )
         {
