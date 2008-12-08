@@ -70,8 +70,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     : KCModule( KWinCompositingConfigFactory::componentData(), parent )
     , mKWinConfig(KSharedConfig::openConfig( "kwinrc" ))
     , m_showConfirmDialog( false )
-    , openglIndex( 0 )
-    , xrenderIndex( 1 )
     {
     KGlobal::locale()->insertCatalog( "kwin_effects" );
     ui.setupUi(this);
@@ -80,22 +78,19 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.statusTitleWidget->hide();
     setupElectricBorders();
 
+#define OPENGL_INDEX 0
+#define XRENDER_INDEX 1
 #ifndef KWIN_HAVE_OPENGL_COMPOSITING
-    ui.compositingType->removeItem(openglIndex);
-    ui.glGroup->setEnabled(false);
+    ui.compositingType->removeItem( OPENGL_INDEX );
+    ui.glGroup->setEnabled( false );
+#define OPENGL_INDEX -1
+#define XRENDER_INDEX 0
 #endif
 #ifndef KWIN_HAVE_XRENDER_COMPOSITING
-    ui.compositingType->removeItem(xrenderIndex);
-    ui.xrenderGroup->setEnabled(false);
+    ui.compositingType->removeItem( XRENDER_INDEX );
+    ui.xrenderGroup->setEnabled( false );
+#define XRENDER_INDEX -1
 #endif
-
-    openglIndex = ui.glGroup->isEnabled() ? 0 : -1;
-    if(ui.xrenderGroup->isEnabled() && ui.glGroup->isEnabled())
-        xrenderIndex = 1;
-    else if(ui.xrenderGroup->isEnabled() && !ui.glGroup->isEnabled())
-        xrenderIndex = 0;
-    else
-        xrenderIndex = -1;
 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
@@ -363,7 +358,7 @@ void KWinCompositingConfig::loadAdvancedTab()
     {
     KConfigGroup config(mKWinConfig, "Compositing");
     QString backend = config.readEntry("Backend", "OpenGL");
-    ui.compositingType->setCurrentIndex((backend == "XRender") ? xrenderIndex : 0);
+    ui.compositingType->setCurrentIndex((backend == "XRender") ? XRENDER_INDEX : 0);
     // 4 - off, 5 - shown, 6 - always, other are old values
     int hps = config.readEntry("HiddenPreviews", 5);
     if( hps == 6 ) // always
@@ -521,7 +516,7 @@ bool KWinCompositingConfig::saveAdvancedTab()
         || config.readEntry("XRenderSmoothScale", false ) != ui.xrenderSmoothScale->isChecked() )
         advancedChanged = true;
 
-    config.writeEntry("Backend", (ui.compositingType->currentIndex() == openglIndex) ? "OpenGL" : "XRender");
+    config.writeEntry("Backend", (ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender");
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
     config.writeEntry("DisableChecks", ui.disableChecks->isChecked());
 

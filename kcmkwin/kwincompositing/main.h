@@ -91,9 +91,6 @@ class KWinCompositingConfig : public KCModule
         KSharedConfigPtr mTmpConfig;
         bool m_showConfirmDialog;
 
-        int openglIndex;
-        int xrenderIndex;
-
         enum ElectricBorderEffects
             {
             NoEffect,
