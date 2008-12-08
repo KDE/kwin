@@ -89,6 +89,7 @@ void DimInactiveEffect::windowActivated( EffectWindow* w )
         }
     active = w;
     if( active != NULL )
+        {
         if( dim_by_group )
             {
             if( active->group() != NULL )
@@ -99,6 +100,7 @@ void DimInactiveEffect::windowActivated( EffectWindow* w )
             }
         else
             active->addRepaintFull();
+       }
     }
 
 } // namespace

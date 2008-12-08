@@ -374,12 +374,14 @@ void Placement::placeCascaded (Client* c, QRect& area, Policy nextPlacement)
     if ((yp + ch) > H) yp = Y;
 
     if ((xp + cw) > W)
+        {
         if (!yp) 
         {
         place(c,area,nextPlacement);
         return;
         }
-    else xp = X;
+        else xp = X;
+        }
 
   //if this isn't the first window
     if (cci[dn].pos.x() != X && cci[dn].pos.y() != Y) 

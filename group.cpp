@@ -785,10 +785,12 @@ Window Client::verifyTransientFor( Window new_transient_for, bool defined )
     if( isSplash() && new_transient_for == None )
         new_transient_for = rootWindow();
     if( new_transient_for == None )
+        {
         if( defined ) // sometimes WM_TRANSIENT_FOR is set to None, instead of root window
             new_property_value = new_transient_for = rootWindow();
         else
             return None;
+        }
     if( new_transient_for == window()) // pointing to self
         { // also fix the property itself
         kWarning( 1216 ) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." ;

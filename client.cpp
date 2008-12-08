@@ -1490,10 +1490,12 @@ void Client::readIcons( Window win, QPixmap* icon, QPixmap* miniicon )
     if( icon != NULL )
         *icon = KWindowSystem::icon( win, 32, 32, true, KWindowSystem::NETWM | KWindowSystem::WMHints );
     if( miniicon != NULL )
+        {
         if( icon == NULL || !icon->isNull())
             *miniicon = KWindowSystem::icon( win, 16, 16, true, KWindowSystem::NETWM | KWindowSystem::WMHints );
         else
             *miniicon = QPixmap();
+        }
     }
 
 void Client::getIcons()
