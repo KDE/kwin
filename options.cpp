@@ -23,12 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KCMRULES
 
-#include <QFile>
 #include <QPalette>
 #include <QPixmap>
 #include <kapplication.h>
 #include <kconfig.h>
-#include <kstandarddirs.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
 
@@ -47,14 +45,9 @@ namespace KWin
 #ifndef KCMRULES
 
 Options::Options()
+    : electric_borders( 0 )
+    , electric_border_delay( 0 )
     {
-    // If there is any contents in the backup file, it means that KWin crashed
-    // while testing a new config. Revert the config.
-    // TODO: Notify the user?
-    if( importBackup() )
-        kWarning( 1212 ) << "The new settings have most likely caused the X server "
-            "to crash. The configuration options have been reverted to their old values.";
-
     updateSettings();
     }
 
@@ -62,44 +55,13 @@ Options::~Options()
     {
     }
 
-
 unsigned long Options::updateSettings()
     {
-    return loadSettings( KGlobal::config() );
-    }
-
-bool Options::importBackup()
-    {
-    QString configFileName = KStandardDirs::locate( "config", KGlobal::config()->name() );
-    QString backupFileName = configFileName + '~';
-
-    if ( !QFile::exists( backupFileName ) )
-        {
-        return false;
-        }
-
-    QFile::remove( configFileName );
-    QFile::rename( backupFileName, configFileName );
-
-    KGlobal::config()->reparseConfiguration();
-    return true;
-    }
-
-unsigned long Options::loadSettings( KSharedConfigPtr configFile )
-    {
+    KSharedConfig::Ptr _config = KGlobal::config();
     unsigned long changed = 0;
-    changed |= KDecorationOptions::updateSettings( configFile.data() ); // read decoration settings
+    changed |= KDecorationOptions::updateSettings( _config.data() ); // read decoration settings
 
-    loadWindowSettings( configFile );
-    loadMouseBindings( configFile );
-    loadCompositingSettings( configFile );
-
-    return changed;
-    }
-
-void Options::loadWindowSettings( KSharedConfigPtr configFile )
-    {
-    KConfigGroup config( configFile, "Windows" );
+    KConfigGroup config( _config, "Windows" );
     moveMode = stringToMoveResizeMode( config.readEntry("MoveMode", "Opaque" ));
     resizeMode = stringToMoveResizeMode( config.readEntry("ResizeMode", "Opaque" ));
     show_geometry_tip = config.readEntry("GeometryTip", false);
@@ -132,7 +94,6 @@ void Options::loadWindowSettings( KSharedConfigPtr configFile )
     if( !focusPolicyIsReasonable()) // #48786, comments #7 and later
         focusStealingPreventionLevel = 0;
 
-    // This was once loaded from kdeglobals.
     xineramaEnabled = config.readEntry ("XineramaEnabled", true);
     xineramaPlacementEnabled = config.readEntry ("XineramaPlacementEnabled", true);
     xineramaMovementEnabled = config.readEntry ("XineramaMovementEnabled", true);
@@ -193,29 +154,8 @@ void Options::loadWindowSettings( KSharedConfigPtr configFile )
     hideUtilityWindowsForInactive = config.readEntry( "HideUtilityWindowsForInactive", true);
     showDesktopIsMinimizeAll = config.readEntry( "ShowDesktopIsMinimizeAll", false );
 
-    // Read button tooltip animation effect from kdeglobals
-    // Since we want to allow users to enable window decoration tooltips
-    // and not kstyle tooltips and vise-versa, we don't read the
-    // "EffectNoTooltip" setting from kdeglobals.
-
-#if 0
-    FIXME: we have no mac style menu implementation in kwin anymore, so this just breaks
-           things for people!
-    KConfig _globalConfig("kdeglobals");
-    KConfigGroup globalConfig(&_globalConfig, "KDE");
-    topmenus = globalConfig.readEntry("macStyle", false);
-#else
-    topmenus = false;
-#endif
-
-    //    QToolTip::setGloballyEnabled( d->show_tooltips );
-    // KDE4 this probably needs to be done manually in clients
-    }
-
-void Options::loadMouseBindings( KSharedConfigPtr configFile )
-    {
     // Mouse bindings
-    KConfigGroup config( configFile, "MouseBindings" );
+    config = KConfigGroup( _config, "MouseBindings" );
     CmdActiveTitlebar1 = mouseCommand(config.readEntry("CommandActiveTitlebar1","Raise"), true );
     CmdActiveTitlebar2 = mouseCommand(config.readEntry("CommandActiveTitlebar2","Lower"), true );
     CmdActiveTitlebar3 = mouseCommand(config.readEntry("CommandActiveTitlebar3","Operations menu"), true );
@@ -231,19 +171,42 @@ void Options::loadMouseBindings( KSharedConfigPtr configFile )
     CmdAll2 = mouseCommand(config.readEntry("CommandAll2","Toggle raise and lower"), false );
     CmdAll3 = mouseCommand(config.readEntry("CommandAll3","Resize"), false );
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel","Nothing"));
-    }
 
-void Options::loadCompositingSettings( KSharedConfigPtr configFile )
-    {
+    config=KConfigGroup(_config,"Compositing");
+    refreshRate = config.readEntry( "RefreshRate", 0 );
+
+    // Read button tooltip animation effect from kdeglobals
+    // Since we want to allow users to enable window decoration tooltips
+    // and not kstyle tooltips and vise-versa, we don't read the
+    // "EffectNoTooltip" setting from kdeglobals.
+
+#if 0
+    FIXME: we have no mac style menu implementation in kwin anymore, so this just breaks
+           things for people!
+    KConfig _globalConfig("kdeglobals");
+    KConfigGroup globalConfig(&_globalConfig, "KDE");
+    topmenus = globalConfig.readEntry("macStyle", false);
+#else
+    topmenus = false;
+#endif
+
+//    QToolTip::setGloballyEnabled( d->show_tooltips );
+// KDE4 this probably needs to be done manually in clients
+
     // Driver-specific config detection
     CompositingPrefs prefs;
     prefs.detect();
+    reloadCompositingSettings( prefs );
+
+    return changed;
+    }
+
+void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
+    {
+    KSharedConfig::Ptr _config = KGlobal::config();
+    KConfigGroup config(_config, "Compositing");
 
     // Compositing settings
-    KConfigGroup config( configFile, "Compositing");
-
-    refreshRate = config.readEntry( "RefreshRate", 0 );
-
     useCompositing = config.readEntry("Enabled", prefs.enableCompositing());
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if( compositingBackend == "XRender" )

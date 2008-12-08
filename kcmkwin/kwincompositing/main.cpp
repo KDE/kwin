@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaboutdata.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kstandarddirs.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <ksettings/dispatcher.h>
@@ -35,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kservice.h>
 #include <ktitlewidget.h>
 
-#include <QFile>
 #include <QtDBus/QtDBus>
 #include <QTimer>
 #include <QLabel>
@@ -69,8 +67,9 @@ ConfirmDialog::ConfirmDialog() :
 
 
 KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList &)
-    : KCModule( KWinCompositingConfigFactory::componentData(), parent),
-        mNewConfig( KSharedConfig::openConfig( "kwinrc" ) )
+    : KCModule( KWinCompositingConfigFactory::componentData(), parent )
+    , mKWinConfig(KSharedConfig::openConfig( "kwinrc" ))
+    , m_showConfirmDialog( false )
     {
     KGlobal::locale()->insertCatalog( "kwin_effects" );
     ui.setupUi(this);
@@ -88,6 +87,8 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.effectAnimations, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
     connect(ui.effectSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
+    connect(ui.effectSelector, SIGNAL(configCommitted(const QByteArray&)),
+            this, SLOT(reparseConfiguration(const QByteArray&)));
 
     connect(ui.windowSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.desktopSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
@@ -96,6 +97,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.edges_monitor, SIGNAL(changed()), this, SLOT(changed()));
     connect(ui.edges_monitor, SIGNAL(edgeSelectionChanged(int,int)), this, SLOT(electricBorderSelectionChanged(int,int)));
 
+    connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(compositingModeChanged()));
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.windowThumbnails, SIGNAL(activated(int)), this, SLOT(changed()));
     connect(ui.disableChecks, SIGNAL(toggled(bool)), this, SLOT(changed()));
@@ -105,20 +107,12 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.xrenderSmoothScale, SIGNAL(toggled(bool)), this, SLOT(changed()));
 
-    // TODO: Apparently nobody can tell why this slot should be needed. Could possibly be removed.
-    connect( ui.effectSelector, SIGNAL( configCommitted( const QByteArray& ) ),
-            this, SLOT( reparseConfiguration( const QByteArray& ) ) );
-
-    // Create the backup config. It will be used as a means to revert the config if
-    // the X server crashes and to determine if a confirmation dialog should be shown.
-    // After the new settings have been confirmed to be stable, it is updated with the new
-    // config. It will be written to disk before a new config is loaded and is deleted after
-    // the user has confirmed the new settings.
-    mBackupConfig = new KConfig( mNewConfig->name() + '~', KConfig::SimpleConfig );
-    updateBackupWithNewConfig();
-    // If the backup file already exists, it is a residue we want to clean up; it would
-    // probably be in an invalid state anyway.
-    deleteBackupConfigFile();
+    // Open the temporary config file
+    // Temporary conf file is used to synchronize effect checkboxes with effect
+    // selector by loading/saving effects from/to temp config when active tab
+    // changes.
+    mTmpConfigFile.open();
+    mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
 
     if( CompositingPrefs::compositingPossible() )
         {
@@ -187,9 +181,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
 KWinCompositingConfig::~KWinCompositingConfig()
     {
-    // Make sure that the backup config is not written to disk.
-    mBackupConfig->markAsClean();
-    delete mBackupConfig;
     }
 
 void KWinCompositingConfig::reparseConfiguration( const QByteArray& conf )
@@ -197,13 +188,52 @@ void KWinCompositingConfig::reparseConfiguration( const QByteArray& conf )
     KSettings::Dispatcher::reparseConfiguration( conf );
     }
 
-void KWinCompositingConfig::compositingEnabled(bool enabled)
+void KWinCompositingConfig::compositingEnabled( bool enabled )
     {
     // Enable the other configuration tabs only when compositing is enabled.
     ui.compositingOptionsContainer->setEnabled(enabled);
     ui.tabWidget->setTabEnabled(1, enabled);
     ui.tabWidget->setTabEnabled(2, enabled);
     ui.tabWidget->setTabEnabled(3, enabled);
+    }
+
+void KWinCompositingConfig::showConfirmDialog( bool reinitCompositing )
+    {
+    bool revert = false;
+    // Feel free to extend this to support several kwin instances (multihead) if you
+    // think it makes sense.
+    OrgKdeKWinInterface kwin("org.kde.kwin", "/KWin", QDBusConnection::sessionBus());
+    if( reinitCompositing ? !kwin.compositingActive().value() : !kwin.waitForCompositingSetup().value() )
+        {
+        KMessageBox::sorry( this, i18n(
+            "Failed to activate desktop effects using the given "
+            "configuration options. Settings will be reverted to their previous values.\n\n"
+            "Check your X configuration. You may also consider changing advanced options, "
+            "especially changing the compositing type." ));
+        revert = true;
+        }
+    else
+        {
+        ConfirmDialog confirm;
+        if( !confirm.exec())
+            revert = true;
+        }
+    if( revert )
+        {
+        // Revert settings
+        KConfigGroup config(mKWinConfig, "Compositing");
+        config.deleteGroup();
+        QMap<QString, QString>::const_iterator it = mPreviousConfig.constBegin();
+        for(; it != mPreviousConfig.constEnd(); ++it)
+            {
+            if (it.value().isEmpty())
+                continue;
+            config.writeEntry(it.key(), it.value());
+            }
+        // Sync with KWin and reload
+        configChanged(reinitCompositing);
+        load();
+        }
     }
 
 void KWinCompositingConfig::initEffectSelector()
@@ -213,14 +243,14 @@ void KWinCompositingConfig::initEffectSelector()
     QList<KPluginInfo> effectinfos = KPluginInfo::fromServices(offers);
 
     // Add them to the plugin selector
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mNewConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Accessibility"), "Accessibility", mNewConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Focus"), "Focus", mNewConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mNewConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Candy"), "Candy", mNewConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mNewConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mNewConfig);
-    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tools"), "Tools", mNewConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Appearance"), "Appearance", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Accessibility"), "Accessibility", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Focus"), "Focus", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Window Management"), "Window Management", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Candy"), "Candy", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Demos"), "Demos", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tests"), "Tests", mTmpConfig);
+    ui.effectSelector->addPlugins(effectinfos, KPluginSelector::ReadConfigFile, i18n("Tools"), "Tools", mTmpConfig);
     }
 
 void KWinCompositingConfig::currentTabChanged(int tab)
@@ -249,12 +279,12 @@ void KWinCompositingConfig::currentTabChanged(int tab)
 
 void KWinCompositingConfig::loadGeneralTab()
     {
-    KConfigGroup config(mNewConfig, "Compositing");
+    KConfigGroup config(mKWinConfig, "Compositing");
     ui.useCompositing->setChecked(config.readEntry("Enabled", mDefaultPrefs.enableCompositing()));
     ui.animationSpeedCombo->setCurrentIndex(config.readEntry("AnimationSpeed", 3 ));
 
     // Load effect settings
-    KConfigGroup effectconfig(mNewConfig, "Plugins");
+    KConfigGroup effectconfig(mTmpConfig, "Plugins");
 #define LOAD_EFFECT_CONFIG(effectname)  effectconfig.readEntry("kwin4_effect_" effectname "Enabled", true)
     int winManagementEnabled = LOAD_EFFECT_CONFIG("presentwindows")
         + LOAD_EFFECT_CONFIG("desktopgrid")
@@ -279,7 +309,7 @@ void KWinCompositingConfig::loadGeneralTab()
         ui.windowSwitchingCombo->setCurrentIndex( 3 );
     if( effectEnabled( "flipswitch", effectconfig ))
         ui.windowSwitchingCombo->setCurrentIndex( 4 );
-    KConfigGroup presentwindowsconfig(mNewConfig, "Effect-PresentWindows");
+    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
     if( effectEnabled( "presentwindows", effectconfig ) && presentwindowsconfig.readEntry("TabBox", false) )
         ui.windowSwitchingCombo->setCurrentIndex( 2 );
 
@@ -288,9 +318,11 @@ void KWinCompositingConfig::loadGeneralTab()
     ui.desktopSwitchingCombo->setCurrentIndex( 0 );
     if( effectEnabled( "slide", effectconfig ))
         ui.desktopSwitchingCombo->setCurrentIndex( 1 );
-    KConfigGroup cubeconfig(mNewConfig, "Effect-Cube");
+    KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     if( effectEnabled( "cube", effectconfig ) && cubeconfig.readEntry("AnimateDesktopChange", false))
         ui.desktopSwitchingCombo->setCurrentIndex( 2 );
+
+    loadElectricBorders();
     }
 
 bool KWinCompositingConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
@@ -310,7 +342,7 @@ void KWinCompositingConfig::loadEffectsTab()
 
 void KWinCompositingConfig::loadAdvancedTab()
     {
-    KConfigGroup config(mNewConfig, "Compositing");
+    KConfigGroup config(mKWinConfig, "Compositing");
     QString backend = config.readEntry("Backend", "OpenGL");
     ui.compositingType->setCurrentIndex((backend == "XRender") ? 1 : 0);
     // 4 - off, 5 - shown, 6 - always, other are old values
@@ -334,11 +366,17 @@ void KWinCompositingConfig::loadAdvancedTab()
 
 void KWinCompositingConfig::load()
     {
-    // Discard any unsaved changes.
-    resetNewToBackupConfig();
+    mKWinConfig->reparseConfiguration();
+
+    // Copy Plugins group to temp config file
+    QMap<QString, QString> entries = mKWinConfig->entryMap("Plugins");
+    QMap<QString, QString>::const_iterator it = entries.constBegin();
+    KConfigGroup tmpconfig(mTmpConfig, "Plugins");
+    tmpconfig.deleteGroup();
+    for(; it != entries.constEnd(); ++it)
+        tmpconfig.writeEntry(it.key(), it.value());
 
     loadGeneralTab();
-    loadElectricBorders();
     loadEffectsTab();
     loadAdvancedTab();
 
@@ -347,13 +385,17 @@ void KWinCompositingConfig::load()
 
 void KWinCompositingConfig::saveGeneralTab()
     {
-    KConfigGroup config(mNewConfig, "Compositing");
+    KConfigGroup config(mKWinConfig, "Compositing");
+    // Check if any critical settings that need confirmation have changed
+    if(ui.useCompositing->isChecked() &&
+       ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.enableCompositing()))
+        m_showConfirmDialog = true;
 
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
     config.writeEntry("AnimationSpeed", ui.animationSpeedCombo->currentIndex());
 
     // Save effects
-    KConfigGroup effectconfig( mNewConfig, "Plugins" );
+    KConfigGroup effectconfig(mTmpConfig, "Plugins");
 #define WRITE_EFFECT_CONFIG(effectname, widget)  effectconfig.writeEntry("kwin4_effect_" effectname "Enabled", widget->isChecked())
     if (ui.effectWinManagement->checkState() != Qt::PartiallyChecked)
         {
@@ -404,7 +446,7 @@ void KWinCompositingConfig::saveGeneralTab()
             effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", true);
             break;
         }
-    KConfigGroup presentwindowsconfig(mNewConfig, "Effect-PresentWindows");
+    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
     presentwindowsconfig.writeEntry("TabBox", presentWindowSwitching);
 
     int desktopSwitcher = ui.desktopSwitchingCombo->currentIndex();
@@ -426,8 +468,10 @@ void KWinCompositingConfig::saveGeneralTab()
             effectconfig.writeEntry("kwin4_effect_cubeEnabled", true);
             break;
         }
-    KConfigGroup cubeconfig(mNewConfig, "Effect-Cube");
+    KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     cubeconfig.writeEntry("AnimateDesktopChange", cubeDesktopSwitching);
+
+    saveElectricBorders();
     }
 
 void KWinCompositingConfig::saveEffectsTab()
@@ -435,12 +479,28 @@ void KWinCompositingConfig::saveEffectsTab()
     ui.effectSelector->save();
     }
 
-void KWinCompositingConfig::saveAdvancedTab()
+bool KWinCompositingConfig::saveAdvancedTab()
     {
+    bool advancedChanged = false;
     static const int hps[] = { 6 /*always*/, 5 /*shown*/,  4 /*never*/ };
 
-    KConfigGroup config(mNewConfig, "Compositing");
+    KConfigGroup config(mKWinConfig, "Compositing");
     QString glModes[] = { "TFP", "SHM", "Fallback" };
+
+    if( config.readEntry("Backend", "OpenGL")
+            != ((ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender")
+        || config.readEntry("GLMode", "TFP") != glModes[ui.glMode->currentIndex()]
+        || config.readEntry("GLDirect", mDefaultPrefs.enableDirectRendering())
+            != ui.glDirect->isChecked()
+        || config.readEntry("GLVSync", mDefaultPrefs.enableVSync()) != ui.glVSync->isChecked()
+        || config.readEntry("DisableChecks", false ) != ui.disableChecks->isChecked())
+        {
+        m_showConfirmDialog = true;
+        advancedChanged = true;
+        }
+    else if( config.readEntry("HiddenPreviews", 5) != hps[ ui.windowThumbnails->currentIndex() ]
+        || config.readEntry("XRenderSmoothScale", false ) != ui.xrenderSmoothScale->isChecked() )
+        advancedChanged = true;
 
     config.writeEntry("Backend", (ui.compositingType->currentIndex() == 0) ? "OpenGL" : "XRender");
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex() ] );
@@ -452,10 +512,16 @@ void KWinCompositingConfig::saveAdvancedTab()
     config.writeEntry("GLVSync", ui.glVSync->isChecked());
 
     config.writeEntry("XRenderSmoothScale", ui.xrenderSmoothScale->isChecked());
+
+    return advancedChanged;
     }
 
 void KWinCompositingConfig::save()
     {
+    // Save current config. We'll use this for restoring in case something goes wrong.
+    KConfigGroup config(mKWinConfig, "Compositing");
+    mPreviousConfig = config.entryMap();
+
     // bah; tab content being dependent on the other is really bad; and
     // deprecated in the HIG for a reason.  Its confusing!
     // Make sure we only call save on each tab once; as they are stateful due to the revert concept
@@ -471,14 +537,37 @@ void KWinCompositingConfig::save()
         loadGeneralTab();
         saveGeneralTab();
         }
+    bool advancedChanged = saveAdvancedTab();
 
-    saveElectricBorders();
-    saveAdvancedTab();
+    // Copy Plugins group from temp config to real config
+    QMap<QString, QString> entries = mTmpConfig->entryMap("Plugins");
+    QMap<QString, QString>::const_iterator it = entries.constBegin();
+    KConfigGroup realconfig(mKWinConfig, "Plugins");
+    realconfig.deleteGroup();
+    for(; it != entries.constEnd(); ++it)
+        realconfig.writeEntry(it.key(), it.value());
 
     emit changed( false );
 
-    activateNewConfig();
+    configChanged(advancedChanged);
+
+    if(m_showConfirmDialog)
+        {
+        m_showConfirmDialog = false;
+        showConfirmDialog(advancedChanged);
+        }
     }
+
+void KWinCompositingConfig::configChanged(bool reinitCompositing)
+    {
+    // Send signal to kwin
+    mKWinConfig->sync();
+    // Send signal to all kwin instances
+    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin",
+        reinitCompositing ? "reinitCompositing" : "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+    }
+
 
 void KWinCompositingConfig::defaults()
     {
@@ -518,7 +607,6 @@ QString KWinCompositingConfig::quickHelp() const
     return i18n("<h1>Desktop Effects</h1>");
     }
 
-
 void KWinCompositingConfig::setupElectricBorders()
     {
     addItemToEdgesMonitor( i18n("No Effect"));
@@ -534,32 +622,22 @@ void KWinCompositingConfig::setupElectricBorders()
         }
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_desktopgrid'");
     if( !services.isEmpty() )
-        {
         addItemToEdgesMonitor( services.first()->name());
-        }
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cube'");
     if( !services.isEmpty() )
-        {
         addItemToEdgesMonitor( services.first()->name());
-        }
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cylinder'");
     if( !services.isEmpty() )
-        {
         addItemToEdgesMonitor( services.first()->name());
-        }
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_sphere'");
     if( !services.isEmpty() )
-        {
         addItemToEdgesMonitor( services.first()->name());
-        }
     }
 
 void KWinCompositingConfig::addItemToEdgesMonitor(const QString& item)
     {
     for( int i=0; i<8; i++ )
-        {
         ui.edges_monitor->addEdgeItem( i, item );
-        }
     }
 
 void KWinCompositingConfig::electricBorderSelectionChanged(int edge, int index)
@@ -579,25 +657,25 @@ void KWinCompositingConfig::electricBorderSelectionChanged(int edge, int index)
 void KWinCompositingConfig::loadElectricBorders()
     {
     // Present Windows
-    KConfigGroup presentwindowsconfig(mNewConfig, "Effect-PresentWindows");
+    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
     changeElectricBorder( (ElectricBorder)presentwindowsconfig.readEntry( "BorderActivateAll",
         int( ElectricTopLeft )), (int)PresentWindowsAll );
     changeElectricBorder( (ElectricBorder)presentwindowsconfig.readEntry( "BorderActivate",
         int( ElectricNone )), (int)PresentWindowsCurrent );
     // Desktop Grid
-    KConfigGroup gridconfig(mNewConfig, "Effect-DesktopGrid");
+    KConfigGroup gridconfig(mKWinConfig, "Effect-DesktopGrid");
     changeElectricBorder( (ElectricBorder)gridconfig.readEntry( "BorderActivate",
         int( ElectricNone )), (int)DesktopGrid );
     // Desktop Cube
-    KConfigGroup cubeconfig(mNewConfig, "Effect-Cube");
+    KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     changeElectricBorder( (ElectricBorder)cubeconfig.readEntry( "BorderActivate",
         int( ElectricNone )), (int)Cube );
     // Desktop Cylinder
-    KConfigGroup cylinderconfig(mNewConfig, "Effect-Cylinder");
+    KConfigGroup cylinderconfig(mKWinConfig, "Effect-Cylinder");
     changeElectricBorder( (ElectricBorder)cylinderconfig.readEntry( "BorderActivate",
         int( ElectricNone )), (int)Cylinder );
     // Desktop Grid
-    KConfigGroup sphereconfig(mNewConfig, "Effect-Sphere");
+    KConfigGroup sphereconfig(mKWinConfig, "Effect-Sphere");
     changeElectricBorder( (ElectricBorder)sphereconfig.readEntry( "BorderActivate",
         int( ElectricNone )), (int)Sphere );
     }
@@ -639,213 +717,42 @@ void KWinCompositingConfig::changeElectricBorder( ElectricBorder border, int ind
 ElectricBorder KWinCompositingConfig::checkEffectHasElectricBorder( int index )
     {
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Top ) == index )
-        {
         return ElectricTop;
-        }
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::TopRight ) == index )
-        {
         return ElectricTopRight;
-        }
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Right ) == index )
-        {
         return ElectricRight;
-        }
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::BottomRight ) == index )
-        {
         return ElectricBottomRight;
-        }
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Bottom ) == index )
-        {
         return ElectricBottom;
-        }
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::BottomLeft ) == index )
-        {
         return ElectricBottomLeft;
-        }
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Left ) == index )
-        {
         return ElectricLeft;
-        }
     if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::TopLeft ) == index )
-        {
         return ElectricTopLeft;
-        }
     return ElectricNone;
     }
 
 void KWinCompositingConfig::saveElectricBorders()
-    {
-    KConfigGroup presentwindowsconfig(mNewConfig, "Effect-PresentWindows");
+{
+    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
     presentwindowsconfig.writeEntry( "BorderActivateAll", (int)checkEffectHasElectricBorder( (int)PresentWindowsAll ));
     presentwindowsconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)PresentWindowsCurrent ));
 
-    KConfigGroup gridconfig(mNewConfig, "Effect-DesktopGrid");
+    KConfigGroup gridconfig(mKWinConfig, "Effect-DesktopGrid");
     gridconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)DesktopGrid ));
 
-    KConfigGroup cubeconfig(mNewConfig, "Effect-Cube");
+    KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     cubeconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)Cube ));
 
-    KConfigGroup cylinderconfig(mNewConfig, "Effect-Cylinder");
+    KConfigGroup cylinderconfig(mKWinConfig, "Effect-Cylinder");
     cylinderconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)Cylinder ));
 
-    KConfigGroup sphereconfig(mNewConfig, "Effect-Sphere");
+    KConfigGroup sphereconfig(mKWinConfig, "Effect-Sphere");
     sphereconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)Sphere ));
-    }
-
-void KWinCompositingConfig::activateNewConfig()
-    {
-    // Write the backup file to disk so it can be used on the next KWin start
-    // if KWin or the X server should crash while testing the new config.
-    mBackupConfig->sync();
-
-    bool configOk = true;
-
-    // Tell KWin to load the new configuration.
-    bool couldReload = sendKWinReloadSignal();
-    // If it was not successfull, show an error message to the user.
-    if ( !couldReload )
-        {
-        KMessageBox::sorry( this, i18n(
-            "Failed to activate desktop effects using the given "
-            "configuration options. Settings will be reverted to their previous values.\n\n"
-            "Check your X configuration. You may also consider changing advanced options, "
-            "especially changing the compositing type." ) );
-        configOk = false;
-        }
-    else
-       {
-        // If the confirmation dialog should be shown, wait for its result.
-        if ( isConfirmationNeeded() )
-            {
-            ConfirmDialog confirm;
-            configOk = confirm.exec();
-            }
-        }
-
-    if ( configOk )
-        {
-        // The new config is stable and was accepted.
-        // Update our internal backup copy of the config.
-        updateBackupWithNewConfig();
-        }
-    else
-        {
-        // Copy back the old config and load it into the ui.
-        load();
-        // Tell KWin to reload the (old) config.
-        sendKWinReloadSignal();
-        }
-
-    // Remove the backup file from disk because it is the same as the main config
-    // anyway and would only confuse the startup code if KWin is restarted while
-    // this module is still opened, (e.g. by calling "kwin --replace").
-    deleteBackupConfigFile();
-    }
-
-bool KWinCompositingConfig::isConfirmationNeeded() const
-    {
-    // Compare new config with the backup and see if any potentially dangerous
-    // values have been changed.
-    KConfigGroup newGroup( mNewConfig, "Compositing" );
-    KConfigGroup backupGroup( mBackupConfig, "Compositing" );
-
-    // Manually enabling compositing is potentially dangerous, but disabling is never.
-    bool newEnabled = newGroup.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
-    bool backupEnabled = backupGroup.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
-    if ( newEnabled && !backupEnabled )
-        {
-        return true;
-        }
-
-    // All potentially dangerous options along with their (usually safe) default values.
-    QHash<QString, QVariant> confirm;
-    confirm[ "Backend" ] = "OpenGL";
-    confirm[ "GLMode" ] = "TFP";
-    confirm[ "GLDirect" ] = mDefaultPrefs.enableDirectRendering();
-    confirm[ "GLVSync" ] = mDefaultPrefs.enableVSync();
-    confirm[ "DisableChecks" ] = false;
-
-    QHash<QString, QVariant>::const_iterator i = confirm.constBegin();
-    for( ; i != confirm.constEnd(); ++i )
-        {
-        if ( newGroup.readEntry( i.key(), i.value() ) !=
-            backupGroup.readEntry( i.key(), i.value() ) )
-            {
-            return true;
-            }
-        }
-
-    // If we have not returned yet, no critical settings have been changed.
-    return false;
-    }
-
-bool KWinCompositingConfig::sendKWinReloadSignal()
-    {
-    // Save the new config to the file system, thus allowing KWin to read it.
-    mNewConfig->sync();
-
-    // Send signal to all kwin instances.
-    QDBusMessage message = QDBusMessage::createSignal( "/KWin", "org.kde.KWin", "reloadCompositingConfig" );
-    QDBusConnection::sessionBus().send(message);
-
-    //-------------
-    // If we added or removed shadows we need to reload decorations as well
-    // We have to do this separately so the settings are in sync
-    // HACK: This should really just reload decorations, not do a full reconfigure
-
-    KConfigGroup effectConfig;
-
-    effectConfig = KConfigGroup( mBackupConfig, "Compositing" );
-    bool enabledBefore = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
-    effectConfig = KConfigGroup( mNewConfig, "Compositing" );
-    bool enabledAfter = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
-
-    effectConfig = KConfigGroup( mBackupConfig, "Plugins" );
-    bool shadowBefore = effectEnabled( "shadow", effectConfig );
-    effectConfig = KConfigGroup( mNewConfig, "Plugins" );
-    bool shadowAfter = effectEnabled( "shadow", effectConfig );
-
-    if( enabledBefore != enabledAfter || shadowBefore != shadowAfter )
-        {
-        message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "reconfigure" );
-        QDBusConnection::sessionBus().send( message );
-        }
-
-    //-------------
-
-    // If compositing is enabled, check if it could be started.
-    KConfigGroup newGroup( mNewConfig, "Compositing" );
-    bool enabled = newGroup.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
-
-    if ( !enabled )
-        {
-        return true;
-        }
-    else
-        {
-        // Feel free to extend this to support several kwin instances (multihead) if you
-        // think it makes sense.
-        OrgKdeKWinInterface kwin( "org.kde.kwin", "/KWin", QDBusConnection::sessionBus() );
-        return kwin.compositingActive().value();
-        }
-    }
-
-void KWinCompositingConfig::updateBackupWithNewConfig()
-    {
-    mNewConfig->copyTo( mBackupConfig->name(), mBackupConfig );
-    }
-
-void KWinCompositingConfig::resetNewToBackupConfig()
-    {
-    mBackupConfig->copyTo( mNewConfig->name(), mNewConfig.data() );
-    }
-
-void KWinCompositingConfig::deleteBackupConfigFile()
-    {
-    QString backupFileName = KStandardDirs::locate( "config", mBackupConfig->name() );
-    // If the file does not exist, QFile::remove() just fails silently.
-    QFile::remove( backupFileName );
-    }
+}
 
 } // namespace
 

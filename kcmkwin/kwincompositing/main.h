@@ -53,48 +53,43 @@ class KWinCompositingConfig : public KCModule
         virtual QString quickHelp() const;
 
     public slots:
+        virtual void compositingEnabled(bool enabled);
+        virtual void showConfirmDialog(bool reinitCompositing);
+        void currentTabChanged(int tab);
+
         virtual void load();
         virtual void save();
         virtual void defaults();
+        void reparseConfiguration(const QByteArray& conf);
 
-    private slots:
-        void reparseConfiguration( const QByteArray& conf );
-        void compositingEnabled(bool enabled);
-        void currentTabChanged(int tab);
-        void electricBorderSelectionChanged(int edge, int index);
-
-    private:
         void loadGeneralTab();
         void loadEffectsTab();
         void loadAdvancedTab();
         void loadElectricBorders();
         void saveGeneralTab();
         void saveEffectsTab();
-        void saveAdvancedTab();
+        bool saveAdvancedTab();
+        void electricBorderSelectionChanged(int edge, int index);
 
+        void configChanged(bool reinitCompositing);
         void initEffectSelector();
 
+    private:
         bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;
-
         void setupElectricBorders();
         void addItemToEdgesMonitor(const QString& item);
         void changeElectricBorder( ElectricBorder border, int index );
         ElectricBorder checkEffectHasElectricBorder( int index );
         void saveElectricBorders();
 
-        void activateNewConfig();
-        bool isConfirmationNeeded() const;
-        bool sendKWinReloadSignal();
-
-        void updateBackupWithNewConfig();
-        void resetNewToBackupConfig();
-        void deleteBackupConfigFile();
-
+        KSharedConfigPtr mKWinConfig;
         Ui::KWinCompositingConfig ui;
         CompositingPrefs mDefaultPrefs;
 
-        KSharedConfigPtr mNewConfig;
-        KConfig* mBackupConfig;
+        QMap<QString, QString> mPreviousConfig;
+        KTemporaryFile mTmpConfigFile;
+        KSharedConfigPtr mTmpConfig;
+        bool m_showConfirmDialog;
 
         enum ElectricBorderEffects
             {
