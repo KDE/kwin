@@ -18,7 +18,7 @@ set_target_properties(kdecorations PROPERTIES
    VERSION ${GENERIC_LIB_VERSION}
    SOVERSION ${GENERIC_LIB_SOVERSION}
    )
-install(TARGETS kdecorations ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kdecorations EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
@@ -43,7 +43,7 @@ kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 target_link_libraries(kwineffects ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${X11_LIBRARIES} kephal)
 set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 
-install(TARGETS kwineffects ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwineffects EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 if(OPENGL_FOUND)
   target_link_libraries(kwineffects ${OPENGL_gl_LIBRARY})
