@@ -57,6 +57,7 @@ Name[zh_CN]=暗淡未激活窗口
 Icon=preferences-system-windows-effect-dim-inactive
 Comment=Darken inactive windows
 Comment[ar]=تعتم النوافذ الخاملة
+Comment[bg]=Потъмнява неактивните прозорци
 Comment[ca]=Enfosqueix les finestres inactives
 Comment[csb]=Zacemniô nieaktiwné òkna
 Comment[de]=Dunkelt inaktive Fenster ab.

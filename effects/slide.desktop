@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Slide
 Name[ar]=النقل
+Name[bg]=Приплъзване
 Name[ca]=Diapositiva
 Name[de]=Gleiten
 Name[el]=Κύλιση
@@ -38,6 +39,7 @@ Name[zh_TW]=滑動
 Icon=preferences-system-windows-effect-slide
 Comment=Slide windows across the screen when switching virtual desktops
 Comment[ar]=تنقل النوافذ عبر الشاشة عند التبديل بين الأسطح الافتراضية
+Comment[bg]=Приплъзване на прозорците при превключване на плотовете
 Comment[ca]=Desplaça les finestres per la pantalla en canviar els escriptoris virtuals
 Comment[de]=Lässt Fenster beim Arbeitsflächenwechsel über den Bildschirm gleiten.
 Comment[el]=Κύλιση παραθύρων κατά μήκος της οθόνης όταν γίνεται εναλλαγή επιφανειών εργασίας

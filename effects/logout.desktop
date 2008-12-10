@@ -71,6 +71,7 @@ Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Desaturate the desktop when displaying the logout dialog
 Comment[ar]=إلغاء تشبع ألوان سطح المكتب عن ظهور حور الخروج
+Comment[bg]=Избледняване на работния плот при показване на прозореца за изход
 Comment[ca]=Reducció de la saturació de l'escriptori en mostar el diàleg de sortida
 Comment[de]=Entsättigt die Arbeitsfläche, wenn der Abmelde-Dialog erscheint.
 Comment[el]=Αποχρωματισμός της επιφάνειας εργασίας κατά την εμφάνιση του διαλόγου αποσύνδεσης

@@ -70,6 +70,7 @@ Name[zh_TW]=登入
 Icon=preferences-system-windows-effect-login
 Comment=Smoothly fade to the desktop when logging in
 Comment[ar]=اظهار سطح المكتب بنعومة عند الولوج
+Comment[bg]=Плавен преход към работния плот при влизане
 Comment[ca]=Transició suau a l'escriptori en connectar-se
 Comment[de]=Blendet die Arbeitsfläche bei nach der Anmeldung langsam ein.
 Comment[el]=Ομαλή εμφάνιση της επιφάνειας εργασίας κατά τη σύνδεση
