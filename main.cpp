@@ -492,13 +492,18 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
     // HACK this is needed for AIGLX
-    setenv( "LIBGL_ALWAYS_INDIRECT","1", true );
+    if( qstrcmp( getenv( "KWIN_DIRECT_GL" ), "1" ) != 0 )
+        setenv( "LIBGL_ALWAYS_INDIRECT","1", true );
     // HACK this is needed to work around a Qt4.4.0RC1 bug (#157659)
     setenv( "QT_SLOW_TOPLEVEL_RESIZE", "1", true );
     KWin::Application a;
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
     KGlobal::locale()->insertCatalog( "kwin_effects" );
+
+    // Announce when KWIN_DIRECT_GL is set for above HACK
+    if( qstrcmp( getenv( "KWIN_DIRECT_GL" ), "1" ) == 0 )
+        kDebug( 1212 ) << "KWIN_DIRECT_GL set, not forcing LIBGL_ALWAYS_INDIRECT=1";
 
     fcntl(XConnectionNumber(KWin::display()), F_SETFD, 1);
 
