@@ -3,7 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2008 Lucas Murray <admin@undefinedfire.com>
+Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
