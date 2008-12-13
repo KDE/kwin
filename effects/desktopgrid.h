@@ -58,6 +58,10 @@ class DesktopGridEffect
         EffectWindow* windowAt( QPoint pos ) const;
         void setCurrentDesktop( int desktop );
         void setHighlightedDesktop( int desktop );
+        int desktopToRight( int desktop, bool wrap = true ) const;
+        int desktopToLeft( int desktop, bool wrap = true ) const;
+        int desktopUp( int desktop, bool wrap = true ) const;
+        int desktopDown( int desktop, bool wrap = true ) const;
         void setActive( bool active );
         void setup();
         void finish();

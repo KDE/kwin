@@ -374,16 +374,16 @@ void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )
         switch( e->key())
             { // Wrap only on autorepeat
             case Qt::Key_Left:
-                setHighlightedDesktop( effects->desktopToLeft( highlightedDesktop, !e->isAutoRepeat()));
+                setHighlightedDesktop( desktopToLeft( highlightedDesktop, !e->isAutoRepeat()));
                 break;
             case Qt::Key_Right:
-                setHighlightedDesktop( effects->desktopToRight( highlightedDesktop, !e->isAutoRepeat()));
+                setHighlightedDesktop( desktopToRight( highlightedDesktop, !e->isAutoRepeat()));
                 break;
             case Qt::Key_Up:
-                setHighlightedDesktop( effects->desktopUp( highlightedDesktop, !e->isAutoRepeat()));
+                setHighlightedDesktop( desktopUp( highlightedDesktop, !e->isAutoRepeat()));
                 break;
             case Qt::Key_Down:
-                setHighlightedDesktop( effects->desktopDown( highlightedDesktop, !e->isAutoRepeat()));
+                setHighlightedDesktop( desktopDown( highlightedDesktop, !e->isAutoRepeat()));
                 break;
             case Qt::Key_Escape:
                 setActive( false );
@@ -575,6 +575,122 @@ void DesktopGridEffect::setHighlightedDesktop( int d )
         return;
     highlightedDesktop = d;
     effects->addRepaintFull();
+    }
+
+int DesktopGridEffect::desktopToRight( int desktop, bool wrap ) const
+    { // Copied from Workspace::desktopToRight()
+    int dt = desktop - 1;
+    if( orientation == Qt::Vertical )
+        {
+        dt += gridSize.height();
+        if( dt >= effects->numberOfDesktops() )
+            {
+            if( wrap )
+                dt -= effects->numberOfDesktops();
+            else
+                return desktop;
+            }
+        }
+    else
+        {
+        int d = ( dt % gridSize.width() ) + 1;
+        if( d >= gridSize.width() )
+            {
+            if( wrap )
+                d -= gridSize.width();
+            else
+                return desktop;
+            }
+        dt = dt - ( dt % gridSize.width() ) + d;
+        }
+    return dt + 1;
+    }
+
+int DesktopGridEffect::desktopToLeft( int desktop, bool wrap ) const
+    { // Copied from Workspace::desktopToLeft()
+    int dt = desktop - 1;
+    if( orientation == Qt::Vertical )
+        {
+        dt -= gridSize.height();
+        if( dt < 0 )
+            {
+            if( wrap )
+                dt += effects->numberOfDesktops();
+            else
+                return desktop;
+            }
+        }
+    else
+        {
+        int d = ( dt % gridSize.width() ) - 1;
+        if( d < 0 )
+            {
+            if( wrap )
+                d += gridSize.width();
+            else
+                return desktop;
+            }
+        dt = dt - ( dt % gridSize.width() ) + d;
+        }
+    return dt + 1;
+    }
+
+int DesktopGridEffect::desktopUp( int desktop, bool wrap ) const
+    { // Copied from Workspace::desktopUp()
+    int dt = desktop - 1;
+    if( orientation == Qt::Horizontal )
+        {
+        dt -= gridSize.width();
+        if( dt < 0 )
+            {
+            if( wrap )
+                dt += effects->numberOfDesktops();
+            else
+                return desktop;
+            }
+        }
+    else
+        {
+        int d = ( dt % gridSize.height() ) - 1;
+        if( d < 0 )
+            {
+            if( wrap )
+                d += gridSize.height();
+            else
+                return desktop;
+            }
+        dt = dt - ( dt % gridSize.height() ) + d;
+        }
+    return dt + 1;
+    }
+
+int DesktopGridEffect::desktopDown( int desktop, bool wrap ) const
+    { // Copied from Workspace::desktopDown()
+    int dt = desktop - 1;
+    if( orientation == Qt::Horizontal )
+        {
+        dt += gridSize.width();
+        if( dt >= effects->numberOfDesktops() )
+            {
+            if( wrap )
+                dt -= effects->numberOfDesktops();
+            else
+                return desktop;
+            }
+        }
+    else
+        {
+        int d = ( dt % gridSize.height() ) + 1;
+        if( d >= gridSize.height() )
+            {
+            if( wrap )
+                d -= gridSize.height();
+            else
+                return desktop;
+            }
+        dt = dt - ( dt % gridSize.height() ) + d;
+        }
+    return dt + 1;
     }
 
 //-----------------------------------------------------------------------------
