@@ -284,10 +284,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
                 {
                 shadowDefined = true;
                 WindowQuad quad( mShadowQuadTypes.at( effects->shadowTextureList( ShadowBorderedActive )), id++ );
-                quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 0 );
-                quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 0 );
-                quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), 1, 1 );
-                quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), 0, 1 );
+                quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 1 );
+                quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 1 );
+                quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), 1, 0 );
+                quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), 0, 0 );
                 quadList.append( quad );
                 }
             }
@@ -297,10 +297,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
                 {
                 shadowDefined = true;
                 WindowQuad quad( mShadowQuadTypes.at( effects->shadowTextureList( ShadowBorderlessActive )), id++ );
-                quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 0 );
-                quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 0 );
-                quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), 1, 1 );
-                quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), 0, 1 );
+                quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 1 );
+                quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 1 );
+                quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), 1, 0 );
+                quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), 0, 0 );
                 quadList.append( quad );
                 }
             }
@@ -310,10 +310,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
                 {
                 shadowDefined = true;
                 WindowQuad quad( mShadowQuadTypes.at( effects->shadowTextureList( ShadowOther )), id++ );
-                quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 0 );
-                quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 0 );
-                quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), 1, 1 );
-                quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), 0, 1 );
+                quad[ 0 ] = WindowVertex( r.x(), r.y(), 0, 1 );
+                quad[ 1 ] = WindowVertex( r.x() + r.width(), r.y(), 1, 1 );
+                quad[ 2 ] = WindowVertex( r.x() + r.width(), r.y() + r.height(), 1, 0 );
+                quad[ 3 ] = WindowVertex( r.x(), r.y() + r.height(), 0, 0 );
                 quadList.append( quad );
                 }
             }
@@ -334,10 +334,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + 0 + fuzzy;
         y2 = shadowYOffset - shadowSize + 0 + fuzzy;
         WindowQuad topLeftQuad( mDefaultShadowQuadType, id++ );
-        topLeftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        topLeftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        topLeftQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        topLeftQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        topLeftQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        topLeftQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        topLeftQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        topLeftQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( topLeftQuad );
         // top
         x1 = shadowXOffset - shadowSize + 0 + fuzzy;
@@ -345,10 +345,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + width - fuzzy;
         y2 = shadowYOffset - shadowSize + 0 + fuzzy;
         WindowQuad topQuad( mDefaultShadowQuadType, id++ );
-        topQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        topQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        topQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        topQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        topQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        topQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        topQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        topQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( topQuad );
         // top-right
         x1 = shadowXOffset - shadowSize + width - fuzzy;
@@ -356,10 +356,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + width + fuzzy;
         y2 = shadowYOffset - shadowSize + 0 + fuzzy;
         WindowQuad topRightQuad( mDefaultShadowQuadType, id++ );
-        topRightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        topRightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        topRightQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        topRightQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        topRightQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        topRightQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        topRightQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        topRightQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( topRightQuad );
         // left
         x1 = shadowXOffset - shadowSize + 0 - fuzzy;
@@ -367,10 +367,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + 0 + fuzzy;
         y2 = shadowYOffset - shadowSize + height - fuzzy;
         WindowQuad leftQuad( mDefaultShadowQuadType, id++ );
-        leftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        leftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        leftQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        leftQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        leftQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        leftQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        leftQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        leftQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( leftQuad );
         // center
         x1 = shadowXOffset - shadowSize + 0 + fuzzy;
@@ -378,10 +378,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + width - fuzzy;
         y2 = shadowYOffset - shadowSize + height - fuzzy;
         WindowQuad contentsQuad( mDefaultShadowQuadType, id++ );
-        contentsQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        contentsQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        contentsQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        contentsQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        contentsQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        contentsQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        contentsQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        contentsQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( contentsQuad );
         // right
         x1 = shadowXOffset - shadowSize + width - fuzzy;
@@ -389,10 +389,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + width + fuzzy;
         y2 = shadowYOffset - shadowSize + height - fuzzy;
         WindowQuad rightQuad( mDefaultShadowQuadType, id++ );
-        rightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        rightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        rightQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        rightQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        rightQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        rightQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        rightQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        rightQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( rightQuad );
         // bottom-left
         x1 = shadowXOffset - shadowSize + 0 - fuzzy;
@@ -400,10 +400,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + 0 + fuzzy;
         y2 = shadowYOffset - shadowSize + height + fuzzy;
         WindowQuad bottomLeftQuad( mDefaultShadowQuadType, id++ );
-        bottomLeftQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        bottomLeftQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        bottomLeftQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        bottomLeftQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        bottomLeftQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        bottomLeftQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        bottomLeftQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        bottomLeftQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( bottomLeftQuad );
         // bottom
         x1 = shadowXOffset - shadowSize + 0 + fuzzy;
@@ -411,10 +411,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + width - fuzzy;
         y2 = shadowYOffset - shadowSize + height + fuzzy;
         WindowQuad bottomQuad( mDefaultShadowQuadType, id++ );
-        bottomQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        bottomQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        bottomQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        bottomQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        bottomQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        bottomQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        bottomQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        bottomQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( bottomQuad );
         // bottom-right
         x1 = shadowXOffset - shadowSize + width - fuzzy;
@@ -422,10 +422,10 @@ void ShadowEffect::buildQuads( EffectWindow* w, WindowQuadList& quadList )
         x2 = shadowXOffset - shadowSize + width + fuzzy;
         y2 = shadowYOffset - shadowSize + height + fuzzy;
         WindowQuad bottomRightQuad( mDefaultShadowQuadType, id++ );
-        bottomRightQuad[ 0 ] = WindowVertex( x1, y1, 0, 0 );
-        bottomRightQuad[ 1 ] = WindowVertex( x2, y1, 1, 0 );
-        bottomRightQuad[ 2 ] = WindowVertex( x2, y2, 1, 1 );
-        bottomRightQuad[ 3 ] = WindowVertex( x1, y2, 0, 1 );
+        bottomRightQuad[ 0 ] = WindowVertex( x1, y1, 0, 1 );
+        bottomRightQuad[ 1 ] = WindowVertex( x2, y1, 1, 1 );
+        bottomRightQuad[ 2 ] = WindowVertex( x2, y2, 1, 0 );
+        bottomRightQuad[ 3 ] = WindowVertex( x1, y2, 0, 0 );
         quadList.append( bottomRightQuad );
         } // This is called for menus, tooltips, windows where the user has disabled borders and shaped windows
 
@@ -750,10 +750,10 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
             verts << quad[1].x() << quad[1].y();
             verts << quad[2].x() << quad[2].y();
             verts << quad[3].x() << quad[3].y();
-            texcoords << quad[3].textureX() << quad[3].textureY();
-            texcoords << quad[2].textureX() << quad[2].textureY();
-            texcoords << quad[1].textureX() << quad[1].textureY();
             texcoords << quad[0].textureX() << quad[0].textureY();
+            texcoords << quad[1].textureX() << quad[1].textureY();
+            texcoords << quad[2].textureX() << quad[2].textureY();
+            texcoords << quad[3].textureX() << quad[3].textureY();
 
             // Work out which texture to use
             int texture = mShadowQuadTypes.indexOf( quad.type() );
