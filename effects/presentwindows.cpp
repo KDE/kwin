@@ -405,9 +405,9 @@ void PresentWindowsEffect::tabBoxClosed()
     {
     if( m_activated )
         {
-        m_tabBoxEnabled = false;
         effects->unrefTabBox();
-        setActive( false );
+        setActive( false, true );
+        m_tabBoxEnabled = false;
         }
     }
 
@@ -1078,13 +1078,13 @@ bool PresentWindowsEffect::isOverlappingAny( EffectWindow *w, const QHash<Effect
 //-----------------------------------------------------------------------------
 // Activation
 
-void PresentWindowsEffect::setActive( bool active )
+void PresentWindowsEffect::setActive( bool active, bool closingTab )
     {
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return;
     if( m_activated == active )
         return;
-    if( m_activated && m_tabBoxEnabled )
+    if( m_activated && m_tabBoxEnabled && !closingTab )
         {
         effects->closeTabBox();
         return;
@@ -1099,9 +1099,9 @@ void PresentWindowsEffect::setActive( bool active )
         foreach( EffectWindow *w, effects->stackingOrder() )
             {
             m_windowData[w].visible = isVisibleWindow( w );
-            m_windowData[w].opacity = w->isOnCurrentDesktop() ? 1.0 : 0.0;
-            if( !m_tabBoxEnabled && m_ignoreMinimized && w->isMinimized() )
-                m_windowData[w].opacity = 0.0;
+            m_windowData[w].opacity = 0.0;
+            if( w->isOnCurrentDesktop() && !w->isMinimized() )
+                m_windowData[w].opacity = 1.0;
             m_windowData[w].highlight = 1.0;
             }
 
@@ -1153,11 +1153,15 @@ void PresentWindowsEffect::setActive( bool active )
         // Fade in/out all windows
         foreach( EffectWindow *w, effects->stackingOrder() )
             {
-            // TODO: w->isOnCurrentDesktop(); doesn't seem to be updated immediately
-            if( m_highlightedWindow )
-                m_windowData[w].visible = ( w->desktop() == m_highlightedWindow->desktop() || w->isOnAllDesktops() ) && !w->isMinimized();
-            else // Only called when cancelling the effect, so isOnCurrentDesktop() is fine
-                m_windowData[w].visible = w->isOnCurrentDesktop() && !w->isMinimized();
+            EffectWindow *activeWindow = effects->activeWindow();
+            if( m_tabBoxEnabled )
+                activeWindow = effects->currentTabBoxWindow();
+            if( activeWindow )
+                m_windowData[w].visible = ( w->desktop() == activeWindow->desktop() || w->isOnAllDesktops() ) && !w->isMinimized();
+            else // Deactivating to an empty desktop
+                m_windowData[w].visible = ( w->isOnCurrentDesktop() || w->isOnAllDesktops() ) && !w->isMinimized();
+            if( m_tabBoxEnabled && w == effects->currentTabBoxWindow() )
+                m_windowData[w].visible = true;
             }
 
         // Move all windows back to their original position

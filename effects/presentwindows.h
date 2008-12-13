@@ -94,7 +94,7 @@ class PresentWindowsEffect
         enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
 
     public slots:
-        void setActive( bool active );
+        void setActive( bool active, bool closingTab = false ); // HACK: closingTab shouldn't be needed
         void toggleActive()  { m_allDesktops = false; setActive( !m_activated ); }
         void toggleActiveAllDesktops()  { m_allDesktops = true; setActive( !m_activated ); }
 
