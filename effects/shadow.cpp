@@ -624,8 +624,8 @@ void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> vert
     prepareRenderStates( texture, opacity, brightness, saturation );
     texture->bind();
     texture->enableNormalizedTexCoords();
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     renderGLGeometry( region, 4, verts.data(), texCoords.data() );
     texture->disableNormalizedTexCoords();
     texture->unbind();
