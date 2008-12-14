@@ -1163,6 +1163,8 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         {
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
+        if( slide )
+            opacity = 1.0f;
         if( start )
             {
             opacity = 1.0 - (1.0 - opacity)*timeLine.value();
