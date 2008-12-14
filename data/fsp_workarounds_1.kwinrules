@@ -51,6 +51,7 @@ Description[th]=(ค่าปริยาย) ปิดการป้องก�
 Description[tr]=(Öntanımlı) XV için odaklama edinimi engellemesini pasifleştir
 Description[uk]=(Типове) Вимкнути запобігання викрадання фокусу для XV
 Description[vi]=(Mặc định) Tắt khả năng ngăn cản bắt tiêu điểm cho XV
+Description[wa]=(Prémetou) Dismete li hapaedje di focus po XV
 Description[x-test]=xx(Default) Disable focus stealing prevention for XVxx
 Description[zh_CN]=(默认)禁用 XV 中的预防焦点被偷
 Description[zh_TW]=（預設）為 XV 關閉避免焦點被偷的功能
