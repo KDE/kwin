@@ -1325,7 +1325,8 @@ bool CubeEffect::borderActivated( ElectricBorder border )
 
 void CubeEffect::toggle()
     {
-    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this ||
+        effects->numberOfDesktops() < 2 )
         return;
     if( !activated )
         {
