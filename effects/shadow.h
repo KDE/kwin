@@ -61,7 +61,7 @@ class ShadowEffect
         void drawShadow( EffectWindow* w, int mask, QRegion region, const WindowPaintData& data );
         void addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const;
         // transforms window rect -> shadow rect
-        QRect shadowRectangle(const QRect& windowRectangle) const;
+        QRect shadowRectangle( EffectWindow* w ) const;
         bool useShadow( EffectWindow* w ) const;
         void drawQueuedShadows( EffectWindow* behindWindow );
 

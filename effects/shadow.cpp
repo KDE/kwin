@@ -192,11 +192,50 @@ void ShadowEffect::updateShadowColor()
     shadowColor = conf.readEntry( "Color",  schemeShadowColor() );
     }
 
-QRect ShadowEffect::shadowRectangle(const QRect& windowRectangle) const
+QRect ShadowEffect::shadowRectangle( EffectWindow* w ) const
     {
-    int shadowGrow = shadowFuzzyness + shadowSize;
-    return windowRectangle.adjusted( shadowXOffset - shadowGrow, shadowYOffset - shadowGrow,
-            shadowXOffset + shadowGrow, shadowYOffset + shadowGrow);
+    QRectF shadowRect;
+    bool shadowDefined = false;
+    if( effects->hasDecorationShadows() )
+        {
+        if( w->hasDecoration() && !forceDecorated )
+            { // Decorated windows must be normal windows
+            foreach( const QRect &r, w->shadowQuads( ShadowBorderedActive ))
+                {
+                shadowDefined = true;
+                shadowRect |= r;
+                }
+            }
+        else if( w->isNormalWindow() && !forceUndecorated )
+            { // No decoration on a normal window
+            foreach( const QRect &r, w->shadowQuads( ShadowBorderlessActive ))
+                {
+                shadowDefined = true;
+                shadowRect |= r;
+                }
+            }
+        else if( !forceOther )
+            { // All other undecorated windows
+            foreach( const QRect &r, w->shadowQuads( ShadowOther ))
+                {
+                shadowDefined = true;
+                shadowRect |= r;
+                }
+            }
+        }
+    if( !shadowDefined )
+        {
+        int width = qMax( shadowFuzzyness * 2, w->width() + 2 * shadowSize );
+        int height = qMax( shadowFuzzyness * 2, w->height() + 2 * shadowSize );
+        int x1, y1, x2, y2;
+        // top-left
+        x1 = shadowXOffset - shadowSize + 0 - shadowFuzzyness;
+        y1 = shadowYOffset - shadowSize + 0 - shadowFuzzyness;
+        x2 = shadowXOffset - shadowSize + width + shadowFuzzyness;
+        y2 = shadowYOffset - shadowSize + height + shadowFuzzyness;
+        return QRect( x1 + w->x(), y1 + w->y(), x2 - x1, y2 - y1 );
+        }
+    return shadowRect.toRect().translated( w->x(), w->y() );
     }
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -225,10 +264,12 @@ void ShadowEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
 
 void ShadowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( useShadow( w ))
-        {
-        data.paint |= shadowRectangle( data.paint.boundingRect() );
-        }
+    // Add the shadow area to the repaint if we are repainting the entire window
+    // This occurs when the active window is changed for example
+    // TODO: This only works if there are no animations in the shadows
+    QRect overlap = ( data.paint & w->geometry() ).boundingRect();
+    if( useShadow( w ) && !overlap.isEmpty() && overlap != data.paint.boundingRect() )
+        data.paint |= shadowRectangle( w );
     effects->prePaintWindow( w, data, time );
     }
 
@@ -259,8 +300,7 @@ void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
             if( !shadowDatas.isEmpty())
                 d.clip |= shadowDatas.last().clip;
             d.mask = mask;
-            foreach(const QRect &r, region.rects())
-                d.region |= shadowRectangle(r);
+            d.region |= shadowRectangle( w );
             d.region &= region;
             shadowDatas.append(d);
             }
@@ -436,17 +476,13 @@ QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
     {
     if( !useShadow( w ))
         return effects->transformWindowDamage( w, r );
-    if( effects->hasDecorationShadows() )
-        // TODO, HACK: We need to get the quads
-        // TODO: It looks like this isn't called on resize
-        return effects->transformWindowDamage( w, r.adjusted( -100, -100, 100, 100 ));
-    QRect r2 = r | shadowRectangle( r );
+    QRect r2 = r | shadowRectangle( w );
     return effects->transformWindowDamage( w, r2 );
     }
 
 void ShadowEffect::windowClosed( EffectWindow* c )
     {
-    effects->addRepaint( shadowRectangle( c->geometry() ));
+    effects->addRepaint( shadowRectangle( c ));
     }
 
 bool ShadowEffect::useShadow( EffectWindow* w ) const
