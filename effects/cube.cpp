@@ -388,10 +388,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 text_font );
             glPopAttrib();
             }
-        if( stop && timeLine.value() == 1.0 )
-            {
-            effects->paintScreen( mask, region, data );
-            }
         if( effects->numScreens() > 1 && !slide && !bigCube  )
             {
             foreach( EffectWindow* w, windowsOnOtherScreens )
@@ -594,19 +590,20 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         }
     if( rotating || (manualAngle != 0.0) )
         {
+        int tempFrontDesktop = frontDesktop;
         if( manualAngle > internalCubeAngle * 0.5f )
             {
             manualAngle -= internalCubeAngle;
-            frontDesktop--;
-            if( frontDesktop == 0 )
-                frontDesktop = effects->numberOfDesktops();
+            tempFrontDesktop--;
+            if( tempFrontDesktop == 0 )
+                tempFrontDesktop = effects->numberOfDesktops();
             }
         if( manualAngle < -internalCubeAngle * 0.5f )
             {
             manualAngle += internalCubeAngle;
-            frontDesktop++;
-            if( frontDesktop > effects->numberOfDesktops() )
-                frontDesktop = 1;
+            tempFrontDesktop++;
+            if( tempFrontDesktop > effects->numberOfDesktops() )
+                tempFrontDesktop = 1;
             }
         float rotationAngle = internalCubeAngle * timeLine.value();
         if( rotationAngle > internalCubeAngle * 0.5f )
@@ -617,18 +614,21 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
                 desktopChangedWhileRotating = true;
                 if( rotationDirection == Left )
                     {
-                    frontDesktop++;
+                    tempFrontDesktop++;
                     }
                 else if( rotationDirection == Right )
                     {
-                    frontDesktop--;
+                    tempFrontDesktop--;
                     }
-                if( frontDesktop > effects->numberOfDesktops() )
-                    frontDesktop = 1;
-                else if( frontDesktop == 0 )
-                    frontDesktop = effects->numberOfDesktops();
+                if( tempFrontDesktop > effects->numberOfDesktops() )
+                    tempFrontDesktop = 1;
+                else if( tempFrontDesktop == 0 )
+                    tempFrontDesktop = effects->numberOfDesktops();
                 }
             }
+        // don't change front desktop during stop animation as this would break some logic
+        if( !stop )
+            frontDesktop = tempFrontDesktop;
         if( rotationDirection == Left )
             {
             rotationAngle *= -1;
@@ -951,6 +951,7 @@ void CubeEffect::postPaintScreen()
             {
             if( timeLine.value() == 1.0 )
                 {
+                effects->setCurrentDesktop( frontDesktop );
                 stop = false;
                 timeLine.setProgress(0.0);
                 activated = false;
@@ -1049,7 +1050,6 @@ void CubeEffect::postPaintScreen()
             schedule_close = false;
             if( !slide )
                 {
-                effects->setCurrentDesktop( frontDesktop );
                 stop = true;
                 }
             else
