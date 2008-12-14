@@ -1159,6 +1159,9 @@ void Workspace::saveDesktopSettings()
                 group.writeEntry( QString("Name_%1").arg(i), "" );
             }
         }
+
+    // Save to disk
+    group.sync();
     }
 
 QStringList Workspace::configModules(bool controlCenter)
