@@ -38,6 +38,12 @@ void FadeEffect::reconfigure( ReconfigureFlags )
     fadeInTime = animationTime( conf, "FadeInTime", 150 );
     fadeOutTime = animationTime( conf, "FadeOutTime", 150 );
     fadeWindows = conf.readEntry( "FadeWindows", true );
+
+    // Add all existing windows to the window list
+    // TODO: Enabling desktop effects should trigger windowAdded() on all windows
+    windows.clear();
+    foreach( EffectWindow *w, effects->stackingOrder() )
+        windows[ w ].opacity = 1.0;
     }
 
 void FadeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
