@@ -808,10 +808,16 @@ void Client::setShade( ShadeMode mode )
 void Client::shadeHover()
     {
     setShade( ShadeHover );
-    cancelShadeHover();
+    cancelShadeHoverTimer();
     }
 
-void Client::cancelShadeHover()
+void Client::shadeUnhover()
+    {
+    setShade( ShadeNormal );
+    cancelShadeHoverTimer();
+    }
+
+void Client::cancelShadeHoverTimer()
     {
     delete shadeHoverTimer;
     shadeHoverTimer = 0;

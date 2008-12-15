@@ -574,15 +574,15 @@ bool Client::performMouseCommand( Options::MouseCommand command, const QPoint &g
             break;
         case Options::MouseShade :
             toggleShade();
-            cancelShadeHover();
+            cancelShadeHoverTimer();
             break;
         case Options::MouseSetShade:
             setShade( ShadeNormal );
-            cancelShadeHover();
+            cancelShadeHoverTimer();
             break;
         case Options::MouseUnsetShade:
             setShade( ShadeNone );
-            cancelShadeHover();
+            cancelShadeHoverTimer();
             break;
         case Options::MouseOperationsMenu:
             if ( isActive() && options->clickRaise )

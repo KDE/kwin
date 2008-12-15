@@ -940,13 +940,16 @@ void Client::enterNotifyEvent( XCrossingEvent* e )
              e->mode == NotifyUngrab ) ) 
         {
 
-        if (options->shadeHover && isShade()) 
+        if ( options->shadeHover )
             {
-            delete shadeHoverTimer;
-            shadeHoverTimer = new QTimer( this );
-            connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeHover() ));
-            shadeHoverTimer->setSingleShot( true );
-            shadeHoverTimer->start( options->shadeHoverInterval );
+            cancelShadeHoverTimer();
+            if (isShade())
+              {
+              shadeHoverTimer = new QTimer( this );
+              connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeHover() ));
+              shadeHoverTimer->setSingleShot( true );
+              shadeHoverTimer->start( options->shadeHoverInterval );
+              }
             }
 
         if ( options->focusPolicy == Options::ClickToFocus )
@@ -1013,9 +1016,14 @@ void Client::leaveNotifyEvent( XCrossingEvent* e )
             {
             cancelAutoRaise();
             workspace()->cancelDelayFocus();
-            cancelShadeHover();
+            cancelShadeHoverTimer();
             if ( shade_mode == ShadeHover && !moveResizeMode && !buttonDown )
-               setShade( ShadeNormal );
+              {
+              shadeHoverTimer = new QTimer( this );
+              connect( shadeHoverTimer, SIGNAL( timeout() ), this, SLOT( shadeUnhover() ));
+              shadeHoverTimer->setSingleShot( true );
+              shadeHoverTimer->start( options->shadeHoverInterval );
+              }
             }
         if ( options->focusPolicy == Options::FocusStrictlyUnderMouse )
             if ( isActive() && lostMouse )

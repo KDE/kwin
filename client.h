@@ -271,7 +271,7 @@ class Client
         void maximize( MaximizeMode );
         void toggleShade();
         void showContextHelp();
-        void cancelShadeHover();
+        void cancelShadeHoverTimer();
         void cancelAutoRaise();
         void checkActiveModal();
         bool hasStrut() const;
@@ -294,6 +294,7 @@ class Client
     private slots:
         void autoRaise();
         void shadeHover();
+        void shadeUnhover();
         void shortcutActivated();
         void delayedMoveResize();
 
