@@ -62,6 +62,9 @@ void MakeTransparentEffect::reconfigure( ReconfigureFlags )
     moveresize_timeline.setDuration( animationTime( conf, "Duration", 800 ) );
     activeinactive_timeline.setCurveShape( TimeLine::EaseInOutCurve );
     activeinactive_timeline.setDuration( animationTime( conf, "Duration", 800 ) );
+
+    // Repaint the screen just in case the user changed the inactive opacity
+    effects->addRepaintFull();
     }
 
 void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
@@ -75,6 +78,8 @@ void MakeTransparentEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData&
         // don't clear PAINT_WINDOW_OPAQUE, contents are not affected
         data.clip &= w->contentsRect().translated( w->pos()); // decoration cannot clip
         }
+    if( inactive != 1.0 && isInactive( w ))
+        data.setTranslucent();
     if(( moveresize != 1.0 && ( w->isUserMove() || w->isUserResize()))
         || ( dialogs != 1.0 && w->isDialog()))
         {
