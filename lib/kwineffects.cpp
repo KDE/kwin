@@ -597,6 +597,11 @@ WindowQuadList WindowQuadList::splitAtX( double x ) const
             ret.append( quad );
             continue;
             }
+        if( quad.left() == quad.right() ) // quad has no size
+            {
+            ret.append( quad );
+            continue;
+            }
         ret.append( quad.makeSubQuad( quad.left(), quad.top(), x, quad.bottom()));
         ret.append( quad.makeSubQuad( x, quad.top(), quad.right(), quad.bottom()));
         }
@@ -624,6 +629,11 @@ WindowQuadList WindowQuadList::splitAtY( double y ) const
                 wholetop = false;
             }
         if( wholetop || wholebottom ) // is whole in one split part
+            {
+            ret.append( quad );
+            continue;
+            }
+        if( quad.top() == quad.bottom() ) // quad has no size
             {
             ret.append( quad );
             continue;
