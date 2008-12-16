@@ -1286,6 +1286,8 @@ EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow *w, int xdiff, 
                 next = NULL;
                 foreach( EffectWindow* e, m_motionManager.managedWindows() )
                     {
+                    if( !m_windowData[e].visible )
+                        continue;
                     QRectF eArea = m_motionManager.transformedGeometry( e );
                     if( eArea.intersects( detectRect ) &&
                         eArea.x() > wArea.x() )
@@ -1319,6 +1321,8 @@ EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow *w, int xdiff, 
                 next = NULL;
                 foreach( EffectWindow* e, m_motionManager.managedWindows() )
                     {
+                    if( !m_windowData[e].visible )
+                        continue;
                     QRectF eArea = m_motionManager.transformedGeometry( e );
                     if( eArea.intersects( detectRect ) &&
                         eArea.x() + eArea.width() < wArea.x() + wArea.width() )
@@ -1357,6 +1361,8 @@ EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow *w, int xdiff, 
                 next = NULL;
                 foreach( EffectWindow* e, m_motionManager.managedWindows() )
                     {
+                    if( !m_windowData[e].visible )
+                        continue;
                     QRectF eArea = m_motionManager.transformedGeometry( e );
                     if( eArea.intersects( detectRect ) &&
                         eArea.y() > wArea.y() )
@@ -1390,6 +1396,8 @@ EffectWindow* PresentWindowsEffect::relativeWindow( EffectWindow *w, int xdiff, 
                 next = NULL;
                 foreach( EffectWindow* e, m_motionManager.managedWindows() )
                     {
+                    if( !m_windowData[e].visible )
+                        continue;
                     QRectF eArea = m_motionManager.transformedGeometry( e );
                     if( eArea.intersects( detectRect ) &&
                         eArea.y() + eArea.height() < wArea.y() + wArea.height() )
