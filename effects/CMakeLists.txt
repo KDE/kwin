@@ -53,7 +53,6 @@ SET(kwin4_effect_builtins_sources
     showpaint.cpp
     slide.cpp
     taskbarthumbnail.cpp
-    tiling.cpp
     thumbnailaside.cpp
     zoom.cpp
     )
@@ -78,7 +77,6 @@ install( FILES
     showpaint.desktop
     slide.desktop
     taskbarthumbnail.desktop
-    tiling.desktop
     thumbnailaside.desktop
     zoom.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )

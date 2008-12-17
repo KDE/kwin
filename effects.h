@@ -54,8 +54,6 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void activateWindow( EffectWindow* c );
         virtual EffectWindow* activeWindow() const;
         virtual void moveWindow( EffectWindow* w, const QPoint& pos );
-        virtual void resizeWindow( EffectWindow* w, const QSize& size );
-        virtual void setWindowGeometry( EffectWindow* w, const QRect& rect );
         virtual void windowToDesktop( EffectWindow* w, int desktop );
 
         virtual int currentDesktop() const;
