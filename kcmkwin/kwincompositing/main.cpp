@@ -335,8 +335,6 @@ void KWinCompositingConfig::loadGeneralTab()
     KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     if( effectEnabled( "cube", effectconfig ) && cubeconfig.readEntry("AnimateDesktopChange", false))
         ui.desktopSwitchingCombo->setCurrentIndex( 2 );
-
-    loadElectricBorders();
     }
 
 bool KWinCompositingConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
@@ -391,6 +389,7 @@ void KWinCompositingConfig::load()
         tmpconfig.writeEntry(it.key(), it.value());
 
     loadGeneralTab();
+    loadElectricBorders();
     loadEffectsTab();
     loadAdvancedTab();
 
@@ -484,8 +483,6 @@ void KWinCompositingConfig::saveGeneralTab()
         }
     KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     cubeconfig.writeEntry("AnimateDesktopChange", cubeDesktopSwitching);
-
-    saveElectricBorders();
     }
 
 void KWinCompositingConfig::saveEffectsTab()
@@ -551,6 +548,7 @@ void KWinCompositingConfig::save()
         loadGeneralTab();
         saveGeneralTab();
         }
+    saveElectricBorders();
     bool advancedChanged = saveAdvancedTab();
 
     // Copy Plugins group from temp config to real config
