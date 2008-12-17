@@ -576,8 +576,38 @@ void KWinCompositingConfig::configChanged(bool reinitCompositing)
     mKWinConfig->sync();
     // Send signal to all kwin instances
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin",
-        reinitCompositing ? "reinitCompositing" : "reloadConfig");
+        //reinitCompositing ? "reinitCompositing" : "reloadConfig");
+        "reinitCompositing");
     QDBusConnection::sessionBus().send(message);
+
+    //-------------
+    // If we added or removed shadows we need to reload decorations as well
+    // We have to do this separately so the settings are in sync
+    // HACK: This should really just reload decorations, not do a full reconfigure
+
+    // HACK: We send two messages to it's correctly synced. Code that was reverted in r894182 was better
+    message = QDBusMessage::createSignal("/KWin", "org.kde.KWin",
+        //reinitCompositing ? "reinitCompositing" : "reloadConfig");
+        "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
+    KConfigGroup effectConfig;
+
+    effectConfig = KConfigGroup( mTmpConfig, "Compositing" );
+    bool enabledBefore = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
+    effectConfig = KConfigGroup( mKWinConfig, "Compositing" );
+    bool enabledAfter = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
+
+    effectConfig = KConfigGroup( mTmpConfig, "Plugins" );
+    bool shadowBefore = effectEnabled( "shadow", effectConfig );
+    effectConfig = KConfigGroup( mKWinConfig, "Plugins" );
+    bool shadowAfter = effectEnabled( "shadow", effectConfig );
+
+    if( enabledBefore != enabledAfter || shadowBefore != shadowAfter )
+        {
+        message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "reconfigure" );
+        QDBusConnection::sessionBus().send( message );
+        }
     }
 
 
