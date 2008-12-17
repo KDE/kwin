@@ -395,6 +395,27 @@ void EffectsHandlerImpl::moveWindow( EffectWindow* w, const QPoint& pos )
         cl->move( pos );
     }
 
+void EffectsHandlerImpl::resizeWindow( EffectWindow* w, const QSize& size )
+    {
+    Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window());
+    if( cl && cl->isResizable())
+        cl->plainResize( size.width(), size.height() );
+    }
+
+void EffectsHandlerImpl::setWindowGeometry( EffectWindow* w, const QRect& rect )
+    {
+    Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window());
+    if( cl )
+        {
+        if( cl->isMovable() && cl->isResizable())
+            cl->setGeometry( rect.x(), rect.y(), rect.width(), rect.height() );
+        else if( cl->isMovable())
+            cl->move( rect.topLeft() );
+        else
+            cl->plainResize( rect.width(), rect.height() );
+        }
+    }
+
 void EffectsHandlerImpl::windowToDesktop( EffectWindow* w, int desktop )
     {
     Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window());
