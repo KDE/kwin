@@ -39,6 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/Xlib.h>
 
+// TODO: Cleanup the order of things in this .h file
+
 class QMenu;
 class KConfig;
 class KActionCollection;
@@ -67,21 +69,21 @@ class Workspace : public QObject, public KDecorationDefines
         Workspace( bool restore = false );
         virtual ~Workspace();
 
-        static Workspace * self() { return _self; }
+        static Workspace* self() { return _self; }
 
-        bool workspaceEvent( XEvent * );
-        bool workspaceEvent( QEvent * );
+        bool workspaceEvent( XEvent* );
+        bool workspaceEvent( QEvent* );
 
         KDecoration* createDecoration( KDecorationBridge* bridge );
 
-        bool hasClient( const Client * );
+        bool hasClient( const Client* );
 
-        template< typename T > Client* findClient( T predicate ) const;
-        template< typename T1, typename T2 > void forEachClient( T1 procedure, T2 predicate );
-        template< typename T > void forEachClient( T procedure );
-        template< typename T > Unmanaged* findUnmanaged( T predicate ) const;
-        template< typename T1, typename T2 > void forEachUnmanaged( T1 procedure, T2 predicate );
-        template< typename T > void forEachUnmanaged( T procedure );
+        template<typename T> Client* findClient( T predicate ) const;
+        template<typename T1, typename T2> void forEachClient( T1 procedure, T2 predicate );
+        template<typename T> void forEachClient( T procedure );
+        template<typename T> Unmanaged* findUnmanaged( T predicate ) const;
+        template<typename T1, typename T2> void forEachUnmanaged( T1 procedure, T2 predicate );
+        template<typename T> void forEachUnmanaged( T procedure );
 
         QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
         QRect clientArea( clientAreaOption, const Client* c ) const;
@@ -92,7 +94,8 @@ class Workspace : public QObject, public KDecorationDefines
          */
         void killWindowId( Window window);
 
-        void killWindow() { slotKillWindow(); }
+        void killWindow()
+            { slotKillWindow(); }
 
         bool initializing() const;
 
@@ -101,32 +104,36 @@ class Workspace : public QObject, public KDecorationDefines
          * if no client has the focus)
          */
         Client* activeClient() const;
-        // Client that was activated, but it's not yet really activeClient(), because
-        // we didn't process yet the matching FocusIn event. Used mostly in focus
-        // stealing prevention code.
+        /**
+         * Client that was activated, but it's not yet really activeClient(), because
+         * we didn't process yet the matching FocusIn event. Used mostly in focus
+         * stealing prevention code.
+         */
         Client* mostRecentlyActivatedClient() const;
 
         void activateClient( Client*, bool force = false  );
         void requestFocus( Client* c, bool force = false );
-        void takeActivity( Client* c, int flags, bool handled ); // flags are ActivityFlags
-        void handleTakeActivity( Client* c, Time timestamp, int flags ); // flags are ActivityFlags
-        bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false, bool ignore_desktop = false );
+        void takeActivity( Client* c, int flags, bool handled ); // Flags are ActivityFlags
+        void handleTakeActivity( Client* c, Time timestamp, int flags ); // Flags are ActivityFlags
+        bool allowClientActivation( const Client* c, Time time = -1U, bool focus_in = false,
+            bool ignore_desktop = false );
         void restoreFocus();
         void gotFocusIn( const Client* );
         void setShouldGetFocus( Client* );
         bool fakeRequestedActivity( Client* c );
         void unfakeActivity( Client* c );
         bool activateNextClient( Client* c );
-        bool focusChangeEnabled() { return block_focus == 0; }
+        bool focusChangeEnabled()
+            { return block_focus == 0; }
 
         void updateColormap();
 
         /**
          * Indicates that the client c is being moved around by the user.
          */
-        void setClientIsMoving( Client *c );
+        void setClientIsMoving( Client* c );
 
-        void place( Client *c, QRect& area );
+        void place( Client* c, QRect& area );
         void placeSmart( Client* c, const QRect& area );
 
         QPoint adjustClientPosition( Client* c, QPoint pos, bool unrestricted );
@@ -137,15 +144,15 @@ class Workspace : public QObject, public KDecorationDefines
         void lowerClientRequest( Client* c, NET::RequestSource src, Time timestamp );
         void restackClientUnderActive( Client* );
         void updateClientLayer( Client* c );
-        void raiseOrLowerClient( Client * );
+        void raiseOrLowerClient( Client* );
         void restoreSessionStackingOrder( Client* c );
         void updateStackingOrder( bool propagate_new_clients = false );
         void forceRestacking();
 
-        void clientHidden( Client*  );
+        void clientHidden( Client* );
         void clientAttentionChanged( Client* c, bool set );
 
-        void checkElectricBorder(const QPoint &pos, Time time);
+        void checkElectricBorder(const QPoint& pos, Time time);
         void reserveElectricBorder( ElectricBorder border );
         void unreserveElectricBorder( ElectricBorder border );
         void reserveElectricBorderSwitching( bool reserve );
@@ -159,7 +166,7 @@ class Workspace : public QObject, public KDecorationDefines
          */
         int numberOfDesktops() const;
         void setNumberOfDesktops( int n );
-        void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const;
+        void calcDesktopLayout( int* x, int* y, Qt::Orientation* orientation ) const;
         int desktopToRight( int desktop, bool wrap ) const;
         int desktopToLeft( int desktop, bool wrap ) const;
         int desktopUp( int desktop, bool wrap ) const;
@@ -168,21 +175,21 @@ class Workspace : public QObject, public KDecorationDefines
         int activeScreen() const;
         int numScreens() const;
         void checkActiveScreen( const Client* c );
-        void setActiveScreenMouse( const QPoint &mousepos );
+        void setActiveScreenMouse( const QPoint& mousepos );
         QRect screenGeometry( int screen ) const;
-        int screenNumber( const QPoint &pos ) const;
+        int screenNumber( const QPoint& pos ) const;
 
-    // for TabBox
+        // Tab box
         Client* currentTabBoxClient() const;
         ClientList currentTabBoxClientList() const;
         int currentTabBoxDesktop() const;
-        QList< int > currentTabBoxDesktopList() const;
-        void setTabBoxClient(Client*);
-        void setTabBoxDesktop(int);
-        Client* nextClientFocusChain(Client*) const;
-        Client* previousClientFocusChain(Client*) const;
-        Client* nextClientStatic(Client*) const;
-        Client* previousClientStatic(Client*) const;
+        QList<int> currentTabBoxDesktopList() const;
+        void setTabBoxClient( Client* );
+        void setTabBoxDesktop( int );
+        Client* nextClientFocusChain( Client* ) const;
+        Client* previousClientFocusChain( Client* ) const;
+        Client* nextClientStatic( Client* ) const;
+        Client* previousClientStatic( Client* ) const;
         int nextDesktopFocusChain( int iDesktop ) const;
         int previousDesktopFocusChain( int iDesktop ) const;
         int nextDesktopStatic( int iDesktop ) const;
@@ -191,7 +198,7 @@ class Workspace : public QObject, public KDecorationDefines
         void unrefTabBox();
         void closeTabBox();
 
-         /**
+        /**
          * Returns the list of clients sorted in stacking order, with topmost client
          * at the last position
          */
@@ -199,14 +206,15 @@ class Workspace : public QObject, public KDecorationDefines
         ToplevelList xStackingOrder() const;
         ClientList ensureStackingOrder( const ClientList& clients ) const;
 
-        Client* topClientOnDesktop( int desktop, int screen, bool unconstrained = false, bool only_normal = true ) const;
+        Client* topClientOnDesktop( int desktop, int screen, bool unconstrained = false,
+            bool only_normal = true ) const;
         Client* findDesktop( bool topmost, int desktop ) const;
         void sendClientToDesktop( Client* c, int desktop, bool dont_activate );
         void windowToPreviousDesktop( Client* c );
         void windowToNextDesktop( Client* c );
         void sendClientToScreen( Client* c, int screen );
 
-    // KDE4 remove me - and it's also in the DCOP interface :(
+        // KDE4 remove me - And it's also in the DCOP interface :(
         void showWindowMenuAt( unsigned long id, int x, int y );
 
         void loadEffect( const QString& name );
@@ -219,13 +227,13 @@ class Workspace : public QObject, public KDecorationDefines
 
 
         /**
-	 * Shows the menu operations menu for the client and makes it active if
-	 * it's not already.
+         * Shows the menu operations menu for the client and makes it active if
+         * it's not already.
          */
-        void showWindowMenu( const QRect &pos, Client* cl );
-	/**
-	 * Backwards compatibility.
-	 */
+        void showWindowMenu( const QRect& pos, Client* cl );
+        /**
+         * Backwards compatibility.
+         */
         void showWindowMenu( int x, int y, Client* cl );
         void showWindowMenu( QPoint pos, Client* cl );
 
@@ -252,18 +260,18 @@ class Workspace : public QObject, public KDecorationDefines
         double decorationShadowBrightness( ShadowType type ) const;
         double decorationShadowSaturation( ShadowType type ) const;
 
-    // dcop interface
+        // D-Bus interface
         void cascadeDesktop();
         void unclutterDesktop();
-        void doNotManage( const QString & );
-        QList< int > decorationSupportedColors() const;
+        void doNotManage( const QString& );
+        QList<int> decorationSupportedColors() const;
         bool setCurrentDesktop( int new_desktop );
         void nextDesktop();
         void previousDesktop();
         void circulateDesktopApplications();
         bool compositingActive();
         bool waitForCompositingSetup();
-        
+
         void setCurrentScreen( int new_screen );
 
         QString desktopName( int desk ) const;
@@ -272,26 +280,31 @@ class Workspace : public QObject, public KDecorationDefines
         void resetShowingDesktop( bool keep_hidden );
         bool showingDesktop() const;
 
-        bool isNotManaged( const QString& title );  // ### setter or getter ?
+        bool isNotManaged( const QString& title );  // TODO: Setter or getter?
 
-        void sendPingToWindow( Window w, Time timestamp ); // called from Client::pingWindow()
-        void sendTakeActivity( Client* c, Time timestamp, long flags ); // called from Client::takeActivity()
+        void sendPingToWindow( Window w, Time timestamp ); // Called from Client::pingWindow()
+        void sendTakeActivity( Client* c, Time timestamp, long flags ); // Called from Client::takeActivity()
 
-        void removeClient( Client*, allowed_t ); // only called from Client::destroyClient() or Client::releaseWindow()
+        void removeClient( Client*, allowed_t ); // Only called from Client::destroyClient() or Client::releaseWindow()
         void setActiveClient( Client*, allowed_t );
         Group* findGroup( Window leader ) const;
         void addGroup( Group* group, allowed_t );
         void removeGroup( Group* group, allowed_t );
         Group* findClientLeaderGroup( const Client* c ) const;
 
-        void removeUnmanaged( Unmanaged*, allowed_t ); // only called from Unmanaged::release()
+        void removeUnmanaged( Unmanaged*, allowed_t ); // Only called from Unmanaged::release()
         void removeDeleted( Deleted*, allowed_t );
         void addDeleted( Deleted*, allowed_t );
 
         bool checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data );
 
-        void focusToNull(); // SELI public?
-        enum FocusChainChange { FocusChainMakeFirst, FocusChainMakeLast, FocusChainUpdate };
+        void focusToNull(); // SELI TODO: Public?
+        enum FocusChainChange
+            {
+            FocusChainMakeFirst,
+            FocusChainMakeLast,
+            FocusChainUpdate
+            };
         void updateFocusChains( Client* c, FocusChainChange change );
 
         bool forcedGlobalMouseGrab() const;
@@ -331,14 +344,14 @@ class Workspace : public QObject, public KDecorationDefines
         void addRepaint( const QRect& r );
         void addRepaint( const QRegion& r );
         void addRepaint( int x, int y, int w, int h );
-        // creates XComposite overlay window, call initOverlay() afterwards
+        /// Creates XComposite overlay window, call initOverlay() afterwards
         bool createOverlay();
-        // init overlay and the destination window in it
+        /// Init overlay and the destination window in it
         void setupOverlay( Window window );
         void showOverlay();
         void hideOverlay(); // hides and resets overlay window
         void setOverlayShape( const QRegion& reg );
-        // destroys XComposite overlay window
+        /// Destroys XComposite overlay window
         void destroyOverlay();
         Window overlayWindow();
         void checkUnredirect( bool force = false );
@@ -347,7 +360,8 @@ class Workspace : public QObject, public KDecorationDefines
     public slots:
         void addRepaintFull();
         void refresh();
-    // keybindings
+
+        // Keybindings
         void slotSwitchDesktopNext();
         void slotSwitchDesktopPrevious();
         void slotSwitchDesktopRight();
@@ -376,7 +390,7 @@ class Workspace : public QObject, public KDecorationDefines
         void slotSwitchToDesktop18() { return slotSwitchToDesktop( 18 ); }
         void slotSwitchToDesktop19() { return slotSwitchToDesktop( 19 ); }
         void slotSwitchToDesktop20() { return slotSwitchToDesktop( 20 ); }
-    //void slotSwitchToWindow( int );
+        //void slotSwitchToWindow( int );
         void slotWindowToDesktop( int );
         void slotWindowToDesktop1() { return slotWindowToDesktop( 1 ); }
         void slotWindowToDesktop2() { return slotWindowToDesktop( 2 ); }
@@ -398,7 +412,7 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWindowToDesktop18() { return slotWindowToDesktop( 18 ); }
         void slotWindowToDesktop19() { return slotWindowToDesktop( 19 ); }
         void slotWindowToDesktop20() { return slotWindowToDesktop( 20 ); }
-    //void slotWindowToListPosition( int );
+        //void slotWindowToListPosition( int );
         void slotSwitchToScreen( int );
         void slotSwitchToScreen0() { return slotSwitchToScreen( 0 ); }
         void slotSwitchToScreen1() { return slotSwitchToScreen( 1 ); }
@@ -534,7 +548,7 @@ class Workspace : public QObject, public KDecorationDefines
         bool establishTabBoxGrab();
         void removeTabBoxGrab();
 
-        void propagateClients( bool propagate_new_clients ); // called only from updateStackingOrder
+        void propagateClients( bool propagate_new_clients ); // Called only from updateStackingOrder
         ClientList constrainedStackingOrder();
         void raiseClientWithinApplication( Client* c );
         void lowerClientWithinApplication( Client* c );
@@ -547,7 +561,7 @@ class Workspace : public QObject, public KDecorationDefines
         void updateTopMenuGeometry( Client* c = NULL );
         void updateToolWindows( bool also_hide );
 
-    // this is the right way to create a new client
+        /// This is the right way to create a new client
         Client* createClient( Window w, bool is_mapped );
         void addClient( Client* c, allowed_t );
         Unmanaged* createUnmanaged( Window w );
@@ -555,28 +569,28 @@ class Workspace : public QObject, public KDecorationDefines
 
         Window findSpecialEventWindow( XEvent* e );
 
-        void randomPlacement(Client* c);
-        void smartPlacement(Client* c);
-        void cascadePlacement(Client* c, bool re_init = false);
+        void randomPlacement( Client* c );
+        void smartPlacement( Client* c );
+        void cascadePlacement( Client* c, bool re_init = false );
 
-    // desktop names and number of desktops
+        // Desktop names and number of desktops
         void loadDesktopSettings();
         void saveDesktopSettings();
 
-    // mouse emulation
+        // Mouse emulation
         WId getMouseEmulationWindow();
         enum MouseEmulation { EmuPress, EmuRelease, EmuMove };
-        unsigned int sendFakedMouseEvent( const QPoint &pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
+        unsigned int sendFakedMouseEvent( const QPoint& pos, WId win, MouseEmulation type, int button, unsigned int state ); // returns the new state
 
         void tabBoxKeyPress( int key );
         void tabBoxKeyRelease( const XKeyEvent& ev );
 
-    // electric borders
+        // Electric borders
         void destroyElectricBorders();
         bool electricBorderEvent(XEvent * e);
         void electricBorderSwitchDesktop( ElectricBorder border, const QPoint& pos );
 
-    // ------------------
+        //---------------------------------------------------------------------
 
         void helperDialog( const QString& message, const Client* c );
 
@@ -612,12 +626,12 @@ class Workspace : public QObject, public KDecorationDefines
 
         Client* active_client;
         Client* last_active_client;
-        Client* most_recently_raised; // used _only_ by raiseOrLowerClient()
+        Client* most_recently_raised; // Used ONLY by raiseOrLowerClient()
         Client* movingClient;
         Client* pending_take_activity;
         int active_screen;
 
-    // delay(ed) window focus timer and client
+        // Delay(ed) window focus timer and client
         QTimer* delayFocusTimer;
         Client* delayfocus_client;
         QPoint focusMousePos;
@@ -627,14 +641,14 @@ class Workspace : public QObject, public KDecorationDefines
         UnmanagedList unmanaged;
         DeletedList deleted;
 
-        ClientList unconstrained_stacking_order; // topmost last
-        ClientList stacking_order; // topmost last
+        ClientList unconstrained_stacking_order; // Topmost last
+        ClientList stacking_order; // Topmost last
         bool force_restacking;
-        mutable ToplevelList x_stacking; // from XQueryTree()
+        mutable ToplevelList x_stacking; // From XQueryTree()
         mutable bool x_stacking_dirty;
-        QVector< ClientList > focus_chain; // currently ative last
-        ClientList global_focus_chain; // this one is only for things like tabbox's MRU
-        ClientList should_get_focus; // last is most recent
+        QVector< ClientList > focus_chain; // Currently ative last
+        ClientList global_focus_chain; // This one is only for things like tabbox's MRU
+        ClientList should_get_focus; // Last is most recent
         ClientList attention_chain;
 
         bool showing_desktop;
@@ -650,9 +664,9 @@ class Workspace : public QObject, public KDecorationDefines
 
         bool control_grab;
         bool tab_grab;
-    //KKeyNative walkThroughDesktopsKeycode, walkBackThroughDesktopsKeycode;
-    //KKeyNative walkThroughDesktopListKeycode, walkBackThroughDesktopListKeycode;
-    //KKeyNative walkThroughWindowsKeycode, walkBackThroughWindowsKeycode;
+        //KKeyNative walkThroughDesktopsKeycode, walkBackThroughDesktopsKeycode;
+        //KKeyNative walkThroughDesktopListKeycode, walkBackThroughDesktopListKeycode;
+        //KKeyNative walkThroughWindowsKeycode, walkBackThroughWindowsKeycode;
         KShortcut cutWalkThroughDesktops, cutWalkThroughDesktopsReverse;
         KShortcut cutWalkThroughDesktopList, cutWalkThroughDesktopListReverse;
         KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
@@ -664,56 +678,56 @@ class Workspace : public QObject, public KDecorationDefines
         TabBox* tab_box;
         PopupInfo* popupinfo;
 
-        QMenu *popup;
-        QMenu *advanced_popup;
-        QMenu *trans_popup;
-        QMenu *desk_popup;
+        QMenu* popup;
+        QMenu* advanced_popup;
+        QMenu* trans_popup;
+        QMenu* desk_popup;
 
         void modalActionsSwitch( bool enabled );
 
-        KActionCollection *keys;
-        KActionCollection *client_keys;
-        QAction *mResizeOpAction;
-        QAction *mMoveOpAction;
-        QAction *mMaximizeOpAction;
-        QAction *mShadeOpAction;
-        QAction *mKeepAboveOpAction;
-        QAction *mKeepBelowOpAction;
-        QAction *mFullScreenOpAction;
-        QAction *mNoBorderOpAction;
-        QAction *mMinimizeOpAction;
-        QAction *mCloseOpAction;
+        KActionCollection* keys;
+        KActionCollection* client_keys;
+        QAction* mResizeOpAction;
+        QAction* mMoveOpAction;
+        QAction* mMaximizeOpAction;
+        QAction* mShadeOpAction;
+        QAction* mKeepAboveOpAction;
+        QAction* mKeepBelowOpAction;
+        QAction* mFullScreenOpAction;
+        QAction* mNoBorderOpAction;
+        QAction* mMinimizeOpAction;
+        QAction* mCloseOpAction;
         ShortcutDialog* client_keys_dialog;
         Client* client_keys_client;
-        KActionCollection *disable_shortcuts_keys;
+        KActionCollection* disable_shortcuts_keys;
         bool global_shortcuts_disabled;
         bool global_shortcuts_disabled_for_client;
 
-        PluginMgr *mgr;
+        PluginMgr* mgr;
 
-        RootInfo *rootInfo;
+        RootInfo* rootInfo;
         QWidget* supportWindow;
 
-    // swallowing
+        // Swallowing
         QStringList doNotManageList;
 
-    // colormap handling
+        // Colormap handling
         Colormap default_colormap;
         Colormap installed_colormap;
 
-    // Timer to collect requests for 'reconfigure'
+        // Timer to collect requests for 'reconfigure'
         QTimer reconfigureTimer;
 
         QTimer updateToolWindowsTimer;
 
-        static Workspace *_self;
+        static Workspace* _self;
 
         bool workspaceInit;
 
         KStartupInfo* startup;
 
         ElectricBorder electric_current_border;
-        Window electric_windows[ ELECTRIC_COUNT ];
+        Window electric_windows[ELECTRIC_COUNT];
         int electricLeft;
         int electricRight;
         int electricTop;
@@ -721,27 +735,27 @@ class Workspace : public QObject, public KDecorationDefines
         Time electric_time_first;
         Time electric_time_last;
         QPoint electric_push_point;
-        int electric_reserved[ ELECTRIC_COUNT ]; // corners/edges used by something
+        int electric_reserved[ELECTRIC_COUNT]; // Corners/edges used by something
 
         Qt::Orientation layoutOrientation;
         int layoutX;
         int layoutY;
 
-        Placement *initPositioning;
+        Placement* initPositioning;
 
-        QVector< QRect > workarea; //  array of workareas for virtual desktops
-        QVector< QVector< QRect > > screenarea; // array of workareas per xinerama screen for all virtual desktops
+        QVector<QRect> workarea; // Array of workareas for virtual desktops
+        QVector< QVector<QRect> > screenarea; // Array of workareas per xinerama screen for all virtual desktops
 
         bool managing_topmenus;
         KSelectionOwner* topmenu_selection;
         KSelectionWatcher* topmenu_watcher;
-        ClientList topmenus; // doesn't own them
+        ClientList topmenus; // Doesn't own them
         mutable int topmenu_height;
         QWidget* topmenu_space;
 
         int set_active_client_recursion;
-        int block_stacking_updates; // when >0, stacking updates are temporarily disabled
-        bool blocked_propagating_new_clients; // propagate also new clients after enabling stacking updates?
+        int block_stacking_updates; // When > 0, stacking updates are temporarily disabled
+        bool blocked_propagating_new_clients; // Propagate also new clients after enabling stacking updates?
         Window null_focus_window;
         bool forced_global_mouse_grab;
         friend class StackingUpdatesBlocker;
@@ -755,10 +769,10 @@ class Workspace : public QObject, public KDecorationDefines
         QRegion repaints_region;
         Window overlay; // XComposite overlay window
         bool overlay_visible;
-        bool overlay_shown; // for showOverlay()
+        bool overlay_shown; // For showOverlay()
         QRegion overlay_shape;
-        QSlider *transSlider;
-        QPushButton *transButton;
+        QSlider* transSlider;
+        QPushButton* transButton;
         QTimer unredirectTimer;
         bool forceUnredirectCheck;
         QList< int > composite_paint_times;
@@ -767,7 +781,9 @@ class Workspace : public QObject, public KDecorationDefines
         friend bool performTransiencyCheck();
     };
 
-// helper for Workspace::blockStackingUpdates() being called in pairs (true/false)
+/**
+ * Helper for Workspace::blockStackingUpdates() being called in pairs (True/false)
+ */
 class StackingUpdatesBlocker
     {
     public:
@@ -775,28 +791,35 @@ class StackingUpdatesBlocker
             : ws( w ) { ws->blockStackingUpdates( true ); }
         ~StackingUpdatesBlocker()
             { ws->blockStackingUpdates( false ); }
+
     private:
         Workspace* ws;
     };
 
-// NET WM Protocol handler class
+/**
+ * NET WM Protocol handler class
+ */
 class RootInfo : public NETRootInfo
     {
     private:
-        typedef KWin::Client Client;  // because of NET::Client
+        typedef KWin::Client Client;  // Because of NET::Client
+
     public:
-        RootInfo( Workspace* ws, Display *dpy, Window w, const char *name, unsigned long pr[], int pr_num, int scr= -1);
+        RootInfo( Workspace* ws, Display* dpy, Window w, const char* name, unsigned long pr[],
+            int pr_num, int scr= -1 );
+
     protected:
-        virtual void changeNumberOfDesktops(int n);
-        virtual void changeCurrentDesktop(int d);
-        virtual void changeActiveWindow(Window w,NET::RequestSource src, Time timestamp, Window active_window);
-        virtual void closeWindow(Window w);
-        virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction);
-        virtual void moveResizeWindow(Window w, int flags, int x, int y, int width, int height );
-        virtual void gotPing(Window w, Time timestamp);
-        virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp);
-        virtual void gotTakeActivity(Window w, Time timestamp, long flags );
+        virtual void changeNumberOfDesktops( int n );
+        virtual void changeCurrentDesktop( int d );
+        virtual void changeActiveWindow( Window w,NET::RequestSource src, Time timestamp, Window active_window );
+        virtual void closeWindow( Window w );
+        virtual void moveResize( Window w, int x_root, int y_root, unsigned long direction );
+        virtual void moveResizeWindow( Window w, int flags, int x, int y, int width, int height );
+        virtual void gotPing( Window w, Time timestamp );
+        virtual void restackWindow( Window w, RequestSource source, Window above, int detail, Time timestamp );
+        virtual void gotTakeActivity( Window w, Time timestamp, long flags );
         virtual void changeShowingDesktop( bool showing );
+
     private:
         Workspace* workspace;
     };
@@ -839,34 +862,31 @@ inline void Workspace::removeGroup( Group* group, allowed_t )
 
 inline const ClientList& Workspace::stackingOrder() const
     {
-// TODO    Q_ASSERT( block_stacking_updates == 0 );
+    // TODO: Q_ASSERT( block_stacking_updates == 0 );
     return stacking_order;
     }
 
-inline void Workspace::showWindowMenu(QPoint pos, Client* cl)
+inline void Workspace::showWindowMenu( QPoint pos, Client* cl )
     {
-    showWindowMenu(QRect(pos, pos), cl);
+    showWindowMenu( QRect( pos, pos ), cl );
     }
 
-inline void Workspace::showWindowMenu(int x, int y, Client* cl)
+inline void Workspace::showWindowMenu( int x, int y, Client* cl )
     {
-    showWindowMenu(QRect(QPoint(x, y), QPoint(x, y)), cl);
+    showWindowMenu( QRect( QPoint( x, y ), QPoint( x, y )), cl );
     }
 
-inline
-void Workspace::setWasUserInteraction()
+inline void Workspace::setWasUserInteraction()
     {
     was_user_interaction = true;
     }
 
-inline
-bool Workspace::wasUserInteraction() const
+inline bool Workspace::wasUserInteraction() const
     {
     return was_user_interaction;
     }
 
-inline
-bool Workspace::managingTopMenus() const
+inline bool Workspace::managingTopMenus() const
     {
     return managing_topmenus;
     }
@@ -906,27 +926,23 @@ inline Window Workspace::overlayWindow()
     return overlay;
     }
 
-inline
-bool Workspace::rulesUpdatesDisabled() const
+inline bool Workspace::rulesUpdatesDisabled() const
     {
     return rules_updates_disabled;
     }
 
-inline
-void Workspace::forceRestacking()
+inline void Workspace::forceRestacking()
     {
     force_restacking = true;
-    StackingUpdatesBlocker blocker( this ); // do restacking if not blocked
+    StackingUpdatesBlocker blocker( this ); // Do restacking if not blocked
     }
 
-inline
-void Workspace::updateFocusMousePosition( const QPoint& pos )
+inline void Workspace::updateFocusMousePosition( const QPoint& pos )
     {
     focusMousePos = pos;
     }
 
-inline
-QPoint Workspace::focusMousePosition() const
+inline QPoint Workspace::focusMousePosition() const
     {
     return focusMousePos;
     }
@@ -944,18 +960,18 @@ inline Client* Workspace::findClient( T predicate ) const
 template< typename T1, typename T2 >
 inline void Workspace::forEachClient( T1 procedure, T2 predicate )
     {
-    for ( ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-        if ( predicate( const_cast< const Client* >( *it)))
+    for( ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it )
+        if( predicate( const_cast<const Client*>( *it )))
             procedure( *it );
-    for ( ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it)
-        if ( predicate( const_cast< const Client* >( *it)))
+    for( ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it )
+        if( predicate( const_cast<const Client*>( *it )))
             procedure( *it );
     }
 
 template< typename T >
 inline void Workspace::forEachClient( T procedure )
     {
-    return forEachClient( procedure, TruePredicate());
+    return forEachClient( procedure, TruePredicate() );
     }
 
 template< typename T >
@@ -967,80 +983,73 @@ inline Unmanaged* Workspace::findUnmanaged( T predicate ) const
 template< typename T1, typename T2 >
 inline void Workspace::forEachUnmanaged( T1 procedure, T2 predicate )
     {
-    for ( UnmanagedList::ConstIterator it = unmanaged.constBegin(); it != unmanaged.constEnd(); ++it)
-        if ( predicate( const_cast< const Unmanaged* >( *it)))
+    for( UnmanagedList::ConstIterator it = unmanaged.constBegin(); it != unmanaged.constEnd(); ++it )
+        if( predicate( const_cast<const Unmanaged*>( *it )))
             procedure( *it );
     }
 
 template< typename T >
 inline void Workspace::forEachUnmanaged( T procedure )
     {
-    return forEachUnmanaged( procedure, TruePredicate());
+    return forEachUnmanaged( procedure, TruePredicate() );
     }
 
 KWIN_COMPARE_PREDICATE( ClientMatchPredicate, Client, const Client*, cl == value );
+
 inline bool Workspace::hasClient( const Client* c )
     {
     return findClient( ClientMatchPredicate( c ));
     }
 
-inline
-void Workspace::checkCompositeTimer()
+inline void Workspace::checkCompositeTimer()
     {
-    if( !compositeTimer.isActive())
+    if( !compositeTimer.isActive() )
         setCompositeTimer();
     }
 
-inline
-bool Workspace::hasDecorationShadows() const
+inline bool Workspace::hasDecorationShadows() const
     {
     return mgr->factory()->supports( AbilityCompositingShadow );
     }
 
-inline
-QList< QList<QImage> > Workspace::decorationShadowTextures()
+inline QList< QList<QImage> > Workspace::decorationShadowTextures()
     {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
         return factory->shadowTextures();
     return QList< QList<QImage> >();
     }
 
-inline
-int Workspace::decorationShadowTextureList( ShadowType type ) const
+inline int Workspace::decorationShadowTextureList( ShadowType type ) const
     {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
         return factory->shadowTextureList( type );
     return -1;
     }
 
-inline
-QList<QRect> Workspace::decorationShadowQuads( ShadowType type, QSize size ) const
+inline QList<QRect> Workspace::decorationShadowQuads( ShadowType type, QSize size ) const
     {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
         return factory->shadowQuads( type, size );
     return QList<QRect>();
     }
 
-inline
-double Workspace::decorationShadowOpacity( ShadowType type ) const
+inline double Workspace::decorationShadowOpacity( ShadowType type ) const
     {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
         return factory->shadowOpacity( type );
     return 1.0;
     }
 
-inline
-double Workspace::decorationShadowBrightness( ShadowType type ) const
+inline double Workspace::decorationShadowBrightness( ShadowType type ) const
     {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
         return factory->shadowBrightness( type );
     return 1.0;
     }
 
-inline
-double Workspace::decorationShadowSaturation( ShadowType type ) const
+inline double Workspace::decorationShadowSaturation( ShadowType type ) const
     {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable* >( mgr->factory() ))
+    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable*>( mgr->factory() ))
         return factory->shadowSaturation( type );
     return 1.0;
     }

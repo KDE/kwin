@@ -73,141 +73,146 @@ namespace KWin
 
 extern int screen_number;
 
-Workspace *Workspace::_self = 0;
+Workspace* Workspace::_self = 0;
 
+//-----------------------------------------------------------------------------
 // Rikkus: This class is too complex. It needs splitting further.
 // It's a nightmare to understand, especially with so few comments :(
-
+//
 // Matthias: Feel free to ask me questions about it. Feel free to add
 // comments. I dissagree that further splittings makes it easier. 2500
 // lines are not too much. It's the task that is complex, not the
 // code.
+//-----------------------------------------------------------------------------
+
 Workspace::Workspace( bool restore )
-  : QObject           (0),
-    current_desktop   (0),
-    number_of_desktops(0),
-    active_popup( NULL ),
-    active_popup_client( NULL ),
-    temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false ),
-    rules_updates_disabled( false ),
-    active_client     (0),
-    last_active_client     (0),
-    most_recently_raised (0),
-    movingClient(0),
-    pending_take_activity ( NULL ),
-    active_screen     (0),
-    delayfocus_client (0),
-    force_restacking( false ),
-    x_stacking_dirty( true ),
-    showing_desktop( false ),
-    block_showing_desktop( 0 ),
-    was_user_interaction (false),
-    session_saving    (false),
-    control_grab      (false),
-    tab_grab          (false),
-    mouse_emulation   (false),
-    block_focus       (0),
-    tab_box           (0),
-    popupinfo         (0),
-    popup             (0),
-    advanced_popup    (0),
-    trans_popup       (0),
-    desk_popup        (0),
-    keys              (0),
-    client_keys       ( NULL ),
-    client_keys_dialog ( NULL ),
-    client_keys_client ( NULL ),
-    disable_shortcuts_keys ( NULL ),
-    global_shortcuts_disabled( false ),
-    global_shortcuts_disabled_for_client( false ),
-    workspaceInit     (true),
-    startup(0),
-    layoutOrientation(Qt::Vertical),
-    layoutX(-1),
-    layoutY(2),
-    managing_topmenus( false ),
-    topmenu_selection( NULL ),
-    topmenu_watcher( NULL ),
-    topmenu_height( 0 ),
-    topmenu_space( NULL ),
-    set_active_client_recursion( 0 ),
-    block_stacking_updates( 0 ),
-    forced_global_mouse_grab( false ),
-    cm_selection( NULL ),
-    compositingSuspended( false ),
-    compositeRate( 0 ),
-    overlay( None ),
-    overlay_visible( true ),
-    overlay_shown( false ),
-    transSlider( NULL ),
-    transButton( NULL ),
-    forceUnredirectCheck( true )
+    : QObject( 0 )
+    , current_desktop( 0 )
+    , number_of_desktops( 0 )
+    , active_popup( NULL )
+    , active_popup_client( NULL )
+    , temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false )
+    , rules_updates_disabled( false )
+    , active_client( 0 )
+    , last_active_client( 0 )
+    , most_recently_raised( 0 )
+    , movingClient( 0 )
+    , pending_take_activity( NULL )
+    , active_screen( 0 )
+    , delayfocus_client( 0 )
+    , force_restacking( false )
+    , x_stacking_dirty( true )
+    , showing_desktop( false )
+    , block_showing_desktop( 0 )
+    , was_user_interaction( false )
+    , session_saving( false )
+    , control_grab( false )
+    , tab_grab( false )
+    , mouse_emulation( false )
+    , block_focus( 0 )
+    , tab_box( 0 )
+    , popupinfo( 0 )
+    , popup( 0 )
+    , advanced_popup( 0 )
+    , trans_popup( 0 )
+    , desk_popup( 0 )
+    , keys( 0 )
+    , client_keys( NULL )
+    , client_keys_dialog( NULL )
+    , client_keys_client( NULL )
+    , disable_shortcuts_keys( NULL )
+    , global_shortcuts_disabled( false )
+    , global_shortcuts_disabled_for_client( false )
+    , workspaceInit( true )
+    , startup( 0 )
+    , layoutOrientation( Qt::Vertical )
+    , layoutX( -1 )
+    , layoutY( 2 )
+    , managing_topmenus( false )
+    , topmenu_selection( NULL )
+    , topmenu_watcher( NULL )
+    , topmenu_height( 0 )
+    , topmenu_space( NULL )
+    , set_active_client_recursion( 0 )
+    , block_stacking_updates( 0 )
+    , forced_global_mouse_grab( false )
+    , cm_selection( NULL )
+    , compositingSuspended( false )
+    , compositeRate( 0 )
+    , overlay( None )
+    , overlay_visible( true )
+    , overlay_shown( false )
+    , transSlider( NULL )
+    , transButton( NULL )
+    , forceUnredirectCheck( true )
     {
     (void) new KWinAdaptor( this );
+
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject("/KWin", this);
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig", this, SLOT(slotReloadConfig()));
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing", this, SLOT(slotReinitCompositing()));
+    dbus.registerObject( "/KWin", this );
+    dbus.connect( QString(), "/KWin", "org.kde.KWin", "reloadConfig",
+        this, SLOT( slotReloadConfig() ));
+    dbus.connect( QString(), "/KWin", "org.kde.KWin", "reinitCompositing",
+        this, SLOT( slotReinitCompositing() ));
+
     _self = this;
     mgr = new PluginMgr;
     QX11Info info;
-    default_colormap = DefaultColormap(display(), info.screen() );
+    default_colormap = DefaultColormap( display(), info.screen() );
     installed_colormap = default_colormap;
 
-    for( int i = 0;
-         i < ELECTRIC_COUNT;
-         ++i )
+    for( int i = 0; i < ELECTRIC_COUNT; ++i )
         {
-        electric_reserved[ i ] = 0;
-        electric_windows[ i ] = None;
+        electric_reserved[i] = 0;
+        electric_windows[i] = None;
         }
 
-    connect( &temporaryRulesMessages, SIGNAL( gotMessage( const QString& )),
-        this, SLOT( gotTemporaryRulesMessage( const QString& )));
-    connect( &rulesUpdatedTimer, SIGNAL( timeout()), this, SLOT( writeWindowRules()));
-    connect( &unredirectTimer, SIGNAL( timeout()), this, SLOT( delayedCheckUnredirect()));
+    connect( &temporaryRulesMessages, SIGNAL( gotMessage(const QString&) ),
+        this, SLOT( gotTemporaryRulesMessage(const QString&) ));
+    connect( &rulesUpdatedTimer, SIGNAL( timeout() ), this, SLOT( writeWindowRules() ));
+    connect( &unredirectTimer, SIGNAL( timeout() ), this, SLOT( delayedCheckUnredirect() ));
     unredirectTimer.setSingleShot( true );
 
-    updateXTime(); // needed for proper initialization of user_time in Client ctor
+    updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
     delayFocusTimer = 0;
 
-    if ( restore )
-      loadSessionInfo();
+    if( restore )
+        loadSessionInfo();
 
     loadWindowRules();
 
-    // call this before XSelectInput() on the root window
+    // Call this before XSelectInput() on the root window
     startup = new KStartupInfo(
         KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this );
 
-    // select windowmanager privileges
-    XSelectInput(display(), rootWindow(),
-                 KeyPressMask |
-                 PropertyChangeMask |
-                 ColormapChangeMask |
-                 SubstructureRedirectMask |
-                 SubstructureNotifyMask |
-                 FocusChangeMask | // for NotifyDetailNone
-                 ExposureMask
-                 );
+    // Select windowmanager privileges
+    XSelectInput( display(), rootWindow(),
+        KeyPressMask |
+        PropertyChangeMask |
+        ColormapChangeMask |
+        SubstructureRedirectMask |
+        SubstructureNotifyMask |
+        FocusChangeMask | // For NotifyDetailNone
+        ExposureMask
+        );
 
     Extensions::init();
     setupCompositing();
 
-    // compatibility
+    // Compatibility
     long data = 1;
 
     XChangeProperty(
-      display(),
-      rootWindow(),
-      atoms->kwin_running,
-      atoms->kwin_running,
-      32,
-      PropModeAppend,
-      (unsigned char*) &data,
-      1
-    );
+        display(),
+        rootWindow(),
+        atoms->kwin_running,
+        atoms->kwin_running,
+        32,
+        PropModeAppend,
+        (unsigned char*)( &data ),
+        1
+        );
 
     client_keys = new KActionCollection( this );
     initShortcuts();
@@ -216,32 +221,32 @@ Workspace::Workspace( bool restore )
 
     init();
 
-    connect( Kephal::Screens::self(), SIGNAL( screenAdded( Kephal::Screen *)), SLOT( desktopResized()));
-    connect( Kephal::Screens::self(), SIGNAL( screenRemoved(int)), SLOT( desktopResized()));
-    connect( Kephal::Screens::self(), SIGNAL( screenResized( Kephal::Screen *, QSize, QSize)), SLOT( desktopResized()));
-    connect( Kephal::Screens::self(), SIGNAL( screenMoved( Kephal::Screen *, QPoint, QPoint)), SLOT( desktopResized()));
+    connect( Kephal::Screens::self(), SIGNAL( screenAdded(Kephal::Screen*) ), SLOT( desktopResized() ));
+    connect( Kephal::Screens::self(), SIGNAL( screenRemoved(int) ), SLOT( desktopResized() ));
+    connect( Kephal::Screens::self(), SIGNAL( screenResized(Kephal::Screen*, QSize, QSize) ), SLOT( desktopResized() ));
+    connect( Kephal::Screens::self(), SIGNAL( screenMoved(Kephal::Screen*, QPoint, QPoint) ), SLOT( desktopResized() ));
     }
 
 void Workspace::init()
     {
     if( options->electricBorders() == Options::ElectricAlways )
-        reserveElectricBorderSwitching( true  );
+        reserveElectricBorderSwitching( true );
     updateElectricBorders();
 
-// not used yet
-//     topDock = 0L;
-//     maximizedWindowCounter = 0;
+    // Not used yet
+    //topDock = 0L;
+    //maximizedWindowCounter = 0;
 
     supportWindow = new QWidget( NULL, Qt::X11BypassWindowManagerHint );
-    XLowerWindow( display(), supportWindow->winId()); // see usage in layers.cpp
+    XLowerWindow( display(), supportWindow->winId() ); // See usage in layers.cpp
 
     XSetWindowAttributes attr;
     attr.override_redirect = 1;
     null_focus_window = XCreateWindow( display(), rootWindow(), -1,-1, 1, 1, 0, CopyFromParent,
         InputOnly, CopyFromParent, CWOverrideRedirect, &attr );
-    XMapWindow(display(), null_focus_window);
+    XMapWindow( display(), null_focus_window );
 
-    unsigned long protocols[ 5 ] =
+    unsigned long protocols[5] =
         {
         NET::Supported |
         NET::SupportingWMCheck |
@@ -277,17 +282,17 @@ void Workspace::init()
         NET::TopMenuMask |
         NET::UtilityMask |
         NET::SplashMask |
-    // No compositing window types here unless we support them also as managed window types
+        // No compositing window types here unless we support them also as managed window types
         0
         ,
         NET::Modal |
-//        NET::Sticky |  // large desktops not supported (and probably never will be)
+        //NET::Sticky | // Large desktops not supported (and probably never will be)
         NET::MaxVert |
         NET::MaxHoriz |
         NET::Shaded |
         NET::SkipTaskbar |
         NET::KeepAbove |
-//        NET::StaysOnTop |  the same like KeepAbove
+        //NET::StaysOnTop | // The same like KeepAbove
         NET::SkipPager |
         NET::Hidden |
         NET::FullScreen |
@@ -311,7 +316,7 @@ void Workspace::init()
         NET::ActionResize |
         NET::ActionMinimize |
         NET::ActionShade |
-//        NET::ActionStick | // Sticky state is not supported
+        //NET::ActionStick | // Sticky state is not supported
         NET::ActionMaxVert |
         NET::ActionMaxHoriz |
         NET::ActionFullScreen |
@@ -321,16 +326,15 @@ void Workspace::init()
         ,
         };
 
-	QX11Info info;
-    rootInfo = new RootInfo( this, display(), supportWindow->winId(), "KWin",
-        protocols, 5, info.screen() );
+    QX11Info info;
+    rootInfo = new RootInfo( this, display(), supportWindow->winId(), "KWin", protocols, 5, info.screen() );
 
     loadDesktopSettings();
     updateDesktopLayout();
-    // extra NETRootInfo instance in Client mode is needed to get the values of the properties
+    // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info( display(), NET::ActiveWindow | NET::CurrentDesktop );
     int initial_desktop;
-    if( !kapp->isSessionRestored())
+    if( !kapp->isSessionRestored() )
         initial_desktop = client_info.currentDesktop();
     else
         {
@@ -340,71 +344,69 @@ void Workspace::init()
     if( !setCurrentDesktop( initial_desktop ))
         setCurrentDesktop( 1 );
 
-    // now we know how many desktops we'll, thus, we initialize the positioning object
-    initPositioning = new Placement(this);
+    // Now we know how many desktops we'll have, thus we initialize the positioning object
+    initPositioning = new Placement( this );
 
     reconfigureTimer.setSingleShot( true );
     updateToolWindowsTimer.setSingleShot( true );
 
-    connect(&reconfigureTimer, SIGNAL(timeout()), this,
-            SLOT(slotReconfigure()));
-    connect( &updateToolWindowsTimer, SIGNAL( timeout()), this, SLOT( slotUpdateToolWindows()));
-    connect( &compositeTimer, SIGNAL( timeout()), SLOT( performCompositing()));
+    connect( &reconfigureTimer, SIGNAL( timeout() ), this, SLOT( slotReconfigure() ));
+    connect( &updateToolWindowsTimer, SIGNAL( timeout() ), this, SLOT( slotUpdateToolWindows() ));
+    connect( &compositeTimer, SIGNAL( timeout() ), SLOT( performCompositing() ));
 
-    connect(KGlobalSettings::self(), SIGNAL(appearanceChanged()), this,
-            SLOT(reconfigure()));
-    connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)), this,
-            SLOT(slotSettingsChanged(int)));
-    connect(KGlobalSettings::self(), SIGNAL(blockShortcuts(int)), this,
-            SLOT(slotBlockShortcuts(int)));
+    connect( KGlobalSettings::self(), SIGNAL( appearanceChanged() ), this, SLOT( reconfigure() ));
+    connect( KGlobalSettings::self(), SIGNAL( settingsChanged(int) ), this, SLOT( slotSettingsChanged(int) ));
+    connect( KGlobalSettings::self(), SIGNAL( blockShortcuts(int) ), this, SLOT( slotBlockShortcuts(int) ));
 
     active_client = NULL;
     rootInfo->setActiveWindow( None );
     focusToNull();
-    if( !kapp->isSessionRestored())
-        ++block_focus; // because it will be set below
+    if( !kapp->isSessionRestored() )
+        ++block_focus; // Because it will be set below
 
-    char nm[ 100 ];
+    char nm[100];
     sprintf( nm, "_KDE_TOPMENU_OWNER_S%d", DefaultScreen( display()));
     Atom topmenu_atom = XInternAtom( display(), nm, False );
     topmenu_selection = new KSelectionOwner( topmenu_atom );
     topmenu_watcher = new KSelectionWatcher( topmenu_atom );
-// TODO grabXServer(); - where exactly put this? topmenu selection claiming down belong must be before
+    //TODO: grabXServer(); // Where exactly put this? topmenu selection claiming down belong must be before
 
-        { // begin updates blocker block
+        { // Begin updates blocker block
         StackingUpdatesBlocker blocker( this );
 
         if( options->topMenuEnabled() && topmenu_selection->claim( false ))
-            setupTopMenuHandling(); // this can call updateStackingOrder()
+            setupTopMenuHandling(); // This can call updateStackingOrder()
         else
             lostTopMenuSelection();
 
         unsigned int i, nwins;
-        Window root_return, parent_return, *wins;
-        XQueryTree(display(), rootWindow(), &root_return, &parent_return, &wins, &nwins);
-        for (i = 0; i < nwins; i++)
+        Window root_return, parent_return;
+        Window* wins;
+        XQueryTree( display(), rootWindow(), &root_return, &parent_return, &wins, &nwins );
+        for( i = 0; i < nwins; i++ )
             {
             XWindowAttributes attr;
-            XGetWindowAttributes(display(), wins[i], &attr);
-            if (attr.override_redirect )
+            XGetWindowAttributes( display(), wins[i], &attr );
+            if( attr.override_redirect )
                 {
-                createUnmanaged( wins[ i ] );
+                createUnmanaged( wins[i] );
                 continue;
                 }
-            if( topmenu_space && topmenu_space->winId() == wins[ i ] )
+            if( topmenu_space && topmenu_space->winId() == wins[i] )
                 continue;
-            if (attr.map_state != IsUnmapped)
+            if( attr.map_state != IsUnmapped )
                 createClient( wins[i], true );
             }
-        if ( wins )
-            XFree((void *) wins);
-    // propagate clients, will really happen at the end of the updates blocker block
+        if( wins )
+            XFree( (void*)( wins ));
+
+        // Propagate clients, will really happen at the end of the updates blocker block
         updateStackingOrder( true );
 
         updateClientArea();
 
-    // NETWM spec says we have to set it to (0,0) if we don't support it
-        NETPoint* viewports = new NETPoint[ number_of_desktops ];
+        // NETWM spec says we have to set it to (0,0) if we don't support it
+        NETPoint* viewports = new NETPoint[number_of_desktops];
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
         QRect geom = Kephal::ScreenUtils::desktopGeometry();
@@ -414,42 +416,45 @@ void Workspace::init()
         rootInfo->setDesktopGeometry( -1, desktop_geometry );
         setShowingDesktop( false );
 
-        } // end updates blocker block
+        } // End updates blocker block
 
     Client* new_active_client = NULL;
-    if( !kapp->isSessionRestored())
+    if( !kapp->isSessionRestored() )
         {
         --block_focus;
-        new_active_client = findClient( WindowMatchPredicate( client_info.activeWindow()));
+        new_active_client = findClient( WindowMatchPredicate( client_info.activeWindow() ));
         }
     if( new_active_client == NULL
-        && activeClient() == NULL && should_get_focus.count() == 0 ) // no client activated in manage()
-        {
+        && activeClient() == NULL && should_get_focus.count() == 0 )
+        { // No client activated in manage()
         if( new_active_client == NULL )
             new_active_client = topClientOnDesktop( currentDesktop(), -1 );
         if( new_active_client == NULL && !desktops.isEmpty() )
-            new_active_client = findDesktop( true, currentDesktop());
+            new_active_client = findDesktop( true, currentDesktop() );
         }
     if( new_active_client != NULL )
         activateClient( new_active_client );
-    // SELI TODO this won't work with unreasonable focus policies,
+    // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't
     // want focus
     workspaceInit = false;
-// TODO ungrabXServer()
+
+    // TODO: ungrabXServer()
     }
 
 Workspace::~Workspace()
     {
     finishCompositing();
     blockStackingUpdates( true );
-// TODO    grabXServer();
-    // use stacking_order, so that kwin --replace keeps stacking order
+
+    // TODO: grabXServer();
+
+    // Use stacking_order, so that kwin --replace keeps stacking order
     for( ClientList::ConstIterator it = stacking_order.constBegin();
-         it != stacking_order.constEnd();
-         ++it )
+        it != stacking_order.constEnd();
+        ++it )
         {
-	// only release the window
+        // Only release the window
         (*it)->releaseWindow( true );
         // No removeClient() is called, it does more than just removing.
         // However, remove from some lists to e.g. prevent performTransiencyCheck()
@@ -458,13 +463,13 @@ Workspace::~Workspace()
         desktops.removeAll( *it );
         }
     for( UnmanagedList::ConstIterator it = unmanaged.constBegin();
-         it != unmanaged.constEnd();
-         ++it )
+        it != unmanaged.constEnd();
+        ++it )
         (*it)->release();
     delete tab_box;
     delete popupinfo;
     discardPopup();
-    XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
+    XDeleteProperty( display(), rootWindow(), atoms->kwin_running );
 
     writeWindowRules();
     KGlobal::config()->sync();
@@ -478,15 +483,17 @@ Workspace::~Workspace()
     delete topmenu_selection;
     delete topmenu_space;
     delete client_keys_dialog;
-    while( !rules.isEmpty())
+    while( !rules.isEmpty() )
         {
         delete rules.front();
         rules.pop_front();
         }
-	foreach ( SessionInfo* s, session )
-		delete s;
+    foreach( SessionInfo* s, session )
+        delete s;
     XDestroyWindow( display(), null_focus_window );
-// TODO    ungrabXServer();
+
+    // TODO: ungrabXServer();
+
     _self = 0;
     }
 
@@ -503,7 +510,7 @@ Client* Workspace::createClient( Window w, bool is_mapped )
     if( scene )
         scene->windowAdded( c );
     if( effects )
-        static_cast<EffectsHandlerImpl*>(effects)->windowAdded( c->effectWindow());
+        static_cast<EffectsHandlerImpl*>( effects )->windowAdded( c->effectWindow() );
     return c;
     }
 
@@ -521,47 +528,47 @@ Unmanaged* Workspace::createUnmanaged( Window w )
     if( scene )
         scene->windowAdded( c );
     if( effects )
-        static_cast<EffectsHandlerImpl*>(effects)->windowAdded( c->effectWindow());
+        static_cast<EffectsHandlerImpl*>( effects )->windowAdded( c->effectWindow() );
     return c;
     }
 
 void Workspace::addClient( Client* c, allowed_t )
     {
-    Group* grp = findGroup( c->window());
+    Group* grp = findGroup( c->window() );
     if( grp != NULL )
         grp->gotLeader( c );
 
-    if ( c->isDesktop() )
+    if( c->isDesktop() )
         {
         desktops.append( c );
-        if( active_client == NULL && should_get_focus.isEmpty() && c->isOnCurrentDesktop())
-            requestFocus( c ); // CHECKME? make sure desktop is active after startup if there's no other window active
+        if( active_client == NULL && should_get_focus.isEmpty() && c->isOnCurrentDesktop() )
+            requestFocus( c ); // TODO: Make sure desktop is active after startup if there's no other window active
         }
     else
         {
-        updateFocusChains( c, FocusChainUpdate ); // add to focus chain if not already there
+        updateFocusChains( c, FocusChainUpdate ); // Add to focus chain if not already there
         clients.append( c );
         }
     if( !unconstrained_stacking_order.contains( c ))
-        unconstrained_stacking_order.append( c ); // raise if it hasn't got any stacking position yet
-    if( !stacking_order.contains( c )) // it'll be updated later, and updateToolWindows() requires
+        unconstrained_stacking_order.append( c ); // Raise if it hasn't got any stacking position yet
+    if( !stacking_order.contains( c )) // It'll be updated later, and updateToolWindows() requires
         stacking_order.append( c );    // c to be in stacking_order
     if( c->isTopMenu())
         addTopMenu( c );
     x_stacking_dirty = true;
-    updateClientArea(); // this cannot be in manage(), because the client got added only now
+    updateClientArea(); // This cannot be in manage(), because the client got added only now
     updateClientLayer( c );
     if( c->isDesktop())
         {
         raiseClient( c );
-	// if there's no active client, make this desktop the active one
+        // If there's no active client, make this desktop the active one
         if( activeClient() == NULL && should_get_focus.count() == 0 )
-            activateClient( findDesktop( true, currentDesktop()));
+            activateClient( findDesktop( true, currentDesktop() ));
         }
     c->checkActiveModal();
-    checkTransients( c->window()); // SELI does this really belong here?
-    updateStackingOrder( true ); // propagate new client
-    if( c->isUtility() || c->isMenu() || c->isToolbar())
+    checkTransients( c->window() ); // SELI TODO: Does this really belong here?
+    updateStackingOrder( true ); // Propagate new client
+    if( c->isUtility() || c->isMenu() || c->isToolbar() )
         updateToolWindows( true );
     checkNonExistentClients();
     if( tab_grab )
@@ -574,8 +581,8 @@ void Workspace::addUnmanaged( Unmanaged* c, allowed_t )
     x_stacking_dirty = true;
     }
 
-/*
-  Destroys the client \a c
+/**
+ * Destroys the client \a c
  */
 void Workspace::removeClient( Client* c, allowed_t )
     {
@@ -584,10 +591,10 @@ void Workspace::removeClient( Client* c, allowed_t )
 
     if( client_keys_client == c )
         setupWindowShortcutDone( false );
-    if( !c->shortcut().isEmpty())
+    if( !c->shortcut().isEmpty() )
         {
-        c->setShortcut( QString() ); // remove from client_keys
-        clientShortcutUpdated( c ); // needed, since this is otherwise delayed by setShortcut() and wouldn't run
+        c->setShortcut( QString() ); // Remove from client_keys
+        clientShortcutUpdated( c ); // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
         }
 
     if( c->isDialog())
@@ -595,11 +602,8 @@ void Workspace::removeClient( Client* c, allowed_t )
     if( c->isNormalWindow())
         Notify::raise( Notify::Delete );
 
-    if( tab_grab )
-        {
-        if( tab_box->currentClient() == c )
-            tab_box->nextPrev( true );
-        }
+    if( tab_grab && tab_box->currentClient() == c )
+        tab_box->nextPrev( true );
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
     clients.removeAll( c );
@@ -607,24 +611,22 @@ void Workspace::removeClient( Client* c, allowed_t )
     unconstrained_stacking_order.removeAll( c );
     stacking_order.removeAll( c );
     x_stacking_dirty = true;
-    for( int i = 1;
-         i <= numberOfDesktops();
-         ++i )
-        focus_chain[ i ].removeAll( c );
+    for( int i = 1; i <= numberOfDesktops(); ++i )
+        focus_chain[i].removeAll( c );
     global_focus_chain.removeAll( c );
     attention_chain.removeAll( c );
     showing_desktop_clients.removeAll( c );
-    if( c->isTopMenu())
+    if( c->isTopMenu() )
         removeTopMenu( c );
     Group* group = findGroup( c->window());
     if( group != NULL )
         group->lostLeader();
 
-    if ( c == most_recently_raised )
+    if( c == most_recently_raised )
         most_recently_raised = 0;
     should_get_focus.removeAll( c );
     Q_ASSERT( c != active_client );
-    if ( c == last_active_client )
+    if( c == last_active_client )
         last_active_client = 0;
     if( c == pending_take_activity )
         pending_take_activity = NULL;
@@ -659,72 +661,70 @@ void Workspace::removeDeleted( Deleted* c, allowed_t )
     if( scene )
         scene->windowDeleted( c );
     if( effects )
-        static_cast<EffectsHandlerImpl*>(effects)->windowDeleted( c->effectWindow());
+        static_cast<EffectsHandlerImpl*>( effects )->windowDeleted( c->effectWindow() );
     deleted.removeAll( c );
     x_stacking_dirty = true;
     }
 
 void Workspace::updateFocusChains( Client* c, FocusChainChange change )
     {
-    if( !c->wantsTabFocus()) // doesn't want tab focus, remove
+    if( !c->wantsTabFocus() ) // Doesn't want tab focus, remove
         {
-        for( int i=1;
-             i<= numberOfDesktops();
-             ++i )
-            focus_chain[i].removeAll(c);
+        for( int i = 1; i <= numberOfDesktops(); ++i )
+            focus_chain[i].removeAll( c );
         global_focus_chain.removeAll( c );
         return;
         }
-    if(c->desktop() == NET::OnAllDesktops)
-        { //now on all desktops, add it to focus_chains it is not already in
-        for( int i=1; i<= numberOfDesktops(); i++)
-            { // making first/last works only on current desktop, don't affect all desktops
+    if( c->desktop() == NET::OnAllDesktops )
+        { // Now on all desktops, add it to focus_chains it is not already in
+        for( int i = 1; i <= numberOfDesktops(); i++)
+            { // Making first/last works only on current desktop, don't affect all desktops
             if( i == currentDesktop()
                 && ( change == FocusChainMakeFirst || change == FocusChainMakeLast ))
                 {
-                focus_chain[ i ].removeAll( c );
+                focus_chain[i].removeAll( c );
                 if( change == FocusChainMakeFirst )
-                    focus_chain[ i ].append( c );
+                    focus_chain[i].append( c );
                 else
-                    focus_chain[ i ].prepend( c );
+                    focus_chain[i].prepend( c );
                 }
-            else if( !focus_chain[ i ].contains( c ))
-                { // add it after the active one
-                if( active_client != NULL && active_client != c
-                    && !focus_chain[ i ].isEmpty() && focus_chain[ i ].last() == active_client )
-                    focus_chain[ i ].insert( focus_chain[ i ].size() - 1, c );
+            else if( !focus_chain[i].contains( c ))
+                { // Add it after the active one
+                if( active_client != NULL && active_client != c &&
+                    !focus_chain[i].isEmpty() && focus_chain[i].last() == active_client )
+                    focus_chain[i].insert( focus_chain[i].size() - 1, c );
                 else
-                    focus_chain[ i ].append( c ); // otherwise add as the first one
+                    focus_chain[i].append( c ); // Otherwise add as the first one
                 }
             }
         }
-    else    //now only on desktop, remove it anywhere else
+    else // Now only on desktop, remove it anywhere else
         {
-        for( int i=1; i<= numberOfDesktops(); i++)
+        for( int i = 1; i <= numberOfDesktops(); i++)
             {
-            if( i == c->desktop())
+            if( i == c->desktop() )
                 {
                 if( change == FocusChainMakeFirst )
                     {
-                    focus_chain[ i ].removeAll( c );
-                    focus_chain[ i ].append( c );
+                    focus_chain[i].removeAll( c );
+                    focus_chain[i].append( c );
                     }
                 else if( change == FocusChainMakeLast )
                     {
-                    focus_chain[ i ].removeAll( c );
-                    focus_chain[ i ].prepend( c );
+                    focus_chain[i].removeAll( c );
+                    focus_chain[i].prepend( c );
                     }
-                else if( !focus_chain[ i ].contains( c ))
-                    { // add it after the active one
-                    if( active_client != NULL && active_client != c
-                        && !focus_chain[ i ].isEmpty() && focus_chain[ i ].last() == active_client )
-                        focus_chain[ i ].insert( focus_chain[ i ].size() - 1, c );
+                else if( !focus_chain[i].contains( c ))
+                    { // Add it after the active one
+                    if( active_client != NULL && active_client != c &&
+                        !focus_chain[i].isEmpty() && focus_chain[i].last() == active_client )
+                        focus_chain[i].insert( focus_chain[i].size() - 1, c );
                     else
-                        focus_chain[ i ].append( c ); // otherwise add as the first one
+                        focus_chain[i].append( c ); // Otherwise add as the first one
                     }
                 }
             else
-                focus_chain[ i ].removeAll( c );
+                focus_chain[i].removeAll( c );
             }
         }
     if( change == FocusChainMakeFirst )
@@ -738,129 +738,130 @@ void Workspace::updateFocusChains( Client* c, FocusChainChange change )
         global_focus_chain.prepend( c );
         }
     else if( !global_focus_chain.contains( c ))
-        { // add it after the active one
-        if( active_client != NULL && active_client != c
-            && !global_focus_chain.isEmpty() && global_focus_chain.last() == active_client )
+        { // Add it after the active one
+        if( active_client != NULL && active_client != c &&
+            !global_focus_chain.isEmpty() && global_focus_chain.last() == active_client )
             global_focus_chain.insert( global_focus_chain.size() - 1, c );
         else
-            global_focus_chain.append( c ); // otherwise add as the first one
+            global_focus_chain.append( c ); // Otherwise add as the first one
         }
     }
 
 void Workspace::updateCurrentTopMenu()
     {
-    if( !managingTopMenus())
+    if( !managingTopMenus() )
         return;
     // toplevel menubar handling
     Client* menubar = 0;
     bool block_desktop_menubar = false;
     if( active_client )
         {
-        // show the new menu bar first...
+        // Show the new menu bar first...
         Client* menu_client = active_client;
-        for(;;)
+        for( ;; )
             {
-            if( menu_client->isFullScreen())
+            if( menu_client->isFullScreen() )
                 block_desktop_menubar = true;
             for( ClientList::ConstIterator it = menu_client->transients().constBegin();
-                 it != menu_client->transients().constEnd();
-                 ++it )
-                if( (*it)->isTopMenu())
+                it != menu_client->transients().constEnd();
+                ++it )
+                if( (*it)->isTopMenu() )
                     {
                     menubar = *it;
                     break;
                     }
-            if( menubar != NULL || !menu_client->isTransient())
+            if( menubar != NULL || !menu_client->isTransient() )
                 break;
             if( menu_client->isModal() || menu_client->transientFor() == NULL )
-                break; // don't use mainwindow's menu if this is modal or group transient
+                break; // Don't use mainwindow's menu if this is modal or group transient
             menu_client = menu_client->transientFor();
             }
         if( !menubar )
-            { // try to find any topmenu from the application (#72113)
+            { // Try to find any topmenu from the application (#72113)
             for( ClientList::ConstIterator it = active_client->group()->members().constBegin();
-                 it != active_client->group()->members().constEnd();
-                 ++it )
-                if( (*it)->isTopMenu())
+                it != active_client->group()->members().constEnd();
+                ++it )
+                if( (*it)->isTopMenu() )
                     {
                     menubar = *it;
                     break;
                     }
             }
         }
-    if( !menubar && !block_desktop_menubar && options->desktopTopMenu())
+    if( !menubar && !block_desktop_menubar && options->desktopTopMenu() )
         {
         // Find the menubar of the desktop
-        Client* desktop = findDesktop( true, currentDesktop());
+        Client* desktop = findDesktop( true, currentDesktop() );
         if( desktop != NULL )
             {
             for( ClientList::ConstIterator it = desktop->transients().constBegin();
-                 it != desktop->transients().constEnd();
-                 ++it )
-                if( (*it)->isTopMenu())
+                it != desktop->transients().constEnd();
+                ++it )
+                if( (*it)->isTopMenu() )
                     {
                     menubar = *it;
                     break;
                     }
             }
-        // TODO to be cleaned app with window grouping
+        // TODO: To be cleaned app with window grouping
         // Without qt-copy patch #0009, the topmenu and desktop are not in the same group,
         // thus the topmenu is not transient for it :-/.
         if( menubar == NULL )
             {
             for( ClientList::ConstIterator it = topmenus.constBegin();
-                 it != topmenus.constEnd();
-                 ++it )
-                if( (*it)->wasOriginallyGroupTransient()) // kdesktop's topmenu has WM_TRANSIENT_FOR
-                    {                                     // set pointing to the root window
-                    menubar = *it;                        // to recognize it here
-                    break;                                // Also, with the xroot hack in kdesktop,
-                    }                                     // there's no NET::Desktop window to be transient for
+                it != topmenus.constEnd();
+                ++it )
+                // kdesktop's topmenu has WM_TRANSIENT_FOR set pointing to the root window
+                // to recognize it here. Also, with the xroot hack in kdesktop, there's
+                // no NET::Desktop window to be transient for.
+                if( (*it)->wasOriginallyGroupTransient() )
+                    {
+                    menubar = *it;
+                    break;
+                    }
             }
         }
 
-//    kDebug(1212) << "CURRENT TOPMENU:" << menubar << ":" << active_client;
-    if ( menubar )
+    //kDebug( 1212 ) << "CURRENT TOPMENU:" << menubar << ":" << active_client;
+    if( menubar )
         {
-        if( active_client && !menubar->isOnDesktop( active_client->desktop()))
-            menubar->setDesktop( active_client->desktop());
+        if( active_client && !menubar->isOnDesktop( active_client->desktop() ))
+            menubar->setDesktop( active_client->desktop() );
         menubar->hideClient( false );
         topmenu_space->hide();
-        // make it appear like it's been raised manually - it's in the Dock layer anyway,
+        // Make it appear like it's been raised manually - it's in the Dock layer anyway,
         // and not raising it could mess up stacking order of topmenus within one application,
         // and thus break raising of mainclients in raiseClient()
         unconstrained_stacking_order.removeAll( menubar );
         unconstrained_stacking_order.append( menubar );
         }
     else if( !block_desktop_menubar )
-        { // no topmenu active - show the space window, so that there's not empty space
+        { // No topmenu active - show the space window, so that there's not empty space
         topmenu_space->show();
         }
 
-    // ... then hide the other ones. Avoids flickers.
-    for ( ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-        {
+    // ... Then hide the other ones. Avoids flickers.
+    for( ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it )
         if( (*it)->isTopMenu() && (*it) != menubar )
             (*it)->hideClient( true );
-        }
     }
 
 
 void Workspace::updateToolWindows( bool also_hide )
     {
-    // TODO what if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
+    // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if( !options->hideUtilityWindowsForInactive )
         {
         for( ClientList::ConstIterator it = clients.constBegin();
-             it != clients.constEnd();
-             ++it )
+            it != clients.constEnd();
+            ++it )
             (*it)->hideClient( false );
         return;
         }
     const Group* group = NULL;
     const Client* client = active_client;
-// Go up in transiency hiearchy, if the top is found, only tool transients for the top mainwindow
-// will be shown; if a group transient is group, all tools in the group will be shown
+    // Go up in transiency hiearchy, if the top is found, only tool transients for the top mainwindow
+    // will be shown; if a group transient is group, all tools in the group will be shown
     while( client != NULL )
         {
         if( !client->isTransient())
@@ -872,23 +873,23 @@ void Workspace::updateToolWindows( bool also_hide )
             }
         client = client->transientFor();
         }
-    // use stacking order only to reduce flicker, it doesn't matter if block_stacking_updates == 0,
-    // i.e. if it's not up to date
+    // Use stacking order only to reduce flicker, it doesn't matter if block_stacking_updates == 0,
+    // I.e. if it's not up to date
 
-    // SELI but maybe it should - what if a new client has been added that's not in stacking order yet?
+    // SELI TODO: But maybe it should - what if a new client has been added that's not in stacking order yet?
     ClientList to_show, to_hide;
     for( ClientList::ConstIterator it = stacking_order.constBegin();
-         it != stacking_order.constEnd();
-         ++it )
+        it != stacking_order.constEnd();
+        ++it )
         {
-        if( (*it)->isUtility() || (*it)->isMenu() || (*it)->isToolbar())
+        if( (*it)->isUtility() || (*it)->isMenu() || (*it)->isToolbar() )
             {
             bool show = true;
-            if( !(*it)->isTransient())
+            if( !(*it)->isTransient() )
                 {
-                if( (*it)->group()->members().count() == 1 ) // has its own group, keep always visible
+                if( (*it)->group()->members().count() == 1 ) // Has its own group, keep always visible
                     show = true;
-                else if( client != NULL && (*it)->group() == client->group())
+                else if( client != NULL && (*it)->group() == client->group() )
                     show = true;
                 else
                     show = false;
@@ -905,15 +906,15 @@ void Workspace::updateToolWindows( bool also_hide )
             if( !show && also_hide )
                 {
                 const ClientList mainclients = (*it)->mainClients();
-                // don't hide utility windows which are standalone(?) or
+                // Don't hide utility windows which are standalone(?) or
                 // have e.g. kicker as mainwindow
                 if( mainclients.isEmpty())
                     show = true;
                 for( ClientList::ConstIterator it2 = mainclients.constBegin();
-                     it2 != mainclients.constEnd();
-                     ++it2 )
+                    it2 != mainclients.constEnd();
+                    ++it2 )
                     {
-                    if( (*it2)->isSpecialWindow())
+                    if( (*it2)->isSpecialWindow() )
                         show = true;
                     }
                 if( !show )
@@ -922,24 +923,23 @@ void Workspace::updateToolWindows( bool also_hide )
             if( show )
                 to_show.append( *it );
             }
-        } // first show new ones, then hide
-	for( int i = to_show.size() - 1;
-              i >= 0;
-              --i ) //from topmost
-        // TODO since this is in stacking order, the order of taskbar entries changes :(
-            to_show.at( i )->hideClient( false );
+        } // First show new ones, then hide
+    for( int i = to_show.size() - 1;
+        i >= 0;
+        --i ) // From topmost
+        // TODO: Since this is in stacking order, the order of taskbar entries changes :(
+        to_show.at( i )->hideClient( false );
     if( also_hide )
         {
         for( ClientList::ConstIterator it = to_hide.constBegin();
-             it != to_hide.constEnd();
-             ++it ) // from bottommost
+            it != to_hide.constEnd();
+            ++it ) // From bottommost
             (*it)->hideClient( true );
         updateToolWindowsTimer.stop();
         }
     else // setActiveClient() is after called with NULL client, quickly followed
-        {    // by setting a new client, which would result in flickering
+         // by setting a new client, which would result in flickering
         updateToolWindowsTimer.start( 50 );
-        }
     }
 
 void Workspace::slotUpdateToolWindows()
@@ -947,59 +947,61 @@ void Workspace::slotUpdateToolWindows()
     updateToolWindows( true );
     }
 
-/*!
-  Updates the current colormap according to the currently active client
+/**
+ * Updates the current colormap according to the currently active client
  */
 void Workspace::updateColormap()
     {
     Colormap cmap = default_colormap;
-    if ( activeClient() && activeClient()->colormap() != None )
+    if( activeClient() && activeClient()->colormap() != None )
         cmap = activeClient()->colormap();
-    if ( cmap != installed_colormap )
+    if( cmap != installed_colormap )
         {
-        XInstallColormap(display(), cmap );
+        XInstallColormap( display(), cmap );
         installed_colormap = cmap;
         }
     }
 
 void Workspace::slotReloadConfig()
-{
-  reconfigure();
-}
+    {
+    reconfigure();
+    }
 
 void Workspace::reconfigure()
     {
     reconfigureTimer.start( 200 );
     }
 
-// This DBUS call is used by the compositing kcm. Since the reconfigure()
-// DBUS call delays the actual reconfiguring, it is not possible to immediately
-// call compositingActive(). Therefore the kcm will instead call this to ensure
-// the reconfiguring has already happened.
+/**
+ * This D-Bus call is used by the compositing kcm. Since the reconfigure()
+ * D-Bus call delays the actual reconfiguring, it is not possible to immediately
+ * call compositingActive(). Therefore the kcm will instead call this to ensure
+ * the reconfiguring has already happened.
+ */
 bool Workspace::waitForCompositingSetup()
     {
-    if( !reconfigureTimer.isActive())
+    if( !reconfigureTimer.isActive() )
         return false;
     reconfigureTimer.stop();
     slotReconfigure();
     return compositingActive();
     }
 
-void Workspace::slotSettingsChanged(int category)
+void Workspace::slotSettingsChanged( int category )
     {
-    kDebug(1212) << "Workspace::slotSettingsChanged()";
+    kDebug( 1212 ) << "Workspace::slotSettingsChanged()";
     if( category == KGlobalSettings::SETTINGS_SHORTCUTS )
         readShortcuts();
     }
 
-/*!
-  Reread settings
+/**
+ * Reread settings
  */
-KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes( true ) );
+KWIN_PROCEDURE( CheckBorderSizesProcedure, Client, cl->checkBorderSizes( true ));
 
 void Workspace::slotReconfigure()
     {
-    kDebug(1212) << "Workspace::slotReconfigure()";
+    kDebug( 1212 ) << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
 
     if( options->electricBorders() == Options::ElectricAlways )
@@ -1016,24 +1018,23 @@ void Workspace::slotReconfigure()
     updateToolWindows( true );
 
     if( mgr->reset( changed ))
-        { // decorations need to be recreated
-#if 0 // This actually seems to make things worse now
-        QWidget curtain;
-        curtain.setBackgroundMode( NoBackground );
-        curtain.setGeometry( Kephal::ScreenUtils::desktopGeometry() );
-        curtain.show();
-#endif
+        { // Decorations need to be recreated
+
+        // This actually seems to make things worse now
+        //QWidget curtain;
+        //curtain.setBackgroundMode( NoBackground );
+        //curtain.setGeometry( Kephal::ScreenUtils::desktopGeometry() );
+        //curtain.show();
+
         for( ClientList::ConstIterator it = clients.constBegin();
-                it != clients.constEnd();
-                ++it )
-            {
+            it != clients.constEnd();
+            ++it )
             (*it)->updateDecoration( true, true );
-            }
         mgr->destroyPreviousPlugin();
         }
     else
         {
-        forEachClient( CheckBorderSizesProcedure());
+        forEachClient( CheckBorderSizesProcedure() );
         foreach( Client* c, clients )
             c->repaintDecoration();
         }
@@ -1042,39 +1043,39 @@ void Workspace::slotReconfigure()
         reserveElectricBorderSwitching( true );
     updateElectricBorders();
 
-    if( options->topMenuEnabled() && !managingTopMenus())
+    if( options->topMenuEnabled() && !managingTopMenus() )
         {
         if( topmenu_selection->claim( false ))
             setupTopMenuHandling();
         else
             lostTopMenuSelection();
         }
-    else if( !options->topMenuEnabled() && managingTopMenus())
+    else if( !options->topMenuEnabled() && managingTopMenus() )
         {
         topmenu_selection->release();
         lostTopMenuSelection();
         }
-    topmenu_height = 0; // invalidate used menu height
-    if( managingTopMenus())
+    topmenu_height = 0; // Invalidate used menu height
+    if( managingTopMenus() )
         {
         updateTopMenuGeometry();
         updateCurrentTopMenu();
         }
 
     if( options->useCompositing && !compositingSuspended )
-    {
+        {
         setupCompositing();
         if( effects ) // setupCompositing() may fail
             effects->reconfigure();
         addRepaintFull();
-    }
+        }
     else
         finishCompositing();
 
     loadWindowRules();
     for( ClientList::Iterator it = clients.begin();
-         it != clients.end();
-         ++it )
+        it != clients.end();
+        ++it )
         {
         (*it)->setupWindowRules( true );
         (*it)->applyWindowRules();
@@ -1091,9 +1092,8 @@ void Workspace::slotReinitCompositing()
     // Update any settings that can be set in the compositing kcm.
     updateElectricBorders();
 
-    // Stop any current compositing
+    // Restart compositing
     finishCompositing();
-    // And start new one
     setupCompositing();
     if( effects ) // setupCompositing() may fail
         effects->reconfigure();
@@ -1103,25 +1103,24 @@ void Workspace::loadDesktopSettings()
     {
     KSharedConfig::Ptr c = KGlobal::config();
     QString groupname;
-    if (screen_number == 0)
+    if( screen_number == 0 )
         groupname = "Desktops";
     else
-        groupname.sprintf("Desktops-screen-%d", screen_number);
-    KConfigGroup group(c,groupname);
+        groupname.sprintf( "Desktops-screen-%d", screen_number );
+    KConfigGroup group( c, groupname );
 
-    int n = group.readEntry("Number", 4);
+    int n = group.readEntry( "Number", 4 );
     number_of_desktops = n;
     workarea.clear();
     workarea.resize( n + 1 );
     screenarea.clear();
     rootInfo->setNumberOfDesktops( number_of_desktops );
     desktop_focus_chain.resize( n );
-    // make it +1, so that it can be accessed as [1..numberofdesktops]
+    // Make it +1, so that it can be accessed as [1..numberofdesktops]
     focus_chain.resize( n + 1 );
-    for(int i = 1; i <= n; i++)
+    for( int i = 1; i <= n; i++ )
         {
-        QString s = group.readEntry(QString("Name_%1").arg(i),
-                                i18n("Desktop %1", i));
+        QString s = group.readEntry( QString( "Name_%1" ).arg( i ), i18n( "Desktop %1", i ));
         rootInfo->setDesktopName( i, s.toUtf8().data() );
         desktop_focus_chain[i-1] = i;
         }
@@ -1134,29 +1133,29 @@ void Workspace::saveDesktopSettings()
     if (screen_number == 0)
         groupname = "Desktops";
     else
-        groupname.sprintf("Desktops-screen-%d", screen_number);
-    KConfigGroup group(c,groupname);
+        groupname.sprintf( "Desktops-screen-%d", screen_number );
+    KConfigGroup group( c, groupname );
 
-   	group.writeEntry("Number", number_of_desktops );
-    for(int i = 1; i <= number_of_desktops; i++)
+    group.writeEntry( "Number", number_of_desktops );
+    for( int i = 1; i <= number_of_desktops; i++ )
         {
         QString s = desktopName( i );
-        QString defaultvalue = i18n("Desktop %1", i);
-        if ( s.isEmpty() )
+        QString defaultvalue = i18n( "Desktop %1", i );
+        if( s.isEmpty() )
             {
             s = defaultvalue;
             rootInfo->setDesktopName( i, s.toUtf8().data() );
             }
 
-        if (s != defaultvalue)
+        if( s != defaultvalue )
             {
-            group.writeEntry( QString("Name_%1").arg(i), s );
+            group.writeEntry( QString( "Name_%1" ).arg( i ), s );
             }
         else
             {
-            QString currentvalue = group.readEntry(QString("Name_%1").arg(i), QString());
-            if (currentvalue != defaultvalue)
-                group.writeEntry( QString("Name_%1").arg(i), "" );
+            QString currentvalue = group.readEntry( QString( "Name_%1" ).arg( i ), QString() );
+            if( currentvalue != defaultvalue )
+                group.writeEntry( QString( "Name_%1" ).arg( i ), "" );
             }
         }
 
@@ -1164,42 +1163,42 @@ void Workspace::saveDesktopSettings()
     group.sync();
     }
 
-QStringList Workspace::configModules(bool controlCenter)
+QStringList Workspace::configModules( bool controlCenter )
     {
     QStringList args;
     args <<  "kwindecoration";
-    if (controlCenter)
+    if( controlCenter )
         args << "kwinoptions";
-    else if (KAuthorized::authorizeControlModule("kde-kwinoptions.desktop"))
-        args  << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced" << "kwinrules" << "kwincompositing";
+    else if( KAuthorized::authorizeControlModule( "kde-kwinoptions.desktop" ))
+        args << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced"
+             << "kwinrules" << "kwincompositing";
     return args;
     }
 
 void Workspace::configureWM()
     {
-        QStringList args;
-        args << "--icon" << "preferences-system-windows"
-             << configModules(false) ;
-        KToolInvocation::kdeinitExec( "kcmshell4", args );
+    QStringList args;
+    args << "--icon" << "preferences-system-windows" << configModules( false );
+    KToolInvocation::kdeinitExec( "kcmshell4", args );
     }
 
-/*!
-  avoids managing a window with title \a title
+/**
+ * Avoids managing a window with title \a title
  */
-void Workspace::doNotManage( const QString &title )
+void Workspace::doNotManage( const QString& title )
     {
     doNotManageList.append( title );
     }
 
-/*!
-  Hack for java applets
+/**
+ * Hack for java applets
  */
 bool Workspace::isNotManaged( const QString& title )
     {
-    for ( QStringList::Iterator it = doNotManageList.begin(); it != doNotManageList.end(); ++it )
+    for( QStringList::Iterator it = doNotManageList.begin(); it != doNotManageList.end(); ++it )
         {
         QRegExp r( (*it) );
-        if (r.indexIn(title) != -1)
+        if( r.indexIn(title) != -1 )
             {
             doNotManageList.erase( it );
             return true;
@@ -1208,8 +1207,8 @@ bool Workspace::isNotManaged( const QString& title )
     return false;
     }
 
-/*!
-  Refreshes all the client windows
+/**
+ * Refreshes all the client windows
  */
 void Workspace::refresh()
     {
@@ -1220,13 +1219,13 @@ void Workspace::refresh()
     QApplication::flush();
     }
 
-/*!
-  During virt. desktop switching, desktop areas covered by windows that are
-  going to be hidden are first obscured by new windows with no background
-  ( i.e. transparent ) placed right below the windows. These invisible windows
-  are removed after the switch is complete.
-  Reduces desktop ( wallpaper ) repaints during desktop switching
-*/
+/**
+ * During virt. desktop switching, desktop areas covered by windows that are
+ * going to be hidden are first obscured by new windows with no background
+ * ( i.e. transparent ) placed right below the windows. These invisible windows
+ * are removed after the switch is complete.
+ * Reduces desktop ( wallpaper ) repaints during desktop switching
+ */
 class ObscuringWindows
     {
     public:
@@ -1243,8 +1242,8 @@ unsigned int ObscuringWindows::max_cache_size = 0;
 
 void ObscuringWindows::create( Client* c )
     {
-    if( compositing()) // not needed with compositing
-        return;
+    if( compositing() )
+        return; // Not needed with compositing
     if( cached == 0 )
         cached = new QList<Window>;
     Window obs_win;
@@ -1252,7 +1251,7 @@ void ObscuringWindows::create( Client* c )
     int mask = CWSibling | CWStackMode;
     if( cached->count() > 0 )
         {
-        cached->removeAll( obs_win = cached->first());
+        cached->removeAll( obs_win = cached->first() );
         chngs.x = c->x();
         chngs.y = c->y();
         chngs.width = c->width();
@@ -1277,109 +1276,103 @@ void ObscuringWindows::create( Client* c )
 
 ObscuringWindows::~ObscuringWindows()
     {
-    max_cache_size = qMax( ( int )max_cache_size, obscuring_windows.count() + 4 ) - 1;
+    max_cache_size = qMax( int( max_cache_size ), obscuring_windows.count() + 4 ) - 1;
     for( QList<Window>::ConstIterator it = obscuring_windows.constBegin();
-         it != obscuring_windows.constEnd();
-         ++it )
+        it != obscuring_windows.constEnd();
+        ++it )
         {
         XUnmapWindow( display(), *it );
-        if( cached->count() < ( int )max_cache_size )
+        if( cached->count() < int( max_cache_size ))
             cached->prepend( *it );
         else
             XDestroyWindow( display(), *it );
         }
     }
 
-
-/*!
-  Sets the current desktop to \a new_desktop
-
-  Shows/Hides windows according to the stacking order and finally
-  propages the new desktop to the world
+/**
+ * Sets the current desktop to \a new_desktop
+ *
+ * Shows/Hides windows according to the stacking order and finally
+ * propages the new desktop to the world
  */
 bool Workspace::setCurrentDesktop( int new_desktop )
     {
-    if (new_desktop < 1 || new_desktop > number_of_desktops )
+    if( new_desktop < 1 || new_desktop > number_of_desktops )
         return false;
 
     closeActivePopup();
     ++block_focus;
-// TODO    Q_ASSERT( block_stacking_updates == 0 ); // make sure stacking_order is up to date
+    // TODO: Q_ASSERT( block_stacking_updates == 0 ); // Make sure stacking_order is up to date
     StackingUpdatesBlocker blocker( this );
 
     int old_desktop = current_desktop;
-    if (new_desktop != current_desktop)
+    if (new_desktop != current_desktop )
         {
         ++block_showing_desktop;
-        /*
-          optimized Desktop switching: unmapping done from back to front
-          mapping done from front to back => less exposure events
-        */
+        // Optimized Desktop switching: unmapping done from back to front
+        // mapping done from front to back => less exposure events
         Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
 
         ObscuringWindows obs_wins;
 
-        current_desktop = new_desktop; // change the desktop (so that Client::updateVisibility() works)
+        current_desktop = new_desktop; // Change the desktop (so that Client::updateVisibility() works)
 
-        for ( ClientList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it)
-            if ( !(*it)->isOnDesktop( new_desktop ) && (*it) != movingClient )
+        for( ClientList::ConstIterator it = stacking_order.constBegin();
+            it != stacking_order.constEnd();
+            ++it )
+            if( !(*it)->isOnDesktop( new_desktop ) && (*it) != movingClient )
                 {
                 if( (*it)->isShown( true ) && (*it)->isOnDesktop( old_desktop ))
                     obs_wins.create( *it );
                 (*it)->updateVisibility();
                 }
 
-        rootInfo->setCurrentDesktop( current_desktop ); // now propagate the change, after hiding, before showing
+        // Now propagate the change, after hiding, before showing
+        rootInfo->setCurrentDesktop( current_desktop );
 
         if( movingClient && !movingClient->isOnDesktop( new_desktop ))
             movingClient->setDesktop( new_desktop );
 
         for( int i = stacking_order.size() - 1; i >= 0 ; --i )
-            if ( stacking_order.at( i )->isOnDesktop( new_desktop ) )
+            if( stacking_order.at( i )->isOnDesktop( new_desktop ))
                 stacking_order.at( i )->updateVisibility();
 
         --block_showing_desktop;
-        if( showingDesktop()) // do this only after desktop change to avoid flicker
+        if( showingDesktop() ) // Do this only after desktop change to avoid flicker
             resetShowingDesktop( false );
         }
 
-    // restore the focus on this desktop
+    // Restore the focus on this desktop
     --block_focus;
     Client* c = 0;
 
-    if ( options->focusPolicyIsReasonable())
-        {
-        // Search in focus chain
-        if ( movingClient != NULL && active_client == movingClient
-            && focus_chain[currentDesktop()].contains( active_client )
-            && active_client->isShown( true ) && active_client->isOnCurrentDesktop())
-            {
-            c = active_client; // the requestFocus below will fail, as the client is already active
-            }
+    if( options->focusPolicyIsReasonable() )
+        { // Search in focus chain
+        if( movingClient != NULL && active_client == movingClient &&
+            focus_chain[currentDesktop()].contains( active_client ) &&
+            active_client->isShown( true ) && active_client->isOnCurrentDesktop())
+            c = active_client; // The requestFocus below will fail, as the client is already active
         if( !c )
             {
-            for( int i = focus_chain[ currentDesktop() ].size() - 1;
-                 i >= 0;
-                 --i )
+            for( int i = focus_chain[currentDesktop()].size() - 1; i >= 0; --i )
                 {
-                if( focus_chain[ currentDesktop() ].at( i )->isShown( false )
-                    && focus_chain[ currentDesktop() ].at( i )->isOnCurrentDesktop())
+                if( focus_chain[currentDesktop()].at( i )->isShown( false ) &&
+                    focus_chain[currentDesktop()].at( i )->isOnCurrentDesktop() )
                     {
-                    c = focus_chain[ currentDesktop() ].at(  i );
+                    c = focus_chain[currentDesktop()].at( i );
                     break;
                     }
                 }
             }
         }
+    // If "unreasonable focus policy" and active_client is on_all_desktops and
+    // under mouse (Hence == old_active_client), conserve focus.
+    // (Thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
+    else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop() )
+        c = active_client;
 
-    //if "unreasonable focus policy"
-    // and active_client is on_all_desktops and under mouse (hence == old_active_client),
-    // conserve focus (thanks to Volker Schatz <V.Schatz at thphys.uni-heidelberg.de>)
-    else if( active_client && active_client->isShown( true ) && active_client->isOnCurrentDesktop())
-      c = active_client;
-
-    if( c == NULL && !desktops.isEmpty())
-        c = findDesktop( true, currentDesktop());
+    if( c == NULL && !desktops.isEmpty() )
+        c = findDesktop( true, currentDesktop() );
 
     if( c != active_client )
         setActiveClient( NULL, Allowed );
@@ -1387,7 +1380,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     if ( c )
         requestFocus( c );
     else if( !desktops.isEmpty() )
-        requestFocus( findDesktop( true, currentDesktop()));
+        requestFocus( findDesktop( true, currentDesktop() ));
     else
         focusToNull();
 
@@ -1396,40 +1389,44 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     // Update focus chain:
     //  If input: chain = { 1, 2, 3, 4 } and currentDesktop() = 3,
     //   Output: chain = { 3, 1, 2, 4 }.
-//    kDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
-//      .arg(currentDesktop()).arg(desktop_focus_chain.find( currentDesktop() ));
+    //kDebug(1212) << QString("Switching to desktop #%1, at focus_chain index %2\n")
+    //    .arg(currentDesktop()).arg(desktop_focus_chain.find( currentDesktop() ));
     for( int i = desktop_focus_chain.indexOf( currentDesktop() ); i > 0; i-- )
         desktop_focus_chain[i] = desktop_focus_chain[i-1];
     desktop_focus_chain[0] = currentDesktop();
 
-//    QString s = "desktop_focus_chain[] = { ";
-//    for( uint i = 0; i < desktop_focus_chain.size(); i++ )
-//        s += QString::number(desktop_focus_chain[i]) + ", ";
-//    kDebug(1212) << s << "}\n";
+    //QString s = "desktop_focus_chain[] = { ";
+    //for( uint i = 0; i < desktop_focus_chain.size(); i++ )
+    //    s += QString::number( desktop_focus_chain[i] ) + ", ";
+    //kDebug( 1212 ) << s << "}\n";
 
-    if( old_desktop != 0 )  // not for the very first time
-        popupinfo->showInfo( desktopName(currentDesktop()) );
+    if( old_desktop != 0 )  // Not for the very first time
+        popupinfo->showInfo( desktopName( currentDesktop() ));
 
     if( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
-        static_cast<EffectsHandlerImpl*>(effects)->desktopChanged( old_desktop );
+        static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
     if( compositing())
         addRepaintFull();
 
     return true;
     }
 
-// called only from DCOP
+/**
+ * Called only from D-Bus
+ */
 void Workspace::nextDesktop()
     {
     int desktop = currentDesktop() + 1;
-    setCurrentDesktop(desktop > numberOfDesktops() ? 1 : desktop);
+    setCurrentDesktop( desktop > numberOfDesktops() ? 1 : desktop );
     }
 
-// called only from DCOP
+/**
+ * Called only from D-Bus
+ */
 void Workspace::previousDesktop()
     {
     int desktop = currentDesktop() - 1;
-    setCurrentDesktop(desktop > 0 ? desktop : numberOfDesktops());
+    setCurrentDesktop( desktop > 0 ? desktop : numberOfDesktops() );
     }
 
 int Workspace::desktopToRight( int desktop, bool wrap ) const
@@ -1437,31 +1434,31 @@ int Workspace::desktopToRight( int desktop, bool wrap ) const
     int x,y;
     Qt::Orientation orientation;
     calcDesktopLayout( &x, &y, &orientation );
-    int dt = desktop-1;
-    if (orientation == Qt::Vertical)
+    int dt = desktop - 1;
+    if( orientation == Qt::Vertical )
         {
         dt += y;
-        if ( dt >= numberOfDesktops() )
+        if( dt >= numberOfDesktops() )
             {
-            if ( wrap )
-              dt -= numberOfDesktops();
+            if( wrap )
+                dt -= numberOfDesktops();
             else
-              return desktop;
+                return desktop;
             }
         }
     else
         {
-        int d = (dt % x) + 1;
-        if ( d >= x )
+        int d = ( dt % x ) + 1;
+        if( d >= x )
             {
-            if ( wrap )
-              d -= x;
+            if( wrap )
+                d -= x;
             else
-              return desktop;
+                return desktop;
             }
-        dt = dt - (dt % x) + d;
+        dt = dt - ( dt % x ) + d;
         }
-    return dt+1;
+    return dt + 1;
     }
 
 int Workspace::desktopToLeft( int desktop, bool wrap ) const
@@ -1469,31 +1466,31 @@ int Workspace::desktopToLeft( int desktop, bool wrap ) const
     int x,y;
     Qt::Orientation orientation;
     calcDesktopLayout( &x, &y, &orientation );
-    int dt = desktop-1;
-    if (orientation == Qt::Vertical)
+    int dt = desktop - 1;
+    if( orientation == Qt::Vertical )
         {
         dt -= y;
-        if ( dt < 0 )
+        if( dt < 0 )
             {
-            if ( wrap )
-              dt += numberOfDesktops();
+            if( wrap )
+                dt += numberOfDesktops();
             else
-              return desktop;
+                return desktop;
             }
         }
     else
         {
-        int d = (dt % x) - 1;
-        if ( d < 0 )
+        int d = ( dt % x ) - 1;
+        if( d < 0 )
             {
-            if ( wrap )
-              d += x;
+            if( wrap )
+                d += x;
             else
-              return desktop;
+                return desktop;
             }
-        dt = dt - (dt % x) + d;
+        dt = dt - ( dt % x ) + d;
         }
-    return dt+1;
+    return dt + 1;
     }
 
 int Workspace::desktopUp( int desktop, bool wrap ) const
@@ -1501,31 +1498,31 @@ int Workspace::desktopUp( int desktop, bool wrap ) const
     int x,y;
     Qt::Orientation orientation;
     calcDesktopLayout( &x, &y, &orientation);
-    int dt = desktop-1;
-    if (orientation == Qt::Horizontal)
+    int dt = desktop - 1;
+    if( orientation == Qt::Horizontal )
         {
         dt -= x;
-        if ( dt < 0 )
+        if( dt < 0 )
             {
-            if ( wrap )
-              dt += numberOfDesktops();
+            if( wrap )
+                dt += numberOfDesktops();
             else
-              return desktop;
+                return desktop;
             }
         }
     else
         {
-        int d = (dt % y) - 1;
-        if ( d < 0 )
+        int d = ( dt % y ) - 1;
+        if( d < 0 )
             {
-            if ( wrap )
-              d += y;
+            if( wrap )
+                d += y;
             else
-              return desktop;
+                return desktop;
             }
-        dt = dt - (dt % y) + d;
+        dt = dt - ( dt % y ) + d;
         }
-    return dt+1;
+    return dt + 1;
     }
 
 int Workspace::desktopDown( int desktop, bool wrap ) const
@@ -1533,75 +1530,72 @@ int Workspace::desktopDown( int desktop, bool wrap ) const
     int x,y;
     Qt::Orientation orientation;
     calcDesktopLayout( &x, &y, &orientation);
-    int dt = desktop-1;
-    if (orientation == Qt::Horizontal)
+    int dt = desktop - 1;
+    if( orientation == Qt::Horizontal )
         {
         dt += x;
-        if ( dt >= numberOfDesktops() )
+        if( dt >= numberOfDesktops() )
             {
-            if ( wrap )
-              dt -= numberOfDesktops();
+            if( wrap )
+                dt -= numberOfDesktops();
             else
-              return desktop;
+                return desktop;
             }
         }
     else
         {
-        int d = (dt % y) + 1;
-        if ( d >= y )
+        int d = ( dt % y ) + 1;
+        if( d >= y )
             {
-            if ( wrap )
-              d -= y;
+            if( wrap )
+                d -= y;
             else
-              return desktop;
+                return desktop;
             }
-        dt = dt - (dt % y) + d;
+        dt = dt - ( dt % y ) + d;
         }
-    return dt+1;
+    return dt + 1;
     }
 
-
-/*!
-  Sets the number of virtual desktops to \a n
+/**
+ * Sets the number of virtual desktops to \a n
  */
 void Workspace::setNumberOfDesktops( int n )
     {
-    if ( n == number_of_desktops )
+    if( n == number_of_desktops )
         return;
     int old_number_of_desktops = number_of_desktops;
     number_of_desktops = n;
 
-    if( currentDesktop() > numberOfDesktops())
-        setCurrentDesktop( numberOfDesktops());
+    if( currentDesktop() > numberOfDesktops() )
+        setCurrentDesktop( numberOfDesktops() );
 
-    // if increasing the number, do the resizing now,
-    // otherwise after the moving of windows to still existing desktops
+    // If increasing the number, do the resizing now, otherwise
+    // after the moving of windows to still existing desktops
     if( old_number_of_desktops < number_of_desktops )
         {
         rootInfo->setNumberOfDesktops( number_of_desktops );
-        NETPoint* viewports = new NETPoint[ number_of_desktops ];
+        NETPoint* viewports = new NETPoint[number_of_desktops];
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
         updateClientArea( true );
         focus_chain.resize( number_of_desktops + 1 );
         }
 
-    // if the number of desktops decreased, move all
-    // windows that would be hidden to the last visible desktop
+    // If the number of desktops decreased, move all windows
+    // that would be hidden to the last visible desktop
     if( old_number_of_desktops > number_of_desktops )
         {
         for( ClientList::ConstIterator it = clients.constBegin();
-              it != clients.constEnd();
-              ++it)
-            {
-            if( !(*it)->isOnAllDesktops() && (*it)->desktop() > numberOfDesktops())
+            it != clients.constEnd();
+            ++it)
+            if( !(*it)->isOnAllDesktops() && (*it)->desktop() > numberOfDesktops() )
                 sendClientToDesktop( *it, numberOfDesktops(), true );
-            }
         }
     if( old_number_of_desktops > number_of_desktops )
         {
         rootInfo->setNumberOfDesktops( number_of_desktops );
-        NETPoint* viewports = new NETPoint[ number_of_desktops ];
+        NETPoint* viewports = new NETPoint[number_of_desktops];
         rootInfo->setDesktopViewport( number_of_desktops, *viewports );
         delete[] viewports;
         updateClientArea( true );
@@ -1612,41 +1606,39 @@ void Workspace::setNumberOfDesktops( int n )
 
     // Resize and reset the desktop focus chain.
     desktop_focus_chain.resize( n );
-    for( int i = 0; i < (int)desktop_focus_chain.size(); i++ )
+    for( int i = 0; i < int( desktop_focus_chain.size() ); i++ )
         desktop_focus_chain[i] = i+1;
     }
 
-/*!
-  Sends client \a c to desktop \a desk.
-
-  Takes care of transients as well.
+/**
+ * Sends client \a c to desktop \a desk.
+ *
+ * Takes care of transients as well.
  */
 void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     {
     bool was_on_desktop = c->isOnDesktop( desk ) || c->isOnAllDesktops();
     c->setDesktop( desk );
-    if ( c->desktop() != desk ) // no change or desktop forced
+    if( c->desktop() != desk ) // No change or desktop forced
         return;
     desk = c->desktop(); // Client did range checking
 
-    if ( c->isOnDesktop( currentDesktop() ) )
+    if( c->isOnDesktop( currentDesktop() ))
         {
-        if ( c->wantsTabFocus() && options->focusPolicyIsReasonable()
-            && !was_on_desktop // for stickyness changes
-            && !dont_activate )
+        if( c->wantsTabFocus() && options->focusPolicyIsReasonable() &&
+            !was_on_desktop && // for stickyness changes
+            !dont_activate )
             requestFocus( c );
         else
             restackClientUnderActive( c );
         }
     else
-        {
         raiseClient( c );
-        }
 
-    ClientList transients_stacking_order = ensureStackingOrder( c->transients());
+    ClientList transients_stacking_order = ensureStackingOrder( c->transients() );
     for( ClientList::ConstIterator it = transients_stacking_order.constBegin();
-         it != transients_stacking_order.constEnd();
-         ++it )
+        it != transients_stacking_order.constEnd();
+        ++it )
         sendClientToDesktop( *it, desk, dont_activate );
     updateClientArea();
     }
@@ -1671,8 +1663,10 @@ int Workspace::activeScreen() const
     return Kephal::ScreenUtils::screenId( cursorPos());
     }
 
-// check whether a client moved completely out of what's considered the active screen,
-// if yes, set a new active screen
+/**
+ * Check whether a client moved completely out of what's considered the active screen,
+ * if yes, set a new active screen.
+ */
 void Workspace::checkActiveScreen( const Client* c )
     {
     if( !options->xineramaEnabled )
@@ -1683,9 +1677,11 @@ void Workspace::checkActiveScreen( const Client* c )
         active_screen = c->screen();
     }
 
-// called e.g. when a user clicks on a window, set active screen to be the screen
-// where the click occurred
-void Workspace::setActiveScreenMouse( const QPoint &mousepos )
+/**
+ * Called e.g. when a user clicks on a window, set active screen to be the screen
+ * where the click occurred
+ */
+void Workspace::setActiveScreenMouse( const QPoint& mousepos )
     {
     if( !options->xineramaEnabled )
         return;
@@ -1699,7 +1695,7 @@ QRect Workspace::screenGeometry( int screen ) const
     return Kephal::ScreenUtils::screenGeometry( screen );
     }
 
-int Workspace::screenNumber( const QPoint &pos ) const
+int Workspace::screenNumber( const QPoint& pos ) const
     {
     if( !options->xineramaEnabled )
         return 0;
@@ -1708,46 +1704,46 @@ int Workspace::screenNumber( const QPoint &pos ) const
 
 void Workspace::sendClientToScreen( Client* c, int screen )
     {
-    if( c->screen() == screen ) // don't use isOnScreen(), that's true even when only partially
+    if( c->screen() == screen ) // Don't use isOnScreen(), that's true even when only partially
         return;
     GeometryUpdatesBlocker blocker( c );
     QRect old_sarea = clientArea( MaximizeArea, c );
-    QRect sarea = clientArea( MaximizeArea, screen, c->desktop());
+    QRect sarea = clientArea( MaximizeArea, screen, c->desktop() );
     c->setGeometry( sarea.x() - old_sarea.x() + c->x(), sarea.y() - old_sarea.y() + c->y(),
-        c->size().width(), c->size().height());
+        c->size().width(), c->size().height() );
     c->checkWorkspacePosition();
-    ClientList transients_stacking_order = ensureStackingOrder( c->transients());
+    ClientList transients_stacking_order = ensureStackingOrder( c->transients() );
     for( ClientList::ConstIterator it = transients_stacking_order.constBegin();
-         it != transients_stacking_order.constEnd();
-         ++it )
+        it != transients_stacking_order.constEnd();
+        ++it )
         sendClientToScreen( *it, screen );
-    if( c->isActive())
+    if( c->isActive() )
         active_screen = screen;
     }
 
 void Workspace::updateDesktopLayout()
     {
-    // rootInfo->desktopLayoutCorner(); // I don't find this worth bothering, feel free to
+    //rootInfo->desktopLayoutCorner(); // I don't find this worth bothering, feel free to
     layoutOrientation = ( rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal
         ? Qt::Horizontal : Qt::Vertical );
     layoutX = rootInfo->desktopLayoutColumnsRows().width();
     layoutY = rootInfo->desktopLayoutColumnsRows().height();
-    if( layoutX == 0 && layoutY == 0 ) // not given, set default layout
+    if( layoutX == 0 && layoutY == 0 ) // Not given, set default layout
         layoutY = 2;
     }
 
-void Workspace::calcDesktopLayout(int* xp, int* yp, Qt::Orientation* orientation) const
+void Workspace::calcDesktopLayout( int* xp, int* yp, Qt::Orientation* orientation ) const
     {
     int x = layoutX; // <= 0 means compute it from the other and total number of desktops
     int y = layoutY;
-    if((x <= 0) && (y > 0))
-       x = (numberOfDesktops()+y-1) / y;
-    else if((y <=0) && (x > 0))
-       y = (numberOfDesktops()+x-1) / x;
+    if(( x <= 0 ) && ( y > 0 ))
+       x = ( numberOfDesktops() + y - 1 ) / y;
+    else if(( y <= 0) && ( x > 0 ))
+       y = ( numberOfDesktops() + x - 1 ) / x;
 
-    if(x <=0)
+    if( x <= 0 )
        x = 1;
-    if (y <= 0)
+    if( y <= 0 )
        y = 1;
     *xp = x;
     *yp = y;
@@ -1760,27 +1756,26 @@ void Workspace::killWindowId( Window window_to_kill )
         return;
     Window window = window_to_kill;
     Client* client = NULL;
-    for(;;)
+    for( ;; )
         {
         client = findClient( FrameIdMatchPredicate( window ));
-        if( client != NULL ) // found the client
-            break;
+        if( client != NULL )
+            break; // Found the client
         Window parent, root;
         Window* children;
         unsigned int children_count;
         XQueryTree( display(), window, &root, &parent, &children, &children_count );
         if( children != NULL )
             XFree( children );
-        if( window == root ) // we didn't find the client, probably an override-redirect window
+        if( window == root ) // We didn't find the client, probably an override-redirect window
             break;
-        window = parent; // go up
+        window = parent; // Go up
         }
     if( client != NULL )
         client->killWindow();
     else
         XKillClient( display(), window_to_kill );
     }
-
 
 void Workspace::sendPingToWindow( Window window, Time timestamp )
     {
@@ -1793,85 +1788,83 @@ void Workspace::sendTakeActivity( Client* c, Time timestamp, long flags )
     pending_take_activity = c;
     }
 
-
-/*!
-  Takes a screenshot of the current window and puts it in the clipboard.
-*/
+/**
+ * Takes a screenshot of the current window and puts it in the clipboard.
+ */
 void Workspace::slotGrabWindow()
     {
     if ( active_client )
         {
         QPixmap snapshot = QPixmap::grabWindow( active_client->frameId() );
 
-	//No XShape - no work.
-        if( Extensions::shapeAvailable())
+        // No XShape - no work.
+        if( Extensions::shapeAvailable() )
             {
-	    //As the first step, get the mask from XShape.
+            // As the first step, get the mask from XShape.
             int count, order;
             XRectangle* rects = XShapeGetRectangles( display(), active_client->frameId(),
-                                                     ShapeBounding, &count, &order);
-	    //The ShapeBounding region is the outermost shape of the window;
-	    //ShapeBounding - ShapeClipping is defined to be the border.
-	    //Since the border area is part of the window, we use bounding
-	    // to limit our work region
-            if (rects)
+                ShapeBounding, &count, &order);
+            // The ShapeBounding region is the outermost shape of the window;
+            // ShapeBounding - ShapeClipping is defined to be the border.
+            // Since the border area is part of the window, we use bounding
+            // to limit our work region
+            if( rects )
                 {
-		//Create a QRegion from the rectangles describing the bounding mask.
+                // Create a QRegion from the rectangles describing the bounding mask.
                 QRegion contents;
-                for (int pos = 0; pos < count; pos++)
-                    contents += QRegion(rects[pos].x, rects[pos].y,
-                                        rects[pos].width, rects[pos].height);
-                XFree(rects);
+                for( int pos = 0; pos < count; pos++ )
+                    contents += QRegion( rects[pos].x, rects[pos].y,
+                        rects[pos].width, rects[pos].height);
+                XFree( rects );
 
-		//Create the bounding box.
-                QRegion bbox(0, 0, snapshot.width(), snapshot.height());
+                // Create the bounding box.
+                QRegion bbox( 0, 0, snapshot.width(), snapshot.height() );
 
-		//Get the masked away area.
+                // Get the masked away area.
                 QRegion maskedAway = bbox - contents;
                 QVector<QRect> maskedAwayRects = maskedAway.rects();
 
-		//Construct a bitmap mask from the rectangles
-                QBitmap mask( snapshot.width(), snapshot.height());
-                QPainter p(&mask);
-                p.fillRect(0, 0, mask.width(), mask.height(), Qt::color1);
-                for (int pos = 0; pos < maskedAwayRects.count(); pos++)
-                    p.fillRect(maskedAwayRects[pos], Qt::color0);
+                // Construct a bitmap mask from the rectangles
+                QBitmap mask( snapshot.width(), snapshot.height() );
+                QPainter p( &mask );
+                p.fillRect( 0, 0, mask.width(), mask.height(), Qt::color1 );
+                for( int pos = 0; pos < maskedAwayRects.count(); pos++ )
+                    p.fillRect( maskedAwayRects[pos], Qt::color0 );
                 p.end();
-                snapshot.setMask(mask);
+                snapshot.setMask( mask );
                 }
             }
 
-        QClipboard *cb = QApplication::clipboard();
+        QClipboard* cb = QApplication::clipboard();
         cb->setPixmap( snapshot );
         }
     else
         slotGrabDesktop();
     }
 
-/*!
-  Takes a screenshot of the whole desktop and puts it in the clipboard.
-*/
+/**
+ * Takes a screenshot of the whole desktop and puts it in the clipboard.
+ */
 void Workspace::slotGrabDesktop()
     {
     QPixmap p = QPixmap::grabWindow( rootWindow() );
-    QClipboard *cb = QApplication::clipboard();
+    QClipboard* cb = QApplication::clipboard();
     cb->setPixmap( p );
     }
 
-
-/*!
-  Invokes keyboard mouse emulation
+/**
+ * Invokes keyboard mouse emulation
  */
 void Workspace::slotMouseEmulation()
     {
-    if ( mouse_emulation )
+    if( mouse_emulation )
         {
         ungrabXKeyboard();
         mouse_emulation = false;
         return;
         }
 
-    if( grabXKeyboard())
+    if( grabXKeyboard() )
         {
         mouse_emulation = true;
         mouse_emulation_state = 0;
@@ -1879,11 +1872,11 @@ void Workspace::slotMouseEmulation()
         }
     }
 
-/*!
-  Returns the child window under the mouse and activates the
-  respective client if necessary.
-
-  Auxiliary function for the mouse emulation system.
+/**
+ * Returns the child window under the mouse and activates the
+ * respective client if necessary.
+ *
+ * Auxiliary function for the mouse emulation system.
  */
 WId Workspace::getMouseEmulationWindow()
     {
@@ -1896,32 +1889,32 @@ WId Workspace::getMouseEmulationWindow()
     do
         {
         w = child;
-        if (!c)
+        if( !c )
             c = findClient( FrameIdMatchPredicate( w ));
-        XQueryPointer( display(), w, &root, &child,
-                       &root_x, &root_y, &lx, &ly, &state );
-        } while  ( child != None && child != w );
+        XQueryPointer( display(), w, &root, &child, &root_x, &root_y, &lx, &ly, &state );
+        } while ( child != None && child != w );
 
-    if ( c && !c->isActive() )
+    if( c && !c->isActive() )
         activateClient( c );
-    return (WId) w;
+    return WId( w );
     }
 
-/*!
-  Sends a faked mouse event to the specified window. Returns the new button state.
+/**
+ * Sends a faked mouse event to the specified window. Returns the new button state.
  */
-unsigned int Workspace::sendFakedMouseEvent( const QPoint &pos, WId w, MouseEmulation type, int button, unsigned int state )
+unsigned int Workspace::sendFakedMouseEvent( const QPoint& pos, WId w, MouseEmulation type,
+    int button, unsigned int state )
     {
     if ( !w )
         return state;
     QWidget* widget = QWidget::find( w );
-    if ( (!widget ||  qobject_cast<QToolButton*>(widget)) && !findClient( WindowMatchPredicate( w )) )
+    if(( !widget ||  qobject_cast<QToolButton*>( widget )) && !findClient( WindowMatchPredicate( w )))
         {
         int x, y;
         Window xw;
         XTranslateCoordinates( display(), rootWindow(), w, pos.x(), pos.y(), &x, &y, &xw );
-        if ( type == EmuMove )
-            { // motion notify events
+        if( type == EmuMove )
+            { // Motion notify events
             XEvent e;
             e.type = MotionNotify;
             e.xmotion.window = w;
@@ -1952,9 +1945,9 @@ unsigned int Workspace::sendFakedMouseEvent( const QPoint &pos, WId w, MouseEmul
             e.xbutton.button = button;
             XSendEvent( display(), w, true, ButtonPressMask, &e );
 
-            if ( type == EmuPress )
+            if( type == EmuPress )
                 {
-                switch ( button )
+                switch( button )
                     {
                     case 2:
                         state |= Button2Mask;
@@ -1969,7 +1962,7 @@ unsigned int Workspace::sendFakedMouseEvent( const QPoint &pos, WId w, MouseEmul
                 }
             else
                 {
-                switch ( button )
+                switch( button )
                     {
                     case 2:
                         state &= ~Button2Mask;
@@ -1984,24 +1977,25 @@ unsigned int Workspace::sendFakedMouseEvent( const QPoint &pos, WId w, MouseEmul
                 }
             }
         }
+
     return state;
     }
 
-/*!
-  Handles keypress event during mouse emulation
+/**
+ * Handles keypress event during mouse emulation
  */
 bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
     {
-    int kc = XKeycodeToKeysym(display(), ev.keycode, 0);
-    int km = ev.state & (ControlMask | Mod1Mask | ShiftMask);
+    int kc = XKeycodeToKeysym( display(), ev.keycode, 0 );
+    int km = ev.state & ( ControlMask | Mod1Mask | ShiftMask );
 
     bool is_control = km & ControlMask;
     bool is_alt = km & Mod1Mask;
     bool is_shift = km & ShiftMask;
-    int delta = is_control?1:is_alt?32:8;
+    int delta = is_control ? 1 : ( is_alt ? 32 : 8 );
     QPoint pos = cursorPos();
 
-    switch ( kc )
+    switch( kc )
         {
         case XK_Left:
         case XK_KP_Left:
@@ -2020,52 +2014,62 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
             pos.ry() += delta;
             break;
         case XK_F1:
-            if ( !mouse_emulation_state )
+            if( !mouse_emulation_state )
                 mouse_emulation_window = getMouseEmulationWindow();
-            if ( (mouse_emulation_state & Button1Mask) == 0 )
-                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button1, mouse_emulation_state );
-            if ( !is_shift )
-                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );
+            if(( mouse_emulation_state & Button1Mask ) == 0 )
+                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                    EmuPress, Button1, mouse_emulation_state );
+            if( !is_shift )
+                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                    EmuRelease, Button1, mouse_emulation_state );
             break;
         case XK_F2:
-            if ( !mouse_emulation_state )
+            if( !mouse_emulation_state )
                 mouse_emulation_window = getMouseEmulationWindow();
-            if ( (mouse_emulation_state & Button2Mask) == 0 )
-                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button2, mouse_emulation_state );
-            if ( !is_shift )
-                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button2, mouse_emulation_state );
+            if(( mouse_emulation_state & Button2Mask ) == 0 )
+                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                    EmuPress, Button2, mouse_emulation_state );
+            if( !is_shift )
+                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                    EmuRelease, Button2, mouse_emulation_state );
             break;
         case XK_F3:
-            if ( !mouse_emulation_state )
+            if( !mouse_emulation_state )
                 mouse_emulation_window = getMouseEmulationWindow();
-            if ( (mouse_emulation_state & Button3Mask) == 0 )
-                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button3, mouse_emulation_state );
-            if ( !is_shift )
-                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button3, mouse_emulation_state );
+            if(( mouse_emulation_state & Button3Mask ) == 0 )
+                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                    EmuPress, Button3, mouse_emulation_state );
+            if( !is_shift )
+                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                    EmuRelease, Button3, mouse_emulation_state );
             break;
         case XK_Return:
         case XK_space:
         case XK_KP_Enter:
         case XK_KP_Space:
             {
-            if ( !mouse_emulation_state )
-                {
-            // nothing was pressed, fake a LMB click
+            if( !mouse_emulation_state )
+                { // Nothing was pressed, fake a LMB click
                 mouse_emulation_window = getMouseEmulationWindow();
-                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuPress, Button1, mouse_emulation_state );
-                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );
+                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                    EmuPress, Button1, mouse_emulation_state );
+                mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                    EmuRelease, Button1, mouse_emulation_state );
                 }
             else
-                { // release all
-                if ( mouse_emulation_state & Button1Mask )
-                    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button1, mouse_emulation_state );
-                if ( mouse_emulation_state & Button2Mask )
-                    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button2, mouse_emulation_state );
-                if ( mouse_emulation_state & Button3Mask )
-                    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuRelease, Button3, mouse_emulation_state );
+                { // Release all
+                if( mouse_emulation_state & Button1Mask )
+                    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                        EmuRelease, Button1, mouse_emulation_state );
+                if( mouse_emulation_state & Button2Mask )
+                    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                        EmuRelease, Button2, mouse_emulation_state );
+                if( mouse_emulation_state & Button3Mask )
+                    mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+                        EmuRelease, Button3, mouse_emulation_state );
                 }
             }
-    // fall through
+        // Fall through
         case XK_Escape:
             ungrabXKeyboard();
             mouse_emulation = false;
@@ -2075,13 +2079,16 @@ bool Workspace::keyPressMouseEmulation( XKeyEvent& ev )
         }
 
     QCursor::setPos( pos );
-    if ( mouse_emulation_state )
-        mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window, EmuMove, 0, mouse_emulation_state );
-    return true;
+    if( mouse_emulation_state )
+        mouse_emulation_state = sendFakedMouseEvent( pos, mouse_emulation_window,
+            EmuMove, 0, mouse_emulation_state );
 
+    return true;
     }
 
-//Delayed focus functions
+/**
+ * Delayed focus functions
+ */
 void Workspace::delayFocus()
     {
     requestFocus( delayfocus_client );
@@ -2104,12 +2111,14 @@ void Workspace::cancelDelayFocus()
     delayFocusTimer = 0;
     }
 
+//-----------------------------------------------------------------------------
 // Electric Borders
-//========================================================================//
-// Electric Border Window management. Electric borders allow a user
-// to change the virtual desktop or activate another features
-// by moving the mouse pointer to the borders or corners.
-// Technically this is done with input only windows.
+//-----------------------------------------------------------------------------
+// Electric Border Window management. Electric borders allow a user to change
+// the virtual desktop or activate another features by moving the mouse pointer
+// to the borders or corners. Technically this is done with input only windows.
+//-----------------------------------------------------------------------------
+
 void Workspace::updateElectricBorders()
     {
     electric_time_first = xTime();
@@ -2121,104 +2130,97 @@ void Workspace::updateElectricBorders()
     electricLeft = r.left();
     electricRight = r.right();
 
-    for( int pos = 0;
-         pos < ELECTRIC_COUNT;
-         ++pos )
+    for( int pos = 0; pos < ELECTRIC_COUNT; ++pos )
         {
-        if( electric_reserved[ pos ] == 0 )
+        if( electric_reserved[pos] == 0 )
             {
-            if( electric_windows[ pos ] != None )
-                XDestroyWindow( display(), electric_windows[ pos ] );
-            electric_windows[ pos ] = None;
+            if( electric_windows[pos] != None )
+                XDestroyWindow( display(), electric_windows[pos] );
+            electric_windows[pos] = None;
             continue;
             }
-        if( electric_windows[ pos ] != None )
+        if( electric_windows[pos] != None )
             continue;
         XSetWindowAttributes attributes;
         attributes.override_redirect = True;
         attributes.event_mask = EnterWindowMask | LeaveWindowMask;
         unsigned long valuemask = CWOverrideRedirect | CWEventMask;
-        int xywh[ ELECTRIC_COUNT ][ 4 ] =
+        int xywh[ELECTRIC_COUNT][4] =
             {
-                { r.left() + 1, r.top(), r.width() - 2, 1 }, // top
-                { r.right(), r.top(), 1, 1 }, // topright
-                { r.right(), r.top() + 1, 1, r.height() - 2 }, // etc.
+                { r.left() + 1, r.top(), r.width() - 2, 1 },   // Top
+                { r.right(), r.top(), 1, 1 },                  // Top-right
+                { r.right(), r.top() + 1, 1, r.height() - 2 }, // Etc.
                 { r.right(), r.bottom(), 1, 1 },
                 { r.left() + 1, r.bottom(), r.width() - 2, 1 },
                 { r.left(), r.bottom(), 1, 1 },
                 { r.left(), r.top() + 1, 1, r.height() - 2 },
                 { r.left(), r.top(), 1, 1 }
             };
-        electric_windows[ pos ] = XCreateWindow( display(), rootWindow(),
-            xywh[ pos ][ 0 ], xywh[ pos ][ 1 ], xywh[ pos ][ 2 ], xywh[ pos ][ 3 ],
+        electric_windows[pos] = XCreateWindow( display(), rootWindow(),
+            xywh[pos][0], xywh[pos][1], xywh[pos][2], xywh[pos][3],
             0, CopyFromParent, InputOnly, CopyFromParent, valuemask, &attributes );
-        XMapWindow( display(), electric_windows[ pos ]);
+        XMapWindow( display(), electric_windows[pos] );
+
         // Set XdndAware on the windows, so that DND enter events are received (#86998)
         Atom version = 4; // XDND version
-        XChangeProperty( display(), electric_windows[ pos ], atoms->xdnd_aware, XA_ATOM,
-            32, PropModeReplace, ( unsigned char* )&version, 1 );
+        XChangeProperty( display(), electric_windows[pos], atoms->xdnd_aware, XA_ATOM,
+            32, PropModeReplace, (unsigned char*)( &version ), 1 );
         }
     }
 
 void Workspace::destroyElectricBorders()
     {
-    for( int pos = 0;
-         pos < ELECTRIC_COUNT;
-         ++pos )
+    for( int pos = 0; pos < ELECTRIC_COUNT; ++pos )
         {
-        if( electric_windows[ pos ] != None )
-            XDestroyWindow( display(), electric_windows[ pos ] );
-        electric_windows[ pos ] = None;
+        if( electric_windows[pos] != None )
+            XDestroyWindow( display(), electric_windows[pos] );
+        electric_windows[pos] = None;
         }
     }
 
 void Workspace::reserveElectricBorderSwitching( bool reserve )
     {
-    for( int pos = 0;
-         pos < ELECTRIC_COUNT;
-         ++pos )
+    for( int pos = 0; pos < ELECTRIC_COUNT; ++pos )
         if( reserve )
-            reserveElectricBorder( static_cast< ElectricBorder >( pos ));
+            reserveElectricBorder( static_cast<ElectricBorder>( pos ));
         else
-            unreserveElectricBorder( static_cast< ElectricBorder >( pos ));
+            unreserveElectricBorder( static_cast<ElectricBorder>( pos ));
     }
 
 void Workspace::reserveElectricBorder( ElectricBorder border )
     {
     if( border == ElectricNone )
         return;
-    if( electric_reserved[ border ]++ == 0 )
-        QTimer::singleShot( 0, this, SLOT( updateElectricBorders()));
+    if( electric_reserved[border]++ == 0 )
+        QTimer::singleShot( 0, this, SLOT( updateElectricBorders() ));
     }
 
 void Workspace::unreserveElectricBorder( ElectricBorder border )
     {
     if( border == ElectricNone )
         return;
-    assert( electric_reserved[ border ] > 0 );
-    if( --electric_reserved[ border ] == 0 )
-        QTimer::singleShot( 0, this, SLOT( updateElectricBorders()));
+    assert( electric_reserved[border] > 0 );
+    if( --electric_reserved[border] == 0 )
+        QTimer::singleShot( 0, this, SLOT( updateElectricBorders() ));
     }
 
-void Workspace::checkElectricBorder(const QPoint &pos, Time now)
+void Workspace::checkElectricBorder(const QPoint& pos, Time now)
     {
-    if ((pos.x() != electricLeft) &&
-        (pos.x() != electricRight) &&
-        (pos.y() != electricTop) &&
-        (pos.y() != electricBottom))
+    if(( pos.x() != electricLeft ) &&
+       ( pos.x() != electricRight ) &&
+       ( pos.y() != electricTop ) &&
+       ( pos.y() != electricBottom ))
        return;
 
     bool have_borders = false;
-    for( int i = 0;
-         i < ELECTRIC_COUNT;
-         ++i )
-        if( electric_windows[ i ] != None )
+    for( int i = 0; i < ELECTRIC_COUNT; ++i )
+        if( electric_windows[i] != None )
             have_borders = true;
     if( !have_borders )
         return;
 
-    Time treshold_set = options->electricBorderDelay(); // set timeout
-    Time treshold_reset = 250; // reset timeout
+    Time treshold_set = options->electricBorderDelay(); // Set timeout
+    Time treshold_reset = 250; // Reset timeout
     int distance_reset = 30; // Mouse should not move more than this many pixels
 
     ElectricBorder border;
@@ -2241,20 +2243,20 @@ void Workspace::checkElectricBorder(const QPoint &pos, Time now)
     else
         abort();
 
-    if( electric_windows[ border ] == None )
+    if( electric_windows[border] == None )
         return;
 
-    if ((electric_current_border == border) &&
-        (timestampDiff(electric_time_last, now) < treshold_reset) &&
-        ((pos-electric_push_point).manhattanLength() < distance_reset))
+    if(( electric_current_border == border ) &&
+       ( timestampDiff( electric_time_last, now ) < treshold_reset ) &&
+       (( pos-electric_push_point ).manhattanLength() < distance_reset ))
         {
         electric_time_last = now;
 
-        if (timestampDiff(electric_time_first, now) > treshold_set)
+        if( timestampDiff( electric_time_first, now ) > treshold_set )
             {
             electric_current_border = ElectricNone;
-            if( effects && static_cast<EffectsHandlerImpl*>(effects)->borderActivated( border ))
-                {} // handled by effects
+            if( effects && static_cast<EffectsHandlerImpl*>( effects )->borderActivated( border ))
+                {} // Handled by effects
             else
                 electricBorderSwitchDesktop( border, pos );
             return;
@@ -2268,11 +2270,11 @@ void Workspace::checkElectricBorder(const QPoint &pos, Time now)
         electric_push_point = pos;
         }
 
-    // reset the pointer to find out whether the user is really pushing
+    // Reset the pointer to find out whether the user is really pushing
     // (the direction back from which it came, starting from top clockwise)
-    const int xdiff[ ELECTRIC_COUNT ] = { 0, -1, -1, -1, 0, 1, 1, 1 };
-    const int ydiff[ ELECTRIC_COUNT ] = { 1, 1, 0, -1, -1, -1, 0, 1 };
-    QCursor::setPos( pos.x() + xdiff[ border ], pos.y() + ydiff[ border ] );
+    const int xdiff[ELECTRIC_COUNT] = { 0, -1, -1, -1, 0, 1, 1, 1 };
+    const int ydiff[ELECTRIC_COUNT] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+    QCursor::setPos( pos.x() + xdiff[border], pos.y() + ydiff[border] );
     }
 
 void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint& _pos )
@@ -2306,17 +2308,17 @@ void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint
         QCursor::setPos( pos );
     }
 
-// this function is called when the user entered an electric border
-// with the mouse. It may switch to another virtual desktop
-bool Workspace::electricBorderEvent(XEvent *e)
+/**
+ * Called when the user entered an electric border with the mouse.
+ * It may switch to another virtual desktop.
+ */
+bool Workspace::electricBorderEvent( XEvent* e )
     {
     if( e->type == EnterNotify )
         {
-        for( int i = 0;
-             i < ELECTRIC_COUNT;
-             ++i )
-            if( electric_windows[ i ] != None && e->xcrossing.window == electric_windows[ i ] )
-                { // the user entered an electric border
+        for( int i = 0; i < ELECTRIC_COUNT; ++i )
+            if( electric_windows[i] != None && e->xcrossing.window == electric_windows[i] )
+                { // The user entered an electric border
                 checkElectricBorder( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ), e->xcrossing.time );
                 return true;
                 }
@@ -2325,13 +2327,12 @@ bool Workspace::electricBorderEvent(XEvent *e)
         {
         if( e->xclient.message_type == atoms->xdnd_position )
             {
-            for( int i = 0;
-                 i < ELECTRIC_COUNT;
-                 ++i )
-                if( electric_windows[ i ] != None && e->xclient.window == electric_windows[ i ] )
+            for( int i = 0; i < ELECTRIC_COUNT; ++i )
+                if( electric_windows[i] != None && e->xclient.window == electric_windows[i] )
                     {
                     updateXTime();
-                    checkElectricBorder( QPoint( e->xclient.data.l[2]>>16, e->xclient.data.l[2]&0xffff), xTime() );
+                    checkElectricBorder( QPoint(
+                        e->xclient.data.l[2]>>16, e->xclient.data.l[2]&0xffff), xTime() );
                     return true;
                     }
             }
@@ -2339,15 +2340,18 @@ bool Workspace::electricBorderEvent(XEvent *e)
     return false;
     }
 
+//-----------------------------------------------------------------------------
+// Top menu
+
 void Workspace::addTopMenu( Client* c )
     {
-    assert( c->isTopMenu());
+    assert( c->isTopMenu() );
     assert( !topmenus.contains( c ));
     topmenus.append( c );
-    if( managingTopMenus())
+    if( managingTopMenus() )
         {
         int minsize = c->minSize().height();
-        if( minsize > topMenuHeight())
+        if( minsize > topMenuHeight() )
             {
             topmenu_height = minsize;
             updateTopMenuGeometry();
@@ -2355,37 +2359,40 @@ void Workspace::addTopMenu( Client* c )
         updateTopMenuGeometry( c );
         updateCurrentTopMenu();
         }
-//        kDebug(1212) << "NEW TOPMENU:" << c;
+
+    //kDebug( 1212 ) << "NEW TOPMENU:" << c;
     }
 
 void Workspace::removeTopMenu( Client* c )
     {
-//    if( c->isTopMenu())
-//        kDebug(1212) << "REMOVE TOPMENU:" << c;
-    assert( c->isTopMenu());
+    //if( c->isTopMenu() )
+    //    kDebug( 1212 ) << "REMOVE TOPMENU:" << c;
+
+    assert( c->isTopMenu() );
     assert( topmenus.contains( c ));
     topmenus.removeAll( c );
     updateCurrentTopMenu();
-    // TODO reduce topMenuHeight() if possible?
+    // TODO: Reduce topMenuHeight() if possible?
     }
 
 void Workspace::lostTopMenuSelection()
     {
-//    kDebug(1212) << "lost TopMenu selection";
-    // make sure this signal is always set when not owning the selection
-    disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
-    connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
+    //kDebug( 1212 ) << "lost TopMenu selection";
+
+    // Make sure this signal is always set when not owning the selection
+    disconnect( topmenu_watcher, SIGNAL( lostOwner() ), this, SLOT( lostTopMenuOwner() ));
+    connect( topmenu_watcher, SIGNAL( lostOwner() ), this, SLOT( lostTopMenuOwner() ));
     if( !managing_topmenus )
         return;
-    connect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
-    disconnect( topmenu_selection, SIGNAL( lostOwnership()), this, SLOT( lostTopMenuSelection()));
+    connect( topmenu_watcher, SIGNAL( lostOwner() ), this, SLOT( lostTopMenuOwner() ));
+    disconnect( topmenu_selection, SIGNAL( lostOwnership() ), this, SLOT( lostTopMenuSelection() ));
     managing_topmenus = false;
     delete topmenu_space;
     topmenu_space = NULL;
     updateClientArea();
     for( ClientList::ConstIterator it = topmenus.constBegin();
-         it != topmenus.constEnd();
-         ++it )
+        it != topmenus.constEnd();
+        ++it )
         (*it)->checkWorkspacePosition();
     }
 
@@ -2393,13 +2400,13 @@ void Workspace::lostTopMenuOwner()
     {
     if( !options->topMenuEnabled())
         return;
-//    kDebug(1212) << "TopMenu selection lost owner";
+    //kDebug( 1212 ) << "TopMenu selection lost owner";
     if( !topmenu_selection->claim( false ))
         {
-//        kDebug(1212) << "Failed to claim TopMenu selection";
+        //kDebug( 1212 ) << "Failed to claim TopMenu selection";
         return;
         }
-//    kDebug(1212) << "claimed TopMenu selection";
+    //kDebug( 1212 ) << "Claimed TopMenu selection";
     setupTopMenuHandling();
     }
 
@@ -2407,14 +2414,14 @@ void Workspace::setupTopMenuHandling()
     {
     if( managing_topmenus )
         return;
-    connect( topmenu_selection, SIGNAL( lostOwnership()), this, SLOT( lostTopMenuSelection()));
-    disconnect( topmenu_watcher, SIGNAL( lostOwner()), this, SLOT( lostTopMenuOwner()));
+    connect( topmenu_selection, SIGNAL( lostOwnership() ), this, SLOT( lostTopMenuSelection() ));
+    disconnect( topmenu_watcher, SIGNAL( lostOwner() ), this, SLOT( lostTopMenuOwner() ));
     managing_topmenus = true;
     topmenu_space = new QWidget( NULL, Qt::X11BypassWindowManagerHint );
-    Window stack[ 2 ];
-    stack[ 0 ] = supportWindow->winId();
-    stack[ 1 ] = topmenu_space->winId();
-    XRestackWindows(display(), stack, 2);
+    Window stack[2];
+    stack[0] = supportWindow->winId();
+    stack[1] = topmenu_space->winId();
+    XRestackWindows( display(), stack, 2 );
     updateTopMenuGeometry();
     topmenu_space->show();
     updateClientArea();
@@ -2424,7 +2431,7 @@ void Workspace::setupTopMenuHandling()
 int Workspace::topMenuHeight() const
     {
     if( topmenu_height == 0 )
-        { // simply create a dummy menubar and use its preffered height as the menu height
+        { // Simply create a dummy menubar and use its preffered height as the menu height
         KMenuBar tmpmenu;
         tmpmenu.addAction( "dummy" );
         topmenu_height = tmpmenu.sizeHint().height();
@@ -2437,25 +2444,25 @@ KDecoration* Workspace::createDecoration( KDecorationBridge* bridge )
     return mgr->createDecoration( bridge );
     }
 
-// returns a list of all colors (KDecorationDefines::ColorType) the current
-// decoration supports
-QList< int > Workspace::decorationSupportedColors() const
+/**
+ * Returns a list of all colors (KDecorationDefines::ColorType) the current
+ * decoration supports
+ */
+QList<int> Workspace::decorationSupportedColors() const
     {
     KDecorationFactory* factory = mgr->factory();
-    QList< int > ret;
+    QList<int> ret;
     for( Ability ab = ABILITYCOLOR_FIRST;
-         ab < ABILITYCOLOR_END;
-         ab = static_cast< Ability>( ab + 1 ))
-        {
+        ab < ABILITYCOLOR_END;
+        ab = static_cast<Ability>( ab + 1 ))
         if( factory->supports( ab ))
             ret << ab;
-        }
     return ret;
     }
 
 QString Workspace::desktopName( int desk ) const
     {
-    return QString::fromUtf8( rootInfo->desktopName( desk ) );
+    return QString::fromUtf8( rootInfo->desktopName( desk ));
     }
 
 bool Workspace::checkStartupNotification( Window w, KStartupInfoId& id, KStartupInfoData& data )
@@ -2463,13 +2470,13 @@ bool Workspace::checkStartupNotification( Window w, KStartupInfoId& id, KStartup
     return startup->checkStartup( w, id, data ) == KStartupInfo::Match;
     }
 
-/*!
-  Puts the focus on a dummy window
-  Just using XSetInputFocus() with None would block keyboard input
+/**
+ * Puts the focus on a dummy window
+ * Just using XSetInputFocus() with None would block keyboard input
  */
 void Workspace::focusToNull()
     {
-    XSetInputFocus(display(), null_focus_window, RevertToPointerRoot, xTime() );
+    XSetInputFocus( display(), null_focus_window, RevertToPointerRoot, xTime() );
     }
 
 void Workspace::helperDialog( const QString& message, const Client* c )
@@ -2478,46 +2485,46 @@ void Workspace::helperDialog( const QString& message, const Client* c )
     QString type;
     if( message == "noborderaltf3" )
         {
-        KAction* action = qobject_cast<KAction*>(keys->action( "Window Operations Menu" ));
+        KAction* action = qobject_cast<KAction*>( keys->action( "Window Operations Menu" ));
         assert( action != NULL );
         QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
-            .arg( action->globalShortcut().primary().toString(QKeySequence::NativeText));
-        args << "--msgbox" <<
-              i18n( "You have selected to show a window without its border.\n"
-                    "Without the border, you will not be able to enable the border "
-                    "again using the mouse: use the window operations menu instead, "
-                    "activated using the %1 keyboard shortcut." ,
-                  shortcut );
+            .arg( action->globalShortcut().primary().toString( QKeySequence::NativeText ));
+        args << "--msgbox" << i18n(
+            "You have selected to show a window without its border.\n"
+            "Without the border, you will not be able to enable the border "
+            "again using the mouse: use the window operations menu instead, "
+            "activated using the %1 keyboard shortcut.",
+            shortcut );
         type = "altf3warning";
         }
     else if( message == "fullscreenaltf3" )
         {
-        KAction* action = qobject_cast<KAction*>(keys->action( "Window Operations Menu" ));
+        KAction* action = qobject_cast<KAction*>( keys->action( "Window Operations Menu" ));
         assert( action != NULL );
         QString shortcut = QString( "%1 (%2)" ).arg( action->text() )
-            .arg( action->globalShortcut().primary().toString(QKeySequence::NativeText));
-        args << "--msgbox" <<
-              i18n( "You have selected to show a window in fullscreen mode.\n"
-                    "If the application itself does not have an option to turn the fullscreen "
-                    "mode off you will not be able to disable it "
-                    "again using the mouse: use the window operations menu instead, "
-                    "activated using the %1 keyboard shortcut." ,
-                  shortcut );
+            .arg( action->globalShortcut().primary().toString( QKeySequence::NativeText ));
+        args << "--msgbox" << i18n(
+            "You have selected to show a window in fullscreen mode.\n"
+            "If the application itself does not have an option to turn the fullscreen "
+            "mode off you will not be able to disable it "
+            "again using the mouse: use the window operations menu instead, "
+            "activated using the %1 keyboard shortcut.",
+            shortcut );
         type = "altf3warning";
         }
     else
         abort();
-    if( !type.isEmpty())
+    if( !type.isEmpty() )
         {
         KConfig cfg( "kwin_dialogsrc" );
-	KConfigGroup cg(&cfg, "Notification Messages" ); // this depends on KMessageBox
-        if( !cg.readEntry( type, true )) // has don't show again checked
-            return;                           // save launching kdialog
-	args <<"--dontagain" << "kwin_dialogsrc:" + type;
+        KConfigGroup cg(&cfg, "Notification Messages" ); // Depends on KMessageBox
+        if( !cg.readEntry( type, true ))
+            return;
+        args << "--dontagain" << "kwin_dialogsrc:" + type;
         }
     if( c != NULL )
-	args <<"--embed" << QString::number( c->window());
-    KProcess::startDetached("kdialog",args);
+        args << "--embed" << QString::number( c->window() );
+    KProcess::startDetached( "kdialog",args );
     }
 
 void Workspace::setShowingDesktop( bool showing )
@@ -2530,45 +2537,45 @@ void Workspace::setShowingDesktop( bool showing )
         showing_desktop_clients.clear();
         ++block_focus;
         ClientList cls = stackingOrder();
-        // find them first, then minimize, otherwise transients may get minimized with the window
+        // Find them first, then minimize, otherwise transients may get minimized with the window
         // they're transient for
         for( ClientList::ConstIterator it = cls.constBegin();
-             it != cls.constEnd();
-             ++it )
-            {
-            if( (*it)->isOnCurrentDesktop() && (*it)->isShown( true ) && !(*it)->isSpecialWindow())
-                showing_desktop_clients.prepend( *it ); // topmost first to reduce flicker
-            }
+            it != cls.constEnd();
+            ++it )
+            if( (*it)->isOnCurrentDesktop() && (*it)->isShown( true ) && !(*it)->isSpecialWindow() )
+                showing_desktop_clients.prepend( *it ); // Topmost first to reduce flicker
         for( ClientList::ConstIterator it = showing_desktop_clients.constBegin();
-             it != showing_desktop_clients.constEnd();
-             ++it )
+            it != showing_desktop_clients.constEnd();
+            ++it )
             (*it)->minimize();
         --block_focus;
-        if( Client* desk = findDesktop( true, currentDesktop()))
+        if( Client* desk = findDesktop( true, currentDesktop() ))
             requestFocus( desk );
         }
     else
         {
         for( ClientList::ConstIterator it = showing_desktop_clients.constBegin();
-             it != showing_desktop_clients.constEnd();
-             ++it )
+            it != showing_desktop_clients.constEnd();
+            ++it )
             (*it)->unminimize();
         if( showing_desktop_clients.count() > 0 )
-            requestFocus( showing_desktop_clients.first());
+            requestFocus( showing_desktop_clients.first() );
         showing_desktop_clients.clear();
         }
     --block_showing_desktop;
     }
 
-// Following Kicker's behavior:
-// Changing a virtual desktop resets the state and shows the windows again.
-// Unminimizing a window resets the state but keeps the windows hidden (except
-// the one that was unminimized).
-// A new window resets the state and shows the windows again, with the new window
-// being active. Due to popular demand (#67406) by people who apparently
-// don't see a difference between "show desktop" and "minimize all", this is not
-// true if "showDesktopIsMinimizeAll" is set in kwinrc. In such case showing
-// a new window resets the state but doesn't show windows.
+/**
+ * Following Kicker's behavior:
+ * Changing a virtual desktop resets the state and shows the windows again.
+ * Unminimizing a window resets the state but keeps the windows hidden (except
+ * the one that was unminimized).
+ * A new window resets the state and shows the windows again, with the new window
+ * being active. Due to popular demand (#67406) by people who apparently
+ * don't see a difference between "show desktop" and "minimize all", this is not
+ * true if "showDesktopIsMinimizeAll" is set in kwinrc. In such case showing
+ * a new window resets the state but doesn't show windows.
+ */
 void Workspace::resetShowingDesktop( bool keep_hidden )
     {
     if( block_showing_desktop > 0 )
@@ -2579,21 +2586,23 @@ void Workspace::resetShowingDesktop( bool keep_hidden )
     if( !keep_hidden )
         {
         for( ClientList::ConstIterator it = showing_desktop_clients.constBegin();
-             it != showing_desktop_clients.constEnd();
-             ++it )
+            it != showing_desktop_clients.constEnd();
+            ++it )
             (*it)->unminimize();
         }
     showing_desktop_clients.clear();
     --block_showing_desktop;
     }
 
-// Activating/deactivating this feature works like this:
-// When nothing is active, and the shortcut is pressed, global shortcuts are disabled
-//   (using global_shortcuts_disabled)
-// When a window that has disabling forced is activated, global shortcuts are disabled.
-//   (using global_shortcuts_disabled_for_client)
-// When a shortcut is pressed and global shortcuts are disabled (either by a shortcut
-// or for a client), they are enabled again.
+/**
+ * Activating/deactivating this feature works like this:
+ * When nothing is active, and the shortcut is pressed, global shortcuts are disabled
+ *     (using global_shortcuts_disabled)
+ * When a window that has disabling forced is activated, global shortcuts are disabled.
+ *     (using global_shortcuts_disabled_for_client)
+ * When a shortcut is pressed and global shortcuts are disabled (either by a shortcut
+ * or for a client), they are enabled again.
+ */
 void Workspace::slotDisableGlobalShortcuts()
     {
     if( global_shortcuts_disabled || global_shortcuts_disabled_for_client )
@@ -2613,14 +2622,14 @@ void Workspace::disableGlobalShortcutsForClient( bool disable )
         if( disable )
             pending_dfc = true;
         KGlobalSettings::self()->emitChange( KGlobalSettings::BlockShortcuts, disable );
-        // kwin will get the kipc message too
+        // KWin will get the kipc message too
         }
     }
 
 void Workspace::disableGlobalShortcuts( bool disable )
     {
     KGlobalSettings::self()->emitChange( KGlobalSettings::BlockShortcuts, disable );
-    // kwin will get the kipc message too
+    // KWin will get the kipc message too
     }
 
 void Workspace::slotBlockShortcuts( int data )
@@ -2635,10 +2644,10 @@ void Workspace::slotBlockShortcuts( int data )
         global_shortcuts_disabled = data;
         global_shortcuts_disabled_for_client = false;
         }
-    // update also Alt+LMB actions etc.
+    // Update also Alt+LMB actions etc.
     for( ClientList::ConstIterator it = clients.constBegin();
-         it != clients.constEnd();
-         ++it )
+        it != clients.constEnd();
+        ++it )
         (*it)->updateMouseGrab();
     }
 
@@ -2651,8 +2660,8 @@ static QTimer* last_cursor_timer;
 
 QPoint Workspace::cursorPos() const
     {
-    if( last_cursor_timestamp == CurrentTime
-        || last_cursor_timestamp != QX11Info::appTime())
+    if( last_cursor_timestamp == CurrentTime ||
+        last_cursor_timestamp != QX11Info::appTime() )
         {
         last_cursor_timestamp = QX11Info::appTime();
         Window root;
@@ -2665,19 +2674,21 @@ QPoint Workspace::cursorPos() const
         last_buttons = state;
         if( last_cursor_timer == NULL )
             {
-            Workspace* ws = const_cast< Workspace* >( this );
+            Workspace* ws = const_cast<Workspace*>( this );
             last_cursor_timer = new QTimer( ws );
             last_cursor_timer->setSingleShot( true );
-            connect( last_cursor_timer, SIGNAL( timeout()), ws, SLOT( resetCursorPosTime()));
+            connect( last_cursor_timer, SIGNAL( timeout() ), ws, SLOT( resetCursorPosTime() ));
             }
         last_cursor_timer->start( 0 );
         }
     return last_cursor_pos;
     }
 
-// Because of QTimer's and the impossibility to get events for all mouse
-// movements (at least I haven't figured out how) the position needs
-// to be also refetched after each return to the event loop.
+/**
+ * Because of QTimer's and the impossibility to get events for all mouse
+ * movements (at least I haven't figured out how) the position needs
+ * to be also refetched after each return to the event loop.
+ */
 void Workspace::resetCursorPosTime()
     {
     last_cursor_timestamp = CurrentTime;
@@ -2687,9 +2698,9 @@ void Workspace::checkCursorPos()
     {
     QPoint last = last_cursor_pos;
     int lastb = last_buttons;
-    cursorPos(); // update if needed
+    cursorPos(); // Update if needed
     if( last != last_cursor_pos || lastb != last_buttons )
-        static_cast< EffectsHandlerImpl* >( effects )->mouseChanged( cursorPos(), last,
+        static_cast<EffectsHandlerImpl*>( effects )->mouseChanged( cursorPos(), last,
             x11ToQtMouseButtons( last_buttons ), x11ToQtMouseButtons( lastb ),
             x11ToQtKeyboardModifiers( last_buttons ), x11ToQtKeyboardModifiers( lastb ));
     }
