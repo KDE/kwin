@@ -37,9 +37,10 @@ class Application : public  KApplication
         ~Application();
 
     protected:
-        bool x11EventFilter( XEvent * );
+        bool x11EventFilter( XEvent* );
         bool notify( QObject* o, QEvent* e );
-        static void crashHandler(int signal);
+        static void crashHandler( int signal );
+
     private slots:
         void lostSelection();
         void resetCrashesCount();

@@ -19,11 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-/*
-
- This file contains things relevant to handling incoming events.
-
-*/
+// This file contains things relevant to handling incoming events.
 
 #include "client.h"
 
@@ -39,46 +35,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-/*!
-  Manages the clients. This means handling the very first maprequest:
-  reparenting, initial geometry, initial state, placement, etc.
-  Returns false if KWin is not going to manage this window.
+/**
+ * Manages the clients. This means handling the very first maprequest:
+ * reparenting, initial geometry, initial state, placement, etc.
+ * Returns false if KWin is not going to manage this window.
  */
 bool Client::manage( Window w, bool isMapped )
     {
-    StackingUpdatesBlocker stacking_blocker( workspace());
+    StackingUpdatesBlocker stacking_blocker( workspace() );
 
     grabXServer();
 
     XWindowAttributes attr;
-    if( !XGetWindowAttributes(display(), w, &attr))
+    if( !XGetWindowAttributes( display(), w, &attr ))
         {
         ungrabXServer();
         return false;
         }
 
-    // from this place on, manage() mustn't return false
+    // From this place on, manage() must not return false
     block_geometry_updates = 1;
-    pending_geometry_update = PendingGeometryForced; // force update when finishing with geometry changes
+    pending_geometry_update = PendingGeometryForced; // Force update when finishing with geometry changes
 
     embedClient( w, attr );
-    
+
     vis = attr.visual;
     bit_depth = attr.depth;
 
-    // SELI order all these things in some sane manner
+    // SELI TODO: Order all these things in some sane manner
 
     bool init_minimize = false;
-    XWMHints * hints = XGetWMHints(display(), w );
-    if (hints && (hints->flags & StateHint) && hints->initial_state == IconicState)
+    XWMHints* hints = XGetWMHints( display(), w );
+    if( hints && ( hints->flags & StateHint ) && hints->initial_state == IconicState )
         init_minimize = true;
-    if (hints)
-        XFree(hints);
+    if( hints )
+        XFree( hints );
     if( isMapped )
-        init_minimize = false; // if it's already mapped, ignore hint
+        init_minimize = false; // If it's already mapped, ignore hint
 
-    unsigned long properties[ 2 ];
-    properties[ WinInfo::PROTOCOLS ] =
+    unsigned long properties[2];
+    properties[WinInfo::PROTOCOLS] =
         NET::WMDesktop |
         NET::WMState |
         NET::WMWindowType |
@@ -89,7 +85,7 @@ bool Client::manage( Window w, bool isMapped )
         NET::WMPid |
         NET::WMIconName |
         0;
-    properties[ WinInfo::PROTOCOLS2 ] =
+    properties[WinInfo::PROTOCOLS2] =
         NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2ExtendedStrut |
@@ -106,31 +102,31 @@ bool Client::manage( Window w, bool isMapped )
     getWmClientLeader();
     getWmClientMachine();
     getSyncCounter();
-    // first only read the caption text, so that setupWindowRules() can use it for matching,
+    // First only read the caption text, so that setupWindowRules() can use it for matching,
     // and only then really set the caption using setCaption(), which checks for duplicates etc.
     // and also relies on rules already existing
     cap_normal = readName();
     setupWindowRules( false );
-    ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO change to rules
+    ignore_focus_stealing = options->checkIgnoreFocusStealing( this ); // TODO: Change to rules
     setCaption( cap_normal, true );
 
-    if( Extensions::shapeAvailable())
+    if( Extensions::shapeAvailable() )
         XShapeSelectInput( display(), window(), ShapeNotifyMask );
-    detectShape( window());
+    detectShape( window() );
     detectNoBorder();
     fetchIconicName();
-    getWMHints(); // needs to be done before readTransient() because of reading the group
-    modal = ( info->state() & NET::Modal ) != 0; // needs to be valid before handling groups
+    getWMHints(); // Needs to be done before readTransient() because of reading the group
+    modal = ( info->state() & NET::Modal ) != 0; // Needs to be valid before handling groups
     readTransient();
     getIcons();
     getWindowProtocols();
-    getWmNormalHints(); // get xSizeHint
+    getWmNormalHints(); // Get xSizeHint
     getMotifHints();
 
-    // TODO try to obey all state information from info->state()
+    // TODO: Try to obey all state information from info->state()
 
-    original_skip_taskbar = skip_taskbar = ( info->state() & NET::SkipTaskbar) != 0;
-    skip_pager = ( info->state() & NET::SkipPager) != 0;
+    original_skip_taskbar = skip_taskbar = ( info->state() & NET::SkipTaskbar ) != 0;
+    skip_pager = ( info->state() & NET::SkipPager ) != 0;
 
     setupCompositing();
 
@@ -151,9 +147,9 @@ bool Client::manage( Window w, bool isMapped )
 
     init_minimize = rules()->checkMinimize( init_minimize, !isMapped );
     noborder = rules()->checkNoBorder( noborder, !isMapped );
-    
-    // initial desktop placement
-    if ( session ) 
+
+    // Initial desktop placement
+    if( session )
         {
         desk = session->desktop;
         if( session->onAllDesktops )
@@ -161,23 +157,23 @@ bool Client::manage( Window w, bool isMapped )
         }
     else
         {
-        // if this window is transient, ensure that it is opened on the
+        // If this window is transient, ensure that it is opened on the
         // same window as its parent.  this is necessary when an application
         // starts up on a different desktop than is currently displayed
-        if( isTransient())
+        if( isTransient() )
             {
             ClientList mainclients = mainClients();
             bool on_current = false;
             Client* maincl = NULL;
-            // this is slightly duplicated from Placement::placeOnMainWindow()
+            // This is slightly duplicated from Placement::placeOnMainWindow()
             for( ClientList::ConstIterator it = mainclients.constBegin();
-                 it != mainclients.constEnd();
-                 ++it )
+                it != mainclients.constEnd();
+                ++it )
                 {
-                if( mainclients.count() > 1 && (*it)->isSpecialWindow())
-                    continue; // don't consider toolbars etc when placing
+                if( mainclients.count() > 1 && (*it)->isSpecialWindow() )
+                    continue; // Don't consider toolbars etc when placing
                 maincl = *it;
-                if( (*it)->isOnCurrentDesktop())
+                if( (*it)->isOnCurrentDesktop() )
                     on_current = true;
                 }
             if( on_current )
@@ -185,19 +181,19 @@ bool Client::manage( Window w, bool isMapped )
             else if( maincl != NULL )
                 desk = maincl->desktop();
             }
-        if ( info->desktop() )
-            desk = info->desktop(); // window had the initial desktop property, force it
+        if( info->desktop() )
+            desk = info->desktop(); // Window had the initial desktop property, force it
         if( desktop() == 0 && asn_valid && asn_data.desktop() != 0 )
             desk = asn_data.desktop();
         }
-    if ( desk == 0 ) // assume window wants to be visible on the current desktop
+    if( desk == 0 ) // Assume window wants to be visible on the current desktop
         desk = workspace()->currentDesktop();
     desk = rules()->checkDesktop( desk, !isMapped );
-    if( desk != NET::OnAllDesktops ) // do range check
+    if( desk != NET::OnAllDesktops ) // Do range check
         desk = qMax( 1, qMin( workspace()->numberOfDesktops(), desk ));
     info->setDesktop( desk );
-    workspace()->updateOnAllDesktopsOfTransients( this ); // SELI
-//    onAllDesktopsChange(); decoration doesn't exist here yet
+    workspace()->updateOnAllDesktopsOfTransients( this ); // SELI TODO
+    //onAllDesktopsChange(); // Decoration doesn't exist here yet
 
     QRect geom( attr.x, attr.y, attr.width, attr.height );
     bool placementDone = false;
@@ -208,48 +204,45 @@ bool Client::manage( Window w, bool isMapped )
     QRect area;
     bool partial_keep_in_area = isMapped || session;
     if( isMapped || session )
-        area = workspace()->clientArea( FullArea, geom.center(), desktop());
+        area = workspace()->clientArea( FullArea, geom.center(), desktop() );
     else if( options->xineramaPlacementEnabled )
         {
         int screen = options->xineramaPlacementScreen;
-        if( screen == -1 ) // active screen
+        if( screen == -1 ) // Active screen
             screen = asn_data.xinerama() == -1 ? workspace()->activeScreen() : asn_data.xinerama();
         area = workspace()->clientArea( PlacementArea, workspace()->screenGeometry( screen ).center(), desktop());
         }
     else
-        area = workspace()->clientArea( PlacementArea, cursorPos(), desktop());
+        area = workspace()->clientArea( PlacementArea, cursorPos(), desktop() );
 
     if( int type = checkFullScreenHack( geom ))
         {
         fullscreen_mode = FullScreenHack;
         if( rules()->checkStrictGeometry( false ))
             {
-            geom = type == 2 // 1 - it's xinerama-aware fullscreen hack, 2 - it's full area
-                ? workspace()->clientArea( FullArea, geom.center(), desktop())
-                : workspace()->clientArea( ScreenArea, geom.center(), desktop());
+            geom = type == 2 // 1 = It's xinerama-aware fullscreen hack, 2 = It's full area
+                ? workspace()->clientArea( FullArea, geom.center(), desktop() )
+                : workspace()->clientArea( ScreenArea, geom.center(), desktop() );
             }
         else
-            geom = workspace()->clientArea( FullScreenArea, geom.center(), desktop());
+            geom = workspace()->clientArea( FullScreenArea, geom.center(), desktop() );
         placementDone = true;
         }
 
-    if ( isDesktop() ) 
-        {
-        // kwin doesn't manage desktop windows
+    if( isDesktop() )
+        // KWin doesn't manage desktop windows
         placementDone = true;
-        }
 
     bool usePosition = false;
     if ( isMapped || session || placementDone )
-        placementDone = true; // use geometry
-    else if( isTransient() && !isUtility() && !isDialog() && !isSplash())
+        placementDone = true; // Use geometry
+    else if( isTransient() && !isUtility() && !isDialog() && !isSplash() )
         usePosition = true;
-    else if( isTransient() && !hasNETSupport())
+    else if( isTransient() && !hasNETSupport() )
         usePosition = true;
-    else if( isDialog() && hasNETSupport())
-    // if the dialog is actually non-NETWM transient window, don't try to apply placement to it,
-    // it breaks with too many things (xmms, display)
-        {
+    else if( isDialog() && hasNETSupport() )
+        { // If the dialog is actually non-NETWM transient window, don't try to apply placement to it,
+          // it breaks with too many things (xmms, display)
         if( mainClients().count() >= 1 )
             {
 #if 1
@@ -261,96 +254,94 @@ bool Client::manage( Window w, bool isMapped )
             // there's also _NET_WM_FULL_PLACEMENT.
             usePosition = true;
 #else
-            ; // force using placement policy
+            ; // Force using placement policy
 #endif
             }
         else
             usePosition = true;
         }
-    else if( isSplash())
-        ; // force using placement policy
+    else if( isSplash() )
+        ; // Force using placement policy
     else
         usePosition = true;
     if( !rules()->checkIgnoreGeometry( !usePosition ))
         {
-        bool ignorePPosition = ( options->ignorePositionClasses.contains(QString::fromLatin1(resourceClass())));
+        bool ignorePPosition = options->ignorePositionClasses.contains(
+            QString::fromLatin1( resourceClass() ));
 
-        if ( ( (xSizeHint.flags & PPosition) && !ignorePPosition ) ||
-             (xSizeHint.flags & USPosition) ) 
+        if((( xSizeHint.flags & PPosition ) && !ignorePPosition ) ||
+            ( xSizeHint.flags & USPosition ))
             {
             placementDone = true;
-            // disobey xinerama placement option for now (#70943)
-            area = workspace()->clientArea( PlacementArea, geom.center(), desktop());
+            // Disobey xinerama placement option for now (#70943)
+            area = workspace()->clientArea( PlacementArea, geom.center(), desktop() );
             }
         }
-    if( true ) // size is always obeyed for now, only with constraints applied
-        if ( (xSizeHint.flags & USSize) || (xSizeHint.flags & PSize) ) 
-            {
-            // keep in mind that we now actually have a size :-)
-            }
+    //if( true ) // Size is always obeyed for now, only with constraints applied
+    //    if(( xSizeHint.flags & USSize ) || ( xSizeHint.flags & PSize ))
+    //        {
+    //        // Keep in mind that we now actually have a size :-)
+    //        }
 
-    if (xSizeHint.flags & PMaxSize)
+    if( xSizeHint.flags & PMaxSize )
         geom.setSize( geom.size().boundedTo(
-            rules()->checkMaxSize( QSize(xSizeHint.max_width, xSizeHint.max_height ) ) ) );
-    if (xSizeHint.flags & PMinSize)
+            rules()->checkMaxSize( QSize( xSizeHint.max_width, xSizeHint.max_height ))));
+    if( xSizeHint.flags & PMinSize )
         geom.setSize( geom.size().expandedTo(
-            rules()->checkMinSize( QSize(xSizeHint.min_width, xSizeHint.min_height ) ) ) );
+            rules()->checkMinSize( QSize( xSizeHint.min_width, xSizeHint.min_height ))));
 
-    if( isMovable())
-        {
-        if( geom.x() > area.right() || geom.y() > area.bottom())
-            placementDone = false; // weird, do not trust.
-        }
+    if( isMovable() && ( geom.x() > area.right() || geom.y() > area.bottom() ))
+        placementDone = false; // Weird, do not trust.
 
-    if ( placementDone )
-        move( geom.x(), geom.y() ); // before gravitating
+    if( placementDone )
+        move( geom.x(), geom.y() ); // Before gravitating
 
-    updateDecoration( false ); // also gravitates
-    // TODO is CentralGravity right here, when resizing is done after gravitating?
-    plainResize( rules()->checkSize( sizeForClientSize( geom.size()), !isMapped ));
+    updateDecoration( false ); // Also gravitates
+    // TODO: Is CentralGravity right here, when resizing is done after gravitating?
+    plainResize( rules()->checkSize( sizeForClientSize( geom.size() ), !isMapped ));
 
     QPoint forced_pos = rules()->checkPosition( invalidPoint, !isMapped );
     if( forced_pos != invalidPoint )
         {
         move( forced_pos );
         placementDone = true;
-        // don't keep inside workarea if the window has specially configured position
+        // Don't keep inside workarea if the window has specially configured position
         partial_keep_in_area = true;
-        area = workspace()->clientArea( FullArea, geom.center(), desktop());
+        area = workspace()->clientArea( FullArea, geom.center(), desktop() );
         }
-    if( !placementDone ) 
-        { // placement needs to be after setting size
+    if( !placementDone )
+        { // Placement needs to be after setting size
         workspace()->place( this, area );
         placementDone = true;
         }
 
-    if(( !isSpecialWindow() || isToolbar()) && isMovable())
+    if(( !isSpecialWindow() || isToolbar() ) && isMovable() )
         keepInArea( area, partial_keep_in_area );
 
     updateShape();
-	
-    //CT extra check for stupid jdk 1.3.1. But should make sense in general
+
+    // CT: Extra check for stupid jdk 1.3.1. But should make sense in general
     // if client has initial state set to Iconic and is transient with a parent
     // window that is not Iconic, set init_state to Normal
-    if( init_minimize && isTransient())
+    if( init_minimize && isTransient() )
         {
         ClientList mainclients = mainClients();
         for( ClientList::ConstIterator it = mainclients.constBegin();
-             it != mainclients.constEnd();
-             ++it )
+            it != mainclients.constEnd();
+            ++it )
             if( (*it)->isShown( true ))
-                init_minimize = false; // SELI even e.g. for NET::Utility?
+                init_minimize = false; // SELI TODO: Even e.g. for NET::Utility?
         }
-    // if a dialog is shown for minimized window, minimize it too
+    // If a dialog is shown for minimized window, minimize it too
     if( !init_minimize && isTransient() && mainClients().count() > 0 )
         {
         bool visible_parent = false;
-        // use allMainClients(), to include also main clients of group transients
+        // Use allMainClients(), to include also main clients of group transients
         // that have been optimized out in Client::checkGroupTransients()
         ClientList mainclients = allMainClients();
         for( ClientList::ConstIterator it = mainclients.constBegin();
-             it != mainclients.constEnd();
-             ++it )
+            it != mainclients.constEnd();
+            ++it )
             if( (*it)->isShown( true ))
                 visible_parent = true;
         if( !visible_parent )
@@ -361,19 +352,19 @@ bool Client::manage( Window w, bool isMapped )
         }
 
     if( init_minimize )
-        minimize( true ); // no animation
+        minimize( true ); // No animation
 
-    // SELI this seems to be mainly for kstart and ksystraycmd
+    // SELI TODO: This seems to be mainly for kstart and ksystraycmd
     // probably should be replaced by something better
     bool doNotShow = false;
-    if ( workspace()->isNotManaged( caption() ) )
+    if ( workspace()->isNotManaged( caption() ))
         doNotShow = true;
 
-    // other settings from the previous session
-    if ( session ) 
+    // Other settings from the previous session
+    if( session )
         {
-        // session restored windows are not considered to be new windows WRT rules,
-        // i.e. obey only forcing rules
+        // Session restored windows are not considered to be new windows WRT rules,
+        // I.e. obey only forcing rules
         setKeepAbove( session->keepAbove );
         setKeepBelow( session->keepBelow );
         setSkipTaskbar( session->skipTaskbar, true );
@@ -381,59 +372,59 @@ bool Client::manage( Window w, bool isMapped )
         setShade( session->shaded ? ShadeNormal : ShadeNone );
         if( session->maximized != MaximizeRestore )
             {
-            maximize( (MaximizeMode) session->maximized );
+            maximize( MaximizeMode( session->maximized ));
             geom_restore = session->restore;
             }
         if( session->fullscreen == FullScreenHack )
-            ; // nothing, this should be already set again above
+            ; // Nothing, this should be already set again above
         else if( session->fullscreen != FullScreenNone )
             {
             setFullScreen( true, false );
             geom_fs_restore = session->fsrestore;
             }
         }
-    else 
+    else
         {
-        geom_restore = geometry(); // remember restore geometry
-        if ( isMaximizable()
-             && ( width() >= area.width() || height() >= area.height() ) ) 
-            {
-            // window is too large for the screen, maximize in the
-            // directions necessary
-            if ( width() >= area.width() && height() >= area.height() ) 
+        geom_restore = geometry(); // Remember restore geometry
+        if( isMaximizable() && ( width() >= area.width() || height() >= area.height() ))
+            { // Window is too large for the screen, maximize in the
+              // directions necessary
+            if( width() >= area.width() && height() >= area.height() )
                 {
                 maximize( Client::MaximizeFull );
-                geom_restore = QRect(); // use placement when unmaximizing
+                geom_restore = QRect(); // Use placement when unmaximizing
                 }
-            else if ( width() >= area.width() ) 
+            else if( width() >= area.width() )
                 {
                 maximize( Client::MaximizeHorizontal );
-                geom_restore = QRect(); // use placement when unmaximizing
-                geom_restore.setY( y()); // but only for horizontal direction
-                geom_restore.setHeight( height());
+                geom_restore = QRect(); // Use placement when unmaximizing
+                geom_restore.setY( y() ); // But only for horizontal direction
+                geom_restore.setHeight( height() );
                 }
-            else if ( height() >= area.height() ) 
+            else if( height() >= area.height() )
                 {
                 maximize( Client::MaximizeVertical );
-                geom_restore = QRect(); // use placement when unmaximizing
-                geom_restore.setX( x()); // but only for vertical direction
-                geom_restore.setWidth( width());
+                geom_restore = QRect(); // Use placement when unmaximizing
+                geom_restore.setX( x() ); // But only for vertical direction
+                geom_restore.setWidth( width() );
                 }
             }
-        // window may want to be maximized
+
+        // Window may want to be maximized
         // done after checking that the window isn't larger than the workarea, so that
         // the restore geometry from the checks above takes precedence, and window
         // isn't restored larger than the workarea
-        MaximizeMode maxmode = static_cast< MaximizeMode >
-            ((( info->state() & NET::MaxVert ) ? MaximizeVertical : 0 )
-            | (( info->state() & NET::MaxHoriz ) ? MaximizeHorizontal : 0 ));
+        MaximizeMode maxmode = static_cast<MaximizeMode>(
+            (( info->state() & NET::MaxVert ) ? MaximizeVertical : 0 ) |
+            (( info->state() & NET::MaxHoriz ) ? MaximizeHorizontal : 0 ));
         MaximizeMode forced_maxmode = rules()->checkMaximize( maxmode, !isMapped );
-        // either hints were set to maximize, or is forced to maximize,
+
+        // Either hints were set to maximize, or is forced to maximize,
         // or is forced to non-maximize and hints were set to maximize
         if( forced_maxmode != MaximizeRestore || maxmode != MaximizeRestore )
             maximize( forced_maxmode );
 
-        // read other initial states
+        // Read other initial states
         setShade( rules()->checkShade( info->state() & NET::Shaded ? ShadeNormal : ShadeNone, !isMapped ));
         setKeepAbove( rules()->checkKeepAbove( info->state() & NET::KeepAbove, !isMapped ));
         setKeepBelow( rules()->checkKeepBelow( info->state() & NET::KeepBelow, !isMapped ));
@@ -443,133 +434,129 @@ bool Client::manage( Window w, bool isMapped )
             demandAttention();
         if( info->state() & NET::Modal )
             setModal( true );
-        if( fullscreen_mode != FullScreenHack && isFullScreenable())
+        if( fullscreen_mode != FullScreenHack && isFullScreenable() )
             setFullScreen( rules()->checkFullScreen( info->state() & NET::FullScreen, !isMapped ), false );
         }
 
     updateAllowedActions( true );
 
-    // set initial user time directly
+    // Set initial user time directly
     user_time = readUserTimeMapTimestamp( asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session );
-    group()->updateUserTime( user_time ); // and do what Client::updateUserTime() does
+    group()->updateUserTime( user_time ); // And do what Client::updateUserTime() does
 
-    if( isTopMenu()) // they're shown in Workspace::addClient() if their mainwindow
-        hideClient( true ); // is the active one
+    if( isTopMenu()) // They're shown in Workspace::addClient() if their mainwindow
+        hideClient( true ); // Is the active one
 
-    // this should avoid flicker, because real restacking is done
+    // This should avoid flicker, because real restacking is done
     // only after manage() finishes because of blocking, but the window is shown sooner
-    XLowerWindow( display(), frameId());
+    XLowerWindow( display(), frameId() );
     if( session && session->stackingOrder != -1 )
         {
         sm_stacking_order = session->stackingOrder;
         workspace()->restoreSessionStackingOrder( this );
         }
 
-    if( compositing())     // sending ConfigureNotify is done when setting mapping state below,
-        sendSyncRequest(); // getting the first sync response means window is ready for compositing
+    if( compositing() )
+        // Sending ConfigureNotify is done when setting mapping state below,
+        // Getting the first sync response means window is ready for compositing
+        sendSyncRequest();
 
     if( isShown( true ) && !doNotShow )
         {
-        if( isDialog())
+        if( isDialog() )
             Notify::raise( Notify::TransNew );
-        if( isNormalWindow())
+        if( isNormalWindow() )
             Notify::raise( Notify::New );
 
         bool allow;
         if( session )
-            allow = session->active
-                && ( !workspace()->wasUserInteraction()
-                    || workspace()->activeClient() == NULL || workspace()->activeClient()->isDesktop());
+            allow = session->active &&
+                ( !workspace()->wasUserInteraction() || workspace()->activeClient() == NULL ||
+                workspace()->activeClient()->isDesktop() );
         else
             allow = workspace()->allowClientActivation( this, userTime(), false );
 
-        // if session saving, force showing new windows (i.e. "save file?" dialogs etc.)
+        // If session saving, force showing new windows (i.e. "save file?" dialogs etc.)
         // also force if activation is allowed
-        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving()))
-            workspace()->setCurrentDesktop( desktop());
+        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving() ))
+            workspace()->setCurrentDesktop( desktop() );
 
         bool belongs_to_desktop = false;
         for( ClientList::ConstIterator it = group()->members().constBegin();
-             it != group()->members().constEnd();
-             ++it )
-            if( (*it)->isDesktop())
+            it != group()->members().constEnd();
+            ++it )
+            if( (*it)->isDesktop() )
                 {
                 belongs_to_desktop = true;
                 break;
                 }
-        if( !belongs_to_desktop && workspace()->showingDesktop())
+        if( !belongs_to_desktop && workspace()->showingDesktop() )
             workspace()->resetShowingDesktop( options->showDesktopIsMinimizeAll );
 
-        if( isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0 ))
+        if( isOnCurrentDesktop() && !isMapped && !allow && ( !session || session->stackingOrder < 0 ))
             workspace()->restackClientUnderActive( this );
 
         updateVisibility();
 
         if( !isMapped )
             {
-            if( allow && isOnCurrentDesktop())
+            if( allow && isOnCurrentDesktop() )
                 {
-                if( !isSpecialWindow())
+                if( !isSpecialWindow() )
                     if ( options->focusPolicyIsReasonable() && wantsTabFocus() )
                         workspace()->requestFocus( this );
                 }
-            else
-                {
-                if( !session && !isSpecialWindow())
-                        demandAttention();
-                }
+            else if( !session && !isSpecialWindow())
+                demandAttention();
             }
         }
     else if( !doNotShow ) // if( !isShown( true ) && !doNotShow )
-        {
         updateVisibility();
-        }
     else // doNotShow
-        { // SELI HACK !!!
-        hideClient( true );
-        }
+        hideClient( true ); // SELI HACK !!!
     assert( mapping_state != Withdrawn );
     blockGeometryUpdates( false );
 
-    if( user_time == CurrentTime || user_time == -1U ) // no known user time, set something old
-        {
+    if( user_time == CurrentTime || user_time == -1U )
+        { // No known user time, set something old
         user_time = xTime() - 1000000;
-        if( user_time == CurrentTime || user_time == -1U ) // let's be paranoid
+        if( user_time == CurrentTime || user_time == -1U ) // Let's be paranoid
             user_time = xTime() - 1000000 + 10;
         }
 
     updateWorkareaDiffs();
 
-//    sendSyntheticConfigureNotify(); done when setting mapping state
+    //sendSyntheticConfigureNotify(); // Done when setting mapping state
 
     delete session;
-    
-    ungrabXServer();
-    
-    client_rules.discardTemporary();
-    applyWindowRules(); // just in case
-    workspace()->discardUsedWindowRules( this, false ); // remove ApplyNow rules
-    updateWindowRules(); // was blocked while !isManaged()
 
-// TODO there's a small problem here - isManaged() depends on the mapping state,
-// but this client is not yet in Workspace's client list at this point, will
-// be only done in addClient()
+    ungrabXServer();
+
+    client_rules.discardTemporary();
+    applyWindowRules(); // Just in case
+    workspace()->discardUsedWindowRules( this, false ); // Remove ApplyNow rules
+    updateWindowRules(); // Was blocked while !isManaged()
+
+    // TODO: there's a small problem here - isManaged() depends on the mapping state,
+    // but this client is not yet in Workspace's client list at this point, will
+    // be only done in addClient()
     return true;
     }
 
-// called only from manage()
-void Client::embedClient( Window w, const XWindowAttributes &attr )
+// Called only from manage()
+void Client::embedClient( Window w, const XWindowAttributes& attr )
     {
     assert( client == None );
     assert( frameId() == None );
     assert( wrapper == None );
     client = w;
-    // we don't want the window to be destroyed when we are destroyed
+
+    // We don't want the window to be destroyed when we are destroyed
     XAddToSaveSet( display(), client );
     XSelectInput( display(), client, NoEventMask );
     XUnmapWindow( display(), client );
-    XWindowChanges wc;     // set the border width to 0
-    wc.border_width = 0; // TODO possibly save this, and also use it for initial configuring of the window
+    XWindowChanges wc; // Set the border width to 0
+    wc.border_width = 0; // TODO: Possibly save this, and also use it for initial configuring of the window
     XConfigureWindow( display(), client, CWBorderWidth, &wc );
 
     XSetWindowAttributes swa;
@@ -578,36 +565,35 @@ void Client::embedClient( Window w, const XWindowAttributes &attr )
     swa.border_pixel = 0;
 
     Window frame = XCreateWindow( display(), rootWindow(), 0, 0, 1, 1, 0,
-		    attr.depth, InputOutput, attr.visual,
-		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
+        attr.depth, InputOutput, attr.visual, CWColormap | CWBackPixmap | CWBorderPixel, &swa );
     setWindowHandles( client, frame );
     wrapper = XCreateWindow( display(), frame, 0, 0, 1, 1, 0,
-		    attr.depth, InputOutput, attr.visual,
-		    CWColormap | CWBackPixmap | CWBorderPixel, &swa );
+        attr.depth, InputOutput, attr.visual, CWColormap | CWBackPixmap | CWBorderPixel, &swa );
 
-    XDefineCursor( display(), frame, QCursor( Qt::ArrowCursor ).handle());
-    // some apps are stupid and don't define their own cursor - set the arrow one for them
-    XDefineCursor( display(), wrapper, QCursor( Qt::ArrowCursor ).handle());
+    XDefineCursor( display(), frame, QCursor( Qt::ArrowCursor ).handle() );
+    // Some apps are stupid and don't define their own cursor - set the arrow one for them
+    XDefineCursor( display(), wrapper, QCursor( Qt::ArrowCursor ).handle() );
     XReparentWindow( display(), client, wrapper, 0, 0 );
     XSelectInput( display(), frame,
-            KeyPressMask | KeyReleaseMask |
-            ButtonPressMask | ButtonReleaseMask |
-            KeymapStateMask |
-            ButtonMotionMask |
-            PointerMotionMask |
-            EnterWindowMask | LeaveWindowMask |
-            FocusChangeMask |
-            ExposureMask |
-            PropertyChangeMask |
-            StructureNotifyMask | SubstructureRedirectMask );
+        KeyPressMask | KeyReleaseMask |
+        ButtonPressMask | ButtonReleaseMask |
+        KeymapStateMask |
+        ButtonMotionMask |
+        PointerMotionMask |
+        EnterWindowMask | LeaveWindowMask |
+        FocusChangeMask |
+        ExposureMask |
+        PropertyChangeMask |
+        StructureNotifyMask | SubstructureRedirectMask );
     XSelectInput( display(), wrapper, ClientWinMask | SubstructureNotifyMask );
     XSelectInput( display(), client,
-                  FocusChangeMask |
-                  PropertyChangeMask |
-                  ColormapChangeMask |
-                  EnterWindowMask | LeaveWindowMask |
-                  KeyPressMask | KeyReleaseMask
-                  );
+        FocusChangeMask |
+        PropertyChangeMask |
+        ColormapChangeMask |
+        EnterWindowMask | LeaveWindowMask |
+        KeyPressMask | KeyReleaseMask
+        );
+
     updateMouseGrab();
     }
 
