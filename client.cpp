@@ -1338,7 +1338,7 @@ QString Client::readName() const
 
 KWIN_COMPARE_PREDICATE( FetchNameInternalPredicate, Client, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
 
-// The list is taken from http://www.unicode.org/reports/tr9/
+// The list is taken from http://www.unicode.org/reports/tr9/ (#154840)
 QChar LRM(0x200E);
 QChar RLM(0x200F);
 QChar LRE(0x202A);
@@ -1360,12 +1360,7 @@ void Client::setCaption( const QString& _s, bool force )
         bool was_suffix = ( !cap_suffix.isEmpty() );
         QString machine_suffix;
         if( wmClientMachine( false ) != "localhost" && !isLocalMachine( wmClientMachine( false )))
-            { // How come doen't it compile in one line? what am i missing...?
-              // machine_suffix = " <@" + wmClientMachine( true ) + '>' + LRM;
-            machine_suffix = " <@" + wmClientMachine( true ) + '>';
-            // This is used to fix issue: http://bugs.kde.org/show_bug.cgi?id=154840
-            machine_suffix = machine_suffix + LRM;
-            }
+            machine_suffix = QString( " <@" ) + wmClientMachine( true ) + '>' + LRM;
         QString shortcut_suffix = !shortcut().isEmpty() ? ( " {" + shortcut().toString() + '}' ) : QString();
         cap_suffix = machine_suffix + shortcut_suffix;
         if(( !isSpecialWindow() || isToolbar() ) && workspace()->findClient( FetchNameInternalPredicate( this )))
