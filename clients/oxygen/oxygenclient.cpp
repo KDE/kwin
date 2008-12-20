@@ -51,6 +51,7 @@
 #include <QPainterPath>
 #include <QTimer>
 #include <QCache>
+#include <QtGui/QApplication>
 
 #include "math.h"
 
@@ -68,6 +69,12 @@ OxygenHelper *oxygenHelper()
     return globalHelper;
 }
 
+static void oxkwincleanupBefore()
+{
+    OxygenHelper *h = globalHelper;
+    h->invalidateCaches();
+}
+
 void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 {
     p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
@@ -79,6 +86,7 @@ OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
     , colorCacheInvalid_(true)
     , helper_(*globalHelper)
 {
+    qAddPostRoutine(oxkwincleanupBefore);
 }
 
 OxygenClient::~OxygenClient()
