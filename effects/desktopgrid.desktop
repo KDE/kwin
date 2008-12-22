@@ -66,6 +66,14 @@ Name[zh_CN]=桌面栅格
 Name[zh_TW]=桌面格
 Icon=preferences-system-windows-effect-desktop-grid
 Comment=Zoom out so all desktops are displayed side-by-side in a grid
+Comment[fr]=Faire un zoom arrière de manière á afficher tout les bureaux côte á côte dans une grille
+Comment[gl]=Reduce de maneira que os escritorios son mostrados lado por lado en grella
+Comment[km]=បង្រួម​ផ្ទៃតុ​ទាំងអស់​បង្ហាញ​ម្ដង​មួយ​ផ្នែក​ៗ​នៅ​ក្នុង​ក្រឡាចត្រង្គ
+Comment[pt]=Reduzir de modo a que todos os ecrãs apareçam lado-a-lado numa grelha
+Comment[pt_BR]=Reduzir de modo a que todos os ecrãs apareçam lado-a-lado numa grelha
+Comment[sv]=Zooma ut så att alla skrivbord visas sida vid sida i ett rutnät
+Comment[uk]=Зменшити так, щоб всі стільниці було показано поруч у вигляді таблиці
+Comment[zh_TW]=縮放所有桌面，讓它們排排站
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
