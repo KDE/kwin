@@ -316,7 +316,9 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     // Draw dividing line
     frame = widget()->rect();
-    frame.adjust(1,1,-1,-1);
+    if (shadowsActive()) {
+        frame.adjust(-1,-1,1,1);
+    }
     frame.getRect(&x, &y, &w, &h);
 
     if(isActive()) {
@@ -361,7 +363,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     if(maximized)
         return;
 
-    helper_.drawFloatFrame(&painter, widget()->rect(), color, !shadowsActive(), isActive(),
+    helper_.drawFloatFrame(&painter, frame, color, !shadowsActive(), isActive(),
                                                                 KDecoration::options()->color(ColorTitleBar));
 
     if(!isResizable())
@@ -430,11 +432,11 @@ void OxygenClient::updateWindowShape()
         setMask(mask);
     }
    else {
-        QRegion mask(6, 1, w-12, h-2);
-        mask += QRegion(1, 6, w-2, h-12);
-        mask += QRegion(3, 3, w-6, h-6);
-        mask += QRegion(4, 2, w-8, h-4);
-        mask += QRegion(2, 4, w-4, h-8);
+        QRegion mask(5, 0, w-10, h-0);
+        mask += QRegion(0, 5, w-0, h-10);
+        mask += QRegion(2, 2, w-4, h-4);
+        mask += QRegion(3, 1, w-6, h-2);
+        mask += QRegion(1, 3, w-2, h-6);
 
         setMask(mask);
     }
@@ -445,7 +447,7 @@ QList<QRect> OxygenClient::shadowQuads( ShadowType type ) const
     Q_UNUSED(type)
 
     QSize size = widget()->size();
-    int outside=20, underlap=5, cornersize=25;
+    int outside=21, underlap=4, cornersize=25;
     // These are underlap under the decoration so the corners look nicer 10px on the outside
     QList<QRect> quads;
     quads.append(QRect(-outside, size.height()-underlap, cornersize, cornersize));
