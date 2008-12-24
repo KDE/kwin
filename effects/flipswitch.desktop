@@ -50,6 +50,7 @@ Icon=preferences-system-windows-effect-flipswitch
 Comment=Flip through windows that are in a stack for the alt+tab window switcher
 Comment[ar]=تقلب النوافذ التي في القائمة لمبدل النوافذ alt+tab 
 Comment[ca]=Roda a través de les finestres que estan en una pila en el commutador de finestres alt+tab
+Comment[da]=Vip gennem vinduer i en stak som alt+tab vinduesskifter
 Comment[de]=3D-Fensterstapel - Fenster werden auf einem Stapel durchgeblättert.
 Comment[el]=Εναλλαγή των παραθύρων ως μια στοίβα για την εναλλαγή παραθύρων με το alt+tab
 Comment[es]=Cambia entre las ventanas apiladas con el conmutador de ventanas alt+tab

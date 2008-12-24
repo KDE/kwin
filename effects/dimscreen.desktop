@@ -55,6 +55,7 @@ Icon=preferences-system-windows-effect-dimscreen
 Comment=Darkens the entire screen when requesting root privileges
 Comment[ar]=تعتم كامل الشاشة عند طلب صلاحيات الجذر
 Comment[ca]=Enfosqueix tota la pantalla en demanar privilegis d'administrador
+Comment[da]=Gør hele skærmen mørkere når der bedes om root-privilegier
 Comment[de]=Dunkelt den gesamten Bildschirm ab, wenn nach dem Systemverwalter-Passwort gefragt wird.
 Comment[el]=Σκίαση ολόκληρης της οθόνης όταν απαιτούνται διακαιώματα ριζικού χρήστη root
 Comment[es]=Oscurece la pantalla completa cuando se requieran privilegios de root
