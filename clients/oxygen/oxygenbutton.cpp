@@ -216,7 +216,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     if(client_.maximizeMode() == OxygenClient::MaximizeRestore)
         painter.translate(0,-1);
 
-    QColor bg = helper_.backgroundTopColor(pal.window());
+    QColor bg = helper_.backgroundTopColor(pal.window().color());
 
     color = buttonDetailColor(pal);
     if(status_ == Oxygen::Hovered || status_ == Oxygen::Pressed) {
@@ -226,7 +226,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
             color = KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
     }
     QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), color);
-    painter.drawPixmap(0, 0, helper_.windecoButton(pal.window(), status_ == Oxygen::Pressed));
+    painter.drawPixmap(0, 0, helper_.windecoButton(pal.window().color(), status_ == Oxygen::Pressed));
 
     if (client_.isActive()) {
         painter.setRenderHints(QPainter::Antialiasing);
