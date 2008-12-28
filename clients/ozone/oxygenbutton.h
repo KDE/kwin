@@ -54,7 +54,7 @@ public:
     ~OxygenButton();
 
     QSize sizeHint() const;
-    const int lastMousePress(){return lastmouse_;}
+    int lastMousePress() const {return lastmouse_;}
     void reset(long unsigned int){repaint();}
 
 protected:
