@@ -368,6 +368,8 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
                 return;
             case Qt::Key_Tab:
                 return; // Nothing at the moment
+            case 0:
+                return; // HACK: Workaround for Qt bug on unbound keys (#178547)
             default:
                 if( !e->text().isEmpty() )
                     {
