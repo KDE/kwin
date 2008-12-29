@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <KPluginFactory>
 #include <KPluginLoader>
+#include <KIcon>
 
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
         registerPlugin<KWin::KWinCompositingConfig>();
@@ -63,6 +64,8 @@ ConfirmDialog::ConfirmDialog() :
             "They will be automatically reverted in 10 seconds." ), this );
     label->setWordWrap( true );
     setMainWidget( label );
+
+    setWindowIcon(KIcon("preferences-desktop-effect"));
     }
 
 
