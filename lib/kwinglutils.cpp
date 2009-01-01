@@ -546,7 +546,7 @@ void GLTexture::enableNormalizedTexCoords()
         // Modify texture matrix so that we could always use non-opengl
         //  coordinates for textures
         glScalef( 1, -1, 1 );
-        glTranslatef( 0, -mSize.height(), 0 );
+        glTranslatef( 0, -1, 0 );
         }
     glMatrixMode( GL_MODELVIEW );
     }
