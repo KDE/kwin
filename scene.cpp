@@ -331,7 +331,7 @@ QList< QPoint > Scene::selfCheckPoints() const
          ++screen )
         { // test top-left and bottom-right of every screen
         ret.append( Kephal::ScreenUtils::screenGeometry( screen ).topLeft());
-        ret.append( Kephal::ScreenUtils::screenGeometry( screen ).bottomRight() + QPoint( -5 + 1, -1 + 1 )
+        ret.append( Kephal::ScreenUtils::screenGeometry( screen ).bottomRight() + QPoint( -3 + 1, -2 + 1 )
             + QPoint( -1, 0 )); // intentionally moved one up, since the source windows will be one down
         }
     return ret;

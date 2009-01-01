@@ -169,12 +169,13 @@ void SceneXrender::createBuffer()
 // Just like SceneOpenGL::selfCheck()
 bool SceneXrender::selfCheck()
     {
-    QImage img( 5, 1, QImage::Format_RGB32 );
+    QImage img( 3, 2, QImage::Format_RGB32 );
     img.setPixel( 0, 0, QColor( Qt::red ).rgb());
     img.setPixel( 1, 0, QColor( Qt::green ).rgb());
     img.setPixel( 2, 0, QColor( Qt::blue ).rgb());
-    img.setPixel( 3, 0, QColor( Qt::white ).rgb());
-    img.setPixel( 4, 0, QColor( Qt::black ).rgb());
+    img.setPixel( 0, 1, QColor( Qt::white ).rgb());
+    img.setPixel( 1, 1, QColor( Qt::black ).rgb());
+    img.setPixel( 2, 1, QColor( Qt::white ).rgb());
     QPixmap pix = QPixmap::fromImage( img );
     QList< QPoint > points = selfCheckPoints();
     QRegion reg;
@@ -189,7 +190,7 @@ bool SceneXrender::selfCheck()
         {
         XSetWindowAttributes wa;
         wa.override_redirect = True;
-        ::Window window = XCreateWindow( display(), rootWindow(), 0, 0, 5, 1, 0, QX11Info::appDepth(),
+        ::Window window = XCreateWindow( display(), rootWindow(), 0, 0, 3, 2, 0, QX11Info::appDepth(),
             CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa );
         XSetWindowBackgroundPixmap( display(), window, pix.handle());
         XClearWindow( display(), window );
@@ -203,7 +204,7 @@ bool SceneXrender::selfCheck()
         XGetWindowAttributes( display(), window, &attrs );
         XRenderPictFormat* format = XRenderFindVisualFormat( display(), attrs.visual );
         Picture pic = XRenderCreatePicture( display(), wpix, format, 0, 0 );
-        QRect rect( p.x(), p.y(), 5, 1 );
+        QRect rect( p.x(), p.y(), 3, 2 );
         XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
             rect.x(), rect.y(), rect.width(), rect.height());
         XFreePixmap( display(), wpix );
@@ -213,18 +214,20 @@ bool SceneXrender::selfCheck()
     bool ok = true;
     foreach( const QPoint& p, points )
         {
-        QPixmap pix = QPixmap::grabWindow( rootWindow(), p.x(), p.y(), 5, 1 );
+        QPixmap pix = QPixmap::grabWindow( rootWindow(), p.x(), p.y(), 3, 2 );
         QImage img = pix.toImage();
 //        kDebug(1212) << "P:" << QColor( img.pixel( 0, 0 )).name();
 //        kDebug(1212) << "P:" << QColor( img.pixel( 1, 0 )).name();
 //        kDebug(1212) << "P:" << QColor( img.pixel( 2, 0 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 3, 0 )).name();
-//        kDebug(1212) << "P:" << QColor( img.pixel( 4, 0 )).name();
+//        kDebug(1212) << "P:" << QColor( img.pixel( 0, 1 )).name();
+//        kDebug(1212) << "P:" << QColor( img.pixel( 1, 1 )).name();
+//        kDebug(1212) << "P:" << QColor( img.pixel( 2, 1 )).name();
         if( img.pixel( 0, 0 ) != QColor( Qt::red ).rgb()
             || img.pixel( 1, 0 ) != QColor( Qt::green ).rgb()
             || img.pixel( 2, 0 ) != QColor( Qt::blue ).rgb()
-            || img.pixel( 3, 0 ) != QColor( Qt::white ).rgb()
-            || img.pixel( 4, 0 ) != QColor( Qt::black ).rgb())
+            || img.pixel( 0, 1 ) != QColor( Qt::white ).rgb()
+            || img.pixel( 1, 1 ) != QColor( Qt::black ).rgb()
+            || img.pixel( 2, 1 ) != QColor( Qt::white ).rgb())
             {
             kError( 1212 ) << "Compositing self-check failed, disabling compositing.";
             ok = false;
