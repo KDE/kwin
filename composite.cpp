@@ -88,7 +88,7 @@ void Workspace::setupCompositing()
         return;
     if( !options->useCompositing && getenv( "KWIN_COMPOSE") == NULL )
         {
-        kDebug( 1212 ) << "Compositing is turned off in options";
+        kDebug( 1212 ) << "Compositing is turned off in options or disabled";
         return;
         }
     else if( compositingSuspended )
