@@ -310,6 +310,7 @@ void Workspace::init()
         NET::WM2ShowingDesktop |
         NET::WM2DesktopLayout |
         NET::WM2FullPlacement |
+        NET::WM2FullscreenMonitors |
         0
         ,
         NET::ActionMove |
