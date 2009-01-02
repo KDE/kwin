@@ -231,10 +231,10 @@ QRect ShadowEffect::shadowRectangle( EffectWindow* w, const QRect& windowRectang
                 shadowXOffset + shadowGrow, shadowYOffset + shadowGrow);
         }
     return windowRectangle.adjusted(
-        qMin( shadowRect.x(), 0.0 ),
-        qMin( shadowRect.y(), 0.0 ),
-        qMax( shadowRect.x() + shadowRect.width() - w->width(), 0.0 ),
-        qMax( shadowRect.y() + shadowRect.height() - w->height(), 0.0 )
+        qMin( shadowRect.x(), qreal(0.0) ),
+        qMin( shadowRect.y(), qreal(0.0) ),
+        qMax( shadowRect.x() + shadowRect.width() - w->width(), qreal(0.0) ),
+        qMax( shadowRect.y() + shadowRect.height() - w->height(), qreal(0.0) )
         );
     }
 
