@@ -137,7 +137,8 @@ void CubeEffect::loadConfig( QString config )
     texturedCaps = conf.readEntry( "TexturedCaps", true );
     if( texturedCaps )
         {
-        QImage img = QImage( KGlobal::dirs()->findResource( "appdata", "cubecap.png" ) );
+        QString capPath = conf.readEntry( "CapPath", KGlobal::dirs()->findResource( "appdata", "cubecap.png" ) );
+        QImage img = QImage( capPath );
         if( !img.isNull() )
             {
             // change the alpha value of each pixel
