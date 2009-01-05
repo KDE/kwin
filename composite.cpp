@@ -337,8 +337,10 @@ void Workspace::performCompositing()
     if( !scene->waitSyncAvailable())
         nextPaintReference = QTime::currentTime();
     checkCursorPos();
-    if(( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
+    if((( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
         || !overlay_visible ) // nothing is visible anyway
+        // HACK: don't idle during active full screen effect so that mouse events are not dropped (bug #177226)
+        && !static_cast< EffectsHandlerImpl* >( effects )->activeFullScreenEffect() )
         {
         scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
