@@ -830,7 +830,8 @@ void Toplevel::addWorkspaceRepaint( const QRect& r2 )
 bool Toplevel::updateUnredirectedState()
     {
     assert( compositing());
-    bool should = shouldUnredirect() && !unredirectSuspend && !shape() && !hasAlpha() && opacity() == 1.0;
+    bool should = shouldUnredirect() && !unredirectSuspend && !shape() && !hasAlpha() && opacity() == 1.0 &&
+        !static_cast<EffectsHandlerImpl*>( effects )->activeFullScreenEffect();
     if( should && !unredirect )
         {
         unredirect = true;

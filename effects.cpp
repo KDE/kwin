@@ -305,6 +305,7 @@ void EffectsHandlerImpl::tabBoxUpdated()
 void EffectsHandlerImpl::setActiveFullScreenEffect( Effect* e )
     {
     fullscreen_effect = e;
+    Workspace::self()->checkUnredirect();
     }
 
 Effect* EffectsHandlerImpl::activeFullScreenEffect() const
