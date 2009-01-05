@@ -211,8 +211,10 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
         {
         double xScale = data.xScale;
         double yScale = data.yScale;
-        
-        data.brightness *= 1.0 - ( 0.3 * ( 1.0 - hoverTimeline[paintingDesktop - 1].value() ));
+
+        // Don't change brightness of windows on all desktops as this causes flickering
+        if( !w->isOnAllDesktops() || w->isDesktop() )
+            data.brightness *= 1.0 - ( 0.3 * ( 1.0 - hoverTimeline[paintingDesktop - 1].value() ));
         
         for( int screen = 0; screen < effects->numScreens(); screen++ )
             {
