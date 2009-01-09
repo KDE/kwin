@@ -387,9 +387,14 @@ void Workspace::updateMinimizedOfTransients( Client* c )
             if( !(*it)->isMinimized()
                  && !(*it)->isTopMenu() ) // topmenus are not minimized, they're hidden
                 {
-                (*it)->minimize( true ); // avoid animation
+                (*it)->minimize();
                 updateMinimizedOfTransients( (*it) );
                 }
+            }
+        if( c->isModal()) // if a modal dialog is minimized, minimize its mainwindow too
+            {
+            foreach( Client* c2, c->mainClients())
+                c2->minimize();
             }
         }
     else
@@ -401,9 +406,14 @@ void Workspace::updateMinimizedOfTransients( Client* c )
             if( (*it)->isMinimized()
                 && !(*it)->isTopMenu())
                 {
-                (*it)->unminimize( true ); // avoid animation
+                (*it)->unminimize();
                 updateMinimizedOfTransients( (*it) );
                 }
+            }
+        if( c->isModal())
+            {
+            foreach( Client* c2, c->mainClients())
+                c2->unminimize();
             }
         }
     }

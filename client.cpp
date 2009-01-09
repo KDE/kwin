@@ -636,11 +636,15 @@ bool Client::isMinimizable() const
         if( !shown_mainwindow )
             return true;
         }
+#if 0
     // This is here because kicker's taskbar doesn't provide separate entries
     // for windows with an explicitly given parent
     // TODO: perhaps this should be redone
+    // Disabled for now, since at least modal dialogs should be minimizable
+    // (resulting in the mainwindow being minimized too).
     if( transientFor() != NULL )
         return false;
+#endif
     if( !wantsTabFocus() ) // SELI, TODO: - NET::Utility? why wantsTabFocus() - skiptaskbar? ?
         return false;
     return true;
