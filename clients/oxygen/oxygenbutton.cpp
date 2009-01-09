@@ -200,11 +200,13 @@ void OxygenButton::paintEvent(QPaintEvent *)
 
     dark.setAlpha(120);
 
-    if(client_.isActive()) {
+    if (client_.isActive())
+    {
         helper_.drawSeparator(&painter, QRect(x, titleHeight-1.5, w, 2), color, Qt::Horizontal);
     }
     
-    if (type_ == ButtonMenu) {
+    if (type_ == ButtonMenu)
+    {
         // we paint the mini icon (which is 16 pixels high)
         int dx = (width() - 16) / 2;
         int dy = (height() - 16) / 2;
@@ -214,27 +216,44 @@ void OxygenButton::paintEvent(QPaintEvent *)
 
 
     if(client_.maximizeMode() == OxygenClient::MaximizeRestore)
+    {
         painter.translate(0,-1);
+    }
 
     QColor bg = helper_.backgroundTopColor(pal.window().color());
 
+    // get icon color
     color = buttonDetailColor(pal);
-    if(status_ == Oxygen::Hovered || status_ == Oxygen::Pressed) {
-        if(type_ == ButtonClose)
+    if (status_ == Oxygen::Hovered || status_ == Oxygen::Pressed)
+    {
+        if (type_ == ButtonClose)
+        {
             color = KColorScheme(pal.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
+        }
         else
+        {
             color = KColorScheme(pal.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
+        }
     }
-    QLinearGradient lg = helper_.decoGradient(QRect(4,4,13,13), color);
+
+    // draw button
     painter.drawPixmap(0, 0, helper_.windecoButton(pal.window().color(), status_ == Oxygen::Pressed));
 
-    if (client_.isActive()) {
+    // draw glow on hover
+    if (status_ == Oxygen::Hovered)
+    {
+        painter.drawPixmap(0, 0, helper_.windecoButtonGlow(color));
+    }
+
+    if (client_.isActive())
+    {
         painter.setRenderHints(QPainter::Antialiasing);
         painter.setBrush(Qt::NoBrush);
-        painter.setPen(QPen(lg, 2.2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter.setPen(QPen(color, 1.4, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         drawIcon(&painter, pal, type_);
     }
-    else {
+    else
+    {
         // outlined mode
         QPixmap pixmap(size());
         pixmap.fill(Qt::transparent);
