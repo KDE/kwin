@@ -434,7 +434,7 @@ void ShowFpsEffect::paintFPSText(int fps)
         return;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     QImage im(100, 100, QImage::Format_ARGB32);
-    im.fill(Qt::transparent);
+    im.fill(0);
     QPainter painter(&im);
     painter.setFont(textFont);
     painter.setPen(textColor);
