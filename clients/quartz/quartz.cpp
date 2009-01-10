@@ -45,8 +45,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Quartz {
 
 static const unsigned char iconify_bits[] = {
-  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7e, 0x00,
-  0x7e, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0xfc, 0x00, 0xfc, 0x00, 0x00, 0x00 };
 
 static const unsigned char close_bits[] = {
   0x00, 0x00, 0x86, 0x01, 0xcc, 0x00, 0x78, 0x00, 0x30, 0x00, 0x78, 0x00,
@@ -284,18 +284,20 @@ void QuartzHandler::readConfig()
 // This may be made configurable at a later stage
 void QuartzHandler::drawBlocks( QPixmap *pi, QPixmap &p, const QColor &c1, const QColor &c2 )
 {
-	QPainter px;
-
-	px.begin( pi );
-
 	// Draw a background gradient first
-    QPainter gp(&p);
+    QPainter gp;
+    gp.begin(&p);
     QLinearGradient grad(0, 0, p.width(), 0);
     grad.setColorAt(0.0, c1);
     grad.setColorAt(1.0, c2);
     gp.setPen(Qt::NoPen);
     gp.setBrush(grad);
     gp.drawRect(p.rect());
+    gp.end();
+
+	QPainter px;
+
+	px.begin( pi );
 
 	int factor = (pi->height()-2)/4;
 	int square = factor - (factor+2)/4;
@@ -476,7 +478,7 @@ void QuartzButton::setBitmap(const unsigned char *bitmap)
 	deco = 0;
 
 	if (bitmap) {
-		deco = new QBitmap(10, 10, bitmap, true);
+		deco = new QBitmap(QBitmap::fromData(QSize(10, 10), bitmap));
 		deco->setMask( *deco );
 		repaint( );
 	}
@@ -531,7 +533,7 @@ void QuartzButton::drawButton(QPainter *p)
 					btnpix = isChecked() ? *ipinDownPix : *ipinUpPix;
 
 			} else
-				btnpix = decoration()->icon().pixmap( QIcon::Small, QIcon::Normal);
+				btnpix = decoration()->icon().pixmap( QSize(10,10), QIcon::Normal);
 
 			// Shrink the miniIcon for tiny titlebars.
 			if ( height() < 16)
@@ -739,7 +741,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
 	if (borderSize > 2) {
 		p.fillRect(x+1, y+1, w-2, borderSize-2, frameColor); // top
 		if (!maxFull) {
-			p.fillRect(x+1, y+h-(borderSize-1), w-2, borderSize-2, frameColor); // bottom
+			p.fillRect(x+1, y+h-(borderSize), w-2, borderSize-1, frameColor); // bottom
 			p.fillRect(x+1, y+borderSize-1, borderSize-1, h-2*(borderSize-1), frameColor); // left
 			p.fillRect(x+w-(borderSize), y+borderSize-1, borderSize-1, h-2*(borderSize-1), frameColor); // right
 		}
@@ -750,7 +752,7 @@ void QuartzClient::paintEvent( QPaintEvent* )
 	if (maxFull) {
 		p.drawLine(x+1, y+titleHeight+(borderSize-1), w-2, y+titleHeight+(borderSize-1));
 	} else {
-		p.drawRect( x+(borderSize-1), y+titleHeight+(borderSize-1), w-2*(borderSize-1), h-titleHeight-2*(borderSize-1) );
+		p.drawRect( x+(borderSize-1), y+titleHeight+(borderSize-1), w-2*(borderSize-1)-1, h-titleHeight-2*(borderSize-1)-1 );
 	}
 
 	// Drawing this extra line removes non-drawn areas when shaded
