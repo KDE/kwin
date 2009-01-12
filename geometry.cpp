@@ -209,6 +209,8 @@ void Workspace::updateClientArea( bool force )
              ++it)
             (*it)->checkWorkspacePosition();
         }
+        
+    kDebug(1212) << "Done.";
     }
 
 void Workspace::updateClientArea()
@@ -230,7 +232,9 @@ QRect Workspace::clientArea( clientAreaOption opt, int screen, int desktop ) con
         desktop = currentDesktop();
     if( screen == -1 )
         screen = activeScreen();
-    QRect sarea = !screenarea.isEmpty() // may be empty during KWin initialization
+    
+    QRect sarea = (!screenarea.isEmpty() 
+            && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
         ? screenarea[ desktop ][ screen ]
         : Kephal::ScreenUtils::screenGeometry( screen );
     QRect warea = workarea[ desktop ].isNull()
