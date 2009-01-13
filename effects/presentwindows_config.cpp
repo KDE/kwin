@@ -71,6 +71,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     connect( m_ui->displayIconBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->switchingBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->ignoreMinimizedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
+    connect( m_ui->showPanelBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->accuracySlider, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->fillGapsBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->shortcutEditor, SIGNAL( keyChange() ), this, SLOT( changed() ));
@@ -107,6 +108,9 @@ void PresentWindowsEffectConfig::load()
     bool ignoreMinimized = conf.readEntry( "IgnoreMinimized", false );
     m_ui->ignoreMinimizedBox->setChecked( ignoreMinimized );
 
+    bool showPanel = conf.readEntry( "ShowPanel", false );
+    m_ui->showPanelBox->setChecked( showPanel );
+
     int accuracy = conf.readEntry( "Accuracy", 1 );
     m_ui->accuracySlider->setSliderPosition( accuracy );
 
@@ -131,6 +135,7 @@ void PresentWindowsEffectConfig::save()
     conf.writeEntry( "DrawWindowIcons", m_ui->displayIconBox->isChecked() );
     conf.writeEntry( "TabBox", m_ui->switchingBox->isChecked() );
     conf.writeEntry( "IgnoreMinimized", m_ui->ignoreMinimizedBox->isChecked() );
+    conf.writeEntry( "ShowPanel", m_ui->showPanelBox->isChecked() );
 
     int accuracy = m_ui->accuracySlider->value();
     conf.writeEntry( "Accuracy", accuracy );
@@ -153,6 +158,7 @@ void PresentWindowsEffectConfig::defaults()
     m_ui->displayIconBox->setChecked( true );
     m_ui->switchingBox->setChecked( false );
     m_ui->ignoreMinimizedBox->setChecked( false );
+    m_ui->showPanelBox->setChecked( false );
     m_ui->accuracySlider->setSliderPosition( 1 );
     m_ui->fillGapsBox->setChecked( true );
     m_ui->shortcutEditor->allDefault();

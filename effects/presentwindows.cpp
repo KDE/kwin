@@ -97,6 +97,7 @@ void PresentWindowsEffect::reconfigure( ReconfigureFlags )
     m_accuracy = conf.readEntry( "Accuracy", 1 ) * 20;
     m_fillGaps = conf.readEntry( "FillGaps", true );
     m_fadeDuration = double( animationTime( 150 ));
+    m_showPanel = conf.readEntry( "ShowPanel", false );
     }
 
 //-----------------------------------------------------------------------------
@@ -187,7 +188,11 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &
         else
             m_windowData[w].opacity = qMax( 0.0, m_windowData[w].opacity - time / m_fadeDuration );
         if( m_windowData[w].opacity == 0.0 )
-            w->disablePainting( EffectWindow::PAINT_DISABLED );
+            {
+            // don't disable painting for panels if show panel is set
+            if( !w->isDock() || ( w->isDock() && !m_showPanel ))
+                w->disablePainting( EffectWindow::PAINT_DISABLED );
+            }
         else if( m_windowData[w].opacity != 1.0 )
             data.setTranslucent();
 
@@ -207,6 +212,12 @@ void PresentWindowsEffect::paintWindow( EffectWindow *w, int mask, QRegion regio
     {
     if( m_activated || m_motionManager.areWindowsMoving() )
         {
+        if( w->isDock() && m_showPanel )
+            {
+            // in case the panel should be shown just display it without any changes
+            effects->paintWindow( w, mask, region, data );
+            return;
+            }
         // Apply opacity and brightness
         data.opacity *= m_windowData[w].opacity;
         data.brightness *= interpolate( 0.7, 1.0, m_windowData[w].highlight );
@@ -525,6 +536,8 @@ void PresentWindowsEffect::rearrangeWindows()
 void PresentWindowsEffect::calculateWindowTransformationsClosest( EffectWindowList windowlist, int screen )
     {
     QRect area = effects->clientArea( ScreenArea, screen, effects->currentDesktop() );
+    if( m_showPanel ) // reserve space for the panel
+        area = effects->clientArea( MaximizeArea, screen, effects->currentDesktop() );
     int columns = int( ceil( sqrt( double( windowlist.count() ))));
     int rows = int( ceil( windowlist.count() / double( columns )));
 
@@ -606,6 +619,8 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest( EffectWindowLi
 void PresentWindowsEffect::calculateWindowTransformationsKompose( EffectWindowList windowlist, int screen )
     {
     QRect availRect = effects->clientArea( ScreenArea, screen, effects->currentDesktop() );
+    if( m_showPanel ) // reserve space for the panel
+        availRect = effects->clientArea( MaximizeArea, screen, effects->currentDesktop() );
     qSort( windowlist ); // The location of the windows should not depend on the stacking order
 
     // Following code is taken from Kompose 0.5.4, src/komposelayout.cpp
@@ -768,6 +783,8 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowLi
     qSort( windowlist );
 
     QRect area = effects->clientArea( ScreenArea, screen, effects->currentDesktop() );
+    if( m_showPanel ) // reserve space for the panel
+        area = effects->clientArea( MaximizeArea, screen, effects->currentDesktop() );
     QRect bounds = area;
     int direction = 0;
     QHash<EffectWindow*, QRect> targets;

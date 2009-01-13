@@ -139,6 +139,7 @@ class PresentWindowsEffect
         int m_accuracy;
         bool m_fillGaps;
         double m_fadeDuration;
+        bool m_showPanel;
 
         // Activation
         bool m_activated;

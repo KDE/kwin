@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>533</width>
+    <width>535</width>
     <height>345</height>
    </rect>
   </property>
@@ -38,7 +38,7 @@
          </sizepolicy>
         </property>
         <property name="specialValueText" >
-         <string comment="Duration of rearrangement">Default</string>
+         <string comment="Duration of rearrangement" >Default</string>
         </property>
         <property name="suffix" >
          <string> msec</string>
@@ -117,6 +117,13 @@
        <widget class="QCheckBox" name="ignoreMinimizedBox" >
         <property name="text" >
          <string>Ignore &amp;minimized windows</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="2" >
+       <widget class="QCheckBox" name="showPanelBox" >
+        <property name="text" >
+         <string>Show &amp;panels</string>
         </property>
        </widget>
       </item>
