@@ -368,6 +368,14 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
                 return;
             case Qt::Key_Tab:
                 return; // Nothing at the moment
+            case Qt::Key_Delete:
+                if( !m_windowFilter.isEmpty() )
+                    {
+                    m_windowFilter.clear();
+                    updateFilterTexture();
+                    rearrangeWindows();
+                    }
+                break;
             case 0:
                 return; // HACK: Workaround for Qt bug on unbound keys (#178547)
             default:
