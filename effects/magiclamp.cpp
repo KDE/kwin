@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // based on minimize animation by Rivo Laks <rivolaks@hot.ee>
 
 #include "magiclamp.h"
+#include <kwinconfig.h>
+#include <kconfiggroup.h>
 
 namespace KWin
 {
@@ -30,8 +32,14 @@ KWIN_EFFECT( magiclamp, MagicLampEffect )
 MagicLampEffect::MagicLampEffect()
     {
     mActiveAnimations = 0;
+    reconfigure( ReconfigureAll );
     }
 
+void MagicLampEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = effects->effectConfig( "MagicLamp" );
+    mAnimationDuration = animationTime( conf, "AnimationDuration", 250 );
+    }
 
 void MagicLampEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
@@ -247,14 +255,14 @@ void MagicLampEffect::postPaintScreen()
 void MagicLampEffect::windowMinimized( EffectWindow* w )
     {
     mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
-    mTimeLineWindows[w].setDuration( animationTime( 250 ));
+    mTimeLineWindows[w].setDuration( mAnimationDuration );
     mTimeLineWindows[w].setProgress(0.0f);
     }
 
 void MagicLampEffect::windowUnminimized( EffectWindow* w )
     {
     mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
-    mTimeLineWindows[w].setDuration( animationTime( 250 ));
+    mTimeLineWindows[w].setDuration( mAnimationDuration );
     mTimeLineWindows[w].setProgress(1.0f);
     }
 

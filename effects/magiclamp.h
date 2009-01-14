@@ -32,6 +32,7 @@ class MagicLampEffect
     public:
         MagicLampEffect();
 
+        virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
@@ -43,6 +44,7 @@ class MagicLampEffect
     private:
         QHash< EffectWindow*, TimeLine > mTimeLineWindows;
         int mActiveAnimations;
+        int mAnimationDuration;
 
         enum IconPosition
             {

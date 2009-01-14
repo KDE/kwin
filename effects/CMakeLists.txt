@@ -89,6 +89,8 @@ SET(kwin4_effect_builtins_config_sources
     desktopgrid_config.ui
     diminactive_config.cpp
     diminactive_config.ui
+    magiclamp_config.cpp
+    magiclamp_config.ui
     maketransparent_config.cpp
     maketransparent_config.ui
     presentwindows_config.cpp
@@ -105,6 +107,7 @@ install( FILES
     boxswitch_config.desktop
     desktopgrid_config.desktop
     diminactive_config.desktop
+    magiclamp_config.desktop
     maketransparent_config.desktop
     presentwindows_config.desktop
     shadow_config.desktop
