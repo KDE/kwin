@@ -40,6 +40,7 @@ SET(kwin4_effect_builtins_sources
     diminactive.cpp
     dimscreen.cpp
     fade.cpp
+    fadedesktop.cpp
     fallapart.cpp
     login.cpp
     logout.cpp
@@ -64,6 +65,7 @@ install( FILES
     diminactive.desktop
     dimscreen.desktop
     fade.desktop
+    fadedesktop.desktop
     fallapart.desktop
     login.desktop
     logout.desktop

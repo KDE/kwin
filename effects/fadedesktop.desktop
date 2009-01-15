@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Fade Desktop
+Icon=preferences-system-windows-effect-fadedesktop
+Comment=Fade between virtual desktops when switching between them
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Lucas Murray
+X-KDE-PluginInfo-Email=lmurray@undefinedfire.com
+X-KDE-PluginInfo-Name=kwin4_effect_fadedesktop
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
+X-KDE-Ordering=50

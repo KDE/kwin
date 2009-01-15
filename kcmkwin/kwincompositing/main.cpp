@@ -163,7 +163,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     // search the effect names
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     KService::List services;
-    QString boxswitch, presentwindows, coverswitch, flipswitch, slide, cube;
+    QString boxswitch, presentwindows, coverswitch, flipswitch, slide, cube, fadedesktop;
     // window switcher
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_boxswitch'");
     if( !services.isEmpty() )
@@ -184,6 +184,9 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cube'");
     if( !services.isEmpty() )
         cube = services.first()->name();
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_fadedesktop'");
+    if( !services.isEmpty() )
+        fadedesktop = services.first()->name();
     // init the combo boxes
     ui.windowSwitchingCombo->addItem(i18n("No Effect"));
     ui.windowSwitchingCombo->addItem(boxswitch);
@@ -194,6 +197,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.desktopSwitchingCombo->addItem(i18n("No Effect"));
     ui.desktopSwitchingCombo->addItem(slide);
     ui.desktopSwitchingCombo->addItem(cube);
+    ui.desktopSwitchingCombo->addItem(fadedesktop);
     }
 
 KWinCompositingConfig::~KWinCompositingConfig()
@@ -338,6 +342,8 @@ void KWinCompositingConfig::loadGeneralTab()
     KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     if( effectEnabled( "cube", effectconfig ) && cubeconfig.readEntry("AnimateDesktopChange", false))
         ui.desktopSwitchingCombo->setCurrentIndex( 2 );
+    if( effectEnabled( "fadedesktop", effectconfig ))
+        ui.desktopSwitchingCombo->setCurrentIndex( 3 );
     }
 
 bool KWinCompositingConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
@@ -472,16 +478,24 @@ void KWinCompositingConfig::saveGeneralTab()
         case 0:
             // no effect
             effectconfig.writeEntry("kwin4_effect_slideEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
             break;
         case 1:
             // slide
             effectconfig.writeEntry("kwin4_effect_slideEnabled", true);
+            effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
             break;
         case 2:
             // cube
             cubeDesktopSwitching = true;
             effectconfig.writeEntry("kwin4_effect_slideEnabled", false);
             effectconfig.writeEntry("kwin4_effect_cubeEnabled", true);
+            effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
+            break;
+        case 3:
+            // fadedesktop
+            effectconfig.writeEntry("kwin4_effect_slideEnabled", false);
+            effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", true);
             break;
         }
     KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
