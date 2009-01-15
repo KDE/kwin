@@ -337,20 +337,20 @@ void OxygenClient::paintEvent(QPaintEvent *e)
         }
 
         if (align & Qt::AlignLeft) {
-            int left = titleLeft + QFontMetrics(options()->font(isActive(), false)).width(caption());
+            int left = titleLeft + QFontMetrics(options()->font(isActive(), false)).width(caption()) + 4;
             int right = titleLeft + titleWidth;
             drawScratch(&painter, palette, left, right, titleTop+6);
         }
         if (align & Qt::AlignRight) {
             int left = titleLeft;
-            int right = titleLeft + titleWidth - QFontMetrics(options()->font(isActive(), false)).width(caption());
+            int right = titleLeft + titleWidth - QFontMetrics(options()->font(isActive(), false)).width(caption()) - 4;
             drawScratch(&painter, palette, right, left, titleTop+6);
         }
         if (align & Qt::AlignHCenter) {
             int textWidth = QFontMetrics(options()->font(isActive(), false)).width(caption());
             int left = titleLeft;
-            int centerLeft = titleLeft + titleWidth/2 - textWidth/2;
-            int centerRight = titleLeft + titleWidth/2 + textWidth/2;
+            int centerLeft = titleLeft + titleWidth/2 - textWidth/2 - 4;
+            int centerRight = titleLeft + titleWidth/2 + textWidth/2 + 4;
             int right = titleLeft + titleWidth;
             drawScratch(&painter, palette, centerLeft, left, titleTop+6);
             drawScratch(&painter, palette, centerRight, right, titleTop+6);
