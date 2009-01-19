@@ -116,20 +116,20 @@ static inline const KDecorationOptions *options()
 static void drawButtonFrame( QPixmap *pix, const QPalette &g, bool sunken )
 {
     QPainter p;
-    int x2 = pix->width() - 1;
-    int y2 = pix->height() - 1;
+    int x2 = pix->width() - 3;
+    int y2 = pix->height() - 3;
     p.begin(pix);
 
     // titlebar button frame
     p.setPen( sunken ? g.color(QPalette::Dark).dark(155) : g.color(QPalette::Light));
-    p.drawLine(0, 0, x2-1, 0);
-    p.drawLine(0, 0, 0, y2-1);
+    p.drawLine(0, 0, x2, 0);
+    p.drawLine(0, 0, 0, y2);
 
     if (sunken)
     {
        p.setPen( g.color(QPalette::Mid).dark(135) );
-       p.drawLine(1, 1, x2-2, 1);
-       p.drawLine(1, 1, 1, y2-2);
+       p.drawLine(1, 1, x2-1, 1);
+       p.drawLine(1, 1, 1, y2-1);
     }
 
     p.setPen( sunken ? g.color(QPalette::Light) : g.color(QPalette::Mid).dark(135));
