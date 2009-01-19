@@ -114,7 +114,7 @@ static void drawButtonFrame(QPixmap *pix, const QPalette &g, bool sunken)
     }
     else{
         p.setPen(g.color(QPalette::Dark ));
-        p.drawRect(0, 0, w-1, h-1);
+        p.drawRect(0, 0, w-2, h-2);
         p.setPen(g.color(QPalette::Light));
         p.drawLine(x2, 0, x2, y2);
         p.drawLine(0, y2, x2, y2);
