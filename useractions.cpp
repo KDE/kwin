@@ -571,6 +571,10 @@ bool Client::performMouseCommand( Options::MouseCommand command, const QPoint &g
             break;
         case Options::MouseLower:
             workspace()->lowerClient( this );
+            // As this most likely makes the window no longer visible change the
+            // keyboard focus to the next available window.
+            //workspace()->activateNextClient( this ); // Doesn't work when we lower a child window
+            workspace()->activateClient( workspace()->topClientOnDesktop( workspace()->currentDesktop(), -1 ));
             break;
         case Options::MouseShade :
             toggleShade();
