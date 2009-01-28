@@ -948,7 +948,13 @@ void Workspace::slotWindowLower()
     {
     Client* c = active_popup_client ? active_popup_client : active_client;
     if ( c )
+        {
         lowerClient( c );
+        // As this most likely makes the window no longer visible change the
+        // keyboard focus to the next available window.
+        //activateNextClient( c ); // Doesn't work when we lower a child window
+        activateClient( topClientOnDesktop( currentDesktop(), -1 ));
+        }
     }
 
 /*!
