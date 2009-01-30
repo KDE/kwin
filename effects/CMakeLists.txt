@@ -226,23 +226,3 @@ if (KWIN_HAVE_XRENDER_COMPOSITING)
   target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB} ${X11_LIBRARIES} kephal)
 endif (KWIN_HAVE_XRENDER_COMPOSITING)
 
-
-
-
-### videocapture plugin
-include(UsePkgConfig)
-PKGCONFIG(libcaptury CAPTURY_INCLUDES CAPTURY_LINK_DIR CAPTURY_LDFLAGS CAPTURY_CFLAGS)
-if( CAPTURY_LDFLAGS )
-    SET( CAPTURY_FOUND TRUE )
-endif( CAPTURY_LDFLAGS )
-
-macro_log_feature(CAPTURY_FOUND "Captury framework library" "Realtime video capturing framework e.g. screen casts" "http://gitorious.org/projects/libcaptury" FALSE "0.3.0" "Provides for video recording desktop effects.")
-
-macro_bool_to_01( CAPTURY_FOUND HAVE_CAPTURY )
-if( CAPTURY_FOUND )
-    KWIN4_ADD_EFFECT(videorecord videorecord.cpp)
-    KWIN4_ADD_EFFECT_CONFIG(videorecord videorecord_config.cpp)
-    target_link_libraries(kwin4_effect_videorecord ${KDE4_KIO_LIBS} ${CAPTURY_LDFLAGS})
-    install( FILES videorecord.desktop videorecord_config.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-endif( CAPTURY_FOUND )
-
