@@ -54,7 +54,7 @@ class ShadowEffect
         void restoreRenderStates( GLTexture *texture, double opacity, double brightness, double saturation );
 
         void drawShadowQuadOpenGL( GLTexture *texture, QVector<float> verts, QVector<float> texCoords,
-            QColor color, QRegion region, float opacity, float brightness, float saturation );
+            QRegion region, float opacity, float brightness, float saturation );
         void drawShadowQuadXRender( XRenderPicture *picture, QRect rect, float xScale, float yScale,
             QColor color, float opacity, float brightness, float saturation );
 
