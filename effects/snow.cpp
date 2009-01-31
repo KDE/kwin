@@ -98,7 +98,7 @@ void SnowEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 int size = 0;
                 while ( size < mMinFlakeSize )
                     size = random() % mMaxFlakeSize;
-                SnowFlake flake = SnowFlake( random() % (displayWidth() - size), -1 * size, size, size, mMaxVSpeed, mMaxHSpeed );
+                SnowFlake flake = SnowFlake( random() % (displayWidth() - size), -size, size, size, mMaxVSpeed, mMaxHSpeed );
                 flakes.append( flake );
 
                 // calculation of next time of snowflake
@@ -356,9 +356,9 @@ SnowFlake::SnowFlake(int x, int y, int width, int height, int maxVSpeed, int max
     if(rotationSpeed == 0) rotationSpeed = 0.5;
     rect = QRect(x, y, width, height);
     frameCounter = 0;
-    maxFrames = displayHeight() / vSpeed;
+    maxFrames = (displayHeight() + 2*height) / vSpeed;
     if( hSpeed > 0 )
-        maxFrames = qMin( maxFrames, (displayWidth() - x)/hSpeed );
+        maxFrames = qMin( maxFrames, (displayWidth() + width - x)/hSpeed );
     else if( hSpeed < 0 )
         maxFrames = qMin( maxFrames, (x + width)/(-hSpeed) );
     }
