@@ -58,6 +58,7 @@ class CoverSwitchEffect
         void paintWindowCover( EffectWindow* w, bool reflectedWindow, WindowPaintData& data );
         void paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow  );
         void paintWindows( QList< EffectWindow* >* windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
+        void abort();
         // thumbnail bar
         class ItemInfo;
         void calculateFrameSize();

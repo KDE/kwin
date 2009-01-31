@@ -101,6 +101,8 @@ void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
                 calculateItemSizes();
             }
+        if( effects->currentTabBoxWindow() == NULL )
+            abort();
         }
     effects->prePaintScreen(data, time);
     }
@@ -1473,6 +1475,23 @@ void CoverSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
             effects->setTabBoxWindow( rightWindows[i] );
             return;
             }
+        }
+    }
+
+void CoverSwitchEffect::abort()
+    {
+    effects->unrefTabBox();
+    effects->setActiveFullScreenEffect( 0 );
+    effects->destroyInputWindow( input );
+    mActivated = false;
+    stop = false;
+    stopRequested = false;
+    effects->addRepaintFull();
+    if( thumbnails && (!dynamicThumbnails ||
+            (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
+        {
+        qDeleteAll( windows );
+        windows.clear();
         }
     }
 
