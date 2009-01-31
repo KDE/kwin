@@ -54,7 +54,7 @@ ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QVariantList& args
     connect( m_ui->opacitySpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->fuzzinessSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->sizeSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->colorButton, SIGNAL( changed( int )), this, SLOT( changed() ));
+    connect( m_ui->colorButton, SIGNAL( changed( QColor )), this, SLOT( changed() ));
     connect( m_ui->strongerActiveBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
 
     connect( m_ui->forceDecoratedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
