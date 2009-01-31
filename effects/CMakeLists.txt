@@ -42,6 +42,7 @@ SET(kwin4_effect_builtins_sources
     fade.cpp
     fadedesktop.cpp
     fallapart.cpp
+    highlightwindow.cpp
     login.cpp
     logout.cpp
     magiclamp.cpp
@@ -67,6 +68,7 @@ install( FILES
     fade.desktop
     fadedesktop.desktop
     fallapart.desktop
+    highlightwindow.desktop
     login.desktop
     logout.desktop
     magiclamp.desktop

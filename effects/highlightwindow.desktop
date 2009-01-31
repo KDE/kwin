@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Highlight Window
+Icon=preferences-system-windows-effect-highlightwindow
+Comment=Highlight the appropriate window when hovering over taskbar entries
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Lucas Murray
+X-KDE-PluginInfo-Email=lmurray@undefinedfire.com
+X-KDE-PluginInfo-Name=kwin4_effect_highlightwindow
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=kwin4_effect_builtins
