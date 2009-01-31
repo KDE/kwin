@@ -1,7 +1,11 @@
 [Desktop Entry]
 Name=Fade Desktop
+Name[gl]=Esvair o escritorio
+Name[uk]=Затемнювати стільницю
 Icon=preferences-system-windows-effect-fadedesktop
 Comment=Fade between virtual desktops when switching between them
+Comment[gl]=Emprega un efeito de esvaemento ao trocar de escritorio
+Comment[uk]=Затемнення перед час перемикання між віртуальними стільницями
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
