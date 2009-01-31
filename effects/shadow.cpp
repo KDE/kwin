@@ -109,9 +109,22 @@ void ShadowEffect::reconfigure( ReconfigureFlags )
                 }
             }
 
+        //-------------------------
         // Create default textures
+
         mDefaultShadowQuadType = effects->newWindowQuadType(); // TODO: Unregister?
-        QImage shadowImage( KGlobal::dirs()->findResource( "data", "kwin/shadow-texture.png" ));
+        QImage shadowImageSrc( KGlobal::dirs()->findResource( "data", "kwin/shadow-texture.png" ));
+
+        // Might as well process the shadow color here
+        QImage shadowImage( shadowImageSrc.width(), shadowImageSrc.height(), QImage::Format_ARGB32 );
+        QPainter painter( &shadowImage );
+        //painter.setCompositionMode( QPainter::CompositionMode_Multiply );
+        painter.setPen( Qt::NoPen );
+        painter.setBrush( shadowColor );
+        painter.drawRect( 0, 0, shadowImage.width(), shadowImage.height() );
+        painter.end();
+        shadowImage.setAlphaChannel( shadowImageSrc.alphaChannel() ); // Cheat, just use the alpha mask
+
         int hw = shadowImage.width() / 2;
         int hh = shadowImage.height() / 2;
         mDefaultShadowTextures.append( new GLTexture( shadowImage.copy( 0,  0,  hw, hh )));
@@ -611,12 +624,9 @@ void ShadowEffect::prepareRenderStates( GLTexture *texture, double opacity, doub
         glActiveTexture(GL_TEXTURE0 );
         }
     else*/ if( opacity != 1.0 || brightness != 1.0 )
-        {
-        // the window is additionally configured to have its opacity adjusted,
-        // do it
-        float opacityByBrightness = opacity * brightness;
+        { // The window is additionally configured to have its opacity adjusted
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-        glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity);
+        glColor4f( brightness, brightness, brightness, opacity );
         }
 #endif
     }
@@ -638,7 +648,7 @@ void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, doub
             glActiveTexture(GL_TEXTURE0);
             }*/
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
-        glColor4f( 0, 0, 0, 0 );
+        glColor4f( 0.0, 0.0, 0.0, 0.0 );
         }
 
     glPopAttrib();  // ENABLE_BIT
@@ -646,15 +656,12 @@ void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, doub
     }
 
 void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> verts, QVector<float> texCoords,
-    QColor color, QRegion region, float opacity, float brightness, float saturation )
+    QRegion region, float opacity, float brightness, float saturation )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( color.isValid() )
-        glColor4f( color.redF(), color.greenF(), color.blueF(), 1.0 );
-    else
-        glColor4f( 1.0, 1.0, 1.0, 1.0 );
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    prepareRenderStates( texture, opacity, brightness, saturation );
+    glColor4f( 1.0, 1.0, 1.0, 1.0 );
+    glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+    prepareRenderStates( texture, opacity, brightness, saturation ); // Usually overrides the above
     texture->bind();
     texture->enableNormalizedTexCoords();
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
@@ -801,7 +808,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                         { // Decorated windows
                         // Active shadow
                         drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
-                            verts, texcoords, QColor(), region,
+                            verts, texcoords, region,
                             data.opacity * window->shadowOpacity( ShadowBorderedActive ),
                             data.brightness * window->shadowBrightness( ShadowBorderedActive ),
                             data.saturation * window->shadowSaturation( ShadowBorderedActive ));
@@ -809,7 +816,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                         // Inactive shadow
                         texture = effects->shadowTextureList( ShadowBorderedInactive );
                         drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
-                            verts, texcoords, QColor(), region,
+                            verts, texcoords, region,
                             data.opacity * window->shadowOpacity( ShadowBorderedInactive ),
                             data.brightness * window->shadowBrightness( ShadowBorderedInactive ),
                             data.saturation * window->shadowSaturation( ShadowBorderedInactive ));
@@ -819,7 +826,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                         if( effects->activeWindow() == window )
                             {
                             drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
-                                verts, texcoords, QColor(), region,
+                                verts, texcoords, region,
                                 data.opacity * window->shadowOpacity( ShadowBorderlessActive ),
                                 data.brightness * window->shadowBrightness( ShadowBorderlessActive ),
                                 data.saturation * window->shadowSaturation( ShadowBorderlessActive ));
@@ -828,7 +835,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             {
                             texture = effects->shadowTextureList( ShadowBorderlessInactive );
                             drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
-                                verts, texcoords, QColor(), region,
+                                verts, texcoords, region,
                                 data.opacity * window->shadowOpacity( ShadowBorderlessInactive ),
                                 data.brightness * window->shadowBrightness( ShadowBorderlessInactive ),
                                 data.saturation * window->shadowSaturation( ShadowBorderlessInactive ));
@@ -837,7 +844,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                     else
                         { // Other windows
                         drawShadowQuadOpenGL( mShadowTextures.at( texture ).at( quad.id() ),
-                            verts, texcoords, QColor(), region,
+                            verts, texcoords, region,
                             data.opacity * window->shadowOpacity( ShadowOther ),
                             data.brightness * window->shadowBrightness( ShadowOther ),
                             data.saturation * window->shadowSaturation( ShadowOther ));
@@ -851,7 +858,7 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                     opacity = 1 - ( 1 - shadowOpacity ) * ( 1 - shadowOpacity );
 
                 drawShadowQuadOpenGL( mDefaultShadowTextures.at( quad.id() ),
-                    verts, texcoords, shadowColor, region,
+                    verts, texcoords, region,
                     data.opacity * opacity,
                     data.brightness,
                     data.saturation );
