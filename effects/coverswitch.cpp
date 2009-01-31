@@ -201,10 +201,8 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             rightIndex = 0;
 
         EffectWindow* frontWindow = tempList[ index ];
-        if( !leftWindows.isEmpty() )
-            leftWindows.clear();
-        if( !rightWindows.isEmpty() )
-            rightWindows.clear();
+        leftWindows.clear();
+        rightWindows.clear();
 
         bool evenWindows = ( tempList.count() % 2 == 0 ) ? true : false;
         int leftWindowCount = 0;
