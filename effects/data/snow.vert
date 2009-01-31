@@ -42,6 +42,6 @@ void main()
     else
         yCoord = float(height)*0.5;
     vec2 vertex = vec2( xCoord, yCoord );
-    vertex = (vertex)*rotation + vec2( float(x), 0.0 ) + vec2(hSpeed, vSpeed)*float(frames);
+    vertex = (vertex)*rotation + vec2( float(x), float(-height) ) + vec2(hSpeed, vSpeed)*float(frames);
     gl_Position = gl_ModelViewProjectionMatrix * vec4(vertex, gl_Vertex.zw);
 }
