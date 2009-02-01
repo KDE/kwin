@@ -58,6 +58,12 @@ MouseMarkEffect::MouseMarkEffect()
     connect( a, SIGNAL( triggered( bool )), this, SLOT( clearLast()));
     reconfigure( ReconfigureAll );
     arrow_start = NULL_POINT;
+    effects->startMousePolling(); // We require it to detect activation as well
+    }
+
+MouseMarkEffect::~MouseMarkEffect()
+    {
+    effects->stopMousePolling();
     }
 
 void MouseMarkEffect::reconfigure( ReconfigureFlags )

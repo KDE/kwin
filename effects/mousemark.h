@@ -33,6 +33,7 @@ class MouseMarkEffect
     Q_OBJECT
     public:
         MouseMarkEffect();
+        ~MouseMarkEffect();
         virtual void reconfigure( ReconfigureFlags );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void mouseChanged( const QPoint& pos, const QPoint& old,

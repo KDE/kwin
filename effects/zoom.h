@@ -45,6 +45,7 @@ class ZoomEffect
     private:
         double zoom;
         double target_zoom;
+        bool polling; // Mouse polling
     };
 
 } // namespace

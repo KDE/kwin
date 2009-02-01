@@ -48,10 +48,12 @@ TrackMouseEffect::TrackMouseEffect()
     , angle( 0 )
     , texture( NULL )
     {
+    effects->startMousePolling(); // We require it to detect activation as well
     }
 
 TrackMouseEffect::~TrackMouseEffect()
     {
+    effects->stopMousePolling();
     delete texture;
     }
 

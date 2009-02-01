@@ -357,6 +357,10 @@ class Workspace : public QObject, public KDecorationDefines
         void checkUnredirect( bool force = false );
         void checkCompositeTimer();
 
+        // Mouse polling
+        void startMousePolling();
+        void stopMousePolling();
+
     public slots:
         void addRepaintFull();
         void refresh();
@@ -517,6 +521,7 @@ class Workspace : public QObject, public KDecorationDefines
         void setPopupClientOpacity( QAction* action );
         void setupCompositing();
         void performCompositing();
+        void performMousePoll();
         void lostCMSelection();
         void updateElectricBorders();
         void resetCursorPosTime();
@@ -765,6 +770,7 @@ class Workspace : public QObject, public KDecorationDefines
         QTimer compositeTimer;
         QTime lastCompositePaint;
         QTime nextPaintReference;
+        QTimer mousePollingTimer;
         int compositeRate;
         QRegion repaints_region;
         Window overlay; // XComposite overlay window

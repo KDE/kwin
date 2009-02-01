@@ -52,6 +52,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     , keyboard_grab_effect( NULL )
     , fullscreen_effect( 0 )
     , next_window_quad_type( EFFECT_QUAD_TYPE_START )
+    , mouse_poll_ref_count( 0 )
     {
     reconfigure();
     }
@@ -352,6 +353,21 @@ void EffectsHandlerImpl::grabbedKeyboardEvent( QKeyEvent* e )
     {
     if( keyboard_grab_effect != NULL )
         keyboard_grab_effect->grabbedKeyboardEvent( e );
+    }
+
+void EffectsHandlerImpl::startMousePolling()
+    {
+    if( !mouse_poll_ref_count ) // Start timer if required
+        Workspace::self()->startMousePolling();
+    mouse_poll_ref_count++;
+    }
+
+void EffectsHandlerImpl::stopMousePolling()
+    {
+    assert( mouse_poll_ref_count );
+    mouse_poll_ref_count--;
+    if( !mouse_poll_ref_count ) // Stop timer if required
+        Workspace::self()->stopMousePolling();
     }
 
 bool EffectsHandlerImpl::hasKeyboardGrab() const

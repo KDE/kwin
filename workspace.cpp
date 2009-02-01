@@ -354,6 +354,7 @@ void Workspace::init()
     connect( &reconfigureTimer, SIGNAL( timeout() ), this, SLOT( slotReconfigure() ));
     connect( &updateToolWindowsTimer, SIGNAL( timeout() ), this, SLOT( slotUpdateToolWindows() ));
     connect( &compositeTimer, SIGNAL( timeout() ), SLOT( performCompositing() ));
+    connect( &mousePollingTimer, SIGNAL( timeout() ), SLOT( performMousePoll() ));
 
     connect( KGlobalSettings::self(), SIGNAL( appearanceChanged() ), this, SLOT( reconfigure() ));
     connect( KGlobalSettings::self(), SIGNAL( settingsChanged(int) ), this, SLOT( slotSettingsChanged(int) ));

@@ -336,11 +336,8 @@ void Workspace::performCompositing()
         }
     if( !scene->waitSyncAvailable())
         nextPaintReference = QTime::currentTime();
-    checkCursorPos();
     if((( repaints_region.isEmpty() && !windowRepaintsPending()) // no damage
-        || !overlay_visible ) // nothing is visible anyway
-        // HACK: don't idle during active full screen effect so that mouse events are not dropped (bug #177226)
-        && !static_cast< EffectsHandlerImpl* >( effects )->activeFullScreenEffect() )
+        || !overlay_visible )) // nothing is visible anyway
         {
         scene->idle();
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
@@ -404,6 +401,11 @@ void Workspace::performCompositing()
 #endif
     }
 
+void Workspace::performMousePoll()
+    {
+    checkCursorPos();
+    }
+
 bool Workspace::windowRepaintsPending() const
     {
     foreach( Toplevel* c, clients )
@@ -428,6 +430,16 @@ void Workspace::setCompositeTimer()
     // The last paint set nextPaintReference as a reference time to which multiples of compositeRate
     // should be added for the next paint. qBound() for protection; system time can change without notice.
     compositeTimer.start( qBound( 0, nextPaintReference.msecsTo( QTime::currentTime() ), 250 ) % compositeRate );
+    }
+
+void Workspace::startMousePolling()
+    {
+    mousePollingTimer.start( 20 ); // 50Hz. TODO: How often do we really need to poll?
+    }
+
+void Workspace::stopMousePolling()
+    {
+    mousePollingTimer.stop();
     }
 
 bool Workspace::createOverlay()

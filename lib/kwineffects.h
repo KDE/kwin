@@ -508,6 +508,10 @@ class KWIN_EXPORT EffectsHandler
         virtual bool grabKeyboard( Effect* effect ) = 0;
         virtual void ungrabKeyboard() = 0;
 
+        // Mouse polling
+        virtual void startMousePolling() = 0;
+        virtual void stopMousePolling() = 0;
+
         virtual void checkElectricBorder(const QPoint &pos, Time time) = 0;
         virtual void reserveElectricBorder( ElectricBorder border ) = 0;
         virtual void unreserveElectricBorder( ElectricBorder border ) = 0;

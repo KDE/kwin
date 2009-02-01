@@ -47,6 +47,7 @@ class MagnifierEffect
         QRect magnifierArea( QPoint pos = cursorPos()) const;
         double zoom;
         double target_zoom;
+        bool polling; // Mouse polling
         QSize magnifier_size;
     };
 
