@@ -67,18 +67,22 @@ void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion reg
     effects->paintWindow( w, mask, region, data ); // paint window first
     if( thumbnails.contains( w ))
         { // paint thumbnails on it
+        int mask = PAINT_WINDOW_TRANSFORMED;
+        if( data.opacity == 1.0 )
+            mask |= PAINT_WINDOW_OPAQUE;
+        else
+            mask |= PAINT_WINDOW_TRANSLUCENT;
         foreach( const Data &thumb, thumbnails.values( w ))
             {
             EffectWindow* thumbw = effects->findWindow( thumb.window );
             if( thumbw == NULL )
                 continue;
-            WindowPaintData data( thumbw );
+            WindowPaintData thumbData( thumbw );
+            thumbData.opacity = data.opacity;
             QRect r;
-            setPositionTransformations( data, r,
+            setPositionTransformations( thumbData, r,
                 thumbw, thumb.rect.translated( w->pos()), Qt::KeepAspectRatio );
-            effects->drawWindow( thumbw,
-                PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
-                r, data );
+            effects->drawWindow( thumbw, mask, r, thumbData );
             }
         }
     }
