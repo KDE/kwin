@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Fade Desktop
+Name[et]=Töölaua hääbumine
 Name[gl]=Esvair o escritorio
 Name[pt]=Desvanecer o Ecrã
 Name[pt_BR]=Desvanecer o Ecrã
@@ -8,6 +9,7 @@ Name[uk]=Затемнювати стільницю
 Name[zh_TW]=淡出淡入桌面
 Icon=preferences-system-windows-effect-fadedesktop
 Comment=Fade between virtual desktops when switching between them
+Comment[et]=Hääbumisefekt ühelt virtuaalselt töölaualt teisele lülitudes
 Comment[gl]=Emprega un efeito de esvaemento ao trocar de escritorio
 Comment[pt]=Desvanece entre os ecrãs virtuais, ao circular entre eles
 Comment[pt_BR]=Desvanece entre os ecrãs virtuais, ao circular entre eles
