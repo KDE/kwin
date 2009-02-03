@@ -42,6 +42,14 @@ class HighlightWindowEffect
         virtual void propertyNotify( EffectWindow* w, long atom );
 
     private:
+        void prepareHighlighting();
+        void finishHighlighting();
+
+        bool m_finishing;
+
+        double m_fadeDuration;
+        QHash<EffectWindow*, double> m_windowOpacity;
+
         long m_atom;
         EffectWindow* m_highlightedWindow;
         EffectWindow* m_monitorWindow;

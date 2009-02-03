@@ -28,7 +28,9 @@ namespace KWin
 KWIN_EFFECT( highlightwindow, HighlightWindowEffect )
 
 HighlightWindowEffect::HighlightWindowEffect()
-    : m_highlightedWindow( NULL )
+    : m_finishing( false )
+    , m_fadeDuration( double( animationTime( 150 )))
+    , m_highlightedWindow( NULL )
     , m_monitorWindow( NULL )
     {
     m_atom = XInternAtom( display(), "_KDE_WINDOW_HIGHLIGHT", False );
@@ -47,31 +49,61 @@ HighlightWindowEffect::~HighlightWindowEffect()
 
 void HighlightWindowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    // If we are highlighting a window set the translucent flag to all others
-    if( m_highlightedWindow && m_highlightedWindow != w && m_monitorWindow != w && w->isNormalWindow() )
-        data.mask |= PAINT_WINDOW_TRANSLUCENT;
+    // Calculate window opacities
+    if( m_highlightedWindow )
+        { // Initial fade out and changing highlight animation
+        double oldOpacity = m_windowOpacity[w];
+        if( m_highlightedWindow == w )
+            m_windowOpacity[w] = qMin( 1.0, m_windowOpacity[w] + time / m_fadeDuration );
+        else if( w->isNormalWindow() ) // Only fade out normal windows
+            m_windowOpacity[w] = qMax( 0.15, m_windowOpacity[w] - time / m_fadeDuration );
+
+        if( m_windowOpacity[w] != 1.0 )
+            data.setTranslucent();
+        if( oldOpacity != m_windowOpacity[w] )
+            w->addRepaintFull();
+        }
+    else if( m_finishing && m_windowOpacity.contains( w ))
+        { // Final fading back in animation
+        double oldOpacity = m_windowOpacity[w];
+        m_windowOpacity[w] = qMin( 1.0, m_windowOpacity[w] + time / m_fadeDuration );
+
+        if( m_windowOpacity[w] != 1.0 )
+            data.setTranslucent();
+        if( oldOpacity != m_windowOpacity[w] )
+            w->addRepaintFull();
+
+        if( m_windowOpacity[w] == 1.0 )
+            m_windowOpacity.remove( w ); // We default to 1.0
+        }
+
     effects->prePaintWindow( w, data, time );
     }
 
 void HighlightWindowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( m_highlightedWindow && m_highlightedWindow != w && m_monitorWindow != w && w->isNormalWindow() )
-        data.opacity *= 0.15; // TODO: Fade out
+    if( m_windowOpacity.contains( w ))
+        data.opacity *= m_windowOpacity[w];
     effects->paintWindow( w, mask, region, data );
     }
 
 void HighlightWindowEffect::windowAdded( EffectWindow* w )
     {
+    if( m_highlightedWindow )
+        { // The effect is activated thus we need to add it to the opacity hash
+        if( w->isNormalWindow() ) // Only fade out normal windows
+            m_windowOpacity[w] = 0.15;
+        else
+            m_windowOpacity[w] = 1.0;
+        }
     propertyNotify( w, m_atom ); // Check initial value
     }
 
 void HighlightWindowEffect::windowDeleted( EffectWindow* w )
     {
-    if( m_monitorWindow == w )
-        { // The monitoring window was destroyed
-        m_monitorWindow = NULL;
-        m_highlightedWindow = NULL;
-        }
+    m_windowOpacity.remove( w );
+    if( m_monitorWindow == w ) // The monitoring window was destroyed
+        finishHighlighting();
     }
 
 void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
@@ -86,14 +118,34 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
 
     if( !data[0] )
         { // Purposely clearing highlight
-        m_monitorWindow = NULL;
-        m_highlightedWindow = NULL;
+        finishHighlighting();
         return;
         }
     m_monitorWindow = w;
     m_highlightedWindow = effects->findWindow( data[0] );
     if( !m_highlightedWindow )
+        {
         kDebug(1212) << "Invalid window targetted for highlight. Requested:" << data[0];
+        return;
+        }
+    prepareHighlighting();
+    m_windowOpacity[w] = 1.0; // Because it's not in stackingOrder() yet
+    }
+
+void HighlightWindowEffect::prepareHighlighting()
+    {
+    // Create window data for every window. Just calling [w] creates it.
+    m_finishing = false;
+    foreach( EffectWindow *w, effects->stackingOrder() )
+        if( !m_windowOpacity.contains( w )) // Just in case we are still finishing from last time
+            m_windowOpacity[w] = 1.0;
+    }
+
+void HighlightWindowEffect::finishHighlighting()
+    {
+    m_finishing = true;
+    m_monitorWindow = NULL;
+    m_highlightedWindow = NULL;
     }
 
 } // namespace
