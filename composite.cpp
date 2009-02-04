@@ -247,6 +247,7 @@ void Workspace::finishCompositing()
     delete scene;
     scene = NULL;
     compositeTimer.stop();
+    mousePollingTimer.stop();
     repaints_region = QRegion();
     for( ClientList::ConstIterator it = clients.constBegin();
          it != clients.constEnd();
