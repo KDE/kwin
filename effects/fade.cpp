@@ -42,8 +42,11 @@ void FadeEffect::reconfigure( ReconfigureFlags )
     // Add all existing windows to the window list
     // TODO: Enabling desktop effects should trigger windowAdded() on all windows
     windows.clear();
+    if( !fadeWindows )
+        return;
     foreach( EffectWindow *w, effects->stackingOrder() )
-        windows[ w ].opacity = 1.0;
+        if( w && isFadeWindow( w )) // TODO: Apparently w can == NULL here?
+            windows[ w ] = WindowInfo();
     }
 
 void FadeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -76,7 +79,7 @@ void FadeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
             }
         }
     effects->prePaintWindow( w, data, time );
-    if( windows.contains( w ) && !w->isPaintingEnabled())
+    if( windows.contains( w ) && !w->isPaintingEnabled() && !effects->activeFullScreenEffect() )
         { // if the window isn't to be painted, then let's make sure
           // to track its progress
         if( windows[ w ].fadeInStep < 1.0
