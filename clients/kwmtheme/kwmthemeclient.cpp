@@ -92,7 +92,7 @@ static bool titleTransparent;
 
 static void create_pixmaps()
 {
-    const char *keys[] = {"wm_top", "wm_bottom", "wm_left", "wm_right",
+    const char * const keys[] = {"wm_top", "wm_bottom", "wm_left", "wm_right",
     "wm_topleft", "wm_topright", "wm_bottomleft", "wm_bottomright"};
 
     if(pixmaps_created)
@@ -292,7 +292,7 @@ void KWMThemeClient::init()
     QString val;
     MyButton *btn;
     int i;
-    static const char *defaultButtons[]={"Menu","Sticky","Off","Iconify",
+    static const char * const defaultButtons[]={"Menu","Sticky","Off","Iconify",
         "Maximize","Close"};
     static const char keyOffsets[]={"ABCDEF"};
     for(i=0; i < 6; ++i){
