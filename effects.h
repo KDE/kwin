@@ -65,6 +65,8 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual QPoint cursorPos() const;
         virtual bool grabKeyboard( Effect* effect );
         virtual void ungrabKeyboard();
+        virtual void startMousePolling();
+        virtual void stopMousePolling();
         virtual EffectWindow* findWindow( WId id ) const;
         virtual EffectWindowList stackingOrder() const;
         virtual void setElevatedWindow( EffectWindow* w, bool set );
@@ -168,6 +170,7 @@ class EffectsHandlerImpl : public EffectsHandler
         QMultiMap< int, EffectPair > effect_order;
         QHash< long, int > registered_atoms;
         int next_window_quad_type;
+        int mouse_poll_ref_count;
 };
 
 class EffectWindowImpl : public EffectWindow

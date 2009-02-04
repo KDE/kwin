@@ -1537,6 +1537,7 @@ void CubeEffect::setActive( bool active )
     {
     if( active )
         {
+        effects->startMousePolling();
         activated = true;
         activeScreen = effects->activeScreen();
         if( !slide )
@@ -1574,6 +1575,7 @@ void CubeEffect::setActive( bool active )
         }
     else
         {
+        effects->stopMousePolling();
         schedule_close = true;
         // we have to add a repaint, to start the deactivating
         effects->addRepaintFull();

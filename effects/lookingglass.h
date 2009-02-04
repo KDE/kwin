@@ -54,6 +54,7 @@ class LookingGlassEffect : public QObject, public ShaderEffect
     private:
         double zoom;
         double target_zoom;
+        bool polling; // Mouse polling
         int radius;
         int initialradius;
         KActionCollection* actionCollection;

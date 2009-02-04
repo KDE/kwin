@@ -164,7 +164,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 57
+#define KWIN_EFFECT_API_VERSION_MINOR 58
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -507,6 +507,10 @@ class KWIN_EXPORT EffectsHandler
         virtual QPoint cursorPos() const = 0;
         virtual bool grabKeyboard( Effect* effect ) = 0;
         virtual void ungrabKeyboard() = 0;
+
+        // Mouse polling
+        virtual void startMousePolling() = 0;
+        virtual void stopMousePolling() = 0;
 
         virtual void checkElectricBorder(const QPoint &pos, Time time) = 0;
         virtual void reserveElectricBorder( ElectricBorder border ) = 0;

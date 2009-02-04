@@ -32,6 +32,7 @@ KWIN_EFFECT( zoom, ZoomEffect )
 ZoomEffect::ZoomEffect()
     : zoom( 1 )
     , target_zoom( 1 )
+    , polling( false )
     {
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a;
@@ -82,6 +83,11 @@ void ZoomEffect::postPaintScreen()
 void ZoomEffect::zoomIn()
     {
     target_zoom *= 1.2;
+    if( !polling )
+        {
+        polling = true;
+        effects->startMousePolling();
+        }
     effects->addRepaintFull();
     }
 
@@ -90,6 +96,11 @@ void ZoomEffect::zoomOut()
     target_zoom /= 1.2;
     if( target_zoom < 1 )
         target_zoom = 1;
+    if( polling )
+        {
+        polling = false;
+        effects->stopMousePolling();
+        }
     effects->addRepaintFull();
     }
 

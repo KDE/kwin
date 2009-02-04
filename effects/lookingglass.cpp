@@ -42,6 +42,7 @@ LookingGlassEffect::LookingGlassEffect() : QObject(), ShaderEffect("lookingglass
     {
     zoom = 1.0f;
     target_zoom = 1.0f;
+    polling = false;
 
     actionCollection = new KActionCollection( this );
     actionCollection->setConfigGlobal(true);
@@ -83,6 +84,11 @@ void LookingGlassEffect::zoomIn()
     {
     target_zoom = qMin(7.0, target_zoom + 0.5);
     setEnabled( true );
+    if( !polling )
+        {
+        polling = true;
+        effects->startMousePolling();
+        }
     effects->addRepaint( cursorPos().x() - radius, cursorPos().y() - radius, 2*radius, 2*radius );
     }
 
@@ -93,6 +99,11 @@ void LookingGlassEffect::zoomOut()
         {
         target_zoom = 1;
         setEnabled( false );
+        }
+    if( polling )
+        {
+        polling = false;
+        effects->stopMousePolling();
         }
     effects->addRepaint( cursorPos().x() - radius, cursorPos().y() - radius, 2*radius, 2*radius );
     }
