@@ -1070,6 +1070,42 @@ void TimeLine::setCurveShape(CurveShape curveShape)
     }
 
 /***************************************************************
+ Motion1D
+***************************************************************/
+
+Motion1D::Motion1D( double initial, double strength, double smoothness )
+    : Motion<double>( initial, strength, smoothness )
+    {
+    }
+
+Motion1D::Motion1D( const Motion1D &other )
+    : Motion<double>( other )
+    {
+    }
+
+Motion1D::~Motion1D()
+    {
+    }
+
+/***************************************************************
+ Motion2D
+***************************************************************/
+
+Motion2D::Motion2D( QPointF initial, double strength, double smoothness )
+    : Motion<QPointF>( initial, strength, smoothness )
+    {
+    }
+
+Motion2D::Motion2D( const Motion2D &other )
+    : Motion<QPointF>( other )
+    {
+    }
+
+Motion2D::~Motion2D()
+    {
+    }
+
+/***************************************************************
  WindowMotionManager
 ***************************************************************/
 
@@ -1088,18 +1124,19 @@ void WindowMotionManager::manage( EffectWindow *w )
     if( m_managedWindows.contains( w ))
         return;
 
-    double strength = 0.9;
-    double decay = 0.75;
-    if( m_useGlobalAnimationModifier )
-        {
-        if( effects->animationTimeFactor() ) // If == 0 we just skip the calculation
-            strength = 0.9 / effects->animationTimeFactor();
-        decay = effects->animationTimeFactor() / ( effects->animationTimeFactor() + 0.3333333 );
+    double strength = 0.08;
+    double smoothness = 4.0;
+    if( m_useGlobalAnimationModifier && effects->animationTimeFactor() )
+        { // If the factor is == 0 then we just skip the calculation completely
+        strength = 0.08 / effects->animationTimeFactor();
+        smoothness = effects->animationTimeFactor() * 4.0;
         }
 
     m_managedWindows[ w ] = WindowMotion();
-    m_managedWindows[ w ].translation.setStrengthDecay( strength, decay );
-    m_managedWindows[ w ].scale.setStrengthDecay( strength, decay / 2.0 );
+    m_managedWindows[ w ].translation.setStrength( strength );
+    m_managedWindows[ w ].translation.setSmoothness( smoothness );
+    m_managedWindows[ w ].scale.setStrength( strength * 1.33 );
+    m_managedWindows[ w ].scale.setSmoothness( smoothness / 2.0 );
 
     m_managedWindows[ w ].translation.setValue( w->pos() );
     m_managedWindows[ w ].scale.setValue( QPointF( 1.0, 1.0 ));
@@ -1166,8 +1203,8 @@ void WindowMotionManager::calculate( int time )
             { // Still scaling
             motion->scale.calculate( time );
             diffS = motion->scale.distance();
-            if( qAbs( diffS.x() ) < 0.002 && qAbs( motion->scale.velocity().x() ) < 0.05 &&
-                qAbs( diffS.y() ) < 0.002 && qAbs( motion->scale.velocity().y() ) < 0.05 )
+            if( qAbs( diffS.x() ) < 0.001 && qAbs( motion->scale.velocity().x() ) < 0.05 &&
+                qAbs( diffS.y() ) < 0.001 && qAbs( motion->scale.velocity().y() ) < 0.05 )
                 { // Hide tiny oscillations
                 motion->scale.finish();
                 diffS = QPoint( 0.0, 0.0 );

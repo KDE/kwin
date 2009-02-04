@@ -1260,14 +1260,7 @@ class KWIN_EXPORT TimeLine
     };
 
 /**
- * @short A single motion dynamics object.
- *
- * This class represents a single object that can be moved around a
- * n-dimensional space. Although it can be used directly by itself
- * it is recommended to use a motion manager instead.
- * 
- * To create a 1D motion object use Motion<double>
- * To create a 2D motion object use Motion<QRectF>
+ * @internal
  */
 template <typename T>
 class KWIN_EXPORT Motion
@@ -1276,12 +1269,10 @@ class KWIN_EXPORT Motion
         /**
          * Creates a new motion object. "Strength" is the amount of
          * acceleration that is applied to the object when the target
-         * changes and "decay" relates to the amount of overshoot
-         * once the object reaches the target. A decay of 1.0 will
-         * cause never-ending oscillation and while a decay of 0.0
-         * will cause no overshoot.
+         * changes and "smoothness" relates to how fast the object
+         * can change its direction and speed.
          */
-        explicit Motion( T initial = T(), double strength = 7.5, double decay = 0.5 );
+        explicit Motion( T initial, double strength, double smoothness );
         /**
          * Creates an exact copy of another motion object, including
          * position, target and velocity.
@@ -1298,10 +1289,8 @@ class KWIN_EXPORT Motion
 
         inline double strength() const { return m_strength; }
         inline void setStrength( const double strength ) { m_strength = strength; }
-        inline double decay() const { return m_decay; }
-        inline void setDecay( const double decay ) { m_decay = decay; }
-        inline void setStrengthDecay( const double strength, const double decay )
-            { m_strength = strength; m_decay = decay; }
+        inline double smoothness() const { return m_smoothness; }
+        inline void setSmoothness( const double smoothness ) { m_smoothness = smoothness; }
 
         /**
          * The distance between the current position and the target.
@@ -1325,7 +1314,37 @@ class KWIN_EXPORT Motion
         T m_target;
         T m_velocity;
         double m_strength;
-        double m_decay;
+        double m_smoothness;
+    };
+
+/**
+ * @short A single 1D motion dynamics object.
+ *
+ * This class represents a single object that can be moved around a
+ * 1D space. Although it can be used directly by itself it is
+ * recommended to use a motion manager instead.
+ */
+class KWIN_EXPORT Motion1D : public Motion<double>
+    {
+    public:
+        explicit Motion1D( double initial = 0.0, double strength = 0.08, double smoothness = 4.0 );
+        Motion1D( const Motion1D &other );
+        ~Motion1D();
+    };
+
+/**
+ * @short A single 2D motion dynamics object.
+ *
+ * This class represents a single object that can be moved around a
+ * 2D space. Although it can be used directly by itself it is
+ * recommended to use a motion manager instead.
+ */
+class KWIN_EXPORT Motion2D : public Motion<QPointF>
+    {
+    public:
+        explicit Motion2D( QPointF initial = QPointF(), double strength = 0.08, double smoothness = 4.0 );
+        Motion2D( const Motion2D &other );
+        ~Motion2D();
     };
 
 /**
@@ -1456,8 +1475,8 @@ class KWIN_EXPORT WindowMotionManager
         bool m_useGlobalAnimationModifier;
         struct WindowMotion
             { // TODO: Rotation, etc?
-            Motion<QPointF> translation; // Absolute position
-            Motion<QPointF> scale; // xScale and yScale
+            Motion2D translation; // Absolute position
+            Motion2D scale; // xScale and yScale
             };
         QHash<EffectWindow*, WindowMotion> m_managedWindows;
         uint m_movingWindows;
@@ -1674,12 +1693,12 @@ double WindowQuad::originalBottom() const
 ***************************************************************/
 
 template <typename T>
-Motion<T>::Motion( T initial, double strength, double decay )
+Motion<T>::Motion( T initial, double strength, double smoothness )
     :   m_value( initial )
     ,   m_target( initial )
     ,   m_velocity()
     ,   m_strength( strength )
-    ,   m_decay( decay )
+    ,   m_smoothness( smoothness )
     {
     }
 
@@ -1689,7 +1708,7 @@ Motion<T>::Motion( const Motion &other )
     ,   m_target( other.target() )
     ,   m_velocity( other.velocity() )
     ,   m_strength( other.strength() )
-    ,   m_decay( other.decay() )
+    ,   m_smoothness( other.smoothness() )
     {
     }
 
@@ -1704,12 +1723,15 @@ void Motion<T>::calculate( const int msec )
     if( m_value == m_target && m_velocity == T() ) // At target and not moving
         return;
 
-    double delta = qMin( 1.0, double( msec ) / 100.0 );
-    T diff = m_target - m_value;
-    T strength = diff * m_strength;
-    m_velocity = m_decay * m_velocity * ( 1.0 - delta ) * ( 1.0 - delta )
-               + strength * delta; // TODO/HACK: Need to work out correct formula
-    m_value += m_velocity;
+    // Poor man's time independent calculation
+    int steps = qMax( 1, msec / 5 );
+    for( int i = 0; i < steps; i++ )
+        {
+        T diff = m_target - m_value;
+        T strength = diff * m_strength;
+        m_velocity = ( m_smoothness * m_velocity + strength ) / ( m_smoothness + 1.0 );
+        m_value += m_velocity;
+        }
     }
 
 template <typename T>
