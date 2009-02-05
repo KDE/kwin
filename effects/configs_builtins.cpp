@@ -4,6 +4,7 @@
 
 Copyright (C) 2007 Bernhard Loos <nhuh.put@web.de>
 Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,93 +22,67 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 
-#include "boxswitch_config.h"
-#include "desktopgrid_config.h"
-#include "diminactive_config.h"
-#include "magiclamp_config.h"
-#include "maketransparent_config.h"
-#include "presentwindows_config.h"
-#include "shadow_config.h"
-#include "showfps_config.h"
-#include "thumbnailaside_config.h"
-#include "zoom_config.h"
-
+#include "boxswitch/boxswitch_config.h"
+#include "desktopgrid/desktopgrid_config.h"
+#include "diminactive/diminactive_config.h"
+#include "magiclamp/magiclamp_config.h"
+#include "translucency/translucency_config.h"
+#include "presentwindows/presentwindows_config.h"
+#include "shadow/shadow_config.h"
+#include "showfps/showfps_config.h"
+#include "thumbnailaside/thumbnailaside_config.h"
+#include "zoom/zoom_config.h"
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-#include "coverswitch_config.h"
-#include "cube_config.h"
-#include "cylinder_config.h"
-#include "flipswitch_config.h"
-#include "invert_config.h"
-#include "lookingglass_config.h"
-#include "mousemark_config.h"
-#include "magnifier_config.h"
-#include "sharpen_config.h"
-#include "snow_config.h"
-#include "sphere_config.h"
-#include "trackmouse_config.h"
-#include "wobblywindows_config.h"
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-// xrender-only here if any
-#endif
-#ifdef HAVE_CAPTURY
-#include "videorecord_config.h"
+#include "coverswitch/coverswitch_config.h"
+#include "cube/cube_config.h"
+#include "cube/cylinder_config.h"
+#include "cube/sphere_config.h"
+#include "flipswitch/flipswitch_config.h"
+#include "invert/invert_config.h"
+#include "lookingglass/lookingglass_config.h"
+#include "mousemark/mousemark_config.h"
+#include "magnifier/magnifier_config.h"
+#include "sharpen/sharpen_config.h"
+#include "snow/snow_config.h"
+#include "trackmouse/trackmouse_config.h"
+#include "wobblywindows/wobblywindows_config.h"
 #endif
 
 #include <kwineffects.h>
 
 #include <KPluginLoader>
-#ifndef KDE_USE_FINAL
-KWIN_EFFECT_CONFIG_FACTORY
-#endif
 
-#define COMMON_PLUGINS \
-    registerPlugin<KWin::BoxSwitchEffectConfig>("boxswitch"); \
-    registerPlugin<KWin::DesktopGridEffectConfig>("desktopgrid"); \
-    registerPlugin<KWin::DimInactiveEffectConfig>("diminactive"); \
-    registerPlugin<KWin::MagicLampEffectConfig>("magiclamp"); \
-    registerPlugin<KWin::MakeTransparentEffectConfig>("maketransparent"); \
-    registerPlugin<KWin::PresentWindowsEffectConfig>("presentwindows");   \
-    registerPlugin<KWin::ShadowEffectConfig>("shadow"); \
-    registerPlugin<KWin::ShowFpsEffectConfig> ("showfps"); \
-    registerPlugin<KWin::ThumbnailAsideEffectConfig>("thumbnailaside"); \
-    registerPlugin<KWin::ZoomEffectConfig>("zoom");
+namespace KWin
+{
 
-#define OPENGL_PLUGINS \
-    registerPlugin<KWin::CoverSwitchEffectConfig>("coverswitch"); \
-    registerPlugin<KWin::CubeEffectConfig>("cube"); \
-    registerPlugin<KWin::CylinderEffectConfig>("cylinder"); \
-    registerPlugin<KWin::FlipSwitchEffectConfig>("flipswitch"); \
-    registerPlugin<KWin::InvertEffectConfig>("invert"); \
-    registerPlugin<KWin::LookingGlassEffectConfig>("lookingglass"); \
-    registerPlugin<KWin::MouseMarkEffectConfig>("mousemark"); \
-    registerPlugin<KWin::MagnifierEffectConfig>("magnifier"); \
-    registerPlugin<KWin::SharpenEffectConfig>("sharpen"); \
-    registerPlugin<KWin::SnowEffectConfig>("snow"); \
-    registerPlugin<KWin::SphereEffectConfig>("sphere"); \
-    registerPlugin<KWin::TrackMouseEffectConfig>("trackmouse"); \
-    registerPlugin<KWin::WobblyWindowsEffectConfig> ("wobblywindows");
+KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
+    KWIN_EFFECT_CONFIG_SINGLE( boxswitch, BoxSwitchEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( desktopgrid, DesktopGridEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( diminactive, DimInactiveEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( magiclamp, MagicLampEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( translucency, TranslucencyEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( presentwindows, PresentWindowsEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( shadow, ShadowEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( showfps, ShowFpsEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( thumbnailaside, ThumbnailAsideEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( zoom, ZoomEffectConfig )
 
-#define XRENDER_PLUGINS
-#define CAPTURY_PLUGINS \
-    registerPlugin<KWin::VideoRecordEffectConfig> ("videorecord");
-
-K_PLUGIN_FACTORY_DEFINITION(EffectFactory,
-    COMMON_PLUGINS
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    OPENGL_PLUGINS
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    XRENDER_PLUGINS
-#endif
-#ifdef HAVE_CAPTURY
-    CAPTURY_PLUGINS
+    KWIN_EFFECT_CONFIG_SINGLE( coverswitch, CoverSwitchEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( cube, CubeEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( cylinder, CylinderEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( sphere, SphereEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( flipswitch, FlipSwitchEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( invert, InvertEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( lookingglass, LookingGlassEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( mousemark, MouseMarkEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( magnifier, MagnifierEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( sharpen, SharpenEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( snow, SnowEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( trackmouse, TrackMouseEffectConfig )
+    KWIN_EFFECT_CONFIG_SINGLE( wobblywindows, WobblyWindowsEffectConfig )
 #endif
     )
-K_EXPORT_PLUGIN(EffectFactory("kwin"))
 
-#undef COMMON_PLUGINS
-#undef OPENGL_PLUGINS
-#undef XRENDER_PLUGINS
-#undef CAPTURY_PLUGINS
+} // namespace

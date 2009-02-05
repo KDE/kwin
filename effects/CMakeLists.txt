@@ -1,235 +1,104 @@
-# Uncomment to have the test effects built
-#add_subdirectory( test )
-
+# Uncomment to have the test effects built as well
+#add_subdirectory( _test )
 
 # Adds effect plugin with given name. Sources are given after the name
-macro(KWIN4_ADD_EFFECT name)
-    kde4_add_plugin(kwin4_effect_${name} ${ARGN})
-    target_link_libraries(kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS} kephal)
-    install(TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
-endmacro(KWIN4_ADD_EFFECT)
+macro( KWIN4_ADD_EFFECT name )
+    kde4_add_plugin( kwin4_effect_${name} ${ARGN} )
+    target_link_libraries( kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS} kephal )
+    install( TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
+endmacro( KWIN4_ADD_EFFECT )
 
-macro(KWIN4_ADD_EFFECT_CONFIG name)
-    set(kwin4_effect_ui ) #empty
-    set(kwin4_effect_src ) #empty
-    foreach(file ${ARGN})
-        if(file MATCHES \\.ui)
-            set(kwin4_effect_ui ${kwin4_effect_ui} ${file})
-        else(file MATCHES \\.ui)
-            set(kwin4_effect_src ${kwin4_effect_src} ${file})
-        endif(file MATCHES \\.ui)
-    endforeach(file)
-    kde4_add_ui_files(kwin4_effect_src ${kwin4_effect_ui})
-    kde4_add_plugin(kcm_kwin4_effect_${name} ${kwin4_effect_src})
-    target_link_libraries(kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} kephal)
-    install(TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
-endmacro(KWIN4_ADD_EFFECT_CONFIG)
+macro( KWIN4_ADD_EFFECT_CONFIG name )
+    set( kwin4_effect_ui ) # Initially empty
+    set( kwin4_effect_src ) # Initially empty
 
+    foreach( file ${ARGN} )
+        if( file MATCHES \\.ui )
+            set( kwin4_effect_ui ${kwin4_effect_ui} ${file} )
+        else( file MATCHES \\.ui )
+            set( kwin4_effect_src ${kwin4_effect_src} ${file} )
+        endif( file MATCHES \\.ui )
+    endforeach( file )
+
+    kde4_add_ui_files( kwin4_effect_src ${kwin4_effect_ui} )
+    kde4_add_plugin( kcm_kwin4_effect_${name} ${kwin4_effect_src} )
+    target_link_libraries( kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} kephal )
+    install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
+endmacro( KWIN4_ADD_EFFECT_CONFIG )
+
+macro( KWIN4_EFFECT_LINK_XRENDER name )
+    if( KWIN_HAVE_XRENDER_COMPOSITING )
+        target_link_libraries( kwin4_effect_${name} ${X11_Xrender_LIB} ${X11_LIBRARIES} kephal )
+    endif( KWIN_HAVE_XRENDER_COMPOSITING )
+endmacro( KWIN4_EFFECT_LINK_XRENDER )
+
+# Make sure we can see our libraries
 include_directories(
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib
     )
 
-install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+# Install the KWin/Effect service type
+install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
-### builtins - most important, ready-to-use effects
-# sources
-SET(kwin4_effect_builtins_sources
-    boxswitch.cpp
-    desktopgrid.cpp
-    dialogparent.cpp
-    diminactive.cpp
-    dimscreen.cpp
-    fade.cpp
-    fadedesktop.cpp
-    fallapart.cpp
-    highlightwindow.cpp
-    login.cpp
-    logout.cpp
-    magiclamp.cpp
-    maketransparent.cpp
-    minimizeanimation.cpp
-    presentwindows.cpp
-    scalein.cpp
-    shadow.cpp
-    showfps.cpp
-    showpaint.cpp
-    slide.cpp
-    taskbarthumbnail.cpp
-    thumbnailaside.cpp
-    zoom.cpp
-    )
-# their .desktop files
+# Create initial variables
+set( kwin4_effect_builtins_sources )
+set( kwin4_effect_builtins_config_sources configs_builtins.cpp )
+set( kwin4_effect_include_directories )
+
+###############################################################################
+# Built-in effects go here
+
+# Common effects
+include( boxswitch/CMakeLists.txt )
+include( desktopgrid/CMakeLists.txt )
+include( dialogparent/CMakeLists.txt )
+include( diminactive/CMakeLists.txt )
+include( dimscreen/CMakeLists.txt )
+include( fade/CMakeLists.txt )
+include( fadedesktop/CMakeLists.txt )
+include( fallapart/CMakeLists.txt )
+include( highlightwindow/CMakeLists.txt )
+include( login/CMakeLists.txt )
+include( logout/CMakeLists.txt )
+include( magiclamp/CMakeLists.txt )
+include( translucency/CMakeLists.txt )
+include( minimizeanimation/CMakeLists.txt )
+include( presentwindows/CMakeLists.txt )
+include( scalein/CMakeLists.txt )
+include( shadow/CMakeLists.txt )
+include( showfps/CMakeLists.txt )
+include( showpaint/CMakeLists.txt )
+include( slide/CMakeLists.txt )
+include( taskbarthumbnail/CMakeLists.txt )
+include( thumbnailaside/CMakeLists.txt )
+include( zoom/CMakeLists.txt )
+
+# OpenGL-specific effects
+if( KWIN_HAVE_OPENGL_COMPOSITING )
+    include( blur/CMakeLists.txt )
+    include( coverswitch/CMakeLists.txt )
+    include( cube/CMakeLists.txt )
+    include( explosion/CMakeLists.txt )
+    include( flipswitch/CMakeLists.txt )
+    include( invert/CMakeLists.txt )
+    include( lookingglass/CMakeLists.txt )
+    include( magnifier/CMakeLists.txt )
+    include( mousemark/CMakeLists.txt )
+    include( sharpen/CMakeLists.txt )
+    include( snow/CMakeLists.txt )
+    include( trackmouse/CMakeLists.txt )
+    include( wobblywindows/CMakeLists.txt )
+endif( KWIN_HAVE_OPENGL_COMPOSITING )
+
+###############################################################################
+
+# Add the builtins plugin
+KWIN4_ADD_EFFECT( builtins ${kwin4_effect_builtins_sources} )
+KWIN4_ADD_EFFECT_CONFIG( builtins ${kwin4_effect_builtins_config_sources} )
+KWIN4_EFFECT_LINK_XRENDER( builtins )
+
+# Install global data files
 install( FILES
-    boxswitch.desktop
-    desktopgrid.desktop
-    dialogparent.desktop
-    diminactive.desktop
-    dimscreen.desktop
-    fade.desktop
-    fadedesktop.desktop
-    fallapart.desktop
-    highlightwindow.desktop
-    login.desktop
-    logout.desktop
-    magiclamp.desktop
-    maketransparent.desktop
-    minimizeanimation.desktop
-    presentwindows.desktop
-    scalein.desktop
-    shadow.desktop
-    showfps.desktop
-    showpaint.desktop
-    slide.desktop
-    taskbarthumbnail.desktop
-    thumbnailaside.desktop
-    zoom.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-# config modules
-SET(kwin4_effect_builtins_config_sources
-    boxswitch_config.cpp
-    boxswitch_config.ui
-    desktopgrid_config.cpp
-    desktopgrid_config.ui
-    diminactive_config.cpp
-    diminactive_config.ui
-    magiclamp_config.cpp
-    magiclamp_config.ui
-    maketransparent_config.cpp
-    maketransparent_config.ui
-    presentwindows_config.cpp
-    presentwindows_config.ui
-    shadow_config.cpp
-    shadow_config.ui
-    showfps_config.cpp
-    showfps_config.ui
-    thumbnailaside_config.cpp
-    thumbnailaside_config.ui
-    zoom_config.cpp
-    configs_builtins.cpp)
-install( FILES
-    boxswitch_config.desktop
-    desktopgrid_config.desktop
-    diminactive_config.desktop
-    magiclamp_config.desktop
-    maketransparent_config.desktop
-    presentwindows_config.desktop
-    shadow_config.desktop
-    showfps_config.desktop
-    thumbnailaside_config.desktop
-    zoom_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-if(KWIN_HAVE_OPENGL_COMPOSITING)
-    # opengl-based effects
-    SET(kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-        blur.cpp
-        coverswitch.cpp
-        cube.cpp
-        cylinder.cpp
-        explosioneffect.cpp
-        flipswitch.cpp
-        invert.cpp
-        lookingglass.cpp
-        magnifier.cpp
-        mousemark.cpp
-        sharpen.cpp
-        sphere.cpp
-        snow.cpp
-        trackmouse.cpp
-        wobblywindows.cpp
-        )
-    install( FILES
-        blur.desktop
-        coverswitch.desktop
-        cube.desktop
-        cylinder.desktop
-        explosion.desktop
-        flipswitch.desktop
-        invert.desktop
-        lookingglass.desktop
-        magnifier.desktop
-        mousemark.desktop
-        sharpen.desktop
-        sphere.desktop
-        snow.desktop
-        trackmouse.desktop
-        wobblywindows.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-    install( FILES
-        data/trackmouse.png
-        data/explosion.frag
-        data/explosion.vert
-        data/explosion-start.png
-        data/explosion-end.png
-        data/blur.frag
-        data/blur.vert
-        data/blur-render.frag
-        data/blur-render.vert
-        data/invert.frag
-        data/invert.vert
-        data/sharpen.frag
-        data/sharpen.vert
-        data/lookingglass.frag
-        data/lookingglass.vert
-        data/shadow-texture.png
-        data/snow.frag
-        data/snow.vert
-        data/snowflake.png
-        data/circle.png
-        data/circle-edgy.png
-        data/cubecap.png
-        data/cylinder.frag
-        data/cylinder.vert
-        data/sphere.vert
-        DESTINATION  ${DATA_INSTALL_DIR}/kwin )
-    SET(kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-        coverswitch_config.cpp
-        coverswitch_config.ui
-        cube_config.cpp
-        cube_config.ui
-        cylinder_config.cpp
-        cylinder_config.ui
-        flipswitch_config.cpp
-        flipswitch_config.ui
-        invert_config.cpp
-        lookingglass_config.cpp
-        lookingglass_config.ui
-        magnifier_config.cpp
-        magnifier_config.ui
-        mousemark_config.cpp
-        mousemark_config.ui
-        sharpen_config.cpp
-        snow_config.cpp
-        snow_config.ui
-        sphere_config.cpp
-        sphere_config.ui
-        trackmouse_config.cpp
-        wobblywindows_config.cpp
-        wobblywindows_config.ui
-        )
-    install( FILES
-        coverswitch_config.desktop
-        cube_config.desktop
-        cylinder_config.desktop
-        flipswitch_config.desktop
-        invert_config.desktop
-        lookingglass_config.desktop
-        magnifier_config.desktop
-        mousemark_config.desktop
-        sharpen_config.desktop
-        snow_config.desktop
-        sphere_config.desktop
-        trackmouse_config.desktop
-        wobblywindows_config.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-endif(KWIN_HAVE_OPENGL_COMPOSITING)
-
-# add the plugin
-KWIN4_ADD_EFFECT(builtins ${kwin4_effect_builtins_sources})
-KWIN4_ADD_EFFECT_CONFIG(builtins ${kwin4_effect_builtins_config_sources})
-# link to xrender if necessary
-if (KWIN_HAVE_XRENDER_COMPOSITING)
-  target_link_libraries(kwin4_effect_builtins ${X11_Xrender_LIB} ${X11_LIBRARIES} kephal)
-endif (KWIN_HAVE_XRENDER_COMPOSITING)
-
+    _data/circle-edgy.png
+    _data/circle.png
+    DESTINATION ${DATA_INSTALL_DIR}/kwin )

@@ -462,12 +462,26 @@ class KWIN_EXPORT Effect
  * E.g.  KWIN_EFFECT_CONFIG( flames, MyFlameEffectConfig )
  **/
 #define KWIN_EFFECT_CONFIG( name, classname ) \
-    K_PLUGIN_FACTORY(name##_factory, registerPlugin<classname>();) \
-    K_EXPORT_PLUGIN(name##_factory("kcm_kwineffect_" #name))
-
+    K_PLUGIN_FACTORY(EffectFactory, registerPlugin<classname>(#name);) \
+    K_EXPORT_PLUGIN(EffectFactory("kcm_kwin4_effect_" #name))
+/**
+ * Defines the function used to retrieve multiple effects' config widget
+ * E.g.  KWIN_EFFECT_CONFIG_MULTIPLE( flames,
+ *           KWIN_EFFECT_CONFIG_SINGLE( flames, MyFlameEffectConfig )
+ *           KWIN_EFFECT_CONFIG_SINGLE( fire, MyFireEffectConfig )
+ *           )
+ **/
+#define KWIN_EFFECT_CONFIG_MULTIPLE( name, singles ) \
+    K_PLUGIN_FACTORY(EffectFactory, singles) \
+    K_EXPORT_PLUGIN(EffectFactory("kcm_kwin4_effect_" #name))
+/**
+ * @see KWIN_EFFECT_CONFIG_MULTIPLE
+ */
+#define KWIN_EFFECT_CONFIG_SINGLE( name, classname ) \
+    registerPlugin<classname>(#name);
 /**
  * The declaration of the factory to export the effect
- **/
+ */
 #define KWIN_EFFECT_CONFIG_FACTORY K_PLUGIN_FACTORY_DECLARATION(EffectFactory)
 
 
