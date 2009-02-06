@@ -724,6 +724,8 @@ void DesktopGridEffect::setActive( bool active )
     activated = active;
     if( activated && timeline.value() == 0 )
         setup();
+    if( !activated )
+        setHighlightedDesktop( effects->currentDesktop() ); // Ensure selected desktop is highlighted
     effects->addRepaintFull();
     }
 
@@ -739,7 +741,7 @@ void DesktopGridEffect::setup()
     hoverTimeline.clear();
     for( int i = 0; i < effects->numberOfDesktops(); i++ )
         {
-        TimeLine newTimeline( animationTime( 250 ));
+        TimeLine newTimeline( animationTime( zoomDuration ));
         newTimeline.setCurveShape( TimeLine::EaseInOutCurve );
         hoverTimeline.append( newTimeline );
         }
