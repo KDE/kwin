@@ -41,7 +41,8 @@ namespace KWin
 KWIN_EFFECT( presentwindows, PresentWindowsEffect )
 
 PresentWindowsEffect::PresentWindowsEffect()
-    : m_borderActivate( ElectricNone )
+    : m_proxy( this )
+    , m_borderActivate( ElectricNone )
     , m_borderActivateAll( ElectricNone )
     ,   m_activated( false )
     ,   m_allDesktops( false )
@@ -98,6 +99,11 @@ void PresentWindowsEffect::reconfigure( ReconfigureFlags )
     m_fillGaps = conf.readEntry( "FillGaps", true );
     m_fadeDuration = double( animationTime( 150 ));
     m_showPanel = conf.readEntry( "ShowPanel", false );
+    }
+
+const void* PresentWindowsEffect::proxy() const
+    {
+    return &m_proxy;
     }
 
 //-----------------------------------------------------------------------------

@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_PRESENTWINDOWS_H
 #define KWIN_PRESENTWINDOWS_H
 
+#include "presentwindows_proxy.h"
+
 // Include with base class for effects.
 #include <kwineffects.h>
 #include <kwinglutils.h>
@@ -69,6 +71,8 @@ class PresentWindowsEffect
         virtual ~PresentWindowsEffect();
 
         virtual void reconfigure( ReconfigureFlags );
+        virtual const void* proxy() const;
+
         // Screen painting
         virtual void prePaintScreen( ScreenPrePaintData &data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData &data );
@@ -129,6 +133,9 @@ class PresentWindowsEffect
         void paintWindowIcon( EffectWindow *w, WindowPaintData &data ); // TODO: Do we need this?
 
     private:
+        PresentWindowsEffectProxy m_proxy;
+        friend class PresentWindowsEffectProxy;
+
         // User configuration settings
         ElectricBorder m_borderActivate;
         ElectricBorder m_borderActivateAll;

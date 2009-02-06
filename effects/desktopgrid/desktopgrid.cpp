@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "desktopgrid.h"
 
+#include "../presentwindows/presentwindows_proxy.h"
+
 #include <math.h>
 
 #include <kaction.h>
@@ -711,6 +713,15 @@ void DesktopGridEffect::setActive( bool active )
         return; // No point if there is only one desktop
     if( activated == active )
         return; // Already in that state
+
+    // Example proxy code, TODO: Use or remove
+    //const PresentWindowsEffectProxy* proxy =
+    //    static_cast<const PresentWindowsEffectProxy*>( effects->getProxy( "presentwindows" ));
+    //if( proxy )
+    //    kDebug() << "Retrieved PresentWindowsEffectProxy, is present windows activate?"
+    //             << proxy->isActive();
+    //else
+    //    kDebug() << "Failed to retrieve PresentWindowsEffectProxy. Maybe present windows isn't enabled?";
 
     activated = active;
     if( activated && timeline.value() == 0 )

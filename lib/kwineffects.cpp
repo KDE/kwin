@@ -112,6 +112,11 @@ void Effect::reconfigure( ReconfigureFlags )
     {
     }
 
+const void* Effect::proxy() const
+    {
+    return NULL;
+    }
+
 void Effect::windowUserMovedResized( EffectWindow* , bool, bool )
     {
     }

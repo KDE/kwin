@@ -297,6 +297,11 @@ class KWIN_EXPORT Effect
         virtual void reconfigure( ReconfigureFlags flags );
 
         /**
+         * Called when another effect requests the proxy for this effect.
+         */
+        virtual const void* proxy() const;
+
+        /**
          * Called before starting to paint the screen.
          * In this method you can:
          * @li set whether the windows or the entire screen will be transformed
@@ -521,6 +526,12 @@ class KWIN_EXPORT EffectsHandler
         virtual QPoint cursorPos() const = 0;
         virtual bool grabKeyboard( Effect* effect ) = 0;
         virtual void ungrabKeyboard() = 0;
+
+        /**
+         * Retrieve the proxy class for an effect if it has one. Will return NULL if
+         * the effect isn't loaded or doesn't have a proxy class.
+         */
+        virtual const void* getProxy( QString name ) = 0;
 
         // Mouse polling
         virtual void startMousePolling() = 0;

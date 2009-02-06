@@ -355,6 +355,18 @@ void EffectsHandlerImpl::grabbedKeyboardEvent( QKeyEvent* e )
         keyboard_grab_effect->grabbedKeyboardEvent( e );
     }
 
+const void* EffectsHandlerImpl::getProxy( QString name )
+    {
+    // All effects start with "kwin4_effect_", prepend it to the name
+    name.prepend( "kwin4_effect_" );
+
+    for( QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it)
+        if ( (*it).first == name )
+            return (*it).second->proxy();
+
+    return NULL;
+    }
+
 void EffectsHandlerImpl::startMousePolling()
     {
     if( !mouse_poll_ref_count ) // Start timer if required

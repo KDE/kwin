@@ -65,6 +65,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual QPoint cursorPos() const;
         virtual bool grabKeyboard( Effect* effect );
         virtual void ungrabKeyboard();
+        virtual const void* getProxy( QString name );
         virtual void startMousePolling();
         virtual void stopMousePolling();
         virtual EffectWindow* findWindow( WId id ) const;

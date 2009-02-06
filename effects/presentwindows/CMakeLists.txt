@@ -4,6 +4,7 @@
 # Source files
 set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
     presentwindows/presentwindows.cpp
+    presentwindows/presentwindows_proxy.cpp
     )
 
 # .desktop files
