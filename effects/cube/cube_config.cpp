@@ -72,7 +72,6 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->displayDesktopNameBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->reflectionBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->backgroundColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
-    connect(m_ui->animateDesktopChangeBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->bigCubeBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
@@ -84,8 +83,6 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->walkThroughDesktopBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->invertKeysBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->invertMouseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(m_ui->dontSlidePanelsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(m_ui->dontSlideStickyWindowsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -105,7 +102,6 @@ void CubeEffectConfig::load()
     QColor capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     bool texturedCaps = conf.readEntry( "TexturedCaps", true );
     bool caps = conf.readEntry( "Caps", true );
-    bool animateChange = conf.readEntry( "AnimateDesktopChange", false );
     bool bigCube = conf.readEntry( "BigCube", false );
     bool closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
     bool walkThroughDesktop = conf.readEntry( "TabBox", false );
@@ -113,8 +109,6 @@ void CubeEffectConfig::load()
     m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
     bool invertKeys = conf.readEntry( "InvertKeys", false );
     bool invertMouse = conf.readEntry( "InvertMouse", false );
-    bool dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
-    bool dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", true );
     
     m_ui->rotationDurationSpin->setValue( duration );
     m_ui->cubeOpacitySlider->setValue( opacity );
@@ -152,14 +146,6 @@ void CubeEffectConfig::load()
         {
         m_ui->capsImageBox->setCheckState( Qt::Unchecked );
         }
-    if( animateChange )
-        {
-        m_ui->animateDesktopChangeBox->setCheckState( Qt::Checked );
-        }
-    else
-        {
-        m_ui->animateDesktopChangeBox->setCheckState( Qt::Unchecked );
-        }
     if( bigCube )
         {
         m_ui->bigCubeBox->setCheckState( Qt::Checked );
@@ -188,8 +174,6 @@ void CubeEffectConfig::load()
     m_ui->capColorButton->setColor( capColor );
     m_ui->invertKeysBox->setChecked( invertKeys );
     m_ui->invertMouseBox->setChecked( invertMouse );
-    m_ui->dontSlidePanelsBox->setChecked( dontSlidePanels );
-    m_ui->dontSlideStickyWindowsBox->setChecked( dontSlideStickyWindows );
     capsSelectionChanged();
 
     emit changed(false);
@@ -208,7 +192,6 @@ void CubeEffectConfig::save()
     conf.writeEntry( "Caps", m_ui->cubeCapsBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CapColor", m_ui->capColorButton->color() );
     conf.writeEntry( "TexturedCaps", m_ui->capsImageBox->checkState() == Qt::Checked ? true : false );
-    conf.writeEntry( "AnimateDesktopChange", m_ui->animateDesktopChangeBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "BigCube", m_ui->bigCubeBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CloseOnMouseRelease", m_ui->closeOnMouseReleaseBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "Wallpaper", m_ui->wallpaperRequester->url().path() );
@@ -216,8 +199,6 @@ void CubeEffectConfig::save()
     conf.writeEntry( "TabBox", m_ui->walkThroughDesktopBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "InvertKeys", m_ui->invertKeysBox->isChecked() );
     conf.writeEntry( "InvertMouse", m_ui->invertMouseBox->isChecked() );
-    conf.writeEntry( "DontSlidePanels", m_ui->dontSlidePanelsBox->isChecked() );
-    conf.writeEntry( "DontSlideStickyWindows", m_ui->dontSlideStickyWindowsBox->isChecked() );
 
     m_ui->editor->save();
 
@@ -239,7 +220,6 @@ void CubeEffectConfig::defaults()
     m_ui->cubeCapsBox->setCheckState( Qt::Checked );
     m_ui->capColorButton->setColor( KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     m_ui->capsImageBox->setCheckState( Qt::Checked );
-    m_ui->animateDesktopChangeBox->setCheckState( Qt::Unchecked );
     m_ui->bigCubeBox->setCheckState( Qt::Unchecked );
     m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
     m_ui->wallpaperRequester->setPath( "" );
@@ -247,8 +227,6 @@ void CubeEffectConfig::defaults()
     m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
     m_ui->invertKeysBox->setChecked( false );
     m_ui->invertMouseBox->setChecked( false );
-    m_ui->dontSlidePanelsBox->setChecked( true );
-    m_ui->dontSlideStickyWindowsBox->setChecked( true );
     m_ui->editor->allDefault();
     emit changed(true);
     }

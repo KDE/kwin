@@ -48,7 +48,6 @@ class CubeEffect
         virtual void mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, 
             Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
-        virtual void desktopChanged( int old );
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxUpdated();
         virtual void tabBoxClosed();
@@ -71,7 +70,6 @@ class CubeEffect
             Down
             };
         virtual void paintCube( int mask, QRegion region, ScreenPaintData& data );
-        void paintSlideCube( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintCap( float z, float zTexture );
         virtual void paintCapStep( float z, float zTexture, bool texture );
         void loadConfig( QString config );
@@ -96,13 +94,11 @@ class CubeEffect
         bool paintCaps;
         TimeLine timeLine;
         TimeLine verticalTimeLine;
-        TimeLine slideTimeLine;
         RotationDirection rotationDirection;
         RotationDirection verticalRotationDirection;
         VerticalRotationPosition verticalPosition;
         QQueue<RotationDirection> rotations;
         QQueue<RotationDirection> verticalRotations;
-        QQueue<RotationDirection> slideRotations;
         QColor backgroundColor;
         QColor capColor;
         GLTexture* wallpaper;
@@ -114,14 +110,9 @@ class CubeEffect
         bool start;
         bool stop;
         bool reflectionPainting;
-        bool slide;
-        int oldDesktop;
         int rotationDuration;
         QList<EffectWindow*> windowsOnOtherScreens;
-        QSet<EffectWindow*> panels;
-        QSet<EffectWindow*> stickyWindows;
         int activeScreen;
-        bool animateDesktopChange;
         bool bigCube;
         bool bottomCap;
         bool closeOnMouseRelease;
@@ -131,8 +122,6 @@ class CubeEffect
         bool invertKeys;
         bool invertMouse;
         bool tabBoxMode;
-        bool dontSlidePanels;
-        bool dontSlideStickyWindows;
         bool shortcutsRegistered;
 
         // GL lists

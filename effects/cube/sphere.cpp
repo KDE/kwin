@@ -82,7 +82,7 @@ bool SphereEffect::loadData()
         mShader->setUniform( "winTexture", 0 );
         mShader->setUniform( "opacity", cubeOpacity );
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-        if( effects->numScreens() > 1 && (slide || bigCube ) )
+        if( effects->numScreens() > 1 && bigCube )
             rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         mShader->setUniform( "width", (float)rect.width() );
         mShader->setUniform( "height", (float)rect.height() );
