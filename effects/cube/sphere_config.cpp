@@ -76,7 +76,9 @@ SphereEffectConfig::SphereEffectConfig(QWidget* parent, const QVariantList& args
     connect(m_ui->closeOnMouseReleaseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->zPositionSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->capDeformationSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-    connect(m_ui->walkThroughDesktopBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->walkThroughDesktopBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));     
+    connect(m_ui->invertKeysBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));             
+    connect(m_ui->invertMouseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -99,6 +101,8 @@ void SphereEffectConfig::load()
     m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 450 ) );
     m_ui->capDeformationSlider->setValue( conf.readEntry( "CapDeformation", 0 ) );
     m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
+    bool invertKeys = conf.readEntry( "InvertKeys", false );
+    bool invertMouse = conf.readEntry( "InvertMouse", false );
     
     m_ui->rotationDurationSpin->setValue( duration );
     m_ui->cubeOpacitySlider->setValue( opacity );
@@ -145,6 +149,8 @@ void SphereEffectConfig::load()
         }
     m_ui->backgroundColorButton->setColor( background );
     m_ui->capColorButton->setColor( capColor );
+    m_ui->invertKeysBox->setChecked( invertKeys );
+    m_ui->invertMouseBox->setChecked( invertMouse );
     capsSelectionChanged();
 
     emit changed(false);
@@ -166,6 +172,8 @@ void SphereEffectConfig::save()
     conf.writeEntry( "ZPosition", m_ui->zPositionSlider->value() );
     conf.writeEntry( "CapDeformation", m_ui->capDeformationSlider->value() );
     conf.writeEntry( "TabBox", m_ui->walkThroughDesktopBox->checkState() == Qt::Checked ? true : false );
+    conf.writeEntry( "InvertKeys", m_ui->invertKeysBox->isChecked() );
+    conf.writeEntry( "InvertMouse", m_ui->invertMouseBox->isChecked() );
 
     m_ui->editor->save();
 
@@ -190,6 +198,8 @@ void SphereEffectConfig::defaults()
     m_ui->zPositionSlider->setValue( 450 );
     m_ui->capDeformationSlider->setValue( 0 );
     m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
+    m_ui->invertKeysBox->setChecked( false );
+    m_ui->invertMouseBox->setChecked( false );
     m_ui->editor->allDefault();
     emit changed(true);
     }

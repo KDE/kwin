@@ -120,6 +120,8 @@ class CubeEffect
         float zoom;
         float zPosition;
         bool useForTabBox;
+        bool invertKeys;
+        bool invertMouse;
         bool tabBoxMode;
 
         // GL lists

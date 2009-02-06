@@ -137,6 +137,8 @@ void CubeEffect::loadConfig( QString config )
         defaultZPosition = 450.0f;
     zPosition = conf.readEntry( "ZPosition", defaultZPosition );
     useForTabBox = conf.readEntry( "TabBox", false );
+    invertKeys = conf.readEntry( "InvertKeys", false );
+    invertMouse = conf.readEntry( "InvertMouse", false );
     QString file = conf.readEntry( "Wallpaper", QString("") );
     if( wallpaper )
         wallpaper->discard();
@@ -1420,12 +1422,20 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
                 if( !rotating && !start )
                     {
                     rotating = true;
-                    rotationDirection = Left;
+                    if( invertKeys )
+                        rotationDirection = Right;
+                    else
+                        rotationDirection = Left;
                     }
                 else
                     {
                     if( rotations.count() < effects->numberOfDesktops() )
-                        rotations.enqueue( Left );
+                        {
+                        if( invertKeys )
+                            rotations.enqueue( Right );
+                        else
+                            rotations.enqueue( Left );
+                        }
                     }
                 break;
             case Qt::Key_Right:
@@ -1434,66 +1444,134 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
                 if( !rotating && !start )
                     {
                     rotating = true;
-                    rotationDirection = Right;
+                    if( invertKeys )
+                        rotationDirection = Left;
+                    else
+                        rotationDirection = Right;
                     }
                 else
                     {
                     if( rotations.count() < effects->numberOfDesktops() )
-                        rotations.enqueue( Right );
+                        {
+                        if( invertKeys )
+                            rotations.enqueue( Left );
+                        else
+                            rotations.enqueue( Right );
+                        }
                     }
                 break;
             case Qt::Key_Up:
                 kDebug(1212) << "up";
-                if( verticalPosition != Up )
+                if( invertKeys )
                     {
-                    if( !verticalRotating )
+                    if( verticalPosition != Down )
                         {
-                        verticalRotating = true;
-                        verticalRotationDirection = Upwards;
-                        if( verticalPosition == Normal )
-                            verticalPosition = Up;
-                        if( verticalPosition == Down )
-                            verticalPosition = Normal;
+                        if( !verticalRotating )
+                            {
+                            verticalRotating = true;
+                            verticalRotationDirection = Downwards;
+                            if( verticalPosition == Normal )
+                                verticalPosition = Down;
+                            if( verticalPosition == Up )
+                                verticalPosition = Normal;
+                            }
+                        else
+                            {
+                            verticalRotations.enqueue( Downwards );
+                            }
                         }
-                    else
+                    else if( manualVerticalAngle > 0.0 && !verticalRotating )
                         {
-                        verticalRotations.enqueue( Upwards );
+                        // rotate to down position from the manual position
+                        verticalRotating = true;
+                        verticalRotationDirection = Downwards;
+                        verticalPosition = Down;
+                        manualVerticalAngle -= 90.0;
                         }
                     }
-                else if( manualVerticalAngle < 0.0 && !verticalRotating )
+                else
                     {
-                    // rotate to up position from the manual position
-                    verticalRotating = true;
-                    verticalRotationDirection = Upwards;
-                    verticalPosition = Up;
-                    manualVerticalAngle += 90.0;
+                    if( verticalPosition != Up )
+                        {
+                        if( !verticalRotating )
+                            {
+                            verticalRotating = true;
+                            verticalRotationDirection = Upwards;
+                            if( verticalPosition == Normal )
+                                verticalPosition = Up;
+                            if( verticalPosition == Down )
+                                verticalPosition = Normal;
+                            }
+                        else
+                            {
+                            verticalRotations.enqueue( Upwards );
+                            }
+                        }
+                    else if( manualVerticalAngle < 0.0 && !verticalRotating )
+                        {
+                        // rotate to up position from the manual position
+                        verticalRotating = true;
+                        verticalRotationDirection = Upwards;
+                        verticalPosition = Up;
+                        manualVerticalAngle += 90.0;
+                        }
                     }
                 break;
             case Qt::Key_Down:
                 kDebug(1212) << "down";
-                if( verticalPosition != Down )
+                if( invertKeys )
                     {
-                    if( !verticalRotating )
+                    if( verticalPosition != Up )
                         {
-                        verticalRotating = true;
-                        verticalRotationDirection = Downwards;
-                        if( verticalPosition == Normal )
-                            verticalPosition = Down;
-                        if( verticalPosition == Up )
-                            verticalPosition = Normal;
+                        if( !verticalRotating )
+                            {
+                            verticalRotating = true;
+                            verticalRotationDirection = Upwards;
+                            if( verticalPosition == Normal )
+                                verticalPosition = Up;
+                            if( verticalPosition == Down )
+                                verticalPosition = Normal;
+                            }
+                        else
+                            {
+                            verticalRotations.enqueue( Upwards );
+                            }
                         }
-                    else
+                    else if( manualVerticalAngle < 0.0 && !verticalRotating )
                         {
-                        verticalRotations.enqueue( Downwards );
+                        // rotate to up position from the manual position
+                        verticalRotating = true;
+                        verticalRotationDirection = Upwards;
+                        verticalPosition = Up;
+                        manualVerticalAngle += 90.0;
                         }
                     }
-                else if( manualVerticalAngle > 0.0 && !verticalRotating )
+                else
                     {
-                    // rotate to down position from the manual position
-                    verticalRotating = true;
-                    verticalRotationDirection = Downwards;
-                    verticalPosition = Down;
-                    manualVerticalAngle -= 90.0;
+                    if( verticalPosition != Down )
+                        {
+                        if( !verticalRotating )
+                            {
+                            verticalRotating = true;
+                            verticalRotationDirection = Downwards;
+                            if( verticalPosition == Normal )
+                                verticalPosition = Down;
+                            if( verticalPosition == Up )
+                                verticalPosition = Normal;
+                            }
+                        else
+                            {
+                            verticalRotations.enqueue( Downwards );
+                            }
+                        }
+                    else if( manualVerticalAngle > 0.0 && !verticalRotating )
+                        {
+                        // rotate to down position from the manual position
+                        verticalRotating = true;
+                        verticalRotationDirection = Downwards;
+                        verticalPosition = Down;
+                        manualVerticalAngle -= 90.0;
+                        }
                     }
                 break;
             case Qt::Key_Escape:
@@ -1662,7 +1740,10 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
             // display height corresponds to 180*
             int deltaY = pos.y() - oldpos.y();
             float deltaVerticalDegrees = (float)deltaY/rect.height()*180.0f;
-            manualVerticalAngle -= deltaVerticalDegrees;
+            if( invertMouse )
+                manualVerticalAngle += deltaVerticalDegrees;
+            else
+                manualVerticalAngle -= deltaVerticalDegrees;
             if( deltaVerticalDegrees != 0.0 )
                 repaint = true;
             }
@@ -1672,7 +1753,10 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
             // display width corresponds to sum of angles of the polyhedron
             int deltaX = oldpos.x() - pos.x();
             float deltaDegrees = (float)deltaX/rect.width() * 360.0f;
-            manualAngle -= deltaDegrees;
+            if( invertMouse )
+                manualAngle += deltaDegrees;
+            else
+                manualAngle -= deltaDegrees;
             if( deltaDegrees != 0.0 )
                 repaint = true;
             }
