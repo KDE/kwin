@@ -432,7 +432,7 @@ otherwise it will remain active</string>
           <item>
            <widget class="QCheckBox" name="invertKeysBox" >
             <property name="text" >
-             <string>Invert courser keys</string>
+             <string>Invert cursor keys</string>
             </property>
            </widget>
           </item>
