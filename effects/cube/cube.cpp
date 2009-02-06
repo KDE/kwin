@@ -199,6 +199,8 @@ void CubeEffect::loadConfig( QString config )
 
     verticalTimeLine.setCurveShape( TimeLine::EaseInOutCurve );
     verticalTimeLine.setDuration( rotationDuration );
+    slideTimeLine.setCurveShape( TimeLine::EaseInOutCurve );
+    slideTimeLine.setDuration( rotationDuration );
     }
 
 CubeEffect::~CubeEffect()
@@ -224,8 +226,13 @@ void CubeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             verticalTimeLine.addTime( time );
             recompileList = true;
             }
-        if( slide && dontSlidePanels )
-            panels.clear();
+        if( slide && !slideRotations.empty() )
+            {
+            slideTimeLine.addTime( time );
+            recompileList = true;
+            if( dontSlidePanels )
+                panels.clear();
+            }
         }
     effects->prePaintScreen( data, time );
     }
@@ -239,7 +246,8 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             recompileList = false;
             glPushMatrix();
             glNewList( glList, GL_COMPILE );
-            rotateCube();
+            if( !slide )
+                rotateCube();
             glEndList();
             glPopMatrix();
             }
@@ -247,7 +255,10 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         // compile List for cube
         glNewList( glList + 1, GL_COMPILE );
         glPushMatrix();
-        paintCube( mask, region, data );
+        if( slide )
+            paintSlideCube( mask, region, data );
+        else
+            paintCube( mask, region, data );
         glPopMatrix();
         glEndList();
 
@@ -338,8 +349,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             zTranslate *= timeLine.value();
         if( stop )
             zTranslate *= ( 1.0 - timeLine.value() );
-        if( slide )
-            zTranslate = 0.0;
         // reflection
         if( reflection && (!slide) )
             {
@@ -557,11 +566,11 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 void CubeEffect::rotateCube()
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 && (slide || bigCube ) )
+    if( effects->numScreens() > 1 && bigCube )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float xScale = 1.0;
     float yScale = 1.0;
-    if( effects->numScreens() > 1 && !slide && !bigCube  )
+    if( effects->numScreens() > 1 && !bigCube  )
         {
         QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         xScale = (float)rect.width()/(float)fullRect.width();
@@ -594,8 +603,6 @@ void CubeEffect::rotateCube()
         zTranslate *= timeLine.value();
     if( stop )
         zTranslate *= ( 1.0 - timeLine.value() );
-    if( slide )
-        zTranslate = 0.0;
     // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
     float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
@@ -718,7 +725,7 @@ void CubeEffect::rotateCube()
 void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 && (slide || bigCube ) )
+    if( effects->numScreens() > 1 && bigCube )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     cube_painting = true;
@@ -727,8 +734,6 @@ void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
         zTranslate *= timeLine.value();
     if( stop )
         zTranslate *= ( 1.0 - timeLine.value() );
-    if( slide )
-        zTranslate = 0.0;
 
     // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
@@ -741,35 +746,6 @@ void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
         if( painting_desktop == 0 )
             {
             painting_desktop = effects->numberOfDesktops();
-            }
-        if( slide )
-            {
-            // only paint required desktops during slide phase
-            if( painting_desktop != frontDesktop )
-                {
-                int leftDesktop = frontDesktop - 1;
-                int rightDesktop = frontDesktop + 1;
-                if( leftDesktop == 0 )
-                    leftDesktop = effects->numberOfDesktops();
-                if( rightDesktop > effects->numberOfDesktops() )
-                    rightDesktop = 1;
-                if( !desktopChangedWhileRotating && rotationDirection == Left && painting_desktop != rightDesktop )
-                    {
-                    continue;
-                    }
-                if( desktopChangedWhileRotating && rotationDirection == Left && painting_desktop != leftDesktop )
-                    {
-                    continue;
-                    }
-                if( !desktopChangedWhileRotating && rotationDirection == Right && painting_desktop != leftDesktop )
-                    {
-                    continue;
-                    }
-                if( desktopChangedWhileRotating && rotationDirection == Right && painting_desktop != rightDesktop )
-                    {
-                    continue;
-                    }
-                }
             }
         ScreenPaintData newData = data;
         RotationData rot = RotationData();
@@ -784,6 +760,75 @@ void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
     cube_painting = false;
     painting_desktop = effects->currentDesktop();
     }
+
+void CubeEffect::paintSlideCube(int mask, QRegion region, KWin::ScreenPaintData& data)
+    {
+    // slide cube only paints to desktops at a time
+    // first the horizontal rotations followed by vertical rotations
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    float point = rect.width()/2*tan(45.0f*M_PI/180.0f);
+    cube_painting = true;
+    painting_desktop = frontDesktop;
+
+    ScreenPaintData firstFaceData = data;
+    ScreenPaintData secondFaceData = data;
+    RotationData firstFaceRot = RotationData();
+    RotationData secondFaceRot = RotationData();
+    RotationDirection direction = slideRotations.head();
+    int secondDesktop;
+    switch ( direction )
+        {
+        case Left:
+            firstFaceRot.axis = RotationData::YAxis;
+            secondFaceRot.axis = RotationData::YAxis;
+            secondDesktop = effects->desktopToLeft( frontDesktop, true );
+            firstFaceRot.angle = 90.0f*slideTimeLine.value();
+            secondFaceRot.angle = -90.0f*(1.0f - slideTimeLine.value());
+            break;
+        case Right:
+            firstFaceRot.axis = RotationData::YAxis;
+            secondFaceRot.axis = RotationData::YAxis;
+            secondDesktop = effects->desktopToRight( frontDesktop, true );
+            firstFaceRot.angle = -90.0f*slideTimeLine.value();
+            secondFaceRot.angle = 90.0f*(1.0f - slideTimeLine.value());
+            break;
+        case Upwards:
+            firstFaceRot.axis = RotationData::XAxis;
+            secondFaceRot.axis = RotationData::XAxis;
+            secondDesktop = effects->desktopUp( frontDesktop, true);
+            firstFaceRot.angle = -90.0f*slideTimeLine.value();
+            secondFaceRot.angle = 90.0f*(1.0f - slideTimeLine.value());
+            point = rect.height()/2*tan(45.0f*M_PI/180.0f);
+            break;
+        case Downwards:
+            firstFaceRot.axis = RotationData::XAxis;
+            secondFaceRot.axis = RotationData::XAxis;
+            secondDesktop = effects->desktopDown( frontDesktop, true );
+            firstFaceRot.angle = 90.0f*slideTimeLine.value();
+            secondFaceRot.angle = -90.0f*(1.0f - slideTimeLine.value());
+            point = rect.height()/2*tan(45.0f*M_PI/180.0f);
+            break;
+        default:
+            // totally impossible
+            return;
+        }
+    // front desktop
+    firstFaceRot.xRotationPoint = rect.width()/2;
+    firstFaceRot.yRotationPoint = rect.height()/2;
+    firstFaceRot.zRotationPoint = -point;
+    firstFaceData.rotation = &firstFaceRot;
+    effects->paintScreen( mask, region, firstFaceData );
+    // second desktop
+    painting_desktop = secondDesktop;
+    secondFaceRot.xRotationPoint = rect.width()/2;
+    secondFaceRot.yRotationPoint = rect.height()/2;
+    secondFaceRot.zRotationPoint = -point;
+    secondFaceData.rotation = &secondFaceRot;
+    effects->paintScreen( mask, region, secondFaceData );
+    cube_painting = false;
+    painting_desktop = effects->currentDesktop();
+    }
+
 
 void CubeEffect::paintCap( float z, float zTexture )
     {
@@ -1078,6 +1123,39 @@ void CubeEffect::postPaintScreen()
             effects->addRepaintFull();
             return; // rotation has to end before cube is closed
             }
+        if( slide )
+            {
+            if( slideTimeLine.value() == 1.0 )
+                {
+                RotationDirection direction = slideRotations.dequeue();
+                switch (direction)
+                    {
+                    case Left:
+                        frontDesktop = effects->desktopToLeft( frontDesktop, true );
+                        break;
+                    case Right:
+                        frontDesktop = effects->desktopToRight( frontDesktop, true );
+                        break;
+                    case Upwards:
+                        frontDesktop = effects->desktopUp( frontDesktop, true );
+                        break;
+                    case Downwards:
+                        frontDesktop = effects->desktopDown( frontDesktop, true );
+                        break;
+                    }
+                slideTimeLine.setProgress( 0.0 );
+                if( !slideRotations.empty() )
+                    {
+                    effects->addRepaintFull();
+                    return;
+                    }
+                }
+            else
+                {
+                effects->addRepaintFull();
+                return;
+                }
+            }
         if( schedule_close )
             {
             schedule_close = false;
@@ -1089,7 +1167,6 @@ void CubeEffect::postPaintScreen()
                 {
                 activated = false;
                 slide = false;
-                timeLine.setDuration( rotationDuration );
                 effects->setActiveFullScreenEffect( 0 );
                 }
             effects->addRepaintFull();
@@ -1671,9 +1748,6 @@ void CubeEffect::rotateToDesktop( int desktop )
         {
         currentShape = TimeLine::EaseInCurve;
         timeLine.setCurveShape( currentShape );
-        // change timeline duration in slide mode
-        if( slide )
-            timeLine.setDuration( rotationDuration / (rotations.count()+1) );
         }
     }
 
@@ -1716,7 +1790,7 @@ void CubeEffect::setActive( bool active )
         capListCreated = false;
         recompileList = true;
         // create the capList
-        if( paintCaps )
+        if( paintCaps && !slide )
             {
             QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
             if( effects->numScreens() > 1 && (slide || bigCube ) )
@@ -1806,16 +1880,75 @@ void CubeEffect::desktopChanged( int old )
     {
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return;
-    if( activated )
+    if( activated && !slide )
         return;
     if( !animateDesktopChange )
         return;
     slide = true;
+    bool activate = true;
+    if( !slideRotations.empty() )
+        {
+        // last slide still in progress
+        activate = false;
+        old = frontDesktop;
+        RotationDirection direction = slideRotations.dequeue();
+        slideRotations.clear();
+        slideRotations.enqueue( direction );
+        }
     oldDesktop = old;
-    setActive( true );
-    frontDesktop = old;
-    rotateToDesktop( effects->currentDesktop() );
-    setActive( false );
+    // calculate distance in respect to pager
+    int x, y;
+    Qt::Orientation orientation;
+    effects->calcDesktopLayout( &x, &y, &orientation );
+    int x_distance = (( effects->currentDesktop() - 1 ) % x ) - (( old - 1 ) % x );
+    if( qAbs( x_distance ) > x/2 )
+        {
+        int sign = -1 * (x_distance/qAbs( x_distance ));
+        x_distance = sign * ( x - qAbs( x_distance ));
+        }
+    if( x_distance > 0 )
+        {
+        for( int i=0; i<x_distance; i++ )
+            {
+            slideRotations.enqueue( Right );
+            }
+        }
+    else if( x_distance < 0 )
+        {
+        x_distance *= -1;
+        for( int i=0; i<x_distance; i++ )
+            {
+            slideRotations.enqueue( Left );
+            }
+        }
+    int y_distance = (( effects->currentDesktop() -1 ) / x ) - (( old - 1 ) / x );
+    if( qAbs( y_distance ) > y/2 )
+        {
+        int sign = -1 * (y_distance/qAbs( y_distance ));
+        y_distance = sign * ( y - qAbs( y_distance ));
+        }
+    if( y_distance > 0 )
+        {
+        for( int i=0; i<y_distance; i++ )
+            {
+            slideRotations.enqueue( Downwards );
+            }
+        }
+    if( y_distance < 0 )
+        {
+        y_distance *= -1;
+        for( int i=0; i<y_distance; i++ )
+            {
+            slideRotations.enqueue( Upwards );
+            }
+        }
+    if( activate )
+        {
+        setActive( true );
+        slideTimeLine.setProgress( 0.0 );
+        frontDesktop = old;
+        setActive( false );
+        }
     }
 
 

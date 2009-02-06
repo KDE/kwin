@@ -69,6 +69,7 @@ class CubeEffect
             Down
             };
         virtual void paintCube( int mask, QRegion region, ScreenPaintData& data );
+        void paintSlideCube( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintCap( float z, float zTexture );
         virtual void paintCapStep( float z, float zTexture, bool texture );
         void loadConfig( QString config );
@@ -92,11 +93,13 @@ class CubeEffect
         bool paintCaps;
         TimeLine timeLine;
         TimeLine verticalTimeLine;
+        TimeLine slideTimeLine;
         RotationDirection rotationDirection;
         RotationDirection verticalRotationDirection;
         VerticalRotationPosition verticalPosition;
         QQueue<RotationDirection> rotations;
         QQueue<RotationDirection> verticalRotations;
+        QQueue<RotationDirection> slideRotations;
         QColor backgroundColor;
         QColor capColor;
         GLTexture* wallpaper;
