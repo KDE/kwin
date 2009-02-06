@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <QObject>
 #include <QQueue>
+#include <QSet>
 
 namespace KWin
 {
@@ -116,7 +117,8 @@ class CubeEffect
         int oldDesktop;
         int rotationDuration;
         QList<EffectWindow*> windowsOnOtherScreens;
-        QList<EffectWindow*> panels;
+        QSet<EffectWindow*> panels;
+        QSet<EffectWindow*> stickyWindows;
         int activeScreen;
         bool animateDesktopChange;
         bool bigCube;
@@ -129,6 +131,7 @@ class CubeEffect
         bool invertMouse;
         bool tabBoxMode;
         bool dontSlidePanels;
+        bool dontSlideStickyWindows;
         bool shortcutsRegistered;
 
         // GL lists

@@ -141,7 +141,8 @@ void CubeEffect::loadConfig( QString config )
     useForTabBox = conf.readEntry( "TabBox", false );
     invertKeys = conf.readEntry( "InvertKeys", false );
     invertMouse = conf.readEntry( "InvertMouse", false );
-    dontSlidePanels = conf.readEntry( "DontSlidePanels", false );
+    dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
+    dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", true );
     QString file = conf.readEntry( "Wallpaper", QString("") );
     if( wallpaper )
         wallpaper->discard();
@@ -234,6 +235,8 @@ void CubeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             recompileList = true;
             if( dontSlidePanels )
                 panels.clear();
+            if( dontSlideStickyWindows )
+                stickyWindows.clear();
             }
         }
     effects->prePaintScreen( data, time );
@@ -553,6 +556,14 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         if( slide && dontSlidePanels )
             {
             foreach( EffectWindow* w, panels )
+                {
+                WindowPaintData wData( w );
+                effects->paintWindow( w, 0, QRegion( w->x(), w->y(), w->width(), w->height() ), wData );
+                }
+            }
+        if( slide && dontSlideStickyWindows )
+            {
+            foreach( EffectWindow* w, stickyWindows )
                 {
                 WindowPaintData wData( w );
                 effects->paintWindow( w, 0, QRegion( w->x(), w->y(), w->width(), w->height() ), wData );
@@ -1040,6 +1051,7 @@ void CubeEffect::postPaintScreen()
                 effects->destroyInputWindow( input );
                 windowsOnOtherScreens.clear();
                 panels.clear();
+                stickyWindows.clear();
 
                 effects->setActiveFullScreenEffect( 0 );
 
@@ -1264,9 +1276,14 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                     }
                 w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
                 }
-            if( slide && dontSlidePanels && w->isDock() && painting_desktop == effects->currentDesktop() )
+            if( slide && dontSlidePanels && w->isDock())
                 {
-                panels.append( w );
+                panels.insert( w );
+                }
+            if( slide && dontSlideStickyWindows && !w->isDock() &&
+                !w->isDesktop() && w->isOnAllDesktops())
+                {
+                stickyWindows.insert( w );
                 }
             }
         }
@@ -1278,6 +1295,9 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
     if( activated && cube_painting )
         {
         if( slide && dontSlidePanels && w->isDock() )
+            return;
+        if( slide && dontSlideStickyWindows &&
+            w->isOnAllDesktops() && !w->isDock() && !w->isDesktop() )
             return;
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;

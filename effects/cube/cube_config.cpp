@@ -85,6 +85,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->invertKeysBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->invertMouseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->dontSlidePanelsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->dontSlideStickyWindowsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -112,7 +113,8 @@ void CubeEffectConfig::load()
     m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
     bool invertKeys = conf.readEntry( "InvertKeys", false );
     bool invertMouse = conf.readEntry( "InvertMouse", false );
-    bool dontSlidePanels = conf.readEntry( "DontSlidePanels", false );
+    bool dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
+    bool dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", true );
     
     m_ui->rotationDurationSpin->setValue( duration );
     m_ui->cubeOpacitySlider->setValue( opacity );
@@ -187,6 +189,7 @@ void CubeEffectConfig::load()
     m_ui->invertKeysBox->setChecked( invertKeys );
     m_ui->invertMouseBox->setChecked( invertMouse );
     m_ui->dontSlidePanelsBox->setChecked( dontSlidePanels );
+    m_ui->dontSlideStickyWindowsBox->setChecked( dontSlideStickyWindows );
     capsSelectionChanged();
 
     emit changed(false);
@@ -214,6 +217,7 @@ void CubeEffectConfig::save()
     conf.writeEntry( "InvertKeys", m_ui->invertKeysBox->isChecked() );
     conf.writeEntry( "InvertMouse", m_ui->invertMouseBox->isChecked() );
     conf.writeEntry( "DontSlidePanels", m_ui->dontSlidePanelsBox->isChecked() );
+    conf.writeEntry( "DontSlideStickyWindows", m_ui->dontSlideStickyWindowsBox->isChecked() );
 
     m_ui->editor->save();
 
@@ -243,7 +247,8 @@ void CubeEffectConfig::defaults()
     m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
     m_ui->invertKeysBox->setChecked( false );
     m_ui->invertMouseBox->setChecked( false );
-    m_ui->dontSlidePanelsBox->setChecked( false );
+    m_ui->dontSlidePanelsBox->setChecked( true );
+    m_ui->dontSlideStickyWindowsBox->setChecked( true );
     m_ui->editor->allDefault();
     emit changed(true);
     }
