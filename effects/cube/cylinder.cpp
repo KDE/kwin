@@ -39,8 +39,6 @@ CylinderEffect::CylinderEffect()
     , mValid( true )
     , mShader( 0 )
     {
-    if( wallpaper )
-        wallpaper->discard();
     reconfigure( ReconfigureAll );
     }
 
@@ -52,8 +50,6 @@ CylinderEffect::~CylinderEffect()
 void CylinderEffect::reconfigure( ReconfigureFlags )
     {
     loadConfig( "Cylinder" );
-    animateDesktopChange = false;
-    bigCube = true;
     }
 
 bool CylinderEffect::supported()
@@ -93,7 +89,7 @@ bool CylinderEffect::loadData()
     return true;
     }
 
-void CylinderEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
+void CylinderEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
     {
     glPushMatrix();
     QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop());
@@ -105,7 +101,7 @@ void CylinderEffect::paintScene( int mask, QRegion region, ScreenPaintData& data
     // radius of the circle
     float radius = (rect.width()*0.5)/cos(radian);
     glTranslatef( 0.0, 0.0, midpoint - radius );
-    CubeEffect::paintScene( mask, region, data );
+    CubeEffect::paintCube( mask, region, data );
     glPopMatrix();
     }
 
@@ -158,17 +154,12 @@ void CylinderEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Win
         effects->paintWindow( w, mask, region, data );
     }
 
-void CylinderEffect::desktopChanged( int old )
-    {
-    // cylinder effect is not useful to slide
-    }
-
 void CylinderEffect::paintCap( float z, float zTexture )
     {
     if( ( !paintCaps ) || effects->numberOfDesktops() <= 2 )
         return;
     CubeEffect::paintCap( z, zTexture );
-    QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
     float cubeAngle = (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f;
     float radian = (cubeAngle*0.5)*M_PI/180;

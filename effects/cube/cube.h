@@ -68,10 +68,11 @@ class CubeEffect
             Normal,
             Down
             };
-        virtual void paintScene( int mask, QRegion region, ScreenPaintData& data );
+        virtual void paintCube( int mask, QRegion region, ScreenPaintData& data );
         virtual void paintCap( float z, float zTexture );
         virtual void paintCapStep( float z, float zTexture, bool texture );
         void loadConfig( QString config );
+        void rotateCube();
         void rotateToDesktop( int desktop );
         void setActive( bool active );
         bool activated;
@@ -123,7 +124,8 @@ class CubeEffect
 
         // GL lists
         bool capListCreated;
-        GLuint capList;
+        bool recompileList;
+        GLuint glList;
     };
 
 } // namespace

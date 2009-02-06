@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 #include <KStandardDirs>
-#include <kconfiggroup.h>
 
 #include <math.h>
 
@@ -40,8 +39,6 @@ SphereEffect::SphereEffect()
     , mValid( true )
     , mShader( 0 )
     {
-    if( wallpaper )
-        wallpaper->discard();
     reconfigure( ReconfigureAll );
     }
 
@@ -53,12 +50,6 @@ SphereEffect::~SphereEffect()
 void SphereEffect::reconfigure( ReconfigureFlags )
     {
     loadConfig( "Sphere" );
-    reflection = false;
-    animateDesktopChange = false;
-    KConfigGroup conf = effects->effectConfig( "Sphere" );
-    zPosition = conf.readEntry( "ZPosition", 450.0 );
-    capDeformationFactor = conf.readEntry( "CapDeformation", 0 )/100.0f;
-    bigCube = true;
     }
 
 bool SphereEffect::supported()
@@ -163,7 +154,7 @@ void SphereEffect::paintCap( float z, float zTexture )
 
 void SphereEffect::paintCapStep( float z, float zTexture, bool texture )
     {
-    QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f;
     float radius = (rect.width()*0.5)/cos(cubeAngle*0.5*M_PI/180.0);
     float angle = acos( (rect.height()*0.5)/radius )*180.0/M_PI;

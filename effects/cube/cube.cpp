@@ -81,7 +81,8 @@ CubeEffect::CubeEffect()
     , useForTabBox( false )
     , tabBoxMode( false )
     , capListCreated( false )
-    , capList( 0 )
+    , recompileList( true )
+    , glList( 0 )
     {
     reconfigure( ReconfigureAll );
 
@@ -116,12 +117,29 @@ void CubeEffect::loadConfig( QString config )
     backgroundColor = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
     animateDesktopChange = conf.readEntry( "AnimateDesktopChange", false );
     bigCube = conf.readEntry( "BigCube", false );
+    // different settings for cylinder and sphere
+    if( config == "Cylinder" )
+        {
+        animateDesktopChange = false;
+        bigCube = true;
+        }
+    if( config == "Sphere" )
+        {
+        animateDesktopChange = false;
+        bigCube = true;
+        reflection = false;
+        }
     capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     paintCaps = conf.readEntry( "Caps", true );
     closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
-    zPosition = conf.readEntry( "ZPosition", 100.0 );
+    float defaultZPosition = 100.0f;
+    if( config == "Sphere" )
+        defaultZPosition = 450.0f;
+    zPosition = conf.readEntry( "ZPosition", defaultZPosition );
     useForTabBox = conf.readEntry( "TabBox", false );
     QString file = conf.readEntry( "Wallpaper", QString("") );
+    if( wallpaper )
+        wallpaper->discard();
     delete wallpaper;
     wallpaper = NULL;
     if( !file.isEmpty() )
@@ -196,10 +214,12 @@ void CubeEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         if( rotating || start || stop )
             {
             timeLine.addTime( time );
+            recompileList = true;
             }
         if( verticalRotating )
             {
             verticalTimeLine.addTime( time );
+            recompileList = true;
             }
         }
     effects->prePaintScreen( data, time );
@@ -209,6 +229,23 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     if( activated )
         {
+        if( recompileList )
+            {
+            recompileList = false;
+            glPushMatrix();
+            glNewList( glList, GL_COMPILE );
+            rotateCube();
+            glEndList();
+            glPopMatrix();
+            }
+
+        // compile List for cube
+        glNewList( glList + 1, GL_COMPILE );
+        glPushMatrix();
+        paintCube( mask, region, data );
+        glPopMatrix();
+        glEndList();
+
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
         if( effects->numScreens() > 1 && (slide || bigCube ) )
             rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
@@ -288,6 +325,16 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glTranslatef( xTranslate, yTranslate, 0.0 );
             }
 
+        // some veriables needed for painting the caps
+        float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+        float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+        float zTranslate = zPosition + zoom;
+        if( start )
+            zTranslate *= timeLine.value();
+        if( stop )
+            zTranslate *= ( 1.0 - timeLine.value() );
+        if( slide )
+            zTranslate = 0.0;
         // reflection
         if( reflection && (!slide) )
             {
@@ -302,7 +349,51 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
             glEnable( GL_CLIP_PLANE0 );
             reflectionPainting = true;
-            paintScene( mask, region, data );
+            glEnable( GL_CULL_FACE );
+            // caps
+            if( paintCaps && ( effects->numberOfDesktops() >= 2 ) )
+                {
+                glPushMatrix();
+                glCallList( glList );
+                glTranslatef( rect.width()/2, 0.0, -point-zTranslate );
+                glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+                glTranslatef( 0.0, rect.height(), 0.0 );
+                glCullFace( GL_FRONT );
+                glCallList( glList + 2 );
+                glTranslatef( 0.0, -rect.height(), 0.0 );
+                glCullFace( GL_BACK );
+                glCallList( glList + 2 );
+                glPopMatrix();
+                }
+
+            // cube
+            glCullFace( GL_FRONT );
+            glPushMatrix();
+            glCallList( glList );
+            glCallList( glList + 1 );
+            glPopMatrix();
+            glCullFace( GL_BACK );
+            glPushMatrix();
+            glCallList( glList );
+            glCallList( glList + 1 );
+            glPopMatrix();
+
+            // cap
+            if( paintCaps && ( effects->numberOfDesktops() >= 2 ) )
+                {
+                glPushMatrix();
+                glCallList( glList );
+                glTranslatef( rect.width()/2, 0.0, -point-zTranslate );
+                glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+                glTranslatef( 0.0, rect.height(), 0.0 );
+                glCullFace( GL_BACK );
+                glCallList( glList + 2 );
+                glTranslatef( 0.0, -rect.height(), 0.0 );
+                glCullFace( GL_FRONT );
+                glCallList( glList + 2 );
+                glPopMatrix();
+                }
+            glDisable( GL_CULL_FACE );
             reflectionPainting = false;
             glDisable( GL_CLIP_PLANE0 );
 
@@ -338,9 +429,51 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glPopMatrix();
             PaintClipper::pop( QRegion( rect ));
             }
+        glEnable( GL_CULL_FACE );
+        // caps
+        if( paintCaps && ( effects->numberOfDesktops() >= 2 ) && !slide )
+            {
+            glPushMatrix();
+            glCallList( glList );
+            glTranslatef( rect.width()/2, 0.0, -point-zTranslate );
+            glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+            glTranslatef( 0.0, rect.height(), 0.0 );
+            glCullFace( GL_BACK );
+            glCallList( glList + 2 );
+            glTranslatef( 0.0, -rect.height(), 0.0 );
+            glCullFace( GL_FRONT );
+            glCallList( glList + 2 );
+            glPopMatrix();
+            }
+
+        // cube
+        glCullFace( GL_BACK );
         glPushMatrix();
-        paintScene( mask, region, data );
+        glCallList( glList );
+        glCallList( glList + 1 );
         glPopMatrix();
+        glCullFace( GL_FRONT );
+        glPushMatrix();
+        glCallList( glList );
+        glCallList( glList + 1 );
+        glPopMatrix();
+
+        // cap
+        if( paintCaps && ( effects->numberOfDesktops() >= 2 ) && !slide )
+            {
+            glPushMatrix();
+            glCallList( glList );
+            glTranslatef( rect.width()/2, 0.0, -point-zTranslate );
+            glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+            glTranslatef( 0.0, rect.height(), 0.0 );
+            glCullFace( GL_FRONT );
+            glCallList( glList + 2 );
+            glTranslatef( 0.0, -rect.height(), 0.0 );
+            glCullFace( GL_BACK );
+            glCallList( glList + 2 );
+            glPopMatrix();
+            }
+        glDisable( GL_CULL_FACE );
 
         if( effects->numScreens() > 1 && !slide && !bigCube  )
             {
@@ -408,7 +541,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         }
     }
 
-void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
+void CubeEffect::rotateCube()
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
     if( effects->numScreens() > 1 && (slide || bigCube ) )
@@ -441,13 +574,8 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         glScalef( xScale, yScale, 1.0 );
         rect = fullRect;
         }
-    int rightSteps = effects->numberOfDesktops()/2;
-    int leftSteps = rightSteps+1;
-    int rightSideCounter = 0;
-    int leftSideCounter = 0;
+
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
-    cube_painting = true;
-    int desktopIndex = 0;
     float zTranslate = zPosition + zoom;
     if( start )
         zTranslate *= timeLine.value();
@@ -455,14 +583,9 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         zTranslate *= ( 1.0 - timeLine.value() );
     if( slide )
         zTranslate = 0.0;
-
-    bool topCapAfter = false;
-    bool topCapBefore = false;
-
     // Rotation of the cube
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
     float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
-    float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
     if( verticalRotating || verticalPosition != Normal || manualVerticalAngle != 0.0 )
         {
         // change the verticalPosition if manualVerticalAngle > 90 or < -90 degrees
@@ -523,71 +646,6 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
         glRotatef( angle, 1.0, 0.0, 0.0 );
         glTranslatef( -rect.width()/2, -rect.height()/2, point+zTranslate );
-
-        // calculate if the caps have to be painted before/after or during desktop painting
-        if( paintCaps )
-            {
-            float M[16];
-            float P[16];
-            float V[4];
-            glGetFloatv( GL_PROJECTION_MATRIX, P );
-            glGetFloatv( GL_MODELVIEW_MATRIX, M );
-            glGetFloatv( GL_VIEWPORT, V );
-
-            // calculate y coordinate of the top of front desktop
-            float X = M[0]*0.0 + M[4]*0.0 + M[8]*(-zTranslate) + M[12]*1;
-            float Y = M[1]*0.0 + M[5]*0.0 + M[9]*(-zTranslate) + M[13]*1;
-            float Z = M[2]*0.0 + M[6]*0.0 + M[10]*(-zTranslate) + M[14]*1;
-            float W = M[3]*0.0 + M[7]*0.0 + M[11]*(-zTranslate) + M[15]*1;
-            float clipY = P[1]*X + P[5]*Y + P[9]*Z + P[13]*W;
-            float clipW = P[3]*X + P[7]*Y + P[11]*Z + P[15]*W;
-            float normY = clipY/clipW;
-            float yFront = (V[3]/2)*normY+(V[3]-V[1])/2;
-
-            // calculate y coordinate of the bottom of front desktop
-            X = M[0]*0.0 + M[4]*rect.height() + M[8]*(-zTranslate) + M[12]*1;
-            Y = M[1]*0.0 + M[5]*rect.height() + M[9]*(-zTranslate) + M[13]*1;
-            Z = M[2]*0.0 + M[6]*rect.height() + M[10]*(-zTranslate) + M[14]*1;
-            W = M[3]*0.0 + M[7]*rect.height() + M[11]*(-zTranslate) + M[15]*1;
-            clipY = P[1]*X + P[5]*Y + P[9]*Z + P[13]*W;
-            clipW = P[3]*X + P[7]*Y + P[11]*Z + P[15]*W;
-            normY = clipY/clipW;
-            float yFrontBottom = (V[3]/2)*normY+(V[3]-V[1])/2;
-
-            // change matrix to a rear position
-            glPushMatrix();
-            glTranslatef( 0.0, 0.0, -point-zTranslate );
-            float desktops = (effects->numberOfDesktops()/2.0);
-            glRotatef( desktops*internalCubeAngle, 1.0, 0.0, 0.0 );
-            glTranslatef( 0.0, 0.0, point );
-            glGetFloatv(GL_MODELVIEW_MATRIX, M);
-            // calculate y coordinate of the top of rear desktop
-            X = M[0]*0.0 + M[4]*0.0 + M[8]*0.0 + M[12]*1;
-            Y = M[1]*0.0 + M[5]*0.0 + M[9]*0.0 + M[13]*1;
-            Z = M[2]*0.0 + M[6]*0.0 + M[10]*0.0 + M[14]*1;
-            W = M[3]*0.0 + M[7]*0.0 + M[11]*0.0 + M[15]*1;
-            clipY = P[1]*X + P[5]*Y + P[9]*Z + P[13]*W;
-            clipW = P[3]*X + P[7]*Y + P[11]*Z + P[15]*W;
-            normY = clipY/clipW;
-            float yBack = (V[3]/2)*normY+(V[3]-V[1])/2;
-
-            // calculate y coordniate of the bottom of rear desktop
-            glTranslatef( 0.0, -rect.height(), 0.0 );
-            glGetFloatv(GL_MODELVIEW_MATRIX, M);
-            X = M[0]*0.0 + M[4]*0.0 + M[8]*0.0 + M[12]*1;
-            Y = M[1]*0.0 + M[5]*0.0 + M[9]*0.0 + M[13]*1;
-            Z = M[2]*0.0 + M[6]*0.0 + M[10]*0.0 + M[14]*1;
-            W = M[3]*0.0 + M[7]*0.0 + M[11]*0.0 + M[15]*1;
-            clipY = P[1]*X + P[5]*Y + P[9]*Z + P[13]*W;
-            clipW = P[3]*X + P[7]*Y + P[11]*Z + P[15]*W;
-            normY = clipY/clipW;
-            float yBackBottom = (V[3]/2)*normY+(V[3]-V[1])/2;
-            glPopMatrix();
-            if( yBack >= yFront )
-                topCapAfter = true;
-            if( yBackBottom <= yFrontBottom )
-                topCapBefore = true;
-            }
         }
     if( rotating || (manualAngle != 0.0) )
         {
@@ -642,53 +700,31 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         glRotatef( rotationAngle, 0.0, 1.0, 0.0 );
         glTranslatef( -rect.width()/2, -rect.height()/2, point+zTranslate );
         }
+    }
 
-    if( topCapBefore || topCapAfter )
-        {
-        if( (topCapAfter && !reflectionPainting) || (topCapBefore && reflectionPainting) )
-            {
-            // paint the bottom cap
-            bottomCap = true;
-            glTranslatef( 0.0, rect.height(), 0.0 );
-            paintCap( point, zTexture );
-            glTranslatef( 0.0, -rect.height(), 0.0 );
-            bottomCap = false;
-            }
-        if( (topCapBefore && !reflectionPainting) || (topCapAfter && reflectionPainting) )
-            {
-            // paint the top cap
-            paintCap( point, zTexture );
-            }
-        }
+void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
+    {
+    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+    if( effects->numScreens() > 1 && (slide || bigCube ) )
+        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    float internalCubeAngle = 360.0f / effects->numberOfDesktops();
+    cube_painting = true;
+    float zTranslate = zPosition + zoom;
+    if( start )
+        zTranslate *= timeLine.value();
+    if( stop )
+        zTranslate *= ( 1.0 - timeLine.value() );
+    if( slide )
+        zTranslate = 0.0;
+
+    // Rotation of the cube
+    float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+    float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
 
     for( int i=0; i<effects->numberOfDesktops(); i++ )
         {
-        if( !topCapAfter && !topCapBefore && i == effects->numberOfDesktops()/2 -1 && !slide )
-            {
-            // paint the bottom cap
-            bottomCap = true;
-            glTranslatef( 0.0, rect.height(), 0.0 );
-            paintCap( point, zTexture );
-            glTranslatef( 0.0, -rect.height(), 0.0 );
-            bottomCap = false;
-            // paint the top cap
-            paintCap( point, zTexture );
-            }
-        if( i%2 == 0 &&  i != effects->numberOfDesktops() -1)
-            {
-            // desktops on the right (including back)
-            desktopIndex = rightSteps - rightSideCounter;
-            rightSideCounter++;
-            }
-        else
-            {
-            // desktops on the left (including front)
-            desktopIndex = leftSteps + leftSideCounter;
-            leftSideCounter++;
-            }
-
         // start painting the cube
-        painting_desktop = (desktopIndex + frontDesktop )%effects->numberOfDesktops();
+        painting_desktop = (i + frontDesktop )%effects->numberOfDesktops();
         if( painting_desktop == 0 )
             {
             painting_desktop = effects->numberOfDesktops();
@@ -725,29 +761,12 @@ void CubeEffect::paintScene( int mask, QRegion region, ScreenPaintData& data )
         ScreenPaintData newData = data;
         RotationData rot = RotationData();
         rot.axis = RotationData::YAxis;
-        rot.angle = internalCubeAngle * desktopIndex;
+        rot.angle = internalCubeAngle * i;
         rot.xRotationPoint = rect.width()/2;
         rot.zRotationPoint = -point;
         newData.rotation = &rot;
         newData.zTranslate = -zTranslate;
         effects->paintScreen( mask, region, newData );
-        }
-    if( topCapBefore || topCapAfter )
-        {
-        if( (topCapAfter && !reflectionPainting) || (topCapBefore && reflectionPainting) )
-            {
-            // paint the top cap
-            paintCap( point, zTexture );
-            }
-        if( (topCapBefore && !reflectionPainting) || (topCapAfter && reflectionPainting) )
-            {
-            // paint the bottom cap
-            bottomCap = true;
-            glTranslatef( 0.0, rect.height(), 0.0 );
-            paintCap( point, zTexture );
-            glTranslatef( 0.0, -rect.height(), 0.0 );
-            bottomCap = false;
-            }
         }
     cube_painting = false;
     painting_desktop = effects->currentDesktop();
@@ -777,11 +796,9 @@ void CubeEffect::paintCap( float z, float zTexture )
     if( !capListCreated )
         {
         capListCreated = true;
-        glNewList( capList, GL_COMPILE_AND_EXECUTE );
-        bool texture = false;
+        glNewList( glList + 2, GL_COMPILE );
         if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
             {
-            texture = true;
             paintCapStep( z, zTexture, true );
             }
         else
@@ -789,7 +806,7 @@ void CubeEffect::paintCap( float z, float zTexture )
         glEndList();
         }
     else
-        glCallList( capList );
+        glCallList( glList + 2 );
     glPopMatrix();
     }
 
@@ -965,7 +982,7 @@ void CubeEffect::postPaintScreen()
                 effects->setActiveFullScreenEffect( 0 );
 
                 // delete the GL lists
-                glDeleteLists( capList, 1 );
+                glDeleteLists( glList, 3 );
                 }
             effects->addRepaintFull();
             }
@@ -1328,7 +1345,7 @@ bool CubeEffect::borderActivated( ElectricBorder border )
 
 void CubeEffect::toggle()
     {
-    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this ||
+    if( ( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this ) ||
         effects->numberOfDesktops() < 2 )
         return;
     if( !activated )
@@ -1568,8 +1585,20 @@ void CubeEffect::setActive( bool active )
             glPopMatrix();
             }
         // create the needed GL lists
-        capList = glGenLists(1);
+        glList = glGenLists(3);
         capListCreated = false;
+        recompileList = true;
+        // create the capList
+        if( paintCaps )
+            {
+            QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
+            if( effects->numScreens() > 1 && (slide || bigCube ) )
+                rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+            float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+            float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+            float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
+            paintCap( point, zTexture );
+            }
         
         effects->addRepaintFull();
         }
@@ -1583,7 +1612,7 @@ void CubeEffect::setActive( bool active )
     }
 
 void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, 
-            Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers )
+            Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers, Qt::KeyboardModifiers )
     {
     if( !activated )
         return;
@@ -1618,7 +1647,10 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
                 repaint = true;
             }
         if( repaint )
+            {
+            recompileList = true;
             effects->addRepaintFull();
+            }
         }
     if( !oldbuttons.testFlag( Qt::LeftButton ) && buttons.testFlag( Qt::LeftButton ) )
         {
