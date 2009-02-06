@@ -1,5 +1,7 @@
 [Desktop Entry]
 Name=Fade Desktop
+Name[ca]=Esvair l'escriptori
+Name[ca@valencia]=Esvair l'escriptori
 Name[et]=Töölaua hääbumine
 Name[gl]=Esvair o escritorio
 Name[nds]=Schriefdisch överblennen
@@ -11,6 +13,8 @@ Name[x-test]=xxFade Desktopxx
 Name[zh_TW]=淡出淡入桌面
 Icon=preferences-system-windows-effect-fadedesktop
 Comment=Fade between virtual desktops when switching between them
+Comment[ca]=Esvaeix entre els escriptoris virtuals quan es commuta entre ells
+Comment[ca@valencia]=Esvaeix entre els escriptoris virtuals quan es commuta entre ells
 Comment[et]=Hääbumisefekt ühelt virtuaalselt töölaualt teisele lülitudes
 Comment[gl]=Emprega un efeito de esvaemento ao trocar de escritorio
 Comment[nds]=Bi't Wesseln de Schriefdischen överenanner blennen
