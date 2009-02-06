@@ -81,17 +81,12 @@ CubeEffect::CubeEffect()
     , zPosition( 0.0 )
     , useForTabBox( false )
     , tabBoxMode( false )
+    , shortcutsRegistered( false )
     , capListCreated( false )
     , recompileList( true )
     , glList( 0 )
     {
     reconfigure( ReconfigureAll );
-
-    KActionCollection* actionCollection = new KActionCollection( this );
-    KAction* a = static_cast< KAction* >( actionCollection->addAction( "Cube" ));
-    a->setText( i18n("Desktop Cube" ));
-    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
-    connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
     }
 
 bool CubeEffect::supported()
@@ -204,6 +199,33 @@ void CubeEffect::loadConfig( QString config )
     verticalTimeLine.setDuration( rotationDuration );
     slideTimeLine.setCurveShape( TimeLine::EaseInOutCurve );
     slideTimeLine.setDuration( rotationDuration );
+
+    // do not connect the shortcut if we use cylinder or sphere
+    KActionCollection* actionCollection = new KActionCollection( this );
+    if( config == "Cube" && !shortcutsRegistered )
+        {
+        KAction* a = static_cast< KAction* >( actionCollection->addAction( "Cube" ));
+        a->setText( i18n("Desktop Cube" ));
+        a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+        connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
+        shortcutsRegistered = true;
+        }
+    if( config == "Cylinder" && !shortcutsRegistered )
+        {
+        KAction* a = static_cast< KAction* >( actionCollection->addAction( "Cylinder" ));
+        a->setText( i18n("Desktop Cylinder" ));
+        a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_F11 ));
+        connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
+        shortcutsRegistered = true;
+        }
+    if( config == "Sphere" && !shortcutsRegistered )
+        {
+        KAction* a = static_cast< KAction* >( actionCollection->addAction( "Sphere" ));
+        a->setText( i18n("Desktop Sphere" ));
+        a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F11 ));
+        connect( a, SIGNAL( triggered( bool )), this, SLOT( toggle()));
+        shortcutsRegistered = true;
+        }
     }
 
 CubeEffect::~CubeEffect()

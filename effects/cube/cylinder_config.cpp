@@ -53,13 +53,13 @@ CylinderEffectConfig::CylinderEffectConfig(QWidget* parent, const QVariantList& 
     m_ui->tabWidget->setTabText( 1, i18nc("@title:tab Advanced Settings", "Advanced") );
 
     m_actionCollection = new KActionCollection( this, componentData() );
-    m_actionCollection->setConfigGroup( "Cube" );
+    m_actionCollection->setConfigGroup( "Cylinder" );
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* a = (KAction*) m_actionCollection->addAction( "Cube" );
-    a->setText( i18n("Desktop Cube" ));
+    KAction* a = (KAction*) m_actionCollection->addAction( "Cylinder" );
+    a->setText( i18n("Desktop Cylinder" ));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_F11 ));
 
     m_ui->editor->addCollection(m_actionCollection);
 

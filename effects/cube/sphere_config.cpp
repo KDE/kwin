@@ -53,13 +53,13 @@ SphereEffectConfig::SphereEffectConfig(QWidget* parent, const QVariantList& args
     m_ui->tabWidget->setTabText( 1, i18nc("@title:tab Advanced Settings", "Advanced") );
 
     m_actionCollection = new KActionCollection( this, componentData() );
-    m_actionCollection->setConfigGroup( "Cube" );
+    m_actionCollection->setConfigGroup( "Sphere" );
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* a = (KAction*) m_actionCollection->addAction( "Cube" );
-    a->setText( i18n("Desktop Cube" ));
+    KAction* a = (KAction*) m_actionCollection->addAction( "Sphere" );
+    a->setText( i18n("Desktop Sphere" ));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F11 ));
 
     m_ui->editor->addCollection(m_actionCollection);
 

@@ -39,6 +39,7 @@ CylinderEffect::CylinderEffect()
     , mValid( true )
     , mShader( 0 )
     {
+    shortcutsRegistered = false;
     reconfigure( ReconfigureAll );
     }
 
