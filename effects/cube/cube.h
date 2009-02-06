@@ -85,6 +85,7 @@ class CubeEffect
         Window input;
         int frontDesktop;
         float cubeOpacity;
+        bool opacityDesktopOnly;
         bool displayDesktopName;
         bool reflection;
         bool rotating;

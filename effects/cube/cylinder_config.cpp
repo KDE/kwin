@@ -66,6 +66,7 @@ CylinderEffectConfig::CylinderEffectConfig(QWidget* parent, const QVariantList& 
     connect(m_ui->rotationDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeOpacitySlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeOpacitySpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->desktopOpacityOnlyBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->displayDesktopNameBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->reflectionBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->backgroundColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
@@ -92,6 +93,7 @@ void CylinderEffectConfig::load()
 
     int duration       = conf.readEntry( "RotationDuration", 0 );
     float opacity      = conf.readEntry( "Opacity", 80 );
+    bool desktopOpacityOnly = conf.readEntry( "OpacityDesktopOnly", false );
     bool desktopName   = conf.readEntry( "DisplayDesktopName", true );
     bool reflection    = conf.readEntry( "Reflection", true );
     QColor background  = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
@@ -109,6 +111,7 @@ void CylinderEffectConfig::load()
     m_ui->rotationDurationSpin->setValue( duration );
     m_ui->cubeOpacitySlider->setValue( opacity );
     m_ui->cubeOpacitySpin->setValue( opacity );
+    m_ui->desktopOpacityOnlyBox->setChecked( desktopOpacityOnly );
     if( desktopName )
         {
         m_ui->displayDesktopNameBox->setCheckState( Qt::Checked );
@@ -175,6 +178,7 @@ void CylinderEffectConfig::save()
     conf.writeEntry( "DisplayDesktopName", m_ui->displayDesktopNameBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "Reflection", m_ui->reflectionBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "Opacity", m_ui->cubeOpacitySpin->value() );
+    conf.writeEntry( "OpacityDesktopOnly", m_ui->desktopOpacityOnlyBox->isChecked() );
     conf.writeEntry( "BackgroundColor", m_ui->backgroundColorButton->color() );
     conf.writeEntry( "Caps", m_ui->cubeCapsBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CapColor", m_ui->capColorButton->color() );
@@ -202,6 +206,7 @@ void CylinderEffectConfig::defaults()
     m_ui->reflectionBox->setCheckState( Qt::Checked );
     m_ui->cubeOpacitySpin->setValue( 80 );
     m_ui->cubeOpacitySlider->setValue( 80 );
+    m_ui->desktopOpacityOnlyBox->setChecked( false );
     m_ui->backgroundColorButton->setColor( QColor( Qt::black ) );
     m_ui->cubeCapsBox->setCheckState( Qt::Checked );
     m_ui->capColorButton->setColor( KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );

@@ -52,7 +52,8 @@ CubeEffect::CubeEffect()
     , borderActivate( ElectricNone )
     , frontDesktop( 0 )
     , cubeOpacity( 1.0 )
-    , displayDesktopName( true )
+    , opacityDesktopOnly( true )
+    , displayDesktopName( false )
     , reflection( true )
     , rotating( false )
     , desktopChangedWhileRotating( false )
@@ -111,6 +112,7 @@ void CubeEffect::loadConfig( QString config )
     effects->reserveElectricBorder( borderActivate );
 
     cubeOpacity = (float)conf.readEntry( "Opacity", 80 )/100.0f;
+    opacityDesktopOnly = conf.readEntry( "OpacityDesktopOnly", false );
     displayDesktopName = conf.readEntry( "DisplayDesktopName", true );
     reflection = conf.readEntry( "Reflection", true );
     rotationDuration = animationTime( conf, "RotationDuration", 500 );
@@ -1372,6 +1374,8 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             // HACK set opacity to 0.99 in case of fully opaque to ensure that windows are painted in correct sequence
             // bug #173214
             if( opacity > 0.99f )
+                opacity = 0.99f;
+            if( opacityDesktopOnly && !w->isDesktop() )
                 opacity = 0.99f;
             data.opacity *= opacity;
             }

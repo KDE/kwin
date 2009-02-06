@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
+    <width>700</width>
     <height>542</height>
    </rect>
   </property>
@@ -238,6 +238,13 @@
             </property>
             <property name="alignment" >
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="3" >
+           <widget class="QCheckBox" name="desktopOpacityOnlyBox" >
+            <property name="text" >
+             <string>Do not change opacity of windows</string>
             </property>
            </widget>
           </item>
@@ -502,6 +509,7 @@ otherwise it will remain active</string>
   <tabstop>rotationDurationSpin</tabstop>
   <tabstop>cubeOpacitySlider</tabstop>
   <tabstop>cubeOpacitySpin</tabstop>
+  <tabstop>desktopOpacityOnlyBox</tabstop>
   <tabstop>backgroundColorButton</tabstop>
   <tabstop>wallpaperRequester</tabstop>
   <tabstop>cubeCapsBox</tabstop>
