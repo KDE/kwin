@@ -112,6 +112,7 @@ class CubeEffect
         int oldDesktop;
         int rotationDuration;
         QList<EffectWindow*> windowsOnOtherScreens;
+        QList<EffectWindow*> panels;
         int activeScreen;
         bool animateDesktopChange;
         bool bigCube;
@@ -123,6 +124,8 @@ class CubeEffect
         bool invertKeys;
         bool invertMouse;
         bool tabBoxMode;
+        bool dontSlidePanels;
+        bool shortcutsRegistered;
 
         // GL lists
         bool capListCreated;

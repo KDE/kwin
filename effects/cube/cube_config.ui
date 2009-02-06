@@ -404,6 +404,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="dontSlidePanelsBox" >
+            <property name="text" >
+             <string>Fix panels while switching desktops</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="bigCubeBox" >
             <property name="toolTip" >
              <string>If enabled span the cube across all screens on a multiscreen setup, otherwise
@@ -487,6 +494,7 @@ otherwise it will remain active</string>
   <tabstop>capColorButton</tabstop>
   <tabstop>capsImageBox</tabstop>
   <tabstop>animateDesktopChangeBox</tabstop>
+  <tabstop>dontSlidePanelsBox</tabstop>
   <tabstop>bigCubeBox</tabstop>
   <tabstop>closeOnMouseReleaseBox</tabstop>
   <tabstop>walkThroughDesktopBox</tabstop>
