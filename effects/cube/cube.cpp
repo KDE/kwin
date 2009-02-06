@@ -1326,6 +1326,36 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 }
             data.quads = new_quads;
             }
+        if( w->isDesktop() && effects->numScreens() > 1 && paintCaps && !slide )
+            {
+            QRegion paint = QRegion( rect );
+            for( int i=0; i<effects->numScreens(); i++ )
+                {
+                if( i == w->screen() )
+                    continue;
+                paint = paint.subtracted( QRegion( effects->clientArea( ScreenArea, i, painting_desktop )));
+                }
+            paint = paint.subtracted( QRegion( w->geometry()));
+            // in case of free area in multiscreen setup fill it with cap color
+            if( !paint.isEmpty() )
+                {
+                glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity );
+                glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+                glEnable( GL_BLEND );
+                glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+                glBegin( GL_QUADS );
+                foreach( QRect paintRect, paint.rects() )
+                    {
+                    glVertex2f( paintRect.x(), paintRect.y() );
+                    glVertex2f( paintRect.x()+paintRect.width(), paintRect.y() );
+                    glVertex2f( paintRect.x()+paintRect.width(), paintRect.y() + paintRect.height() );
+                    glVertex2f( paintRect.x(), paintRect.y() + paintRect.height() );
+                    }
+                glEnd();
+                glDisable( GL_BLEND );
+                glPopAttrib();
+                }
+            }
         }
     effects->paintWindow( w, mask, region, data );
     }
