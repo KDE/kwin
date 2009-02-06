@@ -1900,6 +1900,59 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
         }
     }
 
+void CubeEffect::windowInputMouseEvent( Window w, QEvent* e )
+    {
+    assert( w == input );
+    QMouseEvent *mouse = dynamic_cast< QMouseEvent* >( e );
+    if( mouse && mouse->type() == QEvent::MouseButtonRelease )
+        {
+        if( mouse->button() == Qt::XButton1 )
+            {
+            if( !rotating && !start )
+                {
+                rotating = true;
+                if( invertMouse )
+                    rotationDirection = Right;
+                else
+                    rotationDirection = Left;
+                }
+            else
+                {
+                if( rotations.count() < effects->numberOfDesktops() )
+                    {
+                    if( invertMouse )
+                        rotations.enqueue( Right );
+                    else
+                        rotations.enqueue( Left );
+                    }
+                }
+            effects->addRepaintFull();
+            }
+        if( mouse->button() == Qt::XButton2 )
+            {
+            if( !rotating && !start )
+                {
+                rotating = true;
+                if( invertMouse )
+                    rotationDirection = Left;
+                else
+                    rotationDirection = Right;
+                }
+            else
+                {
+                if( rotations.count() < effects->numberOfDesktops() )
+                    {
+                    if( invertMouse )
+                        rotations.enqueue( Left );
+                    else
+                        rotations.enqueue( Right );
+                    }
+                }
+            effects->addRepaintFull();
+            }
+        }
+    }
+
 void CubeEffect::desktopChanged( int old )
     {
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )

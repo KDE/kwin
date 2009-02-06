@@ -334,6 +334,10 @@ Qt::MouseButton x11ToQtMouseButton( int button )
         return Qt::MidButton;
     if( button == Button3 )
         return Qt::RightButton;
+    if( button == Button4 )
+        return Qt::XButton1;
+    if( button == Button5 )
+        return Qt::XButton2;
     return Qt::NoButton;
     }
 
@@ -366,6 +370,10 @@ Qt::MouseButtons x11ToQtMouseButtons( int state )
         ret |= Qt::MidButton;
     if( state & Button3Mask )
         ret |= Qt::RightButton;
+    if( state & Button4Mask )
+        ret |= Qt::XButton1;
+    if( state & Button5Mask )
+        ret |= Qt::XButton2;
     return ret;
     }
 

@@ -47,6 +47,7 @@ class CubeEffect
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
         virtual void mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, 
             Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
+        virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void desktopChanged( int old );
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxUpdated();
