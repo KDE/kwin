@@ -290,19 +290,15 @@ void PresentWindowsEffect::windowDeleted( EffectWindow *w )
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
     {
-    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+    if( border != m_borderActivate && border != m_borderActivateAll )
         return false;
-    if( border == m_borderActivate && !m_activated )
-        {
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+        return true;
+    if( border == m_borderActivate )
         toggleActive();
-        return true;
-        }
-    if( border == m_borderActivateAll && !m_activated )
-        {
+    else
         toggleActiveAllDesktops();
-        return true;
-        }
-    return false;
+    return true;
     }
 
 void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent *e )

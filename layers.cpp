@@ -219,7 +219,25 @@ void Workspace::propagateClients( bool propagate_new_clients )
     
     // Make the cached stacking order invalid here, in case we need the new stacking order before we get
     // the matching event, due to X being asynchronous.
-    x_stacking_dirty = true; 
+    x_stacking_dirty = true;
+    }
+
+/**
+ * Raise electric border windows to the real top of the screen. We only need
+ * to do this if an effect input window is active.
+ */
+void Workspace::raiseElectricBorderWindows()
+    {
+    Window* windows = new Window[ 8 ]; // There are up to 8 borders
+    int pos = 0;
+    for( int i = 0; i < ELECTRIC_COUNT; ++i )
+        if( electric_windows[ i ] != None )
+            windows[ pos++ ] = electric_windows[ i ];
+    if( !pos )
+        return; // No borders at all
+    XRaiseWindow( display(), windows[ 0 ] );
+    XRestackWindows( display(), windows, pos );
+    delete [] windows;
     }
 
 

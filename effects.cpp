@@ -665,6 +665,11 @@ Window EffectsHandlerImpl::createInputWindow( Effect* e, int x, int y, int w, in
     XDefineCursor( display(), win, cursor.handle());
     XMapWindow( display(), win );
     input_windows.append( qMakePair( e, win ));
+
+    // Raise electric border windows above the input windows
+    // so they can still be triggered.
+    Workspace::self()->raiseElectricBorderWindows();
+
     return win;
     }
 
@@ -740,6 +745,9 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     XRaiseWindow( display(), wins[ 0 ] );
     XRestackWindows( display(), wins, pos );
     delete[] wins;
+    // Raise electric border windows above the input windows
+    // so they can still be triggered. TODO: Do both at once.
+    Workspace::self()->raiseElectricBorderWindows();
     }
 
 QPoint EffectsHandlerImpl::cursorPos() const

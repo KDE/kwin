@@ -361,6 +361,8 @@ class Workspace : public QObject, public KDecorationDefines
         void startMousePolling();
         void stopMousePolling();
 
+        void raiseElectricBorderWindows();
+
     public slots:
         void addRepaintFull();
         void refresh();

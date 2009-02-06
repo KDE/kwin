@@ -406,14 +406,12 @@ void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )
 
 bool DesktopGridEffect::borderActivated( ElectricBorder border )
     {
-    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+    if( border != borderActivate )
         return false;
-    if( border == borderActivate && !activated )
-        {
-        toggle();
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return true;
-        }
-    return false;
+    toggle();
+    return true;
     }
 
 //-----------------------------------------------------------------------------

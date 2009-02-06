@@ -1506,15 +1506,13 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 
 bool CubeEffect::borderActivated( ElectricBorder border )
     {
-    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
+    if( border != borderActivate )
         return false;
-    if( border == borderActivate && !activated )
-        {
-        kDebug(1212) << "border activated";
-        toggle();
+    if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return true;
-        }
-    return false;
+    kDebug(1212) << "border activated";
+    toggle();
+    return true;
     }
 
 void CubeEffect::toggle()
