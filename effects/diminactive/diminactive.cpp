@@ -31,7 +31,10 @@ KWIN_EFFECT( diminactive, DimInactiveEffect )
 DimInactiveEffect::DimInactiveEffect()
     {
     reconfigure( ReconfigureAll );
+    timeline.setDuration( 250 );
+    previousActiveTimeline.setDuration( 250 );
     active = effects->activeWindow();
+    previousActive = NULL;
     }
 
 void DimInactiveEffect::reconfigure( ReconfigureFlags )
@@ -43,12 +46,34 @@ void DimInactiveEffect::reconfigure( ReconfigureFlags )
     dim_strength = conf.readEntry("Strength", 25);
     }
 
+void DimInactiveEffect::prePaintScreen( ScreenPrePaintData& data, int time )
+    {
+    double oldValue = timeline.value();
+    if( effects->activeFullScreenEffect() )
+        timeline.removeTime( time );
+    else
+        timeline.addTime( time );
+    if( oldValue != timeline.value() )
+        effects->addRepaintFull();
+    if( previousActive )
+        { // We are fading out the previous window
+        previousActive->addRepaintFull();
+        previousActiveTimeline.addTime( time );
+        }
+    effects->prePaintScreen( data, time );
+    }
+
 void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( dimWindow( w ))
+    if( dimWindow( w ) || w == previousActive )
         {
-        data.brightness *= (1.0 - (dim_strength / 100.0));
-        data.saturation *= (1.0 - (dim_strength / 100.0));
+        double previous = 1.0;
+        if( w == previousActive )
+            previous = previousActiveTimeline.value();
+        if( previousActiveTimeline.value() == 1.0 )
+            previousActive = NULL;
+        data.brightness *= (1.0 - (dim_strength / 100.0) * timeline.value() * previous );
+        data.saturation *= (1.0 - (dim_strength / 100.0) * timeline.value() * previous );
         }
     effects->paintWindow( w, mask, region, data );
     }
@@ -76,6 +101,9 @@ void DimInactiveEffect::windowActivated( EffectWindow* w )
     {
     if( active != NULL )
         {
+        previousActive = active;
+        previousActiveTimeline.setProgress( 0.0 );
+
         if( dim_by_group )
             {
             if(( w == NULL || w->group() != active->group()) && active->group() != NULL )
