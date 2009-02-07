@@ -2433,7 +2433,7 @@ void Workspace::setupTopMenuHandling()
 int Workspace::topMenuHeight() const
     {
     if( topmenu_height == 0 )
-        { // Simply create a dummy menubar and use its preffered height as the menu height
+        { // Simply create a dummy menubar and use its preferred height as the menu height
         KMenuBar tmpmenu;
         tmpmenu.addAction( "dummy" );
         topmenu_height = tmpmenu.sizeHint().height();

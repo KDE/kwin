@@ -116,7 +116,7 @@ namespace KWin
        Since at this time it's known that the new window doesn't belong
        to any existing application (better said, the application doesn't
        have any other window mapped), it is either the very first window
-       of the application, or its the only window of the application
+       of the application, or it is the only window of the application
        that was hidden before. The latter case is handled by removing
        the property from windows before withdrawing them, making
        the timestamp empty for next mapping of the window. In the sooner

@@ -744,7 +744,7 @@ bool Client::mapRequestEvent( XMapRequestEvent* e )
         {
         // Special support for the save-set feature, which is a bit broken.
         // If there's a window from one client embedded in another one,
-        // e.g. using XEMBED, and the embedder suddenly looses its X connection,
+        // e.g. using XEMBED, and the embedder suddenly loses its X connection,
         // save-set will reparent the embedded window to its closest ancestor
         // that will remains. Unfortunately, with reparenting window managers,
         // this is not the root window, but the frame (or in KWin's case,

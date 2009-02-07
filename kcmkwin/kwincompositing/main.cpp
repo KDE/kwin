@@ -549,7 +549,7 @@ void KWinCompositingConfig::save()
     mPreviousConfig = config.entryMap();
 
     // bah; tab content being dependent on the other is really bad; and
-    // deprecated in the HIG for a reason.  Its confusing!
+    // deprecated in the HIG for a reason.  It is confusing!
     // Make sure we only call save on each tab once; as they are stateful due to the revert concept
     if ( ui.tabWidget->currentIndex() == 0 ) // "General" tab was active
         {

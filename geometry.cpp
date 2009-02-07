@@ -2267,7 +2267,7 @@ bool Client::isFullScreenable( bool fullscreen_hack ) const
         return isNormalWindow();
     if( rules()->checkStrictGeometry( false ))
         {
-        // the app wouldn't fit exactly fullscreen geometry due its strict geometry requirements
+        // the app wouldn't fit exactly fullscreen geometry due to its strict geometry requirements
         QRect fsarea = workspace()->clientArea( FullScreenArea, this );
         if( sizeForClientSize( fsarea.size(), SizemodeAny, true ) != fsarea.size())
             return false;

@@ -1050,7 +1050,7 @@ void Client::checkGroup( Group* set_group, bool force )
             }
         else // Not transient without a group, put it in its client leader group.
             { // This might be stupid if grouping was used for e.g. taskbar grouping
-              // or minimizing together the whole group, but as long as its used
+              // or minimizing together the whole group, but as long as it is used
               // only for dialogs it's better to keep windows from one app in one group.
             Group* new_group = workspace()->findClientLeaderGroup( this );
             if( in_group != NULL && in_group != new_group )
