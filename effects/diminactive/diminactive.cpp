@@ -31,8 +31,8 @@ KWIN_EFFECT( diminactive, DimInactiveEffect )
 DimInactiveEffect::DimInactiveEffect()
     {
     reconfigure( ReconfigureAll );
-    timeline.setDuration( 250 );
-    previousActiveTimeline.setDuration( 250 );
+    timeline.setDuration( animationTime( 250 ));
+    previousActiveTimeline.setDuration( animationTime( 250 ));
     active = effects->activeWindow();
     previousActive = NULL;
     }
