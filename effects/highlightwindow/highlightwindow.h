@@ -53,6 +53,20 @@ class HighlightWindowEffect
         long m_atom;
         EffectWindow* m_highlightedWindow;
         EffectWindow* m_monitorWindow;
+
+        // Offscreen position cache
+        /*QRect m_thumbArea; // Thumbnail area
+        QPoint m_arrowTip; // Position of the arrow's tip
+        QPoint m_arrowA; // Arrow vertex position at the base (First)
+        QPoint m_arrowB; // Arrow vertex position at the base (Second)
+
+        // Helper functions
+        inline double aspectRatio( EffectWindow *w )
+            { return w->width() / double( w->height() ); }
+        inline int widthForHeight( EffectWindow *w, int height )
+            { return int(( height / double( w->height() )) * w->width() ); }
+        inline int heightForWidth( EffectWindow *w, int width )
+            { return int(( width / double( w->width() )) * w->height() ); }*/
     };
 
 } // namespace

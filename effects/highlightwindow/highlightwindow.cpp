@@ -130,6 +130,82 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
         }
     prepareHighlighting();
     m_windowOpacity[w] = 1.0; // Because it's not in stackingOrder() yet
+
+    /* TODO: Finish thumbnails of offscreen windows, not sure if it's worth it though
+    if( !m_highlightedWindow->isOnCurrentDesktop() )
+        { // Window is offscreen, determine thumbnail position
+        QRect screenArea = effects->clientArea( MaximizeArea ); // Workable area of the active screen
+        QRect outerArea = outerArea.adjusted( outerArea.width() / 10, outerArea.height() / 10,
+            -outerArea.width() / 10, -outerArea.height() / 10 ); // Add 10% margin around the edge
+        QRect innerArea = outerArea.adjusted( outerArea.width() / 40, outerArea.height() / 40,
+            -outerArea.width() / 40, -outerArea.height() / 40 ); // Outer edge of the thumbnail border (2.5%)
+        QRect thumbArea = outerArea.adjusted( 20, 20, -20, -20 ); // Outer edge of the thumbnail (20px)
+
+        // Determine the maximum size that we can make the thumbnail within the innerArea
+        double areaAspect = double( thumbArea.width() ) / double( thumbArea.height() );
+        double windowAspect = aspectRatio( m_highlightedWindow );
+        QRect thumbRect; // Position doesn't matter right now, but it will later
+        if( windowAspect > areaAspect )
+            // Top/bottom will touch first
+            thumbRect = QRect( 0, 0, widthForHeight( thumbArea.height() ), thumbArea.height() );
+        else // Left/right will touch first
+            thumbRect = QRect( 0, 0, thumbArea.width(), heightForWidth( thumbArea.width() ));
+        if( thumbRect.width() >= m_highlightedWindow->width() )
+            // Area is larger than the window, just use the window's size
+            thumbRect = m_highlightedWindow->geometry();
+
+        // Determine position of desktop relative to the current one
+        QSize grid;
+        Qt::Orientation orientation;
+        effects->calcDesktopLayout( &grid.rwidth(), &grid.rheight(), &orientation );
+        QPoint currentDesktop;
+        QPoint targetDesktop;
+        if( orientation == Qt::Horizontal )
+            {
+            currentDesktop.setX(( effects->currentDesktop() - 1 ) % grid.width() + 1 );
+            currentDesktop.setY(( effects->currentDesktop() - 1 ) / grid.width() + 1 );
+            targetDesktop.setX(( m_highlightedWindow->desktop() - 1 ) % grid.width() + 1 );
+            targetDesktop.setY(( m_highlightedWindow->desktop() - 1 ) / grid.width() + 1 );
+            }
+        else
+            {
+            currentDesktop.setX(( effects->currentDesktop() - 1 ) / grid.height() + 1 );
+            currentDesktop.setY(( effects->currentDesktop() - 1 ) % grid.height() + 1 );
+            targetDesktop.setX(( m_highlightedWindow->desktop() - 1 ) / grid.height() + 1 );
+            targetDesktop.setY(( m_highlightedWindow->desktop() - 1 ) % grid.height() + 1 );
+            }
+        QPoint direction = targetDesktop - currentDesktop;
+
+        // Draw a line from the center of the current desktop to the center of the target desktop.
+        QPointF desktopLine( 0, 0, direction.x() * screenArea.width(), direction.y() * screenArea.height() );
+        desktopLeft.translate( screenArea.width() / 2, screenArea.height() / 2 ); // Move to the screen center
+
+        // Take the point where the line crosses the outerArea, this will be the tip of our arrow
+        QPointF arrowTip;
+        QLineF testLine( // Top
+            outerArea.x(), outerArea.y(),
+            outerArea.x() + outerArea.width(), outerArea.y() );
+        if( desktopLine.intersect( testLine, &arrowTip ) != QLineF::BoundedIntersection )
+            {
+            testLine = QLineF( // Right
+                outerArea.x() + outerArea.width(), outerArea.y(),
+                outerArea.x() + outerArea.width(), outerArea.y() + outerArea.height() );
+            if( desktopLine.intersect( testLine, &arrowTip ) != QLineF::BoundedIntersection )
+                {
+                testLine = QLineF( // Bottom
+                    outerArea.x() + outerArea.width(), outerArea.y() + outerArea.height(),
+                    outerArea.x(), outerArea.y() + outerArea.height() );
+                if( desktopLine.intersect( testLine, &arrowTip ) != QLineF::BoundedIntersection )
+                    {
+                    testLine = QLineF( // Left
+                        outerArea.x(), outerArea.y() + outerArea.height(),
+                        outerArea.x(), outerArea.y() );
+                    desktopLine.intersect( testLine, &arrowTip ); // Should never fail
+                    }
+                }
+            }
+        m_arrowTip = arrowTip.toPoint();
+        } */
     }
 
 void HighlightWindowEffect::prepareHighlighting()
