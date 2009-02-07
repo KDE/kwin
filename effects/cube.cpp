@@ -46,6 +46,7 @@ KWIN_EFFECT_SUPPORTED( cube, CubeEffect::supported() )
 
 CubeEffect::CubeEffect()
     : activated( false )
+    , mousePolling( false )
     , cube_painting( false )
     , keyboard_grab( false )
     , schedule_close( false )
@@ -1537,7 +1538,11 @@ void CubeEffect::setActive( bool active )
     {
     if( active )
         {
-        effects->startMousePolling();
+        if( !mousePolling )
+            {
+            effects->startMousePolling();
+            mousePolling = true;
+            }
         activated = true;
         activeScreen = effects->activeScreen();
         if( !slide )
@@ -1575,7 +1580,11 @@ void CubeEffect::setActive( bool active )
         }
     else
         {
-        effects->stopMousePolling();
+        if( mousePolling )
+            {
+            effects->stopMousePolling();
+            mousePolling = false;
+            }
         schedule_close = true;
         // we have to add a repaint, to start the deactivating
         effects->addRepaintFull();

@@ -75,6 +75,7 @@ class CubeEffect
         void rotateToDesktop( int desktop );
         void setActive( bool active );
         bool activated;
+        bool mousePolling;
         bool cube_painting;
         bool keyboard_grab;
         bool schedule_close;
