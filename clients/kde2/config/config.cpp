@@ -45,9 +45,10 @@ extern "C"
 //		  Configure tab in kwindecoration
 
 KDE2Config::KDE2Config( KConfig* conf, QWidget* parent )
-	: QObject( parent ), c(conf)
+	: QObject( parent )
 {
 	KGlobal::locale()->insertCatalog("kwin_clients");
+	c = new KConfig("kwinKDE2rc");
 	highcolor = QPixmap::defaultDepth() > 8;
 	gb = new KVBox( parent );
 	gb->setSpacing( KDialog::spacingHint() );
@@ -72,11 +73,6 @@ KDE2Config::KDE2Config( KConfig* conf, QWidget* parent )
 			"for high-color displays; otherwise, no gradients are drawn.") );
 	}
 
-	// Load configuration options
-	c = new KConfig("kwinKDE2rc");
-	KConfigGroup cg(c, "General");
-	load( cg );
-
 	// Ensure we track user changes properly
 	connect( cbShowStipple, SIGNAL(clicked()), 
 			 this, SLOT(slotSelectionChanged()) );
@@ -86,6 +82,9 @@ KDE2Config::KDE2Config( KConfig* conf, QWidget* parent )
 		connect( cbUseGradients, SIGNAL(clicked()), 
 				 this, SLOT(slotSelectionChanged()) );
 
+	// Load configuration options
+	load( KConfigGroup() );
+
 	// Make the widgets visible in kwindecoration
 	gb->show();
 }
@@ -94,6 +93,7 @@ KDE2Config::KDE2Config( KConfig* conf, QWidget* parent )
 KDE2Config::~KDE2Config()
 {
 	delete gb;
+	delete c;
 }
 
 
@@ -107,7 +107,7 @@ void KDE2Config::slotSelectionChanged()
 // It is passed the open config from kwindecoration to improve efficiency
 void KDE2Config::load( const KConfigGroup&  )
 {
-	KConfigGroup cg(c, "KDE2");
+	KConfigGroup cg(c, "General");
 	bool override = cg.readEntry( "ShowTitleBarStipple", true);
 	cbShowStipple->setChecked( override );
 
@@ -124,7 +124,7 @@ void KDE2Config::load( const KConfigGroup&  )
 // Saves the configurable options to the kwinrc config file
 void KDE2Config::save( KConfigGroup&  )
 {
-	KConfigGroup cg(c, "KDE2");
+	KConfigGroup cg(c, "General");
 	cg.writeEntry( "ShowTitleBarStipple", cbShowStipple->isChecked() );
 	cg.writeEntry( "ShowGrabBar", cbShowGrabBar->isChecked() );
 
