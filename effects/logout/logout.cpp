@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
@@ -31,8 +32,9 @@ namespace KWin
 KWIN_EFFECT( logout, LogoutEffect )
 
 LogoutEffect::LogoutEffect()
-    : progress( 0 )
-    , logout_window( NULL )
+    : progress( 0.0 )
+    , logoutWindow( NULL )
+    , logoutWindowClosed( true )
     {
     char net_wm_cm_name[ 100 ];
     sprintf( net_wm_cm_name, "_NET_WM_CM_S%d", DefaultScreen( display()));
@@ -44,26 +46,18 @@ LogoutEffect::LogoutEffect()
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     blurSupported = false;
+    if( effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() )
+        { // TODO: It seems that it is not possible to create a GLRenderTarget that has
+          //       a different size than the display right now. Most likely a KWin core bug.
+        // Create texture and render target
+        blurTexture = new GLTexture( displayWidth(), displayHeight() );
+        blurTexture->setFilter( GL_LINEAR_MIPMAP_LINEAR );
+        blurTexture->setWrapMode( GL_CLAMP_TO_EDGE );
 
-    // If NPOT textures are not supported use the nearest power-of-two sized
-    // texture. It wastes memory, but it's possible to support systems without
-    // NPOT textures this way.
-    int texw = displayWidth();
-    int texh = displayHeight();
-    if( !GLTexture::NPOTTextureSupported() )
-        {
-        kWarning( 1212 ) << "NPOT textures not supported, wasting some memory";
-        texw = nearestPowerOfTwo( texw );
-        texh = nearestPowerOfTwo( texh );
+        blurTarget = new GLRenderTarget( blurTexture );
+        if( blurTarget->valid() )
+            blurSupported = true;
         }
-    // Create texture and render target
-    blurTexture = new GLTexture( texw, texh );
-    blurTexture->setFilter( GL_LINEAR_MIPMAP_LINEAR );
-    blurTexture->setWrapMode( GL_CLAMP_TO_EDGE );
-
-    blurTarget = new GLRenderTarget( blurTexture );
-    if( blurTarget->valid() )
-        blurSupported = true;
 #endif
     }
 
@@ -77,10 +71,10 @@ LogoutEffect::~LogoutEffect()
 
 void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    if( logout_window != NULL )
-        progress = qBound( 0., progress + time / animationTime( 2000. ), 1. );
-    else if( progress != 0 )
-        progress = qBound( 0., progress - time / animationTime( 500. ), 1. );
+    if( logoutWindow != NULL && !logoutWindowClosed )
+        progress = qMin( 1.0, progress + time / animationTime( 2000.0 ));
+    else if( progress > 0.0 )
+        progress = qMax( 0.0, progress - time / animationTime( 500.0 ));
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( blurSupported && progress > 0.0 )
@@ -93,37 +87,32 @@ void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     effects->prePaintScreen( data, time );
     }
 
-void LogoutEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
-    {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( blurSupported && progress > 0.0 && w == logout_window )
-        w->disablePainting( EffectWindow::PAINT_DISABLED );
-#endif
-    effects->prePaintWindow( w, data, time );
-    }
-
 void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( w != logout_window && progress != 0 )
+    if( progress > 0.0 )
         {
-        if( effects->saturationSupported() )
+        if( w == logoutWindow )
             {
-            data.saturation *= ( 1 - progress * 0.8 );
-            data.brightness *= ( 1 - progress * 0.3 );
+            windowOpacity = data.opacity;
+            data.opacity = 0.0; // Cheat, we need the opacity for later but don't want to blur it
             }
-        else // When saturation isn't supported then reduce brightness a bit more
-            {  
-            data.brightness *= ( 1 - progress * 0.6 );
+        else
+            {
+            if( effects->saturationSupported() )
+                {
+                data.saturation *= ( 1.0 - progress * 0.8 );
+                data.brightness *= ( 1.0 - progress * 0.3 );
+                }
+            else // When saturation isn't supported then reduce brightness a bit more
+                data.brightness *= ( 1.0 - progress * 0.6 );
             }
         }
     effects->paintWindow( w, mask, region, data );
     }
 
-void LogoutEffect::postPaintScreen()
+void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
-    if( progress != 0 && progress != 1 )
-        effects->addRepaintFull();
-    effects->postPaintScreen();
+    effects->paintScreen( mask, region, data );
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( blurSupported && progress > 0.0 )
@@ -135,7 +124,7 @@ void LogoutEffect::postPaintScreen()
         GLfloat bias[1];
         glGetTexEnvfv( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias );
         glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, progress * 2.75 );
-        glBegin(GL_QUADS);
+        glBegin( GL_QUADS );
             glTexCoord2f( 0.0, 0.0 );
             glVertex2f( 0.0, displayHeight() );
             glTexCoord2f( 1.0, 0.0 );
@@ -149,34 +138,48 @@ void LogoutEffect::postPaintScreen()
         blurTexture->unbind();
 
         // Render the logout window
-        if( logout_window )
+        if( logoutWindow )
             {
-            int mask = PAINT_WINDOW_OPAQUE; // TODO: Can we have a translucent logout window?
-            QRect region = infiniteRegion();
-            WindowPaintData data( logout_window );
-            effects->drawWindow( logout_window, mask, region, data );
+            int winMask = logoutWindow->hasAlpha() ? PAINT_WINDOW_TRANSLUCENT : PAINT_WINDOW_OPAQUE;
+            WindowPaintData winData( logoutWindow );
+            winData.opacity = windowOpacity;
+            effects->drawWindow( logoutWindow, winMask, region, winData );
             }
         }
 #endif
+    }
+
+void LogoutEffect::postPaintScreen()
+    {
+    if( progress != 0.0 && progress != 1.0 )
+        effects->addRepaintFull();
+    effects->postPaintScreen();
     }
 
 void LogoutEffect::windowAdded( EffectWindow* w )
     {
     if( isLogoutDialog( w ))
         {
-        logout_window = w;
-        progress = 0;
+        logoutWindow = w;
+        logoutWindowClosed = false; // So we don't blur the window on close
+        progress = 0.0;
         effects->addRepaintFull();
         }
     }
 
 void LogoutEffect::windowClosed( EffectWindow* w )
     {
-    if( w == logout_window )
+    if( w == logoutWindow )
         {
-        logout_window = NULL;
+        logoutWindowClosed = true;
         effects->addRepaintFull();
         }
+    }
+
+void LogoutEffect::windowDeleted( EffectWindow* w )
+    {
+    if( w == logoutWindow )
+        logoutWindow = NULL;
     }
 
 bool LogoutEffect::isLogoutDialog( EffectWindow* w )

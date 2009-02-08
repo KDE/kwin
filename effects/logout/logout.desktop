@@ -122,13 +122,13 @@ Comment[zh_TW]=顯示登出視窗時將桌面淡化
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
-X-KDE-PluginInfo-Author=Lubos Lunak
-X-KDE-PluginInfo-Email=l.lunak@kde.org
+X-KDE-PluginInfo-Author=Lubos Lunak & Lucas Murray
+X-KDE-PluginInfo-Email=l.lunak@kde.org & lmurray@undefinedfire.com
 X-KDE-PluginInfo-Name=kwin4_effect_logout
-X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Version=0.2.0
 X-KDE-PluginInfo-Category=Appearance
 X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Library=kwin4_effect_builtins
-X-KDE-Ordering=40
+X-KDE-Ordering=85
