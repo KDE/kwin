@@ -1,7 +1,13 @@
 [Desktop Entry]
 Name=Desktop Cube Animation
+Name[pt_BR]=Animação do cubo da área de trabalho
+Name[sv]=Animering med skrivbordskub
+Name[uk]=Анімація куба стільниць
 Icon=preferences-system-windows-effect-cube
 Comment=Animate desktop switching with a cube
+Comment[pt_BR]=Anima a alternação da área de trabalho com um cubo
+Comment[sv]=Animera skrivbordsbyte med en kub
+Comment[uk]=Створювати анімацію перемикання стільниць куба
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
