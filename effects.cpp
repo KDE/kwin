@@ -1094,6 +1094,12 @@ double EffectWindowImpl::opacity() const
     return toplevel->opacity();
     }
 
+bool EffectWindowImpl::hasAlpha() const
+    {
+    return toplevel->hasAlpha();
+    }
+
+
 bool EffectWindowImpl::isDeleted() const
     {
     return (dynamic_cast<Deleted*>( toplevel ) != 0);

@@ -195,6 +195,7 @@ class EffectWindowImpl : public EffectWindow
         virtual int desktop() const; // prefer isOnXXX()
         virtual bool isMinimized() const;
         virtual double opacity() const;
+        virtual bool hasAlpha() const;
         virtual QString caption() const;
         virtual QPixmap icon() const;
         virtual QString windowClass() const;

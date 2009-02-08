@@ -164,7 +164,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 59
+#define KWIN_EFFECT_API_VERSION_MINOR 60
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -718,6 +718,7 @@ class KWIN_EXPORT EffectWindow
 
         virtual bool isMinimized() const = 0;
         virtual double opacity() const = 0;
+        virtual bool hasAlpha() const = 0;
 
         virtual bool isOnDesktop( int d ) const;
         virtual bool isOnCurrentDesktop() const;
