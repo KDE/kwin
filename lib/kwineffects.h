@@ -164,7 +164,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 58
+#define KWIN_EFFECT_API_VERSION_MINOR 59
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -843,6 +843,10 @@ class KWIN_EXPORT EffectWindow
          * aspects, as opposed to override-redirect windows that are entirely handled by the application).
          */
         virtual bool isManaged() const = 0; // whether it's managed or override-redirect
+        /**
+         * Returns whether or not the window can accept keyboard focus.
+         */
+        virtual bool acceptsFocus() const = 0;
 
         virtual bool isModal() const = 0;
         virtual EffectWindow* findModal() = 0;

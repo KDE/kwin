@@ -1343,6 +1343,14 @@ bool EffectWindowImpl::isManaged() const
     return dynamic_cast< const Client* >( toplevel ) != NULL;
     }
 
+bool EffectWindowImpl::acceptsFocus() const
+    {
+    const Client* client = dynamic_cast< const Client* >( toplevel );
+    if( !client )
+        return true; // We don't actually know...
+    return client->wantsInput();
+    }
+
 bool EffectWindowImpl::isModal() const
     {
     if( Client* c = dynamic_cast< Client* >( toplevel ))

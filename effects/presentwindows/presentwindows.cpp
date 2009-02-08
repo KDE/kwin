@@ -1268,6 +1268,8 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
         return false;
     if( w->isDeleted() )
         return false;
+    if( !w->acceptsFocus() )
+        return false;
     if( !m_allDesktops && !w->isOnCurrentDesktop() )
         return false;
     if( !m_tabBoxEnabled && m_ignoreMinimized && w->isMinimized() )
