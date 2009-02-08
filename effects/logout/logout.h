@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,13 +28,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class GLRenderTarget;
+class GLTexture;
+
 class LogoutEffect
     : public Effect
     {
     public:
         LogoutEffect();
+        ~LogoutEffect();
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void postPaintScreen();
+        virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowAdded( EffectWindow* w );
         virtual void windowClosed( EffectWindow* w );
@@ -41,6 +47,12 @@ class LogoutEffect
         bool isLogoutDialog( EffectWindow* w );
         double progress; // 0-1
         EffectWindow* logout_window;
+
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        bool blurSupported;
+        GLTexture* blurTexture;
+        GLRenderTarget* blurTarget;
+#endif
     };
 
 } // namespace
