@@ -97,6 +97,12 @@ bool DimInactiveEffect::dimWindow( const EffectWindow* w ) const
     return true; // dim the rest
     }
 
+void DimInactiveEffect::windowDeleted( EffectWindow* w )
+    {
+    if( w == previousActive )
+        previousActive = NULL;
+    }
+
 void DimInactiveEffect::windowActivated( EffectWindow* w )
     {
     if( active != NULL )

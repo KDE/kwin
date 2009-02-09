@@ -37,6 +37,7 @@ class DimInactiveEffect
         virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void windowDeleted( EffectWindow* w );
         virtual void windowActivated( EffectWindow* c );
     private:
         bool dimWindow( const EffectWindow* w ) const;
