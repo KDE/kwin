@@ -65,6 +65,8 @@ class SceneOpenGL
         void waitSync();
         void flushBuffer( int mask, QRegion damage );
         bool selfCheck();
+        void selfCheckSetup();
+        bool selfCheckFinish();
         GC gcroot;
         class FBConfigInfo
             {
@@ -91,6 +93,7 @@ class SceneOpenGL
         static XShmSegmentInfo shm;
 #endif
         bool init_ok;
+        bool selfCheckDone;
     };
 
 class SceneOpenGL::Texture

@@ -89,8 +89,9 @@ namespace KWin
 Scene* scene;
 
 Scene::Scene( Workspace* ws )
-    : wspace( ws ),
-    has_waitSync( false )
+    : wspace( ws )
+    , has_waitSync( false )
+    , selfCheckDone( false )
     {
     }
     
@@ -335,6 +336,14 @@ QList< QPoint > Scene::selfCheckPoints() const
             + QPoint( -1, 0 )); // intentionally moved one up, since the source windows will be one down
         }
     return ret;
+    }
+
+QRegion Scene::selfCheckRegion() const
+    {
+    QRegion reg;
+    foreach( const QPoint& p, selfCheckPoints())
+        reg |= QRect( p, QSize( selfCheckWidth(), selfCheckHeight()));
+    return reg;
     }
 
 //****************************************

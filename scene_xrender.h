@@ -56,6 +56,8 @@ class SceneXrender
         void createBuffer();
         void flushBuffer( int mask, QRegion damage );
         bool selfCheck();
+        void selfCheckSetup();
+        bool selfCheckFinish();
         XRenderPictFormat* format;
         Picture front;
         static Picture buffer;

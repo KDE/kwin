@@ -522,6 +522,7 @@ class Workspace : public QObject, public KDecorationDefines
         void slotReloadConfig();
         void setPopupClientOpacity( QAction* action );
         void setupCompositing();
+        void finishCompositing();
         void performCompositing();
         void performMousePoll();
         void lostCMSelection();
@@ -606,7 +607,6 @@ class Workspace : public QObject, public KDecorationDefines
 
         void updateClientArea( bool force );
 
-        void finishCompositing();
         bool windowRepaintsPending() const;
         void setCompositeTimer();
         void checkCompositePaintTime( int msec );

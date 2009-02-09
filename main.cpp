@@ -68,7 +68,7 @@ Atoms* atoms;
 
 int screen_number = -1;
 
-static bool initting = false;
+bool initting = false;
 
 /**
  * Whether to run Xlib in synchronous mode and print backtraces for X errors.
@@ -180,7 +180,7 @@ static int x11ErrorHandler( Display* d, XErrorEvent* e )
     fprintf( stderr, "kwin: X Error (%s)\n", errorMessage( *e, d ).data() );
 
     if( kwin_sync )
-    fprintf( stderr, "%s\n", kBacktrace().toLocal8Bit().data() );
+        fprintf( stderr, "%s\n", kBacktrace().toLocal8Bit().data() );
 
     if( initting )
         {

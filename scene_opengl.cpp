@@ -183,8 +183,16 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         kError( 1212 ) << "OpenGL compositing setup failed";
         return; // error
         }
-    if( !selfCheck())
-        return;
+    // Do self-check immediatelly during compositing setup only when it's not KWin startup
+    // at the same time (in other words, only when activating compositing using the kcm).
+    // Currently selfcheck causes bad flicker (due to X mapping the overlay window
+    // for too long?) which looks bad during KDE startup.
+    if( !initting )
+        {
+        if( !selfCheck())
+            return;
+        selfCheckDone = true;
+        }
     kDebug( 1212 ) << "DB:" << db << ", TFP:" << tfp_mode << ", SHM:" << shm_mode
         << ", Direct:" << bool( glXIsDirect( display(), ctxbuffer )) << endl;
     init_ok = true;
@@ -624,10 +632,28 @@ bool SceneOpenGL::initDrawableConfigs()
 // Test if compositing actually _really_ works, by creating a texture from a testing
 // window, drawing it on the screen, reading the contents back and comparing. This
 // should test whether compositing really works.
-// It would be still nice to check somehow if compositing is not awfully slow.
+// This function does the whole selfcheck, it can be done also in two parts
+// during actual drawing (to avoid flicker, see selfCheck() call from the ctor).
 bool SceneOpenGL::selfCheck()
     {
-    QImage img( 3, 2, QImage::Format_RGB32 );
+    QRegion reg = selfCheckRegion();
+    if( wspace->overlayWindow())
+        { // avoid covering the whole screen too soon
+        wspace->setOverlayShape( reg );
+        wspace->showOverlay();
+        }
+    selfCheckSetup();
+    flushBuffer( PAINT_SCREEN_REGION, reg );
+    bool ok = selfCheckFinish();
+    if( wspace->overlayWindow())
+        wspace->hideOverlay();
+    return ok;
+    }
+
+void SceneOpenGL::selfCheckSetup()
+    {
+    KXErrorHandler err;
+    QImage img( selfCheckWidth(), selfCheckHeight(), QImage::Format_RGB32 );
     img.setPixel( 0, 0, QColor( Qt::red ).rgb());
     img.setPixel( 1, 0, QColor( Qt::green ).rgb());
     img.setPixel( 2, 0, QColor( Qt::blue ).rgb());
@@ -635,46 +661,42 @@ bool SceneOpenGL::selfCheck()
     img.setPixel( 1, 1, QColor( Qt::black ).rgb());
     img.setPixel( 2, 1, QColor( Qt::white ).rgb());
     QPixmap pix = QPixmap::fromImage( img );
-    QList< QPoint > points = selfCheckPoints();
-    QRegion reg;
-    foreach( const QPoint& p, points )
-        reg |= QRect( p, pix.size());
-    if( wspace->overlayWindow())
-        { // avoid covering the whole screen too soon
-        wspace->setOverlayShape( reg );
-        wspace->showOverlay();
-        }
-    foreach( const QPoint& p, points )
+    foreach( const QPoint& p, selfCheckPoints())
         {
         XSetWindowAttributes wa;
         wa.override_redirect = True;
-        ::Window window = XCreateWindow( display(), rootWindow(), 0, 0, 3, 2, 0, QX11Info::appDepth(),
-            CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa );
+        ::Window window = XCreateWindow( display(), rootWindow(), 0, 0, selfCheckWidth(), selfCheckHeight(),
+            0, QX11Info::appDepth(), CopyFromParent, CopyFromParent, CWOverrideRedirect, &wa );
         XSetWindowBackgroundPixmap( display(), window, pix.handle());
         XClearWindow( display(), window );
         XMapWindow( display(), window );
         // move the window one down to where the result will be rendered too, just in case
         // the render would fail completely and eventual check would try to read this window's contents
         XMoveWindow( display(), window, p.x() + 1, p.y());
-        XCompositeRedirectWindow( display(), window, CompositeRedirectManual );
+        XCompositeRedirectWindow( display(), window, CompositeRedirectAutomatic );
         Pixmap wpix = XCompositeNameWindowPixmap( display(), window );
         glXWaitX();
         Texture texture;
-        texture.load( wpix, QSize( 3, 2 ), QX11Info::appDepth());
+        texture.load( wpix, QSize( selfCheckWidth(), selfCheckHeight()), QX11Info::appDepth());
         texture.bind();
-        QRect rect( p.x(), p.y(), 3, 2 );
+        QRect rect( p.x(), p.y(), selfCheckWidth(), selfCheckHeight());
         texture.render( infiniteRegion(), rect );
         texture.unbind();
         glXWaitGL();
         XFreePixmap( display(), wpix );
         XDestroyWindow( display(), window );
         }
-    flushBuffer( PAINT_SCREEN_REGION, reg );
+    err.error( true ); // just sync and discard
+    }
+
+bool SceneOpenGL::selfCheckFinish()
+    {
     glXWaitGL();
+    KXErrorHandler err;
     bool ok = true;
-    foreach( const QPoint& p, points )
+    foreach( const QPoint& p, selfCheckPoints())
         {
-        QPixmap pix = QPixmap::grabWindow( rootWindow(), p.x(), p.y(), 3, 2 );
+        QPixmap pix = QPixmap::grabWindow( rootWindow(), p.x(), p.y(), selfCheckWidth(), selfCheckHeight());
         QImage img = pix.toImage();
 //        kDebug(1212) << "P:" << QColor( img.pixel( 0, 0 )).name();
 //        kDebug(1212) << "P:" << QColor( img.pixel( 1, 0 )).name();
@@ -694,8 +716,8 @@ bool SceneOpenGL::selfCheck()
             break;
             }
         }
-    if( wspace->overlayWindow())
-        wspace->hideOverlay();
+    if( err.error( true ))
+        ok = false;
     if( ok )
         kDebug( 1212 ) << "Compositing self-check passed.";
     if( !ok && options->disableCompositingChecks )
@@ -729,7 +751,18 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     ungrabXServer(); // ungrab before flushBuffer(), it may wait for vsync
     if( wspace->overlayWindow()) // show the window only after the first pass, since
         wspace->showOverlay();   // that pass may take long
+    if( !selfCheckDone )
+        {
+        selfCheckSetup();
+        damage |= selfCheckRegion();
+        }
     flushBuffer( mask, damage );
+    if( !selfCheckDone )
+        {
+        if( !selfCheckFinish())
+            QTimer::singleShot( 0, Workspace::self(), SLOT( finishCompositing()));
+        selfCheckDone = true;
+        }
     // do cleanup
     stacking_order.clear();
     checkGLError( "PostPaint" );

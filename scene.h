@@ -108,6 +108,10 @@ class Scene
         // compute time since the last repaint
         void updateTimeDiff();
         QList< QPoint > selfCheckPoints() const;
+        QRegion selfCheckRegion() const;
+        // dimensions of the test pixmap for selfcheck
+        int selfCheckWidth() const;
+        int selfCheckHeight() const;
         // saved data for 2nd pass of optimized screen painting
         struct Phase2Data
             {
@@ -133,6 +137,7 @@ class Scene
         QTime last_time;
         Workspace* wspace;
         bool has_waitSync;
+        bool selfCheckDone;
     };
 
 // The base class for windows representations in composite backends
@@ -197,6 +202,18 @@ class Scene::Window
     };
 
 extern Scene* scene;
+
+inline
+int Scene::selfCheckWidth() const
+    {
+    return 3;
+    }
+
+inline
+int Scene::selfCheckHeight() const
+    {
+    return 2;
+    }
 
 inline
 int Scene::Window::x() const
