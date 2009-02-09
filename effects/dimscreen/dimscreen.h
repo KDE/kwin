@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
- Copyright (C) 2008 Martin Gräßlin <ubuntu@martin-graesslin.com
+ Copyright (C) 2008, 2009 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,12 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-#include <QTime>
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <X11/extensions/Xrender.h>
-#endif
-
 namespace KWin
 {
 
@@ -41,21 +35,16 @@ class DimScreenEffect
 
         virtual void reconfigure( ReconfigureFlags );
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
-        virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
         virtual void paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data );
         virtual void windowActivated( EffectWindow *w );
 
     private:
         bool mActivated;
-        QTime animationTime;
-        int animationDuration;
-        bool animation;
-        bool deactivate;
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        XRenderPictFormat* alphaFormat;
-#endif
+        bool activateAnimation;
+        bool deactivateAnimation;
+        TimeLine timeline;
+        EffectWindow* window;
     };
 
 } // namespace
