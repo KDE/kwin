@@ -172,7 +172,9 @@ Workspace::Workspace( bool restore )
         this, SLOT( gotTemporaryRulesMessage(const QString&) ));
     connect( &rulesUpdatedTimer, SIGNAL( timeout() ), this, SLOT( writeWindowRules() ));
     connect( &unredirectTimer, SIGNAL( timeout() ), this, SLOT( delayedCheckUnredirect() ));
+    connect( &compositeResetTimer, SIGNAL( timeout()), this, SLOT( resetCompositing()));
     unredirectTimer.setSingleShot( true );
+    compositeResetTimer.setSingleShot( true );
 
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
 

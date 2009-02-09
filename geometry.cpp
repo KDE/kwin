@@ -65,10 +65,7 @@ void Workspace::desktopResized()
     destroyElectricBorders();
     updateElectricBorders();
     if( compositing() )
-        {
-        finishCompositing();
-        QTimer::singleShot( 0, this, SLOT( setupCompositing() ) );
-        }
+        compositeResetTimer.start( 0 );
     }
 
 /*!

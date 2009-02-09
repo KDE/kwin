@@ -785,6 +785,7 @@ class Workspace : public QObject, public KDecorationDefines
         QTimer unredirectTimer;
         bool forceUnredirectCheck;
         QList< int > composite_paint_times;
+        QTimer compositeResetTimer; // for compressing composite resets
 
     private:
         friend bool performTransiencyCheck();

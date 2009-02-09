@@ -510,10 +510,7 @@ bool Workspace::workspaceEvent( XEvent * e )
                     bool changed = ( xrrRefreshRate != XRRConfigCurrentRate( config ));
                     XRRFreeScreenConfigInfo( config );
                     if( changed )
-                        {
-                        finishCompositing();
-                        QTimer::singleShot( 0, this, SLOT( setupCompositing() ) );
-                        }
+                        compositeResetTimer.start( 0 );
                     }
 #endif
                 }
