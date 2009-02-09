@@ -774,6 +774,7 @@ class Workspace : public QObject, public KDecorationDefines
         QTime nextPaintReference;
         QTimer mousePollingTimer;
         int compositeRate;
+        int xrrRefreshRate; // used only for compositing
         QRegion repaints_region;
         Window overlay; // XComposite overlay window
         bool overlay_visible;

@@ -501,15 +501,21 @@ bool Workspace::workspaceEvent( XEvent * e )
                 {
 #ifdef HAVE_XRANDR
                 XRRUpdateConfiguration( e );
-#endif
                 if( compositing() )
                     {
                     // desktopResized() should take care of when the size or
                     // shape of the desktop has changed, but we also want to
                     // catch refresh rate changes
-                    finishCompositing();
-                    QTimer::singleShot( 0, this, SLOT( setupCompositing() ) );
+                    XRRScreenConfiguration *config = XRRGetScreenInfo( display(), rootWindow() );
+                    bool changed = ( xrrRefreshRate != XRRConfigCurrentRate( config ));
+                    XRRFreeScreenConfigInfo( config );
+                    if( changed )
+                        {
+                        finishCompositing();
+                        QTimer::singleShot( 0, this, SLOT( setupCompositing() ) );
+                        }
                     }
+#endif
                 }
             else if( e->type == Extensions::syncAlarmNotifyEvent() && Extensions::syncAvailable())
                 {

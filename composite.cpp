@@ -175,10 +175,8 @@ void Workspace::setupCompositing()
         { // autoconfigure refresh rate based on XRandR info
         if( Extensions::randrAvailable() )
             {
-            XRRScreenConfiguration *config;
-
-            config = XRRGetScreenInfo( display(), rootWindow() );
-            rate = XRRConfigCurrentRate( config );
+            XRRScreenConfiguration *config = XRRGetScreenInfo( display(), rootWindow() );
+            rate = xrrRefreshRate = XRRConfigCurrentRate( config );
             XRRFreeScreenConfigInfo( config );
             }
         }
