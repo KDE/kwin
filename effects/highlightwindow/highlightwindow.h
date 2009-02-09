@@ -37,6 +37,7 @@ class HighlightWindowEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
 
         virtual void windowAdded( EffectWindow* w );
+        virtual void windowClosed( EffectWindow* w );
         virtual void windowDeleted( EffectWindow* w );
 
         virtual void propertyNotify( EffectWindow* w, long atom );

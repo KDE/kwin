@@ -99,11 +99,15 @@ void HighlightWindowEffect::windowAdded( EffectWindow* w )
     propertyNotify( w, m_atom ); // Check initial value
     }
 
+void HighlightWindowEffect::windowClosed( EffectWindow* w )
+    {
+    if( m_monitorWindow == w ) // The monitoring window was destroyed
+        finishHighlighting();
+    }
+
 void HighlightWindowEffect::windowDeleted( EffectWindow* w )
     {
     m_windowOpacity.remove( w );
-    if( m_monitorWindow == w ) // The monitoring window was destroyed
-        finishHighlighting();
     }
 
 void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
@@ -113,11 +117,14 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
 
     QByteArray byteData = w->readProperty( m_atom, m_atom, 32 );
     if( byteData.length() < 1 )
-        return; // Invalid length
+        { // Property was removed, clearing highlight
+        finishHighlighting();
+        return;
+        }
     long* data = reinterpret_cast<long*>( byteData.data() );
 
     if( !data[0] )
-        { // Purposely clearing highlight
+        { // Purposely clearing highlight by issuing a NULL target
         finishHighlighting();
         return;
         }
