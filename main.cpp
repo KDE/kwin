@@ -311,7 +311,7 @@ Application::Application()
 
     atoms = new Atoms;
 
-    initting = false; // TODO
+//    initting = false; // TODO
 
     // This tries to detect compositing options and can use GLX. GLX problems
     // (X errors) shouldn't cause kwin to abort, so this is out of the
