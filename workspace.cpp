@@ -2128,6 +2128,7 @@ void Workspace::updateElectricBorders()
     {
     electric_time_first = xTime();
     electric_time_last = xTime();
+    electric_time_last_trigger = xTime();
     electric_current_border = ElectricNone;
     QRect r = Kephal::ScreenUtils::desktopGeometry();
     electricTop = r.top();
@@ -2226,6 +2227,7 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
 
     Time treshold_set = options->electricBorderDelay(); // Set timeout
     Time treshold_reset = 250; // Reset timeout
+    Time treshold_trigger = 350; // Minimum time between triggers
     int distance_reset = 30; // Mouse should not move more than this many pixels
 
     ElectricBorder border;
@@ -2253,6 +2255,7 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
 
     if(( electric_current_border == border ) &&
        ( timestampDiff( electric_time_last, now ) < treshold_reset ) &&
+       ( timestampDiff( electric_time_last_trigger, now ) > treshold_trigger ) &&
        (( pos-electric_push_point ).manhattanLength() < distance_reset ))
         {
         electric_time_last = now;
@@ -2260,11 +2263,14 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
         if( timestampDiff( electric_time_first, now ) > treshold_set )
             {
             electric_current_border = ElectricNone;
+            electric_time_last_trigger = now;
             if( effects && static_cast<EffectsHandlerImpl*>( effects )->borderActivated( border ))
                 {} // Handled by effects
             else
+                {
                 electricBorderSwitchDesktop( border, pos );
-            return;
+                return;
+                }
             }
         }
     else

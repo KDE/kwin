@@ -741,6 +741,7 @@ class Workspace : public QObject, public KDecorationDefines
         int electricBottom;
         Time electric_time_first;
         Time electric_time_last;
+        Time electric_time_last_trigger;
         QPoint electric_push_point;
         int electric_reserved[ELECTRIC_COUNT]; // Corners/edges used by something
 
