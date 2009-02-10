@@ -7,7 +7,10 @@ X-KDE-ParentComponents=kwin4_effect_cubeslide
 X-KDE-PluginKeyword=cubeslide
 
 Name=Desktop Cube Animation
+Name[et]=Töölauakuubiku animeerimine
+Name[nds]=Animeert Wörpel-Schriefdisch
 Name[pt]=Animação do Cubo de Ecrãs
 Name[pt_BR]=Animação do cubo da área de trabalho
 Name[sv]=Animering med skrivbordskub
 Name[uk]=Анімація куба стільниць
+Name[zh_TW]=桌面立方體動畫
