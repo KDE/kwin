@@ -345,7 +345,8 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             }
         if( windowMove )
             {
-            effects->activateWindow( windowMove ); // Just in case it was deactivated
+            if( wasWindowMove )
+                effects->activateWindow( windowMove ); // Just in case it was deactivated
             effects->setElevatedWindow( windowMove, false );
             windowMove = NULL;
             }
@@ -550,7 +551,7 @@ EffectWindow* DesktopGridEffect::windowAt( QPoint pos ) const
     int desktop;
     pos = unscalePos( pos, &desktop );
     foreach( EffectWindow* w, windows )
-        if( w->isOnDesktop( desktop ) && w->geometry().contains( pos ))
+        if( w->isOnDesktop( desktop ) && !w->isMinimized() && w->geometry().contains( pos ))
             return w;
     return NULL;
     }
