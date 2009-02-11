@@ -39,7 +39,9 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
         KCModule(EffectFactory::componentData(), parent, args)
     {
     QVBoxLayout* layout = new QVBoxLayout(this);
-    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
+
+    // Shortcut config. The shortcut belongs to the component "kwin"!
+    KActionCollection *actionCollection = new KActionCollection( this, KComponentData("kwin") );
 
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "Invert" ));
     a->setText( i18n("Toggle Invert Effect" ));

@@ -55,8 +55,8 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
     connect(m_ui->spinWidth, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->comboColors, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
-    // Shortcut config
-    m_actionCollection = new KActionCollection( this, componentData() );
+    // Shortcut config. The shortcut belongs to the component "kwin"!
+    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
 
     KAction* a = static_cast< KAction* >( m_actionCollection->addAction( "ClearMouseMarks" ));
     a->setText( i18n( "Clear Mouse Marks" ));

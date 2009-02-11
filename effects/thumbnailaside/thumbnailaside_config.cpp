@@ -56,8 +56,9 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     connect(m_ui->spinSpacing, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->spinOpacity, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
-    // Shortcut config
-    m_actionCollection = new KActionCollection( this, componentData() );
+    // Shortcut config. The shortcut belongs to the component "kwin"!
+    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
+
     m_actionCollection->setConfigGroup("ThumbnailAside");
     m_actionCollection->setConfigGlobal(true);
 

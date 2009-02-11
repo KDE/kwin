@@ -39,7 +39,10 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
         KCModule(EffectFactory::componentData(), parent, args)
     {
     QVBoxLayout* layout = new QVBoxLayout(this);
-    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
+
+    // Shortcut config. The shortcut belongs to the component "kwin"!
+    KActionCollection *actionCollection = new KActionCollection( this, KComponentData("kwin") );
+
     KAction* a;
     a = static_cast< KAction* >( actionCollection->addAction( KStandardAction::ZoomIn ));
     a->setProperty("isConfigurationAction", true);

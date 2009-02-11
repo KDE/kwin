@@ -56,7 +56,9 @@ SnowEffectConfig::SnowEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->maxHSpeed, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->snowBehindWindows, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
-    m_actionCollection = new KActionCollection( this, componentData() );
+    // Shortcut config. The shortcut belongs to the component "kwin"!
+    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
+
     m_actionCollection->setConfigGroup("Snow");
     m_actionCollection->setConfigGlobal(true);
 

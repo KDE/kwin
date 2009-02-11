@@ -52,7 +52,9 @@ SphereEffectConfig::SphereEffectConfig(QWidget* parent, const QVariantList& args
     m_ui->tabWidget->setTabText( 0, i18nc("@title:tab Basic Settings", "Basic") );
     m_ui->tabWidget->setTabText( 1, i18nc("@title:tab Advanced Settings", "Advanced") );
 
-    m_actionCollection = new KActionCollection( this, componentData() );
+    // Shortcut config. The shortcut belongs to the component "kwin"!
+    m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
+
     m_actionCollection->setConfigGroup( "Sphere" );
     m_actionCollection->setConfigGlobal(true);
 

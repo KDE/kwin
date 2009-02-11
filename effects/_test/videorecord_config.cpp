@@ -57,7 +57,9 @@ VideoRecordEffectConfig::VideoRecordEffectConfig(QWidget* parent, const QVariant
     hlayout->addWidget( saveVideo );
     layout->addLayout( hlayout );
 
-    KActionCollection* actionCollection = new KActionCollection( this, componentData() );
+    // Shortcut config. The shortcut belongs to the component "kwin"!
+    KActionCollection* actionCollection = new KActionCollection( this, KComponentData("kwin") );
+
     KAction* a = static_cast<KAction*>(actionCollection->addAction( "VideoRecord" ));
     a->setText( i18n("Toggle Video Recording" ));
     a->setProperty("isConfigurationAction", true);
