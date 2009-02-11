@@ -490,6 +490,7 @@ class Workspace : public QObject, public KDecorationDefines
         void reconfigure();
         void slotReconfigure();
         void slotReinitCompositing();
+        void resetCompositing();
 
         void slotKillWindow();
 

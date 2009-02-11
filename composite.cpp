@@ -288,6 +288,15 @@ void Workspace::suspendCompositing( bool suspend )
     setupCompositing(); // will do nothing if suspended
     }
 
+void Workspace::resetCompositing()
+    {
+    if( compositing())
+        {
+        finishCompositing();
+        QTimer::singleShot( 0, this, SLOT( setupCompositing()));
+        }
+    }
+
 void Workspace::addRepaint( int x, int y, int w, int h )
     {
     if( !compositing())
