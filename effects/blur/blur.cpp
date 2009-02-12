@@ -246,7 +246,8 @@ void BlurEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPa
     if( mValid && !effects->activeFullScreenEffect() /*&& mTransparentWindows*/ )
         {
             if( mask & PAINT_WINDOW_TRANSLUCENT &&
-                (data.opacity != 1.0 || data.contents_opacity != 1.0 || data.decoration_opacity != 1.0 ))
+                ((data.opacity != 1.0 || data.contents_opacity != 1.0 || data.decoration_opacity != 1.0 ) ||
+                w->hasAlpha()))
             {
 
             double blurAmount = data.opacity;
