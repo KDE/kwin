@@ -569,6 +569,7 @@ class Workspace : public QObject, public KDecorationDefines
         void setupTopMenuHandling();
         void updateTopMenuGeometry( Client* c = NULL );
         void updateToolWindows( bool also_hide );
+        void fixPositionAfterCrash( Window w, const XWindowAttributes& attr );
 
         /// This is the right way to create a new client
         Client* createClient( Window w, bool is_mapped );

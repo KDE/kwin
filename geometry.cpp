@@ -793,6 +793,17 @@ void Workspace::updateTopMenuGeometry( Client* c )
         updateTopMenuGeometry( *it );
     }
 
+// When kwin crashes, windows will not be gravitated back to their original position
+// and will remain offset by the size of the decoration. So when restarting, fix this
+// (the property with the size of the frame remains on the window after the crash).
+void Workspace::fixPositionAfterCrash( Window w, const XWindowAttributes& attr )
+    {
+    NETWinInfo i( display(), w, rootWindow(), NET::WMFrameExtents );
+    NETStrut frame = i.frameExtents();
+    if( frame.left != 0 || frame.top != 0 )
+        XMoveWindow( display(), w, attr.x - frame.left, attr.y - frame.top );
+    }
+
 //********************************************
 // Client
 //********************************************

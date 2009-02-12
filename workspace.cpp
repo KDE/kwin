@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <kaction.h>
 #include <kconfiggroup.h>
+#include <kcmdlineargs.h>
 #include <QtDBus/QtDBus>
 
 #include "client.h"
@@ -388,6 +389,7 @@ void Workspace::init()
         Window root_return, parent_return;
         Window* wins;
         XQueryTree( display(), rootWindow(), &root_return, &parent_return, &wins, &nwins );
+        bool fixoffset = KCmdLineArgs::parsedArgs()->getOption( "crashes" ).toInt() > 0;
         for( i = 0; i < nwins; i++ )
             {
             XWindowAttributes attr;
@@ -400,7 +402,11 @@ void Workspace::init()
             if( topmenu_space && topmenu_space->winId() == wins[i] )
                 continue;
             if( attr.map_state != IsUnmapped )
+                {
+                if( fixoffset )
+                    fixPositionAfterCrash( wins[ i ], attr );
                 createClient( wins[i], true );
+                }
             }
         if( wins )
             XFree( (void*)( wins ));
