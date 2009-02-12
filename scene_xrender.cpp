@@ -219,6 +219,7 @@ void SceneXrender::selfCheckSetup()
         QRect rect( p.x(), p.y(), selfCheckWidth(), selfCheckHeight());
         XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
             rect.x(), rect.y(), rect.width(), rect.height());
+        XRenderFreePicture( display(), pic );
         XFreePixmap( display(), wpix );
         XDestroyWindow( display(), window );
         }
