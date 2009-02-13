@@ -2711,6 +2711,11 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
+    // If the cursor goes into the "dead" area of a Xinerama screen where the two monitors
+    // have different resolutions treat it as if the cursor didn't move at all.
+    if( workspace()->screenNumber( globalPos ) == -1 )
+        return;
+
     // compute bounds
     // NOTE: This is duped in checkUnrestrictedMoveResize().
     QRect desktopArea = workspace()->clientArea( WorkArea, globalPos, desktop());
