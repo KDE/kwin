@@ -5,6 +5,7 @@ Name[nds]=Animeert Wörpel-Schriefdisch
 Name[pt]=Animação do Cubo de Ecrãs
 Name[pt_BR]=Animação do cubo da área de trabalho
 Name[sv]=Animering med skrivbordskub
+Name[tr]=Masaüstü Küp Animasyonu
 Name[uk]=Анімація куба стільниць
 Name[zh_TW]=桌面立方體動畫
 Icon=preferences-system-windows-effect-cube
@@ -14,6 +15,7 @@ Comment[nds]=Schriefdischwesseln mit en Wörpel animeren
 Comment[pt]=Animar a mudança de ecrãs com um cubo
 Comment[pt_BR]=Anima a alternação da área de trabalho com um cubo
 Comment[sv]=Animera skrivbordsbyte med en kub
+Comment[tr]=Masaüstü değiştirmeyi küp ile canlandır
 Comment[uk]=Створювати анімацію перемикання стільниць куба
 Comment[zh_TW]=切換桌面時模擬立方體的動畫
 
