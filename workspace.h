@@ -172,7 +172,7 @@ class Workspace : public QObject, public KDecorationDefines
         int desktopUp( int desktop, bool wrap ) const;
         int desktopDown( int desktop, bool wrap ) const;
 
-        int activeScreen() const;
+        int activeScreen( bool checkClient = true ) const;
         int numScreens() const;
         void checkActiveScreen( const Client* c );
         void setActiveScreenMouse( const QPoint& mousepos );

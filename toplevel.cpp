@@ -346,7 +346,7 @@ int Toplevel::screen() const
     if( s < 0 )
         // Center of the window is offscreen, just use the active one as if this window is the
         // one with input focus then activeScreen() will return the screen it used to be on.
-        return workspace()->activeScreen();
+        return workspace()->activeScreen( false );
     return s;
     }
 
