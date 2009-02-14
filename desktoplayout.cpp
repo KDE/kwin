@@ -18,35 +18,28 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#include "desktoplayout.h"
+#include "workspace.h"
+
+#include "assert.h"
 
 namespace KWin
 {
 
-DesktopLayout::DesktopLayout()
-    : m_count( 0 ) // This is an invalid state
-    , m_gridSize( 1, 2 ) // Default to two rows
-    , m_grid( new int[2] )
-    , m_current( 0 )
-    , m_dynamic( false )
+void Workspace::updateDesktopLayout()
     {
-    m_grid[0] = 0;
-    m_grid[1] = 0;
+    // TODO: Is there a sane way to avoid overriding the existing grid?
+    int width = rootInfo->desktopLayoutColumnsRows().width();
+    int height = rootInfo->desktopLayoutColumnsRows().height();
+    if( width == 0 && height == 0 ) // Not given, set default layout
+        height = 2;
+    // TODO: Make sure desktopCount_ <= width * height
+    setNETDesktopLayout(
+        rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical,
+        width, height, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
+        );
     }
 
-DesktopLayout::~DesktopLayout()
-    {
-    delete[] m_grid;
-    }
-
-void DesktopLayout::setNumberOfDesktops( int count )
-    {
-    m_count = count;
-    // Make sure our grid is valid. TODO: Is there a sane way to avoid overriding the existing grid?
-    setNETDesktopLayout( Qt::Horizontal, m_count / m_gridSize.height() + 1, m_gridSize.height(), 0 );
-    }
-
-void DesktopLayout::setNETDesktopLayout( Qt::Orientation orientation, int width, int height,
+void Workspace::setNETDesktopLayout( Qt::Orientation orientation, int width, int height,
     int startingCorner )
     {
     Q_UNUSED( startingCorner ); // Not really worth implementing right now.
@@ -54,38 +47,38 @@ void DesktopLayout::setNETDesktopLayout( Qt::Orientation orientation, int width,
     // Calculate valid grid size
     assert( width > 0 && height > 0 );
     if(( width <= 0 ) && ( height > 0 ))
-       width = ( m_count + height - 1 ) / height;
+       width = ( desktopCount_ + height - 1 ) / height;
     else if(( height <= 0 ) && ( width > 0 ))
-       height = ( m_count + width - 1 ) / width;
+       height = ( desktopCount_ + width - 1 ) / width;
 
     // Set private variables
-    delete[] m_grid;
-    m_gridSize = QSize( width, height );
+    delete[] desktopGrid_;
+    desktopGridSize_ = QSize( width, height );
     int size = width * height;
-    m_grid = new int[size];
+    desktopGrid_ = new int[size];
 
     // Populate grid
     int desktop = 1;
     if( orientation == Qt::Horizontal )
         for( int y = 0; y < height; y++ )
             for( int x = 0; x < width; x++ )
-                m_grid[y * width + x] = (desktop <= m_count ? desktop++ : 0);
+                desktopGrid_[y * width + x] = (desktop <= desktopCount_ ? desktop++ : 0);
     else
         for( int x = 0; x < width; x++ )
             for( int y = 0; y < height; y++ )
-                m_grid[y * width + x] = (desktop <= m_count ? desktop++ : 0);
+                desktopGrid_[y * width + x] = (desktop <= desktopCount_ ? desktop++ : 0);
     }
 
-QPoint DesktopLayout::desktopGridCoords( int id ) const
+QPoint Workspace::desktopGridCoords( int id ) const
     {
-    for( int y = 0; y < m_gridSize.height(); y++ )
-        for( int x = 0; x < m_gridSize.width(); x++ )
-            if( m_grid[y * m_gridSize.height() + x] == id )
+    for( int y = 0; y < desktopGridSize_.height(); y++ )
+        for( int x = 0; x < desktopGridSize_.width(); x++ )
+            if( desktopGrid_[y * desktopGridSize_.height() + x] == id )
                 return QPoint( x, y );
     return QPoint( -1, -1 );
     }
 
-QPoint DesktopLayout::desktopCoords( int id ) const
+QPoint Workspace::desktopCoords( int id ) const
     {
     QPoint coords = desktopGridCoords( id );
     if( coords.x() == -1 )
@@ -93,7 +86,7 @@ QPoint DesktopLayout::desktopCoords( int id ) const
     return QPoint( coords.x() * displayWidth(), coords.y() * displayHeight() );
     }
 
-int DesktopLayout::desktopAbove( int id, bool wrap ) const
+int Workspace::desktopAbove( int id, bool wrap ) const
     {
     if( id == 0 )
         id = currentDesktop();
@@ -105,7 +98,7 @@ int DesktopLayout::desktopAbove( int id, bool wrap ) const
         if( coords.y() < 0 )
             {
             if( wrap )
-                coords.setY( m_gridSize.height() - 1 );
+                coords.setY( desktopGridSize_.height() - 1 );
             else
                 return id; // Already at the top-most desktop
             }
@@ -115,7 +108,7 @@ int DesktopLayout::desktopAbove( int id, bool wrap ) const
         }
     }
 
-int DesktopLayout::desktopToRight( int id, bool wrap ) const
+int Workspace::desktopToRight( int id, bool wrap ) const
     {
     if( id == 0 )
         id = currentDesktop();
@@ -124,7 +117,7 @@ int DesktopLayout::desktopToRight( int id, bool wrap ) const
     for(;;)
         {
         coords.rx()++;
-        if( coords.x() >= m_gridSize.width() )
+        if( coords.x() >= desktopGridSize_.width() )
             {
             if( wrap )
                 coords.setX( 0 );
@@ -137,7 +130,7 @@ int DesktopLayout::desktopToRight( int id, bool wrap ) const
         }
     }
 
-int DesktopLayout::desktopBelow( int id, bool wrap ) const
+int Workspace::desktopBelow( int id, bool wrap ) const
     {
     if( id == 0 )
         id = currentDesktop();
@@ -146,7 +139,7 @@ int DesktopLayout::desktopBelow( int id, bool wrap ) const
     for(;;)
         {
         coords.ry()++;
-        if( coords.y() >= m_gridSize.height() )
+        if( coords.y() >= desktopGridSize_.height() )
             {
             if( wrap )
                 coords.setY( 0 );
@@ -159,7 +152,7 @@ int DesktopLayout::desktopBelow( int id, bool wrap ) const
         }
     }
 
-int DesktopLayout::desktopToLeft( int id, bool wrap ) const
+int Workspace::desktopToLeft( int id, bool wrap ) const
     {
     if( id == 0 )
         id = currentDesktop();
@@ -171,7 +164,7 @@ int DesktopLayout::desktopToLeft( int id, bool wrap ) const
         if( coords.x() < 0 )
             {
             if( wrap )
-                coords.setX( m_gridSize.width() - 1 );
+                coords.setX( desktopGridSize_.width() - 1 );
             else
                 return id; // Already at the left-most desktop
             }
@@ -181,12 +174,12 @@ int DesktopLayout::desktopToLeft( int id, bool wrap ) const
         }
     }
 
-int DesktopLayout::addDesktop( QPoint coords )
+int Workspace::addDesktop( QPoint coords )
     { // TODO
     return 0;
     }
 
-void DesktopLayout::deleteDesktop( int id )
+void Workspace::deleteDesktop( int id )
     { // TODO
     }
 

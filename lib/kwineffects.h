@@ -617,7 +617,7 @@ class KWIN_EXPORT EffectsHandler
         /**
          * @returns Whether or not the desktop layout is allowed to be modified by the user.
          */
-        virtual bool desktopLayoutIsDynamic() const = 0;
+        virtual bool isDesktopLayoutDynamic() const = 0;
         /**
          * Create new desktop at the point @a coords
          * @returns The ID of the created desktop

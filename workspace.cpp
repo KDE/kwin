@@ -88,6 +88,13 @@ Workspace* Workspace::_self = 0;
 
 Workspace::Workspace( bool restore )
     : QObject( 0 )
+    // Desktop layout
+    , desktopCount_( 0 ) // This is an invalid state
+    , desktopGridSize_( 1, 2 ) // Default to two rows
+    , desktopGrid_( new int[2] )
+    , currentDesktop_( 0 )
+    , desktopLayoutDynamicity_( false )
+    // Unsorted
     , active_popup( NULL )
     , active_popup_client( NULL )
     , temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false )
@@ -151,6 +158,10 @@ Workspace::Workspace( bool restore )
         this, SLOT( slotReloadConfig() ));
     dbus.connect( QString(), "/KWin", "org.kde.KWin", "reinitCompositing",
         this, SLOT( slotReinitCompositing() ));
+
+    // Initialize desktop grid array
+    desktopGrid_[0] = 0;
+    desktopGrid_[1] = 0;
 
     _self = this;
     mgr = new PluginMgr;
@@ -499,6 +510,8 @@ Workspace::~Workspace()
     XDestroyWindow( display(), null_focus_window );
 
     // TODO: ungrabXServer();
+
+    delete[] desktopGrid_;
 
     _self = 0;
     }
@@ -1116,7 +1129,7 @@ void Workspace::loadDesktopSettings()
     KConfigGroup group( c, groupname );
 
     int n = group.readEntry( "Number", 4 );
-    desktopLayout.setNumberOfDesktops( n );
+    desktopCount_ = n;
     workarea.clear();
     workarea.resize( n + 1 );
     screenarea.clear();
@@ -1321,7 +1334,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
         ObscuringWindows obs_wins;
 
-        desktopLayout.setCurrentDesktop( new_desktop ); // Change the desktop (so that Client::updateVisibility() works)
+        currentDesktop_ = new_desktop; // Change the desktop (so that Client::updateVisibility() works)
 
         for( ClientList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
@@ -1443,7 +1456,8 @@ void Workspace::setNumberOfDesktops( int n )
     if( n == numberOfDesktops() )
         return;
     int old_number_of_desktops = numberOfDesktops();
-    desktopLayout.setNumberOfDesktops( n );
+    desktopCount_ = n;
+    updateDesktopLayout(); // Make sure the layout is still valid
 
     if( currentDesktop() > numberOfDesktops() )
         setCurrentDesktop( numberOfDesktops() );
@@ -1598,18 +1612,6 @@ void Workspace::sendClientToScreen( Client* c, int screen )
         sendClientToScreen( *it, screen );
     if( c->isActive() )
         active_screen = screen;
-    }
-
-void Workspace::updateDesktopLayout()
-    {
-    int width = rootInfo->desktopLayoutColumnsRows().width();
-    int height = rootInfo->desktopLayoutColumnsRows().height();
-    if( width == 0 && height == 0 ) // Not given, set default layout
-        height = 2;
-    desktopLayout.setNETDesktopLayout(
-        rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical,
-        width, height, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
-        );
     }
 
 void Workspace::killWindowId( Window window_to_kill )
@@ -2162,12 +2164,12 @@ void Workspace::electricBorderSwitchDesktop( ElectricBorder border, const QPoint
         }
     if( border == ElectricTop || border == ElectricTopLeft || border == ElectricTopRight )
         {
-        desk = desktopUp( desk, options->rollOverDesktops );
+        desk = desktopAbove( desk, options->rollOverDesktops );
         pos.setY( displayHeight() - 1 - OFFSET );
         }
     if( border == ElectricBottom || border == ElectricBottomLeft || border == ElectricBottomRight )
         {
-        desk = desktopDown( desk, options->rollOverDesktops );
+        desk = desktopBelow( desk, options->rollOverDesktops );
         pos.setY( OFFSET );
         }
     int desk_before = currentDesktop();

@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwineffects.h"
 
-#include "desktoplayout.h"
 #include "scene.h"
 
 #include <QStack>
@@ -72,7 +71,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual int desktopToRight( int desktop = 0, bool wrap = true ) const;
         virtual int desktopBelow( int desktop = 0, bool wrap = true ) const;
         virtual int desktopToLeft( int desktop = 0, bool wrap = true ) const;
-        virtual bool desktopLayoutIsDynamic() const;
+        virtual bool isDesktopLayoutDynamic() const;
         virtual int addDesktop( QPoint coords );
         virtual void deleteDesktop( int id );
         virtual QString desktopName( int desktop ) const;

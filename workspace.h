@@ -4,6 +4,7 @@
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <kmanagerselection.h>
 
-#include "desktoplayout.h"
 #include "plugins.h"
 #include "utils.h"
 #include "kdecoration.h"
@@ -158,21 +158,127 @@ class Workspace : public QObject, public KDecorationDefines
         void unreserveElectricBorder( ElectricBorder border );
         void reserveElectricBorderSwitching( bool reserve );
 
+        //-------------------------------------------------
+        // Desktop layout
+
+    public:
         /**
-         * Returns the current virtual desktop of this workspace
+         * @returns Total number of desktops currently in existance.
+         */
+        int numberOfDesktops() const;
+        /**
+         * Set the number of available desktops to @a count. This function overrides any previous
+         * grid layout.
+         */
+        void setNumberOfDesktops( int count );
+        /**
+         * Called from within setNumberOfDesktops() to ensure the desktop layout is still valid.
+         */
+        void updateDesktopLayout();
+
+        /**
+         * @returns The size of desktop layout in grid units.
+         */
+        QSize desktopGridSize() const;
+        /**
+         * @returns The width of desktop layout in grid units.
+         */
+        int desktopGridWidth() const;
+        /**
+         * @returns The height of desktop layout in grid units.
+         */
+        int desktopGridHeight() const;
+        /**
+         * @returns The width of desktop layout in pixels. Equivalent to gridWidth() *
+         * ::displayWidth().
+         */
+        int workspaceWidth() const;
+        /**
+         * @returns The height of desktop layout in pixels. Equivalent to gridHeight() *
+         * ::displayHeight().
+         */
+        int workspaceHeight() const;
+
+        /**
+         * @returns The ID of the current desktop.
          */
         int currentDesktop() const;
         /**
-         * Returns the number of virtual desktops of this workspace
+         * Set the current desktop to @a current.
+         * @returns True on success, false otherwise.
          */
-        int numberOfDesktops() const;
-        void setNumberOfDesktops( int n );
-        DesktopLayout* getDesktopLayout();
-        int desktopToRight( int desktop, bool wrap ) const;
-        int desktopToLeft( int desktop, bool wrap ) const;
-        int desktopUp( int desktop, bool wrap ) const;
-        int desktopDown( int desktop, bool wrap ) const;
+        bool setCurrentDesktop( int current );
 
+        /**
+         * Generate a desktop layout from EWMH _NET_DESKTOP_LAYOUT property parameters.
+         */
+        void setNETDesktopLayout( Qt::Orientation orientation, int width, int height, int startingCorner );
+
+        /**
+         * @returns The ID of the desktop at the point @a coords or 0 if no desktop exists at that
+         * point. @a coords is to be in grid units.
+         */
+        int desktopAtCoords( QPoint coords ) const;
+        /**
+         * @returns The coords of desktop @a id in grid units.
+         */
+        QPoint desktopGridCoords( int id ) const;
+        /**
+         * @returns The coords of the top-left corner of desktop @a id in pixels.
+         */
+        QPoint desktopCoords( int id ) const;
+
+        /**
+         * @returns The ID of the desktop above desktop @a id. Wraps around to the bottom of
+         * the layout if @a wrap is set. If @a id is not set use the current one.
+         */
+        int desktopAbove( int id = 0, bool wrap = true ) const;
+        /**
+         * @returns The ID of the desktop to the right of desktop @a id. Wraps around to the
+         * left of the layout if @a wrap is set. If @a id is not set use the current one.
+         */
+        int desktopToRight( int id = 0, bool wrap = true ) const;
+        /**
+         * @returns The ID of the desktop below desktop @a id. Wraps around to the top of the
+         * layout if @a wrap is set. If @a id is not set use the current one.
+         */
+        int desktopBelow( int id = 0, bool wrap = true ) const;
+        /**
+         * @returns The ID of the desktop to the left of desktop @a id. Wraps around to the
+         * right of the layout if @a wrap is set. If @a id is not set use the current one.
+         */
+        int desktopToLeft( int id = 0, bool wrap = true ) const;
+
+        /**
+         * @returns Whether or not the layout is allowed to be modified by the user.
+         */
+        bool isDesktopLayoutDynamic() const;
+        /**
+         * Sets whether or not this layout can be modified by the user.
+         */
+        void setDesktopLayoutDynamicity( bool dynamicity );
+        /**
+         * Create new desktop at the point @a coords
+         * @returns The ID of the created desktop
+         */
+        int addDesktop( QPoint coords );
+        /**
+         * Deletes the desktop with the ID @a id. All desktops with an ID greater than the one that
+         * was deleted will have their IDs' decremented.
+         */
+        void deleteDesktop( int id );
+
+    private:
+        int desktopCount_;
+        QSize desktopGridSize_;
+        int* desktopGrid_;
+        int currentDesktop_;
+        bool desktopLayoutDynamicity_;
+
+        //-------------------------------------------------
+        // Unsorted
+
+    public:
         int activeScreen( bool checkClient = true ) const;
         int numScreens() const;
         void checkActiveScreen( const Client* c );
@@ -266,7 +372,6 @@ class Workspace : public QObject, public KDecorationDefines
         void unclutterDesktop();
         void doNotManage( const QString& );
         QList<int> decorationSupportedColors() const;
-        bool setCurrentDesktop( int new_desktop );
         void nextDesktop();
         void previousDesktop();
         void circulateDesktopApplications();
@@ -276,7 +381,6 @@ class Workspace : public QObject, public KDecorationDefines
         void setCurrentScreen( int new_screen );
 
         QString desktopName( int desk ) const;
-        void updateDesktopLayout();
         void setShowingDesktop( bool showing );
         void resetShowingDesktop( bool keep_hidden );
         bool showingDesktop() const;
@@ -746,8 +850,6 @@ class Workspace : public QObject, public KDecorationDefines
         QPoint electric_push_point;
         int electric_reserved[ELECTRIC_COUNT]; // Corners/edges used by something
 
-        DesktopLayout desktopLayout;
-
         Placement* initPositioning;
 
         QVector<QRect> workarea; // Array of workareas for virtual desktops
@@ -834,6 +936,61 @@ class RootInfo : public NETRootInfo
         Workspace* workspace;
     };
 
+//---------------------------------------------------------
+// Desktop layout
+
+inline int Workspace::numberOfDesktops() const
+    {
+    return desktopCount_;
+    }
+
+inline QSize Workspace::desktopGridSize() const
+    {
+    return desktopGridSize_;
+    }
+
+inline int Workspace::desktopGridWidth() const
+    {
+    return desktopGridSize_.width();
+    }
+
+inline int Workspace::desktopGridHeight() const
+    {
+    return desktopGridSize_.height();
+    }
+
+inline int Workspace::workspaceWidth() const
+    {
+    return desktopGridSize_.width() * displayWidth();
+    }
+
+inline int Workspace::workspaceHeight() const
+    {
+    return desktopGridSize_.height() * displayHeight();
+    }
+
+inline int Workspace::currentDesktop() const
+    {
+    return currentDesktop_;
+    }
+
+inline int Workspace::desktopAtCoords( QPoint coords ) const
+    {
+    return desktopGrid_[coords.y() * desktopGridSize_.width() + coords.x()];
+    }
+
+inline bool Workspace::isDesktopLayoutDynamic() const
+    {
+    return desktopLayoutDynamicity_;
+    }
+
+inline void Workspace::setDesktopLayoutDynamicity( bool dynamicity )
+    {
+    desktopLayoutDynamicity_ = dynamicity;
+    }
+
+//---------------------------------------------------------
+// Unsorted
 
 inline bool Workspace::initializing() const
     {
@@ -848,41 +1005,6 @@ inline Client* Workspace::activeClient() const
 inline Client* Workspace::mostRecentlyActivatedClient() const
     {
     return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
-    }
-
-inline int Workspace::currentDesktop() const
-    {
-    return desktopLayout.currentDesktop();
-    }
-
-inline int Workspace::numberOfDesktops() const
-    {
-    return desktopLayout.numberOfDesktops();
-    }
-
-inline DesktopLayout* Workspace::getDesktopLayout()
-    {
-    return &desktopLayout;
-    }
-
-inline int Workspace::desktopToRight( int desktop, bool wrap ) const
-    {
-    return desktopLayout.desktopToRight( desktop, wrap );
-    }
-
-inline int Workspace::desktopToLeft( int desktop, bool wrap ) const
-    {
-    return desktopLayout.desktopToLeft( desktop, wrap );
-    }
-
-inline int Workspace::desktopUp( int desktop, bool wrap ) const
-    {
-    return desktopLayout.desktopAbove( desktop, wrap );
-    }
-
-inline int Workspace::desktopDown( int desktop, bool wrap ) const
-    {
-    return desktopLayout.desktopBelow( desktop, wrap );
     }
 
 inline void Workspace::addGroup( Group* group, allowed_t )

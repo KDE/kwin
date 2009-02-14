@@ -822,7 +822,7 @@ void Workspace::slotSwitchDesktopLeft()
 
 void Workspace::slotSwitchDesktopUp()
     {
-    int desktop = desktopUp( currentDesktop(), options->rollOverDesktops);
+    int desktop = desktopAbove( currentDesktop(), options->rollOverDesktops);
     if( desktop == currentDesktop())
         return;
     setCurrentDesktop( desktop );
@@ -830,7 +830,7 @@ void Workspace::slotSwitchDesktopUp()
 
 void Workspace::slotSwitchDesktopDown()
     {
-    int desktop = desktopDown( currentDesktop(), options->rollOverDesktops);
+    int desktop = desktopBelow( currentDesktop(), options->rollOverDesktops);
     if( desktop == currentDesktop())
         return;
     setCurrentDesktop( desktop );
@@ -1088,7 +1088,7 @@ void Workspace::slotWindowToDesktopLeft()
 
 void Workspace::slotWindowToDesktopUp()
     {
-    int d = desktopUp( currentDesktop(), options->rollOverDesktops);
+    int d = desktopAbove( currentDesktop(), options->rollOverDesktops);
     if( d == currentDesktop())
         return;
     Client* c = active_popup_client ? active_popup_client : active_client;
@@ -1103,7 +1103,7 @@ void Workspace::slotWindowToDesktopUp()
 
 void Workspace::slotWindowToDesktopDown()
     {
-    int d = desktopDown( currentDesktop(), options->rollOverDesktops);
+    int d = desktopBelow( currentDesktop(), options->rollOverDesktops);
     if( d == currentDesktop())
         return;
     Client* c = active_popup_client ? active_popup_client : active_client;
