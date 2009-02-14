@@ -45,7 +45,7 @@ void Workspace::setNETDesktopLayout( Qt::Orientation orientation, int width, int
     Q_UNUSED( startingCorner ); // Not really worth implementing right now.
 
     // Calculate valid grid size
-    assert( width > 0 && height > 0 );
+    assert( width > 0 || height > 0 );
     if(( width <= 0 ) && ( height > 0 ))
        width = ( desktopCount_ + height - 1 ) / height;
     else if(( height <= 0 ) && ( width > 0 ))
