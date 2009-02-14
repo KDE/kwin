@@ -713,7 +713,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, const QPoint &g
             break;
         case Options::MouseOpacityLess:
             if( !isDesktop() ) // No point in changing the opacity of the desktop
-                setOpacity( qMax( opacity() - 0.1, 0.0 ));
+                setOpacity( qMax( opacity() - 0.1, 0.1 ));
             break;
         case Options::MouseNothing:
             replay = true;
