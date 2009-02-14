@@ -167,7 +167,7 @@ class Workspace : public QObject, public KDecorationDefines
          */
         int numberOfDesktops() const;
         void setNumberOfDesktops( int n );
-        void calcDesktopLayout( int* x, int* y, Qt::Orientation* orientation ) const;
+        DesktopLayout* getDesktopLayout();
         int desktopToRight( int desktop, bool wrap ) const;
         int desktopToLeft( int desktop, bool wrap ) const;
         int desktopUp( int desktop, bool wrap ) const;
@@ -747,7 +747,6 @@ class Workspace : public QObject, public KDecorationDefines
         int electric_reserved[ELECTRIC_COUNT]; // Corners/edges used by something
 
         DesktopLayout desktopLayout;
-        Qt::Orientation layoutOrientation; // TODO: Deprecated, remove when calcDesktopLayout() is.
 
         Placement* initPositioning;
 
@@ -859,6 +858,11 @@ inline int Workspace::currentDesktop() const
 inline int Workspace::numberOfDesktops() const
     {
     return desktopLayout.numberOfDesktops();
+    }
+
+inline DesktopLayout* Workspace::getDesktopLayout()
+    {
+    return &desktopLayout;
     }
 
 inline int Workspace::desktopToRight( int desktop, bool wrap ) const

@@ -59,20 +59,21 @@ void DesktopLayout::setNETDesktopLayout( Qt::Orientation orientation, int width,
        height = ( m_count + width - 1 ) / width;
 
     // Set private variables
-    m_gridSize = QSize( width, height );
     delete[] m_grid;
-    m_grid = new int[width * height];
+    m_gridSize = QSize( width, height );
+    int size = width * height;
+    m_grid = new int[size];
 
     // Populate grid
     int desktop = 1;
     if( orientation == Qt::Horizontal )
         for( int y = 0; y < height; y++ )
             for( int x = 0; x < width; x++ )
-                m_grid[y * height + x] = (desktop <= m_count ? desktop++ : 0);
+                m_grid[y * width + x] = (desktop <= m_count ? desktop++ : 0);
     else
         for( int x = 0; x < width; x++ )
             for( int y = 0; y < height; y++ )
-                m_grid[y * height + x] = (desktop <= m_count ? desktop++ : 0);
+                m_grid[y * width + x] = (desktop <= m_count ? desktop++ : 0);
     }
 
 QPoint DesktopLayout::desktopGridCoords( int id ) const

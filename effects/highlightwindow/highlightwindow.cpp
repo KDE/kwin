@@ -162,26 +162,8 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
             thumbRect = m_highlightedWindow->geometry();
 
         // Determine position of desktop relative to the current one
-        QSize grid;
-        Qt::Orientation orientation;
-        effects->calcDesktopLayout( &grid.rwidth(), &grid.rheight(), &orientation );
-        QPoint currentDesktop;
-        QPoint targetDesktop;
-        if( orientation == Qt::Horizontal )
-            {
-            currentDesktop.setX(( effects->currentDesktop() - 1 ) % grid.width() + 1 );
-            currentDesktop.setY(( effects->currentDesktop() - 1 ) / grid.width() + 1 );
-            targetDesktop.setX(( m_highlightedWindow->desktop() - 1 ) % grid.width() + 1 );
-            targetDesktop.setY(( m_highlightedWindow->desktop() - 1 ) / grid.width() + 1 );
-            }
-        else
-            {
-            currentDesktop.setX(( effects->currentDesktop() - 1 ) / grid.height() + 1 );
-            currentDesktop.setY(( effects->currentDesktop() - 1 ) % grid.height() + 1 );
-            targetDesktop.setX(( m_highlightedWindow->desktop() - 1 ) / grid.height() + 1 );
-            targetDesktop.setY(( m_highlightedWindow->desktop() - 1 ) % grid.height() + 1 );
-            }
-        QPoint direction = targetDesktop - currentDesktop;
+        QPoint direction = effects->desktopGridCoords( m_highlightedWindow->desktop() ) -
+            effects->desktopGridCoords( effects->currentDesktop() );
 
         // Draw a line from the center of the current desktop to the center of the target desktop.
         QPointF desktopLine( 0, 0, direction.x() * screenArea.width(), direction.y() * screenArea.height() );

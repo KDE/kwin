@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+// WARNING, TODO: This effect relies on the desktop layout being EWMH-compliant.
+
 KWIN_EFFECT( desktopgrid, DesktopGridEffect )
 
 DesktopGridEffect::DesktopGridEffect()
@@ -755,7 +757,8 @@ void DesktopGridEffect::setup()
         {
         default:
         case LayoutPager:
-            effects->calcDesktopLayout( &gridSize.rwidth(), &gridSize.rheight(), &orientation );
+            orientation = Qt::Horizontal;
+            gridSize = effects->desktopGridSize();
             break;
         case LayoutAutomatic:
             y = sqrt( numDesktops ) + 0.5;
@@ -767,7 +770,7 @@ void DesktopGridEffect::setup()
             gridSize.setHeight( y );
             break;
         case LayoutCustom:
-            effects->calcDesktopLayout( &gridSize.rwidth(), &gridSize.rheight(), &orientation );
+            orientation = Qt::Horizontal;
             gridSize.setWidth( ceil( effects->numberOfDesktops() / double( customLayoutRows )));
             gridSize.setHeight( customLayoutRows );
             break;

@@ -47,6 +47,10 @@ class DesktopLayout
         void setNumberOfDesktops( int count );
 
         /**
+         * @returns The size of desktop layout in grid units.
+         */
+        QSize gridSize() const;
+        /**
          * @returns The width of desktop layout in grid units.
          */
         int gridWidth() const;
@@ -146,6 +150,11 @@ inline int DesktopLayout::numberOfDesktops() const
     return m_count;
     }
 
+inline QSize DesktopLayout::gridSize() const
+    {
+    return m_gridSize;
+    }
+
 inline int DesktopLayout::gridWidth() const
     {
     return m_gridSize.width();
@@ -180,7 +189,7 @@ inline void DesktopLayout::setCurrentDesktop( int current )
 
 inline int DesktopLayout::desktopAtCoords( QPoint coords ) const
     {
-    return m_grid[coords.y() * m_gridSize.height() + coords.x()];
+    return m_grid[coords.y() * m_gridSize.width() + coords.x()];
     }
 
 inline bool DesktopLayout::isDynamic() const

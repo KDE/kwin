@@ -446,39 +446,89 @@ void EffectsHandlerImpl::setCurrentDesktop( int desktop )
     Workspace::self()->setCurrentDesktop( desktop );
     }
 
+QSize EffectsHandlerImpl::desktopGridSize() const
+    {
+    return Workspace::self()->getDesktopLayout()->gridSize();
+    }
+
+int EffectsHandlerImpl::desktopGridWidth() const
+    {
+    return Workspace::self()->getDesktopLayout()->gridWidth();
+    }
+
+int EffectsHandlerImpl::desktopGridHeight() const
+    {
+    return Workspace::self()->getDesktopLayout()->gridHeight();
+    }
+
+int EffectsHandlerImpl::workspaceWidth() const
+    {
+    return Workspace::self()->getDesktopLayout()->width();
+    }
+
+int EffectsHandlerImpl::workspaceHeight() const
+    {
+    return Workspace::self()->getDesktopLayout()->height();
+    }
+
+int EffectsHandlerImpl::desktopAtCoords( QPoint coords ) const
+    {
+    return Workspace::self()->getDesktopLayout()->desktopAtCoords( coords );
+    }
+
+QPoint EffectsHandlerImpl::desktopGridCoords( int id ) const
+    {
+    return Workspace::self()->getDesktopLayout()->desktopGridCoords( id );
+    }
+
+QPoint EffectsHandlerImpl::desktopCoords( int id ) const
+    {
+    return Workspace::self()->getDesktopLayout()->desktopCoords( id );
+    }
+
+int EffectsHandlerImpl::desktopAbove( int desktop, bool wrap ) const
+    {
+    return Workspace::self()->getDesktopLayout()->desktopAbove( desktop, wrap );
+    }
+
+int EffectsHandlerImpl::desktopToRight( int desktop, bool wrap ) const
+    {
+    return Workspace::self()->getDesktopLayout()->desktopToRight( desktop, wrap );
+    }
+
+int EffectsHandlerImpl::desktopBelow( int desktop, bool wrap ) const
+    {
+    return Workspace::self()->getDesktopLayout()->desktopBelow( desktop, wrap );
+    }
+
+int EffectsHandlerImpl::desktopToLeft( int desktop, bool wrap ) const
+    {
+    return Workspace::self()->getDesktopLayout()->desktopToLeft( desktop, wrap );
+    }
+
+bool EffectsHandlerImpl::desktopLayoutIsDynamic() const
+    {
+    return Workspace::self()->getDesktopLayout()->isDynamic();
+    }
+
+int EffectsHandlerImpl::addDesktop( QPoint coords )
+    {
+    return Workspace::self()->getDesktopLayout()->addDesktop( coords );
+    }
+
+void EffectsHandlerImpl::deleteDesktop( int id )
+    {
+    Workspace::self()->getDesktopLayout()->deleteDesktop( id );
+    }
+
 QString EffectsHandlerImpl::desktopName( int desktop ) const
     {
     return Workspace::self()->desktopName( desktop );
     }
 
-void EffectsHandlerImpl::calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const
-    {
-    Workspace::self()->calcDesktopLayout( x, y, orientation );
-    }
-
 bool EffectsHandlerImpl::optionRollOverDesktops() const
     {
     return options->rollOverDesktops;
-    }
-
-int EffectsHandlerImpl::desktopToLeft( int desktop, bool wrap ) const
-    {
-    return Workspace::self()->desktopToLeft( desktop, wrap );
-    }
-
-int EffectsHandlerImpl::desktopToRight( int desktop, bool wrap ) const
-    {
-    return Workspace::self()->desktopToRight( desktop, wrap );
-    }
-
-int EffectsHandlerImpl::desktopUp( int desktop, bool wrap ) const
-    {
-    return Workspace::self()->desktopUp( desktop, wrap );
-    }
-
-int EffectsHandlerImpl::desktopDown( int desktop, bool wrap ) const
-    {
-    return Workspace::self()->desktopDown( desktop, wrap );
     }
 
 double EffectsHandlerImpl::animationTimeFactor() const

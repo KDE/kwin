@@ -42,7 +42,7 @@ class SlideEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void desktopChanged( int old );
     private:
-        QRect desktopRect( int desktop, bool scaled ) const;
+        QRect desktopRect( int desktop ) const;
         TimeLine mTimeLine;
         int painting_desktop;
         bool slide;

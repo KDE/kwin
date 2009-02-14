@@ -164,7 +164,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 60
+#define KWIN_EFFECT_API_VERSION_MINOR 61
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -547,23 +547,96 @@ class KWIN_EXPORT EffectsHandler
         virtual EffectWindow* activeWindow() const = 0 ;
         virtual void moveWindow( EffectWindow* w, const QPoint& pos ) = 0;
         virtual void windowToDesktop( EffectWindow* w, int desktop ) = 0;
-        // 
+
+        // Desktops
+        /**
+         * @returns The ID of the current desktop.
+         */
         virtual int currentDesktop() const = 0;
+        /**
+         * @returns Total number of desktops currently in existance.
+         */
         virtual int numberOfDesktops() const = 0;
+        /**
+         * Set the current desktop to @a desktop.
+         */
         virtual void setCurrentDesktop( int desktop ) = 0;
+        /**
+         * @returns The size of desktop layout in grid units.
+         */
+        virtual QSize desktopGridSize() const = 0;
+        /**
+         * @returns The width of desktop layout in grid units.
+         */
+        virtual int desktopGridWidth() const = 0;
+        /**
+         * @returns The height of desktop layout in grid units.
+         */
+        virtual int desktopGridHeight() const = 0;
+        /**
+         * @returns The width of desktop layout in pixels.
+         */
+        virtual int workspaceWidth() const = 0;
+        /**
+         * @returns The height of desktop layout in pixels.
+         */
+        virtual int workspaceHeight() const = 0;
+        /**
+         * @returns The ID of the desktop at the point @a coords or 0 if no desktop exists at that
+         * point. @a coords is to be in grid units.
+         */
+        virtual int desktopAtCoords( QPoint coords ) const = 0;
+        /**
+         * @returns The coords of desktop @a id in grid units.
+         */
+        virtual QPoint desktopGridCoords( int id ) const = 0;
+        /**
+         * @returns The coords of the top-left corner of desktop @a id in pixels.
+         */
+        virtual QPoint desktopCoords( int id ) const = 0;
+        /**
+         * @returns The ID of the desktop above desktop @a id. Wraps around to the bottom of
+         * the layout if @a wrap is set. If @a id is not set use the current one.
+         */
+        virtual int desktopAbove( int desktop = 0, bool wrap = true ) const = 0;
+        /**
+         * @returns The ID of the desktop to the right of desktop @a id. Wraps around to the
+         * left of the layout if @a wrap is set. If @a id is not set use the current one.
+         */
+        virtual int desktopToRight( int desktop = 0, bool wrap = true ) const = 0;
+        /**
+         * @returns The ID of the desktop below desktop @a id. Wraps around to the top of the
+         * layout if @a wrap is set. If @a id is not set use the current one.
+         */
+        virtual int desktopBelow( int desktop = 0, bool wrap = true ) const = 0;
+        /**
+         * @returns The ID of the desktop to the left of desktop @a id. Wraps around to the
+         * right of the layout if @a wrap is set. If @a id is not set use the current one.
+         */
+        virtual int desktopToLeft( int desktop = 0, bool wrap = true ) const = 0;
+        /**
+         * @returns Whether or not the desktop layout is allowed to be modified by the user.
+         */
+        virtual bool desktopLayoutIsDynamic() const = 0;
+        /**
+         * Create new desktop at the point @a coords
+         * @returns The ID of the created desktop
+         */
+        virtual int addDesktop( QPoint coords ) = 0;
+        /**
+         * Deletes the desktop with the ID @a id. All desktops with an ID greater than the one that
+         * was deleted will have their IDs' decremented.
+         */
+        virtual void deleteDesktop( int id ) = 0;
         virtual QString desktopName( int desktop ) const = 0;
+        virtual bool optionRollOverDesktops() const = 0;
+
         virtual int activeScreen() const = 0; // Xinerama
         virtual int numScreens() const = 0; // Xinerama
         virtual int screenNumber( const QPoint& pos ) const = 0; // Xinerama
         virtual QRect clientArea( clientAreaOption, int screen, int desktop ) const = 0;
         virtual QRect clientArea( clientAreaOption, const EffectWindow* c ) const = 0;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const = 0;
-        virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const = 0;
-        virtual bool optionRollOverDesktops() const = 0;
-        virtual int desktopToLeft( int desktop, bool wrap ) const = 0;
-        virtual int desktopToRight( int desktop, bool wrap ) const = 0;
-        virtual int desktopUp( int desktop, bool wrap ) const = 0;
-        virtual int desktopDown( int desktop, bool wrap ) const = 0;
         /**
          * Factor by which animation speed in the effect should be modified (multiplied).
          * If configurable in the effect itself, the option should have also 'default'

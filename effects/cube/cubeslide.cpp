@@ -148,7 +148,7 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
         case Upwards:
             firstFaceRot.axis = RotationData::XAxis;
             secondFaceRot.axis = RotationData::XAxis;
-            secondDesktop = effects->desktopUp( front_desktop, true);
+            secondDesktop = effects->desktopAbove( front_desktop, true);
             firstFaceRot.angle = -90.0f*timeLine.value();
             secondFaceRot.angle = 90.0f*(1.0f - timeLine.value());
             point = rect.height()/2*tan(45.0f*M_PI/180.0f);
@@ -156,7 +156,7 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
         case Downwards:
             firstFaceRot.axis = RotationData::XAxis;
             secondFaceRot.axis = RotationData::XAxis;
-            secondDesktop = effects->desktopDown( front_desktop, true );
+            secondDesktop = effects->desktopBelow( front_desktop, true );
             firstFaceRot.angle = 90.0f*timeLine.value();
             secondFaceRot.angle = -90.0f*(1.0f - timeLine.value());
             point = rect.height()/2*tan(45.0f*M_PI/180.0f);
@@ -233,10 +233,10 @@ void CubeSlideEffect::postPaintScreen()
                     front_desktop = effects->desktopToRight( front_desktop, true );
                     break;
                 case Upwards:
-                    front_desktop = effects->desktopUp( front_desktop, true );
+                    front_desktop = effects->desktopAbove( front_desktop, true );
                     break;
                 case Downwards:
-                    front_desktop = effects->desktopDown( front_desktop, true );
+                    front_desktop = effects->desktopBelow( front_desktop, true );
                     break;
                 }
             timeLine.setProgress( 0.0 );
@@ -265,47 +265,43 @@ void CubeSlideEffect::desktopChanged( int old )
         slideRotations.enqueue( direction );
         }
     // calculate distance in respect to pager
-    int x, y;
-    Qt::Orientation orientation;
-    effects->calcDesktopLayout( &x, &y, &orientation );
-    int x_distance = (( effects->currentDesktop() - 1 ) % x ) - (( old - 1 ) % x );
-    if( qAbs( x_distance ) > x/2 )
+    QPoint diff = effects->desktopGridCoords( effects->currentDesktop() ) - effects->desktopGridCoords( old );
+    if( qAbs( diff.x() ) > effects->desktopGridWidth()/2 )
         {
-        int sign = -1 * (x_distance/qAbs( x_distance ));
-        x_distance = sign * ( x - qAbs( x_distance ));
+        int sign = -1 * (diff.x()/qAbs( diff.x() ));
+        diff.setX( sign * ( effects->desktopGridWidth() - qAbs( diff.x() )));
         }
-    if( x_distance > 0 )
+    if( diff.x() > 0 )
         {
-        for( int i=0; i<x_distance; i++ )
+        for( int i=0; i<diff.x(); i++ )
             {
             slideRotations.enqueue( Right );
             }
         }
-    else if( x_distance < 0 )
+    else if( diff.x() < 0 )
         {
-        x_distance *= -1;
-        for( int i=0; i<x_distance; i++ )
+        diff.setX( -diff.x() );
+        for( int i=0; i<diff.x(); i++ )
             {
             slideRotations.enqueue( Left );
             }
         }
-    int y_distance = (( effects->currentDesktop() -1 ) / x ) - (( old - 1 ) / x );
-    if( qAbs( y_distance ) > y/2 )
+    if( qAbs( diff.y() ) > effects->desktopGridHeight()/2 )
         {
-        int sign = -1 * (y_distance/qAbs( y_distance ));
-        y_distance = sign * ( y - qAbs( y_distance ));
+        int sign = -1 * (diff.y()/qAbs( diff.y() ));
+        diff.setY( sign * ( effects->desktopGridHeight() - qAbs( diff.y() )));
         }
-    if( y_distance > 0 )
+    if( diff.y() > 0 )
         {
-        for( int i=0; i<y_distance; i++ )
+        for( int i=0; i<diff.y(); i++ )
             {
             slideRotations.enqueue( Downwards );
             }
         }
-    if( y_distance < 0 )
+    if( diff.y() < 0 )
         {
-        y_distance *= -1;
-        for( int i=0; i<y_distance; i++ )
+        diff.setY( -diff.y() );
+        for( int i=0; i<diff.y(); i++ )
             {
             slideRotations.enqueue( Upwards );
             }

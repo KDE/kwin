@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwineffects.h"
 
+#include "desktoplayout.h"
 #include "scene.h"
 
 #include <QStack>
@@ -59,7 +60,24 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual int currentDesktop() const;
         virtual int numberOfDesktops() const;
         virtual void setCurrentDesktop( int desktop );
+        virtual QSize desktopGridSize() const;
+        virtual int desktopGridWidth() const;
+        virtual int desktopGridHeight() const;
+        virtual int workspaceWidth() const;
+        virtual int workspaceHeight() const;
+        virtual int desktopAtCoords( QPoint coords ) const;
+        virtual QPoint desktopGridCoords( int id ) const;
+        virtual QPoint desktopCoords( int id ) const;
+        virtual int desktopAbove( int desktop = 0, bool wrap = true ) const;
+        virtual int desktopToRight( int desktop = 0, bool wrap = true ) const;
+        virtual int desktopBelow( int desktop = 0, bool wrap = true ) const;
+        virtual int desktopToLeft( int desktop = 0, bool wrap = true ) const;
+        virtual bool desktopLayoutIsDynamic() const;
+        virtual int addDesktop( QPoint coords );
+        virtual void deleteDesktop( int id );
         virtual QString desktopName( int desktop ) const;
+        virtual bool optionRollOverDesktops() const;
+
         virtual int displayWidth() const;
         virtual int displayHeight() const;
         virtual QPoint cursorPos() const;
@@ -98,12 +116,6 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual QRect clientArea( clientAreaOption, int screen, int desktop ) const;
         virtual QRect clientArea( clientAreaOption, const EffectWindow* c ) const;
         virtual QRect clientArea( clientAreaOption, const QPoint& p, int desktop ) const;
-        virtual void calcDesktopLayout(int* x, int* y, Qt::Orientation* orientation) const;
-        virtual bool optionRollOverDesktops() const;
-        virtual int desktopToLeft( int desktop, bool wrap ) const;
-        virtual int desktopToRight( int desktop, bool wrap ) const;
-        virtual int desktopUp( int desktop, bool wrap ) const;
-        virtual int desktopDown( int desktop, bool wrap ) const;
         virtual double animationTimeFactor() const;
         virtual WindowQuadType newWindowQuadType();
 

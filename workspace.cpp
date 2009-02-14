@@ -124,7 +124,6 @@ Workspace::Workspace( bool restore )
     , global_shortcuts_disabled_for_client( false )
     , workspaceInit( true )
     , startup( 0 )
-    , layoutOrientation( Qt::Vertical )
     , managing_topmenus( false )
     , topmenu_selection( NULL )
     , topmenu_watcher( NULL )
@@ -1607,30 +1606,10 @@ void Workspace::updateDesktopLayout()
     int height = rootInfo->desktopLayoutColumnsRows().height();
     if( width == 0 && height == 0 ) // Not given, set default layout
         height = 2;
-    layoutOrientation = rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ?
-        Qt::Horizontal : Qt::Vertical;
     desktopLayout.setNETDesktopLayout(
-        layoutOrientation, width, height,
-        0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
+        rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical,
+        width, height, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
         );
-    }
-
-void Workspace::calcDesktopLayout( int* xp, int* yp, Qt::Orientation* orientation ) const
-    { // TODO: Deprecated, use desktopLayout instead
-    int x = desktopLayout.gridWidth(); // <= 0 means compute it from the other and total number of desktops
-    int y = desktopLayout.gridHeight();
-    if(( x <= 0 ) && ( y > 0 ))
-       x = ( numberOfDesktops() + y - 1 ) / y;
-    else if(( y <= 0) && ( x > 0 ))
-       y = ( numberOfDesktops() + x - 1 ) / x;
-
-    if( x <= 0 )
-       x = 1;
-    if( y <= 0 )
-       y = 1;
-    *xp = x;
-    *yp = y;
-    *orientation = layoutOrientation;
     }
 
 void Workspace::killWindowId( Window window_to_kill )

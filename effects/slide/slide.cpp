@@ -92,17 +92,14 @@ void SlideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
      of it, the destination is computed from the current desktop. Positions of desktops
      are done using their topleft corner.
     */
-    QPoint destPos = desktopRect( effects->currentDesktop(), false ).topLeft();
+    QPoint destPos = desktopRect( effects->currentDesktop() ).topLeft();
     QPoint diffPos = destPos - slide_start_pos;
     int w = 0;
     int h = 0;
     if( effects->optionRollOverDesktops())
         {
-        int x, y;
-        Qt::Orientation orientation;
-        effects->calcDesktopLayout( &x, &y, &orientation );
-        w = x * displayWidth();
-        h = y * displayHeight();
+        w = effects->workspaceWidth();
+        h = effects->workspaceHeight();
         // wrap around if shorter
         if( diffPos.x() > 0 && diffPos.x() > w / 2 )
             diffPos.setX( diffPos.x() - w );
@@ -128,7 +125,7 @@ void SlideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
          desktop <= effects->numberOfDesktops();
          ++desktop )
         {
-        QRect rect = desktopRect( desktop, false );
+        QRect rect = desktopRect( desktop );
         if( currentRegion.contains( rect )) // part of the desktop needs painting
             {
             painting_desktop = desktop;
@@ -176,27 +173,10 @@ void SlideEffect::postPaintScreen()
     }
 
 // Gives a position of the given desktop when all desktops are arranged in a grid
-QRect SlideEffect::desktopRect( int desktop, bool scaled ) const
+QRect SlideEffect::desktopRect( int desktop ) const
     {
-    int x, y;
-    Qt::Orientation orientation;
-    effects->calcDesktopLayout( &x, &y, &orientation );
-    --desktop; // make it start with 0
-    QRect rect;
-    if( orientation == Qt::Horizontal )
-        rect = QRect(( desktop % x ) * displayWidth(), ( desktop / x ) * displayHeight(),
-            displayWidth(), displayHeight());
-    else
-        rect = QRect(( desktop / y ) * displayWidth(), ( desktop % y ) * displayHeight(),
-            displayWidth(), displayHeight());
-    if( !scaled )
-        return rect;
-    QRect current = desktopRect( effects->currentDesktop(), false );
-    double progress = mTimeLine.value();
-    rect = QRect( qRound( interpolate( rect.x() - current.x(), rect.x() / double( x ), progress )),
-        qRound( interpolate( rect.y() - current.y(), rect.y() / double( y ), progress )),
-        qRound( interpolate( rect.width(), displayWidth() / double( x ), progress )),
-        qRound( interpolate( rect.height(), displayHeight() / double( y ), progress )));
+    QRect rect( 0, 0, displayWidth(), displayHeight() );
+    rect.translate( effects->desktopCoords( desktop ));
     return rect;
     }
 
@@ -207,16 +187,13 @@ void SlideEffect::desktopChanged( int old )
     
     if( slide ) // old slide still in progress
         {
-        QPoint diffPos = desktopRect( old, false ).topLeft() - slide_start_pos;
+        QPoint diffPos = desktopRect( old ).topLeft() - slide_start_pos;
         int w = 0;
         int h = 0;
         if( effects->optionRollOverDesktops())
             {
-            int x, y;
-            Qt::Orientation orientation;
-            effects->calcDesktopLayout( &x, &y, &orientation );
-            w = x * displayWidth();
-            h = y * displayHeight();
+            w = effects->workspaceWidth();
+            h = effects->workspaceHeight();
             // wrap around if shorter
             if( diffPos.x() > 0 && diffPos.x() > w / 2 )
                 diffPos.setX( diffPos.x() - w );
@@ -236,7 +213,7 @@ void SlideEffect::desktopChanged( int old )
             currentRegion |= ( currentRegion & QRect( w, 0, w, h )).translated( -w, 0 );
             currentRegion |= ( currentRegion & QRect( 0, h, w, h )).translated( 0, -h );
             }
-        QRect rect = desktopRect( effects->currentDesktop(), false );
+        QRect rect = desktopRect( effects->currentDesktop() );
         if( currentRegion.contains( rect ))
             { // current position is in new current desktop (e.g. quickly changing back),
               // don't do full progress
@@ -265,7 +242,7 @@ void SlideEffect::desktopChanged( int old )
         if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
             return;
         mTimeLine.setProgress(0);
-        slide_start_pos = desktopRect( old, false ).topLeft();
+        slide_start_pos = desktopRect( old ).topLeft();
         slide = true;
         effects->setActiveFullScreenEffect( this );
         }
