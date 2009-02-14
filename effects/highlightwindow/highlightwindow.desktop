@@ -2,6 +2,7 @@
 Name=Highlight Window
 Name[ca]=Realça la finestra
 Name[ca@valencia]=Realça la finestra
+Name[el]=Τονισμός παραθύρου
 Name[et]=Akna esiletõstmine
 Name[eu]=Leihoa nabarmendu
 Name[ga]=Aibhsigh Fuinneog
@@ -17,6 +18,7 @@ Icon=preferences-system-windows-effect-highlightwindow
 Comment=Highlight the appropriate window when hovering over taskbar entries
 Comment[ca]=Realça la finestra apropiada em passar el cursor sobre les entrades de la barra de tasques
 Comment[ca@valencia]=Realça la finestra apropiada em passar el cursor sobre les entrades de la barra de tasques
+Comment[el]=Τονισμός του αντίστοιχου παραθύρου όταν το ποντίκι περνάει πάνω από τη γραμμή εργασιών
 Comment[et]=Akende esiletõstmine, kui kursor on nende tegumiriba kirje kohal
 Comment[ga]=Aibhsigh an fhuinneog chuí nuair atá an cúrsóir os cionn iontrála sa tascbharra
 Comment[nds]=Bi't Wiesen op Programmbalken-Indrääg de tohören Finstern rutheven
