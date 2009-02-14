@@ -89,6 +89,7 @@ set(kwin_KDEINIT_SRCS
    deleted.cpp
    effects.cpp
    compositingprefs.cpp
+   desktoplayout.cpp
    )
 
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )

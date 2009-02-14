@@ -88,8 +88,6 @@ Workspace* Workspace::_self = 0;
 
 Workspace::Workspace( bool restore )
     : QObject( 0 )
-    , current_desktop( 0 )
-    , number_of_desktops( 0 )
     , active_popup( NULL )
     , active_popup_client( NULL )
     , temporaryRulesMessages( "_KDE_NET_WM_TEMPORARY_RULES", NULL, false )
@@ -127,8 +125,6 @@ Workspace::Workspace( bool restore )
     , workspaceInit( true )
     , startup( 0 )
     , layoutOrientation( Qt::Vertical )
-    , layoutX( -1 )
-    , layoutY( 2 )
     , managing_topmenus( false )
     , topmenu_selection( NULL )
     , topmenu_watcher( NULL )
@@ -417,8 +413,8 @@ void Workspace::init()
         updateClientArea();
 
         // NETWM spec says we have to set it to (0,0) if we don't support it
-        NETPoint* viewports = new NETPoint[number_of_desktops];
-        rootInfo->setDesktopViewport( number_of_desktops, *viewports );
+        NETPoint* viewports = new NETPoint[numberOfDesktops()];
+        rootInfo->setDesktopViewport( numberOfDesktops(), *viewports );
         delete[] viewports;
         QRect geom = Kephal::ScreenUtils::desktopGeometry();
         NETSize desktop_geometry;
@@ -1121,11 +1117,11 @@ void Workspace::loadDesktopSettings()
     KConfigGroup group( c, groupname );
 
     int n = group.readEntry( "Number", 4 );
-    number_of_desktops = n;
+    desktopLayout.setNumberOfDesktops( n );
     workarea.clear();
     workarea.resize( n + 1 );
     screenarea.clear();
-    rootInfo->setNumberOfDesktops( number_of_desktops );
+    rootInfo->setNumberOfDesktops( n );
     desktop_focus_chain.resize( n );
     // Make it +1, so that it can be accessed as [1..numberofdesktops]
     focus_chain.resize( n + 1 );
@@ -1147,8 +1143,8 @@ void Workspace::saveDesktopSettings()
         groupname.sprintf( "Desktops-screen-%d", screen_number );
     KConfigGroup group( c, groupname );
 
-    group.writeEntry( "Number", number_of_desktops );
-    for( int i = 1; i <= number_of_desktops; i++ )
+    group.writeEntry( "Number", numberOfDesktops() );
+    for( int i = 1; i <= numberOfDesktops(); i++ )
         {
         QString s = desktopName( i );
         QString defaultvalue = i18n( "Desktop %1", i );
@@ -1308,7 +1304,7 @@ ObscuringWindows::~ObscuringWindows()
  */
 bool Workspace::setCurrentDesktop( int new_desktop )
     {
-    if( new_desktop < 1 || new_desktop > number_of_desktops )
+    if( new_desktop < 1 || new_desktop > numberOfDesktops() )
         return false;
 
     closeActivePopup();
@@ -1316,8 +1312,8 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     // TODO: Q_ASSERT( block_stacking_updates == 0 ); // Make sure stacking_order is up to date
     StackingUpdatesBlocker blocker( this );
 
-    int old_desktop = current_desktop;
-    if (new_desktop != current_desktop )
+    int old_desktop = currentDesktop();
+    if (new_desktop != currentDesktop() )
         {
         ++block_showing_desktop;
         // Optimized Desktop switching: unmapping done from back to front
@@ -1326,7 +1322,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
 
         ObscuringWindows obs_wins;
 
-        current_desktop = new_desktop; // Change the desktop (so that Client::updateVisibility() works)
+        desktopLayout.setCurrentDesktop( new_desktop ); // Change the desktop (so that Client::updateVisibility() works)
 
         for( ClientList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
@@ -1339,7 +1335,7 @@ bool Workspace::setCurrentDesktop( int new_desktop )
                 }
 
         // Now propagate the change, after hiding, before showing
-        rootInfo->setCurrentDesktop( current_desktop );
+        rootInfo->setCurrentDesktop( currentDesktop() );
 
         if( movingClient && !movingClient->isOnDesktop( new_desktop ))
             movingClient->setDesktop( new_desktop );
@@ -1440,162 +1436,34 @@ void Workspace::previousDesktop()
     setCurrentDesktop( desktop > 0 ? desktop : numberOfDesktops() );
     }
 
-int Workspace::desktopToRight( int desktop, bool wrap ) const
-    {
-    int x,y;
-    Qt::Orientation orientation;
-    calcDesktopLayout( &x, &y, &orientation );
-    int dt = desktop - 1;
-    if( orientation == Qt::Vertical )
-        {
-        dt += y;
-        if( dt >= numberOfDesktops() )
-            {
-            if( wrap )
-                dt -= numberOfDesktops();
-            else
-                return desktop;
-            }
-        }
-    else
-        {
-        int d = ( dt % x ) + 1;
-        if( d >= x )
-            {
-            if( wrap )
-                d -= x;
-            else
-                return desktop;
-            }
-        dt = dt - ( dt % x ) + d;
-        }
-    return dt + 1;
-    }
-
-int Workspace::desktopToLeft( int desktop, bool wrap ) const
-    {
-    int x,y;
-    Qt::Orientation orientation;
-    calcDesktopLayout( &x, &y, &orientation );
-    int dt = desktop - 1;
-    if( orientation == Qt::Vertical )
-        {
-        dt -= y;
-        if( dt < 0 )
-            {
-            if( wrap )
-                dt += numberOfDesktops();
-            else
-                return desktop;
-            }
-        }
-    else
-        {
-        int d = ( dt % x ) - 1;
-        if( d < 0 )
-            {
-            if( wrap )
-                d += x;
-            else
-                return desktop;
-            }
-        dt = dt - ( dt % x ) + d;
-        }
-    return dt + 1;
-    }
-
-int Workspace::desktopUp( int desktop, bool wrap ) const
-    {
-    int x,y;
-    Qt::Orientation orientation;
-    calcDesktopLayout( &x, &y, &orientation);
-    int dt = desktop - 1;
-    if( orientation == Qt::Horizontal )
-        {
-        dt -= x;
-        if( dt < 0 )
-            {
-            if( wrap )
-                dt += numberOfDesktops();
-            else
-                return desktop;
-            }
-        }
-    else
-        {
-        int d = ( dt % y ) - 1;
-        if( d < 0 )
-            {
-            if( wrap )
-                d += y;
-            else
-                return desktop;
-            }
-        dt = dt - ( dt % y ) + d;
-        }
-    return dt + 1;
-    }
-
-int Workspace::desktopDown( int desktop, bool wrap ) const
-    {
-    int x,y;
-    Qt::Orientation orientation;
-    calcDesktopLayout( &x, &y, &orientation);
-    int dt = desktop - 1;
-    if( orientation == Qt::Horizontal )
-        {
-        dt += x;
-        if( dt >= numberOfDesktops() )
-            {
-            if( wrap )
-                dt -= numberOfDesktops();
-            else
-                return desktop;
-            }
-        }
-    else
-        {
-        int d = ( dt % y ) + 1;
-        if( d >= y )
-            {
-            if( wrap )
-                d -= y;
-            else
-                return desktop;
-            }
-        dt = dt - ( dt % y ) + d;
-        }
-    return dt + 1;
-    }
-
 /**
  * Sets the number of virtual desktops to \a n
  */
 void Workspace::setNumberOfDesktops( int n )
     {
-    if( n == number_of_desktops )
+    if( n == numberOfDesktops() )
         return;
-    int old_number_of_desktops = number_of_desktops;
-    number_of_desktops = n;
+    int old_number_of_desktops = numberOfDesktops();
+    desktopLayout.setNumberOfDesktops( n );
 
     if( currentDesktop() > numberOfDesktops() )
         setCurrentDesktop( numberOfDesktops() );
 
     // If increasing the number, do the resizing now, otherwise
     // after the moving of windows to still existing desktops
-    if( old_number_of_desktops < number_of_desktops )
+    if( old_number_of_desktops < numberOfDesktops() )
         {
-        rootInfo->setNumberOfDesktops( number_of_desktops );
-        NETPoint* viewports = new NETPoint[number_of_desktops];
-        rootInfo->setDesktopViewport( number_of_desktops, *viewports );
+        rootInfo->setNumberOfDesktops( numberOfDesktops() );
+        NETPoint* viewports = new NETPoint[numberOfDesktops()];
+        rootInfo->setDesktopViewport( numberOfDesktops(), *viewports );
         delete[] viewports;
         updateClientArea( true );
-        focus_chain.resize( number_of_desktops + 1 );
+        focus_chain.resize( numberOfDesktops() + 1 );
         }
 
     // If the number of desktops decreased, move all windows
     // that would be hidden to the last visible desktop
-    if( old_number_of_desktops > number_of_desktops )
+    if( old_number_of_desktops > numberOfDesktops() )
         {
         for( ClientList::ConstIterator it = clients.constBegin();
             it != clients.constEnd();
@@ -1603,14 +1471,14 @@ void Workspace::setNumberOfDesktops( int n )
             if( !(*it)->isOnAllDesktops() && (*it)->desktop() > numberOfDesktops() )
                 sendClientToDesktop( *it, numberOfDesktops(), true );
         }
-    if( old_number_of_desktops > number_of_desktops )
+    if( old_number_of_desktops > numberOfDesktops() )
         {
-        rootInfo->setNumberOfDesktops( number_of_desktops );
-        NETPoint* viewports = new NETPoint[number_of_desktops];
-        rootInfo->setDesktopViewport( number_of_desktops, *viewports );
+        rootInfo->setNumberOfDesktops( numberOfDesktops() );
+        NETPoint* viewports = new NETPoint[numberOfDesktops()];
+        rootInfo->setDesktopViewport( numberOfDesktops(), *viewports );
         delete[] viewports;
         updateClientArea( true );
-        focus_chain.resize( number_of_desktops + 1 );
+        focus_chain.resize( numberOfDesktops() + 1 );
         }
 
     saveDesktopSettings();
@@ -1735,19 +1603,22 @@ void Workspace::sendClientToScreen( Client* c, int screen )
 
 void Workspace::updateDesktopLayout()
     {
-    //rootInfo->desktopLayoutCorner(); // I don't find this worth bothering, feel free to
-    layoutOrientation = ( rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal
-        ? Qt::Horizontal : Qt::Vertical );
-    layoutX = rootInfo->desktopLayoutColumnsRows().width();
-    layoutY = rootInfo->desktopLayoutColumnsRows().height();
-    if( layoutX == 0 && layoutY == 0 ) // Not given, set default layout
-        layoutY = 2;
+    int width = rootInfo->desktopLayoutColumnsRows().width();
+    int height = rootInfo->desktopLayoutColumnsRows().height();
+    if( width == 0 && height == 0 ) // Not given, set default layout
+        height = 2;
+    layoutOrientation = rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ?
+        Qt::Horizontal : Qt::Vertical;
+    desktopLayout.setNETDesktopLayout(
+        layoutOrientation, width, height,
+        0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
+        );
     }
 
 void Workspace::calcDesktopLayout( int* xp, int* yp, Qt::Orientation* orientation ) const
-    {
-    int x = layoutX; // <= 0 means compute it from the other and total number of desktops
-    int y = layoutY;
+    { // TODO: Deprecated, use desktopLayout instead
+    int x = desktopLayout.gridWidth(); // <= 0 means compute it from the other and total number of desktops
+    int y = desktopLayout.gridHeight();
     if(( x <= 0 ) && ( y > 0 ))
        x = ( numberOfDesktops() + y - 1 ) / y;
     else if(( y <= 0) && ( x > 0 ))

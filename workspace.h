@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDateTime>
 #include <kmanagerselection.h>
 
+#include "desktoplayout.h"
 #include "plugins.h"
 #include "utils.h"
 #include "kdecoration.h"
@@ -613,8 +614,6 @@ class Workspace : public QObject, public KDecorationDefines
         void setCompositeTimer();
         void checkCompositePaintTime( int msec );
 
-        int current_desktop;
-        int number_of_desktops;
         QVector<int> desktop_focus_chain;
 
         QWidget* active_popup;
@@ -747,9 +746,8 @@ class Workspace : public QObject, public KDecorationDefines
         QPoint electric_push_point;
         int electric_reserved[ELECTRIC_COUNT]; // Corners/edges used by something
 
-        Qt::Orientation layoutOrientation;
-        int layoutX;
-        int layoutY;
+        DesktopLayout desktopLayout;
+        Qt::Orientation layoutOrientation; // TODO: Deprecated, remove when calcDesktopLayout() is.
 
         Placement* initPositioning;
 
@@ -855,12 +853,32 @@ inline Client* Workspace::mostRecentlyActivatedClient() const
 
 inline int Workspace::currentDesktop() const
     {
-    return current_desktop;
+    return desktopLayout.currentDesktop();
     }
 
 inline int Workspace::numberOfDesktops() const
     {
-    return number_of_desktops;
+    return desktopLayout.numberOfDesktops();
+    }
+
+inline int Workspace::desktopToRight( int desktop, bool wrap ) const
+    {
+    return desktopLayout.desktopToRight( desktop, wrap );
+    }
+
+inline int Workspace::desktopToLeft( int desktop, bool wrap ) const
+    {
+    return desktopLayout.desktopToLeft( desktop, wrap );
+    }
+
+inline int Workspace::desktopUp( int desktop, bool wrap ) const
+    {
+    return desktopLayout.desktopAbove( desktop, wrap );
+    }
+
+inline int Workspace::desktopDown( int desktop, bool wrap ) const
+    {
+    return desktopLayout.desktopBelow( desktop, wrap );
     }
 
 inline void Workspace::addGroup( Group* group, allowed_t )
