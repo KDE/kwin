@@ -53,9 +53,11 @@ class CubeEffect
         virtual void tabBoxClosed();
 
         static bool supported();
-    protected slots:
-        void toggle();
-    protected:
+    private slots:
+        void toggleCube();
+        void toggleCylinder();
+        void toggleSphere();
+    private:
         enum RotationDirection
             {
             Left,
@@ -69,9 +71,19 @@ class CubeEffect
             Normal,
             Down
             };
-        virtual void paintCube( int mask, QRegion region, ScreenPaintData& data );
-        virtual void paintCap( float z, float zTexture );
-        virtual void paintCapStep( float z, float zTexture, bool texture );
+        enum CubeMode
+            {
+            Cube,
+            Cylinder,
+            Sphere
+            };
+        void toggle( CubeMode newMode = Cube );
+        void paintCube( int mask, QRegion region, ScreenPaintData& data );
+        void paintCap();
+        void paintCubeCap();
+        void paintCylinderCap();
+        void paintSphereCap();
+        bool loadShader();
         void loadConfig( QString config );
         void rotateCube();
         void rotateToDesktop( int desktop );
@@ -82,6 +94,8 @@ class CubeEffect
         bool keyboard_grab;
         bool schedule_close;
         ElectricBorder borderActivate;
+        ElectricBorder borderActivateCylinder;
+        ElectricBorder borderActivateSphere;
         int painting_desktop;
         Window input;
         int frontDesktop;
@@ -124,6 +138,11 @@ class CubeEffect
         bool invertMouse;
         bool tabBoxMode;
         bool shortcutsRegistered;
+        CubeMode mode;
+        bool useShaders;
+        GLShader* cylinderShader;
+        GLShader* sphereShader;
+        float capDeformationFactor;
 
         // GL lists
         bool capListCreated;

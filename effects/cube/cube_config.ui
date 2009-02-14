@@ -446,6 +446,48 @@ otherwise it will remain active</string>
          </layout>
         </widget>
        </item>
+       <item row="3" column="0" colspan="2" >
+        <widget class="QGroupBox" name="capDeformationGroupBox" >
+         <property name="title" >
+          <string>Sphere Cap Deformation</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_9" >
+          <item row="0" column="0" colspan="2" >
+           <widget class="QSlider" name="capDeformationSlider" >
+            <property name="maximum" >
+             <number>100</number>
+            </property>
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="tickPosition" >
+             <enum>QSlider::TicksBelow</enum>
+            </property>
+            <property name="tickInterval" >
+             <number>25</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QLabel" name="capDeformationSphereLabel" >
+            <property name="text" >
+             <string>Sphere</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QLabel" name="capDeformationPlaneLabel" >
+            <property name="text" >
+             <string>Plane</string>
+            </property>
+            <property name="alignment" >
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>

@@ -682,13 +682,11 @@ void KWinCompositingConfig::setupElectricBorders()
         addItemToEdgesMonitor( services.first()->name());
     services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cube'");
     if( !services.isEmpty() )
-        addItemToEdgesMonitor( services.first()->name());
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cylinder'");
-    if( !services.isEmpty() )
-        addItemToEdgesMonitor( services.first()->name());
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_sphere'");
-    if( !services.isEmpty() )
-        addItemToEdgesMonitor( services.first()->name());
+        {
+        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Cube") );
+        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Cylinder") );
+        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Sphere") );
+        }
     }
 
 void KWinCompositingConfig::addItemToEdgesMonitor(const QString& item)
@@ -727,13 +725,9 @@ void KWinCompositingConfig::loadElectricBorders()
     KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     changeElectricBorder( (ElectricBorder)cubeconfig.readEntry( "BorderActivate",
         int( ElectricNone )), (int)Cube );
-    // Desktop Cylinder
-    KConfigGroup cylinderconfig(mKWinConfig, "Effect-Cylinder");
-    changeElectricBorder( (ElectricBorder)cylinderconfig.readEntry( "BorderActivate",
+    changeElectricBorder( (ElectricBorder)cubeconfig.readEntry( "BorderActivateCylinder",
         int( ElectricNone )), (int)Cylinder );
-    // Desktop Grid
-    KConfigGroup sphereconfig(mKWinConfig, "Effect-Sphere");
-    changeElectricBorder( (ElectricBorder)sphereconfig.readEntry( "BorderActivate",
+    changeElectricBorder( (ElectricBorder)cubeconfig.readEntry( "BorderActivateSphere",
         int( ElectricNone )), (int)Sphere );
     }
 
@@ -803,12 +797,8 @@ void KWinCompositingConfig::saveElectricBorders()
 
     KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
     cubeconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)Cube ));
-
-    KConfigGroup cylinderconfig(mKWinConfig, "Effect-Cylinder");
-    cylinderconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)Cylinder ));
-
-    KConfigGroup sphereconfig(mKWinConfig, "Effect-Sphere");
-    sphereconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)Sphere ));
+    cubeconfig.writeEntry( "BorderActivateCylinder", (int)checkEffectHasElectricBorder( (int)Cylinder ));
+    cubeconfig.writeEntry( "BorderActivateSphere", (int)checkEffectHasElectricBorder( (int)Sphere ));
 }
 
 } // namespace

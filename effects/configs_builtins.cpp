@@ -37,8 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "coverswitch/coverswitch_config.h"
 #include "cube/cube_config.h"
 #include "cube/cubeslide_config.h"
-#include "cube/cylinder_config.h"
-#include "cube/sphere_config.h"
 #include "flipswitch/flipswitch_config.h"
 #include "invert/invert_config.h"
 #include "lookingglass/lookingglass_config.h"
@@ -73,8 +71,6 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( coverswitch, CoverSwitchEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( cube, CubeEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( cubeslide, CubeSlideEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( cylinder, CylinderEffectConfig )
-    KWIN_EFFECT_CONFIG_SINGLE( sphere, SphereEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( flipswitch, FlipSwitchEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( invert, InvertEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( lookingglass, LookingGlassEffectConfig )

@@ -2,6 +2,7 @@ uniform sampler2D winTexture;
 uniform float windowWidth;
 uniform float windowHeight;
 uniform float opacity;
+uniform float front;
 
 vec2 pix2tex(vec2 pix)
 {
@@ -10,5 +11,14 @@ vec2 pix2tex(vec2 pix)
 
 void main()
 {
+    if( front > 0.0 && gl_FrontFacing )
+        discard;
+    if( front < 0.0 && !gl_FrontFacing )
+        discard;
+    // remove the shadow decoration quads
+    if( gl_TexCoord[0].x < 0.0 || gl_TexCoord[0].x > windowWidth ||
+        gl_TexCoord[0].y < 0.0 || gl_TexCoord[0].y > windowHeight )
+        discard;
     gl_FragColor.rgba = texture2D(winTexture, pix2tex(gl_TexCoord[0].xy)).rgba;
+    gl_FragColor.a = gl_FragColor.a * opacity;
 }

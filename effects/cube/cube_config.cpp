@@ -58,10 +58,18 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     m_actionCollection->setConfigGroup( "Cube" );
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* a = (KAction*) m_actionCollection->addAction( "Cube" );
-    a->setText( i18n("Desktop Cube" ));
-    a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+    KAction* cubeAction = (KAction*) m_actionCollection->addAction( "Cube" );
+    cubeAction->setText( i18n("Desktop Cube" ));
+    cubeAction->setProperty("isConfigurationAction", true);
+    cubeAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+    KAction* cylinderAction = (KAction*) m_actionCollection->addAction( "Cylinder" );
+    cylinderAction->setText( i18n("Desktop Cylinder" ));
+    cylinderAction->setProperty("isConfigurationAction", true);
+    cylinderAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_F11 ));
+    KAction* sphereAction = (KAction*) m_actionCollection->addAction( "Sphere" );
+    sphereAction->setText( i18n("Desktop Sphere" ));
+    sphereAction->setProperty("isConfigurationAction", true);
+    sphereAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F11 ));
 
     m_ui->editor->addCollection(m_actionCollection);
 
@@ -85,6 +93,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->walkThroughDesktopBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->invertKeysBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->invertMouseBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->capDeformationSlider, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -111,7 +120,8 @@ void CubeEffectConfig::load()
     m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
     bool invertKeys = conf.readEntry( "InvertKeys", false );
     bool invertMouse = conf.readEntry( "InvertMouse", false );
-    
+    m_ui->capDeformationSlider->setValue( conf.readEntry( "CapDeformation", 0 ) );
+
     m_ui->rotationDurationSpin->setValue( duration );
     m_ui->cubeOpacitySlider->setValue( opacity );
     m_ui->cubeOpacitySpin->setValue( opacity );
@@ -201,6 +211,7 @@ void CubeEffectConfig::save()
     conf.writeEntry( "TabBox", m_ui->walkThroughDesktopBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "InvertKeys", m_ui->invertKeysBox->isChecked() );
     conf.writeEntry( "InvertMouse", m_ui->invertMouseBox->isChecked() );
+    conf.writeEntry( "CapDeformation", m_ui->capDeformationSlider->value() );
 
     m_ui->editor->save();
 
@@ -229,6 +240,7 @@ void CubeEffectConfig::defaults()
     m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
     m_ui->invertKeysBox->setChecked( false );
     m_ui->invertMouseBox->setChecked( false );
+    m_ui->capDeformationSlider->setValue( 0 );
     m_ui->editor->allDefault();
     emit changed(true);
     }
