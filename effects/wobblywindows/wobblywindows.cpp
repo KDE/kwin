@@ -383,8 +383,8 @@ void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bo
         qreal y_increment = rect.height() / (wwi.height-1.0);
 
         Pair picked = {cursorPos().x(), cursorPos().y()};
-        int indx = (picked.x - rect.x()) / x_increment;
-        int indy = (picked.y - rect.y()) / y_increment;
+        int indx = (picked.x - rect.x()) / x_increment + 0.5;
+        int indy = (picked.y - rect.y()) / y_increment + 0.5;
         int pickedPointIndex = indy*wwi.width + indx;
         if (pickedPointIndex < 0)
         {
@@ -403,17 +403,14 @@ void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bo
 
         if (w->isUserResize())
         {
-            if (picked.x > rect.center().x())
-                if (picked.y > rect.center().y())
-                    // picked somewhere in the bottom right, so constrain the top left corner too
-                    wwi.locked[0] = wwi.constraint[0] = true;
-                else
-                    wwi.locked[wwi.count-wwi.width] = wwi.constraint[wwi.count-wwi.width] = true;
-            else
-                if (picked.y > rect.center().y())
-                    wwi.locked[wwi.width-1] = wwi.constraint[wwi.width-1] = true;
-                else
-                    wwi.locked[wwi.count-1] = wwi.constraint[wwi.count-1] = true;
+            // on a resize, do not allow any edges to wobble until it has been moved from
+            // its original location
+            wwi.can_wobble_top = wwi.can_wobble_left = wwi.can_wobble_right = wwi.can_wobble_bottom = false;
+            wwi.resize_original_rect = w->geometry();
+        }
+        else
+        {
+            wwi.can_wobble_top = wwi.can_wobble_left = wwi.can_wobble_right = wwi.can_wobble_bottom = true;
         }
     }
     else if (m_moveEffectEnabled && last)
@@ -423,6 +420,16 @@ void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bo
             WindowWobblyInfos& wwi = windows[w];
             wwi.status = Free;
         }
+    }
+
+    if (windows.contains(w))
+    {
+        WindowWobblyInfos& wwi = windows[w];
+        QRect rect = w->geometry();
+        if(rect.y()!=wwi.resize_original_rect.y()) wwi.can_wobble_top = true;
+        if(rect.x()!=wwi.resize_original_rect.x()) wwi.can_wobble_left = true;
+        if(rect.right()!=wwi.resize_original_rect.right()) wwi.can_wobble_right = true;
+        if(rect.bottom()!=wwi.resize_original_rect.bottom()) wwi.can_wobble_bottom = true;
     }
 }
 
@@ -482,12 +489,12 @@ void WobblyWindowsEffect::wobblyOpenInit(WindowWobblyInfos& wwi) const
         {
             unsigned int idx = j*4 + i;
             wwi.constraint[idx] = false;
-            wwi.locked[idx] = false;
             wwi.position[idx].x = (wwi.position[idx].x + 3*middle.x)/4;
             wwi.position[idx].y = (wwi.position[idx].y + 3*middle.y)/4;
         }
     }
     wwi.status = Openning;
+    wwi.can_wobble_top = wwi.can_wobble_left = wwi.can_wobble_right = wwi.can_wobble_bottom = true;
 }
 
 void WobblyWindowsEffect::wobblyCloseInit(WindowWobblyInfos& wwi, EffectWindow* w) const
@@ -507,7 +514,6 @@ void WobblyWindowsEffect::wobblyCloseInit(WindowWobblyInfos& wwi, EffectWindow* 
         {
             unsigned int idx = j*4 + i;
             wwi.constraint[idx] = false;
-            wwi.locked[idx] = false;
         }
     }
     wwi.status = Closing;
@@ -529,7 +535,6 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry)
     wwi.acceleration = new Pair[wwi.count];
     wwi.buffer = new Pair[wwi.count];
     wwi.constraint = new bool[wwi.count];
-    wwi.locked = new bool[wwi.count];
 
     wwi.bezierSurface = new Pair[wwi.bezierCount];
 
@@ -553,7 +558,6 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry)
             wwi.position[idx] = initValue;
             wwi.velocity[idx] = nullPair;
             wwi.constraint[idx] = false;
-            wwi.locked[idx] = false;
             if (i != 4-2) // x grid count - 2, i.e. not the last point
             {
                 initValue.x += x_increment;
@@ -586,7 +590,6 @@ void WobblyWindowsEffect::freeWobblyInfo(WindowWobblyInfos& wwi) const
     delete[] wwi.acceleration;
     delete[] wwi.buffer;
     delete[] wwi.constraint;
-    delete[] wwi.locked;
 
     delete[] wwi.bezierSurface;
 }
@@ -1071,16 +1074,37 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
 
         vel_sum += fabs(vel.x) + fabs(vel.y);
 
-        if (wwi.locked[i])
-        {
-            wwi.position[i] = wwi.origin[i];
-        }
 #if defined VERBOSE_MODE
         if (wwi.constraint[i])
         {
             kDebug(1212) << "Constraint point ** vel : " << vel.x << "," << vel.y << " ** move : " << vel.x*time << "," << vel.y*time;
         }
 #endif
+    }
+
+    if(!wwi.can_wobble_top)
+    {
+        for (unsigned int i=0; i<wwi.width; ++i)
+            for(unsigned j=0;j<wwi.width-1;++j)
+                wwi.position[i+wwi.width*j].y = wwi.origin[i+wwi.width*j].y;
+    }
+    if(!wwi.can_wobble_bottom)
+    {
+        for (unsigned int i=wwi.width*(wwi.height-1); i<wwi.count; ++i)
+            for(unsigned j=0;j<wwi.width-1;++j)
+                wwi.position[i-wwi.width*j].y = wwi.origin[i-wwi.width*j].y;
+    }
+    if(!wwi.can_wobble_left)
+    {
+        for (unsigned int i=0; i<wwi.count; i+=wwi.width)
+            for(unsigned j=0;j<wwi.width-1;++j)
+                wwi.position[i+j].x = wwi.origin[i+j].x;
+    }
+    if(!wwi.can_wobble_right)
+    {
+        for (unsigned int i=wwi.width-1; i<wwi.count; i+=wwi.width)
+            for(unsigned j=0;j<wwi.width-1;++j)
+                wwi.position[i-j].x = wwi.origin[i-j].x;
     }
 
 #if defined VERBOSE_MODE

@@ -74,9 +74,6 @@ class WobblyWindowsEffect : public Effect
             // given by the window position, ignoring neighbour points.
             bool* constraint;
 
-            // if true, the point is locked to its normal destination position.
-            bool* locked;
-
             unsigned int width;
             unsigned int height;
             unsigned int count;
@@ -90,6 +87,10 @@ class WobblyWindowsEffect : public Effect
 
             // for closing
             QRectF closeRect;
+
+            // for resizing. Only sides that have moved will wobble
+            bool can_wobble_top,can_wobble_left,can_wobble_right,can_wobble_bottom;
+            QRect resize_original_rect;
         };
 
         QHash< const EffectWindow*,  WindowWobblyInfos > windows;
