@@ -474,16 +474,24 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     aboutData.addAuthor( ki18n( "Daniel M. Duley" ),KLocalizedString(), "mosfet@kde.org" );
     aboutData.addAuthor( ki18n( "Luboš Luňák" ), ki18n( "Maintainer" ), "l.lunak@kde.org" );
 
-    // HACK: append "--graphicssystem native" to argument list to force KWin to use this backend
-    int myargc = argc + 2;
-    char **myargv = (char **)malloc( ( myargc + 1 ) * sizeof(char *) );
-    for ( int i = 0; i < argc; i++ )
+    int myargc = argc;
+    char **myargv = argv;
+#if QT_VERSION >= 0x040a00
+# error Qt version larger than 4.9, please fix me
+#endif
+    if (qVersion()[2] >= '5')
         {
-        myargv[i] = argv[i];
+        // HACK: append "--graphicssystem native" to argument list to force KWin to use this backend
+        myargc = argc + 2;
+        myargv = (char **)malloc( ( myargc + 1 ) * sizeof(char *) );
+        for ( int i = 0; i < argc; i++ )
+            {
+            myargv[i] = argv[i];
+            }
+        myargv[ argc ] = "--graphicssystem";
+        myargv[ argc + 1 ] = "native";
+        myargv[ argc + 2 ] = 0;
         }
-    myargv[ argc ] = "--graphicssystem";
-    myargv[ argc + 1 ] = "native";
-    myargv[ argc + 2 ] = 0;
 
     KCmdLineArgs::init( myargc, myargv, &aboutData );
 
