@@ -131,10 +131,16 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
             if (respectWindowState && maximized) {
                 return 0;
             } else {
-                if (lm == LM_BorderBottom)
-                    return BFRAMESIZE + 2;
-                else
-                    return 2;
+                if (OxygenFactory::thinBorders())
+                {
+                    if (lm == LM_BorderBottom) {
+                        return BFRAMESIZE + 2;
+                    } else {
+                        return 2;
+                    }
+                } else {
+                    return BFRAMESIZE;
+                }
             }
         }
 

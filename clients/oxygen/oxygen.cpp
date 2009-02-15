@@ -51,6 +51,7 @@ OxygenHelper *oxygenHelper(); // referenced from definition in oxygendclient.cpp
 bool OxygenFactory::initialized_ = false;
 Qt::Alignment OxygenFactory::titleAlignment_ = Qt::AlignLeft;
 bool OxygenFactory::showStripes_ = true;
+bool OxygenFactory::thinBorders_ = true;
 
 //////////////////////////////////////////////////////////////////////////////
 // OxygenFactory()
@@ -123,10 +124,14 @@ bool OxygenFactory::readConfig()
     else if (value == "Right")
         titleAlignment_ = Qt::AlignRight;
 
-    bool oldstripes = showStripes;    
+    bool oldborders = thinBorders_;
+    thinBorders_ = group.readEntry( "ThinBorders", true );
+
+    bool oldstripes = showStripes_;    
     showStripes_ = group.readEntry( "ShowStripes", true );
 
-    if (oldalign == titleAlignment_ && oldstripes == showStripes_)
+    if (oldalign == titleAlignment_ && oldstripes == showStripes_
+            && oldborders == thinBorders_)
         return false;
     else
         return true;
