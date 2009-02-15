@@ -166,6 +166,7 @@ static const ParameterSet set_4 =
 static const ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
 
 KWIN_EFFECT(wobblywindows, WobblyWindowsEffect)
+KWIN_EFFECT_SUPPORTED(wobblywindows, WobblyWindowsEffect::supported())
 
 WobblyWindowsEffect::WobblyWindowsEffect()
 {
@@ -245,6 +246,10 @@ void WobblyWindowsEffect::reconfigure( ReconfigureFlags )
 #endif
 }
 
+bool WobblyWindowsEffect::supported()
+    {
+    return effects->compositingType() == OpenGLCompositing;
+    }
 
 void WobblyWindowsEffect::setParameterSet(const ParameterSet& pset)
 {

@@ -58,6 +58,8 @@ class WobblyWindowsEffect : public Effect
             Closing
         };
 
+        static bool supported();
+
     private:
 
         bool updateWindowWobblyDatas(EffectWindow* w, qreal time);
