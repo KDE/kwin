@@ -93,13 +93,15 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
     {
     if( progress > 0.0 )
         {
-        if( w == logoutWindow )
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        if( blurSupported && w == logoutWindow )
             {
             windowOpacity = data.opacity;
             data.opacity = 0.0; // Cheat, we need the opacity for later but don't want to blur it
             }
         else
             {
+#endif
             if( effects->saturationSupported() )
                 {
                 data.saturation *= ( 1.0 - progress * 0.8 );
@@ -107,7 +109,9 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
                 }
             else // When saturation isn't supported then reduce brightness a bit more
                 data.brightness *= ( 1.0 - progress * 0.6 );
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
             }
+#endif
         }
     effects->paintWindow( w, mask, region, data );
     }
