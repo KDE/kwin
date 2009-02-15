@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Snap Helper
+Icon=preferences-system-windows-effect-snaphelper
+Comment=Help you locate the center of the screen when moving a window.
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Lucas Murray
+X-KDE-PluginInfo-Email=lmurray@undefinedfire.com
+X-KDE-PluginInfo-Name=kwin4_effect_snaphelper
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Accessibility
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
