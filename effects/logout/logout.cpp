@@ -46,6 +46,8 @@ LogoutEffect::LogoutEffect()
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     blurSupported = false;
+    blurTexture = NULL;
+    blurTarget = NULL;
     if( effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() )
         { // TODO: It seems that it is not possible to create a GLRenderTarget that has
           //       a different size than the display right now. Most likely a KWin core bug.
