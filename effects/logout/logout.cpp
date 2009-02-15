@@ -102,13 +102,16 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
         else
             {
 #endif
-            if( effects->saturationSupported() )
+            if( w != logoutWindow )
                 {
-                data.saturation *= ( 1.0 - progress * 0.8 );
-                data.brightness *= ( 1.0 - progress * 0.3 );
+                if( effects->saturationSupported() )
+                    {
+                    data.saturation *= ( 1.0 - progress * 0.8 );
+                    data.brightness *= ( 1.0 - progress * 0.3 );
+                    }
+                else // When saturation isn't supported then reduce brightness a bit more
+                    data.brightness *= ( 1.0 - progress * 0.6 );
                 }
-            else // When saturation isn't supported then reduce brightness a bit more
-                data.brightness *= ( 1.0 - progress * 0.6 );
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
             }
 #endif
