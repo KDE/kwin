@@ -281,6 +281,11 @@ class Client
         void cancelAutoRaise();
         void checkActiveModal();
         bool hasStrut() const;
+        /**
+         * Whether or not the window has a strut that expands through the invisible area of
+         * an xinerama setup where the monitors are not the same resolution.
+         */
+        bool hasOffscreenXineramaStrut() const;
 
         bool isMove() const 
             {

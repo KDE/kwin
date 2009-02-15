@@ -110,13 +110,23 @@ void Workspace::updateClientArea( bool force )
         if( !(*it)->hasStrut())
             continue;
         QRect r = (*it)->adjustedClientArea( desktopArea, desktopArea );
+
+        // Ignore offscreen xinerama struts. These interfere with the larger monitors on the setup
+        // and should be ignored so that applications that use the work area to work out where
+        // windows can go can use the entire visible area of the larger monitors.
+        // This goes against the EWMH description of the work area but it is a toss up between
+        // having unusable sections of the screen (Which can be quite large with newer monitors)
+        // or having some content appear offscreen (Relatively rare compared to other).
+        bool hasOffscreenXineramaStrut = (*it)->hasOffscreenXineramaStrut();
+
         if( (*it)->isOnAllDesktops())
             {
             for( int i = 1;
                  i <= numberOfDesktops();
                  ++i )
                 {
-                new_wareas[ i ] = new_wareas[ i ].intersected( r );
+                if( !hasOffscreenXineramaStrut )
+                    new_wareas[ i ] = new_wareas[ i ].intersected( r );
                 for( int iS = 0;
                      iS < nscreens;
                      iS ++ )
@@ -128,7 +138,8 @@ void Workspace::updateClientArea( bool force )
             }
         else
             {
-            new_wareas[ (*it)->desktop() ] = new_wareas[ (*it)->desktop() ].intersected( r );
+            if( !hasOffscreenXineramaStrut )
+                new_wareas[ (*it)->desktop() ] = new_wareas[ (*it)->desktop() ].intersected( r );
             for( int iS = 0;
                  iS < nscreens;
                  iS ++ )
@@ -961,6 +972,40 @@ bool Client::hasStrut() const
     return true;
     }
 
+bool Client::hasOffscreenXineramaStrut() const
+    {
+    // Convert strut to a QRegion
+    NETExtendedStrut strutArea = strut();
+    QRegion strutRegion;
+    if( strutArea.left_width != 0 )
+        strutRegion += QRect(
+            0, strutArea.left_start,
+            strutArea.left_width, strutArea.left_end - strutArea.left_start
+            );
+    if( strutArea.right_width != 0 )
+        strutRegion += QRect(
+            displayWidth() - strutArea.right_width, strutArea.right_start,
+            strutArea.right_width, strutArea.right_end - strutArea.right_start
+            );
+    if( strutArea.top_width != 0 )
+        strutRegion += QRect(
+            strutArea.top_start, 0,
+            strutArea.top_end - strutArea.top_start, strutArea.top_width
+            );
+    if( strutArea.bottom_width != 0 )
+        strutRegion += QRect(
+            strutArea.bottom_start, displayHeight() - strutArea.bottom_width,
+            strutArea.bottom_end - strutArea.bottom_start, strutArea.bottom_width
+            );
+
+    // Remove all visible areas so that only the invisible remain
+    int numScreens = Kephal::ScreenUtils::numScreens();
+    for( int i = 0; i < numScreens; i ++ )
+        strutRegion -= Kephal::ScreenUtils::screenGeometry( i );
+
+    // If there's anything left then we have an offscreen strut
+    return !strutRegion.isEmpty();
+    }
 
 // updates differences to workarea edges for all directions
 void Client::updateWorkareaDiffs()
