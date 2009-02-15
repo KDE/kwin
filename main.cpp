@@ -474,7 +474,18 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     aboutData.addAuthor( ki18n( "Daniel M. Duley" ),KLocalizedString(), "mosfet@kde.org" );
     aboutData.addAuthor( ki18n( "Luboš Luňák" ), ki18n( "Maintainer" ), "l.lunak@kde.org" );
 
-    KCmdLineArgs::init( argc, argv, &aboutData );
+    // HACK: append "--graphicssystem native" to argument list to force KWin to use this backend
+    int myargc = argc + 2;
+    char **myargv = (char **)malloc( ( myargc + 1 ) * sizeof(char *) );
+    for ( int i = 0; i < argc; i++ )
+        {
+        myargv[i] = argv[i];
+        }
+    myargv[ argc ] = "--graphicssystem";
+    myargv[ argc + 1 ] = "native";
+    myargv[ argc + 2 ] = 0;
+
+    KCmdLineArgs::init( myargc, myargv, &aboutData );
 
     KCmdLineOptions args;
     args.add( "lock", ki18n( "Disable configuration options" ));
