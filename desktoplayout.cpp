@@ -73,7 +73,7 @@ QPoint Workspace::desktopGridCoords( int id ) const
     {
     for( int y = 0; y < desktopGridSize_.height(); y++ )
         for( int x = 0; x < desktopGridSize_.width(); x++ )
-            if( desktopGrid_[y * desktopGridSize_.height() + x] == id )
+            if( desktopGrid_[y * desktopGridSize_.width() + x] == id )
                 return QPoint( x, y );
     return QPoint( -1, -1 );
     }
