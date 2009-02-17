@@ -2,6 +2,7 @@
 Name=Desktop Cube Animation
 Name[el]=Εφέ κύβου επιφάνειας εργασίας
 Name[et]=Töölauakuubiku animeerimine
+Name[ga]=Beochan an Chiúib Deisce
 Name[nds]=Animeert Wörpel-Schriefdisch
 Name[pt]=Animação do Cubo de Ecrãs
 Name[pt_BR]=Animação do cubo da área de trabalho
@@ -13,6 +14,7 @@ Icon=preferences-system-windows-effect-cube
 Comment=Animate desktop switching with a cube
 Comment[el]=Εφέ εναλλαγής επιφάνειας εργασίας με έναν κύβο
 Comment[et]=Töölaua vahetamise animeerimine kuubikul
+Comment[ga]=Beoigh malairt na deisce le ciúb
 Comment[nds]=Schriefdischwesseln mit en Wörpel animeren
 Comment[pt]=Animar a mudança de ecrãs com um cubo
 Comment[pt_BR]=Anima a alternação da área de trabalho com um cubo

@@ -1,7 +1,23 @@
 [Desktop Entry]
 Name=Snap Helper
+Name[et]=Tõmbumise abiline
+Name[ga]=Uirlis Láraithe
+Name[nds]=Snapphülp
+Name[pt]=Assistente de Ajuste
+Name[pt_BR]=Assistente de Ajuste
+Name[sv]=Bindningshjälp
+Name[uk]=Помічник розташування
+Name[zh_TW]=貼齊小幫手
 Icon=preferences-system-windows-effect-snaphelper
 Comment=Help you locate the center of the screen when moving a window.
+Comment[et]=Aitab akna liigutamisel tuvastada ekraani keskpaika.
+Comment[ga]=Uirlis a chabhraíonn leat lár an scáileáin a aimsiú agus fuinneog á bogadh.
+Comment[nds]=Bi't Verschuven vun Finstern den Schirm sien Merrn finnen
+Comment[pt]=Ajuda-o a localizar o centro do ecrã ao mover uma janela.
+Comment[pt_BR]=Ajuda-o a localizar o centro do ecrã ao mover uma janela.
+Comment[sv]=Hjälper dig lokalisera bildskärmens mitt när ett fönster flyttas.
+Comment[uk]=Допоможе вам знайти центр екрана, коли ви пересуватимете вікно.
+Comment[zh_TW]=幫助您在移動視窗時能定到螢幕中央的位置。
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
