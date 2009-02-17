@@ -524,8 +524,6 @@ bool Client::manage( Window w, bool isMapped )
             user_time = xTime() - 1000000 + 10;
         }
 
-    updateWorkareaDiffs();
-
     //sendSyntheticConfigureNotify(); // Done when setting mapping state
 
     delete session;

@@ -127,6 +127,29 @@ enum ActivityFlags
     ActivityRaise = 1 << 2 // raise the window
     };
 
+enum StrutArea
+    {
+    StrutAreaInvalid = 0, // Null
+    StrutAreaTop     = 1 << 0,
+    StrutAreaRight   = 1 << 1,
+    StrutAreaBottom  = 1 << 2,
+    StrutAreaLeft    = 1 << 3,
+    StrutAreaAll     = StrutAreaTop | StrutAreaRight | StrutAreaBottom | StrutAreaLeft
+    };
+Q_DECLARE_FLAGS( StrutAreas, StrutArea )
+
+class StrutRect : public QRect
+    {
+    public:
+        StrutRect( QRect rect = QRect(), StrutArea area = StrutAreaInvalid );
+        StrutRect( const StrutRect& other );
+        inline StrutArea area() const
+            { return m_area; };
+    private:
+        StrutArea m_area;
+    };
+typedef QVector<StrutRect> StrutRects;
+
 // Some KWin classes, mainly Client and Workspace, are very tighly coupled,
 // and some of the methods of one class may be called only from speficic places.
 // Those methods have additional allowed_t argument. If you pass Allowed
@@ -341,5 +364,8 @@ class ShortcutDialog
 #endif //KCMRULES
 
 } // namespace
+
+// Must be outside namespace
+Q_DECLARE_OPERATORS_FOR_FLAGS( KWin::StrutAreas )
 
 #endif

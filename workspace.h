@@ -90,6 +90,9 @@ class Workspace : public QObject, public KDecorationDefines
         QRect clientArea( clientAreaOption, const Client* c ) const;
         QRect clientArea( clientAreaOption, int screen, int desktop ) const;
 
+        QRegion restrictedMoveArea( int desktop, StrutAreas areas = StrutAreaAll ) const;
+        QRegion previousRestrictedMoveArea( int desktop, StrutAreas areas = StrutAreaAll ) const;
+
         /**
          * @internal
          */
@@ -853,6 +856,10 @@ class Workspace : public QObject, public KDecorationDefines
         Placement* initPositioning;
 
         QVector<QRect> workarea; // Array of workareas for virtual desktops
+        // Array of restricted areas that window cannot be moved into
+        QVector<StrutRects> restrictedmovearea;
+        // Array of the previous restricted areas that window cannot be moved into
+        QVector<StrutRects> oldrestrictedmovearea;
         QVector< QVector<QRect> > screenarea; // Array of workareas per xinerama screen for all virtual desktops
 
         bool managing_topmenus;

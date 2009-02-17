@@ -57,6 +57,26 @@ namespace KWin
 
 #ifndef KCMRULES
 
+//************************************
+// StrutRect
+//************************************
+
+StrutRect::StrutRect( QRect rect, StrutArea area )
+    : QRect( rect )
+    , m_area( area )
+    {
+    }
+
+StrutRect::StrutRect( const StrutRect& other )
+    : QRect( other )
+    , m_area( other.area() )
+    {
+    }
+
+//************************************
+// Motif
+//************************************
+
 void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
     bool& minimize, bool& maximize, bool& close )
     {

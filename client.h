@@ -280,6 +280,8 @@ class Client
         void cancelShadeHoverTimer();
         void cancelAutoRaise();
         void checkActiveModal();
+        StrutRect strutRect( StrutArea area ) const;
+        StrutRects strutRects() const;
         bool hasStrut() const;
         /**
          * Whether or not the window has a strut that expands through the invisible area of
@@ -378,9 +380,7 @@ class Client
         void finishWindowRules();
         void setShortcutInternal( const KShortcut& cut );
 
-        void updateWorkareaDiffs();
         void checkDirection( int new_diff, int old_diff, QRect& rect, const QRect& area );
-        static int computeWorkareaDiff( int left, int right, int a_left, int a_right );
         void configureRequest( int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool );
         NETExtendedStrut strut() const;
         int checkShadeGeometry( int w, int h );
@@ -510,7 +510,6 @@ class Client
         QRect geom_restore;
         QRect geom_fs_restore;
         MaximizeMode maxmode_restore;
-        int workarea_diff_x, workarea_diff_y;
         QTimer* autoRaiseTimer;
         QTimer* shadeHoverTimer;
         QTimer* delayedMoveResizeTimer;

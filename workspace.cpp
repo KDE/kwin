@@ -1132,6 +1132,10 @@ void Workspace::loadDesktopSettings()
     desktopCount_ = n;
     workarea.clear();
     workarea.resize( n + 1 );
+    restrictedmovearea.clear();
+    restrictedmovearea.resize( n + 1 );
+    oldrestrictedmovearea.clear();
+    oldrestrictedmovearea.resize( n + 1 );
     screenarea.clear();
     rootInfo->setNumberOfDesktops( n );
     desktop_focus_chain.resize( n );

@@ -318,12 +318,8 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         XReparentWindow( display(), decoration->widget()->winId(), frameId(), 0, 0 );
         decoration->widget()->lower();
         decoration->borders( border_left, border_right, border_top, border_bottom );
-        int save_workarea_diff_x = workarea_diff_x;
-        int save_workarea_diff_y = workarea_diff_y;
         move( calculateGravitation( false ));
         plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
-        workarea_diff_x = save_workarea_diff_x;
-        workarea_diff_y = save_workarea_diff_y;
         do_show = true;
         if( compositing() )
             discardWindowPixmap();
@@ -352,12 +348,8 @@ void Client::destroyDecoration()
         QPoint grav = calculateGravitation( true );
         border_left = border_right = border_top = border_bottom = 0;
         setMask( QRegion()); // Reset shape mask
-        int save_workarea_diff_x = workarea_diff_x;
-        int save_workarea_diff_y = workarea_diff_y;
         plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         move( grav );
-        workarea_diff_x = save_workarea_diff_x;
-        workarea_diff_y = save_workarea_diff_y;
         if( compositing() )
             discardWindowPixmap();
         if( scene != NULL && !deleting ) 
