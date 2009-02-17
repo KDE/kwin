@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Sheet
+Icon=preferences-system-windows-effect-sheet
+Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Email=kde@martin-graesslin.com
+X-KDE-PluginInfo-Name=kwin4_effect_sheet
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
+X-KDE-Ordering=60
