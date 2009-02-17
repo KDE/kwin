@@ -259,10 +259,24 @@ void CubeSlideEffect::desktopChanged( int old )
         {
         // last slide still in progress
         activate = false;
-        old = front_desktop;
         RotationDirection direction = slideRotations.dequeue();
         slideRotations.clear();
         slideRotations.enqueue( direction );
+        switch (direction)
+            {
+            case Left:
+                old = effects->desktopToLeft( front_desktop, true );
+                break;
+            case Right:
+                old = effects->desktopToRight( front_desktop, true );
+                break;
+            case Upwards:
+                old = effects->desktopAbove( front_desktop, true );
+                break;
+            case Downwards:
+                old = effects->desktopBelow( front_desktop, true );
+                break;
+            }
         }
     // calculate distance in respect to pager
     QPoint diff = effects->desktopGridCoords( effects->currentDesktop() ) - effects->desktopGridCoords( old );
