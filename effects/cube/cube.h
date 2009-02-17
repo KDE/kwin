@@ -143,6 +143,7 @@ class CubeEffect
         GLShader* cylinderShader;
         GLShader* sphereShader;
         float capDeformationFactor;
+        bool useZOrdering;
 
         // GL lists
         bool capListCreated;
