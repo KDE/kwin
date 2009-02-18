@@ -344,9 +344,10 @@ int Toplevel::screen() const
         return 0;
     int s = workspace()->screenNumber( geometry().center());
     if( s < 0 )
-        // Center of the window is offscreen, just use the active one as if this window is the
-        // one with input focus then activeScreen() will return the screen it used to be on.
-        return workspace()->activeScreen( false );
+        {
+        kDebug(1212) << "Invalid screen: Center" << geometry().center() << ", screen" << s;
+        return 0; 
+        }
     return s;
     }
 
