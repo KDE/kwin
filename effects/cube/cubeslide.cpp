@@ -75,21 +75,15 @@ void CubeSlideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     {
     if( !slideRotations.empty() )
         {
-        glPushMatrix();
-        glNewList( glList, GL_COMPILE );
-        paintSlideCube( mask, region, data );
-        glEndList();
-        glPopMatrix();
-
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_CULL_FACE );
         glCullFace( GL_BACK );
         glPushMatrix();
-        glCallList( glList );
+        paintSlideCube( mask, region, data );
         glPopMatrix();
         glCullFace( GL_FRONT );
         glPushMatrix();
-        glCallList( glList );
+        paintSlideCube( mask, region, data );
         glPopMatrix();
         glDisable( GL_CULL_FACE );
         glPopAttrib();
@@ -243,7 +237,6 @@ void CubeSlideEffect::postPaintScreen()
             if( slideRotations.empty() )
                 {
                 effects->setActiveFullScreenEffect( 0 );
-                glDeleteLists( glList, 1 );
                 }
             }
         effects->addRepaintFull();
@@ -323,7 +316,6 @@ void CubeSlideEffect::desktopChanged( int old )
     if( activate )
         {
         effects->setActiveFullScreenEffect( this );
-        glList = glGenLists( 1 );
         timeLine.setProgress( 0.0 );
         front_desktop = old;
         effects->addRepaintFull();

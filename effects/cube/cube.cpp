@@ -309,13 +309,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glPopMatrix();
             }
 
-        // compile List for cube
-        glNewList( glList + 1, GL_COMPILE );
-        glPushMatrix();
-        paintCube( mask, region, data );
-        glPopMatrix();
-        glEndList();
-
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
         if( effects->numScreens() > 1 && bigCube )
             rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
@@ -444,7 +437,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 }
             glPushMatrix();
             glCallList( glList );
-            glCallList( glList + 1 );
+            glPushMatrix();
+            paintCube( mask, region, data );
+            glPopMatrix();
             glPopMatrix();
             glCullFace( GL_BACK );
             if( mode == Cylinder )
@@ -455,7 +450,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 }
             glPushMatrix();
             glCallList( glList );
-            glCallList( glList + 1 );
+            glPushMatrix();
+            paintCube( mask, region, data );
+            glPopMatrix();
             glPopMatrix();
 
             // cap
@@ -549,7 +546,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             }
         glPushMatrix();
         glCallList( glList );
-        glCallList( glList + 1 );
+        glPushMatrix();
+        paintCube( mask, region, data );
+        glPopMatrix();
         glPopMatrix();
         glCullFace( GL_FRONT );
         if( mode == Cylinder )
@@ -566,7 +565,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             }
         glPushMatrix();
         glCallList( glList );
-        glCallList( glList + 1 );
+        glPushMatrix();
+        paintCube( mask, region, data );
+        glPopMatrix();
         glPopMatrix();
 
         // cap
