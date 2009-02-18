@@ -1288,11 +1288,11 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
             if( w->isOnDesktop( painting_desktop ))
                 {
                 QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
-                if( w->x() < rect.x() && !useZOrdering )
+                if( w->x() < rect.x() )
                     {
                     data.quads = data.quads.splitAtX( -w->x() );
                     }
-                if( w->x() + w->width() > rect.x() + rect.width() && !useZOrdering )
+                if( w->x() + w->width() > rect.x() + rect.width() )
                     {
                     data.quads = data.quads.splitAtX( rect.width() - w->x() );
                     }
@@ -1312,7 +1312,7 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                 int prev_desktop = painting_desktop -1;
                 if( prev_desktop == 0 )
                     prev_desktop = effects->numberOfDesktops();
-                if( w->isOnDesktop( prev_desktop ) && !useZOrdering )
+                if( w->isOnDesktop( prev_desktop ) )
                     {
                     QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
                     if( w->x()+w->width() > rect.x() + rect.width() )
@@ -1336,7 +1336,7 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                 int next_desktop = painting_desktop +1;
                 if( next_desktop > effects->numberOfDesktops() )
                     next_desktop = 1;
-                if( w->isOnDesktop( next_desktop ) && !useZOrdering )
+                if( w->isOnDesktop( next_desktop ) )
                     {
                     QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
                     if( w->x() < rect.x() )
@@ -1423,10 +1423,10 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         int next_desktop = painting_desktop +1;
         if( next_desktop > effects->numberOfDesktops() )
             next_desktop = 1;
-        if( w->isOnDesktop( prev_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) && !useZOrdering )
+        glPushMatrix();
+        if( w->isOnDesktop( prev_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
             {
             QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
-            data.xTranslate = -rect.width();
             WindowQuadList new_quads;
             foreach( const WindowQuad &quad, data.quads )
                 {
@@ -1436,11 +1436,20 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     }
                 }
             data.quads = new_quads;
+            RotationData rot = RotationData();
+            rot.axis = RotationData::YAxis;
+            rot.xRotationPoint = rect.width() - w->x();
+            rot.angle = 360.0f / effects->numberOfDesktops();
+            data.rotation = &rot;
+            float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+            float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+            glTranslatef( rect.width()/2, 0.0, -point );
+            glRotatef( -360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+            glTranslatef( -rect.width()/2, 0.0, point );
             }
-        if( w->isOnDesktop( next_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) && !useZOrdering )
+        if( w->isOnDesktop( next_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
             {
             QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
-            data.xTranslate = rect.width();
             WindowQuadList new_quads;
             foreach( const WindowQuad &quad, data.quads )
                 {
@@ -1450,6 +1459,16 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     }
                 }
             data.quads = new_quads;
+            RotationData rot = RotationData();
+            rot.axis = RotationData::YAxis;
+            rot.xRotationPoint = -w->x();
+            rot.angle = -360.0f / effects->numberOfDesktops();
+            data.rotation = &rot;
+            float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
+            float point = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
+            glTranslatef( rect.width()/2, 0.0, -point );
+            glRotatef( 360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+            glTranslatef( -rect.width()/2, 0.0, point );
             }
         QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
 
@@ -1479,7 +1498,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             opacity = 0.99f;
         data.opacity *= opacity;
 
-        if( w->isOnDesktop(painting_desktop) && w->x() < rect.x() && !useZOrdering )
+        if( w->isOnDesktop(painting_desktop) && w->x() < rect.x() )
             {
             WindowQuadList new_quads;
             foreach( const WindowQuad &quad, data.quads )
@@ -1491,7 +1510,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 }
             data.quads = new_quads;
             }
-        if( w->isOnDesktop(painting_desktop) && w->x() + w->width() > rect.x() + rect.width() && !useZOrdering )
+        if( w->isOnDesktop(painting_desktop) && w->x() + w->width() > rect.x() + rect.width() )
             {
             WindowQuadList new_quads;
             foreach( const WindowQuad &quad, data.quads )
@@ -1561,6 +1580,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
     effects->paintWindow( w, PAINT_WINDOW_TRANSFORMED, region, data );
     if( activated && cube_painting )
         {
+        glPopMatrix();
         if( mode == Cylinder )
             cylinderShader->unbind();
         if( mode == Sphere )
