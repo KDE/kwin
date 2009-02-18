@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Snap Helper
+Name[el]=Βοηθός αρπαγής
 Name[et]=Tõmbumise abiline
 Name[ga]=Uirlis Láraithe
 Name[nds]=Snapphülp
@@ -10,6 +11,7 @@ Name[uk]=Помічник розташування
 Name[zh_TW]=貼齊小幫手
 Icon=preferences-system-windows-effect-snaphelper
 Comment=Help you locate the center of the screen when moving a window.
+Comment[el]=Βοηθά στον εντοπισμό του κέντρου της οθόνης όταν μετακινείτε ένα παράθυρο.
 Comment[et]=Aitab akna liigutamisel tuvastada ekraani keskpaika.
 Comment[ga]=Uirlis a chabhraíonn leat lár an scáileáin a aimsiú agus fuinneog á bogadh.
 Comment[nds]=Bi't Verschuven vun Finstern den Schirm sien Merrn finnen
