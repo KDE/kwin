@@ -164,9 +164,13 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
     firstFaceRot.yRotationPoint = rect.height()/2;
     firstFaceRot.zRotationPoint = -point;
     firstFaceData.rotation = &firstFaceRot;
+    other_desktop = secondDesktop;
+    firstDesktop = true;
     effects->paintScreen( mask, region, firstFaceData );
     // second desktop
+    other_desktop = painting_desktop;
     painting_desktop = secondDesktop;
+    firstDesktop = false;
     secondFaceRot.xRotationPoint = rect.width()/2;
     secondFaceRot.yRotationPoint = rect.height()/2;
     secondFaceRot.zRotationPoint = -point;
@@ -180,6 +184,7 @@ void CubeSlideEffect::prePaintWindow( EffectWindow* w,  WindowPrePaintData& data
     {
     if( !slideRotations.empty() && cube_painting )
         {
+        QRect rect = effects->clientArea( FullArea, effects->activeScreen(), painting_desktop );
         if( dontSlidePanels && w->isDock())
             {
             panels.insert( w );
@@ -190,7 +195,62 @@ void CubeSlideEffect::prePaintWindow( EffectWindow* w,  WindowPrePaintData& data
             stickyWindows.insert( w );
             }
         if( w->isOnDesktop( painting_desktop ) )
+            {
+            if( w->x() < rect.x() )
+                {
+                data.quads = data.quads.splitAtX( -w->x() );
+                }
+            if( w->x() + w->width() > rect.x() + rect.width() )
+                {
+                data.quads = data.quads.splitAtX( rect.width() - w->x() );
+                }
+            if( w->y() < rect.y() )
+                {
+                data.quads = data.quads.splitAtY( -w->y() );
+                }
+            if( w->y() + w->height() > rect.y() + rect.height() )
+                {
+                data.quads = data.quads.splitAtY( rect.height() - w->y() );
+                }
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+            }
+        else if( w->isOnDesktop( other_desktop ) )
+            {
+            RotationDirection direction = slideRotations.head();
+            bool enable = false;
+            if( w->x() < rect.x() &&
+                ( direction == Left || direction == Right ) )
+                {
+                data.quads = data.quads.splitAtX( -w->x() );
+                enable = true;
+                }
+            if( w->x() + w->width() > rect.x() + rect.width() &&
+                ( direction == Left || direction == Right ) )
+                {
+                data.quads = data.quads.splitAtX( rect.width() - w->x() );
+                enable = true;
+                }
+            if( w->y() < rect.y() &&
+                ( direction == Upwards || direction == Downwards ) )
+                {
+                data.quads = data.quads.splitAtY( -w->y() );
+                enable = true;
+                }
+            if( w->y() + w->height() > rect.y() + rect.height() &&
+                ( direction == Upwards || direction == Downwards ) )
+                {
+                data.quads = data.quads.splitAtY( rect.height() - w->y() );
+                enable = true;
+                }
+            if( enable )
+                {
+                data.setTransformed();
+                data.setTranslucent();
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+                }
+            else
+                w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+            }
         else
             w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         }
@@ -206,6 +266,125 @@ void CubeSlideEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         if( dontSlideStickyWindows &&
             w->isOnAllDesktops() && !w->isDock() && !w->isDesktop() )
             return;
+
+        // filter out quads overlapping the edges
+        QRect rect = effects->clientArea( FullArea, effects->activeScreen(), painting_desktop );
+        if( w->isOnDesktop( painting_desktop ) )
+            {
+            if( w->x() < rect.x() )
+                {
+                WindowQuadList new_quads;
+                foreach( const WindowQuad &quad, data.quads )
+                    {
+                    if( quad.right() > -w->x() )
+                        {
+                        new_quads.append( quad );
+                        }
+                    }
+                data.quads = new_quads;
+                }
+            if( w->x() + w->width() > rect.x() + rect.width() )
+                {
+                WindowQuadList new_quads;
+                foreach( const WindowQuad &quad, data.quads )
+                    {
+                    if( quad.right() <= rect.width() - w->x() )
+                        {
+                        new_quads.append( quad );
+                        }
+                    }
+                data.quads = new_quads;
+                }
+            if( w->y() < rect.y() )
+                {
+                WindowQuadList new_quads;
+                foreach( const WindowQuad &quad, data.quads )
+                    {
+                    if( quad.bottom() > -w->y() )
+                        {
+                        new_quads.append( quad );
+                        }
+                    }
+                data.quads = new_quads;
+                }
+            if( w->y() + w->height() > rect.y() + rect.height() )
+                {
+                WindowQuadList new_quads;
+                foreach( const WindowQuad &quad, data.quads )
+                    {
+                    if( quad.bottom() <= rect.height() - w->y() )
+                        {
+                        new_quads.append( quad );
+                        }
+                    }
+                data.quads = new_quads;
+                }
+            }
+        // paint windows overlapping edges from other desktop
+        if( w->isOnDesktop( other_desktop ) && ( mask & PAINT_WINDOW_TRANSFORMED ) )
+            {
+            RotationDirection direction = slideRotations.head();
+            if( w->x() < rect.x() &&
+            ( direction == Left || direction == Right ) )
+                {
+                WindowQuadList new_quads;
+                data.xTranslate = rect.width();
+                foreach( const WindowQuad &quad, data.quads )
+                    {
+                    if( quad.right() <= -w->x() )
+                        {
+                        new_quads.append( quad );
+                        }
+                    }
+                data.quads = new_quads;
+                }
+            if( w->x() + w->width() > rect.x() + rect.width() &&
+                ( direction == Left || direction == Right ) )
+                {
+                WindowQuadList new_quads;
+                data.xTranslate = -rect.width();
+                foreach( const WindowQuad &quad, data.quads )
+                    {
+                    if( quad.right() > rect.width() - w->x() )
+                        {
+                        new_quads.append( quad );
+                        }
+                    }
+                data.quads = new_quads;
+                }
+            if( w->y() < rect.y() &&
+                ( direction == Upwards || direction == Downwards ) )
+                {
+                WindowQuadList new_quads;
+                data.yTranslate = rect.height();
+                foreach( const WindowQuad &quad, data.quads )
+                    {
+                    if( quad.bottom() <= -w->y() )
+                        {
+                        new_quads.append( quad );
+                        }
+                    }
+                data.quads = new_quads;
+                }
+            if( w->y() + w->height() > rect.y() + rect.height() &&
+                ( direction == Upwards || direction == Downwards ) )
+                {
+                WindowQuadList new_quads;
+                data.yTranslate = -rect.height();
+                foreach( const WindowQuad &quad, data.quads )
+                    {
+                    if( quad.bottom() > rect.height() - w->y() )
+                        {
+                        new_quads.append( quad );
+                        }
+                    }
+                data.quads = new_quads;
+                }
+            if( firstDesktop )
+                data.opacity *= timeLine.value();
+            else
+                data.opacity *= ( 1.0 - timeLine.value() );
+            }
         }
     effects->paintWindow( w, mask, region, data );
     }

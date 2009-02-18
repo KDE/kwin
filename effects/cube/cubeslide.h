@@ -55,6 +55,8 @@ class CubeSlideEffect
         bool cube_painting;
         int front_desktop;
         int painting_desktop;
+        int other_desktop;
+        bool firstDesktop;
         TimeLine timeLine;
         QQueue<RotationDirection> slideRotations;
         QSet<EffectWindow*> panels;
