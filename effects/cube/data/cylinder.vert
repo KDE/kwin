@@ -25,34 +25,14 @@ uniform float timeLine;
 void main()
 {
     gl_TexCoord[0].xy = gl_Vertex.xy;
-    vec4 vertex = gl_Vertex.xyzw;
+    vec4 vertex = vec4(gl_Vertex.x - ( width*0.5 - xCoord ), gl_Vertex.yzw);
     float radian = radians(cubeAngle*0.5);
-    // height of the triangle compound of  one side of the cube and the two bisecting lines
-    float midpoint = width*0.5*tan(radian);
-    // radius of the circle
-    float radius = (width*0.5)/cos(radian);
+    float radius = (width*0.5)*tan(radian);
+    float azimuthAngle = radians(vertex.x/(width*0.5)*(90.0 - cubeAngle*0.5));
 
-    // the calculation does the following:
-    // At every x position we move on to the circle und create a new circular segment
-    // The distance between the new chord and the desktop (z=0) is the wanted z value
-    // The length of the new chord is 2*distance(x,middle of desktop(width*0.5))
-    // Now we calculate the angle between chord and radius as acos(distance/radius)
-    // With this angle we can can calculate the height of the new triangle (radius-distance*2-radius)
-    // The height is the opposite leg of the triangle compound of distance-*height*-radius
-    // New height minus old height (midpoint) is the looked for z-value
-    
-    // distance from midpoint of desktop to x coord
-    float distance = width*0.5 - (vertex.x+xCoord);
-    if( (vertex.x+xCoord) > width*0.5 )
-        {
-        distance = (vertex.x+xCoord) - width*0.5;
-        }
-    float angle = acos( distance/radius );
-    float h = radius;
-    // if distance == 0 -> angle=90 -> tan(90) singularity
-    if( distance != 0.0 )
-        h = tan( angle ) * distance;
-    vertex.z = h - midpoint;
+    vertex.x = width*0.5 - xCoord + radius * sin( azimuthAngle );
+    vertex.z = gl_Vertex.z + radius * cos( azimuthAngle ) - radius;
+
     vec3 diff = (gl_Vertex.xyz - vertex.xyz)*timeLine;
     vertex.xyz += diff;
     gl_Position = gl_ModelViewProjectionMatrix * vertex;

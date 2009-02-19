@@ -1012,53 +1012,38 @@ void CubeEffect::paintCylinderCap()
     if( effects->numScreens() > 1 && bigCube )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
-    float z = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
-    glPushMatrix();
-    paintCubeCap();
-    glPopMatrix();
 
     float radian = (cubeAngle*0.5)*M_PI/180;
-    // height of the triangle compound of  one side of the cube and the two bisecting lines
-    float midpoint = rect.width()*0.5*tan(radian);
-    // radius of the circle
-    float radius = (rect.width()*0.5)/cos(radian);
+    float radius = (rect.width()*0.5)*tan(radian);
+    float segment = radius/30.0f;
 
-    // paint round part of the cap
-    glPushMatrix();
-    glTranslatef( -rect.width()*0.5, 0.0, z );
-    float triangleWidth = 40.0;
-
-    for( int i=0; i<effects->numberOfDesktops(); i++ )
+    bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
+    if( texture )
+        capTexture->bind();
+    for( int i=1; i<=30; i++ )
         {
-        glPushMatrix();
-        glTranslatef( rect.width()/2, 0.0, -z );
-        glRotatef(  i*(360.0f/effects->numberOfDesktops()), 0.0, 1.0, 0.0 );
-        glTranslatef( -rect.width()/2, 0.0, z );
         glBegin( GL_TRIANGLE_STRIP );
-        for( int j=0; j<rect.width()/triangleWidth; j++ )
+        int steps =  72;
+        for( int j=0; j<=steps; j++ )
             {
-            float zValue = 0.0;
-            // distance from midpoint of desktop to x coord
-            // calculation is same as in shader -> see comments
-            float distance = rect.width()*0.5 - (j*triangleWidth);
-            if( (j*triangleWidth) > rect.width()*0.5 )
-                {
-                distance = (j*triangleWidth) - rect.width()*0.5;
-                }
-            // distance in correct format
-            float angle = acos( distance/radius );
-            float h = radius;
-            // if distance == 0 -> angle=90 -> tan(90) singularity
-            if( distance != 0.0 )
-                h = tan( angle ) * distance;
-            zValue = h - midpoint;
-            glVertex3f( (j+1)*triangleWidth, 0.0, 0.0 );
-            glVertex3f( j*triangleWidth, 0.0, zValue );
+            float azimuthAngle = (j*(360.0f/steps))*M_PI/180.0f;
+            float x1 = segment*(i-1) * sin( azimuthAngle );
+            float x2 = segment*i * sin( azimuthAngle );
+            float z1 = segment*(i-1) * cos( azimuthAngle );
+            float z2 = segment*i * cos( azimuthAngle );
+            if( texture )
+                glTexCoord2f( (radius+x1)/(radius*2.0f), 1.0f - (z1+radius)/(radius*2.0f) );
+            glVertex3f( x1, 0.0, z1 );
+            if( texture )
+                glTexCoord2f( (radius+x2)/(radius*2.0f), 1.0f - (z2+radius)/(radius*2.0f) );
+            glVertex3f( x2, 0.0, z2 );
             }
         glEnd();
-        glPopMatrix();
         }
-    glPopMatrix();
+    if( texture )
+        {
+        capTexture->unbind();
+        }
     }
 
 void CubeEffect::paintSphereCap()
