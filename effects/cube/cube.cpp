@@ -86,6 +86,7 @@ CubeEffect::CubeEffect()
     , useShaders( false )
     , cylinderShader( 0 )
     , sphereShader( 0 )
+    , zOrderingFactor( 0.0f )
     , capListCreated( false )
     , recompileList( true )
     , glList( 0 )
@@ -1410,7 +1411,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         // z-Ordering
         if( !w->isDesktop() && !w->isDock() && useZOrdering )
             {
-            float zOrdering = (effects->stackingOrder().indexOf( w )-1)*25.0;
+            float zOrdering = (effects->stackingOrder().indexOf( w )+1)*zOrderingFactor;
             if( start )
                 zOrdering *= timeLine.value();
             if( stop )
@@ -1945,6 +1946,7 @@ void CubeEffect::setActive( bool active )
             Qt::OpenHandCursor );
         frontDesktop = effects->currentDesktop();
         zoom = 0.0;
+        zOrderingFactor = zPosition / ( effects->stackingOrder().count() - 1 );
         start = true;
         effects->setActiveFullScreenEffect( this );
         kDebug(1212) << "Cube is activated";

@@ -144,6 +144,7 @@ class CubeEffect
         GLShader* sphereShader;
         float capDeformationFactor;
         bool useZOrdering;
+        float zOrderingFactor;
 
         // GL lists
         bool capListCreated;
