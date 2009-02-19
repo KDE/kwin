@@ -1376,6 +1376,12 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             cylinderShader->setUniform( "windowHeight", (float)w->height() );
             cylinderShader->setUniform( "xCoord", (float)w->x() );
             cylinderShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
+            float factor = 0.0f;
+            if( start )
+                factor = 1.0f - timeLine.value();
+            if( stop )
+                factor = timeLine.value();
+            cylinderShader->setUniform( "timeLine", factor );
             data.shader = cylinderShader;
             }
         if( mode == Sphere )
@@ -1386,6 +1392,12 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             sphereShader->setUniform( "xCoord", (float)w->x() );
             sphereShader->setUniform( "yCoord", (float)w->y() );
             sphereShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
+            float factor = 0.0f;
+            if( start )
+                factor = 1.0f - timeLine.value();
+            if( stop )
+                factor = timeLine.value();
+            sphereShader->setUniform( "timeLine", factor );
             data.shader = sphereShader;
             }
         //kDebug(1212) << w->caption();

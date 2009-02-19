@@ -22,6 +22,7 @@ uniform float height;
 uniform float cubeAngle;
 uniform float xCoord;
 uniform float yCoord;
+uniform float timeLine;
 
 void main()
 {
@@ -35,6 +36,9 @@ void main()
     vertex.x = radius * sin( zenithAngle ) * sin( azimuthAngle );
 
     vertex.xy += vec2( width*0.5 - xCoord, height*0.5 - yCoord );
+
+    vec3 diff = (gl_Vertex.xyz - vertex.xyz)*timeLine;
+    vertex.xyz += diff;
 
     gl_Position = gl_ModelViewProjectionMatrix * vec4( vertex, 1.0 );
 }

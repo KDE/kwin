@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 uniform float width;
 uniform float cubeAngle;
 uniform float xCoord;
+uniform float timeLine;
 
 void main()
 {
@@ -52,5 +53,7 @@ void main()
     if( distance != 0.0 )
         h = tan( angle ) * distance;
     vertex.z = h - midpoint;
+    vec3 diff = (gl_Vertex.xyz - vertex.xyz)*timeLine;
+    vertex.xyz += diff;
     gl_Position = gl_ModelViewProjectionMatrix * vertex;
 }
