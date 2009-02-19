@@ -413,6 +413,10 @@ void CubeSlideEffect::postPaintScreen()
                     break;
                 }
             timeLine.setProgress( 0.0 );
+            if( slideRotations.count() == 1 )
+                timeLine.setCurveShape( TimeLine::EaseOutCurve );
+            else
+                timeLine.setCurveShape( TimeLine::LinearCurve );
             if( slideRotations.empty() )
                 {
                 effects->setActiveFullScreenEffect( 0 );
@@ -494,6 +498,10 @@ void CubeSlideEffect::desktopChanged( int old )
         }
     if( activate )
         {
+        if( slideRotations.count() == 1 )
+            timeLine.setCurveShape( TimeLine::EaseInOutCurve );
+        else
+            timeLine.setCurveShape( TimeLine::EaseInCurve );
         effects->setActiveFullScreenEffect( this );
         timeLine.setProgress( 0.0 );
         front_desktop = old;
