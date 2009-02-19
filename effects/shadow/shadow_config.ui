@@ -32,7 +32,7 @@
       <item row="7" column="0" colspan="2" >
        <widget class="QCheckBox" name="strongerActiveBox" >
         <property name="text" >
-         <string>&amp;Active windows has stronger shadow</string>
+         <string>&amp;Active windows have stronger shadows</string>
         </property>
        </widget>
       </item>
