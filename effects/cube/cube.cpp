@@ -1291,6 +1291,8 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                     {
                     data.quads = data.quads.splitAtY( rect.height() - w->y() );
                     }
+                if( useZOrdering && !w->isDesktop() && !w->isDock() )
+                    data.setTransformed();
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
                 }
             else
@@ -1576,7 +1578,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 }
             }
         }
-    effects->paintWindow( w, PAINT_WINDOW_TRANSFORMED, region, data );
+    effects->paintWindow( w, mask, region, data );
     if( activated && cube_painting )
         {
         glPopMatrix();
