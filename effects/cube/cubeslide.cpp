@@ -54,7 +54,7 @@ void CubeSlideEffect::reconfigure( ReconfigureFlags )
     timeLine.setCurveShape( TimeLine::EaseInOutCurve );
     timeLine.setDuration( rotationDuration );
     dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
-    dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", true );
+    dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", false );
     }
 
 void CubeSlideEffect::prePaintScreen( ScreenPrePaintData& data, int time)

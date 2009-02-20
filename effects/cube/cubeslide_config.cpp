@@ -58,7 +58,7 @@ void CubeSlideEffectConfig::load()
 
     int duration       = conf.readEntry( "RotationDuration", 0 );
     bool dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
-    bool dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", true );
+    bool dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", false );
 
     m_ui->rotationDurationSpin->setValue( duration );
     m_ui->dontSlidePanelsBox->setChecked( dontSlidePanels );
@@ -85,7 +85,7 @@ void CubeSlideEffectConfig::defaults()
     {
     m_ui->rotationDurationSpin->setValue( 0 );
     m_ui->dontSlidePanelsBox->setChecked( true );
-    m_ui->dontSlideStickyWindowsBox->setChecked( true );
+    m_ui->dontSlideStickyWindowsBox->setChecked( false );
     emit changed(true);
     }
 
