@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <kwinglobals.h>
-#include <kwinglutils.h>
-#include <kwinxrenderutils.h>
 #include "kdecoration.h"
 
 #include <QtCore/QPair>
