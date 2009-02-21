@@ -282,7 +282,7 @@ class Workspace : public QObject, public KDecorationDefines
         // Unsorted
 
     public:
-        int activeScreen( bool checkClient = true ) const;
+        int activeScreen() const;
         int numScreens() const;
         void checkActiveScreen( const Client* c );
         void setActiveScreenMouse( const QPoint& mousepos );

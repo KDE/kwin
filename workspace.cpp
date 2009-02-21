@@ -1546,7 +1546,7 @@ int Workspace::numScreens() const
     return Kephal::ScreenUtils::numScreens();
     }
 
-int Workspace::activeScreen( bool checkClient ) const
+int Workspace::activeScreen() const
     {
     if( !options->xineramaEnabled )
         return 0;
