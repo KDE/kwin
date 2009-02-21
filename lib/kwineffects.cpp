@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1306,6 +1307,399 @@ EffectWindow* WindowMotionManager::windowAtPoint( QPoint point, bool useStacking
             return windows.at( i );
 
     return NULL;
+    }
+
+/***************************************************************
+ EffectFrame
+***************************************************************/
+
+EffectFrame::EffectFrame( bool staticSize, QPoint position, Qt::Alignment alignment )
+    : QObject()
+    , m_static( staticSize )
+    , m_point( position )
+    , m_alignment( alignment )
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    m_texture = NULL;
+    m_textTexture = NULL;
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    m_picture = NULL;
+    m_textPicture = NULL;
+#endif
+
+    m_frame.setImagePath( "widgets/background" );
+    m_frame.setCacheAllRenderedFrames( true );
+
+    connect( Plasma::Theme::defaultTheme(), SIGNAL( themeChanged() ), this, SLOT( plasmaThemeChanged() ));
+    }
+
+EffectFrame::~EffectFrame()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete m_texture;
+    delete m_textTexture;
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    delete m_picture;
+    delete m_textPicture;
+#endif
+    }
+
+void EffectFrame::free()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete m_texture;
+    m_texture = NULL;
+    delete m_textTexture;
+    m_textTexture = NULL;
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    delete m_picture;
+    m_picture = NULL;
+    delete m_textPicture;
+    m_textPicture = NULL;
+#endif
+    }
+
+void EffectFrame::render( QRegion region, double opacity )
+    {
+    region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
+
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( effects->compositingType() == OpenGLCompositing )
+        {
+        if( !m_texture ) // Lazy creation
+            updateTexture();
+        if( !m_texture || m_geometry.isEmpty() )
+            return;
+
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+        glColor4f( 1.0, 1.0, 1.0, opacity );
+
+        glPushMatrix();
+
+        // Render the actual frame
+        m_texture->bind();
+        qreal left, top, right, bottom;
+        m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+        m_texture->render( region, m_geometry.adjusted( -left, -top, right, bottom ));
+        m_texture->unbind();
+
+        // Render icon
+        if( !m_icon.isNull() && !m_iconSize.isEmpty() )
+            {
+            QPoint topLeft( m_geometry.x(), m_geometry.center().y() - m_iconSize.height() / 2 );
+
+            GLTexture* icon = new GLTexture( m_icon ); // TODO: Cache
+            icon->bind();
+            icon->render( region, QRect( topLeft, m_iconSize ));
+            icon->unbind();
+            delete icon;
+            }
+
+        // Render text
+        if( !m_text.isEmpty() )
+            {
+            if( !m_textTexture ) // Lazy creation
+                updateTextTexture();
+            m_textTexture->bind();
+            m_textTexture->render( region, m_geometry );
+            m_textTexture->unbind();
+            }
+
+        glPopMatrix();
+        glPopAttrib();
+        }
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( effects->compositingType() == XRenderCompositing )
+        {
+        if( !m_picture ) // Lazy creation
+            updatePicture();
+        if( !m_picture || m_geometry.isEmpty() )
+            return;
+
+        // TODO: Opacity
+
+        // Render the actual frame
+        qreal left, top, right, bottom;
+        m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+        QRect geom = m_geometry.adjusted( -left, -top, right, bottom );
+        XRenderComposite( display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
+            0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
+
+        // Render icon
+        if( !m_icon.isNull() && !m_iconSize.isEmpty() )
+            {
+            QPoint topLeft( m_geometry.x(), m_geometry.center().y() - m_iconSize.height() / 2 );
+
+            XRenderPicture* icon = new XRenderPicture( m_icon ); // TODO: Cache
+            geom = QRect( topLeft, m_iconSize );
+            XRenderComposite( display(), PictOpOver, *icon, None, effects->xrenderBufferPicture(),
+                0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
+            delete icon;
+            }
+
+        // Render text
+        if( !m_text.isEmpty() )
+            {
+            if( !m_textPicture ) // Lazy creation
+                updateTextPicture();
+            XRenderComposite( display(), PictOpOver, *m_textPicture, None, effects->xrenderBufferPicture(),
+                0, 0, 0, 0, m_geometry.x(), m_geometry.y(), m_geometry.width(), m_geometry.height() );
+            }
+        }
+#endif
+    }
+
+void EffectFrame::setPosition( const QPoint& point )
+    {
+    m_point = point;
+    }
+
+void EffectFrame::setGeometry( const QRect& geometry, bool force )
+    {
+    bool newSize = false;
+    if( geometry.size() != m_geometry.size() )
+        newSize = true;
+    effects->addRepaint( m_geometry );
+    m_geometry = geometry;
+    effects->addRepaint( m_geometry );
+    if( !newSize && !force )
+        return;
+    qreal left, top, right, bottom;
+    m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+    m_frame.resizeFrame( m_geometry.adjusted( -left, -top, right, bottom ).size() );
+
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( effects->compositingType() == OpenGLCompositing )
+        {
+        delete m_texture;
+        m_texture = NULL;
+        delete m_textTexture;
+        m_textTexture = NULL;
+        }
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( effects->compositingType() == XRenderCompositing )
+        {
+        delete m_picture;
+        m_picture = NULL;
+        delete m_textPicture;
+        m_textPicture = NULL;
+        }
+#endif
+    }
+
+void EffectFrame::setText( const QString& text )
+    {
+    m_text = text;
+    QRect oldGeom = m_geometry;
+    autoResize();
+    if( oldGeom == m_geometry )
+        { // Wasn't updated in autoResize()
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        if( effects->compositingType() == OpenGLCompositing )
+            {
+            delete m_textTexture;
+            m_textTexture = NULL;
+            }
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+        if( effects->compositingType() == XRenderCompositing )
+            {
+            delete m_textPicture;
+            m_textPicture = NULL;
+            }
+        }
+#endif
+    }
+
+void EffectFrame::setFont( const QFont& font )
+    {
+    m_font = font;
+    QRect oldGeom = m_geometry;
+    if( !m_text.isEmpty() )
+        autoResize();
+    if( oldGeom == m_geometry )
+        { // Wasn't updated in autoResize()
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        if( effects->compositingType() == OpenGLCompositing )
+            {
+            delete m_textTexture;
+            m_textTexture = NULL;
+            }
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+        if( effects->compositingType() == XRenderCompositing )
+            {
+            delete m_textPicture;
+            m_textPicture = NULL;
+            }
+        }
+#endif
+    }
+
+void EffectFrame::setIcon( const QPixmap& icon )
+    {
+    m_icon = icon;
+    if( m_iconSize.isEmpty() ) // Set a size if we don't already have one
+        setIconSize( m_icon.size() );
+    }
+
+void EffectFrame::setIconSize( const QSize& size )
+    {
+    m_iconSize = size;
+    autoResize();
+    }
+
+QColor EffectFrame::textColor()
+    {
+    return Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor );
+    }
+
+void EffectFrame::plasmaThemeChanged()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( effects->compositingType() == OpenGLCompositing )
+        {
+        delete m_texture;
+        m_texture = NULL;
+        delete m_textTexture;
+        m_textTexture = NULL;
+        }
+#endif
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    if( effects->compositingType() == XRenderCompositing )
+        {
+        delete m_picture;
+        m_picture = NULL;
+        delete m_textPicture;
+        m_textPicture = NULL;
+        }
+#endif
+    }
+
+void EffectFrame::autoResize()
+    {
+    if( m_static )
+        return; // Not automatically resizing
+
+    QRect geometry;
+
+    // Set size
+    if( !m_text.isEmpty() )
+        {
+        QFontMetrics metrics( m_font );
+        geometry.setSize( metrics.size( 0, m_text ));
+        }
+    if( !m_icon.isNull() && !m_iconSize.isEmpty() )
+        {
+        geometry.setLeft( -m_iconSize.width() );
+        if( m_iconSize.height() > geometry.height() )
+            geometry.setHeight( m_iconSize.height() );
+        }
+
+    // Set position
+    if( m_alignment & Qt::AlignLeft )
+        geometry.moveLeft( m_point.x() );
+    else if( m_alignment & Qt::AlignRight )
+        geometry.moveLeft( m_point.x() - geometry.width() );
+    else
+        geometry.moveLeft( m_point.x() - geometry.width() / 2 );
+    if( m_alignment & Qt::AlignTop )
+        geometry.moveTop( m_point.y() );
+    else if( m_alignment & Qt::AlignBottom )
+        geometry.moveTop( m_point.y() - geometry.height() );
+    else
+        geometry.moveTop( m_point.y() - geometry.height() / 2 );
+
+    setGeometry( geometry );
+    }
+
+void EffectFrame::updateTexture()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete m_texture;
+    m_texture = new GLTexture( m_frame.framePixmap() );
+#endif
+    }
+
+void EffectFrame::updateTextTexture()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete m_textTexture;
+
+    if( m_text.isEmpty() )
+        return;
+
+    // Determine position on texture to paint text
+    QRect rect( QPoint( 0, 0 ), m_geometry.size() );
+    if( !m_icon.isNull() && !m_iconSize.isEmpty() )
+        rect.setLeft( m_iconSize.width() );
+
+    // If static size elide text as required
+    QString text = m_text;
+    if( m_static )
+        {
+        QFontMetrics metrics( m_font );
+        text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
+        }
+
+    // TODO: Use QPixmap for this once GLTexture has been converted to it
+    QImage pixmap( m_geometry.size(), QImage::Format_ARGB32 );
+    pixmap.fill( Qt::transparent );
+    QPainter p( &pixmap );
+    p.setFont( m_font );
+    p.setPen( textColor() );
+    p.drawText( rect, Qt::AlignCenter, text );
+    p.end();
+    m_textTexture = new GLTexture( pixmap );
+#endif
+    }
+
+void EffectFrame::updatePicture()
+    {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    delete m_picture;
+    m_picture = new XRenderPicture( m_frame.framePixmap() );
+#endif
+    }
+
+void EffectFrame::updateTextPicture()
+    { // Mostly copied from EffectFrame::updateTextTexture() above
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+    delete m_textPicture;
+
+    if( m_text.isEmpty() )
+        return;
+
+    // Determine position on texture to paint text
+    QRect rect( QPoint( 0, 0 ), m_geometry.size() );
+    if( !m_icon.isNull() && !m_iconSize.isEmpty() )
+        rect.setLeft( m_iconSize.width() );
+
+    // If static size elide text as required
+    QString text = m_text;
+    if( m_static )
+        {
+        QFontMetrics metrics( m_font );
+        text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
+        }
+
+    QPixmap pixmap( m_geometry.size() );
+    pixmap.fill( Qt::transparent );
+    QPainter p( &pixmap );
+    p.setFont( m_font );
+    p.setPen( textColor() );
+    p.drawText( rect, Qt::AlignCenter, text );
+    p.end();
+    m_textPicture = new XRenderPicture( pixmap );
+#endif
     }
 
 } // namespace

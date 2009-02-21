@@ -97,7 +97,11 @@ class CoverSwitchEffect
         QList< EffectWindow* > leftWindows;
         QList< EffectWindow* > rightWindows;
 
+        EffectFrame captionFrame;
+        QFont captionFont;
+
         // thumbnail bar
+        EffectFrame thumbnailFrame;
         bool thumbnails;
         bool dynamicThumbnails;
         int thumbnailWindows;

@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <kwinglobals.h>
+#include <kwinglutils.h>
+#include <kwinxrenderutils.h>
 #include "kdecoration.h"
 
 #include <QtCore/QPair>
@@ -38,6 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KPluginFactory>
 #include <KDE/KShortcutsEditor>
+
+#include <Plasma/FrameSvg>
+#include <Plasma/Theme>
 
 #include <assert.h>
 #include <limits.h>
@@ -57,6 +63,8 @@ class Effect;
 class WindowQuad;
 class GLRenderTarget;
 class GLShader;
+class GLTexture;
+class XRenderPicture;
 class RotationData;
 class WindowQuadList;
 class WindowPrePaintData;
@@ -164,7 +172,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 80
+#define KWIN_EFFECT_API_VERSION_MINOR 81
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1253,7 +1261,7 @@ class KWIN_EXPORT PaintClipper
 class KWIN_EXPORT TimeLine
     {
 
-    Q_ENUMS( CurveShape )
+    //Q_ENUMS( CurveShape ) // Requires Q_OBJECT
 
     public:
         /**
@@ -1583,6 +1591,86 @@ class KWIN_EXPORT WindowMotionManager
             };
         QHash<EffectWindow*, WindowMotion> m_managedWindows;
         uint m_movingWindows;
+    };
+
+/**
+ * @short Helper class for painting themed boxes.
+ *
+ * Paints a box using the default Plasma theme.
+ */
+class KWIN_EXPORT EffectFrame : public QObject
+    {
+    Q_OBJECT
+
+    public:
+        /**
+         * Creates a new frame object. If the frame does not have a static size
+         * then it will be located at @a position with @a alignment. A
+         * non-static frame will automatically adjust its size to fit the
+         * contents.
+         */
+        EffectFrame( bool staticSize = false, QPoint position = QPoint( -1, -1 ),
+            Qt::Alignment alignment = Qt::AlignCenter );
+        ~EffectFrame();
+
+        /**
+         * Delete any existing textures to free up graphics memory. They will
+         * be automatically recreated the next time they are required.
+         */
+        void free();
+
+        /**
+         * Render the frame.
+         */
+        void render( QRegion region = infiniteRegion(), double opacity = 1.0 );
+
+        void setPosition( const QPoint& point );
+        inline void setAlignment( Qt::Alignment alignment )
+            { m_alignment = alignment; }; // Doesn't change geometry
+        void setGeometry( const QRect& geometry, bool force = false );
+        QRect geometry() const // Inner/contents geometry
+            { return m_geometry; };
+
+        void setText( const QString& text );
+        void setFont( const QFont& font );
+        /**
+         * Set the icon that will appear on the left-hand size of the frame.
+         */
+        void setIcon( const QPixmap& icon );
+        void setIconSize( const QSize& size );
+
+        /**
+         * The foreground text color as specified by the default Plasma theme.
+         */
+        static QColor textColor();
+
+    private slots:
+        void plasmaThemeChanged();
+
+    private:
+        void autoResize(); // Auto-resize if not a static size
+        void updateTexture(); // Update OpenGL frame texture
+        void updateTextTexture(); // Update OpenGL text texture
+        void updatePicture(); // Update XRender frame picture
+        void updateTextPicture(); // Update XRender text picture
+
+        Plasma::FrameSvg m_frame;
+        GLTexture* m_texture;
+        GLTexture* m_textTexture;
+        XRenderPicture* m_picture;
+        XRenderPicture* m_textPicture;
+
+        // Position
+        bool m_static;
+        QPoint m_point;
+        Qt::Alignment m_alignment;
+        QRect m_geometry;
+
+        // Contents
+        QString m_text;
+        QFont m_font;
+        QPixmap m_icon;
+        QSize m_iconSize;
     };
 
 /**

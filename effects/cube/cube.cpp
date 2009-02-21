@@ -57,6 +57,7 @@ CubeEffect::CubeEffect()
     , cubeOpacity( 1.0 )
     , opacityDesktopOnly( true )
     , displayDesktopName( false )
+    , desktopNameFrame( true )
     , reflection( true )
     , rotating( false )
     , desktopChangedWhileRotating( false )
@@ -91,6 +92,10 @@ CubeEffect::CubeEffect()
     , recompileList( true )
     , glList( 0 )
     {
+    desktopNameFont.setBold( true );
+    desktopNameFont.setPointSize( 14 );
+    desktopNameFrame.setFont( desktopNameFont );
+
     reconfigure( ReconfigureAll );
     }
 
@@ -610,37 +615,16 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         // desktop name box - inspired from coverswitch
         if( displayDesktopName )
             {
-            QColor color_frame;
-            QColor color_text;
-            color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
-            color_frame.setAlphaF( 0.5 );
-            color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
+            double opacity = 1.0;
             if( start )
-                {
-                color_frame.setAlphaF( 0.5 * timeLine.value() );
-                color_text.setAlphaF( timeLine.value() );
-                }
+                opacity = timeLine.value();
             if( stop )
-                {
-                color_frame.setAlphaF( 0.5 - 0.5 * timeLine.value() );
-                color_text.setAlphaF( 1.0 - timeLine.value() );
-                }
-            QFont text_font;
-            text_font.setBold( true );
-            text_font.setPointSize( 14 );
-            glPushAttrib( GL_CURRENT_BIT );
-            glColor4f( color_frame.redF(), color_frame.greenF(), color_frame.blueF(), color_frame.alphaF());
-            QRect frameRect = QRect( rect.width()*0.33f + rect.x(),
-                rect.height() + rect.y() - QFontMetrics( text_font ).height() * 1.2f,
-                rect.width()*0.33f,
-                QFontMetrics( text_font ).height() * 1.2f );
-            renderRoundBoxWithEdge( frameRect );
-            effects->paintText( effects->desktopName( frontDesktop ),
-                frameRect.center(),
-                frameRect.width(),
-                color_text,
-                text_font );
-            glPopAttrib();
+                opacity = 1.0 - timeLine.value();
+            QRect frameRect = QRect( rect.width() * 0.33f + rect.x(), rect.height() * 0.95f + rect.y(),
+                rect.width() * 0.34f, QFontMetrics( desktopNameFont ).height() );
+            desktopNameFrame.setGeometry( frameRect );
+            desktopNameFrame.setText( effects->desktopName( frontDesktop ) );
+            desktopNameFrame.render( region, opacity );
             }
         if( effects->numScreens() > 1 && !bigCube  )
             {
@@ -1982,6 +1966,7 @@ void CubeEffect::setActive( bool active )
             mousePolling = false;
             }
         schedule_close = true;
+        desktopNameFrame.free();
         // we have to add a repaint, to start the deactivating
         effects->addRepaintFull();
         }

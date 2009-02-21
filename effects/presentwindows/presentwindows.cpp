@@ -44,24 +44,20 @@ PresentWindowsEffect::PresentWindowsEffect()
     : m_proxy( this )
     , m_borderActivate( ElectricNone )
     , m_borderActivateAll( ElectricNone )
-    ,   m_activated( false )
-    ,   m_allDesktops( false )
-    ,   m_ignoreMinimized( false )
-    ,   m_decalOpacity( 0.0 )
-    //,   m_input()
-    ,   m_hasKeyboardGrab( false )
-    ,   m_tabBoxEnabled( false )
-    //,   m_motionManager()
-    //,   m_windowData()
-    ,   m_highlightedWindow( NULL )
-    //,   m_gridSizes()
-    //,   m_windowFilter()
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    ,   m_filterTexture( NULL )
-    //,   m_filterTextureRect()
-    //,   m_filterFrameRect()
-#endif
+    , m_activated( false )
+    , m_allDesktops( false )
+    , m_ignoreMinimized( false )
+    , m_decalOpacity( 0.0 )
+    , m_hasKeyboardGrab( false )
+    , m_tabBoxEnabled( false )
+    , m_highlightedWindow( NULL )
+    , m_filterFrame( false )
     {
+    QFont font;
+    font.setPointSize( font.pointSize() * 2 );
+    font.setBold( true );
+    m_filterFrame.setFont( font );
+
     KActionCollection* actionCollection = new KActionCollection( this );
     KAction* a = ( KAction* )actionCollection->addAction( "Expose" );
     a->setText( i18n( "Toggle Present Windows (Current desktop)" ));
@@ -78,7 +74,6 @@ PresentWindowsEffect::~PresentWindowsEffect()
     {
     effects->unreserveElectricBorder( m_borderActivate );
     effects->unreserveElectricBorder( m_borderActivateAll );
-    discardFilterTexture();
     }
 
 void PresentWindowsEffect::reconfigure( ReconfigureFlags )
@@ -130,25 +125,8 @@ void PresentWindowsEffect::paintScreen( int mask, QRegion region, ScreenPaintDat
     effects->paintScreen( mask, region, data );
 
     // Display the filter box
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( m_filterTexture && region.intersects( m_filterFrameRect ))
-        {
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
-        // First render the frame
-        QColor color = QPalette().color( QPalette::Active, QPalette::Highlight );
-        glColor4f( color.redF(), color.greenF(), color.blueF(), 0.75f );
-        renderRoundBoxWithEdge( m_filterFrameRect );
-
-        // Then the text on top of it
-        m_filterTexture->bind();
-        m_filterTexture->render( region, m_filterTextureRect );
-        m_filterTexture->unbind();
-        glPopAttrib();
-        }
-#endif
+    if( !m_windowFilter.isEmpty() )
+        m_filterFrame.render( region );
     }
 
 void PresentWindowsEffect::postPaintScreen()
@@ -366,7 +344,7 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
                 if( !m_windowFilter.isEmpty() )
                     {
                     m_windowFilter.remove( m_windowFilter.length() - 1, 1 );
-                    updateFilterTexture();
+                    updateFilterFrame();
                     rearrangeWindows();
                     }
                 return;
@@ -385,7 +363,7 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
                 if( !m_windowFilter.isEmpty() )
                     {
                     m_windowFilter.clear();
-                    updateFilterTexture();
+                    updateFilterFrame();
                     rearrangeWindows();
                     }
                 break;
@@ -395,7 +373,7 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
                 if( !e->text().isEmpty() )
                     {
                     m_windowFilter.append( e->text() );
-                    updateFilterTexture();
+                    updateFilterFrame();
                     rearrangeWindows();
                     return;
                     }
@@ -1196,7 +1174,7 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
         // Move all windows back to their original position
         foreach( EffectWindow *w, m_motionManager.managedWindows() )
             m_motionManager.moveWindow( w, w->geometry() );
-        discardFilterTexture();
+        m_filterFrame.free();
         m_windowFilter.clear();
 
         effects->destroyInputWindow( m_input );
@@ -1210,53 +1188,11 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
 //-----------------------------------------------------------------------------
 // Filter box
 
-void PresentWindowsEffect::discardFilterTexture()
+void PresentWindowsEffect::updateFilterFrame()
     {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    delete m_filterTexture;
-    m_filterTexture = NULL;
-#endif
-    }
-
-void PresentWindowsEffect::updateFilterTexture()
-    {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    discardFilterTexture();
-    if( m_windowFilter.isEmpty())
-        {
-        effects->addRepaint( m_filterTextureRect );
-        return;
-        }
-    // Create font for filter text
-    QFont font;
-    font.setPointSize( font.pointSize() * 2 );
-    font.setBold( true );
-    // Get size of the rect containing filter text
-    QFontMetrics fm( font );
-    QRect rect;
-    QString translatedString = i18n( "Filter:\n%1", m_windowFilter );
-    rect.setSize( fm.size( 0, translatedString ));
-    QRect area = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop() );
-    // Create image
-    QImage im( rect.width(), rect.height(), QImage::Format_ARGB32 );
-    im.fill( Qt::transparent );
-    // Paint the filter text to it
-    QPainter p( &im );
-    p.setFont( font );
-    p.setPen( QPalette().color( QPalette::Active, QPalette::HighlightedText ));
-    p.drawText( rect, Qt::AlignCenter, translatedString );
-    p.end();
-    // Create GL texture
-    m_filterTexture = new GLTexture( im );
-    // Get position for filter text and it's frame
-    m_filterTextureRect = QRect(
-        area.x() + ( area.width() - rect.width() ) / 2,
-        area.y() + ( area.height() - rect.height() ) / 2,
-        rect.width(), rect.height() );
-    m_filterFrameRect = m_filterTextureRect.adjusted( -20, -10, 20, 10 );
-    // Schedule repaint
-    effects->addRepaint( m_filterTextureRect );
-#endif
+    QRect area = effects->clientArea( ScreenArea, effects->activeScreen(), effects->currentDesktop() );
+    m_filterFrame.setPosition( QPoint( area.x() + area.width() / 2, area.y() + area.height() / 2 ));
+    m_filterFrame.setText( i18n( "Filter:\n%1", m_windowFilter ));
     }
 
 //-----------------------------------------------------------------------------

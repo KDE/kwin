@@ -121,8 +121,7 @@ class PresentWindowsEffect
         bool isOverlappingAny( EffectWindow *w, const QHash<EffectWindow*, QRect> &targets, const QRegion &border );
 
         // Filter box
-        void updateFilterTexture();
-        void discardFilterTexture();
+        void updateFilterFrame();
 
         // Helper functions
         bool isSelectableWindow( EffectWindow *w );
@@ -166,12 +165,8 @@ class PresentWindowsEffect
         QList<GridSize> m_gridSizes;
 
         // Filter box
+        EffectFrame m_filterFrame;
         QString m_windowFilter;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        GLTexture *m_filterTexture;
-        QRect m_filterTextureRect;
-        QRect m_filterFrameRect;
-#endif
     };
 
 } // namespace

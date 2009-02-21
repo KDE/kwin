@@ -66,7 +66,6 @@ class BoxSwitchEffect
         void calculateItemSizes();
         void setSelectedWindow( EffectWindow* w );
 
-        void paintFrame();
         void paintHighlight( QRect area );
         void paintWindowThumbnail( EffectWindow* w );
         void paintDesktopThumbnail( int iDesktop );
@@ -77,15 +76,15 @@ class BoxSwitchEffect
         Window mInput;
         int mMode;
 
+        EffectFrame thumbnailFrame;
+
         QRect frame_area;
-        int frame_margin; // TODO graphical background
-        int highlight_margin; // TODO graphical background
+        int highlight_margin;
         QSize item_max_size; // maximum item display size (including highlight)
         QRect text_area;
         QFont text_font;
         QColor color_frame;
         QColor color_highlight;
-        QColor color_text;
 
         float bg_opacity;
         bool elevate_window;

@@ -41,14 +41,14 @@ KWIN_EFFECT( boxswitch, BoxSwitchEffect )
 BoxSwitchEffect::BoxSwitchEffect()
     : mActivated( 0 )
     , mMode( 0 )
+    , thumbnailFrame( true )
     , selected_window( 0 )
     , painting_desktop( 0 )
     , animation( false )
     , highlight_is_set( false )
     {
 
-    frame_margin = 10;
-    highlight_margin = 5;
+    highlight_margin = 10;
     reconfigure( ReconfigureAll );
     }
 
@@ -62,7 +62,6 @@ void BoxSwitchEffect::reconfigure( ReconfigureFlags )
     color_frame.setAlphaF( 0.9 );
     color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
     color_highlight.setAlphaF( 0.9 );
-    color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
     activeTimeLine.setDuration( animationTime( 250 ));
     activeTimeLine.setCurveShape( TimeLine::EaseInOutCurve );
     timeLine.setDuration( animationTime( 150 ));
@@ -122,19 +121,19 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
         {
         if( mMode == TabBoxWindowsMode )
             {
-            paintFrame();
+            thumbnailFrame.render( region );
 
             if( mAnimateSwitch )
                 {
                 // HACK: PaintClipper is used because window split is somehow wrong if the height is greater than width
-                PaintClipper::push( frame_area.adjusted( frame_margin, frame_margin, -frame_margin, -frame_margin ));
+                PaintClipper::push( frame_area );
                 paintHighlight( highlight_area );
                 foreach( EffectWindow* w, windows.keys())
                     {
                     paintWindowThumbnail( w );
                     paintWindowIcon( w );
                     }
-                PaintClipper::pop( frame_area.adjusted( frame_margin, frame_margin, -frame_margin, -frame_margin ) );
+                PaintClipper::pop( frame_area );
                 }
             else
                 {
@@ -154,7 +153,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
             {
             if( !painting_desktop )
                 {
-                paintFrame();
+                thumbnailFrame.render( region );
 
                 foreach( painting_desktop, desktops.keys())
                     {
@@ -236,8 +235,7 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
         // special handling for second half of window in case of animation and even number of windows
         if( mAnimateSwitch && ( windows.size() % 2 == 0 ) )
             {
-            QRect additionalRect = QRect( frame_area.x() + frame_margin,
-                frame_area.y() + frame_margin,
+            QRect additionalRect = QRect( frame_area.x(), frame_area.y(),
                 item_max_size.width()*0.5, item_max_size.height());
             if( additionalRect.contains( pos ))
                 {
@@ -481,6 +479,7 @@ void BoxSwitchEffect::setInactive()
         qDeleteAll( windows );
         desktops.clear();
         }
+    thumbnailFrame.free();
     effects->addRepaint( frame_area );
     frame_area = QRect();
     }
@@ -535,21 +534,23 @@ void BoxSwitchEffect::calculateFrameSize()
     // Separator space between items and text
     const int separator_height = 6;
     // Shrink the size until all windows/desktops can fit onscreen
-    frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
+    frame_area.setWidth( itemcount * item_max_size.width());
     QRect screenr = effects->clientArea( PlacementArea, effects->activeScreen(), effects->currentDesktop());
     while( frame_area.width() > screenr.width())
         {
         item_max_size /= 2;
-        frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
+        frame_area.setWidth( itemcount * item_max_size.width());
         }
-    frame_area.setHeight( frame_margin * 2 + item_max_size.height() +
+    frame_area.setHeight( item_max_size.height() +
             separator_height + text_area.height());
-    text_area.setWidth( frame_area.width() - frame_margin * 2 );
+    text_area.setWidth( frame_area.width() );
 
     frame_area.moveTo( screenr.x() + ( screenr.width() - frame_area.width()) / 2,
         screenr.y() + ( screenr.height() - frame_area.height()) / 2 );
-    text_area.moveTo( frame_area.x() + frame_margin,
-                      frame_area.y() + frame_margin + item_max_size.height() + separator_height);
+    text_area.moveTo( frame_area.x(),
+                      frame_area.y() + item_max_size.height() + separator_height);
+
+    thumbnailFrame.setGeometry( frame_area );
     }
 
 void BoxSwitchEffect::calculateItemSizes()
@@ -642,9 +643,8 @@ void BoxSwitchEffect::calculateItemSizes()
                     }
                 if( ordered_windows.count()%2 == 0 )
                     moveIndex += 0.5;
-                windows[ w ]->area = QRect( frame_area.x() + frame_margin
-                    + moveIndex * item_max_size.width() + offset,
-                    frame_area.y() + frame_margin,
+                windows[ w ]->area = QRect( frame_area.x() + moveIndex * item_max_size.width() + offset,
+                    frame_area.y(),
                     item_max_size.width(), item_max_size.height());
                 windows[ w ]->clickable = windows[ w ]->area;
                 }
@@ -665,9 +665,8 @@ void BoxSwitchEffect::calculateItemSizes()
                 EffectWindow* w = original_windows.at( i );
                 windows[ w ] = new ItemInfo();
 
-                windows[ w ]->area = QRect( frame_area.x() + frame_margin
-                    + i * item_max_size.width(),
-                    frame_area.y() + frame_margin,
+                windows[ w ]->area = QRect( frame_area.x() + i * item_max_size.width(),
+                    frame_area.y(),
                     item_max_size.width(), item_max_size.height());
                 windows[ w ]->clickable = windows[ w ]->area;
                 }
@@ -681,45 +680,12 @@ void BoxSwitchEffect::calculateItemSizes()
             int it = original_desktops.at( i );
             desktops[ it ] = new ItemInfo();
 
-            desktops[ it ]->area = QRect( frame_area.x() + frame_margin
-                + i * item_max_size.width(),
-                frame_area.y() + frame_margin,
+            desktops[ it ]->area = QRect( frame_area.x() + i * item_max_size.width(),
+                frame_area.y(),
                 item_max_size.width(), item_max_size.height());
             desktops[ it ]->clickable = desktops[ it ]->area;
             }
         }
-    }
-
-void BoxSwitchEffect::paintFrame()
-    {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( effects->compositingType() == OpenGLCompositing )
-        {
-        glPushAttrib( GL_CURRENT_BIT );
-        glColor4f( color_frame.redF(), color_frame.greenF(), color_frame.blueF(), color_frame.alphaF());
-        renderRoundBoxWithEdge( frame_area );
-        glPopAttrib();
-        }
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if( effects->compositingType() == XRenderCompositing )
-        {
-        Pixmap pixmap = XCreatePixmap( display(), rootWindow(),
-            frame_area.width(), frame_area.height(), 32 );
-        XRenderPicture pic( pixmap, 32 );
-        XFreePixmap( display(), pixmap );
-        XRenderColor col;
-        col.alpha = int( color_frame.alphaF() * 0xffff );
-        col.red = int( color_frame.redF() * color_frame.alphaF() * 0xffff );
-        col.green = int( color_frame.greenF() * color_frame.alphaF() * 0xffff );
-        col.blue = int( color_frame.blueF() * color_frame.alphaF() * 0xffff );
-        XRenderFillRectangle( display(), PictOpSrc, pic, &col, 0, 0,
-            frame_area.width(), frame_area.height());
-        XRenderComposite( display(), color_frame.alphaF() != 1.0 ? PictOpOver : PictOpSrc,
-            pic, None, effects->xrenderBufferPicture(),
-            0, 0, 0, 0, frame_area.x(), frame_area.y(), frame_area.width(), frame_area.height());
-        }
-#endif
     }
 
 void BoxSwitchEffect::paintHighlight( QRect area )
@@ -818,19 +784,19 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
             if( timeLine.value() < 0.5 )
                 {
                 data.quads = right_quads;
-                secondThumbnail = QRect( frame_area.x() + frame_area.width() - frame_margin 
-                    - (float)item_max_size.width()*timeLine.value(),
-                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                secondThumbnail = QRect( frame_area.x() + frame_area.width() -
+                    (float)item_max_size.width()*timeLine.value(),
+                    frame_area.y(), item_max_size.width(), item_max_size.height());
                 }
             else
                 {
                 data.quads = left_quads;
-                secondThumbnail = QRect( frame_area.x() + frame_margin - (float)item_max_size.width()*timeLine.value(),
-                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                secondThumbnail = QRect( frame_area.x() - (float)item_max_size.width()*timeLine.value(),
+                    frame_area.y(), item_max_size.width(), item_max_size.height());
                 if( right_window )
-                    secondThumbnail = QRect( frame_area.x() + frame_margin -
+                    secondThumbnail = QRect( frame_area.x() -
                         (float)item_max_size.width()*(timeLine.value()-0.5),
-                        frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                        frame_area.y(), item_max_size.width(), item_max_size.height());
                 }
             }
         else
@@ -838,16 +804,16 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
             if( timeLine.value() < 0.5 )
                 {
                 data.quads = left_quads;
-                secondThumbnail = QRect( frame_area.x() + frame_margin -
+                secondThumbnail = QRect( frame_area.x() -
                     (float)item_max_size.width()*(1.0 - timeLine.value()),
-                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                    frame_area.y(), item_max_size.width(), item_max_size.height());
                 }
             else
                 {
                 data.quads = right_quads;
-                secondThumbnail = QRect( frame_area.x() + frame_area.width() - frame_margin 
-                    - (float)item_max_size.width()*(1.0 - timeLine.value()),
-                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                secondThumbnail = QRect( frame_area.x() + frame_area.width() - 
+                    (float)item_max_size.width()*(1.0 - timeLine.value()),
+                    frame_area.y(), item_max_size.width(), item_max_size.height());
                 }
             }
         setPositionTransformations( data,
@@ -913,9 +879,9 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
         // right quads are painted on left side of frame
         data.quads = rightQuads;
         QRect secondThumbnail;
-        secondThumbnail = QRect( frame_area.x() + frame_margin -
+        secondThumbnail = QRect( frame_area.x() -
             (float)item_max_size.width()*0.5 + animationOffset,
-            frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+            frame_area.y(), item_max_size.width(), item_max_size.height());
         setPositionTransformations( data,
             windows[ w ]->thumbnail, w,
             secondThumbnail.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
@@ -1011,7 +977,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
                     if( direction == Left )
                         {
                         x -= windows[ w ]->area.width()*timeLine.value();
-                        x = qMax( x, frame_area.x() + frame_margin );
+                        x = qMax( x, frame_area.x() );
                         }
                     else
                         x += windows[ w ]->area.width()*timeLine.value();
@@ -1023,7 +989,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
                     else
                         {
                         x -= windows[ w ]->area.width()*(1.0-timeLine.value());
-                        x = qMax( x, frame_area.x() + frame_margin );
+                        x = qMax( x, frame_area.x() );
                         }
                     }
                 }
@@ -1090,7 +1056,7 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
 void BoxSwitchEffect::paintText( const QString& text )
 {
     int maxwidth = text_area.width();
-    effects->paintText( text, text_area.center(), maxwidth, color_text, text_font );
+    effects->paintText( text, text_area.center(), maxwidth, EffectFrame::textColor(), text_font );
 }
 
 } // namespace

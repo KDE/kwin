@@ -52,8 +52,15 @@ CoverSwitchEffect::CoverSwitchEffect()
     , scaleFactor( 0.0 )
     , direction( Left )
     , selected_window( 0 )
+    , captionFrame( true )
+    , thumbnailFrame( true )
     {
     reconfigure( ReconfigureAll );
+
+    // Caption frame
+    captionFont.setBold( true );
+    captionFont.setPointSize( captionFont.pointSize() * 2 );
+    captionFrame.setFont( captionFont );
     }
 
 CoverSwitchEffect::~CoverSwitchEffect()
@@ -85,8 +92,7 @@ void CoverSwitchEffect::reconfigure( ReconfigureFlags )
     color_frame.setAlphaF( 0.9 );
     color_highlight = KColorScheme( QPalette::Active, KColorScheme::Selection ).background().color();
     color_highlight.setAlphaF( 0.9 );
-    frame_margin = 10;
-    highlight_margin = 5;
+    highlight_margin = 10;
     }
 
 void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -308,82 +314,40 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glMatrixMode( GL_MODELVIEW );
             }
 
-        // caption of selected window
-        QColor color_frame;
-        QColor color_text;
-        color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
-        color_frame.setAlphaF( 0.9 );
-        color_text = KColorScheme( QPalette::Active, KColorScheme::Window ).foreground().color();
+        // Render the caption frame
+        double opacity = 1.0;
         if( start )
-            {
-            color_frame.setAlphaF( 0.9 * timeLine.value() );
-            color_text.setAlphaF( timeLine.value() );
-            }
+            opacity = timeLine.value();
         else if( stop )
-            {
-            color_frame.setAlphaF( 0.9 - 0.9 * timeLine.value() );
-            color_text.setAlphaF( 1.0 - timeLine.value() );
-            }
-        QFont text_font;
-        text_font.setBold( true );
-        text_font.setPointSize( 20 );
-        glPushAttrib( GL_CURRENT_BIT );
-        glColor4f( color_frame.redF(), color_frame.greenF(), color_frame.blueF(), color_frame.alphaF());
-        QRect frameRect = QRect( area.width()*0.25f + area.x(),
-            area.height()*0.9f + area.y(),
-            area.width()*0.5f,
-            QFontMetrics( text_font ).height() * 1.2f );
-        renderRoundBoxWithEdge( frameRect );
-        effects->paintText( effects->currentTabBoxWindow()->caption(),
-            frameRect.center(),
-            frameRect.width() - 100,
-            color_text,
-            text_font );
-        glPopAttrib();
-        // icon of selected window
+            opacity = 1.0 - timeLine.value();
         QPixmap iconPixmap = effects->currentTabBoxWindow()->icon();
         if( start || stop )
             {
             int alpha = 255.0f * timeLine.value();
             if( stop )
-                {
                 alpha = 255.0f - alpha;
-                }
             QPixmap transparency = iconPixmap.copy( iconPixmap.rect() );
-            transparency.fill( QColor( 255, 255, 255, alpha ) );
-            iconPixmap.setAlphaChannel( transparency.alphaChannel()  );
+            transparency.fill( QColor( 255, 255, 255, alpha ));
+            iconPixmap.setAlphaChannel( transparency.alphaChannel() );
             }
-        GLTexture* icon = new GLTexture( iconPixmap );
-        icon->bind();
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-        icon->bind();
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        // icon takes 80 % of the height of the frame. So each 10 % space left on the top and bottom
-        QRect iconRect = QRect( frameRect.x() + frameRect.height()*0.1f,
-            frameRect.y() + frameRect.height()*0.1f,
-            frameRect.height()*0.8f,
-            frameRect.height()*0.8f );
-        icon->render( region, iconRect);
-        icon->unbind();
-        delete icon;
-        glDisable( GL_BLEND );
-        glPopAttrib();
+        captionFrame.setText( effects->currentTabBoxWindow()->caption() );
+        captionFrame.setIcon( iconPixmap );
+        captionFrame.render( region, opacity );
 
         if( ( thumbnails && (!dynamicThumbnails || 
             (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
             && !( start || stop ) )
             {
-            paintFrame();
+            thumbnailFrame.render( region );
             // HACK: PaintClipper is used because window split is somehow wrong if the height is greater than width
-            PaintClipper::push( frame_area.adjusted( frame_margin, frame_margin, -frame_margin, -frame_margin ));
+            PaintClipper::push( frame_area );
             paintHighlight( highlight_area );
             foreach( EffectWindow* w, windows.keys())
                 {
                 paintWindowThumbnail( w );
                 paintWindowIcon( w );
                 }
-            PaintClipper::pop( frame_area.adjusted( frame_margin, frame_margin, -frame_margin, -frame_margin ) );                
+            PaintClipper::pop( frame_area );
             }
         }
     }
@@ -579,6 +543,14 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                             scaleFactor *= (float)area.width()/(float)(displayWidth());
                         }
                     }
+
+                // Setup caption frame geometry
+                QRect frameRect = QRect( area.width() * 0.25f + area.x(),
+                    area.height() * 0.9f + area.y(),
+                    area.width() * 0.5f,
+                    QFontMetrics( captionFont ).height() );
+                captionFrame.setGeometry( frameRect );
+                captionFrame.setIconSize( QSize( frameRect.height(), frameRect.height() ));
 
                 effects->addRepaintFull();
                 }
@@ -982,16 +954,18 @@ void CoverSwitchEffect::calculateFrameSize()
 
     QRect screenr = effects->clientArea( PlacementArea, activeScreen, effects->currentDesktop());
     itemcount = effects->currentTabBoxWindowList().count();
-    item_max_size.setWidth( (screenr.width()*0.95f - frame_margin * 2)/itemcount );
+    item_max_size.setWidth( (screenr.width()*0.95f * 2)/itemcount );
     if( item_max_size.width() > 250 )
         item_max_size.setWidth( 250 );
     item_max_size.setHeight( item_max_size.width() * ((float)screenr.height()/(float)screenr.width()) );
     // Shrink the size until all windows/desktops can fit onscreen
-    frame_area.setWidth( frame_margin * 2 + itemcount * item_max_size.width());
-    frame_area.setHeight( frame_margin * 2 + item_max_size.height() );
+    frame_area.setWidth( itemcount * item_max_size.width());
+    frame_area.setHeight( item_max_size.height() );
 
     frame_area.moveTo( screenr.x() + ( screenr.width() - frame_area.width()) / 2,
         screenr.y() + screenr.height()*0.05f );
+
+    thumbnailFrame.setGeometry( frame_area );
     }
 
 void CoverSwitchEffect::calculateItemSizes()
@@ -1081,9 +1055,8 @@ void CoverSwitchEffect::calculateItemSizes()
             }
         if( ordered_windows.count()%2 == 0 )
             moveIndex += 0.5;
-        windows[ w ]->area = QRect( frame_area.x() + frame_margin
-            + moveIndex * item_max_size.width() + offset,
-            frame_area.y() + frame_margin,
+        windows[ w ]->area = QRect( frame_area.x() + moveIndex * item_max_size.width() + offset,
+            frame_area.y(),
             item_max_size.width(), item_max_size.height());
         windows[ w ]->clickable = windows[ w ]->area;
         }
@@ -1096,14 +1069,6 @@ void CoverSwitchEffect::calculateItemSizes()
         highlight_area = windows[ effects->currentTabBoxWindow() ]->area;
         highlight_is_set = true;
         }
-    }
-
-void CoverSwitchEffect::paintFrame()
-    {
-    glPushAttrib( GL_CURRENT_BIT );
-    glColor4f( color_frame.redF(), color_frame.greenF(), color_frame.blueF(), color_frame.alphaF());
-    renderRoundBoxWithEdge( frame_area );
-    glPopAttrib();
     }
 
 void CoverSwitchEffect::paintHighlight( QRect area )
@@ -1178,19 +1143,19 @@ void CoverSwitchEffect::paintWindowThumbnail( EffectWindow* w )
             if( timeLine.value() < 0.5 )
                 {
                 data.quads = right_quads;
-                secondThumbnail = QRect( frame_area.x() + frame_area.width() - frame_margin 
-                    - (float)item_max_size.width()*timeLine.value(),
-                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                secondThumbnail = QRect( frame_area.x() + frame_area.width() - 
+                    (float)item_max_size.width()*timeLine.value(),
+                    frame_area.y(), item_max_size.width(), item_max_size.height());
                 }
             else
                 {
                 data.quads = left_quads;
-                secondThumbnail = QRect( frame_area.x() + frame_margin - (float)item_max_size.width()*timeLine.value(),
-                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                secondThumbnail = QRect( frame_area.x() - (float)item_max_size.width()*timeLine.value(),
+                    frame_area.y(), item_max_size.width(), item_max_size.height());
                 if( right_window )
-                    secondThumbnail = QRect( frame_area.x() + frame_margin -
+                    secondThumbnail = QRect( frame_area.x() -
                         (float)item_max_size.width()*(timeLine.value()-0.5),
-                        frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                        frame_area.y(), item_max_size.width(), item_max_size.height());
                 }
             }
         else
@@ -1198,16 +1163,16 @@ void CoverSwitchEffect::paintWindowThumbnail( EffectWindow* w )
             if( timeLine.value() < 0.5 )
                 {
                 data.quads = left_quads;
-                secondThumbnail = QRect( frame_area.x() + frame_margin -
+                secondThumbnail = QRect( frame_area.x() -
                     (float)item_max_size.width()*(1.0 - timeLine.value()),
-                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                    frame_area.y(), item_max_size.width(), item_max_size.height());
                 }
             else
                 {
                 data.quads = right_quads;
-                secondThumbnail = QRect( frame_area.x() + frame_area.width() - frame_margin 
-                    - (float)item_max_size.width()*(1.0 - timeLine.value()),
-                    frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+                secondThumbnail = QRect( frame_area.x() + frame_area.width() - 
+                    (float)item_max_size.width()*(1.0 - timeLine.value()),
+                    frame_area.y(), item_max_size.width(), item_max_size.height());
                 }
             }
         setPositionTransformations( data,
@@ -1273,9 +1238,9 @@ void CoverSwitchEffect::paintWindowThumbnail( EffectWindow* w )
         // right quads are painted on left side of frame
         data.quads = rightQuads;
         QRect secondThumbnail;
-        secondThumbnail = QRect( frame_area.x() + frame_margin -
+        secondThumbnail = QRect( frame_area.x() -
             (float)item_max_size.width()*0.5 + animationOffset,
-            frame_area.y() + frame_margin, item_max_size.width(), item_max_size.height());
+            frame_area.y(), item_max_size.width(), item_max_size.height());
         setPositionTransformations( data,
             windows[ w ]->thumbnail, w,
             secondThumbnail.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
@@ -1336,7 +1301,7 @@ void CoverSwitchEffect::paintWindowIcon( EffectWindow* w )
                     if( direction == Left )
                         {
                         x -= windows[ w ]->area.width()*timeLine.value();
-                        x = qMax( x, frame_area.x() + frame_margin );
+                        x = qMax( x, frame_area.x() );
                         }
                     else
                         x += windows[ w ]->area.width()*timeLine.value();
@@ -1348,7 +1313,7 @@ void CoverSwitchEffect::paintWindowIcon( EffectWindow* w )
                     else
                         {
                         x -= windows[ w ]->area.width()*(1.0-timeLine.value());
-                        x = qMax( x, frame_area.x() + frame_margin );
+                        x = qMax( x, frame_area.x() );
                         }
                     }
                 }
@@ -1423,8 +1388,7 @@ void CoverSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
         // special handling for second half of window in case of animation and even number of windows
         if( windows.size() % 2 == 0 )
             {
-            QRect additionalRect = QRect( frame_area.x() + frame_margin,
-                frame_area.y() + frame_margin,
+            QRect additionalRect = QRect( frame_area.x(), frame_area.y(),
                 item_max_size.width()*0.5, item_max_size.height());
             if( additionalRect.contains( pos ))
                 {
@@ -1493,6 +1457,8 @@ void CoverSwitchEffect::abort()
         qDeleteAll( windows );
         windows.clear();
         }
+    captionFrame.free();
+    thumbnailFrame.free();
     }
 
 

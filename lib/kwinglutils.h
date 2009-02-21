@@ -102,6 +102,10 @@ KWIN_EXPORT void renderGLGeometryImmediate( int count,
 
 
 KWIN_EXPORT void renderRoundBox( const QRect& area, float roundness = 10.0f, GLTexture* texture = 0 );
+/**
+ * @deprecated
+ * @see EffectFrame
+ */
 KWIN_EXPORT void renderRoundBoxWithEdge( const QRect& area, float roundness = 10.0f );
 
 
