@@ -315,6 +315,16 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glPopMatrix();
             }
 
+        // compile List for cube
+        if( useList )
+            {
+            glNewList( glList + 1, GL_COMPILE );
+            glPushMatrix();
+            paintCube( mask, region, data );
+            glPopMatrix();
+            glEndList();
+            }
+
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
         if( effects->numScreens() > 1 && bigCube )
             rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
@@ -443,9 +453,14 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 }
             glPushMatrix();
             glCallList( glList );
-            glPushMatrix();
-            paintCube( mask, region, data );
-            glPopMatrix();
+            if( useList )
+                glCallList( glList + 1 );
+            else
+                {
+                glPushMatrix();
+                paintCube( mask, region, data );
+                glPopMatrix();
+                }
             glPopMatrix();
             glCullFace( GL_BACK );
             if( mode == Cylinder )
@@ -456,9 +471,14 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 }
             glPushMatrix();
             glCallList( glList );
-            glPushMatrix();
-            paintCube( mask, region, data );
-            glPopMatrix();
+            if( useList )
+                glCallList( glList + 1 );
+            else
+                {
+                glPushMatrix();
+                paintCube( mask, region, data );
+                glPopMatrix();
+                }
             glPopMatrix();
 
             // cap
@@ -552,9 +572,14 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             }
         glPushMatrix();
         glCallList( glList );
-        glPushMatrix();
-        paintCube( mask, region, data );
-        glPopMatrix();
+        if( useList )
+            glCallList( glList + 1 );
+        else
+            {
+            glPushMatrix();
+            paintCube( mask, region, data );
+            glPopMatrix();
+            }
         glPopMatrix();
         glCullFace( GL_FRONT );
         if( mode == Cylinder )
@@ -571,10 +596,17 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             }
         glPushMatrix();
         glCallList( glList );
-        glPushMatrix();
-        paintCube( mask, region, data );
+        if( useList )
+            glCallList( glList + 1 );
+        else
+            {
+            glPushMatrix();
+            paintCube( mask, region, data );
+            glPopMatrix();
+            }
         glPopMatrix();
-        glPopMatrix();
+        // we painted once without glList, now it's safe to paint using lists
+        useList = true;
 
         // cap
         if( paintCaps && ( effects->numberOfDesktops() >= 2 ))
@@ -1976,6 +2008,7 @@ void CubeEffect::setActive( bool active )
         glList = glGenLists(3);
         capListCreated = false;
         recompileList = true;
+        useList = false;
         // create the capList
         if( paintCaps )
             paintCap();

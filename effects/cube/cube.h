@@ -147,6 +147,7 @@ class CubeEffect
         float capDeformationFactor;
         bool useZOrdering;
         float zOrderingFactor;
+        bool useList;
 
         // GL lists
         bool capListCreated;
