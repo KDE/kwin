@@ -495,7 +495,8 @@ void BoxSwitchEffect::setSelectedWindow( EffectWindow* w )
         effects->setElevatedWindow( selected_window, false );
         }
     selected_window = w;
-    thumbnailFrame.setText( selected_window->caption() );
+    if( selected_window )
+        thumbnailFrame.setText( selected_window->caption() );
     if( elevate_window && w )
         {
         effects->setElevatedWindow( selected_window, true );
