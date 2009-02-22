@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 #include <ksharedconfig.h>
+#include <kstandarddirs.h>
 #include <kconfiggroup.h>
 
 #include <assert.h>
@@ -1297,6 +1298,18 @@ QRectF WindowMotionManager::transformedGeometry( EffectWindow *w ) const
     return geometry;
     }
 
+QRectF WindowMotionManager::targetGeometry( EffectWindow *w ) const
+    {
+    QRectF geometry( w->geometry() );
+
+    // TODO: Take into account existing scale so that we can work with multiple managers (E.g. Present windows + grid)
+    geometry.moveTo( m_managedWindows[ w ].translation.target() );
+    geometry.setWidth( geometry.width() * m_managedWindows[ w ].scale.target().x() );
+    geometry.setHeight( geometry.height() * m_managedWindows[ w ].scale.target().y() );
+
+    return geometry;
+    }
+
 EffectWindow* WindowMotionManager::windowAtPoint( QPoint point, bool useStackingOrder ) const
     {
     // TODO: Stacking order uses EffectsHandler::stackingOrder() then filters by m_managedWindows
@@ -1313,8 +1326,11 @@ EffectWindow* WindowMotionManager::windowAtPoint( QPoint point, bool useStacking
  EffectFrame
 ***************************************************************/
 
-EffectFrame::EffectFrame( bool staticSize, QPoint position, Qt::Alignment alignment )
+GLTexture* EffectFrame::m_unstyledTexture = NULL;
+
+EffectFrame::EffectFrame( Style style, bool staticSize, QPoint position, Qt::Alignment alignment )
     : QObject()
+    , m_style( style )
     , m_static( staticSize )
     , m_point( position )
     , m_alignment( alignment )
@@ -1328,10 +1344,19 @@ EffectFrame::EffectFrame( bool staticSize, QPoint position, Qt::Alignment alignm
     m_textPicture = NULL;
 #endif
 
-    m_frame.setImagePath( "widgets/background" );
-    m_frame.setCacheAllRenderedFrames( true );
-
-    connect( Plasma::Theme::defaultTheme(), SIGNAL( themeChanged() ), this, SLOT( plasmaThemeChanged() ));
+    if( m_style == Unstyled )
+        {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        if( effects->compositingType() == OpenGLCompositing && !m_unstyledTexture )
+            updateUnstyledTexture();
+#endif
+        }
+    else if( m_style == Styled )
+        {
+        m_frame.setImagePath( "widgets/background" );
+        m_frame.setCacheAllRenderedFrames( true );
+        connect( Plasma::Theme::defaultTheme(), SIGNAL( themeChanged() ), this, SLOT( plasmaThemeChanged() ));
+        }
     }
 
 EffectFrame::~EffectFrame()
@@ -1362,32 +1387,94 @@ void EffectFrame::free()
 #endif
     }
 
-void EffectFrame::render( QRegion region, double opacity )
+void EffectFrame::render( QRegion region, double opacity, double frameOpacity )
     {
+    if( m_geometry.isEmpty() )
+        return; // Nothing to display
+
     region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
         {
-        if( !m_texture ) // Lazy creation
-            updateTexture();
-        if( !m_texture || m_geometry.isEmpty() )
-            return;
-
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-        glColor4f( 1.0, 1.0, 1.0, opacity );
 
         glPushMatrix();
 
         // Render the actual frame
-        m_texture->bind();
-        qreal left, top, right, bottom;
-        m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
-        m_texture->render( region, m_geometry.adjusted( -left, -top, right, bottom ));
-        m_texture->unbind();
+        if( m_style == Unstyled )
+            {
+            const QRect& area = m_geometry.adjusted( -5, -5, 5, 5 );
+            const int roundness = 5;
+            QVector<float> verts, texCoords;
+            verts.reserve( 80 );
+            texCoords.reserve( 80 );
+
+            // Center
+            addQuadVertices( verts, area.left() + roundness, area.top() + roundness,
+                area.right() - roundness, area.bottom() - roundness );
+            addQuadVertices( texCoords, 0.5, 0.5, 0.5, 0.5 );
+
+            // Left
+            addQuadVertices( verts, area.left(), area.top() + roundness,
+                area.left() + roundness, area.bottom() - roundness );
+            addQuadVertices( texCoords, 0.0, 0.5, 0.5, 0.5 );
+            // Top
+            addQuadVertices( verts, area.left() + roundness, area.top(),
+                area.right() - roundness, area.top() + roundness );
+            addQuadVertices( texCoords, 0.5, 0.0, 0.5, 0.5 );
+            // Right
+            addQuadVertices( verts, area.right() - roundness, area.top() + roundness,
+                area.right(), area.bottom() - roundness );
+            addQuadVertices( texCoords, 0.5, 0.5, 1.0, 0.5 );
+            // Bottom
+            addQuadVertices( verts, area.left() + roundness, area.bottom() - roundness,
+                area.right() - roundness, area.bottom() );
+            addQuadVertices( texCoords, 0.5, 0.5, 0.5, 1.0 );
+
+            // Top-left
+            addQuadVertices( verts, area.left(), area.top(),
+                area.left() + roundness, area.top() + roundness );
+            addQuadVertices( texCoords, 0.0, 0.0, 0.5, 0.5 );
+            // Top-right
+            addQuadVertices( verts, area.right() - roundness, area.top(),
+                area.right(), area.top() + roundness );
+            addQuadVertices( texCoords, 0.5, 0.0, 1.0, 0.5 );
+            // Bottom-left
+            addQuadVertices( verts, area.left(), area.bottom() - roundness,
+                area.left() + roundness, area.bottom() );
+            addQuadVertices( texCoords, 0.0, 0.5, 0.5, 1.0 );
+            // Bottom-right
+            addQuadVertices( verts, area.right() - roundness, area.bottom() - roundness,
+                area.right(), area.bottom() );
+            addQuadVertices( texCoords, 0.5, 0.5, 1.0, 1.0 );
+
+            glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
+
+            m_unstyledTexture->bind();
+            m_unstyledTexture->enableNormalizedTexCoords();
+            renderGLGeometry( verts.count() / 2, verts.data(), texCoords.data() );
+            m_unstyledTexture->disableNormalizedTexCoords();
+            m_unstyledTexture->unbind();
+            }
+        else if( m_style == Styled )
+            {
+            if( !m_texture ) // Lazy creation
+                updateTexture();
+
+            glColor4f( 1.0, 1.0, 1.0, opacity * frameOpacity );
+
+            m_texture->bind();
+            qreal left, top, right, bottom;
+            m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+            m_texture->render( region, m_geometry.adjusted( -left, -top, right, bottom ));
+            m_texture->unbind();
+            }
+
+        glColor4f( 1.0, 1.0, 1.0, opacity );
 
         // Render icon
         if( !m_icon.isNull() && !m_iconSize.isEmpty() )
@@ -1418,19 +1505,23 @@ void EffectFrame::render( QRegion region, double opacity )
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if( effects->compositingType() == XRenderCompositing )
         {
-        if( !m_picture ) // Lazy creation
-            updatePicture();
-        if( !m_picture || m_geometry.isEmpty() )
-            return;
-
-        // TODO: Opacity
-
         // Render the actual frame
-        qreal left, top, right, bottom;
-        m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
-        QRect geom = m_geometry.adjusted( -left, -top, right, bottom );
-        XRenderComposite( display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
-            0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
+        if( m_style == Unstyled )
+            xRenderRoundBox( effects->xrenderBufferPicture(), m_geometry.adjusted( -5, -5, 5, 5 ),
+                5, QColor( 0, 0, 0, int( opacity * frameOpacity * 255 )));
+        else if( m_style == Styled )
+            {
+            if( !m_picture ) // Lazy creation
+                updatePicture();
+            qreal left, top, right, bottom;
+            m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+            QRect geom = m_geometry.adjusted( -left, -top, right, bottom );
+            XRenderComposite( display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
+                0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
+            }
+
+        // Opacity, TODO: Can we further optimize this?
+        XRenderPicture fill = xRenderFill( QColor( 255, 255, 255, int( opacity * 255 )));
 
         // Render icon
         if( !m_icon.isNull() && !m_iconSize.isEmpty() )
@@ -1438,8 +1529,8 @@ void EffectFrame::render( QRegion region, double opacity )
             QPoint topLeft( m_geometry.x(), m_geometry.center().y() - m_iconSize.height() / 2 );
 
             XRenderPicture* icon = new XRenderPicture( m_icon ); // TODO: Cache
-            geom = QRect( topLeft, m_iconSize );
-            XRenderComposite( display(), PictOpOver, *icon, None, effects->xrenderBufferPicture(),
+            QRect geom = QRect( topLeft, m_iconSize );
+            XRenderComposite( display(), PictOpOver, *icon, fill, effects->xrenderBufferPicture(),
                 0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
             delete icon;
             }
@@ -1449,7 +1540,7 @@ void EffectFrame::render( QRegion region, double opacity )
             {
             if( !m_textPicture ) // Lazy creation
                 updateTextPicture();
-            XRenderComposite( display(), PictOpOver, *m_textPicture, None, effects->xrenderBufferPicture(),
+            XRenderComposite( display(), PictOpOver, *m_textPicture, fill, effects->xrenderBufferPicture(),
                 0, 0, 0, 0, m_geometry.x(), m_geometry.y(), m_geometry.width(), m_geometry.height() );
             }
         }
@@ -1459,6 +1550,7 @@ void EffectFrame::render( QRegion region, double opacity )
 void EffectFrame::setPosition( const QPoint& point )
     {
     m_point = point;
+    autoResize();
     }
 
 void EffectFrame::setGeometry( const QRect& geometry, bool force )
@@ -1471,9 +1563,13 @@ void EffectFrame::setGeometry( const QRect& geometry, bool force )
     effects->addRepaint( m_geometry );
     if( !newSize && !force )
         return;
-    qreal left, top, right, bottom;
-    m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
-    m_frame.resizeFrame( m_geometry.adjusted( -left, -top, right, bottom ).size() );
+
+    if( m_style == Styled )
+        {
+        qreal left, top, right, bottom;
+        m_frame.getMargins( left, top, right, bottom ); // m_geometry is the inner geometry
+        m_frame.resizeFrame( m_geometry.adjusted( -left, -top, right, bottom ).size() );
+        }
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( effects->compositingType() == OpenGLCompositing )
@@ -1625,7 +1721,8 @@ void EffectFrame::updateTexture()
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete m_texture;
-    m_texture = new GLTexture( m_frame.framePixmap() );
+    if( m_style == Styled )
+        m_texture = new GLTexture( m_frame.framePixmap() );
 #endif
     }
 
@@ -1656,7 +1753,7 @@ void EffectFrame::updateTextTexture()
     QPainter p( &pixmap );
     p.setFont( m_font );
     p.setPen( textColor() );
-    p.drawText( rect, Qt::AlignCenter, text );
+    p.drawText( rect, m_alignment, text );
     p.end();
     m_textTexture = new GLTexture( pixmap );
 #endif
@@ -1666,7 +1763,8 @@ void EffectFrame::updatePicture()
     {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     delete m_picture;
-    m_picture = new XRenderPicture( m_frame.framePixmap() );
+    if( m_style == Styled )
+        m_picture = new XRenderPicture( m_frame.framePixmap() );
 #endif
     }
 
@@ -1696,9 +1794,18 @@ void EffectFrame::updateTextPicture()
     QPainter p( &pixmap );
     p.setFont( m_font );
     p.setPen( textColor() );
-    p.drawText( rect, Qt::AlignCenter, text );
+    p.drawText( rect, m_alignment, text );
     p.end();
     m_textPicture = new XRenderPicture( pixmap );
+#endif
+    }
+
+void EffectFrame::updateUnstyledTexture()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete m_unstyledTexture;
+    QString filename =  KGlobal::dirs()->findResource( "data", "kwin/circle.png" );
+    m_unstyledTexture = new GLTexture( filename );
 #endif
     }
 

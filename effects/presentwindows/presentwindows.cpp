@@ -51,7 +51,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_hasKeyboardGrab( false )
     , m_tabBoxEnabled( false )
     , m_highlightedWindow( NULL )
-    , m_filterFrame( false )
+    , m_filterFrame( EffectFrame::Styled, false )
     {
     QFont font;
     font.setPointSize( font.pointSize() * 2 );
@@ -136,7 +136,16 @@ void PresentWindowsEffect::postPaintScreen()
     else if( !m_activated && m_motionManager.managingWindows() )
         { // We have finished moving them back, stop processing
         m_motionManager.unmanageAll();
+
+        DataHash::iterator i = m_windowData.begin();
+        while( i != m_windowData.end() )
+            {
+            delete i.value().textFrame;
+            delete i.value().iconFrame;
+            i++;
+            }
         m_windowData.clear();
+
         effects->setActiveFullScreenEffect( NULL );
         }
 
@@ -211,23 +220,21 @@ void PresentWindowsEffect::paintWindow( EffectWindow *w, int mask, QRegion regio
             m_motionManager.apply( w, data );
 
             effects->paintWindow( w, mask, region, data );
-            
-            const WindowData &wData = m_windowData[w];
+
+            QRect rect = m_motionManager.transformedGeometry( w ).toRect();
             if( m_showIcons )
-                paintWindowIcon( w, data );
+                {
+                QPoint point( rect.x() + rect.width() * 0.95,
+                    rect.y() + rect.height() * 0.95 );
+                m_windowData[w].iconFrame->setPosition( point );
+                m_windowData[w].iconFrame->render( region, 0.9 * data.opacity * m_decalOpacity, 0.75 );
+                }
             if( m_showCaptions )
                 {
-                QString text = w->caption();
-                QRect textArea( w->x() + data.xTranslate, w->y() + data.yTranslate,
-                    w->width() * data.xScale, w->height() * data.yScale );
-                textArea.adjust( 10, 10, -10, -10 );
-                double opacity = (0.7 + 0.2 * wData.highlight) * data.opacity * m_decalOpacity;
-                QColor textcolor( 255, 255, 255, int( 255 * opacity ));
-                QColor bgcolor( 0, 0, 0, int( 255 * opacity ));
-                QFont f;
-                f.setBold( true );
-                f.setPointSize( 12 );
-                effects->paintTextWithBackground( text, textArea, textcolor, bgcolor, f );
+                QPoint point( rect.x() + rect.width() / 2,
+                    rect.y() + rect.height() / 2 );
+                m_windowData[w].textFrame->setPosition( point );
+                m_windowData[w].textFrame->render( region, 0.9 * data.opacity * m_decalOpacity, 0.75 );
                 }
             }
         else
@@ -245,6 +252,14 @@ void PresentWindowsEffect::windowAdded( EffectWindow *w )
     m_windowData[w].visible = isVisibleWindow( w );
     m_windowData[w].opacity = 0.0;
     m_windowData[w].highlight = 0.0;
+    m_windowData[w].textFrame = new EffectFrame( EffectFrame::Unstyled, false );
+    QFont font;
+    font.setBold( true );
+    font.setPointSize( 12 );
+    m_windowData[w].textFrame->setFont( font );
+    m_windowData[w].iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+    m_windowData[w].iconFrame->setAlignment( Qt::AlignRight | Qt::AlignBottom );
+    m_windowData[w].iconFrame->setIcon( w->icon() );
     if( isSelectableWindow( w ))
         {
         m_motionManager.manage( w );
@@ -262,6 +277,8 @@ void PresentWindowsEffect::windowClosed( EffectWindow *w )
 
 void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     {
+    delete m_windowData[w].textFrame;
+    delete m_windowData[w].iconFrame;
     m_windowData.remove( w );
     m_motionManager.unmanage( w );
     }
@@ -511,6 +528,19 @@ void PresentWindowsEffect::rearrangeWindows()
         else
             calculateWindowTransformationsNatural( windows, screen );
         }
+
+    // Resize text frames if required
+    QFontMetrics* metrics = NULL; // All fonts are the same
+    foreach( EffectWindow *w, m_motionManager.managedWindows() )
+        {
+        if( !metrics )
+            metrics = new QFontMetrics( m_windowData[w].textFrame->font() );
+        QRect geom = m_motionManager.targetGeometry( w ).toRect();
+        QString string = metrics->elidedText( w->caption(), Qt::ElideRight, geom.width() * 0.9 );
+        if( string != m_windowData[w].textFrame->text() )
+            m_windowData[w].textFrame->setText( string );
+        }
+    delete metrics;
     }
 
 void PresentWindowsEffect::calculateWindowTransformationsClosest( EffectWindowList windowlist, int screen )
@@ -1110,6 +1140,14 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
             if( w->isOnCurrentDesktop() && !w->isMinimized() )
                 m_windowData[w].opacity = 1.0;
             m_windowData[w].highlight = 1.0;
+            m_windowData[w].textFrame = new EffectFrame( EffectFrame::Unstyled, false );
+            QFont font;
+            font.setBold( true );
+            font.setPointSize( 12 );
+            m_windowData[w].textFrame->setFont( font );
+            m_windowData[w].iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+            m_windowData[w].iconFrame->setAlignment( Qt::AlignRight | Qt::AlignBottom );
+            m_windowData[w].iconFrame->setIcon( w->icon() );
             }
 
         if( m_tabBoxEnabled )
@@ -1135,7 +1173,16 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
          (( m_motionManager.managedWindows().count() == 1 ) && m_motionManager.managedWindows().first()->isOnCurrentDesktop() ))
             { // No point triggering if there is nothing to do
             m_activated = false;
+
+            DataHash::iterator i = m_windowData.begin();
+            while( i != m_windowData.end() )
+                {
+                delete i.value().textFrame;
+                delete i.value().iconFrame;
+                i++;
+                }
             m_windowData.clear();
+
             m_motionManager.unmanageAll();
             return;
             }
@@ -1415,63 +1462,6 @@ EffectWindow* PresentWindowsEffect::findFirstWindow() const
             }
         }
     return topLeft;
-    }
-
-void PresentWindowsEffect::paintWindowIcon( EffectWindow *w, WindowPaintData &data )
-    {
-    // Don't bother if we don't even have an icon
-    if( w->icon().isNull() )
-        return;
-
-    WindowData &wData = m_windowData[w];
-    if( wData.icon.cacheKey() != w->icon().cacheKey())
-        { // Make sure data.icon is the right QPixmap, and rebind
-        wData.icon = w->icon();
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        if( effects->compositingType() == OpenGLCompositing )
-            {
-            wData.iconTexture = new GLTexture( wData.icon );
-            wData.iconTexture->setFilter( GL_LINEAR );
-            }
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        if( effects->compositingType() == XRenderCompositing )
-            wData.iconPicture = XRenderPicture( wData.icon );
-#endif
-        }
-    int icon_margin = 8;
-    int width = wData.icon.width();
-    int height = wData.icon.height();
-    int x = w->x() + data.xTranslate + w->width() * data.xScale * 0.95 - width - icon_margin;
-    int y = w->y() + data.yTranslate + w->height() * data.yScale * 0.95 - height - icon_margin;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( effects->compositingType() == OpenGLCompositing )
-        {
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        // Render some background
-        glColor4f( 0, 0, 0, 0.5 * wData.opacity * m_decalOpacity );
-        renderRoundBox( QRect( x-3, y-3, width+6, height+6 ), 3 );
-        // Render the icon
-        glColor4f( 1, 1, 1, 1 * wData.opacity * m_decalOpacity );
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        wData.iconTexture->bind();
-        wData.iconTexture->render( infiniteRegion(), QRect( x, y, width, height ));
-        wData.iconTexture->unbind();
-        glPopAttrib();
-        }
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if( effects->compositingType() == XRenderCompositing )
-        {
-        XRenderComposite( display(),
-            wData.icon.depth() == 32 ? PictOpOver : PictOpSrc,
-            wData.iconPicture, None,
-            effects->xrenderBufferPicture(),
-            0, 0, 0, 0, x, y, width, height );
-        }
-#endif
     }
 
 } // namespace

@@ -24,10 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "presentwindows_proxy.h"
 
-// Include with base class for effects.
 #include <kwineffects.h>
-#include <kwinglutils.h>
-#include <kwinxrenderutils.h>
 
 #include <QPixmap>
 
@@ -52,12 +49,8 @@ class PresentWindowsEffect
             int slot;
             int slot_distance;
             QPixmap icon;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-            KSharedPtr< GLTexture > iconTexture;
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            XRenderPicture iconPicture;
-#endif
+            EffectFrame* textFrame;
+            EffectFrame* iconFrame;
             };
         typedef QHash<EffectWindow*, WindowData> DataHash;
         struct GridSize
@@ -129,7 +122,6 @@ class PresentWindowsEffect
         void setHighlightedWindow( EffectWindow *w );
         EffectWindow* relativeWindow( EffectWindow *w, int xdiff, int ydiff, bool wrap ) const;
         EffectWindow* findFirstWindow() const;
-        void paintWindowIcon( EffectWindow *w, WindowPaintData &data ); // TODO: Do we need this?
 
     private:
         PresentWindowsEffectProxy m_proxy;

@@ -52,8 +52,8 @@ CoverSwitchEffect::CoverSwitchEffect()
     , scaleFactor( 0.0 )
     , direction( Left )
     , selected_window( 0 )
-    , captionFrame( true )
-    , thumbnailFrame( true )
+    , captionFrame( EffectFrame::Styled )
+    , thumbnailFrame( EffectFrame::Styled )
     {
     reconfigure( ReconfigureAll );
 

@@ -41,12 +41,16 @@ KWIN_EFFECT( boxswitch, BoxSwitchEffect )
 BoxSwitchEffect::BoxSwitchEffect()
     : mActivated( 0 )
     , mMode( 0 )
-    , thumbnailFrame( true )
+    , thumbnailFrame( EffectFrame::Styled )
     , selected_window( 0 )
     , painting_desktop( 0 )
     , animation( false )
     , highlight_is_set( false )
     {
+    text_font.setBold( true );
+    text_font.setPointSize( 12 );
+    thumbnailFrame.setFont( text_font );
+    thumbnailFrame.setAlignment( Qt::AlignBottom | Qt::AlignHCenter );
 
     highlight_margin = 10;
     reconfigure( ReconfigureAll );
@@ -147,7 +151,6 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                     paintWindowIcon( w );
                     }
                 }
-            paintText( selected_window->caption() );
             }
         else
             {
@@ -164,7 +167,6 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
 
                     paintDesktopThumbnail( painting_desktop );
                     }
-                paintText( effects->desktopName( selected_desktop ));
                 painting_desktop = 0;
                 }
             }
@@ -401,11 +403,12 @@ void BoxSwitchEffect::tabBoxUpdated()
             effects->addRepaint( text_area );
             original_windows = effects->currentTabBoxWindowList();
             }
-        else
+        else if( mMode != TabBoxWindowsMode )
             { // DesktopMode
             if( desktops.contains( selected_desktop ))
                 effects->addRepaint( desktops.value( selected_desktop )->area );
             selected_desktop = effects->currentTabBoxDesktop();
+            thumbnailFrame.setText( effects->desktopName( selected_desktop ));
             if( desktops.contains( selected_desktop ))
                 effects->addRepaint( desktops.value( selected_desktop )->area );
             effects->addRepaint( text_area );
@@ -438,6 +441,7 @@ void BoxSwitchEffect::setActive()
         {
         original_desktops = effects->currentTabBoxDesktopList();
         selected_desktop = effects->currentTabBoxDesktop();
+        thumbnailFrame.setText( effects->desktopName( selected_desktop ));
         }
     calculateFrameSize();
     calculateItemSizes();
@@ -491,6 +495,7 @@ void BoxSwitchEffect::setSelectedWindow( EffectWindow* w )
         effects->setElevatedWindow( selected_window, false );
         }
     selected_window = w;
+    thumbnailFrame.setText( selected_window->caption() );
     if( elevate_window && w )
         {
         effects->setElevatedWindow( selected_window, true );
@@ -528,8 +533,6 @@ void BoxSwitchEffect::calculateFrameSize()
         item_max_size.setHeight( 200 );
         }
     // How much height to reserve for a one-line text label
-    text_font.setBold( true );
-    text_font.setPointSize( 12 );
     text_area.setHeight( QFontMetrics( text_font ).height() * 1.2 );
     // Separator space between items and text
     const int separator_height = 6;
@@ -1052,11 +1055,5 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         }
 #endif
     }
-
-void BoxSwitchEffect::paintText( const QString& text )
-{
-    int maxwidth = text_area.width();
-    effects->paintText( text, text_area.center(), maxwidth, EffectFrame::textColor(), text_font );
-}
 
 } // namespace

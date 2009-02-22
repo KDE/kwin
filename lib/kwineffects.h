@@ -714,6 +714,8 @@ class KWIN_EXPORT EffectsHandler
         virtual int shadowTextureList( ShadowType type ) const = 0;
 
         /**
+         * @deprecated
+         * @see EffectFrame
          * Paints given text onto screen, possibly in elided form
          * @param text
          * @param center center point of the painted text
@@ -723,11 +725,23 @@ class KWIN_EXPORT EffectsHandler
          **/
         bool paintText( const QString& text, const QPoint& center, int maxwidth,
                         const QColor& color, const QFont& font = QFont() );
+        /**
+         * @deprecated
+         * @see EffectFrame
+         */
         bool paintText( const QString& text, const QRect& rect, const QColor& color,
                         const QFont& font = QFont(), const Qt::Alignment& alignment = Qt::AlignCenter );
+        /**
+         * @deprecated
+         * @see EffectFrame
+         */
         bool paintTextWithBackground( const QString& text, const QPoint& center, int maxwidth,
                                       const QColor& color, const QColor& bgcolor,
                                       const QFont& font = QFont() );
+        /**
+         * @deprecated
+         * @see EffectFrame
+         */
         bool paintTextWithBackground( const QString& text, const QRect& rect, const QColor& color,
                                       const QColor& bgcolor, const QFont& font = QFont(),
                                       const Qt::Alignment& alignment = Qt::AlignCenter );
@@ -1552,6 +1566,11 @@ class KWIN_EXPORT WindowMotionManager
          */
         QRectF transformedGeometry( EffectWindow *w ) const;
         /**
+         * Retrieve the current target geometry of a registered
+         * window.
+         */
+        QRectF targetGeometry( EffectWindow *w ) const;
+        /**
          * Return the window that has it's transformed geometry under
          * the specified point. It is recommended to use the stacking
          * order as it's what the user sees, but it is slightly
@@ -1592,22 +1611,32 @@ class KWIN_EXPORT WindowMotionManager
     };
 
 /**
- * @short Helper class for painting themed boxes.
+ * @short Helper class for displaying text and icons in frames.
  *
- * Paints a box using the default Plasma theme.
+ * Paints text and/or and icon with an optional frame around them. The
+ * available frames includes one that follows the default Plasma theme and
+ * another that doesn't.
+ * It is recommended to use this class whenever displaying text.
  */
 class KWIN_EXPORT EffectFrame : public QObject
     {
     Q_OBJECT
 
     public:
+        enum Style
+            {
+            None, ///< Displays no frame around the contents.
+            Unstyled, ///< Displays a basic box around the contents.
+            Styled ///< Displays a Plasma-styled frame around the contents.
+            };
+
         /**
          * Creates a new frame object. If the frame does not have a static size
          * then it will be located at @a position with @a alignment. A
          * non-static frame will automatically adjust its size to fit the
          * contents.
          */
-        EffectFrame( bool staticSize = false, QPoint position = QPoint( -1, -1 ),
+        EffectFrame( Style style, bool staticSize = true, QPoint position = QPoint( -1, -1 ),
             Qt::Alignment alignment = Qt::AlignCenter );
         ~EffectFrame();
 
@@ -1620,22 +1649,34 @@ class KWIN_EXPORT EffectFrame : public QObject
         /**
          * Render the frame.
          */
-        void render( QRegion region = infiniteRegion(), double opacity = 1.0 );
+        void render( QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0 );
 
         void setPosition( const QPoint& point );
+        /**
+         * Set the text alignment for static frames and the position alignment
+         * for non-static.
+         */
         inline void setAlignment( Qt::Alignment alignment )
             { m_alignment = alignment; }; // Doesn't change geometry
         void setGeometry( const QRect& geometry, bool force = false );
-        QRect geometry() const // Inner/contents geometry
+        inline QRect geometry() const // Inner/contents geometry
             { return m_geometry; };
 
         void setText( const QString& text );
+        inline QString text() const
+            { return m_text; };
         void setFont( const QFont& font );
+        inline QFont font() const
+            { return m_font; };
         /**
          * Set the icon that will appear on the left-hand size of the frame.
          */
         void setIcon( const QPixmap& icon );
+        inline QPixmap icon() const
+            { return m_icon; };
         void setIconSize( const QSize& size );
+        inline QSize iconSize() const
+            { return m_iconSize; };
 
         /**
          * The foreground text color as specified by the default Plasma theme.
@@ -1646,12 +1687,15 @@ class KWIN_EXPORT EffectFrame : public QObject
         void plasmaThemeChanged();
 
     private:
+        Q_DISABLE_COPY( EffectFrame ) // As we need to use Qt slots we cannot copy this class
+
         void autoResize(); // Auto-resize if not a static size
-        void updateTexture(); // Update OpenGL frame texture
+        void updateTexture(); // Update OpenGL styled frame texture
         void updateTextTexture(); // Update OpenGL text texture
-        void updatePicture(); // Update XRender frame picture
+        void updatePicture(); // Update XRender styled frame picture
         void updateTextPicture(); // Update XRender text picture
 
+        Style m_style;
         Plasma::FrameSvg m_frame;
         GLTexture* m_texture;
         GLTexture* m_textTexture;
@@ -1669,6 +1713,9 @@ class KWIN_EXPORT EffectFrame : public QObject
         QFont m_font;
         QPixmap m_icon;
         QSize m_iconSize;
+
+        static GLTexture* m_unstyledTexture;
+        static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
     };
 
 /**

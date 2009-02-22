@@ -70,7 +70,6 @@ class BoxSwitchEffect
         void paintWindowThumbnail( EffectWindow* w );
         void paintDesktopThumbnail( int iDesktop );
         void paintWindowIcon( EffectWindow* w );
-        void paintText( const QString& text );
 
         bool mActivated;
         Window mInput;

@@ -135,12 +135,6 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
     if( desktopNameAlignment )
         {
-        double progress = timeline.value();
-        QColor textColor( 255, 255, 255, 255 * progress );
-        QColor bgColor( 0, 0, 0, 178 * progress ); // 70%
-        QFont f;
-        f.setBold( true );
-        f.setPointSize( 12 );
         for( int screen = 0; screen < effects->numScreens(); screen++ )
             {
             QRect screenGeom = effects->clientArea( ScreenArea, screen, 0 );
@@ -152,8 +146,21 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 QRect textArea( posTL.x(), posTL.y(), posBR.x() - posTL.x(), posBR.y() - posTL.y() );
                 textArea.adjust( textArea.width() / 10, textArea.height() / 10,
                     -textArea.width() / 10, -textArea.height() / 10 );
-                effects->paintTextWithBackground( effects->desktopName( desktop ),
-                    textArea, textColor, bgColor, f, desktopNameAlignment );
+                int x, y;
+                if( desktopNameAlignment & Qt::AlignLeft )
+                    x = textArea.x();
+                else if( desktopNameAlignment & Qt::AlignRight )
+                    x = textArea.right();
+                else
+                    x = textArea.center().x();
+                if( desktopNameAlignment & Qt::AlignTop )
+                    y = textArea.y();
+                else if( desktopNameAlignment & Qt::AlignBottom )
+                    y = textArea.bottom();
+                else
+                    y = textArea.center().y();
+                desktopNames[desktop-1]->setPosition( QPoint( x, y ));
+                desktopNames[desktop-1]->render( region, timeline.value(), 0.7 );
                 }
             }
         }
@@ -750,6 +757,22 @@ void DesktopGridEffect::setup()
         }
     hoverTimeline[effects->currentDesktop() - 1].setProgress( 1.0 );
 
+    // Create desktop name textures if enabled
+    if( desktopNameAlignment )
+        {
+        desktopNames = new EffectFrame*[effects->numberOfDesktops()];
+        QFont font;
+        font.setBold( true );
+        font.setPointSize( 12 );
+        for( int i = 0; i < effects->numberOfDesktops(); i++ )
+            {
+            desktopNames[i] = new EffectFrame( EffectFrame::Unstyled, false );
+            desktopNames[i]->setFont( font );
+            desktopNames[i]->setText( effects->desktopName( i+1 ));
+            desktopNames[i]->setAlignment( desktopNameAlignment );
+            }
+        }
+
     // We need these variables for every paint so lets cache them
     int x, y;
     int numDesktops = effects->numberOfDesktops();
@@ -806,6 +829,13 @@ void DesktopGridEffect::setup()
 
 void DesktopGridEffect::finish()
     {
+    if( desktopNameAlignment )
+        {
+        for( int i = 0; i < effects->numberOfDesktops(); i++ )
+            delete desktopNames[i];
+        delete[] desktopNames;
+        }
+
     if( keyboardGrab )
         effects->ungrabKeyboard();
     keyboardGrab = false;

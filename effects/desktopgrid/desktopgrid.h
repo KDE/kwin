@@ -85,7 +85,9 @@ class DesktopGridEffect
         
         // Soft highlighting
         QList<TimeLine> hoverTimeline;
-        
+
+        EffectFrame** desktopNames;
+
         QSize gridSize;
         Qt::Orientation orientation;
         QPoint activeCell;
