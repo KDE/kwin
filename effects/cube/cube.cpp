@@ -2062,6 +2062,13 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
             // display width corresponds to sum of angles of the polyhedron
             int deltaX = oldpos.x() - pos.x();
             float deltaDegrees = (float)deltaX/rect.width() * 360.0f;
+            if( deltaX == 0 )
+                {
+                if( pos.x() == 0 )
+                    deltaDegrees = 5.0f;
+                if( pos.x() == displayWidth() -1 )
+                    deltaDegrees = -5.0f;
+                }
             if( invertMouse )
                 manualAngle += deltaDegrees;
             else
