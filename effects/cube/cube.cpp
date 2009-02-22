@@ -1317,7 +1317,7 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                 int prev_desktop = painting_desktop -1;
                 if( prev_desktop == 0 )
                     prev_desktop = effects->numberOfDesktops();
-                if( w->isOnDesktop( prev_desktop ) )
+                if( w->isOnDesktop( prev_desktop ) && mode == Cube )
                     {
                     QRect rect = effects->clientArea( FullArea, activeScreen, prev_desktop);
                     if( w->x()+w->width() > rect.x() + rect.width() )
@@ -1341,7 +1341,7 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                 int next_desktop = painting_desktop +1;
                 if( next_desktop > effects->numberOfDesktops() )
                     next_desktop = 1;
-                if( w->isOnDesktop( next_desktop ) )
+                if( w->isOnDesktop( next_desktop ) && mode == Cube )
                     {
                     QRect rect = effects->clientArea( FullArea, activeScreen, next_desktop);
                     if( w->x() < rect.x() )
