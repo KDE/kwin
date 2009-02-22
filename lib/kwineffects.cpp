@@ -1515,8 +1515,8 @@ void EffectFrame::setText( const QString& text )
             delete m_textPicture;
             m_textPicture = NULL;
             }
-        }
 #endif
+        }
     }
 
 void EffectFrame::setFont( const QFont& font )
@@ -1540,8 +1540,8 @@ void EffectFrame::setFont( const QFont& font )
             delete m_textPicture;
             m_textPicture = NULL;
             }
-        }
 #endif
+        }
     }
 
 void EffectFrame::setIcon( const QPixmap& icon )
