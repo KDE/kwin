@@ -1555,12 +1555,13 @@ void EffectFrame::setPosition( const QPoint& point )
 
 void EffectFrame::setGeometry( const QRect& geometry, bool force )
     {
+    QRect oldGeom = m_geometry;
     m_geometry = geometry;
-    if( geometry == m_geometry && !force )
+    if( m_geometry == oldGeom && !force )
         return;
-    effects->addRepaint( geometry );
+    effects->addRepaint( oldGeom );
     effects->addRepaint( m_geometry );
-    if( geometry.size() == m_geometry.size() && !force )
+    if( m_geometry.size() == oldGeom.size() && !force )
         return;
 
     if( m_style == Styled )
