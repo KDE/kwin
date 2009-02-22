@@ -277,9 +277,12 @@ void PresentWindowsEffect::windowClosed( EffectWindow *w )
 
 void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     {
-    delete m_windowData[w].textFrame;
-    delete m_windowData[w].iconFrame;
-    m_windowData.remove( w );
+    if( m_windowData.contains( w ))
+        {
+        delete m_windowData[w].textFrame;
+        delete m_windowData[w].iconFrame;
+        m_windowData.remove( w );
+        }
     m_motionManager.unmanage( w );
     }
 
