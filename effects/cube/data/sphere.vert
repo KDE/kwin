@@ -41,4 +41,5 @@ void main()
     vertex.xyz += diff;
 
     gl_Position = gl_ModelViewProjectionMatrix * vec4( vertex, 1.0 );
+    gl_FrontColor = gl_Color;
 }

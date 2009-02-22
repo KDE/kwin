@@ -1347,6 +1347,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             cylinderShader->setUniform( "windowHeight", (float)w->height() );
             cylinderShader->setUniform( "xCoord", (float)w->x() );
             cylinderShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
+            cylinderShader->setUniform( "useTexture", 1.0f );
             float factor = 0.0f;
             if( start )
                 factor = 1.0f - timeLine.value();
@@ -1363,6 +1364,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             sphereShader->setUniform( "xCoord", (float)w->x() );
             sphereShader->setUniform( "yCoord", (float)w->y() );
             sphereShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
+            sphereShader->setUniform( "useTexture", 1.0f );
             float factor = 0.0f;
             if( start )
                 factor = 1.0f - timeLine.value();
@@ -1531,8 +1533,13 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 }
             data.quads = new_quads;
             }
+        }
+    effects->paintWindow( w, mask, region, data );
+    if( activated && cube_painting )
+        {
         if( w->isDesktop() && effects->numScreens() > 1 && paintCaps )
             {
+            QRect rect = effects->clientArea( FullArea, activeScreen, painting_desktop );
             QRegion paint = QRegion( rect );
             for( int i=0; i<effects->numScreens(); i++ )
                 {
@@ -1544,6 +1551,17 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
             // in case of free area in multiscreen setup fill it with cap color
             if( !paint.isEmpty() )
                 {
+                if( mode == Cylinder )
+                    {
+                    cylinderShader->setUniform( "useTexture", -1.0f );
+                    cylinderShader->setUniform( "xCoord", 0.0f );
+                    }
+                if( mode == Sphere )
+                    {
+                    sphereShader->setUniform( "useTexture", -1.0f );
+                    sphereShader->setUniform( "xCoord", 0.0f );
+                    sphereShader->setUniform( "yCoord", 0.0f );
+                    }
                 glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity );
                 glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
                 glEnable( GL_BLEND );
@@ -1551,20 +1569,25 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 glBegin( GL_QUADS );
                 foreach( QRect paintRect, paint.rects() )
                     {
-                    glVertex2f( paintRect.x(), paintRect.y() );
-                    glVertex2f( paintRect.x()+paintRect.width(), paintRect.y() );
-                    glVertex2f( paintRect.x()+paintRect.width(), paintRect.y() + paintRect.height() );
-                    glVertex2f( paintRect.x(), paintRect.y() + paintRect.height() );
+                    for( int i=0; i<=(paintRect.height()/40.0); i++ )
+                        {
+                        for( int j=0; j<=(paintRect.width()/40.0); j++ )
+                            {
+                            glVertex2f( paintRect.x()+j*40.0f, paintRect.y()+i*40.0f );
+                            glVertex2f( qMin( paintRect.x()+(j+1)*40.0f, (float)paintRect.x() + paintRect.width() ),
+                                paintRect.y()+i*40.0f );
+                            glVertex2f( qMin( paintRect.x()+(j+1)*40.0f, (float)paintRect.x() + paintRect.width() ),
+                                qMin( paintRect.y() + (i+1)*40.0f, (float)paintRect.y() + paintRect.height() ) );
+                            glVertex2f( paintRect.x()+j*40.0f,
+                                qMin( paintRect.y() + (i+1)*40.0f, (float)paintRect.y() + paintRect.height() ) );
+                            }
+                        }
                     }
                 glEnd();
                 glDisable( GL_BLEND );
                 glPopAttrib();
                 }
             }
-        }
-    effects->paintWindow( w, mask, region, data );
-    if( activated && cube_painting )
-        {
         glPopMatrix();
         if( mode == Cylinder )
             cylinderShader->unbind();

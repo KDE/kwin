@@ -36,4 +36,5 @@ void main()
     vec3 diff = (gl_Vertex.xyz - vertex.xyz)*timeLine;
     vertex.xyz += diff;
     gl_Position = gl_ModelViewProjectionMatrix * vertex;
+    gl_FrontColor = gl_Color;
 }
