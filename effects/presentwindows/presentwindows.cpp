@@ -249,6 +249,8 @@ void PresentWindowsEffect::paintWindow( EffectWindow *w, int mask, QRegion regio
 
 void PresentWindowsEffect::windowAdded( EffectWindow *w )
     {
+    if( !m_activated )
+        return;
     m_windowData[w].visible = isVisibleWindow( w );
     m_windowData[w].opacity = 0.0;
     m_windowData[w].highlight = 0.0;
@@ -269,21 +271,22 @@ void PresentWindowsEffect::windowAdded( EffectWindow *w )
 
 void PresentWindowsEffect::windowClosed( EffectWindow *w )
     {
+    if( !m_activated )
+        return;
     if( m_highlightedWindow == w )
         setHighlightedWindow( findFirstWindow() );
     m_windowData[w].visible = false; // TODO: Fix this so they do actually fade out
-    rearrangeWindows();
     }
 
 void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     {
-    if( m_windowData.contains( w ))
-        {
-        delete m_windowData[w].textFrame;
-        delete m_windowData[w].iconFrame;
-        m_windowData.remove( w );
-        }
+    if( !m_activated )
+        return;
+    delete m_windowData[w].textFrame;
+    delete m_windowData[w].iconFrame;
+    m_windowData.remove( w );
     m_motionManager.unmanage( w );
+    rearrangeWindows();
     }
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
