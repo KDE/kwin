@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Sheet
 Name[ga]=Bileog
+Name[gl]=Folla
 Name[pt]=Folha
 Name[pt_BR]=Folha
 Name[si]=කොලය
@@ -10,6 +11,7 @@ Name[zh_TW]=飄落
 Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
 Comment[ga]=Leis seo, eitlíonn dialóga módúla isteach agus amach agus iad á dtaispeáint nó á bhfolú
+Comment[gl]=Fai entrar e saír voando ás fiestras modais cando se mostran ou agochan
 Comment[pt]=Fazer com que as janelas voem suavemente quando aparecem ou ficam escondidas
 Comment[pt_BR]=Faz as janelas voarem suavemente quando são exibidas ou ocultadas
 Comment[sv]=Gör att dialogrutor mjukt flyger in eller ut när de visas eller döljs
