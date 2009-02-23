@@ -1278,7 +1278,20 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
         if( cube_painting )
             {
             if( mode == Cylinder || mode == Sphere )
-                data.quads = data.quads.makeGrid( 40 );
+                {
+                int leftDesktop = frontDesktop -1;
+                int rightDesktop = frontDesktop + 1;
+                if( leftDesktop == 0 )
+                    leftDesktop = effects->numberOfDesktops();
+                if( rightDesktop > effects->numberOfDesktops() )
+                    rightDesktop = 1;
+                if( painting_desktop == frontDesktop )
+                    data.quads = data.quads.makeGrid( 40 );
+                else if( painting_desktop == leftDesktop || painting_desktop == rightDesktop )
+                    data.quads = data.quads.makeGrid( 100 );
+                else
+                    data.quads = data.quads.makeGrid( 250 );
+                }
             if( ( w->isDesktop() || w->isDock() ) && w->screen() != activeScreen && w->isOnDesktop( effects->currentDesktop() ) )
                 {
                 windowsOnOtherScreens.append( w );
@@ -1599,19 +1612,32 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 glEnable( GL_BLEND );
                 glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
                 glBegin( GL_QUADS );
+                float quadSize = 0.0f;
+                int leftDesktop = frontDesktop -1;
+                int rightDesktop = frontDesktop + 1;
+                if( leftDesktop == 0 )
+                    leftDesktop = effects->numberOfDesktops();
+                if( rightDesktop > effects->numberOfDesktops() )
+                    rightDesktop = 1;
+                if( painting_desktop == frontDesktop )
+                    quadSize = 100.0f;
+                else if( painting_desktop == leftDesktop || painting_desktop == rightDesktop )
+                    quadSize = 150.0f;
+                else
+                    quadSize = 250.0f;
                 foreach( QRect paintRect, paint.rects() )
                     {
-                    for( int i=0; i<=(paintRect.height()/40.0); i++ )
+                    for( int i=0; i<=(paintRect.height()/quadSize); i++ )
                         {
-                        for( int j=0; j<=(paintRect.width()/40.0); j++ )
+                        for( int j=0; j<=(paintRect.width()/quadSize); j++ )
                             {
-                            glVertex2f( paintRect.x()+j*40.0f, paintRect.y()+i*40.0f );
-                            glVertex2f( qMin( paintRect.x()+(j+1)*40.0f, (float)paintRect.x() + paintRect.width() ),
-                                paintRect.y()+i*40.0f );
-                            glVertex2f( qMin( paintRect.x()+(j+1)*40.0f, (float)paintRect.x() + paintRect.width() ),
-                                qMin( paintRect.y() + (i+1)*40.0f, (float)paintRect.y() + paintRect.height() ) );
-                            glVertex2f( paintRect.x()+j*40.0f,
-                                qMin( paintRect.y() + (i+1)*40.0f, (float)paintRect.y() + paintRect.height() ) );
+                            glVertex2f( paintRect.x()+j*quadSize, paintRect.y()+i*quadSize );
+                            glVertex2f( qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ),
+                                paintRect.y()+i*quadSize );
+                            glVertex2f( qMin( paintRect.x()+(j+1)*quadSize, (float)paintRect.x() + paintRect.width() ),
+                                qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() ) );
+                            glVertex2f( paintRect.x()+j*quadSize,
+                                qMin( paintRect.y() + (i+1)*quadSize, (float)paintRect.y() + paintRect.height() ) );
                             }
                         }
                     }
