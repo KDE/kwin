@@ -40,8 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KPluginFactory>
 #include <KDE/KShortcutsEditor>
 
-#include <Plasma/FrameSvg>
-#include <Plasma/Theme>
+#include <KDE/Plasma/FrameSvg>
+#include <KDE/Plasma/Theme>
 
 #include <assert.h>
 #include <limits.h>
@@ -1683,7 +1683,7 @@ class KWIN_EXPORT EffectFrame : public QObject
          */
         static QColor textColor();
 
-    private slots:
+    private Q_SLOTS:
         void plasmaThemeChanged();
 
     private:
