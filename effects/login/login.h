@@ -36,7 +36,6 @@ class LoginEffect
         virtual void postPaintScreen();
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
-        virtual void windowAdded( EffectWindow* w );
         virtual void windowClosed( EffectWindow* w );
     private:
         bool isLoginSplash( EffectWindow* w );

@@ -76,20 +76,13 @@ void LoginEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
-void LoginEffect::windowAdded( EffectWindow* w )
+void LoginEffect::windowClosed( EffectWindow* w )
     {
     if( isLoginSplash( w ))
         {
+        if( login_window )
+            return; // We already have a window... should never happen.
         login_window = w;
-        progress = 1.0;
-        effects->addRepaintFull();
-        }
-    }
-
-void LoginEffect::windowClosed( EffectWindow* w )
-    {
-    if( w == login_window )
-        {
         login_window->refWindow();
         progress = 0.0;
         effects->addRepaintFull();
