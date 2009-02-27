@@ -84,6 +84,7 @@ Comment[cs]=Odbarvit plochu při zobrazení okna pro odhlášení
 Comment[da]=Afmæt farverne på desktoppen når log ud-dialogen vises
 Comment[de]=Färbt die Arbeitsfläche in Grautöne, wenn der Abmelde-Dialog erscheint.
 Comment[el]=Αποχρωματισμός της επιφάνειας εργασίας κατά την εμφάνιση του διαλόγου αποσύνδεσης
+Comment[en_GB]=Desaturate the desktop when displaying the logout dialogue
 Comment[es]=Desatura el escritorio cuando se finaliza la sesión
 Comment[et]=Töölaua värvide tuhmistamine väljalogimisdialoogi näitamisel
 Comment[fr]=Dé-sature le bureau lors de l'affichage de la fenêtre de déconnexion

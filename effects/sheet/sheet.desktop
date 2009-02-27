@@ -12,6 +12,7 @@ Name[uk]=Аркуш
 Name[zh_TW]=飄落
 Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
+Comment[en_GB]=Make modal dialogues smoothly fly in and out when they are shown or hidden
 Comment[et]=Paneb modaalsed dialoogid sujuvalt peale või ära kerima, kui need nähtavale tuuakse või peidetakse
 Comment[ga]=Leis seo, eitlíonn dialóga módúla isteach agus amach agus iad á dtaispeáint nó á bhfolú
 Comment[gl]=Fai entrar e saír voando ás fiestras modais cando se mostran ou agochan
