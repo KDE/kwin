@@ -198,9 +198,6 @@ public:
 private slots:
   void shadeHoverChanged(bool);
 
-  //copied from kcontrol/konq/kwindesktop, aleXXX
-  void setEBorders();
-
   void changed() { emit KCModule::changed(true); }
 
 private:
@@ -216,18 +213,6 @@ private:
 
   KConfig *config;
   bool     standAlone;
-
-  int getElectricBorders( void );
-  int getElectricBorderDelay();
-  void setElectricBorders( int );
-  void setElectricBorderDelay( int );
-
-  KButtonGroup *electricBox;
-  QRadioButton *active_disable;
-  QRadioButton *active_move;
-  QRadioButton *active_always;
-  QLabel *delaysLabel;
-  KIntNumInput *delays;
 
   void setHideUtilityWindowsForInactive( bool );
   QCheckBox* hideUtilityWindowsForInactive;

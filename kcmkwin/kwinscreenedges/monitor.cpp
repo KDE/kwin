@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2008 Lubos Lunak <l.lunak@suse.cz>
+Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,6 +55,7 @@ Monitor::Monitor( QWidget* parent )
         items[ i ] = new Corner( this );
         scene->addItem( items[ i ] );
         items[ i ]->setBrush( Qt::red ); // TODO color-scheme dependent?
+        hidden[ i ] = false;
         grp[ i ] = new QActionGroup( this );
         }
     checkSize();
@@ -67,6 +69,7 @@ void Monitor::clear()
         {
         popups[ i ]->clear();
         setEdge( i, false );
+        setEdgeHidden( i, false );
         delete grp[ i ];
         grp[ i ] = new QActionGroup( this );
         }
@@ -108,6 +111,20 @@ bool Monitor::edge( int edge ) const
     return items[ edge ]->brush() == Qt::green;
     }
 
+void Monitor::setEdgeHidden( int edge, bool set )
+    {
+    hidden[ edge ] = set;
+    if( set )
+        items[ edge ]->hide();
+    else
+        items[ edge ]->show();
+    }
+
+bool Monitor::edgeHidden( int edge ) const
+    {
+    return hidden[ edge ];
+    }
+
 void Monitor::addEdgeItem( int edge, const QString& item )
     {
     QAction* act = popups[ edge ]->addAction( item );
@@ -117,6 +134,16 @@ void Monitor::addEdgeItem( int edge, const QString& item )
     if( popup_actions[ edge ].count() == 1 )
         act->setChecked( true );
     setEdge( edge, !popup_actions[ edge ][ 0 ]->isChecked());
+    }
+
+void Monitor::setEdgeItemEnabled( int edge, int index, bool enabled )
+    {
+    popup_actions[ edge ][ index ]->setEnabled( enabled );
+    }
+
+bool Monitor::edgeItemEnabled( int edge, int index ) const
+    {
+    return popup_actions[ edge ][ index ]->isEnabled();
     }
 
 void Monitor::selectEdgeItem( int edge, int index )

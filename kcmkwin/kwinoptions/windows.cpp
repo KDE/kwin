@@ -68,10 +68,6 @@
 #define KWIN_SEPARATE_SCREEN_FOCUS "SeparateScreenFocus"
 #define KWIN_ACTIVE_MOUSE_SCREEN   "ActiveMouseScreen"
 
-// kwm config keywords
-#define KWM_ELECTRIC_BORDER                  "ElectricBorders"
-#define KWM_ELECTRIC_BORDER_DELAY            "ElectricBorderDelay"
-
 //CT 15mar 98 - magics
 #define KWM_BRDR_SNAP_ZONE                   "BorderSnapZone"
 #define KWM_BRDR_SNAP_ZONE_DEFAULT           10
@@ -605,7 +601,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 {
     QString wtstr;
     QLabel *label;
-    QGridLayout *lay = new QGridLayout (this);
+    QVBoxLayout *lay = new QVBoxLayout (this);
 
     //iTLabel = new QLabel(i18n("  Allowed overlap:\n"
     //                         "(% of desktop space)"),
@@ -647,51 +643,14 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     kLay->addWidget(shadeHoverLabel, 1, 0);
     kLay->addWidget(shadeHover, 1, 1);
 
-    kLay->setRowStretch(2, 1);
-    lay->addWidget(shBox, 0, 0);
+    lay->addWidget(shBox);
 
     // Any changes goes to slotChanged()
     connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
 
-    electricBox = new KButtonGroup(this);
-    electricBox->setTitle(i18n("Active Desktop Borders"));
-    QGridLayout *bLay = new QGridLayout(electricBox);
-
-    electricBox->setWhatsThis( i18n("If this option is enabled, moving the mouse to a screen border"
-       " will change your desktop. This is e.g. useful if you want to drag windows from one desktop"
-       " to the other.") );
-    active_disable = new QRadioButton(i18n("D&isabled"), electricBox);
-    bLay->addWidget(active_disable, 0, 0, 1, 2);
-    active_move    = new QRadioButton(i18n("Only &when moving windows"), electricBox);
-    bLay->addWidget(active_move, 1, 0, 1, 2);
-    active_always  = new QRadioButton(i18n("A&lways enabled"), electricBox);
-    bLay->addWidget(active_always, 2, 0, 1, 2);
-
-    delays = new KIntNumInput(10, electricBox);
-    delays->setRange(0, MAX_EDGE_RES, 50);
-    delays->setSuffix(i18n(" ms"));
-    delays->setWhatsThis( i18n("Here you can set a delay for switching desktops using the active"
-       " borders feature. Desktops will be switched after the mouse has been pushed against a screen border"
-       " for the specified number of milliseconds.") );
-    delays->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    delaysLabel = new QLabel(i18n("Desktop &switch delay:"), this);
-    delaysLabel->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
-    delaysLabel->setBuddy(delays);
-    bLay->addWidget(delaysLabel, 3, 0);
-    bLay->addWidget(delays, 3, 1);
-
-    connect( electricBox, SIGNAL(clicked(int)), this, SLOT(setEBorders()));
-
-    // Any changes goes to slotChanged()
-    connect(electricBox, SIGNAL(clicked(int)), SLOT(changed()));
-    connect(delays, SIGNAL(valueChanged(int)), SLOT(changed()));
-
-    lay->addWidget(electricBox, 0, 1);
-
-
     QGridLayout *vLay = new QGridLayout();
-    lay->addLayout( vLay, 1, 0, 1, 2 );
+    lay->addLayout( vLay );
 
     placementCombo = new QComboBox(this);
     placementCombo->setEditable( false );
@@ -740,7 +699,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     vLay->addWidget( hideUtilityWindowsForInactive, 1, 0, 1, 2 );
 
 
-    lay->setRowStretch(2, 1);
+    lay->addStretch();
     load();
 
 }
@@ -772,9 +731,6 @@ void KAdvancedConfig::load( void )
 
     setShadeHover(cg.readEntry(KWIN_SHADEHOVER, false));
     setShadeHoverInterval(cg.readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
-
-    setElectricBorders(cg.readEntry(KWM_ELECTRIC_BORDER, 0));
-    setElectricBorderDelay(cg.readEntry(KWM_ELECTRIC_BORDER_DELAY, 150));
 
     QString key;
     // placement policy --- CT 19jan98 ---
@@ -828,9 +784,6 @@ void KAdvancedConfig::save( void )
     if (v<0) v = 0;
     cg.writeEntry(KWIN_SHADEHOVER_INTERVAL, v);
 
-    cg.writeEntry(KWM_ELECTRIC_BORDER, getElectricBorders());
-    cg.writeEntry(KWM_ELECTRIC_BORDER_DELAY,getElectricBorderDelay());
-
     // placement policy --- CT 31jan98 ---
     v =getPlacement();
     if (v == RANDOM_PLACEMENT)
@@ -871,8 +824,6 @@ void KAdvancedConfig::defaults()
 {
     setShadeHover(false);
     setShadeHoverInterval(250);
-    setElectricBorders(0);
-    setElectricBorderDelay(150);
     setPlacement(SMART_PLACEMENT);
     setHideUtilityWindowsForInactive( true );
     emit KCModule::changed(true);
@@ -889,41 +840,6 @@ void KAdvancedConfig::setPlacement(int plac)
     placementCombo->setCurrentIndex(plac);
 }
 
-
-void KAdvancedConfig::setEBorders()
-{
-    delaysLabel->setEnabled(!active_disable->isChecked());
-    delays->setEnabled(!active_disable->isChecked());
-}
-
-int KAdvancedConfig::getElectricBorders()
-{
-    if (active_move->isChecked())
-       return 1;
-    if (active_always->isChecked())
-       return 2;
-    return 0;
-}
-
-int KAdvancedConfig::getElectricBorderDelay()
-{
-    return delays->value();
-}
-
-void KAdvancedConfig::setElectricBorders(int i){
-    switch(i)
-    {
-      case 1: active_move->setChecked(true); break;
-      case 2: active_always->setChecked(true); break;
-      default: active_disable->setChecked(true); break;
-    }
-    setEBorders();
-}
-
-void KAdvancedConfig::setElectricBorderDelay(int delay)
-{
-    delays->setValue(delay);
-}
 
 void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
     hideUtilityWindowsForInactive->setChecked( s );

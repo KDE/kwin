@@ -1,0 +1,18 @@
+[Desktop Entry]
+Exec=kcmshell4 kwinscreenedges
+Icon=preferences-screen-edges
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-DocPath=kcontrol/kwinscreenedges/index.html
+
+X-KDE-Library=kcm_kwinscreenedges
+X-KDE-ParentApp=kcontrol
+
+X-KDE-System-Settings-Parent-Category=desktop
+X-KDE-Weight=65
+
+Name=Screen Edges
+
+Comment=Configure active screen edges
+
+X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop

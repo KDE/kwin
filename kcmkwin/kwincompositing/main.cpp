@@ -79,7 +79,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     layout()->setMargin(0);
     ui.tabWidget->setCurrentIndex(0);
     ui.statusTitleWidget->hide();
-    setupElectricBorders();
 
 #define OPENGL_INDEX 0
 #define XRENDER_INDEX 1
@@ -110,9 +109,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.windowSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.desktopSwitchingCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.animationSpeedCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-
-    connect(ui.edges_monitor, SIGNAL(changed()), this, SLOT(changed()));
-    connect(ui.edges_monitor, SIGNAL(edgeSelectionChanged(int,int)), this, SLOT(electricBorderSelectionChanged(int,int)));
 
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(compositingModeChanged()));
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
@@ -215,7 +211,6 @@ void KWinCompositingConfig::compositingEnabled( bool enabled )
     ui.compositingOptionsContainer->setEnabled(enabled);
     ui.tabWidget->setTabEnabled(1, enabled);
     ui.tabWidget->setTabEnabled(2, enabled);
-    ui.tabWidget->setTabEnabled(3, enabled);
     }
 
 void KWinCompositingConfig::showConfirmDialog( bool reinitCompositing )
@@ -288,7 +283,7 @@ void KWinCompositingConfig::currentTabChanged(int tab)
         saveEffectsTab();
         loadGeneralTab();
         }
-    else if ( tab == 2 )
+    else if ( tab == 1 )
         {
         // Effects tab was activated
         saveGeneralTab();
@@ -397,7 +392,6 @@ void KWinCompositingConfig::load()
         tmpconfig.writeEntry(it.key(), it.value());
 
     loadGeneralTab();
-    loadElectricBorders();
     loadEffectsTab();
     loadAdvancedTab();
 
@@ -563,7 +557,6 @@ void KWinCompositingConfig::save()
         loadGeneralTab();
         saveGeneralTab();
         }
-    saveElectricBorders();
     bool advancedChanged = saveAdvancedTab();
 
     // Copy Plugins group from temp config to real config
@@ -649,157 +642,12 @@ void KWinCompositingConfig::defaults()
     ui.glDirect->setChecked( mDefaultPrefs.enableDirectRendering() );
     ui.glVSync->setChecked( mDefaultPrefs.enableVSync() );
     ui.xrenderSmoothScale->setChecked( false );
-
-    for( int i=0; i<8; i++ )
-        {
-        // set all edges to no effect
-        ui.edges_monitor->selectEdgeItem( i, 0 );
-        }
-    // set top left to present windows
-    ui.edges_monitor->selectEdgeItem( (int)Monitor::TopLeft, (int)PresentWindowsAll );
     }
 
 QString KWinCompositingConfig::quickHelp() const
     {
     return i18n("<h1>Desktop Effects</h1>");
     }
-
-void KWinCompositingConfig::setupElectricBorders()
-    {
-    addItemToEdgesMonitor( i18n("No Effect"));
-
-    // search the effect names
-    KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    KService::List services;
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_presentwindows'");
-    if( !services.isEmpty() )
-        {
-        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "All Desktops" ));
-        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Current Desktop" ));
-        }
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_desktopgrid'");
-    if( !services.isEmpty() )
-        addItemToEdgesMonitor( services.first()->name());
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cube'");
-    if( !services.isEmpty() )
-        {
-        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Cube") );
-        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Cylinder") );
-        addItemToEdgesMonitor( services.first()->name() + " - " + i18n( "Sphere") );
-        }
-    }
-
-void KWinCompositingConfig::addItemToEdgesMonitor(const QString& item)
-    {
-    for( int i=0; i<8; i++ )
-        ui.edges_monitor->addEdgeItem( i, item );
-    }
-
-void KWinCompositingConfig::electricBorderSelectionChanged(int edge, int index)
-    {
-    if( index == (int)NoEffect )
-        return;
-    for( int i=0; i<8; i++)
-        {
-        if( i == edge )
-            continue;
-        if( ui.edges_monitor->selectedEdgeItem( i ) == index )
-            ui.edges_monitor->selectEdgeItem( i, (int)NoEffect );
-        }
-    }
-
-
-void KWinCompositingConfig::loadElectricBorders()
-    {
-    // Present Windows
-    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
-    changeElectricBorder( (ElectricBorder)presentwindowsconfig.readEntry( "BorderActivateAll",
-        int( ElectricTopLeft )), (int)PresentWindowsAll );
-    changeElectricBorder( (ElectricBorder)presentwindowsconfig.readEntry( "BorderActivate",
-        int( ElectricNone )), (int)PresentWindowsCurrent );
-    // Desktop Grid
-    KConfigGroup gridconfig(mKWinConfig, "Effect-DesktopGrid");
-    changeElectricBorder( (ElectricBorder)gridconfig.readEntry( "BorderActivate",
-        int( ElectricNone )), (int)DesktopGrid );
-    // Desktop Cube
-    KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
-    changeElectricBorder( (ElectricBorder)cubeconfig.readEntry( "BorderActivate",
-        int( ElectricNone )), (int)Cube );
-    changeElectricBorder( (ElectricBorder)cubeconfig.readEntry( "BorderActivateCylinder",
-        int( ElectricNone )), (int)Cylinder );
-    changeElectricBorder( (ElectricBorder)cubeconfig.readEntry( "BorderActivateSphere",
-        int( ElectricNone )), (int)Sphere );
-    }
-
-void KWinCompositingConfig::changeElectricBorder( ElectricBorder border, int index )
-    {
-    switch (border)
-        {
-        case ElectricTop:
-            ui.edges_monitor->selectEdgeItem( (int)Monitor::Top, index );
-            break;
-        case ElectricTopRight:
-            ui.edges_monitor->selectEdgeItem( (int)Monitor::TopRight, index );
-            break;
-        case ElectricRight:
-            ui.edges_monitor->selectEdgeItem( (int)Monitor::Right, index );
-            break;
-        case ElectricBottomRight:
-            ui.edges_monitor->selectEdgeItem( (int)Monitor::BottomRight, index );
-            break;
-        case ElectricBottom:
-            ui.edges_monitor->selectEdgeItem( (int)Monitor::Bottom, index );
-            break;
-        case ElectricBottomLeft:
-            ui.edges_monitor->selectEdgeItem( (int)Monitor::BottomLeft, index );
-            break;
-        case ElectricLeft:
-            ui.edges_monitor->selectEdgeItem( (int)Monitor::Left, index );
-            break;
-        case ElectricTopLeft:
-            ui.edges_monitor->selectEdgeItem( (int)Monitor::TopLeft, index );
-            break;
-        default:
-            // nothing
-            break;
-        }
-    }
-
-ElectricBorder KWinCompositingConfig::checkEffectHasElectricBorder( int index )
-    {
-    if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Top ) == index )
-        return ElectricTop;
-    if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::TopRight ) == index )
-        return ElectricTopRight;
-    if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Right ) == index )
-        return ElectricRight;
-    if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::BottomRight ) == index )
-        return ElectricBottomRight;
-    if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Bottom ) == index )
-        return ElectricBottom;
-    if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::BottomLeft ) == index )
-        return ElectricBottomLeft;
-    if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::Left ) == index )
-        return ElectricLeft;
-    if( ui.edges_monitor->selectedEdgeItem( (int)Monitor::TopLeft ) == index )
-        return ElectricTopLeft;
-    return ElectricNone;
-    }
-
-void KWinCompositingConfig::saveElectricBorders()
-{
-    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
-    presentwindowsconfig.writeEntry( "BorderActivateAll", (int)checkEffectHasElectricBorder( (int)PresentWindowsAll ));
-    presentwindowsconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)PresentWindowsCurrent ));
-
-    KConfigGroup gridconfig(mKWinConfig, "Effect-DesktopGrid");
-    gridconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)DesktopGrid ));
-
-    KConfigGroup cubeconfig(mKWinConfig, "Effect-Cube");
-    cubeconfig.writeEntry( "BorderActivate", (int)checkEffectHasElectricBorder( (int)Cube ));
-    cubeconfig.writeEntry( "BorderActivateCylinder", (int)checkEffectHasElectricBorder( (int)Cylinder ));
-    cubeconfig.writeEntry( "BorderActivateSphere", (int)checkEffectHasElectricBorder( (int)Sphere ));
-}
 
 } // namespace
 

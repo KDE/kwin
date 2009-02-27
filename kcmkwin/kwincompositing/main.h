@@ -65,22 +65,15 @@ class KWinCompositingConfig : public KCModule
         void loadGeneralTab();
         void loadEffectsTab();
         void loadAdvancedTab();
-        void loadElectricBorders();
         void saveGeneralTab();
         void saveEffectsTab();
         bool saveAdvancedTab();
-        void electricBorderSelectionChanged(int edge, int index);
 
         void configChanged(bool reinitCompositing);
         void initEffectSelector();
 
     private:
         bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;
-        void setupElectricBorders();
-        void addItemToEdgesMonitor(const QString& item);
-        void changeElectricBorder( ElectricBorder border, int index );
-        ElectricBorder checkEffectHasElectricBorder( int index );
-        void saveElectricBorders();
 
         KSharedConfigPtr mKWinConfig;
         Ui::KWinCompositingConfig ui;
@@ -90,17 +83,6 @@ class KWinCompositingConfig : public KCModule
         KTemporaryFile mTmpConfigFile;
         KSharedConfigPtr mTmpConfig;
         bool m_showConfirmDialog;
-
-        enum ElectricBorderEffects
-            {
-            NoEffect,
-            PresentWindowsAll,
-            PresentWindowsCurrent,
-            DesktopGrid,
-            Cube,
-            Cylinder,
-            Sphere
-            };
     };
 
 } // namespace

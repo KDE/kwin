@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2008 Lubos Lunak <l.lunak@suse.cz>
+Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,8 +43,12 @@ class Monitor
         Monitor( QWidget* parent );
         void setEdge( int edge, bool set );
         bool edge( int edge ) const;
+        void setEdgeHidden( int edge, bool set );
+        bool edgeHidden( int edge ) const;
         void clear();
         void addEdgeItem( int edge, const QString& item );
+        void setEdgeItemEnabled( int edge, int index, bool enabled );
+        bool edgeItemEnabled( int edge, int index ) const;
         void selectEdgeItem( int edge, int index );
         int selectedEdgeItem( int edge ) const;
 
@@ -71,6 +76,7 @@ class Monitor
         QGraphicsView* view;
         QGraphicsScene* scene;
         QGraphicsRectItem* items[ 8 ];
+        bool hidden[ 8 ];
         QMenu* popups[ 8 ];
         QVector< QAction* > popup_actions[ 8 ];
         QActionGroup* grp[ 8 ];
