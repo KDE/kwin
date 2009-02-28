@@ -129,8 +129,20 @@ unsigned long Options::updateSettings()
     windowSnapZone = config.readEntry("WindowSnapZone", 10);
     centerSnapZone = config.readEntry("CenterSnapZone", 0);
     snapOnlyWhenOverlapping = config.readEntry("SnapOnlyWhenOverlapping", false);
+
+    // Electric borders
+    KConfigGroup borderConfig( _config, "ElectricBorders" );
+    electric_border_top = electricBorderAction( borderConfig.readEntry( "Top", "None" ));
+    electric_border_top_right = electricBorderAction( borderConfig.readEntry( "TopRight", "None" ));
+    electric_border_right = electricBorderAction( borderConfig.readEntry( "Right", "None" ));
+    electric_border_bottom_right = electricBorderAction( borderConfig.readEntry( "BottomRight", "None" ));
+    electric_border_bottom = electricBorderAction( borderConfig.readEntry( "Bottom", "None" ));
+    electric_border_bottom_left = electricBorderAction( borderConfig.readEntry( "BottomLeft", "None" ));
+    electric_border_left = electricBorderAction( borderConfig.readEntry( "Left", "None" ));
+    electric_border_top_left = electricBorderAction( borderConfig.readEntry( "TopLeft", "None" ));
     electric_borders = config.readEntry("ElectricBorders", 0);
     electric_border_delay = config.readEntry("ElectricBorderDelay", 150);
+    electric_border_cooldown = config.readEntry("ElectricBorderCooldown", 350);
 
     OpTitlebarDblClick = windowOperation( config.readEntry("TitlebarDoubleClickCommand", "Maximize"), true );
     setOpMaxButtonLeftClick( windowOperation( config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true ));
@@ -246,6 +258,13 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
     }
 
 
+ElectricBorderAction Options::electricBorderAction( const QString& name )
+    {
+    QString lowerName = name.toLower();
+    if( lowerName == "dashboard" ) return ElectricActionDashboard;
+    return ElectricActionNone;
+    }
+
 // restricted should be true for operations that the user may not be able to repeat
 // if the window is moved out of the workspace (e.g. if the user moves a window
 // by the titlebar, and moves it too high beneath Kicker at the top edge, they
@@ -316,6 +335,30 @@ bool Options::showGeometryTip()
     return show_geometry_tip;
     }
 
+ElectricBorderAction Options::electricBorderAction( ElectricBorder edge )
+    {
+    switch( edge )
+        {
+        case ElectricTop:
+            return electric_border_top;
+        case ElectricTopRight:
+            return electric_border_top_right;
+        case ElectricRight:
+            return electric_border_right;
+        case ElectricBottomRight:
+            return electric_border_bottom_right;
+        case ElectricBottom:
+            return electric_border_bottom;
+        case ElectricBottomLeft:
+            return electric_border_bottom_left;
+        case ElectricLeft:
+            return electric_border_left;
+        case ElectricTopLeft:
+            return electric_border_top_left;
+        }
+    return ElectricActionNone;
+    }
+
 int Options::electricBorders()
     {
     return electric_borders;
@@ -324,6 +367,11 @@ int Options::electricBorders()
 int Options::electricBorderDelay()
     {
     return electric_border_delay;
+    }
+
+int Options::electricBorderCooldown()
+    {
+    return electric_border_cooldown;
     }
 
 bool Options::checkIgnoreFocusStealing( const Client* c )

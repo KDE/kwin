@@ -159,6 +159,7 @@ class Workspace : public QObject, public KDecorationDefines
         void checkElectricBorder(const QPoint& pos, Time time);
         void reserveElectricBorder( ElectricBorder border );
         void unreserveElectricBorder( ElectricBorder border );
+        void reserveElectricBorderActions( bool reserve );
         void reserveElectricBorderSwitching( bool reserve );
 
         //-------------------------------------------------

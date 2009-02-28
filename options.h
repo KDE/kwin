@@ -258,7 +258,7 @@ class Options : public KDecorationOptions
         MouseCommand commandAll3() { return CmdAll3; }
         uint keyCmdAllModKey() { return CmdAllModKey; }
 
-
+        static ElectricBorderAction electricBorderAction( const QString& name );
         static WindowOperation windowOperation(const QString &name, bool restricted );
         static MouseCommand mouseCommand(const QString &name, bool restricted );
         static MouseWheelCommand mouseWheelCommand(const QString &name);
@@ -270,16 +270,23 @@ class Options : public KDecorationOptions
 
         enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
         /**
+        * @returns The action assigned to the specified electric border
+        */
+        ElectricBorderAction electricBorderAction( ElectricBorder edge );
+        /**
         * @returns true if electric borders are enabled. With electric borders
         * you can change desktop by moving the mouse pointer towards the edge
         * of the screen
         */
         int electricBorders();
-
         /**
         * @returns the activation delay for electric borders in milliseconds.
         */
         int electricBorderDelay();
+        /**
+        * @returns the trigger cooldown for electric borders in milliseconds.
+        */
+        int electricBorderCooldown();
 
         bool topMenuEnabled() const { return topmenus; }
         bool desktopTopMenu() const { return desktop_topmenu; }
@@ -332,8 +339,17 @@ class Options : public KDecorationOptions
         MouseWheelCommand CmdAllWheel;
         uint CmdAllModKey;
 
+        ElectricBorderAction electric_border_top;
+        ElectricBorderAction electric_border_top_right;
+        ElectricBorderAction electric_border_right;
+        ElectricBorderAction electric_border_bottom_right;
+        ElectricBorderAction electric_border_bottom;
+        ElectricBorderAction electric_border_bottom_left;
+        ElectricBorderAction electric_border_left;
+        ElectricBorderAction electric_border_top_left;
         int electric_borders;
         int electric_border_delay;
+        int electric_border_cooldown;
         bool show_geometry_tip;
         bool topmenus;
         bool desktop_topmenu;

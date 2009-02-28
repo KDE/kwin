@@ -190,32 +190,51 @@ void KWinScreenEdgesConfig::monitorItemSetEnabled( int index, bool enabled )
 void KWinScreenEdgesConfig::monitorInit()
     {
     monitorAddItem( i18n( "No Action" ));
+    monitorAddItem( i18n( "Show Dashboard" ));
 
     // Search the effect names
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     KService::List services;
     services = trader->query( "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_presentwindows'" );
-    if( !services.isEmpty() ) // WARNING: If this is false then all later items will have the wrong IDs
-        {
-        monitorAddItem( services.first()->name() + " - " + i18n( "All Desktops" ));
-        monitorAddItem( services.first()->name() + " - " + i18n( "Current Desktop" ));
-        }
+    if( services.isEmpty() )
+        abort(); // Crash is better than wrong IDs
+    monitorAddItem( services.first()->name() + " - " + i18n( "All Desktops" ));
+    monitorAddItem( services.first()->name() + " - " + i18n( "Current Desktop" ));
     services = trader->query( "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_desktopgrid'" );
-    if( !services.isEmpty() ) // WARNING: If this is false then all later items will have the wrong IDs
-        monitorAddItem( services.first()->name());
+    if( services.isEmpty() )
+        abort(); // Crash is better than wrong IDs
+    monitorAddItem( services.first()->name());
     services = trader->query( "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cube'" );
-    if( !services.isEmpty() ) // WARNING: If this is false then all later items will have the wrong IDs
-        {
-        monitorAddItem( services.first()->name() + " - " + i18n( "Cube" ));
-        monitorAddItem( services.first()->name() + " - " + i18n( "Cylinder" ));
-        monitorAddItem( services.first()->name() + " - " + i18n( "Sphere" ));
-        }
+    if( services.isEmpty() )
+        abort(); // Crash is better than wrong IDs
+    monitorAddItem( services.first()->name() + " - " + i18n( "Cube" ));
+    monitorAddItem( services.first()->name() + " - " + i18n( "Cylinder" ));
+    monitorAddItem( services.first()->name() + " - " + i18n( "Sphere" ));
 
     monitorShowEvent();
     }
 
+void KWinScreenEdgesConfig::monitorLoadAction( ElectricBorder edge, const QString& configName )
+    {
+    KConfigGroup config( m_config, "ElectricBorders" );
+    QString lowerName = config.readEntry( configName, "None" ).toLower();
+    if( lowerName == "dashboard" ) monitorChangeEdge( edge, int( ElectricActionDashboard ));
+    }
+
 void KWinScreenEdgesConfig::monitorLoad()
     {
+    // Load ElectricBorderActions
+    monitorLoadAction( ElectricTop,         "Top" );
+    monitorLoadAction( ElectricTopRight,    "TopRight" );
+    monitorLoadAction( ElectricRight,       "Right" );
+    monitorLoadAction( ElectricBottomRight, "BottomRight" );
+    monitorLoadAction( ElectricBottom,      "Bottom" );
+    monitorLoadAction( ElectricBottomLeft,  "BottomLeft" );
+    monitorLoadAction( ElectricLeft,        "Left" );
+    monitorLoadAction( ElectricTopLeft,     "TopLeft" );
+
+    // Load effect-specific actions:
+
     // Present Windows
     KConfigGroup presentWindowsConfig( m_config, "Effect-PresentWindows" );
     monitorChangeEdge(
@@ -244,8 +263,30 @@ void KWinScreenEdgesConfig::monitorLoad()
         int( Sphere ));
     }
 
+void KWinScreenEdgesConfig::monitorSaveAction( int edge, const QString& configName )
+    {
+    KConfigGroup config( m_config, "ElectricBorders" );
+    int item = m_ui->monitor->selectedEdgeItem( edge );
+    if( item == 1 ) // Plasma dashboard
+        config.writeEntry( configName, "Dashboard" );
+    else // Anything else
+        config.writeEntry( configName, "None" );
+    }
+
 void KWinScreenEdgesConfig::monitorSave()
     {
+    // Save ElectricBorderActions
+    monitorSaveAction( int( Monitor::Top ),         "Top" );
+    monitorSaveAction( int( Monitor::TopRight ),    "TopRight" );
+    monitorSaveAction( int( Monitor::Right ),       "Right" );
+    monitorSaveAction( int( Monitor::BottomRight ), "BottomRight" );
+    monitorSaveAction( int( Monitor::Bottom ),      "Bottom" );
+    monitorSaveAction( int( Monitor::BottomLeft ),  "BottomLeft" );
+    monitorSaveAction( int( Monitor::Left ),        "Left" );
+    monitorSaveAction( int( Monitor::TopLeft ),     "TopLeft" );
+
+    // Save effect-specific actions:
+
     // Present Windows
     KConfigGroup presentWindowsConfig( m_config, "Effect-PresentWindows" );
     presentWindowsConfig.writeEntry( "BorderActivateAll",
@@ -280,14 +321,14 @@ void KWinScreenEdgesConfig::monitorDefaults()
 
 void KWinScreenEdgesConfig::monitorEdgeChanged( int edge, int index )
     {
-    if( index == int( NoEffect ))
+    if( index == int( ElectricActionNone ))
         return;
     for( int i = 0; i < 8; i++ )
         {
         if( i == edge )
             continue;
         if( m_ui->monitor->selectedEdgeItem( i ) == index )
-            m_ui->monitor->selectEdgeItem( i, int( NoEffect ));
+            m_ui->monitor->selectEdgeItem( i, int( ElectricActionNone ));
         }
     }
 

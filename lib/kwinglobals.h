@@ -72,6 +72,17 @@ enum ElectricBorder
     ElectricNone
 };
 
+// TODO: Hardcoding is bad, need to add some way of registering global actions to these.
+// When designing the new system we must keep in mind that we have conditional actions
+// such as "only when moving windows" desktop switching that the current global action
+// system doesn't support.
+enum ElectricBorderAction
+{
+    ElectricActionNone,          // No special action, not set, desktop switch or an effect
+    ElectricActionDashboard,     // Launch the Plasma dashboard
+    ELECTRIC_ACTION_COUNT
+};
+
 // DesktopMode and WindowsMode are based on the order in which the desktop
 //  or window were viewed.
 // DesktopListMode lists them in the order created.

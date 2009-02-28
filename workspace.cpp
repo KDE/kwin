@@ -239,6 +239,7 @@ Workspace::Workspace( bool restore )
 
 void Workspace::init()
     {
+    reserveElectricBorderActions( true );
     if( options->electricBorders() == Options::ElectricAlways )
         reserveElectricBorderSwitching( true );
     updateElectricBorders();
@@ -1023,6 +1024,7 @@ void Workspace::slotReconfigure()
     kDebug( 1212 ) << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
 
+    reserveElectricBorderActions( false );
     if( options->electricBorders() == Options::ElectricAlways )
         reserveElectricBorderSwitching( false );
 
@@ -1058,6 +1060,7 @@ void Workspace::slotReconfigure()
             c->repaintDecoration();
         }
 
+    reserveElectricBorderActions( true );
     if( options->electricBorders() == Options::ElectricAlways )
         reserveElectricBorderSwitching( true );
     updateElectricBorders();
@@ -2046,6 +2049,18 @@ void Workspace::destroyElectricBorders()
         }
     }
 
+void Workspace::reserveElectricBorderActions( bool reserve )
+    {
+    for( int pos = 0; pos < ELECTRIC_COUNT; ++pos )
+        if( options->electricBorderAction( static_cast<ElectricBorder>( pos )))
+            {
+            if( reserve )
+                reserveElectricBorder( static_cast<ElectricBorder>( pos ));
+            else
+                unreserveElectricBorder( static_cast<ElectricBorder>( pos ));
+            }
+    }
+
 void Workspace::reserveElectricBorderSwitching( bool reserve )
     {
     for( int pos = 0; pos < ELECTRIC_COUNT; ++pos )
@@ -2089,7 +2104,7 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
 
     Time treshold_set = options->electricBorderDelay(); // Set timeout
     Time treshold_reset = 250; // Reset timeout
-    Time treshold_trigger = 350; // Minimum time between triggers
+    Time treshold_trigger = options->electricBorderCooldown(); // Minimum time between triggers
     int distance_reset = 30; // Mouse should not move more than this many pixels
 
     ElectricBorder border;
@@ -2126,12 +2141,39 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
             {
             electric_current_border = ElectricNone;
             electric_time_last_trigger = now;
-            if( effects && static_cast<EffectsHandlerImpl*>( effects )->borderActivated( border ))
-                {} // Handled by effects
-            else
-                {
+            if( movingClient )
+                { // If moving a client or have force doing the desktop switch
+                if( options->electricBorders() != Options::ElectricDisabled )
+                    electricBorderSwitchDesktop( border, pos );
+                return; // Don't reset cursor position
+                }
+            if( options->electricBorders() == Options::ElectricAlways &&
+              ( border == ElectricTop || border == ElectricRight ||
+                border == ElectricBottom || border == ElectricLeft ))
+                { // If desktop switching is always enabled don't apply it to the corners if
+                  // an effect is applied to it (We will check that later).
                 electricBorderSwitchDesktop( border, pos );
-                return;
+                return; // Don't reset cursor position
+                }
+            switch( options->electricBorderAction( border ))
+                {
+                case ElectricActionDashboard: // Display Plasma dashboard
+                    {
+                    QDBusInterface plasmaApp( "org.kde.plasma-desktop", "/App" );
+                    plasmaApp.call( "toggleDashboard" );
+                    }
+                    break;
+                case ElectricActionNone: // Either desktop switching or an effect
+                default:
+                    {
+                    if( effects && static_cast<EffectsHandlerImpl*>( effects )->borderActivated( border ))
+                        {} // Handled by effects
+                    else
+                        {
+                        electricBorderSwitchDesktop( border, pos );
+                        return; // Don't reset cursor position
+                        }
+                    }
                 }
             }
         }

@@ -66,8 +66,7 @@ class KWinScreenEdgesConfig : public KCModule
 
         enum EffectActions
             {
-            NoEffect,
-            PresentWindowsAll,
+            PresentWindowsAll = ELECTRIC_ACTION_COUNT, // Start at the end of built in actions
             PresentWindowsCurrent,
             DesktopGrid,
             Cube,
@@ -80,7 +79,9 @@ class KWinScreenEdgesConfig : public KCModule
         void monitorAddItem( const QString& item );
         void monitorItemSetEnabled( int index, bool enabled );
         void monitorInit();
+        void monitorLoadAction( ElectricBorder edge, const QString& configName );
         void monitorLoad();
+        void monitorSaveAction( int edge, const QString& configName );
         void monitorSave();
         void monitorDefaults();
         void monitorShowEvent();
