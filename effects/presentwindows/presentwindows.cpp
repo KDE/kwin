@@ -1136,6 +1136,7 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
     if( m_activated )
         {
         m_decalOpacity = 0.0;
+        m_highlightedWindow = NULL;
         m_windowFilter.clear();
 
         // Add every single window to m_windowData (Just calling [w] creates it)
