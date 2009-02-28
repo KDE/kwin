@@ -173,6 +173,8 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &
         w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE ); // Display always
         w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
 
+        assert( m_windowData.contains( w ));
+
         // Calculate window's opacity
         // TODO: Minimized windows or windows not on the current desktop are only 75% visible?
         if( m_windowData[w].visible )
@@ -211,6 +213,9 @@ void PresentWindowsEffect::paintWindow( EffectWindow *w, int mask, QRegion regio
             effects->paintWindow( w, mask, region, data );
             return;
             }
+
+        assert( m_windowData.contains( w ));
+
         // Apply opacity and brightness
         data.opacity *= m_windowData[w].opacity;
         data.brightness *= interpolate( 0.7, 1.0, m_windowData[w].highlight );
@@ -275,6 +280,7 @@ void PresentWindowsEffect::windowClosed( EffectWindow *w )
         return;
     if( m_highlightedWindow == w )
         setHighlightedWindow( findFirstWindow() );
+    assert( m_windowData.contains( w ));
     m_windowData[w].visible = false; // TODO: Fix this so they do actually fade out
     }
 
@@ -282,6 +288,7 @@ void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     {
     if( !m_activated )
         return;
+    assert( m_windowData.contains( w ));
     delete m_windowData[w].textFrame;
     delete m_windowData[w].iconFrame;
     m_windowData.remove( w );
@@ -311,6 +318,7 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent *e )
     EffectWindowList windows = m_motionManager.managedWindows();
     for( int i = 0; i < windows.size(); i++ )
         {
+        assert( m_windowData.contains( windows.at( i )));
         if( m_motionManager.transformedGeometry( windows.at( i )).contains( cursorPos() ) &&
             m_windowData[windows.at( i )].visible )
             {
@@ -468,6 +476,7 @@ void PresentWindowsEffect::rearrangeWindows()
         foreach( EffectWindow *w, m_motionManager.managedWindows() )
             {
             windowlists[w->screen()].append( w );
+            assert( m_windowData.contains( w ));
             m_windowData[w].visible = true;
             }
         }
@@ -475,6 +484,7 @@ void PresentWindowsEffect::rearrangeWindows()
         { // Can we move this filtering somewhere else?
         foreach( EffectWindow *w, m_motionManager.managedWindows() )
             {
+            assert( m_windowData.contains( w ));
             if( w->caption().contains( m_windowFilter, Qt::CaseInsensitive ) ||
                 w->windowClass().contains( m_windowFilter, Qt::CaseInsensitive ) ||
                 w->windowRole().contains( m_windowFilter, Qt::CaseInsensitive ))
@@ -496,6 +506,7 @@ void PresentWindowsEffect::rearrangeWindows()
     // We filtered out the highlighted window
     if( m_highlightedWindow )
         {
+        assert( m_windowData.contains( m_highlightedWindow ));
         if( m_windowData[m_highlightedWindow].visible == false )
             setHighlightedWindow( findFirstWindow() );
         }
@@ -1162,6 +1173,7 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
             foreach( EffectWindow *w, effects->currentTabBoxWindowList() )
                 {
                 m_motionManager.manage( w );
+                assert( m_windowData.contains( w ));
                 m_windowData[w].visible = effects->currentTabBoxWindowList().contains( w );
                 }
             // Hide windows not in the list
@@ -1214,6 +1226,7 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
         // Fade in/out all windows
         foreach( EffectWindow *w, effects->stackingOrder() )
             {
+            assert( m_windowData.contains( w ));
             EffectWindow *activeWindow = effects->activeWindow();
             if( m_tabBoxEnabled )
                 activeWindow = effects->currentTabBoxWindow();
