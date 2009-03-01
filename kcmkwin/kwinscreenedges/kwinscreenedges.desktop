@@ -12,7 +12,19 @@ X-KDE-System-Settings-Parent-Category=desktop
 X-KDE-Weight=65
 
 Name=Screen Edges
+Name[ga]=Ciumhaiseanna Scáileáin
+Name[pt]=Extremos do Ecrã
+Name[pt_BR]=Contornos da tela
+Name[sv]=Skärmkanter
+Name[uk]=Краї екрана
+Name[zh_TW]=螢幕邊緣
 
 Comment=Configure active screen edges
+Comment[ga]=Cumraigh ciumhaiseanna gníomhacha
+Comment[pt]=Configurar os extremos activos do ecrã
+Comment[pt_BR]=Configurar os contornos de tela ativos
+Comment[sv]=Anpassa aktiva skärmkanter
+Comment[uk]=Налаштування активних країв екрана
+Comment[zh_TW]=設定作用的螢幕邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop
