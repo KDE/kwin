@@ -168,12 +168,10 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &
     {
     // TODO: We should also check to see if any windows are fading just in case fading takes longer
     //       than moving the windows when the effect is deactivated.
-    if( m_activated || m_motionManager.areWindowsMoving() )
+    if(( m_activated || m_motionManager.areWindowsMoving() ) && m_windowData.contains( w ))
         {
         w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE ); // Display always
         w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
-
-        assert( m_windowData.contains( w ));
 
         // Calculate window's opacity
         // TODO: Minimized windows or windows not on the current desktop are only 75% visible?
@@ -205,7 +203,7 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &
 
 void PresentWindowsEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
     {
-    if( m_activated || m_motionManager.areWindowsMoving() )
+    if(( m_activated || m_motionManager.areWindowsMoving() ) && m_windowData.contains( w ))
         {
         if( w->isDock() && m_showPanel )
             {
@@ -213,8 +211,6 @@ void PresentWindowsEffect::paintWindow( EffectWindow *w, int mask, QRegion regio
             effects->paintWindow( w, mask, region, data );
             return;
             }
-
-        assert( m_windowData.contains( w ));
 
         // Apply opacity and brightness
         data.opacity *= m_windowData[w].opacity;
@@ -286,9 +282,8 @@ void PresentWindowsEffect::windowClosed( EffectWindow *w )
 
 void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     {
-    if( !m_activated )
+    if( !m_activated || !m_windowData.contains( w ))
         return;
-    assert( m_windowData.contains( w ));
     delete m_windowData[w].textFrame;
     delete m_windowData[w].iconFrame;
     m_windowData.remove( w );
