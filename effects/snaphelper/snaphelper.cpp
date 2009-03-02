@@ -174,7 +174,7 @@ void SnapHelperEffect::windowClosed( EffectWindow* w )
 
 void SnapHelperEffect::windowUserMovedResized( EffectWindow* w, bool first, bool last )
     {
-    if( first && w->isMovable() )
+    if( first && !last && w->isMovable() )
         {
         m_active = true;
         m_window = w;

@@ -62,6 +62,8 @@ class WobblyWindowsEffect : public Effect
 
     private:
 
+        void startMovedResized(EffectWindow* w);
+        void stepMovedResized(EffectWindow* w);
         bool updateWindowWobblyDatas(EffectWindow* w, qreal time);
 
         struct WindowWobblyInfos

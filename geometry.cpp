@@ -2169,6 +2169,8 @@ void Client::setMaximize( bool vertically, bool horizontally )
         max_mode & MaximizeVertical ? !vertically : vertically,
         max_mode & MaximizeHorizontal ? !horizontally : horizontally,
         false );
+    if( effects )
+        static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized( effectWindow(), true, true );
     }
 
 void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )

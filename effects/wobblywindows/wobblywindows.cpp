@@ -370,55 +370,23 @@ void WobblyWindowsEffect::postPaintScreen()
 
 void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bool last)
 {
-    if (m_moveEffectEnabled && first && !w->isSpecialWindow() &&
-       ((w->isUserMove() && m_moveWobble) || (w->isUserResize() && m_resizeWobble)))
+    if (!m_moveEffectEnabled || w->isSpecialWindow())
+        return;
+
+    if (first)
     {
-        if (!windows.contains(w))
+        if(last && m_moveWobble && m_resizeWobble)
         {
-            WindowWobblyInfos new_wwi;
-            initWobblyInfo(new_wwi, w->geometry());
-            windows[w] = new_wwi;
+            // both first and last - a step change like Maximize
+            stepMovedResized(w);
         }
-
-        WindowWobblyInfos& wwi = windows[w];
-        wwi.status = Moving;
-        const QRectF& rect = w->geometry();
-
-        qreal x_increment = rect.width() / (wwi.width-1.0);
-        qreal y_increment = rect.height() / (wwi.height-1.0);
-
-        Pair picked = {cursorPos().x(), cursorPos().y()};
-        int indx = (picked.x - rect.x()) / x_increment + 0.5;
-        int indy = (picked.y - rect.y()) / y_increment + 0.5;
-        int pickedPointIndex = indy*wwi.width + indx;
-        if (pickedPointIndex < 0)
+        else if ((w->isUserMove() && m_moveWobble) || (w->isUserResize() && m_resizeWobble))
         {
-            kDebug(1212) << "Picked index == " << pickedPointIndex << " with (" << cursorPos().x() << "," << cursorPos().y() << ")";
-            pickedPointIndex = 0;
-        }
-        else if (static_cast<unsigned int>(pickedPointIndex) > wwi.count - 1)
-        {
-            kDebug(1212) << "Picked index == " << pickedPointIndex << " with (" << cursorPos().x() << "," << cursorPos().y() << ")";
-            pickedPointIndex = wwi.count - 1;
-        }
-#if defined VERBOSE_MODE
-        kDebug(1212) << "Original Picked point -- x : " << picked.x << " - y : " << picked.y;
-#endif
-        wwi.constraint[pickedPointIndex] = true;
-
-        if (w->isUserResize())
-        {
-            // on a resize, do not allow any edges to wobble until it has been moved from
-            // its original location
-            wwi.can_wobble_top = wwi.can_wobble_left = wwi.can_wobble_right = wwi.can_wobble_bottom = false;
-            wwi.resize_original_rect = w->geometry();
-        }
-        else
-        {
-            wwi.can_wobble_top = wwi.can_wobble_left = wwi.can_wobble_right = wwi.can_wobble_bottom = true;
+            startMovedResized(w);
         }
     }
-    else if (m_moveEffectEnabled && last)
+
+    if (last)
     {
         if (windows.contains(w))
         {
@@ -435,6 +403,82 @@ void WobblyWindowsEffect::windowUserMovedResized(EffectWindow* w, bool first, bo
         if(rect.x()!=wwi.resize_original_rect.x()) wwi.can_wobble_left = true;
         if(rect.right()!=wwi.resize_original_rect.right()) wwi.can_wobble_right = true;
         if(rect.bottom()!=wwi.resize_original_rect.bottom()) wwi.can_wobble_bottom = true;
+    }
+}
+
+
+void WobblyWindowsEffect::startMovedResized(EffectWindow* w)
+{
+    if (!windows.contains(w))
+    {
+        WindowWobblyInfos new_wwi;
+        initWobblyInfo(new_wwi, w->geometry());
+        windows[w] = new_wwi;
+    }
+
+    WindowWobblyInfos& wwi = windows[w];
+    wwi.status = Moving;
+    const QRectF& rect = w->geometry();
+
+    qreal x_increment = rect.width() / (wwi.width-1.0);
+    qreal y_increment = rect.height() / (wwi.height-1.0);
+
+    Pair picked = {cursorPos().x(), cursorPos().y()};
+    int indx = (picked.x - rect.x()) / x_increment + 0.5;
+    int indy = (picked.y - rect.y()) / y_increment + 0.5;
+    int pickedPointIndex = indy*wwi.width + indx;
+    if (pickedPointIndex < 0)
+    {
+        kDebug(1212) << "Picked index == " << pickedPointIndex << " with (" << cursorPos().x() << "," << cursorPos().y() << ")";
+        pickedPointIndex = 0;
+    }
+    else if (static_cast<unsigned int>(pickedPointIndex) > wwi.count - 1)
+    {
+        kDebug(1212) << "Picked index == " << pickedPointIndex << " with (" << cursorPos().x() << "," << cursorPos().y() << ")";
+        pickedPointIndex = wwi.count - 1;
+    }
+#if defined VERBOSE_MODE
+    kDebug(1212) << "Original Picked point -- x : " << picked.x << " - y : " << picked.y;
+#endif
+    wwi.constraint[pickedPointIndex] = true;
+
+    if (w->isUserResize())
+    {
+        // on a resize, do not allow any edges to wobble until it has been moved from
+        // its original location
+        wwi.can_wobble_top = wwi.can_wobble_left = wwi.can_wobble_right = wwi.can_wobble_bottom = false;
+        wwi.resize_original_rect = w->geometry();
+    }
+    else
+    {
+        wwi.can_wobble_top = wwi.can_wobble_left = wwi.can_wobble_right = wwi.can_wobble_bottom = true;
+    }
+}
+
+void WobblyWindowsEffect::stepMovedResized(EffectWindow* w)
+{
+    QRect new_geometry = w->geometry();
+    if (!windows.contains(w))
+    {
+        WindowWobblyInfos new_wwi;
+        initWobblyInfo(new_wwi, new_geometry);
+        windows[w] = new_wwi;
+    }
+
+    WindowWobblyInfos& wwi = windows[w];
+    wwi.status = Free;
+
+    QRect maximized_area = effects->clientArea(MaximizeArea,w);
+    bool throb_direction_out = (new_geometry.top()==maximized_area.top()&&new_geometry.bottom()==maximized_area.bottom()) || 
+                               (new_geometry.left()==maximized_area.left()&&new_geometry.right()==maximized_area.right());
+    qreal magnitude = throb_direction_out ? 10 : -30; // a small throb out when maximized, a larger throb inwards when restored
+    for (unsigned int j=0; j<wwi.height; ++j)
+    {
+        for (unsigned int i=0; i<wwi.width; ++i)
+        {
+            Pair v = { magnitude*(i/qreal(wwi.width-1)-0.5), magnitude*(j/qreal(wwi.height-1)-0.5) };
+            wwi.velocity[j*wwi.width+i] = v;
+        }
     }
 }
 
