@@ -1681,7 +1681,7 @@ class KWIN_EXPORT EffectFrame : public QObject
         /**
          * The foreground text color as specified by the default Plasma theme.
          */
-        static QColor textColor();
+        static QColor styledTextColor();
 
     private Q_SLOTS:
         void plasmaThemeChanged();

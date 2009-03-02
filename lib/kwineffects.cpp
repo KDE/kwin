@@ -1454,17 +1454,11 @@ void EffectFrame::render( QRegion region, double opacity, double frameOpacity )
 
             glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
 
-            // Our unstyled frame texture is premultiplied
-            // TODO: Fix GLTexture::convertToGLFormat()
-            glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-
             m_unstyledTexture->bind();
             m_unstyledTexture->enableNormalizedTexCoords();
             renderGLGeometry( verts.count() / 2, verts.data(), texCoords.data() );
             m_unstyledTexture->disableNormalizedTexCoords();
             m_unstyledTexture->unbind();
-
-            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
             }
         else if( m_style == Styled )
             {
@@ -1497,10 +1491,6 @@ void EffectFrame::render( QRegion region, double opacity, double frameOpacity )
         // Render text
         if( !m_text.isEmpty() )
             {
-            // Our text texture is premultiplied
-            // TODO: Fix GLTexture::convertToGLFormat()
-            glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-
             if( !m_textTexture ) // Lazy creation
                 updateTextTexture();
             m_textTexture->bind();
@@ -1663,7 +1653,7 @@ void EffectFrame::setIconSize( const QSize& size )
     autoResize();
     }
 
-QColor EffectFrame::textColor()
+QColor EffectFrame::styledTextColor()
     {
     return Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor );
     }
@@ -1757,16 +1747,17 @@ void EffectFrame::updateTextTexture()
         text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
         }
 
-    // TODO: Use QPixmap for this once GLTexture has been converted to it. This will
-    //       allow us to change the contents without creating a completely new texture.
-    QImage pixmap( m_geometry.size(), QImage::Format_ARGB32 );
-    pixmap.fill( Qt::transparent );
-    QPainter p( &pixmap );
+    QImage image( m_geometry.size(), QImage::Format_ARGB32 );
+    image.fill( Qt::transparent );
+    QPainter p( &image );
     p.setFont( m_font );
-    p.setPen( textColor() );
+    if( m_style == Styled )
+        p.setPen( styledTextColor() );
+    else // TODO: What about no frame? Custom color setting required
+        p.setPen( Qt::white );
     p.drawText( rect, m_alignment, text );
     p.end();
-    m_textTexture = new GLTexture( pixmap );
+    m_textTexture = new GLTexture( image );
 #endif
     }
 
@@ -1804,7 +1795,10 @@ void EffectFrame::updateTextPicture()
     pixmap.fill( Qt::transparent );
     QPainter p( &pixmap );
     p.setFont( m_font );
-    p.setPen( textColor() );
+    if( m_style == Styled )
+        p.setPen( styledTextColor() );
+    else // TODO: What about no frame? Custom color setting required
+        p.setPen( Qt::white );
     p.drawText( rect, m_alignment, text );
     p.end();
     m_textPicture = new XRenderPicture( pixmap );
@@ -1822,7 +1816,7 @@ void EffectFrame::updateUnstyledTexture()
     QPainter p( &tmp );
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
-    p.setBrush( Qt::black );
+    p.setBrush( Qt::white );
     p.drawEllipse( tmp.rect() );
     p.end();
 #undef CS

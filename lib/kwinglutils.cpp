@@ -647,27 +647,69 @@ void GLTexture::enableFilter()
         }
     }
 
-QImage GLTexture::convertToGLFormat( const QImage& img ) const
-    {
-    // This method has been copied from Qt's QGLWidget::convertToGLFormat()
-    QImage res = img.convertToFormat(QImage::Format_ARGB32);
-    res = res.mirrored();
+static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum texture_format)
+    { // Copied from Qt
+    Q_ASSERT(dst.size() == img.size());
+    Q_ASSERT(dst.depth() == 32);
+    Q_ASSERT(img.depth() == 32);
 
-    if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-        // Qt has ARGB; OpenGL wants RGBA
-        for (int i=0; i < res.height(); i++) {
-            uint *p = (uint*)res.scanLine(i);
-            uint *end = p + res.width();
-            while (p < end) {
-                *p = (*p << 8) | ((*p >> 24) & 0xFF);
-                p++;
+    const int width = img.width();
+    const int height = img.height();
+    const uint *p = (const uint*) img.scanLine(img.height() - 1);
+    uint *q = (uint*) dst.scanLine(0);
+
+    if (texture_format == GL_BGRA) {
+        if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
+            // mirror + swizzle
+            for (int i=0; i < height; ++i) {
+                const uint *end = p + width;
+                while (p < end) {
+                    *q = ((*p << 24) & 0xff000000)
+                         | ((*p >> 24) & 0x000000ff)
+                         | ((*p << 8) & 0x00ff0000)
+                         | ((*p >> 8) & 0x0000ff00);
+                    p++;
+                    q++;
+                }
+                p -= 2 * width;
+            }
+        } else {
+            const uint bytesPerLine = img.bytesPerLine();
+            for (int i=0; i < height; ++i) {
+                memcpy(q, p, bytesPerLine);
+                q += width;
+                p -= width;
+            }
+        }
+    } else {
+        if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
+            for (int i=0; i < height; ++i) {
+                const uint *end = p + width;
+                while (p < end) {
+                    *q = (*p << 8) | ((*p >> 24) & 0xFF);
+                    p++;
+                    q++;
+                }
+                p -= 2 * width;
+            }
+        } else {
+            for (int i=0; i < height; ++i) {
+                const uint *end = p + width;
+                while (p < end) {
+                    *q = ((*p << 16) & 0xff0000) | ((*p >> 16) & 0xff) | (*p & 0xff00ff00);
+                    p++;
+                    q++;
+                }
+                p -= 2 * width;
             }
         }
     }
-    else {
-        // Qt has ARGB; OpenGL wants ABGR (i.e. RGBA backwards)
-        res = res.rgbSwapped();
-    }
+}
+
+QImage GLTexture::convertToGLFormat( const QImage& img ) const
+    { // Copied from Qt's QGLWidget::convertToGLFormat()
+    QImage res(img.size(), QImage::Format_ARGB32);
+    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_RGBA);
     return res;
     }
 
