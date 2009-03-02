@@ -1454,11 +1454,17 @@ void EffectFrame::render( QRegion region, double opacity, double frameOpacity )
 
             glColor4f( 0.0, 0.0, 0.0, opacity * frameOpacity );
 
+            // Our unstyled frame texture is premultiplied
+            // TODO: Fix GLTexture::convertToGLFormat()
+            glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+
             m_unstyledTexture->bind();
             m_unstyledTexture->enableNormalizedTexCoords();
             renderGLGeometry( verts.count() / 2, verts.data(), texCoords.data() );
             m_unstyledTexture->disableNormalizedTexCoords();
             m_unstyledTexture->unbind();
+
+            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
             }
         else if( m_style == Styled )
             {
@@ -1491,6 +1497,10 @@ void EffectFrame::render( QRegion region, double opacity, double frameOpacity )
         // Render text
         if( !m_text.isEmpty() )
             {
+            // Our text texture is premultiplied
+            // TODO: Fix GLTexture::convertToGLFormat()
+            glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+
             if( !m_textTexture ) // Lazy creation
                 updateTextTexture();
             m_textTexture->bind();
@@ -1747,7 +1757,8 @@ void EffectFrame::updateTextTexture()
         text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
         }
 
-    // TODO: Use QPixmap for this once GLTexture has been converted to it
+    // TODO: Use QPixmap for this once GLTexture has been converted to it. This will
+    //       allow us to change the contents without creating a completely new texture.
     QImage pixmap( m_geometry.size(), QImage::Format_ARGB32 );
     pixmap.fill( Qt::transparent );
     QPainter p( &pixmap );
@@ -1804,8 +1815,18 @@ void EffectFrame::updateUnstyledTexture()
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete m_unstyledTexture;
-    QString filename =  KGlobal::dirs()->findResource( "data", "kwin/circle.png" );
-    m_unstyledTexture = new GLTexture( filename );
+    // Based off circle() from kwinxrenderutils.cpp
+#define CS 8
+    QImage tmp( 2 * CS, 2 * CS, QImage::Format_ARGB32 );
+    tmp.fill( Qt::transparent );
+    QPainter p( &tmp );
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+    p.setBrush( Qt::black );
+    p.drawEllipse( tmp.rect() );
+    p.end();
+#undef CS
+    m_unstyledTexture = new GLTexture( tmp );
 #endif
     }
 
