@@ -4,6 +4,7 @@
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,8 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_TABBOX_H
 #define KWIN_TABBOX_H
 
-#include <QFrame>
 #include <QTimer>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
+#include <KDE/Plasma/FrameSvg>
 #include "utils.h"
 
 
@@ -33,7 +37,7 @@ namespace KWin
 class Workspace;
 class Client;
 
-class TabBox : public QFrame
+class TabBox : public QGraphicsView
     {
     Q_OBJECT
     public:
@@ -53,6 +57,7 @@ class TabBox : public QFrame
         TabBoxMode mode() const;
 
         void reset( bool partial_reset = false );
+        void initScene();
         void nextPrev( bool next = true);
 
         void delayedShow();
@@ -67,6 +72,9 @@ class TabBox : public QFrame
         Workspace* workspace() const;
 
         void reconfigure();
+        void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
+
+        Plasma::FrameSvg* itemFrame();
 
     public slots:
         void show();
@@ -74,10 +82,9 @@ class TabBox : public QFrame
     protected:
         void showEvent( QShowEvent* );
         void hideEvent( QHideEvent* );
-        void paintEvent( QPaintEvent* );
+        virtual void drawBackground( QPainter * painter, const QRectF & rect );
 
     private:
-        void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
         void createDesktopList(QList< int > &list, int start, SortOrder order);
 
     private:
@@ -94,6 +101,49 @@ class TabBox : public QFrame
         int lineHeight;
         bool showMiniIcon;
         bool options_traverse_all;
+
+        QGraphicsScene* scene;
+        Plasma::FrameSvg frame;
+        Plasma::FrameSvg item_frame;
+    };
+
+class TabBoxWindowItem : public QGraphicsItem
+    {
+    public:
+        TabBoxWindowItem( Client* client, TabBox* parent );
+        ~TabBoxWindowItem();
+        virtual QRectF boundingRect() const;
+        virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
+        void setWidth( int width );
+        void setHeight( int height );
+        void setShowMiniIcons( bool showMiniIcons );
+    protected:
+        virtual void drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* );
+
+    private:
+        Client* m_client;
+        TabBox* m_parent;
+        int m_width;
+        int m_height;
+        bool m_showMiniIcons;
+    };
+
+class TabBoxDesktopItem : public QGraphicsItem
+    {
+    public:
+        TabBoxDesktopItem( int desktop, TabBox* parent );
+        ~TabBoxDesktopItem();
+        virtual QRectF boundingRect() const;
+        virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
+        void setWidth( int width );
+        void setHeight( int height );
+    protected:
+        virtual void drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* );
+    private:
+        int m_desktop;
+        TabBox* m_parent;
+        int m_width;
+        int m_height;
     };
 
 
@@ -135,6 +185,12 @@ inline bool TabBox::isDisplayed() const
     {
     return display_refcount > 0;
     }
+
+inline Plasma::FrameSvg* TabBox::itemFrame()
+    {
+    return &item_frame;
+    }
+
 
 } // namespace
 

@@ -98,7 +98,7 @@ qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Works
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} kephal kdecorations kwineffects ${X11_LIBRARIES})
+target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kephal kdecorations kwineffects ${X11_LIBRARIES})
 
 if(OPENGL_FOUND)
   target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})

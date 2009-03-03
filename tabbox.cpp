@@ -4,6 +4,7 @@
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,15 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "client.h"
 #include <QPainter>
-#include <QLabel>
-#include <qdrawutil.h>
-#include <QStyle>
 #include <kglobal.h>
 #include <fixx11h.h>
 #include <kconfig.h>
 #include <klocale.h>
-#include <QApplication>
-#include <QDesktopWidget>
 #include <QAction>
 #include <stdarg.h>
 #include <kdebug.h>
@@ -46,6 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <kkeyserver.h>
 #include <kconfiggroup.h>
+#include <KDE/Plasma/Theme>
+#include <KGlobalSettings>
 
 // specify externals before namespace
 
@@ -55,17 +53,25 @@ namespace KWin
 extern QPixmap* kwin_get_menu_pix_hack();
 
 TabBox::TabBox( Workspace *ws )
-    : QFrame( 0, Qt::X11BypassWindowManagerHint )
+    : QGraphicsView()
     , wspace(ws)
     , client(0)
     , display_refcount( 0 )
     {
-    setFrameStyle(QFrame::StyledPanel);
-    setFrameShadow(QFrame::Raised);
-    setBackgroundRole(QPalette::Base);
-    setLineWidth(3);
-    setMidLineWidth(3);
-    setContentsMargins( 3, 3, 3, 3 );
+    scene = new QGraphicsScene( this );
+    setWindowFlags( Qt::X11BypassWindowManagerHint );
+    setScene( scene );
+    setFrameStyle( QFrame::NoFrame );
+    viewport()->setAutoFillBackground( false );
+    setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    setAttribute( Qt::WA_TranslucentBackground );
+    frame.setImagePath( "dialogs/background" );
+    frame.setCacheAllRenderedFrames( true );
+    frame.setEnabledBorders( Plasma::FrameSvg::AllBorders );
+    item_frame.setImagePath( "widgets/tasks" );
+    item_frame.setCacheAllRenderedFrames( true );
+    item_frame.setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
     showMiniIcon = false;
 
@@ -188,12 +194,14 @@ void TabBox::createDesktopList(QList< int > &list, int start, SortOrder order)
 void TabBox::reset( bool partial_reset )
     {
     int w, h, cw = 0, wmax = 0;
+    qreal left, top, right, bottom;
+    frame.getMargins( left, top, right, bottom );
 
     QRect r = workspace()->screenGeometry( workspace()->activeScreen());
 
     // calculate height of 1 line
-    // fontheight + 1 pixel above + 1 pixel below, or 32x32 icon + 2 pixel above + below
-    lineHeight = qMax(fontMetrics().height() + 2, 32 + 4);
+    // fontheight + 2 pixel above + 2 pixel below, or 32x32 icon + 4 pixel above + below
+    lineHeight = qMax(QFontMetrics( KGlobalSettings::smallestReadableFont() ).height() + 2, 32 + 8);
 
     if ( mode() == TabBoxWindowsMode )
         {
@@ -207,10 +215,15 @@ void TabBox::reset( bool partial_reset )
         createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), starting_client, true);
 
         // calculate maximum caption width
-        cw = fontMetrics().width(no_tasks)+20;
+        cw = fontMetrics().width(no_tasks) + 20;
+        QFont f = font();
+        f.setPointSize( KGlobalSettings::smallestReadableFont().pointSize() );
+        QFontMetrics fm = QFontMetrics( f );
         for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
           {
-          cw = fontMetrics().width( (*it)->caption() );
+          cw = fm.width( (*it)->caption() );
+          if( (*it)->desktop() != wspace->currentDesktop() )
+            cw += fm.width( QString( wspace->desktopName((*it)->desktop()) + ": " ) );
           if ( cw > wmax ) wmax = cw;
           }
 
@@ -228,18 +241,18 @@ void TabBox::reset( bool partial_reset )
           showMiniIcon = false;
           h = clients.count() * lineHeight;
 
-          if ( h > (r.height()-(2*frameWidth())) )  // if too high, use mini icons
+          if ( h > (r.height()-(top + bottom)) )  // if too high, use mini icons
             {
             showMiniIcon = true;
-            // fontheight + 1 pixel above + 1 pixel below, or 16x16 icon + 1 pixel above + below
-            lineHeight = qMax(fontMetrics().height() + 2, 16 + 2);
+            // fontheight + 1 pixel above + 1 pixel below, or 16x16 icon + 2 pixel above + below
+            lineHeight = qMax(QFontMetrics( KGlobalSettings::smallestReadableFont() ).height() + 2, 16 + 4);
 
             h = clients.count() * lineHeight;
 
-            if ( h > (r.height()-(2*frameWidth())) ) // if still too high, remove some clients
+            if ( h > (r.height()-(top + bottom)) ) // if still too high, remove some clients
               {
                 // how many clients to remove
-                int howMany = (h - (r.height()-(2*frameWidth())))/lineHeight;
+                int howMany = (h - (r.height()-(top + bottom)))/lineHeight + 1;
                 for (; howMany; howMany--)
                   clients.removeAll(clients.last());
 
@@ -278,16 +291,83 @@ void TabBox::reset( bool partial_reset )
         }
 
     // height, width for the popup
-    h += 2 * frameWidth();
-    w = 2*frameWidth() + 5*2 + ( showMiniIcon ? 16 : 32 ) + 8 + wmax; // 5*2=margins, ()=icon, 8=space between icon+text
-    w = qBound( r.width()/3 , w, r.width() * 4 / 5 );
+    h += top + bottom;
+    h = qMin( h, r.height() );
+    w = left + right + 5*2 + ( showMiniIcon ? 16 : 32 ) + 8 + wmax; // 5*2=margins, ()=icon, 8=space between icon+text
+    w = qBound( r.width()/5 , w, r.width() * 4 / 5 );
 
-    setGeometry( (r.width()-w)/2 + r.x(),
+    setGeometry((r.width()-w)/2 + r.x(),
                  (r.height()-h)/2+ r.y(),
                  w, h );
+    scene->setSceneRect( 0, 0, w, h );
+    frame.resizeFrame( QSize( w , h ) );
+    // resizing the item frame
+    item_frame.setElementPrefix( "focus" );
+    item_frame.resizeFrame( QSize( w-left-right, lineHeight ) );
+
+    setMask( frame.mask() );
+
+    if( partial_reset )
+        initScene();
 
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
+    }
+
+void TabBox::initScene()
+    {
+    scene->clear();
+    qreal left, top, right, bottom;
+    frame.getMargins( left, top, right, bottom );
+
+    if( mode() == TabBoxWindowsMode )
+        {
+        if( clients.count() == 0 )
+            {
+            QFont f = font();
+            f.setBold( true );
+            f.setPointSize( 14 );
+
+            QGraphicsTextItem* item = scene->addText( no_tasks, f );
+            item->setDefaultTextColor( Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor ) );
+            item->adjustSize();
+            item->setPos( width()*0.5 - QFontMetrics(f).width( item->toPlainText() )*0.5,
+                height()*0.5 - QFontMetrics(f).height()*0.5 );
+            }
+        else
+            {
+            // add clients to scene
+            int index = 0;
+            foreach( Client* client, clients )
+                {
+                TabBoxWindowItem* item = new TabBoxWindowItem( client, this );
+                item->setHeight( lineHeight );
+                item->setWidth( width() - left - right );
+                item->setShowMiniIcons( showMiniIcon );
+                item->setPos( left, top + lineHeight * index );
+                scene->addItem( item );
+                index++;
+                }
+            }
+        }
+    else
+        { // TabBoxDesktopMode || TabBoxDesktopListMode
+        int y = top;
+
+        QRect r = workspace()->screenGeometry( workspace()->activeScreen());
+        foreach (int it, desktops)
+            {
+            TabBoxDesktopItem* item = new TabBoxDesktopItem( it, this );
+            item->setHeight( lineHeight );
+            item->setWidth( width() - left - right );
+            item->setPos( left, top + lineHeight * (it-1) );
+            scene->addItem( item );
+            // next desktop
+            y += lineHeight;
+            if ( y >= r.height() )
+                break;
+            }
+        }
     }
 
 
@@ -431,181 +511,14 @@ void TabBox::hideEvent( QHideEvent* )
     {
     }
 
-/*!
-  Paints the tab box
- */
-void TabBox::paintEvent( QPaintEvent* e )
+void TabBox::drawBackground( QPainter* painter, const QRectF& rect )
     {
-    QFrame::paintEvent( e );
-
-    QPainter p( this );
-    QRect r( contentsRect());
-
-    QPixmap* menu_pix = kwin_get_menu_pix_hack();
-
-    int iconWidth = showMiniIcon ? 16 : 32;
-    int x = r.x();
-    int y = r.y();
-
-    if ( mode () == TabBoxWindowsMode )
-        {
-        if ( !currentClient() )
-            {
-            QFont f = font();
-            f.setBold( true );
-            f.setPointSize( 14 );
-
-            p.setFont(f);
-            p.drawText( r, Qt::AlignCenter, no_tasks);
-            }
-        else
-            {
-            for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-              {
-              if ( workspace()->hasClient( *it ) )  // safety
-                  {
-                  // draw highlight background
-                  if ( (*it) == currentClient() )
-                    p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Active, QPalette::Highlight ));
-
-                  // draw icon
-                  QPixmap icon;
-                  if ( showMiniIcon )
-                    {
-                    if ( !(*it)->miniIcon().isNull() )
-                      icon = (*it)->miniIcon();
-                    }
-                  else
-                    if ( !(*it)->icon().isNull() )
-                      icon = (*it)->icon();
-                    else if ( menu_pix )
-                      icon = *menu_pix;
-                
-                  if( !icon.isNull())
-                    {
-                    if( (*it)->isMinimized())
-                        KIconEffect::semiTransparent( icon );
-                    p.drawPixmap( x+5, y + (lineHeight - iconWidth)/2, icon );
-                    }
-
-                  // generate text to display
-                  QString s;
-
-                  if ( !(*it)->isOnDesktop(workspace()->currentDesktop()) )
-                    s = workspace()->desktopName((*it)->desktop()) + ": ";
-
-                  if ( (*it)->isMinimized() )
-                    s += '(' + (*it)->caption() + ')';
-                  else
-                    s += (*it)->caption();
-
-                  s = fontMetrics().elidedText( s, Qt::ElideMiddle, r.width() - 5 - iconWidth - 8 );
-
-                  // draw text
-                  if ( (*it) == currentClient() )
-                    p.setPen(palette().color( QPalette::Active, QPalette::HighlightedText ));
-                  else if( (*it)->isMinimized())
-                    {
-                    QColor c1 = palette().color( QPalette::Active, QPalette::Text );
-                    QColor c2 = palette().color( QPalette::Active, QPalette::Background );
-                    // from kicker's TaskContainer::blendColors()
-                    int r1, g1, b1;
-                    int r2, g2, b2;
-
-                    c1.getRgb( &r1, &g1, &b1 );
-                    c2.getRgb( &r2, &g2, &b2 );
-
-                    r1 += (int) ( .5 * ( r2 - r1 ) );
-                    g1 += (int) ( .5 * ( g2 - g1 ) );
-                    b1 += (int) ( .5 * ( b2 - b1 ) );
-
-                    p.setPen(QColor( r1, g1, b1 ));
-                    }
-                  else
-                    p.setPen(palette().color( QPalette::Active, QPalette::Text ));
-
-                  p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
-                              Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, s);
-
-                  y += lineHeight;
-                  }
-              if ( y >= r.height() ) break;
-              }
-            }
-        }
-    else
-        { // TabBoxDesktopMode || TabBoxDesktopListMode
-        int iconHeight = iconWidth;
-
-        // get widest desktop name/number
-        QFont f(font());
-        f.setBold(true);
-        f.setPixelSize(iconHeight - 4);  // pixel, not point because I need to know the pixels
-        QFontMetrics fm(f);
-
-        int wmax = 0;
-        foreach (int it, desktops)
-            {
-            wmax = qMax(wmax, fontMetrics().width(workspace()->desktopName(it)));
-
-            // calculate max width of desktop-number text
-            QString num = QString::number(it);
-            iconWidth = qMax(iconWidth - 4, fm.boundingRect(num).width()) + 4;
-            }
-
-        foreach (int it, desktops)
-            {
-            // draw highlight background
-            if ( it == desk )  // current desktop
-              p.fillRect(x, y, r.width(), lineHeight, palette().brush( QPalette::Active, QPalette::Highlight ));
-
-            p.save();
-
-            // draw "icon" (here: number of desktop)
-            p.fillRect(x+5, y+2, iconWidth, iconHeight, palette().brush( QPalette::Active, QPalette::Base ));
-            p.setPen(palette().color( QPalette::Active, QPalette::Text ));
-            p.drawRect(x+5, y+2, iconWidth, iconHeight);
-
-            // draw desktop-number
-            p.setFont(f);
-            QString num = QString::number(it);
-            p.drawText(x+5, y+2, iconWidth, iconHeight, Qt::AlignCenter, num);
-
-            p.restore();
-
-            // draw desktop name text
-            if ( it == desk )
-              p.setPen(palette().color( QPalette::Active, QPalette::HighlightedText ));
-            else
-              p.setPen(palette().color( QPalette::Active, QPalette::Text ));
-
-            p.drawText(x+5 + iconWidth + 8, y, r.width() - 5 - iconWidth - 8, lineHeight,
-                       Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine,
-                       workspace()->desktopName(it));
-
-            // show mini icons from that desktop aligned to each other
-            int x1 = x + 5 + iconWidth + 8 + wmax + 5;
-
-            ClientList list;
-            createClientList(list, it, 0, false);
-            // clients are in reversed stacking order
-            for ( int i = list.size() - 1; i>=0; i-- )
-              {
-              if ( !list.at( i )->miniIcon().isNull() )
-                {
-                if ( x1+18 >= x+r.width() )  // only show full icons
-                  break;
-
-                p.drawPixmap( x1, y + (lineHeight - 16)/2, list.at(  i )->miniIcon() );
-                x1 += 18;
-                }
-              }
-
-            // next desktop
-            y += lineHeight;
-            if ( y >= r.height() ) break;
-            }
-        }
+    painter->save();
+    painter->setCompositionMode( QPainter::CompositionMode_Source );
+    qreal left, top, right, bottom;
+    frame.getMargins( left, top, right, bottom );
+    frame.paintFrame( painter, rect.adjusted( -left, -top, right, bottom ) );
+    painter->restore();
     }
 
 
@@ -715,7 +628,9 @@ void TabBox::handleMouseEvent( XEvent* e )
         return;
         }
 
-    int num = (widgetPos.y()-frameWidth()) / lineHeight;
+    qreal left, top, right, bottom;
+    frame.getMargins( left, top, right, bottom );
+    int num = (widgetPos.y()-top) / lineHeight;
 
     if( mode() == TabBoxWindowsMode )
         {
@@ -745,6 +660,225 @@ void TabBox::handleMouseEvent( XEvent* e )
         }
     update();
     }
+
+//*******************************
+// TabBoxWindowItem
+//*******************************
+
+TabBoxWindowItem::TabBoxWindowItem( Client* client, TabBox* parent )
+    : QGraphicsItem()
+    , m_client( client )
+    , m_parent( parent )
+    , m_width( 0 )
+    , m_height( 0 )
+    , m_showMiniIcons( false )
+    {
+    }
+
+TabBoxWindowItem::~TabBoxWindowItem()
+    {
+    }
+
+QRectF TabBoxWindowItem::boundingRect() const
+    {
+    return QRectF( 0, 0, m_width, m_height );
+    }
+
+void TabBoxWindowItem::setHeight( int height )
+    {
+    m_height = height;
+    }
+
+void TabBoxWindowItem::setWidth( int width )
+    {
+    m_width = width;
+    }
+
+void TabBoxWindowItem::setShowMiniIcons( bool showMiniIcons )
+    {
+    m_showMiniIcons = showMiniIcons;
+    }
+
+void TabBoxWindowItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
+    {
+    painter->setRenderHint( QPainter::Antialiasing );
+
+    drawBackground( painter, option, widget );
+
+    // draw icon
+    int iconWidth = m_showMiniIcons ? 16 : 32;
+    int x = 0;
+    QPixmap* menu_pix = kwin_get_menu_pix_hack();
+    QPixmap icon;
+    if ( m_showMiniIcons )
+        {
+        if ( !m_client->miniIcon().isNull() )
+            icon = m_client->miniIcon();
+        }
+    else
+        {
+        if ( !m_client->icon().isNull() )
+            icon = m_client->icon();
+        else if ( menu_pix )
+            icon = *menu_pix;
+        }
+
+    if( !icon.isNull())
+        {
+        if( m_client->isMinimized())
+            KIconEffect::semiTransparent( icon );
+        if( m_client == m_parent->currentClient() )
+            {
+            KIconEffect *effect = KIconLoader::global()->iconEffect();
+            icon = effect->apply( icon, KIconLoader::Desktop, KIconLoader::ActiveState );
+            }
+        painter->drawPixmap( x+5, (m_height - iconWidth)/2, icon );
+        }
+
+    // generate text to display
+    QString s;
+
+    if ( !m_client->isOnDesktop(m_parent->workspace()->currentDesktop()) )
+    s = m_parent->workspace()->desktopName(m_client->desktop()) + ": ";
+
+    if ( m_client->isMinimized() )
+    s += '(' + m_client->caption() + ')';
+    else
+    s += m_client->caption();
+
+    QFont font = painter->font();
+    font.setPointSize( KGlobalSettings::smallestReadableFont().pointSize() );
+    QFontMetrics fm = QFontMetrics( font );
+    s = fm.elidedText( s, Qt::ElideMiddle, m_width - 5 - iconWidth - 8 );
+    painter->setPen( Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor ) );
+    if( m_client->isMinimized() )
+        {
+        font.setItalic( true );
+        }
+    painter->setFont( font );
+    painter->drawText( x+5 + iconWidth + 8, 0, m_width - 5 - iconWidth - 8, m_height - (m_showMiniIcons ? 2 : 4),
+                              Qt::AlignLeft | Qt::AlignBottom | Qt::TextSingleLine, s );
+    }
+
+void TabBoxWindowItem::drawBackground( QPainter* painter, const QStyleOptionGraphicsItem* , QWidget* )
+    {
+    if( m_client == m_parent->currentClient() )
+        {
+        m_parent->itemFrame()->setElementPrefix( "focus" );
+        m_parent->itemFrame()->paintFrame( painter, boundingRect() );
+        }
+    }
+
+
+//*******************************
+// TabBoxDesktopItem
+//*******************************
+
+TabBoxDesktopItem::TabBoxDesktopItem( int desktop, TabBox* parent )
+    : QGraphicsItem()
+    , m_desktop( desktop )
+    , m_parent( parent )
+    , m_width( 0 )
+    , m_height( 0 )
+    {
+    }
+
+TabBoxDesktopItem::~TabBoxDesktopItem()
+    {
+    }
+
+QRectF TabBoxDesktopItem::boundingRect() const
+    {
+    return QRectF( 0, 0, m_width, m_height );
+    }
+
+void TabBoxDesktopItem::setHeight( int height )
+    {
+    m_height = height;
+    }
+
+void TabBoxDesktopItem::setWidth( int width )
+    {
+    m_width = width;
+    }
+
+void TabBoxDesktopItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
+    {
+    painter->setRenderHint( QPainter::Antialiasing );
+
+    drawBackground( painter, option, widget );
+
+    int iconWidth = 32;
+    int iconHeight = iconWidth;
+    int x = 0;
+    int y = 0;
+
+    // get widest desktop name/number
+    QFont f = painter->font();
+    f.setBold(true);
+    f.setPixelSize(iconHeight - 4);  // pixel, not point because I need to know the pixels
+    QFontMetrics fm = QFontMetrics( f );
+
+    QString num = QString::number( m_desktop );
+    iconWidth = qMax(iconWidth - 4, fm.boundingRect(num).width()) + 4;
+
+    // draw "icon" (here: number of desktop)
+    painter->save();
+    QBrush brush;
+    if( m_desktop == m_parent->currentDesktop() )
+        brush = m_parent->palette().brush( QPalette::Active, QPalette::Highlight );
+    else
+        brush = m_parent->palette().brush( QPalette::Active, QPalette::Base );
+    painter->fillRect(x+5, y+4, iconWidth, iconHeight, brush );
+    painter->setPen(m_parent->palette().color( QPalette::Active, QPalette::Text ));
+    painter->drawRect(x+5, y+4, iconWidth, iconHeight);
+
+    // draw desktop-number
+    painter->setFont(f);
+    painter->drawText(x+5, y+4, iconWidth, iconHeight, Qt::AlignCenter | Qt::AlignVCenter, num);
+
+    painter->restore();
+
+    // draw desktop name text
+    QFont font = painter->font();
+    font.setPointSize( KGlobalSettings::smallestReadableFont().pointSize() );
+    painter->setFont( font );
+    fm = QFontMetrics( font );
+    int wmax = fm.width( m_parent->workspace()->desktopName( m_desktop ));
+
+    painter->setPen( Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor ) );
+    painter->drawText(x+5 + iconWidth + 8, y, m_width - 5 - iconWidth - 8, m_height - 4,
+                    Qt::AlignLeft | Qt::AlignBottom | Qt::TextSingleLine,
+                    m_parent->workspace()->desktopName( m_desktop ));
+
+    // show mini icons from that desktop aligned to each other
+    int x1 = x + 5 + iconWidth + 8 + wmax + 5;
+
+    ClientList list;
+    m_parent->createClientList(list, m_desktop, 0, false);
+    // clients are in reversed stacking order
+    for ( int i = list.size() - 1; i>=0; i-- )
+        {
+        if ( !list.at( i )->miniIcon().isNull() )
+            {
+            if ( x1+18 >= m_width )  // only show full icons
+                break;
+
+            painter->drawPixmap( x1, y + (m_height - 16)/2, list.at(  i )->miniIcon() );
+            x1 += 18;
+            }
+        }
+    }
+
+void TabBoxDesktopItem::drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* )
+    {
+    if( m_desktop == m_parent->currentDesktop() )
+        {
+        m_parent->itemFrame()->setElementPrefix( "focus" );
+        m_parent->itemFrame()->paintFrame( painter, boundingRect() );
+        }
+    }
+
 
 //*******************************
 // Workspace
@@ -969,6 +1103,7 @@ bool Workspace::startKDEWalkThroughWindows()
     modalActionsSwitch( false );
     tab_box->setMode( TabBoxWindowsMode );
     tab_box->reset();
+    tab_box->initScene();
     return true;
     }
 
@@ -980,6 +1115,7 @@ bool Workspace::startWalkThroughDesktops( TabBoxMode mode )
     modalActionsSwitch( false );
     tab_box->setMode( mode );
     tab_box->reset();
+    tab_box->initScene();
     return true;
     }
 
