@@ -51,6 +51,7 @@ PopupInfo::PopupInfo( Workspace* ws, const char *name )
     {
     setObjectName( name );
 
+    setWindowFlags( Qt::X11BypassWindowManagerHint );
     m_infoString = "";
     m_shown = false;
     reset();
@@ -140,7 +141,7 @@ void PopupInfo::reconfigure()
     KSharedConfigPtr c(KGlobal::config());
     const KConfigGroup cg = c->group("PopupInfo");
     m_show = cg.readEntry("ShowPopup", false );
-    m_delayTime = cg.readEntry("PopupHideDelay", 350 );
+    m_delayTime = cg.readEntry("PopupHideDelay", 750 );
     }
 
 void PopupInfo::showInfo(const QString &infoString)
