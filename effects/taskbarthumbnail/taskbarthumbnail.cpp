@@ -53,20 +53,7 @@ void TaskbarThumbnailEffect::prePaintScreen( ScreenPrePaintData& data, int time 
 //    if( thumbnails.count() > 0 )
 //        // TODO this should not be needed (it causes whole screen repaint)
 //        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-
-    damagedWindows.clear();
-
     effects->prePaintScreen(data, time);
-    }
-
-void TaskbarThumbnailEffect::postPaintScreen()
-    {
-    // Update the thumbnail if the window was damaged
-    foreach( EffectWindow* w, thumbnails.keys() )
-        foreach( const Data &thumb, thumbnails.values( w ))
-            if( damagedWindows.contains( effects->findWindow( thumb.window )))
-                effects->addRepaint( thumb.rect.translated( w->pos() ));
-    effects->postPaintScreen();
     }
 
 void TaskbarThumbnailEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
@@ -77,8 +64,6 @@ void TaskbarThumbnailEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData
 
 void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( !( region & w->geometry() ).isEmpty() )
-        damagedWindows.append( w ); // This window is damaged, TODO: Causes repaint loop if thumbnail covers window
     effects->paintWindow( w, mask, region, data ); // paint window first
     if( thumbnails.contains( w ))
         { // paint thumbnails on it
@@ -100,6 +85,15 @@ void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion reg
             effects->drawWindow( thumbw, mask, r, thumbData );
             }
         }
+    }
+
+void TaskbarThumbnailEffect::windowDamaged( EffectWindow* w, const QRect& damage )
+    {
+    // Update the thumbnail if the window was damaged
+    foreach( EffectWindow* window, thumbnails.keys() )
+        foreach( const Data &thumb, thumbnails.values( window ))
+            if( w == effects->findWindow( thumb.window ))
+                effects->addRepaint( thumb.rect.translated( window->pos() ));
     }
 
 void TaskbarThumbnailEffect::windowAdded( EffectWindow* w )
