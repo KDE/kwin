@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglutils.h"
 
+#include <kconfiggroup.h>
 #include <kdebug.h>
 
 namespace KWin
@@ -44,11 +45,29 @@ LogoutEffect::LogoutEffect()
     XChangeProperty( display(), sel, hack, hack, 8, PropModeReplace, (unsigned char*)&hack, 1 );
     // the atom is not removed when effect is destroyed, this is temporary anyway
 
+    reconfigure( ReconfigureAll );
+    }
+
+LogoutEffect::~LogoutEffect()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete blurTexture;
+    delete blurTarget;
+#endif
+    }
+
+void LogoutEffect::reconfigure( ReconfigureFlags )
+    {
+    // Disable blur by default as some drivers don't correctly fallback if they don't
+    // support it and I have yet to work out a way of accurately detecting support.
+    KConfigGroup conf = effects->effectConfig( "Logout" );
+    bool useBlur = conf.readEntry( "UseBlur", false );
+
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     blurSupported = false;
     blurTexture = NULL;
     blurTarget = NULL;
-    if( effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() )
+    if( effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() && useBlur )
         { // TODO: It seems that it is not possible to create a GLRenderTarget that has
           //       a different size than the display right now. Most likely a KWin core bug.
         // Create texture and render target
@@ -60,14 +79,6 @@ LogoutEffect::LogoutEffect()
         if( blurTarget->valid() )
             blurSupported = true;
         }
-#endif
-    }
-
-LogoutEffect::~LogoutEffect()
-    {
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    delete blurTexture;
-    delete blurTarget;
 #endif
     }
 
