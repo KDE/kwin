@@ -65,6 +65,7 @@ CoverSwitchEffect::CoverSwitchEffect()
 
 CoverSwitchEffect::~CoverSwitchEffect()
     {
+    qDeleteAll( windows );
     }
 
 bool CoverSwitchEffect::supported()
@@ -320,18 +321,6 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             opacity = timeLine.value();
         else if( stop )
             opacity = 1.0 - timeLine.value();
-        QPixmap iconPixmap = effects->currentTabBoxWindow()->icon();
-        if( start || stop )
-            {
-            int alpha = 255.0f * timeLine.value();
-            if( stop )
-                alpha = 255.0f - alpha;
-            QPixmap transparency = iconPixmap.copy( iconPixmap.rect() );
-            transparency.fill( QColor( 255, 255, 255, alpha ));
-            iconPixmap.setAlphaChannel( transparency.alphaChannel() );
-            }
-        captionFrame.setText( effects->currentTabBoxWindow()->caption() );
-        captionFrame.setIcon( iconPixmap );
         captionFrame.render( region, opacity );
 
         if( ( thumbnails && (!dynamicThumbnails || 
@@ -551,6 +540,9 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                     QFontMetrics( captionFont ).height() );
                 captionFrame.setGeometry( frameRect );
                 captionFrame.setIconSize( QSize( frameRect.height(), frameRect.height() ));
+                // And initial contents
+                captionFrame.setText( selected_window->caption() );
+                captionFrame.setIcon( selected_window->icon() );
 
                 effects->addRepaintFull();
                 }
@@ -659,6 +651,8 @@ void CoverSwitchEffect::tabBoxUpdated()
                         }
                     }
                 selected_window = effects->currentTabBoxWindow();
+                captionFrame.setText( selected_window->caption() );
+                captionFrame.setIcon( selected_window->icon() );
                 }
             }
             if( thumbnails && (!dynamicThumbnails || 
@@ -970,6 +964,7 @@ void CoverSwitchEffect::calculateFrameSize()
 
 void CoverSwitchEffect::calculateItemSizes()
     {
+    qDeleteAll( windows );
     windows.clear();
     EffectWindowList original_windows = effects->currentTabBoxWindowList();
     int index = original_windows.indexOf( effects->currentTabBoxWindow() );
@@ -1044,6 +1039,10 @@ void CoverSwitchEffect::calculateItemSizes()
         {
         EffectWindow* w = ordered_windows.at( i );
         windows[ w ] = new ItemInfo();
+
+        windows[ w ]->iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+        windows[ w ]->iconFrame->setAlignment( Qt::AlignTop | Qt::AlignLeft );
+        windows[ w ]->iconFrame->setIcon( w->icon() );
 
         float moveIndex = i;
         if( animation && timeLine.value() < 0.5 )
@@ -1267,25 +1266,8 @@ void CoverSwitchEffect::paintWindowIcon( EffectWindow* w )
         return;
         }
 
-    if( windows[ w ]->icon.cacheKey() != w->icon().cacheKey())
-        { // make sure windows[ w ]->icon is the right QPixmap, and rebind
-        windows[ w ]->icon = w->icon();
-        if( ( windows.size() % 2 == 1 ) && animation && w == edge_window )
-            {
-            int alpha;
-            if( timeLine.value() < 0.5 )
-                alpha = 255.0f * (1.0 - timeLine.value()*2.0);
-            else
-                alpha = 255.0f * (timeLine.value()*2.0 - 1.0);
-            QPixmap transparency = windows[ w ]->icon.copy( windows[ w ]->icon.rect() );
-            transparency.fill( QColor( 255, 255, 255, alpha ) );
-            windows[ w ]->icon.setAlphaChannel( transparency.alphaChannel() );
-            }
-        windows[ w ]->iconTexture.load( windows[ w ]->icon );
-        windows[ w ]->iconTexture.setFilter( GL_LINEAR );
-        }
-    int width = windows[ w ]->icon.width();
-    int height = windows[ w ]->icon.height();
+    int width = w->icon().width();
+    int height = w->icon().height();
     int x = windows[ w ]->area.x() + windows[ w ]->area.width() - width - highlight_margin;
     int y = windows[ w ]->area.y() + windows[ w ]->area.height() - height - highlight_margin;
     if( ( windows.size() % 2 == 0 ) )
@@ -1340,26 +1322,9 @@ void CoverSwitchEffect::paintWindowIcon( EffectWindow* w )
                 }
             }
         }
-    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-    glEnable( GL_BLEND );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    // Render some background
-    float alpha = 0.5;
-    if( ( windows.size() % 2 == 1 ) && animation && w == edge_window )
-        {
-        if( timeLine.value() < 0.5 )
-            alpha *= (1.0 - timeLine.value()*2.0);
-        else
-            alpha *= (timeLine.value()*2.0 - 1.0);
-        }
-    glColor4f( 0, 0, 0, alpha );
-    renderRoundBox( QRect( x-3, y-3, width+6, height+6 ), 3 );
-    // Render the icon
-    glColor4f( 1, 1, 1, 1 );
-    windows[ w ]->iconTexture.bind();
-    windows[ w ]->iconTexture.render( infiniteRegion(), QRect( x, y, width, height ));
-    windows[ w ]->iconTexture.unbind();
-    glPopAttrib();
+
+    windows[ w ]->iconFrame->setPosition( QPoint( x, y ));
+    windows[ w ]->iconFrame->render( infiniteRegion(), 1.0, 0.75 );
     }
 
 void CoverSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
@@ -1461,5 +1426,14 @@ void CoverSwitchEffect::abort()
     thumbnailFrame.free();
     }
 
+CoverSwitchEffect::ItemInfo::ItemInfo()
+    : iconFrame( NULL )
+    {
+    }
+
+CoverSwitchEffect::ItemInfo::~ItemInfo()
+    {
+    delete iconFrame;
+    }
 
 } // namespace

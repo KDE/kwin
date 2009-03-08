@@ -79,7 +79,7 @@ void BoxSwitchEffect::reconfigure( ReconfigureFlags )
 
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( mActivated )
+    if( activeTimeLine.value() != 0.0 )
         {
         if( mMode == TabBoxWindowsMode )
             {
@@ -109,7 +109,14 @@ void BoxSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     if( mActivated )
         activeTimeLine.addTime( time );
     else
+        {
         activeTimeLine.removeTime( time );
+        if( activeTimeLine.value() == 0.0 )
+            { // No longer need the window data
+            qDeleteAll( windows );
+            windows.clear();
+            }
+        }
     if( mActivated && animation )
         {
         timeLine.addTime( time );
@@ -428,7 +435,7 @@ void BoxSwitchEffect::setActive()
     {
     mActivated = true;
 
-    // Do this here so we have correct fading on deactivation
+    // Just in case we are activated again before the deactivation animation finished
     qDeleteAll( windows );
     windows.clear();
 
@@ -561,6 +568,7 @@ void BoxSwitchEffect::calculateItemSizes()
     {
     if( mMode == TabBoxWindowsMode )
         {
+        qDeleteAll( windows );
         windows.clear();
         if( mAnimateSwitch )
             {
@@ -637,6 +645,10 @@ void BoxSwitchEffect::calculateItemSizes()
                 EffectWindow* w = ordered_windows.at( i );
                 windows[ w ] = new ItemInfo();
 
+                windows[ w ]->iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+                windows[ w ]->iconFrame->setAlignment( Qt::AlignTop | Qt::AlignLeft );
+                windows[ w ]->iconFrame->setIcon( w->icon() );
+
                 float moveIndex = i;
                 if( animation && timeLine.value() < 0.5 )
                     {
@@ -668,6 +680,10 @@ void BoxSwitchEffect::calculateItemSizes()
                 {
                 EffectWindow* w = original_windows.at( i );
                 windows[ w ] = new ItemInfo();
+
+                windows[ w ]->iconFrame = new EffectFrame( EffectFrame::Unstyled, false );
+                windows[ w ]->iconFrame->setAlignment( Qt::AlignTop | Qt::AlignLeft );
+                windows[ w ]->iconFrame->setIcon( w->icon() );
 
                 windows[ w ]->area = QRect( frame_area.x() + i * item_max_size.width(),
                     frame_area.y(),
@@ -938,34 +954,8 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
         return;
         }
 
-    if( windows[ w ]->icon.cacheKey() != w->icon().cacheKey())
-        { // make sure windows[ w ]->icon is the right QPixmap, and rebind
-        windows[ w ]->icon = w->icon();
-        if( ( windows.size() % 2 == 1 ) && animation && w == edge_window )
-            {
-            int alpha;
-            if( timeLine.value() < 0.5 )
-                alpha = 255.0f * (1.0 - timeLine.value()*2.0);
-            else
-                alpha = 255.0f * (timeLine.value()*2.0 - 1.0);
-            QPixmap transparency = windows[ w ]->icon.copy( windows[ w ]->icon.rect() );
-            transparency.fill( QColor( 255, 255, 255, alpha ) );
-            windows[ w ]->icon.setAlphaChannel( transparency.alphaChannel() );
-            }
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        if( effects->compositingType() == OpenGLCompositing )
-            {
-            windows[ w ]->iconTexture.load( windows[ w ]->icon );
-            windows[ w ]->iconTexture.setFilter( GL_LINEAR );
-            }
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        if( effects->compositingType() == XRenderCompositing )
-            windows[ w ]->iconPicture = XRenderPicture( windows[ w ]->icon );
-#endif
-        }
-    int width = windows[ w ]->icon.width();
-    int height = windows[ w ]->icon.height();
+    int width = w->icon().width();
+    int height = w->icon().height();
     int x = windows[ w ]->area.x() + windows[ w ]->area.width() - width - highlight_margin;
     int y = windows[ w ]->area.y() + windows[ w ]->area.height() - height - highlight_margin;
     if( ( windows.size() % 2 == 0 ) )
@@ -1020,41 +1010,19 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
                 }
             }
         }
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( effects->compositingType() == OpenGLCompositing )
-        {
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        // Render some background
-        float alpha = 0.5;
-        if( ( windows.size() % 2 == 1 ) && animation && w == edge_window )
-            {
-            if( timeLine.value() < 0.5 )
-                alpha *= (1.0 - timeLine.value()*2.0);
-            else
-                alpha *= (timeLine.value()*2.0 - 1.0);
-            }
-        glColor4f( 0, 0, 0, alpha );
-        renderRoundBox( QRect( x-3, y-3, width+6, height+6 ), 3 );
-        // Render the icon
-        glColor4f( 1, 1, 1, 1 );
-        windows[ w ]->iconTexture.bind();
-        windows[ w ]->iconTexture.render( infiniteRegion(), QRect( x, y, width, height ));
-        windows[ w ]->iconTexture.unbind();
-        glPopAttrib();
-        }
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if( effects->compositingType() == XRenderCompositing )
-        {
-        XRenderComposite( display(),
-            windows[ w ]->icon.depth() == 32 ? PictOpOver : PictOpSrc,
-            windows[ w ]->iconPicture, None,
-            effects->xrenderBufferPicture(),
-            0, 0, 0, 0, x, y, width, height );
-        }
-#endif
+
+    windows[ w ]->iconFrame->setPosition( QPoint( x, y ));
+    windows[ w ]->iconFrame->render( infiniteRegion(), 1.0, 0.75 );
+    }
+
+BoxSwitchEffect::ItemInfo::ItemInfo()
+    : iconFrame( NULL )
+    {
+    }
+
+BoxSwitchEffect::ItemInfo::~ItemInfo()
+    {
+    delete iconFrame;
     }
 
 } // namespace

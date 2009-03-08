@@ -117,16 +117,12 @@ class BoxSwitchEffect
 class BoxSwitchEffect::ItemInfo
     {
     public:
+        ItemInfo();
+        ~ItemInfo();
         QRect area; // maximal painting area, including any frames/highlights/etc.
         QRegion clickable;
         QRect thumbnail;
-        QPixmap icon;
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        GLTexture iconTexture;
-#endif
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        XRenderPicture iconPicture;
-#endif
+        EffectFrame* iconFrame;
     };
 
 } // namespace

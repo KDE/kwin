@@ -123,11 +123,12 @@ class CoverSwitchEffect
 class CoverSwitchEffect::ItemInfo
     {
     public:
+        ItemInfo();
+        ~ItemInfo();
         QRect area; // maximal painting area, including any frames/highlights/etc.
         QRegion clickable;
         QRect thumbnail;
-        QPixmap icon;
-        GLTexture iconTexture;
+        EffectFrame* iconFrame;
     };
 
 } // namespace
