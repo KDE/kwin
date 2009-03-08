@@ -80,8 +80,7 @@ void DimScreenEffect::postPaintScreen()
 
 void DimScreenEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
     {
-    if( mActivated && ( w != window ) &&
-        !( w->isComboBox() || w->isDropdownMenu() || w->isTooltip() ) )
+    if( mActivated && ( w != window ) && w->isManaged() )
         {
         data.brightness *= (1.0 - 0.33 * timeline.value() );
         data.saturation *= (1.0 - 0.33 * timeline.value() );
