@@ -92,31 +92,74 @@ void MagicLampEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
+        QRect area = effects->clientArea( ScreenArea, w );
         // If there's no icon geometry, minimize to the center of the screen
         if( !icon.isValid() )
-            icon = QRect( displayWidth() / 2, displayHeight(), 0, 0 );
+            icon = QRect( area.x() + area.width() / 2, area.y() + area.height(), 0, 0 );
 
-        QRect area = effects->clientArea( PlacementArea, w );
-        IconPosition position = Bottom;
-        // top
-        if( icon.y() + icon.height() <= area.y() )
+        IconPosition position;
+        // Assumption: there is a panel containing the icon position
+        EffectWindow* panel = NULL;
+        foreach( EffectWindow* window, effects->stackingOrder() )
             {
-            position = Top;
+            if( !window->isDock() )
+                continue;
+            // we have to use intersects as there seems to be a Plasma bug
+            // the published icon geometry might be bigger than the panel
+            if( window->geometry().intersects( icon ) )
+                {
+                panel = window;
+                break;
+                }
             }
-        // bottom
-        if( icon.y() >= area.y()+area.height() )
+        if( panel )
             {
-            position = Bottom;
+            // Assumption: width of horizonal panel is greater than its height and vice versa
+            // The panel has to border one screen edge, so get it's screen area
+            QRect panelScreen = effects->clientArea( ScreenArea, panel );
+            if( panel->width() >= panel->height() )
+                {
+                // horizontal panel
+                if( panel->y() == panelScreen.y() )
+                    position = Top;
+                else
+                    position = Bottom;
+                }
+            else
+                {
+                // vertical panel
+                if( panel->x() == panelScreen.x() )
+                    position = Left;
+                else
+                    position = Right;
+                }
             }
-        // left
-        if( icon.x() + icon.width() <= area.x() )
+        else
             {
-            position = Left;
-            }
-        // right
-        if( icon.x() >= area.x()+ area.width() )
-            {
-            position = Right;
+            // we did not find a panel, so it might be autohidden
+            QRect iconScreen = effects->clientArea( ScreenArea, icon.topLeft(), effects->currentDesktop() );
+            // as the icon geometry could be overlap a screen edge we use an intersection
+            QRect rect = iconScreen.intersected( icon );
+            // here we need a different assumption: icon geometry borders one screen edge
+            // this assumption might be wrong for e.g. task applet being the only applet in panel
+            // in this case the icon borders two screen edges
+            // there might be a wrong animation, but not distorted
+            if( rect.x() == iconScreen.x() )
+                {
+                position = Left;
+                }
+            else if( rect.x() + rect.width() == iconScreen.x() + iconScreen.width() )
+                {
+                position = Right;
+                }
+            else if( rect.y() == iconScreen.y() )
+                {
+                position = Top;
+                }
+            else
+                {
+                position = Bottom;
+                }
             }
 
         WindowQuadList newQuads;
