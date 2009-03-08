@@ -272,17 +272,16 @@ void PresentWindowsEffect::windowAdded( EffectWindow *w )
 
 void PresentWindowsEffect::windowClosed( EffectWindow *w )
     {
-    if( !m_activated )
-        return;
     if( m_highlightedWindow == w )
         setHighlightedWindow( findFirstWindow() );
-    assert( m_windowData.contains( w ));
+    if( !m_windowData.contains( w ))
+        return;
     m_windowData[w].visible = false; // TODO: Fix this so they do actually fade out
     }
 
 void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     {
-    if( !m_activated || !m_windowData.contains( w ))
+    if( !m_windowData.contains( w ))
         return;
     delete m_windowData[w].textFrame;
     delete m_windowData[w].iconFrame;
@@ -1148,6 +1147,8 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
         // Add every single window to m_windowData (Just calling [w] creates it)
         foreach( EffectWindow *w, effects->stackingOrder() )
             {
+            if( m_windowData.contains( w )) // Happens if we reactivate before the ending animation finishes
+                continue;
             m_windowData[w].visible = isVisibleWindow( w );
             m_windowData[w].opacity = 0.0;
             if( w->isOnCurrentDesktop() && !w->isMinimized() )

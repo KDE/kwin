@@ -26,8 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-#include <QPixmap>
-
 namespace KWin
 {
 
@@ -48,7 +46,6 @@ class PresentWindowsEffect
             double highlight;
             int slot;
             int slot_distance;
-            QPixmap icon;
             EffectFrame* textFrame;
             EffectFrame* iconFrame;
             };
