@@ -51,7 +51,7 @@ OxygenHelper *oxygenHelper(); // referenced from definition in oxygendclient.cpp
 bool OxygenFactory::initialized_ = false;
 Qt::Alignment OxygenFactory::titleAlignment_ = Qt::AlignLeft;
 bool OxygenFactory::showStripes_ = true;
-bool OxygenFactory::thinBorders_ = true;
+int OxygenFactory::borderSize_ = 4; // BorderSize::BorderNormal
 
 //////////////////////////////////////////////////////////////////////////////
 // OxygenFactory()
@@ -101,6 +101,31 @@ bool OxygenFactory::reset(unsigned long changed)
         resetDecorations(changed);
         return false;
     }
+
+    // taken from plastik
+    switch(KDecoration::options()->preferredBorderSize( this )) {
+    case BorderTiny:
+        borderSize_ = 2;
+        break;
+    case BorderLarge:
+        borderSize_ = 8;
+        break;
+    case BorderVeryLarge:
+        borderSize_ = 12;
+        break;
+    case BorderHuge:
+        borderSize_ = 18;
+        break;
+    case BorderVeryHuge:
+        borderSize_ = 27;
+        break;
+    case BorderOversized:
+        borderSize_ = 40;
+        break;
+    case BorderNormal:
+    default:
+        borderSize_ = 4;
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -124,14 +149,36 @@ bool OxygenFactory::readConfig()
     else if (value == "Right")
         titleAlignment_ = Qt::AlignRight;
 
-    bool oldborders = thinBorders_;
-    thinBorders_ = group.readEntry( "ThinBorders", true );
+    int oldBorderSize = borderSize_;
+    switch(KDecoration::options()->preferredBorderSize( this )) {
+    case BorderTiny:
+        borderSize_ = 2;
+        break;
+    case BorderLarge:
+        borderSize_ = 8;
+        break;
+    case BorderVeryLarge:
+        borderSize_ = 12;
+        break;
+    case BorderHuge:
+        borderSize_ = 18;
+        break;
+    case BorderVeryHuge:
+        borderSize_ = 27;
+        break;
+    case BorderOversized:
+        borderSize_ = 40;
+        break;
+    case BorderNormal:
+    default:
+        borderSize_ = 4;
+    }
 
     bool oldstripes = showStripes_;    
     showStripes_ = group.readEntry( "ShowStripes", true );
 
     if (oldalign == titleAlignment_ && oldstripes == showStripes_
-            && oldborders == thinBorders_)
+            && oldBorderSize == borderSize_)
         return false;
     else
         return true;
@@ -161,6 +208,15 @@ bool OxygenFactory::supports( Ability ability ) const
         default:
             return false;
     };
+}
+
+QList< OxygenFactory::BorderSize >
+OxygenFactory::borderSizes() const
+{
+    // the list must be sorted
+    return QList< BorderSize >() << BorderTiny << BorderNormal <<
+	BorderLarge << BorderVeryLarge <<  BorderHuge <<
+	BorderVeryHuge << BorderOversized;
 }
 
 //////////////////////////////////////////////////////////////////////////////

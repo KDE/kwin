@@ -122,6 +122,7 @@ bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
 int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
     bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+    int frameWidth = OxygenFactory::borderSize();
 
     switch (lm) {
         case LM_BorderLeft:
@@ -131,15 +132,12 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
             if (respectWindowState && maximized) {
                 return 0;
             } else {
-                if (OxygenFactory::thinBorders())
-                {
-                    if (lm == LM_BorderBottom) {
-                        return BFRAMESIZE + 2;
-                    } else {
-                        return 2;
-                    }
+                // Even for thin borders (2px wide) we want to preserve
+                // the rounded corners having a minimum height of 7px
+                if (lm == LM_BorderBottom) {
+                    return qMax(frameWidth, 7);
                 } else {
-                    return BFRAMESIZE;
+                    return frameWidth;
                 }
             }
         }

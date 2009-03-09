@@ -35,9 +35,6 @@ namespace Oxygen
 
 static const int OXYGEN_BUTTONSIZE      = 22;
 #define TFRAMESIZE 3
-#define BFRAMESIZE 5
-#define LFRAMESIZE 5
-#define RFRAMESIZE 5
 
 enum ButtonType {
     ButtonHelp=0,
@@ -61,6 +58,7 @@ public:
     virtual KDecoration *createDecoration(KDecorationBridge *b);
     virtual bool reset(unsigned long changed);
     virtual bool supports( Ability ability ) const;
+    QList< BorderSize > borderSizes() const;
 
     virtual QList< QList<QImage> > shadowTextures();
     virtual int shadowTextureList( ShadowType type ) const;
@@ -70,7 +68,7 @@ public:
     static bool initialized();
     static Qt::Alignment titleAlignment();
     static bool showStripes();
-    static bool thinBorders();
+    static int borderSize();
 
 private:
     bool readConfig();
@@ -79,7 +77,7 @@ private:
     static bool initialized_;
     static Qt::Alignment titleAlignment_;
     static bool showStripes_;
-    static bool thinBorders_;
+    static int borderSize_;
 };
 
 inline bool OxygenFactory::initialized()
@@ -91,8 +89,8 @@ inline Qt::Alignment OxygenFactory::titleAlignment()
 inline bool OxygenFactory::showStripes()
     { return showStripes_; }
 
-inline bool OxygenFactory::thinBorders()
-    { return thinBorders_; }
+inline int OxygenFactory::borderSize()
+    { return borderSize_; }
 
 } //namespace Oxygen
 
