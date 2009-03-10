@@ -346,12 +346,14 @@ void OxygenClient::paintEvent(QPaintEvent *e)
         if (align & Qt::AlignLeft) {
             int left = titleLeft + QFontMetrics(options()->font(isActive(), false)).width(caption()) + 4;
             int right = titleLeft + titleWidth;
-            drawScratch(&painter, palette, left, right, titleTop+6);
+            if (left < right)
+                drawStripes(&painter, palette, left, right, titleTop+6);
         }
         if (align & Qt::AlignRight) {
             int left = titleLeft;
             int right = titleLeft + titleWidth - QFontMetrics(options()->font(isActive(), false)).width(caption()) - 4;
-            drawScratch(&painter, palette, right, left, titleTop+6);
+            if (left < right)
+                drawStripes(&painter, palette, right, left, titleTop+6);
         }
         if (align & Qt::AlignHCenter) {
             int textWidth = QFontMetrics(options()->font(isActive(), false)).width(caption());
@@ -359,8 +361,10 @@ void OxygenClient::paintEvent(QPaintEvent *e)
             int centerLeft = titleLeft + titleWidth/2 - textWidth/2 - 4;
             int centerRight = titleLeft + titleWidth/2 + textWidth/2 + 4;
             int right = titleLeft + titleWidth;
-            drawScratch(&painter, palette, centerLeft, left, titleTop+6);
-            drawScratch(&painter, palette, centerRight, right, titleTop+6);
+            if (left < centerLeft && right > centerRight) {
+                drawStripes(&painter, palette, centerLeft, left, titleTop+6);
+                drawStripes(&painter, palette, centerRight, right, titleTop+6);
+            }
         }
     }
 
@@ -391,19 +395,19 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     renderDot(&painter, QPointF(6.5, 2.5), 1.8);
 }
 
-void OxygenClient::drawScratch(QPainter *p, QPalette &palette, const int start, const int end, const int topMargin)
+void OxygenClient::drawStripes(QPainter *p, QPalette &palette, const int start, const int end, const int topMargin)
 {
-    QLinearGradient scratchlg(QPoint(start,0), QPoint(end,0));
-    scratchlg.setColorAt(0.0, Qt::transparent);
-    scratchlg.setColorAt(0.05, KDecoration::options()->color(ColorTitleBar));
-    scratchlg.setColorAt(1.0, Qt::transparent);
-    QPen pen1(scratchlg, 0.5);
+    QLinearGradient stripeGradient(QPoint(start,0), QPoint(end,0));
+    stripeGradient.setColorAt(0.0, Qt::transparent);
+    stripeGradient.setColorAt(0.05, KDecoration::options()->color(ColorTitleBar));
+    stripeGradient.setColorAt(1.0, Qt::transparent);
+    QPen pen1(stripeGradient, 0.5);
 
-    QLinearGradient scratchlg2(QPoint(start,0), QPoint(end,0));
-    scratchlg2.setColorAt(0.0, Qt::transparent);
-    scratchlg2.setColorAt(0.05, helper_.calcLightColor(palette.color(QPalette::Window)));
-    scratchlg2.setColorAt(1.0, Qt::transparent);
-    QPen pen2(scratchlg2, 0.5);
+    QLinearGradient stripeGradient2(QPoint(start,0), QPoint(end,0));
+    stripeGradient2.setColorAt(0.0, Qt::transparent);
+    stripeGradient2.setColorAt(0.05, helper_.calcLightColor(palette.color(QPalette::Window)));
+    stripeGradient2.setColorAt(1.0, Qt::transparent);
+    QPen pen2(stripeGradient2, 0.5);
 
     bool antialiasing = p->testRenderHint(QPainter::Antialiasing);
     p->setRenderHint(QPainter::Antialiasing, false);
