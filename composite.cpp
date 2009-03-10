@@ -461,6 +461,7 @@ bool Workspace::createOverlay()
     overlay = XCompositeGetOverlayWindow( display(), rootWindow());
     if( overlay == None )
         return false;
+    XResizeWindow(display(), overlay, displayWidth(), displayHeight());
     return true;
 #else
     return false;
