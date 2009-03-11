@@ -118,8 +118,7 @@ For example "&lt;b>Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b>" will first try &lt;b
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <layoutfunction spacing="KDialog::spacingHint" margin="KDialog::marginHint" />
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
- <customwidgets>
+  <customwidgets>
   <customwidget>
    <class>KLineEdit</class>
    <extends>QWidget</extends>
