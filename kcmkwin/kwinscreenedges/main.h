@@ -55,7 +55,7 @@ class KWinScreenEdgesConfig : public KCModule
         virtual void save();
         virtual void load();
         virtual void defaults();
-
+        void monitorEdgeChanged( int edge, int index );
     protected:
         virtual void showEvent( QShowEvent* e );
 
@@ -85,7 +85,6 @@ class KWinScreenEdgesConfig : public KCModule
         void monitorSave();
         void monitorDefaults();
         void monitorShowEvent();
-        void monitorEdgeChanged( int edge, int index );
         void monitorChangeEdge( ElectricBorder border, int index );
         void monitorHideEdge( ElectricBorder border, bool hidden );
         ElectricBorder monitorCheckEffectHasEdge( int index );
