@@ -29,11 +29,10 @@ Name[kk]=Әкімші режімде экранды күңгірттеп көр�
 Name[km]=បន្ថយ​ពន្លឺ​អេក្រង់ សម្រាប់​របៀប​ជា​អ្នក​គ្រប់គ្រង
 Name[kn]=ನಿರ್ವಾಹಕ ವಿಧಾನದಲ್ಲಿ (ಅ ಡ್ಮಿನಿಸ್ಟ್ರೇಟರ್ ಮೋಡ್) ತೆರೆಯನ್ನು ಮಂಕಾಗಿಸು
 Name[ko]=관리자 모드에서 화면 어둡게 하기
-Name[lt]=Užtemdyti ekraną administratoriaus veiksenai
+Name[lt]=Užtemdomas ekraną administratoriaus veiksenai
 Name[lv]=Aptumšināt ekrānu, pieprasot administratora tiesības
 Name[ml]=അഡ്മിനിസ്ട്രേറ്റര്‍ മോഡില്‍ സ്ക്രീന്‍ തെളിച്ചം കുറയ്ക്കല്‍
 Name[mr]=प्रशासक पद्धती करीता मंद पडदा
-Name[nb]=Demp skjermen i administratormodus
 Name[nds]=In Systeemplegerbedrief Schirm bedüüstern
 Name[nl]=Scherm dimmen voor administratormodus
 Name[nn]=Demp skjerm i administratormodus
@@ -86,7 +85,6 @@ Comment[ko]=루트 권한이 필요할 때 화면을 어둡게 합니다
 Comment[lt]=Užtamsina visą ekraną, kai prašoma root teisių
 Comment[lv]=Aptumšina visu ekrānu, kad pieprasa root privilēģijas
 Comment[ml]=മൂല (റൂട്ട്) വിശേഷാധികാരം അഭ്യര്‍ത്തിക്കുംബോള്‍ സ്ക്രീന്‍ കറുപ്പിക്കുന്നു
-Comment[nb]=Mørklegger hele skjermen når det spørres etter root-privilegier
 Comment[nds]=Maakt den helen Schirm düüsterer, wenn na Systeempleger-Verlöven fraagt warrt
 Comment[nl]=Maakt het volledige scherm donker wanneer er om root-privileges wordt verzocht
 Comment[pa]=ਜਦੋਂ ਰੂਟ ਅਧਿਕਾਰਾਂ ਦੀ ਲੋੜ ਹੋਵੇ ਤਾਂ ਪੂਰੀ ਸਕਰੀਨ ਲਈ ਗੂੜ੍ਹਾ ਕਰੋ
