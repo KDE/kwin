@@ -22,9 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CCSM_MONITOR_H
 #define CCSM_MONITOR_H
 
+#include <kworkspace/screenpreviewwidget.h>
+
 #include <qactiongroup.h>
 #include <qgraphicsitem.h>
-#include <qlabel.h>
 #include <qvector.h>
 
 class QAction;
@@ -32,11 +33,16 @@ class QGraphicsView;
 class QGraphicsScene;
 class QMenu;
 
+namespace Plasma
+{
+    class FrameSvg;
+}
+
 namespace KWin
 {
 
 class Monitor
-    : public QLabel
+    : public ScreenPreviewWidget
     {
     Q_OBJECT
     public:
@@ -75,7 +81,7 @@ class Monitor
         void checkSize();
         QGraphicsView* view;
         QGraphicsScene* scene;
-        QGraphicsRectItem* items[ 8 ];
+        Corner* items[ 8 ];
         bool hidden[ 8 ];
         QMenu* popups[ 8 ];
         QVector< QAction* > popup_actions[ 8 ];
@@ -87,11 +93,20 @@ class Monitor::Corner
     {
     public:
         Corner( Monitor* m );
+        ~Corner( );
+        void setActive(bool active);
+        bool active() const;
     protected:
         virtual void contextMenuEvent( QGraphicsSceneContextMenuEvent* e );
         virtual void mousePressEvent( QGraphicsSceneMouseEvent* e );
+        virtual void hoverEnterEvent( QGraphicsSceneHoverEvent * e);
+        virtual void hoverLeaveEvent( QGraphicsSceneHoverEvent * e);
+        virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     private:
         Monitor* monitor;
+        Plasma::FrameSvg *button;
+        bool m_active;
+        bool m_hover;
     };
 
 } // namespace

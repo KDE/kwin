@@ -28,19 +28,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <qgraphicsscene.h>
 #include <qgraphicssceneevent.h>
 #include <qmenu.h>
+#include <qdesktopwidget.h>
+#include <qapplication.h>
+#include <plasma/framesvg.h>
 
 namespace KWin
 {
 
 Monitor::Monitor( QWidget* parent )
-    : QLabel( parent )
+    : ScreenPreviewWidget( parent )
     {
-    setPixmap( QPixmap( KStandardDirs::locate( "data", "kcontrol/pics/monitor.png" )));
+    QDesktopWidget *desktop = QApplication::desktop();
+    QRect avail = desktop->availableGeometry(desktop->screenNumber(this));
+    setRatio((qreal)avail.width()/(qreal)avail.height());
     for( int i = 0;
          i < 8;
          ++i )
         popups[ i ] = new QMenu( this );
-    setAlignment( Qt::AlignCenter );
     scene = new QGraphicsScene( this );
     view = new QGraphicsView( scene, this );
     view->setBackgroundBrush( Qt::black );
@@ -54,7 +58,6 @@ Monitor::Monitor( QWidget* parent )
         {
         items[ i ] = new Corner( this );
         scene->addItem( items[ i ] );
-        items[ i ]->setBrush( Qt::red ); // TODO color-scheme dependent?
         hidden[ i ] = false;
         grp[ i ] = new QActionGroup( this );
         }
@@ -77,20 +80,21 @@ void Monitor::clear()
 
 void Monitor::resizeEvent( QResizeEvent* e )
     {
-    QLabel::resizeEvent( e );
+    ScreenPreviewWidget::resizeEvent( e );
     checkSize();
     }
     
 void Monitor::checkSize()
     {
+    QRect contentsRect = previewRect();
     int w = 151;
     int h = 115;
-    view->setGeometry((width()-200)/2+23, (height()-186)/2+14, w, h );
-    scene->setSceneRect( 0, 0, w, h );
-    int x2 = ( w - 20 ) / 2;
-    int x3 = w - 20;
-    int y2 = ( h - 20 ) / 2;
-    int y3 = h - 20;
+    view->setGeometry(contentsRect);
+    scene->setSceneRect(QRect(QPoint(0,0), contentsRect.size()));
+    int x2 = ( contentsRect.width() - 20 ) / 2;
+    int x3 = contentsRect.width() - 20;
+    int y2 = ( contentsRect.height() - 20 ) / 2;
+    int y3 = contentsRect.height() - 20;
     items[ 0 ]->setRect( 0, y2, 20, 20 );
     items[ 1 ]->setRect( x3, y2, 20, 20 );
     items[ 2 ]->setRect( x2, 0, 20, 20 );
@@ -103,7 +107,7 @@ void Monitor::checkSize()
 
 void Monitor::setEdge( int edge, bool set )
     {
-    items[ edge ]->setBrush( set ? Qt::green : Qt::red );
+    items[ edge ]->setActive( set );
     }
 
 bool Monitor::edge( int edge ) const
@@ -201,8 +205,18 @@ void Monitor::flip( Corner* c, QPoint pos )
     }
 
 Monitor::Corner::Corner( Monitor* m )
-    : monitor( m )
+    : monitor( m ),
+      m_active( false ),
+      m_hover( false )
     {
+    button = new Plasma::FrameSvg();
+    button->setImagePath("widgets/button");
+    setAcceptHoverEvents(true);
+    }
+
+Monitor::Corner::~Corner( )
+    {
+    delete button;
     }
 
 void Monitor::Corner::contextMenuEvent( QGraphicsSceneContextMenuEvent* e )
@@ -215,6 +229,67 @@ void Monitor::Corner::mousePressEvent( QGraphicsSceneMouseEvent* e )
     monitor->flip( this, e->screenPos());
     }
 
+void Monitor::Corner::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
+    {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
+
+    if (m_hover)
+        {
+        button->setElementPrefix("normal");
+
+        qreal left, top, right, bottom;
+        button->getMargins(left, top, right, bottom);
+
+        button->setElementPrefix("active");
+        qreal activeLeft, activeTop, activeRight, activeBottom;
+        button->getMargins(activeLeft, activeTop, activeRight, activeBottom);
+
+        QRectF activeRect = QRectF(QPointF(0, 0), rect().size());
+        activeRect.adjust(left - activeLeft, top - activeTop,
+                      -(right - activeRight), -(bottom - activeBottom));
+        button->setElementPrefix("active");
+        button->resizeFrame(activeRect.size());
+        button->paintFrame(painter, rect().topLeft()+activeRect.topLeft());
+        }
+        else
+        {
+        button->setElementPrefix(m_active?"pressed":"normal");
+        button->resizeFrame(rect().size());
+        button->paintFrame(painter, rect().topLeft());
+        }
+
+    if (m_active)
+        {
+        QPainterPath roundedRect;
+        painter->setRenderHint(QPainter::Antialiasing);
+        roundedRect.addRoundedRect(rect().adjusted(5,5,-5,-5), 2, 2);
+        painter->fillPath(roundedRect, QApplication::palette().text());
+        }
+    }
+
+void Monitor::Corner::hoverEnterEvent( QGraphicsSceneHoverEvent * e)
+{
+    m_hover = true;
+    update();
+}
+
+void Monitor::Corner::hoverLeaveEvent( QGraphicsSceneHoverEvent * e)
+{
+    m_hover = false;
+    update();
+}
+
+void Monitor::Corner::setActive( bool active )
+    {
+    m_active = active;
+    update();
+    }
+
+bool Monitor::Corner::active() const
+    {
+    return m_active;
+    }
 } // namespace
 
 #include "monitor.moc"
