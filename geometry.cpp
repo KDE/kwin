@@ -2916,102 +2916,105 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         // adjust new size to snap to other windows/borders
         moveResizeGeom = workspace()->adjustClientSize( this, moveResizeGeom, mode );
 
-        // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
-        // the other directions. If not visible enough, move the window to the closest valid
-        // point. We bruteforce this by slowly moving the window back to its previous position.
-        for(;;)
+        if(!unrestrictedMoveResize)
             {
-            QRegion titlebarRegion( moveResizeGeom.left(), moveResizeGeom.top(),
-                moveResizeGeom.width(), frameTop );
-            titlebarRegion &= workspace()->clientArea( FullArea, -1, 0 ); // On the screen
-            titlebarRegion -= workspace()->restrictedMoveArea( desktop() ); // Strut areas
-            // Now we have a region of all the visible areas of the titlebar
-            // Count the visible pixels and check to see if it's enough
-            int visiblePixels = 0;
-            foreach( const QRect& rect, titlebarRegion.rects() )
-                if( rect.height() >= frameTop ) // Only the full height regions, prevents long slim areas
-                    visiblePixels += rect.width() * rect.height();
-            if( visiblePixels >= titlebarArea )
-                break; // We have reached a valid position
-
-            // Not visible enough, move the window to the closest valid point. We bruteforce
-            // this by slowly moving the window back to its previous position.
-            if( previousMoveResizeGeom.y() != moveResizeGeom.y() )
+            // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
+            // the other directions. If not visible enough, move the window to the closest valid
+            // point. We bruteforce this by slowly moving the window back to its previous position.
+            for(;;)
                 {
-                if( previousMoveResizeGeom.y() > moveResizeGeom.y() )
-                    moveResizeGeom.setTop( moveResizeGeom.y() + 1 );
-                else
-                    moveResizeGeom.setTop( moveResizeGeom.y() - 1 );
-                }
-            else  // Our heights match but we still don't have a valid area, maybe
-                { // we are trying to resize in from the side?
-                bool breakLoop = false;
-                switch( mode )
+                QRegion titlebarRegion( moveResizeGeom.left(), moveResizeGeom.top(),
+                    moveResizeGeom.width(), frameTop );
+                titlebarRegion &= workspace()->clientArea( FullArea, -1, 0 ); // On the screen
+                titlebarRegion -= workspace()->restrictedMoveArea( desktop() ); // Strut areas
+                // Now we have a region of all the visible areas of the titlebar
+                // Count the visible pixels and check to see if it's enough
+                int visiblePixels = 0;
+                foreach( const QRect& rect, titlebarRegion.rects() )
+                    if( rect.height() >= frameTop ) // Only the full height regions, prevents long slim areas
+                        visiblePixels += rect.width() * rect.height();
+                if( visiblePixels >= titlebarArea )
+                    break; // We have reached a valid position
+
+                // Not visible enough, move the window to the closest valid point. We bruteforce
+                // this by slowly moving the window back to its previous position.
+                if( previousMoveResizeGeom.y() != moveResizeGeom.y() )
                     {
-                    case PositionTopLeft:
-                    case PositionLeft:
-                        if( previousMoveResizeGeom.x() >= moveResizeGeom.x() )
-                            {
-                            breakLoop = true;
-                            break;
-                            }
-                        moveResizeGeom.setLeft( moveResizeGeom.x() - 1 );
-                        break;
-                    case PositionTopRight:
-                    case PositionRight:
-                        if( previousMoveResizeGeom.right() <= moveResizeGeom.right() )
-                            {
-                            breakLoop = true;
-                            break;
-                            }
-                        moveResizeGeom.setRight( moveResizeGeom.x() + moveResizeGeom.width() );
-                        break;
-                    default:
-                        breakLoop = true;
+                    if( previousMoveResizeGeom.y() > moveResizeGeom.y() )
+                        moveResizeGeom.setTop( moveResizeGeom.y() + 1 );
+                    else
+                        moveResizeGeom.setTop( moveResizeGeom.y() - 1 );
                     }
-                if( breakLoop )
+                else  // Our heights match but we still don't have a valid area, maybe
+                    { // we are trying to resize in from the side?
+                    bool breakLoop = false;
+                    switch( mode )
+                        {
+                        case PositionTopLeft:
+                        case PositionLeft:
+                            if( previousMoveResizeGeom.x() >= moveResizeGeom.x() )
+                                {
+                                breakLoop = true;
+                                break;
+                                }
+                            moveResizeGeom.setLeft( moveResizeGeom.x() - 1 );
+                            break;
+                        case PositionTopRight:
+                        case PositionRight:
+                            if( previousMoveResizeGeom.right() <= moveResizeGeom.right() )
+                                {
+                                breakLoop = true;
+                                break;
+                                }
+                            moveResizeGeom.setRight( moveResizeGeom.x() + moveResizeGeom.width() );
+                            break;
+                        default:
+                            breakLoop = true;
+                        }
+                    if( breakLoop )
+                        break;
+                    }
+                }
+
+            QSize size = adjustedSize( moveResizeGeom.size(), sizemode );
+            // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
+            topleft = QPoint( moveResizeGeom.right() - size.width() + 1, moveResizeGeom.bottom() - size.height() + 1 );
+            bottomright = QPoint( moveResizeGeom.left() + size.width() - 1, moveResizeGeom.top() + size.height() - 1 );
+            orig = moveResizeGeom;
+            switch ( mode )
+                { // these 4 corners ones are copied from above
+                case PositionTopLeft:
+                    moveResizeGeom =  QRect( topleft, orig.bottomRight() ) ;
+                    break;
+                case PositionBottomRight:
+                    moveResizeGeom =  QRect( orig.topLeft(), bottomright ) ;
+                    break;
+                case PositionBottomLeft:
+                    moveResizeGeom =  QRect( QPoint( topleft.x(), orig.y() ), QPoint( orig.right(), bottomright.y()) ) ;
+                    break;
+                case PositionTopRight:
+                    moveResizeGeom =  QRect( QPoint( orig.x(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
+                    break;
+                // The side ones can't be copied exactly - if aspect ratios are specified, both dimensions may change.
+                // Therefore grow to the right/bottom if needed.
+                // TODO it should probably obey gravity rather than always using right/bottom ?
+                case PositionTop:
+                    moveResizeGeom =  QRect( QPoint( orig.left(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
+                    break;
+                case PositionBottom:
+                    moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
+                    break;
+                case PositionLeft:
+                    moveResizeGeom =  QRect( QPoint( topleft.x(), orig.top() ), QPoint( orig.right(), bottomright.y()));
+                    break;
+                case PositionRight:
+                    moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
+                    break;
+                case PositionCenter:
+                default:
+                    abort();
                     break;
                 }
-            }
-
-        QSize size = adjustedSize( moveResizeGeom.size(), sizemode );
-        // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
-        topleft = QPoint( moveResizeGeom.right() - size.width() + 1, moveResizeGeom.bottom() - size.height() + 1 );
-        bottomright = QPoint( moveResizeGeom.left() + size.width() - 1, moveResizeGeom.top() + size.height() - 1 );
-        orig = moveResizeGeom;
-        switch ( mode )
-            { // these 4 corners ones are copied from above
-            case PositionTopLeft:
-                moveResizeGeom =  QRect( topleft, orig.bottomRight() ) ;
-                break;
-            case PositionBottomRight:
-                moveResizeGeom =  QRect( orig.topLeft(), bottomright ) ;
-                break;
-            case PositionBottomLeft:
-                moveResizeGeom =  QRect( QPoint( topleft.x(), orig.y() ), QPoint( orig.right(), bottomright.y()) ) ;
-                break;
-            case PositionTopRight:
-                moveResizeGeom =  QRect( QPoint( orig.x(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
-                break;
-            // The side ones can't be copied exactly - if aspect ratios are specified, both dimensions may change.
-            // Therefore grow to the right/bottom if needed.
-            // TODO it should probably obey gravity rather than always using right/bottom ?
-            case PositionTop:
-                moveResizeGeom =  QRect( QPoint( orig.left(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
-                break;
-            case PositionBottom:
-                moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
-                break;
-            case PositionLeft:
-                moveResizeGeom =  QRect( QPoint( topleft.x(), orig.top() ), QPoint( orig.right(), bottomright.y()));
-                break;
-            case PositionRight:
-                moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
-                break;
-            case PositionCenter:
-            default:
-                abort();
-                break;
             }
         if( moveResizeGeom.size() != previousMoveResizeGeom.size())
             update = true;
@@ -3031,31 +3034,34 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
             moveResizeGeom.moveTopLeft( workspace()->adjustClientPosition( this, moveResizeGeom.topLeft(),
                                                                            unrestrictedMoveResize ));
 
-            // Make sure the titlebar isn't behind a restricted area.
-            for(;;)
+            if(!unrestrictedMoveResize)
                 {
-                QRegion titlebarRegion( moveResizeGeom.left(), moveResizeGeom.top(),
-                    moveResizeGeom.width(), frameTop );
-                titlebarRegion &= workspace()->clientArea( FullArea, -1, 0 ); // On the screen
-                titlebarRegion -= workspace()->restrictedMoveArea( desktop() ); // Strut areas
-                // Now we have a region of all the visible areas of the titlebar
-                // Count the visible pixels and check to see if it's enough
-                int visiblePixels = 0;
-                foreach( const QRect& rect, titlebarRegion.rects() )
-                    if( rect.height() >= frameTop ) // Only the full height regions, prevents long slim areas
-                        visiblePixels += rect.width() * rect.height();
-                if( visiblePixels >= titlebarArea )
-                    break; // We have reached a valid position
+                // Make sure the titlebar isn't behind a restricted area.
+                for(;;)
+                    {
+                    QRegion titlebarRegion( moveResizeGeom.left(), moveResizeGeom.top(),
+                        moveResizeGeom.width(), frameTop );
+                    titlebarRegion &= workspace()->clientArea( FullArea, -1, 0 ); // On the screen
+                    titlebarRegion -= workspace()->restrictedMoveArea( desktop() ); // Strut areas
+                    // Now we have a region of all the visible areas of the titlebar
+                    // Count the visible pixels and check to see if it's enough
+                    int visiblePixels = 0;
+                    foreach( const QRect& rect, titlebarRegion.rects() )
+                        if( rect.height() >= frameTop ) // Only the full height regions, prevents long slim areas
+                            visiblePixels += rect.width() * rect.height();
+                    if( visiblePixels >= titlebarArea )
+                        break; // We have reached a valid position
 
-                // Move it (Favour vertically)
-                if( previousMoveResizeGeom.y() != moveResizeGeom.y() )
-                    moveResizeGeom.translate( 0,
-                        previousMoveResizeGeom.y() > moveResizeGeom.y() ? 1 : -1 );
-                else
-                    moveResizeGeom.translate( previousMoveResizeGeom.x() > moveResizeGeom.x() ? 1 : -1,
-                        0 );
-                if( moveResizeGeom == previousMoveResizeGeom )
-                    break; // Prevent lockup
+                    // Move it (Favour vertically)
+                    if( previousMoveResizeGeom.y() != moveResizeGeom.y() )
+                        moveResizeGeom.translate( 0,
+                            previousMoveResizeGeom.y() > moveResizeGeom.y() ? 1 : -1 );
+                    else
+                        moveResizeGeom.translate( previousMoveResizeGeom.x() > moveResizeGeom.x() ? 1 : -1,
+                            0 );
+                    if( moveResizeGeom == previousMoveResizeGeom )
+                        break; // Prevent lockup
+                    }
                 }
             }
         if( moveResizeGeom.topLeft() != previousMoveResizeGeom.topLeft())
