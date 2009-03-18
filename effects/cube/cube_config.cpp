@@ -82,7 +82,6 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     connect(m_ui->displayDesktopNameBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->reflectionBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->backgroundColorButton, SIGNAL(changed(QColor)), this, SLOT(changed()));
-    connect(m_ui->bigCubeBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->cubeCapsBox, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
     connect(m_ui->capsImageBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
@@ -114,7 +113,6 @@ void CubeEffectConfig::load()
     QColor capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     bool texturedCaps = conf.readEntry( "TexturedCaps", true );
     bool caps = conf.readEntry( "Caps", true );
-    bool bigCube = conf.readEntry( "BigCube", false );
     bool closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
     bool walkThroughDesktop = conf.readEntry( "TabBox", false );
     m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 100 ) );
@@ -160,14 +158,6 @@ void CubeEffectConfig::load()
         {
         m_ui->capsImageBox->setCheckState( Qt::Unchecked );
         }
-    if( bigCube )
-        {
-        m_ui->bigCubeBox->setCheckState( Qt::Checked );
-        }
-    else
-        {
-        m_ui->bigCubeBox->setCheckState( Qt::Unchecked );
-        }
     if( closeOnMouseRelease )
         {
         m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Checked );
@@ -207,7 +197,6 @@ void CubeEffectConfig::save()
     conf.writeEntry( "Caps", m_ui->cubeCapsBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CapColor", m_ui->capColorButton->color() );
     conf.writeEntry( "TexturedCaps", m_ui->capsImageBox->checkState() == Qt::Checked ? true : false );
-    conf.writeEntry( "BigCube", m_ui->bigCubeBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "CloseOnMouseRelease", m_ui->closeOnMouseReleaseBox->checkState() == Qt::Checked ? true : false );
     conf.writeEntry( "Wallpaper", m_ui->wallpaperRequester->url().path() );
     conf.writeEntry( "ZPosition", m_ui->zPositionSlider->value() );
@@ -237,7 +226,6 @@ void CubeEffectConfig::defaults()
     m_ui->cubeCapsBox->setCheckState( Qt::Checked );
     m_ui->capColorButton->setColor( KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     m_ui->capsImageBox->setCheckState( Qt::Checked );
-    m_ui->bigCubeBox->setCheckState( Qt::Unchecked );
     m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
     m_ui->wallpaperRequester->setPath( "" );
     m_ui->zPositionSlider->setValue( 100 );

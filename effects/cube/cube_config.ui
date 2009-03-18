@@ -408,17 +408,6 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout" >
           <item>
-           <widget class="QCheckBox" name="bigCubeBox" >
-            <property name="toolTip" >
-             <string>If enabled span the cube across all screens on a multiscreen setup, otherwise
-the cube will only be displayed on a single screen</string>
-            </property>
-            <property name="text" >
-             <string>Span cube on all screens in multi screen setup</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QCheckBox" name="closeOnMouseReleaseBox" >
             <property name="toolTip" >
              <string>If enabled the effect will be deactivated after rotating the cube with the mouse,
@@ -534,7 +523,6 @@ otherwise it will remain active</string>
   <tabstop>cubeCapsBox</tabstop>
   <tabstop>capColorButton</tabstop>
   <tabstop>capsImageBox</tabstop>
-  <tabstop>bigCubeBox</tabstop>
   <tabstop>closeOnMouseReleaseBox</tabstop>
   <tabstop>walkThroughDesktopBox</tabstop>
   <tabstop>invertKeysBox</tabstop>

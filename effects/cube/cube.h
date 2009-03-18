@@ -128,9 +128,7 @@ class CubeEffect
         bool stop;
         bool reflectionPainting;
         int rotationDuration;
-        QList<EffectWindow*> windowsOnOtherScreens;
         int activeScreen;
-        bool bigCube;
         bool bottomCap;
         bool closeOnMouseRelease;
         float zoom;

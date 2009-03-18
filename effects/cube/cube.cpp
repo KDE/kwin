@@ -75,7 +75,6 @@ CubeEffect::CubeEffect()
     , stop( false )
     , reflectionPainting( false )
     , activeScreen( 0 )
-    , bigCube( false )
     , bottomCap( false )
     , closeOnMouseRelease( false )
     , zoom( 0.0 )
@@ -125,7 +124,6 @@ void CubeEffect::loadConfig( QString config )
     reflection = conf.readEntry( "Reflection", true );
     rotationDuration = animationTime( conf, "RotationDuration", 500 );
     backgroundColor = conf.readEntry( "BackgroundColor", QColor( Qt::black ) );
-    bigCube = conf.readEntry( "BigCube", false );
     capColor = conf.readEntry( "CapColor", KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     paintCaps = conf.readEntry( "Caps", true );
     closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
@@ -255,7 +253,7 @@ bool CubeEffect::loadShader()
         cylinderShader->setUniform( "winTexture", 0 );
         cylinderShader->setUniform( "opacity", cubeOpacity );
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-        if( effects->numScreens() > 1 && bigCube )
+        if( effects->numScreens() > 1 )
             rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         cylinderShader->setUniform( "width", (float)rect.width() );
         cylinderShader->unbind();
@@ -272,7 +270,7 @@ bool CubeEffect::loadShader()
         sphereShader->setUniform( "winTexture", 0 );
         sphereShader->setUniform( "opacity", cubeOpacity );
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-        if( effects->numScreens() > 1 && bigCube )
+        if( effects->numScreens() > 1 )
             rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         sphereShader->setUniform( "width", (float)rect.width() );
         sphereShader->setUniform( "height", (float)rect.height() );
@@ -326,7 +324,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             }
 
         QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-        if( effects->numScreens() > 1 && bigCube )
+        if( effects->numScreens() > 1 )
             rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
@@ -348,61 +346,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
         glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
-        if( effects->numScreens() > 1 && !bigCube )
-            {
-            windowsOnOtherScreens.clear();
-            // unfortunatelly we have to change the projection matrix in dual screen mode
-            glMatrixMode( GL_PROJECTION );
-            glPushMatrix();
-            glLoadIdentity();
-            float fovy = 60.0f;
-            float aspect = 1.0f;
-            float zNear = 0.1f;
-            float zFar = 100.0f;
-            float ymax = zNear * tan( fovy  * M_PI / 360.0f );
-            float ymin = -ymax;
-            float xmin =  ymin * aspect;
-            float xmax = ymax * aspect;
-            float xTranslate = 0.0;
-            float yTranslate = 0.0;
-            float xminFactor = 1.0;
-            float xmaxFactor = 1.0;
-            float yminFactor = 1.0;
-            float ymaxFactor = 1.0;
-            if( rect.x() == 0 && rect.width() != fullRect.width() )
-                {
-                // horizontal layout: left screen
-                xminFactor = (float)rect.width()/(float)fullRect.width();
-                xmaxFactor = ((float)fullRect.width()-(float)rect.width()*0.5f)/((float)fullRect.width()*0.5f);
-                xTranslate = (float)fullRect.width()*0.5f-(float)rect.width()*0.5f;
-                }
-            if( rect.x() != 0 && rect.width() != fullRect.width() )
-                {
-                // horizontal layout: right screen
-                xminFactor = ((float)fullRect.width()-(float)rect.width()*0.5f)/((float)fullRect.width()*0.5f);
-                xmaxFactor = (float)rect.width()/(float)fullRect.width();
-                xTranslate = (float)fullRect.width()*0.5f-(float)rect.width()*0.5f;
-                }
-            if( rect.y() == 0 && rect.height() != fullRect.height() )
-                {
-                // vertical layout: top screen
-                yminFactor = ((float)fullRect.height()-(float)rect.height()*0.5f)/((float)fullRect.height()*0.5f);
-                ymaxFactor = (float)rect.height()/(float)fullRect.height();
-                yTranslate = (float)fullRect.height()*0.5f-(float)rect.height()*0.5f;
-                }
-            if( rect.y() != 0 && rect.height() != fullRect.height() )
-                {
-                // vertical layout: bottom screen
-                yminFactor = (float)rect.height()/(float)fullRect.height();
-                ymaxFactor = ((float)fullRect.height()-(float)rect.height()*0.5f)/((float)fullRect.height()*0.5f);
-                yTranslate = (float)fullRect.height()*0.5f-(float)rect.height()*0.5f;
-                }
-            glFrustum( xmin*xminFactor, xmax*xmaxFactor, ymin*yminFactor, ymax*ymaxFactor, zNear, zFar );
-            glMatrixMode( GL_MODELVIEW );
-            glPushMatrix();
-            glTranslatef( xTranslate, yTranslate, 0.0 );
-            }
 
         // some veriables needed for painting the caps
         float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
@@ -502,11 +445,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
             glPopMatrix();
             glPushMatrix();
-            if( effects->numScreens() > 1 && rect.x() != fullRect.x() && !bigCube )
-                {
-                // have to change the reflection area in horizontal layout and right screen
-                glTranslatef( -rect.x(), 0.0, 0.0 );
-                }
             glTranslatef( rect.x() + rect.width()*0.5f, 0.0, 0.0 );
             float vertices[] = {
                 -rect.width()*0.5f, rect.height(), 0.0,
@@ -632,15 +570,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             }
         glDisable( GL_CULL_FACE );
 
-        if( effects->numScreens() > 1 && !bigCube  )
-            {
-            glPopMatrix();
-            // revert change of projection matrix
-            glMatrixMode( GL_PROJECTION );
-            glPopMatrix();
-            glMatrixMode( GL_MODELVIEW );
-            }
-
         glDisable( GL_BLEND );
         glPopAttrib();
 
@@ -659,18 +588,6 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             desktopNameFrame.setText( effects->desktopName( frontDesktop ) );
             desktopNameFrame.render( region, opacity );
             }
-        if( effects->numScreens() > 1 && !bigCube  )
-            {
-            foreach( EffectWindow* w, windowsOnOtherScreens )
-                {
-                WindowPaintData wData( w );
-                if( start && !w->isDesktop() && !w->isDock() )
-                    wData.opacity *= (1.0 - timeLine.value());
-                if( stop && !w->isDesktop() && !w->isDock() )
-                    wData.opacity *= timeLine.value();
-                effects->paintWindow( w, 0, QRegion( w->x(), w->y(), w->width(), w->height() ), wData );
-                }
-            }
         }
     else
         {
@@ -681,36 +598,8 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 void CubeEffect::rotateCube()
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 && bigCube )
+    if( effects->numScreens() > 1 )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-    float xScale = 1.0;
-    float yScale = 1.0;
-    if( effects->numScreens() > 1 && !bigCube  )
-        {
-        QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-        xScale = (float)rect.width()/(float)fullRect.width();
-        yScale = (float)rect.height()/(float)fullRect.height();
-        if( start )
-            {
-            xScale = xScale + (1.0 - xScale) * (1.0 - timeLine.value());
-            yScale = yScale + (1.0 - yScale) * (1.0 - timeLine.value());
-            if( rect.x() > 0 )
-                glTranslatef( -rect.x()*(1.0 - timeLine.value()), 0.0, 0.0 );
-            if( rect.y() > 0 )
-                glTranslatef( 0.0, -rect.y()*(1.0 - timeLine.value()), 0.0 );
-            }
-        if( stop )
-            {
-            xScale = xScale + (1.0 - xScale) * timeLine.value();
-            yScale = yScale + (1.0 - yScale) * timeLine.value();
-            if( rect.x() > 0 )
-                glTranslatef( -rect.x()*timeLine.value(), 0.0, 0.0 );
-            if( rect.y() > 0 )
-                glTranslatef( 0.0, -rect.y()*timeLine.value(), 0.0 );
-            }
-        glScalef( xScale, yScale, 1.0 );
-        rect = fullRect;
-        }
 
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     float zTranslate = zPosition + zoom;
@@ -840,7 +729,7 @@ void CubeEffect::rotateCube()
 void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 && bigCube )
+    if( effects->numScreens() > 1 )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     cube_painting = true;
@@ -910,7 +799,7 @@ void CubeEffect::paintCap()
 void CubeEffect::paintCubeCap()
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 && bigCube )
+    if( effects->numScreens() > 1 )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
     float z = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
@@ -1026,7 +915,7 @@ void CubeEffect::paintCubeCap()
 void CubeEffect::paintCylinderCap()
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 && bigCube )
+    if( effects->numScreens() > 1 )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
 
@@ -1066,7 +955,7 @@ void CubeEffect::paintCylinderCap()
 void CubeEffect::paintSphereCap()
     {
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 && bigCube )
+    if( effects->numScreens() > 1 )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
     float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
@@ -1177,7 +1066,6 @@ void CubeEffect::postPaintScreen()
                     effects->ungrabKeyboard();
                 keyboard_grab = false;
                 effects->destroyInputWindow( input );
-                windowsOnOtherScreens.clear();
 
                 effects->setActiveFullScreenEffect( 0 );
 
@@ -1292,15 +1180,6 @@ void CubeEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int 
                     data.quads = data.quads.makeGrid( 100 );
                 else
                     data.quads = data.quads.makeGrid( 250 );
-                }
-            if( ( w->isDesktop() || w->isDock() ) && w->screen() != activeScreen && w->isOnDesktop( effects->currentDesktop() ) )
-                {
-                windowsOnOtherScreens.append( w );
-                }
-            if( (start || stop) && w->screen() != activeScreen && w->isOnDesktop( effects->currentDesktop() )
-                && !w->isDesktop() && !w->isDock() )
-                {
-                windowsOnOtherScreens.append( w );
                 }
             if( w->isOnDesktop( painting_desktop ))
                 {
@@ -2025,7 +1904,7 @@ void CubeEffect::setActive( bool active )
             double eqn[4] = {0.0, 1.0, 0.0, 0.0};
             glPushMatrix();
             QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-            if( effects->numScreens() > 1 && bigCube )
+            if( effects->numScreens() > 1 )
                 rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
             glTranslatef( 0.0, rect.height(), 0.0 );
             glClipPlane( GL_CLIP_PLANE0, eqn );
@@ -2065,7 +1944,7 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
     if( stop )
         return;
     QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 && bigCube )
+    if( effects->numScreens() > 1 )
         rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     if( buttons.testFlag( Qt::LeftButton ) )
         {
