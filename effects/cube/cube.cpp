@@ -652,8 +652,9 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 opacity = timeLine.value();
             if( stop )
                 opacity = 1.0 - timeLine.value();
-            QRect frameRect = QRect( rect.width() * 0.33f + rect.x(), rect.height() * 0.95f + rect.y(),
-                rect.width() * 0.34f, QFontMetrics( desktopNameFont ).height() );
+            QRect screenRect = effects->clientArea( ScreenArea, activeScreen, frontDesktop );
+            QRect frameRect = QRect( screenRect.width() * 0.33f + screenRect.x(), screenRect.height() * 0.95f + screenRect.y(),
+                screenRect.width() * 0.34f, QFontMetrics( desktopNameFont ).height() );
             desktopNameFrame.setGeometry( frameRect );
             desktopNameFrame.setText( effects->desktopName( frontDesktop ) );
             desktopNameFrame.render( region, opacity );
