@@ -13,6 +13,7 @@ Name[ro]=Foaie
 Name[si]=කොලය
 Name[sv]=Blad
 Name[uk]=Аркуш
+Name[x-test]=xxSheetxx
 Name[zh_TW]=飄落
 Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
@@ -28,6 +29,7 @@ Comment[pt_BR]=Faz as janelas voarem suavemente quando são exibidas ou ocultada
 Comment[ro]=Face dialogurile modale să zboare lin cînd sînt afișate sau ascunse
 Comment[sv]=Gör att dialogrutor mjukt flyger in eller ut när de visas eller döljs
 Comment[uk]=Робить так, щоб вікна плавно з'являлись / зникали, коли вони показуються або ховаються
+Comment[x-test]=xxMake modal dialogs smoothly fly in and out when they are shown or hiddenxx
 Comment[zh_TW]=顯示或隱藏對話框時以飄下來、飄上去的方式呈現
 
 Type=Service

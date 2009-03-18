@@ -12,6 +12,7 @@ Name[pt_BR]=Assistente de ajuste
 Name[ro]=Ajutător magnetic
 Name[sv]=Bindningshjälp
 Name[uk]=Помічник розташування
+Name[x-test]=xxSnap Helperxx
 Name[zh_TW]=貼齊小幫手
 Icon=preferences-system-windows-effect-snaphelper
 Comment=Help you locate the center of the screen when moving a window.
@@ -28,6 +29,7 @@ Comment[pt_BR]=Ajuda-o a localizar o centro da tela ao mover uma janela.
 Comment[ro]=Vă ajută să localizați centrul ecranului la mutarea unei ferestre.
 Comment[sv]=Hjälper dig lokalisera bildskärmens mitt när ett fönster flyttas.
 Comment[uk]=Допоможе вам знайти центр екрана, коли ви пересуватимете вікно.
+Comment[x-test]=xxHelp you locate the center of the screen when moving a window.xx
 Comment[zh_TW]=幫助您在移動視窗時能定到螢幕中央的位置。
 
 Type=Service

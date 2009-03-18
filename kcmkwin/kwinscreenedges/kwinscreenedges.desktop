@@ -23,6 +23,7 @@ Name[pt_BR]=Contornos da tela
 Name[ro]=Muchiile ecranului
 Name[sv]=Skärmkanter
 Name[uk]=Краї екрана
+Name[x-test]=xxScreen Edgesxx
 Name[zh_TW]=螢幕邊緣
 
 Comment=Configure active screen edges
@@ -37,6 +38,7 @@ Comment[pt_BR]=Configurar os contornos de tela ativos
 Comment[ro]=Configurează muchiile active ale ecranului
 Comment[sv]=Anpassa aktiva skärmkanter
 Comment[uk]=Налаштування активних країв екрана
+Comment[x-test]=xxConfigure active screen edgesxx
 Comment[zh_TW]=設定作用的螢幕邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop

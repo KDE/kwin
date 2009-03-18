@@ -14,6 +14,7 @@ Name[ro]=Animație Cub de birou
 Name[sv]=Animering med skrivbordskub
 Name[tr]=Masaüstü Küp Animasyonu
 Name[uk]=Анімація куба стільниць
+Name[x-test]=xxDesktop Cube Animationxx
 Name[zh_TW]=桌面立方體動畫
 Icon=preferences-system-windows-effect-cube
 Comment=Animate desktop switching with a cube
@@ -31,6 +32,7 @@ Comment[ro]=Animează comutarea biroului cu un cub
 Comment[sv]=Animera skrivbordsbyte med en kub
 Comment[tr]=Masaüstü değiştirmeyi küp ile canlandır
 Comment[uk]=Створювати анімацію перемикання стільниць куба
+Comment[x-test]=xxAnimate desktop switching with a cubexx
 Comment[zh_TW]=切換桌面時模擬立方體的動畫
 
 Type=Service
