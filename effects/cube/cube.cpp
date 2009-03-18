@@ -252,9 +252,7 @@ bool CubeEffect::loadShader()
         cylinderShader->bind();
         cylinderShader->setUniform( "winTexture", 0 );
         cylinderShader->setUniform( "opacity", cubeOpacity );
-        QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-        if( effects->numScreens() > 1 )
-            rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+        QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         cylinderShader->setUniform( "width", (float)rect.width() );
         cylinderShader->unbind();
         }
@@ -269,9 +267,7 @@ bool CubeEffect::loadShader()
         sphereShader->bind();
         sphereShader->setUniform( "winTexture", 0 );
         sphereShader->setUniform( "opacity", cubeOpacity );
-        QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-        if( effects->numScreens() > 1 )
-            rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+        QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         sphereShader->setUniform( "width", (float)rect.width() );
         sphereShader->setUniform( "height", (float)rect.height() );
         sphereShader->unbind();
@@ -323,10 +319,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glEndList();
             }
 
-        QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-        if( effects->numScreens() > 1 )
-            rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
-        QRect fullRect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+        QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
         // background
         float clearColor[4];
@@ -597,9 +590,7 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
 
 void CubeEffect::rotateCube()
     {
-    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 )
-        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
 
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     float zTranslate = zPosition + zoom;
@@ -728,9 +719,7 @@ void CubeEffect::rotateCube()
 
 void CubeEffect::paintCube( int mask, QRegion region, ScreenPaintData& data )
     {
-    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 )
-        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float internalCubeAngle = 360.0f / effects->numberOfDesktops();
     cube_painting = true;
     float zTranslate = zPosition + zoom;
@@ -798,9 +787,7 @@ void CubeEffect::paintCap()
 
 void CubeEffect::paintCubeCap()
     {
-    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 )
-        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
     float z = rect.width()/2*tan(cubeAngle*0.5f*M_PI/180.0f);
     float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
@@ -914,9 +901,7 @@ void CubeEffect::paintCubeCap()
 
 void CubeEffect::paintCylinderCap()
     {
-    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 )
-        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
 
     float radian = (cubeAngle*0.5)*M_PI/180;
@@ -954,9 +939,7 @@ void CubeEffect::paintCylinderCap()
 
 void CubeEffect::paintSphereCap()
     {
-    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 )
-        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f);
     float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
     float radius = (rect.width()*0.5)/cos(cubeAngle*0.5*M_PI/180.0);
@@ -1903,9 +1886,7 @@ void CubeEffect::setActive( bool active )
             // clip parts above the reflection area
             double eqn[4] = {0.0, 1.0, 0.0, 0.0};
             glPushMatrix();
-            QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-            if( effects->numScreens() > 1 )
-                rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+            QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop());
             glTranslatef( 0.0, rect.height(), 0.0 );
             glClipPlane( GL_CLIP_PLANE0, eqn );
             glPopMatrix();
@@ -1943,9 +1924,7 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
         return;
     if( stop )
         return;
-    QRect rect = effects->clientArea( FullScreenArea, activeScreen, effects->currentDesktop());
-    if( effects->numScreens() > 1 )
-        rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
+    QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
     if( buttons.testFlag( Qt::LeftButton ) )
         {
         bool repaint = false;
