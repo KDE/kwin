@@ -51,6 +51,7 @@ class CubeEffect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxUpdated();
         virtual void tabBoxClosed();
+        virtual void windowAdded( EffectWindow* );
 
         static bool supported();
     private slots:

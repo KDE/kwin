@@ -2068,4 +2068,12 @@ void CubeEffect::tabBoxClosed()
         }
     }
 
+void CubeEffect::windowAdded( EffectWindow* )
+    {
+    // when there is a new window we have to paint it once without using GL List
+    // to prevent that the window is black
+    if( activated )
+        useList = false;
+    }
+
 } // namespace
