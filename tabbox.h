@@ -86,6 +86,7 @@ class TabBox : public QGraphicsView
 
     private:
         void createDesktopList(QList< int > &list, int start, SortOrder order);
+        void updateOutline();
 
     private:
         Workspace* wspace;
@@ -105,6 +106,7 @@ class TabBox : public QGraphicsView
         QGraphicsScene* scene;
         Plasma::FrameSvg frame;
         Plasma::FrameSvg item_frame;
+        Window outline_left, outline_right, outline_top, outline_bottom;
     };
 
 class TabBoxWindowItem : public QGraphicsItem

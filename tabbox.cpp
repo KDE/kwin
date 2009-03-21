@@ -80,10 +80,25 @@ TabBox::TabBox( Workspace *ws )
     reconfigure();
     reset();
     connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
+    XSetWindowAttributes attr;
+    attr.override_redirect = 1;
+    outline_left = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_right = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_top = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_bottom = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+
     }
 
 TabBox::~TabBox()
     {
+    XDestroyWindow( QX11Info::display(), outline_left );
+    XDestroyWindow( QX11Info::display(), outline_right );
+    XDestroyWindow( QX11Info::display(), outline_top );
+    XDestroyWindow( QX11Info::display(), outline_bottom );
     }
 
 
@@ -481,6 +496,8 @@ void TabBox::setCurrentClient( Client* newClient )
     client = newClient;
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
+    else
+        updateOutline();
     }
 
 /*!
@@ -500,6 +517,8 @@ void TabBox::setCurrentDesktop( int newDesktop )
  */
 void TabBox::showEvent( QShowEvent* )
     {
+    if( !effects )
+        updateOutline();
     raise();
     }
 
@@ -509,6 +528,13 @@ void TabBox::showEvent( QShowEvent* )
  */
 void TabBox::hideEvent( QHideEvent* )
     {
+    if( !effects )
+        {
+        XUnmapWindow( QX11Info::display(), outline_left );
+        XUnmapWindow( QX11Info::display(), outline_right );
+        XUnmapWindow( QX11Info::display(), outline_top );
+        XUnmapWindow( QX11Info::display(), outline_bottom );
+        }
     }
 
 void TabBox::drawBackground( QPainter* painter, const QRectF& rect )
@@ -536,6 +562,90 @@ void TabBox::show()
     QWidget::show();
     }
 
+void TabBox::updateOutline()
+    {
+    Client* c = currentClient();
+    if( c == NULL || this->isHidden() || !c->isShown( true ) || !c->isOnCurrentDesktop())
+        {
+        XUnmapWindow( QX11Info::display(), outline_left );
+        XUnmapWindow( QX11Info::display(), outline_right );
+        XUnmapWindow( QX11Info::display(), outline_top );
+        XUnmapWindow( QX11Info::display(), outline_bottom );
+        return;
+        }
+    // left/right parts are between top/bottom, they don't reach as far as the corners
+    XMoveResizeWindow( QX11Info::display(), outline_left, c->x(), c->y() + 5, 5, c->height() - 10 );
+    XMoveResizeWindow( QX11Info::display(), outline_right, c->x() + c->width() - 5, c->y() + 5, 5, c->height() - 10 );
+    XMoveResizeWindow( QX11Info::display(), outline_top, c->x(), c->y(), c->width(), 5 );
+    XMoveResizeWindow( QX11Info::display(), outline_bottom, c->x(), c->y() + c->height() - 5, c->width(), 5 );
+    {
+    QPixmap pix( 5, c->height() - 10 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 0, 0, 0, pix.height() - 1 );
+    p.drawLine( 4, 0, 4, pix.height() - 1 );
+    p.setPen( Qt::gray );
+    p.drawLine( 1, 0, 1, pix.height() - 1 );
+    p.drawLine( 3, 0, 3, pix.height() - 1 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 0, 2, pix.height() - 1 );
+    p.end();
+    XSetWindowBackgroundPixmap( QX11Info::display(), outline_left, pix.handle());
+    XSetWindowBackgroundPixmap( QX11Info::display(), outline_right, pix.handle());
+    }
+    {
+    QPixmap pix( c->width(), 5 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 0, 0, pix.width() - 1 - 0, 0 );
+    p.drawLine( 4, 4, pix.width() - 1 - 4, 4 );
+    p.drawLine( 0, 0, 0, 4 );
+    p.drawLine( pix.width() - 1 - 0, 0, pix.width() - 1 - 0, 4 );
+    p.setPen( Qt::gray );
+    p.drawLine( 1, 1, pix.width() - 1 - 1, 1 );
+    p.drawLine( 3, 3, pix.width() - 1 - 3, 3 );
+    p.drawLine( 1, 1, 1, 4 );
+    p.drawLine( 3, 3, 3, 4 );
+    p.drawLine( pix.width() - 1 - 1, 1, pix.width() - 1 - 1, 4 );
+    p.drawLine( pix.width() - 1 - 3, 3, pix.width() - 1 - 3, 4 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 2, pix.width() - 1 - 2, 2 );
+    p.drawLine( 2, 2, 2, 4 );
+    p.drawLine( pix.width() - 1 - 2, 2, pix.width() - 1 - 2, 4 );
+    p.end();
+    XSetWindowBackgroundPixmap( QX11Info::display(), outline_top, pix.handle());
+    }
+    {
+    QPixmap pix( c->width(), 5 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 4, 0, pix.width() - 1 - 4, 0 );
+    p.drawLine( 0, 4, pix.width() - 1 - 0, 4 );
+    p.drawLine( 0, 4, 0, 0 );
+    p.drawLine( pix.width() - 1 - 0, 4, pix.width() - 1 - 0, 0 );
+    p.setPen( Qt::gray );
+    p.drawLine( 3, 1, pix.width() - 1 - 3, 1 );
+    p.drawLine( 1, 3, pix.width() - 1 - 1, 3 );
+    p.drawLine( 3, 1, 3, 0 );
+    p.drawLine( 1, 3, 1, 0 );
+    p.drawLine( pix.width() - 1 - 3, 1, pix.width() - 1 - 3, 0 );
+    p.drawLine( pix.width() - 1 - 1, 3, pix.width() - 1 - 1, 0 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 2, pix.width() - 1 - 2, 2 );
+    p.drawLine( 2, 0, 2, 2 );
+    p.drawLine( pix.width() - 1 - 2, 0, pix.width() - 1 - 2, 2 );
+    p.end();
+    XSetWindowBackgroundPixmap( QX11Info::display(), outline_bottom, pix.handle());
+    }
+    XClearWindow( QX11Info::display(), outline_left );
+    XClearWindow( QX11Info::display(), outline_right );
+    XClearWindow( QX11Info::display(), outline_top );
+    XClearWindow( QX11Info::display(), outline_bottom );
+    XMapWindow( QX11Info::display(), outline_left );
+    XMapWindow( QX11Info::display(), outline_right );
+    XMapWindow( QX11Info::display(), outline_top );
+    XMapWindow( QX11Info::display(), outline_bottom );
+    }
 
 /*!
   Notify effects that the tab box is being hidden.
@@ -981,6 +1091,7 @@ void Workspace::slotWalkThroughWindows()
     {
     if ( tab_grab || control_grab )
         return;
+    kDebug(0) << "focus policy reasonable?" << options->focusPolicyIsReasonable() << options->altTabStyle;
     if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
         {
         //ungrabXKeyboard(); // need that because of accelerator raw mode
@@ -989,6 +1100,7 @@ void Workspace::slotWalkThroughWindows()
         }
     else
         {
+        kDebug() << "are mode keys pressed" << areModKeysDepressed( cutWalkThroughWindowsReverse );
         if ( areModKeysDepressed( cutWalkThroughWindows ) )
             {
             if ( startKDEWalkThroughWindows() )
