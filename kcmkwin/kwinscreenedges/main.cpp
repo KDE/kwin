@@ -52,8 +52,6 @@ KWinScreenEdgesConfig::KWinScreenEdgesConfig( QWidget* parent, const QVariantLis
     monitorInit();
 
     connect( m_ui->monitor, SIGNAL( changed() ), this, SLOT( changed() ));
-    connect( m_ui->monitor, SIGNAL( edgeSelectionChanged(int,int) ),
-        this, SLOT( monitorEdgeChanged(int,int) ));
 
     connect( m_ui->desktopSwitchCombo, SIGNAL( currentIndexChanged(int) ), this, SLOT( changed() ));
     connect( m_ui->quickTileBox, SIGNAL( stateChanged(int) ), this, SLOT( changed() ));
@@ -237,30 +235,56 @@ void KWinScreenEdgesConfig::monitorLoad()
 
     // Present Windows
     KConfigGroup presentWindowsConfig( m_config, "Effect-PresentWindows" );
-    monitorChangeEdge(
-        ElectricBorder( presentWindowsConfig.readEntry( "BorderActivateAll", int( ElectricTopLeft ))),
-        int( PresentWindowsAll ));
-    monitorChangeEdge(
-        ElectricBorder( presentWindowsConfig.readEntry( "BorderActivate", int( ElectricNone ))),
-        int( PresentWindowsCurrent ));
+    QList<int> list = QList<int>();
+    // PresentWindows BorderActivateAll
+    list.append( int( ElectricTopLeft ) );
+    list = presentWindowsConfig.readEntry( "BorderActivateAll", list );
+    foreach( int i, list )
+        {
+        monitorChangeEdge( ElectricBorder( i ), int( PresentWindowsAll ) );
+        }
+    // PresentWindows BorderActivate
+    list.clear();
+    list.append( int( ElectricNone ) );
+    list = presentWindowsConfig.readEntry( "BorderActivate", list );
+    foreach( int i, list )
+        {
+        monitorChangeEdge( ElectricBorder( i ), int( PresentWindowsCurrent ) );
+        }
 
     // Desktop Grid
     KConfigGroup gridConfig( m_config, "Effect-DesktopGrid" );
-    monitorChangeEdge(
-        ElectricBorder( gridConfig.readEntry( "BorderActivate", int( ElectricNone ))),
-        int( DesktopGrid ));
+    list.clear();
+    list.append( int( ElectricNone ) );
+    list = gridConfig.readEntry( "BorderActivate", list );
+    foreach( int i, list )
+        {
+        monitorChangeEdge( ElectricBorder( i ), int( DesktopGrid ) );
+        }
 
     // Desktop Cube
     KConfigGroup cubeConfig( m_config, "Effect-Cube" );
-    monitorChangeEdge(
-        ElectricBorder( cubeConfig.readEntry( "BorderActivate", int( ElectricNone ))),
-        int( Cube ));
-    monitorChangeEdge(
-        ElectricBorder( cubeConfig.readEntry( "BorderActivateCylinder", int( ElectricNone ))),
-        int( Cylinder ));
-    monitorChangeEdge(
-        ElectricBorder( cubeConfig.readEntry( "BorderActivateSphere", int( ElectricNone ))),
-        int( Sphere ));
+    list.clear();
+    list.append( int( ElectricNone ) );
+    list = gridConfig.readEntry( "BorderActivate", list );
+    foreach( int i, list )
+        {
+        monitorChangeEdge( ElectricBorder( i ), int( Cube ) );
+        }
+    list.clear();
+    list.append( int( ElectricNone ) );
+    list = gridConfig.readEntry( "BorderActivateCylinder", list );
+    foreach( int i, list )
+        {
+        monitorChangeEdge( ElectricBorder( i ), int( Cylinder ) );
+        }
+    list.clear();
+    list.append( int( ElectricNone ) );
+    list = gridConfig.readEntry( "BorderActivateSphere", list );
+    foreach( int i, list )
+        {
+        monitorChangeEdge( ElectricBorder( i ), int( Sphere ) );
+        }
     }
 
 void KWinScreenEdgesConfig::monitorSaveAction( int edge, const QString& configName )
@@ -290,23 +314,23 @@ void KWinScreenEdgesConfig::monitorSave()
     // Present Windows
     KConfigGroup presentWindowsConfig( m_config, "Effect-PresentWindows" );
     presentWindowsConfig.writeEntry( "BorderActivateAll",
-        int( monitorCheckEffectHasEdge( int( PresentWindowsAll ))));
+        monitorCheckEffectHasEdge( int( PresentWindowsAll )));
     presentWindowsConfig.writeEntry( "BorderActivate",
-        int( monitorCheckEffectHasEdge( int( PresentWindowsCurrent ))));
+        monitorCheckEffectHasEdge( int( PresentWindowsCurrent )));
 
     // Desktop Grid
     KConfigGroup gridConfig( m_config, "Effect-DesktopGrid" );
     gridConfig.writeEntry( "BorderActivate",
-        int( monitorCheckEffectHasEdge( int( DesktopGrid ))));
+        monitorCheckEffectHasEdge( int( DesktopGrid )));
 
     // Desktop Cube
     KConfigGroup cubeConfig( m_config, "Effect-Cube" );
     cubeConfig.writeEntry( "BorderActivate",
-        int( monitorCheckEffectHasEdge( int( Cube ))));
+        monitorCheckEffectHasEdge( int( Cube )));
     cubeConfig.writeEntry( "BorderActivateCylinder",
-        int( monitorCheckEffectHasEdge( int( Cylinder ))));
+        monitorCheckEffectHasEdge( int( Cylinder )));
     cubeConfig.writeEntry( "BorderActivateSphere",
-        int( monitorCheckEffectHasEdge( int( Sphere ))));
+        monitorCheckEffectHasEdge( int( Sphere )));
     }
 
 void KWinScreenEdgesConfig::monitorDefaults()
@@ -317,19 +341,6 @@ void KWinScreenEdgesConfig::monitorDefaults()
 
     // Present windows = Top-left
     m_ui->monitor->selectEdgeItem( int( Monitor::TopLeft ), int( PresentWindowsAll ));
-    }
-
-void KWinScreenEdgesConfig::monitorEdgeChanged( int edge, int index )
-    {
-    if( index == int( ElectricActionNone ))
-        return;
-    for( int i = 0; i < 8; i++ )
-        {
-        if( i == edge )
-            continue;
-        if( m_ui->monitor->selectedEdgeItem( i ) == index )
-            m_ui->monitor->selectEdgeItem( i, int( ElectricActionNone ));
-        }
     }
 
 void KWinScreenEdgesConfig::monitorShowEvent()
@@ -432,26 +443,29 @@ void KWinScreenEdgesConfig::monitorHideEdge( ElectricBorder border, bool hidden 
         }
     }
 
-ElectricBorder KWinScreenEdgesConfig::monitorCheckEffectHasEdge( int index )
+QList<int> KWinScreenEdgesConfig::monitorCheckEffectHasEdge( int index ) const
     {
+    QList<int> list = QList<int>();
     if( m_ui->monitor->selectedEdgeItem( int( Monitor::Top )) == index )
-        return ElectricTop;
+        list.append( int( ElectricTop ) );
     if( m_ui->monitor->selectedEdgeItem( int( Monitor::TopRight )) == index )
-        return ElectricTopRight;
+        list.append( int( ElectricTopRight ) );
     if( m_ui->monitor->selectedEdgeItem( int( Monitor::Right )) == index )
-        return ElectricRight;
+        list.append( int( ElectricRight ) );
     if( m_ui->monitor->selectedEdgeItem( int( Monitor::BottomRight )) == index )
-        return ElectricBottomRight;
+        list.append( int( ElectricBottomRight ) );
     if( m_ui->monitor->selectedEdgeItem( int( Monitor::Bottom )) == index )
-        return ElectricBottom;
+        list.append( int( ElectricBottom ) );
     if( m_ui->monitor->selectedEdgeItem( int( Monitor::BottomLeft )) == index )
-        return ElectricBottomLeft;
+        list.append( int( ElectricBottomLeft ) );
     if( m_ui->monitor->selectedEdgeItem( int( Monitor::Left )) == index )
-        return ElectricLeft;
+        list.append( int( ElectricLeft ) );
     if( m_ui->monitor->selectedEdgeItem( int( Monitor::TopLeft )) == index )
-        return ElectricTopLeft;
+        list.append( int( ElectricTopLeft ) );
 
-    return ElectricNone;
+    if( list.isEmpty() )
+        list.append( int( ElectricNone ) );
+    return list;
     }
 
 } // namespace

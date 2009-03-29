@@ -66,7 +66,7 @@ class DesktopGridEffect
         void setup();
         void finish();
         
-        ElectricBorder borderActivate;
+        QList<ElectricBorder> borderActivate;
         int zoomDuration;
         int border;
         Qt::Alignment desktopNameAlignment;

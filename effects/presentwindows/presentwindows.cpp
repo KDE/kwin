@@ -42,8 +42,6 @@ KWIN_EFFECT( presentwindows, PresentWindowsEffect )
 
 PresentWindowsEffect::PresentWindowsEffect()
     : m_proxy( this )
-    , m_borderActivate( ElectricNone )
-    , m_borderActivateAll( ElectricNone )
     , m_activated( false )
     , m_allDesktops( false )
     , m_ignoreMinimized( false )
@@ -72,19 +70,45 @@ PresentWindowsEffect::PresentWindowsEffect()
 
 PresentWindowsEffect::~PresentWindowsEffect()
     {
-    effects->unreserveElectricBorder( m_borderActivate );
-    effects->unreserveElectricBorder( m_borderActivateAll );
+    foreach( ElectricBorder border, m_borderActivate )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    foreach( ElectricBorder border, m_borderActivateAll )
+        {
+        effects->unreserveElectricBorder( border );
+        }
     }
 
 void PresentWindowsEffect::reconfigure( ReconfigureFlags )
     {
     KConfigGroup conf = effects->effectConfig("PresentWindows");
-    effects->unreserveElectricBorder( m_borderActivate );
-    effects->unreserveElectricBorder( m_borderActivateAll );
-    m_borderActivate = ElectricBorder( conf.readEntry( "BorderActivate", int( ElectricNone )));
-    m_borderActivateAll = ElectricBorder( conf.readEntry( "BorderActivateAll", int( ElectricTopLeft )));
-    effects->reserveElectricBorder( m_borderActivate );
-    effects->reserveElectricBorder( m_borderActivateAll );
+    foreach( ElectricBorder border, m_borderActivate )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    foreach( ElectricBorder border, m_borderActivateAll )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    m_borderActivate.clear();
+    m_borderActivateAll.clear();
+    QList<int> borderList = QList<int>();
+    borderList.append( int( ElectricNone ) );
+    borderList = conf.readEntry( "BorderActivate", borderList );
+    foreach( int i, borderList )
+        {
+        m_borderActivate.append( ElectricBorder( i ) );
+        effects->reserveElectricBorder( ElectricBorder( i ) );
+        }
+    borderList.clear();
+    borderList.append( int( ElectricTopLeft ) );
+    borderList = conf.readEntry( "BorderActivateAll", borderList );
+    foreach( int i, borderList )
+        {
+        m_borderActivateAll.append( ElectricBorder( i ) );
+        effects->reserveElectricBorder( ElectricBorder( i ) );
+        }
     m_layoutMode = conf.readEntry( "LayoutMode", int( LayoutNatural ));
     m_showCaptions = conf.readEntry( "DrawWindowCaptions", true );
     m_showIcons = conf.readEntry( "DrawWindowIcons", true );
@@ -292,11 +316,11 @@ void PresentWindowsEffect::windowDeleted( EffectWindow *w )
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
     {
-    if( border != m_borderActivate && border != m_borderActivateAll )
+    if( !m_borderActivate.contains( border ) && !m_borderActivateAll.contains( border ) )
         return false;
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return true;
-    if( border == m_borderActivate )
+    if( m_borderActivate.contains( border ) )
         toggleActive();
     else
         toggleActiveAllDesktops();

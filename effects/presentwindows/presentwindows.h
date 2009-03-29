@@ -125,8 +125,8 @@ class PresentWindowsEffect
         friend class PresentWindowsEffectProxy;
 
         // User configuration settings
-        ElectricBorder m_borderActivate;
-        ElectricBorder m_borderActivateAll;
+        QList<ElectricBorder> m_borderActivate;
+        QList<ElectricBorder> m_borderActivateAll;
         int m_layoutMode;
         bool m_showCaptions;
         bool m_showIcons;

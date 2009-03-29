@@ -50,9 +50,6 @@ CubeEffect::CubeEffect()
     , cube_painting( false )
     , keyboard_grab( false )
     , schedule_close( false )
-    , borderActivate( ElectricNone )
-    , borderActivateCylinder( ElectricNone )
-    , borderActivateSphere( ElectricNone )
     , frontDesktop( 0 )
     , cubeOpacity( 1.0 )
     , opacityDesktopOnly( true )
@@ -111,12 +108,45 @@ void CubeEffect::reconfigure( ReconfigureFlags )
 void CubeEffect::loadConfig( QString config )
     {
     KConfigGroup conf = effects->effectConfig( config );
-    borderActivate = (ElectricBorder)conf.readEntry( "BorderActivate", (int)ElectricNone );
-    borderActivateCylinder = (ElectricBorder)conf.readEntry( "BorderActivateCylinder", (int)ElectricNone );
-    borderActivateSphere = (ElectricBorder)conf.readEntry( "BorderActivateSphere", (int)ElectricNone );
-    effects->reserveElectricBorder( borderActivate );
-    effects->reserveElectricBorder( borderActivateCylinder );
-    effects->reserveElectricBorder( borderActivateSphere );
+    foreach( ElectricBorder border, borderActivate )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    foreach( ElectricBorder border, borderActivateCylinder )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    foreach( ElectricBorder border, borderActivateSphere )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    borderActivate.clear();
+    borderActivateCylinder.clear();
+    borderActivateSphere.clear();
+    QList<int> borderList = QList<int>();
+    borderList.append( int( ElectricNone ) );
+    borderList = conf.readEntry( "BorderActivate", borderList );
+    foreach( int i, borderList )
+        {
+        borderActivate.append( ElectricBorder( i ) );
+        effects->reserveElectricBorder( ElectricBorder( i ) );
+        }
+    borderList.clear();
+    borderList.append( int( ElectricNone ) );
+    borderList = conf.readEntry( "BorderActivateCylinder", borderList );
+    foreach( int i, borderList )
+        {
+        borderActivateCylinder.append( ElectricBorder( i ) );
+        effects->reserveElectricBorder( ElectricBorder( i ) );
+        }
+    borderList.clear();
+    borderList.append( int( ElectricNone ) );
+    borderList = conf.readEntry( "BorderActivateSphere", borderList );
+    foreach( int i, borderList )
+        {
+        borderActivateSphere.append( ElectricBorder( i ) );
+        effects->reserveElectricBorder( ElectricBorder( i ) );
+        }
 
     cubeOpacity = (float)conf.readEntry( "Opacity", 80 )/100.0f;
     opacityDesktopOnly = conf.readEntry( "OpacityDesktopOnly", false );
@@ -218,9 +248,18 @@ void CubeEffect::loadConfig( QString config )
 
 CubeEffect::~CubeEffect()
     {
-    effects->unreserveElectricBorder( borderActivate );
-    effects->unreserveElectricBorder( borderActivateCylinder );
-    effects->unreserveElectricBorder( borderActivateSphere );
+    foreach( ElectricBorder border, borderActivate )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    foreach( ElectricBorder border, borderActivateCylinder )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    foreach( ElectricBorder border, borderActivateSphere )
+        {
+        effects->unreserveElectricBorder( border );
+        }
     delete wallpaper;
     delete capTexture;
     delete cylinderShader;
@@ -1519,26 +1558,27 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
 
 bool CubeEffect::borderActivated( ElectricBorder border )
     {
-    if( border != borderActivate && border != borderActivateCylinder && border != borderActivateSphere )
+    if( !borderActivate.contains( border ) &&
+        !borderActivateCylinder.contains( border ) &&
+        !borderActivateSphere.contains( border ) )
         return false;
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return false;
-    kDebug(1212) << "border activated";
-    if( border == borderActivate )
+    if( borderActivate.contains( border ) )
         {
         if( !activated || ( activated && mode == Cube ) )
             toggleCube();
         else
             return false;
         }
-    if( border == borderActivateCylinder )
+    if( borderActivateCylinder.contains( border ) )
         {
         if( !activated || ( activated && mode == Cylinder ) )
             toggleCylinder();
         else
             return false;
         }
-    if( border == borderActivateSphere )
+    if( borderActivateSphere.contains( border ) )
         {
         if( !activated || ( activated && mode == Sphere ) )
             toggleSphere();

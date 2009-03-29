@@ -42,8 +42,7 @@ namespace KWin
 KWIN_EFFECT( desktopgrid, DesktopGridEffect )
 
 DesktopGridEffect::DesktopGridEffect()
-    : borderActivate( ElectricNone )
-    , activated( false )
+    : activated( false )
     , timeline()
     , keyboardGrab( false )
     , wasWindowMove( false )
@@ -70,16 +69,29 @@ DesktopGridEffect::DesktopGridEffect()
 
 DesktopGridEffect::~DesktopGridEffect()
     {
-    effects->unreserveElectricBorder( borderActivate );
+    foreach( ElectricBorder border, borderActivate )
+        {
+        effects->unreserveElectricBorder( border );
+        }
     }
 
 void DesktopGridEffect::reconfigure( ReconfigureFlags )
     {
     KConfigGroup conf = effects->effectConfig( "DesktopGrid" );
 
-    effects->unreserveElectricBorder( borderActivate );
-    borderActivate = ElectricBorder( conf.readEntry( "BorderActivate", int( ElectricNone )));
-    effects->reserveElectricBorder( borderActivate );
+    foreach( ElectricBorder border, borderActivate )
+        {
+        effects->unreserveElectricBorder( border );
+        }
+    borderActivate.clear();
+    QList<int> borderList = QList<int>();
+    borderList.append( int( ElectricNone ) );
+    borderList = conf.readEntry( "BorderActivate", borderList );
+    foreach( int i, borderList )
+        {
+        borderActivate.append( ElectricBorder( i ) );
+        effects->reserveElectricBorder( ElectricBorder( i ) );
+        }
 
     zoomDuration = animationTime( conf, "ZoomDuration", 300 );
     timeline.setCurveShape( TimeLine::EaseInOutCurve );
@@ -416,7 +428,7 @@ void DesktopGridEffect::grabbedKeyboardEvent( QKeyEvent* e )
 
 bool DesktopGridEffect::borderActivated( ElectricBorder border )
     {
-    if( border != borderActivate )
+    if( !borderActivate.contains( border ) )
         return false;
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return true;

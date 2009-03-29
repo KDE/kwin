@@ -94,9 +94,9 @@ class CubeEffect
         bool cube_painting;
         bool keyboard_grab;
         bool schedule_close;
-        ElectricBorder borderActivate;
-        ElectricBorder borderActivateCylinder;
-        ElectricBorder borderActivateSphere;
+        QList<ElectricBorder> borderActivate;
+        QList<ElectricBorder> borderActivateCylinder;
+        QList<ElectricBorder> borderActivateSphere;
         int painting_desktop;
         Window input;
         int frontDesktop;
