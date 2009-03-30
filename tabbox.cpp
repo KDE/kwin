@@ -496,7 +496,7 @@ void TabBox::setCurrentClient( Client* newClient )
     client = newClient;
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
-    else
+    if( isVisible() )
         updateOutline();
     }
 
@@ -517,7 +517,7 @@ void TabBox::setCurrentDesktop( int newDesktop )
  */
 void TabBox::showEvent( QShowEvent* )
     {
-    if( !effects )
+    if( isVisible() )
         updateOutline();
     raise();
     }
@@ -528,13 +528,6 @@ void TabBox::showEvent( QShowEvent* )
  */
 void TabBox::hideEvent( QHideEvent* )
     {
-    if( !effects )
-        {
-        XUnmapWindow( QX11Info::display(), outline_left );
-        XUnmapWindow( QX11Info::display(), outline_right );
-        XUnmapWindow( QX11Info::display(), outline_top );
-        XUnmapWindow( QX11Info::display(), outline_bottom );
-        }
     }
 
 void TabBox::drawBackground( QPainter* painter, const QRectF& rect )
@@ -654,7 +647,13 @@ void TabBox::hide()
     {
     delayedShowTimer.stop();
     if( isVisible())
+        {
         unrefDisplay();
+        XUnmapWindow( QX11Info::display(), outline_left );
+        XUnmapWindow( QX11Info::display(), outline_right );
+        XUnmapWindow( QX11Info::display(), outline_top );
+        XUnmapWindow( QX11Info::display(), outline_bottom );
+        }
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxClosed();
     if( isDisplayed())
@@ -1091,7 +1090,6 @@ void Workspace::slotWalkThroughWindows()
     {
     if ( tab_grab || control_grab )
         return;
-    kDebug(0) << "focus policy reasonable?" << options->focusPolicyIsReasonable() << options->altTabStyle;
     if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
         {
         //ungrabXKeyboard(); // need that because of accelerator raw mode
@@ -1100,7 +1098,6 @@ void Workspace::slotWalkThroughWindows()
         }
     else
         {
-        kDebug() << "are mode keys pressed" << areModKeysDepressed( cutWalkThroughWindowsReverse );
         if ( areModKeysDepressed( cutWalkThroughWindows ) )
             {
             if ( startKDEWalkThroughWindows() )
