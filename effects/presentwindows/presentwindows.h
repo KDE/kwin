@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "presentwindows_proxy.h"
 
 #include <kwineffects.h>
+#include <kshortcut.h>
 
 namespace KWin
 {
@@ -92,6 +93,11 @@ class PresentWindowsEffect
         void toggleActive()  { m_allDesktops = false; setActive( !m_activated ); }
         void toggleActiveAllDesktops()  { m_allDesktops = true; setActive( !m_activated ); }
 
+        // slots for global shortcut changed
+        // needed to toggle the effect
+        void globalShortcutChanged( const QKeySequence& seq );
+        void globalShortcutChangedAll( const QKeySequence& seq );
+
     protected:
         // Window rearranging
         void rearrangeWindows();
@@ -156,6 +162,10 @@ class PresentWindowsEffect
         // Filter box
         EffectFrame m_filterFrame;
         QString m_windowFilter;
+
+        // Shortcut - needed to toggle the effect
+        KShortcut shortcut;
+        KShortcut shortcutAll;
     };
 
 } // namespace

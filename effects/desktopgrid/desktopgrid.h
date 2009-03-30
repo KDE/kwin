@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DESKTOPGRID_H
 
 #include <kwineffects.h>
+#include <kshortcut.h>
 #include <QObject>
 
 namespace KWin
@@ -50,6 +51,9 @@ class DesktopGridEffect
 
     private slots:
         void toggle();
+        // slots for global shortcut changed
+        // needed to toggle the effect
+        void globalShortcutChanged( const QKeySequence& seq );
 
     private:
         QPointF scalePos( const QPoint& pos, int desktop, int screen = -1 ) const;
@@ -96,6 +100,9 @@ class DesktopGridEffect
         QList<double> unscaledBorder;
         QList<QSizeF> scaledSize;
         QList<QPointF> scaledOffset;
+
+        // Shortcut - needed to toggle the effect
+        KShortcut shortcut;
 
     };
 

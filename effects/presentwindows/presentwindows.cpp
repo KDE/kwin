@@ -60,11 +60,15 @@ PresentWindowsEffect::PresentWindowsEffect()
     KAction* a = ( KAction* )actionCollection->addAction( "Expose" );
     a->setText( i18n( "Toggle Present Windows (Current desktop)" ));
     a->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F9 ));
+    shortcut = a->globalShortcut();
     connect( a, SIGNAL( triggered(bool) ), this, SLOT( toggleActive() ));
+    connect( a, SIGNAL( globalShortcutChanged(QKeySequence) ), this, SLOT( globalShortcutChanged(QKeySequence)));
     KAction* b = ( KAction* )actionCollection->addAction( "ExposeAll" );
     b->setText( i18n( "Toggle Present Windows (All desktops)" ));
     b->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F10 ));
+    shortcutAll = b->globalShortcut();
     connect( b, SIGNAL( triggered(bool) ), this, SLOT( toggleActiveAllDesktops() ));
+    connect( b, SIGNAL( globalShortcutChanged(QKeySequence) ), this, SLOT( globalShortcutChangedAll(QKeySequence)));
     reconfigure( ReconfigureAll );
     }
 
@@ -363,6 +367,19 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
     {
     if( e->type() == QEvent::KeyPress )
         {
+        // check for global shortcuts
+        // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
+        if( !m_allDesktops && shortcut.contains( e->key() + e->modifiers() ) )
+            {
+            toggleActive();
+            return;
+            }
+        if( m_allDesktops && shortcutAll.contains( e->key() + e->modifiers() ) )
+            {
+            toggleActiveAllDesktops();
+            return;
+            }
+
         switch( e->key() )
             { // Wrap only if not auto-repeating
             case Qt::Key_Left:
@@ -1502,6 +1519,16 @@ EffectWindow* PresentWindowsEffect::findFirstWindow() const
             }
         }
     return topLeft;
+    }
+
+void PresentWindowsEffect::globalShortcutChanged( const QKeySequence& seq )
+    {
+    shortcut = KShortcut( seq );
+    }
+
+void PresentWindowsEffect::globalShortcutChangedAll( const QKeySequence& seq )
+    {
+    shortcutAll = KShortcut( seq );
     }
 
 } // namespace

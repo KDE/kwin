@@ -233,15 +233,21 @@ void CubeEffect::loadConfig( QString config )
         KAction* cubeAction = static_cast< KAction* >( actionCollection->addAction( "Cube" ));
         cubeAction->setText( i18n("Desktop Cube" ));
         cubeAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F11 ));
+        cubeShortcut = cubeAction->globalShortcut();
         KAction* cylinderAction = static_cast< KAction* >( actionCollection->addAction( "Cylinder" ));
         cylinderAction->setText( i18n("Desktop Cylinder" ));
         cylinderAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_F11 ));
+        cylinderShortcut = cylinderAction->globalShortcut();
         KAction* sphereAction = static_cast< KAction* >( actionCollection->addAction( "Sphere" ));
         sphereAction->setText( i18n("Desktop Sphere" ));
         sphereAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F11 ));
+        sphereShortcut = sphereAction->globalShortcut();
         connect( cubeAction, SIGNAL( triggered( bool )), this, SLOT( toggleCube()));
         connect( cylinderAction, SIGNAL( triggered( bool )), this, SLOT( toggleCylinder()));
         connect( sphereAction, SIGNAL( triggered( bool )), this, SLOT( toggleSphere()));
+        connect( cubeAction, SIGNAL( globalShortcutChanged( QKeySequence )), this, SLOT( cubeShortcutChanged(QKeySequence)));
+        connect( cylinderAction, SIGNAL( globalShortcutChanged( QKeySequence )), this, SLOT( cylinderShortcutChanged(QKeySequence)));
+        connect( sphereAction, SIGNAL( globalShortcutChanged( QKeySequence )), this, SLOT( sphereShortcutChanged(QKeySequence)));
         shortcutsRegistered = true;
         }
     }
@@ -1639,6 +1645,24 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
     // taken from desktopgrid.cpp
     if( e->type() == QEvent::KeyPress )
         {
+        // check for global shortcuts
+        // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
+        if( mode == Cube && cubeShortcut.contains( e->key() + e->modifiers() ) )
+            {
+            toggleCube();
+            return;
+            }
+        if( mode == Cylinder && cylinderShortcut.contains( e->key() + e->modifiers() ) )
+            {
+            toggleCylinder();
+            return;
+            }
+        if( mode == Sphere && sphereShortcut.contains( e->key() + e->modifiers() ) )
+            {
+            toggleSphere();
+            return;
+            }
+
         int desktop = -1;
         // switch by F<number> or just <number>
         if( e->key() >= Qt::Key_F1 && e->key() <= Qt::Key_F35 )
@@ -2114,6 +2138,21 @@ void CubeEffect::windowAdded( EffectWindow* )
     // to prevent that the window is black
     if( activated )
         useList = false;
+    }
+
+void CubeEffect::cubeShortcutChanged( const QKeySequence& seq )
+    {
+    cubeShortcut = KShortcut( seq );
+    }
+
+void CubeEffect::cylinderShortcutChanged( const QKeySequence& seq )
+    {
+    cylinderShortcut = KShortcut( seq );
+    }
+
+void CubeEffect::sphereShortcutChanged( const QKeySequence& seq )
+    {
+    sphereShortcut = KShortcut( seq );
     }
 
 } // namespace

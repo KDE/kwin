@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 #include <kwinglutils.h>
+#include <kshortcut.h>
 #include <QObject>
 #include <QQueue>
 #include <QSet>
@@ -58,6 +59,11 @@ class CubeEffect
         void toggleCube();
         void toggleCylinder();
         void toggleSphere();
+        // slots for global shortcut changed
+        // needed to toggle the effect
+        void cubeShortcutChanged( const QKeySequence& seq );
+        void cylinderShortcutChanged( const QKeySequence& seq );
+        void sphereShortcutChanged( const QKeySequence& seq );
     private:
         enum RotationDirection
             {
@@ -152,6 +158,11 @@ class CubeEffect
         bool capListCreated;
         bool recompileList;
         GLuint glList;
+
+        // Shortcuts - needed to toggle the effect
+        KShortcut cubeShortcut;
+        KShortcut cylinderShortcut;
+        KShortcut sphereShortcut;
     };
 
 } // namespace
