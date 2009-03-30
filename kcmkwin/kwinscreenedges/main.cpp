@@ -353,27 +353,27 @@ void KWinScreenEdgesConfig::monitorShowEvent()
 
         // Present Windows
         bool enabled = effectEnabled( "presentwindows", config );
-        monitorItemSetEnabled( 1, enabled );
-        monitorItemSetEnabled( 2, enabled );
+        monitorItemSetEnabled( int( PresentWindowsCurrent ), enabled );
+        monitorItemSetEnabled( int( PresentWindowsAll ), enabled );
 
         // Desktop Grid
         enabled = effectEnabled( "desktopgrid", config );
-        monitorItemSetEnabled( 3, enabled );
+        monitorItemSetEnabled( int( DesktopGrid ), enabled );
 
         // Desktop Cube
         enabled = effectEnabled( "cube", config );
-        monitorItemSetEnabled( 4, enabled );
-        monitorItemSetEnabled( 5, enabled );
-        monitorItemSetEnabled( 6, enabled );
+        monitorItemSetEnabled( int( Cube ), enabled );
+        monitorItemSetEnabled( int( Cylinder ), enabled );
+        monitorItemSetEnabled( int( Sphere ), enabled );
         }
     else // Compositing disabled
         {
-        monitorItemSetEnabled( 1, false );
-        monitorItemSetEnabled( 2, false );
-        monitorItemSetEnabled( 3, false );
-        monitorItemSetEnabled( 4, false );
-        monitorItemSetEnabled( 5, false );
-        monitorItemSetEnabled( 6, false );
+        monitorItemSetEnabled( int( PresentWindowsCurrent ), false );
+        monitorItemSetEnabled( int( PresentWindowsAll ), false );
+        monitorItemSetEnabled( int( DesktopGrid ), false );
+        monitorItemSetEnabled( int( Cube ), false );
+        monitorItemSetEnabled( int( Cylinder ), false );
+        monitorItemSetEnabled( int( Sphere ), false );
         }
     }
 
