@@ -136,7 +136,10 @@ void Monitor::addEdgeItem( int edge, const QString& item )
     popup_actions[ edge ].append( act );
     grp[ edge ]->addAction( act );
     if( popup_actions[ edge ].count() == 1 )
+        {
         act->setChecked( true );
+        items[ edge ]->setToolTip( item );
+        }
     setEdge( edge, !popup_actions[ edge ][ 0 ]->isChecked());
     }
 
@@ -154,6 +157,7 @@ void Monitor::selectEdgeItem( int edge, int index )
     {
     popup_actions[ edge ][ index ]->setChecked( true );
     setEdge( edge, !popup_actions[ edge ][ 0 ]->isChecked());
+    items[ edge ]->setToolTip( popup_actions[ edge ][ index ]->text() );
     }
 
 int Monitor::selectedEdgeItem( int edge ) const
@@ -179,6 +183,7 @@ void Monitor::popup( Corner* c, QPoint pos )
                 selectEdgeItem( i, popup_actions[ i ].indexOf( a ));
                 emit changed();
                 emit edgeSelectionChanged( i, popup_actions[ i ].indexOf( a ));
+                c->setToolTip( a->text() );
                 }
             return;
             }
