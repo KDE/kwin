@@ -41,6 +41,8 @@ class MagicLampEffect
         virtual void windowMinimized( EffectWindow* c );
         virtual void windowUnminimized( EffectWindow* c );
 
+        static bool supported();
+
     private:
         QHash< EffectWindow*, TimeLine > mTimeLineWindows;
         int mActiveAnimations;

@@ -28,11 +28,17 @@ namespace KWin
 {
 
 KWIN_EFFECT( magiclamp, MagicLampEffect )
+KWIN_EFFECT_SUPPORTED( magiclamp, MagicLampEffect::supported() )
 
 MagicLampEffect::MagicLampEffect()
     {
     mActiveAnimations = 0;
     reconfigure( ReconfigureAll );
+    }
+
+bool MagicLampEffect::supported()
+    {
+    return effects->compositingType() == OpenGLCompositing;
     }
 
 void MagicLampEffect::reconfigure( ReconfigureFlags )
