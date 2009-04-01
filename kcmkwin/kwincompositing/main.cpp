@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kplugininfo.h>
 #include <kservice.h>
 #include <ktitlewidget.h>
+#include <knotification.h>
 
 #include <QtDBus/QtDBus>
 #include <QTimer>
@@ -610,6 +611,45 @@ void KWinCompositingConfig::configChanged(bool reinitCompositing)
     bool shadowBefore = effectEnabled( "shadow", effectConfig );
     effectConfig = KConfigGroup( mKWinConfig, "Plugins" );
     bool shadowAfter = effectEnabled( "shadow", effectConfig );
+
+    // check for effects not supported by Backend or hardware
+    // such effects are enabled but not returned by DBus method loadedEffects
+    message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "loadedEffects" );
+    QDBusMessage reply = QDBusConnection::sessionBus().call( message );
+    if( reply.type() == QDBusMessage::ReplyMessage )
+        {
+        QStringList loadedEffects = reply.arguments()[0].toStringList();
+        QStringList effects = effectConfig.keyList();
+        QStringList disabledEffects = QStringList();
+        foreach( QString effect, effects )
+            {
+            QString temp = effect.mid( 13, effect.length() - 13 - 7 );
+            effect.truncate( effect.length() - 7 );
+            if( effectEnabled( temp, effectConfig ) && !loadedEffects.contains( effect ) )
+                {
+                disabledEffects << effect;
+                }
+            }
+        if( !disabledEffects.isEmpty() )
+            {
+            KServiceTypeTrader* trader = KServiceTypeTrader::self();
+            KService::List services;
+            QString message = i18n( "The following effects could not be activated:" );
+            message.append( "<ul>" );
+            foreach( QString effect, disabledEffects )
+                {
+                services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == '" + effect + "'");
+                message.append( "<li>" );
+                if( !services.isEmpty() )
+                    message.append( services.first()->name() );
+                else
+                    message.append( effect);
+                message.append( "</li>" );
+                }
+            message.append( "</ul>" );
+            KNotification::event( KNotification::Notification, message );
+            }
+        }
 
     if( enabledBefore != enabledAfter || shadowBefore != shadowAfter )
         {
