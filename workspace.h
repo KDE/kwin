@@ -328,6 +328,8 @@ class Workspace : public QObject, public KDecorationDefines
         // KDE4 remove me - And it's also in the DCOP interface :(
         void showWindowMenuAt( unsigned long id, int x, int y );
 
+        void toggleCompositing()
+            { slotToggleCompositing(); }
         void loadEffect( const QString& name );
         void toggleEffect( const QString& name );
         void reconfigureEffect( const QString& name );
