@@ -71,7 +71,7 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   layout->setMargin(0);
   layout->setSpacing(KDialog::spacingHint());
 
-  QHBoxLayout *lay = new QHBoxLayout();
+  QFormLayout *lay = new QFormLayout();
   lay->setMargin(KDialog::marginHint());
   lay->setSpacing(KDialog::spacingHint());
 
@@ -84,12 +84,9 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   QString wtstr = i18n( "Here you can set how many virtual desktops you want on your KDE desktop. Move the slider to change the value." );
   label->setWhatsThis( wtstr );
   _numInput->setWhatsThis( wtstr );
-  //QSpacerItem *horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-  lay->addWidget(label);
-  lay->addWidget(_numInput);
-  //lay->addItem(horizontalSpacer);
-  lay->setStretchFactor( _numInput, 2 );
+  lay->setWidget(0, QFormLayout::LabelRole, label);
+  lay->setWidget(0, QFormLayout::FieldRole, _numInput);
 
   layout->addLayout(lay);
 
