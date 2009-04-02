@@ -275,7 +275,27 @@ void Workspace::slotToggleCompositing()
     {
     suspendCompositing( !compositingSuspended );
     }
-    
+
+// for the dbus call
+void Workspace::toggleCompositing()
+    {
+    slotToggleCompositing();
+    if( compositingSuspended )
+        {
+        // when disabled show a shortcut how the user can get back compositing
+        QString shortcut, message;
+        if( KAction* action = qobject_cast<KAction*>( keys->action("Suspend Compositing")))
+            shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
+        if( !shortcut.isEmpty() && options->useCompositing )
+            {
+            // display notification only if there is the shortcut
+            message = i18n( "Compositing has been suspended by another application.<br/>"
+                "You can resume using the '%1' shortcut.", shortcut );
+            Notify::raise( Notify::CompositingSlow, message );
+            }
+        }
+    }
+
 void Workspace::suspendCompositing()
     {
     suspendCompositing( true );
