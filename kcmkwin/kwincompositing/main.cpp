@@ -616,7 +616,7 @@ void KWinCompositingConfig::configChanged(bool reinitCompositing)
     // such effects are enabled but not returned by DBus method loadedEffects
     message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "loadedEffects" );
     QDBusMessage reply = QDBusConnection::sessionBus().call( message );
-    if( reply.type() == QDBusMessage::ReplyMessage )
+    if( reply.type() == QDBusMessage::ReplyMessage && enabledAfter )
         {
         QStringList loadedEffects = reply.arguments()[0].toStringList();
         QStringList effects = effectConfig.keyList();
