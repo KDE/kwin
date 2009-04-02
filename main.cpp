@@ -177,7 +177,7 @@ static int x11ErrorHandler( Display* d, XErrorEvent* e )
         return 0;
 
     //fprintf( stderr, "kwin: X Error (%s)\n", KXErrorHandler::errorMessage( *e, d ).data());
-    fprintf( stderr, "kwin: X Error (%s)\n", errorMessage( *e, d ).data() );
+    kWarning( 1212 ) << "kwin: X Error (" << errorMessage( *e, d ) << ")";
 
     if( kwin_sync )
         fprintf( stderr, "%s\n", kBacktrace().toLocal8Bit().data() );
