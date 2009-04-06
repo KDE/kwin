@@ -647,7 +647,7 @@ void KWinCompositingConfig::configChanged(bool reinitCompositing)
                 message.append( "</li>" );
                 }
             message.append( "</ul>" );
-            KNotification::event( KNotification::Notification, message );
+            KNotification::event( "effectsnotsupported", message, QPixmap(), NULL, KNotification::CloseOnTimeout, KComponentData( "kwin" ) );
             }
         }
 
