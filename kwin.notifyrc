@@ -6113,3 +6113,8 @@ Comment[x-test]=xxThe compositing performance was too slow and compositing has b
 Comment[zh_CN]=由于混成性能过低，此特性已经被暂时关闭
 Comment[zh_TW]=組合效能過慢，因此被暫停了
 Action=Popup
+
+[Event/compositingsuspendeddbus]
+Name=Compositing has been suspended
+Comment=Another application has requested to suspend compositing
+Action=Popup

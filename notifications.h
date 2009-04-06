@@ -59,6 +59,7 @@ class Notify
             DemandAttentionCurrent,
             DemandAttentionOther,
             CompositingSlow,
+            CompositingSuspendedDbus,
             DesktopChange = 100
             };
 

@@ -291,7 +291,7 @@ void Workspace::toggleCompositing()
             // display notification only if there is the shortcut
             message = i18n( "Compositing has been suspended by another application.<br/>"
                 "You can resume using the '%1' shortcut.", shortcut );
-            Notify::raise( Notify::CompositingSlow, message );
+            Notify::raise( Notify::CompositingSuspendedDbus, message );
             }
         }
     }
