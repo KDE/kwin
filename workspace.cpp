@@ -44,8 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 
 #include "client.h"
-#include "popupinfo.h"
 #include "tabbox.h"
+#include "desktopchangeosd.h"
 #include "atoms.h"
 #include "placement.h"
 #include "notifications.h"
@@ -117,7 +117,7 @@ Workspace::Workspace( bool restore )
     , mouse_emulation( false )
     , block_focus( 0 )
     , tab_box( 0 )
-    , popupinfo( 0 )
+    , desktop_change_osd( 0 )
     , popup( 0 )
     , advanced_popup( 0 )
     , trans_popup( 0 )
@@ -227,7 +227,7 @@ Workspace::Workspace( bool restore )
     client_keys = new KActionCollection( this );
     initShortcuts();
     tab_box = new TabBox( this );
-    popupinfo = new PopupInfo( this );
+    desktop_change_osd = new DesktopChangeOSD( this );
 
     init();
 
@@ -343,6 +343,7 @@ void Workspace::init()
 
     loadDesktopSettings();
     updateDesktopLayout();
+    desktop_change_osd->numberDesktopsChanged();
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info( display(), NET::ActiveWindow | NET::CurrentDesktop );
     int initial_desktop;
@@ -485,7 +486,7 @@ Workspace::~Workspace()
         ++it )
         (*it)->release();
     delete tab_box;
-    delete popupinfo;
+    delete desktop_change_osd;
     discardPopup();
     XDeleteProperty( display(), rootWindow(), atoms->kwin_running );
 
@@ -1032,7 +1033,7 @@ void Workspace::slotReconfigure()
     unsigned long changed = options->updateSettings();
 
     tab_box->reconfigure();
-    popupinfo->reconfigure();
+    desktop_change_osd->reconfigure();
     initPositioning->reinitCascading( 0 );
     readShortcuts();
     forEachClient( CheckIgnoreFocusStealingProcedure());
@@ -1426,8 +1427,9 @@ bool Workspace::setCurrentDesktop( int new_desktop )
     //    s += QString::number( desktop_focus_chain[i] ) + ", ";
     //kDebug( 1212 ) << s << "}\n";
 
-    if( old_desktop != 0 )  // Not for the very first time
-        popupinfo->showInfo( desktopName( currentDesktop() ));
+    // Not for the very first time, only if something changed and there are more than 1 desktops
+    if( old_desktop != 0 && old_desktop != new_desktop && numberOfDesktops() > 1 )
+        desktop_change_osd->desktopChanged( old_desktop );
 
     if( effects != NULL && old_desktop != 0 && old_desktop != new_desktop )
         static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
@@ -1507,6 +1509,9 @@ void Workspace::setNumberOfDesktops( int n )
     desktop_focus_chain.resize( n );
     for( int i = 0; i < int( desktop_focus_chain.size() ); i++ )
         desktop_focus_chain[i] = i+1;
+
+    // reset the desktop change osd
+    desktop_change_osd->numberDesktopsChanged();
     }
 
 /**

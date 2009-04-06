@@ -56,7 +56,7 @@ namespace KWin
 
 class Client;
 class TabBox;
-class PopupInfo;
+class DesktopChangeOSD;
 class RootInfo;
 class PluginMgr;
 class Placement;
@@ -793,7 +793,7 @@ class Workspace : public QObject, public KDecorationDefines
         int block_focus;
 
         TabBox* tab_box;
-        PopupInfo* popupinfo;
+        DesktopChangeOSD* desktop_change_osd;
 
         QMenu* popup;
         QMenu* advanced_popup;

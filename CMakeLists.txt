@@ -63,8 +63,8 @@ set(kwin_KDEINIT_SRCS
    utils.cpp 
    layers.cpp 
    main.cpp 
-   popupinfo.cpp 
    tabbox.cpp 
+   desktopchangeosd.cpp 
    options.cpp 
    plugins.cpp 
    events.cpp 
