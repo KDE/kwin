@@ -6116,10 +6116,10 @@ Action=Popup
 
 [Event/compositingsuspendeddbus]
 Name=Compositing has been suspended
-Comment=Another application has requested to suspend compositing
+Comment=Another application has requested to suspend compositing.
 Action=Popup
 
 [Event/effectsnotsupported]
 Name=Effects not supported
-Comment=Some effects are not supported by backend or hardware
+Comment=Some effects are not supported by backend or hardware.
 Action=Popup
