@@ -327,7 +327,8 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             if( !wasWindowMove ) // Activate on move
                 effects->activateWindow( windowMove );
             wasWindowMove = true;
-            effects->moveWindow( windowMove, unscalePos( me->pos(), NULL ) + windowMoveDiff );
+            if( windowMove->isMovable() )
+                effects->moveWindow( windowMove, unscalePos( me->pos(), NULL ) + windowMoveDiff );
             // TODO: Window snap
             if( d != highlightedDesktop && !windowMove->isOnAllDesktops() )
                 effects->windowToDesktop( windowMove, d ); // Not true all desktop move
@@ -341,8 +342,9 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             {
             QRect rect;
             EffectWindow* w = windowAt( me->pos());
-            if( w != NULL && w->isMovable())
+            if( w != NULL )
                 { // Prepare it for moving
+                XDefineCursor( display(), input, QCursor( Qt::SizeAllCursor ).handle() );
                 windowMoveDiff = w->pos() - unscalePos( me->pos(), NULL );
                 windowMove = w;
                 effects->setElevatedWindow( windowMove, true );
@@ -374,6 +376,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 effects->activateWindow( windowMove ); // Just in case it was deactivated
             effects->setElevatedWindow( windowMove, false );
             windowMove = NULL;
+            XDefineCursor( display(), input, QCursor( Qt::PointingHandCursor ).handle() );
             }
         wasWindowMove = false;
         }
