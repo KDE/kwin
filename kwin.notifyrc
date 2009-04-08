@@ -6116,10 +6116,24 @@ Action=Popup
 
 [Event/compositingsuspendeddbus]
 Name=Compositing has been suspended
+Name[et]=Komposiit on peatatud
+Name[ga]=Cuireadh comhshuí ar fionraí
+Name[gu]=કોમ્પોઝિટીંગ બંધ કરવામાં આવ્યું છે
+Name[pt]=A composição foi suspensa
+Name[pt_BR]=A composição foi suspensa
+Name[sv]=Sammansättning har stoppats
+Name[uk]=Композитний показ було тимчасово вимкнено
 Comment=Another application has requested to suspend compositing.
 Action=Popup
 
 [Event/effectsnotsupported]
 Name=Effects not supported
+Name[et]=Efektid pole toetatud
+Name[ga]=Ní thacaítear le maisíochtaí
+Name[gu]=અસરો આધાર અપાતી નથી
+Name[pt]=Efeitos não suportados
+Name[pt_BR]=Efeitos não suportados
+Name[sv]=Effekter stöds inte
+Name[uk]=Ефекти не підтримуються
 Comment=Some effects are not supported by backend or hardware.
 Action=Popup
