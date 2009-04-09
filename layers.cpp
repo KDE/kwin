@@ -234,7 +234,10 @@ void Workspace::raiseElectricBorderWindows()
         if( electric_windows[ i ] != None )
             windows[ pos++ ] = electric_windows[ i ];
     if( !pos )
+        {
+        delete [] windows;
         return; // No borders at all
+        }
     XRaiseWindow( display(), windows[ 0 ] );
     XRestackWindows( display(), windows, pos );
     delete [] windows;
