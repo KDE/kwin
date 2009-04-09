@@ -6123,7 +6123,11 @@ Name[pt]=A composição foi suspensa
 Name[pt_BR]=A composição foi suspensa
 Name[sv]=Sammansättning har stoppats
 Name[uk]=Композитний показ було тимчасово вимкнено
+Name[zh_TW]=組合效能已被暫停
 Comment=Another application has requested to suspend compositing.
+Comment[sv]=Ett annat program har begärt att stoppa sammansättning.
+Comment[uk]=Ще одна програма надіслала запит на вимикання композитного режиму.
+Comment[zh_TW]=另一個應用程式要求暫停組合效能。
 Action=Popup
 
 [Event/effectsnotsupported]
@@ -6135,5 +6139,9 @@ Name[pt]=Efeitos não suportados
 Name[pt_BR]=Efeitos não suportados
 Name[sv]=Effekter stöds inte
 Name[uk]=Ефекти не підтримуються
+Name[zh_TW]=未支援效果
 Comment=Some effects are not supported by backend or hardware.
+Comment[sv]=Vissa effekter stöds inte av bakgrundsprogram eller hårdvara.
+Comment[uk]=Деякі з ефектів не підтримуються сервером або обладнанням.
+Comment[zh_TW]=有些效果未被後端介面或硬體支援。
 Action=Popup
