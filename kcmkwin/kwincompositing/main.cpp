@@ -636,7 +636,7 @@ void KWinCompositingConfig::configChanged(bool reinitCompositing)
             KService::List services;
             QString message = i18n( "The following effects could not be activated:" );
             message.append( "<ul>" );
-            foreach( QString effect, disabledEffects )
+            foreach( const QString &effect, disabledEffects )
                 {
                 services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == '" + effect + "'");
                 message.append( "<li>" );

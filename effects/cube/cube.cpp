@@ -1533,7 +1533,7 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                     quadSize = 150.0f;
                 else
                     quadSize = 250.0f;
-                foreach( QRect paintRect, paint.rects() )
+                foreach( const QRect &paintRect, paint.rects() )
                     {
                     for( int i=0; i<=(paintRect.height()/quadSize); i++ )
                         {
