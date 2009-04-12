@@ -87,7 +87,7 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
                 {
                 if( w != selected_window )
                     data.setTranslucent();
-                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE | EffectWindow::PAINT_DISABLED_BY_DESKTOP );
                 }
             }
         else
@@ -213,7 +213,7 @@ void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         {
         if( windows.contains( w ) && w != selected_window )
             {
-            if( w->isMinimized() )
+            if( w->isMinimized() || !w->isOnCurrentDesktop() )
                 // TODO: When deactivating minimized windows are not painted at all
                 data.opacity *= activeTimeLine.value() * bg_opacity;
             else
