@@ -343,7 +343,7 @@
          </property>
          <item>
           <property name="text">
-           <string>Always</string>
+           <string>Always (Breaks minimization)</string>
           </property>
          </item>
          <item>
