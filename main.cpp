@@ -408,6 +408,10 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
             }
         }
 
+    // KWin only works properly with Qt's native X11 backend; override any compile-time
+    // or command line settings to raster or OpenGL.
+    QApplication::setGraphicsSystem("native");
+
     if( !restored )
         { // We only do the multihead fork if we are not restored by the session
           // manager, since the session manager will register multiple kwins,
@@ -474,26 +478,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     aboutData.addAuthor( ki18n( "Daniel M. Duley" ),KLocalizedString(), "mosfet@kde.org" );
     aboutData.addAuthor( ki18n( "Luboš Luňák" ), ki18n( "Maintainer" ), "l.lunak@kde.org" );
 
-    int myargc = argc;
-    char **myargv = argv;
-#if QT_VERSION >= 0x040a00
-# error Qt version larger than 4.9, please fix me
-#endif
-    if (qVersion()[2] >= '5')
-        {
-        // HACK: append "--graphicssystem native" to argument list to force KWin to use this backend
-        myargc = argc + 2;
-        myargv = (char **)malloc( ( myargc + 1 ) * sizeof(char *) );
-        for ( int i = 0; i < argc; i++ )
-            {
-            myargv[i] = argv[i];
-            }
-        myargv[ argc ] = "--graphicssystem";
-        myargv[ argc + 1 ] = "native";
-        myargv[ argc + 2 ] = 0;
-        }
-
-    KCmdLineArgs::init( myargc, myargv, &aboutData );
+    KCmdLineArgs::init( argc, argv, &aboutData );
 
     KCmdLineOptions args;
     args.add( "lock", ki18n( "Disable configuration options" ));
