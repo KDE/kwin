@@ -6116,6 +6116,7 @@ Action=Popup
 
 [Event/compositingsuspendeddbus]
 Name=Compositing has been suspended
+Name[el]=Η σύνθεση εικόνας τέθηκε σε αναστολή
 Name[et]=Komposiit on peatatud
 Name[ga]=Cuireadh comhshuí ar fionraí
 Name[gu]=કોમ્પોઝિટીંગ બંધ કરવામાં આવ્યું છે
@@ -6125,6 +6126,8 @@ Name[sv]=Sammansättning har stoppats
 Name[uk]=Композитний показ було тимчасово вимкнено
 Name[zh_TW]=組合效能已被暫停
 Comment=Another application has requested to suspend compositing.
+Comment[el]=Κάποια εφαρμογή αιτήθηκε την αναστολή της σύνθεσης εικόνας.
+Comment[et]=Mingi muu rakendus on nõudnud komposiidi peatamist.
 Comment[pt]=Outra aplicação pediu para suspender a composição.
 Comment[pt_BR]=Outra aplicação pediu para suspender a composição.
 Comment[sv]=Ett annat program har begärt att stoppa sammansättning.
@@ -6134,6 +6137,7 @@ Action=Popup
 
 [Event/effectsnotsupported]
 Name=Effects not supported
+Name[el]=Τα εφέ δεν υποστηρίζονται
 Name[et]=Efektid pole toetatud
 Name[ga]=Ní thacaítear le maisíochtaí
 Name[gu]=અસરો આધાર અપાતી નથી
@@ -6143,6 +6147,8 @@ Name[sv]=Effekter stöds inte
 Name[uk]=Ефекти не підтримуються
 Name[zh_TW]=未支援效果
 Comment=Some effects are not supported by backend or hardware.
+Comment[el]=Μερικά εφέ δεν υποστηρίζονται από το σύστημα υποστήριξης ή το υλικό.
+Comment[et]=Taustaprogramm või riistvara ei toeta teatavaid efekte.
 Comment[pt]=Alguns dos efeitos não são suportados pela infra-estrutura ou pelo 'hardware'.
 Comment[pt_BR]=Alguns dos efeitos não são suportados pela infra-estrutura ou pelo 'hardware'.
 Comment[sv]=Vissa effekter stöds inte av bakgrundsprogram eller hårdvara.
