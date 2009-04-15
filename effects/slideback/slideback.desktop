@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Slide Back
+
+Type=Service
+Comment=Slide back windows losing focus
+Icon=preferences-system-windows-effect-slideback
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Michael Zanetti
+X-KDE-PluginInfo-Email=michael_zanetti@gmx.net
+X-KDE-PluginInfo-Name=kwin4_effect_slideback
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Category=Focus
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
+X-KDE-Ordering=50
