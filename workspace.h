@@ -644,6 +644,9 @@ class Workspace : public QObject, public KDecorationDefines
     protected:
         bool keyPressMouseEmulation( XKeyEvent& ev );
 
+    Q_SIGNALS:
+        Q_SCRIPTABLE void compositingToggled( bool active );
+
     private:
         void init();
         void initShortcuts();

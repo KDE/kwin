@@ -74,6 +74,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     : KCModule( KWinCompositingConfigFactory::componentData(), parent )
     , mKWinConfig(KSharedConfig::openConfig( "kwinrc" ))
     , m_showConfirmDialog( false )
+    , kwinInterface( NULL )
     {
     KGlobal::locale()->insertCatalog( "kwin_effects" );
     ui.setupUi(this);
@@ -94,6 +95,8 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.xrenderGroup->setEnabled( false );
 #define XRENDER_INDEX -1
 #endif
+
+    kwinInterface = new OrgKdeKWinInterface( "org.kde.kwin", "/KWin", QDBusConnection::sessionBus() );
 
     connect(ui.useCompositing, SIGNAL(toggled(bool)), this, SLOT(compositingEnabled(bool)));
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
@@ -120,6 +123,8 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.glDirect, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glVSync, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.xrenderSmoothScale, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(ui.compositingStateButton, SIGNAL(clicked(bool)), kwinInterface, SLOT(toggleCompositing()));
+    connect(kwinInterface, SIGNAL(compositingToggled(bool)), this, SLOT(setupCompositingState(bool)));
 
     // Open the temporary config file
     // Temporary conf file is used to synchronize effect checkboxes with effect
@@ -149,6 +154,8 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
         ui.statusTitleWidget->setText(text);
         ui.statusTitleWidget->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
         ui.statusTitleWidget->show();
+
+        setupCompositingState( false, false );
         }
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
@@ -234,6 +241,11 @@ void KWinCompositingConfig::showConfirmDialog( bool reinitCompositing )
         ConfirmDialog confirm;
         if( !confirm.exec())
             revert = true;
+        else
+            {
+            // compositing is enabled now
+            setupCompositingState( kwinInterface->compositingActive() );
+            }
         }
     if( revert )
         {
@@ -297,7 +309,8 @@ void KWinCompositingConfig::currentTabChanged(int tab)
 void KWinCompositingConfig::loadGeneralTab()
     {
     KConfigGroup config(mKWinConfig, "Compositing");
-    ui.useCompositing->setChecked(config.readEntry("Enabled", mDefaultPrefs.enableCompositing()));
+    bool enabled = config.readEntry("Enabled", mDefaultPrefs.enableCompositing());
+    ui.useCompositing->setChecked( enabled );
     ui.animationSpeedCombo->setCurrentIndex(config.readEntry("AnimationSpeed", 3 ));
 
     // Load effect settings
@@ -339,6 +352,48 @@ void KWinCompositingConfig::loadGeneralTab()
         ui.desktopSwitchingCombo->setCurrentIndex( 2 );
     if( effectEnabled( "fadedesktop", effectconfig ))
         ui.desktopSwitchingCombo->setCurrentIndex( 3 );
+
+    if( enabled )
+        setupCompositingState( kwinInterface->compositingActive() );
+    else
+        setupCompositingState( false, false );
+    }
+
+void KWinCompositingConfig::setupCompositingState( bool active, bool enabled )
+    {
+    // compositing state
+    QString stateIcon;
+    QString stateText;
+    QString stateButtonText;
+    if( enabled )
+        {
+        // check if compositing is active or suspended
+        if( active )
+            {
+            stateIcon = QString( "dialog-ok-apply" );
+            stateText = i18n( "Compositing is active" );
+            stateButtonText = i18n( "Suspend Compositing" );
+            }
+        else
+            {
+            stateIcon = QString( "dialog-cancel" );
+            stateText = i18n( "Compositing is temporarily disabled" );
+            stateButtonText = i18n( "Resume Compositing" );
+            }
+        }
+    else
+        {
+        // compositing is disabled
+        stateIcon = QString( "dialog-cancel" );
+        stateText = i18n( "Compositing is disabled" );
+        stateButtonText = i18n( "Resume Compositing" );
+        }
+    ui.compositingStateIcon->setPixmap( KIcon( stateIcon ).pixmap( 32, 32 ) );
+    ui.compositingStateLabel->setText( stateText );
+    ui.compositingStateButton->setText( stateButtonText );
+    ui.compositingStateIcon->setEnabled( enabled );
+    ui.compositingStateLabel->setEnabled( enabled );
+    ui.compositingStateButton->setEnabled( enabled );
     }
 
 bool KWinCompositingConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
@@ -409,6 +464,10 @@ void KWinCompositingConfig::saveGeneralTab()
 
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
     config.writeEntry("AnimationSpeed", ui.animationSpeedCombo->currentIndex());
+
+    // disable the compositing state if compositing was turned off
+    if( !ui.useCompositing->isChecked() )
+        setupCompositingState( false, false );
 
     // Save effects
     KConfigGroup effectconfig(mTmpConfig, "Plugins");

@@ -38,6 +38,9 @@
     <method name="circulateDesktopApplications"/>
     <signal name="reloadConfig"/>
     <signal name="reinitCompositing"/>
+    <signal name="compositingToggled">
+      <arg name="active" type="b" direction="out"/>
+    </signal>
     <method name="loadEffect">
       <arg name="name" type="s" direction="in"/>
     </method>

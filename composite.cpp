@@ -306,6 +306,7 @@ void Workspace::suspendCompositing( bool suspend )
     compositingSuspended = suspend;
     finishCompositing();
     setupCompositing(); // will do nothing if suspended
+    emit compositingToggled( !compositingSuspended );
     }
 
 void Workspace::resetCompositing()

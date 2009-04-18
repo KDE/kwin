@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksharedconfig.h>
 #include <ktemporaryfile.h>
 
+#include "kwin_interface.h"
+
 #include "ui_main.h"
 #include "compositingprefs.h"
 #include "ktimerdialog.h"
@@ -71,6 +73,7 @@ class KWinCompositingConfig : public KCModule
 
         void configChanged(bool reinitCompositing);
         void initEffectSelector();
+        void setupCompositingState( bool active, bool enabled = true );
 
     private:
         bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;
@@ -83,6 +86,8 @@ class KWinCompositingConfig : public KCModule
         KTemporaryFile mTmpConfigFile;
         KSharedConfigPtr mTmpConfig;
         bool m_showConfirmDialog;
+
+        OrgKdeKWinInterface* kwinInterface;
     };
 
 } // namespace
