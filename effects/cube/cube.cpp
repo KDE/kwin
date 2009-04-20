@@ -296,7 +296,6 @@ bool CubeEffect::loadShader()
         {
         cylinderShader->bind();
         cylinderShader->setUniform( "winTexture", 0 );
-        cylinderShader->setUniform( "opacity", cubeOpacity );
         QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         cylinderShader->setUniform( "width", (float)rect.width() );
         cylinderShader->unbind();
@@ -311,7 +310,6 @@ bool CubeEffect::loadShader()
         {
         sphereShader->bind();
         sphereShader->setUniform( "winTexture", 0 );
-        sphereShader->setUniform( "opacity", cubeOpacity );
         QRect rect = effects->clientArea( FullArea, activeScreen, effects->currentDesktop() );
         sphereShader->setUniform( "width", (float)rect.width() );
         sphereShader->setUniform( "height", (float)rect.height() );
