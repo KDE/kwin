@@ -656,12 +656,18 @@ void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, doub
     }
 
 void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> verts, QVector<float> texCoords,
-    QRegion region, float opacity, float brightness, float saturation )
+    QRegion region, float opacity, float brightness, float saturation,  GLShader* shader )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     glColor4f( 1.0, 1.0, 1.0, 1.0 );
     glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
     prepareRenderStates( texture, opacity, brightness, saturation ); // Usually overrides the above
+    if( shader )
+        {
+        shader->setUniform("opacity", opacity);
+        shader->setUniform("saturation", saturation);
+        shader->setUniform("brightness", brightness);
+        }
     texture->bind();
     texture->enableNormalizedTexCoords();
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
@@ -811,7 +817,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             verts, texcoords, region,
                             data.opacity * window->shadowOpacity( ShadowBorderedActive ),
                             data.brightness * window->shadowBrightness( ShadowBorderedActive ),
-                            data.saturation * window->shadowSaturation( ShadowBorderedActive ));
+                            data.saturation * window->shadowSaturation( ShadowBorderedActive ),
+                            data.shader);
 
                         // Inactive shadow
                         texture = effects->shadowTextureList( ShadowBorderedInactive );
@@ -819,7 +826,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             verts, texcoords, region,
                             data.opacity * window->shadowOpacity( ShadowBorderedInactive ),
                             data.brightness * window->shadowBrightness( ShadowBorderedInactive ),
-                            data.saturation * window->shadowSaturation( ShadowBorderedInactive ));
+                            data.saturation * window->shadowSaturation( ShadowBorderedInactive ),
+                            data.shader);
                         }
                     else if( effects->shadowTextureList( ShadowBorderlessActive ) == texture )
                         { // Decoration-less normal windows
@@ -829,7 +837,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                                 verts, texcoords, region,
                                 data.opacity * window->shadowOpacity( ShadowBorderlessActive ),
                                 data.brightness * window->shadowBrightness( ShadowBorderlessActive ),
-                                data.saturation * window->shadowSaturation( ShadowBorderlessActive ));
+                                data.saturation * window->shadowSaturation( ShadowBorderlessActive ),
+                                data.shader);
                             }
                         else
                             {
@@ -838,7 +847,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                                 verts, texcoords, region,
                                 data.opacity * window->shadowOpacity( ShadowBorderlessInactive ),
                                 data.brightness * window->shadowBrightness( ShadowBorderlessInactive ),
-                                data.saturation * window->shadowSaturation( ShadowBorderlessInactive ));
+                                data.saturation * window->shadowSaturation( ShadowBorderlessInactive ),
+                                data.shader);
                             }
                         }
                     else
@@ -847,7 +857,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                             verts, texcoords, region,
                             data.opacity * window->shadowOpacity( ShadowOther ),
                             data.brightness * window->shadowBrightness( ShadowOther ),
-                            data.saturation * window->shadowSaturation( ShadowOther ));
+                            data.saturation * window->shadowSaturation( ShadowOther ),
+                            data.shader);
                         }
                     }
                 }
@@ -861,7 +872,8 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
                     verts, texcoords, region,
                     data.opacity * opacity,
                     data.brightness,
-                    data.saturation );
+                    data.saturation,
+                    data.shader);
                 }
 
             glPopMatrix();
