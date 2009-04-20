@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Include with base class for effects.
 #include <kwineffects.h>
 
-
 namespace KWin
 {
 
@@ -58,6 +57,7 @@ class SlideBackEffect
         QHash<EffectWindow *, QRect> destinationList;
         bool disabled;
 
+        QRect getSlideDestination( const QRect &windowUnderGeometry, const QRect &windowOverGeometry);
         void updateStackingOrder();
         bool isWindowOnTop( EffectWindow *w );
         bool isWindowUsable( EffectWindow *w );

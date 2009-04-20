@@ -73,33 +73,7 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
                     effects->setElevatedWindow( tmp, true );
                     elevatedList.append( tmp );
 
-                    // Determine the shortest way:
-                    int leftSlide = w->geometry().left() - tmp->geometry().right() - 20;
-                    int rightSlide = w->geometry().right() - tmp->geometry().left() + 20;
-                    int upSlide = w->geometry().top() -  tmp->geometry().bottom() - 20;
-                    int downSlide = w->geometry().bottom() - tmp->geometry().top() + 20;
-
-                    int horizSlide = leftSlide;
-                    if( abs( horizSlide ) > abs( rightSlide ) )
-                        {
-                        horizSlide = rightSlide;
-                        }
-                    int vertSlide = upSlide;
-                    if( abs( vertSlide ) > abs( downSlide ) )
-                        {
-                        vertSlide = downSlide;
-                        }
-
-                    QRect slideRect = tmp->geometry();
-                    if( abs( horizSlide ) < abs( vertSlide ) )
-                        {
-                        slideRect.moveLeft( slideRect.x() + horizSlide );
-                        }
-                    else
-                        {
-                        slideRect.moveTop( slideRect.y() + vertSlide );
-                        }
-
+                    QRect slideRect = getSlideDestination( w->geometry(), tmp->geometry() );
                     motionManager.manage( tmp );
                     motionManager.moveWindow( tmp, slideRect );
                     destinationList.insert( tmp, slideRect );
@@ -137,6 +111,37 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
             }
         }
     updateStackingOrder();
+    }
+
+QRect SlideBackEffect::getSlideDestination( const QRect &windowUnderGeometry, const QRect &windowOverGeometry)
+    {
+    // Determine the shortest way:
+    int leftSlide = windowUnderGeometry.left() - windowOverGeometry.right() - 20;
+    int rightSlide = windowUnderGeometry.right() - windowOverGeometry.left() + 20;
+    int upSlide = windowUnderGeometry.top() -  windowOverGeometry.bottom() - 20;
+    int downSlide = windowUnderGeometry.bottom() - windowOverGeometry.top() + 20;
+
+    int horizSlide = leftSlide;
+    if( abs( horizSlide ) > abs( rightSlide ) )
+        {
+        horizSlide = rightSlide;
+        }
+    int vertSlide = upSlide;
+    if( abs( vertSlide ) > abs( downSlide ) )
+	{
+	vertSlide = downSlide;
+	}
+
+    QRect slideRect = windowOverGeometry;
+    if( abs( horizSlide ) < abs( vertSlide ) )
+	{
+	slideRect.moveLeft( slideRect.x() + horizSlide );
+	}
+    else
+	{
+	slideRect.moveTop( slideRect.y() + vertSlide );
+	}
+    return slideRect;
     }
 
 void SlideBackEffect::updateStackingOrder()
@@ -219,9 +224,34 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
             if(( abs( motionManager.transformedGeometry( w ).x() - destinationList[w].x() ) < 1 ) &&
                     ( abs( motionManager.transformedGeometry( w ).y() - destinationList[w].y() ) < 1 ) )
                 {
-                // Move the window back where it belongs
-                motionManager.moveWindow( w, w->geometry() );
-                destinationList.remove( w );
+                // If we are still intersecting with the activeWindow it is moving. slide to somewhere else
+                // restore the stacking order of all windows not intersecting any more except panels
+                if( coveringWindows.contains( w ) )
+                    {
+                    foreach( EffectWindow *tmp, elevatedList )
+                        {
+                        if( coveringWindows.contains( tmp ) )
+                            {
+                            QRect newDestination = getSlideDestination( effects->activeWindow()->geometry(), tmp->geometry() );
+                            motionManager.moveWindow( tmp, newDestination );
+                            destinationList[tmp] = newDestination;
+                            }
+                        else
+                            {
+                            if( !tmp->isDock() )
+                                {
+                                effects->setElevatedWindow( tmp, false );
+                                elevatedList.removeAll( tmp );
+                                }
+                            }
+                        }
+                    }
+                else
+                    {
+                    // Move the window back where it belongs
+                    motionManager.moveWindow( w, w->geometry() );
+                    destinationList.remove( w );
+                    }
                 }
             }
         else
@@ -246,8 +276,8 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
                     foreach( EffectWindow *tmp, elevatedList )
                         {
                         effects->setElevatedWindow( tmp, false );
-                        elevatedList.clear();
                         }
+                    elevatedList.clear();
                     }
                 }
             }
