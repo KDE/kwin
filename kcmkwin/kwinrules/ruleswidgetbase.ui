@@ -2034,8 +2034,6 @@
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
- <layoutfunction spacing="KDialog::spacingHint" margin="KDialog::marginHint" />
   <customwidgets>
   <customwidget>
    <class>KComboBox</class>
