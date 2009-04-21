@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Slide Back
 Name[el]=Κύλιση πίσω
+Name[et]=Tagasiliuglemine
 Name[pt]=Deslizar para Trás
 Name[pt_BR]=Deslizar para Trás
 Name[sv]=Glid tillbaka
@@ -10,6 +11,7 @@ Name[uk]=Зниження
 Type=Service
 Comment=Slide back windows losing focus
 Comment[el]=Κύλιση παραθύρων πίσω με απώλεια της εστίασής τους
+Comment[et]=Fookuse kaotanud aknad liuglevad tagasi
 Comment[pt]=Deslizar para trás as janelas que perdem o foco
 Comment[pt_BR]=Deslizar para trás as janelas que perdem o foco
 Comment[sv]=Låt fönster som förlorar fokus glida tillbaka
