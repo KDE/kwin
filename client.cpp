@@ -419,6 +419,14 @@ void Client::repaintDecorationPending()
             ensureDecorationPixmapsPainted();
     }
 
+bool Client::decorationPixmapRequiresRepaint()
+    {
+    if (!paintRedirector)
+        return false;
+    QRegion r = paintRedirector->pendingRegion();
+    return !r.isEmpty();
+    }
+
 void Client::ensureDecorationPixmapsPainted()
     {
     if (!paintRedirector)

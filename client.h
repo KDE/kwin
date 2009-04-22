@@ -310,6 +310,7 @@ class Client
         const QPixmap *bottomDecoPixmap() const { return &decorationPixmapBottom; } 
         const QPixmap *rightDecoPixmap() const { return &decorationPixmapRight; } 
 
+        bool decorationPixmapRequiresRepaint();
         void ensureDecorationPixmapsPainted();
 
     private slots:
