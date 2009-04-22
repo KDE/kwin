@@ -228,11 +228,14 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
                 // restore the stacking order of all windows not intersecting any more except panels
                 if( coveringWindows.contains( w ) )
                     {
+                    EffectWindowList tmpList;
                     foreach( EffectWindow *tmp, elevatedList )
                         {
-                        if( coveringWindows.contains( tmp ) )
+                        if( effects->activeWindow() && effects->activeWindow()->geometry().intersects( tmp->geometry() ) )
                             {
                             QRect newDestination = getSlideDestination( effects->activeWindow()->geometry(), tmp->geometry() );
+                            if( !motionManager.isManaging( tmp ) )
+                                motionManager.manage( tmp );
                             motionManager.moveWindow( tmp, newDestination );
                             destinationList[tmp] = newDestination;
                             }
@@ -240,10 +243,22 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
                             {
                             if( !tmp->isDock() )
                                 {
-                                effects->setElevatedWindow( tmp, false );
-                                elevatedList.removeAll( tmp );
+                                bool keepElevated = false;
+                                foreach( EffectWindow *elevatedWindow, tmpList)
+                                    {
+                                    if( tmp->geometry().intersects( elevatedWindow->geometry() ) )
+                                        {
+                                        keepElevated = true;
+                                        }
+                                    }
+                                if( !keepElevated )
+                                    {
+                                    effects->setElevatedWindow( tmp, false );
+                                    elevatedList.removeAll( tmp );
+                                    }
                                 }
                             }
+                        tmpList.append(tmp);
                         }
                     }
                 else
