@@ -58,6 +58,7 @@ namespace KWin
 class Workspace;
 class Client;
 class Bridge;
+class PaintRedirector;
 
 class Client
     : public Toplevel
@@ -201,7 +202,7 @@ class Client
 
         void updateDecoration( bool check_workspace_pos, bool force = false );
         bool checkBorderSizes( bool also_resize );
-        void repaintDecoration();
+        void triggerDecorationRepaint();
 
         void updateShape();
 
@@ -304,6 +305,13 @@ class Client
         double shadowBrightness( ShadowType type ) const;
         double shadowSaturation( ShadowType type ) const;
 
+        const QPixmap *topDecoPixmap() const { return &decorationPixmapTop; } 
+        const QPixmap *leftDecoPixmap() const { return &decorationPixmapLeft; } 
+        const QPixmap *bottomDecoPixmap() const { return &decorationPixmapBottom; } 
+        const QPixmap *rightDecoPixmap() const { return &decorationPixmapRight; } 
+
+        void ensureDecorationPixmapsPainted();
+
     private slots:
         void autoRaise();
         void shadeHover();
@@ -358,6 +366,7 @@ class Client
         void demandAttentionKNotify();
         void syncTimeout();
         void delayedSetShortcut();
+        void repaintDecorationPending();
 
     private:
         void exportMappingState( int s ); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
@@ -421,6 +430,8 @@ class Client
         void updateHiddenPreview();
 
         void updateInputShape();
+        void repaintDecorationPixmap( QPixmap& pix, const QRect& r, const QPixmap& src, QRegion reg );
+        void resizeDecorationPixmaps();
 
         Time readUserTimeMapTimestamp( const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
             bool session ) const;
@@ -551,6 +562,8 @@ class Client
         friend struct ResetupRulesProcedure;
         friend class GeometryUpdatesBlocker;
         QTimer* demandAttentionKNotifyTimer;
+        QPixmap decorationPixmapLeft, decorationPixmapRight, decorationPixmapTop, decorationPixmapBottom;
+        PaintRedirector* paintRedirector;
 
         friend bool performTransiencyCheck();
     };

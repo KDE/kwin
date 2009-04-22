@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2009 Fredrik Höglund <fredrik@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -467,11 +468,14 @@ void SceneXrender::windowAdded( Toplevel* c )
 // SceneXrender::Window
 //****************************************
 
+QPixmap *SceneXrender::Window::temp_pixmap = 0;
+
 SceneXrender::Window::Window( Toplevel* c )
     : Scene::Window( c )
     , _picture( None )
     , format( XRenderFindVisualFormat( display(), c->visual()))
     , alpha( None )
+    , alpha_cached_opacity(0.0)
     {
     }
 
@@ -520,33 +524,104 @@ void SceneXrender::Window::discardAlpha()
 // Create XRender picture for the alpha mask.
 Picture SceneXrender::Window::alphaMask( double opacity )
     {
-    if( isOpaque() && opacity == 1.0 )
+    if( isOpaque() && qFuzzyCompare( opacity, 1.0 ) )
         return None;
-    if( alpha != None && alpha_cached_opacity != opacity )
+
+    bool created = false;
+    if( alpha == None )
         {
-        if( alpha != None )
-            XRenderFreePicture( display(), alpha );
-        alpha = None;
+        // Create a 1x1 8bpp pixmap containing the given opacity in the alpha channel.
+        Pixmap pixmap = XCreatePixmap( display(), rootWindow(), 1, 1, 8 );
+        XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardA8 );
+        XRenderPictureAttributes pa;
+        pa.repeat = True;
+        alpha = XRenderCreatePicture( display(), pixmap, format, CPRepeat, &pa );
+        XFreePixmap( display(), pixmap );
+        created = true;
         }
-    if( alpha != None )
-        return alpha;
-    if( opacity == 1.0 )
-        { // no need to create alpha mask
-        alpha_cached_opacity = 1.0;
-        return None;
+    if( created || !qFuzzyCompare( alpha_cached_opacity + 1.0, opacity + 1.0 ) )
+        {
+        XRenderColor col;
+        col.alpha = int( opacity * 0xffff );
+        XRenderFillRectangle( display(), PictOpSrc, alpha, &col, 0, 0, 1, 1 );
+        alpha_cached_opacity = opacity;
         }
-    // Create a 1x1 8bpp pixmap containing the given opacity in the alpha channel.
-    Pixmap pixmap = XCreatePixmap( display(), rootWindow(), 1, 1, 8 );
-    XRenderPictFormat* format = XRenderFindStandardFormat( display(), PictStandardA8 );
-    XRenderPictureAttributes pa;
-    pa.repeat = True;
-    alpha = XRenderCreatePicture( display(), pixmap, format, CPRepeat, &pa );
-    XFreePixmap( display(), pixmap );
-    XRenderColor col;
-    col.alpha = int( opacity * 0xffff );
-    alpha_cached_opacity = opacity;
-    XRenderFillRectangle( display(), PictOpSrc, alpha, &col, 0, 0, 1, 1 );
     return alpha;
+    }
+
+// Maps window coordinates to screen coordinates
+QRect SceneXrender::Window::mapToScreen( int mask, const WindowPaintData &data, const QRect &rect ) const
+    {
+    QRect r = rect;
+
+    if( mask & PAINT_WINDOW_TRANSFORMED )
+        {
+        // Apply the window transformation
+        r.moveTo( r.x() * data.xScale + data.xTranslate,
+                  r.y() * data.yScale + data.yTranslate );
+        r.setWidth( r.width() * data.xScale );
+        r.setHeight( r.height() * data.yScale );
+        }
+
+    // Move the rectangle to the screen position
+    r.translate( x(), y() );
+
+    if( mask & PAINT_SCREEN_TRANSFORMED )
+        {
+        // Apply the screen transformation
+        r.moveTo( r.x() * screen_paint.xScale + screen_paint.xTranslate,
+                  r.y() * screen_paint.yScale + screen_paint.yTranslate );
+        r.setWidth( r.width() * screen_paint.xScale );
+        r.setHeight( r.height() * screen_paint.yScale );
+        }
+
+    return r;
+    }
+
+// Maps window coordinates to screen coordinates
+QPoint SceneXrender::Window::mapToScreen( int mask, const WindowPaintData &data, const QPoint &point ) const
+    {
+    QPoint pt = point;
+
+    if( mask & PAINT_WINDOW_TRANSFORMED )
+        {
+        // Apply the window transformation
+        pt.rx() = pt.x() * data.xScale + data.xTranslate;
+        pt.ry() = pt.y() * data.yScale + data.yTranslate;
+        }
+
+    // Move the point to the screen position
+    pt += QPoint(x(), y());
+
+    if( mask & PAINT_SCREEN_TRANSFORMED )
+        {
+        // Apply the screen transformation
+        pt.rx() = pt.x() * screen_paint.xScale + screen_paint.xTranslate;
+        pt.ry() = pt.y() * screen_paint.yScale + screen_paint.yTranslate;
+        }
+
+    return pt;
+    }
+
+void SceneXrender::Window::prepareTempPixmap(const QPixmap *left, const QPixmap *top,
+                                             const QPixmap *right, const QPixmap *bottom)
+    {
+    if( !temp_pixmap )
+        temp_pixmap = new QPixmap( width(), height() );
+    else if( temp_pixmap->width() < width() || temp_pixmap->height() < height() )
+        *temp_pixmap = QPixmap( width(), height() );
+
+    temp_pixmap->fill( Qt::transparent );
+
+    Display *dpy = display();
+    XRenderComposite( dpy, PictOpSrc, top->x11PictureHandle(), None, temp_pixmap->x11PictureHandle(),
+                      0, 0, 0, 0, 0, 0, top->width(), top->height() );
+    XRenderComposite( dpy, PictOpSrc, left->x11PictureHandle(), None, temp_pixmap->x11PictureHandle(),
+                      0, 0, 0, 0, 0, top->height(), left->width(), left->height() );
+    XRenderComposite( dpy, PictOpSrc, right->x11PictureHandle(), None, temp_pixmap->x11PictureHandle(),
+                      0, 0, 0, 0, width() - right->width(), top->height(), right->width(), right->height() );
+    XRenderComposite( dpy, PictOpSrc, bottom->x11PictureHandle(), None, temp_pixmap->x11PictureHandle(),
+                      0, 0, 0, 0, 0, height() - bottom->height(), bottom->width(), bottom->height() );
     }
 
 // paint the window
@@ -554,7 +629,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     {
     setTransformedShape( QRegion()); // maybe nothing will be painted
     // check if there is something to paint
-    bool opaque = isOpaque() && data.opacity == 1.0;
+    bool opaque = isOpaque() && qFuzzyCompare( data.opacity, 1.0 );
     /* HACK: It seems this causes painting glitches, disable temporarily
     if(( mask & PAINT_WINDOW_OPAQUE ) ^ ( mask & PAINT_WINDOW_TRANSLUCENT ))
         { // We are only painting either opaque OR translucent windows, not both
@@ -579,41 +654,46 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     else
         filter = ImageFilterFast;
     // do required transformations
-    int x = toplevel->x();
-    int y = toplevel->y();
-    int width = toplevel->width();
-    int height = toplevel->height();
+    const QRect wr = mapToScreen(mask, data, QRect(0, 0, width(), height()));
+    const QRect cr = QRect(toplevel->clientPos(), toplevel->clientSize()); // Client rect (in the window)
+    const QRect dr = mapToScreen(mask, data, cr); // Destination rect
     double xscale = 1;
     double yscale = 1;
+    bool scaled = false;
     transformed_shape = shape();
+
+    XTransform xform = {{
+        { XDoubleToFixed( 1 ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
+        { XDoubleToFixed( 0 ), XDoubleToFixed( 1),  XDoubleToFixed( 0 ) },
+        { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
+    }};
+ 
+    XTransform identity = {{
+        { XDoubleToFixed( 1 ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
+        { XDoubleToFixed( 0 ), XDoubleToFixed( 1),  XDoubleToFixed( 0 ) },
+        { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
+    }};
+ 
     if( mask & PAINT_WINDOW_TRANSFORMED )
         {
-        xscale *= data.xScale;
-        yscale *= data.yScale;
-        x += data.xTranslate;
-        y += data.yTranslate;
+        xscale = data.xScale;
+        yscale = data.yScale;
         }
     if( mask & PAINT_SCREEN_TRANSFORMED )
         {
         xscale *= screen_paint.xScale;
         yscale *= screen_paint.yScale;
-        x = int( x * screen_paint.xScale );
-        y = int( y * screen_paint.yScale );
-        x += screen_paint.xTranslate;
-        y += screen_paint.yTranslate;
         }
-    if( yscale != 1 || xscale != 1 )
+    if( !qFuzzyCompare( xscale, 1.0 ) || !qFuzzyCompare( yscale, 1.0 ) )
         {
-        XTransform xform = {{
-            { XDoubleToFixed( 1 / xscale ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
-            { XDoubleToFixed( 0 ), XDoubleToFixed( 1 / yscale ), XDoubleToFixed( 0 ) },
-            { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
-        }};
+        scaled = true;
+        xform.matrix[0][0] = XDoubleToFixed(1.0 / xscale);
+        xform.matrix[1][1] = XDoubleToFixed(1.0 / yscale);
+
         XRenderSetPictureTransform( display(), pic, &xform );
-        width = (int)(width * xscale);
-        height = (int)(height * yscale);
         if( filter == ImageFilterGood )
             XRenderSetPictureFilter( display(), pic, const_cast< char* >( "good" ), NULL, 0 );
+
         // transform the shape for clipping in paintTransformedScreen()
         QVector< QRect > rects = transformed_shape.rects();
         for( int i = 0;
@@ -626,40 +706,86 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
             }
         transformed_shape.setRects( rects.constData(), rects.count());
         }
-    transformed_shape.translate( x, y );
+
+    transformed_shape.translate( mapToScreen( mask, data, QPoint(0, 0) ) );
     PaintClipper pcreg( region ); // clip by the region to paint
     PaintClipper pc( transformed_shape ); // clip by window's shape
     for( PaintClipper::Iterator iterator;
          !iterator.isDone();
          iterator.next())
         {
-        if( opaque )
+        if ( !(mask & PAINT_DECORATION_ONLY) )
             {
-            XRenderComposite( display(), PictOpSrc, pic, None, buffer, 0, 0, 0, 0,
-                x, y, width, height);
-            // fake brightness change by overlaying black
-            XRenderColor col = { 0, 0, 0, 0xffff * ( 1 - data.brightness ) };
-            XRenderFillRectangle( display(), PictOpOver, buffer, &col, x, y, width, height );
+            // Paint the window contents
+            if( opaque )
+                {
+                XRenderComposite( display(), PictOpSrc, pic, None, buffer, cr.x() * xscale, cr.y() * yscale,
+                                  0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+                }
+            else
+                {
+                Picture alpha = alphaMask( data.opacity );
+                XRenderComposite( display(), PictOpOver, pic, alpha, buffer, cr.x() * xscale, cr.y() * yscale,
+                                  0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+                transformed_shape = QRegion();
+                }
             }
-        else
+        if( Client *client = dynamic_cast<Client*>( toplevel ) )
             {
-            Picture alpha = alphaMask( data.opacity );
-            XRenderComposite( display(), PictOpOver, pic, alpha, buffer, 0, 0, 0, 0,
-                x, y, width, height);
+            if( !client->noBorder() )
+                {
+                // Paint the decoration
+                Picture alpha = alphaMask( data.opacity * data.decoration_opacity );
+                Display *dpy = display();
+
+                client->ensureDecorationPixmapsPainted();
+
+                const QPixmap *left   = client->leftDecoPixmap();
+                const QPixmap *top    = client->topDecoPixmap();
+                const QPixmap *right  = client->rightDecoPixmap();
+                const QPixmap *bottom = client->bottomDecoPixmap();
+
+                if( !scaled )
+                    {
+                    QRect tr( QPoint( 0, 0 ), top->size() );
+                    QRect lr( QPoint( 0, top->height() ), left->size() );
+                    QRect rr( QPoint( width() - right->width(), top->height() ), right->size() );
+                    QRect br( QPoint( 0, height() - bottom->height() ), bottom->size() );
+
+                    tr = mapToScreen( mask, data, tr );
+                    lr = mapToScreen( mask, data, lr );
+                    rr = mapToScreen( mask, data, rr );
+                    br = mapToScreen( mask, data, br );
+
+                    XRenderComposite( dpy, PictOpOver, top->x11PictureHandle(), alpha, buffer,
+                                      0, 0, 0, 0, tr.x(), tr.y(), tr.width(), tr.height());
+                    XRenderComposite( dpy, PictOpOver, left->x11PictureHandle(), alpha, buffer,
+                                      0, 0, 0, 0, lr.x(), lr.y(), lr.width(), lr.height());
+                    XRenderComposite( dpy, PictOpOver, right->x11PictureHandle(), alpha, buffer,
+                                      0, 0, 0, 0, rr.x(), rr.y(), rr.width(), rr.height());
+                    XRenderComposite( dpy, PictOpOver, bottom->x11PictureHandle(), alpha, buffer,
+                                      0, 0, 0, 0, br.x(), br.y(), br.width(), br.height());
+                    }
+                else
+                    {
+                    prepareTempPixmap( left, top, right, bottom );
+                    XRenderSetPictureTransform( dpy, temp_pixmap->x11PictureHandle(), &xform );
+                    XRenderComposite( dpy, PictOpOver, temp_pixmap->x11PictureHandle(), alpha, buffer,
+                                      0, 0, 0, 0, wr.x(), wr.y(), wr.width(), wr.height() );
+                    XRenderSetPictureTransform( dpy, temp_pixmap->x11PictureHandle(), &identity );
+                    }
+                }
+            }
+        if( data.brightness < 1.0 )
+            {
             // fake brightness change by overlaying black
             XRenderColor col = { 0, 0, 0, 0xffff * ( 1 - data.brightness ) * data.opacity };
-            XRenderFillRectangle( display(), PictOpOver, buffer, &col, x, y, width, height );
-            transformed_shape = QRegion();
+            XRenderFillRectangle( display(), PictOpOver, buffer, &col, wr.x(), wr.y(), wr.width(), wr.height() );
             }
         }
-    if( xscale != 1 || yscale != 1 )
+    if( scaled )
         {
-        XTransform xform = {{
-            { XDoubleToFixed( 1 ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
-            { XDoubleToFixed( 0 ), XDoubleToFixed( 1 ), XDoubleToFixed( 0 ) },
-            { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
-        }};
-        XRenderSetPictureTransform( display(), pic, &xform );
+        XRenderSetPictureTransform( display(), pic, &identity );
         if( filter == ImageFilterGood )
             XRenderSetPictureFilter( display(), pic, const_cast< char* >( "fast" ), NULL, 0 );
         }

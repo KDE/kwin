@@ -232,7 +232,8 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         data.mask = orig_mask | ( w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT );
         w->resetPaintingEnabled();
         data.paint = region;
-        data.clip = w->isOpaque() ? w->shape().translated( w->x(), w->y()) : QRegion();
+        // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
+        data.clip = w->isOpaque() ? QRegion(w->clientRect().translated( w->x(), w->y())) : QRegion();
         data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
@@ -280,6 +281,9 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
             {
             // Paint the opaque window
             paintWindow( d.window, d.mask, d.region, d.quads );
+            // Clip out the client area, so we only draw the decoration in the next pass
+            phase2data[w].region = d.region - d.clip;
+            phase2data[w].mask |= PAINT_DECORATION_ONLY;
             }
         }
     // Fill any areas of the root window not covered by windows
@@ -292,8 +296,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         if( !phase2data.contains( w ))
             continue;
         Phase2Data d = phase2data[w];
-        if( d.mask & PAINT_WINDOW_TRANSLUCENT )
-            paintWindow( d.window, d.mask, d.region, d.quads );
+        paintWindow( d.window, d.mask, d.region, d.quads );
         }
     }
 
@@ -405,6 +408,12 @@ QRegion Scene::Window::shape() const
         shape_valid = true;
         }
     return shape_region;
+    }
+
+// Returns the rectangle occupied by the client within the window geometry
+QRect Scene::Window::clientRect() const
+    {
+    return QRect(toplevel->clientPos(), toplevel->clientSize());
     }
 
 bool Scene::Window::isVisible() const

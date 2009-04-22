@@ -1058,7 +1058,7 @@ void Workspace::slotReconfigure()
         {
         forEachClient( CheckBorderSizesProcedure() );
         foreach( Client* c, clients )
-            c->repaintDecoration();
+            c->triggerDecorationRepaint();
         }
 
     reserveElectricBorderActions( true );

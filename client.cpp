@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "effects.h"
 #include "deleted.h"
+#include "paintredirector.h"
 
 #include <X11/extensions/shape.h>
 #include <QX11Info>
@@ -49,6 +50,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
 #endif
+
+#ifdef HAVE_XRENDER
+#include <X11/extensions/Xrender.h>
+#endif
+
 
 // Put all externs before the namespace statement to allow the linker
 // to resolve them properly
@@ -110,6 +116,7 @@ Client::Client( Workspace* ws )
     , border_bottom( 0 )
     , sm_stacking_order( -1 )
     , demandAttentionKNotifyTimer( NULL )
+    , paintRedirector( 0 )
     { // TODO: Do all as initialization
 
     // Set the initial mapping state
@@ -321,6 +328,9 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         move( calculateGravitation( false ));
         plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         do_show = true;
+        paintRedirector = new PaintRedirector( decoration->widget());
+        connect( paintRedirector, SIGNAL( paintPending()), SLOT( repaintDecorationPending()));
+        resizeDecorationPixmaps();
         if( compositing() )
             discardWindowPixmap();
         if( scene != NULL )
@@ -350,6 +360,9 @@ void Client::destroyDecoration()
         setMask( QRegion()); // Reset shape mask
         plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         move( grav );
+        delete paintRedirector;
+        paintRedirector = NULL;
+        decorationPixmapLeft = decorationPixmapRight = decorationPixmapTop = decorationPixmapBottom = QPixmap();
         if( compositing() )
             discardWindowPixmap();
         if( scene != NULL && !deleting ) 
@@ -388,10 +401,116 @@ bool Client::checkBorderSizes( bool also_resize )
     return true;
     }
 
-void Client::repaintDecoration()
+void Client::triggerDecorationRepaint()
     {
     if( decoration != NULL )
         decoration->widget()->update();
+    }
+
+void Client::repaintDecorationPending()
+    {
+        if ( compositing() )
+            {
+            // The scene will update the decoration pixmaps in the next painting pass
+            const QRegion r = paintRedirector->pendingRegion();
+            Workspace::self()->addRepaint( r.translated( x(), y() ) );
+            }
+        else
+            ensureDecorationPixmapsPainted();
+    }
+
+void Client::ensureDecorationPixmapsPainted()
+    {
+    if (!paintRedirector)
+        return;
+
+    QRegion r = paintRedirector->pendingRegion();
+    if (r.isEmpty())
+        return;
+
+    QPixmap p = paintRedirector->performPendingPaint();
+
+    const QRect lr( 0, border_top, border_left, height() - border_top - border_bottom);
+    const QRect rr( width() - border_right, border_top, border_right, height() - border_top - border_bottom);
+    const QRect tr( 0, 0, width(), border_top );
+    const QRect br( 0, height() - border_bottom, width(), border_bottom );
+
+    repaintDecorationPixmap( decorationPixmapLeft, lr, p, r );
+    repaintDecorationPixmap( decorationPixmapRight, rr, p, r );
+    repaintDecorationPixmap( decorationPixmapTop, tr, p, r );
+    repaintDecorationPixmap( decorationPixmapBottom, br, p, r );
+
+    if (!compositing())
+        {
+        // Blit the pixmaps to the frame window
+#ifdef HAVE_XRENDER
+        if (Extensions::renderAvailable())
+            {
+            XRenderPictFormat* format = XRenderFindVisualFormat( display(), visual());
+            XRenderPictureAttributes pa;
+            pa.subwindow_mode = IncludeInferiors;
+            Picture pic = XRenderCreatePicture( display(), frameId(), format, CPSubwindowMode, &pa );
+            XRenderComposite( display(), PictOpSrc, decorationPixmapLeft.x11PictureHandle(), None, pic,
+                              0, 0, 0, 0, lr.x(), lr.y(), lr.width(), lr.height() );
+            XRenderComposite( display(), PictOpSrc, decorationPixmapRight.x11PictureHandle(), None, pic,
+                              0, 0, 0, 0, rr.x(), rr.y(), rr.width(), rr.height() );
+            XRenderComposite( display(), PictOpSrc, decorationPixmapTop.x11PictureHandle(), None, pic,
+                              0, 0, 0, 0, tr.x(), tr.y(), tr.width(), tr.height() );
+            XRenderComposite( display(), PictOpSrc, decorationPixmapBottom.x11PictureHandle(), None, pic,
+                              0, 0, 0, 0, br.x(), br.y(), br.width(), br.height() );
+            XRenderFreePicture( display(), pic ); // TODO don't recreate pictures all the time?
+            }
+        else
+#endif
+            {
+            XGCValues values;
+            values.subwindow_mode = IncludeInferiors;
+            GC gc = XCreateGC( display(), rootWindow(), GCSubwindowMode, &values );
+            XCopyArea( display(), decorationPixmapLeft.handle(), frameId(), gc, 0, 0,
+                       lr.width(), lr.height(), lr.x(), lr.y() );
+            XCopyArea( display(), decorationPixmapRight.handle(), frameId(), gc, 0, 0,
+                       rr.width(), rr.height(), rr.x(), rr.y() );
+            XCopyArea( display(), decorationPixmapTop.handle(), frameId(), gc, 0, 0,
+                       tr.width(), tr.height(), tr.x(), tr.y() );
+            XCopyArea( display(), decorationPixmapBottom.handle(), frameId(), gc, 0, 0,
+                       br.width(), br.height(), br.x(), br.y() );
+            XFreeGC( display(), gc );
+            }
+        }
+    }
+
+void Client::repaintDecorationPixmap( QPixmap& pix, const QRect& r, const QPixmap& src, QRegion reg )
+    {
+    if( !r.isValid())
+        return;
+    QRect b = reg.boundingRect();
+    reg &= r;
+    if( reg.isEmpty())
+        return;
+    QPainter pt( &pix );
+    pt.translate( -r.topLeft() );
+    pt.setCompositionMode( QPainter::CompositionMode_Source );
+    pt.setClipRegion( reg );
+    pt.drawPixmap( b.topLeft(), src );
+    pt.end();
+    }
+
+void Client::resizeDecorationPixmaps()
+    {
+    decorationPixmapLeft = QPixmap( border_left, height() - border_top - border_bottom );
+    decorationPixmapRight = QPixmap( border_right, height() - border_top - border_bottom );
+    decorationPixmapTop = QPixmap( width(), border_top );
+    decorationPixmapBottom = QPixmap( width(), border_bottom );
+#ifdef HAVE_XRENDER
+    if ( Extensions::renderAvailable() ) {
+        // Make sure the pixmaps are created with alpha channels
+        decorationPixmapLeft.fill( Qt::transparent );
+        decorationPixmapRight.fill( Qt::transparent );
+        decorationPixmapTop.fill( Qt::transparent );
+        decorationPixmapBottom.fill( Qt::transparent );
+    }
+#endif
+    triggerDecorationRepaint();
     }
 
 void Client::detectNoBorder()
@@ -459,6 +578,10 @@ void Client::resizeDecoration( const QSize& s )
         {
         QResizeEvent e( s, oldsize );
         QApplication::sendEvent( decoration->widget(), &e );
+        }
+    else // oldsize != s
+        {
+        resizeDecorationPixmaps();
         }
     }
 

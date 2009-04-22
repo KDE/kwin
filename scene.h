@@ -79,7 +79,9 @@ class Scene
             // At least one window will be painted with transformed geometry.
             PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 5,
             // Clear whole background as the very first step, without optimizing it
-            PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6
+            PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
+            // Temporary solution since (_OPAQUE | _TRANSLUCENT) is not working currently.
+            PAINT_DECORATION_ONLY = 1 << 7
             };
         // types of filtering available
         enum ImageFilterType { ImageFilterFast, ImageFilterGood };
@@ -184,6 +186,7 @@ class Scene::Window
         bool isOpaque() const;
         // shape of the window
         QRegion shape() const;
+        QRect clientRect() const;
         void discardShape();
         void updateToplevel( Toplevel* c );
         // creates initial quad list for the window
