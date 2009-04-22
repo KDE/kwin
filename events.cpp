@@ -711,11 +711,11 @@ bool Client::windowEvent( XEvent* e )
             break;
         case ColormapChangeMask:
             if( e->xany.window == window())
-            {
-            cmap = e->xcolormap.colormap;
-            if ( isActive() )
-                workspace()->updateColormap();
-            }
+                {
+                cmap = e->xcolormap.colormap;
+                if ( isActive() )
+                    workspace()->updateColormap();
+                }
             break;
         default:
             if( e->xany.window == window())
