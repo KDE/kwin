@@ -46,7 +46,6 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
         disabled = false;
         return;
         }
-
     if( !isWindowUsable( w ) || !isWindowOnTop( w ) )     // Focus changed but stacking still the same
         {
         updateStackingOrder();
@@ -68,12 +67,24 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
             if( isWindowUsable( tmp ) && tmp->isOnDesktop( w->desktop() ) )
                 {
                 // Do we have to move it?
-                if( tmp->geometry().intersects( w->geometry() ) )
+                if( intersects( w, tmp->geometry() ) )
                     {
+                    QRect slideRect;
+                    if( w->isModal() )
+                        {
+                        QRect modalGroupGeometry = w->geometry();
+                        foreach( EffectWindow *modalWindow, w->mainWindows() )
+                            {
+                            modalGroupGeometry = modalGroupGeometry.united( modalWindow->geometry() );
+/*                            effects->setElevatedWindow( modalWindow, true );
+                            elevatedList.append( modalWindow );*/
+                            }
+                        slideRect = getSlideDestination( modalGroupGeometry, tmp->geometry() );
+                        }
+                    else
+                        slideRect = getSlideDestination( w->geometry(), tmp->geometry() );
                     effects->setElevatedWindow( tmp, true );
                     elevatedList.append( tmp );
-
-                    QRect slideRect = getSlideDestination( w->geometry(), tmp->geometry() );
                     motionManager.manage( tmp );
                     motionManager.moveWindow( tmp, slideRect );
                     destinationList.insert( tmp, slideRect );
@@ -233,7 +244,16 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
                         {
                         if( effects->activeWindow() && effects->activeWindow()->geometry().intersects( tmp->geometry() ) )
                             {
-                            QRect newDestination = getSlideDestination( effects->activeWindow()->geometry(), tmp->geometry() );
+                            QRect newDestination;
+                            if( effects->activeWindow()->isModal() )
+                                {
+                                QRect modalGroupGeometry = w->geometry();
+                                foreach( EffectWindow *modalWindow, effects->activeWindow()->mainWindows() )
+                                    modalGroupGeometry = modalGroupGeometry.united( modalWindow->geometry() );
+                                newDestination = getSlideDestination( modalGroupGeometry, tmp->geometry() );
+                                }
+                            else
+                                newDestination = getSlideDestination( effects->activeWindow()->geometry(), tmp->geometry() );
                             if( !motionManager.isManaging( tmp ) )
                                 motionManager.manage( tmp );
                             motionManager.moveWindow( tmp, newDestination );
@@ -282,7 +302,7 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
             {
             // It could happen that there is no aciveWindow() here if the user clicks the close-button on an inactive window.
             // Just skip... the window will be removed in windowDeleted() later
-            if( effects->activeWindow() && !motionManager.transformedGeometry( w ).intersects( effects->activeWindow()->geometry() ) )
+            if( effects->activeWindow() && !intersects( effects->activeWindow(), motionManager.transformedGeometry( w ).toAlignedRect() ) )
                 {
                 coveringWindows.removeAll( w );
                 if( coveringWindows.isEmpty() )
@@ -310,6 +330,7 @@ void SlideBackEffect::windowDeleted( EffectWindow* w )
 
 void SlideBackEffect::windowAdded( KWin::EffectWindow* w )
     {
+    Q_UNUSED( w );
     updateStackingOrder();
     }
 
@@ -327,6 +348,19 @@ bool SlideBackEffect::isWindowOnTop( EffectWindow* w )
 bool SlideBackEffect::isWindowUsable( EffectWindow* w )
     {
     return w && ( w->isNormalWindow() || w->isDialog() ) && !w->isDeleted() && !w->isMinimized();
+    }
+
+bool SlideBackEffect::intersects( EffectWindow* windowUnder, const QRect &windowOverGeometry )
+    {
+    QRect windowUnderGeometry = windowUnder->geometry();
+    if( windowUnder->isModal() )
+        {
+        foreach( EffectWindow *tmp, windowUnder->mainWindows() )
+            {
+            windowUnderGeometry = windowUnderGeometry.united( tmp->geometry() );
+            }
+        }
+    return windowUnderGeometry.intersects( windowOverGeometry );
     }
 
 EffectWindowList SlideBackEffect::usableWindows( const EffectWindowList & allWindows )

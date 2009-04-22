@@ -62,6 +62,7 @@ class SlideBackEffect
         bool isWindowOnTop( EffectWindow *w );
         bool isWindowUsable( EffectWindow *w );
         bool stackingOrderChanged();
+        bool intersects( EffectWindow *windowUnder, const QRect &windowOverGeometry );
         EffectWindowList usableWindows( const EffectWindowList &allWindows );
         EffectWindow *newTopWindow();
 
