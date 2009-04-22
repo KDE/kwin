@@ -1290,6 +1290,10 @@ void SceneOpenGL::Texture::unbind()
 SceneOpenGL::Window::Window( Toplevel* c )
     : Scene::Window( c )
     , texture()
+    , topTexture()
+    , leftTexture()
+    , rightTexture()
+    , bottomTexture()
     {
     }
 
@@ -1314,7 +1318,7 @@ bool SceneOpenGL::Window::bindTexture()
     bool success = texture.load( pix, toplevel->size(), toplevel->depth(),
         toplevel->damage());
     if( success )
-        toplevel->resetDamage( toplevel->rect());
+        toplevel->resetDamage( QRect( toplevel->clientPos(), toplevel->clientSize() ) );
     else
         kDebug( 1212 ) << "Failed to bind window";
     return success;
@@ -1323,6 +1327,10 @@ bool SceneOpenGL::Window::bindTexture()
 void SceneOpenGL::Window::discardTexture()
     {
     texture.discard();
+    topTexture.discard();
+    leftTexture.discard();
+    rightTexture.discard();
+    bottomTexture.discard();
     }
 
 // This call is used in SceneOpenGL::windowGeometryShapeChanged(),
@@ -1433,27 +1441,176 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     texture.bind();
     texture.enableUnnormalizedTexCoords();
 
-    WindowQuadList decoration = data.quads.select( WindowQuadDecoration );    
-    if( data.contents_opacity != data.decoration_opacity && !decoration.isEmpty())
-        {
-        prepareStates( data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
-        renderQuads( mask, region, data.quads.select( WindowQuadContents ));
-        restoreStates( data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
-        prepareStates( data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
-        renderQuads( mask, region, decoration );
-        restoreStates( data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
-        }
-    else
-        {
-        prepareStates( data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
-        renderQuads( mask, region, data.quads.select( WindowQuadContents ));
-        renderQuads( mask, region, data.quads.select( WindowQuadDecoration ));
-        restoreStates( data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
-        }
+    WindowQuadList decoration = data.quads.select( WindowQuadDecoration );
+    // paint the content
+    prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+    renderQuads( mask, region, data.quads.select( WindowQuadContents ));
+    restoreStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
 
     texture.disableUnnormalizedTexCoords();
     texture.unbind();
+
+    // decorations
+    if( Client *client = dynamic_cast<Client*>(toplevel) )
+        {
+        if (!client->noBorder())
+            {
+            bool updateDeco = client->decorationPixmapRequiresRepaint();
+            client->ensureDecorationPixmapsPainted();
+
+            const QPixmap *left   = client->leftDecoPixmap();
+            const QPixmap *top    = client->topDecoPixmap();
+            const QPixmap *right  = client->rightDecoPixmap();
+            const QPixmap *bottom = client->bottomDecoPixmap();
+
+            WindowQuadList topList, leftList, rightList, bottomList;
+            QRect topRect( QPoint(0, 0), top->size() );
+            QRect leftRect( QPoint(0, client->clientPos().y()), left->size() );
+            QRect rightRect( QPoint(client->width() - right->width(), client->clientPos().y()), right->size() );
+            QRect bottomRect( QPoint(0, client->height()-bottom->height()), bottom->size() );
+            foreach( WindowQuad quad, decoration )
+                {
+                if( topRect.contains( QPoint( quad.originalLeft(), quad.originalTop() ) ) )
+                    {
+                    topList.append( quad );
+                    continue;
+                    }
+                if( bottomRect.contains( QPoint( quad.originalLeft(), quad.originalTop() ) ) )
+                    {
+                    bottomList.append( quad );
+                    continue;
+                    }
+                if( leftRect.contains( QPoint( quad.originalLeft(), quad.originalTop() ) ) )
+                    {
+                    leftList.append( quad );
+                    continue;
+                    }
+                if( rightRect.contains( QPoint( quad.originalLeft(), quad.originalTop() ) ) )
+                    {
+                    rightList.append( quad );
+                    continue;
+                    }
+                }
+            paintDecoration( top, DecorationTop, region, topRect, data, topList, updateDeco );
+            paintDecoration( left, DecorationLeft, region, leftRect, data, leftList, updateDeco );
+            paintDecoration( right, DecorationRight, region, rightRect, data, rightList, updateDeco );
+            paintDecoration( bottom, DecorationBottom, region, bottomRect, data, bottomList, updateDeco );
+            }
+        }
+
     glPopMatrix();
+    }
+
+void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco )
+    {
+    if( quads.isEmpty())
+        return;
+    SceneOpenGL::Texture* decorationTexture;
+    switch( decorationType )
+        {
+        case DecorationTop:
+            decorationTexture = &topTexture;
+            break;
+        case DecorationLeft:
+            decorationTexture = &leftTexture;
+            break;
+        case DecorationRight:
+            decorationTexture = &rightTexture;
+            break;
+        case DecorationBottom:
+            decorationTexture = &bottomTexture;
+            break;
+        default:
+            return;
+        }
+    if( decorationTexture->texture() != None && !updateDeco )
+        {
+        // texture doesn't need updating, just bind it
+        glBindTexture( decorationTexture->target(), decorationTexture->texture());
+        }
+    else
+        {
+        if( decorationTexture->texture() != None )
+            decorationTexture->release();
+        bool success = decorationTexture->load( decoration->handle(), decoration->size(), decoration->depth() );
+        if( success )
+            toplevel->resetDamage( rect );
+        else
+            {
+            kDebug( 1212 ) << "Failed to bind decoartion";
+            return;
+            }
+        }
+    if( filter == ImageFilterGood )
+        {
+        // avoid unneeded mipmap generation by only using trilinear
+        // filtering when it actually makes a difference, that is with
+        // minification or changed vertices
+        if( options->smoothScale == 2
+            && ( data.quads.smoothNeeded() || data.xScale < 1 || data.yScale < 1 ))
+            {
+            decorationTexture->setFilter( GL_LINEAR_MIPMAP_LINEAR );
+            }
+        else
+            decorationTexture->setFilter( GL_LINEAR );
+        }
+    else
+        decorationTexture->setFilter( GL_NEAREST );
+    decorationTexture->bind();
+    decorationTexture->enableUnnormalizedTexCoords();
+
+    prepareStates( decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
+    float* vertices;
+    float* texcoords;
+    makeDecorationArrays( &vertices, &texcoords, quads, rect );
+    if( data.shader )
+        {
+        int texw = decoration->width();
+        int texh = decoration->height();
+        if( !GLTexture::NPOTTextureSupported() )
+            {
+            kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
+            texw = nearestPowerOfTwo(texw);
+            texh = nearestPowerOfTwo(texh);
+            }
+        data.shader->setUniform("textureWidth", (float)texw);
+        data.shader->setUniform("textureHeight", (float)texh);
+        }
+    renderGLGeometry( region, quads.count() * 4,
+            vertices, texcoords, NULL, 2, 0 );
+    delete[] vertices;
+    delete[] texcoords;
+    restoreStates( decorationType, data.opacity * data.decoration_opacity, data.brightness, data.saturation, data.shader );
+    decorationTexture->disableUnnormalizedTexCoords();
+    decorationTexture->unbind();
+    }
+
+void SceneOpenGL::Window::makeDecorationArrays( float** vertices, float** texcoords, const WindowQuadList& quads, const QRect& rect ) const
+    {
+    *vertices = new float[ quads.count() * 4 * 2 ];
+    *texcoords = new float[ quads.count() * 4 * 2 ];
+    float* vpos = *vertices;
+    float* tpos = *texcoords;
+    foreach( WindowQuad quad, quads )
+        {
+        *vpos++ = quad[ 0 ].x();
+        *vpos++ = quad[ 0 ].y();
+        *vpos++ = quad[ 1 ].x();
+        *vpos++ = quad[ 1 ].y();
+        *vpos++ = quad[ 2 ].x();
+        *vpos++ = quad[ 2 ].y();
+        *vpos++ = quad[ 3 ].x();
+        *vpos++ = quad[ 3 ].y();
+
+        *tpos++ = quad.originalLeft()-rect.x();
+        *tpos++ = quad.originalTop()-rect.y();
+        *tpos++ = quad.originalRight()-rect.x();
+        *tpos++ = quad.originalTop()-rect.y();
+        *tpos++ = quad.originalRight()-rect.x();
+        *tpos++ = quad.originalBottom()-rect.y();
+        *tpos++ = quad.originalLeft()-rect.x();
+        *tpos++ = quad.originalBottom()-rect.y();
+        }
     }
 
 void SceneOpenGL::Window::renderQuads( int, const QRegion& region, const WindowQuadList& quads )
@@ -1470,19 +1627,21 @@ void SceneOpenGL::Window::renderQuads( int, const QRegion& region, const WindowQ
     delete[] texcoords;
     }
 
-void SceneOpenGL::Window::prepareStates( double opacity, double brightness, double saturation, GLShader* shader )
+void SceneOpenGL::Window::prepareStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader )
     {
     if(shader)
-        prepareShaderRenderStates( opacity, brightness, saturation, shader );
+        prepareShaderRenderStates( type, opacity, brightness, saturation, shader );
     else
-        prepareRenderStates( opacity, brightness, saturation );
+        prepareRenderStates( type, opacity, brightness, saturation );
     }
 
-void SceneOpenGL::Window::prepareShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader )
+void SceneOpenGL::Window::prepareShaderRenderStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader )
     {
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
     bool opaque = isOpaque() && opacity == 1.0;
+    if( type != Content )
+        opaque = false;
     if( !opaque )
         {
         glEnable( GL_BLEND );
@@ -1493,17 +1652,49 @@ void SceneOpenGL::Window::prepareShaderRenderStates( double opacity, double brig
     shader->setUniform("brightness", (float)brightness);
     }
 
-void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness, double saturation )
+void SceneOpenGL::Window::prepareRenderStates( TextureType type, double opacity, double brightness, double saturation )
     {
+    Texture* tex;
+    bool alpha = false;
+    bool opaque = true;
+    switch( type )
+        {
+        case Content:
+            tex = &texture;
+            alpha = toplevel->hasAlpha();
+            opaque = isOpaque() && opacity == 1.0;
+            break;
+        case DecorationTop:
+            tex = &topTexture;
+            alpha = true;
+            opaque = false;
+            break;
+        case DecorationLeft:
+            tex = &leftTexture;
+            alpha = true;
+            opaque = false;
+            break;
+        case DecorationRight:
+            tex = &rightTexture;
+            alpha = true;
+            opaque = false;
+            break;
+        case DecorationBottom:
+            tex = &bottomTexture;
+            alpha = true;
+            opaque = false;
+            break;
+        default:
+            return;
+        }
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
-    bool opaque = isOpaque() && opacity == 1.0;
     if( !opaque )
         {
         glEnable( GL_BLEND );
         glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
         }
-    if( saturation != 1.0 && texture.saturationSupported())
+    if( saturation != 1.0 && tex->saturationSupported())
         {
         // First we need to get the color from [0; 1] range to [0.5; 1] range
         glActiveTexture( GL_TEXTURE0 );
@@ -1517,7 +1708,7 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA );
         const float scale_constant[] = { 1.0, 1.0, 1.0, 0.5};
         glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, scale_constant );
-        texture.bind();
+        tex->bind();
 
         // Then we take dot product of the result of previous pass and
         //  saturation_constant. This gives us completely unsaturated
@@ -1533,7 +1724,7 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT );
         glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR );
         glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant );
-        texture.bind();
+        tex->bind();
 
         // Finally we need to interpolate between the original image and the
         //  greyscale image to get wanted level of saturation
@@ -1553,9 +1744,9 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
         // And make primary color contain the wanted opacity
         glColor4f( opacity, opacity, opacity, opacity );
-        texture.bind();
+        tex->bind();
 
-        if( toplevel->hasAlpha() || brightness != 1.0f )
+        if( alpha || brightness != 1.0f )
             {
             glActiveTexture( GL_TEXTURE3 );
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
@@ -1567,7 +1758,7 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
             // The color has to be multiplied by both opacity and brightness
             float opacityByBrightness = opacity * brightness;
             glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity );
-            if( toplevel->hasAlpha() )
+            if( alpha )
                 {
                 // Multiply original texture's alpha by our opacity
                 glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE );
@@ -1583,7 +1774,7 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
                 glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS );
                 glTexEnvi( GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA );
                 }
-            texture.bind();
+            tex->bind();
             }
 
         glActiveTexture(GL_TEXTURE0 );
@@ -1593,7 +1784,7 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         // the window is additionally configured to have its opacity adjusted,
         // do it
         float opacityByBrightness = opacity * brightness;
-        if( toplevel->hasAlpha())
+        if( alpha)
             {
             glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
             glColor4f( opacityByBrightness, opacityByBrightness, opacityByBrightness,
@@ -1616,16 +1807,17 @@ void SceneOpenGL::Window::prepareRenderStates( double opacity, double brightness
         }
     }
 
-void SceneOpenGL::Window::restoreStates( double opacity, double brightness, double saturation, GLShader* shader )
+void SceneOpenGL::Window::restoreStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader )
     {
     if(shader)
-        restoreShaderRenderStates( opacity, brightness, saturation, shader );
+        restoreShaderRenderStates( type, opacity, brightness, saturation, shader );
     else
-        restoreRenderStates( opacity, brightness, saturation );
+        restoreRenderStates( type, opacity, brightness, saturation );
     }
 
-void SceneOpenGL::Window::restoreShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader )
+void SceneOpenGL::Window::restoreShaderRenderStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader )
     {
+    Q_UNUSED( type );
     Q_UNUSED( opacity );
     Q_UNUSED( brightness );
     Q_UNUSED( saturation );
@@ -1633,18 +1825,39 @@ void SceneOpenGL::Window::restoreShaderRenderStates( double opacity, double brig
     glPopAttrib();  // ENABLE_BIT
     }
 
-void SceneOpenGL::Window::restoreRenderStates( double opacity, double brightness, double saturation )
+void SceneOpenGL::Window::restoreRenderStates( TextureType type, double opacity, double brightness, double saturation )
     {
+    Texture* tex;
+    switch( type )
+        {
+        case Content:
+            tex = &texture;
+            break;
+        case DecorationTop:
+            tex = &topTexture;
+            break;
+        case DecorationLeft:
+            tex = &leftTexture;
+            break;
+        case DecorationRight:
+            tex = &rightTexture;
+            break;
+        case DecorationBottom:
+            tex = &bottomTexture;
+            break;
+        default:
+            return;
+        }
     if( opacity != 1.0 || saturation != 1.0 || brightness != 1.0f )
         {
-        if( saturation != 1.0 && texture.saturationSupported())
+        if( saturation != 1.0 && tex->saturationSupported())
             {
             glActiveTexture(GL_TEXTURE3);
-            glDisable( texture.target());
+            glDisable( tex->target());
             glActiveTexture(GL_TEXTURE2);
-            glDisable( texture.target());
+            glDisable( tex->target());
             glActiveTexture(GL_TEXTURE1);
-            glDisable( texture.target());
+            glDisable( tex->target());
             glActiveTexture(GL_TEXTURE0);
             }
         glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );

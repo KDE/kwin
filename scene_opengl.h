@@ -139,16 +139,30 @@ class SceneOpenGL::Window
         void checkTextureSize();
 
     protected:
+        enum TextureType
+            {
+            Content,
+            DecorationTop,
+            DecorationLeft,
+            DecorationRight,
+            DecorationBottom
+            };
+        void paintDecoration( const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco );
+        void makeDecorationArrays( float** vertices, float** texcoords, const WindowQuadList& quads, const QRect& rect  ) const;
         void renderQuads( int mask, const QRegion& region, const WindowQuadList& quads );
-        void prepareStates( double opacity, double brightness, double saturation, GLShader* shader );
-        void prepareRenderStates( double opacity, double brightness, double saturation );
-        void prepareShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader );
-        void restoreStates( double opacity, double brightness, double saturation, GLShader* shader );
-        void restoreRenderStates( double opacity, double brightness, double saturation );
-        void restoreShaderRenderStates( double opacity, double brightness, double saturation, GLShader* shader );
+        void prepareStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader );
+        void prepareRenderStates( TextureType type, double opacity, double brightness, double saturation );
+        void prepareShaderRenderStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader );
+        void restoreStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader );
+        void restoreRenderStates( TextureType type, double opacity, double brightness, double saturation );
+        void restoreShaderRenderStates( TextureType type, double opacity, double brightness, double saturation, GLShader* shader );
 
     private:
         Texture texture;
+        Texture topTexture;
+        Texture leftTexture;
+        Texture rightTexture;
+        Texture bottomTexture;
     };
 
 } // namespace
