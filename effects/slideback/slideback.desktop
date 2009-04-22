@@ -7,6 +7,7 @@ Name[pt_BR]=Deslizar para Trás
 Name[sv]=Glid tillbaka
 Name[tr]=Geriye Kaydır
 Name[uk]=Зниження
+Name[zh_TW]=往回滑動
 
 Type=Service
 Comment=Slide back windows losing focus
@@ -16,6 +17,7 @@ Comment[pt]=Deslizar para trás as janelas que perdem o foco
 Comment[pt_BR]=Deslizar para trás as janelas que perdem o foco
 Comment[sv]=Låt fönster som förlorar fokus glida tillbaka
 Comment[uk]=Вікна, що знижуються, втрачають фокус
+Comment[zh_TW]=將失去焦點的視窗往回滑動
 Icon=preferences-system-windows-effect-slideback
 X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Michael Zanetti
