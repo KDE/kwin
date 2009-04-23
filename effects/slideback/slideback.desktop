@@ -2,6 +2,7 @@
 Name=Slide Back
 Name[el]=Κύλιση πίσω
 Name[et]=Tagasiliuglemine
+Name[km]=ស្លាយ​ថយក្រោយ
 Name[pt]=Deslizar para Trás
 Name[pt_BR]=Deslizar para Trás
 Name[sv]=Glid tillbaka
@@ -13,6 +14,7 @@ Type=Service
 Comment=Slide back windows losing focus
 Comment[el]=Κύλιση παραθύρων πίσω με απώλεια της εστίασής τους
 Comment[et]=Fookuse kaotanud aknad liuglevad tagasi
+Comment[km]=បង្អួច​ស្លាយ​ថយក្រោយ​នៅពេល​បាត់បង់​ការ​ផ្ដោត
 Comment[pt]=Deslizar para trás as janelas que perdem o foco
 Comment[pt_BR]=Deslizar para trás as janelas que perdem o foco
 Comment[sv]=Låt fönster som förlorar fokus glida tillbaka
