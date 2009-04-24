@@ -176,8 +176,10 @@ static int x11ErrorHandler( Display* d, XErrorEvent* e )
     if( ignore_badwindow && ( e->error_code == BadWindow || e->error_code == BadColor ))
         return 0;
 
+#ifndef NDEBUG
     //fprintf( stderr, "kwin: X Error (%s)\n", KXErrorHandler::errorMessage( *e, d ).data());
     kWarning( 1212 ) << "kwin: X Error (" << errorMessage( *e, d ) << ")";
+#endif
 
     if( kwin_sync )
         fprintf( stderr, "%s\n", kBacktrace().toLocal8Bit().data() );
