@@ -82,7 +82,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setMargin(0);
-    layout->setSpacing(KDialog::spacingHint());
 
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
@@ -95,8 +94,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 	QWidget *pluginPage = new QWidget( tabWidget );
 
 	QVBoxLayout* pluginLayout = new QVBoxLayout(pluginPage);
-	pluginLayout->setMargin(KDialog::marginHint());
-	pluginLayout->setSpacing(KDialog::spacingHint());
 
 	// decoration chooser
 	decorationList = new KComboBox( pluginPage );
@@ -106,10 +103,9 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 	pluginLayout->addWidget(decorationList);
 
 	pluginSettingsGrp = new QGroupBox( i18n("Decoration Options"), pluginPage );
-    QGridLayout *pluginSettingsLayout = new QGridLayout();
+    QVBoxLayout *pluginSettingsLayout = new QVBoxLayout();
 	pluginSettingsGrp->setFlat( true );
 	pluginSettingsLayout->setMargin( 0 );
-	pluginSettingsLayout->setSpacing( KDialog::spacingHint() );
 	pluginSettingsGrp->setLayout( pluginSettingsLayout );
 	pluginLayout->addWidget( pluginSettingsGrp );
 
@@ -123,19 +119,17 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 	lBorder->hide();
 	cBorder->hide();
 	QHBoxLayout *borderSizeLayout = new QHBoxLayout();
-    pluginSettingsGrp->layout()->addItem( borderSizeLayout );
+    pluginSettingsLayout->addLayout( borderSizeLayout );
 	borderSizeLayout->addWidget(lBorder);
 	borderSizeLayout->addWidget(cBorder);
 	borderSizeLayout->addStretch();
 
 	pluginConfigWidget = new KVBox(pluginSettingsGrp);
-	pluginSettingsGrp->layout()->addWidget( pluginConfigWidget );
+	pluginSettingsLayout->addWidget( pluginConfigWidget );
 
 	// Page 2 (Button Selector)
 	QWidget* buttonPage = new QWidget( tabWidget );
 	QVBoxLayout* buttonLayout = new QVBoxLayout(buttonPage);
-	buttonLayout->setMargin(KDialog::marginHint());
-	buttonLayout->setSpacing(KDialog::spacingHint());
 
 	cbShowToolTips = new QCheckBox(
 			i18n("&Show window button tooltips"), buttonPage );
@@ -163,7 +157,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 
 	// preview
 	QVBoxLayout* previewLayout = new QVBoxLayout();
-    previewLayout->setSpacing( KDialog::spacingHint() );
     layout->addLayout( previewLayout );
 	previewLayout->setMargin( KDialog::marginHint() );
 
