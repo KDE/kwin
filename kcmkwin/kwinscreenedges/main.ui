@@ -174,12 +174,12 @@
         </item>
         <item>
          <property name="text">
-          <string>Only when moving windows</string>
+          <string>Only When Moving Windows</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Always enabled</string>
+          <string>Always Enabled</string>
          </property>
         </item>
        </widget>
