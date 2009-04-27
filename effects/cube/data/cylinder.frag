@@ -1,6 +1,6 @@
 uniform sampler2D winTexture;
-uniform float windowWidth;
-uniform float windowHeight;
+uniform float textureWidth;
+uniform float textureHeight;
 uniform float opacity;
 uniform float brightness;
 uniform float saturation;
@@ -9,7 +9,7 @@ uniform float useTexture;
 
 vec2 pix2tex(vec2 pix)
 {
-    return vec2(pix.x / windowWidth, pix.y / windowHeight);
+    return vec2(pix.x / textureWidth, pix.y / textureHeight);
 }
 
 void main()
@@ -22,8 +22,8 @@ void main()
     if( useTexture > 0.0 )
         {
         // remove the shadow decoration quads
-        if( gl_TexCoord[0].x < 0.0 || gl_TexCoord[0].x > windowWidth ||
-            gl_TexCoord[0].y < 0.0 || gl_TexCoord[0].y > windowHeight )
+        if( gl_TexCoord[0].x < 0.0 || gl_TexCoord[0].x > textureWidth ||
+            gl_TexCoord[0].y < 0.0 || gl_TexCoord[0].y > textureHeight )
             discard;
         vec4 tex = texture2D(winTexture, pix2tex(gl_TexCoord[0].xy));
         tex = vec4( tex.rgb, tex.a * opacity );

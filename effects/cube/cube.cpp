@@ -1294,8 +1294,6 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         if( mode == Cylinder )
             {
             cylinderShader->bind();
-            cylinderShader->setUniform( "windowWidth", (float)w->width() );
-            cylinderShader->setUniform( "windowHeight", (float)w->height() );
             cylinderShader->setUniform( "xCoord", (float)w->x() );
             cylinderShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
             cylinderShader->setUniform( "useTexture", 1.0f );
@@ -1310,8 +1308,6 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
         if( mode == Sphere )
             {
             sphereShader->bind();
-            sphereShader->setUniform( "windowWidth", (float)w->width() );
-            sphereShader->setUniform( "windowHeight", (float)w->height() );
             sphereShader->setUniform( "xCoord", (float)w->x() );
             sphereShader->setUniform( "yCoord", (float)w->y() );
             sphereShader->setUniform( "cubeAngle", (effects->numberOfDesktops() - 2 )/(float)effects->numberOfDesktops() * 180.0f );
@@ -1323,6 +1319,19 @@ void CubeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowP
                 factor = timeLine.value();
             sphereShader->setUniform( "timeLine", factor );
             data.shader = sphereShader;
+            }
+        if( data.shader )
+            {
+            int texw = w->width();
+            int texh = w->height();
+            if( !GLTexture::NPOTTextureSupported() )
+                {
+                kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
+                texw = nearestPowerOfTwo(texw);
+                texh = nearestPowerOfTwo(texh);
+                }
+            data.shader->setTextureWidth( texw );
+            data.shader->setTextureHeight( texh );
             }
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
