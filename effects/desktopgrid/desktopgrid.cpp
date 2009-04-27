@@ -809,7 +809,7 @@ void DesktopGridEffect::setup()
             gridSize = effects->desktopGridSize();
             break;
         case LayoutAutomatic:
-            y = sqrt( numDesktops ) + 0.5;
+            y = sqrt( float( numDesktops ) ) + 0.5;
             x = float( numDesktops ) / float( y ) + 0.5;
             if( x * y < numDesktops )
                 x++;
