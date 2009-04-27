@@ -116,9 +116,6 @@ QMenu* Workspace::clientPopup()
         action->setIcon( KIcon( "wizard" ) );
         action->setData( Options::ApplicationRulesOp );
 
-        action = popup->addMenu( advanced_popup );
-        action->setText( i18n("Ad&vanced") );
-
         trans_popup = 0;
         if (compositing()){
             trans_popup = new QMenu( popup );
@@ -169,6 +166,9 @@ QMenu* Workspace::clientPopup()
             mShadeOpAction->setShortcut( kaction->globalShortcut().primary() );
         mShadeOpAction->setCheckable( true );
         mShadeOpAction->setData( Options::ShadeOp );
+
+        action = popup->addMenu( advanced_popup );
+        action->setText( i18n("Ad&vanced") );
 
         popup->addSeparator();
 
@@ -266,7 +266,7 @@ void Workspace::initDesktopPopup()
              this, SLOT( desktopPopupAboutToShow() ) );
 
     QAction *action = desk_popup->menuAction();
-    popup->insertAction(advanced_popup->menuAction(), action);
+    popup->insertAction(mMoveOpAction, action);
     action->setText( i18n("To &Desktop") );
     }
 
