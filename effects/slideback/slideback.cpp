@@ -76,13 +76,13 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
                         foreach( EffectWindow *modalWindow, w->mainWindows() )
                             {
                             modalGroupGeometry = modalGroupGeometry.united( modalWindow->geometry() );
-/*                            effects->setElevatedWindow( modalWindow, true );
-                            elevatedList.append( modalWindow );*/
                             }
                         slideRect = getSlideDestination( modalGroupGeometry, tmp->geometry() );
                         }
                     else
+                        {
                         slideRect = getSlideDestination( w->geometry(), tmp->geometry() );
+                        }
                     effects->setElevatedWindow( tmp, true );
                     elevatedList.append( tmp );
                     motionManager.manage( tmp );
@@ -182,12 +182,9 @@ void SlideBackEffect::postPaintScreen()
 
 void SlideBackEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time )
     {
-    if( motionManager.areWindowsMoving() )
+    if( motionManager.isManaging( w ) )
         {
-        if( motionManager.isManaging( w ) )
-            {
-            data.setTransformed();
-            }
+        data.setTransformed();
         }
 
     effects->prePaintWindow( w, data, time );
@@ -195,7 +192,7 @@ void SlideBackEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data,
 
 void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
     {
-    if( !motionManager.managingWindows() && stackingOrderChanged() && ( w == newTopWindow() ) )
+    if( stackingOrderChanged() && ( w == newTopWindow() ) )
         {
         /* This can happen because of two reasons:
            - a window has received the focus earlier without beeing raised and is raised now. -> call windowActivated() now
@@ -215,12 +212,9 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
             windowActivated( w );
             }
         }
-    if( motionManager.areWindowsMoving() )
+    if( motionManager.isManaging( w ) )
         {
-        if( motionManager.isManaging( w ) )
-            {
-            motionManager.apply( w, data );
-            }
+        motionManager.apply( w, data );
         }
     effects->paintWindow( w, mask, region, data );
     }
@@ -242,20 +236,31 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
                     EffectWindowList tmpList;
                     foreach( EffectWindow *tmp, elevatedList )
                         {
-                        if( effects->activeWindow() && effects->activeWindow()->geometry().intersects( tmp->geometry() ) )
+                        QRect elevatedGeometry = tmp->geometry();
+                        if( motionManager.isManaging( tmp ) )
+                            {
+                            elevatedGeometry = motionManager.transformedGeometry( tmp ).toAlignedRect();
+                            }
+                        if( effects->activeWindow() && !tmp->isDock() && effects->activeWindow()->geometry().intersects( elevatedGeometry ) )
                             {
                             QRect newDestination;
                             if( effects->activeWindow()->isModal() )
                                 {
-                                QRect modalGroupGeometry = w->geometry();
+                                QRect modalGroupGeometry = effects->activeWindow()->geometry();
                                 foreach( EffectWindow *modalWindow, effects->activeWindow()->mainWindows() )
+                                    {
                                     modalGroupGeometry = modalGroupGeometry.united( modalWindow->geometry() );
-                                newDestination = getSlideDestination( modalGroupGeometry, tmp->geometry() );
+                                    }
+                                newDestination = getSlideDestination( modalGroupGeometry, elevatedGeometry );
                                 }
                             else
-                                newDestination = getSlideDestination( effects->activeWindow()->geometry(), tmp->geometry() );
+                                {
+                                newDestination = getSlideDestination( effects->activeWindow()->geometry(), elevatedGeometry );
+                                }
                             if( !motionManager.isManaging( tmp ) )
+                                {
                                 motionManager.manage( tmp );
+                                }
                             motionManager.moveWindow( tmp, newDestination );
                             destinationList[tmp] = newDestination;
                             }
