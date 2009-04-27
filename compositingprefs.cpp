@@ -255,7 +255,16 @@ void CompositingPrefs::detectDriverAndVersion()
     else if( mGLVendor == "ATI Technologies Inc." )
         {
         mDriver = "fglrx";
-        mVersion = Version( mGLVersion.split(" ").first());
+        // Ati changed the version string.
+        // The GL version is either in the first or second part
+        QStringList versionParts = mGLVersion.split(" ");
+        if( versionParts.first().count(".") == 2 || versionParts.count() == 1 )
+            mVersion = Version( versionParts.first() );
+        else
+            {
+            // version in second part is encapsulated in ()
+            mVersion = Version( versionParts[1].mid( 1, versionParts[1].length() -2 ) );
+            }
         }
     else if( mGLRenderer.startsWith( "Mesa DRI" ))
         {
