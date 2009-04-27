@@ -106,8 +106,8 @@ void InvertEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
             texw = nearestPowerOfTwo(texw);
             texh = nearestPowerOfTwo(texh);
             }
-        m_shader->setUniform("textureWidth", (float)texw);
-        m_shader->setUniform("textureHeight", (float)texh);
+        m_shader->setTextureWidth( (float)texw );
+        m_shader->setTextureHeight( (float)texh );
 
         data.shader = m_shader;
         }

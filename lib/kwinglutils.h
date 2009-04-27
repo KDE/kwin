@@ -219,6 +219,10 @@ class KWIN_EXPORT GLShader
         int attributeLocation(const QString& name);
         bool setAttribute(const QString& name, float value);
 
+        void setTextureWidth( float width );
+        void setTextureHeight( float height );
+        float textureWidth();
+        float textureHeight();
 
         static void initStatic();
         static bool fragmentShaderSupported()  { return mFragmentShaderSupported; }
@@ -236,6 +240,8 @@ class KWIN_EXPORT GLShader
         QHash< QString, int >* mVariableLocations;
         static bool mFragmentShaderSupported;
         static bool mVertexShaderSupported;
+        float mTextureWidth;
+        float mTextureHeight;
     };
 
 /**

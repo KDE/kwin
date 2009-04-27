@@ -1650,6 +1650,15 @@ void SceneOpenGL::Window::prepareShaderRenderStates( TextureType type, double op
     shader->setUniform("opacity", (float)opacity);
     shader->setUniform("saturation", (float)saturation);
     shader->setUniform("brightness", (float)brightness);
+
+    // setting texture width and heiht stored in shader
+    // only set if it is set by an effect that is not negative
+    float texw = shader->textureWidth();
+    if( texw >= 0.0f )
+        shader->setUniform("textureWidth", texw);
+    float texh = shader->textureHeight();
+    if( texh >= 0.0f )
+        shader->setUniform("textureHeight", texh);
     }
 
 void SceneOpenGL::Window::prepareRenderStates( TextureType type, double opacity, double brightness, double saturation )

@@ -734,6 +734,8 @@ GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
     mValid = false;
     mVariableLocations = 0;
     mProgram = 0;
+    mTextureWidth = -1.0f;
+    mTextureHeight = -1.0f;
 
     loadFromFiles(vertexfile, fragmentfile);
     }
@@ -950,6 +952,25 @@ bool GLShader::setAttribute(const QString& name, float value)
     return (location >= 0);
     }
 
+void GLShader::setTextureHeight(float height)
+    {
+    mTextureHeight = height;
+    }
+
+void GLShader::setTextureWidth(float width)
+    {
+    mTextureWidth = width;
+    }
+
+float GLShader::textureHeight()
+    {
+    return mTextureHeight;
+    }
+
+float GLShader::textureWidth()
+    {
+    return mTextureWidth;
+    }
 
 
 /***  GLRenderTarget  ***/
