@@ -179,7 +179,9 @@ void MagnifierEffect::mouseChanged( const QPoint& pos, const QPoint& old,
     Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers )
     {
     if( pos != old && zoom != 1 )
-        effects->addRepaint( magnifierArea( old ).adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
+        // need full repaint as we might lose some change events on fast mouse movements
+        // see Bug 187658
+        effects->addRepaintFull();
     }
 
 } // namespace
