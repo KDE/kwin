@@ -23,6 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    #include <kwinglutils.h>
+#endif
+
 
 // This effect shows a preview inside a window that has a special property set
 // on it that says which window and where to render. It is used by the taskbar
@@ -82,6 +86,24 @@ void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion reg
             QRect r;
             setPositionTransformations( thumbData, r,
                 thumbw, thumb.rect.translated( w->pos()), Qt::KeepAspectRatio );
+
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+            if( effects->compositingType() == KWin::OpenGLCompositing && data.shader )
+                {
+                // there is a shader - update texture width and height
+                int texw = thumbw->width();
+                int texh = thumbw->height();
+                if( !GLTexture::NPOTTextureSupported() )
+                    {
+                    kWarning( 1212 ) << "NPOT textures not supported, wasting some memory" ;
+                    texw = nearestPowerOfTwo( texw );
+                    texh = nearestPowerOfTwo( texh );
+                    }
+                thumbData.shader = data.shader;
+                thumbData.shader->setTextureWidth( (float)texw );
+                thumbData.shader->setTextureHeight( (float)texh );
+                }
+#endif
             effects->drawWindow( thumbw, mask, r, thumbData );
             }
         }
