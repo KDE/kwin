@@ -64,7 +64,7 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
             }
         else
             {
-            if( isWindowUsable( tmp ) && tmp->isOnDesktop( w->desktop() ) )
+            if( isWindowUsable( tmp ) && ( tmp->isOnDesktop( w->desktop() ) || w->isOnAllDesktops() ) )
                 {
                 // Do we have to move it?
                 if( intersects( w, tmp->geometry() ) )
