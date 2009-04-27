@@ -667,6 +667,8 @@ void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> vert
         shader->setUniform("opacity", opacity);
         shader->setUniform("saturation", saturation);
         shader->setUniform("brightness", brightness);
+        shader->setUniform("textureWidth", 1.0f);
+        shader->setUniform("textureHeight", 1.0f);
         }
     texture->bind();
     texture->enableNormalizedTexCoords();
