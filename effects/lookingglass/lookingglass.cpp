@@ -74,10 +74,25 @@ void LookingGlassEffect::reconfigure( ReconfigureFlags )
 void LookingGlassEffect::toggle()
     {
     if( target_zoom == 1.0f )
+        {
         target_zoom = 2.0f;
+        if( !polling )
+            {
+            polling = true;
+            effects->startMousePolling();
+            }
+        setEnabled( true );
+        }
     else
+        {
         target_zoom = 1.0f;
-    setEnabled( true );
+        if( polling )
+            {
+            polling = false;
+            effects->stopMousePolling();
+            }
+        setEnabled( false );
+        }
     }
 
 void LookingGlassEffect::zoomIn()
@@ -99,11 +114,11 @@ void LookingGlassEffect::zoomOut()
         {
         target_zoom = 1;
         setEnabled( false );
-        }
-    if( polling )
-        {
-        polling = false;
-        effects->stopMousePolling();
+        if( polling )
+            {
+            polling = false;
+            effects->stopMousePolling();
+            }
         }
     effects->addRepaint( cursorPos().x() - radius, cursorPos().y() - radius, 2*radius, 2*radius );
     }

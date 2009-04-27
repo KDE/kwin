@@ -161,11 +161,13 @@ void MagnifierEffect::zoomOut()
     {
     target_zoom /= 1.2;
     if( target_zoom < 1 )
-        target_zoom = 1;
-    if( polling )
         {
-        polling = false;
-        effects->stopMousePolling();
+        target_zoom = 1;
+        if( polling )
+            {
+            polling = false;
+            effects->stopMousePolling();
+            }
         }
     effects->addRepaint( magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
     }
@@ -173,9 +175,23 @@ void MagnifierEffect::zoomOut()
 void MagnifierEffect::toggle()
     {
     if( target_zoom == 1.0 )
+        {
         target_zoom = 2;
+        if( !polling )
+            {
+            polling = true;
+            effects->startMousePolling();
+            }
+        }
     else
+        {
         target_zoom = 1;
+        if( polling )
+            {
+            polling = false;
+            effects->stopMousePolling();
+            }
+        }
     effects->addRepaint( magnifierArea().adjusted( -FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH ));
     }
 

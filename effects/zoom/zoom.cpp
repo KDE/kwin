@@ -95,11 +95,13 @@ void ZoomEffect::zoomOut()
     {
     target_zoom /= 1.2;
     if( target_zoom < 1 )
-        target_zoom = 1;
-    if( polling )
         {
-        polling = false;
-        effects->stopMousePolling();
+        target_zoom = 1;
+        if( polling )
+            {
+            polling = false;
+            effects->stopMousePolling();
+            }
         }
     effects->addRepaintFull();
     }
@@ -107,6 +109,11 @@ void ZoomEffect::zoomOut()
 void ZoomEffect::actualSize()
     {
     target_zoom = 1;
+    if( polling )
+        {
+        polling = false;
+        effects->stopMousePolling();
+        }
     effects->addRepaintFull();
     }
 
