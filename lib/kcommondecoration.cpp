@@ -1259,7 +1259,7 @@ double KCommonDecorationUnstable::shadowSaturation( ShadowType type ) const
 
 void KCommonDecorationUnstable::repaintShadow()
     {
-    return static_cast<const KDecorationUnstable*>( decoration() )->repaintShadow();
+    return static_cast<KDecorationUnstable*>( decoration() )->repaintShadow();
     }
 bool KCommonDecorationUnstable::compositingActive() const
     {
