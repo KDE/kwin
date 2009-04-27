@@ -151,7 +151,8 @@ void ShaderEffect::postPaintScreen()
     if( mValid && mEnabled )
     {
         // Disable render texture
-        assert( effects->popRenderTarget() == mRenderTarget );
+        GLRenderTarget* target = effects->popRenderTarget();
+        assert( target == mRenderTarget );
         mTexture->bind();
 
         // Use the shader
