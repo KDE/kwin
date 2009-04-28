@@ -58,10 +58,8 @@ LogoutEffect::~LogoutEffect()
 
 void LogoutEffect::reconfigure( ReconfigureFlags )
     {
-    // Disable blur by default as some drivers don't correctly fallback if they don't
-    // support it and I have yet to work out a way of accurately detecting support.
     KConfigGroup conf = effects->effectConfig( "Logout" );
-    bool useBlur = conf.readEntry( "UseBlur", false );
+    bool useBlur = conf.readEntry( "UseBlur", true );
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     blurSupported = false;
@@ -137,7 +135,8 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( blurSupported && progress > 0.0 )
         {
-        assert( effects->popRenderTarget() == blurTarget );
+        GLRenderTarget* target = effects->popRenderTarget();
+        assert( target == blurTarget );
 
         // Render the blurred scene
         blurTexture->bind();
