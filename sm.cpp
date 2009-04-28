@@ -386,8 +386,8 @@ SessionSaveDoneHelper::SessionSaveDoneHelper()
     // set the required properties, mostly dummy values
     SmPropValue propvalue[ 5 ];
     SmProp props[ 5 ];
-    propvalue[ 0 ].length = sizeof( int );
-    int value0 = SmRestartNever; // so that this extra SM connection doesn't interfere
+    propvalue[ 0 ].length = sizeof( unsigned char);
+    unsigned char value0 = SmRestartNever; // so that this extra SM connection doesn't interfere
     propvalue[ 0 ].value = &value0;
     props[ 0 ].name = const_cast< char* >( SmRestartStyleHint );
     props[ 0 ].type = const_cast< char* >( SmCARD8 );
