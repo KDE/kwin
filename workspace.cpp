@@ -1001,10 +1001,11 @@ void Workspace::reconfigure()
  */
 bool Workspace::waitForCompositingSetup()
     {
-    if( !reconfigureTimer.isActive() )
-        return false;
-    reconfigureTimer.stop();
-    slotReconfigure();
+    if( reconfigureTimer.isActive() )
+        {
+        reconfigureTimer.stop();
+        slotReconfigure();
+        }
     return compositingActive();
     }
 
