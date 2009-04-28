@@ -771,17 +771,16 @@ void Workspace::cascadeDesktop()
     {
 // TODO XINERAMA this probably is not right for xinerama
     Q_ASSERT( block_stacking_updates == 0 );
-    ClientList::ConstIterator it(stackingOrder().begin());
     initPositioning->reinitCascading( currentDesktop());
     QRect area = clientArea( PlacementArea, QPoint( 0, 0 ), currentDesktop());
-    for (; it != stackingOrder().end(); ++it)
+    foreach( Client* client, stackingOrder() )
         {
-        if((!(*it)->isOnDesktop(currentDesktop())) ||
-           ((*it)->isMinimized())                  ||
-           ((*it)->isOnAllDesktops())              ||
-           (!(*it)->isMovable()) )
+        if((!client->isOnDesktop(currentDesktop())) ||
+           (client->isMinimized())                  ||
+           (client->isOnAllDesktops())              ||
+           (!client->isMovable()) )
             continue;
-        initPositioning->placeCascaded(*it, area);
+        initPositioning->placeCascaded(client, area);
         }
     }
 
