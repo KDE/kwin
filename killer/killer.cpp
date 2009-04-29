@@ -64,12 +64,13 @@ int main( int argc, char* argv[] )
 	return 1;
         }
     QString question = i18n(
-	"<p>Window with title \"<b>%2</b>\" is not responding. "
-	"This window belongs to application <b>%1</b> (PID=%3, hostname=%4).</p>"
-	"<p>Do you wish to terminate this application? (All unsaved data in this application will be lost.)</p>" ,
+	"<p>The window \"<b>%2</b>\" is not responding. "
+	"It belongs to the application <b>%1</b> (Process ID = %3, hostname = %4).</p>"
+	"<p>Do you wish to terminate the application process <em>including <b>all</b> of its child windows</em>?<br />"
+        "<b>Any unsaved data will be lost!</b></p>" ,
 	  appname, caption, QString::number( pid ), QString( hostname ) );
     app.updateUserTimestamp( timestamp );
-    if( KMessageBox::warningYesNoWId( id, question, QString(), KGuiItem(i18n("Terminate")), KGuiItem(i18n("Keep Running")) ) == KMessageBox::Yes )
+    if( KMessageBox::warningContinueCancelWId( id, question, QString(), KGuiItem(i18n("&Terminate application %1", appname), "edit-bomb") ) == KMessageBox::Continue )
         {    
 	if( hostname != "localhost" )
             {
