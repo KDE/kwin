@@ -1118,9 +1118,14 @@ void Workspace::slotReinitCompositing()
 
     // Restart compositing
     finishCompositing();
+    // resume compositing if suspended
+    compositingSuspended = false;
     setupCompositing();
     if( effects ) // setupCompositing() may fail
+        {
         effects->reconfigure();
+        emit compositingToggled( true );
+        }
     }
 
 void Workspace::loadDesktopSettings()
