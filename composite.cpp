@@ -920,6 +920,7 @@ void Client::finishCompositing()
     {
     Toplevel::finishCompositing();
     updateVisibility();
+    triggerDecorationRepaint();
     }
 
 bool Client::shouldUnredirect() const
