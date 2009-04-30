@@ -67,7 +67,7 @@ int main( int argc, char* argv[] )
 	"<p>The window \"<b>%2</b>\" is not responding. "
 	"It belongs to the application <b>%1</b> (Process ID = %3, hostname = %4).</p>"
 	"<p>Do you wish to terminate the application process <em>including <b>all</b> of its child windows</em>?<br />"
-        "<b>Any unsaved data will be lost!</b></p>" ,
+        "<b>Any unsaved data will be lost.</b></p>" ,
 	  appname, caption, QString::number( pid ), QString( hostname ) );
     app.updateUserTimestamp( timestamp );
     if( KMessageBox::warningContinueCancelWId( id, question, QString(), KGuiItem(i18n("&Terminate application %1", appname), "edit-bomb") ) == KMessageBox::Continue )
