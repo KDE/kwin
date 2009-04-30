@@ -112,8 +112,8 @@ bool BlurEffect::loadData()
     mWindowShader->bind();
     mWindowShader->setUniform("windowTex", 0);
     mWindowShader->setUniform("backgroundTex", 4);
-    mWindowShader->setUniform("textureWidth", (float)texw);
-    mWindowShader->setUniform("textureHeight", (float)texh);
+    mWindowShader->setUniform("blurTextureWidth", (float)texw);
+    mWindowShader->setUniform("blurTextureHeight", (float)texh);
     mWindowShader->unbind();
 
     return true;

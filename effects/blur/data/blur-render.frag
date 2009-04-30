@@ -1,7 +1,7 @@
 uniform sampler2D windowTex;
 uniform sampler2D backgroundTex;
-uniform float textureWidth;
-uniform float textureHeight;
+uniform float blurTextureWidth;
+uniform float blurTextureHeight;
 uniform float opacity;
 uniform float saturation;
 uniform float brightness;
@@ -10,7 +10,7 @@ uniform float brightness;
 // Converts pixel coordinates to texture coordinates
 vec2 pix2tex(vec2 pix)
 {
-    return vec2(pix.x / textureWidth, pix.y / textureHeight);
+    return vec2(pix.x / blurTextureWidth, pix.y / blurTextureHeight);
 }
 
 // Returns color of the window at given texture coordinate, taking into
