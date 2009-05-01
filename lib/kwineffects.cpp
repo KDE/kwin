@@ -1816,7 +1816,7 @@ void EffectFrame::updateUnstyledTexture()
     QPainter p( &tmp );
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
-    p.setBrush( Qt::white );
+    p.setBrush( Qt::black );
     p.drawEllipse( tmp.rect() );
     p.end();
 #undef CS
