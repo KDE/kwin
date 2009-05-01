@@ -67,8 +67,8 @@ void KCMRulesList::activeChanged()
     QListWidgetItem *item = rules_listbox->currentItem();
     int itemRow = rules_listbox->row(item);
 
-    if( item != NULL )
-        item->setSelected( true ); // make current==selected
+    if( item != NULL ) // make current==selected
+        rules_listbox->setCurrentItem( item, QItemSelectionModel::ClearAndSelect );
     modify_button->setEnabled( item != NULL );
     delete_button->setEnabled( item != NULL );
     moveup_button->setEnabled( item != NULL && itemRow > 0 );
@@ -83,7 +83,7 @@ void KCMRulesList::newClicked()
         return;
     int pos = rules_listbox->currentRow() + 1;
     rules_listbox->insertItem( pos , rule->description );
-    rules_listbox->item(pos)->setSelected( true );
+    rules_listbox->setCurrentRow( pos, QItemSelectionModel::ClearAndSelect );
     rules.insert( rules.begin() + pos, rule );
     emit changed( true );
     }
@@ -118,10 +118,9 @@ void KCMRulesList::moveupClicked()
     assert( pos != -1 );
     if( pos > 0 )
         {
-        QString txt = rules_listbox->item(pos)->text();
-        delete rules_listbox->takeItem( pos );
-        rules_listbox->insertItem( pos - 1 , txt );
-        rules_listbox->item(pos-1)->setSelected( true );
+        QListWidgetItem * item = rules_listbox->takeItem( pos );
+        rules_listbox->insertItem( pos - 1 , item );
+        rules_listbox->setCurrentItem( item, QItemSelectionModel::ClearAndSelect );
         Rules* rule = rules[ pos ];
         rules[ pos ] = rules[ pos - 1 ];
         rules[ pos - 1 ] = rule;
@@ -135,10 +134,9 @@ void KCMRulesList::movedownClicked()
     assert( pos != -1 );
     if( pos < int( rules_listbox->count()) - 1 )
         {
-        QString txt = rules_listbox->item(pos)->text();
-        delete rules_listbox->takeItem( pos );
-        rules_listbox->insertItem( pos + 1 , txt);
-        rules_listbox->item(pos+1)->setSelected( true );
+        QListWidgetItem * item = rules_listbox->takeItem( pos );
+        rules_listbox->insertItem( pos + 1 , item );
+        rules_listbox->setCurrentItem( item, QItemSelectionModel::ClearAndSelect );
         Rules* rule = rules[ pos ];
         rules[ pos ] = rules[ pos + 1 ];
         rules[ pos + 1 ] = rule;
