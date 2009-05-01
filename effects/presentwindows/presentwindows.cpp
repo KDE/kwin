@@ -28,6 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <kdebug.h>
 
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#include <kwinglutils.h>
+#endif
+
 #include <QMouseEvent>
 #include <QPainter>
 
@@ -256,6 +260,14 @@ void PresentWindowsEffect::paintWindow( EffectWindow *w, int mask, QRegion regio
                 QPoint point( rect.x() + rect.width() * 0.95,
                     rect.y() + rect.height() * 0.95 );
                 m_windowData[w].iconFrame->setPosition( point );
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+                if( effects->compositingType() == KWin::OpenGLCompositing && data.shader )
+                    {
+                    data.shader->setUniform( "textureWidth", 1.0f );
+                    data.shader->setUniform( "textureHeight", 1.0f );
+                    data.shader->setUniform( "opacity", (float)(0.9 * data.opacity * m_decalOpacity * 0.75) );
+                    }
+#endif
                 m_windowData[w].iconFrame->render( region, 0.9 * data.opacity * m_decalOpacity, 0.75 );
                 }
             if( m_showCaptions )
@@ -263,6 +275,14 @@ void PresentWindowsEffect::paintWindow( EffectWindow *w, int mask, QRegion regio
                 QPoint point( rect.x() + rect.width() / 2,
                     rect.y() + rect.height() / 2 );
                 m_windowData[w].textFrame->setPosition( point );
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+                if( effects->compositingType() == KWin::OpenGLCompositing && data.shader )
+                    {
+                    data.shader->setUniform( "textureWidth", 1.0f );
+                    data.shader->setUniform( "textureHeight", 1.0f );
+                    data.shader->setUniform( "opacity", (float)(0.9 * data.opacity * m_decalOpacity * 0.75) );
+                    }
+#endif
                 m_windowData[w].textFrame->render( region, 0.9 * data.opacity * m_decalOpacity, 0.75 );
                 }
             }
