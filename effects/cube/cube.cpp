@@ -84,6 +84,8 @@ CubeEffect::CubeEffect()
     , cylinderShader( 0 )
     , sphereShader( 0 )
     , zOrderingFactor( 0.0f )
+    , mAddedHeightCoeff1( 0.0f )
+    , mAddedHeightCoeff2( 0.0f )
     , capListCreated( false )
     , recompileList( true )
     , glList( 0 )
@@ -401,7 +403,16 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             // as we restrict with a PaintClipper painting on the current screen
             float scaleFactor = 1000000 * tan( 60.0 * M_PI / 360.0f )/rect.height();
             glScalef( 1.0, -1.0, 1.0 );
-            glTranslatef( 0.0, -rect.height()*2, 0.0 );
+
+            // TODO reflection is not correct when mixing manual (mouse) rotating with rotation by cursor keys
+            // there's also a small bug when zooming
+            float addedHeight1 = -sin( asin( float( rect.height() ) / mAddedHeightCoeff1 ) + fabs( manualVerticalAngle ) * M_PI / 180.0f ) * mAddedHeightCoeff1;
+            float addedHeight2 = -sin( asin( float( rect.height() ) / mAddedHeightCoeff2 ) + fabs( manualVerticalAngle ) * M_PI / 180.0f ) * mAddedHeightCoeff2 - addedHeight1;
+            if( manualVerticalAngle > 0.0f && effects->numberOfDesktops() & 1 )
+                glTranslatef( 0.0, cos( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0 );
+            else
+                glTranslatef( 0.0, sin( fabs( manualAngle ) * M_PI / 360.0f * float( effects->numberOfDesktops() ) ) * addedHeight2 + addedHeight1 - float( rect.height() ), 0.0 );
+
 
             glEnable( GL_CLIP_PLANE0 );
             reflectionPainting = true;
@@ -1961,6 +1972,9 @@ void CubeEffect::setActive( bool active )
             glTranslatef( 0.0, rect.height(), 0.0 );
             glClipPlane( GL_CLIP_PLANE0, eqn );
             glPopMatrix();
+            float temporaryCoeff = float( rect.width() ) / tan( M_PI / float( effects->numberOfDesktops() ) );
+            mAddedHeightCoeff1 = sqrt( float( rect.height() ) * float( rect.height() ) + temporaryCoeff * temporaryCoeff );
+            mAddedHeightCoeff2 = sqrt( float( rect.height() ) * float( rect.height() ) + float( rect.width() ) * float( rect.width() ) + temporaryCoeff * temporaryCoeff );
             }
         // create the needed GL lists
         glList = glGenLists(3);

@@ -153,6 +153,9 @@ class CubeEffect
         bool useZOrdering;
         float zOrderingFactor;
         bool useList;
+        // needed for reflection
+        float mAddedHeightCoeff1;
+        float mAddedHeightCoeff2;
 
         // GL lists
         bool capListCreated;
