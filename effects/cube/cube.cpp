@@ -190,35 +190,9 @@ void CubeEffect::loadConfig( QString config )
         QImage img = QImage( capPath );
         if( !img.isNull() )
             {
-            // change the alpha value of each pixel
-            for( int x=0; x<img.width(); x++ )
-                {
-                for( int y=0; y<img.height(); y++ )
-                    {
-                    QRgb pixel = img.pixel( x, y );
-                    if( x == 0 || x == img.width()-1 || y == 0 || y == img.height()-1 )
-                        img.setPixel( x, y, qRgba( capColor.red(), capColor.green(), capColor.blue(), 255*cubeOpacity ) );
-                    else
-                        {
-                        if( qAlpha(pixel) < 255 )
-                            {
-                            // Pixel is transparent - has to be blended with cap color
-                            int red   = (qAlpha(pixel)/255)*(qRed(pixel)/255) + (1 - qAlpha(pixel)/255 )*capColor.red();
-                            int green = (qAlpha(pixel)/255)*(qGreen(pixel)/255) + (1 - qAlpha(pixel)/255 )*capColor.green();
-                            int blue  = (qAlpha(pixel)/255)*(qBlue(pixel)/255) + (1 - qAlpha(pixel)/255 )*capColor.blue();
-                            int alpha = qAlpha(pixel) + (255 - qAlpha(pixel))*cubeOpacity;
-                            img.setPixel( x, y, qRgba( red, green, blue, alpha ) );
-                            }
-                        else
-                            {
-                            img.setPixel( x, y, qRgba( qRed(pixel), qGreen(pixel), qBlue(pixel), ((float)qAlpha(pixel))*cubeOpacity ) );
-                            }
-                        }
-                    }
-                }
             capTexture = new GLTexture( img );
             capTexture->setFilter( GL_LINEAR );
-            capTexture->setWrapMode( GL_CLAMP_TO_EDGE );
+            capTexture->setWrapMode( GL_CLAMP_TO_BORDER );
             }
         }
 
@@ -818,6 +792,30 @@ void CubeEffect::paintCap()
         capListCreated = true;
         glNewList( glList + 2, GL_COMPILE );
         glColor4f( capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity );
+        if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
+            {
+            // modulate the cap texture: cap color should be background for translucent pixels
+            // cube opacity should be used for all pixels
+            // blend with cap color
+            float color[4] = { capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity };
+            glActiveTexture( GL_TEXTURE0 );
+            capTexture->bind();
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL );
+            glColor4fv( color );
+
+            // set Opacity to cube opacity
+            // TODO: change opacity during start/stop animation
+            glActiveTexture( GL_TEXTURE1 );
+            capTexture->bind();
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS );
+            glTexEnvi( GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE );
+            glTexEnvi( GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT );
+            glTexEnvfv( GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, color );
+            glActiveTexture( GL_TEXTURE0 );
+            glTexParameterfv( GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color );
+            }
         glPushMatrix();
         switch( mode )
             {
@@ -835,6 +833,15 @@ void CubeEffect::paintCap()
                 break;
             }
         glPopMatrix();
+        if( texturedCaps && effects->numberOfDesktops() > 3 && capTexture )
+            {
+            glActiveTexture( GL_TEXTURE1 );
+            glDisable( capTexture->target() );
+            glActiveTexture( GL_TEXTURE0 );
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
+            glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
+            capTexture->unbind();
+            }
         glEndList();
         }
     }
@@ -847,8 +854,6 @@ void CubeEffect::paintCubeCap()
     float zTexture = rect.width()/2*tan(45.0f*M_PI/180.0f);
     float angle = 360.0f/effects->numberOfDesktops();
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
-    if( texture )
-        capTexture->bind();
     for( int i=0; i<effects->numberOfDesktops(); i++ )
         {
         int triangleRows = effects->numberOfDesktops()*5;
@@ -947,10 +952,6 @@ void CubeEffect::paintCubeCap()
             }
         glEnd();
         }
-    if( texture )
-        {
-        capTexture->unbind();
-        }
     }
 
 void CubeEffect::paintCylinderCap()
@@ -963,8 +964,6 @@ void CubeEffect::paintCylinderCap()
     float segment = radius/30.0f;
 
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
-    if( texture )
-        capTexture->bind();
     for( int i=1; i<=30; i++ )
         {
         glBegin( GL_TRIANGLE_STRIP );
@@ -985,10 +984,6 @@ void CubeEffect::paintCylinderCap()
             }
         glEnd();
         }
-    if( texture )
-        {
-        capTexture->unbind();
-        }
     }
 
 void CubeEffect::paintSphereCap()
@@ -1000,8 +995,6 @@ void CubeEffect::paintSphereCap()
     float angle = acos( (rect.height()*0.5)/radius )*180.0/M_PI;
     angle /= 30;
     bool texture = texturedCaps && effects->numberOfDesktops() > 3 && capTexture;
-    if( texture )
-        capTexture->bind();
     glPushMatrix();
     glTranslatef( 0.0, -rect.height()*0.5, 0.0 );
     glBegin( GL_QUADS );
@@ -1039,10 +1032,6 @@ void CubeEffect::paintSphereCap()
         }
     glEnd();
     glPopMatrix();
-    if( texture )
-        {
-        capTexture->unbind();
-        }
     }
 
 void CubeEffect::postPaintScreen()
