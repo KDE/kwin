@@ -54,15 +54,11 @@ KWinScreenEdgesConfig::KWinScreenEdgesConfig( QWidget* parent, const QVariantLis
     connect( m_ui->monitor, SIGNAL( changed() ), this, SLOT( changed() ));
 
     connect( m_ui->desktopSwitchCombo, SIGNAL( currentIndexChanged(int) ), this, SLOT( changed() ));
-    connect( m_ui->quickTileBox, SIGNAL( stateChanged(int) ), this, SLOT( changed() ));
-    connect( m_ui->quickMaximizeBox, SIGNAL( stateChanged(int) ), this, SLOT( changed() ));
     connect( m_ui->activationDelaySpin, SIGNAL( valueChanged(int) ), this, SLOT( changed() ));
     connect( m_ui->triggerCooldownSpin, SIGNAL( valueChanged(int) ), this, SLOT( changed() ));
 
     // Visual feedback of action group conflicts
     connect( m_ui->desktopSwitchCombo, SIGNAL( currentIndexChanged(int) ), this, SLOT( groupChanged() ));
-    connect( m_ui->quickTileBox, SIGNAL( stateChanged(int) ), this, SLOT( groupChanged() ));
-    connect( m_ui->quickMaximizeBox, SIGNAL( stateChanged(int) ), this, SLOT( groupChanged() ));
 
     if( CompositingPrefs::compositingPossible() )
         m_defaultPrefs.detect(); // Driver-specific config detection
@@ -80,23 +76,14 @@ void KWinScreenEdgesConfig::groupChanged()
     bool hide = false;
     if( m_ui->desktopSwitchCombo->currentIndex() == 2 )
         hide = true;
-    monitorHideEdge( ElectricTop, hide || m_ui->quickMaximizeBox->isChecked() );
-    monitorHideEdge( ElectricRight, hide || m_ui->quickTileBox->isChecked() );
+    monitorHideEdge( ElectricTop, hide );
+    monitorHideEdge( ElectricRight, hide );
     monitorHideEdge( ElectricBottom, hide );
-    monitorHideEdge( ElectricLeft, hide || m_ui->quickTileBox->isChecked() );
+    monitorHideEdge( ElectricLeft, hide );
 
     // Desktop switch conflicts
-    if( m_ui->quickTileBox->isChecked() || m_ui->quickMaximizeBox->isChecked() )
-        {
-        m_ui->desktopSwitchLabel->setEnabled( false );
-        m_ui->desktopSwitchCombo->setEnabled( false );
-        m_ui->desktopSwitchCombo->setCurrentIndex( 0 );
-        }
-    else
-        {
-        m_ui->desktopSwitchLabel->setEnabled( true );
-        m_ui->desktopSwitchCombo->setEnabled( true );
-        }
+    m_ui->desktopSwitchLabel->setEnabled( true );
+    m_ui->desktopSwitchCombo->setEnabled( true );
     }
 
 void KWinScreenEdgesConfig::load()
@@ -108,8 +95,6 @@ void KWinScreenEdgesConfig::load()
     KConfigGroup config( m_config, "Windows" );
 
     m_ui->desktopSwitchCombo->setCurrentIndex( config.readEntry( "ElectricBorders", 0 ));
-    m_ui->quickTileBox->setChecked( config.readEntry( "QuickTile", false ));
-    m_ui->quickMaximizeBox->setChecked( config.readEntry( "QuickMaximize", false ));
     m_ui->activationDelaySpin->setValue( config.readEntry( "ElectricBorderDelay", 150 ));
     m_ui->triggerCooldownSpin->setValue( config.readEntry( "ElectricBorderCooldown", 350 ));
 
@@ -125,8 +110,6 @@ void KWinScreenEdgesConfig::save()
     KConfigGroup config( m_config, "Windows" );
 
     config.writeEntry( "ElectricBorders", m_ui->desktopSwitchCombo->currentIndex() );
-    config.writeEntry( "QuickTile", m_ui->quickTileBox->isChecked() );
-    config.writeEntry( "QuickMaximize", m_ui->quickMaximizeBox->isChecked() );
     config.writeEntry( "ElectricBorderDelay", m_ui->activationDelaySpin->value() );
     config.writeEntry( "ElectricBorderCooldown", m_ui->triggerCooldownSpin->value() );
 
@@ -144,8 +127,6 @@ void KWinScreenEdgesConfig::defaults()
     monitorDefaults();
 
     m_ui->desktopSwitchCombo->setCurrentIndex( 0 );
-    m_ui->quickTileBox->setChecked( false );
-    m_ui->quickMaximizeBox->setChecked( false );
     m_ui->activationDelaySpin->setValue( 150 );
     m_ui->triggerCooldownSpin->setValue( 350 );
 

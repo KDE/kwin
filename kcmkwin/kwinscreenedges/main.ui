@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>582</width>
-    <height>428</height>
+    <width>713</width>
+    <height>439</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -119,27 +119,7 @@
       <string>Action Groups</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="0" colspan="2">
-       <widget class="QCheckBox" name="quickTileBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>&amp;Tile windows by dragging them to the side of the screen</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0" colspan="2">
-       <widget class="QCheckBox" name="quickMaximizeBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Ma&amp;ximize windows by dragging them to the top of the screen</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0" colspan="2">
        <spacer name="verticalSpacer_3">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -267,8 +247,6 @@
  <tabstops>
   <tabstop>monitor</tabstop>
   <tabstop>desktopSwitchCombo</tabstop>
-  <tabstop>quickTileBox</tabstop>
-  <tabstop>quickMaximizeBox</tabstop>
   <tabstop>activationDelaySpin</tabstop>
   <tabstop>triggerCooldownSpin</tabstop>
  </tabstops>
