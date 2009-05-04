@@ -606,10 +606,12 @@ QPoint SceneXrender::Window::mapToScreen( int mask, const WindowPaintData &data,
 void SceneXrender::Window::prepareTempPixmap(const QPixmap *left, const QPixmap *top,
                                              const QPixmap *right, const QPixmap *bottom)
     {
+    const QRect r = static_cast<Client*>( toplevel )->decorationRect();
+
     if( !temp_pixmap )
-        temp_pixmap = new QPixmap( width(), height() );
-    else if( temp_pixmap->width() < width() || temp_pixmap->height() < height() )
-        *temp_pixmap = QPixmap( width(), height() );
+        temp_pixmap = new QPixmap( r.width(), r.height() );
+    else if( temp_pixmap->width() < r.width() || temp_pixmap->height() < r.height() )
+        *temp_pixmap = QPixmap( r.width(), r.height() );
 
     temp_pixmap->fill( Qt::transparent );
 
@@ -619,9 +621,9 @@ void SceneXrender::Window::prepareTempPixmap(const QPixmap *left, const QPixmap 
     XRenderComposite( dpy, PictOpSrc, left->x11PictureHandle(), None, temp_pixmap->x11PictureHandle(),
                       0, 0, 0, 0, 0, top->height(), left->width(), left->height() );
     XRenderComposite( dpy, PictOpSrc, right->x11PictureHandle(), None, temp_pixmap->x11PictureHandle(),
-                      0, 0, 0, 0, width() - right->width(), top->height(), right->width(), right->height() );
+                      0, 0, 0, 0, r.width() - right->width(), top->height(), right->width(), right->height() );
     XRenderComposite( dpy, PictOpSrc, bottom->x11PictureHandle(), None, temp_pixmap->x11PictureHandle(),
-                      0, 0, 0, 0, 0, height() - bottom->height(), bottom->width(), bottom->height() );
+                      0, 0, 0, 0, 0, r.height() - bottom->height(), bottom->width(), bottom->height() );
     }
 
 // paint the window
@@ -660,7 +662,12 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     double xscale = 1;
     double yscale = 1;
     bool scaled = false;
-    transformed_shape = shape();
+
+    Client *client = dynamic_cast<Client*>( toplevel ); 
+    if ( client && Workspace::self()->decorationHasAlpha() )
+        transformed_shape = QRegion( client->decorationRect() );
+    else
+        transformed_shape = shape();
 
     XTransform xform = {{
         { XDoubleToFixed( 1 ), XDoubleToFixed( 0 ), XDoubleToFixed( 0 ) },
@@ -730,7 +737,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
                 transformed_shape = QRegion();
                 }
             }
-        if( Client *client = dynamic_cast<Client*>( toplevel ) )
+        if( client )
             {
             if( !client->noBorder() )
                 {
@@ -747,10 +754,8 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
 
                 if( !scaled )
                     {
-                    QRect tr( QPoint( 0, 0 ), top->size() );
-                    QRect lr( QPoint( 0, top->height() ), left->size() );
-                    QRect rr( QPoint( width() - right->width(), top->height() ), right->size() );
-                    QRect br( QPoint( 0, height() - bottom->height() ), bottom->size() );
+                    QRect tr, lr, rr, br;
+                    client->layoutDecorationRects( lr, tr, rr, br, Client::WindowRelative );
 
                     tr = mapToScreen( mask, data, tr );
                     lr = mapToScreen( mask, data, lr );
@@ -768,10 +773,11 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
                     }
                 else
                     {
+                    const QRect r = mapToScreen( mask, data, client->decorationRect() );
                     prepareTempPixmap( left, top, right, bottom );
                     XRenderSetPictureTransform( dpy, temp_pixmap->x11PictureHandle(), &xform );
                     XRenderComposite( dpy, PictOpOver, temp_pixmap->x11PictureHandle(), alpha, buffer,
-                                      0, 0, 0, 0, wr.x(), wr.y(), wr.width(), wr.height() );
+                                      0, 0, 0, 0, r.x(), r.y(), r.width(), r.height() );
                     XRenderSetPictureTransform( dpy, temp_pixmap->x11PictureHandle(), &identity );
                     }
                 }

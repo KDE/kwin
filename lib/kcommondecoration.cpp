@@ -178,7 +178,12 @@ void KCommonDecoration::borders( int& left, int& right, int& top, int& bottom ) 
 
 void KCommonDecoration::updateLayout() const
 {
-    QRect r = widget()->rect();
+    const int paddingLeft   = layoutMetric(LM_OuterPaddingLeft);
+    const int paddingTop    = layoutMetric(LM_OuterPaddingTop);
+    const int paddingRight  = layoutMetric(LM_OuterPaddingRight);
+    const int paddingBottom = layoutMetric(LM_OuterPaddingBottom);
+
+    QRect r = widget()->rect().adjusted(paddingLeft, paddingTop, -paddingRight, -paddingBottom);
     int r_x, r_y, r_x2, r_y2;
     r.getCoords(&r_x, &r_y, &r_x2, &r_y2);
 
@@ -729,7 +734,12 @@ KCommonDecoration::Position KCommonDecoration::mousePosition(const QPoint &point
     const int corner = 18+3*layoutMetric(LM_BorderBottom, false)/2;
     Position pos = PositionCenter;
 
-    QRect r = widget()->rect();
+    const int paddingLeft   = layoutMetric(LM_OuterPaddingLeft);
+    const int paddingTop    = layoutMetric(LM_OuterPaddingTop);
+    const int paddingRight  = layoutMetric(LM_OuterPaddingRight);
+    const int paddingBottom = layoutMetric(LM_OuterPaddingBottom);
+
+    QRect r = widget()->rect().adjusted(paddingLeft, paddingTop, -paddingRight, -paddingBottom);
     int r_x, r_y, r_x2, r_y2;
     r.getCoords(&r_x, &r_y, &r_x2, &r_y2);
     int p_x = point.x();
@@ -876,8 +886,14 @@ bool KCommonDecoration::isToolWindow() const
 
 QRect KCommonDecoration::titleRect() const
 {
+    const int pl = layoutMetric(LM_OuterPaddingLeft);
+    const int pt = layoutMetric(LM_OuterPaddingTop);
+    const int pr = layoutMetric(LM_OuterPaddingRight);
+    const int pb = layoutMetric(LM_OuterPaddingBottom);
+
     int r_x, r_y, r_x2, r_y2;
-    widget()->rect().getCoords(&r_x, &r_y, &r_x2, &r_y2);
+    widget()->rect().adjusted(pl, pt, -pr, -pb).getCoords(&r_x, &r_y, &r_x2, &r_y2);
+
     const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
     const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
     const int titleEdgeRight = layoutMetric(LM_TitleEdgeRight);

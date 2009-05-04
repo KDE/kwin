@@ -1162,7 +1162,7 @@ bool Client::eventFilter( QObject* o, QEvent* e )
         // This will ensure that decoration->width() etc. and decoration->widget()->width() will be in sync.
         // These events only seem to be delayed events from initial resizing before show() was called
         // on the decoration widget.
-        if( ev->size() != size())
+        if( ev->size() != (size() + QSize( padding_left + padding_right, padding_top + padding_bottom ) ) )
             return true;
         // HACK: Avoid decoration redraw delays. On resize Qt sets WA_WStateConfigPending
         // which delays all painting until a matching ConfigureNotify event comes.
@@ -1303,7 +1303,7 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         {
         mode = mousePosition( QPoint( x, y ));
         buttonDown = true;
-        moveOffset = QPoint( x, y );
+        moveOffset = QPoint( x - padding_left, y - padding_top );
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
         startDelayedMoveResize();

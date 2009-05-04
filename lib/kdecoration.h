@@ -186,6 +186,10 @@ public:
         ABILITYCOLOR_END, ///< @internal
         // compositing
         AbilityCompositingShadow = 3000, ///< decoration supports window shadows
+        AbilityUsesAlphaChannel = 3001, ///< The decoration isn't clipped to the mask when compositing is enabled.
+                                        ///  The mask is still used to define the input region and the blurred
+                                        ///  region, when the blur plugin is enabled.
+                                        ///  @since 4.3
         // TODO colors for individual button types
         ABILITY_DUMMY = 10000000
         };
@@ -871,10 +875,10 @@ class KWIN_EXPORT KDecorationUnstable
     : public KDecoration
     {
     Q_OBJECT
+
     public:
         KDecorationUnstable( KDecorationBridge* bridge, KDecorationFactory* factory );
         virtual ~KDecorationUnstable();
-
         /**
          * This function should return the positions of the shadow quads to be rendered.
          * All positions are relative to the window's top-left corner. Only "bordered"
@@ -893,7 +897,17 @@ class KWIN_EXPORT KDecorationUnstable
          * This function should return the desired saturation of the shadow.
          */
         virtual double shadowSaturation( ShadowType type ) const;
-
+        /**
+         * This function can return additional padding values that are added outside the
+         * borders of the window, and can be used by the decoration if it wants to paint
+         * outside the frame.
+         *
+         * The typical use case is for drawing a drop shadow or glowing effect around the window.
+         *
+         * The area outside the frame cannot receive input, and when compositing is disabled,
+         * painting is clipped to the mask, or the window frame if no mask is defined.
+         */
+        virtual void padding(int &left, int &right, int &top, int &bottom) const;
         /**
          * Force a repaint of the shadow. Automatically called when the window changes states.
          */

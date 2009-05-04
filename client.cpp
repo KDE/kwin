@@ -325,6 +325,10 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         XReparentWindow( display(), decoration->widget()->winId(), frameId(), 0, 0 );
         decoration->widget()->lower();
         decoration->borders( border_left, border_right, border_top, border_bottom );
+        padding_left = padding_right = padding_top = padding_bottom = 0;
+        if (KDecorationUnstable *deco2 = dynamic_cast<KDecorationUnstable*>(decoration))
+            deco2->padding( padding_left, padding_right, padding_top, padding_bottom );
+        XMoveWindow( display(), decoration->widget()->winId(), -padding_left, -padding_top );
         move( calculateGravitation( false ));
         plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
         do_show = true;
@@ -376,7 +380,16 @@ bool Client::checkBorderSizes( bool also_resize )
     {
     if( decoration == NULL )
         return false;
-    int new_left, new_right, new_top, new_bottom;
+
+    int new_left = 0, new_right = 0, new_top = 0, new_bottom = 0;
+    if (KDecorationUnstable *deco2 = dynamic_cast<KDecorationUnstable*>(decoration))
+        deco2->padding( new_left, new_right, new_top, new_bottom );
+    if (padding_left != new_left || padding_top != new_top)
+        XMoveWindow( display(), decoration->widget()->winId(), -new_left, -new_top );
+    padding_left = new_left;
+    padding_right = new_right;
+    padding_top = new_top;
+    padding_bottom = new_bottom;
     decoration->borders( new_left, new_right, new_top, new_bottom );
     if( new_left == border_left && new_right == border_right &&
         new_top == border_top && new_bottom == border_bottom )
@@ -407,16 +420,31 @@ void Client::triggerDecorationRepaint()
         decoration->widget()->update();
     }
 
+void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, Client::CoordinateMode mode) const
+    {
+    QRect r = decoration->widget()->rect();
+    if (mode == WindowRelative)
+        r.translate(-padding_left, -padding_top);
+
+    top = QRect(r.x(), r.y(), r.width(), padding_top + border_top);
+    bottom = QRect(r.x(), r.y() + r.height() - padding_bottom - border_bottom,
+                   r.width(), padding_bottom + border_bottom);
+    left = QRect(r.x(), r.y() + top.height(),
+                 padding_left + border_left, r.height() - top.height() - bottom.height());
+    right = QRect(r.x() + r.width() - padding_right - border_right, r.y() + top.height(),
+                  padding_right + border_right, r.height() - top.height() - bottom.height());
+    }
+
 void Client::repaintDecorationPending()
     {
-        if ( compositing() )
-            {
-            // The scene will update the decoration pixmaps in the next painting pass
-            const QRegion r = paintRedirector->pendingRegion();
-            Workspace::self()->addRepaint( r.translated( x(), y() ) );
-            }
-        else
-            ensureDecorationPixmapsPainted();
+    if ( compositing() )
+        {
+        // The scene will update the decoration pixmaps in the next painting pass
+        const QRegion r = paintRedirector->pendingRegion();
+        Workspace::self()->addRepaint( r.translated( x() - padding_left, y() - padding_top ) );
+        }
+    else
+        ensureDecorationPixmapsPainted();
     }
 
 bool Client::decorationPixmapRequiresRepaint()
@@ -438,10 +466,8 @@ void Client::ensureDecorationPixmapsPainted()
 
     QPixmap p = paintRedirector->performPendingPaint();
 
-    const QRect lr( 0, border_top, border_left, height() - border_top - border_bottom);
-    const QRect rr( width() - border_right, border_top, border_right, height() - border_top - border_bottom);
-    const QRect tr( 0, 0, width(), border_top );
-    const QRect br( 0, height() - border_bottom, width(), border_bottom );
+    QRect lr, rr, tr, br;
+    layoutDecorationRects( lr, tr, rr, br, DecorationRelative );
 
     repaintDecorationPixmap( decorationPixmapLeft, lr, p, r );
     repaintDecorationPixmap( decorationPixmapRight, rr, p, r );
@@ -451,6 +477,7 @@ void Client::ensureDecorationPixmapsPainted()
     if (!compositing())
         {
         // Blit the pixmaps to the frame window
+        layoutDecorationRects( lr, tr, rr, br, WindowRelative );
 #ifdef HAVE_XRENDER
         if (Extensions::renderAvailable())
             {
@@ -505,10 +532,13 @@ void Client::repaintDecorationPixmap( QPixmap& pix, const QRect& r, const QPixma
 
 void Client::resizeDecorationPixmaps()
     {
-    decorationPixmapLeft = QPixmap( border_left, height() - border_top - border_bottom );
-    decorationPixmapRight = QPixmap( border_right, height() - border_top - border_bottom );
-    decorationPixmapTop = QPixmap( width(), border_top );
-    decorationPixmapBottom = QPixmap( width(), border_bottom );
+    QRect lr, rr, tr, br;
+    layoutDecorationRects( lr, tr, rr, br, DecorationRelative );
+
+    decorationPixmapTop = QPixmap( tr.size() );
+    decorationPixmapBottom = QPixmap( br.size() );
+    decorationPixmapLeft = QPixmap( lr.size() );
+    decorationPixmapRight = QPixmap( rr.size() );
 #ifdef HAVE_XRENDER
     if ( Extensions::renderAvailable() ) {
         // Make sure the pixmaps are created with alpha channels
@@ -580,14 +610,15 @@ void Client::resizeDecoration( const QSize& s )
     {
     if( decoration == NULL )
         return;
-    QSize oldsize = decoration->widget()->size();
-    decoration->resize( s );
-    if( oldsize == s )
+    QSize newSize = s + QSize(padding_left + padding_right, padding_top + padding_bottom);
+    QSize oldSize = decoration->widget()->size();
+    decoration->resize( newSize );
+    if( oldSize == newSize )
         {
-        QResizeEvent e( s, oldsize );
+        QResizeEvent e( newSize, oldSize );
         QApplication::sendEvent( decoration->widget(), &e );
         }
-    else // oldsize != s
+    else // oldSize != newSize
         {
         resizeDecorationPixmaps();
         }
@@ -678,9 +709,10 @@ void Client::updateInputShape()
 
 void Client::setMask( const QRegion& reg, int mode )
     {
-    if( _mask == reg )
+    QRegion r = reg.translated( -padding_left, -padding_right ) & QRect( 0, 0, width(), height() );
+    if( _mask == r )
         return;
-    _mask = reg;
+    _mask = r;
     Window shape_window = frameId();
     if( shape() )
         { // The same way of applying a shape without strange intermediate states like above
@@ -689,13 +721,13 @@ void Client::setMask( const QRegion& reg, int mode )
                 0, 0, 1, 1, 0, 0, 0 );
         shape_window = shape_helper_window;
         }
-    if( reg.isEmpty() )
+    if( _mask.isEmpty() )
         XShapeCombineMask( display(), shape_window, ShapeBounding, 0, 0, None, ShapeSet );
     else if( mode == X::Unsorted )
-        XShapeCombineRegion( display(), shape_window, ShapeBounding, 0, 0, reg.handle(), ShapeSet );
+        XShapeCombineRegion( display(), shape_window, ShapeBounding, 0, 0, _mask.handle(), ShapeSet );
     else
         {
-        QVector< QRect > rects = reg.rects();
+        QVector< QRect > rects = _mask.rects();
         XRectangle* xrects = new XRectangle[rects.count()];
         for( int i = 0; i < rects.count(); ++i )
             {

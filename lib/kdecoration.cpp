@@ -440,6 +440,10 @@ double KDecorationUnstable::opacity() const
     return static_cast< KDecorationBridgeUnstable* >( bridge_ )->opacity();
     }
 
+void KDecorationUnstable::padding(int &left, int &right, int &top, int &bottom) const
+    {
+    left = right = top = bottom = 0;
+    }
 
 KDecorationOptions::KDecorationOptions()
     : d( new KDecorationOptionsPrivate )

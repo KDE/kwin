@@ -1368,8 +1368,6 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     // paint only requested areas
     if( region != infiniteRegion()) // avoid integer overflow
         region.translate( -x(), -y());
-    if(( mask & ( PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED )) == 0 )
-        region &= shape();
     if( region.isEmpty())
         return;
     if( !bindTexture())
@@ -1464,10 +1462,9 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             const QPixmap *bottom = client->bottomDecoPixmap();
 
             WindowQuadList topList, leftList, rightList, bottomList;
-            QRect topRect( QPoint(0, 0), top->size() );
-            QRect leftRect( QPoint(0, client->clientPos().y()), left->size() );
-            QRect rightRect( QPoint(client->width() - right->width(), client->clientPos().y()), right->size() );
-            QRect bottomRect( QPoint(0, client->height()-bottom->height()), bottom->size() );
+            QRect topRect, leftRect, rightRect, bottomRect;
+            client->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect, Client::WindowRelative);
+
             foreach( WindowQuad quad, decoration )
                 {
                 if( topRect.contains( QPoint( quad.originalLeft(), quad.originalTop() ) ) )

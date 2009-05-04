@@ -313,6 +313,17 @@ class Client
         bool decorationPixmapRequiresRepaint();
         void ensureDecorationPixmapsPainted();
 
+        QRect decorationRect() const {
+            return decoration ? decoration->widget()->rect().translated(-padding_left, -padding_top)
+                        : QRect(0, 0, width(), height());
+        }
+
+        enum CoordinateMode {
+            DecorationRelative, // Relative to the top left corner of the decoration
+            WindowRelative      // Relative to the top left corner of the window
+        };
+        void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, CoordinateMode mode) const;
+
     private slots:
         void autoRaise();
         void shadeHover();
@@ -554,6 +565,7 @@ class Client
         QTimer* sync_timeout;
         bool sync_resize_pending;
         int border_left, border_right, border_top, border_bottom;
+        int padding_left, padding_right, padding_top, padding_bottom;
         QRegion _mask;
         static bool check_active_modal; ///< \see Client::checkActiveModal()
         KShortcut _shortcut;

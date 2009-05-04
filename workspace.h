@@ -365,6 +365,8 @@ class Workspace : public QObject, public KDecorationDefines
         bool rulesUpdatesDisabled() const;
 
         bool hasDecorationShadows() const;
+        bool decorationHasAlpha() const;
+
         QList< QList<QImage> > decorationShadowTextures();
         int decorationShadowTextureList( ShadowType type ) const;
         QList<QRect> decorationShadowQuads( ShadowType type, QSize size ) const;
@@ -1179,6 +1181,11 @@ inline void Workspace::checkCompositeTimer()
 inline bool Workspace::hasDecorationShadows() const
     {
     return mgr->factory()->supports( AbilityCompositingShadow );
+    }
+
+inline bool Workspace::decorationHasAlpha() const
+    {
+    return mgr->factory()->supports( AbilityUsesAlphaChannel );
     }
 
 inline QList< QList<QImage> > Workspace::decorationShadowTextures()

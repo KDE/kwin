@@ -140,3 +140,12 @@ double KCommonDecorationWrapper::shadowSaturation( ShadowType type ) const
         return decoration2->shadowSaturation( type );
     return 1.0;
     }
+
+void KCommonDecorationWrapper::padding(int &left, int &right, int &top, int &bottom) const
+    {
+    left   = decoration->layoutMetric(KCommonDecoration::LM_OuterPaddingLeft);
+    right  = decoration->layoutMetric(KCommonDecoration::LM_OuterPaddingRight);
+    top    = decoration->layoutMetric(KCommonDecoration::LM_OuterPaddingTop);
+    bottom = decoration->layoutMetric(KCommonDecoration::LM_OuterPaddingBottom);
+    }
+
