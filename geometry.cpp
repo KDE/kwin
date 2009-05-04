@@ -2016,9 +2016,11 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
         if( effects != NULL )
             static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geom_before_block );
         }
-    addWorkspaceRepaint( geom_before_block );
-    addWorkspaceRepaint( geom );
+    const QRect deco_rect = decorationRect().translated( geom.x(), geom.y() );
+    addWorkspaceRepaint( deco_rect_before_block );
+    addWorkspaceRepaint( deco_rect );
     geom_before_block = geom;
+    deco_rect_before_block = deco_rect;
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -2086,9 +2088,11 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
         scene->windowGeometryShapeChanged( this );
     if( effects != NULL )
         static_cast<EffectsHandlerImpl*>(effects)->windowGeometryShapeChanged( effectWindow(), geom_before_block );
-    addWorkspaceRepaint( geom_before_block );
-    addWorkspaceRepaint( geom );
+    const QRect deco_rect = decorationRect().translated( geom.x(), geom.y() );
+    addWorkspaceRepaint( deco_rect_before_block );
+    addWorkspaceRepaint( deco_rect );
     geom_before_block = geom;
+    deco_rect_before_block = deco_rect;
     }
 
 /*!
@@ -2125,9 +2129,11 @@ void Client::move( int x, int y, ForceGeometry_t force )
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
     // client itself is not damaged
-    addWorkspaceRepaint( geom_before_block );
-    addWorkspaceRepaint( geom ); // trigger repaint of window's new location
+    const QRect deco_rect = decorationRect().translated( geom.x(), geom.y() );
+    addWorkspaceRepaint( deco_rect_before_block );
+    addWorkspaceRepaint( deco_rect ); // trigger repaint of window's new location
     geom_before_block = geom;
+    deco_rect_before_block = deco_rect;
     }
 
 void Client::blockGeometryUpdates( bool block )

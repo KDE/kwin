@@ -556,6 +556,7 @@ class Client
             };
         PendingGeometry_t pending_geometry_update;
         QRect geom_before_block;
+        QRect deco_rect_before_block;
         bool shade_geometry_change;
 #ifdef HAVE_XSYNC
         XSyncCounter sync_counter;
