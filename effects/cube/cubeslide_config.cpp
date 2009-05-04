@@ -46,6 +46,7 @@ CubeSlideEffectConfig::CubeSlideEffectConfig(QWidget* parent, const QVariantList
     connect(m_ui->rotationDurationSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->dontSlidePanelsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->dontSlideStickyWindowsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->usePagerBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     load();
     }
@@ -59,10 +60,13 @@ void CubeSlideEffectConfig::load()
     int duration       = conf.readEntry( "RotationDuration", 0 );
     bool dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
     bool dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", false );
+    bool usePager = conf.readEntry( "UsePagerLayout", true );
 
     m_ui->rotationDurationSpin->setValue( duration );
     m_ui->dontSlidePanelsBox->setChecked( dontSlidePanels );
     m_ui->dontSlideStickyWindowsBox->setChecked( dontSlideStickyWindows );
+    m_ui->usePagerBox->setChecked( usePager );
+
 
     emit changed(false);
     }
@@ -74,6 +78,7 @@ void CubeSlideEffectConfig::save()
     conf.writeEntry( "RotationDuration", m_ui->rotationDurationSpin->value() );
     conf.writeEntry( "DontSlidePanels", m_ui->dontSlidePanelsBox->isChecked() );
     conf.writeEntry( "DontSlideStickyWindows", m_ui->dontSlideStickyWindowsBox->isChecked() );
+    conf.writeEntry( "UsePagerLayout", m_ui->usePagerBox->isChecked() );
 
     conf.sync();
 
@@ -86,6 +91,7 @@ void CubeSlideEffectConfig::defaults()
     m_ui->rotationDurationSpin->setValue( 0 );
     m_ui->dontSlidePanelsBox->setChecked( true );
     m_ui->dontSlideStickyWindowsBox->setChecked( false );
+    m_ui->usePagerBox->setChecked( true );
     emit changed(true);
     }
 

@@ -63,6 +63,7 @@ class CubeSlideEffect
         QSet<EffectWindow*> stickyWindows;
         bool dontSlidePanels;
         bool dontSlideStickyWindows;
+        bool usePagerLayout;
     };
 }
 

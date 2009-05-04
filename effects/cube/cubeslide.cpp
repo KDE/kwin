@@ -55,6 +55,7 @@ void CubeSlideEffect::reconfigure( ReconfigureFlags )
     timeLine.setDuration( rotationDuration );
     dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
     dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", false );
+    usePagerLayout = conf.readEntry( "UsePagerLayout", true );
     }
 
 void CubeSlideEffect::prePaintScreen( ScreenPrePaintData& data, int time)
@@ -128,14 +129,28 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
         case Left:
             firstFaceRot.axis = RotationData::YAxis;
             secondFaceRot.axis = RotationData::YAxis;
-            secondDesktop = effects->desktopToLeft( front_desktop, true );
+            if( usePagerLayout )
+                secondDesktop = effects->desktopToLeft( front_desktop, true );
+            else
+                {
+                secondDesktop = front_desktop - 1;
+                if( secondDesktop == 0 )
+                    secondDesktop = effects->numberOfDesktops();
+                }
             firstFaceRot.angle = 90.0f*timeLine.value();
             secondFaceRot.angle = -90.0f*(1.0f - timeLine.value());
             break;
         case Right:
             firstFaceRot.axis = RotationData::YAxis;
             secondFaceRot.axis = RotationData::YAxis;
-            secondDesktop = effects->desktopToRight( front_desktop, true );
+            if( usePagerLayout )
+                secondDesktop = effects->desktopToRight( front_desktop, true );
+            else
+                {
+                secondDesktop = front_desktop + 1;
+                if( secondDesktop > effects->numberOfDesktops() )
+                    secondDesktop = 1;
+                }
             firstFaceRot.angle = -90.0f*timeLine.value();
             secondFaceRot.angle = 90.0f*(1.0f - timeLine.value());
             break;
@@ -400,10 +415,24 @@ void CubeSlideEffect::postPaintScreen()
             switch (direction)
                 {
                 case Left:
-                    front_desktop = effects->desktopToLeft( front_desktop, true );
+                    if( usePagerLayout )
+                        front_desktop = effects->desktopToLeft( front_desktop, true );
+                    else
+                        {
+                        front_desktop--;
+                        if( front_desktop == 0 )
+                            front_desktop = effects->numberOfDesktops();
+                        }
                     break;
                 case Right:
-                    front_desktop = effects->desktopToRight( front_desktop, true );
+                    if( usePagerLayout )
+                        front_desktop = effects->desktopToRight( front_desktop, true );
+                    else
+                        {
+                        front_desktop++;
+                        if( front_desktop > effects->numberOfDesktops() )
+                            front_desktop = 1;
+                        }
                     break;
                 case Upwards:
                     front_desktop = effects->desktopAbove( front_desktop, true );
@@ -441,10 +470,24 @@ void CubeSlideEffect::desktopChanged( int old )
         switch (direction)
             {
             case Left:
-                old = effects->desktopToLeft( front_desktop, true );
+                if( usePagerLayout )
+                    old = effects->desktopToLeft( front_desktop, true );
+                else
+                    {
+                    old = front_desktop - 1;
+                    if( old == 0 )
+                        old = effects->numberOfDesktops();
+                    }
                 break;
             case Right:
-                old = effects->desktopToRight( front_desktop, true );
+                if( usePagerLayout )
+                    old = effects->desktopToRight( front_desktop, true );
+                else
+                    {
+                    old = front_desktop + 1;
+                    if( old > effects->numberOfDesktops() )
+                        old = 1;
+                    }
                 break;
             case Upwards:
                 old = effects->desktopAbove( front_desktop, true );
@@ -454,46 +497,73 @@ void CubeSlideEffect::desktopChanged( int old )
                 break;
             }
         }
-    // calculate distance in respect to pager
-    QPoint diff = effects->desktopGridCoords( effects->currentDesktop() ) - effects->desktopGridCoords( old );
-    if( qAbs( diff.x() ) > effects->desktopGridWidth()/2 )
+    if( usePagerLayout )
         {
-        int sign = -1 * (diff.x()/qAbs( diff.x() ));
-        diff.setX( sign * ( effects->desktopGridWidth() - qAbs( diff.x() )));
-        }
-    if( diff.x() > 0 )
-        {
-        for( int i=0; i<diff.x(); i++ )
+        // calculate distance in respect to pager
+        QPoint diff = effects->desktopGridCoords( effects->currentDesktop() ) - effects->desktopGridCoords( old );
+        if( qAbs( diff.x() ) > effects->desktopGridWidth()/2 )
             {
-            slideRotations.enqueue( Right );
+            int sign = -1 * (diff.x()/qAbs( diff.x() ));
+            diff.setX( sign * ( effects->desktopGridWidth() - qAbs( diff.x() )));
+            }
+        if( diff.x() > 0 )
+            {
+            for( int i=0; i<diff.x(); i++ )
+                {
+                slideRotations.enqueue( Right );
+                }
+            }
+        else if( diff.x() < 0 )
+            {
+            diff.setX( -diff.x() );
+            for( int i=0; i<diff.x(); i++ )
+                {
+                slideRotations.enqueue( Left );
+                }
+            }
+        if( qAbs( diff.y() ) > effects->desktopGridHeight()/2 )
+            {
+            int sign = -1 * (diff.y()/qAbs( diff.y() ));
+            diff.setY( sign * ( effects->desktopGridHeight() - qAbs( diff.y() )));
+            }
+        if( diff.y() > 0 )
+            {
+            for( int i=0; i<diff.y(); i++ )
+                {
+                slideRotations.enqueue( Downwards );
+                }
+            }
+        if( diff.y() < 0 )
+            {
+            diff.setY( -diff.y() );
+            for( int i=0; i<diff.y(); i++ )
+                {
+                slideRotations.enqueue( Upwards );
+                }
             }
         }
-    else if( diff.x() < 0 )
+    else
         {
-        diff.setX( -diff.x() );
-        for( int i=0; i<diff.x(); i++ )
+        // ignore pager layout
+        int left = old - effects->currentDesktop();
+        if( left < 0 )
+            left = effects->numberOfDesktops() + left;
+        int right = effects->currentDesktop() - old;
+        if( right < 0 )
+            right = effects->numberOfDesktops() + right;
+        if( left < right )
             {
-            slideRotations.enqueue( Left );
+            for( int i=0; i<left; i++ )
+                {
+                slideRotations.enqueue( Left );
+                }
             }
-        }
-    if( qAbs( diff.y() ) > effects->desktopGridHeight()/2 )
-        {
-        int sign = -1 * (diff.y()/qAbs( diff.y() ));
-        diff.setY( sign * ( effects->desktopGridHeight() - qAbs( diff.y() )));
-        }
-    if( diff.y() > 0 )
-        {
-        for( int i=0; i<diff.y(); i++ )
+        else
             {
-            slideRotations.enqueue( Downwards );
-            }
-        }
-    if( diff.y() < 0 )
-        {
-        diff.setY( -diff.y() );
-        for( int i=0; i<diff.y(); i++ )
-            {
-            slideRotations.enqueue( Upwards );
+            for( int i=0; i<right; i++ )
+                {
+                slideRotations.enqueue( Right );
+                }
             }
         }
     if( activate )
