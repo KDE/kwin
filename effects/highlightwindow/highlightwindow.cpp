@@ -30,7 +30,6 @@ KWIN_EFFECT( highlightwindow, HighlightWindowEffect )
 HighlightWindowEffect::HighlightWindowEffect()
     : m_finishing( false )
     , m_fadeDuration( double( animationTime( 150 )))
-    , m_highlightedWindow( NULL )
     , m_monitorWindow( NULL )
     {
     m_atom = XInternAtom( display(), "_KDE_WINDOW_HIGHLIGHT", False );
@@ -50,12 +49,12 @@ HighlightWindowEffect::~HighlightWindowEffect()
 void HighlightWindowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     // Calculate window opacities
-    if( m_highlightedWindow )
+    if( !m_highlightedWindows.isEmpty() )
         { // Initial fade out and changing highlight animation
         double oldOpacity = m_windowOpacity[w];
-        if( m_highlightedWindow == w )
+        if( m_highlightedWindows.contains( w ) )
             m_windowOpacity[w] = qMin( 1.0, m_windowOpacity[w] + time / m_fadeDuration );
-        else if( w->isNormalWindow() ) // Only fade out normal windows
+        else if( w->isNormalWindow() || w->isDialog() ) // Only fade out windows
             m_windowOpacity[w] = qMax( 0.15, m_windowOpacity[w] - time / m_fadeDuration );
 
         if( m_windowOpacity[w] != 1.0 )
@@ -89,9 +88,9 @@ void HighlightWindowEffect::paintWindow( EffectWindow* w, int mask, QRegion regi
 
 void HighlightWindowEffect::windowAdded( EffectWindow* w )
     {
-    if( m_highlightedWindow )
+    if( !m_highlightedWindows.isEmpty() )
         { // The effect is activated thus we need to add it to the opacity hash
-        if( w->isNormalWindow() ) // Only fade out normal windows
+        if( w->isNormalWindow() || w->isDialog() ) // Only fade out windows
             m_windowOpacity[w] = 0.15;
         else
             m_windowOpacity[w] = 1.0;
@@ -129,12 +128,22 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
         return;
         }
     m_monitorWindow = w;
-    m_highlightedWindow = effects->findWindow( data[0] );
-    if( !m_highlightedWindow )
+    bool found = false;
+    int length = byteData.length() / sizeof( data[0] );
+    for( int i=0; i<length; i++ )
         {
-        kDebug(1212) << "Invalid window targetted for highlight. Requested:" << data[0];
-        return;
+        EffectWindow* foundWin = effects->findWindow( data[i] );
+        if( !foundWin )
+            {
+            kDebug(1212) << "Invalid window targetted for highlight. Requested:" << data[i];
+            continue;
+            }
+        if( foundWin->isOnCurrentDesktop() )
+            m_highlightedWindows.append( foundWin );
+        found = true;
         }
+    if( !found )
+        return;
     prepareHighlighting();
     m_windowOpacity[w] = 1.0; // Because it's not in stackingOrder() yet
 
@@ -210,7 +219,7 @@ void HighlightWindowEffect::finishHighlighting()
     {
     m_finishing = true;
     m_monitorWindow = NULL;
-    m_highlightedWindow = NULL;
+    m_highlightedWindows.clear();
     }
 
 } // namespace

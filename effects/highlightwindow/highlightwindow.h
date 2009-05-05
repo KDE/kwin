@@ -52,7 +52,7 @@ class HighlightWindowEffect
         QHash<EffectWindow*, double> m_windowOpacity;
 
         long m_atom;
-        EffectWindow* m_highlightedWindow;
+        QList<EffectWindow*> m_highlightedWindows;
         EffectWindow* m_monitorWindow;
 
         // Offscreen position cache
