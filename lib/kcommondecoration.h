@@ -123,7 +123,7 @@ class KWIN_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
             LM_OuterPaddingLeft,   ///< @since 4.3
             LM_OuterPaddingTop,    ///< @since 4.3
             LM_OuterPaddingRight,  ///< @since 4.3
-            LM_OuterPaddingBottom, ///< @since 4.4
+            LM_OuterPaddingBottom ///< @since 4.4
         };
 
         enum DecorationBehaviour
