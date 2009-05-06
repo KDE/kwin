@@ -21,6 +21,7 @@ Name[x-test]=xxSheetxx
 Name[zh_TW]=飄落
 Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
+Comment[de]=Lässt modale Dialogfenster langsam herein- bzw. wegklappen.
 Comment[el]=Ομαλή εμφάνιση, απόκρυψη με κίνηση των βοηθητικών παραθύρων
 Comment[en_GB]=Make modal dialogues smoothly fly in and out when they are shown or hidden
 Comment[et]=Paneb modaalsed dialoogid sujuvalt peale või ära kerima, kui need nähtavale tuuakse või peidetakse

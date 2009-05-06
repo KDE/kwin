@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Slide Back
+Name[de]=Nach hinten rutschen
 Name[el]=Κύλιση πίσω
 Name[et]=Tagasiliuglemine
 Name[km]=ស្លាយ​ថយក្រោយ
@@ -14,6 +15,7 @@ Name[zh_TW]=往回滑動
 
 Type=Service
 Comment=Slide back windows losing focus
+Comment[de]=Lässt Fenster nach hinten rutschen, wenn sie den Fokus verlieren.
 Comment[el]=Κύλιση παραθύρων πίσω με απώλεια της εστίασής τους
 Comment[et]=Fookuse kaotanud aknad liuglevad tagasi
 Comment[km]=បង្អួច​ស្លាយ​ថយក្រោយ​នៅពេល​បាត់បង់​ការ​ផ្ដោត

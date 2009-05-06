@@ -22,6 +22,7 @@ Name[x-test]=xxDesktop Cube Animationxx
 Name[zh_TW]=桌面立方體動畫
 Icon=preferences-system-windows-effect-cube
 Comment=Animate desktop switching with a cube
+Comment[de]=Wechsel der Arbeitsfläche mit einem Würfel animieren
 Comment[el]=Εφέ εναλλαγής επιφάνειας εργασίας με έναν κύβο
 Comment[et]=Töölaua vahetamise animeerimine kuubikul
 Comment[ga]=Beoigh malairt na deisce le ciúb
