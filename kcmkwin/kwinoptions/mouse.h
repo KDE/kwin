@@ -113,6 +113,7 @@ private:
   QComboBox* coWin1;
   QComboBox* coWin2;
   QComboBox* coWin3;
+  QComboBox* coWinWheel;
 
   QComboBox* coAllKey;
   QComboBox* coAll1;
@@ -124,6 +125,7 @@ private:
   bool standAlone;
 
   const char* functionWin(int);
+  const char* functionWinWheel(int);
   const char* functionAllKey(int);
   const char* functionAll(int);
   const char* functionAllW(int);

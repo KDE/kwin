@@ -446,6 +446,12 @@ const char* const tbl_Win[] = {
     "Activate",
     "Activate and raise",
     "" };
+    
+const char* const tbl_WinWheel[] = {
+    "Scroll",
+    "Activate and scroll",
+    "Activate, raise and scroll",
+    "" };
 
 const char* const tbl_AllKey[] = {
     "Meta",
@@ -616,10 +622,10 @@ void KTitleBarActionsConfig::defaults()
 KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
   : KCModule(inst, parent), config(_config), standAlone(_standAlone)
 {
-  QString strWin1, strWin2, strWin3, strAllKey, strAll1, strAll2, strAll3, strAllW;
+  QString strWin1, strWin2, strWin3, strWinWheel, strAllKey, strAll1, strAll2, strAll3, strAllW;
   QGroupBox *box;
-  QString strMouseButton1, strMouseButton2, strMouseButton3;
-  QString txtButton1, txtButton2, txtButton3;
+  QString strMouseButton1, strMouseButton2, strMouseButton3, strMouseWheel;
+  QString txtButton1, txtButton2, txtButton3, txtWheel;
   QStringList items;
   bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
 
@@ -650,6 +656,8 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   strMouseButton3 = i18n("Right button:");
   txtButton3 = i18n("In this row you can customize right click behavior when clicking into"
      " the titlebar or the frame." );
+     
+  strMouseWheel = i18n("Wheel");
 
   if ( leftHandedMouse )
   {
@@ -664,6 +672,9 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
      " an inactive inner window ('inner' means: not titlebar, not frame).");
 
   strWin3 = i18n("In this row you can customize right click behavior when clicking into"
+     " an inactive inner window ('inner' means: not titlebar, not frame).");
+     
+  strWinWheel = i18n("In this row you can customize behavior when scrolling into"
      " an inactive inner window ('inner' means: not titlebar, not frame).");
 
   // Be nice to lefties
@@ -710,6 +721,25 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   label->setBuddy(combo);
   gridLayout->addWidget(label, 2, 0);
   gridLayout->addWidget(combo, 2, 1);
+  
+  items.clear();
+  items   << i18n("Scroll")
+          << i18n("Activate & Scroll")
+          << i18n("Activate, Raise & Scroll");
+  
+  combo = new QComboBox(box);
+  combo->addItems(items);
+  connect(combo, SIGNAL(activated(int)), SLOT(changed()));
+  coWinWheel = combo;
+  combo->setWhatsThis( strWinWheel );
+  combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  label = new QLabel(strMouseWheel, this);
+  label->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label->setBuddy(combo);
+  gridLayout->addWidget(label, 3, 0);
+  gridLayout->addWidget(combo, 3, 1);
+  
+  
 
 
 /** Inner window, titlebar and frame **************/
@@ -850,6 +880,8 @@ void KWindowActionsConfig::setComboText( QComboBox* combo, const char*txt )
 {
     if( combo == coWin1 || combo == coWin2 || combo == coWin3 )
         combo->setCurrentIndex( tbl_txt_lookup( tbl_Win, txt ));
+    else if (combo == coWinWheel)
+        combo->setCurrentIndex( tbl_txt_lookup( tbl_WinWheel, txt ));
     else if( combo == coAllKey )
         combo->setCurrentIndex( tbl_txt_lookup( tbl_AllKey, txt ));
     else if( combo == coAll1 || combo == coAll2 || combo == coAll3 )
@@ -863,6 +895,11 @@ void KWindowActionsConfig::setComboText( QComboBox* combo, const char*txt )
 const char* KWindowActionsConfig::functionWin( int i )
 {
     return tbl_num_lookup( tbl_Win, i );
+}
+
+const char* KWindowActionsConfig::functionWinWheel (int i)
+{
+    return tbl_num_lookup( tbl_WinWheel, i);
 }
 
 const char* KWindowActionsConfig::functionAllKey( int i )
@@ -886,6 +923,7 @@ void KWindowActionsConfig::load()
   setComboText(coWin1,cg.readEntry("CommandWindow1","Activate, raise and pass click").toAscii());
   setComboText(coWin2,cg.readEntry("CommandWindow2","Activate and pass click").toAscii());
   setComboText(coWin3,cg.readEntry("CommandWindow3","Activate and pass click").toAscii());
+  setComboText(coWinWheel, cg.readEntry("CommandWindowWheel", "Scroll").toAscii());
   setComboText(coAllKey,cg.readEntry("CommandAllKey","Alt").toAscii());
   setComboText(coAll1,cg.readEntry("CommandAll1","Move").toAscii());
   setComboText(coAll2,cg.readEntry("CommandAll2","Toggle raise and lower").toAscii());
@@ -899,6 +937,7 @@ void KWindowActionsConfig::save()
   cg.writeEntry("CommandWindow1", functionWin(coWin1->currentIndex()));
   cg.writeEntry("CommandWindow2", functionWin(coWin2->currentIndex()));
   cg.writeEntry("CommandWindow3", functionWin(coWin3->currentIndex()));
+  cg.writeEntry("CommandWindowWheel", functionWinWheel(coWinWheel->currentIndex()));
   cg.writeEntry("CommandAllKey", functionAllKey(coAllKey->currentIndex()));
   cg.writeEntry("CommandAll1", functionAll(coAll1->currentIndex()));
   cg.writeEntry("CommandAll2", functionAll(coAll2->currentIndex()));
@@ -920,6 +959,7 @@ void KWindowActionsConfig::defaults()
   setComboText(coWin1,"Activate, raise and pass click");
   setComboText(coWin2,"Activate and pass click");
   setComboText(coWin3,"Activate and pass click");
+  setComboText(coWinWheel, "Scroll");
   setComboText(coAllKey,"Alt");
   setComboText (coAll1,"Move");
   setComboText(coAll2,"Toggle raise and lower");

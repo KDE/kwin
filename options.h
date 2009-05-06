@@ -253,6 +253,7 @@ class Options : public KDecorationOptions
         MouseCommand commandWindow1() { return CmdWindow1; }
         MouseCommand commandWindow2() { return CmdWindow2; }
         MouseCommand commandWindow3() { return CmdWindow3; }
+        MouseCommand commandWindowWheel() { return CmdWindowWheel; }
         MouseCommand commandAll1() { return CmdAll1; }
         MouseCommand commandAll2() { return CmdAll2; }
         MouseCommand commandAll3() { return CmdAll3; }
@@ -333,6 +334,7 @@ class Options : public KDecorationOptions
         MouseCommand CmdWindow1;
         MouseCommand CmdWindow2;
         MouseCommand CmdWindow3;
+        MouseCommand CmdWindowWheel;
         MouseCommand CmdAll1;
         MouseCommand CmdAll2;
         MouseCommand CmdAll3;

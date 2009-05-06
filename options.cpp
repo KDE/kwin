@@ -178,6 +178,7 @@ unsigned long Options::updateSettings()
     CmdWindow1 = mouseCommand(config.readEntry("CommandWindow1","Activate, raise and pass click"), false );
     CmdWindow2 = mouseCommand(config.readEntry("CommandWindow2","Activate and pass click"), false );
     CmdWindow3 = mouseCommand(config.readEntry("CommandWindow3","Activate and pass click"), false );
+    CmdWindowWheel = mouseCommand(config.readEntry("CommandWindowWheel", "Scroll"), false);
     CmdAllModKey = (config.readEntry("CommandAllKey","Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
     CmdAll1 = mouseCommand(config.readEntry("CommandAll1","Move"), false );
     CmdAll2 = mouseCommand(config.readEntry("CommandAll2","Toggle raise and lower"), false );
@@ -308,6 +309,9 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == "activate") return MouseActivate;
     if (lowerName == "activate, raise and pass click") return MouseActivateRaiseAndPassClick;
     if (lowerName == "activate and pass click") return MouseActivateAndPassClick;
+    if (lowerName == "scroll") return MouseNothing;
+    if (lowerName == "activate and scroll") return MouseActivateAndPassClick;
+    if (lowerName == "activate, raise and scroll") return MouseActivateRaiseAndPassClick;
     if (lowerName == "activate, raise and move")
         return restricted ? MouseActivateRaiseAndMove : MouseActivateRaiseAndUnrestrictedMove;
     if (lowerName == "move") return restricted ? MouseMove : MouseUnrestrictedMove;
