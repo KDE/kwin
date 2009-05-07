@@ -1230,7 +1230,7 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
             }
         else
             { // inactive inner window
-            if( !isActive() && w == wrapperId() && button < 4 )
+            if( !isActive() && w == wrapperId() && button < 6 )
                 {
                 was_action = true;
                 perform_handled = true;
@@ -1245,8 +1245,12 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
                     case Button3:
                         com = options->commandWindow3();
                         break;
+                    case Button4:
+                    case Button5:
+                        com = options->commandWindowWheel();
+                        break;
                     }
-                }
+             }
             // active inner window
             if( isActive() && w == wrapperId()
                 && options->clickRaise && button < 4 ) // exclude wheel
