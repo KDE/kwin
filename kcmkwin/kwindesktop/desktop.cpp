@@ -255,7 +255,7 @@ void KDesktopConfig::defaults()
     _wheelOption->setEnabled(true);
 #endif
 
-  emit changed(false);
+  emit changed(true);
 }
 
 void KDesktopConfig::slotValueChanged(int n)
