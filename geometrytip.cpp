@@ -33,6 +33,7 @@ GeometryTip::GeometryTip( const XSizeHints* xSizeHints, bool save_under ):
     setLineWidth(1);
     setFrameStyle( QFrame::Raised | QFrame::StyledPanel );
     setAlignment( Qt::AlignCenter | Qt::AlignTop );
+    setWindowFlags( Qt::X11BypassWindowManagerHint );
     sizeHints = xSizeHints;
     if( save_under )
         {
