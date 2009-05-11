@@ -138,7 +138,7 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
             kDebug(1212) << "Invalid window targetted for highlight. Requested:" << data[i];
             continue;
             }
-        if( foundWin->isOnCurrentDesktop() )
+        if( foundWin->isOnCurrentDesktop() && !foundWin->isMinimized() )
             m_highlightedWindows.append( foundWin );
         found = true;
         }
