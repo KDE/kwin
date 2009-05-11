@@ -2,7 +2,6 @@
 Name=Highlight Window
 Name[ca]=Realça la finestra
 Name[ca@valencia]=Realça la finestra
-Name[cs]=Zvýraznit okno
 Name[de]=Fenster hervorheben
 Name[el]=Τονισμός παραθύρου
 Name[et]=Akna esiletõstmine
@@ -29,7 +28,6 @@ Icon=preferences-system-windows-effect-highlightwindow
 Comment=Highlight the appropriate window when hovering over taskbar entries
 Comment[ca]=Realça la finestra apropiada em passar el cursor sobre les entrades de la barra de tasques
 Comment[ca@valencia]=Realça la finestra apropiada em passar el cursor sobre les entrades de la barra de tasques
-Comment[cs]=Zvýrazní odpovídající okno v panelu úloh při najetí kurzorem myši
 Comment[de]=Hebt das dazugehörige Fenster hervor, wenn sich der Mauszeiger über dem Fensterleisten-Eintrag befindet.
 Comment[el]=Τονισμός του αντίστοιχου παραθύρου όταν το ποντίκι περνάει πάνω από τη γραμμή εργασιών
 Comment[et]=Akende esiletõstmine, kui kursor on nende tegumiriba kirje kohal
