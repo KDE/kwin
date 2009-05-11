@@ -51,12 +51,15 @@ class LogoutEffect
         double progress; // 0-1
         EffectWindow* logoutWindow;
         bool logoutWindowClosed;
+        bool logoutWindowPassed;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         bool blurSupported;
         GLTexture* blurTexture;
         GLRenderTarget* blurTarget;
         double windowOpacity;
+        EffectWindowList windows;
+        QHash< EffectWindow*, double > windowsOpacities;
 #endif
     };
 

@@ -36,6 +36,7 @@ LogoutEffect::LogoutEffect()
     : progress( 0.0 )
     , logoutWindow( NULL )
     , logoutWindowClosed( true )
+    , logoutWindowPassed( false )
     {
     char net_wm_cm_name[ 100 ];
     sprintf( net_wm_cm_name, "_NET_WM_CM_S%d", DefaultScreen( display()));
@@ -111,7 +112,7 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
         else
             {
 #endif
-            if( w != logoutWindow )
+            if( w != logoutWindow && !logoutWindowPassed )
                 {
                 if( effects->saturationSupported() )
                     {
@@ -122,8 +123,19 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
                     data.brightness *= ( 1.0 - progress * 0.6 );
                 }
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+            if( blurSupported && logoutWindowPassed )
+                {
+                windows.append( w );
+                windowsOpacities[ w ] = data.opacity;
+                data.opacity = 0.0;
+                }
             }
 #endif
+        if( w == logoutWindow )
+            {
+            // logout window - all following windows are on top and should not be altered
+            logoutWindowPassed = true;
+            }
         }
     effects->paintWindow( w, mask, region, data );
     }
@@ -164,6 +176,18 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
             winData.opacity = windowOpacity;
             effects->drawWindow( logoutWindow, winMask, region, winData );
             }
+
+        // Render all windows on top of logout window
+        foreach( EffectWindow* w, windows )
+            {
+            int winMask = w->hasAlpha() ? PAINT_WINDOW_TRANSLUCENT : PAINT_WINDOW_OPAQUE;
+            WindowPaintData winData( w );
+            winData.opacity = windowsOpacities[ w ];
+            effects->drawWindow( w, winMask, region, winData );
+            }
+
+        windows.clear();
+        windowsOpacities.clear();
         }
 #endif
     }
@@ -171,7 +195,10 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
 void LogoutEffect::postPaintScreen()
     {
     if( progress != 0.0 && progress != 1.0 )
+        {
         effects->addRepaintFull();
+        logoutWindowPassed = false;
+        }
     effects->postPaintScreen();
     }
 
