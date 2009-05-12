@@ -77,6 +77,7 @@ class CoverSwitchEffect
         bool start;
         bool stop;
         bool reflection;
+        bool windowTitle;
         int animationDuration;
         bool stopRequested;
         bool startRequested;

@@ -1,59 +1,60 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KWin::CoverSwitchEffectConfigForm</class>
- <widget class="QWidget" name="KWin::CoverSwitchEffectConfigForm" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KWin::CoverSwitchEffectConfigForm">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
+    <width>492</width>
     <height>236</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" >
-   <item row="1" column="1" >
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="title" >
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
       <string>Zoom</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_8" >
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_8" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout_8">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
          <string>Near</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QLabel" name="label_9" >
-        <property name="text" >
+      <item row="1" column="1">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
          <string>Far</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
-      <item row="0" column="0" colspan="2" >
-       <widget class="QSlider" name="zPositionSlider" >
-        <property name="toolTip" >
+      <item row="0" column="0" colspan="2">
+       <widget class="QSlider" name="zPositionSlider">
+        <property name="toolTip">
          <string>Define how far away the windows should appear</string>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>3000</number>
         </property>
-        <property name="singleStep" >
+        <property name="singleStep">
          <number>100</number>
         </property>
-        <property name="pageStep" >
+        <property name="pageStep">
          <number>500</number>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="tickPosition" >
+        <property name="tickPosition">
          <enum>QSlider::TicksBelow</enum>
         </property>
-        <property name="tickInterval" >
+        <property name="tickInterval">
          <number>200</number>
         </property>
        </widget>
@@ -61,123 +62,123 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="1" >
-    <widget class="QGroupBox" name="groupBox_3" >
-     <property name="title" >
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
       <string>Thumbnail Bar</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3" >
-      <item row="0" column="0" colspan="2" >
-       <widget class="QCheckBox" name="checkThumbnails" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkThumbnails">
+        <property name="text">
          <string>Use additional thumbnail bar</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2" >
-       <widget class="QCheckBox" name="checkDynamicThumbnails" >
-        <property name="toolTip" >
+      <item row="1" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkDynamicThumbnails">
+        <property name="toolTip">
          <string>Only show thumbnail bar if there are at least specified number of windows</string>
         </property>
-        <property name="text" >
+        <property name="text">
          <string>Dynamic mode</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" >
-       <widget class="QLabel" name="labelThumbnailWindows" >
-        <property name="text" >
+      <item row="2" column="0">
+       <widget class="QLabel" name="labelThumbnailWindows">
+        <property name="text">
          <string>Number of windows:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>spinThumbnailWindows</cstring>
         </property>
        </widget>
       </item>
-      <item row="2" column="1" >
-       <widget class="QSpinBox" name="spinThumbnailWindows" />
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="spinThumbnailWindows"/>
       </item>
      </layout>
     </widget>
    </item>
-   <item rowspan="3" row="0" column="0" >
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+   <item row="0" column="0" rowspan="3">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>Appearance</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" >
-      <item row="0" column="0" colspan="2" >
-       <widget class="QCheckBox" name="checkAnimateSwitch" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkAnimateSwitch">
+        <property name="text">
          <string>Animate switch</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2" >
-       <widget class="QCheckBox" name="checkAnimateStart" >
-        <property name="text" >
+      <item row="1" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkAnimateStart">
+        <property name="text">
          <string>Animation on tab box open</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2" >
-       <widget class="QCheckBox" name="checkAnimateStop" >
-        <property name="text" >
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkAnimateStop">
+        <property name="text">
          <string>Animation on tab box close</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2" >
-       <widget class="QCheckBox" name="checkReflection" >
-        <property name="text" >
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkReflection">
+        <property name="text">
          <string>Reflections</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1" >
-       <widget class="QSpinBox" name="spinDuration" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+      <item row="5" column="1">
+       <widget class="QSpinBox" name="spinDuration">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="specialValueText" >
+        <property name="specialValueText">
          <string comment="Duration of rotation">Default</string>
         </property>
-        <property name="suffix" >
+        <property name="suffix">
          <string> msec</string>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>5000</number>
         </property>
-        <property name="singleStep" >
+        <property name="singleStep">
          <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" >
-       <widget class="QLabel" name="label_3" >
-        <property name="text" >
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
          <string>Animation duration:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>spinDuration</cstring>
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="2" >
-       <spacer name="verticalSpacer" >
-        <property name="orientation" >
+      <item row="6" column="0" colspan="2">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
           <height>0</height>
@@ -185,15 +186,25 @@
         </property>
        </spacer>
       </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="checkWindowTitle">
+        <property name="text">
+         <string>Display window &amp;titles</string>
+        </property>
+        <property name="shortcut">
+         <string/>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="2" column="1" >
-    <spacer name="verticalSpacer_2" >
-     <property name="orientation" >
+   <item row="2" column="1">
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" stdset="0" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>0</height>

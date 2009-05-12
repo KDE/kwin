@@ -81,6 +81,7 @@ void CoverSwitchEffect::reconfigure( ReconfigureFlags )
     animateStart      = conf.readEntry( "AnimateStart", true );
     animateStop       = conf.readEntry( "AnimateStop", true );
     reflection        = conf.readEntry( "Reflection", true );
+    windowTitle       = conf.readEntry( "WindowTitle", true );
     zPosition         = conf.readEntry( "ZPosition", 900.0 );
     thumbnails        = conf.readEntry( "Thumbnails", true );
     dynamicThumbnails = conf.readEntry( "DynamicThumbnails", true );
@@ -316,12 +317,15 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             }
 
         // Render the caption frame
-        double opacity = 1.0;
-        if( start )
-            opacity = timeLine.value();
-        else if( stop )
-            opacity = 1.0 - timeLine.value();
-        captionFrame.render( region, opacity );
+        if (windowTitle)
+        {
+            double opacity = 1.0;
+            if( start )
+                opacity = timeLine.value();
+            else if( stop )
+                opacity = 1.0 - timeLine.value();
+            captionFrame.render( region, opacity );
+        }
 
         if( ( thumbnails && (!dynamicThumbnails || 
             (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
@@ -534,15 +538,18 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                     }
 
                 // Setup caption frame geometry
-                QRect frameRect = QRect( area.width() * 0.25f + area.x(),
-                    area.height() * 0.9f + area.y(),
-                    area.width() * 0.5f,
-                    QFontMetrics( captionFont ).height() );
-                captionFrame.setGeometry( frameRect );
-                captionFrame.setIconSize( QSize( frameRect.height(), frameRect.height() ));
-                // And initial contents
-                captionFrame.setText( selected_window->caption() );
-                captionFrame.setIcon( selected_window->icon() );
+                if (windowTitle)
+                {
+                    QRect frameRect = QRect( area.width() * 0.25f + area.x(),
+                        area.height() * 0.9f + area.y(),
+                        area.width() * 0.5f,
+                        QFontMetrics( captionFont ).height() );
+                    captionFrame.setGeometry( frameRect );
+                    captionFrame.setIconSize( QSize( frameRect.height(), frameRect.height() ));
+                    // And initial contents
+                    captionFrame.setText( selected_window->caption() );
+                    captionFrame.setIcon( selected_window->icon() );
+                }
 
                 effects->addRepaintFull();
                 }
