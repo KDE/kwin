@@ -22,6 +22,9 @@
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="desktopSwitchLabel">
+        <property name="toolTip">
+         <string>Change desktop when the mouse cursor is pushed against the edge of the screen</string>
+        </property>
         <property name="text">
          <string>&amp;Switch desktop on edge:</string>
         </property>
@@ -54,6 +57,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label">
+        <property name="toolTip">
+         <string>Amount of time required for the mouse cursor to be pushed against the edge of the screen before the action is triggered</string>
+        </property>
         <property name="text">
          <string>Activation &amp;delay:</string>
         </property>
@@ -86,8 +92,11 @@
         <property name="enabled">
          <bool>true</bool>
         </property>
+        <property name="toolTip">
+         <string>Amount of time required after triggering an action until the next trigger can occur</string>
+        </property>
         <property name="text">
-         <string>Trigger &amp;cooldown:</string>
+         <string>&amp;Reactivation delay:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -192,6 +201,7 @@
  </customwidgets>
  <tabstops>
   <tabstop>monitor</tabstop>
+  <tabstop>desktopSwitchCombo</tabstop>
   <tabstop>activationDelaySpin</tabstop>
   <tabstop>triggerCooldownSpin</tabstop>
  </tabstops>
