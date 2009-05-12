@@ -41,6 +41,7 @@ KWIN_EFFECT( shadow, ShadowEffect )
 ShadowEffect::ShadowEffect()
     : shadowSize( 0 )
     {
+    cachedBlendPicture = X::None;
     reconfigure( ReconfigureAll );
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
              this, SLOT(updateShadowColor()));
@@ -685,12 +686,20 @@ void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, f
     QColor color, float opacity, float brightness, float saturation )
     {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    XRenderColor xc;
+    XRenderPicture fill;
     if( color.isValid() )
-        xc = preMultiply( color, opacity );
+        {
+        if ( color == cachedColor && cachedBlendPicture != X::None )
+            fill = cachedBlendPicture;
+        else
+            {
+            XRenderColor xc = preMultiply( color, opacity );
+            cachedBlendPicture = fill = xRenderFill( &xc );
+            cachedColor = color;
+            }
+        }
     else
-        xc = preMultiply( QColor( 255, 255, 255 ), opacity );
-    XRenderPicture fill = xRenderFill( &xc );
+        fill = xRenderBlendPicture(opacity);
 
     // Scale if required
     if( xScale != 1.0 || yScale != 1.0 )
@@ -714,8 +723,7 @@ void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, f
 
     // Fake brightness by overlaying black
     // Cannot use XRenderFillRectangle() due to ARGB
-    XRenderColor col = { 0, 0, 0, 0xffff * ( 1 - brightness ) * opacity };
-    fill = xRenderFill( &col );
+    fill = xRenderBlendPicture(( 1 - brightness ) * opacity);
     XRenderComposite( display(), PictOpOver, fill, *picture, effects->xrenderBufferPicture(), 0, 0, 0, 0,
         rect.x(), rect.y(), rect.width(), rect.height() );
 

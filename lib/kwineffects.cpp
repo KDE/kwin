@@ -1520,9 +1520,8 @@ void EffectFrame::render( QRegion region, double opacity, double frameOpacity )
                 0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height() );
             }
 
-        // Opacity, TODO: Can we further optimize this?
-        XRenderPicture fill = xRenderFill( QColor( 255, 255, 255, int( opacity * 255 )));
-
+        XRenderPicture fill = xRenderBlendPicture(opacity);
+        
         // Render icon
         if( !m_icon.isNull() && !m_iconSize.isEmpty() )
             {

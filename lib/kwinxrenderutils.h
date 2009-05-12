@@ -116,6 +116,11 @@ XRenderPicture::operator Picture()
     }
 
 /**
+ * Static 1x1 picture used to deliver a black pixel with given opacity (for blending performance)
+ * Call and Use, the PixelPicture will stay, but may change it's opacity meanwhile. It's NOT threadsafe either
+ */
+KWIN_EXPORT XRenderPicture xRenderBlendPicture( double opacity );
+/**
  * Creates a 1x1 Picture filled with c
  */
 KWIN_EXPORT XRenderPicture xRenderFill( const XRenderColor *c );

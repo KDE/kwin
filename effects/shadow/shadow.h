@@ -70,7 +70,7 @@ class ShadowEffect
         int shadowFuzzyness;
         int shadowSize;
         bool intensifyActiveShadow;
-        QColor shadowColor;
+        QColor shadowColor, cachedColor;
         bool forceDecorated;
         bool forceUndecorated;
         bool forceOther;
@@ -81,6 +81,7 @@ class ShadowEffect
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         QList< QList<XRenderPicture*> > mShadowPics;
         QList<XRenderPicture*> mDefaultShadowPics;
+        XRenderPicture cachedBlendPicture;
 #endif
 
         QList<WindowQuadType> mShadowQuadTypes;

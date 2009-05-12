@@ -83,6 +83,18 @@ XRenderPicture xRenderFill( const QColor &c )
     return xRenderFill( &xc );
     }
 
+static XRenderPicture _blendPicture = X::None;
+static XRenderColor _blendColor;
+XRenderPicture xRenderBlendPicture(double opacity)
+    {
+    _blendColor.alpha = ushort(opacity * 0xffff);
+    if (_blendPicture == X::None)
+        _blendPicture = xRenderFill(&_blendColor);
+    else
+        XRenderFillRectangle(display(), PictOpSrc, _blendPicture, &_blendColor, 0, 0, 1, 1);
+    return _blendPicture;
+    }
+
 
 static XRenderPicture *_circle[4] = {NULL, NULL, NULL, NULL};
 
