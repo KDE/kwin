@@ -17,8 +17,8 @@
  */
 
 
-#ifndef RULESLIST__H
-#define RULESLIST__H
+#ifndef __RULESLIST_H__
+#define __RULESLIST_H__
 
 #include "../../rules.h"
 
@@ -28,27 +28,27 @@ namespace KWin
 {
 
 class KCMRulesList
-        : public QWidget, Ui_KCMRulesList
-{
+    : public QWidget, Ui_KCMRulesList
+    {
     Q_OBJECT
-public:
-    KCMRulesList(QWidget* parent = NULL);
-    virtual ~KCMRulesList();
-    void load();
-    void save();
-    void defaults();
-Q_SIGNALS:
-    void changed(bool);
-private Q_SLOTS:
-    void newClicked();
-    void modifyClicked();
-    void deleteClicked();
-    void moveUpClicked();
-    void moveDownClicked();
-    void activeChanged();
-private:
-    QVector< Rules* > rules;
-};
+    public:
+        KCMRulesList( QWidget* parent = NULL );
+        virtual ~KCMRulesList();
+        void load();
+        void save();
+        void defaults();
+    signals:
+        void changed( bool );
+    private slots:
+        void newClicked();
+        void modifyClicked();
+        void deleteClicked();
+        void moveupClicked();
+        void movedownClicked();
+        void activeChanged();
+    private:
+        QVector< Rules* > rules;
+    };
 
 } // namespace
 
