@@ -13,6 +13,7 @@ X-KDE-Weight=65
 
 Name=Screen Edges
 Name[csb]=Nórtë ekranu
+Name[da]=Skærmkanter
 Name[de]=Bildschirmecken
 Name[el]=Άκρα οθόνης
 Name[et]=Ekraani servad
@@ -37,6 +38,7 @@ Name[zh_TW]=螢幕邊緣
 
 Comment=Configure active screen edges
 Comment[csb]=Kònfigùracëjô aktiwnëch nórcëków ekranu
+Comment[da]=Indstil aktive skærmkanter
 Comment[el]=Ρύθμιση των ενεργών άκρων οθόνης
 Comment[et]=Aktiivsete ekraani servade seadistamine
 Comment[ga]=Cumraigh ciumhaiseanna gníomhacha

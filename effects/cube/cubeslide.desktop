@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Desktop Cube Animation
 Name[csb]=Animacëjô Szescanu pùltu
+Name[da]=Animation af skrivebordsterning
 Name[de]=Animation Arbeitsflächen-Würfel
 Name[el]=Εφέ κύβου επιφάνειας εργασίας
 Name[et]=Töölauakuubiku animeerimine
@@ -24,6 +25,7 @@ Name[x-test]=xxDesktop Cube Animationxx
 Name[zh_TW]=桌面立方體動畫
 Icon=preferences-system-windows-effect-cube
 Comment=Animate desktop switching with a cube
+Comment[da]=Animér skift af skrivebord med en terning
 Comment[de]=Wechsel der Arbeitsfläche mit einem Würfel animieren
 Comment[el]=Εφέ εναλλαγής επιφάνειας εργασίας με έναν κύβο
 Comment[et]=Töölaua vahetamise animeerimine kuubikul

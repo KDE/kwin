@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Sheet
 Name[csb]=Sztél
+Name[da]=Ark
 Name[el]=Φύλλο
 Name[et]=Ärakerimine
 Name[fi]=Arkki
@@ -23,6 +24,7 @@ Name[x-test]=xxSheetxx
 Name[zh_TW]=飄落
 Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
+Comment[da]=Få modaldialoger til glat at flyve ind og ud når de vises eller skjules
 Comment[de]=Lässt modale Dialogfenster langsam herein- bzw. wegklappen.
 Comment[el]=Ομαλή εμφάνιση, απόκρυψη με κίνηση των βοηθητικών παραθύρων
 Comment[en_GB]=Make modal dialogues smoothly fly in and out when they are shown or hidden

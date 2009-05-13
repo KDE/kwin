@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Slide Back
 Name[csb]=Pùrganié w tił
+Name[da]=Glid tilbage
 Name[de]=Nach hinten rutschen
 Name[el]=Κύλιση πίσω
 Name[et]=Tagasiliuglemine
@@ -19,6 +20,7 @@ Name[zh_TW]=往回滑動
 Type=Service
 Comment=Slide back windows losing focus
 Comment[csb]=Zezwôlô na pùrganié òknów w tił jak ùtracą swòj fòkùs
+Comment[da]=Glid tilbage når vinduer mister fokus
 Comment[de]=Lässt Fenster nach hinten rutschen, wenn sie den Fokus verlieren.
 Comment[el]=Κύλιση παραθύρων πίσω με απώλεια της εστίασής τους
 Comment[et]=Fookuse kaotanud aknad liuglevad tagasi

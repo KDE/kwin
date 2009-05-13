@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Snap Helper
 Name[csb]=Pòmòc wërówaniô
+Name[da]=Hægtehjælper
 Name[de]=Einrasthilfe
 Name[el]=Βοηθός αρπαγής
 Name[et]=Tõmbumise abiline
@@ -22,6 +23,7 @@ Name[zh_TW]=貼齊小幫手
 Icon=preferences-system-windows-effect-snaphelper
 Comment=Help you locate the center of the screen when moving a window.
 Comment[csb]=Pòmôgô nalezc westrzódk ekranu przë suwaniu òknów.
+Comment[da]=Hjælper dig med at finde midten af skærmen ved flytning af vinduer.
 Comment[de]=Zeigt beim Verschieben von Fenstern eine Hilfestellung zum Auffinden der Bildschirmmitte an.
 Comment[el]=Βοηθά στον εντοπισμό του κέντρου της οθόνης όταν μετακινείτε ένα παράθυρο.
 Comment[en_GB]=Help you locate the centre of the screen when moving a window.
