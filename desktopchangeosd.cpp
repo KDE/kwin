@@ -18,9 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
+
 #include "desktopchangeosd.h"
 #include <QTextStream>
 #include "workspace.h"
+
+#include <X11/extensions/shape.h>
 
 #include <QHash>
 #include <QGraphicsScene>
@@ -191,6 +194,9 @@ void DesktopChangeOSD::desktopChanged( int old )
         show();
         raise();
         }
+    // Set a zero inputmask, effectively making clicks go "through" the popup
+    // For those who impatiently wait to click on a dialog behind the it
+    XShapeCombineRectangles( display(), winId(), ShapeInput, 0, 0, NULL, 0, ShapeSet, Unsorted );
     m_delayedHideTimer.start( m_delayTime );
     }
 
