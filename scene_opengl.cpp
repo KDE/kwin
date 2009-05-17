@@ -1441,9 +1441,12 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
 
     WindowQuadList decoration = data.quads.select( WindowQuadDecoration );
     // paint the content
-    prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
-    renderQuads( mask, region, data.quads.select( WindowQuadContents ));
-    restoreStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+    if ( !(mask & PAINT_DECORATION_ONLY) )
+        {
+        prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+        renderQuads( mask, region, data.quads.select( WindowQuadContents ));
+        restoreStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+        }
 
     texture.disableUnnormalizedTexCoords();
     texture.unbind();
