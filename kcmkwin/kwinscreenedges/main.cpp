@@ -176,19 +176,43 @@ void KWinScreenEdgesConfig::monitorInit()
     KService::List services;
     services = trader->query( "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_presentwindows'" );
     if( services.isEmpty() )
-        abort(); // Crash is better than wrong IDs
-    monitorAddItem( services.first()->name() + " - " + i18n( "All Desktops" ));
-    monitorAddItem( services.first()->name() + " - " + i18n( "Current Desktop" ));
+        {
+        // adding empty strings in case the effect is not found
+        // TODO: after string freeze add a info that the effect is missing
+        monitorAddItem( QString() );
+        monitorAddItem( QString() );
+        }
+    else
+        {
+        monitorAddItem( services.first()->name() + " - " + i18n( "All Desktops" ));
+        monitorAddItem( services.first()->name() + " - " + i18n( "Current Desktop" ));
+        }
     services = trader->query( "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_desktopgrid'" );
     if( services.isEmpty() )
-        abort(); // Crash is better than wrong IDs
-    monitorAddItem( services.first()->name());
+        {
+        // adding empty strings in case the effect is not found
+        // TODO: after string freeze add a info that the effect is missing
+        monitorAddItem( QString() );
+        }
+    else
+        {
+        monitorAddItem( services.first()->name());
+        }
     services = trader->query( "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cube'" );
     if( services.isEmpty() )
-        abort(); // Crash is better than wrong IDs
-    monitorAddItem( services.first()->name() + " - " + i18n( "Cube" ));
-    monitorAddItem( services.first()->name() + " - " + i18n( "Cylinder" ));
-    monitorAddItem( services.first()->name() + " - " + i18n( "Sphere" ));
+        {
+        // adding empty strings in case the effect is not found
+        // TODO: after string freeze add a info that the effect is missing
+        monitorAddItem( QString() );
+        monitorAddItem( QString() );
+        monitorAddItem( QString() );
+        }
+    else
+        {
+        monitorAddItem( services.first()->name() + " - " + i18n( "Cube" ));
+        monitorAddItem( services.first()->name() + " - " + i18n( "Cylinder" ));
+        monitorAddItem( services.first()->name() + " - " + i18n( "Sphere" ));
+        }
 
     monitorShowEvent();
     }
