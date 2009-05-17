@@ -35,18 +35,18 @@ SlideBackEffect::SlideBackEffect()
 
 void SlideBackEffect::windowActivated( EffectWindow* w )
     {
-    if( w == NULL )
+    if( w == NULL || w->keepAbove()) // plasma popups, yakuake etc...
         {
         return;
-        }
-
+        }    
+    
     if( disabled || effects->activeFullScreenEffect() )  // TabBox or PresentWindows/Cube in progress
         {
         updateStackingOrder();
         disabled = false;
         return;
         }
-    if( !isWindowUsable( w ) || !isWindowOnTop( w ) )     // Focus changed but stacking still the same
+    if( !isWindowUsable( w ) || !stackingOrderChanged() )     // Focus changed but stacking still the same
         {
         updateStackingOrder();
         return;
@@ -105,7 +105,7 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
 
                     }
                 }
-            if( tmp->isDock() )
+            if( tmp->isDock() || tmp->keepAbove() )
                 {
                 effects->setElevatedWindow( tmp, true );
                 elevatedList.append( tmp );
@@ -192,6 +192,15 @@ void SlideBackEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data,
 
 void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
     {
+    if( !clippedRegions.isEmpty() )
+        {
+        foreach( const QRegion &region, clippedRegions )
+            {
+            PaintClipper::pop( region );
+	    }
+        clippedRegions.clear();
+	}
+      
     if( stackingOrderChanged() && ( w == newTopWindow() ) )
         {
         /* This can happen because of two reasons:
@@ -201,7 +210,10 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
             {
             if( oldStackingOrder.lastIndexOf( tmp ) > oldStackingOrder.lastIndexOf( w ) && isWindowUsable( tmp ) )
                 {
-                region = region.subtracted( tmp->geometry() );
+		kDebug() << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
+	        PaintClipper::push( region.subtracted( tmp->geometry() ) );
+	        clippedRegions.prepend( region.subtracted( tmp->geometry() ) );
+//                region = region.subtracted( tmp->geometry() );
                 }
             }
         // Add a full repaint to make sure the not painted area is repainted soon
@@ -241,7 +253,7 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
                             {
                             elevatedGeometry = motionManager.transformedGeometry( tmp ).toAlignedRect();
                             }
-                        if( effects->activeWindow() && !tmp->isDock() && effects->activeWindow()->geometry().intersects( elevatedGeometry ) )
+                        if( effects->activeWindow() && !tmp->isDock() && !tmp->keepAbove() && effects->activeWindow()->geometry().intersects( elevatedGeometry ) )
                             {
                             QRect newDestination;
                             if( effects->activeWindow()->isModal() )
@@ -352,7 +364,7 @@ bool SlideBackEffect::isWindowOnTop( EffectWindow* w )
 
 bool SlideBackEffect::isWindowUsable( EffectWindow* w )
     {
-    return w && ( w->isNormalWindow() || w->isDialog() ) && !w->isDeleted() && !w->isMinimized();
+    return w && ( w->isNormalWindow() || w->isDialog() ) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized();
     }
 
 bool SlideBackEffect::intersects( EffectWindow* windowUnder, const QRect &windowOverGeometry )

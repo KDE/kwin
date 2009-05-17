@@ -56,6 +56,7 @@ class SlideBackEffect
         EffectWindowList elevatedList;
         QHash<EffectWindow *, QRect> destinationList;
         bool disabled;
+	QList <QRegion> clippedRegions;
 
         QRect getSlideDestination( const QRect &windowUnderGeometry, const QRect &windowOverGeometry);
         void updateStackingOrder();
