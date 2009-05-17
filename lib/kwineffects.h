@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 81
+#define KWIN_EFFECT_API_VERSION_MINOR 82
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -941,6 +941,10 @@ class KWIN_EXPORT EffectWindow
          * Returns whether or not the window can accept keyboard focus.
          */
         virtual bool acceptsFocus() const = 0;
+        /**
+         * Returns whether or not the window is kept above all other windows.
+         */
+        virtual bool keepAbove() const = 0;
 
         virtual bool isModal() const = 0;
         virtual EffectWindow* findModal() = 0;

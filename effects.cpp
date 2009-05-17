@@ -1407,6 +1407,14 @@ bool EffectWindowImpl::acceptsFocus() const
     return client->wantsInput();
     }
 
+bool EffectWindowImpl::keepAbove() const
+    {
+    const Client* client = dynamic_cast< const Client* >( toplevel );
+    if( !client )
+        return true;
+    return client->keepAbove();
+    }
+
 bool EffectWindowImpl::isModal() const
     {
     if( Client* c = dynamic_cast< Client* >( toplevel ))

@@ -250,6 +250,7 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isDNDIcon() const;
         virtual bool isManaged() const; // managed or override-redirect
         virtual bool acceptsFocus() const;
+        virtual bool keepAbove() const;
 
         virtual bool isModal() const;
         virtual EffectWindow* findModal();
