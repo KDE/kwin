@@ -1,5 +1,7 @@
 [Desktop Entry]
 Name=Slide Back
+Name[ca]=Llisca cap enrere
+Name[ca@valencia]=Llisca cap enrere
 Name[csb]=Pùrganié w tił
 Name[da]=Glid tilbage
 Name[de]=Nach hinten rutschen
@@ -19,8 +21,10 @@ Name[zh_TW]=往回滑動
 
 Type=Service
 Comment=Slide back windows losing focus
+Comment[ca]=Llisca enrere les finestres que perdin el focus
+Comment[ca@valencia]=Llisca enrere les finestres que perdin el focus
 Comment[csb]=Zezwôlô na pùrganié òknów w tił jak ùtracą swòj fòkùs
-Comment[da]=Glid tilbage når vinduer mister fokus
+Comment[da]=Lad vinduer der mister fokus glide tilbage
 Comment[de]=Lässt Fenster nach hinten rutschen, wenn sie den Fokus verlieren.
 Comment[el]=Κύλιση παραθύρων πίσω με απώλεια της εστίασής τους
 Comment[et]=Fookuse kaotanud aknad liuglevad tagasi

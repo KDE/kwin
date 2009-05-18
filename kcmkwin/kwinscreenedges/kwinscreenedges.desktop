@@ -12,6 +12,8 @@ X-KDE-System-Settings-Parent-Category=desktop
 X-KDE-Weight=65
 
 Name=Screen Edges
+Name[ca]=Vores de la pantalla
+Name[ca@valencia]=Vores de la pantalla
 Name[csb]=Nórtë ekranu
 Name[da]=Skærmkanter
 Name[de]=Bildschirmecken
@@ -36,6 +38,8 @@ Name[x-test]=xxScreen Edgesxx
 Name[zh_TW]=螢幕邊緣
 
 Comment=Configure active screen edges
+Comment[ca]=Configura les vores de pantalla actives
+Comment[ca@valencia]=Configura les vores de pantalla actives
 Comment[csb]=Kònfigùracëjô aktiwnëch nórcëków ekranu
 Comment[da]=Indstil aktive skærmkanter
 Comment[el]=Ρύθμιση των ενεργών άκρων οθόνης
