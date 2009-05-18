@@ -512,6 +512,8 @@ void Client::ensureDecorationPixmapsPainted()
             XFreeGC( display(), gc );
             }
         }
+    else
+        XSync( display(), false );
     }
 
 void Client::repaintDecorationPixmap( QPixmap& pix, const QRect& r, const QPixmap& src, QRegion reg )

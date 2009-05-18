@@ -1530,12 +1530,8 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
         }
     else
         {
-        if( decorationTexture->texture() != None )
-            decorationTexture->release();
         bool success = decorationTexture->load( decoration->handle(), decoration->size(), decoration->depth() );
-        if( success )
-            toplevel->resetDamage( rect );
-        else
+        if( !success )
             {
             kDebug( 1212 ) << "Failed to bind decoartion";
             return;
