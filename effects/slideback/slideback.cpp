@@ -192,15 +192,6 @@ void SlideBackEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data,
 
 void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
     {
-    if( !clippedRegions.isEmpty() )
-        {
-        foreach( const QRegion &region, clippedRegions )
-            {
-            PaintClipper::pop( region );
-	    }
-        clippedRegions.clear();
-	}
-      
     if( stackingOrderChanged() && ( w == newTopWindow() ) )
         {
         /* This can happen because of two reasons:
@@ -229,6 +220,14 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
         motionManager.apply( w, data );
         }
     effects->paintWindow( w, mask, region, data );
+    if( !clippedRegions.isEmpty() )
+        {
+        foreach( const QRegion &region, clippedRegions )
+            {
+            PaintClipper::pop( region );
+	    }
+        clippedRegions.clear();
+	}
     }
 
 void SlideBackEffect::postPaintWindow( EffectWindow* w )
