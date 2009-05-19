@@ -182,26 +182,6 @@ void SlideBackEffect::postPaintScreen()
 
 void SlideBackEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time )
     {
-    if( stackingOrderChanged() && ( w == newTopWindow() ) )
-        {
-        /* This can happen because of two reasons:
-           - a window has received the focus earlier without beeing raised and is raised now. -> call windowActivated() now
-           - paintWindow() is called with a new stackingOrder before activateWindow(). Bug? -> don't draw the overlapping content;*/
-        foreach( EffectWindow *tmp, oldStackingOrder )
-            {
-            if( oldStackingOrder.lastIndexOf( tmp ) > oldStackingOrder.lastIndexOf( w ) && isWindowUsable( tmp ) )
-                {
-//		kDebug() << "screw detected." << "clip:" << data.paint << " clipping:" <<  tmp->geometry() ;
-	        PaintClipper::push( data.paint.subtracted( tmp->geometry() ) );
-	        clippedRegions.prepend( data.paint.subtracted( tmp->geometry() ) );
-                }
-            }
-        // Finally call windowActivated in case a already active window is raised.
-        if( !disabled )
-            {
-            windowActivated( w );
-            }
-        }
     if( motionManager.isManaging( w ) )
         {
         data.setTransformed();
@@ -212,15 +192,34 @@ void SlideBackEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data,
 
 void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
     {
+    if( stackingOrderChanged() && ( w == newTopWindow() ) )
+        {
+        /* This can happen because of two reasons:
+           - a window has received the focus earlier without beeing raised and is raised now. -> call windowActivated() now
+           - paintWindow() is called with a new stackingOrder before activateWindow(). Bug? -> don't draw the overlapping content;*/
+        foreach( EffectWindow *tmp, oldStackingOrder )
+            {
+            if( oldStackingOrder.lastIndexOf( tmp ) > oldStackingOrder.lastIndexOf( w ) && isWindowUsable( tmp ) )
+                {
+		kDebug() << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
+	        PaintClipper::push( region.subtracted( tmp->geometry() ) );
+	        clippedRegions.prepend( region.subtracted( tmp->geometry() ) );
+//                region = region.subtracted( tmp->geometry() );
+                }
+            }
+        // Add a full repaint to make sure the not painted area is repainted soon
+        effects->addRepaintFull();
+        // Finally call windowActivated in case a already active window is raised.
+        if( !disabled )
+            {
+            windowActivated( w );
+            }
+        }
     if( motionManager.isManaging( w ) )
         {
         motionManager.apply( w, data );
         }
     effects->paintWindow( w, mask, region, data );
-    }
-
-void SlideBackEffect::postPaintWindow( EffectWindow* w )
-    {
     if( !clippedRegions.isEmpty() )
         {
         foreach( const QRegion &region, clippedRegions )
@@ -229,6 +228,10 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
 	    }
         clippedRegions.clear();
 	}
+    }
+
+void SlideBackEffect::postPaintWindow( EffectWindow* w )
+    {
     if( motionManager.isManaging( w ) )
         {
         if( destinationList.contains( w ) )
