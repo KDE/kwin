@@ -64,6 +64,7 @@ class CubeSlideEffect
         bool dontSlidePanels;
         bool dontSlideStickyWindows;
         bool usePagerLayout;
+        int rotationDuration;
     };
 }
 

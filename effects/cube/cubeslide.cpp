@@ -50,9 +50,9 @@ bool CubeSlideEffect::supported()
 void CubeSlideEffect::reconfigure( ReconfigureFlags )
     {
     KConfigGroup conf = effects->effectConfig( "CubeSlide" );
-    int rotationDuration = animationTime( conf, "RotationDuration", 500 );
+    rotationDuration = conf.readEntry( "RotationDuration", 500 );
     timeLine.setCurveShape( TimeLine::EaseInOutCurve );
-    timeLine.setDuration( rotationDuration );
+    timeLine.setDuration( animationTime( rotationDuration ) );
     dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
     dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", false );
     usePagerLayout = conf.readEntry( "UsePagerLayout", true );
@@ -566,6 +566,7 @@ void CubeSlideEffect::desktopChanged( int old )
                 }
             }
         }
+    timeLine.setDuration( animationTime( (float)rotationDuration / (float)slideRotations.count() ) );
     if( activate )
         {
         if( slideRotations.count() == 1 )
