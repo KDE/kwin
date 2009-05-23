@@ -26,30 +26,14 @@ void main()
             gl_TexCoord[0].y < 0.0 || gl_TexCoord[0].y > textureHeight )
             discard;
         vec4 tex = texture2D(winTexture, pix2tex(gl_TexCoord[0].xy));
-
-        // change saturation, brightness and opacity
-        // in the exactly same way as in SceneOpenGL::Window::prepareRenderStates()
-        // see scene_opengl.cpp
-        float sourceAlpha = tex.a;
-        float opacityByBrightness = opacity * brightness;
+        tex = vec4( tex.rgb, tex.a * opacity );
         if( saturation != 1.0 )
             {
             vec3 desaturated = tex.rgb * vec3( 0.30, 0.59, 0.11 );
             desaturated = vec3( dot( desaturated, tex.rgb ));
-            tex.rgb = tex.rgb * saturation + desaturated * ( 1.0 - saturation );
-            tex.a = opacity;
-            if( sourceAlpha != 1.0 || brightness != 1.0 )
-                {
-                tex.rgb = tex.rgb * opacityByBrightness;
-                if( sourceAlpha != 1.0 )
-                    tex.a = sourceAlpha * opacity;
-                }
+            tex.rgb = tex.rgb * vec3( saturation ) + desaturated * vec3( 1.0 - saturation );
             }
-        else if( opacity != 1.0 || brightness != 1.0 )
-            {
-            tex.rgb = tex.rgb * opacityByBrightness;
-            tex.a = tex.a * opacity;
-            }
+        tex.rgb = tex.rgb * vec3( brightness );
         gl_FragColor = tex;
         }
     else
