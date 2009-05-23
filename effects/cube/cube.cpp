@@ -400,7 +400,21 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
                 glTranslatef( 0.0, rect.height(), 0.0 );
                 glCullFace( GL_FRONT );
+
+                // bottom texture has to be mirrored
+                glMatrixMode( GL_TEXTURE );
+                glPushMatrix();
+                glLoadIdentity();
+                glScalef( 1.0f, -1.0f, 1.0f );
+                glTranslatef( 0.0f, -1.0f, 0.0f );
+                glMatrixMode( GL_MODELVIEW );
+
                 glCallList( glList + 2 );
+
+                glMatrixMode( GL_TEXTURE );
+                glPopMatrix();
+                glMatrixMode( GL_MODELVIEW );
+
                 glTranslatef( 0.0, -rect.height(), 0.0 );
                 glCullFace( GL_BACK );
                 glCallList( glList + 2 );
@@ -454,7 +468,20 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
                 glTranslatef( 0.0, rect.height(), 0.0 );
                 glCullFace( GL_BACK );
+
+                // bottom texture has to be mirrored
+                glMatrixMode( GL_TEXTURE );
+                glPushMatrix();
+                glLoadIdentity();
+                glScalef( 1.0f, -1.0f, 1.0f );
+                glTranslatef( 0.0f, -1.0f, 0.0f );
+                glMatrixMode( GL_MODELVIEW );
                 glCallList( glList + 2 );
+
+                glMatrixMode( GL_TEXTURE );
+                glPopMatrix();
+                glMatrixMode( GL_MODELVIEW );
+
                 glTranslatef( 0.0, -rect.height(), 0.0 );
                 glCullFace( GL_FRONT );
                 glCallList( glList + 2 );
@@ -506,7 +533,20 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 glPushMatrix();
                 glScalef( 1.0, -1.0, 1.0 );
                 }
+
+            // bottom texture has to be mirrored
+            glMatrixMode( GL_TEXTURE );
+            glPushMatrix();
+            glLoadIdentity();
+            glScalef( 1.0f, -1.0f, 1.0f );
+            glTranslatef( 0.0f, -1.0f, 0.0f );
+            glMatrixMode( GL_MODELVIEW );
+
             glCallList( glList + 2 );
+
+            glMatrixMode( GL_TEXTURE );
+            glPopMatrix();
+            glMatrixMode( GL_MODELVIEW );
             if( mode == Sphere )
                 glPopMatrix();
             glTranslatef( 0.0, -rect.height(), 0.0 );
@@ -581,7 +621,21 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 glPushMatrix();
                 glScalef( 1.0, -1.0, 1.0 );
                 }
+
+            // bottom texture has to be mirrored
+            glMatrixMode( GL_TEXTURE );
+            glPushMatrix();
+            glLoadIdentity();
+            glScalef( 1.0f, -1.0f, 1.0f );
+            glTranslatef( 0.0f, -1.0f, 0.0f );
+            glMatrixMode( GL_MODELVIEW );
+
             glCallList( glList + 2 );
+
+            glMatrixMode( GL_TEXTURE );
+            glPopMatrix();
+            glMatrixMode( GL_MODELVIEW );
+
             if( mode == Sphere )
                 glPopMatrix();
             glTranslatef( 0.0, -rect.height(), 0.0 );
