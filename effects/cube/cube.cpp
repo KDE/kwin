@@ -1913,9 +1913,11 @@ void CubeEffect::grabbedKeyboardEvent( QKeyEvent* e )
             case Qt::Key_Plus:
                 zoom -= 10.0;
                 zoom = qMax( -zPosition, zoom );
+                recompileList = true;
                 break;
             case Qt::Key_Minus:
                 zoom += 10.0f;
+                recompileList = true;
                 break;
             default:
                 break;
