@@ -338,6 +338,10 @@ void SlideBackEffect::windowDeleted( EffectWindow* w )
     oldStackingOrder.removeAll( w );
     coveringWindows.removeAll( w );
     elevatedList.removeAll( w );
+    if( motionManager.isManaging( w ) )
+        {
+        motionManager.unmanage( w );
+        }
     }
 
 void SlideBackEffect::windowAdded( KWin::EffectWindow* w )
