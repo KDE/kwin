@@ -30,7 +30,8 @@ KWIN_EFFECT( slideback, SlideBackEffect )
 
 SlideBackEffect::SlideBackEffect()
     {
-    // updateStackingOrder();
+    updateStackingOrder();
+    disabled = false;
     }
 
 void SlideBackEffect::windowActivated( EffectWindow* w )
@@ -207,8 +208,6 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
 //                region = region.subtracted( tmp->geometry() );
                 }
             }
-        // Add a full repaint to make sure the not painted area is repainted soon
-        effects->addRepaintFull();
         // Finally call windowActivated in case a already active window is raised.
         if( !disabled )
             {
