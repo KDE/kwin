@@ -193,7 +193,7 @@ void SlideBackEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &data,
 
 void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, WindowPaintData &data )
     {
-    if( stackingOrderChanged() && ( w == newTopWindow() ) )
+    if( stackingOrderChanged() && ( w == newTopWindow() ) && !disabled )
         {
         /* This can happen because of two reasons:
            - a window has received the focus earlier without beeing raised and is raised now. -> call windowActivated() now
@@ -209,10 +209,7 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
                 }
             }
         // Finally call windowActivated in case a already active window is raised.
-        if( !disabled )
-            {
-            windowActivated( w );
-            }
+        windowActivated( w );
         }
     if( motionManager.isManaging( w ) )
         {
