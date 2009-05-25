@@ -197,6 +197,9 @@ void LogoutEffect::postPaintScreen()
     if( progress != 0.0 && progress != 1.0 )
         {
         effects->addRepaintFull();
+        }
+    if( progress > 0.0 )
+        {
         logoutWindowPassed = false;
         }
     effects->postPaintScreen();
