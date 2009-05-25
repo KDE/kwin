@@ -577,6 +577,13 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWalkThroughWindows();
         void slotWalkBackThroughWindows();
 
+        void slotWalkThroughDesktopsKeyChanged( const QKeySequence& seq );
+        void slotWalkBackThroughDesktopsKeyChanged( const QKeySequence& seq );
+        void slotWalkThroughDesktopListKeyChanged( const QKeySequence& seq );
+        void slotWalkBackThroughDesktopListKeyChanged( const QKeySequence& seq );
+        void slotWalkThroughWindowsKeyChanged( const QKeySequence& seq );
+        void slotWalkBackThroughWindowsKeyChanged( const QKeySequence& seq );
+
         void slotWindowOperations();
         void slotWindowClose();
         void slotWindowMove();

@@ -1193,6 +1193,36 @@ void Workspace::slotWalkBackThroughDesktopList()
         }
     }
 
+void Workspace::slotWalkThroughDesktopsKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughDesktops = KShortcut( seq );
+    }
+
+void Workspace::slotWalkBackThroughDesktopsKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughDesktopsReverse = KShortcut( seq );
+    }
+
+void Workspace::slotWalkThroughDesktopListKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughDesktopList = KShortcut( seq );
+    }
+
+void Workspace::slotWalkBackThroughDesktopListKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughDesktopListReverse = KShortcut( seq );
+    }
+
+void Workspace::slotWalkThroughWindowsKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughWindows = KShortcut( seq );
+    }
+
+void Workspace::slotWalkBackThroughWindowsKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughWindowsReverse = KShortcut( seq );
+    }
+
 void Workspace::modalActionsSwitch( bool enabled )
     {
     QList<KActionCollection*> collections;

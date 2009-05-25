@@ -345,27 +345,45 @@ void Workspace::readShortcuts()
 
     KAction *kaction = qobject_cast<KAction*>( keys->action("Walk Through Desktops") );
     if ( kaction!=0 )
+        {
         cutWalkThroughDesktops = kaction->globalShortcut();
+        connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkThroughDesktopsKeyChanged(QKeySequence)));
+        }
 
     kaction = qobject_cast<KAction*>( keys->action("Walk Through Desktops (Reverse)") );
     if ( kaction!=0 )
+        {
         cutWalkThroughDesktopsReverse = kaction->globalShortcut();
+        connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkBackThroughDesktopsKeyChanged(QKeySequence)));
+        }
 
     kaction = qobject_cast<KAction*>( keys->action("Walk Through Desktop List") );
     if ( kaction!=0 )
+        {
         cutWalkThroughDesktopList = kaction->globalShortcut();
+        connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkThroughDesktopListKeyChanged(QKeySequence)));
+        }
 
     kaction = qobject_cast<KAction*>( keys->action("Walk Through Desktop List (Reverse)") );
     if ( kaction!=0 )
+        {
         cutWalkThroughDesktopListReverse = kaction->globalShortcut();
+        connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkBackThroughDesktopListKeyChanged(QKeySequence)));
+        }
 
     kaction = qobject_cast<KAction*>( keys->action("Walk Through Windows") );
     if ( kaction!=0 )
+        {
         cutWalkThroughWindows = kaction->globalShortcut();
+        connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkThroughWindowsKeyChanged(QKeySequence)));
+        }
 
     kaction = qobject_cast<KAction*>( keys->action("Walk Through Windows (Reverse)") );
     if ( kaction!=0 )
+        {
         cutWalkThroughWindowsReverse = kaction->globalShortcut();
+        connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkBackThroughWindowsKeyChanged(QKeySequence)));
+        }
     discardPopup(); // so that it's recreated next time
     }
 
