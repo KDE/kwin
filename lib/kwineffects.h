@@ -1513,7 +1513,7 @@ class KWIN_EXPORT WindowMotionManager
          */
         void unmanage( EffectWindow *w );
         /**
-         * Deregister all windows, returning the manager to it's
+         * Deregister all windows, returning the manager to its
          * originally initiated state.
          */
         void unmanageAll();
@@ -1526,7 +1526,7 @@ class KWIN_EXPORT WindowMotionManager
         void calculate( int time );
         /**
          * Modify a registered window's paint data to make it appear
-         * at it's real location on the screen. Usually called in
+         * at its real location on the screen. Usually called in
          * paintWindow(). Remember to flag the window as having been
          * transformed in prePaintWindow() by calling
          * WindowPrePaintData::setTransformed()
@@ -1545,7 +1545,7 @@ class KWIN_EXPORT WindowMotionManager
         void reset( EffectWindow *w );
 
         /**
-         * As the manager to move the window to the target position
+         * Ask the manager to move the window to the target position
          * with the specified scale. If `yScale` is not provided or
          * set to 0.0, `scale` will be used as the scale in the
          * vertical direction as well as in the horizontal direction.
@@ -1575,7 +1575,7 @@ class KWIN_EXPORT WindowMotionManager
          */
         QRectF targetGeometry( EffectWindow *w ) const;
         /**
-         * Return the window that has it's transformed geometry under
+         * Return the window that has its transformed geometry under
          * the specified point. It is recommended to use the stacking
          * order as it's what the user sees, but it is slightly
          * slower to process.
