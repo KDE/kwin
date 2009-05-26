@@ -225,7 +225,7 @@ void SnowEffect::postPaintScreen()
 
 void SnowEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( active && snowBehindWindows && !w->isDesktop() && !w->isDock() )
+    if( active && snowBehindWindows && !w->isDesktop() && !w->isDock() && !w->hasAlpha() && data.opacity == 1.0 )
         {
         repaintRegion -= QRegion( w->geometry() );
         }
