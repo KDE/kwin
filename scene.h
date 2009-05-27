@@ -186,7 +186,7 @@ class Scene::Window
         bool isOpaque() const;
         // shape of the window
         QRegion shape() const;
-        QRect clientRect() const;
+        QRegion clientShape() const;
         void discardShape();
         void updateToplevel( Toplevel* c );
         // creates initial quad list for the window

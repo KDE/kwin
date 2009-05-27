@@ -233,7 +233,7 @@ void Scene::paintSimpleScreen( int orig_mask, QRegion region )
         w->resetPaintingEnabled();
         data.paint = region;
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
-        data.clip = w->isOpaque() ? QRegion(w->clientRect().translated( w->x(), w->y())) : QRegion();
+        data.clip = w->isOpaque() ? w->clientShape().translated( w->x(), w->y() ) : QRegion();
         data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow( effectWindow( w ), data, time_diff );
@@ -410,10 +410,14 @@ QRegion Scene::Window::shape() const
     return shape_region;
     }
 
-// Returns the rectangle occupied by the client within the window geometry
-QRect Scene::Window::clientRect() const
+QRegion Scene::Window::clientShape() const
     {
-    return QRect(toplevel->clientPos(), toplevel->clientSize());
+    Client *c = dynamic_cast< Client* >( toplevel );
+    if ( c && c->isShade() )
+        return QRegion();
+
+    const QRegion r = shape() & QRect( toplevel->clientPos(), toplevel->clientSize() );
+    return r.isEmpty() ? QRegion() : r;
     }
 
 bool Scene::Window::isVisible() const
@@ -477,7 +481,7 @@ WindowQuadList Scene::Window::buildQuads( bool force ) const
     else
         {
         Client *client = static_cast<Client*>( toplevel );
-        QRegion contents = shape() & QRect( toplevel->clientPos(), toplevel->clientSize());
+        QRegion contents = clientShape();
         QRegion decoration = (Workspace::self()->decorationHasAlpha() ?
                               QRegion(client->decorationRect()) : shape()) - contents;
         ret = makeQuads( WindowQuadContents, contents );
