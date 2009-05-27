@@ -314,8 +314,9 @@ class Client
         void ensureDecorationPixmapsPainted();
 
         QRect decorationRect() const {
-            return decoration ? decoration->widget()->rect().translated(-padding_left, -padding_top)
-                        : QRect(0, 0, width(), height());
+            return (decoration && decoration->widget()) ?
+                        decoration->widget()->rect().translated(-padding_left, -padding_top) :
+                        QRect(0, 0, width(), height());
         }
 
         enum CoordinateMode {
