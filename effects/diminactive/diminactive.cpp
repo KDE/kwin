@@ -109,6 +109,8 @@ void DimInactiveEffect::windowActivated( EffectWindow* w )
         {
         previousActive = active;
         previousActiveTimeline.setProgress( 0.0 );
+        if( !dimWindow( previousActive ) )
+            previousActive = NULL;
 
         if( dim_by_group )
             {
