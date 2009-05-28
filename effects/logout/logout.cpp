@@ -92,7 +92,6 @@ void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     if( blurSupported && progress > 0.0 )
         {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-        effects->pushRenderTarget( blurTarget );
         }
 #endif
 
@@ -142,6 +141,12 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
 
 void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if( blurSupported && progress > 0.0 )
+        {
+        effects->pushRenderTarget( blurTarget );
+        }
+#endif
     effects->paintScreen( mask, region, data );
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
