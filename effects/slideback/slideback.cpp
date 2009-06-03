@@ -134,18 +134,18 @@ QRect SlideBackEffect::getSlideDestination( const QRect &windowUnderGeometry, co
     int downSlide = windowUnderGeometry.bottom() - windowOverGeometry.top() + 20;
 
     int horizSlide = leftSlide;
-    if( abs( horizSlide ) > abs( rightSlide ) )
+    if( qAbs( horizSlide ) > qAbs( rightSlide ) )
         {
         horizSlide = rightSlide;
         }
     int vertSlide = upSlide;
-    if( abs( vertSlide ) > abs( downSlide ) )
+    if( qAbs( vertSlide ) > qAbs( downSlide ) )
 	{
 	vertSlide = downSlide;
 	}
 
     QRect slideRect = windowOverGeometry;
-    if( abs( horizSlide ) < abs( vertSlide ) )
+    if( qAbs( horizSlide ) < qAbs( vertSlide ) )
 	{
 	slideRect.moveLeft( slideRect.x() + horizSlide );
 	}
@@ -233,8 +233,8 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
         if( destinationList.contains( w ) )
             {
             // has window reched its destination?
-            if(( abs( motionManager.transformedGeometry( w ).x() - destinationList[w].x() ) < 1 ) &&
-                    ( abs( motionManager.transformedGeometry( w ).y() - destinationList[w].y() ) < 1 ) )
+            if(( qAbs( motionManager.transformedGeometry( w ).x() - destinationList[w].x() ) < 1 ) &&
+                    ( qAbs( motionManager.transformedGeometry( w ).y() - destinationList[w].y() ) < 1 ) )
                 {
                 // If we are still intersecting with the activeWindow it is moving. slide to somewhere else
                 // restore the stacking order of all windows not intersecting any more except panels
@@ -304,8 +304,8 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
         else
             {
             // is window back at its original position?
-            if(( abs( motionManager.transformedGeometry( w ).x() - w->geometry().x() ) < 1 ) &&
-                    ( abs( motionManager.transformedGeometry( w ).y() - w->geometry().y() ) < 1 ) )
+            if(( qAbs( motionManager.transformedGeometry( w ).x() - w->geometry().x() ) < 1 ) &&
+                    ( qAbs( motionManager.transformedGeometry( w ).y() - w->geometry().y() ) < 1 ) )
                 {
                 motionManager.unmanage( w );
                 }
