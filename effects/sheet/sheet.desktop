@@ -28,6 +28,7 @@ Name[sv]=Blad
 Name[tr]=Biçimler
 Name[uk]=Аркуш
 Name[x-test]=xxSheetxx
+Name[zh_CN]=飘落
 Name[zh_TW]=飄落
 Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
@@ -54,6 +55,7 @@ Comment[sv]=Gör att dialogrutor mjukt flyger in eller ut när de visas eller d�
 Comment[tr]=Pencereler gösterilirken ve gizlenirken prüzsüz bir şekilde hareket ettir
 Comment[uk]=Робить так, щоб вікна плавно з'являлись / зникали, коли вони показуються або ховаються
 Comment[x-test]=xxMake modal dialogs smoothly fly in and out when they are shown or hiddenxx
+Comment[zh_CN]=显示或隐藏对话框时，以飘起飘落的形式呈现
 Comment[zh_TW]=顯示或隱藏對話框時以飄下來、飄上去的方式呈現
 
 Type=Service
