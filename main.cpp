@@ -248,6 +248,7 @@ Application::Application()
         XSynchronize( display(), True );
         kDebug( 1212 ) << "Running KWin in sync mode";
         }
+    setQuitOnLastWindowClosed( false );
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     KSharedConfig::Ptr config = KGlobal::config();
     if( !config->isImmutable() && args->isSet( "lock" ))
