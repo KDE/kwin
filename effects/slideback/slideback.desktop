@@ -22,6 +22,7 @@ Name[sl]=Zdrs v ozadje
 Name[sv]=Glid tillbaka
 Name[tr]=Geriye Kaydır
 Name[uk]=Зниження
+Name[x-test]=xxSlide Backxx
 Name[zh_CN]=滑出
 Name[zh_TW]=往回滑動
 
@@ -45,6 +46,7 @@ Comment[pt_BR]=Deslizar para trás as janelas que perdem o foco
 Comment[sl]=Okna, ki izgubijo fokus, zdrsnejo v ozadje
 Comment[sv]=Låt fönster som förlorar fokus glida tillbaka
 Comment[uk]=Вікна, що знижуються, втрачають фокус
+Comment[x-test]=xxSlide back windows losing focusxx
 Comment[zh_CN]=当窗口失去焦点时呈现滑出效果
 Comment[zh_TW]=將失去焦點的視窗往回滑動
 Icon=preferences-system-windows-effect-slideback
