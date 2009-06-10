@@ -34,6 +34,7 @@ namespace Oxygen
 // OxygenFactory /////////////////////////////////////////////////////////////
 
 static const int OXYGEN_BUTTONSIZE      = 22;
+static const qreal SHADOW_WIDTH         = 25.5;
 #define TFRAMESIZE 3
 
 enum ButtonType {
@@ -59,11 +60,6 @@ public:
     virtual bool reset(unsigned long changed);
     virtual bool supports( Ability ability ) const;
     QList< BorderSize > borderSizes() const;
-
-    virtual QList< QList<QImage> > shadowTextures();
-    virtual int shadowTextureList( ShadowType type ) const;
-    virtual QList<QRect> shadowQuads( ShadowType type, QSize size ) const;
-    virtual double shadowOpacity( ShadowType type ) const;
 
     static bool initialized();
     static Qt::Alignment titleAlignment();

@@ -75,6 +75,11 @@ static void oxkwincleanupBefore()
     h->invalidateCaches();
 }
 
+void OxygenClient::invalidateCaches()
+{
+    shadowCache_.clear();
+}
+
 void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 {
     p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
@@ -87,6 +92,9 @@ OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
     , helper_(*globalHelper)
 {
     qAddPostRoutine(oxkwincleanupBefore);
+
+    // cache active and inactive states
+    shadowCache_.setMaxCost(2);
 }
 
 OxygenClient::~OxygenClient()
@@ -187,6 +195,13 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_ButtonMarginTop:
             return 0;
 
+        // outer margin for shadow/glow
+        case LM_OuterPaddingLeft:
+        case LM_OuterPaddingRight:
+        case LM_OuterPaddingTop:
+        case LM_OuterPaddingBottom:
+            return SHADOW_WIDTH;
+
         default:
             return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
     }
@@ -274,7 +289,6 @@ QColor OxygenClient::titlebarTextColor(const QPalette &palette)
     }
 }
 
-
 void OxygenClient::paintEvent(QPaintEvent *e)
 {
     Q_UNUSED(e)
@@ -291,7 +305,9 @@ void OxygenClient::paintEvent(QPaintEvent *e)
         palette.setCurrentColorGroup(QPalette::Inactive);
 
     int x,y,w,h;
-    QRect frame = widget()->frameGeometry();
+    QRect frame = widget()->rect();
+    frame.adjust(SHADOW_WIDTH, SHADOW_WIDTH, -SHADOW_WIDTH, -SHADOW_WIDTH);
+
     QColor color = palette.window().color();
     QColor light = helper_.calcLightColor( color );
     QColor dark = helper_.calcDarkColor( color );
@@ -308,8 +324,33 @@ void OxygenClient::paintEvent(QPaintEvent *e)
             buttonsLeftWidth() - buttonsRightWidth() -
             marginLeft - marginRight;
 
+    // draw shadow
+
+    if (compositingActive())
+        shadowTiles(color, SHADOW_WIDTH)->render(
+                frame.adjusted(-SHADOW_WIDTH+4, -SHADOW_WIDTH+4, SHADOW_WIDTH-4, SHADOW_WIDTH-4),
+                &painter, TileSet::Ring);
+
     // draw window background
-    helper_.renderWindowBackground(&painter, frame, this->widget(), palette, 0);
+    bool isCompositingActive = compositingActive();
+
+    if (isCompositingActive) {
+        frame.getRect(&x, &y, &w, &h);
+
+        QRegion mask(x+5, y+0, w-10, h-0);
+        mask += QRegion(x+0, y+5, w-0, h-10);
+        mask += QRegion(x+1, y+3, w-2, h-6);
+        mask += QRegion(x+2, y+2, w-4, h-4);
+        mask += QRegion(x+3, y+1, w-6, h-2);
+
+        painter.setClipRegion(mask);
+    } 
+
+    helper_.renderWindowBackground(&painter, frame, this->widget(), palette, SHADOW_WIDTH);
+
+    if (isCompositingActive) {
+        painter.setClipping(false);
+    }
 
     // draw title text
     painter.setFont(options()->font(isActive(), false));
@@ -320,8 +361,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.setRenderHint(QPainter::Antialiasing);
 
     // Draw dividing line
-    frame = widget()->rect();
-    if (shadowsActive()) {
+    if (compositingActive()) {
         frame.adjust(-1,-1,1,1);
     }
     frame.getRect(&x, &y, &w, &h);
@@ -372,7 +412,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     if(maximized)
         return;
 
-    helper_.drawFloatFrame(&painter, frame, color, !shadowsActive(), isActive(),
+    helper_.drawFloatFrame(&painter, frame, color, !compositingActive(), isActive(),
                                                                 KDecoration::options()->color(ColorTitleBar));
 
     if(!isResizable())
@@ -432,7 +472,7 @@ void OxygenClient::updateWindowShape()
         return;
     }
 
-    if (!shadowsActive()) {
+    if (!compositingActive()) {
         QRegion mask(4, 0, w-8, h);
         mask += QRegion(0, 4, w, h-8);
         mask += QRegion(2, 1, w-4, h-2);
@@ -440,51 +480,138 @@ void OxygenClient::updateWindowShape()
 
         setMask(mask);
     }
-   else {
-        QRegion mask(5, 0, w-10, h-0);
-        mask += QRegion(0, 5, w-0, h-10);
-        mask += QRegion(2, 2, w-4, h-4);
-        mask += QRegion(3, 1, w-6, h-2);
-        mask += QRegion(1, 3, w-2, h-6);
-
-        setMask(mask);
-    }
 }
 
-QList<QRect> OxygenClient::shadowQuads( ShadowType type ) const
+TileSet *OxygenClient::shadowTiles(const QColor &color, qreal size)
 {
-    Q_UNUSED(type)
+    quint64 key = (quint64(color.rgba()) << 32) | quint64(size*10);
+    TileSet *tileSet = shadowCache_.object(key);
 
-    QSize size = widget()->size();
-    int outside=21, underlap=4, cornersize=25;
-    // These are underlap under the decoration so the corners look nicer 10px on the outside
-    QList<QRect> quads;
-    quads.append(QRect(-outside, size.height()-underlap, cornersize, cornersize));
-    quads.append(QRect(underlap, size.height()-underlap, size.width()-2*underlap, cornersize));
-    quads.append(QRect(size.width()-underlap, size.height()-underlap, cornersize, cornersize));
-    quads.append(QRect(-outside, underlap, cornersize, size.height()-2*underlap));
-    quads.append(QRect(size.width()-underlap, underlap, cornersize, size.height()-2*underlap));
-    quads.append(QRect(-outside, -outside, cornersize, cornersize));
-    quads.append(QRect(underlap, -outside, size.width()-2*underlap, cornersize));
-    quads.append(QRect(size.width()-underlap,     -outside, cornersize, cornersize));
-    return quads;
-}
+    if (!tileSet)
+    {
+        QColor light = oxygenHelper()->calcLightColor(oxygenHelper()->backgroundTopColor(color));
+        QColor dark = oxygenHelper()->calcDarkColor(oxygenHelper()->backgroundBottomColor(color));
+        QColor glow = KDecoration::options()->color(ColorFrame);
+        QColor glow2 = KDecoration::options()->color(ColorTitleBar);
 
-double OxygenClient::shadowOpacity( ShadowType type ) const
-{
-    switch( type ) {
-        case ShadowBorderedActive:
-            if( isActive() )
-                return 1.0;
-            return 0.0;
-        case ShadowBorderedInactive:
-            if( isActive() )
-                return 0.0;
-            return 1.0;
-        default:
-            abort(); // Should never be reached
+        QPixmap shadow = QPixmap( size*2, size*2 );
+        shadow.fill( Qt::transparent );
+
+        // draw the corner of the window - actually all 4 corners as one circle
+        QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
+        lg.setColorAt(0.52, light);
+        lg.setColorAt(1.0, dark);
+
+        QPainter p( &shadow );
+        p.setRenderHint( QPainter::Antialiasing );
+        p.setPen( Qt::NoPen );
+
+        if (isActive())
+        {
+            //---------------------------------------------------------------
+            // Active shadow texture
+
+            QRadialGradient rg( size, size, size );
+            QColor c = color;
+            c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
+            c = glow;
+            c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
+            c.setAlpha( 180 );  rg.setColorAt( 5/size, c );
+            c.setAlpha( 25 );  rg.setColorAt( 5.5/size, c );
+            c.setAlpha( 0 );  rg.setColorAt( 6.5/size, c );
+
+            p.setBrush( rg );
+            p.drawRect( shadow.rect() );
+
+            rg = QRadialGradient( size, size, size );
+            c = color;
+            c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
+            c = glow2;
+            c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
+            c.setAlpha( 0.43*255 );  rg.setColorAt( 5.5/size, c );
+            c.setAlpha( 0.30*255 );  rg.setColorAt( 6.5/size, c );
+            c.setAlpha( 0.22*255 );  rg.setColorAt( 7.5/size, c );
+            c.setAlpha( 0.15*255 );  rg.setColorAt( 8.5/size, c );
+            c.setAlpha( 0.08*255 );  rg.setColorAt( 11.5/size, c );
+            c.setAlpha( 0);  rg.setColorAt( 14.5/size, c );
+            p.setRenderHint( QPainter::Antialiasing );
+            p.setBrush( rg );
+            p.drawRect( shadow.rect() );
+            
+            p.setBrush( Qt::NoBrush );
+            p.setPen(QPen(lg, 0.8));
+            p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+
+            p.end();
+
+            tileSet = new TileSet(shadow, size, size, 1, 1);
+            shadowCache_.insert(key, tileSet);
+        } else {
+            //---------------------------------------------------------------
+            // Inactive shadow texture
+
+            QRadialGradient rg = QRadialGradient( size, size+4, size );
+            QColor c = QColor( Qt::black );
+            c.setAlpha( 0.12*255 );  rg.setColorAt( 4.5/size, c );
+            c.setAlpha( 0.11*255 );  rg.setColorAt( 6.6/size, c );
+            c.setAlpha( 0.075*255 );  rg.setColorAt( 8.5/size, c );
+            c.setAlpha( 0.06*255 );  rg.setColorAt( 11.5/size, c );
+            c.setAlpha( 0.035*255 );  rg.setColorAt( 14.5/size, c );
+            c.setAlpha( 0.025*255 );  rg.setColorAt( 17.5/size, c );
+            c.setAlpha( 0.01*255 );  rg.setColorAt( 21.5/size, c );
+            c.setAlpha( 0.0*255 );  rg.setColorAt( 25.5/size, c );
+            p.setRenderHint( QPainter::Antialiasing );
+            p.setPen( Qt::NoPen );
+            p.setBrush( rg );
+            p.drawRect( shadow.rect() );
+
+            rg = QRadialGradient( size, size+2, size );
+            c = QColor( Qt::black );
+            c.setAlpha( 0.25*255 );  rg.setColorAt( 4.5/size, c );
+            c.setAlpha( 0.20*255 );  rg.setColorAt( 5.5/size, c );
+            c.setAlpha( 0.13*255 );  rg.setColorAt( 7.5/size, c );
+            c.setAlpha( 0.06*255 );  rg.setColorAt( 8.5/size, c );
+            c.setAlpha( 0.015*255 );  rg.setColorAt( 11.5/size, c );
+            c.setAlpha( 0.0*255 );  rg.setColorAt( 14.5/size, c );
+            p.setRenderHint( QPainter::Antialiasing );
+            p.setPen( Qt::NoPen );
+            p.setBrush( rg );
+            p.drawRect( shadow.rect() );
+
+            rg = QRadialGradient( size, size+0.2, size );
+            c = color;
+            c = QColor( Qt::black );
+            c.setAlpha( 0.35*255 );  rg.setColorAt( 0/size, c );
+            c.setAlpha( 0.32*255 );  rg.setColorAt( 4.5/size, c );
+            c.setAlpha( 0.22*255 );  rg.setColorAt( 5.0/size, c );
+            c.setAlpha( 0.03*255 );  rg.setColorAt( 5.5/size, c );
+            c.setAlpha( 0.0*255 );  rg.setColorAt( 6.5/size, c );
+            p.setRenderHint( QPainter::Antialiasing );
+            p.setPen( Qt::NoPen );
+            p.setBrush( rg );
+            p.drawRect( shadow.rect() );
+
+            rg = QRadialGradient( size, size, size );
+            c = color;
+            c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
+            c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
+            p.setRenderHint( QPainter::Antialiasing );
+            p.setPen( Qt::NoPen );
+            p.setBrush( rg );
+            p.drawRect( shadow.rect() );
+
+            // draw the corner of the window - actually all 4 corners as one circle
+            p.setBrush( Qt::NoBrush );
+            p.setPen(QPen(lg, 0.8));
+            p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+
+            p.end();
+
+            tileSet = new TileSet(shadow, size, size, 1, 1);
+            shadowCache_.insert(key, tileSet);
+        }
     }
-    return 0;
+    return tileSet;
 }
 
 } //namespace Oxygen

@@ -32,6 +32,7 @@
 #include <kcommondecoration.h>
 
 #include "lib/helper.h"
+#include "lib/tileset.h"
 
 class QPoint;
 
@@ -43,6 +44,7 @@ class OxygenClient : public KCommonDecorationUnstable
 public:
     OxygenClient(KDecorationBridge *b, KDecorationFactory *f);
     virtual ~OxygenClient();
+    virtual void invalidateCaches();
 
     virtual QString visibleName() const;
     virtual KCommonDecorationButton *createButton(::ButtonType type);
@@ -51,15 +53,15 @@ public:
     virtual void updateWindowShape();
     virtual void init();
 
-    virtual QList<QRect> shadowQuads( ShadowType type ) const;
-    virtual double shadowOpacity( ShadowType type ) const;
-
 private:
     void paintEvent(QPaintEvent *e);
     void drawStripes(QPainter *p, QPalette &palette, const int start, const int end, const int topMargin);
     QColor titlebarTextColor(const QPalette &palette);
     bool colorCacheInvalid_;
     QColor cachedTitlebarTextColor_;
+
+    TileSet *shadowTiles(const QColor&, qreal size);
+    QCache<quint64, TileSet> shadowCache_;
 
 protected:
     friend class OxygenButton;

@@ -183,7 +183,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
         pal.setCurrentColorGroup(QPalette::Inactive);
 
     // fill the grey square
-    helper_.renderWindowBackground(&painter, this->rect(), this, pal, 0);
+    helper_.renderWindowBackground(&painter, this->rect(), this, pal, 23 /*TODO: calculate this from layout metrics*/);
     painter.setClipRect(this->rect());
 
     // draw dividing line
