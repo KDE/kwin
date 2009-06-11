@@ -240,7 +240,7 @@ void CompositingPrefs::detectDriverAndVersion()
     kDebug( 1212 ) << "GL version is" << mGLVersion;
     kDebug( 1212 ) << "XGL:" << ( mXgl ? "yes" : "no" );
 
-    if( mGLRenderer.startsWith( "Mesa DRI Intel" ))
+    if( mGLRenderer.startsWith( "Mesa DRI Intel" ) || mGLRenderer.startsWith( "Mesa DRI Mobile Intel" ))
         {
         mDriver = "intel";
         QStringList words = mGLRenderer.split(" ");
