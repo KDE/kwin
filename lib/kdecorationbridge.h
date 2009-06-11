@@ -93,10 +93,7 @@ class KWIN_EXPORT KDecorationBridgeUnstable
     : public KDecorationBridge
     {
     public:
-        virtual void repaintShadow() = 0;
         virtual bool compositingActive() const = 0;
-        virtual bool shadowsActive() const = 0;
-        virtual double opacity() const = 0;
     };
 
 /** @} */

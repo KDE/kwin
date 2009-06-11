@@ -393,51 +393,9 @@ KDecorationUnstable::~KDecorationUnstable()
     {
     }
 
-QList<QRect> KDecorationUnstable::shadowQuads( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return QList<QRect>();
-    }
-
-double KDecorationUnstable::shadowOpacity( ShadowType type ) const
-    {
-    if( isActive() && type == ShadowBorderedActive )
-        return 1.0;
-    else if( !isActive() && type == ShadowBorderedInactive )
-        return 1.0;
-    return 0.0;
-    }
-
-double KDecorationUnstable::shadowBrightness( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return 1.0;
-    }
-
-double KDecorationUnstable::shadowSaturation( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return 1.0;
-    }
-
-void KDecorationUnstable::repaintShadow()
-    {
-    static_cast< KDecorationBridgeUnstable* >( bridge_ )->repaintShadow();
-    }
-
 bool KDecorationUnstable::compositingActive() const
     {
     return static_cast< KDecorationBridgeUnstable* >( bridge_ )->compositingActive();
-    }
-
-bool KDecorationUnstable::shadowsActive() const
-    {
-    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->shadowsActive();
-    }
-
-double KDecorationUnstable::opacity() const
-    {
-    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->opacity();
     }
 
 void KDecorationUnstable::padding(int &left, int &right, int &top, int &bottom) const

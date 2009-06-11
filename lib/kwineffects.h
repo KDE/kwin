@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 82
+#define KWIN_EFFECT_API_VERSION_MINOR 83
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -701,17 +701,6 @@ class KWIN_EXPORT EffectsHandler
          * Returns @a true if the active window decoration has shadow API hooks.
          */
         virtual bool hasDecorationShadows() const = 0;
-        /**
-         * Returns the textures to be used in the shadow. Textures are mapped
-         * to the quad that has the same list offset. E.g. texture[2] is
-         * rendered where the third QRect that EffectWindow::shadowQuads()
-         * returns is.
-         */
-        virtual QList< QList<QImage> > shadowTextures() = 0;
-        /**
-         * Returns the texture list offset for the requested type.
-         */
-        virtual int shadowTextureList( ShadowType type ) const = 0;
 
         /**
          * @deprecated
@@ -950,23 +939,6 @@ class KWIN_EXPORT EffectWindow
         virtual EffectWindow* findModal() = 0;
         virtual EffectWindowList mainWindows() const = 0;
 
-        /**
-         * Returns the positions of the shadow quads to be rendered. All positions
-         * are relative to the window's top-left corner.
-         */
-        virtual QList<QRect> shadowQuads( ShadowType type ) const = 0;
-        /**
-         * Returns the desired opacity of the shadow.
-         */
-        virtual double shadowOpacity( ShadowType type ) const = 0;
-        /**
-         * Returns the desired brightness of the shadow.
-         */
-        virtual double shadowBrightness( ShadowType type ) const = 0;
-        /**
-         * Returns the desired saturation of the shadow.
-         */
-        virtual double shadowSaturation( ShadowType type ) const = 0;
         /**
          * Returns the unmodified window quad list. Can also be used to force rebuilding.
          */

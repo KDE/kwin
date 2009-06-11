@@ -113,34 +113,6 @@ void KCommonDecorationWrapper::reset( unsigned long changed )
     return decoration->reset( changed );
     }
 
-QList<QRect> KCommonDecorationWrapper::shadowQuads( ShadowType type ) const
-    {
-    if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
-        return decoration2->shadowQuads( type );
-    return QList<QRect>();
-    }
-
-double KCommonDecorationWrapper::shadowOpacity( ShadowType type ) const
-    {
-    if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
-        return decoration2->shadowOpacity( type );
-    return 1.0;
-    }
-
-double KCommonDecorationWrapper::shadowBrightness( ShadowType type ) const
-    {
-    if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
-        return decoration2->shadowBrightness( type );
-    return 1.0;
-    }
-
-double KCommonDecorationWrapper::shadowSaturation( ShadowType type ) const
-    {
-    if( KCommonDecorationUnstable *decoration2 = dynamic_cast<KCommonDecorationUnstable*>( decoration ))
-        return decoration2->shadowSaturation( type );
-    return 1.0;
-    }
-
 void KCommonDecorationWrapper::padding(int &left, int &right, int &top, int &bottom) const
     {
     left   = decoration->layoutMetric(KCommonDecoration::LM_OuterPaddingLeft);

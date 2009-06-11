@@ -59,11 +59,6 @@ class KCommonDecorationWrapper
         virtual bool windowDocked( Position side );
         virtual void reset( unsigned long changed );
 
-        virtual QList<QRect> shadowQuads( ShadowType type ) const;
-        virtual double shadowOpacity( ShadowType type ) const;
-        virtual double shadowBrightness( ShadowType type ) const;
-        virtual double shadowSaturation( ShadowType type ) const;
-
         virtual void padding( int &left, int &right, int &top, int &bottom ) const;
     private:
         KCommonDecoration* decoration;

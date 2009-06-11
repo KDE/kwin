@@ -71,20 +71,14 @@ class ShadowEffect
         int shadowSize;
         bool intensifyActiveShadow;
         QColor shadowColor, cachedColor;
-        bool forceDecorated;
-        bool forceUndecorated;
-        bool forceOther;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        QList< QList<GLTexture*> > mShadowTextures;
         QList<GLTexture*> mDefaultShadowTextures;
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        QList< QList<XRenderPicture*> > mShadowPics;
         QList<XRenderPicture*> mDefaultShadowPics;
         XRenderPicture cachedBlendPicture;
 #endif
 
-        QList<WindowQuadType> mShadowQuadTypes;
         WindowQuadType mDefaultShadowQuadType;
 
         struct ShadowData

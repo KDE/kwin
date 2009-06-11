@@ -56,10 +56,6 @@ ShadowEffectConfig::ShadowEffectConfig(QWidget* parent, const QVariantList& args
     connect( m_ui->colorButton, SIGNAL( changed( QColor )), this, SLOT( changed() ));
     connect( m_ui->strongerActiveBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
 
-    connect( m_ui->forceDecoratedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->forceUndecoratedBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->forceOtherBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
-
     load();
     }
 
@@ -80,10 +76,6 @@ void ShadowEffectConfig::load()
     m_ui->sizeSpin->setValue( conf.readEntry( "Size", 5 ));
     m_ui->colorButton->setColor( conf.readEntry( "Color", schemeShadowColor() ));
     m_ui->strongerActiveBox->setChecked( conf.readEntry( "IntensifyActiveShadow", true ));
-
-    m_ui->forceDecoratedBox->setChecked( conf.readEntry( "forceDecoratedToDefault", false ));
-    m_ui->forceUndecoratedBox->setChecked( conf.readEntry( "forceUndecoratedToDefault", false ));
-    m_ui->forceOtherBox->setChecked( conf.readEntry( "forceOtherToDefault", false ));
 
     emit changed(false);
     }
@@ -108,10 +100,6 @@ void ShadowEffectConfig::save()
         conf.writeEntry( "Color", userColor );
     conf.writeEntry( "IntensifyActiveShadow", m_ui->strongerActiveBox->isChecked() );
 
-    conf.writeEntry( "forceDecoratedToDefault", m_ui->forceDecoratedBox->isChecked() );
-    conf.writeEntry( "forceUndecoratedToDefault", m_ui->forceUndecoratedBox->isChecked() );
-    conf.writeEntry( "forceOtherToDefault", m_ui->forceOtherBox->isChecked() );
-
     conf.sync();
 
     emit changed(false);
@@ -131,10 +119,6 @@ void ShadowEffectConfig::defaults()
     m_ui->sizeSpin->setValue( 5 );
     m_ui->colorButton->setColor( schemeShadowColor() );
     m_ui->strongerActiveBox->setChecked( true );
-
-    m_ui->forceDecoratedBox->setChecked( false );
-    m_ui->forceUndecoratedBox->setChecked( false );
-    m_ui->forceOtherBox->setChecked( false );
 
     emit changed(true);
     }

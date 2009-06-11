@@ -203,32 +203,9 @@ void Bridge::grabXServer( bool grab )
         KWin::ungrabXServer();
     }
 
-void Bridge::repaintShadow()
-    {
-    // TODO
-    }
-
 bool Bridge::compositingActive() const
     {
     return c->workspace()->compositingActive();
     }
-
-bool Bridge::shadowsActive() const
-    {
-    if( !c->workspace()->compositingActive() )
-        return false;
-    if( effects && static_cast<EffectsHandlerImpl*>( effects )->isEffectLoaded( "kwin4_effect_shadow" ))
-        { // The shadow effect has a setting to disable decoration shadows, take it into account.
-        KConfigGroup conf = static_cast<EffectsHandlerImpl*>( effects )->effectConfig( "Shadow" );
-        return !conf.readEntry( "forceDecoratedToDefault", false );
-        }
-    return false;
-    }
-
-double Bridge::opacity() const
-    {
-    return c->opacity();
-    }
-
 
 } // namespace

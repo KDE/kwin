@@ -373,14 +373,8 @@ class KWIN_EXPORT KCommonDecorationUnstable
     public:
         KCommonDecorationUnstable(KDecorationBridge* bridge, KDecorationFactory* factory);
         virtual ~KCommonDecorationUnstable();
-        virtual QList<QRect> shadowQuads( ShadowType type ) const;
-        virtual double shadowOpacity( ShadowType type ) const;
-        virtual double shadowBrightness( ShadowType type ) const;
-        virtual double shadowSaturation( ShadowType type ) const;
-        void repaintShadow();
         bool compositingActive() const;
         bool shadowsActive() const;
-        double opacity() const;
     };
 
 /**

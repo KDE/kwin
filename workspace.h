@@ -367,13 +367,6 @@ class Workspace : public QObject, public KDecorationDefines
         bool hasDecorationShadows() const;
         bool decorationHasAlpha() const;
 
-        QList< QList<QImage> > decorationShadowTextures();
-        int decorationShadowTextureList( ShadowType type ) const;
-        QList<QRect> decorationShadowQuads( ShadowType type, QSize size ) const;
-        double decorationShadowOpacity( ShadowType type ) const;
-        double decorationShadowBrightness( ShadowType type ) const;
-        double decorationShadowSaturation( ShadowType type ) const;
-
         // D-Bus interface
         void cascadeDesktop();
         void unclutterDesktop();
@@ -1187,54 +1180,12 @@ inline void Workspace::checkCompositeTimer()
 
 inline bool Workspace::hasDecorationShadows() const
     {
-    return mgr->factory()->supports( AbilityCompositingShadow );
+    return mgr->factory()->supports( AbilityProvidesShadow );
     }
 
 inline bool Workspace::decorationHasAlpha() const
     {
     return mgr->factory()->supports( AbilityUsesAlphaChannel );
-    }
-
-inline QList< QList<QImage> > Workspace::decorationShadowTextures()
-    {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
-        return factory->shadowTextures();
-    return QList< QList<QImage> >();
-    }
-
-inline int Workspace::decorationShadowTextureList( ShadowType type ) const
-    {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
-        return factory->shadowTextureList( type );
-    return -1;
-    }
-
-inline QList<QRect> Workspace::decorationShadowQuads( ShadowType type, QSize size ) const
-    {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
-        return factory->shadowQuads( type, size );
-    return QList<QRect>();
-    }
-
-inline double Workspace::decorationShadowOpacity( ShadowType type ) const
-    {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
-        return factory->shadowOpacity( type );
-    return 1.0;
-    }
-
-inline double Workspace::decorationShadowBrightness( ShadowType type ) const
-    {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast<KDecorationFactoryUnstable*>( mgr->factory() ))
-        return factory->shadowBrightness( type );
-    return 1.0;
-    }
-
-inline double Workspace::decorationShadowSaturation( ShadowType type ) const
-    {
-    if( KDecorationFactoryUnstable* factory = dynamic_cast< KDecorationFactoryUnstable*>( mgr->factory() ))
-        return factory->shadowSaturation( type );
-    return 1.0;
     }
 
 } // namespace

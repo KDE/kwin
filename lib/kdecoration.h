@@ -185,7 +185,8 @@ public:
         AbilityColorButtonFore = 2021, ///< decoration supports button foreground color
         ABILITYCOLOR_END, ///< @internal
         // compositing
-        AbilityCompositingShadow = 3000, ///< decoration supports window shadows
+        AbilityProvidesShadow = 3000, ///< The decoration draws its own shadows.
+                                      ///  @since 4.3
         AbilityUsesAlphaChannel = 3001, ///< The decoration isn't clipped to the mask when compositing is enabled.
                                         ///  The mask is still used to define the input region and the blurred
                                         ///  region, when the blur plugin is enabled.
@@ -869,7 +870,7 @@ class KWIN_EXPORT KDecoration
     };
 
 /**
- * @warning THIS CLASS IS UNSTABLE AND WILL ONLY BE SUPPORTED IN KDE 4.2!
+ * @warning THIS CLASS IS UNSTABLE!
  */
 class KWIN_EXPORT KDecorationUnstable
     : public KDecoration
@@ -879,24 +880,6 @@ class KWIN_EXPORT KDecorationUnstable
     public:
         KDecorationUnstable( KDecorationBridge* bridge, KDecorationFactory* factory );
         virtual ~KDecorationUnstable();
-        /**
-         * This function should return the positions of the shadow quads to be rendered.
-         * All positions are relative to the window's top-left corner. Only "bordered"
-         * windows will call this method.
-         */
-        virtual QList<QRect> shadowQuads( ShadowType type ) const;
-        /**
-         * This function should return the desired opacity of the shadow.
-         */
-        virtual double shadowOpacity( ShadowType type ) const;
-        /**
-         * This function should return the desired brightness of the shadow.
-         */
-        virtual double shadowBrightness( ShadowType type ) const;
-        /**
-         * This function should return the desired saturation of the shadow.
-         */
-        virtual double shadowSaturation( ShadowType type ) const;
         /**
          * This function can return additional padding values that are added outside the
          * borders of the window, and can be used by the decoration if it wants to paint
@@ -909,23 +892,9 @@ class KWIN_EXPORT KDecorationUnstable
          */
         virtual void padding(int &left, int &right, int &top, int &bottom) const;
         /**
-         * Force a repaint of the shadow. Automatically called when the window changes states.
-         */
-        void repaintShadow();
-        /**
-         * Returns @a true if compositing is enabled (Currently useless to decorations,
-         * use \a shadowsActive() instead).
+         * Returns @a true if compositing--and therefore ARGB--is enabled.
          */
         bool compositingActive() const;
-        /**
-         * Returns @a true if compositing is enabled and the shadow effect is activated
-         * by the current user.
-         */
-        bool shadowsActive() const;
-        /**
-         * Returns the opacity that the decoration will be rendered at.
-         */
-        double opacity() const;
     };
 
 inline

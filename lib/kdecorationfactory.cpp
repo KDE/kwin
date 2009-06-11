@@ -78,39 +78,3 @@ NET::WindowType KDecorationFactory::windowType( unsigned long supported_types, K
     {
     return bridge->windowType( supported_types );
     }
-
-QList< QList<QImage> > KDecorationFactoryUnstable::shadowTextures()
-    {
-    return QList< QList<QImage> >();
-    }
-
-int KDecorationFactoryUnstable::shadowTextureList( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return -1;
-    }
-
-QList<QRect> KDecorationFactoryUnstable::shadowQuads( ShadowType type, QSize size ) const
-    {
-    Q_UNUSED( type );
-    Q_UNUSED( size );
-    return QList<QRect>();
-    }
-
-double KDecorationFactoryUnstable::shadowOpacity( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return 1.0;
-    }
-
-double KDecorationFactoryUnstable::shadowBrightness( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return 1.0;
-    }
-
-double KDecorationFactoryUnstable::shadowSaturation( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return 1.0;
-    }

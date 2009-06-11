@@ -116,42 +116,12 @@ class KWIN_EXPORT KDecorationFactory
     };
 
 /**
- * @warning THIS CLASS IS UNSTABLE AND WILL ONLY BE SUPPORTED IN KDE 4.2!
+ * @warning THIS CLASS IS UNSTABLE!
+ * Keep all decoration class names in sync. E.g. KDecorationFactory2 and KDecoration2.
  */
 class KWIN_EXPORT KDecorationFactoryUnstable
     : public KDecorationFactory
     {
-    public:
-        /**
-         * This function should return the texture lists that contain the textures of the
-         * shadow quads. Textures are mapped to the quad that has the same list offset.
-         * E.g. texture[0][2] is rendered where the third QRect that shadowQuads()
-         * returns is if using the first texture list.
-         */
-        virtual QList< QList<QImage> > shadowTextures();
-        /**
-         * This function should return the texture list offset for the requested type.
-         */
-        virtual int shadowTextureList( ShadowType type ) const;
-        /**
-         * This function should return the positions of the shadow quads to be rendered.
-         * All positions are relative to the window's top-left corner. Only "borderless"
-         * and "other" types will call this method.
-         * @param   size    The size of the window.
-         */
-        virtual QList<QRect> shadowQuads( ShadowType type, QSize size ) const;
-        /**
-         * This function should return the desired opacity of the shadow.
-         */
-        virtual double shadowOpacity( ShadowType type ) const;
-        /**
-         * This function should return the desired brightness of the shadow.
-         */
-        virtual double shadowBrightness( ShadowType type ) const;
-        /**
-         * This function should return the desired saturation of the shadow.
-         */
-        virtual double shadowSaturation( ShadowType type ) const;
     };
 
 inline const KDecorationOptions* KDecorationFactory::options()

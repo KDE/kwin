@@ -1249,45 +1249,9 @@ KCommonDecorationUnstable::~KCommonDecorationUnstable()
     }
 
 // All copied from kdecoration.cpp
-QList<QRect> KCommonDecorationUnstable::shadowQuads( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return QList<QRect>();
-    }
-double KCommonDecorationUnstable::shadowOpacity( ShadowType type ) const
-    {
-    if( isActive() && type == ShadowBorderedActive )
-        return 1.0;
-    else if( !isActive() && type == ShadowBorderedInactive )
-        return 1.0;
-    return 0.0;
-    }
-double KCommonDecorationUnstable::shadowBrightness( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return 1.0;
-    }
-double KCommonDecorationUnstable::shadowSaturation( ShadowType type ) const
-    {
-    Q_UNUSED( type );
-    return 1.0;
-    }
-
-void KCommonDecorationUnstable::repaintShadow()
-    {
-    return static_cast<KDecorationUnstable*>( decoration() )->repaintShadow();
-    }
 bool KCommonDecorationUnstable::compositingActive() const
     {
     return static_cast<const KDecorationUnstable*>( decoration() )->compositingActive();
-    }
-bool KCommonDecorationUnstable::shadowsActive() const
-    {
-    return static_cast<const KDecorationUnstable*>( decoration() )->shadowsActive();
-    }
-double KCommonDecorationUnstable::opacity() const
-    {
-    return static_cast<const KDecorationUnstable*>( decoration() )->opacity();
     }
 
 // kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle;

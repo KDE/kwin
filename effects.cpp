@@ -192,16 +192,6 @@ bool EffectsHandlerImpl::hasDecorationShadows() const
     return Workspace::self()->hasDecorationShadows();
     }
 
-QList< QList<QImage> > EffectsHandlerImpl::shadowTextures()
-    {
-    return Workspace::self()->decorationShadowTextures();
-    }
-
-int EffectsHandlerImpl::shadowTextureList( ShadowType type ) const
-    {
-    return Workspace::self()->decorationShadowTextureList( type );
-    }
-
 // start another painting pass
 void EffectsHandlerImpl::startPaint()
     {
@@ -1443,50 +1433,6 @@ EffectWindowList EffectWindowImpl::mainWindows() const
         return ret;
         }
     return EffectWindowList();
-    }
-
-QList<QRect> EffectWindowImpl::shadowQuads( ShadowType type ) const
-    {
-    if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
-        {
-        if( Client* c = dynamic_cast< Client* >( toplevel ))
-            return c->shadowQuads( type );
-        return QList<QRect>();
-        }
-    return toplevel->workspace()->decorationShadowQuads( type, toplevel->size() );
-    }
-
-double EffectWindowImpl::shadowOpacity( ShadowType type ) const
-    {
-    if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
-        {
-        if( Client* c = dynamic_cast< Client* >( toplevel ))
-            return c->shadowOpacity( type );
-        return 1.0;
-        }
-    return toplevel->workspace()->decorationShadowOpacity( type );
-    }
-
-double EffectWindowImpl::shadowBrightness( ShadowType type ) const
-    {
-    if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
-        {
-        if( Client* c = dynamic_cast< Client* >( toplevel ))
-            return c->shadowBrightness( type );
-        return 1.0;
-        }
-    return toplevel->workspace()->decorationShadowBrightness( type );
-    }
-
-double EffectWindowImpl::shadowSaturation( ShadowType type ) const
-    {
-    if( type == ShadowBorderedActive ||  type == ShadowBorderedInactive )
-        {
-        if( Client* c = dynamic_cast< Client* >( toplevel ))
-            return c->shadowSaturation( type );
-        return 1.0;
-        }
-    return toplevel->workspace()->decorationShadowSaturation( type );
     }
 
 WindowQuadList EffectWindowImpl::buildQuads( bool force ) const

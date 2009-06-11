@@ -202,7 +202,7 @@ bool OxygenFactory::supports( Ability ability ) const
         case AbilityButtonSpacer:
         case AbilityButtonShade:
         // compositing
-        case AbilityCompositingShadow: // TODO: UI option to use default shadows instead
+        case AbilityProvidesShadow: // TODO: UI option to use default shadows instead
         case AbilityUsesAlphaChannel:
             return true;
         // no colors supported at this time

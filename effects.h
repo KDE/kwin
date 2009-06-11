@@ -134,8 +134,6 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual void registerPropertyType( long atom, bool reg );
 
         virtual bool hasDecorationShadows() const;
-        virtual QList< QList<QImage> > shadowTextures();
-        virtual int shadowTextureList( ShadowType type ) const;
 
         // internal (used by kwin core or compositing code)
         void startPaint();
@@ -255,11 +253,6 @@ class EffectWindowImpl : public EffectWindow
         virtual bool isModal() const;
         virtual EffectWindow* findModal();
         virtual EffectWindowList mainWindows() const;
-
-        virtual QList<QRect> shadowQuads( ShadowType type ) const;
-        virtual double shadowOpacity( ShadowType type ) const;
-        virtual double shadowBrightness( ShadowType type ) const;
-        virtual double shadowSaturation( ShadowType type ) const;
 
         virtual WindowQuadList buildQuads( bool force = false ) const;
 

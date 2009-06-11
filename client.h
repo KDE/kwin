@@ -300,11 +300,6 @@ class Client
             }
 
         // Decorations <-> Effects
-        QList<QRect> shadowQuads( ShadowType type ) const;
-        double shadowOpacity( ShadowType type ) const;
-        double shadowBrightness( ShadowType type ) const;
-        double shadowSaturation( ShadowType type ) const;
-
         const QPixmap *topDecoPixmap() const { return &decorationPixmapTop; } 
         const QPixmap *leftDecoPixmap() const { return &decorationPixmapLeft; } 
         const QPixmap *bottomDecoPixmap() const { return &decorationPixmapBottom; } 
@@ -845,34 +840,6 @@ inline void Client::removeRule( Rules* rule )
 inline bool Client::hiddenPreview() const
     {
     return mapping_state == Kept;
-    }
-
-inline QList<QRect> Client::shadowQuads( ShadowType type ) const
-    {
-    if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
-        return decoration2->shadowQuads( type );
-    return QList<QRect>();
-    }
-
-inline double Client::shadowOpacity( ShadowType type ) const
-    {
-    if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
-        return decoration2->shadowOpacity( type );
-    return 1.0;
-    }
-
-inline double Client::shadowBrightness( ShadowType type ) const
-    {
-    if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
-        return decoration2->shadowBrightness( type );
-    return 1.0;
-    }
-
-inline double Client::shadowSaturation( ShadowType type ) const
-    {
-    if( KDecorationUnstable* decoration2 = dynamic_cast< KDecorationUnstable* >( decoration ))
-        return decoration2->shadowSaturation( type );
-    return 1.0;
     }
 
 KWIN_COMPARE_PREDICATE( WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value );
