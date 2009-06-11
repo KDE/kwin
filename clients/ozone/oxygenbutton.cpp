@@ -190,7 +190,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
             KDecorationDefines::ColorTitleBar, client_.isActive()));
     }
     // fill the grey square
-    helper_.renderWindowBackground(&painter, this->rect(), this, pal2, 0);
+    helper_.renderWindowBackground(&painter, this->rect(), this, pal, 23 /*TODO: calculate this from layout metrics*/);
     painter.setClipRect(this->rect());
 
     // draw dividing line
