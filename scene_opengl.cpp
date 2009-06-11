@@ -1552,6 +1552,7 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
         }
     else
         decorationTexture->setFilter( GL_NEAREST );
+    decorationTexture->setWrapMode( GL_CLAMP_TO_EDGE );
     decorationTexture->bind();
     decorationTexture->enableUnnormalizedTexCoords();
 
