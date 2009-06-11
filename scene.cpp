@@ -480,9 +480,9 @@ WindowQuadList Scene::Window::buildQuads( bool force ) const
         ret = makeQuads( WindowQuadContents, shape()); // has no decoration
     else
         {
-        Client *client = static_cast<Client*>( toplevel );
+        Client *client = dynamic_cast<Client*>( toplevel );
         QRegion contents = clientShape();
-        QRegion decoration = (Workspace::self()->decorationHasAlpha() ?
+        QRegion decoration = (client && Workspace::self()->decorationHasAlpha() ?
                               QRegion(client->decorationRect()) : shape()) - contents;
         ret = makeQuads( WindowQuadContents, contents );
         ret += makeQuads( WindowQuadDecoration, decoration );
