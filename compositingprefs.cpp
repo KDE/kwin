@@ -266,7 +266,7 @@ void CompositingPrefs::detectDriverAndVersion()
             mVersion = Version( versionParts[1].mid( 1, versionParts[1].length() -2 ) );
             }
         }
-    else if( mGLRenderer.startsWith( "Mesa DRI" ))
+    else if( mGLRenderer.startsWith( "Mesa DRI R" ))
         {
         mDriver = "radeon";
         mVersion = Version( mGLRenderer.split(" ")[ 3 ] );
