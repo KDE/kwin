@@ -715,7 +715,8 @@ void KCommonDecoration::mouseDoubleClickEvent(QMouseEvent *e)
     if( e->button() != Qt::LeftButton )
         return;
 
-    int tb = layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeBottom);
+    int tb = layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_TitleHeight) +
+        layoutMetric(LM_TitleEdgeBottom) + layoutMetric(LM_OuterPaddingTop);
     // when shaded, react on double clicks everywhere to make it easier to unshade. otherwise
     // react only on double clicks in the title bar region...
     if (isSetShade() || e->pos().y() <= tb )
@@ -724,7 +725,8 @@ void KCommonDecoration::mouseDoubleClickEvent(QMouseEvent *e)
 
 void KCommonDecoration::wheelEvent(QWheelEvent *e)
 {
-    int tb = layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeBottom);
+    int tb = layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_TitleHeight) +
+        layoutMetric(LM_TitleEdgeBottom) + layoutMetric(LM_OuterPaddingTop);
     if (isSetShade() || e->pos().y() <= tb )
         titlebarMouseWheelOperation( e->delta());
 }
