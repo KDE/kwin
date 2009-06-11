@@ -77,7 +77,6 @@ static void oxkwincleanupBefore()
 
 void OxygenClient::invalidateCaches()
 {
-    shadowCache_.clear();
 }
 
 void renderDot(QPainter *p, const QPointF &point, qreal diameter)
@@ -92,9 +91,6 @@ OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
     , helper_(*globalHelper)
 {
     qAddPostRoutine(oxkwincleanupBefore);
-
-    // cache active and inactive states
-    shadowCache_.setMaxCost(2);
 }
 
 OxygenClient::~OxygenClient()
@@ -327,8 +323,9 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     // draw shadow
 
     if (compositingActive())
-        shadowTiles(color, SHADOW_WIDTH)->render(
-                frame.adjusted(-SHADOW_WIDTH+4, -SHADOW_WIDTH+4, SHADOW_WIDTH-4, SHADOW_WIDTH-4),
+        shadowTiles(color,KDecoration::options()->color(ColorTitleBar),
+                SHADOW_WIDTH, isActive())->render( frame.adjusted(-SHADOW_WIDTH+4,
+                    -SHADOW_WIDTH+4, SHADOW_WIDTH-4, SHADOW_WIDTH-4),
                 &painter, TileSet::Ring);
 
     // draw window background
@@ -463,8 +460,8 @@ void OxygenClient::drawStripes(QPainter *p, QPalette &palette, const int start, 
 void OxygenClient::updateWindowShape()
 {
     bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
-    int w=widget()->width();
-    int h=widget()->height();
+    int w=widget()->width() - (int)SHADOW_WIDTH;
+    int h=widget()->height() - (int)SHADOW_WIDTH;
 
     if(maximized) {
         QRegion mask(0,0,w,h);
@@ -473,26 +470,44 @@ void OxygenClient::updateWindowShape()
     }
 
     if (!compositingActive()) {
-        QRegion mask(4, 0, w-8, h);
-        mask += QRegion(0, 4, w, h-8);
-        mask += QRegion(2, 1, w-4, h-2);
-        mask += QRegion(1, 2, w-2, h-4);
+        int sw = SHADOW_WIDTH;
+        QRegion mask(sw+4, sw+0, -sw+w-8, -sw+h);
+        mask += QRegion(sw+0, sw+4, -sw+w, -sw+h-8);
+        mask += QRegion(sw+2, sw+1, -sw+w-4, -sw+h-2);
+        mask += QRegion(sw+1, sw+2, -sw+w-2, -sw+h-4);
 
         setMask(mask);
     }
 }
 
-TileSet *OxygenClient::shadowTiles(const QColor &color, qreal size)
+TileSet *OxygenClient::shadowTiles(const QColor& color, const QColor& glow, qreal size, bool active)
 {
-    quint64 key = (quint64(color.rgba()) << 32) | quint64(size*10);
-    TileSet *tileSet = shadowCache_.object(key);
+    ShadowTilesOption opt;
+    opt.active      = active;
+    opt.width       = size;
+    opt.windowColor = color;
+    opt.glowColor   = glow;
+
+    ShadowTilesOption currentOpt = active ? shadowTilesOption_ : glowTilesOption_;
+
+    bool optionChanged = true;
+    if (currentOpt.active == opt.active
+            && currentOpt.width == opt.width
+            && opt.windowColor == opt.windowColor
+            && opt.glowColor == opt.glowColor)
+        optionChanged = false;
+
+    if (active && glowTiles_ && !optionChanged)
+        return glowTiles_;
+    else if (!active && shadowTiles_ && !optionChanged)
+        return shadowTiles_;
+        
+    TileSet *tileSet;
 
     if (!tileSet)
     {
         QColor light = oxygenHelper()->calcLightColor(oxygenHelper()->backgroundTopColor(color));
         QColor dark = oxygenHelper()->calcDarkColor(oxygenHelper()->backgroundBottomColor(color));
-        QColor glow = KDecoration::options()->color(ColorFrame);
-        QColor glow2 = KDecoration::options()->color(ColorTitleBar);
 
         QPixmap shadow = QPixmap( size*2, size*2 );
         shadow.fill( Qt::transparent );
@@ -506,7 +521,7 @@ TileSet *OxygenClient::shadowTiles(const QColor &color, qreal size)
         p.setRenderHint( QPainter::Antialiasing );
         p.setPen( Qt::NoPen );
 
-        if (isActive())
+        if (active)
         {
             //---------------------------------------------------------------
             // Active shadow texture
@@ -514,7 +529,6 @@ TileSet *OxygenClient::shadowTiles(const QColor &color, qreal size)
             QRadialGradient rg( size, size, size );
             QColor c = color;
             c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
-            c = glow;
             c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
             c.setAlpha( 180 );  rg.setColorAt( 5/size, c );
             c.setAlpha( 25 );  rg.setColorAt( 5.5/size, c );
@@ -526,7 +540,7 @@ TileSet *OxygenClient::shadowTiles(const QColor &color, qreal size)
             rg = QRadialGradient( size, size, size );
             c = color;
             c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
-            c = glow2;
+            c = glow;
             c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
             c.setAlpha( 0.43*255 );  rg.setColorAt( 5.5/size, c );
             c.setAlpha( 0.30*255 );  rg.setColorAt( 6.5/size, c );
@@ -545,7 +559,8 @@ TileSet *OxygenClient::shadowTiles(const QColor &color, qreal size)
             p.end();
 
             tileSet = new TileSet(shadow, size, size, 1, 1);
-            shadowCache_.insert(key, tileSet);
+            glowTilesOption_ = opt;
+            glowTiles_       = tileSet;
         } else {
             //---------------------------------------------------------------
             // Inactive shadow texture
@@ -608,16 +623,11 @@ TileSet *OxygenClient::shadowTiles(const QColor &color, qreal size)
             p.end();
 
             tileSet = new TileSet(shadow, size, size, 1, 1);
-            shadowCache_.insert(key, tileSet);
+            shadowTilesOption_ = opt;
+            shadowTiles_       = tileSet;
         }
     }
     return tileSet;
-}
-
-void OxygenClient::activeChange()
-{
-    invalidateCaches();
-    KCommonDecoration::activeChange();
 }
 
 } //namespace Oxygen

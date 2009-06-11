@@ -52,7 +52,14 @@ public:
     virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
     virtual void updateWindowShape();
     virtual void init();
-    virtual void activeChange();
+
+private:
+    struct ShadowTilesOption {
+        QColor windowColor;
+        QColor glowColor;
+        qreal width;
+        bool active;
+    };
 
 private:
     void paintEvent(QPaintEvent *e);
@@ -61,8 +68,12 @@ private:
     bool colorCacheInvalid_;
     QColor cachedTitlebarTextColor_;
 
-    TileSet *shadowTiles(const QColor&, qreal size);
-    QCache<quint64, TileSet> shadowCache_;
+    TileSet *shadowTiles(const QColor& color, const QColor& glow, qreal size, bool active);
+
+    ShadowTilesOption shadowTilesOption_;
+    ShadowTilesOption glowTilesOption_;
+    TileSet *shadowTiles_;
+    TileSet *glowTiles_;
 
 protected:
     friend class OxygenButton;
