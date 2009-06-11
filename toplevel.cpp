@@ -142,6 +142,11 @@ void Toplevel::disownDataPassedToDeleted()
     info = NULL;
     }
 
+QRect Toplevel::visibleRect() const
+    {
+    return geometry();
+    }
+
 NET::WindowType Toplevel::windowType( bool direct, int supported_types ) const
     {
     if( supported_types == 0 )

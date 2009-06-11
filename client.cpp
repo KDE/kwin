@@ -218,7 +218,7 @@ void Client::releaseWindow( bool on_shutdown )
     finishWindowRules();
     ++block_geometry_updates;
     if( isOnCurrentDesktop() && isShown( true ))
-        addWorkspaceRepaint( geometry());
+        addWorkspaceRepaint( visibleRect() );
     // Grab X during the release to make removing of properties, setting to withdrawn state
     // and repareting to root an atomic operation (http://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
     grabXServer();
@@ -286,7 +286,7 @@ void Client::destroyClient()
     finishWindowRules();
     ++block_geometry_updates;
     if( isOnCurrentDesktop() && isShown( true ))
-        addWorkspaceRepaint( geometry());
+        addWorkspaceRepaint( visibleRect() );
     setModal( false );
     hidden = true; // So that it's not considered visible anymore
     workspace()->clientHidden( this );
@@ -669,7 +669,7 @@ void Client::updateShape()
     if( compositing())
         {
         addRepaintFull();
-        addWorkspaceRepaint( geometry()); // In case shape change removes part of this window
+        addWorkspaceRepaint( visibleRect() ); // In case shape change removes part of this window
         }
     if( scene != NULL )
         scene->windowGeometryShapeChanged( this );
@@ -903,7 +903,7 @@ void Client::setShade( ShadeMode mode )
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
     if ( isShade()) 
         { // shade_mode == ShadeNormal
-        addWorkspaceRepaint( geometry() );
+        addWorkspaceRepaint( visibleRect() );
         // Shade
         shade_geometry_change = true;
         QSize s( sizeForClientSize( QSize( clientSize() )));
@@ -1061,7 +1061,7 @@ void Client::internalHide( allowed_t )
         unmap( Allowed );
     if( old == Kept )
         updateHiddenPreview();
-    addWorkspaceRepaint( geometry() );
+    addWorkspaceRepaint( visibleRect() );
     workspace()->clientHidden( this );
     workspace()->checkUnredirect();
     }
@@ -1076,7 +1076,7 @@ void Client::internalKeep( allowed_t )
     if( old == Unmapped || old == Withdrawn )
         map( Allowed );
     updateHiddenPreview();
-    addWorkspaceRepaint( geometry() );
+    addWorkspaceRepaint( visibleRect() );
     workspace()->clientHidden( this );
     workspace()->checkUnredirect();
     }

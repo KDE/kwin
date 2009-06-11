@@ -104,6 +104,7 @@ class Client
         QSize maxSize() const;
         virtual QPoint clientPos() const; // Inside of geometry()
         virtual QSize clientSize() const;
+        virtual QRect visibleRect() const;
 
         bool windowEvent( XEvent* e );
         virtual bool eventFilter( QObject* o, QEvent* e );
@@ -784,6 +785,11 @@ inline QSize Client::clientSize() const
     {
     return client_size;
     }
+
+inline QRect Client::visibleRect() const
+   {
+   return geometry().adjusted( -padding_left, -padding_top, padding_right, padding_bottom );
+   }
 
 inline void Client::setGeometry( const QRect& r, ForceGeometry_t force )
     {

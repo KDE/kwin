@@ -64,6 +64,7 @@ class Toplevel
         int screen() const; // the screen where the center is
         virtual QPoint clientPos() const = 0; // inside of geometry()
         virtual QSize clientSize() const = 0;
+        virtual QRect visibleRect() const; // the area the window occupies on the screen
 
         // prefer isXXX() instead
         // 0 for supported types means default for managed/unmanaged types
