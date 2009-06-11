@@ -382,7 +382,8 @@ void Application::crashHandler( int signal )
 
     fprintf( stderr, "Application::crashHandler() called with signal %d; recent crashes: %d\n", signal, crashes );
     char cmd[1024];
-    sprintf( cmd, "kwin --crashes %d &", crashes );
+    sprintf( cmd, "%s --crashes %d &",
+            QFile::encodeName(QCoreApplication::applicationFilePath()).constData(), crashes );
 
     sleep( 1 );
     system( cmd );
