@@ -54,6 +54,7 @@ bool OxygenFactory::initialized_ = false;
 Qt::Alignment OxygenFactory::titleAlignment_ = Qt::AlignLeft;
 bool OxygenFactory::showStripes_ = true;
 bool OxygenFactory::blendTitlebarColors_ = true;
+bool OxygenFactory::thinBorders_ = true;
 
 //////////////////////////////////////////////////////////////////////////////
 // OxygenFactory()
@@ -126,13 +127,17 @@ bool OxygenFactory::readConfig()
     else if (value == "Right")
         titleAlignment_ = Qt::AlignRight;
 
-    bool oldstripes = showStripes;    
+    bool oldborders = thinBorders_;
+    thinBorders_ = group.readEntry( "ThinBorders", true );
+
+    bool oldstripes = showStripes_;    
     showStripes_ = group.readEntry( "ShowStripes", true );
 
     bool oldblend = blendTitlebarColors;    
     blendTitlebarColors_ = group.readEntry( "BlendTitlebarColors", true );
 
-    if (oldalign == titleAlignment_ && oldstripes == showStripes_ && oldblend == blendTitlebarColors_)
+    if (oldalign == titleAlignment_ && oldstripes == showStripes_
+            && oldborders == thinBorders_)
         return false;
     else
         return true;

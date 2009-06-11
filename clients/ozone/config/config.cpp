@@ -49,7 +49,8 @@ OxygenConfig::OxygenConfig( KConfig*, QWidget* parent )
     c = new KConfig( "oxygenrc" );
     KConfigGroup cg(c, "Windeco");
     ui = new OxygenConfigUI( parent );
-    connect( ui->showStripes,   SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->showStripes, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui->thinBorders, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui->blendTitlebarColors,   SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui->titleAlignmentLeft,   SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui->titleAlignmentCenter,   SIGNAL(clicked()), SIGNAL(changed()) );
@@ -73,6 +74,7 @@ void OxygenConfig::load( const KConfigGroup&  )
 {
     KConfigGroup cg(c, "Windeco");
     ui->showStripes->setChecked( cg.readEntry("ShowStripes", true) );
+    ui->thinBorders->setChecked( cg.readEntry("ThinBorders", true) );
     ui->blendTitlebarColors->setChecked( cg.readEntry("BlendTitlebarColors", true) );
 
     QString titleAlignment = cg.readEntry("TitleAlignment", "Left");
@@ -87,6 +89,7 @@ void OxygenConfig::save( KConfigGroup& )
 {
     KConfigGroup cg(c, "Windeco");
     cg.writeEntry( "ShowStripes", ui->showStripes->isChecked() );
+    cg.writeEntry( "ThinBorders", ui->thinBorders->isChecked() );
     cg.writeEntry( "BlendTitlebarColors", ui->blendTitlebarColors->isChecked() );
 
     QString titleAlignment = "Left";
@@ -107,6 +110,7 @@ void OxygenConfig::save( KConfigGroup& )
 void OxygenConfig::defaults()
 {
     ui->showStripes->setChecked( true );
+    ui->thinBorders->setChecked( true );
     ui->titleAlignmentLeft->setChecked( true );
     ui->blendTitlebarColors->setChecked( true );
     
