@@ -52,6 +52,7 @@ public:
     virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
     virtual void updateWindowShape();
     virtual void init();
+    virtual void activeChange();
 
 private:
     void paintEvent(QPaintEvent *e);

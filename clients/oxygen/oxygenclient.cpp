@@ -614,6 +614,12 @@ TileSet *OxygenClient::shadowTiles(const QColor &color, qreal size)
     return tileSet;
 }
 
+void OxygenClient::activeChange()
+{
+    invalidateCaches();
+    KCommonDecoration::activeChange();
+}
+
 } //namespace Oxygen
 
 //#include "oxygenclient.moc"
