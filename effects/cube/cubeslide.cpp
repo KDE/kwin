@@ -459,6 +459,11 @@ void CubeSlideEffect::desktopChanged( int old )
     {
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return;
+    if( old > effects->numberOfDesktops() )
+        {
+        // number of desktops has been reduced -> no animation
+        return;
+        }
     bool activate = true;
     if( !slideRotations.empty() )
         {
