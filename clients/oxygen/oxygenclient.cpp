@@ -502,130 +502,130 @@ TileSet *OxygenClient::shadowTiles(const QColor& color, const QColor& glow, qrea
     else if (!active && shadowTiles_ && !optionChanged)
         return shadowTiles_;
         
-    TileSet *tileSet;
+    TileSet *tileSet = 0;
 
-    if (!tileSet)
+    //---------------------------------------------------------------
+    // Create new glow/shadow tiles
+
+    QColor light = oxygenHelper()->calcLightColor(oxygenHelper()->backgroundTopColor(color));
+    QColor dark = oxygenHelper()->calcDarkColor(oxygenHelper()->backgroundBottomColor(color));
+
+    QPixmap shadow = QPixmap( size*2, size*2 );
+    shadow.fill( Qt::transparent );
+
+    // draw the corner of the window - actually all 4 corners as one circle
+    QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
+    lg.setColorAt(0.52, light);
+    lg.setColorAt(1.0, dark);
+
+    QPainter p( &shadow );
+    p.setRenderHint( QPainter::Antialiasing );
+    p.setPen( Qt::NoPen );
+
+    if (active)
     {
-        QColor light = oxygenHelper()->calcLightColor(oxygenHelper()->backgroundTopColor(color));
-        QColor dark = oxygenHelper()->calcDarkColor(oxygenHelper()->backgroundBottomColor(color));
+        //---------------------------------------------------------------
+        // Active shadow texture
 
-        QPixmap shadow = QPixmap( size*2, size*2 );
-        shadow.fill( Qt::transparent );
+        QRadialGradient rg( size, size, size );
+        QColor c = color;
+        c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
+        c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
+        c.setAlpha( 180 );  rg.setColorAt( 5/size, c );
+        c.setAlpha( 25 );  rg.setColorAt( 5.5/size, c );
+        c.setAlpha( 0 );  rg.setColorAt( 6.5/size, c );
 
-        // draw the corner of the window - actually all 4 corners as one circle
-        QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-        lg.setColorAt(0.52, light);
-        lg.setColorAt(1.0, dark);
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
-        QPainter p( &shadow );
+        rg = QRadialGradient( size, size, size );
+        c = color;
+        c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
+        c = glow;
+        c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
+        c.setAlpha( 0.43*255 );  rg.setColorAt( 5.5/size, c );
+        c.setAlpha( 0.30*255 );  rg.setColorAt( 6.5/size, c );
+        c.setAlpha( 0.22*255 );  rg.setColorAt( 7.5/size, c );
+        c.setAlpha( 0.15*255 );  rg.setColorAt( 8.5/size, c );
+        c.setAlpha( 0.08*255 );  rg.setColorAt( 11.5/size, c );
+        c.setAlpha( 0);  rg.setColorAt( 14.5/size, c );
+        p.setRenderHint( QPainter::Antialiasing );
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
+        
+        p.setBrush( Qt::NoBrush );
+        p.setPen(QPen(lg, 0.8));
+        p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+
+        p.end();
+
+        tileSet = new TileSet(shadow, size, size, 1, 1);
+        glowTilesOption_ = opt;
+        glowTiles_       = tileSet;
+    } else {
+        //---------------------------------------------------------------
+        // Inactive shadow texture
+
+        QRadialGradient rg = QRadialGradient( size, size+4, size );
+        QColor c = QColor( Qt::black );
+        c.setAlpha( 0.12*255 );  rg.setColorAt( 4.5/size, c );
+        c.setAlpha( 0.11*255 );  rg.setColorAt( 6.6/size, c );
+        c.setAlpha( 0.075*255 );  rg.setColorAt( 8.5/size, c );
+        c.setAlpha( 0.06*255 );  rg.setColorAt( 11.5/size, c );
+        c.setAlpha( 0.035*255 );  rg.setColorAt( 14.5/size, c );
+        c.setAlpha( 0.025*255 );  rg.setColorAt( 17.5/size, c );
+        c.setAlpha( 0.01*255 );  rg.setColorAt( 21.5/size, c );
+        c.setAlpha( 0.0*255 );  rg.setColorAt( 25.5/size, c );
         p.setRenderHint( QPainter::Antialiasing );
         p.setPen( Qt::NoPen );
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
-        if (active)
-        {
-            //---------------------------------------------------------------
-            // Active shadow texture
+        rg = QRadialGradient( size, size+2, size );
+        c = QColor( Qt::black );
+        c.setAlpha( 0.25*255 );  rg.setColorAt( 4.5/size, c );
+        c.setAlpha( 0.20*255 );  rg.setColorAt( 5.5/size, c );
+        c.setAlpha( 0.13*255 );  rg.setColorAt( 7.5/size, c );
+        c.setAlpha( 0.06*255 );  rg.setColorAt( 8.5/size, c );
+        c.setAlpha( 0.015*255 );  rg.setColorAt( 11.5/size, c );
+        c.setAlpha( 0.0*255 );  rg.setColorAt( 14.5/size, c );
+        p.setRenderHint( QPainter::Antialiasing );
+        p.setPen( Qt::NoPen );
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
-            QRadialGradient rg( size, size, size );
-            QColor c = color;
-            c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
-            c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
-            c.setAlpha( 180 );  rg.setColorAt( 5/size, c );
-            c.setAlpha( 25 );  rg.setColorAt( 5.5/size, c );
-            c.setAlpha( 0 );  rg.setColorAt( 6.5/size, c );
+        rg = QRadialGradient( size, size+0.2, size );
+        c = color;
+        c = QColor( Qt::black );
+        c.setAlpha( 0.35*255 );  rg.setColorAt( 0/size, c );
+        c.setAlpha( 0.32*255 );  rg.setColorAt( 4.5/size, c );
+        c.setAlpha( 0.22*255 );  rg.setColorAt( 5.0/size, c );
+        c.setAlpha( 0.03*255 );  rg.setColorAt( 5.5/size, c );
+        c.setAlpha( 0.0*255 );  rg.setColorAt( 6.5/size, c );
+        p.setRenderHint( QPainter::Antialiasing );
+        p.setPen( Qt::NoPen );
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
-            p.setBrush( rg );
-            p.drawRect( shadow.rect() );
+        rg = QRadialGradient( size, size, size );
+        c = color;
+        c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
+        c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
+        p.setRenderHint( QPainter::Antialiasing );
+        p.setPen( Qt::NoPen );
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
-            rg = QRadialGradient( size, size, size );
-            c = color;
-            c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
-            c = glow;
-            c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
-            c.setAlpha( 0.43*255 );  rg.setColorAt( 5.5/size, c );
-            c.setAlpha( 0.30*255 );  rg.setColorAt( 6.5/size, c );
-            c.setAlpha( 0.22*255 );  rg.setColorAt( 7.5/size, c );
-            c.setAlpha( 0.15*255 );  rg.setColorAt( 8.5/size, c );
-            c.setAlpha( 0.08*255 );  rg.setColorAt( 11.5/size, c );
-            c.setAlpha( 0);  rg.setColorAt( 14.5/size, c );
-            p.setRenderHint( QPainter::Antialiasing );
-            p.setBrush( rg );
-            p.drawRect( shadow.rect() );
-            
-            p.setBrush( Qt::NoBrush );
-            p.setPen(QPen(lg, 0.8));
-            p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+        // draw the corner of the window - actually all 4 corners as one circle
+        p.setBrush( Qt::NoBrush );
+        p.setPen(QPen(lg, 0.8));
+        p.drawEllipse(QRectF(size-4, size-4, 8, 8));
 
-            p.end();
+        p.end();
 
-            tileSet = new TileSet(shadow, size, size, 1, 1);
-            glowTilesOption_ = opt;
-            glowTiles_       = tileSet;
-        } else {
-            //---------------------------------------------------------------
-            // Inactive shadow texture
-
-            QRadialGradient rg = QRadialGradient( size, size+4, size );
-            QColor c = QColor( Qt::black );
-            c.setAlpha( 0.12*255 );  rg.setColorAt( 4.5/size, c );
-            c.setAlpha( 0.11*255 );  rg.setColorAt( 6.6/size, c );
-            c.setAlpha( 0.075*255 );  rg.setColorAt( 8.5/size, c );
-            c.setAlpha( 0.06*255 );  rg.setColorAt( 11.5/size, c );
-            c.setAlpha( 0.035*255 );  rg.setColorAt( 14.5/size, c );
-            c.setAlpha( 0.025*255 );  rg.setColorAt( 17.5/size, c );
-            c.setAlpha( 0.01*255 );  rg.setColorAt( 21.5/size, c );
-            c.setAlpha( 0.0*255 );  rg.setColorAt( 25.5/size, c );
-            p.setRenderHint( QPainter::Antialiasing );
-            p.setPen( Qt::NoPen );
-            p.setBrush( rg );
-            p.drawRect( shadow.rect() );
-
-            rg = QRadialGradient( size, size+2, size );
-            c = QColor( Qt::black );
-            c.setAlpha( 0.25*255 );  rg.setColorAt( 4.5/size, c );
-            c.setAlpha( 0.20*255 );  rg.setColorAt( 5.5/size, c );
-            c.setAlpha( 0.13*255 );  rg.setColorAt( 7.5/size, c );
-            c.setAlpha( 0.06*255 );  rg.setColorAt( 8.5/size, c );
-            c.setAlpha( 0.015*255 );  rg.setColorAt( 11.5/size, c );
-            c.setAlpha( 0.0*255 );  rg.setColorAt( 14.5/size, c );
-            p.setRenderHint( QPainter::Antialiasing );
-            p.setPen( Qt::NoPen );
-            p.setBrush( rg );
-            p.drawRect( shadow.rect() );
-
-            rg = QRadialGradient( size, size+0.2, size );
-            c = color;
-            c = QColor( Qt::black );
-            c.setAlpha( 0.35*255 );  rg.setColorAt( 0/size, c );
-            c.setAlpha( 0.32*255 );  rg.setColorAt( 4.5/size, c );
-            c.setAlpha( 0.22*255 );  rg.setColorAt( 5.0/size, c );
-            c.setAlpha( 0.03*255 );  rg.setColorAt( 5.5/size, c );
-            c.setAlpha( 0.0*255 );  rg.setColorAt( 6.5/size, c );
-            p.setRenderHint( QPainter::Antialiasing );
-            p.setPen( Qt::NoPen );
-            p.setBrush( rg );
-            p.drawRect( shadow.rect() );
-
-            rg = QRadialGradient( size, size, size );
-            c = color;
-            c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
-            c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
-            p.setRenderHint( QPainter::Antialiasing );
-            p.setPen( Qt::NoPen );
-            p.setBrush( rg );
-            p.drawRect( shadow.rect() );
-
-            // draw the corner of the window - actually all 4 corners as one circle
-            p.setBrush( Qt::NoBrush );
-            p.setPen(QPen(lg, 0.8));
-            p.drawEllipse(QRectF(size-4, size-4, 8, 8));
-
-            p.end();
-
-            tileSet = new TileSet(shadow, size, size, 1, 1);
-            shadowTilesOption_ = opt;
-            shadowTiles_       = tileSet;
-        }
+        tileSet = new TileSet(shadow, size, size, 1, 1);
+        shadowTilesOption_ = opt;
+        shadowTiles_       = tileSet;
     }
     return tileSet;
 }
