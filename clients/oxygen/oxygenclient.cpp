@@ -460,24 +460,23 @@ void OxygenClient::drawStripes(QPainter *p, QPalette &palette, const int start, 
 void OxygenClient::updateWindowShape()
 {
     bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
-    int w=widget()->width() - (int)SHADOW_WIDTH;
-    int h=widget()->height() - (int)SHADOW_WIDTH;
 
-    if(maximized) {
-        QRegion mask(0,0,w,h);
-        setMask(mask);
+    if(maximized || compositingActive()) {
+        clearMask();
         return;
     }
 
-    if (!compositingActive()) {
-        int sw = SHADOW_WIDTH;
-        QRegion mask(sw+4, sw+0, -sw+w-8, -sw+h);
-        mask += QRegion(sw+0, sw+4, -sw+w, -sw+h-8);
-        mask += QRegion(sw+2, sw+1, -sw+w-4, -sw+h-2);
-        mask += QRegion(sw+1, sw+2, -sw+w-2, -sw+h-4);
+    int w=widget()->width() - (int)SHADOW_WIDTH;
+    int h=widget()->height() - (int)SHADOW_WIDTH;
 
-        setMask(mask);
-    }
+    // set a mask if compositing is not active
+    int sw = SHADOW_WIDTH;
+    QRegion mask(sw+4, sw+0, -sw+w-8, -sw+h);
+    mask += QRegion(sw+0, sw+4, -sw+w, -sw+h-8);
+    mask += QRegion(sw+2, sw+1, -sw+w-4, -sw+h-2);
+    mask += QRegion(sw+1, sw+2, -sw+w-2, -sw+h-4);
+
+    setMask(mask);
 }
 
 TileSet *OxygenClient::shadowTiles(const QColor& color, const QColor& glow, qreal size, bool active)
