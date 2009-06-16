@@ -584,7 +584,7 @@ KDE2Button::KDE2Button(ButtonType type, KDE2Client *parent, const char *name)
 	: KCommonDecorationButton(type, parent)
 {
     setObjectName( name );
-    setAttribute( Qt::WA_NoBackground );
+    setAttribute( Qt::WA_NoSystemBackground );
 
 	isMouseOver = false;
 	deco 		= NULL;
@@ -643,8 +643,9 @@ void KDE2Button::setBitmap(const unsigned char *bitmap)
 	deco = 0;
 
 	if (bitmap) {
-		deco = new QBitmap( QBitmap::fromData(QSize( 10, 10 ), bitmap) );
-		deco->setMask( *deco );
+		deco = new QPainterPath;
+		deco->addRegion(QRegion( QBitmap::fromData(QSize( 10, 10 ), bitmap) ));
+// 		deco->setMask( *deco );
 	}
 }
 
@@ -709,14 +710,18 @@ void KDE2Button::drawButton(QPainter *p)
 				isLeft() ? KDecoration::ColorTitleBar : KDecoration::ColorButtonBg,
 				active).rgb() ) > 127;
 
+		p->setPen(Qt::NoPen);
 		if (isMouseOver)
-			p->setPen( darkDeco ? Qt::darkGray : Qt::lightGray );
+			p->setBrush( darkDeco ? Qt::darkGray : Qt::lightGray );
 		else
-			p->setPen( darkDeco ? Qt::black : Qt::white );
+			p->setBrush( darkDeco ? Qt::black : Qt::white );
 
-		int xOff = (width()-10)/2;
-		int yOff = (height()-10)/2;
-		p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, *deco);
+		QPoint offset((width()-10)/2, (height()-10)/2);
+		if (isDown())
+			offset += QPoint(1,1);
+		p->translate(offset);
+		p->drawPath(*deco);
+		p->translate(-offset);
 
 	} else {
 		QPixmap btnpix;

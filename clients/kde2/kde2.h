@@ -26,12 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KDE2_H
 #define KDE2_H
 
-#include <QBitmap>
 #include <QDateTime>
 #include <kcommondecoration.h>
 #include <kdecorationfactory.h>
 
 class QPixmap;
+class QPainterPath;
 
 namespace KDE2 {
 
@@ -73,7 +73,7 @@ class KDE2Button : public KCommonDecorationButton
 		void drawButton(QPainter *p);
 		void drawButtonLabel(QPainter*) {;}
 
-		QBitmap* deco;
+		QPainterPath* deco;
 		bool    large;
 		bool	isMouseOver;
 };
