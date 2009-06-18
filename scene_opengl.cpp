@@ -1004,7 +1004,7 @@ void SceneOpenGL::Texture::release()
         {
         if( !options->glStrictBinding )
             glXReleaseTexImageEXT( display(), bound_glxpixmap, GLX_FRONT_LEFT_EXT );
-        glXDestroyGLXPixmap( display(), bound_glxpixmap );
+        glXDestroyPixmap( display(), bound_glxpixmap );
         bound_glxpixmap = None;
         }
     }
