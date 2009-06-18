@@ -35,4 +35,5 @@ set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources
 # .desktop files
 install( FILES
     cube/cube_config.desktop
+    cube/cubeslide_config.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
