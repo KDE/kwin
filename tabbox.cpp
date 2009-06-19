@@ -26,7 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "effects.h"
 #include "client.h"
+#include <QStyleOptionGraphicsItem>
 #include <QPainter>
+#include <QTimeLine>
 #include <kglobal.h>
 #include <fixx11h.h>
 #include <kconfig.h>
@@ -57,6 +59,7 @@ TabBox::TabBox( Workspace *ws )
     , wspace(ws)
     , client(0)
     , display_refcount( 0 )
+    , selectionItem( 0 )
     {
     scene = new QGraphicsScene( this );
     setWindowFlags( Qt::X11BypassWindowManagerHint );
@@ -69,7 +72,8 @@ TabBox::TabBox( Workspace *ws )
     frame.setImagePath( "dialogs/background" );
     frame.setCacheAllRenderedFrames( true );
     frame.setEnabledBorders( Plasma::FrameSvg::AllBorders );
-    item_frame.setImagePath( "widgets/tasks" );
+    item_frame.setImagePath( "widgets/viewitem" );
+    item_frame.setElementPrefix( "hover" );
     item_frame.setCacheAllRenderedFrames( true );
     item_frame.setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
@@ -317,7 +321,6 @@ void TabBox::reset( bool partial_reset )
     scene->setSceneRect( 0, 0, w, h );
     frame.resizeFrame( QSize( w , h ) );
     // resizing the item frame
-    item_frame.setElementPrefix( "focus" );
     item_frame.resizeFrame( QSize( w-left-right, lineHeight ) );
 
     setMask( frame.mask() );
@@ -334,6 +337,18 @@ void TabBox::initScene()
     scene->clear();
     qreal left, top, right, bottom;
     frame.getMargins( left, top, right, bottom );
+
+    if( KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects )
+        {
+        selectionItem = new TabBoxSelectionItem( this );
+        selectionItem->setPos( left, top );
+        selectionItem->hide();
+        scene->addItem( selectionItem );
+        }
+    else
+        {
+        selectionItem = 0;
+        }
 
     if( mode() == TabBoxWindowsMode )
         {
@@ -353,6 +368,7 @@ void TabBox::initScene()
             {
             // add clients to scene
             int index = 0;
+
             foreach( Client* client, clients )
                 {
                 TabBoxWindowItem* item = new TabBoxWindowItem( client, this );
@@ -429,7 +445,6 @@ void TabBox::nextPrev( bool next)
 
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
-    update();
     }
 
 
@@ -493,9 +508,30 @@ QList< int > TabBox::currentDesktopList()
  */
 void TabBox::setCurrentClient( Client* newClient )
     {
+    foreach( QGraphicsItem *item, scene->items() )
+        {
+        TabBoxWindowItem* wItem = dynamic_cast<TabBoxWindowItem*>( item );
+        if( !wItem )
+            continue;
+
+        if ( wItem->client() == newClient )
+            {
+            if (selectionItem)
+                selectionItem->moveTo( wItem );
+            else
+                wItem->update();
+            }
+        else if ( !selectionItem && wItem->client() == client )
+            {
+                wItem->update();
+            }
+        }
+
     client = newClient;
+
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
+
     if( isVisible() )
         updateOutline();
     }
@@ -507,7 +543,27 @@ void TabBox::setCurrentClient( Client* newClient )
  */
 void TabBox::setCurrentDesktop( int newDesktop )
     {
+    foreach( QGraphicsItem *item, scene->items() )
+        {
+        TabBoxDesktopItem* dItem = dynamic_cast<TabBoxDesktopItem*>( item );
+        if( !dItem )
+            continue;
+
+        if ( dItem->desktop() == newDesktop )
+            {
+            if (selectionItem)
+                selectionItem->moveTo( dItem );
+            else
+                dItem->update();
+            }
+        else if ( !selectionItem && dItem->desktop() == desk )
+            {
+                dItem->update();
+            }
+        }
+
     desk = newDesktop;
+
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
     }
@@ -767,7 +823,64 @@ void TabBox::handleMouseEvent( XEvent* e )
             num--;
             }
         }
-    update();
+    }
+
+
+//*******************************
+// TabBoxSelectionItem
+//*******************************
+TabBoxSelectionItem::TabBoxSelectionItem( TabBox* parent )
+    : QObject()
+    , QGraphicsItem()
+    , m_parent( parent )
+    , m_timeLine( new QTimeLine( 100, this ) )
+    {
+    setCacheMode( DeviceCoordinateCache );
+    setZValue( -1000 );
+    setFlag(ItemIsMovable, false);
+    setFlag(ItemIsSelectable, false);
+    setFlag(ItemIsFocusable, false);
+
+    m_timeLine->setFrameRange( 0, 40 );
+    m_timeLine->setCurveShape( QTimeLine::EaseInCurve );
+    connect( m_timeLine, SIGNAL( valueChanged(qreal) ),
+             this, SLOT( animateMove(qreal) ) );
+    }
+
+TabBoxSelectionItem::~TabBoxSelectionItem()
+    {
+    }
+
+QRectF TabBoxSelectionItem::boundingRect() const
+    {
+    return m_boundingRect;
+    }
+
+void TabBoxSelectionItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
+    {
+    Q_UNUSED( widget );
+    painter->setRenderHint( QPainter::Antialiasing );
+    m_parent->itemFrame()->paintFrame( painter, option->exposedRect, option->exposedRect );
+    }
+
+void TabBoxSelectionItem::moveTo( QGraphicsItem * item )
+    {
+    if (m_boundingRect != item->boundingRect())
+        {
+        prepareGeometryChange();
+        m_boundingRect = item->boundingRect();
+        }
+
+    show();
+    m_animStartRect = QRectF( pos(), boundingRect().size() );
+    m_animEndRect = QRectF( item->pos(), item->boundingRect().size() );
+    m_timeLine->stop();
+    m_timeLine->start();
+    }
+
+void TabBoxSelectionItem::animateMove( qreal t )
+    {
+        setPos(m_animStartRect.topLeft() * (1 - t) + m_animEndRect.topLeft() * t);
     }
 
 //*******************************
@@ -782,6 +895,7 @@ TabBoxWindowItem::TabBoxWindowItem( Client* client, TabBox* parent )
     , m_height( 0 )
     , m_showMiniIcons( false )
     {
+    setCacheMode( DeviceCoordinateCache );
     }
 
 TabBoxWindowItem::~TabBoxWindowItem()
@@ -807,6 +921,11 @@ void TabBoxWindowItem::setShowMiniIcons( bool showMiniIcons )
     {
     m_showMiniIcons = showMiniIcons;
     }
+
+Client* TabBoxWindowItem::client() const
+{
+    return m_client;
+}
 
 void TabBoxWindowItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
     {
@@ -871,9 +990,8 @@ void TabBoxWindowItem::paint( QPainter* painter, const QStyleOptionGraphicsItem*
 
 void TabBoxWindowItem::drawBackground( QPainter* painter, const QStyleOptionGraphicsItem* , QWidget* )
     {
-    if( m_client == m_parent->currentClient() )
+    if( m_parent->itemsDrawBackgrounds() && m_client == m_parent->currentClient() )
         {
-        m_parent->itemFrame()->setElementPrefix( "focus" );
         m_parent->itemFrame()->paintFrame( painter, boundingRect() );
         }
     }
@@ -890,6 +1008,7 @@ TabBoxDesktopItem::TabBoxDesktopItem( int desktop, TabBox* parent )
     , m_width( 0 )
     , m_height( 0 )
     {
+    setCacheMode( DeviceCoordinateCache );
     }
 
 TabBoxDesktopItem::~TabBoxDesktopItem()
@@ -909,6 +1028,11 @@ void TabBoxDesktopItem::setHeight( int height )
 void TabBoxDesktopItem::setWidth( int width )
     {
     m_width = width;
+    }
+
+int TabBoxDesktopItem::desktop() const
+    {
+    return m_desktop;
     }
 
 void TabBoxDesktopItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
@@ -981,9 +1105,8 @@ void TabBoxDesktopItem::paint( QPainter* painter, const QStyleOptionGraphicsItem
 
 void TabBoxDesktopItem::drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* )
     {
-    if( m_desktop == m_parent->currentDesktop() )
+    if( m_parent->itemsDrawBackgrounds() && m_desktop == m_parent->currentDesktop() )
         {
-        m_parent->itemFrame()->setElementPrefix( "focus" );
         m_parent->itemFrame()->paintFrame( painter, boundingRect() );
         }
     }

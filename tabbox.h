@@ -30,12 +30,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/Plasma/FrameSvg>
 #include "utils.h"
 
+class QTimeLine;
 
 namespace KWin
 {
 
 class Workspace;
 class Client;
+class TabBoxSelectionItem;
 
 class TabBox : public QGraphicsView
     {
@@ -75,6 +77,7 @@ class TabBox : public QGraphicsView
         void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
 
         Plasma::FrameSvg* itemFrame();
+        bool itemsDrawBackgrounds() const;
 
     public slots:
         void show();
@@ -104,9 +107,32 @@ class TabBox : public QGraphicsView
         bool options_traverse_all;
 
         QGraphicsScene* scene;
+        TabBoxSelectionItem* selectionItem;
         Plasma::FrameSvg frame;
         Plasma::FrameSvg item_frame;
         Window outline_left, outline_right, outline_top, outline_bottom;
+    };
+
+class TabBoxSelectionItem : public QObject, public QGraphicsItem
+    {
+    Q_OBJECT
+
+    public:
+        TabBoxSelectionItem( TabBox* parent );
+        ~TabBoxSelectionItem();
+        virtual QRectF boundingRect() const;
+        virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
+        void moveTo( QGraphicsItem * );
+
+    protected Q_SLOTS:
+        void animateMove( qreal t );
+
+    private:
+        TabBox* m_parent;
+        QTimeLine* m_timeLine;
+        QRectF m_boundingRect;
+        QRectF m_animStartRect;
+        QRectF m_animEndRect;
     };
 
 class TabBoxWindowItem : public QGraphicsItem
@@ -119,6 +145,8 @@ class TabBoxWindowItem : public QGraphicsItem
         void setWidth( int width );
         void setHeight( int height );
         void setShowMiniIcons( bool showMiniIcons );
+        Client* client() const;
+
     protected:
         virtual void drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* );
 
@@ -139,6 +167,8 @@ class TabBoxDesktopItem : public QGraphicsItem
         virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
         void setWidth( int width );
         void setHeight( int height );
+        int desktop() const;
+
     protected:
         virtual void drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* );
     private:
@@ -193,6 +223,10 @@ inline Plasma::FrameSvg* TabBox::itemFrame()
     return &item_frame;
     }
 
+inline bool TabBox::itemsDrawBackgrounds() const
+    {
+    return !selectionItem;
+    }
 
 } // namespace
 
