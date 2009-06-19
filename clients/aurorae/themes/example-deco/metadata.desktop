@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Example
+Comment=An example theme based on Air desktop theme
+
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Email=kde@martin-graesslin.com
+X-KDE-PluginInfo-Name=example-deco
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL_V2
+X-KDE-PluginInfo-EnabledByDefault=true
