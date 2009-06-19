@@ -216,7 +216,7 @@ void TabBox::reset( bool partial_reset )
 
     // calculate height of 1 line
     // fontheight + 2 pixel above + 2 pixel below, or 32x32 icon + 4 pixel above + below
-    lineHeight = qMax(QFontMetrics( KGlobalSettings::smallestReadableFont() ).height() + 2, 32 + 8);
+    lineHeight = top + bottom + qMax(QFontMetrics( KGlobalSettings::smallestReadableFont() ).height(), 32 );
 
     if ( mode() == TabBoxWindowsMode )
         {
