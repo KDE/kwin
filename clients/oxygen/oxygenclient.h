@@ -65,6 +65,7 @@ private:
     void paintEvent(QPaintEvent *e);
     void drawStripes(QPainter *p, QPalette &palette, const int start, const int end, const int topMargin);
     QColor titlebarTextColor(const QPalette &palette);
+    bool isMaximized() const;
     bool colorCacheInvalid_;
     QColor cachedTitlebarTextColor_;
 

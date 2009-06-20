@@ -125,7 +125,7 @@ bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
 
 int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
-    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+    bool maximized = isMaximized();
     int frameWidth = OxygenFactory::borderSize();
 
     switch (lm) {
@@ -285,6 +285,11 @@ QColor OxygenClient::titlebarTextColor(const QPalette &palette)
     }
 }
 
+bool OxygenClient::isMaximized() const
+{
+    return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+}
+
 void OxygenClient::paintEvent(QPaintEvent *e)
 {
     Q_UNUSED(e)
@@ -322,7 +327,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     // draw shadow
 
-    if (compositingActive())
+    if (compositingActive() && !isMaximized())
         shadowTiles(color,KDecoration::options()->color(ColorTitleBar),
                 SHADOW_WIDTH, isActive())->render( frame.adjusted(-SHADOW_WIDTH+4,
                     -SHADOW_WIDTH+4, SHADOW_WIDTH-4, SHADOW_WIDTH-4),
@@ -404,9 +409,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     }
 
     // Draw shadows of the frame
-    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
-
-    if(maximized)
+    if(isMaximized())
         return;
 
     helper_.drawFloatFrame(&painter, frame, color, !compositingActive(), isActive(),
@@ -459,9 +462,7 @@ void OxygenClient::drawStripes(QPainter *p, QPalette &palette, const int start, 
 
 void OxygenClient::updateWindowShape()
 {
-    bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
-
-    if(maximized || compositingActive()) {
+    if(isMaximized() || compositingActive()) {
         clearMask();
         return;
     }
