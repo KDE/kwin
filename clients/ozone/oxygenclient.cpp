@@ -353,7 +353,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
         painter.setClipRegion(mask);
     } 
 
-    helper_.renderWindowBackground(&painter, frame, this->widget(), palette, SHADOW_WIDTH);
+    helper_.renderWindowBackground(&painter, frame, this->widget(), pal2, SHADOW_WIDTH);
 
     if (isCompositingActive) {
         painter.setClipping(false);
