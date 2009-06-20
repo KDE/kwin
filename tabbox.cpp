@@ -94,7 +94,6 @@ TabBox::TabBox( Workspace *ws )
         CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
     outline_bottom = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
         CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
-
     }
 
 TabBox::~TabBox()
@@ -369,16 +368,23 @@ void TabBox::initScene()
             // add clients to scene
             int index = 0;
 
-            foreach( Client* client, clients )
+            foreach( Client* c, clients )
                 {
-                TabBoxWindowItem* item = new TabBoxWindowItem( client, this );
+                TabBoxWindowItem* item = new TabBoxWindowItem( c, this );
                 item->setHeight( lineHeight );
                 item->setWidth( width() - left - right );
                 item->setShowMiniIcons( showMiniIcon );
                 item->setPos( left, top + lineHeight * index );
                 scene->addItem( item );
+
+                if ( selectionItem && c == client )
+                    {
+                    selectionItem->setPos( item->pos() );
+                    }
+
                 index++;
                 }
+
             }
         }
     else
@@ -400,7 +406,6 @@ void TabBox::initScene()
             }
         }
     }
-
 
 /*!
   Shows the next or previous item, depending on \a next
@@ -951,7 +956,9 @@ void TabBoxWindowItem::paint( QPainter* painter, const QStyleOptionGraphicsItem*
             icon = *menu_pix;
         }
 
-    if( !icon.isNull())
+    const int iconX = x + 5;
+    const int iconY = ( m_height - iconWidth ) / 2;
+    if( !icon.isNull() )
         {
         if( m_client->isMinimized())
             KIconEffect::semiTransparent( icon );
@@ -960,32 +967,39 @@ void TabBoxWindowItem::paint( QPainter* painter, const QStyleOptionGraphicsItem*
             KIconEffect *effect = KIconLoader::global()->iconEffect();
             icon = effect->apply( icon, KIconLoader::Desktop, KIconLoader::ActiveState );
             }
-        painter->drawPixmap( x+5, (m_height - iconWidth)/2, icon );
+        painter->drawPixmap( iconX, iconY, icon );
         }
 
     // generate text to display
     QString s;
 
     if ( !m_client->isOnDesktop(m_parent->workspace()->currentDesktop()) )
-    s = m_parent->workspace()->desktopName(m_client->desktop()) + ": ";
+        s = m_parent->workspace()->desktopName(m_client->desktop()).append(": ");
 
-    if ( m_client->isMinimized() )
-    s += '(' + m_client->caption() + ')';
-    else
-    s += m_client->caption();
-
+    int textOptions = Qt::AlignLeft | Qt::AlignBottom | Qt ::TextSingleLine;
     QFont font = painter->font();
     font.setPointSize( KGlobalSettings::smallestReadableFont().pointSize() );
-    QFontMetrics fm = QFontMetrics( font );
-    s = fm.elidedText( s, Qt::ElideMiddle, m_width - 5 - iconWidth - 8 );
-    painter->setPen( Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor ) );
-    if( m_client->isMinimized() )
+
+    if ( m_client->isMinimized() )
         {
+        s += '(' + m_client->caption() + ')';
         font.setItalic( true );
         }
+    else
+        s += m_client->caption();
+
+    QFontMetrics fm = QFontMetrics( font );
+    const int textWidth = m_width - iconX - iconWidth;
+    int textHeight = m_height - (iconX * 2);
+
+    if (!m_showMiniIcons && fm.height() < m_height * 2 / 3) {
+        textHeight = m_height - (m_height / 3);
+    }
+
+    s = fm.elidedText( s, Qt::ElideMiddle, textWidth );
+    painter->setPen( Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor ) );
     painter->setFont( font );
-    painter->drawText( x+5 + iconWidth + 8, 0, m_width - 5 - iconWidth - 8, m_height - (m_showMiniIcons ? 2 : 4),
-                              Qt::AlignLeft | Qt::AlignBottom | Qt::TextSingleLine, s );
+    painter->drawText( iconX + iconWidth + 8, iconY, textWidth, textHeight, textOptions, s );
     }
 
 void TabBoxWindowItem::drawBackground( QPainter* painter, const QStyleOptionGraphicsItem* , QWidget* )
