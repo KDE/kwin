@@ -113,10 +113,7 @@ class KDecorationPreviewBridge
         virtual Qt::WFlags initialWFlags() const;
         virtual void grabXServer( bool grab );
 
-        virtual void repaintShadow();
         virtual bool compositingActive() const;
-        virtual bool shadowsActive() const;
-        virtual double opacity() const;
     private:
         KDecorationPreview* preview;
         bool active;

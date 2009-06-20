@@ -374,7 +374,6 @@ class KWIN_EXPORT KCommonDecorationUnstable
         KCommonDecorationUnstable(KDecorationBridge* bridge, KDecorationFactory* factory);
         virtual ~KCommonDecorationUnstable();
         bool compositingActive() const;
-        bool shadowsActive() const;
     };
 
 /**
