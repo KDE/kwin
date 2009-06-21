@@ -1,6 +1,12 @@
 [Desktop Entry]
 Name=Example
+Name[sv]=Exempel
+Name[uk]=Приклад
+Name[zh_TW]=範例
 Comment=An example theme based on Air desktop theme
+Comment[sv]=Ett exempeltema baserat på skrivbordstemat Luft
+Comment[uk]=Приклад теми, заснованої на темі стільниці «Повітря»
+Comment[zh_TW]=基於 Air 桌面主題的範例主題
 
 X-KDE-PluginInfo-Author=Martin Gräßlin
 X-KDE-PluginInfo-Email=kde@martin-graesslin.com
