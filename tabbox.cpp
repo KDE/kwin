@@ -351,7 +351,7 @@ void TabBox::initScene()
 
     if( mode() == TabBoxWindowsMode )
         {
-        if( clients.count() == 0 )
+        if( clients.isEmpty() )
             {
             QFont f = font();
             f.setBold( true );
@@ -877,6 +877,11 @@ void TabBoxSelectionItem::moveTo( QGraphicsItem * item )
         }
 
     show();
+
+    if (!m_animEndRect.isEmpty()) {
+        setPos(m_animEndRect.topLeft());
+    }
+
     m_animStartRect = QRectF( pos(), boundingRect().size() );
     m_animEndRect = QRectF( item->pos(), item->boundingRect().size() );
     m_timeLine->stop();
@@ -886,6 +891,9 @@ void TabBoxSelectionItem::moveTo( QGraphicsItem * item )
 void TabBoxSelectionItem::animateMove( qreal t )
     {
         setPos(m_animStartRect.topLeft() * (1 - t) + m_animEndRect.topLeft() * t);
+        if (qFuzzyCompare(t, qreal(1.0))) {
+            m_animEndRect = QRect();
+        }
     }
 
 //*******************************
