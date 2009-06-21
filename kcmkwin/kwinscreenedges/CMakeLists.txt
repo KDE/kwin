@@ -9,7 +9,7 @@ set(
     )
 kde4_add_ui_files( kcm_kwinscreenedges_PART_SRCS main.ui )
 kde4_add_plugin( kcm_kwinscreenedges ${kcm_kwinscreenedges_PART_SRCS} )
-target_link_libraries( kcm_kwinscreenedges ${KDE4_KDE3SUPPORT_LIBS} ${X11_LIBRARIES} kworkspace ${KDE4_PLASMA_LIBS})
+target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES} kworkspace ${KDE4_PLASMA_LIBS})
 install( TARGETS kcm_kwinscreenedges  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 # CompositingPrefs uses OpenGL
