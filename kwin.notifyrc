@@ -6236,6 +6236,7 @@ Name[is]=Myndbrellan er ekki studd
 Name[km]=បែបផែន​មិនបានគាំទ្រ​ទេ
 Name[ko]=효과가 지원되지 않습니다
 Name[lv]=Efekti nav atbalstīti
+Name[mk]=Ефектите не се поддржани
 Name[ml]=പ്രഭാവങ്ങള്ക്ക് പിതുണയില്ല
 Name[nb]=Effekter ikke støttet
 Name[nds]=Effekten nich ünnerstütt
@@ -6264,6 +6265,7 @@ Comment[is]=Sumt af myndbrellunum eru ekki studdar af bakendanum eða vélbúna�
 Comment[km]=បែបផែន​មួយ​ចំនួន​មិន​ត្រូវ​បានគាំទ្រ​ដោយ​កម្មវិធី​ផ្នែកខាង​ក្រោយ ឬ​ផ្នែក​រឹង ។
 Comment[ko]=일부 효과는 백엔드나 하드웨어가 지원하지 않습니다.
 Comment[lv]=Dažiem efektiem nav vajadzīgā atbalsta aizmugurē vai aparatūrā.
+Comment[mk]=Некои ефекти не се поддржани од задниот крај или од хардверот.
 Comment[ml]=പിന്‍നിര അല്ലെങ്കില്‍ ഖരസാമാഗ്രി പ്രഭാവങ്ങളെ പിന്തുണയ്ക്കുന്നില്ല.
 Comment[nb]=Noen effelter er ikke støttet i motorer eller maskinvare.
 Comment[nds]=Dat Hülpprogramm oder de Hardware doot en poor Effekten nich ünnerstütten.

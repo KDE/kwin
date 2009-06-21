@@ -31,6 +31,7 @@ Name[kn]=ನಿರ್ವಾಹಕ ವಿಧಾನದಲ್ಲಿ (ಅ ಡ್ಮ�
 Name[ko]=관리자 모드에서 화면 어둡게 하기
 Name[lt]=Užtemdomas ekraną administratoriaus veiksenai
 Name[lv]=Aptumšināt ekrānu, pieprasot administratora tiesības
+Name[mk]=Го затемнува екранот за администраторски режим
 Name[ml]=അഡ്മിനിസ്ട്രേറ്റര്‍ മോഡില്‍ സ്ക്രീന്‍ തെളിച്ചം കുറയ്ക്കല്‍
 Name[mr]=प्रशासक पद्धती करीता मंद पडदा
 Name[nb]=Demp skjermen i administratormodus
@@ -85,6 +86,7 @@ Comment[kn]=ನಿರ್ವಾಹಕ ಸವಲತ್ತುಗಳನ್ನು ಕ
 Comment[ko]=루트 권한이 필요할 때 화면을 어둡게 합니다
 Comment[lt]=Pritemdo visą ekraną prašant administratoriaus privilegijų
 Comment[lv]=Aptumšina visu ekrānu, kad pieprasa root privilēģijas
+Comment[mk]=Го затемнува целиот екран при побарување администраторски привилегии
 Comment[ml]=മൂല (റൂട്ട്) വിശേഷാധികാരം അഭ്യര്‍ത്തിക്കുംബോള്‍ സ്ക്രീന്‍ കറുപ്പിക്കുന്നു
 Comment[nb]=Mørklegger hele skjermen når det spørres etter root-privilegier
 Comment[nds]=Maakt den helen Schirm düüsterer, wenn na Systeempleger-Verlöven fraagt warrt
