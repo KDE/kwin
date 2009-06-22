@@ -79,7 +79,7 @@ void DesktopChangeOSD::reconfigure()
     KSharedConfigPtr c(KGlobal::config());
     const KConfigGroup cg = c->group( "PopupInfo" );
     m_show = cg.readEntry( "ShowPopup", false );
-    m_delayTime = cg.readEntry( "PopupHideDelay", 1500 );
+    m_delayTime = cg.readEntry( "PopupHideDelay", 1000 );
     }
 
 void DesktopChangeOSD::desktopChanged( int old )
