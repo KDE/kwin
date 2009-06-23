@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Example
+Name[et]=Näidis
 Name[km]=ឧទាហរណ៍
 Name[pt]=Exemplo
 Name[pt_BR]=Exemplo
@@ -7,6 +8,7 @@ Name[sv]=Exempel
 Name[uk]=Приклад
 Name[zh_TW]=範例
 Comment=An example theme based on Air desktop theme
+Comment[et]=Näidisteema töölauateema Air põhjal
 Comment[km]=ស្បែក​គំរូ​មានមូលដ្ឋាន​លើ​ស្បែក​ផ្ទៃតុ​ខ្យល់
 Comment[pt]=Um tema de exemplo com base no tema Air
 Comment[pt_BR]=Um tema de exemplo com base no tema Air
