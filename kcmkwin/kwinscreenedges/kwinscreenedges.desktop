@@ -1,6 +1,6 @@
 [Desktop Entry]
 Exec=kcmshell4 kwinscreenedges
-Icon=preferences-screen-edges
+Icon=preferences-desktop-screenedges
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-DocPath=kcontrol/kwinscreenedges/index.html
