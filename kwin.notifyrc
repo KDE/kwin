@@ -4820,6 +4820,7 @@ Sound=KDE-Window-All-Desktops.ogg
 Name=Window Not on All Desktops
 Name[ar]=نافذة لا تعمل في كل اسطح المكتب
 Name[be@latin]=Akno nie na ŭsie stały
+Name[bg]=Прозорецът не за всички работни плотове
 Name[bn]=উইণ্ডো সব ডেস্কটপে নয়
 Name[bn_IN]=উইণ্ডো সব ডেস্কটপে নয়
 Name[ca]=Finestra no a tots els escriptoris
@@ -4889,6 +4890,7 @@ Comment=A Window is no longer visible on all desktops
 Comment[af]='n Venster is nie meer op al die werkskerms sigbaar nie
 Comment[ar]=تم اخفاء نافذة من كل اسطح المكتب
 Comment[be@latin]=Akno bolš nia bačnaje na ŭsich stałach.
+Comment[bg]=Прозорецът вече не е видим на всички работни плотове
 Comment[bn]=একটি উইণ্ডো আর সব ডেস্কটপে দেখা যাচ্ছে না
 Comment[bn_IN]=একটি উইণ্ডো আর সব ডেস্কটপে দেখা যাচ্ছে না
 Comment[ca]=Una finestra no serà visible en tots els escriptoris
@@ -6248,6 +6250,7 @@ Action=Popup
 
 [Event/effectsnotsupported]
 Name=Effects not supported
+Name[bg]=Неподдържан ефект
 Name[ca]=Efectes no implementats
 Name[ca@valencia]=Efectes no implementats
 Name[da]=Effekter er ikke understøttet

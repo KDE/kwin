@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sheet
+Name[bg]=Листове
 Name[ca]=Full
 Name[ca@valencia]=Full
 Name[cs]=List
@@ -37,6 +38,7 @@ Name[zh_CN]=飘落
 Name[zh_TW]=飄落
 Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
+Comment[bg]=Отлистване при показване/скриване на прозорците
 Comment[ca]=Fa que els diàlegs modals entrin o surtin volant quan es mostren o s'oculten
 Comment[ca@valencia]=Fa que els diàlegs modals entrin o surtin volant quan es mostren o s'oculten
 Comment[da]=Få modaldialoger til glat at flyve ind og ud når de vises eller skjules

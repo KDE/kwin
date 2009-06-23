@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Desktop Cube Animation
+Name[bg]=Кубична анимация върху работен плот
 Name[ca]=Animació del cub d'escriptori
 Name[ca@valencia]=Animació del cub d'escriptori
 Name[csb]=Animacëjô Szescanu pùltu
@@ -35,6 +36,7 @@ Name[zh_CN]=桌面立方动画
 Name[zh_TW]=桌面立方體動畫
 Icon=preferences-system-windows-effect-cube
 Comment=Animate desktop switching with a cube
+Comment[bg]=Кубично анимиране на превключването меду работните плотове
 Comment[ca]=Anima el canvi d'escriptori amb un cub
 Comment[ca@valencia]=Anima el canvi d'escriptori amb un cub
 Comment[da]=Animér skift af skrivebord med en terning

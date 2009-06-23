@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Snap Helper
+Name[bg]=Центърион
 Name[ca]=Ajudant de desplaçament
 Name[ca@valencia]=Ajudant de desplaçament
 Name[csb]=Pòmòc wërówaniô
@@ -32,6 +33,7 @@ Name[zh_CN]=控屏助手
 Name[zh_TW]=貼齊小幫手
 Icon=preferences-system-windows-effect-snaphelper
 Comment=Help you locate the center of the screen when moving a window.
+Comment[bg]=Помага ви да намерите центъра на екрана при местене на прозорец.
 Comment[ca]=Us ajuda a ubicar el centre de la pantalla en moure una finestra.
 Comment[ca@valencia]=Us ajuda a ubicar el centre de la pantalla en moure una finestra.
 Comment[csb]=Pòmôgô nalezc westrzódk ekranu przë suwaniu òknów.

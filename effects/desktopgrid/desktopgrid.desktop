@@ -72,6 +72,7 @@ Name[zh_CN]=桌面栅格
 Name[zh_TW]=桌面格
 Icon=preferences-system-windows-effect-desktop-grid
 Comment=Zoom out so all desktops are displayed side-by-side in a grid
+Comment[bg]=Работните плотове се показват един до друг в мрежа
 Comment[ca]=Redueix tots els escriptoris per a visualitzar-los un al costat de l'altre en una graella
 Comment[ca@valencia]=Redueix tots els escriptoris per a visualitzar-los un al costat de l'altre en una graella
 Comment[cs]=Oddálí plochy a zobrazí je v mřížce
