@@ -69,11 +69,9 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
 
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setMargin(0);
-  layout->setSpacing(KDialog::spacingHint());
 
-  QFormLayout *lay = new QFormLayout();
-  lay->setMargin(KDialog::marginHint());
-  lay->setSpacing(KDialog::spacingHint());
+  QWidget *desktops = new QWidget(this);
+  QFormLayout *lay = new QFormLayout(desktops);
 
   QLabel *label = new QLabel(i18n("N&umber of desktops: "), this);
   _numInput = new KIntNumInput(4, this);
@@ -88,7 +86,7 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
   lay->setWidget(0, QFormLayout::LabelRole, label);
   lay->setWidget(0, QFormLayout::FieldRole, _numInput);
 
-  layout->addLayout(lay);
+  layout->addWidget(desktops);
 
   // name group
   QGroupBox *name_group = new QGroupBox(i18n("Desktop &Names"), this);
@@ -104,8 +102,8 @@ KDesktopConfig::KDesktopConfig(QWidget *parent, const QVariantList &)
 
       connect(_nameInput[i], SIGNAL(textChanged(const QString&)),
            SLOT( changed() ));
-      namesLayout->addWidget(_nameLabel[i], i, 0, 1, 1);
-      namesLayout->addWidget(_nameInput[i], i, 1, 1, 1);
+      namesLayout->addWidget(_nameLabel[i], i % 10, 0 + 2 * (i >= 10), 1, 1);
+      namesLayout->addWidget(_nameInput[i], i % 10, 1 + 2 * (i >= 10), 1, 1);
     }
 
   for(int i = 1; i < maxDesktops; i++)

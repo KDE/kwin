@@ -692,7 +692,6 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
-    layout->setSpacing(KDialog::spacingHint());
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
 	QLabel* label = new QLabel( this );

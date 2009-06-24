@@ -884,19 +884,12 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
                                         " to the top-left corner of the screen is displayed together with"
                                         " its size."));
 
-    QGridLayout *rLay = new QGridLayout();
-    bLay->addLayout(rLay);
-    rLay->setColumnStretch(0,0);
-    rLay->setColumnStretch(1,1);
-
     moveResizeMaximized = new QCheckBox( i18n("Allow moving and resizing o&f maximized windows"), windowsBox);
     bLay->addWidget(moveResizeMaximized);
     moveResizeMaximized->setWhatsThis( i18n("When enabled, this feature activates the border of maximized windows"
                                               " and allows you to move or resize them,"
                                               " just like for normal windows"));
 
-
-    bLay->addSpacing(10);
 
     lay->addWidget(windowsBox);
 

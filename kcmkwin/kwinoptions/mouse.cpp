@@ -147,13 +147,12 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
 
   QVBoxLayout *layout = new QVBoxLayout(this);
-  layout->setMargin(0);
-  layout->setSpacing(KDialog::spacingHint());
 
 /** Titlebar doubleclick ************/
 
-  QGridLayout *gLayout = new QGridLayout();
-  layout->addLayout( gLayout );
+  QWidget *titlebarActions = new QWidget(this);
+  QGridLayout *gLayout = new QGridLayout(titlebarActions);
+  layout->addWidget( titlebarActions );
 
   QComboBox* combo = new QComboBox(this);
   combo->addItem(i18n("Maximize"));
@@ -207,9 +206,6 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
                              " titlebar or the frame of a window.") );
 
   grid = new QGridLayout(box);
-  grid->setMargin(KDialog::marginHint());
-  grid->setSpacing(KDialog::spacingHint());
-
 
   strMouseButton1 = i18n("Left button:");
   txtButton1 = i18n("In this row you can customize left click behavior when clicking into"
@@ -355,8 +351,6 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
     i18n("Here you can customize behavior when clicking on the maximize button.") );
 
   QHBoxLayout* hlayout = new QHBoxLayout(box);
-  hlayout->setMargin(KDialog::marginHint());
-  hlayout->setSpacing(KDialog::spacingHint());
 
   QString strMouseButton[] = {
     i18n("Left button:"),
@@ -630,8 +624,6 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   bool leftHandedMouse = ( KGlobalSettings::mouseSettings().handed == KGlobalSettings::KMouseSettings::LeftHanded);
 
   QVBoxLayout *layout = new QVBoxLayout(this);
-  layout->setMargin(0);
-  layout->setSpacing(KDialog::spacingHint());
 
 /**  Inactive inner window ******************/
 
@@ -642,8 +634,6 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
                              " inner window ('inner' means: not titlebar, not frame).") );
 
   QGridLayout *gridLayout = new QGridLayout(box);
-  gridLayout->setMargin(KDialog::marginHint());
-  gridLayout->setSpacing(KDialog::spacingHint());
 
   strMouseButton1 = i18n("Left button:");
   txtButton1 = i18n("In this row you can customize left click behavior when clicking into"
@@ -751,14 +741,9 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
                              " a window while pressing a modifier key."));
 
   QHBoxLayout* innerLay=new QHBoxLayout(box);
-  innerLay->setContentsMargins(0,0,0,0);
-  innerLay->setSpacing(KDialog::spacingHint());
+  innerLay->setMargin(0);
   QHBoxLayout* fLay=new QHBoxLayout;
-  fLay->setMargin(KDialog::marginHint());
-  fLay->setSpacing(KDialog::spacingHint());
   gridLayout = new QGridLayout;
-  gridLayout->setMargin(KDialog::marginHint());
-  gridLayout->setSpacing(KDialog::spacingHint());
   innerLay->addLayout(fLay);
   innerLay->addLayout(gridLayout);
 

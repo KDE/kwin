@@ -11,6 +11,9 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
    <item row="1" column="0" colspan="2">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="enabled">
@@ -20,9 +23,6 @@
       <string>Other Settings</string>
      </property>
      <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
       <item row="0" column="0">
        <widget class="QLabel" name="desktopSwitchLabel">
         <property name="toolTip">
@@ -30,9 +30,6 @@
         </property>
         <property name="text">
          <string>&amp;Switch desktop on edge:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
          <cstring>desktopSwitchCombo</cstring>
@@ -66,9 +63,6 @@
         <property name="text">
          <string>Activation &amp;delay:</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
         <property name="buddy">
          <cstring>activationDelaySpin</cstring>
         </property>
@@ -100,9 +94,6 @@
         </property>
         <property name="text">
          <string>&amp;Reactivation delay:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
          <cstring>triggerCooldownSpin</cstring>

@@ -79,6 +79,8 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     KGlobal::locale()->insertCatalog( "kwin_effects" );
     ui.setupUi(this);
     layout()->setMargin(0);
+    ui.verticalSpacer->changeSize(20, KDialog::groupSpacingHint());
+    ui.verticalSpacer_2->changeSize(20, KDialog::groupSpacingHint());
     ui.tabWidget->setCurrentIndex(0);
     ui.statusTitleWidget->hide();
 
@@ -387,7 +389,8 @@ void KWinCompositingConfig::setupCompositingState( bool active, bool enabled )
         stateText = i18n( "Compositing is disabled" );
         stateButtonText = i18n( "Resume Compositing" );
         }
-    ui.compositingStateIcon->setPixmap( KIcon( stateIcon ).pixmap( 32, 32 ) );
+    const int iconSize = (QApplication::fontMetrics().height() > 24) ? 32 : 22;
+    ui.compositingStateIcon->setPixmap( KIcon( stateIcon ).pixmap( iconSize, iconSize ) );
     ui.compositingStateLabel->setText( stateText );
     ui.compositingStateButton->setText( stateButtonText );
     ui.compositingStateIcon->setEnabled( enabled );

@@ -73,7 +73,7 @@ KTimerDialog::KTimerDialog( int msec, TimerStyle style, QWidget *parent,
     // create the widgets
     mainWidget = new KVBox( this );
     timerWidget = new KHBox( mainWidget );
-    timerWidget->setSpacing(KDialog::spacingHint());
+    timerWidget->setSpacing(-1);
     timerLabel = new QLabel( timerWidget );
     timerProgress = new QProgressBar( timerWidget );
     timerProgress->setRange( 0, msecTotal );
@@ -109,6 +109,7 @@ void KTimerDialog::setMainWidget( QWidget *widget )
 {
     // yuck, here goes.
     KVBox *newWidget = new KVBox( this );
+    newWidget->setSpacing(-1);
 
     if ( widget->parentWidget() != mainWidget ) {
         widget->setParent( newWidget);
