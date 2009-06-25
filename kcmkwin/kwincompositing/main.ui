@@ -40,7 +40,7 @@
           <property name="margin">
            <number>0</number>
           </property>
-          <item row="1" column="0" colspan="2">
+          <item row="1" column="0">
            <widget class="QGroupBox" name="groupBox">
             <property name="title">
              <string>Common Settings</string>
