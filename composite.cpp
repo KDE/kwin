@@ -493,6 +493,13 @@ void Workspace::checkCompositePaintTime( int msec )
     {
     if( options->disableCompositingChecks )
         return;
+    // Sanity check. QTime uses the system clock so if the user changes the time or
+    // timezone our timer will return undefined results. Ideally we would use a system
+    // clock independent timer but I am uncertain if Qt provides a nice wrapper for
+    // one or not. As it's unlikely for a single paint to take 15 seconds it seems
+    // like a good upper bound.
+    if( msec < 0 || msec > 15000 )
+        return;
     composite_paint_times.prepend( msec );
     bool tooslow = false;
     // If last 3 paints were way too slow, disable and warn.
