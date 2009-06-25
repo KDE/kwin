@@ -64,6 +64,7 @@ public:
     static bool initialized();
     static Qt::Alignment titleAlignment();
     static bool showStripes();
+    static bool drawSeparator();
     static int borderSize();
 
 private:
@@ -73,6 +74,7 @@ private:
     static bool initialized_;
     static Qt::Alignment titleAlignment_;
     static bool showStripes_;
+    static bool drawSeparator_;
     static int borderSize_;
 };
 
@@ -84,6 +86,9 @@ inline Qt::Alignment OxygenFactory::titleAlignment()
 
 inline bool OxygenFactory::showStripes()
     { return showStripes_; }
+
+inline bool OxygenFactory::drawSeparator()
+    { return drawSeparator_; }
 
 inline int OxygenFactory::borderSize()
     { return borderSize_; }

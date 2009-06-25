@@ -368,7 +368,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     }
     frame.getRect(&x, &y, &w, &h);
 
-    if(isActive()) {
+    if(isActive() && OxygenFactory::drawSeparator() ) 
+    {
         helper_.drawSeparator(&painter, QRect(x, titleTop+titleHeight-1.5, w, 2), color, Qt::Horizontal);
     }
 

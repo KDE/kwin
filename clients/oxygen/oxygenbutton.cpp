@@ -200,7 +200,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
 
     dark.setAlpha(120);
 
-    if (client_.isActive())
+    if (client_.isActive() && OxygenFactory::drawSeparator() )
     {
         helper_.drawSeparator(&painter, QRect(x, titleHeight-1.5, w, 2), color, Qt::Horizontal);
     }
