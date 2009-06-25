@@ -60,6 +60,16 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="QCheckBox" name="drawSeparator">
+     <property name="whatsThis">
+      <string>When enabled, this option increases the visibility of the window titlebar by adding an horizontal bar between the title bar and the window contents</string>
+     </property>
+     <property name="text">
+      <string>Draw separator between title bar and window contents</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
   <resources/>
