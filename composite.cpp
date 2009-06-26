@@ -115,13 +115,15 @@ void Workspace::setupCompositing()
                 kDebug( 1212 ) << "Compositing forced to XRender mode by environment variable";
                 type = XRenderCompositing;
                 break;
-            default:
+            case 'N':
                 if( getenv( "KDE_FAILSAFE" ))
                     kDebug( 1212 ) << "Compositing disabled forcefully by KDE failsafe mode";
                 else
                     kDebug( 1212 ) << "Compositing disabled forcefully by environment variable";
-                type = NoCompositing;
-                return;
+                return; // Return not break
+            default:
+                kDebug( 1212 ) << "Unknown KWIN_COMPOSE mode set, ignoring";
+                break;
             }
         }
 
