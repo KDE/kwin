@@ -2980,47 +2980,49 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                         break;
                     }
                 }
-
-            QSize size = adjustedSize( moveResizeGeom.size(), sizemode );
-            // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
-            topleft = QPoint( moveResizeGeom.right() - size.width() + 1, moveResizeGeom.bottom() - size.height() + 1 );
-            bottomright = QPoint( moveResizeGeom.left() + size.width() - 1, moveResizeGeom.top() + size.height() - 1 );
-            orig = moveResizeGeom;
-            switch ( mode )
-                { // these 4 corners ones are copied from above
-                case PositionTopLeft:
-                    moveResizeGeom =  QRect( topleft, orig.bottomRight() ) ;
-                    break;
-                case PositionBottomRight:
-                    moveResizeGeom =  QRect( orig.topLeft(), bottomright ) ;
-                    break;
-                case PositionBottomLeft:
-                    moveResizeGeom =  QRect( QPoint( topleft.x(), orig.y() ), QPoint( orig.right(), bottomright.y()) ) ;
-                    break;
-                case PositionTopRight:
-                    moveResizeGeom =  QRect( QPoint( orig.x(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
-                    break;
-                // The side ones can't be copied exactly - if aspect ratios are specified, both dimensions may change.
-                // Therefore grow to the right/bottom if needed.
-                // TODO it should probably obey gravity rather than always using right/bottom ?
-                case PositionTop:
-                    moveResizeGeom =  QRect( QPoint( orig.left(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
-                    break;
-                case PositionBottom:
-                    moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
-                    break;
-                case PositionLeft:
-                    moveResizeGeom =  QRect( QPoint( topleft.x(), orig.top() ), QPoint( orig.right(), bottomright.y()));
-                    break;
-                case PositionRight:
-                    moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
-                    break;
-                case PositionCenter:
-                default:
-                    abort();
-                    break;
-                }
             }
+
+        // Always obey size hints, even when in "unrestricted" mode
+        QSize size = adjustedSize( moveResizeGeom.size(), sizemode );
+        // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
+        topleft = QPoint( moveResizeGeom.right() - size.width() + 1, moveResizeGeom.bottom() - size.height() + 1 );
+        bottomright = QPoint( moveResizeGeom.left() + size.width() - 1, moveResizeGeom.top() + size.height() - 1 );
+        orig = moveResizeGeom;
+        switch ( mode )
+            { // these 4 corners ones are copied from above
+            case PositionTopLeft:
+                moveResizeGeom =  QRect( topleft, orig.bottomRight() ) ;
+                break;
+            case PositionBottomRight:
+                moveResizeGeom =  QRect( orig.topLeft(), bottomright ) ;
+                break;
+            case PositionBottomLeft:
+                moveResizeGeom =  QRect( QPoint( topleft.x(), orig.y() ), QPoint( orig.right(), bottomright.y()) ) ;
+                break;
+            case PositionTopRight:
+                moveResizeGeom =  QRect( QPoint( orig.x(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
+                break;
+            // The side ones can't be copied exactly - if aspect ratios are specified, both dimensions may change.
+            // Therefore grow to the right/bottom if needed.
+            // TODO it should probably obey gravity rather than always using right/bottom ?
+            case PositionTop:
+                moveResizeGeom =  QRect( QPoint( orig.left(), topleft.y() ), QPoint( bottomright.x(), orig.bottom()) ) ;
+                break;
+            case PositionBottom:
+                moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
+                break;
+            case PositionLeft:
+                moveResizeGeom =  QRect( QPoint( topleft.x(), orig.top() ), QPoint( orig.right(), bottomright.y()));
+                break;
+            case PositionRight:
+                moveResizeGeom =  QRect( orig.topLeft(), QPoint( bottomright.x(), bottomright.y() ) ) ;
+                break;
+            case PositionCenter:
+            default:
+                abort();
+                break;
+            }
+
         if( moveResizeGeom.size() != previousMoveResizeGeom.size())
             update = true;
         }
