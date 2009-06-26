@@ -55,6 +55,7 @@ class KDecorationPreview
         void setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size);
         void setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right);
     protected:
+        virtual void paintEvent( QPaintEvent* );
         virtual void resizeEvent( QResizeEvent* );
     private:
         void positionPreviews();

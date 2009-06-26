@@ -85,9 +85,11 @@ bool KDecorationPreview::recreateDecoration( KDecorationPlugins* plugins )
         }
 
     positionPreviews();
-    deco[Inactive]->widget()->show();
-    deco[Active]->widget()->show();
+    //deco[Inactive]->widget()->show();
+    //deco[Active]->widget()->show();
 
+    //deco[Inactive]->widget()->render( this, deco[Inactive]->widget()->mapToParent( QPoint(0,0) ) );
+    
     return true;
     }
 
@@ -103,6 +105,13 @@ void KDecorationPreview::disablePreview()
     deco[Active] = deco[Inactive] = NULL;
     no_preview->show();
     }
+
+void KDecorationPreview::paintEvent( QPaintEvent* e )
+{
+    QWidget::paintEvent(e);
+    if( deco[Inactive] ) deco[Inactive]->widget()->render( this, deco[Inactive]->widget()->mapToParent( QPoint(0,0) ) );
+    if( deco[Active] ) deco[Active]->widget()->render( this, deco[Active]->widget()->mapToParent( QPoint(0,0) ) );
+}
 
 void KDecorationPreview::resizeEvent( QResizeEvent* e )
     {
