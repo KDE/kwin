@@ -752,4 +752,3 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
 
 } // namespace
 
-#include "shadow.h"
