@@ -23,6 +23,8 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <QDBusMessage>
+#include <QDBusConnection>
 #include <QLabel>
 #include <QStyle>
 //Added by qt3to4:
@@ -440,7 +442,20 @@ void KDecorationPreviewBridge::grabXServer( bool )
 
 bool KDecorationPreviewBridge::compositingActive() const
     {
-    return false;
+        
+        QDBusMessage message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "compositingActive" );
+        QDBusMessage reply = QDBusConnection::sessionBus().call( message );
+        if( reply.type() != QDBusMessage::ReplyMessage ) 
+        {
+            return false;
+        }
+        
+        if( reply.arguments().empty() ) {
+            return false;
+        }
+        
+        return reply.arguments()[0].toBool();
+
     }
 
 KDecorationPreviewOptions::KDecorationPreviewOptions()
