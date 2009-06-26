@@ -108,13 +108,19 @@ void Workspace::setupCompositing()
         switch( c )
             {
             case 'O':
+                kDebug( 1212 ) << "Compositing forced to OpenGL mode by environment variable";
                 type = OpenGLCompositing;
                 break;
             case 'X':
+                kDebug( 1212 ) << "Compositing forced to XRender mode by environment variable";
                 type = XRenderCompositing;
                 break;
             default:
-                kDebug( 1212 ) << "No compositing";
+                if( getenv( "KDE_FAILSAFE" ))
+                    kDebug( 1212 ) << "Compositing disabled forcefully by KDE failsafe mode";
+                else
+                    kDebug( 1212 ) << "Compositing disabled forcefully by environment variable";
+                type = NoCompositing;
                 return;
             }
         }
