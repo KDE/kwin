@@ -443,18 +443,19 @@ void KDecorationPreviewBridge::grabXServer( bool )
 bool KDecorationPreviewBridge::compositingActive() const
     {
         
-        QDBusMessage message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "compositingActive" );
-        QDBusMessage reply = QDBusConnection::sessionBus().call( message );
-        if( reply.type() != QDBusMessage::ReplyMessage ) 
+    QDBusMessage message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "compositingActive" );
+    QDBusMessage reply = QDBusConnection::sessionBus().call( message );
+    if( reply.type() != QDBusMessage::ReplyMessage ) 
         {
-            return false;
+        return false;
         }
         
-        if( reply.arguments().empty() ) {
-            return false;
+    if( reply.arguments().empty() ) 
+        {
+        return false;
         }
         
-        return reply.arguments()[0].toBool();
+    return reply.arguments()[0].toBool();
 
     }
 
