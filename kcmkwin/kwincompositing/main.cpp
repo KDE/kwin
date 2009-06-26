@@ -362,6 +362,8 @@ void KWinCompositingConfig::loadGeneralTab()
 
 void KWinCompositingConfig::setupCompositingState( bool active, bool enabled )
     {
+    if( getenv( "KDE_FAILSAFE" ))
+        enabled = false;
     // compositing state
     QString stateIcon;
     QString stateText;
@@ -633,6 +635,17 @@ void KWinCompositingConfig::save()
 
     configChanged(advancedChanged);
 
+    // This assumes that this KCM is running with the same environment variables as KWin
+    // TODO: Detect KWIN_COMPOSE=N as well
+    if( getenv( "KDE_FAILSAFE" ) && ui.useCompositing->isChecked() )
+        {
+        KMessageBox::sorry( this, i18n(
+            "Your settings have been saved but as KDE is currently running in failsafe"
+            "mode desktop effects cannot be enabled at this time.\n\n"
+            "Please exit failsafe mode to enable desktop effects." ));
+        m_showConfirmDialog = false; // Dangerous but there is no way to test if failsafe mode
+        }
+
     if(m_showConfirmDialog)
         {
         m_showConfirmDialog = false;
@@ -677,7 +690,7 @@ void KWinCompositingConfig::configChanged(bool reinitCompositing)
     // such effects are enabled but not returned by DBus method loadedEffects
     message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "loadedEffects" );
     QDBusMessage reply = QDBusConnection::sessionBus().call( message );
-    if( reply.type() == QDBusMessage::ReplyMessage && enabledAfter )
+    if( reply.type() == QDBusMessage::ReplyMessage && enabledAfter && !getenv( "KDE_FAILSAFE" ))
         {
         QStringList loadedEffects = reply.arguments()[0].toStringList();
         QStringList effects = effectConfig.keyList();
