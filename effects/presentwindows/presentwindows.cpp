@@ -47,14 +47,25 @@ KWIN_EFFECT( presentwindows, PresentWindowsEffect )
 PresentWindowsEffect::PresentWindowsEffect()
     : m_proxy( this )
     , m_activated( false )
-    , m_allDesktops( false )
     , m_ignoreMinimized( false )
     , m_decalOpacity( 0.0 )
     , m_hasKeyboardGrab( false )
     , m_tabBoxEnabled( false )
+    , m_mode( ModeCurrentDesktop )
+    , m_managerWindow( NULL )
     , m_highlightedWindow( NULL )
     , m_filterFrame( EffectFrame::Styled, false )
     {
+    m_atomDesktop = XInternAtom( display(), "_KDE_PRESENT_WINDOWS_DESKTOP", False );
+    m_atomWindows = XInternAtom( display(), "_KDE_PRESENT_WINDOWS_GROUP", False );
+    effects->registerPropertyType( m_atomDesktop, true );
+    effects->registerPropertyType( m_atomWindows, true );
+
+    // Announce support by creating a dummy version on the root window
+    unsigned char dummy = 0;
+    XChangeProperty( display(), rootWindow(), m_atomDesktop, m_atomDesktop, 8, PropModeReplace, &dummy, 1 );
+    XChangeProperty( display(), rootWindow(), m_atomWindows, m_atomWindows, 8, PropModeReplace, &dummy, 1 );
+
     QFont font;
     font.setPointSize( font.pointSize() * 2 );
     font.setBold( true );
@@ -78,6 +89,10 @@ PresentWindowsEffect::PresentWindowsEffect()
 
 PresentWindowsEffect::~PresentWindowsEffect()
     {
+    XDeleteProperty( display(), rootWindow(), m_atomDesktop );
+    effects->registerPropertyType( m_atomDesktop, false );
+    XDeleteProperty( display(), rootWindow(), m_atomWindows );
+    effects->registerPropertyType( m_atomWindows, false );
     foreach( ElectricBorder border, m_borderActivate )
         {
         effects->unreserveElectricBorder( border );
@@ -322,6 +337,8 @@ void PresentWindowsEffect::windowClosed( EffectWindow *w )
     {
     if( m_highlightedWindow == w )
         setHighlightedWindow( findFirstWindow() );
+    if( m_managerWindow == w )
+        m_managerWindow = NULL;
     if( !m_windowData.contains( w ))
         return;
     m_windowData[w].visible = false; // TODO: Fix this so they do actually fade out
@@ -389,12 +406,12 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
         {
         // check for global shortcuts
         // HACK: keyboard grab disables the global shortcuts so we have to check for global shortcut (bug 156155)
-        if( !m_allDesktops && shortcut.contains( e->key() + e->modifiers() ) )
+        if( m_mode == ModeCurrentDesktop && shortcut.contains( e->key() + e->modifiers() ) )
             {
             toggleActive();
             return;
             }
-        if( m_allDesktops && shortcutAll.contains( e->key() + e->modifiers() ) )
+        if( m_mode == ModeAllDesktops && shortcutAll.contains( e->key() + e->modifiers() ) )
             {
             toggleActiveAllDesktops();
             return;
@@ -502,6 +519,87 @@ void PresentWindowsEffect::tabBoxUpdated()
     {
     if( m_activated )
         setHighlightedWindow( effects->currentTabBoxWindow() );
+    }
+
+//-----------------------------------------------------------------------------
+// Atom handling
+void PresentWindowsEffect::propertyNotify( EffectWindow* w, long a )
+    {
+    if( a != m_atomDesktop && a != m_atomWindows )
+        return; // Not our atom
+
+    if( a == m_atomDesktop )
+        {
+        QByteArray byteData = w->readProperty( m_atomDesktop, m_atomDesktop, 32 );
+        if( byteData.length() < 1 )
+            {
+            // Property was removed, end present windows
+            setActive( false );
+            return;
+            }
+        long* data = reinterpret_cast<long*>( byteData.data() );
+
+        if( !data[0] )
+            {
+            // Purposely ending present windows by issuing a NULL target
+            setActive( false );
+            return;
+            }
+        // present windows is active so don't do anything
+        if( m_activated )
+            return;
+
+        int desktop = data[0];
+        if( desktop > effects->numberOfDesktops() )
+            return;
+        if( desktop == -1 )
+            toggleActiveAllDesktops();
+        else
+            {
+            m_mode = ModeSelectedDesktop;
+            m_desktop = desktop;
+            m_managerWindow = w;
+            setActive( true );
+            }
+        }
+    else if( a == m_atomWindows )
+        {
+        QByteArray byteData = w->readProperty( m_atomWindows, m_atomWindows, 32 );
+        if( byteData.length() < 1 )
+            {
+            // Property was removed, end present windows
+            setActive( false );
+            return;
+            }
+        long* data = reinterpret_cast<long*>( byteData.data() );
+
+        if( !data[0] )
+            {
+            // Purposely ending present windows by issuing a NULL target
+            setActive( false );
+            return;
+            }
+        // present windows is active so don't do anything
+        if( m_activated )
+            return;
+
+        // for security clear selected windows
+        m_selectedWindows.clear();
+        int length = byteData.length() / sizeof( data[0] );
+        for( int i=0; i<length; i++ )
+            {
+            EffectWindow* foundWin = effects->findWindow( data[i] );
+            if( !foundWin )
+                {
+                kDebug(1212) << "Invalid window targetted for present windows. Requested:" << data[i];
+                continue;
+                }
+            m_selectedWindows.append( foundWin );
+            }
+        m_mode = ModeWindowGroup;
+        m_managerWindow = w;
+        setActive( true );
+        }
     }
 
 //-----------------------------------------------------------------------------
@@ -1301,11 +1399,22 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
             m_motionManager.moveWindow( w, w->geometry() );
         m_filterFrame.free();
         m_windowFilter.clear();
+        m_selectedWindows.clear();
 
         effects->destroyInputWindow( m_input );
         if( m_hasKeyboardGrab )
             effects->ungrabKeyboard();
         m_hasKeyboardGrab = false;
+
+        // destroy atom on manager window
+        if( m_managerWindow )
+            {
+            if( m_mode == ModeSelectedDesktop )
+                m_managerWindow->deleteProperty( m_atomDesktop );
+            else if( m_mode == ModeWindowGroup )
+                m_managerWindow->deleteProperty( m_atomWindows );
+            m_managerWindow = NULL;
+            }
         }
     effects->addRepaintFull(); // Trigger the first repaint
     }
@@ -1331,8 +1440,17 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
         return false;
     if( !w->acceptsFocus() )
         return false;
-    if( !m_allDesktops && !w->isOnCurrentDesktop() )
-        return false;
+    switch( m_mode )
+        {
+        case ModeAllDesktops:
+            break;
+        case ModeCurrentDesktop:
+            return w->isOnCurrentDesktop();
+        case ModeSelectedDesktop:
+            return w->isOnDesktop( m_desktop );
+        case ModeWindowGroup:
+            return m_selectedWindows.contains( w );
+        }
     if( !m_tabBoxEnabled && m_ignoreMinimized && w->isMinimized() )
         return false;
     return true;

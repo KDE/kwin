@@ -229,6 +229,7 @@ class EffectWindowImpl : public EffectWindow
         virtual QRect iconGeometry() const;
         virtual QRect contentsRect() const;
         virtual QByteArray readProperty( long atom, long type, int format ) const;
+        virtual void deleteProperty( long atom ) const;
 
         virtual bool isDesktop() const;
         virtual bool isDock() const;

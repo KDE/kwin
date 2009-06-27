@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 83
+#define KWIN_EFFECT_API_VERSION_MINOR 84
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -834,6 +834,7 @@ class KWIN_EXPORT EffectWindow
         virtual QRect contentsRect() const = 0;
         bool hasDecoration() const;
         virtual QByteArray readProperty( long atom, long type, int format ) const = 0;
+        virtual void deleteProperty( long atom ) const = 0;
 
         virtual QString caption() const = 0;
         virtual QPixmap icon() const = 0;

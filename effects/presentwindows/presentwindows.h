@@ -86,12 +86,22 @@ class PresentWindowsEffect
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
 
+        // atoms
+        virtual void propertyNotify( EffectWindow* w, long atom );
+
         enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
+        enum PresentWindowsMode
+            {
+            ModeAllDesktops, // Shows windows of all desktops
+            ModeCurrentDesktop, // Shows windows on current desktop
+            ModeSelectedDesktop, // Shows windows of selected desktop via property (m_desktop)
+            ModeWindowGroup // Shows windows selected via property
+            };
 
     public slots:
         void setActive( bool active, bool closingTab = false ); // HACK: closingTab shouldn't be needed
-        void toggleActive()  { m_allDesktops = false; setActive( !m_activated ); }
-        void toggleActiveAllDesktops()  { m_allDesktops = true; setActive( !m_activated ); }
+        void toggleActive()  { m_mode = ModeCurrentDesktop; setActive( !m_activated ); }
+        void toggleActiveAllDesktops()  { m_mode = ModeAllDesktops; setActive( !m_activated ); }
 
         // slots for global shortcut changed
         // needed to toggle the effect
@@ -144,12 +154,15 @@ class PresentWindowsEffect
 
         // Activation
         bool m_activated;
-        bool m_allDesktops;
         bool m_ignoreMinimized;
         double m_decalOpacity;
         Window m_input;
         bool m_hasKeyboardGrab;
         bool m_tabBoxEnabled;
+        PresentWindowsMode m_mode;
+        int m_desktop;
+        EffectWindowList m_selectedWindows;
+        EffectWindow *m_managerWindow;
 
         // Window data
         WindowMotionManager m_motionManager;
@@ -166,6 +179,13 @@ class PresentWindowsEffect
         // Shortcut - needed to toggle the effect
         KShortcut shortcut;
         KShortcut shortcutAll;
+
+        // Atoms
+        // Present windows for all windows of given desktop
+        // -1 for all desktops
+        long m_atomDesktop;
+        // Present windows for group of window ids
+        long m_atomWindows;
     };
 
 } // namespace

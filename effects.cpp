@@ -1266,6 +1266,12 @@ QByteArray EffectWindowImpl::readProperty( long atom, long type, int format ) co
         }
     }
 
+void EffectWindowImpl::deleteProperty(long int atom) const
+{
+    XDeleteProperty( QX11Info::display(), window()->window(), atom );
+}
+
+
 bool EffectWindowImpl::isMovable() const
     {
     if( Client* c = dynamic_cast< Client* >( toplevel ))
