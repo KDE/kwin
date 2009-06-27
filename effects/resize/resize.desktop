@@ -1,7 +1,11 @@
 [Desktop Entry]
 Name=Resize Window
+Name[sv]=Ändra fönsterstorlek
+Name[uk]=Змінити розмір вікна
 Icon=preferences-system-windows-effect-resize
 Comment=Effect to outline geometry while resizing a window
+Comment[sv]=Effekt för att visa formens kontur när fönsterstorleken ändras
+Comment[uk]=Показує розміри контуру під час зміни розмірів вікна
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
