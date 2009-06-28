@@ -141,6 +141,12 @@ void PresentWindowsEffect::reconfigure( ReconfigureFlags )
     m_fillGaps = conf.readEntry( "FillGaps", true );
     m_fadeDuration = double( animationTime( 150 ));
     m_showPanel = conf.readEntry( "ShowPanel", false );
+    m_leftButtonWindow = (WindowMouseAction)conf.readEntry( "LeftButtonWindow", (int)WindowActivateAction );
+    m_middleButtonWindow = (WindowMouseAction)conf.readEntry( "MiddleButtonWindow", (int)WindowNoAction );
+    m_rightButtonWindow = (WindowMouseAction)conf.readEntry( "RightButtonWindow", (int)WindowExitAction );
+    m_leftButtonDesktop = (DesktopMouseAction)conf.readEntry( "LeftButtonDesktop", (int)DesktopExitAction );
+    m_middleButtonDesktop = (DesktopMouseAction)conf.readEntry( "MiddleButtonDesktop", (int)DesktopNoAction );
+    m_rightButtonDesktop = (DesktopMouseAction)conf.readEntry( "RightButtonDesktop", (int)DesktopNoAction );
     }
 
 const void* PresentWindowsEffect::proxy() const
@@ -375,12 +381,14 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent *e )
     // Which window are we hovering over? Always trigger as we don't always get move events before clicking
     // We cannot use m_motionManager.windowAtPoint() as the window might not be visible
     EffectWindowList windows = m_motionManager.managedWindows();
+    bool hovering = false;
     for( int i = 0; i < windows.size(); i++ )
         {
         assert( m_windowData.contains( windows.at( i )));
         if( m_motionManager.transformedGeometry( windows.at( i )).contains( cursorPos() ) &&
             m_windowData[windows.at( i )].visible )
             {
+            hovering = true;
             if( windows.at( i ) && m_highlightedWindow != windows.at( i ))
                 setHighlightedWindow( windows.at( i ));
             break;
@@ -393,12 +401,110 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent *e )
     QMouseEvent* me = static_cast<QMouseEvent*>( e );
     if( me->button() == Qt::LeftButton )
         {
-        if( m_highlightedWindow )
-            effects->activateWindow( m_highlightedWindow );
-        setActive( false );
+        if( hovering )
+            {
+            // mouse is hovering above a window - use MouseActionsWindow
+            mouseActionWindow( m_leftButtonWindow );
+            }
+        else
+            {
+            // mouse is hovering above desktop - use MouseActionsDesktop
+            mouseActionDesktop( m_leftButtonDesktop );
+            }
         }
-    // TODO: User mouse actions. E.g. right-click stickies and middle-click brings to current desktop
+    if( me->button() == Qt::MidButton )
+        {
+        if( hovering )
+            {
+            // mouse is hovering above a window - use MouseActionsWindow
+            mouseActionWindow( m_middleButtonWindow );
+            }
+        else
+            {
+            // mouse is hovering above desktop - use MouseActionsDesktop
+            mouseActionDesktop( m_middleButtonDesktop );
+            }
+        }
+    if( me->button() == Qt::RightButton )
+        {
+        if( hovering )
+            {
+            // mouse is hovering above a window - use MouseActionsWindow
+            mouseActionWindow( m_rightButtonWindow );
+            }
+        else
+            {
+            // mouse is hovering above desktop - use MouseActionsDesktop
+            mouseActionDesktop( m_rightButtonDesktop );
+            }
+        }
     }
+
+void PresentWindowsEffect::mouseActionWindow( WindowMouseAction& action )
+    {
+    switch( action )
+        {
+        case WindowActivateAction:
+            if( m_highlightedWindow )
+                effects->activateWindow( m_highlightedWindow );
+            setActive( false );
+            break;
+        case WindowExitAction:
+            setActive( false );
+            break;
+        case WindowToCurrentDesktopAction:
+            if( m_highlightedWindow )
+                effects->windowToDesktop( m_highlightedWindow, effects->currentDesktop() );
+            break;
+        case WindowToAllDesktopsAction:
+            if( m_highlightedWindow )
+                {
+                if( m_highlightedWindow->isOnAllDesktops() )
+                    effects->windowToDesktop( m_highlightedWindow, effects->currentDesktop() );
+                else
+                    effects->windowToDesktop( m_highlightedWindow, NET::OnAllDesktops );
+                }
+            break;
+        case WindowMinimizeAction:
+            if( m_highlightedWindow )
+                {
+                if( m_highlightedWindow->isMinimized() )
+                    m_highlightedWindow->unminimize();
+                else
+                    m_highlightedWindow->minimize();
+                }
+            break;
+        case WindowCloseAction:
+            if( m_highlightedWindow )
+                {
+                m_highlightedWindow->closeWindow();
+                }
+            break;
+        default:
+            break;
+        }
+    }
+
+void PresentWindowsEffect::mouseActionDesktop( DesktopMouseAction& action )
+    {
+    switch( action )
+        {
+        case DesktopActivateAction:
+            if( m_highlightedWindow )
+                effects->activateWindow( m_highlightedWindow );
+            setActive( false );
+            break;
+        case DesktopExitAction:
+            setActive( false );
+            break;
+        case DesktopShowDesktopAction:
+            effects->setShowingDesktop( true );
+            setActive( false );
+        default:
+            break;
+        }
+    }
+
 
 void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
     {

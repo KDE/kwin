@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 100
+#define KWIN_EFFECT_API_VERSION_MINOR 101
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -557,6 +557,7 @@ class KWIN_EXPORT EffectsHandler
         virtual EffectWindow* activeWindow() const = 0 ;
         virtual void moveWindow( EffectWindow* w, const QPoint& pos ) = 0;
         virtual void windowToDesktop( EffectWindow* w, int desktop ) = 0;
+        virtual void setShowingDesktop( bool showing ) = 0;
 
         // Desktops
         /**
@@ -948,6 +949,10 @@ class KWIN_EXPORT EffectWindow
          * Returns the unmodified window quad list. Can also be used to force rebuilding.
          */
         virtual WindowQuadList buildQuads( bool force = false ) const = 0;
+
+        virtual void minimize() const = 0;
+        virtual void unminimize() const = 0;
+        virtual void closeWindow() const = 0;
     };
 
 class KWIN_EXPORT EffectWindowGroup

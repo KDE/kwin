@@ -421,6 +421,12 @@ void EffectsHandlerImpl::windowToDesktop( EffectWindow* w, int desktop )
         Workspace::self()->sendClientToDesktop( cl, desktop, true );
     }
 
+void EffectsHandlerImpl::setShowingDesktop( bool showing )
+    {
+    Workspace::self()->setShowingDesktop( showing );
+    }
+
+
 int EffectsHandlerImpl::currentDesktop() const
     {
     return Workspace::self()->currentDesktop();
@@ -1444,6 +1450,30 @@ EffectWindowList EffectWindowImpl::mainWindows() const
 WindowQuadList EffectWindowImpl::buildQuads( bool force ) const
     {
     return sceneWindow()->buildQuads( force );
+    }
+
+void EffectWindowImpl::minimize() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        {
+        c->minimize();
+        }
+    }
+
+void EffectWindowImpl::unminimize() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        {
+        c->unminimize();
+        }
+    }
+
+void EffectWindowImpl::closeWindow() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        {
+        c->closeWindow();
+        }
     }
 
 EffectWindow* effectWindow( Toplevel* w )

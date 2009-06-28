@@ -1,128 +1,129 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>KWin::PresentWindowsEffectConfigForm</class>
- <widget class="QWidget" name="KWin::PresentWindowsEffectConfigForm" >
-  <property name="geometry" >
+ <widget class="QWidget" name="KWin::PresentWindowsEffectConfigForm">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>535</width>
-    <height>345</height>
+    <width>542</width>
+    <height>441</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <item row="0" column="0" >
-    <widget class="QGroupBox" name="groupBox" >
-     <property name="title" >
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
       <string>Appearance</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3" >
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
          <string>Rearrange &amp;duration:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>rearrangeDurationSpin</cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QSpinBox" name="rearrangeDurationSpin" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="rearrangeDurationSpin">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="specialValueText" >
-         <string comment="Duration of rearrangement" >Default</string>
+        <property name="specialValueText">
+         <string comment="Duration of rearrangement">Default</string>
         </property>
-        <property name="suffix" >
+        <property name="suffix">
          <string> msec</string>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>5000</number>
         </property>
-        <property name="singleStep" >
+        <property name="singleStep">
          <number>10</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>0</number>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" >
-       <widget class="QLabel" name="label_3" >
-        <property name="text" >
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
          <string>Layout mode:</string>
         </property>
-        <property name="alignment" >
+        <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring>layoutCombo</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QComboBox" name="layoutCombo" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+      <item row="1" column="1">
+       <widget class="QComboBox" name="layoutCombo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <item>
-         <property name="text" >
+         <property name="text">
           <string>Natural</string>
          </property>
         </item>
         <item>
-         <property name="text" >
+         <property name="text">
           <string>Regular Grid</string>
          </property>
         </item>
         <item>
-         <property name="text" >
+         <property name="text">
           <string>Flexible Grid</string>
          </property>
         </item>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2" >
-       <widget class="QCheckBox" name="displayTitleBox" >
-        <property name="text" >
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="displayTitleBox">
+        <property name="text">
          <string>Display window &amp;titles</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2" >
-       <widget class="QCheckBox" name="displayIconBox" >
-        <property name="text" >
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="displayIconBox">
+        <property name="text">
          <string>Display window &amp;icons</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="2" >
-       <widget class="QCheckBox" name="switchingBox" >
-        <property name="text" >
+      <item row="4" column="0" colspan="2">
+       <widget class="QCheckBox" name="switchingBox">
+        <property name="text">
          <string>Use for window &amp;switching</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="2" >
-       <widget class="QCheckBox" name="ignoreMinimizedBox" >
-        <property name="text" >
+      <item row="5" column="0" colspan="2">
+       <widget class="QCheckBox" name="ignoreMinimizedBox">
+        <property name="text">
          <string>Ignore &amp;minimized windows</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="0" colspan="2" >
-       <widget class="QCheckBox" name="showPanelBox" >
-        <property name="text" >
+      <item row="6" column="0" colspan="2">
+       <widget class="QCheckBox" name="showPanelBox">
+        <property name="text">
          <string>Show &amp;panels</string>
         </property>
        </widget>
@@ -130,16 +131,16 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2" >
-    <widget class="QGroupBox" name="groupBox_2" >
-     <property name="title" >
+   <item row="2" column="0" colspan="2">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
       <string>Activation</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2" >
-      <item row="0" column="0" colspan="2" >
-       <widget class="KWin::GlobalShortcutsEditor" native="1" name="shortcutEditor" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0" colspan="2">
+       <widget class="KWin::GlobalShortcutsEditor" name="shortcutEditor" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -149,25 +150,25 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="1" >
-    <widget class="QGroupBox" name="groupBox_3" >
-     <property name="title" >
+   <item row="0" column="1">
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
       <string>Natural Layout Settings</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_4" >
-      <item row="1" column="0" colspan="3" >
-       <widget class="QCheckBox" name="fillGapsBox" >
-        <property name="text" >
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="1" column="0" colspan="3">
+       <widget class="QCheckBox" name="fillGapsBox">
+        <property name="text">
          <string>Fill &amp;gaps</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="3" >
-       <spacer name="verticalSpacer" >
-        <property name="orientation" >
+      <item row="2" column="0" colspan="3">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
           <height>40</height>
@@ -175,64 +176,316 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="0" >
-       <widget class="QLabel" name="label_6" >
-        <property name="text" >
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
          <string>Faster</string>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring></cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="1" >
-       <widget class="QSlider" name="accuracySlider" >
-        <property name="minimumSize" >
+      <item row="0" column="1">
+       <widget class="QSlider" name="accuracySlider">
+        <property name="minimumSize">
          <size>
           <width>130</width>
           <height>0</height>
          </size>
         </property>
-        <property name="minimum" >
+        <property name="minimum">
          <number>1</number>
         </property>
-        <property name="maximum" >
+        <property name="maximum">
          <number>8</number>
         </property>
-        <property name="singleStep" >
+        <property name="singleStep">
          <number>1</number>
         </property>
-        <property name="pageStep" >
+        <property name="pageStep">
          <number>1</number>
         </property>
-        <property name="value" >
+        <property name="value">
          <number>1</number>
         </property>
-        <property name="tracking" >
+        <property name="tracking">
          <bool>true</bool>
         </property>
-        <property name="orientation" >
+        <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <property name="invertedAppearance" >
+        <property name="invertedAppearance">
          <bool>true</bool>
         </property>
-        <property name="invertedControls" >
+        <property name="invertedControls">
          <bool>false</bool>
         </property>
-        <property name="tickPosition" >
+        <property name="tickPosition">
          <enum>QSlider::TicksBelow</enum>
         </property>
        </widget>
       </item>
-      <item row="0" column="2" >
-       <widget class="QLabel" name="label_5" >
-        <property name="text" >
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
          <string>Nicer</string>
         </property>
-        <property name="buddy" >
+        <property name="buddy">
          <cstring></cstring>
         </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="title">
+      <string>Windows</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Left button:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="leftButtonWindowCombo">
+        <item>
+         <property name="text">
+          <string>Activate window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>End effect</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Bring window to current desktop</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Send window to all desktops</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(Un-)Minimize window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Middle button:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="middleButtonWindowCombo">
+        <item>
+         <property name="text">
+          <string>Activate window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>End effect</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Bring window to current desktop</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Send window to all desktops</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(Un-)Minimize window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Right button:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="rightButtonWindowCombo">
+        <item>
+         <property name="text">
+          <string>Activate window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>End effect</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Bring window to current desktop</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Send window to all desktops</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>(Un-)Minimize window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Close window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="groupBox_5">
+     <property name="title">
+      <string>Desktop</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Left button:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="leftButtonDesktopCombo">
+        <item>
+         <property name="text">
+          <string>Activate window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>End effect</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Show desktop</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Middle button:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="middleButtonDesktopCombo">
+        <item>
+         <property name="text">
+          <string>Activate window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>End effect</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Show desktop</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Right button:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="rightButtonDesktopCombo">
+        <item>
+         <property name="text">
+          <string>Activate window</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>End effect</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Show desktop</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
@@ -244,7 +497,7 @@
   <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global" >kwineffects.h</header>
+   <header location="global">kwineffects.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

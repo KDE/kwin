@@ -97,6 +97,23 @@ class PresentWindowsEffect
             ModeSelectedDesktop, // Shows windows of selected desktop via property (m_desktop)
             ModeWindowGroup // Shows windows selected via property
             };
+        enum WindowMouseAction
+            {
+            WindowActivateAction = 0, // Activates the window and deactivates the effect
+            WindowExitAction = 1, // Deactivates the effect without activating new window
+            WindowToCurrentDesktopAction = 2, // Brings window to current desktop
+            WindowToAllDesktopsAction = 3, // Brings window to all desktops
+            WindowMinimizeAction = 4, // Minimize the window
+            WindowCloseAction = 5, // Closes the window
+            WindowNoAction = 6 // nothing
+            };
+        enum DesktopMouseAction
+            {
+            DesktopActivateAction = 0, // Activates the window and deactivates the effect
+            DesktopExitAction = 1, // Deactivates the effect without activating new window
+            DesktopShowDesktopAction = 2, // Minimizes all windows
+            DesktopNoAction = 3 // nothing
+            };
 
     public slots:
         void setActive( bool active, bool closingTab = false ); // HACK: closingTab shouldn't be needed
@@ -135,6 +152,10 @@ class PresentWindowsEffect
         void setHighlightedWindow( EffectWindow *w );
         EffectWindow* relativeWindow( EffectWindow *w, int xdiff, int ydiff, bool wrap ) const;
         EffectWindow* findFirstWindow() const;
+
+        // Helper functions for mouse actions
+        void mouseActionWindow( WindowMouseAction& action );
+        void mouseActionDesktop( DesktopMouseAction& action );
 
     private:
         PresentWindowsEffectProxy m_proxy;
@@ -186,6 +207,14 @@ class PresentWindowsEffect
         long m_atomDesktop;
         // Present windows for group of window ids
         long m_atomWindows;
+
+        // Mouse Actions
+        WindowMouseAction m_leftButtonWindow;
+        WindowMouseAction m_middleButtonWindow;
+        WindowMouseAction m_rightButtonWindow;
+        DesktopMouseAction m_leftButtonDesktop;
+        DesktopMouseAction m_middleButtonDesktop;
+        DesktopMouseAction m_rightButtonDesktop;
     };
 
 } // namespace

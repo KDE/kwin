@@ -55,6 +55,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual EffectWindow* activeWindow() const;
         virtual void moveWindow( EffectWindow* w, const QPoint& pos );
         virtual void windowToDesktop( EffectWindow* w, int desktop );
+        virtual void setShowingDesktop( bool showing );
 
         virtual int currentDesktop() const;
         virtual int numberOfDesktops() const;
@@ -256,6 +257,10 @@ class EffectWindowImpl : public EffectWindow
         virtual EffectWindowList mainWindows() const;
 
         virtual WindowQuadList buildQuads( bool force = false ) const;
+
+        virtual void minimize() const;
+        virtual void unminimize() const;
+        virtual void closeWindow() const;
 
         const Toplevel* window() const;
         Toplevel* window();
