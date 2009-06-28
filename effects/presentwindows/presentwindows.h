@@ -99,20 +99,20 @@ class PresentWindowsEffect
             };
         enum WindowMouseAction
             {
-            WindowActivateAction = 0, // Activates the window and deactivates the effect
-            WindowExitAction = 1, // Deactivates the effect without activating new window
-            WindowToCurrentDesktopAction = 2, // Brings window to current desktop
-            WindowToAllDesktopsAction = 3, // Brings window to all desktops
-            WindowMinimizeAction = 4, // Minimize the window
-            WindowCloseAction = 5, // Closes the window
-            WindowNoAction = 6 // nothing
+            WindowNoAction = 0, // Nothing
+            WindowActivateAction = 1, // Activates the window and deactivates the effect
+            WindowExitAction = 2, // Deactivates the effect without activating new window
+            WindowToCurrentDesktopAction = 3, // Brings window to current desktop
+            WindowToAllDesktopsAction = 4, // Brings window to all desktops
+            WindowMinimizeAction = 5, // Minimize the window
+            WindowCloseAction = 6 // Closes the window
             };
         enum DesktopMouseAction
             {
-            DesktopActivateAction = 0, // Activates the window and deactivates the effect
-            DesktopExitAction = 1, // Deactivates the effect without activating new window
-            DesktopShowDesktopAction = 2, // Minimizes all windows
-            DesktopNoAction = 3 // nothing
+            DesktopNoAction = 0, // nothing
+            DesktopActivateAction = 1, // Activates the window and deactivates the effect
+            DesktopExitAction = 2, // Deactivates the effect without activating new window
+            DesktopShowDesktopAction = 3 // Minimizes all windows
             };
 
     public slots:

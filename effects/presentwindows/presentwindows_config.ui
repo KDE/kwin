@@ -250,10 +250,18 @@
         <property name="text">
          <string>Left button:</string>
         </property>
+        <property name="buddy">
+         <cstring>leftButtonWindowCombo</cstring>
+        </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="leftButtonWindowCombo">
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>Activate window</string>
@@ -282,11 +290,6 @@
         <item>
          <property name="text">
           <string>Close window</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>No action</string>
          </property>
         </item>
        </widget>
@@ -296,10 +299,18 @@
         <property name="text">
          <string>Middle button:</string>
         </property>
+        <property name="buddy">
+         <cstring>middleButtonWindowCombo</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="middleButtonWindowCombo">
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>Activate window</string>
@@ -328,11 +339,6 @@
         <item>
          <property name="text">
           <string>Close window</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>No action</string>
          </property>
         </item>
        </widget>
@@ -342,10 +348,18 @@
         <property name="text">
          <string>Right button:</string>
         </property>
+        <property name="buddy">
+         <cstring>rightButtonWindowCombo</cstring>
+        </property>
        </widget>
       </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="rightButtonWindowCombo">
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>Activate window</string>
@@ -374,11 +388,6 @@
         <item>
          <property name="text">
           <string>Close window</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>No action</string>
          </property>
         </item>
        </widget>
@@ -400,10 +409,18 @@
         <property name="text">
          <string>Left button:</string>
         </property>
+        <property name="buddy">
+         <cstring>leftButtonDesktopCombo</cstring>
+        </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="leftButtonDesktopCombo">
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>Activate window</string>
@@ -417,11 +434,6 @@
         <item>
          <property name="text">
           <string>Show desktop</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>No action</string>
          </property>
         </item>
        </widget>
@@ -431,10 +443,18 @@
         <property name="text">
          <string>Middle button:</string>
         </property>
+        <property name="buddy">
+         <cstring>middleButtonDesktopCombo</cstring>
+        </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="QComboBox" name="middleButtonDesktopCombo">
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>Activate window</string>
@@ -448,11 +468,6 @@
         <item>
          <property name="text">
           <string>Show desktop</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>No action</string>
          </property>
         </item>
        </widget>
@@ -462,10 +477,18 @@
         <property name="text">
          <string>Right button:</string>
         </property>
+        <property name="buddy">
+         <cstring>rightButtonDesktopCombo</cstring>
+        </property>
        </widget>
       </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="rightButtonDesktopCombo">
+        <item>
+         <property name="text">
+          <string>No action</string>
+         </property>
+        </item>
         <item>
          <property name="text">
           <string>Activate window</string>
@@ -479,11 +502,6 @@
         <item>
          <property name="text">
           <string>Show desktop</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>No action</string>
          </property>
         </item>
        </widget>
