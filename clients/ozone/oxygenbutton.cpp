@@ -215,7 +215,7 @@ void OxygenButton::paintEvent(QPaintEvent *)
     if (type_ == ButtonMenu) {
         // we paint the mini icon (which is 16 pixels high)
         int dx = (width() - 16) / 2;
-        int dy = (height() - 16) / 2;
+        int dy = (height() - 16) / 2 - 1;
         painter.drawPixmap(dx, dy, client_.icon().pixmap(16));
         return;
     }
