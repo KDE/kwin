@@ -263,6 +263,7 @@ ElectricBorderAction Options::electricBorderAction( const QString& name )
     {
     QString lowerName = name.toLower();
     if( lowerName == "dashboard" ) return ElectricActionDashboard;
+    else if( lowerName == "showdesktop" ) return ElectricActionShowDesktop;
     return ElectricActionNone;
     }
 

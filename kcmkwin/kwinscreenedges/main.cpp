@@ -170,6 +170,7 @@ void KWinScreenEdgesConfig::monitorInit()
     {
     monitorAddItem( i18n( "No Action" ));
     monitorAddItem( i18n( "Show Dashboard" ));
+    monitorAddItem( i18n( "Show Desktop" ));
 
     // Search the effect names
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
@@ -298,6 +299,8 @@ void KWinScreenEdgesConfig::monitorSaveAction( int edge, const QString& configNa
     int item = m_ui->monitor->selectedEdgeItem( edge );
     if( item == 1 ) // Plasma dashboard
         config.writeEntry( configName, "Dashboard" );
+    else if( item == 2 )
+        config.writeEntry( configName, "ShowDesktop" );
     else // Anything else
         config.writeEntry( configName, "None" );
     }

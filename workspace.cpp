@@ -2174,6 +2174,11 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
                     plasmaApp.call( "toggleDashboard" );
                     }
                     break;
+                case ElectricActionShowDesktop:
+                    {
+                    setShowingDesktop( !showingDesktop() );
+                    break;
+                    }
                 case ElectricActionNone: // Either desktop switching or an effect
                 default:
                     {
