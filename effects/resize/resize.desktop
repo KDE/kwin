@@ -1,11 +1,14 @@
 [Desktop Entry]
 Name=Resize Window
+Name[km]=ផ្លាស់ប្ដូរ​ទំហំ​បង្អួច
 Name[pt]=Dimensionar a Janela
 Name[pt_BR]=Dimensionar a Janela
 Name[sv]=Ändra fönsterstorlek
+Name[tr]=Pencereyi Yeniden Boyutlandır
 Name[uk]=Змінити розмір вікна
 Icon=preferences-system-windows-effect-resize
 Comment=Effect to outline geometry while resizing a window
+Comment[km]=បែបផែន​ទៅកាន់​ធរណីមាត្រ​គ្រោង​ខណៈពេល​ផ្លាស់ប្ដូរ​ទំហំ​បង្អួច
 Comment[pt]=Efeito da geometria do contorno ao dimensionar uma janela
 Comment[pt_BR]=Efeito da geometria do contorno ao dimensionar uma janela
 Comment[sv]=Effekt för att visa formens kontur när fönsterstorleken ändras
