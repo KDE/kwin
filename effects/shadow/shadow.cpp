@@ -194,21 +194,34 @@ void ShadowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, in
 void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     // Whether the shadow drawing can be delayed or not.
-    bool optimize = !( mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED |
-            PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_WINDOW_TRANSLUCENT ));
+    bool optimize = !(mask & ( PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED |
+            PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_WINDOW_TRANSLUCENT | PAINT_DECORATION_ONLY ));
+
+    QRegion rgn = region;
+    if ( w->keepAbove() )
+        {
+            QRegion shape = w->shape().translated( w->x(), w->y());
+            if (optimize)
+                {
+                    rgn -= shape;
+                    foreach( ShadowData d, shadowDatas )
+                        d.clip |= shape;
+                }
+            optimize = false;
+        }
     if( !optimize )
         {
         // Transformed or translucent windows are drawn bottom-to-top, so
         //  first we need to draw all queued shadows.
         drawQueuedShadows( w );
         }
-    if( useShadow( w ))
+    if( useShadow( w ) && (!(mask & PAINT_DECORATION_ONLY) || w->keepAbove()) )
         {
         if( !optimize )
             {
             // For translucent windows, shadow needs to be drawn before the
             //  window itself.
-            drawShadow( w, mask, region, data );
+            drawShadow( w, mask, rgn, data );
             }
         else
             {
@@ -739,4 +752,3 @@ void ShadowEffect::drawShadow( EffectWindow* window, int mask, QRegion region, c
 
 } // namespace
 
-#include "shadow.h"
