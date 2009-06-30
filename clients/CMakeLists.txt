@@ -1,5 +1,6 @@
 
 add_subdirectory( plastik ) 
+add_subdirectory( aurorae )
 add_subdirectory( b2 ) 
 add_subdirectory( kde2 ) 
 add_subdirectory( keramik ) 
