@@ -30,7 +30,7 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="QSpinBox" name="spinWidth" >
+       <widget class="KIntSpinBox" name="spinWidth" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -62,7 +62,7 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QSpinBox" name="spinHeight" >
+       <widget class="KIntSpinBox" name="spinHeight" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -89,6 +89,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
   <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>

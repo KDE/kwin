@@ -30,7 +30,7 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="QSpinBox" name="numberFlakes" >
+       <widget class="KIntSpinBox" name="numberFlakes" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -59,15 +59,12 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QSpinBox" name="minSizeFlake" >
+       <widget class="KIntSpinBox" name="minSizeFlake" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="suffix" >
-         <string> px</string>
         </property>
         <property name="maximum" >
          <number>30</number>
@@ -91,15 +88,12 @@
        </widget>
       </item>
       <item row="2" column="1" >
-       <widget class="QSpinBox" name="maxSizeFlake" >
+       <widget class="KIntSpinBox" name="maxSizeFlake" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="suffix" >
-         <string> px</string>
         </property>
         <property name="maximum" >
          <number>1000</number>
@@ -123,15 +117,12 @@
        </widget>
       </item>
       <item row="3" column="1" >
-       <widget class="QSpinBox" name="maxVSpeed" >
+       <widget class="KIntSpinBox" name="maxVSpeed" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="suffix" >
-         <string> px/frame</string>
         </property>
         <property name="minimum" >
          <number>1</number>
@@ -158,15 +149,12 @@
        </widget>
       </item>
       <item row="4" column="1" >
-       <widget class="QSpinBox" name="maxHSpeed" >
+       <widget class="KIntSpinBox" name="maxHSpeed" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="suffix" >
-         <string> px/frame</string>
         </property>
         <property name="minimum" >
          <number>0</number>
@@ -195,6 +183,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
   <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>

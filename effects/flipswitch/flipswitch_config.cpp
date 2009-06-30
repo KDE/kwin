@@ -62,6 +62,7 @@ void FlipSwitchEffectConfig::load()
     int flipDuration = conf.readEntry( "FlipDuration", 0 );
     bool animateFlip = conf.readEntry( "AnimateFlip", true );
     m_ui->spinFlipDuration->setValue( flipDuration );
+    m_ui->spinFlipDuration->setSuffix( ki18np ( " milisecond", " miliseconds" ) );
     if( animateFlip )
         {
         m_ui->checkAnimateFlip->setCheckState( Qt::Checked );

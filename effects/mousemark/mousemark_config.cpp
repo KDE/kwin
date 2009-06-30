@@ -88,6 +88,7 @@ void MouseMarkEffectConfig::load()
     int width = conf.readEntry("LineWidth", 3);
     QColor color = conf.readEntry("Color", QColor(Qt::red));
     m_ui->spinWidth->setValue(width);
+    m_ui->spinWidth->setSuffix(ki18np(" pixel", " pixels"));
     m_ui->comboColors->setColor(color);
 
     emit changed(false);

@@ -107,6 +107,7 @@ void PresentWindowsEffectConfig::load()
     m_ui->layoutCombo->setCurrentIndex( layoutMode );
 
     m_ui->rearrangeDurationSpin->setValue( conf.readEntry( "RearrangeDuration", 0 ));
+    m_ui->rearrangeDurationSpin->setSuffix(ki18np(" milisecond", " miliseconds"));
 
     bool displayTitle = conf.readEntry( "DrawWindowCaptions", true );
     m_ui->displayTitleBox->setChecked( displayTitle );

@@ -37,7 +37,7 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QSpinBox" name="spinFlipDuration" >
+       <widget class="KIntSpinBox" name="spinFlipDuration" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -46,9 +46,6 @@
         </property>
         <property name="specialValueText" >
          <string comment="Duration of flip animation">Default</string>
-        </property>
-        <property name="suffix" >
-         <string> msec</string>
         </property>
         <property name="maximum" >
          <number>5000</number>
@@ -63,6 +60,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>checkAnimateFlip</tabstop>
   <tabstop>spinFlipDuration</tabstop>

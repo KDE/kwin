@@ -106,7 +106,9 @@ void DesktopGridEffectConfig::load()
     KConfigGroup conf = EffectsHandler::effectConfig( "DesktopGrid" );
 
     m_ui->zoomDurationSpin->setValue( conf.readEntry( "ZoomDuration", 0 ));
+    m_ui->zoomDurationSpin->setSuffix( ki18np( " milisecond", " miliseconds"));
     m_ui->borderWidthSpin->setValue( conf.readEntry( "BorderWidth", 10 ));
+    m_ui->borderWidthSpin->setSuffix( ki18np( " pixel", " pixels"));
 
     Qt::Alignment alignment = Qt::Alignment( conf.readEntry( "DesktopNameAlignment", 0 ));
     m_ui->desktopNameAlignmentCombo->setCurrentIndex( m_alignmentItems.indexOf( alignment ));
@@ -116,6 +118,7 @@ void DesktopGridEffectConfig::load()
     layoutSelectionChanged();
 
     m_ui->layoutRowsSpin->setValue( conf.readEntry( "CustomLayoutRows", 2 ));
+    m_ui->layoutRowsSpin->setSuffix( ki18np( " row", " rows"));
 
     emit changed(false);
     }

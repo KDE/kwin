@@ -64,7 +64,7 @@
     </widget>
    </item>
    <item row="0" column="2" >
-    <widget class="QSpinBox" name="spinStrength" >
+    <widget class="KIntSpinBox" name="spinStrength" >
      <property name="minimum" >
       <number>1</number>
      </property>
@@ -91,6 +91,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>sliderStrength</tabstop>
   <tabstop>spinStrength</tabstop>

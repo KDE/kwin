@@ -90,9 +90,13 @@ void SnowEffectConfig::load()
     m_ui->snowBehindWindows->setChecked( conf.readEntry("BehindWindows", true));
     m_ui->numberFlakes->setValue( number );
     m_ui->minSizeFlake->setValue( minFlake );
+    m_ui->minSizeFlake->setSuffix( ki18np(" pixel", " pixels") );
     m_ui->maxSizeFlake->setValue( maxFlake );
+    m_ui->maxSizeFlake->setSuffix( ki18np(" pixel", " pixels") );
     m_ui->maxVSpeed->setValue( maxVSpeed );
+    m_ui->maxVSpeed->setSuffix( ki18np(" pixel/frame", " pixels/frame") );
     m_ui->maxHSpeed->setValue( maxHSpeed );
+    m_ui->maxHSpeed->setSuffix( ki18np(" pixel/frame", " pixels/frame") );
 
 
     emit changed(false);

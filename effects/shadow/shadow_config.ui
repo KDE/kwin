@@ -25,7 +25,7 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QSpinBox" name="xOffsetSpin">
+    <widget class="KIntSpinBox" name="xOffsetSpin">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -66,7 +66,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QSpinBox" name="yOffsetSpin">
+    <widget class="KIntSpinBox" name="yOffsetSpin">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -107,7 +107,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QSpinBox" name="opacitySpin">
+    <widget class="KIntSpinBox" name="opacitySpin">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -148,7 +148,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QSpinBox" name="fuzzinessSpin">
+    <widget class="KIntSpinBox" name="fuzzinessSpin">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -189,7 +189,7 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QSpinBox" name="sizeSpin">
+    <widget class="KIntSpinBox" name="sizeSpin">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -246,6 +246,11 @@
    <class>KColorButton</class>
    <extends>QPushButton</extends>
    <header>kcolorbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

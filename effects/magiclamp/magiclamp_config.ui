@@ -24,7 +24,7 @@
     </widget>
    </item>
    <item row="0" column="1" >
-    <widget class="QSpinBox" name="animationDurationSpin" >
+    <widget class="KIntSpinBox" name="animationDurationSpin" >
      <property name="sizePolicy" >
       <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
        <horstretch>0</horstretch>
@@ -33,9 +33,6 @@
      </property>
      <property name="specialValueText" >
       <string comment="Duration of rotation" >Default</string>
-     </property>
-     <property name="suffix" >
-      <string> msec</string>
      </property>
      <property name="maximum" >
       <number>5000</number>
@@ -47,6 +44,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

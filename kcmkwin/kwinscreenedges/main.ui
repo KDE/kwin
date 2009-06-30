@@ -72,7 +72,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QSpinBox" name="activationDelaySpin">
+       <widget class="KIntSpinBox" name="activationDelaySpin">
         <property name="suffix">
          <string> ms</string>
         </property>
@@ -104,7 +104,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QSpinBox" name="triggerCooldownSpin">
+       <widget class="KIntSpinBox" name="triggerCooldownSpin">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -189,6 +189,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
   <customwidget>
    <class>KWin::Monitor</class>
    <extends>QWidget</extends>

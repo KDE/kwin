@@ -46,7 +46,7 @@
        </widget>
       </item>
       <item row="0" column="2" >
-       <widget class="QSpinBox" name="stiffnessSpin" >
+       <widget class="KIntSpinBox" name="stiffnessSpin" >
         <property name="minimum" >
          <number>1</number>
         </property>
@@ -101,7 +101,7 @@
        </widget>
       </item>
       <item row="1" column="2" >
-       <widget class="QSpinBox" name="dragSpin" >
+       <widget class="KIntSpinBox" name="dragSpin" >
         <property name="minimum" >
          <number>50</number>
         </property>
@@ -130,7 +130,7 @@
        </widget>
       </item>
       <item row="2" column="2" >
-       <widget class="QSpinBox" name="moveFactorSpin" >
+       <widget class="KIntSpinBox" name="moveFactorSpin" >
         <property name="minimum" >
          <number>1</number>
         </property>
@@ -244,6 +244,13 @@
   <zorder>advancedBox</zorder>
   <zorder>basicGroup</zorder>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>wobblinessSlider</tabstop>
   <tabstop>moveBox</tabstop>

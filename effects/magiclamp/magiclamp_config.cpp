@@ -55,6 +55,7 @@ void MagicLampEffectConfig::load()
 
     int duration       = conf.readEntry( "AnimationDuration", 0 );
     m_ui->animationDurationSpin->setValue( duration );
+    m_ui->animationDurationSpin->setSuffix(ki18np(" milisecond", " miliseconds"));
     emit changed(false);
     }
 

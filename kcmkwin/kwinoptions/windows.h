@@ -34,7 +34,7 @@ class QGroupBox;
 class QLabel;
 class QSlider;
 class KButtonGroup;
-class QSpinBox;
+// class QSpinBox;
 
 class KColorButton;
 class KIntNumInput;
@@ -64,8 +64,6 @@ class KIntNumInput;
 #define  FOCUS_FOLLOWS_MOUSE          1
 #define  FOCUS_UNDER_MOUSE            2
 #define  FOCUS_STRICTLY_UNDER_MOUSE   3
-
-class QSpinBox;
 
 class KFocusConfig : public KCModule
 {

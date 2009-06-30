@@ -123,6 +123,7 @@ void CubeEffectConfig::load()
     bool zOrdering = conf.readEntry( "ZOrdering", false );
 
     m_ui->rotationDurationSpin->setValue( duration );
+    m_ui->rotationDurationSpin->setSuffix( ki18np( " milisecond", " miliseconds" ) );
     m_ui->cubeOpacitySlider->setValue( opacity );
     m_ui->cubeOpacitySpin->setValue( opacity );
     m_ui->desktopOpacityOnlyBox->setChecked( desktopOpacityOnly );

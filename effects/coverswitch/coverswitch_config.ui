@@ -99,7 +99,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QSpinBox" name="spinThumbnailWindows"/>
+       <widget class="KIntSpinBox" name="spinThumbnailWindows"/>
       </item>
      </layout>
     </widget>
@@ -139,7 +139,7 @@
        </widget>
       </item>
       <item row="5" column="1">
-       <widget class="QSpinBox" name="spinDuration">
+       <widget class="KIntSpinBox" name="spinDuration">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -148,9 +148,6 @@
         </property>
         <property name="specialValueText">
          <string comment="Duration of rotation">Default</string>
-        </property>
-        <property name="suffix">
-         <string> msec</string>
         </property>
         <property name="maximum">
          <number>5000</number>
@@ -214,6 +211,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>checkAnimateSwitch</tabstop>
   <tabstop>checkAnimateStart</tabstop>

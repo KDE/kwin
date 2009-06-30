@@ -267,7 +267,7 @@
        </widget>
       </item>
       <item row="7" column="1" colspan="2" >
-       <widget class="QSpinBox" name="duration" >
+       <widget class="KIntSpinBox" name="duration" >
         <property name="minimumSize" >
          <size>
           <width>60</width>
@@ -276,9 +276,6 @@
         </property>
         <property name="specialValueText" >
          <string comment="Duration of fading">Default</string>
-        </property>
-        <property name="suffix" >
-         <string>msec</string>
         </property>
         <property name="maximum" >
          <number>5000</number>
@@ -525,6 +522,13 @@
   <tabstop>popupmenus</tabstop>
   <tabstop>tornoffmenus</tabstop>
  </tabstops>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

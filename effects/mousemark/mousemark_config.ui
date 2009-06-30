@@ -30,15 +30,12 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="QSpinBox" name="spinWidth" >
+       <widget class="KIntSpinBox" name="spinWidth" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="suffix" >
-         <string> px</string>
         </property>
         <property name="minimum" >
          <number>1</number>
@@ -280,6 +277,11 @@
    <class>KColorCombo</class>
    <extends>QComboBox</extends>
    <header>kcolorcombo.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
   </customwidget>
   <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>

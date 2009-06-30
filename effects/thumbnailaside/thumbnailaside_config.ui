@@ -30,15 +30,12 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="QSpinBox" name="spinWidth" >
+       <widget class="KIntSpinBox" name="spinWidth" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="suffix" >
-         <string> px</string>
         </property>
         <property name="maximum" >
          <number>500</number>
@@ -62,15 +59,12 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="QSpinBox" name="spinSpacing" >
+       <widget class="KIntSpinBox" name="spinSpacing" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
-        </property>
-        <property name="suffix" >
-         <string> px</string>
         </property>
         <property name="maximum" >
          <number>30</number>
@@ -94,7 +88,7 @@
        </widget>
       </item>
       <item row="2" column="1" >
-       <widget class="QSpinBox" name="spinOpacity" >
+       <widget class="KIntSpinBox" name="spinOpacity" >
         <property name="sizePolicy" >
          <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
           <horstretch>0</horstretch>
@@ -121,6 +115,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
   <customwidget>
    <class>KWin::GlobalShortcutsEditor</class>
    <extends>QWidget</extends>

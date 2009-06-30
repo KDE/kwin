@@ -87,7 +87,9 @@ void ThumbnailAsideEffectConfig::load()
     int spacing = conf.readEntry("Spacing", 10);
     int opacity = conf.readEntry("Opacity", 50);
     m_ui->spinWidth->setValue(width);
+    m_ui->spinWidth->setSuffix(ki18np(" pixel", " pixels"));
     m_ui->spinSpacing->setValue(spacing);
+    m_ui->spinSpacing->setSuffix(ki18np(" pixel", " pixels"));
     m_ui->spinOpacity->setValue(opacity);
 
     emit changed(false);
