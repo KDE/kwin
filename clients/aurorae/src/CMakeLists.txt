@@ -4,7 +4,7 @@ set(kwin3_aurorae_PART_SRCS aurorae.cpp themeconfig.cpp)
 
 kde4_add_plugin(kwin3_aurorae ${kwin3_aurorae_PART_SRCS})
 
-target_link_libraries(kwin3_aurorae ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4WORKSPACE_KDECORATIONS_LIBS})
+target_link_libraries(kwin3_aurorae ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kdecorations)
 
 install(TARGETS kwin3_aurorae  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
