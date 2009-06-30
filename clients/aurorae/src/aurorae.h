@@ -95,7 +95,7 @@ private:
         Pressed = 0x4,
         Deactivated = 0x8
     };
-    Q_DECLARE_FLAGS(ButtonStates, ButtonState);
+    Q_DECLARE_FLAGS(ButtonStates, ButtonState)
     void paintButton(QPainter& painter, Plasma::FrameSvg* frame, ButtonStates states);
 
 private:
