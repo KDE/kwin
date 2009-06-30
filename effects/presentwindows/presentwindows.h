@@ -95,7 +95,8 @@ class PresentWindowsEffect
             ModeAllDesktops, // Shows windows of all desktops
             ModeCurrentDesktop, // Shows windows on current desktop
             ModeSelectedDesktop, // Shows windows of selected desktop via property (m_desktop)
-            ModeWindowGroup // Shows windows selected via property
+            ModeWindowGroup, // Shows windows selected via property
+            ModeWindowClass // Shows all windows of same class as selected class
             };
         enum WindowMouseAction
             {
@@ -119,11 +120,13 @@ class PresentWindowsEffect
         void setActive( bool active, bool closingTab = false ); // HACK: closingTab shouldn't be needed
         void toggleActive()  { m_mode = ModeCurrentDesktop; setActive( !m_activated ); }
         void toggleActiveAllDesktops()  { m_mode = ModeAllDesktops; setActive( !m_activated ); }
+        void toggleActiveClass();
 
         // slots for global shortcut changed
         // needed to toggle the effect
         void globalShortcutChanged( const QKeySequence& seq );
         void globalShortcutChangedAll( const QKeySequence& seq );
+        void globalShortcutChangedClass( const QKeySequence& seq );
 
     protected:
         // Window rearranging
@@ -184,6 +187,7 @@ class PresentWindowsEffect
         int m_desktop;
         EffectWindowList m_selectedWindows;
         EffectWindow *m_managerWindow;
+        QString m_class;
 
         // Window data
         WindowMotionManager m_motionManager;
@@ -200,6 +204,7 @@ class PresentWindowsEffect
         // Shortcut - needed to toggle the effect
         KShortcut shortcut;
         KShortcut shortcutAll;
+        KShortcut shortcutClass;
 
         // Atoms
         // Present windows for all windows of given desktop

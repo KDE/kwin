@@ -64,6 +64,11 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     b->setProperty( "isConfigurationAction", true );
     b->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F9 ));
 
+    KAction* c = ( KAction* )m_actionCollection->addAction( "ExposeClass" );
+    c->setText( i18n( "Toggle Present Windows (Window class)" ));
+    c->setProperty( "isConfigurationAction", true );
+    c->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F7 ));
+
     m_ui->shortcutEditor->addCollection( m_actionCollection );
 
     connect( m_ui->layoutCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));

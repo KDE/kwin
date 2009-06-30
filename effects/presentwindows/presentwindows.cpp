@@ -84,6 +84,12 @@ PresentWindowsEffect::PresentWindowsEffect()
     shortcutAll = b->globalShortcut();
     connect( b, SIGNAL( triggered(bool) ), this, SLOT( toggleActiveAllDesktops() ));
     connect( b, SIGNAL( globalShortcutChanged(QKeySequence) ), this, SLOT( globalShortcutChangedAll(QKeySequence)));
+    KAction* c = ( KAction* )actionCollection->addAction( "ExposeClass" );
+    c->setText( i18n( "Toggle Present Windows (Window class)" ));
+    c->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::Key_F7 ));
+    connect( c, SIGNAL( triggered(bool) ), this, SLOT( toggleActiveClass() ));
+    connect( c, SIGNAL( globalShortcutChanged(QKeySequence) ), this, SLOT( globalShortcutChangedClass(QKeySequence)));
+    shortcutClass = c->globalShortcut();
     reconfigure( ReconfigureAll );
     }
 
@@ -153,6 +159,13 @@ const void* PresentWindowsEffect::proxy() const
     {
     return &m_proxy;
     }
+
+void PresentWindowsEffect::toggleActiveClass()
+{
+    m_mode = ModeWindowClass;
+    m_class = effects->activeWindow()->windowClass();
+    setActive( !m_activated );
+}
 
 //-----------------------------------------------------------------------------
 // Screen painting
@@ -520,6 +533,11 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
         if( m_mode == ModeAllDesktops && shortcutAll.contains( e->key() + e->modifiers() ) )
             {
             toggleActiveAllDesktops();
+            return;
+            }
+        if( m_mode == ModeWindowClass && shortcutClass.contains( e->key() + e->modifiers() ) )
+            {
+            toggleActiveClass();
             return;
             }
 
@@ -1556,6 +1574,8 @@ bool PresentWindowsEffect::isSelectableWindow( EffectWindow *w )
             return w->isOnDesktop( m_desktop );
         case ModeWindowGroup:
             return m_selectedWindows.contains( w );
+        case ModeWindowClass:
+            return m_class == w->windowClass();
         }
     if( !m_tabBoxEnabled && m_ignoreMinimized && w->isMinimized() )
         return false;
@@ -1774,6 +1794,11 @@ void PresentWindowsEffect::globalShortcutChanged( const QKeySequence& seq )
 void PresentWindowsEffect::globalShortcutChangedAll( const QKeySequence& seq )
     {
     shortcutAll = KShortcut( seq );
+    }
+
+void PresentWindowsEffect::globalShortcutChangedClass( const QKeySequence& seq )
+    {
+    shortcutClass = KShortcut( seq );
     }
 
 } // namespace
