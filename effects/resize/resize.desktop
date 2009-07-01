@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Resize Window
+Name[et]=Akna suuruse muutmine
 Name[km]=ផ្លាស់ប្ដូរ​ទំហំ​បង្អួច
 Name[pt]=Dimensionar a Janela
 Name[pt_BR]=Dimensionar a Janela
@@ -7,14 +8,17 @@ Name[sv]=Ändra fönsterstorlek
 Name[tr]=Pencereyi Yeniden Boyutlandır
 Name[uk]=Змінити розмір вікна
 Name[x-test]=xxResize Windowxx
+Name[zh_TW]=重新調整視窗大小
 Icon=preferences-system-windows-effect-resize
 Comment=Effect to outline geometry while resizing a window
+Comment[et]=Geomeetria näitamine efekt akna suuruse muutmisel
 Comment[km]=បែបផែន​ទៅកាន់​ធរណីមាត្រ​គ្រោង​ខណៈពេល​ផ្លាស់ប្ដូរ​ទំហំ​បង្អួច
 Comment[pt]=Efeito da geometria do contorno ao dimensionar uma janela
 Comment[pt_BR]=Efeito da geometria do contorno ao dimensionar uma janela
 Comment[sv]=Effekt för att visa formens kontur när fönsterstorleken ändras
 Comment[uk]=Показує розміри контуру під час зміни розмірів вікна
 Comment[x-test]=xxEffect to outline geometry while resizing a windowxx
+Comment[zh_TW]=調整視窗大小時標出位置的效果
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
