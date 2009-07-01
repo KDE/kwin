@@ -50,7 +50,7 @@ void AuroraeFactory::init()
     QString file("aurorae/themes/" + m_themeName + "/decoration.svg");
     QString path = KGlobal::dirs()->findResource("data", file);
     if (path.isEmpty()) {
-        file += "z";
+        file += 'z';
         path = KGlobal::dirs()->findResource("data", file);
     }
     if (path.isEmpty()) {
@@ -78,7 +78,7 @@ void AuroraeFactory::init()
 void AuroraeFactory::readThemeConfig()
 {
     // read config values
-    KConfig conf("aurorae/themes/" + m_themeName + "/" + m_themeName + "rc", KConfig::FullConfig, "data");
+    KConfig conf("aurorae/themes/" + m_themeName + '/' + m_themeName + "rc", KConfig::FullConfig, "data");
     m_themeConfig.load(&conf);
 }
 
@@ -145,7 +145,7 @@ KDecoration *AuroraeFactory::createDecoration(KDecorationBridge *bridge)
 
 void AuroraeFactory::initButtonFrame(const QString &button)
 {
-    QString file("aurorae/themes/" + m_themeName + "/" + button + ".svg");
+    QString file("aurorae/themes/" + m_themeName + '/' + button + ".svg");
     QString path = KGlobal::dirs()->findResource("data", file);
     if (path.isEmpty()) {
         // let's look for svgz
@@ -343,7 +343,7 @@ void AuroraeButton::paintEvent(QPaintEvent *event)
         buttonName = "help";
         break;
     default:
-        buttonName = QString();
+        buttonName.clear();
     }
 
     if (!buttonName.isEmpty()) {

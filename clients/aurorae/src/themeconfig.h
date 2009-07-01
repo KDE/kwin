@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef THEMECONFIG_H
 #define THEMECONFIG_H
 // This class encapsulates all theme config values
-// it's a seperate class as it's needed by both deco and config dialog
+// it's a separate class as it's needed by both deco and config dialog
 
 #include <QString>
 #include <QColor>

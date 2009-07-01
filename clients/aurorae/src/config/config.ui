@@ -24,7 +24,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="theme"/>
+      <widget class="KComboBox" name="theme"/>
      </item>
      <item>
       <widget class="KPushButton" name="aboutPushButton"/>
@@ -88,6 +88,11 @@
    <class>KPushButton</class>
    <extends>QPushButton</extends>
    <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

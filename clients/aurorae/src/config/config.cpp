@@ -100,12 +100,12 @@ void ThemeModel::reload()
         if (QFile::exists(svgFile)) {
             svg->setImagePath(svgFile);
         } else {
-            svg->setImagePath(svgFile + "z");
+            svg->setImagePath(svgFile + 'z');
         }
         svg->setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
         ThemeConfig *config = new ThemeConfig();
-        KConfig conf("aurorae/themes/" + packageName + "/" + packageName + "rc", KConfig::FullConfig, "data");
+        KConfig conf("aurorae/themes/" + packageName + '/' + packageName + "rc", KConfig::FullConfig, "data");
         config->load(&conf);
 
         // buttons
@@ -203,7 +203,7 @@ int ThemeModel::indexOf(const QString &name) const
 
 void ThemeModel::initButtonFrame(const QString &button, const QString &themeName, QHash<QString, Plasma::FrameSvg*> *buttons)
 {
-    QString file("aurorae/themes/" + themeName + "/" + button + ".svg");
+    QString file("aurorae/themes/" + themeName + '/' + button + ".svg");
     QString path = KGlobal::dirs()->findResource("data", file);
     if (path.isEmpty()) {
         // let's look for svgz
