@@ -266,7 +266,8 @@ void Workspace::initDesktopPopup()
              this, SLOT( desktopPopupAboutToShow() ) );
 
     QAction *action = desk_popup->menuAction();
-    popup->insertAction(mMoveOpAction, action);
+    // set it as the first item
+    popup->insertAction( trans_popup ? trans_popup->menuAction() : mMoveOpAction, action);
     action->setText( i18n("To &Desktop") );
     }
 
