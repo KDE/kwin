@@ -479,7 +479,7 @@ void AuroraeClient::reset(unsigned long changed)
 
 QString AuroraeClient::visibleName() const
 {
-    return QString("Aurorae Theme Engine");
+    return i18n("Aurorae Theme Engine");
 }
 
 QString AuroraeClient::defaultButtonsLeft() const
