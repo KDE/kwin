@@ -198,18 +198,6 @@ public:
     enum Requirement { REQUIREMENT_DUMMY = 1000000 };
 };
 
-/**
- * Decoration shadow type.
- */
-enum ShadowType
-    {
-    ShadowBorderedActive = 0, ///< Active shadow of decorated windows
-    ShadowBorderedInactive, ///< Inctive shadow of decorated windows
-    ShadowBorderlessActive, ///< Active shadow of undecorated windows
-    ShadowBorderlessInactive, ///< Inctive shadow of undecorated windows
-    ShadowOther ///< Shadow of all other windows (Menus, comboboxes, tooltips, etc.)
-    };
-
 class KDecorationProvides
     : public KDecorationDefines
     {
