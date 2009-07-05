@@ -5,12 +5,14 @@ Name[pt_BR]=Exemplo
 Name[sv]=Exempel
 Name[tr]=Örnek
 Name[uk]=Приклад
+Name[x-test]=xxExamplexx
 Name[zh_TW]=範例
 Comment=An example theme based on Air desktop theme
 Comment[pt]=Um tema de exemplo baseado no tema Air
 Comment[pt_BR]=Um tema de exemplo baseado no tema Air
 Comment[sv]=Ett exempeltema baserat på skrivbordstemat Luft
 Comment[uk]=Приклад теми, заснованої на темі стільниці «Повітря»
+Comment[x-test]=xxAn example theme based on Air desktop themexx
 Comment[zh_TW]=基於 Air 桌面主題的範例主題
 
 X-KDE-PluginInfo-Author=Martin Gräßlin
