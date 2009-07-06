@@ -44,6 +44,7 @@ class SlideBackEffect
 
         virtual void windowDeleted( EffectWindow* w );
         virtual void windowAdded( EffectWindow* w );
+	virtual void windowUnminimized( EffectWindow* w );
 
         virtual void tabBoxClosed();
 
@@ -54,6 +55,7 @@ class SlideBackEffect
         EffectWindowList oldStackingOrder;
         EffectWindowList coveringWindows;
         EffectWindowList elevatedList;
+	EffectWindow* unminimizedWindow;
         QHash<EffectWindow *, QRect> destinationList;
         bool disabled;
 	QList <QRegion> clippedRegions;
