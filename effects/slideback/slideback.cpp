@@ -32,6 +32,7 @@ SlideBackEffect::SlideBackEffect()
     {
     updateStackingOrder();
     disabled = false;
+    unminimizedWindow = NULL;
     }
 
 void SlideBackEffect::windowActivated( EffectWindow* w )
