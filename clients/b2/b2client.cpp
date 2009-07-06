@@ -419,6 +419,13 @@ void B2Client::init()
         button[i] = NULL;
 
     g = new QGridLayout(widget());
+    
+    // force margin and spacing to 0 so that 
+    // center widget is correctly located with respect
+    // to window border.
+    g->setSpacing(0);
+    g->setMargin(0);
+    
     // Left and right border width
 
     leftSpacer = new QSpacerItem(thickness, 16,
