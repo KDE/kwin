@@ -47,11 +47,19 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
         disabled = false;
         return;
         }
+
     if( !isWindowUsable( w ) || !stackingOrderChanged() )     // Focus changed but stacking still the same
         {
         updateStackingOrder();
         return;
         }
+
+    if( unminimizedWindow == w ){  // A window was activated by beeing unminimized. Don't trigger SlideBack.
+        unminimizedWindow = NULL;
+        updateStackingOrder();
+        return;
+    }
+    
     // Determine all windows on top of the activated one
     bool currentFound = false;
     foreach( EffectWindow *tmp, oldStackingOrder )
@@ -350,6 +358,20 @@ void SlideBackEffect::windowAdded( KWin::EffectWindow* w )
     updateStackingOrder();
     }
 
+void SlideBackEffect::windowUnminimized( EffectWindow* w)
+    {
+    // SlideBack should not be triggered on an unminimized window. For this we need to store the last unminimized window.
+    // If a window is unminimized but not on top we need to clear the memory because the windowUnminimized() is not 
+    // followed by a windowActivated().
+    if( isWindowOnTop( w ) )
+        {
+        unminimizedWindow = w;
+        }
+    else
+        {
+	unminimizedWindow = NULL;
+        }
+    }
 
 void SlideBackEffect::tabBoxClosed()
     {
