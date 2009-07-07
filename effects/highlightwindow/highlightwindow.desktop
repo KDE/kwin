@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Highlight Window
 Name[bg]=Открояване на прозореца
+Name[bn_IN]=উইন্ডো উজ্জ্বল করা হবে
 Name[ca]=Realça la finestra
 Name[ca@valencia]=Realça la finestra
 Name[cs]=Zvýraznit okno
@@ -66,6 +67,7 @@ Comment[ja]=タスクバーのエントリの上にマウスを止めたとき�
 Comment[km]=បន្លិច​បង្អួច​សមរម្យ នៅពេល​សំកាំង​លើ​ធាតុ​របារ​ភារកិច្ច
 Comment[ko]=작업 표시줄의 창 항목을 지나다닐 때 해당하는 창을 강조합니다
 Comment[lv]=Izceļ logu, kad uzkavējas uz tā uzdevumjoslas ieraksta
+Comment[mr]=कार्यपट्टी नोंदणी वरून ताटकळतेवेळी ठराविक खिडकी ठळक करा
 Comment[nb]=Uthev det tilknyttede vinduet når pekeren er over oppgavelinja
 Comment[nds]=Bi't Wiesen op Programmbalken-Indrääg de tohören Finstern rutheven
 Comment[nl]=Laat het betreffende venster oplichten als de muisaanwijzer over taakbalkitems beweegt
