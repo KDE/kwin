@@ -2,6 +2,7 @@
 Name=Resize Window
 Name[et]=Akna suuruse muutmine
 Name[km]=ផ្លាស់ប្ដូរ​ទំហំ​បង្អួច
+Name[nb]=Endre størrelse på vinduet
 Name[pt]=Dimensionar a Janela
 Name[pt_BR]=Redimensionar janela
 Name[sv]=Ändra fönsterstorlek
@@ -13,6 +14,7 @@ Icon=preferences-system-windows-effect-resize
 Comment=Effect to outline geometry while resizing a window
 Comment[et]=Geomeetria näitamine efekt akna suuruse muutmisel
 Comment[km]=បែបផែន​ទៅកាន់​ធរណីមាត្រ​គ្រោង​ខណៈពេល​ផ្លាស់ប្ដូរ​ទំហំ​បង្អួច
+Comment[nb]=Effekt som gir geometri-omriss mens et vindu endrer størrelse
 Comment[pt]=Efeito da geometria do contorno ao dimensionar uma janela
 Comment[pt_BR]=Efeito da geometria do contorno ao dimensionar uma janela
 Comment[sv]=Effekt för att visa formens kontur när fönsterstorleken ändras
