@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Slide Back
+Name[ar]=انقل للخلف
 Name[bg]=Обратно приплъзване
 Name[ca]=Llisca cap enrere
 Name[ca@valencia]=Llisca cap enrere
@@ -43,6 +44,7 @@ Name[zh_TW]=往回滑動
 
 Type=Service
 Comment=Slide back windows losing focus
+Comment[ar]=تنقل النوافذ التي فقدت التركيز للخلف
 Comment[bg]=Обратно приплъзване на прозорците, които остават извън фокус
 Comment[ca]=Llisca enrere les finestres que perdin el focus
 Comment[ca@valencia]=Llisca enrere les finestres que perdin el focus
@@ -58,6 +60,7 @@ Comment[gl]=Manda para atrás as fiestras que perden o foco
 Comment[hu]=Fókuszváltáskor az előző fókuszált ablak visszacsúszik
 Comment[is]=Gluggar sem missa fókus renna til baka
 Comment[km]=បង្អួច​ស្លាយ​ថយក្រោយ​នៅពេល​បាត់បង់​ការ​ផ្ដោត
+Comment[kn]=ಹಿಂದಕ್ಕೆ ಜಾರುವ ಕಿಟಕಿಗಳು ಗಮನವನ್ನು ಕಳೆದುಕೊಳ್ಳುತ್ತಿವೆ
 Comment[lv]=Logi, zaudējot fokusu, aizslīd aiz aktīvā
 Comment[ml]=കേന്ദ്രീകരണം നഷ്ടപ്പെട്ട ജാലകങ്ങള്‍ പിന്നിലേക്ക് തെന്നിമാറട്ടെ.
 Comment[nb]=Skyv tilbake vinduer sm mister fokus

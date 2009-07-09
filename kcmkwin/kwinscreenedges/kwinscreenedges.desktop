@@ -12,6 +12,7 @@ X-KDE-System-Settings-Parent-Category=desktop
 X-KDE-Weight=65
 
 Name=Screen Edges
+Name[ar]=حواف الشاشة
 Name[bg]=Краища на екрана
 Name[bn_IN]=পর্দার প্রান্ত
 Name[ca]=Vores de la pantalla
@@ -62,6 +63,7 @@ Name[zh_CN]=屏幕边缘
 Name[zh_TW]=螢幕邊緣
 
 Comment=Configure active screen edges
+Comment[ar]=اضبط حواف الشاشة النشطة
 Comment[bg]=Настройване на активните краища на екрана
 Comment[bn_IN]=সক্রিয় পর্দার প্রান্তগুলি কনফিগার করুন
 Comment[ca]=Configura les vores de pantalla actives

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Fade Desktop
+Name[ar]=خفوت سطح المكتب
 Name[bg]=Избледняване на работния плот
 Name[ca]=Esvair l'escriptori
 Name[ca@valencia]=Esvair l'escriptori
@@ -43,6 +44,7 @@ Name[zh_CN]=阴影桌面
 Name[zh_TW]=淡出淡入桌面
 Icon=preferences-system-windows-effect-fadedesktop
 Comment=Fade between virtual desktops when switching between them
+Comment[ar]=تجعل أسطح المكتب تختفي عن التبيديل بينها
 Comment[bg]=Избледнване при превключване между работните плотове
 Comment[ca]=Esvaeix entre els escriptoris virtuals quan es commuta entre ells
 Comment[ca@valencia]=Esvaeix entre els escriptoris virtuals quan es commuta entre ells

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Highlight Window
+Name[ar]=إبراز النافذة
 Name[bg]=Открояване на прозореца
 Name[bn_IN]=উইন্ডো উজ্জ্বল করা হবে
 Name[ca]=Realça la finestra
@@ -48,6 +49,7 @@ Name[zh_CN]=突出显示窗口
 Name[zh_TW]=突顯視窗
 Icon=preferences-system-windows-effect-highlightwindow
 Comment=Highlight the appropriate window when hovering over taskbar entries
+Comment[ar]=أبرز النافذة المناسبة عند المرور على مدخلات شريط المهام
 Comment[bg]=Открояване на прозореца, когато курсора е върху лентата с инструменти
 Comment[ca]=Realça la finestra apropiada em passar el cursor sobre les entrades de la barra de tasques
 Comment[ca@valencia]=Realça la finestra apropiada em passar el cursor sobre les entrades de la barra de tasques
