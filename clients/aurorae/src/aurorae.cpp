@@ -661,10 +661,16 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
     }
     QRectF sourceRect = rect;
     if (!compositingActive()) {
-        rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
-                       widget()->width()-conf.paddingRight()-conf.paddingLeft(),
-                       widget()->height()-conf.paddingBottom()-conf.paddingTop());
-        sourceRect = QRectF(0.0, 0.0, rect.width(), rect.height());
+        if (frame->hasElementPrefix("decoration-opaque")) {
+            rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
+                          widget()->width()-conf.paddingRight()-conf.paddingLeft(),
+                          widget()->height()-conf.paddingBottom()-conf.paddingTop());
+            sourceRect = QRectF(0.0, 0.0, rect.width(), rect.height());
+        }
+        else {
+            rect = QRectF(conf.paddingLeft(), conf.paddingTop(), widget()->width(), widget()->height());
+            sourceRect = rect;
+        }
     }
     frame->resizeFrame(rect.size());
     frame->paintFrame(&painter, rect, sourceRect);
@@ -685,7 +691,7 @@ void AuroraeClient::updateWindowShape()
     int w=widget()->width();
     int h=widget()->height();
 
-    if (maximized) {
+    if (maximized || compositingActive()) {
         QRegion mask(0,0,w,h);
         setMask(mask);
         return;
@@ -695,7 +701,9 @@ void AuroraeClient::updateWindowShape()
     Plasma::FrameSvg *deco = AuroraeFactory::instance()->frame();
     if (!deco->hasElementPrefix("decoration-opaque")) {
         // opaque element is missing: set generic mask
-        QRegion mask(0,0,w,h);
+        w = w - conf.paddingLeft() - conf.paddingRight();
+        h = h - conf.paddingTop() - conf.paddingBottom();
+        QRegion mask(conf.paddingLeft(),conf.paddingTop(),w,h);
         setMask(mask);
         return;
     }
