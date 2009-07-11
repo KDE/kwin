@@ -654,6 +654,11 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
         frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
     }
     QRectF rect = QRectF(0.0, 0.0, widget()->width(), widget()->height());
+    if (maximized) {
+        rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
+                      widget()->width() - conf.paddingRight(),
+                      widget()->height() - conf.paddingBottom());
+    }
     QRectF sourceRect = rect;
     if (!compositingActive()) {
         rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
