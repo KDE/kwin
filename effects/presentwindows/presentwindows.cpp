@@ -787,6 +787,8 @@ void PresentWindowsEffect::rearrangeWindows()
         if( m_windowData[m_highlightedWindow].visible == false )
             setHighlightedWindow( findFirstWindow() );
         }
+    else if( m_tabBoxEnabled )
+        setHighlightedWindow( effects->currentTabBoxWindow() );
     else
         setHighlightedWindow( findFirstWindow() );
 
@@ -808,7 +810,8 @@ void PresentWindowsEffect::rearrangeWindows()
             m_gridSizes[screen].columns * m_gridSizes[screen].rows &&
             windows.size() < m_gridSizes[screen].columns * m_gridSizes[screen].rows &&
             windows.size() > ( m_gridSizes[screen].columns - 1) * m_gridSizes[screen].rows &&
-            windows.size() > m_gridSizes[screen].columns * ( m_gridSizes[screen].rows - 1 ))
+            windows.size() > m_gridSizes[screen].columns * ( m_gridSizes[screen].rows - 1 ) &&
+            !m_tabBoxEnabled )
             continue;
 
         // No point continuing if there is no windows to process
@@ -1312,66 +1315,37 @@ void PresentWindowsEffect::assignSlots( EffectWindowList windowlist, const QRect
             taken[ m_windowData[w].slot ] = true;
     int slotWidth = area.width() / columns;
     int slotHeight = area.height() / rows;
-    if( m_tabBoxEnabled )
+    foreach( EffectWindow *w, windowlist )
         {
-        for( int i = 0; i < windowlist.count(); i++ )
-            {
-            EffectWindow *w = windowlist[i];
-            WindowData *wData = &m_windowData[w];
-            if( wData->slot != -1 )
-                continue; // It's already has a slot
-            int x = i % columns;
-            int y = i / columns;
-            QPoint pos = w->geometry().center();
-            if( pos.x() < area.left() )
-                pos.setX( area.left() );
-            if( pos.x() > area.right() )
-                pos.setX( area.right() );
-            if( pos.y() < area.top() )
-                pos.setY( area.top() );
-            if( pos.y() > area.bottom() )
-                pos.setY( area.bottom() );
-            int xdiff = pos.x() - ( area.x() + slotWidth * x + slotWidth / 2 );
-            int ydiff = pos.y() - ( area.y() + slotHeight * y + slotHeight / 2 );
-            int dist = int( sqrt( double( xdiff * xdiff + ydiff * ydiff )));
-            wData->slot = i;
-            wData->slot_distance = dist;
-            }
-        }
-    else
-        {
-        foreach( EffectWindow *w, windowlist )
-            {
-            WindowData *wData = &m_windowData[w];
-            if( wData->slot != -1 )
-                continue; // it already has a slot
-            QPoint pos = w->geometry().center();
-            if( pos.x() < area.left() )
-                pos.setX( area.left() );
-            if( pos.x() > area.right() )
-                pos.setX( area.right() );
-            if( pos.y() < area.top() )
-                pos.setY( area.top() );
-            if( pos.y() > area.bottom() )
-                pos.setY( area.bottom() );
-            int distance = INT_MAX;
-            for( int x = 0; x < columns; x++ )
-                for( int y = 0; y < rows; y++ )
+        WindowData *wData = &m_windowData[w];
+        if( wData->slot != -1 )
+            continue; // it already has a slot
+        QPoint pos = w->geometry().center();
+        if( pos.x() < area.left() )
+            pos.setX( area.left() );
+        if( pos.x() > area.right() )
+            pos.setX( area.right() );
+        if( pos.y() < area.top() )
+            pos.setY( area.top() );
+        if( pos.y() > area.bottom() )
+            pos.setY( area.bottom() );
+        int distance = INT_MAX;
+        for( int x = 0; x < columns; x++ )
+            for( int y = 0; y < rows; y++ )
+                {
+                int slot = x + y * columns;
+                if( taken[slot] )
+                    continue;
+                int xdiff = pos.x() - ( area.x() + slotWidth * x + slotWidth / 2 );
+                int ydiff = pos.y() - ( area.y() + slotHeight * y + slotHeight / 2 );
+                int dist = int( sqrt( double( xdiff * xdiff + ydiff * ydiff )));
+                if( dist < distance )
                     {
-                    int slot = x + y * columns;
-                    if( taken[slot] )
-                        continue;
-                    int xdiff = pos.x() - ( area.x() + slotWidth * x + slotWidth / 2 );
-                    int ydiff = pos.y() - ( area.y() + slotHeight * y + slotHeight / 2 );
-                    int dist = int( sqrt( double( xdiff * xdiff + ydiff * ydiff )));
-                    if( dist < distance )
-                        {
-                        distance = dist;
-                        wData->slot = slot;
-                        wData->slot_distance = distance;
-                        }
+                    distance = dist;
+                    wData->slot = slot;
+                    wData->slot_distance = distance;
                     }
-            }
+                }
         }
     }
 
