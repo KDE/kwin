@@ -90,6 +90,8 @@ void renderDot(QPainter *p, const QPointF &point, qreal diameter)
 OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
     : KCommonDecorationUnstable(b, f)
     , colorCacheInvalid_(true)
+    , shadowTiles_(NULL)
+    , glowTiles_(NULL)
     , helper_(*globalHelper)
 {
     qAddPostRoutine(oxkwincleanupBefore);
@@ -97,6 +99,8 @@ OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f)
 
 OxygenClient::~OxygenClient()
 {
+    delete glowTiles_;
+    delete shadowTiles_;
 }
 QString OxygenClient::visibleName() const
 {
@@ -571,6 +575,9 @@ TileSet *OxygenClient::shadowTiles(const QColor& color, const QColor& glow, qrea
 
         tileSet = new TileSet(shadow, size, size, 1, 1);
         glowTilesOption_ = opt;
+        if (glowTiles_) {
+            delete glowTiles_;
+        }
         glowTiles_       = tileSet;
     } else {
         //---------------------------------------------------------------
@@ -635,6 +642,9 @@ TileSet *OxygenClient::shadowTiles(const QColor& color, const QColor& glow, qrea
 
         tileSet = new TileSet(shadow, size, size, 1, 1);
         shadowTilesOption_ = opt;
+        if (shadowTiles_) {
+            delete shadowTiles_;
+        }
         shadowTiles_       = tileSet;
     }
     return tileSet;
