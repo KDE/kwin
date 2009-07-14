@@ -43,6 +43,8 @@ class PresentWindowsEffect
         struct WindowData
             {
             bool visible;
+            bool deleted;
+            bool referenced;
             double opacity;
             double highlight;
             int slot;

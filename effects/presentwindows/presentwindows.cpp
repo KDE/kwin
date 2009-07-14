@@ -242,8 +242,13 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &
         // Calculate window's opacity
         // TODO: Minimized windows or windows not on the current desktop are only 75% visible?
         if( m_windowData[w].visible )
-            m_windowData[w].opacity = qMin(/*( w->isMinimized() || !w->isOnCurrentDesktop() ) ? 0.75 :*/ 1.0,
-                m_windowData[w].opacity + time / m_fadeDuration );
+            {
+            if( m_windowData[w].deleted )
+                m_windowData[w].opacity = qMax( 0.0, m_windowData[w].opacity - time / m_fadeDuration );
+            else
+                m_windowData[w].opacity = qMin(/*( w->isMinimized() || !w->isOnCurrentDesktop() ) ? 0.75 :*/ 1.0,
+                    m_windowData[w].opacity + time / m_fadeDuration );
+            }
         else
             m_windowData[w].opacity = qMax( 0.0, m_windowData[w].opacity - time / m_fadeDuration );
         if( m_windowData[w].opacity == 0.0 )
@@ -260,6 +265,21 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &
             m_windowData[w].highlight = qMin( 1.0, m_windowData[w].highlight + time / m_fadeDuration );
         else
             m_windowData[w].highlight = qMax( 0.0, m_windowData[w].highlight - time / m_fadeDuration );
+
+        // Closed windows 
+        if( m_windowData[w].deleted )
+            {
+            data.setTranslucent();
+            if( m_windowData[w].opacity <= 0.0 && m_windowData[w].referenced )
+                {
+                // it's possible that another effect has referenced the window
+                // we have to keep the window in the list to prevent flickering
+                m_windowData[w].referenced = false;
+                w->unrefWindow();
+                }
+            else
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
+            }
 
         if( m_motionManager.isManaging( w ))
             data.setTransformed(); // We will be moving this window
@@ -354,13 +374,16 @@ void PresentWindowsEffect::windowAdded( EffectWindow *w )
 
 void PresentWindowsEffect::windowClosed( EffectWindow *w )
     {
-    if( m_highlightedWindow == w )
-        setHighlightedWindow( findFirstWindow() );
     if( m_managerWindow == w )
         m_managerWindow = NULL;
     if( !m_windowData.contains( w ))
         return;
-    m_windowData[w].visible = false; // TODO: Fix this so they do actually fade out
+    m_windowData[w].deleted = true;
+    m_windowData[w].referenced = true;
+    w->refWindow();
+    if( m_highlightedWindow == w )
+        setHighlightedWindow( findFirstWindow() );
+    rearrangeWindows();
     }
 
 void PresentWindowsEffect::windowDeleted( EffectWindow *w )
@@ -371,7 +394,6 @@ void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     delete m_windowData[w].iconFrame;
     m_windowData.remove( w );
     m_motionManager.unmanage( w );
-    rearrangeWindows();
     }
 
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
@@ -399,7 +421,7 @@ void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent *e )
         {
         assert( m_windowData.contains( windows.at( i )));
         if( m_motionManager.transformedGeometry( windows.at( i )).contains( cursorPos() ) &&
-            m_windowData[windows.at( i )].visible )
+            m_windowData[windows.at( i )].visible && !m_windowData[windows.at( i )].deleted )
             {
             hovering = true;
             if( windows.at( i ) && m_highlightedWindow != windows.at( i ))
@@ -752,6 +774,8 @@ void PresentWindowsEffect::rearrangeWindows()
             windowlist = m_motionManager.managedWindows();
         foreach( EffectWindow *w, m_motionManager.managedWindows() )
             {
+            if( m_windowData[w].deleted )
+                continue; // don't include closed windows
             windowlists[w->screen()].append( w );
             assert( m_windowData.contains( w ));
             m_windowData[w].visible = true;
@@ -762,6 +786,8 @@ void PresentWindowsEffect::rearrangeWindows()
         foreach( EffectWindow *w, m_motionManager.managedWindows() )
             {
             assert( m_windowData.contains( w ));
+            if( m_windowData[w].deleted )
+                continue; // don't include closed windows
             if( w->caption().contains( m_windowFilter, Qt::CaseInsensitive ) ||
                 w->windowClass().contains( m_windowFilter, Qt::CaseInsensitive ) ||
                 w->windowRole().contains( m_windowFilter, Qt::CaseInsensitive ))
@@ -1407,6 +1433,8 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
             if( m_windowData.contains( w )) // Happens if we reactivate before the ending animation finishes
                 continue;
             m_windowData[w].visible = isVisibleWindow( w );
+            m_windowData[w].deleted = false;
+            m_windowData[w].referenced = false;
             m_windowData[w].opacity = 0.0;
             if( w->isOnCurrentDesktop() && !w->isMinimized() )
                 m_windowData[w].opacity = 1.0;
@@ -1746,6 +1774,8 @@ EffectWindow* PresentWindowsEffect::findFirstWindow() const
         QRectF geometry = m_motionManager.transformedGeometry( w );
         if( m_windowData[w].visible == false )
             continue; // Not visible
+        if( m_windowData[w].deleted )
+            continue; // Window has been closed
         if( topLeft == NULL )
             {
             topLeft = w;
