@@ -40,6 +40,21 @@ public:
     QColor inactiveTextColor() const {
         return m_inactiveTextColor;
     }
+    QColor activeTextShadowColor() const {
+        return m_activeTextShadowColor;
+    }
+    QColor inactiveTextShadowColor() const {
+        return m_inactiveTextShadowColor;
+    }
+    int textShadowOffsetX() const {
+        return m_textShadowOffsetX;
+    }
+    int textShadowOffsetY() const {
+        return m_textShadowOffsetY;
+    }
+    bool useTextShadow() const {
+        return m_useTextShadow;
+    }
     // Alignment
     Qt::Alignment alignment() const {
         return m_alignment;
@@ -152,6 +167,11 @@ public:
 private:
     QColor m_activeTextColor;
     QColor m_inactiveTextColor;
+    QColor m_activeTextShadowColor;
+    QColor m_inactiveTextShadowColor;
+    int m_textShadowOffsetX;
+    int m_textShadowOffsetY;
+    bool m_useTextShadow;
     Qt::Alignment m_alignment;
     Qt::Alignment m_verticalAlignment;
     // borders

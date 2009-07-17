@@ -1,6 +1,11 @@
 [General]
 ActiveTextColor=0,0,0,255
 InactiveTextColor=178,178,178,178
+UseTextShadow=true
+ActiveTextShadowColor=178,178,178
+InactiveTextShadowColor=0,0,0,255
+TextShadowOffsetX=1
+TextShadowOffsetY=1
 TitleAlignment=Center
 TitleVerticalAlignment=Bottom
 Animation=200

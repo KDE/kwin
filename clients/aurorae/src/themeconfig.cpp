@@ -31,6 +31,11 @@ void ThemeConfig::load(KConfig *conf)
     KConfigGroup general(conf, "General");
     m_activeTextColor = general.readEntry("ActiveTextColor", QColor(Qt::black));
     m_inactiveTextColor = general.readEntry("InactiveTextColor", QColor(Qt::black));
+    m_useTextShadow = general.readEntry("UseTextShadow", false);
+    m_activeTextShadowColor = general.readEntry("ActiveTextShadowColor", QColor(Qt::white));
+    m_inactiveTextShadowColor = general.readEntry("InactiveTextShadowColor", QColor(Qt::white));
+    m_textShadowOffsetX = general.readEntry("TextShadowOffsetX", 0);
+    m_textShadowOffsetY = general.readEntry("TextShadowOffsetY", 0);
     QString alignment = (general.readEntry("TitleAlignment", "Left")).toLower();
     if (alignment == "left") {
         m_alignment = Qt::AlignLeft;

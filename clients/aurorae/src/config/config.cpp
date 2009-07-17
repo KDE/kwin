@@ -428,18 +428,50 @@ void ThemeDelegate::paintDeco(QPainter *painter, bool active, const QStyleOption
     int titleRight = x;
 
     // draw text
-    painter->save();
-    if (active) {
-        painter->setPen(themeConfig->activeTextColor());
-    }
-    else {
-        painter->setPen(themeConfig->inactiveTextColor());
-    }
     y = option.rect.top() + topMargin + themeConfig->paddingTop() + themeConfig->titleEdgeTop();
     QRectF titleRect(QPointF(titleLeft, y), QPointF(titleRight, y + themeConfig->titleHeight()));
     QString caption = i18n("Active Window");
     if (!active) {
         caption = i18n("Inactive Window");
+    }
+    painter->setFont(KGlobalSettings::windowTitleFont());
+    if (themeConfig->useTextShadow()) {
+        // shadow code is inspired by Qt FAQ: How can I draw shadows behind text?
+        // see http://www.qtsoftware.com/developer/faqs/faq.2007-07-27.3052836051
+        painter->save();
+        if (active) {
+            painter->setPen(themeConfig->activeTextShadowColor());
+        }
+        else {
+            painter->setPen(themeConfig->inactiveTextShadowColor());
+        }
+        int dx = themeConfig->textShadowOffsetX();
+        int dy = themeConfig->textShadowOffsetY();
+        painter->setOpacity(0.5);
+        painter->drawText(titleRect.translated(dx, dy),
+                            themeConfig->alignment() | themeConfig->verticalAlignment() | Qt::TextSingleLine,
+                            caption);
+        painter->setOpacity(0.2);
+        painter->drawText(titleRect.translated(dx+1, dy),
+                            themeConfig->alignment() | themeConfig->verticalAlignment() | Qt::TextSingleLine,
+                            caption);
+        painter->drawText(titleRect.translated(dx-1, dy),
+                            themeConfig->alignment() | themeConfig->verticalAlignment() | Qt::TextSingleLine,
+                            caption);
+        painter->drawText(titleRect.translated(dx, dy+1),
+                            themeConfig->alignment() | themeConfig->verticalAlignment() | Qt::TextSingleLine,
+                            caption);
+        painter->drawText(titleRect.translated(dx, dy-1),
+                            themeConfig->alignment() | themeConfig->verticalAlignment() | Qt::TextSingleLine,
+                            caption);
+        painter->restore();
+        painter->save();
+    }
+    if (active) {
+        painter->setPen(themeConfig->activeTextColor());
+    }
+    else {
+        painter->setPen(themeConfig->inactiveTextColor());
     }
     painter->drawText(titleRect,
                        themeConfig->alignment() | themeConfig->verticalAlignment() | Qt::TextSingleLine,

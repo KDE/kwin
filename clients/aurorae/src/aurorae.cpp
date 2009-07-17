@@ -694,12 +694,44 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
     frame->resizeFrame(rect.size());
     frame->paintFrame(&painter, rect, sourceRect);
 
+    painter.setFont(options()->font(isActive()));
+    if (conf.useTextShadow()) {
+        // shadow code is inspired by Qt FAQ: How can I draw shadows behind text?
+        // see http://www.qtsoftware.com/developer/faqs/faq.2007-07-27.3052836051
+        const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
+        painter.save();
+        if (isActive()) {
+            painter.setPen(conf.activeTextShadowColor());
+        }
+        else {
+            painter.setPen(conf.inactiveTextShadowColor());
+        }
+        int dx = conf.textShadowOffsetX();
+        int dy = conf.textShadowOffsetY();
+        painter.setOpacity(0.5);
+        painter.drawText(titleRect().translated(dx, dy),
+                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+                            caption());
+        painter.setOpacity(0.2);
+        painter.drawText(titleRect().translated(dx+1, dy),
+                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+                            caption());
+        painter.drawText(titleRect().translated(dx-1, dy),
+                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+                            caption());
+        painter.drawText(titleRect().translated(dx, dy+1),
+                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+                            caption());
+        painter.drawText(titleRect().translated(dx, dy-1),
+                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+                            caption());
+        painter.restore();
+    }
     if (isActive()) {
         painter.setPen(conf.activeTextColor());
     } else {
         painter.setPen(conf.inactiveTextColor());
     }
-    painter.setFont(options()->font(isActive()));
     painter.drawText(titleRect(), conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
                       caption());
 }
