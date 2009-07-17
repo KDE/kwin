@@ -549,7 +549,26 @@ int AuroraeClient::layoutMetric(LayoutMetric lm, bool respectWindowState,
         return conf.titleHeight();
 
     case LM_ButtonWidth:
-        return conf.buttonWidth();
+        switch (button->type()) {
+        case MinButton:
+            return conf.buttonWidthMinimize();
+        case MaxButton:
+            return conf.buttonWidthMaximizeRestore();
+        case CloseButton:
+            return conf.buttonWidthClose();
+        case OnAllDesktopsButton:
+            return conf.buttonWidthAllDesktops();
+        case AboveButton:
+            return conf.buttonWidthKeepAbove();
+        case BelowButton:
+            return conf.buttonWidthKeepBelow();
+        case ShadeButton:
+            return conf.buttonWidthShade();
+        case MenuButton:
+            return conf.buttonWidthMenu();
+        default:
+            return conf.buttonWidth();
+        }
     case LM_ButtonHeight:
         return conf.buttonHeight();
     case LM_ButtonSpacing:

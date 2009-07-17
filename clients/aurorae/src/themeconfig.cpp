@@ -71,6 +71,15 @@ void ThemeConfig::load(KConfig *conf)
     m_titleHeight = border.readEntry("TitleHeight", 20);
 
     m_buttonWidth = border.readEntry("ButtonWidth", 20);
+    m_buttonWidthMinimize = border.readEntry("ButtonWidthMinimize", m_buttonWidth);
+    m_buttonWidthMaximizeRestore = border.readEntry("ButtonWidthMaximizeRestore", m_buttonWidth);
+    m_buttonWidthClose = border.readEntry("ButtonWidthClose", m_buttonWidth);
+    m_buttonWidthAllDesktops = border.readEntry("ButtonWidthAlldesktops", m_buttonWidth);
+    m_buttonWidthKeepAbove = border.readEntry("ButtonWidthKeepabove", m_buttonWidth);
+    m_buttonWidthKeepBelow = border.readEntry("ButtonWidthKeepbelow", m_buttonWidth);
+    m_buttonWidthShade = border.readEntry("ButtonWidthShade", m_buttonWidth);
+    m_buttonWidthHelp = border.readEntry("ButtonWidthHelp", m_buttonWidth);
+    m_buttonWidthMenu = border.readEntry("ButtonWidthMenu", m_buttonWidth);
     m_buttonHeight = border.readEntry("ButtonHeight", 20);
     m_buttonSpacing = border.readEntry("ButtonSpacing", 5);
     m_buttonMarginTop = border.readEntry("ButtonMarginTop", 0);

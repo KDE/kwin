@@ -86,6 +86,33 @@ public:
     int buttonWidth() const {
         return m_buttonWidth;
     }
+    int buttonWidthMinimize() const {
+        return m_buttonWidthMinimize;
+    }
+    int buttonWidthMaximizeRestore() const {
+        return m_buttonWidthMaximizeRestore;
+    }
+    int buttonWidthClose() const {
+        return m_buttonWidthClose;
+    }
+    int buttonWidthAllDesktops() const {
+        return m_buttonWidthAllDesktops;
+    }
+    int buttonWidthKeepAbove() const {
+        return m_buttonWidthKeepAbove;
+    }
+    int buttonWidthKeepBelow() const {
+        return m_buttonWidthKeepBelow;
+    }
+    int buttonWidthShade() const {
+        return m_buttonWidthShade;
+    }
+    int buttonWidthHelp() const {
+        return m_buttonWidthHelp;
+    }
+    int buttonWidthMenu() const {
+        return m_buttonWidthMenu;
+    }
     int buttonHeight() const {
         return m_buttonHeight;
     }
@@ -143,6 +170,15 @@ private:
 
     // buttons
     int m_buttonWidth;
+    int m_buttonWidthMinimize;
+    int m_buttonWidthMaximizeRestore;
+    int m_buttonWidthClose;
+    int m_buttonWidthAllDesktops;
+    int m_buttonWidthKeepAbove;
+    int m_buttonWidthKeepBelow;
+    int m_buttonWidthShade;
+    int m_buttonWidthHelp;
+    int m_buttonWidthMenu;
     int m_buttonHeight;
     int m_buttonSpacing;
     int m_buttonMarginTop;

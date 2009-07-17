@@ -294,6 +294,7 @@ void ThemeDelegate::paintDeco(QPainter *painter, bool active, const QStyleOption
     int buttonHeight = themeConfig->buttonHeight();
     foreach (const QChar &character, themeConfig->defaultButtonsLeft()) {
         QString buttonName;
+        int width = buttonWidth;
         if (character == '_'){
             x += themeConfig->explicitButtonSpacer() + themeConfig->buttonSpacing();
             continue;
@@ -302,34 +303,42 @@ void ThemeDelegate::paintDeco(QPainter *painter, bool active, const QStyleOption
             KIcon icon = KIcon( "xorg" );
             QSize buttonSize(buttonWidth,buttonHeight);
             painter->drawPixmap(QPoint(x,y), icon.pixmap(buttonSize));
-            x += buttonWidth;
+            x += themeConfig->buttonWidthMenu();
         }
         else if (character == 'S') {
             buttonName = "alldesktops";
+            width = themeConfig->buttonWidthAllDesktops();
         }
         else if (character == 'H') {
             buttonName = "help";
+            width = themeConfig->buttonWidthHelp();
         }
         else if (character == 'I') {
             buttonName = "minimize";
+            width = themeConfig->buttonWidthMinimize();
         }
         else if (character == 'A') {
             buttonName = "restore";
             if (!buttons->contains(buttonName)) {
                 buttonName = "maximize";
             }
+            width = themeConfig->buttonWidthMaximizeRestore();
         }
         else if (character == 'X') {
             buttonName = "close";
+            width = themeConfig->buttonWidthClose();
         }
         else if (character == 'F') {
             buttonName = "keepabove";
+            width = themeConfig->buttonWidthKeepAbove();
         }
         else if (character == 'B') {
             buttonName = "keepbelow";
+            width = themeConfig->buttonWidthKeepBelow();
         }
         else if (character == 'L') {
             buttonName = "shade";
+            width = themeConfig->buttonWidthShade();
         }
         if (!buttonName.isEmpty() && buttons->contains(buttonName)) {
             Plasma::FrameSvg *frame = buttons->value(buttonName);
@@ -337,9 +346,9 @@ void ThemeDelegate::paintDeco(QPainter *painter, bool active, const QStyleOption
             if (!active && frame->hasElementPrefix("inactive")) {
                 frame->setElementPrefix("inactive");
             }
-            frame->resizeFrame(QSize(buttonWidth,buttonHeight));
+            frame->resizeFrame(QSize(width,buttonHeight));
             frame->paintFrame(painter, QPoint(x, y));
-            x += buttonWidth;
+            x += width;
         }
         x += themeConfig->buttonSpacing();
     }
@@ -348,13 +357,14 @@ void ThemeDelegate::paintDeco(QPainter *painter, bool active, const QStyleOption
     }
     int titleLeft = x;
 
-    x = option.rect.right() - rightMargin - themeConfig->paddingRight() - themeConfig->titleEdgeRight() - buttonWidth;
+    x = option.rect.right() - rightMargin - themeConfig->paddingRight() - themeConfig->titleEdgeRight();
     QString rightButtons;
     foreach (const QChar &character, themeConfig->defaultButtonsRight()) {
         rightButtons.prepend(character);
     }
     foreach (const QChar &character, rightButtons) {
         QString buttonName;
+        int width = buttonWidth;
         if (character == '_'){
             x -= themeConfig->explicitButtonSpacer() + themeConfig->buttonSpacing();
             continue;
@@ -362,35 +372,43 @@ void ThemeDelegate::paintDeco(QPainter *painter, bool active, const QStyleOption
         else if (character == 'M') {
             KIcon icon = KIcon( "xorg" );
             QSize buttonSize(buttonWidth,buttonHeight);
+            x -= themeConfig->buttonWidthMenu();
             painter->drawPixmap(QPoint(x,y), icon.pixmap(buttonSize));
-            x -= buttonWidth;
         }
         else if (character == 'S') {
             buttonName = "alldesktops";
+            width = themeConfig->buttonWidthAllDesktops();
         }
         else if (character == 'H') {
             buttonName = "help";
+            width = themeConfig->buttonWidthHelp();
         }
         else if (character == 'I') {
             buttonName = "minimize";
+            width = themeConfig->buttonWidthMinimize();
         }
         else if (character == 'A') {
             buttonName = "restore";
             if (!buttons->contains(buttonName)) {
                 buttonName = "maximize";
             }
+            width = themeConfig->buttonWidthMaximizeRestore();
         }
         else if (character == 'X') {
             buttonName = "close";
+            width = themeConfig->buttonWidthClose();
         }
         else if (character == 'F') {
             buttonName = "keepabove";
+            width = themeConfig->buttonWidthKeepAbove();
         }
         else if (character == 'B') {
             buttonName = "keepbelow";
+            width = themeConfig->buttonWidthKeepBelow();
         }
         else if (character == 'L') {
             buttonName = "shade";
+            width = themeConfig->buttonWidthShade();
         }
         if (!buttonName.isEmpty() && buttons->contains(buttonName)) {
             Plasma::FrameSvg *frame = buttons->value(buttonName);
@@ -398,13 +416,12 @@ void ThemeDelegate::paintDeco(QPainter *painter, bool active, const QStyleOption
             if (!active && frame->hasElementPrefix("inactive")) {
                 frame->setElementPrefix("inactive");
             }
-            frame->resizeFrame(QSize(buttonWidth,buttonHeight));
+            frame->resizeFrame(QSize(width,buttonHeight));
+            x -= width;
             frame->paintFrame(painter, QPoint(x, y));
-            x -= buttonWidth;
         }
         x -= themeConfig->buttonSpacing();
     }
-    x += buttonWidth;
     if (!rightButtons.isEmpty()){
         x += themeConfig->buttonSpacing();
     }
