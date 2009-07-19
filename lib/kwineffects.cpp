@@ -960,7 +960,7 @@ QRect PaintClipper::Iterator::boundingRect() const
  TimeLine
 ***************************************************************/
 
-TimeLine::TimeLine(const int duration)
+TimeLine::TimeLine(int duration)
     {
     m_Time = 0;
     m_Duration = duration;
