@@ -35,6 +35,7 @@ DesktopNamesWidget::DesktopNamesWidget( QWidget *parent )
     , m_maxDesktops( 0 )
     {
     m_namesLayout = new QGridLayout;
+    m_namesLayout->setMargin( 0 );
 
     setLayout( m_namesLayout );
     }

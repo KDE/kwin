@@ -741,7 +741,6 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
                              " a window while pressing a modifier key."));
 
   QHBoxLayout* innerLay=new QHBoxLayout(box);
-  innerLay->setMargin(0);
   QHBoxLayout* fLay=new QHBoxLayout;
   gridLayout = new QGridLayout;
   innerLay->addLayout(fLay);

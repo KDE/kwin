@@ -65,6 +65,7 @@ void KWinDesktopConfig::init()
     // TODO: there has to be a way to add the shortcuts editor to the ui file
     m_editor = new KShortcutsEditor( m_ui, KShortcutsEditor::GlobalAction );
     m_ui->editorFrame->setLayout( new QVBoxLayout() );
+    m_ui->editorFrame->layout()->setMargin( 0 );
     m_ui->editorFrame->layout()->addWidget( m_editor );
 
     m_ui->desktopNames->setDesktopConfig( this );
