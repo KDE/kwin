@@ -58,8 +58,6 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
     connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
     layout->addWidget(mShortcutEditor);
 
-    layout->addStretch();
-
     load();
     }
 
