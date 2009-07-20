@@ -140,7 +140,7 @@ void KWinDesktopConfig::init()
     connect( m_ui->numberSpinBox, SIGNAL(valueChanged(int)), SLOT(slotChangeShortcuts(int)));
     connect( m_ui->activityCheckBox, SIGNAL(stateChanged(int)), SLOT(changed()));
     connect( m_ui->desktopNames, SIGNAL(changed()), SLOT(changed()));
-    connect( m_ui->popupInfoCheckBox, SIGNAL(stateChanged(int)), SLOT(changed()));
+    connect( m_ui->popupInfoCheckBox, SIGNAL(toggled(bool)), SLOT(changed()));
     connect( m_ui->popupHideSpinBox, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect( m_editor, SIGNAL(keyChange()), SLOT(changed()));
     connect( m_ui->allShortcutsCheckBox, SIGNAL(stateChanged(int)), SLOT(slotShowAllShortcuts()));
