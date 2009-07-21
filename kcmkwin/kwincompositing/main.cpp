@@ -338,7 +338,8 @@ void KWinCompositingConfig::loadGeneralTab()
         ui.windowSwitchingCombo->setCurrentIndex( 1 );
     if( effectEnabled( "coverswitch", effectconfig ))
         ui.windowSwitchingCombo->setCurrentIndex( 3 );
-    if( effectEnabled( "flipswitch", effectconfig ))
+    KConfigGroup flipswitchconfig(mKWinConfig, "Effect-FlipSwitch");
+    if( effectEnabled( "flipswitch", effectconfig ) && flipswitchconfig.readEntry("TabBox", false))
         ui.windowSwitchingCombo->setCurrentIndex( 4 );
     KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
     if( effectEnabled( "presentwindows", effectconfig ) && presentwindowsconfig.readEntry("TabBox", false) )
@@ -490,19 +491,18 @@ void KWinCompositingConfig::saveGeneralTab()
 
     int windowSwitcher = ui.windowSwitchingCombo->currentIndex();
     bool presentWindowSwitching = false;
+    bool flipSwitch = false;
     switch( windowSwitcher )
         {
         case 0:
             // no effect
             effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
             effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
-            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", false);
             break;
         case 1:
             // box switch
             effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", true);
             effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
-            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", false);
             break;
         case 2:
             // present windows
@@ -510,16 +510,15 @@ void KWinCompositingConfig::saveGeneralTab()
             effectconfig.writeEntry("kwin4_effect_presentwindowsEnabled", true);
             effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
             effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
-            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", false);
             break;
         case 3:
             // coverswitch
             effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
             effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", true);
-            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", false);
             break;
         case 4:
             // flipswitch
+            flipSwitch = true;
             effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
             effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
             effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", true);
@@ -527,6 +526,8 @@ void KWinCompositingConfig::saveGeneralTab()
         }
     KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
     presentwindowsconfig.writeEntry("TabBox", presentWindowSwitching);
+    KConfigGroup flipswitchconfig(mKWinConfig, "Effect-FlipSwitch");
+    flipswitchconfig.writeEntry("TabBox", flipSwitch);
 
     int desktopSwitcher = ui.desktopSwitchingCombo->currentIndex();
     switch( desktopSwitcher )

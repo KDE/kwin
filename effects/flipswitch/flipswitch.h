@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
- Copyright (C) 2008 Martin Gräßlin <ubuntu@martin-graesslin.com>
+ Copyright (C) 2008, 2009 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,13 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_FLIPSWITCH_H
 
 #include <kwineffects.h>
+#include <KShortcut>
+#include <QQueue>
+
+class KShortcut;
 
 namespace KWin
 {
 
 class FlipSwitchEffect
-    : public Effect
+    : public QObject, public Effect
     {
+    Q_OBJECT
     public:
         FlipSwitchEffect();
         ~FlipSwitchEffect();
@@ -37,30 +42,80 @@ class FlipSwitchEffect
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
         virtual void postPaintScreen();
+        virtual void prePaintWindow( EffectWindow *w, WindowPrePaintData &data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
+        virtual void windowAdded( EffectWindow* w );
+        virtual void windowClosed( EffectWindow* w );
+        virtual bool borderActivated( ElectricBorder border );
+        virtual void grabbedKeyboardEvent( QKeyEvent* e );
 
         static bool supported();
+    private Q_SLOTS:
+        void toggleActiveCurrent();
+        void toggleActiveAllDesktops();
+        void globalShortcutChangedCurrent( QKeySequence shortcut );
+        void globalShortcutChangedAll( QKeySequence shortcut );
+
     private:
-        void paintWindowFlip( EffectWindow* w, bool draw = true, float opacity = 0.8  );
-        bool mActivated;
-        bool mAnimation;
-        int mFlipDuration;
-        bool animateFlip;
-        bool forward;
-        int selectedWindow;
-        bool start;
-        bool stop;
-        bool addFullRepaint;
-        int rearrangeWindows;
-        bool stopRequested;
-        bool startRequested;
-        bool twinview;
-        QRect area;
-        TimeLine timeLine;
-        Window input;
+        class ItemInfo;
+        enum SwitchingDirection
+            {
+            DirectionForward,
+            DirectionBackward
+            };
+        enum FlipSwitchMode
+            {
+            TabboxMode,
+            CurrentDesktopMode,
+            AllDesktopsMode
+            };
+        void setActive( bool activate, FlipSwitchMode mode );
+        bool isSelectableWindow( EffectWindow *w ) const;
+        void scheduleAnimation( const SwitchingDirection& direction, int distance = 1 );
+        void adjustWindowMultiScreen( const EffectWindow *w, WindowPaintData& data );
+        QQueue< SwitchingDirection> m_scheduledDirections;
+        EffectWindow* m_selectedWindow;
+        TimeLine m_timeLine;
+        TimeLine m_startStopTimeLine;
+        TimeLine::CurveShape m_currentAnimationShape;
+        QRect m_screenArea;
+        int m_activeScreen;
+        bool m_active;
+        bool m_start;
+        bool m_stop;
+        bool m_animation;
+        bool m_hasKeyboardGrab;
+        Window m_input;
+        FlipSwitchMode m_mode;
+        EffectFrame m_captionFrame;
+        QFont m_captionFont;
+        EffectWindowList m_flipOrderedWindows;
+        QHash< const EffectWindow*, ItemInfo* > m_windows;
+        // options
+        QList<ElectricBorder> m_borderActivate;
+        QList<ElectricBorder> m_borderActivateAll;
+        bool m_tabbox;
+        float m_angle;
+        float m_xPosition;
+        float m_yPosition;
+        bool m_windowTitle;
+        // Shortcuts
+        KShortcut m_shortcutCurrent;
+        KShortcut m_shortcutAll;
+    };
+
+class FlipSwitchEffect::ItemInfo
+    {
+    public:
+        ItemInfo();
+        ~ItemInfo();
+        bool deleted;
+        double opacity;
+        double brightness;
+        double saturation;
     };
 
 } // namespace

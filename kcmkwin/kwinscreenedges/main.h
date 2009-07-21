@@ -70,7 +70,9 @@ class KWinScreenEdgesConfig : public KCModule
             DesktopGrid,
             Cube,
             Cylinder,
-            Sphere
+            Sphere,
+            FlipSwitchAll,
+            FlipSwitchCurrent
             };
 
         bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;

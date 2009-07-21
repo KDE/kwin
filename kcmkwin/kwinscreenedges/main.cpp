@@ -214,6 +214,19 @@ void KWinScreenEdgesConfig::monitorInit()
         monitorAddItem( services.first()->name() + " - " + i18n( "Cylinder" ));
         monitorAddItem( services.first()->name() + " - " + i18n( "Sphere" ));
         }
+    services = trader->query( "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_flipswitch'" );
+    if( services.isEmpty() )
+        {
+        // adding empty strings in case the effect is not found
+        // TODO: after string freeze add a info that the effect is missing
+        monitorAddItem( QString() );
+        monitorAddItem( QString() );
+        }
+    else
+        {
+        monitorAddItem( services.first()->name() + " - " + i18n( "All Desktops" ));
+        monitorAddItem( services.first()->name() + " - " + i18n( "Current Desktop" ));
+        }
 
     monitorShowEvent();
     }
@@ -291,6 +304,25 @@ void KWinScreenEdgesConfig::monitorLoad()
         {
         monitorChangeEdge( ElectricBorder( i ), int( Sphere ) );
         }
+
+    // Flip Switch
+    KConfigGroup flipSwitchConfig( m_config, "Effect-FlipSwitch" );
+    list.clear();
+    // FlipSwitch BorderActivateAll
+    list.append( int( ElectricNone ) );
+    list = flipSwitchConfig.readEntry( "BorderActivateAll", list );
+    foreach( int i, list )
+        {
+        monitorChangeEdge( ElectricBorder( i ), int( FlipSwitchAll ) );
+        }
+    // FlipSwitch BorderActivate
+    list.clear();
+    list.append( int( ElectricNone ) );
+    list = flipSwitchConfig.readEntry( "BorderActivate", list );
+    foreach( int i, list )
+        {
+        monitorChangeEdge( ElectricBorder( i ), int( FlipSwitchCurrent ) );
+        }
     }
 
 void KWinScreenEdgesConfig::monitorSaveAction( int edge, const QString& configName )
@@ -339,6 +371,13 @@ void KWinScreenEdgesConfig::monitorSave()
         monitorCheckEffectHasEdge( int( Cylinder )));
     cubeConfig.writeEntry( "BorderActivateSphere",
         monitorCheckEffectHasEdge( int( Sphere )));
+
+    // Flip Switch
+    KConfigGroup flipSwitchConfig( m_config, "Effect-FlipSwitch" );
+    flipSwitchConfig.writeEntry( "BorderActivateAll",
+        monitorCheckEffectHasEdge( int( FlipSwitchAll )));
+    flipSwitchConfig.writeEntry( "BorderActivate",
+        monitorCheckEffectHasEdge( int( FlipSwitchCurrent )));
     }
 
 void KWinScreenEdgesConfig::monitorDefaults()
@@ -373,6 +412,11 @@ void KWinScreenEdgesConfig::monitorShowEvent()
         monitorItemSetEnabled( int( Cube ), enabled );
         monitorItemSetEnabled( int( Cylinder ), enabled );
         monitorItemSetEnabled( int( Sphere ), enabled );
+
+        // Flip Switch
+        enabled = effectEnabled( "flipswitch", config );
+        monitorItemSetEnabled( int( FlipSwitchAll ), enabled );
+        monitorItemSetEnabled( int( FlipSwitchCurrent ), enabled );
         }
     else // Compositing disabled
         {
@@ -382,6 +426,8 @@ void KWinScreenEdgesConfig::monitorShowEvent()
         monitorItemSetEnabled( int( Cube ), false );
         monitorItemSetEnabled( int( Cylinder ), false );
         monitorItemSetEnabled( int( Sphere ), false );
+        monitorItemSetEnabled( int( FlipSwitchAll ), false );
+        monitorItemSetEnabled( int( FlipSwitchCurrent ), false );
         }
     }
 
