@@ -317,6 +317,7 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
                     ( qAbs( motionManager.transformedGeometry( w ).y() - w->geometry().y() ) < 1 ) )
                 {
                 motionManager.unmanage( w );
+                effects->addRepaintFull();
                 }
             }
         if( coveringWindows.contains( w ) )
