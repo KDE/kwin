@@ -65,11 +65,11 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     KAction* cylinderAction = (KAction*) m_actionCollection->addAction( "Cylinder" );
     cylinderAction->setText( i18n("Desktop Cylinder" ));
     cylinderAction->setProperty("isConfigurationAction", true);
-    cylinderAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_F11 ));
+    cylinderAction->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut);
     KAction* sphereAction = (KAction*) m_actionCollection->addAction( "Sphere" );
     sphereAction->setText( i18n("Desktop Sphere" ));
     sphereAction->setProperty("isConfigurationAction", true);
-    sphereAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F11 ));
+    sphereAction->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut);
 
     m_ui->editor->addCollection(m_actionCollection);
 
