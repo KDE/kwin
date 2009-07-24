@@ -212,11 +212,11 @@ void CubeEffect::loadConfig( QString config )
         cubeShortcut = cubeAction->globalShortcut();
         KAction* cylinderAction = static_cast< KAction* >( actionCollection->addAction( "Cylinder" ));
         cylinderAction->setText( i18n("Desktop Cylinder" ));
-        cylinderAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::SHIFT + Qt::Key_F11 ));
+        cylinderAction->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut);
         cylinderShortcut = cylinderAction->globalShortcut();
         KAction* sphereAction = static_cast< KAction* >( actionCollection->addAction( "Sphere" ));
         sphereAction->setText( i18n("Desktop Sphere" ));
-        sphereAction->setGlobalShortcut( KShortcut( Qt::CTRL + Qt::META + Qt::Key_F11 ));
+        sphereAction->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut);
         sphereShortcut = sphereAction->globalShortcut();
         connect( cubeAction, SIGNAL( triggered( bool )), this, SLOT( toggleCube()));
         connect( cylinderAction, SIGNAL( triggered( bool )), this, SLOT( toggleCylinder()));
