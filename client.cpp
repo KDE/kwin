@@ -117,6 +117,10 @@ Client::Client( Workspace* ws )
     , sm_stacking_order( -1 )
     , demandAttentionKNotifyTimer( NULL )
     , paintRedirector( 0 )
+    , padding_left( 0 )
+    , padding_right( 0 )
+    , padding_top( 0 )
+    , padding_bottom( 0 )
     { // TODO: Do all as initialization
 
     // Set the initial mapping state
