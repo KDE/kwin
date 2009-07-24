@@ -271,21 +271,21 @@ void KWinScreenEdgesConfig::monitorLoad()
     KConfigGroup cubeConfig( m_config, "Effect-Cube" );
     list.clear();
     list.append( int( ElectricNone ) );
-    list = gridConfig.readEntry( "BorderActivate", list );
+    list = cubeConfig.readEntry( "BorderActivate", list );
     foreach( int i, list )
         {
         monitorChangeEdge( ElectricBorder( i ), int( Cube ) );
         }
     list.clear();
     list.append( int( ElectricNone ) );
-    list = gridConfig.readEntry( "BorderActivateCylinder", list );
+    list = cubeConfig.readEntry( "BorderActivateCylinder", list );
     foreach( int i, list )
         {
         monitorChangeEdge( ElectricBorder( i ), int( Cylinder ) );
         }
     list.clear();
     list.append( int( ElectricNone ) );
-    list = gridConfig.readEntry( "BorderActivateSphere", list );
+    list = cubeConfig.readEntry( "BorderActivateSphere", list );
     foreach( int i, list )
         {
         monitorChangeEdge( ElectricBorder( i ), int( Sphere ) );
