@@ -1,8 +1,16 @@
 [Desktop Entry]
 Name=Sliding popups
+Name[pt]=Mensagens deslizantes
+Name[pt_BR]=Mensagens instantâneas deslizantes
+Name[sv]=Glidande rutor
+Name[uk]=Ковзні контекстні вікна
 
 Type=Service
 Comment=Sliding animation for Plasma popups
+Comment[pt]=Animação deslizante para as mensagens do Plasma
+Comment[pt_BR]=Animação deslizante para as mensagens instantâneas do Plasma
+Comment[sv]=Glidande animering av Plasmarutor
+Comment[uk]=Анімація з ковзанням для контекстних вікон Плазми
 
 Icon=preferences-system-windows-effect-slidingpopups
 X-KDE-ServiceTypes=KWin/Effect
