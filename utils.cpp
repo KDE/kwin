@@ -325,7 +325,7 @@ void ungrabXKeyboard()
         kDebug(1212) << "ungrabXKeyboard() called but keyboard not grabbed!";
         }
     keyboard_grabbed = false;
-    XUngrabKeyboard( display(), xTime());
+    XUngrabKeyboard( display(), CurrentTime);
     }
 
 QPoint cursorPos()
