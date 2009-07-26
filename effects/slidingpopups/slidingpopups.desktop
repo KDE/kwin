@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sliding popups
+Name[nds]=Glieden opdukers
 Name[pt]=Mensagens deslizantes
 Name[pt_BR]=Mensagens instantâneas deslizantes
 Name[sv]=Glidande rutor
@@ -7,6 +8,7 @@ Name[uk]=Ковзні контекстні вікна
 
 Type=Service
 Comment=Sliding animation for Plasma popups
+Comment[nds]=Plasma sien Opdukfinstern gliedt över den Schriefdisch
 Comment[pt]=Animação deslizante para as mensagens do Plasma
 Comment[pt_BR]=Animação deslizante para as mensagens instantâneas do Plasma
 Comment[sv]=Glidande animering av Plasmarutor
