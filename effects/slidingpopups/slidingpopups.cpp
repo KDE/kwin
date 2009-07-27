@@ -61,9 +61,13 @@ void SlidingPopupsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& d
         }
     else if( mDisappearingWindows.contains( w ) )
         {
+
         mDisappearingWindows[ w ].addTime( time );
         if( mDisappearingWindows[ w ].value() < 1 )
+            {
             data.setTransformed();
+            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
+            }
         else
             {
             mDisappearingWindows.remove( w );
@@ -89,7 +93,6 @@ void SlidingPopupsEffect::paintWindow( EffectWindow* w, int mask, QRegion region
         appearing = false;
         animating = true;
         }
-
 
     if( animating )
         {
@@ -168,6 +171,7 @@ void SlidingPopupsEffect::propertyNotify( EffectWindow* w, long a )
         return;
 
     QByteArray data = w->readProperty( mAtom, mAtom, 32 );
+
     if( data.length() < 1 )
         return;
     long* d = reinterpret_cast< long* >( data.data());
