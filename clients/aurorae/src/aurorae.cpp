@@ -27,8 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/Plasma/PaintUtils>
 #include <KIconEffect>
 #include <KIconLoader>
+#include <KSelectionWatcher>
 
 #include <QPainter>
+#include <QTimer>
+#include <QX11Info>
 
 namespace Aurorae
 {
@@ -459,6 +462,20 @@ void AuroraeButton::paintButton(QPainter &painter, Plasma::FrameSvg *frame, Butt
 AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory)
         : KCommonDecorationUnstable(bridge, factory)
 {
+    Display *dpy = QX11Info::display();
+    int screen = DefaultScreen(dpy);
+    char net_wm_cm_name[100];
+    sprintf(net_wm_cm_name, "_NET_WM_CM_S%d", screen);
+    m_compositingWatch = new KSelectionWatcher(net_wm_cm_name, -1, this);
+    // HACK: we have to delay the update to the mask and repaint of window a little bit
+    // otherwise we would be faster than KWin core resulting in not painted shadows
+    // the selection watcher and the timer should be removed when KWin provides the info
+    m_compositingTimer = new QTimer(this);
+    m_compositingTimer->setSingleShot(true);
+    m_compositingTimer->setInterval(100);
+    connect(m_compositingWatch, SIGNAL(newOwner(Window)), m_compositingTimer, SLOT(start()));
+    connect(m_compositingWatch, SIGNAL(lostOwner()), m_compositingTimer, SLOT(start()));
+    connect(m_compositingTimer, SIGNAL(timeout()), this, SLOT(compositingChanged()));
 }
 
 AuroraeClient::~AuroraeClient()
@@ -763,6 +780,12 @@ void AuroraeClient::updateWindowShape()
                                 h-conf.paddingTop()-conf.paddingBottom()));
     QRegion mask = deco->mask().translated(conf.paddingLeft(), conf.paddingTop());
     setMask(mask);
+}
+
+void AuroraeClient::compositingChanged()
+{
+    updateWindowShape();
+    widget()->update();
 }
 
 } // namespace Aurorae

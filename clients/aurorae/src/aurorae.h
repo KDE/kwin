@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcommondecoration.h>
 #include <KDE/Plasma/FrameSvg>
 
+class KSelectionWatcher;
 
 namespace Aurorae
 {
@@ -106,6 +107,7 @@ private:
 
 class AuroraeClient : public KCommonDecorationUnstable
 {
+    Q_OBJECT
 public:
     AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory);
     ~AuroraeClient();
@@ -124,6 +126,13 @@ public:
 protected:
     void reset(unsigned long changed);
     void paintEvent(QPaintEvent *event);
+
+private Q_SLOTS:
+    void compositingChanged();
+
+private:
+    KSelectionWatcher *m_compositingWatch;
+    QTimer *m_compositingTimer;
 };
 
 }
