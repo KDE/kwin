@@ -45,7 +45,10 @@ LogoutEffect::LogoutEffect()
     Atom hack = XInternAtom( display(), "_KWIN_LOGOUT_EFFECT", False );
     XChangeProperty( display(), sel, hack, hack, 8, PropModeReplace, (unsigned char*)&hack, 1 );
     // the atom is not removed when effect is destroyed, this is temporary anyway
-
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    blurTexture = NULL;
+    blurTarget = NULL;
+#endif
     reconfigure( ReconfigureAll );
     }
 
@@ -60,29 +63,49 @@ LogoutEffect::~LogoutEffect()
 void LogoutEffect::reconfigure( ReconfigureFlags )
     {
     KConfigGroup conf = effects->effectConfig( "Logout" );
-    bool useBlur = conf.readEntry( "UseBlur", true );
-
+    useBlur = conf.readEntry( "UseBlur", true );
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    blurSupported = false;
+    delete blurTexture;
     blurTexture = NULL;
+    delete blurTarget;
     blurTarget = NULL;
-    if( effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() && useBlur )
-        { // TODO: It seems that it is not possible to create a GLRenderTarget that has
-          //       a different size than the display right now. Most likely a KWin core bug.
-        // Create texture and render target
-        blurTexture = new GLTexture( displayWidth(), displayHeight() );
-        blurTexture->setFilter( GL_LINEAR_MIPMAP_LINEAR );
-        blurTexture->setWrapMode( GL_CLAMP_TO_EDGE );
-
-        blurTarget = new GLRenderTarget( blurTexture );
-        if( blurTarget->valid() )
-            blurSupported = true;
-        }
+    blurSupported = false;
 #endif
     }
 
 void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    if ( !logoutWindow )
+        {
+        if (blurTexture)
+            {
+            delete blurTexture;
+            blurTexture = NULL;
+            delete blurTarget;
+            blurTarget = NULL;
+            blurSupported = false;
+            }
+        }
+    else if ( !blurTexture )
+        {
+        blurSupported = false;
+        delete blurTarget; // catch as we just tested the texture ;-P
+        if( effects->compositingType() == OpenGLCompositing && GLTexture::NPOTTextureSupported() && useBlur )
+            { // TODO: It seems that it is not possible to create a GLRenderTarget that has
+            //       a different size than the display right now. Most likely a KWin core bug.
+            // Create texture and render target
+            blurTexture = new GLTexture( displayWidth(), displayHeight() );
+            blurTexture->setFilter( GL_LINEAR_MIPMAP_LINEAR );
+            blurTexture->setWrapMode( GL_CLAMP_TO_EDGE );
+
+            blurTarget = new GLRenderTarget( blurTexture );
+            if( blurTarget->valid() )
+                blurSupported = true;
+            }
+        }
+#endif
+
     if( logoutWindow != NULL && !logoutWindowClosed )
         progress = qMin( 1.0, progress + time / animationTime( 2000.0 ));
     else if( progress > 0.0 )

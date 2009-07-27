@@ -54,7 +54,7 @@ class LogoutEffect
         bool logoutWindowPassed;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        bool blurSupported;
+        bool blurSupported, useBlur;
         GLTexture* blurTexture;
         GLRenderTarget* blurTarget;
         double windowOpacity;
