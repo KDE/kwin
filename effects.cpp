@@ -210,6 +210,8 @@ void EffectsHandlerImpl::windowUserMovedResized( EffectWindow* c, bool first, bo
 
 void EffectsHandlerImpl::windowOpacityChanged( EffectWindow* c, double old_opacity )
     {
+        if (!c)
+            return;
     if( static_cast<EffectWindowImpl*>(c)->window()->opacity() == old_opacity )
         return;
     foreach( const EffectPair &ep, loaded_effects )

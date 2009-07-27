@@ -853,7 +853,12 @@ void Client::applyWindowRules()
     setShortcut( rules()->checkShortcut( shortcut().toString()));
     // see also Client::setActive()
     if( isActive())
+        {
+        setOpacity( rules()->checkOpacityActive(opacity()*100)/100.0 );
         workspace()->disableGlobalShortcutsForClient( rules()->checkDisableGlobalShortcuts( false ));
+        }
+    else
+        setOpacity( rules()->checkOpacityInactive(opacity()*100)/100.0 );
     }
 
 void Client::updateWindowRules()
