@@ -1151,6 +1151,7 @@ void CubeEffect::postPaintScreen()
 
                 // delete the GL lists
                 glDeleteLists( glList, 3 );
+                desktopNameFrame.free();
                 }
             effects->addRepaintFull();
             }
@@ -2039,7 +2040,6 @@ void CubeEffect::setActive( bool active )
             mousePolling = false;
             }
         schedule_close = true;
-        desktopNameFrame.free();
         // we have to add a repaint, to start the deactivating
         effects->addRepaintFull();
         }
