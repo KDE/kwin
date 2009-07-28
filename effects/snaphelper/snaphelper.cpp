@@ -163,13 +163,20 @@ void SnapHelperEffect::postPaintScreen()
             }*/
         }
     else if( m_window )
+        {
+        if( m_window->isDeleted() )
+            m_window->unrefWindow();
         m_window = NULL;
+        }
     }
 
 void SnapHelperEffect::windowClosed( EffectWindow* w )
     {
     if( m_window == w )
+        {
+        m_window->refWindow();
         m_active = false;
+        }
     }
 
 void SnapHelperEffect::windowUserMovedResized( EffectWindow* w, bool first, bool last )
