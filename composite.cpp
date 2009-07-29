@@ -958,6 +958,12 @@ bool Client::shouldUnredirect() const
     return false;
     }
 
+void Client::addRepaintFull()
+    {
+    repaints_region = decorationRect();
+    workspace()->checkCompositeTimer();
+    }
+
 //****************************************
 // Unmanaged
 //****************************************
