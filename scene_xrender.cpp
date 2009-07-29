@@ -663,9 +663,12 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
     double yscale = 1;
     bool scaled = false;
 
-    Client *client = dynamic_cast<Client*>( toplevel ); 
+    Client *client = dynamic_cast<Client*>( toplevel );
+    Deleted *deleted = dynamic_cast<Deleted*>( toplevel );
     if ( client && Workspace::self()->decorationHasAlpha() )
         transformed_shape = QRegion( client->decorationRect() );
+    else if( deleted && Workspace::self()->decorationHasAlpha() )
+        transformed_shape = QRegion( deleted->decorationRect() );
     else
         transformed_shape = shape();
 
@@ -737,26 +740,45 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
                 transformed_shape = QRegion();
                 }
             }
-        if( client )
+        if( client || deleted )
             {
-            if( !client->noBorder() )
+            bool noBorder = true;
+            const QPixmap *left;
+            const QPixmap *top;
+            const QPixmap *right;
+            const QPixmap *bottom;
+            QRect tr, lr, rr, br;
+            QRect decorationRect;
+            if( client && !client->noBorder() )
+                {
+                noBorder = client->noBorder();
+                client->ensureDecorationPixmapsPainted();
+
+                left   = client->leftDecoPixmap();
+                top    = client->topDecoPixmap();
+                right  = client->rightDecoPixmap();
+                bottom = client->bottomDecoPixmap();
+                client->layoutDecorationRects( lr, tr, rr, br, Client::WindowRelative );
+                decorationRect = client->decorationRect();
+                }
+            if( deleted && !deleted->noBorder() )
+                {
+                noBorder = deleted->noBorder();
+                left   = deleted->leftDecoPixmap();
+                top    = deleted->topDecoPixmap();
+                right  = deleted->rightDecoPixmap();
+                bottom = deleted->bottomDecoPixmap();
+                deleted->layoutDecorationRects( lr, tr, rr, br );
+                decorationRect = deleted->decorationRect();
+                }
+            if( !noBorder )
                 {
                 // Paint the decoration
                 Picture alpha = alphaMask( data.opacity * data.decoration_opacity );
                 Display *dpy = display();
 
-                client->ensureDecorationPixmapsPainted();
-
-                const QPixmap *left   = client->leftDecoPixmap();
-                const QPixmap *top    = client->topDecoPixmap();
-                const QPixmap *right  = client->rightDecoPixmap();
-                const QPixmap *bottom = client->bottomDecoPixmap();
-
                 if( !scaled )
                     {
-                    QRect tr, lr, rr, br;
-                    client->layoutDecorationRects( lr, tr, rr, br, Client::WindowRelative );
-
                     tr = mapToScreen( mask, data, tr );
                     lr = mapToScreen( mask, data, lr );
                     rr = mapToScreen( mask, data, rr );
@@ -773,7 +795,7 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
                     }
                 else
                     {
-                    const QRect r = mapToScreen( mask, data, client->decorationRect() );
+                    const QRect r = mapToScreen( mask, data, decorationRect );
                     prepareTempPixmap( left, top, right, bottom );
                     XRenderSetPictureTransform( dpy, temp_pixmap->x11PictureHandle(), &xform );
                     XRenderComposite( dpy, PictOpOver, temp_pixmap->x11PictureHandle(), alpha, buffer,

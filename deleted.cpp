@@ -30,6 +30,11 @@ namespace KWin
 Deleted::Deleted( Workspace* ws )
     : Toplevel( ws )
     , delete_refcount( 1 )
+    , no_border( true )
+    , padding_left( 0 )
+    , padding_top( 0 )
+    , padding_right( 0 )
+    , padding_bottom( 0 )
     {
     }
 
@@ -63,6 +68,27 @@ void Deleted::copyToDeleted( Toplevel* c )
     contentsRect = QRect( c->clientPos(), c->clientSize());
     if( WinInfo* cinfo = dynamic_cast< WinInfo* >( info ))
         cinfo->disable();
+    Client* client = dynamic_cast<Client*>(c);
+    if( client )
+        {
+        no_border = client->noBorder();
+        padding_left = client->paddingLeft();
+        padding_right = client->paddingRight();
+        padding_bottom = client->paddingBottom();
+        padding_top = client->paddingTop();
+        if( !no_border )
+            {
+            client->layoutDecorationRects(decoration_left,
+                                          decoration_top,
+                                          decoration_right,
+                                          decoration_bottom,
+                                          Client::WindowRelative);
+            decorationPixmapLeft = *client->leftDecoPixmap();
+            decorationPixmapRight = *client->rightDecoPixmap();
+            decorationPixmapTop = *client->topDecoPixmap();
+            decorationPixmapBottom = *client->bottomDecoPixmap();
+            }
+        }
     }
 
 void Deleted::unrefWindow( bool delay )
@@ -95,6 +121,19 @@ QSize Deleted::clientSize() const
 void Deleted::debug( kdbgstream& stream ) const
     {
     stream << "\'ID:" << window() << "\' (deleted)";
+    }
+
+void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom) const
+    {
+    left = decoration_left;
+    top = decoration_top;
+    right = decoration_right;
+    bottom = decoration_bottom;
+    }
+
+QRect Deleted::decorationRect() const
+    {
+    return rect().adjusted(-padding_left, -padding_top, padding_top, padding_bottom);
     }
 
 } // namespace

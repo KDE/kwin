@@ -1452,21 +1452,42 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     texture.unbind();
 
     // decorations
-    if( Client *client = dynamic_cast<Client*>(toplevel) )
+    Client *client = dynamic_cast<Client*>(toplevel);
+    Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
+    if( client || deleted )
         {
-        if (!client->noBorder())
+        bool noBorder = true;
+        bool updateDeco = false;
+        const QPixmap *left;
+        const QPixmap *top;
+        const QPixmap *right;
+        const QPixmap *bottom;
+        QRect topRect, leftRect, rightRect, bottomRect;
+        if( client && !client->noBorder() )
             {
-            bool updateDeco = client->decorationPixmapRequiresRepaint();
+            noBorder = false;
+            updateDeco = client->decorationPixmapRequiresRepaint();
             client->ensureDecorationPixmapsPainted();
 
-            const QPixmap *left   = client->leftDecoPixmap();
-            const QPixmap *top    = client->topDecoPixmap();
-            const QPixmap *right  = client->rightDecoPixmap();
-            const QPixmap *bottom = client->bottomDecoPixmap();
-
-            WindowQuadList topList, leftList, rightList, bottomList;
-            QRect topRect, leftRect, rightRect, bottomRect;
             client->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect, Client::WindowRelative);
+
+            left   = client->leftDecoPixmap();
+            top    = client->topDecoPixmap();
+            right  = client->rightDecoPixmap();
+            bottom = client->bottomDecoPixmap();
+            }
+        if( deleted && !deleted->noBorder() )
+            {
+            noBorder = false;
+            left   = deleted->leftDecoPixmap();
+            top    = deleted->topDecoPixmap();
+            right  = deleted->rightDecoPixmap();
+            bottom = deleted->bottomDecoPixmap();
+            deleted->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect);
+            }
+        if( !noBorder )
+            {
+            WindowQuadList topList, leftList, rightList, bottomList;
 
             foreach( WindowQuad quad, decoration )
                 {

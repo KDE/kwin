@@ -39,6 +39,14 @@ class Deleted
         virtual int desktop() const;
         virtual QPoint clientPos() const;
         virtual QSize clientSize() const;
+        const QPixmap *topDecoPixmap() const { return &decorationPixmapTop; }
+        const QPixmap *leftDecoPixmap() const { return &decorationPixmapLeft; }
+        const QPixmap *bottomDecoPixmap() const { return &decorationPixmapBottom; }
+        const QPixmap *rightDecoPixmap() const { return &decorationPixmapRight; }
+        bool noBorder() const { return no_border; }
+        void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
+        virtual void addRepaintFull(); // in composite.cpp
+        QRect decorationRect() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
         virtual bool shouldUnredirect() const;
@@ -50,6 +58,17 @@ class Deleted
         double window_opacity;
         int desk;
         QRect contentsRect; // for clientPos()/clientSize()
+
+        QPixmap decorationPixmapLeft;
+        QPixmap decorationPixmapRight;
+        QPixmap decorationPixmapTop;
+        QPixmap decorationPixmapBottom;
+        bool no_border;
+        QRect decoration_left;
+        QRect decoration_right;
+        QRect decoration_top;
+        QRect decoration_bottom;
+        int padding_left, padding_top, padding_right, padding_bottom;
     };
 
 inline void Deleted::refWindow()

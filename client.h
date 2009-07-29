@@ -306,6 +306,11 @@ class Client
         const QPixmap *bottomDecoPixmap() const { return &decorationPixmapBottom; } 
         const QPixmap *rightDecoPixmap() const { return &decorationPixmapRight; } 
 
+        int paddingLeft() const { return padding_left; }
+        int paddingRight() const { return padding_right; }
+        int paddingTop() const { return padding_top; }
+        int paddingBottom() const { return padding_bottom; }
+
         bool decorationPixmapRequiresRepaint();
         void ensureDecorationPixmapsPainted();
 

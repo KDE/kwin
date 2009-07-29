@@ -997,4 +997,10 @@ bool Deleted::shouldUnredirect() const
     return false;
     }
 
+void Deleted::addRepaintFull()
+    {
+    repaints_region = decorationRect();
+    workspace()->checkCompositeTimer();
+    }
+
 } // namespace

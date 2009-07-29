@@ -116,7 +116,7 @@ class Toplevel
         void suspendUnredirect( bool suspend );
         void addRepaint( const QRect& r );
         void addRepaint( int x, int y, int w, int h );
-        void addRepaintFull();
+        virtual void addRepaintFull();
         // these call workspace->addRepaint(), but first transform the damage if needed
         void addWorkspaceRepaint( const QRect& r );
         void addWorkspaceRepaint( int x, int y, int w, int h );
@@ -154,6 +154,7 @@ class Toplevel
         int bit_depth;
         NETWinInfo2* info;
         bool ready_for_painting;
+        QRegion repaints_region; // updating, repaint just requires repaint of that area
     private:
         static QByteArray staticWindowRole(WId);
         static QByteArray staticSessionId(WId);
@@ -169,7 +170,6 @@ class Toplevel
         Damage damage_handle;
 #endif
         QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
-        QRegion repaints_region; // updating, repaint just requires repaint of that area
         bool is_shape;
         EffectWindowImpl* effect_window;
         QByteArray resource_name;
