@@ -516,6 +516,8 @@ void WobblyWindowsEffect::windowClosed(EffectWindow* w)
         {
             freeWobblyInfo(wwi);
             windows.remove(w);
+            if( windows.isEmpty() )
+                effects->addRepaintFull();
         }
     }
     else if (m_closeEffectEnabled)
@@ -1172,6 +1174,8 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
         }
         freeWobblyInfo(wwi);
         windows.remove(w);
+        if( windows.isEmpty() )
+            effects->addRepaintFull();
         return false;
     }
 
