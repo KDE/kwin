@@ -485,7 +485,18 @@ WindowQuadList Scene::Window::buildQuads( bool force ) const
         QRegion decoration = (client && Workspace::self()->decorationHasAlpha() ?
                               QRegion(client->decorationRect()) : shape()) - contents;
         ret = makeQuads( WindowQuadContents, contents );
-        ret += makeQuads( WindowQuadDecoration, decoration );
+        if( (client && !client->isShade()) || !client )
+            ret += makeQuads( WindowQuadDecoration, decoration );
+        else
+            {
+            // this is a shaded client, we have to create four decoartion quads
+            QRect left, top, right, bottom;
+            client->layoutDecorationRects( left, top, right, bottom, Client::WindowRelative );
+            ret += makeQuads( WindowQuadDecoration, top );
+            ret += makeQuads( WindowQuadDecoration, bottom );
+            ret += makeQuads( WindowQuadDecoration, left );
+            ret += makeQuads( WindowQuadDecoration, right );
+            }
         }
     effects->buildQuads( static_cast<Client*>( toplevel )->effectWindow(), ret );
     cached_quad_list = new WindowQuadList( ret );
