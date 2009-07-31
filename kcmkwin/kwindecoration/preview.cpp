@@ -23,8 +23,6 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <QDBusMessage>
-#include <QDBusConnection>
 #include <QLabel>
 #include <QStyle>
 //Added by qt3to4:
@@ -39,6 +37,7 @@
 #include <kdecorationfactory.h>
 #include <kdecoration_plugins_p.h>
 #include <QX11Info>
+#include <kwindowsystem.h>
 
 // FRAME the preview doesn't update to reflect the changes done in the kcm
 
@@ -145,12 +144,24 @@ void KDecorationPreview::positionPreviews()
     size = QSize( width() - xoffset, height() - titleBarHeight )
                 .expandedTo( deco[Active]->minimumSize() );
     geometry = QRect( QPoint( 0, titleBarHeight ), size );
+    if (KDecorationUnstable *unstable = qobject_cast<KDecorationUnstable *>(deco[Active])) {
+        int padLeft, padRight, padTop, padBottom;
+        unstable->padding(padLeft, padRight, padTop, padBottom);
+        geometry.adjust(-padLeft, -padTop, padRight, padBottom);
+    }
+    geometry.adjust(10, 10, -10, -10);
     deco[Active]->widget()->setGeometry( QStyle::visualRect( this->layoutDirection(), this->rect(), geometry ) );
 
     // Resize the inactive window
     size = QSize( width() - xoffset, height() - titleBarHeight )
                 .expandedTo( deco[Inactive]->minimumSize() );
     geometry = QRect( QPoint( xoffset, 0 ), size );
+    if (KDecorationUnstable *unstable = qobject_cast<KDecorationUnstable *>(deco[Inactive])) {
+        int padLeft, padRight, padTop, padBottom;
+        unstable->padding(padLeft, padRight, padTop, padBottom);
+        geometry.adjust(-padLeft, -padTop, padRight, padBottom);
+    }
+    geometry.adjust(10, 10, -10, -10);
     deco[Inactive]->widget()->setGeometry( QStyle::visualRect( this->layoutDirection(), this->rect(), geometry ) );
     }
 
@@ -442,21 +453,7 @@ void KDecorationPreviewBridge::grabXServer( bool )
 
 bool KDecorationPreviewBridge::compositingActive() const
     {
-        
-    QDBusMessage message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "compositingActive" );
-    QDBusMessage reply = QDBusConnection::sessionBus().call( message );
-    if( reply.type() != QDBusMessage::ReplyMessage ) 
-        {
-        return false;
-        }
-        
-    if( reply.arguments().empty() ) 
-        {
-        return false;
-        }
-        
-    return reply.arguments()[0].toBool();
-
+    return KWindowSystem::compositingActive();
     }
 
 KDecorationPreviewOptions::KDecorationPreviewOptions()

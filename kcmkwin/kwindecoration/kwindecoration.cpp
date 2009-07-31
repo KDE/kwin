@@ -158,7 +158,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 	// preview
 	QVBoxLayout* previewLayout = new QVBoxLayout();
     layout->addLayout( previewLayout );
-	previewLayout->setMargin( KDialog::marginHint() );
+	previewLayout->setMargin( 0 );
 
 	preview = new KDecorationPreview( this );
 	previewLayout->addWidget(preview);
