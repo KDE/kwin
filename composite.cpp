@@ -411,7 +411,7 @@ void Workspace::performCompositing()
           // TODO I think effects->transformWindowDamage() doesn't need to be called here,
           // pre-paint will extend painted window areas as necessary.
         repaints_region |= c->repaints().translated( c->pos());
-        c->resetRepaints( c->rect());
+        c->resetRepaints( c->decorationRect());
         }
     QRegion repaints = repaints_region;
     // clear all repaints, so that post-pass can add repaints for the next repaint

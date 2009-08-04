@@ -65,6 +65,7 @@ class Toplevel
         virtual QPoint clientPos() const = 0; // inside of geometry()
         virtual QSize clientSize() const = 0;
         virtual QRect visibleRect() const; // the area the window occupies on the screen
+        virtual QRect decorationRect() const; // rect including the decoration shadows
 
         // prefer isXXX() instead
         // 0 for supported types means default for managed/unmanaged types
@@ -243,6 +244,11 @@ inline int Toplevel::height() const
 inline QRect Toplevel::rect() const
     {
     return QRect( 0, 0, width(), height());
+    }
+
+inline QRect Toplevel::decorationRect() const
+    {
+    return rect();
     }
 
 inline bool Toplevel::readyForPainting() const
