@@ -184,11 +184,6 @@ static int x11ErrorHandler( Display* d, XErrorEvent* e )
     if( kwin_sync )
         fprintf( stderr, "%s\n", kBacktrace().toLocal8Bit().data() );
 
-    if( initting )
-        {
-        fputs( i18n( "kwin: failure during initialization; aborting").toLocal8Bit(), stderr );
-        exit( 1 );
-        }
     return 0;
     }
 
