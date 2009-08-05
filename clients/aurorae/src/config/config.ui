@@ -60,9 +60,16 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
+      <widget class="KPushButton" name="ghnsButton">
+       <property name="text">
+        <string>Get New Themes...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="KPushButton" name="installNewThemeButton">
        <property name="text">
-        <string>Install New Theme</string>
+        <string>Install New Theme...</string>
        </property>
       </widget>
      </item>

@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KTar>
 #include <KUrlRequesterDialog>
 #include <KDE/Plasma/FrameSvg>
+#include <KDE/KNS/Engine>
 
 #include <QFile>
 #include <QPainter>
@@ -495,6 +496,7 @@ AuroraeConfig::AuroraeConfig(KConfig* conf, QWidget* parent)
     Q_UNUSED(conf)
     m_ui = new AuroraeConfigUI(parent);
     m_ui->aboutPushButton->setIcon(KIcon("dialog-information"));
+    m_ui->ghnsButton->setIcon(KIcon("get-hot-new-stuff"));
 
     m_themeModel = new ThemeModel(this);
     m_ui->theme->setModel(m_themeModel);
@@ -508,6 +510,7 @@ AuroraeConfig::AuroraeConfig(KConfig* conf, QWidget* parent)
     connect(m_ui->theme, SIGNAL(currentIndexChanged(int)), this, SIGNAL(changed()));
     connect(m_ui->installNewThemeButton, SIGNAL(clicked(bool)), this, SLOT(slotInstallNewTheme()));
     connect(m_ui->aboutPushButton, SIGNAL(clicked(bool)), this, SLOT(slotAboutClicked()));
+    connect(m_ui->ghnsButton, SIGNAL(clicked(bool)), this, SLOT(slotGHNSClicked()));
     m_ui->show();
 }
 
@@ -611,6 +614,21 @@ void AuroraeConfig::slotInstallNewTheme()
     const QString themeName = m_ui->theme->itemData(index, ThemeModel::PackageNameRole).toString();
     m_themeModel->reload();
     m_ui->theme->setCurrentIndex(m_themeModel->indexOf(themeName));
+}
+
+void AuroraeConfig::slotGHNSClicked()
+{
+    KNS::Engine engine(NULL);
+    if (engine.init("aurorae.knsrc")) {
+        KNS::Entry::List entries = engine.downloadDialogModal(m_ui);
+
+        if (entries.size() > 0) {
+            int index = m_ui->theme->currentIndex();
+            const QString themeName = m_ui->theme->itemData(index, ThemeModel::PackageNameRole).toString();
+            m_themeModel->reload();
+            m_ui->theme->setCurrentIndex(m_themeModel->indexOf(themeName));
+        }
+    }
 }
 
 } // namespace

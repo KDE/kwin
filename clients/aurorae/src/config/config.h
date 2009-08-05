@@ -119,6 +119,7 @@ public slots:
 private slots:
     void slotAboutClicked();
     void slotInstallNewTheme();
+    void slotGHNSClicked();
 
 private:
     QWidget *m_parent;
