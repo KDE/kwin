@@ -302,7 +302,8 @@ void ThemeDelegate::paintDeco(QPainter *painter, bool active, const QStyleOption
         }
         else if (character == 'M') {
             KIcon icon = KIcon( "xorg" );
-            QSize buttonSize(buttonWidth,buttonHeight);
+            int iconSize = qMin(themeConfig->buttonWidthMenu(), themeConfig->buttonHeight());
+            QSize buttonSize(iconSize,iconSize);
             painter->drawPixmap(QPoint(x,y), icon.pixmap(buttonSize));
             x += themeConfig->buttonWidthMenu();
         }

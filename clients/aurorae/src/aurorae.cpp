@@ -269,7 +269,9 @@ void AuroraeButton::paintEvent(QPaintEvent *event)
 
     if (type() == MenuButton) {
         const QIcon icon = decoration()->icon();
-        const QSize size = icon.actualSize(QSize(16, 16));
+        ThemeConfig config = AuroraeFactory::instance()->themeConfig();
+        int iconSize = qMin(config.buttonWidthMenu(), config.buttonHeight());
+        const QSize size = icon.actualSize(QSize(iconSize, iconSize));
         QPixmap iconPix = icon.pixmap(size);
         KIconEffect *effect = KIconLoader::global()->iconEffect();
         if (active) {
