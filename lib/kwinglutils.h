@@ -213,11 +213,11 @@ class KWIN_EXPORT GLShader
         void bind();
         void unbind();
 
-        int uniformLocation(const QString& name);
-        bool setUniform(const QString& name, float value);
-        bool setUniform(const QString& name, int value);
-        int attributeLocation(const QString& name);
-        bool setAttribute(const QString& name, float value);
+        int uniformLocation(const char* name);
+        bool setUniform(const char* name, float value);
+        bool setUniform(const char* name, int value);
+        int attributeLocation(const char* name);
+        bool setAttribute(const char* name, float value);
 
         void setTextureWidth( float width );
         void setTextureHeight( float height );
@@ -237,7 +237,6 @@ class KWIN_EXPORT GLShader
     private:
         unsigned int mProgram;
         bool mValid;
-        QHash< QString, int >* mVariableLocations;
         static bool mFragmentShaderSupported;
         static bool mVertexShaderSupported;
         float mTextureWidth;

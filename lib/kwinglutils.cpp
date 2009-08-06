@@ -732,7 +732,6 @@ void GLShader::initStatic()
 GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
     {
     mValid = false;
-    mVariableLocations = 0;
     mProgram = 0;
     mTextureWidth = -1.0f;
     mTextureHeight = -1.0f;
@@ -742,12 +741,6 @@ GLShader::GLShader(const QString& vertexfile, const QString& fragmentfile)
 
 GLShader::~GLShader()
 {
-    if(mVariableLocations)
-    {
-        mVariableLocations->clear();
-        delete mVariableLocations;
-    }
-
     if(mProgram)
     {
         glDeleteProgram(mProgram);
@@ -878,8 +871,6 @@ bool GLShader::load(const QString& vertexsource, const QString& fragmentsource)
         kDebug(1212) << "Shader linking log:"<< log;
     delete[] log;
 
-    mVariableLocations = new QHash<QString, int>;
-
     mValid = true;
     return true;
     }
@@ -894,21 +885,13 @@ void GLShader::unbind()
     glUseProgram(0);
     }
 
-int GLShader::uniformLocation(const QString& name)
+int GLShader::uniformLocation(const char* name)
     {
-    if(!mVariableLocations)
-        {
-        return -1;
-        }
-    if(!mVariableLocations->contains(name))
-        {
-        int location = glGetUniformLocation(mProgram, name.toLatin1().data());
-        mVariableLocations->insert(name, location);
-        }
-    return mVariableLocations->value(name);
+    int location = glGetUniformLocation(mProgram, name);
+    return location;
     }
 
-bool GLShader::setUniform(const QString& name, float value)
+bool GLShader::setUniform(const char* name, float value)
     {
     int location = uniformLocation(name);
     if(location >= 0)
@@ -918,7 +901,7 @@ bool GLShader::setUniform(const QString& name, float value)
     return (location >= 0);
     }
 
-bool GLShader::setUniform(const QString& name, int value)
+bool GLShader::setUniform(const char* name, int value)
     {
     int location = uniformLocation(name);
     if(location >= 0)
@@ -928,21 +911,13 @@ bool GLShader::setUniform(const QString& name, int value)
     return (location >= 0);
     }
 
-int GLShader::attributeLocation(const QString& name)
+int GLShader::attributeLocation(const char* name)
     {
-    if(!mVariableLocations)
-        {
-        return -1;
-        }
-    if(!mVariableLocations->contains(name))
-        {
-        int location = glGetAttribLocation(mProgram, name.toLatin1().data());
-        mVariableLocations->insert(name, location);
-        }
-    return mVariableLocations->value(name);
+    int location = glGetAttribLocation(mProgram, name);
+    return location;
     }
 
-bool GLShader::setAttribute(const QString& name, float value)
+bool GLShader::setAttribute(const char* name, float value)
     {
     int location = attributeLocation(name);
     if(location >= 0)
