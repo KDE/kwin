@@ -130,6 +130,8 @@ bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
 int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
     bool maximized = isMaximized();
+    // increase the border of the decoration by including the shadow as clickable area
+    int extraBorder = maximized ? 0 : EXTENDED_HITAREA;
     int frameWidth = OxygenFactory::borderSize();
 
     switch (lm) {
@@ -141,11 +143,11 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
                 return 0;
             } else {
                 // Even for thin borders (2px wide) we want to preserve
-                // the rounded corners having a minimum height of 7px
+                // the rounded corners having a minimum height of 4px
                 if (lm == LM_BorderBottom) {
-                    return qMax(frameWidth, 4);
+                    return qMax(frameWidth, 4) + extraBorder;
                 } else {
-                    return frameWidth;
+                    return frameWidth + extraBorder;
                 }
             }
         }
@@ -153,9 +155,9 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_TitleEdgeTop:
         {
             if (respectWindowState && maximized) {
-                return 0;
+                return 0 + extraBorder;
             } else {
-                return TFRAMESIZE;
+                return TFRAMESIZE + extraBorder;
             }
         }
 
@@ -168,9 +170,9 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_TitleEdgeRight:
         {
             if (respectWindowState && maximized) {
-                return 0;
+                return 0 + extraBorder;
             } else {
-                return 6;
+                return 6 + extraBorder;
             }
         }
 
@@ -200,7 +202,7 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_OuterPaddingRight:
         case LM_OuterPaddingTop:
         case LM_OuterPaddingBottom:
-            return SHADOW_WIDTH;
+            return SHADOW_WIDTH - extraBorder;
 
         default:
             return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -317,8 +319,11 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     QColor light = helper_.calcLightColor( color );
     QColor dark = helper_.calcDarkColor( color );
 
+    bool maximized  = isMaximized();
+    int extraBorder = maximized ? 0 : EXTENDED_HITAREA;
+
     const int titleHeight = layoutMetric(LM_TitleHeight);
-    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top();
+    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top() - extraBorder;
     const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
     const int marginLeft = layoutMetric(LM_TitleBorderLeft);
     const int marginRight = layoutMetric(LM_TitleBorderRight);
@@ -331,7 +336,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     // draw shadow
 
-    if (compositingActive() && !isMaximized())
+    if (compositingActive() && !maximized)
         shadowTiles(color,KDecoration::options()->color(ColorTitleBar),
                 SHADOW_WIDTH, isActive())->render( frame.adjusted(-SHADOW_WIDTH+4,
                     -SHADOW_WIDTH+4, SHADOW_WIDTH-4, SHADOW_WIDTH-4),
@@ -414,7 +419,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     }
 
     // Draw shadows of the frame
-    if(isMaximized())
+    if(maximized)
         return;
 
     helper_.drawFloatFrame(&painter, frame, color, !compositingActive(), isActive(),
