@@ -143,7 +143,7 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
                 // Even for thin borders (2px wide) we want to preserve
                 // the rounded corners having a minimum height of 7px
                 if (lm == LM_BorderBottom) {
-                    return qMax(frameWidth, 7);
+                    return qMax(frameWidth, 4);
                 } else {
                     return frameWidth;
                 }
