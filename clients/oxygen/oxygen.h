@@ -35,6 +35,7 @@ namespace Oxygen
 
 static const int OXYGEN_BUTTONSIZE      = 22;
 static const qreal SHADOW_WIDTH         = 25.5;
+static const int EXTENDED_HITAREA       = 2;
 #define TFRAMESIZE 3
 
 enum ButtonType {
