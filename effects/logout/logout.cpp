@@ -62,9 +62,9 @@ LogoutEffect::~LogoutEffect()
 
 void LogoutEffect::reconfigure( ReconfigureFlags )
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     KConfigGroup conf = effects->effectConfig( "Logout" );
     useBlur = conf.readEntry( "UseBlur", true );
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     delete blurTexture;
     blurTexture = NULL;
     delete blurTarget;
