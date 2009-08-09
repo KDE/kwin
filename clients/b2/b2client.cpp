@@ -1145,28 +1145,31 @@ static void redraw_pixmaps()
 	const bool isDown = (i == Down || i == IDown);
 	bool isAct = (i < 3);
 
-	QSize pinSize(16, 16);
-	QBitmap white = QBitmap::fromData(pinSize,
-		isDown ? pindown_white_bits : pinup_white_bits, 
+	const QPoint origin(0, 0);
+	const QSize pinSize(16, 16);
+	QBitmap white = QBitmap::fromData(pinSize,                                                                   
+		isDown ? pindown_white_bits : pinup_white_bits,                                                      
+		QImage::Format_MonoLSB);                                                                             
+	QBitmap gray = QBitmap::fromData(pinSize,                                                                    
+		isDown ? pindown_gray_bits : pinup_gray_bits,                                                        
+		QImage::Format_MonoLSB);                                                                             
+	QBitmap dgray = QBitmap::fromData(pinSize,                                                                   
+		isDown ? pindown_dgray_bits : pinup_dgray_bits,                                                      
 		QImage::Format_MonoLSB);
-	QBitmap gray = QBitmap::fromData(pinSize,
-		isDown ? pindown_gray_bits : pinup_gray_bits, 
-		QImage::Format_MonoLSB);
-	QBitmap dgray = QBitmap::fromData(pinSize,
-		isDown ? pindown_dgray_bits : pinup_dgray_bits, 
-		QImage::Format_MonoLSB);
-
+	QPixmap maskedImage(16, 16);
 	QPixmap *pix = pixmap[P_PINUP + i];
 	QColor color = isAct ? activeColor : inactiveColor;
-	QPoint origin(0, 0);
 	QImage pin(16, 16, QImage::Format_ARGB32_Premultiplied);
         p.begin(&pin);
-	p.setPen(color.light(150));
-	p.drawPixmap(origin, white);
-	p.setPen(color);
-	p.drawPixmap(origin, gray);
-	p.setPen(color.dark(150));
-	p.drawPixmap(origin, dgray);
+	maskedImage.setMask(white);
+	maskedImage.fill(color.light(150));
+	p.drawPixmap(origin, maskedImage);
+	maskedImage.setMask(gray);
+	maskedImage.fill(color);
+	p.drawPixmap(origin, maskedImage);
+	maskedImage.setMask(dgray);
+	maskedImage.fill(color.dark(150));
+	p.drawPixmap(origin, maskedImage);
 	p.end();
 	*pix = QPixmap::fromImage(pin);
     }
