@@ -62,6 +62,8 @@ PlastikButton::PlastikButton(ButtonType type, PlastikClient *parent)
 
 PlastikButton::~PlastikButton()
 {
+    animTmr->stop();
+    delete animTmr;
 }
 
 void PlastikButton::reset(unsigned long changed)
