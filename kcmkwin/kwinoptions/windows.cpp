@@ -120,7 +120,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     focusStealing = new QComboBox( this );
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "None" ));
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Low" ));
-    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Normal" ));
+    focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Medium" ));
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "High" ));
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Extreme" ));
     wtstr = i18n( "<p>This option specifies how much KWin will try to prevent unwanted focus stealing "
@@ -132,8 +132,8 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
                   "<li><em>Low:</em> Prevention is enabled; when some window does not have support "
                   "for the underlying mechanism and KWin cannot reliably decide whether to "
                   "activate the window or not, it will be activated. This setting may have both "
-                  "worse and better results than normal level, depending on the applications.</li>"
-                  "<li><em>Normal:</em> Prevention is enabled.</li>"
+                  "worse and better results than the medium level, depending on the applications.</li>"
+                  "<li><em>Medium:</em> Prevention is enabled.</li>"
                   "<li><em>High:</em> New windows get activated only if no window is currently active "
                   "or if they belong to the currently active application. This setting is probably "
                   "not really usable when not using mouse focus policy.</li>"
