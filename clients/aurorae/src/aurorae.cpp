@@ -685,6 +685,27 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
         }
     }
 
+    // restrict painting on the decoration - no need to paint behind the window
+    int left, right, top, bottom;
+    decoration()->borders(left, right, top, bottom);
+    painter.setClipping(true);
+    painter.setClipRect(0, 0,
+                        left + conf.paddingLeft(),
+                        height() + conf.paddingTop() + conf.paddingBottom(),
+                        Qt::ReplaceClip);
+    painter.setClipRect(0, 0,
+                        width() + conf.paddingLeft() + conf.paddingRight(),
+                        top + conf.paddingTop(),
+                        Qt::UniteClip);
+    painter.setClipRect(width() - right + conf.paddingLeft(), 0,
+                        right + conf.paddingRight(),
+                        height() + conf.paddingTop() + conf.paddingBottom(),
+                        Qt::UniteClip);
+    painter.setClipRect(0, height() - bottom + conf.paddingTop(),
+                        width() + conf.paddingLeft() + conf.paddingRight(),
+                        bottom + conf.paddingBottom(),
+                        Qt::UniteClip);
+
     // top
     if (maximized) {
         frame->setEnabledBorders(Plasma::FrameSvg::NoBorder);
