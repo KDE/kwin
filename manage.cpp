@@ -354,6 +354,7 @@ bool Client::manage( Window w, bool isMapped )
     if( init_minimize )
         minimize( true ); // No animation
 
+
     // SELI TODO: This seems to be mainly for kstart and ksystraycmd
     // probably should be replaced by something better
     bool doNotShow = false;
@@ -370,6 +371,7 @@ bool Client::manage( Window w, bool isMapped )
         setSkipTaskbar( session->skipTaskbar, true );
         setSkipPager( session->skipPager );
         setShade( session->shaded ? ShadeNormal : ShadeNone );
+        setOpacity( session->opacity );
         if( session->maximized != MaximizeRestore )
             {
             maximize( MaximizeMode( session->maximized ));

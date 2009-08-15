@@ -113,6 +113,7 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
     	    // the config entry is called "iconified" for back. comp. reasons
             // (kconf_update script for updating session files would be too complicated)
             cg.writeEntry( QString("iconified")+n, c->isMinimized() );
+            cg.writeEntry( QString("opacity")+n, c->opacity() );
             // the config entry is called "sticky" for back. comp. reasons
             cg.writeEntry( QString("sticky")+n, c->isOnAllDesktops() );
             cg.writeEntry( QString("shaded")+n, c->isShade() );
@@ -180,6 +181,7 @@ void Workspace::loadSessionInfo()
         info->fullscreen = cg.readEntry( QString("fullscreen")+n, 0 );
         info->desktop = cg.readEntry( QString("desktop")+n, 0 );
         info->minimized = cg.readEntry( QString("iconified")+n, false );
+        info->opacity = cg.readEntry( QString("opacity")+n, 1.0 );
         info->onAllDesktops = cg.readEntry( QString("sticky")+n, false );
         info->shaded = cg.readEntry( QString("shaded")+n, false );
         info->keepAbove = cg.readEntry( QString("staysOnTop")+n, false  );

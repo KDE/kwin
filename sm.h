@@ -61,6 +61,7 @@ struct SessionInfo
     QString shortcut;
     bool active; // means 'was active in the saved session'
     int stackingOrder;
+    float opacity;
     };
 
 
