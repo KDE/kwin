@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Example
 Name[de]=Beispiel
+Name[hr]=Primjer
 Name[ja]=例
 Name[km]=ឧទាហរណ៍
 Name[ko]=예제
@@ -19,6 +20,7 @@ Name[uk]=Приклад
 Name[x-test]=xxExamplexx
 Name[zh_TW]=範例
 Comment=An example theme based on Air desktop theme
+Comment[hr]=Primjer teme bazirane na temi Zrak
 Comment[km]=ស្បែក​គំរូ​ដែលមាន​មូលដ្ឋាន​លើ​ស្បែក​ផ្ទៃតុ Air
 Comment[ko]=Air 데스크톱 테마를 기반으로 한 예제 테마
 Comment[nb]=Et eksempeltema basert på skrivebordstemaet Air
