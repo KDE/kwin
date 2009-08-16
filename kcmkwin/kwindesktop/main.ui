@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>KWinDesktopConfigForm</class>
  <widget class="QWidget" name="KWinDesktopConfigForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>560</width>
+    <height>258</height>
+   </rect>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="margin">
     <number>0</number>
@@ -111,6 +119,13 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="messageLabel">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

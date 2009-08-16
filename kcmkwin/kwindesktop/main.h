@@ -67,6 +67,7 @@ class KWinDesktopConfig : public KCModule
     private:
         void init();
         bool effectEnabled( const QString& effect, const KConfigGroup& cfg ) const;
+        QString extrapolatedShortcut( int desktop ) const;
 
     private:
         KWinDesktopConfigForm* m_ui;

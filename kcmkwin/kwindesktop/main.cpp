@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KAction>
 #include <KCModuleProxy>
+#include <KGlobalAccel>
 #include <KPluginInfo>
 #include <KPluginFactory>
 #include <KConfigGroup>
@@ -326,6 +327,54 @@ QString KWinDesktopConfig::cachedDesktopName( int desktop )
     return m_desktopNames[ desktop -1 ];
     }
 
+QString KWinDesktopConfig::extrapolatedShortcut( int desktop ) const
+    {
+
+    if (!desktop || desktop > m_actionCollection->count())
+        return QString();
+    if (desktop == 1)
+        return QString("Ctrl+F1");
+
+    KAction *beforeAction = qobject_cast<KAction*>(m_actionCollection->actions().at(qMin(9, desktop - 2)));
+    QString before = beforeAction->globalShortcut(KAction::ActiveShortcut).toString();
+    if (before.isEmpty())
+        before = beforeAction->globalShortcut(KAction::DefaultShortcut).toString();
+
+    QString seq;
+    if ( before.contains( QRegExp("F[0-9]{1,2}") ) )
+    {
+        if (desktop < 13) // 10?
+            seq = QString("F%1").arg(desktop);
+        else if ( !before.contains("Shift") )
+            seq = "Shift+" + QString("F%1").arg(desktop - 10);
+    }       
+    else if ( before.contains( QRegExp("[0-9]") ) )
+    {
+        if (desktop == 10)
+            seq = "0";
+        else if (desktop > 10)
+        {
+            if ( !before.contains("Shift") )
+                seq = "Shift+" + QString::number(desktop == 20 ? 0 : (desktop - 10));
+        }
+        else
+            seq = QString::number(desktop);
+    }
+
+    if ( !seq.isEmpty() )
+        {
+        if (before.contains("Ctrl"))
+            seq.prepend("Ctrl+");
+        if (before.contains("Alt"))
+            seq.prepend("Alt+");
+        if (before.contains("Shift"))
+            seq.prepend("Shift+");
+        if (before.contains("Meta"))
+            seq.prepend("Meta+");
+        }
+    return seq;
+    }
+
 void KWinDesktopConfig::slotChangeShortcuts( int number )
     {
     if( (number < 1) || (number > maxDesktops) )
@@ -340,32 +389,44 @@ void KWinDesktopConfig::slotChangeShortcuts( int number )
             {
             // remove last actions
             m_actionCollection->removeAction( m_actionCollection->actions().last() );
+            m_ui->messageLabel->hide();
             }
         else
             {
             // add desktop
             int desktop = m_actionCollection->count() + 1;
-            KAction* action = qobject_cast<KAction*>(m_actionCollection->addAction(
-                                "Switch to Desktop " + QString::number(desktop)));
+            KAction* action = qobject_cast<KAction*>(m_actionCollection->addAction(QString("Switch to Desktop %1").arg(desktop)));
             action->setText( i18n("Switch to Desktop %1", desktop) );
             action->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
-            switch( desktop )
+            QString shortcutString = extrapolatedShortcut(desktop);
+            if (shortcutString.isEmpty())
                 {
-                case 1:
-                    action->setGlobalShortcut(KShortcut(Qt::CTRL+Qt::Key_F1), KAction::DefaultShortcut );
-                    break;
-                case 2:
-                    action->setGlobalShortcut(KShortcut(Qt::CTRL+Qt::Key_F2), KAction::DefaultShortcut );
-                    break;
-                case 3:
-                    action->setGlobalShortcut(KShortcut(Qt::CTRL+Qt::Key_F3), KAction::DefaultShortcut );
-                    break;
-                case 4:
-                    action->setGlobalShortcut(KShortcut(Qt::CTRL+Qt::Key_F4), KAction::DefaultShortcut );
-                    break;
-                default:
-                    // no shortcut
-                    break;
+                m_ui->messageLabel->setText(i18n( "No suitable Shortcut for Desktop %1 found", desktop ));
+                m_ui->messageLabel->show();
+                }
+            else
+                {
+                KShortcut shortcut(shortcutString);
+                if (sender())
+                    action->forgetGlobalShortcut();
+                if (KGlobalAccel::self()->isGlobalShortcutAvailable(shortcut.primary()))
+                    {
+                    action->setGlobalShortcut( shortcut );
+                    if (sender())
+                        {
+                        m_ui->messageLabel->setText(i18n( "Assigned global Shortcut \"%1\" to Desktop %2", shortcutString, desktop ));
+                        m_ui->messageLabel->show();
+                        }
+                    }
+                else
+                    {
+                    action->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+                    if (sender())
+                        {
+                        m_ui->messageLabel->setText(i18n( "Shortcut conflict: Could not set Shortcut %1 for Desktop %2", shortcutString, desktop ));
+                        m_ui->messageLabel->show();
+                        }
+                    }
                 }
             action->setProperty("isConfigurationAction", true);
             }
