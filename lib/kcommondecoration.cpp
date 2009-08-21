@@ -291,6 +291,9 @@ void KCommonDecoration::resetLayout()
         m_previewWidget = new QLabel(i18n("<center><b>%1 preview</b></center>", visibleName() ), widget());
         m_previewWidget->setAutoFillBackground(true);
         m_previewWidget->show();
+
+        // fix double deletion, see buttonDestroyed()
+        connect(m_previewWidget, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
     }
 
     addButtons(m_buttonsLeft,
@@ -308,6 +311,28 @@ void KCommonDecoration::resetLayout()
             layoutMetric(LM_TitleBorderLeft,false) + layoutMetric(LM_TitleBorderRight,false) +
             minTitleBarWidth;
     btnHideLastWidth = 0;
+}
+
+void KCommonDecoration::objDestroyed(QObject *obj)
+{
+    // make sure button deletion is reflected in the m_button[] array.
+    // this makes sure that m_button[]-entries are not destroyed
+    // twice, first in their KCommonDecorationButton/QObject
+    // destructor (button objects are parented with the decroation
+    // widget in KCommonDecoration constructor), and then in
+    // ~KCommonDecoration.  a QPointer<KCommonDecorationButton> would
+    // have been the better approach, but changing the button array
+    // would have been ABI incompatible & would have required creation
+    // of kcommondecorationprivate instance.
+    // the same applies to m_previewWidget.
+    for (int n=0; n<NumButtons; n++) {
+        if (m_button[n] == obj) {
+            m_button[n] = 0;
+            break;
+        }
+    }
+    if(obj == m_previewWidget)
+        m_previewWidget = 0;
 }
 
 int KCommonDecoration::buttonsLeftWidth() const
@@ -358,6 +383,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
                         connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
 
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
                         m_button[MenuButton] = btn;
                     }
                     break;
@@ -371,6 +399,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         btn->setOn( oad );
                         connect(btn, SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
 
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
                         m_button[OnAllDesktopsButton] = btn;
                     }
                     break;
@@ -381,6 +412,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         btn->setTipText(i18n("Help") );
                         connect(btn, SIGNAL(clicked()), SLOT(showContextHelp()));
 
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
                         m_button[HelpButton] = btn;
                     }
                     break;
@@ -390,6 +424,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         if (!btn) break;
                         btn->setTipText(i18n("Minimize") );
                         connect(btn, SIGNAL(clicked()), SLOT(minimize()));
+
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
 
                         m_button[MinButton] = btn;
                     }
@@ -405,6 +442,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         btn->setOn( max );
                         connect(btn, SIGNAL(clicked()), SLOT(slotMaximize()));
 
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
                         m_button[MaxButton] = btn;
                     }
                     break;
@@ -414,6 +454,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         if (!btn) break;
                         btn->setTipText(i18n("Close") );
                         connect(btn, SIGNAL(clicked()), SLOT(closeWindow()));
+
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
 
                         m_button[CloseButton] = btn;
                     }
@@ -428,6 +471,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         btn->setOn( above );
                         connect(btn, SIGNAL(clicked()), SLOT(slotKeepAbove()));
 
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
                         m_button[AboveButton] = btn;
                     }
                     break;
@@ -441,6 +487,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         btn->setOn( below );
                         connect(btn, SIGNAL(clicked()), SLOT(slotKeepBelow()));
 
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
                         m_button[BelowButton] = btn;
                     }
                     break;
@@ -453,6 +502,9 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString&
                         btn->setToggleButton(true);
                         btn->setOn( shaded );
                         connect(btn, SIGNAL(clicked()), SLOT(slotShade()));
+
+                        // fix double deletion, see objDestroyed()
+                        connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
 
                         m_button[ShadeButton] = btn;
                     }
@@ -911,7 +963,7 @@ QRect KCommonDecoration::titleRect() const
 
 
 KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent)
-    : QAbstractButton(parent->widget() ),
+    : QAbstractButton(parent?parent->widget():0 ),
         m_decoration(parent),
         m_type(type),
         m_realizeButtons(Qt::LeftButton),

@@ -337,6 +337,10 @@ class KWIN_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
         const KDecoration* decoration() const;
         KDecoration* decoration();
 
+    private Q_SLOTS:
+        /* look out for buttons that have been destroyed. */
+        void objDestroyed(QObject *obj);
+
     private:
         void resetLayout();
 
