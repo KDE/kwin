@@ -342,7 +342,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             {
             QRect rect;
             EffectWindow* w = windowAt( me->pos());
-            if( w != NULL )
+            if( w != NULL && (w->isMovable() || w->isMovableAcrossScreens()) )
                 { // Prepare it for moving
                 XDefineCursor( display(), input, QCursor( Qt::SizeAllCursor ).handle() );
                 windowMoveDiff = w->pos() - unscalePos( me->pos(), NULL );
