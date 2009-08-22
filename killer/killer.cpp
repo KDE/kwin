@@ -70,7 +70,7 @@ int main( int argc, char* argv[] )
         "<b>Any unsaved data will be lost.</b></p>" ,
 	  appname, caption, QString::number( pid ), QString( hostname ) );
     app.updateUserTimestamp( timestamp );
-    if( KMessageBox::warningContinueCancelWId( id, question, QString(), KGuiItem(i18n("&Terminate application %1", appname), "edit-bomb") ) == KMessageBox::Continue )
+    if( KMessageBox::warningContinueCancelWId( id, question, QString(), KGuiItem(i18n("&Terminate Application %1", appname), "edit-bomb") ) == KMessageBox::Continue )
         {    
 	if( hostname != "localhost" )
             {
