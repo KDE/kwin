@@ -46,7 +46,7 @@ namespace Nitrogen
   NitrogenConfiguration::NitrogenConfiguration( void ):
     titleAlignment_( Qt::AlignLeft ),
     buttonSize_( ButtonDefault ),
-    buttonType_( ButtonKde42 ),
+    buttonType_( ButtonKde43 ),
     frameBorder_( BorderDefault ),
     blendColor_( RadialBlending ),
     showStripes_( false ),
@@ -208,8 +208,8 @@ namespace Nitrogen
   {
     switch( value )
     {
-      case ButtonKde42: return "Kde 4.2";
-      case ButtonKde43: return "Kde 4.3";
+      case ButtonKde42: return "KDE 4.2";
+      case ButtonKde43: return "KDE 4.3";
       default: return NitrogenConfiguration().buttonTypeName();
     }
     
@@ -220,8 +220,8 @@ namespace Nitrogen
   //__________________________________________________
   NitrogenConfiguration::ButtonType NitrogenConfiguration::buttonType( QString value )
   {
-    if( value == "Kde 4.2" ) return ButtonKde42;
-    else if( value == "Kde 4.3" ) return ButtonKde43;
+    if( value == "KDE 4.2" ) return ButtonKde42;
+    else if( value == "KDE 4.3" ) return ButtonKde43;
     else return NitrogenConfiguration().buttonType();
   }
 

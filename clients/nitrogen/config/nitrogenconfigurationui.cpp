@@ -109,7 +109,7 @@ namespace Nitrogen
     label->setBuddy( buttonSize );
 
     // button type
-    gridLayout->addWidget( label = new QLabel( tr2i18n("Button type:"), box ), 2, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( tr2i18n("Button style:"), box ), 2, 0, 1, 1 );
     gridLayout->addWidget( buttonType = new QComboBox(box), 2, 1, 1, 1 );
     buttonType->setObjectName(QString::fromUtf8("buttonType"));  
     buttonType->insertItems(0, QStringList()
@@ -153,7 +153,7 @@ namespace Nitrogen
     box->setLayout( vboxLayout );    
     
     // oxygen shadow
-    vboxLayout->addWidget( useOxygenShadows = new QCheckBox( tr2i18n("&Use oxygen shadows", 0 ), this ) );
+    vboxLayout->addWidget( useOxygenShadows = new QCheckBox( tr2i18n("Glow active window", 0 ), this ) );
     useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
     useOxygenShadows->setWhatsThis(tr2i18n(
       "When this option is enabled, oxygen signature blue glow is used for the active window shadow.", 0));
@@ -171,7 +171,7 @@ namespace Nitrogen
       "When enabled, this option increases the visibility of the window titlebar by showing stripes", 0));
     
     // overwrite colors
-    vboxLayout->addWidget( overwriteColors = new QCheckBox( tr2i18n("Overwrite default title bar colors", 0), this) );
+    vboxLayout->addWidget( overwriteColors = new QCheckBox( tr2i18n("Blend title bar colors with window contents", 0), this) );
     overwriteColors->setObjectName(QString::fromUtf8("overwriteColors"));
     overwriteColors->setWhatsThis(tr2i18n(
       "When enabled, window colors are used in place of default title bar colors to draw the decoration", 0));
