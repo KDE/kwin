@@ -62,6 +62,7 @@ kde4_add_executable(nitrogen-convert-exceptions ${conversion_SRCS})
 target_link_libraries( 
     nitrogen-convert-exceptions 
     ${KDE4_KDEUI_LIBS} 
+    ${QT_QTXML_LIBRARY}
   )
 
 install(TARGETS nitrogen-convert-exceptions  DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS} )
