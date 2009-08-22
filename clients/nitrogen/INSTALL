@@ -1,0 +1,48 @@
+// $Id: INSTALL,v 1.2 2009/02/25 21:33:45 hpereira Exp $
+
+/******************************************************************************
+*									       
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>			       
+*									       
+* This is free software; you can redistribute it and/or modify it under the    
+* terms of the GNU General Public License as published by the Free Software    
+* Foundation; either version 2 of the License, or (at your option) any later   
+* version.							               
+* 									       
+* This software is distributed in the hope that it will be useful, but WITHOUT 
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or        
+* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License        
+* for more details.							       
+* 									       
+* You should have received a copy of the GNU General Public License along with 
+* software; if not, write to the Free Software Foundation, Inc., 59 Temple     
+* Place, Suite 330, Boston, MA  02111-1307 USA		                       
+*									       
+*									       
+*******************************************************************************/
+
+How to install
+--------------
+
+I/ Get a tarball of latest release and unpack
+---------------------------------------------
+
+> gtar -xzvf kde4-windeco-nitrogen-X.X.X-Source.tar.gz 
+
+or
+
+> tar -xzvf kde4-windeco-nitrogen-X.X.X-Source.tar.gz
+
+II/ compile the sources.
+------------------------
+To compile and install
+> cd kde4-windeco-nitrogen-X.X.X-Source
+> cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .
+> make
+> sudo make install
+
+You should then be able to change the window decoration style from kde4 system-settings window. 
+
+send comments/problems to hugo.pereira@free.fr
+
+ 

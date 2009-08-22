@@ -1,0 +1,5 @@
+# KDE Desktop Entry
+[Desktop Entry]
+Name=Nitrogen
+Name[x-test]=xxNitrogenxx
+X-KDE-Library=kwin3_nitrogen
