@@ -1,8 +1,6 @@
 #ifndef nitrogen_h
 #define nitrogen_h
 
-// $Id: nitrogen.h,v 1.16 2009/07/05 20:47:44 hpereira Exp $
-
 // Copyright (c) 2006, 2007 Riccardo Iaconelli <ruphy@fsfe.org>
 // Copyright (c) 2009, 2010 Hugo Pereira <hugo.pereira@free.fr>
 //

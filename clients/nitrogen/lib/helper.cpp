@@ -1,5 +1,3 @@
-// $Id: helper.cpp,v 1.20 2009/06/24 02:51:35 hpereira Exp $
-
 /*
 * Copyright 2008 Long Huynh Huu <long.upcase@googlemail.com>
 * Copyright 2007 Matthew Woehlke <mw_triad@users.sourceforge.net>

@@ -1,8 +1,6 @@
 #ifndef ItemModel_h
 #define ItemModel_h
 
-// $Id: itemmodel.h,v 1.2 2009/03/25 23:45:37 hpereira Exp $
-
 /******************************************************************************
  *                         
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>             

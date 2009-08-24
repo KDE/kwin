@@ -1,8 +1,6 @@
 #ifndef _nitrogenexceptionmodel_h_
 #define _nitrogenexceptionmodel_h_
 
-// $Id: nitrogenexceptionmodel.h,v 1.8 2009/05/25 21:05:19 hpereira Exp $
-
 /******************************************************************************
 *                         
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>             

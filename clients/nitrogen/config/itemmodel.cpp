@@ -1,5 +1,3 @@
-// $Id: itemmodel.cpp,v 1.1 2009/03/25 17:44:24 hpereira Exp $
-
 /******************************************************************************
  *                         
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>             

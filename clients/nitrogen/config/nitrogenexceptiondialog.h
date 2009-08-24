@@ -1,8 +1,6 @@
 #ifndef nitrogenexceptiondialog_h
 #define nitrogenexceptiondialog_h
 
-// $Id: nitrogenexceptiondialog.h,v 1.6 2009/07/05 16:15:31 hpereira Exp $
-
 /******************************************************************************
  *                        
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            

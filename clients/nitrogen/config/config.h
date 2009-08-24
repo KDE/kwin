@@ -1,7 +1,5 @@
 #ifndef nitrogen_config_h
 #define nitrogen_config_h
-// $Id: config.h,v 1.7 2009/06/24 01:43:14 hpereira Exp $
-
 /*
  * Nitrogen KWin client configuration module
  *

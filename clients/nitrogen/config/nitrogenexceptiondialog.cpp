@@ -1,5 +1,3 @@
-// $Id: nitrogenexceptiondialog.cpp,v 1.12 2009/07/05 16:15:31 hpereira Exp $
-
 /******************************************************************************
  *                        
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            

@@ -1,8 +1,6 @@
 #ifndef ListModel_h
 #define ListModel_h
 
-// $Id: listmodel.h,v 1.2 2009/04/01 20:49:53 hpereira Exp $
-
 /******************************************************************************
  *                         
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>             

@@ -1,5 +1,3 @@
-// $Id: nitrogenconfigurationui.cpp,v 1.20 2009/07/05 20:45:40 hpereira Exp $
-
 /******************************************************************************
  *                        
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            

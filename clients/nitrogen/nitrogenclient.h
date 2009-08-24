@@ -1,9 +1,6 @@
 #ifndef nitrogenclient_h
 #define nitrogenclient_h
 
-// $Id: nitrogenclient.h,v 1.13 2009/07/05 17:56:25 hpereira Exp $
-
-
 /******************************************************************************
 *                        
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            

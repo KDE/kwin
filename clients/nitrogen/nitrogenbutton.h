@@ -1,8 +1,6 @@
 #ifndef nitrogenbutton_h
 #define nitrogenbutton_h
 
-// $Id: nitrogenbutton.h,v 1.8 2009/06/20 23:13:23 hpereira Exp $
-
 //////////////////////////////////////////////////////////////////////////////
 // Nitrogenbutton.h
 // -------------------

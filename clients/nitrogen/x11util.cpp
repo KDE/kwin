@@ -1,6 +1,4 @@
 
-// $Id: x11util.cpp,v 1.4 2009/07/03 00:36:20 hpereira Exp $
-
 /******************************************************************************
 *
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>

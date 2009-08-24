@@ -1,5 +1,3 @@
-// $Id: nitrogenconvertexceptions.cpp,v 1.1 2009/06/24 01:55:51 hpereira Exp $
-
 /******************************************************************************
  *                        
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            

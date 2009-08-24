@@ -1,8 +1,6 @@
 #ifndef nitrogenconfiguration_h
 #define nitrogenconfiguration_h
 
-// $Id: nitrogenconfiguration.h,v 1.17 2009/07/05 20:47:44 hpereira Exp $
-
 /******************************************************************************
  *                        
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            

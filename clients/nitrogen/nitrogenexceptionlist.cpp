@@ -1,5 +1,3 @@
-// $Id: nitrogenexceptionlist.cpp,v 1.6 2009/06/24 01:43:14 hpereira Exp $
-
 /******************************************************************************
  *                        
  * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            

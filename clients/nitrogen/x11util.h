@@ -1,8 +1,6 @@
 #ifndef X11Util_h
 #define X11Util_h
 
-// $Id: x11util.h,v 1.4 2009/07/03 00:36:20 hpereira Exp $
-
 /******************************************************************************
 *
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>

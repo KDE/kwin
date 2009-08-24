@@ -1,14 +1,6 @@
-# $Id: CMakeLists.txt,v 1.8 2009/06/21 19:57:19 hpereira Exp $
-
 include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib  )
 
-find_package (KDE4 REQUIRED)
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
-include (KDE4Defaults)
-include (MacroLibrary)
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-include_directories (${KDE4_INCLUDES} ${CMAKE_BINARY_DIR})
 
 ########### next target ###############
 
