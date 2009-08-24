@@ -343,4 +343,4 @@ namespace Nitrogen
     return true;
   }
   
-};
+}

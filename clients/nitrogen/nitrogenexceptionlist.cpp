@@ -63,7 +63,7 @@ namespace Nitrogen
     
     // also add exceptions
     int index(0);
-    for( NitrogenExceptionList::const_iterator iter = begin(); iter != end(); iter++, index++ )
+    for( NitrogenExceptionList::const_iterator iter = constBegin(); iter != constEnd(); iter++, index++ )
     {
       
       KConfigGroup group( &config, exceptionGroupName( index ) );
@@ -102,4 +102,4 @@ namespace Nitrogen
   }
     
 
-};
+}

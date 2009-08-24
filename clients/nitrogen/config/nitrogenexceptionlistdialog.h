@@ -131,7 +131,7 @@ namespace Nitrogen
     
   };
   
-};
+}
 
 #endif
   

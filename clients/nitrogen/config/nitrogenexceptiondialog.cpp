@@ -239,4 +239,4 @@ namespace Nitrogen
   bool NitrogenExceptionDialog::ComboBox::isChecked( void ) const
   { return currentText() == Yes; }
   
-};
+}

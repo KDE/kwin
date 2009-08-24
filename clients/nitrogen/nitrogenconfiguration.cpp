@@ -293,4 +293,4 @@ namespace Nitrogen
       useOxygenShadows() == other.useOxygenShadows();
   }
 
-};
+}

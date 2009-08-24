@@ -72,7 +72,7 @@ namespace Nitrogen
       _NET_WM_MOVERESIZE_SIZE_LEFT=7,
       _NET_WM_MOVERESIZE_MOVE=8,
       _NET_WM_MOVERESIZE_SIZE_KEYBOARD=9,
-      _NET_WM_MOVERESIZE_MOVE_KEYBOARD=10,    
+      _NET_WM_MOVERESIZE_MOVE_KEYBOARD=10   
     };
       
     //! supported atoms
@@ -132,6 +132,6 @@ namespace Nitrogen
     
   };
   
-};
+}
 
 #endif

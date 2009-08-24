@@ -89,4 +89,4 @@ namespace Nitrogen
     else return WindowClassName;
   }
   
-};
+}

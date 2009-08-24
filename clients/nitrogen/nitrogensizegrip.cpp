@@ -256,4 +256,4 @@ namespace Nitrogen
 
   }
   
-};
+}

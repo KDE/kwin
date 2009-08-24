@@ -196,6 +196,6 @@ namespace Nitrogen
     
     QMetaObject::connectSlotsByName(this);  
     
-  };
+  }
   
-};
+}

@@ -44,7 +44,7 @@ namespace NitrogenXml
   static const QString TYPE = "type";
   static const QString PATTERN = "pattern";
   static const QString MASK = "mask";
-};
+}
 
 //__________________________________________________________
 NitrogenException readException( QDomElement element )

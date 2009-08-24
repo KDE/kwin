@@ -422,7 +422,7 @@ namespace Nitrogen
     
     QString window_title;
     QString class_name;
-    for( NitrogenExceptionList::const_iterator iter = exceptions_.begin(); iter != exceptions_.end(); iter++ )
+    for( NitrogenExceptionList::const_iterator iter = exceptions_.constBegin(); iter != exceptions_.constEnd(); iter++ )
     {
       
       // discard disabled exceptions
