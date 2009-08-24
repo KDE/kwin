@@ -167,7 +167,7 @@ namespace Nitrogen
   }
   
   //__________________________________________________
-  Qt::Alignment NitrogenConfiguration::titleAlignment( QString value )
+  Qt::Alignment NitrogenConfiguration::titleAlignment( const QString& value )
   {
     if (value == "Left") return Qt::AlignLeft;
     else if (value == "Center") return Qt::AlignHCenter;

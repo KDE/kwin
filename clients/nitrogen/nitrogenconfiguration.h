@@ -115,7 +115,7 @@ namespace Nitrogen
     //@{
     
     static QString titleAlignmentName( Qt::Alignment );
-    static Qt::Alignment titleAlignment( QString );
+    static Qt::Alignment titleAlignment( const QString& );
     
     virtual Qt::Alignment titleAlignment() const
     { return titleAlignment_; }
