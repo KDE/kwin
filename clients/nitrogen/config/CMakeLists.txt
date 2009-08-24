@@ -1,8 +1,5 @@
 include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/lib  )
 
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
-########### next target ###############
 
 set(kwin_nitrogen_config_PART_SRCS 
     config.cpp 

@@ -1,5 +1,3 @@
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
 ########### add version number into compilation defines
 add_definitions ( -DAPP_VERSION=\\\"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}\\\")
 add_subdirectory( config ) 
