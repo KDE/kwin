@@ -285,6 +285,6 @@ namespace Nitrogen
     
   };
   
-};
+}
 
 #endif

@@ -37,7 +37,7 @@ namespace NitrogenConfig
   static const QString ENABLED = "Enabled";
   static const QString MASK = "Mask";
     
-};
+}
 
 namespace Nitrogen
 {
@@ -176,6 +176,6 @@ namespace Nitrogen
   
   
   
-};
+}
 
 #endif
