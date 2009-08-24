@@ -1,10 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////
-// Nitrogenbutton.h
+// nitrogen.cpp
 // -------------------
-// Nitrogen window decoration for KDE.
-// -------------------
-// Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
-// Copyright (c) 2009, 2010 Hugo Pereira <hugo.pereira@free.fr>
+// 
+// Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -22,10 +20,10 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// IN THE SOFTWARE.                 
 //////////////////////////////////////////////////////////////////////////////
 
-#include <assert.h>
+#include <cassert>
 #include <kconfiggroup.h>
 #include <kdeversion.h>
 #include <kwindowinfo.h>
@@ -164,16 +162,10 @@ namespace Nitrogen
       //       case AbilityColorFrame:
       
       // compositing
-      #if KDE_IS_VERSION(4,2,92)
       case AbilityProvidesShadow: // TODO: UI option to use default shadows instead
       case AbilityUsesAlphaChannel:
       return !NitrogenConfiguration::useCompiz();
-      
-      #else
-      case AbilityCompositingShadow: 
-      return !NitrogenConfiguration::useCompiz();
-      #endif
-      
+            
       // no colors supported at this time
       default:
       return false;
@@ -181,239 +173,6 @@ namespace Nitrogen
   }
   
   
-  #if !KDE_IS_VERSION(4,2,92)
-  
-  //////////////////////////////////////////////////////////////////////////////
-  // Shadows (kde4.2 version)
-  
-  //_________________________________________________________________
-  QList< QList<QImage> > NitrogenFactory::shadowTextures()
-  {
-    
-    QList< QList<QImage> > textureLists;
-    
-    // in compiz mode, no textures are used
-    if( NitrogenConfiguration::useCompiz() ) 
-    { return textureLists; }
-    
-    textureLists.append( makeTextures( defaultConfiguration().useOxygenShadows() ? Active:Inactive ) );
-    textureLists.append( makeTextures( Inactive ) );
-    return textureLists;
-
-  }
-    
-  //_________________________________________________________________
-  QList<QImage> NitrogenFactory::makeTextures( NitrogenFactory::Activity state ) const
-  {
-    
-    #define shadowFuzzyness 10
-    #define shadowSize 10
-
-    // palette
-    QPalette palette = qApp->palette();                                                
-    palette.setCurrentColorGroup(QPalette::Active);                                    
-    
-    // shadow size
-    qreal size = 25.5;
-
-    // prepare pixmap and painter
-    QPixmap shadow( size*2, size*2 );
-    shadow.fill( Qt::transparent );
-    QPainter p( &shadow );
-    p.setRenderHint( QPainter::Antialiasing );
-    p.setPen( Qt::NoPen );
-    
-    // prepare colors
-    QColor color = palette.window().color();
-    QColor light = nitrogenHelper()->calcLightColor(nitrogenHelper()->backgroundTopColor(color));
-    QColor dark = nitrogenHelper()->calcDarkColor(nitrogenHelper()->backgroundBottomColor(color));
-    
-    QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-    if( defaultConfiguration().frameBorder() <= NitrogenConfiguration::BorderTiny )
-    {
-      
-      lg.setColorAt(0, nitrogenHelper()->backgroundTopColor(color) );
-      lg.setColorAt(0.52, nitrogenHelper()->backgroundTopColor(color));
-      lg.setColorAt(1.0, nitrogenHelper()->backgroundBottomColor(color) );
-      
-    } else {
-      
-      lg.setColorAt(0.52, light);
-      lg.setColorAt(1.0, dark);
-    
-    }
-
-    switch( state )
-    {
-      case Active:
-      {
-        
-
-        QColor glow = KDecoration::options()->color(ColorFrame);
-        QColor glow2 = KDecoration::options()->color(ColorTitleBar);
-        
-        QRadialGradient rg( size, size, size );
-        QColor c = color;
-        c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
-        c = glow;
-        c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
-        c.setAlpha( 180 );  rg.setColorAt( 5/size, c );
-        c.setAlpha( 25 );  rg.setColorAt( 5.5/size, c );
-        c.setAlpha( 0 );  rg.setColorAt( 6.5/size, c );
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-        
-        rg = QRadialGradient( size, size, size );
-        c = color;
-        c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
-        c = glow2;
-        c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
-        c.setAlpha( 0.43*255 );  rg.setColorAt( 5.5/size, c );
-        c.setAlpha( 0.30*255 );  rg.setColorAt( 6.5/size, c );
-        c.setAlpha( 0.22*255 );  rg.setColorAt( 7.5/size, c );
-        c.setAlpha( 0.15*255 );  rg.setColorAt( 8.5/size, c );
-        c.setAlpha( 0.08*255 );  rg.setColorAt( 11.5/size, c );
-        c.setAlpha( 0);  rg.setColorAt( 14.5/size, c );
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-        
-        // draw the corner of the window - actually all 4 corners as one circle
-        p.setBrush( Qt::NoBrush );
-        p.setPen(QPen(lg, 0.8));
-        p.drawEllipse(QRectF(size-4, size-4, 8, 8));
-        
-        // cut out the part of the texture that is under the window
-        p.setCompositionMode( QPainter::CompositionMode_DestinationOut );
-        p.setBrush( QColor( 0, 0, 0, 255 ));
-        p.setPen( Qt::NoPen );
-        p.drawEllipse(QRectF(size-3, size-3, 6, 6));
-        p.drawRect(QRectF(size-3, size-1, 6, 2));
-        p.drawRect(QRectF(size-1, size-3, 2, 6));
-        p.end();
-        
-        return makeTextures( shadow );
-        
-      }
-      
-      case Inactive: 
-      {
-        
-        //---------------------------------------------------------------
-        // Inactive shadow texture
-        
-        QRadialGradient rg( size, size+4, size );
-        QColor c( Qt::black );
-        c.setAlpha( 0.12*255 );  rg.setColorAt( 4.5/size, c );
-        c.setAlpha( 0.11*255 );  rg.setColorAt( 6.6/size, c );
-        c.setAlpha( 0.075*255 );  rg.setColorAt( 8.5/size, c );
-        c.setAlpha( 0.06*255 );  rg.setColorAt( 11.5/size, c );
-        c.setAlpha( 0.035*255 );  rg.setColorAt( 14.5/size, c );
-        c.setAlpha( 0.025*255 );  rg.setColorAt( 17.5/size, c );
-        c.setAlpha( 0.01*255 );  rg.setColorAt( 21.5/size, c );
-        c.setAlpha( 0.0*255 );  rg.setColorAt( 25.5/size, c );
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-        
-        rg = QRadialGradient( size, size+2, size );
-        c = QColor( Qt::black );
-        c.setAlpha( 0.25*255 );  rg.setColorAt( 4.5/size, c );
-        c.setAlpha( 0.20*255 );  rg.setColorAt( 5.5/size, c );
-        c.setAlpha( 0.13*255 );  rg.setColorAt( 7.5/size, c );
-        c.setAlpha( 0.06*255 );  rg.setColorAt( 8.5/size, c );
-        c.setAlpha( 0.015*255 );  rg.setColorAt( 11.5/size, c );
-        c.setAlpha( 0.0*255 );  rg.setColorAt( 14.5/size, c );
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-        
-        rg = QRadialGradient( size, size+0.2, size );
-        c = QColor( Qt::black );
-        c.setAlpha( 0.35*255 );  rg.setColorAt( 0/size, c );
-        c.setAlpha( 0.32*255 );  rg.setColorAt( 4.5/size, c );
-        c.setAlpha( 0.22*255 );  rg.setColorAt( 5.0/size, c );
-        c.setAlpha( 0.03*255 );  rg.setColorAt( 5.5/size, c );
-        c.setAlpha( 0.0*255 );  rg.setColorAt( 6.5/size, c );
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-        
-        rg = QRadialGradient( size, size, size );
-        c = color;
-        c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
-        c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-        
-        // draw the corner of the window - actually all 4 corners as one circle
-        p.setBrush( Qt::NoBrush );
-        p.setPen(QPen(lg, 0.8));
-        p.drawEllipse(QRectF(size-4, size-4, 8, 8));
-        
-        // cut out the part of the texture that is under the window
-        p.setCompositionMode( QPainter::CompositionMode_DestinationOut );
-        p.setBrush( QColor( 0, 0, 0, 255 ));
-        p.setPen( Qt::NoPen );
-        p.drawEllipse(QRectF(size-3, size-3, 6, 6));
-        p.drawRect(QRectF(size-3, size-1, 6, 2));
-        p.drawRect(QRectF(size-1, size-3, 2, 6));
-        
-        p.end();
-        
-        return makeTextures( shadow );
-      }
-      
-      default:
-      return QList<QImage>();
-      
-    }
-  }
-  
-  //______________________________________________________
-  QImage NitrogenFactory::makeTexture( const QPixmap& pixmap, const QRect& rect ) const
-  {
-    QPixmap dump( rect.size() );
-    dump.fill( Qt::transparent );
-    QPainter painter( &dump );
-    painter.drawPixmap( QPoint(0, 0), pixmap, rect );
-    painter.end();
-    return dump.toImage();
-  }
-  
-  //___________________________________________________________
-  QList<QImage> NitrogenFactory::makeTextures( const QPixmap& shadow ) const
-  {
-    QList<QImage> textures;
-    int w = shadow.width() / 2;
-    int h = shadow.height() / 2;
-    textures.append( makeTexture( shadow, QRect( 0, h+1, w, h ) ) );
-    textures.append( makeTexture( shadow, QRect( w, h+1, 1, h ) ) );
-    textures.append( makeTexture( shadow, QRect( w+1, h+1, w, h ) ) );
-    textures.append( makeTexture( shadow, QRect( 0, h, w, 1 ) ) );
-    textures.append( makeTexture( shadow, QRect( w+1, h, w, 1 ) ) );
-    textures.append( makeTexture( shadow, QRect( 0, 0, w, h ) ) );
-    textures.append( makeTexture( shadow, QRect( w, 0, 1, h ) ) );
-    textures.append( makeTexture( shadow, QRect( w+1, 0, w, h ) ) );
-    return textures;
-  }
-
-  //_________________________________________________________________
-  int NitrogenFactory::shadowTextureList( ShadowType type ) const
-  {
-    switch( type ) {
-      
-      case ShadowBorderedInactive: return 1;
-      default: return 0;
-      
-    }
-    abort(); // Should never be reached
-  }
-  
-  //_________________________________________________________________
-  QList<QRect> NitrogenFactory::shadowQuads( ShadowType, QSize ) const
-  { return QList<QRect>(); }
-  
-  //____________________________________________________________________
-  double NitrogenFactory::shadowOpacity( ShadowType ) const
-  { return 1.0; }
-  #endif
   
   //____________________________________________________________________
   NitrogenConfiguration NitrogenFactory::configuration( const NitrogenClient& client )
