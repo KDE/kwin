@@ -73,7 +73,7 @@ namespace Nitrogen
     
     // left box for comboboxes
     QGroupBox* box;
-    hboxLayout->addWidget( box = new QGroupBox( "Layout", this ) );
+    hboxLayout->addWidget( box = new QGroupBox( i18n("Layout"), this ) );
     QGridLayout* gridLayout = new QGridLayout();
     gridLayout->setSpacing(6);
     box->setLayout( gridLayout );
@@ -146,7 +146,7 @@ namespace Nitrogen
     label->setBuddy( blendColor );
     
     // right is for checkboxes
-    hboxLayout->addWidget( box = new QGroupBox( "Flags", this ) );
+    hboxLayout->addWidget( box = new QGroupBox( i18n("Flags"), this ) );
     QVBoxLayout* vboxLayout = new QVBoxLayout();
     box->setLayout( vboxLayout );    
     
