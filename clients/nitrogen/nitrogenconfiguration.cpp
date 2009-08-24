@@ -1,31 +1,28 @@
-/******************************************************************************
- *                        
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
- *                        
- * This is free software; you can redistribute it and/or modify it under the     
- * terms of the GNU General Public License as published by the Free Software     
- * Foundation; either version 2 of the License, or (at your option) any later   
- * version.                            
- *                         
- * This software is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or         
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License         
- * for more details.                    
- *                         
- * You should have received a copy of the GNU General Public License along with 
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple     
- * Place, Suite 330, Boston, MA   02111-1307 USA                          
- *                        
- *                        
- *******************************************************************************/
-
-/*!
-   \file nitrogenconfiguration.cpp
-   \brief encapsulated window decoration configuration
-   \author Hugo Pereira
-   \version $Revision: 1.20 $
-   \date $Date: 2009/07/05 20:50:42 $
-*/
+//////////////////////////////////////////////////////////////////////////////
+// nitrogenconfiguration.cpp
+// -------------------
+// 
+// Copyright (c) 2009, 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.                 
+//////////////////////////////////////////////////////////////////////////////
+#include <KLocale>
 
 #include <QDBusMessage>
 #include <QDBusConnection>
@@ -64,27 +61,27 @@ namespace Nitrogen
     // title alignment
     setTitleAlignment( titleAlignment( 
       group.readEntry( NitrogenConfig::TITLE_ALIGNMENT, 
-      defaultConfiguration.titleAlignmentName() ) ) );
+      defaultConfiguration.titleAlignmentName( false ) ), false ) );
 
     // button size
     setButtonSize( buttonSize( 
       group.readEntry( NitrogenConfig::BUTTON_SIZE,
-      defaultConfiguration.buttonSizeName() ) ) );
+      defaultConfiguration.buttonSizeName( false ) ), false ) );
 
     // button type
     setButtonType( buttonType( 
       group.readEntry( NitrogenConfig::BUTTON_TYPE,
-      defaultConfiguration.buttonTypeName() ) ) );
+      defaultConfiguration.buttonTypeName( false ) ), false ) );
     
     // frame border
     setFrameBorder( frameBorder( 
       group.readEntry( NitrogenConfig::FRAME_BORDER, 
-      defaultConfiguration.frameBorderName() ) ) );
+      defaultConfiguration.frameBorderName( false ) ), false ) );
     
     // blend color
     setBlendColor( blendColor(
       group.readEntry( NitrogenConfig::BLEND_COLOR, 
-      defaultConfiguration.blendColorName() ) ) );
+      defaultConfiguration.blendColorName( false ) ), false ) );
     
     // show stripes
     setShowStripes( group.readEntry( 
@@ -116,7 +113,6 @@ namespace Nitrogen
   bool NitrogenConfiguration::checkUseCompiz( void )
   {
     
-    #if KDE_IS_VERSION(4,2,92)
     // for some reason, org.kde.compiz does not appear
     // in dbus list with kde 4.3
     QProcess p;
@@ -124,152 +120,151 @@ namespace Nitrogen
     p.waitForFinished();
     QString output( p.readAll() );
     return ( useCompiz_ =  ( output.indexOf( QRegExp( "\\b(compiz)\\b" ) ) >= 0 ) );
-    #else
-    QDBusMessage message = QDBusMessage::createMethodCall( 
-      "org.freedesktop.compiz", 
-      "/org/freedesktop/compiz", 
-      "org.freedesktop.compiz", 
-      "getPlugins" );
-    QDBusMessage reply = QDBusConnection::sessionBus().call( message );
-    return ( useCompiz_ = ( reply.type() == QDBusMessage::ReplyMessage && !reply.arguments().empty() ) );
-    #endif
+
   }
   
   //__________________________________________________
   void NitrogenConfiguration::write( KConfigGroup& group ) const
   {
     
-    group.writeEntry( NitrogenConfig::TITLE_ALIGNMENT, titleAlignmentName() );
-    group.writeEntry( NitrogenConfig::BUTTON_SIZE, buttonSizeName() );
-    group.writeEntry( NitrogenConfig::BUTTON_TYPE, buttonTypeName() );
-    group.writeEntry( NitrogenConfig::BLEND_COLOR, blendColorName() );
-    group.writeEntry( NitrogenConfig::FRAME_BORDER, frameBorderName() );
+    group.writeEntry( NitrogenConfig::TITLE_ALIGNMENT, titleAlignmentName( false ) );
+    group.writeEntry( NitrogenConfig::BUTTON_SIZE, buttonSizeName( false ) );
+    group.writeEntry( NitrogenConfig::BUTTON_TYPE, buttonTypeName( false ) );
+    group.writeEntry( NitrogenConfig::BLEND_COLOR, blendColorName( false ) );
+    group.writeEntry( NitrogenConfig::FRAME_BORDER, frameBorderName( false ) );
+    
     group.writeEntry( NitrogenConfig::SHOW_STRIPES, showStripes() );
     group.writeEntry( NitrogenConfig::DRAW_SEPARATOR, drawSeparator() );
     group.writeEntry( NitrogenConfig::OVERWRITE_COLORS, overwriteColors() );
     group.writeEntry( NitrogenConfig::DRAW_SIZE_GRIP, drawSizeGrip() );
     group.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
+    
   }
     
   //__________________________________________________
-  QString NitrogenConfiguration::titleAlignmentName( Qt::Alignment value )
+  QString NitrogenConfiguration::titleAlignmentName( Qt::Alignment value, bool translated )
   {
+    const char* out;
     switch( value )
     {
-      case Qt::AlignLeft: return "Left";
-      case Qt::AlignHCenter: return "Center";
-      case Qt::AlignRight: return "Right";
-      default: return NitrogenConfiguration().titleAlignmentName();
+      case Qt::AlignLeft: out = "Left"; break;
+      case Qt::AlignHCenter: out = "Center"; break;
+      case Qt::AlignRight: out = "Right"; break;
+      default: return NitrogenConfiguration().titleAlignmentName( translated );
     }
     
-    return QString();
+    return translated ? tr2i18n(out):out;
     
   }
   
   //__________________________________________________
-  Qt::Alignment NitrogenConfiguration::titleAlignment( const QString& value )
+  Qt::Alignment NitrogenConfiguration::titleAlignment( QString value, bool translated )
   {
-    if (value == "Left") return Qt::AlignLeft;
-    else if (value == "Center") return Qt::AlignHCenter;
-    else if (value == "Right") return Qt::AlignRight;
+    if (value == titleAlignmentName( Qt::AlignLeft, translated ) ) return Qt::AlignLeft;
+    else if (value == titleAlignmentName( Qt::AlignRight, translated ) ) return Qt::AlignHCenter;
+    else if (value == titleAlignmentName( Qt::AlignCenter, translated ) ) return Qt::AlignRight;
     else return NitrogenConfiguration().titleAlignment();
   }
   
   //__________________________________________________
-  QString NitrogenConfiguration::buttonSizeName( ButtonSize value )
+  QString NitrogenConfiguration::buttonSizeName( ButtonSize value, bool translated )
   {
+    const char* out;
     switch( value )
     {
-      case ButtonSmall: return "Small";
-      case ButtonDefault: return "Default";
-      case ButtonLarge: return "Large";
-      case ButtonHuge: return "Huge";
-      default: return NitrogenConfiguration().buttonSizeName();
+      case ButtonSmall: out = "Small"; break;
+      case ButtonDefault: out = "Default"; break;
+      case ButtonLarge: out = "Large"; break;
+      case ButtonHuge: out = "Huge"; break;
+      default: return NitrogenConfiguration().buttonSizeName( translated );
     }
     
-    return QString();
+    return translated ? tr2i18n(out):out;
     
   }
 
   //__________________________________________________
-  NitrogenConfiguration::ButtonSize NitrogenConfiguration::buttonSize( QString value )
+  NitrogenConfiguration::ButtonSize NitrogenConfiguration::buttonSize( QString value, bool translated )
   {
-    if( value == "Small" ) return ButtonSmall;
-    else if( value == "Default" ) return ButtonDefault;
-    else if( value == "Large" ) return ButtonLarge;
-    else if( value == "Huge" ) return ButtonHuge;
+    if( value == buttonSizeName( ButtonSmall, translated ) ) return ButtonSmall;
+    else if( value == buttonSizeName( ButtonDefault, translated ) ) return ButtonDefault;
+    else if( value == buttonSizeName( ButtonLarge, translated ) ) return ButtonLarge;
+    else if( value == buttonSizeName( ButtonHuge, translated ) ) return ButtonHuge;
     else return NitrogenConfiguration().buttonSize();
   }
 
   //__________________________________________________
-  QString NitrogenConfiguration::buttonTypeName( ButtonType value )
+  QString NitrogenConfiguration::buttonTypeName( ButtonType value, bool translated )
   {
+    const char* out;
     switch( value )
     {
-      case ButtonKde42: return "KDE 4.2";
-      case ButtonKde43: return "KDE 4.3";
-      default: return NitrogenConfiguration().buttonTypeName();
+      case ButtonKde42: out = "KDE 4.2"; break;
+      case ButtonKde43: out = "Default"; break;
+      default: return NitrogenConfiguration().buttonTypeName( translated );
     }
     
-    return QString();
+    return translated ? tr2i18n(out):out;
     
   }
 
   //__________________________________________________
-  NitrogenConfiguration::ButtonType NitrogenConfiguration::buttonType( const QString& value )
+  NitrogenConfiguration::ButtonType NitrogenConfiguration::buttonType( QString value, bool translated )
   {
-    if( value == "KDE 4.2" ) return ButtonKde42;
-    else if( value == "KDE 4.3" ) return ButtonKde43;
+    if( value == buttonTypeName( ButtonKde42, translated ) ) return ButtonKde42;
+    else if( value == buttonTypeName( ButtonKde43, translated ) ) return ButtonKde43;
     else return NitrogenConfiguration().buttonType();
   }
 
   //__________________________________________________
-  QString NitrogenConfiguration::frameBorderName( FrameBorder value )
+  QString NitrogenConfiguration::frameBorderName( FrameBorder value, bool translated )
   {
+    const char* out;
     switch( value )
     {
-      case BorderNone: return "No Border";
-      case BorderTiny: return "Tiny";
-      case BorderSmall: return "Small";
-      case BorderDefault: return "Default";
-      case BorderLarge: return "Large";
-      default: return NitrogenConfiguration().frameBorderName();
+      case BorderNone: out = "No Border"; break;
+      case BorderTiny: out = "Tiny"; break;
+      case BorderSmall: out = "Small"; break;
+      case BorderDefault: out = "Default"; break;
+      case BorderLarge: out = "Large"; break;
+      default: return NitrogenConfiguration().frameBorderName( translated );
     }
     
-    return QString();
+    return translated ? tr2i18n(out):out;
     
   }
   
   //__________________________________________________
-  NitrogenConfiguration::FrameBorder NitrogenConfiguration::frameBorder( const QString& value )
+  NitrogenConfiguration::FrameBorder NitrogenConfiguration::frameBorder( QString value, bool translated )
   {
-      if( value == "No Border" ) return BorderNone;
-      else if( value == "Tiny" ) return BorderTiny;
-      else if( value == "Small" ) return BorderSmall;
-      else if( value == "Default" ) return BorderDefault;
-      else if( value == "Large" ) return BorderLarge;
+      if( value == frameBorderName( BorderNone, translated ) ) return BorderNone;
+      else if( value == frameBorderName( BorderTiny, translated ) ) return BorderTiny;
+      else if( value == frameBorderName( BorderSmall, translated ) ) return BorderSmall;
+      else if( value == frameBorderName( BorderDefault, translated ) ) return BorderDefault;
+      else if( value == frameBorderName( BorderLarge, translated ) ) return BorderLarge;
       else return NitrogenConfiguration().frameBorder();
   }
   
   //__________________________________________________
-  QString NitrogenConfiguration::blendColorName( BlendColorType value )
+  QString NitrogenConfiguration::blendColorName( BlendColorType value, bool translated )
   {
+    const char* out;
     switch( value )
     {
-      case NoBlending: return "No Blending";
-      case RadialBlending: return "Radial Blending";
-      default: return NitrogenConfiguration().blendColorName();
+      case NoBlending: out = "No Blending"; break;
+      case RadialBlending: out = "Radial Blending"; break;
+      default: return NitrogenConfiguration().blendColorName( translated );
     }
     
-    return QString();
+    return translated ? tr2i18n(out):out;
+    
   }
   
   //__________________________________________________
-  NitrogenConfiguration::BlendColorType NitrogenConfiguration::blendColor( const QString& value )
+  NitrogenConfiguration::BlendColorType NitrogenConfiguration::blendColor( QString value, bool translated )
   {
-    if( value == "No Blending" ) return NoBlending;
-    else if( value == "Radial Blending" ) return RadialBlending;
-    else if( value == "Window Contents" ) return RadialBlending;
+    if( value == blendColorName( NoBlending, translated ) ) return NoBlending;
+    else if( value == blendColorName( RadialBlending, translated ) ) return RadialBlending;
     else return NitrogenConfiguration().blendColor();
   }
   

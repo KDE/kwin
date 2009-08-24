@@ -1,34 +1,30 @@
 #ifndef nitrogenconfiguration_h
 #define nitrogenconfiguration_h
 
-/******************************************************************************
- *                        
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
- *                        
- * This is free software; you can redistribute it and/or modify it under the     
- * terms of the GNU General Public License as published by the Free Software     
- * Foundation; either version 2 of the License, or (at your option) any later   
- * version.                            
- *                         
- * This software is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or         
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License         
- * for more details.                    
- *                         
- * You should have received a copy of the GNU General Public License along with 
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple     
- * Place, Suite 330, Boston, MA   02111-1307 USA                          
- *                        
- *                        
- *******************************************************************************/
-
-/*!
-   \file nitrogenconfiguration.h
-   \brief encapsulated window decoration configuration
-   \author Hugo Pereira
-   \version $Revision: 1.17 $
-   \date $Date: 2009/07/05 20:47:44 $
-*/
+//////////////////////////////////////////////////////////////////////////////
+// nitrogenconfiguration.h
+// -------------------
+// 
+// Copyright (c) 2009, 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.                 
+//////////////////////////////////////////////////////////////////////////////
 
 #include <KConfigGroup>
 
@@ -76,7 +72,7 @@ namespace Nitrogen
     enum FrameBorder
     {
       BorderNone = 0,
-      BorderTiny = 1,
+      BorderTiny = 2,
       BorderSmall = 3,
       BorderDefault = 5,
       BorderLarge = 8
@@ -114,34 +110,34 @@ namespace Nitrogen
     //!@name title alignment
     //@{
     
-    static QString titleAlignmentName( Qt::Alignment );
-    static Qt::Alignment titleAlignment( const QString& );
+    static QString titleAlignmentName( Qt::Alignment, bool translated );
+    static Qt::Alignment titleAlignment( QString, bool translated );
     
     virtual Qt::Alignment titleAlignment() const
     { return titleAlignment_; }
 
-    virtual QString titleAlignmentName() const
-    { return titleAlignmentName( titleAlignment() ); }
+    virtual QString titleAlignmentName( bool translated ) const
+    { return titleAlignmentName( titleAlignment(), translated ); }
 
     virtual void setTitleAlignment( Qt::Alignment value )
     { titleAlignment_ = value; }
     
-    virtual void setTitleAlignment( QString value )
-    { titleAlignment_ = titleAlignment( value ); }
+    virtual void setTitleAlignment( QString value, bool translated )
+    { titleAlignment_ = titleAlignment( value, translated ); }
 
     //@}
     
     //!@name button size
     //@{
     
-    static QString buttonSizeName( ButtonSize );
-    static ButtonSize buttonSize( QString );
+    static QString buttonSizeName( ButtonSize, bool translated );
+    static ButtonSize buttonSize( QString, bool translated );
     
     virtual ButtonSize buttonSize( void ) const
     { return buttonSize_; }
       
-    virtual QString buttonSizeName( void ) const
-    { return buttonSizeName( buttonSize() ); }
+    virtual QString buttonSizeName( bool translated ) const
+    { return buttonSizeName( buttonSize(), translated ); }
     
     virtual void setButtonSize( ButtonSize value )
     { buttonSize_ = value; }
@@ -151,14 +147,14 @@ namespace Nitrogen
     //!@name button size
     //@{
     
-    static QString buttonTypeName( ButtonType );
-    static ButtonType buttonType( const QString& );
+    static QString buttonTypeName( ButtonType, bool translated );
+    static ButtonType buttonType( QString, bool translated );
     
     virtual ButtonType buttonType( void ) const
     { return buttonType_; }
       
-    virtual QString buttonTypeName( void ) const
-    { return buttonTypeName( buttonType() ); }
+    virtual QString buttonTypeName( bool translated ) const
+    { return buttonTypeName( buttonType(), translated ); }
     
     virtual void setButtonType( ButtonType value )
     { buttonType_ = value; }
@@ -168,40 +164,40 @@ namespace Nitrogen
     //!@name frame border
     //@{
     
-    static QString frameBorderName( FrameBorder );
-    static FrameBorder frameBorder( const QString& );
+    static QString frameBorderName( FrameBorder, bool translated );
+    static FrameBorder frameBorder( QString, bool translated );
 
     virtual FrameBorder frameBorder() const
     { return frameBorder_; }
     
-    virtual QString frameBorderName( void ) const
-    { return frameBorderName( frameBorder() ); }
+    virtual QString frameBorderName( bool translated ) const
+    { return frameBorderName( frameBorder(), translated ); }
 
     virtual void setFrameBorder( FrameBorder value )
     { frameBorder_ = value; }
         
-    virtual void setFrameBorder( const QString& value )
-    { frameBorder_ = frameBorder( value ); }
+    virtual void setFrameBorder( QString value, bool translated )
+    { frameBorder_ = frameBorder( value, translated ); }
 
     //@}
     
     //!@name blend color
     //@{
     
-    static QString blendColorName( BlendColorType );
-    static BlendColorType blendColor( const QString& );
+    static QString blendColorName( BlendColorType, bool translated );
+    static BlendColorType blendColor( QString, bool translated );
     
     virtual BlendColorType blendColor( void ) const
     { return blendColor_; }
 
-    virtual QString blendColorName( void ) const
-    { return blendColorName( blendColor() ); }
+    virtual QString blendColorName( bool translated ) const
+    { return blendColorName( blendColor(), translated ); }
 
     virtual void setBlendColor( BlendColorType value )
     { blendColor_ = value; }    
     
-    virtual void setBlendColor( const QString& value )
-    { blendColor_ = blendColor( value ); }    
+    virtual void setBlendColor( QString value, bool translated )
+    { blendColor_ = blendColor( value, translated ); }    
 
     //@}
         
