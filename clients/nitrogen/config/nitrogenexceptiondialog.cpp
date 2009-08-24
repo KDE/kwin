@@ -213,9 +213,9 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  const QString NitrogenExceptionDialog::ComboBox::Default( "Default" );
-  const QString NitrogenExceptionDialog::ComboBox::Yes( "Yes" );
-  const QString NitrogenExceptionDialog::ComboBox::No( "No" );
+  const QString NitrogenExceptionDialog::ComboBox::Default( i18n("Default") );
+  const QString NitrogenExceptionDialog::ComboBox::Yes( i18n("Yes") );
+  const QString NitrogenExceptionDialog::ComboBox::No( i18n("No") );
 
   //___________________________________________
   NitrogenExceptionDialog::ComboBox::ComboBox( QWidget* parent ):
