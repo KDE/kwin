@@ -29,7 +29,7 @@
 
 #include <QPalette>
 #include "nitrogenexceptionmodel.h"
-
+#include <KLocale>
 namespace Nitrogen
 {
   
@@ -37,8 +37,8 @@ namespace Nitrogen
   const QString NitrogenExceptionModel::column_titles_[ NitrogenExceptionModel::n_columns ] =
   { 
     "",
-    "Exception Type",
-    "Regular Expression"
+    i18n("Exception Type"),
+    i18n("Regular Expression")
   };
     
   //__________________________________________________________________
@@ -69,7 +69,7 @@ namespace Nitrogen
             
     } else if( role == Qt::ToolTipRole &&  index.column() == ENABLED ) {
       
-      return "Enable/disable this exception";
+      return i18n("Enable/disable this exception");
       
     }
 
