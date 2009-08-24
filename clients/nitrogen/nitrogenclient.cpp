@@ -1,11 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenclient.cpp
 // -------------------
-// Nitrogen window decoration for KDE
-// -------------------
-// Copyright (c) 2006, 2007 Casper Boemann <cbr@boemann.dk>
-// Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
-// Copyright (c) 2009, 2010 Hugo Pereira <hugo.pereira@free.fr>
+// 
+// Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -23,7 +20,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// IN THE SOFTWARE.                 
 //////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
@@ -95,15 +92,9 @@ namespace Nitrogen
   {
     
     KCommonDecoration::init();
-    #if KDE_IS_VERSION(4,2,92)
     widget()->setAttribute(Qt::WA_NoSystemBackground );
     widget()->setAttribute( Qt::WA_OpaquePaintEvent );
     widget()->setAutoFillBackground( false );
-    #else
-    widget()->setAttribute(Qt::WA_NoSystemBackground, !isPreview() );
-    widget()->setAttribute( Qt::WA_OpaquePaintEvent, !isPreview() );
-    widget()->setAutoFillBackground( isPreview() );
-    #endif
     initialized_ = true;
     
     resetConfiguration();
@@ -137,6 +128,9 @@ namespace Nitrogen
     
     bool maximized( isMaximized() );
     int frameBorder( configuration().frameBorder() );
+    
+    // used to increase hit area on the sides of the widget
+    int extraBorder = (maximized && compositingActive()) ? 0 : EXTENDED_HITAREA;
     int buttonSize( configuration().buttonSize() );
     
     switch (lm) 
@@ -145,22 +139,38 @@ namespace Nitrogen
       case LM_BorderRight:
       case LM_BorderBottom:
       {
+        int border( 0 );
         if (respectWindowState && maximized) {
-          return 0;
+          border = 0;
         }  else if( configuration().frameBorder() == 0 && isPreview() ) {
-          return 1;
+          border = 1;
         }  else {
-          return frameBorder;          
+          
+          if( lm == LM_BorderBottom && frameBorder == NitrogenConfiguration::BorderTiny ) 
+          {
+            
+            // for tiny border, the convention is to have a larger bottom area in order to 
+            // make resizing easier
+            border = 4;
+            
+          } else {
+            
+            border = frameBorder;          
+            
+          }
+          
         }
+        
+        return border + extraBorder;
       }
       
       case LM_TitleEdgeTop:
       {
-        if (respectWindowState && maximized) {
-          return 0;
-        } else {
-          return qMax( 3, frameBorder-2 );
-        }
+        int border = 0;
+        if( !( respectWindowState && maximized )) 
+        { border = qMax( 3, frameBorder-2 ); }
+        
+        return border + extraBorder;
         
       }
       
@@ -172,11 +182,12 @@ namespace Nitrogen
       case LM_TitleEdgeLeft:
       case LM_TitleEdgeRight:
       {
-        if (respectWindowState && maximized) {
-          return 0;
-        } else {
-          return 6;
-        }
+        int border = 0;
+        if( !(respectWindowState && maximized) ) 
+        { border = 6; }
+        
+        return border + extraBorder;
+        
       }
       
       case LM_TitleBorderLeft:
@@ -204,16 +215,13 @@ namespace Nitrogen
       case LM_ButtonMarginTop:
       return 0;
       
-      
-    #if KDE_IS_VERSION(4,2,92)
       // outer margin for shadow/glow
       case LM_OuterPaddingLeft:
       case LM_OuterPaddingRight:
       case LM_OuterPaddingTop:
       case LM_OuterPaddingBottom:
       if( NitrogenConfiguration::useCompiz() ) return 0;
-      else return SHADOW_WIDTH;
-    #endif
+      else return SHADOW_WIDTH - extraBorder;
       
       default:
       return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -322,8 +330,6 @@ namespace Nitrogen
     // disable bottom corners when border frame is too small
     if( configuration().frameBorder() <= NitrogenConfiguration::BorderTiny ) bottom = 0;
     
-    #if KDE_IS_VERSION(4,2,92)
-    
     int sw = layoutMetric( LM_OuterPaddingLeft );
     int sh = layoutMetric( LM_OuterPaddingTop );
 
@@ -337,28 +343,7 @@ namespace Nitrogen
     mask += QRegion(sw + 3*left, sh + 1*top, w-3*(left+right), h-1*(top+bottom));
     mask += QRegion(sw + 1*left, sh + 3*top, w-1*(left+right), h-3*(top+bottom));      
     return mask;
-    
-    #else
-    if (!shadowsActive()) {
-      
-      QRegion mask   (4*left, 0*top, w-4*(left+right), h);
-      mask += QRegion(0*left, 4*top, w-0*(left+right), h-4*(top+bottom));
-      mask += QRegion(2*left, 1*top, w-2*(left+right), h-1*(top+bottom));
-      mask += QRegion(1*left, 2*top, w-1*(left+right), h-2*(top+bottom));
-      return mask;
-      
-    } else {
-      
-      QRegion mask(5*left, 0*top, w-5*(left+right), h-0*(top+bottom));
-      mask += QRegion(0*left, 5*top, w-0*(left+right), h-5*(top+bottom));
-      mask += QRegion(2*left, 2*top, w-2*(left+right), h-2*(top+bottom));
-      mask += QRegion(3*left, 1*top, w-3*(left+right), h-1*(top+bottom));
-      mask += QRegion(1*left, 3*top, w-1*(left+right), h-3*(top+bottom));      
-      return mask;
-      
-    }
-    #endif
-    
+        
   }
   
   //_________________________________________________________
@@ -398,7 +383,6 @@ namespace Nitrogen
   void NitrogenClient::renderWindowBackground( QPainter* painter, const QRect& rect, const QWidget* widget, const QPalette& palette ) const
   {
     
-    //if( configuration().blendColor() == NitrogenConfiguration::NoBlending || isPreview() ) 
     if( configuration().blendColor() == NitrogenConfiguration::NoBlending ) 
     { 
       
@@ -408,10 +392,7 @@ namespace Nitrogen
       
       int offset( configuration().buttonSize() - 22 );
       
-      #if KDE_IS_VERSION(4,2,92)
-      offset += layoutMetric( LM_OuterPaddingBottom );
-      #endif
-      
+      offset += layoutMetric( LM_OuterPaddingBottom );      
       helper().renderWindowBackground(painter, rect, widget, backgroundPalette( widget, palette ), offset );
       
     }  
@@ -484,15 +465,12 @@ namespace Nitrogen
   void NitrogenClient::updateWindowShape()
   { 
     
-    #if KDE_IS_VERSION(4,2,92)
     if(isMaximized() || ( compositingActive() && !NitrogenConfiguration::useCompiz() ) )
     {
     
       clearMask();
     
-    } else 
-    #endif  
-    {
+    } else {
       
       setMask( calcMask() ); 
       
@@ -500,48 +478,6 @@ namespace Nitrogen
     
   }
   
-  #if !KDE_IS_VERSION(4,2,92)
-  //________________________________________________________________
-  QList<QRect> NitrogenClient::shadowQuads( ShadowType ) const
-  {
-    
-    QSize size = widget()->size();
-    int outside=21, underlap=4, cornersize=25;
-    
-    // These are underlap under the decoration so the corners look nicer 10px on the outside
-    QList<QRect> quads;
-    quads.append(QRect(-outside, size.height()-underlap, cornersize, cornersize));
-    quads.append(QRect(underlap, size.height()-underlap, size.width()-2*underlap, cornersize));
-    quads.append(QRect(size.width()-underlap, size.height()-underlap, cornersize, cornersize));
-    quads.append(QRect(-outside, underlap, cornersize, size.height()-2*underlap));
-    quads.append(QRect(size.width()-underlap, underlap, cornersize, size.height()-2*underlap));
-    quads.append(QRect(-outside, -outside, cornersize, cornersize));
-    quads.append(QRect(underlap, -outside, size.width()-2*underlap, cornersize));
-    quads.append(QRect(size.width()-underlap,     -outside, cornersize, cornersize));
-    return quads;
-    
-  }
-  
-  //________________________________________________________________
-  double NitrogenClient::shadowOpacity( ShadowType type ) const
-  {
-    switch( type ) {
-      
-      case ShadowBorderedActive:
-      if( isActive() ) return 1.0;
-      else return 0.0;
-      
-      case ShadowBorderedInactive:
-      if( isActive() )  return 0.0;
-      else return 1.0;
-      
-      default:
-      abort();
-    }
-    return 0;
-    
-  }
-  #endif
   
   //___________________________________________
   void NitrogenClient::resetConfiguration( void )
@@ -586,8 +522,6 @@ namespace Nitrogen
       palette.window().color() : 
       options()->color( ColorTitleBar, isActive());
     
-    #if KDE_IS_VERSION(4,2,92)
-
     // draw shadows
     if( compositingActive() && !( NitrogenConfiguration::useCompiz() || isMaximized() ) )
     {
@@ -598,38 +532,42 @@ namespace Nitrogen
       
     }
     
-    // adjust frame to match outer margins
-    frame.adjust(
-      layoutMetric( LM_OuterPaddingLeft ),
-      layoutMetric( LM_OuterPaddingTop ),
-      -layoutMetric( LM_OuterPaddingRight ),
-      -layoutMetric( LM_OuterPaddingBottom ) );
+    // adjust frame
+    frame.adjust( SHADOW_WIDTH, SHADOW_WIDTH, -SHADOW_WIDTH, -SHADOW_WIDTH );
     
     //  adjust mask
     if( (compositingActive() && !NitrogenConfiguration::useCompiz()) || isPreview() )
     {
-      
-      int x, y, w, h;
-      frame.getRect(&x, &y, &w, &h);
-      
-      // multipliers
-      int left = 1;
-      int right = 1;
-      int top = 1;
-      int bottom = 1;
     
-      // disable bottom corners when border frame is too small
-      if( configuration().frameBorder() <= NitrogenConfiguration::BorderTiny ) bottom = 0;
+      if( isMaximized() ) {
         
-      QRegion mask( x+5*left,   y+0*top, w-5*(left+right), h-0*(top+bottom));
-      mask += QRegion(x+0*left, y+5*top, w-0*(left+right), h-5*(top+bottom));
-      mask += QRegion(x+2*left, y+2*top, w-2*(left+right), h-2*(top+bottom));
-      mask += QRegion(x+3*left, y+1*top, w-3*(left+right), h-1*(top+bottom));
-      mask += QRegion(x+1*left, y+3*top, w-1*(left+right), h-3*(top+bottom));      
+        painter.setClipRect( frame ); 
       
-      painter.setClipRegion( mask );
-    } 
-    #endif
+      } else {
+        
+        int x, y, w, h;
+        frame.getRect(&x, &y, &w, &h);
+        
+        // multipliers
+        int left = 1;
+        int right = 1;
+        int top = 1;
+        int bottom = 1;
+      
+        // disable bottom corners when border frame is too small
+        if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny ) bottom = 0;
+        QRegion mask( x+5*left,   y+0*top, w-5*(left+right), h-0*(top+bottom));
+        mask += QRegion(x+0*left, y+5*top, w-0*(left+right), h-5*(top+bottom));
+        mask += QRegion(x+2*left, y+2*top, w-2*(left+right), h-2*(top+bottom));
+        mask += QRegion(x+3*left, y+1*top, w-3*(left+right), h-1*(top+bottom));
+        mask += QRegion(x+1*left, y+3*top, w-1*(left+right), h-3*(top+bottom));      
+      
+        painter.setClipRegion( mask );
+        
+      }
+      
+    
+    }
     
     // window background
     renderWindowBackground( &painter, frame, widget(), palette );
@@ -642,13 +580,9 @@ namespace Nitrogen
     // useOxygenShadow is set to true, 
     // and copositing is active
     // (that makes a lot of ifs)
-    #if KDE_IS_VERSION(4,2,92)
     if( 
         isPreview() && configuration().frameBorder() == 0 && 
         ( !compositingActive() || NitrogenConfiguration::useCompiz() ) )
-    #else
-    if( isPreview()  && configuration().frameBorder() == 0 )
-    #endif
     {
       painter.save();
       painter.setBrush( Qt::NoBrush );
@@ -667,9 +601,11 @@ namespace Nitrogen
       painter.restore();
     }
     
+    int extraBorder = ( isMaximized() && compositingActive() ) ? 0 : EXTENDED_HITAREA;
+
     // dimensions
     const int titleHeight = layoutMetric(LM_TitleHeight);
-    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top();
+    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top() - extraBorder;
     const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
     const int marginLeft = layoutMetric(LM_TitleBorderLeft);
     const int marginRight = layoutMetric(LM_TitleBorderRight);
@@ -688,11 +624,7 @@ namespace Nitrogen
     painter.setRenderHint(QPainter::Antialiasing);
     
     // adjust if there are shadows
-    #if KDE_IS_VERSION(4,2,92)
-    if (compositingActive()) frame.adjust(-1,-1,1,1);
-    #else
-    if (shadowsActive()) frame.adjust(-1,-1, 1, 1);    
-    #endif
+    if (compositingActive()) frame.adjust(-1,-1, 1, 1);
     
     // dimensions
     int x,y,w,h;
@@ -745,19 +677,12 @@ namespace Nitrogen
     if( !isMaximized() )
     {
       
-      #if KDE_IS_VERSION(4,2,92)
       helper().drawFloatFrame(
         &painter, frame, color, !compositingActive(), isActive(),
         KDecoration::options()->color(ColorTitleBar),
         configuration().frameBorder()
         );
-      #else
-      helper().drawFloatFrame(
-        &painter, frame, color, !shadowsActive(), isActive(),
-        KDecoration::options()->color(ColorTitleBar),
-        configuration().frameBorder()
-        );
-      #endif
+
       if( isResizable() && configuration().frameBorder() >= NitrogenConfiguration::BorderSmall )
       { 
         
@@ -770,17 +695,24 @@ namespace Nitrogen
         renderDot(&painter, QPointF(posX, cenY), 1.8);
         renderDot(&painter, QPointF(posX, cenY + 3), 1.8);
         
-        // Draw the 3-dots resize handles
-        if( !configuration().drawSizeGrip() )
-        {
-          painter.translate(x + w-9, y + h-9);
-          renderDot(&painter, QPointF(2.5, 6.5), 1.8);
-          renderDot(&painter, QPointF(5.5, 5.5), 1.8);
-          renderDot(&painter, QPointF(6.5, 2.5), 1.8);
-        }
-        
       }
       
+      // Draw the 3-dots resize handles
+      if( 
+        isResizable() && 
+        configuration().frameBorder() >= NitrogenConfiguration::BorderTiny && 
+        !configuration().drawSizeGrip() )
+      {
+
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QColor(0, 0, 0, 66));
+
+        painter.translate(x + w-9, y + h-9);
+        renderDot(&painter, QPointF(2.5, 6.5), 1.8);
+        renderDot(&painter, QPointF(5.5, 5.5), 1.8);
+        renderDot(&painter, QPointF(6.5, 2.5), 1.8);
+      }
+        
     }
     
   }
@@ -808,7 +740,6 @@ namespace Nitrogen
   }    
   
   //_________________________________________________________________
-  #if KDE_IS_VERSION(4,2,92)
   TileSet *NitrogenClient::shadowTiles(const QColor& color, const QColor& glow, qreal size, bool active)
   {
     ShadowTilesOption opt;
@@ -972,5 +903,4 @@ namespace Nitrogen
     return tileSet;
   }
   
-  #endif
 }
