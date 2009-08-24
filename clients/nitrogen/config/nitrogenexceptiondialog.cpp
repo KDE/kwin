@@ -99,7 +99,7 @@ namespace Nitrogen
       << NitrogenException::frameBorderName( NitrogenException::BorderLarge ) );
     frame_border_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::FrameBorder, checkbox ) );
-    checkbox->setToolTip( "If checked, specified frame border is used in place of default value." );
+    checkbox->setToolTip( i18n("If checked, specified frame border is used in place of default value.") );
     connect( checkbox, SIGNAL( toggled( bool ) ), frame_border_combobox_, SLOT( setEnabled( bool ) ) );
     
     // blend color
@@ -110,7 +110,7 @@ namespace Nitrogen
       << NitrogenException::blendColorName( NitrogenException::RadialBlending ) );
     blend_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::BlendColor, checkbox ) );
-    checkbox->setToolTip( "If checked, specified blending color is used in title bar in place of default value." );
+    checkbox->setToolTip( i18n("If checked, specified blending color is used in title bar in place of default value.") );
     connect( checkbox, SIGNAL( toggled( bool ) ), blend_combobox_, SLOT( setEnabled( bool ) ) );
     
     // separator

@@ -330,7 +330,7 @@ namespace Nitrogen
     while( !exception.regExp().isValid() )
     {
 
-      KMessageBox::error( this, "Regular Expression syntax is incorrect" );
+      KMessageBox::error( this, i18n("Regular Expression syntax is incorrect") );
       NitrogenExceptionDialog dialog( this );
       dialog.setException( exception );
       if( dialog.exec() == QDialog::Rejected ) return false;
