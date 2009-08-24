@@ -75,23 +75,23 @@ namespace Nitrogen
     
     v_layout->addWidget( up_button_ = new KPushButton( 
       KIcon( "arrow-up", icon_loader ),
-      tr2i18n("Move &Up"), widget ) );
+      i18n("Move &Up"), widget ) );
 
     v_layout->addWidget( down_button_ = new KPushButton( 
       KIcon( "arrow-down", icon_loader ),
-      tr2i18n("Move &Down"), widget ) );
+      i18n("Move &Down"), widget ) );
 
     v_layout->addWidget( add_button_ = new KPushButton( 
       KIcon( "list-add", icon_loader ), 
-      tr2i18n("&Add"), widget ) );
+      i18n("&Add"), widget ) );
     
     v_layout->addWidget( remove_button_ = new KPushButton( 
       KIcon( "list-remove", icon_loader ), 
-      tr2i18n("&Remove"), widget ) );
+      i18n("&Remove"), widget ) );
     
     v_layout->addWidget( edit_button_ = new KPushButton( 
       KIcon( "edit-rename", icon_loader ),
-      tr2i18n("&Edit"), widget ) );
+      i18n("&Edit"), widget ) );
 
     v_layout->addStretch();
 

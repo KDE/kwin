@@ -48,7 +48,7 @@ namespace Nitrogen
     
     // exception definition
     QGroupBox* box;
-    widget->layout()->addWidget( box = new QGroupBox( tr2i18n( "Definition" ), widget ) );
+    widget->layout()->addWidget( box = new QGroupBox( i18n( "Definition" ), widget ) );
     
     QGridLayout* gridLayout = new QGridLayout();
     gridLayout->setSpacing(5);
@@ -58,29 +58,29 @@ namespace Nitrogen
     QLabel *label;
     
     // exception type
-    gridLayout->addWidget( label = new QLabel( tr2i18n( "Exception type: " ), box ), 0, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Exception type: " ), box ), 0, 0, 1, 1 );
     gridLayout->addWidget( type_combobox_ = new QComboBox(box), 0, 1, 1, 1 );
     type_combobox_->insertItems(0, QStringList()
       << NitrogenException::typeName( NitrogenException::WindowClassName )
       << NitrogenException::typeName( NitrogenException::WindowTitle ) );
-    type_combobox_->setToolTip( tr2i18n(
+    type_combobox_->setToolTip( i18n(
       "Select here the window caracteristic used to \n"
       "identify windows to which the exception apply." ) );
     
     label->setAlignment( Qt::AlignRight );
     
     // regular expression
-    gridLayout->addWidget( label = new QLabel( tr2i18n( "Regular expression to match: " ), box ), 1, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Regular expression to match: " ), box ), 1, 0, 1, 1 );
     gridLayout->addWidget( editor_ = new KLineEdit( box ), 1, 1, 1, 1 );
     editor_->setClearButtonShown( true );
-    editor_->setToolTip( tr2i18n(
+    editor_->setToolTip( i18n(
       "Type here the regular expression used to \n"
       "identify windows to which the exception apply." ) );
 
     label->setAlignment( Qt::AlignRight );
     
     // decoration flags
-    widget->layout()->addWidget( box = new QGroupBox( tr2i18n( "Decoration" ), widget ) );    
+    widget->layout()->addWidget( box = new QGroupBox( i18n( "Decoration" ), widget ) );    
     gridLayout = new QGridLayout();
     gridLayout->setSpacing(5);
     gridLayout->setMargin(5);
@@ -89,7 +89,7 @@ namespace Nitrogen
     QCheckBox* checkbox;
     
     // border size
-    gridLayout->addWidget( checkbox = new QCheckBox( tr2i18n("Border size:" ), box ), 2, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 2, 0, 1, 1 );
     gridLayout->addWidget( frame_border_combobox_ = new QComboBox(box), 2, 1, 1, 1 );
     frame_border_combobox_->insertItems(0, QStringList()
       << NitrogenException::frameBorderName( NitrogenException::BorderNone )
@@ -103,7 +103,7 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), frame_border_combobox_, SLOT( setEnabled( bool ) ) );
     
     // blend color
-    gridLayout->addWidget( checkbox = new QCheckBox( tr2i18n("Title bar blending:" ), box ), 3, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Title bar blending:" ), box ), 3, 0, 1, 1 );
     gridLayout->addWidget( blend_combobox_ = new QComboBox(box), 3, 1, 1, 1 );
     blend_combobox_->insertItems(0, QStringList()
       << NitrogenException::blendColorName( NitrogenException::NoBlending )
@@ -114,22 +114,22 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), blend_combobox_, SLOT( setEnabled( bool ) ) );
     
     // separator
-    gridLayout->addWidget( label = new QLabel( tr2i18n( "Draw separator :" ), box ), 4, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Draw separator :" ), box ), 4, 0, 1, 1 );
     gridLayout->addWidget( draw_separator_combobox_ = new ComboBox( box ), 4, 1, 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     
     // stripes
-    gridLayout->addWidget( label = new QLabel( tr2i18n( "Show stripes :" ), box ), 5, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Show stripes :" ), box ), 5, 0, 1, 1 );
     gridLayout->addWidget( show_stripes_combobox_ = new ComboBox( box ), 5, 1, 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     // overwrite colors
-    gridLayout->addWidget( label = new QLabel( tr2i18n( "Overwrite default title bar colors:" ), box ), 6, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Overwrite default title bar colors:" ), box ), 6, 0, 1, 1 );
     gridLayout->addWidget( overwrite_colors_combobox_ = new ComboBox( box ), 6, 1, 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     
     // size grip
-    gridLayout->addWidget( label = new QLabel( tr2i18n( "Draw size grip :" ), box ), 7, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Draw size grip :" ), box ), 7, 0, 1, 1 );
     gridLayout->addWidget( draw_size_grip_combobox_ = new ComboBox( box ), 7, 1, 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
   }
