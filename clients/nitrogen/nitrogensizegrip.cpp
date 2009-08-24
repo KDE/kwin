@@ -20,10 +20,8 @@
  *******************************************************************************/
 
 #include <cassert>
-#include <QApplication>
 #include <QPainter>
 #include <QPolygon>
-#include <QTextStream>
 #include <QTimer>
 
 #include <kdeversion.h>

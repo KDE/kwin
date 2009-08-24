@@ -31,7 +31,6 @@
 
 #include <QLabel>
 #include <QLayout>
-#include <QSpacerItem>
 #include <QGroupBox>
 #include <KLocale>
 

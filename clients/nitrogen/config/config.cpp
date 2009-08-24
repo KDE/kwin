@@ -30,7 +30,6 @@
 #include <KGlobal>
 #include <KLocale>
 #include <kstandarddirs.h>
-#include <QTextStream>
 
 #include "config.h"
 #include "config.moc"

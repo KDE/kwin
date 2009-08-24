@@ -32,10 +32,7 @@
 #include <QPainterPath>
 #include <QPainter>
 #include <QPen>
-#include <QBitmap>
-#include <QTextStream>
 
-#include <KGlobal>
 #include <KColorUtils>
 #include <KColorScheme>
 #include <kcommondecoration.h>

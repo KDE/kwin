@@ -27,7 +27,6 @@
   \date $Date: 2009/05/25 21:05:19 $
 */
 
-#include <QPalette>
 #include "nitrogenexceptionmodel.h"
 #include <KLocale>
 namespace Nitrogen

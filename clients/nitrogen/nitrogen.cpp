@@ -30,7 +30,6 @@
 #include <kdeversion.h>
 #include <kwindowinfo.h>
 #include <QApplication>
-#include <QDir>
 #include <QPainter>
 #include <QTextStream>
 
