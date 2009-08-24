@@ -152,7 +152,7 @@ namespace Nitrogen
     //@{
     
     static QString buttonTypeName( ButtonType );
-    static ButtonType buttonType( QString );
+    static ButtonType buttonType( const QString& );
     
     virtual ButtonType buttonType( void ) const
     { return buttonType_; }
@@ -169,7 +169,7 @@ namespace Nitrogen
     //@{
     
     static QString frameBorderName( FrameBorder );
-    static FrameBorder frameBorder( QString );
+    static FrameBorder frameBorder( const QString& );
 
     virtual FrameBorder frameBorder() const
     { return frameBorder_; }
@@ -180,7 +180,7 @@ namespace Nitrogen
     virtual void setFrameBorder( FrameBorder value )
     { frameBorder_ = value; }
         
-    virtual void setFrameBorder( QString value )
+    virtual void setFrameBorder( const QString& value )
     { frameBorder_ = frameBorder( value ); }
 
     //@}
@@ -189,7 +189,7 @@ namespace Nitrogen
     //@{
     
     static QString blendColorName( BlendColorType );
-    static BlendColorType blendColor( QString );
+    static BlendColorType blendColor( const QString& );
     
     virtual BlendColorType blendColor( void ) const
     { return blendColor_; }
@@ -200,7 +200,7 @@ namespace Nitrogen
     virtual void setBlendColor( BlendColorType value )
     { blendColor_ = value; }    
     
-    virtual void setBlendColor( QString value )
+    virtual void setBlendColor( const QString& value )
     { blendColor_ = blendColor( value ); }    
 
     //@}

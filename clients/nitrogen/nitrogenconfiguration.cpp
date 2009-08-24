@@ -216,7 +216,7 @@ namespace Nitrogen
   }
 
   //__________________________________________________
-  NitrogenConfiguration::ButtonType NitrogenConfiguration::buttonType( QString value )
+  NitrogenConfiguration::ButtonType NitrogenConfiguration::buttonType( const QString& value )
   {
     if( value == "KDE 4.2" ) return ButtonKde42;
     else if( value == "KDE 4.3" ) return ButtonKde43;
@@ -241,7 +241,7 @@ namespace Nitrogen
   }
   
   //__________________________________________________
-  NitrogenConfiguration::FrameBorder NitrogenConfiguration::frameBorder( QString value )
+  NitrogenConfiguration::FrameBorder NitrogenConfiguration::frameBorder( const QString& value )
   {
       if( value == "No Border" ) return BorderNone;
       else if( value == "Tiny" ) return BorderTiny;
@@ -265,7 +265,7 @@ namespace Nitrogen
   }
   
   //__________________________________________________
-  NitrogenConfiguration::BlendColorType NitrogenConfiguration::blendColor( QString value )
+  NitrogenConfiguration::BlendColorType NitrogenConfiguration::blendColor( const QString& value )
   {
     if( value == "No Blending" ) return NoBlending;
     else if( value == "Radial Blending" ) return RadialBlending;
