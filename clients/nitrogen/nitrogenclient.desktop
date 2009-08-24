@@ -1,4 +1,7 @@
 # KDE Desktop Entry
 [Desktop Entry]
 Name=Nitrogen
+Name[sv]=Kväve
+Name[uk]=Азот
+Name[x-test]=xxNitrogenxx
 X-KDE-Library=kwin3_nitrogen
