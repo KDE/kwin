@@ -120,7 +120,7 @@ namespace Nitrogen
     //@{
     
     static QString typeName( Type );
-    static Type type( QString name );
+    static Type type( const QString& name );
 
     virtual QString typeName( void ) const
     { return typeName( type() ); }

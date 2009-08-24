@@ -105,7 +105,7 @@ int main( int argc, char *argv[] )
   QCoreApplication application( argc, argv );
   
   // generate filename
-  QString filename = KStandardDirs::locateLocal( "config", "nitrogen_xml_rc" );
+  const QString filename = KStandardDirs::locateLocal( "config", "nitrogen_xml_rc" );
   QTextStream( stdout ) << "nitrogen-convert-exceptions - reading file " << filename << endl;
   
   // open and get DomDocument

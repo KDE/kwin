@@ -80,7 +80,7 @@ namespace Nitrogen
   }
   
   //_______________________________________________________
-  NitrogenException::Type NitrogenException::type( QString value )
+  NitrogenException::Type NitrogenException::type( const QString& value )
   {
     if( value == "Window Title" ) return WindowTitle;
     else if( value == "Window Class Name" ) return WindowClassName;
