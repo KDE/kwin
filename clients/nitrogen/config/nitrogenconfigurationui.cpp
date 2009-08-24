@@ -146,42 +146,42 @@ namespace Nitrogen
     box->setLayout( vboxLayout );    
     
     // oxygen shadow
-    vboxLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window", 0 ), this ) );
+    vboxLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), this ) );
     useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
     useOxygenShadows->setWhatsThis(i18n(
-      "When this option is enabled, oxygen signature blue glow is used for the active window shadow.", 0));
+      "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
     
     // draw separator
-    vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and window contents", 0), this ) );
+    vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and window contents"), this ) );
     drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
     drawSeparator->setWhatsThis(i18n(
-      "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents.", 0));
+      "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
     
     // show stripes
-    vboxLayout->addWidget( showStripes = new QCheckBox( i18n("Show stripes next to the title", 0), this) );
+    vboxLayout->addWidget( showStripes = new QCheckBox( i18n("Show stripes next to the title"), this) );
     showStripes->setObjectName(QString::fromUtf8("showStripes"));
     showStripes->setWhatsThis(i18n(
-      "When enabled, this option increases the visibility of the window titlebar by showing stripes", 0));
+      "When enabled, this option increases the visibility of the window titlebar by showing stripes"));
     
     // overwrite colors
-    vboxLayout->addWidget( overwriteColors = new QCheckBox( i18n("Blend title bar colors with window contents", 0), this) );
+    vboxLayout->addWidget( overwriteColors = new QCheckBox( i18n("Blend title bar colors with window contents"), this) );
     overwriteColors->setObjectName(QString::fromUtf8("overwriteColors"));
     overwriteColors->setWhatsThis(i18n(
-      "When enabled, window colors are used in place of default title bar colors to draw the decoration", 0));
+      "When enabled, window colors are used in place of default title bar colors to draw the decoration"));
     
     // draw size grip
-    vboxLayout->addWidget( drawSizeGrip = new QCheckBox( i18n("Draw size grip widget in bottom-right corner of windows", 0), this ) );
+    vboxLayout->addWidget( drawSizeGrip = new QCheckBox( i18n("Draw size grip widget in bottom-right corner of windows"), this ) );
     drawSizeGrip->setObjectName(QString::fromUtf8("drawSizeGrip"));
     drawSizeGrip->setWhatsThis(i18n(
       "When this option is enabled, a small triangular widget is drawn in bottom-right corner of every window \n"
-      "that allow to resize the window. This the \"No Border\" border size is selected.", 0));
+      "that allow to resize the window. This the \"No Border\" border size is selected."));
     
     // exceptions
     mainLayout->addLayout( hboxLayout = new QHBoxLayout() );
     hboxLayout->addStretch( 1 );
     
     hboxLayout->addWidget( showExceptions = new QPushButton( i18n("Exceptions ..." ), box ) );
-    showExceptions->setToolTip(i18n("Raise a dialog to store blending type exceptions based on window title.", 0));
+    showExceptions->setToolTip(i18n("Raise a dialog to store blending type exceptions based on window title."));
 
     // about
     // this is disabled until I find a suitable icon for nitrogen.
