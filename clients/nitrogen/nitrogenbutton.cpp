@@ -1,11 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////
-// Nitrogenbutton.cpp
+// nitrogenbutton.cpp
 // -------------------
-// Nitrogen window decoration for KDE. Buttons.
-// -------------------
-// Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
-// Copyright (c) 2006, 2007 Casper Boemann <cbr@boemann.dk>
-// Copyright (c) 2009, 2010 Hugo Pereira <hugo.pereira@free.fr>
+// 
+// Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -23,9 +20,8 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// IN THE SOFTWARE.                 
 //////////////////////////////////////////////////////////////////////////////
-
 
 #include <cmath>
 
@@ -208,22 +204,38 @@ namespace Nitrogen
       
       QLinearGradient lg = helper_.decoGradient( QRect( 4, 4, 13, 13 ), color);
       painter.setRenderHints(QPainter::Antialiasing);
-      painter.setBrush(Qt::NoBrush);
       qreal width( client_.configuration().buttonType() == NitrogenConfiguration::ButtonKde43 ? 1.4:2.2 );
-      painter.setPen(QPen(lg, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+      painter.setBrush(Qt::NoBrush);
+      if( client_.configuration().buttonType() == NitrogenConfiguration::ButtonKde42 )
+      {
+        
+        painter.setPen(QPen(lg, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        
+      } else {
+        
+        painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        
+      }
       drawIcon(&painter, palette, type_);
     
     } else {
 
-      QLinearGradient lg = helper_.decoGradient( QRect( 0, 0, 13, 13 ), color);
-      painter.setRenderHints(QPainter::Antialiasing);
-      painter.setBrush(Qt::NoBrush);
-      painter.setPen(QPen(lg, 3.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-      drawIcon(&painter, palette, type_);
-
-      painter.setPen(QPen( palette.color( backgroundRole() ), 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-      drawIcon(&painter, palette, type_);
+      // outlined mode
+      QPixmap pixmap(size());
+      pixmap.fill(Qt::transparent);
+      QPainter pp(&pixmap);
+      pp.setRenderHints(QPainter::Antialiasing);
+      pp.setBrush(Qt::NoBrush);
+      pp.setPen(QPen(color, 3.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      drawIcon(&pp, palette, type_);
       
+      pp.setCompositionMode(QPainter::CompositionMode_DestinationOut);
+      pp.setPen(QPen(color, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      drawIcon(&pp, palette, type_);
+      
+      painter.drawPixmap(QPoint(0,0), pixmap);
+ 
     }
   }
   
