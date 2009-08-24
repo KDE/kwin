@@ -1,28 +1,31 @@
-/*
-* Nitrogen KWin client configuration module
-*
-* Copyright (C) 2008 Lubos Lunak <l.lunak@kde.org>
-*
-* Based on the Quartz configuration module,
-*     Copyright (c) 2001 Karol Szwed <gallium@kde.org>
-* 
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the license, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; see the file COPYING.  If not, write to
-* the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301, USA.
-*/
-
-// $Id: config.cpp,v 1.25 2009/07/05 20:45:40 hpereira Exp $
+//////////////////////////////////////////////////////////////////////////////
+// config.cpp
+// -------------------
+// 
+// Copyright (c) 2009, 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
+// Copyright (C) 2008 Lubos Lunak <l.lunak@kde.org>
+//
+// Based on the Quartz configuration module,
+//     Copyright (c) 2001 Karol Szwed <gallium@kde.org>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.                 
+//////////////////////////////////////////////////////////////////////////////
 
 #include <KAboutData>
 #include <KAboutApplicationDialog>
@@ -109,11 +112,29 @@ namespace Nitrogen
     
     // save standard configuration
     KConfigGroup configurationGroup( configuration_, "Windeco");
-    configurationGroup.writeEntry( NitrogenConfig::TITLE_ALIGNMENT, user_interface_->titleAlignment->currentText() );
-    configurationGroup.writeEntry( NitrogenConfig::BUTTON_SIZE, user_interface_->buttonSize->currentText() );
-    configurationGroup.writeEntry( NitrogenConfig::BUTTON_TYPE, user_interface_->buttonType->currentText() );
-    configurationGroup.writeEntry( NitrogenConfig::BLEND_COLOR, user_interface_->blendColor->currentText() );
-    configurationGroup.writeEntry( NitrogenConfig::FRAME_BORDER, user_interface_->frameBorder->currentText() );
+    
+    // when writting text entries, on needs to make sure that strings written 
+    // to the configuration file are *not* translated using current locale
+    configurationGroup.writeEntry( 
+      NitrogenConfig::TITLE_ALIGNMENT, 
+      NitrogenConfiguration::titleAlignmentName( NitrogenConfiguration::titleAlignment( user_interface_->titleAlignment->currentText(), true ), false ) );
+    
+    configurationGroup.writeEntry( 
+      NitrogenConfig::BUTTON_SIZE, 
+      NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::buttonSize( user_interface_->buttonSize->currentText(), true ), false ) );
+    
+    configurationGroup.writeEntry( 
+      NitrogenConfig::BUTTON_TYPE, 
+      NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::buttonType( user_interface_->buttonType->currentText(), true ), false ) );
+    
+    configurationGroup.writeEntry( 
+      NitrogenConfig::BLEND_COLOR, 
+      NitrogenConfiguration::blendColorName( NitrogenConfiguration::blendColor( user_interface_->blendColor->currentText(), true ), false ) );
+    
+    configurationGroup.writeEntry( 
+      NitrogenConfig::FRAME_BORDER, 
+      NitrogenConfiguration::frameBorderName( NitrogenConfiguration::frameBorder( user_interface_->frameBorder->currentText(), true ), false ) );
+    
     configurationGroup.writeEntry( NitrogenConfig::SHOW_STRIPES, user_interface_->showStripes->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::DRAW_SEPARATOR, user_interface_->drawSeparator->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::OVERWRITE_COLORS, user_interface_->overwriteColors->isChecked() );
@@ -146,11 +167,11 @@ namespace Nitrogen
   void Config::loadConfiguration( const NitrogenConfiguration& configuration )
   {
     
-    user_interface_->titleAlignment->setCurrentIndex( user_interface_->titleAlignment->findText( configuration.titleAlignmentName() ) );    
-    user_interface_->buttonSize->setCurrentIndex( user_interface_->buttonSize->findText( configuration.buttonSizeName() ) );    
-    user_interface_->buttonType->setCurrentIndex( user_interface_->buttonType->findText( configuration.buttonTypeName() ) );    
-    user_interface_->blendColor->setCurrentIndex( user_interface_->blendColor->findText( configuration.blendColorName() ) );
-    user_interface_->frameBorder->setCurrentIndex( user_interface_->frameBorder->findText( configuration.frameBorderName() ) );
+    user_interface_->titleAlignment->setCurrentIndex( user_interface_->titleAlignment->findText( configuration.titleAlignmentName( true ) ) );    
+    user_interface_->buttonSize->setCurrentIndex( user_interface_->buttonSize->findText( configuration.buttonSizeName( true ) ) );    
+    user_interface_->buttonType->setCurrentIndex( user_interface_->buttonType->findText( configuration.buttonTypeName( true ) ) );    
+    user_interface_->blendColor->setCurrentIndex( user_interface_->blendColor->findText( configuration.blendColorName( true ) ) );
+    user_interface_->frameBorder->setCurrentIndex( user_interface_->frameBorder->findText( configuration.frameBorderName( true ) ) );
 
     user_interface_->showStripes->setChecked( configuration.showStripes() );
     user_interface_->drawSeparator->setChecked( configuration.drawSeparator() );

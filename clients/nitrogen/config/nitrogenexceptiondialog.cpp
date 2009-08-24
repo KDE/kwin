@@ -1,23 +1,27 @@
-/******************************************************************************
- *                        
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
- *                        
- * This is free software; you can redistribute it and/or modify it under the     
- * terms of the GNU General Public License as published by the Free Software     
- * Foundation; either version 2 of the License, or (at your option) any later   
- * version.                            
- *                         
- * This software is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or         
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License         
- * for more details.                    
- *                         
- * You should have received a copy of the GNU General Public License along with 
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple     
- * Place, Suite 330, Boston, MA   02111-1307 USA                          
- *                        
- *                        
- *******************************************************************************/
+//////////////////////////////////////////////////////////////////////////////
+// nitrogenexceptiondialog.cpp
+// -------------------
+// 
+// Copyright (c) 2009, 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.                 
+//////////////////////////////////////////////////////////////////////////////
 
 #include <QGroupBox>
 #include <QLabel>
@@ -92,11 +96,11 @@ namespace Nitrogen
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 2, 0, 1, 1 );
     gridLayout->addWidget( frame_border_combobox_ = new QComboBox(box), 2, 1, 1, 1 );
     frame_border_combobox_->insertItems(0, QStringList()
-      << NitrogenException::frameBorderName( NitrogenException::BorderNone )
-      << NitrogenException::frameBorderName( NitrogenException::BorderTiny )
-      << NitrogenException::frameBorderName( NitrogenException::BorderSmall )
-      << NitrogenException::frameBorderName( NitrogenException::BorderDefault )
-      << NitrogenException::frameBorderName( NitrogenException::BorderLarge ) );
+      << NitrogenException::frameBorderName( NitrogenException::BorderNone, true )
+      << NitrogenException::frameBorderName( NitrogenException::BorderTiny, true )
+      << NitrogenException::frameBorderName( NitrogenException::BorderSmall, true )
+      << NitrogenException::frameBorderName( NitrogenException::BorderDefault, true )
+      << NitrogenException::frameBorderName( NitrogenException::BorderLarge, true ) );
     frame_border_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::FrameBorder, checkbox ) );
     checkbox->setToolTip( i18n("If checked, specified frame border is used in place of default value.") );
@@ -106,8 +110,8 @@ namespace Nitrogen
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Title bar blending:" ), box ), 3, 0, 1, 1 );
     gridLayout->addWidget( blend_combobox_ = new QComboBox(box), 3, 1, 1, 1 );
     blend_combobox_->insertItems(0, QStringList()
-      << NitrogenException::blendColorName( NitrogenException::NoBlending )
-      << NitrogenException::blendColorName( NitrogenException::RadialBlending ) );
+      << NitrogenException::blendColorName( NitrogenException::NoBlending, true )
+      << NitrogenException::blendColorName( NitrogenException::RadialBlending, true ) );
     blend_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::BlendColor, checkbox ) );
     checkbox->setToolTip( i18n("If checked, specified blending color is used in title bar in place of default value.") );
@@ -148,10 +152,10 @@ namespace Nitrogen
     editor_->setText( exception.regExp().pattern() );
 
     // border size
-    frame_border_combobox_->setCurrentIndex( frame_border_combobox_->findText( exception.frameBorderName() ) );
+    frame_border_combobox_->setCurrentIndex( frame_border_combobox_->findText( exception.frameBorderName( true ) ) );
     
     // blend color
-    blend_combobox_->setCurrentIndex( blend_combobox_->findText( exception.blendColorName() ) );
+    blend_combobox_->setCurrentIndex( blend_combobox_->findText( exception.blendColorName( true ) ) );
 
     // flags
     draw_separator_combobox_->setValue( exception.mask() & NitrogenException::DrawSeparator, exception.drawSeparator() );
@@ -171,8 +175,8 @@ namespace Nitrogen
     NitrogenException exception( exception_ );
     exception.setType( NitrogenException::type( type_combobox_->currentText() ) );
     exception.regExp().setPattern( editor_->text() );
-    exception.setFrameBorder( NitrogenException::frameBorder( frame_border_combobox_->currentText() ) );
-    exception.setBlendColor( NitrogenException::blendColor( blend_combobox_->currentText() ) ); 
+    exception.setFrameBorder( NitrogenException::frameBorder( frame_border_combobox_->currentText(), true ) );
+    exception.setBlendColor( NitrogenException::blendColor( blend_combobox_->currentText(), true ) ); 
     
     // mask
     unsigned int mask = NitrogenException::None;

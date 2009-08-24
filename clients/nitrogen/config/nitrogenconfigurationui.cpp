@@ -1,31 +1,27 @@
-/******************************************************************************
- *                        
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
- *                        
- * This is free software; you can redistribute it and/or modify it under the     
- * terms of the GNU General Public License as published by the Free Software     
- * Foundation; either version 2 of the License, or (at your option) any later   
- * version.                            
- *                         
- * This software is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or         
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License         
- * for more details.                    
- *                         
- * You should have received a copy of the GNU General Public License along with 
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple     
- * Place, Suite 330, Boston, MA   02111-1307 USA                          
- *                        
- *                        
- *******************************************************************************/
-
-/*!
-   \file nitrogenconfigurationui.cpp
-   \brief window decoration configuration user interface
-   \author Hugo Pereira
-   \version $Revision: 1.20 $
-   \date $Date: 2009/07/05 20:45:40 $
-*/
+//////////////////////////////////////////////////////////////////////////////
+// nitrogenconfigurationui.cpp
+// -------------------
+// 
+// Copyright (c) 2009, 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.                 
+//////////////////////////////////////////////////////////////////////////////
 
 #include <kdeversion.h>
 
@@ -83,9 +79,9 @@ namespace Nitrogen
     gridLayout->addWidget( titleAlignment = new QComboBox(box), 0, 1, 1, 1 );
     titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));  
     titleAlignment->insertItems(0, QStringList()
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignLeft )
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignHCenter )
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignRight )
+      << NitrogenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
+      << NitrogenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
+      << NitrogenConfiguration::titleAlignmentName( Qt::AlignRight, true )
       );
     
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -96,10 +92,10 @@ namespace Nitrogen
     gridLayout->addWidget( buttonSize = new QComboBox(box), 1, 1, 1, 1 );
     buttonSize->setObjectName(QString::fromUtf8("buttonSize"));  
     buttonSize->insertItems(0, QStringList()
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonSmall )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonDefault )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonLarge )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonHuge )
+      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonSmall, true )
+      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonDefault, true )
+      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonLarge, true )
+      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonHuge, true )
       );
     
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -110,8 +106,8 @@ namespace Nitrogen
     gridLayout->addWidget( buttonType = new QComboBox(box), 2, 1, 1, 1 );
     buttonType->setObjectName(QString::fromUtf8("buttonType"));  
     buttonType->insertItems(0, QStringList()
-      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde42 )
-      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde43 )
+      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde42, true )
+      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde43, true )
       );
     
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -122,11 +118,11 @@ namespace Nitrogen
     gridLayout->addWidget( frameBorder = new QComboBox(box), 3, 1, 1, 1);
     frameBorder->setObjectName(QString::fromUtf8("frameBorder"));
     frameBorder->insertItems(0, QStringList()
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderSmall )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderSmall, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge, true )
       );
     
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -137,8 +133,8 @@ namespace Nitrogen
     gridLayout->addWidget( blendColor = new QComboBox(box), 4, 1, 1, 1 );
     blendColor->setObjectName(QString::fromUtf8("blendColor"));
     blendColor->insertItems(0, QStringList()
-      << NitrogenConfiguration::blendColorName( NitrogenConfiguration::NoBlending )
-      << NitrogenConfiguration::blendColorName( NitrogenConfiguration::RadialBlending )
+      << NitrogenConfiguration::blendColorName( NitrogenConfiguration::NoBlending, true )
+      << NitrogenConfiguration::blendColorName( NitrogenConfiguration::RadialBlending, true )
       );
     
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
