@@ -43,7 +43,7 @@ target_link_libraries(
     ${QT_QTXML_LIBRARY}
   )
 
-install(TARGETS nitrogen-convert-exceptions  DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS nitrogen-convert-exceptions ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 
