@@ -153,7 +153,7 @@ namespace Nitrogen
       default: return NitrogenConfiguration().titleAlignmentName( translated );
     }
     
-    return translated ? tr2i18n(out):out;
+    return translated ? i18n(out):out;
     
   }
   
@@ -179,7 +179,7 @@ namespace Nitrogen
       default: return NitrogenConfiguration().buttonSizeName( translated );
     }
     
-    return translated ? tr2i18n(out):out;
+    return translated ? i18n(out):out;
     
   }
 
@@ -204,7 +204,7 @@ namespace Nitrogen
       default: return NitrogenConfiguration().buttonTypeName( translated );
     }
     
-    return translated ? tr2i18n(out):out;
+    return translated ? i18n(out):out;
     
   }
 
@@ -230,7 +230,7 @@ namespace Nitrogen
       default: return NitrogenConfiguration().frameBorderName( translated );
     }
     
-    return translated ? tr2i18n(out):out;
+    return translated ? i18n(out):out;
     
   }
   
@@ -256,7 +256,7 @@ namespace Nitrogen
       default: return NitrogenConfiguration().blendColorName( translated );
     }
     
-    return translated ? tr2i18n(out):out;
+    return translated ? i18n(out):out;
     
   }
   
