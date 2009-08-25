@@ -72,50 +72,11 @@ namespace Nitrogen
     QGridLayout* gridLayout = new QGridLayout();
     gridLayout->setSpacing(6);
     box->setLayout( gridLayout );
-    
-    // title alignment
-    QLabel* label;
-    gridLayout->addWidget( label = new QLabel( i18n("Title alignment:"), box ), 0, 0, 1, 1 );
-    gridLayout->addWidget( titleAlignment = new QComboBox(box), 0, 1, 1, 1 );
-    titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));  
-    titleAlignment->insertItems(0, QStringList()
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignRight, true )
-      );
-    
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    label->setBuddy( titleAlignment );
-    
-    // button size
-    gridLayout->addWidget( label = new QLabel( i18n("Button size:"), box ), 1, 0, 1, 1 );
-    gridLayout->addWidget( buttonSize = new QComboBox(box), 1, 1, 1, 1 );
-    buttonSize->setObjectName(QString::fromUtf8("buttonSize"));  
-    buttonSize->insertItems(0, QStringList()
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonSmall, true )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonDefault, true )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonLarge, true )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonHuge, true )
-      );
-    
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    label->setBuddy( buttonSize );
-
-    // button type
-    gridLayout->addWidget( label = new QLabel( i18n("Button style:"), box ), 2, 0, 1, 1 );
-    gridLayout->addWidget( buttonType = new QComboBox(box), 2, 1, 1, 1 );
-    buttonType->setObjectName(QString::fromUtf8("buttonType"));  
-    buttonType->insertItems(0, QStringList()
-      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde42, true )
-      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde43, true )
-      );
-    
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    label->setBuddy( buttonType );
 
     // frame border
-    gridLayout->addWidget( label = new QLabel( i18n("Border size:"), box ), 3, 0, 1, 1);
-    gridLayout->addWidget( frameBorder = new QComboBox(box), 3, 1, 1, 1);
+    QLabel* label;
+    gridLayout->addWidget( label = new QLabel( i18n("Border size:"), box ), 0, 0, 1, 1);
+    gridLayout->addWidget( frameBorder = new QComboBox(box), 0, 1, 1, 1);
     frameBorder->setObjectName(QString::fromUtf8("frameBorder"));
     frameBorder->insertItems(0, QStringList()
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
@@ -130,6 +91,45 @@ namespace Nitrogen
     
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     label->setBuddy( frameBorder );
+    
+    // title alignment
+    gridLayout->addWidget( label = new QLabel( i18n("Title alignment:"), box ), 1, 0, 1, 1 );
+    gridLayout->addWidget( titleAlignment = new QComboBox(box), 1, 1, 1, 1 );
+    titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));  
+    titleAlignment->insertItems(0, QStringList()
+      << NitrogenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
+      << NitrogenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
+      << NitrogenConfiguration::titleAlignmentName( Qt::AlignRight, true )
+      );
+    
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    label->setBuddy( titleAlignment );
+    
+    // button size
+    gridLayout->addWidget( label = new QLabel( i18n("Button size:"), box ), 2, 0, 1, 1 );
+    gridLayout->addWidget( buttonSize = new QComboBox(box), 2, 1, 1, 1 );
+    buttonSize->setObjectName(QString::fromUtf8("buttonSize"));  
+    buttonSize->insertItems(0, QStringList()
+      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonSmall, true )
+      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonDefault, true )
+      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonLarge, true )
+      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonHuge, true )
+      );
+    
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    label->setBuddy( buttonSize );
+
+    // button type
+    gridLayout->addWidget( label = new QLabel( i18n("Button style:"), box ), 3, 0, 1, 1 );
+    gridLayout->addWidget( buttonType = new QComboBox(box), 3, 1, 1, 1 );
+    buttonType->setObjectName(QString::fromUtf8("buttonType"));  
+    buttonType->insertItems(0, QStringList()
+      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde42, true )
+      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde43, true )
+      );
+    
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    label->setBuddy( buttonType );
     
     // title bar blending
     gridLayout->addWidget( label = new QLabel( i18n("Title bar blending:" ), box ), 4, 0, 1, 1 );
