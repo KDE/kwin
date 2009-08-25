@@ -480,6 +480,15 @@ void WobblyWindowsEffect::stepMovedResized(EffectWindow* w)
             wwi.velocity[j*wwi.width+i] = v;
         }
     }
+
+    // constrain the middle of the window, so that any asymetry wont cause it to drift off-center
+    for (unsigned int j=1; j<wwi.height-1; ++j)
+    {
+        for (unsigned int i=1; i<wwi.width-1; ++i)
+        {
+            wwi.constraint[j*wwi.width+i] = true;
+        }
+    }
 }
 
 void WobblyWindowsEffect::windowAdded(EffectWindow* w)
