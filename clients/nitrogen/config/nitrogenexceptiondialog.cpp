@@ -68,7 +68,7 @@ namespace Nitrogen
       << NitrogenException::typeName( NitrogenException::WindowClassName )
       << NitrogenException::typeName( NitrogenException::WindowTitle ) );
     type_combobox_->setToolTip( i18n(
-      "Select here the window caracteristic used to \n"
+      "Select here the window characteristic used to \n"
       "identify windows to which the exception apply." ) );
     
     label->setAlignment( Qt::AlignRight );

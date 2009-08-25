@@ -222,7 +222,7 @@ namespace Nitrogen
       ( "http://www.kde-look.org/content/show.php/Nitrogen?content=99551" ) );
     
     aboutData.addAuthor( 
-      ki18n( "Hugo Pereira Da Costa" ), ki18n( "Developper" ),
+      ki18n( "Hugo Pereira Da Costa" ), ki18n( "Developer" ),
       "hugo.pereira@free.fr",
       "http://hugo.pereira.free.fr/index.php" );
     
