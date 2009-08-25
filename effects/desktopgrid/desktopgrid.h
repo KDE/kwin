@@ -83,7 +83,7 @@ class DesktopGridEffect
         int highlightedDesktop;
         Window input;
         bool keyboardGrab;
-        bool wasWindowMove;
+        bool wasWindowMove, wasDesktopMove;
         EffectWindow* windowMove;
         QPoint windowMoveDiff;
         

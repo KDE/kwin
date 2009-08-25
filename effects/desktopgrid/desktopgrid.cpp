@@ -46,6 +46,7 @@ DesktopGridEffect::DesktopGridEffect()
     , timeline()
     , keyboardGrab( false )
     , wasWindowMove( false )
+    , wasDesktopMove( false )
     , windowMove( NULL )
     , windowMoveDiff()
     , gridSize()
@@ -334,17 +335,41 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 effects->windowToDesktop( windowMove, d ); // Not true all desktop move
             }
         if( d != highlightedDesktop ) // Highlight desktop
+            {
+            if ( (me->buttons() & Qt::LeftButton) && !wasWindowMove )
+                {
+                wasDesktopMove = true;
+                EffectWindowList windows = effects->stackingOrder();
+                EffectWindowList stack;
+                foreach( EffectWindow* w, windows )
+                    {
+                    if( w->isOnAllDesktops() )
+                        continue;
+                    if( w->isOnDesktop( highlightedDesktop ) )
+                        effects->windowToDesktop( w, d );
+                    else if( w->isOnDesktop( d ) )
+                        stack << w;
+                    }
+                foreach( EffectWindow* w, stack )
+                    effects->windowToDesktop( w, highlightedDesktop );
+                }
             setHighlightedDesktop( d );
+            }
         }
     if( e->type() == QEvent::MouseButtonPress )
         {
         if( me->buttons() == Qt::LeftButton )
             {
-            QRect rect;
-            EffectWindow* w = windowAt( me->pos());
-            if( w != NULL && (w->isMovable() || w->isMovableAcrossScreens()) )
+//             QRect rect;
+            bool isDesktop = (me->modifiers() & Qt::ControlModifier);
+            EffectWindow* w = isDesktop ? NULL : windowAt( me->pos());
+            if ( w != NULL )
+                isDesktop = w->isDesktop();
+            if ( isDesktop )
+                XDefineCursor( display(), input, QCursor( Qt::ClosedHandCursor ).handle() );
+            else if( w != NULL && w->isMovable() || w->isMovableAcrossScreens() )
                 { // Prepare it for moving
-                XDefineCursor( display(), input, QCursor( Qt::SizeAllCursor ).handle() );
+                XDefineCursor( display(), input, QCursor( Qt::ClosedHandCursor ).handle() );
                 windowMoveDiff = w->pos() - unscalePos( me->pos(), NULL );
                 windowMove = w;
                 effects->setElevatedWindow( windowMove, true );
@@ -365,7 +390,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
         }
     if( e->type() == QEvent::MouseButtonRelease && me->button() == Qt::LeftButton )
         {
-        if( !wasWindowMove )
+        if( !wasWindowMove && !wasDesktopMove )
             {
             setCurrentDesktop( highlightedDesktop );
             setActive( false );
@@ -378,7 +403,10 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             windowMove = NULL;
             XDefineCursor( display(), input, QCursor( Qt::PointingHandCursor ).handle() );
             }
+        else if ( wasDesktopMove )
+            XDefineCursor( display(), input, QCursor( Qt::PointingHandCursor ).handle() );
         wasWindowMove = false;
+        wasDesktopMove = false;
         }
     }
 
