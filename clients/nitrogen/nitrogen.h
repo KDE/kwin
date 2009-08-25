@@ -61,7 +61,12 @@ namespace Nitrogen
   };
 
   static const qreal SHADOW_WIDTH = 25.5;
-  static const int EXTENDED_HITAREA = 2;
+  
+  /* 
+  If non zero, this possibly allow one to have an additional space
+  around window that is clickable although it is part of the shadow 
+  */ 
+  static const int EXTENDED_HITAREA = 0;
   
   Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
     
