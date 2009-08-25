@@ -5,7 +5,7 @@
 // config.h
 // -------------------
 // 
-// Copyright (c) 2009, 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
+// Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 // Copyright (C) 2008 Lubos Lunak <l.lunak@kde.org>
 //
 // Based on the Quartz configuration module,
