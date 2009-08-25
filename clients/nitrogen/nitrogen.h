@@ -67,7 +67,8 @@ namespace Nitrogen
   around window that is clickable although it is part of the shadow 
   */ 
   static const int EXTENDED_HITAREA = 0;
-  
+  static const int TFRAMESIZE = 3;
+
   Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
     
   //! window decoration factory

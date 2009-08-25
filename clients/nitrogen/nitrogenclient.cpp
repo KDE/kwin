@@ -148,12 +148,12 @@ namespace Nitrogen
           border = 1;
         }  else {
           
-          if( lm == LM_BorderBottom && frameBorder == NitrogenConfiguration::BorderTiny ) 
+          if( lm == LM_BorderBottom && frameBorder >= NitrogenConfiguration::BorderTiny ) 
           {
             
             // for tiny border, the convention is to have a larger bottom area in order to 
             // make resizing easier
-            border = 4;
+            border = qMax(frameBorder, 4);
             
           } else {
             
@@ -170,7 +170,7 @@ namespace Nitrogen
       {
         int border = 0;
         if( !( respectWindowState && maximized )) 
-        { border = qMax( 3, frameBorder-2 ); }
+        { border = TFRAMESIZE; }
         
         return border + extraBorder;
         
