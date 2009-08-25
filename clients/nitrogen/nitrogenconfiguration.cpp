@@ -161,8 +161,8 @@ namespace Nitrogen
   Qt::Alignment NitrogenConfiguration::titleAlignment( QString value, bool translated )
   {
     if (value == titleAlignmentName( Qt::AlignLeft, translated ) ) return Qt::AlignLeft;
-    else if (value == titleAlignmentName( Qt::AlignRight, translated ) ) return Qt::AlignHCenter;
-    else if (value == titleAlignmentName( Qt::AlignCenter, translated ) ) return Qt::AlignRight;
+    else if (value == titleAlignmentName( Qt::AlignHCenter, translated ) ) return Qt::AlignHCenter;
+    else if (value == titleAlignmentName( Qt::AlignRight, translated ) ) return Qt::AlignRight;
     else return NitrogenConfiguration().titleAlignment();
   }
   
