@@ -25,7 +25,7 @@
 #include <kglobal.h>
 #include <QLabel>
 #include <QStyle>
-//Added by qt3to4:
+#include <QPainter>
 #include <QMouseEvent>
 #include <QResizeEvent>
 #include <QVector>
@@ -108,11 +108,21 @@ void KDecorationPreview::disablePreview()
     }
 
 void KDecorationPreview::paintEvent( QPaintEvent* e )
-{
-    QWidget::paintEvent(e);
-    if( deco[Inactive] ) deco[Inactive]->widget()->render( this, deco[Inactive]->widget()->mapToParent( QPoint(0,0) ) );
-    if( deco[Active] ) deco[Active]->widget()->render( this, deco[Active]->widget()->mapToParent( QPoint(0,0) ) );
-}
+    {
+    QPainter painter( this );
+    QPoint delta = mapTo( window(), QPoint(0, 0) );
+
+    if ( deco[Inactive] )
+        {
+        QWidget *w = deco[Inactive]->widget();
+        w->render( &painter, delta + w->mapToParent( QPoint(0, 0) ) );
+        }
+    if ( deco[Active] )
+        {
+        QWidget *w = deco[Active]->widget();
+        w->render( &painter, delta + w->mapToParent( QPoint(0, 0) ) );
+        }
+    }
 
 void KDecorationPreview::resizeEvent( QResizeEvent* e )
     {
