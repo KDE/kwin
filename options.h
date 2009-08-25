@@ -224,6 +224,7 @@ class Options : public KDecorationOptions
             MouseNextDesktop, MousePreviousDesktop,
             MouseAbove, MouseBelow,
             MouseOpacityMore, MouseOpacityLess,
+            MouseClose,
             MouseNothing
             };
 

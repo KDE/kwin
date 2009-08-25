@@ -319,6 +319,7 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == "resize") return restricted ? MouseResize : MouseUnrestrictedResize;
     if (lowerName == "shade") return MouseShade;
     if (lowerName == "minimize") return MouseMinimize;
+    if (lowerName == "close") return MouseClose;
     if (lowerName == "nothing") return MouseNothing;
     return MouseNothing;
     }

@@ -273,8 +273,9 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
         << i18n("Lower")
         << i18n("Operations Menu")
         << i18n("Toggle Raise & Lower")
-        << i18n("Nothing")
-        << i18n("Shade");
+        << i18n("Shade")
+        << i18n("Close")
+        << i18n("Nothing");
 
   combo = new QComboBox(box);
   combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -316,6 +317,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
          << i18n("Operations Menu")
          << i18n("Raise")
          << i18n("Lower")
+         << i18n("Close")
          << i18n("Nothing");
 
   combo = new QComboBox(box);
@@ -419,8 +421,9 @@ const char* const tbl_TiAc[] = {
     "Lower",
     "Operations menu",
     "Toggle raise and lower",
-    "Nothing",
     "Shade",
+    "Close",
+    "Nothing",
     "" };
 
 const char* const tbl_TiInAc[] = {
@@ -431,6 +434,7 @@ const char* const tbl_TiInAc[] = {
     "Operations menu",
     "Raise",
     "Lower",
+    "Close",
     "Nothing",
     "" };
 
