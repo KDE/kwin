@@ -224,9 +224,12 @@ namespace Nitrogen
     {
       case BorderNone: out = "No Border"; break;
       case BorderTiny: out = "Tiny"; break;
-      case BorderSmall: out = "Small"; break;
-      case BorderDefault: out = "Default"; break;
+      case BorderDefault: out = "Normal"; break;
       case BorderLarge: out = "Large"; break;
+      case BorderVeryLarge: out = "Very Large"; break;
+      case BorderHuge: out = "Huge"; break;
+      case BorderVeryHuge: out = "Very Huge"; break;
+      case BorderOversized: out = "Oversized"; break;
       default: return NitrogenConfiguration().frameBorderName( translated );
     }
     
@@ -239,9 +242,12 @@ namespace Nitrogen
   {
       if( value == frameBorderName( BorderNone, translated ) ) return BorderNone;
       else if( value == frameBorderName( BorderTiny, translated ) ) return BorderTiny;
-      else if( value == frameBorderName( BorderSmall, translated ) ) return BorderSmall;
       else if( value == frameBorderName( BorderDefault, translated ) ) return BorderDefault;
       else if( value == frameBorderName( BorderLarge, translated ) ) return BorderLarge;
+      else if( value == frameBorderName( BorderVeryLarge, translated ) ) return BorderVeryLarge;
+      else if( value == frameBorderName( BorderHuge, translated ) ) return BorderHuge;
+      else if( value == frameBorderName( BorderVeryHuge, translated ) ) return BorderVeryHuge;
+      else if( value == frameBorderName( BorderOversized, translated ) ) return BorderOversized;
       else return NitrogenConfiguration().frameBorder();
   }
   

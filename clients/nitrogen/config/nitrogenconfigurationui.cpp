@@ -120,9 +120,12 @@ namespace Nitrogen
     frameBorder->insertItems(0, QStringList()
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderSmall, true )
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault, true )
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryLarge, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderHuge, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryHuge, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderOversized, true )
       );
     
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );

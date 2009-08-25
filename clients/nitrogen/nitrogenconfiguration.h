@@ -73,9 +73,12 @@ namespace Nitrogen
     {
       BorderNone = 0,
       BorderTiny = 2,
-      BorderSmall = 3,
-      BorderDefault = 5,
-      BorderLarge = 8
+      BorderDefault = 4,
+      BorderLarge = 8,
+      BorderVeryLarge = 12,
+      BorderHuge = 18,
+      BorderVeryHuge = 27,
+      BorderOversized = 40
     };
 
     //! blend color enumeration

@@ -685,7 +685,7 @@ namespace Nitrogen
         configuration().frameBorder()
         );
 
-      if( isResizable() && configuration().frameBorder() >= NitrogenConfiguration::BorderSmall )
+      if( isResizable() && configuration().frameBorder() >= NitrogenConfiguration::BorderTiny )
       { 
         
         // Draw the 3-dots resize handles

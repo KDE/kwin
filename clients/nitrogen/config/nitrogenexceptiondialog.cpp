@@ -96,11 +96,15 @@ namespace Nitrogen
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 2, 0, 1, 1 );
     gridLayout->addWidget( frame_border_combobox_ = new QComboBox(box), 2, 1, 1, 1 );
     frame_border_combobox_->insertItems(0, QStringList()
-      << NitrogenException::frameBorderName( NitrogenException::BorderNone, true )
-      << NitrogenException::frameBorderName( NitrogenException::BorderTiny, true )
-      << NitrogenException::frameBorderName( NitrogenException::BorderSmall, true )
-      << NitrogenException::frameBorderName( NitrogenException::BorderDefault, true )
-      << NitrogenException::frameBorderName( NitrogenException::BorderLarge, true ) );
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryLarge, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderHuge, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryHuge, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderOversized, true )
+      );
     frame_border_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::FrameBorder, checkbox ) );
     checkbox->setToolTip( i18n("If checked, specified frame border is used in place of default value.") );
