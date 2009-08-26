@@ -676,16 +676,15 @@ namespace Nitrogen
     }
     
     // shadow and resize handles
-    if( !isMaximized() )
+    if( configuration().frameBorder() >= NitrogenConfiguration::BorderTiny && !isMaximized() )
     {
       
       helper().drawFloatFrame(
         &painter, frame, color, !compositingActive(), isActive(),
-        KDecoration::options()->color(ColorTitleBar),
-        configuration().frameBorder()
+        KDecoration::options()->color(ColorTitleBar)
         );
 
-      if( isResizable() && configuration().frameBorder() >= NitrogenConfiguration::BorderTiny )
+      if( isResizable() )
       { 
         
         // Draw the 3-dots resize handles
@@ -702,7 +701,6 @@ namespace Nitrogen
       // Draw the 3-dots resize handles
       if( 
         isResizable() && 
-        configuration().frameBorder() >= NitrogenConfiguration::BorderTiny && 
         !configuration().drawSizeGrip() )
       {
 
@@ -834,7 +832,7 @@ namespace Nitrogen
       
       tileSet = new TileSet(shadow, size, size, 1, 1);
       glowTilesOption_ = opt;
-      glowTiles_       = tileSet;
+      glowTiles_ = tileSet;
     } else {
       
       //---------------------------------------------------------------
