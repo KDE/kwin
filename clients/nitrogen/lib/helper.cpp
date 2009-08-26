@@ -497,16 +497,9 @@ QPixmap NitrogenHelper::glow(const QColor &color, int size, int rsize)
 }
 
 //_______________________________________________________________________________________________________________
-void NitrogenHelper::drawFloatFrame(
-  QPainter *p, 
-  const QRect r, 
-  const QColor &color, 
-  bool drawUglyShadow,
-  bool isActive, 
-  const QColor &frameColor,
-  int frameBorder ) const
+void NitrogenHelper::drawFloatFrame(QPainter *p, const QRect r, const QColor &color, bool drawUglyShadow, bool isActive, const QColor &frameColor) const
 {
-  
+  p->save();
   p->setRenderHint(QPainter::Antialiasing);
   QRect frame = r;
   frame.adjust(1,1,-1,-1);
@@ -519,90 +512,48 @@ void NitrogenHelper::drawFloatFrame(
   
   p->setBrush(Qt::NoBrush);
   
-  if (drawUglyShadow && frameBorder >= 1 ) 
-  {
-    
-    if(isActive) 
-    { 
-      
-      //window active - it's a glow - not a shadow
+  if (drawUglyShadow) {
+    if(isActive) { //window active - it's a glow - not a shadow
       p->setPen(glow);
-      
-      // top
       p->drawLine(QPointF(x+4, y-0.5), QPointF(x+w-4, y-0.5));
       p->drawArc(QRectF(x-0.5, y-0.5, 11, 11),90*16, 90*16);
       p->drawArc(QRectF(x+w-11+0.5, y-0.5, 11, 11), 0, 90*16);
-            
-      if( frameBorder >= 3 )
-      {
-        p->drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h-4));
-        p->drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h-4));
-        p->drawArc(QRectF(0.5, y+h-11+0.5, 11, 11),180*16, 90*16);
-        p->drawArc(QRectF(x+w-11+0.5, y+h-11+0.5, 11, 11),270*16, 90*16);
-        
-        // bottom
-        p->drawLine(QPointF(x+4, y+h+0.5), QPointF(x+w-4, y+h+0.5));
-        
-      } else {
-        
-        p->drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h+0.5));
-        p->drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h+0.5));
-        p->drawLine(QPointF(x-0.5, y+h+0.5), QPointF(x+w+0.5, y+h+0.5));
-        
-      }        
-      
+      p->drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h-4));
+      p->drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h-4));
+      p->drawArc(QRectF(x-0.5, y+h-11+0.5, 11, 11),180*16, 90*16);
+      p->drawArc(QRectF(x+w-11+0.5, y+h-11+0.5, 11, 11),270*16, 90*16);
+      p->drawLine(QPointF(x+4, y+h+0.5), QPointF(x+w-4, y+h+0.5));
       light = KColorUtils::mix(light, frameColor);
       dark = KColorUtils::mix(dark, frameColor);
-      
-    } else { 
-      
-      //window inactive - draw something resembling shadow
+    }
+    else { //window inactive - draw something resembling shadow
       QColor shadow = KColorUtils::darken(color, 0.0, 0.0); // fully desaturate
       p->setPen(KColorUtils::darken(shadow, 0.2));
-
       p->drawLine(QPointF(x+4, y-0.5), QPointF(x+w-4, y-0.5));
       p->drawArc(QRectF(x-0.5, y-0.5, 11, 11),90*16, 90*16);
       p->drawArc(QRectF(x+w-11+0.5, y-0.5, 11, 11), 0, 90*16);
-      
-      if( frameBorder >= 3 )
-      {
-        
-        p->setPen(KColorUtils::darken(shadow, 0.35));
-        p->drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h-4));
-        p->drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h-4));
-        p->setPen(KColorUtils::darken(shadow, 0.45));
-        p->drawArc(QRectF(0.5, y+h-11+0.5, 11, 11),180*16, 90*16);
-        p->drawArc(QRectF(x+w-11+0.5, y+h-11+0.5, 11, 11),270*16, 90*16);
-        p->setPen(KColorUtils::darken(shadow, 0.6));
-        p->drawLine(QPointF(x+4, y+h+0.5), QPointF(x+w-4, y+h+0.5));
-      
-      } else {
-      
-        p->setPen(KColorUtils::darken(shadow, 0.35));
-        p->drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h-0.5));
-        p->drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h-0.5));
-        p->setPen(KColorUtils::darken(shadow, 0.6));
-        p->drawLine(QPointF(x+0.5, y+h+0.5), QPointF(x+w-0.5, y+h+0.5));
-      
-      }
+      p->setPen(KColorUtils::darken(shadow, 0.35));
+      p->drawLine(QPointF(x-0.5, y+4), QPointF(x-0.5, y+h-4));
+      p->drawLine(QPointF(x+w+0.5, y+4), QPointF(x+w+0.5, y+h-4));
+      p->setPen(KColorUtils::darken(shadow, 0.45));
+      p->drawArc(QRectF(x-0.5, y+h-11+0.5, 11, 11),180*16, 90*16);
+      p->drawArc(QRectF(x+w-11+0.5, y+h-11+0.5, 11, 11),270*16, 90*16);
+      p->setPen(KColorUtils::darken(shadow, 0.6));
+      p->drawLine(QPointF(x+4, y+h+0.5), QPointF(x+w-4, y+h+0.5));
     }
   }
   
-  if( frameBorder >= 5 )
-  {
-    p->setPen(QPen(light, 0.8));
-    p->drawLine(QPointF(x+4, y+0.6), QPointF(x+w-4, y+0.6));
-    QLinearGradient lg = QLinearGradient(0.0, 1.5, 0.0, 4.5);
-    lg.setColorAt(0, light);
-    lg.setColorAt(1, dark);
-    p->setPen(QPen(lg, 0.8));
-    p->drawArc(QRectF(x+0.6, y+0.6, 9, 9),90*16, 90*16);
-    p->drawArc(QRectF(x+w-9-0.6, y+0.6, 9, 9), 0, 90*16);
-    p->drawLine(QPointF(x+0.6, y+4), QPointF(x+0.6, y+h-4));
-    p->drawLine(QPointF(x+w-0.6, y+4), QPointF(x+w-0.6, y+h-4));
-  }
-  
-  return;
+  p->setPen(QPen(light, 0.8));
+  p->drawLine(QPointF(x+4, y+0.6), QPointF(x+w-4, y+0.6));
+  QLinearGradient lg = QLinearGradient(0.0, 1.5, 0.0, 4.5);
+  lg.setColorAt(0, light);
+  lg.setColorAt(1, dark);
+  p->setPen(QPen(lg, 0.8));
+  p->drawArc(QRectF(x+0.6, y+0.6, 9, 9),90*16, 90*16);
+  p->drawArc(QRectF(x+w-9-0.6, y+0.6, 9, 9), 0, 90*16);
+  p->drawLine(QPointF(x+0.6, y+4), QPointF(x+0.6, y+h-4));
+  p->drawLine(QPointF(x+w-0.6, y+4), QPointF(x+w-0.6, y+h-4));
+  p->restore();
 }
 
 //_______________________________________________________________________________________________________________

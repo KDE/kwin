@@ -91,15 +91,7 @@ class NitrogenHelper
   QPixmap windecoButtonGlow(const QColor &color, int size = 21);
   
   //! frame
-  void drawFloatFrame(
-    QPainter *p, 
-    const QRect r, 
-    const QColor &color, 
-    bool drawUglyShadow=true, 
-    bool isActive=false, 
-    const QColor &frameColor=QColor(), 
-    int frameBorder = 5
-    ) const;
+  void drawFloatFrame(QPainter *p, const QRect r, const QColor &color, bool drawUglyShadow=true, bool isActive=false, const QColor &frameColor=QColor()) const;
   
   //! separator
   void drawSeparator(QPainter *p, const QRect &r, const QColor &color, Qt::Orientation orientation) const;
