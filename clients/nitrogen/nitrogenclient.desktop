@@ -2,7 +2,9 @@
 [Desktop Entry]
 Name=Nitrogen
 Name[nds]=Stickstoff
+Name[pt_BR]=Nitrogênio
 Name[sv]=Kväve
+Name[tg]=Нитроген
 Name[uk]=Азот
 Name[x-test]=xxNitrogenxx
 X-KDE-Library=kwin3_nitrogen
