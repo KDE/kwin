@@ -432,18 +432,18 @@ namespace Nitrogen
     
     QColor color( KDecoration::options()->color(ColorTitleBar) );
     
-    QLinearGradient scratchlg(QPoint(start,0), QPoint(end,0));
-    scratchlg.setColorAt(0.0, Qt::transparent);
-    scratchlg.setColorAt(0.05, helper().calcDarkColor(color) );
-    scratchlg.setColorAt(1.0, Qt::transparent);
-    QPen pen1(scratchlg, 0.5);
-    
-    QLinearGradient scratchlg2(QPoint(start,0), QPoint(end,0));
-    scratchlg2.setColorAt(0.0, Qt::transparent);
-    scratchlg2.setColorAt(0.05, helper().calcLightColor(palette.color(QPalette::Window)) );
-    scratchlg2.setColorAt(1.0, Qt::transparent);
-    QPen pen2(scratchlg2, 0.5);
-    
+    QLinearGradient stripeGradient(QPoint(start,0), QPoint(end,0));
+    stripeGradient.setColorAt(0.0, Qt::transparent);
+    stripeGradient.setColorAt(0.05, KDecoration::options()->color(ColorTitleBar));
+    stripeGradient.setColorAt(1.0, Qt::transparent);
+    QPen pen1(stripeGradient, 0.5);
+
+    QLinearGradient stripeGradient2(QPoint(start,0), QPoint(end,0));
+    stripeGradient2.setColorAt(0.0, Qt::transparent);
+    stripeGradient2.setColorAt(0.05, helper_.calcLightColor(palette.color(QPalette::Window)));
+    stripeGradient2.setColorAt(1.0, Qt::transparent);
+    QPen pen2(stripeGradient2, 0.5);
+        
     bool antialiasing = p->testRenderHint(QPainter::Antialiasing);
     p->setRenderHint(QPainter::Antialiasing, false);
     const int titleHeight = layoutMetric(LM_TitleHeight);
