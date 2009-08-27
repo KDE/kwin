@@ -130,8 +130,6 @@ bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
 int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
     bool maximized = isMaximized();
-    // increase the border of the decoration by including the shadow as clickable area
-    int extraBorder = (maximized && compositingActive()) ? 0 : EXTENDED_HITAREA;
     int frameWidth = OxygenFactory::borderSize();
 
     switch (lm) {
@@ -139,26 +137,26 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_BorderRight:
         case LM_BorderBottom:
         {
-            int border = 0;
-            if (!(respectWindowState && maximized)) {
+            if (respectWindowState && maximized) {
+                return 0;
+            } else {
                 // Even for thin borders (2px wide) we want to preserve
-                // the rounded corners having a minimum height of 4px
+                // the rounded corners having a minimum height of 7px
                 if (lm == LM_BorderBottom) {
-                    border = qMax(frameWidth, 4);
+                    return qMax(frameWidth, 4);
                 } else {
-                    border = frameWidth;
+                    return frameWidth;
                 }
             }
-            return border + extraBorder;
         }
 
         case LM_TitleEdgeTop:
         {
-            int border = 0;
-            if (!(respectWindowState && maximized)) {
-                border = TFRAMESIZE;
+            if (respectWindowState && maximized) {
+                return 0;
+            } else {
+                return TFRAMESIZE;
             }
-            return border + extraBorder;
         }
 
         case LM_TitleEdgeBottom:
@@ -169,11 +167,11 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_TitleEdgeLeft:
         case LM_TitleEdgeRight:
         {
-            int border = 0;
-            if (!(respectWindowState && maximized)) {
-                border = 6;
+            if (respectWindowState && maximized) {
+                return 0;
+            } else {
+                return 6;
             }
-            return border + extraBorder;
         }
 
         case LM_TitleBorderLeft:
@@ -202,7 +200,7 @@ int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_OuterPaddingRight:
         case LM_OuterPaddingTop:
         case LM_OuterPaddingBottom:
-            return SHADOW_WIDTH - extraBorder;
+            return SHADOW_WIDTH;
 
         default:
             return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -319,12 +317,8 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     QColor light = helper_.calcLightColor( color );
     QColor dark = helper_.calcDarkColor( color );
 
-    bool compositingIsActive = compositingActive();
-    bool maximized  = isMaximized();
-    int extraBorder = (maximized && compositingIsActive) ? 0 : EXTENDED_HITAREA;
-
     const int titleHeight = layoutMetric(LM_TitleHeight);
-    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top() - extraBorder;
+    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top();
     const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
     const int marginLeft = layoutMetric(LM_TitleBorderLeft);
     const int marginRight = layoutMetric(LM_TitleBorderRight);
@@ -337,15 +331,16 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     // draw shadow
 
-    if (compositingIsActive && !maximized)
+    if (compositingActive() && !isMaximized())
         shadowTiles(color,KDecoration::options()->color(ColorTitleBar),
                 SHADOW_WIDTH, isActive())->render( frame.adjusted(-SHADOW_WIDTH+4,
                     -SHADOW_WIDTH+4, SHADOW_WIDTH-4, SHADOW_WIDTH-4),
                 &painter, TileSet::Ring);
 
     // draw window background
+    bool isCompositingActive = compositingActive();
 
-    if (compositingIsActive) {
+    if (isCompositingActive) {
         frame.getRect(&x, &y, &w, &h);
 
         QRegion mask(x+5, y+0, w-10, h-0);
@@ -359,7 +354,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
 
     helper_.renderWindowBackground(&painter, frame, this->widget(), palette, SHADOW_WIDTH);
 
-    if (compositingIsActive) {
+    if (isCompositingActive) {
         painter.setClipping(false);
     }
 
@@ -372,7 +367,7 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     painter.setRenderHint(QPainter::Antialiasing);
 
     // Draw dividing line
-    if (compositingIsActive) {
+    if (compositingActive()) {
         frame.adjust(-1,-1,1,1);
     }
     frame.getRect(&x, &y, &w, &h);
@@ -419,10 +414,10 @@ void OxygenClient::paintEvent(QPaintEvent *e)
     }
 
     // Draw shadows of the frame
-    if(maximized)
+    if(isMaximized())
         return;
 
-    helper_.drawFloatFrame(&painter, frame, color, !compositingIsActive, isActive(),
+    helper_.drawFloatFrame(&painter, frame, color, !compositingActive(), isActive(),
                                                                 KDecoration::options()->color(ColorTitleBar));
 
     if(!isResizable())
