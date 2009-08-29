@@ -415,7 +415,14 @@ namespace Nitrogen
     KCommonDecorationUnstable::activeChange();
     
   }
-  
+
+  //_________________________________________________________
+  void NitrogenClient::shadeChange( void  )
+  { 
+    if( hasSizeGrip() ) sizeGrip().setVisible( !isShade() ); 
+    KCommonDecorationUnstable::shadeChange();
+  }
+
   //_________________________________________________________
   QPalette NitrogenClient::backgroundPalette( const QWidget* widget, QPalette palette ) const
   {    

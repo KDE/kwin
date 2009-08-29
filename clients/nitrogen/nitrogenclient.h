@@ -91,6 +91,9 @@ namespace Nitrogen
         //! triggered when window activity is changed
         virtual void activeChange();
         
+        //! triggered when window shade is changed
+        virtual void shadeChange();
+        
         public slots:
         
         //! reset configuration
