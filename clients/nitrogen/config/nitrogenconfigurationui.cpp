@@ -132,7 +132,7 @@ namespace Nitrogen
     label->setBuddy( buttonType );
     
     // title bar blending
-    gridLayout->addWidget( label = new QLabel( i18n("Title bar blending:" ), box ), 4, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n("Background style:" ), box ), 4, 0, 1, 1 );
     gridLayout->addWidget( blendColor = new QComboBox(box), 4, 1, 1, 1 );
     blendColor->setObjectName(QString::fromUtf8("blendColor"));
     blendColor->insertItems(0, QStringList()
