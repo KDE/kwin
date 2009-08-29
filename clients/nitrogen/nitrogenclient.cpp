@@ -330,7 +330,7 @@ namespace Nitrogen
     int bottom = 1;
     
     // disable bottom corners when border frame is too small
-    if( configuration().frameBorder() <= NitrogenConfiguration::BorderTiny ) bottom = 0;
+    if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny ) bottom = 0;
     
     int sw = layoutMetric( LM_OuterPaddingLeft );
     int sh = layoutMetric( LM_OuterPaddingTop );
@@ -775,7 +775,7 @@ namespace Nitrogen
     
     // draw the corner of the window - actually all 4 corners as one circle
     QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-    if( configuration().frameBorder() <= NitrogenConfiguration::BorderTiny )
+    if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny )
     {
       
       lg.setColorAt(0, helper().backgroundTopColor(color) );
