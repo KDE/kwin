@@ -862,9 +862,16 @@ void KeramikButton::paintEvent( QPaintEvent * )
 			deco = NULL;
 	}
 
-	p.setPen( Qt::black ); // ### hardcoded color
 	if (deco)
-		p.drawPixmap( (size-17)/2, (size-17)/2, *deco );
+	{
+		QPainterPath path;
+		path.addRegion( *deco );
+		QPoint offset( (size-17)/2, (size-17)/2 );
+		p.translate( offset );
+		p.setPen( Qt::NoPen );
+		p.setBrush( Qt::black );
+		p.drawPath( path );
+	}
 }
 
 
