@@ -443,7 +443,7 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
 
 	oldLibraryName = currentLibraryName;
 	currentLibraryName = conf.readEntry("PluginLib",
-					((QPixmap::defaultDepth() > 8) ? "kwin3_ozone" : "kwin3_plastik"));
+					((QPixmap::defaultDepth() > 8) ? "kwin3_nitrogen" : "kwin3_plastik"));
 	QString decoName = decorationName( currentLibraryName );
 
 	// If we are using the "default" kde client, use the "default" entry.
@@ -548,8 +548,8 @@ void KWinDecorationModule::defaults()
 // Don't set default for now
 //	decorationList->setSelected(
 //		decorationList->findItem( i18n("KDE 2") ), true );  // KDE classic client
-	decorationList->setCurrentItem( i18n("Ozone"), true );  // KDE classic client
-	slotChangeDecoration(i18n("Ozone"));
+	decorationList->setCurrentItem( i18n("Nitrogen"), true );  // KDE classic client
+	slotChangeDecoration(i18n("Nitrogen"));
 
 	buttonPositionWidget->setButtonsLeft(KDecorationOptions::defaultTitleButtonsLeft());
 	buttonPositionWidget->setButtonsRight(KDecorationOptions::defaultTitleButtonsRight());
