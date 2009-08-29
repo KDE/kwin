@@ -44,8 +44,8 @@ namespace Nitrogen
     buttonType_( ButtonKde43 ),
     frameBorder_( BorderDefault ),
     blendColor_( RadialBlending ),
-    showStripes_( false ),
-    drawSeparator_( false ),
+    showStripes_( true ),
+    drawSeparator_( true ),
     overwriteColors_( true ),
     drawSizeGrip_( false ),
     useOxygenShadows_( true )
