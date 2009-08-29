@@ -512,10 +512,18 @@ void QuartzButton::drawButton(QPainter *p)
 	{
 		int xOff = (width()-10)/2;
 		int yOff = (height()-10)/2;
-		p->setPen( Qt::black );
-		p->drawPixmap(isDown() ? xOff+2: xOff+1, isDown() ? yOff+2 : yOff+1, *deco);
-		p->setPen( KDecoration::options()->color(KDecoration::ColorButtonBg, decoration()->isActive()).light(150) );
-		p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, *deco);
+		QPainterPath path;
+		path.addRegion( *deco );
+		
+		p->setPen( Qt::NoPen );
+		p->setBrush( Qt::black );
+		p->translate( isDown() ? QPoint( xOff+2, yOff+2 ) : QPoint( xOff+1, yOff+1 ) );
+		p->drawPath( path );
+		
+		p->setBrush( KDecoration::options()->color(KDecoration::ColorButtonBg, decoration()->isActive()).light(150) );
+		p->translate( QPoint( -1, -1 ) );
+		p->drawPath( path );
+		
 	} else
 		{
 			QPixmap btnpix;
