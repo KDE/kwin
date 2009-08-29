@@ -168,12 +168,9 @@ namespace Nitrogen
     if (type_ == ButtonMenu) 
     {
       
-      // we paint the mini icon using 0.72xbuttonsize() as a scale
-      // this roughtly corresponds to 16 for default button size
-      double scale = 0.72;
-      const QPixmap& pixmap( client_.icon().pixmap( scale*width() ) );
+      const QPixmap& pixmap( client_.icon().pixmap( client_.configuration().iconScale() ) );
       double offset = 0.5*(width()-pixmap.width() );
-      painter.drawPixmap(offset, offset, pixmap );
+      painter.drawPixmap(offset, offset-1, pixmap );
       return;
     }
         
