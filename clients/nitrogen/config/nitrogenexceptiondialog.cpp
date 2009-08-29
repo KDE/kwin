@@ -111,7 +111,7 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), frame_border_combobox_, SLOT( setEnabled( bool ) ) );
     
     // blend color
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Title bar blending:" ), box ), 3, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Background style:" ), box ), 3, 0, 1, 1 );
     gridLayout->addWidget( blend_combobox_ = new QComboBox(box), 3, 1, 1, 1 );
     blend_combobox_->insertItems(0, QStringList()
       << NitrogenException::blendColorName( NitrogenException::NoBlending, true )
@@ -122,22 +122,22 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), blend_combobox_, SLOT( setEnabled( bool ) ) );
     
     // separator
-    gridLayout->addWidget( label = new QLabel( i18n( "Draw separator :" ), box ), 4, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Draw separator between title bar and window contents:" ), box ), 4, 0, 1, 1 );
     gridLayout->addWidget( draw_separator_combobox_ = new ComboBox( box ), 4, 1, 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     
     // stripes
-    gridLayout->addWidget( label = new QLabel( i18n( "Show stripes :" ), box ), 5, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Show stripes next to the title:" ), box ), 5, 0, 1, 1 );
     gridLayout->addWidget( show_stripes_combobox_ = new ComboBox( box ), 5, 1, 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     // overwrite colors
-    gridLayout->addWidget( label = new QLabel( i18n( "Overwrite default title bar colors:" ), box ), 6, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Blend title bar colors with window content:" ), box ), 6, 0, 1, 1 );
     gridLayout->addWidget( overwrite_colors_combobox_ = new ComboBox( box ), 6, 1, 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     
     // size grip
-    gridLayout->addWidget( label = new QLabel( i18n( "Draw size grip :" ), box ), 7, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Draw size grip in bottom-right corner of windows:" ), box ), 7, 0, 1, 1 );
     gridLayout->addWidget( draw_size_grip_combobox_ = new ComboBox( box ), 7, 1, 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
   }
@@ -222,8 +222,8 @@ namespace Nitrogen
 
   //___________________________________________
   const QString NitrogenExceptionDialog::ComboBox::Default( i18n("Default") );
-  const QString NitrogenExceptionDialog::ComboBox::Yes( i18n("Yes") );
-  const QString NitrogenExceptionDialog::ComboBox::No( i18n("No") );
+  const QString NitrogenExceptionDialog::ComboBox::Yes( i18n("Enabled") );
+  const QString NitrogenExceptionDialog::ComboBox::No( i18n("Disabled") );
 
   //___________________________________________
   NitrogenExceptionDialog::ComboBox::ComboBox( QWidget* parent ):
