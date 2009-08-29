@@ -213,8 +213,8 @@ namespace Nitrogen
     const char* out;
     switch( value )
     {
-      case ButtonKde42: out = "KDE 4.2"; break;
-      case ButtonKde43: out = "Default"; break;
+      case ButtonKde42: out = "Flush"; break;
+      case ButtonKde43: out = "Sunken"; break;
       default: return NitrogenConfiguration().buttonTypeName( translated );
     }
     
@@ -271,8 +271,8 @@ namespace Nitrogen
     const char* out;
     switch( value )
     {
-      case NoBlending: out = "No Blending"; break;
-      case RadialBlending: out = "Radial Blending"; break;
+      case NoBlending: out = "Solid Color"; break;
+      case RadialBlending: out = "Radial Gradient"; break;
       default: return NitrogenConfiguration().blendColorName( translated );
     }
     
