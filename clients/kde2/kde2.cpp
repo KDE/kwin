@@ -308,6 +308,8 @@ void KDE2Handler::createPixmaps()
 		QPainter maskPainter;
 		int i, x, y;
 		titlePix = new QPixmap(132, normalTitleHeight+2);
+    titlePix->fill( Qt::transparent );
+    
 		QBitmap mask(132, normalTitleHeight+2);
 		mask.fill(Qt::color0);
 
