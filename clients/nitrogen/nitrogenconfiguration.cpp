@@ -194,6 +194,20 @@ namespace Nitrogen
   }
 
   //__________________________________________________
+  int NitrogenConfiguration::iconScale( ButtonSize value )
+  {
+    switch( value )
+    {
+      case ButtonSmall: return 13;
+      case ButtonDefault: return 16; 
+      case ButtonLarge: return 24;
+      case ButtonHuge: return 35;
+      default: return NitrogenConfiguration().iconScale();
+    }
+    
+  }
+    
+  //__________________________________________________
   QString NitrogenConfiguration::buttonTypeName( ButtonType value, bool translated )
   {
     const char* out;

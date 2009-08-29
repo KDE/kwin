@@ -135,10 +135,14 @@ namespace Nitrogen
     
     static QString buttonSizeName( ButtonSize, bool translated );
     static ButtonSize buttonSize( QString, bool translated );
+    static int iconScale( ButtonSize );
     
     virtual ButtonSize buttonSize( void ) const
     { return buttonSize_; }
       
+    virtual int iconScale( void ) const
+    { return iconScale( buttonSize() ); }
+    
     virtual QString buttonSizeName( bool translated ) const
     { return buttonSizeName( buttonSize(), translated ); }
     
