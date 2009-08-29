@@ -338,10 +338,15 @@ void RedmondButton::drawButton(QPainter *p)
 				p->drawPixmap(0, 0, miniBtn ? *iMiniBtnPix1 : *iBtnPix1);
 		}
 
-		p->setPen( *btnForeground );
-		int xOff = (width()-10)/2;
-		int yOff = (height()-10)/2;
-		p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
+		QPainterPath path;
+		path.addRegion( deco );
+		p->setPen( Qt::NoPen );
+		p->setBrush( *btnForeground );
+		QPoint offset( ( width() - 10 )/2, ( height() - 10 )/2 );
+		if( isDown() ) offset += QPoint( 1, 1 );
+		p->translate( offset );
+		p->drawPath( path );
+    
 	} else {
 		if (isLeft() ) {
 			p->fillRect(0, 0, width(), height(),
