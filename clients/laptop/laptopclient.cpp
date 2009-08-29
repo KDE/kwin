@@ -143,6 +143,7 @@ static void create_pixmaps()
     QPainter maskPainter;
     int i, x, y;
     titlePix = new QPixmap(33, 12);
+    titlePix->fill( Qt::transparent );
     QBitmap mask(33, 12);
     mask.fill(Qt::color0);
 
