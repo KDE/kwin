@@ -431,8 +431,12 @@ void ModernButton::drawButton(QPainter *p)
             p->drawPixmap(0, 0, isDown() ? *iButtonPixDown : *iButtonPix);
     }
     if(!deco.isNull()){
-        p->setPen(*buttonFg);
-        p->drawPixmap(isDown() ? 4 : 3, isDown() ? 5 : 4, deco);
+        QPainterPath path;
+        path.addRegion( deco );
+        p->setBrush(*buttonFg);
+        p->setPen( Qt::NoPen );
+        p->translate( isDown() ? QPoint( 4, 5 ):QPoint( 3, 4 ) ); 
+        p->drawPath( path );
     }
 }
 
