@@ -50,7 +50,7 @@ namespace Nitrogen
     colorCacheInvalid_(true)
   {
     setAutoFillBackground(false);
-    setAttribute(Qt::WA_OpaquePaintEvent, false);
+    setAttribute(Qt::WA_NoSystemBackground);
     
     {
       unsigned int size( client_.configuration().buttonSize() );

@@ -95,7 +95,6 @@ namespace Nitrogen
     
     KCommonDecoration::init();
     widget()->setAttribute(Qt::WA_NoSystemBackground );
-    widget()->setAttribute( Qt::WA_OpaquePaintEvent );
     widget()->setAutoFillBackground( false );
     initialized_ = true;
     
