@@ -446,6 +446,12 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
 					((QPixmap::defaultDepth() > 8) ? "kwin3_nitrogen" : "kwin3_plastik"));
 	QString decoName = decorationName( currentLibraryName );
 
+	if (decoName.isEmpty())
+	{ // Selected decoration doesn't exist, use the default
+		currentLibraryName = ((QPixmap::defaultDepth() > 8) ? "kwin3_nitrogen" : "kwin3_plastik");
+		decoName = decorationName( currentLibraryName );
+	}
+
 	// If we are using the "default" kde client, use the "default" entry.
 //	if (decoName.isEmpty())
 //		decoName = i18n("KDE 2");
