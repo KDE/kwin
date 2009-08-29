@@ -227,6 +227,8 @@ WebClient::paintEvent(QPaintEvent * pe)
             titleEdgeBottomBottom-(r_y+titleEdgeTop) );
   titleRect.setTop(1);
 
+  QRegion mask( calcMask() );
+  
   QPainter p(widget());
 
   p.setPen(Qt::black);
@@ -235,13 +237,15 @@ WebClient::paintEvent(QPaintEvent * pe)
   p.setBrush( pal.background() );
 
   p.setClipRegion(pe->region() - titleRect);
+  if( isPreview() && shape_ ) p.setClipRegion( mask, Qt::IntersectClip );
 
+  
   QRect r(widget()->rect());
   r.adjust(0, 0, -1, -1);
   p.drawRect(r);
-
+  
   p.setClipRegion(pe->region());
-
+  if( isPreview() && shape_ ) p.setClipRegion( mask, Qt::IntersectClip );
   p.fillRect(titleRect, options()->color(ColorTitleBar, isActive()));
 
   if (shape_)
@@ -289,11 +293,8 @@ WebClient::paintEvent(QPaintEvent * pe)
   p.drawText(titleRect, Qt::AlignCenter, caption());
 }
 
-void WebClient::updateWindowShape()
+QRegion WebClient::calcMask(void) const
 {
-  if (!shape_)
-    return;
-
   QRegion mask(0, 0, width(), height());
 
   int r(width());
@@ -326,8 +327,14 @@ void WebClient::updateWindowShape()
   mask -= QRegion(r - 3, b - 2, 3, 1);
   mask -= QRegion(r - 2, b - 3, 2, 1);
   mask -= QRegion(r - 1, b - 5, 1, 2);
+  return mask;
+}
 
-  setMask(mask);
+void WebClient::updateWindowShape()
+{
+  if (!shape_)
+    return;
+  setMask(calcMask());
 }
 
 KDecoration* WebFactory::createDecoration( KDecorationBridge* b )
