@@ -106,7 +106,7 @@ void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             {
             timeLine.addTime( (double)time );
             if( thumbnails && (!dynamicThumbnails || 
-                (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
+                (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows)) )
                 calculateItemSizes();
             }
         if( effects->currentTabBoxWindow() == NULL )
@@ -176,8 +176,8 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glTranslatef( xTranslate, yTranslate, 0.0 );
             }
     
-        QList< EffectWindow* > tempList = effects->currentTabBoxWindowList();
-        int index = tempList.indexOf( effects->currentTabBoxWindow() );
+        QList< EffectWindow* > tempList = currentWindowList;
+        int index = tempList.indexOf( selected_window );
         if( animation || start || stop )
             {
             if( !start && !stop )
@@ -245,7 +245,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             PaintClipper::push( clip );
             // no reflections during start and stop animation
             if( !start && !stop )
-                paintScene( frontWindow, &leftWindows, &rightWindows, true );
+                paintScene( frontWindow, leftWindows, rightWindows, true );
             PaintClipper::pop( clip );
             glEnable( GL_BLEND );
             glBlendFunc( GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA );
@@ -305,7 +305,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glPopMatrix();
             glDisable( GL_BLEND );
             }
-        paintScene( frontWindow, &leftWindows, &rightWindows );
+        paintScene( frontWindow, leftWindows, rightWindows );
 
         if( effects->numScreens() > 1 )
             {
@@ -328,7 +328,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         }
 
         if( ( thumbnails && (!dynamicThumbnails || 
-            (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
+            (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows)) )
             && !( start || stop ) )
             {
             thumbnailFrame.render( region );
@@ -356,11 +356,18 @@ void CoverSwitchEffect::postPaintScreen()
                 {
                 stop = false;
                 effects->setActiveFullScreenEffect( 0 );
+                foreach( EffectWindow* window, referrencedWindows )
+                    {
+                    window->unrefWindow();
+                    }
+                referrencedWindows.clear();
+                currentWindowList.clear();
                 if( startRequested )
                     {
                     startRequested = false;
                     mActivated = true;
                     effects->refTabBox();
+                    currentWindowList = effects->currentTabBoxWindowList();
                     if( animateStart )
                         {
                         start = true;
@@ -392,8 +399,8 @@ void CoverSwitchEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
-void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows,
-    QList< EffectWindow* >* rightWindows, bool reflectedWindows )
+void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, const EffectWindowList& leftWindows,
+    const EffectWindowList& rightWindows, bool reflectedWindows )
     {
     // LAYOUT
     // one window in the front. Other windows left and right rotated
@@ -410,8 +417,8 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
     // appears transparent on left side and becomes totally opaque again
     // backward (alt+shift+tab) same as forward but opposite direction
     int width = area.width();
-    int leftWindowCount = leftWindows->count();
-    int rightWindowCount = rightWindows->count();
+    int leftWindowCount = leftWindows.count();
+    int rightWindowCount = rightWindows.count();
     RotationData rot;
     rot.axis = RotationData::YAxis;
 
@@ -443,7 +450,7 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
                 {
                 paintWindows( rightWindows, false, reflectedWindows );
                 paintFrontWindow( frontWindow, width, leftWindowCount, rightWindowCount, reflectedWindows );
-                paintWindows( leftWindows, true, reflectedWindows, rightWindows->at( 0 ) );
+                paintWindows( leftWindows, true, reflectedWindows, rightWindows.at( 0 ) );
                 }
             }
         else
@@ -459,7 +466,7 @@ void CoverSwitchEffect::paintScene( EffectWindow* frontWindow, QList< EffectWind
                 EffectWindow* leftWindow;
                 if( leftWindowCount > 0)
                     {
-                    leftWindow = leftWindows->at( 0 );
+                    leftWindow = leftWindows.at( 0 );
                     paintFrontWindow( frontWindow, width, leftWindowCount, rightWindowCount, reflectedWindows );
                     }
                 else
@@ -513,6 +520,7 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                 effects->setActiveFullScreenEffect( this );
                 scheduled_directions.clear();
                 selected_window = effects->currentTabBoxWindow();
+                currentWindowList = effects->currentTabBoxWindowList();
                 direction = Left;
                 mActivated = true;
                 if( animateStart )
@@ -558,7 +566,7 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
                 startRequested = true;
                 }
             if( thumbnails && (!dynamicThumbnails || 
-                (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
+                (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows)) )
                 {
                 highlight_is_set = false;
                 calculateFrameSize();
@@ -596,7 +604,7 @@ void CoverSwitchEffect::tabBoxClosed()
         effects->destroyInputWindow( input );
         effects->addRepaintFull();
         if( thumbnails && (!dynamicThumbnails || 
-                (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
+                (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows)) )
             {
             qDeleteAll( windows );
             windows.clear();
@@ -608,14 +616,14 @@ void CoverSwitchEffect::tabBoxUpdated()
     {
     if( mActivated )
         {
-        if( animateSwitch && effects->currentTabBoxWindowList().count() > 1)
+        if( animateSwitch && currentWindowList.count() > 1)
             {
             // determine the switch direction
             if( selected_window != effects->currentTabBoxWindow() )
                 {
                 if( selected_window != NULL )
                     {
-                    int old_index = effects->currentTabBoxWindowList().indexOf( selected_window );
+                    int old_index = currentWindowList.indexOf( selected_window );
                     int new_index = effects->currentTabBoxWindowList().indexOf( effects->currentTabBoxWindow() );
                     Direction new_direction;
                     int distance = new_index - old_index;
@@ -658,12 +666,13 @@ void CoverSwitchEffect::tabBoxUpdated()
                         }
                     }
                 selected_window = effects->currentTabBoxWindow();
+                currentWindowList = effects->currentTabBoxWindowList();
                 captionFrame.setText( selected_window->caption() );
                 captionFrame.setIcon( selected_window->icon() );
                 }
             }
             if( thumbnails && (!dynamicThumbnails || 
-                (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
+                (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows)) )
                 {
                 calculateFrameSize();
                 calculateItemSizes();
@@ -839,10 +848,10 @@ void CoverSwitchEffect::paintFrontWindow( EffectWindow* frontWindow, int width, 
         paintWindowCover( frontWindow, reflectedWindow, data );
     }
 
-void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow )
+void CoverSwitchEffect::paintWindows( const EffectWindowList& windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow )
     {
     int width = area.width();
-    int windowCount = windows->count();
+    int windowCount = windows.count();
     EffectWindow* window;
     
     int rotateFactor = 1;
@@ -861,7 +870,7 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, bool left
         RotationData rot;
         rot.axis = RotationData::YAxis;
         rot.angle = angle;
-        rot.angle = angle*rotateFactor;        
+        rot.angle = angle*rotateFactor;
         WindowPaintData data( additionalWindow );
         if( left )
             data.xTranslate += -xTranslate - additionalWindow->geometry().x();
@@ -878,11 +887,13 @@ void CoverSwitchEffect::paintWindows( QList< EffectWindow* >* windows, bool left
     RotationData rot;
     rot.axis = RotationData::YAxis;
     // normal behaviour
-    for( int i=0; i < windowCount; i++ )
+    for( int i=0; i < windows.count(); i++)
         {
-        window = windows->at( i );
-        if( window == NULL )
+        window = windows.at( i );
+        if( window == NULL || window->isDeleted() )
+            {
             continue;
+            }
         WindowPaintData data( window );
         rot.angle = angle;
         if( left )
@@ -954,7 +965,7 @@ void CoverSwitchEffect::calculateFrameSize()
     int itemcount;
 
     QRect screenr = effects->clientArea( PlacementArea, activeScreen, effects->currentDesktop());
-    itemcount = effects->currentTabBoxWindowList().count();
+    itemcount = currentWindowList.count();
     item_max_size.setWidth( (screenr.width()*0.95f * 2)/itemcount );
     if( item_max_size.width() > 250 )
         item_max_size.setWidth( 250 );
@@ -973,8 +984,8 @@ void CoverSwitchEffect::calculateItemSizes()
     {
     qDeleteAll( windows );
     windows.clear();
-    EffectWindowList original_windows = effects->currentTabBoxWindowList();
-    int index = original_windows.indexOf( effects->currentTabBoxWindow() );
+    EffectWindowList original_windows = currentWindowList;
+    int index = original_windows.indexOf( selected_window );
     int leftIndex = index;
     int rightIndex = index + 1;
     if( rightIndex == original_windows.count() )
@@ -1072,7 +1083,7 @@ void CoverSwitchEffect::calculateItemSizes()
         }
     if( !highlight_is_set )
         {
-        highlight_area = windows[ effects->currentTabBoxWindow() ]->area;
+        highlight_area = windows[ selected_window ]->area;
         highlight_is_set = true;
         }
     }
@@ -1346,7 +1357,7 @@ void CoverSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
 
     // has one of the thumbnails been clicked?
     if( (thumbnails && (!dynamicThumbnails || 
-        (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows))))
+        (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows))))
         {
         // determine which item was clicked
         foreach( EffectWindow* w, windows.keys())
@@ -1424,7 +1435,7 @@ void CoverSwitchEffect::abort()
     stopRequested = false;
     effects->addRepaintFull();
     if( thumbnails && (!dynamicThumbnails ||
-            (dynamicThumbnails && effects->currentTabBoxWindowList().size() >= thumbnailWindows)) )
+            (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows)) )
         {
         qDeleteAll( windows );
         windows.clear();
@@ -1432,6 +1443,20 @@ void CoverSwitchEffect::abort()
     captionFrame.free();
     thumbnailFrame.free();
     }
+
+void CoverSwitchEffect::windowClosed( EffectWindow* c )
+    {
+    // if the list is not empty, the effect is active
+    if( !currentWindowList.isEmpty() )
+        {
+        c->refWindow();
+        referrencedWindows.append( c );
+        currentWindowList.removeAll( c );
+        leftWindows.removeAll( c );
+        rightWindows.removeAll( c );
+        }
+    }
+
 
 CoverSwitchEffect::ItemInfo::ItemInfo()
     : iconFrame( NULL )

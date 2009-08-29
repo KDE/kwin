@@ -50,14 +50,15 @@ class CoverSwitchEffect
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
         virtual void windowInputMouseEvent( Window w, QEvent* e );
+        virtual void windowClosed( EffectWindow* c );
 
         static bool supported();
     private:
-        void paintScene( EffectWindow* frontWindow, QList< EffectWindow* >* leftWindows, QList< EffectWindow* >* rightWindows,
+        void paintScene( EffectWindow* frontWindow, const EffectWindowList& leftWindows, const EffectWindowList& rightWindows,
         bool reflectedWindows = false );
         void paintWindowCover( EffectWindow* w, bool reflectedWindow, WindowPaintData& data );
         void paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow  );
-        void paintWindows( QList< EffectWindow* >* windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
+        void paintWindows( const EffectWindowList& windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
         void abort();
         // thumbnail bar
         class ItemInfo;
@@ -97,6 +98,8 @@ class CoverSwitchEffect
         int activeScreen;
         QList< EffectWindow* > leftWindows;
         QList< EffectWindow* > rightWindows;
+        EffectWindowList currentWindowList;
+        EffectWindowList referrencedWindows;
 
         EffectFrame captionFrame;
         QFont captionFont;
