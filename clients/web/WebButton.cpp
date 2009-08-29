@@ -172,12 +172,19 @@ WebButton::drawButton(QPainter *p)
     position_ = Right;
   else
     position_ = Mid;
+  
+  if( deco_->isPreview() && shape_ ) 
+  {
+    QRegion mask( deco_->calcMask().translated( -mapToParent(rect().topLeft()) ) );
+    p->setClipRegion( mask, Qt::IntersectClip );
+  }
+  
   switch ( position_ )
   {
     case Left:
       {
+        
         // Draw edge.
-
         p->setPen(Qt::black);
 
         p->drawLine(0, 0, width(), 0);
@@ -214,7 +221,6 @@ WebButton::drawButton(QPainter *p)
     case Right:
       {
         // Draw edge.
-
         p->setPen(Qt::black);
         p->drawLine(0, 0, width(), 0);
         p->drawLine(width() - 1, 1, width() - 1, height() - 1);
@@ -270,13 +276,15 @@ WebButton::drawButton(QPainter *p)
 
   QPoint center(rect().center());
 
+  QPainterPath path;
+  path.addRegion( bitmap_ );
   int bwby2(bitmap_.width() / 2);    // Bitmap Width BY 2
   int bhby2(bitmap_.height() / 2);   // Bitmap Height BY 2
-
-  p->setBrush(Qt::NoBrush);
-  p->setPen(Qt::black);
-
-  p->drawPixmap(center.x() - bwby2 + 1, center.y() - bhby2 + 1, bitmap_);
+  p->setPen( Qt::NoPen );
+  p->setBrush(Qt::black);
+  p->translate( center.x() - bwby2 + 1, center.y() - bhby2 + 1 );
+  p->drawPath( path );
+  
 }
 
   void
