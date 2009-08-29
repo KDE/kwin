@@ -144,7 +144,7 @@ namespace Nitrogen
         int border( 0 );
         if (respectWindowState && maximized) {
           border = 0;
-        }  else if( configuration().frameBorder() == 0 && isPreview() ) {
+        }  else if( configuration().frameBorder() == 0 && isPreview() && !compositingActive() ) {
           border = 1;
         }  else {
           
@@ -234,9 +234,9 @@ namespace Nitrogen
   //_________________________________________________
   int NitrogenClient::borderWidth( void ) const
   {
-    return 
-      layoutMetric( LM_BorderLeft )+
-      layoutMetric( LM_BorderRight );
+    return isPreview() ? 
+      layoutMetric( LM_BorderLeft )+layoutMetric( LM_OuterPaddingLeft ):
+      layoutMetric( LM_BorderLeft )+layoutMetric( LM_BorderRight );
   }
   
   //_________________________________________________
@@ -726,7 +726,7 @@ namespace Nitrogen
   {
     
     assert( !hasSizeGrip() );
-    if( (!isPreview()) && isResizable() && windowId() != 0 )
+    if( ( isResizable() && windowId() != 0 ) || isPreview() )
     { size_grip_ = new NitrogenSizeGrip( this ); }
     
   }
