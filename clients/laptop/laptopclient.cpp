@@ -338,10 +338,16 @@ void LaptopButton::drawButton(QPainter *p)
         p->drawLine(0, h-1, w-1, h-1);
     }
 
-    p->setPen(btnForeground);
-    int xOff = (width()-8)/2;
-    int yOff = (height()-8)/2;
-    p->drawPixmap(isDown() ? xOff+1: xOff, isDown() ? yOff+1 : yOff, deco);
+    QPainterPath path;
+    path.addRegion( deco );
+    
+    QPoint offset( (width()-8)/2, (height()-8)/2 );
+    if( isDown() ) offset += QPoint( 1, 1 );
+    p->translate( offset );
+    p->setPen( Qt::NoPen );
+    p->setBrush( btnForeground );
+    p->drawPath( path );
+    
 }
 
 // =====================================
