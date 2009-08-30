@@ -60,6 +60,8 @@ class SlidingPopupsEffect
         QHash< const EffectWindow*, TimeLine > mAppearingWindows;
         QHash< const EffectWindow*, TimeLine > mDisappearingWindows;
         QHash< const EffectWindow*, Data > mWindowsData;
+	int mFadeInTime;
+	int mFadeOutTime;
     };
 
 } // namespace

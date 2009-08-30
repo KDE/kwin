@@ -29,6 +29,9 @@ KWIN_EFFECT( slidingpopups, SlidingPopupsEffect )
 
 SlidingPopupsEffect::SlidingPopupsEffect()
     {
+    KConfigGroup conf = effects->effectConfig( "Fade" );
+    mFadeInTime = animationTime( conf, "FadeInTime", 150 );
+    mFadeOutTime = animationTime( conf, "FadeOutTime", 150 );
     mAtom = XInternAtom( display(), "_KDE_SLIDE", False );
     effects->registerPropertyType( mAtom, true );
     // TODO hackish way to announce support, make better after 4.0
@@ -135,7 +138,7 @@ void SlidingPopupsEffect::windowAdded( EffectWindow* w )
     propertyNotify( w, mAtom );
     if( w->isOnCurrentDesktop() && mWindowsData.contains( w ) )
         {
-        mAppearingWindows[ w ].setDuration( animationTime( 250 ));
+        mAppearingWindows[ w ].setDuration( animationTime( mFadeInTime ));
         mAppearingWindows[ w ].setProgress( 0.0 );
         mAppearingWindows[ w ].setCurveShape( TimeLine::EaseOutCurve );
 
@@ -150,7 +153,7 @@ void SlidingPopupsEffect::windowClosed( EffectWindow* w )
         {
         w->refWindow();
         mAppearingWindows.remove( w );
-        mDisappearingWindows[ w ].setDuration( animationTime( 250 ));
+        mDisappearingWindows[ w ].setDuration( animationTime( mFadeOutTime ));
         mDisappearingWindows[ w ].setProgress( 0.0 );
         mDisappearingWindows[ w ].setCurveShape( TimeLine::EaseOutCurve );
 
