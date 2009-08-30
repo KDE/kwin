@@ -122,24 +122,33 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), blend_combobox_, SLOT( setEnabled( bool ) ) );
     
     // separator
-    gridLayout->addWidget( label = new QLabel( i18n( "Draw separator between title bar and window contents:" ), box ), 4, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and window contents:" ), box ), 4, 0, 1, 1 );
     gridLayout->addWidget( draw_separator_combobox_ = new ComboBox( box ), 4, 1, 1, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    draw_separator_combobox_->setEnabled( false );
+    checkboxes_.insert( std::make_pair( NitrogenException::DrawSeparator, checkbox ) );
+    connect( checkbox, SIGNAL( toggled( bool ) ), draw_separator_combobox_, SLOT( setEnabled( bool ) ) );
     
     // stripes
-    gridLayout->addWidget( label = new QLabel( i18n( "Show stripes next to the title:" ), box ), 5, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Show stripes next to the title:" ), box ), 5, 0, 1, 1 );
     gridLayout->addWidget( show_stripes_combobox_ = new ComboBox( box ), 5, 1, 1, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    show_stripes_combobox_->setEnabled( false );
+    checkboxes_.insert( std::make_pair( NitrogenException::ShowStripes, checkbox ) );
+    connect( checkbox, SIGNAL( toggled( bool ) ), show_stripes_combobox_, SLOT( setEnabled( bool ) ) );
 
     // overwrite colors
-    gridLayout->addWidget( label = new QLabel( i18n( "Blend title bar colors with window content:" ), box ), 6, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Blend title bar colors with window content:" ), box ), 6, 0, 1, 1 );
     gridLayout->addWidget( overwrite_colors_combobox_ = new ComboBox( box ), 6, 1, 1, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    
+    overwrite_colors_combobox_->setEnabled( false );
+    checkboxes_.insert( std::make_pair( NitrogenException::BlendColor, checkbox ) );
+    connect( checkbox, SIGNAL( toggled( bool ) ), overwrite_colors_combobox_, SLOT( setEnabled( bool ) ) );
+   
     // size grip
-    gridLayout->addWidget( label = new QLabel( i18n( "Draw size grip in bottom-right corner of windows:" ), box ), 7, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw size grip in bottom-right corner of windows:" ), box ), 7, 0, 1, 1 );
     gridLayout->addWidget( draw_size_grip_combobox_ = new ComboBox( box ), 7, 1, 1, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    draw_size_grip_combobox_->setEnabled( false );
+    checkboxes_.insert( std::make_pair( NitrogenException::DrawSizeGrip, checkbox ) );
+    connect( checkbox, SIGNAL( toggled( bool ) ), draw_size_grip_combobox_, SLOT( setEnabled( bool ) ) );
+    
   }
   
   //___________________________________________
@@ -162,10 +171,10 @@ namespace Nitrogen
     blend_combobox_->setCurrentIndex( blend_combobox_->findText( exception.blendColorName( true ) ) );
 
     // flags
-    draw_separator_combobox_->setValue( exception.mask() & NitrogenException::DrawSeparator, exception.drawSeparator() );
-    show_stripes_combobox_->setValue( exception.mask() & NitrogenException::ShowStripes, exception.showStripes() );
-    overwrite_colors_combobox_->setValue( exception.mask() & NitrogenException::OverwriteColors, exception.overwriteColors() );
-    draw_size_grip_combobox_->setValue( exception.mask() & NitrogenException::DrawSizeGrip, exception.drawSizeGrip() );
+    draw_separator_combobox_->setValue( exception.drawSeparator() );
+    show_stripes_combobox_->setValue( exception.showStripes() );
+    overwrite_colors_combobox_->setValue( exception.overwriteColors() );
+    draw_size_grip_combobox_->setValue( exception.drawSizeGrip() );
     
     // mask
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
@@ -182,64 +191,34 @@ namespace Nitrogen
     exception.setFrameBorder( NitrogenException::frameBorder( frame_border_combobox_->currentText(), true ) );
     exception.setBlendColor( NitrogenException::blendColor( blend_combobox_->currentText(), true ) ); 
     
+    // flags
+    exception.setDrawSeparator( draw_separator_combobox_->isChecked() );
+    exception.setShowStripes( show_stripes_combobox_->isChecked() );
+    exception.setOverwriteColors( overwrite_colors_combobox_->isChecked() );
+    exception.setDrawSizeGrip( draw_size_grip_combobox_->isChecked() );
+    
     // mask
     unsigned int mask = NitrogenException::None;
     for( CheckBoxMap::const_iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
     { if( iter->second->isChecked() ) mask |= iter->first; }
     
-    // separator
-    if( !draw_separator_combobox_->isDefault() )
-    { 
-      mask |= NitrogenException::DrawSeparator;
-      exception.setDrawSeparator( draw_separator_combobox_->isChecked() );
-    }
-    
-    // stripes
-    if( !show_stripes_combobox_->isDefault() )
-    { 
-      mask |= NitrogenException::ShowStripes;
-      exception.setShowStripes( show_stripes_combobox_->isChecked() );
-    }
-    
-    // overwrite colors
-    if( !overwrite_colors_combobox_->isDefault() )
-    {
-      mask |= NitrogenException::OverwriteColors;
-      exception.setOverwriteColors( overwrite_colors_combobox_->isChecked() );
-    }
-    
-    // size grip
-    if( !draw_size_grip_combobox_->isDefault() )
-    { 
-      mask |= NitrogenException::DrawSizeGrip;
-      exception.setDrawSizeGrip( draw_size_grip_combobox_->isChecked() );
-    }
-
     exception.setMask( mask );
     return exception;
   
   }
 
   //___________________________________________
-  const QString NitrogenExceptionDialog::ComboBox::Default( i18n("Default") );
   const QString NitrogenExceptionDialog::ComboBox::Yes( i18n("Enabled") );
   const QString NitrogenExceptionDialog::ComboBox::No( i18n("Disabled") );
 
   //___________________________________________
   NitrogenExceptionDialog::ComboBox::ComboBox( QWidget* parent ):
     QComboBox( parent )
-  { insertItems( 0, QStringList() << Default << Yes << No ); }
+  { insertItems( 0, QStringList() << Yes << No ); }
 
   //___________________________________________
-  void NitrogenExceptionDialog::ComboBox::setValue( bool enabled, bool checked )
-  {
-    if( !enabled ) setCurrentIndex( findText( Default ) );
-    else setCurrentIndex( findText( checked ? Yes:No ) );
-  }
-
-  //___________________________________________
-  bool NitrogenExceptionDialog::ComboBox::isDefault( void ) const
-  { return currentText() == Default; }
+  void NitrogenExceptionDialog::ComboBox::setValue(  bool checked )
+  { setCurrentIndex( findText( checked ? Yes:No ) ); }
   
   //___________________________________________
   bool NitrogenExceptionDialog::ComboBox::isChecked( void ) const

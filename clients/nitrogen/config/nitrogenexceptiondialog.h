@@ -80,7 +80,6 @@ namespace Nitrogen
     {
       public: 
       
-      static const QString Default;
       static const QString Yes;
       static const QString No;
       
@@ -88,11 +87,8 @@ namespace Nitrogen
       ComboBox( QWidget* parent );
       
       //! set value
-      void setValue( bool enabled, bool checked );
-      
-      //! true if default is selected
-      bool isDefault( void ) const;
-      
+      void setValue( bool checked );
+       
       //! true if yes is checkd
       bool isChecked( void ) const;
       
