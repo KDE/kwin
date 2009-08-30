@@ -43,8 +43,8 @@ namespace Nitrogen
     
     // layout
     QHBoxLayout* h_layout = new QHBoxLayout();
-    h_layout->setMargin(4);
-    h_layout->setSpacing(4);
+    h_layout->setMargin(6);
+    h_layout->setSpacing(6);
     setLayout( h_layout );
     
     // list
@@ -54,6 +54,7 @@ namespace Nitrogen
     _list().setSortingEnabled( false );
     _list().setModel( &_model() );
     _list().sortByColumn( NitrogenExceptionModel::TYPE );
+    _list().setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Ignored ) );
     
     // button layout
     QVBoxLayout* v_layout = new QVBoxLayout();
