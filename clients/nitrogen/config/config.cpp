@@ -37,7 +37,6 @@
 #include "config.h"
 #include "config.moc"
 
-#include "nitrogenexceptionlistdialog.h"
 #include "../nitrogenconfiguration.h"
 
 //_______________________________________________________________________
@@ -71,9 +70,8 @@ namespace Nitrogen
     connect( user_interface_->overwriteColors, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->drawSizeGrip, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->useOxygenShadows, SIGNAL(clicked()), SIGNAL(changed()) );
-
-    connect( user_interface_->showExceptions, SIGNAL(clicked()), SLOT( showExceptions() ) );
-    
+    connect( user_interface_->exceptions, SIGNAL(changed()), SIGNAL(changed()) );
+        
     NitrogenConfiguration::checkUseCompiz();
     if( NitrogenConfiguration::useCompiz() ) 
     { user_interface_->useOxygenShadows->setEnabled( false ); }
@@ -98,10 +96,16 @@ namespace Nitrogen
     // load standard configuration
     KConfigGroup configurationGroup( configuration_, "Windeco");
     loadConfiguration( NitrogenConfiguration( configurationGroup ) );
-    exceptions_.read( *configuration_ );
     
-    if( exceptions_.empty() )
-    { exceptions_ = NitrogenExceptionList::defaultList(); }
+    // load exceptions
+    NitrogenExceptionList exceptions;
+    exceptions.read( *configuration_ );
+    if( exceptions.empty() )
+    { exceptions = NitrogenExceptionList::defaultList(); }
+    
+    // install in ui
+    user_interface_->exceptions->setExceptions( exceptions );
+    
     
   }
   
@@ -141,8 +145,10 @@ namespace Nitrogen
     configurationGroup.writeEntry( NitrogenConfig::DRAW_SIZE_GRIP, user_interface_->drawSizeGrip->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, user_interface_->useOxygenShadows->isChecked() );
 
-    // write number of exceptions
-    exceptions_.write( *configuration_ );      
+    // write exceptions
+    user_interface_->exceptions->exceptions().write( *configuration_ );      
+    
+    // sync configuration
     configuration_->sync();
     
   }
@@ -156,7 +162,7 @@ namespace Nitrogen
     loadConfiguration( NitrogenConfiguration() );
     
     // install default exceptions
-    exceptions_ = NitrogenExceptionList::defaultList();
+    user_interface_->exceptions->setExceptions( NitrogenExceptionList::defaultList() );
     
     // emit changed signal
     emit changed();
@@ -180,36 +186,6 @@ namespace Nitrogen
     user_interface_->useOxygenShadows->setChecked( configuration.useOxygenShadows() );
   }
   
-  //_______________________________________________________________________
-  void Config::showExceptions( void )
-  {
-          
-    // get default configuration (from current)
-    KConfigGroup configurationGroup( configuration_, "Windeco");
-    
-    // create dialog
-    NitrogenExceptionListDialog dialog( 
-      dynamic_cast<QWidget*>(parent()), 
-      NitrogenConfiguration( configurationGroup ) );
-    
-    dialog.setExceptions( exceptions_ );
-
-    if( !dialog.exec() ) return;
-    
-    // get new exception list from dialog
-    NitrogenExceptionList new_exceptions = dialog.exceptions();
-
-    // compare to current.
-    if( new_exceptions == exceptions_ ) return;
-    else {    
-      
-      // update and emit change signal if they differ
-      exceptions_ = new_exceptions;
-      emit changed();
-      
-    }
-    
-  }
   
   //_______________________________________________________________________
   void Config::aboutNitrogen( void )
@@ -233,4 +209,5 @@ namespace Nitrogen
       
       
   }
+
 } 

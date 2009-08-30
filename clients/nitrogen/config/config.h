@@ -70,10 +70,7 @@ namespace Nitrogen {
     void defaults();
     
     private slots:
-    
-    //! raise exception list 
-    void showExceptions( void );
-    
+     
     //! about nitrogen
     void aboutNitrogen( void );
     
@@ -87,9 +84,6 @@ namespace Nitrogen {
     
     //! kconfiguration object
     KConfig *configuration_;
-    
-    //! internal list of exceptions
-    NitrogenExceptionList exceptions_;
     
   };
   
