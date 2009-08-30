@@ -9,7 +9,7 @@ set(kwin_nitrogen_config_PART_SRCS
     ../nitrogenexceptionlist.cpp
     nitrogenconfigurationui.cpp 
     nitrogenexceptiondialog.cpp
-    nitrogenexceptionlistdialog.cpp
+    nitrogenexceptionlistwidget.cpp
     nitrogenexceptionmodel.cpp
   )
 
