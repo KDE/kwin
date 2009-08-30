@@ -56,139 +56,165 @@ namespace Nitrogen
   void NitrogenConfigurationUI::setupUI( void )
   {
     
-    std::cout << "NitrogenConfigurationUI::setupUI.\n" << std::endl;
+    std::cout << "NitrogenConfigurationUI::setupUI.\n" << std::endl;    
     
     QVBoxLayout* mainLayout = new QVBoxLayout( this );
     mainLayout->setSpacing(6);
     mainLayout->setMargin(0);
     
-    QHBoxLayout* hboxLayout = new QHBoxLayout();
-    hboxLayout->setSpacing(6);
-    mainLayout->addLayout(hboxLayout);
+    // tab widget for basic and advanced mode
+    QTabWidget* tab( new QTabWidget( this ) );
+    mainLayout->addWidget( tab );
     
-    // left box for comboboxes
-    QGroupBox* box;
-    hboxLayout->addWidget( box = new QGroupBox( i18n("Layout"), this ) );
-    QGridLayout* gridLayout = new QGridLayout();
-    gridLayout->setSpacing(6);
-    box->setLayout( gridLayout );
+    // basic configuration
+    {
+      QWidget *basicWidget = new QWidget();
+      int index = tab->addTab( basicWidget, i18n("&Basic") );
+      tab->setTabToolTip( index, i18n( "Basic window decoration configuration options" ) );
+      
+      QVBoxLayout* vboxLayout = new QVBoxLayout();
+      vboxLayout->setMargin( 6 );
+      vboxLayout->setSpacing( 6 );
+      basicWidget->setLayout( vboxLayout );
+      
+      QGridLayout* gridLayout = new QGridLayout();
+      gridLayout->setSpacing(6);
+      gridLayout->setMargin(0);
+      vboxLayout->addLayout( gridLayout );
 
-    // frame border
-    QLabel* label;
-    gridLayout->addWidget( label = new QLabel( i18n("Border size:"), box ), 0, 0, 1, 1);
-    gridLayout->addWidget( frameBorder = new QComboBox(box), 0, 1, 1, 1);
-    frameBorder->setObjectName(QString::fromUtf8("frameBorder"));
-    frameBorder->insertItems(0, QStringList()
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryLarge, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderHuge, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryHuge, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderOversized, true )
-      );
-    
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    label->setBuddy( frameBorder );
-    
-    // title alignment
-    gridLayout->addWidget( label = new QLabel( i18n("Title alignment:"), box ), 1, 0, 1, 1 );
-    gridLayout->addWidget( titleAlignment = new QComboBox(box), 1, 1, 1, 1 );
-    titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));  
-    titleAlignment->insertItems(0, QStringList()
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
-      << NitrogenConfiguration::titleAlignmentName( Qt::AlignRight, true )
-      );
-    
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    label->setBuddy( titleAlignment );
-    
-    // button size
-    gridLayout->addWidget( label = new QLabel( i18n("Button size:"), box ), 2, 0, 1, 1 );
-    gridLayout->addWidget( buttonSize = new QComboBox(box), 2, 1, 1, 1 );
-    buttonSize->setObjectName(QString::fromUtf8("buttonSize"));  
-    buttonSize->insertItems(0, QStringList()
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonSmall, true )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonDefault, true )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonLarge, true )
-      << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonHuge, true )
-      );
-    
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    label->setBuddy( buttonSize );
+      gridLayout->setColumnStretch(2, 1);
+      
+      // frame border
+      QLabel* label;
+      gridLayout->addWidget( label = new QLabel( i18n("Border size:"), basicWidget ), 0, 0, 1, 1);
+      gridLayout->addWidget( frameBorder = new QComboBox(basicWidget), 0, 1, 1, 1);
+      frameBorder->setObjectName(QString::fromUtf8("frameBorder"));
+      frameBorder->insertItems(0, QStringList()
+        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
+        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
+        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault, true )
+        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge, true )
+        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryLarge, true )
+        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderHuge, true )
+        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryHuge, true )
+        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderOversized, true )
+        );
+      
+      label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+      label->setBuddy( frameBorder );
+      
+      // title alignment
+      gridLayout->addWidget( label = new QLabel( i18n("Title alignment:"), basicWidget ), 1, 0, 1, 1 );
+      gridLayout->addWidget( titleAlignment = new QComboBox(basicWidget), 1, 1, 1, 1 );
+      titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));  
+      titleAlignment->insertItems(0, QStringList()
+        << NitrogenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
+        << NitrogenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
+        << NitrogenConfiguration::titleAlignmentName( Qt::AlignRight, true )
+        );
+      
+      label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+      label->setBuddy( titleAlignment );
 
-    // button type
-    gridLayout->addWidget( label = new QLabel( i18n("Button style:"), box ), 3, 0, 1, 1 );
-    gridLayout->addWidget( buttonType = new QComboBox(box), 3, 1, 1, 1 );
-    buttonType->setObjectName(QString::fromUtf8("buttonType"));  
-    buttonType->insertItems(0, QStringList()
-      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde42, true )
-      << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde43, true )
-      );
+      // button size
+      gridLayout->addWidget( label = new QLabel( i18n("Button size:"), basicWidget ), 2, 0, 1, 1 );
+      gridLayout->addWidget( buttonSize = new QComboBox(basicWidget), 2, 1, 1, 1 );
+      buttonSize->setObjectName(QString::fromUtf8("buttonSize"));  
+      buttonSize->insertItems(0, QStringList()
+        << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonSmall, true )
+        << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonDefault, true )
+        << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonLarge, true )
+        << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonHuge, true )
+        );
     
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    label->setBuddy( buttonType );
+      label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+      label->setBuddy( buttonSize );
+
+      // draw separator
+      vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and window contents"), basicWidget ) );
+      drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
+      drawSeparator->setWhatsThis(i18n(
+        "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
+      
+      // show stripes
+      vboxLayout->addWidget( showStripes = new QCheckBox( i18n("Show stripes next to the title"), basicWidget) );
+      showStripes->setObjectName(QString::fromUtf8("showStripes"));
+      showStripes->setWhatsThis(i18n(
+        "When enabled, this option increases the visibility of the window titlebar by showing stripes"));
+      
+    }
     
-    // title bar blending
-    gridLayout->addWidget( label = new QLabel( i18n("Background style:" ), box ), 4, 0, 1, 1 );
-    gridLayout->addWidget( blendColor = new QComboBox(box), 4, 1, 1, 1 );
-    blendColor->setObjectName(QString::fromUtf8("blendColor"));
-    blendColor->insertItems(0, QStringList()
-      << NitrogenConfiguration::blendColorName( NitrogenConfiguration::NoBlending, true )
-      << NitrogenConfiguration::blendColorName( NitrogenConfiguration::RadialBlending, true )
-      );
     
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    label->setBuddy( blendColor );
+    // advanced configuration
+    {
+      QWidget *advancedWidget = new QWidget();
+      int index = tab->addTab( advancedWidget, "&Advanced" );
+      tab->setTabToolTip( index, i18n( "Advanced window decoration configuration options" ) );
+      
+      QVBoxLayout* vboxLayout = new QVBoxLayout();
+      vboxLayout->setMargin( 6 );
+      vboxLayout->setSpacing( 6 );
+      advancedWidget->setLayout( vboxLayout );
+      
+      QGridLayout* gridLayout = new QGridLayout();
+      gridLayout->setSpacing(6);
+      gridLayout->setMargin(0);
+      vboxLayout->addLayout( gridLayout );
+ 
+      gridLayout->setColumnStretch(2, 1);
+
+      // button type
+      QLabel* label;
+      gridLayout->addWidget( label = new QLabel( i18n("Button style:"), advancedWidget ), 0, 0, 1, 1 );
+      gridLayout->addWidget( buttonType = new QComboBox(advancedWidget), 0, 1, 1, 1 );
+      buttonType->setObjectName(QString::fromUtf8("buttonType"));  
+      buttonType->insertItems(0, QStringList()
+        << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde42, true )
+        << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde43, true )
+        );
+      
+      label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+      label->setBuddy( buttonType );
+      
+      // title bar blending
+      gridLayout->addWidget( label = new QLabel( i18n("Background style:" ), advancedWidget ), 1, 0, 1, 1 );
+      gridLayout->addWidget( blendColor = new QComboBox(advancedWidget), 1, 1, 1, 1 );
+      blendColor->setObjectName(QString::fromUtf8("blendColor"));
+      blendColor->insertItems(0, QStringList()
+        << NitrogenConfiguration::blendColorName( NitrogenConfiguration::NoBlending, true )
+        << NitrogenConfiguration::blendColorName( NitrogenConfiguration::RadialBlending, true )
+        );
     
-    // right is for checkboxes
-    hboxLayout->addWidget( box = new QGroupBox( i18n("Flags"), this ) );
-    QVBoxLayout* vboxLayout = new QVBoxLayout();
-    box->setLayout( vboxLayout );    
+      label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+      label->setBuddy( blendColor );
+        
+      // oxygen shadow
+      vboxLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), advancedWidget ) );
+      useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
+      useOxygenShadows->setWhatsThis(i18n(
+        "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
     
-    // oxygen shadow
-    vboxLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), this ) );
-    useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
-    useOxygenShadows->setWhatsThis(i18n(
-      "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
-    
-    // draw separator
-    vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and window contents"), this ) );
-    drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
-    drawSeparator->setWhatsThis(i18n(
-      "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
-    
-    // show stripes
-    vboxLayout->addWidget( showStripes = new QCheckBox( i18n("Show stripes next to the title"), this) );
-    showStripes->setObjectName(QString::fromUtf8("showStripes"));
-    showStripes->setWhatsThis(i18n(
-      "When enabled, this option increases the visibility of the window titlebar by showing stripes"));
-    
-    // overwrite colors
-    vboxLayout->addWidget( overwriteColors = new QCheckBox( i18n("Blend title bar colors with window contents"), this) );
-    overwriteColors->setObjectName(QString::fromUtf8("overwriteColors"));
-    overwriteColors->setWhatsThis(i18n(
-      "When enabled, window colors are used in place of default title bar colors to draw the decoration"));
-    
-    // draw size grip
-    vboxLayout->addWidget( drawSizeGrip = new QCheckBox( i18n("Draw size grip widget in bottom-right corner of windows"), this ) );
-    drawSizeGrip->setObjectName(QString::fromUtf8("drawSizeGrip"));
-    drawSizeGrip->setWhatsThis(i18n(
-      "When this option is enabled, a small triangular widget is drawn in bottom-right corner of every window \n"
-      "that allow to resize the window. This the \"No Border\" border size is selected."));
+      // overwrite colors
+      vboxLayout->addWidget( overwriteColors = new QCheckBox( i18n("Blend title bar colors with window contents"), advancedWidget) );
+      overwriteColors->setObjectName(QString::fromUtf8("overwriteColors"));
+      overwriteColors->setWhatsThis(i18n(
+        "When enabled, window colors are used in place of default title bar colors to draw the decoration"));
+      
+      // draw size grip
+      vboxLayout->addWidget( drawSizeGrip = new QCheckBox( i18n("Draw size grip widget in bottom-right corner of windows"), advancedWidget ) );
+      drawSizeGrip->setObjectName(QString::fromUtf8("drawSizeGrip"));
+      drawSizeGrip->setWhatsThis(i18n(
+        "When this option is enabled, a small triangular widget is drawn in bottom-right corner of every window \n"
+        "which allow to resize the window."));
+    }
     
     // exceptions
-    mainLayout->addLayout( hboxLayout = new QHBoxLayout() );
-    hboxLayout->addStretch( 1 );
-    
-    hboxLayout->addWidget( showExceptions = new QPushButton( i18n("Exceptions ..." ), box ) );
-    showExceptions->setToolTip(i18n("Raise a dialog to store blending type exceptions based on window title."));
-
-    // about
-    // this is disabled until I find a suitable icon for nitrogen.
-    // hboxLayout->addWidget( aboutNitrogen = new QPushButton( i18n("About Nitrogen" ), box ) );
+    {
+      exceptions = new NitrogenExceptionListWidget();
+      exceptions->setObjectName(QString::fromUtf8("exceptions"));
+      int index = tab->addTab( exceptions, "&Exceptions" );
+      tab->setTabToolTip( index, i18n( "Configure window specific decoration options, based on window name" ) );
+    }
     
     QMetaObject::connectSlotsByName(this);  
     

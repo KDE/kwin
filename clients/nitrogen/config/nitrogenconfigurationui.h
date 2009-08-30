@@ -31,6 +31,8 @@
 #include <QCheckBox>
 #include <QPushButton>
 
+#include "nitrogenexceptionlistwidget.h"
+
 namespace Nitrogen
 {
 
@@ -81,9 +83,7 @@ namespace Nitrogen
     //! about nitrogen
     QPushButton *aboutNitrogen;
     
-    //! raise exceptions
-    QPushButton *showExceptions;
-
+    NitrogenExceptionListWidget *exceptions; 
   };
   
 }
