@@ -1,7 +1,7 @@
-#ifndef _NitrogenExceptionListDialog_h_
-#define _NitrogenExceptionListDialog_h_
+#ifndef _NitrogenExceptionListWidget_h_
+#define _NitrogenExceptionListWidget_h_
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexceptionlistdialog.h
+// NitrogenExceptionListWidget.h
 // -------------------
 // 
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -36,7 +36,7 @@
 namespace Nitrogen
 {
   
-  class NitrogenExceptionListDialog: public KDialog
+  class NitrogenExceptionListWidget: public QWidget
   {
     
     //! Qt meta object
@@ -45,14 +45,19 @@ namespace Nitrogen
     public:
       
     //! constructor
-    NitrogenExceptionListDialog( QWidget*, NitrogenConfiguration default_configuration = NitrogenConfiguration() );
+    NitrogenExceptionListWidget( QWidget* = 0, NitrogenConfiguration default_configuration = NitrogenConfiguration() );
  
     //! set exceptions
     void setExceptions( const NitrogenExceptionList& );
     
     //! get exceptions
     NitrogenExceptionList exceptions( void ) const;
-       
+      
+    signals:
+    
+    //! emited when list is changed
+    void changed( void );
+    
     protected:
   
     //! list

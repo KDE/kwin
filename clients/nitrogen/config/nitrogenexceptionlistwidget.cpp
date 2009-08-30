@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexceptionlistdialog.cpp
+// NitrogenExceptionListWidget.cpp
 // -------------------
 // 
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -28,34 +28,27 @@
 #include <KMessageBox>
 
 #include "nitrogenexceptiondialog.h"
-#include "nitrogenexceptionlistdialog.h"
-#include "nitrogenexceptionlistdialog.moc"
+#include "nitrogenexceptionlistwidget.h"
+#include "nitrogenexceptionlistwidget.moc"
 
 //__________________________________________________________
 namespace Nitrogen
 {
   
   //__________________________________________________________
-  NitrogenExceptionListDialog::NitrogenExceptionListDialog( QWidget* parent, NitrogenConfiguration default_configuration ):
-    KDialog( parent ),
+  NitrogenExceptionListWidget::NitrogenExceptionListWidget( QWidget* parent, NitrogenConfiguration default_configuration ):
+    QWidget( parent ),
     default_configuration_( default_configuration )
   {
     
-    // define buttons
-    setButtons( Ok|Cancel );
-
-    // main widget
-    QWidget* widget = new QWidget( this );
-    setMainWidget( widget );
-
     // layout
     QHBoxLayout* h_layout = new QHBoxLayout();
-    h_layout->setMargin(0);
-    h_layout->setSpacing(5);
-    widget->setLayout( h_layout );
+    h_layout->setMargin(4);
+    h_layout->setSpacing(4);
+    setLayout( h_layout );
     
     // list
-    h_layout->addWidget( list_ = new QTreeView( widget ) );
+    h_layout->addWidget( list_ = new QTreeView( this ) );
     _list().setAllColumnsShowFocus( true );
     _list().setRootIsDecorated( false );
     _list().setSortingEnabled( false );
@@ -71,23 +64,23 @@ namespace Nitrogen
     
     v_layout->addWidget( up_button_ = new KPushButton( 
       KIcon( "arrow-up", icon_loader ),
-      i18n("Move &Up"), widget ) );
+      i18n("Move &Up"), this ) );
 
     v_layout->addWidget( down_button_ = new KPushButton( 
       KIcon( "arrow-down", icon_loader ),
-      i18n("Move &Down"), widget ) );
+      i18n("Move &Down"), this ) );
 
     v_layout->addWidget( add_button_ = new KPushButton( 
       KIcon( "list-add", icon_loader ), 
-      i18n("&Add"), widget ) );
+      i18n("&Add"), this ) );
     
     v_layout->addWidget( remove_button_ = new KPushButton( 
       KIcon( "list-remove", icon_loader ), 
-      i18n("&Remove"), widget ) );
+      i18n("&Remove"), this ) );
     
     v_layout->addWidget( edit_button_ = new KPushButton( 
       KIcon( "edit-rename", icon_loader ),
-      i18n("&Edit"), widget ) );
+      i18n("&Edit"), this ) );
 
     v_layout->addStretch();
 
@@ -101,7 +94,6 @@ namespace Nitrogen
     connect( &_list(), SIGNAL( clicked( const QModelIndex& ) ), SLOT( _toggle( const QModelIndex& ) ) );
     connect( _list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateButtons() ) );
     
-    resize( 500, 250 );
     _updateButtons();
     _resizeColumns();
     
@@ -109,14 +101,14 @@ namespace Nitrogen
   }
 
   //__________________________________________________________
-  void NitrogenExceptionListDialog::setExceptions( const NitrogenExceptionList& exceptions )
+  void NitrogenExceptionListWidget::setExceptions( const NitrogenExceptionList& exceptions )
   { 
     _model().set( NitrogenExceptionModel::List( exceptions.begin(), exceptions.end() ) ); 
     _resizeColumns();
   }
 
   //__________________________________________________________
-  NitrogenExceptionList NitrogenExceptionListDialog::exceptions( void ) const
+  NitrogenExceptionList NitrogenExceptionListWidget::exceptions( void ) const
   { 
     
     NitrogenExceptionModel::List exceptions( _model().get() );
@@ -128,7 +120,7 @@ namespace Nitrogen
   }
   
   //__________________________________________________________
-  void NitrogenExceptionListDialog::_updateButtons( void )
+  void NitrogenExceptionListWidget::_updateButtons( void )
   {
     
     bool has_selection( !_list().selectionModel()->selectedRows().empty() );
@@ -142,7 +134,7 @@ namespace Nitrogen
 
   
   //_______________________________________________________
-  void NitrogenExceptionListDialog::_add( void )
+  void NitrogenExceptionListWidget::_add( void )
   {
     
     // map dialog
@@ -166,12 +158,13 @@ namespace Nitrogen
     }
   
     _resizeColumns();
+    emit changed();
     return;
     
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListDialog::_edit( void )
+  void NitrogenExceptionListWidget::_edit( void )
   {
     
     // retrieve selection
@@ -188,27 +181,37 @@ namespace Nitrogen
     if( dialog.exec() == QDialog::Rejected ) return;
     NitrogenException new_exception = dialog.exception();
     
+    // check if exception was changed
+    if( exception == new_exception ) return;
+
+    // check new exception validity
     if( !_checkException( new_exception ) ) return;
-    *&exception = new_exception; 
     
+    // asign new exception
+    *&exception = new_exception; 
     _resizeColumns();
+    emit changed();
     return;
 
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListDialog::_remove( void )
+  void NitrogenExceptionListWidget::_remove( void )
   {
+
+    // shoud use a konfirmation dialog
+    if( KMessageBox::questionYesNo( this, i18n("Remove selected exception ?") ) == KMessageBox::No ) return;
 
     // remove
     _model().remove( _model().get( _list().selectionModel()->selectedRows() ) );
     _resizeColumns();
+    emit changed();
     return;
     
   }
   
   //_______________________________________________________
-  void NitrogenExceptionListDialog::_toggle( const QModelIndex& index )
+  void NitrogenExceptionListWidget::_toggle( const QModelIndex& index )
   {
     
     if( !index.isValid() ) return;
@@ -219,10 +222,13 @@ namespace Nitrogen
     exception.setEnabled( !exception.enabled() );
     _model().add( exception );
     
+    emit changed();
+    return;
+  
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListDialog::_up( void )
+  void NitrogenExceptionListWidget::_up( void )
   {
 
     NitrogenExceptionModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
@@ -261,12 +267,13 @@ namespace Nitrogen
     for( NitrogenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); iter++ )
     { _list().selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
     
+    emit changed();
     return;
     
   }
   
   //_______________________________________________________
-  void NitrogenExceptionListDialog::_down( void )
+  void NitrogenExceptionListWidget::_down( void )
   {
     
     NitrogenExceptionModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
@@ -307,12 +314,13 @@ namespace Nitrogen
     for( NitrogenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); iter++ )
     { _list().selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
     
+    emit changed();
     return;
     
   }
   
   //_______________________________________________________
-  void NitrogenExceptionListDialog::_resizeColumns( void ) const
+  void NitrogenExceptionListWidget::_resizeColumns( void ) const
   {
     _list().resizeColumnToContents( NitrogenExceptionModel::ENABLED );
     _list().resizeColumnToContents( NitrogenExceptionModel::TYPE );
@@ -320,7 +328,7 @@ namespace Nitrogen
   }
   
   //_______________________________________________________
-  bool NitrogenExceptionListDialog::_checkException( NitrogenException& exception )
+  bool NitrogenExceptionListWidget::_checkException( NitrogenException& exception )
   {
     
     while( !exception.regExp().isValid() )
