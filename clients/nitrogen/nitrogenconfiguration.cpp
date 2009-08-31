@@ -35,9 +35,6 @@ namespace Nitrogen
 {
  
   //__________________________________________________
-  bool NitrogenConfiguration::useCompiz_;
-  
-  //__________________________________________________
   NitrogenConfiguration::NitrogenConfiguration( void ):
     titleAlignment_( Qt::AlignLeft ),
     buttonSize_( ButtonDefault ),
@@ -108,21 +105,7 @@ namespace Nitrogen
       NitrogenConfig::USE_OXYGEN_SHADOWS,
       defaultConfiguration.useOxygenShadows() ) );
   }
-  
-  //__________________________________________________
-  bool NitrogenConfiguration::checkUseCompiz( void )
-  {
     
-    // for some reason, org.kde.compiz does not appear
-    // in dbus list with kde 4.3
-    QProcess p;
-    p.start( "ps", QStringList() << "-A" );
-    p.waitForFinished();
-    QString output( p.readAll() );
-    return ( useCompiz_ =  ( output.indexOf( QRegExp( "\\b(compiz)\\b" ) ) >= 0 ) );
-
-  }
-  
   //__________________________________________________
   void NitrogenConfiguration::write( KConfigGroup& group ) const
   {

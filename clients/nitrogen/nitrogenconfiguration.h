@@ -100,13 +100,6 @@ namespace Nitrogen
     //! equal to operator
     bool operator == ( const NitrogenConfiguration& ) const;
     
-    //! true if compiz is used as a window decoration
-    static bool useCompiz( void )
-    { return useCompiz_; }
-    
-    //! check if compiz is used
-    static bool checkUseCompiz( void );
-    
     //! write to kconfig group
     virtual void write( KConfigGroup& ) const;
     
@@ -279,10 +272,6 @@ namespace Nitrogen
     
     //! oxygen shadows
     bool useOxygenShadows_;
-    
-    //! compiz
-    static bool useCompiz_;
-      
     
   };
   

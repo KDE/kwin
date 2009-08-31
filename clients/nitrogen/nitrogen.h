@@ -132,9 +132,6 @@ namespace Nitrogen
     //! exceptions
     static NitrogenExceptionList exceptions_;
     
-    //! true if compiz is used
-    static bool useCompiz_;
-    
   };
       
 }

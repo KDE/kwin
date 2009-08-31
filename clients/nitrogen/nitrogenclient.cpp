@@ -221,8 +221,7 @@ namespace Nitrogen
       case LM_OuterPaddingRight:
       case LM_OuterPaddingTop:
       case LM_OuterPaddingBottom:
-      if( NitrogenConfiguration::useCompiz() ) return 0;
-      else return SHADOW_WIDTH - extraBorder;
+      return SHADOW_WIDTH - extraBorder;
       
       default:
       return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -473,7 +472,7 @@ namespace Nitrogen
   void NitrogenClient::updateWindowShape()
   { 
     
-    if(isMaximized() || ( compositingActive() && !NitrogenConfiguration::useCompiz() ) )
+    if(isMaximized() || compositingActive() )
     {
     
       clearMask();
@@ -494,7 +493,6 @@ namespace Nitrogen
     if( !initialized_ ) return;
     
     configuration_ = NitrogenFactory::configuration( *this );     
-    QTextStream( stdout ) << "NitrogenClient::resetConfiguration - useCompiz: " << NitrogenConfiguration::useCompiz() << endl;
     
     // handle size grip
     if( configuration_.drawSizeGrip() ) 
@@ -531,7 +529,7 @@ namespace Nitrogen
       options()->color( ColorTitleBar, isActive());
     
     // draw shadows
-    if( compositingActive() && !( NitrogenConfiguration::useCompiz() || isMaximized() ) )
+    if( compositingActive() && !isMaximized() )
     {
       shadowTiles(
         color,KDecoration::options()->color(ColorTitleBar),
@@ -544,7 +542,7 @@ namespace Nitrogen
     frame.adjust( SHADOW_WIDTH, SHADOW_WIDTH, -SHADOW_WIDTH, -SHADOW_WIDTH );
     
     //  adjust mask
-    if( (compositingActive() && !NitrogenConfiguration::useCompiz()) || isPreview() )
+    if( compositingActive() || isPreview() )
     {
     
       if( isMaximized() ) {
@@ -581,16 +579,14 @@ namespace Nitrogen
     renderWindowBackground( &painter, frame, widget(), palette );
     
     // clipping
-    if( compositingActive() && !NitrogenConfiguration::useCompiz() ) painter.setClipping(false);
+    if( compositingActive() ) painter.setClipping(false);
 
     // in preview mode and when frame border is 0, 
     // one still draw a small rect around, unless kde is recent enough,
     // useOxygenShadow is set to true, 
     // and copositing is active
     // (that makes a lot of ifs)
-    if( 
-        isPreview() && configuration().frameBorder() == 0 && 
-        ( !compositingActive() || NitrogenConfiguration::useCompiz() ) )
+    if( isPreview() && configuration().frameBorder() == 0 && !compositingActive() )
     {
       painter.save();
       painter.setBrush( Qt::NoBrush );
