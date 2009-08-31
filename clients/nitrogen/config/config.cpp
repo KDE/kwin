@@ -71,13 +71,10 @@ namespace Nitrogen
     connect( user_interface_->drawSizeGrip, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->useOxygenShadows, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->exceptions, SIGNAL(changed()), SIGNAL(changed()) );
-        
-    NitrogenConfiguration::checkUseCompiz();
-    if( NitrogenConfiguration::useCompiz() ) 
-    { user_interface_->useOxygenShadows->setEnabled( false ); }
     
     load( configurationGroup );
     user_interface_->show();
+    
   }
   
   
