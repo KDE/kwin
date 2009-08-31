@@ -112,9 +112,6 @@ namespace Nitrogen
     NitrogenConfiguration configuration( group );
     bool changed = !( configuration == defaultConfiguration() );
 
-    // check configurations
-    changed |= (NitrogenConfiguration::useCompiz() == NitrogenConfiguration::checkUseCompiz());
-    
     // read exceptionsreadConfig
     NitrogenExceptionList exceptions( config );
     if( !( exceptions == exceptions_ ) ) 
@@ -165,7 +162,7 @@ namespace Nitrogen
       // compositing
       case AbilityProvidesShadow: // TODO: UI option to use default shadows instead
       case AbilityUsesAlphaChannel:
-      return !NitrogenConfiguration::useCompiz();
+      return true;
             
       // no colors supported at this time
       default:
