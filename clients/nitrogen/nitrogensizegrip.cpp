@@ -48,9 +48,11 @@ namespace Nitrogen
     decoration_offset_( false )
   { 
 
+    setAttribute(Qt::WA_NoSystemBackground );
+    setAutoFillBackground( false );
+    
     // cursor
     setCursor( Qt::SizeFDiagCursor );
-    setAutoFillBackground( true );
 
     // size
     setFixedSize( QSize( GRIP_SIZE, GRIP_SIZE ) );
@@ -66,7 +68,6 @@ namespace Nitrogen
     
     // embed
     embed();
-    updateBackgroundColor();
     updatePosition();
     
     // event filter
@@ -81,25 +82,8 @@ namespace Nitrogen
   {}
   
   //_____________________________________________
-  void NitrogenSizeGrip::updateBackgroundColor( void )
-  {
-    
-    QPalette palette = client().widget()->palette();
-    
-    // active color
-    palette.setCurrentColorGroup( client().isActive() ? QPalette::Active:QPalette::Inactive );
-      
-    // get relevant colors
-    QColor base( client().configuration().overwriteColors() ? 
-      palette.button().color().darker(250) : 
-      client().options()->color( NitrogenClient::ColorTitleBar, client().isActive() ) );
-    
-    palette.setColor( backgroundRole(), base );
-    setPalette( palette );
-       
-    XMapRaised( QX11Info::display(), winId() ); 
-    
-  }
+  void NitrogenSizeGrip::activeChange( void )
+  { XMapRaised( QX11Info::display(), winId() ); }
   
   //_____________________________________________
   void NitrogenSizeGrip::embed( void )
@@ -144,14 +128,8 @@ namespace Nitrogen
   void NitrogenSizeGrip::paintEvent( QPaintEvent* )
   {
     
-    QPalette palette = client().widget()->palette();
-    palette.setCurrentColorGroup( (client().isActive() ) ? QPalette::Active : QPalette::Inactive );
-    
     // get relevant colors
-    QColor base( client().configuration().overwriteColors() ? 
-      palette.button().color() : 
-      client().options()->color( NitrogenClient::ColorTitleBar, client().isActive() ) );
-    
+    QColor base( palette().brush( (client().isActive() ) ? QPalette::Active : QPalette::Inactive, QPalette::Button ).color() );    
     QColor dark( base.darker(250) );
     QColor light( base.darker(150) );
 
@@ -237,15 +215,25 @@ namespace Nitrogen
       client().width() - GRIP_SIZE - OFFSET,
       client().height() - GRIP_SIZE - OFFSET );
     
-    if( decoration_offset_ ) 
-    { 
+    if( client().isPreview() )
+    {
       
-      position-= QPoint( client().borderWidth(), client().borderHeight() );
+      position -= QPoint( 
+        client().layoutMetric( NitrogenClient::LM_BorderLeft )+client().layoutMetric( NitrogenClient::LM_OuterPaddingLeft ),
+        client().layoutMetric( NitrogenClient::LM_TitleHeight )+client().layoutMetric( NitrogenClient::LM_TitleEdgeTop )+client().layoutMetric( NitrogenClient::LM_TitleEdgeBottom )+client().layoutMetric( NitrogenClient::LM_BorderBottom ) );
+      
+    } else if( decoration_offset_ ) {
+      
+      // not sure whether this case still happens or not
+      position -= QPoint( 
+        client().layoutMetric( NitrogenClient::LM_BorderLeft )+client().layoutMetric( NitrogenClient::LM_BorderRight ),
+        client().layoutMetric( NitrogenClient::LM_TitleHeight )+client().layoutMetric( NitrogenClient::LM_TitleEdgeTop )+client().layoutMetric( NitrogenClient::LM_TitleEdgeBottom )+client().layoutMetric( NitrogenClient::LM_BorderBottom ) );
     
-    } else { 
-        position -= QPoint( 
-            client().layoutMetric( NitrogenClient::LM_BorderRight ),
-            client().layoutMetric( NitrogenClient::LM_BorderBottom ) );
+    } else {
+        
+      position -= QPoint( 
+        client().layoutMetric( NitrogenClient::LM_BorderRight ),
+        client().layoutMetric( NitrogenClient::LM_BorderBottom ) );
     }
     
     move( position );
