@@ -229,24 +229,6 @@ namespace Nitrogen
     
   }
   
-  //_________________________________________________
-  int NitrogenClient::borderWidth( void ) const
-  {
-    return isPreview() ? 
-      layoutMetric( LM_BorderLeft )+layoutMetric( LM_OuterPaddingLeft ):
-      layoutMetric( LM_BorderLeft )+layoutMetric( LM_BorderRight );
-  }
-  
-  //_________________________________________________
-  int NitrogenClient::borderHeight( void ) const
-  {
-    return 
-      layoutMetric( LM_TitleHeight ) + 
-      layoutMetric( LM_TitleEdgeTop ) + 
-      layoutMetric( LM_TitleEdgeBottom ) + 
-      layoutMetric( LM_BorderBottom );
-  }
-  
   //_________________________________________________________
   KCommonDecorationButton *NitrogenClient::createButton(::ButtonType type)
   {
@@ -406,7 +388,7 @@ namespace Nitrogen
     // update size grip so that it gets the right color
     if( hasSizeGrip() ) 
     {
-      sizeGrip().updateBackgroundColor();
+      sizeGrip().activeChange();
       sizeGrip().update();
     }
     
