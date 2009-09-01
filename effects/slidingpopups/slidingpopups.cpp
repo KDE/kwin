@@ -29,9 +29,9 @@ KWIN_EFFECT( slidingpopups, SlidingPopupsEffect )
 
 SlidingPopupsEffect::SlidingPopupsEffect()
     {
-    KConfigGroup conf = effects->effectConfig( "Fade" );
-    mFadeInTime = animationTime( conf, "FadeInTime", 150 );
-    mFadeOutTime = animationTime( conf, "FadeOutTime", 150 );
+    KConfigGroup conf = effects->effectConfig( "SlidingPopups" );
+    mFadeInTime = animationTime( conf, "SlideInTime", 250 );
+    mFadeOutTime = animationTime( conf, "SlideOutTime", 250 );
     mAtom = XInternAtom( display(), "_KDE_SLIDE", False );
     effects->registerPropertyType( mAtom, true );
     // TODO hackish way to announce support, make better after 4.0
@@ -85,6 +85,7 @@ void SlidingPopupsEffect::paintWindow( EffectWindow* w, int mask, QRegion region
     bool animating = false;
     bool appearing = false;
     QRegion clippedRegion = region;
+    data.opacity = 1.0;
 
     if( mAppearingWindows.contains( w ) )
         {
