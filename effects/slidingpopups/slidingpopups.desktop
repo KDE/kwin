@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sliding popups
+Name[et]=Liuguvad hüpikdialoogid
 Name[hr]=Pomični iskočnici
 Name[id]=Menggeser popup
 Name[nb]=Glidende oppsprett
@@ -14,6 +15,7 @@ Name[zh_TW]=滑動彈出視窗
 
 Type=Service
 Comment=Sliding animation for Plasma popups
+Comment[et]=Plasma hüpikdialoogide liuguv animatsioon
 Comment[hr]=Animacija pomicanja za Plasma iskočnike
 Comment[id]=Animasi menggeser untuk popup Plasma
 Comment[nb]=Glidende animasjon for Plasma-oppsprett
