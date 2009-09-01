@@ -63,15 +63,7 @@ namespace Nitrogen
         
         //! dimensions
         virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
-        
-        //! border width
-        /*! full border width, left and right */
-        virtual int borderWidth( void ) const;
-        
-        //! border height
-        /*! full border height, top and bottom */
-        virtual int borderHeight( void ) const;
-        
+                
         //! window shape
         virtual void updateWindowShape();
         
