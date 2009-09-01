@@ -44,7 +44,6 @@ namespace Nitrogen
       {
         NitrogenException exception( group ); 
         if( exception.regExp().isValid() ) push_back( exception );
-        QTextStream( stdout ) << "NitrogenExceptionList::read - read exception " << exception.regExp().pattern() << endl;
       } else break;
       
     }
