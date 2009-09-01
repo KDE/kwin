@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_COVERSWITCH_H
 
 #include <QHash>
-#include <QPixmap>
 #include <QRect>
 #include <QRegion>
 #include <QSize>

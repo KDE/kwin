@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfiggroup.h>
 #include <QVBoxLayout>
-#include <QColor>
 
 namespace KWin
 {

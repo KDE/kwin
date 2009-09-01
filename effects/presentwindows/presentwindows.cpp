@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <QMouseEvent>
-#include <QPainter>
 
 #include <math.h>
 #include <assert.h>

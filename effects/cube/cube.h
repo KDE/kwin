@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kshortcut.h>
 #include <QObject>
 #include <QQueue>
-#include <QSet>
 
 namespace KWin
 {
