@@ -54,7 +54,7 @@ namespace Nitrogen
     public slots:
     
     //! update background color
-    void updateBackgroundColor( void );
+    void activeChange( void );
 
     protected slots:
     
