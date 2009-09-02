@@ -109,23 +109,19 @@ void KDecorationPreview::disablePreview()
 
 void KDecorationPreview::paintEvent( QPaintEvent* e )
     {
-  
-    QWidget::paintEvent(e);
-    
-    // render existing decorations into a pixmap
-    // there is some translations involved to make use of event.rect() 
-    // and optimize painting
-    QRect rect( KDecorationPreview::rect().intersected( e->rect() )  );
-    QPixmap pixmap( rect.size() );
-    pixmap.fill( Qt::transparent );
-    if( deco[Inactive] ) deco[Inactive]->widget()->render( &pixmap, deco[Inactive]->widget()->mapToParent(  -rect.topLeft() ) );
-    if( deco[Active] ) deco[Active]->widget()->render( &pixmap, deco[Active]->widget()->mapToParent(  -rect.topLeft() ) );
-    
-    // draw pixmap on widget
     QPainter painter( this );
-    painter.setClipRect( e->rect() );
-    painter.drawPixmap( rect.topLeft(), pixmap );
-    
+    QPoint delta = mapTo( window(), QPoint(0, 0) );
+
+    if ( deco[Inactive] )
+        {
+        QWidget *w = deco[Inactive]->widget();
+        w->render( &painter, delta + w->mapToParent( QPoint(0, 0) ) );
+        }
+    if ( deco[Active] )
+        {
+        QWidget *w = deco[Active]->widget();
+        w->render( &painter, delta + w->mapToParent( QPoint(0, 0) ) );
+        }
     }
 
 void KDecorationPreview::resizeEvent( QResizeEvent* e )
