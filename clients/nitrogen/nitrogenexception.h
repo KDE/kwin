@@ -67,8 +67,8 @@ namespace Nitrogen
       OverwriteColors = 1<<3,
       FrameBorder = 1<<4,
       BlendColor = 1<<5,
-      DrawSizeGrip = 1<<6,
-      All = TitleAlignment|ShowStripes|DrawSeparator|OverwriteColors|FrameBorder|BlendColor|DrawSizeGrip
+      SizeGripMode = 1<<6,
+      All = TitleAlignment|ShowStripes|DrawSeparator|OverwriteColors|FrameBorder|BlendColor|SizeGripMode
     };
     
     //! constructor

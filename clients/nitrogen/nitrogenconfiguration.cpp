@@ -41,10 +41,10 @@ namespace Nitrogen
     buttonType_( ButtonKde43 ),
     frameBorder_( BorderDefault ),
     blendColor_( RadialBlending ),
+    sizeGripMode_( SizeGripWhenNeeded ),
     showStripes_( true ),
     drawSeparator_( true ),
     overwriteColors_( true ),
-    drawSizeGrip_( false ),
     useOxygenShadows_( true )
   {}
 
@@ -79,6 +79,11 @@ namespace Nitrogen
     setBlendColor( blendColor(
       group.readEntry( NitrogenConfig::BLEND_COLOR, 
       defaultConfiguration.blendColorName( false ) ), false ) );
+
+    // size grip
+    setSizeGripMode( sizeGripMode( 
+      group.readEntry( NitrogenConfig::SIZE_GRIP_MODE, 
+      defaultConfiguration.sizeGripModeName( false ) ), false ) );
     
     // show stripes
     setShowStripes( group.readEntry( 
@@ -95,11 +100,6 @@ namespace Nitrogen
       NitrogenConfig::OVERWRITE_COLORS, 
       defaultConfiguration.overwriteColors() ) );
     
-    // size grip
-    setDrawSizeGrip( group.readEntry( 
-      NitrogenConfig::DRAW_SIZE_GRIP, 
-      defaultConfiguration.drawSizeGrip() ) );
-    
     // oxygen shadows
     setUseOxygenShadows( group.readEntry(
       NitrogenConfig::USE_OXYGEN_SHADOWS,
@@ -115,11 +115,11 @@ namespace Nitrogen
     group.writeEntry( NitrogenConfig::BUTTON_TYPE, buttonTypeName( false ) );
     group.writeEntry( NitrogenConfig::BLEND_COLOR, blendColorName( false ) );
     group.writeEntry( NitrogenConfig::FRAME_BORDER, frameBorderName( false ) );
+    group.writeEntry( NitrogenConfig::SIZE_GRIP_MODE, sizeGripModeName( false ) );
     
     group.writeEntry( NitrogenConfig::SHOW_STRIPES, showStripes() );
     group.writeEntry( NitrogenConfig::DRAW_SEPARATOR, drawSeparator() );
     group.writeEntry( NitrogenConfig::OVERWRITE_COLORS, overwriteColors() );
-    group.writeEntry( NitrogenConfig::DRAW_SIZE_GRIP, drawSizeGrip() );
     group.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
     
   }
@@ -271,6 +271,30 @@ namespace Nitrogen
     else return NitrogenConfiguration().blendColor();
   }
   
+  //__________________________________________________
+  QString NitrogenConfiguration::sizeGripModeName( SizeGripMode value, bool translated )
+  {
+    const char* out;
+    switch( value )
+    {
+      case SizeGripAlways: out = "Always Show Extra Size Grip"; break;
+      case SizeGripNever: out = "Always Hide Extra Size Grip"; break;
+      case SizeGripWhenNeeded: out = "Show Extra Size Grip When Needed"; break;
+      default: return NitrogenConfiguration().sizeGripModeName( translated );
+    }
+    
+    return translated ? i18n(out):out;
+    
+  }
+  
+  //__________________________________________________
+  NitrogenConfiguration::SizeGripMode NitrogenConfiguration::sizeGripMode( QString value, bool translated )
+  {
+    if( value == sizeGripModeName( SizeGripAlways, translated ) ) return SizeGripAlways;
+    else if( value == sizeGripModeName( SizeGripNever, translated ) ) return SizeGripNever;
+    else if( value == sizeGripModeName( SizeGripWhenNeeded, translated ) ) return SizeGripWhenNeeded;
+    else return NitrogenConfiguration().sizeGripMode();
+  }
   
   //________________________________________________________
   bool NitrogenConfiguration::operator == (const NitrogenConfiguration& other ) const
@@ -282,10 +306,10 @@ namespace Nitrogen
       buttonType() == other.buttonType() &&
       frameBorder() == other.frameBorder() &&
       blendColor() == other.blendColor() &&
+      sizeGripMode() == other.sizeGripMode() &&
       showStripes() == other.showStripes() &&
       drawSeparator() == other.drawSeparator() &&
       overwriteColors() == other.overwriteColors() &&
-      drawSizeGrip() == other.drawSizeGrip() &&
       useOxygenShadows() == other.useOxygenShadows();
   }
 

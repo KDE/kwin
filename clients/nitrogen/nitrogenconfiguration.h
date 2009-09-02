@@ -39,7 +39,7 @@ namespace NitrogenConfig
   static const QString OVERWRITE_COLORS = "OverwriteColors";
   static const QString FRAME_BORDER = "FrameBorder";
   static const QString BLEND_COLOR = "BlendColor";
-  static const QString DRAW_SIZE_GRIP = "DrawSizeGrip";
+  static const QString SIZE_GRIP_MODE = "SizeGripMode";
   static const QString USE_OXYGEN_SHADOWS = "UseOxygenShadows";
   
 }
@@ -85,6 +85,14 @@ namespace Nitrogen
     enum BlendColorType {
       NoBlending,
       RadialBlending
+    };
+    
+    //! size grip mode
+    enum SizeGripMode
+    {
+      SizeGripAlways,
+      SizeGripNever,
+      SizeGripWhenNeeded
     };
     
     //! default constructor
@@ -201,6 +209,34 @@ namespace Nitrogen
 
     //@}
         
+    //!@name size grip
+    //@{
+    
+    static QString sizeGripModeName( SizeGripMode, bool translated );
+    static SizeGripMode sizeGripMode( QString, bool translated );
+    
+    virtual SizeGripMode sizeGripMode( void ) const
+    { return sizeGripMode_; }
+
+    virtual QString sizeGripModeName( bool translated ) const
+    { return sizeGripModeName( sizeGripMode(), translated ); }
+
+    virtual void setSizeGripMode( SizeGripMode value )
+    { sizeGripMode_ = value; }    
+    
+    virtual void setSizeGripMode( QString value, bool translated )
+    { sizeGripMode_ = sizeGripMode( value, translated ); }    
+
+    //! draw size grip
+    virtual bool drawSizeGrip( void ) const
+    {
+      return 
+        sizeGripMode() == SizeGripAlways || 
+        (sizeGripMode() == SizeGripWhenNeeded && frameBorder() == BorderNone );
+    }
+    
+    //@}
+
     //! stripes
     virtual bool showStripes( void ) const
     { return showStripes_; }
@@ -225,14 +261,6 @@ namespace Nitrogen
     virtual void setOverwriteColors( bool value )
     { overwriteColors_ = value; }
       
-    //! draw size grip
-    virtual bool drawSizeGrip( void ) const
-    { return drawSizeGrip_; }
-    
-    //! draw size grip
-    virtual void setDrawSizeGrip( bool value )
-    { drawSizeGrip_ = value; }
-    
     //! oxygen shadows
     virtual bool useOxygenShadows( void ) const
     { return useOxygenShadows_; }
@@ -257,6 +285,9 @@ namespace Nitrogen
 
     //! frame border
     BlendColorType blendColor_;
+
+    //! size grip mode
+    SizeGripMode sizeGripMode_;
     
     //! stripes
     bool showStripes_;
@@ -266,9 +297,6 @@ namespace Nitrogen
     
     //! overwrite colors
     bool overwriteColors_;
-    
-    //! size grip
-    bool drawSizeGrip_;
     
     //! oxygen shadows
     bool useOxygenShadows_;
