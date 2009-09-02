@@ -47,9 +47,9 @@ namespace Nitrogen
     buttonType(0),
     frameBorder(0),
     blendColor(0),
+    sizeGripMode(0),
     drawSeparator(0),
-    showStripes(0),
-    drawSizeGrip(0)
+    showStripes(0)
   { setupUI(); }
     
   //_________________________________________________________
@@ -187,7 +187,24 @@ namespace Nitrogen
     
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( blendColor );
-        
+            
+      // draw size grip
+      gridLayout->addWidget( label = new QLabel( i18n("Extra Size grip display:"), advancedWidget ), 2, 0, 1, 1 );
+      gridLayout->addWidget( sizeGripMode = new QComboBox(advancedWidget), 2, 1, 1, 1 );
+      sizeGripMode->setObjectName(QString::fromUtf8("sizeGripMode"));
+      sizeGripMode->setWhatsThis(i18n(
+        "Size grip is a small triangular widget drawn in bottom-right corner of a window \n"
+        "which allows to resize the window. This option controls in which case the size grip \n"
+        "must be drawn."));
+      sizeGripMode->insertItems(0, QStringList()
+        << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
+        << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripWhenNeeded, true )
+        << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripAlways, true )
+        );
+    
+      label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+      label->setBuddy( sizeGripMode );
+      
       // oxygen shadow
       vboxLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), advancedWidget ) );
       useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
@@ -199,13 +216,6 @@ namespace Nitrogen
       overwriteColors->setObjectName(QString::fromUtf8("overwriteColors"));
       overwriteColors->setWhatsThis(i18n(
         "When enabled, window colors are used in place of default title bar colors to draw the decoration"));
-      
-      // draw size grip
-      vboxLayout->addWidget( drawSizeGrip = new QCheckBox( i18n("Draw size grip widget in bottom-right corner of windows"), advancedWidget ) );
-      drawSizeGrip->setObjectName(QString::fromUtf8("drawSizeGrip"));
-      drawSizeGrip->setWhatsThis(i18n(
-        "When this option is enabled, a small triangular widget is drawn in bottom-right corner of every window \n"
-        "which allow to resize the window."));
     }
     
     // exceptions

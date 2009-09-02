@@ -65,6 +65,9 @@ namespace Nitrogen
     
     //! blend combobox
     QComboBox* blend_combobox_;
+
+    //! size grip
+    QComboBox* sizeGripModeComboBox_;
     
     //! map mask and checkbox
     typedef std::map< NitrogenException::AttributesMask, QCheckBox*> CheckBoxMap;
@@ -103,10 +106,7 @@ namespace Nitrogen
     
     //! overwrite colors
     ComboBox* overwrite_colors_combobox_;
-    
-    //! size grip
-    ComboBox* draw_size_grip_combobox_;
-  
+      
   };
   
 }

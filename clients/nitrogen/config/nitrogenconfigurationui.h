@@ -65,6 +65,9 @@ namespace Nitrogen
     //! blend color
     QComboBox *blendColor;
 
+    //! size grip
+    QComboBox *sizeGripMode;
+    
     //! draw separator
     QCheckBox *drawSeparator;
     
@@ -73,9 +76,6 @@ namespace Nitrogen
         
     //! overwrite colors
     QCheckBox *overwriteColors;
-
-    //! size grip
-    QCheckBox *drawSizeGrip;
 
     //! nitrogen shadow
     QCheckBox *useOxygenShadows;

@@ -121,34 +121,39 @@ namespace Nitrogen
     checkbox->setToolTip( i18n("If checked, specified blending color is used in title bar in place of default value.") );
     connect( checkbox, SIGNAL( toggled( bool ) ), blend_combobox_, SLOT( setEnabled( bool ) ) );
     
+    // size grip
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Size grip display:" ), box ), 4, 0, 1, 1 );
+    gridLayout->addWidget( sizeGripModeComboBox_ = new QComboBox( box ), 4, 1, 1, 1 );
+    sizeGripModeComboBox_->insertItems(0, QStringList()
+      << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
+      << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripWhenNeeded, true )
+      << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripAlways, true )
+      );
+    sizeGripModeComboBox_->setEnabled( false );
+    checkboxes_.insert( std::make_pair( NitrogenException::SizeGripMode, checkbox ) );
+    connect( checkbox, SIGNAL( toggled( bool ) ), sizeGripModeComboBox_, SLOT( setEnabled( bool ) ) );
+
     // separator
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and window contents:" ), box ), 4, 0, 1, 1 );
-    gridLayout->addWidget( draw_separator_combobox_ = new ComboBox( box ), 4, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and window contents:" ), box ), 5, 0, 1, 1 );
+    gridLayout->addWidget( draw_separator_combobox_ = new ComboBox( box ), 5, 1, 1, 1 );
     draw_separator_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::DrawSeparator, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), draw_separator_combobox_, SLOT( setEnabled( bool ) ) );
     
     // stripes
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Show stripes next to the title:" ), box ), 5, 0, 1, 1 );
-    gridLayout->addWidget( show_stripes_combobox_ = new ComboBox( box ), 5, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Show stripes next to the title:" ), box ), 6, 0, 1, 1 );
+    gridLayout->addWidget( show_stripes_combobox_ = new ComboBox( box ), 6, 1, 1, 1 );
     show_stripes_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::ShowStripes, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), show_stripes_combobox_, SLOT( setEnabled( bool ) ) );
 
     // overwrite colors
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Blend title bar colors with window content:" ), box ), 6, 0, 1, 1 );
-    gridLayout->addWidget( overwrite_colors_combobox_ = new ComboBox( box ), 6, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Blend title bar colors with window content:" ), box ), 7, 0, 1, 1 );
+    gridLayout->addWidget( overwrite_colors_combobox_ = new ComboBox( box ), 7, 1, 1, 1 );
     overwrite_colors_combobox_->setEnabled( false );
-    checkboxes_.insert( std::make_pair( NitrogenException::OverwriteColors, checkbox ) );
+    checkboxes_.insert( std::make_pair( NitrogenException::BlendColor, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), overwrite_colors_combobox_, SLOT( setEnabled( bool ) ) );
-   
-    // size grip
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw size grip in bottom-right corner of windows:" ), box ), 7, 0, 1, 1 );
-    gridLayout->addWidget( draw_size_grip_combobox_ = new ComboBox( box ), 7, 1, 1, 1 );
-    draw_size_grip_combobox_->setEnabled( false );
-    checkboxes_.insert( std::make_pair( NitrogenException::DrawSizeGrip, checkbox ) );
-    connect( checkbox, SIGNAL( toggled( bool ) ), draw_size_grip_combobox_, SLOT( setEnabled( bool ) ) );
-    
+       
   }
   
   //___________________________________________
@@ -170,11 +175,13 @@ namespace Nitrogen
     // blend color
     blend_combobox_->setCurrentIndex( blend_combobox_->findText( exception.blendColorName( true ) ) );
 
+    // size grip
+    sizeGripModeComboBox_->setCurrentIndex( sizeGripModeComboBox_->findText( exception.sizeGripModeName( true ) ) );
+    
     // flags
     draw_separator_combobox_->setValue( exception.drawSeparator() );
     show_stripes_combobox_->setValue( exception.showStripes() );
     overwrite_colors_combobox_->setValue( exception.overwriteColors() );
-    draw_size_grip_combobox_->setValue( exception.drawSizeGrip() );
     
     // mask
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
@@ -190,12 +197,12 @@ namespace Nitrogen
     exception.regExp().setPattern( editor_->text() );
     exception.setFrameBorder( NitrogenException::frameBorder( frame_border_combobox_->currentText(), true ) );
     exception.setBlendColor( NitrogenException::blendColor( blend_combobox_->currentText(), true ) ); 
+    exception.setSizeGripMode( NitrogenException::sizeGripMode( sizeGripModeComboBox_->currentText(), true ) );
     
     // flags
     exception.setDrawSeparator( draw_separator_combobox_->isChecked() );
     exception.setShowStripes( show_stripes_combobox_->isChecked() );
     exception.setOverwriteColors( overwrite_colors_combobox_->isChecked() );
-    exception.setDrawSizeGrip( draw_size_grip_combobox_->isChecked() );
     
     // mask
     unsigned int mask = NitrogenException::None;
