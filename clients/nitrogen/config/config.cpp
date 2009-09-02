@@ -64,11 +64,11 @@ namespace Nitrogen
     connect( user_interface_->buttonType, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( user_interface_->frameBorder, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( user_interface_->blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
+    connect( user_interface_->sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
    
     connect( user_interface_->showStripes, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->drawSeparator, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->overwriteColors, SIGNAL(clicked()), SIGNAL(changed()) );
-    connect( user_interface_->drawSizeGrip, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->useOxygenShadows, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->exceptions, SIGNAL(changed()), SIGNAL(changed()) );
     
@@ -135,11 +135,14 @@ namespace Nitrogen
     configurationGroup.writeEntry( 
       NitrogenConfig::FRAME_BORDER, 
       NitrogenConfiguration::frameBorderName( NitrogenConfiguration::frameBorder( user_interface_->frameBorder->currentText(), true ), false ) );
+
+    configurationGroup.writeEntry( 
+      NitrogenConfig::SIZE_GRIP_MODE,
+      NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::sizeGripMode( user_interface_->sizeGripMode->currentText(), true ), false ) );
     
     configurationGroup.writeEntry( NitrogenConfig::SHOW_STRIPES, user_interface_->showStripes->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::DRAW_SEPARATOR, user_interface_->drawSeparator->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::OVERWRITE_COLORS, user_interface_->overwriteColors->isChecked() );
-    configurationGroup.writeEntry( NitrogenConfig::DRAW_SIZE_GRIP, user_interface_->drawSizeGrip->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, user_interface_->useOxygenShadows->isChecked() );
 
     // write exceptions
@@ -175,11 +178,11 @@ namespace Nitrogen
     user_interface_->buttonType->setCurrentIndex( user_interface_->buttonType->findText( configuration.buttonTypeName( true ) ) );    
     user_interface_->blendColor->setCurrentIndex( user_interface_->blendColor->findText( configuration.blendColorName( true ) ) );
     user_interface_->frameBorder->setCurrentIndex( user_interface_->frameBorder->findText( configuration.frameBorderName( true ) ) );
+    user_interface_->sizeGripMode->setCurrentIndex( user_interface_->sizeGripMode->findText( configuration.sizeGripModeName( true ) ) );
 
     user_interface_->showStripes->setChecked( configuration.showStripes() );
     user_interface_->drawSeparator->setChecked( configuration.drawSeparator() );
     user_interface_->overwriteColors->setChecked( configuration.overwriteColors() );
-    user_interface_->drawSizeGrip->setChecked( configuration.drawSizeGrip() );
     user_interface_->useOxygenShadows->setChecked( configuration.useOxygenShadows() );
   }
   
