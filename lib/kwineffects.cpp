@@ -114,7 +114,7 @@ void Effect::reconfigure( ReconfigureFlags )
     {
     }
 
-const void* Effect::proxy() const
+void* Effect::proxy()
     {
     return NULL;
     }

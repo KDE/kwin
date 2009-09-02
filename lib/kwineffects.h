@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 102
+#define KWIN_EFFECT_API_VERSION_MINOR 103
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -309,7 +309,7 @@ class KWIN_EXPORT Effect
         /**
          * Called when another effect requests the proxy for this effect.
          */
-        virtual const void* proxy() const;
+        virtual void* proxy();
 
         /**
          * Called before starting to paint the screen.
@@ -541,7 +541,7 @@ class KWIN_EXPORT EffectsHandler
          * Retrieve the proxy class for an effect if it has one. Will return NULL if
          * the effect isn't loaded or doesn't have a proxy class.
          */
-        virtual const void* getProxy( QString name ) = 0;
+        virtual void* getProxy( QString name ) = 0;
 
         // Mouse polling
         virtual void startMousePolling() = 0;

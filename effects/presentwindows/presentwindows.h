@@ -64,7 +64,7 @@ class PresentWindowsEffect
         virtual ~PresentWindowsEffect();
 
         virtual void reconfigure( ReconfigureFlags );
-        virtual const void* proxy() const;
+        virtual void* proxy();
 
         // Screen painting
         virtual void prePaintScreen( ScreenPrePaintData &data, int time );

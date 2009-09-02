@@ -776,8 +776,8 @@ void DesktopGridEffect::setActive( bool active )
         return; // Already in that state
 
     // Example proxy code, TODO: Use or remove
-    //const PresentWindowsEffectProxy* proxy =
-    //    static_cast<const PresentWindowsEffectProxy*>( effects->getProxy( "presentwindows" ));
+    //PresentWindowsEffectProxy* proxy =
+    //    static_cast<PresentWindowsEffectProxy*>( effects->getProxy( "presentwindows" ));
     //if( proxy )
     //    kDebug() << "Retrieved PresentWindowsEffectProxy, is present windows activate?"
     //             << proxy->isActive();

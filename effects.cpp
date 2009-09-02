@@ -347,7 +347,7 @@ void EffectsHandlerImpl::grabbedKeyboardEvent( QKeyEvent* e )
         keyboard_grab_effect->grabbedKeyboardEvent( e );
     }
 
-const void* EffectsHandlerImpl::getProxy( QString name )
+void* EffectsHandlerImpl::getProxy( QString name )
     {
     // All effects start with "kwin4_effect_", prepend it to the name
     name.prepend( "kwin4_effect_" );

@@ -154,7 +154,7 @@ void PresentWindowsEffect::reconfigure( ReconfigureFlags )
     m_rightButtonDesktop = (DesktopMouseAction)conf.readEntry( "RightButtonDesktop", (int)DesktopNoAction );
     }
 
-const void* PresentWindowsEffect::proxy() const
+void* PresentWindowsEffect::proxy()
     {
     return &m_proxy;
     }
