@@ -139,7 +139,7 @@ namespace Nitrogen
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Blend title bar colors with window content:" ), box ), 6, 0, 1, 1 );
     gridLayout->addWidget( overwrite_colors_combobox_ = new ComboBox( box ), 6, 1, 1, 1 );
     overwrite_colors_combobox_->setEnabled( false );
-    checkboxes_.insert( std::make_pair( NitrogenException::BlendColor, checkbox ) );
+    checkboxes_.insert( std::make_pair( NitrogenException::OverwriteColors, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), overwrite_colors_combobox_, SLOT( setEnabled( bool ) ) );
    
     // size grip
