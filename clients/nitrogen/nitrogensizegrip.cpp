@@ -219,8 +219,11 @@ namespace Nitrogen
     {
       
       position -= QPoint( 
-        client().layoutMetric( NitrogenClient::LM_BorderLeft )+client().layoutMetric( NitrogenClient::LM_OuterPaddingLeft ),
-        client().layoutMetric( NitrogenClient::LM_TitleHeight )+client().layoutMetric( NitrogenClient::LM_TitleEdgeTop )+client().layoutMetric( NitrogenClient::LM_TitleEdgeBottom )+client().layoutMetric( NitrogenClient::LM_BorderBottom ) );
+        client().layoutMetric( NitrogenClient::LM_BorderRight )+
+        client().layoutMetric( NitrogenClient::LM_OuterPaddingRight ),
+        client().layoutMetric( NitrogenClient::LM_OuterPaddingBottom )+
+        client().layoutMetric( NitrogenClient::LM_BorderBottom ) 
+        );
       
     } else if( decoration_offset_ ) {
       
