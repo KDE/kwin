@@ -193,9 +193,9 @@ namespace Nitrogen
       gridLayout->addWidget( sizeGripMode = new QComboBox(advancedWidget), 2, 1, 1, 1 );
       sizeGripMode->setObjectName(QString::fromUtf8("sizeGripMode"));
       sizeGripMode->setWhatsThis(i18n(
-        "Size grip is a small triangular widget drawn in bottom-right corner of a window \n"
-        "which allows to resize the window. This option controls in which case the size grip \n"
-        "must be drawn."));
+        "The extra size grip is a small triangle shown in the bottom-right corner of a window \n"
+        "which allows to resize the window. This option controls in which case this size grip \n"
+        "is shown."));
       sizeGripMode->insertItems(0, QStringList()
         << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
         << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripWhenNeeded, true )
