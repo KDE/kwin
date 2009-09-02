@@ -319,11 +319,11 @@ namespace Nitrogen
     h -= sh + layoutMetric( LM_OuterPaddingBottom );
     
     
-    QRegion mask(sw + 5*left, sh + 0*top, w-5*(left+right), h-0*(top+bottom));
-    mask += QRegion(sw + 0*left, sh + 5*top, w-0*(left+right), h-5*(top+bottom));
-    mask += QRegion(sw + 2*left, sh + 2*top, w-2*(left+right), h-2*(top+bottom));
-    mask += QRegion(sw + 3*left, sh + 1*top, w-3*(left+right), h-1*(top+bottom));
-    mask += QRegion(sw + 1*left, sh + 3*top, w-1*(left+right), h-3*(top+bottom));      
+    QRegion mask(sw + 4*left, sh + 0*top, w-4*(left+right), h-0*(top+bottom));
+    mask += QRegion(sw + 0*left, sh + 4*top, w-0*(left+right), h-4*(top+bottom));
+    mask += QRegion(sw + 2*left, sh + 1*top, w-2*(left+right), h-1*(top+bottom));
+    mask += QRegion(sw + 1*left, sh + 2*top, w-1*(left+right), h-2*(top+bottom));      
+    
     return mask;
         
   }
