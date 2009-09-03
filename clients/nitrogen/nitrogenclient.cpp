@@ -72,6 +72,8 @@ namespace Nitrogen
     KCommonDecorationUnstable(b, f), 
     colorCacheInvalid_(true),
     size_grip_( 0 ),
+    shadowTiles_( 0 ),
+    glowTiles_( 0 ),
     helper_(*globalHelper),
     initialized_( false )
   { qAddPostRoutine(oxkwincleanupBefore); }
@@ -82,6 +84,10 @@ namespace Nitrogen
     
     // delete sizegrip if any
     if( hasSizeGrip() ) deleteSizeGrip();
+    
+    // delete tilesets
+    if( shadowTiles_ ) delete shadowTiles_; 
+    if( glowTiles_ ) delete glowTiles_;
     
   }
   
@@ -741,10 +747,18 @@ namespace Nitrogen
       && opt.glowColor == opt.glowColor)
       optionChanged = false;
     
-    if (active && glowTiles_ && !optionChanged)
-      return glowTiles_;
-    else if (!active && shadowTiles_ && !optionChanged)
-      return shadowTiles_;
+    if (active && glowTiles_ )
+    { 
+    
+      if( optionChanged) delete glowTiles_;
+      else return glowTiles_;
+      
+    } else if (!active && shadowTiles_ ) {
+      
+      if( optionChanged ) delete shadowTiles_;
+      else return shadowTiles_;
+      
+    }
     
     TileSet *tileSet = 0;
     
