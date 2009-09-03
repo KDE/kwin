@@ -93,8 +93,8 @@ namespace Nitrogen
     QCheckBox* checkbox;
     
     // border size
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 2, 0, 1, 1 );
-    gridLayout->addWidget( frame_border_combobox_ = new QComboBox(box), 2, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 0, 0, 1, 1 );
+    gridLayout->addWidget( frame_border_combobox_ = new QComboBox(box), 0, 1, 1, 1 );
     frame_border_combobox_->insertItems(0, QStringList()
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
@@ -111,8 +111,8 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), frame_border_combobox_, SLOT( setEnabled( bool ) ) );
     
     // blend color
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Background style:" ), box ), 3, 0, 1, 1 );
-    gridLayout->addWidget( blend_combobox_ = new QComboBox(box), 3, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Background style:" ), box ), 1, 0, 1, 1 );
+    gridLayout->addWidget( blend_combobox_ = new QComboBox(box), 1, 1, 1, 1 );
     blend_combobox_->insertItems(0, QStringList()
       << NitrogenException::blendColorName( NitrogenException::NoBlending, true )
       << NitrogenException::blendColorName( NitrogenException::RadialBlending, true ) );
@@ -122,8 +122,8 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), blend_combobox_, SLOT( setEnabled( bool ) ) );
     
     // size grip
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Size grip display:" ), box ), 4, 0, 1, 1 );
-    gridLayout->addWidget( sizeGripModeComboBox_ = new QComboBox( box ), 4, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Size grip display:" ), box ), 2, 0, 1, 1 );
+    gridLayout->addWidget( sizeGripModeComboBox_ = new QComboBox( box ), 2, 1, 1, 1 );
     sizeGripModeComboBox_->insertItems(0, QStringList()
       << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
       << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripWhenNeeded, true )
@@ -134,22 +134,22 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), sizeGripModeComboBox_, SLOT( setEnabled( bool ) ) );
 
     // separator
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and window contents:" ), box ), 5, 0, 1, 1 );
-    gridLayout->addWidget( draw_separator_combobox_ = new ComboBox( box ), 5, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and window contents:" ), box ), 3, 0, 1, 1 );
+    gridLayout->addWidget( draw_separator_combobox_ = new ComboBox( box ), 3, 1, 1, 1 );
     draw_separator_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::DrawSeparator, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), draw_separator_combobox_, SLOT( setEnabled( bool ) ) );
     
     // stripes
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Show stripes next to the title:" ), box ), 6, 0, 1, 1 );
-    gridLayout->addWidget( show_stripes_combobox_ = new ComboBox( box ), 6, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Show stripes next to the title:" ), box ), 4, 0, 1, 1 );
+    gridLayout->addWidget( show_stripes_combobox_ = new ComboBox( box ), 4, 1, 1, 1 );
     show_stripes_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::ShowStripes, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), show_stripes_combobox_, SLOT( setEnabled( bool ) ) );
 
     // overwrite colors
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Blend title bar colors with window content:" ), box ), 7, 0, 1, 1 );
-    gridLayout->addWidget( overwrite_colors_combobox_ = new ComboBox( box ), 7, 1, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Blend title bar colors with window content:" ), box ), 5, 0, 1, 1 );
+    gridLayout->addWidget( overwrite_colors_combobox_ = new ComboBox( box ), 5, 1, 1, 1 );
     overwrite_colors_combobox_->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::BlendColor, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), overwrite_colors_combobox_, SLOT( setEnabled( bool ) ) );
