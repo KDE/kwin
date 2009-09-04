@@ -422,7 +422,7 @@ namespace Nitrogen
       int shadow_size = 5;
       int height = HFRAMESIZE;
       QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
-      helper().slab( palette.color( widget->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(-2, 0, 2, 2 ), painter, TileSet::Bottom );
+      helper().slab( palette.color( widget->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(-shadow_size, 0, shadow_size, 2 ), painter, TileSet::Bottom );
       
       int offset = layoutMetric( LM_OuterPaddingTop );
       int gradient_height = 64 + configuration().buttonSize() - 22;
