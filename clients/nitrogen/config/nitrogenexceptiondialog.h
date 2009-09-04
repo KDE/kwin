@@ -55,19 +55,19 @@ namespace Nitrogen
     private:
     
     //! line editor
-    KLineEdit* editor_;
+    KLineEdit* exceptionEditor;
     
     //! blend combobox
-    QComboBox* type_combobox_;
+    QComboBox* exceptionType;
 
     //! border size
-    QComboBox* frame_border_combobox_;
+    QComboBox* frameBorder;
     
     //! blend combobox
-    QComboBox* blend_combobox_;
+    QComboBox* blendColor;
 
     //! size grip
-    QComboBox* sizeGripModeComboBox_;
+    QComboBox* sizeGripMode;
     
     //! map mask and checkbox
     typedef std::map< NitrogenException::AttributesMask, QCheckBox*> CheckBoxMap;
@@ -98,14 +98,14 @@ namespace Nitrogen
       
     };
     
+    //! overwrite colors
+    ComboBox* titleOutline;
+    
     //! draw separator
-    ComboBox* draw_separator_combobox_;
+    ComboBox* drawSeparator;
     
     //! stripes
-    ComboBox* show_stripes_combobox_;
-    
-    //! overwrite colors
-    ComboBox* overwrite_colors_combobox_;
+    ComboBox* showStripes;
       
   };
   
