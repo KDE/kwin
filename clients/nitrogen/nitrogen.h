@@ -67,8 +67,14 @@ namespace Nitrogen
   around window that is clickable although it is part of the shadow 
   */ 
   static const int EXTENDED_HITAREA = 0;
+  
+  // this is the top title bar edge
   static const int TFRAMESIZE = 3;
-
+  
+  // this is the extra title bar top and bottom edges
+  // needed to outline active window title bar
+  static const int HFRAMESIZE = 4;
+  
   Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
     
   //! window decoration factory
