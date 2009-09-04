@@ -32,7 +32,6 @@
 #include <QtGui/QLinearGradient>
 #include <QtCore/QCache>
 
-#include "../nitrogenconfiguration.h"
 
 #define _glowBias 0.9 // not likely to be configurable
 
@@ -87,7 +86,7 @@ class NitrogenHelper
   //@}
   
   //! buttons
-  QPixmap windecoButton(const QColor &color, bool pressed, Nitrogen::NitrogenConfiguration::ButtonType type, int size = 21);
+  QPixmap windecoButton(const QColor &color, bool pressed, int size = 21);
   QPixmap windecoButtonGlow(const QColor &color, int size = 21);
   
   //! frame

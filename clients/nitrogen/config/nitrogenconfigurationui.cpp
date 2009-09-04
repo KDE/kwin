@@ -44,7 +44,6 @@ namespace Nitrogen
     QWidget( parent ),
     titleAlignment(0),
     buttonSize(0),
-    buttonType(0),
     frameBorder(0),
     blendColor(0),
     sizeGripMode(0),
@@ -162,21 +161,9 @@ namespace Nitrogen
       vboxLayout->addLayout( gridLayout );
  
       gridLayout->setColumnStretch(2, 1);
-
-      // button type
-      QLabel* label;
-      gridLayout->addWidget( label = new QLabel( i18n("Button style:"), advancedWidget ), 0, 0, 1, 1 );
-      gridLayout->addWidget( buttonType = new QComboBox(advancedWidget), 0, 1, 1, 1 );
-      buttonType->setObjectName(QString::fromUtf8("buttonType"));  
-      buttonType->insertItems(0, QStringList()
-        << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde42, true )
-        << NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::ButtonKde43, true )
-        );
-      
-      label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-      label->setBuddy( buttonType );
       
       // title bar blending
+      QLabel* label;
       gridLayout->addWidget( label = new QLabel( i18n("Background style:" ), advancedWidget ), 1, 0, 1, 1 );
       gridLayout->addWidget( blendColor = new QComboBox(advancedWidget), 1, 1, 1, 1 );
       blendColor->setObjectName(QString::fromUtf8("blendColor"));

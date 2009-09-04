@@ -61,7 +61,6 @@ namespace Nitrogen
     user_interface_ = new NitrogenConfigurationUI( parent );    
     connect( user_interface_->titleAlignment, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( user_interface_->buttonSize, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
-    connect( user_interface_->buttonType, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( user_interface_->frameBorder, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( user_interface_->blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( user_interface_->sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
@@ -125,10 +124,6 @@ namespace Nitrogen
       NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::buttonSize( user_interface_->buttonSize->currentText(), true ), false ) );
     
     configurationGroup.writeEntry( 
-      NitrogenConfig::BUTTON_TYPE, 
-      NitrogenConfiguration::buttonTypeName( NitrogenConfiguration::buttonType( user_interface_->buttonType->currentText(), true ), false ) );
-    
-    configurationGroup.writeEntry( 
       NitrogenConfig::BLEND_COLOR, 
       NitrogenConfiguration::blendColorName( NitrogenConfiguration::blendColor( user_interface_->blendColor->currentText(), true ), false ) );
     
@@ -175,7 +170,6 @@ namespace Nitrogen
     
     user_interface_->titleAlignment->setCurrentIndex( user_interface_->titleAlignment->findText( configuration.titleAlignmentName( true ) ) );    
     user_interface_->buttonSize->setCurrentIndex( user_interface_->buttonSize->findText( configuration.buttonSizeName( true ) ) );    
-    user_interface_->buttonType->setCurrentIndex( user_interface_->buttonType->findText( configuration.buttonTypeName( true ) ) );    
     user_interface_->blendColor->setCurrentIndex( user_interface_->blendColor->findText( configuration.blendColorName( true ) ) );
     user_interface_->frameBorder->setCurrentIndex( user_interface_->frameBorder->findText( configuration.frameBorderName( true ) ) );
     user_interface_->sizeGripMode->setCurrentIndex( user_interface_->sizeGripMode->findText( configuration.sizeGripModeName( true ) ) );

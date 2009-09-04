@@ -149,25 +149,20 @@ namespace Nitrogen
         int border( 0 );
         if (respectWindowState && maximized) {
           border = 0;
-        }  else if( configuration().frameBorder() == 0 && isPreview() && !compositingActive() ) {
+        }  else if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && isPreview() && !compositingActive() ) {
           border = 1;
-        }  else {
-          
-          if( lm == LM_BorderBottom && frameBorder >= NitrogenConfiguration::BorderTiny ) 
-          {
+        }  else if( lm == LM_BorderBottom && frameBorder >= NitrogenConfiguration::BorderTiny ) {
             
-            // for tiny border, the convention is to have a larger bottom area in order to 
-            // make resizing easier
-            border = qMax(frameBorder, 4);
+          // for tiny border, the convention is to have a larger bottom area in order to 
+          // make resizing easier
+          border = qMax(frameBorder, 4);
             
-          } else {
+        } else {
             
-            border = frameBorder;          
+          border = frameBorder;          
             
-          }
-          
         }
-        
+          
         return border + extraBorder;
       }
       
@@ -574,7 +569,7 @@ namespace Nitrogen
     // useOxygenShadow is set to true, 
     // and copositing is active
     // (that makes a lot of ifs)
-    if( isPreview() && configuration().frameBorder() == 0 && !compositingActive() )
+    if( isPreview() && configuration().frameBorder() == NitrogenConfiguration::BorderNone && !compositingActive() )
     {
       painter.save();
       painter.setBrush( Qt::NoBrush );
@@ -689,9 +684,7 @@ namespace Nitrogen
       }
       
       // Draw the 3-dots resize handles
-      if( 
-        isResizable() && 
-        !configuration().drawSizeGrip() )
+      if( isResizable() && !configuration().drawSizeGrip() )
       {
 
         painter.setPen(Qt::NoPen);

@@ -33,7 +33,6 @@ namespace NitrogenConfig
   
   static const QString TITLE_ALIGNMENT = "TitleAlignment";
   static const QString BUTTON_SIZE = "ButtonSize";
-  static const QString BUTTON_TYPE = "ButtonType";
   static const QString SHOW_STRIPES = "ShowStripes";
   static const QString DRAW_SEPARATOR = "DrawSeparator";
   static const QString OVERWRITE_COLORS = "OverwriteColors";
@@ -52,13 +51,6 @@ namespace Nitrogen
     
     public:
 
-    //! button type
-    enum ButtonType
-    {
-      ButtonKde42,
-      ButtonKde43
-    };
-    
     //! button size enumeration
     enum ButtonSize
     {
@@ -151,24 +143,7 @@ namespace Nitrogen
     { buttonSize_ = value; }
     
     //@}
-    
-    //!@name button size
-    //@{
-    
-    static QString buttonTypeName( ButtonType, bool translated );
-    static ButtonType buttonType( QString, bool translated );
-    
-    virtual ButtonType buttonType( void ) const
-    { return buttonType_; }
-      
-    virtual QString buttonTypeName( bool translated ) const
-    { return buttonTypeName( buttonType(), translated ); }
-    
-    virtual void setButtonType( ButtonType value )
-    { buttonType_ = value; }
-    
-    //@}
-    
+        
     //!@name frame border
     //@{
     
@@ -276,9 +251,6 @@ namespace Nitrogen
 
     //! button size
     ButtonSize buttonSize_;
-    
-    //! button type
-    ButtonType buttonType_;
     
     //! blend color
     FrameBorder frameBorder_; 

@@ -38,7 +38,6 @@ namespace Nitrogen
   NitrogenConfiguration::NitrogenConfiguration( void ):
     titleAlignment_( Qt::AlignLeft ),
     buttonSize_( ButtonDefault ),
-    buttonType_( ButtonKde43 ),
     frameBorder_( BorderDefault ),
     blendColor_( RadialBlending ),
     sizeGripMode_( SizeGripWhenNeeded ),
@@ -65,11 +64,6 @@ namespace Nitrogen
       group.readEntry( NitrogenConfig::BUTTON_SIZE,
       defaultConfiguration.buttonSizeName( false ) ), false ) );
 
-    // button type
-    setButtonType( buttonType( 
-      group.readEntry( NitrogenConfig::BUTTON_TYPE,
-      defaultConfiguration.buttonTypeName( false ) ), false ) );
-    
     // frame border
     setFrameBorder( frameBorder( 
       group.readEntry( NitrogenConfig::FRAME_BORDER, 
@@ -112,7 +106,6 @@ namespace Nitrogen
     
     group.writeEntry( NitrogenConfig::TITLE_ALIGNMENT, titleAlignmentName( false ) );
     group.writeEntry( NitrogenConfig::BUTTON_SIZE, buttonSizeName( false ) );
-    group.writeEntry( NitrogenConfig::BUTTON_TYPE, buttonTypeName( false ) );
     group.writeEntry( NitrogenConfig::BLEND_COLOR, blendColorName( false ) );
     group.writeEntry( NitrogenConfig::FRAME_BORDER, frameBorderName( false ) );
     group.writeEntry( NitrogenConfig::SIZE_GRIP_MODE, sizeGripModeName( false ) );
@@ -190,29 +183,6 @@ namespace Nitrogen
     
   }
     
-  //__________________________________________________
-  QString NitrogenConfiguration::buttonTypeName( ButtonType value, bool translated )
-  {
-    const char* out;
-    switch( value )
-    {
-      case ButtonKde42: out = "Flush"; break;
-      case ButtonKde43: out = "Sunken"; break;
-      default: return NitrogenConfiguration().buttonTypeName( translated );
-    }
-    
-    return translated ? i18n(out):out;
-    
-  }
-
-  //__________________________________________________
-  NitrogenConfiguration::ButtonType NitrogenConfiguration::buttonType( QString value, bool translated )
-  {
-    if( value == buttonTypeName( ButtonKde42, translated ) ) return ButtonKde42;
-    else if( value == buttonTypeName( ButtonKde43, translated ) ) return ButtonKde43;
-    else return NitrogenConfiguration().buttonType();
-  }
-
   //__________________________________________________
   QString NitrogenConfiguration::frameBorderName( FrameBorder value, bool translated )
   {
@@ -303,7 +273,6 @@ namespace Nitrogen
     return
       titleAlignment() == other.titleAlignment() &&
       buttonSize() == other.buttonSize() &&
-      buttonType() == other.buttonType() &&
       frameBorder() == other.frameBorder() &&
       blendColor() == other.blendColor() &&
       sizeGripMode() == other.sizeGripMode() &&

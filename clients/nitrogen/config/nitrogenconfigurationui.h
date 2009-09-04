@@ -56,9 +56,6 @@ namespace Nitrogen
     //! button size
     QComboBox* buttonSize;
 
-    //! button size
-    QComboBox* buttonType;
-     
     //! frame border
     QComboBox *frameBorder;
 

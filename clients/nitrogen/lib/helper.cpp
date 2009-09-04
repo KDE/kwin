@@ -318,7 +318,7 @@ QLinearGradient NitrogenHelper::decoGradient(const QRect &r, const QColor &color
 }
 
 //_______________________________________________________________________________________________________________
-QPixmap NitrogenHelper::windecoButton(const QColor &color, bool pressed, Nitrogen::NitrogenConfiguration::ButtonType type, int size)
+QPixmap NitrogenHelper::windecoButton(const QColor &color, bool pressed, int size)
 {
   
   quint64 key = (quint64(color.rgba()) << 32) | (size << 1) | pressed;
@@ -334,73 +334,41 @@ QPixmap NitrogenHelper::windecoButton(const QColor &color, bool pressed, Nitroge
     p.setPen(Qt::NoPen);
     
     double u = double(size)/22.0;
-    if( type == Nitrogen::NitrogenConfiguration::ButtonKde42 )
+    QColor light  = calcLightColor(color);
+    QColor dark   = calcDarkColor(color);
+    QColor shadow = calcShadowColor(color);
+    
+    QRectF rect(0.0, 0.0, size, size);
+    QRectF buttonRect = rect.adjusted(2*u,2*u,-2*u,-2*u);
+    
+    QLinearGradient fill(QPointF(0.0, 0.0*u), QPointF(0.0, 21.0*u));
+    fill.setColorAt(0.0, alphaColor(light, 0.7));
+    fill.setColorAt(1.0, alphaColor(dark, 0.7));
+    
+    p.setBrush(fill);
+    p.drawEllipse(buttonRect);
+    p.setBrush(Qt::NoBrush);
+    
+    // shadow
+    if (pressed)
     {
-      QColor light = calcLightColor(color);
-      QColor dark = alphaColor(calcShadowColor(color), 0.6);
-      
-      QRectF rect(0.0, 0.0, size, size);
-      QRectF buttonRect = rect.adjusted(3*u,3*u,-3*u,-3*u);
-      
-      p.setBrush(color);
-      p.drawEllipse(buttonRect);
-      p.setBrush(Qt::NoBrush);
-      
-      QLinearGradient darkgr(QPointF(1.0*u, 0.0), QPointF(20.0*u, 0.0));
-      darkgr.setColorAt(0.0, Qt::transparent);
-      darkgr.setColorAt(0.5, dark);
-      darkgr.setColorAt(1.0, Qt::transparent);
-      
-      QLinearGradient lightgr(QPointF(1.0*u, 0.0), QPointF(20.0*u, 0.0));
-      lightgr.setColorAt(0.0, Qt::transparent);
-      lightgr.setColorAt(0.5, light);
-      lightgr.setColorAt(1.0, Qt::transparent);
-      
-      p.setPen(QPen(darkgr, 1.5*u));
-      p.drawEllipse(buttonRect);
-      p.setPen(QPen(lightgr, 1.5*u));
-      if (!pressed) p.drawEllipse(buttonRect.adjusted(0.0, 1.0, 0.0, 1.0));
-      else p.drawEllipse(buttonRect.adjusted(1.0, 1.5, -1.0, 1.0));
-      
-    } else {
-      
-      QColor light  = calcLightColor(color);
-      QColor dark   = calcDarkColor(color);
-      QColor shadow = calcShadowColor(color);
-      
-      QRectF rect(0.0, 0.0, size, size);
-      QRectF buttonRect = rect.adjusted(2*u,2*u,-2*u,-2*u);
-      
-      QLinearGradient fill(QPointF(0.0, 0.0*u), QPointF(0.0, 21.0*u));
-      fill.setColorAt(0.0, alphaColor(light, 0.7));
-      fill.setColorAt(1.0, alphaColor(dark, 0.7));
-      
-      p.setBrush(fill);
-      p.drawEllipse(buttonRect);
-      p.setBrush(Qt::NoBrush);
-      
-      // shadow
-      if (pressed)
-      {
-        p.setPen(alphaColor(dark, 0.4));
-        p.drawEllipse(buttonRect.adjusted(0.9, 0.6, -0.7, -0.7).adjusted(1.7,1.7,-1.7,-1.7));
-        p.setPen(alphaColor(dark, 0.8));
-        p.drawEllipse(buttonRect.adjusted(0.9, 0.6, -0.7, -0.7).adjusted(1.2,1.2,-1.2,-1.2));
-      }
-      p.setPen(QPen(KColorUtils::mix(dark, shadow, 0.12), 2.0));
-      p.drawEllipse(buttonRect.adjusted(0.9, 0.6, -0.7, -0.7).adjusted(0,0.1,0,-0.1));
-      p.setPen(QPen(KColorUtils::mix(dark, shadow, 0.6), 1.2));
-      p.drawEllipse(buttonRect.adjusted(1.0, 1.4, -0.8, -0.8));
-      
-      // reflection
-      QLinearGradient lightgr(QPointF(0.0, 0.0*u), QPointF(0.0, 21.0*u));
-      lightgr.setColorAt(0.0, Qt::transparent);
-      lightgr.setColorAt(1.0, light);
-      p.setPen(QPen(lightgr, 1.7));
-      p.drawEllipse(buttonRect.adjusted(0.0, -0.5, -0.1, 0.0));
-      
+      p.setPen(alphaColor(dark, 0.4));
+      p.drawEllipse(buttonRect.adjusted(0.9, 0.6, -0.7, -0.7).adjusted(1.7,1.7,-1.7,-1.7));
+      p.setPen(alphaColor(dark, 0.8));
+      p.drawEllipse(buttonRect.adjusted(0.9, 0.6, -0.7, -0.7).adjusted(1.2,1.2,-1.2,-1.2));
     }
-      
+    p.setPen(QPen(KColorUtils::mix(dark, shadow, 0.12), 2.0));
+    p.drawEllipse(buttonRect.adjusted(0.9, 0.6, -0.7, -0.7).adjusted(0,0.1,0,-0.1));
+    p.setPen(QPen(KColorUtils::mix(dark, shadow, 0.6), 1.2));
+    p.drawEllipse(buttonRect.adjusted(1.0, 1.4, -0.8, -0.8));
+    
+    // reflection
+    QLinearGradient lightgr(QPointF(0.0, 0.0*u), QPointF(0.0, 21.0*u));
+    lightgr.setColorAt(0.0, Qt::transparent);
+    lightgr.setColorAt(1.0, light);
+    p.setPen(QPen(lightgr, 1.7));
+    p.drawEllipse(buttonRect.adjusted(0.0, -0.5, -0.1, 0.0));
+    
     m_windecoButtonCache.insert(key, pixmap);
       
   }

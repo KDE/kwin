@@ -191,7 +191,7 @@ namespace Nitrogen
       client_.options()->color(KDecorationDefines::ColorTitleBar, client_.isActive());
 
     // draw button shape
-    painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Nitrogen::Pressed, client_.configuration().buttonType(), (21.0*client_.configuration().buttonSize())/22 ) );
+    painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Nitrogen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
     
     // draw glow on hover
     if( status_ == Nitrogen::Hovered ) 
@@ -203,19 +203,10 @@ namespace Nitrogen
       
       QLinearGradient lg = helper_.decoGradient( QRect( 4, 4, 13, 13 ), color);
       painter.setRenderHints(QPainter::Antialiasing);
-      qreal width( client_.configuration().buttonType() == NitrogenConfiguration::ButtonKde43 ? 1.4:2.2 );
+      qreal width( 1.4 );
 
-      painter.setBrush(Qt::NoBrush);
-      if( client_.configuration().buttonType() == NitrogenConfiguration::ButtonKde42 )
-      {
-        
-        painter.setPen(QPen(lg, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        
-      } else {
-        
-        painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        
-      }
+      painter.setBrush(Qt::NoBrush);        
+      painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
       drawIcon(&painter, palette, type_);
     
     } else {
