@@ -71,8 +71,8 @@ namespace Nitrogen
     //! show stripes
     QCheckBox *showStripes;
         
-    //! overwrite colors
-    QCheckBox *overwriteColors;
+    //! active window title outline
+    QCheckBox *titleOutline;
 
     //! nitrogen shadow
     QCheckBox *useOxygenShadows;

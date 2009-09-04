@@ -68,7 +68,7 @@ namespace Nitrogen
     // basic configuration
     {
       QWidget *basicWidget = new QWidget();
-      int index = tab->addTab( basicWidget, i18n("&Basic") );
+      int index = tab->addTab( basicWidget, i18n("&General") );
       tab->setTabToolTip( index, i18n( "Basic window decoration configuration options" ) );
       
       QVBoxLayout* vboxLayout = new QVBoxLayout();
@@ -128,18 +128,20 @@ namespace Nitrogen
     
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( buttonSize );
-
-      // draw separator
-      vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and window contents"), basicWidget ) );
-      drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
-      drawSeparator->setWhatsThis(i18n(
-        "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
+   
+      // active window title outline
+      vboxLayout->addWidget( titleOutline = new QCheckBox( i18n("Outline active window title"), basicWidget) );
+      titleOutline->setObjectName(QString::fromUtf8("titleOutline"));
+      titleOutline->setWhatsThis(i18n(
+        "When enabled, an additional frame is shown around the active window as well as its title"));
       
       // show stripes
       vboxLayout->addWidget( showStripes = new QCheckBox( i18n("Show stripes next to the title"), basicWidget) );
       showStripes->setObjectName(QString::fromUtf8("showStripes"));
       showStripes->setWhatsThis(i18n(
         "When enabled, this option increases the visibility of the window titlebar by showing stripes"));
+
+      showStripes->hide();
       
     }
     
@@ -197,19 +199,20 @@ namespace Nitrogen
       useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
       useOxygenShadows->setWhatsThis(i18n(
         "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
-    
-      // overwrite colors
-      vboxLayout->addWidget( overwriteColors = new QCheckBox( i18n("Blend title bar colors with window contents"), advancedWidget) );
-      overwriteColors->setObjectName(QString::fromUtf8("overwriteColors"));
-      overwriteColors->setWhatsThis(i18n(
-        "When enabled, window colors are used in place of default title bar colors to draw the decoration"));
-    }
+      
+      // draw separator
+      vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and active window contents"), advancedWidget ) );
+      drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
+      drawSeparator->setWhatsThis(i18n(
+        "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
+
+     }
     
     // exceptions
     {
       exceptions = new NitrogenExceptionListWidget();
       exceptions->setObjectName(QString::fromUtf8("exceptions"));
-      int index = tab->addTab( exceptions, "&Exceptions" );
+      int index = tab->addTab( exceptions, "&Window-Specific" );
       tab->setTabToolTip( index, i18n( "Configure window specific decoration options, based on window name" ) );
     }
     
