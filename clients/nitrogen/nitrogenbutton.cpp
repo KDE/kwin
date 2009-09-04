@@ -145,7 +145,7 @@ namespace Nitrogen
     else palette.setCurrentColorGroup(QPalette::Inactive);
             
     client_.renderWindowBackground( &painter, rect(), this, palette );
-    if( client_.isActive() && client_.configuration().drawTitleOutline() )
+    if( client_.isActive() && client_.configuration().drawTitleOutline() && !client_.isMaximized() )
     { client_.renderWindowBorder( &painter, rect(), this, palette ); }
     
     // draw dividing line
