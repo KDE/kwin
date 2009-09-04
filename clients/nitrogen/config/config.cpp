@@ -67,10 +67,12 @@ namespace Nitrogen
    
     connect( user_interface_->showStripes, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->drawSeparator, SIGNAL(clicked()), SIGNAL(changed()) );
-    connect( user_interface_->overwriteColors, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( user_interface_->titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->useOxygenShadows, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->exceptions, SIGNAL(changed()), SIGNAL(changed()) );
-    
+     
+    connect( user_interface_->titleOutline, SIGNAL(toggled( bool )), user_interface_->drawSeparator, SLOT( setDisabled( bool ) ) );
+   
     load( configurationGroup );
     user_interface_->show();
     
@@ -137,7 +139,7 @@ namespace Nitrogen
     
     configurationGroup.writeEntry( NitrogenConfig::SHOW_STRIPES, user_interface_->showStripes->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::DRAW_SEPARATOR, user_interface_->drawSeparator->isChecked() );
-    configurationGroup.writeEntry( NitrogenConfig::OVERWRITE_COLORS, user_interface_->overwriteColors->isChecked() );
+    configurationGroup.writeEntry( NitrogenConfig::DRAW_TITLE_OUTLINE, user_interface_->titleOutline->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, user_interface_->useOxygenShadows->isChecked() );
 
     // write exceptions
@@ -176,7 +178,7 @@ namespace Nitrogen
 
     user_interface_->showStripes->setChecked( configuration.showStripes() );
     user_interface_->drawSeparator->setChecked( configuration.drawSeparator() );
-    user_interface_->overwriteColors->setChecked( configuration.overwriteColors() );
+    user_interface_->titleOutline->setChecked( configuration.drawTitleOutline() );
     user_interface_->useOxygenShadows->setChecked( configuration.useOxygenShadows() );
   }
   
