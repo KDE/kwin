@@ -135,6 +135,12 @@ namespace Nitrogen
       titleOutline->setWhatsThis(i18n(
         "When enabled, an additional frame is shown around the active window as well as its title"));
       
+      // draw separator
+      vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and active window contents"), basicWidget ) );
+      drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
+      drawSeparator->setWhatsThis(i18n(
+        "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
+     
       // show stripes
       vboxLayout->addWidget( showStripes = new QCheckBox( i18n("Show stripes next to the title"), basicWidget) );
       showStripes->setObjectName(QString::fromUtf8("showStripes"));
@@ -142,7 +148,7 @@ namespace Nitrogen
         "When enabled, this option increases the visibility of the window titlebar by showing stripes"));
 
       showStripes->hide();
-      
+       
     }
     
     
@@ -199,12 +205,6 @@ namespace Nitrogen
       useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
       useOxygenShadows->setWhatsThis(i18n(
         "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
-      
-      // draw separator
-      vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and active window contents"), advancedWidget ) );
-      drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
-      drawSeparator->setWhatsThis(i18n(
-        "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
 
      }
     
