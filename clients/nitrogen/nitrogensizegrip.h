@@ -85,8 +85,8 @@ namespace Nitrogen
     
     //! grip size
     enum { 
-      OFFSET = 1,
-      GRIP_SIZE = 15 
+      OFFSET = 0,
+      GRIP_SIZE = 14 
     };
       
     // nitrogen client
