@@ -74,7 +74,7 @@ namespace Nitrogen
         NitrogenConfiguration configuration( void ) const;
         
         //! helper class
-        NitrogenHelper& helper( void ) const
+        OxygenHelper& helper( void ) const
         { return helper_; }
         
         //! window background
@@ -157,7 +157,7 @@ namespace Nitrogen
         TileSet *glowTiles_;
 
         //! helper
-        NitrogenHelper& helper_;    
+        OxygenHelper& helper_;    
         
         //! true when initialized
         bool initialized_;

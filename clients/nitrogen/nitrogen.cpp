@@ -47,7 +47,7 @@ namespace Nitrogen
 {
   
   // referenced from definition in Nitrogendclient.cpp
-  NitrogenHelper *nitrogenHelper(); 
+  OxygenHelper *nitrogenHelper(); 
   
   // initialize static members
   bool NitrogenFactory::initialized_ = false;

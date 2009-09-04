@@ -103,7 +103,7 @@ namespace Nitrogen
     NitrogenClient &client_;
     
     //! helper
-    NitrogenHelper &helper_;
+    OxygenHelper &helper_;
     
     //! button type
     ButtonType type_;
