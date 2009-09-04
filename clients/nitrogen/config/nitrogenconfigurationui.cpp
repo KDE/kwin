@@ -194,7 +194,6 @@ namespace Nitrogen
       sizeGripMode->insertItems(0, QStringList()
         << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
         << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripWhenNeeded, true )
-        << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripAlways, true )
         );
     
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );

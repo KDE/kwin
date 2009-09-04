@@ -247,7 +247,6 @@ namespace Nitrogen
     const char* out;
     switch( value )
     {
-      case SizeGripAlways: out = "Always Show Extra Size Grip"; break;
       case SizeGripNever: out = "Always Hide Extra Size Grip"; break;
       case SizeGripWhenNeeded: out = "Show Extra Size Grip When Needed"; break;
       default: return NitrogenConfiguration().sizeGripModeName( translated );
@@ -260,8 +259,7 @@ namespace Nitrogen
   //__________________________________________________
   NitrogenConfiguration::SizeGripMode NitrogenConfiguration::sizeGripMode( QString value, bool translated )
   {
-    if( value == sizeGripModeName( SizeGripAlways, translated ) ) return SizeGripAlways;
-    else if( value == sizeGripModeName( SizeGripNever, translated ) ) return SizeGripNever;
+    if( value == sizeGripModeName( SizeGripNever, translated ) ) return SizeGripNever;
     else if( value == sizeGripModeName( SizeGripWhenNeeded, translated ) ) return SizeGripWhenNeeded;
     else return NitrogenConfiguration().sizeGripMode();
   }

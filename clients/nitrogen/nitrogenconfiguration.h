@@ -82,7 +82,6 @@ namespace Nitrogen
     //! size grip mode
     enum SizeGripMode
     {
-      SizeGripAlways,
       SizeGripNever,
       SizeGripWhenNeeded
     };
@@ -204,11 +203,7 @@ namespace Nitrogen
 
     //! draw size grip
     virtual bool drawSizeGrip( void ) const
-    {
-      return 
-        sizeGripMode() == SizeGripAlways || 
-        (sizeGripMode() == SizeGripWhenNeeded && frameBorder() == BorderNone );
-    }
+    { return (sizeGripMode() == SizeGripWhenNeeded && frameBorder() == BorderNone ); }
     
     //@}
 
