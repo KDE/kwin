@@ -226,7 +226,7 @@ namespace Nitrogen
       if( iter->mask() & NitrogenException::BlendColor ) configuration.setBlendColor( iter->blendColor() );
       if( iter->mask() & NitrogenException::DrawSeparator ) configuration.setDrawSeparator( iter->drawSeparator() );
       if( iter->mask() & NitrogenException::ShowStripes ) configuration.setShowStripes( iter->showStripes() );
-      if( iter->mask() & NitrogenException::OverwriteColors ) configuration.setOverwriteColors( iter->overwriteColors() );
+      if( iter->mask() & NitrogenException::TitleOutline ) configuration.setDrawTitleOutline( iter->drawTitleOutline() );
       if( iter->mask() & NitrogenException::SizeGripMode ) configuration.setSizeGripMode( iter->sizeGripMode() );
       
       return configuration;
