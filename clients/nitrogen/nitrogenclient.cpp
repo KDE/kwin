@@ -48,16 +48,16 @@ using namespace std;
 namespace Nitrogen
 {
   
-  K_GLOBAL_STATIC_WITH_ARGS(NitrogenHelper, globalHelper, ("nitrogenDeco"))
+  K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("nitrogenDeco"))
     
   //___________________________________________
-  NitrogenHelper *nitrogenHelper()
+  OxygenHelper *nitrogenHelper()
   { return globalHelper; }
   
   //___________________________________________
   static void oxkwincleanupBefore()
   {
-    NitrogenHelper *h = globalHelper;
+    OxygenHelper *h = globalHelper;
     h->invalidateCaches();
   }
   
@@ -373,10 +373,9 @@ namespace Nitrogen
       
     } else { 
       
-      int offset( configuration().buttonSize() - 22 );
-      
-      offset += layoutMetric( LM_OuterPaddingBottom );      
-      helper().renderWindowBackground(painter, rect, widget, backgroundPalette( widget, palette ), offset );
+      int offset = layoutMetric( LM_OuterPaddingBottom );
+      int height = 64 + configuration().buttonSize() - 22;
+      helper().renderWindowBackground(painter, rect, widget, backgroundPalette( widget, palette ), offset, height );
       
     }  
     
