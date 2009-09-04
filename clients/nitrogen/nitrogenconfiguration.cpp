@@ -43,7 +43,7 @@ namespace Nitrogen
     sizeGripMode_( SizeGripWhenNeeded ),
     showStripes_( true ),
     drawSeparator_( true ),
-    overwriteColors_( true ),
+    drawTitleOutline_( false ),
     useOxygenShadows_( true )
   {}
 
@@ -89,10 +89,10 @@ namespace Nitrogen
       NitrogenConfig::DRAW_SEPARATOR, 
       defaultConfiguration.drawSeparator() ) );
     
-    // overwrite color
-    setOverwriteColors( group.readEntry( 
-      NitrogenConfig::OVERWRITE_COLORS, 
-      defaultConfiguration.overwriteColors() ) );
+    // title outline
+    setDrawTitleOutline( group.readEntry( 
+      NitrogenConfig::DRAW_TITLE_OUTLINE, 
+      defaultConfiguration.drawTitleOutline() ) );
     
     // oxygen shadows
     setUseOxygenShadows( group.readEntry(
@@ -112,7 +112,7 @@ namespace Nitrogen
     
     group.writeEntry( NitrogenConfig::SHOW_STRIPES, showStripes() );
     group.writeEntry( NitrogenConfig::DRAW_SEPARATOR, drawSeparator() );
-    group.writeEntry( NitrogenConfig::OVERWRITE_COLORS, overwriteColors() );
+    group.writeEntry( NitrogenConfig::DRAW_TITLE_OUTLINE, drawTitleOutline() );
     group.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
     
   }
@@ -278,7 +278,7 @@ namespace Nitrogen
       sizeGripMode() == other.sizeGripMode() &&
       showStripes() == other.showStripes() &&
       drawSeparator() == other.drawSeparator() &&
-      overwriteColors() == other.overwriteColors() &&
+      drawTitleOutline() == other.drawTitleOutline() &&
       useOxygenShadows() == other.useOxygenShadows();
   }
 

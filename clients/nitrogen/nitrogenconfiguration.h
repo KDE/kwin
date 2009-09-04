@@ -35,7 +35,7 @@ namespace NitrogenConfig
   static const QString BUTTON_SIZE = "ButtonSize";
   static const QString SHOW_STRIPES = "ShowStripes";
   static const QString DRAW_SEPARATOR = "DrawSeparator";
-  static const QString OVERWRITE_COLORS = "OverwriteColors";
+  static const QString DRAW_TITLE_OUTLINE = "DrawTitleOutline";
   static const QString FRAME_BORDER = "FrameBorder";
   static const QString BLEND_COLOR = "BlendColor";
   static const QString SIZE_GRIP_MODE = "SizeGripMode";
@@ -214,7 +214,8 @@ namespace Nitrogen
 
     //! stripes
     virtual bool showStripes( void ) const
-    { return showStripes_; }
+    //{ return showStripes_; }
+    { return false; }
     
     //! stripes
     virtual void setShowStripes( bool value ) 
@@ -228,14 +229,14 @@ namespace Nitrogen
     virtual void setDrawSeparator( bool value )
     { drawSeparator_ = value; }
 
-    //! overwrite colors
-    virtual bool overwriteColors( void ) const
-    { return overwriteColors_; }
+    //! title outline
+    virtual bool drawTitleOutline( void ) const
+    { return drawTitleOutline_; }
+    
+    //! title outline
+    virtual void setDrawTitleOutline( bool value )
+    { drawTitleOutline_ = value; }
 
-    //! overwrite colors
-    virtual void setOverwriteColors( bool value )
-    { overwriteColors_ = value; }
-      
     //! oxygen shadows
     virtual bool useOxygenShadows( void ) const
     { return useOxygenShadows_; }
@@ -267,8 +268,8 @@ namespace Nitrogen
     //! separator
     bool drawSeparator_;
     
-    //! overwrite colors
-    bool overwriteColors_;
+    //! active window title outline
+    bool drawTitleOutline_;
     
     //! oxygen shadows
     bool useOxygenShadows_;
