@@ -149,7 +149,7 @@ namespace Nitrogen
     switch( value )
     {
       case ButtonSmall: out = "Small"; break;
-      case ButtonDefault: out = "Default"; break;
+      case ButtonDefault: out = "Normal"; break;
       case ButtonLarge: out = "Large"; break;
       case ButtonHuge: out = "Huge"; break;
       default: return NitrogenConfiguration().buttonSizeName( translated );
