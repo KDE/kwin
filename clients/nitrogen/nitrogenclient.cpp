@@ -515,8 +515,8 @@ namespace Nitrogen
   //_________________________________________________________
   QPalette NitrogenClient::backgroundPalette( const QWidget* widget, QPalette palette ) const
   {    
-    if( configuration().drawTitleOutline() )
-    { palette.setColor( widget->window()->backgroundRole(), options()->color( KDecorationDefines::ColorTitleBar, isActive() ) ); }
+    if( configuration().drawTitleOutline() && isActive() )
+    { palette.setColor( widget->window()->backgroundRole(), options()->color( KDecorationDefines::ColorTitleBar, true ) ); }
     
     return palette;
     
