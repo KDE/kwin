@@ -145,6 +145,8 @@ namespace Nitrogen
     else palette.setCurrentColorGroup(QPalette::Inactive);
             
     client_.renderWindowBackground( &painter, rect(), this, palette );
+    if( client_.isActive() && client_.configuration().drawTitleOutline() )
+    { client_.renderWindowBorder( &painter, rect(), this, palette ); }
     
     // draw dividing line
     painter.setRenderHints(QPainter::Antialiasing);
@@ -153,9 +155,7 @@ namespace Nitrogen
     int w = frame.width()-2;
     
     const int titleHeight = client_.layoutMetric(KCommonDecoration::LM_TitleHeight);
-    QColor color = ( client_.configuration().overwriteColors() ) ? 
-      palette.window().color() : 
-      client_.options()->color( KDecorationDefines::ColorTitleBar, client_.isActive());
+    QColor color = palette.window().color();
 
     QColor light = helper_.calcLightColor( color );
     QColor dark = helper_.calcDarkColor( color );
@@ -186,9 +186,7 @@ namespace Nitrogen
     { painter.translate( 0, -1 ); }
 
     // button shape color
-    QColor bt = client_.configuration().overwriteColors() ?
-      palette.window().color():
-      client_.options()->color(KDecorationDefines::ColorTitleBar, client_.isActive());
+    QColor bt = palette.window().color();
 
     // draw button shape
     painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Nitrogen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
