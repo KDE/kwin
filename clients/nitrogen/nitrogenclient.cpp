@@ -172,13 +172,16 @@ namespace Nitrogen
         if( !( respectWindowState && maximized )) 
         { border = TFRAMESIZE; }
         
+        if( configuration().drawTitleOutline() ) border += HFRAMESIZE/2;
+        
         return border + extraBorder;
         
       }
       
       case LM_TitleEdgeBottom:
       {
-        return 0;
+        if( configuration().drawTitleOutline() ) return HFRAMESIZE/2;
+        else return 0;
       }
       
       case LM_TitleEdgeLeft:
@@ -194,7 +197,11 @@ namespace Nitrogen
       
       case LM_TitleBorderLeft:
       case LM_TitleBorderRight:
-      return 5;
+      {
+        int border = 5;
+        if( configuration().drawTitleOutline() ) border += 2*HFRAMESIZE;
+        return border;
+      }
       
       case LM_ButtonWidth:
       case LM_ButtonHeight:
@@ -333,7 +340,7 @@ namespace Nitrogen
   QColor NitrogenClient::titlebarTextColor(const QPalette &palette)
   {
     
-    if( !configuration().overwriteColors() ) 
+    if( configuration().drawTitleOutline() ) 
     { 
       
       return options()->color(ColorFont, isActive()); 
@@ -369,15 +376,117 @@ namespace Nitrogen
     if( configuration().blendColor() == NitrogenConfiguration::NoBlending ) 
     { 
       
-      painter->fillRect( rect, backgroundPalette( widget, palette ).color( widget->window()->backgroundRole() ) );
+      painter->fillRect( rect, palette.color( widget->window()->backgroundRole() ) );
       
     } else { 
       
-      int offset = layoutMetric( LM_OuterPaddingBottom );
+      int offset = layoutMetric( LM_OuterPaddingTop );
       int height = 64 + configuration().buttonSize() - 22;
-      helper().renderWindowBackground(painter, rect, widget, backgroundPalette( widget, palette ), offset, height );
+      helper().renderWindowBackground(painter, rect, widget, palette, offset, height );
       
     }  
+    
+  }
+  
+  //_________________________________________________________
+  void NitrogenClient::renderWindowBorder( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QPalette& palette ) const
+  {
+    
+    QWidget* window = widget->window();
+    
+    // get coordinates relative to the client area
+    QPoint position = (isPreview()) ? 
+      widget->mapTo( const_cast<QWidget*>( NitrogenClient::widget() ), widget->rect().topLeft() ):
+      widget->mapTo( window, widget->rect().topLeft() );
+    
+    // save painter
+    if (clipRect.isValid()) {
+      painter->save();
+      painter->setClipRegion(clipRect,Qt::IntersectClip);
+    }
+    
+    painter->setPen( Qt::NoPen );
+    
+    QColor color = palette.color(window->backgroundRole());
+    QColor top = helper().backgroundTopColor( color );
+    QColor bottom = helper().backgroundBottomColor( color );
+    
+    QRect r = (isPreview()) ? NitrogenClient::widget()->rect():window->rect();
+    r.adjust( SHADOW_WIDTH, SHADOW_WIDTH, -SHADOW_WIDTH, -SHADOW_WIDTH );
+    r.adjust(0,0, 1, 1);
+    
+    // draw top line
+    // one could probably use a 'slab' here to have a drop shadow
+    {
+      
+      int shadow_size = 5;
+      int height = HFRAMESIZE;
+      QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
+      helper().slab( palette.color( widget->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(-2, 0, 2, 2 ), painter, TileSet::Bottom );
+      
+      int offset = layoutMetric( LM_OuterPaddingTop );
+      int gradient_height = 64 + configuration().buttonSize() - 22;
+      helper().renderWindowBackground(painter, rect, widget, palette, offset, gradient_height );
+      
+    }
+    
+    // draw bottom line
+    if( configuration().frameBorder() >= NitrogenConfiguration::BorderTiny )
+    {
+      int height = qMin( HFRAMESIZE, layoutMetric( LM_BorderBottom ) );
+      painter->setBrush( bottom );
+      painter->drawRect( QRect( r.bottomLeft()-position-QPoint(0,height), QSize( r.width(), height ) ) );
+    }
+    
+    // left and right
+    if( configuration().frameBorder() >= NitrogenConfiguration::BorderTiny )
+    {
+      
+      QLinearGradient gradient(0, r.top(), 0, r.height() );
+      gradient.setColorAt(0.0, top);
+      gradient.setColorAt(0.5, color);
+      gradient.setColorAt(1.0, bottom);
+      
+      painter->setBrush( gradient );
+      
+      // left
+      {
+        int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderLeft ) );
+        painter->drawRect( QRect( r.topLeft()-position, QSize( width, r.height() ) ) );
+      }
+      
+      // right
+      {
+        int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderRight ) );
+        painter->drawRect( QRect( r.topRight()-position-QPoint(width,0), QSize( width, r.height() ) ) );
+      }
+      
+    }
+    
+    // restore painter
+    if (clipRect.isValid()) painter->restore();
+
+  }
+  
+  //_________________________________________________________
+  void NitrogenClient::renderTitleOutline(  QPainter* painter, const QRect& rect, const QPalette& palette ) const
+  {
+    
+    // shadow
+    {
+      int shadow_size = 7;
+      int voffset = -shadow_size;
+      if( !isMaximized() ) voffset += HFRAMESIZE;
+      helper().slab( palette.color( widget()->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(0, voffset, 0, 0 ), painter, TileSet::Bottom|TileSet::Left|TileSet::Right );
+    }
+    
+    // center
+    {
+      int offset = layoutMetric( LM_OuterPaddingTop );
+      int height = 64 + configuration().buttonSize() - 22;
+      int voffset = isMaximized() ? 0:HFRAMESIZE;
+      helper().renderWindowBackground(painter, rect.adjusted( 4, voffset, -4, -4 ), widget(), palette, offset, height );
+    }
     
   }
   
@@ -406,7 +515,7 @@ namespace Nitrogen
   //_________________________________________________________
   QPalette NitrogenClient::backgroundPalette( const QWidget* widget, QPalette palette ) const
   {    
-    if( !configuration().overwriteColors() )
+    if( configuration().drawTitleOutline() )
     { palette.setColor( widget->window()->backgroundRole(), options()->color( KDecorationDefines::ColorTitleBar, isActive() ) ); }
     
     return palette;
@@ -506,15 +615,14 @@ namespace Nitrogen
     QRect frame = widget()->rect();
     
     // base color
-    QColor color = ( configuration().overwriteColors() ) ? 
-      palette.window().color() : 
-      options()->color( ColorTitleBar, isActive());
+    QColor color = palette.window().color();
     
     // draw shadows
     if( compositingActive() && !isMaximized() )
     {
       shadowTiles(
-        color,KDecoration::options()->color(ColorTitleBar),
+        backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+        KDecoration::options()->color(ColorTitleBar),
         SHADOW_WIDTH, configuration().useOxygenShadows() && isActive() )->render( frame.adjusted( 4, 4, -4, -4),
         &painter, TileSet::Ring);
       
@@ -559,6 +667,10 @@ namespace Nitrogen
     
     // window background
     renderWindowBackground( &painter, frame, widget(), palette );
+    if( isActive() && configuration().drawTitleOutline() && !isMaximized() ) 
+    {
+      renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
+    }
     
     // clipping
     if( compositingActive() ) painter.setClipping(false);
@@ -602,11 +714,29 @@ namespace Nitrogen
       buttonsLeftWidth() - buttonsRightWidth() -
       marginLeft - marginRight;
     
+    QRect titleRect( titleLeft, titleTop-1, titleWidth, titleHeight );
+    painter.setFont( options()->font(isActive(), false) );
+
+    if( isActive() && configuration().drawTitleOutline() )
+    {
+      
+      // get title bounding rect
+      QRect boundingRect = painter.boundingRect( titleRect, configuration().titleAlignment() | Qt::AlignVCenter, caption() );
+
+      // adjust
+      boundingRect.setTop( frame.top() );
+      boundingRect.setBottom( titleTop+titleHeight );
+      boundingRect.setLeft( qMax( boundingRect.left(), titleLeft ) - 2*HFRAMESIZE );
+      boundingRect.setRight( qMin( boundingRect.right(), titleLeft + titleWidth ) + 2*HFRAMESIZE );
+      
+      renderTitleOutline( &painter, boundingRect, backgroundPalette( widget(), palette ) );
+      
+    }
+      
     // draw title text    
     painter.setPen( titlebarTextColor( backgroundPalette( widget(), palette ) ) );
-    painter.setFont( options()->font(isActive(), false) );
     
-    painter.drawText(titleLeft, titleTop-1, titleWidth, titleHeight, configuration().titleAlignment() | Qt::AlignVCenter, caption() );
+    painter.drawText( titleRect, configuration().titleAlignment() | Qt::AlignVCenter, caption() );
     painter.setRenderHint(QPainter::Antialiasing);
     
     // adjust if there are shadows
@@ -617,6 +747,7 @@ namespace Nitrogen
     frame.getRect(&x, &y, &w, &h);
     
     // separator
+    //if( isActive() && configuration().drawSeparator() && !configuration().drawTitleOutline() ) 
     if( isActive() && configuration().drawSeparator() ) 
     { helper().drawSeparator(&painter, QRect(x, titleTop+titleHeight-1.5, w, 2), color, Qt::Horizontal); }
     
@@ -664,7 +795,8 @@ namespace Nitrogen
     {
       
       helper().drawFloatFrame(
-        &painter, frame, color, !compositingActive(), isActive(),
+        &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ), 
+        !compositingActive(), isActive(),
         KDecoration::options()->color(ColorTitleBar)
         );
 
@@ -732,13 +864,7 @@ namespace Nitrogen
     
     ShadowTilesOption currentOpt = active ? shadowTilesOption_ : glowTilesOption_;
     
-    bool optionChanged = true;
-    if (currentOpt.active == opt.active
-      && currentOpt.width == opt.width
-      && opt.windowColor == opt.windowColor
-      && opt.glowColor == opt.glowColor)
-      optionChanged = false;
-    
+    bool optionChanged = !(currentOpt == opt );
     if (active && glowTiles_ )
     { 
     

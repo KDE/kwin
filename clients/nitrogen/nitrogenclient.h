@@ -46,10 +46,10 @@ namespace Nitrogen
         
         Q_OBJECT
             
-            public:
+        public:
             
-            //! constructor
-            NitrogenClient(KDecorationBridge *b, KDecorationFactory *f);
+        //! constructor
+        NitrogenClient(KDecorationBridge *b, KDecorationFactory *f);
         
         //! destructor
         virtual ~NitrogenClient();
@@ -80,6 +80,13 @@ namespace Nitrogen
         //! window background
         virtual void renderWindowBackground( QPainter*, const QRect&, const QWidget*, const QPalette& ) const;
         
+        //! window border
+        // this draws a "blue" border around active window
+        virtual void renderWindowBorder( QPainter*, const QRect&, const QWidget*, const QPalette& ) const;
+        
+        //! title outline
+        virtual void renderTitleOutline( QPainter*, const QRect&, const QPalette& ) const;
+        
         //! triggered when window activity is changed
         virtual void activeChange();
         
@@ -101,11 +108,30 @@ namespace Nitrogen
         
         private:
         
-        struct ShadowTilesOption {
-            QColor windowColor;
-            QColor glowColor;
-            qreal width;
-            bool active;
+        class ShadowTilesOption {
+          
+          public:
+          
+          //! constructor
+          ShadowTilesOption( void ):
+            width(0),
+            active(false)
+          {}
+          
+          //! equal to operator
+          bool operator == ( const ShadowTilesOption& other ) const
+          {
+            return 
+              windowColor == other.windowColor &&
+              glowColor == other.glowColor &&
+              width == other.width &&
+              active == other.active;
+          }
+              
+          QColor windowColor;
+          QColor glowColor;
+          qreal width;
+          bool active;
         };
        
         //! palette background
