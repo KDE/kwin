@@ -162,7 +162,7 @@ namespace Nitrogen
     
     dark.setAlpha(120);
     
-    if(client_.isActive() && client_.configuration().drawSeparator() ) 
+    if(client_.isActive() && client_.configuration().drawSeparator() && !client_.configuration().drawTitleOutline() ) 
     { helper_.drawSeparator(&painter, QRect(x, titleHeight-1.5, w, 2), color, Qt::Horizontal); }
     
     if (type_ == ButtonMenu) 

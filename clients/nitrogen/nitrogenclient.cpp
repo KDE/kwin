@@ -747,8 +747,7 @@ namespace Nitrogen
     frame.getRect(&x, &y, &w, &h);
     
     // separator
-    //if( isActive() && configuration().drawSeparator() && !configuration().drawTitleOutline() ) 
-    if( isActive() && configuration().drawSeparator() ) 
+    if( isActive() && configuration().drawSeparator() && !configuration().drawTitleOutline() ) 
     { helper().drawSeparator(&painter, QRect(x, titleTop+titleHeight-1.5, w, 2), color, Qt::Horizontal); }
     
     // draw stripes as indicator for active windows
