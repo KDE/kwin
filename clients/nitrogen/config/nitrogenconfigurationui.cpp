@@ -205,7 +205,9 @@ namespace Nitrogen
       useOxygenShadows->setWhatsThis(i18n(
         "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
 
-     }
+      vboxLayout->addStretch(1);
+     
+    }
     
     // exceptions
     {
