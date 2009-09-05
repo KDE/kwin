@@ -90,6 +90,9 @@ namespace Nitrogen
         //! triggered when window activity is changed
         virtual void activeChange();
         
+        //! triggered when maximize state changed
+        virtual void maximizeChange();
+        
         //! triggered when window shade is changed
         virtual void shadeChange();
         

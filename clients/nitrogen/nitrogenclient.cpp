@@ -507,9 +507,16 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
+  void NitrogenClient::maximizeChange( void  )
+  { 
+    if( hasSizeGrip() ) sizeGrip().setVisible( !( isShade() || isMaximized() ) ); 
+    KCommonDecorationUnstable::maximizeChange();
+  }
+
+  //_________________________________________________________
   void NitrogenClient::shadeChange( void  )
   { 
-    if( hasSizeGrip() ) sizeGrip().setVisible( !isShade() ); 
+    if( hasSizeGrip() ) sizeGrip().setVisible( !( isShade() || isMaximized() ) ); 
     KCommonDecorationUnstable::shadeChange();
   }
 
