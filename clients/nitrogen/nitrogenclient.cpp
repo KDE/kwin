@@ -318,8 +318,8 @@ namespace Nitrogen
     int top = 1;
     int bottom = 1;
     
-    // disable bottom corners when border frame is too small
-    if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny ) bottom = 0;
+    // disable bottom corners when border frame is too small and window is not shaded
+    if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny && !isShade() ) bottom = 0;
     
     int sw = layoutMetric( LM_OuterPaddingLeft );
     int sh = layoutMetric( LM_OuterPaddingTop );
@@ -523,6 +523,7 @@ namespace Nitrogen
   //_________________________________________________________
   QPalette NitrogenClient::backgroundPalette( const QWidget* widget, QPalette palette ) const
   {    
+    
     if( configuration().drawTitleOutline() && isActive() )
     { palette.setColor( widget->window()->backgroundRole(), options()->color( KDecorationDefines::ColorTitleBar, true ) ); }
     
@@ -658,8 +659,8 @@ namespace Nitrogen
         int top = 1;
         int bottom = 1;
       
-        // disable bottom corners when border frame is too small
-        if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny ) bottom = 0;
+        // disable bottom corners when border frame is too small and window is not shaded
+        if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny && !isShade() ) bottom = 0;
         QRegion mask( x+5*left,   y+0*top, w-5*(left+right), h-0*(top+bottom));
         mask += QRegion(x+0*left, y+5*top, w-0*(left+right), h-5*(top+bottom));
         mask += QRegion(x+2*left, y+2*top, w-2*(left+right), h-2*(top+bottom));
@@ -807,7 +808,7 @@ namespace Nitrogen
         KDecoration::options()->color(ColorTitleBar)
         );
 
-      if( isResizable() )
+      if( isResizable() && !isShade() )
       { 
         
         // Draw the 3-dots resize handles
@@ -822,7 +823,7 @@ namespace Nitrogen
       }
       
       // Draw the 3-dots resize handles
-      if( isResizable() && !configuration().drawSizeGrip() )
+      if( isResizable() && !isShade() && !configuration().drawSizeGrip() )
       {
 
         painter.setPen(Qt::NoPen);
