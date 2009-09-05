@@ -170,9 +170,10 @@ namespace Nitrogen
       {
         int border = 0;
         if( !( respectWindowState && maximized )) 
-        { border = TFRAMESIZE; }
-        
-        if( configuration().drawTitleOutline() ) border += HFRAMESIZE/2;
+        { 
+          border = TFRAMESIZE; 
+          if( configuration().drawTitleOutline() ) border += HFRAMESIZE/2;
+        }
         
         return border + extraBorder;
         
