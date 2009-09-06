@@ -165,6 +165,7 @@ namespace Nitrogen
     if(client_.isActive() && client_.configuration().drawSeparator() && !client_.configuration().drawTitleOutline() ) 
     { helper_.drawSeparator(&painter, QRect(x, titleHeight-1.5, w, 2), color, Qt::Horizontal); }
     
+    // for menu button the application icon is used
     if (type_ == ButtonMenu) 
     {
       
@@ -181,8 +182,8 @@ namespace Nitrogen
       else color = KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
     }
     
-    // translate buttons up if window is not maximized
-    if(client_.maximizeMode() == NitrogenClient::MaximizeRestore)
+    // translate buttons up if window maximized
+    if(client_.isMaximized())
     { painter.translate( 0, -1 ); }
 
     // button shape color
