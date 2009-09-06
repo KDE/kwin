@@ -34,6 +34,7 @@
 #include <KLocale>
 #include <KColorUtils>
 
+#include <QLabel>
 #include <QPainter>
 #include <QTextStream>
 #include <QApplication>
@@ -103,6 +104,20 @@ namespace Nitrogen
     widget()->setAttribute(Qt::WA_NoSystemBackground );
     widget()->setAutoFillBackground( false );
     initialized_ = true;
+    
+    // in case of preview, one wants to make the label used
+    // for the central widget transparent. This allows one to have
+    // the correct background (with gradient) rendered
+    // Remark: this is minor (and safe) a hack. 
+    // This should be moved upstream (into kwin/lib/kdecoration)
+    if( isPreview() ) 
+    { 
+      
+      QList<QLabel*> children( widget()->findChildren<QLabel*>() );
+      for( QList<QLabel*>::iterator iter = children.begin(); iter != children.end(); iter++ )
+      { (*iter)->setAutoFillBackground( false ); }
+      
+    }
     
     resetConfiguration();
     
