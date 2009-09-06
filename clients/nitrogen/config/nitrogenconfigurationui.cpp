@@ -30,8 +30,6 @@
 #include <QGroupBox>
 #include <KLocale>
 
-#include <iostream>
-
 #include "../nitrogenconfiguration.h"
 #include "nitrogenconfigurationui.h"
 #include "nitrogenconfigurationui.moc"
@@ -54,9 +52,7 @@ namespace Nitrogen
   //_________________________________________________________
   void NitrogenConfigurationUI::setupUI( void )
   {
-    
-    std::cout << "NitrogenConfigurationUI::setupUI.\n" << std::endl;    
-    
+        
     QVBoxLayout* mainLayout = new QVBoxLayout( this );
     mainLayout->setSpacing(6);
     mainLayout->setMargin(0);
