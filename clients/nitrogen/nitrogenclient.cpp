@@ -93,7 +93,7 @@ namespace Nitrogen
   
   //___________________________________________
   QString NitrogenClient::visibleName() const
-  { return i18n("nitrogen"); }
+  { return i18n("Nitrogen"); }
   
   //___________________________________________
   void NitrogenClient::init()
