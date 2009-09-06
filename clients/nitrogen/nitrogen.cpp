@@ -25,12 +25,12 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
+#include <kdebug.h>
 #include <kconfiggroup.h>
 #include <kdeversion.h>
 #include <kwindowinfo.h>
 #include <QApplication>
 #include <QPainter>
-#include <QTextStream>
 
 #include "nitrogen.h"
 #include "nitrogen.moc"
@@ -77,7 +77,7 @@ namespace Nitrogen
   bool NitrogenFactory::reset(unsigned long changed)
   {
     
-    QTextStream( stdout ) << "NitrogenConfig::reset." << endl;
+    kDebug( 1212 ) << endl;
     
     // read in the configuration
     setInitialized( false );
@@ -104,7 +104,7 @@ namespace Nitrogen
   bool NitrogenFactory::readConfig()
   {
 
-    QTextStream( stdout ) << "NitrogenConfig::readConfig." << endl;
+    kDebug( 1212 ) << endl;
     
     // create a config object
     KConfig config("nitrogenrc");
