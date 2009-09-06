@@ -383,7 +383,8 @@ namespace Nitrogen
       
       int offset = layoutMetric( LM_OuterPaddingTop );
       int height = 64 + configuration().buttonSize() - 22;
-      helper().renderWindowBackground(painter, rect, widget, palette, offset, height );
+      const QWidget* window( isPreview() ? NitrogenClient::widget() : widget->window() );
+      helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
       
     }  
     
@@ -393,12 +394,17 @@ namespace Nitrogen
   void NitrogenClient::renderWindowBorder( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QPalette& palette ) const
   {
     
-    QWidget* window = widget->window();
+    const QWidget* window = (isPreview()) ? NitrogenClient::widget() : widget->window();
     
     // get coordinates relative to the client area
-    QPoint position = (isPreview()) ? 
-      widget->mapTo( const_cast<QWidget*>( NitrogenClient::widget() ), widget->rect().topLeft() ):
-      widget->mapTo( window, widget->rect().topLeft() );
+    // this is annoying. One could use mapTo if this was taking const QWidget* and not
+    // const QWidget* as argument. 
+    const QWidget* w = widget;
+    QPoint position( 0, 0 );
+    while (  w != window && !w->isWindow() && w != w->parentWidget() ) {
+      position += w->geometry().topLeft();
+      w = w->parentWidget();
+    } 
     
     // save painter
     if (clipRect.isValid()) {
@@ -427,7 +433,8 @@ namespace Nitrogen
       
       int offset = layoutMetric( LM_OuterPaddingTop );
       int gradient_height = 64 + configuration().buttonSize() - 22;
-      helper().renderWindowBackground(painter, rect, widget, palette, offset, gradient_height );
+      const QWidget* window( isPreview() ? NitrogenClient::widget() : widget->window() );
+      helper().renderWindowBackground(painter, rect, widget, window, palette, offset, gradient_height );
       
     }
     
@@ -486,7 +493,8 @@ namespace Nitrogen
       int offset = layoutMetric( LM_OuterPaddingTop );
       int height = 64 + configuration().buttonSize() - 22;
       int voffset = isMaximized() ? 0:HFRAMESIZE;
-      helper().renderWindowBackground(painter, rect.adjusted( 4, voffset, -4, -4 ), widget(), palette, offset, height );
+      const QWidget* window( isPreview() ? widget() : widget()->window() );
+      helper().renderWindowBackground(painter, rect.adjusted( 4, voffset, -4, -4 ), widget(), window, palette, offset, height );
     }
     
   }
