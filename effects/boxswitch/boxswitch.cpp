@@ -408,7 +408,6 @@ void BoxSwitchEffect::tabBoxUpdated()
                 effects->addRepaint( windows.value( selected_window )->area );
             selected_window->addRepaintFull();
             effects->addRepaint( text_area );
-            original_windows = effects->currentTabBoxWindowList();
             }
         else if( mMode != TabBoxWindowsMode )
             { // DesktopMode
@@ -423,6 +422,8 @@ void BoxSwitchEffect::tabBoxUpdated()
                 return;
             original_desktops = effects->currentTabBoxDesktopList();
             }
+        // for safety copy list each time tabbox is updated
+        original_windows = effects->currentTabBoxWindowList();
         effects->addRepaint( frame_area );
         calculateFrameSize();
         calculateItemSizes();
@@ -484,6 +485,12 @@ void BoxSwitchEffect::setInactive()
         // But we do need to remove elevation status
         if( elevate_window && selected_window )
             effects->setElevatedWindow( selected_window, false );
+
+        foreach( EffectWindow* w, referrencedWindows )
+            {
+            w->unrefWindow();
+            }
+        referrencedWindows.clear();
         }
     else
         { // DesktopMode
@@ -515,6 +522,15 @@ void BoxSwitchEffect::windowClosed( EffectWindow* w )
     if( w == selected_window )
         {
         setSelectedWindow( 0 );
+        }
+    if( windows.contains( w ) )
+        {
+        w->refWindow();
+        referrencedWindows.append( w );
+        original_windows.removeAll( w );
+        delete windows[ w ];
+        windows.remove( w );
+        effects->addRepaintFull();
         }
     }
 
@@ -642,6 +658,8 @@ void BoxSwitchEffect::calculateItemSizes()
                 }
             for( int i = 0; i < ordered_windows.count(); i++ )
                 {
+                if( !ordered_windows.at( i ) )
+                    continue;
                 EffectWindow* w = ordered_windows.at( i );
                 windows[ w ] = new ItemInfo();
 
@@ -678,6 +696,8 @@ void BoxSwitchEffect::calculateItemSizes()
             {
             for( int i = 0; i < original_windows.count(); i++ )
                 {
+                if( !original_windows.at( i ) )
+                    continue;
                 EffectWindow* w = original_windows.at( i );
                 windows[ w ] = new ItemInfo();
 
