@@ -215,7 +215,8 @@ void OxygenButton::paintEvent(QPaintEvent *)
     }
 
 
-    if(client_.maximizeMode() == OxygenClient::MaximizeRestore)
+    // translate buttons up if window maximized
+    if(client_.isMaximized())
     {
         painter.translate(0,-1);
     }
