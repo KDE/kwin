@@ -585,7 +585,6 @@ namespace Nitrogen
     {
       
       if( !hasSizeGrip() ) createSizeGrip(); 
-      sizeGrip().setVisible( !( isMaximized() || isShade() ) );
       
     } else if( hasSizeGrip() ) deleteSizeGrip();
     
@@ -799,7 +798,10 @@ namespace Nitrogen
     
     assert( !hasSizeGrip() );
     if( ( isResizable() && windowId() != 0 ) || isPreview() )
-    { size_grip_ = new NitrogenSizeGrip( this ); }
+    { 
+      size_grip_ = new NitrogenSizeGrip( this ); 
+      sizeGrip().setVisible( !( isMaximized() || isShade() ) );
+    }
     
   }
   
