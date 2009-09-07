@@ -70,8 +70,6 @@ namespace Nitrogen
     connect( user_interface_->useOxygenShadows, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->exceptions, SIGNAL(changed()), SIGNAL(changed()) );
      
-    connect( user_interface_->titleOutline, SIGNAL(toggled( bool )), user_interface_->drawSeparator, SLOT( setDisabled( bool ) ) );
-   
     load( configurationGroup );
     user_interface_->show();
     
