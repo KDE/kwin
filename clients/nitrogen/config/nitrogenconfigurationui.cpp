@@ -45,6 +45,7 @@ namespace Nitrogen
     frameBorder(0),
     blendColor(0),
     sizeGripMode(0),
+    titleOutline(0),
     drawSeparator(0)
   { setupUI(); }
     
