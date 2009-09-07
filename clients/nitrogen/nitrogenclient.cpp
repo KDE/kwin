@@ -33,6 +33,7 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KColorUtils>
+#include <KDebug>
 
 #include <QLabel>
 #include <QPainter>
@@ -655,9 +656,8 @@ namespace Nitrogen
       shadowTiles(
         backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
         KDecoration::options()->color(ColorTitleBar),
-        SHADOW_WIDTH, configuration().useOxygenShadows() && isActive() )->render( frame.adjusted( 4, 4, -4, -4),
+        SHADOW_WIDTH, isActive() )->render( frame.adjusted( 4, 4, -4, -4),
         &painter, TileSet::Ring);
-      
     }
     
     // adjust frame
@@ -893,7 +893,7 @@ namespace Nitrogen
     opt.windowColor = color;
     opt.glowColor   = glow;
     
-    ShadowTilesOption currentOpt = active ? shadowTilesOption_ : glowTilesOption_;
+    ShadowTilesOption currentOpt = active ? glowTilesOption_:shadowTilesOption_;
     
     bool optionChanged = !(currentOpt == opt );
     if (active && glowTiles_ )
@@ -909,38 +909,19 @@ namespace Nitrogen
       
     }
     
+    kDebug( 1212 ) << " creating tiles - active: " << active << endl;
     TileSet *tileSet = 0;
     
     //---------------------------------------------------------------
     // Create new glow/shadow tiles
-    
-    QColor light = helper().calcLightColor( helper().backgroundTopColor(color) );
-    QColor dark = helper().calcDarkColor(helper().backgroundBottomColor(color));
-    
     QPixmap shadow = QPixmap( size*2, size*2 );
     shadow.fill( Qt::transparent );
-    
-    // draw the corner of the window - actually all 4 corners as one circle
-    QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-    if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny )
-    {
-      
-      lg.setColorAt(0, helper().backgroundTopColor(color) );
-      lg.setColorAt(0.52, helper().backgroundTopColor(color));
-      lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
-      
-    } else {
-      
-      lg.setColorAt(0.52, light);
-      lg.setColorAt(1.0, dark);
-    
-    }
     
     QPainter p( &shadow );
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
     
-    if (active)
+    if( active && configuration().useOxygenShadows() )
     {
       //---------------------------------------------------------------
       // Active shadow texture
@@ -970,16 +951,7 @@ namespace Nitrogen
       p.setRenderHint( QPainter::Antialiasing );
       p.setBrush( rg );
       p.drawRect( shadow.rect() );
-      
-      p.setBrush( Qt::NoBrush );
-      p.setPen(QPen(lg, 0.8));
-      p.drawEllipse(QRectF(size-4, size-4, 8, 8));
-      
-      p.end();
-      
-      tileSet = new TileSet(shadow, size, size, 1, 1);
-      glowTilesOption_ = opt;
-      glowTiles_ = tileSet;
+
     } else {
       
       //---------------------------------------------------------------
@@ -1034,17 +1006,49 @@ namespace Nitrogen
       p.setPen( Qt::NoPen );
       p.setBrush( rg );
       p.drawRect( shadow.rect() );
-      
-      // draw the corner of the window - actually all 4 corners as one circle
-      p.setBrush( Qt::NoBrush );
-      p.setPen(QPen(lg, 0.8));
-      p.drawEllipse(QRectF(size-4, size-4, 8, 8));
-      
-      p.end();
-      
+        
       tileSet = new TileSet(shadow, size, size, 1, 1);
+    }
+    
+    // draw the corner of the window - actually all 4 corners as one circle
+    QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
+    if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny )
+    {
+      
+      // for no 
+      lg.setColorAt(0.52, helper().backgroundTopColor(color));
+      lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
+      
+    } else {
+      
+      QColor light = helper().calcLightColor( helper().backgroundTopColor(color) );
+      QColor dark = helper().calcDarkColor(helper().backgroundBottomColor(color));
+    
+      lg.setColorAt(0.52, light);
+      lg.setColorAt(1.0, dark);
+    
+    }
+
+    p.setBrush( Qt::NoBrush );
+    p.setPen(QPen(lg, 0.8));
+    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+      
+    p.end();
+      
+    tileSet = new TileSet(shadow, size, size, 1, 1);
+    
+    // store option and style
+    if( active )
+    {
+      
+      glowTilesOption_ = opt;
+      glowTiles_ = tileSet;
+      
+    } else {
+      
       shadowTilesOption_ = opt;
-      shadowTiles_       = tileSet;
+      shadowTiles_ = tileSet;
+      
     }
     
     return tileSet;
