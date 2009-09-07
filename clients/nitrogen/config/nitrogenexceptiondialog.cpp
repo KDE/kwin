@@ -146,15 +146,6 @@ namespace Nitrogen
     checkboxes_.insert( std::make_pair( NitrogenException::DrawSeparator, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), drawSeparator, SLOT( setEnabled( bool ) ) );
     
-    // stripes
-    // temporarily hide the "stripes" settings. Might be permanently removed in the future
-    //gridLayout->addWidget( checkbox = new QCheckBox( i18n("Show stripes next to the title:" ), box ), 5, 0, 1, 1 );
-    gridLayout->addWidget( showStripes = new ComboBox( box ), 5, 1, 1, 1 );
-    showStripes->setEnabled( false );
-    showStripes->hide();
-    //checkboxes_.insert( std::make_pair( NitrogenException::ShowStripes, checkbox ) );
-    //connect( checkbox, SIGNAL( toggled( bool ) ), showStripes, SLOT( setEnabled( bool ) ) );
-       
   }
   
   //___________________________________________
@@ -181,7 +172,6 @@ namespace Nitrogen
     
     // flags
     drawSeparator->setValue( exception.drawSeparator() );
-    showStripes->setValue( exception.showStripes() );
     titleOutline->setValue( exception.drawTitleOutline() );
     
     // mask
@@ -202,7 +192,6 @@ namespace Nitrogen
     
     // flags
     exception.setDrawSeparator( drawSeparator->isChecked() );
-    exception.setShowStripes( showStripes->isChecked() );
     exception.setDrawTitleOutline( titleOutline->isChecked() );
     
     // mask

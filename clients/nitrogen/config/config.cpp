@@ -65,7 +65,6 @@ namespace Nitrogen
     connect( user_interface_->blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
     connect( user_interface_->sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
    
-    connect( user_interface_->showStripes, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->drawSeparator, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( user_interface_->useOxygenShadows, SIGNAL(clicked()), SIGNAL(changed()) );
@@ -137,7 +136,6 @@ namespace Nitrogen
       NitrogenConfig::SIZE_GRIP_MODE,
       NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::sizeGripMode( user_interface_->sizeGripMode->currentText(), true ), false ) );
     
-    configurationGroup.writeEntry( NitrogenConfig::SHOW_STRIPES, user_interface_->showStripes->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::DRAW_SEPARATOR, user_interface_->drawSeparator->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::DRAW_TITLE_OUTLINE, user_interface_->titleOutline->isChecked() );
     configurationGroup.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, user_interface_->useOxygenShadows->isChecked() );
@@ -176,7 +174,6 @@ namespace Nitrogen
     user_interface_->frameBorder->setCurrentIndex( user_interface_->frameBorder->findText( configuration.frameBorderName( true ) ) );
     user_interface_->sizeGripMode->setCurrentIndex( user_interface_->sizeGripMode->findText( configuration.sizeGripModeName( true ) ) );
 
-    user_interface_->showStripes->setChecked( configuration.showStripes() );
     user_interface_->drawSeparator->setChecked( configuration.drawSeparator() );
     user_interface_->titleOutline->setChecked( configuration.drawTitleOutline() );
     user_interface_->useOxygenShadows->setChecked( configuration.useOxygenShadows() );

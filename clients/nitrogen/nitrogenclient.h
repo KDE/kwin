@@ -143,9 +143,6 @@ namespace Nitrogen
         //! palette background
         QPalette backgroundPalette( const QWidget*, QPalette ) const;
         
-        //! draw
-        void drawStripes(QPainter*, QPalette&, const int, const int, const int);
-        
         //! calculate mask
         QRegion calcMask( void ) const;
         

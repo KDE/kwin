@@ -33,7 +33,6 @@ namespace NitrogenConfig
   
   static const QString TITLE_ALIGNMENT = "TitleAlignment";
   static const QString BUTTON_SIZE = "ButtonSize";
-  static const QString SHOW_STRIPES = "ShowStripes";
   static const QString DRAW_SEPARATOR = "DrawSeparator";
   static const QString DRAW_TITLE_OUTLINE = "DrawTitleOutline";
   static const QString FRAME_BORDER = "FrameBorder";
@@ -207,15 +206,6 @@ namespace Nitrogen
     
     //@}
 
-    //! stripes
-    virtual bool showStripes( void ) const
-    //{ return showStripes_; }
-    { return false; }
-    
-    //! stripes
-    virtual void setShowStripes( bool value ) 
-    { showStripes_ = value; }
-    
     //! separator
     virtual bool drawSeparator( void ) const
     { return drawSeparator_; }
@@ -256,9 +246,6 @@ namespace Nitrogen
 
     //! size grip mode
     SizeGripMode sizeGripMode_;
-    
-    //! stripes
-    bool showStripes_;
     
     //! separator
     bool drawSeparator_;

@@ -41,7 +41,6 @@ namespace Nitrogen
     frameBorder_( BorderDefault ),
     blendColor_( RadialBlending ),
     sizeGripMode_( SizeGripWhenNeeded ),
-    showStripes_( true ),
     drawSeparator_( true ),
     drawTitleOutline_( false ),
     useOxygenShadows_( true )
@@ -79,11 +78,6 @@ namespace Nitrogen
       group.readEntry( NitrogenConfig::SIZE_GRIP_MODE, 
       defaultConfiguration.sizeGripModeName( false ) ), false ) );
     
-    // show stripes
-    setShowStripes( group.readEntry( 
-      NitrogenConfig::SHOW_STRIPES, 
-      defaultConfiguration.showStripes() ) );
-    
     // draw separator
     setDrawSeparator( group.readEntry( 
       NitrogenConfig::DRAW_SEPARATOR, 
@@ -110,7 +104,6 @@ namespace Nitrogen
     group.writeEntry( NitrogenConfig::FRAME_BORDER, frameBorderName( false ) );
     group.writeEntry( NitrogenConfig::SIZE_GRIP_MODE, sizeGripModeName( false ) );
     
-    group.writeEntry( NitrogenConfig::SHOW_STRIPES, showStripes() );
     group.writeEntry( NitrogenConfig::DRAW_SEPARATOR, drawSeparator() );
     group.writeEntry( NitrogenConfig::DRAW_TITLE_OUTLINE, drawTitleOutline() );
     group.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
@@ -274,7 +267,6 @@ namespace Nitrogen
       frameBorder() == other.frameBorder() &&
       blendColor() == other.blendColor() &&
       sizeGripMode() == other.sizeGripMode() &&
-      showStripes() == other.showStripes() &&
       drawSeparator() == other.drawSeparator() &&
       drawTitleOutline() == other.drawTitleOutline() &&
       useOxygenShadows() == other.useOxygenShadows();

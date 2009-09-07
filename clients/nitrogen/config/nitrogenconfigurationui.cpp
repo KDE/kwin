@@ -45,8 +45,7 @@ namespace Nitrogen
     frameBorder(0),
     blendColor(0),
     sizeGripMode(0),
-    drawSeparator(0),
-    showStripes(0)
+    drawSeparator(0)
   { setupUI(); }
     
   //_________________________________________________________
@@ -137,14 +136,6 @@ namespace Nitrogen
       drawSeparator->setWhatsThis(i18n(
         "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
      
-      // show stripes
-      vboxLayout->addWidget( showStripes = new QCheckBox( i18n("Show stripes next to the title"), basicWidget) );
-      showStripes->setObjectName(QString::fromUtf8("showStripes"));
-      showStripes->setWhatsThis(i18n(
-        "When enabled, this option increases the visibility of the window titlebar by showing stripes"));
-
-      showStripes->hide();
-       
     }
     
     

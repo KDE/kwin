@@ -555,43 +555,6 @@ namespace Nitrogen
   }
   
   //________________________________________________________________
-  void NitrogenClient::drawStripes(QPainter *p, QPalette &palette, const int start, const int end, const int topMargin)
-  {
-    
-    QColor color( KDecoration::options()->color(ColorTitleBar) );
-    
-    QLinearGradient stripeGradient(QPoint(start,0), QPoint(end,0));
-    stripeGradient.setColorAt(0.0, Qt::transparent);
-    stripeGradient.setColorAt(0.05, KDecoration::options()->color(ColorTitleBar));
-    stripeGradient.setColorAt(1.0, Qt::transparent);
-    QPen pen1(stripeGradient, 0.5);
-
-    QLinearGradient stripeGradient2(QPoint(start,0), QPoint(end,0));
-    stripeGradient2.setColorAt(0.0, Qt::transparent);
-    stripeGradient2.setColorAt(0.05, helper_.calcLightColor(palette.color(QPalette::Window)));
-    stripeGradient2.setColorAt(1.0, Qt::transparent);
-    QPen pen2(stripeGradient2, 0.5);
-        
-    bool antialiasing = p->testRenderHint(QPainter::Antialiasing);
-    p->setRenderHint(QPainter::Antialiasing, false);
-    const int titleHeight = layoutMetric(LM_TitleHeight);
-    double voffset = 4.0*configuration().buttonSize()/22;
-    double scale = double(titleHeight-voffset)/4;
-    double base = titleHeight + topMargin;
-    for (int i = 0; i < 3; ++i)
-    {
-      
-      // calculate offset for each stripe. 
-      int offset = int(base - voffset) - int(scale)*(i+1);
-      p->setPen(pen1);
-      p->drawLine(QPoint(start, offset), QPoint(end, offset));
-      p->setPen(pen2);
-      p->drawLine(QPoint(start, offset+1), QPoint(end, offset+1));
-    }
-    p->setRenderHint(QPainter::Antialiasing, antialiasing);
-  }
-  
-  //________________________________________________________________
   void NitrogenClient::updateWindowShape()
   { 
     
@@ -784,45 +747,6 @@ namespace Nitrogen
     // separator
     if( isActive() && configuration().drawSeparator() && !configuration().drawTitleOutline() ) 
     { helper().drawSeparator(&painter, QRect(x, titleTop+titleHeight-1.5, w, 2), color, Qt::Horizontal); }
-    
-    // draw stripes as indicator for active windows
-    if( isActive() && configuration().showStripes() )
-    {
-      
-      Qt::Alignment align = configuration().titleAlignment();
-      if (widget()->layoutDirection() == Qt::RightToLeft)
-      {
-        
-        if (align == Qt::AlignLeft) align = Qt::AlignRight;
-        else if (align == Qt::AlignRight) align = Qt::AlignLeft;
-        
-      }
-      
-      if (align & Qt::AlignLeft) {
-        
-        int left = titleLeft + QFontMetrics(options()->font(isActive(), false)).width( caption() ) + 4;
-        int right = titleLeft + titleWidth;
-        drawStripes(&painter, palette, left, right, titleTop);
-        
-      } else if (align & Qt::AlignRight) {
-        
-        int left = titleLeft;
-        int right = titleLeft + titleWidth - QFontMetrics(options()->font(isActive(), false)).width( caption() ) - 4;
-        drawStripes(&painter, palette, right, left, titleTop);
-        
-      } else if (align & Qt::AlignHCenter) {
-        
-        int textWidth = QFontMetrics(options()->font(isActive(), false)).width( caption() );
-        int left = titleLeft;
-        int centerLeft = titleLeft + titleWidth/2 - textWidth/2 - 4;
-        int centerRight = titleLeft + titleWidth/2 + textWidth/2 + 4;
-        int right = titleLeft + titleWidth;
-        drawStripes(&painter, palette, centerLeft, left, titleTop);
-        drawStripes(&painter, palette, centerRight, right, titleTop);
-        
-      }
-      
-    }
     
     // shadow and resize handles
     if( configuration().frameBorder() >= NitrogenConfiguration::BorderTiny && !isMaximized() )

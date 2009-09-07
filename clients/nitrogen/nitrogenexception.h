@@ -62,13 +62,12 @@ namespace Nitrogen
     {
       None = 0,
       TitleAlignment = 1<<0,
-      ShowStripes = 1<<1,
       DrawSeparator = 1<<2,
       TitleOutline = 1<<3,
       FrameBorder = 1<<4,
       BlendColor = 1<<5,
       SizeGripMode = 1<<6,
-      All = TitleAlignment|ShowStripes|DrawSeparator|TitleOutline|FrameBorder|BlendColor|SizeGripMode
+      All = TitleAlignment|DrawSeparator|TitleOutline|FrameBorder|BlendColor|SizeGripMode
     };
     
     //! constructor

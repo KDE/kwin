@@ -68,9 +68,6 @@ namespace Nitrogen
     //! draw separator
     QCheckBox *drawSeparator;
     
-    //! show stripes
-    QCheckBox *showStripes;
-        
     //! active window title outline
     QCheckBox *titleOutline;
 

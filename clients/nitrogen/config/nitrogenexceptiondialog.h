@@ -104,9 +104,6 @@ namespace Nitrogen
     //! draw separator
     ComboBox* drawSeparator;
     
-    //! stripes
-    ComboBox* showStripes;
-      
   };
   
 }
