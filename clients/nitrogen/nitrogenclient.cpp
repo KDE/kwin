@@ -1007,7 +1007,6 @@ namespace Nitrogen
       p.setBrush( rg );
       p.drawRect( shadow.rect() );
         
-      tileSet = new TileSet(shadow, size, size, 1, 1);
     }
     
     // draw the corner of the window - actually all 4 corners as one circle
