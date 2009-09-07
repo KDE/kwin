@@ -123,19 +123,9 @@ namespace Nitrogen
     
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( buttonSize );
-   
-      // active window title outline
-      vboxLayout->addWidget( titleOutline = new QCheckBox( i18n("Outline active window title"), basicWidget) );
-      titleOutline->setObjectName(QString::fromUtf8("titleOutline"));
-      titleOutline->setWhatsThis(i18n(
-        "When enabled, an additional frame is shown around the active window as well as its title"));
-      
-      // draw separator
-      vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and active window contents"), basicWidget ) );
-      drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
-      drawSeparator->setWhatsThis(i18n(
-        "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
-     
+
+      vboxLayout->addStretch(1);
+        
     }
     
     
@@ -186,13 +176,25 @@ namespace Nitrogen
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( sizeGripMode );
       
+      // active window title outline
+      vboxLayout->addWidget( titleOutline = new QCheckBox( i18n("Outline active window title"), advancedWidget) );
+      titleOutline->setObjectName(QString::fromUtf8("titleOutline"));
+      titleOutline->setWhatsThis(i18n(
+        "When enabled, an additional frame is shown around the active window as well as its title"));
+      
+      // draw separator
+      vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and active window contents"), advancedWidget ) );
+      drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
+      drawSeparator->setWhatsThis(i18n(
+        "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
+      
       // oxygen shadow
       vboxLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), advancedWidget ) );
       useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
       useOxygenShadows->setWhatsThis(i18n(
         "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
 
-      vboxLayout->addStretch(1);
+      connect( titleOutline, SIGNAL(toggled( bool )), drawSeparator, SLOT( setDisabled( bool ) ) );
      
     }
     
