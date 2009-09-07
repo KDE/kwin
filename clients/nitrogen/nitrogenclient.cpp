@@ -623,6 +623,7 @@ namespace Nitrogen
     {
       
       if( !hasSizeGrip() ) createSizeGrip(); 
+      sizeGrip().setVisible( !( isMaximized() || isShade() ) );
       
     } else if( hasSizeGrip() ) deleteSizeGrip();
     
