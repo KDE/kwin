@@ -61,6 +61,14 @@ namespace Nitrogen
         //! true if window is maximized
         virtual bool isMaximized( void ) const;
         
+        //! true when separator is to be drawn
+        virtual bool drawSeparator( void ) const
+        { return isActive() && configuration().drawSeparator() && !configuration().drawTitleOutline(); }
+       
+        //! true when oxygen 'glow' shadow is to be drawn for active window
+        virtual bool useOxygenShadows( void ) const
+        { return isActive() && configuration().useOxygenShadows(); }
+        
         //! dimensions
         virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
                 

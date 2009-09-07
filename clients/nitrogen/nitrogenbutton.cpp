@@ -162,7 +162,7 @@ namespace Nitrogen
     
     dark.setAlpha(120);
     
-    if(client_.isActive() && client_.configuration().drawSeparator() && !client_.configuration().drawTitleOutline() ) 
+    if( client_.drawSeparator() ) 
     { helper_.drawSeparator(&painter, QRect(x, titleHeight-1.5, w, 2), color, Qt::Horizontal); }
     
     // for menu button the application icon is used

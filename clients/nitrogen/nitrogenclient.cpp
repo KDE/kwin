@@ -745,7 +745,7 @@ namespace Nitrogen
     frame.getRect(&x, &y, &w, &h);
     
     // separator
-    if( isActive() && configuration().drawSeparator() && !configuration().drawTitleOutline() ) 
+    if( drawSeparator() ) 
     { helper().drawSeparator(&painter, QRect(x, titleTop+titleHeight-1.5, w, 2), color, Qt::Horizontal); }
     
     // shadow and resize handles
@@ -902,7 +902,7 @@ namespace Nitrogen
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
     
-    if( active && configuration().useOxygenShadows() )
+    if( useOxygenShadows() )
     {
       
       //---------------------------------------------------------------
