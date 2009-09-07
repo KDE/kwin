@@ -439,13 +439,12 @@ namespace Nitrogen
     r.adjust(0,0, 1, 1);
     
     // draw top line
-    // one could probably use a 'slab' here to have a drop shadow
     {
       
       int shadow_size = 5;
       int height = HFRAMESIZE;
       QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
-      helper().slab( palette.color( widget->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(-shadow_size, 0, shadow_size, 2 ), painter, TileSet::Bottom );
+      helper().slab( palette.color( widget->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(-shadow_size-1, 0, shadow_size+1, 2 ), painter, TileSet::Bottom );
       
       int offset = layoutMetric( LM_OuterPaddingTop );
       int gradient_height = 64 + configuration().buttonSize() - 22;
@@ -684,13 +683,16 @@ namespace Nitrogen
         int bottom = 1;
       
         // disable bottom corners when border frame is too small and window is not shaded
-        if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny && !isShade() ) bottom = 0;
+        if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && !isShade() ) bottom = 0;
         QRegion mask( x+5*left,   y+0*top, w-5*(left+right), h-0*(top+bottom));
         mask += QRegion(x+0*left, y+5*top, w-0*(left+right), h-5*(top+bottom));
         mask += QRegion(x+2*left, y+2*top, w-2*(left+right), h-2*(top+bottom));
         mask += QRegion(x+3*left, y+1*top, w-3*(left+right), h-1*(top+bottom));
         mask += QRegion(x+1*left, y+3*top, w-1*(left+right), h-3*(top+bottom));      
-      
+
+        if( configuration().frameBorder() == NitrogenConfiguration::BorderNone )
+        { mask += QRegion(x+0*left, y+4*top, w-0*(left+right), h-4*(top+bottom)); }
+
         painter.setClipRegion( mask );
         
       }
@@ -913,6 +915,60 @@ namespace Nitrogen
     kDebug( 1212 ) << " creating tiles - active: " << active << endl;
     TileSet *tileSet = 0;
     
+    if( active && configuration().drawTitleOutline() && configuration().frameBorder() == NitrogenConfiguration::BorderNone )
+    {
+      
+      //---------------------------------------------------------------
+      // Create new glow/shadow tiles
+      QPixmap shadow = QPixmap( size*2, size*2 );
+      shadow.fill( Qt::transparent );
+      
+      QPainter p( &shadow );
+      p.setRenderHint( QPainter::Antialiasing );
+     
+      QPixmap shadowTop = shadowPixmap( color, glow, size, active );
+      QRect topRect( shadow.rect() );
+      topRect.setBottom( int( size )-1 );
+      p.setClipRect( topRect );
+      p.drawPixmap( QPointF( 0, 0 ), shadowTop );
+      
+      QPixmap shadowBottom = shadowPixmap( widget()->palette().color( widget()->backgroundRole() ), glow, size, active );
+      QRect bottomRect( shadow.rect() );
+      bottomRect.setTop( int( size ) );
+      p.setClipRect( bottomRect );
+      p.drawPixmap( QPointF( 0, 0 ), shadowBottom );
+      p.end();
+
+      tileSet = new TileSet( shadow, size, size, 1, 1);
+      
+    } else {
+      
+      tileSet = new TileSet(
+        shadowPixmap( color, glow, size, active ), 
+        size, size, 1, 1);
+    
+    }
+    
+    // store option and style
+    if( active )
+    {
+      
+      glowTilesOption_ = opt;
+      glowTiles_ = tileSet;
+      
+    } else {
+      
+      shadowTilesOption_ = opt;
+      shadowTiles_ = tileSet;
+      
+    }
+    
+    return tileSet;
+  }
+  
+  QPixmap NitrogenClient::shadowPixmap(const QColor& color, const QColor& glow, qreal size, bool active) const
+  {
+    
     //---------------------------------------------------------------
     // Create new glow/shadow tiles
     QPixmap shadow = QPixmap( size*2, size*2 );
@@ -924,6 +980,7 @@ namespace Nitrogen
     
     if( active && configuration().useOxygenShadows() )
     {
+      
       //---------------------------------------------------------------
       // Active shadow texture
       
@@ -1034,24 +1091,7 @@ namespace Nitrogen
     p.drawEllipse(QRectF(size-4, size-4, 8, 8));
       
     p.end();
-      
-    tileSet = new TileSet(shadow, size, size, 1, 1);
-    
-    // store option and style
-    if( active )
-    {
-      
-      glowTilesOption_ = opt;
-      glowTiles_ = tileSet;
-      
-    } else {
-      
-      shadowTilesOption_ = opt;
-      shadowTiles_ = tileSet;
-      
-    }
-    
-    return tileSet;
+    return shadow;
   }
   
 }
