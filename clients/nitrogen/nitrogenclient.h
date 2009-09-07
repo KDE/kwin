@@ -109,6 +109,9 @@ namespace Nitrogen
         //! shadows
         TileSet *shadowTiles(const QColor& color, const QColor& glow, qreal size, bool active);
         
+        //! shadows
+        QPixmap shadowPixmap( const QColor& color, const QColor& glow, qreal size, bool active) const;
+        
         private:
         
         class ShadowTilesOption {
