@@ -87,6 +87,8 @@ unsigned long Options::updateSettings()
 
     rollOverDesktops = config.readEntry("RollOverDesktops", true);
 
+    legacyFullscreenSupport = config.readEntry( "LegacyFullscreenSupport", false );
+
 //    focusStealingPreventionLevel = config.readEntry( "FocusStealingPreventionLevel", 2 );
     // TODO use low level for now
     focusStealingPreventionLevel = config.readEntry( "FocusStealingPreventionLevel", 1 );

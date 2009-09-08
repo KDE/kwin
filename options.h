@@ -207,6 +207,11 @@ class Options : public KDecorationOptions
          */
         QStringList ignorePositionClasses;
 
+        /**
+        * support legacy fullscreen windows hack: borderless non-netwm windows with screen geometry
+        */
+        bool legacyFullscreenSupport;
+
         bool checkIgnoreFocusStealing( const Client* c );
 
         WindowOperation operationTitlebarDblClick() { return OpTitlebarDblClick; }

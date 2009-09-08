@@ -2538,6 +2538,8 @@ QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) co
 
 int Client::checkFullScreenHack( const QRect& geom ) const
     {
+    if( !options->legacyFullscreenSupport )
+        return 0;
     // if it's noborder window, and has size of one screen or the whole desktop geometry, it's fullscreen hack
     if( noBorder() && app_noborder && isFullScreenable( true ))
         {
