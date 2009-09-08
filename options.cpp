@@ -143,6 +143,7 @@ unsigned long Options::updateSettings()
     electric_borders = config.readEntry("ElectricBorders", 0);
     electric_border_delay = config.readEntry("ElectricBorderDelay", 150);
     electric_border_cooldown = config.readEntry("ElectricBorderCooldown", 350);
+    electric_border_pushback_pixels = config.readEntry("ElectricBorderPushbackPixels", 1);
     electric_border_maximize = config.readEntry("ElectricBorderMaximize", false);
     electric_border_tiling = config.readEntry("ElectricBorderTiling" , false );
 

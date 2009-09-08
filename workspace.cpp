@@ -2134,7 +2134,7 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
     Time treshold_reset = 250; // Reset timeout
     Time treshold_trigger = options->electricBorderCooldown(); // Minimum time between triggers
     int distance_reset = 30; // Mouse should not move more than this many pixels
-    int pushback_pixels = 1;
+    int pushback_pixels = options->electricBorderPushbackPixels();
 
     ElectricBorder border;
     if( pos.x() == electricLeft && pos.y() == electricTop )
@@ -2159,6 +2159,11 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
     if( electric_windows[border] == None )
         return;
 
+    if( pushback_pixels == 0 )
+        {
+        // no pushback so we have to activate at once
+        electric_time_last = now;
+        }
     if(( electric_current_border == border ) &&
        ( timestampDiff( electric_time_last, now ) < treshold_reset ) &&
        ( timestampDiff( electric_time_last_trigger, now ) > treshold_trigger ) &&

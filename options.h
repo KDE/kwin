@@ -290,6 +290,11 @@ class Options : public KDecorationOptions
         */
         int electricBorderCooldown();
         /**
+        * @returns the number of pixels the mouse cursor is pushed back when it
+        * reaches the screen edge.
+        */
+        int electricBorderPushbackPixels() const { return electric_border_pushback_pixels; }
+        /**
         * @returns true if a window gets maximized when it reaches top screen edge
         * while being moved.
         */
@@ -363,6 +368,7 @@ class Options : public KDecorationOptions
         int electric_borders;
         int electric_border_delay;
         int electric_border_cooldown;
+        int electric_border_pushback_pixels;
         bool electric_border_maximize;
         bool electric_border_tiling;
         bool show_geometry_tip;
