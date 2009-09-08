@@ -118,7 +118,7 @@ namespace Nitrogen
         TileSet *shadowTiles(const QColor& color, const QColor& glow, qreal size, bool active);
         
         //! shadows
-        QPixmap shadowPixmap( const QColor& color, const QColor& glow, qreal size, bool active) const;
+        QPixmap shadowPixmap( const QColor& color, const QColor& glow, qreal size) const;
         
         private:
         
