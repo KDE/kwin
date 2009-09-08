@@ -240,7 +240,7 @@ void AuroraeButton::mouseReleaseEvent(QMouseEvent *e)
     KCommonDecorationButton::mouseReleaseEvent(e);
 }
 
-void AuroraeButton::animationUpdate(double progress, int id)
+void AuroraeButton::animationUpdate(qreal progress, int id)
 {
     Q_UNUSED(id)
     m_animationProgress = progress;
