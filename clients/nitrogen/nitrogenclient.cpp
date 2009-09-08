@@ -631,7 +631,7 @@ namespace Nitrogen
     
       if( isMaximized() ) {
         
-        painter.setClipRect( frame ); 
+        painter.setClipRect( frame, Qt::IntersectClip ); 
       
       } else {
         
@@ -655,7 +655,7 @@ namespace Nitrogen
         if( configuration().frameBorder() == NitrogenConfiguration::BorderNone )
         { mask += QRegion(x+0*left, y+4*top, w-0*(left+right), h-4*(top+bottom)); }
 
-        painter.setClipRegion( mask );
+        painter.setClipRegion( mask, Qt::IntersectClip );
         
       }
       
@@ -852,13 +852,13 @@ namespace Nitrogen
       QPainter p( &shadow );
       p.setRenderHint( QPainter::Antialiasing );
      
-      QPixmap shadowTop = shadowPixmap( color, glow, size, active );
+      QPixmap shadowTop = shadowPixmap( color, glow, size );
       QRect topRect( shadow.rect() );
       topRect.setBottom( int( size )-1 );
       p.setClipRect( topRect );
       p.drawPixmap( QPointF( 0, 0 ), shadowTop );
       
-      QPixmap shadowBottom = shadowPixmap( widget()->palette().color( widget()->backgroundRole() ), glow, size, active );
+      QPixmap shadowBottom = shadowPixmap( widget()->palette().color( widget()->backgroundRole() ), glow, size );
       QRect bottomRect( shadow.rect() );
       bottomRect.setTop( int( size ) );
       p.setClipRect( bottomRect );
@@ -870,7 +870,7 @@ namespace Nitrogen
     } else {
       
       tileSet = new TileSet(
-        shadowPixmap( color, glow, size, active ), 
+        shadowPixmap( color, glow, size ), 
         size, size, 1, 1);
     
     }
@@ -892,7 +892,7 @@ namespace Nitrogen
     return tileSet;
   }
   
-  QPixmap NitrogenClient::shadowPixmap(const QColor& color, const QColor& glow, qreal size, bool active) const
+  QPixmap NitrogenClient::shadowPixmap(const QColor& color, const QColor& glow, qreal size) const
   {
     
     //---------------------------------------------------------------
