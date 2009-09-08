@@ -2709,7 +2709,9 @@ bool Client::startMoveResize()
     Notify::raise( isResize() ? Notify::ResizeStart : Notify::MoveStart );
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized( effectWindow(), true, false );
-    if( options->electricBorders() == Options::ElectricMoveOnly )
+    if( options->electricBorders() == Options::ElectricMoveOnly ||
+        options->electricBorderMaximize() ||
+        options->electricBorderTiling() )
         workspace()->reserveElectricBorderSwitching( true );
     return true;
     }
@@ -2717,10 +2719,40 @@ bool Client::startMoveResize()
 void Client::finishMoveResize( bool cancel )
     {
     leaveMoveResize();
+    if( isElectricBorderMaximizing() )
+        {
+        cancel = true;
+        }
     if( cancel )
         setGeometry( initialMoveResizeGeom );
     else
         setGeometry( moveResizeGeom );
+    if( isElectricBorderMaximizing() )
+        {
+        electricMaximizing = false;
+        switch( electricMode )
+            {
+            case ElectricMaximizeMode:
+                if( maximizeMode() == MaximizeFull )
+                    setMaximize( false, false );
+                else
+                    setMaximize( true, true );
+                break;
+            case ElectricLeftMode:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, cursorPos() ,workspace()->currentDesktop() );
+                setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height() ) );
+                break;
+                }
+            case ElectricRightMode:
+                {
+                QRect max = workspace()->clientArea( MaximizeArea, cursorPos() ,workspace()->currentDesktop() );
+                setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() ) );
+                break;
+                }
+            }
+        workspace()->hideElectricBorderWindowOutline();
+        }
     checkMaximizeGeometry();
 // FRAME    update();
     Notify::raise( isResize() ? Notify::ResizeEnd : Notify::MoveEnd );
@@ -2755,7 +2787,9 @@ void Client::leaveMoveResize()
     eater = 0;
     delete sync_timeout;
     sync_timeout = NULL;
-    if( options->electricBorders() == Options::ElectricMoveOnly )
+    if( options->electricBorders() == Options::ElectricMoveOnly ||
+        options->electricBorderMaximize() ||
+        options->electricBorderTiling() )
         workspace()->reserveElectricBorderSwitching( false );
     }
 
@@ -3094,6 +3128,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
 void Client::performMoveResize()
     {
+    if( isElectricBorderMaximizing() )
+        return;
 #ifdef HAVE_XSYNC
     if( isResize() && sync_counter != None )
         {
@@ -3128,6 +3164,59 @@ void Client::syncTimeout()
     sync_timeout = NULL;
     if( sync_resize_pending )
         performMoveResize();
+    }
+
+void Client::setElectricBorderMode( ElectricMaximizingMode mode )
+    {
+    electricMode = mode;
+    }
+
+ElectricMaximizingMode Client::electricBorderMode() const
+    {
+    return electricMode;
+    }
+
+bool Client::isElectricBorderMaximizing() const
+    {
+    return electricMaximizing;
+    }
+
+void Client::setElectricBorderMaximizing( bool maximizing )
+    {
+    electricMaximizing = maximizing;
+    if( maximizing )
+        workspace()->showElectricBorderWindowOutline();
+    else
+        workspace()->hideElectricBorderWindowOutline();
+    }
+
+QRect Client::electricBorderMaximizeGeometry()
+    {
+    QRect ret;
+    switch( electricMode )
+        {
+        case ElectricMaximizeMode:
+            {
+            if( maximizeMode() == MaximizeFull )
+                ret = geometryRestore();
+            else
+                ret = workspace()->clientArea( MaximizeArea, cursorPos() ,workspace()->currentDesktop() );
+            break;
+            }
+        case ElectricLeftMode:
+            {
+            QRect max = workspace()->clientArea( MaximizeArea, cursorPos() ,workspace()->currentDesktop() );
+            ret = QRect( max.x(), max.y(), max.width()/2, max.height() );
+            break;
+            }
+        case ElectricRightMode:
+            {
+            QRect max = workspace()->clientArea( MaximizeArea, cursorPos() ,workspace()->currentDesktop() );
+            ret = QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() );
+            break;
+            }
+        }
+    return ret;
     }
 
 } // namespace

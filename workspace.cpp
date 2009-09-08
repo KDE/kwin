@@ -453,6 +453,17 @@ void Workspace::init()
         }
     if( new_active_client != NULL )
         activateClient( new_active_client );
+
+    // outline windows for electric border maximize window mode
+    outline_left = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_right = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_top = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+    outline_bottom = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
+        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
+
     // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't
     // want focus
@@ -492,6 +503,12 @@ Workspace::~Workspace()
 
     writeWindowRules();
     KGlobal::config()->sync();
+
+    // destroy outline windows for electric border maximize window mode
+    XDestroyWindow( QX11Info::display(), outline_left );
+    XDestroyWindow( QX11Info::display(), outline_right );
+    XDestroyWindow( QX11Info::display(), outline_top );
+    XDestroyWindow( QX11Info::display(), outline_bottom );
 
     delete rootInfo;
     delete supportWindow;
@@ -2117,6 +2134,7 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
     Time treshold_reset = 250; // Reset timeout
     Time treshold_trigger = options->electricBorderCooldown(); // Minimum time between triggers
     int distance_reset = 30; // Mouse should not move more than this many pixels
+    int pushback_pixels = 1;
 
     ElectricBorder border;
     if( pos.x() == electricLeft && pos.y() == electricTop )
@@ -2153,41 +2171,80 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
             electric_current_border = ElectricNone;
             electric_time_last_trigger = now;
             if( movingClient )
-                { // If moving a client or have force doing the desktop switch
-                if( options->electricBorders() != Options::ElectricDisabled )
-                    electricBorderSwitchDesktop( border, pos );
-                return; // Don't reset cursor position
-                }
-            if( options->electricBorders() == Options::ElectricAlways &&
-              ( border == ElectricTop || border == ElectricRight ||
-                border == ElectricBottom || border == ElectricLeft ))
-                { // If desktop switching is always enabled don't apply it to the corners if
-                  // an effect is applied to it (We will check that later).
-                electricBorderSwitchDesktop( border, pos );
-                return; // Don't reset cursor position
-                }
-            switch( options->electricBorderAction( border ))
                 {
-                case ElectricActionDashboard: // Display Plasma dashboard
+                // If moving a client or have force doing the desktop switch
+                if( options->electricBorders() != Options::ElectricDisabled )
                     {
-                    QDBusInterface plasmaApp( "org.kde.plasma-desktop", "/App" );
-                    plasmaApp.call( "toggleDashboard" );
+                    electricBorderSwitchDesktop( border, pos );
+                    return; // Don't reset cursor position
                     }
-                    break;
-                case ElectricActionShowDesktop:
+                // maximize only when not using for switch
+                if( options->electricBorderMaximize() && border == ElectricTop &&
+                    movingClient->isMaximizable() )
                     {
-                    setShowingDesktop( !showingDesktop() );
-                    break;
+                    bool enable = !movingClient->isElectricBorderMaximizing();
+                    movingClient->setElectricBorderMode( ElectricMaximizeMode );
+                    movingClient->setElectricBorderMaximizing( enable );
+                    // stronger push back
+                    pushback_pixels = 10;
                     }
-                case ElectricActionNone: // Either desktop switching or an effect
-                default:
+                if( options->electricBorderTiling() )
                     {
-                    if( effects && static_cast<EffectsHandlerImpl*>( effects )->borderActivated( border ))
-                        {} // Handled by effects
-                    else
+                    bool enable = !movingClient->isElectricBorderMaximizing();
+                    bool activate = false;
+                    if( border == ElectricLeft )
                         {
-                        electricBorderSwitchDesktop( border, pos );
-                        return; // Don't reset cursor position
+                        movingClient->setElectricBorderMode( ElectricLeftMode );
+                        activate = true;
+                        }
+                    else if( border == ElectricRight )
+                        {
+                        movingClient->setElectricBorderMode( ElectricRightMode );
+                        activate = true;
+                        }
+                    if( activate )
+                        {
+                        movingClient->setElectricBorderMaximizing( enable );
+                        // stronger push back
+                        pushback_pixels = 10;
+                        }
+                    }
+                else
+                    return; // Don't reset cursor position
+                }
+            else
+                {
+                if( options->electricBorders() == Options::ElectricAlways &&
+                ( border == ElectricTop || border == ElectricRight ||
+                    border == ElectricBottom || border == ElectricLeft ))
+                    { // If desktop switching is always enabled don't apply it to the corners if
+                    // an effect is applied to it (We will check that later).
+                    electricBorderSwitchDesktop( border, pos );
+                    return; // Don't reset cursor position
+                    }
+                switch( options->electricBorderAction( border ))
+                    {
+                    case ElectricActionDashboard: // Display Plasma dashboard
+                        {
+                        QDBusInterface plasmaApp( "org.kde.plasma-desktop", "/App" );
+                        plasmaApp.call( "toggleDashboard" );
+                        }
+                        break;
+                    case ElectricActionShowDesktop:
+                        {
+                        setShowingDesktop( !showingDesktop() );
+                        break;
+                        }
+                    case ElectricActionNone: // Either desktop switching or an effect
+                    default:
+                        {
+                        if( effects && static_cast<EffectsHandlerImpl*>( effects )->borderActivated( border ))
+                            {} // Handled by effects
+                        else
+                            {
+                            electricBorderSwitchDesktop( border, pos );
+                            return; // Don't reset cursor position
+                            }
                         }
                     }
                 }
@@ -2203,8 +2260,22 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
 
     // Reset the pointer to find out whether the user is really pushing
     // (the direction back from which it came, starting from top clockwise)
-    const int xdiff[ELECTRIC_COUNT] = { 0, -1, -1, -1, 0, 1, 1, 1 };
-    const int ydiff[ELECTRIC_COUNT] = { 1, 1, 0, -1, -1, -1, 0, 1 };
+    const int xdiff[ELECTRIC_COUNT] = { 0,
+                                        -pushback_pixels,
+                                        -pushback_pixels,
+                                        -pushback_pixels,
+                                        0,
+                                        pushback_pixels,
+                                        pushback_pixels,
+                                        pushback_pixels };
+    const int ydiff[ELECTRIC_COUNT] = { pushback_pixels,
+                                        pushback_pixels,
+                                        0,
+                                        -pushback_pixels,
+                                        -pushback_pixels,
+                                        -pushback_pixels,
+                                        0,
+                                        pushback_pixels };
     QCursor::setPos( pos.x() + xdiff[border], pos.y() + ydiff[border] );
     }
 
@@ -2269,6 +2340,94 @@ bool Workspace::electricBorderEvent( XEvent* e )
             }
         }
     return false;
+    }
+
+void Workspace::showElectricBorderWindowOutline()
+    {
+    if( !movingClient )
+        return;
+    // code copied from TabBox::updateOutline() in tabbox.cpp
+    QRect c = movingClient->electricBorderMaximizeGeometry();
+    // left/right parts are between top/bottom, they don't reach as far as the corners
+    XMoveResizeWindow( QX11Info::display(), outline_left, c.x(), c.y() + 5, 5, c.height() - 10 );
+    XMoveResizeWindow( QX11Info::display(), outline_right, c.x() + c.width() - 5, c.y() + 5, 5, c.height() - 10 );
+    XMoveResizeWindow( QX11Info::display(), outline_top, c.x(), c.y(), c.width(), 5 );
+    XMoveResizeWindow( QX11Info::display(), outline_bottom, c.x(), c.y() + c.height() - 5, c.width(), 5 );
+    {
+    QPixmap pix( 5, c.height() - 10 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 0, 0, 0, pix.height() - 1 );
+    p.drawLine( 4, 0, 4, pix.height() - 1 );
+    p.setPen( Qt::gray );
+    p.drawLine( 1, 0, 1, pix.height() - 1 );
+    p.drawLine( 3, 0, 3, pix.height() - 1 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 0, 2, pix.height() - 1 );
+    p.end();
+    XSetWindowBackgroundPixmap( QX11Info::display(), outline_left, pix.handle());
+    XSetWindowBackgroundPixmap( QX11Info::display(), outline_right, pix.handle());
+    }
+    {
+    QPixmap pix( c.width(), 5 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 0, 0, pix.width() - 1 - 0, 0 );
+    p.drawLine( 4, 4, pix.width() - 1 - 4, 4 );
+    p.drawLine( 0, 0, 0, 4 );
+    p.drawLine( pix.width() - 1 - 0, 0, pix.width() - 1 - 0, 4 );
+    p.setPen( Qt::gray );
+    p.drawLine( 1, 1, pix.width() - 1 - 1, 1 );
+    p.drawLine( 3, 3, pix.width() - 1 - 3, 3 );
+    p.drawLine( 1, 1, 1, 4 );
+    p.drawLine( 3, 3, 3, 4 );
+    p.drawLine( pix.width() - 1 - 1, 1, pix.width() - 1 - 1, 4 );
+    p.drawLine( pix.width() - 1 - 3, 3, pix.width() - 1 - 3, 4 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 2, pix.width() - 1 - 2, 2 );
+    p.drawLine( 2, 2, 2, 4 );
+    p.drawLine( pix.width() - 1 - 2, 2, pix.width() - 1 - 2, 4 );
+    p.end();
+    XSetWindowBackgroundPixmap( QX11Info::display(), outline_top, pix.handle());
+    }
+    {
+    QPixmap pix( c.width(), 5 );
+    QPainter p( &pix );
+    p.setPen( Qt::white );
+    p.drawLine( 4, 0, pix.width() - 1 - 4, 0 );
+    p.drawLine( 0, 4, pix.width() - 1 - 0, 4 );
+    p.drawLine( 0, 4, 0, 0 );
+    p.drawLine( pix.width() - 1 - 0, 4, pix.width() - 1 - 0, 0 );
+    p.setPen( Qt::gray );
+    p.drawLine( 3, 1, pix.width() - 1 - 3, 1 );
+    p.drawLine( 1, 3, pix.width() - 1 - 1, 3 );
+    p.drawLine( 3, 1, 3, 0 );
+    p.drawLine( 1, 3, 1, 0 );
+    p.drawLine( pix.width() - 1 - 3, 1, pix.width() - 1 - 3, 0 );
+    p.drawLine( pix.width() - 1 - 1, 3, pix.width() - 1 - 1, 0 );
+    p.setPen( Qt::black );
+    p.drawLine( 2, 2, pix.width() - 1 - 2, 2 );
+    p.drawLine( 2, 0, 2, 2 );
+    p.drawLine( pix.width() - 1 - 2, 0, pix.width() - 1 - 2, 2 );
+    p.end();
+    XSetWindowBackgroundPixmap( QX11Info::display(), outline_bottom, pix.handle());
+    }
+    XClearWindow( QX11Info::display(), outline_left );
+    XClearWindow( QX11Info::display(), outline_right );
+    XClearWindow( QX11Info::display(), outline_top );
+    XClearWindow( QX11Info::display(), outline_bottom );
+    XMapWindow( QX11Info::display(), outline_left );
+    XMapWindow( QX11Info::display(), outline_right );
+    XMapWindow( QX11Info::display(), outline_top );
+    XMapWindow( QX11Info::display(), outline_bottom );
+    }
+
+void Workspace::hideElectricBorderWindowOutline()
+    {
+        XUnmapWindow( QX11Info::display(), outline_left );
+        XUnmapWindow( QX11Info::display(), outline_right );
+        XUnmapWindow( QX11Info::display(), outline_top );
+        XUnmapWindow( QX11Info::display(), outline_bottom );
     }
 
 //-----------------------------------------------------------------------------

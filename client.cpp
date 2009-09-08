@@ -121,6 +121,7 @@ Client::Client( Workspace* ws )
     , padding_right( 0 )
     , padding_top( 0 )
     , padding_bottom( 0 )
+    , electricMaximizing( false )
     { // TODO: Do all as initialization
 
     // Set the initial mapping state

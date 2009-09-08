@@ -467,6 +467,8 @@ class Workspace : public QObject, public KDecorationDefines
         void stopMousePolling();
 
         void raiseElectricBorderWindows();
+        void showElectricBorderWindowOutline();
+        void hideElectricBorderWindowOutline();
 
     public slots:
         void addRepaintFull();
@@ -902,6 +904,11 @@ class Workspace : public QObject, public KDecorationDefines
         bool forceUnredirectCheck;
         QList< int > composite_paint_times;
         QTimer compositeResetTimer; // for compressing composite resets
+
+        Window outline_left;
+        Window outline_right;
+        Window outline_top;
+        Window outline_bottom;
 
     private:
         friend bool performTransiencyCheck();

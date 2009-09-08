@@ -218,6 +218,11 @@ class Client
         void resizeWithChecks( int w, int h, ForceGeometry_t force = NormalGeometrySet );
         void resizeWithChecks( const QSize& s, ForceGeometry_t force = NormalGeometrySet );
         void keepInArea( QRect area, bool partial = false );
+        void setElectricBorderMode( ElectricMaximizingMode mode );
+        ElectricMaximizingMode electricBorderMode() const;
+        void setElectricBorderMaximizing( bool maximizing );
+        bool isElectricBorderMaximizing() const;
+        QRect electricBorderMaximizeGeometry();
 
         void growHorizontal();
         void shrinkHorizontal();
@@ -581,6 +586,9 @@ class Client
         QTimer* demandAttentionKNotifyTimer;
         QPixmap decorationPixmapLeft, decorationPixmapRight, decorationPixmapTop, decorationPixmapBottom;
         PaintRedirector* paintRedirector;
+
+        bool electricMaximizing;
+        ElectricMaximizingMode electricMode;
 
         friend bool performTransiencyCheck();
     };

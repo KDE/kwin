@@ -72,6 +72,13 @@ enum ElectricBorder
     ElectricNone
 };
 
+enum ElectricMaximizingMode
+{
+    ElectricMaximizeMode,
+    ElectricLeftMode,
+    ElectricRightMode
+};
+
 // TODO: Hardcoding is bad, need to add some way of registering global actions to these.
 // When designing the new system we must keep in mind that we have conditional actions
 // such as "only when moving windows" desktop switching that the current global action

@@ -289,6 +289,16 @@ class Options : public KDecorationOptions
         * @returns the trigger cooldown for electric borders in milliseconds.
         */
         int electricBorderCooldown();
+        /**
+        * @returns true if a window gets maximized when it reaches top screen edge
+        * while being moved.
+        */
+        bool electricBorderMaximize() const { return electric_border_maximize; }
+        /**
+        * @returns true if window is tiled to half screen when reaching left or
+        * right screen edge while been moved
+        */
+        bool electricBorderTiling() const { return electric_border_tiling; }
 
         bool topMenuEnabled() const { return topmenus; }
         bool desktopTopMenu() const { return desktop_topmenu; }
@@ -353,6 +363,8 @@ class Options : public KDecorationOptions
         int electric_borders;
         int electric_border_delay;
         int electric_border_cooldown;
+        bool electric_border_maximize;
+        bool electric_border_tiling;
         bool show_geometry_tip;
         bool topmenus;
         bool desktop_topmenu;
