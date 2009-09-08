@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_FADE_H
 #define KWIN_FADE_H
 
+#include "fade_proxy.h"
+
 #include <kwineffects.h>
 
 namespace KWin
@@ -41,14 +43,19 @@ class FadeEffect
         virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
+        virtual const void* proxy() const;
+        
 
+        void setWindowIgnored( EffectWindow* w, bool ignore );
         bool isFadeWindow( EffectWindow* w );
     private:
         class WindowInfo;
         QHash< const EffectWindow*, WindowInfo > windows;
+        QSet< const EffectWindow* > ignoredWindows;
         double fadeInStep, fadeOutStep;
         int fadeInTime, fadeOutTime;
         bool fadeWindows;
+        FadeEffectProxy m_proxy;
     };
 
 class FadeEffect::WindowInfo

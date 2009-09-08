@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "slidingpopups.h"
 
+#include "../fade/fade_proxy.h"
+
 #include <kdebug.h>
 
 namespace KWin
@@ -85,7 +87,6 @@ void SlidingPopupsEffect::paintWindow( EffectWindow* w, int mask, QRegion region
     bool animating = false;
     bool appearing = false;
     QRegion clippedRegion = region;
-    data.opacity = 1.0;
 
     if( mAppearingWindows.contains( w ) )
         {
@@ -107,20 +108,20 @@ void SlidingPopupsEffect::paintWindow( EffectWindow* w, int mask, QRegion region
             {
             case West:
                 data.xTranslate +=  (start - w->width()) * progress;
-                clippedRegion = clippedRegion.subtracted(QRegion(start - w->width(), w->y(), w->width(), w->height()));
+                clippedRegion = clippedRegion.subtracted(QRegion(start - w->width(), w->y(), w->width(), w->height() ) );
                 break;
             case North:
                 data.yTranslate +=  (start - w->height()) * progress;
-                clippedRegion = clippedRegion.subtracted(QRegion(w->x(), start - w->height(), w->width(), w->height()));
+                clippedRegion = clippedRegion.subtracted(QRegion( w->x(), start - w->height(), w->width(), w->height() ) );
                 break;
             case East:
                 data.xTranslate +=  (start - w->x()) * progress;
-                clippedRegion = clippedRegion.subtracted(QRegion(w->x()+w->width(), w->y(), w->width(), w->height()));
+                clippedRegion = clippedRegion.subtracted(QRegion( w->x()+w->width(), w->y(), w->width(), w->height() ) );
                 break;
             case South:
             default:
                 data.yTranslate +=  (start - w->y()) * progress;
-                clippedRegion = clippedRegion.subtracted(QRegion(w->x(), start, w->width(), w->height()));
+                clippedRegion = clippedRegion.subtracted(QRegion( w->x(), start, w->width(), w->height() ) );
             }
         }
 
@@ -139,9 +140,15 @@ void SlidingPopupsEffect::windowAdded( EffectWindow* w )
     propertyNotify( w, mAtom );
     if( w->isOnCurrentDesktop() && mWindowsData.contains( w ) )
         {
-        mAppearingWindows[ w ].setDuration( animationTime( mFadeInTime ));
+        mAppearingWindows[ w ].setDuration( animationTime( mFadeInTime ) );
         mAppearingWindows[ w ].setProgress( 0.0 );
         mAppearingWindows[ w ].setCurveShape( TimeLine::EaseOutCurve );
+
+        //tell fadeto ignore this window
+        const FadeEffectProxy* proxy =
+            static_cast<const FadeEffectProxy*>( effects->getProxy( "fade" ) );
+        if( proxy )
+            ((FadeEffectProxy*)proxy)->setWindowIgnored( w, true );
 
         w->addRepaintFull();
         }
