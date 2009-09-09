@@ -61,7 +61,7 @@ namespace Nitrogen {
     public slots:
 
     //! load configuration
-    void load( const KConfigGroup& conf );	
+    void load( const KConfigGroup& conf );
 
     //! save configuration
     void save( KConfigGroup& conf );
