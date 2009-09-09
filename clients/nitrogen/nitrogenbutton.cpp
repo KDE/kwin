@@ -146,7 +146,7 @@ namespace Nitrogen
 
     client_.renderWindowBackground( &painter, rect(), this, palette );
     if( client_.isActive() && client_.configuration().drawTitleOutline() && !client_.isMaximized() )
-    { client_.renderWindowBorder( &painter, rect(), this, palette ); }
+    { client_.renderWindowBorder( &painter, rect(), this, client_.backgroundPalette( this, palette ) ); }
 
     // draw dividing line
     painter.setRenderHints(QPainter::Antialiasing);
