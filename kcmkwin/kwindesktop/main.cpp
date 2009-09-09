@@ -232,7 +232,14 @@ void KWinDesktopConfig::load()
     int n = info.numberOfDesktops();
 
     m_ui->numberSpinBox->setValue(n);
-    slotChangeShortcuts(n);
+    for( int i=1; i<n; ++i )
+        {
+        KAction* a = qobject_cast<KAction*>(m_actionCollection->addAction(QString("Switch to Desktop %1").arg(n)));
+        a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction( "Switch One Desktop Down" ));
+        a->setProperty("isConfigurationAction", true);
+        a->setText( i18n("Switch to Desktop %1", n) );
+        a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+        }
 
     for( int i = 1; i <= maxDesktops; i++ )
         {
