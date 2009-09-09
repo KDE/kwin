@@ -165,14 +165,20 @@ namespace Nitrogen
         int border( 0 );
         if (respectWindowState && maximized) {
           border = 0;
-        }  else if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && isPreview() && !compositingActive() ) {
-          border = 1;
-        }  else if( lm == LM_BorderBottom && frameBorder >= NitrogenConfiguration::BorderTiny ) {
+        }  else if( lm == LM_BorderBottom && frameBorder >= NitrogenConfiguration::BorderNoSide ) {
 
           // for tiny border, the convention is to have a larger bottom area in order to
           // make resizing easier
           border = qMax(frameBorder, 4);
 
+        }  else if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && isPreview() && !compositingActive() ) {
+        
+          border = 1;
+
+        } else if( frameBorder < NitrogenConfiguration::BorderTiny ) {
+          
+          border = 0;
+          
         } else {
 
           border = frameBorder;
@@ -335,7 +341,7 @@ namespace Nitrogen
     int bottom = 1;
 
     // disable bottom corners when border frame is too small and window is not shaded
-    if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny && !isShade() ) bottom = 0;
+    if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && !isShade() ) bottom = 0;
 
     int sw = layoutMetric( LM_OuterPaddingLeft );
     int sh = layoutMetric( LM_OuterPaddingTop );
@@ -454,7 +460,7 @@ namespace Nitrogen
     }
 
     // draw bottom line
-    if( configuration().frameBorder() >= NitrogenConfiguration::BorderTiny )
+    if( configuration().frameBorder() > NitrogenConfiguration::BorderNone )
     {
       int height = qMin( HFRAMESIZE, layoutMetric( LM_BorderBottom ) );
       painter->setBrush( bottom );
