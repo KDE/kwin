@@ -97,6 +97,7 @@ namespace Nitrogen
     gridLayout->addWidget( frameBorder = new QComboBox(box), 0, 1, 1, 1 );
     frameBorder->insertItems(0, QStringList()
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
+      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNoSide, true )
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault, true )
       << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge, true )

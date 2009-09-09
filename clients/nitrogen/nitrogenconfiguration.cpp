@@ -183,6 +183,7 @@ namespace Nitrogen
     switch( value )
     {
       case BorderNone: out = translated ? i18n( "No Border" ):"No Border"; break;
+      case BorderNoSide: out = translated ? i18n( "No Side Border" ):"No Side Border"; break;
       case BorderTiny: out = translated ? i18n( "Tiny" ):"Tiny"; break;
       case BorderDefault: out = translated ? i18n( "Normal" ):"Normal"; break;
       case BorderLarge: out = translated ? i18n( "Large" ):"Large"; break;
@@ -201,6 +202,7 @@ namespace Nitrogen
   NitrogenConfiguration::FrameBorder NitrogenConfiguration::frameBorder( QString value, bool translated )
   {
       if( value == frameBorderName( BorderNone, translated ) ) return BorderNone;
+      else if( value == frameBorderName( BorderNoSide, translated ) ) return BorderNoSide;
       else if( value == frameBorderName( BorderTiny, translated ) ) return BorderTiny;
       else if( value == frameBorderName( BorderDefault, translated ) ) return BorderDefault;
       else if( value == frameBorderName( BorderLarge, translated ) ) return BorderLarge;

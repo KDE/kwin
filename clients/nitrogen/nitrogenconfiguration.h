@@ -63,6 +63,7 @@ namespace Nitrogen
     enum FrameBorder
     {
       BorderNone = 0,
+      BorderNoSide = 1,
       BorderTiny = 2,
       BorderDefault = 4,
       BorderLarge = 8,
