@@ -184,7 +184,15 @@ void SlidingPopupsEffect::propertyNotify( EffectWindow* w, long a )
     QByteArray data = w->readProperty( mAtom, mAtom, 32 );
 
     if( data.length() < 1 )
+        {
+        FadeEffectProxy* proxy =
+        static_cast<FadeEffectProxy*>( effects->getProxy( "fade" ) );
+        if( proxy )
+            proxy->setWindowIgnored(w, false);
+
         return;
+        }
+
     long* d = reinterpret_cast< long* >( data.data());
     Data animData;
     animData.start = d[ 0 ];
