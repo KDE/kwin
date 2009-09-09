@@ -429,8 +429,8 @@ namespace Nitrogen
     }
 
     // save painter
+    painter->save();
     if (clipRect.isValid()) {
-      painter->save();
       painter->setClipRegion(clipRect,Qt::IntersectClip);
     }
 
@@ -444,52 +444,57 @@ namespace Nitrogen
     r.adjust( SHADOW_WIDTH, SHADOW_WIDTH, -SHADOW_WIDTH, -SHADOW_WIDTH );
     r.adjust(0,0, 1, 1);
 
-    // draw top line
-    {
+    // mask and painting frame
+    QRegion mask;
+    QRect frame;
 
+    // top line
+    {
       int shadow_size = 5;
       int height = HFRAMESIZE;
       QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
       helper().slab( palette.color( widget->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(-shadow_size-1, 0, shadow_size+1, 2 ), painter, TileSet::Bottom );
-      renderWindowBackground(painter, rect, widget, palette );
-
+      mask += rect;
+      frame |= rect;
     }
 
-    // draw bottom line
+    // bottom line
     if( configuration().frameBorder() > NitrogenConfiguration::BorderNone )
     {
       int height = qMin( HFRAMESIZE, layoutMetric( LM_BorderBottom ) );
-      painter->setBrush( bottom );
-      painter->drawRect( QRect( r.bottomLeft()-position-QPoint(0,height), QSize( r.width(), height ) ) );
+      QRect rect( r.bottomLeft()-position-QPoint(0,height), QSize( r.width(), height ) );
+      mask += rect;
+      frame |= rect;
     }
 
     // left and right
     if( configuration().frameBorder() >= NitrogenConfiguration::BorderTiny )
     {
 
-      QLinearGradient gradient(0, r.top(), 0, r.height() );
-      gradient.setColorAt(0.0, top);
-      gradient.setColorAt(0.5, color);
-      gradient.setColorAt(1.0, bottom);
-
-      painter->setBrush( gradient );
-
       // left
       {
         int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderLeft ) );
-        painter->drawRect( QRect( r.topLeft()-position, QSize( width, r.height() ) ) );
+        QRect rect( r.topLeft()-position, QSize( width, r.height() ) );
+        mask += rect;
+        frame |= rect;
       }
 
       // right
       {
         int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderRight ) );
-        painter->drawRect( QRect( r.topRight()-position-QPoint(width,0), QSize( width, r.height() ) ) );
+        QRect rect( r.topRight()-position-QPoint(width,0), QSize( width, r.height() ) );
+        mask += rect;
+        frame |= rect;
       }
 
     }
 
+    // paint
+    painter->setClipRegion( mask, Qt::IntersectClip);
+    renderWindowBackground(painter, frame, widget, palette );
+
     // restore painter
-    if (clipRect.isValid()) painter->restore();
+    painter->restore();
 
   }
 
