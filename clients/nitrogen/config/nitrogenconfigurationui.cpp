@@ -133,7 +133,7 @@ namespace Nitrogen
     // advanced configuration
     {
       QWidget *advancedWidget = new QWidget();
-      int index = tab->addTab( advancedWidget, "&Advanced" );
+      int index = tab->addTab( advancedWidget, i18n( "&Advanced" ) );
       tab->setTabToolTip( index, i18n( "Advanced window decoration configuration options" ) );
 
       QVBoxLayout* vboxLayout = new QVBoxLayout();
@@ -203,7 +203,7 @@ namespace Nitrogen
     {
       exceptions = new NitrogenExceptionListWidget();
       exceptions->setObjectName(QString::fromUtf8("exceptions"));
-      int index = tab->addTab( exceptions, "&Window-Specific" );
+      int index = tab->addTab( exceptions, i18n( "&Window-Specific" ) );
       tab->setTabToolTip( index, i18n( "Configure window specific decoration options, based on window name" ) );
     }
 
