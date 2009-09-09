@@ -172,13 +172,13 @@ namespace Nitrogen
           border = qMax(frameBorder, 4);
 
         }  else if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && isPreview() && !compositingActive() ) {
-        
+
           border = 1;
 
         } else if( frameBorder < NitrogenConfiguration::BorderTiny ) {
-          
+
           border = 0;
-          
+
         } else {
 
           border = frameBorder;
@@ -451,11 +451,7 @@ namespace Nitrogen
       int height = HFRAMESIZE;
       QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
       helper().slab( palette.color( widget->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(-shadow_size-1, 0, shadow_size+1, 2 ), painter, TileSet::Bottom );
-
-      int offset = layoutMetric( LM_OuterPaddingTop );
-      int gradient_height = 64 + configuration().buttonSize() - 22;
-      const QWidget* window( isPreview() ? NitrogenClient::widget() : widget->window() );
-      helper().renderWindowBackground(painter, rect, widget, window, palette, offset, gradient_height );
+      renderWindowBackground(painter, rect, widget, palette );
 
     }
 
@@ -511,11 +507,8 @@ namespace Nitrogen
 
     // center
     {
-      int offset = layoutMetric( LM_OuterPaddingTop );
-      int height = 64 + configuration().buttonSize() - 22;
       int voffset = isMaximized() ? 0:HFRAMESIZE;
-      const QWidget* window( isPreview() ? widget() : widget()->window() );
-      helper().renderWindowBackground(painter, rect.adjusted( 4, voffset, -4, -4 ), widget(), window, palette, offset, height );
+      renderWindowBackground(painter, rect.adjusted( 4, voffset, -4, -4 ), widget(), palette );
     }
 
   }
