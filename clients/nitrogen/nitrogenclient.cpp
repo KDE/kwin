@@ -434,12 +434,6 @@ namespace Nitrogen
       painter->setClipRegion(clipRect,Qt::IntersectClip);
     }
 
-    painter->setPen( Qt::NoPen );
-
-    QColor color = palette.color(window->backgroundRole());
-    QColor top = helper().backgroundTopColor( color );
-    QColor bottom = helper().backgroundBottomColor( color );
-
     QRect r = (isPreview()) ? NitrogenClient::widget()->rect():window->rect();
     r.adjust( SHADOW_WIDTH, SHADOW_WIDTH, -SHADOW_WIDTH, -SHADOW_WIDTH );
     r.adjust(0,0, 1, 1);
