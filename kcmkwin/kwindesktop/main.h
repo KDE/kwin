@@ -52,10 +52,14 @@ class KWinDesktopConfig : public KCModule
         ~KWinDesktopConfig();
         QString cachedDesktopName( int desktop );
 
+        // undo all changes
+        void undo();
+
     public slots:
         virtual void save();
         virtual void load();
         virtual void defaults();
+
 
     private slots:
         void slotChangeShortcuts( int number );

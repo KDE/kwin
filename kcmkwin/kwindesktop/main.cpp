@@ -220,6 +220,7 @@ void KWinDesktopConfig::init()
 
 KWinDesktopConfig::~KWinDesktopConfig()
     {
+    undo();
     }
 
 void KWinDesktopConfig::defaults()
@@ -248,6 +249,9 @@ void KWinDesktopConfig::defaults()
 
 void KWinDesktopConfig::load()
     {
+    // This method is called on reset(). So undo all changes.
+    undo();
+
 #ifdef Q_WS_X11
     // get number of desktops
     NETRootInfo info( QX11Info::display(), NET::NumberOfDesktops | NET::DesktopNames );
@@ -348,6 +352,14 @@ void KWinDesktopConfig::save()
     QDBusConnection::sessionBus().send(message);
 
     emit changed(false);
+    }
+
+
+void KWinDesktopConfig::undo()
+    {
+    // The global shortcuts editor makes changes active immediately. In case
+    // of undo we have to undo them manually
+    m_editor->undoChanges();
     }
 
 QString KWinDesktopConfig::cachedDesktopName( int desktop )
