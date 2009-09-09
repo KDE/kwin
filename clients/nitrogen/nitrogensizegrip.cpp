@@ -44,8 +44,7 @@ namespace Nitrogen
   //_____________________________________________
   NitrogenSizeGrip::NitrogenSizeGrip( NitrogenClient* client ):
     QWidget( client->widget() ),
-    client_( client ),
-    decoration_offset_( false )
+    client_( client )
   {
 
     setAttribute(Qt::WA_NoSystemBackground );
@@ -102,12 +101,6 @@ namespace Nitrogen
       if( parent && parent != root && parent != current ) current = parent;
       else break;
     }
-
-    // if the current window is the window_id
-    // (i.e. if the client is top-level)
-    // the decoration_offset_ flag is set to true, meaning that decoration borders
-    // are taken into account when placing the widget.
-    decoration_offset_ = ( current == window_id );
 
     // reparent
     XReparentWindow( QX11Info::display(), winId(), current, 0, 0 );
@@ -224,13 +217,6 @@ namespace Nitrogen
         client().layoutMetric( NitrogenClient::LM_OuterPaddingBottom )+
         client().layoutMetric( NitrogenClient::LM_BorderBottom )
         );
-
-    } else if( decoration_offset_ ) {
-
-      // not sure whether this case still happens or not
-      position -= QPoint(
-        client().layoutMetric( NitrogenClient::LM_BorderLeft )+client().layoutMetric( NitrogenClient::LM_BorderRight ),
-        client().layoutMetric( NitrogenClient::LM_TitleHeight )+client().layoutMetric( NitrogenClient::LM_TitleEdgeTop )+client().layoutMetric( NitrogenClient::LM_TitleEdgeBottom )+client().layoutMetric( NitrogenClient::LM_BorderBottom ) );
 
     } else {
 

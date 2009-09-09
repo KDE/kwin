@@ -92,9 +92,6 @@ namespace Nitrogen
     // nitrogen client
     NitrogenClient* client_;
 
-    //! true when decoration offset must be accounted for when moving the widget
-    bool decoration_offset_;
-
   };
 
 
