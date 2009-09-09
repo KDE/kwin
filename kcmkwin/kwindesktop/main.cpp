@@ -56,6 +56,8 @@ KWinDesktopConfigForm::KWinDesktopConfigForm( QWidget* parent )
 KWinDesktopConfig::KWinDesktopConfig( QWidget* parent, const QVariantList& args )
     : KCModule( KWinDesktopConfigFactory::componentData(), parent, args )
     , m_config( KSharedConfig::openConfig( "kwinrc" ))
+    , m_actionCollection( NULL )
+    , m_switchDesktopCollection( NULL )
     {
     init();
     }
@@ -119,7 +121,27 @@ void KWinDesktopConfig::init()
     a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
 
     m_editor->addCollection( m_switchDesktopCollection, i18n( "Desktop Switching" ) );
+
+#ifdef Q_WS_X11
+    // get number of desktops
+    NETRootInfo info( QX11Info::display(), NET::NumberOfDesktops | NET::DesktopNames );
+    int n = info.numberOfDesktops();
+
+    for( int i=1; i<=n; ++i )
+        {
+        KAction* a = qobject_cast<KAction*>(m_actionCollection->addAction(QString("Switch to Desktop %1").arg(i)));
+        a->setProperty("isConfigurationAction", true);
+        a->setText( i18n("Switch to Desktop %1", i) );
+        a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+        }
+
+    // This should be after the "Switch to Desktop %1" loop. It HAS to be
+    // there after numberSpinBox is connected to slotChangeShortcuts. We would
+    // overwrite the users settings if not,
+    m_ui->numberSpinBox->setValue(n);
+
     m_editor->addCollection( m_actionCollection, i18n( "Desktop Switching" ) );
+#endif
 
     // search the effect names
     // TODO: way to recognize if a effect is not found
@@ -160,7 +182,6 @@ void KWinDesktopConfig::init()
     connect( m_ui->effectComboBox, SIGNAL(currentIndexChanged(int)), SLOT(slotEffectSelectionChanged(int)));
     connect( m_ui->effectInfoButton, SIGNAL(clicked()), SLOT(slotAboutEffectClicked()));
     connect( m_ui->effectConfigButton, SIGNAL(clicked()), SLOT(slotConfigureEffectClicked()));
-
 
     // Begin check for immutable - taken from old desktops kcm
 #ifdef Q_WS_X11
@@ -224,22 +245,12 @@ void KWinDesktopConfig::defaults()
     emit changed(true);
     }
 
+
 void KWinDesktopConfig::load()
     {
 #ifdef Q_WS_X11
     // get number of desktops
     NETRootInfo info( QX11Info::display(), NET::NumberOfDesktops | NET::DesktopNames );
-    int n = info.numberOfDesktops();
-
-    m_ui->numberSpinBox->setValue(n);
-    for( int i=1; i<n; ++i )
-        {
-        KAction* a = qobject_cast<KAction*>(m_actionCollection->addAction(QString("Switch to Desktop %1").arg(n)));
-        a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction( "Switch One Desktop Down" ));
-        a->setProperty("isConfigurationAction", true);
-        a->setText( i18n("Switch to Desktop %1", n) );
-        a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
-        }
 
     for( int i = 1; i <= maxDesktops; i++ )
         {
@@ -248,6 +259,7 @@ void KWinDesktopConfig::load()
         m_ui->desktopNames->setName( i, name );
         }
 #endif
+
     // Popup info
     KConfigGroup popupInfo( m_config, "PopupInfo" );
     m_ui->popupInfoCheckBox->setChecked( popupInfo.readEntry( "ShowPopup", false ));
