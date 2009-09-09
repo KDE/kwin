@@ -85,6 +85,9 @@ namespace Nitrogen
         OxygenHelper& helper( void ) const
         { return helper_; }
 
+        //! palette background
+        QPalette backgroundPalette( const QWidget*, QPalette ) const;
+
         //! window background
         virtual void renderWindowBackground( QPainter*, const QRect&, const QWidget*, const QPalette& ) const;
 
@@ -147,9 +150,6 @@ namespace Nitrogen
           qreal width;
           bool active;
         };
-
-        //! palette background
-        QPalette backgroundPalette( const QWidget*, QPalette ) const;
 
         //! calculate mask
         QRegion calcMask( void ) const;
