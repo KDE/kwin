@@ -52,7 +52,7 @@ namespace Nitrogen
 
       switch( index.column() )
       {
-        case TYPE: return exception.typeName();
+        case TYPE: return exception.typeName( true );
         case REGEXP: return exception.regExp().pattern();
         default: return QVariant();
         break;
