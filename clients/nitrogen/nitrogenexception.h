@@ -122,11 +122,11 @@ namespace Nitrogen
     //!@name exception type
     //@{
 
-    static QString typeName( Type );
-    static Type type( const QString& name );
+    static QString typeName( Type, bool );
+    static Type type( const QString& name, bool );
 
-    virtual QString typeName( void ) const
-    { return typeName( type() ); }
+    virtual QString typeName( bool translated ) const
+    { return typeName( type(), translated ); }
 
     virtual Type type( void ) const
     { return type_; }

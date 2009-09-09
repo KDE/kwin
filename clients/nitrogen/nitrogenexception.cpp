@@ -24,6 +24,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
+#include <KLocale>
 #include "nitrogenexception.h"
 
 namespace Nitrogen
@@ -40,7 +41,7 @@ namespace Nitrogen
     // exception type
     setType( type(
       group.readEntry( NitrogenConfig::TYPE,
-      default_configuration.typeName() ) ) );
+      default_configuration.typeName( false ) ), false ) );
 
     // exception pattern
     regExp().setPattern( group.readEntry( NitrogenConfig::PATTERN, QString() ) );
@@ -62,7 +63,7 @@ namespace Nitrogen
   {
 
     NitrogenConfiguration::write( group );
-    group.writeEntry( NitrogenConfig::TYPE, typeName() );
+    group.writeEntry( NitrogenConfig::TYPE, typeName( false ) );
     group.writeEntry( NitrogenConfig::PATTERN, regExp().pattern() );
     group.writeEntry( NitrogenConfig::ENABLED, enabled() );
     group.writeEntry( NitrogenConfig::MASK, mask() );
@@ -70,12 +71,12 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  QString NitrogenException::typeName( Type type )
+  QString NitrogenException::typeName( Type type, bool translated )
   {
     switch( type )
     {
-      case WindowTitle: return "Window Title";
-      case WindowClassName: return "Window Class Name";
+      case WindowTitle: return translated ? i18n( "Window Title" ):"Window Title";
+      case WindowClassName: return translated ? i18n( "Window Class Name" ):"Window Class Name";
       default: assert( false );
     }
 
@@ -83,10 +84,10 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  NitrogenException::Type NitrogenException::type( const QString& value )
+  NitrogenException::Type NitrogenException::type( const QString& value, bool translated )
   {
-    if( value == "Window Title" ) return WindowTitle;
-    else if( value == "Window Class Name" ) return WindowClassName;
+    if( value == typeName( WindowTitle, translated ) ) return WindowTitle;
+    else if( value == typeName( WindowClassName, translated ) ) return WindowClassName;
     else return WindowClassName;
   }
 
