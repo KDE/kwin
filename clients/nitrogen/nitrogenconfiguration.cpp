@@ -113,16 +113,16 @@ namespace Nitrogen
   //__________________________________________________
   QString NitrogenConfiguration::titleAlignmentName( Qt::Alignment value, bool translated )
   {
-    const char* out;
+    QString out;
     switch( value )
     {
-      case Qt::AlignLeft: out = "Left"; break;
-      case Qt::AlignHCenter: out = "Center"; break;
-      case Qt::AlignRight: out = "Right"; break;
+      case Qt::AlignLeft: out = translated ? i18n( "Left" ):"Left"; break;
+      case Qt::AlignHCenter: out = translated ? i18n( "Center" ):"Center"; break;
+      case Qt::AlignRight: out = translated ? i18n( "Right" ):"Right"; break;
       default: return NitrogenConfiguration().titleAlignmentName( translated );
     }
 
-    return translated ? i18n(out):out;
+    return out;
 
   }
 
@@ -138,17 +138,17 @@ namespace Nitrogen
   //__________________________________________________
   QString NitrogenConfiguration::buttonSizeName( ButtonSize value, bool translated )
   {
-    const char* out;
+    QString out;
     switch( value )
     {
-      case ButtonSmall: out = "Small"; break;
-      case ButtonDefault: out = "Normal"; break;
-      case ButtonLarge: out = "Large"; break;
-      case ButtonHuge: out = "Huge"; break;
+      case ButtonSmall: out = translated ? i18n( "Small" ):"Small"; break;
+      case ButtonDefault: out = translated ? i18n( "Normal" ):"Normal"; break;
+      case ButtonLarge: out = translated ? i18n( "Large" ):"Large"; break;
+      case ButtonHuge: out = translated ? i18n( "Huge" ):"Huge"; break;
       default: return NitrogenConfiguration().buttonSizeName( translated );
     }
 
-    return translated ? i18n(out):out;
+    return out;
 
   }
 
@@ -179,21 +179,21 @@ namespace Nitrogen
   //__________________________________________________
   QString NitrogenConfiguration::frameBorderName( FrameBorder value, bool translated )
   {
-    const char* out;
+    QString out;
     switch( value )
     {
-      case BorderNone: out = "No Border"; break;
-      case BorderTiny: out = "Tiny"; break;
-      case BorderDefault: out = "Normal"; break;
-      case BorderLarge: out = "Large"; break;
-      case BorderVeryLarge: out = "Very Large"; break;
-      case BorderHuge: out = "Huge"; break;
-      case BorderVeryHuge: out = "Very Huge"; break;
-      case BorderOversized: out = "Oversized"; break;
+      case BorderNone: out = translated ? i18n( "No Border" ):"No Border"; break;
+      case BorderTiny: out = translated ? i18n( "Tiny" ):"Tiny"; break;
+      case BorderDefault: out = translated ? i18n( "Normal" ):"Normal"; break;
+      case BorderLarge: out = translated ? i18n( "Large" ):"Large"; break;
+      case BorderVeryLarge: out = translated ? i18n( "Very Large" ):"Very Large"; break;
+      case BorderHuge: out = translated ? i18n( "Huge" ):"Huge"; break;
+      case BorderVeryHuge: out = translated ? i18n( "Very Huge" ):"Very Huge"; break;
+      case BorderOversized: out = translated ? i18n( "Oversized" ):"Oversized"; break;
       default: return NitrogenConfiguration().frameBorderName( translated );
     }
 
-    return translated ? i18n(out):out;
+    return out;
 
   }
 
@@ -214,15 +214,15 @@ namespace Nitrogen
   //__________________________________________________
   QString NitrogenConfiguration::blendColorName( BlendColorType value, bool translated )
   {
-    const char* out;
+    QString out;
     switch( value )
     {
-      case NoBlending: out = "Solid Color"; break;
-      case RadialBlending: out = "Radial Gradient"; break;
+      case NoBlending: out = translated ? i18n( "Solid Color" ):"Solid Color"; break;
+      case RadialBlending: out = translated ? i18n( "Radial Gradient" ):"Radial Gradient"; break;
       default: return NitrogenConfiguration().blendColorName( translated );
     }
 
-    return translated ? i18n(out):out;
+    return out;
 
   }
 
@@ -237,15 +237,15 @@ namespace Nitrogen
   //__________________________________________________
   QString NitrogenConfiguration::sizeGripModeName( SizeGripMode value, bool translated )
   {
-    const char* out;
+    QString out;
     switch( value )
     {
-      case SizeGripNever: out = "Always Hide Extra Size Grip"; break;
-      case SizeGripWhenNeeded: out = "Show Extra Size Grip When Needed"; break;
+      case SizeGripNever: out = translated ? i18n( "Always Hide Extra Size Grip" ):"Always Hide Extra Size Grip"; break;
+      case SizeGripWhenNeeded: out = translated ? i18n( "Show Extra Size Grip When Needed" ):"Show Extra Size Grip When Needed"; break;
       default: return NitrogenConfiguration().sizeGripModeName( translated );
     }
 
-    return translated ? i18n(out):out;
+    return out;
 
   }
 
