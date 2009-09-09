@@ -65,8 +65,8 @@ namespace Nitrogen
     gridLayout->addWidget( label = new QLabel( i18n( "Exception type: " ), box ), 0, 0, 1, 1 );
     gridLayout->addWidget( exceptionType = new QComboBox(box), 0, 1, 1, 1 );
     exceptionType->insertItems(0, QStringList()
-      << NitrogenException::typeName( NitrogenException::WindowClassName )
-      << NitrogenException::typeName( NitrogenException::WindowTitle ) );
+      << NitrogenException::typeName( NitrogenException::WindowClassName, true )
+      << NitrogenException::typeName( NitrogenException::WindowTitle, true ) );
     exceptionType->setToolTip( i18n(
       "Select here the window characteristic used to \n"
       "identify windows to which the exception apply." ) );
@@ -156,7 +156,7 @@ namespace Nitrogen
     exception_ = exception;
 
     // type
-    exceptionType->setCurrentIndex( exceptionType->findText( exception.typeName() ) );
+    exceptionType->setCurrentIndex( exceptionType->findText( exception.typeName( true ) ) );
 
     // regular expression
     exceptionEditor->setText( exception.regExp().pattern() );
@@ -184,7 +184,7 @@ namespace Nitrogen
   NitrogenException NitrogenExceptionDialog::exception( void ) const
   {
     NitrogenException exception( exception_ );
-    exception.setType( NitrogenException::type( exceptionType->currentText() ) );
+    exception.setType( NitrogenException::type( exceptionType->currentText(), true ) );
     exception.regExp().setPattern( exceptionEditor->text() );
     exception.setFrameBorder( NitrogenException::frameBorder( frameBorder->currentText(), true ) );
     exception.setBlendColor( NitrogenException::blendColor( blendColor->currentText(), true ) );
