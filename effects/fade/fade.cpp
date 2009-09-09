@@ -33,7 +33,7 @@ FadeEffect::FadeEffect()
     reconfigure( ReconfigureAll );
     }
 
-const void* FadeEffect::proxy() const
+void* FadeEffect::proxy()
     {
     return &m_proxy;
     }
@@ -199,6 +199,7 @@ void FadeEffect::windowClosed( EffectWindow* w )
 void FadeEffect::windowDeleted( EffectWindow* w )
     {
     windows.remove( w );
+    ignoredWindows.remove( w );
     }
 
 void FadeEffect::setWindowIgnored( EffectWindow* w, bool ignore )

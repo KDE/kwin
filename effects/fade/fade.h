@@ -43,8 +43,7 @@ class FadeEffect
         virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void windowDeleted( EffectWindow* c );
-        virtual const void* proxy() const;
-        
+        virtual void* proxy();
 
         void setWindowIgnored( EffectWindow* w, bool ignore );
         bool isFadeWindow( EffectWindow* w );
