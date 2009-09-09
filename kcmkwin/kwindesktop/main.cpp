@@ -89,21 +89,32 @@ void KWinDesktopConfig::init()
 
     // actions for switch desktop collection - other action is filled dynamically
     KAction* a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction( "Switch to Next Desktop" ));
+    a->setProperty("isConfigurationAction", true);
     a->setText( i18n( "Switch to Next Desktop" ));
     a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+
     a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction( "Switch to Previous Desktop" ));
+    a->setProperty("isConfigurationAction", true);
     a->setText( i18n( "Switch to Previous Desktop" ));
     a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+
     a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction( "Switch One Desktop to the Right" ));
+    a->setProperty("isConfigurationAction", true);
     a->setText( i18n( "Switch One Desktop to the Right" ));
     a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+
     a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction( "Switch One Desktop to the Left" ));
+    a->setProperty("isConfigurationAction", true);
     a->setText( i18n( "Switch One Desktop to the Left" ));
     a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+
     a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction( "Switch One Desktop Up" ));
+    a->setProperty("isConfigurationAction", true);
     a->setText( i18n( "Switch One Desktop Up" ));
     a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
+
     a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction( "Switch One Desktop Down" ));
+    a->setProperty("isConfigurationAction", true);
     a->setText( i18n( "Switch One Desktop Down" ));
     a->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
 
@@ -396,6 +407,7 @@ void KWinDesktopConfig::slotChangeShortcuts( int number )
             // add desktop
             int desktop = m_actionCollection->count() + 1;
             KAction* action = qobject_cast<KAction*>(m_actionCollection->addAction(QString("Switch to Desktop %1").arg(desktop)));
+            action->setProperty("isConfigurationAction", true);
             action->setText( i18n("Switch to Desktop %1", desktop) );
             action->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
             QString shortcutString = extrapolatedShortcut(desktop);
@@ -428,7 +440,6 @@ void KWinDesktopConfig::slotChangeShortcuts( int number )
                         }
                     }
                 }
-            action->setProperty("isConfigurationAction", true);
             }
         }
     m_editor->clearCollections();
