@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenconfiguration.cpp
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 #include <KLocale>
 
@@ -33,7 +33,7 @@
 
 namespace Nitrogen
 {
- 
+
   //__________________________________________________
   NitrogenConfiguration::NitrogenConfiguration( void ):
     titleAlignment_( Qt::AlignLeft ),
@@ -48,68 +48,68 @@ namespace Nitrogen
 
   //__________________________________________________
   NitrogenConfiguration::NitrogenConfiguration( KConfigGroup group )
-  { 
-    
+  {
+
     // used to set default values when entries are not found in kconfig
     NitrogenConfiguration defaultConfiguration;
-    
+
     // title alignment
-    setTitleAlignment( titleAlignment( 
-      group.readEntry( NitrogenConfig::TITLE_ALIGNMENT, 
+    setTitleAlignment( titleAlignment(
+      group.readEntry( NitrogenConfig::TITLE_ALIGNMENT,
       defaultConfiguration.titleAlignmentName( false ) ), false ) );
 
     // button size
-    setButtonSize( buttonSize( 
+    setButtonSize( buttonSize(
       group.readEntry( NitrogenConfig::BUTTON_SIZE,
       defaultConfiguration.buttonSizeName( false ) ), false ) );
 
     // frame border
-    setFrameBorder( frameBorder( 
-      group.readEntry( NitrogenConfig::FRAME_BORDER, 
+    setFrameBorder( frameBorder(
+      group.readEntry( NitrogenConfig::FRAME_BORDER,
       defaultConfiguration.frameBorderName( false ) ), false ) );
-    
+
     // blend color
     setBlendColor( blendColor(
-      group.readEntry( NitrogenConfig::BLEND_COLOR, 
+      group.readEntry( NitrogenConfig::BLEND_COLOR,
       defaultConfiguration.blendColorName( false ) ), false ) );
 
     // size grip
-    setSizeGripMode( sizeGripMode( 
-      group.readEntry( NitrogenConfig::SIZE_GRIP_MODE, 
+    setSizeGripMode( sizeGripMode(
+      group.readEntry( NitrogenConfig::SIZE_GRIP_MODE,
       defaultConfiguration.sizeGripModeName( false ) ), false ) );
-    
+
     // draw separator
-    setDrawSeparator( group.readEntry( 
-      NitrogenConfig::DRAW_SEPARATOR, 
+    setDrawSeparator( group.readEntry(
+      NitrogenConfig::DRAW_SEPARATOR,
       defaultConfiguration.drawSeparator() ) );
-    
+
     // title outline
-    setDrawTitleOutline( group.readEntry( 
-      NitrogenConfig::DRAW_TITLE_OUTLINE, 
+    setDrawTitleOutline( group.readEntry(
+      NitrogenConfig::DRAW_TITLE_OUTLINE,
       defaultConfiguration.drawTitleOutline() ) );
-    
+
     // oxygen shadows
     setUseOxygenShadows( group.readEntry(
       NitrogenConfig::USE_OXYGEN_SHADOWS,
       defaultConfiguration.useOxygenShadows() ) );
   }
-    
+
   //__________________________________________________
   void NitrogenConfiguration::write( KConfigGroup& group ) const
   {
-    
+
     group.writeEntry( NitrogenConfig::TITLE_ALIGNMENT, titleAlignmentName( false ) );
     group.writeEntry( NitrogenConfig::BUTTON_SIZE, buttonSizeName( false ) );
     group.writeEntry( NitrogenConfig::BLEND_COLOR, blendColorName( false ) );
     group.writeEntry( NitrogenConfig::FRAME_BORDER, frameBorderName( false ) );
     group.writeEntry( NitrogenConfig::SIZE_GRIP_MODE, sizeGripModeName( false ) );
-    
+
     group.writeEntry( NitrogenConfig::DRAW_SEPARATOR, drawSeparator() );
     group.writeEntry( NitrogenConfig::DRAW_TITLE_OUTLINE, drawTitleOutline() );
     group.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
-    
+
   }
-    
+
   //__________________________________________________
   QString NitrogenConfiguration::titleAlignmentName( Qt::Alignment value, bool translated )
   {
@@ -121,11 +121,11 @@ namespace Nitrogen
       case Qt::AlignRight: out = "Right"; break;
       default: return NitrogenConfiguration().titleAlignmentName( translated );
     }
-    
+
     return translated ? i18n(out):out;
-    
+
   }
-  
+
   //__________________________________________________
   Qt::Alignment NitrogenConfiguration::titleAlignment( QString value, bool translated )
   {
@@ -134,7 +134,7 @@ namespace Nitrogen
     else if (value == titleAlignmentName( Qt::AlignRight, translated ) ) return Qt::AlignRight;
     else return NitrogenConfiguration().titleAlignment();
   }
-  
+
   //__________________________________________________
   QString NitrogenConfiguration::buttonSizeName( ButtonSize value, bool translated )
   {
@@ -147,9 +147,9 @@ namespace Nitrogen
       case ButtonHuge: out = "Huge"; break;
       default: return NitrogenConfiguration().buttonSizeName( translated );
     }
-    
+
     return translated ? i18n(out):out;
-    
+
   }
 
   //__________________________________________________
@@ -168,14 +168,14 @@ namespace Nitrogen
     switch( value )
     {
       case ButtonSmall: return 13;
-      case ButtonDefault: return 16; 
+      case ButtonDefault: return 16;
       case ButtonLarge: return 24;
       case ButtonHuge: return 35;
       default: return NitrogenConfiguration().iconScale();
     }
-    
+
   }
-    
+
   //__________________________________________________
   QString NitrogenConfiguration::frameBorderName( FrameBorder value, bool translated )
   {
@@ -192,11 +192,11 @@ namespace Nitrogen
       case BorderOversized: out = "Oversized"; break;
       default: return NitrogenConfiguration().frameBorderName( translated );
     }
-    
+
     return translated ? i18n(out):out;
-    
+
   }
-  
+
   //__________________________________________________
   NitrogenConfiguration::FrameBorder NitrogenConfiguration::frameBorder( QString value, bool translated )
   {
@@ -210,7 +210,7 @@ namespace Nitrogen
       else if( value == frameBorderName( BorderOversized, translated ) ) return BorderOversized;
       else return NitrogenConfiguration().frameBorder();
   }
-  
+
   //__________________________________________________
   QString NitrogenConfiguration::blendColorName( BlendColorType value, bool translated )
   {
@@ -221,11 +221,11 @@ namespace Nitrogen
       case RadialBlending: out = "Radial Gradient"; break;
       default: return NitrogenConfiguration().blendColorName( translated );
     }
-    
+
     return translated ? i18n(out):out;
-    
+
   }
-  
+
   //__________________________________________________
   NitrogenConfiguration::BlendColorType NitrogenConfiguration::blendColor( QString value, bool translated )
   {
@@ -233,7 +233,7 @@ namespace Nitrogen
     else if( value == blendColorName( RadialBlending, translated ) ) return RadialBlending;
     else return NitrogenConfiguration().blendColor();
   }
-  
+
   //__________________________________________________
   QString NitrogenConfiguration::sizeGripModeName( SizeGripMode value, bool translated )
   {
@@ -244,11 +244,11 @@ namespace Nitrogen
       case SizeGripWhenNeeded: out = "Show Extra Size Grip When Needed"; break;
       default: return NitrogenConfiguration().sizeGripModeName( translated );
     }
-    
+
     return translated ? i18n(out):out;
-    
+
   }
-  
+
   //__________________________________________________
   NitrogenConfiguration::SizeGripMode NitrogenConfiguration::sizeGripMode( QString value, bool translated )
   {
@@ -256,11 +256,11 @@ namespace Nitrogen
     else if( value == sizeGripModeName( SizeGripWhenNeeded, translated ) ) return SizeGripWhenNeeded;
     else return NitrogenConfiguration().sizeGripMode();
   }
-  
+
   //________________________________________________________
   bool NitrogenConfiguration::operator == (const NitrogenConfiguration& other ) const
   {
-    
+
     return
       titleAlignment() == other.titleAlignment() &&
       buttonSize() == other.buttonSize() &&

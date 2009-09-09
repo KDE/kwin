@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenconfigurationui.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,7 +22,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <kdeversion.h>
@@ -39,17 +39,17 @@ namespace Nitrogen
   //_____________________________________________
   class NitrogenConfigurationUI: public QWidget
   {
-    
+
     Q_OBJECT
-    
+
     public:
 
     //! constructor
     NitrogenConfigurationUI( QWidget* );
-    
+
     //! setup ui
     void setupUI( void );
-    
+
     //! title alignment
     QComboBox *titleAlignment;
 
@@ -64,22 +64,22 @@ namespace Nitrogen
 
     //! size grip
     QComboBox *sizeGripMode;
-    
+
     //! draw separator
     QCheckBox *drawSeparator;
-    
+
     //! active window title outline
     QCheckBox *titleOutline;
 
     //! nitrogen shadow
     QCheckBox *useOxygenShadows;
-    
+
     //! about nitrogen
     QPushButton *aboutNitrogen;
-    
-    NitrogenExceptionListWidget *exceptions; 
+
+    NitrogenExceptionListWidget *exceptions;
   };
-  
+
 }
 
 #endif

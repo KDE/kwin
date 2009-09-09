@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogensizegrip.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +23,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <QWidget>
@@ -39,65 +39,65 @@ namespace Nitrogen
   //! implements size grip for all widgets
   class NitrogenSizeGrip: public QWidget
   {
-    
-    public: 
-    
+
+    public:
+
     //! constructor
     NitrogenSizeGrip( NitrogenClient* );
-    
+
     //! constructor
     virtual ~NitrogenSizeGrip( void );
-    
+
     //! event filter
     virtual bool eventFilter( QObject*, QEvent* );
 
     public slots:
-    
+
     //! update background color
     void activeChange( void );
 
     protected slots:
-    
+
     //! embed into parent widget
     void embed( void );
-    
+
     protected:
-    
+
     //!@name event handlers
     //@{
-    
+
     //! paint
     virtual void paintEvent( QPaintEvent* );
-    
+
     //! mouse press
     virtual void mousePressEvent( QMouseEvent* );
-   
+
     //@}
-        
+
     //! client
     NitrogenClient& client( void ) const
     { return *client_; }
-    
+
     //! update position
     void updatePosition( void );
-    
+
     private:
-    
+
     //! grip size
-    enum { 
+    enum {
       OFFSET = 0,
-      GRIP_SIZE = 14 
+      GRIP_SIZE = 14
     };
-      
+
     // nitrogen client
     NitrogenClient* client_;
-    
+
     //! true when decoration offset must be accounted for when moving the widget
     bool decoration_offset_;
-        
+
   };
-  
-  
+
+
 }
 
 #endif

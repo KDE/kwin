@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenbutton.h
 // -------------------
-// 
+//
 // Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
 // Copyright (c) 2006, 2007 Casper Boemann <cbr@boemann.dk>
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -36,87 +36,87 @@
 namespace Nitrogen
 {
   class NitrogenClient;
-  
+
   enum ButtonStatus {
     Normal,
     Hovered,
-    Pressed 
+    Pressed
   };
-    
+
   Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
-    
+
   class NitrogenButton : public KCommonDecorationButton
   {
     public:
-    
+
     //! constructor
     explicit NitrogenButton(NitrogenClient &parent,
       const QString &tip=NULL,
       ButtonType type=ButtonHelp);
-    
+
     //! destructor
     ~NitrogenButton();
-    
+
     //! destructor
     QSize sizeHint() const;
-    
+
     //! last button mouse
-    // int lastMousePress() const 
+    // int lastMousePress() const
     // {return lastmouse_;}
-    
+
     //! reset
     void reset(long unsigned int)
     {repaint();}
-    
+
     //! button type
     ButtonType type( void ) const
     { return type_; }
-    
+
     protected:
-    
+
     //! press event
     void mousePressEvent(QMouseEvent* );
-    
+
     //! release event
     void mouseReleaseEvent(QMouseEvent* );
-        
+
     //! enter event
     void enterEvent( QEvent* );
-    
+
     //! leave event
     void leaveEvent(QEvent* );
-    
+
     //! paint
     void paintEvent(QPaintEvent* );
-    
+
     private:
 
     //! draw icon
     void drawIcon(QPainter*, QPalette&, ButtonType& );
-    
+
     //! color
     QColor buttonDetailColor(const QPalette& );
-    
+
     private:
-    
+
     //! parent client
     NitrogenClient &client_;
-    
+
     //! helper
     OxygenHelper &helper_;
-    
+
     //! button type
     ButtonType type_;
-    
+
     //! button status
     ButtonState status_;
-    
+
     //! last button mouse pressed
     int lastmouse_;
     bool colorCacheInvalid_;
     QColor cachedButtonDetailColor_;
   };
-  
+
 } //namespace Nitrogen
 
 #endif

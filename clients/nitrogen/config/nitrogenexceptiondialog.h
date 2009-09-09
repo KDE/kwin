@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenexceptiondialog.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,7 +22,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KDialog>
@@ -36,76 +36,76 @@
 
 namespace Nitrogen
 {
-  
+
   //! nitrogen exceptions list
   class NitrogenExceptionDialog: public KDialog
   {
-    
+
     public:
-    
+
     //! constructor
     NitrogenExceptionDialog( QWidget* parent );
 
     //! set exception
     void setException( NitrogenException );
-    
+
     //! get exception
     NitrogenException exception( void ) const;
-    
+
     private:
-    
+
     //! line editor
     KLineEdit* exceptionEditor;
-    
+
     //! blend combobox
     QComboBox* exceptionType;
 
     //! border size
     QComboBox* frameBorder;
-    
+
     //! blend combobox
     QComboBox* blendColor;
 
     //! size grip
     QComboBox* sizeGripMode;
-    
+
     //! map mask and checkbox
     typedef std::map< NitrogenException::AttributesMask, QCheckBox*> CheckBoxMap;
-    
+
     //! map mask and checkbox
     CheckBoxMap checkboxes_;
-    
+
     //! internal exception
     NitrogenException exception_;
-    
+
     //! local combobox to handle configuration checkboxes
     class ComboBox: public QComboBox
     {
-      public: 
-      
+      public:
+
       static const QString Yes;
       static const QString No;
-      
+
       //! constructor
       ComboBox( QWidget* parent );
-      
+
       //! set value
       void setValue( bool checked );
-       
+
       //! true if yes is checkd
       bool isChecked( void ) const;
-      
-      
+
+
     };
-    
+
     //! overwrite colors
     ComboBox* titleOutline;
-    
+
     //! draw separator
     ComboBox* drawSeparator;
-    
+
   };
-  
+
 }
 
 #endif

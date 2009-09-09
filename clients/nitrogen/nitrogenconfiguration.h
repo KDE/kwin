@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenconfiguration.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,14 +23,14 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KConfigGroup>
 
 namespace NitrogenConfig
 {
-  
+
   static const QString TITLE_ALIGNMENT = "TitleAlignment";
   static const QString BUTTON_SIZE = "ButtonSize";
   static const QString DRAW_SEPARATOR = "DrawSeparator";
@@ -39,7 +39,7 @@ namespace NitrogenConfig
   static const QString BLEND_COLOR = "BlendColor";
   static const QString SIZE_GRIP_MODE = "SizeGripMode";
   static const QString USE_OXYGEN_SHADOWS = "UseOxygenShadows";
-  
+
 }
 
 namespace Nitrogen
@@ -47,7 +47,7 @@ namespace Nitrogen
 
   class NitrogenConfiguration
   {
-    
+
     public:
 
     //! button size enumeration
@@ -58,7 +58,7 @@ namespace Nitrogen
       ButtonLarge = 32,
       ButtonHuge = 48
     };
-    
+
     //! frame border enumeration
     enum FrameBorder
     {
@@ -77,36 +77,36 @@ namespace Nitrogen
       NoBlending,
       RadialBlending
     };
-    
+
     //! size grip mode
     enum SizeGripMode
     {
       SizeGripNever,
       SizeGripWhenNeeded
     };
-    
+
     //! default constructor
     NitrogenConfiguration( void );
- 
+
     //! constructor from KConfig
     NitrogenConfiguration( KConfigGroup );
-    
+
     //! destructor
     virtual ~NitrogenConfiguration( void )
     {}
-        
+
     //! equal to operator
     bool operator == ( const NitrogenConfiguration& ) const;
-    
+
     //! write to kconfig group
     virtual void write( KConfigGroup& ) const;
-    
+
     //!@name title alignment
     //@{
-    
+
     static QString titleAlignmentName( Qt::Alignment, bool translated );
     static Qt::Alignment titleAlignment( QString, bool translated );
-    
+
     virtual Qt::Alignment titleAlignment() const
     { return titleAlignment_; }
 
@@ -115,59 +115,59 @@ namespace Nitrogen
 
     virtual void setTitleAlignment( Qt::Alignment value )
     { titleAlignment_ = value; }
-    
+
     virtual void setTitleAlignment( QString value, bool translated )
     { titleAlignment_ = titleAlignment( value, translated ); }
 
     //@}
-    
+
     //!@name button size
     //@{
-    
+
     static QString buttonSizeName( ButtonSize, bool translated );
     static ButtonSize buttonSize( QString, bool translated );
     static int iconScale( ButtonSize );
-    
+
     virtual ButtonSize buttonSize( void ) const
     { return buttonSize_; }
-      
+
     virtual int iconScale( void ) const
     { return iconScale( buttonSize() ); }
-    
+
     virtual QString buttonSizeName( bool translated ) const
     { return buttonSizeName( buttonSize(), translated ); }
-    
+
     virtual void setButtonSize( ButtonSize value )
     { buttonSize_ = value; }
-    
+
     //@}
-        
+
     //!@name frame border
     //@{
-    
+
     static QString frameBorderName( FrameBorder, bool translated );
     static FrameBorder frameBorder( QString, bool translated );
 
     virtual FrameBorder frameBorder() const
     { return frameBorder_; }
-    
+
     virtual QString frameBorderName( bool translated ) const
     { return frameBorderName( frameBorder(), translated ); }
 
     virtual void setFrameBorder( FrameBorder value )
     { frameBorder_ = value; }
-        
+
     virtual void setFrameBorder( QString value, bool translated )
     { frameBorder_ = frameBorder( value, translated ); }
 
     //@}
-    
+
     //!@name blend color
     //@{
-    
+
     static QString blendColorName( BlendColorType, bool translated );
     static BlendColorType blendColor( QString, bool translated );
-    
+
     virtual BlendColorType blendColor( void ) const
     { return blendColor_; }
 
@@ -175,19 +175,19 @@ namespace Nitrogen
     { return blendColorName( blendColor(), translated ); }
 
     virtual void setBlendColor( BlendColorType value )
-    { blendColor_ = value; }    
-    
+    { blendColor_ = value; }
+
     virtual void setBlendColor( QString value, bool translated )
-    { blendColor_ = blendColor( value, translated ); }    
+    { blendColor_ = blendColor( value, translated ); }
 
     //@}
-        
+
     //!@name size grip
     //@{
-    
+
     static QString sizeGripModeName( SizeGripMode, bool translated );
     static SizeGripMode sizeGripMode( QString, bool translated );
-    
+
     virtual SizeGripMode sizeGripMode( void ) const
     { return sizeGripMode_; }
 
@@ -195,21 +195,21 @@ namespace Nitrogen
     { return sizeGripModeName( sizeGripMode(), translated ); }
 
     virtual void setSizeGripMode( SizeGripMode value )
-    { sizeGripMode_ = value; }    
-    
+    { sizeGripMode_ = value; }
+
     virtual void setSizeGripMode( QString value, bool translated )
-    { sizeGripMode_ = sizeGripMode( value, translated ); }    
+    { sizeGripMode_ = sizeGripMode( value, translated ); }
 
     //! draw size grip
     virtual bool drawSizeGrip( void ) const
     { return (sizeGripMode() == SizeGripWhenNeeded && frameBorder() == BorderNone ); }
-    
+
     //@}
 
     //! separator
     virtual bool drawSeparator( void ) const
     { return drawSeparator_; }
-    
+
     //! separator
     virtual void setDrawSeparator( bool value )
     { drawSeparator_ = value; }
@@ -217,7 +217,7 @@ namespace Nitrogen
     //! title outline
     virtual bool drawTitleOutline( void ) const
     { return drawTitleOutline_; }
-    
+
     //! title outline
     virtual void setDrawTitleOutline( bool value )
     { drawTitleOutline_ = value; }
@@ -225,39 +225,39 @@ namespace Nitrogen
     //! oxygen shadows
     virtual bool useOxygenShadows( void ) const
     { return useOxygenShadows_; }
-    
+
     //! oxygen shadows
     virtual void setUseOxygenShadows( bool value )
     { useOxygenShadows_ = value; }
-    
+
     private:
-    
-    //! title alignment 
+
+    //! title alignment
     Qt::Alignment titleAlignment_;
 
     //! button size
     ButtonSize buttonSize_;
-    
+
     //! blend color
-    FrameBorder frameBorder_; 
+    FrameBorder frameBorder_;
 
     //! frame border
     BlendColorType blendColor_;
 
     //! size grip mode
     SizeGripMode sizeGripMode_;
-    
+
     //! separator
     bool drawSeparator_;
-    
+
     //! active window title outline
     bool drawTitleOutline_;
-    
+
     //! oxygen shadows
     bool useOxygenShadows_;
-    
+
   };
-  
+
 }
 
 #endif

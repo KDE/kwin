@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenconfigurationui.cpp
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <kdeversion.h>
@@ -36,7 +36,7 @@
 
 namespace Nitrogen
 {
-  
+
   //_________________________________________________________
   NitrogenConfigurationUI::NitrogenConfigurationUI( QWidget* parent ):
     QWidget( parent ),
@@ -48,37 +48,37 @@ namespace Nitrogen
     drawSeparator(0),
     titleOutline(0)
   { setupUI(); }
-    
+
   //_________________________________________________________
   void NitrogenConfigurationUI::setupUI( void )
   {
-        
+
     QVBoxLayout* mainLayout = new QVBoxLayout( this );
     mainLayout->setSpacing(6);
     mainLayout->setMargin(0);
-    
+
     // tab widget for basic and advanced mode
     QTabWidget* tab( new QTabWidget( this ) );
     mainLayout->addWidget( tab );
-    
+
     // basic configuration
     {
       QWidget *basicWidget = new QWidget();
       int index = tab->addTab( basicWidget, i18n("&General") );
       tab->setTabToolTip( index, i18n( "Basic window decoration configuration options" ) );
-      
+
       QVBoxLayout* vboxLayout = new QVBoxLayout();
       vboxLayout->setMargin( 6 );
       vboxLayout->setSpacing( 6 );
       basicWidget->setLayout( vboxLayout );
-      
+
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setSpacing(6);
       gridLayout->setMargin(0);
       vboxLayout->addLayout( gridLayout );
 
       gridLayout->setColumnStretch(2, 1);
-      
+
       // frame border
       QLabel* label;
       gridLayout->addWidget( label = new QLabel( i18n("Border size:"), basicWidget ), 0, 0, 1, 1);
@@ -94,60 +94,60 @@ namespace Nitrogen
         << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryHuge, true )
         << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderOversized, true )
         );
-      
+
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( frameBorder );
-      
+
       // title alignment
       gridLayout->addWidget( label = new QLabel( i18n("Title alignment:"), basicWidget ), 1, 0, 1, 1 );
       gridLayout->addWidget( titleAlignment = new QComboBox(basicWidget), 1, 1, 1, 1 );
-      titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));  
+      titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));
       titleAlignment->insertItems(0, QStringList()
         << NitrogenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
         << NitrogenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
         << NitrogenConfiguration::titleAlignmentName( Qt::AlignRight, true )
         );
-      
+
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( titleAlignment );
 
       // button size
       gridLayout->addWidget( label = new QLabel( i18n("Button size:"), basicWidget ), 2, 0, 1, 1 );
       gridLayout->addWidget( buttonSize = new QComboBox(basicWidget), 2, 1, 1, 1 );
-      buttonSize->setObjectName(QString::fromUtf8("buttonSize"));  
+      buttonSize->setObjectName(QString::fromUtf8("buttonSize"));
       buttonSize->insertItems(0, QStringList()
         << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonSmall, true )
         << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonDefault, true )
         << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonLarge, true )
         << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonHuge, true )
         );
-    
+
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( buttonSize );
 
       vboxLayout->addStretch(1);
-        
+
     }
-    
-    
+
+
     // advanced configuration
     {
       QWidget *advancedWidget = new QWidget();
       int index = tab->addTab( advancedWidget, "&Advanced" );
       tab->setTabToolTip( index, i18n( "Advanced window decoration configuration options" ) );
-      
+
       QVBoxLayout* vboxLayout = new QVBoxLayout();
       vboxLayout->setMargin( 6 );
       vboxLayout->setSpacing( 6 );
       advancedWidget->setLayout( vboxLayout );
-      
+
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setSpacing(6);
       gridLayout->setMargin(0);
       vboxLayout->addLayout( gridLayout );
- 
+
       gridLayout->setColumnStretch(2, 1);
-      
+
       // title bar blending
       QLabel* label;
       gridLayout->addWidget( label = new QLabel( i18n("Background style:" ), advancedWidget ), 1, 0, 1, 1 );
@@ -157,10 +157,10 @@ namespace Nitrogen
         << NitrogenConfiguration::blendColorName( NitrogenConfiguration::NoBlending, true )
         << NitrogenConfiguration::blendColorName( NitrogenConfiguration::RadialBlending, true )
         );
-    
+
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( blendColor );
-            
+
       // draw size grip
       gridLayout->addWidget( label = new QLabel( i18n("Extra Size grip display:"), advancedWidget ), 2, 0, 1, 1 );
       gridLayout->addWidget( sizeGripMode = new QComboBox(advancedWidget), 2, 1, 1, 1 );
@@ -173,22 +173,22 @@ namespace Nitrogen
         << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
         << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripWhenNeeded, true )
         );
-    
+
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( sizeGripMode );
-      
+
       // active window title outline
       vboxLayout->addWidget( titleOutline = new QCheckBox( i18n("Outline active window title"), advancedWidget) );
       titleOutline->setObjectName(QString::fromUtf8("titleOutline"));
       titleOutline->setWhatsThis(i18n(
         "When enabled, an additional frame is shown around the active window as well as its title"));
-      
+
       // draw separator
       vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and active window contents"), advancedWidget ) );
       drawSeparator->setObjectName(QString::fromUtf8("drawSeparator"));
       drawSeparator->setWhatsThis(i18n(
         "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
-      
+
       // oxygen shadow
       vboxLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), advancedWidget ) );
       useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
@@ -196,9 +196,9 @@ namespace Nitrogen
         "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
 
       connect( titleOutline, SIGNAL(toggled( bool )), drawSeparator, SLOT( setDisabled( bool ) ) );
-     
+
     }
-    
+
     // exceptions
     {
       exceptions = new NitrogenExceptionListWidget();
@@ -206,9 +206,9 @@ namespace Nitrogen
       int index = tab->addTab( exceptions, "&Window-Specific" );
       tab->setTabToolTip( index, i18n( "Configure window specific decoration options, based on window name" ) );
     }
-    
-    QMetaObject::connectSlotsByName(this);  
-    
+
+    QMetaObject::connectSlotsByName(this);
+
   }
-  
+
 }

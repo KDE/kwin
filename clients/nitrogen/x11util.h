@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // x11util.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +23,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <QWidget>
@@ -36,16 +36,16 @@
 #include <X11/Xutil.h>
 #endif
 
-namespace Nitrogen 
+namespace Nitrogen
 {
   class X11Util
   {
-    
+
     public:
-    
+
     //! singleton
     static X11Util& get( void );
-    
+
     //! Atoms enumeration
     enum Atoms
     {
@@ -53,7 +53,7 @@ namespace Nitrogen
       _NET_WM_STATE,
       _NET_WM_MOVERESIZE
     };
-    
+
     enum Direction
     {
       _NET_WM_MOVERESIZE_SIZE_TOPLEFT=0,
@@ -66,66 +66,66 @@ namespace Nitrogen
       _NET_WM_MOVERESIZE_SIZE_LEFT=7,
       _NET_WM_MOVERESIZE_MOVE=8,
       _NET_WM_MOVERESIZE_SIZE_KEYBOARD=9,
-      _NET_WM_MOVERESIZE_MOVE_KEYBOARD=10   
+      _NET_WM_MOVERESIZE_MOVE_KEYBOARD=10
     };
-      
+
     //! supported atoms
     bool isSupported( const Atoms& atom );
-     
+
     //! move/resize widget using X11 window manager
     /*! returns true on success */
     bool moveResizeWidget( WId, int screen, QPoint, Direction, Qt::MouseButton button = Qt::LeftButton );
-    
+
     #ifdef Q_WS_X11
-    
+
     //! find atom
     Atom findAtom( const Atoms& atom );
-    
+
     #endif
-    
+
     private:
-    
+
     //! constructor
     X11Util( void );
-    
+
     //! atom names
-    typedef std::map<Atoms, QString> AtomNameMap; 
-    
+    typedef std::map<Atoms, QString> AtomNameMap;
+
     //! atom names
     void _initializeAtomNames( void );
-    
+
     //! atom names
     const AtomNameMap& _atomNames( void ) const
     { return atom_names_; }
-    
+
     AtomNameMap atom_names_;
-    
+
     //! supported atoms
     typedef std::map<Atoms, bool > SupportedAtomMap;
-    
+
     //! supported atoms
     const SupportedAtomMap& _supportedAtoms( void ) const
     { return supported_atoms_; }
-    
+
     SupportedAtomMap supported_atoms_;
-    
+
     #ifdef Q_WS_X11
-    
+
     //! atom map
     typedef std::map<Atoms, Atom> AtomMap;
-    
+
     //! atoms
     // const AtomMap& _atoms( void ) const
     AtomMap& _atoms( void )
     { return atoms_; }
-    
+
     //! atoms
     AtomMap atoms_;
-    
+
     #endif
-    
+
   };
-  
+
 }
 
 #endif

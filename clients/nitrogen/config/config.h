@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // config.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 // Copyright (C) 2008 Lubos Lunak <l.lunak@kde.org>
 //
@@ -27,7 +27,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KConfig>
@@ -38,55 +38,55 @@
 namespace Nitrogen {
 
   class NitrogenConfiguration;
-  
+
   // nitrogen configuration object
   class Config: public QObject
   {
-    
+
     Q_OBJECT
-    
+
     public:
-      
+
     //! constructor
     Config( KConfig* conf, QWidget* parent );
-  
+
     //! destructor
     ~Config();
-    
+
     signals:
-    
+
     //! emmited whenever configuration is changed
     void changed();
-    
+
     public slots:
-    
+
     //! load configuration
     void load( const KConfigGroup& conf );	
-    
+
     //! save configuration
     void save( KConfigGroup& conf );
-    
+
     //! restore defaults
     void defaults();
-    
+
     private slots:
-     
+
     //! about nitrogen
     void aboutNitrogen( void );
-    
+
     private:
-    
+
     //! load configuration
     void loadConfiguration( const NitrogenConfiguration& );
-    
+
     //! user interface
     NitrogenConfigurationUI *user_interface_;
-    
+
     //! kconfiguration object
     KConfig *configuration_;
-    
+
   };
-  
+
 } //namespace Nitrogen
 
 #endif

@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // x11util.cpp
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,97 +20,97 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include "x11util.h"
- 
+
 using namespace std;
 
 namespace Nitrogen
 {
-  
+
   //________________________________________________________________________
   X11Util& X11Util::get( void )
   {
     static X11Util singleton;
     return singleton;
   }
-  
+
   //________________________________________________________________________
   X11Util::X11Util( void )
-  { 
+  {
     _initializeAtomNames();
   }
-  
+
   //________________________________________________________________________
   bool X11Util::isSupported( const Atoms& atom )
   {
-    
+
     #ifdef Q_WS_X11
-    
+
     SupportedAtomMap::const_iterator iter( _supportedAtoms().find( atom ) );
     if( iter != _supportedAtoms().end() ) return iter->second;
-    
+
     Display* display( QX11Info::display() );
     Atom net_supported( findAtom( _NET_SUPPORTED ) );
     Atom searched( findAtom( atom ) );
-    
+
     Atom actual;
     int format;
     unsigned char *data;
     unsigned long offset = 0;
-    
+
     while( 1 )
     {
       unsigned long n, left;
       XGetWindowProperty( display, QX11Info::appRootWindow(),
         net_supported, offset, 1L,
-        false, XA_ATOM, &actual,  
-        &format, &n, &left, 
+        false, XA_ATOM, &actual,
+        &format, &n, &left,
         (unsigned char **) &data);
-      
-      if( data == None ) break;      
-      
+
+      if( data == None ) break;
+
       // try cast data to atom
       Atom found( *(Atom*)data );
-      
-      if( found == searched ) 
+
+      if( found == searched )
       {
         supported_atoms_[atom] = true;
         return true;
       }
-      
+
       if( !left ) break;
       else offset ++;
-      
+
     }
-    
+
     supported_atoms_[atom] = false;
-    
+
     #endif
-    
+
     return false;
-    
+
   }
-  
+
   //________________________________________________________________________
-  bool X11Util::moveResizeWidget( 
-    WId id, 
+  bool X11Util::moveResizeWidget(
+    WId id,
     int screen,
-    QPoint position, 
-    X11Util::Direction direction, 
+    QPoint position,
+    X11Util::Direction direction,
     Qt::MouseButton button )
   {
-        
+
     #ifdef Q_WS_X11
-    
+
     // check
     if( !isSupported( _NET_WM_MOVERESIZE ) ) return false;
-    
+
     Display* display( QX11Info::display() );
-    Atom net_wm_moveresize( findAtom( _NET_WM_MOVERESIZE ) );   
-    
+    Atom net_wm_moveresize( findAtom( _NET_WM_MOVERESIZE ) );
+
     XEvent event;
     event.xclient.type = ClientMessage;
     event.xclient.message_type = net_wm_moveresize;
@@ -119,48 +119,48 @@ namespace Nitrogen
     event.xclient.format = 32;
     event.xclient.data.l[0] = position.x();
     event.xclient.data.l[1] = position.y();
-    event.xclient.data.l[2] = direction; 
+    event.xclient.data.l[2] = direction;
     event.xclient.data.l[3] = button;
     event.xclient.data.l[4] = 0;
     XUngrabPointer( display, QX11Info::appTime() );
-    XSendEvent(display, 
-      QX11Info::appRootWindow( screen ), 
+    XSendEvent(display,
+      QX11Info::appRootWindow( screen ),
       false,
       SubstructureRedirectMask | SubstructureNotifyMask, &event);
     return true;
-    
+
     #else
     return false;
     #endif
   }
-  
+
   //________________________________________________________________________
   void X11Util::_initializeAtomNames( void )
   {
-    
+
     atom_names_[_NET_SUPPORTED] = "_NET_SUPPORTED";
     atom_names_[_NET_WM_STATE] = "_NET_WM_STATE";
     atom_names_[_NET_WM_MOVERESIZE] = "_NET_WM_MOVERESIZE";
-    
+
     return;
   }
-  
+
   #ifdef Q_WS_X11
-  
+
   //________________________________________________________________________
   Atom X11Util::findAtom( const Atoms& atom )
   {
-    
+
     // find atom in map
     AtomMap::iterator iter( _atoms().find( atom ) );
     if( iter != _atoms().end() ) return iter->second;
-    
+
     // create atom if not found
     Display* display( QX11Info::display() );
     Atom out( XInternAtom(display, qPrintable( atom_names_[atom] ), false ) );
     atoms_[atom] = out;
     return out;
-    
+
   }
 
 }

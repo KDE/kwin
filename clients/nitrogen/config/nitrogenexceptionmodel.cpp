@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenexceptionmodel.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,36 +20,36 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include "nitrogenexceptionmodel.h"
 #include <KLocale>
 namespace Nitrogen
 {
-  
+
   //_______________________________________________
   const QString NitrogenExceptionModel::column_titles_[ NitrogenExceptionModel::n_columns ] =
-  { 
+  {
     "",
     i18n("Exception Type"),
     i18n("Regular Expression")
   };
-    
+
   //__________________________________________________________________
   QVariant NitrogenExceptionModel::data( const QModelIndex& index, int role ) const
   {
-  
+
     // check index, role and column
     if( !index.isValid() ) return QVariant();
-    
+
     // retrieve associated file info
     const NitrogenException& exception( get(index) );
-  
+
     // return text associated to file and column
-    if( role == Qt::DisplayRole ) 
+    if( role == Qt::DisplayRole )
     {
-      
+
       switch( index.column() )
       {
         case TYPE: return exception.typeName();
@@ -57,35 +57,35 @@ namespace Nitrogen
         default: return QVariant();
         break;
       }
-      
+
     } else if( role == Qt::CheckStateRole &&  index.column() == ENABLED ) {
-      
+
       return exception.enabled() ? Qt::Checked : Qt::Unchecked;
-            
+
     } else if( role == Qt::ToolTipRole &&  index.column() == ENABLED ) {
-      
+
       return i18n("Enable/disable this exception");
-      
+
     }
 
-    
+
     return QVariant();
   }
-  
+
   //__________________________________________________________________
   QVariant NitrogenExceptionModel::headerData(int section, Qt::Orientation orientation, int role) const
   {
-    
-    if( 
-      orientation == Qt::Horizontal && 
-      role == Qt::DisplayRole && 
-      section >= 0 && 
+
+    if(
+      orientation == Qt::Horizontal &&
+      role == Qt::DisplayRole &&
+      section >= 0 &&
       section < n_columns )
     { return column_titles_[section]; }
-    
+
     // return empty
-    return QVariant(); 
-    
+    return QVariant();
+
   }
-    
+
 }

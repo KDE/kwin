@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenexception.cpp
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
@@ -28,7 +28,7 @@
 
 namespace Nitrogen
 {
-  
+
   //_______________________________________________________
   NitrogenException::NitrogenException( KConfigGroup group ):
     NitrogenConfiguration( group )
@@ -38,37 +38,37 @@ namespace Nitrogen
     NitrogenException default_configuration;
 
     // exception type
-    setType( type( 
-      group.readEntry( NitrogenConfig::TYPE, 
+    setType( type(
+      group.readEntry( NitrogenConfig::TYPE,
       default_configuration.typeName() ) ) );
-    
+
     // exception pattern
     regExp().setPattern( group.readEntry( NitrogenConfig::PATTERN, QString() ) );
-    
+
     // enability
     setEnabled(
       group.readEntry( NitrogenConfig::ENABLED,
       default_configuration.enabled() ) );
-    
+
     // exception mask
-    setMask( 
-      group.readEntry( NitrogenConfig::MASK, 
+    setMask(
+      group.readEntry( NitrogenConfig::MASK,
       default_configuration.mask() ) );
-    
+
   }
-  
+
   //_______________________________________________________
   void NitrogenException::write( KConfigGroup& group ) const
   {
-    
+
     NitrogenConfiguration::write( group );
     group.writeEntry( NitrogenConfig::TYPE, typeName() );
     group.writeEntry( NitrogenConfig::PATTERN, regExp().pattern() );
     group.writeEntry( NitrogenConfig::ENABLED, enabled() );
     group.writeEntry( NitrogenConfig::MASK, mask() );
-    
+
   }
-  
+
   //_______________________________________________________
   QString NitrogenException::typeName( Type type )
   {
@@ -78,10 +78,10 @@ namespace Nitrogen
       case WindowClassName: return "Window Class Name";
       default: assert( false );
     }
-    
+
     return QString();
   }
-  
+
   //_______________________________________________________
   NitrogenException::Type NitrogenException::type( const QString& value )
   {
@@ -89,5 +89,5 @@ namespace Nitrogen
     else if( value == "Window Class Name" ) return WindowClassName;
     else return WindowClassName;
   }
-  
+
 }

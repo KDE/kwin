@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenexceptiondialog.cpp
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <QGroupBox>
@@ -32,12 +32,12 @@
 
 namespace Nitrogen
 {
-  
+
   //___________________________________________
   NitrogenExceptionDialog::NitrogenExceptionDialog( QWidget* parent ):
     KDialog( parent )
   {
-    
+
     // define buttons
     setButtons( Ok|Cancel );
     showButtonSeparator( true );
@@ -49,18 +49,18 @@ namespace Nitrogen
     widget->setLayout( new QVBoxLayout() );
     widget->layout()->setSpacing(5);
     widget->layout()->setMargin(0);
-    
+
     // exception definition
     QGroupBox* box;
     widget->layout()->addWidget( box = new QGroupBox( i18n( "Definition" ), widget ) );
-    
+
     QGridLayout* gridLayout = new QGridLayout();
     gridLayout->setSpacing(5);
     gridLayout->setMargin(5);
     box->setLayout( gridLayout );
-      
+
     QLabel *label;
-    
+
     // exception type
     gridLayout->addWidget( label = new QLabel( i18n( "Exception type: " ), box ), 0, 0, 1, 1 );
     gridLayout->addWidget( exceptionType = new QComboBox(box), 0, 1, 1, 1 );
@@ -70,9 +70,9 @@ namespace Nitrogen
     exceptionType->setToolTip( i18n(
       "Select here the window characteristic used to \n"
       "identify windows to which the exception apply." ) );
-    
+
     label->setAlignment( Qt::AlignRight );
-    
+
     // regular expression
     gridLayout->addWidget( label = new QLabel( i18n( "Regular expression to match: " ), box ), 1, 0, 1, 1 );
     gridLayout->addWidget( exceptionEditor = new KLineEdit( box ), 1, 1, 1, 1 );
@@ -82,16 +82,16 @@ namespace Nitrogen
       "identify windows to which the exception apply." ) );
 
     label->setAlignment( Qt::AlignRight );
-    
+
     // decoration flags
-    widget->layout()->addWidget( box = new QGroupBox( i18n( "Decoration" ), widget ) );    
+    widget->layout()->addWidget( box = new QGroupBox( i18n( "Decoration" ), widget ) );
     gridLayout = new QGridLayout();
     gridLayout->setSpacing(5);
     gridLayout->setMargin(5);
     box->setLayout( gridLayout );
 
     QCheckBox* checkbox;
-    
+
     // border size
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 0, 0, 1, 1 );
     gridLayout->addWidget( frameBorder = new QComboBox(box), 0, 1, 1, 1 );
@@ -109,7 +109,7 @@ namespace Nitrogen
     checkboxes_.insert( std::make_pair( NitrogenException::FrameBorder, checkbox ) );
     checkbox->setToolTip( i18n("If checked, specified frame border is used in place of default value.") );
     connect( checkbox, SIGNAL( toggled( bool ) ), frameBorder, SLOT( setEnabled( bool ) ) );
-    
+
     // blend color
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Background style:" ), box ), 1, 0, 1, 1 );
     gridLayout->addWidget( blendColor = new QComboBox(box), 1, 1, 1, 1 );
@@ -120,7 +120,7 @@ namespace Nitrogen
     checkboxes_.insert( std::make_pair( NitrogenException::BlendColor, checkbox ) );
     checkbox->setToolTip( i18n("If checked, specified blending color is used in title bar in place of default value.") );
     connect( checkbox, SIGNAL( toggled( bool ) ), blendColor, SLOT( setEnabled( bool ) ) );
-    
+
     // size grip
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Size grip display:" ), box ), 2, 0, 1, 1 );
     gridLayout->addWidget( sizeGripMode = new QComboBox( box ), 2, 1, 1, 1 );
@@ -145,63 +145,63 @@ namespace Nitrogen
     drawSeparator->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::DrawSeparator, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), drawSeparator, SLOT( setEnabled( bool ) ) );
-    
+
   }
-  
+
   //___________________________________________
   void NitrogenExceptionDialog::setException( NitrogenException exception )
   {
 
     // store exception internally
     exception_ = exception;
-    
+
     // type
     exceptionType->setCurrentIndex( exceptionType->findText( exception.typeName() ) );
-    
+
     // regular expression
     exceptionEditor->setText( exception.regExp().pattern() );
 
     // border size
     frameBorder->setCurrentIndex( frameBorder->findText( exception.frameBorderName( true ) ) );
-    
+
     // blend color
     blendColor->setCurrentIndex( blendColor->findText( exception.blendColorName( true ) ) );
 
     // size grip
     sizeGripMode->setCurrentIndex( sizeGripMode->findText( exception.sizeGripModeName( true ) ) );
-    
+
     // flags
     drawSeparator->setValue( exception.drawSeparator() );
     titleOutline->setValue( exception.drawTitleOutline() );
-    
+
     // mask
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
     { iter->second->setChecked( exception.mask() & iter->first ); }
-    
+
   }
 
   //___________________________________________
   NitrogenException NitrogenExceptionDialog::exception( void ) const
-  { 
+  {
     NitrogenException exception( exception_ );
     exception.setType( NitrogenException::type( exceptionType->currentText() ) );
     exception.regExp().setPattern( exceptionEditor->text() );
     exception.setFrameBorder( NitrogenException::frameBorder( frameBorder->currentText(), true ) );
-    exception.setBlendColor( NitrogenException::blendColor( blendColor->currentText(), true ) ); 
+    exception.setBlendColor( NitrogenException::blendColor( blendColor->currentText(), true ) );
     exception.setSizeGripMode( NitrogenException::sizeGripMode( sizeGripMode->currentText(), true ) );
-    
+
     // flags
     exception.setDrawSeparator( drawSeparator->isChecked() );
     exception.setDrawTitleOutline( titleOutline->isChecked() );
-    
+
     // mask
     unsigned int mask = NitrogenException::None;
     for( CheckBoxMap::const_iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
     { if( iter->second->isChecked() ) mask |= iter->first; }
-    
+
     exception.setMask( mask );
     return exception;
-  
+
   }
 
   //___________________________________________
@@ -216,9 +216,9 @@ namespace Nitrogen
   //___________________________________________
   void NitrogenExceptionDialog::ComboBox::setValue(  bool checked )
   { setCurrentIndex( findText( checked ? Yes:No ) ); }
-  
+
   //___________________________________________
   bool NitrogenExceptionDialog::ComboBox::isChecked( void ) const
   { return currentText() == Yes; }
-  
+
 }

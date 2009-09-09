@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogenexceptionlist.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +23,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KConfig>
@@ -33,35 +33,35 @@
 
 namespace Nitrogen
 {
-  
+
   //! nitrogen exceptions list
   class NitrogenExceptionList: public QList<NitrogenException>
   {
-    
+
     public:
-    
+
     //! default constructor
     NitrogenExceptionList( void )
     {}
-   
+
     //! default constructor
     NitrogenExceptionList( const KConfig& config )
     { read( config ); }
-    
+
     //! read from KConfig
     void read( const KConfig& );
-    
+
     //! write to kconfig
     void write( KConfig& );
-    
+
     //! default exception list
     static NitrogenExceptionList defaultList( void );
-            
+
     //! generate exception group name for given exception index
     static QString exceptionGroupName( int index );
 
   };
-  
+
 }
 
 #endif

@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // nitrogen.h
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira <hugo.pereira@free.fr>
 // Copyright (c) 2006, 2007 Riccardo Iaconelli <ruphy@fsfe.org>
 //
@@ -24,7 +24,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 #include <QObject>
@@ -39,14 +39,14 @@
 
 namespace Nitrogen
 {
-  
+
   class NitrogenClient;
-  
+
   //! button size
   // enum { NITROGEN_BUTTONSIZE = 22 };
-    
+
   //! buttons
-  enum ButtonType 
+  enum ButtonType
   {
     ButtonHelp=0,
     ButtonMax,
@@ -61,85 +61,85 @@ namespace Nitrogen
   };
 
   static const qreal SHADOW_WIDTH = 25.5;
-  
-  /* 
+
+  /*
   If non zero, this possibly allow one to have an additional space
-  around window that is clickable although it is part of the shadow 
-  */ 
+  around window that is clickable although it is part of the shadow
+  */
   static const int EXTENDED_HITAREA = 0;
-  
+
   // this is the top title bar edge
   static const int TFRAMESIZE = 3;
-  
+
   // this is the extra title bar top and bottom edges
   // needed to outline active window title bar
   static const int HFRAMESIZE = 4;
-  
+
   Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
-    
+
   //! window decoration factory
   class NitrogenFactory: public QObject, public KDecorationFactoryUnstable
   {
-    
+
     Q_OBJECT
-    
+
     public:
-    
+
     //! constructor
     NitrogenFactory();
-    
+
     //! destructor
     virtual ~NitrogenFactory();
-    
+
     //! create decoration
     virtual KDecoration *createDecoration(KDecorationBridge *b);
-    
+
     //! configuration reset
     virtual bool reset(unsigned long changed);
 
     //! configuration capabilities
     virtual bool supports( Ability ability ) const;
-        
+
     //! true if initialized
     static bool initialized()
     { return initialized_; }
-    
+
     //! get configuration for a give client
     static NitrogenConfiguration configuration( const NitrogenClient& );
-    
+
     signals:
-    
+
     //! configuration has changed
     void configurationChanged( void );
-    
+
     private:
-     
+
     //! read configuration from KConfig
     bool readConfig();
-    
+
     //! default configuration
     static NitrogenConfiguration defaultConfiguration( void )
     { return defaultConfiguration_; }
-        
+
     //! initialization
     static void setInitialized( bool value )
     { initialized_ = value; }
-    
+
     //! set default configuration
     static void setDefaultConfiguration( NitrogenConfiguration value )
     { defaultConfiguration_ = value; }
-    
+
     //! initialization flag
     static bool initialized_;
-    
+
     //! default configuration
     static NitrogenConfiguration defaultConfiguration_;
-    
+
     //! exceptions
     static NitrogenExceptionList exceptions_;
-    
+
   };
-      
+
 }
 
 #endif

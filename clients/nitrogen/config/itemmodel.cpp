@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 // itemmodel.cpp
 // -------------------
-// 
+//
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.                 
+// IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
 /*!
@@ -44,32 +44,32 @@ ItemModel::ItemModel( QObject* parent ):
 
 //____________________________________________________________
 void ItemModel::sort( int column, Qt::SortOrder order )
-{ 
-  
+{
+
   // store column and order
   sort_column_ = column;
   sort_order_ = order;
-  
+
   // emit signals and call private methods
   emit layoutAboutToBeChanged();
   _sort( column, order );
   emit layoutChanged();
-  
+
 }
 
 //____________________________________________________________
 QModelIndexList ItemModel::indexes( int column, const QModelIndex& parent ) const
-{ 
+{
   QModelIndexList out;
   int rows( rowCount( parent ) );
   for( int row = 0; row < rows; row++ )
-  { 
+  {
     QModelIndex index( this->index( row, column, parent ) );
     if( !index.isValid() ) continue;
     out.push_back( index );
     out += indexes( column, index );
   }
-  
+
   return out;
-  
+
 }
