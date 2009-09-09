@@ -369,9 +369,9 @@ void ShadowEffect::windowClosed( EffectWindow* c )
 
 bool ShadowEffect::useShadow( EffectWindow* w ) const
     {
-    return !w->isDeleted() && !w->isDesktop()
-        // popups and docks may have shadow even if shaped, their shape is almost rectangular
-        && ( !w->hasOwnShape() || w->isDropdownMenu() || w->isPopupMenu() || w->isComboBox() || w->isDock())
+    return !w->isDeleted() && !w->isDesktop() && !w->isDock()
+        // popups may have shadow even if shaped, their shape is almost rectangular
+        && ( !w->hasOwnShape() || w->isDropdownMenu() || w->isPopupMenu() || w->isComboBox())
         // If decoration has it's own shadow leave it alone
         && !( w->hasDecoration() && effects->hasDecorationShadows() );
     }
