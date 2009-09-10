@@ -125,6 +125,18 @@ namespace Nitrogen
   }
 
   //___________________________________________
+  void NitrogenClient::reset( unsigned long changed )
+  {
+    if( changed & SettingCompositing )
+    {
+      updateWindowShape();
+      widget()->update();
+    }
+    
+    KCommonDecorationUnstable::reset( changed );
+  }
+
+  //___________________________________________
   bool NitrogenClient::isMaximized() const
   { return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();  }
 

@@ -78,6 +78,9 @@ namespace Nitrogen
         //! initialization
         virtual void init();
 
+        // reset
+        virtual void reset( unsigned long changed );
+
         //! return associated configuration
         NitrogenConfiguration configuration( void ) const;
 
