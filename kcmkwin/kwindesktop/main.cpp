@@ -450,15 +450,14 @@ void KWinDesktopConfig::slotChangeShortcuts( int number )
             else
                 {
                 KShortcut shortcut(shortcutString);
-                if (KGlobalAccel::self()->isGlobalShortcutAvailable(shortcut.primary()))
+                if (!shortcut.primary().isEmpty() || KGlobalAccel::self()->isGlobalShortcutAvailable(shortcut.primary()))
                     {
-                    action->setGlobalShortcut( shortcut );
+                    action->setGlobalShortcut( shortcut, KAction::ActiveShortcut, KAction::NoAutoloading );
                     m_ui->messageLabel->setText(i18n( "Assigned global Shortcut \"%1\" to Desktop %2", shortcutString, desktop ));
                     m_ui->messageLabel->show();
                     }
                 else
                     {
-                    action->setGlobalShortcut( KShortcut(), KAction::ActiveShortcut );
                     m_ui->messageLabel->setText(i18n( "Shortcut conflict: Could not set Shortcut %1 for Desktop %2", shortcutString, desktop ));
                     m_ui->messageLabel->show();
                     }
