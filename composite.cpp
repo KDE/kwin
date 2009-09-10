@@ -314,6 +314,9 @@ void Workspace::suspendCompositing( bool suspend )
     compositingSuspended = suspend;
     finishCompositing();
     setupCompositing(); // will do nothing if suspended
+    // notify decorations that composition state has changed
+    KDecorationFactory* factory = mgr->factory();
+    factory->reset(SettingCompositing);
     emit compositingToggled( !compositingSuspended );
     }
 
