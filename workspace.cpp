@@ -1135,9 +1135,13 @@ void Workspace::slotReinitCompositing()
 
     // Restart compositing
     finishCompositing();
+    
     // resume compositing if suspended
     compositingSuspended = false;
     setupCompositing();
+    KDecorationFactory* factory = mgr->factory();
+    factory->reset(SettingCompositing);
+    
     if( effects ) // setupCompositing() may fail
         {
         effects->reconfigure();
