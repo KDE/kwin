@@ -429,9 +429,18 @@ void KWinDesktopConfig::slotChangeShortcuts( int number )
         {
         if( number < m_actionCollection->count() )
             {
-            // remove last actions
-            m_actionCollection->removeAction( m_actionCollection->actions().last() );
+            // Remove the action from the action collection. The action itself
+            // will still exist because that's the way kwin currently works.
+            // No need to remove/forget it. See kwinbindings.
+            KAction *a = qobject_cast<KAction*>(
+                    m_actionCollection->takeAction( m_actionCollection->actions().last() ));
+            // Remove any associated global shortcut. Set it to ""
+            a->setGlobalShortcut(
+                    KShortcut(),
+                    KAction::ActiveShortcut,
+                    KAction::NoAutoloading);
             m_ui->messageLabel->hide();
+            delete a;
             }
         else
             {
