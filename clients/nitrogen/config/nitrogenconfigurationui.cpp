@@ -134,8 +134,8 @@ namespace Nitrogen
     // advanced configuration
     {
       QWidget *advancedWidget = new QWidget();
-      int index = tab->addTab( advancedWidget, i18n( "&Advanced" ) );
-      tab->setTabToolTip( index, i18n( "Advanced window decoration configuration options" ) );
+      int index = tab->addTab( advancedWidget, i18n( "&Fine Tuning" ) );
+      tab->setTabToolTip( index, i18n( "Additional window decoration configuration options" ) );
 
       QVBoxLayout* vboxLayout = new QVBoxLayout();
       vboxLayout->setMargin( 6 );
@@ -204,8 +204,8 @@ namespace Nitrogen
     {
       exceptions = new NitrogenExceptionListWidget();
       exceptions->setObjectName(QString::fromUtf8("exceptions"));
-      int index = tab->addTab( exceptions, i18n( "&Window-Specific" ) );
-      tab->setTabToolTip( index, i18n( "Configure window specific decoration options, based on window name" ) );
+      int index = tab->addTab( exceptions, i18n( "&Window-Specific Overrides" ) );
+      tab->setTabToolTip( index, i18n( "Configure window decoraction option overrides for specific windows" ) );
     }
 
     QMetaObject::connectSlotsByName(this);
