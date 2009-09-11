@@ -71,6 +71,7 @@ class KWinCompositingConfig : public KCModule
         void saveEffectsTab();
         bool saveAdvancedTab();
 
+        void checkLoadedEffects();
         void configChanged(bool reinitCompositing);
         void initEffectSelector();
         void setupCompositingState( bool active, bool enabled = true );

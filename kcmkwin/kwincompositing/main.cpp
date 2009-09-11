@@ -246,6 +246,7 @@ void KWinCompositingConfig::showConfirmDialog( bool reinitCompositing )
             {
             // compositing is enabled now
             setupCompositingState( kwinInterface->compositingActive() );
+            checkLoadedEffects();
             }
         }
     if( revert )
@@ -654,45 +655,18 @@ void KWinCompositingConfig::save()
         }
     }
 
-void KWinCompositingConfig::configChanged(bool reinitCompositing)
+void KWinCompositingConfig::checkLoadedEffects()
     {
-    // Send signal to kwin
-    mKWinConfig->sync();
-    // Send signal to all kwin instances
-    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin",
-        //reinitCompositing ? "reinitCompositing" : "reloadConfig");
-        "reinitCompositing");
-    QDBusConnection::sessionBus().send(message);
-
-    //-------------
-    // If we added or removed shadows we need to reload decorations as well
-    // We have to do this separately so the settings are in sync
-    // HACK: This should really just reload decorations, not do a full reconfigure
-
-    // HACK: We send two messages to it's correctly synced. Code that was reverted in r894182 was better
-    message = QDBusMessage::createSignal("/KWin", "org.kde.KWin",
-        //reinitCompositing ? "reinitCompositing" : "reloadConfig");
-        "reloadConfig");
-    QDBusConnection::sessionBus().send(message);
-
-    KConfigGroup effectConfig;
-
-    effectConfig = KConfigGroup( mTmpConfig, "Compositing" );
-    bool enabledBefore = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
-    effectConfig = KConfigGroup( mKWinConfig, "Compositing" );
-    bool enabledAfter = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
-
-    effectConfig = KConfigGroup( mTmpConfig, "Plugins" );
-    bool shadowBefore = effectEnabled( "shadow", effectConfig );
-    effectConfig = KConfigGroup( mKWinConfig, "Plugins" );
-    bool shadowAfter = effectEnabled( "shadow", effectConfig );
-
     // check for effects not supported by Backend or hardware
     // such effects are enabled but not returned by DBus method loadedEffects
-    message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "loadedEffects" );
+    QDBusMessage message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "loadedEffects" );
     QDBusMessage reply = QDBusConnection::sessionBus().call( message );
+    KConfigGroup effectConfig = KConfigGroup( mKWinConfig, "Compositing" );
+    bool enabledAfter = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
+
     if( reply.type() == QDBusMessage::ReplyMessage && enabledAfter && !getenv( "KDE_FAILSAFE" ))
         {
+        effectConfig = KConfigGroup( mKWinConfig, "Plugins" );
         QStringList loadedEffects = reply.arguments()[0].toStringList();
         QStringList effects = effectConfig.keyList();
         QStringList disabledEffects = QStringList();
@@ -725,12 +699,22 @@ void KWinCompositingConfig::configChanged(bool reinitCompositing)
             KNotification::event( "effectsnotsupported", message, QPixmap(), NULL, KNotification::CloseOnTimeout, KComponentData( "kwin" ) );
             }
         }
+    }
 
-    if( enabledBefore != enabledAfter || shadowBefore != shadowAfter )
-        {
-        message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "reconfigure" );
-        QDBusConnection::sessionBus().send( message );
-        }
+void KWinCompositingConfig::configChanged(bool reinitCompositing)
+    {
+    // Send signal to kwin
+    mKWinConfig->sync();
+    // Send signal to all kwin instances
+    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin",
+        reinitCompositing ? "reinitCompositing" : "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
+
+    // HACK: We can't just do this here, due to the asynchronous nature of signals.
+    // We also can't change reinitCompositing into a message (which would allow
+    // callWithCallbac() to do this neater) due to multiple kwin instances.
+    if( !m_showConfirmDialog )
+        QTimer::singleShot(1000, this, SLOT(checkLoadedEffects()));
     }
 
 
