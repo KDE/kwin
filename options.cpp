@@ -366,6 +366,9 @@ ElectricBorderAction Options::electricBorderAction( ElectricBorder edge )
             return electric_border_left;
         case ElectricTopLeft:
             return electric_border_top_left;
+        default:
+            // fallthrough
+            break;
         }
     return ElectricActionNone;
     }

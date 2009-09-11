@@ -1356,8 +1356,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
     {
     // check if there is something to paint (e.g. don't paint if the window
     // is only opaque and only PAINT_WINDOW_TRANSLUCENT is requested)
-    bool opaque = isOpaque() && data.opacity == 1.0;
     /* HACK: It seems this causes painting glitches, disable temporarily
+    bool opaque = isOpaque() && data.opacity == 1.0;
     if(( mask & PAINT_WINDOW_OPAQUE ) ^ ( mask & PAINT_WINDOW_TRANSLUCENT ))
         { // We are only painting either opaque OR translucent windows, not both
         if( mask & PAINT_WINDOW_OPAQUE && !opaque )
@@ -1458,10 +1458,10 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         {
         bool noBorder = true;
         bool updateDeco = false;
-        const QPixmap *left;
-        const QPixmap *top;
-        const QPixmap *right;
-        const QPixmap *bottom;
+        const QPixmap *left = NULL;
+        const QPixmap *top = NULL;
+        const QPixmap *right = NULL;
+        const QPixmap *bottom = NULL;
         QRect topRect, leftRect, rightRect, bottomRect;
         if( client && !client->noBorder() )
             {

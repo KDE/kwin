@@ -743,10 +743,10 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         if( client || deleted )
             {
             bool noBorder = true;
-            const QPixmap *left;
-            const QPixmap *top;
-            const QPixmap *right;
-            const QPixmap *bottom;
+            const QPixmap *left = NULL;
+            const QPixmap *top = NULL;
+            const QPixmap *right = NULL;
+            const QPixmap *bottom = NULL;
             QRect tr, lr, rr, br;
             QRect decorationRect;
             if( client && !client->noBorder() )

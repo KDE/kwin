@@ -478,7 +478,7 @@ bool Workspace::workspaceEvent( XEvent * e )
         case Expose:
             if( compositing()
                 && ( e->xexpose.window == rootWindow()  // root window needs repainting
-                    || overlay != None && e->xexpose.window == overlay )) // overlay needs repainting
+                    || (overlay != None && e->xexpose.window == overlay) )) // overlay needs repainting
                 {
                 addRepaint( e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height );
                 }

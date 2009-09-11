@@ -77,6 +77,9 @@ bool initting = false;
  */
 static bool kwin_sync = false;
 
+// errorMessage is only used ifndef NDEBUG, and only in one place.
+// it might be worth reevaluating why this is used? I don't know.
+#ifndef NDEBUG
 /**
  * Outputs: "Error: <error> (<value>), Request: <request>(<value>), Resource: <value>"
  */
@@ -161,6 +164,7 @@ static QByteArray errorMessage( const XErrorEvent& event, Display* dpy )
         }
     return ret;
     }
+#endif
 
 static int x11ErrorHandler( Display* d, XErrorEvent* e )
     {
