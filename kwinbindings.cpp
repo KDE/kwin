@@ -153,6 +153,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     DEF( I18N_NOOP("Window to Screen 6"),               0, slotWindowToScreen6() );
     DEF( I18N_NOOP("Window to Screen 7"),               0, slotWindowToScreen7() );
     DEF( I18N_NOOP("Window to Next Screen"),            0, slotWindowToNextScreen() );
+    DEF( I18N_NOOP("Show Desktop"),                     0, slotToggleShowDesktop() );
 
     a = actionCollection->addAction( "Group:Desktop Switching" );
     a->setText( i18n("Desktop Switching") );

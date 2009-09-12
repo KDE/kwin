@@ -546,6 +546,7 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWindowToScreen7() { return slotWindowToScreen( 7 ); }
         void slotSwitchToNextScreen();
         void slotWindowToNextScreen();
+        void slotToggleShowDesktop();
 
         void slotWindowMaximize();
         void slotWindowMaximizeVertical();

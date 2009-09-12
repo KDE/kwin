@@ -1035,6 +1035,14 @@ void Workspace::slotSetupWindowShortcut()
     }
 
 /*!
+  Toggles show desktop
+ */
+void Workspace::slotToggleShowDesktop()
+    {
+    setShowingDesktop( !showingDesktop() );
+    }
+
+/*!
   Move window to next desktop
  */
 void Workspace::slotWindowToNextDesktop()
