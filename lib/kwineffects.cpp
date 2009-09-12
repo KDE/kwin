@@ -966,7 +966,7 @@ TimeLine::TimeLine(const int duration)
     m_Duration = duration;
     m_TimeLine = new QTimeLine(m_Duration ? m_Duration : 1); // (avoid QTimeLine warning)
     m_TimeLine->setFrameRange(0, m_Duration);
-    m_TimeLine->setCurveShape(QTimeLine::EaseInCurve);
+    setCurveShape(EaseInCurve);
     }
 
 TimeLine::TimeLine(const TimeLine &other)
@@ -975,7 +975,7 @@ TimeLine::TimeLine(const TimeLine &other)
     m_Duration = other.m_Duration;
     m_TimeLine = new QTimeLine(m_Duration ? m_Duration : 1);
     m_TimeLine->setFrameRange(0, m_Duration);
-    setCurveShape(m_CurveShape);
+    setCurveShape(other.m_CurveShape);
     if( m_Duration != 0 )
         setProgress(m_Progress);
     }

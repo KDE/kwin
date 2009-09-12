@@ -117,6 +117,7 @@ XShmSegmentInfo SceneOpenGL::shm;
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
     , init_ok( false )
+    , selfCheckDone( false )
     {
     if( !Extensions::glxAvailable())
         {
