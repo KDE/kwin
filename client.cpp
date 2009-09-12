@@ -1740,6 +1740,9 @@ void Client::getSyncCounter()
                 &attrs );
             }
         }
+
+    if( ret == Success )
+        XFree( propRet );
 #endif
 }
 
