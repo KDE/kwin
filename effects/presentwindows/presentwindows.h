@@ -173,6 +173,7 @@ class PresentWindowsEffect
         bool m_showCaptions;
         bool m_showIcons;
         bool m_tabBoxAllowed;
+        bool m_tabBoxAlternativeAllowed;
         int m_accuracy;
         bool m_fillGaps;
         double m_fadeDuration;

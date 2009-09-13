@@ -46,6 +46,8 @@ BoxSwitchEffect::BoxSwitchEffect()
     , painting_desktop( 0 )
     , animation( false )
     , highlight_is_set( false )
+    , primaryTabBox( true )
+    , secondaryTabBox( false )
     {
     text_font.setBold( true );
     text_font.setPointSize( 12 );
@@ -75,13 +77,16 @@ void BoxSwitchEffect::reconfigure( ReconfigureFlags )
     bg_opacity = conf.readEntry( "BackgroundOpacity", 25 ) / 100.0;
     elevate_window = conf.readEntry( "ElevateSelected", true );
     mAnimateSwitch = conf.readEntry( "AnimateSwitch", false );
+
+    primaryTabBox = conf.readEntry( "TabBox", true );
+    secondaryTabBox = conf.readEntry( "TabBoxAlternative", false );
     }
 
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     if( activeTimeLine.value() != 0.0 )
         {
-        if( mMode == TabBoxWindowsMode )
+        if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
             {
             if( windows.contains( w ))
                 {
@@ -130,7 +135,7 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
     effects->paintScreen( mask, region, data );
     if( mActivated )
         {
-        if( mMode == TabBoxWindowsMode )
+        if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
             {
             thumbnailFrame.render( region );
 
@@ -209,7 +214,8 @@ void BoxSwitchEffect::postPaintScreen()
 
 void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if(( mActivated && mMode == TabBoxWindowsMode ) || ( !mActivated && activeTimeLine.value() != 0.0 ))
+    if(( mActivated && (mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode) )
+        || ( !mActivated && activeTimeLine.value() != 0.0 ))
         {
         if( windows.contains( w ) && w != selected_window )
             {
@@ -232,7 +238,7 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
     pos += frame_area.topLeft();
 
     // determine which item was clicked
-    if( mMode == TabBoxWindowsMode )
+    if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
         foreach( EffectWindow* w, windows.keys())
             {
@@ -268,7 +274,7 @@ void BoxSwitchEffect::windowDamaged( EffectWindow* w, const QRect& damage )
     {
     if( mActivated )
         {
-        if( mMode == TabBoxWindowsMode )
+        if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
             {
             if( windows.contains( w ))
                 {
@@ -294,7 +300,7 @@ void BoxSwitchEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& 
     {
     if( mActivated )
         {
-        if( mMode == TabBoxWindowsMode )
+        if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
             {
             if( windows.contains( w ) && w->size() != old.size())
                 {
@@ -320,7 +326,8 @@ void BoxSwitchEffect::tabBoxAdded( int mode )
     {
     if( !mActivated )
         {
-        if( mode == TabBoxWindowsMode )
+        if( ( mode == TabBoxWindowsMode && primaryTabBox ) ||
+            ( mode == TabBoxWindowsAlternativeMode && secondaryTabBox) )
             {
             if( effects->currentTabBoxWindowList().count() > 0 )
                 {
@@ -333,7 +340,7 @@ void BoxSwitchEffect::tabBoxAdded( int mode )
                 setActive();
                 }
             }
-        else
+        else if( mode == TabBoxDesktopListMode || mode == TabBoxDesktopMode )
             { // DesktopMode
             if( effects->currentTabBoxDesktopList().count() > 0 )
                 {
@@ -356,7 +363,8 @@ void BoxSwitchEffect::tabBoxUpdated()
     {
     if( mActivated )
         {
-        if( mMode == TabBoxWindowsMode && selected_window != effects->currentTabBoxWindow() )
+        if( (mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode)
+            && selected_window != effects->currentTabBoxWindow() )
             {
             if( selected_window != NULL )
                 {
@@ -409,7 +417,7 @@ void BoxSwitchEffect::tabBoxUpdated()
             selected_window->addRepaintFull();
             effects->addRepaint( text_area );
             }
-        else if( mMode != TabBoxWindowsMode )
+        else if( mMode != TabBoxWindowsMode && mMode != TabBoxWindowsAlternativeMode )
             { // DesktopMode
             if( desktops.contains( selected_desktop ))
                 effects->addRepaint( desktops.value( selected_desktop )->area );
@@ -440,7 +448,7 @@ void BoxSwitchEffect::setActive()
     qDeleteAll( windows );
     windows.clear();
 
-    if( mMode == TabBoxWindowsMode )
+    if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
         original_windows = effects->currentTabBoxWindowList();
         setSelectedWindow( effects->currentTabBoxWindow());
@@ -456,7 +464,7 @@ void BoxSwitchEffect::setActive()
     mInput = effects->createInputWindow( this, frame_area.x(), frame_area.y(),
         frame_area.width(), frame_area.height(), Qt::ArrowCursor );
     effects->addRepaint( frame_area );
-    if( mMode == TabBoxWindowsMode )
+    if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
         foreach( EffectWindow* w, windows.keys())
             {
@@ -474,7 +482,7 @@ void BoxSwitchEffect::setInactive()
         effects->destroyInputWindow( mInput );
         mInput = None;
         }
-    if( mMode == TabBoxWindowsMode )
+    if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
         foreach( EffectWindow* w, windows.keys())
             {
@@ -544,7 +552,7 @@ void BoxSwitchEffect::calculateFrameSize()
     {
     int itemcount;
 
-    if( mMode == TabBoxWindowsMode )
+    if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
         itemcount = original_windows.count();
         item_max_size.setWidth( 200 );
@@ -582,7 +590,7 @@ void BoxSwitchEffect::calculateFrameSize()
 
 void BoxSwitchEffect::calculateItemSizes()
     {
-    if( mMode == TabBoxWindowsMode )
+    if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
         qDeleteAll( windows );
         windows.clear();

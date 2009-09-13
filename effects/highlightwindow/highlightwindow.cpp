@@ -130,6 +130,7 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
     m_monitorWindow = w;
     bool found = false;
     int length = byteData.length() / sizeof( data[0] );
+    m_highlightedWindows.clear();
     for( int i=0; i<length; i++ )
         {
         EffectWindow* foundWin = effects->findWindow( data[i] );
@@ -143,7 +144,10 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
         found = true;
         }
     if( !found )
+        {
+        finishHighlighting();
         return;
+        }
     prepareHighlighting();
     m_windowOpacity[w] = 1.0; // Because it's not in stackingOrder() yet
 

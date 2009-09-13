@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+Icon=preferences-system-windows-focus
+Exec=kcmshell4 kwintabbox
+
+X-KDE-Library=kcm_kwintabbox
+X-KDE-ParentApp=kcontrol
+
+X-KDE-System-Settings-Parent-Category=window-behaviour
+X-KDE-Weight=60
+
+Name=Navigate Through Windows
+Comment=Configure the behaviour for navigating through windows

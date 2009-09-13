@@ -98,6 +98,7 @@ class FlipSwitchEffect
         QList<ElectricBorder> m_borderActivate;
         QList<ElectricBorder> m_borderActivateAll;
         bool m_tabbox;
+        bool m_tabboxAlternative;
         float m_angle;
         float m_xPosition;
         float m_yPosition;

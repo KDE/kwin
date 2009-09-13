@@ -112,6 +112,9 @@ class BoxSwitchEffect
         QQueue<Direction> scheduled_directions;
         EffectWindow* edge_window;
         EffectWindow* right_window;
+
+        bool primaryTabBox;
+        bool secondaryTabBox;
     };
 
 class BoxSwitchEffect::ItemInfo

@@ -385,6 +385,20 @@ void Workspace::readShortcuts()
         cutWalkThroughWindowsReverse = kaction->globalShortcut();
         connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkBackThroughWindowsKeyChanged(QKeySequence)));
         }
+
+    kaction = qobject_cast<KAction*>( keys->action("Walk Through Windows Alternative") );
+    if ( kaction!=0 )
+        {
+        cutWalkThroughWindowsAlternative = kaction->globalShortcut();
+        connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkThroughWindowsAlternativeKeyChanged(QKeySequence)));
+        }
+
+    kaction = qobject_cast<KAction*>( keys->action("Walk Through Windows Alternative (Reverse)") );
+    if ( kaction!=0 )
+        {
+        cutWalkThroughWindowsAlternativeReverse = kaction->globalShortcut();
+        connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkBackThroughWindowsAlternativeKeyChanged(QKeySequence)));
+        }
     discardPopup(); // so that it's recreated next time
     }
 
@@ -1227,8 +1241,9 @@ void Workspace::showWindowMenu( const QRect &pos, Client* cl )
  */
 void Workspace::slotWindowClose()
     {
-    if ( tab_box->isVisible())
-        return;
+    // TODO: why?
+//     if ( tab_box->isVisible())
+//         return;
     Client* c = active_popup_client ? active_popup_client : active_client;
     performWindowOperation( c, Options::CloseOp );
     }

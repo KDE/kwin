@@ -54,6 +54,8 @@ CoverSwitchEffect::CoverSwitchEffect()
     , selected_window( 0 )
     , captionFrame( EffectFrame::Styled )
     , thumbnailFrame( EffectFrame::Styled )
+    , primaryTabBox( false )
+    , secondaryTabBox( false )
     {
     reconfigure( ReconfigureAll );
 
@@ -88,6 +90,8 @@ void CoverSwitchEffect::reconfigure( ReconfigureFlags )
     thumbnailWindows  = conf.readEntry( "ThumbnailWindows", 8 );
     timeLine.setCurveShape( TimeLine::EaseInOutCurve );
     timeLine.setDuration( animationDuration );
+    primaryTabBox = conf.readEntry( "TabBox", false );
+    secondaryTabBox = conf.readEntry( "TabBoxAlternative", false );
 
     // thumbnail bar
     color_frame = KColorScheme( QPalette::Active, KColorScheme::Window ).background().color();
@@ -109,7 +113,7 @@ void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows)) )
                 calculateItemSizes();
             }
-        if( effects->currentTabBoxWindow() == NULL )
+        if( selected_window == NULL )
             abort();
         }
     effects->prePaintScreen(data, time);
@@ -510,7 +514,9 @@ void CoverSwitchEffect::tabBoxAdded( int mode )
     if( !mActivated )
         {
         // only for windows mode
-        if( mode == TabBoxWindowsMode && effects->currentTabBoxWindowList().count() > 0 )
+        if( (( mode == TabBoxWindowsMode && primaryTabBox ) ||
+            ( mode == TabBoxWindowsAlternativeMode && secondaryTabBox ))
+            && effects->currentTabBoxWindowList().count() > 0 )
             {
             input = effects->createFullScreenInputWindow( this, Qt::ArrowCursor );
             activeScreen = effects->activeScreen();

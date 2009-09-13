@@ -115,6 +115,7 @@ void FlipSwitchEffect::reconfigure( ReconfigureFlags )
         effects->reserveElectricBorder( ElectricBorder( i ) );
         }
     m_tabbox = conf.readEntry( "TabBox", false );
+    m_tabboxAlternative = conf.readEntry( "TabBoxAlternative", false );
     float duration = animationTime( conf, "Duration", 200 );
     m_timeLine.setDuration( duration );
     m_startStopTimeLine.setDuration( duration );
@@ -549,9 +550,9 @@ void FlipSwitchEffect::tabBoxAdded( int mode )
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return;
     // only for windows mode
-    if( m_tabbox
+    if( (( mode == TabBoxWindowsMode && m_tabbox ) ||
+        ( mode == TabBoxWindowsAlternativeMode && m_tabboxAlternative ))
         && (!m_active || (m_active && m_stop))
-        && mode == TabBoxWindowsMode
         && !effects->currentTabBoxWindowList().isEmpty() )
         {
         setActive( true, TabboxMode );

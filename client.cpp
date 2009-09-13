@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "deleted.h"
 #include "paintredirector.h"
+#include "tabbox.h"
 
 #include <X11/extensions/shape.h>
 #include <QX11Info>
@@ -168,6 +169,10 @@ Client::Client( Workspace* ws )
 
     cmap = None;
 
+    // TabBoxClient
+    m_tabBoxClient = new TabBox::TabBoxClientImpl();
+    m_tabBoxClient->setClient( this );
+
     geom = QRect( 0, 0, 100, 100 ); // So that decorations don't start with size being (0,0)
     client_size = QSize( 100, 100 );
 #if defined(HAVE_XSYNC) || defined(HAVE_XDAMAGE)
@@ -194,6 +199,7 @@ Client::~Client()
     assert( block_geometry_updates == 0 );
     assert( !check_active_modal );
     delete bridge;
+    delete m_tabBoxClient;
     }
 
 // Use destroyClient() or releaseWindow(), Client instances cannot be deleted directly

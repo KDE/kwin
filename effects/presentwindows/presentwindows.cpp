@@ -141,6 +141,7 @@ void PresentWindowsEffect::reconfigure( ReconfigureFlags )
     m_showCaptions = conf.readEntry( "DrawWindowCaptions", true );
     m_showIcons = conf.readEntry( "DrawWindowIcons", true );
     m_tabBoxAllowed = conf.readEntry( "TabBox", false );
+    m_tabBoxAlternativeAllowed = conf.readEntry( "TabBoxAlternative", false );
     m_ignoreMinimized = conf.readEntry( "IgnoreMinimized", false );
     m_accuracy = conf.readEntry( "Accuracy", 1 ) * 20;
     m_fillGaps = conf.readEntry( "FillGaps", true );
@@ -639,9 +640,9 @@ void PresentWindowsEffect::tabBoxAdded( int mode )
         return;
     if( m_activated )
         return;
-    if( !m_tabBoxAllowed )
-        return;
-    if( mode == TabBoxWindowsMode && effects->currentTabBoxWindowList().count() > 0 )
+    if( (( mode == TabBoxWindowsMode && m_tabBoxAllowed ) ||
+        ( mode == TabBoxWindowsAlternativeMode && m_tabBoxAlternativeAllowed )) &&
+        effects->currentTabBoxWindowList().count() > 0 )
         {
         m_tabBoxEnabled = true;
         setActive( true );

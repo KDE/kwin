@@ -94,7 +94,13 @@ enum ElectricBorderAction
 // DesktopMode and WindowsMode are based on the order in which the desktop
 //  or window were viewed.
 // DesktopListMode lists them in the order created.
-enum TabBoxMode { TabBoxDesktopMode, TabBoxDesktopListMode, TabBoxWindowsMode };
+enum TabBoxMode
+{
+    TabBoxDesktopMode,           // Focus chain of desktops
+    TabBoxDesktopListMode,       // Static desktop order
+    TabBoxWindowsMode,           // Primary window switching mode
+    TabBoxWindowsAlternativeMode // Secondary window switching mode
+};
 
 inline
 KWIN_EXPORT Display* display()

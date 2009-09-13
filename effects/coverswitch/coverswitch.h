@@ -121,6 +121,8 @@ class CoverSwitchEffect
         QRect highlight_area;
         bool highlight_is_set;
 
+        bool primaryTabBox;
+        bool secondaryTabBox;
     };
 
 class CoverSwitchEffect::ItemInfo

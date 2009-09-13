@@ -335,9 +335,11 @@ void KWinCompositingConfig::loadGeneralTab()
     // window switching
     // Set current option to "none" if no plugin is activated.
     ui.windowSwitchingCombo->setCurrentIndex( 0 );
-    if( effectEnabled( "boxswitch", effectconfig ))
+    KConfigGroup boxswitchconfig(mKWinConfig, "Effect-BoxSwitch");
+    if( effectEnabled( "boxswitch", effectconfig ) && boxswitchconfig.readEntry("TabBox", true))
         ui.windowSwitchingCombo->setCurrentIndex( 1 );
-    if( effectEnabled( "coverswitch", effectconfig ))
+    KConfigGroup coverswitchconfig(mKWinConfig, "Effect-CoverSwitch");
+    if( effectEnabled( "coverswitch", effectconfig ) && coverswitchconfig.readEntry("TabBox", false))
         ui.windowSwitchingCombo->setCurrentIndex( 3 );
     KConfigGroup flipswitchconfig(mKWinConfig, "Effect-FlipSwitch");
     if( effectEnabled( "flipswitch", effectconfig ) && flipswitchconfig.readEntry("TabBox", false))
@@ -491,44 +493,48 @@ void KWinCompositingConfig::saveGeneralTab()
 #undef WRITE_EFFECT_CONFIG
 
     int windowSwitcher = ui.windowSwitchingCombo->currentIndex();
+    bool boxSwitch              = false;
     bool presentWindowSwitching = false;
-    bool flipSwitch = false;
+    bool coverSwitch            = false;
+    bool flipSwitch             = false;
     switch( windowSwitcher )
         {
-        case 0:
-            // no effect
-            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
-            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
-            break;
         case 1:
-            // box switch
-            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", true);
-            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
+            boxSwitch = true;
             break;
         case 2:
-            // present windows
             presentWindowSwitching = true;
-            effectconfig.writeEntry("kwin4_effect_presentwindowsEnabled", true);
-            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
-            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
             break;
         case 3:
-            // coverswitch
-            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
-            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", true);
+            coverSwitch = true;
             break;
         case 4:
-            // flipswitch
             flipSwitch = true;
-            effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", false);
-            effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", false);
-            effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", true);
             break;
+        default:
+            break; // nothing
         }
-    KConfigGroup presentwindowsconfig(mKWinConfig, "Effect-PresentWindows");
-    presentwindowsconfig.writeEntry("TabBox", presentWindowSwitching);
-    KConfigGroup flipswitchconfig(mKWinConfig, "Effect-FlipSwitch");
-    flipswitchconfig.writeEntry("TabBox", flipSwitch);
+    // activate effects if not active
+    if( boxSwitch )
+        effectconfig.writeEntry("kwin4_effect_boxswitchEnabled", true);
+    if( presentWindowSwitching )
+        effectconfig.writeEntry("kwin4_effect_presentwindowsEnabled", true);
+    if( coverSwitch )
+        effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", true);
+    if( flipSwitch )
+        effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", true);
+    KConfigGroup boxswitchconfig( mKWinConfig, "Effect-BoxSwitch" );
+    boxswitchconfig.writeEntry( "TabBox", boxSwitch );
+    boxswitchconfig.sync();
+    KConfigGroup presentwindowsconfig( mKWinConfig, "Effect-PresentWindows" );
+    presentwindowsconfig.writeEntry( "TabBox", presentWindowSwitching );
+    presentwindowsconfig.sync();
+    KConfigGroup coverswitchconfig( mKWinConfig, "Effect-CoverSwitch" );
+    coverswitchconfig.writeEntry( "TabBox", coverSwitch );
+    coverswitchconfig.sync();
+    KConfigGroup flipswitchconfig( mKWinConfig, "Effect-FlipSwitch" );
+    flipswitchconfig.writeEntry( "TabBox", flipSwitch );
+    flipswitchconfig.sync();
 
     int desktopSwitcher = ui.desktopSwitchingCombo->currentIndex();
     switch( desktopSwitcher )

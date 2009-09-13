@@ -54,8 +54,12 @@ class QPushButton;
 namespace KWin
 {
 
-class Client;
+namespace TabBox
+{
 class TabBox;
+}
+
+class Client;
 class DesktopChangeOSD;
 class RootInfo;
 class PluginMgr;
@@ -572,6 +576,8 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWalkBackThroughDesktopList();
         void slotWalkThroughWindows();
         void slotWalkBackThroughWindows();
+        void slotWalkThroughWindowsAlternative();
+        void slotWalkBackThroughWindowsAlternative();
 
         void slotWalkThroughDesktopsKeyChanged( const QKeySequence& seq );
         void slotWalkBackThroughDesktopsKeyChanged( const QKeySequence& seq );
@@ -579,6 +585,8 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWalkBackThroughDesktopListKeyChanged( const QKeySequence& seq );
         void slotWalkThroughWindowsKeyChanged( const QKeySequence& seq );
         void slotWalkBackThroughWindowsKeyChanged( const QKeySequence& seq );
+        void slotWalkThroughWindowsAlternativeKeyChanged( const QKeySequence& seq );
+        void slotWalkBackThroughWindowsAlternativeKeyChanged( const QKeySequence& seq );
 
         void slotWindowOperations();
         void slotWindowClose();
@@ -661,14 +669,15 @@ class Workspace : public QObject, public KDecorationDefines
         void setupWindowShortcut( Client* c );
         void checkCursorPos();
 
-        bool startKDEWalkThroughWindows();
+        bool startKDEWalkThroughWindows( TabBoxMode mode ); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
         bool startWalkThroughDesktops( TabBoxMode mode ); // TabBoxDesktopMode | TabBoxDesktopListMode
         bool startWalkThroughDesktops();
         bool startWalkThroughDesktopList();
+        void navigatingThroughWindows( bool forward, const KShortcut& shortcut, TabBoxMode mode ); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
         void KDEWalkThroughWindows( bool forward );
         void CDEWalkThroughWindows( bool forward );
         void walkThroughDesktops( bool forward );
-        void KDEOneStepThroughWindows( bool forward );
+        void KDEOneStepThroughWindows( bool forward, TabBoxMode mode ); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
         void oneStepThroughDesktops( bool forward, TabBoxMode mode ); // TabBoxDesktopMode | TabBoxDesktopListMode
         void oneStepThroughDesktops( bool forward );
         void oneStepThroughDesktopList( bool forward );
@@ -795,12 +804,13 @@ class Workspace : public QObject, public KDecorationDefines
         KShortcut cutWalkThroughDesktops, cutWalkThroughDesktopsReverse;
         KShortcut cutWalkThroughDesktopList, cutWalkThroughDesktopListReverse;
         KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
+        KShortcut cutWalkThroughWindowsAlternative, cutWalkThroughWindowsAlternativeReverse;
         bool mouse_emulation;
         unsigned int mouse_emulation_state;
         WId mouse_emulation_window;
         int block_focus;
 
-        TabBox* tab_box;
+        TabBox::TabBox* tab_box;
         DesktopChangeOSD* desktop_change_osd;
 
         QMenu* popup;

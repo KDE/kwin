@@ -226,7 +226,7 @@ Workspace::Workspace( bool restore )
 
     client_keys = new KActionCollection( this );
     initShortcuts();
-    tab_box = new TabBox( this );
+    tab_box = new TabBox::TabBox( this );
     desktop_change_osd = new DesktopChangeOSD( this );
 
     init();
@@ -1225,7 +1225,7 @@ QStringList Workspace::configModules( bool controlCenter )
         args << "kwinoptions";
     else if( KAuthorized::authorizeControlModule( "kde-kwinoptions.desktop" ))
         args << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced"
-             << "kwinrules" << "kwincompositing";
+             << "kwinrules" << "kwincompositing" << "kwintabbox";
     return args;
     }
 

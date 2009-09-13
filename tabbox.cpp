@@ -21,31 +21,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 //#define QT_CLEAN_NAMESPACE
+// own
 #include "tabbox.h"
-#include <QTextStream>
-#include "workspace.h"
-#include "effects.h"
+// tabbox
+#include "tabbox/clientmodel.h"
+#include "tabbox/desktopmodel.h"
+#include "tabbox/tabboxconfig.h"
+// kwin
 #include "client.h"
-#include <QStyleOptionGraphicsItem>
-#include <QPainter>
-#include <QTimeLine>
-#include <kglobal.h>
-#include <fixx11h.h>
-#include <kconfig.h>
-#include <klocale.h>
+#include "effects.h"
+#include "workspace.h"
+// Qt
 #include <QAction>
-#include <stdarg.h>
-#include <kdebug.h>
-#include <kglobalsettings.h>
-#include <kiconeffect.h>
+#include <QX11Info>
+// KDE
+#include <KActionCollection>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KDebug>
+#include <kkeyserver.h>
+// X11
+#include <fixx11h.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
-#include <QX11Info>
-#include <kactioncollection.h>
-#include <kkeyserver.h>
-#include <kconfiggroup.h>
-#include <KDE/Plasma/Theme>
-#include <KGlobalSettings>
 
 // specify externals before namespace
 
@@ -54,54 +52,208 @@ namespace KWin
 
 extern QPixmap* kwin_get_menu_pix_hack();
 
-TabBox::TabBox( Workspace *ws )
-    : QGraphicsView()
-    , wspace(ws)
-    , client(0)
-    , display_refcount( 0 )
-    , selectionItem( 0 )
+namespace TabBox
+{
+
+TabBoxHandlerImpl::TabBoxHandlerImpl()
+    : TabBoxHandler()
     {
-    scene = new QGraphicsScene( this );
-    setWindowFlags( Qt::X11BypassWindowManagerHint );
-    setScene( scene );
-    setFrameStyle( QFrame::NoFrame );
-    viewport()->setAutoFillBackground( false );
-    setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    setAttribute( Qt::WA_TranslucentBackground );
-    frame.setImagePath( "dialogs/background" );
-    frame.setCacheAllRenderedFrames( true );
-    frame.setEnabledBorders( Plasma::FrameSvg::AllBorders );
-    item_frame.setImagePath( "widgets/viewitem" );
-    item_frame.setElementPrefix( "hover" );
-    item_frame.setCacheAllRenderedFrames( true );
-    item_frame.setEnabledBorders( Plasma::FrameSvg::AllBorders );
+    }
 
-    showMiniIcon = false;
+TabBoxHandlerImpl::~TabBoxHandlerImpl()
+    {
+    }
 
-    no_tasks = i18n("*** No Windows ***");
-    m = TabBoxDesktopMode; // init variables
+int TabBoxHandlerImpl::activeScreen() const
+    {
+    return Workspace::self()->activeScreen();
+    }
+
+int TabBoxHandlerImpl::currentDesktop() const
+    {
+    return Workspace::self()->currentDesktop();
+    }
+
+QString TabBoxHandlerImpl::desktopName( TabBoxClient* client ) const
+    {
+    if( TabBoxClientImpl* c = static_cast< TabBoxClientImpl* >( client ) )
+        {
+        if( !c->client()->isOnAllDesktops() )
+            return Workspace::self()->desktopName( c->client()->desktop() );
+        }
+    return Workspace::self()->desktopName( Workspace::self()->currentDesktop() );
+    }
+
+QString TabBoxHandlerImpl::desktopName( int desktop ) const
+    {
+    return Workspace::self()->desktopName( desktop );
+    }
+
+TabBoxClient* TabBoxHandlerImpl::nextClientFocusChain( TabBoxClient* client ) const
+    {
+    Client* current = (static_cast< TabBoxClientImpl* >( client ))->client();
+    return Workspace::self()->nextClientFocusChain( current )->tabBoxClient();
+    }
+
+int TabBoxHandlerImpl::nextDesktopFocusChain( int desktop ) const
+    {
+    return Workspace::self()->nextDesktopFocusChain( desktop );
+    }
+
+int TabBoxHandlerImpl::numberOfDesktops() const
+    {
+    return Workspace::self()->numberOfDesktops();
+    }
+
+TabBoxClient* TabBoxHandlerImpl::activeClient() const
+    {
+    if( Workspace::self()->activeClient() )
+        return Workspace::self()->activeClient()->tabBoxClient();
+    else
+        return NULL;
+    }
+
+TabBoxClient* TabBoxHandlerImpl::clientToAddToList( TabBoxClient* client, int desktop, bool allDesktops ) const
+    {
+    Workspace* workspace = Workspace::self();
+    Client* ret = NULL;
+    Client* current = (static_cast< TabBoxClientImpl* >( client ))->client();
+    bool addClient = false;
+    if( allDesktops )
+        addClient = true;
+    else
+        addClient = current->isOnDesktop( desktop );
+    addClient = addClient && current->wantsTabFocus();
+    if ( addClient )
+        { // don't add windows that have modal dialogs
+        Client* modal = current->findModal();
+        if( modal == NULL || modal == current )
+            ret = current;
+        else if( clientList().contains( modal->tabBoxClient() ) )
+            ret = modal;
+        else
+            {
+            // nothing
+            }
+        }
+    if( options->separateScreenFocus && options->xineramaEnabled )
+        {
+        if( current->screen() != workspace->activeScreen())
+            ret = NULL;
+        }
+    if( ret )
+        return ret->tabBoxClient();
+    else
+        return NULL;
+    }
+
+TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
+    {
+    ClientList stacking = Workspace::self()->stackingOrder();
+    TabBoxClientList ret;
+    foreach( const Client* client, stacking )
+        {
+        ret.append( client->tabBoxClient() );
+        }
+    return ret;
+    }
+
+/*********************************************************
+* TabBoxClientImpl
+*********************************************************/
+
+TabBoxClientImpl::TabBoxClientImpl()
+    : TabBoxClient()
+    {
+    }
+
+TabBoxClientImpl::~TabBoxClientImpl()
+    {
+    }
+
+QString TabBoxClientImpl::caption() const
+    {
+    return m_client->caption();
+    }
+
+QPixmap TabBoxClientImpl::icon() const
+    {
+    return m_client->icon();
+    }
+
+WId TabBoxClientImpl::window() const
+    {
+    return m_client->window();
+    }
+
+bool TabBoxClientImpl::isMinimized() const
+    {
+    return m_client->isMinimized();
+    }
+
+int TabBoxClientImpl::x() const
+    {
+    return m_client->x();
+    }
+
+int TabBoxClientImpl::y() const
+    {
+    return m_client->y();
+    }
+
+int TabBoxClientImpl::width() const
+    {
+    return m_client->width();
+    }
+
+int TabBoxClientImpl::height() const
+    {
+    return m_client->height();
+    }
+
+
+/*********************************************************
+* TabBox
+*********************************************************/
+TabBox::TabBox( Workspace *ws )
+    : QObject()
+    , wspace(ws)
+    , display_refcount( 0 )
+    {
+    m_defaultConfig = TabBoxConfig();
+    m_defaultConfig.setTabBoxMode( TabBoxConfig::ClientTabBox );
+    m_defaultConfig.setClientListMode( TabBoxConfig::CurrentDesktopClientList );
+    m_defaultConfig.setClientSwitchingMode( TabBoxConfig::FocusChainSwitching );
+    m_defaultConfig.setLayout( TabBoxConfig::VerticalLayout );
+
+    m_alternativeConfig = TabBoxConfig();
+    m_alternativeConfig.setTabBoxMode( TabBoxConfig::ClientTabBox );
+    m_alternativeConfig.setClientListMode( TabBoxConfig::AllDesktopsClientList );
+    m_alternativeConfig.setClientSwitchingMode( TabBoxConfig::FocusChainSwitching );
+    m_alternativeConfig.setLayout( TabBoxConfig::VerticalLayout );
+
+    m_desktopConfig = TabBoxConfig();
+    m_desktopConfig.setTabBoxMode( TabBoxConfig::DesktopTabBox );
+    m_desktopConfig.setShowTabBox( true );
+    m_desktopConfig.setDesktopSwitchingMode( TabBoxConfig::MostRecentlyUsedDesktopSwitching );
+    m_desktopConfig.setLayout( TabBoxConfig::VerticalLayout );
+
+    m_desktopListConfig = TabBoxConfig();
+    m_desktopListConfig.setTabBoxMode( TabBoxConfig::DesktopTabBox );
+    m_desktopListConfig.setShowTabBox( true );
+    m_desktopListConfig.setDesktopSwitchingMode( TabBoxConfig::StaticDesktopSwitching );
+    m_desktopListConfig.setLayout( TabBoxConfig::VerticalLayout );
+    m_tabBox = new TabBoxHandlerImpl();
+    m_tabBox->setConfig( m_defaultConfig );
+
+
+    m_tabBoxMode = TabBoxDesktopMode; // init variables
     reconfigure();
-    reset();
     connect(&delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
-    XSetWindowAttributes attr;
-    attr.override_redirect = 1;
-    outline_left = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
-    outline_right = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
-    outline_top = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
-    outline_bottom = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
-        CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
     }
 
 TabBox::~TabBox()
     {
-    XDestroyWindow( QX11Info::display(), outline_left );
-    XDestroyWindow( QX11Info::display(), outline_right );
-    XDestroyWindow( QX11Info::display(), outline_top );
-    XDestroyWindow( QX11Info::display(), outline_bottom );
     }
 
 
@@ -112,98 +264,23 @@ TabBox::~TabBox()
  */
 void TabBox::setMode( TabBoxMode mode )
     {
-    m = mode;
-    }
-
-
-/*!
-  Create list of clients on specified desktop, starting with client c
-*/
-void TabBox::createClientList(ClientList &list, int desktop /*-1 = all*/, Client *c, bool chain)
-    {
-    ClientList::size_type idx = 0;
-
-    list.clear();
-
-    Client* start = c;
-
-    if ( chain )
-        c = workspace()->nextClientFocusChain(c);
-    else
-        c = workspace()->stackingOrder().first();
-
-    Client* stop = c;
-
-    while ( c )
+    m_tabBoxMode = mode;
+    switch( mode )
         {
-        Client* add = NULL;
-        if ( ((desktop == -1) || c->isOnDesktop(desktop))
-             && c->wantsTabFocus() )
-            { // don't add windows that have modal dialogs
-            Client* modal = c->findModal();
-            if( modal == NULL || modal == c )
-                add = c;
-            else if( !list.contains( modal ))
-                add = modal;
-            else
-                {
-                // nothing
-                }
-            }
-        if( options->separateScreenFocus && options->xineramaEnabled )
-            {
-            if( c->screen() != workspace()->activeScreen())
-                add = NULL;
-            }
-        if( add != NULL )
-            {
-            if ( start == add )
-                {
-                list.removeAll( add );
-                list.prepend( add );
-                }
-            else
-                list += add;
-            }
-        if ( chain )
-          c = workspace()->nextClientFocusChain( c );
-        else
-          {
-          if ( idx >= (workspace()->stackingOrder().size()-1) )
-            c = 0;
-          else
-            c = workspace()->stackingOrder()[++idx];
-          }
-
-        if ( c == stop )
+        case TabBoxWindowsMode:
+            m_tabBox->setConfig( m_defaultConfig );
+            break;
+        case TabBoxWindowsAlternativeMode:
+            m_tabBox->setConfig( m_alternativeConfig );
+            break;
+        case TabBoxDesktopMode:
+            m_tabBox->setConfig( m_desktopConfig );
+            break;
+        case TabBoxDesktopListMode:
+            m_tabBox->setConfig( m_desktopListConfig );
             break;
         }
     }
-
-
-/*!
-  Create list of desktops, starting with desktop start
-*/
-void TabBox::createDesktopList(QList< int > &list, int start, SortOrder order)
-    {
-    list.clear();
-
-    int iDesktop = start;
-
-    for( int i = 1; i <= workspace()->numberOfDesktops(); i++ )
-        {
-        list.append( iDesktop );
-        if ( order == StaticOrder )
-            {
-            iDesktop = workspace()->nextDesktopStatic( iDesktop );
-            }
-        else
-            { // MostRecentlyUsedOrder
-            iDesktop = workspace()->nextDesktopFocusChain( iDesktop );
-            }
-        }
-    }
-
 
 /*!
   Resets the tab box to display the active client in TabBoxWindowsMode, or the
@@ -211,247 +288,46 @@ void TabBox::createDesktopList(QList< int > &list, int start, SortOrder order)
  */
 void TabBox::reset( bool partial_reset )
     {
-    int w, h, cw = 0, wmax = 0;
-    qreal left, top, right, bottom;
-    frame.getMargins( left, top, right, bottom );
-
-    QRect r = workspace()->screenGeometry( workspace()->activeScreen());
-
-    // calculate height of 1 line
-    // fontheight + 2 pixel above + 2 pixel below, or 32x32 icon + 4 pixel above + below
-    lineHeight = top + bottom + qMax(QFontMetrics( KGlobalSettings::smallestReadableFont() ).height(), 32 );
-
-    if ( mode() == TabBoxWindowsMode )
+    switch( m_tabBox->config().tabBoxMode() )
         {
-        Client* starting_client = 0;
-        if( partial_reset && clients.count() != 0 )
-            starting_client = clients.first();
-        else
-            client = starting_client = workspace()->activeClient();
+        case TabBoxConfig::ClientTabBox:
+            m_tabBox->createModel( partial_reset );
+            if( !partial_reset )
+                {
+                setCurrentClient( workspace()->activeClient() );
+                // it's possible that the active client is not part of the model
+                // in that case the index is invalid
+                if( !m_index.isValid() )
+                    setCurrentIndex( m_tabBox->first() );
+                }
+            else
+                {
+                if( !m_index.isValid() || !m_tabBox->client( m_index ) )
+                    setCurrentIndex( m_tabBox->first() );
+                }
+            break;
+        case TabBoxConfig::DesktopTabBox:
+            m_tabBox->createModel();
 
-        // get all clients to show
-        createClientList(clients, options_traverse_all ? -1 : workspace()->currentDesktop(), starting_client, true);
-
-        // calculate maximum caption width
-        cw = fontMetrics().width(no_tasks) + 20;
-        QFont f = font();
-        f.setPointSize( KGlobalSettings::smallestReadableFont().pointSize() );
-        QFontMetrics fm = QFontMetrics( f );
-        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-          {
-          cw = fm.width( (*it)->caption() );
-          if( (*it)->desktop() != wspace->currentDesktop() )
-            cw += fm.width( QString( wspace->desktopName((*it)->desktop()) + ": " ) );
-          if ( cw > wmax ) wmax = cw;
-          }
-
-        // calculate height for the popup
-        if ( clients.count() == 0 )  // height for the "not tasks" text
-          {
-          QFont f = font();
-          f.setBold( true );
-          f.setPointSize( 14 );
-
-          h = QFontMetrics(f).height()*4;
-          }
-        else
-          {
-          showMiniIcon = false;
-          h = clients.count() * lineHeight;
-
-          if ( h > (r.height()-(top + bottom)) )  // if too high, use mini icons
-            {
-            showMiniIcon = true;
-            // fontheight + 1 pixel above + 1 pixel below, or 16x16 icon + 2 pixel above + below
-            lineHeight = qMax(QFontMetrics( KGlobalSettings::smallestReadableFont() ).height() + 2, 16 + 4);
-
-            h = clients.count() * lineHeight;
-
-            if ( h > (r.height()-(top + bottom)) ) // if still too high, remove some clients
-              {
-                // how many clients to remove
-                int howMany = (h - (r.height()-(top + bottom)))/lineHeight + 1;
-                for (; howMany; howMany--)
-                  clients.removeAll(clients.last());
-
-                h = clients.count() * lineHeight;
-              }
-            }
-          }
+            if( !partial_reset )
+                setCurrentDesktop( workspace()->currentDesktop() );
+            break;
         }
-    else
-        {
-        int starting_desktop;
-        if( mode() == TabBoxDesktopListMode )
-            {
-            starting_desktop = 1;
-            createDesktopList(desktops, starting_desktop, StaticOrder );
-            }
-        else
-            { // TabBoxDesktopMode
-            starting_desktop = workspace()->currentDesktop();
-            createDesktopList(desktops, starting_desktop, MostRecentlyUsedOrder );
-            }
-
-        if( !partial_reset )
-            desk = workspace()->currentDesktop();
-
-        showMiniIcon = false;
-
-        foreach (int it, desktops)
-          {
-          cw = fontMetrics().width( workspace()->desktopName(it) );
-          if ( cw > wmax ) wmax = cw;
-          }
-
-        // calculate height for the popup (max. 16 desktops always fit in a 800x600 screen)
-        h = desktops.count() * lineHeight;
-        }
-
-    // height, width for the popup
-    h += top + bottom;
-    h = qMin( h, r.height() );
-    w = left + right + 5*2 + ( showMiniIcon ? 16 : 32 ) + 8 + wmax; // 5*2=margins, ()=icon, 8=space between icon+text
-    w = qBound( r.width()/5 , w, r.width() * 4 / 5 );
-
-    setGeometry((r.width()-w)/2 + r.x(),
-                 (r.height()-h)/2+ r.y(),
-                 w, h );
-    scene->setSceneRect( 0, 0, w, h );
-    frame.resizeFrame( QSize( w , h ) );
-    // resizing the item frame
-    item_frame.resizeFrame( QSize( w-left-right, lineHeight ) );
-
-    setMask( frame.mask() );
-
-    if( partial_reset )
-        initScene();
 
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
-    }
-
-void TabBox::initScene()
-    {
-    scene->clear();
-    qreal left, top, right, bottom;
-    frame.getMargins( left, top, right, bottom );
-
-    if( KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects )
-        {
-        selectionItem = new TabBoxSelectionItem( this );
-        selectionItem->setPos( left, top );
-        selectionItem->hide();
-        scene->addItem( selectionItem );
-        }
-    else
-        {
-        selectionItem = 0;
-        }
-
-    if( mode() == TabBoxWindowsMode )
-        {
-        if( clients.isEmpty() )
-            {
-            QFont f = font();
-            f.setBold( true );
-            f.setPointSize( 14 );
-
-            QGraphicsTextItem* item = scene->addText( no_tasks, f );
-            item->setDefaultTextColor( Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor ) );
-            item->adjustSize();
-            item->setPos( width()*0.5 - QFontMetrics(f).width( item->toPlainText() )*0.5,
-                height()*0.5 - QFontMetrics(f).height()*0.5 );
-            }
-        else
-            {
-            // add clients to scene
-            int index = 0;
-
-            foreach( Client* c, clients )
-                {
-                TabBoxWindowItem* item = new TabBoxWindowItem( c, this );
-                item->setHeight( lineHeight );
-                item->setWidth( width() - left - right );
-                item->setShowMiniIcons( showMiniIcon );
-                item->setPos( left, top + lineHeight * index );
-                scene->addItem( item );
-
-                if ( selectionItem && c == client )
-                    {
-                    selectionItem->setPos( item->pos() );
-                    }
-
-                index++;
-                }
-
-            }
-        }
-    else
-        { // TabBoxDesktopMode || TabBoxDesktopListMode
-        int y = top;
-
-        QRect r = workspace()->screenGeometry( workspace()->activeScreen());
-        foreach (int it, desktops)
-            {
-            TabBoxDesktopItem* item = new TabBoxDesktopItem( it, this );
-            item->setHeight( lineHeight );
-            item->setWidth( width() - left - right );
-            item->setPos( left, top + lineHeight * (it-1) );
-            scene->addItem( item );
-            // next desktop
-            y += lineHeight;
-            if ( y >= r.height() )
-                break;
-            }
-        }
     }
 
 /*!
   Shows the next or previous item, depending on \a next
  */
-void TabBox::nextPrev( bool next)
+void TabBox::nextPrev( bool next )
     {
-    if ( mode() == TabBoxWindowsMode )
-        {
-        Client* firstClient = 0;
-        Client* newClient = client;
-        do
-            {
-            if ( next )
-                newClient = workspace()->nextClientFocusChain(newClient);
-            else
-                newClient = workspace()->previousClientFocusChain(newClient);
-            if (!firstClient)
-                {
-                // When we see our first client for the second time,
-                // it's time to stop.
-                firstClient = newClient;
-                }
-            else if (newClient == firstClient)
-                {
-                // No candidates found.
-                newClient = 0;
-                break;
-                }
-            } while ( newClient && !clients.contains( newClient ));
-        setCurrentClient( newClient );
-        }
-    else if( mode() == TabBoxDesktopMode )
-        {
-        setCurrentDesktop ( next ? workspace()->nextDesktopFocusChain( desk )
-                                 : workspace()->previousDesktopFocusChain( desk ) );
-        }
-    else
-        { // TabBoxDesktopListMode
-        setCurrentDesktop ( next ? workspace()->nextDesktopStatic( desk )
-                                 : workspace()->previousDesktopStatic( desk )) ;
-        }
+    setCurrentIndex( m_tabBox->nextPrev( next ), false );
 
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
     }
-
 
 
 /*!
@@ -460,11 +336,14 @@ void TabBox::nextPrev( bool next)
  */
 Client* TabBox::currentClient()
     {
-    if ( mode() != TabBoxWindowsMode )
-        return 0;
-    if (!workspace()->hasClient( client ))
-        return 0;
-    return client;
+    if( TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >( m_tabBox->client( m_index )) )
+        {
+        if( !workspace()->hasClient( client->client() ) )
+            return NULL;
+        return client->client();
+        }
+    else
+        return NULL;
     }
 
 /*!
@@ -474,9 +353,14 @@ Client* TabBox::currentClient()
  */
 ClientList TabBox::currentClientList()
     {
-    if( mode() != TabBoxWindowsMode )
-        return ClientList();
-    return clients;
+    TabBoxClientList list = m_tabBox->clientList();
+    ClientList ret;
+    foreach( const TabBoxClient* client, list )
+        {
+        if( const TabBoxClientImpl* c = static_cast< const TabBoxClientImpl* >( client ) )
+            ret.append( c->client() );
+        }
+    return ret;
     }
 
 
@@ -487,22 +371,18 @@ ClientList TabBox::currentClientList()
  */
 int TabBox::currentDesktop()
     {
-    if ( mode() == TabBoxDesktopListMode || mode() == TabBoxDesktopMode )
-        return desk;
-    return -1;
+    return m_tabBox->desktop( m_index );
     }
 
 
 /*!
   Returns the list of desktops potentially displayed ( only works in
   TabBoxDesktopListMode )
-  Returns an empty list if no desktops are available.
+  Returns an empty list if no are available.
  */
 QList< int > TabBox::currentDesktopList()
     {
-    if ( mode() == TabBoxDesktopListMode || mode() == TabBoxDesktopMode )
-        return desktops;
-    return QList< int >();
+    return m_tabBox->desktopList();
     }
 
 
@@ -513,32 +393,7 @@ QList< int > TabBox::currentDesktopList()
  */
 void TabBox::setCurrentClient( Client* newClient )
     {
-    foreach( QGraphicsItem *item, scene->items() )
-        {
-        TabBoxWindowItem* wItem = dynamic_cast<TabBoxWindowItem*>( item );
-        if( !wItem )
-            continue;
-
-        if ( wItem->client() == newClient )
-            {
-            if (selectionItem)
-                selectionItem->moveTo( wItem );
-            else
-                wItem->update();
-            }
-        else if ( !selectionItem && wItem->client() == client )
-            {
-                wItem->update();
-            }
-        }
-
-    client = newClient;
-
-    if( effects )
-        static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
-
-    if( isVisible() )
-        updateOutline();
+    setCurrentIndex( m_tabBox->index( newClient->tabBoxClient() ) );
     }
 
 /*!
@@ -548,59 +403,18 @@ void TabBox::setCurrentClient( Client* newClient )
  */
 void TabBox::setCurrentDesktop( int newDesktop )
     {
-    foreach( QGraphicsItem *item, scene->items() )
-        {
-        TabBoxDesktopItem* dItem = dynamic_cast<TabBoxDesktopItem*>( item );
-        if( !dItem )
-            continue;
+    setCurrentIndex( m_tabBox->desktopIndex( newDesktop ) );
+    }
 
-        if ( dItem->desktop() == newDesktop )
-            {
-            if (selectionItem)
-                selectionItem->moveTo( dItem );
-            else
-                dItem->update();
-            }
-        else if ( !selectionItem && dItem->desktop() == desk )
-            {
-                dItem->update();
-            }
-        }
-
-    desk = newDesktop;
-
-    if( effects )
+void TabBox::TabBox::setCurrentIndex( QModelIndex index, bool notifyEffects )
+    {
+    if( !index.isValid() )
+        return;
+    m_index = index;
+    m_tabBox->setCurrentIndex( index );
+    if( effects && notifyEffects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxUpdated();
     }
-
-/*!
-  Reimplemented to raise the tab box as well
- */
-void TabBox::showEvent( QShowEvent* )
-    {
-    if( isVisible() )
-        updateOutline();
-    raise();
-    }
-
-
-/*!
-  hide the icon box if necessary
- */
-void TabBox::hideEvent( QHideEvent* )
-    {
-    }
-
-void TabBox::drawBackground( QPainter* painter, const QRectF& rect )
-    {
-    painter->save();
-    painter->setCompositionMode( QPainter::CompositionMode_Source );
-    qreal left, top, right, bottom;
-    frame.getMargins( left, top, right, bottom );
-    frame.paintFrame( painter, rect.adjusted( -left, -top, right, bottom ) );
-    painter->restore();
-    }
-
 
 /*!
   Notify effects that the tab box is being shown, and only display the
@@ -609,97 +423,17 @@ void TabBox::drawBackground( QPainter* painter, const QRectF& rect )
 void TabBox::show()
     {
     if( effects )
-        static_cast<EffectsHandlerImpl*>(effects)->tabBoxAdded( mode());
+        static_cast<EffectsHandlerImpl*>(effects)->tabBoxAdded( m_tabBoxMode );
     if( isDisplayed())
-        return;
-    refDisplay();
-    QWidget::show();
-    }
-
-void TabBox::updateOutline()
-    {
-    Client* c = currentClient();
-    if( c == NULL || this->isHidden() || !c->isShown( true ) || !c->isOnCurrentDesktop())
         {
-        XUnmapWindow( QX11Info::display(), outline_left );
-        XUnmapWindow( QX11Info::display(), outline_right );
-        XUnmapWindow( QX11Info::display(), outline_top );
-        XUnmapWindow( QX11Info::display(), outline_bottom );
+        m_isShown = false;
         return;
         }
-    // left/right parts are between top/bottom, they don't reach as far as the corners
-    XMoveResizeWindow( QX11Info::display(), outline_left, c->x(), c->y() + 5, 5, c->height() - 10 );
-    XMoveResizeWindow( QX11Info::display(), outline_right, c->x() + c->width() - 5, c->y() + 5, 5, c->height() - 10 );
-    XMoveResizeWindow( QX11Info::display(), outline_top, c->x(), c->y(), c->width(), 5 );
-    XMoveResizeWindow( QX11Info::display(), outline_bottom, c->x(), c->y() + c->height() - 5, c->width(), 5 );
-    {
-    QPixmap pix( 5, c->height() - 10 );
-    QPainter p( &pix );
-    p.setPen( Qt::white );
-    p.drawLine( 0, 0, 0, pix.height() - 1 );
-    p.drawLine( 4, 0, 4, pix.height() - 1 );
-    p.setPen( Qt::gray );
-    p.drawLine( 1, 0, 1, pix.height() - 1 );
-    p.drawLine( 3, 0, 3, pix.height() - 1 );
-    p.setPen( Qt::black );
-    p.drawLine( 2, 0, 2, pix.height() - 1 );
-    p.end();
-    XSetWindowBackgroundPixmap( QX11Info::display(), outline_left, pix.handle());
-    XSetWindowBackgroundPixmap( QX11Info::display(), outline_right, pix.handle());
+    refDisplay();
+    m_isShown = true;
+    m_tabBox->show();
     }
-    {
-    QPixmap pix( c->width(), 5 );
-    QPainter p( &pix );
-    p.setPen( Qt::white );
-    p.drawLine( 0, 0, pix.width() - 1 - 0, 0 );
-    p.drawLine( 4, 4, pix.width() - 1 - 4, 4 );
-    p.drawLine( 0, 0, 0, 4 );
-    p.drawLine( pix.width() - 1 - 0, 0, pix.width() - 1 - 0, 4 );
-    p.setPen( Qt::gray );
-    p.drawLine( 1, 1, pix.width() - 1 - 1, 1 );
-    p.drawLine( 3, 3, pix.width() - 1 - 3, 3 );
-    p.drawLine( 1, 1, 1, 4 );
-    p.drawLine( 3, 3, 3, 4 );
-    p.drawLine( pix.width() - 1 - 1, 1, pix.width() - 1 - 1, 4 );
-    p.drawLine( pix.width() - 1 - 3, 3, pix.width() - 1 - 3, 4 );
-    p.setPen( Qt::black );
-    p.drawLine( 2, 2, pix.width() - 1 - 2, 2 );
-    p.drawLine( 2, 2, 2, 4 );
-    p.drawLine( pix.width() - 1 - 2, 2, pix.width() - 1 - 2, 4 );
-    p.end();
-    XSetWindowBackgroundPixmap( QX11Info::display(), outline_top, pix.handle());
-    }
-    {
-    QPixmap pix( c->width(), 5 );
-    QPainter p( &pix );
-    p.setPen( Qt::white );
-    p.drawLine( 4, 0, pix.width() - 1 - 4, 0 );
-    p.drawLine( 0, 4, pix.width() - 1 - 0, 4 );
-    p.drawLine( 0, 4, 0, 0 );
-    p.drawLine( pix.width() - 1 - 0, 4, pix.width() - 1 - 0, 0 );
-    p.setPen( Qt::gray );
-    p.drawLine( 3, 1, pix.width() - 1 - 3, 1 );
-    p.drawLine( 1, 3, pix.width() - 1 - 1, 3 );
-    p.drawLine( 3, 1, 3, 0 );
-    p.drawLine( 1, 3, 1, 0 );
-    p.drawLine( pix.width() - 1 - 3, 1, pix.width() - 1 - 3, 0 );
-    p.drawLine( pix.width() - 1 - 1, 3, pix.width() - 1 - 1, 0 );
-    p.setPen( Qt::black );
-    p.drawLine( 2, 2, pix.width() - 1 - 2, 2 );
-    p.drawLine( 2, 0, 2, 2 );
-    p.drawLine( pix.width() - 1 - 2, 0, pix.width() - 1 - 2, 2 );
-    p.end();
-    XSetWindowBackgroundPixmap( QX11Info::display(), outline_bottom, pix.handle());
-    }
-    XClearWindow( QX11Info::display(), outline_left );
-    XClearWindow( QX11Info::display(), outline_right );
-    XClearWindow( QX11Info::display(), outline_top );
-    XClearWindow( QX11Info::display(), outline_bottom );
-    XMapWindow( QX11Info::display(), outline_left );
-    XMapWindow( QX11Info::display(), outline_right );
-    XMapWindow( QX11Info::display(), outline_top );
-    XMapWindow( QX11Info::display(), outline_bottom );
-    }
+
 
 /*!
   Notify effects that the tab box is being hidden.
@@ -707,19 +441,17 @@ void TabBox::updateOutline()
 void TabBox::hide()
     {
     delayedShowTimer.stop();
-    if( isVisible())
+    if( m_isShown )
         {
+        m_isShown = false;
         unrefDisplay();
-        XUnmapWindow( QX11Info::display(), outline_left );
-        XUnmapWindow( QX11Info::display(), outline_right );
-        XUnmapWindow( QX11Info::display(), outline_top );
-        XUnmapWindow( QX11Info::display(), outline_bottom );
         }
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->tabBoxClosed();
     if( isDisplayed())
         kDebug( 1212 ) << "Tab box was not properly closed by an effect";
-    QWidget::hide();
+    m_index = QModelIndex();
+    m_tabBox->hide();
     QApplication::syncX();
     XEvent otherEvent;
     while (XCheckTypedEvent (display(), EnterNotify, &otherEvent ) )
@@ -739,7 +471,42 @@ void TabBox::unrefDisplay()
 void TabBox::reconfigure()
     {
     KSharedConfigPtr c(KGlobal::config());
-    options_traverse_all = c->group("TabBox").readEntry("TraverseAll", false );
+    KConfigGroup config = c->group( "TabBox" );
+
+    loadConfig( c->group( "TabBox" ), m_defaultConfig );
+    loadConfig( c->group( "TabBoxAlternative" ), m_alternativeConfig );
+
+    m_tabBox->setConfig( m_defaultConfig );
+
+    m_delayShow = config.readEntry<bool>( "ShowDelay", true );
+    m_delayShowTime = config.readEntry<int>( "DelayTime", 90 );
+    }
+
+void TabBox::loadConfig( const KConfigGroup& config, TabBoxConfig& tabBoxConfig )
+    {
+    tabBoxConfig.setClientListMode( TabBoxConfig::ClientListMode(
+        config.readEntry<int>( "ListMode", TabBoxConfig::defaultListMode() )));
+    tabBoxConfig.setClientSwitchingMode( TabBoxConfig::ClientSwitchingMode(
+        config.readEntry<int>( "SwitchingMode", TabBoxConfig::defaultSwitchingMode() )));
+    tabBoxConfig.setLayout( TabBoxConfig::LayoutMode(
+        config.readEntry<int>( "LayoutMode", TabBoxConfig::defaultLayoutMode() )));
+    tabBoxConfig.setSelectedItemViewPosition( TabBoxConfig::SelectedItemViewPosition(
+        config.readEntry<int>( "SelectedItem", TabBoxConfig::defaultSelectedItemViewPosition())));
+
+    tabBoxConfig.setShowOutline( config.readEntry<bool>( "ShowOutline",
+                                                             TabBoxConfig::defaultShowOutline()));
+    tabBoxConfig.setShowTabBox( config.readEntry<bool>( "ShowTabBox",
+                                                            TabBoxConfig::defaultShowTabBox()));
+    tabBoxConfig.setHighlightWindows( config.readEntry<bool>( "HighlightWindows",
+                                                                  TabBoxConfig::defaultHighlightWindow()));
+
+    tabBoxConfig.setMinWidth( config.readEntry<int>( "MinWidth",
+                                                         TabBoxConfig::defaultMinWidth()));
+    tabBoxConfig.setMinHeight( config.readEntry<int>( "MinHeight",
+                                                         TabBoxConfig::defaultMinHeight()));
+
+    tabBoxConfig.setLayoutName( config.readEntry<QString>( "LayoutName", TabBoxConfig::defaultLayoutName()));
+    tabBoxConfig.setSelectedItemLayoutName( config.readEntry<QString>( "SelectedLayoutName", TabBoxConfig::defaultSelectedItemLayoutName()));
     }
 
 /*!
@@ -762,26 +529,25 @@ void TabBox::reconfigure()
  */
 void TabBox::delayedShow()
     {
-    KSharedConfigPtr c(KGlobal::config());
-    KConfigGroup cg(c, "TabBox");
-    bool delay = cg.readEntry("ShowDelay", true);
+    if( isDisplayed() || delayedShowTimer.isActive() )
+        // already called show - no need to call it twice
+        return;
 
-    if (!delay)
+    if( !m_delayShowTime )
         {
         show();
         return;
         }
 
-    int delayTime = cg.readEntry("DelayTime", 90);
     delayedShowTimer.setSingleShot(true);
-    delayedShowTimer.start(delayTime);
+    delayedShowTimer.start( m_delayShowTime );
     }
 
 
 void TabBox::handleMouseEvent( XEvent* e )
     {
     XAllowEvents( display(), AsyncPointer, xTime());
-    if( !isVisible() && isDisplayed())
+    if( !m_isShown && isDisplayed())
         { // tabbox has been replaced, check effects
         if( effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent( e ))
             return;
@@ -789,349 +555,52 @@ void TabBox::handleMouseEvent( XEvent* e )
     if( e->type != ButtonPress )
         return;
     QPoint pos( e->xbutton.x_root, e->xbutton.y_root );
-    QPoint widgetPos = mapFromGlobal( pos ); // inside tabbox
 
-    if(( !isVisible() && isDisplayed())
-        || !geometry().contains( pos ))
+    if(( !m_isShown && isDisplayed())
+        || (!m_tabBox->containsPos( pos ) &&
+        (e->xbutton.button == Button1 || e->xbutton.button == Button2 || e->xbutton.button == Button3)))
         {
         workspace()->closeTabBox();  // click outside closes tab
         return;
         }
 
-    qreal left, top, right, bottom;
-    frame.getMargins( left, top, right, bottom );
-    int num = (widgetPos.y()-top) / lineHeight;
-
-    if( mode() == TabBoxWindowsMode )
+    QModelIndex index;
+    if( e->xbutton.button == Button1 || e->xbutton.button == Button2 || e->xbutton.button == Button3 )
         {
-        for( ClientList::ConstIterator it = clients.constBegin();
-             it != clients.constEnd();
-             ++it)
+        index = m_tabBox->indexAt( pos );
+        if( e->xbutton.button == Button2 && index.isValid() )
             {
-            if( workspace()->hasClient( *it ) && (num == 0) ) // safety
+            if( TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >( m_tabBox->client( index )) )
                 {
-                setCurrentClient( *it );
-                break;
+                if( workspace()->hasClient( client->client() ) )
+                    {
+                    client->client()->closeWindow();
+                    return;
+                    }
                 }
-            num--;
             }
         }
     else
         {
-        foreach( int it, desktops )
-            {
-            if( num == 0 )
-                {
-                setCurrentDesktop( it );
-                break;
-                }
-            num--;
-            }
-        }
-    }
-
-
-//*******************************
-// TabBoxSelectionItem
-//*******************************
-TabBoxSelectionItem::TabBoxSelectionItem( TabBox* parent )
-    : QObject()
-    , QGraphicsItem()
-    , m_parent( parent )
-    , m_timeLine( new QTimeLine( 100, this ) )
-    {
-    setCacheMode( DeviceCoordinateCache );
-    setZValue( -1000 );
-    setFlag(ItemIsMovable, false);
-    setFlag(ItemIsSelectable, false);
-    setFlag(ItemIsFocusable, false);
-
-    m_timeLine->setFrameRange( 0, 40 );
-    m_timeLine->setCurveShape( QTimeLine::EaseInCurve );
-    connect( m_timeLine, SIGNAL( valueChanged(qreal) ),
-             this, SLOT( animateMove(qreal) ) );
-    }
-
-TabBoxSelectionItem::~TabBoxSelectionItem()
-    {
-    }
-
-QRectF TabBoxSelectionItem::boundingRect() const
-    {
-    return m_boundingRect;
-    }
-
-void TabBoxSelectionItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
-    {
-    Q_UNUSED( widget );
-    painter->setRenderHint( QPainter::Antialiasing );
-    m_parent->itemFrame()->paintFrame( painter, option->exposedRect, option->exposedRect );
-    }
-
-void TabBoxSelectionItem::moveTo( QGraphicsItem * item )
-    {
-    if (m_boundingRect != item->boundingRect())
-        {
-        prepareGeometryChange();
-        m_boundingRect = item->boundingRect();
+        // mouse wheel event
+        index = m_tabBox->nextPrev( e->xbutton.button == Button5 );
         }
 
-    show();
-
-    if (!m_animEndRect.isEmpty()) {
-        setPos(m_animEndRect.topLeft());
+    if( index.isValid() )
+        setCurrentIndex( index );
     }
 
-    m_animStartRect = QRectF( pos(), boundingRect().size() );
-    m_animEndRect = QRectF( item->pos(), item->boundingRect().size() );
-    m_timeLine->stop();
-    m_timeLine->start();
-    }
-
-void TabBoxSelectionItem::animateMove( qreal t )
+void TabBox::TabBox::grabbedKeyEvent( QKeyEvent* event )
     {
-        setPos(m_animStartRect.topLeft() * (1 - t) + m_animEndRect.topLeft() * t);
-        if (qFuzzyCompare(t, qreal(1.0))) {
-            m_animEndRect = QRect();
+    if( !m_isShown && isDisplayed() )
+        { // tabbox has been replaced, check effects
+        // TODO: pass keyevent to effects
+        return;
         }
+    setCurrentIndex( m_tabBox->grabbedKeyEvent( event ) );
     }
 
-//*******************************
-// TabBoxWindowItem
-//*******************************
-
-TabBoxWindowItem::TabBoxWindowItem( Client* client, TabBox* parent )
-    : QGraphicsItem()
-    , m_client( client )
-    , m_parent( parent )
-    , m_width( 0 )
-    , m_height( 0 )
-    , m_showMiniIcons( false )
-    {
-    setCacheMode( DeviceCoordinateCache );
-    }
-
-TabBoxWindowItem::~TabBoxWindowItem()
-    {
-    }
-
-QRectF TabBoxWindowItem::boundingRect() const
-    {
-    return QRectF( 0, 0, m_width, m_height );
-    }
-
-void TabBoxWindowItem::setHeight( int height )
-    {
-    m_height = height;
-    }
-
-void TabBoxWindowItem::setWidth( int width )
-    {
-    m_width = width;
-    }
-
-void TabBoxWindowItem::setShowMiniIcons( bool showMiniIcons )
-    {
-    m_showMiniIcons = showMiniIcons;
-    }
-
-Client* TabBoxWindowItem::client() const
-{
-    return m_client;
-}
-
-void TabBoxWindowItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
-    {
-    painter->setRenderHint( QPainter::Antialiasing );
-
-    drawBackground( painter, option, widget );
-
-    // draw icon
-    int iconWidth = m_showMiniIcons ? 16 : 32;
-    int x = 0;
-    QPixmap* menu_pix = kwin_get_menu_pix_hack();
-    QPixmap icon;
-    if ( m_showMiniIcons )
-        {
-        if ( !m_client->miniIcon().isNull() )
-            icon = m_client->miniIcon();
-        }
-    else
-        {
-        if ( !m_client->icon().isNull() )
-            icon = m_client->icon();
-        else if ( menu_pix )
-            icon = *menu_pix;
-        }
-
-    const int iconX = x + 5;
-    const int iconY = ( m_height - iconWidth ) / 2;
-    if( !icon.isNull() )
-        {
-        if( m_client->isMinimized())
-            KIconEffect::semiTransparent( icon );
-        if( m_client == m_parent->currentClient() )
-            {
-            KIconEffect *effect = KIconLoader::global()->iconEffect();
-            icon = effect->apply( icon, KIconLoader::Desktop, KIconLoader::ActiveState );
-            }
-        painter->drawPixmap( iconX, iconY, icon );
-        }
-
-    // generate text to display
-    QString s;
-
-    if ( !m_client->isOnDesktop(m_parent->workspace()->currentDesktop()) )
-        s = m_parent->workspace()->desktopName(m_client->desktop()).append(": ");
-
-    int textOptions = Qt::AlignLeft | Qt::AlignBottom | Qt ::TextSingleLine;
-    QFont font = painter->font();
-    font.setPointSize( KGlobalSettings::smallestReadableFont().pointSize() );
-
-    if ( m_client->isMinimized() )
-        {
-        s += '(' + m_client->caption() + ')';
-        font.setItalic( true );
-        }
-    else
-        s += m_client->caption();
-
-    QFontMetrics fm = QFontMetrics( font );
-    const int textWidth = m_width - iconX - iconWidth;
-    int textHeight = m_height - (iconX * 2);
-
-    if (!m_showMiniIcons && fm.height() < m_height * 2 / 3) {
-        textHeight = m_height - (m_height / 3);
-    }
-
-    s = fm.elidedText( s, Qt::ElideMiddle, textWidth );
-    painter->setPen( Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor ) );
-    painter->setFont( font );
-    painter->drawText( iconX + iconWidth + 8, iconY, textWidth, textHeight, textOptions, s );
-    }
-
-void TabBoxWindowItem::drawBackground( QPainter* painter, const QStyleOptionGraphicsItem* , QWidget* )
-    {
-    if( m_parent->itemsDrawBackgrounds() && m_client == m_parent->currentClient() )
-        {
-        m_parent->itemFrame()->paintFrame( painter, boundingRect() );
-        }
-    }
-
-
-//*******************************
-// TabBoxDesktopItem
-//*******************************
-
-TabBoxDesktopItem::TabBoxDesktopItem( int desktop, TabBox* parent )
-    : QGraphicsItem()
-    , m_desktop( desktop )
-    , m_parent( parent )
-    , m_width( 0 )
-    , m_height( 0 )
-    {
-    setCacheMode( DeviceCoordinateCache );
-    }
-
-TabBoxDesktopItem::~TabBoxDesktopItem()
-    {
-    }
-
-QRectF TabBoxDesktopItem::boundingRect() const
-    {
-    return QRectF( 0, 0, m_width, m_height );
-    }
-
-void TabBoxDesktopItem::setHeight( int height )
-    {
-    m_height = height;
-    }
-
-void TabBoxDesktopItem::setWidth( int width )
-    {
-    m_width = width;
-    }
-
-int TabBoxDesktopItem::desktop() const
-    {
-    return m_desktop;
-    }
-
-void TabBoxDesktopItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
-    {
-    painter->setRenderHint( QPainter::Antialiasing );
-
-    drawBackground( painter, option, widget );
-
-    int iconWidth = 32;
-    int iconHeight = iconWidth;
-    int x = 0;
-    int y = 0;
-
-    // get widest desktop name/number
-    QFont f = painter->font();
-    f.setBold(true);
-    f.setPixelSize(iconHeight - 4);  // pixel, not point because I need to know the pixels
-    QFontMetrics fm = QFontMetrics( f );
-
-    QString num = QString::number( m_desktop );
-    iconWidth = qMax(iconWidth - 4, fm.boundingRect(num).width()) + 4;
-
-    // draw "icon" (here: number of desktop)
-    painter->save();
-    QBrush brush;
-    if( m_desktop == m_parent->currentDesktop() )
-        brush = m_parent->palette().brush( QPalette::Active, QPalette::Highlight );
-    else
-        brush = m_parent->palette().brush( QPalette::Active, QPalette::Base );
-    painter->fillRect(x+5, y+4, iconWidth, iconHeight, brush );
-    painter->setPen(m_parent->palette().color( QPalette::Active, QPalette::Text ));
-    painter->drawRect(x+5, y+4, iconWidth, iconHeight);
-
-    // draw desktop-number
-    painter->setFont(f);
-    painter->drawText(x+5, y+4, iconWidth, iconHeight, Qt::AlignCenter | Qt::AlignVCenter, num);
-
-    painter->restore();
-
-    // draw desktop name text
-    QFont font = painter->font();
-    font.setPointSize( KGlobalSettings::smallestReadableFont().pointSize() );
-    painter->setFont( font );
-    fm = QFontMetrics( font );
-    int wmax = fm.width( m_parent->workspace()->desktopName( m_desktop ));
-
-    painter->setPen( Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor ) );
-    painter->drawText(x+5 + iconWidth + 8, y, m_width - 5 - iconWidth - 8, m_height - 4,
-                    Qt::AlignLeft | Qt::AlignBottom | Qt::TextSingleLine,
-                    m_parent->workspace()->desktopName( m_desktop ));
-
-    // show mini icons from that desktop aligned to each other
-    int x1 = x + 5 + iconWidth + 8 + wmax + 5;
-
-    ClientList list;
-    m_parent->createClientList(list, m_desktop, 0, false);
-    // clients are in reversed stacking order
-    for ( int i = list.size() - 1; i>=0; i-- )
-        {
-        if ( !list.at( i )->miniIcon().isNull() )
-            {
-            if ( x1+18 >= m_width )  // only show full icons
-                break;
-
-            painter->drawPixmap( x1, y + (m_height - 16)/2, list.at(  i )->miniIcon() );
-            x1 += 18;
-            }
-        }
-    }
-
-void TabBoxDesktopItem::drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* )
-    {
-    if( m_parent->itemsDrawBackgrounds() && m_desktop == m_parent->currentDesktop() )
-        {
-        m_parent->itemFrame()->paintFrame( painter, boundingRect() );
-        }
-    }
+} // namespace TabBox
 
 
 //*******************************
@@ -1231,51 +700,48 @@ static bool areModKeysDepressed( const KShortcut& cut )
     return false;
     }
 
-void Workspace::slotWalkThroughWindows()
+void Workspace::navigatingThroughWindows( bool forward, const KShortcut& shortcut, TabBoxMode mode )
     {
     if ( tab_grab || control_grab )
         return;
-    if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
+    if ( !options->focusPolicyIsReasonable())
         {
         //ungrabXKeyboard(); // need that because of accelerator raw mode
         // CDE style raise / lower
-        CDEWalkThroughWindows( true );
+        CDEWalkThroughWindows( forward );
         }
     else
         {
-        if ( areModKeysDepressed( cutWalkThroughWindows ) )
+        if ( areModKeysDepressed( shortcut ) )
             {
-            if ( startKDEWalkThroughWindows() )
-                KDEWalkThroughWindows( true );
+            if ( startKDEWalkThroughWindows( mode) )
+                KDEWalkThroughWindows( forward );
             }
         else
             // if the shortcut has no modifiers, don't show the tabbox,
             // don't grab, but simply go to the next window
-            KDEOneStepThroughWindows( true );
+            KDEOneStepThroughWindows( forward, mode );
         }
+    }
+
+void Workspace::slotWalkThroughWindows()
+    {
+    navigatingThroughWindows( true, cutWalkThroughWindows, TabBoxWindowsMode );
     }
 
 void Workspace::slotWalkBackThroughWindows()
     {
-    if( tab_grab || control_grab )
-        return;
-    if ( options->altTabStyle == Options::CDE || !options->focusPolicyIsReasonable())
-        {
-        // CDE style raise / lower
-        CDEWalkThroughWindows( false );
-        }
-    else
-        {
-        if ( areModKeysDepressed( cutWalkThroughWindowsReverse ) )
-            {
-            if ( startKDEWalkThroughWindows() )
-                KDEWalkThroughWindows( false );
-            }
-        else
-            {
-            KDEOneStepThroughWindows( false );
-            }
-        }
+    navigatingThroughWindows( false, cutWalkThroughWindowsReverse, TabBoxWindowsMode );
+    }
+
+void Workspace::slotWalkThroughWindowsAlternative()
+    {
+    navigatingThroughWindows( true, cutWalkThroughWindowsAlternative, TabBoxWindowsAlternativeMode );
+    }
+
+void Workspace::slotWalkBackThroughWindowsAlternative()
+    {
+    navigatingThroughWindows( false, cutWalkThroughWindowsAlternativeReverse, TabBoxWindowsAlternativeMode );
     }
 
 void Workspace::slotWalkThroughDesktops()
@@ -1368,6 +834,16 @@ void Workspace::slotWalkBackThroughWindowsKeyChanged( const QKeySequence& seq )
     cutWalkThroughWindowsReverse = KShortcut( seq );
     }
 
+void Workspace::slotWalkThroughWindowsAlternativeKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughWindowsAlternative = KShortcut( seq );
+    }
+
+void Workspace::slotWalkBackThroughWindowsAlternativeKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughWindowsAlternativeReverse = KShortcut( seq );
+    }
+
 void Workspace::modalActionsSwitch( bool enabled )
     {
     QList<KActionCollection*> collections;
@@ -1379,15 +855,14 @@ void Workspace::modalActionsSwitch( bool enabled )
             action->setEnabled(enabled);
     }
 
-bool Workspace::startKDEWalkThroughWindows()
+bool Workspace::startKDEWalkThroughWindows( TabBoxMode mode )
     {
     if( !establishTabBoxGrab())
         return false;
     tab_grab = true;
     modalActionsSwitch( false );
-    tab_box->setMode( TabBoxWindowsMode );
+    tab_box->setMode( mode );
     tab_box->reset();
-    tab_box->initScene();
     return true;
     }
 
@@ -1399,7 +874,6 @@ bool Workspace::startWalkThroughDesktops( TabBoxMode mode )
     modalActionsSwitch( false );
     tab_box->setMode( mode );
     tab_box->reset();
-    tab_box->initScene();
     return true;
     }
 
@@ -1490,9 +964,9 @@ void Workspace::CDEWalkThroughWindows( bool forward )
         }
     }
 
-void Workspace::KDEOneStepThroughWindows( bool forward )
+void Workspace::KDEOneStepThroughWindows( bool forward, TabBoxMode mode )
     {
-    tab_box->setMode( TabBoxWindowsMode );
+    tab_box->setMode( mode );
     tab_box->reset();
     tab_box->nextPrev( forward );
     if( Client* c = tab_box->currentClient() )
@@ -1532,12 +1006,24 @@ void Workspace::tabBoxKeyPress( int keyQt )
 
     if (tab_grab)
         {
-        forward = cutWalkThroughWindows.contains( keyQt );
-        backward = cutWalkThroughWindowsReverse.contains( keyQt );
+        KShortcut forwardShortcut;
+        KShortcut backwardShortcut;
+        if( tab_box->mode() == TabBoxWindowsMode )
+            {
+            forwardShortcut = cutWalkThroughWindows;
+            backwardShortcut = cutWalkThroughWindowsReverse;
+            }
+        else
+            {
+            forwardShortcut = cutWalkThroughWindowsAlternative;
+            backwardShortcut = cutWalkThroughWindowsAlternativeReverse;
+            }
+        forward = forwardShortcut.contains( keyQt );
+        backward = backwardShortcut.contains( keyQt );
         if (forward || backward)
             {
-            kDebug(125) << "== " << cutWalkThroughWindows.toString()
-                << " or " << cutWalkThroughWindowsReverse.toString() << endl;
+            kDebug(125) << "== " << forwardShortcut.toString()
+                << " or " << backwardShortcut.toString() << endl;
             KDEWalkThroughWindows( forward );
             }
         }
@@ -1557,6 +1043,11 @@ void Workspace::tabBoxKeyPress( int keyQt )
             && !(forward || backward) )
             { // if Escape is part of the shortcut, don't cancel
             closeTabBox();
+            }
+        else if( !(forward || backward) )
+            {
+            QKeyEvent* event = new QKeyEvent( QEvent::KeyPress, keyQt & ~Qt::KeyboardModifierMask, Qt::NoModifier );
+            tab_box->grabbedKeyEvent( event );
             }
         }
     }
@@ -1623,9 +1114,10 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
     if (tab_grab)
         {
         bool old_control_grab = control_grab;
+        Client* c = tab_box->currentClient();
         closeTabBox();
         control_grab = old_control_grab;
-        if( Client* c = tab_box->currentClient())
+        if( c )
             {
             activateClient( c );
             if( c->isShade() && options->shadeHover )
@@ -1635,11 +1127,12 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
     if (control_grab)
         {
         bool old_tab_grab = tab_grab;
+        int desktop = tab_box->currentDesktop();
         closeTabBox();
         tab_grab = old_tab_grab;
-        if ( tab_box->currentDesktop() != -1 )
+        if ( desktop != -1 )
             {
-            setCurrentDesktop( tab_box->currentDesktop() );
+            setCurrentDesktop( desktop );
             }
         }
     }

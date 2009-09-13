@@ -54,6 +54,11 @@ class KStartupInfoData;
 
 namespace KWin
 {
+namespace TabBox {
+
+class TabBoxClientImpl;
+}
+
 
 class Workspace;
 class Client;
@@ -332,6 +337,8 @@ class Client
         void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, CoordinateMode mode) const;
         virtual void addRepaintFull();
 
+        TabBox::TabBoxClientImpl* tabBoxClient() const { return m_tabBoxClient; }
+
     private slots:
         void autoRaise();
         void shadeHover();
@@ -586,6 +593,7 @@ class Client
         QTimer* demandAttentionKNotifyTimer;
         QPixmap decorationPixmapLeft, decorationPixmapRight, decorationPixmapTop, decorationPixmapBottom;
         PaintRedirector* paintRedirector;
+        TabBox::TabBoxClientImpl* m_tabBoxClient;
 
         bool electricMaximizing;
         ElectricMaximizingMode electricMode;

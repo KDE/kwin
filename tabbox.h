@@ -24,22 +24,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_TABBOX_H
 
 #include <QTimer>
-#include <QGraphicsView>
-#include <QGraphicsScene>
-#include <QGraphicsItem>
-#include <KDE/Plasma/FrameSvg>
+#include <QModelIndex>
 #include "utils.h"
+#include "tabbox/tabboxhandler.h"
 
-class QTimeLine;
+class QKeyEvent;
 
 namespace KWin
 {
 
 class Workspace;
 class Client;
-class TabBoxSelectionItem;
+namespace TabBox
+{
+class TabBoxConfig;
 
-class TabBox : public QGraphicsView
+class TabBoxHandlerImpl : public TabBoxHandler
+    {
+    public:
+        TabBoxHandlerImpl();
+        virtual ~TabBoxHandlerImpl();
+
+        virtual int activeScreen() const;
+        virtual TabBoxClient* activeClient() const;
+        virtual int currentDesktop() const;
+        virtual QString desktopName( TabBoxClient* client ) const;
+        virtual QString desktopName( int desktop ) const;
+        virtual TabBoxClient* nextClientFocusChain( TabBoxClient* client ) const;
+        virtual int nextDesktopFocusChain( int desktop ) const;
+        virtual int numberOfDesktops() const;
+        virtual TabBoxClientList stackingOrder() const;
+        virtual TabBoxClient* clientToAddToList( TabBoxClient* client, int desktop, bool allDesktops ) const;
+    };
+
+class TabBoxClientImpl : public TabBoxClient
+    {
+    public:
+        TabBoxClientImpl();
+        virtual ~TabBoxClientImpl();
+
+        virtual QString caption() const;
+        virtual QPixmap icon() const;
+        virtual WId window() const;
+        virtual bool isMinimized() const;
+        virtual int x() const;
+        virtual int y() const;
+        virtual int width() const;
+        virtual int height() const;
+
+        Client* client() const { return m_client; }
+        void setClient( Client* client ) { m_client = client; }
+
+    private:
+        Client* m_client;
+    };
+
+class TabBox : public QObject
     {
     Q_OBJECT
     public:
@@ -54,12 +94,10 @@ class TabBox : public QGraphicsView
         void setCurrentClient( Client* newClient );
         void setCurrentDesktop( int newDesktop );
 
-        enum SortOrder { StaticOrder, MostRecentlyUsedOrder };
         void setMode( TabBoxMode mode );
-        TabBoxMode mode() const;
+        TabBoxMode mode() const { return m_tabBoxMode; }
 
         void reset( bool partial_reset = false );
-        void initScene();
         void nextPrev( bool next = true);
 
         void delayedShow();
@@ -70,114 +108,38 @@ class TabBox : public QGraphicsView
         bool isDisplayed() const;
 
         void handleMouseEvent( XEvent* );
+        void grabbedKeyEvent( QKeyEvent* event );
 
         Workspace* workspace() const;
 
         void reconfigure();
-        void createClientList(ClientList &list, int desktop /*-1 = all*/, Client *start, bool chain);
-
-        Plasma::FrameSvg* itemFrame();
-        bool itemsDrawBackgrounds() const;
 
     public slots:
         void show();
 
-    protected:
-        void showEvent( QShowEvent* );
-        void hideEvent( QHideEvent* );
-        virtual void drawBackground( QPainter * painter, const QRectF & rect );
-
     private:
-        void createDesktopList(QList< int > &list, int start, SortOrder order);
-        void updateOutline();
+        void setCurrentIndex( QModelIndex index, bool notifyEffects = true );
+        void loadConfig( const KConfigGroup& config, TabBoxConfig& tabBoxConfig );
 
     private:
         Workspace* wspace;
-        TabBoxMode m;
-        ClientList clients;
-        Client* client;
-        QList< int > desktops;
-        int desk;
+        TabBoxMode m_tabBoxMode;
+        QModelIndex m_index;
+        TabBoxHandlerImpl* m_tabBox;
+        bool m_delayShow;
+        int m_delayShowTime;
 
         QTimer delayedShowTimer;
         int display_refcount;
-        QString no_tasks;
-        int lineHeight;
-        bool showMiniIcon;
-        bool options_traverse_all;
 
-        QGraphicsScene* scene;
-        TabBoxSelectionItem* selectionItem;
-        Plasma::FrameSvg frame;
-        Plasma::FrameSvg item_frame;
-        Window outline_left, outline_right, outline_top, outline_bottom;
+        TabBoxConfig m_defaultConfig;
+        TabBoxConfig m_alternativeConfig;
+        TabBoxConfig m_desktopConfig;
+        TabBoxConfig m_desktopListConfig;
+        // false if an effect has referenced the tabbox
+        // true if tabbox is active (independent on showTabbox setting)
+        bool m_isShown;
     };
-
-class TabBoxSelectionItem : public QObject, public QGraphicsItem
-    {
-    Q_OBJECT
-
-    public:
-        TabBoxSelectionItem( TabBox* parent );
-        ~TabBoxSelectionItem();
-        virtual QRectF boundingRect() const;
-        virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
-        void moveTo( QGraphicsItem * );
-
-    protected Q_SLOTS:
-        void animateMove( qreal t );
-
-    private:
-        TabBox* m_parent;
-        QTimeLine* m_timeLine;
-        QRectF m_boundingRect;
-        QRectF m_animStartRect;
-        QRectF m_animEndRect;
-    };
-
-class TabBoxWindowItem : public QGraphicsItem
-    {
-    public:
-        TabBoxWindowItem( Client* client, TabBox* parent );
-        ~TabBoxWindowItem();
-        virtual QRectF boundingRect() const;
-        virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
-        void setWidth( int width );
-        void setHeight( int height );
-        void setShowMiniIcons( bool showMiniIcons );
-        Client* client() const;
-
-    protected:
-        virtual void drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* );
-
-    private:
-        Client* m_client;
-        TabBox* m_parent;
-        int m_width;
-        int m_height;
-        bool m_showMiniIcons;
-    };
-
-class TabBoxDesktopItem : public QGraphicsItem
-    {
-    public:
-        TabBoxDesktopItem( int desktop, TabBox* parent );
-        ~TabBoxDesktopItem();
-        virtual QRectF boundingRect() const;
-        virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
-        void setWidth( int width );
-        void setHeight( int height );
-        int desktop() const;
-
-    protected:
-        virtual void drawBackground( QPainter* painter, const QStyleOptionGraphicsItem*, QWidget* );
-    private:
-        int m_desktop;
-        TabBox* m_parent;
-        int m_width;
-        int m_height;
-    };
-
 
 /*!
   Returns the tab box' workspace
@@ -185,16 +147,6 @@ class TabBoxDesktopItem : public QGraphicsItem
 inline Workspace* TabBox::workspace() const
     {
     return wspace;
-    }
-
-/*!
-  Returns the current mode, either TabBoxDesktopListMode or TabBoxWindowsMode
-
-  \sa setMode()
- */
-inline TabBoxMode TabBox::mode() const
-    {
-    return m;
     }
 
 /*!
@@ -218,15 +170,7 @@ inline bool TabBox::isDisplayed() const
     return display_refcount > 0;
     }
 
-inline Plasma::FrameSvg* TabBox::itemFrame()
-    {
-    return &item_frame;
-    }
-
-inline bool TabBox::itemsDrawBackgrounds() const
-    {
-    return !selectionItem;
-    }
+} // namespace TabBox
 
 } // namespace
 
