@@ -91,8 +91,13 @@ QString TabBoxHandlerImpl::desktopName( int desktop ) const
 
 TabBoxClient* TabBoxHandlerImpl::nextClientFocusChain( TabBoxClient* client ) const
     {
-    Client* current = (static_cast< TabBoxClientImpl* >( client ))->client();
-    return Workspace::self()->nextClientFocusChain( current )->tabBoxClient();
+    if( TabBoxClientImpl* c = static_cast< TabBoxClientImpl* >( client ) )
+        {
+        Client* next = Workspace::self()->nextClientFocusChain( c->client() );
+        if( next )
+            return next->tabBoxClient();
+        }
+    return NULL;
     }
 
 int TabBoxHandlerImpl::nextDesktopFocusChain( int desktop ) const
