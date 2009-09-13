@@ -109,11 +109,11 @@ QMenu* Workspace::clientPopup()
         action->setData( Options::SetupWindowShortcutOp );
 
         action = advanced_popup->addAction( i18n("&Special Window Settings...") );
-        action->setIcon( KIcon( "wizard" ) );
+        action->setIcon( KIcon( "preferences-system-windows-actions" ) );
         action->setData( Options::WindowRulesOp );
 
         action = advanced_popup->addAction( i18n("&Special Application Settings...") );
-        action->setIcon( KIcon( "wizard" ) );
+        action->setIcon( KIcon( "preferences-system-windows-actions" ) );
         action->setData( Options::ApplicationRulesOp );
 
         trans_popup = 0;
