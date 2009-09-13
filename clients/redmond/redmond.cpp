@@ -421,10 +421,10 @@ int RedmondDeco::layoutMetric(LayoutMetric lm, bool respectWindowState, const KC
 
 		case LM_TitleEdgeLeft:
 		case LM_TitleEdgeRight:
-			return border ? borderWidth+2 : 2;
+			return border ? borderWidth+2 : 0;
 
 		case LM_TitleEdgeTop:
-			return border ? borderWidth+2 : 2;
+			return border ? borderWidth+2 : 0;
 
 		case LM_TitleEdgeBottom:
 			return border ? 1 : 0;
