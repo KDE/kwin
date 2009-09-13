@@ -115,6 +115,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         0, slotWindowShrinkHorizontal() );
     DEF2( "Window Shrink Vertical", I18N_NOOP("Pack Shrink Window Vertically"),
         0, slotWindowShrinkVertical() );
+    DEF2( "Window Quick Tile Left", I18N_NOOP("Quick Tile Window to the Left"),
+        0, slotWindowQuickTileLeft() );
+    DEF2( "Window Quick Tile Right", I18N_NOOP("Quick Tile Window to the Right"),
+        0, slotWindowQuickTileRight() );
 
     a = actionCollection->addAction( "Group:Window Desktop" );
     a->setText( i18n("Window & Desktop") );

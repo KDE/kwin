@@ -721,6 +721,23 @@ void Client::shrinkVertical()
         setGeometry( geom );
     }
 
+
+void Workspace::slotWindowQuickTileLeft()
+    {
+    if( !active_client )
+      return;
+
+    active_client->setQuickTileMode( QuickTileLeft );
+    }
+
+void Workspace::slotWindowQuickTileRight()
+    {
+    if( !active_client )
+      return;
+
+    active_client->setQuickTileMode( QuickTileRight );
+    }
+
 int Workspace::packPositionLeft( const Client* cl, int oldx, bool left_edge ) const
     {
     int newx = clientArea( MovementArea, cl ).left();

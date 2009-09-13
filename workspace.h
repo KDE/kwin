@@ -569,6 +569,8 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWindowGrowVertical();
         void slotWindowShrinkHorizontal();
         void slotWindowShrinkVertical();
+        void slotWindowQuickTileLeft();
+        void slotWindowQuickTileRight();
 
         void slotWalkThroughDesktops();
         void slotWalkBackThroughDesktops();

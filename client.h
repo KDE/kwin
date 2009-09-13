@@ -229,6 +229,12 @@ class Client
         bool isElectricBorderMaximizing() const;
         QRect electricBorderMaximizeGeometry();
 
+        /** Set the quick tile mode ("snap") of this window.
+         * This will also handle preserving and restoring of window geometry as necessary.
+         * @param mode The tile mode (left/right) to give this window.
+         */
+        void setQuickTileMode( QuickTileMode mode );
+
         void growHorizontal();
         void shrinkHorizontal();
         void growVertical();
@@ -492,6 +498,11 @@ class Client
             Kept ///< The frame should be unmapped, but is kept (For compositing)
             };
         MappingState mapping_state;
+
+        /** The quick tile mode of this window.
+         */
+        QuickTileMode quick_tile_mode;
+
         void readTransient();
         Window verifyTransientFor( Window transient_for, bool set );
         void addTransient( Client* cl );
