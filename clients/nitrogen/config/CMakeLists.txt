@@ -8,6 +8,7 @@ set(kwin_nitrogen_config_PART_SRCS
     ../nitrogenexception.cpp
     ../nitrogenexceptionlist.cpp
     nitrogenconfigurationui.cpp
+    nitrogendetectwidget.cpp
     nitrogenexceptiondialog.cpp
     nitrogenexceptionlistwidget.cpp
     nitrogenexceptionmodel.cpp
@@ -19,6 +20,7 @@ target_link_libraries(
     kwin_nitrogen_config
     ${KDE4_KDEUI_LIBS}
     ${QT_QTGUI_LIBRARY}
+    ${X11_X11_LIB}
   )
 
 install(TARGETS kwin_nitrogen_config  DESTINATION ${PLUGIN_INSTALL_DIR} )

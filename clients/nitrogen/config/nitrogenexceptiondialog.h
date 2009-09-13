@@ -37,9 +37,13 @@
 namespace Nitrogen
 {
 
+  class DetectDialog;
+
   //! nitrogen exceptions list
   class NitrogenExceptionDialog: public KDialog
   {
+
+    Q_OBJECT
 
     public:
 
@@ -51,6 +55,12 @@ namespace Nitrogen
 
     //! get exception
     NitrogenException exception( void ) const;
+
+    private slots:
+
+    void selectWindowProperties( void );
+
+    void readWindowProperties( bool );
 
     private:
 
@@ -103,6 +113,9 @@ namespace Nitrogen
 
     //! draw separator
     ComboBox* drawSeparator;
+
+    //! detection dialog
+    DetectDialog* detectDialog;
 
   };
 

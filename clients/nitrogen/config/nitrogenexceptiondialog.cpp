@@ -23,31 +23,35 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include <cassert>
 #include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <KLocale>
+#include <KPushButton>
 
+#include "nitrogendetectwidget.h"
 #include "nitrogenexceptiondialog.h"
+#include "nitrogenexceptiondialog.moc"
 
 namespace Nitrogen
 {
 
   //___________________________________________
   NitrogenExceptionDialog::NitrogenExceptionDialog( QWidget* parent ):
-    KDialog( parent )
+    KDialog( parent ),
+    detectDialog(0)
   {
 
     // define buttons
     setButtons( Ok|Cancel );
-    showButtonSeparator( true );
+    showButtonSeparator( false );
 
     // main widget
     QWidget* widget = new QWidget( this );
     setMainWidget( widget );
 
     widget->setLayout( new QVBoxLayout() );
-    widget->layout()->setSpacing(5);
     widget->layout()->setMargin(0);
 
     // exception definition
@@ -55,8 +59,6 @@ namespace Nitrogen
     widget->layout()->addWidget( box = new QGroupBox( i18n( "Definition" ), widget ) );
 
     QGridLayout* gridLayout = new QGridLayout();
-    gridLayout->setSpacing(5);
-    gridLayout->setMargin(5);
     box->setLayout( gridLayout );
 
     QLabel *label;
@@ -66,12 +68,17 @@ namespace Nitrogen
     gridLayout->addWidget( exceptionType = new QComboBox(box), 0, 1, 1, 1 );
     exceptionType->insertItems(0, QStringList()
       << NitrogenException::typeName( NitrogenException::WindowClassName, true )
-      << NitrogenException::typeName( NitrogenException::WindowTitle, true ) );
+      << NitrogenException::typeName( NitrogenException::WindowTitle, true )
+      );
     exceptionType->setToolTip( i18n(
       "Select here the window characteristic used to \n"
       "identify windows to which the exception apply." ) );
 
     label->setAlignment( Qt::AlignRight );
+
+    KPushButton* button = new KPushButton( i18n( "&Detect Window Properties" ), box );
+    gridLayout->addWidget( button, 2, 0, 1, 2, Qt::AlignRight|Qt::AlignVCenter );
+    connect( button, SIGNAL( clicked( void ) ), SLOT( selectWindowProperties() ) );
 
     // regular expression
     gridLayout->addWidget( label = new QLabel( i18n( "Regular expression to match: " ), box ), 1, 0, 1, 1 );
@@ -86,8 +93,6 @@ namespace Nitrogen
     // decoration flags
     widget->layout()->addWidget( box = new QGroupBox( i18n( "Decoration" ), widget ) );
     gridLayout = new QGridLayout();
-    gridLayout->setSpacing(5);
-    gridLayout->setMargin(5);
     box->setLayout( gridLayout );
 
     QCheckBox* checkbox;
@@ -202,6 +207,55 @@ namespace Nitrogen
 
     exception.setMask( mask );
     return exception;
+
+  }
+
+  //___________________________________________
+  void NitrogenExceptionDialog::selectWindowProperties( void )
+  {
+
+    // create widget
+    if( !detectDialog )
+    {
+      detectDialog = new DetectDialog( this );
+      connect( detectDialog, SIGNAL( detectionDone( bool ) ), SLOT( readWindowProperties( bool ) ) );
+    }
+
+    detectDialog->detect(0);
+
+  }
+
+  //___________________________________________
+  void NitrogenExceptionDialog::readWindowProperties( bool valid )
+  {
+    assert( detectDialog );
+    if( valid )
+    {
+
+      // type
+      exceptionType->setCurrentIndex( exceptionType->findText( NitrogenException::typeName( detectDialog->exceptionType(), true ) ) );
+
+      // window info
+      const KWindowInfo& info( detectDialog->windowInfo() );
+
+      switch( detectDialog->exceptionType() )
+      {
+        case NitrogenException::WindowClassName:
+        exceptionEditor->setText( info.windowClassClass() );
+        break;
+
+        case NitrogenException::WindowTitle:
+        exceptionEditor->setText( info.name() );
+        break;
+
+        default: assert( false );
+
+      }
+
+    }
+
+    delete detectDialog;
+    detectDialog = 0;
 
   }
 

@@ -54,7 +54,6 @@ namespace Nitrogen
   {
 
     QVBoxLayout* mainLayout = new QVBoxLayout( this );
-    mainLayout->setSpacing(6);
     mainLayout->setMargin(0);
 
     // tab widget for basic and advanced mode
@@ -68,12 +67,9 @@ namespace Nitrogen
       tab->setTabToolTip( index, i18n( "Basic window decoration configuration options" ) );
 
       QVBoxLayout* vboxLayout = new QVBoxLayout();
-      vboxLayout->setMargin( 6 );
-      vboxLayout->setSpacing( 6 );
       basicWidget->setLayout( vboxLayout );
 
       QGridLayout* gridLayout = new QGridLayout();
-      gridLayout->setSpacing(6);
       gridLayout->setMargin(0);
       vboxLayout->addLayout( gridLayout );
 
@@ -138,12 +134,9 @@ namespace Nitrogen
       tab->setTabToolTip( index, i18n( "Additional window decoration configuration options" ) );
 
       QVBoxLayout* vboxLayout = new QVBoxLayout();
-      vboxLayout->setMargin( 6 );
-      vboxLayout->setSpacing( 6 );
       advancedWidget->setLayout( vboxLayout );
 
       QGridLayout* gridLayout = new QGridLayout();
-      gridLayout->setSpacing(6);
       gridLayout->setMargin(0);
       vboxLayout->addLayout( gridLayout );
 
