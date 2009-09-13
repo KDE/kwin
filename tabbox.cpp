@@ -220,6 +220,7 @@ TabBox::TabBox( Workspace *ws )
     , wspace(ws)
     , display_refcount( 0 )
     {
+    m_isShown = false;
     m_defaultConfig = TabBoxConfig();
     m_defaultConfig.setTabBoxMode( TabBoxConfig::ClientTabBox );
     m_defaultConfig.setClientListMode( TabBoxConfig::CurrentDesktopClientList );

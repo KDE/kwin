@@ -91,6 +91,7 @@ class TabBoxHandlerPrivate
 
 TabBoxHandlerPrivate::TabBoxHandlerPrivate()
     {
+    isShown = false;
     config = TabBoxConfig();
     view = new TabBoxView();
     XSetWindowAttributes attr;
