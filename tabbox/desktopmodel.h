@@ -35,7 +35,6 @@ namespace KWin
 namespace TabBox
 {
 class ClientModel;
-class TabBoxConfig;
 
 /**
 * The model for desktops used in TabBox.

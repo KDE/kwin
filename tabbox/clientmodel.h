@@ -36,7 +36,6 @@ namespace KWin
 namespace TabBox
 {
 
-class TabBoxConfig;
 
 /**
 * The model for TabBoxClients used in TabBox.
