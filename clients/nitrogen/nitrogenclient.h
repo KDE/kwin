@@ -121,10 +121,10 @@ namespace Nitrogen
         void paintEvent( QPaintEvent* );
 
         //! shadows
-        TileSet *shadowTiles(const QColor& color, const QColor& glow, qreal size, bool active);
+        TileSet *shadowTiles(const QColor& color, bool active);
 
         //! shadows
-        QPixmap shadowPixmap( const QColor& color, const QColor& glow, qreal size) const;
+        QPixmap shadowPixmap( const QColor& color, bool active ) const;
 
         private:
 
@@ -143,13 +143,13 @@ namespace Nitrogen
           {
             return
               windowColor == other.windowColor &&
-              glowColor == other.glowColor &&
+              innerColor == other.innerColor &&
               width == other.width &&
               active == other.active;
           }
 
           QColor windowColor;
-          QColor glowColor;
+          QColor innerColor;
           qreal width;
           bool active;
         };
@@ -191,10 +191,10 @@ namespace Nitrogen
         //! size grip widget
         NitrogenSizeGrip* size_grip_;
 
-        ShadowTilesOption shadowTilesOption_;
-        ShadowTilesOption glowTilesOption_;
-        TileSet *shadowTiles_;
-        TileSet *glowTiles_;
+        ShadowTilesOption inactiveShadowTilesOption_;
+        ShadowTilesOption activeShadowTilesOption_;
+        TileSet *inactiveShadowTiles_;
+        TileSet *activeShadowTiles_;
 
         //! helper
         OxygenHelper& helper_;

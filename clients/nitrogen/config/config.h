@@ -31,6 +31,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KConfig>
+#include <QPalette>
 
 #include "nitrogenconfigurationui.h"
 #include "../nitrogenexceptionlist.h"
@@ -38,6 +39,7 @@
 namespace Nitrogen {
 
   class NitrogenConfiguration;
+  class NitrogenShadowConfiguration;
 
   // nitrogen configuration object
   class Config: public QObject
@@ -79,8 +81,14 @@ namespace Nitrogen {
     //! load configuration
     void loadConfiguration( const NitrogenConfiguration& );
 
+    //! load configuration
+    void loadShadowConfiguration( QPalette::ColorGroup, const NitrogenShadowConfiguration& );
+
+    //! load configuration
+    void saveShadowConfiguration( QPalette::ColorGroup, const NitrogenShadowConfigurationUI& ) const;
+
     //! user interface
-    NitrogenConfigurationUI *user_interface_;
+    NitrogenConfigurationUI *userInterface_;
 
     //! kconfiguration object
     KConfig *configuration_;

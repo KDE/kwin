@@ -74,8 +74,8 @@ namespace Nitrogen
     KCommonDecorationUnstable(b, f),
     colorCacheInvalid_(true),
     size_grip_( 0 ),
-    shadowTiles_( 0 ),
-    glowTiles_( 0 ),
+    inactiveShadowTiles_( 0 ),
+    activeShadowTiles_( 0 ),
     helper_(*globalHelper),
     initialized_( false )
   { qAddPostRoutine(oxkwincleanupBefore); }
@@ -88,8 +88,8 @@ namespace Nitrogen
     if( hasSizeGrip() ) deleteSizeGrip();
 
     // delete tilesets
-    if( shadowTiles_ ) delete shadowTiles_;
-    if( glowTiles_ ) delete glowTiles_;
+    if( inactiveShadowTiles_ ) delete inactiveShadowTiles_;
+    if( activeShadowTiles_ ) delete activeShadowTiles_;
 
   }
 
@@ -132,7 +132,7 @@ namespace Nitrogen
       updateWindowShape();
       widget()->update();
     }
-    
+
     KCommonDecorationUnstable::reset( changed );
   }
 
@@ -264,7 +264,7 @@ namespace Nitrogen
       case LM_OuterPaddingRight:
       case LM_OuterPaddingTop:
       case LM_OuterPaddingBottom:
-      return SHADOW_WIDTH - extraBorder;
+      return NitrogenFactory::shadowSize() - extraBorder;
 
       default:
       return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -447,7 +447,7 @@ namespace Nitrogen
     }
 
     QRect r = (isPreview()) ? NitrogenClient::widget()->rect():window->rect();
-    r.adjust( SHADOW_WIDTH, SHADOW_WIDTH, -SHADOW_WIDTH, -SHADOW_WIDTH );
+    r.adjust( NitrogenFactory::shadowSize(), NitrogenFactory::shadowSize(), -NitrogenFactory::shadowSize(), -NitrogenFactory::shadowSize() );
     r.adjust(0,0, 1, 1);
 
     // mask and painting frame
@@ -604,7 +604,6 @@ namespace Nitrogen
   void NitrogenClient::paintEvent( QPaintEvent* event )
   {
 
-
     // factory
     if(!( initialized_ && NitrogenFactory::initialized() ) ) return;
 
@@ -627,13 +626,12 @@ namespace Nitrogen
     {
       shadowTiles(
         backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-        KDecoration::options()->color(ColorTitleBar),
-        SHADOW_WIDTH, isActive() )->render( frame.adjusted( 4, 4, -4, -4),
+        isActive() )->render( frame.adjusted( 4, 4, -4, -4),
         &painter, TileSet::Ring);
     }
 
     // adjust frame
-    frame.adjust( SHADOW_WIDTH, SHADOW_WIDTH, -SHADOW_WIDTH, -SHADOW_WIDTH );
+    frame.adjust( NitrogenFactory::shadowSize(), NitrogenFactory::shadowSize(), -NitrogenFactory::shadowSize(), -NitrogenFactory::shadowSize() );
 
     //  adjust mask
     if( compositingActive() || isPreview() )
@@ -662,6 +660,8 @@ namespace Nitrogen
         mask += QRegion(x+3*left, y+1*top, w-3*(left+right), h-1*(top+bottom));
         mask += QRegion(x+1*left, y+3*top, w-1*(left+right), h-3*(top+bottom));
 
+        // in no-border configuration, an extra pixel is added to the mask
+        // in order to get the corners color right in case of title highlighting.
         if( configuration().frameBorder() == NitrogenConfiguration::BorderNone )
         { mask += QRegion(x+0*left, y+4*top, w-0*(left+right), h-4*(top+bottom)); }
 
@@ -824,51 +824,58 @@ namespace Nitrogen
   }
 
   //_________________________________________________________________
-  TileSet *NitrogenClient::shadowTiles(const QColor& color, const QColor& glow, qreal size, bool active)
+  TileSet *NitrogenClient::shadowTiles(const QColor& color, bool active)
   {
+
+    NitrogenShadowConfiguration shadowConfiguration( NitrogenFactory::shadowConfiguration( active && useOxygenShadows() ) );
+
     ShadowTilesOption opt;
     opt.active      = active;
-    opt.width       = size;
+    opt.width       = shadowConfiguration.shadowSize();
     opt.windowColor = color;
-    opt.glowColor   = glow;
+    opt.innerColor   = shadowConfiguration.innerColor();
 
-    ShadowTilesOption currentOpt = active ? glowTilesOption_:shadowTilesOption_;
+    ShadowTilesOption currentOpt = active ? activeShadowTilesOption_:inactiveShadowTilesOption_;
 
     bool optionChanged = !(currentOpt == opt );
-    if (active && glowTiles_ )
+    if (active && activeShadowTiles_ )
     {
 
-      if( optionChanged) delete glowTiles_;
-      else return glowTiles_;
+      if( optionChanged) delete activeShadowTiles_;
+      else return activeShadowTiles_;
 
-    } else if (!active && shadowTiles_ ) {
+    } else if (!active && inactiveShadowTiles_ ) {
 
-      if( optionChanged ) delete shadowTiles_;
-      else return shadowTiles_;
+      if( optionChanged ) delete inactiveShadowTiles_;
+      else return inactiveShadowTiles_;
 
     }
 
     kDebug( 1212 ) << " creating tiles - active: " << active << endl;
     TileSet *tileSet = 0;
 
+    //
+    qreal size( NitrogenFactory::shadowSize() );
     if( active && configuration().drawTitleOutline() && configuration().frameBorder() == NitrogenConfiguration::BorderNone )
     {
 
-      //---------------------------------------------------------------
-      // Create new glow/shadow tiles
+      // a more complex tile set is needed for the configuration above:
+      // top corners must be beveled with the "active titlebar color" while
+      // bottom corners must be beveled with the "window background color".
+      // this requires generating two shadow pixmaps and tiling them in the tileSet.
       QPixmap shadow = QPixmap( size*2, size*2 );
       shadow.fill( Qt::transparent );
 
       QPainter p( &shadow );
       p.setRenderHint( QPainter::Antialiasing );
 
-      QPixmap shadowTop = shadowPixmap( color, glow, size );
+      QPixmap shadowTop = shadowPixmap( color, active );
       QRect topRect( shadow.rect() );
       topRect.setBottom( int( size )-1 );
       p.setClipRect( topRect );
       p.drawPixmap( QPointF( 0, 0 ), shadowTop );
 
-      QPixmap shadowBottom = shadowPixmap( widget()->palette().color( widget()->backgroundRole() ), glow, size );
+      QPixmap shadowBottom = shadowPixmap( widget()->palette().color( widget()->backgroundRole() ), active );
       QRect bottomRect( shadow.rect() );
       bottomRect.setTop( int( size ) );
       p.setClipRect( bottomRect );
@@ -880,7 +887,7 @@ namespace Nitrogen
     } else {
 
       tileSet = new TileSet(
-        shadowPixmap( color, glow, size ),
+        shadowPixmap( color, active ),
         size, size, 1, 1);
 
     }
@@ -889,24 +896,29 @@ namespace Nitrogen
     if( active )
     {
 
-      glowTilesOption_ = opt;
-      glowTiles_ = tileSet;
+      activeShadowTilesOption_ = opt;
+      activeShadowTiles_ = tileSet;
 
     } else {
 
-      shadowTilesOption_ = opt;
-      shadowTiles_ = tileSet;
+      inactiveShadowTilesOption_ = opt;
+      inactiveShadowTiles_ = tileSet;
 
     }
 
     return tileSet;
   }
 
-  QPixmap NitrogenClient::shadowPixmap(const QColor& color, const QColor& glow, qreal size) const
+  //_________________________________________________________________
+  QPixmap NitrogenClient::shadowPixmap(const QColor& color, bool active ) const
   {
 
-    //---------------------------------------------------------------
-    // Create new glow/shadow tiles
+    NitrogenShadowConfiguration shadowConfiguration( NitrogenFactory::shadowConfiguration( active && useOxygenShadows() ) );
+
+    static const qreal fixedSize = 25.5;
+    qreal size( NitrogenFactory::shadowSize() );
+    qreal shadowSize( shadowConfiguration.shadowSize() );
+
     QPixmap shadow = QPixmap( size*2, size*2 );
     shadow.fill( Qt::transparent );
 
@@ -914,101 +926,181 @@ namespace Nitrogen
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
 
-    if( useOxygenShadows() )
+    qreal hoffset = shadowConfiguration.horizontalOffset();
+    qreal voffset = shadowConfiguration.verticalOffset();
+
+    // this is the size of the shadow for which
+    // the following gradients have been originally calculated
+    if( active && useOxygenShadows() )
     {
 
-      //---------------------------------------------------------------
-      // Active shadow texture
+      {
 
-      QRadialGradient rg( size, size, size );
-      QColor c = color;
-      c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
-      c.setAlpha( 220 );  rg.setColorAt( 4.5/size, c );
-      c.setAlpha( 180 );  rg.setColorAt( 5/size, c );
-      c.setAlpha( 25 );  rg.setColorAt( 5.5/size, c );
-      c.setAlpha( 0 );  rg.setColorAt( 6.5/size, c );
+        // all gradients are constructed in the same way
+        // values are alpha channels for all gradients "pin-points"
+        // positions are gradient pin-points, originally calculated
+        // for a total gradient size of 25.5 (fixedSize)
+        //
+        // To scale these with the actual shadow size, one must:
+        // 1- keep the first pin-point unscaled (because it matches the window corner)
+        // 2- make the last pin-point full-scaled (i.e grow 1:1 with shadow size)
+        // intermediate pin-points are a linear interpolation between the two
+        //
+        // Note: this strategy does not work if first pin-point end up being larger than last.
+        // when this is the case the gradient is simpy disabled
+        int values[5] = {255, 220, 180, 25, 0};
+        qreal x[5] = {4.4, 4.5, 5, 5.5, 6.5};
 
-      p.setBrush( rg );
-      p.drawRect( shadow.rect() );
+        qreal a = (x[4]/fixedSize - x[0]/shadowSize)/(x[4]-x[0]);
 
-      rg = QRadialGradient( size, size, size );
-      c = color;
-      c.setAlpha( 255 );  rg.setColorAt( 4.4/size, c );
-      c = glow;
-      c.setAlpha( 0.58*255 );  rg.setColorAt( 4.5/size, c );
-      c.setAlpha( 0.43*255 );  rg.setColorAt( 5.5/size, c );
-      c.setAlpha( 0.30*255 );  rg.setColorAt( 6.5/size, c );
-      c.setAlpha( 0.22*255 );  rg.setColorAt( 7.5/size, c );
-      c.setAlpha( 0.15*255 );  rg.setColorAt( 8.5/size, c );
-      c.setAlpha( 0.08*255 );  rg.setColorAt( 11.5/size, c );
-      c.setAlpha( 0);  rg.setColorAt( 14.5/size, c );
-      p.setRenderHint( QPainter::Antialiasing );
-      p.setBrush( rg );
-      p.drawRect( shadow.rect() );
+        if( a > 0 )
+        {
+          qreal b = x[0]*x[4]*(1.0/shadowSize - 1.0/fixedSize)/(x[4]-x[0]);
+          QRadialGradient rg( size, size, shadowSize );
+          QColor c = color;
+          for( int i = 0; i<5; i++ )
+          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
+
+          p.setBrush( rg );
+          p.drawRect( shadow.rect() );
+
+        }
+
+      }
+
+     {
+
+        int values[7] = { 0.58*255, 0.43*255, 0.30*255, 0.22*255, 0.15*255, 0.08*255, 0 };
+        qreal x[7] = {4.5, 5.5, 6.5, 7.5, 8.5, 11.5, 14.4};
+        qreal a = (x[6]/fixedSize - x[0]/shadowSize)/(x[6]-x[0]);
+
+        if( a > 0 )
+        {
+          qreal b = x[0]*x[6]*(1.0/shadowSize - 1.0/fixedSize)/(x[6]-x[0]);
+          QRadialGradient rg( size, size, shadowSize );
+
+          // firt pin-point is assigned the windeco color
+          // and does not scale with the shadow size
+          QColor c = color;
+          c.setAlpha( 255 );  rg.setColorAt( 4.4/shadowSize, c );
+
+          // othe pin-points follow the usual construct
+          c = shadowConfiguration.innerColor();
+          for( int i = 0; i<7; i++ )
+          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
+
+          p.setBrush( rg );
+          p.drawRect( shadow.rect() );
+
+        }
+      }
+
+      {
+        QRadialGradient rg = QRadialGradient( size, size, size );
+        QColor c = color;
+
+        c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
+        c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
+
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
+      }
 
     } else {
 
-      //---------------------------------------------------------------
-      // Inactive shadow texture
 
-      QRadialGradient rg = QRadialGradient( size, size+4, size );
-      QColor c = QColor( Qt::black );
-      c.setAlpha( 0.12*255 );  rg.setColorAt( 4.5/size, c );
-      c.setAlpha( 0.11*255 );  rg.setColorAt( 6.6/size, c );
-      c.setAlpha( 0.075*255 );  rg.setColorAt( 8.5/size, c );
-      c.setAlpha( 0.06*255 );  rg.setColorAt( 11.5/size, c );
-      c.setAlpha( 0.035*255 );  rg.setColorAt( 14.5/size, c );
-      c.setAlpha( 0.025*255 );  rg.setColorAt( 17.5/size, c );
-      c.setAlpha( 0.01*255 );  rg.setColorAt( 21.5/size, c );
-      c.setAlpha( 0.0*255 );  rg.setColorAt( 25.5/size, c );
-      p.setRenderHint( QPainter::Antialiasing );
-      p.setPen( Qt::NoPen );
-      p.setBrush( rg );
-      p.drawRect( shadow.rect() );
+      {
 
-      rg = QRadialGradient( size, size+2, size );
-      c = QColor( Qt::black );
-      c.setAlpha( 0.25*255 );  rg.setColorAt( 4.5/size, c );
-      c.setAlpha( 0.20*255 );  rg.setColorAt( 5.5/size, c );
-      c.setAlpha( 0.13*255 );  rg.setColorAt( 7.5/size, c );
-      c.setAlpha( 0.06*255 );  rg.setColorAt( 8.5/size, c );
-      c.setAlpha( 0.015*255 );  rg.setColorAt( 11.5/size, c );
-      c.setAlpha( 0.0*255 );  rg.setColorAt( 14.5/size, c );
-      p.setRenderHint( QPainter::Antialiasing );
-      p.setPen( Qt::NoPen );
-      p.setBrush( rg );
-      p.drawRect( shadow.rect() );
+        int values[8] = { 0.12*255, 0.11*255, 0.075*255, 0.06*255, 0.035*255, 0.025*255, 0.01*255, 0 };
+        qreal x[8] = {4.5, 6.6, 8.5, 11.5, 14.5, 17.5, 21.5, 25.5 };
+        qreal a = (x[7]/fixedSize - x[0]/shadowSize)/(x[7]-x[0]);
 
-      rg = QRadialGradient( size, size+0.2, size );
-      c = color;
-      c = QColor( Qt::black );
-      c.setAlpha( 0.35*255 );  rg.setColorAt( 0/size, c );
-      c.setAlpha( 0.32*255 );  rg.setColorAt( 4.5/size, c );
-      c.setAlpha( 0.22*255 );  rg.setColorAt( 5.0/size, c );
-      c.setAlpha( 0.03*255 );  rg.setColorAt( 5.5/size, c );
-      c.setAlpha( 0.0*255 );  rg.setColorAt( 6.5/size, c );
-      p.setRenderHint( QPainter::Antialiasing );
-      p.setPen( Qt::NoPen );
-      p.setBrush( rg );
-      p.drawRect( shadow.rect() );
+        if( a > 0 )
+        {
+          qreal b = x[0]*x[7]*(1.0/shadowSize - 1.0/fixedSize)/(x[7]-x[0]);
+          QRadialGradient rg = QRadialGradient(
+            size+20.0*hoffset,
+            size+20.0*voffset,
+            shadowSize );
 
-      rg = QRadialGradient( size, size, size );
-      c = color;
-      c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
-      c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
-      p.setRenderHint( QPainter::Antialiasing );
-      p.setPen( Qt::NoPen );
-      p.setBrush( rg );
-      p.drawRect( shadow.rect() );
+          QColor c = shadowConfiguration.outerColor();
+          for( int i = 0; i<8; i++ )
+          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
+
+          p.setBrush( rg );
+          p.drawRect( shadow.rect()  );
+
+        }
+      }
+
+      {
+
+        int values[6] = { 0.25*255, 0.20*255, 0.13*255, 0.06*255, 0.015*255, 0 };
+        qreal x[6] = {4.5, 5.5, 7.5, 8.5, 11.5, 14.5 };
+        qreal a = (x[5]/fixedSize - x[0]/shadowSize)/(x[5]-x[0]);
+
+        if( a > 0 )
+        {
+          qreal b = x[0]*x[5]*(1.0/shadowSize - 1.0/fixedSize)/(x[5]-x[0]);
+          QRadialGradient rg = QRadialGradient(
+            size+10.0*hoffset,
+            size+10.0*voffset,
+            shadowSize );
+
+          QColor c = shadowConfiguration.midColor();
+          for( int i = 0; i<6; i++ )
+          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
+
+          p.setBrush( rg );
+          p.drawRect( shadow.rect() );
+        }
+
+      }
+
+      {
+        int values[4] = { 0.32*255, 0.22*255, 0.03*255, 0 };
+        qreal x[4] = { 4.5, 5.0, 5.5, 6.5 };
+        qreal a = (x[3]/fixedSize - x[0]/shadowSize)/(x[3]-x[0]);
+
+        if( a > 0 )
+        {
+
+          qreal b = x[0]*x[3]*(1.0/shadowSize - 1.0/fixedSize)/(x[3]-x[0]);
+          QRadialGradient rg = QRadialGradient(
+            size+hoffset,
+            size+voffset,
+            shadowSize );
+
+          QColor c = shadowConfiguration.innerColor();
+          for( int i = 0; i<5; i++ )
+          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
+
+          p.setBrush( rg );
+          p.drawRect( shadow.rect() );
+
+        }
+
+      }
+
+      {
+        QRadialGradient rg = QRadialGradient( size, size, size );
+        QColor c = color;
+
+        c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
+        c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
+
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
+      }
 
     }
 
     // draw the corner of the window - actually all 4 corners as one circle
-    QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
+    // this is all fixedSize. Does not scale with shadow size
+    QLinearGradient lg = QLinearGradient(0.0, fixedSize-4.5, 0.0, fixedSize+4.5);
     if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny )
     {
 
-      // for no
       lg.setColorAt(0.52, helper().backgroundTopColor(color));
       lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
 
@@ -1024,7 +1116,7 @@ namespace Nitrogen
 
     p.setBrush( Qt::NoBrush );
     p.setPen(QPen(lg, 0.8));
-    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+    p.drawEllipse(QRectF(fixedSize-4, fixedSize-4, 8, 8));
 
     p.end();
     return shadow;

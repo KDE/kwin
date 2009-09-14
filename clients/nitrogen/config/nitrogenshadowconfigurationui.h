@@ -1,7 +1,7 @@
-#ifndef nitrogenconfigurationui_h
-#define nitrogenconfigurationui_h
+#ifndef NitrogenShadowConfigurationUI_h
+#define NitrogenShadowConfigurationUI_h
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenconfigurationui.h
+// NitrogenShadowConfigurationUI.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -25,21 +25,16 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <kdeversion.h>
-#include <QWidget>
-#include <QComboBox>
 #include <QCheckBox>
-#include <QPushButton>
-#include <QVector>
-
-#include "nitrogenshadowconfigurationui.h"
-#include "nitrogenexceptionlistwidget.h"
+#include <QGroupBox>
+#include <KIntSpinBox>
+#include <kcolorbutton.h>
 
 namespace Nitrogen
 {
 
   //_____________________________________________
-  class NitrogenConfigurationUI: public QWidget
+  class NitrogenShadowConfigurationUI: public QGroupBox
   {
 
     Q_OBJECT
@@ -47,48 +42,33 @@ namespace Nitrogen
     public:
 
     //! constructor
-    NitrogenConfigurationUI( QWidget* );
+    NitrogenShadowConfigurationUI( const QString&, QWidget* );
 
-    //! setup ui
+    //! ui
     void setupUI( void );
 
-    //! title alignment
-    QComboBox *titleAlignment;
+    //! size spinbox
+    KIntSpinBox *shadowSize;
 
-    //! button size
-    QComboBox* buttonSize;
+    //! horizontal offset
+    KIntSpinBox *horizontalOffset;
 
-    //! frame border
-    QComboBox *frameBorder;
+    //! vertical offset
+    KIntSpinBox *verticalOffset;
 
-    //! blend color
-    QComboBox *blendColor;
+    //! first color
+    KColorButton *innerColor;
 
-    //! size grip
-    QComboBox *sizeGripMode;
+    //! second color
+    KColorButton *outerColor;
 
-    //! draw separator
-    QCheckBox *drawSeparator;
-
-    //! active window title outline
-    QCheckBox *titleOutline;
-
-    //! nitrogen shadow
-    QCheckBox *useOxygenShadows;
-
-    //! about nitrogen
-    QPushButton *aboutNitrogen;
-
-    // shadow configuration
-    QVector<NitrogenShadowConfigurationUI*> shadowConfigurations;
-
-    //! exceptions
-    NitrogenExceptionListWidget *exceptions;
+    //! second color checkbox
+    QCheckBox *useOuterColor;
 
     signals:
 
-    //! emmited when changed
-    bool changed( void );
+    //! emmitted when configuration is changed
+    void changed( void );
 
   };
 

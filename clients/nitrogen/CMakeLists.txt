@@ -12,6 +12,7 @@ set(kwin_nitrogen_SRCS
      nitrogenconfiguration.cpp
      nitrogenexception.cpp
      nitrogenexceptionlist.cpp
+     nitrogenshadowconfiguration.cpp
      nitrogensizegrip.cpp
      x11util.cpp
   )

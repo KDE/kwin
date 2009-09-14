@@ -52,6 +52,8 @@ namespace Nitrogen
   // initialize static members
   bool NitrogenFactory::initialized_ = false;
   NitrogenConfiguration NitrogenFactory::defaultConfiguration_;
+  NitrogenShadowConfiguration NitrogenFactory::activeShadowConfiguration_ = NitrogenShadowConfiguration( QPalette::Active );
+  NitrogenShadowConfiguration NitrogenFactory::inactiveShadowConfiguration_ = NitrogenShadowConfiguration( QPalette::Inactive );
   NitrogenExceptionList NitrogenFactory::exceptions_;
 
   //___________________________________________________
@@ -106,11 +108,17 @@ namespace Nitrogen
 
     kDebug( 1212 ) << endl;
 
+    bool changed( false );
+
     // create a config object
     KConfig config("nitrogenrc");
     KConfigGroup group( config.group("Windeco") );
     NitrogenConfiguration configuration( group );
-    bool changed = !( configuration == defaultConfiguration() );
+    if( !( configuration == defaultConfiguration() ) )
+    {
+      setDefaultConfiguration( configuration );
+      changed = true;
+    }
 
     // read exceptionsreadConfig
     NitrogenExceptionList exceptions( config );
@@ -120,12 +128,26 @@ namespace Nitrogen
       changed = true;
     }
 
+    // read shadow configurations
+    NitrogenShadowConfiguration activeShadowConfiguration( QPalette::Active, config.group( "ActiveShadow" ) );
+    if( !( activeShadowConfiguration == activeShadowConfiguration_ ) )
+    {
+      activeShadowConfiguration_ = activeShadowConfiguration;
+      changed = true;
+    }
+
+    // read shadow configurations
+    NitrogenShadowConfiguration inactiveShadowConfiguration( QPalette::Inactive, config.group( "InactiveShadow" ) );
+    if( !( inactiveShadowConfiguration == inactiveShadowConfiguration_ ) )
+    {
+      inactiveShadowConfiguration_ = inactiveShadowConfiguration;
+      changed = true;
+    }
 
     if( changed )
     {
 
       nitrogenHelper()->invalidateCaches();
-      setDefaultConfiguration( configuration );
       return true;
 
     } else return false;

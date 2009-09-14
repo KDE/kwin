@@ -32,6 +32,7 @@
 #include <kdeversion.h>
 
 #include "nitrogenconfiguration.h"
+#include "nitrogenshadowconfiguration.h"
 #include "nitrogenexceptionlist.h"
 
 // TODO:
@@ -59,8 +60,6 @@ namespace Nitrogen
     ButtonShade,
     ButtonTypeCount
   };
-
-  static const qreal SHADOW_WIDTH = 25.5;
 
   /*
   If non zero, this possibly allow one to have an additional space
@@ -107,6 +106,22 @@ namespace Nitrogen
     //! get configuration for a give client
     static NitrogenConfiguration configuration( const NitrogenClient& );
 
+    //! shadow configuration
+    static NitrogenShadowConfiguration activeShadowConfiguration( void )
+    { return activeShadowConfiguration_; }
+
+    //! shadow configuration
+    static NitrogenShadowConfiguration inactiveShadowConfiguration( void )
+    { return inactiveShadowConfiguration_; }
+
+    //! shadow configuration
+    static NitrogenShadowConfiguration shadowConfiguration( bool active )
+    { return active ? activeShadowConfiguration():inactiveShadowConfiguration(); }
+
+    //! shadow size
+    static qreal shadowSize( void )
+    { return qMax( activeShadowConfiguration().shadowSize(), inactiveShadowConfiguration().shadowSize() ); }
+
     signals:
 
     //! configuration has changed
@@ -134,6 +149,12 @@ namespace Nitrogen
 
     //! default configuration
     static NitrogenConfiguration defaultConfiguration_;
+
+    //! shadow configuration
+    static NitrogenShadowConfiguration activeShadowConfiguration_;
+
+    //! shadow configuration
+    static NitrogenShadowConfiguration inactiveShadowConfiguration_;
 
     //! exceptions
     static NitrogenExceptionList exceptions_;

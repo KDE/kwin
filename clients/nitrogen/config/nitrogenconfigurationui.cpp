@@ -32,7 +32,6 @@
 
 #include "../nitrogenconfiguration.h"
 #include "nitrogenconfigurationui.h"
-#include "nitrogenconfigurationui.moc"
 
 namespace Nitrogen
 {
@@ -121,7 +120,6 @@ namespace Nitrogen
 
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
       label->setBuddy( buttonSize );
-
       vboxLayout->addStretch(1);
 
     }
@@ -183,13 +181,34 @@ namespace Nitrogen
       drawSeparator->setWhatsThis(i18n(
         "When enabled, this option makes an horizontal separator appear between the window title bar and the window contents."));
 
+      vboxLayout->addStretch(1);
+
+    }
+
+    // shadow configurations
+    {
+      shadowConfigurations = QVector<NitrogenShadowConfigurationUI*>( 2, 0 );
+      QWidget* widget = new QWidget();
+      int index = tab->addTab( widget, i18n( "&Shadows" ) );
+      tab->setTabToolTip( index, i18n( "Configure shadow colors for active and inactive windows" ) );
+
+      QGridLayout* gridLayout( new QGridLayout() );
+      widget->setLayout( gridLayout );
+
       // oxygen shadow
-      vboxLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), advancedWidget ) );
+      gridLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), this ), 0, 0, 1, 1 );
       useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
       useOxygenShadows->setWhatsThis(i18n(
         "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
 
-      connect( titleOutline, SIGNAL(toggled( bool )), drawSeparator, SLOT( setDisabled( bool ) ) );
+      // regular shadow configuration
+      gridLayout->addWidget( shadowConfigurations[1] = new NitrogenShadowConfigurationUI( i18n( "Window Dropdown Shadow" ), widget ), 1, 0, 1, 1 );
+      shadowConfigurations[1]->setObjectName( "inactiveShadowConfiguration" );
+
+      // active window glow
+      gridLayout->addWidget( shadowConfigurations[0] = new NitrogenShadowConfigurationUI( i18n( "Active Window Glow" ), widget ), 1, 1, 1, 1 );
+      shadowConfigurations[0]->setObjectName( "activeShadowConfiguration" );
+      shadowConfigurations[0]->setEnabled( false );
 
     }
 
@@ -201,7 +220,24 @@ namespace Nitrogen
       tab->setTabToolTip( index, i18n( "Configure window decoraction option overrides for specific windows" ) );
     }
 
+    // connections
     QMetaObject::connectSlotsByName(this);
+
+    connect( titleOutline, SIGNAL(toggled( bool )), drawSeparator, SLOT( setDisabled( bool ) ) );
+    connect( useOxygenShadows, SIGNAL(toggled( bool )), shadowConfigurations[0], SLOT( setEnabled( bool ) ) );
+
+    connect( shadowConfigurations[0], SIGNAL( changed() ), SIGNAL( changed() ) );
+    connect( shadowConfigurations[1], SIGNAL( changed() ), SIGNAL( changed() ) );
+    connect( titleAlignment, SIGNAL(currentIndexChanged(int)), SIGNAL( changed() ) );
+    connect( buttonSize, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
+    connect( frameBorder, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
+    connect( blendColor, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
+    connect( sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
+
+    connect( drawSeparator, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( useOxygenShadows, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( exceptions, SIGNAL(changed()), SIGNAL(changed()) );
 
   }
 

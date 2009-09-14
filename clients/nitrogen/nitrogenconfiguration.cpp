@@ -24,11 +24,6 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <KLocale>
 
-#include <QDBusMessage>
-#include <QDBusConnection>
-#include <QProcess>
-#include <kdeversion.h>
-
 #include "nitrogenconfiguration.h"
 
 namespace Nitrogen
