@@ -40,7 +40,7 @@ namespace Nitrogen
   {
 
     // check colorgroup
-    assert( colorGroup() == QPalette::Active || colorGroup() == QPalette::Inactive );
+    assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
 
     // vertical offset
     verticalOffset_ = ( NitrogenShadowConfiguration::colorGroup() == QPalette::Active ) ? 0:0.2;
