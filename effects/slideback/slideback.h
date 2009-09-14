@@ -68,6 +68,7 @@ class SlideBackEffect
         bool intersects( EffectWindow *windowUnder, const QRect &windowOverGeometry );
         EffectWindowList usableWindows( const EffectWindowList &allWindows );
         EffectWindow *newTopWindow();
+        QRect getModalGroupGeometry( EffectWindow *w );
 
     };
 

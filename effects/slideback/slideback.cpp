@@ -80,19 +80,7 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
                 if( intersects( w, tmp->geometry() ) )
                     {
                     QRect slideRect;
-                    if( w->isModal() )
-                        {
-                        QRect modalGroupGeometry = w->geometry();
-                        foreach( EffectWindow *modalWindow, w->mainWindows() )
-                            {
-                            modalGroupGeometry = modalGroupGeometry.united( modalWindow->geometry() );
-                            }
-                        slideRect = getSlideDestination( modalGroupGeometry, tmp->geometry() );
-                        }
-                    else
-                        {
-                        slideRect = getSlideDestination( w->geometry(), tmp->geometry() );
-                        }
+                    slideRect = getSlideDestination( getModalGroupGeometry( w ), tmp->geometry() );
                     effects->setElevatedWindow( tmp, true );
                     elevatedList.append( tmp );
                     motionManager.manage( tmp );
@@ -211,9 +199,9 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
             {
             if( oldStackingOrder.lastIndexOf( tmp ) > oldStackingOrder.lastIndexOf( w ) && isWindowUsable( tmp ) )
                 {
-		kDebug() << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
-	        PaintClipper::push( region.subtracted( tmp->geometry() ) );
-	        clippedRegions.prepend( region.subtracted( tmp->geometry() ) );
+                kDebug() << "screw detected. region:" << region << "clipping:" <<  tmp->geometry() ;
+                PaintClipper::push( region.subtracted( tmp->geometry() ) );
+                clippedRegions.prepend( region.subtracted( tmp->geometry() ) );
 //                region = region.subtracted( tmp->geometry() );
                 }
             }
@@ -260,19 +248,7 @@ void SlideBackEffect::postPaintWindow( EffectWindow* w )
                         if( effects->activeWindow() && !tmp->isDock() && !tmp->keepAbove() && effects->activeWindow()->geometry().intersects( elevatedGeometry ) )
                             {
                             QRect newDestination;
-                            if( effects->activeWindow()->isModal() )
-                                {
-                                QRect modalGroupGeometry = effects->activeWindow()->geometry();
-                                foreach( EffectWindow *modalWindow, effects->activeWindow()->mainWindows() )
-                                    {
-                                    modalGroupGeometry = modalGroupGeometry.united( modalWindow->geometry() );
-                                    }
-                                newDestination = getSlideDestination( modalGroupGeometry, elevatedGeometry );
-                                }
-                            else
-                                {
-                                newDestination = getSlideDestination( effects->activeWindow()->geometry(), elevatedGeometry );
-                                }
+                            newDestination = getSlideDestination( getModalGroupGeometry( effects->activeWindow() ), elevatedGeometry );
                             if( !motionManager.isManaging( tmp ) )
                                 {
                                 motionManager.manage( tmp );
@@ -392,14 +368,7 @@ bool SlideBackEffect::isWindowUsable( EffectWindow* w )
 
 bool SlideBackEffect::intersects( EffectWindow* windowUnder, const QRect &windowOverGeometry )
     {
-    QRect windowUnderGeometry = windowUnder->geometry();
-    if( windowUnder->isModal() )
-        {
-        foreach( EffectWindow *tmp, windowUnder->mainWindows() )
-            {
-            windowUnderGeometry = windowUnderGeometry.united( tmp->geometry() );
-            }
-        }
+    QRect windowUnderGeometry = getModalGroupGeometry( windowUnder );
     return windowUnderGeometry.intersects( windowOverGeometry );
     }
 
@@ -425,6 +394,19 @@ EffectWindow* SlideBackEffect::newTopWindow()
     {
     EffectWindowList stacking = usableWindows( effects->stackingOrder() );
     return stacking.isEmpty() ? NULL : stacking.last();
+    }
+
+QRect SlideBackEffect::getModalGroupGeometry( EffectWindow *w )
+    {
+    QRect modalGroupGeometry = w->geometry();
+    if( w->isModal() )
+        {
+        foreach( EffectWindow *modalWindow, w->mainWindows() )
+            {
+            modalGroupGeometry = modalGroupGeometry.united( getModalGroupGeometry( modalWindow ) );
+            }
+        }
+    return modalGroupGeometry;        
     }
 
 } //Namespace
