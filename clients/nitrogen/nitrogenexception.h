@@ -140,10 +140,10 @@ namespace Nitrogen
     //@{
 
     virtual QRegExp regExp( void ) const
-    { return reg_exp_; }
+    { return regExp_; }
 
     virtual QRegExp& regExp( void )
-    { return reg_exp_; }
+    { return regExp_; }
 
     //@}
 
@@ -168,7 +168,7 @@ namespace Nitrogen
     Type type_;
 
     //! regular expression to match window caption
-    QRegExp reg_exp_;
+    QRegExp regExp_;
 
     //! attributes mask
     unsigned int mask_;

@@ -40,7 +40,7 @@ namespace Nitrogen
   //________________________________________________________________________
   X11Util::X11Util( void )
   {
-    _initializeAtomNames();
+    initializeAtomNames();
   }
 
   //________________________________________________________________________
@@ -49,8 +49,8 @@ namespace Nitrogen
 
     #ifdef Q_WS_X11
 
-    SupportedAtomMap::const_iterator iter( _supportedAtoms().find( atom ) );
-    if( iter != _supportedAtoms().end() ) return iter->second;
+    SupportedAtomMap::const_iterator iter( supportedAtoms().find( atom ) );
+    if( iter != supportedAtoms().end() ) return iter->second;
 
     Display* display( QX11Info::display() );
     Atom net_supported( findAtom( _NET_SUPPORTED ) );
@@ -77,7 +77,7 @@ namespace Nitrogen
 
       if( found == searched )
       {
-        supported_atoms_[atom] = true;
+        supportedAtoms_[atom] = true;
         return true;
       }
 
@@ -86,7 +86,7 @@ namespace Nitrogen
 
     }
 
-    supported_atoms_[atom] = false;
+    supportedAtoms_[atom] = false;
 
     #endif
 
@@ -135,12 +135,12 @@ namespace Nitrogen
   }
 
   //________________________________________________________________________
-  void X11Util::_initializeAtomNames( void )
+  void X11Util::initializeAtomNames( void )
   {
 
-    atom_names_[_NET_SUPPORTED] = "_NET_SUPPORTED";
-    atom_names_[_NET_WM_STATE] = "_NET_WM_STATE";
-    atom_names_[_NET_WM_MOVERESIZE] = "_NET_WM_MOVERESIZE";
+    atomNames_[_NET_SUPPORTED] = "_NET_SUPPORTED";
+    atomNames_[_NET_WM_STATE] = "_NET_WM_STATE";
+    atomNames_[_NET_WM_MOVERESIZE] = "_NET_WM_MOVERESIZE";
 
     return;
   }
@@ -152,12 +152,12 @@ namespace Nitrogen
   {
 
     // find atom in map
-    AtomMap::iterator iter( _atoms().find( atom ) );
-    if( iter != _atoms().end() ) return iter->second;
+    AtomMap::iterator iter( atoms().find( atom ) );
+    if( iter != atoms().end() ) return iter->second;
 
     // create atom if not found
     Display* display( QX11Info::display() );
-    Atom out( XInternAtom(display, qPrintable( atom_names_[atom] ), false ) );
+    Atom out( XInternAtom(display, qPrintable( atomNames_[atom] ), false ) );
     atoms_[atom] = out;
     return out;
 

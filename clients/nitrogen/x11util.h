@@ -92,22 +92,22 @@ namespace Nitrogen
     typedef std::map<Atoms, QString> AtomNameMap;
 
     //! atom names
-    void _initializeAtomNames( void );
+    void initializeAtomNames( void );
 
     //! atom names
-    const AtomNameMap& _atomNames( void ) const
-    { return atom_names_; }
+    const AtomNameMap& atomNames( void ) const
+    { return atomNames_; }
 
-    AtomNameMap atom_names_;
+    AtomNameMap atomNames_;
 
     //! supported atoms
     typedef std::map<Atoms, bool > SupportedAtomMap;
 
     //! supported atoms
-    const SupportedAtomMap& _supportedAtoms( void ) const
-    { return supported_atoms_; }
+    const SupportedAtomMap& supportedAtoms( void ) const
+    { return supportedAtoms_; }
 
-    SupportedAtomMap supported_atoms_;
+    SupportedAtomMap supportedAtoms_;
 
     #ifdef Q_WS_X11
 
@@ -115,8 +115,8 @@ namespace Nitrogen
     typedef std::map<Atoms, Atom> AtomMap;
 
     //! atoms
-    // const AtomMap& _atoms( void ) const
-    AtomMap& _atoms( void )
+    // const AtomMap& atoms( void ) const
+    AtomMap& atoms( void )
     { return atoms_; }
 
     //! atoms

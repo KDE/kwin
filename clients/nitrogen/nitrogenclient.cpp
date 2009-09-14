@@ -73,7 +73,7 @@ namespace Nitrogen
   NitrogenClient::NitrogenClient(KDecorationBridge *b, KDecorationFactory *f):
     KCommonDecorationUnstable(b, f),
     colorCacheInvalid_(true),
-    size_grip_( 0 ),
+    sizeGrip_( 0 ),
     inactiveShadowTiles_( 0 ),
     activeShadowTiles_( 0 ),
     helper_(*globalHelper),
@@ -809,7 +809,7 @@ namespace Nitrogen
     assert( !hasSizeGrip() );
     if( ( isResizable() && windowId() != 0 ) || isPreview() )
     {
-      size_grip_ = new NitrogenSizeGrip( this );
+      sizeGrip_ = new NitrogenSizeGrip( this );
       sizeGrip().setVisible( !( isMaximized() || isShade() ) );
     }
 
@@ -819,8 +819,8 @@ namespace Nitrogen
   void NitrogenClient::deleteSizeGrip( void )
   {
     assert( hasSizeGrip() );
-    size_grip_->deleteLater();
-    size_grip_ = 0;
+    sizeGrip_->deleteLater();
+    sizeGrip_ = 0;
   }
 
   //_________________________________________________________________

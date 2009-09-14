@@ -171,11 +171,11 @@ namespace Nitrogen
 
         // size grip
         bool hasSizeGrip( void ) const
-        { return (bool)size_grip_; }
+        { return (bool)sizeGrip_; }
 
         //! size grip
         NitrogenSizeGrip& sizeGrip( void ) const
-        { return *size_grip_; }
+        { return *sizeGrip_; }
 
         //@}
 
@@ -189,7 +189,7 @@ namespace Nitrogen
         QColor cachedTitlebarTextColor_;
 
         //! size grip widget
-        NitrogenSizeGrip* size_grip_;
+        NitrogenSizeGrip* sizeGrip_;
 
         ShadowTilesOption inactiveShadowTilesOption_;
         ShadowTilesOption activeShadowTilesOption_;
