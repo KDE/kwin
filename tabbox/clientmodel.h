@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef TABBOXMODEL_H
-#define TABBOXMODEL_H
+#ifndef CLIENTMODEL_H
+#define CLIENTMODEL_H
 #include "tabboxhandler.h"
 
 #include <QModelIndex>
@@ -99,4 +99,4 @@ class ClientModel
 } // namespace Tabbox
 } // namespace KWin
 
-#endif // TABBOXMODEL_H
+#endif // CLIENTMODEL_H

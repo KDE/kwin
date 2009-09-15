@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef TABBOXDELEGATE_H
-#define TABBOXDELEGATE_H
+#ifndef CLIENTITEMDELEGATE_H
+#define CLIENTITEMDELEGATE_H
 #include "itemlayoutconfig.h"
 
 #include <QAbstractItemDelegate>
@@ -106,4 +106,4 @@ class ClientItemDelegate
 } // namespace Tabbox
 } // namespace KWin
 
-#endif // TABBOXDELEGATE_H
+#endif // CLIENTITEMDELEGATE_H
