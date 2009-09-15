@@ -1097,26 +1097,26 @@ namespace Nitrogen
 
     // draw the corner of the window - actually all 4 corners as one circle
     // this is all fixedSize. Does not scale with shadow size
-    QLinearGradient lg = QLinearGradient(0.0, fixedSize-4.5, 0.0, fixedSize+4.5);
+    QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
     if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny )
     {
 
-      lg.setColorAt(0.52, helper().backgroundTopColor(color));
-      lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
+      lg.setColorAt(0.52*fixedSize/size, helper().backgroundTopColor(color));
+      lg.setColorAt(1.0*fixedSize/size, helper().backgroundBottomColor(color) );
 
     } else {
 
       QColor light = helper().calcLightColor( helper().backgroundTopColor(color) );
       QColor dark = helper().calcDarkColor(helper().backgroundBottomColor(color));
 
-      lg.setColorAt(0.52, light);
-      lg.setColorAt(1.0, dark);
+      lg.setColorAt(0.52*fixedSize/size, light);
+      lg.setColorAt(1.0*fixedSize/size, dark);
 
     }
 
     p.setBrush( Qt::NoBrush );
     p.setPen(QPen(lg, 0.8));
-    p.drawEllipse(QRectF(fixedSize-4, fixedSize-4, 8, 8));
+    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
 
     p.end();
     return shadow;
