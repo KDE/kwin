@@ -50,7 +50,7 @@ using namespace std;
 namespace Nitrogen
 {
 
-  K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("nitrogenDeco"))
+  K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("oxygenDeco"))
 
   //___________________________________________
   OxygenHelper *nitrogenHelper()
@@ -95,7 +95,7 @@ namespace Nitrogen
 
   //___________________________________________
   QString NitrogenClient::visibleName() const
-  { return i18n("Nitrogen"); }
+  { return i18n("Oxygen"); }
 
   //___________________________________________
   void NitrogenClient::init()

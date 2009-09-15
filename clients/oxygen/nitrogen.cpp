@@ -111,7 +111,7 @@ namespace Nitrogen
     bool changed( false );
 
     // create a config object
-    KConfig config("nitrogenrc");
+    KConfig config("oxygenrc");
     KConfigGroup group( config.group("Windeco") );
     NitrogenConfiguration configuration( group );
     if( !( configuration == defaultConfiguration() ) )

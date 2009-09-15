@@ -56,7 +56,7 @@ namespace Nitrogen
 
     KGlobal::locale()->insertCatalog("kwin_clients");
 
-    configuration_ = new KConfig( "nitrogenrc" );
+    configuration_ = new KConfig( "oxygenrc" );
     KConfigGroup configurationGroup( configuration_, "Windeco");
 
     userInterface_ = new NitrogenConfigurationUI( parent );
@@ -210,25 +210,6 @@ namespace Nitrogen
   }
   //_______________________________________________________________________
   void Config::aboutNitrogen( void )
-  {
-    KAboutData aboutData( "nitrogen", 0,
-      ki18n( "Nitrogen" ), APP_VERSION,
-      ki18n( "Oxygen based Window decoration for KDE" ), KAboutData::License_GPL,
-      KLocalizedString(),
-      KLocalizedString(),
-      ( "http://www.kde-look.org/content/show.php/Nitrogen?content=99551" ) );
-
-    aboutData.addAuthor(
-      ki18n( "Hugo Pereira Da Costa" ), ki18n( "Developer" ),
-      "hugo.pereira@free.fr",
-      "http://hugo.pereira.free.fr/index.php" );
-
-    aboutData.addCredit( ki18n( "Oxygen team" ) );
-
-    // create dialog
-    KAboutApplicationDialog( &aboutData, 0 ).exec();
-
-
-  }
+  {}
 
 }
