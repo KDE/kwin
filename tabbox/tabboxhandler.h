@@ -148,7 +148,7 @@ class TabBoxHandler : public QObject
         * <LI>The client won't be added if it has modal dialogs</LI>
         * <LI>In that case the modal dialog will be returned if it isn't already
         * included</LI>
-        * <LI>Won't be added if it isn't on active screen when using seperate
+        * <LI>Won't be added if it isn't on active screen when using separate
         * screen focus</LI>
         * </UL>
         * @param client The client to be checked for inclusion
@@ -240,7 +240,7 @@ class TabBoxHandler : public QObject
         int currentSelectedDesktop() const;
 
         /**
-        * Handles additonal grabbed key events by the TabBox controller.
+        * Handles additional grabbed key events by the TabBox controller.
         * It is able to handle cursor key presses and to find the item
         * left/right/above/below of current item.
         * @param event The key event which has been grabbed

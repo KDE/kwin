@@ -67,7 +67,7 @@ class DesktopItemDelegate
         * @param painter The painter to paint the text
         * @param option The current QStyleOptionViewItem
         * @param element The current ItemLayoutConfigRowElement
-        * @param x The left x positon for drawing the text
+        * @param x The left x position for drawing the text
         * @param y The top y position for drawing the text
         * @param rowHeight The height of the current rendered row
         * @param text The text which should be drawn
@@ -86,7 +86,7 @@ class DesktopItemDelegate
         * Calculates the size hint of given text.
         * This method is used to calculate the maximum size of a row.
         * @param index The current model index
-        * @param element The ItemLayoutConfigRowElement defining how the text has to be layed out.
+        * @param element The ItemLayoutConfigRowElement defining how the text has to be laid out.
         * @param text The text whose size has to be calculated
         * @return The size of the given text if it would be rendered
         */
