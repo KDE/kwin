@@ -413,7 +413,7 @@ void KWinTabBoxConfig::defaults()
 bool KWinTabBoxConfig::effectEnabled(const QString& effect, const KConfigGroup& cfg) const
     {
     KService::List services = KServiceTypeTrader::self()->query(
-        "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + "'" );
+        "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'' );
     if( services.isEmpty())
         return false;
     QVariant v = services.first()->property( "X-KDE-PluginInfo-EnabledByDefault" );
@@ -493,7 +493,7 @@ void KWinTabBoxConfig::aboutEffectClicked( KWinTabBoxConfigForm* ui )
         default:
             return;
         }
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + "'");
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
     if( services.isEmpty() )
         return;
     KPluginInfo pluginInfo( services.first() );
