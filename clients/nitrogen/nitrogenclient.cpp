@@ -977,15 +977,12 @@ namespace Nitrogen
         if( a > 0 )
         {
           qreal b = x[0]*x[6]*(1.0/shadowSize - 1.0/fixedSize)/(x[6]-x[0]);
-          QRadialGradient rg( size, size, shadowSize );
+          QRadialGradient rg(
+            size+hoffset,
+            size+voffset,
+            shadowSize );
 
-          // firt pin-point is assigned the windeco color
-          // and does not scale with the shadow size
-          QColor c = color;
-          c.setAlpha( 255 );  rg.setColorAt( 4.4/shadowSize, c );
-
-          // othe pin-points follow the usual construct
-          c = shadowConfiguration.innerColor();
+          QColor c = shadowConfiguration.innerColor();
           for( int i = 0; i<7; i++ )
           { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
 
@@ -1101,20 +1098,23 @@ namespace Nitrogen
     if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny )
     {
 
-      lg.setColorAt(0.52*fixedSize/size, helper().backgroundTopColor(color));
-      lg.setColorAt(1.0*fixedSize/size, helper().backgroundBottomColor(color) );
+      lg.setColorAt(0.52, helper().backgroundTopColor(color));
+      lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
 
     } else {
 
       QColor light = helper().calcLightColor( helper().backgroundTopColor(color) );
       QColor dark = helper().calcDarkColor(helper().backgroundBottomColor(color));
 
-      lg.setColorAt(0.52*fixedSize/size, light);
-      lg.setColorAt(1.0*fixedSize/size, dark);
+      lg.setColorAt(0.52, light);
+      lg.setColorAt(1.0, dark);
 
     }
 
     p.setBrush( Qt::NoBrush );
+    if( configuration().frameBorder() == NitrogenConfiguration::BorderNone )
+    { p.setClipRect( QRectF( 0, 0, 2*size, size ) ); }
+
     p.setPen(QPen(lg, 0.8));
     p.drawEllipse(QRectF(size-4, size-4, 8, 8));
 
