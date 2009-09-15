@@ -56,7 +56,7 @@ namespace Nitrogen
 
     // exception definition
     QGroupBox* box;
-    widget->layout()->addWidget( box = new QGroupBox( i18n( "Definition" ), widget ) );
+    widget->layout()->addWidget( box = new QGroupBox( i18n( "Window Identification" ), widget ) );
 
     QGridLayout* gridLayout = new QGridLayout();
     box->setLayout( gridLayout );
@@ -64,17 +64,17 @@ namespace Nitrogen
     QLabel *label;
 
     // exception type
-    gridLayout->addWidget( label = new QLabel( i18n( "Exception type: " ), box ), 0, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( i18n( "Matching window property:" ), box ), 0, 0, 1, 1 );
     gridLayout->addWidget( exceptionType = new QComboBox(box), 0, 1, 1, 1 );
     exceptionType->insertItems(0, QStringList()
       << NitrogenException::typeName( NitrogenException::WindowClassName, true )
       << NitrogenException::typeName( NitrogenException::WindowTitle, true )
       );
     exceptionType->setToolTip( i18n(
-      "Select here the window characteristic used to \n"
-      "identify windows to which the exception apply." ) );
+      "Select here the window property used to identify windows \n"
+      "to which the specific decoration options apply." ) );
 
-    label->setAlignment( Qt::AlignRight );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     KPushButton* button = new KPushButton( i18n( "&Detect Window Properties" ), box );
     gridLayout->addWidget( button, 2, 0, 1, 2, Qt::AlignRight|Qt::AlignVCenter );
@@ -85,13 +85,13 @@ namespace Nitrogen
     gridLayout->addWidget( exceptionEditor = new KLineEdit( box ), 1, 1, 1, 1 );
     exceptionEditor->setClearButtonShown( true );
     exceptionEditor->setToolTip( i18n(
-      "Type here the regular expression used to \n"
-      "identify windows to which the exception apply." ) );
+      "Type here the regular expression used to identify windows \n"
+      "to which the specific decoration options apply." ) );
 
-    label->setAlignment( Qt::AlignRight );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     // decoration flags
-    widget->layout()->addWidget( box = new QGroupBox( i18n( "Decoration" ), widget ) );
+    widget->layout()->addWidget( box = new QGroupBox( i18n( "Decoration Options" ), widget ) );
     gridLayout = new QGridLayout();
     box->setLayout( gridLayout );
 
@@ -128,7 +128,7 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), blendColor, SLOT( setEnabled( bool ) ) );
 
     // size grip
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Size grip display:" ), box ), 2, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Extra size grip display:" ), box ), 2, 0, 1, 1 );
     gridLayout->addWidget( sizeGripMode = new QComboBox( box ), 2, 1, 1, 1 );
     sizeGripMode->insertItems(0, QStringList()
       << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
@@ -146,7 +146,7 @@ namespace Nitrogen
     connect( checkbox, SIGNAL( toggled( bool ) ), titleOutline, SLOT( setEnabled( bool ) ) );
 
     // separator
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and window contents:" ), box ), 4, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and active window contents:" ), box ), 4, 0, 1, 1 );
     gridLayout->addWidget( drawSeparator = new ComboBox( box ), 4, 1, 1, 1 );
     drawSeparator->setEnabled( false );
     checkboxes_.insert( std::make_pair( NitrogenException::DrawSeparator, checkbox ) );
