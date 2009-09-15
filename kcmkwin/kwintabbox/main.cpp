@@ -523,8 +523,9 @@ void KWinTabBoxConfig::aboutEffectClicked( KWinTabBoxConfigForm* ui )
             i++;
             }
         }
-    KAboutApplicationDialog aboutPlugin( &aboutData, this );
-    aboutPlugin.exec();
+    QPointer< KAboutApplicationDialog > aboutPlugin = new KAboutApplicationDialog( &aboutData, this );
+    aboutPlugin->exec();
+    delete aboutPlugin;
     }
 
 void KWinTabBoxConfig::slotConfigureEffectClicked()
@@ -558,19 +559,19 @@ void KWinTabBoxConfig::configureEffectClicked( KWinTabBoxConfigForm* ui )
             return;
         }
     KCModuleProxy* proxy = new KCModuleProxy( effect );
-    KDialog configDialog( this );
-    configDialog.setWindowTitle( ui->effectCombo->currentText() );
-    configDialog.setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
-    connect(&configDialog, SIGNAL(defaultClicked()), proxy, SLOT(defaults()));
+    QPointer< KDialog > configDialog = new KDialog( this );
+    configDialog->setWindowTitle( ui->effectCombo->currentText() );
+    configDialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
+    connect(configDialog, SIGNAL(defaultClicked()), proxy, SLOT(defaults()));
 
-    QWidget *showWidget = new QWidget( &configDialog );
+    QWidget *showWidget = new QWidget( configDialog );
     QVBoxLayout *layout = new QVBoxLayout;
     showWidget->setLayout( layout );
     layout->addWidget( proxy );
     layout->insertSpacing( -1, KDialog::marginHint() );
-    configDialog.setMainWidget( showWidget );
+    configDialog->setMainWidget( showWidget );
 
-    if( configDialog.exec() == QDialog::Accepted )
+    if( configDialog->exec() == QDialog::Accepted )
         {
         proxy->save();
         }
@@ -578,11 +579,12 @@ void KWinTabBoxConfig::configureEffectClicked( KWinTabBoxConfigForm* ui )
         {
         proxy->load();
         }
+    delete configDialog;
     }
 
 void KWinTabBoxConfig::slotConfigureLayoutClicked()
     {
-    KDialog* dialog = new KDialog( this );
+    QPointer<KDialog> dialog = new KDialog( this );
     dialog->setCaption( i18n("Configure Layout") );
     dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
     connect( dialog, SIGNAL(okClicked()), this, SLOT(slotLayoutChanged()));
@@ -590,8 +592,8 @@ void KWinTabBoxConfig::slotConfigureLayoutClicked()
     m_configForm->setConfig( m_tabBoxConfig );
     dialog->setMainWidget( m_configForm );
 
-    dialog->enableButtonApply( false );
-    dialog->show();
+    dialog->exec();
+    delete dialog;
     }
 
 void KWinTabBoxConfig::slotLayoutChanged()
@@ -602,7 +604,7 @@ void KWinTabBoxConfig::slotLayoutChanged()
 
 void KWinTabBoxConfig::slotConfigureLayoutClickedAlternative()
     {
-    KDialog* dialog = new KDialog( this );
+    QPointer<KDialog> dialog = new KDialog( this );
     dialog->setCaption( i18n("Configure Layout") );
     dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
     connect( dialog, SIGNAL(okClicked()), this, SLOT(slotLayoutChangedAlternative()));
@@ -610,8 +612,8 @@ void KWinTabBoxConfig::slotConfigureLayoutClickedAlternative()
     m_configForm->setConfig( m_tabBoxAlternativeConfig );
     dialog->setMainWidget( m_configForm );
 
-    dialog->enableButtonApply( false );
-    dialog->show();
+    dialog->exec();
+    delete dialog;
     }
 
 void KWinTabBoxConfig::slotLayoutChangedAlternative()
