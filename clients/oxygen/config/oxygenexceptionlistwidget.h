@@ -1,7 +1,7 @@
-#ifndef _NitrogenExceptionListWidget_h_
-#define _NitrogenExceptionListWidget_h_
+#ifndef _OxygenExceptionListWidget_h_
+#define _OxygenExceptionListWidget_h_
 //////////////////////////////////////////////////////////////////////////////
-// NitrogenExceptionListWidget.h
+// OxygenExceptionListWidget.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -29,14 +29,14 @@
 #include <QTreeView>
 #include <KDialog>
 
-#include "nitrogenexceptionmodel.h"
-#include "../nitrogenexceptionlist.h"
+#include "oxygenexceptionmodel.h"
+#include "../oxygenexceptionlist.h"
 
 //! QDialog used to commit selected files
-namespace Nitrogen
+namespace Oxygen
 {
 
-  class NitrogenExceptionListWidget: public QWidget
+  class OxygenExceptionListWidget: public QWidget
   {
 
     //! Qt meta object
@@ -45,13 +45,13 @@ namespace Nitrogen
     public:
 
     //! constructor
-    NitrogenExceptionListWidget( QWidget* = 0, NitrogenConfiguration default_configuration = NitrogenConfiguration() );
+    OxygenExceptionListWidget( QWidget* = 0, OxygenConfiguration default_configuration = OxygenConfiguration() );
 
     //! set exceptions
-    void setExceptions( const NitrogenExceptionList& );
+    void setExceptions( const OxygenExceptionList& );
 
     //! get exceptions
-    NitrogenExceptionList exceptions( void ) const;
+    OxygenExceptionList exceptions( void ) const;
 
     signals:
 
@@ -65,11 +65,11 @@ namespace Nitrogen
     { return *list_; }
 
     //! model
-    const NitrogenExceptionModel& _model() const
+    const OxygenExceptionModel& _model() const
     { return model_; }
 
     //! model
-    NitrogenExceptionModel& _model()
+    OxygenExceptionModel& _model()
     { return model_; }
 
     protected slots:
@@ -101,16 +101,16 @@ namespace Nitrogen
     void _resizeColumns( void ) const;
 
     //! check exception
-    bool _checkException( NitrogenException& );
+    bool _checkException( OxygenException& );
 
     //! default configuration
-    NitrogenConfiguration default_configuration_;
+    OxygenConfiguration default_configuration_;
 
     //! list of files
     QTreeView* list_;
 
     //! model
-    NitrogenExceptionModel model_;
+    OxygenExceptionModel model_;
 
     //! add
     KPushButton* add_button_;

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// NitrogenExceptionListWidget.cpp
+// OxygenExceptionListWidget.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -27,16 +27,16 @@
 #include <KLocale>
 #include <KMessageBox>
 
-#include "nitrogenexceptiondialog.h"
-#include "nitrogenexceptionlistwidget.h"
-#include "nitrogenexceptionlistwidget.moc"
+#include "oxygenexceptiondialog.h"
+#include "oxygenexceptionlistwidget.h"
+#include "oxygenexceptionlistwidget.moc"
 
 //__________________________________________________________
-namespace Nitrogen
+namespace Oxygen
 {
 
   //__________________________________________________________
-  NitrogenExceptionListWidget::NitrogenExceptionListWidget( QWidget* parent, NitrogenConfiguration default_configuration ):
+  OxygenExceptionListWidget::OxygenExceptionListWidget( QWidget* parent, OxygenConfiguration default_configuration ):
     QWidget( parent ),
     default_configuration_( default_configuration )
   {
@@ -53,7 +53,7 @@ namespace Nitrogen
     _list().setRootIsDecorated( false );
     _list().setSortingEnabled( false );
     _list().setModel( &_model() );
-    _list().sortByColumn( NitrogenExceptionModel::TYPE );
+    _list().sortByColumn( OxygenExceptionModel::TYPE );
     _list().setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Ignored ) );
 
     // button layout
@@ -102,26 +102,26 @@ namespace Nitrogen
   }
 
   //__________________________________________________________
-  void NitrogenExceptionListWidget::setExceptions( const NitrogenExceptionList& exceptions )
+  void OxygenExceptionListWidget::setExceptions( const OxygenExceptionList& exceptions )
   {
-    _model().set( NitrogenExceptionModel::List( exceptions.begin(), exceptions.end() ) );
+    _model().set( OxygenExceptionModel::List( exceptions.begin(), exceptions.end() ) );
     _resizeColumns();
   }
 
   //__________________________________________________________
-  NitrogenExceptionList NitrogenExceptionListWidget::exceptions( void ) const
+  OxygenExceptionList OxygenExceptionListWidget::exceptions( void ) const
   {
 
-    NitrogenExceptionModel::List exceptions( _model().get() );
-    NitrogenExceptionList out;
-    for( NitrogenExceptionModel::List::const_iterator iter = exceptions.begin(); iter != exceptions.end(); iter++ )
+    OxygenExceptionModel::List exceptions( _model().get() );
+    OxygenExceptionList out;
+    for( OxygenExceptionModel::List::const_iterator iter = exceptions.begin(); iter != exceptions.end(); iter++ )
     { out.push_back( *iter ); }
     return out;
 
   }
 
   //__________________________________________________________
-  void NitrogenExceptionListWidget::_updateButtons( void )
+  void OxygenExceptionListWidget::_updateButtons( void )
   {
 
     bool has_selection( !_list().selectionModel()->selectedRows().empty() );
@@ -135,16 +135,16 @@ namespace Nitrogen
 
 
   //_______________________________________________________
-  void NitrogenExceptionListWidget::_add( void )
+  void OxygenExceptionListWidget::_add( void )
   {
 
     // map dialog
-    NitrogenExceptionDialog dialog( this );
+    OxygenExceptionDialog dialog( this );
     dialog.setException( default_configuration_ );
     if( dialog.exec() == QDialog::Rejected ) return;
 
     // retrieve exception and check
-    NitrogenException exception( dialog.exception() );
+    OxygenException exception( dialog.exception() );
     if( !_checkException( exception ) ) return;
 
     // create new item
@@ -165,22 +165,22 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListWidget::_edit( void )
+  void OxygenExceptionListWidget::_edit( void )
   {
 
     // retrieve selection
     QModelIndex current( _list().selectionModel()->currentIndex() );
     if( !current.isValid() ) return;
 
-    NitrogenException& exception( _model().get( current ) );
+    OxygenException& exception( _model().get( current ) );
 
     // create dialog
-    NitrogenExceptionDialog dialog( this );
+    OxygenExceptionDialog dialog( this );
     dialog.setException( exception );
 
     // map dialog
     if( dialog.exec() == QDialog::Rejected ) return;
-    NitrogenException new_exception = dialog.exception();
+    OxygenException new_exception = dialog.exception();
 
     // check if exception was changed
     if( exception == new_exception ) return;
@@ -197,7 +197,7 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListWidget::_remove( void )
+  void OxygenExceptionListWidget::_remove( void )
   {
 
     // shoud use a konfirmation dialog
@@ -212,14 +212,14 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListWidget::_toggle( const QModelIndex& index )
+  void OxygenExceptionListWidget::_toggle( const QModelIndex& index )
   {
 
     if( !index.isValid() ) return;
-    if( index.column() != NitrogenExceptionModel::ENABLED ) return;
+    if( index.column() != OxygenExceptionModel::ENABLED ) return;
 
     // get matching exception
-    NitrogenException& exception( _model().get( index ) );
+    OxygenException& exception( _model().get( index ) );
     exception.setEnabled( !exception.enabled() );
     _model().add( exception );
 
@@ -229,20 +229,20 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListWidget::_up( void )
+  void OxygenExceptionListWidget::_up( void )
   {
 
-    NitrogenExceptionModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
+    OxygenExceptionModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
     if( selection.empty() ) { return; }
 
     // retrieve selected indexes in list and store in model
     QModelIndexList selected_indexes( _list().selectionModel()->selectedRows() );
-    NitrogenExceptionModel::List selected_exceptions( _model().get( selected_indexes ) );
+    OxygenExceptionModel::List selected_exceptions( _model().get( selected_indexes ) );
 
-    NitrogenExceptionModel::List current_exceptions( _model().get() );
-    NitrogenExceptionModel::List new_exceptions;
+    OxygenExceptionModel::List current_exceptions( _model().get() );
+    OxygenExceptionModel::List new_exceptions;
 
-    for( NitrogenExceptionModel::List::const_iterator iter = current_exceptions.begin(); iter != current_exceptions.end(); iter++ )
+    for( OxygenExceptionModel::List::const_iterator iter = current_exceptions.begin(); iter != current_exceptions.end(); iter++ )
     {
 
       // check if new list is not empty, current index is selected and last index is not.
@@ -253,7 +253,7 @@ namespace Nitrogen
         selected_indexes.indexOf( _model().index( new_exceptions.back() ) ) != -1
         ) )
       {
-        NitrogenException last( new_exceptions.back() );
+        OxygenException last( new_exceptions.back() );
         new_exceptions.pop_back();
         new_exceptions.push_back( *iter );
         new_exceptions.push_back( last );
@@ -265,7 +265,7 @@ namespace Nitrogen
 
     // restore selection
     _list().selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-    for( NitrogenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); iter++ )
+    for( OxygenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); iter++ )
     { _list().selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
     emit changed();
@@ -274,21 +274,21 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListWidget::_down( void )
+  void OxygenExceptionListWidget::_down( void )
   {
 
-    NitrogenExceptionModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
+    OxygenExceptionModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
     if( selection.empty() )
     { return; }
 
     // retrieve selected indexes in list and store in model
     QModelIndexList selected_indexes( _list().selectionModel()->selectedIndexes() );
-    NitrogenExceptionModel::List selected_exceptions( _model().get( selected_indexes ) );
+    OxygenExceptionModel::List selected_exceptions( _model().get( selected_indexes ) );
 
-    NitrogenExceptionModel::List current_exceptions( _model().get() );
-    NitrogenExceptionModel::List new_exceptions;
+    OxygenExceptionModel::List current_exceptions( _model().get() );
+    OxygenExceptionModel::List new_exceptions;
 
-    for( NitrogenExceptionModel::List::reverse_iterator iter = current_exceptions.rbegin(); iter != current_exceptions.rend(); iter++ )
+    for( OxygenExceptionModel::List::reverse_iterator iter = current_exceptions.rbegin(); iter != current_exceptions.rend(); iter++ )
     {
 
       // check if new list is not empty, current index is selected and last index is not.
@@ -300,7 +300,7 @@ namespace Nitrogen
         ) )
       {
 
-        NitrogenException last( new_exceptions.back() );
+        OxygenException last( new_exceptions.back() );
         new_exceptions.pop_back();
         new_exceptions.push_back( *iter );
         new_exceptions.push_back( last );
@@ -308,11 +308,11 @@ namespace Nitrogen
       } else new_exceptions.push_back( *iter );
     }
 
-    _model().set( NitrogenExceptionModel::List( new_exceptions.rbegin(), new_exceptions.rend() ) );
+    _model().set( OxygenExceptionModel::List( new_exceptions.rbegin(), new_exceptions.rend() ) );
 
     // restore selection
     _list().selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-    for( NitrogenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); iter++ )
+    for( OxygenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); iter++ )
     { _list().selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
     emit changed();
@@ -321,22 +321,22 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  void NitrogenExceptionListWidget::_resizeColumns( void ) const
+  void OxygenExceptionListWidget::_resizeColumns( void ) const
   {
-    _list().resizeColumnToContents( NitrogenExceptionModel::ENABLED );
-    _list().resizeColumnToContents( NitrogenExceptionModel::TYPE );
-    _list().resizeColumnToContents( NitrogenExceptionModel::REGEXP );
+    _list().resizeColumnToContents( OxygenExceptionModel::ENABLED );
+    _list().resizeColumnToContents( OxygenExceptionModel::TYPE );
+    _list().resizeColumnToContents( OxygenExceptionModel::REGEXP );
   }
 
   //_______________________________________________________
-  bool NitrogenExceptionListWidget::_checkException( NitrogenException& exception )
+  bool OxygenExceptionListWidget::_checkException( OxygenException& exception )
   {
 
     while( !exception.regExp().isValid() )
     {
 
       KMessageBox::error( this, i18n("Regular Expression syntax is incorrect") );
-      NitrogenExceptionDialog dialog( this );
+      OxygenExceptionDialog dialog( this );
       dialog.setException( exception );
       if( dialog.exec() == QDialog::Rejected ) return false;
       exception = dialog.exception();

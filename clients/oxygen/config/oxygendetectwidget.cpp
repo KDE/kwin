@@ -1,6 +1,6 @@
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogendetectwidget.cpp
+// oxygendetectwidget.cpp
 // Note: this class is a stripped down version of
 // /kdebase/workspace/kwin/kcmkwin/kwinrules/detectwidget.cpp
 // Copyright (c) 2004 Lubos Lunak <l.lunak@kde.org>
@@ -34,8 +34,8 @@
 #include <KLocale>
 #include <QMouseEvent>
 
-#include "nitrogendetectwidget.h"
-#include "nitrogendetectwidget.moc"
+#include "oxygendetectwidget.h"
+#include "oxygendetectwidget.moc"
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -43,7 +43,7 @@
 #include <fixx11h.h>
 #include <QX11Info>
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //_________________________________________________________
@@ -77,24 +77,24 @@ namespace Nitrogen
 
     QCheckBox* checkbox;
     group->addButton( checkbox = new QCheckBox( i18n( "Use window class (whole application)" ) ) );
-    checkboxes.insert( std::make_pair( checkbox, NitrogenException::WindowClassName ) );
+    checkboxes.insert( std::make_pair( checkbox, OxygenException::WindowClassName ) );
     checkbox->setChecked( true );
     box->layout()->addWidget( checkbox );
 
     group->addButton( checkbox = new QCheckBox( i18n( "Use window title" ) ) );
-    checkboxes.insert( std::make_pair( checkbox, NitrogenException::WindowTitle ) );
+    checkboxes.insert( std::make_pair( checkbox, OxygenException::WindowTitle ) );
     box->layout()->addWidget( checkbox );
 
   }
 
   //_________________________________________________________
-  NitrogenException::Type DetectWidget::exceptionType( void ) const
+  OxygenException::Type DetectWidget::exceptionType( void ) const
   {
     for( CheckBoxMap::const_iterator iter = checkboxes.begin(); iter != checkboxes.end(); iter++ )
     { if( iter->first->isChecked() ) return iter->second; }
 
     assert( false );
-    return NitrogenException::WindowClassName;
+    return OxygenException::WindowClassName;
   }
 
   //_________________________________________________________

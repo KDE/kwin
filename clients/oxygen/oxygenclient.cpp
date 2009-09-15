@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenclient.cpp
+// oxygenclient.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -40,20 +40,20 @@
 #include <QTextStream>
 #include <QApplication>
 
-#include "nitrogen.h"
-#include "nitrogenbutton.h"
-#include "nitrogenclient.h"
-#include "nitrogenclient.moc"
-#include "nitrogensizegrip.h"
+#include "oxygen.h"
+#include "oxygenbutton.h"
+#include "oxygenclient.h"
+#include "oxygenclient.moc"
+#include "oxygensizegrip.h"
 
 using namespace std;
-namespace Nitrogen
+namespace Oxygen
 {
 
   K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("oxygenDeco"))
 
   //___________________________________________
-  OxygenHelper *nitrogenHelper()
+  OxygenHelper *oxygenHelper()
   { return globalHelper; }
 
   //___________________________________________
@@ -70,7 +70,7 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  NitrogenClient::NitrogenClient(KDecorationBridge *b, KDecorationFactory *f):
+  OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f):
     KCommonDecorationUnstable(b, f),
     colorCacheInvalid_(true),
     sizeGrip_( 0 ),
@@ -81,7 +81,7 @@ namespace Nitrogen
   { qAddPostRoutine(oxkwincleanupBefore); }
 
   //___________________________________________
-  NitrogenClient::~NitrogenClient()
+  OxygenClient::~OxygenClient()
   {
 
     // delete sizegrip if any
@@ -94,11 +94,11 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  QString NitrogenClient::visibleName() const
+  QString OxygenClient::visibleName() const
   { return i18n("Oxygen"); }
 
   //___________________________________________
-  void NitrogenClient::init()
+  void OxygenClient::init()
   {
 
     KCommonDecoration::init();
@@ -125,7 +125,7 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  void NitrogenClient::reset( unsigned long changed )
+  void OxygenClient::reset( unsigned long changed )
   {
     if( changed & SettingCompositing )
     {
@@ -137,11 +137,11 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  bool NitrogenClient::isMaximized() const
+  bool OxygenClient::isMaximized() const
   { return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();  }
 
   //___________________________________________
-  bool NitrogenClient::decorationBehaviour(DecorationBehaviour behaviour) const
+  bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
   {
     switch (behaviour)
     {
@@ -158,7 +158,7 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  int NitrogenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
+  int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
   {
 
     bool maximized( isMaximized() );
@@ -177,17 +177,17 @@ namespace Nitrogen
         int border( 0 );
         if (respectWindowState && maximized) {
           border = 0;
-        }  else if( lm == LM_BorderBottom && frameBorder >= NitrogenConfiguration::BorderNoSide ) {
+        }  else if( lm == LM_BorderBottom && frameBorder >= OxygenConfiguration::BorderNoSide ) {
 
           // for tiny border, the convention is to have a larger bottom area in order to
           // make resizing easier
           border = qMax(frameBorder, 4);
 
-        }  else if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && isPreview() && !compositingActive() ) {
+        }  else if( configuration().frameBorder() == OxygenConfiguration::BorderNone && isPreview() && !compositingActive() ) {
 
           border = 1;
 
-        } else if( frameBorder < NitrogenConfiguration::BorderTiny ) {
+        } else if( frameBorder < OxygenConfiguration::BorderTiny ) {
 
           border = 0;
 
@@ -264,7 +264,7 @@ namespace Nitrogen
       case LM_OuterPaddingRight:
       case LM_OuterPaddingTop:
       case LM_OuterPaddingBottom:
-      return NitrogenFactory::shadowSize() - extraBorder;
+      return OxygenFactory::shadowSize() - extraBorder;
 
       default:
       return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -273,35 +273,35 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  KCommonDecorationButton *NitrogenClient::createButton(::ButtonType type)
+  KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
   {
     switch (type) {
       case MenuButton:
-      return new NitrogenButton(*this, i18n("Menu"), ButtonMenu);
+      return new OxygenButton(*this, i18n("Menu"), ButtonMenu);
 
       case HelpButton:
-      return new NitrogenButton(*this, i18n("Help"), ButtonHelp);
+      return new OxygenButton(*this, i18n("Help"), ButtonHelp);
 
       case MinButton:
-      return new NitrogenButton(*this, i18n("Minimize"), ButtonMin);
+      return new OxygenButton(*this, i18n("Minimize"), ButtonMin);
 
       case MaxButton:
-      return new NitrogenButton(*this, i18n("Maximize"), ButtonMax);
+      return new OxygenButton(*this, i18n("Maximize"), ButtonMax);
 
       case CloseButton:
-      return new NitrogenButton(*this, i18n("Close"), ButtonClose);
+      return new OxygenButton(*this, i18n("Close"), ButtonClose);
 
       case AboveButton:
-      return new NitrogenButton(*this, i18n("Keep Above Others"), ButtonAbove);
+      return new OxygenButton(*this, i18n("Keep Above Others"), ButtonAbove);
 
       case BelowButton:
-      return new NitrogenButton(*this, i18n("Keep Below Others"), ButtonBelow);
+      return new OxygenButton(*this, i18n("Keep Below Others"), ButtonBelow);
 
       case OnAllDesktopsButton:
-      return new NitrogenButton(*this, i18n("On All Desktops"), ButtonSticky);
+      return new OxygenButton(*this, i18n("On All Desktops"), ButtonSticky);
 
       case ShadeButton:
-      return new NitrogenButton(*this, i18n("Shade Button"), ButtonShade);
+      return new OxygenButton(*this, i18n("Shade Button"), ButtonShade);
 
       default:
       return 0;
@@ -334,7 +334,7 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  QRegion NitrogenClient::calcMask( void ) const
+  QRegion OxygenClient::calcMask( void ) const
   {
 
     if( isMaximized() )
@@ -353,7 +353,7 @@ namespace Nitrogen
     int bottom = 1;
 
     // disable bottom corners when border frame is too small and window is not shaded
-    if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && !isShade() ) bottom = 0;
+    if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() ) bottom = 0;
 
     int sw = layoutMetric( LM_OuterPaddingLeft );
     int sh = layoutMetric( LM_OuterPaddingTop );
@@ -372,7 +372,7 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  QColor NitrogenClient::titlebarTextColor(const QPalette &palette)
+  QColor OxygenClient::titlebarTextColor(const QPalette &palette)
   {
 
     if( configuration().drawTitleOutline() )
@@ -405,10 +405,10 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  void NitrogenClient::renderWindowBackground( QPainter* painter, const QRect& rect, const QWidget* widget, const QPalette& palette ) const
+  void OxygenClient::renderWindowBackground( QPainter* painter, const QRect& rect, const QWidget* widget, const QPalette& palette ) const
   {
 
-    if( configuration().blendColor() == NitrogenConfiguration::NoBlending )
+    if( configuration().blendColor() == OxygenConfiguration::NoBlending )
     {
 
       painter->fillRect( rect, palette.color( widget->window()->backgroundRole() ) );
@@ -417,7 +417,7 @@ namespace Nitrogen
 
       int offset = layoutMetric( LM_OuterPaddingTop );
       int height = 64 + configuration().buttonSize() - 22;
-      const QWidget* window( isPreview() ? NitrogenClient::widget() : widget->window() );
+      const QWidget* window( isPreview() ? OxygenClient::widget() : widget->window() );
       helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
 
     }
@@ -425,10 +425,10 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  void NitrogenClient::renderWindowBorder( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QPalette& palette ) const
+  void OxygenClient::renderWindowBorder( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QPalette& palette ) const
   {
 
-    const QWidget* window = (isPreview()) ? NitrogenClient::widget() : widget->window();
+    const QWidget* window = (isPreview()) ? OxygenClient::widget() : widget->window();
 
     // get coordinates relative to the client area
     // this is annoying. One could use mapTo if this was taking const QWidget* and not
@@ -446,8 +446,8 @@ namespace Nitrogen
       painter->setClipRegion(clipRect,Qt::IntersectClip);
     }
 
-    QRect r = (isPreview()) ? NitrogenClient::widget()->rect():window->rect();
-    r.adjust( NitrogenFactory::shadowSize(), NitrogenFactory::shadowSize(), -NitrogenFactory::shadowSize(), -NitrogenFactory::shadowSize() );
+    QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
+    r.adjust( OxygenFactory::shadowSize(), OxygenFactory::shadowSize(), -OxygenFactory::shadowSize(), -OxygenFactory::shadowSize() );
     r.adjust(0,0, 1, 1);
 
     // mask and painting frame
@@ -465,7 +465,7 @@ namespace Nitrogen
     }
 
     // bottom line
-    if( configuration().frameBorder() > NitrogenConfiguration::BorderNone )
+    if( configuration().frameBorder() > OxygenConfiguration::BorderNone )
     {
       int height = qMin( HFRAMESIZE, layoutMetric( LM_BorderBottom ) );
       QRect rect( r.bottomLeft()-position-QPoint(0,height), QSize( r.width(), height ) );
@@ -474,7 +474,7 @@ namespace Nitrogen
     }
 
     // left and right
-    if( configuration().frameBorder() >= NitrogenConfiguration::BorderTiny )
+    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
     {
 
       // left
@@ -505,7 +505,7 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  void NitrogenClient::renderTitleOutline(  QPainter* painter, const QRect& rect, const QPalette& palette ) const
+  void OxygenClient::renderTitleOutline(  QPainter* painter, const QRect& rect, const QPalette& palette ) const
   {
 
     // shadow
@@ -525,7 +525,7 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  void NitrogenClient::activeChange( void )
+  void OxygenClient::activeChange( void )
   {
 
     // update size grip so that it gets the right color
@@ -540,21 +540,21 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  void NitrogenClient::maximizeChange( void  )
+  void OxygenClient::maximizeChange( void  )
   {
     if( hasSizeGrip() ) sizeGrip().setVisible( !( isShade() || isMaximized() ) );
     KCommonDecorationUnstable::maximizeChange();
   }
 
   //_________________________________________________________
-  void NitrogenClient::shadeChange( void  )
+  void OxygenClient::shadeChange( void  )
   {
     if( hasSizeGrip() ) sizeGrip().setVisible( !( isShade() || isMaximized() ) );
     KCommonDecorationUnstable::shadeChange();
   }
 
   //_________________________________________________________
-  QPalette NitrogenClient::backgroundPalette( const QWidget* widget, QPalette palette ) const
+  QPalette OxygenClient::backgroundPalette( const QWidget* widget, QPalette palette ) const
   {
 
     if( configuration().drawTitleOutline() && isActive() )
@@ -565,7 +565,7 @@ namespace Nitrogen
   }
 
   //________________________________________________________________
-  void NitrogenClient::updateWindowShape()
+  void OxygenClient::updateWindowShape()
   {
 
     if(isMaximized() || compositingActive() )
@@ -583,12 +583,12 @@ namespace Nitrogen
 
 
   //___________________________________________
-  void NitrogenClient::resetConfiguration( void )
+  void OxygenClient::resetConfiguration( void )
   {
 
     if( !initialized_ ) return;
 
-    configuration_ = NitrogenFactory::configuration( *this );
+    configuration_ = OxygenFactory::configuration( *this );
 
     // handle size grip
     if( configuration_.drawSizeGrip() )
@@ -601,11 +601,11 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  void NitrogenClient::paintEvent( QPaintEvent* event )
+  void OxygenClient::paintEvent( QPaintEvent* event )
   {
 
     // factory
-    if(!( initialized_ && NitrogenFactory::initialized() ) ) return;
+    if(!( initialized_ && OxygenFactory::initialized() ) ) return;
 
     // palette
     QPalette palette = widget()->palette();
@@ -631,7 +631,7 @@ namespace Nitrogen
     }
 
     // adjust frame
-    frame.adjust( NitrogenFactory::shadowSize(), NitrogenFactory::shadowSize(), -NitrogenFactory::shadowSize(), -NitrogenFactory::shadowSize() );
+    frame.adjust( OxygenFactory::shadowSize(), OxygenFactory::shadowSize(), -OxygenFactory::shadowSize(), -OxygenFactory::shadowSize() );
 
     //  adjust mask
     if( compositingActive() || isPreview() )
@@ -653,7 +653,7 @@ namespace Nitrogen
         int bottom = 1;
 
         // disable bottom corners when border frame is too small and window is not shaded
-        if( configuration().frameBorder() == NitrogenConfiguration::BorderNone && !isShade() ) bottom = 0;
+        if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() ) bottom = 0;
         QRegion mask( x+5*left,   y+0*top, w-5*(left+right), h-0*(top+bottom));
         mask += QRegion(x+0*left, y+5*top, w-0*(left+right), h-5*(top+bottom));
         mask += QRegion(x+2*left, y+2*top, w-2*(left+right), h-2*(top+bottom));
@@ -662,7 +662,7 @@ namespace Nitrogen
 
         // in no-border configuration, an extra pixel is added to the mask
         // in order to get the corners color right in case of title highlighting.
-        if( configuration().frameBorder() == NitrogenConfiguration::BorderNone )
+        if( configuration().frameBorder() == OxygenConfiguration::BorderNone )
         { mask += QRegion(x+0*left, y+4*top, w-0*(left+right), h-4*(top+bottom)); }
 
         painter.setClipRegion( mask, Qt::IntersectClip );
@@ -687,7 +687,7 @@ namespace Nitrogen
     // useOxygenShadow is set to true,
     // and copositing is active
     // (that makes a lot of ifs)
-    if( isPreview() && configuration().frameBorder() == NitrogenConfiguration::BorderNone && !compositingActive() )
+    if( isPreview() && configuration().frameBorder() == OxygenConfiguration::BorderNone && !compositingActive() )
     {
       painter.save();
       painter.setBrush( Qt::NoBrush );
@@ -758,7 +758,7 @@ namespace Nitrogen
     { helper().drawSeparator(&painter, QRect(x, titleTop+titleHeight-1.5, w, 2), color, Qt::Horizontal); }
 
     // shadow and resize handles
-    if( configuration().frameBorder() >= NitrogenConfiguration::BorderTiny && !isMaximized() )
+    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny && !isMaximized() )
     {
 
       helper().drawFloatFrame(
@@ -799,24 +799,24 @@ namespace Nitrogen
   }
 
   //________________________________________________________________
-  NitrogenConfiguration NitrogenClient::configuration( void ) const
+  OxygenConfiguration OxygenClient::configuration( void ) const
   { return configuration_; }
 
   //_________________________________________________________________
-  void NitrogenClient::createSizeGrip( void )
+  void OxygenClient::createSizeGrip( void )
   {
 
     assert( !hasSizeGrip() );
     if( ( isResizable() && windowId() != 0 ) || isPreview() )
     {
-      sizeGrip_ = new NitrogenSizeGrip( this );
+      sizeGrip_ = new OxygenSizeGrip( this );
       sizeGrip().setVisible( !( isMaximized() || isShade() ) );
     }
 
   }
 
   //_________________________________________________________________
-  void NitrogenClient::deleteSizeGrip( void )
+  void OxygenClient::deleteSizeGrip( void )
   {
     assert( hasSizeGrip() );
     sizeGrip_->deleteLater();
@@ -824,10 +824,10 @@ namespace Nitrogen
   }
 
   //_________________________________________________________________
-  TileSet *NitrogenClient::shadowTiles(const QColor& color, bool active)
+  TileSet *OxygenClient::shadowTiles(const QColor& color, bool active)
   {
 
-    NitrogenShadowConfiguration shadowConfiguration( NitrogenFactory::shadowConfiguration( active && useOxygenShadows() ) );
+    OxygenShadowConfiguration shadowConfiguration( OxygenFactory::shadowConfiguration( active && useOxygenShadows() ) );
 
     ShadowTilesOption opt;
     opt.active      = active;
@@ -855,8 +855,8 @@ namespace Nitrogen
     TileSet *tileSet = 0;
 
     //
-    qreal size( NitrogenFactory::shadowSize() );
-    if( active && configuration().drawTitleOutline() && configuration().frameBorder() == NitrogenConfiguration::BorderNone )
+    qreal size( OxygenFactory::shadowSize() );
+    if( active && configuration().drawTitleOutline() && configuration().frameBorder() == OxygenConfiguration::BorderNone )
     {
 
       // a more complex tile set is needed for the configuration above:
@@ -910,13 +910,13 @@ namespace Nitrogen
   }
 
   //_________________________________________________________________
-  QPixmap NitrogenClient::shadowPixmap(const QColor& color, bool active ) const
+  QPixmap OxygenClient::shadowPixmap(const QColor& color, bool active ) const
   {
 
-    NitrogenShadowConfiguration shadowConfiguration( NitrogenFactory::shadowConfiguration( active && useOxygenShadows() ) );
+    OxygenShadowConfiguration shadowConfiguration( OxygenFactory::shadowConfiguration( active && useOxygenShadows() ) );
 
     static const qreal fixedSize = 25.5;
-    qreal size( NitrogenFactory::shadowSize() );
+    qreal size( OxygenFactory::shadowSize() );
     qreal shadowSize( shadowConfiguration.shadowSize() );
 
     QPixmap shadow = QPixmap( size*2, size*2 );
@@ -1095,7 +1095,7 @@ namespace Nitrogen
     // draw the corner of the window - actually all 4 corners as one circle
     // this is all fixedSize. Does not scale with shadow size
     QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-    if( configuration().frameBorder() < NitrogenConfiguration::BorderTiny )
+    if( configuration().frameBorder() < OxygenConfiguration::BorderTiny )
     {
 
       lg.setColorAt(0.52, helper().backgroundTopColor(color));
@@ -1112,7 +1112,7 @@ namespace Nitrogen
     }
 
     p.setBrush( Qt::NoBrush );
-    if( configuration().frameBorder() == NitrogenConfiguration::BorderNone )
+    if( configuration().frameBorder() == OxygenConfiguration::BorderNone )
     { p.setClipRect( QRectF( 0, 0, 2*size, size ) ); }
 
     p.setPen(QPen(lg, 0.8));

@@ -1,8 +1,8 @@
-#ifndef nitrogen_h
-#define nitrogen_h
+#ifndef oxygen_h
+#define oxygen_h
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogen.h
+// oxygen.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira <hugo.pereira@free.fr>
@@ -31,20 +31,17 @@
 #include <kdecorationfactory.h>
 #include <kdeversion.h>
 
-#include "nitrogenconfiguration.h"
-#include "nitrogenshadowconfiguration.h"
-#include "nitrogenexceptionlist.h"
+#include "oxygenconfiguration.h"
+#include "oxygenshadowconfiguration.h"
+#include "oxygenexceptionlist.h"
 
 // TODO:
 // should review implementation not to use static objects
 
-namespace Nitrogen
+namespace Oxygen
 {
 
-  class NitrogenClient;
-
-  //! button size
-  // enum { NITROGEN_BUTTONSIZE = 22 };
+  class OxygenClient;
 
   //! buttons
   enum ButtonType
@@ -77,7 +74,7 @@ namespace Nitrogen
   Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
 
   //! window decoration factory
-  class NitrogenFactory: public QObject, public KDecorationFactoryUnstable
+  class OxygenFactory: public QObject, public KDecorationFactoryUnstable
   {
 
     Q_OBJECT
@@ -85,10 +82,10 @@ namespace Nitrogen
     public:
 
     //! constructor
-    NitrogenFactory();
+    OxygenFactory();
 
     //! destructor
-    virtual ~NitrogenFactory();
+    virtual ~OxygenFactory();
 
     //! create decoration
     virtual KDecoration *createDecoration(KDecorationBridge *b);
@@ -104,18 +101,18 @@ namespace Nitrogen
     { return initialized_; }
 
     //! get configuration for a give client
-    static NitrogenConfiguration configuration( const NitrogenClient& );
+    static OxygenConfiguration configuration( const OxygenClient& );
 
     //! shadow configuration
-    static NitrogenShadowConfiguration activeShadowConfiguration( void )
+    static OxygenShadowConfiguration activeShadowConfiguration( void )
     { return activeShadowConfiguration_; }
 
     //! shadow configuration
-    static NitrogenShadowConfiguration inactiveShadowConfiguration( void )
+    static OxygenShadowConfiguration inactiveShadowConfiguration( void )
     { return inactiveShadowConfiguration_; }
 
     //! shadow configuration
-    static NitrogenShadowConfiguration shadowConfiguration( bool active )
+    static OxygenShadowConfiguration shadowConfiguration( bool active )
     { return active ? activeShadowConfiguration():inactiveShadowConfiguration(); }
 
     //! shadow size
@@ -133,7 +130,7 @@ namespace Nitrogen
     bool readConfig();
 
     //! default configuration
-    static NitrogenConfiguration defaultConfiguration( void )
+    static OxygenConfiguration defaultConfiguration( void )
     { return defaultConfiguration_; }
 
     //! initialization
@@ -141,23 +138,23 @@ namespace Nitrogen
     { initialized_ = value; }
 
     //! set default configuration
-    static void setDefaultConfiguration( NitrogenConfiguration value )
+    static void setDefaultConfiguration( OxygenConfiguration value )
     { defaultConfiguration_ = value; }
 
     //! initialization flag
     static bool initialized_;
 
     //! default configuration
-    static NitrogenConfiguration defaultConfiguration_;
+    static OxygenConfiguration defaultConfiguration_;
 
     //! shadow configuration
-    static NitrogenShadowConfiguration activeShadowConfiguration_;
+    static OxygenShadowConfiguration activeShadowConfiguration_;
 
     //! shadow configuration
-    static NitrogenShadowConfiguration inactiveShadowConfiguration_;
+    static OxygenShadowConfiguration inactiveShadowConfiguration_;
 
     //! exceptions
-    static NitrogenExceptionList exceptions_;
+    static OxygenExceptionList exceptions_;
 
   };
 

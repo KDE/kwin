@@ -1,7 +1,7 @@
-#ifndef nitrogenconfigurationui_h
-#define nitrogenconfigurationui_h
+#ifndef _oxygenexceptionmodel_h_
+#define _oxygenexceptionmodel_h_
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenconfigurationui.h
+// oxygenexceptionmodel.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -25,73 +25,56 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <kdeversion.h>
-#include <QWidget>
-#include <QComboBox>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QVector>
+#include "listmodel.h"
+#include "../oxygenexception.h"
 
-#include "nitrogenshadowconfigurationui.h"
-#include "nitrogenexceptionlistwidget.h"
-
-namespace Nitrogen
+namespace Oxygen
 {
 
-  //_____________________________________________
-  class NitrogenConfigurationUI: public QWidget
+  //! qlistview for object counters
+  class OxygenExceptionModel: public ListModel<OxygenException>
   {
-
-    Q_OBJECT
 
     public:
 
-    //! constructor
-    NitrogenConfigurationUI( QWidget* );
+    //! number of columns
+    enum { n_columns = 3 };
 
-    //! setup ui
-    void setupUI( void );
+    //! column type enumeration
+    enum ColumnType {
+      ENABLED,
+      TYPE,
+      REGEXP
+    };
 
-    //! title alignment
-    QComboBox *titleAlignment;
 
-    //! button size
-    QComboBox* buttonSize;
+    //!@name methods reimplemented from base class
+    //@{
 
-    //! frame border
-    QComboBox *frameBorder;
+    // return data for a given index
+    virtual QVariant data(const QModelIndex &index, int role) const;
 
-    //! blend color
-    QComboBox *blendColor;
+    //! header data
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    //! size grip
-    QComboBox *sizeGripMode;
+    //! number of columns for a given index
+    virtual int columnCount(const QModelIndex& ) const
+    { return n_columns; }
 
-    //! draw separator
-    QCheckBox *drawSeparator;
+    //@}
 
-    //! active window title outline
-    QCheckBox *titleOutline;
+    protected:
 
-    //! nitrogen shadow
-    QCheckBox *useOxygenShadows;
+    //! sort
+    virtual void _sort( int, Qt::SortOrder )
+    {}
 
-    //! about nitrogen
-    QPushButton *aboutNitrogen;
+    private:
 
-    // shadow configuration
-    QVector<NitrogenShadowConfigurationUI*> shadowConfigurations;
-
-    //! exceptions
-    NitrogenExceptionListWidget *exceptions;
-
-    signals:
-
-    //! emmited when changed
-    bool changed( void );
+    //! column titles
+    static const QString column_titles_[ n_columns ];
 
   };
 
 }
-
 #endif

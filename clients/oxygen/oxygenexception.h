@@ -1,8 +1,8 @@
-#ifndef nitrogenexception_h
-#define nitrogenexception_h
+#ifndef oxygenexception_h
+#define oxygenexception_h
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexception.h
+// oxygenexception.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -27,10 +27,10 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <QRegExp>
-#include "nitrogenconfiguration.h"
+#include "oxygenconfiguration.h"
 
 
-namespace NitrogenConfig
+namespace OxygenConfig
 {
 
   //! needed for exceptions
@@ -41,11 +41,11 @@ namespace NitrogenConfig
 
 }
 
-namespace Nitrogen
+namespace Oxygen
 {
 
-  //! nitrogen exception
-  class NitrogenException: public NitrogenConfiguration
+  //! oxygen exception
+  class OxygenException: public OxygenConfiguration
   {
 
     public:
@@ -71,33 +71,33 @@ namespace Nitrogen
     };
 
     //! constructor
-    NitrogenException( NitrogenConfiguration configuration = NitrogenConfiguration() ):
-      NitrogenConfiguration( configuration ),
+    OxygenException( OxygenConfiguration configuration = OxygenConfiguration() ):
+      OxygenConfiguration( configuration ),
       enabled_( true ),
       type_( WindowClassName ),
       mask_( None )
     {}
 
     //! constructor
-    NitrogenException( KConfigGroup );
+    OxygenException( KConfigGroup );
 
     //! destructor
-    virtual ~NitrogenException( void )
+    virtual ~OxygenException( void )
     {}
 
     //! equal to operator
-    bool operator == (const NitrogenException& exception ) const
+    bool operator == (const OxygenException& exception ) const
     {
       return
         enabled() == exception.enabled() &&
         type() == exception.type() &&
         regExp().pattern() == exception.regExp().pattern() &&
         mask() == exception.mask() &&
-        NitrogenConfiguration::operator == ( exception );
+        OxygenConfiguration::operator == ( exception );
     }
 
     //! less than operator
-    bool operator < (const NitrogenException& exception ) const
+    bool operator < (const OxygenException& exception ) const
     {
       if( enabled() != exception.enabled() ) return enabled() < exception.enabled();
       else if( mask() != exception.mask() ) return mask() < exception.mask();

@@ -1,8 +1,8 @@
-#ifndef nitrogenclient_h
-#define nitrogenclient_h
+#ifndef oxygenclient_h
+#define oxygenclient_h
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenclient.h
+// oxygenclient.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -31,17 +31,17 @@
 #include <kcommondecoration.h>
 
 #include "kdeversion.h"
-#include "nitrogenconfiguration.h"
+#include "oxygenconfiguration.h"
 #include "lib/helper.h"
 #include "lib/tileset.h"
 
 
-namespace Nitrogen
+namespace Oxygen
 {
 
-    class NitrogenSizeGrip;
+    class OxygenSizeGrip;
 
-    class NitrogenClient : public KCommonDecorationUnstable
+    class OxygenClient : public KCommonDecorationUnstable
     {
 
         Q_OBJECT
@@ -49,10 +49,10 @@ namespace Nitrogen
         public:
 
         //! constructor
-        NitrogenClient(KDecorationBridge *b, KDecorationFactory *f);
+        OxygenClient(KDecorationBridge *b, KDecorationFactory *f);
 
         //! destructor
-        virtual ~NitrogenClient();
+        virtual ~OxygenClient();
 
         virtual QString visibleName() const;
         virtual KCommonDecorationButton *createButton(::ButtonType type);
@@ -82,7 +82,7 @@ namespace Nitrogen
         virtual void reset( unsigned long changed );
 
         //! return associated configuration
-        NitrogenConfiguration configuration( void ) const;
+        OxygenConfiguration configuration( void ) const;
 
         //! helper class
         OxygenHelper& helper( void ) const
@@ -174,13 +174,13 @@ namespace Nitrogen
         { return (bool)sizeGrip_; }
 
         //! size grip
-        NitrogenSizeGrip& sizeGrip( void ) const
+        OxygenSizeGrip& sizeGrip( void ) const
         { return *sizeGrip_; }
 
         //@}
 
         //! configuration
-        NitrogenConfiguration configuration_;
+        OxygenConfiguration configuration_;
 
         //! used to invalidate color cache
         bool colorCacheInvalid_;
@@ -189,7 +189,7 @@ namespace Nitrogen
         QColor cachedTitlebarTextColor_;
 
         //! size grip widget
-        NitrogenSizeGrip* sizeGrip_;
+        OxygenSizeGrip* sizeGrip_;
 
         ShadowTilesOption inactiveShadowTilesOption_;
         ShadowTilesOption activeShadowTilesOption_;
@@ -205,6 +205,6 @@ namespace Nitrogen
     };
 
 
-} // namespace Nitrogen
+} // namespace Oxygen
 
 #endif // EXAMPLECLIENT_H

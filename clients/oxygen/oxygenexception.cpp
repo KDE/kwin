@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexception.cpp
+// oxygenexception.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -25,53 +25,53 @@
 
 #include <cassert>
 #include <KLocale>
-#include "nitrogenexception.h"
+#include "oxygenexception.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //_______________________________________________________
-  NitrogenException::NitrogenException( KConfigGroup group ):
-    NitrogenConfiguration( group )
+  OxygenException::OxygenException( KConfigGroup group ):
+    OxygenConfiguration( group )
   {
 
     // used to set default values when entries are not found in kconfig
-    NitrogenException default_configuration;
+    OxygenException default_configuration;
 
     // exception type
     setType( type(
-      group.readEntry( NitrogenConfig::TYPE,
+      group.readEntry( OxygenConfig::TYPE,
       default_configuration.typeName( false ) ), false ) );
 
     // exception pattern
-    regExp().setPattern( group.readEntry( NitrogenConfig::PATTERN, QString() ) );
+    regExp().setPattern( group.readEntry( OxygenConfig::PATTERN, QString() ) );
 
     // enability
     setEnabled(
-      group.readEntry( NitrogenConfig::ENABLED,
+      group.readEntry( OxygenConfig::ENABLED,
       default_configuration.enabled() ) );
 
     // exception mask
     setMask(
-      group.readEntry( NitrogenConfig::MASK,
+      group.readEntry( OxygenConfig::MASK,
       default_configuration.mask() ) );
 
   }
 
   //_______________________________________________________
-  void NitrogenException::write( KConfigGroup& group ) const
+  void OxygenException::write( KConfigGroup& group ) const
   {
 
-    NitrogenConfiguration::write( group );
-    group.writeEntry( NitrogenConfig::TYPE, typeName( false ) );
-    group.writeEntry( NitrogenConfig::PATTERN, regExp().pattern() );
-    group.writeEntry( NitrogenConfig::ENABLED, enabled() );
-    group.writeEntry( NitrogenConfig::MASK, mask() );
+    OxygenConfiguration::write( group );
+    group.writeEntry( OxygenConfig::TYPE, typeName( false ) );
+    group.writeEntry( OxygenConfig::PATTERN, regExp().pattern() );
+    group.writeEntry( OxygenConfig::ENABLED, enabled() );
+    group.writeEntry( OxygenConfig::MASK, mask() );
 
   }
 
   //_______________________________________________________
-  QString NitrogenException::typeName( Type type, bool translated )
+  QString OxygenException::typeName( Type type, bool translated )
   {
     switch( type )
     {
@@ -84,7 +84,7 @@ namespace Nitrogen
   }
 
   //_______________________________________________________
-  NitrogenException::Type NitrogenException::type( const QString& value, bool translated )
+  OxygenException::Type OxygenException::type( const QString& value, bool translated )
   {
     if( value == typeName( WindowTitle, translated ) ) return WindowTitle;
     else if( value == typeName( WindowClassName, translated ) ) return WindowClassName;

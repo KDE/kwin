@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// NitrogenShadowConfigurationUI.cpp
+// OxygenShadowConfigurationUI.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -27,13 +27,13 @@
 #include <QLabel>
 #include <QLayout>
 
-#include "nitrogenshadowconfigurationui.h"
+#include "oxygenshadowconfigurationui.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //_________________________________________________________
-  NitrogenShadowConfigurationUI::NitrogenShadowConfigurationUI( const QString& name, QWidget* parent ):
+  OxygenShadowConfigurationUI::OxygenShadowConfigurationUI( const QString& name, QWidget* parent ):
     QGroupBox( name, parent ),
     shadowSize(0),
     horizontalOffset(0),
@@ -43,7 +43,7 @@ namespace Nitrogen
   { setupUI(); }
 
   //_________________________________________________________
-  void NitrogenShadowConfigurationUI::setupUI( void )
+  void OxygenShadowConfigurationUI::setupUI( void )
   {
 
     QGridLayout* mainLayout = new QGridLayout();

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenshadowconfiguration.cpp
+// oxygenshadowconfiguration.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -26,13 +26,13 @@
 #include <cassert>
 #include <kdecoration.h>
 
-#include "nitrogenshadowconfiguration.h"
+#include "oxygenshadowconfiguration.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //_________________________________________________________
-  NitrogenShadowConfiguration::NitrogenShadowConfiguration( QPalette::ColorGroup colorGroup ):
+  OxygenShadowConfiguration::OxygenShadowConfiguration( QPalette::ColorGroup colorGroup ):
     colorGroup_( colorGroup ),
     shadowSize_( 25.5 ),
     horizontalOffset_( 0 ),
@@ -43,10 +43,10 @@ namespace Nitrogen
     assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
 
     // vertical offset
-    verticalOffset_ = ( NitrogenShadowConfiguration::colorGroup() == QPalette::Active ) ? 0:0.2;
+    verticalOffset_ = ( OxygenShadowConfiguration::colorGroup() == QPalette::Active ) ? 0:0.2;
 
     // colors
-    innerColor_ = ( NitrogenShadowConfiguration::colorGroup() == QPalette::Active ) ?
+    innerColor_ = ( OxygenShadowConfiguration::colorGroup() == QPalette::Active ) ?
       KDecoration::options()->color( KDecorationDefines::ColorTitleBar, true ):
       QColor( Qt::black );
 
@@ -56,26 +56,26 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  NitrogenShadowConfiguration::NitrogenShadowConfiguration( QPalette::ColorGroup colorGroup, KConfigGroup group ):
+  OxygenShadowConfiguration::OxygenShadowConfiguration( QPalette::ColorGroup colorGroup, KConfigGroup group ):
     colorGroup_( colorGroup )
   {
 
     // get default configuration
-    NitrogenShadowConfiguration defaultConfiguration( NitrogenShadowConfiguration::colorGroup() );
+    OxygenShadowConfiguration defaultConfiguration( OxygenShadowConfiguration::colorGroup() );
 
-    setShadowSize( group.readEntry( NitrogenConfig::SHADOW_SIZE, defaultConfiguration.shadowSize() ) );
-    setHorizontalOffset( group.readEntry( NitrogenConfig::SHADOW_HOFFSET, defaultConfiguration.horizontalOffset() ) );
-    setVerticalOffset( group.readEntry( NitrogenConfig::SHADOW_VOFFSET, defaultConfiguration.verticalOffset() ) );
-    setInnerColor( group.readEntry( NitrogenConfig::SHADOW_INNER_COLOR, defaultConfiguration.innerColor() ) );
-    setOuterColor( group.readEntry( NitrogenConfig::SHADOW_OUTER_COLOR, defaultConfiguration.outerColor() ) );
-    setUseOuterColor( group.readEntry( NitrogenConfig::SHADOW_USE_OUTER_COLOR, defaultConfiguration.useOuterColor() ) );
+    setShadowSize( group.readEntry( OxygenConfig::SHADOW_SIZE, defaultConfiguration.shadowSize() ) );
+    setHorizontalOffset( group.readEntry( OxygenConfig::SHADOW_HOFFSET, defaultConfiguration.horizontalOffset() ) );
+    setVerticalOffset( group.readEntry( OxygenConfig::SHADOW_VOFFSET, defaultConfiguration.verticalOffset() ) );
+    setInnerColor( group.readEntry( OxygenConfig::SHADOW_INNER_COLOR, defaultConfiguration.innerColor() ) );
+    setOuterColor( group.readEntry( OxygenConfig::SHADOW_OUTER_COLOR, defaultConfiguration.outerColor() ) );
+    setUseOuterColor( group.readEntry( OxygenConfig::SHADOW_USE_OUTER_COLOR, defaultConfiguration.useOuterColor() ) );
     setOuterColor2( calcOuterColor() );
     setMidColor( calcMidColor() );
 
   }
 
   //_________________________________________________________
-  bool NitrogenShadowConfiguration::operator == ( const NitrogenShadowConfiguration& other ) const
+  bool OxygenShadowConfiguration::operator == ( const OxygenShadowConfiguration& other ) const
   {
     assert( colorGroup() == other.colorGroup() );
     return
@@ -88,36 +88,36 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  void NitrogenShadowConfiguration::write( KConfigGroup& group ) const
+  void OxygenShadowConfiguration::write( KConfigGroup& group ) const
   {
-    group.writeEntry( NitrogenConfig::SHADOW_SIZE, shadowSize() );
-    group.writeEntry( NitrogenConfig::SHADOW_HOFFSET, horizontalOffset() );
-    group.writeEntry( NitrogenConfig::SHADOW_VOFFSET, verticalOffset() );
-    group.writeEntry( NitrogenConfig::SHADOW_INNER_COLOR, innerColor().name() );
-    group.writeEntry( NitrogenConfig::SHADOW_OUTER_COLOR, outerColor().name() );
-    group.writeEntry( NitrogenConfig::SHADOW_USE_OUTER_COLOR, useOuterColor() );
+    group.writeEntry( OxygenConfig::SHADOW_SIZE, shadowSize() );
+    group.writeEntry( OxygenConfig::SHADOW_HOFFSET, horizontalOffset() );
+    group.writeEntry( OxygenConfig::SHADOW_VOFFSET, verticalOffset() );
+    group.writeEntry( OxygenConfig::SHADOW_INNER_COLOR, innerColor().name() );
+    group.writeEntry( OxygenConfig::SHADOW_OUTER_COLOR, outerColor().name() );
+    group.writeEntry( OxygenConfig::SHADOW_USE_OUTER_COLOR, useOuterColor() );
   }
 
   //_________________________________________________________
-  void NitrogenShadowConfiguration::setInnerColor( QColor color )
-  { innerColor_ = color.isValid() ? color : NitrogenShadowConfiguration( colorGroup() ).innerColor(); }
+  void OxygenShadowConfiguration::setInnerColor( QColor color )
+  { innerColor_ = color.isValid() ? color : OxygenShadowConfiguration( colorGroup() ).innerColor(); }
 
   //_________________________________________________________
-  void NitrogenShadowConfiguration::setMidColor( QColor color )
-  { midColor_ = color.isValid() ? color : NitrogenShadowConfiguration( colorGroup() ).midColor(); }
+  void OxygenShadowConfiguration::setMidColor( QColor color )
+  { midColor_ = color.isValid() ? color : OxygenShadowConfiguration( colorGroup() ).midColor(); }
 
   //_________________________________________________________
-  void NitrogenShadowConfiguration::setOuterColor( QColor color )
-  { outerColor_ = color.isValid() ? color : NitrogenShadowConfiguration( colorGroup() ).outerColor(); }
+  void OxygenShadowConfiguration::setOuterColor( QColor color )
+  { outerColor_ = color.isValid() ? color : OxygenShadowConfiguration( colorGroup() ).outerColor(); }
 
   //_________________________________________________________
-  void NitrogenShadowConfiguration::setOuterColor2( QColor color )
-  { outerColor2_ = color.isValid() ? color : NitrogenShadowConfiguration( colorGroup() ).outerColor2(); }
+  void OxygenShadowConfiguration::setOuterColor2( QColor color )
+  { outerColor2_ = color.isValid() ? color : OxygenShadowConfiguration( colorGroup() ).outerColor2(); }
 
   //_________________________________________________________
-  QColor NitrogenShadowConfiguration::calcOuterColor( void ) const
+  QColor OxygenShadowConfiguration::calcOuterColor( void ) const
   {
-    QColor innerColor( NitrogenShadowConfiguration::innerColor() );
+    QColor innerColor( OxygenShadowConfiguration::innerColor() );
     assert( innerColor.isValid() );
 
     // should contain a more ellaborate mathematical formula
@@ -126,10 +126,10 @@ namespace Nitrogen
   }
 
   //_________________________________________________________
-  QColor NitrogenShadowConfiguration::calcMidColor( void ) const
+  QColor OxygenShadowConfiguration::calcMidColor( void ) const
   {
-    QColor innerColor( NitrogenShadowConfiguration::innerColor() );
-    QColor outerColor( NitrogenShadowConfiguration::outerColor() );
+    QColor innerColor( OxygenShadowConfiguration::innerColor() );
+    QColor outerColor( OxygenShadowConfiguration::outerColor() );
     assert( innerColor.isValid() && outerColor.isValid() );
 
     // should contain a more ellaborate mathematical formula

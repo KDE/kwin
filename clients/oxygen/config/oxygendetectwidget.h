@@ -1,8 +1,8 @@
-#ifndef nitrogendetectwidget_h
-#define nitrogendetectwidget_h
+#ifndef oxygendetectwidget_h
+#define oxygendetectwidget_h
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogendetectwidget.h
+// oxygendetectwidget.h
 // Note: this class is a stripped down version of
 // /kdebase/workspace/kwin/kcmkwin/kwinrules/detectwidget.h
 // Copyright (c) 2004 Lubos Lunak <l.lunak@kde.org>
@@ -39,9 +39,9 @@
 
 #include <kwindowsystem.h>
 
-#include "../nitrogenexception.h"
+#include "../oxygenexception.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   class DetectWidget: public QWidget
@@ -65,7 +65,7 @@ namespace Nitrogen
     { windowMachine->setText( value ); }
 
     //! type
-    NitrogenException::Type exceptionType( void ) const;
+    OxygenException::Type exceptionType( void ) const;
 
     private:
 
@@ -74,7 +74,7 @@ namespace Nitrogen
     QLabel* windowMachine;
 
     // map checkboxes against exception type
-    typedef std::map<QCheckBox*, NitrogenException::Type > CheckBoxMap;
+    typedef std::map<QCheckBox*, OxygenException::Type > CheckBoxMap;
     CheckBoxMap checkboxes;
 
   };
@@ -100,7 +100,7 @@ namespace Nitrogen
     { return info; }
 
     //! exception type
-    NitrogenException::Type exceptionType() const
+    OxygenException::Type exceptionType() const
     { return widget->exceptionType(); }
 
     signals:

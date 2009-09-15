@@ -1,8 +1,8 @@
-#ifndef nitrogenbutton_h
-#define nitrogenbutton_h
+#ifndef oxygenbutton_h
+#define oxygenbutton_h
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenbutton.h
+// oxygenbutton.h
 // -------------------
 //
 // Copyright (c) 2006, 2007 Riccardo Iaconelli <riccardo@kde.org>
@@ -30,12 +30,12 @@
 
 #include <kcommondecoration.h>
 
-#include "nitrogen.h"
-#include "nitrogenclient.h"
+#include "oxygen.h"
+#include "oxygenclient.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
-  class NitrogenClient;
+  class OxygenClient;
 
   enum ButtonStatus {
     Normal,
@@ -45,17 +45,17 @@ namespace Nitrogen
 
   Q_DECLARE_FLAGS(ButtonState, ButtonStatus)
 
-  class NitrogenButton : public KCommonDecorationButton
+  class OxygenButton : public KCommonDecorationButton
   {
     public:
 
     //! constructor
-    explicit NitrogenButton(NitrogenClient &parent,
+    explicit OxygenButton(OxygenClient &parent,
       const QString &tip=NULL,
       ButtonType type=ButtonHelp);
 
     //! destructor
-    ~NitrogenButton();
+    ~OxygenButton();
 
     //! destructor
     QSize sizeHint() const;
@@ -100,7 +100,7 @@ namespace Nitrogen
     private:
 
     //! parent client
-    NitrogenClient &client_;
+    OxygenClient &client_;
 
     //! helper
     OxygenHelper &helper_;
@@ -117,6 +117,6 @@ namespace Nitrogen
     QColor cachedButtonDetailColor_;
   };
 
-} //namespace Nitrogen
+} //namespace Oxygen
 
 #endif

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenconfigurationui.cpp
+// oxygenconfigurationui.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -30,14 +30,14 @@
 #include <QGroupBox>
 #include <KLocale>
 
-#include "../nitrogenconfiguration.h"
-#include "nitrogenconfigurationui.h"
+#include "../oxygenconfiguration.h"
+#include "oxygenconfigurationui.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //_________________________________________________________
-  NitrogenConfigurationUI::NitrogenConfigurationUI( QWidget* parent ):
+  OxygenConfigurationUI::OxygenConfigurationUI( QWidget* parent ):
     QWidget( parent ),
     titleAlignment(0),
     buttonSize(0),
@@ -49,7 +49,7 @@ namespace Nitrogen
   { setupUI(); }
 
   //_________________________________________________________
-  void NitrogenConfigurationUI::setupUI( void )
+  void OxygenConfigurationUI::setupUI( void )
   {
 
     QVBoxLayout* mainLayout = new QVBoxLayout( this );
@@ -80,15 +80,15 @@ namespace Nitrogen
       gridLayout->addWidget( frameBorder = new QComboBox(basicWidget), 0, 1, 1, 1);
       frameBorder->setObjectName(QString::fromUtf8("frameBorder"));
       frameBorder->insertItems(0, QStringList()
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNoSide, true )
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault, true )
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge, true )
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryLarge, true )
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderHuge, true )
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryHuge, true )
-        << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderOversized, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNone, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNoSide, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderTiny, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderDefault, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderLarge, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderVeryLarge, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderHuge, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderVeryHuge, true )
+        << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderOversized, true )
         );
 
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -99,9 +99,9 @@ namespace Nitrogen
       gridLayout->addWidget( titleAlignment = new QComboBox(basicWidget), 1, 1, 1, 1 );
       titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));
       titleAlignment->insertItems(0, QStringList()
-        << NitrogenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
-        << NitrogenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
-        << NitrogenConfiguration::titleAlignmentName( Qt::AlignRight, true )
+        << OxygenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
+        << OxygenConfiguration::titleAlignmentName( Qt::AlignHCenter, true )
+        << OxygenConfiguration::titleAlignmentName( Qt::AlignRight, true )
         );
 
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -112,10 +112,10 @@ namespace Nitrogen
       gridLayout->addWidget( buttonSize = new QComboBox(basicWidget), 2, 1, 1, 1 );
       buttonSize->setObjectName(QString::fromUtf8("buttonSize"));
       buttonSize->insertItems(0, QStringList()
-        << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonSmall, true )
-        << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonDefault, true )
-        << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonLarge, true )
-        << NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::ButtonHuge, true )
+        << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonSmall, true )
+        << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonDefault, true )
+        << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonLarge, true )
+        << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonHuge, true )
         );
 
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -146,8 +146,8 @@ namespace Nitrogen
       gridLayout->addWidget( blendColor = new QComboBox(advancedWidget), 1, 1, 1, 1 );
       blendColor->setObjectName(QString::fromUtf8("blendColor"));
       blendColor->insertItems(0, QStringList()
-        << NitrogenConfiguration::blendColorName( NitrogenConfiguration::NoBlending, true )
-        << NitrogenConfiguration::blendColorName( NitrogenConfiguration::RadialBlending, true )
+        << OxygenConfiguration::blendColorName( OxygenConfiguration::NoBlending, true )
+        << OxygenConfiguration::blendColorName( OxygenConfiguration::RadialBlending, true )
         );
 
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -162,8 +162,8 @@ namespace Nitrogen
         "which allows to resize the window. This option controls in which case this size grip \n"
         "is shown."));
       sizeGripMode->insertItems(0, QStringList()
-        << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
-        << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripWhenNeeded, true )
+        << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripNever, true )
+        << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripWhenNeeded, true )
         );
 
       label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -187,7 +187,7 @@ namespace Nitrogen
 
     // shadow configurations
     {
-      shadowConfigurations = QVector<NitrogenShadowConfigurationUI*>( 2, 0 );
+      shadowConfigurations = QVector<OxygenShadowConfigurationUI*>( 2, 0 );
       QWidget* widget = new QWidget();
       int index = tab->addTab( widget, i18n( "&Shadows" ) );
       tab->setTabToolTip( index, i18n( "Configure shadow colors for active and inactive windows" ) );
@@ -202,11 +202,11 @@ namespace Nitrogen
         "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
 
       // regular shadow configuration
-      gridLayout->addWidget( shadowConfigurations[1] = new NitrogenShadowConfigurationUI( i18n( "Window Dropdown Shadow" ), widget ), 1, 0, 1, 1 );
+      gridLayout->addWidget( shadowConfigurations[1] = new OxygenShadowConfigurationUI( i18n( "Window Dropdown Shadow" ), widget ), 1, 0, 1, 1 );
       shadowConfigurations[1]->setObjectName( "inactiveShadowConfiguration" );
 
       // active window glow
-      gridLayout->addWidget( shadowConfigurations[0] = new NitrogenShadowConfigurationUI( i18n( "Active Window Glow" ), widget ), 1, 1, 1, 1 );
+      gridLayout->addWidget( shadowConfigurations[0] = new OxygenShadowConfigurationUI( i18n( "Active Window Glow" ), widget ), 1, 1, 1, 1 );
       shadowConfigurations[0]->setObjectName( "activeShadowConfiguration" );
       shadowConfigurations[0]->setEnabled( false );
 
@@ -214,7 +214,7 @@ namespace Nitrogen
 
     // exceptions
     {
-      exceptions = new NitrogenExceptionListWidget();
+      exceptions = new OxygenExceptionListWidget();
       exceptions->setObjectName(QString::fromUtf8("exceptions"));
       int index = tab->addTab( exceptions, i18n( "&Window-Specific Overrides" ) );
       tab->setTabToolTip( index, i18n( "Configure window decoraction option overrides for specific windows" ) );

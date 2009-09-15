@@ -1,8 +1,8 @@
-#ifndef nitrogenshadowconfiguration_h
-#define nitrogenshadowconfiguration_h
+#ifndef oxygenshadowconfiguration_h
+#define oxygenshadowconfiguration_h
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenshadowconfiguration.h
+// oxygenshadowconfiguration.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -29,7 +29,7 @@
 #include <KConfigGroup>
 #include <QPalette>
 
-namespace NitrogenConfig
+namespace OxygenConfig
 {
 
   static const QString SHADOW_SIZE = "Size";
@@ -40,27 +40,27 @@ namespace NitrogenConfig
   static const QString SHADOW_USE_OUTER_COLOR = "UseOuterColor";
 }
 
-namespace Nitrogen
+namespace Oxygen
 {
 
-  class NitrogenShadowConfiguration
+  class OxygenShadowConfiguration
   {
 
     public:
 
     //! button size enumeration
     //! default constructor
-    NitrogenShadowConfiguration( QPalette::ColorGroup );
+    OxygenShadowConfiguration( QPalette::ColorGroup );
 
     //! constructor from KConfig
-    NitrogenShadowConfiguration( QPalette::ColorGroup, KConfigGroup );
+    OxygenShadowConfiguration( QPalette::ColorGroup, KConfigGroup );
 
     //! destructor
-    virtual ~NitrogenShadowConfiguration( void )
+    virtual ~OxygenShadowConfiguration( void )
     {}
 
     //! equal to operator
-    bool operator == ( const NitrogenShadowConfiguration& ) const;
+    bool operator == ( const OxygenShadowConfiguration& ) const;
 
     //! write to kconfig group
     virtual void write( KConfigGroup& ) const;

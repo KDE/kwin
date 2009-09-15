@@ -1,8 +1,7 @@
-#ifndef nitrogensizegrip_h
-#define nitrogensizegrip_h
-
+#ifndef OxygenShadowConfigurationUI_h
+#define OxygenShadowConfigurationUI_h
 //////////////////////////////////////////////////////////////////////////////
-// nitrogensizegrip.h
+// OxygenShadowConfigurationUI.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -26,74 +25,52 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QWidget>
-#include <QPaintEvent>
-#include <QMouseEvent>
-#include <QMouseEvent>
+#include <QCheckBox>
+#include <QGroupBox>
+#include <KIntSpinBox>
+#include <kcolorbutton.h>
 
-namespace Nitrogen
+namespace Oxygen
 {
 
-  class NitrogenClient;
-
-  //! implements size grip for all widgets
-  class NitrogenSizeGrip: public QWidget
+  //_____________________________________________
+  class OxygenShadowConfigurationUI: public QGroupBox
   {
+
+    Q_OBJECT
 
     public:
 
     //! constructor
-    NitrogenSizeGrip( NitrogenClient* );
+    OxygenShadowConfigurationUI( const QString&, QWidget* );
 
-    //! constructor
-    virtual ~NitrogenSizeGrip( void );
+    //! ui
+    void setupUI( void );
 
-    //! event filter
-    virtual bool eventFilter( QObject*, QEvent* );
+    //! size spinbox
+    KIntSpinBox *shadowSize;
 
-    public slots:
+    //! horizontal offset
+    KIntSpinBox *horizontalOffset;
 
-    //! update background color
-    void activeChange( void );
+    //! vertical offset
+    KIntSpinBox *verticalOffset;
 
-    protected slots:
+    //! first color
+    KColorButton *innerColor;
 
-    //! embed into parent widget
-    void embed( void );
+    //! second color
+    KColorButton *outerColor;
 
-    protected:
+    //! second color checkbox
+    QCheckBox *useOuterColor;
 
-    //!@name event handlers
-    //@{
+    signals:
 
-    //! paint
-    virtual void paintEvent( QPaintEvent* );
-
-    //! mouse press
-    virtual void mousePressEvent( QMouseEvent* );
-
-    //@}
-
-    //! client
-    NitrogenClient& client( void ) const
-    { return *client_; }
-
-    //! update position
-    void updatePosition( void );
-
-    private:
-
-    //! grip size
-    enum {
-      OFFSET = 0,
-      GRIP_SIZE = 14
-    };
-
-    // nitrogen client
-    NitrogenClient* client_;
+    //! emmitted when configuration is changed
+    void changed( void );
 
   };
-
 
 }
 

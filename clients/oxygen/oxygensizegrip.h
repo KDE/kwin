@@ -1,8 +1,8 @@
-#ifndef nitrogenexceptionlist_h
-#define nitrogenexceptionlist_h
+#ifndef oxygensizegrip_h
+#define oxygensizegrip_h
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexceptionlist.h
+// oxygensizegrip.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -26,41 +26,74 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <KConfig>
-#include <QList>
+#include <QWidget>
+#include <QPaintEvent>
+#include <QMouseEvent>
+#include <QMouseEvent>
 
-#include "nitrogenexception.h"
-
-namespace Nitrogen
+namespace Oxygen
 {
 
-  //! nitrogen exceptions list
-  class NitrogenExceptionList: public QList<NitrogenException>
+  class OxygenClient;
+
+  //! implements size grip for all widgets
+  class OxygenSizeGrip: public QWidget
   {
 
     public:
 
-    //! default constructor
-    NitrogenExceptionList( void )
-    {}
+    //! constructor
+    OxygenSizeGrip( OxygenClient* );
 
-    //! default constructor
-    NitrogenExceptionList( const KConfig& config )
-    { read( config ); }
+    //! constructor
+    virtual ~OxygenSizeGrip( void );
 
-    //! read from KConfig
-    void read( const KConfig& );
+    //! event filter
+    virtual bool eventFilter( QObject*, QEvent* );
 
-    //! write to kconfig
-    void write( KConfig& );
+    public slots:
 
-    //! default exception list
-    static NitrogenExceptionList defaultList( void );
+    //! update background color
+    void activeChange( void );
 
-    //! generate exception group name for given exception index
-    static QString exceptionGroupName( int index );
+    protected slots:
+
+    //! embed into parent widget
+    void embed( void );
+
+    protected:
+
+    //!@name event handlers
+    //@{
+
+    //! paint
+    virtual void paintEvent( QPaintEvent* );
+
+    //! mouse press
+    virtual void mousePressEvent( QMouseEvent* );
+
+    //@}
+
+    //! client
+    OxygenClient& client( void ) const
+    { return *client_; }
+
+    //! update position
+    void updatePosition( void );
+
+    private:
+
+    //! grip size
+    enum {
+      OFFSET = 0,
+      GRIP_SIZE = 14
+    };
+
+    // oxygen client
+    OxygenClient* client_;
 
   };
+
 
 }
 

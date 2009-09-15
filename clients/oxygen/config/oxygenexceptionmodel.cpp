@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexceptionmodel.h
+// oxygenexceptionmodel.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -23,13 +23,13 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "nitrogenexceptionmodel.h"
+#include "oxygenexceptionmodel.h"
 #include <KLocale>
-namespace Nitrogen
+namespace Oxygen
 {
 
   //_______________________________________________
-  const QString NitrogenExceptionModel::column_titles_[ NitrogenExceptionModel::n_columns ] =
+  const QString OxygenExceptionModel::column_titles_[ OxygenExceptionModel::n_columns ] =
   {
     "",
     i18n("Exception Type"),
@@ -37,14 +37,14 @@ namespace Nitrogen
   };
 
   //__________________________________________________________________
-  QVariant NitrogenExceptionModel::data( const QModelIndex& index, int role ) const
+  QVariant OxygenExceptionModel::data( const QModelIndex& index, int role ) const
   {
 
     // check index, role and column
     if( !index.isValid() ) return QVariant();
 
     // retrieve associated file info
-    const NitrogenException& exception( get(index) );
+    const OxygenException& exception( get(index) );
 
     // return text associated to file and column
     if( role == Qt::DisplayRole )
@@ -73,7 +73,7 @@ namespace Nitrogen
   }
 
   //__________________________________________________________________
-  QVariant NitrogenExceptionModel::headerData(int section, Qt::Orientation orientation, int role) const
+  QVariant OxygenExceptionModel::headerData(int section, Qt::Orientation orientation, int role) const
   {
 
     if(

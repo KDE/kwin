@@ -1,5 +1,5 @@
-#ifndef nitrogen_config_h
-#define nitrogen_config_h
+#ifndef oxygen_config_h
+#define oxygen_config_h
 
 //////////////////////////////////////////////////////////////////////////////
 // config.h
@@ -33,15 +33,15 @@
 #include <KConfig>
 #include <QPalette>
 
-#include "nitrogenconfigurationui.h"
-#include "../nitrogenexceptionlist.h"
+#include "oxygenconfigurationui.h"
+#include "../oxygenexceptionlist.h"
 
-namespace Nitrogen {
+namespace Oxygen {
 
-  class NitrogenConfiguration;
-  class NitrogenShadowConfiguration;
+  class OxygenConfiguration;
+  class OxygenShadowConfiguration;
 
-  // nitrogen configuration object
+  // oxygen configuration object
   class Config: public QObject
   {
 
@@ -73,28 +73,28 @@ namespace Nitrogen {
 
     private slots:
 
-    //! about nitrogen
-    void aboutNitrogen( void );
+    //! about oxygen
+    void aboutOxygen( void );
 
     private:
 
     //! load configuration
-    void loadConfiguration( const NitrogenConfiguration& );
+    void loadConfiguration( const OxygenConfiguration& );
 
     //! load configuration
-    void loadShadowConfiguration( QPalette::ColorGroup, const NitrogenShadowConfiguration& );
+    void loadShadowConfiguration( QPalette::ColorGroup, const OxygenShadowConfiguration& );
 
     //! load configuration
-    void saveShadowConfiguration( QPalette::ColorGroup, const NitrogenShadowConfigurationUI& ) const;
+    void saveShadowConfiguration( QPalette::ColorGroup, const OxygenShadowConfigurationUI& ) const;
 
     //! user interface
-    NitrogenConfigurationUI *userInterface_;
+    OxygenConfigurationUI *userInterface_;
 
     //! kconfiguration object
     KConfig *configuration_;
 
   };
 
-} //namespace Nitrogen
+} //namespace Oxygen
 
 #endif

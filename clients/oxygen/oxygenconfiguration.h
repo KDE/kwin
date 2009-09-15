@@ -1,8 +1,8 @@
-#ifndef nitrogenconfiguration_h
-#define nitrogenconfiguration_h
+#ifndef oxygenconfiguration_h
+#define oxygenconfiguration_h
 
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenconfiguration.h
+// oxygenconfiguration.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -28,7 +28,7 @@
 
 #include <KConfigGroup>
 
-namespace NitrogenConfig
+namespace OxygenConfig
 {
 
   static const QString TITLE_ALIGNMENT = "TitleAlignment";
@@ -42,10 +42,10 @@ namespace NitrogenConfig
 
 }
 
-namespace Nitrogen
+namespace Oxygen
 {
 
-  class NitrogenConfiguration
+  class OxygenConfiguration
   {
 
     public:
@@ -87,17 +87,17 @@ namespace Nitrogen
     };
 
     //! default constructor
-    NitrogenConfiguration( void );
+    OxygenConfiguration( void );
 
     //! constructor from KConfig
-    NitrogenConfiguration( KConfigGroup );
+    OxygenConfiguration( KConfigGroup );
 
     //! destructor
-    virtual ~NitrogenConfiguration( void )
+    virtual ~OxygenConfiguration( void )
     {}
 
     //! equal to operator
-    bool operator == ( const NitrogenConfiguration& ) const;
+    bool operator == ( const OxygenConfiguration& ) const;
 
     //! write to kconfig group
     virtual void write( KConfigGroup& ) const;

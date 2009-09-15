@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenbutton.cpp
+// oxygenbutton.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -34,14 +34,14 @@
 #include <KColorUtils>
 #include <KColorScheme>
 #include <kcommondecoration.h>
-#include "nitrogenbutton.h"
-#include "nitrogenclient.h"
-#include "nitrogen.h"
+#include "oxygenbutton.h"
+#include "oxygenclient.h"
+#include "oxygen.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
   //_______________________________________________
-  NitrogenButton::NitrogenButton(NitrogenClient &parent,
+  OxygenButton::OxygenButton(OxygenClient &parent,
     const QString& tip, ButtonType type):
     KCommonDecorationButton((::ButtonType)type, &parent),
     client_(parent),
@@ -62,14 +62,14 @@ namespace Nitrogen
   }
 
   //_______________________________________________
-  NitrogenButton::~NitrogenButton()
+  OxygenButton::~OxygenButton()
   {}
 
-  //declare function from Nitrogenclient.cpp
+  //declare function from Oxygenclient.cpp
   QColor reduceContrast(const QColor &c0, const QColor &c1, double t);
 
   //_______________________________________________
-  QColor NitrogenButton::buttonDetailColor(const QPalette &palette)
+  QColor OxygenButton::buttonDetailColor(const QPalette &palette)
   {
 
     if (client_.isActive()) return palette.color(QPalette::Active, QPalette::ButtonText);
@@ -91,55 +91,55 @@ namespace Nitrogen
   }
 
   //___________________________________________________
-  QSize NitrogenButton::sizeHint() const
+  QSize OxygenButton::sizeHint() const
   {
     unsigned int size( client_.configuration().buttonSize() );
     return QSize( size, size );
   }
 
   //___________________________________________________
-  void NitrogenButton::enterEvent(QEvent *e)
+  void OxygenButton::enterEvent(QEvent *e)
   {
     KCommonDecorationButton::enterEvent(e);
-    if (status_ != Nitrogen::Pressed) status_ = Nitrogen::Hovered;
+    if (status_ != Oxygen::Pressed) status_ = Oxygen::Hovered;
     update();
   }
 
   //___________________________________________________
-  void NitrogenButton::leaveEvent(QEvent *e)
+  void OxygenButton::leaveEvent(QEvent *e)
   {
     KCommonDecorationButton::leaveEvent(e);
-    status_ = Nitrogen::Normal;
+    status_ = Oxygen::Normal;
     update();
   }
 
   //___________________________________________________
-  void NitrogenButton::mousePressEvent(QMouseEvent *e)
+  void OxygenButton::mousePressEvent(QMouseEvent *e)
   {
 
-    status_ = Nitrogen::Pressed;
+    status_ = Oxygen::Pressed;
     update();
 
     KCommonDecorationButton::mousePressEvent(e);
   }
 
   //___________________________________________________
-  void NitrogenButton::mouseReleaseEvent(QMouseEvent *e)
+  void OxygenButton::mouseReleaseEvent(QMouseEvent *e)
   {
-    status_ = Nitrogen::Normal;
+    status_ = Oxygen::Normal;
     update();
 
     KCommonDecorationButton::mouseReleaseEvent(e);
   }
 
   //___________________________________________________
-  void NitrogenButton::paintEvent(QPaintEvent *event)
+  void OxygenButton::paintEvent(QPaintEvent *event)
   {
 
     QPainter painter(this);
     painter.setClipRect(this->rect().intersected( event->rect() ) );
 
-    QPalette palette = NitrogenButton::palette();
+    QPalette palette = OxygenButton::palette();
 
     if( client_.isActive() ) palette.setCurrentColorGroup(QPalette::Active);
     else palette.setCurrentColorGroup(QPalette::Inactive);
@@ -176,7 +176,7 @@ namespace Nitrogen
     }
 
     color = buttonDetailColor(palette);
-    if(status_ == Nitrogen::Hovered || status_ == Nitrogen::Pressed)
+    if(status_ == Oxygen::Hovered || status_ == Oxygen::Pressed)
     {
       if(type_ == ButtonClose) color = KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
       else color = KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
@@ -190,10 +190,10 @@ namespace Nitrogen
     QColor bt = palette.window().color();
 
     // draw button shape
-    painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Nitrogen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
+    painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Oxygen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
 
     // draw glow on hover
-    if( status_ == Nitrogen::Hovered )
+    if( status_ == Oxygen::Hovered )
     { painter.drawPixmap(0, 0, helper_.windecoButtonGlow(color, (21.0*client_.configuration().buttonSize())/22)); }
 
     // draw button icon
@@ -229,7 +229,7 @@ namespace Nitrogen
   }
 
   //___________________________________________________
-  void NitrogenButton::drawIcon(QPainter *painter, QPalette &palette, ButtonType &type)
+  void OxygenButton::drawIcon(QPainter *painter, QPalette &palette, ButtonType &type)
   {
 
     painter->save();
@@ -263,14 +263,14 @@ namespace Nitrogen
       case ButtonMax:
       switch(client_.maximizeMode())
       {
-        case NitrogenClient::MaximizeRestore:
-        case NitrogenClient::MaximizeVertical:
-        case NitrogenClient::MaximizeHorizontal:
+        case OxygenClient::MaximizeRestore:
+        case OxygenClient::MaximizeVertical:
+        case OxygenClient::MaximizeHorizontal:
         painter->drawLine(QPointF( 7.5,11.5), QPointF(10.5, 8.5));
         painter->drawLine(QPointF(10.5, 8.5), QPointF(13.5,11.5));
         break;
 
-        case NitrogenClient::MaximizeFull:
+        case OxygenClient::MaximizeFull:
         {
           painter->translate(1.5, 1.5);
           QPoint points[4] = {QPoint(9, 6), QPoint(12, 9), QPoint(9, 12), QPoint(6, 9)};

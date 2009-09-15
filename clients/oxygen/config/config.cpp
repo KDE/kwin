@@ -37,17 +37,17 @@
 #include "config.h"
 #include "config.moc"
 
-#include "../nitrogenconfiguration.h"
-#include "../nitrogenshadowconfiguration.h"
+#include "../oxygenconfiguration.h"
+#include "../oxygenshadowconfiguration.h"
 
 //_______________________________________________________________________
 extern "C"
 {
   KDE_EXPORT QObject* allocate_config( KConfig* conf, QWidget* parent )
-  { return ( new Nitrogen::Config( conf, parent ) ); }
+  { return ( new Oxygen::Config( conf, parent ) ); }
 }
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //_______________________________________________________________________
@@ -59,7 +59,7 @@ namespace Nitrogen
     configuration_ = new KConfig( "oxygenrc" );
     KConfigGroup configurationGroup( configuration_, "Windeco");
 
-    userInterface_ = new NitrogenConfigurationUI( parent );
+    userInterface_ = new OxygenConfigurationUI( parent );
     connect( userInterface_, SIGNAL(changed()), SIGNAL( changed() ) );
 
     load( configurationGroup );
@@ -81,15 +81,15 @@ namespace Nitrogen
   {
 
     // load standard configuration
-    loadConfiguration( NitrogenConfiguration( KConfigGroup( configuration_, "Windeco") ) );
-    loadShadowConfiguration( QPalette::Active, NitrogenShadowConfiguration( QPalette::Active, KConfigGroup( configuration_, "ActiveShadow") ) );
-    loadShadowConfiguration( QPalette::Inactive, NitrogenShadowConfiguration( QPalette::Inactive, KConfigGroup( configuration_, "InactiveShadow") ) );
+    loadConfiguration( OxygenConfiguration( KConfigGroup( configuration_, "Windeco") ) );
+    loadShadowConfiguration( QPalette::Active, OxygenShadowConfiguration( QPalette::Active, KConfigGroup( configuration_, "ActiveShadow") ) );
+    loadShadowConfiguration( QPalette::Inactive, OxygenShadowConfiguration( QPalette::Inactive, KConfigGroup( configuration_, "InactiveShadow") ) );
 
     // load exceptions
-    NitrogenExceptionList exceptions;
+    OxygenExceptionList exceptions;
     exceptions.read( *configuration_ );
     if( exceptions.empty() )
-    { exceptions = NitrogenExceptionList::defaultList(); }
+    { exceptions = OxygenExceptionList::defaultList(); }
 
     // install in ui
     userInterface_->exceptions->setExceptions( exceptions );
@@ -108,28 +108,28 @@ namespace Nitrogen
     // when writting text entries, on needs to make sure that strings written
     // to the configuration file are *not* translated using current locale
     configurationGroup.writeEntry(
-      NitrogenConfig::TITLE_ALIGNMENT,
-      NitrogenConfiguration::titleAlignmentName( NitrogenConfiguration::titleAlignment( userInterface_->titleAlignment->currentText(), true ), false ) );
+      OxygenConfig::TITLE_ALIGNMENT,
+      OxygenConfiguration::titleAlignmentName( OxygenConfiguration::titleAlignment( userInterface_->titleAlignment->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
-      NitrogenConfig::BUTTON_SIZE,
-      NitrogenConfiguration::buttonSizeName( NitrogenConfiguration::buttonSize( userInterface_->buttonSize->currentText(), true ), false ) );
+      OxygenConfig::BUTTON_SIZE,
+      OxygenConfiguration::buttonSizeName( OxygenConfiguration::buttonSize( userInterface_->buttonSize->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
-      NitrogenConfig::BLEND_COLOR,
-      NitrogenConfiguration::blendColorName( NitrogenConfiguration::blendColor( userInterface_->blendColor->currentText(), true ), false ) );
+      OxygenConfig::BLEND_COLOR,
+      OxygenConfiguration::blendColorName( OxygenConfiguration::blendColor( userInterface_->blendColor->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
-      NitrogenConfig::FRAME_BORDER,
-      NitrogenConfiguration::frameBorderName( NitrogenConfiguration::frameBorder( userInterface_->frameBorder->currentText(), true ), false ) );
+      OxygenConfig::FRAME_BORDER,
+      OxygenConfiguration::frameBorderName( OxygenConfiguration::frameBorder( userInterface_->frameBorder->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
-      NitrogenConfig::SIZE_GRIP_MODE,
-      NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::sizeGripMode( userInterface_->sizeGripMode->currentText(), true ), false ) );
+      OxygenConfig::SIZE_GRIP_MODE,
+      OxygenConfiguration::sizeGripModeName( OxygenConfiguration::sizeGripMode( userInterface_->sizeGripMode->currentText(), true ), false ) );
 
-    configurationGroup.writeEntry( NitrogenConfig::DRAW_SEPARATOR, userInterface_->drawSeparator->isChecked() );
-    configurationGroup.writeEntry( NitrogenConfig::DRAW_TITLE_OUTLINE, userInterface_->titleOutline->isChecked() );
-    configurationGroup.writeEntry( NitrogenConfig::USE_OXYGEN_SHADOWS, userInterface_->useOxygenShadows->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, userInterface_->drawSeparator->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, userInterface_->titleOutline->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, userInterface_->useOxygenShadows->isChecked() );
 
     // write exceptions
     userInterface_->exceptions->exceptions().write( *configuration_ );
@@ -145,19 +145,19 @@ namespace Nitrogen
 
 
   //_______________________________________________________________________
-  void Config::saveShadowConfiguration( QPalette::ColorGroup colorGroup, const NitrogenShadowConfigurationUI& ui ) const
+  void Config::saveShadowConfiguration( QPalette::ColorGroup colorGroup, const OxygenShadowConfigurationUI& ui ) const
   {
 
     assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
 
     // save shadow configuration
     KConfigGroup configurationGroup( configuration_, ( (colorGroup == QPalette::Active) ? "ActiveShadow":"InactiveShadow" ) );
-    configurationGroup.writeEntry( NitrogenConfig::SHADOW_SIZE, 0.1*ui.shadowSize->value() );
-    configurationGroup.writeEntry( NitrogenConfig::SHADOW_HOFFSET, 0.1*ui.horizontalOffset->value() );
-    configurationGroup.writeEntry( NitrogenConfig::SHADOW_VOFFSET, 0.1*ui.verticalOffset->value() );
-    configurationGroup.writeEntry( NitrogenConfig::SHADOW_INNER_COLOR, ui.innerColor->color() );
-    configurationGroup.writeEntry( NitrogenConfig::SHADOW_OUTER_COLOR, ui.outerColor->color() );
-    configurationGroup.writeEntry( NitrogenConfig::SHADOW_USE_OUTER_COLOR, ui.useOuterColor->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_SIZE, 0.1*ui.shadowSize->value() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_HOFFSET, 0.1*ui.horizontalOffset->value() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_VOFFSET, 0.1*ui.verticalOffset->value() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_INNER_COLOR, ui.innerColor->color() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_OUTER_COLOR, ui.outerColor->color() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_USE_OUTER_COLOR, ui.useOuterColor->isChecked() );
 
   }
 
@@ -166,14 +166,14 @@ namespace Nitrogen
   {
 
     // install default configuration
-    loadConfiguration( NitrogenConfiguration() );
+    loadConfiguration( OxygenConfiguration() );
 
     // load shadows
-    loadShadowConfiguration( QPalette::Active, NitrogenShadowConfiguration( QPalette::Active ) );
-    loadShadowConfiguration( QPalette::Inactive, NitrogenShadowConfiguration( QPalette::Inactive ) );
+    loadShadowConfiguration( QPalette::Active, OxygenShadowConfiguration( QPalette::Active ) );
+    loadShadowConfiguration( QPalette::Inactive, OxygenShadowConfiguration( QPalette::Inactive ) );
 
     // install default exceptions
-    userInterface_->exceptions->setExceptions( NitrogenExceptionList::defaultList() );
+    userInterface_->exceptions->setExceptions( OxygenExceptionList::defaultList() );
 
     // emit changed signal
     emit changed();
@@ -181,7 +181,7 @@ namespace Nitrogen
   }
 
   //_______________________________________________________________________
-  void Config::loadConfiguration( const NitrogenConfiguration& configuration )
+  void Config::loadConfiguration( const OxygenConfiguration& configuration )
   {
 
     userInterface_->titleAlignment->setCurrentIndex( userInterface_->titleAlignment->findText( configuration.titleAlignmentName( true ) ) );
@@ -197,10 +197,10 @@ namespace Nitrogen
 
 
   //_______________________________________________________________________
-  void Config::loadShadowConfiguration( QPalette::ColorGroup colorGroup, const NitrogenShadowConfiguration& configuration )
+  void Config::loadShadowConfiguration( QPalette::ColorGroup colorGroup, const OxygenShadowConfiguration& configuration )
   {
     assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
-    NitrogenShadowConfigurationUI* ui = userInterface_->shadowConfigurations[ (colorGroup == QPalette::Active) ? 0:1 ];
+    OxygenShadowConfigurationUI* ui = userInterface_->shadowConfigurations[ (colorGroup == QPalette::Active) ? 0:1 ];
     ui->shadowSize->setValue( 10*configuration.shadowSize() );
     ui->horizontalOffset->setValue( 10*configuration.horizontalOffset() );
     ui->verticalOffset->setValue( 10*configuration.verticalOffset() );
@@ -209,7 +209,7 @@ namespace Nitrogen
     ui->useOuterColor->setChecked( configuration.useOuterColor() );
   }
   //_______________________________________________________________________
-  void Config::aboutNitrogen( void )
+  void Config::aboutOxygen( void )
   {}
 
 }

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexceptionlist.cpp
+// oxygenexceptionlist.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -25,13 +25,13 @@
 
 #include <QTextStream>
 
-#include "nitrogenexceptionlist.h"
+#include "oxygenexceptionlist.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //______________________________________________________________
-  void NitrogenExceptionList::read( const KConfig& config )
+  void OxygenExceptionList::read( const KConfig& config )
   {
 
     clear();
@@ -42,7 +42,7 @@ namespace Nitrogen
       KConfigGroup group( &config, exceptionGroupName( index ) );
       if( group.exists() )
       {
-        NitrogenException exception( group );
+        OxygenException exception( group );
         if( exception.regExp().isValid() ) push_back( exception );
       } else break;
 
@@ -51,7 +51,7 @@ namespace Nitrogen
   }
 
   //______________________________________________________________
-  void NitrogenExceptionList::write( KConfig& config )
+  void OxygenExceptionList::write( KConfig& config )
   {
 
     // remove previous group
@@ -64,7 +64,7 @@ namespace Nitrogen
 
     // also add exceptions
     int index(0);
-    for( NitrogenExceptionList::const_iterator iter = constBegin(); iter != constEnd(); iter++, index++ )
+    for( OxygenExceptionList::const_iterator iter = constBegin(); iter != constEnd(); iter++, index++ )
     {
 
       KConfigGroup group( &config, exceptionGroupName( index ) );
@@ -76,17 +76,17 @@ namespace Nitrogen
   }
 
   //______________________________________________________________
-  NitrogenExceptionList NitrogenExceptionList::defaultList( void )
+  OxygenExceptionList OxygenExceptionList::defaultList( void )
   {
 
-    NitrogenExceptionList out;
+    OxygenExceptionList out;
 
     // default exception that covers most commonly used gtk based applications
-    NitrogenException exception;
-    exception.setType( NitrogenException::WindowClassName );
+    OxygenException exception;
+    exception.setType( OxygenException::WindowClassName );
     exception.regExp().setPattern( "(Firefox)|(Thunderbird)|(Gimp)" );
-    exception.setBlendColor( NitrogenException::NoBlending );
-    exception.setMask( NitrogenException::BlendColor );
+    exception.setBlendColor( OxygenException::NoBlending );
+    exception.setMask( OxygenException::BlendColor );
     exception.setEnabled( true );
 
     out.push_back( exception );
@@ -95,7 +95,7 @@ namespace Nitrogen
   }
 
   //_______________________________________________________________________
-  QString NitrogenExceptionList::exceptionGroupName( int index )
+  QString OxygenExceptionList::exceptionGroupName( int index )
   {
     QString out;
     QTextStream( &out ) << "Windeco Exception " << index;

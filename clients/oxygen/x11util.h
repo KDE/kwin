@@ -36,7 +36,7 @@
 #include <X11/Xutil.h>
 #endif
 
-namespace Nitrogen
+namespace Oxygen
 {
   class X11Util
   {

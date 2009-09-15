@@ -1,7 +1,7 @@
-#ifndef nitrogenexceptiondialog_h
-#define nitrogenexceptiondialog_h
+#ifndef oxygenexceptiondialog_h
+#define oxygenexceptiondialog_h
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexceptiondialog.h
+// oxygenexceptiondialog.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -32,15 +32,15 @@
 
 #include <map>
 
-#include "../nitrogenexception.h"
+#include "../oxygenexception.h"
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   class DetectDialog;
 
-  //! nitrogen exceptions list
-  class NitrogenExceptionDialog: public KDialog
+  //! oxygen exceptions list
+  class OxygenExceptionDialog: public KDialog
   {
 
     Q_OBJECT
@@ -48,13 +48,13 @@ namespace Nitrogen
     public:
 
     //! constructor
-    NitrogenExceptionDialog( QWidget* parent );
+    OxygenExceptionDialog( QWidget* parent );
 
     //! set exception
-    void setException( NitrogenException );
+    void setException( OxygenException );
 
     //! get exception
-    NitrogenException exception( void ) const;
+    OxygenException exception( void ) const;
 
     private slots:
 
@@ -80,13 +80,13 @@ namespace Nitrogen
     QComboBox* sizeGripMode;
 
     //! map mask and checkbox
-    typedef std::map< NitrogenException::AttributesMask, QCheckBox*> CheckBoxMap;
+    typedef std::map< OxygenException::AttributesMask, QCheckBox*> CheckBoxMap;
 
     //! map mask and checkbox
     CheckBoxMap checkboxes_;
 
     //! internal exception
-    NitrogenException exception_;
+    OxygenException exception_;
 
     //! local combobox to handle configuration checkboxes
     class ComboBox: public QComboBox

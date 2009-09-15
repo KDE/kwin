@@ -35,41 +35,46 @@
 
 using namespace std;
 
-//_______________________________________________________________
-ItemModel::ItemModel( QObject* parent ):
-  QAbstractItemModel( parent ),
-  sort_column_(0),
-  sort_order_( Qt::AscendingOrder )
-{}
-
-//____________________________________________________________
-void ItemModel::sort( int column, Qt::SortOrder order )
+namespace Oxygen
 {
-
-  // store column and order
-  sort_column_ = column;
-  sort_order_ = order;
-
-  // emit signals and call private methods
-  emit layoutAboutToBeChanged();
-  _sort( column, order );
-  emit layoutChanged();
-
-}
-
-//____________________________________________________________
-QModelIndexList ItemModel::indexes( int column, const QModelIndex& parent ) const
-{
-  QModelIndexList out;
-  int rows( rowCount( parent ) );
-  for( int row = 0; row < rows; row++ )
+  
+  //_______________________________________________________________
+  ItemModel::ItemModel( QObject* parent ):
+    QAbstractItemModel( parent ),
+    sort_column_(0),
+    sort_order_( Qt::AscendingOrder )
+  {}
+  
+  //____________________________________________________________
+  void ItemModel::sort( int column, Qt::SortOrder order )
   {
-    QModelIndex index( this->index( row, column, parent ) );
-    if( !index.isValid() ) continue;
-    out.push_back( index );
-    out += indexes( column, index );
+    
+    // store column and order
+    sort_column_ = column;
+    sort_order_ = order;
+    
+    // emit signals and call private methods
+    emit layoutAboutToBeChanged();
+    _sort( column, order );
+    emit layoutChanged();
+    
   }
-
-  return out;
-
+  
+  //____________________________________________________________
+  QModelIndexList ItemModel::indexes( int column, const QModelIndex& parent ) const
+  {
+    QModelIndexList out;
+    int rows( rowCount( parent ) );
+    for( int row = 0; row < rows; row++ )
+    {
+      QModelIndex index( this->index( row, column, parent ) );
+      if( !index.isValid() ) continue;
+      out.push_back( index );
+      out += indexes( column, index );
+    }
+    
+    return out;
+    
+  }
+  
 }

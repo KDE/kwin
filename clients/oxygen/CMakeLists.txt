@@ -6,14 +6,14 @@ add_subdirectory( config )
 set(kwin_oxygen_SRCS
      lib/helper.cpp
      lib/tileset.cpp
-     nitrogen.cpp
-     nitrogenbutton.cpp
-     nitrogenclient.cpp
-     nitrogenconfiguration.cpp
-     nitrogenexception.cpp
-     nitrogenexceptionlist.cpp
-     nitrogenshadowconfiguration.cpp
-     nitrogensizegrip.cpp
+     oxygen.cpp
+     oxygenbutton.cpp
+     oxygenclient.cpp
+     oxygenconfiguration.cpp
+     oxygenexception.cpp
+     oxygenexceptionlist.cpp
+     oxygenshadowconfiguration.cpp
+     oxygensizegrip.cpp
      x11util.cpp
   )
 

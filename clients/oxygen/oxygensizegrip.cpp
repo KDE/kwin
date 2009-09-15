@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogensizegrip.cpp
+// oxygensizegrip.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -30,19 +30,19 @@
 
 #include <kdeversion.h>
 
-#include "nitrogenbutton.h"
-#include "nitrogenclient.h"
-#include "nitrogensizegrip.h"
+#include "oxygenbutton.h"
+#include "oxygenclient.h"
+#include "oxygensizegrip.h"
 #include "x11util.h"
 
 #include <QX11Info>
 #include <X11/Xlib.h>
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //_____________________________________________
-  NitrogenSizeGrip::NitrogenSizeGrip( NitrogenClient* client ):
+  OxygenSizeGrip::OxygenSizeGrip( OxygenClient* client ):
     QWidget( client->widget() ),
     client_( client )
   {
@@ -77,15 +77,15 @@ namespace Nitrogen
 
   }
   //_____________________________________________
-  NitrogenSizeGrip::~NitrogenSizeGrip( void )
+  OxygenSizeGrip::~OxygenSizeGrip( void )
   {}
 
   //_____________________________________________
-  void NitrogenSizeGrip::activeChange( void )
+  void OxygenSizeGrip::activeChange( void )
   { XMapRaised( QX11Info::display(), winId() ); }
 
   //_____________________________________________
-  void NitrogenSizeGrip::embed( void )
+  void OxygenSizeGrip::embed( void )
   {
 
     WId window_id = client().windowId();
@@ -108,7 +108,7 @@ namespace Nitrogen
   }
 
   //_____________________________________________
-  bool NitrogenSizeGrip::eventFilter( QObject* object, QEvent* event )
+  bool OxygenSizeGrip::eventFilter( QObject* object, QEvent* event )
   {
 
     if( object != client().widget() ) return false;
@@ -118,7 +118,7 @@ namespace Nitrogen
   }
 
   //_____________________________________________
-  void NitrogenSizeGrip::paintEvent( QPaintEvent* )
+  void OxygenSizeGrip::paintEvent( QPaintEvent* )
   {
 
     // get relevant colors
@@ -155,7 +155,7 @@ namespace Nitrogen
   }
 
   //_____________________________________________
-  void NitrogenSizeGrip::mousePressEvent( QMouseEvent* event )
+  void OxygenSizeGrip::mousePressEvent( QMouseEvent* event )
   {
 
     switch (event->button())
@@ -201,7 +201,7 @@ namespace Nitrogen
   }
 
   //_______________________________________________________________________________
-  void NitrogenSizeGrip::updatePosition( void )
+  void OxygenSizeGrip::updatePosition( void )
   {
 
     QPoint position(
@@ -212,17 +212,17 @@ namespace Nitrogen
     {
 
       position -= QPoint(
-        client().layoutMetric( NitrogenClient::LM_BorderRight )+
-        client().layoutMetric( NitrogenClient::LM_OuterPaddingRight ),
-        client().layoutMetric( NitrogenClient::LM_OuterPaddingBottom )+
-        client().layoutMetric( NitrogenClient::LM_BorderBottom )
+        client().layoutMetric( OxygenClient::LM_BorderRight )+
+        client().layoutMetric( OxygenClient::LM_OuterPaddingRight ),
+        client().layoutMetric( OxygenClient::LM_OuterPaddingBottom )+
+        client().layoutMetric( OxygenClient::LM_BorderBottom )
         );
 
     } else {
 
       position -= QPoint(
-        client().layoutMetric( NitrogenClient::LM_BorderRight ),
-        client().layoutMetric( NitrogenClient::LM_BorderBottom ) );
+        client().layoutMetric( OxygenClient::LM_BorderRight ),
+        client().layoutMetric( OxygenClient::LM_BorderBottom ) );
     }
 
     move( position );

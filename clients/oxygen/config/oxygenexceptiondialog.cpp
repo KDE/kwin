@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// nitrogenexceptiondialog.cpp
+// oxygenexceptiondialog.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -30,15 +30,15 @@
 #include <KLocale>
 #include <KPushButton>
 
-#include "nitrogendetectwidget.h"
-#include "nitrogenexceptiondialog.h"
-#include "nitrogenexceptiondialog.moc"
+#include "oxygendetectwidget.h"
+#include "oxygenexceptiondialog.h"
+#include "oxygenexceptiondialog.moc"
 
-namespace Nitrogen
+namespace Oxygen
 {
 
   //___________________________________________
-  NitrogenExceptionDialog::NitrogenExceptionDialog( QWidget* parent ):
+  OxygenExceptionDialog::OxygenExceptionDialog( QWidget* parent ):
     KDialog( parent ),
     detectDialog(0)
   {
@@ -67,8 +67,8 @@ namespace Nitrogen
     gridLayout->addWidget( label = new QLabel( i18n( "Matching window property:" ), box ), 0, 0, 1, 1 );
     gridLayout->addWidget( exceptionType = new QComboBox(box), 0, 1, 1, 1 );
     exceptionType->insertItems(0, QStringList()
-      << NitrogenException::typeName( NitrogenException::WindowClassName, true )
-      << NitrogenException::typeName( NitrogenException::WindowTitle, true )
+      << OxygenException::typeName( OxygenException::WindowClassName, true )
+      << OxygenException::typeName( OxygenException::WindowTitle, true )
       );
     exceptionType->setToolTip( i18n(
       "Select here the window property used to identify windows \n"
@@ -101,18 +101,18 @@ namespace Nitrogen
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 0, 0, 1, 1 );
     gridLayout->addWidget( frameBorder = new QComboBox(box), 0, 1, 1, 1 );
     frameBorder->insertItems(0, QStringList()
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNone, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderNoSide, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderTiny, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderDefault, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderLarge, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryLarge, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderHuge, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderVeryHuge, true )
-      << NitrogenConfiguration::frameBorderName( NitrogenConfiguration::BorderOversized, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNone, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNoSide, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderTiny, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderDefault, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderLarge, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderVeryLarge, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderHuge, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderVeryHuge, true )
+      << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderOversized, true )
       );
     frameBorder->setEnabled( false );
-    checkboxes_.insert( std::make_pair( NitrogenException::FrameBorder, checkbox ) );
+    checkboxes_.insert( std::make_pair( OxygenException::FrameBorder, checkbox ) );
     checkbox->setToolTip( i18n("If checked, specified frame border is used in place of default value.") );
     connect( checkbox, SIGNAL( toggled( bool ) ), frameBorder, SLOT( setEnabled( bool ) ) );
 
@@ -120,10 +120,10 @@ namespace Nitrogen
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Background style:" ), box ), 1, 0, 1, 1 );
     gridLayout->addWidget( blendColor = new QComboBox(box), 1, 1, 1, 1 );
     blendColor->insertItems(0, QStringList()
-      << NitrogenException::blendColorName( NitrogenException::NoBlending, true )
-      << NitrogenException::blendColorName( NitrogenException::RadialBlending, true ) );
+      << OxygenException::blendColorName( OxygenException::NoBlending, true )
+      << OxygenException::blendColorName( OxygenException::RadialBlending, true ) );
     blendColor->setEnabled( false );
-    checkboxes_.insert( std::make_pair( NitrogenException::BlendColor, checkbox ) );
+    checkboxes_.insert( std::make_pair( OxygenException::BlendColor, checkbox ) );
     checkbox->setToolTip( i18n("If checked, specified blending color is used in title bar in place of default value.") );
     connect( checkbox, SIGNAL( toggled( bool ) ), blendColor, SLOT( setEnabled( bool ) ) );
 
@@ -131,31 +131,31 @@ namespace Nitrogen
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Extra size grip display:" ), box ), 2, 0, 1, 1 );
     gridLayout->addWidget( sizeGripMode = new QComboBox( box ), 2, 1, 1, 1 );
     sizeGripMode->insertItems(0, QStringList()
-      << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripNever, true )
-      << NitrogenConfiguration::sizeGripModeName( NitrogenConfiguration::SizeGripWhenNeeded, true )
+      << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripNever, true )
+      << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripWhenNeeded, true )
       );
     sizeGripMode->setEnabled( false );
-    checkboxes_.insert( std::make_pair( NitrogenException::SizeGripMode, checkbox ) );
+    checkboxes_.insert( std::make_pair( OxygenException::SizeGripMode, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), sizeGripMode, SLOT( setEnabled( bool ) ) );
 
     // outline active window title
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Outline active window title:" ), box ), 3, 0, 1, 1 );
     gridLayout->addWidget( titleOutline = new ComboBox( box ), 3, 1, 1, 1 );
     titleOutline->setEnabled( false );
-    checkboxes_.insert( std::make_pair( NitrogenException::TitleOutline, checkbox ) );
+    checkboxes_.insert( std::make_pair( OxygenException::TitleOutline, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), titleOutline, SLOT( setEnabled( bool ) ) );
 
     // separator
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and active window contents:" ), box ), 4, 0, 1, 1 );
     gridLayout->addWidget( drawSeparator = new ComboBox( box ), 4, 1, 1, 1 );
     drawSeparator->setEnabled( false );
-    checkboxes_.insert( std::make_pair( NitrogenException::DrawSeparator, checkbox ) );
+    checkboxes_.insert( std::make_pair( OxygenException::DrawSeparator, checkbox ) );
     connect( checkbox, SIGNAL( toggled( bool ) ), drawSeparator, SLOT( setEnabled( bool ) ) );
 
   }
 
   //___________________________________________
-  void NitrogenExceptionDialog::setException( NitrogenException exception )
+  void OxygenExceptionDialog::setException( OxygenException exception )
   {
 
     // store exception internally
@@ -187,21 +187,21 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  NitrogenException NitrogenExceptionDialog::exception( void ) const
+  OxygenException OxygenExceptionDialog::exception( void ) const
   {
-    NitrogenException exception( exception_ );
-    exception.setType( NitrogenException::type( exceptionType->currentText(), true ) );
+    OxygenException exception( exception_ );
+    exception.setType( OxygenException::type( exceptionType->currentText(), true ) );
     exception.regExp().setPattern( exceptionEditor->text() );
-    exception.setFrameBorder( NitrogenException::frameBorder( frameBorder->currentText(), true ) );
-    exception.setBlendColor( NitrogenException::blendColor( blendColor->currentText(), true ) );
-    exception.setSizeGripMode( NitrogenException::sizeGripMode( sizeGripMode->currentText(), true ) );
+    exception.setFrameBorder( OxygenException::frameBorder( frameBorder->currentText(), true ) );
+    exception.setBlendColor( OxygenException::blendColor( blendColor->currentText(), true ) );
+    exception.setSizeGripMode( OxygenException::sizeGripMode( sizeGripMode->currentText(), true ) );
 
     // flags
     exception.setDrawSeparator( drawSeparator->isChecked() );
     exception.setDrawTitleOutline( titleOutline->isChecked() );
 
     // mask
-    unsigned int mask = NitrogenException::None;
+    unsigned int mask = OxygenException::None;
     for( CheckBoxMap::const_iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
     { if( iter->second->isChecked() ) mask |= iter->first; }
 
@@ -211,7 +211,7 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  void NitrogenExceptionDialog::selectWindowProperties( void )
+  void OxygenExceptionDialog::selectWindowProperties( void )
   {
 
     // create widget
@@ -226,25 +226,25 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  void NitrogenExceptionDialog::readWindowProperties( bool valid )
+  void OxygenExceptionDialog::readWindowProperties( bool valid )
   {
     assert( detectDialog );
     if( valid )
     {
 
       // type
-      exceptionType->setCurrentIndex( exceptionType->findText( NitrogenException::typeName( detectDialog->exceptionType(), true ) ) );
+      exceptionType->setCurrentIndex( exceptionType->findText( OxygenException::typeName( detectDialog->exceptionType(), true ) ) );
 
       // window info
       const KWindowInfo& info( detectDialog->windowInfo() );
 
       switch( detectDialog->exceptionType() )
       {
-        case NitrogenException::WindowClassName:
+        case OxygenException::WindowClassName:
         exceptionEditor->setText( info.windowClassClass() );
         break;
 
-        case NitrogenException::WindowTitle:
+        case OxygenException::WindowTitle:
         exceptionEditor->setText( info.name() );
         break;
 
@@ -260,20 +260,20 @@ namespace Nitrogen
   }
 
   //___________________________________________
-  const QString NitrogenExceptionDialog::ComboBox::Yes( i18n("Enabled") );
-  const QString NitrogenExceptionDialog::ComboBox::No( i18n("Disabled") );
+  const QString OxygenExceptionDialog::ComboBox::Yes( i18n("Enabled") );
+  const QString OxygenExceptionDialog::ComboBox::No( i18n("Disabled") );
 
   //___________________________________________
-  NitrogenExceptionDialog::ComboBox::ComboBox( QWidget* parent ):
+  OxygenExceptionDialog::ComboBox::ComboBox( QWidget* parent ):
     QComboBox( parent )
   { insertItems( 0, QStringList() << Yes << No ); }
 
   //___________________________________________
-  void NitrogenExceptionDialog::ComboBox::setValue(  bool checked )
+  void OxygenExceptionDialog::ComboBox::setValue(  bool checked )
   { setCurrentIndex( findText( checked ? Yes:No ) ); }
 
   //___________________________________________
-  bool NitrogenExceptionDialog::ComboBox::isChecked( void ) const
+  bool OxygenExceptionDialog::ComboBox::isChecked( void ) const
   { return currentText() == Yes; }
 
 }

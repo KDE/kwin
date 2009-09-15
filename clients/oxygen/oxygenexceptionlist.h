@@ -1,7 +1,8 @@
-#ifndef NitrogenShadowConfigurationUI_h
-#define NitrogenShadowConfigurationUI_h
+#ifndef oxygenexceptionlist_h
+#define oxygenexceptionlist_h
+
 //////////////////////////////////////////////////////////////////////////////
-// NitrogenShadowConfigurationUI.h
+// oxygenexceptionlist.h
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
@@ -25,50 +26,39 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QCheckBox>
-#include <QGroupBox>
-#include <KIntSpinBox>
-#include <kcolorbutton.h>
+#include <KConfig>
+#include <QList>
 
-namespace Nitrogen
+#include "oxygenexception.h"
+
+namespace Oxygen
 {
 
-  //_____________________________________________
-  class NitrogenShadowConfigurationUI: public QGroupBox
+  //! oxygen exceptions list
+  class OxygenExceptionList: public QList<OxygenException>
   {
-
-    Q_OBJECT
 
     public:
 
-    //! constructor
-    NitrogenShadowConfigurationUI( const QString&, QWidget* );
+    //! default constructor
+    OxygenExceptionList( void )
+    {}
 
-    //! ui
-    void setupUI( void );
+    //! default constructor
+    OxygenExceptionList( const KConfig& config )
+    { read( config ); }
 
-    //! size spinbox
-    KIntSpinBox *shadowSize;
+    //! read from KConfig
+    void read( const KConfig& );
 
-    //! horizontal offset
-    KIntSpinBox *horizontalOffset;
+    //! write to kconfig
+    void write( KConfig& );
 
-    //! vertical offset
-    KIntSpinBox *verticalOffset;
+    //! default exception list
+    static OxygenExceptionList defaultList( void );
 
-    //! first color
-    KColorButton *innerColor;
-
-    //! second color
-    KColorButton *outerColor;
-
-    //! second color checkbox
-    QCheckBox *useOuterColor;
-
-    signals:
-
-    //! emmitted when configuration is changed
-    void changed( void );
+    //! generate exception group name for given exception index
+    static QString exceptionGroupName( int index );
 
   };
 
