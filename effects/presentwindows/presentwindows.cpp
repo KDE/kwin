@@ -1107,8 +1107,11 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowLi
     if( windowlist.count() == 1 )
         {
         // Just move the window to its original location to save time
-        m_motionManager.moveWindow( windowlist[0], windowlist[0]->geometry() );
-        return;
+        if( effects->clientArea( FullScreenArea, windowlist[0] ).contains( windowlist[0]->geometry() ) )
+            {
+            m_motionManager.moveWindow( windowlist[0], windowlist[0]->geometry() );
+            return;
+            }
         }
 
     // As we are using pseudo-random movement (See "slot") we need to make sure the list
