@@ -1433,9 +1433,14 @@ void CoverSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
 
 void CoverSwitchEffect::abort()
     {
-    effects->unrefTabBox();
+    // it's possible that abort is called after tabbox has been closed
+    // in this case the cleanup is already done (see bug 207554)
+    if( mActivated )
+        {
+        effects->unrefTabBox();
+        effects->destroyInputWindow( input );
+        }
     effects->setActiveFullScreenEffect( 0 );
-    effects->destroyInputWindow( input );
     mActivated = false;
     stop = false;
     stopRequested = false;
