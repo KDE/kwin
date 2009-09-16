@@ -473,7 +473,7 @@ const QPixmap &PlastikClient::captionPixmap() const
 
     QFontMetrics fm(s_titleFont);
     int captionWidth  = fm.width(c);
-    int captionHeight = fm.height();
+    int captionDescent = fm.descent();
 
     const int th  = layoutMetric(LM_TitleHeight, false) + layoutMetric(LM_TitleEdgeBottom, false);
 
@@ -488,7 +488,13 @@ const QPixmap &PlastikClient::captionPixmap() const
                             Handler()->pixmap(TitleBarTile, active, isToolWindow()) );
 
     painter.setFont(s_titleFont);
-    QPoint tp(1, captionHeight - 3);
+
+    QRect boundingRect = painter.boundingRect(captionPixmap->rect(),
+                                              Qt::AlignVCenter | Handler()->titleAlign(), c);
+
+
+    QPoint tp = boundingRect.bottomLeft() - QPoint(0, captionDescent);
+
     QColor fontColor = Handler()->getColor(TitleFont,active);
     if(Handler()->titleShadow())
     {
