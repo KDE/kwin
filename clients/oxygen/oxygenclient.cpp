@@ -926,70 +926,52 @@ namespace Oxygen
     p.setRenderHint( QPainter::Antialiasing );
     p.setPen( Qt::NoPen );
 
-    qreal hoffset = shadowConfiguration.horizontalOffset();
-    qreal voffset = shadowConfiguration.verticalOffset();
+    // offsets are scaled with the shadow size
+    // so that the ratio Top-shadow/Bottom-shadow is kept constant
+    // when shadow size is chqnged
+    qreal hoffset = shadowConfiguration.horizontalOffset()*shadowSize/fixedSize;
+    qreal voffset = shadowConfiguration.verticalOffset()*shadowSize/fixedSize;
 
-    // this is the size of the shadow for which
-    // the following gradients have been originally calculated
     if( active && useOxygenShadows() )
     {
 
       {
 
-        // all gradients are constructed in the same way
-        // values are alpha channels for all gradients "pin-points"
-        // positions are gradient pin-points, originally calculated
-        // for a total gradient size of 25.5 (fixedSize)
-        //
-        // To scale these with the actual shadow size, one must:
-        // 1- keep the first pin-point unscaled (because it matches the window corner)
-        // 2- make the last pin-point full-scaled (i.e grow 1:1 with shadow size)
-        // intermediate pin-points are a linear interpolation between the two
-        //
-        // Note: this strategy does not work if first pin-point end up being larger than last.
-        // when this is the case the gradient is simpy disabled
         int values[5] = {255, 220, 180, 25, 0};
         qreal x[5] = {4.4, 4.5, 5, 5.5, 6.5};
 
-        qreal a = (x[4]/fixedSize - x[0]/shadowSize)/(x[4]-x[0]);
+        // the first point of this gradient does not scale
+        QRadialGradient rg( size, size, shadowSize );
 
-        if( a > 0 )
-        {
-          qreal b = x[0]*x[4]*(1.0/shadowSize - 1.0/fixedSize)/(x[4]-x[0]);
-          QRadialGradient rg( size, size, shadowSize );
-          QColor c = color;
-          for( int i = 0; i<5; i++ )
-          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
+        QColor c = color;
+        for( int i = 0; i<5; i++ )
+        { c.setAlpha( values[i] ); rg.setColorAt( x[0]/shadowSize+(x[i]-x[0])/fixedSize, c ); }
 
-          p.setBrush( rg );
-          p.drawRect( shadow.rect() );
-
-        }
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
       }
 
-     {
+      {
 
-        int values[7] = { 0.58*255, 0.43*255, 0.30*255, 0.22*255, 0.15*255, 0.08*255, 0 };
-        qreal x[7] = {4.5, 5.5, 6.5, 7.5, 8.5, 11.5, 14.4};
-        qreal a = (x[6]/fixedSize - x[0]/shadowSize)/(x[6]-x[0]);
+        // this gradient scales with shadow size
+        int nPoints = 8;
+        qreal values[8] = {1, 0.58, 0.43, 0.30, 0.22, 0.15, 0.08, 0 };
+        qreal x[8] = {0, 4.5, 5.5, 6.5, 7.5, 8.5, 11.5, 14.4};
 
-        if( a > 0 )
-        {
-          qreal b = x[0]*x[6]*(1.0/shadowSize - 1.0/fixedSize)/(x[6]-x[0]);
-          QRadialGradient rg(
-            size+hoffset,
-            size+voffset,
-            shadowSize );
+        // this gradient scales with shadow size
+        QRadialGradient rg(
+          size+hoffset,
+          size+voffset,
+          shadowSize );
 
-          QColor c = shadowConfiguration.innerColor();
-          for( int i = 0; i<7; i++ )
-          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
+        QColor c = shadowConfiguration.innerColor();
+        for( int i = 0; i<nPoints; i++ )
+        { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
 
-          p.setBrush( rg );
-          p.drawRect( shadow.rect() );
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
-        }
       }
 
       {
@@ -1008,74 +990,57 @@ namespace Oxygen
 
       {
 
-        int values[8] = { 0.12*255, 0.11*255, 0.075*255, 0.06*255, 0.035*255, 0.025*255, 0.01*255, 0 };
-        qreal x[8] = {4.5, 6.6, 8.5, 11.5, 14.5, 17.5, 21.5, 25.5 };
-        qreal a = (x[7]/fixedSize - x[0]/shadowSize)/(x[7]-x[0]);
+        int nPoints = 9;
+        qreal values[9] = { 0.17, 0.12, 0.11, 0.075, 0.06, 0.035, 0.025, 0.01, 0 };
+        qreal x[9] = {0, 4.5, 6.6, 8.5, 11.5, 14.5, 17.5, 21.5, 25.5 };
+        QRadialGradient rg = QRadialGradient(
+          size+20.0*hoffset,
+          size+20.0*voffset,
+          shadowSize );
 
-        if( a > 0 )
-        {
-          qreal b = x[0]*x[7]*(1.0/shadowSize - 1.0/fixedSize)/(x[7]-x[0]);
-          QRadialGradient rg = QRadialGradient(
-            size+20.0*hoffset,
-            size+20.0*voffset,
-            shadowSize );
+        QColor c = shadowConfiguration.outerColor();
+        for( int i = 0; i<nPoints; i++ )
+        { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
 
-          QColor c = shadowConfiguration.outerColor();
-          for( int i = 0; i<8; i++ )
-          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
-
-          p.setBrush( rg );
-          p.drawRect( shadow.rect()  );
-
-        }
-      }
-
-      {
-
-        int values[6] = { 0.25*255, 0.20*255, 0.13*255, 0.06*255, 0.015*255, 0 };
-        qreal x[6] = {4.5, 5.5, 7.5, 8.5, 11.5, 14.5 };
-        qreal a = (x[5]/fixedSize - x[0]/shadowSize)/(x[5]-x[0]);
-
-        if( a > 0 )
-        {
-          qreal b = x[0]*x[5]*(1.0/shadowSize - 1.0/fixedSize)/(x[5]-x[0]);
-          QRadialGradient rg = QRadialGradient(
-            size+10.0*hoffset,
-            size+10.0*voffset,
-            shadowSize );
-
-          QColor c = shadowConfiguration.midColor();
-          for( int i = 0; i<6; i++ )
-          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
-
-          p.setBrush( rg );
-          p.drawRect( shadow.rect() );
-        }
+        p.setBrush( rg );
+        p.drawRect( shadow.rect()  );
 
       }
 
       {
-        int values[4] = { 0.32*255, 0.22*255, 0.03*255, 0 };
-        qreal x[4] = { 4.5, 5.0, 5.5, 6.5 };
-        qreal a = (x[3]/fixedSize - x[0]/shadowSize)/(x[3]-x[0]);
 
-        if( a > 0 )
-        {
+        int nPoints = 7;
+        qreal values[7] = {0.55, 0.25, 0.20, 0.1, 0.06, 0.015, 0 };
+        qreal x[7] = {0, 4.5, 5.5, 7.5, 8.5, 11.5, 14.5 };
+        QRadialGradient rg = QRadialGradient(
+          size+10.0*hoffset,
+          size+10.0*voffset,
+          shadowSize );
 
-          qreal b = x[0]*x[3]*(1.0/shadowSize - 1.0/fixedSize)/(x[3]-x[0]);
-          QRadialGradient rg = QRadialGradient(
-            size+hoffset,
-            size+voffset,
-            shadowSize );
+        QColor c = shadowConfiguration.midColor();
+        for( int i = 0; i<nPoints; i++ )
+        { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
 
-          QColor c = shadowConfiguration.innerColor();
-          for( int i = 0; i<5; i++ )
-          { c.setAlpha( values[i] ); rg.setColorAt( a*x[i]+b, c ); }
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
-          p.setBrush( rg );
-          p.drawRect( shadow.rect() );
+      }
 
-        }
+      {
+        int nPoints = 5;
+        qreal values[5] = { 1, 0.32, 0.22, 0.03, 0 };
+        qreal x[5] = { 0, 4.5, 5.0, 5.5, 6.5 };
+        QRadialGradient rg = QRadialGradient(
+          size+hoffset,
+          size+voffset,
+          shadowSize );
+
+        QColor c = shadowConfiguration.innerColor();
+        for( int i = 0; i<nPoints; i++ )
+        { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
+
+        p.setBrush( rg );
+        p.drawRect( shadow.rect() );
 
       }
 
