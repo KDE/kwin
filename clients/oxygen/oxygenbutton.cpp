@@ -216,14 +216,19 @@ namespace Oxygen
     painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Oxygen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
 
     // draw glow on hover
-    if( status_ == Oxygen::Hovered || timeLine_.state() == OxygenTimeLine::Running )
+    if( timeLine_.state() == OxygenTimeLine::Running )
     {
-      qreal ratio( qreal( timeLine_.currentIndex() )/qreal( timeLine_.maxIndex() ) );
 
+      qreal ratio( qreal( timeLine_.currentIndex() )/qreal( timeLine_.maxIndex() ) );
       painter.save();
       painter.setOpacity( ratio );
       painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
       painter.restore();
+
+    } else if( status_ == Oxygen::Hovered ) {
+
+      painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
+
     }
 
     // draw button icon
