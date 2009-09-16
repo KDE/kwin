@@ -14,6 +14,7 @@ set(kwin_oxygen_SRCS
      oxygenexceptionlist.cpp
      oxygenshadowconfiguration.cpp
      oxygensizegrip.cpp
+     oxygentimeline.cpp
      x11util.cpp
   )
 

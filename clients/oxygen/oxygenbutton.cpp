@@ -38,6 +38,7 @@
 #include <KColorUtils>
 #include <KColorScheme>
 #include <kcommondecoration.h>
+#include <KDebug>
 
 namespace Oxygen
 {
@@ -48,7 +49,8 @@ namespace Oxygen
     client_(parent),
     helper_( parent.helper() ),
     type_(type),
-    colorCacheInvalid_(true)
+    colorCacheInvalid_(true),
+    timeLine_( 200, this )
   {
     setAutoFillBackground(false);
     setAttribute(Qt::WA_NoSystemBackground);
@@ -60,6 +62,12 @@ namespace Oxygen
 
     setCursor(Qt::ArrowCursor);
     setToolTip(tip);
+
+    timeLine_.setFrameRange( 0, 1000 );
+    timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
+    connect( &timeLine_, SIGNAL( currentIndexChanged( int ) ), SLOT( repaint() ) );
+    connect( &timeLine_, SIGNAL( finished() ), SLOT( repaint() ) );
+
   }
 
   //_______________________________________________
@@ -103,6 +111,9 @@ namespace Oxygen
   {
     KCommonDecorationButton::enterEvent(e);
     if (status_ != Oxygen::Pressed) status_ = Oxygen::Hovered;
+    if( timeLine_.state() != OxygenTimeLine::NotRunning ) timeLine_.stop();
+    timeLine_.setDirection( OxygenTimeLine::Forward );
+    timeLine_.start();
     update();
   }
 
@@ -111,7 +122,13 @@ namespace Oxygen
   {
     KCommonDecorationButton::leaveEvent(e);
     status_ = Oxygen::Normal;
+
+    if( timeLine_.state() != OxygenTimeLine::NotRunning ) timeLine_.stop();
+    timeLine_.setDirection( OxygenTimeLine::Backward );
+    timeLine_.start();
+
     update();
+
   }
 
   //___________________________________________________
@@ -176,12 +193,17 @@ namespace Oxygen
       return;
     }
 
+    // calculate color depending on timeline state
     color = buttonDetailColor(palette);
-    if(status_ == Oxygen::Hovered || status_ == Oxygen::Pressed)
+    QColor glow = (type_ == ButtonClose) ?
+      KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color():
+      KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
+
+    if( timeLine_.state() == OxygenTimeLine::Running )
     {
-      if(type_ == ButtonClose) color = KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color();
-      else color = KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
-    }
+      qreal ratio( qreal( timeLine_.currentIndex() )/qreal( timeLine_.maxIndex() ) );
+      color = KColorUtils::mix( color, glow, ratio );
+    } else if( status_ == Oxygen::Hovered ) color = glow;
 
     // translate buttons up if window maximized
     if(client_.isMaximized())
@@ -194,8 +216,15 @@ namespace Oxygen
     painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Oxygen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
 
     // draw glow on hover
-    if( status_ == Oxygen::Hovered )
-    { painter.drawPixmap(0, 0, helper_.windecoButtonGlow(color, (21.0*client_.configuration().buttonSize())/22)); }
+    if( status_ == Oxygen::Hovered || timeLine_.state() == OxygenTimeLine::Running )
+    {
+      qreal ratio( qreal( timeLine_.currentIndex() )/qreal( timeLine_.maxIndex() ) );
+
+      painter.save();
+      painter.setOpacity( ratio );
+      painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
+      painter.restore();
+    }
 
     // draw button icon
     if (client_.isActive())

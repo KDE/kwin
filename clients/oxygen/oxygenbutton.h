@@ -32,6 +32,7 @@
 
 #include "oxygen.h"
 #include "oxygenclient.h"
+#include "oxygentimeline.h"
 
 namespace Oxygen
 {
@@ -59,10 +60,6 @@ namespace Oxygen
 
     //! destructor
     QSize sizeHint() const;
-
-    //! last button mouse
-    // int lastMousePress() const
-    // {return lastmouse_;}
 
     //! reset
     void reset(long unsigned int)
@@ -111,10 +108,12 @@ namespace Oxygen
     //! button status
     ButtonState status_;
 
-    //! last button mouse pressed
-    int lastmouse_;
     bool colorCacheInvalid_;
     QColor cachedButtonDetailColor_;
+
+    //! timeline used for smooth transitions
+    OxygenTimeLine timeLine_;
+
   };
 
 } //namespace Oxygen
