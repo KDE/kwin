@@ -23,13 +23,14 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QLayout>
-#include <KLocale>
-#include <KMessageBox>
-
-#include "oxygenexceptiondialog.h"
 #include "oxygenexceptionlistwidget.h"
 #include "oxygenexceptionlistwidget.moc"
+#include "oxygenexceptiondialog.h"
+
+#include <QLayout>
+#include <QSharedPointer>
+#include <KLocale>
+#include <KMessageBox>
 
 //__________________________________________________________
 namespace Oxygen
@@ -114,7 +115,7 @@ namespace Oxygen
 
     OxygenExceptionModel::List exceptions( _model().get() );
     OxygenExceptionList out;
-    for( OxygenExceptionModel::List::const_iterator iter = exceptions.begin(); iter != exceptions.end(); iter++ )
+    for( OxygenExceptionModel::List::const_iterator iter = exceptions.begin(); iter != exceptions.end(); ++iter )
     { out.push_back( *iter ); }
     return out;
 
@@ -139,12 +140,12 @@ namespace Oxygen
   {
 
     // map dialog
-    OxygenExceptionDialog dialog( this );
-    dialog.setException( default_configuration_ );
-    if( dialog.exec() == QDialog::Rejected ) return;
+    QSharedPointer<OxygenExceptionDialog> dialog( new OxygenExceptionDialog( this ) );
+    dialog->setException( default_configuration_ );
+    if( dialog->exec() == QDialog::Accepted ) return;
 
     // retrieve exception and check
-    OxygenException exception( dialog.exception() );
+    OxygenException exception( dialog->exception() );
     if( !_checkException( exception ) ) return;
 
     // create new item
@@ -175,12 +176,12 @@ namespace Oxygen
     OxygenException& exception( _model().get( current ) );
 
     // create dialog
-    OxygenExceptionDialog dialog( this );
-    dialog.setException( exception );
+    QSharedPointer<OxygenExceptionDialog> dialog( new OxygenExceptionDialog( this ) );
+    dialog->setException( exception );
 
     // map dialog
-    if( dialog.exec() == QDialog::Rejected ) return;
-    OxygenException new_exception = dialog.exception();
+    if( dialog->exec() == QDialog::Rejected ) return;
+    OxygenException new_exception = dialog->exception();
 
     // check if exception was changed
     if( exception == new_exception ) return;
@@ -200,7 +201,7 @@ namespace Oxygen
   void OxygenExceptionListWidget::_remove( void )
   {
 
-    // shoud use a konfirmation dialog
+    // should use a konfirmation dialog
     if( KMessageBox::questionYesNo( this, i18n("Remove selected exception ?") ) == KMessageBox::No ) return;
 
     // remove
@@ -242,7 +243,7 @@ namespace Oxygen
     OxygenExceptionModel::List current_exceptions( _model().get() );
     OxygenExceptionModel::List new_exceptions;
 
-    for( OxygenExceptionModel::List::const_iterator iter = current_exceptions.begin(); iter != current_exceptions.end(); iter++ )
+    for( OxygenExceptionModel::List::const_iterator iter = current_exceptions.begin(); iter != current_exceptions.end(); ++iter )
     {
 
       // check if new list is not empty, current index is selected and last index is not.
@@ -265,7 +266,7 @@ namespace Oxygen
 
     // restore selection
     _list().selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-    for( OxygenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); iter++ )
+    for( OxygenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); ++iter )
     { _list().selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
     emit changed();
@@ -288,7 +289,7 @@ namespace Oxygen
     OxygenExceptionModel::List current_exceptions( _model().get() );
     OxygenExceptionModel::List new_exceptions;
 
-    for( OxygenExceptionModel::List::reverse_iterator iter = current_exceptions.rbegin(); iter != current_exceptions.rend(); iter++ )
+    for( OxygenExceptionModel::List::reverse_iterator iter = current_exceptions.rbegin(); iter != current_exceptions.rend(); ++iter )
     {
 
       // check if new list is not empty, current index is selected and last index is not.
@@ -312,7 +313,7 @@ namespace Oxygen
 
     // restore selection
     _list().selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-    for( OxygenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); iter++ )
+    for( OxygenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); ++iter )
     { _list().selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
     emit changed();
@@ -336,10 +337,10 @@ namespace Oxygen
     {
 
       KMessageBox::error( this, i18n("Regular Expression syntax is incorrect") );
-      OxygenExceptionDialog dialog( this );
-      dialog.setException( exception );
-      if( dialog.exec() == QDialog::Rejected ) return false;
-      exception = dialog.exception();
+      QSharedPointer<OxygenExceptionDialog> dialog( new OxygenExceptionDialog( this ) );
+      dialog->setException( exception );
+      if( dialog->exec() == QDialog::Rejected ) return false;
+      exception = dialog->exception();
 
     }
 

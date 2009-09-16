@@ -44,7 +44,7 @@ namespace Oxygen
     public:
 
     //! constructor
-    ItemModel(QObject *parent = 0);
+    explicit ItemModel(QObject *parent = 0);
 
     //! destructor
     virtual ~ItemModel()
@@ -89,7 +89,7 @@ namespace Oxygen
       public:
 
       //! constructor
-      SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
+      explicit SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
         type_( type ),
         order_( order )
       {}

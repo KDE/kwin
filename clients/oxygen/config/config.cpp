@@ -27,18 +27,17 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <KAboutData>
-#include <KAboutApplicationDialog>
-#include <KConfigGroup>
-#include <KGlobal>
-#include <KLocale>
-#include <kstandarddirs.h>
-
 #include "config.h"
 #include "config.moc"
 
 #include "../oxygenconfiguration.h"
 #include "../oxygenshadowconfiguration.h"
+
+#include <KAboutData>
+#include <KAboutApplicationDialog>
+#include <KConfigGroup>
+#include <KGlobal>
+#include <KLocale>
 
 //_______________________________________________________________________
 extern "C"
@@ -105,7 +104,7 @@ namespace Oxygen
     // save standard configuration
     KConfigGroup configurationGroup( configuration_, "Windeco");
 
-    // when writting text entries, on needs to make sure that strings written
+    // when writing text entries, on needs to make sure that strings written
     // to the configuration file are *not* translated using current locale
     configurationGroup.writeEntry(
       OxygenConfig::TITLE_ALIGNMENT,

@@ -23,9 +23,9 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenexception.h"
 #include <cassert>
 #include <KLocale>
-#include "oxygenexception.h"
 
 namespace Oxygen
 {

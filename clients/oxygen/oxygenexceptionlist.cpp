@@ -23,9 +23,9 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QTextStream>
-
 #include "oxygenexceptionlist.h"
+
+#include <QTextStream>
 
 namespace Oxygen
 {

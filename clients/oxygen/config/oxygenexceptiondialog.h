@@ -27,7 +27,7 @@
 
 #include <KDialog>
 #include <KLineEdit>
-#include <QComboBox>
+#include <KComboBox>
 #include <QCheckBox>
 
 #include <map>
@@ -68,16 +68,16 @@ namespace Oxygen
     KLineEdit* exceptionEditor;
 
     //! blend combobox
-    QComboBox* exceptionType;
+    KComboBox* exceptionType;
 
     //! border size
-    QComboBox* frameBorder;
+    KComboBox* frameBorder;
 
     //! blend combobox
-    QComboBox* blendColor;
+    KComboBox* blendColor;
 
     //! size grip
-    QComboBox* sizeGripMode;
+    KComboBox* sizeGripMode;
 
     //! map mask and checkbox
     typedef std::map< OxygenException::AttributesMask, QCheckBox*> CheckBoxMap;
@@ -89,7 +89,7 @@ namespace Oxygen
     OxygenException exception_;
 
     //! local combobox to handle configuration checkboxes
-    class ComboBox: public QComboBox
+    class ComboBox: public KComboBox
     {
       public:
 

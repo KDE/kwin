@@ -23,6 +23,11 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+
+#include "oxygensizegrip.h"
+#include "oxygenbutton.h"
+#include "oxygenclient.h"
+
 #include <cassert>
 #include <QPainter>
 #include <QPolygon>
@@ -30,11 +35,7 @@
 
 #include <kdeversion.h>
 
-#include "oxygenbutton.h"
-#include "oxygenclient.h"
-#include "oxygensizegrip.h"
 #include "x11util.h"
-
 #include <QX11Info>
 #include <X11/Xlib.h>
 

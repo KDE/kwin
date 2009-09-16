@@ -25,6 +25,13 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenclient.h"
+#include "oxygenclient.moc"
+
+#include "oxygen.h"
+#include "oxygenbutton.h"
+#include "oxygensizegrip.h"
+
 #include <cassert>
 #include <cmath>
 #include <iostream>
@@ -39,12 +46,6 @@
 #include <QPainter>
 #include <QTextStream>
 #include <QApplication>
-
-#include "oxygen.h"
-#include "oxygenbutton.h"
-#include "oxygenclient.h"
-#include "oxygenclient.moc"
-#include "oxygensizegrip.h"
 
 using namespace std;
 namespace Oxygen
@@ -115,7 +116,7 @@ namespace Oxygen
     {
 
       QList<QLabel*> children( widget()->findChildren<QLabel*>() );
-      for( QList<QLabel*>::iterator iter = children.begin(); iter != children.end(); iter++ )
+      for( QList<QLabel*>::iterator iter = children.begin(); iter != children.end(); ++iter )
       { (*iter)->setAutoFillBackground( false ); }
 
     }

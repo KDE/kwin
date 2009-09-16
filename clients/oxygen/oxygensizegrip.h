@@ -29,7 +29,6 @@
 #include <QWidget>
 #include <QPaintEvent>
 #include <QMouseEvent>
-#include <QMouseEvent>
 
 namespace Oxygen
 {

@@ -1,5 +1,5 @@
-#ifndef _OxygenExceptionListWidget_h_
-#define _OxygenExceptionListWidget_h_
+#ifndef OxygenExceptionListWidget_h
+#define OxygenExceptionListWidget_h
 //////////////////////////////////////////////////////////////////////////////
 // OxygenExceptionListWidget.h
 // -------------------
@@ -45,7 +45,7 @@ namespace Oxygen
     public:
 
     //! constructor
-    OxygenExceptionListWidget( QWidget* = 0, OxygenConfiguration default_configuration = OxygenConfiguration() );
+    explicit OxygenExceptionListWidget( QWidget* = 0, OxygenConfiguration default_configuration = OxygenConfiguration() );
 
     //! set exceptions
     void setExceptions( const OxygenExceptionList& );
@@ -55,7 +55,7 @@ namespace Oxygen
 
     signals:
 
-    //! emited when list is changed
+    //! emitted when list is changed
     void changed( void );
 
     protected:

@@ -24,6 +24,10 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygen.h"
+#include "oxygen.moc"
+#include "oxygenclient.h"
+
 #include <cassert>
 #include <kdebug.h>
 #include <kconfiggroup.h>
@@ -31,11 +35,6 @@
 #include <kwindowinfo.h>
 #include <QApplication>
 #include <QPainter>
-
-#include "oxygen.h"
-#include "oxygen.moc"
-#include "oxygenclient.h"
-
 
 extern "C"
 {
@@ -200,7 +199,7 @@ namespace Oxygen
 
     QString window_title;
     QString class_name;
-    for( OxygenExceptionList::const_iterator iter = exceptions_.constBegin(); iter != exceptions_.constEnd(); iter++ )
+    for( OxygenExceptionList::const_iterator iter = exceptions_.constBegin(); iter != exceptions_.constEnd(); ++iter )
     {
 
       // discard disabled exceptions
@@ -227,7 +226,7 @@ namespace Oxygen
             KWindowInfo info( client.windowId(), 0, NET::WM2WindowClass );
             QString window_class_name( info.windowClassName() );
             QString window_class( info.windowClassClass() );
-            class_name = window_class_name + " " + window_class;
+            class_name = window_class_name + ' ' + window_class;
           }
 
           value = class_name;

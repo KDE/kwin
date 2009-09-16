@@ -25,6 +25,10 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenbutton.h"
+#include "oxygenclient.h"
+#include "oxygen.h"
+
 #include <cmath>
 
 #include <QPainterPath>
@@ -34,9 +38,6 @@
 #include <KColorUtils>
 #include <KColorScheme>
 #include <kcommondecoration.h>
-#include "oxygenbutton.h"
-#include "oxygenclient.h"
-#include "oxygen.h"
 
 namespace Oxygen
 {

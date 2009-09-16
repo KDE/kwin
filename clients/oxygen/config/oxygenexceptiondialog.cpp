@@ -23,6 +23,10 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenexceptiondialog.h"
+#include "oxygenexceptiondialog.moc"
+#include "oxygendetectwidget.h"
+
 #include <cassert>
 #include <QGroupBox>
 #include <QLabel>
@@ -30,9 +34,6 @@
 #include <KLocale>
 #include <KPushButton>
 
-#include "oxygendetectwidget.h"
-#include "oxygenexceptiondialog.h"
-#include "oxygenexceptiondialog.moc"
 
 namespace Oxygen
 {
@@ -65,7 +66,7 @@ namespace Oxygen
 
     // exception type
     gridLayout->addWidget( label = new QLabel( i18n( "Matching window property:" ), box ), 0, 0, 1, 1 );
-    gridLayout->addWidget( exceptionType = new QComboBox(box), 0, 1, 1, 1 );
+    gridLayout->addWidget( exceptionType = new KComboBox(box), 0, 1, 1, 1 );
     exceptionType->insertItems(0, QStringList()
       << OxygenException::typeName( OxygenException::WindowClassName, true )
       << OxygenException::typeName( OxygenException::WindowTitle, true )
@@ -99,7 +100,7 @@ namespace Oxygen
 
     // border size
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 0, 0, 1, 1 );
-    gridLayout->addWidget( frameBorder = new QComboBox(box), 0, 1, 1, 1 );
+    gridLayout->addWidget( frameBorder = new KComboBox(box), 0, 1, 1, 1 );
     frameBorder->insertItems(0, QStringList()
       << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNone, true )
       << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNoSide, true )
@@ -118,7 +119,7 @@ namespace Oxygen
 
     // blend color
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Background style:" ), box ), 1, 0, 1, 1 );
-    gridLayout->addWidget( blendColor = new QComboBox(box), 1, 1, 1, 1 );
+    gridLayout->addWidget( blendColor = new KComboBox(box), 1, 1, 1, 1 );
     blendColor->insertItems(0, QStringList()
       << OxygenException::blendColorName( OxygenException::NoBlending, true )
       << OxygenException::blendColorName( OxygenException::RadialBlending, true ) );
@@ -129,7 +130,7 @@ namespace Oxygen
 
     // size grip
     gridLayout->addWidget( checkbox = new QCheckBox( i18n("Extra size grip display:" ), box ), 2, 0, 1, 1 );
-    gridLayout->addWidget( sizeGripMode = new QComboBox( box ), 2, 1, 1, 1 );
+    gridLayout->addWidget( sizeGripMode = new KComboBox( box ), 2, 1, 1, 1 );
     sizeGripMode->insertItems(0, QStringList()
       << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripNever, true )
       << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripWhenNeeded, true )
@@ -181,7 +182,7 @@ namespace Oxygen
     titleOutline->setValue( exception.drawTitleOutline() );
 
     // mask
-    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { iter->second->setChecked( exception.mask() & iter->first ); }
 
   }
@@ -202,7 +203,7 @@ namespace Oxygen
 
     // mask
     unsigned int mask = OxygenException::None;
-    for( CheckBoxMap::const_iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
+    for( CheckBoxMap::const_iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { if( iter->second->isChecked() ) mask |= iter->first; }
 
     exception.setMask( mask );
@@ -265,7 +266,7 @@ namespace Oxygen
 
   //___________________________________________
   OxygenExceptionDialog::ComboBox::ComboBox( QWidget* parent ):
-    QComboBox( parent )
+    KComboBox( parent )
   { insertItems( 0, QStringList() << Yes << No ); }
 
   //___________________________________________

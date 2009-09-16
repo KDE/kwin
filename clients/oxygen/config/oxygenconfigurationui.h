@@ -27,7 +27,7 @@
 
 #include <kdeversion.h>
 #include <QWidget>
-#include <QComboBox>
+#include <KComboBox>
 #include <QCheckBox>
 #include <QPushButton>
 #include <QVector>
@@ -53,19 +53,19 @@ namespace Oxygen
     void setupUI( void );
 
     //! title alignment
-    QComboBox *titleAlignment;
+    KComboBox *titleAlignment;
 
     //! button size
-    QComboBox* buttonSize;
+    KComboBox* buttonSize;
 
     //! frame border
-    QComboBox *frameBorder;
+    KComboBox *frameBorder;
 
     //! blend color
-    QComboBox *blendColor;
+    KComboBox *blendColor;
 
     //! size grip
-    QComboBox *sizeGripMode;
+    KComboBox *sizeGripMode;
 
     //! draw separator
     QCheckBox *drawSeparator;

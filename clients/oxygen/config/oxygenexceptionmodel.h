@@ -1,5 +1,5 @@
-#ifndef _oxygenexceptionmodel_h_
-#define _oxygenexceptionmodel_h_
+#ifndef oxygenexceptionmodel_h
+#define oxygenexceptionmodel_h
 //////////////////////////////////////////////////////////////////////////////
 // oxygenexceptionmodel.h
 // -------------------

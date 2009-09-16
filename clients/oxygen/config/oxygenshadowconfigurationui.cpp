@@ -23,11 +23,11 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenshadowconfigurationui.h"
+
 #include <KLocale>
 #include <QLabel>
 #include <QLayout>
-
-#include "oxygenshadowconfigurationui.h"
 
 namespace Oxygen
 {

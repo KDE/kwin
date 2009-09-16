@@ -23,10 +23,10 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenshadowconfiguration.h"
+
 #include <cassert>
 #include <kdecoration.h>
-
-#include "oxygenshadowconfiguration.h"
 
 namespace Oxygen
 {

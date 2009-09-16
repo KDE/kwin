@@ -27,15 +27,15 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygendetectwidget.h"
+#include "oxygendetectwidget.moc"
+
 #include <cassert>
 #include <QButtonGroup>
 #include <QLayout>
 #include <QGroupBox>
 #include <KLocale>
 #include <QMouseEvent>
-
-#include "oxygendetectwidget.h"
-#include "oxygendetectwidget.moc"
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -90,7 +90,7 @@ namespace Oxygen
   //_________________________________________________________
   OxygenException::Type DetectWidget::exceptionType( void ) const
   {
-    for( CheckBoxMap::const_iterator iter = checkboxes.begin(); iter != checkboxes.end(); iter++ )
+    for( CheckBoxMap::const_iterator iter = checkboxes.begin(); iter != checkboxes.end(); ++iter )
     { if( iter->first->isChecked() ) return iter->second; }
 
     assert( false );

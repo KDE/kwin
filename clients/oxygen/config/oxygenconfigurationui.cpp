@@ -23,15 +23,16 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
+#include "oxygenconfigurationui.h"
+#include "../oxygenconfiguration.h"
+
 #include <kdeversion.h>
 
 #include <QLabel>
 #include <QLayout>
 #include <QGroupBox>
 #include <KLocale>
-
-#include "../oxygenconfiguration.h"
-#include "oxygenconfigurationui.h"
+#include <KTabWidget>
 
 namespace Oxygen
 {
@@ -56,7 +57,7 @@ namespace Oxygen
     mainLayout->setMargin(0);
 
     // tab widget for basic and advanced mode
-    QTabWidget* tab( new QTabWidget( this ) );
+    KTabWidget* tab( new KTabWidget( this ) );
     mainLayout->addWidget( tab );
 
     // basic configuration
@@ -77,7 +78,7 @@ namespace Oxygen
       // frame border
       QLabel* label;
       gridLayout->addWidget( label = new QLabel( i18n("Border size:"), basicWidget ), 0, 0, 1, 1);
-      gridLayout->addWidget( frameBorder = new QComboBox(basicWidget), 0, 1, 1, 1);
+      gridLayout->addWidget( frameBorder = new KComboBox(basicWidget), 0, 1, 1, 1);
       frameBorder->setObjectName(QString::fromUtf8("frameBorder"));
       frameBorder->insertItems(0, QStringList()
         << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNone, true )
@@ -96,7 +97,7 @@ namespace Oxygen
 
       // title alignment
       gridLayout->addWidget( label = new QLabel( i18n("Title alignment:"), basicWidget ), 1, 0, 1, 1 );
-      gridLayout->addWidget( titleAlignment = new QComboBox(basicWidget), 1, 1, 1, 1 );
+      gridLayout->addWidget( titleAlignment = new KComboBox(basicWidget), 1, 1, 1, 1 );
       titleAlignment->setObjectName(QString::fromUtf8("titleAlignment"));
       titleAlignment->insertItems(0, QStringList()
         << OxygenConfiguration::titleAlignmentName( Qt::AlignLeft, true )
@@ -109,7 +110,7 @@ namespace Oxygen
 
       // button size
       gridLayout->addWidget( label = new QLabel( i18n("Button size:"), basicWidget ), 2, 0, 1, 1 );
-      gridLayout->addWidget( buttonSize = new QComboBox(basicWidget), 2, 1, 1, 1 );
+      gridLayout->addWidget( buttonSize = new KComboBox(basicWidget), 2, 1, 1, 1 );
       buttonSize->setObjectName(QString::fromUtf8("buttonSize"));
       buttonSize->insertItems(0, QStringList()
         << OxygenConfiguration::buttonSizeName( OxygenConfiguration::ButtonSmall, true )
@@ -143,7 +144,7 @@ namespace Oxygen
       // title bar blending
       QLabel* label;
       gridLayout->addWidget( label = new QLabel( i18n("Background style:" ), advancedWidget ), 1, 0, 1, 1 );
-      gridLayout->addWidget( blendColor = new QComboBox(advancedWidget), 1, 1, 1, 1 );
+      gridLayout->addWidget( blendColor = new KComboBox(advancedWidget), 1, 1, 1, 1 );
       blendColor->setObjectName(QString::fromUtf8("blendColor"));
       blendColor->insertItems(0, QStringList()
         << OxygenConfiguration::blendColorName( OxygenConfiguration::NoBlending, true )
@@ -155,7 +156,7 @@ namespace Oxygen
 
       // draw size grip
       gridLayout->addWidget( label = new QLabel( i18n("Extra Size grip display:"), advancedWidget ), 2, 0, 1, 1 );
-      gridLayout->addWidget( sizeGripMode = new QComboBox(advancedWidget), 2, 1, 1, 1 );
+      gridLayout->addWidget( sizeGripMode = new KComboBox(advancedWidget), 2, 1, 1, 1 );
       sizeGripMode->setObjectName(QString::fromUtf8("sizeGripMode"));
       sizeGripMode->setWhatsThis(i18n(
         "The extra size grip is a small triangle shown in the bottom-right corner of a window \n"
