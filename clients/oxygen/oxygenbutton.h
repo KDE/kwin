@@ -29,10 +29,10 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <kcommondecoration.h>
+#include <QTimeLine>
 
 #include "oxygen.h"
 #include "oxygenclient.h"
-#include "oxygentimeline.h"
 
 namespace Oxygen
 {
@@ -112,7 +112,7 @@ namespace Oxygen
     QColor cachedButtonDetailColor_;
 
     //! timeline used for smooth transitions
-    OxygenTimeLine timeLine_;
+    QTimeLine timeLine_;
 
   };
 

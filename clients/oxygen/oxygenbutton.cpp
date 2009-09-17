@@ -65,8 +65,8 @@ namespace Oxygen
 
     timeLine_.setFrameRange( 0, 1000 );
     timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
-    connect( &timeLine_, SIGNAL( currentIndexChanged( int ) ), SLOT( repaint() ) );
-    connect( &timeLine_, SIGNAL( finished() ), SLOT( repaint() ) );
+    connect( &timeLine_, SIGNAL( frameChanged( int ) ), SLOT( update() ) );
+    connect( &timeLine_, SIGNAL( finished() ), SLOT( update() ) );
 
   }
 
@@ -111,9 +111,13 @@ namespace Oxygen
   {
     KCommonDecorationButton::enterEvent(e);
     if (status_ != Oxygen::Pressed) status_ = Oxygen::Hovered;
-    if( timeLine_.state() != OxygenTimeLine::NotRunning ) timeLine_.stop();
-    timeLine_.setDirection( OxygenTimeLine::Forward );
-    timeLine_.start();
+    if( timeLine_.state() == QTimeLine::NotRunning )
+    {
+      timeLine_.setDirection( QTimeLine::Forward );
+      timeLine_.start();
+    } else if( timeLine_.direction() == QTimeLine::Backward ) {
+      timeLine_.toggleDirection();
+    }
     update();
   }
 
@@ -123,9 +127,13 @@ namespace Oxygen
     KCommonDecorationButton::leaveEvent(e);
     status_ = Oxygen::Normal;
 
-    if( timeLine_.state() != OxygenTimeLine::NotRunning ) timeLine_.stop();
-    timeLine_.setDirection( OxygenTimeLine::Backward );
-    timeLine_.start();
+    if( timeLine_.state() == QTimeLine::NotRunning )
+    {
+      timeLine_.setDirection( QTimeLine::Backward );
+      timeLine_.start();
+    } else if( timeLine_.direction() == QTimeLine::Forward ) {
+      timeLine_.toggleDirection();
+    }
 
     update();
 
@@ -199,9 +207,9 @@ namespace Oxygen
       KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color():
       KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
 
-    if( timeLine_.state() == OxygenTimeLine::Running )
+    if( timeLine_.state() == QTimeLine::Running )
     {
-      qreal ratio( qreal( timeLine_.currentIndex() )/qreal( timeLine_.maxIndex() ) );
+      qreal ratio( qreal( timeLine_.currentFrame() )/qreal( timeLine_.endFrame() ) );
       color = KColorUtils::mix( color, glow, ratio );
     } else if( status_ == Oxygen::Hovered ) color = glow;
 
@@ -216,10 +224,10 @@ namespace Oxygen
     painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Oxygen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
 
     // draw glow on hover
-    if( timeLine_.state() == OxygenTimeLine::Running )
+    if( timeLine_.state() == QTimeLine::Running )
     {
 
-      qreal ratio( qreal( timeLine_.currentIndex() )/qreal( timeLine_.maxIndex() ) );
+      qreal ratio( qreal( timeLine_.currentFrame() )/qreal( timeLine_.endFrame() ) );
       painter.save();
       painter.setOpacity( ratio );
       painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
