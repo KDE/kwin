@@ -61,6 +61,8 @@ KWinScreenEdgesConfig::KWinScreenEdgesConfig( QWidget* parent, const QVariantLis
 
     // Visual feedback of action group conflicts
     connect( m_ui->desktopSwitchCombo, SIGNAL( currentIndexChanged(int) ), this, SLOT( groupChanged() ));
+    connect( m_ui->quickMaximizeBox, SIGNAL( stateChanged(int) ), this, SLOT( groupChanged() ));
+    connect( m_ui->quickTileBox, SIGNAL( stateChanged(int) ), this, SLOT( groupChanged() ));
 
     if( CompositingPrefs::compositingPossible() )
         m_defaultPrefs.detect(); // Driver-specific config detection
@@ -84,13 +86,17 @@ void KWinScreenEdgesConfig::groupChanged()
     monitorHideEdge( ElectricLeft, hide );
 
     // Desktop switch conflicts
-    m_ui->desktopSwitchLabel->setEnabled( true );
-    m_ui->desktopSwitchCombo->setEnabled( true );
-
-    bool enableMaximize = false;
-    if( m_ui->desktopSwitchCombo->currentIndex() == 0 )
-        enableMaximize = true;
-    m_ui->quickMaximizeBox->setEnabled( enableMaximize );
+    if( m_ui->quickTileBox->isChecked() || m_ui->quickMaximizeBox->isChecked() )
+        {
+        m_ui->desktopSwitchLabel->setEnabled( false );
+        m_ui->desktopSwitchCombo->setEnabled( false );
+        m_ui->desktopSwitchCombo->setCurrentIndex( 0 );
+        }
+    else
+        {
+        m_ui->desktopSwitchLabel->setEnabled( true );
+        m_ui->desktopSwitchCombo->setEnabled( true );
+        }
     }
 
 void KWinScreenEdgesConfig::load()
