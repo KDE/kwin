@@ -30,11 +30,11 @@
 
 #include "oxygen.h"
 #include "oxygenbutton.h"
+#include "oxygenshadowcache.h"
 #include "oxygensizegrip.h"
 
 #include <cassert>
 #include <cmath>
-#include <iostream>
 
 #include <kdeversion.h>
 #include <KGlobal>
@@ -44,7 +44,6 @@
 
 #include <QLabel>
 #include <QPainter>
-#include <QTextStream>
 #include <QApplication>
 
 using namespace std;
@@ -52,16 +51,23 @@ namespace Oxygen
 {
 
   K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("oxygenDeco"))
+  K_GLOBAL_STATIC_WITH_ARGS(OxygenShadowCache, globalShadowCache, (512))
 
   //___________________________________________
   OxygenHelper *oxygenHelper()
   { return globalHelper; }
 
   //___________________________________________
+  OxygenShadowCache *oxygenShadowCache()
+  { return globalShadowCache; }
+
+  //___________________________________________
   static void oxkwincleanupBefore()
   {
-    OxygenHelper *h = globalHelper;
-    h->invalidateCaches();
+
+    globalHelper->invalidateCaches();
+    globalShadowCache->invalidateCaches();
+
   }
 
   //___________________________________________
@@ -75,10 +81,6 @@ namespace Oxygen
     KCommonDecorationUnstable(b, f),
     colorCacheInvalid_(true),
     sizeGrip_( 0 ),
-    inactiveShadowConfiguration_( QPalette::Inactive ),
-    activeShadowConfiguration_( QPalette::Active ),
-    inactiveShadowTiles_( 0 ),
-    activeShadowTiles_( 0 ),
     helper_(*globalHelper),
     initialized_( false )
   { qAddPostRoutine(oxkwincleanupBefore); }
@@ -89,10 +91,6 @@ namespace Oxygen
 
     // delete sizegrip if any
     if( hasSizeGrip() ) deleteSizeGrip();
-
-    // delete tilesets
-    if( inactiveShadowTiles_ ) delete inactiveShadowTiles_;
-    if( activeShadowTiles_ ) delete activeShadowTiles_;
 
   }
 
@@ -267,7 +265,7 @@ namespace Oxygen
       case LM_OuterPaddingRight:
       case LM_OuterPaddingTop:
       case LM_OuterPaddingBottom:
-      return OxygenFactory::shadowSize() - extraBorder;
+      return oxygenShadowCache()->shadowSize() - extraBorder;
 
       default:
       return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -450,7 +448,8 @@ namespace Oxygen
     }
 
     QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
-    r.adjust( OxygenFactory::shadowSize(), OxygenFactory::shadowSize(), -OxygenFactory::shadowSize(), -OxygenFactory::shadowSize() );
+    qreal shadowSize( oxygenShadowCache()->shadowSize() );
+    r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
     r.adjust(0,0, 1, 1);
 
     // mask and painting frame
@@ -459,10 +458,10 @@ namespace Oxygen
 
     // top line
     {
-      int shadow_size = 5;
+      int shadowSize = 5;
       int height = HFRAMESIZE;
       QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
-      helper().slab( palette.color( widget->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(-shadow_size-1, 0, shadow_size+1, 2 ), painter, TileSet::Bottom );
+      helper().slab( palette.color( widget->backgroundRole() ), 0, shadowSize )->render( rect.adjusted(-shadowSize-1, 0, shadowSize+1, 2 ), painter, TileSet::Bottom );
       mask += rect;
       frame |= rect;
     }
@@ -513,10 +512,10 @@ namespace Oxygen
 
     // shadow
     {
-      int shadow_size = 7;
-      int voffset = -shadow_size;
+      int shadowSize = 7;
+      int voffset = -shadowSize;
       if( !isMaximized() ) voffset += HFRAMESIZE;
-      helper().slab( palette.color( widget()->backgroundRole() ), 0, shadow_size )->render( rect.adjusted(0, voffset, 0, 0 ), painter, TileSet::Bottom|TileSet::Left|TileSet::Right );
+      helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( rect.adjusted(0, voffset, 0, 0 ), painter, TileSet::Bottom|TileSet::Left|TileSet::Right );
     }
 
     // center
@@ -553,15 +552,6 @@ namespace Oxygen
   void OxygenClient::shadeChange( void  )
   {
     if( hasSizeGrip() ) sizeGrip().setVisible( !( isShade() || isMaximized() ) );
-
-    // in border none mode, need to reinitialze shadowTiles because
-    // bottom corner rounding is changed
-    if( compositingActive() && configuration().frameBorder() == OxygenConfiguration::BorderNone )
-    {
-      inactiveShadowConfiguration_ = OxygenShadowConfiguration( QPalette::Active );
-      activeShadowConfiguration_ = OxygenShadowConfiguration( QPalette::Active );
-    }
-
     KCommonDecorationUnstable::shadeChange();
   }
 
@@ -636,14 +626,16 @@ namespace Oxygen
     // draw shadows
     if( compositingActive() && !isMaximized() )
     {
-      shadowTiles(
-        backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-        isActive() )->render( frame.adjusted( 4, 4, -4, -4),
+
+      oxygenShadowCache()->tileSet( this )->render(
+        frame.adjusted( 4, 4, -4, -4),
         &painter, TileSet::Ring);
+
     }
 
     // adjust frame
-    frame.adjust( OxygenFactory::shadowSize(), OxygenFactory::shadowSize(), -OxygenFactory::shadowSize(), -OxygenFactory::shadowSize() );
+    qreal shadowSize( oxygenShadowCache()->shadowSize() );
+    frame.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
 
     //  adjust mask
     if( compositingActive() || isPreview() )
@@ -833,267 +825,6 @@ namespace Oxygen
     assert( hasSizeGrip() );
     sizeGrip_->deleteLater();
     sizeGrip_ = 0;
-  }
-
-  //_________________________________________________________________
-  TileSet *OxygenClient::shadowTiles(const QColor& color, bool active)
-  {
-
-    OxygenShadowConfiguration shadowConfiguration( OxygenFactory::shadowConfiguration( active && useOxygenShadows() ) );
-
-    OxygenShadowConfiguration local( shadowConfiguration );
-    local.setShadowSize( OxygenFactory::shadowSize() );
-
-    OxygenShadowConfiguration current = active ? activeShadowConfiguration_:inactiveShadowConfiguration_;
-
-    bool optionChanged = !(current == local );
-    if (active && activeShadowTiles_ )
-    {
-
-      if( optionChanged) delete activeShadowTiles_;
-      else return activeShadowTiles_;
-
-    } else if (!active && inactiveShadowTiles_ ) {
-
-      if( optionChanged ) delete inactiveShadowTiles_;
-      else return inactiveShadowTiles_;
-
-    }
-
-    kDebug( 1212 ) << " creating tiles - active: " << active << endl;
-    TileSet *tileSet = 0;
-
-    //
-    qreal size( OxygenFactory::shadowSize() );
-    if( active && configuration().drawTitleOutline() && configuration().frameBorder() == OxygenConfiguration::BorderNone )
-    {
-
-      // a more complex tile set is needed for the configuration above:
-      // top corners must be beveled with the "active titlebar color" while
-      // bottom corners must be beveled with the "window background color".
-      // this requires generating two shadow pixmaps and tiling them in the tileSet.
-      QPixmap shadow = QPixmap( size*2, size*2 );
-      shadow.fill( Qt::transparent );
-
-      QPainter p( &shadow );
-      p.setRenderHint( QPainter::Antialiasing );
-
-      QPixmap shadowTop = shadowPixmap( color, active );
-      QRect topRect( shadow.rect() );
-      topRect.setBottom( int( size )-1 );
-      p.setClipRect( topRect );
-      p.drawPixmap( QPointF( 0, 0 ), shadowTop );
-
-      QPixmap shadowBottom = shadowPixmap( widget()->palette().color( widget()->backgroundRole() ), active );
-      QRect bottomRect( shadow.rect() );
-      bottomRect.setTop( int( size ) );
-      p.setClipRect( bottomRect );
-      p.drawPixmap( QPointF( 0, 0 ), shadowBottom );
-      p.end();
-
-      tileSet = new TileSet( shadow, size, size, 1, 1);
-
-    } else {
-
-      tileSet = new TileSet(
-        shadowPixmap( color, active ),
-        size, size, 1, 1);
-
-    }
-
-    // store option and style
-    if( active )
-    {
-
-      activeShadowConfiguration_ = local;
-      activeShadowTiles_ = tileSet;
-
-    } else {
-
-      inactiveShadowConfiguration_ = local;
-      inactiveShadowTiles_ = tileSet;
-
-    }
-
-    return tileSet;
-  }
-
-  //_________________________________________________________________
-  QPixmap OxygenClient::shadowPixmap(const QColor& color, bool active ) const
-  {
-
-    OxygenShadowConfiguration shadowConfiguration( OxygenFactory::shadowConfiguration( active && useOxygenShadows() ) );
-
-    static const qreal fixedSize = 25.5;
-    qreal size( OxygenFactory::shadowSize() );
-    qreal shadowSize( shadowConfiguration.shadowSize() );
-
-    QPixmap shadow = QPixmap( size*2, size*2 );
-    shadow.fill( Qt::transparent );
-
-    QPainter p( &shadow );
-    p.setRenderHint( QPainter::Antialiasing );
-    p.setPen( Qt::NoPen );
-
-    // offsets are scaled with the shadow size
-    // so that the ratio Top-shadow/Bottom-shadow is kept constant
-    // when shadow size is chqnged
-    qreal hoffset = shadowConfiguration.horizontalOffset()*shadowSize/fixedSize;
-    qreal voffset = shadowConfiguration.verticalOffset()*shadowSize/fixedSize;
-
-    if( active && useOxygenShadows() )
-    {
-
-      {
-
-        int values[5] = {255, 220, 180, 25, 0};
-        qreal x[5] = {4.4, 4.5, 5, 5.5, 6.5};
-
-        // the first point of this gradient does not scale
-        QRadialGradient rg( size, size, shadowSize );
-
-        QColor c = color;
-        for( int i = 0; i<5; i++ )
-        { c.setAlpha( values[i] ); rg.setColorAt( x[0]/shadowSize+(x[i]-x[0])/fixedSize, c ); }
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-
-      }
-
-      {
-
-        // this gradient scales with shadow size
-        int nPoints = 8;
-        qreal values[8] = {1, 0.58, 0.43, 0.30, 0.22, 0.15, 0.08, 0 };
-        qreal x[8] = {0, 4.5, 5.5, 6.5, 7.5, 8.5, 11.5, 14.4};
-
-        // this gradient scales with shadow size
-        QRadialGradient rg(
-          size+hoffset,
-          size+voffset,
-          shadowSize );
-
-        QColor c = shadowConfiguration.innerColor();
-        for( int i = 0; i<nPoints; i++ )
-        { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-
-      }
-
-      {
-        QRadialGradient rg = QRadialGradient( size, size, size );
-        QColor c = color;
-
-        c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
-        c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-      }
-
-    } else {
-
-
-      {
-
-        int nPoints = 9;
-        qreal values[9] = { 0.17, 0.12, 0.11, 0.075, 0.06, 0.035, 0.025, 0.01, 0 };
-        qreal x[9] = {0, 4.5, 6.6, 8.5, 11.5, 14.5, 17.5, 21.5, 25.5 };
-        QRadialGradient rg = QRadialGradient(
-          size+20.0*hoffset,
-          size+20.0*voffset,
-          shadowSize );
-
-        QColor c = shadowConfiguration.outerColor();
-        for( int i = 0; i<nPoints; i++ )
-        { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect()  );
-
-      }
-
-      {
-
-        int nPoints = 7;
-        qreal values[7] = {0.55, 0.25, 0.20, 0.1, 0.06, 0.015, 0 };
-        qreal x[7] = {0, 4.5, 5.5, 7.5, 8.5, 11.5, 14.5 };
-        QRadialGradient rg = QRadialGradient(
-          size+10.0*hoffset,
-          size+10.0*voffset,
-          shadowSize );
-
-        QColor c = shadowConfiguration.midColor();
-        for( int i = 0; i<nPoints; i++ )
-        { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-
-      }
-
-      {
-        int nPoints = 5;
-        qreal values[5] = { 1, 0.32, 0.22, 0.03, 0 };
-        qreal x[5] = { 0, 4.5, 5.0, 5.5, 6.5 };
-        QRadialGradient rg = QRadialGradient(
-          size+hoffset,
-          size+voffset,
-          shadowSize );
-
-        QColor c = shadowConfiguration.innerColor();
-        for( int i = 0; i<nPoints; i++ )
-        { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-
-      }
-
-      {
-        QRadialGradient rg = QRadialGradient( size, size, size );
-        QColor c = color;
-
-        c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
-        c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-      }
-
-    }
-
-    // draw the corner of the window - actually all 4 corners as one circle
-    // this is all fixedSize. Does not scale with shadow size
-    QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-    if( configuration().frameBorder() < OxygenConfiguration::BorderTiny )
-    {
-
-      lg.setColorAt(0.52, helper().backgroundTopColor(color));
-      lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
-
-    } else {
-
-      QColor light = helper().calcLightColor( helper().backgroundTopColor(color) );
-      QColor dark = helper().calcDarkColor(helper().backgroundBottomColor(color));
-
-      lg.setColorAt(0.52, light);
-      lg.setColorAt(1.0, dark);
-
-    }
-
-    p.setBrush( Qt::NoBrush );
-    if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() )
-    { p.setClipRect( QRectF( 0, 0, 2*size, size ) ); }
-
-    p.setPen(QPen(lg, 0.8));
-    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
-
-    p.end();
-    return shadow;
   }
 
 }

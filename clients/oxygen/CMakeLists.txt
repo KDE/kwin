@@ -13,6 +13,7 @@ set(kwin_oxygen_SRCS
      oxygenexception.cpp
      oxygenexceptionlist.cpp
      oxygenshadowconfiguration.cpp
+     oxygenshadowcache.cpp
      oxygensizegrip.cpp
      x11util.cpp
   )

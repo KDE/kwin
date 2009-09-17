@@ -31,7 +31,6 @@
 #include <kcommondecoration.h>
 
 #include "oxygenconfiguration.h"
-#include "oxygenshadowconfiguration.h"
 #include "lib/helper.h"
 #include "lib/tileset.h"
 
@@ -64,10 +63,6 @@ namespace Oxygen
         //! true when separator is to be drawn
         virtual bool drawSeparator( void ) const
         { return isActive() && configuration().drawSeparator() && !configuration().drawTitleOutline(); }
-
-        //! true when oxygen 'glow' shadow is to be drawn for active window
-        virtual bool useOxygenShadows( void ) const
-        { return isActive() && configuration().useOxygenShadows(); }
 
         //! dimensions
         virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
@@ -120,12 +115,6 @@ namespace Oxygen
         //! paint
         void paintEvent( QPaintEvent* );
 
-        //! shadows
-        TileSet *shadowTiles(const QColor& color, bool active);
-
-        //! shadows
-        QPixmap shadowPixmap( const QColor& color, bool active ) const;
-
         private:
 
         //! calculate mask
@@ -164,11 +153,6 @@ namespace Oxygen
 
         //! size grip widget
         OxygenSizeGrip* sizeGrip_;
-
-        OxygenShadowConfiguration inactiveShadowConfiguration_;
-        OxygenShadowConfiguration activeShadowConfiguration_;
-        TileSet *inactiveShadowTiles_;
-        TileSet *activeShadowTiles_;
 
         //! helper
         OxygenHelper& helper_;

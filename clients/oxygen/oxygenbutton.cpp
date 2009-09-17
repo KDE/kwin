@@ -31,7 +31,6 @@
 
 #include <cmath>
 
-#include <QPainterPath>
 #include <QPainter>
 #include <QPen>
 

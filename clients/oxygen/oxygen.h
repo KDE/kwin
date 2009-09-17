@@ -32,7 +32,6 @@
 #include <kdeversion.h>
 
 #include "oxygenconfiguration.h"
-#include "oxygenshadowconfiguration.h"
 #include "oxygenexceptionlist.h"
 
 // TODO:
@@ -103,22 +102,6 @@ namespace Oxygen
     //! get configuration for a give client
     static OxygenConfiguration configuration( const OxygenClient& );
 
-    //! shadow configuration
-    static OxygenShadowConfiguration activeShadowConfiguration( void )
-    { return activeShadowConfiguration_; }
-
-    //! shadow configuration
-    static OxygenShadowConfiguration inactiveShadowConfiguration( void )
-    { return inactiveShadowConfiguration_; }
-
-    //! shadow configuration
-    static OxygenShadowConfiguration shadowConfiguration( bool active )
-    { return active ? activeShadowConfiguration():inactiveShadowConfiguration(); }
-
-    //! shadow size
-    static qreal shadowSize( void )
-    { return qMax( activeShadowConfiguration().shadowSize(), inactiveShadowConfiguration().shadowSize() ); }
-
     signals:
 
     //! configuration has changed
@@ -146,12 +129,6 @@ namespace Oxygen
 
     //! default configuration
     static OxygenConfiguration defaultConfiguration_;
-
-    //! shadow configuration
-    static OxygenShadowConfiguration activeShadowConfiguration_;
-
-    //! shadow configuration
-    static OxygenShadowConfiguration inactiveShadowConfiguration_;
 
     //! exceptions
     static OxygenExceptionList exceptions_;
