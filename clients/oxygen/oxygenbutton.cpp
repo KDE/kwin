@@ -125,16 +125,19 @@ namespace Oxygen
   void OxygenButton::leaveEvent(QEvent *e)
   {
     KCommonDecorationButton::leaveEvent(e);
-    status_ = Oxygen::Normal;
 
-    if( timeLine_.state() == QTimeLine::NotRunning )
+    if( status_ != Oxygen::Pressed )
     {
-      timeLine_.setDirection( QTimeLine::Backward );
-      timeLine_.start();
-    } else if( timeLine_.direction() == QTimeLine::Forward ) {
-      timeLine_.toggleDirection();
+      if( timeLine_.state() == QTimeLine::NotRunning )
+      {
+        timeLine_.setDirection( QTimeLine::Backward );
+        timeLine_.start();
+      } else if( timeLine_.direction() == QTimeLine::Forward ) {
+        timeLine_.toggleDirection();
+      }
     }
 
+    status_ = Oxygen::Normal;
     update();
 
   }
