@@ -75,6 +75,8 @@ namespace Oxygen
     KCommonDecorationUnstable(b, f),
     colorCacheInvalid_(true),
     sizeGrip_( 0 ),
+    inactiveShadowConfiguration_( QPalette::Inactive ),
+    activeShadowConfiguration_( QPalette::Active ),
     inactiveShadowTiles_( 0 ),
     activeShadowTiles_( 0 ),
     helper_(*globalHelper),
@@ -830,15 +832,12 @@ namespace Oxygen
 
     OxygenShadowConfiguration shadowConfiguration( OxygenFactory::shadowConfiguration( active && useOxygenShadows() ) );
 
-    ShadowTilesOption opt;
-    opt.active      = active;
-    opt.width       = shadowConfiguration.shadowSize();
-    opt.windowColor = color;
-    opt.innerColor   = shadowConfiguration.innerColor();
+    OxygenShadowConfiguration local( shadowConfiguration );
+    local.setShadowSize( OxygenFactory::shadowSize() );
 
-    ShadowTilesOption currentOpt = active ? activeShadowTilesOption_:inactiveShadowTilesOption_;
+    OxygenShadowConfiguration current = active ? activeShadowConfiguration_:inactiveShadowConfiguration_;
 
-    bool optionChanged = !(currentOpt == opt );
+    bool optionChanged = !(current == local );
     if (active && activeShadowTiles_ )
     {
 
@@ -897,12 +896,12 @@ namespace Oxygen
     if( active )
     {
 
-      activeShadowTilesOption_ = opt;
+      activeShadowConfiguration_ = local;
       activeShadowTiles_ = tileSet;
 
     } else {
 
-      inactiveShadowTilesOption_ = opt;
+      inactiveShadowConfiguration_ = local;
       inactiveShadowTiles_ = tileSet;
 
     }

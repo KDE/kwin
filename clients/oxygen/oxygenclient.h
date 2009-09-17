@@ -30,8 +30,8 @@
 
 #include <kcommondecoration.h>
 
-#include "kdeversion.h"
 #include "oxygenconfiguration.h"
+#include "oxygenshadowconfiguration.h"
 #include "lib/helper.h"
 #include "lib/tileset.h"
 
@@ -128,32 +128,6 @@ namespace Oxygen
 
         private:
 
-        class ShadowTilesOption {
-
-          public:
-
-          //! constructor
-          ShadowTilesOption( void ):
-            width(0),
-            active(false)
-          {}
-
-          //! equal to operator
-          bool operator == ( const ShadowTilesOption& other ) const
-          {
-            return
-              windowColor == other.windowColor &&
-              innerColor == other.innerColor &&
-              width == other.width &&
-              active == other.active;
-          }
-
-          QColor windowColor;
-          QColor innerColor;
-          qreal width;
-          bool active;
-        };
-
         //! calculate mask
         QRegion calcMask( void ) const;
 
@@ -191,8 +165,8 @@ namespace Oxygen
         //! size grip widget
         OxygenSizeGrip* sizeGrip_;
 
-        ShadowTilesOption inactiveShadowTilesOption_;
-        ShadowTilesOption activeShadowTilesOption_;
+        OxygenShadowConfiguration inactiveShadowConfiguration_;
+        OxygenShadowConfiguration activeShadowConfiguration_;
         TileSet *inactiveShadowTiles_;
         TileSet *activeShadowTiles_;
 
