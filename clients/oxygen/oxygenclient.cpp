@@ -553,6 +553,15 @@ namespace Oxygen
   void OxygenClient::shadeChange( void  )
   {
     if( hasSizeGrip() ) sizeGrip().setVisible( !( isShade() || isMaximized() ) );
+
+    // in border none mode, need to reinitialze shadowTiles because
+    // bottom corner rounding is changed
+    if( compositingActive() && configuration().frameBorder() == OxygenConfiguration::BorderNone )
+    {
+      inactiveShadowConfiguration_ = OxygenShadowConfiguration( QPalette::Active );
+      activeShadowConfiguration_ = OxygenShadowConfiguration( QPalette::Active );
+    }
+
     KCommonDecorationUnstable::shadeChange();
   }
 
@@ -1077,7 +1086,7 @@ namespace Oxygen
     }
 
     p.setBrush( Qt::NoBrush );
-    if( configuration().frameBorder() == OxygenConfiguration::BorderNone )
+    if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() )
     { p.setClipRect( QRectF( 0, 0, 2*size, size ) ); }
 
     p.setPen(QPen(lg, 0.8));
