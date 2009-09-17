@@ -2215,8 +2215,11 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
         changeMaximize( false, false, false ); // restore
         }
 
-
-    QRect clientArea = workspace()->clientArea( MaximizeArea, this );
+    QRect clientArea;
+    if( isElectricBorderMaximizing() )
+        clientArea = workspace()->clientArea( MaximizeArea, cursorPos(), desktop() );
+    else
+        clientArea = workspace()->clientArea( MaximizeArea, this );
 
     // save sizes for restoring, if maximalizing
     if( !adjust && !( y() == clientArea.top() && height() == clientArea.height()))
@@ -2743,7 +2746,6 @@ void Client::finishMoveResize( bool cancel )
         setGeometry( moveResizeGeom );
     if( isElectricBorderMaximizing() )
         {
-        electricMaximizing = false;
         switch( electricMode )
             {
             case ElectricMaximizeMode:
@@ -2763,6 +2765,7 @@ void Client::finishMoveResize( bool cancel )
                 break;
                 }
             }
+        electricMaximizing = false;
         workspace()->hideElectricBorderWindowOutline();
         }
     checkMaximizeGeometry();
@@ -3271,12 +3274,12 @@ void Client::setQuickTileMode( QuickTileMode mode )
         // Do the actual tile.
         if( mode == QuickTileLeft )
             {
-            QRect max = workspace()->clientArea( MaximizeArea, this );
+            QRect max = workspace()->clientArea( MaximizeArea, cursorPos(), desktop() );
             setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height() ) );
             }
         else
             {
-            QRect max = workspace()->clientArea( MaximizeArea, this);
+            QRect max = workspace()->clientArea( MaximizeArea, cursorPos(), desktop() );
             setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() ) );
             }
 
