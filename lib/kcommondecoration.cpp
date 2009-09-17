@@ -862,42 +862,13 @@ void KCommonDecoration::updateWindowShape()
     int w = widget()->width();
     int h = widget()->height();
 
-    bool tl=true,tr=true,bl=true,br=true; // is there a transparent rounded corner in top-left? etc
-
-    // no transparent rounded corners if this window corner lines up with a screen corner
-    for(int screen=0; screen < Kephal::ScreenUtils::numScreens(); ++screen)
-    {
-        QRect fullscreen(Kephal::ScreenUtils::screenGeometry(screen));
-        QRect window = geometry();
-
-        if(window.topLeft()    == fullscreen.topLeft() ) tl = false;
-        if(window.topRight()   == fullscreen.topRight() ) tr = false;
-        if(window.bottomLeft() == fullscreen.bottomLeft() ) bl = false;
-        if(window.bottomRight()== fullscreen.bottomRight() ) br = false;
-    }
-
     QRegion mask(0, 0, w, h);
 
-    // Remove top-left corner.
-    if(tl)
-    {
-        mask -= cornerShape(WC_TopLeft);
-    }
-    // Remove top-right corner.
-    if(tr)
-    {
-        mask -= cornerShape(WC_TopRight);
-    }
-        // Remove top-left corner.
-    if(bl)
-    {
-        mask -= cornerShape(WC_BottomLeft);
-    }
-    // Remove top-right corner.
-    if(br)
-    {
-        mask -= cornerShape(WC_BottomRight);
-    }
+    // Remove corners (if subclass wants to.)
+    mask -= cornerShape(WC_TopLeft);
+    mask -= cornerShape(WC_TopRight);
+    mask -= cornerShape(WC_BottomLeft);
+    mask -= cornerShape(WC_BottomRight);
 
     setMask( mask );
 }
