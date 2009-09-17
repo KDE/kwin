@@ -110,13 +110,8 @@ namespace Oxygen
   {
     KCommonDecorationButton::enterEvent(e);
     if (status_ != Oxygen::Pressed) status_ = Oxygen::Hovered;
-    if( timeLine_.state() == QTimeLine::NotRunning )
-    {
-      timeLine_.setDirection( QTimeLine::Forward );
-      timeLine_.start();
-    } else if( timeLine_.direction() == QTimeLine::Backward ) {
-      timeLine_.toggleDirection();
-    }
+    timeLine_.setDirection( QTimeLine::Forward );
+    if( timeLine_.state() == QTimeLine::NotRunning ) timeLine_.start();
     update();
   }
 
@@ -127,13 +122,8 @@ namespace Oxygen
 
     if( status_ != Oxygen::Pressed )
     {
-      if( timeLine_.state() == QTimeLine::NotRunning )
-      {
-        timeLine_.setDirection( QTimeLine::Backward );
-        timeLine_.start();
-      } else if( timeLine_.direction() == QTimeLine::Forward ) {
-        timeLine_.toggleDirection();
-      }
+      timeLine_.setDirection( QTimeLine::Backward );
+      if( timeLine_.state() == QTimeLine::NotRunning ) timeLine_.start();
     }
 
     status_ = Oxygen::Normal;
