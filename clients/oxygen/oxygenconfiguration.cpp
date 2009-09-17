@@ -32,12 +32,12 @@ namespace Oxygen
 
   //__________________________________________________
   OxygenConfiguration::OxygenConfiguration( void ):
-    titleAlignment_( Qt::AlignLeft ),
+    titleAlignment_( Qt::AlignHCenter ),
     buttonSize_( ButtonDefault ),
     frameBorder_( BorderDefault ),
     blendColor_( RadialBlending ),
     sizeGripMode_( SizeGripWhenNeeded ),
-    drawSeparator_( true ),
+    drawSeparator_( false ),
     drawTitleOutline_( false ),
     useOxygenShadows_( true )
   {}
