@@ -61,7 +61,7 @@ LayoutConfig::LayoutConfig(QWidget* parent)
     {
     d = new LayoutConfigPrivate;
     d->ui.setupUi( this );
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    QVBoxLayout* layout = new QVBoxLayout;
     QWidget* tabBoxView = tabBox->tabBoxView();
     tabBoxView->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding );
     layout->addWidget( tabBoxView );
