@@ -59,9 +59,6 @@ namespace Oxygen
     virtual ~OxygenShadowConfiguration( void )
     {}
 
-    //! equal to operator
-    bool operator == ( const OxygenShadowConfiguration& ) const;
-
     //! write to kconfig group
     virtual void write( KConfigGroup& ) const;
 
@@ -118,6 +115,19 @@ namespace Oxygen
     //! use outer color
     void setUseOuterColor( bool value )
     { useOuterColor_ = value; }
+
+    //! equal to operator
+    bool operator == (const OxygenShadowConfiguration& other ) const
+    {
+      return
+        colorGroup_ == other.colorGroup_ &&
+        shadowSize_ == other.shadowSize_ &&
+        horizontalOffset_ == other.horizontalOffset_ &&
+        verticalOffset_ == other.verticalOffset_ &&
+        innerColor_ == other.innerColor_ &&
+        ( useOuterColor_ == false || outerColor_ == other.outerColor_ ) &&
+        useOuterColor_ == other.useOuterColor_;
+    }
 
     protected:
 

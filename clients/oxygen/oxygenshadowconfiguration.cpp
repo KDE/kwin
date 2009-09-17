@@ -75,19 +75,6 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  bool OxygenShadowConfiguration::operator == ( const OxygenShadowConfiguration& other ) const
-  {
-    assert( colorGroup() == other.colorGroup() );
-    return
-      shadowSize() == other.shadowSize() &&
-      horizontalOffset() == other.horizontalOffset() &&
-      verticalOffset() == other.verticalOffset() &&
-      innerColor() == other.innerColor() &&
-      outerColor() == other.outerColor() &&
-      useOuterColor() == other.useOuterColor();
-  }
-
-  //_________________________________________________________
   void OxygenShadowConfiguration::write( KConfigGroup& group ) const
   {
     group.writeEntry( OxygenConfig::SHADOW_SIZE, shadowSize() );
