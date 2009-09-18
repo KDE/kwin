@@ -138,7 +138,7 @@ namespace Oxygen
         bool animateActiveChange( void ) const
         {
           return
-            configuration().useOxygenShadows() ||
+            (compositingActive() && !isMaximized() && configuration().useOxygenShadows()) ||
             configuration().drawSeparator() ||
             configuration().drawTitleOutline();
         }
