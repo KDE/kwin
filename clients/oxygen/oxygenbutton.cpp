@@ -156,32 +156,29 @@ namespace Oxygen
 
     QPainter painter(this);
     painter.setClipRect(this->rect().intersected( event->rect() ) );
+    painter.setRenderHints(QPainter::Antialiasing);
 
     QPalette palette = OxygenButton::palette();
 
     if( client_.isActive() ) palette.setCurrentColorGroup(QPalette::Active);
     else palette.setCurrentColorGroup(QPalette::Inactive);
 
+    // window background
     client_.renderWindowBackground( &painter, rect(), this, palette );
-    if( client_.isActive() && client_.configuration().drawTitleOutline() && !client_.isMaximized() )
+
+    // window border
+    if( client_.drawTitleOutline() && !client_.isMaximized() )
     { client_.renderWindowBorder( &painter, rect(), this, client_.backgroundPalette( this, palette ) ); }
 
-    // draw dividing line
-    painter.setRenderHints(QPainter::Antialiasing);
-    QRect frame = client_.widget()->rect();
-    int x = -this->geometry().x()+1;
-    int w = frame.width()-2;
-
-    const int titleHeight = client_.layoutMetric(KCommonDecoration::LM_TitleHeight);
+    // colors
     QColor color = palette.window().color();
-
     QColor light = helper_.calcLightColor( color );
     QColor dark = helper_.calcDarkColor( color );
 
     dark.setAlpha(120);
 
     if( client_.drawSeparator() )
-    { helper_.drawSeparator(&painter, QRect(x, titleHeight-1.5, w, 2), color, Qt::Horizontal); }
+    { client_.renderSeparator( &painter, rect(), this, color ); }
 
     // for menu button the application icon is used
     if (type_ == ButtonMenu)

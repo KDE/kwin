@@ -27,11 +27,24 @@
 #include "oxygenshadowcache.h"
 #include "oxygenclient.h"
 
+#include <cassert>
 #include <KDebug>
 #include <QPainter>
 
 namespace Oxygen
 {
+
+
+  //_______________________________________________________
+  OxygenShadowCache::OxygenShadowCache( int maxIndex ):
+    maxIndex_( maxIndex ),
+    activeShadowConfiguration_( OxygenShadowConfiguration( QPalette::Active ) ),
+    inactiveShadowConfiguration_( OxygenShadowConfiguration( QPalette::Inactive ) )
+  {
+    kDebug(1212) << endl;
+    shadowCache_.setMaxCost( 1<<5 );
+    animatedShadowCache_.setMaxCost( maxIndex_<<5 );
+  }
 
   //_______________________________________________________
   bool OxygenShadowCache::shadowConfigurationChanged( const OxygenShadowConfiguration& other ) const
@@ -72,13 +85,44 @@ namespace Oxygen
   }
 
   //_______________________________________________________
-  OxygenShadowCache::OxygenShadowCache( int maxIndex ):
-    maxIndex_( maxIndex ),
-    activeShadowConfiguration_( OxygenShadowConfiguration( QPalette::Active ) ),
-    inactiveShadowConfiguration_( OxygenShadowConfiguration( QPalette::Inactive ) )
+  TileSet* OxygenShadowCache::tileSet( const OxygenClient* client, int index )
   {
-    kDebug(1212) << endl;
-    shadowCache_.setMaxCost( 1<<5 );
+
+    assert( index <= maxIndex_ );
+
+    // construct key
+    Key key = Key();
+    key.index = index;
+    key.active = client->isActive();
+    key.useOxygenShadows = client->configuration().useOxygenShadows();
+    key.isShade = client->isShade();
+    key.hasNoBorder = client->configuration().frameBorder() == OxygenConfiguration::BorderNone;
+    key.hasTitleOutline = client->configuration().drawTitleOutline();
+
+    // check if tileset already in cache
+    int hash( key.hash() );
+    if( animatedShadowCache_.contains(hash) ) return animatedShadowCache_.object(hash);
+
+    // create shadow and tileset otherwise
+    qreal size( shadowSize() );
+    qreal opacity( qreal(index)/qreal(maxIndex_) );
+
+    QPixmap shadow( size*2, size*2 );
+    shadow.fill( Qt::transparent );
+    QPainter p( &shadow );
+    p.setRenderHint( QPainter::Antialiasing );
+
+    p.setOpacity( 1.0 - opacity );
+    p.drawPixmap( QPointF(0,0), shadowPixmap( client, false ) );
+
+    p.setOpacity( opacity );
+    p.drawPixmap( QPointF(0,0), shadowPixmap( client, true ) );
+    p.end();
+
+    TileSet* tileSet = new TileSet(shadow, size, size, 1, 1);
+    animatedShadowCache_.insert( hash, tileSet );
+    return tileSet;
+
   }
 
   //_________________________________________________________________
@@ -313,6 +357,7 @@ namespace Oxygen
     // note this can be optimized because not all of the flag configurations are actually relevant
     // allocate 3 empty bits for flags
     int out =
+      ( index << 5 ) |
       ( active << 4 ) |
       (useOxygenShadows << 3 ) |
       (isShade<<2) |

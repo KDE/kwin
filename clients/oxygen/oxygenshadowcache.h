@@ -52,6 +52,7 @@ namespace Oxygen
     void invalidateCaches( void )
     {
       shadowCache_.clear();
+      animatedShadowCache_.clear();
     }
 
     //! returns true if provided shadow configuration changes with respect to stored
@@ -86,6 +87,7 @@ namespace Oxygen
 
       //! explicit constructor
       explicit Key( void ):
+        index(0),
         active(false),
         useOxygenShadows(false),
         isShade(false),
@@ -96,6 +98,7 @@ namespace Oxygen
       //! hash function
       int hash( void ) const;
 
+      int index;
       bool active;
       bool useOxygenShadows;
       bool isShade;
@@ -127,8 +130,11 @@ namespace Oxygen
     //! cache
     typedef QCache<int, TileSet> TileSetCache;
 
-    //! active shadow cache
+    //! shadow cache
     TileSetCache shadowCache_;
+
+    //! animated shadow cache
+    TileSetCache animatedShadowCache_;
 
   };
 

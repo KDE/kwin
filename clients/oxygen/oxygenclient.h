@@ -29,6 +29,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <kcommondecoration.h>
+#include <QTimeLine>
 
 #include "oxygenconfiguration.h"
 #include "lib/helper.h"
@@ -60,9 +61,22 @@ namespace Oxygen
         //! true if window is maximized
         virtual bool isMaximized( void ) const;
 
+        //! true when title outline is to be drawn
+        bool drawTitleOutline( void ) const
+        {
+          return
+            ( timeLineIsRunning() || isActive() ) &&
+            configuration().drawTitleOutline();
+        }
+
         //! true when separator is to be drawn
-        virtual bool drawSeparator( void ) const
-        { return isActive() && configuration().drawSeparator() && !configuration().drawTitleOutline(); }
+        bool drawSeparator( void ) const
+        {
+          return
+            ( timeLineIsRunning() || isActive() ) &&
+            configuration().drawSeparator() &&
+            !configuration().drawTitleOutline();
+        }
 
         //! dimensions
         virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
@@ -93,6 +107,9 @@ namespace Oxygen
         // this draws a "blue" border around active window
         virtual void renderWindowBorder( QPainter*, const QRect&, const QWidget*, const QPalette& ) const;
 
+        //! separator
+        virtual void renderSeparator( QPainter*, const QRect&, const QWidget*, const QColor& ) const;
+
         //! title outline
         virtual void renderTitleOutline( QPainter*, const QRect&, const QPalette& ) const;
 
@@ -116,6 +133,23 @@ namespace Oxygen
         void paintEvent( QPaintEvent* );
 
         private:
+
+        //! return true when activity change are animated
+        bool animateActiveChange( void ) const
+        {
+          return
+            configuration().useOxygenShadows() ||
+            configuration().drawSeparator() ||
+            configuration().drawTitleOutline();
+        }
+
+        //! return true if timeLine is running
+        bool timeLineIsRunning( void ) const
+        { return timeLine_.state() == QTimeLine::Running; }
+
+        //! return animation opacity
+        qreal opacity( void ) const
+        { return qreal( timeLine_.currentFrame() )/qreal( timeLine_.endFrame() ); }
 
         //! calculate mask
         QRegion calcMask( void ) const;
@@ -153,6 +187,9 @@ namespace Oxygen
 
         //! size grip widget
         OxygenSizeGrip* sizeGrip_;
+
+        //! animation timeLine
+        QTimeLine timeLine_;
 
         //! helper
         OxygenHelper& helper_;

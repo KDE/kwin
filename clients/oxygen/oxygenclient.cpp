@@ -50,8 +50,9 @@ using namespace std;
 namespace Oxygen
 {
 
+  const int maxAnimationIndex( 256 );
   K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("oxygenDeco"))
-  K_GLOBAL_STATIC_WITH_ARGS(OxygenShadowCache, globalShadowCache, (512))
+  K_GLOBAL_STATIC_WITH_ARGS(OxygenShadowCache, globalShadowCache, (maxAnimationIndex))
 
   //___________________________________________
   OxygenHelper *oxygenHelper()
@@ -81,6 +82,7 @@ namespace Oxygen
     KCommonDecorationUnstable(b, f),
     colorCacheInvalid_(true),
     sizeGrip_( 0 ),
+    timeLine_( 200, this ),
     helper_(*globalHelper),
     initialized_( false )
   { qAddPostRoutine(oxkwincleanupBefore); }
@@ -105,6 +107,13 @@ namespace Oxygen
     KCommonDecoration::init();
     widget()->setAttribute(Qt::WA_NoSystemBackground );
     widget()->setAutoFillBackground( false );
+
+    // initialize timeLine
+    timeLine_.setFrameRange( 0, maxAnimationIndex );
+    timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
+    connect( &timeLine_, SIGNAL( frameChanged( int ) ), widget(), SLOT( update() ) );
+    connect( &timeLine_, SIGNAL( finished() ), widget(), SLOT( update() ) );
+
     initialized_ = true;
 
     // in case of preview, one wants to make the label used
@@ -183,10 +192,6 @@ namespace Oxygen
           // for tiny border, the convention is to have a larger bottom area in order to
           // make resizing easier
           border = qMax(frameBorder, 4);
-
-        }  else if( configuration().frameBorder() == OxygenConfiguration::BorderNone && isPreview() && !compositingActive() ) {
-
-          border = 1;
 
         } else if( frameBorder < OxygenConfiguration::BorderTiny ) {
 
@@ -379,7 +384,14 @@ namespace Oxygen
     if( configuration().drawTitleOutline() )
     {
 
-      return options()->color(ColorFont, isActive());
+      if( timeLineIsRunning() )
+      {
+
+        return KColorUtils::mix(
+          options()->color(ColorFont, false),
+          options()->color(ColorFont, true ), opacity() );
+
+      } else return options()->color(ColorFont, isActive());
 
     } else if (isActive()) {
 
@@ -443,9 +455,8 @@ namespace Oxygen
 
     // save painter
     painter->save();
-    if (clipRect.isValid()) {
-      painter->setClipRegion(clipRect,Qt::IntersectClip);
-    }
+    if( timeLineIsRunning() ) painter->setOpacity( opacity() );
+    if( clipRect.isValid() ) painter->setClipRegion(clipRect,Qt::IntersectClip);
 
     QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
     qreal shadowSize( oxygenShadowCache()->shadowSize() );
@@ -507,8 +518,57 @@ namespace Oxygen
   }
 
   //_________________________________________________________
+  void OxygenClient::renderSeparator( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QColor& color ) const
+  {
+
+    const QWidget* window = (isPreview()) ? OxygenClient::widget() : widget->window();
+
+    // get coordinates relative to the client area
+    // this is annoying. One could use mapTo if this was taking const QWidget* and not
+    // const QWidget* as argument.
+    QPoint position( 0, 0 );
+    {
+      const QWidget* w = widget;
+      while (  w != window && !w->isWindow() && w != w->parentWidget() ) {
+        position += w->geometry().topLeft();
+        w = w->parentWidget();
+      }
+    }
+
+    // setup painter
+    painter->save();
+    if( timeLineIsRunning() ) painter->setOpacity( opacity() );
+    if (clipRect.isValid()) painter->setClipRegion(clipRect,Qt::IntersectClip);
+
+    QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
+    qreal shadowSize( oxygenShadowCache()->shadowSize() );
+    r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
+    r.adjust(0,0, 1, 1);
+
+    int extraBorder = ( isMaximized() && compositingActive() ) ? 0 : EXTENDED_HITAREA;
+
+    // dimensions
+    const int titleHeight = layoutMetric(LM_TitleHeight);
+    const int titleTop = layoutMetric(LM_TitleEdgeTop) + r.top() - extraBorder;
+
+    // dimensions
+    int x,y,w,h;
+    r.getRect(&x, &y, &w, &h);
+    helper().drawSeparator( painter, QRect(x, titleTop+titleHeight-1.5, w, 2).translated( -position ), color, Qt::Horizontal);
+
+    painter->restore();
+
+  }
+
+  //_________________________________________________________
   void OxygenClient::renderTitleOutline(  QPainter* painter, const QRect& rect, const QPalette& palette ) const
   {
+
+    if( timeLineIsRunning() )
+    {
+      painter->save();
+      painter->setOpacity( opacity() );
+    }
 
     // shadow
     {
@@ -524,6 +584,8 @@ namespace Oxygen
       renderWindowBackground(painter, rect.adjusted( 4, voffset, -4, -4 ), widget(), palette );
     }
 
+    if( timeLineIsRunning() ) painter->restore();
+
   }
 
   //_________________________________________________________
@@ -535,6 +597,14 @@ namespace Oxygen
     {
       sizeGrip().activeChange();
       sizeGrip().update();
+    }
+
+    // reset animation
+    if( animateActiveChange() )
+    {
+      timeLine_.setDirection( isActive() ? QTimeLine::Forward : QTimeLine::Backward );
+      if(timeLine_.state() == QTimeLine::NotRunning )
+      { timeLine_.start(); }
     }
 
     KCommonDecorationUnstable::activeChange();
@@ -627,9 +697,20 @@ namespace Oxygen
     if( compositingActive() && !isMaximized() )
     {
 
-      oxygenShadowCache()->tileSet( this )->render(
-        frame.adjusted( 4, 4, -4, -4),
-        &painter, TileSet::Ring);
+      if( configuration().useOxygenShadows() && timeLineIsRunning() )
+      {
+
+        oxygenShadowCache()->tileSet( this, timeLine_.currentFrame() )->render(
+          frame.adjusted( 4, 4, -4, -4),
+          &painter, TileSet::Ring);
+
+      } else {
+
+        oxygenShadowCache()->tileSet( this )->render(
+          frame.adjusted( 4, 4, -4, -4),
+          &painter, TileSet::Ring);
+
+      }
 
     }
 
@@ -678,37 +759,10 @@ namespace Oxygen
 
     // window background
     renderWindowBackground( &painter, frame, widget(), palette );
-    if( isActive() && configuration().drawTitleOutline() && !isMaximized() )
-    {
-      renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
-    }
+    if( drawTitleOutline()  && !isMaximized() ) renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
 
     // clipping
     if( compositingActive() ) painter.setClipping(false);
-
-    // in preview mode and when frame border is 0,
-    // one still draw a small rect around, unless kde is recent enough,
-    // useOxygenShadow is set to true,
-    // and copositing is active
-    // (that makes a lot of ifs)
-    if( isPreview() && configuration().frameBorder() == OxygenConfiguration::BorderNone && !compositingActive() )
-    {
-      painter.save();
-      painter.setBrush( Qt::NoBrush );
-      painter.setPen( QPen( helper().calcDarkColor( widget()->palette().window().color() ), 1 ) );
-
-      QPainterPath path;
-      QPoint first( frame.topLeft()+QPoint( 0, 6 ) );
-      path.moveTo( first );
-      path.quadTo( frame.topLeft(), frame.topLeft()+QPoint( 6, 0 ) );
-      path.lineTo( frame.topRight()-QPoint( 6, 0 ) );
-      path.quadTo( frame.topRight(), frame.topRight()+QPoint( 0, 6 ) );
-      path.lineTo( frame.bottomRight() );
-      path.lineTo( frame.bottomLeft() );
-      path.lineTo( first );
-      painter.drawPath( path );
-      painter.restore();
-    }
 
     int extraBorder = ( isMaximized() && compositingActive() ) ? 0 : EXTENDED_HITAREA;
 
@@ -728,7 +782,7 @@ namespace Oxygen
     QRect titleRect( titleLeft, titleTop-1, titleWidth, titleHeight );
     painter.setFont( options()->font(isActive(), false) );
 
-    if( isActive() && configuration().drawTitleOutline() )
+    if( drawTitleOutline() )
     {
 
       // get title bounding rect
@@ -739,10 +793,12 @@ namespace Oxygen
       boundingRect.setBottom( titleTop+titleHeight );
       boundingRect.setLeft( qMax( boundingRect.left(), titleLeft ) - 2*HFRAMESIZE );
       boundingRect.setRight( qMin( boundingRect.right(), titleLeft + titleWidth ) + 2*HFRAMESIZE );
-
       renderTitleOutline( &painter, boundingRect, backgroundPalette( widget(), palette ) );
 
     }
+
+    // separator
+    if( drawSeparator() ) renderSeparator(&painter, frame, widget(), color );
 
     // draw title text
     painter.setPen( titlebarTextColor( backgroundPalette( widget(), palette ) ) );
@@ -751,15 +807,11 @@ namespace Oxygen
     painter.setRenderHint(QPainter::Antialiasing);
 
     // adjust if there are shadows
-    if (compositingActive()) frame.adjust(-1,-1, 1, 1);
+    if( compositingActive() ) frame.adjust(-1,-1, 1, 1);
 
     // dimensions
     int x,y,w,h;
     frame.getRect(&x, &y, &w, &h);
-
-    // separator
-    if( drawSeparator() )
-    { helper().drawSeparator(&painter, QRect(x, titleTop+titleHeight-1.5, w, 2), color, Qt::Horizontal); }
 
     // shadow and resize handles
     if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny && !isMaximized() )
