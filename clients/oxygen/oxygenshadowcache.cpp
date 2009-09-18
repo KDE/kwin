@@ -34,6 +34,8 @@
 namespace Oxygen
 {
 
+  // referenced from definition in Oxygendclient.cpp
+  OxygenHelper *oxygenHelper();
 
   //_______________________________________________________
   OxygenShadowCache::OxygenShadowCache( int maxIndex ):
@@ -42,8 +44,8 @@ namespace Oxygen
     inactiveShadowConfiguration_( OxygenShadowConfiguration( QPalette::Inactive ) )
   {
     kDebug(1212) << endl;
-    shadowCache_.setMaxCost( 1<<5 );
-    animatedShadowCache_.setMaxCost( maxIndex_<<5 );
+    shadowCache_.setMaxCost( 1<<6 );
+    animatedShadowCache_.setMaxCost( maxIndex_<<6 );
   }
 
   //_______________________________________________________
@@ -65,12 +67,7 @@ namespace Oxygen
   {
 
     // construct key
-    Key key = Key();
-    key.active = client->isActive();
-    key.useOxygenShadows = client->configuration().useOxygenShadows();
-    key.isShade = client->isShade();
-    key.hasNoBorder = client->configuration().frameBorder() == OxygenConfiguration::BorderNone;
-    key.hasTitleOutline = client->configuration().drawTitleOutline();
+    Key key( client );
 
     // check if tileset already in cache
     int hash( key.hash() );
@@ -91,13 +88,7 @@ namespace Oxygen
     assert( index <= maxIndex_ );
 
     // construct key
-    Key key = Key();
-    key.index = index;
-    key.active = client->isActive();
-    key.useOxygenShadows = client->configuration().useOxygenShadows();
-    key.isShade = client->isShade();
-    key.hasNoBorder = client->configuration().frameBorder() == OxygenConfiguration::BorderNone;
-    key.hasTitleOutline = client->configuration().drawTitleOutline();
+    Key key( client );
 
     // check if tileset already in cache
     int hash( key.hash() );
@@ -130,6 +121,7 @@ namespace Oxygen
   {
 
     // get window color
+    Key key( client );
     QPalette palette( client->backgroundPalette( client->widget(), client->widget()->palette() ) );
     QColor color( palette.color( client->widget()->backgroundRole() ) );
 
@@ -147,7 +139,7 @@ namespace Oxygen
       QPainter p( &shadow );
       p.setRenderHint( QPainter::Antialiasing );
 
-      QPixmap shadowTop = simpleShadowPixmap( color, client, active );
+      QPixmap shadowTop = simpleShadowPixmap( color, key, active );
       QRect topRect( shadow.rect() );
       topRect.setBottom( int( size )-1 );
       p.setClipRect( topRect );
@@ -156,7 +148,7 @@ namespace Oxygen
       // get window color
       palette = client->widget()->palette();
       color = palette.color( client->widget()->backgroundRole() );
-      QPixmap shadowBottom = simpleShadowPixmap( color, client, active );
+      QPixmap shadowBottom = simpleShadowPixmap( color, key, active );
       QRect bottomRect( shadow.rect() );
       bottomRect.setTop( int( size ) );
       p.setClipRect( bottomRect );
@@ -165,17 +157,17 @@ namespace Oxygen
 
       return shadow;
 
-    } else return simpleShadowPixmap( color, client, active );
+    } else return simpleShadowPixmap( color, key, active );
 
   }
 
   //_______________________________________________________
-  QPixmap OxygenShadowCache::simpleShadowPixmap( const QColor& color, const OxygenClient* client, bool active ) const
+  QPixmap OxygenShadowCache::simpleShadowPixmap( const QColor& color, const Key& key, bool active ) const
   {
 
     // local reference to relevant shadow configuration
     const OxygenShadowConfiguration& shadowConfiguration(
-      active && client->configuration().useOxygenShadows() ?
+      active && key.useOxygenShadows ?
       activeShadowConfiguration_:inactiveShadowConfiguration_ );
 
     static const qreal fixedSize = 25.5;
@@ -195,7 +187,7 @@ namespace Oxygen
     qreal hoffset = shadowConfiguration.horizontalOffset()*shadowSize/fixedSize;
     qreal voffset = shadowConfiguration.verticalOffset()*shadowSize/fixedSize;
 
-    if( active && client->configuration().useOxygenShadows() )
+    if( active && key.useOxygenShadows )
     {
 
       {
@@ -322,16 +314,16 @@ namespace Oxygen
     // draw the corner of the window - actually all 4 corners as one circle
     // this is all fixedSize. Does not scale with shadow size
     QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-    if( client->configuration().frameBorder() < OxygenConfiguration::BorderTiny )
+    if( key.frameBorder < Key::BorderAny )
     {
 
-      lg.setColorAt(0.52, client->helper().backgroundTopColor(color));
-      lg.setColorAt(1.0, client->helper().backgroundBottomColor(color) );
+      lg.setColorAt(0.52, oxygenHelper()->backgroundTopColor(color));
+      lg.setColorAt(1.0, oxygenHelper()->backgroundBottomColor(color) );
 
     } else {
 
-      QColor light = client->helper().calcLightColor( client->helper().backgroundTopColor(color) );
-      QColor dark = client->helper().calcDarkColor( client->helper().backgroundBottomColor(color));
+      QColor light = oxygenHelper()->calcLightColor( oxygenHelper()->backgroundTopColor(color) );
+      QColor dark = oxygenHelper()->calcDarkColor( oxygenHelper()->backgroundBottomColor(color));
 
       lg.setColorAt(0.52, light);
       lg.setColorAt(1.0, dark);
@@ -339,7 +331,7 @@ namespace Oxygen
     }
 
     p.setBrush( Qt::NoBrush );
-    if( client->configuration().frameBorder() == OxygenConfiguration::BorderNone && !client->isShade() )
+    if( key.frameBorder ==Key::BorderNone && !key.isShade )
     { p.setClipRect( QRectF( 0, 0, 2*size, size ) ); }
 
     p.setPen(QPen(lg, 0.8));
@@ -351,18 +343,37 @@ namespace Oxygen
   }
 
   //_______________________________________________________
+  OxygenShadowCache::Key::Key( const OxygenClient* client ):
+    index(0)
+  {
+
+    active = client->isActive();
+    useOxygenShadows = client->configuration().useOxygenShadows();
+    isShade = client->isShade();
+    hasTitleOutline = client->configuration().drawTitleOutline();
+    switch(  client->configuration().frameBorder() )
+    {
+      case OxygenConfiguration::BorderNone: frameBorder = Key::BorderNone; break;
+      case OxygenConfiguration::BorderNoSide:  frameBorder = Key::BorderNoSide; break;
+      default:  frameBorder = Key::BorderAny; break;
+    }
+
+  }
+
+
+  //_______________________________________________________
   int OxygenShadowCache::Key::hash( void ) const
   {
 
     // note this can be optimized because not all of the flag configurations are actually relevant
     // allocate 3 empty bits for flags
     int out =
-      ( index << 5 ) |
-      ( active << 4 ) |
-      (useOxygenShadows << 3 ) |
-      (isShade<<2) |
-      (hasNoBorder<<1) |
-      (hasTitleOutline<<0);
+      ( index << 6 ) |
+      ( active << 5 ) |
+      (useOxygenShadows << 4 ) |
+      (isShade<<3) |
+      (hasTitleOutline<<2) |
+      (frameBorder<<0);
 
     return out;
 

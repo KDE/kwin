@@ -85,15 +85,26 @@ namespace Oxygen
 
       public:
 
+      //! this is a shorter enumeration
+      enum FrameBorder
+      {
+        BorderNone,
+        BorderNoSide,
+        BorderAny
+      };
+
       //! explicit constructor
       explicit Key( void ):
         index(0),
         active(false),
         useOxygenShadows(false),
         isShade(false),
-        hasNoBorder(false),
-        hasTitleOutline(false)
+        hasTitleOutline(false),
+        frameBorder( BorderAny )
       {}
+
+      //! constructor from client
+      Key( const OxygenClient* );
 
       //! hash function
       int hash( void ) const;
@@ -102,18 +113,17 @@ namespace Oxygen
       bool active;
       bool useOxygenShadows;
       bool isShade;
-      bool hasNoBorder;
       bool hasTitleOutline;
 
-    };
+      FrameBorder frameBorder;
 
-    private:
+    };
 
     //! complex pixmap (when needed)
     QPixmap shadowPixmap( const OxygenClient*, bool active ) const;
 
     //! simple pixmap
-    QPixmap simpleShadowPixmap( const QColor&, const OxygenClient*, bool active ) const;
+    QPixmap simpleShadowPixmap( const QColor&, const Key&, bool active ) const;
 
     private:
 
