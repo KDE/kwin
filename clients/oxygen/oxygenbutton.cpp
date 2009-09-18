@@ -120,7 +120,7 @@ namespace Oxygen
   {
     KCommonDecorationButton::leaveEvent(e);
 
-    if( status_ != Oxygen::Pressed )
+    if( status_ == Oxygen::Hovered )
     {
       timeLine_.setDirection( QTimeLine::Backward );
       if( timeLine_.state() == QTimeLine::NotRunning ) timeLine_.start();
