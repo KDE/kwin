@@ -58,8 +58,16 @@ namespace Oxygen
         virtual KCommonDecorationButton *createButton(::ButtonType type);
         virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
 
+        //!@name flags
+        //@{
+
         //! true if window is maximized
-        virtual bool isMaximized( void ) const;
+        virtual bool isMaximized( void ) const
+        { return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();  }
+
+        //! return true if timeLine is running
+        bool timeLineIsRunning( void ) const
+        { return timeLine_.state() == QTimeLine::Running; }
 
         //! true when title outline is to be drawn
         bool drawTitleOutline( void ) const
@@ -78,6 +86,8 @@ namespace Oxygen
             !configuration().drawTitleOutline();
         }
 
+        //@}
+
         //! dimensions
         virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
 
@@ -91,11 +101,20 @@ namespace Oxygen
         virtual void reset( unsigned long changed );
 
         //! return associated configuration
-        OxygenConfiguration configuration( void ) const;
+        const OxygenConfiguration& configuration( void ) const
+        { return configuration_; }
+
+        //! return timeLine
+        const QTimeLine& timeLine( void ) const
+        { return timeLine_; }
 
         //! helper class
         OxygenHelper& helper( void ) const
         { return helper_; }
+
+        //! return animation opacity
+        qreal opacity( void ) const
+        { return qreal( timeLine_.currentFrame() )/qreal( timeLine_.endFrame() ); }
 
         //! palette background
         QPalette backgroundPalette( const QWidget*, QPalette ) const;
@@ -137,19 +156,12 @@ namespace Oxygen
         //! return true when activity change are animated
         bool animateActiveChange( void ) const
         {
-          return
+          if( isPreview() ) return false;
+          else return
             (compositingActive() && !isMaximized() && configuration().useOxygenShadows()) ||
             configuration().drawSeparator() ||
             configuration().drawTitleOutline();
         }
-
-        //! return true if timeLine is running
-        bool timeLineIsRunning( void ) const
-        { return timeLine_.state() == QTimeLine::Running; }
-
-        //! return animation opacity
-        qreal opacity( void ) const
-        { return qreal( timeLine_.currentFrame() )/qreal( timeLine_.endFrame() ); }
 
         //! calculate mask
         QRegion calcMask( void ) const;

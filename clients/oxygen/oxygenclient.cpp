@@ -147,10 +147,6 @@ namespace Oxygen
   }
 
   //___________________________________________
-  bool OxygenClient::isMaximized() const
-  { return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();  }
-
-  //___________________________________________
   bool OxygenClient::decorationBehaviour(DecorationBehaviour behaviour) const
   {
     switch (behaviour)
@@ -853,10 +849,6 @@ namespace Oxygen
     }
 
   }
-
-  //________________________________________________________________
-  OxygenConfiguration OxygenClient::configuration( void ) const
-  { return configuration_; }
 
   //_________________________________________________________________
   void OxygenClient::createSizeGrip( void )
