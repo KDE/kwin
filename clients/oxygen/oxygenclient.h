@@ -169,6 +169,9 @@ namespace Oxygen
         //! text color
         QColor titlebarTextColor(const QPalette&);
 
+        //! text color
+        QColor titlebarTextColor(const QPalette&, bool active);
+
         //!@name size grip
         //@{
 

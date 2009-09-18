@@ -376,20 +376,23 @@ namespace Oxygen
   //_________________________________________________________
   QColor OxygenClient::titlebarTextColor(const QPalette &palette)
   {
+    if( timeLineIsRunning() ) return KColorUtils::mix(
+      titlebarTextColor( palette, false ),
+      titlebarTextColor( palette, true ),
+      opacity() );
+    else return titlebarTextColor( palette, isActive() );
+  }
+
+  //_________________________________________________________
+  QColor OxygenClient::titlebarTextColor(const QPalette &palette, bool active)
+  {
 
     if( configuration().drawTitleOutline() )
     {
 
-      if( timeLineIsRunning() )
-      {
+      return options()->color(ColorFont, active);
 
-        return KColorUtils::mix(
-          options()->color(ColorFont, false),
-          options()->color(ColorFont, true ), opacity() );
-
-      } else return options()->color(ColorFont, isActive());
-
-    } else if (isActive()) {
+    } else if( active ){
 
       return palette.color(QPalette::Active, QPalette::WindowText);
 
