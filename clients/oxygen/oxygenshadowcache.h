@@ -29,13 +29,13 @@
 
 #include <QCache>
 
+#include "oxygenclient.h"
 #include "oxygenshadowconfiguration.h"
 #include "lib/tileset.h"
 
 namespace Oxygen
 {
 
-  class OxygenClient;
 
   class OxygenShadowCache
   {
@@ -80,6 +80,7 @@ namespace Oxygen
     TileSet* tileSet( const OxygenClient*, int );
 
     //! Key class to be used into QCache
+    /*! class is entirely inline for optimization */
     class Key
     {
 
@@ -104,10 +105,48 @@ namespace Oxygen
       {}
 
       //! constructor from client
-      Key( const OxygenClient* );
+      Key( const OxygenClient* client ):
+        index(0)
+      {
+
+        active = client->isActive();
+        useOxygenShadows = client->configuration().useOxygenShadows();
+        isShade = client->isShade();
+        hasTitleOutline = client->configuration().drawTitleOutline();
+        switch(  client->configuration().frameBorder() )
+        {
+          case OxygenConfiguration::BorderNone: frameBorder = Key::BorderNone; break;
+          case OxygenConfiguration::BorderNoSide:  frameBorder = Key::BorderNoSide; break;
+          default:  frameBorder = Key::BorderAny; break;
+        }
+
+      }
+
+      //! constructor from int
+      Key( int hash ):
+        index( hash>>6 ),
+        active( (hash>>5)&1 ),
+        useOxygenShadows( (hash>>4)&1 ),
+        isShade( (hash>>3)&1 ),
+        hasTitleOutline( (hash>>2)&1 ),
+        frameBorder( (FrameBorder)(hash&3) )
+      {}
 
       //! hash function
-      int hash( void ) const;
+      int hash( void ) const
+      {
+
+        // note this can be optimized because not all of the flag configurations are actually relevant
+        // allocate 3 empty bits for flags
+        return
+          ( index << 6 ) |
+          ( active << 5 ) |
+          (useOxygenShadows << 4 ) |
+          (isShade<<3) |
+          (hasTitleOutline<<2) |
+          (frameBorder<<0);
+
+      }
 
       int index;
       bool active;
@@ -121,6 +160,10 @@ namespace Oxygen
 
     //! complex pixmap (when needed)
     QPixmap shadowPixmap( const OxygenClient*, bool active ) const;
+
+    //! simple pixmap
+    QPixmap simpleShadowPixmap( const QColor& color, const Key& key ) const
+    { return simpleShadowPixmap( color, key, key.active ); }
 
     //! simple pixmap
     QPixmap simpleShadowPixmap( const QColor&, const Key&, bool active ) const;

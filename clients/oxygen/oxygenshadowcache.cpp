@@ -192,18 +192,66 @@ namespace Oxygen
 
       {
 
+        int nPoints = 5;
         int values[5] = {255, 220, 180, 25, 0};
         qreal x[5] = {4.4, 4.5, 5, 5.5, 6.5};
 
-        // the first point of this gradient does not scale
+        // the first point of this gradient does not scaled
         QRadialGradient rg( size, size, shadowSize );
 
         QColor c = color;
-        for( int i = 0; i<5; i++ )
+        for( int i = 0; i<nPoints; i++ )
         { c.setAlpha( values[i] ); rg.setColorAt( x[0]/shadowSize+(x[i]-x[0])/fixedSize, c ); }
 
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
+        if( key.frameBorder == Key::BorderNone && !key.isShade )
+        {
+
+          // draw ellipse for the upper rect
+          p.setClipRect( QRectF( 0, 0, 2*size, size ) );
+          p.setBrush( rg );
+          p.drawRect( shadow.rect() );
+          p.setClipping( false );
+
+          // draw square gradients for the lower rect
+          QRectF rect( 0, size, 2*size, 5 );
+          p.setClipRect( rect );
+          QLinearGradient lg( 0.0, 0.0, 2*size, 0.0 );
+          for( int i = 0; i<nPoints; i++ )
+          {
+
+            c.setAlpha( values[i] );
+            qreal xx( x[0]+(x[i]-x[0])*shadowSize/fixedSize );
+            lg.setColorAt( (size-xx)/(2.0*size), c );
+            lg.setColorAt( (size+xx)/(2.0*size), c );
+
+          }
+
+          p.setBrush( lg );
+          p.drawRect( rect );
+
+          rect = QRectF( size-5, size, 10, size );
+          p.setClipRect( rect );
+          lg = QLinearGradient( 0, size, 0, 2*size );
+          for( int i = 0; i<nPoints; i++ )
+          {
+
+            c.setAlpha( values[i] );
+            qreal xx( x[0]+(x[i]-x[0])*shadowSize/fixedSize );
+            lg.setColorAt( xx/size, c );
+
+          }
+
+          p.setBrush( lg );
+          p.drawRect( rect );
+
+          p.setClipping( false );
+
+        } else {
+
+          p.setBrush( rg );
+          p.drawRect( shadow.rect() );
+
+        }
 
       }
 
@@ -227,17 +275,6 @@ namespace Oxygen
         p.setBrush( rg );
         p.drawRect( shadow.rect() );
 
-      }
-
-      {
-        QRadialGradient rg = QRadialGradient( size, size, size );
-        QColor c = color;
-
-        c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
-        c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
       }
 
     } else {
@@ -298,17 +335,13 @@ namespace Oxygen
 
       }
 
-      {
-        QRadialGradient rg = QRadialGradient( size, size, size );
-        QColor c = color;
+    }
 
-        c.setAlpha( 255 );  rg.setColorAt( 4.0/size, c );
-        c.setAlpha( 0 );  rg.setColorAt( 4.01/size, c );
-
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
-      }
-
+    // this is the inner circle.
+    // has widget color
+    {
+      p.setBrush( color );
+      p.drawEllipse( QRectF( size-4, size-4, 8, 8 ) );
     }
 
     // draw the corner of the window - actually all 4 corners as one circle
@@ -330,52 +363,19 @@ namespace Oxygen
 
     }
 
-    p.setBrush( Qt::NoBrush );
-    if( key.frameBorder ==Key::BorderNone && !key.isShade )
-    { p.setClipRect( QRectF( 0, 0, 2*size, size ) ); }
+    {
 
-    p.setPen(QPen(lg, 0.8));
-    p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+      p.setBrush( Qt::NoBrush );
+      if( key.frameBorder == Key::BorderNone && !key.isShade )
+      { p.setClipRect( QRectF( 0, 0, 2*size, size ) ); }
+
+      p.setPen(QPen(lg, 0.8));
+      p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+
+    }
 
     p.end();
     return shadow;
-
-  }
-
-  //_______________________________________________________
-  OxygenShadowCache::Key::Key( const OxygenClient* client ):
-    index(0)
-  {
-
-    active = client->isActive();
-    useOxygenShadows = client->configuration().useOxygenShadows();
-    isShade = client->isShade();
-    hasTitleOutline = client->configuration().drawTitleOutline();
-    switch(  client->configuration().frameBorder() )
-    {
-      case OxygenConfiguration::BorderNone: frameBorder = Key::BorderNone; break;
-      case OxygenConfiguration::BorderNoSide:  frameBorder = Key::BorderNoSide; break;
-      default:  frameBorder = Key::BorderAny; break;
-    }
-
-  }
-
-
-  //_______________________________________________________
-  int OxygenShadowCache::Key::hash( void ) const
-  {
-
-    // note this can be optimized because not all of the flag configurations are actually relevant
-    // allocate 3 empty bits for flags
-    int out =
-      ( index << 6 ) |
-      ( active << 5 ) |
-      (useOxygenShadows << 4 ) |
-      (isShade<<3) |
-      (hasTitleOutline<<2) |
-      (frameBorder<<0);
-
-    return out;
 
   }
 
