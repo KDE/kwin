@@ -93,6 +93,7 @@ namespace Oxygen
 
     } else {
 
+      if( changed & SettingColors ) oxygenShadowCache()->invalidateCaches();
       resetDecorations(changed);
       return false;
 
