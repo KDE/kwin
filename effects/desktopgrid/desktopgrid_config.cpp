@@ -105,7 +105,7 @@ void DesktopGridEffectConfig::load()
     KConfigGroup conf = EffectsHandler::effectConfig( "DesktopGrid" );
 
     m_ui->zoomDurationSpin->setValue( conf.readEntry( "ZoomDuration", 0 ));
-    m_ui->zoomDurationSpin->setSuffix( ki18np( " milisecond", " miliseconds"));
+    m_ui->zoomDurationSpin->setSuffix( ki18np( " millisecond", " milliseconds"));
     m_ui->borderWidthSpin->setValue( conf.readEntry( "BorderWidth", 10 ));
     m_ui->borderWidthSpin->setSuffix( ki18np( " pixel", " pixels"));
 

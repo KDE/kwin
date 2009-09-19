@@ -67,7 +67,7 @@ void CoverSwitchEffectConfig::load()
     KConfigGroup conf = EffectsHandler::effectConfig( "CoverSwitch" );
 
     m_ui->spinDuration->setValue( conf.readEntry( "Duration", 0 ) );
-    m_ui->spinDuration->setSuffix( ki18np( " milisecond", " miliseconds" ) );
+    m_ui->spinDuration->setSuffix( ki18np( " millisecond", " milliseconds" ) );
     m_ui->checkAnimateSwitch->setChecked( conf.readEntry( "AnimateSwitch", true ));
     m_ui->checkAnimateStart->setChecked( conf.readEntry( "AnimateStart", true ));
     m_ui->checkAnimateStop->setChecked( conf.readEntry( "AnimateStop", true ));

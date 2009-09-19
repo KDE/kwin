@@ -77,7 +77,7 @@ void TranslucencyEffectConfig::load()
     m_ui->popupmenus->setValue( (int)( conf.readEntry( "PopupMenus", 1.0) * 100 ) );
     m_ui->tornoffmenus->setValue( (int)( conf.readEntry( "TornOffMenus", 1.0) * 100 ) );
     m_ui->duration->setValue( conf.readEntry( "Duration", 0) );
-    m_ui->duration->setSuffix(ki18np(" milisecond", " miliseconds"));
+    m_ui->duration->setSuffix(ki18np(" millisecond", " milliseconds"));
 
     emit changed(false);
     }
