@@ -157,10 +157,7 @@ namespace Oxygen
         bool animateActiveChange( void ) const
         {
           if( isPreview() ) return false;
-          else return
-            (compositingActive() && !isMaximized() && configuration().useOxygenShadows()) ||
-            configuration().drawSeparator() ||
-            configuration().drawTitleOutline();
+          else return true;
         }
 
         //! calculate mask
