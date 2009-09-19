@@ -89,6 +89,7 @@ namespace Oxygen
 
     // construct key
     Key key( client );
+    key.index = index;
 
     // check if tileset already in cache
     int hash( key.hash() );
