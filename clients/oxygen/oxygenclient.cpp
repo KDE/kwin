@@ -56,11 +56,17 @@ namespace Oxygen
 
   //___________________________________________
   OxygenHelper *oxygenHelper()
-  { return globalHelper; }
+  {
+    OxygenHelper *helper = globalHelper;
+    return helper;
+  }
 
   //___________________________________________
   OxygenShadowCache *oxygenShadowCache()
-  { return globalShadowCache; }
+  {
+    OxygenShadowCache* cache = globalShadowCache;
+    return cache;
+  }
 
   //___________________________________________
   static void oxkwincleanupBefore()
