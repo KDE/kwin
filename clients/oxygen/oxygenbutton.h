@@ -94,6 +94,17 @@ namespace Oxygen
     //! color
     QColor buttonDetailColor(const QPalette& );
 
+    //! color
+    QColor buttonDetailColor(const QPalette&, bool active );
+
+    //! opacity
+    qreal opacity( void ) const
+    { return qreal( timeLine_.currentFrame() ) / qreal(timeLine_.endFrame()); }
+
+    //! true if timeline is running
+    bool timeLineIsRunning( void ) const
+    { return timeLine_.state() == QTimeLine::Running; }
+
     private:
 
     //! parent client

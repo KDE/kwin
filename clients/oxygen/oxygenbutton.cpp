@@ -79,8 +79,18 @@ namespace Oxygen
   //_______________________________________________
   QColor OxygenButton::buttonDetailColor(const QPalette &palette)
   {
+    if( client_.timeLineIsRunning() ) return KColorUtils::mix(
+      buttonDetailColor( palette, false ),
+      buttonDetailColor( palette, true ),
+      client_.opacity() );
+    else return buttonDetailColor( palette, client_.isActive() );
+  }
 
-    if (client_.isActive()) return palette.color(QPalette::Active, QPalette::ButtonText);
+  //_______________________________________________
+  QColor OxygenButton::buttonDetailColor(const QPalette &palette, bool active)
+  {
+
+    if( active ) return palette.color(QPalette::Active, QPalette::ButtonText);
     else {
 
       if (colorCacheInvalid_)
@@ -96,6 +106,7 @@ namespace Oxygen
 
       return cachedButtonDetailColor_;
     }
+
   }
 
   //___________________________________________________
@@ -111,7 +122,7 @@ namespace Oxygen
     KCommonDecorationButton::enterEvent(e);
     if (status_ != Oxygen::Pressed) status_ = Oxygen::Hovered;
     timeLine_.setDirection( QTimeLine::Forward );
-    if( timeLine_.state() == QTimeLine::NotRunning ) timeLine_.start();
+    if( !timeLineIsRunning() ) timeLine_.start();
     update();
   }
 
@@ -123,7 +134,7 @@ namespace Oxygen
     if( status_ == Oxygen::Hovered )
     {
       timeLine_.setDirection( QTimeLine::Backward );
-      if( timeLine_.state() == QTimeLine::NotRunning ) timeLine_.start();
+      if( !timeLineIsRunning() ) timeLine_.start();
     }
 
     status_ = Oxygen::Normal;
@@ -196,11 +207,8 @@ namespace Oxygen
       KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color():
       KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
 
-    if( timeLine_.state() == QTimeLine::Running )
-    {
-      qreal ratio( qreal( timeLine_.currentFrame() )/qreal( timeLine_.endFrame() ) );
-      color = KColorUtils::mix( color, glow, ratio );
-    } else if( status_ == Oxygen::Hovered ) color = glow;
+    if( timeLineIsRunning() ) color = KColorUtils::mix( color, glow, opacity() );
+    else if( status_ == Oxygen::Hovered ) color = glow;
 
     // translate buttons up if window maximized
     if(client_.isMaximized())
@@ -213,12 +221,11 @@ namespace Oxygen
     painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Oxygen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
 
     // draw glow on hover
-    if( timeLine_.state() == QTimeLine::Running )
+    if( timeLineIsRunning() )
     {
 
-      qreal ratio( qreal( timeLine_.currentFrame() )/qreal( timeLine_.endFrame() ) );
       painter.save();
-      painter.setOpacity( ratio );
+      painter.setOpacity( opacity() );
       painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
       painter.restore();
 
@@ -229,35 +236,14 @@ namespace Oxygen
     }
 
     // draw button icon
-    if (client_.isActive())
-    {
+    QLinearGradient lg = helper_.decoGradient( QRect( 4, 4, 13, 13 ), color);
+    painter.setRenderHints(QPainter::Antialiasing);
+    qreal width( 1.4 );
 
-      QLinearGradient lg = helper_.decoGradient( QRect( 4, 4, 13, 13 ), color);
-      painter.setRenderHints(QPainter::Antialiasing);
-      qreal width( 1.4 );
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    drawIcon(&painter, palette, type_);
 
-      painter.setBrush(Qt::NoBrush);
-      painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-      drawIcon(&painter, palette, type_);
-
-    } else {
-
-      // outlined mode
-      QPixmap pixmap(size());
-      pixmap.fill(Qt::transparent);
-      QPainter pp(&pixmap);
-      pp.setRenderHints(QPainter::Antialiasing);
-      pp.setBrush(Qt::NoBrush);
-      pp.setPen(QPen(color, 3.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-      drawIcon(&pp, palette, type_);
-
-      pp.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-      pp.setPen(QPen(color, 1.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-      drawIcon(&pp, palette, type_);
-
-      painter.drawPixmap(QPoint(0,0), pixmap);
-
-    }
   }
 
   //___________________________________________________
