@@ -193,6 +193,8 @@ unsigned long Options::updateSettings()
     config=KConfigGroup(_config,"Compositing");
     refreshRate = config.readEntry( "RefreshRate", 0 );
 
+    borderless_maximized_windows = config.readEntry( "BorderlessMaximizedWindows", false );
+
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
     // and not kstyle tooltips and vise-versa, we don't read the

@@ -310,6 +310,8 @@ class Options : public KDecorationOptions
         */
         bool electricBorderTiling() const { return electric_border_tiling; }
 
+        bool borderlessMaximizedWindows() const { return borderless_maximized_windows; }
+
         bool topMenuEnabled() const { return topmenus; }
         bool desktopTopMenu() const { return desktop_topmenu; }
 
@@ -376,6 +378,7 @@ class Options : public KDecorationOptions
         int electric_border_pushback_pixels;
         bool electric_border_maximize;
         bool electric_border_tiling;
+        bool borderless_maximized_windows;
         bool show_geometry_tip;
         bool topmenus;
         bool desktop_topmenu;
