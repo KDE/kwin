@@ -189,6 +189,9 @@ namespace Oxygen
     qreal hoffset = shadowConfiguration.horizontalOffset()*shadowSize/fixedSize;
     qreal voffset = shadowConfiguration.verticalOffset()*shadowSize/fixedSize;
 
+    // some gradients rendering are different at bottom corners for NoBorders windows
+    bool noBorder( key.frameBorder == Key::BorderNone && !key.isShade );
+
     if( active && key.useOxygenShadows )
     {
 
@@ -204,7 +207,7 @@ namespace Oxygen
         for( int i = 0; i<nPoints; i++ )
         { c.setAlpha( values[i] ); rg.setColorAt( x[0]/shadowSize+(x[i]-x[0])/fixedSize, c ); }
 
-        renderGradient( p, shadow.rect(), rg, key.frameBorder == Key::BorderNone && !key.isShade );
+        renderGradient( p, shadow.rect(), rg, noBorder );
 
       }
 
@@ -239,7 +242,7 @@ namespace Oxygen
         { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
 
         p.setBrush( rg );
-        p.drawRect( shadow.rect()  );
+        p.drawRect( shadow.rect() );
 
       }
 
@@ -267,17 +270,10 @@ namespace Oxygen
         for( int i = 0; i<nPoints; i++ )
         { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
 
-        renderGradient( p, shadow.rect(), rg, key.frameBorder == Key::BorderNone && !key.isShade );
+        renderGradient( p, shadow.rect(), rg, noBorder );
 
       }
 
-    }
-
-    // this is the inner circle.
-    // has widget color
-    {
-      p.setBrush( color );
-      p.drawEllipse( QRectF( size-4, size-4, 8, 8 ) );
     }
 
     // draw the corner of the window - actually all 4 corners as one circle
@@ -299,14 +295,11 @@ namespace Oxygen
 
     }
 
-    {
-
-      qreal ratio( qMin( fixedSize/size, 1.0 ) );
-      p.setBrush( Qt::NoBrush );
-      p.setPen(QPen(lg, 0.8/ratio ));
-      p.drawEllipse(QRectF(size-4*ratio, size-4*ratio, 8*ratio, 8*ratio));
-
-    }
+    // draw ellipse.
+    // note: special tricks are needed to cope with some rounding issues when size is not an integer.
+    p.setBrush( lg );
+    int sizeInt( size );
+    p.drawEllipse( QRectF( sizeInt-4, sizeInt-4, 8+2*(size-sizeInt), 8+2*(size-sizeInt) );
 
     p.end();
     return shadow;
@@ -324,8 +317,6 @@ namespace Oxygen
       return;
     }
 
-
-    assert( rect.width() == rect.height() );
     qreal size( rect.width()/2.0 );
     qreal hoffset( rg.center().x() - size );
     qreal voffset( rg.center().y() - size );
@@ -335,14 +326,16 @@ namespace Oxygen
     qreal radius( rg.radius() );
 
     // draw ellipse for the upper rect
-    p.setClipRect( QRectF( hoffset, 0, 2*size-hoffset, size ) );
-    p.setBrush( rg );
-    p.drawRect( rect );
+    {
+      QRectF rect( hoffset, voffset, 2*size-hoffset, size );
+      p.setBrush( rg );
+      p.drawRect( rect );
+    }
 
     // draw square gradients for the lower rect
-    // vertical lines
     {
-      QRectF rect( hoffset, size, 2*size-hoffset, 4+voffset );
+      // vertical lines
+      QRectF rect( hoffset, size+voffset, 2*size-hoffset, 4 );
       QLinearGradient lg( hoffset, 0.0, 2*size+hoffset, 0.0 );
       for( int i = 0; i<stops.size(); i++ )
       {
@@ -352,7 +345,6 @@ namespace Oxygen
         lg.setColorAt( (size+xx)/(2.0*size), c );
       }
 
-      p.setClipRect( rect );
       p.setBrush( lg );
       p.drawRect( rect );
 
@@ -360,7 +352,7 @@ namespace Oxygen
 
     {
       // horizontal line
-      QRectF rect( size-4.2+hoffset, size+voffset, 8.4, size-voffset );
+      QRectF rect( size-4+hoffset, size+voffset, 8, size );
       QLinearGradient lg = QLinearGradient( 0, voffset, 0, 2*size+voffset );
       for( int i = 0; i<stops.size(); i++ )
       {
@@ -369,14 +361,14 @@ namespace Oxygen
         lg.setColorAt( (size+xx)/(2.0*size), c );
       }
 
-      p.setClipRect( rect );
       p.setBrush( lg );
       p.drawRect( rect );
     }
 
     {
+
       // bottom-left corner
-      QRectF rect( hoffset, size+4, size-4, size );
+      QRectF rect( hoffset, size+4+voffset, size-4, size );
       QRadialGradient rg = QRadialGradient( size+hoffset-4, size+4+voffset, radius );
       for( int i = 0; i<stops.size(); i++ )
       {
@@ -392,7 +384,6 @@ namespace Oxygen
         rg.setColorAt( xx, c );
       }
 
-      p.setClipRect( rect );
       p.setBrush( rg );
       p.drawRect( rect );
 
@@ -400,7 +391,7 @@ namespace Oxygen
 
     {
       // bottom-right corner
-      QRectF rect( size+4+hoffset, size+4, size-4, size );
+      QRectF rect( size+4+hoffset, size+4+voffset, size-4, size );
       QRadialGradient rg = QRadialGradient( size+hoffset+4, size+4+voffset, radius );
       for( int i = 0; i<stops.size(); i++ )
       {
@@ -416,13 +407,11 @@ namespace Oxygen
         rg.setColorAt( xx, c );
       }
 
-      p.setClipRect( rect );
       p.setBrush( rg );
       p.drawRect( rect );
 
     }
 
-    p.setClipping( false );
-
   }
+
 }
