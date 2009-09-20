@@ -342,7 +342,7 @@ namespace Oxygen
     // draw square gradients for the lower rect
     // vertical lines
     {
-      QRectF rect( hoffset, size, 2*size-hoffset, 4.2+voffset );
+      QRectF rect( hoffset, size, 2*size-hoffset, 4+voffset );
       QLinearGradient lg( hoffset, 0.0, 2*size+hoffset, 0.0 );
       for( int i = 0; i<stops.size(); i++ )
       {
