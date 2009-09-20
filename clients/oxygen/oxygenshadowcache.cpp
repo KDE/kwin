@@ -299,7 +299,7 @@ namespace Oxygen
     // note: special tricks are needed to cope with some rounding issues when size is not an integer.
     p.setBrush( lg );
     int sizeInt( size );
-    p.drawEllipse( QRectF( sizeInt-4, sizeInt-4, 8+2*(size-sizeInt), 8+2*(size-sizeInt) );
+    p.drawEllipse( QRectF( sizeInt-4, sizeInt-4, 8+2*(size-sizeInt), 8+2*(size-sizeInt) ) );
 
     p.end();
     return shadow;
