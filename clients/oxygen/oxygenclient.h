@@ -124,7 +124,7 @@ namespace Oxygen
 
         //! window border
         // this draws a "blue" border around active window
-        virtual void renderWindowBorder( QPainter*, const QRect&, const QWidget*, const QPalette& ) const;
+        virtual void renderWindowBorder( QPainter*, const QRect&, const QWidget*, const QPalette&, TileSet::Tiles tiles = TileSet::Ring ) const;
 
         //! separator
         virtual void renderSeparator( QPainter*, const QRect&, const QWidget*, const QColor& ) const;

@@ -186,8 +186,11 @@ namespace Oxygen
       case LM_BorderBottom:
       {
         int border( 0 );
-        if (respectWindowState && maximized) {
+        if( respectWindowState && maximized && lm != LM_BorderBottom )
+        {
+
           border = 0;
+
         }  else if( lm == LM_BorderBottom && frameBorder >= OxygenConfiguration::BorderNoSide ) {
 
           // for tiny border, the convention is to have a larger bottom area in order to
@@ -442,7 +445,7 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  void OxygenClient::renderWindowBorder( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QPalette& palette ) const
+  void OxygenClient::renderWindowBorder( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QPalette& palette, TileSet::Tiles tiles ) const
   {
 
     const QWidget* window = (isPreview()) ? OxygenClient::widget() : widget->window();
@@ -472,6 +475,7 @@ namespace Oxygen
     QRect frame;
 
     // top line
+    if( tiles&TileSet::Top )
     {
       int shadowSize = 5;
       int height = HFRAMESIZE;
@@ -482,7 +486,7 @@ namespace Oxygen
     }
 
     // bottom line
-    if( configuration().frameBorder() > OxygenConfiguration::BorderNone )
+    if( configuration().frameBorder() > OxygenConfiguration::BorderNone && (tiles&TileSet::Bottom) )
     {
       int height = qMin( HFRAMESIZE, layoutMetric( LM_BorderBottom ) );
       QRect rect( r.bottomLeft()-position-QPoint(0,height), QSize( r.width(), height ) );
@@ -495,6 +499,7 @@ namespace Oxygen
     {
 
       // left
+      if( tiles&TileSet::Left )
       {
         int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderLeft ) );
         QRect rect( r.topLeft()-position, QSize( width, r.height() ) );
@@ -503,6 +508,7 @@ namespace Oxygen
       }
 
       // right
+      if( tiles&TileSet::Right )
       {
         int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderRight ) );
         QRect rect( r.topRight()-position-QPoint(width,0), QSize( width, r.height() ) );
@@ -513,8 +519,11 @@ namespace Oxygen
     }
 
     // paint
-    painter->setClipRegion( mask, Qt::IntersectClip);
-    renderWindowBackground(painter, frame, widget, palette );
+    if( !mask.isEmpty() )
+    {
+      painter->setClipRegion( mask, Qt::IntersectClip);
+      renderWindowBackground(painter, frame, widget, palette );
+    }
 
     // restore painter
     painter->restore();
@@ -698,23 +707,15 @@ namespace Oxygen
     QColor color = palette.window().color();
 
     // draw shadows
-    if( compositingActive() && !isMaximized() )
+    if( compositingActive() )
     {
 
-      if( configuration().useOxygenShadows() && timeLineIsRunning() )
-      {
+      TileSet *tileSet( 0 );
+      if( configuration().useOxygenShadows() && timeLineIsRunning() ) tileSet = oxygenShadowCache()->tileSet( this, timeLine_.currentFrame() );
+      else tileSet = oxygenShadowCache()->tileSet( this );
 
-        oxygenShadowCache()->tileSet( this, timeLine_.currentFrame() )->render(
-          frame.adjusted( 4, 4, -4, -4),
-          &painter, TileSet::Ring);
-
-      } else {
-
-        oxygenShadowCache()->tileSet( this )->render(
-          frame.adjusted( 4, 4, -4, -4),
-          &painter, TileSet::Ring);
-
-      }
+      if( !isMaximized() ) tileSet->render( frame.adjusted( 4, 4, -4, -4), &painter, TileSet::Ring);
+      else if( isShade() ) tileSet->render( frame.adjusted( 0, 4, 0, -4), &painter, TileSet::Bottom);
 
     }
 
@@ -763,7 +764,11 @@ namespace Oxygen
 
     // window background
     renderWindowBackground( &painter, frame, widget(), palette );
-    if( drawTitleOutline()  && !isMaximized() ) renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
+    if( drawTitleOutline() )
+    {
+      if( !isMaximized() ) renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
+      else if( isShade() ) renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ), TileSet::Bottom );
+    }
 
     // clipping
     if( compositingActive() ) painter.setClipping(false);
@@ -818,16 +823,30 @@ namespace Oxygen
     frame.getRect(&x, &y, &w, &h);
 
     // shadow and resize handles
-    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny && !isMaximized() )
+    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
     {
 
-      helper().drawFloatFrame(
-        &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-        !compositingActive(), isActive(),
-        KDecoration::options()->color(ColorTitleBar)
-        );
+      if( !isMaximized() )
+      {
 
-      if( isResizable() && !isShade() )
+        helper().drawFloatFrame(
+          &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          !compositingActive(), isActive(),
+          KDecoration::options()->color(ColorTitleBar)
+          );
+
+      } else if( isShade() ) {
+
+        // adjust frame so that only the bottom part of the frame is drawn
+        helper().drawFloatFrame(
+          &painter, frame.adjusted( -4, -4, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          !compositingActive(), isActive(),
+          KDecoration::options()->color(ColorTitleBar)
+          );
+
+      }
+
+      if( isResizable() && !isShade() && !isMaximized() )
       {
 
         // Draw the 3-dots resize handles
