@@ -29,7 +29,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <kcommondecoration.h>
-#include <QTimeLine>
+#include <QtCore/QTimeLine>
 
 #include "oxygen.h"
 #include "oxygenclient.h"

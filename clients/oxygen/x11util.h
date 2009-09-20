@@ -26,15 +26,13 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QWidget>
+#include <QtGui/QWidget>
 #include <map>
 
-#ifdef Q_WS_X11
-#include <QX11Info>
+#include <QtGui/QX11Info>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
-#endif
 
 namespace Oxygen
 {
@@ -76,12 +74,8 @@ namespace Oxygen
     /*! returns true on success */
     bool moveResizeWidget( WId, int screen, QPoint, Direction, Qt::MouseButton button = Qt::LeftButton );
 
-    #ifdef Q_WS_X11
-
     //! find atom
     Atom findAtom( const Atoms& atom );
-
-    #endif
 
     private:
 
@@ -109,8 +103,6 @@ namespace Oxygen
 
     SupportedAtomMap supportedAtoms_;
 
-    #ifdef Q_WS_X11
-
     //! atom map
     typedef std::map<Atoms, Atom> AtomMap;
 
@@ -121,8 +113,6 @@ namespace Oxygen
 
     //! atoms
     AtomMap atoms_;
-
-    #endif
 
   };
 

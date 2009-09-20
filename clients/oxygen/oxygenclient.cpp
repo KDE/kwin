@@ -42,11 +42,10 @@
 #include <KColorUtils>
 #include <KDebug>
 
-#include <QLabel>
-#include <QPainter>
-#include <QApplication>
+#include <QtGui/QLabel>
+#include <QtGui/QPainter>
+#include <QtGui/QApplication>
 
-using namespace std;
 namespace Oxygen
 {
 

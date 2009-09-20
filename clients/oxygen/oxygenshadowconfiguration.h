@@ -27,7 +27,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KConfigGroup>
-#include <QPalette>
+#include <QtGui/QPalette>
 
 namespace OxygenConfig
 {

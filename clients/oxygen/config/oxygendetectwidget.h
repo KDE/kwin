@@ -32,10 +32,10 @@
 
 #include <map>
 #include <KDialog>
-#include <QEvent>
-#include <QByteArray>
-#include <QCheckBox>
-#include <QLabel>
+#include <QtCore/QEvent>
+#include <QtCore/QByteArray>
+#include <QtGui/QCheckBox>
+#include <QtGui/QLabel>
 
 #include <kwindowsystem.h>
 

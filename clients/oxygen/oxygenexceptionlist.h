@@ -27,7 +27,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KConfig>
-#include <QList>
+#include <QtCore/QList>
 
 #include "oxygenexception.h"
 

@@ -26,11 +26,10 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <kdeversion.h>
-#include <QWidget>
 #include <KComboBox>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QVector>
+#include <QtGui/QWidget>
+#include <QtGui/QCheckBox>
+#include <QtCore/QVector>
 
 #include "oxygenshadowconfigurationui.h"
 #include "oxygenexceptionlistwidget.h"

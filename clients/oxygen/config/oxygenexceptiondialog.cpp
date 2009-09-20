@@ -28,9 +28,9 @@
 #include "oxygendetectwidget.h"
 
 #include <cassert>
-#include <QGroupBox>
-#include <QLabel>
-#include <QLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
 #include <KLocale>
 #include <KPushButton>
 

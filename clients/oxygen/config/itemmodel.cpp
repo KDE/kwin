@@ -33,33 +33,31 @@
 
 #include "itemmodel.h"
 
-using namespace std;
-
 namespace Oxygen
 {
-  
+
   //_______________________________________________________________
   ItemModel::ItemModel( QObject* parent ):
     QAbstractItemModel( parent ),
     sort_column_(0),
     sort_order_( Qt::AscendingOrder )
   {}
-  
+
   //____________________________________________________________
   void ItemModel::sort( int column, Qt::SortOrder order )
   {
-    
+
     // store column and order
     sort_column_ = column;
     sort_order_ = order;
-    
+
     // emit signals and call private methods
     emit layoutAboutToBeChanged();
     _sort( column, order );
     emit layoutChanged();
-    
+
   }
-  
+
   //____________________________________________________________
   QModelIndexList ItemModel::indexes( int column, const QModelIndex& parent ) const
   {
@@ -72,9 +70,9 @@ namespace Oxygen
       out.push_back( index );
       out += indexes( column, index );
     }
-    
+
     return out;
-    
+
   }
-  
+
 }

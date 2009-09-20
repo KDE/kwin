@@ -31,8 +31,8 @@
 
 #include <cmath>
 
-#include <QPainter>
-#include <QPen>
+#include <QtGui/QPainter>
+#include <QtGui/QPen>
 
 #include <KColorUtils>
 #include <KColorScheme>

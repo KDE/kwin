@@ -27,7 +27,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QObject>
+#include <QtCore/QObject>
 #include <kdecorationfactory.h>
 #include <kdeversion.h>
 

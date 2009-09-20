@@ -26,8 +26,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KPushButton>
-#include <QTreeView>
 #include <KDialog>
+#include <QtGui/QTreeView>
 
 #include "oxygenexceptionmodel.h"
 #include "../oxygenexceptionlist.h"

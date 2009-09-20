@@ -26,8 +26,8 @@
 #include "oxygenshadowconfigurationui.h"
 
 #include <KLocale>
-#include <QLabel>
-#include <QLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
 
 namespace Oxygen
 {

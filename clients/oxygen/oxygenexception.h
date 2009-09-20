@@ -26,7 +26,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QRegExp>
+#include <QtCore/QRegExp>
 #include "oxygenconfiguration.h"
 
 

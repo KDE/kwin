@@ -30,7 +30,7 @@
 #include <cassert>
 #include <KColorUtils>
 #include <KDebug>
-#include <QPainter>
+#include <QtGui/QPainter>
 
 namespace Oxygen
 {

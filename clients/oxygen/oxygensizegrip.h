@@ -26,9 +26,9 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QWidget>
-#include <QPaintEvent>
-#include <QMouseEvent>
+#include <QtGui/QWidget>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QMouseEvent>
 
 namespace Oxygen
 {

@@ -34,8 +34,6 @@
 #include <KConfigGroup>
 #include <KWindowInfo>
 #include <kdeversion.h>
-#include <QApplication>
-#include <QPainter>
 
 extern "C"
 {

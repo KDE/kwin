@@ -31,7 +31,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <KConfig>
-#include <QPalette>
+#include <QtGui/QPalette>
 
 #include "oxygenconfigurationui.h"
 #include "../oxygenexceptionlist.h"

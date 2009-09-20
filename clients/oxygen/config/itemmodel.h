@@ -33,7 +33,7 @@
 */
 
 
-#include <QAbstractItemModel>
+#include <QtCore/QAbstractItemModel>
 
 //! Job model. Stores job information for display in lists
 namespace Oxygen

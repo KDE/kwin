@@ -27,8 +27,8 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QCache>
-#include <QRadialGradient>
+#include <QtCore/QCache>
+#include <QtGui/QRadialGradient>
 
 #include "oxygenclient.h"
 #include "oxygenshadowconfiguration.h"

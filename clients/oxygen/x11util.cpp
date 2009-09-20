@@ -25,8 +25,6 @@
 
 #include "x11util.h"
 
-using namespace std;
-
 namespace Oxygen
 {
 
@@ -46,8 +44,6 @@ namespace Oxygen
   //________________________________________________________________________
   bool X11Util::isSupported( const Atoms& atom )
   {
-
-    #ifdef Q_WS_X11
 
     SupportedAtomMap::const_iterator iter( supportedAtoms().find( atom ) );
     if( iter != supportedAtoms().end() ) return iter->second;
@@ -88,8 +84,6 @@ namespace Oxygen
 
     supportedAtoms_[atom] = false;
 
-    #endif
-
     return false;
 
   }
@@ -102,8 +96,6 @@ namespace Oxygen
     X11Util::Direction direction,
     Qt::MouseButton button )
   {
-
-    #ifdef Q_WS_X11
 
     // check
     if( !isSupported( _NET_WM_MOVERESIZE ) ) return false;
@@ -129,9 +121,6 @@ namespace Oxygen
       SubstructureRedirectMask | SubstructureNotifyMask, &event);
     return true;
 
-    #else
-    return false;
-    #endif
   }
 
   //________________________________________________________________________
@@ -144,8 +133,6 @@ namespace Oxygen
 
     return;
   }
-
-  #ifdef Q_WS_X11
 
   //________________________________________________________________________
   Atom X11Util::findAtom( const Atoms& atom )
@@ -164,5 +151,3 @@ namespace Oxygen
   }
 
 }
-
-#endif

@@ -28,7 +28,7 @@
 #include <KDialog>
 #include <KLineEdit>
 #include <KComboBox>
-#include <QCheckBox>
+#include <QtGui/QCheckBox>
 
 #include <map>
 

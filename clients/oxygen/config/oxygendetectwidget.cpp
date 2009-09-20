@@ -31,17 +31,17 @@
 #include "oxygendetectwidget.moc"
 
 #include <cassert>
-#include <QButtonGroup>
-#include <QLayout>
-#include <QGroupBox>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QMouseEvent>
 #include <KLocale>
-#include <QMouseEvent>
 
+#include <QtGui/QX11Info>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <fixx11h.h>
-#include <QX11Info>
 
 namespace Oxygen
 {

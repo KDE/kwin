@@ -25,8 +25,8 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QCheckBox>
-#include <QGroupBox>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGroupBox>
 #include <KIntSpinBox>
 #include <kcolorbutton.h>
 

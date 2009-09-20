@@ -27,8 +27,8 @@
 #include "oxygenexceptionlistwidget.moc"
 #include "oxygenexceptiondialog.h"
 
-#include <QLayout>
-#include <QSharedPointer>
+#include <QtGui/QLayout>
+#include <QtCore/QSharedPointer>
 #include <KLocale>
 #include <KMessageBox>
 
