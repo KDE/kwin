@@ -28,6 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <QCache>
+#include <QRadialGradient>
 
 #include "oxygenclient.h"
 #include "oxygenshadowconfiguration.h"
@@ -169,6 +170,10 @@ namespace Oxygen
     QPixmap simpleShadowPixmap( const QColor&, const Key&, bool active ) const;
 
     private:
+
+    //! draw gradient into rect
+    /*! a separate method is used in order to properly account for corners */
+    void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool noBorder = false ) const;
 
     //! max index
     /*! it is used to set caches max cost, and calculate animation opacity */

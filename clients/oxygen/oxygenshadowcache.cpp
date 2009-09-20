@@ -28,6 +28,7 @@
 #include "oxygenclient.h"
 
 #include <cassert>
+#include <KColorUtils>
 #include <KDebug>
 #include <QPainter>
 
@@ -199,60 +200,11 @@ namespace Oxygen
 
         // the first point of this gradient does not scaled
         QRadialGradient rg( size, size, shadowSize );
-
         QColor c = color;
         for( int i = 0; i<nPoints; i++ )
         { c.setAlpha( values[i] ); rg.setColorAt( x[0]/shadowSize+(x[i]-x[0])/fixedSize, c ); }
 
-        if( key.frameBorder == Key::BorderNone && !key.isShade )
-        {
-
-          // draw ellipse for the upper rect
-          p.setClipRect( QRectF( 0, 0, 2*size, size ) );
-          p.setBrush( rg );
-          p.drawRect( shadow.rect() );
-          p.setClipping( false );
-
-          // draw square gradients for the lower rect
-          QRectF rect( 0, size, 2*size, 5 );
-          p.setClipRect( rect );
-          QLinearGradient lg( 0.0, 0.0, 2*size, 0.0 );
-          for( int i = 0; i<nPoints; i++ )
-          {
-
-            c.setAlpha( values[i] );
-            qreal xx( x[0]+(x[i]-x[0])*shadowSize/fixedSize );
-            lg.setColorAt( (size-xx)/(2.0*size), c );
-            lg.setColorAt( (size+xx)/(2.0*size), c );
-
-          }
-
-          p.setBrush( lg );
-          p.drawRect( rect );
-
-          rect = QRectF( size-5, size, 10, size );
-          p.setClipRect( rect );
-          lg = QLinearGradient( 0, size, 0, 2*size );
-          for( int i = 0; i<nPoints; i++ )
-          {
-
-            c.setAlpha( values[i] );
-            qreal xx( x[0]+(x[i]-x[0])*shadowSize/fixedSize );
-            lg.setColorAt( xx/size, c );
-
-          }
-
-          p.setBrush( lg );
-          p.drawRect( rect );
-
-          p.setClipping( false );
-
-        } else {
-
-          p.setBrush( rg );
-          p.drawRect( shadow.rect() );
-
-        }
+        renderGradient( p, shadow.rect(), rg, key.frameBorder == Key::BorderNone && !key.isShade );
 
       }
 
@@ -264,11 +216,7 @@ namespace Oxygen
         qreal x[8] = {0, 4.5, 5.5, 6.5, 7.5, 8.5, 11.5, 14.4};
 
         // this gradient scales with shadow size
-        QRadialGradient rg(
-          size+hoffset,
-          size+voffset,
-          shadowSize );
-
+        QRadialGradient rg( size+hoffset, size+voffset, shadowSize );
         QColor c = shadowConfiguration.innerColor();
         for( int i = 0; i<nPoints; i++ )
         { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
@@ -285,11 +233,7 @@ namespace Oxygen
         int nPoints = 9;
         qreal values[9] = { 0.17, 0.12, 0.11, 0.075, 0.06, 0.035, 0.025, 0.01, 0 };
         qreal x[9] = {0, 4.5, 6.6, 8.5, 11.5, 14.5, 17.5, 21.5, 25.5 };
-        QRadialGradient rg = QRadialGradient(
-          size+20.0*hoffset,
-          size+20.0*voffset,
-          shadowSize );
-
+        QRadialGradient rg = QRadialGradient( size+20.0*hoffset, size+20.0*voffset, shadowSize );
         QColor c = shadowConfiguration.outerColor();
         for( int i = 0; i<nPoints; i++ )
         { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
@@ -304,11 +248,7 @@ namespace Oxygen
         int nPoints = 7;
         qreal values[7] = {0.55, 0.25, 0.20, 0.1, 0.06, 0.015, 0 };
         qreal x[7] = {0, 4.5, 5.5, 7.5, 8.5, 11.5, 14.5 };
-        QRadialGradient rg = QRadialGradient(
-          size+10.0*hoffset,
-          size+10.0*voffset,
-          shadowSize );
-
+        QRadialGradient rg = QRadialGradient( size+10.0*hoffset, size+10.0*voffset, shadowSize );
         QColor c = shadowConfiguration.midColor();
         for( int i = 0; i<nPoints; i++ )
         { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
@@ -322,17 +262,12 @@ namespace Oxygen
         int nPoints = 5;
         qreal values[5] = { 1, 0.32, 0.22, 0.03, 0 };
         qreal x[5] = { 0, 4.5, 5.0, 5.5, 6.5 };
-        QRadialGradient rg = QRadialGradient(
-          size+hoffset,
-          size+voffset,
-          shadowSize );
-
+        QRadialGradient rg = QRadialGradient( size+hoffset, size+voffset, shadowSize );
         QColor c = shadowConfiguration.innerColor();
         for( int i = 0; i<nPoints; i++ )
         { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
 
-        p.setBrush( rg );
-        p.drawRect( shadow.rect() );
+        renderGradient( p, shadow.rect(), rg, key.frameBorder == Key::BorderNone && !key.isShade );
 
       }
 
@@ -366,12 +301,10 @@ namespace Oxygen
 
     {
 
+      qreal ratio( qMin( fixedSize/size, 1.0 ) );
       p.setBrush( Qt::NoBrush );
-      if( key.frameBorder == Key::BorderNone && !key.isShade )
-      { p.setClipRect( QRectF( 0, 0, 2*size, size ) ); }
-
-      p.setPen(QPen(lg, 0.8));
-      p.drawEllipse(QRectF(size-4, size-4, 8, 8));
+      p.setPen(QPen(lg, 0.8/ratio ));
+      p.drawEllipse(QRectF(size-4*ratio, size-4*ratio, 8*ratio, 8*ratio));
 
     }
 
@@ -380,4 +313,116 @@ namespace Oxygen
 
   }
 
+  //_______________________________________________________
+  void OxygenShadowCache::renderGradient( QPainter& p, const QRectF& rect, const QRadialGradient& rg, bool noBorders ) const
+  {
+
+    if( !noBorders )
+    {
+      p.setBrush( rg );
+      p.drawRect( rect );
+      return;
+    }
+
+
+    assert( rect.width() == rect.height() );
+    qreal size( rect.width()/2.0 );
+    qreal hoffset( rg.center().x() - size );
+    qreal voffset( rg.center().y() - size );
+
+    // load gradient stops
+    QGradientStops stops( rg.stops() );
+    qreal radius( rg.radius() );
+
+    // draw ellipse for the upper rect
+    p.setClipRect( QRectF( hoffset, 0, 2*size-hoffset, size ) );
+    p.setBrush( rg );
+    p.drawRect( rect );
+
+    // draw square gradients for the lower rect
+    // vertical lines
+    {
+      QRectF rect( hoffset, size, 2*size-hoffset, 4.2+voffset );
+      QLinearGradient lg( hoffset, 0.0, 2*size+hoffset, 0.0 );
+      for( int i = 0; i<stops.size(); i++ )
+      {
+        QColor c( stops[i].second );
+        qreal xx( stops[i].first*radius );
+        lg.setColorAt( (size-xx)/(2.0*size), c );
+        lg.setColorAt( (size+xx)/(2.0*size), c );
+      }
+
+      p.setClipRect( rect );
+      p.setBrush( lg );
+      p.drawRect( rect );
+
+    }
+
+    {
+      // horizontal line
+      QRectF rect( size-4.2+hoffset, size+voffset, 8.4, size-voffset );
+      QLinearGradient lg = QLinearGradient( 0, voffset, 0, 2*size+voffset );
+      for( int i = 0; i<stops.size(); i++ )
+      {
+        QColor c( stops[i].second );
+        qreal xx( stops[i].first*radius );
+        lg.setColorAt( (size+xx)/(2.0*size), c );
+      }
+
+      p.setClipRect( rect );
+      p.setBrush( lg );
+      p.drawRect( rect );
+    }
+
+    {
+      // bottom-left corner
+      QRectF rect( hoffset, size+4, size-4, size );
+      QRadialGradient rg = QRadialGradient( size+hoffset-4, size+4+voffset, radius );
+      for( int i = 0; i<stops.size(); i++ )
+      {
+        QColor c( stops[i].second );
+        qreal xx( stops[i].first -4.0/rg.radius() );
+        if( xx<0 && i < stops.size()-1 )
+        {
+          qreal x1( stops[i+1].first -4.0/rg.radius() );
+          c = KColorUtils::mix( c, stops[i+1].second, -xx/(x1-xx) );
+          xx = 0;
+        }
+
+        rg.setColorAt( xx, c );
+      }
+
+      p.setClipRect( rect );
+      p.setBrush( rg );
+      p.drawRect( rect );
+
+    }
+
+    {
+      // bottom-right corner
+      QRectF rect( size+4+hoffset, size+4, size-4, size );
+      QRadialGradient rg = QRadialGradient( size+hoffset+4, size+4+voffset, radius );
+      for( int i = 0; i<stops.size(); i++ )
+      {
+        QColor c( stops[i].second );
+        qreal xx( stops[i].first -4.0/rg.radius() );
+        if( xx<0 && i < stops.size()-1 )
+        {
+          qreal x1( stops[i+1].first -4.0/rg.radius() );
+          c = KColorUtils::mix( c, stops[i+1].second, -xx/(x1-xx) );
+          xx = 0;
+        }
+
+        rg.setColorAt( xx, c );
+      }
+
+      p.setClipRect( rect );
+      p.setBrush( rg );
+      p.drawRect( rect );
+
+    }
+
+    p.setClipping( false );
+
+  }
 }
