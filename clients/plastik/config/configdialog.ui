@@ -46,7 +46,6 @@
      </layout>
      <zorder>AlignLeft</zorder>
      <zorder>AlignHCenter</zorder>
-     <zorder>titleAlign_</zorder>
      <zorder>AlignRight</zorder>
     </widget>
    </item>
