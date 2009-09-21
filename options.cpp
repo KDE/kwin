@@ -171,6 +171,8 @@ unsigned long Options::updateSettings()
     hideUtilityWindowsForInactive = config.readEntry( "HideUtilityWindowsForInactive", true);
     showDesktopIsMinimizeAll = config.readEntry( "ShowDesktopIsMinimizeAll", false );
 
+    borderless_maximized_windows = config.readEntry( "BorderlessMaximizedWindows", false );
+
     // Mouse bindings
     config = KConfigGroup( _config, "MouseBindings" );
     CmdActiveTitlebar1 = mouseCommand(config.readEntry("CommandActiveTitlebar1","Raise"), true );
@@ -192,8 +194,6 @@ unsigned long Options::updateSettings()
 
     config=KConfigGroup(_config,"Compositing");
     refreshRate = config.readEntry( "RefreshRate", 0 );
-
-    borderless_maximized_windows = config.readEntry( "BorderlessMaximizedWindows", false );
 
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
