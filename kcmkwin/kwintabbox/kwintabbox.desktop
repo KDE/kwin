@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 Icon=preferences-system-windows-focus
 Exec=kcmshell4 kwintabbox
-
+X-DocPath=kcontrol/kwintabbox/index.html
 X-KDE-Library=kcm_kwintabbox
 X-KDE-ParentApp=kcontrol
 
