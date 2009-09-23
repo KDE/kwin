@@ -71,8 +71,7 @@ namespace Oxygen
 
     long *states = (long *) data;
     bool found = false;
-    static bool first( true );
-    for( unsigned long i = 0; i<count && !( found =  (searched == states[i]) ); i++ )
+    for( unsigned long i = 0; (i<count) &&!( found =  (searched == (Atom) states[i]) ); i++ )
     {}
 
     supportedAtoms_[atom] = found;
