@@ -52,39 +52,31 @@ namespace Oxygen
     Atom net_supported( findAtom( _NET_SUPPORTED ) );
     Atom searched( findAtom( atom ) );
 
-    Atom actual;
+    Atom type;
     int format;
     unsigned char *data;
-    unsigned long offset = 0;
+    unsigned long count;
+    unsigned long unused;
 
-    while( 1 )
-    {
-      unsigned long n, left;
-      XGetWindowProperty( display, QX11Info::appRootWindow(),
-        net_supported, offset, 1L,
-        false, XA_ATOM, &actual,
-        &format, &n, &left,
-        (unsigned char **) &data);
+    // get window property
+    if( XGetWindowProperty(
+      display, QX11Info::appRootWindow(),
+      net_supported, 0l, 2048l,
+      false, XA_ATOM, &type,
+      &format, &count, &unused, (unsigned char **) &data) != Success )
+    { return false; }
 
-      if( data == None ) break;
+    if( type != XA_ATOM || format != 32 || count <= 0 || data == None )
+    { return false; }
 
-      // try cast data to atom
-      Atom found( *(Atom*)data );
+    long *states = (long *) data;
+    bool found = false;
+    static bool first( true );
+    for( unsigned long i = 0; i<count && !( found =  (searched == states[i]) ); i++ )
+    {}
 
-      if( found == searched )
-      {
-        supportedAtoms_[atom] = true;
-        return true;
-      }
-
-      if( !left ) break;
-      else offset ++;
-
-    }
-
-    supportedAtoms_[atom] = false;
-
-    return false;
+    supportedAtoms_[atom] = found;
+    return found;
 
   }
 
