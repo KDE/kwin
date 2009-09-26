@@ -26,6 +26,7 @@
 
 #include "oxygenshadowcache.h"
 #include "oxygenclient.h"
+#include "oxygen.h"
 
 #include <cassert>
 #include <KColorUtils>
@@ -34,9 +35,6 @@
 
 namespace Oxygen
 {
-
-  // referenced from definition in Oxygendclient.cpp
-  OxygenHelper *oxygenHelper();
 
   //_______________________________________________________
   OxygenShadowCache::OxygenShadowCache( int maxIndex ):

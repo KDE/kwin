@@ -49,30 +49,12 @@
 namespace Oxygen
 {
 
-  const int maxAnimationIndex( 256 );
-  K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("oxygenDeco"))
-  K_GLOBAL_STATIC_WITH_ARGS(OxygenShadowCache, globalShadowCache, (maxAnimationIndex))
-
-  //___________________________________________
-  OxygenHelper *oxygenHelper()
-  {
-    OxygenHelper *helper = globalHelper;
-    return helper;
-  }
-
-  //___________________________________________
-  OxygenShadowCache *oxygenShadowCache()
-  {
-    OxygenShadowCache* cache = globalShadowCache;
-    return cache;
-  }
-
   //___________________________________________
   static void oxkwincleanupBefore()
   {
 
-    globalHelper->invalidateCaches();
-    globalShadowCache->invalidateCaches();
+    oxygenHelper()->invalidateCaches();
+    oxygenShadowCache()->invalidateCaches();
 
   }
 
@@ -88,7 +70,7 @@ namespace Oxygen
     colorCacheInvalid_(true),
     sizeGrip_( 0 ),
     timeLine_( 200, this ),
-    helper_(*globalHelper),
+    helper_(*oxygenHelper()),
     initialized_( false )
   { qAddPostRoutine(oxkwincleanupBefore); }
 

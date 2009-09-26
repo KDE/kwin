@@ -34,13 +34,19 @@
 #include "oxygenconfiguration.h"
 #include "oxygenexceptionlist.h"
 
-// TODO:
-// should review implementation not to use static objects
+class OxygenHelper;
 
 namespace Oxygen
 {
 
   class OxygenClient;
+  class OxygenShadowCache;
+
+  //! helper singleton
+  OxygenHelper* oxygenHelper();
+
+  //! shadow cache singleton
+  OxygenShadowCache* oxygenShadowCache();
 
   //! buttons
   enum ButtonType
@@ -56,6 +62,9 @@ namespace Oxygen
     ButtonShade,
     ButtonTypeCount
   };
+
+  //! maximum index/frame used for animations
+  static const int maxAnimationIndex = 256;
 
   /*
   If non zero, this possibly allow one to have an additional space

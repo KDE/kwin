@@ -28,10 +28,12 @@
 #include "oxygen.moc"
 #include "oxygenclient.h"
 #include "oxygenshadowcache.h"
+#include "lib/helper.h"
 
 #include <cassert>
-#include <KDebug>
 #include <KConfigGroup>
+#include <KDebug>
+#include <KGlobal>
 #include <KWindowInfo>
 #include <kdeversion.h>
 
@@ -44,9 +46,22 @@ extern "C"
 namespace Oxygen
 {
 
-  // referenced from definition in Oxygendclient.cpp
-  OxygenHelper *oxygenHelper();
-  OxygenShadowCache *oxygenShadowCache();
+  K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("oxygenDeco"))
+  K_GLOBAL_STATIC_WITH_ARGS(OxygenShadowCache, globalShadowCache, (maxAnimationIndex))
+
+  //___________________________________________
+  OxygenHelper *oxygenHelper()
+  {
+    OxygenHelper *helper = globalHelper;
+    return helper;
+  }
+
+  //___________________________________________
+  OxygenShadowCache *oxygenShadowCache()
+  {
+    OxygenShadowCache* cache = globalShadowCache;
+    return cache;
+  }
 
   // initialize static members
   bool OxygenFactory::initialized_ = false;
