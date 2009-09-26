@@ -1202,9 +1202,9 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow* w, qreal time)
     return true;
 }
 
-void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobblyInfos& wwi)
+void WobblyWindowsEffect::heightRingLinearMean(Pair** data_pointer, WindowWobblyInfos& wwi)
 {
-    Pair* datas = *datas_pointer;
+    Pair* data = *data_pointer;
     Pair neibourgs[8];
 
     // for corners
@@ -1212,10 +1212,10 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
     // top-left
     {
         Pair& res = wwi.buffer[0];
-        Pair vit = datas[0];
-        neibourgs[0] = datas[1];
-        neibourgs[1] = datas[wwi.width];
-        neibourgs[2] = datas[wwi.width+1];
+        Pair vit = data[0];
+        neibourgs[0] = data[1];
+        neibourgs[1] = data[wwi.width];
+        neibourgs[2] = data[wwi.width+1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
@@ -1225,10 +1225,10 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
     // top-right
     {
         Pair& res = wwi.buffer[wwi.width-1];
-        Pair vit = datas[wwi.width-1];
-        neibourgs[0] = datas[wwi.width-2];
-        neibourgs[1] = datas[2*wwi.width-1];
-        neibourgs[2] = datas[2*wwi.width-2];
+        Pair vit = data[wwi.width-1];
+        neibourgs[0] = data[wwi.width-2];
+        neibourgs[1] = data[2*wwi.width-1];
+        neibourgs[2] = data[2*wwi.width-2];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
@@ -1238,10 +1238,10 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
     // bottom-left
    {
         Pair& res = wwi.buffer[wwi.width*(wwi.height-1)];
-        Pair vit = datas[wwi.width*(wwi.height-1)];
-        neibourgs[0] = datas[wwi.width*(wwi.height-1)+1];
-        neibourgs[1] = datas[wwi.width*(wwi.height-2)];
-        neibourgs[2] = datas[wwi.width*(wwi.height-2)+1];
+        Pair vit = data[wwi.width*(wwi.height-1)];
+        neibourgs[0] = data[wwi.width*(wwi.height-1)+1];
+        neibourgs[1] = data[wwi.width*(wwi.height-2)];
+        neibourgs[2] = data[wwi.width*(wwi.height-2)+1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
@@ -1251,10 +1251,10 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
     // bottom-right
     {
         Pair& res = wwi.buffer[wwi.count-1];
-        Pair vit = datas[wwi.count-1];
-        neibourgs[0] = datas[wwi.count-2];
-        neibourgs[1] = datas[wwi.width*(wwi.height-1)-1];
-        neibourgs[2] = datas[wwi.width*(wwi.height-1)-2];
+        Pair vit = data[wwi.count-1];
+        neibourgs[0] = data[wwi.count-2];
+        neibourgs[1] = data[wwi.width*(wwi.height-1)-1];
+        neibourgs[2] = data[wwi.width*(wwi.height-1)-2];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + 3.0*vit.x) / 6.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + 3.0*vit.y) / 6.0;
@@ -1267,12 +1267,12 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
     for (unsigned int i=1; i<wwi.width-1; ++i)
     {
         Pair& res = wwi.buffer[i];
-        Pair vit = datas[i];
-        neibourgs[0] = datas[i-1];
-        neibourgs[1] = datas[i+1];
-        neibourgs[2] = datas[i+wwi.width];
-        neibourgs[3] = datas[i+wwi.width-1];
-        neibourgs[4] = datas[i+wwi.width+1];
+        Pair vit = data[i];
+        neibourgs[0] = data[i-1];
+        neibourgs[1] = data[i+1];
+        neibourgs[2] = data[i+wwi.width];
+        neibourgs[3] = data[i+wwi.width-1];
+        neibourgs[4] = data[i+wwi.width+1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0*vit.x) / 10.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0*vit.y) / 10.0;
@@ -1282,12 +1282,12 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
     for (unsigned int i=wwi.width*(wwi.height-1)+1; i<wwi.count-1; ++i)
     {
         Pair& res = wwi.buffer[i];
-        Pair vit = datas[i];
-        neibourgs[0] = datas[i-1];
-        neibourgs[1] = datas[i+1];
-        neibourgs[2] = datas[i-wwi.width];
-        neibourgs[3] = datas[i-wwi.width-1];
-        neibourgs[4] = datas[i-wwi.width+1];
+        Pair vit = data[i];
+        neibourgs[0] = data[i-1];
+        neibourgs[1] = data[i+1];
+        neibourgs[2] = data[i-wwi.width];
+        neibourgs[3] = data[i-wwi.width-1];
+        neibourgs[4] = data[i-wwi.width+1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0*vit.x) / 10.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0*vit.y) / 10.0;
@@ -1297,12 +1297,12 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
     for (unsigned int i=wwi.width; i<wwi.width*(wwi.height-1); i+=wwi.width)
     {
         Pair& res = wwi.buffer[i];
-        Pair vit = datas[i];
-        neibourgs[0] = datas[i+1];
-        neibourgs[1] = datas[i-wwi.width];
-        neibourgs[2] = datas[i+wwi.width];
-        neibourgs[3] = datas[i-wwi.width+1];
-        neibourgs[4] = datas[i+wwi.width+1];
+        Pair vit = data[i];
+        neibourgs[0] = data[i+1];
+        neibourgs[1] = data[i-wwi.width];
+        neibourgs[2] = data[i+wwi.width];
+        neibourgs[3] = data[i-wwi.width+1];
+        neibourgs[4] = data[i+wwi.width+1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0*vit.x) / 10.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0*vit.y) / 10.0;
@@ -1312,12 +1312,12 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
     for (unsigned int i=2*wwi.width-1; i<wwi.count-1; i+=wwi.width)
     {
         Pair& res = wwi.buffer[i];
-        Pair vit = datas[i];
-        neibourgs[0] = datas[i-1];
-        neibourgs[1] = datas[i-wwi.width];
-        neibourgs[2] = datas[i+wwi.width];
-        neibourgs[3] = datas[i-wwi.width-1];
-        neibourgs[4] = datas[i+wwi.width-1];
+        Pair vit = data[i];
+        neibourgs[0] = data[i-1];
+        neibourgs[1] = data[i-wwi.width];
+        neibourgs[2] = data[i+wwi.width];
+        neibourgs[3] = data[i-wwi.width-1];
+        neibourgs[4] = data[i+wwi.width-1];
 
         res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + 5.0*vit.x) / 10.0;
         res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + 5.0*vit.y) / 10.0;
@@ -1331,23 +1331,23 @@ void WobblyWindowsEffect::heightRingLinearMean(Pair** datas_pointer, WindowWobbl
             unsigned int index = i+j*wwi.width;
 
             Pair& res = wwi.buffer[index];
-            Pair& vit = datas[index];
-            neibourgs[0] = datas[index-1];
-            neibourgs[1] = datas[index+1];
-            neibourgs[2] = datas[index-wwi.width];
-            neibourgs[3] = datas[index+wwi.width];
-            neibourgs[4] = datas[index-wwi.width-1];
-            neibourgs[5] = datas[index-wwi.width+1];
-            neibourgs[6] = datas[index+wwi.width-1];
-            neibourgs[7] = datas[index+wwi.width+1];
+            Pair& vit = data[index];
+            neibourgs[0] = data[index-1];
+            neibourgs[1] = data[index+1];
+            neibourgs[2] = data[index-wwi.width];
+            neibourgs[3] = data[index+wwi.width];
+            neibourgs[4] = data[index-wwi.width-1];
+            neibourgs[5] = data[index-wwi.width+1];
+            neibourgs[6] = data[index+wwi.width-1];
+            neibourgs[7] = data[index+wwi.width+1];
 
             res.x = (neibourgs[0].x + neibourgs[1].x + neibourgs[2].x + neibourgs[3].x + neibourgs[4].x + neibourgs[5].x + neibourgs[6].x + neibourgs[7].x + 8.0*vit.x) / 16.0;
             res.y = (neibourgs[0].y + neibourgs[1].y + neibourgs[2].y + neibourgs[3].y + neibourgs[4].y + neibourgs[5].y + neibourgs[6].y + neibourgs[7].y + 8.0*vit.y) / 16.0;
         }
     }
 
-    Pair* tmp = datas;
-    *datas_pointer = wwi.buffer;
+    Pair* tmp = data;
+    *data_pointer = wwi.buffer;
     wwi.buffer = tmp;
 }
 

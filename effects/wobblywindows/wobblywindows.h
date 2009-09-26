@@ -132,7 +132,7 @@ class WobblyWindowsEffect : public Effect
 
         WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const;
 
-        static void heightRingLinearMean(Pair** datas, WindowWobblyInfos& wwi);
+        static void heightRingLinearMean(Pair** data_pointer, WindowWobblyInfos& wwi);
 
         void setParameterSet(const ParameterSet& pset);
 };
