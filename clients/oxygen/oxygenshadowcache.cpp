@@ -103,11 +103,24 @@ namespace Oxygen
     QPainter p( &shadow );
     p.setRenderHint( QPainter::Antialiasing );
 
-    p.setOpacity( 1.0 - opacity );
-    p.drawPixmap( QPointF(0,0), shadowPixmap( client, false ) );
+    QPixmap inactiveShadow( shadowPixmap( client, false ) );
+    {
+      QPainter pp( &inactiveShadow );
+      pp.setRenderHint( QPainter::Antialiasing );
+      pp.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+      pp.fillRect( inactiveShadow.rect(), QColor( 0, 0, 0, 255*(1.0-opacity ) ) );
+    }
 
-    p.setOpacity( opacity );
-    p.drawPixmap( QPointF(0,0), shadowPixmap( client, true ) );
+    QPixmap activeShadow( shadowPixmap( client, true ) );
+    {
+      QPainter pp( &activeShadow );
+      pp.setRenderHint( QPainter::Antialiasing );
+      pp.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+      pp.fillRect( activeShadow.rect(), QColor( 0, 0, 0, 255*( opacity ) ) );
+    }
+
+    p.drawPixmap( QPointF(0,0), inactiveShadow );
+    p.drawPixmap( QPointF(0,0), activeShadow );
     p.end();
 
     TileSet* tileSet = new TileSet(shadow, size, size, 1, 1);

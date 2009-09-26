@@ -442,8 +442,11 @@ namespace Oxygen
     }
 
     // save painter
-    painter->save();
-    if( clipRect.isValid() ) painter->setClipRegion(clipRect,Qt::IntersectClip);
+    if( clipRect.isValid() )
+    {
+      painter->save();
+      painter->setClipRegion(clipRect,Qt::IntersectClip);
+    }
 
     QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
     qreal shadowSize( oxygenShadowCache()->shadowSize() );
@@ -508,7 +511,8 @@ namespace Oxygen
     }
 
     // restore painter
-    painter->restore();
+    if( clipRect.isValid() )
+    { painter->restore(); }
 
   }
 
@@ -531,9 +535,11 @@ namespace Oxygen
     }
 
     // setup painter
-    painter->save();
-    if( timeLineIsRunning() ) painter->setOpacity( opacity() );
-    if (clipRect.isValid()) painter->setClipRegion(clipRect,Qt::IntersectClip);
+    if (clipRect.isValid())
+    {
+      painter->save();
+      painter->setClipRegion(clipRect,Qt::IntersectClip);
+    }
 
     QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
     qreal shadowSize( oxygenShadowCache()->shadowSize() );
@@ -549,9 +555,12 @@ namespace Oxygen
     // dimensions
     int x,y,w,h;
     r.getRect(&x, &y, &w, &h);
-    helper().drawSeparator( painter, QRect(x, titleTop+titleHeight-1.5, w, 2).translated( -position ), color, Qt::Horizontal);
 
-    painter->restore();
+    QColor local( color );
+    if( timeLineIsRunning() ) local = helper().alphaColor( color, opacity() );
+    helper().drawSeparator( painter, QRect(x, titleTop+titleHeight-1.5, w, 2).translated( -position ), local, Qt::Horizontal);
+
+    if (clipRect.isValid()) { painter->restore(); }
 
   }
 

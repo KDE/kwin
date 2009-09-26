@@ -224,10 +224,7 @@ namespace Oxygen
     if( timeLineIsRunning() )
     {
 
-      painter.save();
-      painter.setOpacity( opacity() );
-      painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
-      painter.restore();
+      painter.drawPixmap(0, 0, helper_.windecoButtonGlow( helper_.alphaColor( glow, opacity() ), (21.0*client_.configuration().buttonSize())/22));
 
     } else if( status_ == Oxygen::Hovered ) {
 
