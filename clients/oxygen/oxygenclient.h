@@ -119,6 +119,13 @@ namespace Oxygen
         //! palette background
         QPalette backgroundPalette( const QWidget*, QPalette ) const;
 
+        //! background
+        QColor backgroundColor( const QWidget* widget, QPalette palette ) const
+        { return backgroundColor( widget, palette, isActive() ); }
+
+        //! background
+        QColor backgroundColor( const QWidget*, QPalette, bool ) const;
+
         //! window background
         virtual void renderWindowBackground( QPainter*, const QRect&, const QWidget*, const QPalette& ) const;
 

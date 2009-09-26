@@ -37,7 +37,6 @@
 #include <cmath>
 
 #include <kdeversion.h>
-#include <KGlobal>
 #include <KLocale>
 #include <KColorUtils>
 #include <KDebug>
@@ -444,7 +443,6 @@ namespace Oxygen
 
     // save painter
     painter->save();
-    if( timeLineIsRunning() ) painter->setOpacity( opacity() );
     if( clipRect.isValid() ) painter->setClipRegion(clipRect,Qt::IntersectClip);
 
     QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
@@ -460,6 +458,8 @@ namespace Oxygen
     if( tiles&TileSet::Top )
     {
       int shadowSize = 5;
+      if( timeLineIsRunning() ) shadowSize*=opacity();
+
       int height = HFRAMESIZE;
       QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
       helper().slab( palette.color( widget->backgroundRole() ), 0, shadowSize )->render( rect.adjusted(-shadowSize-1, 0, shadowSize+1, 2 ), painter, TileSet::Bottom );
@@ -559,27 +559,24 @@ namespace Oxygen
   void OxygenClient::renderTitleOutline(  QPainter* painter, const QRect& rect, const QPalette& palette ) const
   {
 
-    if( timeLineIsRunning() )
-    {
-      painter->save();
-      painter->setOpacity( opacity() );
-    }
-
     // shadow
     {
       int shadowSize = 7;
+      if( timeLineIsRunning() ) shadowSize *= opacity();
       int voffset = -shadowSize;
       if( !isMaximized() ) voffset += HFRAMESIZE;
       helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( rect.adjusted(0, voffset, 0, 0 ), painter, TileSet::Bottom|TileSet::Left|TileSet::Right );
+
     }
 
     // center
     {
-      int voffset = isMaximized() ? 0:HFRAMESIZE;
-      renderWindowBackground(painter, rect.adjusted( 4, voffset, -4, -4 ), widget(), palette );
-    }
+      int offset = 4;
+      if( timeLineIsRunning() ) offset *= opacity();
 
-    if( timeLineIsRunning() ) painter->restore();
+      int voffset = isMaximized() ? 0:HFRAMESIZE;
+      renderWindowBackground(painter, rect.adjusted( offset, voffset, -offset, -offset ), widget(), palette );
+    }
 
   }
 
@@ -624,10 +621,35 @@ namespace Oxygen
   QPalette OxygenClient::backgroundPalette( const QWidget* widget, QPalette palette ) const
   {
 
-    if( configuration().drawTitleOutline() && isActive() )
-    { palette.setColor( widget->window()->backgroundRole(), options()->color( KDecorationDefines::ColorTitleBar, true ) ); }
+    if( configuration().drawTitleOutline() )
+    {
+      if( timeLineIsRunning() )
+      {
+
+        QColor inactiveColor( backgroundColor( widget, palette, false ) );
+        QColor activeColor( backgroundColor( widget, palette, true ) );
+        QColor mixed( KColorUtils::mix( inactiveColor, activeColor, opacity() ) );
+        palette.setColor( widget->window()->backgroundRole(), mixed );
+
+      } else if( isActive() ) {
+
+        palette.setColor( widget->window()->backgroundRole(), options()->color( KDecorationDefines::ColorTitleBar, true ) );
+
+      }
+
+    }
 
     return palette;
+
+  }
+
+  //_________________________________________________________
+  QColor OxygenClient::backgroundColor( const QWidget* widget, QPalette palette, bool active ) const
+  {
+
+    return ( configuration().drawTitleOutline() && active ) ?
+      options()->color( KDecorationDefines::ColorTitleBar, true ):
+      palette.color( widget->window()->backgroundRole() );
 
   }
 
