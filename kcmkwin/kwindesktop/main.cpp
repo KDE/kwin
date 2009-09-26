@@ -175,9 +175,8 @@ void KWinDesktopConfig::init()
     connect( m_ui->activityCheckBox, SIGNAL(stateChanged(int)), SLOT(changed()));
     connect( m_ui->desktopNames, SIGNAL(changed()), SLOT(changed()));
     connect( m_ui->popupInfoCheckBox, SIGNAL(toggled(bool)), SLOT(changed()));
-    connect( m_ui->popupInfoCheckBox, SIGNAL(toggled(bool)), m_ui->popupHideSpinBox, SLOT(setEnabled(bool)));
-    connect( m_ui->popupInfoCheckBox, SIGNAL(toggled(bool)), m_ui->hideLabel, SLOT(setEnabled(bool)));
     connect( m_ui->popupHideSpinBox, SIGNAL(valueChanged(int)), SLOT(changed()));
+    connect( m_ui->desktopLayoutIndicatorCheckBox, SIGNAL(stateChanged(int)), SLOT(changed()));
     connect( m_editor, SIGNAL(keyChange()), SLOT(changed()));
     connect( m_ui->allShortcutsCheckBox, SIGNAL(stateChanged(int)), SLOT(slotShowAllShortcuts()));
     connect( m_ui->effectComboBox, SIGNAL(currentIndexChanged(int)), SLOT(changed()));
@@ -240,6 +239,7 @@ void KWinDesktopConfig::defaults()
     // popup info
     m_ui->popupInfoCheckBox->setChecked( false );
     m_ui->popupHideSpinBox->setValue( 1000 );
+    m_ui->desktopLayoutIndicatorCheckBox->setChecked( true );
 
     m_ui->effectComboBox->setCurrentIndex( 1 );
 
@@ -270,8 +270,7 @@ void KWinDesktopConfig::load()
     KConfigGroup popupInfo( m_config, "PopupInfo" );
     m_ui->popupInfoCheckBox->setChecked( popupInfo.readEntry( "ShowPopup", false ));
     m_ui->popupHideSpinBox->setValue( popupInfo.readEntry( "PopupHideDelay", 1000 ));
-    m_ui->popupHideSpinBox->setEnabled( m_ui->popupInfoCheckBox->isChecked() );
-    m_ui->hideLabel->setEnabled( m_ui->popupInfoCheckBox->isChecked() );
+    m_ui->desktopLayoutIndicatorCheckBox->setChecked( !popupInfo.readEntry( "TextOnly", false) );
 
     // Effect for desktop switching
     // Set current option to "none" if no plugin is activated.
@@ -314,6 +313,7 @@ void KWinDesktopConfig::save()
     KConfigGroup popupInfo( m_config, "PopupInfo" );
     popupInfo.writeEntry( "ShowPopup", m_ui->popupInfoCheckBox->isChecked() );
     popupInfo.writeEntry( "PopupHideDelay", m_ui->popupHideSpinBox->value() );
+    popupInfo.writeEntry( "TextOnly", !m_ui->desktopLayoutIndicatorCheckBox->isChecked() );
 
     // Effect desktop switching
     KConfigGroup effectconfig( m_config, "Plugins" );

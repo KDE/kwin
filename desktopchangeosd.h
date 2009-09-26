@@ -80,6 +80,7 @@ class DesktopChangeOSD : public QGraphicsView
         QTimer m_delayedHideTimer;
         bool m_show;
         int m_delayTime;
+        bool m_textOnly;
     };
 
 class DesktopChangeItem : public QObject, public QGraphicsItem

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>560</width>
+    <width>622</width>
     <height>258</height>
    </rect>
   </property>
@@ -260,7 +260,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -272,6 +272,16 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QCheckBox" name="desktopLayoutIndicatorCheckBox">
+            <property name="toolTip">
+             <string>Enabling this option will show a small preview of the desktop layout indicating the selected desktop.</string>
+            </property>
+            <property name="text">
+             <string>Show desktop layout indicators</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

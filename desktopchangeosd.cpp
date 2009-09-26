@@ -43,6 +43,7 @@ DesktopChangeOSD::DesktopChangeOSD( Workspace* ws )
     , m_active( false )
     , m_show( false )
     , m_delayTime( 0 )
+    , m_textOnly( false )
     {
     setWindowFlags( Qt::X11BypassWindowManagerHint );
     setFrameStyle( QFrame::NoFrame );
@@ -58,13 +59,13 @@ DesktopChangeOSD::DesktopChangeOSD( Workspace* ws )
     m_item_frame.setCacheAllRenderedFrames( true );
     m_item_frame.setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
-    reconfigure();
-
     m_delayedHideTimer.setSingleShot( true );
     connect( &m_delayedHideTimer, SIGNAL(timeout()), this, SLOT(hide()) );
 
     m_scene = new QGraphicsScene( 0 );
     setScene( m_scene );
+
+    reconfigure();
 
     m_scene->addItem( new DesktopChangeText( m_wspace ) );
     }
@@ -80,6 +81,8 @@ void DesktopChangeOSD::reconfigure()
     const KConfigGroup cg = c->group( "PopupInfo" );
     m_show = cg.readEntry( "ShowPopup", false );
     m_delayTime = cg.readEntry( "PopupHideDelay", 1000 );
+    m_textOnly = cg.readEntry( "TextOnly", false );
+    numberDesktopsChanged();
     }
 
 void DesktopChangeOSD::desktopChanged( int old )
@@ -184,6 +187,9 @@ void DesktopChangeOSD::desktopChanged( int old )
         }
     if( m_active )
         {
+        // for text only we need to resize
+        if( m_textOnly )
+            resize();
         // already active - just update and reset timer
         update();
         }
@@ -227,10 +233,13 @@ void DesktopChangeOSD::numberDesktopsChanged()
             }
         }
 
-    for( int i=1; i<=m_wspace->numberOfDesktops(); i++ )
+    if( !m_textOnly )
         {
-        DesktopChangeItem* item = new DesktopChangeItem( m_wspace, this, i );
-        m_scene->addItem( item );
+        for( int i=1; i<=m_wspace->numberOfDesktops(); i++ )
+            {
+            DesktopChangeItem* item = new DesktopChangeItem( m_wspace, this, i );
+            m_scene->addItem( item );
+            }
         }
     }
 
@@ -275,6 +284,14 @@ void DesktopChangeOSD::resize()
         itemOffset *= (float)desktopGridSize.width()*0.5f;
         }
 
+    // set size to the desktop name if the "pager" is not shown
+    if( m_textOnly )
+        {
+        height = fontMetrics().height() + 4 + top + bottom;
+        width = fontMetrics().boundingRect( m_wspace->desktopName( m_wspace->currentDesktop() ) ).width() +
+                4 + left + right;
+        }
+
     QRect rect = QRect( screenRect.x() + (screenRect.width()-width)/2,
         screenRect.y() + (screenRect.height()-height)/2,
         width,
@@ -307,7 +324,10 @@ void DesktopChangeOSD::resize()
             {
             text->setPos( left, top );
             text->setWidth( width - left - right );
-            text->setHeight( fontMetrics().height() );
+            if( m_textOnly )
+                text->setHeight( fontMetrics().height() + 4 );
+            else
+                text->setHeight( fontMetrics().height() );
             }
         }
     }
