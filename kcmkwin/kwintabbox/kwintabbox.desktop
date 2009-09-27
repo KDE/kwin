@@ -11,6 +11,7 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
 Name=Navigate Through Windows
+Name[id]=Navigasi Melalui Jendela
 Name[nb]=Naviger gjennom vinduer
 Name[nds]=Dör de Finstern lopen
 Name[pt]=Navegar pelas Janelas
@@ -20,6 +21,7 @@ Name[tr]=Pencereler Arasında Gez
 Name[uk]=Навігація вікнами
 Name[x-test]=xxNavigate Through Windowsxx
 Comment=Configure the behaviour for navigating through windows
+Comment[id]=Atur perilaku untuk bernavigasi melalui jendela
 Comment[nb]=Tilpass oppførselen for nevigering gjennom vinduer
 Comment[nds]=Dat Bedregen bi't Wesseln vun Finstern instellen
 Comment[pt]=Configurar o comportamento de navegação pelas janelas
