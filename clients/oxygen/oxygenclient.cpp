@@ -594,7 +594,9 @@ namespace Oxygen
   {
 
     // update size grip so that it gets the right color
-    if( hasSizeGrip() )
+    // also make sure it is remaped to from z stack,
+    // unless hidden
+    if( hasSizeGrip() && !(isShade() || isMaximized() ))
     {
       sizeGrip().activeChange();
       sizeGrip().update();
