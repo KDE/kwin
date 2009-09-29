@@ -648,7 +648,7 @@ void KWinCompositingConfig::save()
     if( getenv( "KDE_FAILSAFE" ) && ui.useCompositing->isChecked() )
         {
         KMessageBox::sorry( this, i18n(
-            "Your settings have been saved but as KDE is currently running in failsafe"
+            "Your settings have been saved but as KDE is currently running in failsafe "
             "mode desktop effects cannot be enabled at this time.\n\n"
             "Please exit failsafe mode to enable desktop effects." ));
         m_showConfirmDialog = false; // Dangerous but there is no way to test if failsafe mode
