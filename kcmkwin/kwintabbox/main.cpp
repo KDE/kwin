@@ -56,6 +56,7 @@ KWinTabBoxConfig::KWinTabBoxConfig( QWidget* parent, const QVariantList& args )
     : KCModule( KWinTabBoxConfigFactory::componentData(), parent, args )
     , m_config( KSharedConfig::openConfig( "kwinrc" ))
     {
+    KGlobal::locale()->insertCatalog( "kwin_effects" );
     KTabWidget* tabWidget = new KTabWidget( this );
     m_primaryTabBoxUi = new KWinTabBoxConfigForm( tabWidget );
     m_alternativeTabBoxUi = new KWinTabBoxConfigForm( tabWidget );
