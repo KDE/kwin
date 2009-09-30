@@ -2,6 +2,7 @@
 Name=Resize Window
 Name[de]=Fenstergröße ändern
 Name[et]=Akna suuruse muutmine
+Name[gl]=Mudar o tamaño da fiestra
 Name[hr]=Promjena veličine prozora
 Name[id]=Ubah Ukuran Jendela
 Name[km]=ផ្លាស់ប្ដូរ​ទំហំ​បង្អួច
@@ -24,6 +25,7 @@ Name[zh_TW]=重新調整視窗大小
 Icon=preferences-system-windows-effect-resize
 Comment=Effect to outline geometry while resizing a window
 Comment[et]=Geomeetria näitamine efekt akna suuruse muutmisel
+Comment[gl]=Efecto para mostrar o contorno mentres se muda o tamaño das fiestras
 Comment[hr]=Efekt označivanja geometrije prozora prilikom promjene njegove veličine
 Comment[id]=Efek untuk kerangka geometri ketika mengubah ukuran jendela
 Comment[km]=បែបផែន​ទៅកាន់​ធរណីមាត្រ​គ្រោង​ខណៈពេល​ផ្លាស់ប្ដូរ​ទំហំ​បង្អួច

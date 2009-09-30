@@ -12,6 +12,7 @@ X-KDE-Weight=60
 
 Name=Navigate Through Windows
 Name[et]=Akende vahel liikumine
+Name[gl]=Percorrer as fiestras
 Name[id]=Navigasi Melalui Jendela
 Name[nb]=Naviger gjennom vinduer
 Name[nds]=Dör de Finstern lopen
@@ -23,6 +24,7 @@ Name[uk]=Навігація вікнами
 Name[x-test]=xxNavigate Through Windowsxx
 Comment=Configure the behaviour for navigating through windows
 Comment[et]=Akende vahel liikumise seadistamine
+Comment[gl]=Configura o comportamento do percorrido polas fiestras
 Comment[id]=Atur perilaku untuk bernavigasi melalui jendela
 Comment[nb]=Tilpass oppførselen for nevigering gjennom vinduer
 Comment[nds]=Dat Bedregen bi't Wesseln vun Finstern instellen
