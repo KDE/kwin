@@ -84,9 +84,6 @@
           </item>
           <item row="2" column="0" colspan="2">
            <widget class="QCheckBox" name="activityCheckBox">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="text">
              <string>Different activity for each desktop</string>
             </property>

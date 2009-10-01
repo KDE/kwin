@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDBusMessage>
 #include <QDBusConnection>
+#include <QDBusInterface>
 
 #include <KAboutApplicationDialog>
 #include <KActionCollection>
@@ -285,6 +286,16 @@ void KWinDesktopConfig::load()
     slotEffectSelectionChanged( m_ui->effectComboBox->currentIndex() );
     // TODO: plasma stuff
 
+    QDBusInterface interface( "org.kde.plasma-desktop", "/App" );
+    if( interface.isValid() )
+        {
+        bool perVirtualDesktopViews = interface.call( "perVirtualDesktopViews" ).arguments().first().toBool();
+        m_ui->activityCheckBox->setEnabled( true );
+        m_ui->activityCheckBox->setChecked( perVirtualDesktopViews );
+        }
+    else
+        m_ui->activityCheckBox->setEnabled( false );
+
     emit changed(false);
     }
 
@@ -350,8 +361,11 @@ void KWinDesktopConfig::save()
 
     m_config->sync();
     // Send signal to all kwin instances
-    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-    QDBusConnection::sessionBus().send(message);
+    QDBusMessage message = QDBusMessage::createSignal( "/KWin", "org.kde.KWin", "reloadConfig" );
+    QDBusConnection::sessionBus().send( message );
+
+    QDBusInterface interface( "org.kde.plasma-desktop", "/App" );
+    interface.call( "setPerVirtualDesktopViews", ( m_ui->activityCheckBox->isChecked() ) );
 
     emit changed(false);
     }
