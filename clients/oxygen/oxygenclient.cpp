@@ -69,6 +69,7 @@ namespace Oxygen
     colorCacheInvalid_(true),
     sizeGrip_( 0 ),
     timeLine_( 200, this ),
+    titleTimeLine_( 200, this ),
     helper_(*oxygenHelper()),
     initialized_( false )
   { qAddPostRoutine(oxkwincleanupBefore); }
@@ -99,6 +100,13 @@ namespace Oxygen
     timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
     connect( &timeLine_, SIGNAL( frameChanged( int ) ), widget(), SLOT( update() ) );
     connect( &timeLine_, SIGNAL( finished() ), widget(), SLOT( update() ) );
+
+    // initialize titleTimeLine
+    titleTimeLine_.setFrameRange( 0, maxAnimationIndex );
+    titleTimeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
+    connect( &titleTimeLine_, SIGNAL( frameChanged( int ) ), widget(), SLOT( update() ) );
+    connect( &titleTimeLine_, SIGNAL( finished() ), widget(), SLOT( update() ) );
+    connect( &titleTimeLine_, SIGNAL( finished() ), this, SLOT( updateOldCaption() ) );
 
     initialized_ = true;
 
@@ -590,6 +598,40 @@ namespace Oxygen
   }
 
   //_________________________________________________________
+  void OxygenClient::renderTitleText(  QPainter* painter, const QRect& rect, Qt::Alignment alignment, QColor color) const
+  {
+    if( titleTimeLineIsRunning() )
+    {
+
+      // if alignment is left, or right, need to get the common part of both strings
+      // and draw that with full opacity and mask et out for the rest
+      if( alignment & Qt::AlignLeft )
+      {}
+
+      if( !oldCaption().isEmpty() )
+      {
+        color.setAlphaF( 1.0 - titleOpacity() );
+        painter->setPen( color );
+        painter->drawText( rect, alignment, oldCaption() );
+      }
+
+      if( !caption().isEmpty() )
+      {
+        color.setAlphaF( titleOpacity() );
+        painter->setPen( color );
+        painter->drawText( rect, alignment, caption() );
+      }
+
+    } else if( !caption().isEmpty() ) {
+
+      painter->setPen( color );
+      painter->drawText( rect, alignment, caption() );
+
+    }
+
+  }
+
+  //_________________________________________________________
   void OxygenClient::activeChange( void )
   {
 
@@ -626,6 +668,17 @@ namespace Oxygen
   {
     if( hasSizeGrip() ) sizeGrip().setVisible( !( isShade() || isMaximized() ) );
     KCommonDecorationUnstable::shadeChange();
+  }
+
+  //_________________________________________________________
+  void OxygenClient::captionChange( void  )
+  {
+    KCommonDecorationUnstable::captionChange();
+
+    if( !animateTitleChange() ) return;
+    if( titleTimeLineIsRunning() ) titleTimeLine_.stop();
+    titleTimeLine_.start();
+
   }
 
   //_________________________________________________________
@@ -689,6 +742,13 @@ namespace Oxygen
     if( !initialized_ ) return;
 
     configuration_ = OxygenFactory::configuration( *this );
+
+    // animations duration
+    timeLine_.setDuration( configuration_.animationsDuration() );
+    titleTimeLine_.setDuration( configuration_.animationsDuration() );
+
+    // need to update old caption
+    updateOldCaption();
 
     // handle size grip
     if( configuration_.drawSizeGrip() )
@@ -825,9 +885,8 @@ namespace Oxygen
     if( drawSeparator() ) renderSeparator(&painter, frame, widget(), color );
 
     // draw title text
-    painter.setPen( titlebarTextColor( backgroundPalette( widget(), palette ) ) );
+    renderTitleText( &painter, titleRect, configuration().titleAlignment() | Qt::AlignVCenter, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
 
-    painter.drawText( titleRect, configuration().titleAlignment() | Qt::AlignVCenter, caption() );
     painter.setRenderHint(QPainter::Antialiasing);
 
     // adjust if there are shadows

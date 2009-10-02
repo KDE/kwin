@@ -39,7 +39,9 @@ namespace Oxygen
     sizeGripMode_( SizeGripWhenNeeded ),
     drawSeparator_( false ),
     drawTitleOutline_( false ),
-    useOxygenShadows_( true )
+    useOxygenShadows_( true ),
+    useAnimations_( true ),
+    animationsDuration_( 150 )
   {}
 
   //__________________________________________________
@@ -88,6 +90,16 @@ namespace Oxygen
     setUseOxygenShadows( group.readEntry(
       OxygenConfig::USE_OXYGEN_SHADOWS,
       defaultConfiguration.useOxygenShadows() ) );
+
+    // animations
+    setUseAnimations( group.readEntry(
+      OxygenConfig::USE_ANIMATIONS,
+      defaultConfiguration.useAnimations() ) );
+
+    // animations
+    setAnimationsDuration( group.readEntry(
+      OxygenConfig::ANIMATIONS_DURATION,
+      defaultConfiguration.animationsDuration() ) );
   }
 
   //__________________________________________________
@@ -103,7 +115,8 @@ namespace Oxygen
     group.writeEntry( OxygenConfig::DRAW_SEPARATOR, drawSeparator() );
     group.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, drawTitleOutline() );
     group.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
-
+    group.writeEntry( OxygenConfig::USE_ANIMATIONS, useAnimations() );
+    group.writeEntry( OxygenConfig::ANIMATIONS_DURATION, animationsDuration() );
   }
 
   //__________________________________________________
@@ -267,7 +280,10 @@ namespace Oxygen
       sizeGripMode() == other.sizeGripMode() &&
       drawSeparator() == other.drawSeparator() &&
       drawTitleOutline() == other.drawTitleOutline() &&
-      useOxygenShadows() == other.useOxygenShadows();
+      useOxygenShadows() == other.useOxygenShadows() &&
+      useAnimations() == other.useAnimations() &&
+      animationsDuration() == other.animationsDuration();
+
   }
 
 }

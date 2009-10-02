@@ -139,6 +139,9 @@ namespace Oxygen
         //! title outline
         virtual void renderTitleOutline( QPainter*, const QRect&, const QPalette& ) const;
 
+        //! title text
+        virtual void renderTitleText( QPainter*, const QRect&, Qt::Alignment, QColor ) const;
+
         //! triggered when window activity is changed
         virtual void activeChange();
 
@@ -147,6 +150,9 @@ namespace Oxygen
 
         //! triggered when window shade is changed
         virtual void shadeChange();
+
+        //! triggered when window shade is changed
+        virtual void captionChange();
 
         public slots:
 
@@ -158,13 +164,44 @@ namespace Oxygen
         //! paint
         void paintEvent( QPaintEvent* );
 
+        protected slots:
+
+        //! update old caption with current
+        void updateOldCaption( void )
+        { setOldCaption( caption() ); }
+
         private:
+
+        //! title timeline
+        bool titleTimeLineIsRunning( void ) const
+        { return titleTimeLine_.state() == QTimeLine::Running; }
+
+        //! title opacity
+        qreal titleOpacity( void ) const
+        { return qreal( titleTimeLine_.currentFrame() )/qreal( titleTimeLine_.endFrame() ); }
+
+        //! old caption if any
+        const QString& oldCaption( void ) const
+        { return oldCaption_; }
+
+        //! old caption
+        void setOldCaption( const QString& value )
+        { oldCaption_ = value; }
 
         //! return true when activity change are animated
         bool animateActiveChange( void ) const
         {
-          if( isPreview() ) return false;
+          if( configuration().useAnimations() && !isPreview() ) return false;
           else return true;
+        }
+
+        //! return true when activity change are animated
+        bool animateTitleChange( void ) const
+        {
+          return
+            configuration().useAnimations() &&
+            !configuration().drawTitleOutline() &&
+            !isPreview();
         }
 
         //! calculate mask
@@ -209,6 +246,12 @@ namespace Oxygen
 
         //! animation timeLine
         QTimeLine timeLine_;
+
+        //! title animation timeLine
+        QTimeLine titleTimeLine_;
+
+        //! old caption
+        QString oldCaption_;
 
         //! helper
         OxygenHelper& helper_;

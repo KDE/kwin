@@ -39,6 +39,8 @@ namespace OxygenConfig
   static const QString BLEND_COLOR = "BlendColor";
   static const QString SIZE_GRIP_MODE = "SizeGripMode";
   static const QString USE_OXYGEN_SHADOWS = "UseOxygenShadows";
+  static const QString USE_ANIMATIONS = "UseAnimations";
+  static const QString ANIMATIONS_DURATION = "AnimationsDuration";
 
 }
 
@@ -231,6 +233,22 @@ namespace Oxygen
     virtual void setUseOxygenShadows( bool value )
     { useOxygenShadows_ = value; }
 
+    //! animations
+    virtual bool useAnimations( void ) const
+    { return useAnimations_; }
+
+    //! animations
+    virtual void setUseAnimations( bool value )
+    { useAnimations_ = value; }
+
+    //! animations
+    virtual int animationsDuration( void ) const
+    { return animationsDuration_; }
+
+    //! animations
+    virtual void setAnimationsDuration( int value )
+    { animationsDuration_ = value; }
+
     private:
 
     //! title alignment
@@ -256,6 +274,12 @@ namespace Oxygen
 
     //! oxygen shadows
     bool useOxygenShadows_;
+
+    //! animations
+    bool useAnimations_;
+
+    //! animations
+    int animationsDuration_;
 
   };
 
