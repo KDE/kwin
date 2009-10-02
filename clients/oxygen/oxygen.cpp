@@ -91,8 +91,6 @@ namespace Oxygen
   bool OxygenFactory::reset(unsigned long changed)
   {
 
-    kDebug( 1212 ) << endl;
-
     // read in the configuration
     setInitialized( false );
     bool configuration_changed = readConfig();
@@ -117,8 +115,6 @@ namespace Oxygen
   //___________________________________________________
   bool OxygenFactory::readConfig()
   {
-
-    kDebug( 1212 ) << endl;
 
     bool changed( false );
 
