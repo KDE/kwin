@@ -3149,7 +3149,7 @@ void Client::performMoveResize()
     if( isElectricBorderMaximizing() )
         return;
 #ifdef HAVE_XSYNC
-    if( isResize() && sync_counter != None )
+    if( isResize() && sync_counter != None && !sync_resize_pending )
         {
         sync_timeout = new QTimer( this );
         connect( sync_timeout, SIGNAL( timeout()), SLOT( syncTimeout()));
