@@ -1191,6 +1191,104 @@ void Workspace::slotSendToDesktop( QAction *action )
     }
 
 /*!
+  Switches to the nearest window in given direction
+ */
+void Workspace::switchWindow( Direction direction )
+    {
+    if( !active_client )
+        return;
+    Client *c = active_client;
+    Client *switchTo = 0;
+    int bestScore = 0;
+    int d = c->desktop();
+    // Centre of the active window
+    QPoint curPos( c->pos().x() + c->geometry().width() / 2,
+                   c->pos().y() + c->geometry().height() / 2 );
+
+    QList<Client *> clist = stackingOrder();
+    for( QList<Client *>::Iterator i = clist.begin(); i != clist.end(); ++i )
+        {
+        if( (*i)->wantsTabFocus() && *i != c &&
+            (*i)->desktop() == d && ! (*i)->isMinimized() )
+            {
+            // Centre of the other window
+            QPoint other( (*i)->pos().x() + (*i)->geometry().width() / 2,
+                          (*i)->pos().y() + (*i)->geometry().height() / 2 );
+
+            int distance;
+            int offset;
+            switch( direction )
+                {
+                case DirectionNorth:
+                    distance = curPos.y() - other.y();
+                    offset = qAbs(other.x() - curPos.x());
+                    break;
+                case DirectionEast:
+                    distance = other.x() - curPos.x();
+                    offset = qAbs(other.y() - curPos.y());
+                    break;
+                case DirectionSouth:
+                    distance = other.y() - curPos.y();
+                    offset = qAbs(other.x() - curPos.x());
+                    break;
+                case DirectionWest:
+                    distance = curPos.x() - other.x();
+                    offset = qAbs(other.y() - curPos.y());
+                    break;
+                default:
+                    distance = -1;
+                    offset = -1;
+                }
+
+            if( distance > 0 )
+                {
+                // Inverse score
+                int score = distance + offset + ( (offset * offset) / distance );
+                if( score < bestScore || !switchTo )
+                    {
+                    switchTo = *i;
+                    bestScore = score;
+                    }
+                }
+            }
+        }
+    if( switchTo )
+        activateClient( switchTo );
+    }
+
+/*!
+  Switches to upper window
+ */
+void Workspace::slotSwitchWindowUp()
+    {
+    switchWindow( DirectionNorth );
+    }
+
+/*!
+  Switches to lower window
+ */
+void Workspace::slotSwitchWindowDown()
+    {
+    switchWindow( DirectionSouth );
+    }
+
+/*!
+  Switches to window on the right
+ */
+void Workspace::slotSwitchWindowRight()
+    {
+    switchWindow( DirectionEast );
+    }
+
+/*!
+  Switches to window on the left
+ */
+void Workspace::slotSwitchWindowLeft()
+    {
+    switchWindow( DirectionWest );
+    }
+
+/*!
   Shows the window operations popup menu for the activeClient()
  */
 void Workspace::slotWindowOperations()

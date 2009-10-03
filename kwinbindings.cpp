@@ -119,6 +119,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         0, slotWindowQuickTileLeft() );
     DEF2( "Window Quick Tile Right", I18N_NOOP("Quick Tile Window to the Right"),
         0, slotWindowQuickTileRight() );
+    DEF2( "Switch Window Up", I18N_NOOP("Switch to Window Above"),
+          Qt::META+Qt::ALT+Qt::Key_Up, slotSwitchWindowUp() );
+    DEF2( "Switch Window Down", I18N_NOOP("Switch to Window Below"),
+          Qt::META+Qt::ALT+Qt::Key_Down, slotSwitchWindowDown() );
+    DEF2( "Switch Window Right", I18N_NOOP("Switch to Window to the Right"),
+          Qt::META+Qt::ALT+Qt::Key_Right, slotSwitchWindowRight() );
+    DEF2( "Switch Window Left", I18N_NOOP("Switch to Window to the Left"),
+          Qt::META+Qt::ALT+Qt::Key_Left, slotSwitchWindowLeft() );
 
     a = actionCollection->addAction( "Group:Window Desktop" );
     a->setText( i18n("Window & Desktop") );

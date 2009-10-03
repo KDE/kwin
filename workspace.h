@@ -590,6 +590,11 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWalkThroughWindowsAlternativeKeyChanged( const QKeySequence& seq );
         void slotWalkBackThroughWindowsAlternativeKeyChanged( const QKeySequence& seq );
 
+        void slotSwitchWindowUp();
+        void slotSwitchWindowDown();
+        void slotSwitchWindowRight();
+        void slotSwitchWindowLeft();
+
         void slotWindowOperations();
         void slotWindowClose();
         void slotWindowMove();
@@ -671,6 +676,14 @@ class Workspace : public QObject, public KDecorationDefines
         void setupWindowShortcut( Client* c );
         void checkCursorPos();
 
+        enum Direction
+            {
+            DirectionNorth,
+            DirectionEast,
+            DirectionSouth,
+            DirectionWest
+            };
+        void switchWindow( Direction direction );
         bool startKDEWalkThroughWindows( TabBoxMode mode ); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
         bool startWalkThroughDesktops( TabBoxMode mode ); // TabBoxDesktopMode | TabBoxDesktopListMode
         bool startWalkThroughDesktops();
