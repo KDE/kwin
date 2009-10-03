@@ -389,10 +389,12 @@ void Workspace::raiseClient( Client* c, bool nogroup )
 
     if( !nogroup && c->isTransient())
         {
-        ClientList wins = ensureStackingOrder( c->group()->members());
-        foreach( Client* c2, wins )
-            if( c2 != c )
-                raiseClient( c2, true );
+        ClientList transients;
+        Client *transient_parent = c;
+        while ((transient_parent = transient_parent->transientFor()))
+            transients << transient_parent;
+        foreach( transient_parent, transients )
+            raiseClient( transient_parent, true );
         }
 
     unconstrained_stacking_order.removeAll( c );
