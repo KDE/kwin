@@ -536,7 +536,8 @@ class Client
         uint hidden : 1; ///< Forcibly hidden by calling hide()
         uint modal : 1; ///< NET::Modal
         uint noborder : 1;
-        uint app_noborder : 1; ///< The app requested no border using something (window type, motif hints)
+        uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
+        uint motif_noborder : 1; ///< App requested no border via Motif WM hints
         uint urgency : 1; ///< XWMHints, UrgencyHint
         uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
         uint demands_attention : 1;

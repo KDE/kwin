@@ -152,6 +152,7 @@ Client::Client( Workspace* ws )
     modal = false;
     noborder = false;
     app_noborder = false;
+    motif_noborder = false;
     urgency = false;
     ignore_focus_stealing = false;
     demands_attention = false;
@@ -1617,12 +1618,18 @@ void Client::getWMHints()
 
 void Client::getMotifHints()
     {
-    bool mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
-    Motif::readFlags( client, mnoborder, mresize, mmove, mminimize, mmaximize, mclose );
-    if( mnoborder )
+    bool mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
+    Motif::readFlags( client, mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose );
+    if( mgot_noborder )
         {
-        noborder = true;
-        app_noborder =  true;
+        motif_noborder = mnoborder;
+        // If we just got a hint telling us to hide decorations, we do so.
+        if ( motif_noborder )
+            noborder = true;
+        // If the Motif hint is now telling us to show decorations, we only do so if the app didn't
+        // instruct us to hide decorations in some other way, though.
+        else if ( !motif_noborder && !app_noborder )
+            noborder = false;
         }
     if( !hasNETSupport() )
         { // NETWM apps should set type and size constraints

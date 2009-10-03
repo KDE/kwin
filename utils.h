@@ -192,9 +192,14 @@ const int ShapeInput = 2;
 class Motif 
     {
     public:
-        static void readFlags( WId w, bool& noborder, bool& resize, bool& move,
-            bool& minimize, bool& maximize, bool& close );
-        struct MwmHints 
+        // Read a window's current settings from its _MOTIF_WM_HINTS
+        // property.  If it explicitly requests that decorations be shown
+        // or hidden, 'got_noborder' is set to true and 'noborder' is set
+        // appropriately.
+        static void readFlags( WId w, bool& got_noborder, bool& noborder,
+            bool& resize, bool& move, bool& minimize, bool& maximize,
+            bool& close );
+        struct MwmHints
             {
             ulong flags;
             ulong functions;

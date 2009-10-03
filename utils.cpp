@@ -77,8 +77,8 @@ StrutRect::StrutRect( const StrutRect& other )
 // Motif
 //************************************
 
-void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
-    bool& minimize, bool& maximize, bool& close )
+void Motif::readFlags( WId w, bool& got_noborder, bool& noborder,
+    bool& resize, bool& move, bool& minimize, bool& maximize, bool& close )
     {
     Atom type;
     int format;
@@ -92,6 +92,7 @@ void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
         if ( data )
             hints = (MwmHints*) data;
         }
+    got_noborder = false;
     noborder = false;
     resize = true;
     move = true;
@@ -117,10 +118,10 @@ void Motif::readFlags( WId w, bool& noborder, bool& resize, bool& move,
             if( hints->functions & MWM_FUNC_CLOSE )
                 close = set_value;
             }
-        if ( hints->flags & MWM_HINTS_DECORATIONS ) 
+        if ( hints->flags & MWM_HINTS_DECORATIONS )
             {
-            if ( hints->decorations == 0 )
-                noborder = true;
+            got_noborder = true;
+            noborder = !hints->decorations;
             }
         XFree( data );
         }
