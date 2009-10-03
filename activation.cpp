@@ -861,7 +861,9 @@ void Client::setActive( bool act )
     if ( active == act )
         return;
     active = act;
-    const int ruledOpacity = active ? rules()->checkOpacityActive(opacity()*100) : rules()->checkOpacityInactive(opacity()*100);
+    const int ruledOpacity = active
+        ? rules()->checkOpacityActive( qRound( opacity() * 100.0 ))
+        : rules()->checkOpacityInactive( qRound( opacity() * 100.0 ));
     setOpacity( ruledOpacity/100.0 );
     workspace()->setActiveClient( act ? this : NULL, Allowed );
     
