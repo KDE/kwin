@@ -63,6 +63,7 @@ LogoutEffect::~LogoutEffect()
 void LogoutEffect::reconfigure( ReconfigureFlags )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    frameDelay = 0;
     KConfigGroup conf = effects->effectConfig( "Logout" );
     useBlur = conf.readEntry( "UseBlur", true );
     delete blurTexture;
@@ -102,14 +103,24 @@ void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             blurTarget = new GLRenderTarget( blurTexture );
             if( blurTarget->valid() )
                 blurSupported = true;
+
+            // As creating the render target takes time it can cause the first two frames of the
+            // blur animation to be jerky. For this reason we only start the animation after the
+            // third frame.
+            frameDelay = 2;
             }
         }
 #endif
 
-    if( logoutWindow != NULL && !logoutWindowClosed )
-        progress = qMin( 1.0, progress + time / animationTime( 2000.0 ));
-    else if( progress > 0.0 )
-        progress = qMax( 0.0, progress - time / animationTime( 500.0 ));
+    if( frameDelay )
+        --frameDelay;
+    else
+        {
+        if( logoutWindow != NULL && !logoutWindowClosed )
+            progress = qMin( 1.0, progress + time / animationTime( 2000.0 ));
+        else if( progress > 0.0 )
+            progress = qMax( 0.0, progress - time / animationTime( 500.0 ));
+        }
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( blurSupported && progress > 0.0 )
@@ -222,7 +233,7 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
 
 void LogoutEffect::postPaintScreen()
     {
-    if( progress != 0.0 && progress != 1.0 )
+    if(( progress != 0.0 && progress != 1.0 ) || frameDelay )
         {
         effects->addRepaintFull();
         }
