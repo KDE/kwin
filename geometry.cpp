@@ -3084,7 +3084,8 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
         if( !isMovable() ) // isMovableAcrossScreens() must have been true to get here
             { // Special moving of maximized windows on Xinerama screens
             int screen = workspace()->screenNumber( globalPos );
-            moveResizeGeom = workspace()->clientArea( MaximizeArea, screen, 0 );
+            moveResizeGeom = workspace()->clientArea(
+                isFullScreen() ? FullScreenArea : MaximizeArea, screen, 0 );
             }
         else
             {
