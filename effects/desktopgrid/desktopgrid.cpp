@@ -392,7 +392,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
         {
         if( !wasWindowMove && !wasDesktopMove )
             {
-            setCurrentDesktop( highlightedDesktop );
+            setCurrentDesktop( posToDesktop( me->pos() ));
             setActive( false );
             }
         if( windowMove )
