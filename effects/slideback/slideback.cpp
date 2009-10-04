@@ -49,7 +49,7 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
         return;
         }
 
-    if( !isWindowUsable( w ) || !stackingOrderChanged() )     // Focus changed but stacking still the same
+    if( !isWindowUsable( w ) || !stackingOrderChanged() || !isWindowOnTop( w ) )     // Focus changed but stacking still the same
         {
         updateStackingOrder();
         return;
