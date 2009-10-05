@@ -1312,6 +1312,7 @@ QRectF WindowMotionManager::targetGeometry( EffectWindow *w ) const
 
 EffectWindow* WindowMotionManager::windowAtPoint( QPoint point, bool useStackingOrder ) const
     {
+    Q_UNUSED( useStackingOrder );
     // TODO: Stacking order uses EffectsHandler::stackingOrder() then filters by m_managedWindows
     EffectWindowList windows = m_managedWindows.keys();
 

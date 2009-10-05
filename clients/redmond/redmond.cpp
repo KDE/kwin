@@ -174,8 +174,8 @@ static void create_pixmaps ()
     defaultMenuPix = new QPixmap(kdelogo);
 
     // buttons (active/inactive, sunken/unsunken)
-	QColorGroup g = options()->palette(KDecoration::ColorButtonBg, true).active();
-    QColor c = g.background();
+    QPalette g = options()->palette(KDecoration::ColorButtonBg, true);
+    QColor c = g.button().color();
     *btnPix1 = QPixmap(normalTitleHeight, normalTitleHeight-2);
     *btnDownPix1 = QPixmap(normalTitleHeight, normalTitleHeight-2);
     *iBtnPix1 = QPixmap(normalTitleHeight, normalTitleHeight-2);
@@ -193,8 +193,7 @@ static void create_pixmaps ()
         gradientFill(miniBtnDownPix1, c.dark(130), c.light(130));
 
         g = options()->palette(KDecoration::ColorButtonBg, false);
-        g.setCurrentColorGroup( QPalette::Active );
-        c = g.background();
+        c = g.button().color();
         gradientFill(iBtnPix1, c.light(130), c.dark(130));
         gradientFill(iBtnDownPix1, c.dark(130), c.light(130));
         gradientFill(iMiniBtnPix1, c.light(130), c.dark(130));
@@ -206,8 +205,7 @@ static void create_pixmaps ()
         miniBtnDownPix1->fill(c.rgb());
 
         g = options()->palette(KDecoration::ColorButtonBg, false);
-        g.setCurrentColorGroup( QPalette::Active );
-        c = g.background();
+        c = g.button().color();
         iBtnPix1->fill(c.rgb());
         iBtnDownPix1->fill(c.rgb());
         iMiniBtnPix1->fill(c.rgb());
@@ -215,14 +213,12 @@ static void create_pixmaps ()
     }
 
     g = options()->palette(KDecoration::ColorButtonBg, true);
-    g.setCurrentColorGroup( QPalette::Active );
     drawButtonFrame(btnPix1, g, false);
     drawButtonFrame(btnDownPix1, g, true);
     drawButtonFrame(miniBtnPix1, g, false);
     drawButtonFrame(miniBtnDownPix1, g, true);
 
     g = options()->palette(KDecoration::ColorButtonBg, false);
-    g.setCurrentColorGroup( QPalette::Active );
     drawButtonFrame(iBtnPix1, g, false);
     drawButtonFrame(iBtnDownPix1, g, true);
     drawButtonFrame(iMiniBtnPix1, g, false);
@@ -277,7 +273,7 @@ void RedmondButton::reset(unsigned long changed)
 				break;
 			case MenuButton:
 			{
-				QPixmap miniIcon = decoration()->icon().pixmap(QIcon::Small, QIcon::Normal);
+				QPixmap miniIcon = decoration()->icon().pixmap(QSize(16, 16), QIcon::Normal, QIcon::On);
 				if (!miniIcon.isNull()) {
 					setPixmap(miniIcon);
 				} else {
@@ -507,7 +503,7 @@ void RedmondDeco::paintEvent( QPaintEvent* )
     int x2 = r.width()-1;
     int y2 = r.height()-1;
     int w  = r.width();
-    int h  = r.height();
+    //int h  = r.height();
 
     // Draw part of the frame that is the frame color
     // ==============================================

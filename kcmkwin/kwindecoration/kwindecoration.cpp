@@ -75,7 +75,8 @@ K_EXPORT_PLUGIN(KWinDecoFactory("kcmkwindecoration"))
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &)
     : KCModule(KWinDecoFactory::componentData(), parent),
     kwinConfig(KSharedConfig::openConfig("kwinrc")),
-    pluginObject(0)
+    pluginObject(0),
+    library(NULL)
 {
     KConfigGroup style( kwinConfig, "Style");
     plugins = new KDecorationPreviewPlugins(kwinConfig);
@@ -397,14 +398,11 @@ void KWinDecorationModule::resetPlugin( KConfigGroup& conf, const QString& curre
 	delete pluginObject;
 	pluginObject = 0;
 
-	// Use klibloader for library manipulation
-	KLibLoader* loader = KLibLoader::self();
-
 	// Free the old library if possible
-	if (!oldLibraryName.isNull())
-		loader->unloadLibrary( oldName );
+	if (library != NULL)
+		library->unload();
 
-	KLibrary* library = loader->library( currentName );
+	library = new KLibrary( currentName );
 	if (library != NULL)
 	{
                 KLibrary::void_function_ptr alloc_ptr = library->resolveFunction("allocate_config");

@@ -134,7 +134,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
 	return true;
 
     // Try loading the requested plugin
-    library = KLibLoader::self()->library(path);
+    library = new KLibrary(path);
 
     // If that fails, fall back to the default plugin
     if (!library)
@@ -145,7 +145,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
 	    return true;
         path = KLibLoader::findLibrary(nameStr);
 	if (!path.isEmpty())
-            library = KLibLoader::self()->library(path);
+            library = new KLibrary(path);
         }
 
     if (!library)

@@ -49,6 +49,7 @@ extern "C" KDE_EXPORT QObject *allocate_config(KConfig *conf, QWidget *parent)
 B2Config::B2Config(KConfig *conf, QWidget *parent)
 	: QObject(parent)
 {
+    Q_UNUSED( conf );
     KGlobal::locale()->insertCatalog("kwin_b2_config");
     b2Config = new KConfig("kwinb2rc");
     gb = new KVBox(parent);

@@ -47,6 +47,7 @@ extern "C"
 QuartzConfig::QuartzConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
+	Q_UNUSED( conf );
 	quartzConfig = new KConfig("kwinquartzrc");
     KConfigGroup cg(quartzConfig, "General");
 	KGlobal::locale()->insertCatalog("kwin_clients");

@@ -86,6 +86,7 @@ class DesktopChangeOSD : public QGraphicsView
 class DesktopChangeItem : public QObject, public QGraphicsItem
     {
     Q_OBJECT
+    Q_INTERFACES(QGraphicsItem)
     public:
         DesktopChangeItem( Workspace* ws, DesktopChangeOSD* parent, int desktop );
         ~DesktopChangeItem();

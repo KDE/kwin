@@ -153,6 +153,7 @@ void ShaderEffect::postPaintScreen()
         // Disable render texture
         GLRenderTarget* target = effects->popRenderTarget();
         assert( target == mRenderTarget );
+        Q_UNUSED( target );
         mTexture->bind();
 
         // Use the shader

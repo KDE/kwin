@@ -33,7 +33,7 @@
 #include <kcmodule.h>
 #include "buttons.h"
 #include <kconfig.h>
-#include <klibloader.h>
+#include <klibrary.h>
 
 #include <kdecoration.h>
 
@@ -119,6 +119,7 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 		QWidget* pluginConfigWidget;
 		QString  currentLibraryName;
 		QString  oldLibraryName;
+		KLibrary* library;
 		QObject* (*allocatePlugin)( KConfigGroup& conf, QWidget* parent );
 
 		// Page 2

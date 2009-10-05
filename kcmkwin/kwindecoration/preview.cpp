@@ -109,6 +109,7 @@ void KDecorationPreview::disablePreview()
 
 void KDecorationPreview::paintEvent( QPaintEvent* e )
     {
+    Q_UNUSED( e );
     QPainter painter( this );
     QPoint delta = mapTo( window(), QPoint(0, 0) );
 
