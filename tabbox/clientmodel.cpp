@@ -85,7 +85,7 @@ QVariant ClientModel::data( const QModelIndex& index, int role ) const
 int ClientModel::columnCount( const QModelIndex& parent ) const
     {
     Q_UNUSED( parent )
-    int count;
+    int count = 1;
     switch( tabBox->config().layout() )
         {
         case TabBoxConfig::HorizontalLayout:
@@ -106,7 +106,7 @@ int ClientModel::columnCount( const QModelIndex& parent ) const
 int ClientModel::rowCount( const QModelIndex& parent ) const
     {
     Q_UNUSED( parent )
-    int count;
+    int count = 1;
     switch( tabBox->config().layout() )
         {
         case TabBoxConfig::HorizontalLayout:

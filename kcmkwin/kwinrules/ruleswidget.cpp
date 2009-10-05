@@ -50,6 +50,7 @@ namespace KWin
 RulesWidget::RulesWidget( QWidget* parent )
     : detect_dlg( NULL )
     {
+    Q_UNUSED( parent );
     setupUi(this);
 
     QString enableDesc =
@@ -476,16 +477,16 @@ Rules* RulesWidget::rules() const
         rules->types = NET::AllTypesMask;
     else
         {
-        rules->types |= types->item(0)->isSelected() ? NET::NormalMask : 0;
-        rules->types |= types->item(1)->isSelected() ? NET::DialogMask : 0;
-        rules->types |= types->item(2)->isSelected() ? NET::UtilityMask : 0;
-        rules->types |= types->item(3)->isSelected() ? NET::DockMask : 0;
-        rules->types |= types->item(4)->isSelected() ? NET::ToolbarMask : 0;
-        rules->types |= types->item(5)->isSelected() ? NET::MenuMask : 0;
-        rules->types |= types->item(6)->isSelected() ? NET::SplashMask : 0;
-        rules->types |= types->item(7)->isSelected() ? NET::DesktopMask : 0;
-        rules->types |= types->item(8)->isSelected() ? NET::OverrideMask : 0;
-        rules->types |= types->item(9)->isSelected() ? NET::TopMenuMask : 0;
+        rules->types |= types->item(0)->isSelected() ? NET::NormalMask : 0U;
+        rules->types |= types->item(1)->isSelected() ? NET::DialogMask : 0U;
+        rules->types |= types->item(2)->isSelected() ? NET::UtilityMask : 0U;
+        rules->types |= types->item(3)->isSelected() ? NET::DockMask : 0U;
+        rules->types |= types->item(4)->isSelected() ? NET::ToolbarMask : 0U;
+        rules->types |= types->item(5)->isSelected() ? NET::MenuMask : 0U;
+        rules->types |= types->item(6)->isSelected() ? NET::SplashMask : 0U;
+        rules->types |= types->item(7)->isSelected() ? NET::DesktopMask : 0U;
+        rules->types |= types->item(8)->isSelected() ? NET::OverrideMask : 0U;
+        rules->types |= types->item(9)->isSelected() ? NET::TopMenuMask : 0U;
         }
     rules->title = title->text();
     rules->titlematch = static_cast< Rules::StringMatch >( title_match->currentIndex());

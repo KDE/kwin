@@ -103,10 +103,10 @@ static QPixmap *iButtonPixDown=0;
 static QColor *buttonFg;
 static bool pixmaps_created = false;
 
-static QBitmap *lcDark1;
-static QBitmap *lcDark2;
-static QBitmap *lcDark3;
-static QBitmap *lcLight1;
+static QBitmap lcDark1;
+static QBitmap lcDark2;
+static QBitmap lcDark3;
+static QBitmap lcLight1;
 static QImage *btnSource;
 
 static bool show_handle;
@@ -129,12 +129,13 @@ static void make_button_fx(const QPalette &g, QPixmap *pix, bool light=false)
         int i, destH, destS, destV, srcH, srcS, srcV;
         QColor btnColor = g.background().color();
 
+        // TODO: This seems to have been broken from the port to Qt4
         if(btnSource->depth() < 32)
-            *btnSource = btnSource->convertDepth(32);
+            *btnSource = btnSource->convertToFormat(QImage::Format_RGB32);
         if(light)
             btnColor = btnColor.light(120);
         btnColor.getHsv(&destH, &destS, &destV);
-        QImage btnDest(14, 15, 32);
+        QImage btnDest(14, 15, QImage::Format_RGB32);
 
         unsigned int *srcData = (unsigned int *)btnSource->bits();
         unsigned int *destData = (unsigned int *)btnDest.bits();
@@ -149,19 +150,19 @@ static void make_button_fx(const QPalette &g, QPixmap *pix, bool light=false)
 
     }
     else{
-        if(!lcDark1->mask()){
-            lcDark1->setMask(*lcDark1);
-            lcDark2->setMask(*lcDark2);
-            lcDark3->setMask(*lcDark3);
-            lcLight1->setMask(*lcLight1);
+        if(!lcDark1.mask()){
+            lcDark1.setMask(lcDark1);
+            lcDark2.setMask(lcDark2);
+            lcDark3.setMask(lcDark3);
+            lcLight1.setMask(lcLight1);
         }
         p.setPen(g.dark().color());
-        p.drawPixmap(0, 0, *lcDark2);
-        p.drawPixmap(0, 0, *lcDark1);
+        p.drawPixmap(0, 0, lcDark2);
+        p.drawPixmap(0, 0, lcDark1);
         p.setPen(g.mid().color());
-        p.drawPixmap(0, 0, *lcDark3);
+        p.drawPixmap(0, 0, lcDark3);
         p.setPen(g.light().color());
-        p.drawPixmap(0, 0, *lcLight1);
+        p.drawPixmap(0, 0, lcLight1);
     }
 }
 
@@ -181,10 +182,10 @@ static void create_pixmaps()
         return;
     pixmaps_created = true;
 
-    lcDark1 = new QBitmap(14, 15, lowcolor_6a696a_bits, true);
-    lcDark2 = new QBitmap(14, 15, lowcolor_949194_bits, true);
-    lcDark3 = new QBitmap(14, 15, lowcolor_b4b6b4_bits, true);
-    lcLight1 = new QBitmap(14, 15, lowcolor_e6e6e6_bits, true);
+    lcDark1 = QBitmap::fromData(QSize(14, 15), lowcolor_6a696a_bits, QImage::Format_Mono);
+    lcDark2 = QBitmap::fromData(QSize(14, 15), lowcolor_949194_bits, QImage::Format_Mono);
+    lcDark3 = QBitmap::fromData(QSize(14, 15), lowcolor_b4b6b4_bits, QImage::Format_Mono);
+    lcLight1 = QBitmap::fromData(QSize(14, 15), lowcolor_e6e6e6_bits, QImage::Format_Mono);
     btnSource = new QImage(btnhighcolor_xpm);
 
     if(QPixmap::defaultDepth() > 8){
@@ -218,10 +219,6 @@ static void create_pixmaps()
     else
         buttonFg = new QColor(Qt::black);
 
-    delete lcDark1;
-    delete lcDark2;
-    delete lcDark3;
-    delete lcLight1;
     delete btnSource;
 }
 
@@ -649,7 +646,7 @@ void ModernSys::paintEvent( QPaintEvent* )
 
     QPalette pt = options()->palette(ColorFrame, isActive());
     pt.setCurrentColorGroup( QPalette::Active );
-    QBrush fillBrush(widget()->palette().brush(QPalette::Background).pixmap() ?
+    QBrush fillBrush(!widget()->palette().brush(QPalette::Background).texture().isNull() ?
                      widget()->palette().brush(QPalette::Background) :
                      pt.brush(QPalette::Button));
 

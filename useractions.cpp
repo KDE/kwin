@@ -327,9 +327,7 @@ void Workspace::initShortcuts()
     // a separate KActionCollection is needed for the shortcut for disabling global shortcuts,
     // otherwise it would also disable itself
     disable_shortcuts_keys = new KActionCollection( this );
-#ifdef __GNUC__
-#warning TODO PORT ME (KGlobalAccel related)
-#endif
+    // TODO: PORT ME (KGlobalAccel related)
     // FIXME KAccel port... needed?
     //disable_shortcuts_keys->disableBlocking( true );
 #define IN_KWIN
@@ -339,9 +337,7 @@ void Workspace::initShortcuts()
 
 void Workspace::readShortcuts()
     {
-#ifdef __GNUC__
-#warning TODO PORT ME (KGlobalAccel related)
-#endif
+    // TODO: PORT ME (KGlobalAccel related)
     //KGlobalAccel::self()->readSettings();
 
     KAction *kaction = qobject_cast<KAction*>( keys->action("Walk Through Desktops") );
@@ -406,12 +402,10 @@ void Workspace::readShortcuts()
 void Workspace::setupWindowShortcut( Client* c )
     {
     assert( client_keys_dialog == NULL );
-#ifdef __GNUC__
-#warning TODO PORT ME (KGlobalAccel related)
-#endif
-//    keys->setEnabled( false );
-//    disable_shortcuts_keys->setEnabled( false );
-//    client_keys->setEnabled( false );
+    // TODO: PORT ME (KGlobalAccel related)
+    //keys->setEnabled( false );
+    //disable_shortcuts_keys->setEnabled( false );
+    //client_keys->setEnabled( false );
     client_keys_dialog = new ShortcutDialog( c->shortcut().primary());
     client_keys_client = c;
     connect( client_keys_dialog, SIGNAL( dialogDone( bool )), SLOT( setupWindowShortcutDone( bool )));

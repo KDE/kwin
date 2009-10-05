@@ -168,6 +168,7 @@ static QByteArray errorMessage( const XErrorEvent& event, Display* dpy )
 
 static int x11ErrorHandler( Display* d, XErrorEvent* e )
     {
+    Q_UNUSED( d );
     bool ignore_badwindow = true; // Might be temporary
 
     if( initting && ( e->request_code == X_ChangeWindowAttributes || e->request_code == X_GrabKey ) &&
@@ -252,9 +253,7 @@ Application::Application()
     KSharedConfig::Ptr config = KGlobal::config();
     if( !config->isImmutable() && args->isSet( "lock" ))
         {
-#ifdef __GNUC__
-#warning this shouldn not be necessary
-#endif
+        // TODO: This shouldn't be necessary
         //config->setReadOnly( true );
         config->reparseConfiguration();
         }

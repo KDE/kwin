@@ -47,6 +47,7 @@ extern "C"
 KDE2Config::KDE2Config( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
+	Q_UNUSED( conf );
 	KGlobal::locale()->insertCatalog("kwin_clients");
 	c = new KConfig("kwinKDE2rc");
 	highcolor = QPixmap::defaultDepth() > 8;

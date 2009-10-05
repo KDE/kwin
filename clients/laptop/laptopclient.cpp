@@ -254,6 +254,7 @@ static void delete_pixmaps()
 LaptopButton::LaptopButton(ButtonType type, LaptopClient *parent, const char *name)
     : KCommonDecorationButton(type, parent)
 {
+    Q_UNUSED( name );
     setAttribute(Qt::WA_NoSystemBackground, true);
 }
 

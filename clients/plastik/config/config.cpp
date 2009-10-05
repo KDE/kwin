@@ -36,6 +36,7 @@
 PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
     : QObject(parent), m_config(0), m_dialog(0)
 {
+    Q_UNUSED( config );
     // create the configuration object
     m_config = new KConfig("kwinplastikrc");
     KConfigGroup cg(m_config, "General");

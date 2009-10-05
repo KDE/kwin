@@ -1028,8 +1028,8 @@ static void redraw_pixmaps()
 	QColor color = is_act ? activeColor : inactiveColor;
 	drawB2Rect(&thinBox, color, is_down);
 	pix->fill(Qt::black);
-	bitBlt(pix, 0, 0, &thinBox,
-		0, 0, thinBox.width(), thinBox.height());
+	QPainter p(pix);
+	p.drawPixmap(0, 0, thinBox);
     }
 
     // normalize + iconify
@@ -1044,12 +1044,12 @@ static void redraw_pixmaps()
 	drawB2Rect(&smallBox, color, is_down);
 	drawB2Rect(&largeBox, color, is_down);
 	pix->fill(options()->color(KDecoration::ColorTitleBar, is_act));
-	bitBlt(pix, pix->width() - 12, pix->width() - 12, &largeBox,
-	       0, 0, 12, 12);
-	bitBlt(pix, 0, 0, &smallBox, 0, 0, 10, 10);
+	QPainter p(pix);
+	p.drawPixmap(pix->width() - 12, pix->width() - 12, largeBox, 0, 0, 12, 12);
+	p.drawPixmap(0, 0, smallBox, 0, 0, 10, 10);
 
-	bitBlt(pixmap[P_ICONIFY + i], 0, 0,
-	       &smallBox, 0, 0, 10, 10);
+	QPainter p2(pixmap[P_ICONIFY + i]);
+	p2.drawPixmap(0, 0, smallBox, 0, 0, 10, 10);
     }
 
     // resize
@@ -1059,7 +1059,8 @@ static void redraw_pixmaps()
 	*pixmap[P_RESIZE + i] = *pixmap[P_MAX + i];
 	pixmap[P_RESIZE + i]->detach();
 	drawB2Rect(&smallBox, is_act ? activeColor : inactiveColor, is_down);
-	bitBlt(pixmap[P_RESIZE + i], 0, 0, &smallBox, 0, 0, 10, 10);
+	QPainter p(pixmap[P_RESIZE + i]);
+	p.drawPixmap(0, 0, smallBox, 0, 0, 10, 10);
     }
 
     QPainter p;
@@ -1241,13 +1242,15 @@ void B2Client::positionButtons()
 }
 
 // Transparent bound stuff.
-static QRect *visible_bound;
+//static QRect *visible_bound;
 static QPolygon bound_shape;
 
 
 bool B2Client::drawbound(const QRect& geom, bool clear)
 {
     // Let kwin draw the bounds, for now.
+    Q_UNUSED(geom);
+    Q_UNUSED(clear);
     return false;
 #if 0
     if (clear) {
@@ -1512,10 +1515,10 @@ void B2Titlebar::resizeEvent(QResizeEvent *)
 
 void B2Titlebar::paintEvent(QPaintEvent *)
 {
-    if (client->isActive())
-        bitBlt(this, 0, 0, &titleBuffer, 0, 0, titleBuffer.width(),
-               titleBuffer.height());
-    else {
+    if (client->isActive()) {
+        QPainter p(this);
+        p.drawPixmap(0, 0, titleBuffer);
+    } else {
         QPainter p(this);
 	drawTitlebar(p, false);
     }

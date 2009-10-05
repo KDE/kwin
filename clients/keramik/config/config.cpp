@@ -52,6 +52,7 @@ extern "C"
 KeramikConfig::KeramikConfig( KConfig* conf, QWidget* parent )
 	: QObject( parent )
 {
+	Q_UNUSED( conf );
 	KGlobal::locale()->insertCatalog("kwin_clients");
 	c = new KConfig( "kwinkeramikrc" );
 	KConfigGroup cg(c, "General");

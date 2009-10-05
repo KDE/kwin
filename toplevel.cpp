@@ -156,10 +156,8 @@ NET::WindowType Toplevel::windowType( bool direct, int supported_types ) const
     if( direct )
         return wt;
     const Client* cl = dynamic_cast< const Client* >( this );
-#ifdef __GNUC__
-#warning TODO
-#endif
-//    NET::WindowType wt2 = rules()->checkType( wt );
+    // TODO
+    //NET::WindowType wt2 = rules()->checkType( wt );
     NET::WindowType wt2 = wt;
     if( wt != wt2 )
         {
