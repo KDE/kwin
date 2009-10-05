@@ -106,6 +106,7 @@ class ButtonSourceItem : public Q3ListViewItem
 		ButtonSourceItem(Q3ListView * parent, const Button& btn);
 		virtual ~ButtonSourceItem();
 
+		using Q3ListViewItem::paintCell;
 		void paintCell(QPainter *p, const QPalette &cg, int column, int width, int align);
 
 		void setButton(const Button& btn);

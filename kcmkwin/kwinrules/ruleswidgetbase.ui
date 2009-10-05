@@ -18,7 +18,7 @@
      <property name="currentIndex" >
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="TabPage1" >
       <property name="geometry" >
        <rect>
         <x>0</x>
@@ -245,7 +245,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="TabPage2" >
       <property name="geometry" >
        <rect>
         <x>0</x>
@@ -541,7 +541,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
+     <widget class="QWidget" name="TabPage3" >
       <property name="geometry" >
        <rect>
         <x>0</x>
@@ -1087,7 +1087,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
+     <widget class="QWidget" name="TabPage4" >
       <property name="geometry" >
        <rect>
         <x>0</x>
@@ -1605,7 +1605,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
+     <widget class="QWidget" name="TabPage5" >
       <property name="geometry" >
        <rect>
         <x>0</x>
