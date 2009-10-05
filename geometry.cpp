@@ -334,8 +334,12 @@ QRegion Workspace::previousRestrictedMoveArea( int desktop, StrutAreas areas ) c
   Client \a c is moved around to position \a pos. This gives the
   workspace the opportunity to interveniate and to implement
   snap-to-windows functionality.
+
+  The parameter \a snapAdjust is a multiplier used to calculate the
+  effective snap zones. When 1.0, it means that the snap zones will be
+  used without change.
  */
-QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted )
+QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted, double snapAdjust )
     {
    //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
    //CT adapted for kwin on 25Nov1999
@@ -363,7 +367,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted
         int lx, ly, lrx, lry; //coords and size for the comparison client, l
 
       // border snap
-        int snap = options->borderSnapZone; //snap trigger
+        int snap = options->borderSnapZone * snapAdjust; //snap trigger
         if (snap)
             {
             if ((sOWO?(cx<xmin):true) && (qAbs(xmin-cx)<snap))
@@ -390,13 +394,13 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted
             }
 
       // windows snap
-        snap = options->windowSnapZone;
+        snap = options->windowSnapZone * snapAdjust;
         if (snap)
             {
             QList<Client *>::ConstIterator l;
             for (l = clients.constBegin();l != clients.constEnd();++l )
                 {
-                if ((*l)->isOnDesktop(currentDesktop()) &&
+                if ((*l)->isOnDesktop(c->desktop()) &&
                    !(*l)->isMinimized()
                     && (*l) != c )
                     {
@@ -470,7 +474,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted
             }
 
       // center snap
-        snap = options->centerSnapZone; //snap trigger
+        snap = options->centerSnapZone * snapAdjust; //snap trigger
         if (snap)
             {
             int diffX = qAbs( (xmin + xmax)/2 - (cx + cw/2) );

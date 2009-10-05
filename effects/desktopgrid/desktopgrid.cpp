@@ -329,8 +329,10 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 effects->activateWindow( windowMove );
             wasWindowMove = true;
             if( windowMove->isMovable() )
-                effects->moveWindow( windowMove, unscalePos( me->pos(), NULL ) + windowMoveDiff );
-            // TODO: Window snap
+                {
+                int screen = effects->screenNumber( me->pos() );
+                effects->moveWindow( windowMove, unscalePos( me->pos(), NULL ) + windowMoveDiff, true, 1.0 / scale[screen] );
+                }
             if( d != highlightedDesktop && !windowMove->isOnAllDesktops() )
                 effects->windowToDesktop( windowMove, d ); // Not true all desktop move
             }

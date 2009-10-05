@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 103
+#define KWIN_EFFECT_API_VERSION_MINOR 104
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -555,7 +555,7 @@ class KWIN_EXPORT EffectsHandler
         // functions that allow controlling windows/desktop
         virtual void activateWindow( EffectWindow* c ) = 0;
         virtual EffectWindow* activeWindow() const = 0 ;
-        virtual void moveWindow( EffectWindow* w, const QPoint& pos ) = 0;
+        virtual void moveWindow( EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0 ) = 0;
         virtual void windowToDesktop( EffectWindow* w, int desktop ) = 0;
         virtual void setShowingDesktop( bool showing ) = 0;
 

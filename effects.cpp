@@ -409,10 +409,15 @@ EffectWindow* EffectsHandlerImpl::activeWindow() const
     return Workspace::self()->activeClient() ? Workspace::self()->activeClient()->effectWindow() : NULL;
     }
 
-void EffectsHandlerImpl::moveWindow( EffectWindow* w, const QPoint& pos )
+void EffectsHandlerImpl::moveWindow( EffectWindow* w, const QPoint& pos, bool snap, double snapAdjust )
     {
     Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window());
-    if( cl && cl->isMovable())
+    if (!cl || !cl->isMovable())
+        return;
+
+    if (snap)
+        cl->move(Workspace::self()->adjustClientPosition(cl, pos, true, snapAdjust));
+    else
         cl->move( pos );
     }
 

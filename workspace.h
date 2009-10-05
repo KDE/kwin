@@ -144,7 +144,7 @@ class Workspace : public QObject, public KDecorationDefines
         void place( Client* c, QRect& area );
         void placeSmart( Client* c, const QRect& area );
 
-        QPoint adjustClientPosition( Client* c, QPoint pos, bool unrestricted );
+        QPoint adjustClientPosition( Client* c, QPoint pos, bool unrestricted, double snapAdjust = 1.0 );
         QRect adjustClientSize( Client* c, QRect moveResizeGeom, int mode );
         void raiseClient( Client* c, bool nogroup = false );
         void lowerClient( Client* c, bool nogroup = false );
