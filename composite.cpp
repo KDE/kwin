@@ -757,6 +757,10 @@ Pixmap Toplevel::createWindowPixmap()
     }
 
 #ifdef HAVE_XDAMAGE
+// We must specify that the two events are a union so the compiler doesn't
+// complain about strict aliasing rules.
+typedef union { XEvent e; XDamageNotifyEvent de; } EventUnion;
+
 void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
     {
     QRegion damage( e->area.x, e->area.y, e->area.width, e->area.height );
@@ -764,11 +768,11 @@ void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
     int cnt = 1;
     while( XPending( display()))
         {
-        XEvent e2;
-        if( XPeekEvent( display(), &e2 ) && e2.type == Extensions::damageNotifyEvent()
-            && e2.xany.window == frameId())
+        EventUnion e2;
+        if( XPeekEvent( display(), &e2.e ) && e2.e.type == Extensions::damageNotifyEvent()
+            && e2.e.xany.window == frameId())
             {
-            XNextEvent( display(), &e2 );
+            XNextEvent( display(), &e2.e );
             if( cnt > 200 )
                 {
                 // If there are way too many damage events in the queue, just discard them
@@ -778,8 +782,7 @@ void Toplevel::damageNotifyEvent( XDamageNotifyEvent* e )
                 damage = rect();
                 continue;
                 }
-            XDamageNotifyEvent* e = reinterpret_cast< XDamageNotifyEvent* >( &e2 );
-            QRect r( e->area.x, e->area.y, e->area.width, e->area.height );
+            QRect r( e2.de.area.x, e2.de.area.y, e2.de.area.width, e2.de.area.height );
             ++cnt;
             // If there are too many damaged rectangles, increase them
             // to be multiples of 100x100 px grid, since QRegion get quite

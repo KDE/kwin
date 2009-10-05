@@ -155,6 +155,7 @@ void ShadowEffect::updateShadowColor()
 
 QRect ShadowEffect::shadowRectangle( EffectWindow* w, const QRect& windowRectangle ) const
     {
+    Q_UNUSED( w );
     int shadowGrow = shadowFuzzyness + shadowSize;
     return windowRectangle.adjusted( shadowXOffset - shadowGrow, shadowYOffset - shadowGrow,
             shadowXOffset + shadowGrow, shadowYOffset + shadowGrow);
@@ -422,6 +423,8 @@ void ShadowEffect::drawQueuedShadows( EffectWindow* behindWindow )
 // Modified version of SceneOpenGL::Window::prepareRenderStates() from scene_opengl.cpp
 void ShadowEffect::prepareRenderStates( GLTexture *texture, double opacity, double brightness, double saturation )
     {
+    Q_UNUSED( texture );
+    Q_UNUSED( saturation );
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     // setup blending of transparent windows
     glPushAttrib( GL_ENABLE_BIT );
@@ -508,6 +511,7 @@ void ShadowEffect::prepareRenderStates( GLTexture *texture, double opacity, doub
 // Modified version of SceneOpenGL::Window::restoreRenderStates() from scene_opengl.cpp
 void ShadowEffect::restoreRenderStates( GLTexture *texture, double opacity, double brightness, double saturation )
     {
+    Q_UNUSED( texture );
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( opacity != 1.0 || saturation != 1.0 || brightness != 1.0 )
         {
@@ -558,6 +562,7 @@ void ShadowEffect::drawShadowQuadOpenGL( GLTexture *texture, QVector<float> vert
 void ShadowEffect::drawShadowQuadXRender( XRenderPicture *picture, QRect rect, float xScale, float yScale,
     QColor color, float opacity, float brightness, float saturation )
     {
+    Q_UNUSED( saturation );
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     XRenderPicture fill;
     if( color.isValid() )

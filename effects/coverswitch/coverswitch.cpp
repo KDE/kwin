@@ -1354,6 +1354,7 @@ void CoverSwitchEffect::paintWindowIcon( EffectWindow* w )
 void CoverSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
     {
     assert( w == input );
+    Q_UNUSED( w );
     if( e->type() != QEvent::MouseButtonPress )
         return;
     // we don't want click events during animations

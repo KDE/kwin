@@ -111,6 +111,7 @@ void TaskbarThumbnailEffect::paintWindow( EffectWindow* w, int mask, QRegion reg
 
 void TaskbarThumbnailEffect::windowDamaged( EffectWindow* w, const QRect& damage )
     {
+    Q_UNUSED( damage );
     // Update the thumbnail if the window was damaged
     foreach( EffectWindow* window, thumbnails.keys() )
         foreach( const Data &thumb, thumbnails.values( window ))

@@ -114,7 +114,7 @@ void CubeEffectConfig::load()
     bool closeOnMouseRelease = conf.readEntry( "CloseOnMouseRelease", false );
     bool walkThroughDesktop = conf.readEntry( "TabBox", false );
     m_ui->zPositionSlider->setValue( conf.readEntry( "ZPosition", 100 ) );
-    m_ui->wallpaperRequester->setPath( conf.readEntry( "Wallpaper", "" ) );
+    m_ui->wallpaperRequester->setUrl( KUrl( conf.readEntry( "Wallpaper", "" ) ));
     bool invertKeys = conf.readEntry( "InvertKeys", false );
     bool invertMouse = conf.readEntry( "InvertMouse", false );
     m_ui->capDeformationSlider->setValue( conf.readEntry( "CapDeformation", 0 ) );
@@ -226,7 +226,7 @@ void CubeEffectConfig::defaults()
     m_ui->capColorButton->setColor( KColorScheme( QPalette::Active, KColorScheme::Window ).background().color() );
     m_ui->capsImageBox->setCheckState( Qt::Checked );
     m_ui->closeOnMouseReleaseBox->setCheckState( Qt::Unchecked );
-    m_ui->wallpaperRequester->setPath( "" );
+    m_ui->wallpaperRequester->setUrl( KUrl( "" ));
     m_ui->zPositionSlider->setValue( 100 );
     m_ui->walkThroughDesktopBox->setCheckState( Qt::Unchecked );
     m_ui->invertKeysBox->setChecked( false );

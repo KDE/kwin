@@ -87,8 +87,8 @@ void Monitor::resizeEvent( QResizeEvent* e )
 void Monitor::checkSize()
     {
     QRect contentsRect = previewRect();
-    int w = 151;
-    int h = 115;
+    //int w = 151;
+    //int h = 115;
     view->setGeometry(contentsRect);
     scene->setSceneRect(QRect(QPoint(0,0), contentsRect.size()));
     int x2 = ( contentsRect.width() - 20 ) / 2;
@@ -275,12 +275,14 @@ void Monitor::Corner::paint( QPainter* painter, const QStyleOptionGraphicsItem* 
 
 void Monitor::Corner::hoverEnterEvent( QGraphicsSceneHoverEvent * e)
 {
+    Q_UNUSED( e );
     m_hover = true;
     update();
 }
 
 void Monitor::Corner::hoverLeaveEvent( QGraphicsSceneHoverEvent * e)
 {
+    Q_UNUSED( e );
     m_hover = false;
     update();
 }

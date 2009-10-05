@@ -188,6 +188,7 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
         {
         GLRenderTarget* target = effects->popRenderTarget();
         assert( target == blurTarget );
+        Q_UNUSED( target );
 
         // Render the blurred scene
         blurTexture->bind();

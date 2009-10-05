@@ -2118,6 +2118,7 @@ void CubeEffect::mouseChanged( const QPoint& pos, const QPoint& oldpos, Qt::Mous
 void CubeEffect::windowInputMouseEvent( Window w, QEvent* e )
     {
     assert( w == input );
+    Q_UNUSED( w );
     QMouseEvent *mouse = dynamic_cast< QMouseEvent* >( e );
     if( mouse && mouse->type() == QEvent::MouseButtonRelease )
         {

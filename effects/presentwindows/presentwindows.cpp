@@ -412,6 +412,7 @@ bool PresentWindowsEffect::borderActivated( ElectricBorder border )
 void PresentWindowsEffect::windowInputMouseEvent( Window w, QEvent *e )
     {
     assert( w == m_input );
+    Q_UNUSED( w );
 
     // Which window are we hovering over? Always trigger as we don't always get move events before clicking
     // We cannot use m_motionManager.windowAtPoint() as the window might not be visible

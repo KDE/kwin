@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 
 #include "kdebug.h"
-#include "klibloader.h"
+#include "klibrary.h"
 #include "kdesktopfile.h"
 #include "kconfiggroup.h"
 #include "kstandarddirs.h"
@@ -840,7 +840,7 @@ unsigned long EffectsHandlerImpl::xrenderBufferPicture()
 KLibrary* EffectsHandlerImpl::findEffectLibrary( KService* service )
     {
     QString libname = service->library();
-    KLibrary* library = KLibLoader::self()->library(libname);
+    KLibrary* library = new KLibrary(libname);
     if( !library )
         {
         kError( 1212 ) << "couldn't open library for effect '" <<

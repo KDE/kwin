@@ -1225,7 +1225,7 @@ void Client::checkWorkspacePosition()
             newGeom.x() != leftMax )
             { // Left was touching before but isn't anymore
             // If the other side was touching make sure it still is afterwards
-            if( newGeom.y() == newGeom.x() + newGeom.width() == oldRightMax )
+            if( newGeom.x() + newGeom.width() == oldRightMax )
                 newGeom.setLeft( qMax( leftMax, screenArea.x() ));
             else
                 newGeom.moveLeft( qMax( leftMax, screenArea.x() ));

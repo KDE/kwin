@@ -232,6 +232,7 @@ void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
 void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
     {
     assert( w == mInput );
+    Q_UNUSED( w );
     if( e->type() != QEvent::MouseButtonPress )
         return;
     QPoint pos = static_cast< QMouseEvent* >( e )->pos();
@@ -272,6 +273,7 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
 
 void BoxSwitchEffect::windowDamaged( EffectWindow* w, const QRect& damage )
     {
+    Q_UNUSED( damage );
     if( mActivated )
         {
         if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
