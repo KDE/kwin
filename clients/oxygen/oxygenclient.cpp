@@ -606,13 +606,12 @@ namespace Oxygen
     QRect boundingRect = painter->boundingRect( titleRect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
 
     // adjust to make sure bounding rect
-    // 1/ uses maximum height
-    // 2/ does not exceeds available space
-    boundingRect.setTop( frame.top() );
+    // 1/ has same vertical alignment as original titleRect
+    // 2/ does not exceeds available horizontal space
+    boundingRect.setTop( titleRect.top() );
     boundingRect.setBottom( titleRect.bottom() );
     boundingRect.setLeft( qMax( boundingRect.left(), titleRect.left() ) );
     boundingRect.setRight( qMin( boundingRect.right(), titleRect.right() ) );
-
     return boundingRect;
 
   }
@@ -894,7 +893,7 @@ namespace Oxygen
 
     // title outline
     if( drawTitleOutline() )
-    { renderTitleOutline( &painter, boundingRect.adjusted( -2*HFRAMESIZE, 0, 2*HFRAMESIZE, 0 ), backgroundPalette( widget(), palette ) ); }
+    { renderTitleOutline( &painter, boundingRect.adjusted( -2*HFRAMESIZE, -layoutMetric(LM_TitleEdgeTop), 2*HFRAMESIZE, 2 ), backgroundPalette( widget(), palette ) ); }
 
     // draw title text
     renderTitleText( &painter, boundingRect, configuration().titleAlignment() | Qt::AlignVCenter, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
