@@ -161,6 +161,7 @@ class Workspace : public QObject, public KDecorationDefines
         void clientAttentionChanged( Client* c, bool set );
 
         void checkElectricBorder(const QPoint& pos, Time time);
+        void restoreElectricBorderSize( ElectricBorder border );
         void reserveElectricBorder( ElectricBorder border );
         void unreserveElectricBorder( ElectricBorder border );
         void reserveElectricBorderActions( bool reserve );

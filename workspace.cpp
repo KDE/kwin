@@ -2081,6 +2081,26 @@ void Workspace::destroyElectricBorders()
         }
     }
 
+void Workspace::restoreElectricBorderSize( ElectricBorder border )
+    {
+    if( electric_windows[border] == None )
+        return;
+    QRect r = Kephal::ScreenUtils::desktopGeometry();
+    int xywh[ELECTRIC_COUNT][4] =
+        {
+            { r.left() + 1, r.top(), r.width() - 2, 1 },   // Top
+            { r.right(), r.top(), 1, 1 },                  // Top-right
+            { r.right(), r.top() + 1, 1, r.height() - 2 }, // Etc.
+            { r.right(), r.bottom(), 1, 1 },
+            { r.left() + 1, r.bottom(), r.width() - 2, 1 },
+            { r.left(), r.bottom(), 1, 1 },
+            { r.left(), r.top() + 1, 1, r.height() - 2 },
+            { r.left(), r.top(), 1, 1 }
+        };
+    XMoveResizeWindow( display(), electric_windows[border],
+        xywh[border][0], xywh[border][1], xywh[border][2], xywh[border][3] );
+    }
+
 void Workspace::reserveElectricBorderActions( bool reserve )
     {
     for( int pos = 0; pos < ELECTRIC_COUNT; ++pos )
@@ -2191,18 +2211,17 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
                 if( options->electricBorderMaximize() && border == ElectricTop &&
                     movingClient->isMaximizable() )
                     {
-                    bool enable = !movingClient->isElectricBorderMaximizing();
                     movingClient->setElectricBorderMode( ElectricMaximizeMode );
                     movingClient->setElectricBorderMaximizing( true );
                     // Make electric windows thicker so we can detect when the user wants to cancel
                     QRect r = Kephal::ScreenUtils::desktopGeometry();
+                    XRaiseWindow( display(), electric_windows[ElectricTop] );
                     XResizeWindow( display(), electric_windows[ElectricTop],
                         r.width() - 2, 20 );
                     return; // Don't reset cursor position
                     }
                 if( options->electricBorderTiling() )
                     {
-                    bool enable = !movingClient->isElectricBorderMaximizing();
                     bool activate = false;
                     if( border == ElectricLeft )
                         {
@@ -2210,6 +2229,7 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
                         activate = true;
                         // Make electric windows thicker so we can detect when the user wants to cancel
                         QRect r = Kephal::ScreenUtils::desktopGeometry();
+                        XRaiseWindow( display(), electric_windows[ElectricLeft] );
                         XResizeWindow( display(), electric_windows[ElectricLeft],
                             20, r.height() - 2 );
                         }
@@ -2219,12 +2239,13 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
                         activate = true;
                         // Make electric windows thicker so we can detect when the user wants to cancel
                         QRect r = Kephal::ScreenUtils::desktopGeometry();
+                        XRaiseWindow( display(), electric_windows[ElectricRight] );
                         XMoveResizeWindow( display(), electric_windows[ElectricRight],
                             r.right() - 19, r.top() + 1, 20, r.height() - 2 );
                         }
                     if( activate )
                         {
-                        movingClient->setElectricBorderMaximizing( enable );
+                        movingClient->setElectricBorderMaximizing( true );
                         return; // Don't reset cursor position
                         }
                     }
@@ -2343,20 +2364,16 @@ bool Workspace::electricBorderEvent( XEvent* e )
             movingClient->setElectricBorderMaximizing( false );
 
             // Restore electric windows back to their normal size
-            QRect r = Kephal::ScreenUtils::desktopGeometry();
             switch( movingClient->electricBorderMode() )
                 {
                 case ElectricMaximizeMode:
-                    XResizeWindow( display(), electric_windows[ElectricTop],
-                        r.width() - 2, 1 );
+                    restoreElectricBorderSize( ElectricTop );
                     break;
                 case ElectricLeftMode:
-                    XResizeWindow( display(), electric_windows[ElectricLeft],
-                        1, r.height() - 2 );
+                    restoreElectricBorderSize( ElectricLeft );
                     break;
                 case ElectricRightMode:
-                    XMoveResizeWindow( display(), electric_windows[ElectricRight],
-                        r.right(), r.top() + 1, 1, r.height() - 2 );
+                    restoreElectricBorderSize( ElectricRight );
                     break;
                 }
             }

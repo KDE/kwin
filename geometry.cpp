@@ -2760,17 +2760,16 @@ void Client::finishMoveResize( bool cancel )
                     setMaximize( false, false );
                 else
                     setMaximize( true, true );
+                workspace()->restoreElectricBorderSize( ElectricTop );
                 break;
             case ElectricLeftMode:
-                {
                 setQuickTileMode( QuickTileLeft );
+                workspace()->restoreElectricBorderSize( ElectricLeft );
                 break;
-                }
             case ElectricRightMode:
-                {
                 setQuickTileMode( QuickTileRight );
+                workspace()->restoreElectricBorderSize( ElectricRight );
                 break;
-                }
             }
         electricMaximizing = false;
         workspace()->hideElectricBorderWindowOutline();
