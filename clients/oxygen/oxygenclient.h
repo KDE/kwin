@@ -136,6 +136,9 @@ namespace Oxygen
         //! separator
         virtual void renderSeparator( QPainter*, const QRect&, const QWidget*, const QColor& ) const;
 
+        //! get maximum space available for title
+        virtual QRect titleRect( const QRect& ) const;
+
         //! get title bounding rect
         virtual QRect titleBoundingRect( QPainter*, const QRect&, const QString& ) const;
 

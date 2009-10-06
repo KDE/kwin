@@ -573,7 +573,7 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  QRect OxygenClient::titleBoundingRect( QPainter* painter, const QRect& frame, const QString& caption ) const
+  QRect OxygenClient::titleRect( const QRect& frame ) const
   {
 
     int extraBorder = ( isMaximized() && compositingActive() ) ? 0 : EXTENDED_HITAREA;
@@ -591,16 +591,27 @@ namespace Oxygen
       buttonsLeftWidth() - buttonsRightWidth() -
       marginLeft - marginRight;
 
-    QRect titleRect( titleLeft, titleTop-1, titleWidth, titleHeight );
+    // maximum rect allocated for title
+    return QRect( titleLeft, titleTop-1, titleWidth, titleHeight );
+
+  }
+
+  //_________________________________________________________
+  QRect OxygenClient::titleBoundingRect( QPainter* painter, const QRect& frame, const QString& caption ) const
+  {
+
+    QRect titleRect( OxygenClient::titleRect( frame ) );
 
     // get title bounding rect
     QRect boundingRect = painter->boundingRect( titleRect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
 
-    // adjust
+    // adjust to make sure bounding rect
+    // 1/ uses maximum height
+    // 2/ does not exceeds available space
     boundingRect.setTop( frame.top() );
-    boundingRect.setBottom( titleTop+titleHeight );
-    boundingRect.setLeft( qMax( boundingRect.left(), titleLeft ) - 2*HFRAMESIZE );
-    boundingRect.setRight( qMin( boundingRect.right(), titleLeft + titleWidth ) + 2*HFRAMESIZE );
+    boundingRect.setBottom( titleRect.bottom() );
+    boundingRect.setLeft( qMax( boundingRect.left(), titleRect.left() ) );
+    boundingRect.setRight( qMin( boundingRect.right(), titleRect.right() ) );
 
     return boundingRect;
 
@@ -883,7 +894,7 @@ namespace Oxygen
 
     // title outline
     if( drawTitleOutline() )
-    { renderTitleOutline( &painter, boundingRect, backgroundPalette( widget(), palette ) ); }
+    { renderTitleOutline( &painter, boundingRect.adjusted( -2*HFRAMESIZE, 0, 2*HFRAMESIZE, 0 ), backgroundPalette( widget(), palette ) ); }
 
     // draw title text
     renderTitleText( &painter, boundingRect, configuration().titleAlignment() | Qt::AlignVCenter, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
