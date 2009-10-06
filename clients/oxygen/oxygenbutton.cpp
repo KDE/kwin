@@ -183,13 +183,14 @@ namespace Oxygen
 
     // colors
     QColor color = palette.window().color();
-    QColor light = helper_.calcLightColor( color );
-    QColor dark = helper_.calcDarkColor( color );
 
-    dark.setAlpha(120);
-
+    // separator
     if( client_.drawSeparator() )
     { client_.renderSeparator( &painter, rect(), this, color ); }
+
+    // translate buttons up if window maximized
+    if(client_.isMaximized())
+    { painter.translate( 0, -1 ); }
 
     // for menu button the application icon is used
     if (type_ == ButtonMenu)
@@ -209,10 +210,6 @@ namespace Oxygen
 
     if( timeLineIsRunning() ) color = KColorUtils::mix( color, glow, opacity() );
     else if( status_ == Oxygen::Hovered ) color = glow;
-
-    // translate buttons up if window maximized
-    if(client_.isMaximized())
-    { painter.translate( 0, -1 ); }
 
     // button shape color
     QColor bt = palette.window().color();
