@@ -2358,7 +2358,8 @@ bool Workspace::electricBorderEvent( XEvent* e )
     {
     if( e->type == EnterNotify )
         {
-        if( movingClient && e->xcrossing.window == movingClient->moveResizeGrabWindow() )
+        if( movingClient && movingClient->isElectricBorderMaximizing() &&
+            e->xcrossing.window == movingClient->moveResizeGrabWindow() )
             { // Cancel the quick tiling/maximization action when the user moves away from the edge.
               // This event isn't from the border window; it came from the grab window.
             movingClient->setElectricBorderMaximizing( false );
