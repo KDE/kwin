@@ -3151,8 +3151,6 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
 void Client::performMoveResize()
     {
-    if( isElectricBorderMaximizing() )
-        return;
 #ifdef HAVE_XSYNC
     if( isResize() && options->resizeMode == Options::Opaque &&
         sync_counter != None && !sync_resize_pending )
