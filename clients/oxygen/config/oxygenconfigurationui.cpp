@@ -218,7 +218,7 @@ namespace Oxygen
       exceptions = new OxygenExceptionListWidget();
       exceptions->setObjectName(QString::fromUtf8("exceptions"));
       int index = tab->addTab( exceptions, i18n( "&Window-Specific Overrides" ) );
-      tab->setTabToolTip( index, i18n( "Configure window decoraction option overrides for specific windows" ) );
+      tab->setTabToolTip( index, i18n( "Configure window decoration option overrides for specific windows" ) );
     }
 
     // connections
