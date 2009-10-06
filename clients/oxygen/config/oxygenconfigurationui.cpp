@@ -155,7 +155,7 @@ namespace Oxygen
       label->setBuddy( blendColor );
 
       // draw size grip
-      gridLayout->addWidget( label = new QLabel( i18n("Extra Size grip display:"), advancedWidget ), 2, 0, 1, 1 );
+      gridLayout->addWidget( label = new QLabel( i18n("Extra size grip display:"), advancedWidget ), 2, 0, 1, 1 );
       gridLayout->addWidget( sizeGripMode = new KComboBox(advancedWidget), 2, 1, 1, 1 );
       sizeGripMode->setObjectName(QString::fromUtf8("sizeGripMode"));
       sizeGripMode->setWhatsThis(i18n(
