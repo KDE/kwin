@@ -290,21 +290,9 @@ namespace Oxygen
     // draw the corner of the window - actually all 4 corners as one circle
     // this is all fixedSize. Does not scale with shadow size
     QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-    if( key.frameBorder < Key::BorderAny )
-    {
-
-      lg.setColorAt(0.52, oxygenHelper()->backgroundTopColor(color));
-      lg.setColorAt(1.0, oxygenHelper()->backgroundBottomColor(color) );
-
-    } else {
-
-      QColor light = oxygenHelper()->calcLightColor( oxygenHelper()->backgroundTopColor(color) );
-      QColor dark = oxygenHelper()->calcDarkColor( oxygenHelper()->backgroundBottomColor(color));
-
-      lg.setColorAt(0.52, light);
-      lg.setColorAt(1.0, dark);
-
-    }
+    lg.setColorAt(0.0, oxygenHelper()->calcLightColor( oxygenHelper()->backgroundTopColor(color) ));
+    lg.setColorAt(0.52, oxygenHelper()->backgroundTopColor(color) );
+    lg.setColorAt(1.0, oxygenHelper()->backgroundBottomColor(color) );
 
     // draw ellipse.
     // note: special tricks are needed to cope with some rounding issues when size is not an integer.
