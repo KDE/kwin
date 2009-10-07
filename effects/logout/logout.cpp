@@ -110,11 +110,11 @@ void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             frameDelay = 2;
             }
         }
-#endif
 
     if( frameDelay )
         --frameDelay;
     else
+#endif
         {
         if( logoutWindow != NULL && !logoutWindowClosed )
             progress = qMin( 1.0, progress + time / animationTime( 2000.0 ));
@@ -234,14 +234,16 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
 
 void LogoutEffect::postPaintScreen()
     {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if(( progress != 0.0 && progress != 1.0 ) || frameDelay )
-        {
         effects->addRepaintFull();
-        }
+#else
+    if( progress != 0.0 && progress != 1.0 )
+        effects->addRepaintFull();
+#endif
+
     if( progress > 0.0 )
-        {
         logoutWindowPassed = false;
-        }
     effects->postPaintScreen();
     }
 
