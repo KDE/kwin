@@ -196,10 +196,7 @@ namespace Oxygen
 
         //! return true when activity change are animated
         bool animateActiveChange( void ) const
-        {
-          if( configuration().useAnimations() && !isPreview() ) return false;
-          else return true;
-        }
+        { return ( configuration().useAnimations() && !isPreview() ); }
 
         //! return true when activity change are animated
         bool animateTitleChange( void ) const
