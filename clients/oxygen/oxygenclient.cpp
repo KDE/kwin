@@ -922,8 +922,9 @@ namespace Oxygen
 
       } else {
 
+        QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
         helper().drawFloatFrame(
-          &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          &painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
           false, isActive() && configuration().useOxygenShadows(),
           KDecoration::options()->color(ColorTitleBar),
           TileSet::Top
