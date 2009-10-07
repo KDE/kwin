@@ -63,6 +63,10 @@ namespace Oxygen
     ButtonTypeCount
   };
 
+  #if !KDE_IS_VERSION(4,3,90)
+  enum{ SettingCompositing = 1 << 6 };
+  #endif
+
   //! maximum index/frame used for animations
   static const int maxAnimationIndex = 256;
 

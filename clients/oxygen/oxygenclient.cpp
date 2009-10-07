@@ -933,11 +933,12 @@ namespace Oxygen
 
     } else if( isShade() ) {
 
-      // adjust frame so that only the bottom part of the frame is drawn
+      // for shaded maximized windows adjust frame and draw the bottom part of it
       helper().drawFloatFrame(
-        &painter, frame.adjusted( -4, -4, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+        &painter, frame.adjusted( -4, 0, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
         !compositingActive(), isActive(),
-        KDecoration::options()->color(ColorTitleBar)
+        KDecoration::options()->color(ColorTitleBar),
+        TileSet::Bottom
         );
 
     }
