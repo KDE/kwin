@@ -906,33 +906,48 @@ namespace Oxygen
     // adjust if there are shadows
     if( compositingActive() ) frame.adjust(-1,-1, 1, 1);
 
-    // dimensions
-    int x,y,w,h;
-    frame.getRect(&x, &y, &w, &h);
-
     // shadow and resize handles
-    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
+    if( !isMaximized() )
     {
 
-      if( !isMaximized() )
+      if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
       {
+
 
         helper().drawFloatFrame(
           &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-          !compositingActive(), isActive(),
+          !compositingActive(), isActive() && configuration().useOxygenShadows(),
           KDecoration::options()->color(ColorTitleBar)
           );
 
-      } else if( isShade() ) {
+      } else {
 
-        // adjust frame so that only the bottom part of the frame is drawn
         helper().drawFloatFrame(
-          &painter, frame.adjusted( -4, -4, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-          !compositingActive(), isActive(),
-          KDecoration::options()->color(ColorTitleBar)
+          &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          false, isActive() && configuration().useOxygenShadows(),
+          KDecoration::options()->color(ColorTitleBar),
+          TileSet::Top
           );
-
       }
+
+    } else if( isShade() ) {
+
+      // adjust frame so that only the bottom part of the frame is drawn
+      helper().drawFloatFrame(
+        &painter, frame.adjusted( -4, -4, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+        !compositingActive(), isActive(),
+        KDecoration::options()->color(ColorTitleBar)
+        );
+
+    }
+
+    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
+    {
+
+
+      // dimensions
+      int x,y,w,h;
+      frame.getRect(&x, &y, &w, &h);
 
       if( isResizable() && !isShade() && !isMaximized() )
       {
