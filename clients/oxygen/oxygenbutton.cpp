@@ -208,35 +208,51 @@ namespace Oxygen
       KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color():
       KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
 
+    // make glow darker
+    glow = helper_.calcDarkColor( glow );
+
     if( timeLineIsRunning() ) color = KColorUtils::mix( color, glow, opacity() );
     else if( status_ == Oxygen::Hovered ) color = glow;
 
     // button shape color
     QColor bt = palette.window().color();
 
-    // draw button shape
-    painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Oxygen::Pressed, (21.0*client_.configuration().buttonSize())/22 ) );
-
     // draw glow on hover
     if( timeLineIsRunning() )
     {
 
-      painter.drawPixmap(0, 0, helper_.windecoButtonGlow( helper_.alphaColor( glow, opacity() ), (21.0*client_.configuration().buttonSize())/22));
+      // mixed shadow and glow for smooth transition
+      painter.drawPixmap(0, 0, helper_.windecoButtonGlow( KColorUtils::mix( Qt::black, glow, opacity() ), (21.0*client_.configuration().buttonSize())/22));
 
     } else if( status_ == Oxygen::Hovered ) {
 
+      // glow only
       painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
+
+    } else {
+
+      // shadow only
+      painter.drawPixmap(0, 0, helper_.windecoButtonGlow(Qt::black, (21.0*client_.configuration().buttonSize())/22));
 
     }
 
-    // draw button icon
-    QLinearGradient lg = helper_.decoGradient( QRect( 4, 4, 13, 13 ), color);
-    painter.setRenderHints(QPainter::Antialiasing);
-    qreal width( 1.4 );
+    // draw button shape
+    painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Oxygen::Pressed, (21.0*client_.configuration().buttonSize())/22.0 ) );
 
-    painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    drawIcon(&painter, palette, type_);
+    // draw button icon
+    painter.setRenderHints(QPainter::Antialiasing);
+    qreal width( 1.2 );
+
+    {
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(QPen( helper_.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        drawIcon(&painter, palette, type_);
+
+        painter.translate(0,-1.5);
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        drawIcon(&painter, palette, type_);
+    }
 
   }
 
