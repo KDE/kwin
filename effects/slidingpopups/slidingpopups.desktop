@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sliding popups
+Name[en_GB]=Sliding popups
 Name[et]=Liuguvad hüpikdialoogid
 Name[gl]=Fiestras emerxentes deslizantes
 Name[hr]=Pomični iskočnici
@@ -16,6 +17,7 @@ Name[zh_TW]=滑動彈出視窗
 
 Type=Service
 Comment=Sliding animation for Plasma popups
+Comment[en_GB]=Sliding animation for Plasma popups
 Comment[et]=Plasma hüpikdialoogide liuguv animatsioon
 Comment[gl]=Animación deslizantes para os widgets de Plasma emerxentes
 Comment[hr]=Animacija pomicanja za Plasma iskočnike
