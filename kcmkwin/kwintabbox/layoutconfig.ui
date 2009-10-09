@@ -103,7 +103,7 @@
          </sizepolicy>
         </property>
         <property name="toolTip">
-         <string>Minimum width in percent of screen width.</string>
+         <string>Minimum width, as a percentage of screen width.</string>
         </property>
         <property name="suffix">
          <string> %</string>
@@ -132,7 +132,7 @@
          </sizepolicy>
         </property>
         <property name="toolTip">
-         <string>Minimum height in percent of screen height</string>
+         <string>Minimum height, as a percentage of screen height.</string>
         </property>
         <property name="suffix">
          <string> %</string>

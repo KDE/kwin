@@ -159,8 +159,8 @@ namespace Oxygen
       gridLayout->addWidget( sizeGripMode = new KComboBox(advancedWidget), 2, 1, 1, 1 );
       sizeGripMode->setObjectName(QString::fromUtf8("sizeGripMode"));
       sizeGripMode->setWhatsThis(i18n(
-        "The extra size grip is a small triangle shown in the bottom-right corner of a window \n"
-        "which allows to resize the window. This option controls in which case this size grip \n"
+        "The extra size grip is a small triangle, shown in the bottom-right corner of a window,\n"
+        "which allows the window to be resized. This option controls in which cases the size grip \n"
         "is shown."));
       sizeGripMode->insertItems(0, QStringList()
         << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripNever, true )
@@ -174,7 +174,7 @@ namespace Oxygen
       vboxLayout->addWidget( titleOutline = new QCheckBox( i18n("Outline active window title"), advancedWidget) );
       titleOutline->setObjectName(QString::fromUtf8("titleOutline"));
       titleOutline->setWhatsThis(i18n(
-        "When enabled, an additional frame is shown around the active window as well as its title"));
+        "When enabled, an additional frame is shown around the active window as well as its title."));
 
       // draw separator
       vboxLayout->addWidget( drawSeparator = new QCheckBox( i18n("Draw separator between title bar and active window contents"), advancedWidget ) );
@@ -200,10 +200,10 @@ namespace Oxygen
       gridLayout->addWidget( useOxygenShadows = new QCheckBox( i18n("Glow active window" ), this ), 0, 0, 1, 1 );
       useOxygenShadows->setObjectName(QString::fromUtf8("useOxygenShadows"));
       useOxygenShadows->setWhatsThis(i18n(
-        "When this option is enabled, oxygen signature blue glow is used for the active window shadow."));
+        "When this option is enabled, the oxygen signature blue glow is used for the active window shadow."));
 
       // regular shadow configuration
-      gridLayout->addWidget( shadowConfigurations[1] = new OxygenShadowConfigurationUI( i18n( "Window Dropdown Shadow" ), widget ), 1, 0, 1, 1 );
+      gridLayout->addWidget( shadowConfigurations[1] = new OxygenShadowConfigurationUI( i18n( "Window Drop-Down Shadow" ), widget ), 1, 0, 1, 1 );
       shadowConfigurations[1]->setObjectName( "inactiveShadowConfiguration" );
 
       // active window glow

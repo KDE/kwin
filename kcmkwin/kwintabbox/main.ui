@@ -14,7 +14,7 @@
    <item row="0" column="1">
     <widget class="QGroupBox" name="showTabBox">
      <property name="title">
-      <string>Display List while switching</string>
+      <string>Display list while switching</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -23,7 +23,7 @@
       <item>
        <widget class="QCheckBox" name="highlightWindowCheck">
         <property name="toolTip">
-         <string>The currently selected window will be highlighted by fading out all other windows. This option requires active desktop effects</string>
+         <string>The currently selected window will be highlighted by fading out all other windows. This option requires desktop effects to be active.</string>
         </property>
         <property name="text">
          <string>Highlight selected window</string>
