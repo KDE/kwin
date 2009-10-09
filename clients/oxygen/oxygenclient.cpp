@@ -471,7 +471,7 @@ namespace Oxygen
       int shadowSize = 5;
       if( timeLineIsRunning() ) shadowSize*=opacity();
 
-      int height = HFRAMESIZE;
+      int height = HFRAMESIZE-1;
       QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
       helper().slab( palette.color( widget->backgroundRole() ), 0, shadowSize )->render( rect.adjusted(-shadowSize-1, 0, shadowSize+1, 2 ), painter, TileSet::Bottom );
       mask += rect;
@@ -481,10 +481,16 @@ namespace Oxygen
     // bottom line
     if( configuration().frameBorder() > OxygenConfiguration::BorderNone && (tiles&TileSet::Bottom) )
     {
-      int height = qMin( HFRAMESIZE, layoutMetric( LM_BorderBottom ) );
+      int height = qMin( HFRAMESIZE, layoutMetric( LM_BorderBottom ) )-1;
+      QColor shadow( helper().backgroundBottomColor( widget->palette().color( widget->backgroundRole() ) ) );
+      painter->setPen( shadow );
       QRect rect( r.bottomLeft()-position-QPoint(0,height), QSize( r.width(), height ) );
+      painter->drawLine( r.bottomLeft()-position-QPoint(0,height+1), r.bottomRight()-position-QPoint(0,height+1) );
+
       mask += rect;
       frame |= rect;
+
+
     }
 
     // left and right
@@ -492,10 +498,14 @@ namespace Oxygen
     {
 
       // left
+      QColor shadow( helper().calcDarkColor( widget->palette().color( widget->backgroundRole() ) ) );
+      painter->setPen( shadow );
       if( tiles&TileSet::Left )
       {
-        int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderLeft ) );
+        int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderLeft ) )-1;
         QRect rect( r.topLeft()-position, QSize( width, r.height() ) );
+        painter->drawLine( r.topLeft()-position-QPoint(width+1,HFRAMESIZE), r.bottomLeft()-position-QPoint(width+1,-HFRAMESIZE) );
+
         mask += rect;
         frame |= rect;
       }
@@ -503,8 +513,10 @@ namespace Oxygen
       // right
       if( tiles&TileSet::Right )
       {
-        int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderRight ) );
+        int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderRight ) )-1;
         QRect rect( r.topRight()-position-QPoint(width,0), QSize( width, r.height() ) );
+        painter->drawLine( r.topRight()-position-QPoint(-width-1,HFRAMESIZE), r.bottomRight()-position-QPoint(-width-1,-HFRAMESIZE) );
+
         mask += rect;
         frame |= rect;
       }
@@ -612,6 +624,9 @@ namespace Oxygen
     boundingRect.setBottom( titleRect.bottom() );
     boundingRect.setLeft( qMax( boundingRect.left(), titleRect.left() ) );
     boundingRect.setRight( qMin( boundingRect.right(), titleRect.right() ) );
+
+    // finally translate one pixel up
+    boundingRect.translate(0, -1 );
     return boundingRect;
 
   }
@@ -893,7 +908,7 @@ namespace Oxygen
 
     // title outline
     if( drawTitleOutline() )
-    { renderTitleOutline( &painter, boundingRect.adjusted( -2*HFRAMESIZE, -layoutMetric(LM_TitleEdgeTop), 2*HFRAMESIZE, 2 ), backgroundPalette( widget(), palette ) ); }
+    { renderTitleOutline( &painter, boundingRect.adjusted( -2*HFRAMESIZE, -layoutMetric(LM_TitleEdgeTop)+1, 2*HFRAMESIZE, 2 ), backgroundPalette( widget(), palette ) ); }
 
     // draw title text
     renderTitleText( &painter, boundingRect, configuration().titleAlignment() | Qt::AlignVCenter, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
@@ -907,42 +922,38 @@ namespace Oxygen
     if( compositingActive() ) frame.adjust(-1,-1, 1, 1);
 
     // shadow and resize handles
-    if( true )
+    if( !isMaximized() )
     {
-      if( !isMaximized() )
+
+      if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
       {
 
-        if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
-        {
-
-          helper().drawFloatFrame(
-            &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-            !compositingActive(), isActive() && configuration().useOxygenShadows(),
-            KDecoration::options()->color(ColorTitleBar)
-            );
-
-        } else {
-
-          // for tiny borders, use a frame that matches the titlebar only
-          QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
-          helper().drawFloatFrame(
-            &painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-            false, isActive() && configuration().useOxygenShadows(),
-            KDecoration::options()->color(ColorTitleBar)
-            );
-        }
-
-      } else if( isShade() ) {
-
-        // for shaded maximized windows adjust frame and draw the bottom part of it
         helper().drawFloatFrame(
-          &painter, frame.adjusted( -4, 0, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-          !compositingActive(), isActive(),
-          KDecoration::options()->color(ColorTitleBar),
-          TileSet::Bottom
+          &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          !compositingActive(), isActive() && configuration().useOxygenShadows(),
+          KDecoration::options()->color(ColorTitleBar)
           );
 
+      } else {
+
+        // for tiny borders, use a frame that matches the titlebar only
+        QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
+        helper().drawFloatFrame(
+          &painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          false, isActive() && configuration().useOxygenShadows(),
+          KDecoration::options()->color(ColorTitleBar)
+          );
       }
+
+    } else if( isShade() ) {
+
+      // for shaded maximized windows adjust frame and draw the bottom part of it
+      helper().drawFloatFrame(
+        &painter, frame.adjusted( -4, 0, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+        !compositingActive(), isActive(),
+        KDecoration::options()->color(ColorTitleBar),
+        TileSet::Bottom
+        );
 
     }
 

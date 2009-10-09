@@ -188,9 +188,8 @@ namespace Oxygen
     if( client_.drawSeparator() )
     { client_.renderSeparator( &painter, rect(), this, color ); }
 
-    // translate buttons up if window maximized
-    if(client_.isMaximized())
-    { painter.translate( 0, -1 ); }
+    // translate button up for centering
+    painter.translate( 0, -1 );
 
     // for menu button the application icon is used
     if (type_ == ButtonMenu)
