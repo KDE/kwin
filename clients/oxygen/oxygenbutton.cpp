@@ -242,16 +242,14 @@ namespace Oxygen
     painter.setRenderHints(QPainter::Antialiasing);
     qreal width( 1.2 );
 
-    {
-        painter.setBrush(Qt::NoBrush);
-        painter.setPen(QPen( helper_.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        drawIcon(&painter, palette, type_);
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen( helper_.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    drawIcon(&painter, palette, type_);
 
-        painter.translate(0,-1.5);
-        painter.setBrush(Qt::NoBrush);
-        painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        drawIcon(&painter, palette, type_);
-    }
+    painter.translate(0,-1.5);
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    drawIcon(&painter, palette, type_);
 
   }
 
