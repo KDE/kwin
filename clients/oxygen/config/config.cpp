@@ -151,7 +151,7 @@ namespace Oxygen
 
     // save shadow configuration
     KConfigGroup configurationGroup( configuration_, ( (colorGroup == QPalette::Active) ? "ActiveShadow":"InactiveShadow" ) );
-    configurationGroup.writeEntry( OxygenConfig::SHADOW_SIZE, 0.1*ui.shadowSize->value() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_SIZE, ui.shadowSize->value() );
     configurationGroup.writeEntry( OxygenConfig::SHADOW_HOFFSET, 0.1*ui.horizontalOffset->value() );
     configurationGroup.writeEntry( OxygenConfig::SHADOW_VOFFSET, 0.1*ui.verticalOffset->value() );
     configurationGroup.writeEntry( OxygenConfig::SHADOW_INNER_COLOR, ui.innerColor->color() );
@@ -200,7 +200,7 @@ namespace Oxygen
   {
     assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
     OxygenShadowConfigurationUI* ui = userInterface_->shadowConfigurations[ (colorGroup == QPalette::Active) ? 0:1 ];
-    ui->shadowSize->setValue( 10*configuration.shadowSize() );
+    ui->shadowSize->setValue( configuration.shadowSize() );
     ui->horizontalOffset->setValue( 10*configuration.horizontalOffset() );
     ui->verticalOffset->setValue( 10*configuration.verticalOffset() );
     ui->innerColor->setColor( configuration.innerColor() );

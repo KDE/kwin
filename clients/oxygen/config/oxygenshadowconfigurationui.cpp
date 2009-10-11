@@ -52,7 +52,7 @@ namespace Oxygen
     // shadow size
     QLabel* label;
     mainLayout->addWidget( label = new QLabel( i18n( "Size:" ), this ), 0, 0, 1, 1 );
-    mainLayout->addWidget( shadowSize = new KIntSpinBox( 0, 500, 1, 1, this ), 0, 1, 1, 1 );
+    mainLayout->addWidget( shadowSize = new KIntSpinBox( 0, 50, 1, 1, this ), 0, 1, 1, 1 );
     shadowSize->setObjectName(QString::fromUtf8("shadowSize"));
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     label->setBuddy( shadowSize );

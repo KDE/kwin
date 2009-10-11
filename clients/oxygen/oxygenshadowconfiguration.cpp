@@ -33,25 +33,37 @@ namespace Oxygen
 
   //_________________________________________________________
   OxygenShadowConfiguration::OxygenShadowConfiguration( QPalette::ColorGroup colorGroup ):
-    colorGroup_( colorGroup ),
-    shadowSize_( 25.5 ),
-    horizontalOffset_( 0 ),
-    useOuterColor_( false )
+    colorGroup_( colorGroup )
   {
 
     // check colorgroup
     assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
 
-    // vertical offset
-    verticalOffset_ = ( OxygenShadowConfiguration::colorGroup() == QPalette::Active ) ? 0:0.2;
+    if( colorGroup == QPalette::Active )
+    {
 
-    // colors
-    innerColor_ = ( OxygenShadowConfiguration::colorGroup() == QPalette::Active ) ?
-      KDecoration::options()->color( KDecorationDefines::ColorTitleBar, true ):
-      QColor( Qt::black );
+      shadowSize_ = 25;
+      horizontalOffset_ = 0;
+      verticalOffset_ = 0.1;
 
-    outerColor_ = outerColor2_ = calcOuterColor();
-    midColor_ = calcMidColor();
+      innerColor_ = QColor( "#0070D2" );
+      outerColor_ = QColor( "#6ABAFF" );
+      outerColor2_ = calcOuterColor();
+      midColor_ = calcMidColor();
+      useOuterColor_ = true;
+
+    } else {
+
+      shadowSize_ = 25;
+      horizontalOffset_ = 0;
+      verticalOffset_ = 0.2;
+
+      innerColor_ = QColor( Qt::black );
+      outerColor_ = outerColor2_ = calcOuterColor();
+      midColor_ = calcMidColor();
+      useOuterColor_ = false;
+
+    }
 
   }
 
