@@ -108,7 +108,7 @@ namespace Oxygen
     private:
 
     //! parent client
-    OxygenClient &client_;
+    const OxygenClient &client_;
 
     //! helper
     OxygenHelper &helper_;
