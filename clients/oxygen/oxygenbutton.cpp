@@ -266,10 +266,6 @@ namespace Oxygen
     {
 
       case ButtonSticky:
-      if(isChecked()) {
-        newPen.setColor(KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color());
-        painter->setPen(newPen);
-      }
       painter->drawPoint(QPointF(10.5,10.5));
       break;
 
