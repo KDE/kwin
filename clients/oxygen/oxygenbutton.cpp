@@ -236,7 +236,8 @@ namespace Oxygen
     }
 
     // draw button shape
-    painter.drawPixmap(0, 0, helper_.windecoButton(bt, status_ == Oxygen::Pressed, (21.0*client_.configuration().buttonSize())/22.0 ) );
+    bool pressed( (status_ == Oxygen::Pressed) || ( type_ == ButtonSticky && isChecked() ) );
+    painter.drawPixmap(0, 0, helper_.windecoButton(bt, pressed, (21.0*client_.configuration().buttonSize())/22.0 ) );
 
     // draw button icon
     painter.setRenderHints(QPainter::Antialiasing);
