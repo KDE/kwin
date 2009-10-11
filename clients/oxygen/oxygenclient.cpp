@@ -934,9 +934,19 @@ namespace Oxygen
           KDecoration::options()->color(ColorTitleBar)
           );
 
+      } else if( drawTitleOutline() ) {
+
+        // for small borders, use a frame that matches the titlebar only
+        QRect local( frame.topLeft(), QSize( frame.width(), HFRAMESIZE ) );
+        helper().drawFloatFrame(
+          &painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          false, isActive() && configuration().useOxygenShadows(),
+          KDecoration::options()->color(ColorTitleBar)
+          );
+
       } else {
 
-        // for tiny borders, use a frame that matches the titlebar only
+        // for small borders, use a frame that matches the titlebar only
         QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
         helper().drawFloatFrame(
           &painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
