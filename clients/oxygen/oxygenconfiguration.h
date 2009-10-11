@@ -56,7 +56,7 @@ namespace Oxygen
     enum ButtonSize
     {
       ButtonSmall = 18,
-      ButtonDefault = 22,
+      ButtonDefault = 20,
       ButtonLarge = 32,
       ButtonHuge = 48
     };
