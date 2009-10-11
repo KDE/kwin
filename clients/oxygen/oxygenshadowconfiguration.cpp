@@ -42,12 +42,12 @@ namespace Oxygen
     if( colorGroup == QPalette::Active )
     {
 
-      shadowSize_ = 25;
+      shadowSize_ = 29;
       horizontalOffset_ = 0;
       verticalOffset_ = 0.1;
 
-      innerColor_ = QColor( "#0070D2" );
-      outerColor_ = QColor( "#6ABAFF" );
+      innerColor_ = QColor( "#70EFFF" );
+      outerColor_ = QColor( "#54A7F0" );
       outerColor2_ = calcOuterColor();
       midColor_ = calcMidColor();
       useOuterColor_ = true;
