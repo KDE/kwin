@@ -300,7 +300,8 @@ void TabBox::reset( bool partial_reset )
             m_tabBox->createModel( partial_reset );
             if( !partial_reset )
                 {
-                setCurrentClient( workspace()->activeClient() );
+                if( workspace()->activeClient() )
+                    setCurrentClient( workspace()->activeClient() );
                 // it's possible that the active client is not part of the model
                 // in that case the index is invalid
                 if( !m_index.isValid() )
