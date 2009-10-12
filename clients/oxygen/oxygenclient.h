@@ -114,7 +114,11 @@ namespace Oxygen
 
         //! return animation opacity
         qreal opacity( void ) const
-        { return qreal( timeLine_.currentFrame() )/qreal( timeLine_.endFrame() ); }
+        {
+          int frame( timeLine_.currentFrame() );
+          if( timeLine_.direction() == QTimeLine::Backward ) frame -= timeLine_.startFrame();
+          return qreal( frame )/qreal( timeLine_.endFrame() );
+        }
 
         //! palette background
         QPalette backgroundPalette( const QWidget*, QPalette ) const;

@@ -96,8 +96,8 @@ namespace Oxygen
     widget()->setAutoFillBackground( false );
 
     // initialize timeLine
-    timeLine_.setFrameRange( 0, maxAnimationIndex );
-    timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
+    timeLine_.setFrameRange( maxAnimationIndex/5, maxAnimationIndex );
+    timeLine_.setCurveShape( QTimeLine::EaseOutCurve );
     connect( &timeLine_, SIGNAL( frameChanged( int ) ), widget(), SLOT( update() ) );
     connect( &timeLine_, SIGNAL( finished() ), widget(), SLOT( update() ) );
 
@@ -689,14 +689,7 @@ namespace Oxygen
   void OxygenClient::activeChange( void )
   {
 
-    // update size grip so that it gets the right color
-    // also make sure it is remaped to from z stack,
-    // unless hidden
-    if( hasSizeGrip() && !(isShade() || isMaximized() ))
-    {
-      sizeGrip().activeChange();
-      sizeGrip().update();
-    }
+    KCommonDecorationUnstable::activeChange();
 
     // reset animation
     if( animateActiveChange() )
@@ -706,7 +699,14 @@ namespace Oxygen
       { timeLine_.start(); }
     }
 
-    KCommonDecorationUnstable::activeChange();
+    // update size grip so that it gets the right color
+    // also make sure it is remaped to from z stack,
+    // unless hidden
+    if( hasSizeGrip() && !(isShade() || isMaximized() ))
+    {
+      sizeGrip().activeChange();
+      sizeGrip().update();
+    }
 
   }
 
@@ -840,8 +840,14 @@ namespace Oxygen
     {
 
       TileSet *tileSet( 0 );
-      if( configuration().useOxygenShadows() && timeLineIsRunning() ) tileSet = oxygenShadowCache()->tileSet( this, timeLine_.currentFrame() );
-      else tileSet = oxygenShadowCache()->tileSet( this );
+      if( configuration().useOxygenShadows() && timeLineIsRunning() )
+      {
+
+        int frame = timeLine_.currentFrame();
+        if( timeLine_.direction() == QTimeLine::Backward ) frame -= timeLine_.startFrame();
+        tileSet = oxygenShadowCache()->tileSet( this, frame );
+
+      } else tileSet = oxygenShadowCache()->tileSet( this );
 
       if( !isMaximized() ) tileSet->render( frame.adjusted( 4, 4, -4, -4), &painter, TileSet::Ring);
       else if( isShade() ) tileSet->render( frame.adjusted( 0, 4, 0, -4), &painter, TileSet::Bottom);
