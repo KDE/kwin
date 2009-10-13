@@ -181,6 +181,10 @@ namespace Oxygen
 
           border = 0;
 
+        } else if( !compositingActive() && frameBorder == OxygenConfiguration::BorderTiny ) {
+
+          border = qMax( frameBorder, 3 );
+
         } else {
 
           border = frameBorder;
@@ -330,34 +334,12 @@ namespace Oxygen
     if( isMaximized() )
     { return widget()->rect(); }
 
-    QRect frame( widget()->rect() );
+    QRect frame( widget()->rect().adjusted(
+        layoutMetric( LM_OuterPaddingLeft ), layoutMetric( LM_OuterPaddingTop ),
+        -layoutMetric( LM_OuterPaddingRight ), -layoutMetric( LM_OuterPaddingBottom ) ) );
 
-    // dimensions
-    int w=frame.width();
-    int h=frame.height();
-
-    // multipliers
-    int left = 1;
-    int right = 1;
-    int top = 1;
-    int bottom = 1;
-
-    // disable bottom corners when border frame is too small and window is not shaded
-    if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() ) bottom = 0;
-
-    int sw = layoutMetric( LM_OuterPaddingLeft );
-    int sh = layoutMetric( LM_OuterPaddingTop );
-
-    w -= sw + layoutMetric( LM_OuterPaddingRight );
-    h -= sh + layoutMetric( LM_OuterPaddingBottom );
-
-
-    QRegion mask(sw + 4*left, sh + 0*top, w-4*(left+right), h-0*(top+bottom));
-    mask += QRegion(sw + 0*left, sh + 4*top, w-0*(left+right), h-4*(top+bottom));
-    mask += QRegion(sw + 2*left, sh + 1*top, w-2*(left+right), h-1*(top+bottom));
-    mask += QRegion(sw + 1*left, sh + 2*top, w-1*(left+right), h-2*(top+bottom));
-
-    return mask;
+    if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() ) return helper().roundedMask( frame, 1, 1, 1, 0 );
+    else return helper().roundedMask( frame );
 
   }
 
@@ -617,7 +599,7 @@ namespace Oxygen
     boundingRect.setRight( qMin( boundingRect.right(), titleRect.right() ) );
 
     // finally translate one pixel up
-    boundingRect.translate(0, -1 );
+    if( compositingActive() && !isMaximized() ) boundingRect.translate(0, -1 );
     return boundingRect;
 
   }
@@ -859,9 +841,6 @@ namespace Oxygen
 
       } else {
 
-        int x, y, w, h;
-        frame.getRect(&x, &y, &w, &h);
-
         // multipliers
         int left = 1;
         int right = 1;
@@ -870,16 +849,16 @@ namespace Oxygen
 
         // disable bottom corners when border frame is too small and window is not shaded
         if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() ) bottom = 0;
-        QRegion mask( x+5*left,   y+0*top, w-5*(left+right), h-0*(top+bottom));
-        mask += QRegion(x+0*left, y+5*top, w-0*(left+right), h-5*(top+bottom));
-        mask += QRegion(x+2*left, y+2*top, w-2*(left+right), h-2*(top+bottom));
-        mask += QRegion(x+3*left, y+1*top, w-3*(left+right), h-1*(top+bottom));
-        mask += QRegion(x+1*left, y+3*top, w-1*(left+right), h-3*(top+bottom));
+        QRegion mask( helper().roundedRegion( frame, left, right, top, bottom ) );
 
         // in no-border configuration, an extra pixel is added to the mask
         // in order to get the corners color right in case of title highlighting.
         if( configuration().frameBorder() == OxygenConfiguration::BorderNone )
-        { mask += QRegion(x+0*left, y+4*top, w-0*(left+right), h-4*(top+bottom)); }
+        {
+            int x, y, w, h;
+            frame.getRect(&x, &y, &w, &h);
+            mask += QRegion(x+0*left, y+4*top, w-0*(left+right), h-4*(top+bottom));
+        }
 
         painter.setClipRegion( mask, Qt::IntersectClip );
 
@@ -975,7 +954,7 @@ namespace Oxygen
       if( isResizable() && !isShade() && !isMaximized() )
       {
 
-        // Draw the 3-dots resize handles
+        // Draw right side 3-dots resize handles
         qreal cenY = h / 2 + y + 0.5;
         qreal posX = w + x - 2.5;
 
@@ -987,7 +966,7 @@ namespace Oxygen
 
       }
 
-      // Draw the 3-dots resize handles
+      // Draw bottom-right cornet 3-dots resize handles
       if( isResizable() && !isShade() && !configuration().drawSizeGrip() )
       {
 
