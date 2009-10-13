@@ -27,8 +27,6 @@
 #include "oxygen.h"
 #include "oxygen.moc"
 #include "oxygenclient.h"
-#include "oxygenshadowcache.h"
-#include "lib/helper.h"
 
 #include <cassert>
 #include <KConfigGroup>
@@ -46,30 +44,11 @@ extern "C"
 namespace Oxygen
 {
 
-  K_GLOBAL_STATIC_WITH_ARGS(OxygenHelper, globalHelper, ("oxygenDeco"))
-  K_GLOBAL_STATIC_WITH_ARGS(OxygenShadowCache, globalShadowCache, (maxAnimationIndex))
-
-  //___________________________________________
-  OxygenHelper *oxygenHelper()
-  {
-    OxygenHelper *helper = globalHelper;
-    return helper;
-  }
-
-  //___________________________________________
-  OxygenShadowCache *oxygenShadowCache()
-  {
-    OxygenShadowCache* cache = globalShadowCache;
-    return cache;
-  }
-
-  // initialize static members
-  bool OxygenFactory::initialized_ = false;
-  OxygenConfiguration OxygenFactory::defaultConfiguration_;
-  OxygenExceptionList OxygenFactory::exceptions_;
-
   //___________________________________________________
-  OxygenFactory::OxygenFactory()
+  OxygenFactory::OxygenFactory():
+    initialized_( false ),
+    helper_( "oxygenDeco" ),
+    shadowCache_( helper_, maxAnimationIndex)
   {
     readConfig();
     setInitialized( true );
@@ -104,7 +83,7 @@ namespace Oxygen
 
     } else {
 
-      if( changed & SettingColors ) oxygenShadowCache()->invalidateCaches();
+      if( changed & SettingColors ) shadowCache().invalidateCaches();
       resetDecorations(changed);
       return false;
 
@@ -138,25 +117,25 @@ namespace Oxygen
 
     // read shadow configurations
     OxygenShadowConfiguration activeShadowConfiguration( QPalette::Active, config.group( "ActiveShadow" ) );
-    if( oxygenShadowCache()->shadowConfigurationChanged( activeShadowConfiguration ) )
+    if( shadowCache().shadowConfigurationChanged( activeShadowConfiguration ) )
     {
-      oxygenShadowCache()->setShadowConfiguration( activeShadowConfiguration );
+      shadowCache().setShadowConfiguration( activeShadowConfiguration );
       changed = true;
     }
 
     // read shadow configurations
     OxygenShadowConfiguration inactiveShadowConfiguration( QPalette::Inactive, config.group( "InactiveShadow" ) );
-    if( oxygenShadowCache()->shadowConfigurationChanged( inactiveShadowConfiguration ) )
+    if( shadowCache().shadowConfigurationChanged( inactiveShadowConfiguration ) )
     {
-      oxygenShadowCache()->setShadowConfiguration( inactiveShadowConfiguration );
+      shadowCache().setShadowConfiguration( inactiveShadowConfiguration );
       changed = true;
     }
 
     if( changed )
     {
 
-      oxygenShadowCache()->invalidateCaches();
-      oxygenHelper()->invalidateCaches();
+      shadowCache().invalidateCaches();
+      helper().invalidateCaches();
       return true;
 
     } else return false;

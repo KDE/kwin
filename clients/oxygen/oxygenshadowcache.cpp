@@ -27,6 +27,7 @@
 #include "oxygenshadowcache.h"
 #include "oxygenclient.h"
 #include "oxygen.h"
+#include "lib/helper.h"
 
 #include <cassert>
 #include <KColorUtils>
@@ -37,7 +38,8 @@ namespace Oxygen
 {
 
   //_______________________________________________________
-  OxygenShadowCache::OxygenShadowCache( int maxIndex ):
+  OxygenShadowCache::OxygenShadowCache( OxygenHelper& helper, int maxIndex ):
+    helper_( helper ),
     maxIndex_( maxIndex ),
     activeShadowConfiguration_( OxygenShadowConfiguration( QPalette::Active ) ),
     inactiveShadowConfiguration_( OxygenShadowConfiguration( QPalette::Inactive ) )
@@ -291,9 +293,9 @@ namespace Oxygen
     // draw the corner of the window - actually all 4 corners as one circle
     // this is all fixedSize. Does not scale with shadow size
     QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
-    lg.setColorAt(0.0, oxygenHelper()->calcLightColor( oxygenHelper()->backgroundTopColor(color) ));
-    lg.setColorAt(0.52, oxygenHelper()->backgroundTopColor(color) );
-    lg.setColorAt(1.0, oxygenHelper()->backgroundBottomColor(color) );
+    lg.setColorAt(0.0, helper().calcLightColor( helper().backgroundTopColor(color) ));
+    lg.setColorAt(0.52, helper().backgroundTopColor(color) );
+    lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
 
     // draw ellipse.
     p.setBrush( lg );
@@ -411,5 +413,23 @@ namespace Oxygen
     }
 
   }
+
+  OxygenShadowCache::Key::Key( const OxygenClient* client):
+  index(0)
+  {
+
+    active = client->isActive();
+    useOxygenShadows = client->configuration().useOxygenShadows();
+    isShade = client->isShade();
+    hasTitleOutline = client->configuration().drawTitleOutline();
+    switch(  client->configuration().frameBorder() )
+    {
+      case OxygenConfiguration::BorderNone: frameBorder = Key::BorderNone; break;
+      case OxygenConfiguration::BorderNoSide:  frameBorder = Key::BorderNoSide; break;
+      default:  frameBorder = Key::BorderAny; break;
+    }
+
+  }
+
 
 }

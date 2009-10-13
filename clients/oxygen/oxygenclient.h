@@ -31,6 +31,7 @@
 #include <kcommondecoration.h>
 #include <QtCore/QTimeLine>
 
+#include "oxygen.h"
 #include "oxygenconfiguration.h"
 #include "lib/helper.h"
 #include "lib/tileset.h"
@@ -40,7 +41,6 @@ namespace Oxygen
 {
 
     class OxygenSizeGrip;
-
     class OxygenClient : public KCommonDecorationUnstable
     {
 
@@ -49,7 +49,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        OxygenClient(KDecorationBridge *b, KDecorationFactory *f);
+        OxygenClient(KDecorationBridge *b, OxygenFactory *f);
 
         //! destructor
         virtual ~OxygenClient();
@@ -110,7 +110,11 @@ namespace Oxygen
 
         //! helper class
         OxygenHelper& helper( void ) const
-        { return helper_; }
+        { return factory_->helper(); }
+
+        //! helper class
+        OxygenShadowCache& shadowCache( void ) const
+        { return factory_->shadowCache(); }
 
         //! return animation opacity
         qreal opacity( void ) const
@@ -248,6 +252,9 @@ namespace Oxygen
         //! stored color
         QColor cachedTitlebarTextColor_;
 
+        //! factory
+        OxygenFactory* factory_;
+
         //! size grip widget
         OxygenSizeGrip* sizeGrip_;
 
@@ -259,9 +266,6 @@ namespace Oxygen
 
         //! old caption
         QString oldCaption_;
-
-        //! helper
-        OxygenHelper& helper_;
 
         //! true when initialized
         bool initialized_;

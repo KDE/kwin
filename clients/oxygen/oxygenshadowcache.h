@@ -30,20 +30,21 @@
 #include <QtCore/QCache>
 #include <QtGui/QRadialGradient>
 
-#include "oxygenclient.h"
 #include "oxygenshadowconfiguration.h"
 #include "lib/tileset.h"
+
+class OxygenHelper;
 
 namespace Oxygen
 {
 
-
+  class OxygenClient;
   class OxygenShadowCache
   {
     public:
 
     //! constructor
-    OxygenShadowCache( int maxIndex );
+    OxygenShadowCache( OxygenHelper& helper, int maxIndex );
 
     //! destructor
     virtual ~OxygenShadowCache( void )
@@ -106,22 +107,7 @@ namespace Oxygen
       {}
 
       //! constructor from client
-      Key( const OxygenClient* client ):
-        index(0)
-      {
-
-        active = client->isActive();
-        useOxygenShadows = client->configuration().useOxygenShadows();
-        isShade = client->isShade();
-        hasTitleOutline = client->configuration().drawTitleOutline();
-        switch(  client->configuration().frameBorder() )
-        {
-          case OxygenConfiguration::BorderNone: frameBorder = Key::BorderNone; break;
-          case OxygenConfiguration::BorderNoSide:  frameBorder = Key::BorderNoSide; break;
-          default:  frameBorder = Key::BorderAny; break;
-        }
-
-      }
+      Key( const OxygenClient* );
 
       //! constructor from int
       Key( int hash ):
@@ -169,11 +155,19 @@ namespace Oxygen
     //! simple pixmap
     QPixmap simpleShadowPixmap( const QColor&, const Key&, bool active ) const;
 
+    protected:
+
+    OxygenHelper& helper( void ) const
+    { return helper_; }
+
     private:
 
     //! draw gradient into rect
     /*! a separate method is used in order to properly account for corners */
     void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool noBorder = false ) const;
+
+    //! helper
+    OxygenHelper& helper_;
 
     //! max index
     /*! it is used to set caches max cost, and calculate animation opacity */

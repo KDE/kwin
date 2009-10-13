@@ -49,30 +49,21 @@ namespace Oxygen
 {
 
   //___________________________________________
-  static void oxkwincleanupBefore()
-  {
-
-    oxygenHelper()->invalidateCaches();
-    oxygenShadowCache()->invalidateCaches();
-
-  }
-
-  //___________________________________________
   void renderDot(QPainter *p, const QPointF &point, qreal diameter)
   {
     p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
   }
 
   //___________________________________________
-  OxygenClient::OxygenClient(KDecorationBridge *b, KDecorationFactory *f):
+  OxygenClient::OxygenClient(KDecorationBridge *b, OxygenFactory *f):
     KCommonDecorationUnstable(b, f),
     colorCacheInvalid_(true),
+    factory_( f ),
     sizeGrip_( 0 ),
     timeLine_( 200, this ),
     titleTimeLine_( 200, this ),
-    helper_(*oxygenHelper()),
     initialized_( false )
-  { qAddPostRoutine(oxkwincleanupBefore); }
+  {}
 
   //___________________________________________
   OxygenClient::~OxygenClient()
@@ -263,7 +254,7 @@ namespace Oxygen
       case LM_OuterPaddingRight:
       case LM_OuterPaddingTop:
       case LM_OuterPaddingBottom:
-      return oxygenShadowCache()->shadowSize() - extraBorder;
+      return shadowCache().shadowSize() - extraBorder;
 
       default:
       return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -457,7 +448,7 @@ namespace Oxygen
     }
 
     QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
-    qreal shadowSize( oxygenShadowCache()->shadowSize() );
+    qreal shadowSize( shadowCache().shadowSize() );
     r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
     r.adjust(0,0, 1, 1);
 
@@ -481,7 +472,7 @@ namespace Oxygen
     // bottom line
     if( configuration().frameBorder() > OxygenConfiguration::BorderNone && (tiles&TileSet::Bottom) )
     {
-      int height = qMin( HFRAMESIZE, layoutMetric( LM_BorderBottom ) )-1;
+      int height = qMin( (int) HFRAMESIZE, layoutMetric( LM_BorderBottom ) )-1;
       QColor shadow( helper().backgroundBottomColor( widget->palette().color( widget->backgroundRole() ) ) );
       painter->setPen( shadow );
       QRect rect( r.bottomLeft()-position-QPoint(0,height), QSize( r.width(), height ) );
@@ -502,7 +493,7 @@ namespace Oxygen
       painter->setPen( shadow );
       if( tiles&TileSet::Left )
       {
-        int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderLeft ) )-1;
+        int width = qMin( (int)HFRAMESIZE, layoutMetric( LM_BorderLeft ) )-1;
         QRect rect( r.topLeft()-position, QSize( width, r.height() ) );
         painter->drawLine( r.topLeft()-position-QPoint(width+1,HFRAMESIZE), r.bottomLeft()-position-QPoint(width+1,-HFRAMESIZE) );
 
@@ -513,7 +504,7 @@ namespace Oxygen
       // right
       if( tiles&TileSet::Right )
       {
-        int width = qMin( HFRAMESIZE, layoutMetric( LM_BorderRight ) )-1;
+        int width = qMin( (int)HFRAMESIZE, layoutMetric( LM_BorderRight ) )-1;
         QRect rect( r.topRight()-position-QPoint(width,0), QSize( width, r.height() ) );
         painter->drawLine( r.topRight()-position-QPoint(-width-1,HFRAMESIZE), r.bottomRight()-position-QPoint(-width-1,-HFRAMESIZE) );
 
@@ -562,7 +553,7 @@ namespace Oxygen
     }
 
     QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
-    qreal shadowSize( oxygenShadowCache()->shadowSize() );
+    qreal shadowSize( shadowCache().shadowSize() );
     r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
     r.adjust(0,0, 1, 1);
 
@@ -795,7 +786,7 @@ namespace Oxygen
 
     if( !initialized_ ) return;
 
-    configuration_ = OxygenFactory::configuration( *this );
+    configuration_ = factory_->configuration( *this );
 
     // animations duration
     timeLine_.setDuration( configuration_.animationsDuration() );
@@ -819,7 +810,7 @@ namespace Oxygen
   {
 
     // factory
-    if(!( initialized_ && OxygenFactory::initialized() ) ) return;
+    if(!( initialized_ && factory_->initialized() ) ) return;
 
     // palette
     QPalette palette = widget()->palette();
@@ -845,9 +836,9 @@ namespace Oxygen
 
         int frame = timeLine_.currentFrame();
         if( timeLine_.direction() == QTimeLine::Backward ) frame -= timeLine_.startFrame();
-        tileSet = oxygenShadowCache()->tileSet( this, frame );
+        tileSet = shadowCache().tileSet( this, frame );
 
-      } else tileSet = oxygenShadowCache()->tileSet( this );
+      } else tileSet = shadowCache().tileSet( this );
 
       if( !isMaximized() ) tileSet->render( frame.adjusted( 4, 4, -4, -4), &painter, TileSet::Ring);
       else if( isShade() ) tileSet->render( frame.adjusted( 0, 4, 0, -4), &painter, TileSet::Bottom);
@@ -855,7 +846,7 @@ namespace Oxygen
     }
 
     // adjust frame
-    qreal shadowSize( oxygenShadowCache()->shadowSize() );
+    qreal shadowSize( shadowCache().shadowSize() );
     frame.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
 
     //  adjust mask
