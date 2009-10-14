@@ -119,7 +119,7 @@ namespace Oxygen
     //! button status
     ButtonState status_;
 
-    bool colorCacheInvalid_;
+    // button color
     QColor cachedButtonDetailColor_;
 
     //! timeline used for smooth transitions

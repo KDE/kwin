@@ -48,7 +48,6 @@ namespace Oxygen
     client_(parent),
     helper_( parent.helper() ),
     type_(type),
-    colorCacheInvalid_(true),
     timeLine_( 200, this )
   {
     setAutoFillBackground(false);
@@ -93,14 +92,13 @@ namespace Oxygen
     if( active ) return palette.color(QPalette::Active, QPalette::ButtonText);
     else {
 
-      if (colorCacheInvalid_)
+      if( !cachedButtonDetailColor_.isValid() )
       {
         QColor ab = palette.color(QPalette::Active, QPalette::Button);
         QColor af = palette.color(QPalette::Active, QPalette::ButtonText);
         QColor nb = palette.color(QPalette::Inactive, QPalette::Button);
         QColor nf = palette.color(QPalette::Inactive, QPalette::ButtonText);
 
-        colorCacheInvalid_ = false;
         cachedButtonDetailColor_ = reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
       }
 
