@@ -54,12 +54,17 @@ namespace Oxygen
         //! destructor
         virtual ~OxygenClient();
 
+        //! decoration name
         virtual QString visibleName() const;
+
+        //! buttons
         virtual KCommonDecorationButton *createButton(::ButtonType type);
-        virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
 
         //!@name flags
         //@{
+
+        //! true if decoration has iquired behavior
+        virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
 
         //! true if window is maximized
         virtual bool isMaximized( void ) const
@@ -87,9 +92,6 @@ namespace Oxygen
         }
 
         //@}
-
-        //! dimensions
-        virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
 
         //! window shape
         virtual void updateWindowShape();
@@ -124,6 +126,18 @@ namespace Oxygen
           return qreal( frame )/qreal( timeLine_.endFrame() );
         }
 
+        //!@name metrics and color definitions
+        //@{
+
+        //! dimensions
+        virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+
+        //! get maximum space available for title
+        virtual QRect titleRect( const QRect& ) const;
+
+        //! get title bounding rect
+        virtual QRect titleBoundingRect( QPainter*, const QRect&, const QString& ) const;
+
         //! palette background
         QPalette backgroundPalette( const QWidget*, QPalette ) const;
 
@@ -134,6 +148,11 @@ namespace Oxygen
         //! background
         QColor backgroundColor( const QWidget*, QPalette, bool ) const;
 
+        //@}
+
+        //!@name rendering methods (called in paintEvent)
+        //@{
+
         //! window background
         virtual void renderWindowBackground( QPainter*, const QRect&, const QWidget*, const QPalette& ) const;
 
@@ -143,12 +162,6 @@ namespace Oxygen
 
         //! separator
         virtual void renderSeparator( QPainter*, const QRect&, const QWidget*, const QColor& ) const;
-
-        //! get maximum space available for title
-        virtual QRect titleRect( const QRect& ) const;
-
-        //! get title bounding rect
-        virtual QRect titleBoundingRect( QPainter*, const QRect&, const QString& ) const;
 
         //! title outline
         virtual void renderTitleOutline( QPainter*, const QRect&, const QPalette& ) const;
@@ -162,6 +175,11 @@ namespace Oxygen
         //! render dots
         virtual void renderDots( QPainter*, const QRect&, const QColor& ) const;
 
+        //@}
+
+        //!@name status change methods (overloaded from KCommonDecorationUnstable)
+        //@{
+
         //! triggered when window activity is changed
         virtual void activeChange();
 
@@ -173,6 +191,8 @@ namespace Oxygen
 
         //! triggered when window shade is changed
         virtual void captionChange();
+
+        //@}
 
         public slots:
 

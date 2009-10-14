@@ -148,7 +148,84 @@ namespace Oxygen
     }
   }
 
-  //___________________________________________
+  //_________________________________________________________
+  KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
+  {
+    switch (type) {
+      case MenuButton:
+      return new OxygenButton(*this, i18n("Menu"), ButtonMenu);
+
+      case HelpButton:
+      return new OxygenButton(*this, i18n("Help"), ButtonHelp);
+
+      case MinButton:
+      return new OxygenButton(*this, i18n("Minimize"), ButtonMin);
+
+      case MaxButton:
+      return new OxygenButton(*this, i18n("Maximize"), ButtonMax);
+
+      case CloseButton:
+      return new OxygenButton(*this, i18n("Close"), ButtonClose);
+
+      case AboveButton:
+      return new OxygenButton(*this, i18n("Keep Above Others"), ButtonAbove);
+
+      case BelowButton:
+      return new OxygenButton(*this, i18n("Keep Below Others"), ButtonBelow);
+
+      case OnAllDesktopsButton:
+      return new OxygenButton(*this, i18n("On All Desktops"), ButtonSticky);
+
+      case ShadeButton:
+      return new OxygenButton(*this, i18n("Shade Button"), ButtonShade);
+
+      default:
+      return 0;
+    }
+  }
+
+  //_________________________________________________________
+  QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
+  {
+    double s = KColorUtils::contrastRatio(c0, c1);
+    if (s < t)
+      return c1;
+
+    double l = 0.0, h = 1.0;
+    double x = s, a;
+    QColor r = c1;
+    for (int maxiter = 16; maxiter; --maxiter)
+    {
+
+      a = 0.5 * (l + h);
+      r = KColorUtils::mix(c0, c1, a);
+      x = KColorUtils::contrastRatio(c0, r);
+
+      if (fabs(x - t) < 0.01) break;
+      if (x > t) h = a;
+      else l = a;
+    }
+
+    return r;
+  }
+
+  //_________________________________________________________
+  QRegion OxygenClient::calcMask( void ) const
+  {
+
+    if( isMaximized() )
+    { return widget()->rect(); }
+
+    QRect frame( widget()->rect().adjusted(
+        layoutMetric( LM_OuterPaddingLeft ), layoutMetric( LM_OuterPaddingTop ),
+        -layoutMetric( LM_OuterPaddingRight ), -layoutMetric( LM_OuterPaddingBottom ) ) );
+
+    if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() ) return helper().roundedMask( frame, 1, 1, 1, 0 );
+    else return helper().roundedMask( frame );
+
+  }
+
+    //___________________________________________
   int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
   {
 
@@ -267,79 +344,49 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  KCommonDecorationButton *OxygenClient::createButton(::ButtonType type)
+  QRect OxygenClient::titleRect( const QRect& frame ) const
   {
-    switch (type) {
-      case MenuButton:
-      return new OxygenButton(*this, i18n("Menu"), ButtonMenu);
 
-      case HelpButton:
-      return new OxygenButton(*this, i18n("Help"), ButtonHelp);
+    int extraBorder = ( isMaximized() && compositingActive() ) ? 0 : EXTENDED_HITAREA;
 
-      case MinButton:
-      return new OxygenButton(*this, i18n("Minimize"), ButtonMin);
+    // dimensions
+    const int titleHeight = layoutMetric(LM_TitleHeight);
+    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top() - extraBorder;
+    const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
+    const int marginLeft = layoutMetric(LM_TitleBorderLeft);
+    const int marginRight = layoutMetric(LM_TitleBorderRight);
 
-      case MaxButton:
-      return new OxygenButton(*this, i18n("Maximize"), ButtonMax);
+    const int titleLeft = frame.left() + titleEdgeLeft + buttonsLeftWidth() + marginLeft;
+    const int titleWidth = frame.width() -
+      titleEdgeLeft - layoutMetric(LM_TitleEdgeRight) -
+      buttonsLeftWidth() - buttonsRightWidth() -
+      marginLeft - marginRight;
 
-      case CloseButton:
-      return new OxygenButton(*this, i18n("Close"), ButtonClose);
+    // maximum rect allocated for title
+    return QRect( titleLeft, titleTop-1, titleWidth, titleHeight );
 
-      case AboveButton:
-      return new OxygenButton(*this, i18n("Keep Above Others"), ButtonAbove);
-
-      case BelowButton:
-      return new OxygenButton(*this, i18n("Keep Below Others"), ButtonBelow);
-
-      case OnAllDesktopsButton:
-      return new OxygenButton(*this, i18n("On All Desktops"), ButtonSticky);
-
-      case ShadeButton:
-      return new OxygenButton(*this, i18n("Shade Button"), ButtonShade);
-
-      default:
-      return 0;
-    }
   }
 
   //_________________________________________________________
-  QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
-  {
-    double s = KColorUtils::contrastRatio(c0, c1);
-    if (s < t)
-      return c1;
-
-    double l = 0.0, h = 1.0;
-    double x = s, a;
-    QColor r = c1;
-    for (int maxiter = 16; maxiter; --maxiter)
-    {
-
-      a = 0.5 * (l + h);
-      r = KColorUtils::mix(c0, c1, a);
-      x = KColorUtils::contrastRatio(c0, r);
-
-      if (fabs(x - t) < 0.01) break;
-      if (x > t) h = a;
-      else l = a;
-    }
-
-    return r;
-  }
-
-  //_________________________________________________________
-  QRegion OxygenClient::calcMask( void ) const
+  QRect OxygenClient::titleBoundingRect( QPainter* painter, const QRect& frame, const QString& caption ) const
   {
 
-    if( isMaximized() )
-    { return widget()->rect(); }
+    QRect titleRect( OxygenClient::titleRect( frame ) );
 
-    QRect frame( widget()->rect().adjusted(
-        layoutMetric( LM_OuterPaddingLeft ), layoutMetric( LM_OuterPaddingTop ),
-        -layoutMetric( LM_OuterPaddingRight ), -layoutMetric( LM_OuterPaddingBottom ) ) );
+    // get title bounding rect
+    QRect boundingRect = painter->boundingRect( titleRect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
 
-    if( configuration().frameBorder() == OxygenConfiguration::BorderNone && !isShade() ) return helper().roundedMask( frame, 1, 1, 1, 0 );
-    else return helper().roundedMask( frame );
+    // adjust to make sure bounding rect
+    // 1/ has same vertical alignment as original titleRect
+    // 2/ does not exceeds available horizontal space
+    boundingRect.setTop( titleRect.top() );
+    boundingRect.setBottom( titleRect.bottom() );
+    boundingRect.setLeft( qMax( boundingRect.left(), titleRect.left() ) );
+    boundingRect.setRight( qMin( boundingRect.right(), titleRect.right() ) );
+
+    // finally translate one pixel up
+    if( compositingActive() && !isMaximized() ) boundingRect.translate(0, -1 );
+    return boundingRect;
 
   }
 
@@ -554,53 +601,6 @@ namespace Oxygen
     helper().drawSeparator( painter, QRect(x, titleTop+titleHeight-1.5, w, 2).translated( -position ), local, Qt::Horizontal);
 
     if (clipRect.isValid()) { painter->restore(); }
-
-  }
-
-  //_________________________________________________________
-  QRect OxygenClient::titleRect( const QRect& frame ) const
-  {
-
-    int extraBorder = ( isMaximized() && compositingActive() ) ? 0 : EXTENDED_HITAREA;
-
-    // dimensions
-    const int titleHeight = layoutMetric(LM_TitleHeight);
-    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top() - extraBorder;
-    const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
-    const int marginLeft = layoutMetric(LM_TitleBorderLeft);
-    const int marginRight = layoutMetric(LM_TitleBorderRight);
-
-    const int titleLeft = frame.left() + titleEdgeLeft + buttonsLeftWidth() + marginLeft;
-    const int titleWidth = frame.width() -
-      titleEdgeLeft - layoutMetric(LM_TitleEdgeRight) -
-      buttonsLeftWidth() - buttonsRightWidth() -
-      marginLeft - marginRight;
-
-    // maximum rect allocated for title
-    return QRect( titleLeft, titleTop-1, titleWidth, titleHeight );
-
-  }
-
-  //_________________________________________________________
-  QRect OxygenClient::titleBoundingRect( QPainter* painter, const QRect& frame, const QString& caption ) const
-  {
-
-    QRect titleRect( OxygenClient::titleRect( frame ) );
-
-    // get title bounding rect
-    QRect boundingRect = painter->boundingRect( titleRect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
-
-    // adjust to make sure bounding rect
-    // 1/ has same vertical alignment as original titleRect
-    // 2/ does not exceeds available horizontal space
-    boundingRect.setTop( titleRect.top() );
-    boundingRect.setBottom( titleRect.bottom() );
-    boundingRect.setLeft( qMax( boundingRect.left(), titleRect.left() ) );
-    boundingRect.setRight( qMin( boundingRect.right(), titleRect.right() ) );
-
-    // finally translate one pixel up
-    if( compositingActive() && !isMaximized() ) boundingRect.translate(0, -1 );
-    return boundingRect;
 
   }
 
