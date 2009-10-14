@@ -2219,7 +2219,7 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
         clientArea = workspace()->clientArea( MaximizeArea, this );
 
     if( options->borderlessMaximizedWindows() )
-        setNoBorder(max_mode == MaximizeFull);
+        setNoBorder(app_noborder || max_mode == MaximizeFull);
 
     // save sizes for restoring, if maximalizing
     if( !adjust && !( y() == clientArea.top() && height() == clientArea.height()))
