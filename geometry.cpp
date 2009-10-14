@@ -2174,13 +2174,6 @@ void Client::maximize( MaximizeMode m )
  */
 void Client::setMaximize( bool vertically, bool horizontally )
     {
-    // If maximizing, and a quick tile mode is set, drop it:
-    // this will restore the original geometry, meaning we can save it correctly here,
-    // as well as moving from maximized to quick tiled properly if desired.
-    // (remember, a quick tile is technically not maximized in any way!)
-    if( (vertically || horizontally) && quick_tile_mode != QuickTileNone )
-        setQuickTileMode( QuickTileNone );
-
     // changeMaximize() flips the state, so change from set->flip
     changeMaximize(
         max_mode & MaximizeVertical ? !vertically : vertically,
@@ -2254,6 +2247,23 @@ void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
         {
         if( checkBorderSizes( false )) // only query, don't resize
             geom_mode = ForceGeometrySet;
+        }
+
+    // Conditional quick tiling exit points
+    if( quick_tile_mode != QuickTileNone )
+        {
+        if( old_mode == MaximizeFull &&
+            !clientArea.contains( geom_restore.center() ))
+            { // Not restoring on the same screen
+            // TODO: The following doesn't work for some reason
+            //geom_restore = geom_pretile; // Restore to the pretiled geometry
+            //quick_tile_mode = QuickTileNone; // And exit quick tile mode manually
+            }
+        else if(( old_mode == MaximizeVertical && max_mode == MaximizeRestore ) ||
+                ( old_mode == MaximizeFull && max_mode == MaximizeHorizontal ))
+            { // Modifying geometry of a tiled window
+            quick_tile_mode = QuickTileNone; // Exit quick tile mode without restoring geometry
+            }
         }
 
     // restore partial maximizations
@@ -2707,11 +2717,34 @@ bool Client::startMoveResize()
         move_resize_grab_window = None;
         return false;
         }
-    if ( maximizeMode() != MaximizeRestore )
-        resetMaximize();
-    // Undo any quick tile state this window has (it will trigger a resize, but that's expected)
-    if( quick_tile_mode != QuickTileNone )
+    if( maximizeMode() == MaximizeFull && options->electricBorderMaximize() )
+        { // If we have quick maximization enabled then it's safe to automatically restore windows
+          // when starting a move as the user can undo their action by moving the window back to
+          // the top of the screen. When the setting is disabled then doing so is confusing.
+        const QRect before = geometry();
+        setMaximize( false, false );
+        // Move the window so it's under the cursor
+        moveOffset = QPoint(
+            double( moveOffset.x() ) / double( before.width() ) * double( geom_restore.width() ),
+            double( moveOffset.y() ) / double( before.height() ) * double( geom_restore.height() )
+            );
+        }
+    if( maximizeMode() != MaximizeRestore )
+        resetMaximize(); // TODO: I have no idea what this does... Is it needed?
+    if( quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter ) // Cannot use isMove() yet
+        { // Exit quick tile mode when the user attempts to move a tiled window
+        const QRect before = geometry();
         setQuickTileMode( QuickTileNone );
+        // Move the window so it's under the cursor
+        moveOffset = QPoint(
+            double( moveOffset.x() ) / double( before.width() ) * double( geom_pretile.width() ),
+            double( moveOffset.y() ) / double( before.height() ) * double( geom_pretile.height() )
+            );
+        }
+    if( quick_tile_mode != QuickTileNone && mode != PositionCenter ) // Cannot use isResize() yet
+        { // Exit quick tile mode when the user attempts to resize a tiled window
+        quick_tile_mode = QuickTileNone; // Do so without restoring original geometry
+        }
 
     moveResizeMode = true;
     workspace()->setClientIsMoving(this);
@@ -3260,7 +3293,7 @@ void Client::setQuickTileMode( QuickTileMode mode )
              (quick_tile_mode == QuickTileRight && mode == QuickTileLeft) )
         {
         // Untiling, so just restore geometry, and we're done.
-        setGeometry( geom_restore );
+        setGeometry( geom_pretile );
         quick_tile_mode = QuickTileNone;
         return;
         }
@@ -3272,7 +3305,7 @@ void Client::setQuickTileMode( QuickTileMode mode )
 
         // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
         // Store geometry first, so we can go out of this tile later.
-        geom_restore = geometry();
+        geom_pretile = geometry();
 
         // Temporary, so the maximize code doesn't get all confused
         quick_tile_mode = QuickTileNone;
