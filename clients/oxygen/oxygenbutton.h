@@ -32,7 +32,6 @@
 #include <QtCore/QTimeLine>
 
 #include "oxygen.h"
-#include "oxygenclient.h"
 
 namespace Oxygen
 {
@@ -48,12 +47,29 @@ namespace Oxygen
 
   class OxygenButton : public KCommonDecorationButton
   {
+
+    Q_OBJECT
+
     public:
+
+    //! flags
+    enum RenderFlag
+    {
+
+      Background = 1<<0,
+      Deco = 1<<1,
+      Icon = 1<<2,
+      All = Background|Deco|Icon
+
+    };
+
+    Q_DECLARE_FLAGS(RenderFlags, RenderFlag)
 
     //! constructor
     explicit OxygenButton(OxygenClient &parent,
       const QString &tip=NULL,
-      ButtonType type=ButtonHelp);
+      ButtonType type=ButtonHelp,
+      RenderFlags flags = All);
 
     //! destructor
     ~OxygenButton();
@@ -68,6 +84,11 @@ namespace Oxygen
     //! button type
     ButtonType type( void ) const
     { return type_; }
+
+    //! set force inactive
+    /*! returns true if value was actually changed */
+    void setForceInactive( const bool& value )
+    { forceInactive_ = value; }
 
     protected:
 
@@ -86,8 +107,6 @@ namespace Oxygen
     //! paint
     void paintEvent(QPaintEvent* );
 
-    private:
-
     //! draw icon
     void drawIcon(QPainter*, QPalette&, ButtonType& );
 
@@ -105,7 +124,19 @@ namespace Oxygen
     bool timeLineIsRunning( void ) const
     { return timeLine_.state() == QTimeLine::Running; }
 
+    //! true if button is active
+    bool isActive( void ) const;
+
+    protected slots:
+
+    //! update
+    void setDirty( void )
+    { update(); }
+
     private:
+
+    //! flags
+    RenderFlags renderFlags_;
 
     //! parent client
     const OxygenClient &client_;
@@ -119,7 +150,10 @@ namespace Oxygen
     //! button status
     ButtonState status_;
 
-    // button color
+    //! true if button should be forced inactive
+    bool forceInactive_;
+
+    //! true if color cache is to be reseted
     QColor cachedButtonDetailColor_;
 
     //! timeline used for smooth transitions

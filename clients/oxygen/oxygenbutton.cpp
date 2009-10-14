@@ -26,6 +26,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenbutton.h"
+#include "oxygenbutton.moc"
 #include "oxygenclient.h"
 #include "oxygen.h"
 
@@ -42,12 +43,17 @@
 namespace Oxygen
 {
   //_______________________________________________
-  OxygenButton::OxygenButton(OxygenClient &parent,
-    const QString& tip, ButtonType type):
+  OxygenButton::OxygenButton(
+    OxygenClient &parent,
+    const QString& tip,
+    ButtonType type,
+    RenderFlags flags):
     KCommonDecorationButton((::ButtonType)type, &parent),
+    renderFlags_( flags ),
     client_(parent),
     helper_( parent.helper() ),
     type_(type),
+    forceInactive_( false ),
     timeLine_( 200, this )
   {
     setAutoFillBackground(false);
@@ -63,8 +69,8 @@ namespace Oxygen
 
     timeLine_.setFrameRange( 0, 1000 );
     timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
-    connect( &timeLine_, SIGNAL( frameChanged( int ) ), SLOT( update() ) );
-    connect( &timeLine_, SIGNAL( finished() ), SLOT( update() ) );
+    connect( &timeLine_, SIGNAL( frameChanged( int ) ), SLOT( setDirty() ) );
+    connect( &timeLine_, SIGNAL( finished() ), SLOT( setDirty() ) );
 
   }
 
@@ -72,17 +78,14 @@ namespace Oxygen
   OxygenButton::~OxygenButton()
   {}
 
-  //declare function from Oxygenclient.cpp
-  QColor reduceContrast(const QColor &c0, const QColor &c1, double t);
-
   //_______________________________________________
   QColor OxygenButton::buttonDetailColor(const QPalette &palette)
   {
-    if( client_.timeLineIsRunning() ) return KColorUtils::mix(
+    if( client_.timeLineIsRunning() && !forceInactive_ ) return KColorUtils::mix(
       buttonDetailColor( palette, false ),
       buttonDetailColor( palette, true ),
       client_.opacity() );
-    else return buttonDetailColor( palette, client_.isActive() );
+    else return buttonDetailColor( palette, isActive() );
   }
 
   //_______________________________________________
@@ -98,7 +101,6 @@ namespace Oxygen
         QColor af = palette.color(QPalette::Active, QPalette::ButtonText);
         QColor nb = palette.color(QPalette::Inactive, QPalette::Button);
         QColor nf = palette.color(QPalette::Inactive, QPalette::ButtonText);
-
         cachedButtonDetailColor_ = reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
       }
 
@@ -106,6 +108,10 @@ namespace Oxygen
     }
 
   }
+
+  //___________________________________________________
+  bool OxygenButton::isActive( void ) const
+  { return (!forceInactive_) && client_.isActive(); }
 
   //___________________________________________________
   QSize OxygenButton::sizeHint() const
@@ -117,16 +123,17 @@ namespace Oxygen
   //___________________________________________________
   void OxygenButton::enterEvent(QEvent *e)
   {
+
     KCommonDecorationButton::enterEvent(e);
     if (status_ != Oxygen::Pressed) status_ = Oxygen::Hovered;
     timeLine_.setDirection( QTimeLine::Forward );
     if( !timeLineIsRunning() ) timeLine_.start();
-    update();
   }
 
   //___________________________________________________
   void OxygenButton::leaveEvent(QEvent *e)
   {
+
     KCommonDecorationButton::leaveEvent(e);
 
     if( status_ == Oxygen::Hovered )
@@ -136,7 +143,7 @@ namespace Oxygen
     }
 
     status_ = Oxygen::Normal;
-    update();
+    setDirty();
 
   }
 
@@ -144,8 +151,9 @@ namespace Oxygen
   void OxygenButton::mousePressEvent(QMouseEvent *e)
   {
 
+    kDebug(1212) << endl;
     status_ = Oxygen::Pressed;
-    update();
+    setDirty();
 
     KCommonDecorationButton::mousePressEvent(e);
   }
@@ -153,8 +161,10 @@ namespace Oxygen
   //___________________________________________________
   void OxygenButton::mouseReleaseEvent(QMouseEvent *e)
   {
-    status_ = Oxygen::Normal;
-    update();
+
+    kDebug(1212) << endl;
+    status_ = ( rect().contains( e->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
+    setDirty();
 
     KCommonDecorationButton::mouseReleaseEvent(e);
   }
@@ -168,87 +178,100 @@ namespace Oxygen
     painter.setRenderHints(QPainter::Antialiasing);
 
     QPalette palette = OxygenButton::palette();
-
-    if( client_.isActive() ) palette.setCurrentColorGroup(QPalette::Active);
+    if( isActive() ) palette.setCurrentColorGroup(QPalette::Active);
     else palette.setCurrentColorGroup(QPalette::Inactive);
-
-    // window background
-    client_.renderWindowBackground( &painter, rect(), this, palette );
-
-    // window border
-    if( client_.drawTitleOutline() && !client_.isMaximized() )
-    { client_.renderWindowBorder( &painter, rect(), this, client_.backgroundPalette( this, palette ) ); }
-
-    // colors
     QColor color = palette.window().color();
 
-    // separator
-    if( client_.drawSeparator() )
-    { client_.renderSeparator( &painter, rect(), this, color ); }
-
-    // translate button up for centering
-    if( client_.compositingActive() && !client_.isMaximized() ) painter.translate( 0, -1 );
-
-    // for menu button the application icon is used
-    if (type_ == ButtonMenu)
+    // window background
+    if( renderFlags_ & Background )
     {
 
-      const QPixmap& pixmap( client_.icon().pixmap( client_.configuration().iconScale() ) );
-      double offset = 0.5*(width()-pixmap.width() );
-      painter.drawPixmap(offset, offset-1, pixmap );
-      return;
+      client_.renderWindowBackground( &painter, rect(), this, palette );
+
+      // window border
+      if( client_.drawTitleOutline() )
+      { client_.renderWindowBorder( &painter, rect(), this, client_.backgroundPalette( this, palette ) ); }
+
+      // separator
+      if( client_.drawSeparator() )
+      { client_.renderSeparator( &painter, rect(), this, color ); }
+
     }
 
-    // calculate color depending on timeline state
+    // translate buttons up if window maximized
+    if( client_.compositingActive() && !client_.isMaximized() ) painter.translate( 0, -1 );
+
+    // base button color
+    QColor bt = palette.window().color();
+
+    // button icon and glow color depending on timeline state
     color = buttonDetailColor(palette);
     QColor glow = (type_ == ButtonClose) ?
       KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color():
       KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
-
-    // make glow darker
     glow = helper_.calcDarkColor( glow );
 
     if( timeLineIsRunning() ) color = KColorUtils::mix( color, glow, opacity() );
     else if( status_ == Oxygen::Hovered ) color = glow;
 
-    // button shape color
-    QColor bt = palette.window().color();
-
-    // draw glow on hover
-    if( timeLineIsRunning() )
+    // button decoration
+    if( ( renderFlags_ & Deco ) && (type_ != ButtonMenu) )
     {
 
-      // mixed shadow and glow for smooth transition
-      painter.drawPixmap(0, 0, helper_.windecoButtonGlow( KColorUtils::mix( Qt::black, glow, opacity() ), (21.0*client_.configuration().buttonSize())/22));
+      // draw glow on hover
+      if( timeLineIsRunning() )
+      {
 
-    } else if( status_ == Oxygen::Hovered ) {
+        // mixed shadow and glow for smooth transition
+        painter.drawPixmap(0, 0, helper_.windecoButtonGlow( KColorUtils::mix( Qt::black, glow, opacity() ), (21.0*client_.configuration().buttonSize())/22));
 
-      // glow only
-      painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
+      } else if( status_ == Oxygen::Hovered ) {
 
-    } else {
+        // glow only
+        painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
 
-      // shadow only
-      painter.drawPixmap(0, 0, helper_.windecoButtonGlow(Qt::black, (21.0*client_.configuration().buttonSize())/22));
+      } else {
+
+        // shadow only
+        painter.drawPixmap(0, 0, helper_.windecoButtonGlow(Qt::black, (21.0*client_.configuration().buttonSize())/22));
+
+      }
+
+      // draw button shape
+      bool pressed( (status_ == Oxygen::Pressed) || ( type_ == ButtonSticky && isChecked() ) );
+      painter.drawPixmap(0, 0, helper_.windecoButton(bt, pressed, (21.0*client_.configuration().buttonSize())/22.0 ) );
 
     }
 
-    // draw button shape
-    bool pressed( (status_ == Oxygen::Pressed) || ( type_ == ButtonSticky && isChecked() ) );
-    painter.drawPixmap(0, 0, helper_.windecoButton(bt, pressed, (21.0*client_.configuration().buttonSize())/22.0 ) );
+    // Icon
+    if( renderFlags_ & Icon )
+    {
 
-    // draw button icon
-    painter.setRenderHints(QPainter::Antialiasing);
-    qreal width( 1.2 );
+      // for menu button the application icon is used
+      if (type_ == ButtonMenu)
+      {
 
-    painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen( helper_.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    drawIcon(&painter, palette, type_);
+        const QPixmap& pixmap( client_.icon().pixmap( client_.configuration().iconScale() ) );
+        double offset = 0.5*(width()-pixmap.width() );
+        painter.drawPixmap(offset, offset-1, pixmap );
 
-    painter.translate(0,-1.5);
-    painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-    drawIcon(&painter, palette, type_);
+      } else {
+
+        painter.setRenderHints(QPainter::Antialiasing);
+        qreal width( 1.2 );
+
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(QPen( helper_.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        drawIcon(&painter, palette, type_);
+
+        painter.translate(0,-1.5);
+        painter.setBrush(Qt::NoBrush);
+        painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        drawIcon(&painter, palette, type_);
+
+      }
+
+    }
 
   }
 
@@ -347,7 +370,6 @@ namespace Oxygen
         painter->drawLine(QPointF( 7.5,10.5), QPointF(10.5, 7.5));
         painter->drawLine(QPointF(10.5, 7.5), QPointF(13.5,10.5));
         painter->drawLine(QPointF( 7.5,13.0), QPointF(13.5,13.0));
-
       }
       break;
 
