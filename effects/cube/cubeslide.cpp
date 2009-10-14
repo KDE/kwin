@@ -66,8 +66,7 @@ void CubeSlideEffect::prePaintScreen( ScreenPrePaintData& data, int time)
         timeLine.addTime( time );
         if( dontSlidePanels )
             panels.clear();
-        if( dontSlideStickyWindows )
-            stickyWindows.clear();
+        stickyWindows.clear();
         }
     effects->prePaintScreen( data, time );
     }
@@ -96,13 +95,10 @@ void CubeSlideEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 effects->paintWindow( w, 0, QRegion( w->x(), w->y(), w->width(), w->height() ), wData );
                 }
             }
-        if( dontSlideStickyWindows )
+        foreach( EffectWindow* w, stickyWindows )
             {
-            foreach( EffectWindow* w, stickyWindows )
-                {
-                WindowPaintData wData( w );
-                effects->paintWindow( w, 0, QRegion( w->x(), w->y(), w->width(), w->height() ), wData );
-                }
+            WindowPaintData wData( w );
+            effects->paintWindow( w, 0, QRegion( w->x(), w->y(), w->width(), w->height() ), wData );
             }
         }
     else
@@ -204,7 +200,11 @@ void CubeSlideEffect::prePaintWindow( EffectWindow* w,  WindowPrePaintData& data
             {
             panels.insert( w );
             }
-        if( dontSlideStickyWindows && !w->isDock() &&
+        if( !w->isManaged() )
+            {
+            stickyWindows.insert( w );
+            }
+        else if( dontSlideStickyWindows && !w->isDock() &&
             !w->isDesktop() && w->isOnAllDesktops())
             {
             stickyWindows.insert( w );
@@ -278,8 +278,7 @@ void CubeSlideEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         {
         if( dontSlidePanels && w->isDock() )
             return;
-        if( dontSlideStickyWindows &&
-            w->isOnAllDesktops() && !w->isDock() && !w->isDesktop() )
+        if( stickyWindows.contains( w ) )
             return;
 
         // filter out quads overlapping the edges
