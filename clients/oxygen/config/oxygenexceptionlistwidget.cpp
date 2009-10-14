@@ -142,7 +142,7 @@ namespace Oxygen
     // map dialog
     QSharedPointer<OxygenExceptionDialog> dialog( new OxygenExceptionDialog( this ) );
     dialog->setException( default_configuration_ );
-    if( dialog->exec() == QDialog::Accepted ) return;
+    if( dialog->exec() == QDialog::Rejected ) return;
 
     // retrieve exception and check
     OxygenException exception( dialog->exception() );
