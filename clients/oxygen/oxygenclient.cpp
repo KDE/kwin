@@ -658,6 +658,104 @@ namespace Oxygen
 
   }
 
+  //_______________________________________________________________________
+  void OxygenClient::renderFloatFrame( QPainter* painter, const QRect& frame, const QPalette& palette ) const
+  {
+
+    // shadow and resize handles
+    if( !isMaximized() )
+    {
+
+      if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
+      {
+
+        helper().drawFloatFrame(
+          painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          !compositingActive(), isActive() && configuration().useOxygenShadows(),
+          KDecoration::options()->color(ColorTitleBar)
+          );
+
+      } else if( drawTitleOutline() ) {
+
+        // for small borders, use a frame that matches the titlebar only
+        QRect local( frame.topLeft(), QSize( frame.width(), HFRAMESIZE ) );
+        helper().drawFloatFrame(
+          painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          false, isActive() && configuration().useOxygenShadows(),
+          KDecoration::options()->color(ColorTitleBar)
+          );
+
+      } else {
+
+        // for small borders, use a frame that matches the titlebar only
+        QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
+        helper().drawFloatFrame(
+          painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          false, isActive() && configuration().useOxygenShadows(),
+          KDecoration::options()->color(ColorTitleBar)
+          );
+      }
+
+    } else if( isShade() ) {
+
+      // for shaded maximized windows adjust frame and draw the bottom part of it
+      helper().drawFloatFrame(
+        painter, frame.adjusted( -4, 0, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+        !compositingActive(), isActive(),
+        KDecoration::options()->color(ColorTitleBar),
+        TileSet::Bottom
+        );
+
+    }
+
+  }
+
+  //____________________________________________________________________________
+  void OxygenClient::renderDots( QPainter* painter, const QRect& frame, const QColor& color ) const
+  {
+
+    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
+    {
+
+
+      // dimensions
+      int x,y,w,h;
+      frame.getRect(&x, &y, &w, &h);
+
+      if( isResizable() && !isShade() && !isMaximized() )
+      {
+
+        // Draw right side 3-dots resize handles
+        qreal cenY = h / 2 + y + 0.5;
+        qreal posX = w + x - 2.5;
+
+        painter->setPen(Qt::NoPen);
+        painter->setBrush( color );
+        renderDot( painter, QPointF(posX, cenY - 3), 1.8);
+        renderDot( painter, QPointF(posX, cenY), 1.8);
+        renderDot( painter, QPointF(posX, cenY + 3), 1.8);
+
+      }
+
+      // Draw bottom-right cornet 3-dots resize handles
+      if( isResizable() && !isShade() && !configuration().drawSizeGrip() )
+      {
+
+        painter->setPen(Qt::NoPen);
+        painter->setBrush( color );
+
+        painter->save();
+        painter->translate(x + w-9, y + h-9);
+        renderDot( painter, QPointF(2.5, 6.5), 1.8);
+        renderDot( painter, QPointF(5.5, 5.5), 1.8);
+        renderDot( painter, QPointF(6.5, 2.5), 1.8);
+        painter->restore();
+      }
+
+    }
+
+  }
+
   //_________________________________________________________
   void OxygenClient::activeChange( void )
   {
@@ -897,89 +995,11 @@ namespace Oxygen
     // adjust if there are shadows
     if( compositingActive() ) frame.adjust(-1,-1, 1, 1);
 
-    // shadow and resize handles
-    if( !isMaximized() )
-    {
+    // float frame
+    renderFloatFrame( &painter, frame, palette );
 
-      if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
-      {
-
-        helper().drawFloatFrame(
-          &painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-          !compositingActive(), isActive() && configuration().useOxygenShadows(),
-          KDecoration::options()->color(ColorTitleBar)
-          );
-
-      } else if( drawTitleOutline() ) {
-
-        // for small borders, use a frame that matches the titlebar only
-        QRect local( frame.topLeft(), QSize( frame.width(), HFRAMESIZE ) );
-        helper().drawFloatFrame(
-          &painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-          false, isActive() && configuration().useOxygenShadows(),
-          KDecoration::options()->color(ColorTitleBar)
-          );
-
-      } else {
-
-        // for small borders, use a frame that matches the titlebar only
-        QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
-        helper().drawFloatFrame(
-          &painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-          false, isActive() && configuration().useOxygenShadows(),
-          KDecoration::options()->color(ColorTitleBar)
-          );
-      }
-
-    } else if( isShade() ) {
-
-      // for shaded maximized windows adjust frame and draw the bottom part of it
-      helper().drawFloatFrame(
-        &painter, frame.adjusted( -4, 0, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-        !compositingActive(), isActive(),
-        KDecoration::options()->color(ColorTitleBar),
-        TileSet::Bottom
-        );
-
-    }
-
-    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
-    {
-
-
-      // dimensions
-      int x,y,w,h;
-      frame.getRect(&x, &y, &w, &h);
-
-      if( isResizable() && !isShade() && !isMaximized() )
-      {
-
-        // Draw right side 3-dots resize handles
-        qreal cenY = h / 2 + y + 0.5;
-        qreal posX = w + x - 2.5;
-
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QColor(0, 0, 0, 66));
-        renderDot(&painter, QPointF(posX, cenY - 3), 1.8);
-        renderDot(&painter, QPointF(posX, cenY), 1.8);
-        renderDot(&painter, QPointF(posX, cenY + 3), 1.8);
-
-      }
-
-      // Draw bottom-right cornet 3-dots resize handles
-      if( isResizable() && !isShade() && !configuration().drawSizeGrip() )
-      {
-
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QColor(0, 0, 0, 66));
-
-        painter.translate(x + w-9, y + h-9);
-        renderDot(&painter, QPointF(2.5, 6.5), 1.8);
-        renderDot(&painter, QPointF(5.5, 5.5), 1.8);
-        renderDot(&painter, QPointF(6.5, 2.5), 1.8);
-      }
-
-    }
+    //! dots
+    renderDots( &painter, frame, QColor(0, 0, 0, 66));
 
   }
 

@@ -156,6 +156,12 @@ namespace Oxygen
         //! title text
         virtual void renderTitleText( QPainter*, const QRect&, Qt::Alignment, QColor ) const;
 
+        //! render float frame
+        virtual void renderFloatFrame( QPainter*, const QRect&, const QPalette& ) const;
+
+        //! render dots
+        virtual void renderDots( QPainter*, const QRect&, const QColor& ) const;
+
         //! triggered when window activity is changed
         virtual void activeChange();
 
