@@ -53,6 +53,31 @@ namespace Oxygen
   {
     p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
   }
+  
+  //_________________________________________________________
+  QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
+  {
+    double s = KColorUtils::contrastRatio(c0, c1);
+    if (s < t)
+      return c1;
+
+    double l = 0.0, h = 1.0;
+    double x = s, a;
+    QColor r = c1;
+    for (int maxiter = 16; maxiter; --maxiter)
+    {
+
+      a = 0.5 * (l + h);
+      r = KColorUtils::mix(c0, c1, a);
+      x = KColorUtils::contrastRatio(c0, r);
+
+      if (fabs(x - t) < 0.01) break;
+      if (x > t) h = a;
+      else l = a;
+    }
+
+    return r;
+  }
 
   //___________________________________________
   OxygenClient::OxygenClient(KDecorationBridge *b, OxygenFactory *f):
@@ -182,31 +207,6 @@ namespace Oxygen
       default:
       return 0;
     }
-  }
-
-  //_________________________________________________________
-  QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
-  {
-    double s = KColorUtils::contrastRatio(c0, c1);
-    if (s < t)
-      return c1;
-
-    double l = 0.0, h = 1.0;
-    double x = s, a;
-    QColor r = c1;
-    for (int maxiter = 16; maxiter; --maxiter)
-    {
-
-      a = 0.5 * (l + h);
-      r = KColorUtils::mix(c0, c1, a);
-      x = KColorUtils::contrastRatio(c0, r);
-
-      if (fabs(x - t) < 0.01) break;
-      if (x > t) h = a;
-      else l = a;
-    }
-
-    return r;
   }
 
   //_________________________________________________________

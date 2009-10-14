@@ -298,6 +298,16 @@ namespace Oxygen
 
     };
 
+    //!@name utility functions
+    //@{
+
+    // dot
+    void renderDot(QPainter*, const QPointF&, qreal );
+
+    // contrast
+    QColor reduceContrast(const QColor&, const QColor&, double t);
+
+    //@}
 
 } // namespace Oxygen
 
