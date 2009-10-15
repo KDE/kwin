@@ -123,9 +123,9 @@ namespace Oxygen
   {
 
     // get relevant colors
-    QColor base( palette().brush( (client().isActive() ) ? QPalette::Active : QPalette::Inactive, QPalette::Button ).color() );
-    QColor dark( base.darker(250) );
-    QColor light( base.darker(150) );
+    QColor base( client().backgroundColor( this, palette(), client().isActive() ) );
+    QColor light( client().helper().calcDarkColor( base ) );
+    QColor dark( client().helper().calcDarkColor( base.darker(150) ) );
 
     // create and configure painter
     QPainter painter(this);
