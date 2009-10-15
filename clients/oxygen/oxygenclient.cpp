@@ -636,7 +636,7 @@ namespace Oxygen
       {
 
         helper().drawFloatFrame(
-          painter, frame, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          painter, frame, backgroundColor( widget(), palette ),
           !compositingActive(), isActive() && configuration().useOxygenShadows(),
           KDecoration::options()->color(ColorTitleBar)
           );
@@ -646,7 +646,7 @@ namespace Oxygen
         // for small borders, use a frame that matches the titlebar only
         QRect local( frame.topLeft(), QSize( frame.width(), layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) ) );
         helper().drawFloatFrame(
-          painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+          painter, local, backgroundColor( widget(), palette ),
           false, isActive() && configuration().useOxygenShadows(),
           KDecoration::options()->color(ColorTitleBar)
           );
@@ -656,7 +656,7 @@ namespace Oxygen
 
       // for shaded maximized windows adjust frame and draw the bottom part of it
       helper().drawFloatFrame(
-        painter, frame.adjusted( -4, 0, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
+        painter, frame.adjusted( -4, 0, 4, 0 ), backgroundColor( widget(), palette ),
         !( compositingActive() || configuration().frameBorder() == OxygenConfiguration::BorderNone ), isActive(),
         KDecoration::options()->color(ColorTitleBar),
         TileSet::Bottom
