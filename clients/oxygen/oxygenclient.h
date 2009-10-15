@@ -34,8 +34,6 @@
 #include "oxygen.h"
 #include "oxygenconfiguration.h"
 #include "lib/helper.h"
-#include "lib/tileset.h"
-
 
 namespace Oxygen
 {
@@ -74,21 +72,13 @@ namespace Oxygen
         bool timeLineIsRunning( void ) const
         { return timeLine_.state() == QTimeLine::Running; }
 
-        //! true when title outline is to be drawn
-        bool drawTitleOutline( void ) const
-        {
-          return
-            ( timeLineIsRunning() || isActive() ) &&
-            configuration().drawTitleOutline();
-        }
-
         //! true when separator is to be drawn
         bool drawSeparator( void ) const
         {
-          return
-            ( timeLineIsRunning() || isActive() ) &&
-            configuration().drawSeparator() &&
-            !configuration().drawTitleOutline();
+            return
+                ( timeLineIsRunning() || isActive() ) &&
+                configuration().drawSeparator() &&
+                !configuration().drawTitleOutline();
         }
 
         //@}
@@ -121,9 +111,9 @@ namespace Oxygen
         //! return animation opacity
         qreal opacity( void ) const
         {
-          int frame( timeLine_.currentFrame() );
-          if( timeLine_.direction() == QTimeLine::Backward ) frame -= timeLine_.startFrame();
-          return qreal( frame )/qreal( timeLine_.endFrame() );
+            int frame( timeLine_.currentFrame() );
+            if( timeLine_.direction() == QTimeLine::Backward ) frame -= timeLine_.startFrame();
+            return qreal( frame )/qreal( timeLine_.endFrame() );
         }
 
         //!@name metrics and color definitions
@@ -132,8 +122,9 @@ namespace Oxygen
         //! dimensions
         virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
 
-        //! get maximum space available for title
-        virtual QRect titleRect( const QRect& ) const;
+        //! get title bounding rect
+        virtual QRect titleBoundingRect( QPainter* painter, const QString& caption ) const
+        { return titleBoundingRect( painter, titleRect(), caption ); }
 
         //! get title bounding rect
         virtual QRect titleBoundingRect( QPainter*, const QRect&, const QString& ) const;
@@ -158,7 +149,7 @@ namespace Oxygen
 
         //! window border
         // this draws a "blue" border around active window
-        virtual void renderWindowBorder( QPainter*, const QRect&, const QWidget*, const QPalette&, TileSet::Tiles tiles = TileSet::Ring ) const;
+        virtual void renderWindowBorder( QPainter*, const QRect&, const QWidget*, const QPalette& ) const;
 
         //! separator
         virtual void renderSeparator( QPainter*, const QRect&, const QWidget*, const QColor& ) const;
@@ -167,7 +158,10 @@ namespace Oxygen
         virtual void renderTitleOutline( QPainter*, const QRect&, const QPalette& ) const;
 
         //! title text
-        virtual void renderTitleText( QPainter*, const QRect&, Qt::Alignment, QColor ) const;
+        virtual void renderTitleText( QPainter*, const QRect&, QColor ) const;
+
+        //! title text
+        virtual void renderTitleText( QPainter*, const QRect&, const QString&, const QColor& ) const;
 
         //! render float frame
         virtual void renderFloatFrame( QPainter*, const QRect&, const QPalette& ) const;
@@ -202,15 +196,7 @@ namespace Oxygen
         protected:
 
         //! paint
-        void paintEvent( QPaintEvent* );
-
-        protected slots:
-
-        //! update old caption with current
-        void updateOldCaption( void )
-        { setOldCaption( caption() ); }
-
-        private:
+        virtual void paintEvent( QPaintEvent* );
 
         //! title timeline
         bool titleTimeLineIsRunning( void ) const
@@ -235,10 +221,10 @@ namespace Oxygen
         //! return true when activity change are animated
         bool animateTitleChange( void ) const
         {
-          return
-            configuration().useAnimations() &&
-            !configuration().drawTitleOutline() &&
-            !isPreview();
+            return
+                configuration().useAnimations() &&
+                !configuration().drawTitleOutline() &&
+                !isPreview();
         }
 
         //! calculate mask
@@ -269,20 +255,22 @@ namespace Oxygen
 
         //@}
 
-        //! configuration
-        OxygenConfiguration configuration_;
+        protected slots:
 
-        //! used to invalidate color cache
-        bool colorCacheInvalid_;
+        //! update old caption with current
+        void updateOldCaption( void )
+        { setOldCaption( caption() ); }
 
-        //! stored color
-        QColor cachedTitlebarTextColor_;
+        private:
 
         //! factory
         OxygenFactory* factory_;
 
         //! size grip widget
         OxygenSizeGrip* sizeGrip_;
+
+        //! configuration
+        OxygenConfiguration configuration_;
 
         //! animation timeLine
         QTimeLine timeLine_;

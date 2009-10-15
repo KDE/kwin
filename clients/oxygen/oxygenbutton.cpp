@@ -46,10 +46,8 @@ namespace Oxygen
   OxygenButton::OxygenButton(
     OxygenClient &parent,
     const QString& tip,
-    ButtonType type,
-    RenderFlags flags):
+    ButtonType type):
     KCommonDecorationButton((::ButtonType)type, &parent),
-    renderFlags_( flags ),
     client_(parent),
     helper_( parent.helper() ),
     type_(type),
@@ -95,16 +93,13 @@ namespace Oxygen
     if( active ) return palette.color(QPalette::Active, QPalette::ButtonText);
     else {
 
-      if( !cachedButtonDetailColor_.isValid() )
-      {
-        QColor ab = palette.color(QPalette::Active, QPalette::Button);
-        QColor af = palette.color(QPalette::Active, QPalette::ButtonText);
-        QColor nb = palette.color(QPalette::Inactive, QPalette::Button);
-        QColor nf = palette.color(QPalette::Inactive, QPalette::ButtonText);
-        cachedButtonDetailColor_ = reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
-      }
+      // todo: re-implement caching
+      QColor ab = palette.color(QPalette::Active, QPalette::Button);
+      QColor af = palette.color(QPalette::Active, QPalette::ButtonText);
+      QColor nb = palette.color(QPalette::Inactive, QPalette::Button);
+      QColor nf = palette.color(QPalette::Inactive, QPalette::ButtonText);
+      return reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
 
-      return cachedButtonDetailColor_;
     }
 
   }
@@ -183,14 +178,11 @@ namespace Oxygen
     QColor color = palette.window().color();
 
     // window background
-    if( renderFlags_ & Background )
+    if( type_ != ButtonItemClose && type_ != ButtonItemMenu )
     {
 
       client_.renderWindowBackground( &painter, rect(), this, palette );
-
-      // window border
-      if( client_.drawTitleOutline() )
-      { client_.renderWindowBorder( &painter, rect(), this, client_.backgroundPalette( this, palette ) ); }
+      client_.renderWindowBorder( &painter, rect(), this, client_.backgroundPalette( this, palette ) );
 
       // separator
       if( client_.drawSeparator() )
@@ -199,14 +191,20 @@ namespace Oxygen
     }
 
     // translate buttons up if window maximized
-    if( client_.compositingActive() && !client_.isMaximized() ) painter.translate( 0, -1 );
+    if(
+      client_.compositingActive() &&
+      !( client_.isMaximized() || type_ == ButtonItemClose || type_ == ButtonItemMenu ) )
+    { painter.translate( 0, -1 ); }
 
     // base button color
-    QColor bt = palette.window().color();
+    QColor bt = ((type_ == ButtonItemClose && forceInactive_ ) ? client_.backgroundPalette( this, palette ):palette).window().color();
 
     // button icon and glow color depending on timeline state
-    color = buttonDetailColor(palette);
-    QColor glow = (type_ == ButtonClose) ?
+    color = (type_ == ButtonItemClose && forceInactive_ ) ?
+      buttonDetailColor( client_.backgroundPalette( this, palette ) ):
+      buttonDetailColor( palette );
+
+    QColor glow = (type_ == ButtonClose || type_ == ButtonItemClose ) ?
       KColorScheme(palette.currentColorGroup()).foreground(KColorScheme::NegativeText).color():
       KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
     glow = helper_.calcDarkColor( glow );
@@ -215,7 +213,7 @@ namespace Oxygen
     else if( status_ == Oxygen::Hovered ) color = glow;
 
     // button decoration
-    if( ( renderFlags_ & Deco ) && (type_ != ButtonMenu) )
+    if( type_ != ButtonMenu && type_ != ButtonItemClose && type_ != ButtonItemMenu )
     {
 
       // draw glow on hover
@@ -244,32 +242,27 @@ namespace Oxygen
     }
 
     // Icon
-    if( renderFlags_ & Icon )
+    // for menu button the application icon is used
+    if( type_ == ButtonMenu || type_ == ButtonItemMenu )
     {
 
-      // for menu button the application icon is used
-      if (type_ == ButtonMenu)
-      {
+      const QPixmap& pixmap( client_.icon().pixmap( client_.configuration().iconScale() ) );
+      double offset = 0.5*(width()-pixmap.width() );
+      painter.drawPixmap(offset, offset-1, pixmap );
 
-        const QPixmap& pixmap( client_.icon().pixmap( client_.configuration().iconScale() ) );
-        double offset = 0.5*(width()-pixmap.width() );
-        painter.drawPixmap(offset, offset-1, pixmap );
+    } else {
 
-      } else {
+      painter.setRenderHints(QPainter::Antialiasing);
+      qreal width( 1.2 );
 
-        painter.setRenderHints(QPainter::Antialiasing);
-        qreal width( 1.2 );
+      painter.setBrush(Qt::NoBrush);
+      painter.setPen(QPen( helper_.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      drawIcon(&painter, palette, type_);
 
-        painter.setBrush(Qt::NoBrush);
-        painter.setPen(QPen( helper_.calcLightColor( bt ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        drawIcon(&painter, palette, type_);
-
-        painter.translate(0,-1.5);
-        painter.setBrush(Qt::NoBrush);
-        painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        drawIcon(&painter, palette, type_);
-
-      }
+      painter.translate(0,-1.5);
+      painter.setBrush(Qt::NoBrush);
+      painter.setPen(QPen(color, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+      drawIcon(&painter, palette, type_);
 
     }
 
@@ -324,6 +317,7 @@ namespace Oxygen
       }
       break;
 
+      case ButtonItemClose:
       case ButtonClose:
       painter->drawLine(QPointF( 7.5,7.5), QPointF(13.5,13.5));
       painter->drawLine(QPointF(13.5,7.5), QPointF( 7.5,13.5));

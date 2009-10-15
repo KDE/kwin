@@ -88,14 +88,6 @@ namespace Oxygen
 
       public:
 
-      //! this is a shorter enumeration
-      enum FrameBorder
-      {
-        BorderNone,
-        BorderNoSide,
-        BorderAny
-      };
-
       //! explicit constructor
       explicit Key( void ):
         index(0),
@@ -103,7 +95,7 @@ namespace Oxygen
         useOxygenShadows(false),
         isShade(false),
         hasTitleOutline(false),
-        frameBorder( BorderAny )
+        hasBorder( true )
       {}
 
       //! constructor from client
@@ -111,12 +103,12 @@ namespace Oxygen
 
       //! constructor from int
       Key( int hash ):
-        index( hash>>6 ),
-        active( (hash>>5)&1 ),
-        useOxygenShadows( (hash>>4)&1 ),
-        isShade( (hash>>3)&1 ),
-        hasTitleOutline( (hash>>2)&1 ),
-        frameBorder( (FrameBorder)(hash&3) )
+        index( hash>>5 ),
+        active( (hash>>4)&1 ),
+        useOxygenShadows( (hash>>3)&1 ),
+        isShade( (hash>>2)&1 ),
+        hasTitleOutline( (hash>>1)&1 ),
+        hasBorder( hash&1 )
       {}
 
       //! hash function
@@ -126,12 +118,12 @@ namespace Oxygen
         // note this can be optimized because not all of the flag configurations are actually relevant
         // allocate 3 empty bits for flags
         return
-          ( index << 6 ) |
-          ( active << 5 ) |
-          (useOxygenShadows << 4 ) |
-          (isShade<<3) |
-          (hasTitleOutline<<2) |
-          (frameBorder<<0);
+          ( index << 5 ) |
+          ( active << 4 ) |
+          (useOxygenShadows << 3 ) |
+          (isShade<<2) |
+          (hasTitleOutline<<1) |
+          (hasBorder<<0);
 
       }
 
@@ -140,8 +132,7 @@ namespace Oxygen
       bool useOxygenShadows;
       bool isShade;
       bool hasTitleOutline;
-
-      FrameBorder frameBorder;
+      bool hasBorder;
 
     };
 
@@ -164,7 +155,7 @@ namespace Oxygen
 
     //! draw gradient into rect
     /*! a separate method is used in order to properly account for corners */
-    void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool noBorder = false ) const;
+    void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool hasBorder = true ) const;
 
     //! helper
     OxygenHelper& helper_;

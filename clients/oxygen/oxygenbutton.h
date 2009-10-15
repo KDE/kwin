@@ -52,24 +52,10 @@ namespace Oxygen
 
     public:
 
-    //! flags
-    enum RenderFlag
-    {
-
-      Background = 1<<0,
-      Deco = 1<<1,
-      Icon = 1<<2,
-      All = Background|Deco|Icon
-
-    };
-
-    Q_DECLARE_FLAGS(RenderFlags, RenderFlag)
-
     //! constructor
     explicit OxygenButton(OxygenClient &parent,
       const QString &tip=NULL,
-      ButtonType type=ButtonHelp,
-      RenderFlags flags = All);
+      ButtonType type=ButtonHelp );
 
     //! destructor
     ~OxygenButton();
@@ -130,13 +116,12 @@ namespace Oxygen
     protected slots:
 
     //! update
+    /*! for some reason calling "update()" directly does not work for buttons that
+    are created directly by the client */
     void setDirty( void )
-    { update(); }
+    { if( parentWidget() ) parentWidget()->update( geometry() ); }
 
     private:
-
-    //! flags
-    RenderFlags renderFlags_;
 
     //! parent client
     const OxygenClient &client_;
@@ -152,9 +137,6 @@ namespace Oxygen
 
     //! true if button should be forced inactive
     bool forceInactive_;
-
-    //! true if color cache is to be reseted
-    QColor cachedButtonDetailColor_;
 
     //! timeline used for smooth transitions
     QTimeLine timeLine_;

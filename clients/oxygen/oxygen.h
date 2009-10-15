@@ -54,7 +54,15 @@ namespace Oxygen
     ButtonAbove,
     ButtonBelow,
     ButtonShade,
-    ButtonTypeCount
+    ButtonTypeCount,
+
+    // Close only one tab
+    ButtonItemClose=100,
+
+    // shows the window menu for one tab
+    ButtonItemMenu
+
+
   };
 
   Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
@@ -63,12 +71,6 @@ namespace Oxygen
   {
     //! maximum index/frame used for animations
     maxAnimationIndex = 256,
-
-    /*!
-      If non zero, this possibly allow one to have an additional space
-      around window that is clickable although it is part of the shadow
-    */
-    EXTENDED_HITAREA = 0,
 
     //! this is the top title bar edge
     TFRAMESIZE = 3,
@@ -79,6 +81,10 @@ namespace Oxygen
     */
     HFRAMESIZE = 4
   };
+
+  #if !KDE_IS_VERSION(4,3,90)
+  enum{ SettingCompositing = 1 << 6 };
+  #endif
 
   //! window decoration factory
   class OxygenFactory: public QObject, public KDecorationFactoryUnstable
@@ -129,7 +135,7 @@ namespace Oxygen
     bool readConfig();
 
     //! default configuration
-    OxygenConfiguration defaultConfiguration( void )
+    const OxygenConfiguration& defaultConfiguration( void )
     { return defaultConfiguration_; }
 
     //! initialization

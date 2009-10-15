@@ -139,40 +139,7 @@ namespace Oxygen
     Key key( client );
     QPalette palette( client->backgroundPalette( client->widget(), client->widget()->palette() ) );
     QColor color( palette.color( client->widget()->backgroundRole() ) );
-
-    if( active && client->configuration().drawTitleOutline() && client->configuration().frameBorder() == OxygenConfiguration::BorderNone )
-    {
-
-      // a more complex tile set is needed for the configuration above:
-      // top corners must be beveled with the "active titlebar color" while
-      // bottom corners must be beveled with the "window background color".
-      // this requires generating two shadow pixmaps and tiling them in the tileSet.
-
-      qreal size( shadowSize() );
-      QPixmap shadow( 2*size, 2*size );
-      shadow.fill( Qt::transparent );
-      QPainter p( &shadow );
-      p.setRenderHint( QPainter::Antialiasing );
-
-      QPixmap shadowTop = simpleShadowPixmap( color, key, active );
-      QRect topRect( shadow.rect() );
-      topRect.setBottom( int( size )-1 );
-      p.setClipRect( topRect );
-      p.drawPixmap( QPointF( 0, 0 ), shadowTop );
-
-      // get window color
-      palette = client->widget()->palette();
-      color = palette.color( client->widget()->backgroundRole() );
-      QPixmap shadowBottom = simpleShadowPixmap( color, key, active );
-      QRect bottomRect( shadow.rect() );
-      bottomRect.setTop( int( size ) );
-      p.setClipRect( bottomRect );
-      p.drawPixmap( QPointF( 0, 0 ), shadowBottom );
-      p.end();
-
-      return shadow;
-
-    } else return simpleShadowPixmap( color, key, active );
+    return simpleShadowPixmap( color, key, active );
 
   }
 
@@ -202,8 +169,8 @@ namespace Oxygen
     qreal hoffset = shadowConfiguration.horizontalOffset()*shadowSize/fixedSize;
     qreal voffset = shadowConfiguration.verticalOffset()*shadowSize/fixedSize;
 
-    // some gradients rendering are different at bottom corners for NoBorders windows
-    bool noBorder( key.frameBorder == Key::BorderNone && !key.isShade );
+    // some gradients rendering are different at bottom corners if client has no border
+    bool hasBorder( key.hasBorder || key.isShade );
 
     if( active && key.useOxygenShadows )
     {
@@ -220,7 +187,7 @@ namespace Oxygen
         { c.setAlpha( values[i] ); rg.setColorAt( x[i], c ); }
 
         p.setBrush( rg );
-        renderGradient( p, shadow.rect(), rg, noBorder );
+        renderGradient( p, shadow.rect(), rg, hasBorder );
 
       }
 
@@ -252,7 +219,7 @@ namespace Oxygen
         for( int i = 0; i<nPoints; i++ )
         { c.setAlphaF( values[i] ); rg.setColorAt( x[i]/fixedSize, c ); }
 
-        renderGradient( p, shadow.rect(), rg, noBorder );
+        renderGradient( p, shadow.rect(), rg, hasBorder );
 
       }
 
@@ -295,8 +262,8 @@ namespace Oxygen
     QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
     lg.setColorAt(0.0, helper().calcLightColor( helper().backgroundTopColor(color) ));
 
-    if( key.frameBorder < Key::BorderAny && !key.isShade ) lg.setColorAt(0.52, helper().backgroundBottomColor(color) );
-    else lg.setColorAt(0.52, helper().backgroundTopColor(color) );
+    if(  key.hasBorder || key.isShade ) lg.setColorAt(0.52, helper().backgroundTopColor(color) );
+    else lg.setColorAt(0.52, helper().backgroundBottomColor(color) );
 
     lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
 
@@ -310,10 +277,10 @@ namespace Oxygen
   }
 
   //_______________________________________________________
-  void OxygenShadowCache::renderGradient( QPainter& p, const QRectF& rect, const QRadialGradient& rg, bool noBorders ) const
+  void OxygenShadowCache::renderGradient( QPainter& p, const QRectF& rect, const QRadialGradient& rg, bool hasBorder ) const
   {
 
-    if( !noBorders )
+    if( hasBorder )
     {
       p.setBrush( rg );
       p.drawRect( rect );
@@ -425,12 +392,7 @@ namespace Oxygen
     useOxygenShadows = client->configuration().useOxygenShadows();
     isShade = client->isShade();
     hasTitleOutline = client->configuration().drawTitleOutline();
-    switch(  client->configuration().frameBorder() )
-    {
-      case OxygenConfiguration::BorderNone: frameBorder = Key::BorderNone; break;
-      case OxygenConfiguration::BorderNoSide:  frameBorder = Key::BorderNoSide; break;
-      default:  frameBorder = Key::BorderAny; break;
-    }
+    hasBorder = ( client->configuration().frameBorder() > OxygenConfiguration::BorderNone );
 
   }
 

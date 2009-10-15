@@ -30,8 +30,8 @@
 
 #include "oxygen.h"
 #include "oxygenbutton.h"
-#include "oxygenshadowcache.h"
 #include "oxygensizegrip.h"
+#include "lib/tileset.h"
 
 #include <cassert>
 #include <cmath>
@@ -53,7 +53,7 @@ namespace Oxygen
   {
     p->drawEllipse(QRectF(point.x()-diameter/2, point.y()-diameter/2, diameter, diameter));
   }
-  
+
   //_________________________________________________________
   QColor reduceContrast(const QColor &c0, const QColor &c1, double t)
   {
@@ -82,7 +82,6 @@ namespace Oxygen
   //___________________________________________
   OxygenClient::OxygenClient(KDecorationBridge *b, OxygenFactory *f):
     KCommonDecorationUnstable(b, f),
-    colorCacheInvalid_(true),
     factory_( f ),
     sizeGrip_( 0 ),
     timeLine_( 200, this ),
@@ -231,9 +230,6 @@ namespace Oxygen
 
     bool maximized( isMaximized() );
     int frameBorder( configuration().frameBorder() );
-
-    // used to increase hit area on the sides of the widget
-    int extraBorder = (maximized && compositingActive()) ? 0 : EXTENDED_HITAREA;
     int buttonSize( configuration().buttonSize() );
 
     switch (lm)
@@ -268,7 +264,7 @@ namespace Oxygen
 
         }
 
-        return border + extraBorder;
+        return border;
       }
 
       case LM_TitleEdgeTop:
@@ -277,17 +273,15 @@ namespace Oxygen
         if( !( respectWindowState && maximized ))
         {
           border = TFRAMESIZE;
-          if( configuration().drawTitleOutline() ) border += HFRAMESIZE/2;
         }
 
-        return border + extraBorder;
+        return border;
 
       }
 
       case LM_TitleEdgeBottom:
       {
-        if( configuration().drawTitleOutline() ) return HFRAMESIZE/2;
-        else return 0;
+        return 0;
       }
 
       case LM_TitleEdgeLeft:
@@ -297,7 +291,7 @@ namespace Oxygen
         if( !(respectWindowState && maximized) )
         { border = 6; }
 
-        return border + extraBorder;
+        return border;
 
       }
 
@@ -305,7 +299,11 @@ namespace Oxygen
       case LM_TitleBorderRight:
       {
         int border = 5;
-        if( configuration().drawTitleOutline() ) border += 2*HFRAMESIZE;
+
+        // if title outline is to be drawn, one adds the space needed to
+        // separate title and tab border. namely the same value
+        if( configuration().drawTitleOutline() ) border += border;
+
         return border;
       }
 
@@ -313,15 +311,7 @@ namespace Oxygen
       case LM_ButtonHeight:
       case LM_TitleHeight:
       {
-        if (respectWindowState && isToolWindow()) {
-
-          return buttonSize;
-
-        } else {
-
-          return buttonSize;
-
-        }
+        return buttonSize;
       }
 
       case LM_ButtonSpacing:
@@ -335,7 +325,7 @@ namespace Oxygen
       case LM_OuterPaddingRight:
       case LM_OuterPaddingTop:
       case LM_OuterPaddingBottom:
-      return shadowCache().shadowSize() - extraBorder;
+      return shadowCache().shadowSize();
 
       default:
       return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
@@ -344,48 +334,21 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  QRect OxygenClient::titleRect( const QRect& frame ) const
+  QRect OxygenClient::titleBoundingRect( QPainter* painter, const QRect& rect, const QString& caption ) const
   {
-
-    int extraBorder = ( isMaximized() && compositingActive() ) ? 0 : EXTENDED_HITAREA;
-
-    // dimensions
-    const int titleHeight = layoutMetric(LM_TitleHeight);
-    const int titleTop = layoutMetric(LM_TitleEdgeTop) + frame.top() - extraBorder;
-    const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
-    const int marginLeft = layoutMetric(LM_TitleBorderLeft);
-    const int marginRight = layoutMetric(LM_TitleBorderRight);
-
-    const int titleLeft = frame.left() + titleEdgeLeft + buttonsLeftWidth() + marginLeft;
-    const int titleWidth = frame.width() -
-      titleEdgeLeft - layoutMetric(LM_TitleEdgeRight) -
-      buttonsLeftWidth() - buttonsRightWidth() -
-      marginLeft - marginRight;
-
-    // maximum rect allocated for title
-    return QRect( titleLeft, titleTop-1, titleWidth, titleHeight );
-
-  }
-
-  //_________________________________________________________
-  QRect OxygenClient::titleBoundingRect( QPainter* painter, const QRect& frame, const QString& caption ) const
-  {
-
-    QRect titleRect( OxygenClient::titleRect( frame ) );
 
     // get title bounding rect
-    QRect boundingRect = painter->boundingRect( titleRect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
+    QRect boundingRect = painter->boundingRect( rect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
 
     // adjust to make sure bounding rect
     // 1/ has same vertical alignment as original titleRect
     // 2/ does not exceeds available horizontal space
-    boundingRect.setTop( titleRect.top() );
-    boundingRect.setBottom( titleRect.bottom() );
-    boundingRect.setLeft( qMax( boundingRect.left(), titleRect.left() ) );
-    boundingRect.setRight( qMin( boundingRect.right(), titleRect.right() ) );
+    boundingRect.setTop( rect.top() );
+    boundingRect.setBottom( rect.bottom() );
 
-    // finally translate one pixel up
-    if( compositingActive() && !isMaximized() ) boundingRect.translate(0, -1 );
+    if( rect.left() > boundingRect.left() ) { boundingRect.setLeft( rect.left() ); }
+    if( rect.right() < boundingRect.right() ) { boundingRect.setRight( rect.right() ); }
+
     return boundingRect;
 
   }
@@ -404,30 +367,18 @@ namespace Oxygen
   QColor OxygenClient::titlebarTextColor(const QPalette &palette, bool active)
   {
 
-    if( configuration().drawTitleOutline() )
-    {
-
-      return options()->color(ColorFont, active);
-
-    } else if( active ){
+    if( active ){
 
       return palette.color(QPalette::Active, QPalette::WindowText);
 
     } else {
 
-      if(colorCacheInvalid_)
-      {
-
-        QColor ab = palette.color(QPalette::Active, QPalette::Window);
-        QColor af = palette.color(QPalette::Active, QPalette::WindowText);
-        QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
-        QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
-
-        colorCacheInvalid_ = false;
-        cachedTitlebarTextColor_ = reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
-      }
-
-      return cachedTitlebarTextColor_;
+      // todo: reimplement cache
+      QColor ab = palette.color(QPalette::Active, QPalette::Window);
+      QColor af = palette.color(QPalette::Active, QPalette::WindowText);
+      QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
+      QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
+      return reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
 
     }
 
@@ -454,17 +405,20 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  void OxygenClient::renderWindowBorder( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QPalette& palette, TileSet::Tiles tiles ) const
+  void OxygenClient::renderWindowBorder( QPainter* painter, const QRect& clipRect, const QWidget* widget, const QPalette& palette ) const
   {
 
-    const QWidget* window = (isPreview()) ? OxygenClient::widget() : widget->window();
+    // check if outline is needed
+    if( !( isActive() && configuration().drawTitleOutline() ) ) return;
 
     // get coordinates relative to the client area
     // this is annoying. One could use mapTo if this was taking const QWidget* and not
     // const QWidget* as argument.
+    const QWidget* window = (isPreview()) ? OxygenClient::widget() : widget->window();
     const QWidget* w = widget;
     QPoint position( 0, 0 );
-    while (  w != window && !w->isWindow() && w != w->parentWidget() ) {
+    while (  w != window && !w->isWindow() && w != w->parentWidget() )
+    {
       position += w->geometry().topLeft();
       w = w->parentWidget();
     }
@@ -481,25 +435,41 @@ namespace Oxygen
     r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
     r.adjust(0,0, 1, 1);
 
-    // mask and painting frame
+    // title height
+    int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
+
+    // darker frame
+    {
+
+      QPoint topLeft( r.topLeft()-position );
+      QRect rect( topLeft, QSize( r.width(), titleHeight ) );
+      renderWindowBackground(painter, rect, widget, palette );
+
+    }
+
+    // horizontal lina
+    {
+      int shadowSize = 7;
+      int height = shadowSize-3;
+
+      QPoint topLeft( r.topLeft()+QPoint(0,titleHeight-height)-position );
+      QRect rect( topLeft, QSize( r.width(), height ) );
+
+      // adjustements to cope with shadow size and outline border.
+      rect.adjust( -shadowSize, 0, shadowSize-1, 0 );
+      if( configuration().frameBorder() > OxygenConfiguration::BorderTiny && configuration().drawTitleOutline() && isActive() && !isMaximized() )
+      { rect.adjust( HFRAMESIZE-1, 0, -HFRAMESIZE+1, 0 ); }
+
+      helper().slab( widget->palette().color( QPalette::Window ), 0, shadowSize )
+        ->render( rect, painter, TileSet::Top );
+
+    }
+
     QRegion mask;
     QRect frame;
 
-    // top line
-    if( tiles&TileSet::Top )
-    {
-      int shadowSize = 5;
-      if( timeLineIsRunning() ) shadowSize*=opacity();
-
-      int height = HFRAMESIZE-1;
-      QRect rect( r.topLeft()-position, QSize( r.width(), height ) );
-      helper().slab( palette.color( widget->backgroundRole() ), 0, shadowSize )->render( rect.adjusted(-shadowSize-1, 0, shadowSize+1, 2 ), painter, TileSet::Bottom );
-      mask += rect;
-      frame |= rect;
-    }
-
     // bottom line
-    if( configuration().frameBorder() > OxygenConfiguration::BorderNone && (tiles&TileSet::Bottom) )
+    if( configuration().drawTitleOutline() && configuration().frameBorder() > OxygenConfiguration::BorderNone )
     {
       int height = qMin( (int) HFRAMESIZE, layoutMetric( LM_BorderBottom ) )-1;
       QColor shadow( helper().backgroundBottomColor( widget->palette().color( widget->backgroundRole() ) ) );
@@ -514,16 +484,15 @@ namespace Oxygen
     }
 
     // left and right
-    if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
+    if( configuration().drawTitleOutline() && configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
     {
 
       // left
       QColor shadow( helper().calcDarkColor( widget->palette().color( widget->backgroundRole() ) ) );
       painter->setPen( shadow );
-      if( tiles&TileSet::Left )
       {
         int width = qMin( (int)HFRAMESIZE, layoutMetric( LM_BorderLeft ) )-1;
-        QRect rect( r.topLeft()-position, QSize( width, r.height() ) );
+        QRect rect( r.topLeft()-position + QPoint( 0, titleHeight ), QSize( width, r.height()-titleHeight ) );
         painter->drawLine( r.topLeft()-position-QPoint(width+1,HFRAMESIZE), r.bottomLeft()-position-QPoint(width+1,-HFRAMESIZE) );
 
         mask += rect;
@@ -531,10 +500,9 @@ namespace Oxygen
       }
 
       // right
-      if( tiles&TileSet::Right )
       {
         int width = qMin( (int)HFRAMESIZE, layoutMetric( LM_BorderRight ) )-1;
-        QRect rect( r.topRight()-position-QPoint(width,0), QSize( width, r.height() ) );
+        QRect rect( r.topRight()-position-QPoint(width, -titleHeight ), QSize( width, r.height() - titleHeight ) );
         painter->drawLine( r.topRight()-position-QPoint(-width-1,HFRAMESIZE), r.bottomRight()-position-QPoint(-width-1,-HFRAMESIZE) );
 
         mask += rect;
@@ -584,21 +552,14 @@ namespace Oxygen
     QRect r = (isPreview()) ? OxygenClient::widget()->rect():window->rect();
     qreal shadowSize( shadowCache().shadowSize() );
     r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
-    r.adjust(0,0, 1, 1);
-
-    int extraBorder = ( isMaximized() && compositingActive() ) ? 0 : EXTENDED_HITAREA;
 
     // dimensions
     const int titleHeight = layoutMetric(LM_TitleHeight);
-    const int titleTop = layoutMetric(LM_TitleEdgeTop) + r.top() - extraBorder;
-
-    // dimensions
-    int x,y,w,h;
-    r.getRect(&x, &y, &w, &h);
+    const int titleTop = layoutMetric(LM_TitleEdgeTop) + r.top();
 
     QColor local( color );
     if( timeLineIsRunning() ) local = helper().alphaColor( color, opacity() );
-    helper().drawSeparator( painter, QRect(x, titleTop+titleHeight-1.5, w, 2).translated( -position ), local, Qt::Horizontal);
+    helper().drawSeparator( painter, QRect(r.top(), titleTop+titleHeight-1.5, r.width(), 2).translated( -position ), local, Qt::Horizontal);
 
     if (clipRect.isValid()) { painter->restore(); }
 
@@ -608,53 +569,58 @@ namespace Oxygen
   void OxygenClient::renderTitleOutline(  QPainter* painter, const QRect& rect, const QPalette& palette ) const
   {
 
+    // center (for active windows only)
+    {
+      painter->save();
+      int offset = 2;
+      int voffset = 1;
+      QRect adjustedRect( rect.adjusted( offset, voffset, -offset, 1 ) );
+
+      // prepare painter mask
+      QRegion mask( adjustedRect.adjusted( 1, 0, -1, 0 ) );
+      mask += adjustedRect.adjusted( 0, 1, 0, 0 );
+      painter->setClipRegion( mask, Qt::IntersectClip );
+
+      // draw window background
+      renderWindowBackground(painter, adjustedRect, widget(), palette );
+      painter->restore();
+    }
+
     // shadow
-    {
-      int shadowSize = 7;
-      if( timeLineIsRunning() ) shadowSize *= opacity();
-      int voffset = -shadowSize;
-      if( !isMaximized() ) voffset += HFRAMESIZE;
-      helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( rect.adjusted(0, voffset, 0, 0 ), painter, TileSet::Bottom|TileSet::Left|TileSet::Right );
-
-    }
-
-    // center
-    {
-      int offset = 4;
-      if( timeLineIsRunning() ) offset *= opacity();
-
-      int voffset = isMaximized() ? 0:HFRAMESIZE;
-      renderWindowBackground(painter, rect.adjusted( offset, voffset, -offset, -offset ), widget(), palette );
-    }
+    int shadowSize = 7;
+    int offset = -2;
+    int voffset = 5-shadowSize;
+    QRect adjustedRect( rect.adjusted(offset, voffset, -offset, shadowSize) );
+    helper().slab( palette.color( widget()->backgroundRole() ), 0, shadowSize )->render( adjustedRect, painter, TileSet::Top|TileSet::Left|TileSet::Right );
 
   }
 
   //_________________________________________________________
-  void OxygenClient::renderTitleText(  QPainter* painter, const QRect& rect, Qt::Alignment alignment, QColor color) const
+  void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, QColor color ) const
   {
+
     if( titleTimeLineIsRunning() )
     {
 
-      if( !oldCaption().isEmpty() )
-      {
-        color.setAlphaF( 1.0 - titleOpacity() );
-        painter->setPen( color );
-        painter->drawText( rect, alignment, oldCaption() );
-      }
-
-      if( !caption().isEmpty() )
-      {
-        color.setAlphaF( titleOpacity() );
-        painter->setPen( color );
-        painter->drawText( rect, alignment, caption() );
-      }
+      if( !oldCaption().isEmpty() ) renderTitleText( painter, rect, oldCaption(), helper().alphaColor( color, 1.0 - titleOpacity() ) );
+      if( !caption().isEmpty() ) renderTitleText( painter, rect, caption(), helper().alphaColor( color, titleOpacity() ) );
 
     } else if( !caption().isEmpty() ) {
 
-      painter->setPen( color );
-      painter->drawText( rect, alignment, caption() );
+      renderTitleText( painter, rect, caption(), color );
 
     }
+
+  }
+
+  //_______________________________________________________________________
+  void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, const QString& caption, const QColor& color ) const
+  {
+
+    Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
+    QString local( QFontMetrics( painter->font() ).elidedText( caption, Qt::ElideRight, rect.width() ) );
+    painter->setPen( color );
+    painter->drawText( rect, alignment, local );
 
   }
 
@@ -675,16 +641,6 @@ namespace Oxygen
           KDecoration::options()->color(ColorTitleBar)
           );
 
-      } else if( drawTitleOutline() ) {
-
-        // for small borders, use a frame that matches the titlebar only
-        QRect local( frame.topLeft(), QSize( frame.width(), HFRAMESIZE ) );
-        helper().drawFloatFrame(
-          painter, local, backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-          false, isActive() && configuration().useOxygenShadows(),
-          KDecoration::options()->color(ColorTitleBar)
-          );
-
       } else {
 
         // for small borders, use a frame that matches the titlebar only
@@ -701,7 +657,7 @@ namespace Oxygen
       // for shaded maximized windows adjust frame and draw the bottom part of it
       helper().drawFloatFrame(
         painter, frame.adjusted( -4, 0, 4, 0 ), backgroundPalette( widget(), palette ).color( widget()->backgroundRole() ),
-        !compositingActive(), isActive(),
+        !( compositingActive() || configuration().frameBorder() == OxygenConfiguration::BorderNone ), isActive(),
         KDecoration::options()->color(ColorTitleBar),
         TileSet::Bottom
         );
@@ -819,10 +775,13 @@ namespace Oxygen
         QColor activeColor( backgroundColor( widget, palette, true ) );
         QColor mixed( KColorUtils::mix( inactiveColor, activeColor, opacity() ) );
         palette.setColor( widget->window()->backgroundRole(), mixed );
+        palette.setColor( QPalette::Button, mixed );
 
       } else if( isActive() ) {
 
-        palette.setColor( widget->window()->backgroundRole(), options()->color( KDecorationDefines::ColorTitleBar, true ) );
+        QColor color =  options()->color( KDecorationDefines::ColorTitleBar, true );
+        palette.setColor( widget->window()->backgroundRole(), color );
+        palette.setColor( QPalette::Button, color );
 
       }
 
@@ -846,16 +805,8 @@ namespace Oxygen
   void OxygenClient::updateWindowShape()
   {
 
-    if(isMaximized() || compositingActive() )
-    {
-
-      clearMask();
-
-    } else {
-
-      setMask( calcMask() );
-
-    }
+    if(isMaximized() || compositingActive() ) clearMask();
+    else setMask( calcMask() );
 
   }
 
@@ -967,39 +918,48 @@ namespace Oxygen
 
     // window background
     renderWindowBackground( &painter, frame, widget(), palette );
-    if( drawTitleOutline() )
-    {
-      if( !isMaximized() ) renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
-      else if( isShade() ) renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ), TileSet::Bottom );
-    }
+    renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
 
     // clipping
-    if( compositingActive() ) painter.setClipping(false);
+    if( compositingActive() )
+    {
+      painter.setClipping(false);
+      frame.adjust(-1,-1, 1, 1);
+    }
+
+    // adjust frame if there are shadows
+    {
+      painter.save();
+      painter.setRenderHint(QPainter::Antialiasing);
+
+
+      // float frame
+      renderFloatFrame( &painter, frame, palette );
+
+      // clipping
+      if( compositingActive() ) painter.setClipping(false);
+
+      // resize handles
+      renderDots( &painter, frame, QColor(0, 0, 0, 66) );
+      painter.restore();
+    }
 
     // title bounding rect
     painter.setFont( options()->font(isActive(), false) );
-    QRect boundingRect( titleBoundingRect( &painter, frame, caption() ) );
+    QRect boundingRect( titleBoundingRect( &painter, caption() ) );
+    if( isActive() && configuration().drawTitleOutline() )
+    {
+      renderTitleOutline( &painter, boundingRect.adjusted(
+        -layoutMetric( LM_TitleBorderLeft ),
+        -layoutMetric( LM_TitleEdgeTop ),
+        layoutMetric( LM_TitleBorderRight ), 0 ), palette );
+    }
 
-    // title outline
-    if( drawTitleOutline() )
-    { renderTitleOutline( &painter, boundingRect.adjusted( -2*HFRAMESIZE, -layoutMetric(LM_TitleEdgeTop)+1, 2*HFRAMESIZE, 2 ), backgroundPalette( widget(), palette ) ); }
-
-    // draw title text
-    renderTitleText( &painter, boundingRect, configuration().titleAlignment() | Qt::AlignVCenter, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
+    // title text
+    renderTitleText( &painter, boundingRect, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
 
     // separator
     if( drawSeparator() ) renderSeparator(&painter, frame, widget(), color );
-
-    painter.setRenderHint(QPainter::Antialiasing);
-
-    // adjust if there are shadows
-    if( compositingActive() ) frame.adjust(-1,-1, 1, 1);
-
-    // float frame
-    renderFloatFrame( &painter, frame, palette );
-
-    //! dots
-    renderDots( &painter, frame, QColor(0, 0, 0, 66));
 
   }
 
