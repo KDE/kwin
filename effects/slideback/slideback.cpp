@@ -347,7 +347,7 @@ void SlideBackEffect::windowUnminimized( EffectWindow* w)
         }
     else
         {
-	unminimizedWindow = NULL;
+        unminimizedWindow = NULL;
         }
     }
 
@@ -358,7 +358,12 @@ void SlideBackEffect::tabBoxClosed()
 
 bool SlideBackEffect::isWindowOnTop( EffectWindow* w )
     {
-    return usableWindows( effects->stackingOrder() ).last() == w ? true : false;
+    EffectWindowList openWindows = usableWindows( effects->stackingOrder() );
+    if( !openWindows.isEmpty() && ( openWindows.last() == w ) )
+        {
+        return true;
+        }
+    return false;
     }
 
 bool SlideBackEffect::isWindowUsable( EffectWindow* w )
