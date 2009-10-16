@@ -44,7 +44,7 @@ namespace Oxygen
 
   //_____________________________________________
   OxygenSizeGrip::OxygenSizeGrip( OxygenClient* client ):
-    QWidget( client->widget() ),
+    QWidget( client->widget(), Qt::ToolTip ),
     client_( client )
   {
 
