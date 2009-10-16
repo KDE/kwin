@@ -56,8 +56,7 @@ QPixmap PaintRedirector::performPendingPaint()
 bool PaintRedirector::isToolTip( QWidget *object ) const
     {
     // ### We need a more reliable way of doing this
-    return object->metaObject()->className() == QString("QWidget") &&
-           object->objectName() != QString("decoration widget");
+    return object->windowFlags() & Qt::ToolTip;
     }
 
 bool PaintRedirector::eventFilter( QObject* o, QEvent* e )
