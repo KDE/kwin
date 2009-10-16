@@ -70,8 +70,6 @@ void SlidingPopupsEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& d
         w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
 
         mDisappearingWindows[ w ].addTime( time );
-        if( mDisappearingWindows[ w ].value() >= 1 )
-            w->unrefWindow();
         }
     effects->prePaintWindow( w, data, time );
     }
@@ -127,6 +125,8 @@ void SlidingPopupsEffect::postPaintWindow( EffectWindow* w )
     if( mAppearingWindows.contains( w ) || mDisappearingWindows.contains( w ) )
         w->addRepaintFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
+    if( mDisappearingWindows.contains( w ) && mDisappearingWindows[ w ].value() >= 1 )
+        w->unrefWindow();
     }
 
 void SlidingPopupsEffect::windowAdded( EffectWindow* w )
