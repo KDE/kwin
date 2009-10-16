@@ -113,14 +113,6 @@ namespace Oxygen
     //! true if button is active
     bool isActive( void ) const;
 
-    protected slots:
-
-    //! update
-    /*! for some reason calling "update()" directly does not work for buttons that
-    are created directly by the client */
-    void setDirty( void )
-    { if( parentWidget() ) parentWidget()->update( geometry() ); }
-
     private:
 
     //! parent client

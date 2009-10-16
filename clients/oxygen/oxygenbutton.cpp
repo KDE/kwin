@@ -67,8 +67,8 @@ namespace Oxygen
 
     timeLine_.setFrameRange( 0, 1000 );
     timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
-    connect( &timeLine_, SIGNAL( frameChanged( int ) ), SLOT( setDirty() ) );
-    connect( &timeLine_, SIGNAL( finished() ), SLOT( setDirty() ) );
+    connect( &timeLine_, SIGNAL( frameChanged( int ) ), SLOT( update() ) );
+    connect( &timeLine_, SIGNAL( finished() ), SLOT( update() ) );
 
   }
 
@@ -138,7 +138,7 @@ namespace Oxygen
     }
 
     status_ = Oxygen::Normal;
-    setDirty();
+    update();
 
   }
 
@@ -148,7 +148,7 @@ namespace Oxygen
 
     kDebug(1212) << endl;
     status_ = Oxygen::Pressed;
-    setDirty();
+    update();
 
     KCommonDecorationButton::mousePressEvent(e);
   }
@@ -159,7 +159,7 @@ namespace Oxygen
 
     kDebug(1212) << endl;
     status_ = ( rect().contains( e->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
-    setDirty();
+    update();
 
     KCommonDecorationButton::mouseReleaseEvent(e);
   }
