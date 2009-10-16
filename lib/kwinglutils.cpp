@@ -1017,12 +1017,15 @@ void GLRenderTarget::initFBO()
                            mTexture->target(), mTexture->texture(), 0);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER_EXT);
-    if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
-        {
-        kError(1212) << "Invalid fb status: " << status << endl;
-        }
 
     glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
+
+    if( status != GL_FRAMEBUFFER_COMPLETE_EXT )
+        { // We have an incomplete framebuffer, consider it invalid
+        kError(1212) << "Invalid framebuffer status: " << status;
+        glDeleteFramebuffers(1, &mFramebuffer);
+        return;
+        }
 
     mValid = true;
     }
