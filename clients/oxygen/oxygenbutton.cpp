@@ -179,8 +179,8 @@ namespace Oxygen
     if( type_ != ButtonItemClose && type_ != ButtonItemMenu )
     {
 
-      client_.renderWindowBackground( &painter, rect(), this, palette );
-      client_.renderWindowBorder( &painter, rect(), this, client_.backgroundPalette( this, palette ) );
+      client_.renderWindowBackground( &painter, rect(), this,  client_.backgroundPalette( this, palette ) );
+      client_.renderWindowBorder( &painter, rect(), this, palette );
 
       // separator
       if( client_.drawSeparator() )

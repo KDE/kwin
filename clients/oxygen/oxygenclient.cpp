@@ -435,19 +435,13 @@ namespace Oxygen
     r.adjust( shadowSize, shadowSize, -shadowSize, -shadowSize );
     r.adjust(0,0, 1, 1);
 
+    // base color
+    QColor color( palette.window().color() );
+
     // title height
     int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
 
-    // darker frame
-    {
-
-      QPoint topLeft( r.topLeft()-position );
-      QRect rect( topLeft, QSize( r.width(), titleHeight ) );
-      renderWindowBackground(painter, rect, widget, palette );
-
-    }
-
-    // horizontal lina
+    // horizontal line
     {
       int shadowSize = 7;
       int height = shadowSize-3;
@@ -460,62 +454,76 @@ namespace Oxygen
       if( configuration().frameBorder() > OxygenConfiguration::BorderTiny && configuration().drawTitleOutline() && isActive() && !isMaximized() )
       { rect.adjust( HFRAMESIZE-1, 0, -HFRAMESIZE+1, 0 ); }
 
-      helper().slab( widget->palette().color( QPalette::Window ), 0, shadowSize )
-        ->render( rect, painter, TileSet::Top );
+      helper().slab( color, 0, shadowSize )->render( rect, painter, TileSet::Top );
 
     }
 
-    QRegion mask;
-    QRect frame;
-
-    // bottom line
-    if( configuration().drawTitleOutline() && configuration().frameBorder() > OxygenConfiguration::BorderNone )
-    {
-      int height = qMin( (int) HFRAMESIZE, layoutMetric( LM_BorderBottom ) )-1;
-      QColor shadow( helper().backgroundBottomColor( widget->palette().color( widget->backgroundRole() ) ) );
-      painter->setPen( shadow );
-      QRect rect( r.bottomLeft()-position-QPoint(0,height), QSize( r.width(), height ) );
-      painter->drawLine( r.bottomLeft()-position-QPoint(0,height+1), r.bottomRight()-position-QPoint(0,height+1) );
-
-      mask += rect;
-      frame |= rect;
-
-
-    }
-
-    // left and right
-    if( configuration().drawTitleOutline() && configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
+    if( configuration().drawTitleOutline() )
     {
 
-      // left
-      QColor shadow( helper().calcDarkColor( widget->palette().color( widget->backgroundRole() ) ) );
-      painter->setPen( shadow );
+      // save mask and frame to where
+      // grey window background is to be rendered
+      QRegion mask;
+      QRect frame;
+
+      // bottom line
+      int leftOffset = qMin( layoutMetric( LM_BorderLeft ), int(HFRAMESIZE) );
+      int rightOffset = qMin( layoutMetric( LM_BorderRight ), int(HFRAMESIZE) );
+      if( configuration().frameBorder() > OxygenConfiguration::BorderNone )
       {
-        int width = qMin( (int)HFRAMESIZE, layoutMetric( LM_BorderLeft ) )-1;
-        QRect rect( r.topLeft()-position + QPoint( 0, titleHeight ), QSize( width, r.height()-titleHeight ) );
-        painter->drawLine( r.topLeft()-position-QPoint(width+1,HFRAMESIZE), r.bottomLeft()-position-QPoint(width+1,-HFRAMESIZE) );
 
-        mask += rect;
-        frame |= rect;
+        int height = qMax( 0, layoutMetric( LM_BorderBottom ) - HFRAMESIZE );
+        int width = r.width() - leftOffset - rightOffset - 1;
+
+        QRect rect( r.bottomLeft()-position + QPoint( leftOffset, -layoutMetric( LM_BorderBottom ) ), QSize( width, height ) );
+        if( height > 0 ) { mask += rect; frame |= rect; }
+
+        QColor shadow( helper().calcDarkColor( color ) );
+        painter->setPen( shadow );
+        painter->drawLine( rect.bottomLeft()+QPoint(0,1), rect.bottomRight()+QPoint(0,1) );
+
       }
 
-      // right
-      {
-        int width = qMin( (int)HFRAMESIZE, layoutMetric( LM_BorderRight ) )-1;
-        QRect rect( r.topRight()-position-QPoint(width, -titleHeight ), QSize( width, r.height() - titleHeight ) );
-        painter->drawLine( r.topRight()-position-QPoint(-width-1,HFRAMESIZE), r.bottomRight()-position-QPoint(-width-1,-HFRAMESIZE) );
+      // left and right
+      int topOffset = titleHeight;
+      int bottomOffset = qMin( layoutMetric( LM_BorderBottom ), int(HFRAMESIZE) );
+      int height = r.height() - topOffset - bottomOffset - 1;
 
-        mask += rect;
-        frame |= rect;
+      if( configuration().frameBorder() >= OxygenConfiguration::BorderTiny )
+      {
+
+        QColor shadow( helper().calcLightColor( color ) );
+        painter->setPen( shadow );
+
+        // left
+        int width = qMax( 0, layoutMetric( LM_BorderLeft ) - HFRAMESIZE );
+        QRect rect( r.topLeft()-position + QPoint( layoutMetric( LM_BorderLeft ) - width, topOffset ), QSize( width, height ) );
+        if( width > 0 ) { mask += rect; frame |= rect; }
+
+        painter->drawLine( rect.topLeft()-QPoint(1,0), rect.bottomLeft()-QPoint(1, 0) );
+
+        // right
+        width = qMax( 0, layoutMetric( LM_BorderRight ) - HFRAMESIZE );
+        rect = QRect(r.topRight()-position + QPoint( -layoutMetric( LM_BorderRight ), topOffset ), QSize( width, height ));
+        if( width > 0 ) { mask += rect; frame |= rect; }
+
+        painter->drawLine( rect.topRight()+QPoint(1,0), rect.bottomRight()+QPoint(1, 0) );
       }
 
-    }
+      // in preview mode also adds center square
+      if( isPreview() )
+      {
+        QRect rect( r.topLeft()-position + QPoint( layoutMetric( LM_BorderLeft ), topOffset ), QSize(r.width()-layoutMetric( LM_BorderLeft )-layoutMetric( LM_BorderRight ),height) );
+        mask += rect; frame |= rect;
+      }
 
-    // paint
-    if( !mask.isEmpty() )
-    {
-      painter->setClipRegion( mask, Qt::IntersectClip);
-      renderWindowBackground(painter, frame, widget, palette );
+      // paint
+      if( !mask.isEmpty() )
+      {
+        painter->setClipRegion( mask, Qt::IntersectClip);
+        renderWindowBackground(painter, frame, widget, palette );
+      }
+
     }
 
     // restore painter
@@ -917,8 +925,8 @@ namespace Oxygen
     }
 
     // window background
-    renderWindowBackground( &painter, frame, widget(), palette );
-    renderWindowBorder( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
+    renderWindowBackground( &painter, frame, widget(), backgroundPalette( widget(), palette ) );
+    renderWindowBorder( &painter, frame, widget(), palette );
 
     // clipping
     if( compositingActive() )
