@@ -146,7 +146,6 @@ namespace Oxygen
   void OxygenButton::mousePressEvent(QMouseEvent *e)
   {
 
-    kDebug(1212) << endl;
     status_ = Oxygen::Pressed;
     update();
 
@@ -157,7 +156,6 @@ namespace Oxygen
   void OxygenButton::mouseReleaseEvent(QMouseEvent *e)
   {
 
-    kDebug(1212) << endl;
     status_ = ( rect().contains( e->pos() ) ) ? Oxygen::Hovered:Oxygen::Normal;
     update();
 
