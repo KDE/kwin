@@ -141,6 +141,33 @@ namespace Oxygen
 
         //@}
 
+        //!@name status change methods (overloaded from KCommonDecorationUnstable)
+        //@{
+
+        //! triggered when window activity is changed
+        virtual void activeChange();
+
+        //! triggered when maximize state changed
+        virtual void maximizeChange();
+
+        //! triggered when window shade is changed
+        virtual void shadeChange();
+
+        //! triggered when window shade is changed
+        virtual void captionChange();
+
+        //@}
+
+        public slots:
+
+        //! reset configuration
+        void resetConfiguration( void );
+
+        protected:
+
+        //! paint
+        virtual void paintEvent( QPaintEvent* );
+
         //!@name rendering methods (called in paintEvent)
         //@{
 
@@ -170,33 +197,6 @@ namespace Oxygen
         virtual void renderDots( QPainter*, const QRect&, const QColor& ) const;
 
         //@}
-
-        //!@name status change methods (overloaded from KCommonDecorationUnstable)
-        //@{
-
-        //! triggered when window activity is changed
-        virtual void activeChange();
-
-        //! triggered when maximize state changed
-        virtual void maximizeChange();
-
-        //! triggered when window shade is changed
-        virtual void shadeChange();
-
-        //! triggered when window shade is changed
-        virtual void captionChange();
-
-        //@}
-
-        public slots:
-
-        //! reset configuration
-        void resetConfiguration( void );
-
-        protected:
-
-        //! paint
-        virtual void paintEvent( QPaintEvent* );
 
         //! title timeline
         bool titleTimeLineIsRunning( void ) const

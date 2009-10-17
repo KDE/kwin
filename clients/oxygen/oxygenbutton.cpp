@@ -175,19 +175,6 @@ namespace Oxygen
     else palette.setCurrentColorGroup(QPalette::Inactive);
     QColor color = palette.window().color();
 
-    // window background
-    if( type_ != ButtonItemClose && type_ != ButtonItemMenu )
-    {
-
-      client_.renderWindowBackground( &painter, rect(), this,  client_.backgroundPalette( this, palette ) );
-      client_.renderWindowBorder( &painter, rect(), this, palette );
-
-      // separator
-      if( client_.drawSeparator() )
-      { client_.renderSeparator( &painter, rect(), this, color ); }
-
-    }
-
     // translate buttons up if window maximized
     if(
       client_.compositingActive() &&
