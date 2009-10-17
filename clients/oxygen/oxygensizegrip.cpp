@@ -33,7 +33,7 @@
 #include <QtGui/QPolygon>
 #include <QtCore/QTimer>
 
-#include <kdeversion.h>
+#include <KDebug>
 
 #include "x11util.h"
 #include <QtGui/QX11Info>
@@ -44,7 +44,7 @@ namespace Oxygen
 
   //_____________________________________________
   OxygenSizeGrip::OxygenSizeGrip( OxygenClient* client ):
-    QWidget( client->widget(), Qt::ToolTip ),
+    QWidget( 0 ),
     client_( client )
   {
 
