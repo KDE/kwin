@@ -35,7 +35,6 @@
 
 #include <KDebug>
 
-#include "x11util.h"
 #include <QtGui/QX11Info>
 #include <X11/Xlib.h>
 
@@ -181,14 +180,8 @@ namespace Oxygen
 
         // check client window id
         if( !client().windowId() ) break;
-
-        // get matching screen
-        int screen( client().widget()->x11Info().screen() );
-
         client().widget()->setFocus();
-
-        // post event
-        X11Util::get().moveResizeWidget( client().windowId(), screen, event->globalPos(), X11Util::_NET_WM_MOVERESIZE_SIZE_BOTTOMRIGHT );
+        client().decoration()->performWindowOperation( KDecorationDefines::ResizeOp );
 
       }
       break;
