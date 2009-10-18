@@ -90,14 +90,14 @@ namespace Oxygen
   QColor OxygenButton::buttonDetailColor(const QPalette &palette, bool active)
   {
 
-    if( active ) return palette.color(QPalette::Active, QPalette::ButtonText);
+    if( active ) return palette.color(QPalette::Active, QPalette::WindowText);
     else {
 
       // todo: re-implement caching
-      QColor ab = palette.color(QPalette::Active, QPalette::Button);
-      QColor af = palette.color(QPalette::Active, QPalette::ButtonText);
-      QColor nb = palette.color(QPalette::Inactive, QPalette::Button);
-      QColor nf = palette.color(QPalette::Inactive, QPalette::ButtonText);
+      QColor ab = palette.color(QPalette::Active, QPalette::Window);
+      QColor af = palette.color(QPalette::Active, QPalette::WindowText);
+      QColor nb = palette.color(QPalette::Inactive, QPalette::Window);
+      QColor nf = palette.color(QPalette::Inactive, QPalette::WindowText);
       return reduceContrast(nb, nf, qMax(qreal(2.5), KColorUtils::contrastRatio(ab, KColorUtils::mix(ab, af, 0.4))));
 
     }
