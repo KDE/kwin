@@ -43,7 +43,7 @@ namespace Oxygen
 
   //_____________________________________________
   OxygenSizeGrip::OxygenSizeGrip( OxygenClient* client ):
-    QWidget( 0 ),
+    QWidget(0),
     client_( client )
   {
 
@@ -76,6 +76,7 @@ namespace Oxygen
     show();
 
   }
+
   //_____________________________________________
   OxygenSizeGrip::~OxygenSizeGrip( void )
   {}
@@ -89,21 +90,33 @@ namespace Oxygen
   {
 
     WId window_id = client().windowId();
-    assert( window_id );
+    if( client().isPreview() ) {
 
-    WId current = window_id;
-    while( true )
-    {
-      WId root, parent = 0;
-      WId *children = 0L;
-      uint child_count = 0;
-      XQueryTree(QX11Info::display(), current, &root, &parent, &children, &child_count);
-      if( parent && parent != root && parent != current ) current = parent;
-      else break;
+      kDebug(1212) << "Using kcommondecoration::widget()" << endl;
+      setParent( client().widget() );
+
+    } else if( window_id ) {
+
+      kDebug(1212) << "Using Window ID" << endl;
+      WId current = window_id;
+      while( true )
+      {
+        WId root, parent = 0;
+        WId *children = 0L;
+        uint child_count = 0;
+        XQueryTree(QX11Info::display(), current, &root, &parent, &children, &child_count);
+        if( parent && parent != root && parent != current ) current = parent;
+        else break;
+      }
+
+      // reparent
+      XReparentWindow( QX11Info::display(), winId(), current, 0, 0 );
+    } else {
+
+      kDebug(1212) << "Unable to find valid parent. Hiding" << endl;
+      hide();
+
     }
-
-    // reparent
-    XReparentWindow( QX11Info::display(), winId(), current, 0, 0 );
 
   }
 
@@ -181,7 +194,8 @@ namespace Oxygen
         // check client window id
         if( !client().windowId() ) break;
         client().widget()->setFocus();
-        client().decoration()->performWindowOperation( KDecorationDefines::ResizeOp );
+        if( client().decoration() )
+        { client().decoration()->performWindowOperation( KDecorationDefines::ResizeOp ); }
 
       }
       break;

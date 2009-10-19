@@ -838,7 +838,7 @@ namespace Oxygen
     if( configuration_.drawSizeGrip() )
     {
 
-      if( !( hasSizeGrip() || isPreview() ) ) createSizeGrip();
+      if( !hasSizeGrip() ) createSizeGrip();
 
     } else if( hasSizeGrip() ) deleteSizeGrip();
 
