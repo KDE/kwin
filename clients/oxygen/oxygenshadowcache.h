@@ -73,7 +73,13 @@ namespace Oxygen
 
     //! shadow size
     qreal shadowSize( void ) const
-    { return qMax( activeShadowConfiguration_.shadowSize(), inactiveShadowConfiguration_.shadowSize() ); }
+    {
+        qreal size( qMax( activeShadowConfiguration_.shadowSize(), inactiveShadowConfiguration_.shadowSize() ) );
+
+        // even if shadows are disabled,
+        // you need a minimum size to allow corner rendering
+        return qMax( size, 5.0 );
+    }
 
     //! get shadow matching client
     TileSet* tileSet( const OxygenClient* );
