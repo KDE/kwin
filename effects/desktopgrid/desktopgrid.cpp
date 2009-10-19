@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <netwm_def.h>
 #include <QEvent>
 #include <QMouseEvent>
+#include <kglobalsettings.h>
 
 namespace KWin
 {
@@ -323,7 +324,8 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
     if( e->type() == QEvent::MouseMove )
         {
         int d = posToDesktop( me->pos());
-        if( windowMove != NULL )
+        if( windowMove != NULL &&
+            (me->pos() - dragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay() )
             { // Handle window moving
             if( !wasWindowMove ) // Activate on move
                 effects->activateWindow( windowMove );
@@ -363,6 +365,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
         if( me->buttons() == Qt::LeftButton )
             {
 //             QRect rect;
+            dragStartPos = me->pos();
             bool isDesktop = (me->modifiers() & Qt::ControlModifier);
             EffectWindow* w = isDesktop ? NULL : windowAt( me->pos());
             if ( w != NULL )

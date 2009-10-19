@@ -86,6 +86,7 @@ class DesktopGridEffect
         bool wasWindowMove, wasDesktopMove;
         EffectWindow* windowMove;
         QPoint windowMoveDiff;
+        QPoint dragStartPos;
         
         // Soft highlighting
         QList<TimeLine> hoverTimeline;
