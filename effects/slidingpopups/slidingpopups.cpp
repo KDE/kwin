@@ -85,7 +85,7 @@ void SlidingPopupsEffect::paintWindow( EffectWindow* w, int mask, QRegion region
         appearing = true;
         animating = true;
         }
-    else if( mDisappearingWindows.contains( w ) )
+    else if( mDisappearingWindows.contains( w ) || w->isDeleted() )
         {
         appearing = false;
         animating = true;
@@ -126,7 +126,10 @@ void SlidingPopupsEffect::postPaintWindow( EffectWindow* w )
         w->addRepaintFull(); // trigger next animation repaint
     effects->postPaintWindow( w );
     if( mDisappearingWindows.contains( w ) && mDisappearingWindows[ w ].value() >= 1 )
+        {
+        mDisappearingWindows.remove( w );
         w->unrefWindow();
+        }
     }
 
 void SlidingPopupsEffect::windowAdded( EffectWindow* w )
