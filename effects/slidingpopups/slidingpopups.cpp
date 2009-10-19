@@ -93,7 +93,16 @@ void SlidingPopupsEffect::paintWindow( EffectWindow* w, int mask, QRegion region
 
     if( animating )
         {
-        const qreal progress = appearing?(1 - mAppearingWindows[ w ].value()):mDisappearingWindows[ w ].value();
+        qreal progress;
+        if( appearing )
+            progress = 1.0 - mAppearingWindows[ w ].value();
+        else
+            {
+            if( mDisappearingWindows.contains( w ))
+                progress = mDisappearingWindows[ w ].value();
+            else
+                progress = 1.0;
+            }
         const int start = mWindowsData[ w ].start;
 
         switch (mWindowsData[ w ].from)
