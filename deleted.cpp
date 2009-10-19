@@ -40,6 +40,8 @@ Deleted::Deleted( Workspace* ws )
 
 Deleted::~Deleted()
     {
+    if( delete_refcount != 0 )
+        kError(1212) << "Deleted client has non-zero reference count (" << delete_refcount << ")";
     assert( delete_refcount == 0 );
     workspace()->removeDeleted( this, Allowed );
     deleteEffectWindow();
