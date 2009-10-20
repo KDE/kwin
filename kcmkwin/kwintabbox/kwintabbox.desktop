@@ -12,6 +12,7 @@ X-KDE-Weight=60
 
 Name=Navigate Through Windows
 Name[en_GB]=Navigate Through Windows
+Name[eo]=Foliumi tra la fenestroj
 Name[et]=Akende vahel liikumine
 Name[gl]=Percorrer as fiestras
 Name[id]=Navigasi Melalui Jendela
@@ -30,6 +31,7 @@ Comment=Configure the behavior for navigating through windows.
 Comment[en_GB]=Configure the behaviour for navigating through windows.
 Comment[et]=Akende vahel liikumise seadistamine.
 Comment[lt]=Navigavimo tarp langų elgsenos konfigūravimas.
+Comment[nb]=Tilpass oppførselen for nevigering gjennom vinduer.
 Comment[nl]=Het gedrag voor het door vensters wandelen configureren.
 Comment[pt]=Configurar o comportamento de navegação pelas janelas.
 Comment[pt_BR]=Configura o comportamento da navegação pelas janelas.
