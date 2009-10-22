@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Cube Gears
+Icon=preferences-system-windows-effect-cube
+Comment=Display gears inside the cube
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Email=kde@martin-graesslin.com
+X-KDE-PluginInfo-Name=kwin4_effect_gears
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Candy
+X-KDE-PluginInfo-Depends=kwin4_effect_cube
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_tests
+X-KDE-Ordering=51

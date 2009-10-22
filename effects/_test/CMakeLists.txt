@@ -1,7 +1,7 @@
 # Adds effect plugin with given name. Sources are given after the name
 macro(KWIN4_ADD_EFFECT name)
     kde4_add_plugin(kwin4_effect_${name} ${ARGN})
-    target_link_libraries(kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS})
+    target_link_libraries(kwin4_effect_${name} kwineffects ${KDE4_KDEUI_LIBS} ${X11_LIBRARIES} kephal)
     install(TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR})
 endmacro(KWIN4_ADD_EFFECT)
 
@@ -42,6 +42,9 @@ if(OPENGL_FOUND)
         demo_liquid.cpp
         demo_showpicture.cpp
         demo_wavywindows.cpp
+        ../cube/cube_proxy.cpp
+        ../cube/cube.cpp
+        gears.cpp
         test_fbo.cpp
         )
 
@@ -49,6 +52,7 @@ if(OPENGL_FOUND)
         demo_liquid.desktop
         demo_showpicture.desktop
         demo_wavywindows.desktop
+        gears.desktop
         test_fbo.desktop
         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 

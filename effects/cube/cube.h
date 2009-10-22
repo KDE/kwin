@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kshortcut.h>
 #include <QObject>
 #include <QQueue>
+#include "cube_inside.h"
+#include "cube_proxy.h"
 
 namespace KWin
 {
@@ -52,6 +54,11 @@ class CubeEffect
         virtual void tabBoxUpdated();
         virtual void tabBoxClosed();
         virtual void windowAdded( EffectWindow* );
+
+        // proxy functions
+        virtual void* proxy();
+        void registerCubeInsideEffect( CubeInsideEffect* effect );
+        void unregisterCubeInsideEffect( CubeInsideEffect* effect );
 
         static bool supported();
     private slots:
@@ -165,6 +172,10 @@ class CubeEffect
         KShortcut cubeShortcut;
         KShortcut cylinderShortcut;
         KShortcut sphereShortcut;
+
+        // proxy
+        CubeEffectProxy m_proxy;
+        QList< CubeInsideEffect* > m_cubeInsideEffects;
     };
 
 } // namespace

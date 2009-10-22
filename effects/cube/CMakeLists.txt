@@ -4,6 +4,7 @@
 # Source files
 set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
     cube/cube.cpp
+    cube/cube_proxy.cpp
     cube/cubeslide.cpp
     )
 

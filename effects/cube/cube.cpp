@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "cube.h"
+#include "cube_inside.h"
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -90,6 +91,7 @@ CubeEffect::CubeEffect()
     , capListCreated( false )
     , recompileList( true )
     , glList( 0 )
+    , m_proxy( this )
     {
     desktopNameFont.setBold( true );
     desktopNameFont.setPointSize( 14 );
@@ -441,6 +443,18 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
                 glPopMatrix();
                 }
             glPopMatrix();
+
+            // call the inside cube effects
+            foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
+                {
+                glPushMatrix();
+                glCallList( glList );
+                glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
+                glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+                inside->paint();
+                glPopMatrix();
+                }
+
             glCullFace( GL_BACK );
             if( mode == Cylinder )
                 {
@@ -581,6 +595,19 @@ void CubeEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             glPopMatrix();
             }
         glPopMatrix();
+
+
+        // call the inside cube effects
+        foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
+            {
+            glPushMatrix();
+            glCallList( glList );
+            glTranslatef( rect.width()/2, rect.height()/2, -point-zTranslate );
+            glRotatef( (1-frontDesktop)*360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0 );
+            inside->paint();
+            glPopMatrix();
+            }
+
         glCullFace( GL_FRONT );
         if( mode == Cylinder )
             {
@@ -1988,6 +2015,10 @@ void CubeEffect::rotateToDesktop( int desktop )
 
 void CubeEffect::setActive( bool active )
     {
+    foreach( CubeInsideEffect* inside, m_cubeInsideEffects )
+        {
+        inside->setActive( true );
+        }
     if( active )
         {
         if( !mousePolling )
@@ -2221,6 +2252,21 @@ void CubeEffect::cylinderShortcutChanged( const QKeySequence& seq )
 void CubeEffect::sphereShortcutChanged( const QKeySequence& seq )
     {
     sphereShortcut = KShortcut( seq );
+    }
+
+void* CubeEffect::proxy()
+    {
+    return &m_proxy;
+    }
+
+void CubeEffect::registerCubeInsideEffect(CubeInsideEffect* effect)
+    {
+    m_cubeInsideEffects.append( effect );
+    }
+
+void CubeEffect::unregisterCubeInsideEffect(CubeInsideEffect* effect)
+    {
+    m_cubeInsideEffects.removeAll( effect );
     }
 
 } // namespace
