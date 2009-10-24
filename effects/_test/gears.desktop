@@ -1,7 +1,15 @@
 [Desktop Entry]
 Name=Cube Gears
+Name[pt]=Engrenagens Cúbicas
+Name[sv]=Kubkuggar
+Name[uk]=Шестерні у кубі
+Name[x-test]=xxCube Gearsxx
 Icon=preferences-system-windows-effect-cube
 Comment=Display gears inside the cube
+Comment[pt]=Mostrar as engrenagens dentro do cubo
+Comment[sv]=Visa kugghjul inne i kuben
+Comment[uk]=Показувати шестерні у кубі
+Comment[x-test]=xxDisplay gears inside the cubexx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
