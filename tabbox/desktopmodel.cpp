@@ -75,7 +75,7 @@ int DesktopModel::columnCount( const QModelIndex& parent ) const
             count = 1;
             break;
         case TabBoxConfig::HorizontalVerticalLayout:
-            count = qRound( sqrt( m_desktopList.count() ) );
+            count = qRound( sqrt( float(m_desktopList.count() )) );
             if( count * count < m_desktopList.count() )
                 count++;
             // TODO: pager layout?
@@ -97,7 +97,7 @@ int DesktopModel::rowCount( const QModelIndex& parent ) const
             count = m_desktopList.count();
             break;
         case TabBoxConfig::HorizontalVerticalLayout:
-            count = qRound( sqrt( m_desktopList.count() ) );
+            count = qRound( sqrt( float(m_desktopList.count()) ) );
             // TODO: pager layout?
             break;
         }

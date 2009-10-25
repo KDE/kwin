@@ -95,7 +95,7 @@ int ClientModel::columnCount( const QModelIndex& parent ) const
             count = 1;
             break;
         case TabBoxConfig::HorizontalVerticalLayout:
-            count = qRound( sqrt( m_clientList.count() ) );
+            count = qRound( sqrt(float( m_clientList.count() )) );
             if( count * count < m_clientList.count() )
                 count++;
             break;
@@ -116,7 +116,7 @@ int ClientModel::rowCount( const QModelIndex& parent ) const
             count = m_clientList.count();
             break;
         case TabBoxConfig::HorizontalVerticalLayout:
-            count = qRound( sqrt( m_clientList.count() ) );
+            count = qRound( sqrt( float( m_clientList.count() )) );
             break;
         }
     return qMax( count, 1 );
