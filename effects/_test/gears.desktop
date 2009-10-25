@@ -1,12 +1,18 @@
 [Desktop Entry]
 Name=Cube Gears
+Name[en_GB]=Cube Gears
+Name[gl]=Engrenaxes no cubo
 Name[pt]=Engrenagens Cúbicas
+Name[pt_BR]=Engrenagens cúbicas
 Name[sv]=Kubkuggar
 Name[uk]=Шестерні у кубі
 Name[x-test]=xxCube Gearsxx
 Icon=preferences-system-windows-effect-cube
 Comment=Display gears inside the cube
+Comment[en_GB]=Display gears inside the cube
+Comment[gl]=Mostra engrenaxes dentro do cubo
 Comment[pt]=Mostrar as engrenagens dentro do cubo
+Comment[pt_BR]=Mostra engrenagens dentro de um cubo
 Comment[sv]=Visa kugghjul inne i kuben
 Comment[uk]=Показувати шестерні у кубі
 Comment[x-test]=xxDisplay gears inside the cubexx
