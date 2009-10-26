@@ -29,6 +29,7 @@ Name[x-test]=xxNavigate Through Windowsxx
 Name[zh_TW]=透過視窗導覽
 Comment=Configure the behavior for navigating through windows.
 Comment[en_GB]=Configure the behaviour for navigating through windows.
+Comment[eo]=Agordi la konduton por travigado tra la fenestroj.
 Comment[et]=Akende vahel liikumise seadistamine.
 Comment[gl]=Configura o comportamento do percorrido polas fiestras.
 Comment[lt]=Navigavimo tarp langų elgsenos konfigūravimas.
