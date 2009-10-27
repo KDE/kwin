@@ -110,8 +110,8 @@ void KWinScreenEdgesConfig::load()
     m_ui->desktopSwitchCombo->setCurrentIndex( config.readEntry( "ElectricBorders", 0 ));
     m_ui->activationDelaySpin->setValue( config.readEntry( "ElectricBorderDelay", 150 ));
     m_ui->triggerCooldownSpin->setValue( config.readEntry( "ElectricBorderCooldown", 350 ));
-    m_ui->quickMaximizeBox->setChecked( config.readEntry( "ElectricBorderMaximize", false ));
-    m_ui->quickTileBox->setChecked( config.readEntry( "ElectricBorderTiling", false ));
+    m_ui->quickMaximizeBox->setChecked( config.readEntry( "ElectricBorderMaximize", true ));
+    m_ui->quickTileBox->setChecked( config.readEntry( "ElectricBorderTiling", true ));
 
     emit changed( false );
     }
@@ -146,8 +146,8 @@ void KWinScreenEdgesConfig::defaults()
     m_ui->desktopSwitchCombo->setCurrentIndex( 0 );
     m_ui->activationDelaySpin->setValue( 150 );
     m_ui->triggerCooldownSpin->setValue( 350 );
-    m_ui->quickMaximizeBox->setChecked( false );
-    m_ui->quickTileBox->setChecked( false );
+    m_ui->quickMaximizeBox->setChecked( true );
+    m_ui->quickTileBox->setChecked( true );
 
     emit changed( true );
     }
