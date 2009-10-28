@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Cube Gears
 Name[en_GB]=Cube Gears
+Name[et]=Kuuphammasrattad
 Name[gl]=Engrenaxes no cubo
 Name[id]=Gigi Kubus
 Name[pt]=Engrenagens Cúbicas
@@ -8,10 +9,12 @@ Name[pt_BR]=Engrenagens cúbicas
 Name[sv]=Kubkuggar
 Name[uk]=Шестерні у кубі
 Name[x-test]=xxCube Gearsxx
+Name[zh_TW]=立方體內的齒輪
 Icon=preferences-system-windows-effect-cube
 Comment=Display gears inside the cube
 Comment[en_GB]=Display gears inside the cube
 Comment[eo]=Montri ilojn ene de la kubo
+Comment[et]=Hammasrataste kujutamine kuubikus
 Comment[gl]=Mostra engrenaxes dentro do cubo
 Comment[id]=Tampilkan gigi di dalam kubus
 Comment[pt]=Mostrar as engrenagens dentro do cubo
@@ -19,6 +22,7 @@ Comment[pt_BR]=Mostra engrenagens dentro de um cubo
 Comment[sv]=Visa kugghjul inne i kuben
 Comment[uk]=Показувати шестерні у кубі
 Comment[x-test]=xxDisplay gears inside the cubexx
+Comment[zh_TW]=在立方體內顯示齒輪
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
