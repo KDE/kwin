@@ -47,57 +47,6 @@ namespace Oxygen
 {
 
   //_________________________________________________________
-  DetectWidget::DetectWidget( QWidget* parent ):
-    QWidget( parent )
-  {
-
-    QVBoxLayout* vboxLayout = new QVBoxLayout();
-    vboxLayout->setMargin( 0 );
-    setLayout( vboxLayout );
-
-    QGroupBox* box( new QGroupBox( i18n( "Information about Selected Window" ), this ) );
-    vboxLayout->addWidget( box );
-
-    // display layout
-    QGridLayout *gridLayout = new QGridLayout();
-    box->setLayout( gridLayout );
-
-    // class
-    gridLayout->addWidget( new QLabel( i18n( "Class: " ), box ), 0, 0, 1, 1, Qt::AlignRight|Qt::AlignVCenter );
-    gridLayout->addWidget( windowClass = new QLabel( box ), 0, 1, 1, 1 );
-
-    // title
-    gridLayout->addWidget( new QLabel( i18n( "Title: " ), box ), 1, 0, 1, 1, Qt::AlignRight|Qt::AlignVCenter );
-    gridLayout->addWidget( windowTitle = new QLabel( box ), 1, 1, 1, 1 );
-
-    box = new QGroupBox( i18n( "Window Property Selection" ), this );
-    QButtonGroup* group( new QButtonGroup( this ) );
-    box->setLayout( new QVBoxLayout() );
-    vboxLayout->addWidget( box );
-
-    QCheckBox* checkbox;
-    group->addButton( checkbox = new QCheckBox( i18n( "Use window class (whole application)" ) ) );
-    checkboxes.insert( std::make_pair( checkbox, OxygenException::WindowClassName ) );
-    checkbox->setChecked( true );
-    box->layout()->addWidget( checkbox );
-
-    group->addButton( checkbox = new QCheckBox( i18n( "Use window title" ) ) );
-    checkboxes.insert( std::make_pair( checkbox, OxygenException::WindowTitle ) );
-    box->layout()->addWidget( checkbox );
-
-  }
-
-  //_________________________________________________________
-  OxygenException::Type DetectWidget::exceptionType( void ) const
-  {
-    for( CheckBoxMap::const_iterator iter = checkboxes.begin(); iter != checkboxes.end(); ++iter )
-    { if( iter->first->isChecked() ) return iter->second; }
-
-    assert( false );
-    return OxygenException::WindowClassName;
-  }
-
-  //_________________________________________________________
   DetectDialog::DetectDialog( QWidget* parent ):
     KDialog( parent ),
     grabber( 0 )
@@ -107,8 +56,11 @@ namespace Oxygen
     setButtons( Ok|Cancel );
     showButtonSeparator( false );
 
+    QWidget* local( new QWidget( this ) );
+    widget.setupUi( local );
+
     // central widget
-    setMainWidget( widget = new DetectWidget( this ) );
+    setMainWidget( local );
 
   }
 
@@ -140,8 +92,8 @@ namespace Oxygen
     QString wmclass_name = info.windowClassName();
     QString title = info.name();
 
-    widget->setWindowClass( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')' );
-    widget->setWindowTitle( title );
+    widget.windowClass->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')' );
+    widget.windowTitle->setText( title );
     emit detectionDone( exec() == KDialog::Accepted );
 
     return;

@@ -16,6 +16,8 @@ set(kwin_oxygen_config_PART_SRCS
     oxygenshadowconfigurationui.cpp
   )
 
+kde4_add_ui_files(kwin_oxygen_config_PART_SRCS oxygendetectwidget.ui)
+
 kde4_add_plugin(kwin_oxygen_config ${kwin_oxygen_config_PART_SRCS})
 
 target_link_libraries(

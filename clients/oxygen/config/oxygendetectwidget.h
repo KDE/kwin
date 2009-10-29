@@ -40,44 +40,10 @@
 #include <kwindowsystem.h>
 
 #include "../oxygenexception.h"
+#include "ui_oxygendetectwidget.h"
 
 namespace Oxygen
 {
-
-  class DetectWidget: public QWidget
-  {
-
-    public:
-
-      //! constructor
-      DetectWidget( QWidget* );
-
-    //! window class
-    void setWindowClass( QString value )
-    { windowClass->setText( value ); }
-
-    //! window title
-    void setWindowTitle( QString value )
-    { windowTitle->setText( value ); }
-
-    //! window machine
-    void setWindowMachine( QString value )
-    { windowMachine->setText( value ); }
-
-    //! type
-    OxygenException::Type exceptionType( void ) const;
-
-    private:
-
-    QLabel* windowClass;
-    QLabel* windowTitle;
-    QLabel* windowMachine;
-
-    // map checkboxes against exception type
-    typedef std::map<QCheckBox*, OxygenException::Type > CheckBoxMap;
-    CheckBoxMap checkboxes;
-
-  };
 
   class DetectDialog : public KDialog
   {
@@ -101,7 +67,11 @@ namespace Oxygen
 
     //! exception type
     OxygenException::Type exceptionType() const
-    { return widget->exceptionType(); }
+    {
+        if( widget.windowClassCheckBox->isChecked() ) return OxygenException::WindowClassName;
+        else if( widget.windowTitleCheckBox->isChecked() ) return OxygenException::WindowTitle;
+        else return OxygenException::WindowClassName;
+    }
 
     signals:
 
@@ -129,7 +99,7 @@ namespace Oxygen
     QString machine;
 
     //! main widget
-    DetectWidget* widget;
+    Ui_DetectWidget widget;
 
     //! invisible dialog used to grab mouse
     KDialog* grabber;
