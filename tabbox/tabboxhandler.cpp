@@ -503,6 +503,8 @@ QModelIndex TabBoxHandler::nextPrev( bool forward ) const
                 row = 0;
             }
         ret = model->index( row, column );
+        if( !ret.isValid() )
+            ret = model->index( 0, 0 );
         }
     else
         {
@@ -516,6 +518,16 @@ QModelIndex TabBoxHandler::nextPrev( bool forward ) const
                 row = model->rowCount() - 1;
             }
         ret = model->index( row, column );
+        if( !ret.isValid() )
+            {
+            row = model->rowCount() - 1;
+            for( int i = model->columnCount() - 1; i >= 0; i-- )
+                {
+                ret = model->index( row, i );
+                if( ret.isValid() )
+                    break;
+                }
+            }
         }
     if( ret.isValid() )
         return ret;
