@@ -2218,7 +2218,10 @@ void CubeEffect::tabBoxAdded( int mode )
 void CubeEffect::tabBoxUpdated()
     {
     if( activated )
+        {
         rotateToDesktop( effects->currentTabBoxDesktop() );
+        effects->addRepaintFull();
+        }
     }
 
 void CubeEffect::tabBoxClosed()
