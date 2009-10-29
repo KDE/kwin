@@ -281,6 +281,10 @@ void PresentWindowsEffect::prePaintWindow( EffectWindow *w, WindowPrePaintData &
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DELETE );
             }
 
+        // desktop windows on other desktops (Plasma activity per desktop) should not be painted
+        if( w->isDesktop() && !w->isOnCurrentDesktop() )
+            w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+
         if( m_motionManager.isManaging( w ))
             data.setTransformed(); // We will be moving this window
         }
