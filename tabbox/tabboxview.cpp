@@ -50,7 +50,9 @@ TabBoxView::TabBoxView( QWidget* parent )
     {
     setWindowFlags( Qt::X11BypassWindowManagerHint );
     setAttribute( Qt::WA_TranslucentBackground );
-    setAutoFillBackground( false );
+    QPalette pal = palette();
+    pal.setColor(backgroundRole(), Qt::transparent);
+    setPalette(pal);
     m_clientModel = new ClientModel( this );
     m_desktopModel = new DesktopModel( this );
     m_delegate = new ClientItemDelegate( this );
@@ -78,10 +80,13 @@ void TabBoxView::paintEvent(QPaintEvent* e)
     {
     // paint the background
     QPainter painter( this );
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setClipRect(e->rect());
     painter.save();
     painter.setCompositionMode( QPainter::CompositionMode_Source );
-    m_frame->resizeFrame( geometry().size() );
+    painter.fillRect( rect(), Qt::transparent );
     painter.setClipRegion( m_frame->mask() );
+    m_frame->resizeFrame( geometry().size() );
     m_frame->paintFrame( &painter );
     painter.restore();
     QWidget::paintEvent(e);
@@ -97,7 +102,10 @@ void TabBoxView::updateGeometry()
     int y = screenRect.y() + screenRect.height() * 0.5 - hint.height() * 0.5;
 
     setGeometry( x, y, hint.width(), hint.height() );
-    m_frame->resizeFrame( hint );
+    qreal left, top, right, bottom;
+    m_frame->getMargins( left, top, right, bottom );
+    m_frame->resizeFrame( hint + QSizeF( left + right, top + bottom ) );
+    setMask( m_frame->mask() );
     }
 
 QSize TabBoxView::sizeHint() const
