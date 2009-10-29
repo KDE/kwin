@@ -70,8 +70,6 @@ KWinTabBoxConfig::KWinTabBoxConfig( QWidget* parent, const QVariantList& args )
     layout->addWidget( infoLabel );
     layout->addWidget( tabWidget );
 
-    m_configForm = new TabBox::LayoutConfig();
-
     m_editor = new KShortcutsEditor( m_primaryTabBoxUi, KShortcutsEditor::GlobalAction );
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection( this, KComponentData("kwin") );
@@ -590,6 +588,7 @@ void KWinTabBoxConfig::slotConfigureLayoutClicked()
     dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
     connect( dialog, SIGNAL(okClicked()), this, SLOT(slotLayoutChanged()));
 
+    m_configForm = new TabBox::LayoutConfig( dialog );
     m_configForm->setConfig( m_tabBoxConfig );
     dialog->setMainWidget( m_configForm );
 
@@ -610,6 +609,7 @@ void KWinTabBoxConfig::slotConfigureLayoutClickedAlternative()
     dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
     connect( dialog, SIGNAL(okClicked()), this, SLOT(slotLayoutChangedAlternative()));
 
+    m_configForm = new TabBox::LayoutConfig( dialog );
     m_configForm->setConfig( m_tabBoxAlternativeConfig );
     dialog->setMainWidget( m_configForm );
 
