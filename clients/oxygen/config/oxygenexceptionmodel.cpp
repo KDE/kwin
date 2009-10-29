@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// oxygenexceptionmodel.h
+// oxygenexceptionmodel.cpp
 // -------------------
 //
 // Copyright (c) 2009 Hugo Pereira Da Costa <hugo.pereira@free.fr>
