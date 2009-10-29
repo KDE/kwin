@@ -2206,7 +2206,7 @@ void CubeEffect::tabBoxAdded( int mode )
         return;
     if( effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this )
         return;
-    if( useForTabBox && mode != TabBoxWindowsMode )
+    if( useForTabBox && mode == TabBoxDesktopListMode )
         {
         effects->refTabBox();
         tabBoxMode = true;
