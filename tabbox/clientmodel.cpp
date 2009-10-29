@@ -154,7 +154,6 @@ void ClientModel::createClientList( bool partialReset )
 
 void ClientModel::createClientList( int desktop, bool partialReset )
     {
-    reset();
     TabBoxClient* start = tabBox->activeClient();
     // TODO: new clients are not added at correct position
     if( partialReset && !m_clientList.isEmpty() )
@@ -225,6 +224,7 @@ void ClientModel::createClientList( int desktop, bool partialReset )
             break;
             }
         }
+    reset();
     }
 
 } // namespace Tabbox

@@ -131,7 +131,6 @@ QModelIndex DesktopModel::desktopIndex( int desktop ) const
 
 void DesktopModel::createDesktopList()
     {
-    reset();
     m_desktopList.clear();
     qDeleteAll( m_clientModels );
     m_clientModels.clear();
@@ -163,6 +162,7 @@ void DesktopModel::createDesktopList()
             break;
             }
         }
+    reset();
     }
 
 } // namespace Tabbox
