@@ -25,13 +25,6 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
-/*!
-  \file    ItemModel.h
-  \author  Hugo Pereira
-  \version $Revision: 1.2 $
-  \date    $Date: 2009/03/25 23:45:37 $
-*/
-
 
 #include <QtCore/QAbstractItemModel>
 

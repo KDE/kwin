@@ -23,14 +23,6 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-/*!
-  \file    ItemModel.h
-  \brief   Job model. Stores job information for display in lists
-  \author  Hugo Pereira
-  \version $Revision: 1.1 $
-  \date    $Date: 2009/03/25 17:44:24 $
-*/
-
 #include "itemmodel.h"
 
 namespace Oxygen
