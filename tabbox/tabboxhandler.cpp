@@ -490,6 +490,8 @@ QModelIndex TabBoxHandler::nextPrev( bool forward ) const
         case TabBoxConfig::DesktopTabBox:
             model = d->desktopModel();
             break;
+        default:
+            return d->index;
         }
     if( forward )
         {
@@ -594,6 +596,8 @@ QModelIndex TabBoxHandler::grabbedKeyEvent( QKeyEvent* event ) const
         case TabBoxConfig::DesktopTabBox:
             model = d->desktopModel();
             break;
+        default:
+            return d->index;
         }
     int column = d->index.column();
     int row = d->index.row();
@@ -691,6 +695,8 @@ QModelIndex TabBoxHandler::first() const
         case TabBoxConfig::DesktopTabBox:
             model = d->desktopModel();
             break;
+        default:
+            return QModelIndex();
         }
     return model->index( 0, 0 );
     }
