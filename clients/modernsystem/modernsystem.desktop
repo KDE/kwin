@@ -82,4 +82,5 @@ Name[wa]=Sistinme modiene
 Name[x-test]=xxModern Systemxx
 Name[zh_CN]=现代系统
 Name[zh_TW]=現代系統
+Type=Decoration
 X-KDE-Library=kwin3_modernsys

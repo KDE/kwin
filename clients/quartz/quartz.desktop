@@ -83,4 +83,5 @@ Name[xh]=Quartz
 Name[x-test]=xxQuartzxx
 Name[zh_CN]=Quartz
 Name[zh_TW]=石英
+Type=Decoration
 X-KDE-Library=kwin3_quartz

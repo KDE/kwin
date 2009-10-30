@@ -85,4 +85,5 @@ Name[xh]=KDE 2
 Name[x-test]=xxKDE 2xx
 Name[zh_CN]=KDE 2
 Name[zh_TW]=KDE 2
+Type=Decoration
 X-KDE-Library=kwin3_kde2

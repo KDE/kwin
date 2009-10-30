@@ -339,10 +339,11 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             // HACK: PaintClipper is used because window split is somehow wrong if the height is greater than width
             PaintClipper::push( frame_area );
             paintHighlight( highlight_area );
-            foreach( EffectWindow* w, windows.keys())
+            QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+            for( i = windows.constBegin(); i != windows.constEnd(); ++i )
                 {
-                paintWindowThumbnail( w );
-                paintWindowIcon( w );
+                paintWindowThumbnail( i.key() );
+                paintWindowIcon( i.key() );
                 }
             PaintClipper::pop( frame_area );
             }
@@ -1367,11 +1368,12 @@ void CoverSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
         (dynamicThumbnails && currentWindowList.size() >= thumbnailWindows))))
         {
         // determine which item was clicked
-        foreach( EffectWindow* w, windows.keys())
+        QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+        for( i = windows.constBegin(); i != windows.constEnd(); ++i )
             {
-            if( windows[ w ]->clickable.contains( pos ))
+            if( i.value()->clickable.contains( pos ))
                 {
-                effects->setTabBoxWindow( w );
+                effects->setTabBoxWindow( i.key() );
                 return;
                 }
             }

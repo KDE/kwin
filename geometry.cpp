@@ -177,7 +177,7 @@ void Workspace::updateClientArea( bool force )
              ++i )
             {
             new_wareas[ i ] = new_wareas[ i ].intersected( topmenu_area );
-            new_rmoveareas[ i ] += topmenu_area;
+            new_rmoveareas[ i ] += StrutRect( topmenu_area );
             }
         }
 
@@ -1135,51 +1135,51 @@ void Client::checkWorkspacePosition()
 
         // Get the max strut point for each side where the window is (E.g. Highest point for
         // the bottom struts bounded by the window's left and right sides).
-        foreach( QRect rect, workspace()->previousRestrictedMoveArea( desktop(), StrutAreaTop ).rects() )
+        foreach( const QRect& r, workspace()->previousRestrictedMoveArea( desktop(), StrutAreaTop ).rects() )
             {
-            rect &= newGeomTall;
+            QRect rect = r & newGeomTall;
             if( !rect.isEmpty() )
                 oldTopMax = qMax( oldTopMax, rect.y() + rect.height() );
             }
-        foreach( QRect rect, workspace()->previousRestrictedMoveArea( desktop(), StrutAreaRight ).rects() )
+        foreach( const QRect& r, workspace()->previousRestrictedMoveArea( desktop(), StrutAreaRight ).rects() )
             {
-            rect &= newGeomWide;
+            QRect rect = r & newGeomWide;
             if( !rect.isEmpty() )
                 oldRightMax = qMin( oldRightMax, rect.x() );
             }
-        foreach( QRect rect, workspace()->previousRestrictedMoveArea( desktop(), StrutAreaBottom ).rects() )
+        foreach( const QRect& r, workspace()->previousRestrictedMoveArea( desktop(), StrutAreaBottom ).rects() )
             {
-            rect &= newGeomTall;
+            QRect rect = r & newGeomTall;
             if( !rect.isEmpty() )
                 oldBottomMax = qMin( oldBottomMax, rect.y() );
             }
-        foreach( QRect rect, workspace()->previousRestrictedMoveArea( desktop(), StrutAreaLeft ).rects() )
+        foreach( const QRect& r, workspace()->previousRestrictedMoveArea( desktop(), StrutAreaLeft ).rects() )
             {
-            rect &= newGeomWide;
+            QRect rect = r & newGeomWide;
             if( !rect.isEmpty() )
                 oldLeftMax = qMax( oldLeftMax, rect.x() + rect.width() );
             }
-        foreach( QRect rect, workspace()->restrictedMoveArea( desktop(), StrutAreaTop ).rects() )
+        foreach( const QRect& r, workspace()->restrictedMoveArea( desktop(), StrutAreaTop ).rects() )
             {
-            rect &= newGeomTall;
+            QRect rect = r & newGeomTall;
             if( !rect.isEmpty() )
                 topMax = qMax( topMax, rect.y() + rect.height() );
             }
-        foreach( QRect rect, workspace()->restrictedMoveArea( desktop(), StrutAreaRight ).rects() )
+        foreach( const QRect& r, workspace()->restrictedMoveArea( desktop(), StrutAreaRight ).rects() )
             {
-            rect &= newGeomWide;
+            QRect rect = r & newGeomWide;
             if( !rect.isEmpty() )
                 rightMax = qMin( rightMax, rect.x() );
             }
-        foreach( QRect rect, workspace()->restrictedMoveArea( desktop(), StrutAreaBottom ).rects() )
+        foreach( const QRect& r, workspace()->restrictedMoveArea( desktop(), StrutAreaBottom ).rects() )
             {
-            rect &= newGeomTall;
+            QRect rect = r & newGeomTall;
             if( !rect.isEmpty() )
                 bottomMax = qMin( bottomMax, rect.y() );
             }
-        foreach( QRect rect, workspace()->restrictedMoveArea( desktop(), StrutAreaLeft ).rects() )
+        foreach( const QRect& r, workspace()->restrictedMoveArea( desktop(), StrutAreaLeft ).rects() )
             {
-            rect &= newGeomWide;
+            QRect rect = r & newGeomWide;
             if( !rect.isEmpty() )
                 leftMax = qMax( leftMax, rect.x() + rect.width() );
             }

@@ -144,23 +144,23 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 // HACK: PaintClipper is used because window split is somehow wrong if the height is greater than width
                 PaintClipper::push( frame_area );
                 paintHighlight( highlight_area );
-                foreach( EffectWindow* w, windows.keys())
+                QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+                for( i = windows.constBegin(); i != windows.constEnd(); ++i )
                     {
-                    paintWindowThumbnail( w );
-                    paintWindowIcon( w );
+                    paintWindowThumbnail( i.key() );
+                    paintWindowIcon( i.key() );
                     }
                 PaintClipper::pop( frame_area );
                 }
             else
                 {
-                foreach( EffectWindow* w, windows.keys())
+                QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+                for( i = windows.constBegin(); i != windows.constEnd(); ++i )
                     {
-                    if( w == selected_window )
-                        {
-                        paintHighlight( windows[ w ]->area );
-                        }
-                    paintWindowThumbnail( w );
-                    paintWindowIcon( w );
+                    if( i.key() == selected_window )
+                        paintHighlight( i.value()->area );
+                    paintWindowThumbnail( i.key() );
+                    paintWindowIcon( i.key() );
                     }
                 }
             }
@@ -170,12 +170,12 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                 {
                 thumbnailFrame.render( region );
 
-                foreach( painting_desktop, desktops.keys())
+                QHash< int, ItemInfo* >::const_iterator i;
+                for( i = desktops.constBegin(); i != desktops.constEnd(); ++i )
                     {
+                    painting_desktop = i.key();
                     if( painting_desktop == selected_desktop )
-                        {
                         paintHighlight( desktops[ painting_desktop ]->area ); //effects->desktopName( painting_desktop )
-                        }
 
                     paintDesktopThumbnail( painting_desktop );
                     }
@@ -241,12 +241,11 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
     // determine which item was clicked
     if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
-        foreach( EffectWindow* w, windows.keys())
+        QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+        for( i = windows.constBegin(); i != windows.constEnd(); ++i )
             {
-            if( windows[ w ]->clickable.contains( pos ))
-                {
-                effects->setTabBoxWindow( w );
-                }
+            if( i.value()->clickable.contains( pos ))
+                effects->setTabBoxWindow( i.key() );
             }
         // special handling for second half of window in case of animation and even number of windows
         if( mAnimateSwitch && ( windows.size() % 2 == 0 ) )
@@ -261,12 +260,11 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
         }
     else
         {
-        foreach( int i, desktops.keys())
+        QHash< int, ItemInfo* >::const_iterator i;
+        for( i = desktops.constBegin(); i != desktops.constEnd(); ++i )
             {
-            if( desktops[ i ]->clickable.contains( pos ))
-                {
-                effects->setTabBoxDesktop( i );
-                }
+            if( i.value()->clickable.contains( pos ))
+                effects->setTabBoxDesktop( i.key() );
             }
         }
     }
@@ -468,9 +466,10 @@ void BoxSwitchEffect::setActive()
     effects->addRepaint( frame_area );
     if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
-        foreach( EffectWindow* w, windows.keys())
+        QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+        for( i = windows.constBegin(); i != windows.constEnd(); ++i )
             {
-            w->addRepaintFull();
+            i.key()->addRepaintFull();
             }
         }
     }
@@ -486,10 +485,11 @@ void BoxSwitchEffect::setInactive()
         }
     if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
-        foreach( EffectWindow* w, windows.keys())
+        QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+        for( i = windows.constBegin(); i != windows.constEnd(); ++i )
             {
-            if( w != selected_window )
-                w->addRepaintFull();
+            if( i.key() != selected_window )
+                i.key()->addRepaintFull();
             }
         // We don't unset the selected window so we have correct fading
         // But we do need to remove elevation status

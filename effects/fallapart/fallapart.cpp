@@ -62,7 +62,7 @@ void FallApartEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
         {
         WindowQuadList new_quads;
         int cnt = 0;
-        foreach( WindowQuad quad, data.quads )
+        foreach( WindowQuad quad, data.quads ) // krazy:exclude=foreach
             {
             // make fragments move in various directions, based on where
             // they are (left pieces generally move to the left, etc.)

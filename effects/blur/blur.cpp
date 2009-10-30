@@ -147,11 +147,8 @@ bool BlurEffect::supported()
 QRegion BlurEffect::expandedRegion( const QRegion& region ) const
     {
     QRegion expandedregion;
-    foreach( QRect r, region.rects() )
-        {
-        r.adjust( -mBlurRadius, -mBlurRadius, mBlurRadius, mBlurRadius );
-        expandedregion += r;
-        }
+    foreach( const QRect& r, region.rects() )
+        expandedregion += r.adjusted( -mBlurRadius, -mBlurRadius, mBlurRadius, mBlurRadius );
     return expandedregion;
     }
 
@@ -208,7 +205,7 @@ void BlurEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
             int pixels = 0;
             tex->bind();
             tex->enableUnnormalizedTexCoords();
-            foreach( QRect r, mScreenDirty.rects() )
+            foreach( QRect r, mScreenDirty.rects() ) // krazy:exclude=foreach
                 {
                 r.adjust(0, -1, 0, -1);
                 int rx2 = r.x() + r.width();

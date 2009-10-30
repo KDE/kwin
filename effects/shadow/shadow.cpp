@@ -205,8 +205,9 @@ void ShadowEffect::drawWindow( EffectWindow* w, int mask, QRegion region, Window
             if (optimize)
                 {
                     rgn -= shape;
-                    foreach( ShadowData d, shadowDatas )
-                        d.clip |= shape;
+                    QList<ShadowData>::iterator i;
+                    for( i = shadowDatas.begin(); i != shadowDatas.end(); ++i )
+                        (*i).clip |= shape;
                 }
             optimize = false;
         }

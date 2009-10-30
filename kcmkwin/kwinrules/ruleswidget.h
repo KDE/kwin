@@ -126,7 +126,7 @@ class EditShortcutDialog
     {
     Q_OBJECT
     public:
-        EditShortcutDialog( QWidget* parent = NULL, const char* name = NULL );
+        explicit EditShortcutDialog( QWidget* parent = NULL, const char* name = NULL );
         void setShortcut( const QString& cut );
         QString shortcut() const;
     private:
@@ -139,7 +139,7 @@ class ShortcutDialog
     {
     Q_OBJECT
     public:
-        ShortcutDialog( const QKeySequence& cut, QWidget* parent = NULL );
+        explicit ShortcutDialog( const QKeySequence& cut, QWidget* parent = NULL );
         virtual void accept();
         QKeySequence shortcut() const;
     private:

@@ -243,13 +243,13 @@ void CompositingPrefs::detectDriverAndVersion()
     if( mGLRenderer.startsWith( "Mesa DRI Intel" ) || mGLRenderer.startsWith( "Mesa DRI Mobile Intel" ))
         {
         mDriver = "intel";
-        QStringList words = mGLRenderer.split(" ");
+        QStringList words = mGLRenderer.split(' ');
         mVersion = Version( words[ words.count() - 2 ] );
         }
     else if( mGLVendor == "NVIDIA Corporation" )
         {
         mDriver = "nvidia";
-        QStringList words = mGLVersion.split(" ");
+        QStringList words = mGLVersion.split(' ');
         mVersion = Version( words[ words.count() - 1 ] );
         }
     else if( mGLVendor == "ATI Technologies Inc." )
@@ -257,7 +257,7 @@ void CompositingPrefs::detectDriverAndVersion()
         mDriver = "fglrx";
         // Ati changed the version string.
         // The GL version is either in the first or second part
-        QStringList versionParts = mGLVersion.split(" ");
+        QStringList versionParts = mGLVersion.split(' ');
         if( versionParts.first().count(".") == 2 || versionParts.count() == 1 )
             mVersion = Version( versionParts.first() );
         else
@@ -269,12 +269,12 @@ void CompositingPrefs::detectDriverAndVersion()
     else if( mGLRenderer.startsWith( "Mesa DRI R" ))
         {
         mDriver = "radeon";
-        mVersion = Version( mGLRenderer.split(" ")[ 3 ] );
+        mVersion = Version( mGLRenderer.split(' ')[ 3 ] );
         }
     else if( mGLRenderer == "Software Rasterizer" )
         {
         mDriver = "software";
-        QStringList words = mGLVersion.split(" ");
+        QStringList words = mGLVersion.split(' ');
         mVersion = Version( words[ words.count() - 1 ] );
         }
     else

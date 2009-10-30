@@ -407,7 +407,7 @@ void KWinCompositingConfig::setupCompositingState( bool active, bool enabled )
 bool KWinCompositingConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
     {
     KService::List services = KServiceTypeTrader::self()->query(
-        "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + "'");
+        "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
     if( services.isEmpty())
         return false;
     QVariant v = services.first()->property("X-KDE-PluginInfo-EnabledByDefault");
@@ -676,7 +676,7 @@ void KWinCompositingConfig::checkLoadedEffects()
         QStringList loadedEffects = reply.arguments()[0].toStringList();
         QStringList effects = effectConfig.keyList();
         QStringList disabledEffects = QStringList();
-        foreach( QString effect, effects )
+        foreach( QString effect, effects ) // krazy:exclude=foreach
             {
             QString temp = effect.mid( 13, effect.length() - 13 - 7 );
             effect.truncate( effect.length() - 7 );
@@ -693,7 +693,7 @@ void KWinCompositingConfig::checkLoadedEffects()
             message.append( "<ul>" );
             foreach( const QString &effect, disabledEffects )
                 {
-                services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == '" + effect + "'");
+                services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == '" + effect + '\'');
                 message.append( "<li>" );
                 if( !services.isEmpty() )
                     message.append( services.first()->name() );

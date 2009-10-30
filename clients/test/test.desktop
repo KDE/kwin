@@ -81,4 +81,5 @@ Name[wa]=Saye KWin
 Name[x-test]=xxKWin testxx
 Name[zh_CN]=KWin 测试
 Name[zh_TW]=KWin 測試
+Type=Decoration
 X-KDE-Library=kwin3_test

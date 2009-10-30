@@ -84,4 +84,5 @@ Name[xh]=Redmond
 Name[x-test]=xxRedmondxx
 Name[zh_CN]=Redmond
 Name[zh_TW]=Redmond
+Type=Decoration
 X-KDE-Library=kwin3_redmond

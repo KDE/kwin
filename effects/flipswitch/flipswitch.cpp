@@ -167,7 +167,7 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
         int tabIndex = index;
         if( m_mode == TabboxMode )
             {
-            foreach( SwitchingDirection direction, m_scheduledDirections )
+            foreach( SwitchingDirection direction, m_scheduledDirections ) // krazy:exclude=foreach
                 {
                 if( direction == DirectionBackward )
                     index++;
@@ -199,7 +199,7 @@ void FlipSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& d
             }
         else
             {
-            foreach( SwitchingDirection direction, m_scheduledDirections )
+            foreach( SwitchingDirection direction, m_scheduledDirections ) // krazy:exclude=foreach
                 {
                 if( direction == DirectionForward )
                     index++;

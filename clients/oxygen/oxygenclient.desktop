@@ -80,4 +80,5 @@ Name[wa]=Ocsidjinne
 Name[x-test]=xxOxygenxx
 Name[zh_CN]=Oxygen
 Name[zh_TW]=Oxygen
+Type=Decoration
 X-KDE-Library=kwin3_oxygen

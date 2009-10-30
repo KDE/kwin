@@ -216,14 +216,15 @@ void PresentWindowsEffect::postPaintScreen()
         }
 
     // Update windows that are changing brightness or opacity
-    foreach( EffectWindow *w, m_windowData.keys() )
+    DataHash::const_iterator i;
+    for( i = m_windowData.constBegin(); i != m_windowData.constEnd(); ++i )
         {
-        if( m_windowData[w].opacity > 0.0 && m_windowData[w].opacity < 1.0 )
-            w->addRepaintFull();
-        if( m_windowData[w].highlight > 0.0 && m_windowData[w].highlight < 1.0 )
-            w->addRepaintFull();
+        if( i.value().opacity > 0.0 && i.value().opacity < 1.0 )
+            i.key()->addRepaintFull();
+        if( i.value().highlight > 0.0 && i.value().highlight < 1.0 )
+            i.key()->addRepaintFull();
         }
-    
+
     effects->postPaintScreen();
     }
 
@@ -1403,12 +1404,13 @@ bool PresentWindowsEffect::isOverlappingAny( EffectWindow *w, const QHash<Effect
     if( border.intersects( targets[w] ))
         return true;
     // Is there a better way to do this?
-    foreach( EffectWindow *e, targets.keys() )
+    QHash<EffectWindow*, QRect>::const_iterator i;
+    for( i = targets.constBegin(); i != targets.constEnd(); ++i )
         {
-        if( w == e )
+        if( w == i.key() )
             continue;
         if( targets[w].adjusted( -5, -5, 5, 5 ).intersects(
-            targets[e].adjusted( -5, -5, 5, 5 )))
+            i.value().adjusted( -5, -5, 5, 5 )))
             return true;
         }
     return false;

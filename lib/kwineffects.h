@@ -1622,7 +1622,7 @@ class KWIN_EXPORT EffectFrame : public QObject
          * non-static frame will automatically adjust its size to fit the
          * contents.
          */
-        EffectFrame( Style style, bool staticSize = true, QPoint position = QPoint( -1, -1 ),
+        explicit EffectFrame( Style style, bool staticSize = true, QPoint position = QPoint( -1, -1 ),
             Qt::Alignment alignment = Qt::AlignCenter );
         ~EffectFrame();
 

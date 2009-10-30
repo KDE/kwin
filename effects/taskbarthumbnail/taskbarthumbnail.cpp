@@ -113,7 +113,7 @@ void TaskbarThumbnailEffect::windowDamaged( EffectWindow* w, const QRect& damage
     {
     Q_UNUSED( damage );
     // Update the thumbnail if the window was damaged
-    foreach( EffectWindow* window, thumbnails.keys() )
+    foreach( EffectWindow* window, thumbnails.uniqueKeys() )
         foreach( const Data &thumb, thumbnails.values( window ))
             if( w == effects->findWindow( thumb.window ))
                 effects->addRepaint( thumb.rect.translated( window->pos() ));

@@ -409,7 +409,7 @@ QString KWinDesktopConfig::extrapolatedShortcut( int desktop ) const
     else if ( before.contains( QRegExp("[0-9]") ) )
     {
         if (desktop == 10)
-            seq = "0";
+            seq = '0';
         else if (desktop > 10)
         {
             if ( !before.contains("Shift") )
@@ -515,7 +515,7 @@ void KWinDesktopConfig::slotEffectSelectionChanged( int index )
 bool KWinDesktopConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
     {
     KService::List services = KServiceTypeTrader::self()->query(
-    "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + "'");
+    "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
     if( services.isEmpty())
         return false;
     QVariant v = services.first()->property("X-KDE-PluginInfo-EnabledByDefault");
@@ -541,7 +541,7 @@ void KWinDesktopConfig::slotAboutEffectClicked()
         default:
             return;
         }
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + "'");
+    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
     if( services.isEmpty() )
         return;
     KPluginInfo pluginInfo( services.first() );

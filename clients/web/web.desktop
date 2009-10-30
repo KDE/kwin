@@ -84,4 +84,5 @@ Name[xh]=Web
 Name[x-test]=xxWebxx
 Name[zh_CN]=网页
 Name[zh_TW]=網頁
+Type=Decoration
 X-KDE-Library=kwin3_web

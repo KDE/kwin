@@ -163,7 +163,7 @@ void KWinScreenEdgesConfig::showEvent( QShowEvent* e )
 bool KWinScreenEdgesConfig::effectEnabled( const QString& effect, const KConfigGroup& cfg ) const
     {
     KService::List services = KServiceTypeTrader::self()->query(
-        "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + "'");
+        "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
     if( services.isEmpty())
         return false;
     QVariant v = services.first()->property("X-KDE-PluginInfo-EnabledByDefault");

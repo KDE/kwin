@@ -61,7 +61,7 @@ void initGLX()
     glXVersion = MAKE_GL_VERSION( major, minor, 0 );
     // Get list of supported GLX extensions
     glxExtensions = QString((const char*)glXQueryExtensionsString(
-        display(), DefaultScreen( display()))).split(" ");
+        display(), DefaultScreen( display()))).split(' ');
 
     glxResolveFunctions();
     }
@@ -74,7 +74,7 @@ void initGL()
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(),
                                     glversioninfo.count() > 2 ? glversioninfo[2].toInt() : 0);
     // Get list of supported OpenGL extensions
-    glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(" ");
+    glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
     // handle OpenGL extensions functions
     glResolveFunctions();

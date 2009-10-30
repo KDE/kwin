@@ -169,7 +169,7 @@ void MagicLampEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
             }
 
         WindowQuadList newQuads;
-        foreach( WindowQuad quad, data.quads )
+        foreach( WindowQuad quad, data.quads ) // krazy:exclude=foreach
             {
             if( position == Top || position == Bottom )
                 {

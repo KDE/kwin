@@ -1490,7 +1490,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             {
             WindowQuadList topList, leftList, rightList, bottomList;
 
-            foreach( WindowQuad quad, decoration )
+            foreach( const WindowQuad& quad, decoration )
                 {
                 if( topRect.contains( QPoint( quad.originalLeft(), quad.originalTop() ) ) )
                     {
@@ -1610,7 +1610,7 @@ void SceneOpenGL::Window::makeDecorationArrays( float** vertices, float** texcoo
     *texcoords = new float[ quads.count() * 4 * 2 ];
     float* vpos = *vertices;
     float* tpos = *texcoords;
-    foreach( WindowQuad quad, quads )
+    foreach( const WindowQuad& quad, quads )
         {
         *vpos++ = quad[ 0 ].x();
         *vpos++ = quad[ 0 ].y();

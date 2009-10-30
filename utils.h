@@ -141,7 +141,7 @@ Q_DECLARE_FLAGS( StrutAreas, StrutArea )
 class StrutRect : public QRect
     {
     public:
-        StrutRect( QRect rect = QRect(), StrutArea area = StrutAreaInvalid );
+        explicit StrutRect( QRect rect = QRect(), StrutArea area = StrutAreaInvalid );
         StrutRect( const StrutRect& other );
         inline StrutArea area() const
             { return m_area; };
