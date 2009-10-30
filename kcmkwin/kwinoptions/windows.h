@@ -29,7 +29,7 @@
 class QRadioButton;
 class QCheckBox;
 class QPushButton;
-class QComboBox;
+class KComboBox;
 class QGroupBox;
 class QLabel;
 class QSlider;
@@ -107,11 +107,11 @@ private:
   void setShowPopupinfo(bool);
 
   void setFocusStealing( int );
-  QComboBox* focusStealing;
+  KComboBox* focusStealing;
 
   //QGroupBox *fcsBox;
   QWidget* fcsBox;
-  QComboBox *focusCombo;
+  KComboBox *focusCombo;
   QLabel *autoRaiseOnLabel;
   QCheckBox *autoRaiseOn;
   QLabel *delayFocusOnLabel;
@@ -217,7 +217,7 @@ private:
 
   int getPlacement( void ); //CT
   void setPlacement(int); //CT
-  QComboBox *placementCombo;
+  KComboBox *placementCombo;
 };
 
 #endif // KKWMWINDOWS_H

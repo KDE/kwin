@@ -44,7 +44,8 @@
 class KComboBox;
 class QCheckBox;
 class QLabel;
-class QTabWidget;
+class KComboBox;
+class KTabWidget;
 class KVBox;
 
 class KDecorationPlugins;
@@ -98,7 +99,7 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 		static int borderSizeToIndex( BorderSize size, QList< BorderSize > sizes );
 		static BorderSize indexToBorderSize( int index, QList< BorderSize > sizes );
 
-		QTabWidget* tabWidget;
+		KTabWidget* tabWidget;
 
 		// Page 1
 		KComboBox* decorationList;
@@ -112,7 +113,7 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 	//	QCheckBox* cbUseMiniWindows;
 		QCheckBox* cbShowToolTips;
 		QLabel*    lBorder;
-		QComboBox* cBorder;
+		KComboBox* cBorder;
 		BorderSize border_size;
 
 		QObject* pluginObject;

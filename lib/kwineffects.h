@@ -565,7 +565,7 @@ class KWIN_EXPORT EffectsHandler
          */
         virtual int currentDesktop() const = 0;
         /**
-         * @returns Total number of desktops currently in existance.
+         * @returns Total number of desktops currently in existence.
          */
         virtual int numberOfDesktops() const = 0;
         /**

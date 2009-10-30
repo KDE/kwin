@@ -55,7 +55,7 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
         return;
         }
 
-    if( unminimizedWindow == w ){  // A window was activated by beeing unminimized. Don't trigger SlideBack.
+    if( unminimizedWindow == w ){  // A window was activated by being unminimized. Don't trigger SlideBack.
         unminimizedWindow = NULL;
         updateStackingOrder();
         return;
@@ -193,7 +193,7 @@ void SlideBackEffect::paintWindow( EffectWindow *w, int mask, QRegion region, Wi
     if( stackingOrderChanged() && ( w == newTopWindow() ) && !disabled )
         {
         /* This can happen because of two reasons:
-           - a window has received the focus earlier without beeing raised and is raised now. -> call windowActivated() now
+           - a window has received the focus earlier without being raised and is raised now. -> call windowActivated() now
            - paintWindow() is called with a new stackingOrder before activateWindow(). Bug? -> don't draw the overlapping content;*/
         foreach( EffectWindow *tmp, oldStackingOrder )
             {

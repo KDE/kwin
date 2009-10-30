@@ -366,7 +366,7 @@ void KWinCompositingConfig::loadGeneralTab()
 
 void KWinCompositingConfig::setupCompositingState( bool active, bool enabled )
     {
-    if( getenv( "KDE_FAILSAFE" ))
+    if( !qgetenv( "KDE_FAILSAFE" ).isNull() )
         enabled = false;
     // compositing state
     QString stateIcon;
@@ -645,7 +645,7 @@ void KWinCompositingConfig::save()
 
     // This assumes that this KCM is running with the same environment variables as KWin
     // TODO: Detect KWIN_COMPOSE=N as well
-    if( getenv( "KDE_FAILSAFE" ) && ui.useCompositing->isChecked() )
+    if( !qgetenv( "KDE_FAILSAFE" ).isNull() && ui.useCompositing->isChecked() )
         {
         KMessageBox::sorry( this, i18n(
             "Your settings have been saved but as KDE is currently running in failsafe "

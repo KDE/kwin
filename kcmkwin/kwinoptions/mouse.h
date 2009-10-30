@@ -25,17 +25,17 @@
 class KConfig;
 
 #include <kcmodule.h>
-#include <QComboBox>
+#include <KComboBox>
 #include <klocale.h>
 
 
-class ToolTipComboBox: public QComboBox
+class ToolTipComboBox: public KComboBox
 {
   Q_OBJECT
     
 public:
   ToolTipComboBox(QWidget * owner, char const * const * toolTips_)
-    : QComboBox(owner)
+    : KComboBox(owner)
     , toolTips(toolTips_) {}
 
 public slots:
@@ -64,15 +64,15 @@ public slots:
 	void changed() { emit KCModule::changed(true); }
 
 private:
-  QComboBox* coTiDbl;
+  KComboBox* coTiDbl;
 
-  QComboBox* coTiAct1;
-  QComboBox* coTiAct2;
-  QComboBox* coTiAct3;
-  QComboBox* coTiAct4;  
-  QComboBox* coTiInAct1;
-  QComboBox* coTiInAct2;
-  QComboBox* coTiInAct3;
+  KComboBox* coTiAct1;
+  KComboBox* coTiAct2;
+  KComboBox* coTiAct3;
+  KComboBox* coTiAct4;  
+  KComboBox* coTiInAct1;
+  KComboBox* coTiInAct2;
+  KComboBox* coTiInAct3;
 
   ToolTipComboBox * coMax[3];
 
@@ -85,7 +85,7 @@ private:
   const char* functionTiInAc(int);
   const char* functionMax(int);
 
-  void setComboText(QComboBox* combo, const char* text);
+  void setComboText(KComboBox* combo, const char* text);
   const char* fixup( const char* s );
 
 private slots:
@@ -110,16 +110,16 @@ public slots:
 	void changed() { emit KCModule::changed(true); }
 
 private:
-  QComboBox* coWin1;
-  QComboBox* coWin2;
-  QComboBox* coWin3;
-  QComboBox* coWinWheel;
+  KComboBox* coWin1;
+  KComboBox* coWin2;
+  KComboBox* coWin3;
+  KComboBox* coWinWheel;
 
-  QComboBox* coAllKey;
-  QComboBox* coAll1;
-  QComboBox* coAll2;
-  QComboBox* coAll3;
-  QComboBox* coAllW;
+  KComboBox* coAllKey;
+  KComboBox* coAll1;
+  KComboBox* coAll2;
+  KComboBox* coAll3;
+  KComboBox* coAllW;
 
   KConfig *config;
   bool standAlone;
@@ -130,7 +130,7 @@ private:
   const char* functionAll(int);
   const char* functionAllW(int);
 
-  void setComboText(QComboBox* combo, const char* text);
+  void setComboText(KComboBox* combo, const char* text);
   const char* fixup( const char* s );
 };
 

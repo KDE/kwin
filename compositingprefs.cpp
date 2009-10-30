@@ -240,7 +240,7 @@ void CompositingPrefs::detectDriverAndVersion()
     kDebug( 1212 ) << "GL version is" << mGLVersion;
     kDebug( 1212 ) << "XGL:" << ( mXgl ? "yes" : "no" );
 
-    if( mGLRenderer.startsWith( "Mesa DRI Intel" ) || mGLRenderer.startsWith( "Mesa DRI Mobile Intel" ))
+    if( mGLRenderer.startsWith( "Mesa DRI Intel" ) || mGLRenderer.startsWith( "Mesa DRI Mobile Intel" )) // krazy:exclude=strings
         {
         mDriver = "intel";
         QStringList words = mGLRenderer.split(' ');
@@ -266,7 +266,7 @@ void CompositingPrefs::detectDriverAndVersion()
             mVersion = Version( versionParts[1].mid( 1, versionParts[1].length() -2 ) );
             }
         }
-    else if( mGLRenderer.startsWith( "Mesa DRI R" ))
+    else if( mGLRenderer.startsWith( "Mesa DRI R" )) // krazy:exclude=strings
         {
         mDriver = "radeon";
         mVersion = Version( mGLRenderer.split(' ')[ 3 ] );
@@ -325,7 +325,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
         }
     else if( mDriver == "radeon" )
         { // radeon r200 only ?
-        if( mGLRenderer.startsWith( "Mesa DRI R200" ) && mVersion >= Version( "20060602" ))
+        if( mGLRenderer.startsWith( "Mesa DRI R200" ) && mVersion >= Version( "20060602" )) // krazy:exclude=strings
             {
             kDebug( 1212 ) << "radeon r200 >= 20060602, enabling compositing";
             mEnableCompositing = true;

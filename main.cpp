@@ -43,8 +43,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdialog.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
+#include <kde_file.h>
 #include <QLabel>
-#include <QComboBox>
+#include <KComboBox>
 #include <QVBoxLayout>
 
 #include "atoms.h"
@@ -208,7 +209,7 @@ class AlternativeWMDialog : public KDialog
                 "You can select another window manager to run:" );
             QLabel* textLabel = new QLabel( text, mainWidget );
             layout->addWidget( textLabel );
-            wmList = new QComboBox( mainWidget );
+            wmList = new KComboBox( mainWidget );
             wmList->setEditable( true );
             layout->addWidget( wmList );
 
@@ -233,7 +234,7 @@ class AlternativeWMDialog : public KDialog
             { return wmList->currentText(); }
 
     private:
-        QComboBox* wmList;
+        KComboBox* wmList;
 };
 
 int Application::crashes = 0;
@@ -418,7 +419,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
         { // We only do the multihead fork if we are not restored by the session
           // manager, since the session manager will register multiple kwins,
           // one for each screen...
-        QByteArray multiHead = getenv( "KDE_MULTIHEAD" );
+        QByteArray multiHead = qgetenv( "KDE_MULTIHEAD" );
         if( multiHead.toLower() == "true" )
             {
             Display* dpy = XOpenDisplay( NULL );
@@ -488,15 +489,15 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     args.add( "crashes <n>", ki18n( "Indicate that KWin has recently crashed n times" ));
     KCmdLineArgs::addCmdLineOptions( args );
 
-    if( signal( SIGTERM, KWin::sighandler ) == SIG_IGN )
-        signal( SIGTERM, SIG_IGN );
-    if( signal( SIGINT, KWin::sighandler ) == SIG_IGN )
-        signal( SIGINT, SIG_IGN );
-    if( signal( SIGHUP, KWin::sighandler ) == SIG_IGN )
-        signal( SIGHUP, SIG_IGN );
+    if( KDE_signal( SIGTERM, KWin::sighandler ) == SIG_IGN )
+        KDE_signal( SIGTERM, SIG_IGN );
+    if( KDE_signal( SIGINT, KWin::sighandler ) == SIG_IGN )
+        KDE_signal( SIGINT, SIG_IGN );
+    if( KDE_signal( SIGHUP, KWin::sighandler ) == SIG_IGN )
+        KDE_signal( SIGHUP, SIG_IGN );
 
     // HACK: This is needed for AIGLX
-    if( qstrcmp( getenv( "KWIN_DIRECT_GL" ), "1" ) != 0 )
+    if( qstrcmp( qgetenv( "KWIN_DIRECT_GL" ), "1" ) != 0 )
         setenv( "LIBGL_ALWAYS_INDIRECT","1", true );
 
     // HACK: this is needed to work around a Qt4.4.0RC1 bug (#157659)
@@ -508,7 +509,7 @@ KDE_EXPORT int kdemain( int argc, char * argv[] )
     KGlobal::locale()->insertCatalog( "kwin_effects" );
 
     // Announce when KWIN_DIRECT_GL is set for above HACK
-    if( qstrcmp( getenv( "KWIN_DIRECT_GL" ), "1" ) == 0 )
+    if( qstrcmp( qgetenv( "KWIN_DIRECT_GL" ), "1" ) == 0 )
         kDebug( 1212 ) << "KWIN_DIRECT_GL set, not forcing LIBGL_ALWAYS_INDIRECT=1";
 
     fcntl( XConnectionNumber( KWin::display() ), F_SETFD, 1 );

@@ -27,7 +27,7 @@
 #include <QCheckBox>
 #include <QRadioButton>
 #include <QLabel>
-#include <QComboBox>
+#include <KComboBox>
 #include <QHBoxLayout>
 #include <QFormLayout>
 #include <QtDBus/QtDBus>
@@ -117,7 +117,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     fcsBox->setLayout( gLay );
 
-    focusStealing = new QComboBox( this );
+    focusStealing = new KComboBox( this );
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "None" ));
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Low" ));
     focusStealing->addItem( i18nc( "Focus Stealing Prevention Level", "Medium" ));
@@ -151,7 +151,7 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     gLay->addWidget(label, 0, 0, 1, 2);
     gLay->addWidget(focusStealing, 0, 2);
 
-    focusCombo =  new QComboBox(fcsBox);
+    focusCombo =  new KComboBox(fcsBox);
     focusCombo->setEditable( false );
     focusCombo->addItem(i18n("Click to Focus"), CLICK_TO_FOCUS);
     focusCombo->addItem(i18n("Focus Follows Mouse"), FOCUS_FOLLOWS_MOUSE);
@@ -652,7 +652,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     QGridLayout *vLay = new QGridLayout();
     lay->addLayout( vLay );
 
-    placementCombo = new QComboBox(this);
+    placementCombo = new KComboBox(this);
     placementCombo->setEditable( false );
     placementCombo->addItem(i18n("Smart"), SMART_PLACEMENT);
     placementCombo->addItem(i18n("Maximizing"), MAXIMIZING_PLACEMENT);

@@ -20,7 +20,7 @@
 #include "mouse.h"
 
 #include <QLabel>
-#include <QComboBox>
+#include <KComboBox>
 
 #include <QLayout>
 #include <QSizePolicy>
@@ -154,7 +154,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   QGridLayout *gLayout = new QGridLayout(titlebarActions);
   layout->addWidget( titlebarActions );
 
-  QComboBox* combo = new QComboBox(this);
+  KComboBox* combo = new KComboBox(this);
   combo->addItem(i18n("Maximize"));
   combo->addItem(i18n("Maximize (vertical only)"));
   combo->addItem(i18n("Maximize (horizontal only)"));
@@ -177,7 +177,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
 
 /** Mouse Wheel Events  **************/
   // Titlebar and frame mouse Wheel  
-  QComboBox* comboW = new QComboBox(this);
+  KComboBox* comboW = new KComboBox(this);
   comboW->addItem(i18n("Raise/Lower"));
   comboW->addItem(i18n("Shade/Unshade"));
   comboW->addItem(i18n("Maximize/Restore"));
@@ -245,7 +245,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
                                " or the frame of an active window.") );
 
   // Titlebar and frame, active, mouse button 1
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 1, 1);
   combo->addItem(i18n("Raise"));
@@ -277,7 +277,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
         << i18n("Close")
         << i18n("Nothing");
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 2, 1);
   combo->addItems(items);
@@ -286,7 +286,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->setWhatsThis( i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>active</em> window."));
 
   // Titlebar and frame, active, mouse button 3
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 3, 1);
   combo->addItems(items);
@@ -320,7 +320,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
          << i18n("Close")
          << i18n("Nothing");
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 1, 2);
   combo->addItems(items);
@@ -328,7 +328,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   coTiInAct1 = combo;
   combo->setWhatsThis( txtButton1);
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 2, 2);
   combo->addItems(items);
@@ -336,7 +336,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   coTiInAct2 = combo;
   combo->setWhatsThis( i18n("Behavior on <em>middle</em> click into the titlebar or frame of an <em>inactive</em> window."));
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   grid->addWidget(combo, 3, 2);
   combo->addItems(items);
@@ -514,7 +514,7 @@ static int tbl_txt_lookup( const char* const arr[], const char* txt )
     return 0;
 }
 
-void KTitleBarActionsConfig::setComboText( QComboBox* combo, const char*txt )
+void KTitleBarActionsConfig::setComboText( KComboBox* combo, const char*txt )
 {
     if( combo == coTiDbl )
         combo->setCurrentIndex( tbl_txt_lookup( tbl_TiDbl, txt ));
@@ -680,7 +680,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
           << i18n("Activate")
           << i18n("Activate & Raise");
 
-  QComboBox* combo = new QComboBox(box);
+  KComboBox* combo = new KComboBox(box);
   coWin1 = combo;
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -692,7 +692,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   gridLayout->addWidget(label, 0, 0);
   gridLayout->addWidget(combo, 0, 1);
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin2 = combo;
@@ -704,7 +704,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   gridLayout->addWidget(label, 1, 0);
   gridLayout->addWidget(combo, 1, 1);
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWin3 = combo;
@@ -721,7 +721,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
           << i18n("Activate & Scroll")
           << i18n("Activate, Raise & Scroll");
   
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coWinWheel = combo;
@@ -770,7 +770,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   }
 
   // Combo's
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->addItem(i18n("Meta"));
   combo->addItem(i18n("Alt"));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
@@ -796,7 +796,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
         << i18n("Minimize")
         << i18n("Nothing");
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll1 = combo;
@@ -809,7 +809,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   gridLayout->addWidget(combo, 0, 1);
 
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll2 = combo;
@@ -821,7 +821,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   gridLayout->addWidget(label, 1, 0);
   gridLayout->addWidget(combo, 1, 1);
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->addItems(items);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAll3 =  combo;
@@ -834,7 +834,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   gridLayout->addWidget(combo, 2, 1);
 
 
-  combo = new QComboBox(box);
+  combo = new KComboBox(box);
   combo->addItem(i18n("Raise/Lower"));
   combo->addItem(i18n("Shade/Unshade"));
   combo->addItem(i18n("Maximize/Restore"));
@@ -864,7 +864,7 @@ KWindowActionsConfig::~KWindowActionsConfig()
     delete config;
 }
 
-void KWindowActionsConfig::setComboText( QComboBox* combo, const char*txt )
+void KWindowActionsConfig::setComboText( KComboBox* combo, const char*txt )
 {
     if( combo == coWin1 || combo == coWin2 || combo == coWin3 )
         combo->setCurrentIndex( tbl_txt_lookup( tbl_Win, txt ));

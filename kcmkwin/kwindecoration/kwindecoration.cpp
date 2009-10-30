@@ -35,7 +35,8 @@
 #include <QGroupBox>
 #include <QGridLayout>
 #include <QCheckBox>
-#include <QTabWidget>
+#include <KComboBox>
+#include <KTabWidget>
 
 #include <QLabel>
 #include <QFile>
@@ -88,7 +89,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
 //	QWhatsThis::add( cbUseMiniWindows, i18n( "Note that this option is not available on all styles yet" ) );
 
-	tabWidget = new QTabWidget( this );
+	tabWidget = new KTabWidget( this );
 	layout->addWidget( tabWidget );
 
 	// Page 1 (General Options)
@@ -114,7 +115,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 
 	// Border size chooser
 	lBorder = new QLabel (i18n("B&order size:"), pluginSettingsGrp);
-	cBorder = new QComboBox(pluginSettingsGrp);
+	cBorder = new KComboBox(pluginSettingsGrp);
 	lBorder->setBuddy(cBorder);
 	cBorder->setWhatsThis( i18n( "Use this combobox to change the border size of the decoration." ));
 	lBorder->hide();
@@ -226,7 +227,7 @@ void KWinDecorationModule::findDecorations()
 					KDesktopFile desktopFile(filename);
 					QString libName = desktopFile.desktopGroup().readEntry("X-KDE-Library");
 
-					if (!libName.isEmpty() && libName.startsWith( "kwin3_" ))
+					if (!libName.isEmpty() && libName.toLatin1().startsWith( "kwin3_" ))
 					{
 						DecorationInfo di;
 						di.name = desktopFile.readName();
@@ -589,7 +590,7 @@ void KWinDecorationModule::checkSupportedBorderSizes()
 
 QString KWinDecorationModule::styleToConfigLib( QString& styleLib )
 {
-        if( styleLib.startsWith( "kwin3_" ))
+        if( styleLib.toLatin1().startsWith( "kwin3_" ))
             return "kwin_" + styleLib.mid( 6 ) + "_config";
         else
             return styleLib + "_config";

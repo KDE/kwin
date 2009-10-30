@@ -74,7 +74,7 @@ B2Config::B2Config(KConfig *conf, QWidget *parent)
     //actionsGB->setOrientation(Qt::Horizontal);
     QLabel *menuDblClickLabel = new QLabel(actionsGB);
     menuDblClickLabel->setText(i18n("Double click on menu button:"));
-    menuDblClickOp = new QComboBox(actionsGB);
+    menuDblClickOp = new KComboBox(actionsGB);
     menuDblClickOp->addItem(i18n("Do Nothing"));
     menuDblClickOp->addItem(i18n("Minimize Window"));
     menuDblClickOp->addItem(i18n("Shade Window"));

@@ -172,7 +172,7 @@ class Workspace : public QObject, public KDecorationDefines
 
     public:
         /**
-         * @returns Total number of desktops currently in existance.
+         * @returns Total number of desktops currently in existence.
          */
         int numberOfDesktops() const;
         /**

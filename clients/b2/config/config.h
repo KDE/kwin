@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <QComboBox>
+#include <KComboBox>
 #include <kconfig.h>
 
 class B2Config: public QObject
@@ -55,7 +55,7 @@ private:
     QCheckBox *cbColorBorder;
     QCheckBox *showGrabHandleCb;
     QGroupBox *actionsGB;
-    QComboBox *menuDblClickOp;
+    KComboBox *menuDblClickOp;
     QWidget *gb;
 };
 

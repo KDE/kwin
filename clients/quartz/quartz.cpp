@@ -12,7 +12,7 @@
   Includes mini titlebars for ToolWindow Support.
   Button positions are now customizable.
  
- 	drawColorBitmaps orignally from kdefx:
+ 	drawColorBitmaps originally from kdefx:
  	  Copyright (C) 1999 Daniel M. Duley <mosfet@kde.org>
  
 This program is free software; you can redistribute it and/or modify

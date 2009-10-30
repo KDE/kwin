@@ -37,7 +37,7 @@ int main( int argc, char* argv[] )
     KAboutData about( "kwin_update_default_rules", "kwin", KLocalizedString(), 0 );
     KCmdLineArgs::init( argc, argv, &about );
     KComponentData inst( &about );
-    Q_UNUSED( KGlobal::locale() ); // jump-start locales to get to translated desriptions
+    Q_UNUSED( KGlobal::locale() ); // jump-start locales to get to translated descriptions
     QString file = KStandardDirs::locate( "data", QString( "kwin/default_rules/" ) + argv[ 1 ] );
     if( file.isEmpty())
         {
