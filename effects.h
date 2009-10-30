@@ -152,6 +152,7 @@ class EffectsHandlerImpl : public EffectsHandler
         void tabBoxAdded( int mode );
         void tabBoxClosed();
         void tabBoxUpdated();
+        void tabBoxKeyEvent( QKeyEvent* event );
         bool borderActivated( ElectricBorder border );
         void mouseChanged( const QPoint& pos, const QPoint& oldpos,
             Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,

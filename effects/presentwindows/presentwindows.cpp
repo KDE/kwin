@@ -673,6 +673,44 @@ void PresentWindowsEffect::tabBoxUpdated()
         setHighlightedWindow( effects->currentTabBoxWindow() );
     }
 
+void PresentWindowsEffect::tabBoxKeyEvent( QKeyEvent* event )
+    {
+    // not using the "normal" grabbedKeyboardEvent as we don't want to filter in tabbox
+    if( event->type() == QEvent::KeyPress )
+        {
+        switch( event->key() )
+            { // Wrap only if not auto-repeating
+            case Qt::Key_Left:
+                setHighlightedWindow( relativeWindow( m_highlightedWindow, -1, 0, !event->isAutoRepeat() ));
+                break;
+            case Qt::Key_Right:
+                setHighlightedWindow( relativeWindow( m_highlightedWindow, 1, 0, !event->isAutoRepeat() ));
+                break;
+            case Qt::Key_Up:
+                setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, -1, !event->isAutoRepeat() ));
+                break;
+            case Qt::Key_Down:
+                setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, 1, !event->isAutoRepeat() ));
+                break;
+            case Qt::Key_Home:
+                setHighlightedWindow( relativeWindow( m_highlightedWindow, -1000, 0, false ));
+                break;
+            case Qt::Key_End:
+                setHighlightedWindow( relativeWindow( m_highlightedWindow, 1000, 0, false ));
+                break;
+            case Qt::Key_PageUp:
+                setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, -1000, false ));
+                break;
+            case Qt::Key_PageDown:
+                setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, 1000, false ));
+                break;
+            default:
+                // nothing
+                break;
+            }
+        }
+    }
+
 //-----------------------------------------------------------------------------
 // Atom handling
 void PresentWindowsEffect::propertyNotify( EffectWindow* w, long a )

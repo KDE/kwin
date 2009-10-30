@@ -295,6 +295,12 @@ void EffectsHandlerImpl::tabBoxUpdated()
         ep.second->tabBoxUpdated();
     }
 
+void EffectsHandlerImpl::tabBoxKeyEvent( QKeyEvent* event )
+    {
+    foreach( const EffectPair &ep, loaded_effects )
+        ep.second->tabBoxKeyEvent( event );
+    }
+
 void EffectsHandlerImpl::setActiveFullScreenEffect( Effect* e )
     {
     fullscreen_effect = e;

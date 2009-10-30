@@ -601,7 +601,8 @@ void TabBox::TabBox::grabbedKeyEvent( QKeyEvent* event )
     {
     if( !m_isShown && isDisplayed() )
         { // tabbox has been replaced, check effects
-        // TODO: pass keyevent to effects
+        if( effects )
+            static_cast<EffectsHandlerImpl*>(effects)->tabBoxKeyEvent( event );
         return;
         }
     setCurrentIndex( m_tabBox->grabbedKeyEvent( event ) );

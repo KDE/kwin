@@ -186,6 +186,11 @@ void Effect::tabBoxClosed()
 void Effect::tabBoxUpdated()
     {
     }
+
+void Effect::tabBoxKeyEvent( QKeyEvent* )
+    {
+    }
+
 bool Effect::borderActivated( ElectricBorder )
     {
     return false;

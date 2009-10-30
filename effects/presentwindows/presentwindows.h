@@ -87,6 +87,7 @@ class PresentWindowsEffect
         virtual void tabBoxAdded( int mode );
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
+        virtual void tabBoxKeyEvent( QKeyEvent* event );
 
         // atoms
         virtual void propertyNotify( EffectWindow* w, long atom );
