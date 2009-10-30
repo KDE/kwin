@@ -124,6 +124,8 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList( TabBoxClient* client, int de
     Client* ret = NULL;
     Client* current = (static_cast< TabBoxClientImpl* >( client ))->client();
     bool addClient = false;
+    bool applications = (config().clientListMode() == TabBoxConfig::AllDesktopsApplicationList ||
+                         config().clientListMode() == TabBoxConfig::CurrentDesktopApplicationList);
     if( allDesktops )
         addClient = true;
     else
@@ -139,6 +141,21 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList( TabBoxClient* client, int de
         else
             {
             // nothing
+            }
+        if( ret && applications )
+            {
+            // check if the list already contains an entry of this application
+            foreach( TabBoxClient* tabBoxClient, clientList() )
+                {
+                if( TabBoxClientImpl* c = dynamic_cast< TabBoxClientImpl* >(tabBoxClient) )
+                    {
+                    if( c->client()->resourceClass() == ret->resourceClass() )
+                        {
+                        ret = NULL;
+                        break;
+                        }
+                    }
+                }
             }
         }
     if( options->separateScreenFocus && options->xineramaEnabled )

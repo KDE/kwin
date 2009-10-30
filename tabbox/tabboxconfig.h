@@ -68,7 +68,9 @@ class TabBoxConfig
         enum ClientListMode
             {
             CurrentDesktopClientList, ///< Only TabBoxClients on current desktop are included
-            AllDesktopsClientList ///< TabBoxClients from all desktops are included.
+            AllDesktopsClientList, ///< TabBoxClients from all desktops are included.
+            CurrentDesktopApplicationList, ///< Only one TabBoxClient for each application on current desktop is included
+            AllDesktopsApplicationList ///< Only one TabBoxClient for each application is included
             };
         /**
         * ClientSwitchingMode defines the sorting of the TabBoxClients in the

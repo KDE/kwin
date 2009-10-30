@@ -90,6 +90,16 @@
           <string>All Desktops</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string>Current Desktop Grouped by Applications</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>All Desktops Grouped by Applications</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="1" column="0">
