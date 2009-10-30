@@ -123,6 +123,10 @@ void Effect::windowUserMovedResized( EffectWindow* , bool, bool )
     {
     }
 
+void Effect::windowMoveResizeGeometryUpdate( EffectWindow* , const QRect& )
+    {
+    }
+
 void Effect::windowOpacityChanged( EffectWindow*, double )
     {
     }

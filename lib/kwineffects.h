@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 105
+#define KWIN_EFFECT_API_VERSION_MINOR 106
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -384,6 +384,8 @@ class KWIN_EXPORT Effect
 
         /** called when moved/resized or once after it's finished */
         virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
+        /** called when the geometry changed during moving/resizing. */
+        virtual void windowMoveResizeGeometryUpdate( EffectWindow* c, const QRect& geometry );
         virtual void windowOpacityChanged( EffectWindow* c, double old_opacity );
         virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );

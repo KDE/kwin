@@ -139,6 +139,7 @@ class EffectsHandlerImpl : public EffectsHandler
         // internal (used by kwin core or compositing code)
         void startPaint();
         void windowUserMovedResized( EffectWindow* c, bool first, bool last );
+        void windowMoveResizeGeometryUpdate( EffectWindow* c, const QRect& geometry );
         void windowOpacityChanged( EffectWindow* c, double old_opacity );
         void windowAdded( EffectWindow* c );
         void windowClosed( EffectWindow* c );

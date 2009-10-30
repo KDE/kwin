@@ -60,8 +60,8 @@ void ResizeEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
     effects->paintWindow( w, mask, region, data );
     if( m_active && w == m_resizeWindow )
         {
-        QRegion intersection = m_originalWindowRect.intersected( w->geometry() );
-        QRegion paintRegion = m_originalWindowRect.united( w->geometry() ).subtracted( intersection );
+        QRegion intersection = m_originalWindowRect.intersected( m_currentGeometry );
+        QRegion paintRegion = m_originalWindowRect.united( m_currentGeometry ).subtracted( intersection );
         float alpha = 0.8f;
         QColor color = KColorScheme( QPalette::Normal, KColorScheme::Selection ).background().color();
 
@@ -113,12 +113,22 @@ void ResizeEffect::windowUserMovedResized( EffectWindow* w, bool first, bool las
         m_active = true;
         m_resizeWindow = w;
         m_originalWindowRect = w->geometry();
+        m_currentGeometry = w->geometry();
         w->addRepaintFull();
         }
     if( m_active && w == m_resizeWindow && last )
         {
         m_active = false;
         m_resizeWindow = NULL;
+        effects->addRepaintFull();
+        }
+    }
+
+void ResizeEffect::windowMoveResizeGeometryUpdate( EffectWindow* c, const QRect& geometry )
+    {
+    if( m_active && c == m_resizeWindow )
+        {
+        m_currentGeometry = geometry;
         effects->addRepaintFull();
         }
     }

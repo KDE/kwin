@@ -3209,7 +3209,10 @@ void Client::performMoveResize()
         drawbound( moveResizeGeom ); // they overlap; the paint event will come after this,
         }                               // so the geometry tip will be painted above the outline
     if( effects )
+        {
+        static_cast<EffectsHandlerImpl*>(effects)->windowMoveResizeGeometryUpdate( effectWindow(), moveResizeGeom );
         static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized( effectWindow(), false, false );
+        }
     }
 
 void Client::syncTimeout()

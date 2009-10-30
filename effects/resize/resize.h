@@ -35,11 +35,13 @@ class ResizeEffect
         virtual void prePaintScreen( ScreenPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowUserMovedResized( EffectWindow *w, bool first, bool last );
+        virtual void windowMoveResizeGeometryUpdate(EffectWindow* c, const QRect& geometry);
 
     private:
         bool m_active;
         EffectWindow* m_resizeWindow;
         QRegion m_originalWindowRect;
+        QRect m_currentGeometry;
     };
 
 }

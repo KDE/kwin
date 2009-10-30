@@ -208,6 +208,12 @@ void EffectsHandlerImpl::windowUserMovedResized( EffectWindow* c, bool first, bo
         ep.second->windowUserMovedResized( c, first, last );
     }
 
+void EffectsHandlerImpl::windowMoveResizeGeometryUpdate( EffectWindow* c, const QRect& geometry )
+    {
+    foreach( const EffectPair &ep, loaded_effects )
+        ep.second->windowMoveResizeGeometryUpdate( c, geometry );
+    }
+
 void EffectsHandlerImpl::windowOpacityChanged( EffectWindow* c, double old_opacity )
     {
         if (!c)
