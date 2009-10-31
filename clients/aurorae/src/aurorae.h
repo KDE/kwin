@@ -127,12 +127,6 @@ protected:
     void reset(unsigned long changed);
     void paintEvent(QPaintEvent *event);
 
-private Q_SLOTS:
-    void compositingChanged();
-
-private:
-    KSelectionWatcher *m_compositingWatch;
-    QTimer *m_compositingTimer;
 };
 
 }
