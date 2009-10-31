@@ -61,14 +61,14 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QCheckBox" name="windowClassCheckBox">
+       <widget class="QRadioButton" name="windowClassCheckBox">
         <property name="text">
          <string>Use window class (whole application)</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="windowTitleCheckBox">
+       <widget class="QRadioButton" name="windowTitleCheckBox">
         <property name="locale">
          <locale language="French" country="France"/>
         </property>
