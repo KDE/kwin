@@ -40,7 +40,7 @@ namespace Oxygen
     public:
 
     //! constructor
-    OxygenShadowConfigurationUI( const QString&, QWidget* );
+    OxygenShadowConfigurationUI( QWidget* );
     Ui_ShadowConfiguraionUI ui;
 
     signals:

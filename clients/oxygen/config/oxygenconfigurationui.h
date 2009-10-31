@@ -31,6 +31,7 @@
 #include <QtGui/QCheckBox>
 #include <QtCore/QVector>
 
+#include "ui_oxygenconfigurationui.h"
 #include "oxygenshadowconfigurationui.h"
 #include "oxygenexceptionlistwidget.h"
 
@@ -48,41 +49,11 @@ namespace Oxygen
     //! constructor
     OxygenConfigurationUI( QWidget* );
 
-    //! setup ui
-    void setupUI( void );
-
-    //! title alignment
-    KComboBox *titleAlignment;
-
-    //! button size
-    KComboBox* buttonSize;
-
-    //! frame border
-    KComboBox *frameBorder;
-
-    //! blend color
-    KComboBox *blendColor;
-
-    //! size grip
-    KComboBox *sizeGripMode;
-
-    //! draw separator
-    QCheckBox *drawSeparator;
-
-    //! active window title outline
-    QCheckBox *titleOutline;
-
-    //! oxygen shadow
-    QCheckBox *useOxygenShadows;
-
-    //! about oxygen
-    QPushButton *aboutOxygen;
+    //! ui
+    Ui_OxygenConfigurationUI ui;
 
     // shadow configuration
     QVector<OxygenShadowConfigurationUI*> shadowConfigurations;
-
-    //! exceptions
-    OxygenExceptionListWidget *exceptions;
 
     signals:
 

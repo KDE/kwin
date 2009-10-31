@@ -33,8 +33,8 @@ namespace Oxygen
 {
 
   //_________________________________________________________
-  OxygenShadowConfigurationUI::OxygenShadowConfigurationUI( const QString& name, QWidget* parent ):
-    QGroupBox( name, parent )
+  OxygenShadowConfigurationUI::OxygenShadowConfigurationUI( QWidget* parent ):
+    QGroupBox( parent )
   {
     ui.setupUi( this );
     ui.label->setBuddy( ui.shadowSize );

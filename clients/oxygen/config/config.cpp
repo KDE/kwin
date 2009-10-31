@@ -91,7 +91,7 @@ namespace Oxygen
     { exceptions = OxygenExceptionList::defaultList(); }
 
     // install in ui
-    userInterface_->exceptions->setExceptions( exceptions );
+    userInterface_->ui.exceptions->setExceptions( exceptions );
 
 
   }
@@ -108,30 +108,30 @@ namespace Oxygen
     // to the configuration file are *not* translated using current locale
     configurationGroup.writeEntry(
       OxygenConfig::TITLE_ALIGNMENT,
-      OxygenConfiguration::titleAlignmentName( OxygenConfiguration::titleAlignment( userInterface_->titleAlignment->currentText(), true ), false ) );
+      OxygenConfiguration::titleAlignmentName( OxygenConfiguration::titleAlignment( userInterface_->ui.titleAlignment->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::BUTTON_SIZE,
-      OxygenConfiguration::buttonSizeName( OxygenConfiguration::buttonSize( userInterface_->buttonSize->currentText(), true ), false ) );
+      OxygenConfiguration::buttonSizeName( OxygenConfiguration::buttonSize( userInterface_->ui.buttonSize->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::BLEND_COLOR,
-      OxygenConfiguration::blendColorName( OxygenConfiguration::blendColor( userInterface_->blendColor->currentText(), true ), false ) );
+      OxygenConfiguration::blendColorName( OxygenConfiguration::blendColor( userInterface_->ui.blendColor->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::FRAME_BORDER,
-      OxygenConfiguration::frameBorderName( OxygenConfiguration::frameBorder( userInterface_->frameBorder->currentText(), true ), false ) );
+      OxygenConfiguration::frameBorderName( OxygenConfiguration::frameBorder( userInterface_->ui.frameBorder->currentText(), true ), false ) );
 
     configurationGroup.writeEntry(
       OxygenConfig::SIZE_GRIP_MODE,
-      OxygenConfiguration::sizeGripModeName( OxygenConfiguration::sizeGripMode( userInterface_->sizeGripMode->currentText(), true ), false ) );
+      OxygenConfiguration::sizeGripModeName( OxygenConfiguration::sizeGripMode( userInterface_->ui.sizeGripMode->currentText(), true ), false ) );
 
-    configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, userInterface_->drawSeparator->isChecked() );
-    configurationGroup.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, userInterface_->titleOutline->isChecked() );
-    configurationGroup.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, userInterface_->useOxygenShadows->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, userInterface_->ui.drawSeparator->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, userInterface_->ui.titleOutline->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, userInterface_->ui.useOxygenShadows->isChecked() );
 
     // write exceptions
-    userInterface_->exceptions->exceptions().write( *configuration_ );
+    userInterface_->ui.exceptions->exceptions().write( *configuration_ );
 
     // write shadow configuration
     saveShadowConfiguration( QPalette::Active, *userInterface_->shadowConfigurations[0] );
@@ -171,7 +171,7 @@ namespace Oxygen
     loadShadowConfiguration( QPalette::Inactive, OxygenShadowConfiguration( QPalette::Inactive ) );
 
     // install default exceptions
-    userInterface_->exceptions->setExceptions( OxygenExceptionList::defaultList() );
+    userInterface_->ui.exceptions->setExceptions( OxygenExceptionList::defaultList() );
 
     // emit changed signal
     emit changed();
@@ -182,15 +182,15 @@ namespace Oxygen
   void Config::loadConfiguration( const OxygenConfiguration& configuration )
   {
 
-    userInterface_->titleAlignment->setCurrentIndex( userInterface_->titleAlignment->findText( configuration.titleAlignmentName( true ) ) );
-    userInterface_->buttonSize->setCurrentIndex( userInterface_->buttonSize->findText( configuration.buttonSizeName( true ) ) );
-    userInterface_->blendColor->setCurrentIndex( userInterface_->blendColor->findText( configuration.blendColorName( true ) ) );
-    userInterface_->frameBorder->setCurrentIndex( userInterface_->frameBorder->findText( configuration.frameBorderName( true ) ) );
-    userInterface_->sizeGripMode->setCurrentIndex( userInterface_->sizeGripMode->findText( configuration.sizeGripModeName( true ) ) );
+    userInterface_->ui.titleAlignment->setCurrentIndex( userInterface_->ui.titleAlignment->findText( configuration.titleAlignmentName( true ) ) );
+    userInterface_->ui.buttonSize->setCurrentIndex( userInterface_->ui.buttonSize->findText( configuration.buttonSizeName( true ) ) );
+    userInterface_->ui.blendColor->setCurrentIndex( userInterface_->ui.blendColor->findText( configuration.blendColorName( true ) ) );
+    userInterface_->ui.frameBorder->setCurrentIndex( userInterface_->ui.frameBorder->findText( configuration.frameBorderName( true ) ) );
+    userInterface_->ui.sizeGripMode->setCurrentIndex( userInterface_->ui.sizeGripMode->findText( configuration.sizeGripModeName( true ) ) );
 
-    userInterface_->drawSeparator->setChecked( configuration.drawSeparator() );
-    userInterface_->titleOutline->setChecked( configuration.drawTitleOutline() );
-    userInterface_->useOxygenShadows->setChecked( configuration.useOxygenShadows() );
+    userInterface_->ui.drawSeparator->setChecked( configuration.drawSeparator() );
+    userInterface_->ui.titleOutline->setChecked( configuration.drawTitleOutline() );
+    userInterface_->ui.useOxygenShadows->setChecked( configuration.useOxygenShadows() );
   }
 
 
