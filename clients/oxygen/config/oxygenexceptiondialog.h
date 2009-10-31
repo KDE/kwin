@@ -33,7 +33,7 @@
 #include <map>
 
 #include "../oxygenexception.h"
-#include "ui_oxygenexceptionwidget.h"
+#include "ui_oxygenexceptiondialog.h"
 
 namespace Oxygen
 {
