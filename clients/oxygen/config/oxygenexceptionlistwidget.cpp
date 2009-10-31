@@ -27,7 +27,6 @@
 #include "oxygenexceptionlistwidget.moc"
 #include "oxygenexceptiondialog.h"
 
-#include <QtGui/QLayout>
 #include <QtCore/QSharedPointer>
 #include <KLocale>
 #include <KMessageBox>
@@ -42,59 +41,33 @@ namespace Oxygen
     default_configuration_( default_configuration )
   {
 
-    // layout
-    QHBoxLayout* h_layout = new QHBoxLayout();
-    h_layout->setMargin(6);
-    h_layout->setSpacing(6);
-    setLayout( h_layout );
+    //! ui
+    ui.setupUi( this );
 
     // list
-    h_layout->addWidget( list_ = new QTreeView( this ) );
-    _list().setAllColumnsShowFocus( true );
-    _list().setRootIsDecorated( false );
-    _list().setSortingEnabled( false );
-    _list().setModel( &_model() );
-    _list().sortByColumn( OxygenExceptionModel::TYPE );
-    _list().setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Ignored ) );
+    ui.exceptionListView->setAllColumnsShowFocus( true );
+    ui.exceptionListView->setRootIsDecorated( false );
+    ui.exceptionListView->setSortingEnabled( false );
+    ui.exceptionListView->setModel( &_model() );
+    ui.exceptionListView->sortByColumn( OxygenExceptionModel::TYPE );
+    ui.exceptionListView->setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Ignored ) );
 
-    // button layout
-    QVBoxLayout* v_layout = new QVBoxLayout();
-    v_layout->setMargin(0);
-    v_layout->setSpacing(5);
-    h_layout->addLayout( v_layout );
     KIconLoader* icon_loader = KIconLoader::global();
+    ui.moveUpButton->setIcon( KIcon( "arrow-up", icon_loader ) );
+    ui.moveDownButton->setIcon( KIcon( "arrow-down", icon_loader ) );
+    ui.addButton->setIcon( KIcon( "list-add", icon_loader ) );
+    ui.removeButton->setIcon( KIcon( "list-remove", icon_loader ) );
+    ui.editButton->setIcon( KIcon( "edit-rename", icon_loader ) );
 
-    v_layout->addWidget( up_button_ = new KPushButton(
-      KIcon( "arrow-up", icon_loader ),
-      i18n("Move &Up"), this ) );
+    connect( ui.addButton, SIGNAL( clicked() ), SLOT( _add() ) );
+    connect( ui.editButton, SIGNAL( clicked() ), SLOT( _edit() ) );
+    connect( ui.removeButton, SIGNAL( clicked() ), SLOT( _remove() ) );
+    connect( ui.moveUpButton, SIGNAL( clicked() ), SLOT( _up() ) );
+    connect( ui.moveDownButton, SIGNAL( clicked() ), SLOT( _down() ) );
 
-    v_layout->addWidget( down_button_ = new KPushButton(
-      KIcon( "arrow-down", icon_loader ),
-      i18n("Move &Down"), this ) );
-
-    v_layout->addWidget( add_button_ = new KPushButton(
-      KIcon( "list-add", icon_loader ),
-      i18n("&Add"), this ) );
-
-    v_layout->addWidget( remove_button_ = new KPushButton(
-      KIcon( "list-remove", icon_loader ),
-      i18n("&Remove"), this ) );
-
-    v_layout->addWidget( edit_button_ = new KPushButton(
-      KIcon( "edit-rename", icon_loader ),
-      i18n("&Edit"), this ) );
-
-    v_layout->addStretch();
-
-    connect( add_button_, SIGNAL( clicked() ), SLOT( _add() ) );
-    connect( edit_button_, SIGNAL( clicked() ), SLOT( _edit() ) );
-    connect( remove_button_, SIGNAL( clicked() ), SLOT( _remove() ) );
-    connect( up_button_, SIGNAL( clicked() ), SLOT( _up() ) );
-    connect( down_button_, SIGNAL( clicked() ), SLOT( _down() ) );
-
-    connect( &_list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _edit() ) );
-    connect( &_list(), SIGNAL( clicked( const QModelIndex& ) ), SLOT( _toggle( const QModelIndex& ) ) );
-    connect( _list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateButtons() ) );
+    connect( ui.exceptionListView, SIGNAL( activated( const QModelIndex& ) ), SLOT( _edit() ) );
+    connect( ui.exceptionListView, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _toggle( const QModelIndex& ) ) );
+    connect( ui.exceptionListView->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateButtons() ) );
 
     _updateButtons();
     _resizeColumns();
@@ -125,12 +98,12 @@ namespace Oxygen
   void OxygenExceptionListWidget::_updateButtons( void )
   {
 
-    bool has_selection( !_list().selectionModel()->selectedRows().empty() );
-    remove_button_->setEnabled( has_selection );
-    edit_button_->setEnabled( has_selection );
+    bool has_selection( !ui.exceptionListView->selectionModel()->selectedRows().empty() );
+    ui.removeButton->setEnabled( has_selection );
+    ui.editButton->setEnabled( has_selection );
 
-    up_button_->setEnabled( has_selection && !_list().selectionModel()->isRowSelected( 0, QModelIndex() ) );
-    down_button_->setEnabled( has_selection && !_list().selectionModel()->isRowSelected( _model().rowCount()-1, QModelIndex() ) );
+    ui.moveUpButton->setEnabled( has_selection && !ui.exceptionListView->selectionModel()->isRowSelected( 0, QModelIndex() ) );
+    ui.moveDownButton->setEnabled( has_selection && !ui.exceptionListView->selectionModel()->isRowSelected( _model().rowCount()-1, QModelIndex() ) );
 
   }
 
@@ -153,10 +126,10 @@ namespace Oxygen
 
     // make sure item is selected
     QModelIndex index( _model().index( exception ) );
-    if( index != _list().selectionModel()->currentIndex() )
+    if( index != ui.exceptionListView->selectionModel()->currentIndex() )
     {
-      _list().selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-      _list().selectionModel()->setCurrentIndex( index,  QItemSelectionModel::Current|QItemSelectionModel::Rows );
+      ui.exceptionListView->selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+      ui.exceptionListView->selectionModel()->setCurrentIndex( index,  QItemSelectionModel::Current|QItemSelectionModel::Rows );
     }
 
     _resizeColumns();
@@ -170,7 +143,7 @@ namespace Oxygen
   {
 
     // retrieve selection
-    QModelIndex current( _list().selectionModel()->currentIndex() );
+    QModelIndex current( ui.exceptionListView->selectionModel()->currentIndex() );
     if( !current.isValid() ) return;
 
     OxygenException& exception( _model().get( current ) );
@@ -205,7 +178,7 @@ namespace Oxygen
     if( KMessageBox::questionYesNo( this, i18n("Remove selected exception?") ) == KMessageBox::No ) return;
 
     // remove
-    _model().remove( _model().get( _list().selectionModel()->selectedRows() ) );
+    _model().remove( _model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
     _resizeColumns();
     emit changed();
     return;
@@ -233,11 +206,11 @@ namespace Oxygen
   void OxygenExceptionListWidget::_up( void )
   {
 
-    OxygenExceptionModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
+    OxygenExceptionModel::List selection( _model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
     if( selection.empty() ) { return; }
 
     // retrieve selected indexes in list and store in model
-    QModelIndexList selected_indexes( _list().selectionModel()->selectedRows() );
+    QModelIndexList selected_indexes( ui.exceptionListView->selectionModel()->selectedRows() );
     OxygenExceptionModel::List selected_exceptions( _model().get( selected_indexes ) );
 
     OxygenExceptionModel::List current_exceptions( _model().get() );
@@ -265,9 +238,9 @@ namespace Oxygen
     _model().set( new_exceptions );
 
     // restore selection
-    _list().selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+    ui.exceptionListView->selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
     for( OxygenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); ++iter )
-    { _list().selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
+    { ui.exceptionListView->selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
     emit changed();
     return;
@@ -278,12 +251,12 @@ namespace Oxygen
   void OxygenExceptionListWidget::_down( void )
   {
 
-    OxygenExceptionModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
+    OxygenExceptionModel::List selection( _model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
     if( selection.empty() )
     { return; }
 
     // retrieve selected indexes in list and store in model
-    QModelIndexList selected_indexes( _list().selectionModel()->selectedIndexes() );
+    QModelIndexList selected_indexes( ui.exceptionListView->selectionModel()->selectedIndexes() );
     OxygenExceptionModel::List selected_exceptions( _model().get( selected_indexes ) );
 
     OxygenExceptionModel::List current_exceptions( _model().get() );
@@ -312,9 +285,9 @@ namespace Oxygen
     _model().set( OxygenExceptionModel::List( new_exceptions.rbegin(), new_exceptions.rend() ) );
 
     // restore selection
-    _list().selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+    ui.exceptionListView->selectionModel()->select( _model().index( selected_exceptions.front() ),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
     for( OxygenExceptionModel::List::const_iterator iter = selected_exceptions.begin(); iter != selected_exceptions.end(); ++iter )
-    { _list().selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
+    { ui.exceptionListView->selectionModel()->select( _model().index( *iter ), QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
     emit changed();
     return;
@@ -324,9 +297,9 @@ namespace Oxygen
   //_______________________________________________________
   void OxygenExceptionListWidget::_resizeColumns( void ) const
   {
-    _list().resizeColumnToContents( OxygenExceptionModel::ENABLED );
-    _list().resizeColumnToContents( OxygenExceptionModel::TYPE );
-    _list().resizeColumnToContents( OxygenExceptionModel::REGEXP );
+    ui.exceptionListView->resizeColumnToContents( OxygenExceptionModel::ENABLED );
+    ui.exceptionListView->resizeColumnToContents( OxygenExceptionModel::TYPE );
+    ui.exceptionListView->resizeColumnToContents( OxygenExceptionModel::REGEXP );
   }
 
   //_______________________________________________________

@@ -25,10 +25,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <KPushButton>
-#include <KDialog>
-#include <QtGui/QTreeView>
-
+#include "ui_oxygenexceptionlistwidget.h"
 #include "oxygenexceptionmodel.h"
 #include "../oxygenexceptionlist.h"
 
@@ -59,10 +56,6 @@ namespace Oxygen
     void changed( void );
 
     protected:
-
-    //! list
-    QTreeView& _list() const
-    { return *list_; }
 
     //! model
     const OxygenExceptionModel& _model() const
@@ -106,26 +99,11 @@ namespace Oxygen
     //! default configuration
     OxygenConfiguration default_configuration_;
 
-    //! list of files
-    QTreeView* list_;
-
     //! model
     OxygenExceptionModel model_;
 
-    //! add
-    KPushButton* add_button_;
-
-    //! edit
-    KPushButton* edit_button_;
-
-    //! remove
-    KPushButton* remove_button_;
-
-    //! move up
-    KPushButton* up_button_;
-
-    //! move down
-    KPushButton* down_button_;
+    //! ui
+    Ui_OxygenExceptionListWidget ui;
 
   };
 
