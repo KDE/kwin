@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OxygenExceptionWidget</class>
+ <widget class="QWidget" name="OxygenExceptionWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>463</width>
+    <height>311</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Window Identification</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Matching window property: </string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QComboBox" name="exceptionType"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Regular expression to match: </string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QLineEdit" name="exceptionEditor"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="detectDialogButton">
+        <property name="text">
+         <string>Detect Window Properties</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Decoration Options</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="frameBorderCheckBox">
+        <property name="text">
+         <string>Border size:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QComboBox" name="frameBorderComboBox"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="QComboBox" name="blendColorComboBox"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="sizeGripCheckBox">
+        <property name="text">
+         <string>Extra size grip display:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="titleOutlineCheckBox">
+        <property name="text">
+         <string>Outline active window title:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="separatorCheckBox">
+        <property name="text">
+         <string>Draw separator between title bar and window contents: </string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QComboBox" name="sizeGripComboBox"/>
+      </item>
+      <item row="4" column="2">
+       <widget class="QComboBox" name="titleOutlineComboBox"/>
+      </item>
+      <item row="5" column="2">
+       <widget class="QComboBox" name="separatorComboBox"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="blendColorCheckBox">
+        <property name="text">
+         <string>Background style:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -28,15 +28,14 @@
 #include "oxygendetectwidget.h"
 
 #include <cassert>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <KLocale>
-#include <KPushButton>
 
 
 namespace Oxygen
 {
+
+  //___________________________________________
+  const QString OxygenExceptionDialog::yes( i18n("Enabled") );
+  const QString OxygenExceptionDialog::no( i18n("Disabled") );
 
   //___________________________________________
   OxygenExceptionDialog::OxygenExceptionDialog( QWidget* parent ):
@@ -47,61 +46,24 @@ namespace Oxygen
     // define buttons
     setButtons( Ok|Cancel );
     showButtonSeparator( false );
-
-    // main widget
-    QWidget* widget = new QWidget( this );
-    setMainWidget( widget );
-
-    widget->setLayout( new QVBoxLayout() );
-    widget->layout()->setMargin(0);
-
-    // exception definition
-    QGroupBox* box;
-    widget->layout()->addWidget( box = new QGroupBox( i18n( "Window Identification" ), widget ) );
-
-    QGridLayout* gridLayout = new QGridLayout();
-    box->setLayout( gridLayout );
-
-    QLabel *label;
+    QWidget* local( new QWidget( this ) );
+    ui.setupUi( local );
+    setMainWidget( local );
 
     // exception type
-    gridLayout->addWidget( label = new QLabel( i18n( "Matching window property:" ), box ), 0, 0, 1, 1 );
-    gridLayout->addWidget( exceptionType = new KComboBox(box), 0, 1, 1, 1 );
-    exceptionType->insertItems(0, QStringList()
+    ui.label->setBuddy( ui.exceptionType );
+    ui.exceptionType->insertItems( 0, QStringList()
       << OxygenException::typeName( OxygenException::WindowClassName, true )
       << OxygenException::typeName( OxygenException::WindowTitle, true )
       );
-    exceptionType->setToolTip( i18n(
-      "Select here the window property used to identify windows \n"
-      "to which the specific decoration options apply." ) );
 
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-
-    KPushButton* button = new KPushButton( i18n( "&Detect Window Properties" ), box );
-    gridLayout->addWidget( button, 2, 0, 1, 2, Qt::AlignRight|Qt::AlignVCenter );
-    connect( button, SIGNAL( clicked( void ) ), SLOT( selectWindowProperties() ) );
+    connect( ui.detectDialogButton, SIGNAL( clicked( void ) ), SLOT( selectWindowProperties() ) );
 
     // regular expression
-    gridLayout->addWidget( label = new QLabel( i18n( "Regular expression to match: " ), box ), 1, 0, 1, 1 );
-    gridLayout->addWidget( exceptionEditor = new KLineEdit( box ), 1, 1, 1, 1 );
-    exceptionEditor->setClearButtonShown( true );
-    exceptionEditor->setToolTip( i18n(
-      "Type here the regular expression used to identify windows \n"
-      "to which the specific decoration options apply." ) );
-
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-
-    // decoration flags
-    widget->layout()->addWidget( box = new QGroupBox( i18n( "Decoration Options" ), widget ) );
-    gridLayout = new QGridLayout();
-    box->setLayout( gridLayout );
-
-    QCheckBox* checkbox;
+    ui.label_2->setBuddy( ui.exceptionEditor );
 
     // border size
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Border size:" ), box ), 0, 0, 1, 1 );
-    gridLayout->addWidget( frameBorder = new KComboBox(box), 0, 1, 1, 1 );
-    frameBorder->insertItems(0, QStringList()
+    ui.frameBorderComboBox->insertItems(0, QStringList()
       << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNone, true )
       << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderNoSide, true )
       << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderTiny, true )
@@ -112,46 +74,38 @@ namespace Oxygen
       << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderVeryHuge, true )
       << OxygenConfiguration::frameBorderName( OxygenConfiguration::BorderOversized, true )
       );
-    frameBorder->setEnabled( false );
-    checkboxes_.insert( std::make_pair( OxygenException::FrameBorder, checkbox ) );
-    checkbox->setToolTip( i18n("If checked, specified frame border is used in place of default value.") );
-    connect( checkbox, SIGNAL( toggled( bool ) ), frameBorder, SLOT( setEnabled( bool ) ) );
+    ui.frameBorderComboBox->setEnabled( false );
+    checkboxes_.insert( std::make_pair( OxygenException::FrameBorder, ui.frameBorderCheckBox ) );
+    connect( ui.frameBorderCheckBox, SIGNAL( toggled( bool ) ), ui.frameBorderComboBox, SLOT( setEnabled( bool ) ) );
 
     // blend color
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Background style:" ), box ), 1, 0, 1, 1 );
-    gridLayout->addWidget( blendColor = new KComboBox(box), 1, 1, 1, 1 );
-    blendColor->insertItems(0, QStringList()
+    ui.blendColorComboBox->insertItems(0, QStringList()
       << OxygenException::blendColorName( OxygenException::NoBlending, true )
       << OxygenException::blendColorName( OxygenException::RadialBlending, true ) );
-    blendColor->setEnabled( false );
-    checkboxes_.insert( std::make_pair( OxygenException::BlendColor, checkbox ) );
-    checkbox->setToolTip( i18n("If checked, specified blending color is used in title bar in place of default value.") );
-    connect( checkbox, SIGNAL( toggled( bool ) ), blendColor, SLOT( setEnabled( bool ) ) );
+    ui.blendColorComboBox->setEnabled( false );
+    checkboxes_.insert( std::make_pair( OxygenException::BlendColor, ui.blendColorCheckBox ) );
+    connect( ui.blendColorCheckBox, SIGNAL( toggled( bool ) ), ui.blendColorComboBox, SLOT( setEnabled( bool ) ) );
 
     // size grip
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Extra size grip display:" ), box ), 2, 0, 1, 1 );
-    gridLayout->addWidget( sizeGripMode = new KComboBox( box ), 2, 1, 1, 1 );
-    sizeGripMode->insertItems(0, QStringList()
+    ui.sizeGripComboBox->insertItems(0, QStringList()
       << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripNever, true )
       << OxygenConfiguration::sizeGripModeName( OxygenConfiguration::SizeGripWhenNeeded, true )
       );
-    sizeGripMode->setEnabled( false );
-    checkboxes_.insert( std::make_pair( OxygenException::SizeGripMode, checkbox ) );
-    connect( checkbox, SIGNAL( toggled( bool ) ), sizeGripMode, SLOT( setEnabled( bool ) ) );
+    ui.sizeGripComboBox->setEnabled( false );
+    checkboxes_.insert( std::make_pair( OxygenException::SizeGripMode, ui.sizeGripCheckBox ) );
+    connect( ui.sizeGripCheckBox, SIGNAL( toggled( bool ) ), ui.sizeGripComboBox, SLOT( setEnabled( bool ) ) );
 
     // outline active window title
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Outline active window title:" ), box ), 3, 0, 1, 1 );
-    gridLayout->addWidget( titleOutline = new ComboBox( box ), 3, 1, 1, 1 );
-    titleOutline->setEnabled( false );
-    checkboxes_.insert( std::make_pair( OxygenException::TitleOutline, checkbox ) );
-    connect( checkbox, SIGNAL( toggled( bool ) ), titleOutline, SLOT( setEnabled( bool ) ) );
+    ui.titleOutlineComboBox->insertItems(0, QStringList() << yes << no );
+    ui.titleOutlineComboBox->setEnabled( false );
+    checkboxes_.insert( std::make_pair( OxygenException::TitleOutline, ui.titleOutlineCheckBox ) );
+    connect( ui.titleOutlineCheckBox, SIGNAL( toggled( bool ) ), ui.titleOutlineComboBox, SLOT( setEnabled( bool ) ) );
 
     // separator
-    gridLayout->addWidget( checkbox = new QCheckBox( i18n("Draw separator between title bar and active window contents:" ), box ), 4, 0, 1, 1 );
-    gridLayout->addWidget( drawSeparator = new ComboBox( box ), 4, 1, 1, 1 );
-    drawSeparator->setEnabled( false );
-    checkboxes_.insert( std::make_pair( OxygenException::DrawSeparator, checkbox ) );
-    connect( checkbox, SIGNAL( toggled( bool ) ), drawSeparator, SLOT( setEnabled( bool ) ) );
+    ui.separatorComboBox->insertItems(0, QStringList() << yes << no );
+    ui.separatorComboBox->setEnabled( false );
+    checkboxes_.insert( std::make_pair( OxygenException::DrawSeparator, ui.separatorCheckBox ) );
+    connect( ui.separatorCheckBox, SIGNAL( toggled( bool ) ), ui.separatorComboBox, SLOT( setEnabled( bool ) ) );
 
   }
 
@@ -163,23 +117,13 @@ namespace Oxygen
     exception_ = exception;
 
     // type
-    exceptionType->setCurrentIndex( exceptionType->findText( exception.typeName( true ) ) );
-
-    // regular expression
-    exceptionEditor->setText( exception.regExp().pattern() );
-
-    // border size
-    frameBorder->setCurrentIndex( frameBorder->findText( exception.frameBorderName( true ) ) );
-
-    // blend color
-    blendColor->setCurrentIndex( blendColor->findText( exception.blendColorName( true ) ) );
-
-    // size grip
-    sizeGripMode->setCurrentIndex( sizeGripMode->findText( exception.sizeGripModeName( true ) ) );
-
-    // flags
-    drawSeparator->setValue( exception.drawSeparator() );
-    titleOutline->setValue( exception.drawTitleOutline() );
+    ui.exceptionType->setCurrentIndex( ui.exceptionType->findText( exception.typeName( true ) ) );
+    ui.exceptionEditor->setText( exception.regExp().pattern() );
+    ui.frameBorderComboBox->setCurrentIndex( ui.frameBorderComboBox->findText( exception.frameBorderName( true ) ) );
+    ui.blendColorComboBox->setCurrentIndex( ui.blendColorComboBox->findText( exception.blendColorName( true ) ) );
+    ui.sizeGripComboBox->setCurrentIndex( ui.sizeGripComboBox->findText( exception.sizeGripModeName( true ) ) );
+    ui.separatorComboBox->setCurrentIndex( ui.separatorComboBox->findText( exception.drawSeparator() ? yes:no ) );
+    ui.titleOutlineComboBox->setCurrentIndex( ui.titleOutlineComboBox->findText( exception.drawTitleOutline() ? yes:no ) );
 
     // mask
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
@@ -191,15 +135,15 @@ namespace Oxygen
   OxygenException OxygenExceptionDialog::exception( void ) const
   {
     OxygenException exception( exception_ );
-    exception.setType( OxygenException::type( exceptionType->currentText(), true ) );
-    exception.regExp().setPattern( exceptionEditor->text() );
-    exception.setFrameBorder( OxygenException::frameBorder( frameBorder->currentText(), true ) );
-    exception.setBlendColor( OxygenException::blendColor( blendColor->currentText(), true ) );
-    exception.setSizeGripMode( OxygenException::sizeGripMode( sizeGripMode->currentText(), true ) );
+    exception.setType( OxygenException::type( ui.exceptionType->currentText(), true ) );
+    exception.regExp().setPattern( ui.exceptionEditor->text() );
+    exception.setFrameBorder( OxygenException::frameBorder( ui.frameBorderComboBox->currentText(), true ) );
+    exception.setBlendColor( OxygenException::blendColor( ui.blendColorComboBox->currentText(), true ) );
+    exception.setSizeGripMode( OxygenException::sizeGripMode( ui.sizeGripComboBox->currentText(), true ) );
 
     // flags
-    exception.setDrawSeparator( drawSeparator->isChecked() );
-    exception.setDrawTitleOutline( titleOutline->isChecked() );
+    exception.setDrawSeparator( ui.separatorComboBox->currentText() == yes );
+    exception.setDrawTitleOutline( ui.titleOutlineComboBox->currentText() == yes );
 
     // mask
     unsigned int mask = OxygenException::None;
@@ -234,7 +178,7 @@ namespace Oxygen
     {
 
       // type
-      exceptionType->setCurrentIndex( exceptionType->findText( OxygenException::typeName( detectDialog->exceptionType(), true ) ) );
+      ui.exceptionType->setCurrentIndex( ui.exceptionType->findText( OxygenException::typeName( detectDialog->exceptionType(), true ) ) );
 
       // window info
       const KWindowInfo& info( detectDialog->windowInfo() );
@@ -242,11 +186,11 @@ namespace Oxygen
       switch( detectDialog->exceptionType() )
       {
         case OxygenException::WindowClassName:
-        exceptionEditor->setText( info.windowClassClass() );
+        ui.exceptionEditor->setText( info.windowClassClass() );
         break;
 
         case OxygenException::WindowTitle:
-        exceptionEditor->setText( info.name() );
+        ui.exceptionEditor->setText( info.name() );
         break;
 
         default: assert( false );
@@ -259,22 +203,5 @@ namespace Oxygen
     detectDialog = 0;
 
   }
-
-  //___________________________________________
-  const QString OxygenExceptionDialog::ComboBox::Yes( i18n("Enabled") );
-  const QString OxygenExceptionDialog::ComboBox::No( i18n("Disabled") );
-
-  //___________________________________________
-  OxygenExceptionDialog::ComboBox::ComboBox( QWidget* parent ):
-    KComboBox( parent )
-  { insertItems( 0, QStringList() << Yes << No ); }
-
-  //___________________________________________
-  void OxygenExceptionDialog::ComboBox::setValue(  bool checked )
-  { setCurrentIndex( findText( checked ? Yes:No ) ); }
-
-  //___________________________________________
-  bool OxygenExceptionDialog::ComboBox::isChecked( void ) const
-  { return currentText() == Yes; }
 
 }

@@ -68,8 +68,8 @@ namespace Oxygen
     //! exception type
     OxygenException::Type exceptionType() const
     {
-        if( widget.windowClassCheckBox->isChecked() ) return OxygenException::WindowClassName;
-        else if( widget.windowTitleCheckBox->isChecked() ) return OxygenException::WindowTitle;
+        if( ui.windowClassCheckBox->isChecked() ) return OxygenException::WindowClassName;
+        else if( ui.windowTitleCheckBox->isChecked() ) return OxygenException::WindowTitle;
         else return OxygenException::WindowClassName;
     }
 
@@ -99,7 +99,7 @@ namespace Oxygen
     QString machine;
 
     //! main widget
-    Ui_DetectWidget widget;
+    Ui_DetectWidget ui;
 
     //! invisible dialog used to grab mouse
     KDialog* grabber;

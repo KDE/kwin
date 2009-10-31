@@ -57,7 +57,8 @@ namespace Oxygen
     showButtonSeparator( false );
 
     QWidget* local( new QWidget( this ) );
-    widget.setupUi( local );
+    ui.setupUi( local );
+    ui.windowClassCheckBox->setChecked( true );
 
     // central widget
     setMainWidget( local );
@@ -92,8 +93,8 @@ namespace Oxygen
     QString wmclass_name = info.windowClassName();
     QString title = info.name();
 
-    widget.windowClass->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')' );
-    widget.windowTitle->setText( title );
+    ui.windowClass->setText( wmclass_class + " (" + wmclass_name + ' ' + wmclass_class + ')' );
+    ui.windowTitle->setText( title );
     emit detectionDone( exec() == KDialog::Accepted );
 
     return;

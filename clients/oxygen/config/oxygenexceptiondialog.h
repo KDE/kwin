@@ -33,6 +33,7 @@
 #include <map>
 
 #include "../oxygenexception.h"
+#include "ui_oxygenexceptionwidget.h"
 
 namespace Oxygen
 {
@@ -64,20 +65,10 @@ namespace Oxygen
 
     private:
 
-    //! line editor
-    KLineEdit* exceptionEditor;
+    static const QString yes;
+    static const QString no;
 
-    //! blend combobox
-    KComboBox* exceptionType;
-
-    //! border size
-    KComboBox* frameBorder;
-
-    //! blend combobox
-    KComboBox* blendColor;
-
-    //! size grip
-    KComboBox* sizeGripMode;
+    Ui_OxygenExceptionWidget ui;
 
     //! map mask and checkbox
     typedef std::map< OxygenException::AttributesMask, QCheckBox*> CheckBoxMap;
@@ -87,32 +78,6 @@ namespace Oxygen
 
     //! internal exception
     OxygenException exception_;
-
-    //! local combobox to handle configuration checkboxes
-    class ComboBox: public KComboBox
-    {
-      public:
-
-      static const QString Yes;
-      static const QString No;
-
-      //! constructor
-      ComboBox( QWidget* parent );
-
-      //! set value
-      void setValue( bool checked );
-
-      //! true if yes is checkd
-      bool isChecked( void ) const;
-
-
-    };
-
-    //! overwrite colors
-    ComboBox* titleOutline;
-
-    //! draw separator
-    ComboBox* drawSeparator;
 
     //! detection dialog
     DetectDialog* detectDialog;
