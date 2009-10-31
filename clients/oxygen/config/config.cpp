@@ -151,12 +151,11 @@ namespace Oxygen
 
     // save shadow configuration
     KConfigGroup configurationGroup( configuration_, ( (colorGroup == QPalette::Active) ? "ActiveShadow":"InactiveShadow" ) );
-    configurationGroup.writeEntry( OxygenConfig::SHADOW_SIZE, ui.shadowSize->value() );
-    configurationGroup.writeEntry( OxygenConfig::SHADOW_HOFFSET, 0.1*ui.horizontalOffset->value() );
-    configurationGroup.writeEntry( OxygenConfig::SHADOW_VOFFSET, 0.1*ui.verticalOffset->value() );
-    configurationGroup.writeEntry( OxygenConfig::SHADOW_INNER_COLOR, ui.innerColor->color() );
-    configurationGroup.writeEntry( OxygenConfig::SHADOW_OUTER_COLOR, ui.outerColor->color() );
-    configurationGroup.writeEntry( OxygenConfig::SHADOW_USE_OUTER_COLOR, ui.useOuterColor->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_SIZE, ui.ui.shadowSize->value() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_VOFFSET, 0.1*ui.ui.verticalOffset->value() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_INNER_COLOR, ui.ui.innerColor->color() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_OUTER_COLOR, ui.ui.outerColor->color() );
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_USE_OUTER_COLOR, ui.ui.useOuterColor->isChecked() );
 
   }
 
@@ -200,12 +199,11 @@ namespace Oxygen
   {
     assert( colorGroup == QPalette::Active || colorGroup == QPalette::Inactive );
     OxygenShadowConfigurationUI* ui = userInterface_->shadowConfigurations[ (colorGroup == QPalette::Active) ? 0:1 ];
-    ui->shadowSize->setValue( configuration.shadowSize() );
-    ui->horizontalOffset->setValue( 10*configuration.horizontalOffset() );
-    ui->verticalOffset->setValue( 10*configuration.verticalOffset() );
-    ui->innerColor->setColor( configuration.innerColor() );
-    ui->outerColor->setColor( configuration.outerColor() );
-    ui->useOuterColor->setChecked( configuration.useOuterColor() );
+    ui->ui.shadowSize->setValue( configuration.shadowSize() );
+    ui->ui.verticalOffset->setValue( 10*configuration.verticalOffset() );
+    ui->ui.innerColor->setColor( configuration.innerColor() );
+    ui->ui.outerColor->setColor( configuration.outerColor() );
+    ui->ui.useOuterColor->setChecked( configuration.useOuterColor() );
   }
   //_______________________________________________________________________
   void Config::aboutOxygen( void )

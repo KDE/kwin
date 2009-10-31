@@ -27,9 +27,7 @@
 
 #include <QtGui/QCheckBox>
 #include <QtGui/QGroupBox>
-#include <KIntSpinBox>
-#include <kcolorbutton.h>
-
+#include <ui_oxygenshadowconfigurationui.h>
 namespace Oxygen
 {
 
@@ -43,32 +41,13 @@ namespace Oxygen
 
     //! constructor
     OxygenShadowConfigurationUI( const QString&, QWidget* );
-
-    //! ui
-    void setupUI( void );
-
-    //! size spinbox
-    KIntSpinBox *shadowSize;
-
-    //! horizontal offset
-    KIntSpinBox *horizontalOffset;
-
-    //! vertical offset
-    KIntSpinBox *verticalOffset;
-
-    //! first color
-    KColorButton *innerColor;
-
-    //! second color
-    KColorButton *outerColor;
-
-    //! second color checkbox
-    QCheckBox *useOuterColor;
+    Ui_ShadowConfiguraionUI ui;
 
     signals:
 
     //! emmitted when configuration is changed
     void changed( void );
+
 
   };
 
