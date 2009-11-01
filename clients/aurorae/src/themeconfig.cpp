@@ -71,6 +71,10 @@ void ThemeConfig::load(KConfig *conf)
     m_titleEdgeBottom = border.readEntry("TitleEdgeBottom", 5);
     m_titleEdgeLeft = border.readEntry("TitleEdgeLeft", 5);
     m_titleEdgeRight = border.readEntry("TitleEdgeRight", 5);
+    m_titleEdgeTopMaximized = border.readEntry("TitleEdgeTopMaximized", m_titleEdgeTop);
+    m_titleEdgeBottomMaximized = border.readEntry("TitleEdgeBottomMaximized", m_titleEdgeBottom);
+    m_titleEdgeLeftMaximized = border.readEntry("TitleEdgeLeftMaximized", m_titleEdgeLeft);
+    m_titleEdgeRightMaximized = border.readEntry("TitleEdgeRightMaximized", m_titleEdgeRight);
     m_titleBorderLeft = border.readEntry("TitleBorderLeft", 5);
     m_titleBorderRight = border.readEntry("TitleBorderRight", 5);
     m_titleHeight = border.readEntry("TitleHeight", 20);

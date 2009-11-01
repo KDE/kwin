@@ -88,6 +88,18 @@ public:
     int titleEdgeRight() const {
         return m_titleEdgeRight;
     }
+    int titleEdgeTopMaximized() const {
+        return m_titleEdgeTopMaximized;
+    }
+    int titleEdgeBottomMaximized() const {
+        return m_titleEdgeBottomMaximized;
+    }
+    int titleEdgeLeftMaximized() const {
+        return m_titleEdgeLeftMaximized;
+    }
+    int titleEdgeRightMaximized() const {
+        return m_titleEdgeRightMaximized;
+    }
     int titleBorderLeft() const {
         return m_titleBorderLeft;
     }
@@ -184,6 +196,10 @@ private:
     int m_titleEdgeBottom;
     int m_titleEdgeLeft;
     int m_titleEdgeRight;
+    int m_titleEdgeTopMaximized;
+    int m_titleEdgeBottomMaximized;
+    int m_titleEdgeLeftMaximized;
+    int m_titleEdgeRightMaximized;
     int m_titleBorderLeft;
     int m_titleBorderRight;
     int m_titleHeight;

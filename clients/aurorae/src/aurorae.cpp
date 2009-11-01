@@ -570,13 +570,13 @@ int AuroraeClient::layoutMetric(LayoutMetric lm, bool respectWindowState,
         return conf.paddingBottom();
 
     case LM_TitleEdgeLeft:
-        return conf.titleEdgeLeft();
+        return maximized && respectWindowState ? conf.titleEdgeLeftMaximized() : conf.titleEdgeLeft();
     case LM_TitleEdgeRight:
-        return conf.titleBorderRight();
+        return maximized && respectWindowState ? conf.titleEdgeRightMaximized() : conf.titleBorderRight();
     case LM_TitleEdgeTop:
-        return conf.titleEdgeTop();
+        return maximized && respectWindowState ? conf.titleEdgeTopMaximized() : conf.titleEdgeTop();
     case LM_TitleEdgeBottom:
-        return conf.titleEdgeBottom();
+        return maximized && respectWindowState ? conf.titleEdgeBottomMaximized() : conf.titleEdgeBottom();
 
     case LM_ButtonMarginTop:
         return conf.buttonMarginTop();
