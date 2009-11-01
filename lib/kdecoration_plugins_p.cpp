@@ -106,7 +106,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
         nameStr = group.readEntry("PluginLib", defaultPlugin );
         }
     // make sure people can switch between HEAD and kwin_iii branch
-    if( nameStr.toLatin1().startsWith( "kwin_" ))
+    if( nameStr.startsWith( "kwin_" ))
 	nameStr = "kwin3_" + nameStr.mid( 5 );
 
     KLibrary *oldLibrary = library;

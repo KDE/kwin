@@ -47,7 +47,6 @@ Comment[uk]=Приклад теми, заснованої на темі стіл
 Comment[x-test]=xxAn example theme based on the Air desktop theme.xx
 Comment[zh_TW]=基於 Air 桌面主題的範例主題
 
-Type=Theme
 X-KDE-PluginInfo-Author=Martin Gräßlin
 X-KDE-PluginInfo-Email=kde@martin-graesslin.com
 X-KDE-PluginInfo-Name=example-deco

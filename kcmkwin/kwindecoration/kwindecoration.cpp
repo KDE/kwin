@@ -227,7 +227,7 @@ void KWinDecorationModule::findDecorations()
 					KDesktopFile desktopFile(filename);
 					QString libName = desktopFile.desktopGroup().readEntry("X-KDE-Library");
 
-					if (!libName.isEmpty() && libName.toLatin1().startsWith( "kwin3_" ))
+					if (!libName.isEmpty() && libName.startsWith( "kwin3_" ))
 					{
 						DecorationInfo di;
 						di.name = desktopFile.readName();
@@ -590,7 +590,7 @@ void KWinDecorationModule::checkSupportedBorderSizes()
 
 QString KWinDecorationModule::styleToConfigLib( QString& styleLib )
 {
-        if( styleLib.toLatin1().startsWith( "kwin3_" ))
+        if( styleLib.startsWith( "kwin3_" ))
             return "kwin_" + styleLib.mid( 6 ) + "_config";
         else
             return styleLib + "_config";
