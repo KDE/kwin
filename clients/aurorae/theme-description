@@ -86,7 +86,7 @@ The following section shows the possible options with their default values.
 [General]
 TitleAlignment=Left             # vorizontal alignment of window title
 TitleVerticalAlignment=Center   # vertical alignment of window title
-Animation=0                     # animation duration in msec when hovering a button
+Animation=0                     # animation duration in msec when hovering a button and on active/inactive change
 ActiveTextColor=0,0,0,255       # title text color of active window
 InactiveTextColor=0,0,0,255     # title text color of inactive window
 UseTextShadow=false             # Draw Shadow behind title text

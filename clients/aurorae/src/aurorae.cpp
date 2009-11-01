@@ -278,6 +278,19 @@ void AuroraeButton::paintEvent(QPaintEvent *event)
         } else {
             iconPix = effect->apply(iconPix, KIconLoader::Desktop, KIconLoader::DisabledState);
         }
+        AuroraeClient *deco = dynamic_cast<AuroraeClient*>(decoration());
+        if (deco && deco->isAnimating()) {
+            // animation
+            QPixmap oldPix = icon.pixmap(size);
+            if (!active) {
+                if (underMouse()) {
+                    oldPix = effect->apply(iconPix, KIconLoader::Desktop, KIconLoader::ActiveState);
+                }
+            } else {
+                oldPix = effect->apply(iconPix, KIconLoader::Desktop, KIconLoader::DisabledState);
+            }
+            iconPix = Plasma::PaintUtils::transition(oldPix, iconPix, deco->animationProgress());
+        }
         painter.drawPixmap(0, 0, iconPix);
         return;
     }
@@ -450,7 +463,28 @@ void AuroraeButton::paintButton(QPainter &painter, Plasma::FrameSvg *frame, Butt
                                                          target, m_animationProgress);
         painter.drawPixmap(rect(), result);
     } else {
-        frame->paintFrame(&painter);
+        bool animation = false;
+        AuroraeClient *deco = dynamic_cast<AuroraeClient*>(decoration());
+        if (deco && deco->isAnimating()) {
+            animationPrefix = prefix;
+            if (prefix.endsWith("-inactive")) {
+                animationPrefix.remove("-inactive");
+            } else {
+                animationPrefix = animationPrefix + "-inactive";
+            }
+            if (frame->hasElementPrefix(animationPrefix)) {
+                animation = true;
+                QPixmap target = frame->framePixmap();
+                frame->setElementPrefix(animationPrefix);
+                frame->resizeFrame(size());
+                QPixmap result = Plasma::PaintUtils::transition(frame->framePixmap(),
+                                                                target, deco->animationProgress());
+                painter.drawPixmap(rect(), result);
+            }
+        }
+        if (!animation) {
+            frame->paintFrame(&painter);
+        }
     }
 }
 
@@ -461,6 +495,7 @@ void AuroraeButton::paintButton(QPainter &painter, Plasma::FrameSvg *frame, Butt
 AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory)
         : KCommonDecorationUnstable(bridge, factory)
 {
+    connect(Plasma::Animator::self(), SIGNAL(customAnimationFinished(int)), this, SLOT(animationFinished(int)));
 }
 
 AuroraeClient::~AuroraeClient()
@@ -655,6 +690,7 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
                      !options()->moveResizeMaximizedWindows();
 
     QPainter painter(widget());
+    painter.setRenderHint(QPainter::Antialiasing);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
 
     const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
@@ -718,15 +754,58 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
         }
     }
     frame->resizeFrame(rect.size());
-    frame->paintFrame(&painter, rect, sourceRect);
 
-    painter.setFont(options()->font(isActive()));
+    // animation
+    if (m_animationId != 0 && frame->hasElementPrefix("decoration-inactive")) {
+        QPixmap target = frame->framePixmap();
+        frame->setElementPrefix("decoration-inactive");
+        if (!isActive()) {
+            frame->setElementPrefix("decoration");
+        }
+        if (!compositingActive() && frame->hasElementPrefix("decoration-opaque-inactive")) {
+            frame->setElementPrefix("decoration-opaque-inactive");
+            if (!isActive()) {
+                frame->setElementPrefix("decoration-opaque");
+            }
+        }
+        frame->resizeFrame(rect.size());
+        QPixmap result = Plasma::PaintUtils::transition(frame->framePixmap(),
+                                                        target, m_animationProgress);
+        painter.drawPixmap(rect.toRect(), result);
+    } else {
+        frame->paintFrame(&painter, rect, sourceRect);
+    }
+
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    if (m_animationId != 0) {
+        QPixmap result;
+        if (isActive()) {
+            result = Plasma::PaintUtils::transition(m_inactiveText, m_activeText, m_animationProgress);
+        } else {
+            result = Plasma::PaintUtils::transition(m_activeText, m_inactiveText, m_animationProgress);
+        }
+        painter.drawPixmap(titleRect(), result);
+    } else {
+        if (isActive()) {
+            painter.drawPixmap(titleRect(), m_activeText);
+        } else {
+            painter.drawPixmap(titleRect(), m_inactiveText);
+            }
+    }
+}
+
+void AuroraeClient::generateTextPixmap(QPixmap& pixmap, bool active)
+{
+    QPainter painter(&pixmap);
+    pixmap.fill(Qt::transparent);
+    const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
+    painter.setFont(options()->font(active));
     if (conf.useTextShadow()) {
         // shadow code is inspired by Qt FAQ: How can I draw shadows behind text?
         // see http://www.qtsoftware.com/developer/faqs/faq.2007-07-27.3052836051
         const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
         painter.save();
-        if (isActive()) {
+        if (active) {
             painter.setPen(conf.activeTextShadowColor());
         }
         else {
@@ -735,31 +814,39 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
         int dx = conf.textShadowOffsetX();
         int dy = conf.textShadowOffsetY();
         painter.setOpacity(0.5);
-        painter.drawText(titleRect().translated(dx, dy),
+        painter.drawText(pixmap.rect().translated(dx, dy),
                             conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
                             caption());
         painter.setOpacity(0.2);
-        painter.drawText(titleRect().translated(dx+1, dy),
+        painter.drawText(pixmap.rect().translated(dx+1, dy),
                             conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
                             caption());
-        painter.drawText(titleRect().translated(dx-1, dy),
+        painter.drawText(pixmap.rect().translated(dx-1, dy),
                             conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
                             caption());
-        painter.drawText(titleRect().translated(dx, dy+1),
+        painter.drawText(pixmap.rect().translated(dx, dy+1),
                             conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
                             caption());
-        painter.drawText(titleRect().translated(dx, dy-1),
+        painter.drawText(pixmap.rect().translated(dx, dy-1),
                             conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
                             caption());
         painter.restore();
     }
-    if (isActive()) {
+    if (active) {
         painter.setPen(conf.activeTextColor());
     } else {
         painter.setPen(conf.inactiveTextColor());
     }
-    painter.drawText(titleRect(), conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+    painter.drawText(pixmap.rect(), conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
                       caption());
+    painter.end();
+}
+
+void AuroraeClient::captionChange()
+{
+    generateTextPixmap(m_activeText, true);
+    generateTextPixmap(m_inactiveText, false);
+    KCommonDecoration::captionChange();
 }
 
 void AuroraeClient::updateWindowShape()
@@ -789,6 +876,46 @@ void AuroraeClient::updateWindowShape()
                                 h-conf.paddingTop()-conf.paddingBottom()));
     QRegion mask = deco->mask().translated(conf.paddingLeft(), conf.paddingTop());
     setMask(mask);
+}
+
+void AuroraeClient::activeChange()
+{
+    if (m_animationId != 0) {
+        Plasma::Animator::self()->stopCustomAnimation(m_animationId);
+    }
+    m_animationProgress = 0.0;
+    int time = AuroraeFactory::instance()->themeConfig().animationTime();
+    if (time != 0) {
+        m_animationId = Plasma::Animator::self()->customAnimation(40 / (1000.0 / qreal(time)),
+                                                                  time, Plasma::Animator::EaseInOutCurve, this, "animationUpdate");
+    }
+    KCommonDecoration::activeChange();
+}
+
+void AuroraeClient::animationUpdate(qreal progress, int id)
+{
+    if (m_animationId == id) {
+        m_animationProgress = progress;
+        widget()->update();
+    }
+}
+
+void AuroraeClient::animationFinished(int id)
+{
+    if (m_animationId == id) {
+        m_animationId = 0;
+        widget()->update();
+    }
+}
+
+void AuroraeClient::resize(const QSize& s)
+{
+    KCommonDecoration::resize(s);
+    m_activeText = QPixmap(titleRect().size());
+    m_activeText.fill(Qt::transparent);
+    m_inactiveText = QPixmap(titleRect().size());
+    m_inactiveText.fill(Qt::transparent);
+    captionChange();
 }
 
 } // namespace Aurorae

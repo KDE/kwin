@@ -122,10 +122,27 @@ public:
                      const KCommonDecorationButton * = 0) const;
     virtual KCommonDecorationButton *createButton(ButtonType type);
     virtual void updateWindowShape();
+    virtual void activeChange();
+    virtual void captionChange();
+    virtual void resize(const QSize& s);
+
+    bool isAnimating() const { return m_animationId != 0; }
+    qreal animationProgress() const { return m_animationProgress; }
+
+public slots:
+    void animationUpdate(qreal progress, int id);
+    void animationFinished(int id);
 
 protected:
     void reset(unsigned long changed);
     void paintEvent(QPaintEvent *event);
+
+private:
+    void generateTextPixmap(QPixmap& pixmap, bool active);
+    int m_animationId;
+    qreal m_animationProgress;
+    QPixmap m_activeText;
+    QPixmap m_inactiveText;
 
 };
 
