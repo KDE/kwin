@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglutils.h"
 
+#include <math.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
 
@@ -77,9 +78,9 @@ void LogoutEffect::reconfigure( ReconfigureFlags )
 void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if ( !logoutWindow )
+    if( !logoutWindow && progress == 0.0 )
         {
-        if (blurTexture)
+        if( blurTexture )
             {
             delete blurTexture;
             blurTexture = NULL;
@@ -88,7 +89,7 @@ void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             blurSupported = false;
             }
         }
-    else if ( !blurTexture )
+    else if( !blurTexture )
         {
         blurSupported = false;
         delete blurTarget; // catch as we just tested the texture ;-P
@@ -144,24 +145,28 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
             }
         else
             {
-#endif
             if( w != logoutWindow && !logoutWindowPassed )
                 {
-                if( effects->saturationSupported() )
+                if( blurSupported )
+                    data.saturation *= ( 1.0 - progress * 0.2 );
+                else
                     {
                     data.saturation *= ( 1.0 - progress * 0.8 );
                     data.brightness *= ( 1.0 - progress * 0.3 );
                     }
-                else // When saturation isn't supported then reduce brightness a bit more
-                    data.brightness *= ( 1.0 - progress * 0.6 );
                 }
-#ifdef KWIN_HAVE_OPENGL_COMPOSITING
             if( blurSupported && logoutWindowPassed )
                 {
                 windows.append( w );
                 windowsOpacities[ w ] = data.opacity;
                 data.opacity = 0.0;
                 }
+            }
+#else
+        if( w != logoutWindow && !logoutWindowPassed )
+            {
+            data.saturation *= ( 1.0 - progress * 0.8 );
+            data.brightness *= ( 1.0 - progress * 0.3 );
             }
 #endif
         if( w == logoutWindow )
@@ -190,11 +195,32 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
         assert( target == blurTarget );
         Q_UNUSED( target );
 
-        // Render the blurred scene
+        //--------------------------
+        // Render the screen effect
+
+        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+
+        // Unmodified base image
         blurTexture->bind();
+        glBegin( GL_QUADS );
+            glTexCoord2f( 0.0, 0.0 );
+            glVertex2f( 0.0, displayHeight() );
+            glTexCoord2f( 1.0, 0.0 );
+            glVertex2f( displayWidth(), displayHeight() );
+            glTexCoord2f( 1.0, 1.0 );
+            glVertex2f( displayWidth(), 0.0 );
+            glTexCoord2f( 0.0, 1.0 );
+            glVertex2f( 0.0, 0.0 );
+        glEnd();
+
+        // Blurred image
         GLfloat bias[1];
         glGetTexEnvfv( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias );
-        glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, progress * 2.75 );
+        glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 1.75 );
+        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        glColor4f( 1.0f, 1.0f, 1.0f, progress * 0.4 );
         glBegin( GL_QUADS );
             glTexCoord2f( 0.0, 0.0 );
             glVertex2f( 0.0, displayHeight() );
@@ -207,6 +233,45 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
         glEnd();
         glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias[0] );
         blurTexture->unbind();
+
+        // Vignetting (Radial gradient with transparent middle and black edges)
+        for( int screen = 0; screen < effects->numScreens(); screen++ )
+            { // TODO: Cache
+            QRect screenGeom = effects->clientArea( ScreenArea, screen, 0 );
+            glScissor( screenGeom.x(), displayHeight() - screenGeom.y() - screenGeom.height(),
+                screenGeom.width(), screenGeom.height() ); // GL coords are flipped
+            glEnable( GL_SCISSOR_TEST ); // Geom must be set before enable
+            float ro = float(( screenGeom.width() > screenGeom.height() )
+                             ? screenGeom.width() : screenGeom.height() ) * 0.8f; // Outer radius
+            glBegin( GL_TRIANGLES );
+                const float a = M_PI / 8.0f; // Angle of increment
+                for( float i = 0.0f; i < M_PI * 1.99f; i += a )
+                    {
+                    float x, y;
+
+                    glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
+
+                    x = screenGeom.x() + screenGeom.width() / 2;
+                    y = screenGeom.y() + screenGeom.height() / 2;
+                    glVertex3f( x, y, 0 );
+
+                    glColor4f( 0.0f, 0.0f, 0.0f, progress * 0.9f );
+
+                    x = ro * cos( i ) + screenGeom.x() + screenGeom.width() / 2;
+                    y = ro * sin( i ) + screenGeom.y() + screenGeom.height() / 2;
+                    glVertex3f( x, y, 0 );
+
+                    x = ro * cos( i + a ) + screenGeom.x() + screenGeom.width() / 2;
+                    y = ro * sin( i + a ) + screenGeom.y() + screenGeom.height() / 2;
+                    glVertex3f( x, y, 0 );
+                    }
+            glEnd();
+            glDisable( GL_SCISSOR_TEST );
+            }
+
+        glPopAttrib();
+
+        //--------------------------
 
         // Render the logout window
         if( logoutWindow )
