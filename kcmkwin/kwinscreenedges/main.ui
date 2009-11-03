@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>713</width>
-    <height>475</height>
+    <height>500</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -16,20 +16,7 @@
      <property name="title">
       <string>Active Screen Edge Actions</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="KWin::Monitor" name="monitor" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>200</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QLabel" name="label_7">
         <property name="text">
@@ -40,6 +27,19 @@
         </property>
         <property name="wordWrap">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="KWin::Monitor" name="monitor" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>200</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
         </property>
        </widget>
       </item>
