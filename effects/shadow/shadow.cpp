@@ -375,7 +375,9 @@ bool ShadowEffect::useShadow( EffectWindow* w ) const
         // popups may have shadow even if shaped, their shape is almost rectangular
         && ( !w->hasOwnShape() || w->isDropdownMenu() || w->isPopupMenu() || w->isComboBox())
         // If decoration has it's own shadow leave it alone
-        && !( w->hasDecoration() && effects->hasDecorationShadows() );
+        && !( w->hasDecoration() && effects->hasDecorationShadows() )
+        && !( w->windowClass() == "ksmserver ksmserver" &&
+                ( w->windowRole() == "logoutdialog" || w->windowRole() == "logouteffect" ));
     }
 
 void ShadowEffect::addQuadVertices(QVector<float>& verts, float x1, float y1, float x2, float y2) const
