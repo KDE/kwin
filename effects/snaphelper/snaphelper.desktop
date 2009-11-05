@@ -2,6 +2,7 @@
 Name=Snap Helper
 Name[bg]=Центърион
 Name[ca]=Ajudant de desplaçament
+Name[cs]=Pomůcka přichytávání
 Name[csb]=Pòmòc wërówaniô
 Name[da]=Hægtehjælper
 Name[de]=Einrasthilfe
@@ -49,6 +50,7 @@ Icon=preferences-system-windows-effect-snaphelper
 Comment=Help you locate the center of the screen when moving a window.
 Comment[bg]=Помага ви да намерите центъра на екрана при местене на прозорец.
 Comment[ca]=Us ajuda a ubicar el centre de la pantalla en moure una finestra.
+Comment[cs]=Pomůže najít střed obrazovky při přesunu okna.
 Comment[csb]=Pòmôgô nalezc westrzódk ekranu przë suwaniu òknów.
 Comment[da]=Hjælper dig med at finde midten af skærmen ved flytning af vinduer.
 Comment[de]=Zeigt beim Verschieben von Fenstern eine Hilfestellung zum Auffinden der Bildschirmmitte an.

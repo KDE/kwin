@@ -53,6 +53,7 @@ Icon=preferences-system-windows-effect-sheet
 Comment=Make modal dialogs smoothly fly in and out when they are shown or hidden
 Comment[bg]=Отлистване при показване/скриване на прозорците
 Comment[ca]=Fa que els diàlegs modals entrin o surtin volant quan es mostren o s'oculten
+Comment[cs]=Nechat modální dialogy plynule zmizet/objevit se, pokud jsou zobrazeny resp. skryty
 Comment[da]=Få modaldialoger til glat at flyve ind og ud når de vises eller skjules
 Comment[de]=Lässt modale Dialogfenster langsam herein- bzw. herausschweben.
 Comment[el]=Ομαλή εμφάνιση, απόκρυψη με κίνηση των βοηθητικών παραθύρων
