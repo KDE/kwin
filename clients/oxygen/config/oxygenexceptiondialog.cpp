@@ -124,6 +124,7 @@ namespace Oxygen
     ui.sizeGripComboBox->setCurrentIndex( ui.sizeGripComboBox->findText( exception.sizeGripModeName( true ) ) );
     ui.separatorComboBox->setCurrentIndex( ui.separatorComboBox->findText( exception.drawSeparator() ? yes:no ) );
     ui.titleOutlineComboBox->setCurrentIndex( ui.titleOutlineComboBox->findText( exception.drawTitleOutline() ? yes:no ) );
+    ui.hideTitleBar->setChecked( exception.hideTitleBar() );
 
     // mask
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
@@ -144,6 +145,7 @@ namespace Oxygen
     // flags
     exception.setDrawSeparator( ui.separatorComboBox->currentText() == yes );
     exception.setDrawTitleOutline( ui.titleOutlineComboBox->currentText() == yes );
+    exception.setHideTitleBar( ui.hideTitleBar->isChecked() );
 
     // mask
     unsigned int mask = OxygenException::None;

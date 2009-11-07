@@ -78,6 +78,7 @@ namespace Oxygen
             return
                 ( timeLineIsRunning() || isActive() ) &&
                 configuration().drawSeparator() &&
+                !configuration().hideTitleBar() &&
                 !configuration().drawTitleOutline();
         }
 
@@ -224,6 +225,7 @@ namespace Oxygen
             return
                 configuration().useAnimations() &&
                 !configuration().drawTitleOutline() &&
+                !configuration().hideTitleBar() &&
                 !isPreview();
         }
 

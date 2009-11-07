@@ -39,6 +39,7 @@ namespace OxygenConfig
   static const QString BLEND_COLOR = "BlendColor";
   static const QString SIZE_GRIP_MODE = "SizeGripMode";
   static const QString USE_OXYGEN_SHADOWS = "UseOxygenShadows";
+  static const QString HIDE_TITLEBAR = "HideTitleBar";
   static const QString USE_ANIMATIONS = "UseAnimations";
   static const QString ANIMATIONS_DURATION = "AnimationsDuration";
 
@@ -225,6 +226,14 @@ namespace Oxygen
     virtual void setDrawTitleOutline( bool value )
     { drawTitleOutline_ = value; }
 
+    //! hide title bar
+    virtual bool hideTitleBar( void ) const
+    { return hideTitleBar_; }
+
+    //! hide title bar
+    virtual void setHideTitleBar( bool value )
+    { hideTitleBar_ = value; }
+
     //! oxygen shadows
     virtual bool useOxygenShadows( void ) const
     { return useOxygenShadows_; }
@@ -271,6 +280,9 @@ namespace Oxygen
 
     //! active window title outline
     bool drawTitleOutline_;
+
+    //! hide titlebar completely (but not window border)
+    bool hideTitleBar_;
 
     //! oxygen shadows
     bool useOxygenShadows_;

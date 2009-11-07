@@ -39,6 +39,7 @@ namespace Oxygen
     sizeGripMode_( SizeGripWhenNeeded ),
     drawSeparator_( false ),
     drawTitleOutline_( false ),
+    hideTitleBar_( false ),
     useOxygenShadows_( true ),
     useAnimations_( true ),
     animationsDuration_( 150 )
@@ -86,6 +87,11 @@ namespace Oxygen
       OxygenConfig::DRAW_TITLE_OUTLINE,
       defaultConfiguration.drawTitleOutline() ) );
 
+    // hide title bar
+    setHideTitleBar( group.readEntry(
+      OxygenConfig::HIDE_TITLEBAR,
+      defaultConfiguration.hideTitleBar() ) );
+
     // oxygen shadows
     setUseOxygenShadows( group.readEntry(
       OxygenConfig::USE_OXYGEN_SHADOWS,
@@ -114,6 +120,7 @@ namespace Oxygen
 
     group.writeEntry( OxygenConfig::DRAW_SEPARATOR, drawSeparator() );
     group.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, drawTitleOutline() );
+    group.writeEntry( OxygenConfig::HIDE_TITLEBAR, hideTitleBar() );
     group.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
     group.writeEntry( OxygenConfig::USE_ANIMATIONS, useAnimations() );
     group.writeEntry( OxygenConfig::ANIMATIONS_DURATION, animationsDuration() );
@@ -280,6 +287,7 @@ namespace Oxygen
       sizeGripMode() == other.sizeGripMode() &&
       drawSeparator() == other.drawSeparator() &&
       drawTitleOutline() == other.drawTitleOutline() &&
+      hideTitleBar() == other.hideTitleBar() &&
       useOxygenShadows() == other.useOxygenShadows() &&
       useAnimations() == other.useAnimations() &&
       animationsDuration() == other.animationsDuration();

@@ -228,7 +228,6 @@ namespace Oxygen
 
       if( iter->regExp().indexIn( value ) < 0 ) continue;
 
-
       OxygenConfiguration configuration( defaultConfiguration() );
 
       // propagate all features found in mask to the output configuration
@@ -237,7 +236,7 @@ namespace Oxygen
       if( iter->mask() & OxygenException::DrawSeparator ) configuration.setDrawSeparator( iter->drawSeparator() );
       if( iter->mask() & OxygenException::TitleOutline ) configuration.setDrawTitleOutline( iter->drawTitleOutline() );
       if( iter->mask() & OxygenException::SizeGripMode ) configuration.setSizeGripMode( iter->sizeGripMode() );
-
+      configuration.setHideTitleBar( iter->hideTitleBar() );
       return configuration;
 
     }

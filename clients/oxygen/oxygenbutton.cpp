@@ -166,6 +166,8 @@ namespace Oxygen
   void OxygenButton::paintEvent(QPaintEvent *event)
   {
 
+    if( client_.configuration().hideTitleBar() ) return;
+
     QPainter painter(this);
     painter.setClipRect(this->rect().intersected( event->rect() ) );
     painter.setRenderHints(QPainter::Antialiasing);

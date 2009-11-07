@@ -224,13 +224,13 @@ namespace Oxygen
 
   }
 
-    //___________________________________________
+  //___________________________________________
   int OxygenClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
   {
 
     bool maximized( isMaximized() );
     int frameBorder( configuration().frameBorder() );
-    int buttonSize( configuration().buttonSize() );
+    int buttonSize( configuration().hideTitleBar() ? 0 : configuration().buttonSize() );
 
     switch (lm)
     {
@@ -270,9 +270,15 @@ namespace Oxygen
       case LM_TitleEdgeTop:
       {
         int border = 0;
-        if( !( respectWindowState && maximized ))
+        if( frameBorder == OxygenConfiguration::BorderNone && configuration().hideTitleBar() )
         {
+
+            border = 0;
+
+        } else if( !( respectWindowState && maximized )) {
+
           border = TFRAMESIZE;
+
         }
 
         return border;
@@ -952,22 +958,27 @@ namespace Oxygen
       painter.restore();
     }
 
-    // title bounding rect
-    painter.setFont( options()->font(isActive(), false) );
-    QRect boundingRect( titleBoundingRect( &painter, caption() ) );
-    if( isActive() && configuration().drawTitleOutline() )
+    if( !configuration().hideTitleBar() )
     {
-      renderTitleOutline( &painter, boundingRect.adjusted(
-        -layoutMetric( LM_TitleBorderLeft ),
-        -layoutMetric( LM_TitleEdgeTop ),
-        layoutMetric( LM_TitleBorderRight ), 0 ), palette );
+
+        // title bounding rect
+        painter.setFont( options()->font(isActive(), false) );
+        QRect boundingRect( titleBoundingRect( &painter, caption() ) );
+        if( isActive() && configuration().drawTitleOutline() )
+        {
+            renderTitleOutline( &painter, boundingRect.adjusted(
+                -layoutMetric( LM_TitleBorderLeft ),
+                -layoutMetric( LM_TitleEdgeTop ),
+                layoutMetric( LM_TitleBorderRight ), 0 ), palette );
+        }
+
+        // title text
+        renderTitleText( &painter, boundingRect, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
+
+        // separator
+        if( drawSeparator() ) renderSeparator(&painter, frame, widget(), color );
+
     }
-
-    // title text
-    renderTitleText( &painter, boundingRect, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
-
-    // separator
-    if( drawSeparator() ) renderSeparator(&painter, frame, widget(), color );
 
   }
 
