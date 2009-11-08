@@ -278,7 +278,7 @@ void BoxSwitchEffect::windowDamaged( EffectWindow* w, const QRect& damage )
             {
             if( windows.contains( w ))
                 {
-                effects->addRepaint( windows[ w ]->area );
+                effects->addRepaint( frame_area );
                 }
             }
         else
