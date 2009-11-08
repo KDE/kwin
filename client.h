@@ -336,6 +336,8 @@ class Client
                         QRect(0, 0, width(), height());
         }
 
+        QRegion decorationPendingRegion() const;
+
         enum CoordinateMode {
             DecorationRelative, // Relative to the top left corner of the decoration
             WindowRelative      // Relative to the top left corner of the window

@@ -66,6 +66,7 @@ class Toplevel
         virtual QSize clientSize() const = 0;
         virtual QRect visibleRect() const; // the area the window occupies on the screen
         virtual QRect decorationRect() const; // rect including the decoration shadows
+        virtual QRegion decorationPendingRegion() const; // decoration region that needs to be repainted
 
         // prefer isXXX() instead
         // 0 for supported types means default for managed/unmanaged types
@@ -249,6 +250,11 @@ inline QRect Toplevel::rect() const
 inline QRect Toplevel::decorationRect() const
     {
     return rect();
+    }
+
+inline QRegion Toplevel::decorationPendingRegion() const
+    {
+    return QRegion();
     }
 
 inline bool Toplevel::readyForPainting() const

@@ -449,15 +449,16 @@ void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect 
                   padding_right + border_right, r.height() - top.height() - bottom.height());
     }
 
+QRegion Client::decorationPendingRegion() const
+    {
+    if (!paintRedirector)
+        return QRegion();
+    return paintRedirector->pendingRegion().translated( x() - padding_left, y() - padding_top );
+    }
+
 void Client::repaintDecorationPending()
     {
-    if ( compositing() )
-        {
-        // The scene will update the decoration pixmaps in the next painting pass
-        const QRegion r = paintRedirector->pendingRegion();
-        Workspace::self()->addRepaint( r.translated( x() - padding_left, y() - padding_top ) );
-        }
-    else
+    if (!compositing())
         ensureDecorationPixmapsPainted();
     }
 
