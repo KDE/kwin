@@ -38,6 +38,7 @@ public:
     bool reset(unsigned long changed);
     KDecoration *createDecoration(KDecorationBridge*);
     bool supports(Ability ability) const;
+    virtual QList< BorderSize > borderSizes() const;
 
     Plasma::FrameSvg *frame() {
         return &m_frame;

@@ -172,6 +172,13 @@ Plasma::FrameSvg *AuroraeFactory::button(const QString &b)
     }
 }
 
+QList< KDecorationDefines::BorderSize > AuroraeFactory::borderSizes() const
+{
+    return QList< BorderSize >() << BorderTiny << BorderNormal <<
+        BorderLarge << BorderVeryLarge <<  BorderHuge <<
+        BorderVeryHuge << BorderOversized;
+}
+
 
 AuroraeFactory *AuroraeFactory::s_instance = NULL;
 
@@ -552,13 +559,47 @@ int AuroraeClient::layoutMetric(LayoutMetric lm, bool respectWindowState,
     bool maximized = maximizeMode() == MaximizeFull &&
                      !options()->moveResizeMaximizedWindows();
     const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
+    qreal left, top, right, bottom;
+    AuroraeFactory::instance()->frame()->getMargins(left, top, right, bottom);
+    int borderLeft, borderRight, borderBottom;;
+    switch (KDecoration::options()->preferredBorderSize(AuroraeFactory::instance())) {
+        case BorderTiny:
+            if (compositingActive()) {
+                borderLeft = qMin(0, (int)left - conf.borderLeft() - conf.paddingLeft());
+                borderRight = qMin(0, (int)right - conf.borderRight() - conf.paddingRight());
+                borderBottom = qMin(0, (int)bottom - conf.borderBottom() - conf.paddingBottom());
+            } else {
+                borderLeft = qMin(0, (int)left - conf.borderLeft());
+                borderRight = qMin(0, (int)right - conf.borderRight());
+                borderBottom = qMin(0, (int)bottom - conf.borderBottom());
+            }
+            break;
+        case BorderLarge:
+            borderLeft = borderRight = borderBottom = 4;
+            break;
+        case BorderVeryLarge:
+            borderLeft = borderRight = borderBottom = 8;
+            break;
+        case BorderHuge:
+            borderLeft = borderRight = borderBottom = 12;
+            break;
+        case BorderVeryHuge:
+            borderLeft = borderRight = borderBottom = 23;
+            break;
+        case BorderOversized:
+            borderLeft = borderRight = borderBottom = 36;
+            break;
+        case BorderNormal:
+        default:
+            borderLeft = borderRight = borderBottom =  0;
+    }
     switch (lm) {
     case LM_BorderLeft:
-        return maximized && respectWindowState ? 0 : conf.borderLeft();
+        return maximized && respectWindowState ? 0 : conf.borderLeft() + borderLeft;
     case LM_BorderRight:
-        return maximized && respectWindowState ? 0 : conf.borderRight();
+        return maximized && respectWindowState ? 0 : conf.borderRight() + borderRight;
     case LM_BorderBottom:
-        return maximized && respectWindowState ? 0 : conf.borderBottom();
+        return maximized && respectWindowState ? 0 : conf.borderBottom() + borderBottom;
 
     case LM_OuterPaddingLeft:
         return conf.paddingLeft();
