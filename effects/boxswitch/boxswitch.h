@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
 
+#include "boxswitch_proxy.h"
+
 namespace KWin
 {
 
@@ -56,6 +58,9 @@ class BoxSwitchEffect
         virtual void tabBoxClosed();
         virtual void tabBoxUpdated();
         virtual void windowClosed( EffectWindow* w );
+        virtual void* proxy();
+        void activateFromProxy( int mode, bool animate, bool showText, float positioningFactor );
+        void paintWindowsBox( const QRegion& region );
     private:
         class ItemInfo;
         void setActive();
@@ -115,6 +120,12 @@ class BoxSwitchEffect
 
         bool primaryTabBox;
         bool secondaryTabBox;
+
+        BoxSwitchEffectProxy mProxy;
+        bool mProxyActivated;
+        bool mProxyAnimateSwitch;
+        bool mProxyShowText;
+        float mPositioningFactor;
     };
 
 class BoxSwitchEffect::ItemInfo

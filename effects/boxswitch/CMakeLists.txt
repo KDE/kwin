@@ -4,6 +4,7 @@
 # Source files
 set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
     boxswitch/boxswitch.cpp
+    boxswitch/boxswitch_proxy.cpp
     )
 
 # .desktop files

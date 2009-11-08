@@ -59,14 +59,6 @@ class CoverSwitchEffect
         void paintFrontWindow( EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow  );
         void paintWindows( const EffectWindowList& windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL );
         void abort();
-        // thumbnail bar
-        class ItemInfo;
-        void calculateFrameSize();
-        void calculateItemSizes();
-        void paintFrame();
-        void paintHighlight( QRect area );
-        void paintWindowThumbnail( EffectWindow* w );
-        void paintWindowIcon( EffectWindow* w );
 
         bool mActivated;
         float angle;
@@ -103,37 +95,12 @@ class CoverSwitchEffect
         EffectFrame captionFrame;
         QFont captionFont;
 
-        // thumbnail bar
-        EffectFrame thumbnailFrame;
         bool thumbnails;
         bool dynamicThumbnails;
         int thumbnailWindows;
-        QHash< EffectWindow*, ItemInfo* > windows;
-        QRect frame_area;
-        int frame_margin;
-        int highlight_margin;
-        QSize item_max_size; // maximum item display size (including highlight)
-        QColor color_frame;
-        QColor color_highlight;
-        QColor color_text;
-        EffectWindow* edge_window;
-        EffectWindow* right_window;
-        QRect highlight_area;
-        bool highlight_is_set;
 
         bool primaryTabBox;
         bool secondaryTabBox;
-    };
-
-class CoverSwitchEffect::ItemInfo
-    {
-    public:
-        ItemInfo();
-        ~ItemInfo();
-        QRect area; // maximal painting area, including any frames/highlights/etc.
-        QRegion clickable;
-        QRect thumbnail;
-        EffectFrame* iconFrame;
     };
 
 } // namespace

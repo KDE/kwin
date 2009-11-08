@@ -48,6 +48,11 @@ BoxSwitchEffect::BoxSwitchEffect()
     , highlight_is_set( false )
     , primaryTabBox( true )
     , secondaryTabBox( false )
+    , mProxy( this )
+    , mProxyActivated( 0 )
+    , mProxyAnimateSwitch( 0 )
+    , mProxyShowText( 0 )
+    , mPositioningFactor( 0.5f )
     {
     text_font.setBold( true );
     text_font.setPointSize( 12 );
@@ -84,7 +89,7 @@ void BoxSwitchEffect::reconfigure( ReconfigureFlags )
 
 void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( activeTimeLine.value() != 0.0 )
+    if( activeTimeLine.value() != 0.0 && !mProxyActivated )
         {
         if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
             {
@@ -133,36 +138,11 @@ void BoxSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data )
     {
     effects->paintScreen( mask, region, data );
-    if( mActivated )
+    if( mActivated && !mProxyActivated )
         {
         if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
             {
-            thumbnailFrame.render( region );
-
-            if( mAnimateSwitch )
-                {
-                // HACK: PaintClipper is used because window split is somehow wrong if the height is greater than width
-                PaintClipper::push( frame_area );
-                paintHighlight( highlight_area );
-                QHash< EffectWindow*, ItemInfo* >::const_iterator i;
-                for( i = windows.constBegin(); i != windows.constEnd(); ++i )
-                    {
-                    paintWindowThumbnail( i.key() );
-                    paintWindowIcon( i.key() );
-                    }
-                PaintClipper::pop( frame_area );
-                }
-            else
-                {
-                QHash< EffectWindow*, ItemInfo* >::const_iterator i;
-                for( i = windows.constBegin(); i != windows.constEnd(); ++i )
-                    {
-                    if( i.key() == selected_window )
-                        paintHighlight( i.value()->area );
-                    paintWindowThumbnail( i.key() );
-                    paintWindowIcon( i.key() );
-                    }
-                }
+            paintWindowsBox(region);
             }
         else
             {
@@ -181,6 +161,36 @@ void BoxSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& da
                     }
                 painting_desktop = 0;
                 }
+            }
+        }
+    }
+
+void BoxSwitchEffect::paintWindowsBox(const QRegion& region)
+    {
+    thumbnailFrame.render( region );
+
+    if( (mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch) )
+        {
+        // HACK: PaintClipper is used because window split is somehow wrong if the height is greater than width
+        PaintClipper::push( frame_area );
+        paintHighlight( highlight_area );
+        QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+        for( i = windows.constBegin(); i != windows.constEnd(); ++i )
+            {
+            paintWindowThumbnail( i.key() );
+            paintWindowIcon( i.key() );
+            }
+        PaintClipper::pop( frame_area );
+        }
+    else
+        {
+        QHash< EffectWindow*, ItemInfo* >::const_iterator i;
+        for( i = windows.constBegin(); i != windows.constEnd(); ++i )
+            {
+            if( i.key() == selected_window )
+                paintHighlight( i.value()->area );
+            paintWindowThumbnail( i.key() );
+            paintWindowIcon( i.key() );
             }
         }
     }
@@ -214,8 +224,8 @@ void BoxSwitchEffect::postPaintScreen()
 
 void BoxSwitchEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if(( mActivated && (mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode) )
-        || ( !mActivated && activeTimeLine.value() != 0.0 ))
+    if((( mActivated && (mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode) )
+        || ( !mActivated && activeTimeLine.value() != 0.0 )) && !mProxyActivated)
         {
         if( windows.contains( w ) && w != selected_window )
             {
@@ -368,7 +378,7 @@ void BoxSwitchEffect::tabBoxUpdated()
             {
             if( selected_window != NULL )
                 {
-                if( mAnimateSwitch )
+                if( (mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch) )
                     {
                     int old_index = effects->currentTabBoxWindowList().indexOf( selected_window );
                     int new_index = effects->currentTabBoxWindowList().indexOf( effects->currentTabBoxWindow() );
@@ -422,7 +432,8 @@ void BoxSwitchEffect::tabBoxUpdated()
             if( desktops.contains( selected_desktop ))
                 effects->addRepaint( desktops.value( selected_desktop )->area );
             selected_desktop = effects->currentTabBoxDesktop();
-            thumbnailFrame.setText( effects->desktopName( selected_desktop ));
+            if( !mProxyActivated || mProxyShowText )
+                thumbnailFrame.setText( effects->desktopName( selected_desktop ));
             if( desktops.contains( selected_desktop ))
                 effects->addRepaint( desktops.value( selected_desktop )->area );
             effects->addRepaint( text_area );
@@ -457,12 +468,17 @@ void BoxSwitchEffect::setActive()
         {
         original_desktops = effects->currentTabBoxDesktopList();
         selected_desktop = effects->currentTabBoxDesktop();
-        thumbnailFrame.setText( effects->desktopName( selected_desktop ));
+        if( !mProxyActivated || mProxyShowText )
+            thumbnailFrame.setText( effects->desktopName( selected_desktop ));
         }
     calculateFrameSize();
     calculateItemSizes();
-    mInput = effects->createInputWindow( this, frame_area.x(), frame_area.y(),
-        frame_area.width(), frame_area.height(), Qt::ArrowCursor );
+    if( !mProxyActivated )
+        {
+        // only create the input window when effect is not activated via the proxy
+        mInput = effects->createInputWindow( this, frame_area.x(), frame_area.y(),
+                                             frame_area.width(), frame_area.height(), Qt::ArrowCursor );
+        }
     effects->addRepaint( frame_area );
     if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
@@ -478,11 +494,13 @@ void BoxSwitchEffect::setInactive()
     {
     mActivated = false;
     effects->unrefTabBox();
-    if( mInput != None )
+    if( !mProxyActivated && mInput != None )
         {
         effects->destroyInputWindow( mInput );
         mInput = None;
         }
+    mProxyActivated = false;
+    mPositioningFactor = 0.5f;
     if( mMode == TabBoxWindowsMode || mMode == TabBoxWindowsAlternativeMode )
         {
         QHash< EffectWindow*, ItemInfo* >::const_iterator i;
@@ -519,7 +537,7 @@ void BoxSwitchEffect::setSelectedWindow( EffectWindow* w )
         effects->setElevatedWindow( selected_window, false );
         }
     selected_window = w;
-    if( selected_window )
+    if( selected_window && ( !mProxyActivated || mProxyShowText ) )
         thumbnailFrame.setText( selected_window->caption() );
     if( elevate_window && w )
         {
@@ -580,10 +598,12 @@ void BoxSwitchEffect::calculateFrameSize()
         }
     frame_area.setHeight( item_max_size.height() +
             separator_height + text_area.height());
+    if( mProxyActivated && !mProxyShowText )
+        frame_area.setHeight( item_max_size.height() );
     text_area.setWidth( frame_area.width() );
 
     frame_area.moveTo( screenr.x() + ( screenr.width() - frame_area.width()) / 2,
-        screenr.y() + ( screenr.height() - frame_area.height()) / 2 );
+        screenr.y() + ( screenr.height() - frame_area.height()) / 2 * mPositioningFactor * 2 );
     text_area.moveTo( frame_area.x(),
                       frame_area.y() + item_max_size.height() + separator_height);
 
@@ -596,7 +616,7 @@ void BoxSwitchEffect::calculateItemSizes()
         {
         qDeleteAll( windows );
         windows.clear();
-        if( mAnimateSwitch )
+        if( (mAnimateSwitch && !mProxyActivated) || (mProxyActivated && mProxyAnimateSwitch) )
             {
             int index = original_windows.indexOf( effects->currentTabBoxWindow() );
             int leftIndex = index;
@@ -1043,6 +1063,48 @@ void BoxSwitchEffect::paintWindowIcon( EffectWindow* w )
 
     windows[ w ]->iconFrame->setPosition( QPoint( x, y ));
     windows[ w ]->iconFrame->render( infiniteRegion(), 1.0, 0.75 );
+    }
+
+void* BoxSwitchEffect::proxy()
+    {
+    return &mProxy;
+    }
+
+void BoxSwitchEffect::activateFromProxy( int mode, bool animate, bool showText, float positioningFactor )
+    {
+    if( !mActivated )
+        {
+        mProxyActivated = true;
+        mProxyAnimateSwitch = animate;
+        mProxyShowText = showText;
+        mPositioningFactor = positioningFactor;
+        thumbnailFrame.setText(" ");
+        if( ( mode == TabBoxWindowsMode ) || ( mode == TabBoxWindowsAlternativeMode ) )
+            {
+            if( effects->currentTabBoxWindowList().count() > 0 )
+                {
+                mMode = mode;
+                effects->refTabBox();
+                highlight_is_set = false;
+                animation = false;
+                scheduled_directions.clear();
+                right_window = 0;
+                setActive();
+                }
+            }
+        else if( mode == TabBoxDesktopListMode || mode == TabBoxDesktopMode )
+            { // DesktopMode
+            if( effects->currentTabBoxDesktopList().count() > 0 )
+                {
+                mMode = mode;
+                painting_desktop = 0;
+                effects->refTabBox();
+                setActive();
+                }
+            }
+        if( !mActivated )
+            mProxyActivated = false;
+        }
     }
 
 BoxSwitchEffect::ItemInfo::ItemInfo()
