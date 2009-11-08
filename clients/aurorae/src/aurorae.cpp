@@ -563,35 +563,35 @@ int AuroraeClient::layoutMetric(LayoutMetric lm, bool respectWindowState,
     AuroraeFactory::instance()->frame()->getMargins(left, top, right, bottom);
     int borderLeft, borderRight, borderBottom;;
     switch (KDecoration::options()->preferredBorderSize(AuroraeFactory::instance())) {
-        case BorderTiny:
-            if (compositingActive()) {
-                borderLeft = qMin(0, (int)left - conf.borderLeft() - conf.paddingLeft());
-                borderRight = qMin(0, (int)right - conf.borderRight() - conf.paddingRight());
-                borderBottom = qMin(0, (int)bottom - conf.borderBottom() - conf.paddingBottom());
-            } else {
-                borderLeft = qMin(0, (int)left - conf.borderLeft());
-                borderRight = qMin(0, (int)right - conf.borderRight());
-                borderBottom = qMin(0, (int)bottom - conf.borderBottom());
-            }
-            break;
-        case BorderLarge:
-            borderLeft = borderRight = borderBottom = 4;
-            break;
-        case BorderVeryLarge:
-            borderLeft = borderRight = borderBottom = 8;
-            break;
-        case BorderHuge:
-            borderLeft = borderRight = borderBottom = 12;
-            break;
-        case BorderVeryHuge:
-            borderLeft = borderRight = borderBottom = 23;
-            break;
-        case BorderOversized:
-            borderLeft = borderRight = borderBottom = 36;
-            break;
-        case BorderNormal:
-        default:
-            borderLeft = borderRight = borderBottom =  0;
+    case BorderTiny:
+        if (compositingActive()) {
+            borderLeft = qMin(0, (int)left - conf.borderLeft() - conf.paddingLeft());
+            borderRight = qMin(0, (int)right - conf.borderRight() - conf.paddingRight());
+            borderBottom = qMin(0, (int)bottom - conf.borderBottom() - conf.paddingBottom());
+        } else {
+            borderLeft = qMin(0, (int)left - conf.borderLeft());
+            borderRight = qMin(0, (int)right - conf.borderRight());
+            borderBottom = qMin(0, (int)bottom - conf.borderBottom());
+        }
+        break;
+    case BorderLarge:
+        borderLeft = borderRight = borderBottom = 4;
+        break;
+    case BorderVeryLarge:
+        borderLeft = borderRight = borderBottom = 8;
+        break;
+    case BorderHuge:
+        borderLeft = borderRight = borderBottom = 12;
+        break;
+    case BorderVeryHuge:
+        borderLeft = borderRight = borderBottom = 23;
+        break;
+    case BorderOversized:
+        borderLeft = borderRight = borderBottom = 36;
+        break;
+    case BorderNormal:
+    default:
+        borderLeft = borderRight = borderBottom =  0;
     }
     switch (lm) {
     case LM_BorderLeft:
