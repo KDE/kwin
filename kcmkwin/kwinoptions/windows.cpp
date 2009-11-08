@@ -57,10 +57,6 @@
 #define KWIN_DELAYFOCUS            "DelayFocus"
 #define KWIN_CLICKRAISE            "ClickRaise"
 #define KWIN_MOVE_RESIZE_MAXIMIZED "MoveResizeMaximizedWindows"
-#define KWIN_ALTTABMODE            "AltTabStyle"
-#define KWIN_TRAVERSE_ALL          "TraverseAll"
-#define KWIN_SHOW_POPUP            "ShowPopup"
-#define KWIN_ROLL_OVER_DESKTOPS    "RollOverDesktops"
 #define KWIN_SHADEHOVER            "ShadeHover"
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
 #define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
@@ -262,56 +258,6 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
 
     lay->addWidget(fcsBox);
 
-
-
-
-
-    kbdBox = new KButtonGroup(this);
-    kbdBox->setTitle(i18nc("@title:group", "Window Switching"));
-    QVBoxLayout *kLay = new QVBoxLayout(kbdBox);
-
-    altTabPopup = new QCheckBox( i18n("Show window list while switching windows"), kbdBox );
-    kLay->addWidget( altTabPopup );
-
-    wtstr = i18n("Hold down the Alt key and press the Tab key repeatedly to walk"
-                 " through the windows on the current desktop (the Alt+Tab"
-                 " combination can be reconfigured).\n\n"
-                 "If this checkbox is checked"
-                 " a popup widget is shown, displaying the icons of all windows to"
-                 " walk through and the title of the currently selected one.\n\n"
-                 "Otherwise, the focus is passed to a new window each time Tab"
-                 " is pressed, with no popup widget.  In addition, the previously"
-                 " activated window will be sent to the back in this mode.");
-    altTabPopup->setWhatsThis( wtstr );
-    connect(focusCombo, SIGNAL(activated(int)), this, SLOT(updateAltTabMode()));
-    kLay->addWidget(altTabPopup);
-
-    traverseAll = new QCheckBox( i18n( "&Traverse windows on all desktops" ), kbdBox );
-    kLay->addWidget( traverseAll );
-
-    wtstr = i18n( "Leave this option disabled if you want to limit walking through"
-                  " windows to the current desktop." );
-    traverseAll->setWhatsThis( wtstr );
-    kLay->addWidget(traverseAll);
-
-    rollOverDesktops = new QCheckBox( i18n("Desktop navi&gation wraps around"), kbdBox );
-    kLay->addWidget(rollOverDesktops);
-
-    wtstr = i18n( "Enable this option if you want keyboard or active desktop border navigation beyond"
-                  " the edge of a desktop to take you to the opposite edge of the new desktop." );
-    rollOverDesktops->setWhatsThis( wtstr );
-    kLay->addWidget(rollOverDesktops);
-
-    showPopupinfo = new QCheckBox( i18n("Popup desktop name on desktop &switch"), kbdBox );
-    kLay->addWidget(showPopupinfo);
-
-    wtstr = i18n( "Enable this option if you wish to see the current desktop"
-                  " name popup whenever the current desktop is changed." );
-    showPopupinfo->setWhatsThis( wtstr );
-    kLay->addWidget(showPopupinfo);
-
-    lay->addWidget(kbdBox);
-
     lay->addStretch();
 
     // Any changes goes to slotChanged()
@@ -323,10 +269,6 @@ KFocusConfig::KFocusConfig (bool _standAlone, KConfig *_config, const KComponent
     connect(delayFocus, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(separateScreenFocus, SIGNAL(clicked()), SLOT(changed()));
     connect(activeMouseScreen, SIGNAL(clicked()), SLOT(changed()));
-    connect(altTabPopup, SIGNAL(clicked()), SLOT(changed()));
-    connect(traverseAll, SIGNAL(clicked()), SLOT(changed()));
-    connect(rollOverDesktops, SIGNAL(clicked()), SLOT(changed()));
-    connect(showPopupinfo, SIGNAL(clicked()), SLOT(changed()));
 
     load();
 }
@@ -343,13 +285,6 @@ void KFocusConfig::setFocus(int foc)
 
     // this will disable/hide the auto raise delay widget if focus==click
     focusPolicyChanged();
-    updateAltTabMode();
-}
-
-void KFocusConfig::updateAltTabMode()
-{
-    // not KDE-style Alt+Tab with unreasonable focus policies
-    altTabPopup->setEnabled( focusCombo->currentIndex() == 0 || focusCombo->currentIndex() == 1 );
 }
 
 void KFocusConfig::setAutoRaiseInterval(int tb)
@@ -443,22 +378,6 @@ void KFocusConfig::updateActiveMouseScreen()
         setActiveMouseScreen( focusCombo->currentIndex() != 0 );
 }
 
-void KFocusConfig::setAltTabMode(bool a) {
-    altTabPopup->setChecked(a);
-}
-
-void KFocusConfig::setTraverseAll(bool a) {
-    traverseAll->setChecked(a);
-}
-
-void KFocusConfig::setRollOverDesktops(bool a) {
-    rollOverDesktops->setChecked(a);
-}
-
-void KFocusConfig::setShowPopupinfo(bool a) {
-    showPopupinfo->setChecked(a);
-}
-
 void KFocusConfig::load( void )
 {
     QString key;
@@ -490,16 +409,6 @@ void KFocusConfig::load( void )
     setSeparateScreenFocus( cg.readEntry(KWIN_SEPARATE_SCREEN_FOCUS, false));
     // on by default for non click to focus policies
     setActiveMouseScreen( cg.readEntry(KWIN_ACTIVE_MOUSE_SCREEN, focusCombo->currentIndex() != 0 ));
-
-    key = cg.readEntry(KWIN_ALTTABMODE, "KDE");
-    setAltTabMode(key == "KDE");
-
-    setRollOverDesktops( cg.readEntry(KWIN_ROLL_OVER_DESKTOPS, true));
-
-    setShowPopupinfo( config->group("PopupInfo").readEntry(KWIN_SHOW_POPUP, false));
-
-    setTraverseAll( config->group("TabBox").readEntry(KWIN_TRAVERSE_ALL, false));
-
 
 //    setFocusStealing( cg.readEntry(KWIN_FOCUS_STEALING, 2 ));
     // TODO default to low for now
@@ -541,17 +450,6 @@ void KFocusConfig::save( void )
     cg.writeEntry(KWIN_SEPARATE_SCREEN_FOCUS, separateScreenFocus->isChecked());
     cg.writeEntry(KWIN_ACTIVE_MOUSE_SCREEN, activeMouseScreen->isChecked());
 
-    if (altTabPopup->isChecked())
-        cg.writeEntry(KWIN_ALTTABMODE, "KDE");
-    else
-        cg.writeEntry(KWIN_ALTTABMODE, "CDE");
-
-    cg.writeEntry( KWIN_ROLL_OVER_DESKTOPS, rollOverDesktops->isChecked());
-
-    config->group("PopupInfo").writeEntry( KWIN_SHOW_POPUP, showPopupinfo->isChecked());
-
-    config->group("TabBox").writeEntry( KWIN_TRAVERSE_ALL , traverseAll->isChecked());
-
     cg.writeEntry(KWIN_FOCUS_STEALING, focusStealing->currentIndex());
 
 
@@ -582,10 +480,6 @@ void KFocusConfig::defaults()
 
     // on by default for non click to focus policies
     setActiveMouseScreen( focusCombo->currentIndex() != 0 );
-    setAltTabMode(true);
-    setTraverseAll( false );
-    setRollOverDesktops(true);
-    setShowPopupinfo(false);
     setDelayFocusEnabled();
     emit KCModule::changed(true);
 }

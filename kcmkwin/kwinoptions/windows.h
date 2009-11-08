@@ -82,7 +82,6 @@ private slots:
   void autoRaiseOnTog(bool);//CT 23Oct1998
   void delayFocusOnTog(bool);
   void clickRaiseOnTog(bool);
-  void updateAltTabMode();
   void updateActiveMouseScreen();
 	void changed() { emit KCModule::changed(true); }
 
@@ -101,10 +100,6 @@ private:
   void setClickRaise(bool);
   void setSeparateScreenFocus(bool);
   void setActiveMouseScreen(bool);
-  void setAltTabMode(bool);
-  void setTraverseAll(bool);
-  void setRollOverDesktops(bool);
-  void setShowPopupinfo(bool);
 
   void setFocusStealing( int );
   KComboBox* focusStealing;
@@ -121,12 +116,6 @@ private:
   KIntNumInput *delayFocus;
   QCheckBox *separateScreenFocus;
   QCheckBox *activeMouseScreen;
-
-  KButtonGroup *kbdBox;
-  QCheckBox    *altTabPopup;
-  QCheckBox    *traverseAll;
-  QCheckBox    *rollOverDesktops;
-  QCheckBox    *showPopupinfo;
 
   KConfig *config;
   bool     standAlone;
