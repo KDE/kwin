@@ -178,6 +178,7 @@ void KWinDesktopConfig::init()
     connect( m_ui->popupInfoCheckBox, SIGNAL(toggled(bool)), SLOT(changed()));
     connect( m_ui->popupHideSpinBox, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect( m_ui->desktopLayoutIndicatorCheckBox, SIGNAL(stateChanged(int)), SLOT(changed()));
+    connect( m_ui->wrapAroundBox, SIGNAL(stateChanged(int)), SLOT(changed()));
     connect( m_editor, SIGNAL(keyChange()), SLOT(changed()));
     connect( m_ui->allShortcutsCheckBox, SIGNAL(stateChanged(int)), SLOT(slotShowAllShortcuts()));
     connect( m_ui->effectComboBox, SIGNAL(currentIndexChanged(int)), SLOT(changed()));
@@ -244,6 +245,8 @@ void KWinDesktopConfig::defaults()
 
     m_ui->effectComboBox->setCurrentIndex( 1 );
 
+    m_ui->wrapAroundBox->setChecked( true );
+
     m_editor->allDefault();
 
     emit changed(true);
@@ -272,6 +275,10 @@ void KWinDesktopConfig::load()
     m_ui->popupInfoCheckBox->setChecked( popupInfo.readEntry( "ShowPopup", false ));
     m_ui->popupHideSpinBox->setValue( popupInfo.readEntry( "PopupHideDelay", 1000 ));
     m_ui->desktopLayoutIndicatorCheckBox->setChecked( !popupInfo.readEntry( "TextOnly", false) );
+
+    // Wrap Around on screen edge
+    KConfigGroup windowConfig( m_config, "Windows" );
+    m_ui->wrapAroundBox->setChecked( windowConfig.readEntry<bool>( "RollOverDesktops", true ) );
 
     // Effect for desktop switching
     // Set current option to "none" if no plugin is activated.
@@ -325,6 +332,10 @@ void KWinDesktopConfig::save()
     popupInfo.writeEntry( "ShowPopup", m_ui->popupInfoCheckBox->isChecked() );
     popupInfo.writeEntry( "PopupHideDelay", m_ui->popupHideSpinBox->value() );
     popupInfo.writeEntry( "TextOnly", !m_ui->desktopLayoutIndicatorCheckBox->isChecked() );
+
+    // Wrap Around on screen edge
+    KConfigGroup windowConfig( m_config, "Windows" );
+    windowConfig.writeEntry( "RollOverDesktops", m_ui->wrapAroundBox->isChecked() );
 
     // Effect desktop switching
     KConfigGroup effectconfig( m_config, "Plugins" );

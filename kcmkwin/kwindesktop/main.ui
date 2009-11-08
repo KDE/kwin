@@ -132,6 +132,16 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
+        <widget class="QCheckBox" name="wrapAroundBox">
+         <property name="whatsThis">
+          <string>Enable this option if you want keyboard or active desktop border navigation beyond the edge of a desktop to take you to the opposite edge of the new desktop.</string>
+         </property>
+         <property name="text">
+          <string>Desktop navigation wraps around</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox_3">
          <property name="title">
           <string>Desktop Effect Animation</string>
