@@ -239,7 +239,7 @@ namespace Oxygen
       case LM_BorderBottom:
       {
         int border( 0 );
-        if( respectWindowState && maximized && lm != LM_BorderBottom )
+        if( respectWindowState && maximized )
         {
 
           border = 0;
