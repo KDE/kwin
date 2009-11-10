@@ -42,6 +42,7 @@ namespace OxygenConfig
   static const QString HIDE_TITLEBAR = "HideTitleBar";
   static const QString USE_ANIMATIONS = "UseAnimations";
   static const QString ANIMATIONS_DURATION = "AnimationsDuration";
+  static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
 
 }
 
@@ -143,6 +144,12 @@ namespace Oxygen
 
     virtual void setButtonSize( ButtonSize value )
     { buttonSize_ = value; }
+
+    virtual bool useNarrowButtonSpacing( void ) const
+    { return useNarrowButtonSpacing_; }
+
+    virtual void  setUseNarrowButtonSpacing( bool value )
+    { useNarrowButtonSpacing_ = value; }
 
     //@}
 
@@ -292,6 +299,9 @@ namespace Oxygen
 
     //! animations
     int animationsDuration_;
+
+    //! narrow button spacing
+    bool useNarrowButtonSpacing_;
 
   };
 

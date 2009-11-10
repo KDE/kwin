@@ -42,7 +42,8 @@ namespace Oxygen
     hideTitleBar_( false ),
     useOxygenShadows_( true ),
     useAnimations_( true ),
-    animationsDuration_( 150 )
+    animationsDuration_( 150 ),
+    useNarrowButtonSpacing_( false )
   {}
 
   //__________________________________________________
@@ -106,6 +107,11 @@ namespace Oxygen
     setAnimationsDuration( group.readEntry(
       OxygenConfig::ANIMATIONS_DURATION,
       defaultConfiguration.animationsDuration() ) );
+
+    // buttonSpacing
+    setUseNarrowButtonSpacing( group.readEntry(
+      OxygenConfig::NARROW_BUTTON_SPACING,
+      defaultConfiguration.useNarrowButtonSpacing() ) );
   }
 
   //__________________________________________________
@@ -124,6 +130,7 @@ namespace Oxygen
     group.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
     group.writeEntry( OxygenConfig::USE_ANIMATIONS, useAnimations() );
     group.writeEntry( OxygenConfig::ANIMATIONS_DURATION, animationsDuration() );
+    group.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, useNarrowButtonSpacing() );
   }
 
   //__________________________________________________
@@ -290,7 +297,8 @@ namespace Oxygen
       hideTitleBar() == other.hideTitleBar() &&
       useOxygenShadows() == other.useOxygenShadows() &&
       useAnimations() == other.useAnimations() &&
-      animationsDuration() == other.animationsDuration();
+      animationsDuration() == other.animationsDuration() &&
+      useNarrowButtonSpacing() == other.useNarrowButtonSpacing();
 
   }
 

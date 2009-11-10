@@ -229,6 +229,7 @@ namespace Oxygen
   {
 
     bool maximized( isMaximized() );
+    bool narrowSpacing( configuration().useNarrowButtonSpacing() );
     int frameBorder( configuration().frameBorder() );
     int buttonSize( configuration().hideTitleBar() ? 0 : configuration().buttonSize() );
 
@@ -273,7 +274,7 @@ namespace Oxygen
         if( frameBorder == OxygenConfiguration::BorderNone && configuration().hideTitleBar() )
         {
 
-            border = 0;
+          border = 0;
 
         } else if( !( respectWindowState && maximized )) {
 
@@ -295,7 +296,7 @@ namespace Oxygen
       {
         int border = 0;
         if( !(respectWindowState && maximized) )
-        { border = 6; }
+        { border = 4; }
 
         return border;
 
@@ -321,7 +322,7 @@ namespace Oxygen
       }
 
       case LM_ButtonSpacing:
-      return 1;
+      return narrowSpacing ? 1:3;
 
       case LM_ButtonMarginTop:
       return 0;
@@ -814,6 +815,15 @@ namespace Oxygen
       palette.color( widget->window()->backgroundRole() );
 
   }
+
+  //_________________________________________________________
+  QString OxygenClient::defaultButtonsLeft() const
+  { return KCommonDecoration::defaultButtonsLeft(); }
+
+
+  //_________________________________________________________
+  QString OxygenClient::defaultButtonsRight() const
+  { return "HIAX"; }
 
   //________________________________________________________________
   void OxygenClient::updateWindowShape()
