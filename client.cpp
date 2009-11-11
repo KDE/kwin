@@ -458,7 +458,15 @@ QRegion Client::decorationPendingRegion() const
 
 void Client::repaintDecorationPending()
     {
-    if (!compositing())
+    if (compositing()) 
+        {
+	// The scene will update the decoration pixmaps in the next painting pass
+	// if it has not been already repainted before
+	const QRegion r = paintRedirector->pendingRegion();
+	if (!r.isEmpty())
+	    Workspace::self()->addRepaint( r.translated( x() - padding_left, y() - padding_top ) );
+        }
+    else
         ensureDecorationPixmapsPainted();
     }
 
