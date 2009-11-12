@@ -47,6 +47,8 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
     connect(m_ui->checkAnimateStart, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkAnimateStop, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkReflection, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->colorFront, SIGNAL(changed(const QColor&)), this, SLOT(changed()));
+    connect(m_ui->colorRear, SIGNAL(changed(const QColor&)), this, SLOT(changed()));
     connect(m_ui->checkWindowTitle, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkThumbnails, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->checkDynamicThumbnails, SIGNAL(stateChanged(int)), this, SLOT(changed()));
@@ -72,6 +74,8 @@ void CoverSwitchEffectConfig::load()
     m_ui->checkAnimateStart->setChecked( conf.readEntry( "AnimateStart", true ));
     m_ui->checkAnimateStop->setChecked( conf.readEntry( "AnimateStop", true ));
     m_ui->checkReflection->setChecked( conf.readEntry( "Reflection", true ));
+    m_ui->colorFront->setColor( conf.readEntry( "MirrorFrontColor", QColor(0,0,0) ));
+    m_ui->colorRear->setColor( conf.readEntry( "MirrorRearColor", QColor(0,0,0) ));
     m_ui->checkWindowTitle->setChecked( conf.readEntry( "WindowTitle", true ));
     m_ui->checkThumbnails->setChecked( conf.readEntry( "Thumbnails", true ));
     m_ui->checkDynamicThumbnails->setChecked( conf.readEntry( "DynamicThumbnails", true ));
@@ -92,6 +96,8 @@ void CoverSwitchEffectConfig::save()
     conf.writeEntry( "AnimateStart", m_ui->checkAnimateStart->isChecked() );
     conf.writeEntry( "AnimateStop", m_ui->checkAnimateStop->isChecked() );
     conf.writeEntry( "Reflection", m_ui->checkReflection->isChecked() );
+    conf.writeEntry( "MirrorFrontColor", m_ui->colorFront->color() );
+    conf.writeEntry( "MirrorRearColor", m_ui->colorRear->color() );
     conf.writeEntry( "WindowTitle", m_ui->checkWindowTitle->isChecked() );
     conf.writeEntry( "Thumbnails", m_ui->checkThumbnails->isChecked() );
     conf.writeEntry( "DynamicThumbnails", m_ui->checkDynamicThumbnails->isChecked() );
@@ -111,6 +117,8 @@ void CoverSwitchEffectConfig::defaults()
     m_ui->checkAnimateStart->setCheckState( Qt::Checked );
     m_ui->checkAnimateStop->setCheckState( Qt::Checked );
     m_ui->checkReflection->setCheckState( Qt::Checked );
+    m_ui->colorFront->setColor( QColor(0,0,0) );
+    m_ui->colorRear->setColor( QColor(0,0,0) );
     m_ui->checkWindowTitle->setCheckState( Qt::Checked );
     m_ui->checkThumbnails->setCheckState( Qt::Checked );
     m_ui->checkDynamicThumbnails->setCheckState( Qt::Checked );

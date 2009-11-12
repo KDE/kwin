@@ -6,197 +6,257 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>492</width>
-    <height>236</height>
+    <width>453</width>
+    <height>264</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Zoom</string>
+  <layout class="QVBoxLayout" name="verticalLayout_5">
+   <item>
+    <widget class="QCheckBox" name="checkWindowTitle">
+     <property name="text">
+      <string>Display window &amp;titles</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_8">
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>Near</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>Far</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="QSlider" name="zPositionSlider">
-        <property name="toolTip">
-         <string>Define how far away the windows should appear</string>
-        </property>
-        <property name="maximum">
-         <number>3000</number>
-        </property>
-        <property name="singleStep">
-         <number>100</number>
-        </property>
-        <property name="pageStep">
-         <number>500</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksBelow</enum>
-        </property>
-        <property name="tickInterval">
-         <number>200</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <property name="shortcut">
+      <string/>
+     </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Thumbnail Bar</string>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Zoom</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="zPositionSlider">
+       <property name="toolTip">
+        <string>Define how far away the windows should appear</string>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>100</number>
+       </property>
+       <property name="pageStep">
+        <number>500</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksBelow</enum>
+       </property>
+       <property name="tickInterval">
+        <number>200</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Near</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Far</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0" colspan="2">
-       <widget class="QCheckBox" name="checkThumbnails">
-        <property name="text">
-         <string>Use additional thumbnail bar</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QCheckBox" name="checkDynamicThumbnails">
-        <property name="toolTip">
-         <string>Only show thumbnail bar if there are at least specified number of windows</string>
-        </property>
-        <property name="text">
-         <string>Dynamic mode</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="labelThumbnailWindows">
-        <property name="text">
-         <string>Number of windows:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>spinThumbnailWindows</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="KIntSpinBox" name="spinThumbnailWindows"/>
-      </item>
-     </layout>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Animation</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QCheckBox" name="checkAnimateSwitch">
+         <property name="text">
+          <string>Animate switch</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkAnimateStart">
+         <property name="text">
+          <string>Animation on tab box open</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkAnimateStop">
+         <property name="text">
+          <string>Animation on tab box close</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Animation duration:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>spinDuration</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="KIntSpinBox" name="spinDuration">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="specialValueText">
+            <string comment="Duration of rotation">Default</string>
+           </property>
+           <property name="maximum">
+            <number>5000</number>
+           </property>
+           <property name="singleStep">
+            <number>10</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Thumbnail Bar</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QCheckBox" name="checkThumbnails">
+         <property name="text">
+          <string>Use additional thumbnail bar</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkDynamicThumbnails">
+         <property name="toolTip">
+          <string>Only show thumbnail bar if there are at least specified number of windows</string>
+         </property>
+         <property name="text">
+          <string>Dynamic mode</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="labelThumbnailWindows">
+           <property name="text">
+            <string>Number of windows:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>spinThumbnailWindows</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="KIntSpinBox" name="spinThumbnailWindows"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Reflections</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QCheckBox" name="checkReflection">
+         <property name="text">
+          <string>Reflections</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout_3">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::FieldsStayAtSizeHint</enum>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Rear color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="KColorButton" name="colorRear"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Front color</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="KColorButton" name="colorFront"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="3">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Appearance</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0" colspan="2">
-       <widget class="QCheckBox" name="checkAnimateSwitch">
-        <property name="text">
-         <string>Animate switch</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QCheckBox" name="checkAnimateStart">
-        <property name="text">
-         <string>Animation on tab box open</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="QCheckBox" name="checkAnimateStop">
-        <property name="text">
-         <string>Animation on tab box close</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QCheckBox" name="checkReflection">
-        <property name="text">
-         <string>Reflections</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="KIntSpinBox" name="spinDuration">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="specialValueText">
-         <string comment="Duration of rotation">Default</string>
-        </property>
-        <property name="maximum">
-         <number>5000</number>
-        </property>
-        <property name="singleStep">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Animation duration:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>spinDuration</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0" colspan="2">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="checkWindowTitle">
-        <property name="text">
-         <string>Display window &amp;titles</string>
-        </property>
-        <property name="shortcut">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="1">
+   <item>
     <spacer name="verticalSpacer_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -217,18 +277,125 @@
    <extends>QSpinBox</extends>
    <header>knuminput.h</header>
   </customwidget>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
+  </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>checkAnimateSwitch</tabstop>
-  <tabstop>checkAnimateStart</tabstop>
-  <tabstop>checkAnimateStop</tabstop>
-  <tabstop>checkReflection</tabstop>
-  <tabstop>spinDuration</tabstop>
-  <tabstop>checkThumbnails</tabstop>
-  <tabstop>checkDynamicThumbnails</tabstop>
-  <tabstop>spinThumbnailWindows</tabstop>
-  <tabstop>zPositionSlider</tabstop>
- </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>checkReflection</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>colorFront</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>60</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>110</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkReflection</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>colorRear</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>102</x>
+     <y>51</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>284</x>
+     <y>72</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkReflection</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>202</x>
+     <y>78</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkReflection</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>175</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>209</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkThumbnails</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>checkDynamicThumbnails</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>103</x>
+     <y>58</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>107</x>
+     <y>74</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkThumbnails</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelThumbnailWindows</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>181</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>259</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkThumbnails</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spinThumbnailWindows</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>324</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

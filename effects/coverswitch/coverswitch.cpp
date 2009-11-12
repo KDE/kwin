@@ -91,6 +91,17 @@ void CoverSwitchEffect::reconfigure( ReconfigureFlags )
     timeLine.setDuration( animationDuration );
     primaryTabBox = conf.readEntry( "TabBox", false );
     secondaryTabBox = conf.readEntry( "TabBoxAlternative", false );
+    QColor tmp        = conf.readEntry( "MirrorFrontColor", QColor(0,0,0) );
+    mirrorColor[0][0] = tmp.redF();
+    mirrorColor[0][1] = tmp.greenF();
+    mirrorColor[0][2] = tmp.blueF();
+    mirrorColor[0][3] = 1.0;
+    tmp               = conf.readEntry( "MirrorRearColor", QColor(0,0,0) );
+    mirrorColor[1][0] = tmp.redF();
+    mirrorColor[1][1] = tmp.greenF();
+    mirrorColor[1][2] = tmp.blueF();
+    mirrorColor[1][3] = -1.0;
+    
     }
 
 void CoverSwitchEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -260,12 +271,12 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
                 (float)area.width()*reflectionScaleFactor, area.height(), -5000,
                 -(float)area.width()*reflectionScaleFactor, area.height(), -5000 };
             // foreground
-            float alpha = 1.0;
             if( start )
-                alpha = timeLine.value();
+                mirrorColor[0][3] = timeLine.value();
             else if( stop )
-                alpha = 1.0 - timeLine.value();
-            glColor4f( 0.0, 0.0, 0.0, alpha );
+                mirrorColor[0][3] = 1.0 - timeLine.value();
+            glColor4fv( mirrorColor[0] );
+            mirrorColor[0][3] = 1.0;
 
             int y = 0;
             // have to adjust the y values to fit OpenGL
@@ -288,8 +299,7 @@ void CoverSwitchEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
             glVertex3f( vertices[0], vertices[1], vertices[2] );
             glVertex3f( vertices[3], vertices[4], vertices[5] );
             // rearground
-            alpha = -1.0;
-            glColor4f( 0.0, 0.0, 0.0, alpha );
+            glColor4fv( mirrorColor[1] );
             glVertex3f( vertices[6], vertices[7], vertices[8] );
             glVertex3f( vertices[9], vertices[10], vertices[11] );
             glEnd();
