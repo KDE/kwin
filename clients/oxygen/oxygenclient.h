@@ -192,10 +192,12 @@ namespace Oxygen
         virtual void renderTitleOutline( QPainter*, const QRect&, const QPalette& ) const;
 
         //! title text
-        virtual void renderTitleText( QPainter*, const QRect&, QColor ) const;
+        /*! second color, if valid, is for contrast pixel */
+        virtual void renderTitleText( QPainter*, const QRect&, const QColor&, const QColor& = QColor() ) const;
 
         //! title text
-        virtual void renderTitleText( QPainter*, const QRect&, const QString&, const QColor& ) const;
+        /*! second color, if valid, is for contrast pixel */
+        virtual void renderTitleText( QPainter*, const QRect&, const QString&, const QColor&, const QColor& = QColor() ) const;
 
         //! render float frame
         virtual void renderFloatFrame( QPainter*, const QRect&, const QPalette& ) const;
@@ -243,6 +245,12 @@ namespace Oxygen
 
         //! text color
         QColor titlebarTextColor(const QPalette&, bool active);
+
+        //! text color
+        QColor titlebarContrastColor(const QPalette&);
+
+        //! text color
+        QColor titlebarContrastColor(const QPalette&, bool active);
 
         //!@name size grip
         //@{

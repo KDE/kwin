@@ -391,6 +391,21 @@ namespace Oxygen
 
   }
 
+
+  //_________________________________________________________
+  QColor OxygenClient::titlebarContrastColor(const QPalette &palette)
+  {
+    if( timeLineIsRunning() ) return KColorUtils::mix(
+      titlebarContrastColor( palette, false ),
+      titlebarContrastColor( palette, true ),
+      opacity() );
+    else return titlebarContrastColor( palette, isActive() );
+  }
+
+  //_________________________________________________________
+  QColor OxygenClient::titlebarContrastColor(const QPalette &palette, bool active)
+  { return helper().calcLightColor( palette.color( widget()->window()->backgroundRole() ) ); }
+
   //_________________________________________________________
   void OxygenClient::renderWindowBackground( QPainter* painter, const QRect& rect, const QWidget* widget, const QPalette& palette ) const
   {
@@ -611,29 +626,53 @@ namespace Oxygen
   }
 
   //_________________________________________________________
-  void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, QColor color ) const
+  void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, const QColor& color, const QColor& contrast ) const
   {
 
     if( titleTimeLineIsRunning() )
     {
 
-      if( !oldCaption().isEmpty() ) renderTitleText( painter, rect, oldCaption(), helper().alphaColor( color, 1.0 - titleOpacity() ) );
-      if( !caption().isEmpty() ) renderTitleText( painter, rect, caption(), helper().alphaColor( color, titleOpacity() ) );
+      if( !oldCaption().isEmpty() ) {
+
+        renderTitleText(
+          painter, rect, oldCaption(),
+          helper().alphaColor( color, 1.0 - titleOpacity() ),
+          contrast.isValid() ? helper().alphaColor( contrast, 1.0 - titleOpacity() ):contrast );
+
+      }
+
+      if( !caption().isEmpty() ) {
+
+        renderTitleText(
+          painter, rect, caption(),
+          helper().alphaColor( color, titleOpacity() ),
+          contrast.isValid() ? helper().alphaColor( contrast, titleOpacity() ):contrast );
+
+      }
 
     } else if( !caption().isEmpty() ) {
 
-      renderTitleText( painter, rect, caption(), color );
+      renderTitleText( painter, rect, caption(), color, contrast );
 
     }
 
   }
 
   //_______________________________________________________________________
-  void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, const QString& caption, const QColor& color ) const
+  void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, const QString& caption, const QColor& color, const QColor& contrast ) const
   {
 
     Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
     QString local( QFontMetrics( painter->font() ).elidedText( caption, Qt::ElideRight, rect.width() ) );
+
+    if( contrast.isValid() )
+    {
+      painter->setPen( contrast );
+      painter->translate( 0, 1 );
+      painter->drawText( rect, alignment, local );
+      painter->translate( 0, -1 );
+    }
+
     painter->setPen( color );
     painter->drawText( rect, alignment, local );
 
@@ -983,7 +1022,9 @@ namespace Oxygen
         }
 
         // title text
-        renderTitleText( &painter, boundingRect, titlebarTextColor( backgroundPalette( widget(), palette ) ) );
+        renderTitleText( &painter, boundingRect,
+          titlebarTextColor( palette ),
+          titlebarContrastColor( palette ) );
 
         // separator
         if( drawSeparator() ) renderSeparator(&painter, frame, widget(), color );
