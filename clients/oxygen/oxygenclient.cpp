@@ -394,16 +394,6 @@ namespace Oxygen
 
   //_________________________________________________________
   QColor OxygenClient::titlebarContrastColor(const QPalette &palette)
-  {
-    if( timeLineIsRunning() ) return KColorUtils::mix(
-      titlebarContrastColor( palette, false ),
-      titlebarContrastColor( palette, true ),
-      opacity() );
-    else return titlebarContrastColor( palette, isActive() );
-  }
-
-  //_________________________________________________________
-  QColor OxygenClient::titlebarContrastColor(const QPalette &palette, bool active)
   { return helper().calcLightColor( palette.color( widget()->window()->backgroundRole() ) ); }
 
   //_________________________________________________________
