@@ -229,7 +229,7 @@ class Options : public KDecorationOptions
             MouseNextDesktop, MousePreviousDesktop,
             MouseAbove, MouseBelow,
             MouseOpacityMore, MouseOpacityLess,
-            MouseClose,
+            MouseClose, MouseLeftGroupWindow, MouseRightGroupWindow,
             MouseNothing
             };
 
@@ -237,7 +237,7 @@ class Options : public KDecorationOptions
             {
             MouseWheelRaiseLower, MouseWheelShadeUnshade, MouseWheelMaximizeRestore,
             MouseWheelAboveBelow, MouseWheelPreviousNextDesktop,
-            MouseWheelChangeOpacity,
+            MouseWheelChangeOpacity, MouseWheelChangeGroupWindow,
             MouseWheelNothing
             };
 

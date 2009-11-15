@@ -340,6 +340,7 @@ Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
     if (lowerName == "above/below") return MouseWheelAboveBelow;
     if (lowerName == "previous/next desktop") return MouseWheelPreviousNextDesktop;
     if (lowerName == "change opacity") return MouseWheelChangeOpacity;
+    if (lowerName == "switch to group window to the left/right") return MouseWheelChangeGroupWindow;
     return MouseWheelNothing;
     }
 
@@ -411,6 +412,8 @@ Options::MouseCommand Options::wheelToMouseCommand( MouseWheelCommand com, int d
             return delta > 0 ? MousePreviousDesktop : MouseNextDesktop;
         case MouseWheelChangeOpacity:
             return delta > 0 ? MouseOpacityMore : MouseOpacityLess;
+        case MouseWheelChangeGroupWindow:
+            return delta > 0 ? MouseLeftGroupWindow : MouseRightGroupWindow;
         default:
             return MouseNothing;
         }

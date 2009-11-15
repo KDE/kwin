@@ -184,6 +184,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   comboW->addItem(i18n("Keep Above/Below"));  
   comboW->addItem(i18n("Move to Previous/Next Desktop"));  
   comboW->addItem(i18n("Change Opacity"));  
+  comboW->addItem(i18n("Switch to Group Window to the Left/Right"));
   comboW->addItem(i18n("Nothing"));  
   comboW->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
   connect(comboW, SIGNAL(activated(int)), SLOT(changed()));
@@ -474,6 +475,7 @@ const char* tbl_TiWAc[] = {
     "Above/Below",
     "Previous/Next Desktop",
     "Change Opacity",
+    "Switch to Group Window to the Left/Right",
     "Nothing",
     "" };
 
@@ -484,6 +486,7 @@ const char* tbl_AllW[] = {
     "Above/Below",
     "Previous/Next Desktop",
     "Change Opacity",
+    "Switch to Group Window to the Left/Right",
     "Nothing",
     "" };
 
@@ -841,6 +844,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   combo->addItem(i18n("Keep Above/Below"));  
   combo->addItem(i18n("Move to Previous/Next Desktop"));  
   combo->addItem(i18n("Change Opacity"));  
+  combo->addItem(i18n("Switch to Group Window to the Left/Right"));
   combo->addItem(i18n("Nothing"));  
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAllW =  combo;
