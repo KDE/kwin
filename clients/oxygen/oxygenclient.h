@@ -35,7 +35,8 @@
 
 #include <kcommondecoration.h>
 #include <QtCore/QTimeLine>
-#include <QtCore/QSharedPointer>
+#include <QBasicTimer>
+#include <QTimerEvent>
 
 namespace Oxygen
 {
@@ -183,7 +184,6 @@ namespace Oxygen
         void setForceActive( bool value )
         { forceActive_ = value; }
 
-
         //!@name event filters
         //@{
 
@@ -210,6 +210,9 @@ namespace Oxygen
 
         //! drop event
         virtual bool dropEvent( QDropEvent* );
+
+        //! timer event
+        virtual void timerEvent( QTimerEvent* );
 
         //@}
 
@@ -381,6 +384,13 @@ namespace Oxygen
 
         //! drag start point
         QPoint dragPoint_;
+
+        //! drag start timer.
+        /*!
+        it is needed to activate animations when this was not done via either
+        dragMoveEvent or dragLeaveEvent
+        */
+        QBasicTimer dragStartTimer_;
 
     };
 

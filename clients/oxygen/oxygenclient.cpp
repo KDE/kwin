@@ -1474,6 +1474,7 @@ namespace Oxygen
       // because overlapping pixmap and pointer slows down the pixmap alot.
       drag->setHotSpot( QPoint( event->pos().x() - geometry.left(), -1 ) );
 
+      dragStartTimer_.start( 50, this );
       drag->exec( Qt::MoveAction );
 
       // detach tab from window
@@ -1534,6 +1535,7 @@ namespace Oxygen
     if( itemData_.animationType() & AnimationSameTarget )
     {
 
+      if( dragStartTimer_.isActive() ) dragStartTimer_.stop();
       itemData_.animate( AnimationTypes(AnimationLeave|AnimationSameTarget), sourceItem_ );
 
     } else if( itemData_.animated() ) {
@@ -1561,6 +1563,8 @@ namespace Oxygen
       itemData_.animate( AnimationMove, itemClicked( position, true ) );
 
     } else if( itemData_.count() > 1 )  {
+
+      if( dragStartTimer_.isActive() ) dragStartTimer_.stop();
 
       QPoint position( event->pos() );
       int itemClicked( OxygenClient::itemClicked( position, false ) );
@@ -1609,6 +1613,21 @@ namespace Oxygen
     }
 
     return true;
+
+  }
+
+  //_____________________________________________________________
+  void OxygenClient::timerEvent( QTimerEvent* event )
+  {
+
+    if( event->timerId() != dragStartTimer_.timerId() )
+    { return KCommonDecorationUnstable::timerEvent( event ); }
+
+    dragStartTimer_.stop();
+
+    // do nothing if there is only one tab
+    if( itemData_.count() > 1 )
+    { itemData_.animate( AnimationTypes( AnimationLeave|AnimationSameTarget ), sourceItem_ ); }
 
   }
 
