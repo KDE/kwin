@@ -43,6 +43,7 @@ namespace Oxygen
     useOxygenShadows_( true ),
     useAnimations_( true ),
     animationsDuration_( 150 ),
+    tabsEnabled_( true ),
     useNarrowButtonSpacing_( false )
   {}
 
@@ -108,10 +109,16 @@ namespace Oxygen
       OxygenConfig::ANIMATIONS_DURATION,
       defaultConfiguration.animationsDuration() ) );
 
+    // tabbing
+    setTabsEnabled( group.readEntry(
+      OxygenConfig::TABS_ENABLED,
+      defaultConfiguration.tabsEnabled() ) );
+
     // buttonSpacing
     setUseNarrowButtonSpacing( group.readEntry(
       OxygenConfig::NARROW_BUTTON_SPACING,
       defaultConfiguration.useNarrowButtonSpacing() ) );
+
   }
 
   //__________________________________________________
@@ -130,7 +137,9 @@ namespace Oxygen
     group.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
     group.writeEntry( OxygenConfig::USE_ANIMATIONS, useAnimations() );
     group.writeEntry( OxygenConfig::ANIMATIONS_DURATION, animationsDuration() );
+    group.writeEntry( OxygenConfig::TABS_ENABLED, tabsEnabled() );
     group.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, useNarrowButtonSpacing() );
+
   }
 
   //__________________________________________________
@@ -298,6 +307,7 @@ namespace Oxygen
       useOxygenShadows() == other.useOxygenShadows() &&
       useAnimations() == other.useAnimations() &&
       animationsDuration() == other.animationsDuration() &&
+      tabsEnabled() == other.tabsEnabled() &&
       useNarrowButtonSpacing() == other.useNarrowButtonSpacing();
 
   }

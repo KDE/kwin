@@ -63,10 +63,6 @@ namespace Oxygen
     //! destructor
     QSize sizeHint() const;
 
-    //! reset
-    void reset(long unsigned int)
-    {repaint();}
-
     //! button type
     ButtonType type( void ) const
     { return type_; }
@@ -75,6 +71,9 @@ namespace Oxygen
     /*! returns true if value was actually changed */
     void setForceInactive( const bool& value )
     { forceInactive_ = value; }
+
+    //! configuration reset
+    virtual void reset( unsigned long );
 
     protected:
 

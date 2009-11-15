@@ -122,6 +122,8 @@ Workspace::Workspace( bool restore )
     , advanced_popup( 0 )
     , trans_popup( 0 )
     , desk_popup( 0 )
+    , add_tabs_popup( 0 )
+    , switch_to_tab_popup( 0 )
     , keys( 0 )
     , client_keys( NULL )
     , client_keys_dialog( NULL )
@@ -1070,6 +1072,13 @@ void Workspace::slotReconfigure()
             it != clients.constEnd();
             ++it )
             (*it)->updateDecoration( true, true );
+        // If the new decoration doesn't supports tabs then ungroup clients
+        if( !decorationSupportsClientGrouping() )
+            {
+            QList<ClientGroup*> tmpGroups = clientGroups; // Prevent crashing
+            for( QList<ClientGroup*>::const_iterator i = tmpGroups.begin(); i != tmpGroups.end(); i++ )
+                (*i)->removeAll();
+            }
         mgr->destroyPreviousPlugin();
         }
     else
@@ -2853,6 +2862,19 @@ void Workspace::checkCursorPos()
         static_cast<EffectsHandlerImpl*>( effects )->mouseChanged( cursorPos(), last,
             x11ToQtMouseButtons( last_buttons ), x11ToQtMouseButtons( lastb ),
             x11ToQtKeyboardModifiers( last_buttons ), x11ToQtKeyboardModifiers( lastb ));
+    }
+
+int Workspace::indexOfClientGroup( ClientGroup* group )
+    {
+    return clientGroups.indexOf( group );
+    }
+
+void Workspace::moveItemToClientGroup( ClientGroup* oldGroup, int oldIndex,
+    ClientGroup* group, int index )
+    {
+    Client* c = oldGroup->clients().at( oldIndex );
+    oldGroup->remove( c );
+    group->add( c, index, true );
     }
 
 } // namespace

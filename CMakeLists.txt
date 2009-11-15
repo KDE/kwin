@@ -59,6 +59,7 @@ endif( KWIN_HAVE_COMPOSITING )
 set(kwin_KDEINIT_SRCS
    workspace.cpp 
    client.cpp 
+   clientgroup.cpp
    placement.cpp 
    atoms.cpp 
    utils.cpp 

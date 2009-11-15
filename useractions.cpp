@@ -167,6 +167,27 @@ QMenu* Workspace::clientPopup()
         mShadeOpAction->setCheckable( true );
         mShadeOpAction->setData( Options::ShadeOp );
 
+        popup->addSeparator();
+
+        // Actions for window tabbing
+        if( decorationSupportsClientGrouping() )
+            {
+            mRemoveTabGroup = popup->addAction( i18n("Remove &from group") );
+            kaction = qobject_cast<KAction*>( keys->action("Remove TabGroup") );
+            if( kaction!=0 )
+                mRemoveTabGroup->setShortcut( kaction->globalShortcut().primary() );
+            mRemoveTabGroup->setData( Options::RemoveClientFromGroupOp );
+
+            mCloseGroup = popup->addAction( i18n("Close entire &group") );
+            mCloseGroup->setIcon( KIcon( "window-close" ) );
+            kaction = qobject_cast<KAction*>( keys->action("Close TabGroup") );
+            if( kaction!=0 )
+                mCloseGroup->setShortcut( kaction->globalShortcut().primary() );
+            mCloseGroup->setData( Options::CloseClientGroupOp );
+
+            popup->addSeparator();
+            }
+
         action = popup->addMenu( advanced_popup );
         action->setText( i18n("Ad&vanced") );
 
@@ -196,6 +217,8 @@ void Workspace::discardPopup()
     delete popup;
     popup = NULL; 
     desk_popup = NULL;
+    switch_to_tab_popup = NULL;
+    add_tabs_popup = NULL;
     }
 
 void Workspace::setPopupClientOpacity( QAction* action )
@@ -240,6 +263,22 @@ void Workspace::clientPopupAboutToShow()
     mNoBorderOpAction->setChecked( active_popup_client->noBorder() );
     mMinimizeOpAction->setEnabled( active_popup_client->isMinimizable() );
     mCloseOpAction->setEnabled( active_popup_client->isCloseable() );
+
+    delete switch_to_tab_popup;
+    switch_to_tab_popup = 0;
+    delete add_tabs_popup;
+    add_tabs_popup = 0;
+    if( decorationSupportsClientGrouping() )
+        {
+        const int tabGroupSize = active_popup_client->clientGroup()->items().count();
+        if( tabGroupSize > 1 )
+            initSwitchToTab();
+        initAddToTabGroup();
+
+        mRemoveTabGroup->setVisible( tabGroupSize > 1 );
+        mCloseGroup->setVisible( tabGroupSize > 1 );
+        }
+
     if( trans_popup != NULL )
         {
         foreach( QAction* action, trans_popup->actions())
@@ -252,6 +291,118 @@ void Workspace::clientPopupAboutToShow()
         }
     }
 
+void Workspace::initSwitchToTab()
+    {
+    if( switch_to_tab_popup )
+        return;
+    switch_to_tab_popup = new QMenu( popup );
+    switch_to_tab_popup->setFont( KGlobalSettings::menuFont() );
+    connect( switch_to_tab_popup, SIGNAL( triggered( QAction* ) ),
+             this, SLOT( slotSwitchToTab( QAction* ) ) );
+    connect( switch_to_tab_popup, SIGNAL( aboutToShow() ),
+             this, SLOT( switchToTabPopupAboutToShow() ) );
+
+    QAction* action = switch_to_tab_popup->menuAction();
+    popup->insertAction( mRemoveTabGroup, action );
+    action->setText( i18n("Switch to group window") );
+    }
+
+void Workspace::slotSwitchToTab( QAction* action )
+    {
+    int side = action->data().toInt();
+    int c_id = active_popup_client->clientGroup()->indexOfClient( active_popup_client );
+    int size = active_popup_client->clientGroup()->clients().count();
+    if( side == 0 ) // Left
+        {
+        if( c_id > 0 )
+            active_popup_client->clientGroup()->setVisible( c_id - 1 );
+        else
+            active_popup_client->clientGroup()->setVisible( size - 1 );
+        }
+    else if( side == 1 ) // Right
+        {
+        if( c_id < size - 1 )
+            active_popup_client->clientGroup()->setVisible( c_id + 1 );
+        else
+            active_popup_client->clientGroup()->setVisible( 0 );
+        }
+    else // Find the client
+        {
+        side -= 2;
+        for( QList<ClientGroup*>::const_iterator i = clientGroups.begin(); i != clientGroups.end(); ++i )
+            {
+            if( (*i)->contains( active_popup_client ))
+                {
+                (*i)->setVisible( side );
+                break;
+                }
+            }
+        }
+    }
+
+void Workspace::switchToTabPopupAboutToShow()
+    {
+    if( !switch_to_tab_popup )
+        return;
+    switch_to_tab_popup->clear();
+    QAction* action = switch_to_tab_popup->addAction( i18n( "To the left" ));
+    action->setData( 0 );
+    action = switch_to_tab_popup->addAction( i18n( "To the right" ));
+    action->setData( 1 );
+    switch_to_tab_popup->addSeparator();
+    int index = 2;
+    foreach( Client* c, active_popup_client->clientGroup()->clients() )
+        {
+        if( c != active_popup_client )
+            {
+            action = switch_to_tab_popup->addAction( c->caption() );
+            action->setData( index );
+            }
+        index++;
+        }
+
+    }
+
+void Workspace::initAddToTabGroup()
+    {
+    if( add_tabs_popup )
+        return;
+    add_tabs_popup = new QMenu( popup );
+    add_tabs_popup->setFont( KGlobalSettings::menuFont() );
+    connect( add_tabs_popup, SIGNAL( triggered( QAction* ) ),
+             this, SLOT( slotAddToTabGroup( QAction* ) ) ); // Merge to a group
+    connect( add_tabs_popup, SIGNAL( aboutToShow() ),
+             this, SLOT( groupTabPopupAboutToShow() ) ); // Show the possible groups to add
+
+    QAction* action = add_tabs_popup->menuAction();
+    popup->insertAction( mRemoveTabGroup, action );
+    action->setText( i18n("Move window to group") );
+    }
+
+void Workspace::slotAddToTabGroup( QAction* action )
+    {
+    if( !action->data().isValid() )
+        return;
+    moveItemToClientGroup( active_popup_client->clientGroup(),
+        active_popup_client->clientGroup()->indexOfClient( active_popup_client ),
+        clientGroups[action->data().toInt()], -1 );
+    }
+
+void Workspace::groupTabPopupAboutToShow()
+    {
+    if( !add_tabs_popup )
+        return;
+    add_tabs_popup->clear();
+    int index = 0;
+    for( QList<ClientGroup*>::const_iterator i = clientGroups.begin(); i != clientGroups.end(); i++, index++ )
+        {
+        if( !(*i)->contains( active_popup_client ))
+            {
+            QAction* action = add_tabs_popup->addAction( (*i)->visible()->caption() );
+            action->setData( index );
+            }
+        }
+    }
 
 void Workspace::initDesktopPopup()
     {
@@ -380,6 +531,22 @@ void Workspace::readShortcuts()
         {
         cutWalkThroughWindowsReverse = kaction->globalShortcut();
         connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkBackThroughWindowsKeyChanged(QKeySequence)));
+        }
+
+    kaction = qobject_cast<KAction*>( keys->action("Walk Through Group Windows") );
+    if( kaction != 0 )
+        {
+        cutWalkThroughGroupWindows = kaction->globalShortcut();
+        connect( kaction, SIGNAL( globalShortcutChanged( QKeySequence ) ), this,
+        SLOT( slotMoveToTabRightKeyChanged( QKeySequence ) ) );
+        }
+
+    kaction = qobject_cast<KAction*>( keys->action("Walk Through Group Windows (Reverse)") );
+    if( kaction != 0 )
+        {
+        cutWalkThroughGroupWindowsReverse = kaction->globalShortcut();
+        connect( kaction, SIGNAL( globalShortcutChanged( QKeySequence ) ), this,
+        SLOT( slotMoveToTabLeftKeyChanged( QKeySequence ) ) );
         }
 
     kaction = qobject_cast<KAction*>( keys->action("Walk Through Windows Alternative") );
@@ -582,6 +749,31 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
             break;
         case Options::NoOp:
             break;
+        case Options::RemoveClientFromGroupOp:
+            c->clientGroup()->remove( c );
+            break;
+        case Options::MoveClientInGroupLeftOp:
+            {
+            int c_id = c->clientGroup()->indexOfClient( c );
+            int size = c->clientGroup()->clients().count();
+            if( c_id > 0 )
+                c->clientGroup()->setVisible( c_id - 1 );
+            else
+                c->clientGroup()->setVisible( size - 1 );
+            break;
+            }
+        case Options::MoveClientInGroupRightOp:
+            {
+            int c_id = c->clientGroup()->indexOfClient( c );
+            int size = c->clientGroup()->clients().count();
+            if( c_id < size - 1 )
+                c->clientGroup()->setVisible( c_id + 1 );
+            else
+                c->clientGroup()->setVisible( 0 );
+            break;
+            }
+        case Options::CloseClientGroupOp:
+            c->clientGroup()->closeAll();
         }
     }
 
@@ -1154,6 +1346,36 @@ void Workspace::slotWindowToDesktopDown()
         }
     }
 
+void Workspace::slotSwitchToTabRight()
+    {
+    if( !active_client )
+        return;
+    int c_id = active_client->clientGroup()->indexOfClient( active_client );
+    int size = active_client->clientGroup()->clients().count();
+    if( c_id < size - 1 )
+        active_client->clientGroup()->setVisible( c_id + 1 );
+    else
+        active_client->clientGroup()->setVisible( 0 );
+    }
+
+void Workspace::slotSwitchToTabLeft()
+    {
+    if( !active_client )
+        return;
+    int c_id = active_client->clientGroup()->indexOfClient( active_client );
+    int size = active_client->clientGroup()->clients().count();
+    if( c_id > 0 )
+        active_client->clientGroup()->setVisible( c_id - 1 );
+    else
+        active_client->clientGroup()->setVisible( size - 1 );
+    }
+
+void Workspace::slotRemoveFromGroup()
+    {
+    if( !active_client )
+        return;
+    active_client->clientGroup()->remove( active_client );
+    }
 
 /*!
   Kill Window feature, similar to xkill

@@ -31,7 +31,6 @@
 
 #include <cassert>
 #include <KColorUtils>
-#include <KDebug>
 #include <QtGui/QPainter>
 
 namespace Oxygen
@@ -44,7 +43,6 @@ namespace Oxygen
     activeShadowConfiguration_( OxygenShadowConfiguration( QPalette::Active ) ),
     inactiveShadowConfiguration_( OxygenShadowConfiguration( QPalette::Inactive ) )
   {
-    kDebug(1212) << endl;
     shadowCache_.setMaxCost( 1<<6 );
     animatedShadowCache_.setMaxCost( maxIndex_<<6 );
   }
@@ -393,7 +391,7 @@ namespace Oxygen
   index(0)
   {
 
-    active = client->isActive();
+    active = client->isActive() || client->isForcedActive();
     useOxygenShadows = client->configuration().useOxygenShadows();
     isShade = client->isShade();
     hasTitleOutline = client->configuration().drawTitleOutline();

@@ -97,6 +97,7 @@ Client::Client( Workspace* ws )
     , delayedMoveResizeTimer( NULL )
     , in_group( NULL )
     , window_group( None )
+    , client_group( NULL )
     , in_layer( UnknownLayer )
     , ping_timer( NULL )
     , process_killer( NULL )
@@ -244,6 +245,8 @@ void Client::releaseWindow( bool on_shutdown )
     XUnmapWindow( display(), frameId()); // Destroying decoration would cause ugly visual effect
     destroyDecoration();
     cleanGrouping();
+    if( clientGroup() )
+        clientGroup()->remove( this );
     if( !on_shutdown )
         {
         workspace()->removeClient( this, Allowed );
@@ -306,6 +309,8 @@ void Client::destroyClient()
     workspace()->clientHidden( this );
     destroyDecoration();
     cleanGrouping();
+    if( clientGroup() )
+        clientGroup()->remove( this );
     workspace()->removeClient( this, Allowed );
     client = None; // invalidate
     XDestroyWindow( display(), wrapper );
@@ -656,7 +661,7 @@ bool Client::noBorder() const
 
 bool Client::userCanSetNoBorder() const
     {
-    return !isFullScreen() && !isShade();
+    return !isFullScreen() && !isShade() && ( clientGroup() == NULL || !(clientGroup()->items().count() > 1));
     }
 
 void Client::setNoBorder( bool set )
@@ -849,6 +854,10 @@ void Client::minimize( bool avoid_animation )
     workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
     if( effects && !avoid_animation ) // TODO: Shouldn't it tell effects at least about the change?
         static_cast<EffectsHandlerImpl*>(effects)->windowMinimized( effectWindow());
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 void Client::unminimize( bool avoid_animation )
@@ -864,6 +873,10 @@ void Client::unminimize( bool avoid_animation )
     updateWindowRules();
     if( effects && !avoid_animation )
         static_cast<EffectsHandlerImpl*>( effects )->windowUnminimized( effectWindow() );
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 QRect Client::iconGeometry() const
@@ -967,6 +980,10 @@ void Client::setShade( ShadeMode mode )
     workspace()->updateMinimizedOfTransients( this );
     decoration->shadeChange();
     updateWindowRules();
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 void Client::shadeHover()
@@ -996,7 +1013,7 @@ void Client::updateVisibility()
     {
     if( deleting )
         return;
-    if( hidden )
+    if( hidden && ( clientGroup() == NULL || clientGroup()->visible() == this ))
         {
         info->setState( NET::Hidden, NET::Hidden );
         setSkipTaskbar( true, false ); // Also hide from taskbar
@@ -1006,7 +1023,8 @@ void Client::updateVisibility()
             internalHide( Allowed );
         return;
         }
-    setSkipTaskbar( original_skip_taskbar, false ); // Reset from 'hidden'
+    if( clientGroup() == NULL || clientGroup()->visible() == this )
+        setSkipTaskbar( original_skip_taskbar, false ); // Reset from 'hidden'
     if( minimized )
         {
         info->setState( NET::Hidden, NET::Hidden );
@@ -1396,6 +1414,10 @@ void Client::setDesktop( int desktop )
     workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
     updateVisibility();
     updateWindowRules();
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 /**
@@ -1418,6 +1440,10 @@ void Client::setOnAllDesktops( bool b )
         setDesktop( NET::OnAllDesktops );
     else
         setDesktop( workspace()->currentDesktop());
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 /**
@@ -1568,7 +1594,10 @@ void Client::setCaption( const QString& _s, bool force )
             info->setVisibleIconName( ( cap_iconic + cap_suffix ).toUtf8() );
 
         if( isManaged() && decoration != NULL )
+            {
+            client_group->updateItems();
             decoration->captionChange();
+            }
         }
     }
 
@@ -1604,6 +1633,37 @@ void Client::fetchIconicName()
 QString Client::caption( bool full ) const
     {
     return full ? cap_normal + cap_suffix : cap_normal;
+    }
+
+void Client::dontMoveResize()
+    {
+    buttonDown = false;
+    stopDelayedMoveResize();
+    if( moveResizeMode )
+        finishMoveResize( false );
+    }
+
+void Client::setClientShown( bool shown )
+    {
+    if( !shown )
+        {
+        unmap( Allowed );
+        hidden = true;
+        //updateVisibility();
+        //updateAllowedActions();
+        workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
+        addWorkspaceRepaint( visibleRect() );
+        }
+    else
+        {
+        map( Allowed );
+        hidden = false;
+        updateVisibility();
+        //updateAllowedActions();
+        takeFocus( Allowed );
+        autoRaise();
+        workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
+        }
     }
 
 void Client::getWMHints()

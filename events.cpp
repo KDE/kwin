@@ -1367,6 +1367,8 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
             QPoint mousepos( x_root - x, y_root - y );
             mode = mousePosition( mousepos );
             }
+        else if( workspace()->decorationSupportsClientGrouping() )
+            return false;
         updateCursor();
         }
     return true;

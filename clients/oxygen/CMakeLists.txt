@@ -9,6 +9,7 @@ set(kwin_oxygen_SRCS
      oxygen.cpp
      oxygenbutton.cpp
      oxygenclient.cpp
+     oxygenclientgroupitemdata.cpp
      oxygenconfiguration.cpp
      oxygenexception.cpp
      oxygenexceptionlist.cpp

@@ -42,6 +42,7 @@ namespace OxygenConfig
   static const QString HIDE_TITLEBAR = "HideTitleBar";
   static const QString USE_ANIMATIONS = "UseAnimations";
   static const QString ANIMATIONS_DURATION = "AnimationsDuration";
+  static const QString TABS_ENABLED = "TabsEnabled";
   static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
 
 }
@@ -265,6 +266,14 @@ namespace Oxygen
     virtual void setAnimationsDuration( int value )
     { animationsDuration_ = value; }
 
+    //! tabbing
+    virtual bool tabsEnabled( void ) const
+    { return tabsEnabled_; }
+
+    //! tabbing
+    virtual void setTabsEnabled( bool value )
+    { tabsEnabled_ = value; }
+
     private:
 
     //! title alignment
@@ -299,6 +308,9 @@ namespace Oxygen
 
     //! animations
     int animationsDuration_;
+
+    //! tabbing
+    bool tabsEnabled_;
 
     //! narrow button spacing
     bool useNarrowButtonSpacing_;

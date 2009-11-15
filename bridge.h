@@ -76,6 +76,20 @@ class Bridge : public KDecorationBridgeUnstable
         virtual void grabXServer( bool grab );
 
         virtual bool compositingActive() const;
+
+        // Window tabbing
+        virtual bool isClientGroupActive();
+        virtual QList< ClientGroupItem > clientGroupItems() const;
+        virtual int itemId( int index );
+        virtual int visibleClientGroupItem();
+        virtual void setVisibleClientGroupItem( int index );
+        virtual void moveItemInClientGroup( int index, int before );
+        virtual void moveItemToClientGroup( int itemId, int before );
+        virtual void removeFromClientGroup( int index, const QRect& newGeom );
+        virtual void closeClientGroupItem( int index );
+        virtual void closeAllInClientGroup();
+        virtual void displayClientMenu( int index, const QPoint& pos );
+
     private:
         Client* c;
     };

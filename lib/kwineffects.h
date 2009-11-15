@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 106
+#define KWIN_EFFECT_API_VERSION_MINOR 107
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -393,6 +393,9 @@ class KWIN_EXPORT Effect
         virtual void windowActivated( EffectWindow* c );
         virtual void windowMinimized( EffectWindow* c );
         virtual void windowUnminimized( EffectWindow* c );
+        virtual void clientGroupItemSwitched( EffectWindow* from, EffectWindow* to );
+        virtual void clientGroupItemAdded( EffectWindow* from, EffectWindow* to ); // from merged with to
+        virtual void clientGroupItemRemoved( EffectWindow* c, EffectWindow* group ); // c removed from group
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void desktopChanged( int old );
         virtual void windowDamaged( EffectWindow* w, const QRect& r );
@@ -956,6 +959,8 @@ class KWIN_EXPORT EffectWindow
         virtual void minimize() const = 0;
         virtual void unminimize() const = 0;
         virtual void closeWindow() const = 0;
+
+        virtual bool visibleInClientGroup() const = 0;
     };
 
 class KWIN_EXPORT EffectWindowGroup

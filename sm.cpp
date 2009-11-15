@@ -127,6 +127,10 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             cg.writeEntry( QString("windowType")+n, windowTypeToTxt( c->windowType()));
             cg.writeEntry( QString("shortcut")+n, c->shortcut().toString());
             cg.writeEntry( QString("stackingOrder")+n, unconstrained_stacking_order.indexOf( c ));
+            int group = 0;
+            if( c->clientGroup() )
+                group = c->clientGroup()->clients().count() > 1 ? (int) c->clientGroup() : 0;
+            cg.writeEntry( QString("clientGroup")+n, group );
             }
         }
     if( phase == SMSavePhase0 )
@@ -193,6 +197,8 @@ void Workspace::loadSessionInfo()
         info->shortcut = cg.readEntry( QString("shortcut")+n, QString() );
         info->active = ( active_client == i );
         info->stackingOrder = cg.readEntry( QString("stackingOrder")+n, -1 );
+        info->clientGroup = cg.readEntry( QString("clientGroup")+n, 0 );
+        info->clientGroupClient = NULL;
         }
     }
 
@@ -266,6 +272,13 @@ SessionInfo* Workspace::takeSessionInfo( Client* c )
                 }
             }
         }
+
+    // Set clientGroupClient for other clients in the same group
+    if( realInfo && realInfo->clientGroup )
+        foreach( SessionInfo* info, session )
+            if( !info->clientGroupClient && info->clientGroup == realInfo->clientGroup )
+                info->clientGroupClient = c;
+
     return realInfo;
     }
 

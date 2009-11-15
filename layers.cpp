@@ -820,6 +820,10 @@ void Client::setKeepAbove( bool b )
         decoration->emitKeepAboveChanged( keepAbove());
     workspace()->updateClientLayer( this );
     updateWindowRules();
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 void Client::setKeepBelow( bool b )
@@ -839,6 +843,10 @@ void Client::setKeepBelow( bool b )
         decoration->emitKeepBelowChanged( keepBelow());
     workspace()->updateClientLayer( this );
     updateWindowRules();
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 Layer Client::layer() const

@@ -34,6 +34,8 @@ class QSocketNotifier;
 namespace KWin
 {
 
+class Client;
+
 struct SessionInfo
     {
     QByteArray sessionId;
@@ -62,6 +64,9 @@ struct SessionInfo
     bool active; // means 'was active in the saved session'
     int stackingOrder;
     float opacity;
+    int clientGroup; // Unique identifier for the client group that this window is in
+
+    Client* clientGroupClient; // The first client created that has an identical identifier
     };
 
 

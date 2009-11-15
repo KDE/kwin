@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Tabstrip
+Name[x-test]=xxTabstripxx
+X-KDE-Library=kwin3_tabstrip

@@ -155,6 +155,18 @@ void Effect::windowUnminimized( EffectWindow* )
     {
     }
 
+void Effect::clientGroupItemSwitched( EffectWindow* from, EffectWindow* to )
+    {
+    }
+
+void Effect::clientGroupItemAdded( EffectWindow* from, EffectWindow* to )
+    {
+    }
+
+void Effect::clientGroupItemRemoved( EffectWindow* c, EffectWindow* group )
+    {
+    }
+
 void Effect::windowInputMouseEvent( Window, QEvent* )
     {
     }

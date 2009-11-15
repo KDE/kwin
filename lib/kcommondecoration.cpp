@@ -1279,5 +1279,67 @@ bool KCommonDecorationUnstable::compositingActive() const
     return static_cast<const KDecorationUnstable*>( decoration() )->compositingActive();
     }
 
+// Window tabbing
+
+bool KCommonDecorationUnstable::isClientGroupActive()
+    {
+    return static_cast<const KDecorationUnstable*>( decoration() )->isClientGroupActive();
+    }
+
+QList< ClientGroupItem > KCommonDecorationUnstable::clientGroupItems() const
+    {
+    return static_cast<const KDecorationUnstable*>( decoration() )->clientGroupItems();
+    }
+
+int KCommonDecorationUnstable::itemId( int index )
+    {
+    return static_cast<const KDecorationUnstable*>( decoration() )->itemId( index );
+    }
+
+int KCommonDecorationUnstable::visibleClientGroupItem()
+    {
+    return static_cast<const KDecorationUnstable*>( decoration() )->visibleClientGroupItem();
+    }
+
+void KCommonDecorationUnstable::setVisibleClientGroupItem( int index )
+    {
+    static_cast<const KDecorationUnstable*>( decoration() )->setVisibleClientGroupItem( index );
+    }
+
+void KCommonDecorationUnstable::moveItemInClientGroup( int index, int before )
+    {
+    static_cast<const KDecorationUnstable*>( decoration() )->moveItemInClientGroup( index, before );
+    }
+
+void KCommonDecorationUnstable::moveItemToClientGroup( int itemId, int before )
+    {
+    static_cast<const KDecorationUnstable*>( decoration() )->moveItemToClientGroup( itemId, before );
+    }
+
+void KCommonDecorationUnstable::removeFromClientGroup( int index, const QRect& newGeom )
+    {
+    static_cast<const KDecorationUnstable*>( decoration() )->removeFromClientGroup( index, newGeom );
+    }
+
+void KCommonDecorationUnstable::closeClientGroupItem( int index )
+    {
+    static_cast<const KDecorationUnstable*>( decoration() )->closeClientGroupItem( index );
+    }
+
+void KCommonDecorationUnstable::closeAllInClientGroup()
+    {
+    static_cast<const KDecorationUnstable*>( decoration() )->closeAllInClientGroup();
+    }
+
+void KCommonDecorationUnstable::displayClientMenu( int index, const QPoint& pos )
+    {
+    static_cast<const KDecorationUnstable*>( decoration() )->displayClientMenu( index, pos );
+    }
+
+bool KCommonDecorationUnstable::eventFilter( QObject* o, QEvent* e )
+    {
+    return KCommonDecoration::eventFilter( o, e );
+    }
+
 // kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle;
 

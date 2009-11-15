@@ -44,7 +44,9 @@ enum ButtonType {
     AboveButton,
     BelowButton,
     ShadeButton,
-    NumButtons
+    NumButtons,
+    ItemCloseButton=100, // Close only one tab
+    ItemMenuButton // shows the window menu for one tab
 };
 
 class KCommonDecorationButton;
@@ -378,6 +380,21 @@ class KWIN_EXPORT KCommonDecorationUnstable
         KCommonDecorationUnstable(KDecorationBridge* bridge, KDecorationFactory* factory);
         virtual ~KCommonDecorationUnstable();
         bool compositingActive() const;
+
+        // Window tabbing
+        bool isClientGroupActive();
+        QList< ClientGroupItem > clientGroupItems() const;
+        int itemId( int index );
+        int visibleClientGroupItem();
+        void setVisibleClientGroupItem( int index );
+        void moveItemInClientGroup( int index, int before );
+        void moveItemToClientGroup( int itemId, int before = -1 );
+        void removeFromClientGroup( int index, const QRect& newGeom = QRect() );
+        void closeClientGroupItem( int index );
+        void closeAllInClientGroup();
+        void displayClientMenu( int index, const QPoint& pos );
+
+        virtual bool eventFilter( QObject* o, QEvent* e );
     };
 
 /**

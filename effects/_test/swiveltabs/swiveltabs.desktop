@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Swivel Tabs
+Name[x-test]=xxSwivel Tabsxx
+Icon=preferences-system-windows-effect-swiveltabs
+Comment=Make the windows turn when switching tabs
+Comment[x-test]=xxMake the windows turn when switching tabsxx
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Jorge Mata
+X-KDE-PluginInfo-Email=matamax123@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_swiveltabs
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Focus
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins

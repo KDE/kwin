@@ -28,12 +28,14 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <kcommondecoration.h>
-#include <QtCore/QTimeLine>
-
 #include "oxygen.h"
+#include "oxygenclientgroupitemdata.h"
 #include "oxygenconfiguration.h"
 #include "lib/helper.h"
+
+#include <kcommondecoration.h>
+#include <QtCore/QTimeLine>
+#include <QtCore/QSharedPointer>
 
 namespace Oxygen
 {
@@ -71,6 +73,10 @@ namespace Oxygen
         //! return true if timeLine is running
         bool timeLineIsRunning( void ) const
         { return timeLine_.state() == QTimeLine::Running; }
+
+        //! true when decoration is forced active
+        bool isForcedActive( void ) const
+        { return forceActive_ && clientGroupItems().count() > 1; }
 
         //! true when separator is to be drawn
         bool drawSeparator( void ) const
@@ -124,18 +130,18 @@ namespace Oxygen
         virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
 
         //! get title bounding rect
-        virtual QRect titleBoundingRect( QPainter* painter, const QString& caption ) const
-        { return titleBoundingRect( painter, titleRect(), caption ); }
+        virtual QRect titleBoundingRect( const QFont& font, const QString& caption ) const
+        { return titleBoundingRect( font, titleRect(), caption ); }
 
         //! get title bounding rect
-        virtual QRect titleBoundingRect( QPainter*, const QRect&, const QString& ) const;
+        virtual QRect titleBoundingRect( const QFont&, QRect, const QString& ) const;
 
         //! palette background
         QPalette backgroundPalette( const QWidget*, QPalette ) const;
 
         //! background
         QColor backgroundColor( const QWidget* widget, QPalette palette ) const
-        { return backgroundColor( widget, palette, isActive() ); }
+        { return backgroundColor( widget, palette, isActive() || isForcedActive() ); }
 
         //! background
         QColor backgroundColor( const QWidget*, QPalette, bool ) const;
@@ -165,15 +171,47 @@ namespace Oxygen
 
         //@}
 
-        public slots:
+        //! event filter
+        virtual bool eventFilter( QObject*, QEvent* );
 
-        //! reset configuration
-        void resetConfiguration( void );
+        //! resize event
+        virtual void resizeEvent(QResizeEvent *e);
 
         protected:
 
+        //! true when decoration is forced active
+        void setForceActive( bool value )
+        { forceActive_ = value; }
+
+
+        //!@name event filters
+        //@{
+
         //! paint
         virtual void paintEvent( QPaintEvent* );
+
+        //! mouse press event
+        virtual bool mousePressEvent( QMouseEvent* );
+
+        //! mouse release event
+        virtual bool mouseReleaseEvent( QMouseEvent* );
+
+        //! mouse move event
+        virtual bool mouseMoveEvent( QMouseEvent* );
+
+        //! drag enter event
+        virtual bool dragEnterEvent( QDragEnterEvent* );
+
+        //! drag move event
+        virtual bool dragMoveEvent( QDragMoveEvent* );
+
+        //! drag leave event
+        virtual bool dragLeaveEvent( QDragLeaveEvent* );
+
+        //! drop event
+        virtual bool dropEvent( QDropEvent* );
+
+        //@}
 
         //!@name rendering methods (called in paintEvent)
         //@{
@@ -199,6 +237,12 @@ namespace Oxygen
         /*! second color, if valid, is for contrast pixel */
         virtual void renderTitleText( QPainter*, const QRect&, const QString&, const QColor&, const QColor& = QColor() ) const;
 
+        //! GroupItem
+        virtual void renderItem( QPainter*, int, const QPalette& );
+
+        //! tabbing target rect
+        virtual void renderTargetRect( QPainter*, const QPalette& );
+
         //! render float frame
         virtual void renderFloatFrame( QPainter*, const QRect&, const QPalette& ) const;
 
@@ -206,6 +250,16 @@ namespace Oxygen
         virtual void renderDots( QPainter*, const QRect&, const QColor& ) const;
 
         //@}
+
+        //! close tab matching give button
+        virtual bool closeItem( const OxygenButton* );
+
+        //! index of item matching point
+        int itemClicked( const QPoint& position, bool between = false ) const
+        { return itemData_.itemAt( position , between ); }
+
+        //! return pixmap corresponding to a given tab, for dragging
+        QPixmap itemDragPixmap( int, const QRect& );
 
         //! title timeline
         bool titleTimeLineIsRunning( void ) const
@@ -247,7 +301,12 @@ namespace Oxygen
         QColor titlebarTextColor(const QPalette&, bool active);
 
         //! text color
-        QColor titlebarContrastColor(const QPalette&);
+        QColor titlebarContrastColor(const QPalette& palette ) const
+        { return titlebarContrastColor( palette.color( widget()->window()->backgroundRole() ) ); }
+
+        //! text color
+        QColor titlebarContrastColor(const QColor& color ) const
+        { return helper().calcLightColor( color ); }
 
         //!@name size grip
         //@{
@@ -274,6 +333,17 @@ namespace Oxygen
         void updateOldCaption( void )
         { setOldCaption( caption() ); }
 
+        //! set target item to -1
+        void clearTargetItem( void );
+
+        //! clear force active flag
+        void clearForceActive( void )
+        { if( isActive() ) setForceActive( false ); }
+
+        //! title bounding rects
+        /*! calculate and return title bounding rects in case of tabbed window */
+        void updateItemBoundingRects( bool alsoUpdate = true );
+
         private:
 
         //! factory
@@ -296,6 +366,21 @@ namespace Oxygen
 
         //! true when initialized
         bool initialized_;
+
+        //! true when decoration is forced active
+        bool forceActive_;
+
+        //! mouse button
+        Qt::MouseButton mouseButton_;
+
+        //! tab bounding rects
+        ClientGroupItemDataList itemData_;
+
+        //! index of tab being dragged if any, -1 otherwise
+        int sourceItem_;
+
+        //! drag start point
+        QPoint dragPoint_;
 
     };
 

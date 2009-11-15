@@ -60,6 +60,7 @@ class TabBox;
 }
 
 class Client;
+class ClientGroup;
 class DesktopChangeOSD;
 class RootInfo;
 class PluginMgr;
@@ -314,6 +315,15 @@ class Workspace : public QObject, public KDecorationDefines
         void unrefTabBox();
         void closeTabBox();
 
+        // Tabbing
+        void addClientGroup( ClientGroup* group );
+        void removeClientGroup( ClientGroup* group );
+        /// Returns the index of c in clientGroupList.
+        int indexOfClientGroup( ClientGroup* group );
+        /// Change the client c_id to the group with index g_id
+        void moveItemToClientGroup( ClientGroup* oldGroup, int oldIndex, ClientGroup* group, int index = -1 );
+        QList<ClientGroup*> clientGroups; // List of existing clients groups with no special order
+
         /**
          * Returns the list of clients sorted in stacking order, with topmost client
          * at the last position
@@ -371,6 +381,7 @@ class Workspace : public QObject, public KDecorationDefines
 
         bool hasDecorationShadows() const;
         bool decorationHasAlpha() const;
+        bool decorationSupportsClientGrouping() const; // Returns true if the decoration supports tabs.
 
         // D-Bus interface
         void cascadeDesktop();
@@ -588,6 +599,8 @@ class Workspace : public QObject, public KDecorationDefines
         void slotWalkBackThroughDesktopListKeyChanged( const QKeySequence& seq );
         void slotWalkThroughWindowsKeyChanged( const QKeySequence& seq );
         void slotWalkBackThroughWindowsKeyChanged( const QKeySequence& seq );
+        void slotMoveToTabLeftKeyChanged( const QKeySequence& seq );
+        void slotMoveToTabRightKeyChanged( const QKeySequence& seq );
         void slotWalkThroughWindowsAlternativeKeyChanged( const QKeySequence& seq );
         void slotWalkBackThroughWindowsAlternativeKeyChanged( const QKeySequence& seq );
 
@@ -636,7 +649,15 @@ class Workspace : public QObject, public KDecorationDefines
         void suspendCompositing();
         void suspendCompositing( bool suspend );
 
+        void slotSwitchToTabLeft(); // Slot to move left the active Client.
+        void slotSwitchToTabRight(); // Slot to move right the active Client.
+        void slotRemoveFromGroup(); // Slot to remove the active client from its group.
+
     private slots:
+        void groupTabPopupAboutToShow(); // Popup to add to another group
+        void switchToTabPopupAboutToShow(); // Popup to move in the group
+        void slotAddToTabGroup( QAction* ); // Add client to a group
+        void slotSwitchToTab( QAction* ); // Change the tab
         void desktopPopupAboutToShow();
         void clientPopupAboutToShow();
         void slotSendToDesktop( QAction* );
@@ -820,6 +841,7 @@ class Workspace : public QObject, public KDecorationDefines
         KShortcut cutWalkThroughDesktops, cutWalkThroughDesktopsReverse;
         KShortcut cutWalkThroughDesktopList, cutWalkThroughDesktopListReverse;
         KShortcut cutWalkThroughWindows, cutWalkThroughWindowsReverse;
+        KShortcut cutWalkThroughGroupWindows, cutWalkThroughGroupWindowsReverse;
         KShortcut cutWalkThroughWindowsAlternative, cutWalkThroughWindowsAlternativeReverse;
         bool mouse_emulation;
         unsigned int mouse_emulation_state;
@@ -833,6 +855,8 @@ class Workspace : public QObject, public KDecorationDefines
         QMenu* advanced_popup;
         QMenu* trans_popup;
         QMenu* desk_popup;
+        QMenu* add_tabs_popup; // Menu to add the group to other group
+        QMenu* switch_to_tab_popup; // Menu to change tab
 
         void modalActionsSwitch( bool enabled );
 
@@ -848,11 +872,16 @@ class Workspace : public QObject, public KDecorationDefines
         QAction* mNoBorderOpAction;
         QAction* mMinimizeOpAction;
         QAction* mCloseOpAction;
+        QAction* mRemoveTabGroup; // Remove client from group
+        QAction* mCloseGroup; // Close all clients in the group
         ShortcutDialog* client_keys_dialog;
         Client* client_keys_client;
         KActionCollection* disable_shortcuts_keys;
         bool global_shortcuts_disabled;
         bool global_shortcuts_disabled_for_client;
+
+        void initAddToTabGroup(); // Load options for menu add_tabs_popup
+        void initSwitchToTab(); // Load options for menu switch_to_tab_popup
 
         PluginMgr* mgr;
 
@@ -1220,6 +1249,21 @@ inline bool Workspace::hasDecorationShadows() const
 inline bool Workspace::decorationHasAlpha() const
     {
     return mgr->factory()->supports( AbilityUsesAlphaChannel );
+    }
+
+inline bool Workspace::decorationSupportsClientGrouping() const
+    {
+    return mgr->factory()->supports( AbilityClientGrouping );
+    }
+
+inline void Workspace::addClientGroup( ClientGroup* group )
+    {
+    clientGroups.append( group );
+    }
+
+inline void Workspace::removeClientGroup( ClientGroup* group )
+    {
+    clientGroups.removeAll( group );
     }
 
 } // namespace

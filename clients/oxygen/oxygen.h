@@ -62,7 +62,6 @@ namespace Oxygen
     // shows the window menu for one tab
     ButtonItemMenu
 
-
   };
 
   Q_DECLARE_FLAGS(ButtonTypes, ButtonType)
@@ -81,10 +80,6 @@ namespace Oxygen
     */
     HFRAMESIZE = 4
   };
-
-  #if !KDE_IS_VERSION(4,3,90)
-  enum{ SettingCompositing = 1 << 6 };
-  #endif
 
   //! window decoration factory
   class OxygenFactory: public QObject, public KDecorationFactoryUnstable
@@ -124,18 +119,13 @@ namespace Oxygen
     //! get configuration for a give client
     virtual OxygenConfiguration configuration( const OxygenClient& );
 
-    signals:
-
-    //! configuration has changed
-    void configurationChanged( void );
-
     private:
 
     //! read configuration from KConfig
     bool readConfig();
 
     //! default configuration
-    const OxygenConfiguration& defaultConfiguration( void )
+    const OxygenConfiguration& defaultConfiguration( void ) const
     { return defaultConfiguration_; }
 
     //! initialization

@@ -147,6 +147,9 @@ class EffectsHandlerImpl : public EffectsHandler
         void windowActivated( EffectWindow* c );
         void windowMinimized( EffectWindow* c );
         void windowUnminimized( EffectWindow* c );
+        void clientGroupItemSwitched( EffectWindow* from, EffectWindow* to );
+        void clientGroupItemAdded( EffectWindow* from, EffectWindow* to );
+        void clientGroupItemRemoved( EffectWindow* c, EffectWindow* group );
         void desktopChanged( int old );
         void windowDamaged( EffectWindow* w, const QRect& r );
         void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
@@ -263,6 +266,8 @@ class EffectWindowImpl : public EffectWindow
         virtual void minimize() const;
         virtual void unminimize() const;
         virtual void closeWindow() const;
+
+        virtual bool visibleInClientGroup() const;
 
         const Toplevel* window() const;
         Toplevel* window();

@@ -261,6 +261,24 @@ void EffectsHandlerImpl::windowUnminimized( EffectWindow* c )
         ep.second->windowUnminimized( c );
     }
 
+void EffectsHandlerImpl::clientGroupItemSwitched( EffectWindow* from, EffectWindow* to )
+    {
+    foreach( const EffectPair &ep, loaded_effects )
+        ep.second->clientGroupItemSwitched( from, to );
+    }
+
+void EffectsHandlerImpl::clientGroupItemAdded( EffectWindow* from, EffectWindow* to )
+    {
+    foreach( const EffectPair &ep, loaded_effects )
+        ep.second->clientGroupItemAdded( from, to );
+    }
+
+void EffectsHandlerImpl::clientGroupItemRemoved( EffectWindow* c, EffectWindow* group )
+    {
+    foreach( const EffectPair &ep, loaded_effects )
+        ep.second->clientGroupItemRemoved( c, group );
+    }
+
 void EffectsHandlerImpl::desktopChanged( int old )
     {
     foreach( const EffectPair &ep, loaded_effects )
@@ -1493,6 +1511,13 @@ void EffectWindowImpl::closeWindow() const
         {
         c->closeWindow();
         }
+    }
+
+bool EffectWindowImpl::visibleInClientGroup() const
+    {
+    if( Client* c = dynamic_cast< Client* >( toplevel ))
+        return c == c->clientGroup()->visible();
+    return false;
     }
 
 EffectWindow* effectWindow( Toplevel* w )

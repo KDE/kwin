@@ -60,11 +60,7 @@ namespace Oxygen
 
   //___________________________________________________
   KDecoration* OxygenFactory::createDecoration(KDecorationBridge* bridge )
-  {
-    OxygenClient* client( new OxygenClient( bridge, this ) );
-    connect( this, SIGNAL( configurationChanged() ), client, SLOT( resetConfiguration() ) );
-    return client->decoration();
-  }
+  { return (new OxygenClient( bridge, this ))->decoration(); }
 
   //___________________________________________________
   bool OxygenFactory::reset(unsigned long changed)
@@ -75,7 +71,6 @@ namespace Oxygen
     bool configuration_changed = readConfig();
     setInitialized( true );
 
-    emit configurationChanged();
     if( configuration_changed || (changed & (SettingDecoration | SettingButtons | SettingBorder)) )
     {
 
@@ -173,6 +168,10 @@ namespace Oxygen
       case AbilityProvidesShadow: // TODO: UI option to use default shadows instead
       case AbilityUsesAlphaChannel:
       return true;
+
+      // tabs
+      case AbilityClientGrouping:
+      return defaultConfiguration().tabsEnabled();
 
       // no colors supported at this time
       default:

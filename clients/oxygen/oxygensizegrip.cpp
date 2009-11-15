@@ -33,8 +33,6 @@
 #include <QtGui/QPolygon>
 #include <QtCore/QTimer>
 
-#include <KDebug>
-
 #include <QtGui/QX11Info>
 #include <X11/Xlib.h>
 
@@ -92,12 +90,10 @@ namespace Oxygen
     WId window_id = client().windowId();
     if( client().isPreview() ) {
 
-      kDebug(1212) << "Using kcommondecoration::widget()" << endl;
       setParent( client().widget() );
 
     } else if( window_id ) {
 
-      kDebug(1212) << "Using Window ID" << endl;
       WId current = window_id;
       while( true )
       {
@@ -113,7 +109,6 @@ namespace Oxygen
       XReparentWindow( QX11Info::display(), winId(), current, 0, 0 );
     } else {
 
-      kDebug(1212) << "Unable to find valid parent. Hiding" << endl;
       hide();
 
     }

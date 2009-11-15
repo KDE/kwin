@@ -61,6 +61,18 @@ void SlideBackEffect::windowActivated( EffectWindow* w )
         return;
     }
     
+    if( clientItemShown == w )
+        {
+        clientItemShown = NULL;
+        updateStackingOrder();
+        return;
+        }
+    if( clientItemHidden == w )
+        {
+        clientItemHidden = NULL;
+        updateStackingOrder();
+        return;
+        }
     // Determine all windows on top of the activated one
     bool currentFound = false;
     foreach( EffectWindow *tmp, oldStackingOrder )
@@ -351,6 +363,12 @@ void SlideBackEffect::windowUnminimized( EffectWindow* w)
         }
     }
 
+void SlideBackEffect::clientGroupItemSwitched( EffectWindow* from, EffectWindow* to )
+    {
+    clientItemShown = to;
+    clientItemHidden = from;
+    }
+
 void SlideBackEffect::tabBoxClosed()
     {
     disabled = true;
@@ -368,7 +386,8 @@ bool SlideBackEffect::isWindowOnTop( EffectWindow* w )
 
 bool SlideBackEffect::isWindowUsable( EffectWindow* w )
     {
-    return w && ( w->isNormalWindow() || w->isDialog() ) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized();
+    return w && ( w->isNormalWindow() || w->isDialog() ) && !w->keepAbove() && !w->isDeleted() && !w->isMinimized()
+        && w->visibleInClientGroup();
     }
 
 bool SlideBackEffect::intersects( EffectWindow* windowUnder, const QRect &windowOverGeometry )

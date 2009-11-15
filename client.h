@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kdecoration.h"
 #include "rules.h"
 #include "toplevel.h"
+#include "clientgroup.h"
 
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
@@ -301,6 +302,24 @@ class Client
         StrutRect strutRect( StrutArea area ) const;
         StrutRects strutRects() const;
         bool hasStrut() const;
+
+        // Tabbing functions
+        ClientGroup* clientGroup() const; // Returns a pointer to client_group
+        void setClientGroup( ClientGroup* group );
+        /*
+        *   If shown is true the client is mapped and raised, if false
+        *   the client is unmapped and hidden, this function is called
+        *   when the tabbing group of the client switches its visible
+        *   client.
+        */
+        void setClientShown( bool shown );
+        /*
+        *   When a click is done in the decoration and it calls the group
+        *   to change the visible client it starts to move-resize the new
+        *   client, this function stops it.
+        */
+        void dontMoveResize();
+
         /**
          * Whether or not the window has a strut that expands through the invisible area of
          * an xinerama setup where the monitors are not the same resolution.
@@ -570,6 +589,7 @@ class Client
         QString cap_normal, cap_iconic, cap_suffix;
         Group* in_group;
         Window window_group;
+        ClientGroup* client_group;
         Layer in_layer;
         QTimer* ping_timer;
         QProcess* process_killer;
@@ -703,6 +723,16 @@ inline Group* Client::group()
     return in_group;
     }
 
+inline void Client::setClientGroup( ClientGroup* group )
+    {
+    client_group = group;
+    }
+
+inline ClientGroup* Client::clientGroup() const
+    {
+    return client_group;
+    }
+
 inline bool Client::isMinimized() const
     {
     return minimized;
@@ -715,7 +745,8 @@ inline bool Client::isActive() const
 
 inline bool Client::isShown( bool shaded_is_shown ) const
     {
-    return !isMinimized() && ( !isShade() || shaded_is_shown ) && !hidden;
+    return !isMinimized() && ( !isShade() || shaded_is_shown ) && !hidden &&
+        ( clientGroup() == NULL || clientGroup()->visible() == this );
     }
 
 inline bool Client::isHiddenInternal() const

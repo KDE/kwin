@@ -99,7 +99,7 @@ QWidget* KDecoration::initialParentWidget() const
     {
     return bridge_->initialParentWidget();
     }
-    
+
 Qt::WFlags KDecoration::initialWFlags() const
     {
     return bridge_->initialWFlags();
@@ -109,7 +109,7 @@ bool KDecoration::isActive() const
     {
     return bridge_->isActive();
     }
-    
+
 bool KDecoration::isCloseable() const
     {
     return bridge_->isCloseable();
@@ -119,12 +119,12 @@ bool KDecoration::isMaximizable() const
     {
     return bridge_->isMaximizable();
     }
-    
+
 KDecoration::MaximizeMode KDecoration::maximizeMode() const
     {
     return bridge_->maximizeMode();
     }
-    
+
 bool KDecoration::isMinimizable() const
     {
     return bridge_->isMinimizable();
@@ -134,32 +134,32 @@ bool KDecoration::providesContextHelp() const
     {
     return bridge_->providesContextHelp();
     }
-    
+
 int KDecoration::desktop() const
     {
     return bridge_->desktop();
     }
-    
+
 bool KDecoration::isModal() const
     {
     return bridge_->isModal();
     }
-    
+
 bool KDecoration::isShadeable() const
     {
     return bridge_->isShadeable();
     }
-    
+
 bool KDecoration::isShade() const
     {
     return bridge_->isShade();
     }
-    
+
 bool KDecoration::isSetShade() const
     {
     return bridge_->isSetShade();
     }
-    
+
 bool KDecoration::keepAbove() const
     {
     return bridge_->keepAbove();
@@ -189,7 +189,7 @@ QIcon KDecoration::icon() const
     {
     return bridge_->icon();
     }
-    
+
 QString KDecoration::caption() const
     {
     return bridge_->caption();
@@ -204,7 +204,7 @@ void KDecoration::showWindowMenu( const QRect &pos )
     {
     bridge_->showWindowMenu( pos );
     }
-    
+
 void KDecoration::showWindowMenu( QPoint pos )
     {
     bridge_->showWindowMenu( pos );
@@ -219,22 +219,22 @@ void KDecoration::setMask( const QRegion& reg, int mode )
     {
     bridge_->setMask( reg, mode );
     }
-    
+
 void KDecoration::clearMask()
     {
     bridge_->setMask( QRegion(), 0 );
     }
-    
+
 bool KDecoration::isPreview() const
     {
     return bridge_->isPreview();
     }
-    
+
 QRect KDecoration::geometry() const
     {
     return bridge_->geometry();
     }
-    
+
 QRect KDecoration::iconGeometry() const
     {
     return bridge_->iconGeometry();
@@ -249,7 +249,7 @@ WId KDecoration::windowId() const
     {
     return bridge_->windowId();
     }
-        
+
 void KDecoration::closeWindow()
     {
     bridge_->closeWindow();
@@ -264,7 +264,7 @@ void KDecoration::maximize( MaximizeMode mode )
     {
     bridge_->maximize( mode );
     }
-    
+
 void KDecoration::minimize()
     {
     bridge_->minimize();
@@ -274,7 +274,7 @@ void KDecoration::showContextHelp()
     {
     bridge_->showContextHelp();
     }
-    
+
 void KDecoration::setDesktop( int desktop )
     {
     bridge_->setDesktop( desktop );
@@ -302,12 +302,12 @@ void KDecoration::setShade( bool set )
     {
     bridge_->setShade( set );
     }
-        
+
 void KDecoration::setKeepAbove( bool set )
     {
     bridge_->setKeepAbove( set );
     }
-    
+
 void KDecoration::setKeepBelow( bool set )
     {
     bridge_->setKeepBelow( set );
@@ -341,7 +341,7 @@ void KDecoration::grabXServer()
     {
     bridge_->grabXServer( true );
     }
-    
+
 void KDecoration::ungrabXServer()
     {
     bridge_->grabXServer( false );
@@ -401,6 +401,69 @@ bool KDecorationUnstable::compositingActive() const
 void KDecorationUnstable::padding(int &left, int &right, int &top, int &bottom) const
     {
     left = right = top = bottom = 0;
+    }
+
+// Window tabbing
+
+bool KDecorationUnstable::isClientGroupActive()
+    {
+    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->isClientGroupActive();
+    }
+
+QList< ClientGroupItem > KDecorationUnstable::clientGroupItems() const
+    {
+    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->clientGroupItems();
+    }
+
+int KDecorationUnstable::itemId( int index )
+    {
+    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->itemId( index );
+    }
+
+int KDecorationUnstable::visibleClientGroupItem()
+    {
+    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->visibleClientGroupItem();
+    }
+
+void KDecorationUnstable::setVisibleClientGroupItem( int index )
+    {
+    static_cast< KDecorationBridgeUnstable* >( bridge_ )->setVisibleClientGroupItem( index );
+    }
+
+void KDecorationUnstable::moveItemInClientGroup( int index, int before )
+    {
+    static_cast< KDecorationBridgeUnstable* >( bridge_ )->moveItemInClientGroup( index, before );
+    }
+
+void KDecorationUnstable::moveItemToClientGroup( int itemId, int before )
+    {
+    static_cast< KDecorationBridgeUnstable* >( bridge_ )->moveItemToClientGroup( itemId, before );
+    }
+
+void KDecorationUnstable::removeFromClientGroup( int index, const QRect& newGeom )
+    {
+    static_cast< KDecorationBridgeUnstable* >( bridge_ )->removeFromClientGroup( index, newGeom );
+    }
+
+void KDecorationUnstable::closeClientGroupItem( int index )
+    {
+    static_cast< KDecorationBridgeUnstable* >( bridge_ )->closeClientGroupItem( index );
+    }
+
+void KDecorationUnstable::closeAllInClientGroup()
+    {
+    static_cast< KDecorationBridgeUnstable* >( bridge_ )->closeAllInClientGroup();
+    }
+
+void KDecorationUnstable::displayClientMenu( int index, const QPoint& pos )
+    {
+    static_cast< KDecorationBridgeUnstable* >( bridge_ )->displayClientMenu( index, pos );
+    }
+
+
+QString KDecorationDefines::clientGroupItemDragMimeType()
+    {
+    return "text/ClientGroupItem";
     }
 
 KDecorationOptions::KDecorationOptions()
@@ -495,7 +558,7 @@ bool KDecorationOptions::moveResizeMaximizedWindows() const
 
 KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick( Qt::MouseButtons button ) const
     {
-    return button == Qt::RightButton? d->opMaxButtonRightClick : 
+    return button == Qt::RightButton? d->opMaxButtonRightClick :
            button == Qt::MidButton?   d->opMaxButtonMiddleClick :
                                       d->opMaxButtonLeftClick;
     }

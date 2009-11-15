@@ -105,7 +105,11 @@ public:
         NoBorderOp,
         NoOp,
         SetupWindowShortcutOp,
-        ApplicationRulesOp
+        ApplicationRulesOp,
+        RemoveClientFromGroupOp, // Remove from group
+        CloseClientGroupOp, // Close the group
+        MoveClientInGroupLeftOp, // Move left in the group
+        MoveClientInGroupRightOp // Move right in the group
         };
     /**
      * Basic color types that should be recognized by all decoration styles.
@@ -192,12 +196,43 @@ public:
                                         ///  The mask is still used to define the input region and the blurred
                                         ///  region, when the blur plugin is enabled.
                                         ///  @since 4.3
+        // Tabbing
+        AbilityClientGrouping = 4000, ///< The decoration supports tabbing
         // TODO colors for individual button types
         ABILITY_DUMMY = 10000000
         };
 
     enum Requirement { REQUIREMENT_DUMMY = 1000000 };
+    
+    /**
+    *
+    * Returns mimeType used to drag and drop clientGroupItems 
+    */
+    
+    static QString clientGroupItemDragMimeType();
+
 };
+
+class KWIN_EXPORT ClientGroupItem
+    {
+    public:
+        ClientGroupItem( QString t, QIcon i )
+            {
+            title_ = t;
+            icon_ = i;
+            }
+        inline QIcon icon() const
+            {
+            return icon_;
+            }
+        inline QString title() const
+            {
+            return title_;
+            }
+    private:
+        QString title_;
+        QIcon icon_;
+    };
 
 class KDecorationProvides
     : public KDecorationDefines
@@ -672,6 +707,7 @@ class KWIN_EXPORT KDecoration
          * isShade() to get the current state.
          */
         virtual void shadeChange() = 0;
+
     Q_SIGNALS:
         /**
          * This signal is emitted whenever the window's keep-above state changes.
@@ -681,6 +717,7 @@ class KWIN_EXPORT KDecoration
          * This signal is emitted whenever the window's keep-below state changes.
          */
         void keepBelowChanged( bool );
+
     public:
         /**
          * This function may be reimplemented to provide custom bound drawing
@@ -848,6 +885,7 @@ class KWIN_EXPORT KDecoration
          * @internal
          */
         void emitKeepBelowChanged( bool below );
+
     private:
         KDecorationBridge* bridge_;
         QWidget* w_;
@@ -856,6 +894,7 @@ class KWIN_EXPORT KDecoration
         friend class KDecorationUnstable; // for bridge_
         static KDecorationOptions* options_;
         KDecorationPrivate* d;
+
     };
 
 /**
@@ -884,6 +923,62 @@ class KWIN_EXPORT KDecorationUnstable
          * Returns @a true if compositing--and therefore ARGB--is enabled.
          */
         bool compositingActive() const;
+
+        // Window tabbing
+
+        /**
+         * Returns whether or not this client group contains the active client.
+         */
+        bool isClientGroupActive();
+        /**
+         * Return a list of all the clients in the group that contains the client that this
+         * decoration is attached to.
+         */
+        QList< ClientGroupItem > clientGroupItems() const;
+        /**
+         * Returns a unique identifier for the client at index \p index of the client group list.
+         * \see moveItemToClientGroup()
+         */
+        int itemId( int index );
+        /**
+         * Returns the list index of the currently visible client in this group.
+         */
+        int visibleClientGroupItem();
+        /**
+         * Switch the currently visible client to the one at list index \p index.
+         */
+        void setVisibleClientGroupItem( int index );
+        /**
+         * Move the client at index \p index to the position before the client at index \p before.
+         */
+        void moveItemInClientGroup( int index, int before );
+        /**
+         * Move the client that's unique identifier is \p itemId to the position before the client
+         * at index \p before if set, otherwise the end of the list. This call is to move clients
+         * between two different groups, if moving in the same group then use
+         * moveItemInClientGroup() instead.
+         * \see itemId()
+         */
+        void moveItemToClientGroup( int itemId, int before = -1 );
+        /**
+         * Remove the client at index \p index from the group. If \p newGeom is set then the client
+         * will move and resize to the specified geometry, otherwise it will stay where the group
+         * is located.
+         */
+        void removeFromClientGroup( int index, const QRect& newGeom = QRect() );
+        /**
+         * Close the client at index \p index.
+         */
+        void closeClientGroupItem( int index );
+        /**
+         * Close all windows in this group.
+         */
+        void closeAllInClientGroup();
+        /**
+         * Display the right-click client menu belonging to the client at index \p index at the
+         * global coordinates specified by \p pos.
+         */
+        void displayClientMenu( int index, const QPoint& pos );
     };
 
 inline

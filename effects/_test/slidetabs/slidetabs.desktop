@@ -1,0 +1,21 @@
+[Desktop Entry]
+Name=Slide Tabs
+Name[x-test]=xxSlide Tabsxx
+
+Icon=preferences-system-windows-effect-slidetabs
+
+Type=Service
+Comment=Slide windows when switching or groupping tabs.
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Jorge Mata
+X-KDE-PluginInfo-Email=matamax123@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_slidetabs
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Focus
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Library=kwin4_effect_builtins
+X-KDE-Ordering=50

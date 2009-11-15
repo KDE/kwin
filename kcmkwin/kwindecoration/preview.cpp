@@ -467,6 +467,58 @@ bool KDecorationPreviewBridge::compositingActive() const
     return KWindowSystem::compositingActive();
     }
 
+// Window tabbing
+
+bool KDecorationPreviewBridge::isClientGroupActive()
+    {
+    return active;
+    }
+
+QList< ClientGroupItem > KDecorationPreviewBridge::clientGroupItems() const
+    {
+    return QList< ClientGroupItem >() << ClientGroupItem(
+        active ? "Active Window" : "Inactive Window", icon() );
+    }
+
+int KDecorationPreviewBridge::itemId( int )
+    {
+    return 0;
+    }
+
+int KDecorationPreviewBridge::visibleClientGroupItem()
+    {
+    return 0;
+    }
+
+void KDecorationPreviewBridge::setVisibleClientGroupItem( int )
+    {
+    }
+
+void KDecorationPreviewBridge::moveItemInClientGroup( int, int )
+    {
+    }
+
+void KDecorationPreviewBridge::moveItemToClientGroup( int, int )
+    {
+    }
+
+void KDecorationPreviewBridge::removeFromClientGroup( int, const QRect& )
+    {
+    }
+
+void KDecorationPreviewBridge::closeClientGroupItem( int )
+    {
+    }
+
+void KDecorationPreviewBridge::closeAllInClientGroup()
+    {
+    }
+
+void KDecorationPreviewBridge::displayClientMenu( int, const QPoint& )
+    {
+    }
+
+
 KDecorationPreviewOptions::KDecorationPreviewOptions()
     {
     customBorderSize = BordersCount; // invalid

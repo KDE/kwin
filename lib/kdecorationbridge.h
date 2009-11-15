@@ -94,6 +94,19 @@ class KWIN_EXPORT KDecorationBridgeUnstable
     {
     public:
         virtual bool compositingActive() const = 0;
+
+        // Window tabbing
+        virtual bool isClientGroupActive() = 0;
+        virtual QList< ClientGroupItem > clientGroupItems() const = 0;
+        virtual int itemId( int index ) = 0;
+        virtual int visibleClientGroupItem() = 0;
+        virtual void setVisibleClientGroupItem( int index ) = 0;
+        virtual void moveItemInClientGroup( int index, int before ) = 0;
+        virtual void moveItemToClientGroup( int itemId, int before ) = 0;
+        virtual void removeFromClientGroup( int index, const QRect& newGeom ) = 0;
+        virtual void closeClientGroupItem( int index ) = 0;
+        virtual void closeAllInClientGroup() = 0;
+        virtual void displayClientMenu( int index, const QPoint& pos ) = 0;
     };
 
 /** @} */

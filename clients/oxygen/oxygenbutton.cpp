@@ -38,7 +38,6 @@
 #include <KColorUtils>
 #include <KColorScheme>
 #include <kcommondecoration.h>
-#include <KDebug>
 
 namespace Oxygen
 {
@@ -52,7 +51,7 @@ namespace Oxygen
     helper_( parent.helper() ),
     type_(type),
     forceInactive_( false ),
-    timeLine_( 200, this )
+    timeLine_( 150, this )
   {
     setAutoFillBackground(false);
     setAttribute(Qt::WA_NoSystemBackground);
@@ -69,6 +68,7 @@ namespace Oxygen
     timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
     connect( &timeLine_, SIGNAL( frameChanged( int ) ), SLOT( update() ) );
     connect( &timeLine_, SIGNAL( finished() ), SLOT( update() ) );
+    reset(0);
 
   }
 
@@ -79,11 +79,11 @@ namespace Oxygen
   //_______________________________________________
   QColor OxygenButton::buttonDetailColor(const QPalette &palette)
   {
-    if( client_.timeLineIsRunning() && !forceInactive_ ) return KColorUtils::mix(
+    if( client_.timeLineIsRunning() && !forceInactive_ && !client_.isForcedActive()) return KColorUtils::mix(
       buttonDetailColor( palette, false ),
       buttonDetailColor( palette, true ),
       client_.opacity() );
-    else return buttonDetailColor( palette, isActive() );
+    else return buttonDetailColor( palette, isActive() || client_.isForcedActive() );
   }
 
   //_______________________________________________
@@ -113,6 +113,12 @@ namespace Oxygen
   {
     unsigned int size( client_.configuration().buttonSize() );
     return QSize( size, size );
+  }
+
+  //___________________________________________________
+  void OxygenButton::reset( unsigned long )
+  {
+    timeLine_.setDuration( client_.configuration().animationsDuration() );
   }
 
   //___________________________________________________

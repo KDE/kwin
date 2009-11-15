@@ -367,6 +367,13 @@ void Workspace::takeActivity( Client* c, int flags, bool handled )
         }
     if( !c->isShown( true )) // shouldn't happen, call activateClient() if needed
         {
+        int group_size = c->clientGroup()->clients().count();
+        if( group_size > 1 && c->clientGroup()->visible() != c ) // the tab is hidden, make it visible and call this function again
+            {
+            c->clientGroup()->setVisible( c );
+            takeActivity( c, flags, handled );
+            return;
+            }
         kWarning( 1212 ) << "takeActivity: not shown" ;
         return;
         }

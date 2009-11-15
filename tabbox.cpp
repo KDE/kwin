@@ -859,6 +859,15 @@ void Workspace::slotWalkBackThroughWindowsKeyChanged( const QKeySequence& seq )
     cutWalkThroughWindowsReverse = KShortcut( seq );
     }
 
+void Workspace::slotMoveToTabLeftKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughGroupWindows = KShortcut( seq );
+    }
+void Workspace::slotMoveToTabRightKeyChanged( const QKeySequence& seq )
+    {
+    cutWalkThroughGroupWindowsReverse = KShortcut( seq );
+    }
+
 void Workspace::slotWalkThroughWindowsAlternativeKeyChanged( const QKeySequence& seq )
     {
     cutWalkThroughWindowsAlternative = KShortcut( seq );

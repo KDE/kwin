@@ -296,6 +296,26 @@ bool Client::manage( Window w, bool isMapped )
     if( placementDone )
         move( geom.x(), geom.y() ); // Before gravitating
 
+    // Create client group if the window will have a decoration
+    if( !noBorder() )
+        {
+        client_group = NULL;
+        // Automatically add to previous groups on session restore
+        if( session && session->clientGroupClient && session->clientGroupClient != this )
+            session->clientGroupClient->clientGroup()->add( this, -1, true );
+        else if( isMapped )
+            // If the window is already mapped (Restarted KWin) add any windows that already have the
+            // same geometry to the same client group. (May incorrectly handle maximized windows)
+            foreach( ClientGroup* group, workspace()->clientGroups )
+                if( geom == QRect( group->visible()->pos(), group->visible()->clientSize() ))
+                    {
+                    group->add( this, -1, true );
+                    break;
+                    }
+        if( !client_group )
+            client_group = new ClientGroup( this );
+        }
+
     updateDecoration( false ); // Also gravitates
     // TODO: Is CentralGravity right here, when resizing is done after gravitating?
     plainResize( rules()->checkSize( sizeForClientSize( geom.size() ), !isMapped ));

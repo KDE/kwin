@@ -402,6 +402,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted
                 {
                 if ((*l)->isOnDesktop(c->desktop()) &&
                    !(*l)->isMinimized()
+                   && (!(*l)->clientGroup() || (*l) != (*l)->clientGroup()->visible())
                     && (*l) != c )
                     {
                     lx = (*l)->x();
@@ -1345,8 +1346,8 @@ QSize Client::sizeForClientSize( const QSize& wsize, Sizemode mode, bool noframe
 
     // basesize, minsize, maxsize, paspect and resizeinc have all values defined,
     // even if they're not set in flags - see getWmNormalHints()
-    QSize min_size = minSize();
-    QSize max_size = maxSize();
+    QSize min_size = clientGroup() ? clientGroup()->minSize() : minSize();
+    QSize max_size = clientGroup() ? clientGroup()->maxSize() : maxSize();
     if( decoration != NULL )
         {
         QSize decominsize = decoration->minimumSize();
@@ -1902,8 +1903,8 @@ bool Client::isResizable() const
     if( rules()->checkSize( QSize()).isValid()) // forced size
         return false;
 
-    QSize min = minSize();
-    QSize max = maxSize();
+    QSize min = clientGroup() ? clientGroup()->minSize() : minSize();
+    QSize max = clientGroup() ? clientGroup()->maxSize() : maxSize();
     return min.width() < max.width() || min.height() < max.height();
     }
 
@@ -2025,6 +2026,10 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     addWorkspaceRepaint( deco_rect );
     geom_before_block = geom;
     deco_rect_before_block = deco_rect;
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 void Client::plainResize( int w, int h, ForceGeometry_t force )
@@ -2097,6 +2102,10 @@ void Client::plainResize( int w, int h, ForceGeometry_t force )
     addWorkspaceRepaint( deco_rect );
     geom_before_block = geom;
     deco_rect_before_block = deco_rect;
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 /*!
@@ -2138,6 +2147,10 @@ void Client::move( int x, int y, ForceGeometry_t force )
     addWorkspaceRepaint( deco_rect ); // trigger repaint of window's new location
     geom_before_block = geom;
     deco_rect_before_block = deco_rect;
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 void Client::blockGeometryUpdates( bool block )
@@ -2181,6 +2194,10 @@ void Client::setMaximize( bool vertically, bool horizontally )
         false );
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized( effectWindow(), true, true );
+
+    // Update states of all other windows in this group
+    if( clientGroup() )
+        clientGroup()->updateStates( this );
     }
 
 void Client::changeMaximize( bool vertical, bool horizontal, bool adjust )
@@ -3005,7 +3022,6 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                 abort();
                 break;
             }
-
         // adjust new size to snap to other windows/borders
         moveResizeGeom = workspace()->adjustClientSize( this, moveResizeGeom, mode );
 
