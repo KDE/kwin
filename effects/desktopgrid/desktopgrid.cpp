@@ -204,9 +204,10 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
 
 void DesktopGridEffect::postPaintScreen()
     {
-    if( activated ? timeline.value() != 1 :
-        (timeline.value() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows())) )
+    if( activated ? timeline.value() != 1 : timeline.value() != 0 )
         effects->addRepaintFull(); // Repaint during zoom
+    if( isUsingPresentWindows() && isMotionManagerMovingWindows() )
+        effects->addRepaintFull();
     if( activated )
         {
         for( int i = 0; i < effects->numberOfDesktops(); i++ )
@@ -559,6 +560,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
                 manager.manage( windowMove );
                 m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
+                effects->addRepaintFull();
                 }
             windowMove = NULL;
             XDefineCursor( display(), input, QCursor( Qt::PointingHandCursor ).handle() );
