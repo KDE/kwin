@@ -362,9 +362,21 @@ void DesktopGridEffect::windowAdded( EffectWindow* w )
         return;
     if( isUsingPresentWindows() )
         {
-        WindowMotionManager& manager = m_managers[ (w->desktop()-1)*effects->numScreens()+w->screen() ];
-        manager.manage( w );
-        m_proxy->calculateWindowTransformations( manager.managedWindows(), w->screen(), manager );
+        if( w->isOnAllDesktops() )
+            {
+            for( int i=0; i<effects->numberOfDesktops(); i++ )
+                {
+                WindowMotionManager& manager = m_managers[ i*effects->numScreens()+w->screen() ];
+                manager.manage( w );
+                m_proxy->calculateWindowTransformations( manager.managedWindows(), w->screen(), manager );
+                }
+            }
+        else
+            {
+            WindowMotionManager& manager = m_managers[ (w->desktop()-1)*effects->numScreens()+w->screen() ];
+            manager.manage( w );
+            m_proxy->calculateWindowTransformations( manager.managedWindows(), w->screen(), manager );
+            }
         }
     effects->addRepaintFull();
     }
