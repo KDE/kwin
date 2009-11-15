@@ -1473,20 +1473,6 @@ namespace Oxygen
       // note: the pixmap is moved just above the pointer on purpose
       // because overlapping pixmap and pointer slows down the pixmap alot.
       drag->setHotSpot( QPoint( event->pos().x() - geometry.left(), -1 ) );
-      
-      // must start animation immediatly rather than waiting for next drag-move or drag-leave evnet. 
-      // however it depends on where the point is located.
-      if( itemData_[itemClicked].boundingRect_.contains( dragPoint_ ) )
-      { 
-
-        itemData_.animate( AnimationTypes( AnimationMove|AnimationSameTarget ), sourceItem_ );
-        
-      } else {
-        
-        itemData_.animate( AnimationTypes(AnimationLeave|AnimationSameTarget), sourceItem_ );
-        
-      }
-      
 
       drag->exec( Qt::MoveAction );
 
