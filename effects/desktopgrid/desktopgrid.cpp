@@ -4,6 +4,7 @@
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -317,6 +318,12 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
             d.yScale = interpolate( 1, yScale * scale[screen] * (float)transformedGeo.height()/(float)w->geometry().height(), progress);
             d.xTranslate += qRound( newPos.x() - w->x() );
             d.yTranslate += qRound( newPos.y() - w->y() );
+
+            if( isUsingPresentWindows() && w->isDock() )
+                {
+                // fade out panels if present windows is used
+                d.opacity *= ( 1.0 - timeline.value() );
+                }
 
             if( effects->compositingType() == XRenderCompositing )
                 { // More exact clipping as XRender displays the entire window instead of just the quad
