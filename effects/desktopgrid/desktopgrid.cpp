@@ -407,7 +407,22 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             (me->pos() - dragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay() )
             { // Handle window moving
             if( !wasWindowMove ) // Activate on move
+                {
                 effects->activateWindow( windowMove );
+                if( isUsingPresentWindows() && !windowMove->isOnAllDesktops() )
+                    {
+                    WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
+                    const QRectF transformedGeo = manager.transformedGeometry( windowMove );
+                    const QPointF pos = scalePos( transformedGeo.topLeft().toPoint(), windowMove->desktop(), windowMove->screen() );
+                    const QSize size( scale[windowMove->screen()] * (float)transformedGeo.width(),
+                                        scale[windowMove->screen()] * (float)transformedGeo.height() );
+                    m_windowMoveGeometry = QRect( pos.toPoint(), size );
+                    m_windowMoveStartPoint = me->pos();
+
+                    manager.unmanage( windowMove );
+                    m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
+                    }
+                }
             wasWindowMove = true;
             if( windowMove->isMovable() && !isUsingPresentWindows() )
                 {
@@ -485,19 +500,6 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 windowMoveDiff = w->pos() - unscalePos( me->pos(), NULL );
                 windowMove = w;
                 effects->setElevatedWindow( windowMove, true );
-                if( isUsingPresentWindows() && !w->isOnAllDesktops() )
-                    {
-                    WindowMotionManager& manager = m_managers[ (w->desktop()-1)*(effects->numScreens()) + w->screen() ];
-                    const QRectF transformedGeo = manager.transformedGeometry( w );
-                    const QPointF pos = scalePos( transformedGeo.topLeft().toPoint(), w->desktop(), w->screen() );
-                    const QSize size( scale[w->screen()] * (float)transformedGeo.width(),
-                                      scale[w->screen()] * (float)transformedGeo.height() );
-                    m_windowMoveGeometry = QRect( pos.toPoint(), size );
-                    m_windowMoveStartPoint = me->pos();
-
-                    manager.unmanage( w );
-                    m_proxy->calculateWindowTransformations( manager.managedWindows(), w->screen(), manager );
-                    }
                 }
             }
         else if(( me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton ) && windowMove == NULL )
@@ -553,15 +555,17 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
         if( windowMove )
             {
             if( wasWindowMove )
-                effects->activateWindow( windowMove ); // Just in case it was deactivated
-            effects->setElevatedWindow( windowMove, false );
-            if( isUsingPresentWindows() )
                 {
-                WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
-                manager.manage( windowMove );
-                m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
-                effects->addRepaintFull();
+                effects->activateWindow( windowMove ); // Just in case it was deactivated
+                if( isUsingPresentWindows() )
+                    {
+                    WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
+                    manager.manage( windowMove );
+                    m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
+                    effects->addRepaintFull();
+                    }
                 }
+            effects->setElevatedWindow( windowMove, false );
             windowMove = NULL;
             XDefineCursor( display(), input, QCursor( Qt::PointingHandCursor ).handle() );
             }
