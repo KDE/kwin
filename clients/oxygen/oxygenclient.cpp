@@ -1616,7 +1616,7 @@ namespace Oxygen
 
       setForceActive( true );
       int itemClicked( OxygenClient::itemClicked( point, true ) );
-      int source = QString( groupData->data( clientGroupItemDragMimeType() ) ).toInt();
+      long source = QString( groupData->data( clientGroupItemDragMimeType() ) ).toLong();
       moveItemToClientGroup( source, itemClicked );
 
     }

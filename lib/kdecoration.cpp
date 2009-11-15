@@ -415,7 +415,7 @@ QList< ClientGroupItem > KDecorationUnstable::clientGroupItems() const
     return static_cast< KDecorationBridgeUnstable* >( bridge_ )->clientGroupItems();
     }
 
-int KDecorationUnstable::itemId( int index )
+long KDecorationUnstable::itemId( int index )
     {
     return static_cast< KDecorationBridgeUnstable* >( bridge_ )->itemId( index );
     }
@@ -435,7 +435,7 @@ void KDecorationUnstable::moveItemInClientGroup( int index, int before )
     static_cast< KDecorationBridgeUnstable* >( bridge_ )->moveItemInClientGroup( index, before );
     }
 
-void KDecorationUnstable::moveItemToClientGroup( int itemId, int before )
+void KDecorationUnstable::moveItemToClientGroup( long itemId, int before )
     {
     static_cast< KDecorationBridgeUnstable* >( bridge_ )->moveItemToClientGroup( itemId, before );
     }

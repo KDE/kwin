@@ -480,7 +480,7 @@ QList< ClientGroupItem > KDecorationPreviewBridge::clientGroupItems() const
         active ? "Active Window" : "Inactive Window", icon() );
     }
 
-int KDecorationPreviewBridge::itemId( int )
+long KDecorationPreviewBridge::itemId( int )
     {
     return 0;
     }
@@ -498,7 +498,7 @@ void KDecorationPreviewBridge::moveItemInClientGroup( int, int )
     {
     }
 
-void KDecorationPreviewBridge::moveItemToClientGroup( int, int )
+void KDecorationPreviewBridge::moveItemToClientGroup( long, int )
     {
     }
 

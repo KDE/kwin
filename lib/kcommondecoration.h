@@ -384,11 +384,11 @@ class KWIN_EXPORT KCommonDecorationUnstable
         // Window tabbing
         bool isClientGroupActive();
         QList< ClientGroupItem > clientGroupItems() const;
-        int itemId( int index );
+        long itemId( int index );
         int visibleClientGroupItem();
         void setVisibleClientGroupItem( int index );
         void moveItemInClientGroup( int index, int before );
-        void moveItemToClientGroup( int itemId, int before = -1 );
+        void moveItemToClientGroup( long itemId, int before = -1 );
         void removeFromClientGroup( int index, const QRect& newGeom = QRect() );
         void closeClientGroupItem( int index );
         void closeAllInClientGroup();

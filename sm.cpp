@@ -129,7 +129,9 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
             cg.writeEntry( QString("stackingOrder")+n, unconstrained_stacking_order.indexOf( c ));
             int group = 0;
             if( c->clientGroup() )
-                group = c->clientGroup()->clients().count() > 1 ? (int) c->clientGroup() : 0;
+                group = c->clientGroup()->clients().count() > 1 ?
+                    // KConfig doesn't support long so we need to live with less precision on 64-bit systems
+                    static_cast<int>( reinterpret_cast<long>( c->clientGroup() )) : 0;
             cg.writeEntry( QString("clientGroup")+n, group );
             }
         }

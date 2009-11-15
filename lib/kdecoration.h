@@ -939,7 +939,7 @@ class KWIN_EXPORT KDecorationUnstable
          * Returns a unique identifier for the client at index \p index of the client group list.
          * \see moveItemToClientGroup()
          */
-        int itemId( int index );
+        long itemId( int index );
         /**
          * Returns the list index of the currently visible client in this group.
          */
@@ -959,7 +959,7 @@ class KWIN_EXPORT KDecorationUnstable
          * moveItemInClientGroup() instead.
          * \see itemId()
          */
-        void moveItemToClientGroup( int itemId, int before = -1 );
+        void moveItemToClientGroup( long itemId, int before = -1 );
         /**
          * Remove the client at index \p index from the group. If \p newGeom is set then the client
          * will move and resize to the specified geometry, otherwise it will stay where the group

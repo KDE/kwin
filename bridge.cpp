@@ -218,10 +218,10 @@ QList< ClientGroupItem > Bridge::clientGroupItems() const
     return c->clientGroup()->items();
     }
 
-int Bridge::itemId( int index )
+long Bridge::itemId( int index )
     {
     const ClientList list = c->clientGroup()->clients();
-    return reinterpret_cast<int>( list.at( index ));
+    return reinterpret_cast<long>( list.at( index ));
     }
 
 int Bridge::visibleClientGroupItem()
@@ -239,7 +239,7 @@ void Bridge::moveItemInClientGroup( int index, int before )
     c->clientGroup()->move( index, before );
     }
 
-void Bridge::moveItemToClientGroup( int itemId, int before )
+void Bridge::moveItemToClientGroup( long itemId, int before )
     {
     Client* item = reinterpret_cast<Client*>( itemId );
     c->workspace()->moveItemToClientGroup( item->clientGroup(), item->clientGroup()->indexOfClient( item ),

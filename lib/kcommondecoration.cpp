@@ -1291,7 +1291,7 @@ QList< ClientGroupItem > KCommonDecorationUnstable::clientGroupItems() const
     return static_cast<const KDecorationUnstable*>( decoration() )->clientGroupItems();
     }
 
-int KCommonDecorationUnstable::itemId( int index )
+long KCommonDecorationUnstable::itemId( int index )
     {
     return static_cast<const KDecorationUnstable*>( decoration() )->itemId( index );
     }
@@ -1311,7 +1311,7 @@ void KCommonDecorationUnstable::moveItemInClientGroup( int index, int before )
     static_cast<const KDecorationUnstable*>( decoration() )->moveItemInClientGroup( index, before );
     }
 
-void KCommonDecorationUnstable::moveItemToClientGroup( int itemId, int before )
+void KCommonDecorationUnstable::moveItemToClientGroup( long itemId, int before )
     {
     static_cast<const KDecorationUnstable*>( decoration() )->moveItemToClientGroup( itemId, before );
     }

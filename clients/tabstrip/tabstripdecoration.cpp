@@ -380,7 +380,7 @@ bool TabstripDecoration::dropEvent( QDropEvent* e )
                 }
             else
                 {
-                int source = QString( group_data->data( clientGroupItemDragMimeType() ) ).toInt();
+                long source = QString( group_data->data( clientGroupItemDragMimeType() ) ).toLong();
                 moveItemToClientGroup( source, itemClicked( point, true ));
                 }
             return true;
