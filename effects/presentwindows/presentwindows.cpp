@@ -893,7 +893,7 @@ void PresentWindowsEffect::rearrangeWindows()
         else if( m_layoutMode == LayoutFlexibleGrid )
             calculateWindowTransformationsKompose( windows, screen );
         else
-            calculateWindowTransformationsNatural( windows, screen );
+            calculateWindowTransformationsNatural( windows, screen, m_motionManager );
         }
 
     // Resize text frames if required
@@ -1139,21 +1139,21 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose( EffectWindowLi
         }
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen )
+void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen, WindowMotionManager& motionManager )
     {
     // If windows do not overlap they scale into nothingness, fix by resetting. To reproduce
     // just have a single window on a Xinerama screen or have two windows that do not touch.
     // TODO: Work out why this happens, is most likely a bug in the manager.
     foreach( EffectWindow *w, windowlist )
-        if( m_motionManager.transformedGeometry( w ) == w->geometry() )
-            m_motionManager.reset( w );
+        if( motionManager.transformedGeometry( w ) == w->geometry() )
+            motionManager.reset( w );
 
     if( windowlist.count() == 1 )
         {
         // Just move the window to its original location to save time
         if( effects->clientArea( FullScreenArea, windowlist[0] ).contains( windowlist[0]->geometry() ) )
             {
-            m_motionManager.moveWindow( windowlist[0], windowlist[0]->geometry() );
+            motionManager.moveWindow( windowlist[0], windowlist[0]->geometry() );
             return;
             }
         }
@@ -1168,13 +1168,14 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowLi
     QRect bounds = area;
     int direction = 0;
     QHash<EffectWindow*, QRect> targets;
+    QHash<EffectWindow*, int> directions;
     foreach( EffectWindow *w, windowlist )
         {
         bounds = bounds.united( w->geometry() );
         targets[w] = w->geometry();
         // Reuse the unused "slot" as a preferred direction attribute. This is used when the window
         // is on the edge of the screen to try to use as much screen real estate as possible.
-        m_windowData[w].slot = direction;
+        directions[w] = direction;
         direction++;
         if( direction == 4 )
             direction = 0;
@@ -1227,9 +1228,9 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowLi
                     if( xSection != 1 || ySection != 1 ) // Remove this if you want the center to pull as well
                         {
                         if( xSection == 1 )
-                            xSection = ( m_windowData[w].slot / 2 ? 2 : 0 );
+                            xSection = ( directions[w] / 2 ? 2 : 0 );
                         if( ySection == 1 )
-                            ySection = ( m_windowData[w].slot % 2 ? 2 : 0 );
+                            ySection = ( directions[w] % 2 ? 2 : 0 );
                         }
                     if( xSection == 0 && ySection == 0 )
                         diff = QPoint( bounds.topLeft() - targets[w].center() );
@@ -1373,7 +1374,7 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowLi
 
     // Notify the motion manager of the targets
     foreach( EffectWindow *w, windowlist )
-        m_motionManager.moveWindow( w, targets[w] );
+        motionManager.moveWindow( w, targets[w] );
     }
 
 //-----------------------------------------------------------------------------

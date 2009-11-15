@@ -136,7 +136,7 @@ class PresentWindowsEffect
         void rearrangeWindows();
         void calculateWindowTransformationsClosest( EffectWindowList windowlist, int screen );
         void calculateWindowTransformationsKompose( EffectWindowList windowlist, int screen );
-        void calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen );
+        void calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen, WindowMotionManager& motionManager );
 
         // Helper functions for window rearranging
         inline double aspectRatio( EffectWindow *w )

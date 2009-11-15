@@ -33,9 +33,9 @@ PresentWindowsEffectProxy::~PresentWindowsEffectProxy()
     {
     }
 
-bool PresentWindowsEffectProxy::isActive() const
+void PresentWindowsEffectProxy::calculateWindowTransformations(EffectWindowList windows, int screen, WindowMotionManager& manager)
     {
-    return m_effect->m_activated;
+    return m_effect->calculateWindowTransformationsNatural( windows, screen, manager );
     }
 
 } // namespace

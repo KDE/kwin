@@ -88,6 +88,7 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     connect( m_ui->layoutCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( layoutSelectionChanged() ));
     connect( m_ui->layoutRowsSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->shortcutEditor, SIGNAL( keyChange() ), this, SLOT( changed() ));
+    connect( m_ui->presentWindowsCheckBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
 
     load();
     }
@@ -119,6 +120,8 @@ void DesktopGridEffectConfig::load()
     m_ui->layoutRowsSpin->setValue( conf.readEntry( "CustomLayoutRows", 2 ));
     m_ui->layoutRowsSpin->setSuffix( ki18np( " row", " rows"));
 
+    m_ui->presentWindowsCheckBox->setChecked( conf.readEntry( "PresentWindows", true ));
+
     emit changed(false);
     }
 
@@ -140,6 +143,8 @@ void DesktopGridEffectConfig::save()
 
     conf.writeEntry( "CustomLayoutRows", m_ui->layoutRowsSpin->value() );
 
+    conf.writeEntry( "PresentWindows", m_ui->presentWindowsCheckBox->isChecked() );
+
     m_ui->shortcutEditor->save();
 
     conf.sync();
@@ -156,6 +161,7 @@ void DesktopGridEffectConfig::defaults()
     m_ui->layoutCombo->setCurrentIndex( int( DesktopGridEffect::LayoutPager ));
     m_ui->layoutRowsSpin->setValue( 2 );
     m_ui->shortcutEditor->allDefault();
+    m_ui->presentWindowsCheckBox->setChecked( true );
     emit changed(true);
     }
 

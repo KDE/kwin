@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class PresentWindowsEffectProxy;
+
 class DesktopGridEffect
     : public QObject, public Effect
     {
@@ -43,6 +45,7 @@ class DesktopGridEffect
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowClosed( EffectWindow* w );
+        virtual void windowAdded( EffectWindow* w );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
         virtual bool borderActivated( ElectricBorder border );
@@ -69,6 +72,8 @@ class DesktopGridEffect
         void setActive( bool active );
         void setup();
         void finish();
+        bool isMotionManagerMovingWindows();
+        bool isUsingPresentWindows() const;
         
         QList<ElectricBorder> borderActivate;
         int zoomDuration;
@@ -104,6 +109,10 @@ class DesktopGridEffect
 
         // Shortcut - needed to toggle the effect
         KShortcut shortcut;
+
+        PresentWindowsEffectProxy* m_proxy;
+        QList<WindowMotionManager> m_managers;
+        bool m_usePresentWindows;
 
     };
 

@@ -20,20 +20,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KWIN_PRESENTWINDOWS_PROXY_H
 #define KWIN_PRESENTWINDOWS_PROXY_H
+#include <kwineffects.h>
 
 namespace KWin
 {
 
 class PresentWindowsEffect;
 
-// Example proxy code, TODO: Use or remove
 class PresentWindowsEffectProxy
     {
     public:
         PresentWindowsEffectProxy( PresentWindowsEffect* effect );
         ~PresentWindowsEffectProxy();
 
-        bool isActive() const;
+        void calculateWindowTransformations(EffectWindowList windows, int screen, WindowMotionManager& manager);
 
     private:
         PresentWindowsEffect* m_effect;
