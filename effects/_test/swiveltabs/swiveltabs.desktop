@@ -1,9 +1,7 @@
 [Desktop Entry]
 Name=Swivel Tabs
-Name[x-test]=xxSwivel Tabsxx
 Icon=preferences-system-windows-effect-swiveltabs
 Comment=Make the windows turn when switching tabs
-Comment[x-test]=xxMake the windows turn when switching tabsxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
