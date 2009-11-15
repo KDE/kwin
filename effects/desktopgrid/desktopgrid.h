@@ -113,6 +113,8 @@ class DesktopGridEffect
         PresentWindowsEffectProxy* m_proxy;
         QList<WindowMotionManager> m_managers;
         bool m_usePresentWindows;
+        QRect m_windowMoveGeometry;
+        QPoint m_windowMoveStartPoint;
 
     };
 

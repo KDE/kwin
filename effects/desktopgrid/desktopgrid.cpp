@@ -156,6 +156,18 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         paintingDesktop = desktop;
         effects->paintScreen( mask, region, d );
         }
+    if( isUsingPresentWindows() && windowMove )
+        {
+        // the moving window has to be painted on top of all desktops
+        QPoint diff = cursorPos() - m_windowMoveStartPoint;
+        QRect geo = m_windowMoveGeometry.translated( diff );
+        WindowPaintData d( windowMove );
+        d.xScale *= (float)geo.width()/(float)windowMove->width();
+        d.yScale *= (float)geo.height()/(float)windowMove->height();
+        d.xTranslate += qRound( geo.left() - windowMove->x() );
+        d.yTranslate += qRound( geo.top() - windowMove->y() );
+        effects->drawWindow( windowMove, PAINT_WINDOW_TRANSFORMED, infiniteRegion(), d );
+        }
 
     if( desktopNameAlignment )
         {
@@ -245,6 +257,11 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
     {
     if( timeline.value() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows()) )
         {
+        if( isUsingPresentWindows() && w == windowMove )
+            {
+            return; // will be painted on top of all other windows
+            }
+
         double xScale = data.xScale;
         double yScale = data.yScale;
 
@@ -398,21 +415,9 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 }
             if( d != highlightedDesktop && !windowMove->isOnAllDesktops() )
                 {
-                const int oldDesktop = windowMove->desktop();
                 effects->windowToDesktop( windowMove, d ); // Not true all desktop move
-                if( isUsingPresentWindows() )
-                    {
-                    // TODO: move window to other screen
-                    WindowMotionManager& oldManager =
-                        m_managers[ (oldDesktop-1)*(effects->numScreens())+windowMove->screen() ];
-                    WindowMotionManager& newManager =
-                        m_managers[ (d-1)*(effects->numScreens())+windowMove->screen() ];
-                    oldManager.unmanage( windowMove );
-                    newManager.manage( windowMove );
-                    m_proxy->calculateWindowTransformations( oldManager.managedWindows(), windowMove->screen(), oldManager );
-                    m_proxy->calculateWindowTransformations( newManager.managedWindows(), windowMove->screen(), newManager );
-                    }
                 }
+            effects->addRepaintFull();
             }
         if( d != highlightedDesktop ) // Highlight desktop
             {
@@ -479,6 +484,19 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 windowMoveDiff = w->pos() - unscalePos( me->pos(), NULL );
                 windowMove = w;
                 effects->setElevatedWindow( windowMove, true );
+                if( isUsingPresentWindows() && !w->isOnAllDesktops() )
+                    {
+                    WindowMotionManager& manager = m_managers[ (w->desktop()-1)*(effects->numScreens()) + w->screen() ];
+                    const QRectF transformedGeo = manager.transformedGeometry( w );
+                    const QPointF pos = scalePos( transformedGeo.topLeft().toPoint(), w->desktop(), w->screen() );
+                    const QSize size( scale[w->screen()] * (float)transformedGeo.width(),
+                                      scale[w->screen()] * (float)transformedGeo.height() );
+                    m_windowMoveGeometry = QRect( pos.toPoint(), size );
+                    m_windowMoveStartPoint = me->pos();
+
+                    manager.unmanage( w );
+                    m_proxy->calculateWindowTransformations( manager.managedWindows(), w->screen(), manager );
+                    }
                 }
             }
         else if(( me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton ) && windowMove == NULL )
@@ -536,6 +554,12 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             if( wasWindowMove )
                 effects->activateWindow( windowMove ); // Just in case it was deactivated
             effects->setElevatedWindow( windowMove, false );
+            if( isUsingPresentWindows() )
+                {
+                WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
+                manager.manage( windowMove );
+                m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
+                }
             windowMove = NULL;
             XDefineCursor( display(), input, QCursor( Qt::PointingHandCursor ).handle() );
             }
