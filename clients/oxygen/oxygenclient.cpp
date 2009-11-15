@@ -948,7 +948,8 @@ namespace Oxygen
       // separators
       // draw Left separator
       QColor color( backgroundPalette( widget(), palette ).window().color() );
-      if( index != visibleClientGroupItem() && ( ( index == 0 && buttonsLeftWidth() > 0 ) || itemData_.isTarget( index ) ) )
+      bool isFirstItem(  index == 0 || (index == 1 && !itemData_[0].boundingRect_.isValid() ) );
+      if( !active && ( ( isFirstItem && buttonsLeftWidth() > 0 ) || itemData_.isTarget( index ) ) )
       {
 
         QRect local( item.boundingRect_.topLeft()+QPoint(0,2), QSize( 2, item.boundingRect_.height()-3 ) );
@@ -960,7 +961,7 @@ namespace Oxygen
       if(
         ( index == itemCount-1 && buttonsRightWidth() > 0 ) ||
         ( index+1 < itemCount && ( itemData_.isTarget( index+1 ) ||
-        index+1 != visibleClientGroupItem() ) ) )
+        !( index+1 == visibleClientGroupItem() && itemData_[index+1].boundingRect_.isValid() ) ) ) )
       {
 
         QRect local( item.boundingRect_.topRight()+QPoint(0,2), QSize( 2, item.boundingRect_.height()-3 ) );
