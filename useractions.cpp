@@ -310,7 +310,7 @@ void Workspace::initSwitchToTab()
 void Workspace::slotSwitchToTab( QAction* action )
     {
     int side = action->data().toInt();
-    int c_id = active_popup_client->clientGroup()->indexOfClient( active_popup_client );
+    int c_id = active_popup_client->clientGroup()->indexOfVisibleClient();
     int size = active_popup_client->clientGroup()->clients().count();
     if( side == 0 ) // Left
         {
@@ -353,7 +353,7 @@ void Workspace::switchToTabPopupAboutToShow()
     int index = 2;
     foreach( Client* c, active_popup_client->clientGroup()->clients() )
         {
-        if( c != active_popup_client )
+        if( c != active_popup_client->clientGroup()->visible() )
             {
             action = switch_to_tab_popup->addAction( c->caption() );
             action->setData( index );
