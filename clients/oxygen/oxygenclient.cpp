@@ -1627,7 +1627,10 @@ namespace Oxygen
 
     // do nothing if there is only one tab
     if( itemData_.count() > 1 )
-    { itemData_.animate( AnimationTypes( AnimationLeave|AnimationSameTarget ), sourceItem_ ); }
+    {
+      itemData_.animate( AnimationTypes( AnimationMove|AnimationSameTarget ), sourceItem_ );
+      itemData_.animate( AnimationTypes( AnimationLeave|AnimationSameTarget ), sourceItem_ );
+    }
 
   }
 
