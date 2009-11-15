@@ -85,13 +85,13 @@ namespace Oxygen
 
       // store dragged item
       bool animate( true );
-      
-      if( (type&AnimationSameTarget) && draggedItem_ == NoItem ) 
+
+      if( (type&AnimationSameTarget) && draggedItem_ == NoItem )
       {
-      
+
         animate = false;
         draggedItem_ = target;
-      
+
       } else if( (type&AnimationMove) && targetItem_ == target ) return;
 
       // check timeLine
@@ -128,15 +128,15 @@ namespace Oxygen
         item.endBoundingRect_ = item.refBoundingRect_;
         item.endBoundingRect_.setLeft( left );
 
-        if( !( (type&AnimationSameTarget) && index == draggedItem_ ) )
+        if( (type&AnimationSameTarget) && index == draggedItem_ )
         {
 
-          item.endBoundingRect_.setWidth( width );
-          left+=width;
+          item.endBoundingRect_.setWidth( 0 );
 
         } else {
 
-          item.endBoundingRect_.setWidth( 0 );
+          item.endBoundingRect_.setWidth( width );
+          left+=width;
 
         }
 
@@ -150,18 +150,18 @@ namespace Oxygen
       }
 
       if( animate ) timeLine().start();
-      else { 
-        
+      else {
+
         for( int index = 0; index < count(); index++ )
-        { 
+        {
           ClientGroupItemData& item( ClientGroupItemDataList::operator[](index) );
           item.boundingRect_ = item.endBoundingRect_;
         }
-        
+
         updateButtons( true );
-        
+
       }
-        
+
     } else if( type & AnimationLeave ) {
 
       // stop timeLine
@@ -195,8 +195,18 @@ namespace Oxygen
           if( index != target )
           {
 
+            if( count() <= 2 )
+            {
+
+              item.endBoundingRect_ = client_.defaultTitleRect( index == client_.visibleClientGroupItem() );
+
+            } else {
+
+
               item.endBoundingRect_.setWidth( width );
               left+=width;
+
+            }
 
           } else {
 
@@ -254,7 +264,8 @@ namespace Oxygen
       const ClientGroupItemData& item( at(index) );
       if( !item.closeButton_ ) continue;
 
-      if( !item.boundingRect_.isValid() ) {
+      if( (!item.boundingRect_.isValid()) || ((animationType_ & AnimationSameTarget)&&count()<=2 ) )
+      {
 
         item.closeButton_.data()->hide();
 

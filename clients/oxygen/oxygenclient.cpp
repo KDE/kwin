@@ -389,6 +389,30 @@ namespace Oxygen
   }
 
   //_________________________________________________________
+  QRect OxygenClient::defaultTitleRect( bool active ) const
+  {
+    QRect titleRect( OxygenClient::titleRect() );
+    titleRect.adjust( 0, -layoutMetric( LM_TitleEdgeTop ), 0, 0 );
+
+    if( active && configuration().drawTitleOutline() && isActive() )
+    {
+
+      QRect textRect( titleBoundingRect( options()->font( true, false),  titleRect, caption() ) );
+      titleRect.setLeft( textRect.left() - layoutMetric( LM_TitleBorderLeft ) );
+      titleRect.setRight( textRect.right() + layoutMetric( LM_TitleBorderRight ) );
+
+    } else {
+
+      titleRect.setLeft( widget()->rect().left() + layoutMetric( LM_OuterPaddingLeft ) );
+      titleRect.setRight( widget()->rect().right() - layoutMetric( LM_OuterPaddingRight ) );
+
+    }
+
+    return titleRect;
+
+  }
+
+  //_________________________________________________________
   QRect OxygenClient::titleBoundingRect( const QFont& font, QRect rect, const QString& caption ) const
   {
 
@@ -494,23 +518,7 @@ namespace Oxygen
     if( itemData_.count() == 1 )
     {
 
-      QRect active( itemData_.front().activeRect_ );
-      if( configuration().drawTitleOutline() && isActive() )
-      {
-
-        QRect textRect( titleBoundingRect( options()->font( true, false),  active, caption() ) );
-        active.setLeft( textRect.left() - layoutMetric( LM_TitleBorderLeft ) );
-        active.setRight( textRect.right() + layoutMetric( LM_TitleBorderRight ) );
-
-      } else {
-
-        active.setLeft( widget()->rect().left() + layoutMetric( LM_OuterPaddingLeft ) );
-        active.setRight( widget()->rect().right() - layoutMetric( LM_OuterPaddingRight ) );
-
-      }
-
-      // assign to item
-      itemData_.front().reset( active );
+      itemData_.front().reset( defaultTitleRect() );
 
     } else {
 
@@ -869,7 +877,7 @@ namespace Oxygen
     { textRect.adjust( layoutMetric( LM_TitleBorderLeft ), 0, -layoutMetric(LM_TitleBorderRight), 0 ); }
 
     // add extra space for the button
-    if( itemCount > 1 )
+    if( itemCount > 1 && item.closeButton_ && item.closeButton_.data()->isVisible() )
     { textRect.adjust( 0, 0, - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 ); }
 
     // check if current item is active
@@ -934,7 +942,7 @@ namespace Oxygen
     }
 
     // render separators between inactive tabs
-    if( !( active || itemCount == 1 ) )
+    if( !( active || itemCount == 1 ) && item.closeButton_ && item.closeButton_.data()->isVisible() )
     {
 
       // separators
