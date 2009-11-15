@@ -53,7 +53,7 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
         return;
 
     // Client must not already be grouped
-    assert( c->clientGroup()->clients().size() == 1 );
+    assert( !c->clientGroup() || c->clientGroup()->clients().size() == 1 );
 
     // Tabbed windows MUST have a decoration
     if( c->noBorder() )
