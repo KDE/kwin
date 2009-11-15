@@ -572,7 +572,7 @@ void KTitleBarActionsConfig::load()
   setComboText(coTiAct1,cg.readEntry("CommandActiveTitlebar1","Raise").toAscii());
   setComboText(coTiAct2,cg.readEntry("CommandActiveTitlebar2","Lower").toAscii());
   setComboText(coTiAct3,cg.readEntry("CommandActiveTitlebar3","Operations menu").toAscii());
-  setComboText(coTiAct4,cg.readEntry("CommandTitlebarWheel","Nothing").toAscii());  
+  setComboText(coTiAct4,cg.readEntry("CommandTitlebarWheel","Switch to Group Window to the Left/Right").toAscii());
   setComboText(coTiInAct1,cg.readEntry("CommandInactiveTitlebar1","Activate and raise").toAscii());
   setComboText(coTiInAct2,cg.readEntry("CommandInactiveTitlebar2","Activate and lower").toAscii());
   setComboText(coTiInAct3,cg.readEntry("CommandInactiveTitlebar3","Operations menu").toAscii());
@@ -611,7 +611,7 @@ void KTitleBarActionsConfig::defaults()
   setComboText(coTiAct1,"Raise");
   setComboText(coTiAct2,"Lower");
   setComboText(coTiAct3,"Operations menu");
-  setComboText(coTiAct4,"Nothing");    
+  setComboText(coTiAct4,"Switch to Group Window to the Left/Right");
   setComboText(coTiInAct1,"Activate and raise");
   setComboText(coTiInAct2,"Activate and lower");
   setComboText(coTiInAct3,"Operations menu");
