@@ -1564,6 +1564,11 @@ void Client::getWmNormalHints()
         }
     if( ! ( xSizeHint.flags & PWinGravity ))
         xSizeHint.win_gravity = NorthWestGravity;
+
+    // Update min/max size of this group
+    if( clientGroup() )
+        clientGroup()->updateMinMaxSize();
+
     if( isManaged())
         { // update to match restrictions
         QSize new_size = adjustedSize();
@@ -1775,11 +1780,6 @@ void Client::configureRequest( int value_mask, int rx, int ry, int rw, int rh, i
                 }
             }
         }
-
-    // Update states of all other windows in this group
-    if( clientGroup() )
-        clientGroup()->updateStates( this );
-
     // No need to send synthetic configure notify event here, either it's sent together
     // with geometry change, or there's no need to send it.
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.

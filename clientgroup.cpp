@@ -270,7 +270,7 @@ void ClientGroup::updateMinMaxSize()
     if( minSize_.width() > maxSize_.width() ||
         minSize_.height() > maxSize_.height() )
         {
-        kWarning(1212) << "ClientGroup's min size is greater than its' max size. Setting max to min.";
+        //kWarning(1212) << "ClientGroup's min size is greater than its max size. Setting max to min.";
         maxSize_ = minSize_;
         }
 
