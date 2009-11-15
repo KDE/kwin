@@ -155,15 +155,15 @@ void Effect::windowUnminimized( EffectWindow* )
     {
     }
 
-void Effect::clientGroupItemSwitched( EffectWindow* from, EffectWindow* to )
+void Effect::clientGroupItemSwitched( EffectWindow*, EffectWindow* )
     {
     }
 
-void Effect::clientGroupItemAdded( EffectWindow* from, EffectWindow* to )
+void Effect::clientGroupItemAdded( EffectWindow*, EffectWindow* )
     {
     }
 
-void Effect::clientGroupItemRemoved( EffectWindow* c, EffectWindow* group )
+void Effect::clientGroupItemRemoved( EffectWindow*, EffectWindow* )
     {
     }
 

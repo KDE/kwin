@@ -40,6 +40,7 @@ extern "C"
 
 TabstripConfig::TabstripConfig( KConfig *c, QWidget *parent )
     {
+    Q_UNUSED(c);
     KGlobal::locale()->insertCatalog( "kwin_tabstrip_config" );
     config = new KConfig( "tabstriprc" );
     KConfigGroup cg( config, "General" );
