@@ -246,7 +246,7 @@ void Client::releaseWindow( bool on_shutdown )
     destroyDecoration();
     cleanGrouping();
     if( clientGroup() )
-        clientGroup()->remove( this );
+        clientGroup()->remove( this, QRect(), true );
     if( !on_shutdown )
         {
         workspace()->removeClient( this, Allowed );
@@ -310,7 +310,7 @@ void Client::destroyClient()
     destroyDecoration();
     cleanGrouping();
     if( clientGroup() )
-        clientGroup()->remove( this );
+        clientGroup()->remove( this, QRect(), true );
     workspace()->removeClient( this, Allowed );
     client = None; // invalidate
     XDestroyWindow( display(), wrapper );

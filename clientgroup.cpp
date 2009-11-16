@@ -97,12 +97,12 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
     clients_[visible_]->triggerDecorationRepaint();
     }
 
-void ClientGroup::remove( int index, const QRect& newGeom )
+void ClientGroup::remove( int index, const QRect& newGeom, bool toNullGroup )
     {
-    remove( clients_[index], newGeom );
+    remove( clients_[index], newGeom, toNullGroup );
     }
 
-void ClientGroup::remove( Client* c, const QRect& newGeom )
+void ClientGroup::remove( Client* c, const QRect& newGeom, bool toNullGroup )
     {
     if( !c )
         return;
@@ -130,7 +130,7 @@ void ClientGroup::remove( Client* c, const QRect& newGeom )
     updateItems();
     updateMinMaxSize();
 
-    c->setClientGroup( new ClientGroup( c ));
+    c->setClientGroup( toNullGroup ? NULL : new ClientGroup( c ));
     if( newGeom.isValid() )
         c->setGeometry( newGeom );
 

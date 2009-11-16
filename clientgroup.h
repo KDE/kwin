@@ -62,14 +62,16 @@ class ClientGroup
         /**
          * Remove the client at index \p index from the group. If \p newGeom is set then the client
          * will move and resize to the specified geometry, otherwise it will stay where the group
-         * is located.
+         * is located. If \p toNullGroup is not true then the client will be added to a new group
+         * of its own.
          */
-        void remove( int index, const QRect& newGeom = QRect() );
+        void remove( int index, const QRect& newGeom = QRect(), bool toNullGroup = false );
         /**
          * Remove \p c from the group. If \p newGeom is set then the client will move and resize to
-         * the specified geometry, otherwise it will stay where the group is located.
+         * the specified geometry, otherwise it will stay where the group is located. If
+         * \p toNullGroup is not true then the client will be added to a new group of its own.
          */
-        void remove( Client* c, const QRect& newGeom = QRect() );
+        void remove( Client* c, const QRect& newGeom = QRect(), bool toNullGroup = false );
         /**
          * Remove all clients from this group. Results in all clients except the first being moved
            to a group of their own.
