@@ -1516,7 +1516,11 @@ void EffectWindowImpl::closeWindow() const
 bool EffectWindowImpl::visibleInClientGroup() const
     {
     if( Client* c = dynamic_cast< Client* >( toplevel ))
+        {
+        if( !c->clientGroup() )
+            return true;
         return c == c->clientGroup()->visible();
+        }
     return false;
     }
 
