@@ -182,7 +182,7 @@ unsigned long Options::updateSettings()
     CmdInactiveTitlebar1 = mouseCommand(config.readEntry("CommandInactiveTitlebar1","Activate and raise"), true );
     CmdInactiveTitlebar2 = mouseCommand(config.readEntry("CommandInactiveTitlebar2","Activate and lower"), true );
     CmdInactiveTitlebar3 = mouseCommand(config.readEntry("CommandInactiveTitlebar3","Operations menu"), true );
-    CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel","Nothing"));
+    CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel","Switch to Group Window to the Left/Right"));
     CmdWindow1 = mouseCommand(config.readEntry("CommandWindow1","Activate, raise and pass click"), false );
     CmdWindow2 = mouseCommand(config.readEntry("CommandWindow2","Activate and pass click"), false );
     CmdWindow3 = mouseCommand(config.readEntry("CommandWindow3","Activate and pass click"), false );
