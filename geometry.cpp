@@ -402,7 +402,7 @@ QPoint Workspace::adjustClientPosition( Client* c, QPoint pos, bool unrestricted
                 {
                 if ((*l)->isOnDesktop(c->desktop()) &&
                    !(*l)->isMinimized()
-                   && (!(*l)->clientGroup() || (*l) != (*l)->clientGroup()->visible())
+                    && (!(*l)->clientGroup() || (*l) == (*l)->clientGroup()->visible())
                     && (*l) != c )
                     {
                     lx = (*l)->x();
