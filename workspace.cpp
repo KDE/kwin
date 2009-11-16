@@ -1076,7 +1076,7 @@ void Workspace::slotReconfigure()
         if( !decorationSupportsClientGrouping() )
             {
             QList<ClientGroup*> tmpGroups = clientGroups; // Prevent crashing
-            for( QList<ClientGroup*>::const_iterator i = tmpGroups.begin(); i != tmpGroups.end(); i++ )
+            for( QList<ClientGroup*>::const_iterator i = tmpGroups.constBegin(); i != tmpGroups.constEnd(); i++ )
                 (*i)->removeAll();
             }
         mgr->destroyPreviousPlugin();

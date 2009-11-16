@@ -329,7 +329,7 @@ void Workspace::slotSwitchToTab( QAction* action )
     else // Find the client
         {
         side -= 2;
-        for( QList<ClientGroup*>::const_iterator i = clientGroups.begin(); i != clientGroups.end(); ++i )
+        for( QList<ClientGroup*>::const_iterator i = clientGroups.constBegin(); i != clientGroups.constEnd(); ++i )
             {
             if( (*i)->contains( active_popup_client ))
                 {
@@ -394,7 +394,7 @@ void Workspace::groupTabPopupAboutToShow()
         return;
     add_tabs_popup->clear();
     int index = 0;
-    for( QList<ClientGroup*>::const_iterator i = clientGroups.begin(); i != clientGroups.end(); i++, index++ )
+    for( QList<ClientGroup*>::const_iterator i = clientGroups.constBegin(); i != clientGroups.constEnd(); i++, index++ )
         {
         if( !(*i)->contains( active_popup_client ))
             {
