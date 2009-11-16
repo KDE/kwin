@@ -1,3 +1,7 @@
 [Desktop Entry]
 Name=Tabstrip
+Name[pt]=Barra de Páginas
+Name[sv]=Flikrad
+Name[uk]=Смужка вкладок
+Name[x-test]=xxTabstripxx
 X-KDE-Library=kwin3_tabstrip

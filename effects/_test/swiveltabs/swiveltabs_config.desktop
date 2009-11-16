@@ -7,3 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_swiveltabs
 X-KDE-PluginKeyword=swiveltabs
 
 Name=Swivel Tabs
+Name[pt]=Barras Rotativas
+Name[sv]=Låt flikar vända
+Name[uk]=Вкладки на шарнірах
+Name[x-test]=xxSwivel Tabsxx
