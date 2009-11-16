@@ -1645,6 +1645,8 @@ void Client::dontMoveResize()
 
 void Client::setClientShown( bool shown )
     {
+    if( deleting )
+        return; // Don't change shown status if this client is being deleted
     if( !shown )
         {
         unmap( Allowed );
