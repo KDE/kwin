@@ -1529,7 +1529,7 @@ namespace Oxygen
 
       QPoint position( event->pos() );
       int itemClicked( OxygenClient::itemClicked( position, false ) );
-      itemData_.animate( AnimationTypes( AnimationEnter|AnimationSameTarget ), itemClicked );
+      itemData_.animate( AnimationEnter|AnimationSameTarget, itemClicked );
 
     }
 
@@ -1545,7 +1545,7 @@ namespace Oxygen
     {
 
       if( dragStartTimer_.isActive() ) dragStartTimer_.stop();
-      itemData_.animate( AnimationTypes(AnimationLeave|AnimationSameTarget), sourceItem_ );
+      itemData_.animate( AnimationLeave|AnimationSameTarget, sourceItem_ );
 
     } else if( itemData_.animated() ) {
 
@@ -1577,7 +1577,7 @@ namespace Oxygen
 
       QPoint position( event->pos() );
       int itemClicked( OxygenClient::itemClicked( position, false ) );
-      itemData_.animate( AnimationTypes( AnimationMove|AnimationSameTarget ), itemClicked );
+      itemData_.animate( AnimationMove|AnimationSameTarget, itemClicked );
 
     }
 
@@ -1637,8 +1637,8 @@ namespace Oxygen
     // do nothing if there is only one tab
     if( itemData_.count() > 1 )
     {
-      itemData_.animate( AnimationTypes( AnimationMove|AnimationSameTarget ), sourceItem_ );
-      itemData_.animate( AnimationTypes( AnimationLeave|AnimationSameTarget ), sourceItem_ );
+      itemData_.animate( AnimationMove|AnimationSameTarget, sourceItem_ );
+      itemData_.animate( AnimationLeave|AnimationSameTarget, sourceItem_ );
     }
 
   }

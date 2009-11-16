@@ -196,6 +196,8 @@ namespace Oxygen
 
   };
 
+  Q_DECLARE_OPERATORS_FOR_FLAGS(Oxygen::AnimationTypes)
+
 }
 
 #endif
