@@ -60,6 +60,8 @@ KWinTabBoxConfig::KWinTabBoxConfig( QWidget* parent, const QVariantList& args )
     KTabWidget* tabWidget = new KTabWidget( this );
     m_primaryTabBoxUi = new KWinTabBoxConfigForm( tabWidget );
     m_alternativeTabBoxUi = new KWinTabBoxConfigForm( tabWidget );
+    m_alternativeTabBoxUi->description->setText(
+        i18n( "These settings are used by the \"Walk Through Windows Alternative\" actions." ));
     tabWidget->addTab( m_primaryTabBoxUi, i18n("Main") );
     tabWidget->addTab( m_alternativeTabBoxUi, i18n("Alternative") );
     QVBoxLayout* layout = new QVBoxLayout( this );

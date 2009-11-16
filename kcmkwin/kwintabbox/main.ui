@@ -6,11 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
-    <height>279</height>
+    <width>445</width>
+    <height>288</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="KTitleWidget" name="description">
+     <property name="text">
+      <string>These settings are used by the &quot;Walk Through Windows&quot; actions.</string>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -198,6 +205,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KTitleWidget</class>
+   <extends>QWidget</extends>
+   <header>ktitlewidget.h</header>
+  </customwidget>
   <customwidget>
    <class>KPushButton</class>
    <extends>QPushButton</extends>
