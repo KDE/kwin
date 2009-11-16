@@ -2877,6 +2877,37 @@ void Workspace::moveItemToClientGroup( ClientGroup* oldGroup, int oldIndex,
     group->add( c, index, true );
     }
 
+// To accept "mainwindow#1" to "mainwindow#2"
+static QByteArray truncatedWindowRole( QByteArray a )
+    {
+    int i = a.indexOf('#');
+    if( i == -1 )
+        return a;
+    QByteArray b( a );
+    b.truncate( i );
+    return b;
+    }
+
+Client* Workspace::findSimilarClient( Client* c )
+    { // Attempt to find a similar window to the input. If we find multiple possibilities that are in 
+      // different groups then ignore all of them. This function is for automatic window grouping.
+    Client* found = NULL;
+    QByteArray wRole = truncatedWindowRole( c->windowRole() );
+    foreach( Client* cl, clients )
+        {
+        QByteArray wRoleB = truncatedWindowRole( cl->windowRole() );
+        if( c->resourceClass() == cl->resourceClass() && // Same resource class
+            wRole == wRoleB && // Same window role
+            cl->isNormalWindow() ) // Normal window TODO: Can modal windows be "normal"?
+            {
+            if( found && found->clientGroup() != cl->clientGroup() ) // We've found two, ignore both
+                return NULL;
+            found = cl;
+            }
+        }
+    return found;
+    }
+
 } // namespace
 
 #include "workspace.moc"

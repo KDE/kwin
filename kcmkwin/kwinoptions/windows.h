@@ -204,6 +204,9 @@ private:
   void setHideUtilityWindowsForInactive( bool );
   QCheckBox* hideUtilityWindowsForInactive;
 
+  void setAutogroupSimilarWindows( bool );
+  QCheckBox* autogroupSimilarWindows;
+
   int getPlacement( void ); //CT
   void setPlacement(int); //CT
   KComboBox *placementCombo;

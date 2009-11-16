@@ -322,6 +322,7 @@ class Workspace : public QObject, public KDecorationDefines
         int indexOfClientGroup( ClientGroup* group );
         /// Change the client c_id to the group with index g_id
         void moveItemToClientGroup( ClientGroup* oldGroup, int oldIndex, ClientGroup* group, int index = -1 );
+        Client* findSimilarClient( Client* c );
         QList<ClientGroup*> clientGroups; // List of existing clients groups with no special order
 
         /**

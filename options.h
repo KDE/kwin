@@ -321,6 +321,8 @@ class Options : public KDecorationOptions
         // Whether to hide utility windows for inactive applications.
         bool hideUtilityWindowsForInactive;
 
+        bool autogroupSimilarWindows;
+
         // Compositing settings
         bool useCompositing;
         CompositingType compositingMode;

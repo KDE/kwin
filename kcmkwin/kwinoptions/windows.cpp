@@ -61,6 +61,7 @@
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
 #define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
 #define KWIN_HIDE_UTILITY          "HideUtilityWindowsForInactive"
+#define KWIN_AUTOGROUP_SIMILAR     "AutogroupSimilarWindows"
 #define KWIN_SEPARATE_SCREEN_FOCUS "SeparateScreenFocus"
 #define KWIN_ACTIVE_MOUSE_SCREEN   "ActiveMouseScreen"
 
@@ -592,6 +593,12 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     connect(hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
     vLay->addWidget( hideUtilityWindowsForInactive, 1, 0, 1, 2 );
 
+    autogroupSimilarWindows = new QCheckBox( i18n( "Automatically group identical windows" ), this );
+    autogroupSimilarWindows->setWhatsThis(
+        i18n( "When turned on attempt to automatically detect when a newly opened window is related"
+              " to an existing one and place them in the same window group." ));
+    connect(autogroupSimilarWindows, SIGNAL(toggled(bool)), SLOT(changed()));
+    vLay->addWidget( autogroupSimilarWindows, 2, 0, 1, 2 );
 
     lay->addStretch();
     load();
@@ -663,6 +670,7 @@ void KAdvancedConfig::load( void )
 //  }
 
     setHideUtilityWindowsForInactive( cg.readEntry( KWIN_HIDE_UTILITY, true));
+    setAutogroupSimilarWindows( cg.readEntry( KWIN_AUTOGROUP_SIMILAR, false));
 
     emit KCModule::changed(false);
 }
@@ -701,6 +709,7 @@ void KAdvancedConfig::save( void )
         cg.writeEntry(KWIN_PLACEMENT, "Smart");
 
     cg.writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
+    cg.writeEntry(KWIN_AUTOGROUP_SIMILAR, autogroupSimilarWindows->isChecked());
 
     if (standAlone)
     {
@@ -720,6 +729,7 @@ void KAdvancedConfig::defaults()
     setShadeHoverInterval(250);
     setPlacement(SMART_PLACEMENT);
     setHideUtilityWindowsForInactive( true );
+    setAutogroupSimilarWindows( false );
     emit KCModule::changed(true);
 }
 
@@ -737,6 +747,10 @@ void KAdvancedConfig::setPlacement(int plac)
 
 void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
     hideUtilityWindowsForInactive->setChecked( s );
+}
+
+void KAdvancedConfig::setAutogroupSimilarWindows(bool s) {
+    autogroupSimilarWindows->setChecked( s );
 }
 
 KMovingConfig::~KMovingConfig ()

@@ -85,7 +85,6 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
     updateMinMaxSize();
     updateStates( clients_[visible_], c );
 
-    c->setGeometry( clients_[visible_]->geometry() );
     if( becomeVisible ) // Set visible after settings geometry
         setVisible( c );
 
