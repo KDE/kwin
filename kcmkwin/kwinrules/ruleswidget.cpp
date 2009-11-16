@@ -99,6 +99,7 @@ RulesWidget::RulesWidget( QWidget* parent )
     SETUP( acceptfocus, force );
     SETUP( closeable, force );
     SETUP( autogroup, force );
+    SETUP( autogroupid, force );
     SETUP( opacityactive, force );
     SETUP( opacityinactive, force );
     SETUP( shortcut, force );
@@ -147,6 +148,7 @@ UPDATE_ENABLE_SLOT( skippager )
 UPDATE_ENABLE_SLOT( acceptfocus )
 UPDATE_ENABLE_SLOT( closeable )
 UPDATE_ENABLE_SLOT( autogroup )
+UPDATE_ENABLE_SLOT( autogroupid )
 UPDATE_ENABLE_SLOT( opacityactive )
 UPDATE_ENABLE_SLOT( opacityinactive )
 void RulesWidget::updateEnableshortcut()
@@ -423,6 +425,7 @@ void RulesWidget::setRules( Rules* rules )
     CHECKBOX_FORCE_RULE( acceptfocus, );
     CHECKBOX_FORCE_RULE( closeable, );
     CHECKBOX_FORCE_RULE( autogroup, );
+    LINEEDIT_FORCE_RULE( autogroupid, );
     LINEEDIT_FORCE_RULE( opacityactive, intToStr );
     LINEEDIT_FORCE_RULE( opacityinactive, intToStr );
     LINEEDIT_SET_RULE( shortcut, );
@@ -514,6 +517,7 @@ Rules* RulesWidget::rules() const
     CHECKBOX_FORCE_RULE( acceptfocus, );
     CHECKBOX_FORCE_RULE( closeable, );
     CHECKBOX_FORCE_RULE( autogroup, );
+    LINEEDIT_FORCE_RULE( autogroupid, );
     LINEEDIT_FORCE_RULE( opacityactive, strToInt );
     LINEEDIT_FORCE_RULE( opacityinactive, strToInt );
     LINEEDIT_SET_RULE( shortcut, );
@@ -632,6 +636,7 @@ void RulesWidget::prefillUnusedValues( const KWindowInfo& info )
     //CHECKBOX_PREFILL( acceptfocus, );
     //CHECKBOX_PREFILL( closeable, );
     //CHECKBOX_PREFILL( autogroup, );
+    //LINEEDIT_PREFILL( autogroupid, );
     LINEEDIT_PREFILL( opacityactive, intToStr, 100 /*get the actual opacity somehow*/);
     LINEEDIT_PREFILL( opacityinactive, intToStr, 100 /*get the actual opacity somehow*/);
     //LINEEDIT_PREFILL( shortcut, );

@@ -297,6 +297,7 @@ bool Client::manage( Window w, bool isMapped )
         move( geom.x(), geom.y() ); // Before gravitating
 
     // Create client group if the window will have a decoration
+    bool dontKeepInArea = false;
     if( !noBorder() )
         {
         client_group = NULL;
@@ -312,14 +313,16 @@ bool Client::manage( Window w, bool isMapped )
                     group->add( this, -1, true );
                     break;
                     }
-        if( !client_group && !isMapped && !session &&
-            rules()->checkAutogrouping( options->autogroupSimilarWindows ))
+        if( !client_group && !isMapped && !session )
             { // Attempt to automatically group similar windows
             const Client* similar = workspace()->findSimilarClient( this );
             if( similar && similar->clientGroup() && !similar->noBorder() )
                 {
                 similar->clientGroup()->add( this, -1, true );
-                placementDone = true; // Don't move entire group
+                // Don't move entire group
+                geom = QRect( similar->pos() + similar->clientPos(), similar->clientSize() );
+                placementDone = true;
+                dontKeepInArea = true;
                 }
             }
         if( !client_group )
@@ -345,7 +348,7 @@ bool Client::manage( Window w, bool isMapped )
         placementDone = true;
         }
 
-    if(( !isSpecialWindow() || isToolbar() ) && isMovable() )
+    if(( !isSpecialWindow() || isToolbar() ) && isMovable() && !dontKeepInArea )
         keepInArea( area, partial_keep_in_area );
 
     updateShape();

@@ -2892,19 +2892,45 @@ Client* Workspace::findSimilarClient( Client* c )
     { // Attempt to find a similar window to the input. If we find multiple possibilities that are in 
       // different groups then ignore all of them. This function is for automatic window grouping.
     Client* found = NULL;
-    QByteArray wRole = truncatedWindowRole( c->windowRole() );
-    foreach( Client* cl, clients )
+
+    // See if the window has a group ID to match with
+    QString wGId = c->rules()->checkAutogroupById( QString() );
+    if( !wGId.isEmpty() )
         {
-        QByteArray wRoleB = truncatedWindowRole( cl->windowRole() );
-        if( c->resourceClass() == cl->resourceClass() && // Same resource class
-            wRole == wRoleB && // Same window role
-            cl->isNormalWindow() ) // Normal window TODO: Can modal windows be "normal"?
+        foreach( Client* cl, clients )
             {
-            if( found && found->clientGroup() != cl->clientGroup() ) // We've found two, ignore both
-                return NULL;
-            found = cl;
+            if( wGId == cl->rules()->checkAutogroupById( QString() ))
+                {
+                if( found && found->clientGroup() != cl->clientGroup() ) // We've found two, ignore both
+                    {
+                    found = NULL;
+                    break; // Continue to the next test
+                    }
+                found = cl;
+                }
+            }
+        if( found )
+            return found;
+        }
+
+    // If we don't have an ID take a guess
+    if( c->rules()->checkAutogrouping( options->autogroupSimilarWindows ))
+        {
+        QByteArray wRole = truncatedWindowRole( c->windowRole() );
+        foreach( Client* cl, clients )
+            {
+            QByteArray wRoleB = truncatedWindowRole( cl->windowRole() );
+            if( c->resourceClass() == cl->resourceClass() && // Same resource class
+                wRole == wRoleB && // Same window role
+                cl->isNormalWindow() ) // Normal window TODO: Can modal windows be "normal"?
+                {
+                if( found && found->clientGroup() != cl->clientGroup() ) // We've found two, ignore both
+                    return NULL;
+                found = cl;
+                }
             }
         }
+
     return found;
     }
 
