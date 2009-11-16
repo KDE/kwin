@@ -65,7 +65,7 @@ KCommonDecorationButton *TabstripDecoration::createButton( ButtonType type )
             return ( new TabstripButton( type, this, i18n("Menu") ) );
             break;
         case OnAllDesktopsButton:
-            return ( new TabstripButton( type, this, i18n("AllDesktops") ) );
+            return ( new TabstripButton( type, this, i18n("All Desktops") ) );
             break;
         case AboveButton:
             return ( new TabstripButton( type, this, i18n("Above") ) );
