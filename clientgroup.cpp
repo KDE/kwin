@@ -275,7 +275,7 @@ void ClientGroup::updateMinMaxSize()
         }
 
     // Ensure all windows are within these sizes
-    const QSize size = clients_[visible_]->size();
+    const QSize size = clients_[visible_]->clientSize();
     QSize newSize(
         qBound( minSize_.width(), size.width(), maxSize_.width() ),
         qBound( minSize_.height(), size.height(), maxSize_.height() ));
@@ -285,7 +285,7 @@ void ClientGroup::updateMinMaxSize()
             // There seems to be a race condition when using plainResize() which causes the window
             // to sometimes be located at new window's location instead of the visible window's location
             // when a window with a large min size is added to a group with a small window size.
-            (*i)->setGeometry( QRect( clients_[visible_]->pos(), newSize )); 
+            (*i)->setGeometry( QRect( clients_[visible_]->pos(), (*i)->sizeForClientSize( newSize ))); 
     }
 
 }

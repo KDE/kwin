@@ -230,6 +230,8 @@ class Client
         bool isElectricBorderMaximizing() const;
         QRect electricBorderMaximizeGeometry();
 
+        QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny, bool noframe = false ) const;
+
         /** Set the quick tile mode ("snap") of this window.
          * This will also handle preserving and restoring of window geometry as necessary.
          * @param mode The tile mode (left/right) to give this window.
@@ -426,7 +428,6 @@ class Client
         void exportMappingState( int s ); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
         bool isManaged() const; ///< Returns false if this client is not yet managed
         void updateAllowedActions( bool force = false );
-        QSize sizeForClientSize( const QSize&, Sizemode mode = SizemodeAny, bool noframe = false ) const;
         QRect fullscreenMonitorsArea( NETFullscreenMonitors topology ) const;
         void changeMaximize( bool horizontal, bool vertical, bool adjust );
         void checkMaximizeGeometry();
