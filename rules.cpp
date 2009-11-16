@@ -68,6 +68,7 @@ Rules::Rules()
     , acceptfocusrule( UnusedForceRule )
     , moveresizemoderule( UnusedForceRule )
     , closeablerule( UnusedForceRule )
+    , autogrouprule( UnusedForceRule )
     , strictgeometryrule( UnusedForceRule )
     , shortcutrule( UnusedSetRule )
     , disableglobalshortcutsrule( UnusedForceRule )
@@ -168,6 +169,7 @@ void Rules::readFromCfg( const KConfigGroup& cfg )
     READ_FORCE_RULE( acceptfocus, , false);
     READ_FORCE_RULE( moveresizemode,Options::stringToMoveResizeMode, QString());
     READ_FORCE_RULE( closeable, , false);
+    READ_FORCE_RULE( autogroup,, false);
     READ_FORCE_RULE( strictgeometry, , false);
     READ_SET_RULE( shortcut, ,QString() );
     READ_FORCE_RULE( disableglobalshortcuts, , false);
@@ -252,6 +254,7 @@ void Rules::write( KConfigGroup& cfg ) const
     WRITE_FORCE_RULE( acceptfocus, );
     WRITE_FORCE_RULE( moveresizemode, Options::moveResizeModeToString );
     WRITE_FORCE_RULE( closeable, );
+    WRITE_FORCE_RULE( autogroup, );
     WRITE_FORCE_RULE( strictgeometry, );
     WRITE_SET_RULE( shortcut, );
     WRITE_FORCE_RULE( disableglobalshortcuts, );
@@ -288,6 +291,7 @@ bool Rules::isEmpty() const
         && acceptfocusrule == UnusedForceRule
         && moveresizemoderule == UnusedForceRule
         && closeablerule == UnusedForceRule
+        && autogrouprule == UnusedForceRule
         && strictgeometryrule == UnusedForceRule
         && shortcutrule == UnusedSetRule
         && disableglobalshortcutsrule == UnusedForceRule );
@@ -612,6 +616,7 @@ APPLY_FORCE_RULE( fsplevel, FSP, int )
 APPLY_FORCE_RULE( acceptfocus, AcceptFocus, bool )
 APPLY_FORCE_RULE( moveresizemode, MoveResizeMode, Options::MoveResizeMode )
 APPLY_FORCE_RULE( closeable, Closeable, bool )
+APPLY_FORCE_RULE( autogroup, Autogrouping, bool )
 APPLY_FORCE_RULE( strictgeometry, StrictGeometry, bool )
 APPLY_RULE( shortcut, Shortcut, QString )
 APPLY_FORCE_RULE( disableglobalshortcuts, DisableGlobalShortcuts, bool )
@@ -674,6 +679,7 @@ void Rules::discardUsed( bool withdrawn )
     DISCARD_USED_FORCE_RULE( acceptfocus );
     DISCARD_USED_FORCE_RULE( moveresizemode );
     DISCARD_USED_FORCE_RULE( closeable );
+    DISCARD_USED_FORCE_RULE( autogroup );
     DISCARD_USED_FORCE_RULE( strictgeometry );
     DISCARD_USED_SET_RULE( shortcut );
     DISCARD_USED_FORCE_RULE( disableglobalshortcuts );
@@ -794,6 +800,7 @@ CHECK_FORCE_RULE( FSP, int )
 CHECK_FORCE_RULE( AcceptFocus, bool )
 CHECK_FORCE_RULE( MoveResizeMode, Options::MoveResizeMode )
 CHECK_FORCE_RULE( Closeable, bool )
+CHECK_FORCE_RULE( Autogrouping, bool )
 CHECK_FORCE_RULE( StrictGeometry, bool )
 CHECK_RULE( Shortcut, QString )
 CHECK_FORCE_RULE( DisableGlobalShortcuts, bool )
@@ -849,6 +856,7 @@ void Client::applyWindowRules()
     QSize s = adjustedSize();
     if( s != size())
         resizeWithChecks( s );
+    // Autogrouping : Only checked on window manage
     // StrictGeometry
     setShortcut( rules()->checkShortcut( shortcut().toString()));
     // see also Client::setActive()

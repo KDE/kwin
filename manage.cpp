@@ -312,7 +312,8 @@ bool Client::manage( Window w, bool isMapped )
                     group->add( this, -1, true );
                     break;
                     }
-        if( !client_group && !isMapped && !session && options->autogroupSimilarWindows )
+        if( !client_group && !isMapped && !session &&
+            rules()->checkAutogrouping( options->autogroupSimilarWindows ))
             { // Attempt to automatically group similar windows
             const Client* similar = workspace()->findSimilarClient( this );
             if( similar && similar->clientGroup() && !similar->noBorder() )

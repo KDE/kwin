@@ -72,6 +72,7 @@ class RulesWidget
         void updateEnableskippager();
         void updateEnableacceptfocus();
         void updateEnablecloseable();
+        void updateEnableautogroup();
         void updateEnableopacityactive();
         void updateEnableopacityinactive();
         // workarounds tab
