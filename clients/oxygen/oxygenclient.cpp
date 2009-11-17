@@ -117,8 +117,8 @@ namespace Oxygen
     widget()->setAcceptDrops( true );
 
     // setup glow animation
-    glowAnimation().data()->setStartValue( 0.1 );
-    glowAnimation().data()->setEndValue( 0.9 );
+    glowAnimation().data()->setStartValue( glowBias() );
+    glowAnimation().data()->setEndValue( 1.0 );
     glowAnimation().data()->setTargetObject( this );
     glowAnimation().data()->setPropertyName( "glowIntensity" );
     glowAnimation().data()->setCurveShape( Animation::EaseInOutCurve );

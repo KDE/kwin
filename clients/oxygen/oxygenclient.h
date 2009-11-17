@@ -48,7 +48,8 @@ namespace Oxygen
         Q_OBJECT
 
         //! declare glow intensity property
-        Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
+        //!Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
+        Q_PROPERTY( qreal glowIntensity READ glowIntensityUnbiased WRITE setGlowIntensity )
 
         //! declare title opacity
         Q_PROPERTY( qreal titleOpacity READ titleOpacity WRITE setTitleOpacity )
@@ -119,8 +120,18 @@ namespace Oxygen
         void setGlowIntensity( qreal value )
         { glowIntensity_ = value; }
 
-        qreal glowIntensity( void ) const
+        //! unbiased glow intensity
+        qreal glowIntensityUnbiased( void ) const
         { return glowIntensity_; }
+
+        //! glow bias
+        static qreal glowBias( void )
+        { return 0.2; }
+
+        //! true (biased) intensity
+        /*! this is needed to have glow go from either 0.2->1 or 0.8->0 depending on the animation direction */
+        qreal glowIntensity( void ) const
+        { return glowAnimation().data()->direction() == Animation::Forward ? glowIntensity_ : glowIntensity_-glowBias(); }
 
         //@}
 
