@@ -69,6 +69,7 @@ Rules::Rules()
     , moveresizemoderule( UnusedForceRule )
     , closeablerule( UnusedForceRule )
     , autogrouprule( UnusedForceRule )
+    , autogroupfgrule( UnusedForceRule )
     , autogroupidrule( UnusedForceRule )
     , strictgeometryrule( UnusedForceRule )
     , shortcutrule( UnusedSetRule )
@@ -171,6 +172,7 @@ void Rules::readFromCfg( const KConfigGroup& cfg )
     READ_FORCE_RULE( moveresizemode,Options::stringToMoveResizeMode, QString());
     READ_FORCE_RULE( closeable, , false);
     READ_FORCE_RULE( autogroup,, false);
+    READ_FORCE_RULE( autogroupfg,, true);
     READ_FORCE_RULE( autogroupid,, QString());
     READ_FORCE_RULE( strictgeometry, , false);
     READ_SET_RULE( shortcut, ,QString() );
@@ -257,6 +259,7 @@ void Rules::write( KConfigGroup& cfg ) const
     WRITE_FORCE_RULE( moveresizemode, Options::moveResizeModeToString );
     WRITE_FORCE_RULE( closeable, );
     WRITE_FORCE_RULE( autogroup, );
+    WRITE_FORCE_RULE( autogroupfg, );
     WRITE_FORCE_RULE( autogroupid, );
     WRITE_FORCE_RULE( strictgeometry, );
     WRITE_SET_RULE( shortcut, );
@@ -295,6 +298,7 @@ bool Rules::isEmpty() const
         && moveresizemoderule == UnusedForceRule
         && closeablerule == UnusedForceRule
         && autogrouprule == UnusedForceRule
+        && autogroupfgrule == UnusedForceRule
         && autogroupidrule == UnusedForceRule
         && strictgeometryrule == UnusedForceRule
         && shortcutrule == UnusedSetRule
@@ -621,6 +625,7 @@ APPLY_FORCE_RULE( acceptfocus, AcceptFocus, bool )
 APPLY_FORCE_RULE( moveresizemode, MoveResizeMode, Options::MoveResizeMode )
 APPLY_FORCE_RULE( closeable, Closeable, bool )
 APPLY_FORCE_RULE( autogroup, Autogrouping, bool )
+APPLY_FORCE_RULE( autogroupfg, AutogroupInForeground, bool )
 APPLY_FORCE_RULE( autogroupid, AutogroupById, QString )
 APPLY_FORCE_RULE( strictgeometry, StrictGeometry, bool )
 APPLY_RULE( shortcut, Shortcut, QString )
@@ -685,6 +690,7 @@ void Rules::discardUsed( bool withdrawn )
     DISCARD_USED_FORCE_RULE( moveresizemode );
     DISCARD_USED_FORCE_RULE( closeable );
     DISCARD_USED_FORCE_RULE( autogroup );
+    DISCARD_USED_FORCE_RULE( autogroupfg );
     DISCARD_USED_FORCE_RULE( autogroupid );
     DISCARD_USED_FORCE_RULE( strictgeometry );
     DISCARD_USED_SET_RULE( shortcut );
@@ -807,6 +813,7 @@ CHECK_FORCE_RULE( AcceptFocus, bool )
 CHECK_FORCE_RULE( MoveResizeMode, Options::MoveResizeMode )
 CHECK_FORCE_RULE( Closeable, bool )
 CHECK_FORCE_RULE( Autogrouping, bool )
+CHECK_FORCE_RULE( AutogroupInForeground, bool )
 CHECK_FORCE_RULE( AutogroupById, QString )
 CHECK_FORCE_RULE( StrictGeometry, bool )
 CHECK_RULE( Shortcut, QString )
@@ -864,6 +871,7 @@ void Client::applyWindowRules()
     if( s != size())
         resizeWithChecks( s );
     // Autogrouping : Only checked on window manage
+    // AutogroupInForeground : Only checked on window manage
     // AutogroupById : Only checked on window manage
     // StrictGeometry
     setShortcut( rules()->checkShortcut( shortcut().toString()));

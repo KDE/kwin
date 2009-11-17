@@ -1157,20 +1157,27 @@
         </widget>
        </item>
        <item row="8" column="0" >
+        <widget class="QCheckBox" name="enable_autogroupfg" >
+         <property name="text" >
+          <string>Autog&amp;roup in foreground</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0" >
         <widget class="QCheckBox" name="enable_autogroupid" >
          <property name="text" >
           <string>Autogroup by I&amp;D</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="0" >
+       <item row="10" column="0" >
         <widget class="QCheckBox" name="enable_opacityactive" >
          <property name="text" >
           <string>A&amp;ctive opacity in %</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="1" >
+       <item row="10" column="1" >
         <widget class="KComboBox" name="rule_opacityactive" >
          <property name="enabled" >
           <bool>false</bool>
@@ -1192,7 +1199,7 @@
          </item>
         </widget>
        </item>
-       <item row="9" column="2" colspan="2" >
+       <item row="10" column="2" colspan="2" >
         <widget class="KRestrictedLine" name="opacityactive" >
          <property name="enabled" >
           <bool>false</bool>
@@ -1283,14 +1290,46 @@
         </widget>
        </item>
        <item row="8" column="2" >
+        <widget class="QCheckBox" name="autogroupfg" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="text" >
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="2" >
         <widget class="KLineEdit" name="autogroupid" >
          <property name="enabled" >
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="8" column="1" >
+       <item row="9" column="1" >
         <widget class="KComboBox" name="rule_autogroupid" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text" >
+           <string>Do Not Affect</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Force Temporarily</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="8" column="1" >
+        <widget class="KComboBox" name="rule_autogroupfg" >
          <property name="enabled" >
           <bool>false</bool>
          </property>
@@ -1562,7 +1601,7 @@
          </item>
         </widget>
        </item>
-       <item row="12" column="1" >
+       <item row="13" column="1" >
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -1578,7 +1617,7 @@
          </property>
         </spacer>
        </item>
-       <item row="10" column="1" >
+       <item row="11" column="1" >
         <widget class="KComboBox" name="rule_opacityinactive" >
          <property name="enabled" >
           <bool>false</bool>
@@ -1600,7 +1639,7 @@
          </item>
         </widget>
        </item>
-       <item row="10" column="2" colspan="2" >
+       <item row="11" column="2" colspan="2" >
         <widget class="KRestrictedLine" name="opacityinactive" >
          <property name="enabled" >
           <bool>false</bool>
@@ -1610,14 +1649,14 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="0" >
+       <item row="11" column="0" >
         <widget class="QCheckBox" name="enable_opacityinactive" >
          <property name="text" >
           <string>I&amp;nactive opacity in %</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="0" >
+       <item row="12" column="0" >
         <widget class="QCheckBox" name="enable_shortcut" >
          <property name="text" >
           <string>Shortcut</string>
@@ -1627,7 +1666,7 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="1" >
+       <item row="12" column="1" >
         <widget class="KComboBox" name="rule_shortcut" >
          <property name="enabled" >
           <bool>false</bool>
@@ -1664,14 +1703,14 @@
          </item>
         </widget>
        </item>
-       <item row="11" column="5" >
+       <item row="12" column="5" >
         <widget class="QPushButton" name="shortcut_edit" >
          <property name="text" >
           <string>Edit...</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="2" colspan="3" >
+       <item row="12" column="2" colspan="3" >
         <widget class="KRestrictedLine" name="shortcut" >
          <property name="enabled" >
           <bool>false</bool>

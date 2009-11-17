@@ -73,6 +73,7 @@ class RulesWidget
         void updateEnableacceptfocus();
         void updateEnablecloseable();
         void updateEnableautogroup();
+        void updateEnableautogroupfg();
         void updateEnableautogroupid();
         void updateEnableopacityactive();
         void updateEnableopacityinactive();

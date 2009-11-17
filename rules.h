@@ -78,6 +78,7 @@ class WindowRules
         Options::MoveResizeMode checkMoveResizeMode( Options::MoveResizeMode mode ) const;
         bool checkCloseable( bool closeable ) const;
         bool checkAutogrouping( bool autogroup ) const;
+        bool checkAutogroupInForeground( bool fg ) const;
         QString checkAutogroupById( QString id ) const;
         bool checkStrictGeometry( bool strict ) const;
         QString checkShortcut( QString s, bool init = false ) const;
@@ -132,6 +133,7 @@ class Rules
         bool applyMoveResizeMode( Options::MoveResizeMode& mode ) const;
         bool applyCloseable( bool& closeable ) const;
         bool applyAutogrouping( bool& autogroup ) const;
+        bool applyAutogroupInForeground( bool& fg ) const;
         bool applyAutogroupById( QString& id ) const;
         bool applyStrictGeometry( bool& strict ) const;
         bool applyShortcut( QString& shortcut, bool init ) const;
@@ -248,6 +250,8 @@ class Rules
         ForceRule closeablerule;
         bool autogroup;
         ForceRule autogrouprule;
+        bool autogroupfg;
+        ForceRule autogroupfgrule;
         QString autogroupid;
         ForceRule autogroupidrule;
         bool strictgeometry;
