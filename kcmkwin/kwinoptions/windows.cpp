@@ -593,7 +593,7 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     connect(hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
     vLay->addWidget( hideUtilityWindowsForInactive, 1, 0, 1, 2 );
 
-    autogroupSimilarWindows = new QCheckBox( i18n( "Automatically group identical windows" ), this );
+    autogroupSimilarWindows = new QCheckBox( i18n( "Automatically group similar windows" ), this );
     autogroupSimilarWindows->setWhatsThis(
         i18n( "When turned on attempt to automatically detect when a newly opened window is related"
               " to an existing one and place them in the same window group." ));
