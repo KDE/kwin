@@ -177,10 +177,10 @@ unsigned long Options::updateSettings()
     // Mouse bindings
     config = KConfigGroup( _config, "MouseBindings" );
     CmdActiveTitlebar1 = mouseCommand(config.readEntry("CommandActiveTitlebar1","Raise"), true );
-    CmdActiveTitlebar2 = mouseCommand(config.readEntry("CommandActiveTitlebar2","Lower"), true );
+    CmdActiveTitlebar2 = mouseCommand(config.readEntry("CommandActiveTitlebar2","Start Window Tab Drag"), true );
     CmdActiveTitlebar3 = mouseCommand(config.readEntry("CommandActiveTitlebar3","Operations menu"), true );
     CmdInactiveTitlebar1 = mouseCommand(config.readEntry("CommandInactiveTitlebar1","Activate and raise"), true );
-    CmdInactiveTitlebar2 = mouseCommand(config.readEntry("CommandInactiveTitlebar2","Activate and lower"), true );
+    CmdInactiveTitlebar2 = mouseCommand(config.readEntry("CommandInactiveTitlebar2","Start Window Tab Drag"), true );
     CmdInactiveTitlebar3 = mouseCommand(config.readEntry("CommandInactiveTitlebar3","Operations menu"), true );
     CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel","Switch to Group Window to the Left/Right"));
     CmdWindow1 = mouseCommand(config.readEntry("CommandWindow1","Activate, raise and pass click"), false );
@@ -327,6 +327,7 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     if (lowerName == "resize") return restricted ? MouseResize : MouseUnrestrictedResize;
     if (lowerName == "shade") return MouseShade;
     if (lowerName == "minimize") return MouseMinimize;
+    if (lowerName == "start window tab drag") return MouseClientGroupDrag;
     if (lowerName == "close") return MouseClose;
     if (lowerName == "nothing") return MouseNothing;
     return MouseNothing;

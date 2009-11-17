@@ -107,6 +107,7 @@ class KWIN_EXPORT KDecorationBridgeUnstable
         virtual void closeClientGroupItem( int index ) = 0;
         virtual void closeAllInClientGroup() = 0;
         virtual void displayClientMenu( int index, const QPoint& pos ) = 0;
+        virtual WindowOperation buttonToWindowOperation( Qt::MouseButtons button ) = 0;
     };
 
 /** @} */

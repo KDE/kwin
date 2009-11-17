@@ -253,6 +253,8 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   combo->addItem(i18n("Lower"));
   combo->addItem(i18n("Operations Menu"));
   combo->addItem(i18n("Toggle Raise & Lower"));
+  combo->addItem(i18n("Close"));
+  combo->addItem(i18n("Start Window Tab Drag"));
   combo->addItem(i18n("Nothing"));
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coTiAct1 = combo;
@@ -274,9 +276,10 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
         << i18n("Lower")
         << i18n("Operations Menu")
         << i18n("Toggle Raise & Lower")
-        << i18n("Shade")
         << i18n("Close")
-        << i18n("Nothing");
+        << i18n("Start Window Tab Drag")
+        << i18n("Nothing")
+        << i18n("Shade");
 
   combo = new KComboBox(box);
   combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
@@ -319,6 +322,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
          << i18n("Raise")
          << i18n("Lower")
          << i18n("Close")
+         << i18n("Start Window Tab Drag")
          << i18n("Nothing");
 
   combo = new KComboBox(box);
@@ -422,9 +426,10 @@ const char* const tbl_TiAc[] = {
     "Lower",
     "Operations menu",
     "Toggle raise and lower",
-    "Shade",
     "Close",
+    "Start window tab drag",
     "Nothing",
+    "Shade",
     "" };
 
 const char* const tbl_TiInAc[] = {
@@ -436,6 +441,7 @@ const char* const tbl_TiInAc[] = {
     "Raise",
     "Lower",
     "Close",
+    "Start window tab drag",
     "Nothing",
     "" };
 
@@ -570,11 +576,11 @@ void KTitleBarActionsConfig::load()
 
   KConfigGroup cg(config, "MouseBindings");
   setComboText(coTiAct1,cg.readEntry("CommandActiveTitlebar1","Raise").toAscii());
-  setComboText(coTiAct2,cg.readEntry("CommandActiveTitlebar2","Lower").toAscii());
+  setComboText(coTiAct2,cg.readEntry("CommandActiveTitlebar2","Start Window Tab Drag").toAscii());
   setComboText(coTiAct3,cg.readEntry("CommandActiveTitlebar3","Operations menu").toAscii());
   setComboText(coTiAct4,cg.readEntry("CommandTitlebarWheel","Switch to Group Window to the Left/Right").toAscii());
   setComboText(coTiInAct1,cg.readEntry("CommandInactiveTitlebar1","Activate and raise").toAscii());
-  setComboText(coTiInAct2,cg.readEntry("CommandInactiveTitlebar2","Activate and lower").toAscii());
+  setComboText(coTiInAct2,cg.readEntry("CommandInactiveTitlebar2","Start Window Tab Drag").toAscii());
   setComboText(coTiInAct3,cg.readEntry("CommandInactiveTitlebar3","Operations menu").toAscii());
 }
 
@@ -609,11 +615,11 @@ void KTitleBarActionsConfig::defaults()
 {
   setComboText(coTiDbl, "Shade");
   setComboText(coTiAct1,"Raise");
-  setComboText(coTiAct2,"Lower");
+  setComboText(coTiAct2,"Start Window Tab Drag");
   setComboText(coTiAct3,"Operations menu");
   setComboText(coTiAct4,"Switch to Group Window to the Left/Right");
   setComboText(coTiInAct1,"Activate and raise");
-  setComboText(coTiInAct2,"Activate and lower");
+  setComboText(coTiInAct2,"Start Window Tab Drag");
   setComboText(coTiInAct3,"Operations menu");
   for (int t = 0; t < 3; ++t)
     setComboText(coMax[t], tbl_Max[t]);

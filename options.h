@@ -229,7 +229,7 @@ class Options : public KDecorationOptions
             MouseNextDesktop, MousePreviousDesktop,
             MouseAbove, MouseBelow,
             MouseOpacityMore, MouseOpacityLess,
-            MouseClose, MouseLeftGroupWindow, MouseRightGroupWindow,
+            MouseClose, MouseLeftGroupWindow, MouseRightGroupWindow, MouseClientGroupDrag,
             MouseNothing
             };
 

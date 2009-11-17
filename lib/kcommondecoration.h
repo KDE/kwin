@@ -394,6 +394,7 @@ class KWIN_EXPORT KCommonDecorationUnstable
         void closeAllInClientGroup();
         void displayClientMenu( int index, const QPoint& pos );
 
+        WindowOperation buttonToWindowOperation( Qt::MouseButtons button );
         virtual bool eventFilter( QObject* o, QEvent* e );
     };
 

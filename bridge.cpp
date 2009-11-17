@@ -268,4 +268,9 @@ void Bridge::displayClientMenu( int index, const QPoint& pos )
     c->clientGroup()->displayClientMenu( index, pos );
     }
 
+KDecoration::WindowOperation Bridge::buttonToWindowOperation( Qt::MouseButtons button )
+    {
+    return c->mouseButtonToWindowOperation( button );
+    }
+
 } // namespace

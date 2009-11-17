@@ -747,6 +747,7 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
         case Options::LowerOp:
             lowerClient(c);
             break;
+        case Options::ClientGroupDragOp: // Handled by decoration itself
         case Options::NoOp:
             break;
         case Options::RemoveClientFromGroupOp:
@@ -775,6 +776,32 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
         case Options::CloseClientGroupOp:
             c->clientGroup()->closeAll();
         }
+    }
+
+/**
+ * Called by the decoration in the new API to determine what buttons the user has configured for
+ * window tab dragging and the operations menu.
+ */
+Options::WindowOperation Client::mouseButtonToWindowOperation( Qt::MouseButtons button )
+    {
+    Options::MouseCommand com = Options::MouseNothing;
+    bool active = isActive();
+    if( !wantsInput() ) // we cannot be active, use it anyway
+        active = true;
+
+    if( button == Qt::LeftButton )
+        com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
+    else if( button == Qt::MidButton )
+        com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
+    else if( button == Qt::RightButton )
+        com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
+
+    // TODO: Complete the list
+    if( com == Options::MouseClientGroupDrag )
+        return Options::ClientGroupDragOp;
+    if( com == Options::MouseOperationsMenu )
+        return Options::OperationsOp;
+    return Options::NoOp;
     }
 
 /*!
@@ -957,6 +984,7 @@ bool Client::performMouseCommand( Options::MouseCommand command, const QPoint &g
         case Options::MouseClose:
             closeWindow();
             break;
+        case Options::MouseClientGroupDrag:
         case Options::MouseNothing:
             replay = true;
             break;

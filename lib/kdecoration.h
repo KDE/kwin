@@ -109,7 +109,8 @@ public:
         RemoveClientFromGroupOp, // Remove from group
         CloseClientGroupOp, // Close the group
         MoveClientInGroupLeftOp, // Move left in the group
-        MoveClientInGroupRightOp // Move right in the group
+        MoveClientInGroupRightOp, // Move right in the group
+        ClientGroupDragOp
         };
     /**
      * Basic color types that should be recognized by all decoration styles.
@@ -979,6 +980,11 @@ class KWIN_EXPORT KDecorationUnstable
          * global coordinates specified by \p pos.
          */
         void displayClientMenu( int index, const QPoint& pos );
+        /**
+         * Determine which action the user has mapped \p button to. Useful for determining whether
+         * a button press was for window tab dragging or for displaying the client menu.
+         */
+        WindowOperation buttonToWindowOperation( Qt::MouseButtons button );
     };
 
 inline

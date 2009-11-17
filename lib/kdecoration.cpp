@@ -460,6 +460,10 @@ void KDecorationUnstable::displayClientMenu( int index, const QPoint& pos )
     static_cast< KDecorationBridgeUnstable* >( bridge_ )->displayClientMenu( index, pos );
     }
 
+KDecoration::WindowOperation KDecorationUnstable::buttonToWindowOperation( Qt::MouseButtons button )
+    {
+    return static_cast< KDecorationBridgeUnstable* >( bridge_ )->buttonToWindowOperation( button );
+    }
 
 QString KDecorationDefines::clientGroupItemDragMimeType()
     {

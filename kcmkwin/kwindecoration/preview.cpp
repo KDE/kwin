@@ -518,6 +518,10 @@ void KDecorationPreviewBridge::displayClientMenu( int, const QPoint& )
     {
     }
 
+KDecoration::WindowOperation KDecorationPreviewBridge::buttonToWindowOperation( Qt::MouseButtons )
+    {
+    return KDecoration::NoOp;
+    }
 
 KDecorationPreviewOptions::KDecorationPreviewOptions()
     {

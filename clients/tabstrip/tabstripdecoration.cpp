@@ -252,22 +252,15 @@ bool TabstripDecoration::eventFilter( QObject* o, QEvent* e )
     else if( e->type() == QEvent::Drop && widget() == o )
         state = dropEvent( static_cast< QDropEvent* >( e ) );
 
-    else if( TabstripButton *btn = dynamic_cast< TabstripButton* >( o ) )
+    if( TabstripButton *btn = dynamic_cast< TabstripButton* >( o ) )
+        {
         if( e->type() == QEvent::MouseButtonRelease )
             {
             if( static_cast<QMouseEvent*>(e)->button() ==  Qt::LeftButton )
             { closeClientGroupItem( closeButtons.indexOf( btn ) ); }
             return true;
             }
-    if( TabstripButton *btn = dynamic_cast< TabstripButton* >( o ) )
-        if( e->type() == QEvent::MouseButtonPress || e->type() == QEvent::MouseMove )
-            {
-            QMouseEvent *past = static_cast< QMouseEvent* >( e );
-            QPoint point = btn->mapToParent( past->pos() );
-            QMouseEvent *ev = new QMouseEvent( past->type(), point, past->button(), past->buttons(), past->modifiers() );
-            e = dynamic_cast< QEvent* >( ev );
-            o = widget();
-            }
+        }
     return state || KCommonDecorationUnstable::eventFilter( o, e ); 
     }
 
@@ -275,12 +268,11 @@ bool TabstripDecoration::mouseButtonPressEvent( QMouseEvent* e )
     {
     click = widget()->mapToParent( e->pos() );
     int item = itemClicked( click );
-    if( item >= 0 &&
-        ( e->button() == Qt::MidButton || e->button() == Qt::LeftButton || e->button() == Qt::RightButton ))
+    if( item >= 0 )
         {
         click_in_progress = true;
         button = e->button();
-        return button != Qt::LeftButton;
+        return true;
         }
     click_in_progress = false;
     return false;
@@ -293,9 +285,9 @@ bool TabstripDecoration::mouseButtonReleaseEvent( QMouseEvent* e )
     if( click_in_progress && item >= 0 )
         {
         click_in_progress = false;
-        if( e->button() == Qt::LeftButton || e->button() == Qt::MidButton )
+        if( buttonToWindowOperation( e->button() ) != OperationsOp )
             setVisibleClientGroupItem( item );
-        else if( e->button() == Qt::RightButton )
+        else
             displayClientMenu( item, widget()->mapToGlobal( release ) );
         return true;
         }
@@ -307,7 +299,8 @@ bool TabstripDecoration::mouseMoveEvent( QMouseEvent* e )
     {
     QPoint c = e->pos();
     int item = itemClicked( c );
-    if( item >= 0 && click_in_progress && button == Qt::MidButton && ( c - click ).manhattanLength() >= 4 )
+    if( item >= 0 && click_in_progress && buttonToWindowOperation( button ) == ClientGroupDragOp &&
+        ( c - click ).manhattanLength() >= 4 )
         {
         click_in_progress = false;
         drag_in_progress = true;

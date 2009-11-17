@@ -247,6 +247,7 @@ class Client
         KShortcut shortcut() const;
         void setShortcut( const QString& cut );
 
+        WindowOperation mouseButtonToWindowOperation( Qt::MouseButtons button );
         bool performMouseCommand( Options::MouseCommand, const QPoint& globalPos, bool handled = false );
 
         QRect adjustedClientArea( const QRect& desktop, const QRect& area ) const;
@@ -410,7 +411,8 @@ class Client
         bool buttonReleaseEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
         bool motionNotifyEvent( Window w, int state, int x, int y, int x_root, int y_root );
 
-        void processDecorationButtonPress( int button, int state, int x, int y, int x_root, int y_root );
+        bool processDecorationButtonPress( int button, int state, int x, int y, int x_root, int y_root,
+            bool ignoreMenu = false );
 
     protected:
         virtual void debug( kdbgstream& stream ) const;

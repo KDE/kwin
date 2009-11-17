@@ -1393,21 +1393,16 @@ namespace Oxygen
     QPoint point = event->pos();
     if( itemClicked( point ) < 0 ) return false;
 
+    mouseButton_ = event->button();
     bool accepted( false );
-    if( event->button() == Qt::MidButton )
+    if( buttonToWindowOperation( mouseButton_ ) == ClientGroupDragOp )
     {
 
       dragPoint_ = point;
-      mouseButton_ = Qt::MidButton;
       accepted = true;
 
-    } else if( event->button() == Qt::LeftButton ) {
+    } else if( buttonToWindowOperation( mouseButton_ ) == OperationsOp ) {
 
-      mouseButton_ = Qt::LeftButton;
-
-    } else if( event->button() == Qt::RightButton ) {
-
-      mouseButton_ = Qt::RightButton;
       accepted = true;
 
     }
@@ -1419,8 +1414,8 @@ namespace Oxygen
   {
 
     bool accepted( false );
-    if( ( mouseButton_ == Qt::LeftButton && event->button() == Qt::LeftButton ) ||
-      ( mouseButton_ == Qt::MidButton && event->button() == Qt::MidButton ) )
+    if( mouseButton_ == event->button() &&
+        buttonToWindowOperation( mouseButton_ ) != OperationsOp )
     {
 
       QPoint point = event->pos();
@@ -1434,7 +1429,8 @@ namespace Oxygen
         accepted = true;
       }
 
-    } else if( mouseButton_ == Qt::RightButton && event->button() == Qt::RightButton ) {
+    } else if( mouseButton_ == event->button() &&
+        buttonToWindowOperation( mouseButton_ ) == OperationsOp ) {
 
       QPoint point = event->pos();
       int itemClicked( OxygenClient::itemClicked( point ) );
@@ -1456,7 +1452,7 @@ namespace Oxygen
     { return false; }
 
     bool accepted( false );
-    if( mouseButton_ == Qt::MidButton )
+    if( buttonToWindowOperation( mouseButton_ ) == ClientGroupDragOp )
     {
 
       QPoint point = event->pos();

@@ -128,6 +128,7 @@ class KDecorationPreviewBridge
         virtual void closeClientGroupItem( int index );
         virtual void closeAllInClientGroup();
         virtual void displayClientMenu( int index, const QPoint& pos );
+        virtual WindowOperation buttonToWindowOperation( Qt::MouseButtons button );
 
     private:
         KDecorationPreview* preview;

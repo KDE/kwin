@@ -1279,7 +1279,13 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
         return true;
         }
     if( w == decorationId())
-        return false; // don't eat decoration events
+        {
+        if( dynamic_cast<KDecorationUnstable*>( decoration ))
+            // New API processes core events FIRST and only passes unused ones to the decoration
+            return processDecorationButtonPress( button, state, x, y, x_root, y_root, true );
+        else
+            return false; // Don't eat old API decoration events
+        }
     if( w == frameId())
         processDecorationButtonPress( button, state, x, y, x_root, y_root );
     return true;
@@ -1288,7 +1294,8 @@ bool Client::buttonPressEvent( Window w, int button, int state, int x, int y, in
 
 // this function processes button press events only after decoration decides not to handle them,
 // unlike buttonPressEvent(), which (when the window is decoration) filters events before decoration gets them
-void Client::processDecorationButtonPress( int button, int /*state*/, int x, int y, int x_root, int y_root )
+bool Client::processDecorationButtonPress( int button, int /*state*/, int x, int y, int x_root, int y_root,
+        bool ignoreMenu )
     {
     Options::MouseCommand com = Options::MouseNothing;
     bool active = isActive();
@@ -1303,7 +1310,8 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
     if( button == Button1
         && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
-        && com != Options::MouseMinimize )  // mouse release event
+        && com != Options::MouseMinimize  // mouse release event
+        && com != Options::MouseClientGroupDrag )
         {
         mode = mousePosition( QPoint( x, y ));
         buttonDown = true;
@@ -1313,7 +1321,19 @@ void Client::processDecorationButtonPress( int button, int /*state*/, int x, int
         startDelayedMoveResize();
         updateCursor();
         }
-    performMouseCommand( com, QPoint( x_root, y_root ));
+    // In the new API the decoration may process the menu action to display an inactive tab's menu.
+    // If the event is unhandled then the core will create one for the active window in the group.
+    if( !ignoreMenu || com != Options::MouseOperationsMenu )
+        performMouseCommand( com, QPoint( x_root, y_root ));
+    return !( // Return events that should be passed to the decoration in the new API
+        com == Options::MouseRaise ||
+        com == Options::MouseOperationsMenu ||
+        com == Options::MouseActivateAndRaise ||
+        com == Options::MouseActivate ||
+        com == Options::MouseActivateRaiseAndPassClick ||
+        com == Options::MouseActivateAndPassClick ||
+        com == Options::MouseClientGroupDrag ||
+        com == Options::MouseNothing );
     }
 
 // called from decoration

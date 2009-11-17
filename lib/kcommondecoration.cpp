@@ -1336,6 +1336,11 @@ void KCommonDecorationUnstable::displayClientMenu( int index, const QPoint& pos 
     static_cast<const KDecorationUnstable*>( decoration() )->displayClientMenu( index, pos );
     }
 
+KDecoration::WindowOperation KCommonDecorationUnstable::buttonToWindowOperation( Qt::MouseButtons button )
+    {
+    return static_cast<const KDecorationUnstable*>( decoration() )->buttonToWindowOperation( button );
+    }
+
 bool KCommonDecorationUnstable::eventFilter( QObject* o, QEvent* e )
     {
     return KCommonDecoration::eventFilter( o, e );
