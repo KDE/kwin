@@ -1653,6 +1653,8 @@ void Client::setClientShown( bool shown )
         hidden = true;
         //updateVisibility();
         //updateAllowedActions();
+        if( options->inactiveTabsSkipTaskbar )
+            setSkipTaskbar( true, false ); // TODO: Causes reshuffle of the taskbar
         workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
         addWorkspaceRepaint( visibleRect() );
         }
@@ -1660,8 +1662,10 @@ void Client::setClientShown( bool shown )
         {
         map( Allowed );
         hidden = false;
-        updateVisibility();
+        //updateVisibility();
         //updateAllowedActions();
+        if( options->inactiveTabsSkipTaskbar )
+            setSkipTaskbar( false, false );
         takeFocus( Allowed );
         autoRaise();
         workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );

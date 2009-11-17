@@ -321,6 +321,7 @@ class Options : public KDecorationOptions
         // Whether to hide utility windows for inactive applications.
         bool hideUtilityWindowsForInactive;
 
+        bool inactiveTabsSkipTaskbar;
         bool autogroupSimilarWindows;
         bool autogroupInForeground;
 

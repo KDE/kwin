@@ -169,6 +169,7 @@ unsigned long Options::updateSettings()
 
     killPingTimeout = config.readEntry( "KillPingTimeout", 5000 );
     hideUtilityWindowsForInactive = config.readEntry( "HideUtilityWindowsForInactive", true);
+    inactiveTabsSkipTaskbar = config.readEntry( "InactiveTabsSkipTaskbar", false );
     autogroupSimilarWindows = config.readEntry( "AutogroupSimilarWindows", false );
     autogroupInForeground = config.readEntry( "AutogroupInForeground", true );
     showDesktopIsMinimizeAll = config.readEntry( "ShowDesktopIsMinimizeAll", false );

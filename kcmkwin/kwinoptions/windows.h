@@ -205,6 +205,9 @@ private:
   void setHideUtilityWindowsForInactive( bool );
   QCheckBox* hideUtilityWindowsForInactive;
 
+  void setInactiveTabsSkipTaskbar( bool );
+  QCheckBox* inactiveTabsSkipTaskbar;
+
   void setAutogroupSimilarWindows( bool );
   QCheckBox* autogroupSimilarWindows;
 

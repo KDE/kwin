@@ -61,6 +61,7 @@
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
 #define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
 #define KWIN_HIDE_UTILITY          "HideUtilityWindowsForInactive"
+#define KWIN_INACTIVE_SKIP_TASKBAR "InactiveTabsSkipTaskbar"
 #define KWIN_AUTOGROUP_SIMILAR     "AutogroupSimilarWindows"
 #define KWIN_AUTOGROUP_FOREGROUND  "AutogroupInForeground"
 #define KWIN_SEPARATE_SCREEN_FOCUS "SeparateScreenFocus"
@@ -548,6 +549,13 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
     wtBox->setTitle(i18n("Window Tabbing"));
     QVBoxLayout *wtLay = new QVBoxLayout(wtBox);
 
+    inactiveTabsSkipTaskbar = new QCheckBox( i18n( "Hide inactive window tabs from the taskbar" ), this );
+    inactiveTabsSkipTaskbar->setVisible( false ); // TODO: We want translations in case this is fixed...
+    inactiveTabsSkipTaskbar->setWhatsThis(
+        i18n( "When turned on hide all tabs that are not active from the taskbar." ));
+    connect(inactiveTabsSkipTaskbar, SIGNAL(toggled(bool)), SLOT(changed()));
+    wtLay->addWidget( inactiveTabsSkipTaskbar );
+
     autogroupSimilarWindows = new QCheckBox( i18n( "Automatically group similar windows" ), this );
     autogroupSimilarWindows->setWhatsThis(
         i18n( "When turned on attempt to automatically detect when a newly opened window is related"
@@ -689,6 +697,7 @@ void KAdvancedConfig::load( void )
 //  }
 
     setHideUtilityWindowsForInactive( cg.readEntry( KWIN_HIDE_UTILITY, true));
+    setInactiveTabsSkipTaskbar( cg.readEntry( KWIN_INACTIVE_SKIP_TASKBAR, false));
     setAutogroupSimilarWindows( cg.readEntry( KWIN_AUTOGROUP_SIMILAR, false));
     setAutogroupInForeground( cg.readEntry( KWIN_AUTOGROUP_FOREGROUND, true));
 
@@ -729,6 +738,7 @@ void KAdvancedConfig::save( void )
         cg.writeEntry(KWIN_PLACEMENT, "Smart");
 
     cg.writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
+    cg.writeEntry(KWIN_INACTIVE_SKIP_TASKBAR, inactiveTabsSkipTaskbar->isChecked());
     cg.writeEntry(KWIN_AUTOGROUP_SIMILAR, autogroupSimilarWindows->isChecked());
     cg.writeEntry(KWIN_AUTOGROUP_FOREGROUND, autogroupInForeground->isChecked());
 
@@ -750,6 +760,7 @@ void KAdvancedConfig::defaults()
     setShadeHoverInterval(250);
     setPlacement(SMART_PLACEMENT);
     setHideUtilityWindowsForInactive( true );
+    setInactiveTabsSkipTaskbar( false );
     setAutogroupSimilarWindows( false );
     setAutogroupInForeground( true );
     emit KCModule::changed(true);
@@ -769,6 +780,10 @@ void KAdvancedConfig::setPlacement(int plac)
 
 void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
     hideUtilityWindowsForInactive->setChecked( s );
+}
+
+void KAdvancedConfig::setInactiveTabsSkipTaskbar(bool s) {
+    inactiveTabsSkipTaskbar->setChecked( s );
 }
 
 void KAdvancedConfig::setAutogroupSimilarWindows(bool s) {
