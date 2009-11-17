@@ -322,6 +322,7 @@ class Options : public KDecorationOptions
         bool hideUtilityWindowsForInactive;
 
         bool autogroupSimilarWindows;
+        bool autogroupInForeground;
 
         // Compositing settings
         bool useCompositing;

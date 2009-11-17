@@ -62,6 +62,7 @@
 #define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
 #define KWIN_HIDE_UTILITY          "HideUtilityWindowsForInactive"
 #define KWIN_AUTOGROUP_SIMILAR     "AutogroupSimilarWindows"
+#define KWIN_AUTOGROUP_FOREGROUND  "AutogroupInForeground"
 #define KWIN_SEPARATE_SCREEN_FOCUS "SeparateScreenFocus"
 #define KWIN_ACTIVE_MOUSE_SCREEN   "ActiveMouseScreen"
 
@@ -540,6 +541,31 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
 
     lay->addWidget(shBox);
 
+    //----------------
+    // Window tabbing
+
+    wtBox = new KButtonGroup(this);
+    wtBox->setTitle(i18n("Window Tabbing"));
+    QVBoxLayout *wtLay = new QVBoxLayout(wtBox);
+
+    autogroupSimilarWindows = new QCheckBox( i18n( "Automatically group similar windows" ), this );
+    autogroupSimilarWindows->setWhatsThis(
+        i18n( "When turned on attempt to automatically detect when a newly opened window is related"
+              " to an existing one and place them in the same window group." ));
+    connect(autogroupSimilarWindows, SIGNAL(toggled(bool)), SLOT(changed()));
+    wtLay->addWidget( autogroupSimilarWindows );
+
+    autogroupInForeground = new QCheckBox( i18n( "Switch to automatically grouped windows immediately" ), this );
+    autogroupInForeground->setWhatsThis(
+        i18n( "When turned on immediately switch to any new window tabs that were automatically added"
+              " to the current group." ));
+    connect(autogroupInForeground, SIGNAL(toggled(bool)), SLOT(changed()));
+    wtLay->addWidget( autogroupInForeground );
+
+    lay->addWidget(wtBox);
+
+    //----------------
+
     // Any changes goes to slotChanged()
     connect(shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -592,13 +618,6 @@ KAdvancedConfig::KAdvancedConfig (bool _standAlone, KConfig *_config, const KCom
               " have to mark the windows with the proper window type for this feature to work." ));
     connect(hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
     vLay->addWidget( hideUtilityWindowsForInactive, 1, 0, 1, 2 );
-
-    autogroupSimilarWindows = new QCheckBox( i18n( "Automatically group similar windows" ), this );
-    autogroupSimilarWindows->setWhatsThis(
-        i18n( "When turned on attempt to automatically detect when a newly opened window is related"
-              " to an existing one and place them in the same window group." ));
-    connect(autogroupSimilarWindows, SIGNAL(toggled(bool)), SLOT(changed()));
-    vLay->addWidget( autogroupSimilarWindows, 2, 0, 1, 2 );
 
     lay->addStretch();
     load();
@@ -671,6 +690,7 @@ void KAdvancedConfig::load( void )
 
     setHideUtilityWindowsForInactive( cg.readEntry( KWIN_HIDE_UTILITY, true));
     setAutogroupSimilarWindows( cg.readEntry( KWIN_AUTOGROUP_SIMILAR, false));
+    setAutogroupInForeground( cg.readEntry( KWIN_AUTOGROUP_FOREGROUND, true));
 
     emit KCModule::changed(false);
 }
@@ -710,6 +730,7 @@ void KAdvancedConfig::save( void )
 
     cg.writeEntry(KWIN_HIDE_UTILITY, hideUtilityWindowsForInactive->isChecked());
     cg.writeEntry(KWIN_AUTOGROUP_SIMILAR, autogroupSimilarWindows->isChecked());
+    cg.writeEntry(KWIN_AUTOGROUP_FOREGROUND, autogroupInForeground->isChecked());
 
     if (standAlone)
     {
@@ -730,6 +751,7 @@ void KAdvancedConfig::defaults()
     setPlacement(SMART_PLACEMENT);
     setHideUtilityWindowsForInactive( true );
     setAutogroupSimilarWindows( false );
+    setAutogroupInForeground( true );
     emit KCModule::changed(true);
 }
 
@@ -751,6 +773,10 @@ void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s) {
 
 void KAdvancedConfig::setAutogroupSimilarWindows(bool s) {
     autogroupSimilarWindows->setChecked( s );
+}
+
+void KAdvancedConfig::setAutogroupInForeground(bool s) {
+    autogroupInForeground->setChecked( s );
 }
 
 KMovingConfig::~KMovingConfig ()

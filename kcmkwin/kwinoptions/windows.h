@@ -194,6 +194,7 @@ private:
   void setShadeHoverInterval(int);
 
   KButtonGroup *shBox;
+  KButtonGroup *wtBox;
   QCheckBox *shadeHoverOn;
   QLabel *shadeHoverLabel;
   KIntNumInput *shadeHover;
@@ -206,6 +207,9 @@ private:
 
   void setAutogroupSimilarWindows( bool );
   QCheckBox* autogroupSimilarWindows;
+
+  void setAutogroupInForeground( bool );
+  QCheckBox* autogroupInForeground;
 
   int getPlacement( void ); //CT
   void setPlacement(int); //CT

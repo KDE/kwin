@@ -170,6 +170,7 @@ unsigned long Options::updateSettings()
     killPingTimeout = config.readEntry( "KillPingTimeout", 5000 );
     hideUtilityWindowsForInactive = config.readEntry( "HideUtilityWindowsForInactive", true);
     autogroupSimilarWindows = config.readEntry( "AutogroupSimilarWindows", false );
+    autogroupInForeground = config.readEntry( "AutogroupInForeground", true );
     showDesktopIsMinimizeAll = config.readEntry( "ShowDesktopIsMinimizeAll", false );
 
     borderless_maximized_windows = config.readEntry( "BorderlessMaximizedWindows", false );
