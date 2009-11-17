@@ -183,7 +183,7 @@ unsigned long Options::updateSettings()
     CmdInactiveTitlebar1 = mouseCommand(config.readEntry("CommandInactiveTitlebar1","Activate and raise"), true );
     CmdInactiveTitlebar2 = mouseCommand(config.readEntry("CommandInactiveTitlebar2","Start Window Tab Drag"), true );
     CmdInactiveTitlebar3 = mouseCommand(config.readEntry("CommandInactiveTitlebar3","Operations menu"), true );
-    CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel","Switch to Group Window to the Left/Right"));
+    CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel","Switch to Window Tab to the Left/Right"));
     CmdWindow1 = mouseCommand(config.readEntry("CommandWindow1","Activate, raise and pass click"), false );
     CmdWindow2 = mouseCommand(config.readEntry("CommandWindow2","Activate and pass click"), false );
     CmdWindow3 = mouseCommand(config.readEntry("CommandWindow3","Activate and pass click"), false );
@@ -343,8 +343,9 @@ Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
     if (lowerName == "above/below") return MouseWheelAboveBelow;
     if (lowerName == "previous/next desktop") return MouseWheelPreviousNextDesktop;
     if (lowerName == "change opacity") return MouseWheelChangeOpacity;
-    if (lowerName == "switch to group window to the left/right") return MouseWheelChangeGroupWindow;
-    return MouseWheelNothing;
+    if (lowerName == "switch to window tab to the left/right") return MouseWheelChangeGroupWindow;
+    if (lowerName == "nothing") return MouseWheelNothing;
+    return MouseWheelChangeGroupWindow;
     }
 
 bool Options::showGeometryTip()

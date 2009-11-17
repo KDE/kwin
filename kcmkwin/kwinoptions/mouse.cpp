@@ -184,7 +184,7 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   comboW->addItem(i18n("Keep Above/Below"));  
   comboW->addItem(i18n("Move to Previous/Next Desktop"));  
   comboW->addItem(i18n("Change Opacity"));  
-  comboW->addItem(i18n("Switch to Group Window to the Left/Right"));
+  comboW->addItem(i18n("Switch to Window Tab to the Left/Right"));
   comboW->addItem(i18n("Nothing"));  
   comboW->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
   connect(comboW, SIGNAL(activated(int)), SLOT(changed()));
@@ -481,7 +481,7 @@ const char* tbl_TiWAc[] = {
     "Above/Below",
     "Previous/Next Desktop",
     "Change Opacity",
-    "Switch to Group Window to the Left/Right",
+    "Switch to Window Tab to the Left/Right",
     "Nothing",
     "" };
 
@@ -492,7 +492,7 @@ const char* tbl_AllW[] = {
     "Above/Below",
     "Previous/Next Desktop",
     "Change Opacity",
-    "Switch to Group Window to the Left/Right",
+    "Switch to Window Tab to the Left/Right",
     "Nothing",
     "" };
 
@@ -578,7 +578,7 @@ void KTitleBarActionsConfig::load()
   setComboText(coTiAct1,cg.readEntry("CommandActiveTitlebar1","Raise").toAscii());
   setComboText(coTiAct2,cg.readEntry("CommandActiveTitlebar2","Start Window Tab Drag").toAscii());
   setComboText(coTiAct3,cg.readEntry("CommandActiveTitlebar3","Operations menu").toAscii());
-  setComboText(coTiAct4,cg.readEntry("CommandTitlebarWheel","Switch to Group Window to the Left/Right").toAscii());
+  setComboText(coTiAct4,cg.readEntry("CommandTitlebarWheel","Switch to Window Tab to the Left/Right").toAscii());
   setComboText(coTiInAct1,cg.readEntry("CommandInactiveTitlebar1","Activate and raise").toAscii());
   setComboText(coTiInAct2,cg.readEntry("CommandInactiveTitlebar2","Start Window Tab Drag").toAscii());
   setComboText(coTiInAct3,cg.readEntry("CommandInactiveTitlebar3","Operations menu").toAscii());
@@ -617,7 +617,7 @@ void KTitleBarActionsConfig::defaults()
   setComboText(coTiAct1,"Raise");
   setComboText(coTiAct2,"Start Window Tab Drag");
   setComboText(coTiAct3,"Operations menu");
-  setComboText(coTiAct4,"Switch to Group Window to the Left/Right");
+  setComboText(coTiAct4,"Switch to Window Tab to the Left/Right");
   setComboText(coTiInAct1,"Activate and raise");
   setComboText(coTiInAct2,"Start Window Tab Drag");
   setComboText(coTiInAct3,"Operations menu");
@@ -850,7 +850,7 @@ KWindowActionsConfig::KWindowActionsConfig (bool _standAlone, KConfig *_config, 
   combo->addItem(i18n("Keep Above/Below"));  
   combo->addItem(i18n("Move to Previous/Next Desktop"));  
   combo->addItem(i18n("Change Opacity"));  
-  combo->addItem(i18n("Switch to Group Window to the Left/Right"));
+  combo->addItem(i18n("Switch to Window Tab to the Left/Right"));
   combo->addItem(i18n("Nothing"));  
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));
   coAllW =  combo;

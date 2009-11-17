@@ -54,8 +54,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     a->setText( i18n("Navigation") );
     DEF( I18N_NOOP("Walk Through Windows"),                 Qt::ALT+Qt::Key_Tab, slotWalkThroughWindows() );
     DEF( I18N_NOOP("Walk Through Windows (Reverse)"),       Qt::ALT+Qt::SHIFT+Qt::Key_Backtab, slotWalkBackThroughWindows() );
-    DEF( I18N_NOOP("Walk Through Grouped Windows"),           0, slotSwitchToTabRight() );
-    DEF( I18N_NOOP("Walk Through Grouped Windows (Reverse)"), 0, slotSwitchToTabLeft() );
+    DEF( I18N_NOOP("Walk Through Window Tabs"),             0, slotSwitchToTabRight() );
+    DEF( I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotSwitchToTabLeft() );
     DEF( I18N_NOOP("Remove Window From Group"),             0, slotRemoveFromGroup() );
     DEF( I18N_NOOP("Walk Through Windows Alternative"),     0, slotWalkThroughWindowsAlternative() );
     DEF( I18N_NOOP("Walk Through Windows Alternative (Reverse)"), 0, slotWalkBackThroughWindowsAlternative() );

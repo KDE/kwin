@@ -304,7 +304,7 @@ void Workspace::initSwitchToTab()
 
     QAction* action = switch_to_tab_popup->menuAction();
     popup->insertAction( mRemoveTabGroup, action );
-    action->setText( i18n("Switch to group window") );
+    action->setText( i18n("Switch to window tab") );
     }
 
 void Workspace::slotSwitchToTab( QAction* action )
@@ -533,7 +533,7 @@ void Workspace::readShortcuts()
         connect( kaction, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(slotWalkBackThroughWindowsKeyChanged(QKeySequence)));
         }
 
-    kaction = qobject_cast<KAction*>( keys->action("Walk Through Group Windows") );
+    kaction = qobject_cast<KAction*>( keys->action("Walk Through Window Tabs") );
     if( kaction != 0 )
         {
         cutWalkThroughGroupWindows = kaction->globalShortcut();
@@ -541,7 +541,7 @@ void Workspace::readShortcuts()
         SLOT( slotMoveToTabRightKeyChanged( QKeySequence ) ) );
         }
 
-    kaction = qobject_cast<KAction*>( keys->action("Walk Through Group Windows (Reverse)") );
+    kaction = qobject_cast<KAction*>( keys->action("Walk Through Window Tabs (Reverse)") );
     if( kaction != 0 )
         {
         cutWalkThroughGroupWindowsReverse = kaction->globalShortcut();
