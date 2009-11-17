@@ -29,11 +29,11 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenbutton.h"
+#include "lib/oxygenanimation.h"
 
 #include <QtCore/QList>
 #include <QtCore/QWeakPointer>
 #include <QtCore/QRect>
-#include <QtCore/QTimeLine>
 
 namespace Oxygen
 {
@@ -102,6 +102,9 @@ namespace Oxygen
 
     Q_OBJECT
 
+    //! declare animation progress property
+    Q_PROPERTY( qreal progress READ progress WRITE setProgress )
+
     public:
 
     //! invalid item index
@@ -119,7 +122,7 @@ namespace Oxygen
     { return dirty_; }
 
     //! true if being animated
-    bool animated( void ) const
+    bool isAnimated( void ) const
     { return animationType_ != AnimationNone; }
 
     //! animation type
@@ -137,38 +140,39 @@ namespace Oxygen
     /* might need to add the side of the target here */
     void animate( AnimationTypes, int = NoItem );
 
+    //! true if animation is in progress
+    bool isAnimationRunning( void ) const
+    { return animation().data()->isRunning(); }
+
     //! update button activity
     void updateButtonActivity( int visibleItem ) const;
 
     //! update buttons
     void updateButtons( bool alsoUpdate ) const;
 
-    //! get timeLine
-    const QTimeLine& timeLine( void ) const
-    { return timeLine_; }
-
-    //! get timeLine
-    QTimeLine& timeLine( void )
-    { return timeLine_; }
-
-    //! true if timeLine is running
-    bool timeLineIsRunning( void ) const
-    { return timeLine().state() == QTimeLine::Running; }
-
     //! target rect
     const QRect& targetRect( void ) const
     { return targetRect_; }
+
+    //!@name animation progress
+    //@{
+
+    //! return animation object
+    virtual const Animation::Pointer& animation() const
+    { return animation_; }
+
+    void setProgress( qreal value )
+    { progress_ = value; }
+
+    qreal progress( void ) const
+    { return progress_; }
+
+    //@}
 
     protected slots:
 
     //! update bounding rects
     void updateBoundingRects( bool alsoUpdate = true );
-
-    protected:
-
-    //! timeLine ratio
-    qreal ratio( void )
-    { return qreal( timeLine().currentFrame() ) / qreal( timeLine().endFrame() ); }
 
     private:
 
@@ -179,11 +183,14 @@ namespace Oxygen
     /* used to trigger update at next paintEvent */
     bool dirty_;
 
-    //! animation timeline
-    QTimeLine timeLine_;
+    //! animation
+    Animation::Pointer animation_;
 
-    //! last animation
+    //! last animation type
     AnimationTypes animationType_;
+
+    //! animation progress
+    qreal progress_;
 
     //! dragged item
     int draggedItem_;

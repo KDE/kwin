@@ -6,6 +6,7 @@ add_subdirectory( config )
 set(kwin_oxygen_SRCS
      lib/helper.cpp
      lib/tileset.cpp
+     lib/oxygenanimation.cpp
      oxygen.cpp
      oxygenbutton.cpp
      oxygenclient.cpp

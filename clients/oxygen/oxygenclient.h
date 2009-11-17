@@ -31,10 +31,10 @@
 #include "oxygen.h"
 #include "oxygenclientgroupitemdata.h"
 #include "oxygenconfiguration.h"
+#include "lib/oxygenanimation.h"
 #include "lib/helper.h"
 
 #include <kcommondecoration.h>
-#include <QtCore/QTimeLine>
 #include <QBasicTimer>
 #include <QTimerEvent>
 
@@ -46,6 +46,12 @@ namespace Oxygen
     {
 
         Q_OBJECT
+
+        //! declare glow intensity property
+        Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
+
+        //! declare title opacity
+        Q_PROPERTY( qreal titleOpacity READ titleOpacity WRITE setTitleOpacity )
 
         public:
 
@@ -71,9 +77,9 @@ namespace Oxygen
         virtual bool isMaximized( void ) const
         { return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();  }
 
-        //! return true if timeLine is running
-        bool timeLineIsRunning( void ) const
-        { return timeLine_.state() == QTimeLine::Running; }
+        //! true if glow is animated
+        bool glowIsAnimated( void ) const
+        { return glowAnimation_.data()->isRunning(); }
 
         //! true when decoration is forced active
         bool isForcedActive( void ) const
@@ -83,7 +89,7 @@ namespace Oxygen
         bool drawSeparator( void ) const
         {
             return
-                ( timeLineIsRunning() || isActive() ) &&
+                ( glowIsAnimated() || isActive() ) &&
                 configuration().drawSeparator() &&
                 !configuration().hideTitleBar() &&
                 !configuration().drawTitleOutline();
@@ -104,9 +110,19 @@ namespace Oxygen
         const OxygenConfiguration& configuration( void ) const
         { return configuration_; }
 
-        //! return timeLine
-        const QTimeLine& timeLine( void ) const
-        { return timeLine_; }
+        //!@name glow animation
+        //@{
+
+        virtual const Animation::Pointer& glowAnimation( void ) const
+        { return glowAnimation_; }
+
+        void setGlowIntensity( qreal value )
+        { glowIntensity_ = value; }
+
+        qreal glowIntensity( void ) const
+        { return glowIntensity_; }
+
+        //@}
 
         //! helper class
         OxygenHelper& helper( void ) const
@@ -115,14 +131,6 @@ namespace Oxygen
         //! helper class
         OxygenShadowCache& shadowCache( void ) const
         { return factory_->shadowCache(); }
-
-        //! return animation opacity
-        qreal opacity( void ) const
-        {
-            int frame( timeLine_.currentFrame() );
-            if( timeLine_.direction() == QTimeLine::Backward ) frame -= timeLine_.startFrame();
-            return qreal( frame )/qreal( timeLine_.endFrame() );
-        }
 
         //!@name metrics and color definitions
         //@{
@@ -267,13 +275,22 @@ namespace Oxygen
         //! return pixmap corresponding to a given tab, for dragging
         QPixmap itemDragPixmap( int, const QRect& );
 
-        //! title timeline
-        bool titleTimeLineIsRunning( void ) const
-        { return titleTimeLine_.state() == QTimeLine::Running; }
+        //!@name title animation
+        //@{
 
-        //! title opacity
+        const Animation::Pointer& titleAnimation( void ) const
+        { return titleAnimation_; }
+
+        bool titleIsAnimated( void ) const
+        { return titleAnimation().data()->isRunning(); }
+
         qreal titleOpacity( void ) const
-        { return qreal( titleTimeLine_.currentFrame() )/qreal( titleTimeLine_.endFrame() ); }
+        { return titleOpacity_; }
+
+        void setTitleOpacity( qreal value )
+        { titleOpacity_ = value; }
+
+        //@}
 
         //! old caption if any
         const QString& oldCaption( void ) const
@@ -361,11 +378,17 @@ namespace Oxygen
         //! configuration
         OxygenConfiguration configuration_;
 
-        //! animation timeLine
-        QTimeLine timeLine_;
+        //! glow animation
+        Animation::Pointer glowAnimation_;
 
-        //! title animation timeLine
-        QTimeLine titleTimeLine_;
+        //! title animation
+        Animation::Pointer titleAnimation_;
+
+        //! glow intensity
+        qreal glowIntensity_;
+
+        //! title opacity
+        qreal titleOpacity_;
 
         //! old caption
         QString oldCaption_;

@@ -51,7 +51,8 @@ namespace Oxygen
     helper_( parent.helper() ),
     type_(type),
     forceInactive_( false ),
-    timeLine_( 150, this )
+    glowAnimation_( new Animation( 150, this ) ),
+    glowIntensity_(0)
   {
     setAutoFillBackground(false);
     setAttribute(Qt::WA_NoSystemBackground);
@@ -64,10 +65,18 @@ namespace Oxygen
     setCursor(Qt::ArrowCursor);
     setToolTip(tip);
 
-    timeLine_.setFrameRange( 0, 1000 );
-    timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
-    connect( &timeLine_, SIGNAL( frameChanged( int ) ), SLOT( update() ) );
-    connect( &timeLine_, SIGNAL( finished() ), SLOT( update() ) );
+    // setup animation
+    glowAnimation().data()->setStartValue( 0 );
+    glowAnimation().data()->setEndValue( 1.0 );
+    glowAnimation().data()->setTargetObject( this );
+    glowAnimation().data()->setPropertyName( "glowIntensity" );
+
+    // set curve shape. Warning: this is not portable to Qt Kinetic
+    glowAnimation().data()->setCurveShape( Animation::EaseInOutCurve );
+
+    // setup connections
+    connect( glowAnimation().data(), SIGNAL( valueChanged( const QVariant& ) ), SLOT( update( void ) ) );
+    connect( glowAnimation().data(), SIGNAL( finished( void ) ), SLOT( update( void ) ) );
     reset(0);
 
   }
@@ -79,10 +88,10 @@ namespace Oxygen
   //_______________________________________________
   QColor OxygenButton::buttonDetailColor(const QPalette &palette)
   {
-    if( client_.timeLineIsRunning() && !forceInactive_ && !client_.isForcedActive()) return KColorUtils::mix(
+    if( client_.glowIsAnimated() && !forceInactive_ && !client_.isForcedActive()) return KColorUtils::mix(
       buttonDetailColor( palette, false ),
       buttonDetailColor( palette, true ),
-      client_.opacity() );
+      client_.glowIntensity() );
     else return buttonDetailColor( palette, isActive() || client_.isForcedActive() );
   }
 
@@ -117,9 +126,8 @@ namespace Oxygen
 
   //___________________________________________________
   void OxygenButton::reset( unsigned long )
-  {
-    timeLine_.setDuration( client_.configuration().animationsDuration() );
-  }
+  { glowAnimation().data()->setDuration( client_.configuration().animationsDuration() ); }
+
 
   //___________________________________________________
   void OxygenButton::enterEvent(QEvent *e)
@@ -127,8 +135,8 @@ namespace Oxygen
 
     KCommonDecorationButton::enterEvent(e);
     if (status_ != Oxygen::Pressed) status_ = Oxygen::Hovered;
-    timeLine_.setDirection( QTimeLine::Forward );
-    if( !timeLineIsRunning() ) timeLine_.start();
+    glowAnimation().data()->setDirection( Animation::Forward );
+    if( !isAnimated() ) glowAnimation().data()->start();
   }
 
   //___________________________________________________
@@ -139,8 +147,8 @@ namespace Oxygen
 
     if( status_ == Oxygen::Hovered )
     {
-      timeLine_.setDirection( QTimeLine::Backward );
-      if( !timeLineIsRunning() ) timeLine_.start();
+      glowAnimation().data()->setDirection( Animation::Backward );
+      if( !isAnimated() ) glowAnimation().data()->start();
     }
 
     status_ = Oxygen::Normal;
@@ -192,7 +200,7 @@ namespace Oxygen
     // base button color
     QColor bt = ((type_ == ButtonItemClose && forceInactive_ ) ? client_.backgroundPalette( this, palette ):palette).window().color();
 
-    // button icon and glow color depending on timeline state
+    // button icon and glow color depending on glow intensity
     color = (type_ == ButtonItemClose && forceInactive_ ) ?
       buttonDetailColor( client_.backgroundPalette( this, palette ) ):
       buttonDetailColor( palette );
@@ -202,7 +210,7 @@ namespace Oxygen
       KColorScheme(palette.currentColorGroup()).decoration(KColorScheme::HoverColor).color();
     glow = helper_.calcDarkColor( glow );
 
-    if( timeLineIsRunning() ) color = KColorUtils::mix( color, glow, opacity() );
+    if( isAnimated() ) color = KColorUtils::mix( color, glow, glowIntensity() );
     else if( status_ == Oxygen::Hovered ) color = glow;
 
     // button decoration
@@ -210,11 +218,11 @@ namespace Oxygen
     {
 
       // draw glow on hover
-      if( timeLineIsRunning() )
+      if( isAnimated() )
       {
 
         // mixed shadow and glow for smooth transition
-        painter.drawPixmap(0, 0, helper_.windecoButtonGlow( KColorUtils::mix( Qt::black, glow, opacity() ), (21.0*client_.configuration().buttonSize())/22));
+        painter.drawPixmap(0, 0, helper_.windecoButtonGlow( KColorUtils::mix( Qt::black, glow, glowIntensity() ), (21.0*client_.configuration().buttonSize())/22));
 
       } else if( status_ == Oxygen::Hovered ) {
 

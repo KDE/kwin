@@ -29,9 +29,9 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <kcommondecoration.h>
-#include <QtCore/QTimeLine>
 
 #include "oxygen.h"
+#include "lib/oxygenanimation.h"
 
 namespace Oxygen
 {
@@ -49,6 +49,9 @@ namespace Oxygen
   {
 
     Q_OBJECT
+
+    //! declare animation progress property
+    Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
 
     public:
 
@@ -74,6 +77,21 @@ namespace Oxygen
 
     //! configuration reset
     virtual void reset( unsigned long );
+
+    //!@name glow animation
+    //@{
+
+    //! return animation object
+    virtual const Animation::Pointer& glowAnimation() const
+    { return glowAnimation_; }
+
+    void setGlowIntensity( qreal value )
+    { glowIntensity_ = value; }
+
+    qreal glowIntensity( void ) const
+    { return glowIntensity_; }
+
+    //@}
 
     protected:
 
@@ -101,13 +119,9 @@ namespace Oxygen
     //! color
     QColor buttonDetailColor(const QPalette&, bool active );
 
-    //! opacity
-    qreal opacity( void ) const
-    { return qreal( timeLine_.currentFrame() ) / qreal(timeLine_.endFrame()); }
-
-    //! true if timeline is running
-    bool timeLineIsRunning( void ) const
-    { return timeLine_.state() == QTimeLine::Running; }
+    //! true if animation is in progress
+    bool isAnimated( void ) const
+    { return glowAnimation().data()->isRunning(); }
 
     //! true if button is active
     bool isActive( void ) const;
@@ -129,8 +143,12 @@ namespace Oxygen
     //! true if button should be forced inactive
     bool forceInactive_;
 
-    //! timeline used for smooth transitions
-    QTimeLine timeLine_;
+    //! glow animation
+    Animation::Pointer glowAnimation_;
+
+    //! glow intensity
+    qreal glowIntensity_;
+
 
   };
 

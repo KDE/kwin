@@ -83,8 +83,10 @@ namespace Oxygen
     KCommonDecorationUnstable(b, f),
     factory_( f ),
     sizeGrip_( 0 ),
-    timeLine_( 200, this ),
-    titleTimeLine_( 200, this ),
+    glowAnimation_( new Animation( 200, this ) ),
+    titleAnimation_( new Animation( 200, this ) ),
+    glowIntensity_(0),
+    titleOpacity_(0),
     initialized_( false ),
     forceActive_( false ),
     mouseButton_( Qt::NoButton ),
@@ -114,22 +116,28 @@ namespace Oxygen
     widget()->setAutoFillBackground( false );
     widget()->setAcceptDrops( true );
 
-    // initialize timeLine
-    timeLine_.setFrameRange( maxAnimationIndex/5, maxAnimationIndex );
-    timeLine_.setCurveShape( QTimeLine::EaseOutCurve );
-    connect( &timeLine_, SIGNAL( frameChanged( int ) ), widget(), SLOT( update() ) );
-    connect( &timeLine_, SIGNAL( finished() ), widget(), SLOT( update() ) );
-    connect( &timeLine_, SIGNAL( finished() ), this, SLOT( clearForceActive() ) );
+    // setup glow animation
+    glowAnimation().data()->setStartValue( 0.1 );
+    glowAnimation().data()->setEndValue( 0.9 );
+    glowAnimation().data()->setTargetObject( this );
+    glowAnimation().data()->setPropertyName( "glowIntensity" );
+    glowAnimation().data()->setCurveShape( Animation::EaseInOutCurve );
+    connect( glowAnimation().data(), SIGNAL( valueChanged( const QVariant& ) ), widget(), SLOT( update( void ) ) );
+    connect( glowAnimation().data(), SIGNAL( finished( void ) ), widget(), SLOT( update( void ) ) );
+    connect( glowAnimation().data(), SIGNAL( finished() ), this, SLOT( clearForceActive() ) );
 
-    // initialize titleTimeLine
-    titleTimeLine_.setFrameRange( 0, maxAnimationIndex );
-    titleTimeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
-    connect( &titleTimeLine_, SIGNAL( frameChanged( int ) ), widget(), SLOT( update() ) );
-    connect( &titleTimeLine_, SIGNAL( finished() ), widget(), SLOT( update() ) );
-    connect( &titleTimeLine_, SIGNAL( finished() ), this, SLOT( updateOldCaption() ) );
+    // setup title animation
+    titleAnimation().data()->setStartValue( 0 );
+    titleAnimation().data()->setEndValue( 1 );
+    titleAnimation().data()->setTargetObject( this );
+    titleAnimation().data()->setPropertyName( "titleOpacity" );
+    titleAnimation().data()->setCurveShape( Animation::EaseInOutCurve );
+    connect( titleAnimation().data(), SIGNAL( valueChanged( const QVariant& ) ), widget(), SLOT( update( void ) ) );
+    connect( titleAnimation().data(), SIGNAL( finished( void ) ), widget(), SLOT( update( void ) ) );
+    connect( titleAnimation().data(), SIGNAL( finished( void ) ), this, SLOT( updateOldCaption() ) );
 
     // lists
-    connect( &itemData_.timeLine(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
+    connect( itemData_.animation().data(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
 
     // in case of preview, one wants to make the label used
     // for the central widget transparent. This allows one to have
@@ -168,9 +176,9 @@ namespace Oxygen
     configuration_ = factory_->configuration( *this );
 
     // animations duration
-    timeLine_.setDuration( configuration_.animationsDuration() );
-    titleTimeLine_.setDuration( configuration_.animationsDuration() );
-    itemData_.timeLine().setDuration( configuration_.animationsDuration() );
+    glowAnimation().data()->setDuration( configuration_.animationsDuration() );
+    titleAnimation().data()->setDuration( configuration_.animationsDuration() );
+    itemData_.animation().data()->setDuration( configuration_.animationsDuration() );
 
     // should also update animations for buttons
     resetButtons();
@@ -448,7 +456,6 @@ namespace Oxygen
   void OxygenClient::clearTargetItem( void )
   {
 
-    if( !itemData_.animated() ) return;
     if( itemData_.animationType() == AnimationLeave )
     { itemData_.setDirty( true ); }
 
@@ -541,10 +548,10 @@ namespace Oxygen
   //_________________________________________________________
   QColor OxygenClient::titlebarTextColor(const QPalette &palette)
   {
-    if( timeLineIsRunning() ) return KColorUtils::mix(
+    if( glowIsAnimated() ) return KColorUtils::mix(
       titlebarTextColor( palette, false ),
       titlebarTextColor( palette, true ),
-      opacity() );
+      glowIntensity() );
     else return titlebarTextColor( palette, isActive() );
   }
 
@@ -594,7 +601,7 @@ namespace Oxygen
   {
 
     // check if outline is needed
-    if( clientGroupItems().count() < 2 && !itemData_.animated() && !( isActive() && configuration().drawTitleOutline() ) ) return;
+    if( clientGroupItems().count() < 2 && !itemData_.isAnimated() && !( isActive() && configuration().drawTitleOutline() ) ) return;
 
     // get coordinates relative to the client area
     // this is annoying. One could use mapTo if this was taking const QWidget* and not
@@ -627,7 +634,7 @@ namespace Oxygen
     int titleHeight( layoutMetric( LM_TitleEdgeTop ) + layoutMetric( LM_TitleEdgeBottom ) + layoutMetric( LM_TitleHeight ) );
 
     // make titlebar background darker for tabbed, non-outline window
-    if( ( clientGroupItems().count() >= 2 || itemData_.animated() ) && !(configuration().drawTitleOutline() && isActive() ) )
+    if( ( clientGroupItems().count() >= 2 || itemData_.isAnimated() ) && !(configuration().drawTitleOutline() && isActive() ) )
     {
 
       QPoint topLeft( r.topLeft()-position );
@@ -767,7 +774,7 @@ namespace Oxygen
     const int titleTop = layoutMetric(LM_TitleEdgeTop) + r.top();
 
     QColor local( color );
-    if( timeLineIsRunning() ) local = helper().alphaColor( color, opacity() );
+    if( glowIsAnimated() ) local = helper().alphaColor( color, glowIntensity() );
     helper().drawSeparator( painter, QRect(r.top(), titleTop+titleHeight-1.5, r.width(), 2).translated( -position ), local, Qt::Horizontal);
 
     if (clipRect.isValid()) { painter->restore(); }
@@ -808,7 +815,7 @@ namespace Oxygen
   void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, const QColor& color, const QColor& contrast ) const
   {
 
-    if( titleTimeLineIsRunning() )
+    if( titleIsAnimated() )
     {
 
       if( !oldCaption().isEmpty() ) {
@@ -873,7 +880,7 @@ namespace Oxygen
     QRect textRect( item.boundingRect_.adjusted( 0, layoutMetric( LM_TitleEdgeTop )-1, 0, -1 ) );
 
     // add extra space needed for title outline
-    if( itemCount > 1 || itemData_.animated() )
+    if( itemCount > 1 || itemData_.isAnimated() )
     { textRect.adjust( layoutMetric( LM_TitleBorderLeft ), 0, -layoutMetric(LM_TitleBorderRight), 0 ); }
 
     // add extra space for the button
@@ -891,7 +898,7 @@ namespace Oxygen
     if( itemCount == 1 ) {
 
       textRect = titleBoundingRect( painter->font(), textRect, caption );
-      if( itemData_.animated() ) {
+      if( itemData_.isAnimated() ) {
 
         renderTitleOutline( painter, item.boundingRect_, palette );
 
@@ -976,7 +983,7 @@ namespace Oxygen
   //_______________________________________________________________________
   void OxygenClient::renderTargetRect( QPainter* p, const QPalette& palette )
   {
-    if( itemData_.targetRect().isNull() || itemData_.timeLineIsRunning() ) return;
+    if( itemData_.targetRect().isNull() || itemData_.isAnimationRunning() ) return;
 
     p->save();
     QColor color = palette.color(QPalette::Highlight);
@@ -1084,9 +1091,8 @@ namespace Oxygen
     // reset animation
     if( animateActiveChange() )
     {
-      timeLine_.setDirection( isActive() ? QTimeLine::Forward : QTimeLine::Backward );
-      if(timeLine_.state() == QTimeLine::NotRunning )
-      { timeLine_.start(); }
+      glowAnimation().data()->setDirection( isActive() ? Animation::Forward : Animation::Backward );
+      if(!glowIsAnimated()) { glowAnimation().data()->start(); }
     }
 
     // update size grip so that it gets the right color
@@ -1120,8 +1126,7 @@ namespace Oxygen
     KCommonDecorationUnstable::captionChange();
 
     if( !animateTitleChange() ) return;
-    if( titleTimeLineIsRunning() ) titleTimeLine_.stop();
-    titleTimeLine_.start();
+    titleAnimation().data()->restart();
 
   }
 
@@ -1131,12 +1136,12 @@ namespace Oxygen
 
     if( configuration().drawTitleOutline() )
     {
-      if( timeLineIsRunning() && !isForcedActive() )
+      if( glowIsAnimated() && !isForcedActive() )
       {
 
         QColor inactiveColor( backgroundColor( widget, palette, false ) );
         QColor activeColor( backgroundColor( widget, palette, true ) );
-        QColor mixed( KColorUtils::mix( inactiveColor, activeColor, opacity() ) );
+        QColor mixed( KColorUtils::mix( inactiveColor, activeColor, glowIntensity() ) );
         palette.setColor( widget->window()->backgroundRole(), mixed );
         palette.setColor( QPalette::Button, mixed );
 
@@ -1279,11 +1284,10 @@ namespace Oxygen
     {
 
       TileSet *tileSet( 0 );
-      if( configuration().useOxygenShadows() && timeLineIsRunning() && !isForcedActive() )
+      if( configuration().useOxygenShadows() && glowIsAnimated() && !isForcedActive() )
       {
 
-        int frame = timeLine_.currentFrame();
-        if( timeLine_.direction() == QTimeLine::Backward ) frame -= timeLine_.startFrame();
+        int frame = maxAnimationIndex*glowIntensity();
         tileSet = shadowCache().tileSet( this, frame );
 
       } else tileSet = shadowCache().tileSet( this );
@@ -1379,7 +1383,7 @@ namespace Oxygen
         renderTargetRect( &painter, widget()->palette() );
 
         // separator
-        if( itemCount == 1 && !itemData_.animated() && drawSeparator() )
+        if( itemCount == 1 && !itemData_.isAnimated() && drawSeparator() )
         { renderSeparator(&painter, frame, widget(), color ); }
 
     }
@@ -1543,7 +1547,7 @@ namespace Oxygen
       if( dragStartTimer_.isActive() ) dragStartTimer_.stop();
       itemData_.animate( AnimationLeave|AnimationSameTarget, sourceItem_ );
 
-    } else if( itemData_.animated() ) {
+    } else if( itemData_.isAnimated() ) {
 
 
       itemData_.animate( AnimationLeave );

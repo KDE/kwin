@@ -39,15 +39,23 @@ namespace Oxygen
     QObject( parent ),
     QList<ClientGroupItemData>(),
     client_( *parent ),
-    timeLine_( 150, this ),
+    animation_( new Animation( 150, this ) ),
     animationType_( AnimationNone ),
+    progress_(0),
     draggedItem_( NoItem ),
     targetItem_( NoItem )
   {
-    timeLine_.setFrameRange( 0, maxAnimationIndex );
-    timeLine_.setCurveShape( QTimeLine::EaseInOutCurve );
-    connect( &timeLine_, SIGNAL( frameChanged( int ) ), this, SLOT( updateBoundingRects() ) );
-    connect( &timeLine_, SIGNAL( finished() ), this, SLOT( updateBoundingRects() ) );
+
+    // setup animation
+    animation().data()->setStartValue( 0 );
+    animation().data()->setEndValue( 1.0 );
+    animation().data()->setTargetObject( this );
+    animation().data()->setPropertyName( "progress" );
+
+    // setup connections
+    connect( animation().data(), SIGNAL( valueChanged( const QVariant& ) ), SLOT( updateBoundingRects( void ) ) );
+    connect( animation().data(), SIGNAL( finished( void ) ), SLOT( updateBoundingRects( void ) ) );
+
   }
 
   //________________________________________________________________
@@ -76,7 +84,7 @@ namespace Oxygen
     if( type == AnimationNone )
     {
 
-      if( timeLineIsRunning() ) timeLine().stop();
+      if( isAnimationRunning() ) animation().data()->stop();
       targetItem_ = NoItem;
       draggedItem_ = NoItem;
       targetRect_ = QRect();
@@ -94,8 +102,8 @@ namespace Oxygen
 
       } else if( (type&AnimationMove) && targetItem_ == target ) return;
 
-      // check timeLine
-      if( timeLineIsRunning() ) timeLine().stop();
+      // check animation state
+      if( isAnimationRunning() ) animation().data()->stop();
 
       targetItem_ = target;
       targetRect_ = QRect();
@@ -149,7 +157,7 @@ namespace Oxygen
         targetRect_.setWidth( width );
       }
 
-      if( animate ) timeLine().start();
+      if( animate ) animation().data()->start();
       else {
 
         for( int index = 0; index < count(); index++ )
@@ -164,8 +172,8 @@ namespace Oxygen
 
     } else if( type & AnimationLeave ) {
 
-      // stop timeLine
-      if( timeLineIsRunning() ) timeLine().stop();
+      // stop animation state
+      if( isAnimationRunning() ) animation().data()->stop();
 
       // reset target
       targetItem_ = NoItem;
@@ -228,7 +236,7 @@ namespace Oxygen
 
       }
 
-      timeLine().start();
+      animation().data()->start();
 
     }
 
@@ -294,7 +302,7 @@ namespace Oxygen
   void ClientGroupItemDataList::updateBoundingRects( bool alsoUpdate )
   {
 
-    qreal ratio( ClientGroupItemDataList::ratio() );
+    qreal ratio( ClientGroupItemDataList::progress() );
     for( iterator iter = begin(); iter != end(); iter++ )
     {
 
