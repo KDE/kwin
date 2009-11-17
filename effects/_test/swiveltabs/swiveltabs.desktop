@@ -1,12 +1,14 @@
 [Desktop Entry]
 Name=Swivel Tabs
 Name[pt]=Barras Rotativas
+Name[pt_BR]=Barras giratórias
 Name[sv]=Låt flikar vända
 Name[uk]=Вкладки на шарнірах
 Name[x-test]=xxSwivel Tabsxx
 Icon=preferences-system-windows-effect-swiveltabs
 Comment=Make the windows turn when switching tabs
 Comment[pt]=Dar a volta às janelas ao mudar de páginas
+Comment[pt_BR]=Fazer as janelas girarem ao alternar as abas
 Comment[sv]=Låt fönster vändas vid byte av flikar
 Comment[tr]=Sekmelere geçerken pencereleri döndür
 Comment[uk]=Обертання вікон під час перемикання вкладок
