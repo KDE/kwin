@@ -43,6 +43,7 @@ class PaintRedirector
         QPixmap performPendingPaint();
         virtual bool eventFilter( QObject* o, QEvent* e );
         QRegion pendingRegion() const;
+        QRegion scheduledRepaintRegion();
     signals:
         void paintPending();
     private:
@@ -51,6 +52,7 @@ class PaintRedirector
         bool isToolTip( QWidget* widget ) const;
         QWidget* widget;
         QRegion pending;
+        QRegion scheduled;
         bool recursionCheck;
         QTimer timer;
     };

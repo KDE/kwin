@@ -50,6 +50,7 @@ QPixmap PaintRedirector::performPendingPaint()
     widget->render( &pixmap, QPoint(), pending.boundingRect(), QWidget::DrawChildren );
     recursionCheck = false;
     pending = QRegion();
+    scheduled = QRegion();
     return pixmap;
     }
 
@@ -84,6 +85,7 @@ bool PaintRedirector::eventFilter( QObject* o, QEvent* e )
                 QPaintEvent* pe = static_cast< QPaintEvent* >( e );
                 QWidget* w = static_cast< QWidget* >( o );
                 pending |= pe->region().translated( w->mapTo( widget, QPoint( 0, 0 )));
+                scheduled = pending;
                 timer.start( 0 );
                 return true; // filter out
                 }
@@ -97,6 +99,13 @@ bool PaintRedirector::eventFilter( QObject* o, QEvent* e )
 QRegion PaintRedirector::pendingRegion() const
     {
     return pending;
+    }
+
+QRegion PaintRedirector::scheduledRepaintRegion()
+    {
+    QRegion tempRegion = scheduled;
+    scheduled = QRegion();
+    return tempRegion;
     }
 
 void PaintRedirector::added( QWidget* w )
