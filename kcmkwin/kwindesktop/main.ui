@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>KWinDesktopConfigForm</class>
  <widget class="QWidget" name="KWinDesktopConfigForm">
@@ -36,7 +36,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="numberLabel">
             <property name="whatsThis">
-             <string>Here you can set how many virtual desktops you want on your KDE desktop. Move the slider to change the value.</string>
+             <string>Here you can set how many virtual desktops you want on your KDE desktop.</string>
             </property>
             <property name="text">
              <string>Number of desktops:</string>
@@ -49,7 +49,7 @@
           <item row="0" column="1">
            <widget class="KIntSpinBox" name="numberSpinBox">
             <property name="whatsThis">
-             <string>Here you can set how many virtual desktops you want on your KDE desktop. Move the slider to change the value.</string>
+             <string>Here you can set how many virtual desktops you want on your KDE desktop.</string>
             </property>
             <property name="minimum">
              <number>1</number>
