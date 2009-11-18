@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 X-KDE-ServiceTypes=KCModule
-X-DocPath=kcontrol/desktop/index.html#desktop-number
+X-DocPath=kcontrol/desktop/index.html
 Icon=preferences-desktop-multiple
 Exec=kcmshell4 desktop
 
