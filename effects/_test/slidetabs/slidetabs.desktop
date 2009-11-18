@@ -1,5 +1,7 @@
 [Desktop Entry]
 Name=Slide Tabs
+Name[en_GB]=Slide Tabs
+Name[hr]=Kliži kartice
 Name[pt]=Barras Deslizantes
 Name[pt_BR]=Barras deslizantes
 Name[sv]=Låt flikar glida
@@ -11,12 +13,6 @@ Icon=preferences-system-windows-effect-slidetabs
 
 Type=Service
 Comment=Slide windows when switching or grouping tabs.
-Comment[pt]=Deslizar as janelas pelo ecrã ao mudar de páginas.
-Comment[pt_BR]=Desliza as janelas ao alternar ou agrupar abas.
-Comment[sv]=Låt fönster glida vid byte eller gruppering av flikar.
-Comment[tr]=Sekmelere geçerken veya gruplandırırken pencereleri kaydır.
-Comment[uk]=Ковзання вікон вздовж стільниці, під час перемикання або групування вкладок.
-Comment[x-test]=xxSlide windows when switching or groupping tabs.xx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect

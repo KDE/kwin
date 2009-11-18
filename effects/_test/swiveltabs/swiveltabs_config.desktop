@@ -7,6 +7,8 @@ X-KDE-ParentComponents=kwin4_effect_swiveltabs
 X-KDE-PluginKeyword=swiveltabs
 
 Name=Swivel Tabs
+Name[en_GB]=Swivel Tabs
+Name[hr]=Kartice koje se okreću oko osi
 Name[pt]=Barras Rotativas
 Name[pt_BR]=Barras giratórias
 Name[sv]=Låt flikar vända

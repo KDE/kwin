@@ -7,6 +7,8 @@ X-KDE-ParentComponents=kwin4_effect_slidetabs
 X-KDE-PluginKeyword=slidetabs
 
 Name=Slide Tabs
+Name[en_GB]=Slide Tabs
+Name[hr]=Kliži kartice
 Name[pt]=Barras Deslizantes
 Name[pt_BR]=Barras deslizantes
 Name[sv]=Låt flikar glida
