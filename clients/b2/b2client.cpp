@@ -8,6 +8,9 @@
     improvements, customizable menu double click action and button hover
     effects are
     Copyright (c) 2003, 2004, 2006 Luciano Montanaro <mikelima@cirulla.net>
+    
+    Added option to turn off titlebar autorelocation
+    Copyright (c) 2009 Jussi Kekkonen <tmt@ubuntu.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -96,7 +99,7 @@ static QPixmap *pixmap[P_NUM_PIXMAPS];
 
 static QPixmap* titleGradient[2] = {0, 0};
 
-static int thickness = 4; // Frame thickness
+static int thickness = 3; // Frame thickness
 static int buttonSize = 16;
 
 enum DblClickOperation {
@@ -111,6 +114,7 @@ static DblClickOperation menu_dbl_click_op = NoOp;
 static bool pixmaps_created = false;
 static bool colored_frame = false;
 static bool do_draw_handle = true;
+static bool do_amove_tb = true;
 static bool drawSmallBorders = false;
 
 // =====================================
@@ -140,6 +144,7 @@ static void read_config(B2ClientFactory *f)
     KConfigGroup conf(&_conf, "General");
     colored_frame = conf.readEntry("UseTitleBarBorderColors", false);
     do_draw_handle = conf.readEntry("DrawGrabHandle", true);
+    do_amove_tb = conf.readEntry("AutoMoveTitleBar", true);
     drawSmallBorders = !options()->moveResizeMaximizedWindows();
 
     QString opString = conf.readEntry("MenuButtonDoubleClickOperation", "NoOp");
@@ -155,7 +160,7 @@ static void read_config(B2ClientFactory *f)
 
     switch (options()->preferredBorderSize(f)) {
     case KDecoration::BorderTiny:
-	thickness = 2;
+	thickness = 1;
 	break;
     case KDecoration::BorderLarge:
 	thickness = 5;
@@ -174,7 +179,7 @@ static void read_config(B2ClientFactory *f)
 	break;
     case KDecoration::BorderNormal:
     default:
-	thickness = 4;
+	thickness = 3;
     }
 }
 
@@ -594,6 +599,12 @@ bool B2Client::mustDrawHandle() const
     }
 }
 
+bool B2Client::autoMoveTitlebar() const
+{
+	return do_amove_tb;
+}
+
+
 void B2Client::iconChange()
 {
     if (button[BtnMenu])
@@ -687,7 +698,7 @@ void B2Client::paintEvent(QPaintEvent* e)
     p.drawRect(0, t.bottom() - thickness + 1,
 	    fWidth, fHeight - bb + thickness);
 
-    if (thickness >= 2) {
+    if (thickness >= 1) {
 	// inner window rect
 	p.drawRect(thickness - 1, t.bottom(),
 		fWidth - 2 * (thickness - 1), fHeight - bDepth + 2);
@@ -754,7 +765,7 @@ void B2Client::paintEvent(QPaintEvent* e)
        we now might have the space available, but the titlebar gets no
        visibilitinotify events until its state changes, so we just try
      */
-    if (titlebar->isFullyObscured()) {
+    if (titlebar->isFullyObscured()) { //FIXME this doesn't work in composited X
         /* We first see, if our repaint contained the titlebar area */
 	QRegion reg(QRect(0, 0, width(), buttonSize + 4));
 	reg = reg.intersect(e->region());
@@ -986,6 +997,8 @@ void B2Client::unobscureTitlebar()
        so we look at all windows above us (stacking_order) merging their
        masks, intersecting it with our titlebar area, and see if we can
        find a place not covered by any window */
+	if (autoMoveTitlebar())	// I'm not sure if earlier check does it right, so let's make it sure, DO WE AUTOMOVE?
+    {
     if (in_unobs) {
 	return;
     }
@@ -1000,6 +1013,7 @@ void B2Client::unobscureTitlebar()
 	titleMoveAbs(reg.boundingRect().x());
     }
     in_unobs = 0;
+	} // if (autoMoveTitlebar())
 }
 
 static void redraw_pixmaps()

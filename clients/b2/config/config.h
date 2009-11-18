@@ -6,6 +6,7 @@
  		http://gallium.n3.net/
  	Copyright (c) 2007
  		Luciano Montanaro <mikelima@cirulla.net>
+ 	Automove titlebar bits Copyright (c) 2009 Jussi Kekkonen <tmt@ubuntu.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,6 +55,7 @@ private:
     KConfig *b2Config;
     QCheckBox *cbColorBorder;
     QCheckBox *showGrabHandleCb;
+    QCheckBox *autoMoveTitlebarCb;
     QGroupBox *actionsGB;
     KComboBox *menuDblClickOp;
     QWidget *gb;

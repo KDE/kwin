@@ -6,6 +6,7 @@
  		http://gallium.n3.net/
  	Copyright (c) 2007
  		Luciano Montanaro <mikelima@cirulla.net>
+ 	Automove titlebar bits Copyright (c) 2009 Jussi Kekkonen <tmt@ubuntu.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -68,6 +69,14 @@ B2Config::B2Config(KConfig *conf, QWidget *parent)
 	    i18n("When selected, decorations are drawn with a \"grab handle\" "
 		"in the bottom right corner of the windows; "
 		"otherwise, no grab handle is drawn."));
+		
+	// Automove Titlebar
+	autoMoveTitlebarCb = new QCheckBox(
+		i18n("Automove titlebar"), gb);
+	autoMoveTitlebarCb->setWhatsThis(
+		i18n("When selected, Titlebars are automatically relovated "
+		 "to visible place; "
+		 "otherwise, only moved manually."));
 
     // Double click menu option support
     actionsGB = new QGroupBox(i18n("Actions Settings"), gb);
@@ -100,6 +109,8 @@ B2Config::B2Config(KConfig *conf, QWidget *parent)
 	    this, SLOT(slotSelectionChanged()));
     connect(showGrabHandleCb, SIGNAL(clicked()),
 	    this, SLOT(slotSelectionChanged()));
+	connect(autoMoveTitlebarCb, SIGNAL(clicked()),
+		this, SLOT(slotSelectionChanged()));
     connect(menuDblClickOp, SIGNAL(activated(int)),
 	    this, SLOT(slotSelectionChanged()));
     // Make the widgets visible in kwindecoration
@@ -128,6 +139,9 @@ void B2Config::load(const KConfigGroup & /*conf*/)
 
     override = cg.readEntry("DrawGrabHandle", true);
     showGrabHandleCb->setChecked(override);
+
+	override = cg.readEntry( "AutoMoveTitleBar", true );
+	autoMoveTitlebarCb->setChecked(override);
 
     QString returnString = cg.readEntry(
 	    "MenuButtonDoubleClickOperation", "NoOp");
@@ -167,6 +181,7 @@ void B2Config::save(KConfigGroup & /*conf*/)
     KConfigGroup cg(b2Config, "General");
     cg.writeEntry("UseTitleBarBorderColors", cbColorBorder->isChecked());
     cg.writeEntry("DrawGrabHandle", showGrabHandleCb->isChecked());
+    cg.writeEntry("AutoMoveTitleBar", autoMoveTitlebarCb->isChecked());
     cg.writeEntry("MenuButtonDoubleClickOperation", 
 	    opToString(menuDblClickOp->currentIndex()));
     // Ensure others trying to read this config get updated
@@ -178,6 +193,7 @@ void B2Config::defaults()
 {
     cbColorBorder->setChecked(false);
     showGrabHandleCb->setChecked(true);
+    autoMoveTitlebarCb->setChecked(true);
     menuDblClickOp->setCurrentIndex(0);
 }
 

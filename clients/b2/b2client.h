@@ -1,9 +1,12 @@
 /*********************************************************************
   B-II KWin Client
- 
+
   Changes:
   	Customizable button positions by Karol Szwed <gallium@kde.org>
   	Ported to the kde3.2 API by Luciano Montanaro <mikelima@cirulla.net>
+  	
+  	Added option to turn off titlebar autorelocation
+  	Copyright (c) 2009 Jussi Kekkonen <tmt@ubuntu.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -152,6 +155,7 @@ private:
     void positionButtons();
     void calcHiddenButtons();
     bool mustDrawHandle() const;
+    bool autoMoveTitlebar() const;
     
     enum ButtonType{BtnMenu=0, BtnSticky, BtnIconify, BtnMax, BtnClose,
         BtnHelp, BtnShade, BtnResize, BtnCount};
