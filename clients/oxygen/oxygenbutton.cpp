@@ -191,11 +191,13 @@ namespace Oxygen
     else palette.setCurrentColorGroup(QPalette::Inactive);
     QColor color = palette.window().color();
 
-    // translate buttons up if window maximized
     if(
       client_.compositingActive() &&
       !( client_.isMaximized() || type_ == ButtonItemClose || type_ == ButtonItemMenu ) )
     { painter.translate( 0, -1 ); }
+
+    // translate buttons down if window maximized
+    if( client_.isMaximized() ) painter.translate( 0, 1 );
 
     // base button color
     QColor bt = ((type_ == ButtonItemClose && forceInactive_ ) ? client_.backgroundPalette( this, palette ):palette).window().color();

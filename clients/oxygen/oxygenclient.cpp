@@ -851,6 +851,9 @@ namespace Oxygen
     Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
     QString local( QFontMetrics( painter->font() ).elidedText( caption, Qt::ElideRight, rect.width() ) );
 
+    // translate title down in case of maximized window
+    if( isMaximized() ) painter->translate( 0, 2 );
+
     if( contrast.isValid() )
     {
       painter->setPen( contrast );
@@ -861,6 +864,9 @@ namespace Oxygen
 
     painter->setPen( color );
     painter->drawText( rect, alignment, local );
+
+    // translate back
+    if( isMaximized() ) painter->translate( 0, -2 );
 
   }
 
