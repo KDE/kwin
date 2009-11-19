@@ -451,6 +451,9 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             if( d != highlightedDesktop && !windowMove->isOnAllDesktops() )
                 {
                 effects->windowToDesktop( windowMove, d ); // Not true all desktop move
+                const int screen = effects->screenNumber( me->pos() );
+                if( screen != windowMove->screen() )
+                    effects->windowToScreen( windowMove, screen );
                 }
             effects->addRepaintFull();
             }

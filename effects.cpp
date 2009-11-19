@@ -458,6 +458,13 @@ void EffectsHandlerImpl::windowToDesktop( EffectWindow* w, int desktop )
         Workspace::self()->sendClientToDesktop( cl, desktop, true );
     }
 
+void EffectsHandlerImpl::windowToScreen( EffectWindow* w, int screen )
+    {
+    Client* cl = dynamic_cast< Client* >( static_cast<EffectWindowImpl*>(w)->window());
+    if( cl && !cl->isDesktop() && !cl->isDock() && !cl->isTopMenu())
+        Workspace::self()->sendClientToScreen( cl, screen );
+    }
+
 void EffectsHandlerImpl::setShowingDesktop( bool showing )
     {
     Workspace::self()->setShowingDesktop( showing );

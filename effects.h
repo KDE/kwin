@@ -55,6 +55,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual EffectWindow* activeWindow() const;
         virtual void moveWindow( EffectWindow* w, const QPoint& pos, bool snap = false, double snapAdjust = 1.0 );
         virtual void windowToDesktop( EffectWindow* w, int desktop );
+        virtual void windowToScreen( EffectWindow* w, int screen );
         virtual void setShowingDesktop( bool showing );
 
         virtual int currentDesktop() const;
