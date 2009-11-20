@@ -908,7 +908,7 @@ namespace Oxygen
 
         renderTitleOutline( painter, item.boundingRect_, palette );
 
-      } else if( isActive() && configuration().drawTitleOutline() ) {
+      } else if( (isActive()||glowIsAnimated()) && configuration().drawTitleOutline() ) {
 
         // adjusts boundingRect accordingly
         QRect boundingRect( item.boundingRect_ );
