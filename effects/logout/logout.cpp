@@ -236,35 +236,22 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
 
         // Vignetting (Radial gradient with transparent middle and black edges)
         for( int screen = 0; screen < effects->numScreens(); screen++ )
-            { // TODO: Cache
+            {
             QRect screenGeom = effects->clientArea( ScreenArea, screen, 0 );
             glScissor( screenGeom.x(), displayHeight() - screenGeom.y() - screenGeom.height(),
                 screenGeom.width(), screenGeom.height() ); // GL coords are flipped
             glEnable( GL_SCISSOR_TEST ); // Geom must be set before enable
-            float ro = float(( screenGeom.width() > screenGeom.height() )
-                             ? screenGeom.width() : screenGeom.height() ) * 0.8f; // Outer radius
-            glBegin( GL_TRIANGLES );
-                const float a = M_PI / 8.0f; // Angle of increment
-                for( float i = 0.0f; i < M_PI * 1.99f; i += a )
-                    {
-                    float x, y;
-
-                    glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
-
-                    x = screenGeom.x() + screenGeom.width() / 2;
-                    y = screenGeom.y() + screenGeom.height() / 2;
-                    glVertex3f( x, y, 0 );
-
-                    glColor4f( 0.0f, 0.0f, 0.0f, progress * 0.9f );
-
-                    x = ro * cos( i ) + screenGeom.x() + screenGeom.width() / 2;
-                    y = ro * sin( i ) + screenGeom.y() + screenGeom.height() / 2;
-                    glVertex3f( x, y, 0 );
-
-                    x = ro * cos( i + a ) + screenGeom.x() + screenGeom.width() / 2;
-                    y = ro * sin( i + a ) + screenGeom.y() + screenGeom.height() / 2;
-                    glVertex3f( x, y, 0 );
-                    }
+            const float cenX = screenGeom.x() + screenGeom.width() / 2;
+            const float cenY = screenGeom.y() + screenGeom.height() / 2;
+            const float a = M_PI / 16.0f; // Angle of increment
+            const float r = float(( screenGeom.width() > screenGeom.height() )
+                                  ? screenGeom.width() : screenGeom.height() ) * 0.8f; // Radius
+            glBegin( GL_TRIANGLE_FAN );
+                glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
+                glVertex3f( cenX, cenY, 0.0f );
+                glColor4f( 0.0f, 0.0f, 0.0f, progress * 0.9f );
+                for( float i = 0.0f; i <= M_PI * 2.01f; i += a )
+                    glVertex3f( cenX + r * cos( i ), cenY + r * sin( i ), 0.0f );
             glEnd();
             glDisable( GL_SCISSOR_TEST );
             }
