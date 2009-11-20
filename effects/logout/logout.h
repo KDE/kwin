@@ -54,6 +54,7 @@ class LogoutEffect
         bool logoutWindowPassed;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+        void renderVignetting();
         int frameDelay;
         bool blurSupported, useBlur;
         GLTexture* blurTexture;

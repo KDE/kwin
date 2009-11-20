@@ -138,42 +138,51 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
     if( progress > 0.0 )
         {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-        if( blurSupported && w == logoutWindow )
-            {
-            windowOpacity = data.opacity;
-            data.opacity = 0.0; // Cheat, we need the opacity for later but don't want to blur it
-            }
-        else
-            {
-            if( w != logoutWindow && !logoutWindowPassed )
-                {
-                if( blurSupported )
-                    data.saturation *= ( 1.0 - progress * 0.2 );
+        if( effects->compositingType() == KWin::OpenGLCompositing )
+            { // In OpenGL mode we add vignetting and, if supported, a slight blur
+            if( blurSupported )
+                { // When using blur we render everything to an FBO and as such don't do the vignetting
+                  // until after we render the FBO to the screen.
+                if( w == logoutWindow )
+                    { // Window is rendered after the FBO
+                    windowOpacity = data.opacity;
+                    data.opacity = 0.0; // Cheat, we need the opacity for later but don't want to blur it
+                    }
                 else
                     {
-                    data.saturation *= ( 1.0 - progress * 0.8 );
-                    data.brightness *= ( 1.0 - progress * 0.3 );
+                    if( logoutWindowPassed )
+                        { // Window is rendered after the FBO
+                        windows.append( w );
+                        windowsOpacities[ w ] = data.opacity;
+                        data.opacity = 0.0;
+                        }
+                    else // Window is added to the FBO
+                        data.saturation *= ( 1.0 - progress * 0.2 );
                     }
                 }
-            if( blurSupported && logoutWindowPassed )
-                {
-                windows.append( w );
-                windowsOpacities[ w ] = data.opacity;
-                data.opacity = 0.0;
+            else
+                { // If we are not blurring then we are not rendering to an FBO
+                if( w == logoutWindow )
+                    // This is the logout window don't alter it but render our vignetting now
+                    renderVignetting();
+                else if( !logoutWindowPassed )
+                    // Window is in the background, desaturate
+                    data.saturation *= ( 1.0 - progress * 0.2 );
+                // All other windows are unaltered
                 }
             }
-#else
-        if( w != logoutWindow && !logoutWindowPassed )
-            {
-            data.saturation *= ( 1.0 - progress * 0.8 );
-            data.brightness *= ( 1.0 - progress * 0.3 );
-            }
 #endif
-        if( w == logoutWindow )
-            {
-            // logout window - all following windows are on top and should not be altered
-            logoutWindowPassed = true;
+        if( effects->compositingType() == KWin::XRenderCompositing )
+            { // Since we can't do vignetting in XRender just do a stronger desaturation and darken
+            if( w != logoutWindow && !logoutWindowPassed )
+                {
+                data.saturation *= ( 1.0 - progress * 0.8 );
+                data.brightness *= ( 1.0 - progress * 0.3 );
+                }
             }
+        if( w == logoutWindow )
+            // All following windows are on top of the logout window and should not be altered either
+            logoutWindowPassed = true;
         }
     effects->paintWindow( w, mask, region, data );
     }
@@ -182,104 +191,94 @@ void LogoutEffect::paintScreen( int mask, QRegion region, ScreenPaintData& data 
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     if( blurSupported && progress > 0.0 )
-        {
         effects->pushRenderTarget( blurTarget );
-        }
 #endif
     effects->paintScreen( mask, region, data );
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( blurSupported && progress > 0.0 )
+    if( effects->compositingType() == KWin::OpenGLCompositing && progress > 0.0 )
         {
-        GLRenderTarget* target = effects->popRenderTarget();
-        assert( target == blurTarget );
-        Q_UNUSED( target );
-
-        //--------------------------
-        // Render the screen effect
-
-        glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
-
-        // Unmodified base image
-        blurTexture->bind();
-        glBegin( GL_QUADS );
-            glTexCoord2f( 0.0, 0.0 );
-            glVertex2f( 0.0, displayHeight() );
-            glTexCoord2f( 1.0, 0.0 );
-            glVertex2f( displayWidth(), displayHeight() );
-            glTexCoord2f( 1.0, 1.0 );
-            glVertex2f( displayWidth(), 0.0 );
-            glTexCoord2f( 0.0, 1.0 );
-            glVertex2f( 0.0, 0.0 );
-        glEnd();
-
-        // Blurred image
-        GLfloat bias[1];
-        glGetTexEnvfv( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias );
-        glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 1.75 );
-        glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
-        glEnable( GL_BLEND );
-        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        glColor4f( 1.0f, 1.0f, 1.0f, progress * 0.4 );
-        glBegin( GL_QUADS );
-            glTexCoord2f( 0.0, 0.0 );
-            glVertex2f( 0.0, displayHeight() );
-            glTexCoord2f( 1.0, 0.0 );
-            glVertex2f( displayWidth(), displayHeight() );
-            glTexCoord2f( 1.0, 1.0 );
-            glVertex2f( displayWidth(), 0.0 );
-            glTexCoord2f( 0.0, 1.0 );
-            glVertex2f( 0.0, 0.0 );
-        glEnd();
-        glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias[0] );
-        blurTexture->unbind();
-
-        // Vignetting (Radial gradient with transparent middle and black edges)
-        for( int screen = 0; screen < effects->numScreens(); screen++ )
+        if( !blurSupported )
             {
-            QRect screenGeom = effects->clientArea( ScreenArea, screen, 0 );
-            glScissor( screenGeom.x(), displayHeight() - screenGeom.y() - screenGeom.height(),
-                screenGeom.width(), screenGeom.height() ); // GL coords are flipped
-            glEnable( GL_SCISSOR_TEST ); // Geom must be set before enable
-            const float cenX = screenGeom.x() + screenGeom.width() / 2;
-            const float cenY = screenGeom.y() + screenGeom.height() / 2;
-            const float a = M_PI / 16.0f; // Angle of increment
-            const float r = float(( screenGeom.width() > screenGeom.height() )
-                                  ? screenGeom.width() : screenGeom.height() ) * 0.8f; // Radius
-            glBegin( GL_TRIANGLE_FAN );
-                glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
-                glVertex3f( cenX, cenY, 0.0f );
-                glColor4f( 0.0f, 0.0f, 0.0f, progress * 0.9f );
-                for( float i = 0.0f; i <= M_PI * 2.01f; i += a )
-                    glVertex3f( cenX + r * cos( i ), cenY + r * sin( i ), 0.0f );
+            if( !logoutWindowPassed )
+                // The logout window has been deleted but we still want to fade out the vignetting, thus
+                // render it on the top of everything if still animating. We don't check if logoutWindow
+                // is set as it may still be even if it wasn't rendered.
+                renderVignetting();
+            }
+        else
+            {
+            GLRenderTarget* target = effects->popRenderTarget();
+            assert( target == blurTarget );
+            Q_UNUSED( target );
+
+            //--------------------------
+            // Render the screen effect
+
+            glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+
+            // Unmodified base image
+            blurTexture->bind();
+            glBegin( GL_QUADS );
+                glTexCoord2f( 0.0, 0.0 );
+                glVertex2f( 0.0, displayHeight() );
+                glTexCoord2f( 1.0, 0.0 );
+                glVertex2f( displayWidth(), displayHeight() );
+                glTexCoord2f( 1.0, 1.0 );
+                glVertex2f( displayWidth(), 0.0 );
+                glTexCoord2f( 0.0, 1.0 );
+                glVertex2f( 0.0, 0.0 );
             glEnd();
-            glDisable( GL_SCISSOR_TEST );
+
+            // Blurred image
+            GLfloat bias[1];
+            glGetTexEnvfv( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias );
+            glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 1.75 );
+            glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
+            glEnable( GL_BLEND );
+            glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+            glColor4f( 1.0f, 1.0f, 1.0f, progress * 0.4 );
+            glBegin( GL_QUADS );
+                glTexCoord2f( 0.0, 0.0 );
+                glVertex2f( 0.0, displayHeight() );
+                glTexCoord2f( 1.0, 0.0 );
+                glVertex2f( displayWidth(), displayHeight() );
+                glTexCoord2f( 1.0, 1.0 );
+                glVertex2f( displayWidth(), 0.0 );
+                glTexCoord2f( 0.0, 1.0 );
+                glVertex2f( 0.0, 0.0 );
+            glEnd();
+            glTexEnvf( GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias[0] );
+            blurTexture->unbind();
+
+            // Vignetting (Radial gradient with transparent middle and black edges)
+            renderVignetting();
+
+            glPopAttrib();
+
+            //--------------------------
+
+            // Render the logout window
+            if( logoutWindow )
+                {
+                int winMask = logoutWindow->hasAlpha() ? PAINT_WINDOW_TRANSLUCENT : PAINT_WINDOW_OPAQUE;
+                WindowPaintData winData( logoutWindow );
+                winData.opacity = windowOpacity;
+                effects->drawWindow( logoutWindow, winMask, region, winData );
+                }
+
+            // Render all windows on top of logout window
+            foreach( EffectWindow* w, windows )
+                {
+                int winMask = w->hasAlpha() ? PAINT_WINDOW_TRANSLUCENT : PAINT_WINDOW_OPAQUE;
+                WindowPaintData winData( w );
+                winData.opacity = windowsOpacities[ w ];
+                effects->drawWindow( w, winMask, region, winData );
+                }
+
+            windows.clear();
+            windowsOpacities.clear();
             }
-
-        glPopAttrib();
-
-        //--------------------------
-
-        // Render the logout window
-        if( logoutWindow )
-            {
-            int winMask = logoutWindow->hasAlpha() ? PAINT_WINDOW_TRANSLUCENT : PAINT_WINDOW_OPAQUE;
-            WindowPaintData winData( logoutWindow );
-            winData.opacity = windowOpacity;
-            effects->drawWindow( logoutWindow, winMask, region, winData );
-            }
-
-        // Render all windows on top of logout window
-        foreach( EffectWindow* w, windows )
-            {
-            int winMask = w->hasAlpha() ? PAINT_WINDOW_TRANSLUCENT : PAINT_WINDOW_OPAQUE;
-            WindowPaintData winData( w );
-            winData.opacity = windowsOpacities[ w ];
-            effects->drawWindow( w, winMask, region, winData );
-            }
-
-        windows.clear();
-        windowsOpacities.clear();
         }
 #endif
     }
@@ -334,5 +333,35 @@ bool LogoutEffect::isLogoutDialog( EffectWindow* w )
         }
     return false;
     }
+
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+void LogoutEffect::renderVignetting()
+    {
+    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT );
+    glEnable( GL_BLEND ); // If not already (Such as when rendered straight to the screen)
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    for( int screen = 0; screen < effects->numScreens(); screen++ )
+        {
+        QRect screenGeom = effects->clientArea( ScreenArea, screen, 0 );
+        glScissor( screenGeom.x(), displayHeight() - screenGeom.y() - screenGeom.height(),
+            screenGeom.width(), screenGeom.height() ); // GL coords are flipped
+        glEnable( GL_SCISSOR_TEST ); // Geom must be set before enable
+        const float cenX = screenGeom.x() + screenGeom.width() / 2;
+        const float cenY = screenGeom.y() + screenGeom.height() / 2;
+        const float a = M_PI / 16.0f; // Angle of increment
+        const float r = float(( screenGeom.width() > screenGeom.height() )
+                              ? screenGeom.width() : screenGeom.height() ) * 0.8f; // Radius
+        glBegin( GL_TRIANGLE_FAN );
+            glColor4f( 0.0f, 0.0f, 0.0f, 0.0f );
+            glVertex3f( cenX, cenY, 0.0f );
+            glColor4f( 0.0f, 0.0f, 0.0f, progress * 0.9f );
+            for( float i = 0.0f; i <= M_PI * 2.01f; i += a )
+                glVertex3f( cenX + r * cos( i ), cenY + r * sin( i ), 0.0f );
+        glEnd();
+        glDisable( GL_SCISSOR_TEST );
+        }
+    glPopAttrib();
+    }
+#endif
 
 } // namespace
