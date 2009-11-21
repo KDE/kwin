@@ -8,6 +8,7 @@ Name[sv]=Låt flikar glida
 Name[tr]=Sekmeleri Kaydır
 Name[uk]=Ковзання вкладок
 Name[x-test]=xxSlide Tabsxx
+Name[zh_TW]=滑動分頁
 
 Icon=preferences-system-windows-effect-slidetabs
 
@@ -19,6 +20,7 @@ Comment[pt_BR]=Desliza as janelas ao alternar ou agrupar abas.
 Comment[sv]=Låt fönster glida vid byte eller gruppering av flikar.
 Comment[uk]=Ковзання вікон вздовж стільниці, під час перемикання або групування вкладок.
 Comment[x-test]=xxSlide windows when switching or grouping tabs.xx
+Comment[zh_TW]=切換或群組分頁時滑動視窗
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
