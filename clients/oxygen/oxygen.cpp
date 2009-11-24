@@ -92,6 +92,13 @@ namespace Oxygen
 
     bool changed( false );
 
+    /*
+    always reload helper
+    this is needed to properly handle
+    color contrast settings changed
+    */
+    helper().reloadConfig();
+
     // create a config object
     KConfig config("oxygenrc");
     KConfigGroup group( config.group("Windeco") );
