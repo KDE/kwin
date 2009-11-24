@@ -692,7 +692,7 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
-	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	QLabel* label = new QLabel( this );
 	m_dropSite = new ButtonDropSite( this );

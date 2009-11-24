@@ -83,7 +83,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     plugins = new KDecorationPreviewPlugins(kwinConfig);
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->setMargin(0);
 
 // Save this for later...
 //	cbUseMiniWindows = new QCheckBox( i18n( "Render mini &titlebars for all windows"), checkGroup );
