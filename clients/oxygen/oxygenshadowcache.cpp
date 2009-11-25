@@ -264,10 +264,8 @@ namespace Oxygen
     // this is all fixedSize. Does not scale with shadow size
     QLinearGradient lg = QLinearGradient(0.0, size-4.5, 0.0, size+4.5);
     lg.setColorAt(0.0, helper().calcLightColor( helper().backgroundTopColor(color) ));
+    lg.setColorAt(0.51, helper().backgroundBottomColor(color) );
     lg.setColorAt(1.0, helper().backgroundBottomColor(color) );
-
-    if( key.isShade ) lg.setColorAt(0.51, helper().backgroundTopColor(color) );
-    else lg.setColorAt(0.51, helper().backgroundBottomColor(color) );
 
 
     // draw ellipse.
