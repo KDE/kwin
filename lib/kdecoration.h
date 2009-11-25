@@ -629,6 +629,20 @@ class KWIN_EXPORT KDecoration
          */
         int height() const;  // convenience
         /**
+         * Returns the rectangle within the window frame that should be transparent.
+         * Usually this rectangle is the same as the client area, and it is never
+         * larger.
+         *
+         * If the client has requested that the window frame is extended into the
+         * client area, this rectangle is smaller than the client area.
+         *
+         * If the window frame should cover the whole client area, a null rectangle
+         * is returned.
+         *
+         * @since 4.4
+         */
+        QRect transparentRect() const;
+        /**
          * This function is the default handler for mouse events. All mouse events
          * that are not handled by the decoration itself should be passed to it
          * in order to make work operations like window resizing by dragging borders etc.

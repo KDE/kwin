@@ -467,6 +467,11 @@ bool KDecorationPreviewBridge::compositingActive() const
     return KWindowSystem::compositingActive();
     }
 
+QRect KDecorationPreviewBridge::transparentRect() const
+    {
+    return QRect();
+    }
+
 // Window tabbing
 
 bool KDecorationPreviewBridge::isClientGroupActive()

@@ -932,6 +932,10 @@ QRect KCommonDecoration::titleRect() const
               titleEdgeBottomBottom-(r_y+titleEdgeTop) );
 }
 
+QRect KCommonDecoration::transparentRect() const
+{
+    return wrapper->transparentRect();
+}
 
 KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent)
     : QAbstractButton(parent?parent->widget():0 ),

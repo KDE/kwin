@@ -445,13 +445,23 @@ void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect 
     if (mode == WindowRelative)
         r.translate(-padding_left, -padding_top);
 
-    top = QRect(r.x(), r.y(), r.width(), padding_top + border_top);
-    bottom = QRect(r.x(), r.y() + r.height() - padding_bottom - border_bottom,
-                   r.width(), padding_bottom + border_bottom);
+    NETStrut strut = info->frameOverlap();
+    if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
+        {
+        top = QRect(r.x(), r.y(), r.width(), r.height() / 3);
+        left = QRect(r.x(), r.y() + top.height(), width() / 2, r.height() / 3);
+        right = QRect(r.x() + left.width(), r.y() + top.height(), r.width() - left.width(), left.height());
+        bottom = QRect(r.x(), r.y() + top.height() + left.height(), r.width(), r.height() - left.height() - top.height());
+        return;
+        }
+
+    top = QRect(r.x(), r.y(), r.width(), padding_top + border_top + strut.top);
+    bottom = QRect(r.x(), r.y() + r.height() - padding_bottom - border_bottom - strut.bottom,
+                   r.width(), padding_bottom + border_bottom + strut.bottom);
     left = QRect(r.x(), r.y() + top.height(),
-                 padding_left + border_left, r.height() - top.height() - bottom.height());
-    right = QRect(r.x() + r.width() - padding_right - border_right, r.y() + top.height(),
-                  padding_right + border_right, r.height() - top.height() - bottom.height());
+                 padding_left + border_left + strut.left, r.height() - top.height() - bottom.height());
+    right = QRect(r.x() + r.width() - padding_right - border_right - strut.right, r.y() + top.height(),
+                  padding_right + border_right + strut.right, r.height() - top.height() - bottom.height());
     }
 
 QRegion Client::decorationPendingRegion() const
@@ -579,6 +589,20 @@ void Client::resizeDecorationPixmaps()
     }
 #endif
     triggerDecorationRepaint();
+    }
+
+QRect Client::transparentRect() const
+    {
+    NETStrut strut = info->frameOverlap();
+    if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
+        return QRect();
+
+    const QRect r = QRect(clientPos(), clientSize())
+                        .adjusted(strut.left, strut.top, -strut.right, -strut.bottom);
+    if (r.isValid())
+        return r;
+
+    return QRect();
     }
 
 void Client::detectNoBorder()

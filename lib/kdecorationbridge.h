@@ -94,6 +94,7 @@ class KWIN_EXPORT KDecorationBridgeUnstable
     {
     public:
         virtual bool compositingActive() const = 0;
+        virtual QRect transparentRect() const = 0;
 
         // Window tabbing
         virtual bool isClientGroupActive() = 0;

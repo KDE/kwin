@@ -324,6 +324,7 @@ void Workspace::init()
         NET::WM2DesktopLayout |
         NET::WM2FullPlacement |
         NET::WM2FullscreenMonitors |
+        NET::WM2FrameOverlap |
         0
         ,
         NET::ActionMove |

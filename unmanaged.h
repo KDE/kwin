@@ -41,6 +41,7 @@ class Unmanaged
         virtual int desktop() const;
         virtual QPoint clientPos() const;
         virtual QSize clientSize() const;
+        virtual QRect transparentRect() const;
     protected:
         virtual void debug( kdbgstream& stream ) const;
         virtual bool shouldUnredirect() const;

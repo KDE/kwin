@@ -208,6 +208,11 @@ bool Bridge::compositingActive() const
     return c->workspace()->compositingActive();
     }
 
+QRect Bridge::transparentRect() const
+    {
+    return c->transparentRect().translated(-c->decorationRect().topLeft());
+    }
+
 bool Bridge::isClientGroupActive()
     {
     return c->clientGroup()->containsActiveClient();

@@ -39,6 +39,7 @@ class Deleted
         virtual int desktop() const;
         virtual QPoint clientPos() const;
         virtual QSize clientSize() const;
+        virtual QRect transparentRect() const;
         const QPixmap *topDecoPixmap() const { return &decorationPixmapTop; }
         const QPixmap *leftDecoPixmap() const { return &decorationPixmapLeft; }
         const QPixmap *bottomDecoPixmap() const { return &decorationPixmapBottom; }
@@ -58,6 +59,7 @@ class Deleted
         double window_opacity;
         int desk;
         QRect contentsRect; // for clientPos()/clientSize()
+        QRect transparent_rect;
 
         QPixmap decorationPixmapLeft;
         QPixmap decorationPixmapRight;

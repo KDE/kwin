@@ -358,6 +358,8 @@ class Client
                         QRect(0, 0, width(), height());
         }
 
+        QRect transparentRect() const;
+
         QRegion decorationPendingRegion() const;
 
         enum CoordinateMode {

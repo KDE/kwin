@@ -66,6 +66,7 @@ class Toplevel
         virtual QSize clientSize() const = 0;
         virtual QRect visibleRect() const; // the area the window occupies on the screen
         virtual QRect decorationRect() const; // rect including the decoration shadows
+        virtual QRect transparentRect() const = 0;
         virtual QRegion decorationPendingRegion() const; // decoration region that needs to be repainted
 
         // prefer isXXX() instead

@@ -122,6 +122,11 @@ QSize Unmanaged::clientSize() const
     return size();
     }
 
+QRect Unmanaged::transparentRect() const
+    {
+    return QRect(clientPos(), clientSize());
+    }
+
 void Unmanaged::debug( kdbgstream& stream ) const
     {
     stream << "\'ID:" << window() << "\'";

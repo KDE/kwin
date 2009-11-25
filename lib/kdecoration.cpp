@@ -382,6 +382,14 @@ KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
     return m;
     }
 
+QRect KDecoration::transparentRect() const
+    {
+    if (KDecorationBridgeUnstable *bridge2 = dynamic_cast<KDecorationBridgeUnstable*>(bridge_))
+        return bridge2->transparentRect();
+    else
+        return QRect();
+    }
+
 
 KDecorationUnstable::KDecorationUnstable( KDecorationBridge* bridge, KDecorationFactory* factory )
     : KDecoration( bridge, factory )

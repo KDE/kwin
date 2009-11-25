@@ -115,6 +115,7 @@ class KDecorationPreviewBridge
         virtual void grabXServer( bool grab );
 
         virtual bool compositingActive() const;
+        virtual QRect transparentRect() const;
 
         // Window tabbing
         virtual bool isClientGroupActive();

@@ -68,6 +68,7 @@ void Deleted::copyToDeleted( Toplevel* c )
     Toplevel::copyToDeleted( c );
     desk = c->desktop();
     contentsRect = QRect( c->clientPos(), c->clientSize());
+    transparent_rect = c->transparentRect();
     if( WinInfo* cinfo = dynamic_cast< WinInfo* >( info ))
         cinfo->disable();
     Client* client = dynamic_cast<Client*>(c);
@@ -136,6 +137,11 @@ void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect
 QRect Deleted::decorationRect() const
     {
     return rect().adjusted(-padding_left, -padding_top, padding_top, padding_bottom);
+    }
+
+QRect Deleted::transparentRect() const
+    {
+    return transparent_rect;
     }
 
 } // namespace

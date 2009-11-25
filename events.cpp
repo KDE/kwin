@@ -634,6 +634,10 @@ bool Client::windowEvent( XEvent* e )
                 i.setOpacity( info->opacity());
                 }
             }
+        if( dirty[ WinInfo::PROTOCOLS2 ] & NET::WM2FrameOverlap )
+            {
+            // ### Inform the decoration
+            }
         }
 
     switch (e->type) 

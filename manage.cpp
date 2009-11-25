@@ -91,6 +91,7 @@ bool Client::manage( Window w, bool isMapped )
         NET::WM2ExtendedStrut |
         NET::WM2Opacity |
         NET::WM2FullscreenMonitors |
+        NET::WM2FrameOverlap |
         0;
 
     info = new WinInfo( this, display(), client, rootWindow(), properties, 2 );

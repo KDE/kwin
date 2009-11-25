@@ -233,6 +233,22 @@ class KWIN_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
          */
         QRect titleRect() const;
 
+        /**
+         * Returns the rectangle within the decoration that should be transparent.
+         *
+         * Usually this is the rectangle occupied by the client window,
+         * but a smaller rectangle may be returned if the client has specified
+         * that the window decoration should extend below the client area.
+         *
+         * If the client has requested that the decoration should cover the whole
+         * client area, a null rectangle is returned.
+         *
+         * The returned rectangle is never larger than the client area.
+         *
+         * @since 4.4
+         */
+        QRect transparentRect() const;
+
     public:
         /**
          * Handles widget and layout creation, call the base implementation when subclassing this member.
