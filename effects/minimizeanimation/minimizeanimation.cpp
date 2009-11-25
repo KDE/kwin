@@ -39,34 +39,39 @@ void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time
         //  whole screen won't be repainted, resulting in artefacts
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
+    QHash< EffectWindow*, TimeLine >::iterator entry = mTimeLineWindows.begin();
+    bool erase = false;
+    while( entry != mTimeLineWindows.end() )
+        {
+        TimeLine &timeline = entry.value();
+        if( entry.key()->isMinimized() )
+            {
+            timeline.addTime(time);
+            erase = (timeline.progress() >= 1.0f);
+            }
+        else
+            {
+            timeline.removeTime(time);
+            erase = (timeline.progress() <= 0.0f);
+            }
+        if( erase )
+            entry = mTimeLineWindows.erase( entry );
+        else
+            ++entry;
+        }
+
     effects->prePaintScreen(data, time);
     }
 
 void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
-    if( mTimeLineWindows.contains( w ))
+    // Schedule window for transformation if the animation is still in
+    //  progress
+    if( mTimeLineWindows.contains( w ) )
         {
-        if( w->isMinimized() )
-            {
-            mTimeLineWindows[w].addTime(time);
-            if( mTimeLineWindows[w].progress() >= 1.0f )
-                mTimeLineWindows.remove( w );
-            }
-        else
-            {
-            mTimeLineWindows[w].removeTime(time);
-            if( mTimeLineWindows[w].progress() <= 0.0f )
-                mTimeLineWindows.remove( w );
-            }
-
-        // Schedule window for transformation if the animation is still in
-        //  progress
-        if( mTimeLineWindows.contains( w ))
-            {
-            // We'll transform this window
-            data.setTransformed();
-            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
-            }
+        // We'll transform this window
+        data.setTransformed();
+        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
         }
 
     effects->prePaintWindow( w, data, time );
@@ -74,10 +79,11 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintDat
 
 void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    if( mTimeLineWindows.contains( w ))
+    QHash< EffectWindow*, TimeLine >::const_iterator entry = mTimeLineWindows.find(w);
+    if( entry != mTimeLineWindows.constEnd() )
     {
         // 0 = not minimized, 1 = fully minimized
-        double progress = mTimeLineWindows[w].value();
+        double progress = entry->value();
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
@@ -107,18 +113,25 @@ void MinimizeAnimationEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
+void MinimizeAnimationEffect::windowDeleted( EffectWindow* w )
+    {
+        mTimeLineWindows.remove( w );
+    }
+
 void MinimizeAnimationEffect::windowMinimized( EffectWindow* w )
     {
-    mTimeLineWindows[w].setCurveShape(TimeLine::EaseInCurve);
-    mTimeLineWindows[w].setDuration( animationTime( 250 ));
-    mTimeLineWindows[w].setProgress(0.0f);
+    TimeLine &timeline = mTimeLineWindows[w];
+    timeline.setCurveShape(TimeLine::EaseInCurve);
+    timeline.setDuration( animationTime( 250 ));
+    timeline.setProgress(0.0f);
     }
 
 void MinimizeAnimationEffect::windowUnminimized( EffectWindow* w )
     {
-    mTimeLineWindows[w].setCurveShape(TimeLine::EaseOutCurve);
-    mTimeLineWindows[w].setDuration( animationTime( 250 ));
-    mTimeLineWindows[w].setProgress(1.0f);
+    TimeLine &timeline = mTimeLineWindows[w];
+    timeline.setCurveShape(TimeLine::EaseOutCurve);
+    timeline.setDuration( animationTime( 250 ));
+    timeline.setProgress(1.0f);
     }
 
 } // namespace

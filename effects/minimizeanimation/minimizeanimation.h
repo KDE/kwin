@@ -42,6 +42,7 @@ class MinimizeAnimationEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void postPaintScreen();
 
+        virtual void windowDeleted( EffectWindow* c );
         virtual void windowMinimized( EffectWindow* c );
         virtual void windowUnminimized( EffectWindow* c );
 
