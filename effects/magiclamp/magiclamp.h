@@ -48,6 +48,7 @@ class MagicLampEffect
         QHash< EffectWindow*, TimeLine > mTimeLineWindows;
         int mActiveAnimations;
         int mAnimationDuration;
+        int mShadowOffset[4];
 
         enum IconPosition
             {

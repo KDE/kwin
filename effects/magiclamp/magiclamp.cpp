@@ -45,10 +45,43 @@ void MagicLampEffect::reconfigure( ReconfigureFlags )
     {
     KConfigGroup conf = effects->effectConfig( "MagicLamp" );
     mAnimationDuration = animationTime( conf, "AnimationDuration", 250 );
+    conf = effects->effectConfig( "Shadow" );
+    int v = conf.readEntry( "Size", 5 );
+    v += conf.readEntry( "Fuzzyness", 10 );
+    mShadowOffset[0] = mShadowOffset[1] = -v;
+    mShadowOffset[2] = mShadowOffset[3] = v;
+    v = conf.readEntry( "XOffset", 0 );
+    mShadowOffset[0] -= v;
+    mShadowOffset[2] += v;
+    v = conf.readEntry( "YOffset", 3 );
+    mShadowOffset[1] -= v;
+    mShadowOffset[3] += v;
     }
 
 void MagicLampEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
+
+    QHash< EffectWindow*, TimeLine >::iterator entry = mTimeLineWindows.begin();
+    bool erase = false;
+    while( entry != mTimeLineWindows.end() )
+        {
+        TimeLine &timeline = entry.value();
+        if( entry.key()->isMinimized() )
+            {
+            timeline.addTime(time);
+            erase = (timeline.progress() >= 1.0f);
+            }
+        else
+            {
+            timeline.removeTime(time);
+            erase = (timeline.progress() <= 0.0f);
+            }
+        if( erase )
+            entry = mTimeLineWindows.erase( entry );
+        else
+            ++entry;
+        }
+    
     mActiveAnimations = mTimeLineWindows.count();
     if( mActiveAnimations > 0 )
         // We need to mark the screen windows as transformed. Otherwise the
@@ -60,30 +93,14 @@ void MagicLampEffect::prePaintScreen( ScreenPrePaintData& data, int time )
 
 void MagicLampEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
+    // Schedule window for transformation if the animation is still in
+    //  progress
     if( mTimeLineWindows.contains( w ))
         {
-        if( w->isMinimized() )
-            {
-            mTimeLineWindows[w].addTime(time);
-            if( mTimeLineWindows[w].progress() >= 1.0f )
-                mTimeLineWindows.remove( w );
-            }
-        else
-            {
-            mTimeLineWindows[w].removeTime(time);
-            if( mTimeLineWindows[w].progress() <= 0.0f )
-                mTimeLineWindows.remove( w );
-            }
-
-        // Schedule window for transformation if the animation is still in
-        //  progress
-        if( mTimeLineWindows.contains( w ))
-            {
-            // We'll transform this window
-            data.setTransformed();
-            data.quads = data.quads.makeGrid( 40 );
-            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
-            }
+        // We'll transform this window
+        data.setTransformed();
+        data.quads = data.quads.makeGrid( 40 );
+        w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
         }
 
     effects->prePaintWindow( w, data, time );
@@ -92,79 +109,123 @@ void MagicLampEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
 void MagicLampEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     if( mTimeLineWindows.contains( w ))
-    {
+        {
         // 0 = not minimized, 1 = fully minimized
         float progress = mTimeLineWindows[w].value();
 
         QRect geo = w->geometry();
         QRect icon = w->iconGeometry();
         QRect area = effects->clientArea( ScreenArea, w );
+        IconPosition position = Top;
         // If there's no icon geometry, minimize to the center of the screen
         if( !icon.isValid() )
-            icon = QRect( area.x() + area.width() / 2, area.y() + area.height(), 0, 0 );
-
-        IconPosition position;
-        // Assumption: there is a panel containing the icon position
-        EffectWindow* panel = NULL;
-        foreach( EffectWindow* window, effects->stackingOrder() )
             {
-            if( !window->isDock() )
-                continue;
-            // we have to use intersects as there seems to be a Plasma bug
-            // the published icon geometry might be bigger than the panel
-            if( window->geometry().intersects( icon ) )
-                {
-                panel = window;
-                break;
-                }
-            }
-        if( panel )
+            QRect extG = geo.adjusted(mShadowOffset[0], mShadowOffset[1], mShadowOffset[2], mShadowOffset[3]);
+            QPoint pt = QCursor::pos();
+            // focussing inside the window is no good, leads to ugly artefacts, find nearest border
+            if (extG.contains(pt))
             {
-            // Assumption: width of horizonal panel is greater than its height and vice versa
-            // The panel has to border one screen edge, so get it's screen area
-            QRect panelScreen = effects->clientArea( ScreenArea, panel );
-            if( panel->width() >= panel->height() )
-                {
-                // horizontal panel
-                if( panel->y() == panelScreen.y() )
-                    position = Top;
-                else
+                const int d[2][2] = { {pt.x() - extG.x(), extG.right()  - pt.x()},
+                                      {pt.y() - extG.y(), extG.bottom() - pt.y()} };
+                int di = d[1][0];
+                position = Top;
+                if (d[0][0] < di)
+                    {
+                    di = d[0][0];
+                    position = Left;
+                    }
+                if (d[1][1] < di)
+                    {
+                    di = d[1][1];
                     position = Bottom;
-                }
+                    }
+                if (d[0][1] < di)
+                    position = Right;
+                switch (position)
+                    {
+                    case Top: pt.setY(extG.y()); break;
+                    case Left: pt.setX(extG.x()); break;
+                    case Bottom: pt.setY(extG.bottom()); break;
+                    case Right: pt.setX(extG.right()); break;
+                    }
+            }
             else
                 {
-                // vertical panel
-                if( panel->x() == panelScreen.x() )
+                if (pt.y() < geo.y())
+                    position = Top;
+                else if (pt.x() < geo.x())
                     position = Left;
-                else
+                else if (pt.y() > geo.bottom())
+                    position = Bottom;
+                else if (pt.x() > geo.right())
                     position = Right;
                 }
+            icon = QRect(pt, QSize(0,0));
             }
         else
             {
-            // we did not find a panel, so it might be autohidden
-            QRect iconScreen = effects->clientArea( ScreenArea, icon.topLeft(), effects->currentDesktop() );
-            // as the icon geometry could be overlap a screen edge we use an intersection
-            QRect rect = iconScreen.intersected( icon );
-            // here we need a different assumption: icon geometry borders one screen edge
-            // this assumption might be wrong for e.g. task applet being the only applet in panel
-            // in this case the icon borders two screen edges
-            // there might be a wrong animation, but not distorted
-            if( rect.x() == iconScreen.x() )
+            // Assumption: there is a panel containing the icon position
+            EffectWindow* panel = NULL;
+            foreach( EffectWindow* window, effects->stackingOrder() )
                 {
-                position = Left;
+                if( !window->isDock() )
+                    continue;
+                // we have to use intersects as there seems to be a Plasma bug
+                // the published icon geometry might be bigger than the panel
+                if( window->geometry().intersects( icon ) )
+                    {
+                    panel = window;
+                    break;
+                    }
                 }
-            else if( rect.x() + rect.width() == iconScreen.x() + iconScreen.width() )
+            if( panel )
                 {
-                position = Right;
-                }
-            else if( rect.y() == iconScreen.y() )
-                {
-                position = Top;
+                // Assumption: width of horizonal panel is greater than its height and vice versa
+                // The panel has to border one screen edge, so get it's screen area
+                QRect panelScreen = effects->clientArea( ScreenArea, panel );
+                if( panel->width() >= panel->height() )
+                    {
+                    // horizontal panel
+                    if( panel->y() == panelScreen.y() )
+                        position = Top;
+                    else
+                        position = Bottom;
+                    }
+                else
+                    {
+                    // vertical panel
+                    if( panel->x() == panelScreen.x() )
+                        position = Left;
+                    else
+                        position = Right;
+                    }
                 }
             else
                 {
-                position = Bottom;
+                // we did not find a panel, so it might be autohidden
+                QRect iconScreen = effects->clientArea( ScreenArea, icon.topLeft(), effects->currentDesktop() );
+                // as the icon geometry could be overlap a screen edge we use an intersection
+                QRect rect = iconScreen.intersected( icon );
+                // here we need a different assumption: icon geometry borders one screen edge
+                // this assumption might be wrong for e.g. task applet being the only applet in panel
+                // in this case the icon borders two screen edges
+                // there might be a wrong animation, but not distorted
+                if( rect.x() == iconScreen.x() )
+                    {
+                    position = Left;
+                    }
+                else if( rect.x() + rect.width() == iconScreen.x() + iconScreen.width() )
+                    {
+                    position = Right;
+                    }
+                else if( rect.y() == iconScreen.y() )
+                    {
+                    position = Top;
+                    }
+                else
+                    {
+                    position = Bottom;
+                    }
                 }
             }
 
@@ -302,9 +363,9 @@ void MagicLampEffect::postPaintScreen()
     }
 
 void MagicLampEffect::windowDeleted( EffectWindow* w )
-{
+    {
     mTimeLineWindows.remove( w );
-}
+    }
 
 void MagicLampEffect::windowMinimized( EffectWindow* w )
     {
