@@ -33,11 +33,6 @@ MinimizeAnimationEffect::MinimizeAnimationEffect()
 
 void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
-    mActiveAnimations = mTimeLineWindows.count();
-    if( mActiveAnimations > 0 )
-        // We need to mark the screen windows as transformed. Otherwise the
-        //  whole screen won't be repainted, resulting in artefacts
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     QHash< EffectWindow*, TimeLine >::iterator entry = mTimeLineWindows.begin();
     bool erase = false;
@@ -59,6 +54,12 @@ void MinimizeAnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time
         else
             ++entry;
         }
+
+    mActiveAnimations = mTimeLineWindows.count();
+    if( mActiveAnimations > 0 )
+        // We need to mark the screen windows as transformed. Otherwise the
+        //  whole screen won't be repainted, resulting in artefacts
+        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     effects->prePaintScreen(data, time);
     }
