@@ -724,22 +724,6 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
          !iterator.isDone();
          iterator.next())
         {
-        if ( !(mask & PAINT_DECORATION_ONLY) )
-            {
-            // Paint the window contents
-            if( opaque )
-                {
-                XRenderComposite( display(), PictOpSrc, pic, None, buffer, cr.x() * xscale, cr.y() * yscale,
-                                  0, 0, dr.x(), dr.y(), dr.width(), dr.height());
-                }
-            else
-                {
-                Picture alpha = alphaMask( data.opacity );
-                XRenderComposite( display(), PictOpOver, pic, alpha, buffer, cr.x() * xscale, cr.y() * yscale,
-                                  0, 0, dr.x(), dr.y(), dr.width(), dr.height());
-                transformed_shape = QRegion();
-                }
-            }
         if( client || deleted )
             {
             bool noBorder = true;
@@ -804,7 +788,24 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
                     }
                 }
             }
-        if( data.brightness < 1.0 )
+        if ( !(mask & PAINT_DECORATION_ONLY) )
+            {
+            // Paint the window contents
+            if( opaque )
+                {
+                XRenderComposite( display(), PictOpSrc, pic, None, buffer, cr.x() * xscale, cr.y() * yscale,
+                                  0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+                }
+            else
+                {
+                Picture alpha = alphaMask( data.opacity );
+                XRenderComposite( display(), PictOpOver, pic, alpha, buffer, cr.x() * xscale, cr.y() * yscale,
+                                  0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+                transformed_shape = QRegion();
+                }
+            }
+ 
+       if( data.brightness < 1.0 )
             {
             // fake brightness change by overlaying black
             XRenderColor col = { 0, 0, 0, 0xffff * ( 1 - data.brightness ) * data.opacity };

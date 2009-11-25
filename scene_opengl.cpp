@@ -1437,20 +1437,8 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         }
     region.translate( toplevel->x(), toplevel->y() );  // Back to screen coords
 
-    texture.bind();
-    texture.enableUnnormalizedTexCoords();
-
     WindowQuadList decoration = data.quads.select( WindowQuadDecoration );
-    // paint the content
-    if ( !(mask & PAINT_DECORATION_ONLY) )
-        {
-        prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
-        renderQuads( mask, region, data.quads.select( WindowQuadContents ));
-        restoreStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
-        }
 
-    texture.disableUnnormalizedTexCoords();
-    texture.unbind();
 
     // decorations
     Client *client = dynamic_cast<Client*>(toplevel);
@@ -1519,6 +1507,20 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
             paintDecoration( bottom, DecorationBottom, region, bottomRect, data, bottomList, updateDeco );
             }
         }
+
+    texture.bind();
+    texture.enableUnnormalizedTexCoords();
+
+    // paint the content
+    if ( !(mask & PAINT_DECORATION_ONLY) )
+        {
+        prepareStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+        renderQuads( mask, region, data.quads.select( WindowQuadContents ));
+        restoreStates( Content, data.opacity * data.contents_opacity, data.brightness, data.saturation, data.shader );
+        }
+
+    texture.disableUnnormalizedTexCoords();
+    texture.unbind();
 
     glPopMatrix();
     }
