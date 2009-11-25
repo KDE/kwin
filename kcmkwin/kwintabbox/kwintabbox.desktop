@@ -50,3 +50,4 @@ Comment[tr]=Pencereler arasında gezinme davranışını yapılandır.
 Comment[uk]=Налаштування поведінки системи під час навігації вікнами.
 Comment[x-test]=xxConfigure the behavior for navigating through windows.xx
 Comment[zh_TW]=設定透過視窗導覽的行為
+X-KDE-Keywords=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab
