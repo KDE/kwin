@@ -301,6 +301,11 @@ void MagicLampEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
+void MagicLampEffect::windowDeleted( EffectWindow* w )
+{
+    mTimeLineWindows.remove( w );
+}
+
 void MagicLampEffect::windowMinimized( EffectWindow* w )
     {
     mTimeLineWindows[w].setCurveShape(TimeLine::LinearCurve);
