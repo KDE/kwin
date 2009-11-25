@@ -76,7 +76,7 @@ B2Config::B2Config(KConfig *conf, QWidget *parent)
 	autoMoveTitlebarCb->setWhatsThis(
 		i18n("When selected, titlebars are automatically relocated "
 		 "to visible positions; "
-		 "otherwise, they are only moved manually."));
+		 "otherwise, they are only moved manually using shift+drag."));
 
     // Double click menu option support
     actionsGB = new QGroupBox(i18n("Actions Settings"), gb);
