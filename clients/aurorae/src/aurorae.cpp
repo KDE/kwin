@@ -751,7 +751,7 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
     // restrict painting on the decoration - no need to paint behind the window
     int left, right, top, bottom;
     decoration()->borders(left, right, top, bottom);
-    if (!compositingActive() && !transparentRect().isNull()) {
+    if (!compositingActive() || (compositingActive() && !transparentRect().isNull())) {
         // only clip when compositing is not active and we don't extend into the client
         painter.setClipping(true);
         painter.setClipRect(0, 0,
