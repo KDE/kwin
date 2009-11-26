@@ -155,13 +155,13 @@ KTitleBarActionsConfig::KTitleBarActionsConfig (bool _standAlone, KConfig *_conf
   layout->addWidget( titlebarActions );
 
   KComboBox* combo = new KComboBox(this);
-  combo->addItem(i18n("Maximize"));
+  combo->addItem(i18nc("@item:inlistbox behavior on double click", "Maximize"));
   combo->addItem(i18n("Maximize (vertical only)"));
   combo->addItem(i18n("Maximize (horizontal only)"));
-  combo->addItem(i18n("Minimize"));
-  combo->addItem(i18n("Shade"));
+  combo->addItem(i18nc("@item:inlistbox behavior on double click", "Minimize"));
+  combo->addItem(i18nc"Shade"));
   combo->addItem(i18n("Lower"));
-  combo->addItem(i18n("On All Desktops"));
+  combo->addItem(i18nc("@item:inlistbox behavior on double click", "On All Desktops"));
   combo->addItem(i18n("Nothing"));
   combo->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
   connect(combo, SIGNAL(activated(int)), SLOT(changed()));

@@ -101,7 +101,7 @@
        <widget class="QComboBox" name="desktopSwitchCombo">
         <item>
          <property name="text">
-          <string>Disabled</string>
+          <string comment="Switch desktop on edge">Disabled</string>
          </property>
         </item>
         <item>
