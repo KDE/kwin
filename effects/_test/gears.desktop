@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Cube Gears
+Name[el]=Κυβικά γρανάζια
 Name[en_GB]=Cube Gears
 Name[eo]=Dentradoj en Kubo
 Name[et]=Kuuphammasrattad
@@ -20,6 +21,7 @@ Name[x-test]=xxCube Gearsxx
 Name[zh_TW]=立方體內的齒輪
 Icon=preferences-system-windows-effect-cube
 Comment=Display gears inside the cube
+Comment[el]=Εμφάνιση γραναζιών μέσα στον κύβο
 Comment[en_GB]=Display gears inside the cube
 Comment[eo]=Montri ilojn ene de la kubo
 Comment[et]=Hammasrataste kujutamine kuubikus

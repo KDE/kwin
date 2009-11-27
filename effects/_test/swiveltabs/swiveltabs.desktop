@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Swivel Tabs
+Name[el]=Στρεφόμενες καρτέλες
 Name[en_GB]=Swivel Tabs
 Name[hr]=Kartice koje se okreću oko osi
 Name[kk]=Қойындыларды бұрау
@@ -12,6 +13,7 @@ Name[x-test]=xxSwivel Tabsxx
 Name[zh_TW]=轉動分頁
 Icon=preferences-system-windows-effect-swiveltabs
 Comment=Make the windows turn when switching tabs
+Comment[el]=Κάντε τα παράθυρα να περιστρέφονται κατά την εναλλαγή καρτελλών
 Comment[en_GB]=Make the windows turn when switching tabs
 Comment[hr]=Učini da se prozori okreću kada se prebacuju kartice
 Comment[kk]=Қойындыларды ауыстыру кезде терезелерді бұрау

@@ -2,6 +2,7 @@
 Name=Example
 Name[bg]=Пример
 Name[de]=Beispiel
+Name[el]=Παράδειγμα
 Name[en_GB]=Example
 Name[eo]=Ekzemplo
 Name[et]=Näide
@@ -32,6 +33,7 @@ Name[uk]=Приклад
 Name[x-test]=xxExamplexx
 Name[zh_TW]=範例
 Comment=An example theme based on the Air desktop theme.
+Comment[el]=Ένα παράδειγμα θέματος επιφάνειας εργασίας βασισμένο στο Air.
 Comment[en_GB]=An example theme based on the Air desktop theme.
 Comment[eo]=Ekzempla etoso bazita sur la Air-labortabla etoso.
 Comment[et]=Näidisteema töölauateema Air põhjal.
