@@ -80,7 +80,7 @@ void MinimizeAnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintDat
 
 void MinimizeAnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
-    QHash< EffectWindow*, TimeLine >::const_iterator entry = mTimeLineWindows.find(w);
+    QHash< EffectWindow*, TimeLine >::const_iterator entry = mTimeLineWindows.constFind(w);
     if( entry != mTimeLineWindows.constEnd() )
     {
         // 0 = not minimized, 1 = fully minimized
