@@ -434,7 +434,6 @@ namespace Oxygen
 
     }
 
-
     // get title bounding rect
     QRect boundingRect = QFontMetrics( font ).boundingRect( rect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
 
@@ -1093,6 +1092,7 @@ namespace Oxygen
   {
 
     KCommonDecorationUnstable::activeChange();
+    itemData_.setDirty( true );
 
     // reset animation
     if( animateActiveChange() )
@@ -1130,7 +1130,7 @@ namespace Oxygen
   void OxygenClient::captionChange( void  )
   {
     KCommonDecorationUnstable::captionChange();
-
+    itemData_.setDirty( true );
     if( !animateTitleChange() ) return;
     titleAnimation().data()->restart();
 
@@ -1480,7 +1480,7 @@ namespace Oxygen
       geometry = itemData_[itemClicked].boundingRect_;
 
       // remove space used for buttons
-      if( itemData_.count() >= 0 )
+      if( itemData_.count() > 1  )
       { geometry.adjust( 0, 0,  - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 ); }
 
       drag->setPixmap( itemDragPixmap( itemClicked, geometry ) );
