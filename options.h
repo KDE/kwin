@@ -391,7 +391,7 @@ class Options : public KDecorationOptions
         int animationSpeed; // 0 - instant, 5 - very slow
 
         MouseCommand wheelToMouseCommand( MouseWheelCommand com, int delta );
-        void reloadCompositingSettings(const CompositingPrefs& prefs);
+        void reloadCompositingSettings();
     };
 
 extern Options* options;

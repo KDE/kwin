@@ -217,21 +217,18 @@ unsigned long Options::updateSettings()
 // KDE4 this probably needs to be done manually in clients
 
     // Driver-specific config detection
-    // TODO: this is now a bit cumbersome.
-    // reloadCompositingSettings isn't use anywhere else, so the prefs should be allocated there
-    // and not passed as value
-    CompositingPrefs prefs;
-    reloadCompositingSettings( prefs );
+    reloadCompositingSettings();
 
     return changed;
     }
 
-void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
+void Options::reloadCompositingSettings()
     {
     KSharedConfig::Ptr _config = KGlobal::config();
     KConfigGroup config(_config, "Compositing");
 
     // Compositing settings
+    CompositingPrefs prefs;
     useCompositing = config.readEntry("Enabled", true);
     if (useCompositing)
     {
@@ -240,7 +237,7 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
     }
     if (!useCompositing)
         return;
-    
+
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if( compositingBackend == "XRender" )
         compositingMode = XRenderCompositing;
