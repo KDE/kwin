@@ -30,7 +30,7 @@ extern "C"
     {
     KDE_EXPORT KDecorationFactory *create_factory()
         {
-        return new TabstripFactory::TabstripFactory();
+        return new TabstripFactory();
         }
     }
 

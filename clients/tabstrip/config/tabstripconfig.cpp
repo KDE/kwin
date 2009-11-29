@@ -34,7 +34,7 @@ extern "C"
     {
     KDE_EXPORT QObject* allocate_config( KConfig* conf, QWidget* parent )
         {
-        return new TabstripConfig::TabstripConfig( conf, parent );
+        return new TabstripConfig( conf, parent );
         }
     }
 
