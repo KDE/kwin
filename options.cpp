@@ -239,7 +239,7 @@ void Options::reloadCompositingSettings(const CompositingPrefs& prefs)
         useCompositing = prefs.enableCompositing();
     }
     if (!useCompositing)
-        return false;
+        return;
     
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if( compositingBackend == "XRender" )
