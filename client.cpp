@@ -446,7 +446,11 @@ void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect 
         r.translate(-padding_left, -padding_top);
 
     NETStrut strut = info->frameOverlap();
-    if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
+
+    // Ignore the overlap strut when compositing is disabled
+    if (!compositing())
+        strut.left = strut.top = strut.right = strut.bottom = 0;
+    else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
         {
         top = QRect(r.x(), r.y(), r.width(), r.height() / 3);
         left = QRect(r.x(), r.y() + top.height(), width() / 2, r.height() / 3);
@@ -593,8 +597,13 @@ void Client::resizeDecorationPixmaps()
 
 QRect Client::transparentRect() const
     {
+    if (isShade())
+        return QRect();
+
     NETStrut strut = info->frameOverlap();
-    if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
+    if (!compositing()) // Ignore the strut when compositing is disabled
+        strut.left = strut.top = strut.right = strut.bottom = 0;
+    else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
         return QRect();
 
     const QRect r = QRect(clientPos(), clientSize())
