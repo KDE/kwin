@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Resize Window
 Name[ca]=Redimensionament de les finestres
+Name[da]=Ændr størrelse på vindue
 Name[de]=Fenstergröße ändern
 Name[el]=Αλλαγή μεγέθους παραθύρου
 Name[en_GB]=Resize Window
@@ -34,6 +35,7 @@ Name[zh_TW]=重新調整視窗大小
 Icon=preferences-system-windows-effect-resize
 Comment=Effect to outline geometry while resizing a window
 Comment[ca]=Efecte de geometria de contorn en redimensionar una finestra
+Comment[da]=Effekt for at omridse geometri under ændring af vinduesstørrelse
 Comment[el]=Εφέ για το γεωμετρικό περίγραμμα κατά την αλλαγή μεγέθους ενός παραθύρου
 Comment[en_GB]=Effect to outline geometry while resizing a window
 Comment[et]=Geomeetria näitamine efekt akna suuruse muutmisel

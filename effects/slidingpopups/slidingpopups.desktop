@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sliding popups
+Name[da]=Glidende pop-op'er
 Name[el]=Κυλιόμενα αναδυόμενων
 Name[en_GB]=Sliding popups
 Name[eo]=Lumbilda ŝprucfenestroj
@@ -24,6 +25,7 @@ Name[zh_TW]=滑動彈出視窗
 
 Type=Service
 Comment=Sliding animation for Plasma popups
+Comment[da]=Glidende animation til Plasma-pop-op'er
 Comment[el]=Γραφικά κύλισης για αναδυόμενα από το Plasma
 Comment[en_GB]=Sliding animation for Plasma popups
 Comment[eo]=Glitantaj animacioj por Plasma ŝprucfenestro
