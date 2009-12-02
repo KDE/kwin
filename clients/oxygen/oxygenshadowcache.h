@@ -78,7 +78,7 @@ namespace Oxygen
 
         // even if shadows are disabled,
         // you need a minimum size to allow corner rendering
-        return qMax( size, 5.0 );
+        return qMax( size, qreal(5.0) );
     }
 
     //! get shadow matching client
