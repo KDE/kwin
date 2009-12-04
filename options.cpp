@@ -227,17 +227,16 @@ void Options::reloadCompositingSettings()
     KSharedConfig::Ptr _config = KGlobal::config();
     KConfigGroup config(_config, "Compositing");
 
+    // do not even detect compositing preferences if explicitly disabled
+    if( config.hasKey( "Enabled" ) && !config.readEntry( "Enabled", true ))
+        {
+        useCompositing = false;
+        return;
+        }
     // Compositing settings
     CompositingPrefs prefs;
-    if( !config.hasKey( "Enabled" ))
-        {
-        prefs.detect();
-        useCompositing = prefs.recommendCompositing();
-        }
-    else
-        useCompositing = config.readEntry( "Enabled" , true );
-    if (!useCompositing)
-        return;
+    prefs.detect();
+    useCompositing = config.readEntry( "Enabled" , prefs.recommendCompositing());
 
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
     if( compositingBackend == "XRender" )
