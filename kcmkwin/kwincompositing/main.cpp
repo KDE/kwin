@@ -127,12 +127,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.compositingStateButton, SIGNAL(clicked(bool)), kwinInterface, SLOT(toggleCompositing()));
     connect(kwinInterface, SIGNAL(compositingToggled(bool)), this, SLOT(setupCompositingState(bool)));
 
-    // NOTICE: this is intended to workaround broken GL implementations that succesfully segfault on glXQuery :-(
-    KConfigGroup gl_workaround_config(mKWinConfig, "Compositing");
-    bool checkIsSave = gl_workaround_config.readEntry("CheckIsSafe", true);
-    gl_workaround_config.writeEntry("CheckIsSafe", false);
-    gl_workaround_config.sync();
-    
     // Open the temporary config file
     // Temporary conf file is used to synchronize effect checkboxes with effect
     // selector by loading/saving effects from/to temp config when active tab
@@ -140,13 +134,20 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     mTmpConfigFile.open();
     mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
 
-    if( checkIsSave && CompositingPrefs::compositingPossible() )
+    // NOTICE: this is intended to workaround broken GL implementations that succesfully segfault on glXQuery :-(
+    KConfigGroup gl_workaround_config(mKWinConfig, "Compositing");
+    const bool checkIsSafe = gl_workaround_config.readEntry("CheckIsSafe", true);
+    if( checkIsSafe && CompositingPrefs::compositingPossible() )
         {
+        gl_workaround_config.writeEntry("CheckIsSafe", false);
+        gl_workaround_config.sync();
         // Driver-specific config detection
         mDefaultPrefs.detect();
         initEffectSelector();
         // Initialize the user interface with the config loaded from kwinrc.
         load();
+        gl_workaround_config.writeEntry("CheckIsSafe", true);
+        gl_workaround_config.sync();
         }
     else
         {
@@ -163,9 +164,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
         setupCompositingState( false, false );
         }
-
-    gl_workaround_config.writeEntry("CheckIsSafe", checkIsSave);
-    gl_workaround_config.sync();
 
     KAboutData *about = new KAboutData(I18N_NOOP("kcmkwincompositing"), 0,
             ki18n("KWin Desktop Effects Configuration Module"),
