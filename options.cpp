@@ -58,8 +58,8 @@ Options::~Options()
 unsigned long Options::updateSettings()
     {
     KSharedConfig::Ptr _config = KGlobal::config();
-    unsigned long changed = 0;
-    changed |= KDecorationOptions::updateSettings( _config.data() ); // read decoration settings
+    // read decoration settings
+    const unsigned long changed = KDecorationOptions::updateSettings( _config.data() );
 
     KConfigGroup config( _config, "Windows" );
     moveMode = stringToMoveResizeMode( config.readEntry("MoveMode", "Opaque" ));
@@ -229,12 +229,8 @@ void Options::reloadCompositingSettings()
 
     // Compositing settings
     CompositingPrefs prefs;
-    useCompositing = config.readEntry("Enabled", true);
-    if (useCompositing)
-    {
-        prefs.detect();
-        useCompositing = prefs.enableCompositing();
-    }
+    prefs.detect();
+    useCompositing = config.readEntry("Enabled", prefs.enableCompositing());
     if (!useCompositing)
         return;
 
