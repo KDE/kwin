@@ -64,9 +64,17 @@ KWinScreenEdgesConfig::KWinScreenEdgesConfig( QWidget* parent, const QVariantLis
     connect( m_ui->quickMaximizeBox, SIGNAL( stateChanged(int) ), this, SLOT( groupChanged() ));
     connect( m_ui->quickTileBox, SIGNAL( stateChanged(int) ), this, SLOT( groupChanged() ));
 
-    if( CompositingPrefs::compositingPossible() )
+    // NOTICE: this is intended to workaround broken GL implementations that succesfully segfault on glXQuery :-(
+    KConfigGroup gl_workaround_config(m_config, "Compositing");
+    const bool checkIsSafe = gl_workaround_config.readEntry("CheckIsSafe", true);
+    if( checkIsSafe && CompositingPrefs::compositingPossible() )
+        {
+        gl_workaround_config.writeEntry("CheckIsSafe", false);
+        gl_workaround_config.sync();
         m_defaultPrefs.detect(); // Driver-specific config detection
-
+        gl_workaround_config.writeEntry("CheckIsSafe", true);
+        gl_workaround_config.sync();
+        }
     load();
     }
 
@@ -413,7 +421,7 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     {
     // Check if they are enabled
     KConfigGroup config( m_config, "Compositing" );
-    if( config.readEntry( "Enabled", m_defaultPrefs.enableCompositing() ))
+    if( config.readEntry( "Enabled", m_defaultPrefs.recommendCompositing() ))
         { // Compositing enabled
         config = KConfigGroup( m_config, "Plugins" );
 

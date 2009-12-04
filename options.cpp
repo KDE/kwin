@@ -229,12 +229,13 @@ void Options::reloadCompositingSettings()
 
     // Compositing settings
     CompositingPrefs prefs;
-    useCompositing = config.readEntry("Enabled", true);
-    if (useCompositing)
-    {
+    if( !config.hasKey( "Enabled" ))
+        {
         prefs.detect();
-        useCompositing = prefs.enableCompositing();
-    }
+        useCompositing = prefs.recommendCompositing();
+        }
+    else
+        useCompositing = config.readEntry( "Enabled" , true );
     if (!useCompositing)
         return;
 

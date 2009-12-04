@@ -317,7 +317,7 @@ void KWinCompositingConfig::currentTabChanged(int tab)
 void KWinCompositingConfig::loadGeneralTab()
     {
     KConfigGroup config(mKWinConfig, "Compositing");
-    bool enabled = config.readEntry("Enabled", mDefaultPrefs.enableCompositing());
+    bool enabled = config.readEntry("Enabled", mDefaultPrefs.recommendCompositing());
     ui.useCompositing->setChecked( enabled );
     ui.animationSpeedCombo->setCurrentIndex(config.readEntry("AnimationSpeed", 3 ));
 
@@ -473,7 +473,7 @@ void KWinCompositingConfig::saveGeneralTab()
     KConfigGroup config(mKWinConfig, "Compositing");
     // Check if any critical settings that need confirmation have changed
     if(ui.useCompositing->isChecked() &&
-       ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.enableCompositing()))
+       ui.useCompositing->isChecked() != config.readEntry("Enabled", mDefaultPrefs.recommendCompositing()))
         m_showConfirmDialog = true;
 
     config.writeEntry("Enabled", ui.useCompositing->isChecked());
@@ -674,7 +674,7 @@ void KWinCompositingConfig::checkLoadedEffects()
     QDBusMessage message = QDBusMessage::createMethodCall( "org.kde.kwin", "/KWin", "org.kde.KWin", "loadedEffects" );
     QDBusMessage reply = QDBusConnection::sessionBus().call( message );
     KConfigGroup effectConfig = KConfigGroup( mKWinConfig, "Compositing" );
-    bool enabledAfter = effectConfig.readEntry( "Enabled", mDefaultPrefs.enableCompositing() );
+    bool enabledAfter = effectConfig.readEntry( "Enabled", mDefaultPrefs.recommendCompositing() );
 
     if( reply.type() == QDBusMessage::ReplyMessage && enabledAfter && !getenv( "KDE_FAILSAFE" ))
         {
@@ -734,7 +734,7 @@ void KWinCompositingConfig::defaults()
     {
     ui.tabWidget->setCurrentIndex(0);
 
-    ui.useCompositing->setChecked(mDefaultPrefs.enableCompositing());
+    ui.useCompositing->setChecked(mDefaultPrefs.recommendCompositing());
     ui.effectWinManagement->setChecked(true);
     ui.effectShadows->setChecked(true);
     ui.effectAnimations->setChecked(true);

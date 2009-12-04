@@ -33,7 +33,7 @@ namespace KWin
 
 CompositingPrefs::CompositingPrefs()
     : mXgl( false )
-    , mEnableCompositing( false )
+    , mRecommendCompositing( false )
     , mEnableVSync( true )
     , mEnableDirectRendering( true )
     , mStrictBinding( true )
@@ -44,9 +44,9 @@ CompositingPrefs::~CompositingPrefs()
     {
     }
 
-bool CompositingPrefs::enableCompositing() const
+bool CompositingPrefs::recommendCompositing() const
     {
-    return mEnableCompositing;
+    return mRecommendCompositing;
     }
 
 bool CompositingPrefs::compositingPossible()
@@ -321,7 +321,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
     if( mXgl )
         {
         kDebug( 1212 ) << "xgl, enabling";
-        mEnableCompositing = true;
+        mRecommendCompositing = true;
         mStrictBinding = false;
         }
     else if( mDriver == "intel" )
@@ -334,12 +334,12 @@ void CompositingPrefs::applyDriverSpecificOptions()
             if( mGLRenderer.contains( "Intel(R) 9" ))
                 { // Enable compositing by default on 900-series cards
                 kDebug( 1212 ) << "intel >= 20061017 and 900-series card, enabling compositing";
-                mEnableCompositing = true;
+                mRecommendCompositing = true;
                 }
             if( mGLRenderer.contains( "Mesa DRI Intel(R) G" ))
                 { // e.g. G43 chipset
                 kDebug( 1212 ) << "intel >= 20061017 and Gxx-series card, enabling compositing";
-                mEnableCompositing = true;
+                mRecommendCompositing = true;
                 }
             }
         }
@@ -349,7 +349,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
         if( mVersion >= Version( "173.14.12" ))
             {
             kDebug( 1212 ) << "nvidia >= 173.14.12, enabling compositing";
-            mEnableCompositing = true;
+            mRecommendCompositing = true;
             }
         }
     else if( mDriver == "radeon" )
@@ -357,12 +357,12 @@ void CompositingPrefs::applyDriverSpecificOptions()
         if( mGLRenderer.startsWith( "Mesa DRI R200" ) && mVersion >= Version( "20060602" )) // krazy:exclude=strings
             {
             kDebug( 1212 ) << "radeon r200 >= 20060602, enabling compositing";
-            mEnableCompositing = true;
+            mRecommendCompositing = true;
             }
         if( mGLRenderer.startsWith( "Mesa DRI R300" ) && mVersion >= Version( "20090101" )) // krazy:exclude=strings
             {
             kDebug( 1212 ) << "radeon r300 >= 20090101, enabling compositing";
-            mEnableCompositing = true;
+            mRecommendCompositing = true;
             }
         if( mGLRenderer.startsWith( "Mesa DRI R600" ) )
             {
@@ -372,7 +372,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
             if( major > 7 || ( major == 7 && minor >= 7 ) )
                 {
                 kDebug( 1212 ) << "Radeon R600/R700, Mesa 7.7 or better. Enabling compositing.";
-                mEnableCompositing = true;
+                mRecommendCompositing = true;
                 }
             }
         }
@@ -381,7 +381,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
         if( mVersion >= Version( "2.1.7412" ))
             {
             kDebug( 1212 ) << "fglrx >= 2.1.7412, enabling compositing";
-            mEnableCompositing = true;
+            mRecommendCompositing = true;
             }
         }
     }

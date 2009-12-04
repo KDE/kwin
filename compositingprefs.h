@@ -54,7 +54,7 @@ public:
     static bool compositingPossible();
     static QString compositingNotPossibleReason();
     bool validateSetup( CompositingType compositingType ) const;
-    bool enableCompositing() const; // recommendCompositing()?
+    bool recommendCompositing() const;
     bool enableVSync() const  { return mEnableVSync; }
     bool enableDirectRendering() const  { return mEnableDirectRendering; }
     bool strictBinding() const { return mStrictBinding; }
@@ -85,7 +85,7 @@ private:
     Version mVersion;
     bool mXgl;
 
-    bool mEnableCompositing;
+    bool mRecommendCompositing;
     bool mEnableVSync;
     bool mEnableDirectRendering;
     bool mStrictBinding;
