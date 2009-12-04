@@ -289,6 +289,32 @@ void CompositingPrefs::detectDriverAndVersion()
 #endif
     }
 
+void CompositingPrefs::parseMesaVersion( const QString &version, int *major, int *minor )
+    {
+    *major = 0;
+    *minor = 0;
+
+    const QStringList tokens = version.split( ' ' );
+    int token = 0;
+    while( token < tokens.count() && !tokens.at( token ).endsWith( "Mesa" ) )
+        token++;
+
+    if( token < tokens.count() - 1 )
+        {
+        const QStringList version = tokens.at( token + 1 ).split( '.' );
+        if( version.count() >= 2 )
+            {
+            *major = version[ 0 ].toInt();
+
+            int end = 0;
+            while( end < version[ 1 ].length() && version[ 1 ][ end ].isDigit() )
+                end++;
+
+            *minor = version[ 1 ].left( end ).toInt();
+            }
+        }
+    }
+
 // See http://techbase.kde.org/Projects/KWin/HW for a list of some cards that are known to work.
 void CompositingPrefs::applyDriverSpecificOptions()
     {
@@ -327,7 +353,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
             }
         }
     else if( mDriver == "radeon" )
-        { // radeon r200 only ?
+        {
         if( mGLRenderer.startsWith( "Mesa DRI R200" ) && mVersion >= Version( "20060602" )) // krazy:exclude=strings
             {
             kDebug( 1212 ) << "radeon r200 >= 20060602, enabling compositing";
@@ -337,6 +363,17 @@ void CompositingPrefs::applyDriverSpecificOptions()
             {
             kDebug( 1212 ) << "radeon r300 >= 20090101, enabling compositing";
             mEnableCompositing = true;
+            }
+        if( mGLRenderer.startsWith( "Mesa DRI R600" ) )
+            {
+            // Enable compositing with Mesa 7.7 or later
+            int major, minor;
+            parseMesaVersion( mGLVersion, &major, &minor );
+            if( major > 7 || ( major == 7 && minor >= 7 ) )
+                {
+                kDebug( 1212 ) << "Radeon R600/R700, Mesa 7.7 or better. Enabling compositing.";
+                mEnableCompositing = true;
+                }
             }
         }
     else if( mDriver == "fglrx" )

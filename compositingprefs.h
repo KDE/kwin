@@ -69,6 +69,7 @@ public:
 protected:
 
     void detectDriverAndVersion();
+    void parseMesaVersion( const QString &version, int *major, int *minor );
     void applyDriverSpecificOptions();
     static bool detectXgl();
 
