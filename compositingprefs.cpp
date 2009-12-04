@@ -270,6 +270,9 @@ void CompositingPrefs::detectDriverAndVersion()
         {
         mDriver = "radeon";
         mVersion = Version( mGLRenderer.split(' ')[ 3 ] );
+        // Check that the version string is changed, and try the fifth element if it does
+        if (!mVersion.startsWith("20"))
+            mVersion = Version( mGLRenderer.split(' ')[ 5 ] );
         }
     else if( mGLRenderer == "Software Rasterizer" )
         {
@@ -328,6 +331,11 @@ void CompositingPrefs::applyDriverSpecificOptions()
         if( mGLRenderer.startsWith( "Mesa DRI R200" ) && mVersion >= Version( "20060602" )) // krazy:exclude=strings
             {
             kDebug( 1212 ) << "radeon r200 >= 20060602, enabling compositing";
+            mEnableCompositing = true;
+            }
+        if( mGLRenderer.startsWith( "Mesa DRI R300" ) && mVersion >= Version( "20090101" )) // krazy:exclude=strings
+            {
+            kDebug( 1212 ) << "radeon r300 >= 20090101, enabling compositing";
             mEnableCompositing = true;
             }
         }
