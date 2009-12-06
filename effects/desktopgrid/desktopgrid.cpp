@@ -427,7 +427,6 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             { // Handle window moving
             if( !wasWindowMove ) // Activate on move
                 {
-                effects->activateWindow( windowMove );
                 if( isUsingPresentWindows() && !windowMove->isOnAllDesktops() )
                     {
                     WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
@@ -572,13 +571,14 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
         if( !wasWindowMove && !wasDesktopMove )
             {
             setCurrentDesktop( posToDesktop( me->pos() ));
+            if( windowMove )
+                effects->activateWindow( windowMove );
             setActive( false );
             }
         if( windowMove )
             {
             if( wasWindowMove )
                 {
-                effects->activateWindow( windowMove ); // Just in case it was deactivated
                 if( isUsingPresentWindows() )
                     {
                     WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
