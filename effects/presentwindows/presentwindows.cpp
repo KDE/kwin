@@ -1555,16 +1555,19 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
     else
         {
         // Fade in/out all windows
+        EffectWindow *activeWindow = effects->activeWindow();
+        int desktop = effects->currentDesktop();
+        if( activeWindow && !activeWindow->isOnAllDesktops() )
+            desktop = activeWindow->desktop();
         foreach( EffectWindow *w, effects->stackingOrder() )
             {
             assert( m_windowData.contains( w ));
-            EffectWindow *activeWindow = effects->activeWindow();
             if( m_tabBoxEnabled )
                 activeWindow = effects->currentTabBoxWindow();
             if( activeWindow )
-                m_windowData[w].visible = ( w->desktop() == activeWindow->desktop() || w->isOnAllDesktops() ) && !w->isMinimized();
+                m_windowData[w].visible = ( w->isOnDesktop( desktop ) || w->isOnAllDesktops() ) && !w->isMinimized();
             else // Deactivating to an empty desktop
-                m_windowData[w].visible = ( w->isOnCurrentDesktop() || w->isOnAllDesktops() ) && !w->isMinimized();
+                m_windowData[w].visible = ( w->isOnDesktop( desktop ) || w->isOnAllDesktops() ) && !w->isMinimized();
             if( m_tabBoxEnabled && w == effects->currentTabBoxWindow() )
                 m_windowData[w].visible = true;
             }
