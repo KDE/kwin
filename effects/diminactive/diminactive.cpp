@@ -80,7 +80,7 @@ void DimInactiveEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
 
 bool DimInactiveEffect::dimWindow( const EffectWindow* w ) const
     {
-    if( active == w )
+    if( effects->activeWindow() == w )
         return false; // never dim active window
     if( active && dim_by_group && active->group() == w->group())
         return false; // don't dim in active group if configured so
