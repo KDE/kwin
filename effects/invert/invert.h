@@ -40,7 +40,7 @@ class InvertEffect
         InvertEffect();
         ~InvertEffect();
 
-        virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
+        virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowClosed( EffectWindow* w );
 
     public slots:

@@ -841,7 +841,7 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
             }
 
         // paint one part of the thumbnail
-        effects->drawWindow( w,
+        effects->paintWindow( w,
             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
             windows[ w ]->thumbnail, data );
 
@@ -890,7 +890,7 @@ void BoxSwitchEffect::paintWindowThumbnail( EffectWindow* w )
             windows[ w ]->thumbnail, w,
             secondThumbnail.adjusted( highlight_margin, highlight_margin, -highlight_margin, -highlight_margin ),
             Qt::KeepAspectRatio );
-        effects->drawWindow( w,
+        effects->paintWindow( w,
             PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSFORMED,
             windows[ w ]->thumbnail, data );
         }

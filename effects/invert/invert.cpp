@@ -87,7 +87,7 @@ bool InvertEffect::loadData()
     return true;
     }
 
-void InvertEffect::paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
+void InvertEffect::drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data )
     {
     // Load if we haven't already
     if( m_valid && !m_inited )
@@ -112,7 +112,7 @@ void InvertEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
         data.shader = m_shader;
         }
 
-    effects->paintWindow( w, mask, region, data );
+    effects->drawWindow( w, mask, region, data );
 
     if( useShader )
         m_shader->unbind();
