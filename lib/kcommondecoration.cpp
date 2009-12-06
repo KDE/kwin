@@ -1287,7 +1287,7 @@ bool KCommonDecorationUnstable::compositingActive() const
 
 bool KCommonDecorationUnstable::isClientGroupActive()
     {
-    return static_cast<const KDecorationUnstable*>( decoration() )->isClientGroupActive();
+    return static_cast<KDecorationUnstable*>( decoration() )->isClientGroupActive();
     }
 
 QList< ClientGroupItem > KCommonDecorationUnstable::clientGroupItems() const
@@ -1297,52 +1297,52 @@ QList< ClientGroupItem > KCommonDecorationUnstable::clientGroupItems() const
 
 long KCommonDecorationUnstable::itemId( int index )
     {
-    return static_cast<const KDecorationUnstable*>( decoration() )->itemId( index );
+    return static_cast<KDecorationUnstable*>( decoration() )->itemId( index );
     }
 
 int KCommonDecorationUnstable::visibleClientGroupItem()
     {
-    return static_cast<const KDecorationUnstable*>( decoration() )->visibleClientGroupItem();
+    return static_cast<KDecorationUnstable*>( decoration() )->visibleClientGroupItem();
     }
 
 void KCommonDecorationUnstable::setVisibleClientGroupItem( int index )
     {
-    static_cast<const KDecorationUnstable*>( decoration() )->setVisibleClientGroupItem( index );
+    static_cast<KDecorationUnstable*>( decoration() )->setVisibleClientGroupItem( index );
     }
 
 void KCommonDecorationUnstable::moveItemInClientGroup( int index, int before )
     {
-    static_cast<const KDecorationUnstable*>( decoration() )->moveItemInClientGroup( index, before );
+    static_cast<KDecorationUnstable*>( decoration() )->moveItemInClientGroup( index, before );
     }
 
 void KCommonDecorationUnstable::moveItemToClientGroup( long itemId, int before )
     {
-    static_cast<const KDecorationUnstable*>( decoration() )->moveItemToClientGroup( itemId, before );
+    static_cast<KDecorationUnstable*>( decoration() )->moveItemToClientGroup( itemId, before );
     }
 
 void KCommonDecorationUnstable::removeFromClientGroup( int index, const QRect& newGeom )
     {
-    static_cast<const KDecorationUnstable*>( decoration() )->removeFromClientGroup( index, newGeom );
+    static_cast<KDecorationUnstable*>( decoration() )->removeFromClientGroup( index, newGeom );
     }
 
 void KCommonDecorationUnstable::closeClientGroupItem( int index )
     {
-    static_cast<const KDecorationUnstable*>( decoration() )->closeClientGroupItem( index );
+    static_cast<KDecorationUnstable*>( decoration() )->closeClientGroupItem( index );
     }
 
 void KCommonDecorationUnstable::closeAllInClientGroup()
     {
-    static_cast<const KDecorationUnstable*>( decoration() )->closeAllInClientGroup();
+    static_cast<KDecorationUnstable*>( decoration() )->closeAllInClientGroup();
     }
 
 void KCommonDecorationUnstable::displayClientMenu( int index, const QPoint& pos )
     {
-    static_cast<const KDecorationUnstable*>( decoration() )->displayClientMenu( index, pos );
+    static_cast<KDecorationUnstable*>( decoration() )->displayClientMenu( index, pos );
     }
 
 KDecoration::WindowOperation KCommonDecorationUnstable::buttonToWindowOperation( Qt::MouseButtons button )
     {
-    return static_cast<const KDecorationUnstable*>( decoration() )->buttonToWindowOperation( button );
+    return static_cast<KDecorationUnstable*>( decoration() )->buttonToWindowOperation( button );
     }
 
 bool KCommonDecorationUnstable::eventFilter( QObject* o, QEvent* e )
