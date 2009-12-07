@@ -100,6 +100,7 @@ namespace Oxygen
     connect( ui.titleOutline, SIGNAL(toggled( bool )), ui.drawSeparator, SLOT( setDisabled( bool ) ) );
 
     connect( shadowConfigurations[0], SIGNAL( changed() ), SIGNAL( changed() ) );
+    connect( shadowConfigurations[0], SIGNAL( toggled( bool ) ), SIGNAL( changed() ) );
     connect( shadowConfigurations[1], SIGNAL( changed() ), SIGNAL( changed() ) );
     connect( ui.titleAlignment, SIGNAL(currentIndexChanged(int)), SIGNAL( changed() ) );
     connect( ui.buttonSize, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
