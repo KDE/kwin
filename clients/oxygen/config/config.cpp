@@ -128,7 +128,7 @@ namespace Oxygen
 
     configurationGroup.writeEntry( OxygenConfig::DRAW_SEPARATOR, userInterface_->ui.drawSeparator->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, userInterface_->ui.titleOutline->isChecked() );
-    configurationGroup.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, userInterface_->ui.useOxygenShadows->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, userInterface_->shadowConfigurations[0]->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::TABS_ENABLED, userInterface_->ui.tabsEnabled->isChecked() );
 
     // write exceptions
@@ -191,7 +191,7 @@ namespace Oxygen
 
     userInterface_->ui.drawSeparator->setChecked( configuration.drawSeparator() );
     userInterface_->ui.titleOutline->setChecked( configuration.drawTitleOutline() );
-    userInterface_->ui.useOxygenShadows->setChecked( configuration.useOxygenShadows() );
+    userInterface_->shadowConfigurations[0]->setChecked( configuration.useOxygenShadows() );
     userInterface_->ui.tabsEnabled->setChecked( configuration.tabsEnabled() );
   }
 

@@ -95,11 +95,9 @@ namespace Oxygen
     // shadows
     shadowConfigurations.push_back( ui.activeShadowConfiguration );
     shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
-    ui.activeShadowConfiguration->setEnabled( false );
 
     // connections
     connect( ui.titleOutline, SIGNAL(toggled( bool )), ui.drawSeparator, SLOT( setDisabled( bool ) ) );
-    connect( ui.useOxygenShadows, SIGNAL(toggled( bool )), shadowConfigurations[0], SLOT( setEnabled( bool ) ) );
 
     connect( shadowConfigurations[0], SIGNAL( changed() ), SIGNAL( changed() ) );
     connect( shadowConfigurations[1], SIGNAL( changed() ), SIGNAL( changed() ) );
@@ -112,7 +110,6 @@ namespace Oxygen
     connect( ui.tabsEnabled, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.drawSeparator, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
-    connect( ui.useOxygenShadows, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.exceptions, SIGNAL(changed()), SIGNAL(changed()) );
 
   }
