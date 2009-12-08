@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Slide Back
+Name[ar]=انقل للخلف
 Name[bg]=Обратно приплъзване
 Name[ca]=Llisca cap enrere
 Name[cs]=Zasunout
@@ -49,6 +50,7 @@ Name[zh_TW]=往回滑動
 
 Type=Service
 Comment=Slide back windows losing focus
+Comment[ar]=تنقل النوافذ التي فقدت التركيز للخلف
 Comment[bg]=Обратно приплъзване на прозорците, които остават извън фокус
 Comment[ca]=Llisca enrere les finestres que perdin el focus
 Comment[cs]=Zasunout okna, pokud ztratí zaměření

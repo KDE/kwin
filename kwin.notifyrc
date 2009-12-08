@@ -3866,7 +3866,7 @@ Name[zh_CN]=窗口关闭
 Name[zh_TW]=視窗關閉
 Comment=A window closes
 Comment[af]='n Venster maak toe
-Comment[ar]=تم اغلاق نافذة
+Comment[ar]=تم إغلاق نافذة
 Comment[be]=Акно закрываецца
 Comment[be@latin]=Akno začynienaje.
 Comment[bg]=Затваряне на прозореца
@@ -6316,7 +6316,7 @@ Comment[zh_TW]=在其他虛擬桌面上的視窗要求注意
 
 [Event/compositingslow]
 Name=Compositing Performance Is Slow
-Name[ar]=أداء التكوين بطيء
+Name[ar]=أداء التركيب بطيء
 Name[be@latin]=Kampazycyja zamarudnaja
 Name[ca]=El rendiment de la composició és lent
 Name[ca@valencia]=El rendiment de la composició és lent
@@ -6373,7 +6373,7 @@ Name[x-test]=xxCompositing Performance Is Slowxx
 Name[zh_CN]=混成性能过低
 Name[zh_TW]=組合效能過慢
 Comment=The compositing performance was too slow and compositing has been suspended
-Comment[ar]=أداء التكوين بطيء جدا و تم تعليقه.
+Comment[ar]=أداء التركيب بطيء جدا و تم تعليقه.
 Comment[be@latin]=Chutkaść kampazycyi była zamałoj, i tamu jana była vyklučanaja.
 Comment[ca]=El rendiment de la composició era massa lent i s'ha suspès
 Comment[ca@valencia]=El rendiment de la composició era massa lent i s'ha suspès
@@ -6431,6 +6431,7 @@ Action=Popup
 
 [Event/compositingsuspendeddbus]
 Name=Compositing has been suspended
+Name[ar]=علق التركيب
 Name[ca]=S'ha suspès la composició
 Name[cs]=Kompozice byla pozastavena
 Name[da]=Compositing er blevet suspenderet
@@ -6477,6 +6478,7 @@ Name[x-test]=xxCompositing has been suspendedxx
 Name[zh_CN]=混成已被中断
 Name[zh_TW]=組合效能已被暫停
 Comment=Another application has requested to suspend compositing.
+Comment[ar]=تطبيق أخر طلب تعليق التركيب
 Comment[ca]=Una altra aplicació ha sol·licitat de suspendre la composició.
 Comment[cs]=Jiná aplikace si vyžádala pozastavení kompozice.
 Comment[da]=Et andet program har anmodet om suspendering af compositing.
@@ -6523,6 +6525,7 @@ Action=Popup
 
 [Event/effectsnotsupported]
 Name=Effects not supported
+Name[ar]=التأثيرات غير مدعومة
 Name[bg]=Неподдържан ефект
 Name[ca]=Efectes no implementats
 Name[cs]=Efekty nepodporovány
@@ -6572,6 +6575,7 @@ Name[x-test]=xxEffects not supportedxx
 Name[zh_CN]=不支持的效果
 Name[zh_TW]=未支援效果
 Comment=Some effects are not supported by backend or hardware.
+Comment[ar]=بعض التأثيرات غير مدعومة من الخلفية أو العتاد.
 Comment[ca]=Alguns efectes no estan implementats pel dorsal o pel maquinari.
 Comment[cs]=Některé efekty nejsou podporovány backendem nebo hardwarem.
 Comment[da]=Nogle effekter er ikke understøttet af underliggende programmer eller hardware.
