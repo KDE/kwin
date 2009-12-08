@@ -1335,11 +1335,13 @@ EffectWindow* WindowMotionManager::windowAtPoint( QPoint point, bool useStacking
     {
     Q_UNUSED( useStackingOrder );
     // TODO: Stacking order uses EffectsHandler::stackingOrder() then filters by m_managedWindows
-    EffectWindowList windows = m_managedWindows.keys();
-
-    for( int i = 0; i < windows.size(); i++ )
-        if( transformedGeometry( windows.at( i )).contains( point ))
-            return windows.at( i );
+    QHash< EffectWindow*, WindowMotion >::ConstIterator it = m_managedWindows.constBegin();
+    while( it != m_managedWindows.constEnd() )
+        {
+        if( transformedGeometry( it.key() ).contains( point ) )
+            return it.key();
+        ++it;
+        }
 
     return NULL;
     }
