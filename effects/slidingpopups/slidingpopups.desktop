@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Sliding popups
+Name[ca]=Missatges emergents desplaçant-se
 Name[da]=Glidende pop-op'er
 Name[el]=Κυλιόμενα αναδυόμενων
 Name[en_GB]=Sliding popups
@@ -18,6 +19,7 @@ Name[nn]=Glidande sprettoppvindauge
 Name[pt]=Mensagens deslizantes
 Name[pt_BR]=Mensagens instantâneas deslizantes
 Name[ru]=Анимация всплывающих окон
+Name[sl]=Drseča pojavna okna
 Name[sv]=Glidande rutor
 Name[tr]=Kayan bildirimler
 Name[uk]=Ковзні контекстні вікна
@@ -26,10 +28,12 @@ Name[zh_TW]=滑動彈出視窗
 
 Type=Service
 Comment=Sliding animation for Plasma popups
+Comment[ca]=Animació de desplaçament pels missatges emergents del Plasma
 Comment[da]=Glidende animation til Plasma-pop-op'er
 Comment[el]=Γραφικά κύλισης για αναδυόμενα από το Plasma
 Comment[en_GB]=Sliding animation for Plasma popups
 Comment[eo]=Glitantaj animacioj por Plasma ŝprucfenestro
+Comment[es]=Animación deslizante para ventanas emergentes de Plasma
 Comment[et]=Plasma hüpikdialoogide liuguv animatsioon
 Comment[gl]=Animación deslizantes para os widgets de Plasma emerxentes
 Comment[hr]=Animacija pomicanja za Plasma iskočnike
@@ -42,6 +46,7 @@ Comment[nds]=Plasma sien Opdukfinstern gliedt över den Schriefdisch
 Comment[nl]=Schuivende animaties voor Plasma-popups
 Comment[pt]=Animação deslizante para as mensagens do Plasma
 Comment[pt_BR]=Animação deslizante para as mensagens instantâneas do Plasma
+Comment[sl]=Animacija drsenja za pojavna okna v Plasmi
 Comment[sv]=Glidande animering av Plasmarutor
 Comment[tr]=Açılan Plasma bildirimleri için kaydırma canlandırması
 Comment[uk]=Анімація з ковзанням для контекстних вікон Плазми

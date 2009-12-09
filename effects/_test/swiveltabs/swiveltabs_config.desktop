@@ -7,6 +7,7 @@ X-KDE-ParentComponents=kwin4_effect_swiveltabs
 X-KDE-PluginKeyword=swiveltabs
 
 Name=Swivel Tabs
+Name[ca]=Pestanyes giratòries
 Name[da]=Hvirvlende faneblade
 Name[el]=Στρεφόμενες καρτέλες
 Name[en_GB]=Swivel Tabs
@@ -18,6 +19,7 @@ Name[nb]=Roter faner
 Name[nds]=Paneels dreihen
 Name[pt]=Barras Rotativas
 Name[pt_BR]=Barras giratórias
+Name[sl]=Obračajoči zavihki
 Name[sv]=Låt flikar vända
 Name[uk]=Вкладки на шарнірах
 Name[x-test]=xxSwivel Tabsxx

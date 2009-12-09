@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Tabstrip
+Name[ca]=Barra de pestanyes
 Name[da]=Tabstrip
+Name[de]=Tabstrip
 Name[el]=Tabstrip
 Name[en_GB]=Tabstrip
 Name[et]=Sakiriba
@@ -11,6 +13,7 @@ Name[nb]=Fanestripe
 Name[nds]=Tabstrip
 Name[pt]=Barra de Páginas
 Name[pt_BR]=Barra de abas
+Name[sl]=Tabstrip
 Name[sv]=Flikrad
 Name[uk]=Смужка вкладок
 Name[x-test]=xxTabstripxx
