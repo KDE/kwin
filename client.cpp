@@ -1628,7 +1628,8 @@ void Client::setCaption( const QString& _s, bool force )
 
         if( isManaged() && decoration != NULL )
             {
-            client_group->updateItems();
+            if (client_group)
+                client_group->updateItems();
             decoration->captionChange();
             }
         }
