@@ -270,7 +270,8 @@ void Workspace::clientPopupAboutToShow()
     add_tabs_popup = 0;
     if( decorationSupportsClientGrouping() )
         {
-        const int tabGroupSize = active_popup_client->clientGroup()->items().count();
+        const int tabGroupSize = active_popup_client->clientGroup() ?
+                                 active_popup_client->clientGroup()->items().count() : 1;
         if( tabGroupSize > 1 )
             initSwitchToTab();
         initAddToTabGroup();
