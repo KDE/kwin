@@ -260,7 +260,7 @@ namespace Oxygen
 
         //! title text
         /*! second color, if valid, is for contrast pixel */
-        virtual void renderTitleText( QPainter*, const QRect&, const QString&, const QColor&, const QColor& = QColor() ) const;
+        virtual void renderTitleText( QPainter*, const QRect&, const QString&, const QColor&, const QColor& = QColor(), bool elide = true ) const;
 
         //! GroupItem
         virtual void renderItem( QPainter*, int, const QPalette& );

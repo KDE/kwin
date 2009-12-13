@@ -817,12 +817,38 @@ namespace Oxygen
     if( titleIsAnimated() )
     {
 
+      // due to alpha blending issues, one must first draw the contrast text,
+      // then the plain text.
+      if( contrast.isValid() )
+      {
+
+        painter->translate( 0, 1 );
+        if( !oldCaption().isEmpty() ) {
+
+          renderTitleText(
+            painter, rect, oldCaption(),
+            helper().alphaColor( contrast, 1.0 - titleOpacity() ),
+            QColor(), false );
+
+        }
+
+        if( !caption().isEmpty() ) {
+
+          renderTitleText(
+            painter, rect, caption(),
+            helper().alphaColor( contrast, titleOpacity() ), QColor() );
+
+        }
+
+        painter->translate( 0, -1 );
+
+      }
+
       if( !oldCaption().isEmpty() ) {
 
         renderTitleText(
           painter, rect, oldCaption(),
-          helper().alphaColor( color, 1.0 - titleOpacity() ),
-          contrast.isValid() ? helper().alphaColor( contrast, 1.0 - titleOpacity() ):contrast );
+          helper().alphaColor( color, 1.0 - titleOpacity() ), QColor(), false );
 
       }
 
@@ -830,8 +856,7 @@ namespace Oxygen
 
         renderTitleText(
           painter, rect, caption(),
-          helper().alphaColor( color, titleOpacity() ),
-          contrast.isValid() ? helper().alphaColor( contrast, titleOpacity() ):contrast );
+          helper().alphaColor( color, titleOpacity() ), QColor() );
 
       }
 
@@ -844,11 +869,11 @@ namespace Oxygen
   }
 
   //_______________________________________________________________________
-  void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, const QString& caption, const QColor& color, const QColor& contrast ) const
+  void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, const QString& caption, const QColor& color, const QColor& contrast, bool elide ) const
   {
 
     Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
-    QString local( QFontMetrics( painter->font() ).elidedText( caption, Qt::ElideRight, rect.width() ) );
+    QString local( elide ? QFontMetrics( painter->font() ).elidedText( caption, Qt::ElideRight, rect.width() ):caption );
 
     // translate title down in case of maximized window
     if( isMaximized() ) painter->translate( 0, 2 );
