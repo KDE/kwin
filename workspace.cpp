@@ -2874,7 +2874,6 @@ void Workspace::moveItemToClientGroup( ClientGroup* oldGroup, int oldIndex,
     ClientGroup* group, int index )
     {
     Client* c = oldGroup->clients().at( oldIndex );
-    oldGroup->remove( c );
     group->add( c, index, true );
     }
 

@@ -52,8 +52,12 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
     if( contains( c ) || !c->workspace()->decorationSupportsClientGrouping() )
         return;
 
-    // Client must not already be grouped
-    assert( !c->clientGroup() || c->clientGroup()->clients().size() == 1 );
+    // If it's not possible to move both windows on to the same desktop then ungroup them
+    // We do this here as the ungroup code in updateStates() cannot be called until add() completes
+    if( c->desktop() != clients_[visible_]->desktop() )
+        c->setDesktop( clients_[visible_]->desktop() );
+    if( c->desktop() != clients_[visible_]->desktop() )
+        return;
 
     // Tabbed windows MUST have a decoration
     if( c->noBorder() )
@@ -66,8 +70,9 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
         static_cast<EffectsHandlerImpl*>(effects)->clientGroupItemAdded(
             c->effectWindow(), clients_[visible_]->effectWindow() );
 
-    // Delete old group and update
-    delete c->clientGroup(); // Delete old group as it's now empty
+    // Remove from old group and update
+    if( c->clientGroup() )
+        c->clientGroup()->remove( c );
     c->setClientGroup( this ); // Let the client know which group it belongs to
 
     // Actually add to new group
@@ -236,6 +241,10 @@ void ClientGroup::updateStates( Client* main, Client* only )
                 (*i)->setKeepAbove( main->keepAbove() );
             if( (*i)->keepBelow() != main->keepBelow() )
                 (*i)->setKeepBelow( main->keepBelow() );
+
+            // If it's not possible to move both windows on to the same desktop then ungroup them
+            if( (*i)->desktop() != main->desktop() )
+                remove( *i );
             }
     }
 
