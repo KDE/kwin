@@ -103,18 +103,20 @@ void TabstripDecoration::paintTab( QPainter &painter, const QRect &geom, ClientG
         {
         QRect rect( geom.x() + 25, geom.y(), geom.width() - 48, geom.height() );
         QRect text;
-        QFont font;
+        QFont font = options()->font( active );
         QFontMetrics metrics( font );
         QString string = metrics.elidedText( item.title(), Qt::ElideRight, rect.width() );
+        painter.setFont( font );
         painter.drawText( rect, TabstripFactory::titleAlign() | Qt::AlignVCenter, string, &text );
         painter.drawPixmap( text.x() - 22, rect.y() + 3, item.icon().pixmap( 16 ));
         }
     else
         {
         QRect rect( geom.x() + 5, geom.y(), geom.width() - 28, geom.height() );
-        QFont font;
+        QFont font = options()->font( active );
         QFontMetrics metrics( font );
         QString string = metrics.elidedText( item.title(), Qt::ElideRight, rect.width() );
+        painter.setFont( font );
         painter.drawText( rect, TabstripFactory::titleAlign() | Qt::AlignVCenter, string );
         }
     }
@@ -207,9 +209,10 @@ void TabstripDecoration::paintEvent( QPaintEvent * )
         painter.setPen( textColor );
         QRect rect( titleRect().x() + 2, titleRect().y(),
             titleRect().width() - 6, titleRect().height() - 3 );
-        QFont font;
+        QFont font = options()->font( isActive() );
         QFontMetrics metrics( font );
         QString string = metrics.elidedText( caption(), Qt::ElideRight, rect.width() );
+        painter.setFont( font );
         painter.drawText( rect, TabstripFactory::titleAlign() | Qt::AlignVCenter, string );
         }
     }
