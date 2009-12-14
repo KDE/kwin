@@ -33,7 +33,6 @@ class TabstripDecoration : public KCommonDecorationUnstable
     {
     public:
         TabstripDecoration( KDecorationBridge *bridge, KDecorationFactory *factory );
-        ~TabstripDecoration();
         KCommonDecorationButton *createButton( ButtonType type );
         void init();
         QString visibleName() const;

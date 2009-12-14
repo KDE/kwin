@@ -35,16 +35,6 @@ TabstripDecoration::TabstripDecoration( KDecorationBridge *bridge, KDecorationFa
     button = Qt::NoButton;
     }
 
-TabstripDecoration::~TabstripDecoration()
-    {
-    for( int i = 0; i < closeButtons.size(); ++i )
-        {
-        TabstripButton *btn = closeButtons.front();
-        closeButtons.removeFirst();
-        delete btn;
-        }
-    }
-
 KCommonDecorationButton *TabstripDecoration::createButton( ButtonType type )
     {
     switch( type )
@@ -151,9 +141,9 @@ void TabstripDecoration::paintEvent( QPaintEvent * )
     // Delete unneeded tab close buttons
     while( tabCount < closeButtons.size() || ( tabCount == 1 && closeButtons.size() > 0 ))
         {
-        TabstripButton *btn = closeButtons.front();
-        closeButtons.removeFirst();
-        delete btn;
+        TabstripButton *btn = closeButtons.takeFirst();
+        btn->hide();
+        btn->deleteLater();
         }
 
     if( tabCount > 1 )
@@ -255,12 +245,12 @@ bool TabstripDecoration::eventFilter( QObject* o, QEvent* e )
     else if( e->type() == QEvent::Drop && widget() == o )
         state = dropEvent( static_cast< QDropEvent* >( e ) );
 
-    if( TabstripButton *btn = dynamic_cast< TabstripButton* >( o ) )
+    if ( !state && e->type() == QEvent::MouseButtonRelease &&
+         static_cast<QMouseEvent*>(e)->button() ==  Qt::LeftButton )
         {
-        if( e->type() == QEvent::MouseButtonRelease )
+        if( TabstripButton *btn = dynamic_cast< TabstripButton* >( o ) )
             {
-            if( static_cast<QMouseEvent*>(e)->button() ==  Qt::LeftButton )
-            { closeClientGroupItem( closeButtons.indexOf( btn ) ); }
+            closeClientGroupItem( closeButtons.indexOf( btn ) );
             return true;
             }
         }
