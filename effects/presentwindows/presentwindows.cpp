@@ -572,28 +572,36 @@ void PresentWindowsEffect::grabbedKeyboardEvent( QKeyEvent *e )
         switch( e->key() )
             { // Wrap only if not auto-repeating
             case Qt::Key_Left:
-                setHighlightedWindow( relativeWindow( m_highlightedWindow, -1, 0, !e->isAutoRepeat() ));
+                if( m_highlightedWindow )
+                    setHighlightedWindow( relativeWindow( m_highlightedWindow, -1, 0, !e->isAutoRepeat() ));
                 break;
             case Qt::Key_Right:
-                setHighlightedWindow( relativeWindow( m_highlightedWindow, 1, 0, !e->isAutoRepeat() ));
+                if( m_highlightedWindow )
+                    setHighlightedWindow( relativeWindow( m_highlightedWindow, 1, 0, !e->isAutoRepeat() ));
                 break;
             case Qt::Key_Up:
-                setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, -1, !e->isAutoRepeat() ));
+                if( m_highlightedWindow )
+                    setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, -1, !e->isAutoRepeat() ));
                 break;
             case Qt::Key_Down:
-                setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, 1, !e->isAutoRepeat() ));
+                if( m_highlightedWindow )
+                    setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, 1, !e->isAutoRepeat() ));
                 break;
             case Qt::Key_Home:
-                setHighlightedWindow( relativeWindow( m_highlightedWindow, -1000, 0, false ));
+                if( m_highlightedWindow )
+                    setHighlightedWindow( relativeWindow( m_highlightedWindow, -1000, 0, false ));
                 break;
             case Qt::Key_End:
-                setHighlightedWindow( relativeWindow( m_highlightedWindow, 1000, 0, false ));
+                if( m_highlightedWindow )
+                    setHighlightedWindow( relativeWindow( m_highlightedWindow, 1000, 0, false ));
                 break;
             case Qt::Key_PageUp:
-                setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, -1000, false ));
+                if( m_highlightedWindow )
+                    setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, -1000, false ));
                 break;
             case Qt::Key_PageDown:
-                setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, 1000, false ));
+                if( m_highlightedWindow )
+                    setHighlightedWindow( relativeWindow( m_highlightedWindow, 0, 1000, false ));
                 break;
             case Qt::Key_Backspace:
                 if( !m_windowFilter.isEmpty() )
