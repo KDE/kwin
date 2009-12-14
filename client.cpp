@@ -1681,7 +1681,7 @@ void Client::setClientShown( bool shown )
     {
     if( deleting )
         return; // Don't change shown status if this client is being deleted
-    if( !shown )
+    if( !shown && !hidden )
         {
         unmap( Allowed );
         hidden = true;
@@ -1692,7 +1692,7 @@ void Client::setClientShown( bool shown )
         workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
         addWorkspaceRepaint( visibleRect() );
         }
-    else
+    else if( hidden )
         {
         map( Allowed );
         hidden = false;
