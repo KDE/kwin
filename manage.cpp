@@ -309,7 +309,9 @@ bool Client::manage( Window w, bool isMapped )
             // If the window is already mapped (Restarted KWin) add any windows that already have the
             // same geometry to the same client group. (May incorrectly handle maximized windows)
             foreach( ClientGroup* group, workspace()->clientGroups )
-                if( geom == QRect( group->visible()->pos(), group->visible()->clientSize() ))
+                if( geom == QRect( group->visible()->pos(), group->visible()->clientSize() ) &&
+                    desk == group->visible()->desktop() &&
+                    group->visible()->maximizeMode() != MaximizeFull )
                     {
                     group->add( this, -1, true );
                     break;
