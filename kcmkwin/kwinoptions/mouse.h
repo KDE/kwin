@@ -60,6 +60,9 @@ public:
   void save();
   void defaults();
 
+protected:
+  void showEvent( QShowEvent *ev );
+
 public slots:
 	void changed() { emit KCModule::changed(true); }
 
@@ -105,6 +108,9 @@ public:
   void load();
   void save();
   void defaults();
+
+protected:
+  void showEvent( QShowEvent *ev );
 
 public slots:
 	void changed() { emit KCModule::changed(true); }

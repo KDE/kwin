@@ -567,6 +567,16 @@ const char* KTitleBarActionsConfig::functionMax( int i )
     return tbl_num_lookup( tbl_Max, i );
 }
 
+void KTitleBarActionsConfig::showEvent( QShowEvent *ev )
+{
+    if ( !standAlone ) {
+        // Workaround KCModule::showEvent() calling load(), see bug 163817
+        QWidget::showEvent( ev );
+        return;
+    }
+    KCModule::showEvent( ev );
+}
+
 void KTitleBarActionsConfig::load()
 {
   KConfigGroup windowsConfig(config, "Windows");
@@ -913,6 +923,15 @@ const char* KWindowActionsConfig::functionAll( int i )
 const char* KWindowActionsConfig::functionAllW(int i)
 {
     return tbl_num_lookup( tbl_AllW, i );
+}
+
+void KWindowActionsConfig::showEvent( QShowEvent *ev )
+{
+    if ( !standAlone ) {
+        QWidget::showEvent( ev );
+        return;
+    }
+    KCModule::showEvent( ev );
 }
 
 void KWindowActionsConfig::load()

@@ -76,6 +76,9 @@ public:
   void save();
   void defaults();
 
+protected:
+  void showEvent( QShowEvent *ev );
+
 private slots:
   void setDelayFocusEnabled();
   void focusPolicyChanged();
@@ -132,6 +135,9 @@ public:
   void save();
   void defaults();
 
+protected:
+  void showEvent( QShowEvent *ev );
+
 private slots:
   void changed() { emit KCModule::changed(true); }
   void slotBrdrSnapChanged( int );
@@ -181,6 +187,9 @@ public:
   void load();
   void save();
   void defaults();
+
+protected:
+  void showEvent( QShowEvent *ev );
 
 private slots:
   void shadeHoverChanged(bool);

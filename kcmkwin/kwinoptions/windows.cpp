@@ -381,6 +381,15 @@ void KFocusConfig::updateActiveMouseScreen()
         setActiveMouseScreen( focusCombo->currentIndex() != 0 );
 }
 
+void KFocusConfig::showEvent( QShowEvent *ev )
+{
+    if ( !standAlone ) {
+        QWidget::showEvent( ev );
+        return;
+    }
+    KCModule::showEvent( ev );
+}
+
 void KFocusConfig::load( void )
 {
     QString key;
@@ -652,6 +661,15 @@ void KAdvancedConfig::shadeHoverChanged(bool a) {
     shadeHover->setEnabled(a);
 }
 
+
+void KAdvancedConfig::showEvent( QShowEvent *ev )
+{
+    if ( !standAlone ) {
+        QWidget::showEvent( ev );
+        return;
+    }
+    KCModule::showEvent( ev );
+}
 
 void KAdvancedConfig::load( void )
 {
@@ -980,6 +998,15 @@ void KMovingConfig::slotWndwSnapChanged(int value) {
 
 void KMovingConfig::slotCntrSnapChanged(int value) {
     CntrSnap->setSuffix(i18np(" pixel", " pixels", value));
+}
+
+void KMovingConfig::showEvent( QShowEvent *ev )
+{
+    if ( !standAlone ) {
+        QWidget::showEvent( ev );
+        return;
+    }
+    KCModule::showEvent( ev );
 }
 
 void KMovingConfig::load( void )
