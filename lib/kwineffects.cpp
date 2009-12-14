@@ -1825,6 +1825,14 @@ void EffectFrame::updateTextPicture()
 #endif
     }
 
+void EffectFrame::cleanup()
+    {
+#ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    delete m_unstyledTexture;
+    m_unstyledTexture = NULL;
+#endif
+    }
+
 void EffectFrame::updateUnstyledTexture()
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING

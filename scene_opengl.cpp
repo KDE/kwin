@@ -233,6 +233,7 @@ SceneOpenGL::~SceneOpenGL()
             glXDestroyPixmap( display(), last_pixmap );
         glXDestroyContext( display(), ctxdrawable );
         }
+    EffectFrame::cleanup();
     checkGLError( "Cleanup" );
     }
 
