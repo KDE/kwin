@@ -1139,7 +1139,7 @@ Motion2D::~Motion2D()
 
 WindowMotionManager::WindowMotionManager( bool useGlobalAnimationModifier )
     :   m_useGlobalAnimationModifier( useGlobalAnimationModifier )
-    ,   m_movingWindows( 0 )
+
     { // TODO: Allow developer to modify motion attributes
     } // TODO: What happens when the window moves by an external force?
 
@@ -1177,23 +1177,22 @@ void WindowMotionManager::unmanage( EffectWindow *w )
 
     QPointF diffT = m_managedWindows[ w ].translation.distance();
     QPointF diffS = m_managedWindows[ w ].scale.distance();
-    if( diffT.x() != 0.0 || diffT.y() != 0.0 || diffS.x() != 0.0 || diffS.y() != 0.0 )
-        m_movingWindows--; // Window was moving
 
+    m_movingWindowsSet.remove( w );
     m_managedWindows.remove( w );
     }
 
 void WindowMotionManager::unmanageAll()
     {
     m_managedWindows.clear();
-    m_movingWindows = 0;
+    m_movingWindowsSet.clear();
     }
 
 void WindowMotionManager::calculate( int time )
     {
     if( !effects->animationTimeFactor() )
         { // Just skip it completely if the user wants no animation
-        m_movingWindows = 0;
+        m_movingWindowsSet.clear();
         QHash<EffectWindow*, WindowMotion>::iterator it = m_managedWindows.begin();
         for(; it != m_managedWindows.end(); it++ )
             {
@@ -1242,7 +1241,7 @@ void WindowMotionManager::calculate( int time )
 
         // We just finished this window's motion
         if( stopped && diffT == QPoint( 0.0, 0.0 ) && diffS == QPoint( 0.0, 0.0 ))
-            m_movingWindows--;
+            m_movingWindowsSet.remove( it.key() );
         }
     }
 
@@ -1302,9 +1301,7 @@ void WindowMotionManager::moveWindow( EffectWindow *w, QPoint target, double sca
     m_managedWindows[ w ].translation.setTarget( target );
     m_managedWindows[ w ].scale.setTarget( scalePoint );
 
-    if( m_managedWindows[ w ].translation.velocity() == QPointF( 0.0, 0.0 ) &&
-        m_managedWindows[ w ].scale.velocity() == QPointF( 0.0, 0.0 ))
-        m_movingWindows++;
+    m_movingWindowsSet << w;
     }
 
 QRectF WindowMotionManager::transformedGeometry( EffectWindow *w ) const

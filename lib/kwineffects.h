@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 108
+#define KWIN_EFFECT_API_VERSION_MINOR 109
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1592,7 +1592,7 @@ class KWIN_EXPORT WindowMotionManager
          * or not. Can be used to see if an effect should be
          * processed and displayed or not.
          */
-        inline bool areWindowsMoving() { return m_movingWindows > 0; }
+        inline bool areWindowsMoving() { return !m_movingWindowsSet.isEmpty(); }
 
     private:
         bool m_useGlobalAnimationModifier;
@@ -1602,7 +1602,7 @@ class KWIN_EXPORT WindowMotionManager
             Motion2D scale; // xScale and yScale
             };
         QHash<EffectWindow*, WindowMotion> m_managedWindows;
-        uint m_movingWindows;
+        QSet<EffectWindow*> m_movingWindowsSet;
     };
 
 /**
