@@ -1681,18 +1681,7 @@ void Client::setClientShown( bool shown )
     {
     if( deleting )
         return; // Don't change shown status if this client is being deleted
-    if( !shown && !hidden )
-        {
-        unmap( Allowed );
-        hidden = true;
-        //updateVisibility();
-        //updateAllowedActions();
-        if( options->inactiveTabsSkipTaskbar )
-            setSkipTaskbar( true, false ); // TODO: Causes reshuffle of the taskbar
-        workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
-        addWorkspaceRepaint( visibleRect() );
-        }
-    else if( hidden )
+    if( shown && hidden )
         {
         map( Allowed );
         hidden = false;
@@ -1703,6 +1692,17 @@ void Client::setClientShown( bool shown )
         takeFocus( Allowed );
         autoRaise();
         workspace()->updateFocusChains( this, Workspace::FocusChainMakeFirst );
+        }
+    if( !shown && !hidden )
+        {
+        unmap( Allowed );
+        hidden = true;
+        //updateVisibility();
+        //updateAllowedActions();
+        if( options->inactiveTabsSkipTaskbar )
+            setSkipTaskbar( true, false ); // TODO: Causes reshuffle of the taskbar
+        workspace()->updateFocusChains( this, Workspace::FocusChainMakeLast );
+        addWorkspaceRepaint( visibleRect() );
         }
     }
 
