@@ -52,12 +52,21 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
     if( contains( c ) || !c->workspace()->decorationSupportsClientGrouping() )
         return;
 
-    // If it's not possible to move both windows on to the same desktop then ungroup them
+    // If it's not possible to have the same states then ungroup them, TODO: Check all states
     // We do this here as the ungroup code in updateStates() cannot be called until add() completes
+    QRect oldGeom = c->geometry();
+    if( c->geometry() != clients_[visible_]->geometry() )
+        c->setGeometry( clients_[visible_]->geometry() );
+    if( c->geometry() != clients_[visible_]->geometry() )
+        return;
     if( c->desktop() != clients_[visible_]->desktop() )
         c->setDesktop( clients_[visible_]->desktop() );
     if( c->desktop() != clients_[visible_]->desktop() )
+        {
+        if( c->geometry() != oldGeom )
+            c->setGeometry( oldGeom ); // Restore old geometry
         return;
+        }
 
     // Tabbed windows MUST have a decoration
     if( c->noBorder() )
@@ -242,7 +251,9 @@ void ClientGroup::updateStates( Client* main, Client* only )
             if( (*i)->keepBelow() != main->keepBelow() )
                 (*i)->setKeepBelow( main->keepBelow() );
 
-            // If it's not possible to move both windows on to the same desktop then ungroup them
+            // If it's not possible to have the same states then ungroup them, TODO: Check all states
+            if( (*i)->geometry() != main->geometry() )
+                remove( *i );
             if( (*i)->desktop() != main->desktop() )
                 remove( *i );
             }
