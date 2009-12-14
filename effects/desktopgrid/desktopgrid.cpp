@@ -440,6 +440,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                     manager.unmanage( windowMove );
                     m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
                     }
+                XDefineCursor( display(), input, QCursor( Qt::ClosedHandCursor ).handle() );
                 }
             wasWindowMove = true;
             if( windowMove->isMovable() && !isUsingPresentWindows() )
@@ -456,11 +457,16 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 }
             effects->addRepaintFull();
             }
+        else if( (me->buttons() & Qt::LeftButton) && !wasDesktopMove &&
+            (me->pos() - dragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay())
+            {
+            wasDesktopMove = true;
+            XDefineCursor( display(), input, QCursor( Qt::ClosedHandCursor ).handle() );
+            }
         if( d != highlightedDesktop ) // Highlight desktop
             {
             if ( (me->buttons() & Qt::LeftButton) && !wasWindowMove )
                 {
-                wasDesktopMove = true;
                 EffectWindowList windows = effects->stackingOrder();
                 EffectWindowList stack;
                 foreach( EffectWindow* w, windows )
@@ -513,11 +519,8 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             EffectWindow* w = isDesktop ? NULL : windowAt( me->pos());
             if ( w != NULL )
                 isDesktop = w->isDesktop();
-            if ( isDesktop )
-                XDefineCursor( display(), input, QCursor( Qt::ClosedHandCursor ).handle() );
-            else if( w != NULL && ( w->isMovable() || w->isMovableAcrossScreens() ))
+            if( w != NULL && ( w->isMovable() || w->isMovableAcrossScreens() ))
                 { // Prepare it for moving
-                XDefineCursor( display(), input, QCursor( Qt::ClosedHandCursor ).handle() );
                 windowMoveDiff = w->pos() - unscalePos( me->pos(), NULL );
                 windowMove = w;
                 effects->setElevatedWindow( windowMove, true );
