@@ -1470,11 +1470,12 @@ namespace Oxygen
       QPoint point = event->pos();
       int itemClicked( OxygenClient::itemClicked( point ) );
       displayClientMenu( itemClicked, widget()->mapToGlobal( event->pos() ) );
+      accepted = true; // displayClientMenu can possibly destroy the deco...
 
     }
 
     mouseButton_ = Qt::NoButton;
-    return false;
+    return accepted;
 
   }
 
