@@ -76,6 +76,11 @@ void KWinDesktopConfig::init()
     m_ui->desktopNames->setMaxDesktops( maxDesktops );
     m_ui->desktopNames->numberChanged( defaultDesktops );
 
+    // number of rows are still missing in Plasma - hide them for now
+    // TODO: bring them back when trunk is open and bug Plasma devs ;-)
+    m_ui->label->hide();
+    m_ui->rowsSpinBox->hide();
+
     QVBoxLayout* layout = new QVBoxLayout( this );
     layout->addWidget( m_ui );
 
