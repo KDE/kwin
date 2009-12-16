@@ -324,7 +324,6 @@ void Workspace::init()
         NET::WM2DesktopLayout |
         NET::WM2FullPlacement |
         NET::WM2FullscreenMonitors |
-        NET::WM2FrameOverlap |
         0
         ,
         NET::ActionMove |
@@ -340,6 +339,9 @@ void Workspace::init()
         0
         ,
         };
+
+    if ( mgr->factory()->supports( AbilityExtendIntoClientArea ) )
+        protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
 
     QX11Info info;
     rootInfo = new RootInfo( this, display(), supportWindow->winId(), "KWin", protocols, 5, info.screen() );
@@ -1132,6 +1134,7 @@ void Workspace::slotReconfigure()
         (*it)->applyWindowRules();
         discardUsedWindowRules( *it, false );
         }
+    rootInfo->setSupported( NET::WM2FrameOverlap, mgr->factory()->supports( AbilityExtendIntoClientArea ) );
     }
 
 void Workspace::slotReinitCompositing()
