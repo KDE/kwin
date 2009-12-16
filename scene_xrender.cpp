@@ -684,6 +684,8 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         { XDoubleToFixed( 0 ), XDoubleToFixed( 0 ), XDoubleToFixed( 1 ) }
     }};
  
+    XRenderPictureAttributes attr;
+
     if( mask & PAINT_WINDOW_TRANSFORMED )
         {
         xscale = data.xScale;
@@ -703,6 +705,22 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         XRenderSetPictureTransform( display(), pic, &xform );
         if( filter == ImageFilterGood )
             XRenderSetPictureFilter( display(), pic, const_cast< char* >( "good" ), NULL, 0 );
+
+        // This is needed to avoid hitting a fallback in the radeon driver.
+        // The Render specification states that sampling pixels outside the
+        // source picture results in alpha=0 pixels. This can be achieved by
+        // setting the border color to transparent black, but since the border
+        // color has the same format as the texture, it only works when the
+        // texture has an alpha channel. So the driver falls back to software
+        // when the repeat mode is RepeatNone, the picture has a non-identity
+        // transformation matrix, and doesn't have an alpha channel.
+        // Since we only scale the picture, we can work around this by setting
+        // the repeat mode to RepeatPad.
+        if (!window()->hasAlpha())
+            {
+            attr.repeat = RepeatPad;
+            XRenderChangePicture( display(), pic, CPRepeat, &attr );
+            }
 
         // transform the shape for clipping in paintTransformedScreen()
         QVector< QRect > rects = transformed_shape.rects();
@@ -817,6 +835,11 @@ void SceneXrender::Window::performPaint( int mask, QRegion region, WindowPaintDa
         XRenderSetPictureTransform( display(), pic, &identity );
         if( filter == ImageFilterGood )
             XRenderSetPictureFilter( display(), pic, const_cast< char* >( "fast" ), NULL, 0 );
+        if (!window()->hasAlpha())
+            {
+            attr.repeat = RepeatNone;
+            XRenderChangePicture( display(), pic, CPRepeat, &attr );
+            }
         }
     }
 
