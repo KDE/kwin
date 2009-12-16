@@ -383,6 +383,7 @@ class Workspace : public QObject, public KDecorationDefines
         bool hasDecorationShadows() const;
         bool decorationHasAlpha() const;
         bool decorationSupportsClientGrouping() const; // Returns true if the decoration supports tabs.
+        bool decorationSupportsFrameOverlap() const;
 
         // D-Bus interface
         void cascadeDesktop();
@@ -1255,6 +1256,11 @@ inline bool Workspace::decorationHasAlpha() const
 inline bool Workspace::decorationSupportsClientGrouping() const
     {
     return mgr->factory()->supports( AbilityClientGrouping );
+    }
+
+inline bool Workspace::decorationSupportsFrameOverlap() const
+    {
+    return mgr->factory()->supports( AbilityExtendIntoClientArea );
     }
 
 inline void Workspace::addClientGroup( ClientGroup* group )

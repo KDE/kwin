@@ -448,7 +448,7 @@ void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect 
     NETStrut strut = info->frameOverlap();
 
     // Ignore the overlap strut when compositing is disabled
-    if (!compositing())
+    if (!compositing() || !Workspace::self()->decorationSupportsFrameOverlap())
         strut.left = strut.top = strut.right = strut.bottom = 0;
     else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
         {
@@ -601,7 +601,8 @@ QRect Client::transparentRect() const
         return QRect();
 
     NETStrut strut = info->frameOverlap();
-    if (!compositing()) // Ignore the strut when compositing is disabled
+    // Ignore the strut when compositing is disabled or the decoration doesn't support it
+    if (!compositing() || !Workspace::self()->decorationSupportsFrameOverlap())
         strut.left = strut.top = strut.right = strut.bottom = 0;
     else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
         return QRect();
