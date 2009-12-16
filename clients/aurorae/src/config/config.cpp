@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KTar>
 #include <KUrlRequesterDialog>
 #include <KDE/Plasma/FrameSvg>
-#include <KDE/KNS/Engine>
+#include <KDE/KNS3/DownloadDialog>
 
 #include <QFile>
 #include <QPainter>
@@ -619,17 +619,19 @@ void AuroraeConfig::slotInstallNewTheme()
 
 void AuroraeConfig::slotGHNSClicked()
 {
-    KNS::Engine engine(NULL);
-    if (engine.init("aurorae.knsrc")) {
-        KNS::Entry::List entries = engine.downloadDialogModal(m_ui);
-
-        if (entries.size() > 0) {
+    QPointer<KNS3::DownloadDialog> dialog = new KNS3::DownloadDialog("aurorae.knsrc");
+    // explicit set the icon or there will be a question mark
+    // has to be kept in sync with kwindecoration.desktop
+    dialog->setWindowIcon(KIcon("preferences-system-windows-action"));
+    if (dialog->exec() == KDialog::Accepted) {
+        if (dialog->changedEntries().size() > 0) {
             int index = m_ui->theme->currentIndex();
             const QString themeName = m_ui->theme->itemData(index, ThemeModel::PackageNameRole).toString();
             m_themeModel->reload();
             m_ui->theme->setCurrentIndex(m_themeModel->indexOf(themeName));
         }
     }
+    delete dialog;
 }
 
 } // namespace
