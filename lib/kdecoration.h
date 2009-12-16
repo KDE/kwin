@@ -197,6 +197,8 @@ public:
                                         ///  The mask is still used to define the input region and the blurred
                                         ///  region, when the blur plugin is enabled.
                                         ///  @since 4.3
+        AbilityExtendIntoClientArea = 3002, ///< The decoration respects transparentRect()
+                                            ///  @since 4.4
         // Tabbing
         AbilityClientGrouping = 4000, ///< The decoration supports tabbing
         // TODO colors for individual button types
