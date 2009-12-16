@@ -113,6 +113,7 @@ bool AuroraeFactory::supports(Ability ability) const
     case AbilityUsesAlphaChannel:
     case AbilityButtonMenu:
     case AbilityButtonSpacer:
+    case AbilityExtendIntoClientArea:
         return true;
     case AbilityButtonMinimize:
         return m_buttons.contains("minimize");
