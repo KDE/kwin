@@ -48,7 +48,7 @@ namespace KWin
 {
 
 /*
- Consistency checks for window relations. Since transients are determinated
+ Consistency checks for window relations. Since transients are determined
  using Client::transiency_list and main windows are determined using Client::transientFor()
  or the group for group transients, these have to match both ways.
 */

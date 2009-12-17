@@ -134,7 +134,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     mTmpConfigFile.open();
     mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
 
-    // NOTICE: this is intended to workaround broken GL implementations that succesfully segfault on glXQuery :-(
+    // NOTICE: this is intended to workaround broken GL implementations that successfully segfault on glXQuery :-(
     KConfigGroup gl_workaround_config(mKWinConfig, "Compositing");
     const bool checkIsSafe = gl_workaround_config.readEntry("CheckIsSafe", true);
     if( checkIsSafe && CompositingPrefs::compositingPossible() )

@@ -1512,7 +1512,7 @@ namespace Oxygen
       drag->setPixmap( itemDragPixmap( itemClicked, geometry ) );
 
       // note: the pixmap is moved just above the pointer on purpose
-      // because overlapping pixmap and pointer slows down the pixmap alot.
+      // because overlapping pixmap and pointer slows down the pixmap a lot.
       QPoint hotSpot( QPoint( event->pos().x() - geometry.left(), -1 ) );
 
       // make sure the horizontal hotspot position is not too far away (more than 1px)
