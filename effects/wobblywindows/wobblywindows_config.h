@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef KWIN_WOBBLY_CONFIG_H
-#define KWIN_WOBBLY_CONFIG_H
+#ifndef KWIN_WOBBLYWINDOWS_CONFIG_H
+#define KWIN_WOBBLYWINDOWS_CONFIG_H
 
 #include <kcmodule.h>
 

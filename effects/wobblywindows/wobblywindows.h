@@ -8,8 +8,8 @@ You can Freely distribute this program under the GNU General Public
 License. See the file "COPYING" for the exact licensing terms.
 ******************************************************************/
 
-#ifndef WOBBLYWINDOWS_H
-#define WOBBLYWINDOWS_H
+#ifndef KWIN_WOBBLYWINDOWS_H
+#define KWIN_WOBBLYWINDOWS_H
 
 // Include with base class for effects.
 #include <kwineffects.h>
