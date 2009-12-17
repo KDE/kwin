@@ -303,7 +303,7 @@ namespace Oxygen
   {
 
     qreal ratio( ClientGroupItemDataList::progress() );
-    for( iterator iter = begin(); iter != end(); iter++ )
+    for( iterator iter = begin(); iter != end(); ++iter )
     {
 
       // left

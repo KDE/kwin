@@ -221,7 +221,7 @@ void ClientGroup::setVisible( Client* c )
 
     visible_ = indexOfClient( c );
     c->setClientShown( true );
-    for( ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); i++ )
+    for( ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); ++i )
         if( (*i) != c )
             (*i)->setClientShown( false );
     }
@@ -262,7 +262,7 @@ void ClientGroup::updateStates( Client* main, Client* only )
 void ClientGroup::updateItems()
     {
     items_.clear();
-    for( ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); i++ )
+    for( ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); ++i )
         {
         QIcon icon( (*i)->icon() );
         icon.addPixmap( (*i)->miniIcon() );
@@ -275,7 +275,7 @@ void ClientGroup::updateMinMaxSize()
     // Determine entire group's minimum and maximum sizes
     minSize_ = QSize( 0, 0 );
     maxSize_ = QSize( INT_MAX, INT_MAX );
-    for( ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); i++ )
+    for( ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); ++i )
         {
         if( (*i)->minSize().width() > minSize_.width() )
             minSize_.setWidth( (*i)->minSize().width() );
@@ -299,7 +299,7 @@ void ClientGroup::updateMinMaxSize()
         qBound( minSize_.width(), size.width(), maxSize_.width() ),
         qBound( minSize_.height(), size.height(), maxSize_.height() ));
     if( newSize != size )
-        for( ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); i++ )
+        for( ClientList::const_iterator i = clients_.constBegin(); i != clients_.constEnd(); ++i )
             // TODO: Doesn't affect shaded windows?
             // There seems to be a race condition when using plainResize() which causes the window
             // to sometimes be located at new window's location instead of the visible window's location

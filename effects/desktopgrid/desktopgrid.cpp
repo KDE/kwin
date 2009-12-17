@@ -992,7 +992,7 @@ void DesktopGridEffect::setActive( bool active )
         if( isUsingPresentWindows() )
             {
             QList<WindowMotionManager>::iterator it;
-            for( it = m_managers.begin(); it != m_managers.end(); it++ )
+            for( it = m_managers.begin(); it != m_managers.end(); ++it )
                 {
                 foreach( EffectWindow* w, (*it).managedWindows() )
                     {
@@ -1152,7 +1152,7 @@ bool DesktopGridEffect::isMotionManagerMovingWindows()
     if( isUsingPresentWindows() )
         {
         QList<WindowMotionManager>::iterator it;
-        for( it = m_managers.begin(); it != m_managers.end(); it++ )
+        for( it = m_managers.begin(); it != m_managers.end(); ++it )
             {
             if( (*it).areWindowsMoving() )
                 return true;

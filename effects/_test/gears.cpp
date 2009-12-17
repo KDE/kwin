@@ -123,7 +123,7 @@ void GearsEffect::gear( float inner_radius, float outer_radius, float width, int
     /* draw front face */
     glBegin( GL_QUAD_STRIP );
 
-    for( i = 0; i <= teeth; i++ )
+    for( i = 0; i <= teeth; ++i )
         {
         angle = i * 2.0 * M_PI / teeth;
         glVertex3f( r0 * cos( angle ), r0 * sin( angle ), width * 0.5 );
@@ -141,7 +141,7 @@ void GearsEffect::gear( float inner_radius, float outer_radius, float width, int
     /* draw front sides of teeth */
     glBegin( GL_QUADS );
 
-    for( i = 0; i < teeth; i++ )
+    for( i = 0; i < teeth; ++i )
         {
         angle = i * 2.0 * M_PI / teeth;
 
@@ -161,7 +161,7 @@ void GearsEffect::gear( float inner_radius, float outer_radius, float width, int
     /* draw back face */
     glBegin( GL_QUAD_STRIP );
 
-    for( i = 0; i <= teeth; i++ )
+    for( i = 0; i <= teeth; ++i )
         {
         angle = i * 2.0 * M_PI / teeth;
         glVertex3f( r1 * cos( angle ), r1 * sin( angle ), -width * 0.5 );
@@ -180,7 +180,7 @@ void GearsEffect::gear( float inner_radius, float outer_radius, float width, int
     glBegin( GL_QUADS );
     da = 2.0 * M_PI / teeth / 4.0;
 
-    for( i = 0; i < teeth; i++ )
+    for( i = 0; i < teeth; ++i )
         {
         angle = i * 2.0 * M_PI / teeth;
 
@@ -198,7 +198,7 @@ void GearsEffect::gear( float inner_radius, float outer_radius, float width, int
     /* draw outward faces of teeth */
     glBegin( GL_QUAD_STRIP );
 
-    for( i = 0; i < teeth; i++ )
+    for( i = 0; i < teeth; ++i )
         {
         angle = i * 2.0 * M_PI / teeth;
 
@@ -236,7 +236,7 @@ void GearsEffect::gear( float inner_radius, float outer_radius, float width, int
     /* draw inside radius cylinder */
     glBegin( GL_QUAD_STRIP );
 
-    for( i = 0; i <= teeth; i++ )
+    for( i = 0; i <= teeth; ++i )
         {
         angle = i * 2.0 * M_PI / teeth;
         glNormal3f( -cos( angle ), -sin( angle ), 0.0 );

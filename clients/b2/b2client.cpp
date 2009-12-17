@@ -261,7 +261,7 @@ static void create_pixmaps()
     QBitmap pinupMask = QBitmap::fromData(QSize(16, 16), pinup_mask_bits);
     QBitmap pindownMask = QBitmap::fromData(QSize(16, 16), pindown_mask_bits);
     QBitmap menuMask = QBitmap::fromData(QSize(16, 16), menu_mask_bits);
-    for (i = 0; i < NumStates; i++) {
+    for (i = 0; i < NumStates; ++i) {
 	bool isDown = (i == Down) || (i == IDown);
 	pixmap[P_MENU + i]->setMask(menuMask);
 	pixmap[P_PINUP + i]->setMask(isDown ? pindownMask: pinupMask);
@@ -280,7 +280,7 @@ static void create_pixmaps()
     mask.fillRect(0, 0, 10, 10, one);
     mask.end();
 
-    for (i = 0; i < NumStates; i++)
+    for (i = 0; i < NumStates; ++i)
 	pixmap[P_NORMALIZE + i]->setMask(normalizeMask);
 
     QBitmap shadeMask(bsize, bsize);
@@ -288,7 +288,7 @@ static void create_pixmaps()
     mask.begin(&shadeMask);
     mask.fillRect(0, 0, bsize, 6, one);
     mask.end();
-    for (i = 0; i < NumStates; i++)
+    for (i = 0; i < NumStates; ++i)
 	pixmap[P_SHADE + i]->setMask(shadeMask);
 }
 
