@@ -587,8 +587,9 @@ void KWinDesktopConfig::slotAboutEffectClicked()
             i++;
             }
         }
-    KAboutApplicationDialog aboutPlugin( &aboutData, this );
-    aboutPlugin.exec();
+    QPointer<KAboutApplicationDialog> aboutPlugin = new KAboutApplicationDialog( &aboutData, this );
+    aboutPlugin->exec();
+    delete aboutPlugin;
     }
 
 void KWinDesktopConfig::slotConfigureEffectClicked()
@@ -603,19 +604,19 @@ void KWinDesktopConfig::slotConfigureEffectClicked()
             return;
         }
     KCModuleProxy* proxy = new KCModuleProxy( effect );
-    KDialog configDialog( this );
-    configDialog.setWindowTitle( m_ui->effectComboBox->currentText() );
-    configDialog.setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
-    connect(&configDialog, SIGNAL(defaultClicked()), proxy, SLOT(defaults()));
+    QPointer< KDialog > configDialog = new KDialog( this );
+    configDialog->setWindowTitle( m_ui->effectComboBox->currentText() );
+    configDialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Default );
+    connect(configDialog, SIGNAL(defaultClicked()), proxy, SLOT(defaults()));
 
-    QWidget *showWidget = new QWidget( &configDialog );
+    QWidget *showWidget = new QWidget( configDialog );
     QVBoxLayout *layout = new QVBoxLayout;
     showWidget->setLayout( layout );
     layout->addWidget( proxy );
     layout->insertSpacing( -1, KDialog::marginHint() );
-    configDialog.setMainWidget( showWidget );
+    configDialog->setMainWidget( showWidget );
 
-    if( configDialog.exec() == QDialog::Accepted )
+    if( configDialog->exec() == QDialog::Accepted )
         {
         proxy->save();
         }
@@ -623,6 +624,7 @@ void KWinDesktopConfig::slotConfigureEffectClicked()
         {
         proxy->load();
         }
+    delete configDialog;
     }
 
 } // namespace

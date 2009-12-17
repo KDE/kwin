@@ -696,10 +696,11 @@ void RulesWidget::prepareWindowSpecific( WId window )
 
 void RulesWidget::shortcutEditClicked()
     {
-    EditShortcutDialog dlg( window());
-    dlg.setShortcut( shortcut->text());
-    if( dlg.exec() == QDialog::Accepted )
-        shortcut->setText( dlg.shortcut());
+    QPointer<EditShortcutDialog> dlg = new EditShortcutDialog( window());
+    dlg->setShortcut( shortcut->text());
+    if( dlg->exec() == QDialog::Accepted )
+        shortcut->setText( dlg->shortcut());
+    delete dlg;
     }
 
 RulesDialog::RulesDialog( QWidget* parent, const char* name )
@@ -757,9 +758,10 @@ EditShortcut::EditShortcut( QWidget* parent )
 
 void EditShortcut::editShortcut()
     {
-    ShortcutDialog dlg( QKeySequence( shortcut->text()), window());
-    if( dlg.exec() == QDialog::Accepted )
-        shortcut->setText( dlg.shortcut().toString());
+    QPointer< ShortcutDialog > dlg = new ShortcutDialog( QKeySequence( shortcut->text()), window());
+    if( dlg->exec() == QDialog::Accepted )
+        shortcut->setText( dlg->shortcut().toString());
+    delete dlg;
     }
 
 void EditShortcut::clearShortcut()
