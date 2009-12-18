@@ -17,6 +17,7 @@ set(kwin_oxygen_SRCS
      oxygenshadowconfiguration.cpp
      oxygenshadowcache.cpp
      oxygensizegrip.cpp
+     oxygentitleanimationdata.cpp
   )
 
 kde4_add_plugin(kwin3_oxygen ${kwin_oxygen_SRCS})

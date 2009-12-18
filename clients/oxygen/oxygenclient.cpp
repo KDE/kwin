@@ -84,9 +84,8 @@ namespace Oxygen
     factory_( f ),
     sizeGrip_( 0 ),
     glowAnimation_( new Animation( 200, this ) ),
-    titleAnimation_( new Animation( 200, this ) ),
+    titleAnimationData_( new TitleAnimationData( this ) ),
     glowIntensity_(0),
-    titleOpacity_(0),
     initialized_( false ),
     forceActive_( false ),
     mouseButton_( Qt::NoButton ),
@@ -126,15 +125,10 @@ namespace Oxygen
     connect( glowAnimation().data(), SIGNAL( finished( void ) ), widget(), SLOT( update( void ) ) );
     connect( glowAnimation().data(), SIGNAL( finished() ), this, SLOT( clearForceActive() ) );
 
-    // setup title animation
-    titleAnimation().data()->setStartValue( 0 );
-    titleAnimation().data()->setEndValue( 1 );
-    titleAnimation().data()->setTargetObject( this );
-    titleAnimation().data()->setPropertyName( "titleOpacity" );
-    titleAnimation().data()->setCurveShape( Animation::EaseInOutCurve );
-    connect( titleAnimation().data(), SIGNAL( valueChanged( const QVariant& ) ), widget(), SLOT( update( void ) ) );
-    connect( titleAnimation().data(), SIGNAL( finished( void ) ), widget(), SLOT( update( void ) ) );
-    connect( titleAnimation().data(), SIGNAL( finished( void ) ), this, SLOT( updateOldCaption() ) );
+
+    // title animation data
+    titleAnimationData_.data()->initialize();
+    connect( titleAnimationData_.data(), SIGNAL( pixmapsChanged() ), widget(), SLOT( update( void ) ) );
 
     // lists
     connect( itemData_.animation().data(), SIGNAL( finished() ), this, SLOT( clearTargetItem() ) );
@@ -177,8 +171,11 @@ namespace Oxygen
 
     // animations duration
     glowAnimation().data()->setDuration( configuration_.animationsDuration() );
-    titleAnimation().data()->setDuration( configuration_.animationsDuration() );
+    titleAnimationData_.data()->setDuration( configuration_.animationsDuration() );
     itemData_.animation().data()->setDuration( configuration_.animationsDuration() );
+
+    // reset title transitions
+    titleAnimationData_.data()->reset();
 
     // should also update animations for buttons
     resetButtons();
@@ -189,9 +186,6 @@ namespace Oxygen
       ClientGroupItemData& item( itemData_[index] );
       if( item.closeButton_ ) { item.closeButton_.data()->reset(0); }
     }
-
-    // copy current caption to old
-    updateOldCaption();
 
     // reset tab geometry
     itemData_.setDirty( true );
@@ -814,51 +808,41 @@ namespace Oxygen
   void OxygenClient::renderTitleText( QPainter* painter, const QRect& rect, const QColor& color, const QColor& contrast ) const
   {
 
-    if( titleIsAnimated() )
+    if( !titleAnimationData_.data()->isValid() )
+    {
+        // contrast pixmap
+        titleAnimationData_.data()->reset(
+            rect,
+            renderTitleText( rect, caption(), color ),
+            renderTitleText( rect, caption(), contrast ) );
+    }
+
+    if( titleAnimationData_.data()->isDirty() )
     {
 
-      // due to alpha blending issues, one must first draw the contrast text,
-      // then the plain text.
-      if( contrast.isValid() )
-      {
+        // contrast pixmap
+        titleAnimationData_.data()->setPixmaps(
+            rect,
+            renderTitleText( rect, caption(), color ),
+            renderTitleText( rect, caption(), contrast ) );
 
-        painter->translate( 0, 1 );
-        if( !oldCaption().isEmpty() ) {
+        titleAnimationData_.data()->setDirty( false );
+        titleAnimationData_.data()->startAnimation();
+        renderTitleText( painter, rect, color, contrast );
 
-          renderTitleText(
-            painter, rect, oldCaption(),
-            helper().alphaColor( contrast, 1.0 - titleOpacity() ),
-            QColor(), false );
+    } else if( titleAnimationData_.data()->isAnimated() ) {
 
+        if( isMaximized() ) painter->translate( 0, 2 );
+        if( !titleAnimationData_.data()->contrastPixmap().isNull() )
+        {
+            painter->translate( 0, 1 );
+            painter->drawPixmap( rect.topLeft(), titleAnimationData_.data()->contrastPixmap() );
+            painter->translate( 0, -1 );
         }
 
-        if( !caption().isEmpty() ) {
+        painter->drawPixmap( rect.topLeft(), titleAnimationData_.data()->pixmap() );
 
-          renderTitleText(
-            painter, rect, caption(),
-            helper().alphaColor( contrast, titleOpacity() ), QColor() );
-
-        }
-
-        painter->translate( 0, -1 );
-
-      }
-
-      if( !oldCaption().isEmpty() ) {
-
-        renderTitleText(
-          painter, rect, oldCaption(),
-          helper().alphaColor( color, 1.0 - titleOpacity() ), QColor(), false );
-
-      }
-
-      if( !caption().isEmpty() ) {
-
-        renderTitleText(
-          painter, rect, caption(),
-          helper().alphaColor( color, titleOpacity() ), QColor() );
-
-      }
+        if( isMaximized() ) painter->translate( 0, -2 );
 
     } else if( !caption().isEmpty() ) {
 
@@ -891,6 +875,26 @@ namespace Oxygen
 
     // translate back
     if( isMaximized() ) painter->translate( 0, -2 );
+
+  }
+
+  //_______________________________________________________________________
+  QPixmap OxygenClient::renderTitleText( const QRect& rect, const QString& caption, const QColor& color, bool elide ) const
+  {
+
+    QPixmap out( rect.size() );
+    out.fill( Qt::transparent );
+    if( caption.isEmpty() || !color.isValid() ) return out;
+
+    QPainter painter( &out );
+    painter.setFont( options()->font(isActive(), false) );
+    Qt::Alignment alignment( configuration().titleAlignment() | Qt::AlignVCenter );
+    QString local( elide ? QFontMetrics( painter.font() ).elidedText( caption, Qt::ElideRight, rect.width() ):caption );
+
+    painter.setPen( color );
+    painter.drawText( out.rect(), alignment, local );
+    painter.end();
+    return out;
 
   }
 
@@ -1154,10 +1158,11 @@ namespace Oxygen
   //_________________________________________________________
   void OxygenClient::captionChange( void  )
   {
+
     KCommonDecorationUnstable::captionChange();
     itemData_.setDirty( true );
-    if( !animateTitleChange() ) return;
-    titleAnimation().data()->restart();
+    if( animateTitleChange() )
+    { titleAnimationData_.data()->setDirty( true ); }
 
   }
 
@@ -1495,6 +1500,8 @@ namespace Oxygen
       int itemClicked( OxygenClient::itemClicked( point ) );
       if( itemClicked < 0 ) return false;
 
+      titleAnimationData_.data()->reset();
+
       QDrag *drag = new QDrag( widget() );
       QMimeData *groupData = new QMimeData();
       groupData->setData( clientGroupItemDragMimeType(), QString().setNum( itemId( itemClicked )).toAscii() );
@@ -1660,6 +1667,7 @@ namespace Oxygen
 
     }
 
+    titleAnimationData_.data()->reset();
     return true;
 
   }

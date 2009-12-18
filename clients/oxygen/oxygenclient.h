@@ -31,6 +31,7 @@
 #include "oxygen.h"
 #include "oxygenclientgroupitemdata.h"
 #include "oxygenconfiguration.h"
+#include "oxygentitleanimationdata.h"
 #include "lib/oxygenanimation.h"
 #include "lib/helper.h"
 
@@ -50,9 +51,6 @@ namespace Oxygen
         //! declare glow intensity property
         //!Q_PROPERTY( qreal glowIntensity READ glowIntensity WRITE setGlowIntensity )
         Q_PROPERTY( qreal glowIntensity READ glowIntensityUnbiased WRITE setGlowIntensity )
-
-        //! declare title opacity
-        Q_PROPERTY( qreal titleOpacity READ titleOpacity WRITE setTitleOpacity )
 
         public:
 
@@ -262,6 +260,9 @@ namespace Oxygen
         /*! second color, if valid, is for contrast pixel */
         virtual void renderTitleText( QPainter*, const QRect&, const QString&, const QColor&, const QColor& = QColor(), bool elide = true ) const;
 
+        //! title text
+        virtual QPixmap renderTitleText( const QRect&, const QString&, const QColor&, bool elide = true ) const;
+
         //! GroupItem
         virtual void renderItem( QPainter*, int, const QPalette& );
 
@@ -285,31 +286,6 @@ namespace Oxygen
 
         //! return pixmap corresponding to a given tab, for dragging
         QPixmap itemDragPixmap( int, const QRect& );
-
-        //!@name title animation
-        //@{
-
-        const Animation::Pointer& titleAnimation( void ) const
-        { return titleAnimation_; }
-
-        bool titleIsAnimated( void ) const
-        { return titleAnimation().data()->isRunning(); }
-
-        qreal titleOpacity( void ) const
-        { return titleOpacity_; }
-
-        void setTitleOpacity( qreal value )
-        { titleOpacity_ = value; }
-
-        //@}
-
-        //! old caption if any
-        const QString& oldCaption( void ) const
-        { return oldCaption_; }
-
-        //! old caption
-        void setOldCaption( const QString& value )
-        { oldCaption_ = value; }
 
         //! return true when activity change are animated
         bool animateActiveChange( void ) const
@@ -363,10 +339,6 @@ namespace Oxygen
 
         protected slots:
 
-        //! update old caption with current
-        void updateOldCaption( void )
-        { setOldCaption( caption() ); }
-
         //! set target item to -1
         void clearTargetItem( void );
 
@@ -392,17 +364,11 @@ namespace Oxygen
         //! glow animation
         Animation::Pointer glowAnimation_;
 
-        //! title animation
-        Animation::Pointer titleAnimation_;
+        //! title animation data
+        TitleAnimationData::Pointer titleAnimationData_;
 
         //! glow intensity
         qreal glowIntensity_;
-
-        //! title opacity
-        qreal titleOpacity_;
-
-        //! old caption
-        QString oldCaption_;
 
         //! true when initialized
         bool initialized_;
