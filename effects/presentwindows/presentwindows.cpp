@@ -896,12 +896,7 @@ void PresentWindowsEffect::rearrangeWindows()
         if( !windows.count() )
             continue;
 
-        if( m_layoutMode == LayoutRegularGrid || m_tabBoxEnabled ) // Force the grid for window switching
-            calculateWindowTransformationsClosest( windows, screen );
-        else if( m_layoutMode == LayoutFlexibleGrid )
-            calculateWindowTransformationsKompose( windows, screen );
-        else
-            calculateWindowTransformationsNatural( windows, screen, m_motionManager );
+        calculateWindowTransformations( windows, screen, m_motionManager );
         }
 
     // Resize text frames if required
@@ -918,8 +913,28 @@ void PresentWindowsEffect::rearrangeWindows()
     delete metrics;
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsClosest( EffectWindowList windowlist, int screen )
+void PresentWindowsEffect::calculateWindowTransformations( EffectWindowList windowlist, int screen,
+        WindowMotionManager& motionManager, bool external )
     {
+    if( m_layoutMode == LayoutRegularGrid || m_tabBoxEnabled ) // Force the grid for window switching
+        calculateWindowTransformationsClosest( windowlist, screen, motionManager );
+    else if( m_layoutMode == LayoutFlexibleGrid )
+        calculateWindowTransformationsKompose( windowlist, screen, motionManager );
+    else
+        calculateWindowTransformationsNatural( windowlist, screen, motionManager );
+
+    // If called externally we don't need to remember this data
+    if( external )
+        m_windowData.clear();
+    }
+
+void PresentWindowsEffect::calculateWindowTransformationsClosest( EffectWindowList windowlist, int screen,
+        WindowMotionManager& motionManager )
+    {
+    // This layout mode requires at least one window visible
+    if( windowlist.count() == 0 )
+        return;
+
     QRect area = effects->clientArea( ScreenArea, screen, effects->currentDesktop() );
     if( m_showPanel ) // reserve space for the panel
         area = effects->clientArea( MaximizeArea, screen, effects->currentDesktop() );
@@ -927,8 +942,12 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest( EffectWindowLi
     int rows = int( ceil( windowlist.count() / double( columns )));
 
     // Remember the size for later
-    m_gridSizes[screen].columns = columns;
-    m_gridSizes[screen].rows = rows;
+    // If we are using this layout externally we don't need to remember m_gridSizes.
+    if( m_gridSizes.size() != 0 )
+        {
+        m_gridSizes[screen].columns = columns;
+        m_gridSizes[screen].rows = rows;
+        }
 
     // Assign slots
     foreach( EffectWindow *w, windowlist )
@@ -997,12 +1016,17 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest( EffectWindowLi
                 target.center().y() - int( w->height() * scale ) / 2,
                 scale * w->width(), scale * w->height() );
         }
-        m_motionManager.moveWindow( w, target );
+        motionManager.moveWindow( w, target );
         }
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsKompose( EffectWindowList windowlist, int screen )
+void PresentWindowsEffect::calculateWindowTransformationsKompose( EffectWindowList windowlist, int screen,
+        WindowMotionManager& motionManager )
     {
+    // This layout mode requires at least one window visible
+    if( windowlist.count() == 0 )
+        return;
+
     QRect availRect = effects->clientArea( ScreenArea, screen, effects->currentDesktop() );
     if( m_showPanel ) // reserve space for the panel
         availRect = effects->clientArea( MaximizeArea, screen, effects->currentDesktop() );
@@ -1136,7 +1160,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose( EffectWindowLi
             QRect target = geometryRects[pos];
             target.setY( target.y() + topOffset );
             m_windowData[window].slot = pos;
-            m_motionManager.moveWindow( window, target );
+            motionManager.moveWindow( window, target );
 
             //kDebug(1212) << "Window '" << window->caption() << "' gets moved to (" <<
             //        mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
@@ -1147,7 +1171,8 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose( EffectWindowLi
         }
     }
 
-void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen, WindowMotionManager& motionManager )
+void PresentWindowsEffect::calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen,
+        WindowMotionManager& motionManager )
     {
     // If windows do not overlap they scale into nothingness, fix by resetting. To reproduce
     // just have a single window on a Xinerama screen or have two windows that do not touch.

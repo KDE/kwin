@@ -134,9 +134,14 @@ class PresentWindowsEffect
     protected:
         // Window rearranging
         void rearrangeWindows();
-        void calculateWindowTransformationsClosest( EffectWindowList windowlist, int screen );
-        void calculateWindowTransformationsKompose( EffectWindowList windowlist, int screen );
-        void calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen, WindowMotionManager& motionManager );
+        void calculateWindowTransformations( EffectWindowList windowlist, int screen,
+            WindowMotionManager& motionManager, bool external = false );
+        void calculateWindowTransformationsClosest( EffectWindowList windowlist, int screen,
+            WindowMotionManager& motionManager );
+        void calculateWindowTransformationsKompose( EffectWindowList windowlist, int screen,
+            WindowMotionManager& motionManager );
+        void calculateWindowTransformationsNatural( EffectWindowList windowlist, int screen,
+            WindowMotionManager& motionManager );
 
         // Helper functions for window rearranging
         inline double aspectRatio( EffectWindow *w )
