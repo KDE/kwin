@@ -27,9 +27,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
-       <widget class="QComboBox" name="exceptionType"/>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
@@ -40,15 +37,22 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QLineEdit" name="exceptionEditor"/>
-      </item>
       <item row="2" column="2">
        <widget class="QPushButton" name="detectDialogButton">
         <property name="text">
          <string>Detect Window Properties</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="KLineEdit" name="exceptionEditor">
+        <property name="showClearButton" stdset="0">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="KComboBox" name="exceptionType"/>
       </item>
      </layout>
     </widget>
@@ -65,12 +69,6 @@
          <string>Border size:</string>
         </property>
        </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QComboBox" name="frameBorderComboBox"/>
-      </item>
-      <item row="2" column="2">
-       <widget class="QComboBox" name="blendColorComboBox"/>
       </item>
       <item row="3" column="0">
        <widget class="QCheckBox" name="sizeGripCheckBox">
@@ -92,15 +90,6 @@
          <string>Draw separator between title bar and window contents: </string>
         </property>
        </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QComboBox" name="sizeGripComboBox"/>
-      </item>
-      <item row="4" column="2">
-       <widget class="QComboBox" name="titleOutlineComboBox"/>
-      </item>
-      <item row="5" column="2">
-       <widget class="QComboBox" name="separatorComboBox"/>
       </item>
       <item row="2" column="0">
        <widget class="QCheckBox" name="blendColorCheckBox">
@@ -126,11 +115,38 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="2">
+       <widget class="KComboBox" name="frameBorderComboBox"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="KComboBox" name="blendColorComboBox"/>
+      </item>
+      <item row="3" column="2">
+       <widget class="KComboBox" name="sizeGripComboBox"/>
+      </item>
+      <item row="4" column="2">
+       <widget class="KComboBox" name="titleOutlineComboBox"/>
+      </item>
+      <item row="5" column="2">
+       <widget class="KComboBox" name="separatorComboBox"/>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
