@@ -1397,7 +1397,7 @@ void Workspace::slotWindowToDesktopDown()
 
 void Workspace::slotSwitchToTabRight()
     {
-    if( !active_client )
+    if( !active_client || !active_client->clientGroup() )
         return;
     int c_id = active_client->clientGroup()->indexOfClient( active_client );
     int size = active_client->clientGroup()->clients().count();
@@ -1409,7 +1409,7 @@ void Workspace::slotSwitchToTabRight()
 
 void Workspace::slotSwitchToTabLeft()
     {
-    if( !active_client )
+    if( !active_client || !active_client->clientGroup() )
         return;
     int c_id = active_client->clientGroup()->indexOfClient( active_client );
     int size = active_client->clientGroup()->clients().count();
@@ -1421,7 +1421,7 @@ void Workspace::slotSwitchToTabLeft()
 
 void Workspace::slotRemoveFromGroup()
     {
-    if( !active_client )
+    if( !active_client || !active_client->clientGroup() )
         return;
     active_client->clientGroup()->remove( active_client );
     }
