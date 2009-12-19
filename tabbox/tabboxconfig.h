@@ -280,7 +280,7 @@ class TabBoxConfig
         static SelectedItemViewPosition defaultSelectedItemViewPosition() { return NonePosition; }
         static bool defaultShowTabBox() { return true; }
         static bool defaultShowOutline() { return true; }
-        static bool defaultHighlightWindow() { return false; }
+        static bool defaultHighlightWindow() { return true; }
         static int defaultMinWidth() { return 20; }
         static int defaultMinHeight() { return 20; }
         static QString defaultLayoutName() { return QString( "Default" ); }
