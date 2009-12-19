@@ -2,6 +2,7 @@
 Name=Sliding popups
 Name[ca]=Missatges emergents desplaçant-se
 Name[da]=Glidende pop-op'er
+Name[de]=Hereingleitende Aufklappfenster
 Name[el]=Κυλιόμενα αναδυόμενων
 Name[en_GB]=Sliding popups
 Name[eo]=Lumbilda ŝprucfenestroj
@@ -30,6 +31,7 @@ Type=Service
 Comment=Sliding animation for Plasma popups
 Comment[ca]=Animació de desplaçament pels missatges emergents del Plasma
 Comment[da]=Glidende animation til Plasma-pop-op'er
+Comment[de]=Effekt zum Hereingleiten von Plasma-Aufklappfenstern
 Comment[el]=Γραφικά κύλισης για αναδυόμενα από το Plasma
 Comment[en_GB]=Sliding animation for Plasma popups
 Comment[eo]=Glitantaj animacioj por Plasma ŝprucfenestro
