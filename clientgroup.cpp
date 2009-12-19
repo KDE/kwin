@@ -52,19 +52,35 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
     if( contains( c ) || !c->workspace()->decorationSupportsClientGrouping() )
         return;
 
+    // Remove the Client->ClientGroup reference if the client is already in another group so we
+    // don't change the geometry of other clients in their current group by accident. However
+    // don't REMOVE them from the actual group until we are certain that the client will be moved.
+    ClientGroup* oldGroup = NULL;
+    if( c->clientGroup() )
+        {
+        oldGroup = c->clientGroup();
+        c->setClientGroup( NULL );
+        }
+
     // If it's not possible to have the same states then ungroup them, TODO: Check all states
     // We do this here as the ungroup code in updateStates() cannot be called until add() completes
     QRect oldGeom = c->geometry();
     if( c->geometry() != clients_[visible_]->geometry() )
         c->setGeometry( clients_[visible_]->geometry() );
     if( c->geometry() != clients_[visible_]->geometry() )
+        {
+        if( oldGroup ) // Re-add to old group if required
+            c->setClientGroup( oldGroup );
         return;
+        }
     if( c->desktop() != clients_[visible_]->desktop() )
         c->setDesktop( clients_[visible_]->desktop() );
     if( c->desktop() != clients_[visible_]->desktop() )
         {
         if( c->geometry() != oldGeom )
             c->setGeometry( oldGeom ); // Restore old geometry
+        if( oldGroup ) // Re-add to old group if required
+            c->setClientGroup( oldGroup );
         return;
         }
 
@@ -74,12 +90,16 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
     if( clients_[visible_]->noBorder() )
         clients_[visible_]->setNoBorder( false );
 
+    // Re-add to old group if required for the effect hook
+    if( oldGroup )
+        c->setClientGroup( oldGroup );
+
     // Notify effects of merge
     if( effects != NULL )
         static_cast<EffectsHandlerImpl*>(effects)->clientGroupItemAdded(
             c->effectWindow(), clients_[visible_]->effectWindow() );
 
-    // Remove from old group and update
+    // Actually remove from old group if required and update
     if( c->clientGroup() )
         c->clientGroup()->remove( c );
     c->setClientGroup( this ); // Let the client know which group it belongs to
