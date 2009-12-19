@@ -247,6 +247,11 @@ void Bridge::moveItemInClientGroup( int index, int before )
 void Bridge::moveItemToClientGroup( long itemId, int before )
     {
     Client* item = reinterpret_cast<Client*>( itemId );
+    if( !c->workspace()->hasClient( item ))
+        {
+        kWarning(1212) << "****** ARBITRARY CODE EXECUTION ATTEMPT DETECTED ******";
+        return;
+        }
     c->workspace()->moveItemToClientGroup( item->clientGroup(), item->clientGroup()->indexOfClient( item ),
         c->clientGroup(), before );
     }
