@@ -47,7 +47,7 @@ HighlightWindowEffect::~HighlightWindowEffect()
     }
 
 static bool isInitiallyHidden( EffectWindow* w )
-    { // Is the window is hidden unless it is highlighted?
+    { // Is the window initially hidden until it is highlighted?
     return !w->visibleInClientGroup() || !w->isOnCurrentDesktop();
     }
 
@@ -148,8 +148,8 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
     m_monitorWindow = w;
     bool found = false;
     int length = byteData.length() / sizeof( data[0] );
-    foreach( EffectWindow* e, m_highlightedWindows )
-        effects->setElevatedWindow( e, false );
+    //foreach( EffectWindow* e, m_highlightedWindows )
+    //    effects->setElevatedWindow( e, false );
     m_highlightedWindows.clear();
     for( int i=0; i<length; i++ )
         {
@@ -162,7 +162,9 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
         if( !foundWin->isMinimized() )
             {
             m_highlightedWindows.append( foundWin );
-            effects->setElevatedWindow( foundWin, true );
+            // TODO: We cannot just simply elevate the window as this will elevate it over
+            // Plasma tooltips and other such windows as well
+            //effects->setElevatedWindow( foundWin, true );
             }
         found = true;
         }
