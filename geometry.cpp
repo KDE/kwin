@@ -324,7 +324,7 @@ QRegion Workspace::previousRestrictedMoveArea( int desktop, StrutAreas areas ) c
     if( desktop == NETWinInfo::OnAllDesktops || desktop == 0 )
         desktop = currentDesktop();
     QRegion region;
-    foreach( const StrutRect& rect, oldrestrictedmovearea[desktop] )
+    foreach( const StrutRect& rect, oldrestrictedmovearea.at(desktop) )
         if( areas & rect.area() )
             region += rect;
     return region;
