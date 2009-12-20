@@ -148,6 +148,8 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
     m_monitorWindow = w;
     bool found = false;
     int length = byteData.length() / sizeof( data[0] );
+    foreach( EffectWindow* e, m_highlightedWindows )
+        effects->setElevatedWindow( e, false );
     m_highlightedWindows.clear();
     for( int i=0; i<length; i++ )
         {
@@ -158,7 +160,10 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
             continue;
             }
         if( !foundWin->isMinimized() )
+            {
             m_highlightedWindows.append( foundWin );
+            effects->setElevatedWindow( foundWin, true );
+            }
         found = true;
         }
     if( !found )
