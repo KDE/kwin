@@ -46,16 +46,22 @@ HighlightWindowEffect::~HighlightWindowEffect()
     effects->registerPropertyType( m_atom, false );
     }
 
+static bool isInitiallyHidden( EffectWindow* w )
+    { // Is the window is hidden unless it is highlighted?
+    return !w->visibleInClientGroup() || !w->isOnCurrentDesktop();
+    }
+
 void HighlightWindowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
     {
     // Calculate window opacities
     if( !m_highlightedWindows.isEmpty() )
         { // Initial fade out and changing highlight animation
         double oldOpacity = m_windowOpacity[w];
-        if( m_highlightedWindows.contains( w ) )
+        if( m_highlightedWindows.contains( w ))
             m_windowOpacity[w] = qMin( 1.0, m_windowOpacity[w] + time / m_fadeDuration );
         else if( w->isNormalWindow() || w->isDialog() ) // Only fade out windows
-            m_windowOpacity[w] = qMax( 0.15, m_windowOpacity[w] - time / m_fadeDuration );
+            m_windowOpacity[w] = qMax( isInitiallyHidden( w ) ? 0.0 : 0.15,
+                m_windowOpacity[w] - time / m_fadeDuration );
 
         if( m_windowOpacity[w] != 1.0 )
             data.setTranslucent();
@@ -65,15 +71,27 @@ void HighlightWindowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData&
     else if( m_finishing && m_windowOpacity.contains( w ))
         { // Final fading back in animation
         double oldOpacity = m_windowOpacity[w];
-        m_windowOpacity[w] = qMin( 1.0, m_windowOpacity[w] + time / m_fadeDuration );
+        if( isInitiallyHidden( w ))
+            m_windowOpacity[w] = qMax( 0.0, m_windowOpacity[w] - time / m_fadeDuration );
+        else
+            m_windowOpacity[w] = qMin( 1.0, m_windowOpacity[w] + time / m_fadeDuration );
 
         if( m_windowOpacity[w] != 1.0 )
             data.setTranslucent();
         if( oldOpacity != m_windowOpacity[w] )
             w->addRepaintFull();
 
-        if( m_windowOpacity[w] == 1.0 )
+        if( m_windowOpacity[w] == 1.0 || m_windowOpacity[w] == 0.0 )
             m_windowOpacity.remove( w ); // We default to 1.0
+        }
+
+    // Show tabbed windows and windows on other desktops if highlighted
+    if( m_windowOpacity.contains( w ) && m_windowOpacity[w] != 0.0 )
+        {
+        if( !w->visibleInClientGroup() )
+            w->enablePainting( EffectWindow::PAINT_DISABLED );
+        if( !w->isOnCurrentDesktop() )
+            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         }
 
     effects->prePaintWindow( w, data, time );
@@ -91,7 +109,7 @@ void HighlightWindowEffect::windowAdded( EffectWindow* w )
     if( !m_highlightedWindows.isEmpty() )
         { // The effect is activated thus we need to add it to the opacity hash
         if( w->isNormalWindow() || w->isDialog() ) // Only fade out windows
-            m_windowOpacity[w] = 0.15;
+            m_windowOpacity[w] = isInitiallyHidden( w ) ? 0.0 : 0.15;
         else
             m_windowOpacity[w] = 1.0;
         }
@@ -139,7 +157,7 @@ void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
             kDebug(1212) << "Invalid window targetted for highlight. Requested:" << data[i];
             continue;
             }
-        if( foundWin->isOnCurrentDesktop() && !foundWin->isMinimized() )
+        if( !foundWin->isMinimized() )
             m_highlightedWindows.append( foundWin );
         found = true;
         }
@@ -216,7 +234,7 @@ void HighlightWindowEffect::prepareHighlighting()
     m_finishing = false;
     foreach( EffectWindow *w, effects->stackingOrder() )
         if( !m_windowOpacity.contains( w )) // Just in case we are still finishing from last time
-            m_windowOpacity[w] = 1.0;
+            m_windowOpacity[w] = isInitiallyHidden( w ) ? 0.0 : 1.0;
     }
 
 void HighlightWindowEffect::finishHighlighting()
