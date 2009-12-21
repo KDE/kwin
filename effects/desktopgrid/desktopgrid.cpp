@@ -233,6 +233,8 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& dat
         if( w->isOnDesktop( paintingDesktop ))
             {
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
+            if( w->isMinimized() && isUsingPresentWindows() )
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
             data.mask |= PAINT_WINDOW_TRANSFORMED;
 
             // Split windows at screen edges
@@ -323,6 +325,10 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
                 {
                 // fade out panels if present windows is used
                 d.opacity *= ( 1.0 - timeline.value() );
+                }
+            if( isUsingPresentWindows() && w->isMinimized() )
+                {
+                d.opacity *= timeline.value();
                 }
 
             if( effects->compositingType() == XRenderCompositing )
