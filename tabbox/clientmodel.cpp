@@ -170,7 +170,8 @@ void ClientModel::createClientList( int desktop, bool partialReset )
             while ( c )
                 {
                 TabBoxClient* add = tabBox->clientToAddToList( c, desktop,
-                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsClientList );
+                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsClientList ||
+                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsApplicationList );
                 if( add != NULL )
                     {
                     if ( start == add )
@@ -198,7 +199,8 @@ void ClientModel::createClientList( int desktop, bool partialReset )
             while ( c )
                 {
                 TabBoxClient* add = tabBox->clientToAddToList( c, desktop,
-                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsClientList );
+                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsClientList ||
+                                tabBox->config().clientListMode() == TabBoxConfig::AllDesktopsApplicationList  );
                 if( add != NULL )
                     {
                     if ( start == add )
