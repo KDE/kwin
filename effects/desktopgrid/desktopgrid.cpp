@@ -809,6 +809,8 @@ EffectWindow* DesktopGridEffect::windowAt( QPoint pos ) const
 
     int desktop;
     pos = unscalePos( pos, &desktop );
+    if( desktop >= effects->numberOfDesktops() )
+        return NULL;
     if( isUsingPresentWindows() )
         {
         const int screen = effects->screenNumber( pos );
