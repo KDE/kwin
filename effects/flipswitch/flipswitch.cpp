@@ -501,6 +501,8 @@ void FlipSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             if( w->isMinimized() )
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE );
+            if( !w->visibleInClientGroup() )
+                w->enablePainting( EffectWindow::PAINT_DISABLED_BY_CLIENT_GROUP );
             }
         else
             {
