@@ -727,7 +727,7 @@ void Workspace::slotWindowQuickTileLeft()
     if( !active_client )
       return;
 
-    active_client->setQuickTileMode( QuickTileLeft );
+    active_client->setQuickTileMode( QuickTileLeft, true );
     }
 
 void Workspace::slotWindowQuickTileRight()
@@ -735,7 +735,7 @@ void Workspace::slotWindowQuickTileRight()
     if( !active_client )
       return;
 
-    active_client->setQuickTileMode( QuickTileRight );
+    active_client->setQuickTileMode( QuickTileRight, true );
     }
 
 int Workspace::packPositionLeft( const Client* cl, int oldx, bool left_edge ) const

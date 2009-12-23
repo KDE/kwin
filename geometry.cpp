@@ -3297,7 +3297,7 @@ QRect Client::electricBorderMaximizeGeometry()
     return ret;
     }
 
-void Client::setQuickTileMode( QuickTileMode mode )
+void Client::setQuickTileMode( QuickTileMode mode, bool keyboard )
     {
     // Only allow quick tile on a regular or maximized window
     if( !isResizable() && maximizeMode() != MaximizeFull )
@@ -3318,18 +3318,56 @@ void Client::setQuickTileMode( QuickTileMode mode )
         {
         // Untiling, so just restore geometry, and we're done.
         setGeometry( geom_pretile );
+        checkWorkspacePosition(); // Just in case it's a different screen
         quick_tile_mode = QuickTileNone;
         return;
         }
     else
         {
-        // Check they aren't retiling in an existing direction, so we don't overwrite the saved geometry needlessly
-        if ( quick_tile_mode == mode )
-            return;
+        QPoint whichScreen = keyboard ? geometry().center() : cursorPos();
 
-        // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
-        // Store geometry first, so we can go out of this tile later.
-        geom_pretile = geometry();
+        // If trying to tile to the side that the window is already tiled to move the window to the next
+        // screen if it exists, otherwise ignore the request to prevent corrupting geom_pretile.
+        if( quick_tile_mode == mode )
+            {
+            const int numScreens = Kephal::ScreenUtils::numScreens();
+            const int curScreen = screen();
+            int nextScreen = curScreen;
+            QRect screens[numScreens];
+            for( int i = 0; i < numScreens; ++i ) // Cache
+                screens[i] = Kephal::ScreenUtils::screenGeometry( i );
+            for( int i = 0; i < numScreens; ++i )
+                {
+                if( i == curScreen )
+                    continue;
+                if((( mode == QuickTileLeft &&
+                        screens[i].center().x() < screens[nextScreen].center().x() ) ||
+                    ( mode == QuickTileRight &&
+                        screens[i].center().x() > screens[nextScreen].center().x() )) &&
+                    // Must be in horizontal line
+                    ( screens[i].bottom() > screens[nextScreen].top() ||
+                      screens[i].top() < screens[nextScreen].bottom() ))
+                    nextScreen = i;
+                }
+            if( nextScreen == curScreen )
+                return; // No other screens
+
+            // Move to other screen
+            geom_pretile.translate(
+                screens[nextScreen].x() - screens[curScreen].x(),
+                screens[nextScreen].y() - screens[curScreen].y() );
+            whichScreen = screens[nextScreen].center();
+
+            // Swap sides
+            if( mode == QuickTileLeft )
+                mode = QuickTileRight;
+            else
+                mode = QuickTileLeft;
+            }
+        else
+            // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
+            // Store geometry first, so we can go out of this tile later.
+            geom_pretile = geometry();
 
         // Temporary, so the maximize code doesn't get all confused
         quick_tile_mode = QuickTileNone;
@@ -3337,12 +3375,12 @@ void Client::setQuickTileMode( QuickTileMode mode )
         // Do the actual tile.
         if( mode == QuickTileLeft )
             {
-            QRect max = workspace()->clientArea( MaximizeArea, cursorPos(), desktop() );
+            QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
             setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height() ) );
             }
         else
             {
-            QRect max = workspace()->clientArea( MaximizeArea, cursorPos(), desktop() );
+            QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
             setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() ) );
             }
 

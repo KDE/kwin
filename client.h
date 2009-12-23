@@ -236,7 +236,7 @@ class Client
          * This will also handle preserving and restoring of window geometry as necessary.
          * @param mode The tile mode (left/right) to give this window.
          */
-        void setQuickTileMode( QuickTileMode mode );
+        void setQuickTileMode( QuickTileMode mode, bool keyboard = false );
 
         void growHorizontal();
         void shrinkHorizontal();
