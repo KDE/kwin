@@ -1,3 +1,6 @@
+# the factory macros cause errors
+kde4_no_enable_final(kwineffects)
+
 # Uncomment to have the test effects built as well
 #add_subdirectory( _test )
 
