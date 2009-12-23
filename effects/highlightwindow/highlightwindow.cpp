@@ -89,7 +89,7 @@ void HighlightWindowEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData&
     if( m_windowOpacity.contains( w ) && m_windowOpacity[w] != 0.0 )
         {
         if( !w->visibleInClientGroup() )
-            w->enablePainting( EffectWindow::PAINT_DISABLED );
+            w->enablePainting( EffectWindow::PAINT_DISABLED_BY_CLIENT_GROUP );
         if( !w->isOnCurrentDesktop() )
             w->enablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
         }

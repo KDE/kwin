@@ -456,7 +456,9 @@ void Scene::Window::resetPaintingEnabled()
         {
         if( c->isMinimized() )
             disable_painting |= PAINT_DISABLED_BY_MINIMIZE;
-        if( c->isHiddenInternal())
+        if( c->clientGroup() && c != c->clientGroup()->visible() )
+            disable_painting |= PAINT_DISABLED_BY_CLIENT_GROUP;
+        else if( c->isHiddenInternal())
             disable_painting |= PAINT_DISABLED;
         }
     }

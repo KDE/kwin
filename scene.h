@@ -170,13 +170,15 @@ class Scene::Window
         enum
             {
             // Window will not be painted
-            PAINT_DISABLED              = 1 << 0,
+            PAINT_DISABLED                 = 1 << 0,
             // Window will not be painted because it is deleted
-            PAINT_DISABLED_BY_DELETE    = 1 << 1,
+            PAINT_DISABLED_BY_DELETE       = 1 << 1,
             // Window will not be painted because of which desktop it's on
-            PAINT_DISABLED_BY_DESKTOP   = 1 << 2,
+            PAINT_DISABLED_BY_DESKTOP      = 1 << 2,
             // Window will not be painted because it is minimized
-            PAINT_DISABLED_BY_MINIMIZE  = 1 << 3
+            PAINT_DISABLED_BY_MINIMIZE     = 1 << 3,
+            // Window will not be painted because it is not the active window in a client group
+            PAINT_DISABLED_BY_CLIENT_GROUP = 1 << 4
             };
         void enablePainting( int reason );
         void disablePainting( int reason );

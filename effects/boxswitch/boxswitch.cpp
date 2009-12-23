@@ -95,7 +95,9 @@ void BoxSwitchEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
             {
             if( windows.contains( w ))
                 {
-                if( w != selected_window )
+                if( w == selected_window )
+                    w->enablePainting( EffectWindow::PAINT_DISABLED_BY_CLIENT_GROUP );
+                else
                     data.setTranslucent();
                 w->enablePainting( EffectWindow::PAINT_DISABLED_BY_MINIMIZE | EffectWindow::PAINT_DISABLED_BY_DESKTOP );
                 }
