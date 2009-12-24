@@ -2,7 +2,7 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-DocPath=kcontrol/desktop/index.html
-Icon=preferences-desktop-multiple
+Icon=preferences-desktop
 Exec=kcmshell4 desktop
 
 X-KDE-Library=kcm_kwindesktop

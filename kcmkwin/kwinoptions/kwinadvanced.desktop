@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=preferences-system-windows-advanced
+Icon=preferences-system-windows-actions
 Type=Service
 X-KDE-ServiceTypes=KCModule
 Exec=kcmshell4 kwinadvanced
@@ -78,7 +78,7 @@ Name[sl]=Napredno
 Name[sr]=Напредно
 Name[sr@latin]=Napredno
 Name[sv]=Avancerat
-Name[ta]=உயர்நிலை 
+Name[ta]=உயர்நிலை
 Name[te]=ఆధునాతన
 Name[tg]=Иловагӣ
 Name[th]=ขั้นสูง

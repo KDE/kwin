@@ -1,6 +1,6 @@
 [Desktop Entry]
 Exec=kcmshell4 kwinoptions
-Icon=preferences-system-windows-behaviour
+Icon=preferences-system-windows-actions
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-DocPath=kcontrol/windowbehaviour/index.html

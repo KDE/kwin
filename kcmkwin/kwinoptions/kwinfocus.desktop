@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=preferences-system-windows-focus
+Icon=preferences-system-windows
 Type=Service
 X-KDE-ServiceTypes=KCModule
 Exec=kcmshell4 kwinfocus
