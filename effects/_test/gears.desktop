@@ -24,6 +24,7 @@ Name[sv]=Kubkuggar
 Name[tr]=Küp Dişlileri
 Name[uk]=Шестерні у кубі
 Name[x-test]=xxCube Gearsxx
+Name[zh_CN]=立方齿轮
 Name[zh_TW]=立方體內的齒輪
 Icon=preferences-system-windows-effect-cube
 Comment=Display gears inside the cube
@@ -53,6 +54,7 @@ Comment[sv]=Visa kugghjul inne i kuben
 Comment[tr]=Küpün içerisinde dişlileri göster
 Comment[uk]=Показувати шестерні у кубі
 Comment[x-test]=xxDisplay gears inside the cubexx
+Comment[zh_CN]=在立方体中显示齿轮
 Comment[zh_TW]=在立方體內顯示齒輪
 
 Type=Service

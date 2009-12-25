@@ -26,6 +26,7 @@ Name[sv]=Glidande rutor
 Name[tr]=Kayan bildirimler
 Name[uk]=Ковзні контекстні вікна
 Name[x-test]=xxSliding popupsxx
+Name[zh_CN]=滚动气泡通知
 Name[zh_TW]=滑動彈出視窗
 
 Type=Service
@@ -55,6 +56,7 @@ Comment[sv]=Glidande animering av Plasmarutor
 Comment[tr]=Açılan Plasma bildirimleri için kaydırma canlandırması
 Comment[uk]=Анімація з ковзанням для контекстних вікон Плазми
 Comment[x-test]=xxSliding animation for Plasma popupsxx
+Comment[zh_CN]=出现 Plasma 气泡通知时呈现滚动动画
 Comment[zh_TW]=Plasma 彈出視窗的滑動動畫
 
 Icon=preferences-system-windows-effect-slidingpopups

@@ -21,6 +21,7 @@ Name[sv]=Låt flikar glida
 Name[tr]=Sekmeleri Kaydır
 Name[uk]=Ковзання вкладок
 Name[x-test]=xxSlide Tabsxx
+Name[zh_CN]=滚动分页
 Name[zh_TW]=滑動分頁
 
 Icon=preferences-system-windows-effect-slidetabs
@@ -46,6 +47,7 @@ Comment[sl]=Ob preklapljanju med zavihku ali združevanju naj okna drsijo.
 Comment[sv]=Låt fönster glida vid byte eller gruppering av flikar.
 Comment[uk]=Ковзання вікон вздовж стільниці, під час перемикання або групування вкладок.
 Comment[x-test]=xxSlide windows when switching or grouping tabs.xx
+Comment[zh_CN]=在切换或分组标签页时滚动窗口。
 Comment[zh_TW]=切換或群組分頁時滑動視窗
 
 Type=Service

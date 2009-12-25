@@ -40,6 +40,7 @@ Name[tg]=Мисолҳо
 Name[tr]=Örnek
 Name[uk]=Приклад
 Name[x-test]=xxExamplexx
+Name[zh_CN]=实例
 Name[zh_TW]=範例
 Comment=An example theme based on the Air desktop theme.
 Comment[ca]=Un tema d'exemple basat en el tema d'escriptori Air.
@@ -71,6 +72,7 @@ Comment[sv]=Ett exempeltema baserat på skrivbordstemat Luft.
 Comment[tr]=Air masaüstü temasını temel alan bir örnek tema.
 Comment[uk]=Приклад теми, заснованої на темі стільниці «Повітря».
 Comment[x-test]=xxAn example theme based on the Air desktop theme.xx
+Comment[zh_CN]=基于“空气”桌面主题的示例主题。
 Comment[zh_TW]=基於 Air 桌面主題的範例主題
 
 X-KDE-PluginInfo-Author=Martin Gräßlin

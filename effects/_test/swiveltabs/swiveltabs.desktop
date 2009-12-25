@@ -18,6 +18,7 @@ Name[sl]=Obračajoči zavihki
 Name[sv]=Låt flikar vända
 Name[uk]=Вкладки на шарнірах
 Name[x-test]=xxSwivel Tabsxx
+Name[zh_CN]=转动分页
 Name[zh_TW]=轉動分頁
 Icon=preferences-system-windows-effect-swiveltabs
 Comment=Make the windows turn when switching tabs
@@ -42,6 +43,7 @@ Comment[sv]=Låt fönster vändas vid byte av flikar
 Comment[tr]=Sekmelere geçerken pencereleri döndür
 Comment[uk]=Обертання вікон під час перемикання вкладок
 Comment[x-test]=xxMake the windows turn when switching tabsxx
+Comment[zh_CN]=在切换标签时转动窗口
 Comment[zh_TW]=切換分頁時讓視窗轉動
 
 Type=Service

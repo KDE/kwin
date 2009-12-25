@@ -36,6 +36,7 @@ Name[tg]=Тағйири андозаи тиреза
 Name[tr]=Pencereyi Yeniden Boyutlandır
 Name[uk]=Змінити розмір вікна
 Name[x-test]=xxResize Windowxx
+Name[zh_CN]=调整窗口大小
 Name[zh_TW]=重新調整視窗大小
 Icon=preferences-system-windows-effect-resize
 Comment=Effect to outline geometry while resizing a window
@@ -68,6 +69,7 @@ Comment[sv]=Effekt för att visa formens kontur när fönsterstorleken ändras
 Comment[tr]=Bir pencere yeniden boyutlandırılırken pencerenin dış hatlarını belirginleştiren bir efekt
 Comment[uk]=Показує розміри контуру під час зміни розмірів вікна
 Comment[x-test]=xxEffect to outline geometry while resizing a windowxx
+Comment[zh_CN]=调整窗口大小时的窗口轮廓线特效
 Comment[zh_TW]=調整視窗大小時標出位置的效果
 
 Type=Service

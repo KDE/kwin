@@ -21,5 +21,6 @@ Name[sl]=Tabstrip
 Name[sv]=Flikrad
 Name[uk]=Смужка вкладок
 Name[x-test]=xxTabstripxx
+Name[zh_CN]=Tabstrip
 Name[zh_TW]=Tabstrip
 X-KDE-Library=kwin3_tabstrip
