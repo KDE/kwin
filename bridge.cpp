@@ -215,12 +215,20 @@ QRect Bridge::transparentRect() const
 
 bool Bridge::isClientGroupActive()
     {
-    return c->clientGroup()->containsActiveClient();
+    if( c->clientGroup() )
+        return c->clientGroup()->containsActiveClient();
+    return isActive();
     }
 
 QList< ClientGroupItem > Bridge::clientGroupItems() const
     {
-    return c->clientGroup()->items();
+    if( c->clientGroup() )
+        return c->clientGroup()->items();
+    QList< ClientGroupItem > items;
+    QIcon icon( c->icon() );
+    icon.addPixmap( c->miniIcon() );
+    items.append( ClientGroupItem( c->caption(), icon ));
+    return items;
     }
 
 long Bridge::itemId( int index )
@@ -231,7 +239,9 @@ long Bridge::itemId( int index )
 
 int Bridge::visibleClientGroupItem()
     {
-    return c->clientGroup()->indexOfVisibleClient();
+    if( c->clientGroup() )
+        return c->clientGroup()->indexOfVisibleClient();
+    return 0;
     }
 
 void Bridge::setVisibleClientGroupItem( int index )
