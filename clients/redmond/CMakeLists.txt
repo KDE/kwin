@@ -1,5 +1,3 @@
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
 set(kwin3_redmond_PART_SRCS redmond.cpp)
 
 kde4_add_plugin(kwin3_redmond ${kwin3_redmond_PART_SRCS})

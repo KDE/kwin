@@ -1447,7 +1447,7 @@ void B2Button::leaveEvent(QEvent *e)
 // =====================================
 
 B2Titlebar::B2Titlebar(B2Client *parent)
-    : QWidget(parent->widget(), Qt::WStyle_Customize | Qt::WNoAutoErase),
+    : QWidget(parent->widget()),
       client(parent),
       set_x11mask(false), isfullyobscured(false), shift_move(false)
 {
