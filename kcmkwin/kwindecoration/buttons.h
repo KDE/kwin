@@ -1,6 +1,7 @@
 /*
 	This is the new kwindecoration kcontrol module
 
+	Copyright (c) 2009, Urs Wolfer <uwolfer @ kde.org>
 	Copyright (c) 2004, Sandro Giessl <sandro@giessl.com>
 	Copyright (c) 2001
 		Karol Szwed <gallium@kde.org>
@@ -28,24 +29,12 @@
 
 */
 
-#ifndef __BUTTONS_H_
-#define __BUTTONS_H_
+#ifndef BUTTONS_H
+#define BUTTONS_H
 
 #include <QBitmap>
-#include <QEvent>
-#include <q3dragobject.h>
-#include <q3listbox.h>
-//Added by qt3to4:
-#include <QDragLeaveEvent>
-#include <QDragMoveEvent>
-#include <QFrame>
-#include <QDropEvent>
-#include <QList>
-#include <QResizeEvent>
-#include <QDragEnterEvent>
-#include <QMouseEvent>
-
-#include <k3listview.h>
+#include <QListWidget>
+#include <QMimeData>
 
 class KDecorationFactory;
 
@@ -66,10 +55,10 @@ class Button
 		bool supported;
 };
 
-class ButtonDrag : public Q3StoredDrag
+class ButtonDrag : public QMimeData
 {
 	public:
-		ButtonDrag( Button btn, QWidget* parent, const char* name=0 );
+		ButtonDrag(Button btn);
 		~ButtonDrag() {}
 
 		static bool canDecode( QDropEvent* e );
@@ -100,26 +89,22 @@ class ButtonDropSiteItem
 /**
  * This is plugged into ButtonSource
  */
-class ButtonSourceItem : public Q3ListViewItem
+class ButtonSourceItem : public QListWidgetItem
 {
 	public:
-		ButtonSourceItem(Q3ListView * parent, const Button& btn);
+		ButtonSourceItem(QListWidget * parent, const Button& btn);
 		virtual ~ButtonSourceItem();
-
-		using Q3ListViewItem::paintCell;
-		void paintCell(QPainter *p, const QPalette &cg, int column, int width, int align);
 
 		void setButton(const Button& btn);
 		Button button() const;
 	private:
 		Button m_button;
-		bool m_dirty;
 };
 
 /**
  * Implements the button drag source list view
  */
-class ButtonSource : public K3ListView
+class ButtonSource : public QListWidget
 {
 	Q_OBJECT
 
@@ -131,14 +116,18 @@ class ButtonSource : public K3ListView
 
 		void hideAllButtons();
 		void showAllButtons();
+		
+		void dragMoveEvent(QDragMoveEvent *e);
+		void dragEnterEvent(QDragEnterEvent *e);
+		void dropEvent(QDropEvent *e);
+		void mousePressEvent(QMouseEvent *e);
+		
+	signals:
+		void dropped();
 
 	public slots:
 		void hideButton(QChar btn);
 		void showButton(QChar btn);
-
-	protected:
-		bool acceptDrag(QDropEvent* e) const;
-		virtual Q3DragObject *dragObject();
 };
 
 typedef QList<ButtonDropSiteItem*> ButtonList;
@@ -151,7 +140,7 @@ class ButtonDropSite: public QFrame
 	Q_OBJECT
 
 	public:
-		explicit ButtonDropSite( QWidget* parent=0, const char* name=0 );
+		explicit ButtonDropSite(QWidget* parent = 0);
 		~ButtonDropSite();
 
 		// Allow external classes access our buttons - ensure buttons are
@@ -160,6 +149,14 @@ class ButtonDropSite: public QFrame
 		ButtonList buttonsRight;
 		void clearLeft();
 		void clearRight();
+
+		void resizeEvent(QResizeEvent* e);
+		void dragEnterEvent(QDragEnterEvent* e);
+		void dragMoveEvent(QDragMoveEvent* e);
+		void dragLeaveEvent(QDragLeaveEvent* e);
+		void dropEvent(QDropEvent* e);
+		void mousePressEvent(QMouseEvent* e); ///< Starts dragging a button...
+		void paintEvent(QPaintEvent* p);
 
 	signals:
 		void buttonAdded(QChar btn);
@@ -171,14 +168,6 @@ class ButtonDropSite: public QFrame
 		void recalcItemGeometry(); ///< Call this whenever the item list changes... updates the items' rect property
 
 	protected:
-		void resizeEvent(QResizeEvent*);
-		void dragEnterEvent( QDragEnterEvent* e );
-		void dragMoveEvent( QDragMoveEvent* e );
-		void dragLeaveEvent( QDragLeaveEvent* e );
-		void dropEvent( QDropEvent* e );
-		void mousePressEvent( QMouseEvent* e ); ///< Starts dragging a button...
-
-		void paintEvent( QPaintEvent* p );
 		ButtonDropSiteItem *buttonAt(QPoint p);
 		bool removeButton(ButtonDropSiteItem *item);
 		int calcButtonListWidth(const ButtonList& buttons); ///< Computes the total space the buttons will take in the titlebar
@@ -204,7 +193,7 @@ class ButtonPositionWidget : public QWidget
 	Q_OBJECT
 
 	public:
-		explicit ButtonPositionWidget(QWidget *parent = 0, const char* name = 0);
+		explicit ButtonPositionWidget(QWidget *parent = 0);
 		~ButtonPositionWidget();
 
 		/**

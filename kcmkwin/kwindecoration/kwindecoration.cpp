@@ -27,6 +27,9 @@
 
 */
 
+#include "kwindecoration.h"
+#include "preview.h"
+
 #include <assert.h>
 #include <QDir>
 #include <QFileInfo>
@@ -41,10 +44,6 @@
 #include <QLabel>
 #include <QFile>
 #include <QSlider>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
 
 #include <QtDBus/QtDBus>
 
@@ -58,8 +57,6 @@
 #include <kdialog.h>
 #include <kaboutdata.h>
 
-#include "kwindecoration.h"
-#include "preview.h"
 #include <kdecoration_plugins_p.h>
 #include <kdecorationfactory.h>
 #include <kvbox.h>
@@ -148,7 +145,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 	buttonLayout->addWidget( cbUseCustomButtonPositions );
 
 	// Add nifty dnd button modification widgets
-	buttonPositionWidget = new ButtonPositionWidget(buttonPage, "button_position_widget");
+	buttonPositionWidget = new ButtonPositionWidget(buttonPage);
+	buttonPositionWidget->setObjectName("button_position_widget");
 	buttonPositionWidget->setDecorationFactory(plugins->factory() );
 	QHBoxLayout* buttonControlLayout = new QHBoxLayout();
     buttonLayout->addLayout( buttonControlLayout );

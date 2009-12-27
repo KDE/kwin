@@ -34,15 +34,13 @@
 #include "buttons.h"
 #include <kconfig.h>
 #include <klibrary.h>
+#include <kapplication.h>
 
 #include <kdecoration.h>
 
-//Added by qt3to4:
-#include <QLabel>
-#include <kvbox.h>
-
 class KComboBox;
 class QCheckBox;
+class QGroupBox;
 class QLabel;
 class KComboBox;
 class KTabWidget;

@@ -1,6 +1,7 @@
 /*
 	This is the new kwindecoration kcontrol module
 
+	Copyright (c) 2009, Urs Wolfer <uwolfer @ kde.org>
 	Copyright (c) 2004, Sandro Giessl <sandro@giessl.com>
 	Copyright (c) 2001
 		Karol Szwed <gallium@kde.org>
@@ -28,37 +29,25 @@
 
 */
 
-#include <q3header.h>
-#include <QPainter>
-#include <QLabel>
-#include <QLayout>
-#include <QStyle>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QDragLeaveEvent>
-#include <QDragMoveEvent>
-#include <QDropEvent>
-#include <QFrame>
-#include <QResizeEvent>
-#include <QVBoxLayout>
-#include <QDragEnterEvent>
-#include <QMouseEvent>
-
-#include <kdebug.h>
-
-#include <kdialog.h>
-#include <klocale.h>
-#include <kglobalsettings.h>
-
-#include <kdecorationfactory.h>
-
 #include "buttons.h"
 #include "pixmaps.h"
 
+#include <QApplication>
+#include <QPainter>
+#include <QLabel>
+#include <QLayout>
+#include <QMimeData>
+#include <QScrollBar>
+
+#include <klocale.h>
+
+#include <kdecorationfactory.h>
+
 
 #define BUTTONDRAGMIMETYPE "application/x-kde_kwindecoration_buttons"
-ButtonDrag::ButtonDrag( Button btn, QWidget* parent, const char* name)
-	: Q3StoredDrag( BUTTONDRAGMIMETYPE, parent, name)
+
+ButtonDrag::ButtonDrag(Button btn)
+	: QMimeData()
 {
 	QByteArray data;
 	QDataStream stream(&data, QIODevice::WriteOnly);
@@ -67,18 +56,18 @@ ButtonDrag::ButtonDrag( Button btn, QWidget* parent, const char* name)
 	stream << btn.type.unicode();
 	stream << (int) btn.duplicate;
 	stream << (int) btn.supported;
-	setEncodedData( data );
+	setData(BUTTONDRAGMIMETYPE, data);
 }
 
 
 bool ButtonDrag::canDecode( QDropEvent* e )
 {
-	return e->provides( BUTTONDRAGMIMETYPE );
+	return e->mimeData()->hasFormat(BUTTONDRAGMIMETYPE);
 }
 
 bool ButtonDrag::decode( QDropEvent* e, Button& btn )
 {
-	QByteArray data = e->mimeData()->data( BUTTONDRAGMIMETYPE );
+	QByteArray data = e->mimeData()->data(BUTTONDRAGMIMETYPE);
 	if ( data.size() )
 	{
 		e->accept();
@@ -120,30 +109,24 @@ Button::~Button()
 // helper function to deal with the Button's bitmaps more easily...
 QPixmap bitmapPixmap(const QBitmap& bm, const QColor& color)
 {
-	QPixmap pm(bm.size() );
-	pm.setMask(bm);
+	QPixmap pm( bm.size() );
+	pm.fill(Qt::white);
 	QPainter p(&pm);
 	p.setPen(color);
-	p.drawPixmap(0,0,bm);
+	p.drawPixmap(0, 0, bm);
 	p.end();
+	pm.setMask(pm.createMaskFromColor(Qt::white));
 	return pm;
 }
 
 
 ButtonSource::ButtonSource(QWidget *parent)
-	: K3ListView(parent)
+	: QListWidget(parent)
 {
-	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-	setResizeMode(Q3ListView::AllColumns);
 	setDragEnabled(true);
 	setAcceptDrops(true);
-	setDropVisualizer(false);
-	setSorting(-1);
-	header()->setClickEnabled(false);
-	header()->hide();
-
-	addColumn(i18n("Buttons") );
+	setDropIndicatorShown(false);
+	setSortingEnabled(true);
 }
 
 ButtonSource::~ButtonSource()
@@ -154,13 +137,9 @@ QSize ButtonSource::sizeHint() const
 {
 	// make the sizeHint height a bit smaller than the one of QListView...
 
-	if ( cachedSizeHint().isValid() )
-		return cachedSizeHint();
-
 	ensurePolished();
 
-	QSize s( header()->sizeHint() );
-
+	QSize s;
 	if ( verticalScrollBar()->isVisible() )
 		s.setWidth( s.width() + style()->pixelMetric(QStyle::PM_ScrollBarExtent) );
 	s += QSize(frameWidth()*2,frameWidth()*2);
@@ -168,71 +147,76 @@ QSize ButtonSource::sizeHint() const
 	// size hint: 4 lines of text...
 	s.setHeight( s.height() + fontMetrics().lineSpacing()*3 );
 
-	setCachedSizeHint( s );
-
 	return s;
 }
 
 void ButtonSource::hideAllButtons()
 {
-	Q3ListViewItemIterator it(this);
-	while (it.current() ) {
-		it.current()->setVisible(false);
-		++it;
+	for (int i = 0; i < count(); i++) {
+		item(i)->setHidden(true);
 	}
 }
 
 void ButtonSource::showAllButtons()
 {
-	Q3ListViewItemIterator it(this);
-	while (it.current() ) {
-		it.current()->setVisible(true);
-		++it;
+	for (int i = 0; i < count(); i++) {
+		item(i)->setHidden(false);
 	}
 }
 
 void ButtonSource::showButton( QChar btn )
 {
-	Q3ListViewItemIterator it(this);
-	while (it.current() ) {
-		ButtonSourceItem *item = dynamic_cast<ButtonSourceItem*>(it.current() );
-		if (item && item->button().type == btn) {
-			it.current()->setVisible(true);
+	for (int i = 0; i < count(); i++) {
+		ButtonSourceItem *buttonItem = dynamic_cast<ButtonSourceItem*>(item(i));
+		if (buttonItem && buttonItem->button().type == btn) {
+			item(i)->setHidden(false);
 			return;
 		}
-		++it;
 	}
 }
 
 void ButtonSource::hideButton( QChar btn )
 {
-	Q3ListViewItemIterator it(this);
-	while (it.current() ) {
-		ButtonSourceItem *item = dynamic_cast<ButtonSourceItem*>(it.current() );
-		if (item && item->button().type == btn && !item->button().duplicate) {
-			it.current()->setVisible(false);
+	for (int i = 0; i < count(); i++) {
+		ButtonSourceItem *buttonItem = dynamic_cast<ButtonSourceItem*>(item(i));
+		if (buttonItem && buttonItem->button().type == btn && !buttonItem->button().duplicate) {
+			item(i)->setHidden(true);
 			return;
 		}
-		++it;
 	}
 }
 
-bool ButtonSource::acceptDrag(QDropEvent* e) const
+void ButtonSource::dragMoveEvent(QDragMoveEvent *e)
 {
-	return acceptDrops() && ButtonDrag::canDecode(e);
+	e->setAccepted(ButtonDrag::canDecode(e));
 }
 
-Q3DragObject *ButtonSource::dragObject()
+void ButtonSource::dragEnterEvent(QDragEnterEvent *e)
 {
-	ButtonSourceItem *i = dynamic_cast<ButtonSourceItem*>(selectedItem() );
+	e->setAccepted(ButtonDrag::canDecode(e));
+}
+
+void ButtonSource::dropEvent(QDropEvent *e)
+{
+	if (ButtonDrag::canDecode(e)) {
+		emit dropped();
+		e->accept();
+	} else {
+		e->ignore();
+	}
+}
+
+void ButtonSource::mousePressEvent(QMouseEvent *e)
+{
+	ButtonSourceItem *i = dynamic_cast<ButtonSourceItem*>(itemAt(e->pos()));
 
 	if (i) {
-		ButtonDrag *bd = new ButtonDrag(i->button(), viewport(), "button_drag");
-		bd->setPixmap(bitmapPixmap(i->button().icon, palette().color( QPalette::Foreground )));
-		return bd;
+		ButtonDrag *bd = new ButtonDrag(i->button());
+		QDrag *drag = new QDrag(this);
+		drag->setMimeData(bd);
+		drag->setPixmap(bitmapPixmap(i->button().icon, palette().color(QPalette::Foreground)));
+		drag->exec();
 	}
-
-	return 0;
 }
 
 ButtonDropSiteItem::ButtonDropSiteItem(const Button& btn)
@@ -263,7 +247,6 @@ int ButtonDropSiteItem::height()
 
 void ButtonDropSiteItem::draw(QPainter *p, const QPalette& cg, const QRect &r)
 {
-// 	p->fillRect(r, cg.base() );
 	if (m_button.supported)
             p->setPen(cg.color(QPalette::Foreground) );
 	else
@@ -273,17 +256,17 @@ void ButtonDropSiteItem::draw(QPainter *p, const QPalette& cg, const QRect &r)
 }
 
 
-ButtonDropSite::ButtonDropSite( QWidget* parent, const char* name )
+ButtonDropSite::ButtonDropSite(QWidget* parent)
 	: QFrame( parent ),
 	  m_selected(0)
 {
-	setObjectName( name );
 	setAcceptDrops( true );
 	setFrameShape( WinPanel );
 	setFrameShadow( Raised );
 	setMinimumHeight( 26 );
 	setMaximumHeight( 26 );
 	setMinimumWidth( 250 );		// Ensure buttons will fit
+	setCursor(Qt::OpenHandCursor);
 }
 
 ButtonDropSite::~ButtonDropSite()
@@ -496,12 +479,13 @@ QRect ButtonDropSite::rightDropArea()
 
 void ButtonDropSite::mousePressEvent( QMouseEvent* e )
 {
-	// TODO: only start the real drag after some drag distance
+	QDrag *drag = new QDrag(this);
 	m_selected = buttonAt(e->pos() );
 	if (m_selected) {
-		ButtonDrag *bd = new ButtonDrag(m_selected->button(), this);
-		bd->setPixmap(bitmapPixmap(m_selected->button().icon, palette().color( QPalette::Foreground ) ) );
-		bd->dragMove();
+		ButtonDrag *bd = new ButtonDrag(m_selected->button());
+		drag->setMimeData(bd);
+		drag->setPixmap(bitmapPixmap(m_selected->button().icon, palette().color(QPalette::Foreground)));
+		drag->exec();
 	}
 }
 
@@ -618,10 +602,9 @@ void ButtonDropSite::paintEvent( QPaintEvent* /*pe*/ )
 
 	drawButtonList( &p, buttonsLeft, offset );
 
-	QColor c1( 0x0A, 0x5F, 0x89 );		// KDE 2 titlebar default colour
+	QColor c1(palette().color(QPalette::Mid));
 	p.fillRect( r, c1 );
-	p.setPen( Qt::white );
-	p.setFont( QFont( KGlobalSettings::generalFont().family(), 12, QFont::Bold) );
+	p.setPen(palette().color(QPalette::Foreground));
 	p.drawText( r, Qt::AlignLeft | Qt::AlignVCenter, i18n("KDE") );
 
 	offset = geometry().width() - 3 - rightoffset;
@@ -633,10 +616,9 @@ void ButtonDropSite::paintEvent( QPaintEvent* /*pe*/ )
 	}
 }
 
-ButtonSourceItem::ButtonSourceItem(Q3ListView * parent, const Button& btn)
-	: Q3ListViewItem(parent),
-	  m_button(btn),
-	  m_dirty(true)
+ButtonSourceItem::ButtonSourceItem(QListWidget * parent, const Button& btn)
+	: QListWidgetItem(parent),
+	  m_button(btn)
 {
 	setButton(btn);
 }
@@ -645,36 +627,17 @@ ButtonSourceItem::~ButtonSourceItem()
 {
 }
 
-void ButtonSourceItem::paintCell(QPainter *p, const QPalette &cg, int column, int width, int align)
-{
-	// we need the color group cg, so to the work here, not in setButton...
-	if (m_dirty) {
-		if (m_button.supported) {
-                    setPixmap(0, bitmapPixmap(m_button.icon, cg.color( QPalette::Foreground ) ) );
-		} else {
-                    setPixmap(0, bitmapPixmap(m_button.icon, cg.color( QPalette::Mid ) ) );
-		}
-		m_dirty = false;
-	}
-
-	if (m_button.supported) {
-		Q3ListViewItem::paintCell(p,cg,column,width,align);
-	} else {
-		// grey out unsupported buttons
-		QPalette cg2 = cg;
-		cg2.setColor(QPalette::Text, cg.color(QPalette::Mid) );
-		Q3ListViewItem::paintCell(p,cg2,column,width,align);
-	}
-}
-
 void ButtonSourceItem::setButton(const Button& btn)
 {
 	m_button = btn;
-	m_dirty = true; // update the pixmap when in paintCell()...
 	if (btn.supported) {
-		setText(0, btn.name);
+		setText(btn.name);
+		setIcon(bitmapPixmap(btn.icon, QApplication::palette().color(QPalette::Foreground)));
+		setForeground(QBrush(QApplication::palette().color(QPalette::Foreground)));
 	} else {
-		setText(0, i18n("%1 (unavailable)", btn.name) );
+		setText(i18n("%1 (unavailable)", btn.name) );
+		setIcon(bitmapPixmap(btn.icon, QApplication::palette().color(QPalette::Mid)));
+		setForeground(QBrush(QApplication::palette().color(QPalette::Mid)));
 	}
 }
 
@@ -684,12 +647,10 @@ Button ButtonSourceItem::button() const
 }
 
 
-ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
+ButtonPositionWidget::ButtonPositionWidget(QWidget *parent)
     : QWidget(parent),
       m_factory(0)
 {
-    setObjectName( name );
-
 	QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -709,7 +670,7 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent, const char* name)
 
 	connect( m_dropSite, SIGNAL(buttonAdded(QChar)), m_buttonSource, SLOT(hideButton(QChar)) );
 	connect( m_dropSite, SIGNAL(buttonRemoved(QChar)), m_buttonSource, SLOT(showButton(QChar)) );
-	connect( m_buttonSource, SIGNAL(dropped(QDropEvent*, Q3ListViewItem*)), m_dropSite, SLOT(removeSelectedButton()) );
+	connect( m_buttonSource, SIGNAL(dropped()), m_dropSite, SLOT(removeSelectedButton()) );
 
 	connect( m_dropSite, SIGNAL(changed()), SIGNAL(changed()) );
 
@@ -774,15 +735,13 @@ void ButtonPositionWidget::setDecorationFactory(KDecorationFactory *factory)
 
 	// update the button lists...
 	// 1. set status on the source items...
-	Q3ListViewItemIterator it(m_buttonSource);
-	while (it.current() ) {
-		ButtonSourceItem *i = dynamic_cast<ButtonSourceItem*>(it.current() );
-		if (i) {
-			Button b = i->button();
+	for (int i = 0; i < m_buttonSource->count(); i++) {
+		ButtonSourceItem *buttonItem = dynamic_cast<ButtonSourceItem*>(m_buttonSource->item(i));
+		if (buttonItem) {
+			Button b = buttonItem->button();
 			b.supported = m_supportedButtons.contains(b.type);
-			i->setButton(b);
+			buttonItem->setButton(b);
 		}
-		++it;
 	}
 	// 2. rebuild the drop site items...
 	setButtonsLeft(buttonsLeft() );
@@ -794,47 +753,47 @@ Button ButtonPositionWidget::getButton(QChar type, bool& success) {
 
 	if (type == 'R') {
 		QBitmap bmp = QBitmap::fromData(QSize( resize_width, resize_height ), resize_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Resize"), bmp, 'R', false, m_supportedButtons.contains('R') );
 	} else if (type == 'L') {
 		QBitmap bmp = QBitmap::fromData(QSize( shade_width, shade_height ), shade_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Shade"), bmp, 'L', false, m_supportedButtons.contains('L') );
 	} else if (type == 'B') {
 		QBitmap bmp = QBitmap::fromData(QSize( keepbelowothers_width, keepbelowothers_height ), keepbelowothers_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Keep Below Others"), bmp, 'B', false, m_supportedButtons.contains('B') );
 	} else if (type == 'F') {
 		QBitmap bmp = QBitmap::fromData(QSize( keepaboveothers_width, keepaboveothers_height ), keepaboveothers_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Keep Above Others"), bmp, 'F', false, m_supportedButtons.contains('F') );
 	} else if (type == 'X') {
 		QBitmap bmp = QBitmap::fromData(QSize( close_width, close_height ), close_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Close"), bmp, 'X', false, m_supportedButtons.contains('X') );
 	} else if (type == 'A') {
 		QBitmap bmp = QBitmap::fromData(QSize( maximize_width, maximize_height ), maximize_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Maximize"), bmp, 'A', false, m_supportedButtons.contains('A') );
 	} else if (type == 'I') {
 		QBitmap bmp = QBitmap::fromData(QSize( minimize_width, minimize_height ), minimize_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Minimize"), bmp, 'I', false, m_supportedButtons.contains('I') );
 	} else if (type == 'H') {
 		QBitmap bmp = QBitmap::fromData(QSize( help_width, help_height ), help_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Help"), bmp, 'H', false, m_supportedButtons.contains('H') );
 	} else if (type == 'S') {
 		QBitmap bmp = QBitmap::fromData(QSize( onalldesktops_width, onalldesktops_height ), onalldesktops_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("On All Desktops"), bmp, 'S', false, m_supportedButtons.contains('S') );
 	} else if (type == 'M') {
 		QBitmap bmp = QBitmap::fromData(QSize( menu_width, menu_height ), menu_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("Menu"), bmp, 'M', false, m_supportedButtons.contains('M') );
 	} else if (type == '_') {
 		QBitmap bmp = QBitmap::fromData(QSize( spacer_width, spacer_height ), spacer_bits);
-		bmp.setMask(bmp);
+		bmp.createMaskFromColor(Qt::white);
 		return Button(i18n("--- spacer ---"), bmp, '_', true, m_supportedButtons.contains('_') );
 	} else {
 		success = false;
