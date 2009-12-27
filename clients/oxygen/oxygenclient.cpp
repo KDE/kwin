@@ -1514,7 +1514,18 @@ namespace Oxygen
 
       // remove space used for buttons
       if( itemData_.count() > 1  )
-      { geometry.adjust( 0, 0,  - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 ); }
+      {
+
+        geometry.adjust( 0, 0,  - configuration().buttonSize() - layoutMetric(LM_TitleEdgeRight), 0 );
+
+      } else if( !( isActive() && configuration().drawTitleOutline() ) ) {
+
+
+        geometry.adjust(
+          buttonsLeftWidth() + layoutMetric( LM_TitleEdgeLeft ) , 0,
+          -( buttonsRightWidth() + layoutMetric( LM_TitleEdgeRight )), 0 );
+
+      }
 
       drag->setPixmap( itemDragPixmap( itemClicked, geometry ) );
 
