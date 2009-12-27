@@ -71,7 +71,6 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     m_ui->shortcutEditor->addCollection( m_actionCollection );
 
     connect( m_ui->layoutCombo, SIGNAL( currentIndexChanged( int )), this, SLOT( changed() ));
-    connect( m_ui->rearrangeDurationSpin, SIGNAL( valueChanged( int )), this, SLOT( changed() ));
     connect( m_ui->displayTitleBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->displayIconBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
     connect( m_ui->switchingBox, SIGNAL( stateChanged( int )), this, SLOT( changed() ));
@@ -104,9 +103,6 @@ void PresentWindowsEffectConfig::load()
     
     int layoutMode = conf.readEntry( "LayoutMode", int( PresentWindowsEffect::LayoutNatural ));
     m_ui->layoutCombo->setCurrentIndex( layoutMode );
-
-    m_ui->rearrangeDurationSpin->setValue( conf.readEntry( "RearrangeDuration", 0 ));
-    m_ui->rearrangeDurationSpin->setSuffix(ki18np(" millisecond", " milliseconds"));
 
     bool displayTitle = conf.readEntry( "DrawWindowCaptions", true );
     m_ui->displayTitleBox->setChecked( displayTitle );
@@ -155,8 +151,6 @@ void PresentWindowsEffectConfig::save()
     int layoutMode = m_ui->layoutCombo->currentIndex();
     conf.writeEntry( "LayoutMode", layoutMode );
 
-    conf.writeEntry( "RearrangeDuration", m_ui->rearrangeDurationSpin->value() );
-
     conf.writeEntry( "DrawWindowCaptions", m_ui->displayTitleBox->isChecked() );
     conf.writeEntry( "DrawWindowIcons", m_ui->displayIconBox->isChecked() );
     conf.writeEntry( "TabBox", m_ui->switchingBox->isChecked() );
@@ -193,7 +187,6 @@ void PresentWindowsEffectConfig::save()
 void PresentWindowsEffectConfig::defaults()
     {
     m_ui->layoutCombo->setCurrentIndex( int( PresentWindowsEffect::LayoutNatural ));
-    m_ui->rearrangeDurationSpin->setValue( 0 );
     m_ui->displayTitleBox->setChecked( true );
     m_ui->displayIconBox->setChecked( true );
     m_ui->switchingBox->setChecked( false );
