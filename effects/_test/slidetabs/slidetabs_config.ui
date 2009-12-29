@@ -21,7 +21,7 @@
    <item>
     <widget class="QCheckBox" name="switching">
      <property name="text">
-      <string>slide when switching tabs</string>
+      <string>Slide when switching tabs</string>
      </property>
     </widget>
    </item>
