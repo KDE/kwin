@@ -43,7 +43,7 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
     KGlobal::locale()->insertCatalog("kwin_clients");
 
     // create and show the configuration dialog
-    m_dialog = new ConfigDialog(parent);
+    m_dialog = new PlastikConfigDialog(parent);
     m_dialog->show();
 
     // load the configuration

@@ -27,10 +27,10 @@
 #include "ui_configdialog.h"
 class KConfig;
 
-class ConfigDialog : public QWidget, public Ui::ConfigDialog
+class PlastikConfigDialog : public QWidget, public Ui::PlastikConfigDialog
 {
 public:
-  ConfigDialog( QWidget *parent ) : QWidget( parent ) {
+  PlastikConfigDialog( QWidget *parent ) : QWidget( parent ) {
     setupUi( this );
   }
 };
@@ -53,7 +53,7 @@ public slots:
 
 private:
     KConfig *m_config;
-    ConfigDialog *m_dialog;
+    PlastikConfigDialog *m_dialog;
 };
 
 #endif // KNIFTYCONFIG_H
