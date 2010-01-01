@@ -36,6 +36,7 @@ namespace Aurorae
 AuroraeFactory::AuroraeFactory()
         : QObject()
         , KDecorationFactoryUnstable()
+        , m_valid(false)
 {
     init();
 }
@@ -55,7 +56,7 @@ void AuroraeFactory::init()
     }
     if (path.isEmpty()) {
         kDebug(1216) << "Could not find decoration svg: aborting";
-        abort();
+        return;
     }
     m_frame.setImagePath(path);
     m_frame.setCacheAllRenderedFrames(true);
@@ -73,6 +74,7 @@ void AuroraeFactory::init()
     initButtonFrame("help");
 
     readThemeConfig();
+    m_valid = true;
 }
 
 void AuroraeFactory::readThemeConfig()
@@ -263,7 +265,7 @@ void AuroraeButton::animationFinished(int id)
 void AuroraeButton::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
-    if (decoration()->isPreview()) {
+    if (decoration()->isPreview() || !AuroraeFactory::instance()->isValid()) {
         return;
     }
 
@@ -557,6 +559,9 @@ bool AuroraeClient::decorationBehaviour(DecorationBehaviour behavior) const
 int AuroraeClient::layoutMetric(LayoutMetric lm, bool respectWindowState,
                                    const KCommonDecorationButton *button) const
 {
+    if (!AuroraeFactory::instance()->isValid()) {
+        return KCommonDecoration::layoutMetric(lm, respectWindowState, button);
+    }
     bool maximized = maximizeMode() == MaximizeFull &&
                      !options()->moveResizeMaximizedWindows();
     const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
@@ -725,7 +730,7 @@ KCommonDecorationButton *AuroraeClient::createButton(ButtonType type)
 void AuroraeClient::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-    if (isPreview()) {
+    if (isPreview() || !AuroraeFactory::instance()->isValid()) {
         return;
     }
     bool maximized = maximizeMode() == MaximizeFull &&
@@ -843,6 +848,9 @@ void AuroraeClient::generateTextPixmap(QPixmap& pixmap, bool active)
 {
     QPainter painter(&pixmap);
     pixmap.fill(Qt::transparent);
+    if (!AuroraeFactory::instance()->isValid()) {
+        return;
+    }
     const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
     painter.setFont(options()->font(active));
     if (conf.useTextShadow()) {
@@ -900,7 +908,7 @@ void AuroraeClient::updateWindowShape()
     int w=widget()->width();
     int h=widget()->height();
 
-    if (maximized || compositingActive()) {
+    if (maximized || compositingActive() || !AuroraeFactory::instance()->isValid()) {
         QRegion mask(0,0,w,h);
         setMask(mask);
         return;

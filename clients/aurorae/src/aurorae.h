@@ -50,6 +50,9 @@ public:
     ThemeConfig &themeConfig() {
         return m_themeConfig;
     }
+    bool isValid() const {
+        return m_valid;
+    }
 
 private:
     AuroraeFactory();
@@ -68,6 +71,7 @@ private:
 
     // buttons
     QHash< QString, Plasma::FrameSvg* > m_buttons;
+    bool m_valid;
 };
 
 class AuroraeButton : public KCommonDecorationButton
