@@ -1553,7 +1553,7 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
         // texture doesn't need updating, just bind it
         glBindTexture( decorationTexture->target(), decorationTexture->texture());
         }
-    else
+    else if( !decoration->isNull() )
         {
         bool success = decorationTexture->load( decoration->handle(), decoration->size(), decoration->depth() );
         if( !success )
@@ -1562,6 +1562,8 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
             return;
             }
         }
+    else
+        return;
     if( filter == ImageFilterGood )
         {
         // avoid unneeded mipmap generation by only using trilinear
