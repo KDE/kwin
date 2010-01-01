@@ -433,7 +433,25 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
             { // Handle window moving
             if( !wasWindowMove ) // Activate on move
                 {
-                if( isUsingPresentWindows() && !windowMove->isOnAllDesktops() )
+                if( isUsingPresentWindows() && windowMove->isOnAllDesktops() )
+                    {
+                    for( int i=0; i<effects->numberOfDesktops(); ++i )
+                        {
+                        WindowMotionManager& manager = m_managers[ (i)*(effects->numScreens()) + windowMove->screen() ];
+                        if( (i+1) == d )
+                            {
+                            const QRectF transformedGeo = manager.transformedGeometry( windowMove );
+                            const QPointF pos = scalePos( transformedGeo.topLeft().toPoint(), d, windowMove->screen() );
+                            const QSize size( scale[windowMove->screen()] * (float)transformedGeo.width(),
+                                                scale[windowMove->screen()] * (float)transformedGeo.height() );
+                            m_windowMoveGeometry = QRect( pos.toPoint(), size );
+                            m_windowMoveStartPoint = me->pos();
+                            }
+                        manager.unmanage( windowMove );
+                        m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
+                        }
+                    }
+                else if( isUsingPresentWindows() )
                     {
                     WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
                     const QRectF transformedGeo = manager.transformedGeometry( windowMove );
@@ -454,9 +472,10 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 int screen = effects->screenNumber( me->pos() );
                 effects->moveWindow( windowMove, unscalePos( me->pos(), NULL ) + windowMoveDiff, true, 1.0 / scale[screen] );
                 }
-            if( d != highlightedDesktop && !windowMove->isOnAllDesktops() )
+            if( d != highlightedDesktop )
                 {
-                effects->windowToDesktop( windowMove, d ); // Not true all desktop move
+                if( !windowMove->isOnAllDesktops() )
+                    effects->windowToDesktop( windowMove, d ); // Not true all desktop move
                 const int screen = effects->screenNumber( me->pos() );
                 if( screen != windowMove->screen() )
                     effects->windowToScreen( windowMove, screen );
@@ -590,9 +609,21 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                 {
                 if( isUsingPresentWindows() )
                     {
-                    WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
-                    manager.manage( windowMove );
-                    m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
+                    if( windowMove->isOnAllDesktops() )
+                        {
+                        for( int i=0; i<effects->numberOfDesktops(); ++i )
+                            {
+                            WindowMotionManager& manager = m_managers[ (i)*(effects->numScreens()) + windowMove->screen() ];
+                            manager.manage( windowMove );
+                            m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
+                            }
+                        }
+                    else
+                        {
+                        WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
+                        manager.manage( windowMove );
+                        m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
+                        }
                     effects->addRepaintFull();
                     }
                 }
