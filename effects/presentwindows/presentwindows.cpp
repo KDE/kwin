@@ -162,8 +162,13 @@ void* PresentWindowsEffect::proxy()
 
 void PresentWindowsEffect::toggleActiveClass()
 {
-    m_mode = ModeWindowClass;
-    m_class = effects->activeWindow()->windowClass();
+    if( !m_activated )
+        {
+        if( !effects->activeWindow() )
+            return;
+        m_mode = ModeWindowClass;
+        m_class = effects->activeWindow()->windowClass();
+        }
     setActive( !m_activated );
 }
 
