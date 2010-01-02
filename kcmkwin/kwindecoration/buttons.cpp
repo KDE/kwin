@@ -40,6 +40,7 @@
 #include <QScrollBar>
 
 #include <klocale.h>
+#include <kglobalsettings.h>
 
 #include <kdecorationfactory.h>
 
@@ -214,7 +215,7 @@ void ButtonSource::mousePressEvent(QMouseEvent *e)
 		ButtonDrag *bd = new ButtonDrag(i->button());
 		QDrag *drag = new QDrag(this);
 		drag->setMimeData(bd);
-		drag->setPixmap(bitmapPixmap(i->button().icon, palette().color(QPalette::Foreground)));
+		drag->setPixmap(bitmapPixmap(i->button().icon, palette().color(QPalette::WindowText)));
 		drag->exec();
 	}
 }
@@ -248,9 +249,9 @@ int ButtonDropSiteItem::height()
 void ButtonDropSiteItem::draw(QPainter *p, const QPalette& cg, const QRect &r)
 {
 	if (m_button.supported)
-            p->setPen(cg.color(QPalette::Foreground) );
+            p->setPen(cg.color(QPalette::WindowText) );
 	else
-            p->setPen( cg.color(QPalette::Mid) );
+            p->setPen( cg.color(QPalette::Disabled, QPalette::WindowText) );
 	QBitmap &i = m_button.icon;
 	p->drawPixmap(r.left()+(r.width()-i.width())/2, r.top()+(r.height()-i.height())/2, i);
 }
@@ -484,7 +485,7 @@ void ButtonDropSite::mousePressEvent( QMouseEvent* e )
 	if (m_selected) {
 		ButtonDrag *bd = new ButtonDrag(m_selected->button());
 		drag->setMimeData(bd);
-		drag->setPixmap(bitmapPixmap(m_selected->button().icon, palette().color(QPalette::Foreground)));
+		drag->setPixmap(bitmapPixmap(m_selected->button().icon, palette().color(QPalette::WindowText)));
 		drag->exec();
 	}
 }
@@ -604,8 +605,9 @@ void ButtonDropSite::paintEvent( QPaintEvent* /*pe*/ )
 
 	QColor c1(palette().color(QPalette::Mid));
 	p.fillRect( r, c1 );
-	p.setPen(palette().color(QPalette::Foreground));
-	p.drawText( r, Qt::AlignLeft | Qt::AlignVCenter, i18n("KDE") );
+	p.setPen(palette().color(QPalette::WindowText));
+	p.setFont(KGlobalSettings::windowTitleFont());
+	p.drawText( r.adjusted(4, 0, -4, 0), Qt::AlignLeft | Qt::AlignVCenter, i18n("KDE") );
 
 	offset = geometry().width() - 3 - rightoffset;
 	drawButtonList( &p, buttonsRight, offset );
@@ -632,12 +634,12 @@ void ButtonSourceItem::setButton(const Button& btn)
 	m_button = btn;
 	if (btn.supported) {
 		setText(btn.name);
-		setIcon(bitmapPixmap(btn.icon, QApplication::palette().color(QPalette::Foreground)));
-		setForeground(QBrush(QApplication::palette().color(QPalette::Foreground)));
+		setIcon(bitmapPixmap(btn.icon, QApplication::palette().color(QPalette::Text)));
+		setForeground(QApplication::palette().brush(QPalette::Text));
 	} else {
 		setText(i18n("%1 (unavailable)", btn.name) );
-		setIcon(bitmapPixmap(btn.icon, QApplication::palette().color(QPalette::Mid)));
-		setForeground(QBrush(QApplication::palette().color(QPalette::Mid)));
+		setIcon(bitmapPixmap(btn.icon, QApplication::palette().color(QPalette::Disabled, QPalette::Text)));
+		setForeground(QApplication::palette().brush(QPalette::Disabled, QPalette::Text));
 	}
 }
 
