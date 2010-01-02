@@ -1900,7 +1900,7 @@
          </property>
          <item>
           <property name="text" >
-           <string>None</string>
+           <string comment="no focus stealing prevention">None</string>
           </property>
          </item>
          <item>

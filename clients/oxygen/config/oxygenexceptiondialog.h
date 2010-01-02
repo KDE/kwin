@@ -65,9 +65,6 @@ namespace Oxygen
 
     private:
 
-    static const QString yes;
-    static const QString no;
-
     Ui_OxygenExceptionWidget ui;
 
     //! map mask and checkbox

@@ -34,10 +34,6 @@ namespace Oxygen
 {
 
   //___________________________________________
-  const QString OxygenExceptionDialog::yes( i18n("Enabled") );
-  const QString OxygenExceptionDialog::no( i18n("Disabled") );
-
-  //___________________________________________
   OxygenExceptionDialog::OxygenExceptionDialog( QWidget* parent ):
     KDialog( parent ),
     detectDialog(0)
@@ -96,13 +92,13 @@ namespace Oxygen
     connect( ui.sizeGripCheckBox, SIGNAL( toggled( bool ) ), ui.sizeGripComboBox, SLOT( setEnabled( bool ) ) );
 
     // outline active window title
-    ui.titleOutlineComboBox->insertItems(0, QStringList() << yes << no );
+    ui.titleOutlineComboBox->insertItems(0, QStringList() << i18nc( "outline window title", "Enabled" ) << i18nc( "outline window title", "Disabled" ) );
     ui.titleOutlineComboBox->setEnabled( false );
     checkboxes_.insert( std::make_pair( OxygenException::TitleOutline, ui.titleOutlineCheckBox ) );
     connect( ui.titleOutlineCheckBox, SIGNAL( toggled( bool ) ), ui.titleOutlineComboBox, SLOT( setEnabled( bool ) ) );
 
     // separator
-    ui.separatorComboBox->insertItems(0, QStringList() << yes << no );
+    ui.separatorComboBox->insertItems(0, QStringList() << i18nc( "draw separator", "Enabled" ) << i18nc( "draw separator", "Disabled" ) );
     ui.separatorComboBox->setEnabled( false );
     checkboxes_.insert( std::make_pair( OxygenException::DrawSeparator, ui.separatorCheckBox ) );
     connect( ui.separatorCheckBox, SIGNAL( toggled( bool ) ), ui.separatorComboBox, SLOT( setEnabled( bool ) ) );
@@ -122,8 +118,8 @@ namespace Oxygen
     ui.frameBorderComboBox->setCurrentIndex( ui.frameBorderComboBox->findText( exception.frameBorderName( true ) ) );
     ui.blendColorComboBox->setCurrentIndex( ui.blendColorComboBox->findText( exception.blendColorName( true ) ) );
     ui.sizeGripComboBox->setCurrentIndex( ui.sizeGripComboBox->findText( exception.sizeGripModeName( true ) ) );
-    ui.separatorComboBox->setCurrentIndex( ui.separatorComboBox->findText( exception.drawSeparator() ? yes:no ) );
-    ui.titleOutlineComboBox->setCurrentIndex( ui.titleOutlineComboBox->findText( exception.drawTitleOutline() ? yes:no ) );
+    ui.separatorComboBox->setCurrentIndex( ui.separatorComboBox->findText( exception.drawSeparator() ? i18nc( "draw separator", "Enabled" ) : i18nc( "draw separator", "Disabled" ) ) );
+    ui.titleOutlineComboBox->setCurrentIndex( ui.titleOutlineComboBox->findText( exception.drawTitleOutline() ? i18nc( "outline window title", "Enabled" ) : i18nc( "outline window title", "Disabled" ) ) );
     ui.hideTitleBar->setChecked( exception.hideTitleBar() );
 
     // mask
@@ -143,8 +139,8 @@ namespace Oxygen
     exception.setSizeGripMode( OxygenException::sizeGripMode( ui.sizeGripComboBox->currentText(), true ) );
 
     // flags
-    exception.setDrawSeparator( ui.separatorComboBox->currentText() == yes );
-    exception.setDrawTitleOutline( ui.titleOutlineComboBox->currentText() == yes );
+    exception.setDrawSeparator( ui.separatorComboBox->currentText() == i18nc( "draw separator", "Enabled" ) );
+    exception.setDrawTitleOutline( ui.titleOutlineComboBox->currentText() == i18nc( "outline window title", "Enabled" ) );
     exception.setHideTitleBar( ui.hideTitleBar->isChecked() );
 
     // mask

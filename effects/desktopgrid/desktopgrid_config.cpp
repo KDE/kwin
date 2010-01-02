@@ -61,7 +61,7 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     m_ui->shortcutEditor->addCollection( m_actionCollection );
 
     m_alignmentItems.append( Qt::Alignment( 0 ));
-    m_ui->desktopNameAlignmentCombo->addItem( i18n( "Disabled" ));
+    m_ui->desktopNameAlignmentCombo->addItem( i18nc( "Desktop name alignment:", "Disabled" ));
     m_alignmentItems.append( Qt::AlignHCenter | Qt::AlignTop );
     m_ui->desktopNameAlignmentCombo->addItem( i18n( "Top" ));
     m_alignmentItems.append( Qt::AlignRight | Qt::AlignTop );

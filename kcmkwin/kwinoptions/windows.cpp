@@ -883,7 +883,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     QGridLayout *kLay = new QGridLayout(MagicBox);
 
     BrdrSnap = new KIntNumInput(10, MagicBox);
-    BrdrSnap->setSpecialValueText( i18n("none") );
+    BrdrSnap->setSpecialValueText( i18nc("no border snap zone", "none") );
     BrdrSnap->setRange( 0, MAX_BRDR_SNAP);
     BrdrSnap->setSteps(1,10);
     BrdrSnap->setWhatsThis( i18n("Here you can set the snap zone for screen borders, i.e."
@@ -897,7 +897,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     kLay->addWidget(BrdrSnap, 0, 1);
 
     WndwSnap = new KIntNumInput(10, MagicBox);
-    WndwSnap->setSpecialValueText( i18n("none") );
+    WndwSnap->setSpecialValueText( i18nc("no window snap zone", "none") );
     WndwSnap->setRange( 0, MAX_WNDW_SNAP);
     WndwSnap->setSteps(1,10);
     WndwSnap->setWhatsThis( i18n("Here you can set the snap zone for windows, i.e."
@@ -911,7 +911,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
     kLay->addWidget(WndwSnap, 1, 1);
 
     CntrSnap = new KIntNumInput(10, MagicBox);
-    CntrSnap->setSpecialValueText( i18n("none") );
+    CntrSnap->setSpecialValueText( i18nc("no center snap zone", "none") );
     CntrSnap->setRange( 0, MAX_CNTR_SNAP);
     CntrSnap->setSteps(1,10);
     CntrSnap->setWhatsThis( i18n("Here you can set the snap zone for the screen center, i.e."
