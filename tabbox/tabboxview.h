@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * @since 4.4
 */
 
+class QPropertyAnimation;
 class QModelIndex;
 namespace Plasma
 {
@@ -61,6 +62,7 @@ class TabBoxAdditionalView;
 class TabBoxView : public QWidget
     {
     Q_OBJECT
+    Q_PROPERTY( QRect selectedItem READ selectedItem WRITE setSelectedItem )
     public:
         TabBoxView( QWidget* parent = 0 );
         ~TabBoxView();
@@ -98,6 +100,9 @@ class TabBoxView : public QWidget
         void setPreview( bool preview );
         bool preview() const { return m_preview; }
 
+        QRect selectedItem() const { return m_selectedItem; }
+        void setSelectedItem( const QRect& rect ) { m_selectedItem = rect; }
+
     private slots:
         /**
         * This slot reacts on a changed TabBoxConfig. It changes the used
@@ -134,9 +139,15 @@ class TabBoxView : public QWidget
         */
         Plasma::FrameSvg* m_frame;
         /**
+        * The FrameSvg to render selected items
+        */
+        Plasma::FrameSvg* m_selectionFrame;
+        /**
         * TabBoxView is a preview
         */
         bool m_preview;
+        QPropertyAnimation* m_animation;
+        QRect m_selectedItem;
 
     };
 

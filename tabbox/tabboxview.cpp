@@ -35,10 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QKeyEvent>
 #include <QSizePolicy>
 #include <QPainter>
+#include <QPropertyAnimation>
 
 // KDE
 #include <kephal/screens.h>
 #include <Plasma/FrameSvg>
+#include <KDebug>
 
 namespace KWin
 {
@@ -69,7 +71,16 @@ TabBoxView::TabBoxView( QWidget* parent )
     m_frame->setCacheAllRenderedFrames( true );
     m_frame->setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
+    m_selectionFrame = new Plasma::FrameSvg( this );
+    m_selectionFrame->setImagePath( "widgets/viewitem" );
+    m_selectionFrame->setElementPrefix( "hover" );
+    m_selectionFrame->setCacheAllRenderedFrames( true );
+    m_selectionFrame->setEnabledBorders( Plasma::FrameSvg::AllBorders );
+
+    m_animation = new QPropertyAnimation( this, "selectedItem", this );
+
     connect( tabBox, SIGNAL(configChanged()), this, SLOT(configChanged()));
+    connect( m_animation, SIGNAL(valueChanged(QVariant)), SLOT(update()));
     }
 
 TabBoxView::~TabBoxView()
@@ -85,9 +96,13 @@ void TabBoxView::paintEvent(QPaintEvent* e)
     painter.save();
     painter.setCompositionMode( QPainter::CompositionMode_Source );
     painter.fillRect( rect(), Qt::transparent );
-    painter.setClipRegion( m_frame->mask() );
     m_frame->resizeFrame( geometry().size() );
+    painter.setClipRegion( m_frame->mask() );
     m_frame->paintFrame( &painter );
+    m_selectionFrame->resizeFrame( m_selectedItem.size() );
+    painter.setCompositionMode( QPainter::CompositionMode_SourceOver );
+    m_selectionFrame->paintFrame( &painter,
+                                  m_tableView->geometry().topLeft() + m_selectedItem.topLeft() );
     painter.restore();
     QWidget::paintEvent(e);
     }
@@ -165,6 +180,16 @@ void TabBoxView::setCurrentIndex( QModelIndex index )
     if( index.isValid() )
         {
         m_tableView->setCurrentIndex( index );
+        if( m_selectedItem.isNull() )
+            m_selectedItem = m_tableView->visualRect( index );
+        if( m_animation->state() == QPropertyAnimation::Running )
+            m_animation->setEndValue( m_tableView->visualRect( index ) );
+        else
+            {
+            m_animation->setStartValue( m_selectedItem );
+            m_animation->setEndValue( m_tableView->visualRect( index ) );
+            m_animation->start();
+            }
         m_additionalView->setCurrentIndex( index );
         }
     }

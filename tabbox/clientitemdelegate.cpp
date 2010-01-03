@@ -119,13 +119,6 @@ void ClientItemDelegate::paint( QPainter* painter, const QStyleOptionViewItem& o
         return;
         }
 
-    painter->save();
-    if( option.state & QStyle::State_Selected && m_showSelection )
-        {
-        m_frame->resizeFrame( option.rect.size() );
-        m_frame->paintFrame( painter, option.rect.topLeft() );
-        }
-    painter->restore();
     qreal left, top, right, bottom;
     m_frame->getMargins( left, top, right, bottom );
 
