@@ -1531,6 +1531,21 @@ bool EffectWindowImpl::visibleInClientGroup() const
     return false;
     }
 
+void EffectWindowImpl::setData( int role, const QVariant &data )
+    {
+    if ( !data.isNull() )
+        dataMap[ role ] = data;
+    else
+        dataMap.remove( role );
+    }
+
+QVariant EffectWindowImpl::data( int role ) const
+    {
+    if( !dataMap.contains( role ) )
+        return QVariant();
+    return dataMap[ role ];
+    }
+
 EffectWindow* effectWindow( Toplevel* w )
     {
     EffectWindowImpl* ret = w->effectWindow();

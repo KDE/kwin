@@ -277,9 +277,13 @@ class EffectWindowImpl : public EffectWindow
         void setSceneWindow( Scene::Window* w ); // internal
         const Scene::Window* sceneWindow() const; // internal
         Scene::Window* sceneWindow(); // internal
+
+        void setData( int role, const QVariant &data );
+        QVariant data( int role ) const;
     private:
         Toplevel* toplevel;
         Scene::Window* sw; // This one is used only during paint pass.
+        QMap<int, QVariant> dataMap;
 };
 
 class EffectWindowGroupImpl
