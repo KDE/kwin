@@ -1238,7 +1238,7 @@ QStringList Workspace::configModules( bool controlCenter )
         args << "kwinoptions";
     else if( KAuthorized::authorizeControlModule( "kde-kwinoptions.desktop" ))
         args << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced"
-             << "kwinrules" << "kwincompositing" << "kwintabbox";
+             << "kwinrules" << "kwincompositing" << "kwintabbox" << "kwinscreenedges";
     return args;
     }
 
