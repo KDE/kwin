@@ -38,6 +38,10 @@ namespace KWin
 
 KWIN_EFFECT( shadow, ShadowEffect )
 
+enum {
+    ShadowOverrideRole = 0x22A982D1
+};
+
 ShadowEffect::ShadowEffect()
     : shadowSize( 0 )
     {
@@ -45,6 +49,8 @@ ShadowEffect::ShadowEffect()
     reconfigure( ReconfigureAll );
     connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
              this, SLOT(updateShadowColor()));
+    shadowOverride = XInternAtom( display(), "_KDE_SHADOW_OVERRIDE", False );
+    effects->registerPropertyType( shadowOverride, true );
     }
 
 ShadowEffect::~ShadowEffect()
@@ -57,6 +63,7 @@ ShadowEffect::~ShadowEffect()
     for( int i = 0; i < mDefaultShadowPics.size(); i++ )
         delete mDefaultShadowPics.at( i );
 #endif
+    effects->registerPropertyType( shadowOverride, false );
     }
 
 void ShadowEffect::reconfigure( ReconfigureFlags )
@@ -364,6 +371,21 @@ QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
     return effects->transformWindowDamage( w, r2 );
     }
 
+void ShadowEffect::propertyNotify( EffectWindow* w, long atom )
+    {
+    if ( atom != shadowOverride )
+        return;
+    const QByteArray value = w->readProperty( atom, atom, 32 );
+    w->setData( ShadowOverrideRole, !value.isNull() );
+    effects->addRepaint( shadowRectangle( w, w->geometry() ));
+    }
+
+void ShadowEffect::windowAdded( EffectWindow* c )
+    {
+    const QByteArray value = c->readProperty( shadowOverride, shadowOverride, 32 );
+    c->setData( ShadowOverrideRole, !value.isNull() );
+    }
+
 void ShadowEffect::windowClosed( EffectWindow* c )
     {
     effects->addRepaint( shadowRectangle( c, c->geometry() ));
@@ -374,6 +396,8 @@ bool ShadowEffect::useShadow( EffectWindow* w ) const
     return !w->isDeleted() && !w->isDesktop() && !w->isDock()
         // popups may have shadow even if shaped, their shape is almost rectangular
         && ( !w->hasOwnShape() || w->isDropdownMenu() || w->isPopupMenu() || w->isComboBox())
+        // Ignore windows that draw their own shadows
+        && !w->data( ShadowOverrideRole ).toBool()
         // If decoration has it's own shadow leave it alone
         && !( w->hasDecoration() && effects->hasDecorationShadows() )
         && !( w->windowClass() == "ksmserver ksmserver" &&

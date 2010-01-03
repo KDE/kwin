@@ -42,9 +42,11 @@ class ShadowEffect
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void drawWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void paintScreen( int mask, QRegion region, ScreenPaintData& data );
+        virtual void windowAdded( EffectWindow* c );
         virtual void windowClosed( EffectWindow* c );
         virtual void buildQuads( EffectWindow* w, WindowQuadList& quadList );
         virtual QRect transformWindowDamage( EffectWindow* w, const QRect& r );
+        virtual void propertyNotify( EffectWindow* w, long atom );
 
     private slots:
         void updateShadowColor();
@@ -71,6 +73,7 @@ class ShadowEffect
         int shadowSize;
         bool intensifyActiveShadow;
         QColor shadowColor, cachedColor;
+        Atom shadowOverride;
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         QList<GLTexture*> mDefaultShadowTextures;
 #endif
