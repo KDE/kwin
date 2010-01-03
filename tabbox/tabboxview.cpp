@@ -131,8 +131,6 @@ QSize TabBoxView::sizeHint() const
     QSize tabBoxSize = m_tableView->sizeHint();
     qreal columnWidth = tabBoxSize.width() / m_tableView->model()->columnCount();
     qreal rowHeight = tabBoxSize.height() / m_tableView->model()->rowCount();
-    for( int i=0; i<m_tableView->model()->columnCount(); i++ )
-        m_tableView->setColumnWidth( i, columnWidth );
     for( int i=0; i<m_tableView->model()->rowCount(); i++ )
         m_tableView->setRowHeight( i, rowHeight );
 
@@ -148,18 +146,24 @@ QSize TabBoxView::sizeHint() const
     m_frame->getMargins( left, top, right, bottom );
     int width = columnWidth * m_tableView->model()->columnCount() + left + right;
     int height = rowHeight * m_tableView->model()->rowCount() + top + bottom;
+    qreal addedWidth = left + right;
 
     // depending on layout of additional view we have to add some width or height
     switch( tabBox->config().selectedItemViewPosition() )
         {
         case TabBoxConfig::AbovePosition: // fall through
         case TabBoxConfig::BelowPosition:
-            width = qMax( width, additionalSize.width() + int(left + right) );
+            if( additionalSize.width() + int(left + right) > width )
+                {
+                addedWidth += (additionalSize.width() + int(left + right) - width);
+                width = additionalSize.width() + int(left + right);
+                }
             height = height + additionalSize.height();
             break;
         case TabBoxConfig::LeftPosition: // fall through
         case TabBoxConfig::RightPosition:
             width = width + additionalSize.width();
+            addedWidth += additionalSize.width();
             height = qMax( height, additionalSize.height() + int(top + bottom) );
             break;
         default:
@@ -172,6 +176,13 @@ QSize TabBoxView::sizeHint() const
                     screenRect.width() );
     height = qBound( screenRect.height() * tabBox->config().minHeight() / 100, height,
                      screenRect.height() );
+    if( width - addedWidth > tabBoxSize.width() )
+        {
+        columnWidth = (width - addedWidth) / m_tableView->model()->columnCount();
+        }
+    m_tableView->setMinimumWidth( width - addedWidth );
+    for( int i=0; i<m_tableView->model()->columnCount(); i++ )
+        m_tableView->setColumnWidth( i, columnWidth );
     return QSize( width, height );
     }
 
@@ -292,7 +303,9 @@ void TabBoxView::configChanged()
         default:
             {
             layout = new QVBoxLayout();
+            layout->addStretch();
             layout->addWidget( m_tableView );
+            layout->addStretch();
             m_additionalView->hide();
             break;
             }
