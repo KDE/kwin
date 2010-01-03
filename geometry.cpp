@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kapplication.h>
 #include <kglobal.h>
-#include <QPainter>
 #include <kwindowsystem.h>
 
 #include "placement.h"
@@ -40,6 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "geometrytip.h"
 #include "rules.h"
 #include "effects.h"
+#include <QPainter>
+#include <QVarLengthArray>
 #include <QX11Info>
 
 #include <kephal/screens.h>
@@ -3334,7 +3335,7 @@ void Client::setQuickTileMode( QuickTileMode mode, bool keyboard )
             const int numScreens = Kephal::ScreenUtils::numScreens();
             const int curScreen = screen();
             int nextScreen = curScreen;
-            QRect screens[numScreens];
+            QVarLengthArray<QRect> screens(numScreens);
             for( int i = 0; i < numScreens; ++i ) // Cache
                 screens[i] = Kephal::ScreenUtils::screenGeometry( i );
             for( int i = 0; i < numScreens; ++i )
