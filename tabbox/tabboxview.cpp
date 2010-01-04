@@ -49,6 +49,7 @@ namespace TabBox
 
 TabBoxView::TabBoxView( QWidget* parent )
     : QWidget( parent )
+    , m_previewUpdate( false )
     {
     setWindowFlags( Qt::X11BypassWindowManagerHint );
     setAttribute( Qt::WA_TranslucentBackground );
@@ -82,6 +83,7 @@ TabBoxView::TabBoxView( QWidget* parent )
 
     connect( tabBox, SIGNAL(configChanged()), this, SLOT(configChanged()));
     connect( m_animation, SIGNAL(valueChanged(QVariant)), SLOT(update()));
+    connect( m_tableView, SIGNAL(activated(QModelIndex)), SLOT(setCurrentIndex(QModelIndex)));
     }
 
 TabBoxView::~TabBoxView()
@@ -94,9 +96,13 @@ void TabBoxView::paintEvent(QPaintEvent* e)
     QPainter painter( this );
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setClipRect(e->rect());
-    m_frame->resizeFrame( geometry().size() );
     m_frame->paintFrame( &painter );
     // and the selection item
+    if( m_previewUpdate )
+        {
+        m_previewUpdate = false;
+        setCurrentIndex( m_tableView->currentIndex() );
+        }
     m_selectionFrame->paintFrame( &painter,
                                   m_tableView->geometry().topLeft() + m_selectedItem.topLeft() );
     QWidget::paintEvent(e);
@@ -113,6 +119,13 @@ bool TabBoxView::event( QEvent* event )
     return QWidget::event( event );
     }
 
+void TabBoxView::resizeEvent(QResizeEvent* event)
+    {
+    m_frame->resizeFrame( event->size() );
+    setMask( m_frame->mask() );
+    QWidget::resizeEvent(event);
+    }
+
 void TabBoxView::updateGeometry()
     {
     if( m_tableView->model()->columnCount() == 0 || m_tableView->model()->rowCount() == 0 )
@@ -123,10 +136,6 @@ void TabBoxView::updateGeometry()
     int y = screenRect.y() + screenRect.height() * 0.5 - hint.height() * 0.5;
 
     setGeometry( x, y, hint.width(), hint.height() );
-    qreal left, top, right, bottom;
-    m_frame->getMargins( left, top, right, bottom );
-    m_frame->resizeFrame( hint + QSizeF( left + right, top + bottom ) );
-    setMask( m_frame->mask() );
     }
 
 QSize TabBoxView::sizeHint() const
@@ -323,6 +332,8 @@ void TabBoxView::configChanged()
             }
         }
     setLayout( layout );
+    if( m_preview )
+        m_previewUpdate = true;
     }
 
 QModelIndex TabBoxView::indexAt( QPoint pos )
@@ -386,6 +397,13 @@ QSize TabBoxMainView::sizeHint() const
                   rowHeight * model()->rowCount() );
     }
 
+QModelIndex TabBoxMainView::moveCursor(QAbstractItemView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers)
+    {
+    Q_UNUSED( cursorAction )
+    Q_UNUSED( modifiers )
+    return currentIndex();
+    }
+
 /********************************************************
 * TabBoxAdditonalView
 ********************************************************/
@@ -432,6 +450,18 @@ QSize TabBoxAdditionalView::sizeHint() const
     qreal columnWidth = (minWidth + qreal(maxWidth - minWidth) / 2.0 );
     qreal rowHeight = (minHeight + qreal(maxHeight - minHeight) / 2.0 );
     return QSize( columnWidth, rowHeight );
+    }
+
+QModelIndex TabBoxAdditionalView::moveCursor( QAbstractItemView::CursorAction cursorAction, Qt::KeyboardModifiers modifiers )
+    {
+    Q_UNUSED( cursorAction )
+    Q_UNUSED( modifiers )
+    return currentIndex();
+    }
+
+void TabBoxAdditionalView::wheelEvent( QWheelEvent* event )
+    {
+    Q_UNUSED( event )
     }
 
 } // namespace Tabbox

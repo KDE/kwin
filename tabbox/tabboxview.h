@@ -68,14 +68,10 @@ class TabBoxView : public QWidget
         ~TabBoxView();
         virtual void paintEvent( QPaintEvent* e );
         virtual bool event( QEvent* event );
+        virtual void resizeEvent( QResizeEvent* event );
         virtual QSize sizeHint() const;
         void updateGeometry();
 
-        /**
-        * Sets the current index in the two views.
-        * @param index The new index
-        */
-        void setCurrentIndex( QModelIndex index );
         /**
         * Returns the index at the given position of the main view widget.
         * @param pos The widget position
@@ -103,6 +99,13 @@ class TabBoxView : public QWidget
 
         QRect selectedItem() const { return m_selectedItem; }
         void setSelectedItem( const QRect& rect ) { m_selectedItem = rect; }
+
+    public slots:
+        /**
+        * Sets the current index in the two views.
+        * @param index The new index
+        */
+        void setCurrentIndex( QModelIndex index );
 
     private slots:
         /**
@@ -149,6 +152,7 @@ class TabBoxView : public QWidget
         bool m_preview;
         QPropertyAnimation* m_animation;
         QRect m_selectedItem;
+        bool m_previewUpdate;
 
     };
 
@@ -166,6 +170,7 @@ class TabBoxMainView : public QTableView
         ~TabBoxMainView();
 
         virtual QSize sizeHint() const;
+        virtual QModelIndex moveCursor( CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
     };
 /**
 * This class is the additional widget of the TabBoxView.
@@ -181,6 +186,8 @@ class TabBoxAdditionalView : public QTableView
         ~TabBoxAdditionalView();
 
         virtual QSize sizeHint() const;
+        virtual QModelIndex moveCursor( CursorAction cursorAction, Qt::KeyboardModifiers modifiers );
+        virtual void wheelEvent( QWheelEvent* event );
     };
 
 } // namespace Tabbox
