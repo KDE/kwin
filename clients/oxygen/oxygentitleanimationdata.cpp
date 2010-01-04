@@ -50,7 +50,7 @@ namespace Oxygen
         animation().data()->setEndValue( 1 );
         animation().data()->setTargetObject( this );
         animation().data()->setPropertyName( "opacity" );
-        animation().data()->setCurveShape( Animation::EaseInOutCurve );
+        animation().data()->setEasingCurve( QEasingCurve::InOutQuad );
         connect( animation().data(), SIGNAL( valueChanged( const QVariant& ) ), SLOT( updatePixmaps( void ) ) );
         connect( animation().data(), SIGNAL( finished( void ) ), SLOT( updatePixmaps( void ) ) );
 

@@ -72,7 +72,7 @@ namespace Oxygen
     glowAnimation().data()->setPropertyName( "glowIntensity" );
 
     // set curve shape. Warning: this is not portable to Qt Kinetic
-    glowAnimation().data()->setCurveShape( Animation::EaseInOutCurve );
+    glowAnimation().data()->setEasingCurve( QEasingCurve::InOutQuad );
 
     // setup connections
     connect( glowAnimation().data(), SIGNAL( valueChanged( const QVariant& ) ), SLOT( update( void ) ) );
