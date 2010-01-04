@@ -32,7 +32,7 @@
 
 #include <cassert>
 #include <QtCore/QObject>
-#include <QtCore/QPointer>
+#include <QtCore/QWeakPointer>
 #include <QtGui/QPixmap>
 
 namespace Oxygen
@@ -48,7 +48,7 @@ namespace Oxygen
 
         public:
 
-        typedef QPointer<TitleAnimationData> Pointer;
+        typedef QWeakPointer<TitleAnimationData> Pointer;
 
         //! constructor
         TitleAnimationData( QObject* );
