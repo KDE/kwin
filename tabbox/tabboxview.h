@@ -67,6 +67,7 @@ class TabBoxView : public QWidget
         TabBoxView( QWidget* parent = 0 );
         ~TabBoxView();
         virtual void paintEvent( QPaintEvent* e );
+        virtual bool event( QEvent* event );
         virtual QSize sizeHint() const;
         void updateGeometry();
 

@@ -78,6 +78,7 @@ TabBoxView::TabBoxView( QWidget* parent )
     m_selectionFrame->setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
     m_animation = new QPropertyAnimation( this, "selectedItem", this );
+    m_animation->setEasingCurve( QEasingCurve::InOutQuad );
 
     connect( tabBox, SIGNAL(configChanged()), this, SLOT(configChanged()));
     connect( m_animation, SIGNAL(valueChanged(QVariant)), SLOT(update()));
@@ -93,18 +94,23 @@ void TabBoxView::paintEvent(QPaintEvent* e)
     QPainter painter( this );
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setClipRect(e->rect());
-    painter.save();
-    painter.setCompositionMode( QPainter::CompositionMode_Source );
-    painter.fillRect( rect(), Qt::transparent );
     m_frame->resizeFrame( geometry().size() );
-    painter.setClipRegion( m_frame->mask() );
     m_frame->paintFrame( &painter );
-    m_selectionFrame->resizeFrame( m_selectedItem.size() );
-    painter.setCompositionMode( QPainter::CompositionMode_SourceOver );
+    // and the selection item
     m_selectionFrame->paintFrame( &painter,
                                   m_tableView->geometry().topLeft() + m_selectedItem.topLeft() );
-    painter.restore();
     QWidget::paintEvent(e);
+    }
+
+bool TabBoxView::event( QEvent* event )
+    {
+    if( event->type() == QEvent::Paint )
+        {
+        QPainter p( this );
+        p.setCompositionMode( QPainter::CompositionMode_Source );
+        p.fillRect( rect(), Qt::transparent );
+        }
+    return QWidget::event( event );
     }
 
 void TabBoxView::updateGeometry()
@@ -191,16 +197,22 @@ void TabBoxView::setCurrentIndex( QModelIndex index )
     if( index.isValid() )
         {
         m_tableView->setCurrentIndex( index );
+        const QRect visualRect = m_tableView->visualRect( index );
         if( m_selectedItem.isNull() )
-            m_selectedItem = m_tableView->visualRect( index );
+            m_selectedItem = visualRect;
         if( m_animation->state() == QPropertyAnimation::Running )
-            m_animation->setEndValue( m_tableView->visualRect( index ) );
+            {
+            m_animation->stop();
+            m_selectedItem = visualRect;
+            update();
+            }
         else
             {
             m_animation->setStartValue( m_selectedItem );
-            m_animation->setEndValue( m_tableView->visualRect( index ) );
+            m_animation->setEndValue( visualRect );
             m_animation->start();
             }
+        m_selectionFrame->resizeFrame( visualRect.size() );
         m_additionalView->setCurrentIndex( index );
         }
     }
@@ -321,7 +333,8 @@ QModelIndex TabBoxView::indexAt( QPoint pos )
 void TabBoxView::setPreview( bool preview )
     {
     m_preview = preview;
-    m_frame->setImagePath( "dialogs/opaque/background" );
+    if( preview )
+        m_frame->setImagePath( "dialogs/opaque/background" );
     }
 
 /********************************************************
