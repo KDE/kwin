@@ -296,6 +296,7 @@ namespace Oxygen
         {
             return
                 configuration().useAnimations() &&
+                configuration().animateTitleChange() &&
                 !configuration().drawTitleOutline() &&
                 !configuration().hideTitleBar() &&
                 !isPreview();

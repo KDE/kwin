@@ -42,6 +42,7 @@ namespace Oxygen
     hideTitleBar_( false ),
     useOxygenShadows_( true ),
     useAnimations_( true ),
+    animateTitleChange_( false ),
     animationsDuration_( 150 ),
     tabsEnabled_( true ),
     useNarrowButtonSpacing_( false )
@@ -105,6 +106,11 @@ namespace Oxygen
       defaultConfiguration.useAnimations() ) );
 
     // animations
+    setAnimateTitleChange( group.readEntry(
+      OxygenConfig::ANIMATE_TITLE_CHANGE,
+      defaultConfiguration.animateTitleChange() ) );
+
+    // animations
     setAnimationsDuration( group.readEntry(
       OxygenConfig::ANIMATIONS_DURATION,
       defaultConfiguration.animationsDuration() ) );
@@ -136,6 +142,7 @@ namespace Oxygen
     group.writeEntry( OxygenConfig::HIDE_TITLEBAR, hideTitleBar() );
     group.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
     group.writeEntry( OxygenConfig::USE_ANIMATIONS, useAnimations() );
+    group.writeEntry( OxygenConfig::ANIMATE_TITLE_CHANGE, animateTitleChange() );
     group.writeEntry( OxygenConfig::ANIMATIONS_DURATION, animationsDuration() );
     group.writeEntry( OxygenConfig::TABS_ENABLED, tabsEnabled() );
     group.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, useNarrowButtonSpacing() );
@@ -306,6 +313,7 @@ namespace Oxygen
       hideTitleBar() == other.hideTitleBar() &&
       useOxygenShadows() == other.useOxygenShadows() &&
       useAnimations() == other.useAnimations() &&
+      animateTitleChange() == other.animateTitleChange() &&
       animationsDuration() == other.animationsDuration() &&
       tabsEnabled() == other.tabsEnabled() &&
       useNarrowButtonSpacing() == other.useNarrowButtonSpacing();

@@ -41,6 +41,7 @@ namespace OxygenConfig
   static const QString USE_OXYGEN_SHADOWS = "UseOxygenShadows";
   static const QString HIDE_TITLEBAR = "HideTitleBar";
   static const QString USE_ANIMATIONS = "UseAnimations";
+  static const QString ANIMATE_TITLE_CHANGE = "AnimateTitleChange";
   static const QString ANIMATIONS_DURATION = "AnimationsDuration";
   static const QString TABS_ENABLED = "TabsEnabled";
   static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
@@ -259,6 +260,14 @@ namespace Oxygen
     { useAnimations_ = value; }
 
     //! animations
+    virtual bool animateTitleChange( void ) const
+    { return animateTitleChange_; }
+
+    //! animations
+    virtual void setAnimateTitleChange( bool value )
+    { animateTitleChange_ = value; }
+
+    //! animations
     virtual int animationsDuration( void ) const
     { return animationsDuration_; }
 
@@ -305,6 +314,9 @@ namespace Oxygen
 
     //! animations
     bool useAnimations_;
+
+    //! animations
+    bool animateTitleChange_;
 
     //! animations
     int animationsDuration_;
