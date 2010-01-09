@@ -851,7 +851,7 @@ KMovingConfig::KMovingConfig (bool _standAlone, KConfig *_config, const KCompone
                                         " to the top-left corner of the screen is displayed together with"
                                         " its size."));
 
-    moveResizeMaximized = new QCheckBox( i18n("Allow moving and resizing o&f maximized windows"), windowsBox);
+    moveResizeMaximized = new QCheckBox( i18n("Display borders on &maximized windows"), windowsBox);
     bLay->addWidget(moveResizeMaximized);
     moveResizeMaximized->setWhatsThis( i18n("When enabled, this feature activates the border of maximized windows"
                                               " and allows you to move or resize them,"
