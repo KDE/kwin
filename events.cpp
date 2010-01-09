@@ -1456,7 +1456,7 @@ void Client::checkQuickTilingMaximizationZones( int xroot, int yroot )
                 return;
                 }
             if( options->electricBorderMaximize() &&
-                yroot <= screen->geom().y() + 20 && isMaximizable() )
+                yroot <= screen->geom().y() + 5 && isMaximizable() )
                 {
                 setElectricBorderMode( ElectricMaximizeMode );
                 setElectricBorderMaximizing( true );
