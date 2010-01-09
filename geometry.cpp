@@ -3310,6 +3310,30 @@ void Client::setQuickTileMode( QuickTileMode mode, bool keyboard )
         {
         setMaximize(false, false);
         checkMaximizeGeometry();
+
+        QPoint whichScreen = keyboard ? geometry().center() : cursorPos();
+
+        // DUPLICATED BELOW: --------------------------------------------------
+
+        // Temporary, so the maximize code doesn't get all confused
+        quick_tile_mode = QuickTileNone;
+
+        // Do the actual tile.
+        if( mode == QuickTileLeft )
+            {
+            QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+            setGeometry( QRect( max.x(), max.y(), max.width()/2, max.height() ) );
+            }
+        else
+            {
+            QRect max = workspace()->clientArea( MaximizeArea, whichScreen, desktop() );
+            setGeometry( QRect( max.x() + max.width()/2, max.y(), max.width()/2, max.height() ) );
+            }
+
+        // Store the mode change
+        quick_tile_mode = mode;
+
+        return;
         }
 
     // First, check if the requested tile negates the tile we're in now: move right when left or left when right
@@ -3370,6 +3394,8 @@ void Client::setQuickTileMode( QuickTileMode mode, bool keyboard )
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
             geom_pretile = geometry();
+
+        // DUPLICATED ABOVE: --------------------------------------------------
 
         // Temporary, so the maximize code doesn't get all confused
         quick_tile_mode = QuickTileNone;

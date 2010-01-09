@@ -412,6 +412,7 @@ class Client
         bool buttonPressEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
         bool buttonReleaseEvent( Window w, int button, int state, int x, int y, int x_root, int y_root );
         bool motionNotifyEvent( Window w, int state, int x, int y, int x_root, int y_root );
+        void checkQuickTilingMaximizationZones( int xroot, int yroot );
 
         bool processDecorationButtonPress( int button, int state, int x, int y, int x_root, int y_root,
             bool ignoreMenu = false );

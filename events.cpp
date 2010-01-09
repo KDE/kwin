@@ -50,6 +50,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xrandr.h>
 #endif
 
+#include <kephal/screens.h>
+
 namespace KWin
 {
 
@@ -1432,6 +1434,39 @@ static bool waitingMotionEvent()
     return was_motion;
     }
 
+// Checks if the mouse cursor is near the edge of the screen and if so activates quick tiling or maximization
+void Client::checkQuickTilingMaximizationZones( int xroot, int yroot )
+    {
+    foreach( Kephal::Screen* screen, Kephal::Screens::self()->screens() )
+        {
+        if( screen->geom().contains( QPoint( xroot, yroot )))
+            {
+            if( options->electricBorderTiling() &&
+                xroot <= screen->geom().x() + 20 )
+                {
+                setElectricBorderMode( ElectricLeftMode );
+                setElectricBorderMaximizing( true );
+                return;
+                }
+            else if( options->electricBorderTiling() &&
+                xroot >= screen->geom().x() + screen->geom().width() - 20 )
+                {
+                setElectricBorderMode( ElectricRightMode );
+                setElectricBorderMaximizing( true );
+                return;
+                }
+            if( options->electricBorderMaximize() &&
+                yroot <= screen->geom().y() + 20 && isMaximizable() )
+                {
+                setElectricBorderMode( ElectricMaximizeMode );
+                setElectricBorderMaximizing( true );
+                return;
+                }
+            }
+        }
+    setElectricBorderMaximizing( false );
+    }
+
 // return value matters only when filtering events before decoration gets them
 bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_root, int y_root )
     {
@@ -1455,8 +1490,12 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
         x = this->x(); // translate from grab window to local coords
         y = this->y();
         }
-    if( !waitingMotionEvent())
+    if( !waitingMotionEvent() )
+        {
         handleMoveResize( x, y, x_root, y_root );
+        if( isMove() )
+            checkQuickTilingMaximizationZones( x_root, y_root );
+        }
     return true;
     }
     

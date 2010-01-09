@@ -2216,54 +2216,8 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
                 {
                 // If moving a client or have force doing the desktop switch
                 if( options->electricBorders() != Options::ElectricDisabled )
-                    {
                     electricBorderSwitchDesktop( border, pos );
-                    return; // Don't reset cursor position
-                    }
-                // maximize only when not using for switch
-                if( options->electricBorderMaximize() && border == ElectricTop &&
-                    movingClient->isMaximizable() )
-                    {
-                    movingClient->setElectricBorderMode( ElectricMaximizeMode );
-                    movingClient->setElectricBorderMaximizing( true );
-                    // Make electric windows thicker so we can detect when the user wants to cancel
-                    QRect r = Kephal::ScreenUtils::desktopGeometry();
-                    XRaiseWindow( display(), electric_windows[ElectricTop] );
-                    XResizeWindow( display(), electric_windows[ElectricTop],
-                        r.width() - 2, 20 );
-                    return; // Don't reset cursor position
-                    }
-                if( options->electricBorderTiling() )
-                    {
-                    bool activate = false;
-                    if( border == ElectricLeft )
-                        {
-                        movingClient->setElectricBorderMode( ElectricLeftMode );
-                        activate = true;
-                        // Make electric windows thicker so we can detect when the user wants to cancel
-                        QRect r = Kephal::ScreenUtils::desktopGeometry();
-                        XRaiseWindow( display(), electric_windows[ElectricLeft] );
-                        XResizeWindow( display(), electric_windows[ElectricLeft],
-                            20, r.height() - 2 );
-                        }
-                    else if( border == ElectricRight )
-                        {
-                        movingClient->setElectricBorderMode( ElectricRightMode );
-                        activate = true;
-                        // Make electric windows thicker so we can detect when the user wants to cancel
-                        QRect r = Kephal::ScreenUtils::desktopGeometry();
-                        XRaiseWindow( display(), electric_windows[ElectricRight] );
-                        XMoveResizeWindow( display(), electric_windows[ElectricRight],
-                            r.right() - 19, r.top() + 1, 20, r.height() - 2 );
-                        }
-                    if( activate )
-                        {
-                        movingClient->setElectricBorderMaximizing( true );
-                        return; // Don't reset cursor position
-                        }
-                    }
-                else
-                    return; // Don't reset cursor position
+                return; // Don't reset cursor position
                 }
             else
                 {
@@ -2371,26 +2325,6 @@ bool Workspace::electricBorderEvent( XEvent* e )
     {
     if( e->type == EnterNotify )
         {
-        if( movingClient && movingClient->isElectricBorderMaximizing() &&
-            e->xcrossing.window == movingClient->moveResizeGrabWindow() )
-            { // Cancel the quick tiling/maximization action when the user moves away from the edge.
-              // This event isn't from the border window; it came from the grab window.
-            movingClient->setElectricBorderMaximizing( false );
-
-            // Restore electric windows back to their normal size
-            switch( movingClient->electricBorderMode() )
-                {
-                case ElectricMaximizeMode:
-                    restoreElectricBorderSize( ElectricTop );
-                    break;
-                case ElectricLeftMode:
-                    restoreElectricBorderSize( ElectricLeft );
-                    break;
-                case ElectricRightMode:
-                    restoreElectricBorderSize( ElectricRight );
-                    break;
-                }
-            }
         for( int i = 0; i < ELECTRIC_COUNT; ++i )
             if( electric_windows[i] != None && e->xcrossing.window == electric_windows[i] )
                 { // The user entered an electric border

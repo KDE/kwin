@@ -45,15 +45,6 @@ int main( int argc, char* argv[] )
     if( !tabbox.hasKey("ShowTabBox") )
         tabbox.writeEntry("ShowTabBox", (style.compare("KDE", Qt::CaseInsensitive) == 0)?true:false);
     tabbox.sync();
-    // screen edges - disable quick tiling when switch on desktop edge is activated
-    KConfigGroup borders(&config, "ElectricBorders");
-    if( borders.readEntry<int>("ElectricBorders", 0) >= 1 &&
-        !borders.hasKey("ElectricBorderMaximize") && !borders.hasKey("ElectricBorderTiling") )
-        {
-        borders.writeEntry("ElectricBorderMaximize", false);
-        borders.writeEntry("ElectricBorderTiling", false);
-        }
-    borders.sync();
     config.sync();
     // Send signal to all kwin instances
     QDBusMessage message =

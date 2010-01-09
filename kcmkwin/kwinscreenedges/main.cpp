@@ -92,19 +92,6 @@ void KWinScreenEdgesConfig::groupChanged()
     monitorHideEdge( ElectricRight, hide );
     monitorHideEdge( ElectricBottom, hide );
     monitorHideEdge( ElectricLeft, hide );
-
-    // Desktop switch conflicts
-    if( m_ui->quickTileBox->isChecked() || m_ui->quickMaximizeBox->isChecked() )
-        {
-        m_ui->desktopSwitchLabel->setEnabled( false );
-        m_ui->desktopSwitchCombo->setEnabled( false );
-        m_ui->desktopSwitchCombo->setCurrentIndex( 0 );
-        }
-    else
-        {
-        m_ui->desktopSwitchLabel->setEnabled( true );
-        m_ui->desktopSwitchCombo->setEnabled( true );
-        }
     }
 
 void KWinScreenEdgesConfig::load()
