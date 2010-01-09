@@ -959,6 +959,10 @@ void CoverSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
     if( pos.y() < (area.height()*scaleFactor - area.height())*0.5f*(1.0f/scaleFactor) )
         return;
 
+    // if there is no selected window (that is no window at all) we cannot click it
+    if( !selected_window )
+        return;
+
     if( pos.x() < (area.width()*scaleFactor - selected_window->width())*0.5f*(1.0f/scaleFactor) )
         {
         float availableSize = (area.width()*scaleFactor - area.width())*0.5f*(1.0f/scaleFactor);
