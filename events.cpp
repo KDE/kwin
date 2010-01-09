@@ -1455,7 +1455,7 @@ void Client::checkQuickTilingMaximizationZones( int xroot, int yroot )
                 setElectricBorderMaximizing( true );
                 return;
                 }
-            if( options->electricBorderMaximize() &&
+            else if( options->electricBorderMaximize() &&
                 yroot <= screen->geom().y() + 5 && isMaximizable() )
                 {
                 setElectricBorderMode( ElectricMaximizeMode );
@@ -1493,7 +1493,7 @@ bool Client::motionNotifyEvent( Window w, int /*state*/, int x, int y, int x_roo
     if( !waitingMotionEvent() )
         {
         handleMoveResize( x, y, x_root, y_root );
-        if( isMove() )
+        if( isMove() && isResizable() )
             checkQuickTilingMaximizationZones( x_root, y_root );
         }
     return true;
