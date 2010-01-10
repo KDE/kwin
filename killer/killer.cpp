@@ -46,6 +46,7 @@ int main( int argc, char* argv[] )
     options.add("timestamp <time>", ki18n("Time of user action causing termination"));
     KCmdLineArgs::addCmdLineOptions( options );
     KApplication app;
+    KApplication::setWindowIcon( KIcon( "kwin" ) );
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     QString hostname = args->getOption( "hostname" );
     bool pid_ok = false;
