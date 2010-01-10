@@ -223,37 +223,35 @@ void TabstripDecoration::init()
 
 bool TabstripDecoration::eventFilter( QObject* o, QEvent* e )
     {
-    bool state = false;
-    if( e->type() == QEvent::MouseButtonPress )
-        state = mouseButtonPressEvent( static_cast< QMouseEvent* >( e ) );
-
-    else if( e->type() == QEvent::MouseButtonRelease && widget() == o )
-        state = mouseButtonReleaseEvent( static_cast< QMouseEvent* >( e ) );
-
-    else if( e->type() == QEvent::MouseMove )
-        state = mouseMoveEvent( static_cast< QMouseEvent* >( e ) );
-
-    else if( e->type() == QEvent::DragEnter && widget() == o )
-        state = dragEnterEvent( static_cast< QDragEnterEvent* >( e ) );
-
-    else if( e->type() == QEvent::DragMove && widget() == o )
-        state = dragMoveEvent( static_cast< QDragMoveEvent* >( e ) );
-
-    else if( e->type() == QEvent::DragLeave && widget() == o )
-        state = dragLeaveEvent( static_cast< QDragLeaveEvent* >( e ) );
-
-    else if( e->type() == QEvent::Drop && widget() == o )
-        state = dropEvent( static_cast< QDropEvent* >( e ) );
-
-    if ( !state && e->type() == QEvent::MouseButtonRelease &&
-         static_cast<QMouseEvent*>(e)->button() ==  Qt::LeftButton )
+    if( TabstripButton *btn = dynamic_cast< TabstripButton* >( o ))
         {
-        if( TabstripButton *btn = dynamic_cast< TabstripButton* >( o ) )
+        if( e->type() == QEvent::MouseButtonPress )
+            return true; // No-op
+        else if( e->type() == QEvent::MouseButtonRelease )
             {
-            closeClientGroupItem( closeButtons.indexOf( btn ) );
+            const QMouseEvent* me = static_cast< QMouseEvent* >( e );
+            if( me->button() == Qt::LeftButton && btn->rect().contains( me->pos() ))
+                closeClientGroupItem( closeButtons.indexOf( btn ));
             return true;
             }
         }
+
+    bool state = false;
+    if( e->type() == QEvent::MouseButtonPress )
+        state = mouseButtonPressEvent( static_cast< QMouseEvent* >( e ));
+    else if( e->type() == QEvent::MouseButtonRelease && widget() == o )
+        state = mouseButtonReleaseEvent( static_cast< QMouseEvent* >( e ));
+    else if( e->type() == QEvent::MouseMove )
+        state = mouseMoveEvent( static_cast< QMouseEvent* >( e ));
+    else if( e->type() == QEvent::DragEnter && widget() == o )
+        state = dragEnterEvent( static_cast< QDragEnterEvent* >( e ));
+    else if( e->type() == QEvent::DragMove && widget() == o )
+        state = dragMoveEvent( static_cast< QDragMoveEvent* >( e ));
+    else if( e->type() == QEvent::DragLeave && widget() == o )
+        state = dragLeaveEvent( static_cast< QDragLeaveEvent* >( e ));
+    else if( e->type() == QEvent::Drop && widget() == o )
+        state = dropEvent( static_cast< QDropEvent* >( e ));
+
     return state || KCommonDecorationUnstable::eventFilter( o, e ); 
     }
 
@@ -261,6 +259,11 @@ bool TabstripDecoration::mouseButtonPressEvent( QMouseEvent* e )
     {
     click = widget()->mapToParent( e->pos() );
     int item = itemClicked( click );
+    if( buttonToWindowOperation( e->button() ) == OperationsOp )
+        {
+        displayClientMenu( item, widget()->mapToGlobal( click ));
+        return true;
+        }
     if( item >= 0 )
         {
         click_in_progress = true;
@@ -278,10 +281,7 @@ bool TabstripDecoration::mouseButtonReleaseEvent( QMouseEvent* e )
     if( click_in_progress && item >= 0 )
         {
         click_in_progress = false;
-        if( buttonToWindowOperation( e->button() ) != OperationsOp )
-            setVisibleClientGroupItem( item );
-        else
-            displayClientMenu( item, widget()->mapToGlobal( release ) );
+        setVisibleClientGroupItem( item );
         return true;
         }
     click_in_progress = false;

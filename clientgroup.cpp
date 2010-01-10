@@ -211,6 +211,8 @@ void ClientGroup::move( Client* c, Client* before )
 
 void ClientGroup::displayClientMenu( int index, const QPoint& pos )
     {
+    if( index == -1 )
+        index = visible_;
     displayClientMenu( clients_[index], pos );
     }
 
