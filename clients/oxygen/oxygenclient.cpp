@@ -1251,7 +1251,8 @@ namespace Oxygen
       if( widget() == object ) state = mouseReleaseEvent( static_cast< QMouseEvent* >( event ) );
       else if( OxygenButton *btn = qobject_cast< OxygenButton* >( object ) )
       {
-        if( static_cast< QMouseEvent* >( event )->button() == Qt::LeftButton )
+        QMouseEvent* mouseEvent( static_cast< QMouseEvent* >( event ) );
+        if( mouseEvent->button() == Qt::LeftButton && btn->rect().contains( mouseEvent->pos() ) )
         { state = closeItem( btn ); }
       }
 
