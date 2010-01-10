@@ -41,6 +41,7 @@ class CubeSlideEffect
         virtual void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time );
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void desktopChanged( int old );
+        virtual void windowUserMovedResized( EffectWindow* c, bool first, bool last );
 
         static bool supported();
     private:
@@ -52,6 +53,7 @@ class CubeSlideEffect
             Downwards
             };
         void paintSlideCube( int mask, QRegion region, ScreenPaintData& data );
+        void windowMovingChanged( float progress, RotationDirection direction );
         bool cube_painting;
         int front_desktop;
         int painting_desktop;
@@ -65,6 +67,10 @@ class CubeSlideEffect
         bool dontSlideStickyWindows;
         bool usePagerLayout;
         int rotationDuration;
+        bool useWindowMoving;
+        bool windowMoving;
+        bool desktopChangedWhileMoving;
+        double progressRestriction;
     };
 }
 

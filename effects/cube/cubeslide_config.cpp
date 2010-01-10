@@ -46,6 +46,7 @@ CubeSlideEffectConfig::CubeSlideEffectConfig(QWidget* parent, const QVariantList
     connect(m_ui->dontSlidePanelsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->dontSlideStickyWindowsBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->usePagerBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect(m_ui->windowsMovingBox, SIGNAL(stateChanged(int)), SLOT(changed()));
 
     load();
     }
@@ -65,7 +66,7 @@ void CubeSlideEffectConfig::load()
     m_ui->dontSlidePanelsBox->setChecked( dontSlidePanels );
     m_ui->dontSlideStickyWindowsBox->setChecked( dontSlideStickyWindows );
     m_ui->usePagerBox->setChecked( usePager );
-
+    m_ui->windowsMovingBox->setChecked( conf.readEntry( "UseWindowMoving", false ) );
 
     emit changed(false);
     }
@@ -78,6 +79,7 @@ void CubeSlideEffectConfig::save()
     conf.writeEntry( "DontSlidePanels", m_ui->dontSlidePanelsBox->isChecked() );
     conf.writeEntry( "DontSlideStickyWindows", m_ui->dontSlideStickyWindowsBox->isChecked() );
     conf.writeEntry( "UsePagerLayout", m_ui->usePagerBox->isChecked() );
+    conf.writeEntry( "UseWindowMoving", m_ui->windowsMovingBox->isChecked() );
 
     conf.sync();
 
@@ -91,6 +93,7 @@ void CubeSlideEffectConfig::defaults()
     m_ui->dontSlidePanelsBox->setChecked( true );
     m_ui->dontSlideStickyWindowsBox->setChecked( false );
     m_ui->usePagerBox->setChecked( true );
+    m_ui->windowsMovingBox->setChecked( false );
     emit changed(true);
     }
 

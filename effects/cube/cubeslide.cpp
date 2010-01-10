@@ -34,6 +34,9 @@ KWIN_EFFECT( cubeslide, CubeSlideEffect )
 KWIN_EFFECT_SUPPORTED( cubeslide, CubeSlideEffect::supported() )
 
 CubeSlideEffect::CubeSlideEffect()
+    : windowMoving( false )
+    , desktopChangedWhileMoving( false )
+    , progressRestriction( 0.0f )
     {
     reconfigure( ReconfigureAll );
     }
@@ -56,6 +59,7 @@ void CubeSlideEffect::reconfigure( ReconfigureFlags )
     dontSlidePanels = conf.readEntry( "DontSlidePanels", true );
     dontSlideStickyWindows = conf.readEntry( "DontSlideStickyWindows", false );
     usePagerLayout = conf.readEntry( "UsePagerLayout", true );
+    useWindowMoving = conf.readEntry( "UseWindowMoving", false );
     }
 
 void CubeSlideEffect::prePaintScreen( ScreenPrePaintData& data, int time)
@@ -64,6 +68,8 @@ void CubeSlideEffect::prePaintScreen( ScreenPrePaintData& data, int time)
         {
         data.mask |= PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
         timeLine.addTime( time );
+        if( windowMoving && timeLine.progress() > progressRestriction )
+            timeLine.setProgress( progressRestriction );
         if( dontSlidePanels )
             panels.clear();
         stickyWindows.clear();
@@ -463,6 +469,13 @@ void CubeSlideEffect::desktopChanged( int old )
         // number of desktops has been reduced -> no animation
         return;
         }
+    if( windowMoving )
+        {
+        desktopChangedWhileMoving = true;
+        progressRestriction = 1.0 - progressRestriction;
+        effects->addRepaintFull();
+        return;
+        }
     bool activate = true;
     if( !slideRotations.empty() )
         {
@@ -582,6 +595,100 @@ void CubeSlideEffect::desktopChanged( int old )
         front_desktop = old;
         effects->addRepaintFull();
         }
+    }
+
+void CubeSlideEffect::windowUserMovedResized( EffectWindow* c, bool first, bool last )
+    {
+    if( !useWindowMoving )
+        return;
+    if( (first && last) || c->isUserResize() )
+        return;
+    if( last )
+        {
+        if( !desktopChangedWhileMoving )
+            {
+            if( slideRotations.isEmpty() )
+                return;
+            const RotationDirection direction = slideRotations.dequeue();
+            switch( direction )
+                {
+                case Left:
+                    slideRotations.enqueue( Right );
+                    break;
+                case Right:
+                    slideRotations.enqueue( Left );
+                    break;
+                case Upwards:
+                    slideRotations.enqueue( Downwards );
+                    break;
+                case Downwards:
+                    slideRotations.enqueue( Upwards );
+                    break;
+                default:
+                    break; // impossible
+                }
+            timeLine.setProgress( 1.0 - timeLine.progress() );
+            }
+        desktopChangedWhileMoving = false;
+        windowMoving = false;
+        effects->addRepaintFull();
+        return;
+        }
+    const QPoint cursor = effects->cursorPos();
+    const int horizontal = displayWidth()*0.1;
+    const int vertical = displayHeight()*0.1;
+    const QRect leftRect( 0, displayHeight()*0.1, horizontal, displayHeight()*0.8 );
+    const QRect rightRect( displayWidth() - horizontal, displayHeight()*0.1, horizontal, displayHeight()*0.8 );
+    const QRect topRect( horizontal, 0, displayWidth()*0.8, vertical );
+    const QRect bottomRect( horizontal, displayHeight() - vertical, displayWidth() - horizontal*2, vertical );
+    if( leftRect.contains( cursor ) )
+        {
+        if( effects->desktopToLeft(effects->currentDesktop()) != effects->currentDesktop() )
+            windowMovingChanged( 0.3 * (float)(horizontal - cursor.x())/(float)horizontal, Left );
+        }
+    else if( rightRect.contains( cursor ) )
+        {
+        if( effects->desktopToRight(effects->currentDesktop()) != effects->currentDesktop() )
+            windowMovingChanged( 0.3 * (float)(cursor.x() - displayWidth() + horizontal)/(float)horizontal, Right );
+        }
+    else if( topRect.contains( cursor ) )
+        {
+        if( effects->desktopAbove(effects->currentDesktop()) != effects->currentDesktop() )
+            windowMovingChanged( 0.3 * (float)(vertical - cursor.y())/(float)vertical, Upwards);
+        }
+    else if( bottomRect.contains( cursor ) )
+        {
+        if( effects->desktopBelow(effects->currentDesktop()) != effects->currentDesktop() )
+            windowMovingChanged( 0.3 * (float)(cursor.y() - displayHeight() + vertical)/(float)vertical, Downwards );
+        }
+    else
+        {
+        // not in one of the areas
+        windowMoving = false;
+        desktopChangedWhileMoving = false;
+        timeLine.setProgress( 0.0 );
+        if( !slideRotations.isEmpty() )
+            slideRotations.clear();
+        effects->setActiveFullScreenEffect( 0 );
+        effects->addRepaintFull();
+        }
+    }
+
+void CubeSlideEffect::windowMovingChanged( float progress, RotationDirection direction )
+    {
+    if( desktopChangedWhileMoving )
+        progressRestriction = 1.0 - progress;
+    else
+        progressRestriction = progress;
+    front_desktop = effects->currentDesktop();
+    if( slideRotations.isEmpty() )
+        {
+        slideRotations.enqueue( direction );
+        timeLine.setCurveShape( TimeLine::EaseInOutCurve );
+        windowMoving = true;
+        effects->setActiveFullScreenEffect( this );
+        }
+    effects->addRepaintFull();
     }
 
 } // namespace
