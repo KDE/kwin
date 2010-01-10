@@ -1445,7 +1445,11 @@ namespace Oxygen
 
     } else if( buttonToWindowOperation( mouseButton_ ) == OperationsOp ) {
 
-      accepted = true;
+      QPoint point = event->pos();
+      int itemClicked( OxygenClient::itemClicked( point ) );
+      displayClientMenu( itemClicked, widget()->mapToGlobal( event->pos() ) );
+      mouseButton_ = Qt::NoButton;
+      accepted = true; // displayClientMenu can possibly destroy the deco...
 
     }
     return accepted;
@@ -1470,14 +1474,6 @@ namespace Oxygen
         setForceActive( true );
         accepted = true;
       }
-
-    } else if( mouseButton_ == event->button() &&
-        buttonToWindowOperation( mouseButton_ ) == OperationsOp ) {
-
-      QPoint point = event->pos();
-      int itemClicked( OxygenClient::itemClicked( point ) );
-      displayClientMenu( itemClicked, widget()->mapToGlobal( event->pos() ) );
-      accepted = true; // displayClientMenu can possibly destroy the deco...
 
     }
 
