@@ -183,6 +183,20 @@ enum WindowQuadType
     };
 
 /**
+ * EffectWindow::setData() and EffectWindow::data() global roles.
+ * All values between 0 and 999 are reserved for global roles.
+ */
+enum DataRole
+    {
+    // Grab roles are used to force all other animations to ignore the window.
+    // The value of the data is set to the Effect's `this` value.
+    WindowAddedGrabRole = 1,
+    WindowClosedGrabRole,
+    WindowMinimizedGrabRole,
+    WindowUnminimizedGrabRole
+    };
+
+/**
  * Infinite region (i.e. a special region type saying that everything needs to be painted).
  */
 KWIN_EXPORT inline

@@ -142,6 +142,9 @@ void FallApartEffect::windowClosed( EffectWindow* c )
     {
     if ( !isRealWindow( c ) )
         return;
+    const void* e = c->data( WindowClosedGrabRole ).value<void*>();
+    if( e && e != this )
+        return;
     windows[ c ] = 0;
     c->refWindow();
     }

@@ -28,14 +28,8 @@ namespace KWin
 KWIN_EFFECT( fade, FadeEffect )
 
 FadeEffect::FadeEffect()
-    : m_proxy( this )
     {
     reconfigure( ReconfigureAll );
-    }
-
-void* FadeEffect::proxy()
-    {
-    return &m_proxy;
     }
 
 void FadeEffect::reconfigure( ReconfigureFlags )
@@ -199,26 +193,18 @@ void FadeEffect::windowClosed( EffectWindow* w )
 void FadeEffect::windowDeleted( EffectWindow* w )
     {
     windows.remove( w );
-    ignoredWindows.remove( w );
     }
-
-void FadeEffect::setWindowIgnored( EffectWindow* w, bool ignore )
-{
-    if (ignore)
-        {
-        ignoredWindows.insert( w );
-        }
-    else
-        {
-        ignoredWindows.remove( w );
-        }
-}
 
 bool FadeEffect::isFadeWindow( EffectWindow* w )
     {
+    void* e;
+    if( w->isDeleted() )
+        e = w->data( WindowClosedGrabRole ).value<void*>();
+    else
+        e = w->data( WindowAddedGrabRole ).value<void*>();
     if( w->windowClass() == "ksplashx ksplashx"
-        || w->windowClass() == "ksplashsimple ksplashsimple" 
-        || ignoredWindows.contains( w ) )
+        || w->windowClass() == "ksplashsimple ksplashsimple"
+        || ( e && e != this ))
         { // see login effect
         return false;
         }

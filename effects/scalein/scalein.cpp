@@ -61,8 +61,9 @@ void ScaleInEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wind
 
 bool ScaleInEffect::isScaleWindow( EffectWindow* w )
     {
+    const void* e = w->data( WindowAddedGrabRole ).value<void*>();
     // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
-    if ( w->isPopupMenu() || w->isSpecialWindow() || w->isUtility() )
+    if ( w->isPopupMenu() || w->isSpecialWindow() || w->isUtility() || ( e && e != this ))
         return false;
     return true;
     }

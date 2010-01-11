@@ -196,6 +196,9 @@ void ExplosionEffect::postPaintScreen()
 
 void ExplosionEffect::windowClosed( EffectWindow* c )
     {
+    const void* e = c->data( WindowClosedGrabRole ).value<void*>();
+    if( e && e != this )
+        return;
     if( c->isOnCurrentDesktop() && !c->isMinimized())
         {
         mWindows[ c ] = 0; // count up to 1

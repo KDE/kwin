@@ -20,8 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "slidingpopups.h"
 
-#include "../fade/fade_proxy.h"
-
 #include <kdebug.h>
 
 namespace KWin
@@ -150,11 +148,8 @@ void SlidingPopupsEffect::windowAdded( EffectWindow* w )
         mAppearingWindows[ w ].setProgress( 0.0 );
         mAppearingWindows[ w ].setCurveShape( TimeLine::EaseOutCurve );
 
-        //tell fadeto ignore this window
-        const FadeEffectProxy* proxy =
-            static_cast<const FadeEffectProxy*>( effects->getProxy( "fade" ) );
-        if( proxy )
-            ((FadeEffectProxy*)proxy)->setWindowIgnored( w, true );
+        // Tell other windowAdded() effects to ignore this window
+        w->setData( WindowAddedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
 
         w->addRepaintFull();
         }
@@ -170,6 +165,9 @@ void SlidingPopupsEffect::windowClosed( EffectWindow* w )
         mDisappearingWindows[ w ].setDuration( animationTime( mFadeOutTime ));
         mDisappearingWindows[ w ].setProgress( 0.0 );
         mDisappearingWindows[ w ].setCurveShape( TimeLine::EaseOutCurve );
+
+        // Tell other windowClosed() effects to ignore this window
+        w->setData( WindowClosedGrabRole, QVariant::fromValue( static_cast<void*>( this )));
 
         w->addRepaintFull();
         }
@@ -190,14 +188,7 @@ void SlidingPopupsEffect::propertyNotify( EffectWindow* w, long a )
     QByteArray data = w->readProperty( mAtom, mAtom, 32 );
 
     if( data.length() < 1 )
-        {
-        FadeEffectProxy* proxy =
-        static_cast<FadeEffectProxy*>( effects->getProxy( "fade" ) );
-        if( proxy )
-            proxy->setWindowIgnored(w, false);
-
         return;
-        }
 
     long* d = reinterpret_cast< long* >( data.data());
     Data animData;
