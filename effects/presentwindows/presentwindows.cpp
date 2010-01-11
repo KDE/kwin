@@ -1544,6 +1544,8 @@ void PresentWindowsEffect::setActive( bool active, bool closingTab )
             {
             foreach( EffectWindow *w, effects->currentTabBoxWindowList() )
                 {
+                if( !w )
+                    continue;
                 m_motionManager.manage( w );
                 assert( m_windowData.contains( w ));
                 m_windowData[w].visible = effects->currentTabBoxWindowList().contains( w );
