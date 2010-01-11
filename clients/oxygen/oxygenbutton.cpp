@@ -160,8 +160,11 @@ namespace Oxygen
   void OxygenButton::mousePressEvent(QMouseEvent *e)
   {
 
-    status_ = Oxygen::Pressed;
-    update();
+    if( type_ == ButtonMax || e->button() == Qt::LeftButton )
+    {
+      status_ = Oxygen::Pressed;
+      update();
+    }
 
     KCommonDecorationButton::mousePressEvent(e);
   }
