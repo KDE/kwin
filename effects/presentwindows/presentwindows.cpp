@@ -690,6 +690,8 @@ void PresentWindowsEffect::tabBoxUpdated()
 
 void PresentWindowsEffect::tabBoxKeyEvent( QKeyEvent* event )
     {
+    if( !m_activated )
+        return;
     // not using the "normal" grabbedKeyboardEvent as we don't want to filter in tabbox
     if( event->type() == QEvent::KeyPress )
         {
