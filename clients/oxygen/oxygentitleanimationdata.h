@@ -131,7 +131,7 @@ namespace Oxygen
 
         signals:
 
-        virtual void pixmapsChanged( void );
+        void pixmapsChanged( void );
 
         protected slots:
 
