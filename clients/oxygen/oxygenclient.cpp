@@ -1434,13 +1434,13 @@ namespace Oxygen
 
     QPoint point = event->pos();
     if( itemClicked( point ) < 0 ) return false;
+    dragPoint_ = point;
 
     mouseButton_ = event->button();
     bool accepted( false );
     if( buttonToWindowOperation( mouseButton_ ) == ClientGroupDragOp )
     {
 
-      dragPoint_ = point;
       accepted = true;
 
     } else if( buttonToWindowOperation( mouseButton_ ) == OperationsOp ) {
@@ -1555,12 +1555,12 @@ namespace Oxygen
         );
       }
 
+      // reset button
+      mouseButton_ = Qt::NoButton;
       accepted = true;
 
     }
 
-    // reset button
-    mouseButton_ = Qt::NoButton;
     return accepted;
 
   }
