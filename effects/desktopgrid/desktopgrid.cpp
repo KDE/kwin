@@ -1020,6 +1020,8 @@ void DesktopGridEffect::setActive( bool active )
         return; // Only one fullscreen effect at a time thanks
     if( effects->numberOfDesktops() < 2 )
         return; // No point if there is only one desktop
+    if( active && isMotionManagerMovingWindows() )
+        return; // Still moving windows from last usage - don't activate
     if( activated == active )
         return; // Already in that state
 
