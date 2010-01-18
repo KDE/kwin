@@ -368,6 +368,8 @@ void DesktopGridEffect::windowAdded( EffectWindow* w )
         return;
     if( isUsingPresentWindows() )
         {
+        if( w->isDesktop() || w->isDock() || !w->visibleInClientGroup() )
+            return; // don't add
         if( w->isOnAllDesktops() )
             {
             for( int i=0; i<effects->numberOfDesktops(); i++ )
