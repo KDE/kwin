@@ -131,8 +131,10 @@ void DecorationDelegate::slotConfigure()
         new KWinDecorationConfigDialog( name, borderSizes, size, m_itemView );
     if( configDialog->exec() == KDialog::Accepted )
         {
-        static_cast< DecorationModel* >( itemView()->model() )->setBorderSize( index, configDialog->borderSize() );
-        static_cast< DecorationModel* >( itemView()->model() )->regeneratePreview( focusedIndex() );
+        DecorationModel* model = static_cast< DecorationModel* >(
+            static_cast< QSortFilterProxyModel* >( itemView()->model() )->sourceModel() );
+        model->setBorderSize( index, configDialog->borderSize() );
+        model->regeneratePreview( focusedIndex() );
         }
 
     delete configDialog;
