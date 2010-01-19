@@ -653,6 +653,8 @@ int AuroraeClient::layoutMetric(LayoutMetric lm, bool respectWindowState,
             return conf.buttonWidthShade();
         case MenuButton:
             return conf.buttonWidthMenu();
+        case HelpButton:
+            return conf.buttonWidthHelp();
         default:
             return conf.buttonWidth();
         }
