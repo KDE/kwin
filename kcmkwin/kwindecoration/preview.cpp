@@ -39,8 +39,6 @@
 #include <QX11Info>
 #include <kwindowsystem.h>
 
-// FRAME the preview doesn't update to reflect the changes done in the kcm
-
 KDecorationPreview::KDecorationPreview( QWidget* parent )
     :   QWidget( parent )
     {
@@ -123,6 +121,24 @@ void KDecorationPreview::paintEvent( QPaintEvent* e )
         QWidget *w = deco[Active]->widget();
         w->render( &painter, delta + w->mapToParent( QPoint(0, 0) ) );
         }
+    }
+
+QPixmap KDecorationPreview::preview()
+    {
+    QPixmap pixmap( size() );
+    pixmap.fill( Qt::transparent );
+
+    if ( deco[Inactive] )
+        {
+        QWidget *w = deco[Inactive]->widget();
+        w->render( &pixmap, w->mapToParent( QPoint(0, 0) ) );
+        }
+    if ( deco[Active] )
+        {
+        QWidget *w = deco[Active]->widget();
+        w->render( &pixmap, w->mapToParent( QPoint(0, 0) ) );
+        }
+    return pixmap;
     }
 
 void KDecorationPreview::resizeEvent( QResizeEvent* e )

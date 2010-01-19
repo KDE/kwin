@@ -54,6 +54,7 @@ class KDecorationPreview
         QRect windowGeometry( bool ) const;
         void setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size);
         void setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right);
+        QPixmap preview();
     protected:
         virtual void paintEvent( QPaintEvent* );
         virtual void resizeEvent( QResizeEvent* );

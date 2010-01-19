@@ -38,6 +38,9 @@
 
 class KDecorationFactory;
 
+namespace KWin
+{
+
 /**
  * This class holds the button data.
  */
@@ -196,11 +199,6 @@ class ButtonPositionWidget : public QWidget
 		explicit ButtonPositionWidget(QWidget *parent = 0);
 		~ButtonPositionWidget();
 
-		/**
-		 * set the factory, so the class e.g. knows which buttons are supported by the client
-		 */
-		void setDecorationFactory(KDecorationFactory *factory);
-
 		QString buttonsLeft() const;
 		QString buttonsRight() const;
 		void setButtonsLeft(const QString &buttons);
@@ -220,6 +218,7 @@ class ButtonPositionWidget : public QWidget
 		QString m_supportedButtons;
 };
 
+} // namespace KWin
 
 #endif
 // vim: ts=4

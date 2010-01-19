@@ -4,6 +4,7 @@
 	Copyright (c) 2001
 		Karol Szwed <gallium@kde.org>
 		http://gallium.n3.net/
+	Copyright 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
 
 	Supports new kwin configuration plugins, and titlebar button position
 	modification via dnd interface.
@@ -31,31 +32,25 @@
 #define KWINDECORATION_H
 
 #include <kcmodule.h>
-#include "buttons.h"
 #include <kconfig.h>
-#include <klibrary.h>
-#include <kapplication.h>
 
 #include <kdecoration.h>
 
-class KComboBox;
-class QCheckBox;
-class QGroupBox;
-class QLabel;
-class KComboBox;
-class KTabWidget;
-class KVBox;
+#include "ui_decoration.h"
 
-class KDecorationPlugins;
-class KDecorationPreview;
-
-// Stores themeName and its corresponding library Name
-struct DecorationInfo
+class QSortFilterProxyModel;
+namespace KWin
 {
-	QString name;
-	QString libraryName;
-};
 
+class DecorationModel;
+
+class KWinDecorationForm : public QWidget, public Ui::KWinDecorationForm
+{
+    Q_OBJECT
+
+    public:
+        explicit KWinDecorationForm( QWidget* parent );
+};
 
 class KWinDecorationModule : public KCModule, public KDecorationDefines
 {
@@ -79,54 +74,27 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 	protected slots:
 		// Allows us to turn "save" on
 		void slotSelectionChanged();
-		void slotChangeDecoration( const QString &  );
-		void slotBorderChanged( int );
-		void slotButtonsChanged();
+		void slotConfigureButtons();
+        void slotGHNSClicked();
 
 	private:
 		void readConfig( const KConfigGroup& conf );
 		void writeConfig( KConfigGroup &conf );
-		void findDecorations();
-		void createDecorationList();
-		void updateSelection();
-		QString decorationLibName( const QString& name );
-		QString decorationName ( QString& libName );
-		static QString styleToConfigLib( QString& styleLib );
-		void resetPlugin( KConfigGroup& conf, const QString& currentDecoName = QString() );
-		void checkSupportedBorderSizes();
-		static int borderSizeToIndex( BorderSize size, QList< BorderSize > sizes );
-		static BorderSize indexToBorderSize( int index, QList< BorderSize > sizes );
 
-		KTabWidget* tabWidget;
-
-		// Page 1
-		KComboBox* decorationList;
-		QList<DecorationInfo> decorations;
-
-		KDecorationPreview* preview;
-		KDecorationPlugins* plugins;
 		KSharedConfigPtr kwinConfig;
 
-		QCheckBox* cbUseCustomButtonPositions;
-	//	QCheckBox* cbUseMiniWindows;
-		QCheckBox* cbShowToolTips;
-		QLabel*    lBorder;
-		KComboBox* cBorder;
-		BorderSize border_size;
+        KWinDecorationForm* m_ui;
+        bool m_showTooltips;
+        bool m_customPositions;
+        QString m_leftButtons;
+        QString m_rightButtons;
 
-		QObject* pluginObject;
-		QWidget* pluginConfigWidget;
-		QString  currentLibraryName;
-		QString  oldLibraryName;
-		KLibrary* library;
-		QObject* (*allocatePlugin)( KConfigGroup& conf, QWidget* parent );
-
-		// Page 2
-		ButtonPositionWidget *buttonPositionWidget;
-		KVBox*	 buttonPage;
-                QGroupBox *pluginSettingsGrp;
+        DecorationModel* m_model;
+        QSortFilterProxyModel* m_proxyModel;
+        bool m_configLoaded;
 };
 
+} //namespace
 
 #endif
 // vim: ts=4

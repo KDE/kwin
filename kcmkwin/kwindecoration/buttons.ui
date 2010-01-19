@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KWinDecorationButtonsConfigForm</class>
+ <widget class="QWidget" name="KWinDecorationButtonsConfigForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="showToolTipsCheckBox">
+     <property name="whatsThis">
+      <string>Enabling this checkbox will show window button tooltips. If this checkbox is off, no window button tooltips will be shown.</string>
+     </property>
+     <property name="text">
+      <string>&amp;Show window button tooltips</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="useCustomButtonPositionsCheckBox">
+     <property name="whatsThis">
+      <string>The appropriate settings can be found in the &quot;Buttons&quot; Tab; please note that this option is not available on all styles yet.</string>
+     </property>
+     <property name="text">
+      <string>Use custom titlebar button &amp;positions</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="KWin::ButtonPositionWidget" name="buttonPositionWidget" native="true"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KWin::ButtonPositionWidget</class>
+   <extends>QWidget</extends>
+   <header>buttons.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

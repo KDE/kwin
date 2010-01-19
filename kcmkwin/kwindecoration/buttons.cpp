@@ -47,6 +47,9 @@
 
 #define BUTTONDRAGMIMETYPE "application/x-kde_kwindecoration_buttons"
 
+namespace KWin
+{
+
 ButtonDrag::ButtonDrag(Button btn)
 	: QMimeData()
 {
@@ -678,6 +681,7 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent)
 
 	// insert all possible buttons into the source (backwards to keep the preferred order...)
 	bool dummy;
+	m_supportedButtons = "MSHIAX_FBLR"; // support all buttons
 	new ButtonSourceItem(m_buttonSource, getButton('R', dummy) );
 	new ButtonSourceItem(m_buttonSource, getButton('L', dummy) );
 	new ButtonSourceItem(m_buttonSource, getButton('B', dummy) );
@@ -693,61 +697,6 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent)
 
 ButtonPositionWidget::~ButtonPositionWidget()
 {
-}
-
-void ButtonPositionWidget::setDecorationFactory(KDecorationFactory *factory)
-{
-	if (!factory)
-		return;
-
-	m_factory = factory;
-
-	// get the list of supported buttons
-	if (m_factory->supports(KDecorationDefines::AbilityAnnounceButtons) ) {
-		QString supportedButtons;
-
-		if (m_factory->supports(KDecorationDefines::AbilityButtonMenu) )
-			supportedButtons.append('M');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonOnAllDesktops) )
-			supportedButtons.append('S');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonSpacer) )
-			supportedButtons.append('_');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonHelp) )
-			supportedButtons.append('H');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonMinimize) )
-			supportedButtons.append('I');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonMaximize) )
-			supportedButtons.append('A');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonClose) )
-			supportedButtons.append('X');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonAboveOthers) )
-			supportedButtons.append('F');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonBelowOthers) )
-			supportedButtons.append('B');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonShade) )
-			supportedButtons.append('L');
-		if (m_factory->supports(KDecorationDefines::AbilityButtonResize) )
-			supportedButtons.append('R');
-
-		m_supportedButtons = supportedButtons;
-	} else {
-		// enable only buttons available before AbilityButton* introduction
-		m_supportedButtons = "MSHIAX_";
-	}
-
-	// update the button lists...
-	// 1. set status on the source items...
-	for (int i = 0; i < m_buttonSource->count(); i++) {
-		ButtonSourceItem *buttonItem = dynamic_cast<ButtonSourceItem*>(m_buttonSource->item(i));
-		if (buttonItem) {
-			Button b = buttonItem->button();
-			b.supported = m_supportedButtons.contains(b.type);
-			buttonItem->setButton(b);
-		}
-	}
-	// 2. rebuild the drop site items...
-	setButtonsLeft(buttonsLeft() );
-	setButtonsRight(buttonsRight() );
 }
 
 Button ButtonPositionWidget::getButton(QChar type, bool& success) {
@@ -856,6 +805,8 @@ void ButtonPositionWidget::setButtonsRight(const QString &buttons)
 	m_dropSite->recalcItemGeometry();
 	m_dropSite->update();
 }
+
+} // namespace KWin
 
 #include "buttons.moc"
 // vim: ts=4
