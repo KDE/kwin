@@ -1,16 +1,16 @@
 /*
-	This is the new kwindecoration kcontrol module
+    This is the new kwindecoration kcontrol module
 
-	Copyright (c) 2001
-		Karol Szwed <gallium@kde.org>
-		http://gallium.n3.net/
-	Copyright 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
+    Copyright (c) 2001
+        Karol Szwed <gallium@kde.org>
+        http://gallium.n3.net/
+    Copyright 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
 
-	Supports new kwin configuration plugins, and titlebar button position
-	modification via dnd interface.
+    Supports new kwin configuration plugins, and titlebar button position
+    modification via dnd interface.
 
-	Based on original "kwintheme" (Window Borders)
-	Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
+    Based on original "kwintheme" (Window Borders)
+    Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -54,34 +54,34 @@ class KWinDecorationForm : public QWidget, public Ui::KWinDecorationForm
 
 class KWinDecorationModule : public KCModule, public KDecorationDefines
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		KWinDecorationModule(QWidget* parent, const QVariantList &);
-		~KWinDecorationModule();
+    public:
+        KWinDecorationModule(QWidget* parent, const QVariantList &);
+        ~KWinDecorationModule();
 
-		virtual void load();
-		virtual void save();
-		virtual void defaults();
+        virtual void load();
+        virtual void save();
+        virtual void defaults();
 
-		QString quickHelp() const;
+        QString quickHelp() const;
 
-	signals:
-		void pluginLoad( const KConfigGroup& conf );
-		void pluginSave( KConfigGroup &conf );
-		void pluginDefaults();
+    signals:
+        void pluginLoad( const KConfigGroup& conf );
+        void pluginSave( KConfigGroup &conf );
+        void pluginDefaults();
 
-	protected slots:
-		// Allows us to turn "save" on
-		void slotSelectionChanged();
-		void slotConfigureButtons();
+    protected slots:
+        // Allows us to turn "save" on
+        void slotSelectionChanged();
+        void slotConfigureButtons();
         void slotGHNSClicked();
 
-	private:
-		void readConfig( const KConfigGroup& conf );
-		void writeConfig( KConfigGroup &conf );
+    private:
+        void readConfig( const KConfigGroup& conf );
+        void writeConfig( KConfigGroup &conf );
 
-		KSharedConfigPtr kwinConfig;
+        KSharedConfigPtr kwinConfig;
 
         KWinDecorationForm* m_ui;
         bool m_showTooltips;
@@ -97,5 +97,3 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
 } //namespace
 
 #endif
-// vim: ts=4
-// kate: space-indent off; tab-width 4;

@@ -1,16 +1,16 @@
 /*
-	This is the new kwindecoration kcontrol module
+    This is the new kwindecoration kcontrol module
 
-	Copyright (c) 2001
-		Karol Szwed <gallium@kde.org>
-		http://gallium.n3.net/
-	Copyright 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
+    Copyright (c) 2001
+        Karol Szwed <gallium@kde.org>
+        http://gallium.n3.net/
+    Copyright 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
 
-	Supports new kwin configuration plugins, and titlebar button position
-	modification via dnd interface.
+    Supports new kwin configuration plugins, and titlebar button position
+    modification via dnd interface.
 
-	Based on original "kwintheme" (Window Borders)
-	Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
+    Based on original "kwintheme" (Window Borders)
+    Copyright (C) 2001 Rik Hemsley (rikkus) <rik@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -85,22 +85,22 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     m_proxyModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
     m_ui->decorationList->setModel( m_proxyModel );
 
-	readConfig( style );
+    readConfig( style );
 
-	connect( m_ui->decorationList, SIGNAL(activated(QModelIndex)), SLOT(slotSelectionChanged()) );
+    connect( m_ui->decorationList, SIGNAL(activated(QModelIndex)), SLOT(slotSelectionChanged()) );
     connect( m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect( m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()) );
     connect( m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
     connect( delegate, SIGNAL(regeneratePreview(QModelIndex,QSize)),
              m_model, SLOT(regeneratePreview(QModelIndex,QSize)));
 
-	KAboutData *about =
-		new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
-				ki18n("Window Decoration Control Module"),
-				0, KLocalizedString(), KAboutData::License_GPL,
-				ki18n("(c) 2001 Karol Szwed"));
-	about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
-	setAboutData(about);
+    KAboutData *about =
+            new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
+                ki18n("Window Decoration Control Module"),
+                0, KLocalizedString(), KAboutData::License_GPL,
+                ki18n("(c) 2001 Karol Szwed"));
+    about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
+    setAboutData(about);
 }
 
 
@@ -111,7 +111,7 @@ KWinDecorationModule::~KWinDecorationModule()
 // This is the selection handler setting
 void KWinDecorationModule::slotSelectionChanged()
 {
-	emit KCModule::changed(true);
+    emit KCModule::changed(true);
 }
 
 // Reads the kwin config settings, and sets all UI controls to those settings
@@ -120,8 +120,8 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
 {
     m_showTooltips = conf.readEntry("ShowToolTips", true);
 
-	// Find the corresponding decoration name to that of
-	// the current plugin library name
+    // Find the corresponding decoration name to that of
+    // the current plugin library name
 
    QString libraryName = conf.readEntry("PluginLib",
                          ((QPixmap::defaultDepth() > 8) ? "kwin3_oxygen" : "kwin3_plastik"));
@@ -157,13 +157,13 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
             }
         }
 
-	// Buttons tab
-	// ============
+    // Buttons tab
+    // ============
     m_customPositions = conf.readEntry("CustomButtonPositions", false);
-	// Menu and onAllDesktops buttons are default on LHS
+    // Menu and onAllDesktops buttons are default on LHS
     m_leftButtons = conf.readEntry("ButtonsOnLeft", KDecorationOptions::defaultTitleButtonsLeft());
-	// Help, Minimize, Maximize and Close are default on RHS
-	m_rightButtons = conf.readEntry("ButtonsOnRight", KDecorationOptions::defaultTitleButtonsRight());
+    // Help, Minimize, Maximize and Close are default on RHS
+    m_rightButtons = conf.readEntry("ButtonsOnRight", KDecorationOptions::defaultTitleButtonsRight());
     if( m_configLoaded )
         m_model->changeButtons( m_customPositions, m_leftButtons, m_rightButtons );
     else
@@ -172,7 +172,7 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
         m_model->setButtons( m_customPositions, m_leftButtons, m_rightButtons );
         }
 
-	emit KCModule::changed(false);
+    emit KCModule::changed(false);
 }
 
 
@@ -182,12 +182,12 @@ void KWinDecorationModule::writeConfig( KConfigGroup & conf )
     const QModelIndex index = m_proxyModel->mapToSource( m_ui->decorationList->currentIndex() );
     const QString libName = m_model->data( index, DecorationModel::LibraryNameRole ).toString();
 
-	// General settings
-	conf.writeEntry("PluginLib", libName);
+    // General settings
+    conf.writeEntry("PluginLib", libName);
     conf.writeEntry("CustomButtonPositions", m_customPositions );
     conf.writeEntry("ShowToolTips", m_showTooltips );
 
-	// Button settings
+    // Button settings
     conf.writeEntry("ButtonsOnLeft", m_leftButtons );
     conf.writeEntry("ButtonsOnRight", m_rightButtons );
     conf.writeEntry( "BorderSize",
@@ -201,8 +201,8 @@ void KWinDecorationModule::writeConfig( KConfigGroup & conf )
         group.sync();
         }
 
-	// We saved, so tell kcmodule that there have been  no new user changes made.
-	emit KCModule::changed(false);
+    // We saved, so tell kcmodule that there have been  no new user changes made.
+    emit KCModule::changed(false);
 }
 
 
@@ -231,7 +231,7 @@ void KWinDecorationModule::save()
 
 void KWinDecorationModule::defaults()
 {
-	// Set the KDE defaults
+    // Set the KDE defaults
     m_customPositions = false;
     m_showTooltips = true;
     const QModelIndex index = m_proxyModel->mapFromSource( m_model->indexOfName( i18n("Oxygen") ) );
@@ -248,14 +248,14 @@ void KWinDecorationModule::defaults()
 
 QString KWinDecorationModule::quickHelp() const
 {
-	return i18n( "<h1>Window Manager Decoration</h1>"
-		"<p>This module allows you to choose the window border decorations, "
-		"as well as titlebar button positions and custom decoration options.</p>"
-		"To choose a theme for your window decoration click on its name and apply your choice by clicking the \"Apply\" button below."
-		" If you do not want to apply your choice you can click the \"Reset\" button to discard your changes."
-		"<p>You can configure each theme. There are different options specific for each theme.</p>"
-		"<p>On the \"Buttons\" tab check the \"Use custom titlebar button positions\" box "
-		"and you can change the positions of the buttons to your liking.</p>" );
+    return i18n( "<h1>Window Manager Decoration</h1>"
+        "<p>This module allows you to choose the window border decorations, "
+        "as well as titlebar button positions and custom decoration options.</p>"
+        "To choose a theme for your window decoration click on its name and apply your choice by clicking the \"Apply\" button below."
+        " If you do not want to apply your choice you can click the \"Reset\" button to discard your changes."
+        "<p>You can configure each theme. There are different options specific for each theme.</p>"
+        "<p>On the \"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+        "and you can change the positions of the buttons to your liking.</p>" );
 }
 
 void KWinDecorationModule::slotConfigureButtons()
@@ -306,6 +306,3 @@ void KWinDecorationModule::slotGHNSClicked()
 } // namespace KWin
 
 #include "kwindecoration.moc"
-// vim: ts=4
-// kate: space-indent off; tab-width 4;
-
