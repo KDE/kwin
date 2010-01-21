@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2010 Jorge Mata <matamax123@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,6 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobal.h>
 #include <kstandarddirs.h>
 
+#include <kaction.h>
+#include <kactioncollection.h>
+
 #include <math.h>
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
@@ -48,13 +52,51 @@ TrackMouseEffect::TrackMouseEffect()
     , angle( 0 )
     , texture( NULL )
     {
-    effects->startMousePolling(); // We require it to detect activation as well
+    mousePolling = false;
+    actionCollection = new KActionCollection( this );
+    action = static_cast< KAction* >( actionCollection->addAction( "TrackMouse" ));
+    action->setText( i18n( "Track mouse" ) );
+    action->setGlobalShortcut( KShortcut() );
+    connect( action, SIGNAL( triggered( bool ) ), this, SLOT( toggle() ) );
+    reconfigure( ReconfigureAll );
     }
 
 TrackMouseEffect::~TrackMouseEffect()
     {
-    effects->stopMousePolling();
+    if( mousePolling )
+        effects->stopMousePolling();
     delete texture;
+    }
+
+void TrackMouseEffect::reconfigure( ReconfigureFlags )
+    {
+    KConfigGroup conf = effects->effectConfig( "TrackMouse" );
+    bool shift = conf.readEntry( "Shift", false );
+    bool alt = conf.readEntry( "Alt", false );
+    bool control = conf.readEntry( "Control", true );
+    bool meta = conf.readEntry( "Meta", true );
+    modifier = 0;
+    if( meta )
+        modifier |= Qt::MetaModifier;
+    if( control )
+        modifier |= Qt::ControlModifier;
+    if( alt )
+        modifier |= Qt::AltModifier;
+    if( shift )
+        modifier |= Qt::ShiftModifier;
+    if( modifier != 0 && action != NULL )
+        {
+        action->forgetGlobalShortcut();
+        effects->startMousePolling();
+        mousePolling = true;
+        }
+    else if( action != NULL )
+        {
+        action->setGlobalShortcut( KShortcut() );
+        if( mousePolling )
+            effects->stopMousePolling();
+        mousePolling = false;
+        }
     }
 
 void TrackMouseEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -103,10 +145,27 @@ void TrackMouseEffect::postPaintScreen()
     effects->postPaintScreen();
     }
 
+void TrackMouseEffect::toggle()
+    {
+    if( !active )
+        {
+        if( texture == NULL )
+            loadTexture();
+        if( texture == NULL )
+            return;
+        active = true;
+        angle = 0;
+        }
+    else
+        active = false;
+    for( int i = 0; i < STARS; ++i )
+        effects->addRepaint( starRect( i ));
+    }
+
 void TrackMouseEffect::mouseChanged( const QPoint&, const QPoint&, Qt::MouseButtons,
     Qt::MouseButtons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers )
     {
-    if( modifiers == ( Qt::CTRL | Qt::META ))
+    if( modifier != 0 && modifiers == modifier )
         {
         if( !active )
             {
@@ -117,21 +176,14 @@ void TrackMouseEffect::mouseChanged( const QPoint&, const QPoint&, Qt::MouseButt
             active = true;
             angle = 0;
             }
-        for( int i = 0;
-             i < STARS;
-             ++i )
+        for( int i = 0; i < STARS; ++i )
             effects->addRepaint( starRect( i ));
         }
-    else
+    else if( active )
         {
-        if( active )
-            {
-            for( int i = 0;
-                 i < STARS;
-                 ++i )
-                effects->addRepaint( starRect( i ));
-            active = false;
-            }
+        for( int i = 0; i < STARS; ++i )
+            effects->addRepaint( starRect( i ));
+        active = false;
         }
     }
 

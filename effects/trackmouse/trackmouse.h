@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2010 Jorge Mata <matamax123@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,12 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <kwinglutils.h>
 
+class KAction;
+
 namespace KWin
 {
 
 class TrackMouseEffect
-    : public Effect
+    : public QObject, public Effect
     {
+    Q_OBJECT
     public:
         TrackMouseEffect();
         virtual ~TrackMouseEffect();
@@ -39,13 +43,19 @@ class TrackMouseEffect
         virtual void mouseChanged( const QPoint& pos, const QPoint& old,
             Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
             Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers );
+        virtual void reconfigure( ReconfigureFlags );
+    private slots:
+        void toggle();
     private:
         QRect starRect( int num ) const;
         void loadTexture();
-        bool active;
+        bool active, mousePolling;
         int angle;
         GLTexture* texture;
         QSize textureSize;
+        KActionCollection* actionCollection;
+        KAction* action;
+        Qt::KeyboardModifiers modifier;
     };
 
 } // namespace

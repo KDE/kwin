@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
+Copyright (C) 2010 Jorge Mata <matamax123@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,9 +24,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kcmodule.h>
 
+#include "ui_trackmouse_config.h"
+
+class KActionCollection;
+class KAction;
 
 namespace KWin
 {
+
+class TrackMouseEffectConfigForm : public QWidget, public Ui::TrackMouseEffectConfigForm
+    {
+      Q_OBJECT
+      public:
+        explicit TrackMouseEffectConfigForm( QWidget* parent );
+    };
 
 class TrackMouseEffectConfig : public KCModule
     {
@@ -38,6 +50,12 @@ class TrackMouseEffectConfig : public KCModule
         virtual void save();
         virtual void load();
         virtual void defaults();
+    private slots:
+        virtual void enableEditor( bool );
+    private:
+        TrackMouseEffectConfigForm* m_ui;
+        KAction *action;
+        KActionCollection* m_actionCollection;
     };
 
 } // namespace

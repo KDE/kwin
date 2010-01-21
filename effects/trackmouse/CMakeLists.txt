@@ -22,6 +22,7 @@ install( FILES
 # Source files
 set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
     trackmouse/trackmouse_config.cpp
+    trackmouse/trackmouse_config.ui
     )
 
 # .desktop files
