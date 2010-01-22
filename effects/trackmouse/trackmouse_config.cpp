@@ -116,13 +116,12 @@ void TrackMouseEffectConfig::enableEditor( bool enabled )
     if( !enabled && !m_ui->alt->isChecked() && !m_ui->shift->isChecked() && !m_ui->meta->isChecked() && !m_ui->control->isChecked() )
         {
         m_ui->editor->setEnabled( true );
-        action->setGlobalShortcut( KShortcut() );
         emit changed( true );
         }
     else if( enabled && ( m_ui->alt->isChecked() || m_ui->shift->isChecked() || m_ui->meta->isChecked() || m_ui->control->isChecked() ) )
         {
         m_ui->editor->setEnabled( false );
-        action->forgetGlobalShortcut();
+        action->setGlobalShortcut( KShortcut(), KAction::ShortcutTypes( KAction::ActiveShortcut | KAction::DefaultShortcut), KAction::NoAutoloading );
         emit changed(true);
         }
     emit changed( true );

@@ -86,13 +86,12 @@ void TrackMouseEffect::reconfigure( ReconfigureFlags )
         modifier |= Qt::ShiftModifier;
     if( modifier != 0 && action != NULL )
         {
-        action->forgetGlobalShortcut();
-        effects->startMousePolling();
+        if( !mousePolling )
+            effects->startMousePolling();
         mousePolling = true;
         }
     else if( action != NULL )
         {
-        action->setGlobalShortcut( KShortcut() );
         if( mousePolling )
             effects->stopMousePolling();
         mousePolling = false;
@@ -147,6 +146,8 @@ void TrackMouseEffect::postPaintScreen()
 
 void TrackMouseEffect::toggle()
     {
+    if( mousePolling )
+        return;
     if( !active )
         {
         if( texture == NULL )
