@@ -2850,6 +2850,10 @@ Client* Workspace::findSimilarClient( Client* c )
             return found;
         }
 
+    // If this is a transient window don't take a guess
+    if( c->isTransient() )
+        return NULL;
+
     // If we don't have an ID take a guess
     if( c->rules()->checkAutogrouping( options->autogroupSimilarWindows ))
         {
