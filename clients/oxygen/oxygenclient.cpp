@@ -420,13 +420,11 @@ namespace Oxygen
   {
 
     // check bounding rect against titleRect
-    // conflicts can happen only if there is only one item in group
-    if( itemData_.count() == 1 )
+    if( titleRectCanConflict() ) 
     {
       QRect titleRect( OxygenClient::titleRect() );
       if( titleRect.left() > rect.left() ) { rect.setLeft( titleRect.left() ); }
       if( titleRect.right() < rect.right() ) { rect.setRight( titleRect.right() ); }
-
     }
 
     // get title bounding rect
@@ -929,10 +927,14 @@ namespace Oxygen
     const QList< ClientGroupItem >& items( clientGroupItems() );
     QString caption( itemCount == 1 ? OxygenClient::caption() : items[index].title() );
 
+    // make sure title rect never conflicts with decoration buttons
+    if( titleRectCanConflict() ) 
+    { textRect = titleBoundingRect( painter->font(), textRect, caption ); }
+    
     // title outline
-    if( itemCount == 1 ) {
-
-      textRect = titleBoundingRect( painter->font(), textRect, caption );
+    if( itemCount == 1 )
+    {
+        
       if( itemData_.isAnimated() ) {
 
         renderTitleOutline( painter, item.boundingRect_, palette );
