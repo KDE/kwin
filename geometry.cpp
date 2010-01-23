@@ -2018,7 +2018,6 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     
     // keep track of old maximize mode 
     // to detect changes
-    MaximizeMode old_mode( max_mode );
     checkMaximizeGeometry();
     workspace()->checkActiveScreen( this );
     workspace()->updateStackingOrder();
@@ -2028,7 +2027,7 @@ void Client::setGeometry( int x, int y, int w, int h, ForceGeometry_t force )
     // - size is changed
     // - maximize mode is changed to MaximizeRestore, when size unchanged
     //   which can happen when untabbing maximized windows
-    if( resized || ( old_mode != max_mode && max_mode == MaximizeRestore ) )
+    if( resized )
         {
         discardWindowPixmap();
         if( scene != NULL )

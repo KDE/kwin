@@ -165,8 +165,19 @@ void ClientGroup::remove( Client* c, const QRect& newGeom, bool toNullGroup )
 
     c->setClientGroup( toNullGroup ? NULL : new ClientGroup( c ));
     if( newGeom.isValid() )
+        {
+        // HACK: if the group was maximized, one needs to make some checks on the future client maximize mode
+        // because the transition from maximized to MaximizeRestore is not handled properly in setGeometry when
+        // the new geometry size is unchanged.
+        // since newGeom has the same size as the old client geometry, one just needs to check the topLeft position of newGeom
+        // and compare that to the group maximize mode.
+        // when the new mode is predicted to be MaximizeRestore, one must set it manually, in order to avoid decoration artifacts
+        Client::MaximizeMode groupMaxMode( newVisible->maximizeMode() );
+        if( ( ( groupMaxMode & Client::MaximizeHorizontal ) && newGeom.left() != newVisible->geometry().left() ) || 
+            ( ( groupMaxMode & Client::MaximizeVertical ) && newGeom.top() != newVisible->geometry().top() ) )
+            c->maximize( Client::MaximizeRestore );
         c->setGeometry( newGeom );
-
+        }
     newVisible->triggerDecorationRepaint();
     }
 
