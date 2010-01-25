@@ -135,22 +135,26 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     mTmpConfig = KSharedConfig::openConfig(mTmpConfigFile.fileName());
 
     // NOTICE: this is intended to workaround broken GL implementations that successfully segfault on glXQuery :-(
-    KConfigGroup gl_workaround_config(mKWinConfig, "Compositing");
-    const bool checkIsSafe = gl_workaround_config.readEntry("CheckIsSafe", true);
-    if( checkIsSafe && CompositingPrefs::compositingPossible() )
+    KConfigGroup unsafeConfig(mKWinConfig, "Compositing");
+    const bool glUnsafe = unsafeConfig.readEntry( "OpenGLIsUnsafe", false );
+    if( !glUnsafe && CompositingPrefs::compositingPossible() )
         {
-        gl_workaround_config.writeEntry("CheckIsSafe", false);
-        gl_workaround_config.sync();
+        unsafeConfig.writeEntry( "OpenGLIsUnsafe", true );
+        unsafeConfig.sync();
+
         // Driver-specific config detection
         mDefaultPrefs.detect();
         initEffectSelector();
         // Initialize the user interface with the config loaded from kwinrc.
         load();
-        gl_workaround_config.writeEntry("CheckIsSafe", true);
-        gl_workaround_config.sync();
+
+        unsafeConfig.writeEntry( "OpenGLIsUnsafe", false );
+        unsafeConfig.sync();
         }
     else
         {
+        // TODO: Add a "force recheck" button that removes the "OpenGLInUnsafe" flag
+
         ui.useCompositing->setEnabled(false);
         ui.useCompositing->setChecked(false);
         compositingEnabled(false);

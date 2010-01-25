@@ -141,17 +141,40 @@ void Workspace::setupCompositing()
           break; // don't fall through (this is a testing one) */
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         case OpenGLCompositing:
-            kDebug( 1212 ) << "OpenGL compositing";
-            scene = new SceneOpenGL( this );
-            if( !scene->initFailed())
-                break; // -->
-            delete scene;
-            scene = NULL;
-            break; // do not fall back to XRender for now, maybe in the future
+            {
+            kDebug( 1212 ) << "Initializing OpenGL compositing";
+
+            // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
+            KSharedConfigPtr unsafeConfigPtr( KSharedConfig::openConfig( "kwinrc" ));
+            KConfigGroup unsafeConfig( unsafeConfigPtr, "Compositing" );
+            if( unsafeConfig.readEntry( "OpenGLIsUnsafe", false ))
+                kWarning( 1212 ) << "KWin has detected that your OpenGL library is unsafe to use, "
+                                    "falling back to XRender.";
+            else
+                {
+                unsafeConfig.writeEntry( "OpenGLIsUnsafe", true );
+                unsafeConfig.sync();
+
+                scene = new SceneOpenGL( this );
+
+                // TODO: Add 30 second delay to protect against screen freezes as well
+                unsafeConfig.writeEntry( "OpenGLIsUnsafe", false );
+                unsafeConfig.sync();
+
+                if( !scene->initFailed())
+                    break; // -->
+                delete scene;
+                scene = NULL;
+                }
+
+            // Fall back to XRender
+            kDebug(1212) << "Falling back to XRender as OpenGL failed";
+            type = options->compositingMode = XRenderCompositing;
+            }
 #endif
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         case XRenderCompositing:
-            kDebug( 1212 ) << "XRender compositing";
+            kDebug( 1212 ) << "Initializing XRender compositing";
             scene = new SceneXrender( this );
           break;
 #endif
@@ -159,7 +182,7 @@ void Workspace::setupCompositing()
 #ifndef KWIN_HAVE_COMPOSITING
             kDebug( 1212 ) << "Compositing was not available at compile time";
 #else
-            kDebug( 1212 ) << "No compositing";
+            kDebug( 1212 ) << "No compositing enabled";
 #endif
             delete cm_selection;
           return;
@@ -270,6 +293,14 @@ void Workspace::finishCompositing()
     while( !deleted.isEmpty())
         deleted.first()->discard( Allowed );
 #endif
+    }
+
+// OpenGL self-check failed, fallback to XRender
+void Workspace::fallbackToXRenderCompositing()
+    {
+    finishCompositing();
+    options->compositingMode = XRenderCompositing;
+    setupCompositing();
     }
 
 void Workspace::lostCMSelection()

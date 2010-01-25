@@ -713,7 +713,7 @@ bool SceneOpenGL::selfCheckFinish()
             || img.pixel( 1, 1 ) != QColor( Qt::black ).rgb()
             || img.pixel( 2, 1 ) != QColor( Qt::white ).rgb())
             {
-            kError( 1212 ) << "Compositing self-check failed, disabling compositing.";
+            kError( 1212 ) << "OpenGL compositing self-check failed, falling back to XRender.";
             ok = false;
             break;
             }
@@ -721,7 +721,7 @@ bool SceneOpenGL::selfCheckFinish()
     if( err.error( true ))
         ok = false;
     if( ok )
-        kDebug( 1212 ) << "Compositing self-check passed.";
+        kDebug( 1212 ) << "OpenGL compositing self-check passed.";
     if( !ok && options->disableCompositingChecks )
         {
         kWarning( 1212 ) << "Compositing checks disabled, proceeding regardless of self-check failure.";
@@ -762,7 +762,7 @@ void SceneOpenGL::paint( QRegion damage, ToplevelList toplevels )
     if( !selfCheckDone )
         {
         if( !selfCheckFinish())
-            QTimer::singleShot( 0, Workspace::self(), SLOT( finishCompositing()));
+            QTimer::singleShot( 0, Workspace::self(), SLOT( fallbackToXRenderCompositing()));
         selfCheckDone = true;
         }
     // do cleanup
@@ -1376,7 +1376,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         return;
     glPushMatrix();
     // set texture filter
-    if( options->smoothScale != 0 ) // default to yes
+    if( options->glSmoothScale != 0 ) // default to yes
         {
         if( mask & PAINT_WINDOW_TRANSFORMED )
             filter = ImageFilterGood;
@@ -1392,7 +1392,7 @@ void SceneOpenGL::Window::performPaint( int mask, QRegion region, WindowPaintDat
         // avoid unneeded mipmap generation by only using trilinear
         // filtering when it actually makes a difference, that is with
         // minification or changed vertices
-        if( options->smoothScale == 2
+        if( options->glSmoothScale == 2
             && ( data.quads.smoothNeeded() || data.xScale < 1 || data.yScale < 1 ))
             {
             texture.setFilter( GL_LINEAR_MIPMAP_LINEAR );
@@ -1569,7 +1569,7 @@ void SceneOpenGL::Window::paintDecoration( const QPixmap* decoration, TextureTyp
         // avoid unneeded mipmap generation by only using trilinear
         // filtering when it actually makes a difference, that is with
         // minification or changed vertices
-        if( options->smoothScale == 2
+        if( options->glSmoothScale == 2
             && ( data.quads.smoothNeeded() || data.xScale < 1 || data.yScale < 1 ))
             {
             decorationTexture->setFilter( GL_LINEAR_MIPMAP_LINEAR );

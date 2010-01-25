@@ -678,6 +678,7 @@ class Workspace : public QObject, public KDecorationDefines
         void setPopupClientOpacity( QAction* action );
         void setupCompositing();
         void finishCompositing();
+        void fallbackToXRenderCompositing();
         void performCompositing();
         void performMousePoll();
         void lostCMSelection();

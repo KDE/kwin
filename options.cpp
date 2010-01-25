@@ -253,7 +253,7 @@ void Options::reloadCompositingSettings()
         glMode = GLFallback;
     glDirect = config.readEntry("GLDirect", prefs.enableDirectRendering() );
     glVSync = config.readEntry("GLVSync", prefs.enableVSync() );
-    smoothScale = qBound( -1, config.readEntry( "GLTextureFilter", -1 ), 2 );
+    glSmoothScale = qBound( -1, config.readEntry( "GLTextureFilter", -1 ), 2 );
     glStrictBinding = config.readEntry( "GLStrictBinding", prefs.strictBinding());
 
     xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false );
@@ -270,9 +270,6 @@ void Options::reloadCompositingSettings()
 
     unredirectFullscreen = config.readEntry( "UnredirectFullscreen", true );
     animationSpeed = qBound( 0, config.readEntry( "AnimationSpeed", 3 ), 6 );
-
-    if( !disableCompositingChecks && !prefs.validateSetup( compositingMode ))
-        useCompositing = false;
     }
 
 

@@ -248,7 +248,7 @@ bool SceneXrender::selfCheckFinish()
             || img.pixel( 1, 1 ) != QColor( Qt::black ).rgb()
             || img.pixel( 2, 1 ) != QColor( Qt::white ).rgb())
             {
-            kError( 1212 ) << "Compositing self-check failed, disabling compositing.";
+            kError( 1212 ) << "XRender compositing self-check failed, disabling compositing.";
             ok = false;
             break;
             }
@@ -256,7 +256,7 @@ bool SceneXrender::selfCheckFinish()
     if( err.error( true ))
         ok = false;
     if( ok )
-        kDebug( 1212 ) << "Compositing self-check passed.";
+        kDebug( 1212 ) << "XRender compositing self-check passed.";
     if( !ok && options->disableCompositingChecks )
         {
         kWarning( 1212 ) << "Compositing checks disabled, proceeding regardless of self-check failure.";

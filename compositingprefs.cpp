@@ -107,28 +107,6 @@ QString CompositingPrefs::compositingNotPossibleReason()
 #endif
     }
 
-// This function checks selected compositing setup and returns false if it should not
-// be used even if explicitly configured (unless checks are overridden).
-// More checks like broken XRender setups etc. should be added here.
-bool CompositingPrefs::validateSetup( CompositingType compositingType ) const
-    {
-    switch( compositingType )
-        {
-        case NoCompositing:
-            return false;
-        case OpenGLCompositing:
-            if( mDriver == "software" )
-                {
-                kDebug( 1212 ) << "Software GL renderer detected, forcing compositing off.";
-                return false;
-                }
-            return true; // allow
-        case XRenderCompositing:
-            return true; // xrender - always allow?
-        }
-    abort();
-    }
-
 void CompositingPrefs::detect()
     {
     if( !compositingPossible())
@@ -235,10 +213,6 @@ void CompositingPrefs::detectDriverAndVersion()
     mGLRenderer = QString((const char*)glGetString( GL_RENDERER ));
     mGLVersion = QString((const char*)glGetString( GL_VERSION ));
     mXgl = detectXgl();
-    kDebug( 1212 ) << "GL vendor is" << mGLVendor;
-    kDebug( 1212 ) << "GL renderer is" << mGLRenderer;
-    kDebug( 1212 ) << "GL version is" << mGLVersion;
-    kDebug( 1212 ) << "XGL:" << ( mXgl ? "yes" : "no" );
 
     if( mGLRenderer.startsWith( "Mesa DRI Intel" ) || mGLRenderer.startsWith( "Mesa DRI Mobile Intel" )) // krazy:exclude=strings
         {
@@ -285,105 +259,44 @@ void CompositingPrefs::detectDriverAndVersion()
         mDriver = "unknown";
         }
 
-    kDebug( 1212 ) << "Detected driver" << mDriver << ", version" << mVersion.join(".");
+    // Always output as it's VERY useful
+    kWarning( 1212 ) << "GL vendor is" << mGLVendor;
+    kWarning( 1212 ) << "GL renderer is" << mGLRenderer;
+    kWarning( 1212 ) << "GL version is" << mGLVersion;
+    if( mXgl )
+        kWarning( 1212 ) << "Using XGL";
+    kWarning( 1212 ) << "Detected driver" << mDriver << ", version" << mVersion.join(".");
 #endif
-    }
-
-void CompositingPrefs::parseMesaVersion( const QString &version, int *major, int *minor )
-    {
-    *major = 0;
-    *minor = 0;
-
-    const QStringList tokens = version.split( ' ' );
-    int token = 0;
-    while( token < tokens.count() && !tokens.at( token ).endsWith( "Mesa" ) )
-        token++;
-
-    if( token < tokens.count() - 1 )
-        {
-        const QStringList version = tokens.at( token + 1 ).split( '.' );
-        if( version.count() >= 2 )
-            {
-            *major = version[ 0 ].toInt();
-
-            int end = 0;
-            while( end < version[ 1 ].length() && version[ 1 ][ end ].isDigit() )
-                end++;
-
-            *minor = version[ 1 ].left( end ).toInt();
-            }
-        }
     }
 
 // See http://techbase.kde.org/Projects/KWin/HW for a list of some cards that are known to work.
 void CompositingPrefs::applyDriverSpecificOptions()
     {
+    // Always recommend
+    mRecommendCompositing = true;
+
+    // Known driver specific options
     if( mXgl )
         {
-        kDebug( 1212 ) << "xgl, enabling";
-        mRecommendCompositing = true;
         mStrictBinding = false;
         }
     else if( mDriver == "intel" )
         {
-        kDebug( 1212 ) << "intel driver, disabling vsync, enabling direct";
         mEnableVSync = false;
-        mEnableDirectRendering = true;
-        if( mVersion >= Version( "20061017" ))
-            { 
-            if( mGLRenderer.contains( "Intel(R) 9" ))
-                { // Enable compositing by default on 900-series cards
-                kDebug( 1212 ) << "intel >= 20061017 and 900-series card, enabling compositing";
-                mRecommendCompositing = true;
-                }
-            if( mGLRenderer.contains( "Mesa DRI Intel(R) G" ))
-                { // e.g. G43 chipset
-                kDebug( 1212 ) << "intel >= 20061017 and Gxx-series card, enabling compositing";
-                mRecommendCompositing = true;
-                }
-            }
         }
     else if( mDriver == "nvidia" )
         {
         mStrictBinding = false;
-        if( mVersion >= Version( "173.14.12" ))
-            {
-            kDebug( 1212 ) << "nvidia >= 173.14.12, enabling compositing";
-            mRecommendCompositing = true;
-            }
         }
-    else if( mDriver == "radeon" )
-        {
-        if( mGLRenderer.startsWith( "Mesa DRI R200" ) && mVersion >= Version( "20060602" )) // krazy:exclude=strings
-            {
-            kDebug( 1212 ) << "radeon r200 >= 20060602, enabling compositing";
-            mRecommendCompositing = true;
-            }
-        if( mGLRenderer.startsWith( "Mesa DRI R300" ) && mVersion >= Version( "20090101" )) // krazy:exclude=strings
-            {
-            kDebug( 1212 ) << "radeon r300 >= 20090101, enabling compositing";
-            mRecommendCompositing = true;
-            }
-        if( mGLRenderer.startsWith( "Mesa DRI R600" ) )
-            {
-            // Enable compositing with Mesa 7.7 or later
-            int major, minor;
-            parseMesaVersion( mGLVersion, &major, &minor );
-            if( major > 7 || ( major == 7 && minor >= 7 ) )
-                {
-                kDebug( 1212 ) << "Radeon R600/R700, Mesa 7.7 or better. Enabling compositing.";
-                mRecommendCompositing = true;
-                }
-            }
-        }
-    else if( mDriver == "fglrx" )
-        { // radeon r200 only ?
-        if( mVersion >= Version( "2.1.7412" ))
-            {
-            kDebug( 1212 ) << "fglrx >= 2.1.7412, enabling compositing";
-            mRecommendCompositing = true;
-            }
-        }
+    //else if( mDriver == "fglrx" )
+    //    {
+    //    }
+    //else if( mDriver == "radeon" )
+    //    {
+    //    }
+    //else if( mDriver == "software" )
+    //    {
+    //    }
     }
 
 

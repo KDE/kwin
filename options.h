@@ -325,27 +325,36 @@ class Options : public KDecorationOptions
         bool autogroupSimilarWindows;
         bool autogroupInForeground;
 
+        // Desktop effects
+        double animationTimeFactor() const;
+
+        //----------------------
         // Compositing settings
-        bool useCompositing;
+
+        enum GLMode { GLTFP, GLSHM, GLFallback };
+
         CompositingType compositingMode;
+        bool useCompositing; // Separate to mode so the user can toggle
+
+        // General preferences
         HiddenPreviews hiddenPreviews;
         bool unredirectFullscreen;
         bool disableCompositingChecks;
-
-        uint refreshRate;
-        // This is for OpenGL mode
-        int smoothScale; // 0 = no, 1 = yes when transformed,
-                         // 2 = try trilinear when transformed; else 1,
-                         // -1 = auto
-        // This is for XRender mode
+        // OpenGL
+        GLMode glMode;
+        int glSmoothScale;  // 0 = no, 1 = yes when transformed,
+                            // 2 = try trilinear when transformed; else 1,
+                            // -1 = auto
+        bool glVSync;
+        // XRender
         bool xrenderSmoothScale;
 
-        enum GLMode { GLTFP, GLSHM, GLFallback };
-        GLMode glMode;
+        // Settings that should be auto-detected
+        uint refreshRate;
         bool glDirect;
-        bool glVSync;
         bool glStrictBinding;
-        double animationTimeFactor() const;
+
+        //----------------------
 
     private:
         WindowOperation OpTitlebarDblClick;
