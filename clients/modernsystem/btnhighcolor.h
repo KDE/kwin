@@ -21,7 +21,7 @@
 #define __BTNHIGHCOLOR_H
 
 /* XPM */
-static const char * btnhighcolor_xpm[] = {
+static const char * const btnhighcolor_xpm[] = {
 "14 15 75 1",
 " 	c None",
 ".	c #6E6E6E",

@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace Redmond {
 
-static const char *kdelogo[] = {
+static const char * const kdelogo[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 8 1",
 " 	c None",
