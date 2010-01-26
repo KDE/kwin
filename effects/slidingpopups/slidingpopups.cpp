@@ -136,6 +136,7 @@ void SlidingPopupsEffect::postPaintWindow( EffectWindow* w )
         {
         mDisappearingWindows.remove( w );
         w->unrefWindow();
+        effects->addRepaintFull();
         }
     }
 
@@ -178,6 +179,7 @@ void SlidingPopupsEffect::windowDeleted( EffectWindow* w )
     mAppearingWindows.remove( w );
     mDisappearingWindows.remove( w );
     mWindowsData.remove( w );
+    effects->addRepaintFull();
     }
 
 void SlidingPopupsEffect::propertyNotify( EffectWindow* w, long a )
