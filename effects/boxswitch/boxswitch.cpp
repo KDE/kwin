@@ -257,7 +257,10 @@ void BoxSwitchEffect::windowInputMouseEvent( Window w, QEvent* e )
         for( i = windows.constBegin(); i != windows.constEnd(); ++i )
             {
             if( i.value()->clickable.contains( pos ))
+                {
                 effects->setTabBoxWindow( i.key() );
+                break;
+                }
             }
         // special handling for second half of window in case of animation and even number of windows
         if( mAnimateSwitch && ( windows.size() % 2 == 0 ) )
