@@ -1546,6 +1546,7 @@ namespace Oxygen
       // detach tab from window
       if( drag->target() == 0 && itemData_.count() > 1 )
       {
+        itemData_.setDirty( true );
         removeFromClientGroup( sourceItem_,
             widget()->frameGeometry().adjusted(
                 layoutMetric( LM_OuterPaddingLeft ),
@@ -1665,8 +1666,8 @@ namespace Oxygen
         { itemClicked = -1; }
       }
 
-      moveItemInClientGroup( from, itemClicked );
       itemData_.setDirty( true );
+      moveItemInClientGroup( from, itemClicked );
       widget()->update();
 
     } else {
@@ -1674,6 +1675,7 @@ namespace Oxygen
       setForceActive( true );
       int itemClicked( OxygenClient::itemClicked( point, true ) );
       long source = QString( groupData->data( clientGroupItemDragMimeType() ) ).toLong();
+      itemData_.setDirty( true );
       moveItemToClientGroup( source, itemClicked );
 
     }
@@ -1709,6 +1711,7 @@ namespace Oxygen
     {
       if( button == itemData_[i].closeButton_.data() )
       {
+        itemData_.setDirty( true );
         closeClientGroupItem( i );
         return true;
       }
