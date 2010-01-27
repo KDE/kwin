@@ -87,7 +87,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 
     readConfig( style );
 
-    connect( m_ui->decorationList, SIGNAL(activated(QModelIndex)), SLOT(slotSelectionChanged()) );
+    connect( m_ui->decorationList->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), SLOT(slotSelectionChanged()) );
     connect( m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect( m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()) );
     connect( m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
