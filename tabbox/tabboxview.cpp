@@ -79,6 +79,7 @@ TabBoxView::TabBoxView( QWidget* parent )
     m_selectionFrame->setEnabledBorders( Plasma::FrameSvg::AllBorders );
 
     m_animation = new QPropertyAnimation( this, "selectedItem", this );
+    m_animation->setDuration(250);
     m_animation->setEasingCurve( QEasingCurve::InOutQuad );
 
     connect( tabBox, SIGNAL(configChanged()), this, SLOT(configChanged()));
