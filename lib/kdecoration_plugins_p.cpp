@@ -137,6 +137,7 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
     library = new KLibrary(path);
 
     // If that fails, fall back to the default plugin
+trydefaultlib:
     if (!library)
         {
 	kDebug(1212) << " could not load library, try default plugin again";
@@ -162,6 +163,13 @@ bool KDecorationPlugins::loadPlugin( QString nameStr )
 
     if(!create_ptr)
         {
+        if( nameStr != defaultPlugin )
+            {
+            kDebug(1212) << i18n( "The library %1 is not a KWin plugin.", path );
+            library->unload();
+            library = NULL;
+            goto trydefaultlib;
+            }
         error( i18n( "The library %1 is not a KWin plugin.", path ));
         library->unload();
         return false;
