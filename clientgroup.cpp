@@ -64,13 +64,28 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
 
     // If it's not possible to have the same states then ungroup them, TODO: Check all states
     // We do this here as the ungroup code in updateStates() cannot be called until add() completes
+    ShadeMode oldShadeMode = c->shadeMode();
+    if( c->shadeMode() != clients_[visible_]->shadeMode() )
+        c->setShade( clients_[visible_]->shadeMode() );
+    if( c->shadeMode() != clients_[visible_]->shadeMode() )
+        {
+        if( oldGroup ) // Re-add to old group if required
+            c->setClientGroup( oldGroup );
+        // One need to trigger decoration repaint on the group to 
+        // make sure hover animations are properly reset.
+        clients_[visible_]->triggerDecorationRepaint();
+        return;
+        }
     QRect oldGeom = c->geometry();
     if( c->geometry() != clients_[visible_]->geometry() )
         c->setGeometry( clients_[visible_]->geometry() );
     if( c->geometry() != clients_[visible_]->geometry() )
         {
+        if( c->shadeMode() != oldShadeMode )
+            c->setShade( oldShadeMode );  // Restore old shade mode
         if( oldGroup ) // Re-add to old group if required
             c->setClientGroup( oldGroup );
+        clients_[visible_]->triggerDecorationRepaint();
         return;
         }
     if( c->desktop() != clients_[visible_]->desktop() )
@@ -79,8 +94,11 @@ void ClientGroup::add( Client* c, int before, bool becomeVisible )
         {
         if( c->geometry() != oldGeom )
             c->setGeometry( oldGeom ); // Restore old geometry
+        if( c->shadeMode() != oldShadeMode )
+            c->setShade( oldShadeMode );  // Restore old shade mode
         if( oldGroup ) // Re-add to old group if required
             c->setClientGroup( oldGroup );
+        clients_[visible_]->triggerDecorationRepaint();
         return;
         }
 
