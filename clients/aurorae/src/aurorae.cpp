@@ -836,12 +836,12 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
         } else {
             result = Plasma::PaintUtils::transition(m_activeText, m_inactiveText, m_animationProgress);
         }
-        painter.drawPixmap(titleRect(), result);
+        painter.drawPixmap(0, 0, result);
     } else {
         if (isActive()) {
-            painter.drawPixmap(titleRect(), m_activeText);
+            painter.drawPixmap(0, 0, m_activeText);
         } else {
-            painter.drawPixmap(titleRect(), m_inactiveText);
+            painter.drawPixmap(0, 0, m_inactiveText);
             }
     }
 }
@@ -855,6 +855,15 @@ void AuroraeClient::generateTextPixmap(QPixmap& pixmap, bool active)
     }
     const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
     painter.setFont(options()->font(active));
+    if ((active && conf.haloActive()) || (!active && conf.haloInactive())) {
+        QRectF haloRect = painter.fontMetrics().boundingRect(titleRect(),
+            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+            caption());
+        if (haloRect.width() > titleRect().width()) {
+            haloRect.setWidth(titleRect().width());
+        }
+        Plasma::PaintUtils::drawHalo(&painter, haloRect);
+    }
     if (conf.useTextShadow()) {
         // shadow code is inspired by Qt FAQ: How can I draw shadows behind text?
         // see http://www.qtsoftware.com/developer/faqs/faq.2007-07-27.3052836051
@@ -892,7 +901,7 @@ void AuroraeClient::generateTextPixmap(QPixmap& pixmap, bool active)
     } else {
         painter.setPen(conf.inactiveTextColor());
     }
-    painter.drawText(pixmap.rect(), conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+    painter.drawText(titleRect(), conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
                       caption());
     painter.end();
 }
@@ -966,9 +975,9 @@ void AuroraeClient::animationFinished(int id)
 void AuroraeClient::resize(const QSize& s)
 {
     KCommonDecoration::resize(s);
-    m_activeText = QPixmap(titleRect().size());
+    m_activeText = QPixmap(QSize(widget()->width(), titleRect().height() + titleRect().y()));
     m_activeText.fill(Qt::transparent);
-    m_inactiveText = QPixmap(titleRect().size());
+    m_inactiveText = QPixmap(QSize(widget()->width(), titleRect().height() + titleRect().y()));
     m_inactiveText.fill(Qt::transparent);
     captionChange();
 }

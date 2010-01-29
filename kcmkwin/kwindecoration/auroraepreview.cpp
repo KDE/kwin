@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KStandardDirs>
 // Plasma
 #include <Plasma/FrameSvg>
+#include <Plasma/PaintUtils>
 
 namespace KWin
 {
@@ -319,6 +320,15 @@ void AuroraePreview::paintDeco( QPainter *painter, bool active, const QRect &rec
         caption = i18n( "Inactive Window" );
         }
     painter->setFont( KGlobalSettings::windowTitleFont() );
+    if( ( active && m_themeConfig->haloActive() ) || ( !active && m_themeConfig->haloInactive() ) )
+        {
+        QRectF haloRect = painter->fontMetrics().boundingRect(titleRect.toRect(),
+            m_themeConfig->alignment() | m_themeConfig->verticalAlignment() | Qt::TextSingleLine,
+            caption);
+        if( haloRect.width() > titleRect.width() )
+            haloRect.setWidth( titleRect.width() );
+        Plasma::PaintUtils::drawHalo(painter, haloRect);
+        }
     if( m_themeConfig->useTextShadow() )
         {
         // shadow code is inspired by Qt FAQ: How can I draw shadows behind text?

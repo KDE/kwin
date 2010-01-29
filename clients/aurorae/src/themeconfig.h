@@ -55,6 +55,12 @@ public:
     bool useTextShadow() const {
         return m_useTextShadow;
     }
+    bool haloActive() const {
+        return m_haloActive;
+    }
+    bool haloInactive() const {
+        return m_haloInactive;
+    }
     // Alignment
     Qt::Alignment alignment() const {
         return m_alignment;
@@ -184,6 +190,8 @@ private:
     int m_textShadowOffsetX;
     int m_textShadowOffsetY;
     bool m_useTextShadow;
+    bool m_haloActive;
+    bool m_haloInactive;
     Qt::Alignment m_alignment;
     Qt::Alignment m_verticalAlignment;
     // borders

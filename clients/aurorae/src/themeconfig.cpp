@@ -36,6 +36,8 @@ void ThemeConfig::load(KConfig *conf)
     m_inactiveTextShadowColor = general.readEntry("InactiveTextShadowColor", QColor(Qt::white));
     m_textShadowOffsetX = general.readEntry("TextShadowOffsetX", 0);
     m_textShadowOffsetY = general.readEntry("TextShadowOffsetY", 0);
+    m_haloActive = general.readEntry("HaloActive", false);
+    m_haloInactive = general.readEntry("HaloInactive", false);
     QString alignment = (general.readEntry("TitleAlignment", "Left")).toLower();
     if (alignment == "left") {
         m_alignment = Qt::AlignLeft;
