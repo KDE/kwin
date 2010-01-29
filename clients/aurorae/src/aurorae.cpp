@@ -23,12 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDE/Plasma/Animator>
 #include <KDE/Plasma/PaintUtils>
 #include <KIconEffect>
 #include <KIconLoader>
 
 #include <QPainter>
+#include <QPropertyAnimation>
 
 namespace Aurorae
 {
@@ -190,12 +190,11 @@ AuroraeFactory *AuroraeFactory::s_instance = NULL;
 *******************************************************/
 AuroraeButton::AuroraeButton(ButtonType type, KCommonDecoration *parent)
         : KCommonDecorationButton(type, parent)
-        , m_animationId(0)
         , m_animationProgress(0.0)
         , m_pressed(false)
 {
+    m_animation = new QPropertyAnimation(this, "animation", this);
     setAttribute(Qt::WA_NoSystemBackground);
-    connect(Plasma::Animator::self(), SIGNAL(customAnimationFinished(int)), this, SLOT(animationFinished(int)));
 }
 
 void AuroraeButton::reset(unsigned long changed)
@@ -206,14 +205,17 @@ void AuroraeButton::reset(unsigned long changed)
 void AuroraeButton::enterEvent(QEvent *event)
 {
     Q_UNUSED(event)
-    if (m_animationId != 0) {
-        Plasma::Animator::self()->stopCustomAnimation(m_animationId);
+    if (isAnimating()) {
+        m_animation->stop();
     }
     m_animationProgress = 0.0;
     int time = AuroraeFactory::instance()->themeConfig().animationTime();
     if (time != 0) {
-        m_animationId = Plasma::Animator::self()->customAnimation(40 / (1000.0 / qreal(time)),
-                        time, Plasma::Animator::EaseInCurve, this, "animationUpdate");
+        m_animation->setDuration(time);
+        m_animation->setEasingCurve(QEasingCurve::InQuad);
+        m_animation->setStartValue(0.0);
+        m_animation->setEndValue(1.0);
+        m_animation->start();
     }
     update();
 }
@@ -221,14 +223,17 @@ void AuroraeButton::enterEvent(QEvent *event)
 void AuroraeButton::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event)
-    if (m_animationId != 0) {
-        Plasma::Animator::self()->stopCustomAnimation(m_animationId);
+    if (isAnimating()) {
+        m_animation->stop();
     }
     m_animationProgress = 0.0;
     int time = AuroraeFactory::instance()->themeConfig().animationTime();
     if (time != 0) {
-        m_animationId = Plasma::Animator::self()->customAnimation(40 / (1000.0 / qreal(time)),
-                        time, Plasma::Animator::EaseOutCurve, this, "animationUpdate");
+        m_animation->setDuration(time);
+        m_animation->setEasingCurve(QEasingCurve::OutQuad);
+        m_animation->setStartValue(0.0);
+        m_animation->setEndValue(1.0);
+        m_animation->start();
     }
     update();
 }
@@ -245,21 +250,6 @@ void AuroraeButton::mouseReleaseEvent(QMouseEvent *e)
     m_pressed = false;
     update();
     KCommonDecorationButton::mouseReleaseEvent(e);
-}
-
-void AuroraeButton::animationUpdate(qreal progress, int id)
-{
-    Q_UNUSED(id)
-    m_animationProgress = progress;
-    update();
-}
-
-void AuroraeButton::animationFinished(int id)
-{
-    if (m_animationId == id) {
-        m_animationId = 0;
-        update();
-    }
 }
 
 void AuroraeButton::paintEvent(QPaintEvent *event)
@@ -445,7 +435,7 @@ void AuroraeButton::paintButton(QPainter &painter, Plasma::FrameSvg *frame, Butt
     }
     frame->setElementPrefix(prefix);
     frame->resizeFrame(size());
-    if (m_animationId != 0) {
+    if (isAnimating()) {
         // there is an animation so we have to use it
         // the animation is definately a hover animation as currently nothing else is supported
         if (!states.testFlag(Hover)) {
@@ -498,6 +488,22 @@ void AuroraeButton::paintButton(QPainter &painter, Plasma::FrameSvg *frame, Butt
     }
 }
 
+bool AuroraeButton::isAnimating() const
+{
+    return (m_animation->state() == QAbstractAnimation::Running);
+}
+
+qreal AuroraeButton::animationProgress() const
+{
+    return m_animationProgress;
+}
+
+void AuroraeButton::setAnimationProgress(qreal progress)
+{
+    m_animationProgress = progress;
+    update();
+}
+
 /*******************************************************
 * Client
 *******************************************************/
@@ -505,7 +511,7 @@ void AuroraeButton::paintButton(QPainter &painter, Plasma::FrameSvg *frame, Butt
 AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory)
         : KCommonDecorationUnstable(bridge, factory)
 {
-    connect(Plasma::Animator::self(), SIGNAL(customAnimationFinished(int)), this, SLOT(animationFinished(int)));
+    m_animation = new QPropertyAnimation(this, "animation", this);
 }
 
 AuroraeClient::~AuroraeClient()
@@ -808,7 +814,7 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
     frame->resizeFrame(rect.size());
 
     // animation
-    if (m_animationId != 0 && frame->hasElementPrefix("decoration-inactive")) {
+    if (isAnimating() && frame->hasElementPrefix("decoration-inactive")) {
         QPixmap target = frame->framePixmap();
         frame->setElementPrefix("decoration-inactive");
         if (!isActive()) {
@@ -829,7 +835,7 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
     }
 
     painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    if (m_animationId != 0) {
+    if (isAnimating()) {
         QPixmap result;
         if (isActive()) {
             result = Plasma::PaintUtils::transition(m_inactiveText, m_activeText, m_animationProgress);
@@ -944,32 +950,19 @@ void AuroraeClient::updateWindowShape()
 
 void AuroraeClient::activeChange()
 {
-    if (m_animationId != 0) {
-        Plasma::Animator::self()->stopCustomAnimation(m_animationId);
+    if (isAnimating()) {
+        m_animation->stop();
     }
     m_animationProgress = 0.0;
     int time = AuroraeFactory::instance()->themeConfig().animationTime();
     if (time != 0) {
-        m_animationId = Plasma::Animator::self()->customAnimation(40 / (1000.0 / qreal(time)),
-                                                                  time, Plasma::Animator::EaseInOutCurve, this, "animationUpdate");
+        m_animation->setDuration(time);
+        m_animation->setEasingCurve(QEasingCurve::InOutQuad);
+        m_animation->setStartValue(0.0);
+        m_animation->setEndValue(1.0);
+        m_animation->start();
     }
     KCommonDecoration::activeChange();
-}
-
-void AuroraeClient::animationUpdate(qreal progress, int id)
-{
-    if (m_animationId == id) {
-        m_animationProgress = progress;
-        widget()->update();
-    }
-}
-
-void AuroraeClient::animationFinished(int id)
-{
-    if (m_animationId == id) {
-        m_animationId = 0;
-        widget()->update();
-    }
 }
 
 void AuroraeClient::resize(const QSize& s)
@@ -980,6 +973,22 @@ void AuroraeClient::resize(const QSize& s)
     m_inactiveText = QPixmap(QSize(widget()->width(), titleRect().height() + titleRect().y()));
     m_inactiveText.fill(Qt::transparent);
     captionChange();
+}
+
+bool AuroraeClient::isAnimating() const
+{
+    return (m_animation->state() == QAbstractAnimation::Running);
+}
+
+qreal AuroraeClient::animationProgress() const
+{
+    return m_animationProgress;
+}
+
+void AuroraeClient::setAnimationProgress(qreal progress)
+{
+    m_animationProgress = progress;
+    widget()->update();
 }
 
 } // namespace Aurorae

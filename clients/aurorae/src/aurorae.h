@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/Plasma/FrameSvg>
 
 class KSelectionWatcher;
+class QPropertyAnimation;
 
 namespace Aurorae
 {
@@ -77,6 +78,7 @@ private:
 class AuroraeButton : public KCommonDecorationButton
 {
     Q_OBJECT
+    Q_PROPERTY(qreal animation READ animationProgress WRITE setAnimationProgress)
 
 public:
     AuroraeButton(ButtonType type, KCommonDecoration *parent);
@@ -84,10 +86,8 @@ public:
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
     void paintEvent(QPaintEvent *event);
-
-public slots:
-    void animationUpdate(qreal progress, int id);
-    void animationFinished(int id);
+    qreal animationProgress() const;
+    void setAnimationProgress(qreal progress);
 
 protected:
     void mousePressEvent(QMouseEvent *e);
@@ -102,17 +102,19 @@ private:
     };
     Q_DECLARE_FLAGS(ButtonStates, ButtonState)
     void paintButton(QPainter& painter, Plasma::FrameSvg* frame, ButtonStates states);
+    bool isAnimating() const;
 
 private:
-    int m_animationId;
     qreal m_animationProgress;
     bool m_pressed;
+    QPropertyAnimation *m_animation;
 };
 
 
 class AuroraeClient : public KCommonDecorationUnstable
 {
     Q_OBJECT
+    Q_PROPERTY(qreal animation READ animationProgress WRITE setAnimationProgress)
 public:
     AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory);
     ~AuroraeClient();
@@ -131,12 +133,9 @@ public:
     virtual void captionChange();
     virtual void resize(const QSize& s);
 
-    bool isAnimating() const { return m_animationId != 0; }
-    qreal animationProgress() const { return m_animationProgress; }
-
-public slots:
-    void animationUpdate(qreal progress, int id);
-    void animationFinished(int id);
+    bool isAnimating() const;
+    qreal animationProgress() const;
+    void setAnimationProgress(qreal progress);
 
 protected:
     void reset(unsigned long changed);
@@ -144,10 +143,10 @@ protected:
 
 private:
     void generateTextPixmap(QPixmap& pixmap, bool active);
-    int m_animationId;
     qreal m_animationProgress;
     QPixmap m_activeText;
     QPixmap m_inactiveText;
+    QPropertyAnimation *m_animation;
 
 };
 
