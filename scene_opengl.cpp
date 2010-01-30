@@ -113,6 +113,7 @@ bool SceneOpenGL::shm_mode;
 XShmSegmentInfo SceneOpenGL::shm;
 #endif
 
+//static int firstWasDirect = -1;
 
 SceneOpenGL::SceneOpenGL( Workspace* ws )
     : Scene( ws )
@@ -124,6 +125,43 @@ SceneOpenGL::SceneOpenGL( Workspace* ws )
         kDebug( 1212 ) << "No glx extensions available";
         return; // error
         }
+
+    // LIBGL_ALWAYS_INDIRECT:
+    //   This environment variable causes the Mesa libGL to not load any DRI driver on the client's
+    // side at all. This has the side-effect of making the library behave differently when creating
+    // indirect rendering contexts for compositing.
+    //   When a Mesa driver is using DRI1 compositing will only work in indirect rendering mode
+    // while when using DRI2 it's possible to use compositing with direct rendering. When running
+    // with direct rendering we have more OpenGL features available to us therefore it's the
+    // prefered mode to be running in.
+    //   If AIGLX is enabled when we create an indirect rendering context without this variable set
+    // the context doesn't seem to be usable for compositing for some reason. Needs more research.
+    //   In Mesa this variable is only read during the first call to glXQueryVersion() so it cannot
+    // be changed after GLX has already been used by KWin.
+    //   Fglrx also uses this variable but I have yet to research how it acts under various
+    // conditions and what the optimal usage of it by KWin would be.
+    //     -- lmurray (30th Jan, 2010)
+    // TODO: Set this variable only when explicitly running in indirect rendering mode.
+    //const int isDirect = options->glDirect ? 1 : 0;
+    //if( firstWasDirect == -1 )
+    //    firstWasDirect = isDirect;
+    //else
+    //    if( isDirect != firstWasDirect )
+    //        // Switching indirect => direct won't take effect and direct => indirect will cause
+    //        // compositing to not work at all on AIGLX systems.
+    //        kWarning( 1212 ) << "Switched direct rendering mode while KWin was running. THIS IS UNSAFE!";
+    //if( !options->glDirect )
+    //    {
+        // HACK: This is required for compositing to work on AIGLX
+        if( qstrcmp( qgetenv( "KWIN_DIRECT_GL" ), "1" ) != 0 )
+            {
+            kDebug( 1212 ) << "Forcing LIBGL_ALWAYS_INDIRECT=1";
+            setenv( "LIBGL_ALWAYS_INDIRECT", "1", true );
+            }
+        else
+            kDebug( 1212 ) << "KWIN_DIRECT_GL set, not forcing LIBGL_ALWAYS_INDIRECT=1";
+    //    }
+
     initGLX();
     // check for FBConfig support
     if( !hasGLExtension( "GLX_SGIX_fbconfig" ) || !glXGetFBConfigAttrib || !glXGetFBConfigs ||

@@ -276,6 +276,8 @@ void CompositingPrefs::applyDriverSpecificOptions()
     mRecommendCompositing = true;
 
     // Known driver specific options
+    // NOTE: GLX has already been loaded so we cannot change direct rendering mode here if the
+    //       driver uses the LIBGL_ALWAYS_INDIRECT environment variable.
     if( mXgl )
         {
         mStrictBinding = false;
@@ -286,6 +288,7 @@ void CompositingPrefs::applyDriverSpecificOptions()
         }
     else if( mDriver == "nvidia" )
         {
+        mEnableDirectRendering = true; // Driver doesn't use LIBGL_ALWAYS_INDIRECT
         mStrictBinding = false;
         }
     //else if( mDriver == "fglrx" )
