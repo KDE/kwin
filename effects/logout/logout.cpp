@@ -4,7 +4,7 @@
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
-Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2009, 2010 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,10 +35,18 @@ KWIN_EFFECT( logout, LogoutEffect )
 
 LogoutEffect::LogoutEffect()
     : progress( 0.0 )
+    , displayEffect( false )
     , logoutWindow( NULL )
     , logoutWindowClosed( true )
     , logoutWindowPassed( false )
+    , canDoPersistent( false )
+    , ignoredWindows()
     {
+    // Persistent effect
+    logoutAtom = XInternAtom( display(), "_KDE_LOGGING_OUT", False );
+    effects->registerPropertyType( logoutAtom, true );
+
+    // Block KSMServer's effect
     char net_wm_cm_name[ 100 ];
     sprintf( net_wm_cm_name, "_NET_WM_CM_S%d", DefaultScreen( display()));
     Atom net_wm_cm = XInternAtom( display(), net_wm_cm_name, False );
@@ -46,6 +54,7 @@ LogoutEffect::LogoutEffect()
     Atom hack = XInternAtom( display(), "_KWIN_LOGOUT_EFFECT", False );
     XChangeProperty( display(), sel, hack, hack, 8, PropModeReplace, (unsigned char*)&hack, 1 );
     // the atom is not removed when effect is destroyed, this is temporary anyway
+
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
     blurTexture = NULL;
     blurTarget = NULL;
@@ -78,7 +87,7 @@ void LogoutEffect::reconfigure( ReconfigureFlags )
 void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     {
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
-    if( !logoutWindow && progress == 0.0 )
+    if( !displayEffect && progress == 0.0 )
         {
         if( blurTexture )
             {
@@ -117,7 +126,7 @@ void LogoutEffect::prePaintScreen( ScreenPrePaintData& data, int time )
     else
 #endif
         {
-        if( logoutWindow != NULL && !logoutWindowClosed )
+        if( displayEffect )
             progress = qMin( 1.0, progress + time / animationTime( 2000.0 ));
         else if( progress > 0.0 )
             progress = qMax( 0.0, progress - time / animationTime( 500.0 ));
@@ -150,7 +159,7 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
                     }
                 else
                     {
-                    if( logoutWindowPassed )
+                    if( logoutWindowPassed || ignoredWindows.contains( w ))
                         { // Window is rendered after the FBO
                         windows.append( w );
                         windowsOpacities[ w ] = data.opacity;
@@ -165,7 +174,7 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
                 if( w == logoutWindow )
                     // This is the logout window don't alter it but render our vignetting now
                     renderVignetting();
-                else if( !logoutWindowPassed )
+                else if( !logoutWindowPassed && !ignoredWindows.contains( w ))
                     // Window is in the background, desaturate
                     data.saturation *= ( 1.0 - progress * 0.2 );
                 // All other windows are unaltered
@@ -174,13 +183,15 @@ void LogoutEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Windo
 #endif
         if( effects->compositingType() == KWin::XRenderCompositing )
             { // Since we can't do vignetting in XRender just do a stronger desaturation and darken
-            if( w != logoutWindow && !logoutWindowPassed )
+            if( w != logoutWindow && !logoutWindowPassed && !ignoredWindows.contains( w ))
                 {
                 data.saturation *= ( 1.0 - progress * 0.8 );
                 data.brightness *= ( 1.0 - progress * 0.3 );
                 }
             }
-        if( w == logoutWindow )
+        if( w == logoutWindow ||
+            ignoredWindows.contains( w )) // HACK: All windows past the first ignored one should not be
+                                          //       blurred as it affects the stacking order.
             // All following windows are on top of the logout window and should not be altered either
             logoutWindowPassed = true;
         }
@@ -305,8 +316,13 @@ void LogoutEffect::windowAdded( EffectWindow* w )
         logoutWindow = w;
         logoutWindowClosed = false; // So we don't blur the window on close
         progress = 0.0;
+        displayEffect = true;
+        ignoredWindows.clear();
         effects->addRepaintFull();
         }
+    else if( canDoPersistent )
+        // TODO: Add parent
+        ignoredWindows.append( w );
     }
 
 void LogoutEffect::windowClosed( EffectWindow* w )
@@ -314,12 +330,15 @@ void LogoutEffect::windowClosed( EffectWindow* w )
     if( w == logoutWindow )
         {
         logoutWindowClosed = true;
+        if( !canDoPersistent )
+            displayEffect = false; // Fade back to normal
         effects->addRepaintFull();
         }
     }
 
 void LogoutEffect::windowDeleted( EffectWindow* w )
     {
+    ignoredWindows.removeAll( w );
     if( w == logoutWindow )
         logoutWindow = NULL;
     }
@@ -363,5 +382,22 @@ void LogoutEffect::renderVignetting()
     glPopAttrib();
     }
 #endif
+
+void LogoutEffect::propertyNotify( EffectWindow* w, long a )
+    {
+    if( w || a != logoutAtom )
+        return; // Not our atom
+
+    QByteArray byteData = effects->readRootProperty( logoutAtom, logoutAtom, 8 );
+    if( byteData.length() < 1 )
+        { // Property was deleted
+        displayEffect = false;
+        return;
+        }
+
+    // We are using a compatible KSMServer therefore only terminate the effect when the
+    // atom is deleted, not when the dialog is closed.
+    canDoPersistent = true;
+    }
 
 } // namespace

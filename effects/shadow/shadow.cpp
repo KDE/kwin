@@ -373,7 +373,7 @@ QRect ShadowEffect::transformWindowDamage( EffectWindow* w, const QRect& r )
 
 void ShadowEffect::propertyNotify( EffectWindow* w, long atom )
     {
-    if ( atom != shadowOverride )
+    if( !w || atom != shadowOverride )
         return;
     const QByteArray value = w->readProperty( atom, atom, 32 );
     w->setData( ShadowOverrideRole, !value.isNull() );

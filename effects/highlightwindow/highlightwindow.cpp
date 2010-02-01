@@ -129,7 +129,7 @@ void HighlightWindowEffect::windowDeleted( EffectWindow* w )
 
 void HighlightWindowEffect::propertyNotify( EffectWindow* w, long a )
     {
-    if( a != m_atom )
+    if( !w || a != m_atom )
         return; // Not our atom
 
     QByteArray byteData = w->readProperty( m_atom, m_atom, 32 );

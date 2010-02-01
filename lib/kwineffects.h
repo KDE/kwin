@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 112
+#define KWIN_EFFECT_API_VERSION_MINOR 113
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -722,6 +722,8 @@ class KWIN_EXPORT EffectsHandler
          Note that even events that haven't been registered for can be received.
         */
         virtual void registerPropertyType( long atom, bool reg ) = 0;
+        virtual QByteArray readRootProperty( long atom, long type, int format ) const = 0;
+        virtual void deleteRootProperty( long atom ) const = 0;
 
         /**
          * Returns @a true if the active window decoration has shadow API hooks.

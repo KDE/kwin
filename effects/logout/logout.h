@@ -4,7 +4,7 @@
 
 Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
-Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2009, 2010 Lucas Murray <lmurray@undefinedfire.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,12 +46,19 @@ class LogoutEffect
         virtual void windowAdded( EffectWindow* w );
         virtual void windowClosed( EffectWindow* w );
         virtual void windowDeleted( EffectWindow* w );
+        virtual void propertyNotify( EffectWindow* w, long a );
     private:
         bool isLogoutDialog( EffectWindow* w );
         double progress; // 0-1
+        bool displayEffect;
         EffectWindow* logoutWindow;
         bool logoutWindowClosed;
         bool logoutWindowPassed;
+
+        // Persistent effect
+        long logoutAtom;
+        bool canDoPersistent;
+        EffectWindowList ignoredWindows;
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
         void renderVignetting();

@@ -46,6 +46,52 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+//---------------------
+// Static
+
+static QByteArray readWindowProperty( Window win, long atom, long type, int format )
+    {
+    int len = 32768;
+    for(;;)
+        {
+        unsigned char* data;
+        Atom rtype;
+        int rformat;
+        unsigned long nitems, after;
+        if( XGetWindowProperty( QX11Info::display(), win,
+            atom, 0, len, False, AnyPropertyType,
+            &rtype, &rformat, &nitems, &after, &data ) == Success )
+            {
+            if( after > 0 )
+                {
+                XFree( data );
+                len *= 2;
+                continue;
+                }
+            if( long( rtype ) == type && rformat == format )
+                {
+                int bytelen = format == 8 ? nitems : format == 16 ? nitems * sizeof( short ) : nitems * sizeof( long );
+                QByteArray ret( reinterpret_cast< const char* >( data ), bytelen );
+                XFree( data );
+                return ret;
+                }
+            else // wrong format, type or something
+                {
+                XFree( data );
+                return QByteArray();
+                }
+            }
+        else // XGetWindowProperty() failed
+            return QByteArray();
+        }
+    }
+
+static void deleteWindowProperty( Window win, long int atom )
+    {
+    XDeleteProperty( QX11Info::display(), win, atom );
+    }
+
+//---------------------
 
 EffectsHandlerImpl::EffectsHandlerImpl(CompositingType type)
     : EffectsHandler(type)
@@ -426,6 +472,16 @@ void EffectsHandlerImpl::registerPropertyType( long atom, bool reg )
         if( --registered_atoms[ atom ] == 0 )
             registered_atoms.remove( atom );
         }
+    }
+
+QByteArray EffectsHandlerImpl::readRootProperty( long atom, long type, int format ) const
+    {
+    return readWindowProperty( rootWindow(), atom, type, format );
+    }
+
+void EffectsHandlerImpl::deleteRootProperty( long atom ) const
+    {
+    deleteWindowProperty( rootWindow(), atom );
     }
 
 void EffectsHandlerImpl::activateWindow( EffectWindow* c )
@@ -1281,46 +1337,13 @@ QRect EffectWindowImpl::contentsRect() const
 
 QByteArray EffectWindowImpl::readProperty( long atom, long type, int format ) const
     {
-    int len = 32768;
-    for(;;)
-        {
-        unsigned char* data;
-        Atom rtype;
-        int rformat;
-        unsigned long nitems, after;
-        if( XGetWindowProperty( QX11Info::display(), window()->window(),
-            atom, 0, len, False, AnyPropertyType,
-            &rtype, &rformat, &nitems, &after, &data ) == Success )
-            {
-            if( after > 0 )
-                {
-                XFree( data );
-                len *= 2;
-                continue;
-                }
-            if( long( rtype ) == type && rformat == format )
-                {
-                int bytelen = format == 8 ? nitems : format == 16 ? nitems * sizeof( short ) : nitems * sizeof( long );
-                QByteArray ret( reinterpret_cast< const char* >( data ), bytelen );
-                XFree( data );
-                return ret;
-                }
-            else // wrong format, type or something
-                {
-                XFree( data );
-                return QByteArray();
-                }
-            }
-        else // XGetWindowProperty() failed
-            return QByteArray();
-        }
+    return readWindowProperty( window()->window(), atom, type, format );
     }
 
 void EffectWindowImpl::deleteProperty(long int atom) const
-{
-    XDeleteProperty( QX11Info::display(), window()->window(), atom );
-}
-
+    {
+    deleteWindowProperty( window()->window(), atom );
+    }
 
 bool EffectWindowImpl::isMovable() const
     {

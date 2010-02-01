@@ -184,7 +184,7 @@ void SlidingPopupsEffect::windowDeleted( EffectWindow* w )
 
 void SlidingPopupsEffect::propertyNotify( EffectWindow* w, long a )
     {
-    if( a != mAtom )
+    if( !w || a != mAtom )
         return;
 
     QByteArray data = w->readProperty( mAtom, mAtom, 32 );

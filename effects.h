@@ -134,6 +134,8 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual unsigned long xrenderBufferPicture();
         virtual void reconfigure();
         virtual void registerPropertyType( long atom, bool reg );
+        virtual QByteArray readRootProperty( long atom, long type, int format ) const;
+        virtual void deleteRootProperty( long atom ) const;
 
         virtual bool hasDecorationShadows() const;
 

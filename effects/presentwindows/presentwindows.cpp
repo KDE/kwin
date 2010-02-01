@@ -732,7 +732,7 @@ void PresentWindowsEffect::tabBoxKeyEvent( QKeyEvent* event )
 // Atom handling
 void PresentWindowsEffect::propertyNotify( EffectWindow* w, long a )
     {
-    if( a != m_atomDesktop && a != m_atomWindows )
+    if( !w || ( a != m_atomDesktop && a != m_atomWindows ))
         return; // Not our atom
 
     if( a == m_atomDesktop )

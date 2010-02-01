@@ -131,7 +131,7 @@ void TaskbarThumbnailEffect::windowDeleted( EffectWindow* w )
 
 void TaskbarThumbnailEffect::propertyNotify( EffectWindow* w, long a )
     {
-    if( a != atom )
+    if( !w || a != atom )
         return;
     thumbnails.remove( w );
     QByteArray data = w->readProperty( atom, atom, 32 );

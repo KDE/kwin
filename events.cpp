@@ -321,6 +321,13 @@ bool Workspace::workspaceEvent( XEvent * e )
                 if( c->windowEvent( e ))
                     return true;
                 }
+
+        // We want to pass root window property events to effects
+        if( e->type == PropertyNotify && e->xany.window == rootWindow() && effects )
+            {
+            XPropertyEvent* re = &e->xproperty;
+            static_cast< EffectsHandlerImpl* >( effects )->propertyNotify( NULL, re->atom );
+            }
         }
     if( movingClient != NULL && movingClient->moveResizeGrabWindow() == e->xany.window
         && ( e->type == MotionNotify || e->type == ButtonPress || e->type == ButtonRelease ))
