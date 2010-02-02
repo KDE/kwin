@@ -126,6 +126,9 @@ namespace Oxygen
     //! true if button is active
     bool isActive( void ) const;
 
+    //! true if buttons hover are animated
+    bool animateButtonHover( void ) const;
+
     private:
 
     //! parent client
