@@ -366,7 +366,7 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
     if( check_workspace_pos )
         checkWorkspacePosition();
     blockGeometryUpdates( false );
-    if( do_show )
+    if( !noBorder() )
         decoration->widget()->show();
     updateFrameExtents();
     }
