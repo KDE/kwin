@@ -1,3 +1,4 @@
+kde4_no_enable_final( kwinoptions )
 
 add_subdirectory( kwinoptions )
 add_subdirectory( kwindecoration )
