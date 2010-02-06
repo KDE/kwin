@@ -25,8 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QGraphicsItem>
 #include <QTimer>
 #include <KDE/Plasma/FrameSvg>
+#include <QWeakPointer>
 
 class QGraphicsScene;
+class QPropertyAnimation;
 
 namespace KWin
 {
@@ -86,6 +88,9 @@ class DesktopChangeOSD : public QGraphicsView
 class DesktopChangeItem : public QObject, public QGraphicsItem
     {
     Q_OBJECT
+    Q_PROPERTY( qreal arrowValue READ arrowValue WRITE setArrowValue )
+    Q_PROPERTY( qreal highLightValue READ highLightValue WRITE setHighLightValue )
+
 #if QT_VERSION >= 0x040600
     Q_INTERFACES(QGraphicsItem)
 #endif
@@ -93,8 +98,8 @@ class DesktopChangeItem : public QObject, public QGraphicsItem
         DesktopChangeItem( Workspace* ws, DesktopChangeOSD* parent, int desktop );
         ~DesktopChangeItem();
         enum { Type = UserType + 1 };
-        void startDesktopHighlightAnimation( int time );
-        void stopDesktopHightlightAnimation( int time );
+        void startDesktopHighLightAnimation( int time );
+        void stopDesktopHighLightAnimation();
 
         inline void setWidth( float width ) { m_width = width;};
         inline void setHeight( float height ) { m_height = height;};
@@ -114,13 +119,17 @@ class DesktopChangeItem : public QObject, public QGraphicsItem
             };
         void setArrow( Arrow arrow, int start_delay, int hide_delay );
 
-    public slots:
-        void animationUpdate( qreal progress, int id );
-        void animationFinished( int id );
+        qreal arrowValue() const;
+        qreal highLightValue() const;
+
+    protected slots:
+        void setArrowValue( qreal value );
+        void setHighLightValue( qreal value );
 
     private slots:
         void showArrow();
         void hideArrow();
+        void arrowAnimationFinished();
 
     private:
         Workspace* m_wspace;
@@ -128,17 +137,19 @@ class DesktopChangeItem : public QObject, public QGraphicsItem
         int m_desktop;
         float m_width;
         float m_height;
-        int m_hightlight_anim_id;
-        bool m_fadein_highlight;
-        qreal m_hightlight_progress;
         QTimer m_delayed_show_arrow_timer;
         QTimer m_delayed_hide_arrow_timer;
 
         Arrow m_arrow;
-        bool m_arrow_shown;
-        int m_arrow_anim_id;
-        bool m_fadein_arrow;
-        qreal m_arrow_progress;
+        bool m_arrowShown;
+        bool m_fadeInArrow;
+        bool m_fadeInHighLight;
+
+        qreal m_arrowValue;
+        qreal m_highLightValue;
+
+        QWeakPointer<QPropertyAnimation> m_arrowAnimation;
+        QWeakPointer<QPropertyAnimation> m_highLightAnimation;
     };
 
 }

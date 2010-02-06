@@ -25,11 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/shape.h>
 
+#include <QEasingCurve>
+#include <QPropertyAnimation>
 #include <QHash>
 #include <QGraphicsScene>
 #include <QRect>
 #include <KDE/Plasma/Theme>
-#include <KDE/Plasma/Animator>
 #include <KDE/Plasma/PaintUtils>
 #include <kiconloader.h>
 
@@ -179,9 +180,9 @@ void DesktopChangeOSD::desktopChanged( int old )
             if( old != m_wspace->currentDesktop() )
                 {
                 if( item->desktop() == m_wspace->currentDesktop() )
-                    item->startDesktopHighlightAnimation( m_delayTime * 0.33 );
+                    item->startDesktopHighLightAnimation( m_delayTime * 0.33 );
                 if( m_active && item->desktop() == old )
-                    item->stopDesktopHightlightAnimation( m_delayTime * 0.33 );
+                    item->stopDesktopHighLightAnimation();
                 }
             }
         }
@@ -369,19 +370,17 @@ DesktopChangeItem::DesktopChangeItem( Workspace* ws, DesktopChangeOSD* parent, i
     , m_desktop( desktop )
     , m_width( 0.0f )
     , m_height( 0.0f )
-    , m_hightlight_anim_id( 0 )
-    , m_fadein_highlight( 0 )
     , m_arrow( NONE )
-    , m_arrow_shown( 0 )
-    , m_arrow_anim_id( 0 )
-    , m_fadein_arrow( 0 )
-    , m_arrow_progress( 0.0 )
+    , m_arrowShown( false )
+    , m_fadeInArrow( false )
+    , m_fadeInHighLight( false )
+    , m_arrowValue( 0.0 )
+    , m_highLightValue( 0.0 )
     {
     m_delayed_show_arrow_timer.setSingleShot( true );
     m_delayed_hide_arrow_timer.setSingleShot( true );
     connect( &m_delayed_show_arrow_timer, SIGNAL(timeout()), this, SLOT(showArrow()));
     connect( &m_delayed_hide_arrow_timer, SIGNAL(timeout()), this, SLOT(hideArrow()));
-    connect( Plasma::Animator::self(), SIGNAL(customAnimationFinished(int)), this, SLOT(animationFinished(int)));
     }
 
 DesktopChangeItem::~DesktopChangeItem()
@@ -398,12 +397,15 @@ void DesktopChangeItem::setArrow( Arrow arrow, int start_delay, int hide_delay )
     // stop timers
     m_delayed_show_arrow_timer.stop();
     m_delayed_hide_arrow_timer.stop();
-    if( m_arrow_anim_id != 0 )
+
+    QPropertyAnimation *arrowAnimation = m_arrowAnimation.data();
+    if( arrowAnimation )
         {
-        Plasma::Animator::self()->stopCustomAnimation( m_arrow_anim_id );
-        m_arrow_anim_id = 0;
+        arrowAnimation->stop();
+        m_arrowAnimation.clear();
         }
-    m_arrow_shown = false;
+
+    m_arrowShown = false;
     m_arrow = arrow;
     if( m_arrow != NONE )
         {
@@ -412,105 +414,125 @@ void DesktopChangeItem::setArrow( Arrow arrow, int start_delay, int hide_delay )
         }
     }
 
+qreal DesktopChangeItem::arrowValue() const
+    {
+    qCritical() << __func__ << m_arrowValue;
+    return m_arrowValue;
+    }
+
+qreal DesktopChangeItem::highLightValue() const
+    {
+    return m_highLightValue;
+    }
+
+void DesktopChangeItem::setArrowValue( qreal value )
+        {
+    m_arrowValue = value;
+
+    update();
+        }
+
+void DesktopChangeItem::setHighLightValue( qreal value )
+    {
+    m_highLightValue = value;
+
+    update();
+    }
+
 void DesktopChangeItem::showArrow()
     {
-    m_arrow_shown = true;
-    if( m_arrow_anim_id != 0 )
+    m_arrowShown = true;
+
+    QPropertyAnimation *arrowAnimation = m_arrowAnimation.data();
+    if( !arrowAnimation )
         {
-        Plasma::Animator::self()->stopCustomAnimation( m_arrow_anim_id );
+        arrowAnimation = new QPropertyAnimation( this, "arrowValue" );
+        arrowAnimation->setDuration( m_parent->getDelayTime()*0.15f );
+        arrowAnimation->setStartValue( 0.0 );
+        arrowAnimation->setEndValue( 1.0 );
+
+        m_arrowAnimation = arrowAnimation;
         }
-    m_fadein_arrow = true;
-    m_arrow_anim_id = Plasma::Animator::self()->customAnimation(40 / (1000 / (m_parent->getDelayTime()*0.15f)),
-        m_parent->getDelayTime()*0.15f, Plasma::Animator::EaseInCurve, this, "animationUpdate" );
+
+    m_fadeInArrow = true;
+
+    arrowAnimation->setEasingCurve( QEasingCurve::InQuad );
+    arrowAnimation->setDirection( QAbstractAnimation::Forward );
+    arrowAnimation->start();
     }
 
 void DesktopChangeItem::hideArrow()
     {
-    if( m_arrow_anim_id != 0 )
-        {
-        Plasma::Animator::self()->stopCustomAnimation( m_arrow_anim_id );
-        }
-    m_fadein_arrow = false;
-    m_arrow_anim_id = Plasma::Animator::self()->customAnimation(40 / (1000 / (m_parent->getDelayTime()*0.15f)),
-        m_parent->getDelayTime()*0.15f, Plasma::Animator::EaseOutCurve, this, "animationUpdate" );
-    }
+    m_fadeInArrow = false;
 
-void DesktopChangeItem::startDesktopHighlightAnimation( int time )
-    {
-    if( m_hightlight_anim_id != 0 )
+    QPropertyAnimation *arrowAnimation = m_arrowAnimation.data();
+    if( arrowAnimation )
         {
-        // stop current animation
-        Plasma::Animator::self()->stopCustomAnimation( m_hightlight_anim_id );
-        }
-    m_fadein_highlight = true;
-    m_hightlight_anim_id = Plasma::Animator::self()->customAnimation(40 / (1000 / (qreal)time),
-        time, Plasma::Animator::EaseInCurve, this, "animationUpdate" );
-    }
+        arrowAnimation->setEasingCurve( QEasingCurve::OutQuad );
+        arrowAnimation->setDirection( QAbstractAnimation::Backward );
+        arrowAnimation->start( QAbstractAnimation::DeleteWhenStopped );
 
-void DesktopChangeItem::stopDesktopHightlightAnimation( int time )
-    {
-    if( m_hightlight_anim_id != 0 )
-        {
-        // stop current animation
-        Plasma::Animator::self()->stopCustomAnimation( m_hightlight_anim_id );
-        }
-    m_fadein_highlight = false;
-    m_hightlight_anim_id = Plasma::Animator::self()->customAnimation(40 / (1000 / (qreal)time),
-        time, Plasma::Animator::EaseOutCurve, this, "animationUpdate" );
-    }
-
-void DesktopChangeItem::animationUpdate( qreal progress, int id )
-    {
-    if( id == m_hightlight_anim_id )
-        {
-        if( m_fadein_highlight )
-            m_hightlight_progress = progress;
-        else
-            m_hightlight_progress = 1.0 - progress;
-        update();
-        }
-    if( id == m_arrow_anim_id )
-        {
-        if( m_fadein_arrow )
-            m_arrow_progress = progress;
-        else
-            m_arrow_progress = 1.0 - progress;
-        update();
+        connect( arrowAnimation, SIGNAL(finished()), this, SLOT(arrowAnimationFinished()) );
         }
     }
 
-void DesktopChangeItem::animationFinished( int id )
+void DesktopChangeItem::startDesktopHighLightAnimation( int time )
     {
-    if( id == m_hightlight_anim_id )
+    QPropertyAnimation *highLightAnimation = m_highLightAnimation.data();
+    if( !highLightAnimation )
         {
-        m_hightlight_anim_id = 0;
-        update();
+        highLightAnimation = new QPropertyAnimation( this, "highLightValue" );
+        highLightAnimation->setDuration( time );
+        highLightAnimation->setStartValue( 0.0 );
+        highLightAnimation->setEndValue( 1.0 );
+
+        m_highLightAnimation = highLightAnimation;
         }
-    if( id == m_arrow_anim_id )
+
+    m_fadeInHighLight = true;
+
+    highLightAnimation->setEasingCurve( QEasingCurve::InQuad );
+    highLightAnimation->setDirection( QAbstractAnimation::Forward );
+    highLightAnimation->start();
+    }
+
+void DesktopChangeItem::stopDesktopHighLightAnimation()
+    {
+    m_fadeInHighLight = false;
+
+    QPropertyAnimation *highLightAnimation = m_highLightAnimation.data();
+    if(highLightAnimation)
         {
-        m_arrow_anim_id = 0;
-        if( !m_fadein_arrow )
-            m_arrow_shown = false;
-        update();
+        highLightAnimation->setEasingCurve( QEasingCurve::OutQuad );
+        highLightAnimation->setDirection( QAbstractAnimation::Backward );
+        highLightAnimation->start( QAbstractAnimation::DeleteWhenStopped );
         }
+    }
+
+void DesktopChangeItem::arrowAnimationFinished()
+    {
+    if( !m_fadeInArrow )
+        m_arrowShown = false;
     }
 
 void DesktopChangeItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* , QWidget* )
     {
-    if( m_wspace->currentDesktop() == m_desktop || m_hightlight_anim_id != 0 )
+    if( m_wspace->currentDesktop() == m_desktop || (!m_highLightAnimation.isNull() &&
+                m_highLightAnimation.data()->state() == QAbstractAnimation::Running) )
         {
         qreal left, top, right, bottom;
         m_parent->itemFrame()->getMargins( left, top, right, bottom );
-        if( m_hightlight_anim_id )
+        if( !m_highLightAnimation.isNull() &&
+                m_highLightAnimation.data()->state() == QAbstractAnimation::Running )
             {
             // there is an animation - so we use transition from normal to active or vice versa
-            if( m_fadein_highlight )
+            if( m_fadeInHighLight )
                 {
                 m_parent->itemFrame()->setElementPrefix( "normal" );
                 QPixmap normal = m_parent->itemFrame()->framePixmap();
                 m_parent->itemFrame()->setElementPrefix( "hover" );
                 QPixmap result = Plasma::PaintUtils::transition( normal,
-                    m_parent->itemFrame()->framePixmap(), m_hightlight_progress );
+                    m_parent->itemFrame()->framePixmap(), m_highLightValue );
                 painter->drawPixmap( boundingRect().toRect(), result);
                 }
             else
@@ -519,7 +541,7 @@ void DesktopChangeItem::paint( QPainter* painter, const QStyleOptionGraphicsItem
                 QPixmap normal = m_parent->itemFrame()->framePixmap();
                 m_parent->itemFrame()->setElementPrefix( "normal" );
                 QPixmap result = Plasma::PaintUtils::transition( normal,
-                    m_parent->itemFrame()->framePixmap(), 1.0 - m_hightlight_progress );
+                    m_parent->itemFrame()->framePixmap(), 1.0 - m_highLightValue );
                 painter->drawPixmap( boundingRect().toRect(), result);
                 }
             }
@@ -529,9 +551,8 @@ void DesktopChangeItem::paint( QPainter* painter, const QStyleOptionGraphicsItem
             m_parent->itemFrame()->setElementPrefix( "hover" );
             m_parent->itemFrame()->paintFrame( painter, boundingRect() );
             }
-
         QColor rectColor = Plasma::Theme::defaultTheme()->color( Plasma::Theme::TextColor );
-        rectColor.setAlphaF( 0.6 * m_hightlight_progress );
+        rectColor.setAlphaF( 0.6 * m_highLightValue );
         QBrush rectBrush = QBrush( rectColor );
         painter->fillRect( boundingRect().adjusted( left, top, -right, -bottom ), rectBrush );
         }
@@ -541,7 +562,7 @@ void DesktopChangeItem::paint( QPainter* painter, const QStyleOptionGraphicsItem
         m_parent->itemFrame()->paintFrame( painter, boundingRect() );
         }
 
-    if( !m_arrow_shown )
+    if( !m_arrowShown )
         return;
     // paint the arrow
     QPixmap icon;
@@ -577,7 +598,9 @@ void DesktopChangeItem::paint( QPainter* painter, const QStyleOptionGraphicsItem
         }
     if( m_arrow != NONE )
         {
-        if( m_arrow_anim_id != 0 )
+        if( !m_arrowAnimation.isNull() &&
+                m_arrowAnimation.data()->state() == QAbstractAnimation::Running &&
+                !qFuzzyCompare(m_arrowValue, 1.0) )
             {
             QPixmap temp( icon.size() );
             temp.fill( Qt::transparent );
@@ -586,7 +609,7 @@ void DesktopChangeItem::paint( QPainter* painter, const QStyleOptionGraphicsItem
             p.setCompositionMode( QPainter::CompositionMode_Source );
             p.drawPixmap( 0, 0, icon );
             p.setCompositionMode( QPainter::CompositionMode_DestinationIn );
-            p.fillRect( temp.rect(), QColor( 0, 0, 0, 255*m_arrow_progress ) );
+            p.fillRect( temp.rect(), QColor( 0, 0, 0, 255*m_arrowValue ) );
             p.end();
 
             icon = temp;
