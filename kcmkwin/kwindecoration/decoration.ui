@@ -49,14 +49,14 @@
      <item>
       <widget class="KPushButton" name="configureButtonsButton">
        <property name="text">
-        <string>Configure Buttons ...</string>
+        <string>Configure Buttons...</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="KPushButton" name="ghnsButton">
        <property name="text">
-        <string>Get New Decorations ...</string>
+        <string>Get New Decorations...</string>
        </property>
       </widget>
      </item>
