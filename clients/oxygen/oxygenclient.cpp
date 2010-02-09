@@ -419,14 +419,6 @@ namespace Oxygen
   QRect OxygenClient::titleBoundingRect( const QFont& font, QRect rect, const QString& caption ) const
   {
 
-    // check bounding rect against titleRect
-    if( titleRectCanConflict() ) 
-    {
-      QRect titleRect( OxygenClient::titleRect() );
-      if( titleRect.left() > rect.left() ) { rect.setLeft( titleRect.left() ); }
-      if( titleRect.right() < rect.right() ) { rect.setRight( titleRect.right() ); }
-    }
-
     // get title bounding rect
     QRect boundingRect = QFontMetrics( font ).boundingRect( rect, configuration().titleAlignment() | Qt::AlignVCenter, caption );
 
@@ -927,19 +919,24 @@ namespace Oxygen
     const QList< ClientGroupItem >& items( clientGroupItems() );
     QString caption( itemCount == 1 ? OxygenClient::caption() : items[index].title() );
 
-    // make sure title rect never conflicts with decoration buttons
-    if( titleRectCanConflict() ) 
-    { textRect = titleBoundingRect( painter->font(), textRect, caption ); }
-    
+    // always make sure that titleRect never conflicts with window buttons
+    QRect titleRect( OxygenClient::titleRect() );
+    if( titleRect.left() > textRect.left() ) { textRect.setLeft( titleRect.left() ); }
+    if( titleRect.right() < textRect.right() ) { textRect.setRight( titleRect.right() ); }
+
     // title outline
     if( itemCount == 1 )
     {
-        
+
       if( itemData_.isAnimated() ) {
 
+        textRect = titleBoundingRect( painter->font(), textRect, caption );
         renderTitleOutline( painter, item.boundingRect_, palette );
 
       } else if( (isActive()||glowIsAnimated()) && configuration().drawTitleOutline() ) {
+
+        // adjust textRect
+        textRect = titleBoundingRect( painter->font(), textRect, caption );
 
         // adjusts boundingRect accordingly
         QRect boundingRect( item.boundingRect_ );

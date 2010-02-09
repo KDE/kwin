@@ -302,15 +302,6 @@ namespace Oxygen
                 !isPreview();
         }
 
-        //! returns true if drawn item can conflict with buttons.
-        /*! 
-        this might happen either
-        - when there is only one item in the group
-        - when there are two items but the second is being dragged in or away
-        */
-        bool titleRectCanConflict( void ) const
-        {  return ( itemData_.count() == 1 || ( itemData_.count() == 2 && (itemData_.animationType()&AnimationSameTarget) ) ); }
-        
         //! calculate mask
         QRegion calcMask( void ) const;
 
