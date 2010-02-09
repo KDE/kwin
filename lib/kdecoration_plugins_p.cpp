@@ -78,8 +78,12 @@ bool KDecorationPlugins::reset( unsigned long changed )
     if(( !loadPlugin( "" ) && library ) // "" = read the one in cfg file
         || oldPlugin == pluginStr )
         { // no new plugin loaded, reset the old one
-        assert( fact != NULL );
+ //       assert( fact != NULL );
+	if(fact != NULL)
+	{
         ret = fact->reset( changed );
+	}
+
         }
     return ret || oldPlugin != pluginStr;
     }
