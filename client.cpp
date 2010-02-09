@@ -329,7 +329,6 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
     if( !force &&
      (( decoration == NULL && noBorder() ) || ( decoration != NULL && !noBorder() )))
         return;
-    bool do_show = false;
     QRect oldgeom = geometry();
     blockGeometryUpdates( true );
     if( force )
@@ -350,7 +349,6 @@ void Client::updateDecoration( bool check_workspace_pos, bool force )
         XMoveWindow( display(), decoration->widget()->winId(), -padding_left, -padding_top );
         move( calculateGravitation( false ));
         plainResize( sizeForClientSize( clientSize()), ForceGeometrySet );
-        do_show = true;
         paintRedirector = new PaintRedirector( decoration->widget());
         connect( paintRedirector, SIGNAL( paintPending()), SLOT( repaintDecorationPending()));
         resizeDecorationPixmaps();
