@@ -121,6 +121,14 @@ namespace Oxygen
     bool isDirty( void ) const
     { return dirty_; }
 
+    //! enable animations
+    void setAnimationsEnabled( bool value )
+    { animationsEnabled_ = value; }
+
+    //! animations enabled
+    bool animationsEnabled( void ) const
+    { return animationsEnabled_; }
+
     //! true if being animated
     bool isAnimated( void ) const
     { return animationType_ != AnimationNone; }
@@ -182,6 +190,9 @@ namespace Oxygen
     //! dirty flag
     /* used to trigger update at next paintEvent */
     bool dirty_;
+
+    //! true if animations are enabled
+    bool animationsEnabled_;
 
     //! animation
     Animation::Pointer animation_;

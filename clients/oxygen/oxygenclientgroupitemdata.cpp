@@ -39,6 +39,8 @@ namespace Oxygen
     QObject( parent ),
     QList<ClientGroupItemData>(),
     client_( *parent ),
+    dirty_( false ),
+    animationsEnabled_( true ),
     animation_( new Animation( 150, this ) ),
     animationType_( AnimationNone ),
     progress_(0),
@@ -157,8 +159,19 @@ namespace Oxygen
         targetRect_.setWidth( width );
       }
 
-      if( animate ) animation().data()->start();
-      else {
+      if( animate )
+      {
+
+        if( animationsEnabled() ) animation().data()->start();
+        else {
+
+          // change progress to maximum
+          progress_ = 1;
+          updateBoundingRects();
+
+        }
+
+      } else {
 
         for( int index = 0; index < count(); index++ )
         {
@@ -236,7 +249,14 @@ namespace Oxygen
 
       }
 
-      animation().data()->start();
+      if( animationsEnabled() ) animation().data()->start();
+      else {
+        
+        // change progress to maximum
+        progress_ = 1;
+        updateBoundingRects();
+        
+      }
 
     }
 
