@@ -130,6 +130,7 @@ namespace Oxygen
     configurationGroup.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, userInterface_->ui.titleOutline->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, userInterface_->shadowConfigurations[0]->isChecked() );
     configurationGroup.writeEntry( OxygenConfig::TABS_ENABLED, userInterface_->ui.tabsEnabled->isChecked() );
+    configurationGroup.writeEntry( OxygenConfig::USE_ANIMATIONS, userInterface_->ui.useAnimations->isChecked() );
 
     // write exceptions
     userInterface_->ui.exceptions->exceptions().write( *configuration_ );
@@ -193,6 +194,7 @@ namespace Oxygen
     userInterface_->ui.titleOutline->setChecked( configuration.drawTitleOutline() );
     userInterface_->shadowConfigurations[0]->setChecked( configuration.useOxygenShadows() );
     userInterface_->ui.tabsEnabled->setChecked( configuration.tabsEnabled() );
+    userInterface_->ui.useAnimations->setChecked( configuration.useAnimations() );
   }
 
 

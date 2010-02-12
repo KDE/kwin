@@ -109,6 +109,7 @@ namespace Oxygen
     connect( ui.sizeGripMode, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()) );
 
     connect( ui.tabsEnabled, SIGNAL(clicked()), SIGNAL(changed()) );
+    connect( ui.useAnimations, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.drawSeparator, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.titleOutline, SIGNAL(clicked()), SIGNAL(changed()) );
     connect( ui.exceptions, SIGNAL(changed()), SIGNAL(changed()) );
