@@ -42,7 +42,7 @@ namespace Oxygen
     hideTitleBar_( false ),
     useOxygenShadows_( true ),
     useAnimations_( true ),
-    animateTitleChange_( false ),
+    animateTitleChange_( true ),
     animationsDuration_( 150 ),
     tabsEnabled_( true ),
     useNarrowButtonSpacing_( false )

@@ -33,7 +33,10 @@
 #include <cassert>
 #include <QtCore/QObject>
 #include <QtCore/QWeakPointer>
+#include <QtCore/QBasicTimer>
+#include <QtCore/QTimerEvent>
 #include <QtGui/QPixmap>
+
 
 namespace Oxygen
 {
@@ -94,14 +97,30 @@ namespace Oxygen
         //@{
 
 
+        //! returns true if animations are locked
+        bool isLocked( void ) const
+        { return animationLockTimer_.isActive(); }
+
+        //! returns true if title transition animation is currently running
         bool isAnimated( void ) const
         { return animation().data()->isRunning(); }
 
-        //! start animation
+        //! start lock animation timer
+        void lockAnimations( void )
+        { animationLockTimer_.start( lockTime_, this ); }
+
+        //! start title transition animation
         void startAnimation( void )
         {
             assert( !isAnimated() );
             animation().data()->start();
+        }
+
+        //! finish title transition animation
+        void finishAnimation( void )
+        {
+            assert( isAnimated() );
+            animation().data()->stop();
         }
 
         //@}
@@ -139,6 +158,9 @@ namespace Oxygen
         virtual void updatePixmaps( void );
 
         protected:
+
+        //! timer event
+        void timerEvent( QTimerEvent* );
 
         //! animation object
         const Animation::Pointer& animation( void ) const
@@ -211,6 +233,12 @@ namespace Oxygen
 
         BlendedPixmap contrastPixmap_;
         BlendedPixmap pixmap_;
+
+        //! lock time (milliseconds
+        static const int lockTime_;
+
+        //! timer used to disable animations when triggered too early
+        QBasicTimer animationLockTimer_;
 
         //! title animation
         Animation::Pointer animation_;

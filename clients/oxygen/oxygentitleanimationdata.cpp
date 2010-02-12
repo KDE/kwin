@@ -33,6 +33,9 @@
 namespace Oxygen
 {
 
+    // use 300 milliseconds for animation lock
+    const int TitleAnimationData::lockTime_ = 300;
+
     //_________________________________________________________
     TitleAnimationData::TitleAnimationData( QObject* parent ):
         QObject( parent ),
@@ -79,6 +82,25 @@ namespace Oxygen
         contrastPixmap_.blend( opacity() );
         pixmap_.blend( opacity() );
         emit pixmapsChanged();
+    }
+
+    //_________________________________________________________
+    void TitleAnimationData::timerEvent( QTimerEvent* e )
+    {
+
+        if( e->timerId() != animationLockTimer_.timerId() )
+        { return QObject::timerEvent( e ); }
+
+        // stop veto
+        animationLockTimer_.stop();
+
+        if( !isAnimated() )
+        {
+            // triggers pixmap updates
+            reset();
+            emit pixmapsChanged();
+        }
+
     }
 
     //_________________________________________________________

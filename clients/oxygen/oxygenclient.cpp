@@ -811,15 +811,35 @@ namespace Oxygen
     if( titleAnimationData_.data()->isDirty() )
     {
 
-        // contrast pixmap
-        titleAnimationData_.data()->setPixmaps(
-            rect,
-            renderTitleText( rect, caption(), color ),
-            renderTitleText( rect, caption(), contrast ) );
-
+        // clear dirty flags
         titleAnimationData_.data()->setDirty( false );
-        titleAnimationData_.data()->startAnimation();
-        renderTitleText( painter, rect, color, contrast );
+
+        // finish current animation if running
+        if( titleAnimationData_.data()->isAnimated() )
+        { titleAnimationData_.data()->finishAnimation(); }
+
+        if( !titleAnimationData_.data()->isLocked() )
+        {
+
+            // set pixmaps
+            titleAnimationData_.data()->setPixmaps(
+                rect,
+                renderTitleText( rect, caption(), color ),
+                renderTitleText( rect, caption(), contrast ) );
+
+            titleAnimationData_.data()->startAnimation();
+            renderTitleText( painter, rect, color, contrast );
+
+        } else if( !caption().isEmpty() ) {
+
+            renderTitleText( painter, rect, caption(), color, contrast );
+
+        }
+
+        // lock animations (this must be done whether or not
+        // animation was actually started, in order to extend locking
+        // every time title get changed too rapidly
+        titleAnimationData_.data()->lockAnimations();
 
     } else if( titleAnimationData_.data()->isAnimated() ) {
 
