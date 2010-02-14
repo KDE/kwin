@@ -174,7 +174,7 @@ namespace Oxygen
     glowAnimation().data()->setDuration( configuration_.animationsDuration() );
     titleAnimationData_.data()->setDuration( configuration_.animationsDuration() );
     itemData_.animation().data()->setDuration( configuration_.animationsDuration() );
-    itemData_.setAnimationsEnabled( configuration_.useAnimations() );
+    itemData_.setAnimationsEnabled( useAnimations() );
 
     // reset title transitions
     titleAnimationData_.data()->reset();

@@ -36,8 +36,10 @@
 #include "lib/helper.h"
 
 #include <kcommondecoration.h>
-#include <QBasicTimer>
-#include <QTimerEvent>
+#include <KGlobalSettings>
+#include <QtCore/QBasicTimer>
+#include <QtCore/QTimerEvent>
+
 
 namespace Oxygen
 {
@@ -75,6 +77,16 @@ namespace Oxygen
         //! true if window is maximized
         virtual bool isMaximized( void ) const
         { return maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();  }
+
+
+        //! true if animations are used
+        /*! this combines OxygenConfiguration and KGlobalSettings */
+        bool useAnimations( void ) const
+        {
+          return
+            configuration().useAnimations() &&
+            KGlobalSettings::graphicEffectsLevel() >= KGlobalSettings::SimpleAnimationEffects;
+        }
 
         //! true if glow is animated
         bool glowIsAnimated( void ) const
@@ -289,13 +301,13 @@ namespace Oxygen
 
         //! return true when activity change are animated
         bool animateActiveChange( void ) const
-        { return ( configuration().useAnimations() && !isPreview() ); }
+        { return ( useAnimations() && !isPreview() ); }
 
         //! return true when activity change are animated
         bool animateTitleChange( void ) const
         {
             return
-                configuration().useAnimations() &&
+                useAnimations() &&
                 configuration().animateTitleChange() &&
                 !configuration().drawTitleOutline() &&
                 !configuration().hideTitleBar() &&
