@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 #include <klocale.h>
 #include <kdeversion.h>
+#include <kstandarddirs.h>
+
+#include <qprocess.h>
 
 
 namespace KWin
@@ -115,6 +118,20 @@ void CompositingPrefs::detect()
         }
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    // HACK: This is needed for AIGLX
+    if( qstrcmp( qgetenv( "KWIN_DIRECT_GL" ), "1" ) != 0 )
+        {
+        // Start an external helper program that initializes GLX and returns
+        // 0 if we can use direct rendering, and 1 otherwise.
+        // The reason we have to use an external program is that after GLX
+        // has been initialized, it's too late to set the LIBGL_ALWAYS_INDIRECT
+        // environment variable.
+        // Direct rendering is preferred, since not all OpenGL extensions are
+        // available with indirect rendering.
+        const QString opengl_test = KStandardDirs::findExe( "kwin_opengl_test" );
+        if ( QProcess::execute( opengl_test ) != 0 )
+            setenv( "LIBGL_ALWAYS_INDIRECT", "1", true );
+        }
     if( !Extensions::glxAvailable())
         {
         kDebug( 1212 ) << "No GLX available";

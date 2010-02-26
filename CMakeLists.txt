@@ -112,6 +112,7 @@ kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 target_link_libraries(kdeinit_kwin ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTXML_LIBRARY} kephal kdecorations kwineffects ${X11_LIBRARIES})
 
 if(OPENGL_FOUND)
+  add_subdirectory(opengltest)
   target_link_libraries(kdeinit_kwin ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)
