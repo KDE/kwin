@@ -1,6 +1,10 @@
 [Global]
 IconName=kwin
 Comment=KWin Window Manager
+Comment[pt]=Gestor de Janelas KWin
+Comment[pt_BR]=Gerenciador de janelas KWin
+Comment[uk]=Керування вікнами KWin
+Comment[x-test]=xxKWin Window Managerxx
 
 [Event/desktop1]
 Name=Change to Desktop 1
