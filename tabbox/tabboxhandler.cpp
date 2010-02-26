@@ -228,7 +228,7 @@ void TabBoxHandlerPrivate::hideOutline()
 
 void TabBoxHandlerPrivate::updateHighlightWindows()
     {
-    if( !isShown )
+    if( !isShown || config.tabBoxMode() != TabBoxConfig::ClientTabBox )
         return;
     QVector< WId > data( 2 );
     Display *dpy = QX11Info::display();
