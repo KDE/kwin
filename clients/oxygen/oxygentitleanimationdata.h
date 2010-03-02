@@ -28,7 +28,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include "lib/oxygenanimation.h"
+#include "oxygenanimation.h"
 
 #include <cassert>
 #include <QtCore/QObject>

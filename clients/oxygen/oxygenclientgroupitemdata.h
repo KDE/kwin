@@ -29,7 +29,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenbutton.h"
-#include "lib/oxygenanimation.h"
+#include "oxygenanimation.h"
 
 #include <QtCore/QList>
 #include <QtCore/QWeakPointer>

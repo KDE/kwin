@@ -31,7 +31,7 @@
 #include <kcommondecoration.h>
 
 #include "oxygen.h"
-#include "lib/oxygenanimation.h"
+#include "oxygenanimation.h"
 
 namespace Oxygen
 {

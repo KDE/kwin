@@ -31,7 +31,7 @@
 #include <QtGui/QRadialGradient>
 
 #include "oxygenshadowconfiguration.h"
-#include "lib/tileset.h"
+#include "tileset.h"
 
 class OxygenHelper;
 

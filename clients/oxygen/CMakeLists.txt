@@ -1,12 +1,10 @@
 ########### add version number into compilation defines
 add_definitions ( -DAPP_VERSION=\\\"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}\\\")
 add_subdirectory( config )
+include_directories(${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/oxygen)
 
 ########### next target ###############
 set(kwin_oxygen_SRCS
-     lib/helper.cpp
-     lib/tileset.cpp
-     lib/oxygenanimation.cpp
      oxygen.cpp
      oxygenbutton.cpp
      oxygenclient.cpp
@@ -27,6 +25,7 @@ target_link_libraries(
     ${X11_X11_LIB}
     ${X11_Xrender_LIB}
     kdecorations
+    oxygenstyle
   )
 
 install(TARGETS kwin3_oxygen  DESTINATION ${PLUGIN_INSTALL_DIR} )

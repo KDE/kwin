@@ -32,8 +32,8 @@
 #include "oxygenclientgroupitemdata.h"
 #include "oxygenconfiguration.h"
 #include "oxygentitleanimationdata.h"
-#include "lib/oxygenanimation.h"
-#include "lib/helper.h"
+#include "oxygenanimation.h"
+#include "oxygenhelper.h"
 
 #include <kcommondecoration.h>
 #include <KGlobalSettings>

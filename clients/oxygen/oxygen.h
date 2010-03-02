@@ -35,7 +35,7 @@
 #include "oxygenexceptionlist.h"
 
 #include "oxygenshadowcache.h"
-#include "lib/helper.h"
+#include "oxygenhelper.h"
 
 namespace Oxygen
 {

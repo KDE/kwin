@@ -27,7 +27,7 @@
 #include "oxygenshadowcache.h"
 #include "oxygenclient.h"
 #include "oxygen.h"
-#include "lib/helper.h"
+#include "oxygenhelper.h"
 
 #include <cassert>
 #include <KColorUtils>

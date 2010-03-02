@@ -31,7 +31,7 @@
 #include "oxygen.h"
 #include "oxygenbutton.h"
 #include "oxygensizegrip.h"
-#include "lib/tileset.h"
+#include "tileset.h"
 
 #include <cassert>
 #include <cmath>
