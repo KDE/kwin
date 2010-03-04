@@ -33,7 +33,7 @@
 #include "oxygenconfiguration.h"
 #include "oxygentitleanimationdata.h"
 #include "oxygenanimation.h"
-#include "oxygenhelper.h"
+#include "helper.h"
 
 #include <kcommondecoration.h>
 #include <KGlobalSettings>
@@ -146,7 +146,7 @@ namespace Oxygen
         //@}
 
         //! helper class
-        OxygenHelper& helper( void ) const
+        OxygenDecoHelper& helper( void ) const
         { return factory_->helper(); }
 
         //! helper class

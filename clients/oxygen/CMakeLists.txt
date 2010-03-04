@@ -5,6 +5,7 @@ include_directories(${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/oxygen)
 
 ########### next target ###############
 set(kwin_oxygen_SRCS
+     helper.cpp
      oxygen.cpp
      oxygenbutton.cpp
      oxygenclient.cpp

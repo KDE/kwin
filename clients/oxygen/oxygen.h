@@ -35,7 +35,7 @@
 #include "oxygenexceptionlist.h"
 
 #include "oxygenshadowcache.h"
-#include "oxygenhelper.h"
+#include "helper.h"
 
 namespace Oxygen
 {
@@ -109,7 +109,7 @@ namespace Oxygen
     { return initialized_; }
 
     //! helper
-    virtual OxygenHelper& helper( void )
+    virtual OxygenDecoHelper& helper( void )
     { return helper_; }
 
     //! shadow cache
@@ -140,7 +140,7 @@ namespace Oxygen
     bool initialized_;
 
     //! helper
-    OxygenHelper helper_;
+    OxygenDecoHelper helper_;
 
     //! shadow cache
     OxygenShadowCache shadowCache_;
