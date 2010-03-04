@@ -164,7 +164,7 @@ namespace Oxygen
     void renderGradient( QPainter&, const QRectF&, const QRadialGradient&, bool hasBorder = true ) const;
 
     //! helper
-    OxygenHelper& helper_;
+    OxygenDecoHelper& helper_;
 
     //! max index
     /*! it is used to set caches max cost, and calculate animation opacity */

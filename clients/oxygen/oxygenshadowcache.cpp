@@ -37,7 +37,7 @@ namespace Oxygen
 {
 
   //_______________________________________________________
-  OxygenShadowCache::OxygenShadowCache( OxygenHelper& helper, int maxIndex ):
+  OxygenShadowCache::OxygenShadowCache( OxygenDecoHelper& helper, int maxIndex ):
     helper_( helper ),
     maxIndex_( maxIndex ),
     activeShadowConfiguration_( OxygenShadowConfiguration( QPalette::Active ) ),
