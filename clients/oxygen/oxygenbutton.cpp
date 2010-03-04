@@ -119,7 +119,7 @@ namespace Oxygen
 
   //___________________________________________________
   bool OxygenButton::animateButtonHover( void ) const
-  { return client_.configuration().useAnimations(); }
+  { return client_.useAnimations(); }
 
   //___________________________________________________
   QSize OxygenButton::sizeHint() const

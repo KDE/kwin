@@ -31,7 +31,7 @@
 #include <QtGui/QRadialGradient>
 
 #include "oxygenshadowconfiguration.h"
-#include "tileset.h"
+#include "helper.h"
 
 class OxygenHelper;
 
@@ -44,7 +44,7 @@ namespace Oxygen
     public:
 
     //! constructor
-    OxygenShadowCache( OxygenHelper& helper, int maxIndex );
+    OxygenShadowCache( OxygenDecoHelper& helper, int maxIndex );
 
     //! destructor
     virtual ~OxygenShadowCache( void )
