@@ -600,7 +600,7 @@ void DesktopChangeItem::paint( QPainter* painter, const QStyleOptionGraphicsItem
         {
         if( !m_arrowAnimation.isNull() &&
                 m_arrowAnimation.data()->state() == QAbstractAnimation::Running &&
-                !qFuzzyCompare(m_arrowValue, 1.0) )
+                !qFuzzyCompare(m_arrowValue, qreal(1.0)) )
             {
             QPixmap temp( icon.size() );
             temp.fill( Qt::transparent );
