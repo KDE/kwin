@@ -100,6 +100,11 @@ glValidateProgram_func glValidateProgram;
 glGetUniformLocation_func glGetUniformLocation;
 glVertexAttrib1f_func glVertexAttrib1f;
 glGetAttribLocation_func glGetAttribLocation;
+glGenProgramsARB_func glGenProgramsARB;
+glBindProgramARB_func glBindProgramARB;
+glProgramStringARB_func glProgramStringARB;
+glProgramLocalParameter4fARB_func glProgramLocalParameter4fARB;
+glDeleteProgramsARB_func glDeleteProgramsARB;
 
 
 static glXFuncPtr getProcAddress( const char* name )
@@ -237,6 +242,14 @@ void glResolveFunctions()
         GL_RESOLVE_WITH_EXT( glGetUniformLocation, glGetUniformLocationARB );
         GL_RESOLVE_WITH_EXT( glVertexAttrib1f, glVertexAttrib1fARB );
         GL_RESOLVE_WITH_EXT( glGetAttribLocation, glGetAttribLocationARB );
+        }
+    if( hasGLExtension( "GL_ARB_fragment_program" ) && hasGLExtension( "GL_ARB_vertex_program" ))
+        {
+        GL_RESOLVE( glProgramStringARB );
+        GL_RESOLVE( glBindProgramARB );
+        GL_RESOLVE( glDeleteProgramsARB );
+        GL_RESOLVE( glGenProgramsARB );
+        GL_RESOLVE( glProgramLocalParameter4fARB );
         }
     }
 

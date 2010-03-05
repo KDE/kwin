@@ -276,6 +276,11 @@ typedef GLvoid (*glValidateProgram_func)(GLuint);
 typedef GLint (*glGetUniformLocation_func)(GLuint, const GLchar*);
 typedef GLvoid (*glVertexAttrib1f_func)(GLuint, GLfloat);
 typedef GLint (*glGetAttribLocation_func)(GLuint, const GLchar*);
+typedef void (*glGenProgramsARB_func)(GLsizei, GLuint*);
+typedef void (*glBindProgramARB_func)(GLenum, GLuint);
+typedef void (*glProgramStringARB_func)(GLenum, GLenum, GLsizei, const GLvoid*);
+typedef void (*glProgramLocalParameter4fARB_func)(GLenum, GLuint, GLfloat, GLfloat, GLfloat, GLfloat);
+typedef void (*glDeleteProgramsARB_func)(GLsizei, const GLuint*);
 extern KWIN_EXPORT glCreateShader_func glCreateShader;
 extern KWIN_EXPORT glShaderSource_func glShaderSource;
 extern KWIN_EXPORT glCompileShader_func glCompileShader;
@@ -297,6 +302,11 @@ extern KWIN_EXPORT glValidateProgram_func glValidateProgram;
 extern KWIN_EXPORT glGetUniformLocation_func glGetUniformLocation;
 extern KWIN_EXPORT glVertexAttrib1f_func glVertexAttrib1f;
 extern KWIN_EXPORT glGetAttribLocation_func glGetAttribLocation;
+extern KWIN_EXPORT glGenProgramsARB_func glGenProgramsARB;
+extern KWIN_EXPORT glBindProgramARB_func glBindProgramARB;
+extern KWIN_EXPORT glProgramStringARB_func glProgramStringARB;
+extern KWIN_EXPORT glProgramLocalParameter4fARB_func glProgramLocalParameter4fARB;
+extern KWIN_EXPORT glDeleteProgramsARB_func glDeleteProgramsARB;
 
 } // namespace
 
