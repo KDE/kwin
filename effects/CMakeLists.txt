@@ -81,7 +81,7 @@ include( zoom/CMakeLists.txt )
 
 # OpenGL-specific effects
 if( KWIN_HAVE_OPENGL_COMPOSITING )
-    #include( blur/CMakeLists.txt )
+    include( blur/CMakeLists.txt )
     include( coverswitch/CMakeLists.txt )
     include( cube/CMakeLists.txt )
     include( explosion/CMakeLists.txt )
