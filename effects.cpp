@@ -238,6 +238,11 @@ bool EffectsHandlerImpl::hasDecorationShadows() const
     return Workspace::self()->hasDecorationShadows();
     }
 
+bool EffectsHandlerImpl::decorationsHaveAlpha() const
+    {
+    return Workspace::self()->decorationHasAlpha();
+    }
+
 // start another painting pass
 void EffectsHandlerImpl::startPaint()
     {

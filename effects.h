@@ -139,6 +139,8 @@ class EffectsHandlerImpl : public EffectsHandler
 
         virtual bool hasDecorationShadows() const;
 
+        virtual bool decorationsHaveAlpha() const;
+
         // internal (used by kwin core or compositing code)
         void startPaint();
         void windowUserMovedResized( EffectWindow* c, bool first, bool last );

@@ -731,6 +731,12 @@ class KWIN_EXPORT EffectsHandler
         virtual bool hasDecorationShadows() const = 0;
 
         /**
+         * Returns @a true if the window decorations use the alpha channel, and @a false otherwise.
+         * @since 4.5
+         */
+        virtual bool decorationsHaveAlpha() const = 0;
+
+        /**
          * @deprecated
          * @see EffectFrame
          * Paints given text onto screen, possibly in elided form
