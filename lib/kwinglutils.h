@@ -129,6 +129,8 @@ class KWIN_EXPORT GLTexture
 
         bool isNull() const;
         QSize size() const;
+        int width() const { return mSize.width(); }   /// @since 4.5
+        int height() const { return mSize.height(); } /// @since 4.5
 
         virtual bool load( const QImage& image, GLenum target = GL_TEXTURE_2D );
         virtual bool load( const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D );
