@@ -358,6 +358,7 @@ GLTexture::GLTexture( int width, int height )
         mTarget = GL_TEXTURE_2D;
         mScale.setWidth( 1.0 / width);
         mScale.setHeight( 1.0 / height);
+        mSize = QSize( width, height );
         can_use_mipmaps = true;
 
         glGenTextures( 1, &mTexture );
