@@ -26,6 +26,10 @@ macro_log_feature(KWIN_HAVE_COMPOSITING "Compositing support" "X11 Compositing s
 
 macro_bool_to_01( OPENGL_FOUND KWIN_HAVE_OPENGL )
 
+if(OPENGL_FOUND)
+  include_directories(${OPENGL_INCLUDE_DIR})
+endif(OPENGL_FOUND)
+
 # for things that are also used by kwin libraries
 configure_file(lib/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/lib/kwinconfig.h )
 # for kwin internal things

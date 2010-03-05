@@ -8,7 +8,6 @@ set(kdecorations_LIB_SRCS
    kcommondecoration.cpp
    kcommondecoration_p.cpp )
 
-
 kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 
 target_link_libraries(kdecorations ${KDE4_KDEUI_LIBS} kephal)
@@ -54,6 +53,7 @@ if(OPENGL_FOUND)
   if (DL_LIBRARY)
     target_link_libraries(kwineffects ${DL_LIBRARY})
   endif(DL_LIBRARY)
+  include_directories(${OPENGL_INCLUDE_DIR})
 endif(OPENGL_FOUND)
 if (X11_Xrender_FOUND)
   target_link_libraries(kwineffects ${X11_Xrender_LIB})
