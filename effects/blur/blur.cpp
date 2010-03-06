@@ -20,9 +20,16 @@
 #include "blur.h"
 #include "blurshader.h"
 
+#include <X11/Xatom.h>
+
 
 namespace KWin
 {
+
+enum {
+    BlurRegionRole = 0x1C50A74B 
+};
+
 
 KWIN_EFFECT(blur, BlurEffect)
 KWIN_EFFECT_SUPPORTED(blur, BlurEffect::supported())
@@ -41,13 +48,54 @@ BlurEffect::BlurEffect()
     tex->setWrapMode(GL_CLAMP_TO_EDGE);
 
     target = new GLRenderTarget(tex);
+
+    net_wm_blur_region = XInternAtom(display(), "_KDE_NET_WM_BLUR_REGION", False);
+    effects->registerPropertyType(net_wm_blur_region, true);
+
+    // ### Hackish way to announce support.
+    //     Should be included in _NET_SUPPORTED instead.
+    XChangeProperty(display(), rootWindow(), net_wm_blur_region, net_wm_blur_region,
+                    32, PropModeReplace, 0, 0);
 }
 
 BlurEffect::~BlurEffect()
 {
+    effects->registerPropertyType(net_wm_blur_region, false);
+    XDeleteProperty(display(), rootWindow(), net_wm_blur_region);
+
     delete shader;
     delete target;
     delete tex;
+}
+
+void BlurEffect::updateBlurRegion(EffectWindow *w) const
+{
+    QRegion region;
+
+    const QByteArray value = w->readProperty(net_wm_blur_region, XA_CARDINAL, 32);
+    if (value.size() > 0 && !(value.size() % (4 * sizeof(quint32)))) {
+        const quint32 *cardinals = reinterpret_cast<const quint32*>(value.constData());
+        for (unsigned int i = 0; i < value.size() / sizeof(quint32);) {
+            int x = cardinals[i++];
+            int y = cardinals[i++];
+            int w = cardinals[i++];
+            int h = cardinals[i++];
+            region += QRect(x, y, w, h);
+        }
+    }
+
+    w->setData(BlurRegionRole, value.isNull() ? QVariant() : region);
+}
+
+void BlurEffect::windowAdded(EffectWindow *w)
+{
+    updateBlurRegion(w);
+}
+
+void BlurEffect::propertyNotify(EffectWindow *w, long atom)
+{
+    if (w && atom == net_wm_blur_region)
+        updateBlurRegion(w);
 }
 
 bool BlurEffect::supported()
@@ -74,6 +122,29 @@ QRegion BlurEffect::expand(const QRegion &region) const
     return expanded;
 }
 
+QRegion BlurEffect::blurRegion(const EffectWindow *w) const
+{
+    QRegion region;
+
+    const QVariant value = w->data(BlurRegionRole);
+    if (value.isValid()) {
+        const QRegion appRegion = qvariant_cast<QRegion>(value);
+        if (!appRegion.isEmpty()) {
+            if (w->hasDecoration()) {
+                region = w->shape();
+                region -= w->contentsRect();
+                region |= appRegion.translated(w->contentsRect().topLeft()) &
+                                        w->contentsRect();
+            } else
+                region = appRegion & w->contentsRect();
+        } else
+            region = w->shape();
+    } else
+        region = w->shape();
+
+    return region;
+}
+
 void BlurEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
     // Force the scene to call paintGenericScreen() so the windows are painted bottom -> top
@@ -85,15 +156,18 @@ void BlurEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 
 void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
+    const QRect screen(0, 0, displayWidth(), displayHeight());
     bool scaled = !qFuzzyCompare(data.xScale, 1.0) && !qFuzzyCompare(data.yScale, 1.0);
     bool translated = data.xTranslate || data.yTranslate;
+    bool transformed = scaled || translated;
     bool hasAlpha = w->hasAlpha() || (w->hasDecoration() && effects->decorationsHaveAlpha());
 
-    if (!effects->activeFullScreenEffect() && hasAlpha && !w->isDesktop() &&
-        !scaled && !translated /* && region.intersects(w->geometry())*/)
+    QRegion shape;
+    if (!effects->activeFullScreenEffect() && hasAlpha && !w->isDesktop() && !transformed)
+        shape = blurRegion(w).translated(w->geometry().topLeft()) & screen;
+
+    if (!shape.isEmpty() && region.intersects(shape.boundingRect()))
     {
-        const QRect screen(0, 0, displayWidth(), displayHeight());
-        const QRegion shape = w->shape().translated(w->geometry().topLeft()) & screen;
         const QRect r = expand(shape.boundingRect()) & screen;
         const QPoint offset = -shape.boundingRect().topLeft() +
                         (shape.boundingRect().topLeft() - r.topLeft());

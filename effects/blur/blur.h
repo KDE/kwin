@@ -39,12 +39,16 @@ public:
 
     static bool supported();
 
+    void windowAdded(EffectWindow *w);
+    void propertyNotify(EffectWindow *w, long atom);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
 
 private:
     QRect expand(const QRect &rect) const;
     QRegion expand(const QRegion &region) const;
+    QRegion blurRegion(const EffectWindow *w) const;
+    void updateBlurRegion(EffectWindow *w) const;
 
 private:
     BlurShader *shader;
@@ -52,6 +56,7 @@ private:
     QVector<QVector2D> texCoords;
     GLRenderTarget *target;
     GLTexture *tex;
+    long net_wm_blur_region;
     int radius;
 };
 
