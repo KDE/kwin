@@ -1,7 +1,7 @@
 [Global]
 IconName=kwin
 Comment=KWin Window Manager
-Comment[de]=KWin Fenstermanager
+Comment[de]=KWin-Fenstermanager
 Comment[el]=Διαχειριστής παραθύρων Kwin
 Comment[es]=Gestor de ventanas KWin
 Comment[hr]=Upravitelj prozora KWin
@@ -9,6 +9,7 @@ Comment[nb]=KWin vindusbehandler
 Comment[nds]=KWin-Finsterpleger
 Comment[pt]=Gestor de Janelas KWin
 Comment[pt_BR]=Gerenciador de janelas KWin
+Comment[sv]=Kwin fönsterhanterare
 Comment[uk]=Керування вікнами KWin
 Comment[x-test]=xxKWin Window Managerxx
 
