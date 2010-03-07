@@ -761,6 +761,20 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
             frame->setElementPrefix("decoration-opaque-inactive");
         }
     }
+    if (maximized) {
+        if (frame->hasElementPrefix("decoration-maximized")) {
+            frame->setElementPrefix("decoration-maximized");
+        }
+        if (!isActive() && frame->hasElementPrefix("decoration-maximized-inactive")) {
+            frame->setElementPrefix("decoration-maximized-inactive");
+        }
+        if (!compositingActive() && frame->hasElementPrefix("decoration-maximized-opaque")) {
+            frame->setElementPrefix("decoration-maximized-opaque");
+            if (!isActive() && frame->hasElementPrefix("decoration-maximized-opaque-inactive")) {
+                frame->setElementPrefix("decoration-maximized-opaque-inactive");
+            }
+        }
+    }
 
     // restrict painting on the decoration - no need to paint behind the window
     int left, right, top, bottom;
@@ -797,6 +811,11 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
         rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
                       widget()->width() - conf.paddingRight(),
                       widget()->height() - conf.paddingBottom());
+        if (transparentRect().isNull()) {
+            rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
+                          widget()->width() - conf.paddingRight(),
+                          layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeBottom));
+        }
     }
     QRectF sourceRect = rect;
     if (!compositingActive()) {
@@ -826,10 +845,24 @@ void AuroraeClient::paintEvent(QPaintEvent *event)
                 frame->setElementPrefix("decoration-opaque");
             }
         }
+        if (maximized && frame->hasElementPrefix("decoration-maximized-inactive")) {
+            frame->setElementPrefix("decoration-maximized-inactive");
+            if (!isActive()) {
+                frame->setElementPrefix("decoration-maximized");
+            }
+            if (!compositingActive() && frame->hasElementPrefix("decoration-maximized-opaque-inactive")) {
+                frame->setElementPrefix("decoration-maximized-opaque-inactive");
+                if (!isActive()) {
+                    frame->setElementPrefix("decoration-maximized-opaque");
+                }
+            }
+        } else if (maximized && frame->hasElementPrefix("decoration-maximized")) {
+            frame->setElementPrefix("decoration-maximized");
+        }
         frame->resizeFrame(rect.size());
         QPixmap result = Plasma::PaintUtils::transition(frame->framePixmap(),
                                                         target, m_animationProgress);
-        painter.drawPixmap(rect.toRect(), result);
+        painter.drawPixmap(rect.toRect(), result, sourceRect);
     } else {
         frame->paintFrame(&painter, rect, sourceRect);
     }

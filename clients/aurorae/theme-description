@@ -39,6 +39,27 @@ This opaque decoration is used for generating the window mask. The element prefi
 "decoration-opaque" for active and "decoration-opaque-inactive" for inactive windows. The mask is
 generated from the active window.
 
+Maximized Windows
+-----------------
+In order to better support maximized windows there exists a special frame svg called
+"decoration-maximized". In the same way as for the general decoration you can specify a version for
+inactive, opaque and inactive-opaque. This results in the following names:
+ * decoration-maximized
+ * decoration-maximized-inactive
+ * decoration-maximized-opaque
+ * decoration-maximized-opaque-inactive
+
+In all cases only the center element will be used. There is no need to specify borders. Please note
+that in case of a window with translucent widgets the center element will be stretched to the size
+of the complete window.
+
+The following fallback strategy is used: if inactive is not present it falls back to the active.
+If opaque is not present it falls back to the translucent. If none of the maximized elements are
+present the center element of the decoration is used!
+
+In order to support Fitts' Law all TitleEdge Settings are set to 0. So the buttons will be directly
+next to the screen edges. You have the possibility to overwrite these settins (see below).
+
 Buttons
 =======
 You have to provide a svgz file for each button your theme should contain. If you do not provide a
