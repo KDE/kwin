@@ -36,7 +36,6 @@
 #include "helper.h"
 
 #include <kcommondecoration.h>
-#include <KGlobalSettings>
 #include <QtCore/QBasicTimer>
 #include <QtCore/QTimerEvent>
 
@@ -80,13 +79,8 @@ namespace Oxygen
 
 
         //! true if animations are used
-        /*! this combines OxygenConfiguration and KGlobalSettings */
         bool useAnimations( void ) const
-        {
-          return
-            configuration().useAnimations() &&
-            KGlobalSettings::graphicEffectsLevel() >= KGlobalSettings::SimpleAnimationEffects;
-        }
+        { return configuration().useAnimations(); }
 
         //! true if glow is animated
         bool glowIsAnimated( void ) const
