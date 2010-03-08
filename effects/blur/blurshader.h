@@ -29,32 +29,91 @@ class BlurShader
 {
 public:
     BlurShader();
-    ~BlurShader();
+    virtual ~BlurShader();
+
+    static BlurShader *create();
 
     // Sets the radius in pixels
     void setRadius(int radius);
+    int radius() const { return mRadius; }
 
     // Sets the blur direction
-    void setDirection(Qt::Orientation orientation);
+    void setDirection(Qt::Orientation direction);
+    Qt::Orientation direction() const { return mDirection; }
 
     // Sets the distance between two pixels
-    void setPixelDistance(float val);
+    virtual void setPixelDistance(float val) = 0;
 
     // The opacity of the resulting pixels is multiplied by this value
-    void setOpacity(float val);
+    virtual void setOpacity(float val) = 0;
 
+    virtual void bind() = 0;
+    virtual void unbind() = 0;
+
+protected:
+    float gaussian(float x, float sigma) const;
+    QVector<float> gaussianKernel() const;
+    virtual void init() = 0;
+    virtual void reset() = 0;
+
+private:
+    int mRadius;
+    Qt::Orientation mDirection;
+};
+
+
+// ----------------------------------------------------------------------------
+
+
+
+class GLSLBlurShader : public BlurShader
+{
+public:
+    GLSLBlurShader();
+    ~GLSLBlurShader();
+
+    void setPixelDistance(float val);
+    void setOpacity(float val);
     void bind();
     void unbind();
 
-private:
-    float gaussian(float x, float sigma) const;
-    QVector<float> gaussianKernel() const;
+protected:
     void init();
+    void reset();
+
+    GLuint compile(GLenum type, const QByteArray &source);
+    GLuint link(GLuint vertexShader, GLuint fragmentShader);
 
 private:
     GLuint program;
-    int radius;
-    Qt::Orientation direction;
+    int uTexUnit;
+    int uPixelSize;
+    int uOpacity;
+};
+
+
+
+// ----------------------------------------------------------------------------
+
+
+
+class ARBBlurShader : public BlurShader
+{
+public:
+    ARBBlurShader();
+    ~ARBBlurShader();
+
+    void setPixelDistance(float val);
+    void setOpacity(float val);
+    void bind();
+    void unbind();
+
+protected:
+    void init();
+    void reset();
+
+private:
+    GLuint program;
 };
 
 } // namespace KWin

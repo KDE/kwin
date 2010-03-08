@@ -38,7 +38,7 @@ KWIN_EFFECT_SUPPORTED(blur, BlurEffect::supported())
 BlurEffect::BlurEffect()
     : radius(12)
 {
-    shader = new BlurShader;
+    shader = BlurShader::create();
     shader->setRadius(radius);
 
     // Offscreen texture that's used as the target for the horizontal blur pass
@@ -101,7 +101,8 @@ void BlurEffect::propertyNotify(EffectWindow *w, long atom)
 bool BlurEffect::supported()
 {
     return GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() &&
-           hasGLExtension("GL_ARB_fragment_program");
+           ((GLShader::vertexShaderSupported() && GLShader::fragmentShaderSupported()) ||
+            hasGLExtension("GL_ARB_fragment_program"));
 }
 
 QRect BlurEffect::expand(const QRect &rect) const
