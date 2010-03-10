@@ -53,7 +53,6 @@ private:
 private:
     BlurShader *shader;
     QVector<QVector2D> vertices;
-    QVector<QVector2D> texCoords;
     GLRenderTarget *target;
     GLTexture *tex;
     long net_wm_blur_region;

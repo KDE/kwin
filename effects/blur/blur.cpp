@@ -219,46 +219,44 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         }
 
-        const float tw = tex->width();
-        const float th = tex->height();
         int vertexCount = shape.rectCount() * 4;
-
-        if (vertices.size() < vertexCount) {
+        if (vertices.size() < vertexCount)
             vertices.resize(vertexCount);
-            texCoords.resize(vertexCount);
-        }
+
+        // Set the up the texture matrix to transform from screen coordinates
+        // to texture coordinates.
+        glMatrixMode(GL_TEXTURE);
+        glPushMatrix();
+        glLoadIdentity();
+        glScalef(1.0 / tex->width(), -1.0 / tex->height(), 1);
+        glTranslatef(offset.x(), -tex->height() + offset.y(), 0); 
 
         int i = 0;
         foreach (const QRect &r, shape.rects()) {
-            vertices[i + 0] = QVector2D(r.x(),             r.y()); 
-            vertices[i + 1] = QVector2D(r.x() + r.width(), r.y()); 
-            vertices[i + 2] = QVector2D(r.x() + r.width(), r.y() + r.height()); 
-            vertices[i + 3] = QVector2D(r.x(),             r.y() + r.height()); 
-
-            const QRect sr = r.translated(offset);
-            texCoords[i + 0] = QVector2D(sr.x() / tw,                1 - sr.y() / th);
-            texCoords[i + 1] = QVector2D((sr.x() + sr.width()) / tw, 1 - sr.y() / th);
-            texCoords[i + 2] = QVector2D((sr.x() + sr.width()) / tw, 1 - (sr.y() + sr.height()) / th);
-            texCoords[i + 3] = QVector2D(sr.x() / tw,                1 - (sr.y() + sr.height()) / th);
-            i += 4;
+            vertices[i++] = QVector2D(r.x(),             r.y()); 
+            vertices[i++] = QVector2D(r.x() + r.width(), r.y()); 
+            vertices[i++] = QVector2D(r.x() + r.width(), r.y() + r.height()); 
+            vertices[i++] = QVector2D(r.x(),             r.y() + r.height()); 
         }
 
         if (vertexCount > 1000) {
             glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
             glEnableClientState(GL_VERTEX_ARRAY);
             glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            glTexCoordPointer(2, GL_FLOAT, 0, (float*)texCoords.constData());
+            glTexCoordPointer(2, GL_FLOAT, 0, (float*)vertices.constData());
             glVertexPointer(2, GL_FLOAT, 0, (float*)vertices.constData());
             glDrawArrays(GL_QUADS, 0, vertexCount);
             glPopClientAttrib();
         } else {
             glBegin(GL_QUADS);
             for (int i = 0; i < vertexCount; i++) {
-                glTexCoord2fv((const float*)&texCoords[i]);
+                glTexCoord2fv((const float*)&vertices[i]);
                 glVertex2fv((const float*)&vertices[i]);
             }
             glEnd();
         }
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
 
         if (opacity < 1.0)
             glPopAttrib();
