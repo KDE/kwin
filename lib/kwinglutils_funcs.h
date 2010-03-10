@@ -282,6 +282,7 @@ typedef void (*glBindProgramARB_func)(GLenum, GLuint);
 typedef void (*glProgramStringARB_func)(GLenum, GLenum, GLsizei, const GLvoid*);
 typedef void (*glProgramLocalParameter4fARB_func)(GLenum, GLuint, GLfloat, GLfloat, GLfloat, GLfloat);
 typedef void (*glDeleteProgramsARB_func)(GLsizei, const GLuint*);
+typedef void (*glGetProgramivARB_func)(GLenum, GLenum, GLint*);
 extern KWIN_EXPORT glCreateShader_func glCreateShader;
 extern KWIN_EXPORT glShaderSource_func glShaderSource;
 extern KWIN_EXPORT glCompileShader_func glCompileShader;
@@ -310,6 +311,7 @@ extern KWIN_EXPORT glBindProgramARB_func glBindProgramARB;
 extern KWIN_EXPORT glProgramStringARB_func glProgramStringARB;
 extern KWIN_EXPORT glProgramLocalParameter4fARB_func glProgramLocalParameter4fARB;
 extern KWIN_EXPORT glDeleteProgramsARB_func glDeleteProgramsARB;
+extern KWIN_EXPORT glGetProgramivARB_func glGetProgramivARB;
 
 } // namespace
 

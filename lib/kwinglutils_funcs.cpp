@@ -107,6 +107,7 @@ glBindProgramARB_func glBindProgramARB;
 glProgramStringARB_func glProgramStringARB;
 glProgramLocalParameter4fARB_func glProgramLocalParameter4fARB;
 glDeleteProgramsARB_func glDeleteProgramsARB;
+glGetProgramivARB_func glGetProgramivARB;
 
 
 static glXFuncPtr getProcAddress( const char* name )
@@ -254,6 +255,7 @@ void glResolveFunctions()
         GL_RESOLVE( glDeleteProgramsARB );
         GL_RESOLVE( glGenProgramsARB );
         GL_RESOLVE( glProgramLocalParameter4fARB );
+        GL_RESOLVE( glGetProgramivARB );
         }
     }
 
