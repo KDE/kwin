@@ -185,6 +185,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
         // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
         effects->pushRenderTarget(target);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         shader->bind();
         shader->setDirection(Qt::Horizontal);
