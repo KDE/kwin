@@ -55,6 +55,7 @@ protected:
     QVector<float> gaussianKernel() const;
     virtual void init() = 0;
     virtual void reset() = 0;
+    virtual int maxKernelSize() const = 0;
 
 private:
     int mRadius;
@@ -80,6 +81,7 @@ public:
 protected:
     void init();
     void reset();
+    int maxKernelSize() const;
 
     GLuint compile(GLenum type, const QByteArray &source);
     GLuint link(GLuint vertexShader, GLuint fragmentShader);
@@ -111,6 +113,7 @@ public:
 protected:
     void init();
     void reset();
+    int maxKernelSize() const;
 
 private:
     GLuint program;

@@ -68,10 +68,13 @@ float BlurShader::gaussian(float x, float sigma) const
 
 QVector<float> BlurShader::gaussianKernel() const
 {
-    const int size = mRadius | 1;
+    int size = qMin(mRadius | 1, maxKernelSize());
+    if (!(size & 0x1))
+        size -= 1;
+
     QVector<float> kernel(size);
-    const qreal sigma = mRadius / 2.5;
     const int center = size / 2;
+    const qreal sigma = (size - 1) / 2.5;
 
     // Generate the gaussian kernel
     kernel[center] = gaussian(0, sigma) * .5;
@@ -146,6 +149,15 @@ void GLSLBlurShader::bind()
 void GLSLBlurShader::unbind()
 {
     glUseProgram(0);
+}
+
+int GLSLBlurShader::maxKernelSize() const
+{
+    int value;
+    glGetIntegerv(GL_MAX_VARYING_FLOATS, &value);
+    // Note: In theory the driver could pack two vec2's in one vec4,
+    //       but we'll assume it doesn't do that
+    return value / 4; // Max number of vec4 varyings
 }
 
 GLuint GLSLBlurShader::compile(GLenum type, const QByteArray &source)
@@ -329,6 +341,20 @@ void ARBBlurShader::unbind()
 {
     glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
     glDisable(GL_FRAGMENT_PROGRAM_ARB);
+}
+
+int ARBBlurShader::maxKernelSize() const
+{
+    int value;
+    int result;
+
+    glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_MAX_PROGRAM_PARAMETERS_ARB, &value);
+    result = (value - 1) * 2; // We only need to store half the kernel, since it's symmetrical
+
+    glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_MAX_PROGRAM_INSTRUCTIONS_ARB, &value);
+    result = qMin(result, value / 3); // We need 3 instructions / sample
+
+    return result;
 }
 
 void ARBBlurShader::init()
