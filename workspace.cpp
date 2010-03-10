@@ -2242,6 +2242,16 @@ void Workspace::checkElectricBorder(const QPoint& pos, Time now)
                         setShowingDesktop( !showingDesktop() );
                         break;
                         }
+                    case ElectricActionLockScreen: // Lock the screen
+                        {
+                        QDBusInterface screenSaver( "org.kde.screensaver", "/ScreenSaver" );
+                        screenSaver.call( "Lock" );
+                        }
+                        break;
+                    case ElectricActionPreventScreenLocking:
+                        {
+                        break;
+                        }
                     case ElectricActionNone: // Either desktop switching or an effect
                     default:
                         {
