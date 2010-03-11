@@ -1226,13 +1226,13 @@ namespace Oxygen
 
   }
 
-//   //_________________________________________________________
-//   QString OxygenClient::defaultButtonsLeft() const
-//   { return KCommonDecoration::defaultButtonsLeft(); }
-//
-//   //_________________________________________________________
-//   QString OxygenClient::defaultButtonsRight() const
-//   { return "HIAX"; }
+  //_________________________________________________________
+  QString OxygenClient::defaultButtonsLeft() const
+  { return KCommonDecoration::defaultButtonsLeft(); }
+
+  //_________________________________________________________
+  QString OxygenClient::defaultButtonsRight() const
+  { return "HIAX"; }
 
   //________________________________________________________________
   void OxygenClient::updateWindowShape()
