@@ -162,12 +162,13 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
     bool translated = data.xTranslate || data.yTranslate;
     bool transformed = scaled || translated;
     bool hasAlpha = w->hasAlpha() || (w->hasDecoration() && effects->decorationsHaveAlpha());
+    bool valid = target->valid() && shader->isValid();
 
     QRegion shape;
     if (!effects->activeFullScreenEffect() && hasAlpha && !w->isDesktop() && !transformed)
         shape = blurRegion(w).translated(w->geometry().topLeft()) & screen;
 
-    if (!shape.isEmpty() && region.intersects(shape.boundingRect()))
+    if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()))
     {
         const QRect r = expand(shape.boundingRect()) & screen;
         const QPoint offset = -shape.boundingRect().topLeft() +

@@ -29,7 +29,7 @@ using namespace KWin;
 
 
 BlurShader::BlurShader()
-    : mRadius(12)
+    : mRadius(0), mValid(false)
 {
 }
 
@@ -52,6 +52,7 @@ void BlurShader::setRadius(int radius)
     if (mRadius != r) {
         mRadius = r;
         reset();
+        init();
     }
 }
 
@@ -117,10 +118,15 @@ void GLSLBlurShader::reset()
         glDeleteProgram(program);
         program = 0;
     }
+
+    setIsValid(false);
 }
 
 void GLSLBlurShader::setPixelDistance(float val)
 {
+    if (!isValid())
+        return;
+
     float pixelSize[2] = { 0.0, 0.0 };
 
     if (direction() == Qt::Horizontal)
@@ -133,14 +139,17 @@ void GLSLBlurShader::setPixelDistance(float val)
 
 void GLSLBlurShader::setOpacity(float val)
 {
+    if (!isValid())
+        return;
+
     const float opacity[4] = { val, val, val, val };
     glUniform4fv(uOpacity, 1, opacity);
 }
 
 void GLSLBlurShader::bind()
 {
-    if (!program)
-        init();
+    if (!isValid())
+        return;
 
     glUseProgram(program);
     glUniform1i(uTexUnit, 0);
@@ -284,6 +293,8 @@ void GLSLBlurShader::init()
         uPixelSize = glGetUniformLocation(program, "pixelSize");
         uOpacity   = glGetUniformLocation(program, "opacity");
     }
+
+    setIsValid(program != 0);
 }
 
 
@@ -308,6 +319,8 @@ void ARBBlurShader::reset()
         glDeleteProgramsARB(1, &program);
         program = 0;
     }
+
+    setIsValid(false);
 }
 
 void ARBBlurShader::setPixelDistance(float val)
@@ -331,8 +344,8 @@ void ARBBlurShader::setOpacity(float val)
 
 void ARBBlurShader::bind()
 {
-    if (!program)
-        init();
+    if (!isValid())
+        return;
 
     glEnable(GL_FRAGMENT_PROGRAM_ARB);
     glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, program);
@@ -413,7 +426,9 @@ void ARBBlurShader::init()
     if (glGetError()) {
         const char *error = (const char*)glGetString(GL_PROGRAM_ERROR_STRING_ARB);
         kError() << "Failed to compile fragment program:" << error;
-    }
+        setIsValid(false);
+    } else
+        setIsValid(true);
 
     glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0); 
 }

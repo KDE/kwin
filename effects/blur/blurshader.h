@@ -33,6 +33,8 @@ public:
 
     static BlurShader *create();
 
+    bool isValid() const { return mValid; }
+
     // Sets the radius in pixels
     void setRadius(int radius);
     int radius() const { return mRadius; }
@@ -53,6 +55,7 @@ public:
 protected:
     float gaussian(float x, float sigma) const;
     QVector<float> gaussianKernel() const;
+    void setIsValid(bool value) { mValid = value; }
     virtual void init() = 0;
     virtual void reset() = 0;
     virtual int maxKernelSize() const = 0;
@@ -60,6 +63,7 @@ protected:
 private:
     int mRadius;
     Qt::Orientation mDirection;
+    bool mValid;
 };
 
 
