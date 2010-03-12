@@ -104,7 +104,18 @@ bool checkGLError( const char* txt )
     GLenum err = glGetError();
     if( err != GL_NO_ERROR )
         {
-        kWarning(1212) << "GL error (" << txt << "): 0x" << QString::number( err, 16 ) ;
+        QString string;
+        switch (err)
+            {
+            case GL_INVALID_ENUM:      string = "GL_INVALID_ENUM";          break;
+            case GL_INVALID_VALUE:     string = "GL_INVALID_VALUE";         break;
+            case GL_INVALID_OPERATION: string = "GL_INVALID_OPERATION";     break;
+            case GL_STACK_OVERFLOW:    string = "GL_STACK_OVERFLOW";        break;
+            case GL_STACK_UNDERFLOW:   string = "GL_STACK_UNDERFLOW";       break;
+            case GL_OUT_OF_MEMORY:     string = "GL_OUT_OF_MEMORY";         break;
+            default: string = QString( "0x" ) + QString::number( err, 16 ); break;
+            }
+        kWarning(1212) << "GL error (" << txt << "): " << string;
         return true;
         }
     return false;
