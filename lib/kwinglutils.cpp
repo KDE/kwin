@@ -374,7 +374,7 @@ GLTexture::GLTexture( int width, int height )
 
         glGenTextures( 1, &mTexture );
         bind();
-        glTexImage2D( mTarget, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D( mTarget, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
         unbind();
         }
     }
@@ -451,8 +451,8 @@ bool GLTexture::load( const QImage& image, GLenum target )
     if( isNull())
         glGenTextures( 1, &mTexture );
     bind();
-    glTexImage2D( mTarget, 0, GL_RGBA, img.width(), img.height(), 0,
-        GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
+    glTexImage2D( mTarget, 0, GL_RGBA8, img.width(), img.height(), 0,
+        GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
     unbind();
     return true;
     }
@@ -721,7 +721,7 @@ static void convertToGLFormatHelper(QImage &dst, const QImage &img, GLenum textu
 QImage GLTexture::convertToGLFormat( const QImage& img ) const
     { // Copied from Qt's QGLWidget::convertToGLFormat()
     QImage res(img.size(), QImage::Format_ARGB32);
-    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_RGBA);
+    convertToGLFormatHelper(res, img.convertToFormat(QImage::Format_ARGB32), GL_BGRA);
     return res;
     }
 
