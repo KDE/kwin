@@ -60,6 +60,7 @@ glXGetFBConfigs_func glXGetFBConfigs;
 
 // glActiveTexture
 glActiveTexture_func glActiveTexture;
+glBlendColor_func glBlendColor;
 // framebuffer_object extension functions
 glIsRenderbuffer_func glIsRenderbuffer;
 glBindRenderbuffer_func glBindRenderbuffer;
@@ -257,6 +258,7 @@ void glResolveFunctions()
         GL_RESOLVE( glProgramLocalParameter4fARB );
         GL_RESOLVE( glGetProgramivARB );
         }
+    GL_RESOLVE_WITH_EXT( glBlendColor, glBlendColorARB );
     }
 
 } // namespace
