@@ -120,7 +120,7 @@ QRegion BlurEffect::expand(const QRegion &region) const
 {
     QRegion expanded;
 
-    if (region.rectCount() < 10) {
+    if (region.rectCount() < 20) {
         foreach (const QRect &rect, region.rects())
             expanded += expand(rect);
     } else
@@ -159,6 +159,38 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
     return region;
 }
 
+void BlurEffect::drawRegion(const QRegion &region)
+{
+    const int vertexCount = region.rectCount() * 4;
+    if (vertices.size() < vertexCount)
+        vertices.resize(vertexCount);
+
+    int i = 0;
+    foreach (const QRect &r, region.rects()) {
+        vertices[i++] = QVector2D(r.x(),             r.y()); 
+        vertices[i++] = QVector2D(r.x() + r.width(), r.y()); 
+        vertices[i++] = QVector2D(r.x() + r.width(), r.y() + r.height()); 
+        vertices[i++] = QVector2D(r.x(),             r.y() + r.height()); 
+    }
+
+    if (vertexCount > 1000) {
+        glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glTexCoordPointer(2, GL_FLOAT, 0, (float*)vertices.constData());
+        glVertexPointer(2, GL_FLOAT, 0, (float*)vertices.constData());
+        glDrawArrays(GL_QUADS, 0, vertexCount);
+        glPopClientAttrib();
+    } else {
+        glBegin(GL_QUADS);
+        for (int i = 0; i < vertexCount; i++) {
+            glTexCoord2fv((const float*)&vertices[i]);
+            glVertex2fv((const float*)&vertices[i]);
+        }
+        glEnd();
+    }
+}
+
 void BlurEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 {
     // Force the scene to call paintGenericScreen() so the windows are painted bottom -> top
@@ -183,7 +215,8 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()))
     {
-        const QRect r = expand(shape.boundingRect()) & screen;
+        const QRegion expanded = expand(shape) & screen;
+        const QRect r = expanded.boundingRect();
         const QPoint offset = -shape.boundingRect().topLeft() +
                         (shape.boundingRect().topLeft() - r.topLeft());
 
@@ -205,12 +238,14 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         shader->setDirection(Qt::Horizontal);
         shader->setPixelDistance(1.0 / r.width());
 
-        glBegin(GL_QUADS);
-        glTexCoord2f(0, 1);  glVertex2i(0, 0);
-        glTexCoord2f(1, 1);  glVertex2i(r.width(), 0);
-        glTexCoord2f(1, 0);  glVertex2i(r.width(), r.height());
-        glTexCoord2f(0, 0);  glVertex2i(0, r.height());
-        glEnd();
+        // Set up the texture matrix to normalize the coordinates
+        glMatrixMode(GL_TEXTURE);
+        glPushMatrix();
+        glLoadIdentity();
+        glScalef(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
+        glTranslatef(0, -scratch.height(), 0); 
+
+        drawRegion(expanded.translated(-r.topLeft()));
 
         effects->popRenderTarget();
         scratch.unbind();
@@ -232,42 +267,14 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
             glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
         }
 
-        int vertexCount = shape.rectCount() * 4;
-        if (vertices.size() < vertexCount)
-            vertices.resize(vertexCount);
-
         // Set the up the texture matrix to transform from screen coordinates
         // to texture coordinates.
-        glMatrixMode(GL_TEXTURE);
-        glPushMatrix();
         glLoadIdentity();
         glScalef(1.0 / tex->width(), -1.0 / tex->height(), 1);
         glTranslatef(offset.x(), -tex->height() + offset.y(), 0); 
 
-        int i = 0;
-        foreach (const QRect &r, shape.rects()) {
-            vertices[i++] = QVector2D(r.x(),             r.y()); 
-            vertices[i++] = QVector2D(r.x() + r.width(), r.y()); 
-            vertices[i++] = QVector2D(r.x() + r.width(), r.y() + r.height()); 
-            vertices[i++] = QVector2D(r.x(),             r.y() + r.height()); 
-        }
+        drawRegion(shape);
 
-        if (vertexCount > 1000) {
-            glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            glTexCoordPointer(2, GL_FLOAT, 0, (float*)vertices.constData());
-            glVertexPointer(2, GL_FLOAT, 0, (float*)vertices.constData());
-            glDrawArrays(GL_QUADS, 0, vertexCount);
-            glPopClientAttrib();
-        } else {
-            glBegin(GL_QUADS);
-            for (int i = 0; i < vertexCount; i++) {
-                glTexCoord2fv((const float*)&vertices[i]);
-                glVertex2fv((const float*)&vertices[i]);
-            }
-            glEnd();
-        }
         glPopMatrix();
         glMatrixMode(GL_MODELVIEW);
 

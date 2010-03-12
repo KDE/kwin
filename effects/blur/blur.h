@@ -49,6 +49,7 @@ private:
     QRegion expand(const QRegion &region) const;
     QRegion blurRegion(const EffectWindow *w) const;
     void updateBlurRegion(EffectWindow *w) const;
+    void drawRegion(const QRegion &region);
 
 private:
     BlurShader *shader;
