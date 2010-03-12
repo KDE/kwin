@@ -1340,6 +1340,12 @@ QRect EffectWindowImpl::contentsRect() const
     return QRect( toplevel->clientPos(), toplevel->clientSize());
     }
 
+QRect EffectWindowImpl::decorationInnerRect() const
+    {
+    Client *client = dynamic_cast<Client*>(toplevel);
+    return client ? client->transparentRect() : contentsRect();
+    }
+
 QByteArray EffectWindowImpl::readProperty( long atom, long type, int format ) const
     {
     return readWindowProperty( window()->window(), atom, type, format );

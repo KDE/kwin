@@ -864,6 +864,12 @@ class KWIN_EXPORT EffectWindow
          * Geometry of the actual window contents inside the whole (including decorations) window.
          */
         virtual QRect contentsRect() const = 0;
+        /**
+         * Geometry of the transparent rect in the decoration.
+         * May be different from contentsRect() if the decoration is extended into the client area.
+         * @since 4.5
+         */
+        virtual QRect decorationInnerRect() const = 0;
         bool hasDecoration() const;
         virtual QByteArray readProperty( long atom, long type, int format ) const = 0;
         virtual void deleteProperty( long atom ) const = 0;
