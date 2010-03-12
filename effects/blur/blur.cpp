@@ -84,7 +84,13 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
         }
     }
 
-    w->setData(BlurRegionRole, value.isNull() ? QVariant() : region);
+    if (region.isEmpty() && !value.isNull()) {
+        // Set the data to a dummy value.
+        // This is needed to be able to distinguish between the value not
+        // being set, and being set to an empty region.
+        w->setData(BlurRegionRole, 1);
+    } else
+        w->setData(BlurRegionRole, region);
 }
 
 void BlurEffect::windowAdded(EffectWindow *w)
@@ -133,15 +139,22 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
         if (!appRegion.isEmpty()) {
             if (w->hasDecoration()) {
                 region = w->shape();
-                region -= w->contentsRect();
+                region -= w->decorationInnerRect();
                 region |= appRegion.translated(w->contentsRect().topLeft()) &
                                         w->contentsRect();
             } else
                 region = appRegion & w->contentsRect();
-        } else
+        } else {
+            // An empty region means that the blur effect should be enabled
+            // for the whole window.
             region = w->shape();
-    } else
+        }
+    } else if (w->hasDecoration()) {
+        // If the client hasn't specified a blur region, we'll only enable
+        // the effect behind the decoration.
         region = w->shape();
+        region -= w->decorationInnerRect();
+    }
 
     return region;
 }
