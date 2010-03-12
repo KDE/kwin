@@ -137,15 +137,6 @@ void GLSLBlurShader::setPixelDistance(float val)
     glUniform2fv(uPixelSize, 1, pixelSize);
 }
 
-void GLSLBlurShader::setOpacity(float val)
-{
-    if (!isValid())
-        return;
-
-    const float opacity[4] = { val, val, val, val };
-    glUniform4fv(uOpacity, 1, opacity);
-}
-
 void GLSLBlurShader::bind()
 {
     if (!isValid())
@@ -239,7 +230,7 @@ void GLSLBlurShader::init()
     stream << "\n";
     stream << "void main(void)\n";
     stream << "{\n";
-    stream << "    gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;\n";
+    stream << "    gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;\n\n";
 
     for (int i = 0; i < center; i++)
         stream << "    samplePos" << i << " = gl_TexCoord[0].st + pixelSize * vec2("
@@ -257,8 +248,7 @@ void GLSLBlurShader::init()
     // ===================================================================
     QTextStream stream2(&fragmentSource);
 
-    stream2 << "uniform sampler2D texUnit;\n";
-    stream2 << "uniform vec4 opacity;\n\n";
+    stream2 << "uniform sampler2D texUnit;\n\n";
     for (int i = 0; i < size; i++)
         stream2 << "varying vec2 samplePos" << i << ";\n";
     stream2 << "\n";
@@ -272,7 +262,7 @@ void GLSLBlurShader::init()
     for (int i = 1; i < size; i++)
         stream2 << "    sum += texture2D(texUnit, samplePos" << i << ") * kernel"
                 << (i > center ? size - i - 1 : i) << ";\n";
-    stream2 << "    gl_FragColor = sum * opacity;\n";
+    stream2 << "    gl_FragColor = sum;\n";
     stream2 << "}\n";
     stream2.flush();
 
@@ -291,7 +281,6 @@ void GLSLBlurShader::init()
     if (program) {
         uTexUnit   = glGetUniformLocation(program, "texUnit");
         uPixelSize = glGetUniformLocation(program, "pixelSize");
-        uOpacity   = glGetUniformLocation(program, "opacity");
     }
 
     setIsValid(program != 0);
@@ -335,11 +324,6 @@ void ARBBlurShader::setPixelDistance(float val)
         glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, 0, 0, firstStep, 0, 0);
         glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, 1, 0, nextStep, 0, 0);
     }
-}
-
-void ARBBlurShader::setOpacity(float val)
-{
-    glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, 2, val, val, val, val);
 }
 
 void ARBBlurShader::bind()
@@ -388,7 +372,6 @@ void ARBBlurShader::init()
 
     stream << "PARAM firstSample = program.local[0];\n"; // Distance from gl_TexCoord[0] to the next sample
     stream << "PARAM nextSample  = program.local[1];\n"; // Distance to the subsequent sample
-    stream << "PARAM opacity     = program.local[2];\n"; // The opacity with which to modulate the pixels
 
     stream << "TEMP coord;\n";   // The coordinate we'll be sampling
     stream << "TEMP sample;\n";  // The sampled value
@@ -415,7 +398,7 @@ void ARBBlurShader::init()
         stream << "TEX sample, coord, texture[0], 2D;\n";                // sample = texture2D(tex, coord)
         stream << "MAD sum, sample, kernel" << center - i << ", sum;\n"; // sum += sample * kernel[center - i]
     }
-    stream << "MUL result.color, sum, opacity;\n";                       // gl_FragColor = sum * opacity
+    stream << "MOV result.color, sum;\n";                                // gl_FragColor = sum
     stream << "END\n";
     stream.flush();
 

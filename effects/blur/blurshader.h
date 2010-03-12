@@ -46,9 +46,6 @@ public:
     // Sets the distance between two pixels
     virtual void setPixelDistance(float val) = 0;
 
-    // The opacity of the resulting pixels is multiplied by this value
-    virtual void setOpacity(float val) = 0;
-
     virtual void bind() = 0;
     virtual void unbind() = 0;
 
@@ -78,7 +75,6 @@ public:
     ~GLSLBlurShader();
 
     void setPixelDistance(float val);
-    void setOpacity(float val);
     void bind();
     void unbind();
 
@@ -94,7 +90,6 @@ private:
     GLuint program;
     int uTexUnit;
     int uPixelSize;
-    int uOpacity;
 };
 
 
@@ -110,7 +105,6 @@ public:
     ~ARBBlurShader();
 
     void setPixelDistance(float val);
-    void setOpacity(float val);
     void bind();
     void unbind();
 

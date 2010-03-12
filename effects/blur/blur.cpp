@@ -191,7 +191,6 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         shader->bind();
         shader->setDirection(Qt::Horizontal);
         shader->setPixelDistance(1.0 / r.width());
-        shader->setOpacity(1.0);
 
         glBegin(GL_QUADS);
         glTexCoord2f(0, 1);  glVertex2i(0, 0);
@@ -214,11 +213,10 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         // Modulate the blurred texture with the window opacity if the window isn't opaque
         const float opacity = data.opacity * data.contents_opacity;
         if (opacity < 1.0) {
-            shader->setOpacity(opacity);
-
             glPushAttrib(GL_COLOR_BUFFER_BIT);
             glEnable(GL_BLEND);
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendColor(0, 0, 0, opacity);
+            glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
         }
 
         int vertexCount = shape.rectCount() * 4;
