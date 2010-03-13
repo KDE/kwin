@@ -36,10 +36,8 @@ KWIN_EFFECT_SUPPORTED(blur, BlurEffect::supported())
 
 
 BlurEffect::BlurEffect()
-    : radius(12)
 {
     shader = BlurShader::create();
-    shader->setRadius(radius);
 
     // Offscreen texture that's used as the target for the horizontal blur pass
     // and the source for the vertical pass.
@@ -56,6 +54,8 @@ BlurEffect::BlurEffect()
     //     Should be included in _NET_SUPPORTED instead.
     XChangeProperty(display(), rootWindow(), net_wm_blur_region, net_wm_blur_region,
                     32, PropModeReplace, 0, 0);
+
+    reconfigure(ReconfigureAll);
 }
 
 BlurEffect::~BlurEffect()
@@ -66,6 +66,15 @@ BlurEffect::~BlurEffect()
     delete shader;
     delete target;
     delete tex;
+}
+
+void BlurEffect::reconfigure(ReconfigureFlags flags)
+{
+    Q_UNUSED(flags)
+
+    KConfigGroup cg = EffectsHandler::effectConfig("Blur");
+    int radius = qBound(2, cg.readEntry("BlurRadius", 12), 14);
+    shader->setRadius(radius);
 }
 
 void BlurEffect::updateBlurRegion(EffectWindow *w) const
@@ -113,6 +122,7 @@ bool BlurEffect::supported()
 
 QRect BlurEffect::expand(const QRect &rect) const
 {
+    const int radius = shader->radius();
     return rect.adjusted(-radius, -radius, radius, radius);
 }
 

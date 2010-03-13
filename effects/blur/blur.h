@@ -39,6 +39,7 @@ public:
 
     static bool supported();
 
+    void reconfigure(ReconfigureFlags flags);
     void windowAdded(EffectWindow *w);
     void propertyNotify(EffectWindow *w, long atom);
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
@@ -57,7 +58,6 @@ private:
     GLRenderTarget *target;
     GLTexture *tex;
     long net_wm_blur_region;
-    int radius;
 };
 
 } // namespace KWin

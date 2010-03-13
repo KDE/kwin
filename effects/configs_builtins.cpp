@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "zoom/zoom_config.h"
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+#include "blur/blur_config.h"
 #include "coverswitch/coverswitch_config.h"
 #include "cube/cube_config.h"
 #include "cube/cubeslide_config.h"
@@ -68,6 +69,7 @@ KWIN_EFFECT_CONFIG_MULTIPLE( builtins,
     KWIN_EFFECT_CONFIG_SINGLE( zoom, ZoomEffectConfig )
 
 #ifdef KWIN_HAVE_OPENGL_COMPOSITING
+    KWIN_EFFECT_CONFIG_SINGLE( blur, BlurEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( coverswitch, CoverSwitchEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( cube, CubeEffectConfig )
     KWIN_EFFECT_CONFIG_SINGLE( cubeslide, CubeSlideEffectConfig )
