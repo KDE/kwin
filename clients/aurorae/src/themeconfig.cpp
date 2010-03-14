@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "themeconfig.h"
+#include <kdecoration.h>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -59,8 +60,8 @@ void ThemeConfig::load(KConfig *conf)
         m_verticalAlignment = Qt::AlignBottom;
     }
     m_animationTime = general.readEntry("Animation", 0);
-    m_defaultButtonsLeft = general.readEntry("LeftButtons", "MS");
-    m_defaultButtonsRight = general.readEntry("RightButtons", "HIA__X");
+    m_defaultButtonsLeft = general.readEntry("LeftButtons", KDecorationOptions::defaultTitleButtonsLeft());
+    m_defaultButtonsRight = general.readEntry("RightButtons", KDecorationOptions::defaultTitleButtonsRight());
     m_shadow = general.readEntry("Shadow", true);
 
     KConfigGroup border(conf, "Layout");
