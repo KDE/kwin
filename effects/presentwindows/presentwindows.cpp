@@ -408,6 +408,16 @@ void PresentWindowsEffect::windowDeleted( EffectWindow *w )
     m_motionManager.unmanage( w );
     }
 
+void PresentWindowsEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& old )
+    {
+    Q_UNUSED( old )
+    if( !m_activated )
+        return;
+    if( !m_windowData.contains( w ))
+        return;
+    rearrangeWindows();
+    }
+
 bool PresentWindowsEffect::borderActivated( ElectricBorder border )
     {
     if( !m_borderActivate.contains( border ) && !m_borderActivateAll.contains( border ) )

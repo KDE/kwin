@@ -46,6 +46,7 @@ class DesktopGridEffect
         virtual void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data );
         virtual void windowClosed( EffectWindow* w );
         virtual void windowAdded( EffectWindow* w );
+        virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
         virtual bool borderActivated( ElectricBorder border );

@@ -79,6 +79,7 @@ class PresentWindowsEffect
         virtual void windowAdded( EffectWindow *w );
         virtual void windowClosed( EffectWindow *w );
         virtual void windowDeleted( EffectWindow *w );
+        virtual void windowGeometryShapeChanged( EffectWindow* w, const QRect& old );
         virtual bool borderActivated( ElectricBorder border );
         virtual void windowInputMouseEvent( Window w, QEvent *e );
         virtual void grabbedKeyboardEvent( QKeyEvent *e );

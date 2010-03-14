@@ -419,6 +419,31 @@ void DesktopGridEffect::windowClosed( EffectWindow* w )
     effects->addRepaintFull();
     }
 
+void DesktopGridEffect::windowGeometryShapeChanged( EffectWindow* w, const QRect& old )
+    {
+    Q_UNUSED( old )
+    if( !activated )
+        return;
+    if( w == windowMove && wasWindowMove )
+        return;
+    if( isUsingPresentWindows() )
+        {
+        if( w->isOnAllDesktops() )
+            {
+            for( int i=0; i<effects->numberOfDesktops(); i++ )
+                {
+                WindowMotionManager& manager = m_managers[i*effects->numScreens()+w->screen()];
+                m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
+                }
+            }
+        else
+            {
+            WindowMotionManager& manager = m_managers[(w->desktop()-1)*effects->numScreens()+w->screen()];
+            m_proxy->calculateWindowTransformations(manager.managedWindows(), w->screen(), manager);
+            }
+        }
+    }
+
 void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
     {
     if((   e->type() != QEvent::MouseMove
