@@ -157,7 +157,7 @@ void DesktopGridEffect::paintScreen( int mask, QRegion region, ScreenPaintData& 
         paintingDesktop = desktop;
         effects->paintScreen( mask, region, d );
         }
-    if( isUsingPresentWindows() && windowMove )
+    if( isUsingPresentWindows() && windowMove && wasWindowMove )
         {
         // the moving window has to be painted on top of all desktops
         QPoint diff = cursorPos() - m_windowMoveStartPoint;
@@ -261,7 +261,7 @@ void DesktopGridEffect::paintWindow( EffectWindow* w, int mask, QRegion region, 
     {
     if( timeline.value() != 0 || (isUsingPresentWindows() && isMotionManagerMovingWindows()) )
         {
-        if( isUsingPresentWindows() && w == windowMove )
+        if( isUsingPresentWindows() && w == windowMove && wasWindowMove )
             {
             return; // will be painted on top of all other windows
             }
