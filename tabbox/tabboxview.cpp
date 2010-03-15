@@ -339,7 +339,7 @@ void TabBoxView::configChanged()
 
 QModelIndex TabBoxView::indexAt( QPoint pos )
     {
-    return m_tableView->indexAt( pos );
+    return m_tableView->indexAt( m_tableView->mapFromParent( pos ) );
     }
 
 void TabBoxView::setPreview( bool preview )
