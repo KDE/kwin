@@ -159,7 +159,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
         ui.useCompositing->setChecked(false);
         compositingEnabled(false);
 
-        QString text = i18n("Compositing is not supported on your system.");
+        QString text = i18n("Desktop effects are not available on this system due to the following technical issues:");
         text += "<br>";
         text += CompositingPrefs::compositingNotPossibleReason();
         ui.statusTitleWidget->setText(text);
@@ -388,22 +388,22 @@ void KWinCompositingConfig::setupCompositingState( bool active, bool enabled )
         if( active )
             {
             stateIcon = QString( "dialog-ok-apply" );
-            stateText = i18n( "Compositing is active" );
-            stateButtonText = i18n( "Suspend Compositing" );
+            stateText = i18n( "Desktop effects are active" );
+            stateButtonText = i18n( "Suspend Desktop Effects" );
             }
         else
             {
             stateIcon = QString( "dialog-cancel" );
-            stateText = i18n( "Compositing is temporarily disabled" );
-            stateButtonText = i18n( "Resume Compositing" );
+            stateText = i18n( "Desktop effects are temporarily disabled" );
+            stateButtonText = i18n( "Resume Desktop Effects" );
             }
         }
     else
         {
         // compositing is disabled
         stateIcon = QString( "dialog-cancel" );
-        stateText = i18n( "Compositing is disabled" );
-        stateButtonText = i18n( "Resume Compositing" );
+        stateText = i18n( "Desktop effects are disabled" );
+        stateButtonText = i18n( "Resume Desktop Effects" );
         }
     const int iconSize = (QApplication::fontMetrics().height() > 24) ? 32 : 22;
     ui.compositingStateIcon->setPixmap( KIcon( stateIcon ).pixmap( iconSize, iconSize ) );
@@ -699,7 +699,7 @@ void KWinCompositingConfig::checkLoadedEffects()
             {
             KServiceTypeTrader* trader = KServiceTypeTrader::self();
             KService::List services;
-            QString message = i18n( "The following effects could not be activated:" );
+            QString message = i18n( "The following desktop effects could not be activated:" );
             message.append( "<ul>" );
             foreach( const QString &effect, disabledEffects )
                 {

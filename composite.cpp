@@ -328,7 +328,7 @@ void Workspace::toggleCompositing()
         if( !shortcut.isEmpty() && options->useCompositing )
             {
             // display notification only if there is the shortcut
-            message = i18n( "Compositing has been suspended by another application.<br/>"
+            message = i18n( "Desktop effects have been suspended by another application.<br/>"
                 "You can resume using the '%1' shortcut.", shortcut );
             Notify::raise( Notify::CompositingSuspendedDbus, message );
             }
@@ -582,12 +582,12 @@ void Workspace::checkCompositePaintTime( int msec )
         if( KAction* action = qobject_cast<KAction*>( keys->action("Suspend Compositing")))
             shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
         if (shortcut.isEmpty())
-            message = i18n( "Compositing was too slow and has been suspended.\n"
-                "You can disable functionality checks in advanced compositing settings." );
+            message = i18n( "Desktop effects were too slow and have been suspended.\n"
+                "You can disable functionality checks in System Settings (on the Advanced tab in Desktop Effects)." );
         else
-            message = i18n( "Compositing was too slow and has been suspended.\n"
+            message = i18n( "Desktop effects were too slow and have been suspended.\n"
                 "If this was only a temporary problem, you can resume using the '%1' shortcut.\n"
-                "You can also disable functionality checks in advanced compositing settings.", shortcut );
+                "You can disable functionality checks in System Settings (on the Advanced tab in Desktop Effects).", shortcut );
         Notify::raise( Notify::CompositingSlow, message );
         compositeTimer.start( 1000 ); // so that it doesn't trigger sooner than suspendCompositing()
         }
