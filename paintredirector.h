@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include <qregion.h>
 #include <qtimer.h>
 #include <qwidget.h>
+#include <qbasictimer.h>
 
 namespace KWin
 {
@@ -50,11 +51,14 @@ class PaintRedirector
         void added( QWidget* widget );
         void removed( QWidget* widget );
         bool isToolTip( QWidget* widget ) const;
+        void timerEvent( QTimerEvent* event );
         QWidget* widget;
         QRegion pending;
         QRegion scheduled;
+        QPixmap scratch;
         bool recursionCheck;
         QTimer timer;
+        QBasicTimer cleanupTimer;
     };
 
 } // namespace

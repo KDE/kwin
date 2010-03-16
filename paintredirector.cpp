@@ -27,6 +27,7 @@ DEALINGS IN THE SOFTWARE.
 #include <kdebug.h>
 #include <qevent.h>
 #include <qpainter.h>
+#include <qmath.h>
 
 namespace KWin
 {
@@ -43,15 +44,22 @@ PaintRedirector::PaintRedirector( QWidget* w )
 QPixmap PaintRedirector::performPendingPaint()
     {
     //qDebug() << "### performing paint, pending:" << pending.boundingRect();
-    QPixmap pixmap( pending.boundingRect().size());
-    pixmap.fill( Qt::transparent );
+    const QSize size = pending.boundingRect().size();
+    if ( scratch.width() < size.width() || scratch.height() < size.height() )
+        {
+        int w = qCeil( size.width() / 128. ) * 128;
+        int h = qCeil( size.height() / 128. ) * 128;
+        scratch = QPixmap( qMax( scratch.width(), w ), qMax( scratch.height(), h ) );
+        }
+    scratch.fill( Qt::transparent );
     recursionCheck = true;
     // do not use DrawWindowBackground, it's ok to be transparent
-    widget->render( &pixmap, QPoint(), pending.boundingRect(), QWidget::DrawChildren );
+    widget->render( &scratch, QPoint(), pending.boundingRect(), QWidget::DrawChildren );
     recursionCheck = false;
     pending = QRegion();
     scheduled = QRegion();
-    return pixmap;
+    cleanupTimer.start(2000, this);
+    return scratch;
     }
 
 bool PaintRedirector::isToolTip( QWidget *object ) const
@@ -126,6 +134,15 @@ void PaintRedirector::removed( QWidget* w )
             removed( static_cast< QWidget* >( o ));
         }
     w->installEventFilter( this );
+    }
+
+void PaintRedirector::timerEvent( QTimerEvent* event )
+    {
+    if ( event->timerId() == cleanupTimer.timerId() )
+        {
+        cleanupTimer.stop();
+        scratch = QPixmap();
+        }
     }
 
 } // namespace
