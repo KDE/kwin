@@ -577,10 +577,18 @@ void Client::resizeDecorationPixmaps()
     QRect lr, rr, tr, br;
     layoutDecorationRects( lr, tr, rr, br, DecorationRelative );
 
-    decorationPixmapTop = QPixmap( tr.size() );
-    decorationPixmapBottom = QPixmap( br.size() );
-    decorationPixmapLeft = QPixmap( lr.size() );
-    decorationPixmapRight = QPixmap( rr.size() );
+    if ( decorationPixmapTop.size() != tr.size() )
+        decorationPixmapTop = QPixmap( tr.size() );
+
+    if ( decorationPixmapBottom.size() != br.size() )
+        decorationPixmapBottom = QPixmap( br.size() );
+
+    if ( decorationPixmapLeft.size() != lr.size() )
+        decorationPixmapLeft = QPixmap( lr.size() );
+
+    if ( decorationPixmapRight.size() != rr.size() )
+        decorationPixmapRight = QPixmap( rr.size() );
+
 #ifdef HAVE_XRENDER
     if ( Extensions::renderAvailable() ) {
         // Make sure the pixmaps are created with alpha channels
