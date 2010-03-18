@@ -1,6 +1,7 @@
 [Global]
 IconName=kwin
 Comment=KWin Window Manager
+Comment[cs]=Správce oken KWin
 Comment[de]=KWin-Fenstermanager
 Comment[el]=Διαχειριστής παραθύρων Kwin
 Comment[en_GB]=KWin Window Manager

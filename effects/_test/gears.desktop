@@ -2,6 +2,7 @@
 Name=Cube Gears
 Name[ca]=Engranatges cúbics
 Name[ca@valencia]=Engranatges cúbics
+Name[cs]=Soukolí kostky
 Name[da]=Terningtandhjul
 Name[de]=Zahnräder im Würfel
 Name[el]=Κυβικά γρανάζια
@@ -53,6 +54,7 @@ Icon=preferences-system-windows-effect-cube
 Comment=Display gears inside the cube
 Comment[ca]=Visualitza els engranatges dins d'un cub
 Comment[ca@valencia]=Visualitza els engranatges dins d'un cub
+Comment[cs]=Zobrazit soukolí uvnitř kostky
 Comment[da]=Viser tandhjul inde i terningen
 Comment[de]=Zeigt Zahnräder in einem Würfel an.
 Comment[el]=Εμφάνιση γραναζιών μέσα στον κύβο
