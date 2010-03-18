@@ -1316,6 +1316,13 @@ QRectF WindowMotionManager::transformedGeometry( EffectWindow *w ) const
     return geometry;
     }
 
+void WindowMotionManager::setTransformedGeometry( EffectWindow *w, const QRectF &geometry )
+    {
+    m_managedWindows[ w ].translation.setValue( geometry.topLeft() );
+    m_managedWindows[ w ].scale.setValue( QPointF( geometry.width()/qreal(w->width()),
+                                                   geometry.height()/qreal(w->height())));
+    }
+
 QRectF WindowMotionManager::targetGeometry( EffectWindow *w ) const
     {
     QRectF geometry( w->geometry() );

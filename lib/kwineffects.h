@@ -1597,6 +1597,12 @@ class KWIN_EXPORT WindowMotionManager
          */
         QRectF transformedGeometry( EffectWindow *w ) const;
         /**
+         * Sets the current transformed geometry of a registered window to the given geometry.
+         * @see transformedGeometry
+         * @since 4.5
+         */
+        void setTransformedGeometry( EffectWindow *w, const QRectF &geometry );
+        /**
          * Retrieve the current target geometry of a registered
          * window.
          */

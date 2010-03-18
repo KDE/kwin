@@ -638,10 +638,16 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                     {
                     if( windowMove->isOnAllDesktops() )
                         {
+                        const int targetDesktop = posToDesktop( cursorPos() );
                         for( int i=0; i<effects->numberOfDesktops(); ++i )
                             {
                             WindowMotionManager& manager = m_managers[ (i)*(effects->numScreens()) + windowMove->screen() ];
                             manager.manage( windowMove );
+                            if( i+1 == targetDesktop )
+                                {
+                                // for the desktop the window is dropped on, we use the current geometry
+                                manager.setTransformedGeometry( windowMove, moveGeometryToDesktop( targetDesktop ) );
+                                }
                             m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
                             }
                         }
@@ -649,6 +655,7 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                         {
                         WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
                         manager.manage( windowMove );
+                        manager.setTransformedGeometry( windowMove, moveGeometryToDesktop( windowMove->desktop() ) );
                         m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
                         }
                     effects->addRepaintFull();
@@ -1232,6 +1239,35 @@ bool DesktopGridEffect::isMotionManagerMovingWindows()
 bool DesktopGridEffect::isUsingPresentWindows() const
     {
     return (m_proxy != NULL);
+    }
+
+// transforms the geometry of the moved window to a geometry on the desktop
+// internal method only used when a window is dropped onto a desktop
+QRectF DesktopGridEffect::moveGeometryToDesktop( int desktop ) const
+    {
+    QPointF point = unscalePos( m_windowMoveGeometry.topLeft() + cursorPos() - m_windowMoveStartPoint );
+    const double scaleFactor = scale[ windowMove->screen() ];
+    if( posToDesktop( m_windowMoveGeometry.topLeft() + cursorPos() - m_windowMoveStartPoint ) != desktop )
+        {
+        // topLeft is not on the desktop - check other corners
+        // if all corners are not on the desktop the window is bigger than the desktop - no matter what it will look strange
+        if( posToDesktop( m_windowMoveGeometry.topRight() + cursorPos() - m_windowMoveStartPoint ) == desktop )
+            {
+            point = unscalePos( m_windowMoveGeometry.topRight() + cursorPos() - m_windowMoveStartPoint ) -
+                QPointF( m_windowMoveGeometry.width(), 0) / scaleFactor;
+            }
+        else if( posToDesktop( m_windowMoveGeometry.bottomLeft() + cursorPos() - m_windowMoveStartPoint ) == desktop )
+            {
+            point = unscalePos( m_windowMoveGeometry.bottomLeft() + cursorPos() - m_windowMoveStartPoint ) -
+                QPointF(0, m_windowMoveGeometry.height() ) / scaleFactor;
+            }
+        else if( posToDesktop( m_windowMoveGeometry.bottomRight() + cursorPos() - m_windowMoveStartPoint ) == desktop )
+            {
+            point = unscalePos( m_windowMoveGeometry.bottomRight() + cursorPos() - m_windowMoveStartPoint ) -
+                QPointF(m_windowMoveGeometry.width(), m_windowMoveGeometry.height() ) / scaleFactor;
+            }
+        }
+    return QRectF( point, m_windowMoveGeometry.size() / scaleFactor );
     }
 
 } // namespace

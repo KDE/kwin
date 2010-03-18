@@ -75,6 +75,7 @@ class DesktopGridEffect
         void finish();
         bool isMotionManagerMovingWindows();
         bool isUsingPresentWindows() const;
+        QRectF moveGeometryToDesktop( int desktop ) const;
         
         QList<ElectricBorder> borderActivate;
         int zoomDuration;
