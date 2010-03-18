@@ -139,6 +139,10 @@ void ClientItemDelegate::paint( QPainter* painter, const QStyleOptionViewItem& o
                     break;
                 case ItemLayoutConfigRowElement::ElementDesktopName:
                     {
+                    if( tabBox->config().tabBoxMode() == TabBoxConfig::ClientTabBox &&
+                        (tabBox->config().clientListMode() == TabBoxConfig::CurrentDesktopClientList) ||
+                        (tabBox->config().clientListMode() == TabBoxConfig::CurrentDesktopApplicationList))
+                        break;
                     x += paintTextElement( painter, option, index, element, x, y, rowHeight,
                                       index.model()->data( index, ClientModel::DesktopNameRole ).toString() );
                     break;
@@ -241,6 +245,10 @@ QSizeF ClientItemDelegate::rowSize( const QModelIndex& index, int row ) const
                 {
                 QSizeF size = textElementSizeHint( index, element,
                                                     index.model()->data( index, ClientModel::DesktopNameRole ).toString() );
+                if( tabBox->config().tabBoxMode() == TabBoxConfig::ClientTabBox &&
+                    (tabBox->config().clientListMode() == TabBoxConfig::CurrentDesktopClientList) ||
+                    (tabBox->config().clientListMode() == TabBoxConfig::CurrentDesktopApplicationList))
+                    size = QSizeF( 0, 0 );
                 rowWidth += size.width();
                 rowHeight = qMax<qreal>( rowHeight, size.height() );
                 break;
