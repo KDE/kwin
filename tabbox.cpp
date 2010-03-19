@@ -180,6 +180,18 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
     return ret;
     }
 
+TabBoxClient* TabBoxHandlerImpl::desktopClient() const
+    {
+    foreach( const Client* client, Workspace::self()->stackingOrder() )
+        {
+        if( client->isDesktop() )
+            {
+            return client->tabBoxClient();
+            }
+        }
+    return NULL;
+    }
+
 /*********************************************************
 * TabBoxClientImpl
 *********************************************************/
@@ -195,6 +207,9 @@ TabBoxClientImpl::~TabBoxClientImpl()
 
 QString TabBoxClientImpl::caption() const
     {
+    if( m_client->isDesktop() )
+        return i18nc( "Special entry in alt+tab list for minimizing all windows",
+                      "Show Desktop" );
     return m_client->caption();
     }
 
@@ -258,12 +273,14 @@ TabBox::TabBox( Workspace *ws )
     m_desktopConfig = TabBoxConfig();
     m_desktopConfig.setTabBoxMode( TabBoxConfig::DesktopTabBox );
     m_desktopConfig.setShowTabBox( true );
+    m_desktopConfig.setShowDesktop( false );
     m_desktopConfig.setDesktopSwitchingMode( TabBoxConfig::MostRecentlyUsedDesktopSwitching );
     m_desktopConfig.setLayout( TabBoxConfig::VerticalLayout );
 
     m_desktopListConfig = TabBoxConfig();
     m_desktopListConfig.setTabBoxMode( TabBoxConfig::DesktopTabBox );
     m_desktopListConfig.setShowTabBox( true );
+    m_desktopListConfig.setShowDesktop( false );
     m_desktopListConfig.setDesktopSwitchingMode( TabBoxConfig::StaticDesktopSwitching );
     m_desktopListConfig.setLayout( TabBoxConfig::VerticalLayout );
     m_tabBox = new TabBoxHandlerImpl();
@@ -523,6 +540,8 @@ void TabBox::loadConfig( const KConfigGroup& config, TabBoxConfig& tabBoxConfig 
                                                             TabBoxConfig::defaultShowTabBox()));
     tabBoxConfig.setHighlightWindows( config.readEntry<bool>( "HighlightWindows",
                                                                   TabBoxConfig::defaultHighlightWindow()));
+    tabBoxConfig.setShowDesktop( config.readEntry<bool>( "ShowDesktop",
+                                                            TabBoxConfig::defaultShowDesktop()));
 
     tabBoxConfig.setMinWidth( config.readEntry<int>( "MinWidth",
                                                          TabBoxConfig::defaultMinWidth()));
@@ -1156,6 +1175,8 @@ void Workspace::tabBoxKeyRelease( const XKeyEvent& ev )
             activateClient( c );
             if( c->isShade() && options->shadeHover )
                 c->setShade( ShadeActivated );
+            if( c->isDesktop() )
+                setShowingDesktop( !showingDesktop() );
             }
         }
     if (control_grab)

@@ -144,6 +144,7 @@ KWinTabBoxConfig::KWinTabBoxConfig( QWidget* parent, const QVariantList& args )
     connect( m_primaryTabBoxUi->showOutlineCheck, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect( m_primaryTabBoxUi->showTabBox, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect( m_primaryTabBoxUi->highlightWindowCheck, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect( m_primaryTabBoxUi->showDesktopBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     // combo boxes alternative
     connect( m_alternativeTabBoxUi->listModeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect( m_alternativeTabBoxUi->switchingModeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
@@ -152,6 +153,7 @@ KWinTabBoxConfig::KWinTabBoxConfig( QWidget* parent, const QVariantList& args )
     connect( m_alternativeTabBoxUi->showOutlineCheck, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect( m_alternativeTabBoxUi->showTabBox, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect( m_alternativeTabBoxUi->highlightWindowCheck, SIGNAL(stateChanged(int)), this, SLOT(changed()));
+    connect( m_alternativeTabBoxUi->showDesktopBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
 
     // effects
     connect( m_primaryTabBoxUi->effectCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(slotEffectSelectionChanged(int)));
@@ -249,6 +251,8 @@ void KWinTabBoxConfig::loadConfig( const KConfigGroup& config, KWin::TabBox::Tab
         config.readEntry<int>( "LayoutMode", TabBox::TabBoxConfig::defaultLayoutMode() )));
     tabBoxConfig.setSelectedItemViewPosition( TabBox::TabBoxConfig::SelectedItemViewPosition(
         config.readEntry<int>( "SelectedItem", TabBox::TabBoxConfig::defaultSelectedItemViewPosition())));
+    tabBoxConfig.setShowDesktop( config.readEntry<bool>( "ShowDesktop",
+                                                         TabBox::TabBoxConfig::defaultShowDesktop()));
 
     tabBoxConfig.setShowOutline( config.readEntry<bool>( "ShowOutline",
                                                              TabBox::TabBoxConfig::defaultShowOutline()));
@@ -275,6 +279,7 @@ void KWinTabBoxConfig::saveConfig( KConfigGroup& config, const KWin::TabBox::Tab
     config.writeEntry( "SelectedItem",       int(tabBoxConfig.selectedItemViewPosition()) );
     config.writeEntry( "LayoutName",         tabBoxConfig.layoutName() );
     config.writeEntry( "SelectedLayoutName", tabBoxConfig.selectedItemLayoutName() );
+    config.writeEntry( "ShowDesktop",        tabBoxConfig.isShowDesktop() );
 
     // check boxes
     config.writeEntry( "ShowOutline",      tabBoxConfig.isShowOutline() );
@@ -389,6 +394,7 @@ void KWinTabBoxConfig::defaults()
     m_primaryTabBoxUi->showOutlineCheck->setChecked( TabBox::TabBoxConfig::defaultShowOutline() );
     m_primaryTabBoxUi->showTabBox->setChecked( TabBox::TabBoxConfig::defaultShowTabBox() );
     m_primaryTabBoxUi->highlightWindowCheck->setChecked( TabBox::TabBoxConfig::defaultHighlightWindow() );
+    m_primaryTabBoxUi->showDesktopBox->setChecked( TabBox::TabBoxConfig::defaultShowDesktop() );
 
     // effects
     m_primaryTabBoxUi->effectCombo->setCurrentIndex( 1 );
@@ -402,6 +408,7 @@ void KWinTabBoxConfig::defaults()
     m_alternativeTabBoxUi->showOutlineCheck->setChecked( TabBox::TabBoxConfig::defaultShowOutline() );
     m_alternativeTabBoxUi->showTabBox->setChecked( TabBox::TabBoxConfig::defaultShowTabBox() );
     m_alternativeTabBoxUi->highlightWindowCheck->setChecked( TabBox::TabBoxConfig::defaultHighlightWindow() );
+    m_alternativeTabBoxUi->showDesktopBox->setChecked( TabBox::TabBoxConfig::defaultShowDesktop() );
 
     // effects
     m_alternativeTabBoxUi->effectCombo->setCurrentIndex( 0 );
@@ -431,6 +438,7 @@ void KWinTabBoxConfig::updateUiFromConfig( KWinTabBoxConfigForm* ui, const KWin:
     ui->showOutlineCheck->setChecked( config.isShowOutline() );
     ui->showTabBox->setChecked( config.isShowTabBox());
     ui->highlightWindowCheck->setChecked( config.isHighlightWindows() );
+    ui->showDesktopBox->setChecked( config.isShowDesktop() );
     }
 
 void KWinTabBoxConfig::updateConfigFromUi( const KWin::KWinTabBoxConfigForm* ui, TabBox::TabBoxConfig& config )
@@ -441,6 +449,7 @@ void KWinTabBoxConfig::updateConfigFromUi( const KWin::KWinTabBoxConfigForm* ui,
     config.setShowOutline( ui->showOutlineCheck->isChecked() );
     config.setShowTabBox( ui->showTabBox->isChecked() );
     config.setHighlightWindows( ui->highlightWindowCheck->isChecked() );
+    config.setShowDesktop( ui->showDesktopBox->isChecked() );
     }
 
 void KWinTabBoxConfig::slotEffectSelectionChanged( int index )

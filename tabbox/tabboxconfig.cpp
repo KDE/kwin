@@ -41,6 +41,7 @@ class TabBoxConfigPrivate
             , minHeight( TabBoxConfig::defaultMinHeight() )
             , layoutName( TabBoxConfig::defaultLayoutName() )
             , selectedItemLayoutName( TabBoxConfig::defaultSelectedItemLayoutName() )
+            , showDesktop( TabBoxConfig::defaultShowDesktop() )
             {
             }
         ~TabBoxConfigPrivate()
@@ -60,6 +61,7 @@ class TabBoxConfigPrivate
         int minHeight;
         QString layoutName;
         QString selectedItemLayoutName;
+        bool showDesktop;
     };
 
 TabBoxConfig::TabBoxConfig()
@@ -78,6 +80,7 @@ TabBoxConfig& TabBoxConfig::operator=( const KWin::TabBox::TabBoxConfig& object 
     d->highlightWindows = object.isHighlightWindows();
     d->showOutline = object.isShowOutline();
     d->tabBoxMode = object.tabBoxMode();
+    d->showDesktop = object.isShowDesktop();
     d->layout = object.layout();
     d->clientListMode = object.clientListMode();
     d->clientSwitchingMode = object.clientSwitchingMode();
@@ -218,6 +221,16 @@ QString& TabBoxConfig::selectedItemLayoutName() const
 void TabBoxConfig::setSelectedItemLayoutName( const QString& name )
     {
     d->selectedItemLayoutName = name;
+    }
+
+bool TabBoxConfig::isShowDesktop() const
+    {
+    return d->showDesktop;
+    }
+
+void TabBoxConfig::setShowDesktop( bool show )
+    {
+    d->showDesktop = show;
     }
 
 } // namespace TabBox

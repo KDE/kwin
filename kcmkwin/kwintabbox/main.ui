@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>445</width>
-    <height>288</height>
+    <width>490</width>
+    <height>332</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -97,14 +97,14 @@
         </item>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="3" column="0" colspan="2">
        <widget class="QCheckBox" name="showOutlineCheck">
         <property name="text">
          <string>Show outline of selected window</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
          <string>Effect:</string>
@@ -114,7 +114,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="4" column="1">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="KComboBox" name="effectCombo">
@@ -143,6 +143,16 @@
          <widget class="KPushButton" name="effectInfoButton"/>
         </item>
        </layout>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="showDesktopBox">
+        <property name="toolTip">
+         <string>Adds an entry to minimize all windows.</string>
+        </property>
+        <property name="text">
+         <string>Include desktop</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

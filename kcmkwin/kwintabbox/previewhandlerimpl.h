@@ -65,6 +65,7 @@ class PreviewHandlerImpl :
         virtual KWin::TabBox::TabBoxClient* nextClientFocusChain(KWin::TabBox::TabBoxClient* client) const;
         virtual KWin::TabBox::TabBoxClient* activeClient() const;
         virtual int activeScreen() const;
+        virtual TabBoxClient* desktopClient() const;
 
     private:
         TabBoxClientList m_stackingOrder;

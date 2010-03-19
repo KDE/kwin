@@ -199,6 +199,11 @@ class TabBoxConfig
         * @see setlayoutName
         */
         QString& selectedItemLayoutName() const;
+        /**
+        * @return If an item for minimizing all windows to the desktop should be included.
+        * @see setShowDesktop
+        */
+        bool isShowDesktop() const;
 
         // setters
         /**
@@ -272,6 +277,11 @@ class TabBoxConfig
         * @see selectedItemLayoutName
         */
         void setSelectedItemLayoutName( const QString& name );
+        /**
+        * @param show Include item to minimize all windows to the desktop
+        * @see isShowDesktop
+        */
+        void setShowDesktop( bool show );
 
         // some static methods to access default values
         static ClientListMode defaultListMode() { return CurrentDesktopClientList; }
@@ -285,6 +295,7 @@ class TabBoxConfig
         static int defaultMinHeight() { return 20; }
         static QString defaultLayoutName() { return QString( "Default" ); }
         static QString defaultSelectedItemLayoutName() { return QString( "Text" ); }
+        static bool defaultShowDesktop() { return false; }
     private:
         TabBoxConfigPrivate* d;
     };

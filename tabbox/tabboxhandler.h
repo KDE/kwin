@@ -157,6 +157,10 @@ class TabBoxHandler : public QObject
         * @return The client to be included in the list or NULL if it isn't to be included
         */
         virtual TabBoxClient* clientToAddToList( TabBoxClient* client, int desktop, bool allDesktops ) const = 0;
+        /**
+        * @return The first desktop window in the stacking order.
+        */
+        virtual TabBoxClient* desktopClient() const = 0;
 
         /**
         * @return The currently used TabBoxConfig

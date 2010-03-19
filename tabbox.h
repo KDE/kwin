@@ -55,6 +55,7 @@ class TabBoxHandlerImpl : public TabBoxHandler
         virtual int numberOfDesktops() const;
         virtual TabBoxClientList stackingOrder() const;
         virtual TabBoxClient* clientToAddToList( TabBoxClient* client, int desktop, bool allDesktops ) const;
+        virtual TabBoxClient* desktopClient() const;
     };
 
 class TabBoxClientImpl : public TabBoxClient

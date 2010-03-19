@@ -175,5 +175,11 @@ int PreviewHandlerImpl::activeScreen() const
     return 0;
     }
 
+TabBoxClient* PreviewHandlerImpl::desktopClient() const
+    {
+    return 0;
+    }
+
+
 } // namespace TabBox
 } // namespace KWin

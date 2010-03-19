@@ -226,6 +226,12 @@ void ClientModel::createClientList( int desktop, bool partialReset )
             break;
             }
         }
+    if( tabBox->config().isShowDesktop() )
+        {
+        TabBoxClient* desktopClient = tabBox->desktopClient();
+        if( desktopClient )
+            m_clientList.append( desktopClient );
+        }
     reset();
     }
 
