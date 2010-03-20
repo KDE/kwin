@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // TODO: Cleanup the order of things in this .h file
 
 class QMenu;
+class QActionGroup;
 class KConfig;
 class KActionCollection;
 class KStartupInfo;
@@ -857,6 +858,7 @@ class Workspace : public QObject, public KDecorationDefines
         QMenu* popup;
         QMenu* advanced_popup;
         QMenu* trans_popup;
+        QActionGroup* trans_popup_group;
         QMenu* desk_popup;
         QMenu* add_tabs_popup; // Menu to add the group to other group
         QMenu* switch_to_tab_popup; // Menu to change tab

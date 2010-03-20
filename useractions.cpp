@@ -121,12 +121,14 @@ QMenu* Workspace::clientPopup()
             trans_popup = new QMenu( popup );
             trans_popup->setFont(KGlobalSettings::menuFont());
             connect( trans_popup, SIGNAL( triggered(QAction*) ), this, SLOT( setPopupClientOpacity(QAction*)));
+            trans_popup_group = new QActionGroup(trans_popup);
             const int levels[] = { 100, 90, 75, 50, 25, 10 };
             for( unsigned int i = 0;
                  i < sizeof( levels ) / sizeof( levels[ 0 ] );
                  ++i )
                 {
                 action = trans_popup->addAction( QString::number( levels[ i ] ) + "%" );
+                action->setActionGroup( trans_popup_group );
                 action->setCheckable( true );
                 action->setData( levels[ i ] );
                 }
