@@ -136,7 +136,7 @@ TabBoxClient* TabBoxHandlerImpl::clientToAddToList( TabBoxClient* client, int de
         Client* modal = current->findModal();
         if( modal == NULL || modal == current )
             ret = current;
-        else if( clientList().contains( modal->tabBoxClient() ) )
+        else if( !clientList().contains( modal->tabBoxClient() ) )
             ret = modal;
         else
             {
