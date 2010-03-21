@@ -250,6 +250,8 @@ void DesktopGridEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& dat
                 if( w->y() + w->height() > screenGeom.y() + screenGeom.height() )
                     data.quads = data.quads.splitAtY( screenGeom.y() + screenGeom.height() - w->y() );
                 }
+            if( windowMove && wasWindowMove && windowMove->findModal() == w )
+                w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
             }
         else
             w->disablePainting( EffectWindow::PAINT_DISABLED_BY_DESKTOP );
@@ -475,6 +477,11 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                             m_windowMoveStartPoint = me->pos();
                             }
                         manager.unmanage( windowMove );
+                        if( EffectWindow* modal = windowMove->findModal() )
+                            {
+                            if( manager.isManaging( modal ) )
+                                manager.unmanage( modal );
+                            }
                         m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
                         }
                     }
@@ -489,6 +496,11 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                     m_windowMoveStartPoint = me->pos();
 
                     manager.unmanage( windowMove );
+                    if( EffectWindow* modal = windowMove->findModal() )
+                        {
+                        if( manager.isManaging( modal ) )
+                            manager.unmanage( modal );
+                        }
                     m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
                     }
                 XDefineCursor( display(), input, QCursor( Qt::ClosedHandCursor ).handle() );
@@ -643,6 +655,8 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                             {
                             WindowMotionManager& manager = m_managers[ (i)*(effects->numScreens()) + windowMove->screen() ];
                             manager.manage( windowMove );
+                            if( EffectWindow* modal = windowMove->findModal() )
+                                manager.manage( modal );
                             if( i+1 == targetDesktop )
                                 {
                                 // for the desktop the window is dropped on, we use the current geometry
@@ -655,6 +669,8 @@ void DesktopGridEffect::windowInputMouseEvent( Window, QEvent* e )
                         {
                         WindowMotionManager& manager = m_managers[ (windowMove->desktop()-1)*(effects->numScreens()) + windowMove->screen() ];
                         manager.manage( windowMove );
+                        if( EffectWindow* modal = windowMove->findModal() )
+                            manager.manage( modal );
                         manager.setTransformedGeometry( windowMove, moveGeometryToDesktop( windowMove->desktop() ) );
                         m_proxy->calculateWindowTransformations( manager.managedWindows(), windowMove->screen(), manager );
                         }
