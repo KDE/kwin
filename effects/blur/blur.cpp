@@ -47,7 +47,7 @@ BlurEffect::BlurEffect()
 
     target = new GLRenderTarget(tex);
 
-    net_wm_blur_region = XInternAtom(display(), "_KDE_NET_WM_BLUR_REGION", False);
+    net_wm_blur_region = XInternAtom(display(), "_KDE_NET_WM_BLUR_BEHIND_REGION", False);
     effects->registerPropertyType(net_wm_blur_region, true);
 
     // ### Hackish way to announce support.
