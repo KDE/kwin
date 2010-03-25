@@ -345,10 +345,13 @@ namespace Oxygen
       {
         QColor c( stops[i].second );
         qreal xx( stops[i].first -4.0/rg.radius() );
-        if( xx<0 && i < stops.size()-1 )
+        if( xx<0 )
         {
-          qreal x1( stops[i+1].first -4.0/rg.radius() );
-          c = KColorUtils::mix( c, stops[i+1].second, -xx/(x1-xx) );
+          if( i < stops.size()-1 )
+          {
+            qreal x1( stops[i+1].first -4.0/rg.radius() );
+            c = KColorUtils::mix( c, stops[i+1].second, -xx/(x1-xx) );
+          }
           xx = 0;
         }
 
@@ -368,10 +371,13 @@ namespace Oxygen
       {
         QColor c( stops[i].second );
         qreal xx( stops[i].first -4.0/rg.radius() );
-        if( xx<0 && i < stops.size()-1 )
+        if( xx<0 )
         {
-          qreal x1( stops[i+1].first -4.0/rg.radius() );
-          c = KColorUtils::mix( c, stops[i+1].second, -xx/(x1-xx) );
+          if( i < stops.size()-1 )
+          {
+            qreal x1( stops[i+1].first -4.0/rg.radius() );
+            c = KColorUtils::mix( c, stops[i+1].second, -xx/(x1-xx) );
+          }
           xx = 0;
         }
 
