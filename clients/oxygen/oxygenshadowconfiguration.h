@@ -66,6 +66,14 @@ namespace Oxygen
     QPalette::ColorGroup colorGroup( void ) const
     { return colorGroup_; }
 
+    //! enability
+    void setEnabled( bool value )
+    { enabled_ = value; }
+
+    //! enability
+    bool isEnabled( void ) const
+    { return enabled_; }
+
     //! shadow size
     qreal shadowSize( void ) const
     { return shadowSize_; }
@@ -121,6 +129,7 @@ namespace Oxygen
     {
       return
         colorGroup_ == other.colorGroup_ &&
+        enabled_ == other.enabled_ &&
         shadowSize_ == other.shadowSize_ &&
         horizontalOffset_ == other.horizontalOffset_ &&
         verticalOffset_ == other.verticalOffset_ &&
@@ -151,6 +160,9 @@ namespace Oxygen
 
     //! color group
     QPalette::ColorGroup colorGroup_;
+
+    //! enability
+    bool enabled_;
 
     //! shadow size
     qreal shadowSize_;

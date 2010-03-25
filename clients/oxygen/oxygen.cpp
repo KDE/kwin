@@ -127,6 +127,7 @@ namespace Oxygen
 
     // read shadow configurations
     OxygenShadowConfiguration inactiveShadowConfiguration( QPalette::Inactive, config.group( "InactiveShadow" ) );
+    inactiveShadowConfiguration.setEnabled( configuration.useDropShadows() );
     if( shadowCache().shadowConfigurationChanged( inactiveShadowConfiguration ) )
     {
       shadowCache().setShadowConfiguration( inactiveShadowConfiguration );

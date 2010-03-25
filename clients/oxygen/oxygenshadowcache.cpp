@@ -152,7 +152,7 @@ namespace Oxygen
 
     static const qreal fixedSize = 25.5;
     qreal size( shadowSize() );
-    qreal shadowSize( shadowConfiguration.shadowSize() );
+    qreal shadowSize( shadowConfiguration.isEnabled() ? shadowConfiguration.shadowSize():0 );
 
     QPixmap shadow = QPixmap( size*2, size*2 );
     shadow.fill( Qt::transparent );

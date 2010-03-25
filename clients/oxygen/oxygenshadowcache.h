@@ -74,7 +74,9 @@ namespace Oxygen
     //! shadow size
     qreal shadowSize( void ) const
     {
-        qreal size( qMax( activeShadowConfiguration_.shadowSize(), inactiveShadowConfiguration_.shadowSize() ) );
+        qreal activeSize( activeShadowConfiguration_.isEnabled() ? activeShadowConfiguration_.shadowSize():0 );
+        qreal inactiveSize( inactiveShadowConfiguration_.isEnabled() ? inactiveShadowConfiguration_.shadowSize():0 );
+        qreal size( qMax( activeSize, inactiveSize ) );
 
         // even if shadows are disabled,
         // you need a minimum size to allow corner rendering

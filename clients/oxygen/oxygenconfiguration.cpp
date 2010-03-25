@@ -40,6 +40,7 @@ namespace Oxygen
     drawSeparator_( false ),
     drawTitleOutline_( false ),
     hideTitleBar_( false ),
+    useDropShadows_( true ),
     useOxygenShadows_( true ),
     useAnimations_( true ),
     animateTitleChange_( true ),
@@ -95,6 +96,11 @@ namespace Oxygen
       OxygenConfig::HIDE_TITLEBAR,
       defaultConfiguration.hideTitleBar() ) );
 
+    // drop shadows
+    setUseDropShadows( group.readEntry(
+      OxygenConfig::USE_DROP_SHADOWS,
+      defaultConfiguration.useDropShadows() ) );
+
     // oxygen shadows
     setUseOxygenShadows( group.readEntry(
       OxygenConfig::USE_OXYGEN_SHADOWS,
@@ -140,6 +146,7 @@ namespace Oxygen
     group.writeEntry( OxygenConfig::DRAW_SEPARATOR, drawSeparator() );
     group.writeEntry( OxygenConfig::DRAW_TITLE_OUTLINE, drawTitleOutline() );
     group.writeEntry( OxygenConfig::HIDE_TITLEBAR, hideTitleBar() );
+    group.writeEntry( OxygenConfig::USE_DROP_SHADOWS, useDropShadows() );
     group.writeEntry( OxygenConfig::USE_OXYGEN_SHADOWS, useOxygenShadows() );
     group.writeEntry( OxygenConfig::USE_ANIMATIONS, useAnimations() );
     group.writeEntry( OxygenConfig::ANIMATE_TITLE_CHANGE, animateTitleChange() );
@@ -311,6 +318,7 @@ namespace Oxygen
       drawSeparator() == other.drawSeparator() &&
       drawTitleOutline() == other.drawTitleOutline() &&
       hideTitleBar() == other.hideTitleBar() &&
+      useDropShadows() == other.useDropShadows() &&
       useOxygenShadows() == other.useOxygenShadows() &&
       useAnimations() == other.useAnimations() &&
       animateTitleChange() == other.animateTitleChange() &&

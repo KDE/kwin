@@ -191,6 +191,9 @@
          <property name="title">
           <string>Window Drop-Down Shadow</string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">

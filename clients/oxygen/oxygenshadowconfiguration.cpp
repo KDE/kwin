@@ -33,7 +33,8 @@ namespace Oxygen
 
   //_________________________________________________________
   OxygenShadowConfiguration::OxygenShadowConfiguration( QPalette::ColorGroup colorGroup ):
-    colorGroup_( colorGroup )
+    colorGroup_( colorGroup ),
+    enabled_( true )
   {
 
     // check colorgroup
@@ -69,7 +70,8 @@ namespace Oxygen
 
   //_________________________________________________________
   OxygenShadowConfiguration::OxygenShadowConfiguration( QPalette::ColorGroup colorGroup, KConfigGroup group ):
-    colorGroup_( colorGroup )
+    colorGroup_( colorGroup ),
+    enabled_( true )
   {
 
     // get default configuration
