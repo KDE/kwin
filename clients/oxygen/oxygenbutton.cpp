@@ -70,8 +70,6 @@ namespace Oxygen
     glowAnimation().data()->setEndValue( 1.0 );
     glowAnimation().data()->setTargetObject( this );
     glowAnimation().data()->setPropertyName( "glowIntensity" );
-
-    // set curve shape. Warning: this is not portable to Qt Kinetic
     glowAnimation().data()->setEasingCurve( QEasingCurve::InOutQuad );
 
     // setup connections
@@ -228,32 +226,24 @@ namespace Oxygen
     if( isAnimated() ) color = KColorUtils::mix( color, glow, glowIntensity() );
     else if( status_ == Oxygen::Hovered ) color = glow;
 
-    // button decoration
+
     if( type_ != ButtonMenu && type_ != ButtonItemClose && type_ != ButtonItemMenu )
     {
 
-      // draw glow on hover
-      if( isAnimated() )
-      {
+      // decide shadow color
+      QColor local;
+      if( isAnimated() ) local = KColorUtils::mix( Qt::black, glow, glowIntensity() );
+      else if( status_ == Oxygen::Hovered ) local = glow;
+      else local = Qt::black;
 
-        // mixed shadow and glow for smooth transition
-        painter.drawPixmap(0, 0, helper_.windecoButtonGlow( KColorUtils::mix( Qt::black, glow, glowIntensity() ), (21.0*client_.configuration().buttonSize())/22));
+      qreal scale( (21.0*client_.configuration().buttonSize())/22.0 );
 
-      } else if( status_ == Oxygen::Hovered ) {
-
-        // glow only
-        painter.drawPixmap(0, 0, helper_.windecoButtonGlow(glow, (21.0*client_.configuration().buttonSize())/22));
-
-      } else {
-
-        // shadow only
-        painter.drawPixmap(0, 0, helper_.windecoButtonGlow(Qt::black, (21.0*client_.configuration().buttonSize())/22));
-
-      }
+      // draw shadow
+      painter.drawPixmap( 0, 0, helper_.windecoButtonGlow( local, scale ) );
 
       // draw button shape
       bool pressed( (status_ == Oxygen::Pressed) || ( type_ == ButtonSticky && isChecked() ) );
-      painter.drawPixmap(0, 0, helper_.windecoButton(bt, pressed, (21.0*client_.configuration().buttonSize())/22.0 ) );
+      painter.drawPixmap(0, 0, helper_.windecoButton(bt, pressed, scale ) );
 
     }
 
