@@ -91,9 +91,7 @@ class DesktopChangeItem : public QObject, public QGraphicsItem
     Q_PROPERTY( qreal arrowValue READ arrowValue WRITE setArrowValue )
     Q_PROPERTY( qreal highLightValue READ highLightValue WRITE setHighLightValue )
 
-#if QT_VERSION >= 0x040600
     Q_INTERFACES(QGraphicsItem)
-#endif
     public:
         DesktopChangeItem( Workspace* ws, DesktopChangeOSD* parent, int desktop );
         ~DesktopChangeItem();
