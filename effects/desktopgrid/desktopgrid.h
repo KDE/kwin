@@ -25,11 +25,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <kshortcut.h>
 #include <QObject>
+#include <QtGui/QGraphicsView>
+
+namespace Plasma
+{
+class PushButton;
+}
 
 namespace KWin
 {
 
 class PresentWindowsEffectProxy;
+
+class DesktopButtonsView : public QGraphicsView
+    {
+    Q_OBJECT
+    public:
+        DesktopButtonsView( QWidget* parent = 0 );
+        void windowInputMouseEvent( QMouseEvent* e );
+        void setAddDesktopEnabled( bool enable );
+        void setRemoveDesktopEnabled( bool enable );
+        virtual void drawBackground( QPainter* painter, const QRectF& rect );
+
+    Q_SIGNALS:
+        void addDesktop();
+        void removeDesktop();
+
+    private:
+        Plasma::PushButton* m_addDesktopButton;
+        Plasma::PushButton* m_removeDesktopButton;
+        Plasma::FrameSvg* m_frame;
+    };
 
 class DesktopGridEffect
     : public QObject, public Effect
@@ -50,6 +76,7 @@ class DesktopGridEffect
         virtual void windowInputMouseEvent( Window w, QEvent* e );
         virtual void grabbedKeyboardEvent( QKeyEvent* e );
         virtual bool borderActivated( ElectricBorder border );
+        virtual void numberDesktopsChanged( int old );
 
         enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
 
@@ -58,6 +85,8 @@ class DesktopGridEffect
         // slots for global shortcut changed
         // needed to toggle the effect
         void globalShortcutChanged( const QKeySequence& seq );
+        void slotAddDesktop();
+        void slotRemoveDesktop();
 
     private:
         QPointF scalePos( const QPoint& pos, int desktop, int screen = -1 ) const;
@@ -72,10 +101,13 @@ class DesktopGridEffect
         int desktopDown( int desktop, bool wrap = true ) const;
         void setActive( bool active );
         void setup();
+        void setupGrid();
         void finish();
         bool isMotionManagerMovingWindows();
         bool isUsingPresentWindows() const;
         QRectF moveGeometryToDesktop( int desktop ) const;
+        void desktopsAdded( int old );
+        void desktopsRemoved( int old );
         
         QList<ElectricBorder> borderActivate;
         int zoomDuration;
@@ -98,7 +130,7 @@ class DesktopGridEffect
         // Soft highlighting
         QList<TimeLine> hoverTimeline;
 
-        EffectFrame** desktopNames;
+        QList< EffectFrame* > desktopNames;
 
         QSize gridSize;
         Qt::Orientation orientation;
@@ -117,6 +149,8 @@ class DesktopGridEffect
         bool m_usePresentWindows;
         QRect m_windowMoveGeometry;
         QPoint m_windowMoveStartPoint;
+
+        QHash< DesktopButtonsView*, EffectWindow* > m_desktopButtonsViews;
 
     };
 
