@@ -32,7 +32,6 @@ void Workspace::updateDesktopLayout()
     int height = rootInfo->desktopLayoutColumnsRows().height();
     if( width == 0 && height == 0 ) // Not given, set default layout
         height = 2;
-    // TODO: Make sure desktopCount_ <= width * height
     setNETDesktopLayout(
         rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical,
         width, height, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
@@ -50,6 +49,13 @@ void Workspace::setNETDesktopLayout( Qt::Orientation orientation, int width, int
        width = ( desktopCount_ + height - 1 ) / height;
     else if(( height <= 0 ) && ( width > 0 ))
        height = ( desktopCount_ + width - 1 ) / width;
+    while( width * height < desktopCount_ )
+        {
+        if( orientation == Qt::Horizontal )
+            ++width;
+        else
+            ++height;
+        }
 
     // Set private variables
     delete[] desktopGrid_;
