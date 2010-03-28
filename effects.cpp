@@ -468,6 +468,12 @@ void EffectsHandlerImpl::propertyNotify( EffectWindow* c, long atom )
         ep.second->propertyNotify( c, atom );
     }
 
+void EffectsHandlerImpl::numberDesktopsChanged( int old )
+    {
+    foreach( const EffectPair &ep, loaded_effects )
+        ep.second->numberDesktopsChanged( old );
+    }
+
 void EffectsHandlerImpl::registerPropertyType( long atom, bool reg )
     {
     if( reg )
@@ -545,6 +551,11 @@ int EffectsHandlerImpl::numberOfDesktops() const
 void EffectsHandlerImpl::setCurrentDesktop( int desktop )
     {
     Workspace::self()->setCurrentDesktop( desktop );
+    }
+
+void EffectsHandlerImpl::setNumberOfDesktops( int desktops )
+    {
+    Workspace::self()->setNumberOfDesktops( desktops );
     }
 
 QSize EffectsHandlerImpl::desktopGridSize() const

@@ -1552,6 +1552,9 @@ void Workspace::setNumberOfDesktops( int n )
 
     // reset the desktop change osd
     desktop_change_osd->numberDesktopsChanged();
+    // inform effects
+    if( effects )
+        static_cast< EffectsHandlerImpl* >( effects )->numberDesktopsChanged( old_number_of_desktops );
     }
 
 /**

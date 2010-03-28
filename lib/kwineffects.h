@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 131
+#define KWIN_EFFECT_API_VERSION_MINOR 132
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
     KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -433,6 +433,13 @@ class KWIN_EXPORT Effect
         virtual void tabBoxKeyEvent( QKeyEvent* event );
         virtual bool borderActivated( ElectricBorder border );
 
+        /**
+        * called when the number of currently existing desktops is changed.
+        * @param old The previous number of desktops in used.
+        * @see EffectsHandler::numberOfDesktops.
+        */
+        virtual void numberDesktopsChanged( int old );
+
         static int displayWidth();
         static int displayHeight();
         static QPoint cursorPos();
@@ -593,6 +600,10 @@ class KWIN_EXPORT EffectsHandler
          * Set the current desktop to @a desktop.
          */
         virtual void setCurrentDesktop( int desktop ) = 0;
+        /**
+        * Sets the total number of desktops to @a desktops.
+        */
+        virtual void setNumberOfDesktops( int desktops ) = 0;
         /**
          * @returns The size of desktop layout in grid units.
          */

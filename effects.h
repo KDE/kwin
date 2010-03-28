@@ -61,6 +61,7 @@ class EffectsHandlerImpl : public EffectsHandler
         virtual int currentDesktop() const;
         virtual int numberOfDesktops() const;
         virtual void setCurrentDesktop( int desktop );
+        virtual void setNumberOfDesktops( int desktops );
         virtual QSize desktopGridSize() const;
         virtual int desktopGridWidth() const;
         virtual int desktopGridHeight() const;
@@ -169,6 +170,7 @@ class EffectsHandlerImpl : public EffectsHandler
         void grabbedKeyboardEvent( QKeyEvent* e );
         bool hasKeyboardGrab() const;
         void propertyNotify( EffectWindow* c, long atom );
+        void numberDesktopsChanged( int old );
 
         bool loadEffect( const QString& name );
         void toggleEffect( const QString& name );
