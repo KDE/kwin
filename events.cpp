@@ -1397,9 +1397,7 @@ bool Client::buttonReleaseEvent( Window w, int /*button*/, int state, int x, int
             {
             finishMoveResize( false );
             // mouse position is still relative to old Client position, adjust it
-            QPoint mousepos( x_root - x, y_root - y );
-            if( w == frameId() ) 
-                mousepos += QPoint( padding_left, padding_top );
+            QPoint mousepos( x_root - x + padding_left, y_root - y + padding_top );
             mode = mousePosition( mousepos );
             }
         else if( workspace()->decorationSupportsClientGrouping() )
