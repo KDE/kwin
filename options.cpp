@@ -228,7 +228,15 @@ void Options::reloadCompositingSettings()
     KConfigGroup config(_config, "Compositing");
 
     // do not even detect compositing preferences if explicitly disabled
-    if( config.hasKey( "Enabled" ) && !config.readEntry( "Enabled", true ))
+    bool environmentForce = false;
+    if( getenv( "KWIN_COMPOSE" ))
+        {
+        // if compositing is enforced by the environment variable, the preferences have to be read
+        const char c = getenv( "KWIN_COMPOSE" )[ 0 ];
+        if( c == 'X' || c == 'O' )
+            environmentForce = true;
+        }
+    if( config.hasKey( "Enabled" ) && !config.readEntry( "Enabled", true ) && !environmentForce )
         {
         useCompositing = false;
         return;
