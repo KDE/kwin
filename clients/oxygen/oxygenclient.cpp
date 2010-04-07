@@ -573,7 +573,8 @@ namespace Oxygen
     } else {
 
       int offset = layoutMetric( LM_OuterPaddingTop );
-      int height = 64 + configuration().buttonSize() - OxygenConfiguration::ButtonDefault;
+      int height = 64 - OxygenConfiguration::ButtonDefault;
+      if( !configuration().hideTitleBar() ) height += configuration().buttonSize();
       const QWidget* window( isPreview() ? OxygenClient::widget() : widget->window() );
       helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
 
