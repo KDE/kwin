@@ -27,9 +27,9 @@ ThemeConfig::ThemeConfig()
 {
 }
 
-void ThemeConfig::load(KConfig *conf)
+void ThemeConfig::load(const KConfig &conf)
 {
-    KConfigGroup general(conf, "General");
+    KConfigGroup general(&conf, "General");
     m_activeTextColor = general.readEntry("ActiveTextColor", QColor(Qt::black));
     m_inactiveTextColor = general.readEntry("InactiveTextColor", QColor(Qt::black));
     m_useTextShadow = general.readEntry("UseTextShadow", false);
@@ -64,7 +64,7 @@ void ThemeConfig::load(KConfig *conf)
     m_defaultButtonsRight = general.readEntry("RightButtons", KDecorationOptions::defaultTitleButtonsRight());
     m_shadow = general.readEntry("Shadow", true);
 
-    KConfigGroup border(conf, "Layout");
+    KConfigGroup border(&conf, "Layout");
     // default values taken from KCommonDecoration::layoutMetric() in kcommondecoration.cpp
     m_borderLeft = border.readEntry("BorderLeft", 5);
     m_borderRight = border.readEntry("BorderRight", 5);

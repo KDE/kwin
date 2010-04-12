@@ -54,7 +54,7 @@ AuroraePreview::AuroraePreview( const QString& name, const QString& packageName,
 
     m_themeConfig = new Aurorae::ThemeConfig();
     KConfig conf( "aurorae/themes/" + packageName + '/' + packageName + "rc", KConfig::FullConfig, "data" );
-    m_themeConfig->load( &conf );
+    m_themeConfig->load( conf );
 
     initButtonFrame( "minimize", packageName );
     initButtonFrame( "maximize", packageName );

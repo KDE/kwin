@@ -1,6 +1,14 @@
 ########### decoration ###############
+include_directories( ./lib )
 
-set(kwin3_aurorae_PART_SRCS aurorae.cpp themeconfig.cpp)
+set(kwin3_aurorae_PART_SRCS
+    aurorae.cpp
+    lib/auroraebutton.cpp
+    lib/auroraescene.cpp
+    lib/auroraetab.cpp
+    lib/auroraetheme.cpp
+    lib/themeconfig.cpp
+)
 
 kde4_add_plugin(kwin3_aurorae ${kwin3_aurorae_PART_SRCS})
 

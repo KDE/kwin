@@ -30,7 +30,7 @@ class ThemeConfig
 {
 public:
     ThemeConfig();
-    void load(KConfig *conf);
+    void load(const KConfig &conf);
     ~ThemeConfig() {};
     // active window
     QColor activeTextColor() const {

@@ -1,5 +1,5 @@
 /********************************************************************
-Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
+Copyright (C) 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,14 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "themeconfig.h"
 
+#include <kdecoration.h>
 #include <kdecorationfactory.h>
-#include <kcommondecoration.h>
-#include <KDE/Plasma/FrameSvg>
 
-class QPropertyAnimation;
+class QGraphicsView;
+class QGraphicsScene;
 
 namespace Aurorae
 {
+class AuroraeTheme;
+class AuroraeScene;
 
 class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
 {
@@ -40,113 +42,55 @@ public:
     bool supports(Ability ability) const;
     virtual QList< BorderSize > borderSizes() const;
 
-    Plasma::FrameSvg *frame() {
-        return &m_frame;
-    }
-    Plasma::FrameSvg *button(const QString& b);
-    bool hasButton(const QString& button) {
-        return m_buttons.contains(button);
-    }
-    ThemeConfig &themeConfig() {
-        return m_themeConfig;
-    }
-    bool isValid() const {
-        return m_valid;
+    AuroraeTheme *theme() const {
+        return m_theme;
     }
 
 private:
     AuroraeFactory();
     void init();
-    void initButtonFrame(const QString& button);
-    void readThemeConfig();
 
 private:
     static AuroraeFactory *s_instance;
 
-    // theme name
-    QString m_themeName;
-    ThemeConfig m_themeConfig;
-    // deco
-    Plasma::FrameSvg m_frame;
-
-    // buttons
-    QHash< QString, Plasma::FrameSvg* > m_buttons;
-    bool m_valid;
+    AuroraeTheme *m_theme;
 };
 
-class AuroraeButton : public KCommonDecorationButton
+class AuroraeClient : public KDecorationUnstable
 {
     Q_OBJECT
-    Q_PROPERTY(qreal animation READ animationProgress WRITE setAnimationProgress)
-
 public:
-    AuroraeButton(ButtonType type, KCommonDecoration *parent);
-    void reset(unsigned long changed);
-    void enterEvent(QEvent *event);
-    void leaveEvent(QEvent *event);
-    void paintEvent(QPaintEvent *event);
-    qreal animationProgress() const;
-    void setAnimationProgress(qreal progress);
-
-protected:
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
-
-private:
-    enum ButtonState {
-        Active = 0x1,
-        Hover = 0x2,
-        Pressed = 0x4,
-        Deactivated = 0x8
-    };
-    Q_DECLARE_FLAGS(ButtonStates, ButtonState)
-    void paintButton(QPainter& painter, Plasma::FrameSvg* frame, ButtonStates states);
-    bool isAnimating() const;
-
-private:
-    qreal m_animationProgress;
-    bool m_pressed;
-    QPropertyAnimation *m_animation;
-};
-
-
-class AuroraeClient : public KCommonDecorationUnstable
-{
-    Q_OBJECT
-    Q_PROPERTY(qreal animation READ animationProgress WRITE setAnimationProgress)
-public:
-    AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory);
-    ~AuroraeClient();
-
-    virtual void init();
-
-    virtual QString visibleName() const;
-    virtual QString defaultButtonsLeft() const;
-    virtual QString defaultButtonsRight() const;
-    virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
-    virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true,
-                     const KCommonDecorationButton * = 0) const;
-    virtual KCommonDecorationButton *createButton(ButtonType type);
-    virtual void updateWindowShape();
+    AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     virtual void activeChange();
+    virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void captionChange();
+    virtual void desktopChange();
+    virtual void iconChange();
+    virtual void init();
+    virtual void maximizeChange();
+    virtual QSize minimumSize() const;
+    virtual Position mousePosition(const QPoint& p) const;
     virtual void resize(const QSize& s);
+    virtual void shadeChange();
+    // optional overrides
+    virtual void padding(int &left, int &right, int &top, int &bottom) const;
+    virtual void reset(long unsigned int changed);
 
-    bool isAnimating() const;
-    qreal animationProgress() const;
-    void setAnimationProgress(qreal progress);
-
-protected:
-    void reset(unsigned long changed);
-    void paintEvent(QPaintEvent *event);
+private slots:
+    void menuClicked();
+    void toggleShade();
+    void keepAboveChanged(bool above);
+    void keepBelowChanged(bool below);
+    void toggleKeepAbove();
+    void toggleKeepBelow();
+    void titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons);
+    void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
+    void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
 
 private:
-    void generateTextPixmap(QPixmap& pixmap, bool active);
-    qreal m_animationProgress;
-    QPixmap m_activeText;
-    QPixmap m_inactiveText;
-    QPropertyAnimation *m_animation;
-
+    void updateWindowShape();
+    AuroraeScene *m_scene;
+    QGraphicsView *m_view;
 };
 
 }

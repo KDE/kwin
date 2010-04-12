@@ -1,6 +1,6 @@
 # need a header file from Aurorae sources
 include_directories(
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/clients/aurorae/src/
+    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/clients/aurorae/src/lib
 )
 
 set(kcm_kwindecoration_PART_SRCS
@@ -12,7 +12,7 @@ set(kcm_kwindecoration_PART_SRCS
     decorationdelegate.cpp
     decorationmodel.cpp
     auroraepreview.cpp
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/clients/aurorae/src/themeconfig.cpp
+    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/clients/aurorae/src/lib/themeconfig.cpp
 )
 
 kde4_add_ui_files(kcm_kwindecoration_PART_SRCS buttons.ui config.ui decoration.ui)

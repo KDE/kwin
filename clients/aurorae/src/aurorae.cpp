@@ -1,5 +1,5 @@
 /********************************************************************
-Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
+Copyright (C) 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,19 +16,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "aurorae.h"
+#include "auroraescene.h"
+#include "auroraetheme.h"
 
-#include <kglobal.h>
-#include <kstandarddirs.h>
-#include <kdebug.h>
+#include <QApplication>
+#include <QGraphicsView>
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDE/Plasma/PaintUtils>
-#include <KIconEffect>
-#include <KIconLoader>
-
-#include <QPainter>
-#include <QPropertyAnimation>
+#include <Plasma/FrameSvg>
 
 namespace Aurorae
 {
@@ -36,7 +32,7 @@ namespace Aurorae
 AuroraeFactory::AuroraeFactory()
         : QObject()
         , KDecorationFactoryUnstable()
-        , m_valid(false)
+        , m_theme(new AuroraeTheme(this))
 {
     init();
 }
@@ -46,42 +42,10 @@ void AuroraeFactory::init()
     KConfig conf("auroraerc");
     KConfigGroup group(&conf, "Engine");
 
-    m_themeName = group.readEntry("ThemeName", "example-deco");
-
-    QString file("aurorae/themes/" + m_themeName + "/decoration.svg");
-    QString path = KGlobal::dirs()->findResource("data", file);
-    if (path.isEmpty()) {
-        file += 'z';
-        path = KGlobal::dirs()->findResource("data", file);
-    }
-    if (path.isEmpty()) {
-        kDebug(1216) << "Could not find decoration svg: aborting";
-        return;
-    }
-    m_frame.setImagePath(path);
-    m_frame.setCacheAllRenderedFrames(true);
-    m_frame.setEnabledBorders(Plasma::FrameSvg::AllBorders);
-
-    // load the buttons
-    initButtonFrame("minimize");
-    initButtonFrame("maximize");
-    initButtonFrame("restore");
-    initButtonFrame("close");
-    initButtonFrame("alldesktops");
-    initButtonFrame("keepabove");
-    initButtonFrame("keepbelow");
-    initButtonFrame("shade");
-    initButtonFrame("help");
-
-    readThemeConfig();
-    m_valid = true;
-}
-
-void AuroraeFactory::readThemeConfig()
-{
-    // read config values
-    KConfig conf("aurorae/themes/" + m_themeName + '/' + m_themeName + "rc", KConfig::FullConfig, "data");
-    m_themeConfig.load(&conf);
+    const QString themeName = group.readEntry("ThemeName", "example-deco");
+    KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
+    m_theme->loadTheme(themeName, config);
+    m_theme->setBorderSize(KDecoration::options()->preferredBorderSize(this));
 }
 
 AuroraeFactory::~AuroraeFactory()
@@ -100,9 +64,6 @@ AuroraeFactory *AuroraeFactory::instance()
 
 bool AuroraeFactory::reset(unsigned long changed)
 {
-    // re-read config
-    m_frame.clearCache();
-    m_buttons.clear();
     init();
     resetDecorations(changed);
     return false; // need hard reset
@@ -118,23 +79,23 @@ bool AuroraeFactory::supports(Ability ability) const
     case AbilityExtendIntoClientArea:
         return true;
     case AbilityButtonMinimize:
-        return m_buttons.contains("minimize");
+        return m_theme->hasButton(MinimizeButton);
     case AbilityButtonMaximize:
-        return m_buttons.contains("maximize") || m_buttons.contains("restore");
+        return m_theme->hasButton(MaximizeButton) || m_theme->hasButton(RestoreButton);
     case AbilityButtonClose:
-        return m_buttons.contains("close");
+        return m_theme->hasButton(CloseButton);
     case AbilityButtonAboveOthers:
-        return m_buttons.contains("keepabove");
+        return m_theme->hasButton(KeepAboveButton);
     case AbilityButtonBelowOthers:
-        return m_buttons.contains("keepbelow");
+        return m_theme->hasButton(KeepBelowButton);
     case AbilityButtonShade:
-        return m_buttons.contains("shade");
+        return m_theme->hasButton(ShadeButton);
     case AbilityButtonOnAllDesktops:
-        return m_buttons.contains("alldesktops");
+        return m_theme->hasButton(AllDesktopsButton);
     case AbilityButtonHelp:
-        return m_buttons.contains("help");
+        return m_theme->hasButton(HelpButton);
     case AbilityProvidesShadow:
-        return m_themeConfig.shadow();
+        return true; // TODO: correct value from theme
     default:
         return false;
     }
@@ -143,36 +104,7 @@ bool AuroraeFactory::supports(Ability ability) const
 KDecoration *AuroraeFactory::createDecoration(KDecorationBridge *bridge)
 {
     AuroraeClient *client = new AuroraeClient(bridge, this);
-    return client->decoration();
-}
-
-void AuroraeFactory::initButtonFrame(const QString &button)
-{
-    QString file("aurorae/themes/" + m_themeName + '/' + button + ".svg");
-    QString path = KGlobal::dirs()->findResource("data", file);
-    if (path.isEmpty()) {
-        // let's look for svgz
-        file.append("z");
-        path = KGlobal::dirs()->findResource("data", file);
-    }
-    if (!path.isEmpty()) {
-        Plasma::FrameSvg *frame = new Plasma::FrameSvg(this);
-        frame->setImagePath(path);
-        frame->setCacheAllRenderedFrames(true);
-        frame->setEnabledBorders(Plasma::FrameSvg::NoBorder);
-        m_buttons[ button ] = frame;
-    } else {
-        kDebug(1216) << "No button for: " << button;
-    }
-}
-
-Plasma::FrameSvg *AuroraeFactory::button(const QString &b)
-{
-    if (hasButton(b)) {
-        return m_buttons[ b ];
-    } else {
-        return NULL;
-    }
+    return client;
 }
 
 QList< KDecorationDefines::BorderSize > AuroraeFactory::borderSizes() const
@@ -186,770 +118,206 @@ QList< KDecorationDefines::BorderSize > AuroraeFactory::borderSizes() const
 AuroraeFactory *AuroraeFactory::s_instance = NULL;
 
 /*******************************************************
-* Button
-*******************************************************/
-AuroraeButton::AuroraeButton(ButtonType type, KCommonDecoration *parent)
-        : KCommonDecorationButton(type, parent)
-        , m_animationProgress(0.0)
-        , m_pressed(false)
-{
-    m_animation = new QPropertyAnimation(this, "animation", this);
-    setAttribute(Qt::WA_NoSystemBackground);
-}
-
-void AuroraeButton::reset(unsigned long changed)
-{
-    Q_UNUSED(changed)
-}
-
-void AuroraeButton::enterEvent(QEvent *event)
-{
-    Q_UNUSED(event)
-    if (isAnimating()) {
-        m_animation->stop();
-    }
-    m_animationProgress = 0.0;
-    int time = AuroraeFactory::instance()->themeConfig().animationTime();
-    if (time != 0) {
-        m_animation->setDuration(time);
-        m_animation->setEasingCurve(QEasingCurve::InQuad);
-        m_animation->setStartValue(0.0);
-        m_animation->setEndValue(1.0);
-        m_animation->start();
-    }
-    update();
-}
-
-void AuroraeButton::leaveEvent(QEvent *event)
-{
-    Q_UNUSED(event)
-    if (isAnimating()) {
-        m_animation->stop();
-    }
-    m_animationProgress = 0.0;
-    int time = AuroraeFactory::instance()->themeConfig().animationTime();
-    if (time != 0) {
-        m_animation->setDuration(time);
-        m_animation->setEasingCurve(QEasingCurve::OutQuad);
-        m_animation->setStartValue(0.0);
-        m_animation->setEndValue(1.0);
-        m_animation->start();
-    }
-    update();
-}
-
-void AuroraeButton::mousePressEvent(QMouseEvent *e)
-{
-    m_pressed = true;
-    update();
-    KCommonDecorationButton::mousePressEvent(e);
-}
-
-void AuroraeButton::mouseReleaseEvent(QMouseEvent *e)
-{
-    m_pressed = false;
-    update();
-    KCommonDecorationButton::mouseReleaseEvent(e);
-}
-
-void AuroraeButton::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event)
-    if (decoration()->isPreview() || !AuroraeFactory::instance()->isValid()) {
-        return;
-    }
-
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-
-    bool active = decoration()->isActive();
-
-    if (type() == MenuButton) {
-        const QIcon icon = decoration()->icon();
-        ThemeConfig config = AuroraeFactory::instance()->themeConfig();
-        int iconSize = qMin(config.buttonWidthMenu(), config.buttonHeight());
-        const QSize size = icon.actualSize(QSize(iconSize, iconSize));
-        QPixmap iconPix = icon.pixmap(size);
-        KIconEffect *effect = KIconLoader::global()->iconEffect();
-        if (active) {
-            if (underMouse()) {
-                iconPix = effect->apply(iconPix, KIconLoader::Desktop, KIconLoader::ActiveState);
-            }
-        } else {
-            iconPix = effect->apply(iconPix, KIconLoader::Desktop, KIconLoader::DisabledState);
-        }
-        AuroraeClient *deco = dynamic_cast<AuroraeClient*>(decoration());
-        if (deco && deco->isAnimating()) {
-            // animation
-            QPixmap oldPix = icon.pixmap(size);
-            if (!active) {
-                if (underMouse()) {
-                    oldPix = effect->apply(iconPix, KIconLoader::Desktop, KIconLoader::ActiveState);
-                }
-            } else {
-                oldPix = effect->apply(iconPix, KIconLoader::Desktop, KIconLoader::DisabledState);
-            }
-            iconPix = Plasma::PaintUtils::transition(oldPix, iconPix, deco->animationProgress());
-        }
-        painter.drawPixmap(0, 0, iconPix);
-        return;
-    }
-
-    ButtonStates states;
-    if (active) {
-        states |= Active;
-    }
-    if (underMouse()) {
-        states |= Hover;
-    }
-    if (m_pressed) {
-        states |= Pressed;
-    }
-    QString buttonName = "";
-    switch (type()) {
-    case MinButton:
-        if (!decoration()->isMinimizable()) {
-            states |= Deactivated;
-        }
-        buttonName = "minimize";
-        break;
-    case CloseButton:
-        if (!decoration()->isCloseable()) {
-            states |= Deactivated;
-        }
-        buttonName = "close";
-        break;
-    case MaxButton: {
-        if (!decoration()->isMaximizable()) {
-            states |= Deactivated;
-        }
-        buttonName = "maximize";
-        if (decoration()->maximizeMode() == KDecorationDefines::MaximizeFull &&
-                !decoration()->options()->moveResizeMaximizedWindows()) {
-            buttonName = "restore";
-            if (!AuroraeFactory::instance()->hasButton(buttonName)) {
-                buttonName = "maximize";
-            }
-        }
-        break;
-    }
-    case OnAllDesktopsButton:
-        if (decoration()->isOnAllDesktops()) {
-            states |= Hover;
-        }
-        buttonName = "alldesktops";
-        break;
-    case AboveButton:
-        buttonName = "keepabove";
-        break;
-    case BelowButton:
-        buttonName = "keepbelow";
-        break;
-    case ShadeButton:
-        if (!decoration()->isShadeable()) {
-            states |= Deactivated;
-        }
-        if (decoration()->isShade()) {
-            states |= Hover;
-        }
-        buttonName = "shade";
-        break;
-    case HelpButton:
-        buttonName = "help";
-        break;
-    default:
-        buttonName.clear();
-    }
-
-    if (!buttonName.isEmpty()) {
-        if (AuroraeFactory::instance()->hasButton(buttonName)) {
-            Plasma::FrameSvg *button = AuroraeFactory::instance()->button(buttonName);
-            paintButton(painter, button, states);
-        }
-    }
-}
-
-void AuroraeButton::paintButton(QPainter &painter, Plasma::FrameSvg *frame, ButtonStates states)
-{
-    QString prefix = "active";
-    QString animationPrefix = "active";
-    bool hasInactive = false;
-    // check for inactive prefix
-    if (!states.testFlag(Active) && frame->hasElementPrefix("inactive")) {
-        // we have inactive, so we use it
-        hasInactive = true;
-        prefix = "inactive";
-        animationPrefix = "inactive";
-    }
-
-    if (states.testFlag(Hover)) {
-        if (states.testFlag(Active)) {
-            if (frame->hasElementPrefix("hover")) {
-                prefix = "hover";
-            }
-        } else {
-            if (hasInactive) {
-                if (frame->hasElementPrefix("hover-inactive")) {
-                    prefix = "hover-inactive";
-                }
-            } else {
-                if (frame->hasElementPrefix("hover")) {
-                    prefix = "hover";
-                }
-            }
-        }
-    }
-    if (states.testFlag(Pressed)) {
-        if (states.testFlag(Active)) {
-            if (frame->hasElementPrefix("pressed")) {
-                prefix = "pressed";
-            }
-        } else {
-            if (hasInactive) {
-                if (frame->hasElementPrefix("pressed-inactive")) {
-                    prefix = "pressed-inactive";
-                }
-            } else {
-                if (frame->hasElementPrefix("pressed")) {
-                    prefix = "pressed";
-                }
-            }
-        }
-    }
-    if (states.testFlag(Deactivated)) {
-        if (states.testFlag(Active)) {
-            if (frame->hasElementPrefix("deactivated")) {
-                prefix = "deactivated";
-            }
-        } else {
-            if (hasInactive) {
-                if (frame->hasElementPrefix("deactivated-inactive")) {
-                    prefix = "deactivated-inactive";
-                }
-            } else {
-                if (frame->hasElementPrefix("deactivated")) {
-                    prefix = "deactivated";
-                }
-            }
-        }
-    }
-    frame->setElementPrefix(prefix);
-    frame->resizeFrame(size());
-    if (isAnimating()) {
-        // there is an animation so we have to use it
-        // the animation is definately a hover animation as currently nothing else is supported
-        if (!states.testFlag(Hover)) {
-            // only have to set for not hover state as animationPrefix is set to (in)active by default
-            if (states.testFlag(Active)) {
-                if (frame->hasElementPrefix("hover")) {
-                    animationPrefix = "hover";
-                }
-            } else {
-                if (hasInactive) {
-                    if (frame->hasElementPrefix("hover-inactive")) {
-                        animationPrefix = "hover-inactive";
-                    }
-                } else {
-                    if (frame->hasElementPrefix("hover")) {
-                        animationPrefix = "hover";
-                    }
-                }
-            }
-        }
-        QPixmap target = frame->framePixmap();
-        frame->setElementPrefix(animationPrefix);
-        frame->resizeFrame(size());
-        QPixmap result = Plasma::PaintUtils::transition(frame->framePixmap(),
-                                                         target, m_animationProgress);
-        painter.drawPixmap(rect(), result);
-    } else {
-        bool animation = false;
-        AuroraeClient *deco = dynamic_cast<AuroraeClient*>(decoration());
-        if (deco && deco->isAnimating()) {
-            animationPrefix = prefix;
-            if (prefix.endsWith("-inactive")) {
-                animationPrefix.remove("-inactive");
-            } else {
-                animationPrefix = animationPrefix + "-inactive";
-            }
-            if (frame->hasElementPrefix(animationPrefix)) {
-                animation = true;
-                QPixmap target = frame->framePixmap();
-                frame->setElementPrefix(animationPrefix);
-                frame->resizeFrame(size());
-                QPixmap result = Plasma::PaintUtils::transition(frame->framePixmap(),
-                                                                target, deco->animationProgress());
-                painter.drawPixmap(rect(), result);
-            }
-        }
-        if (!animation) {
-            frame->paintFrame(&painter);
-        }
-    }
-}
-
-bool AuroraeButton::isAnimating() const
-{
-    return (m_animation->state() == QAbstractAnimation::Running);
-}
-
-qreal AuroraeButton::animationProgress() const
-{
-    return m_animationProgress;
-}
-
-void AuroraeButton::setAnimationProgress(qreal progress)
-{
-    m_animationProgress = progress;
-    update();
-}
-
-/*******************************************************
 * Client
 *******************************************************/
-
 AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory)
-        : KCommonDecorationUnstable(bridge, factory)
+    : KDecorationUnstable(bridge, factory)
 {
-    m_animation = new QPropertyAnimation(this, "animation", this);
-}
-
-AuroraeClient::~AuroraeClient()
-{
+    m_scene = new AuroraeScene(AuroraeFactory::instance()->theme(),
+                               options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft(),
+                               options()->customButtonPositions() ? options()->titleButtonsRight() : AuroraeFactory::instance()->theme()->defaultButtonsRight(),
+                               providesContextHelp(), this);
+    connect(m_scene, SIGNAL(closeWindow()), SLOT(closeWindow()));
+    connect(m_scene, SIGNAL(maximize(Qt::MouseButtons)), SLOT(maximize(Qt::MouseButtons)));
+    connect(m_scene, SIGNAL(showContextHelp()), SLOT(showContextHelp()));
+    connect(m_scene, SIGNAL(minimizeWindow()), SLOT(minimize()));
+    connect(m_scene, SIGNAL(menuClicked()), SLOT(menuClicked()));
+    connect(m_scene, SIGNAL(menuDblClicked()), SLOT(closeWindow()));
+    connect(m_scene, SIGNAL(toggleOnAllDesktops()), SLOT(toggleOnAllDesktops()));
+    connect(m_scene, SIGNAL(toggleShade()), SLOT(toggleShade()));
+    connect(m_scene, SIGNAL(toggleKeepAbove()), SLOT(toggleKeepAbove()));
+    connect(m_scene, SIGNAL(toggleKeepBelow()), SLOT(toggleKeepBelow()));
+    connect(m_scene, SIGNAL(titlePressed(Qt::MouseButton,Qt::MouseButtons)),
+            SLOT(titlePressed(Qt::MouseButton,Qt::MouseButtons)));
+    connect(m_scene, SIGNAL(titleReleased(Qt::MouseButton,Qt::MouseButtons)),
+            SLOT(titleReleased(Qt::MouseButton,Qt::MouseButtons)));
+    connect(m_scene, SIGNAL(titleDoubleClicked()), SLOT(titlebarDblClickOperation()));
+    connect(m_scene, SIGNAL(titleMouseMoved(Qt::MouseButton,Qt::MouseButtons)), 
+            SLOT(titleMouseMoved(Qt::MouseButton,Qt::MouseButtons)));
+    connect(m_scene, SIGNAL(wheelEvent(int)), SLOT(titlebarMouseWheelOperation(int)));
+    connect(this, SIGNAL(keepAboveChanged(bool)), SLOT(keepAboveChanged(bool)));
+    connect(this, SIGNAL(keepBelowChanged(bool)), SLOT(keepBelowChanged(bool)));
 }
 
 void AuroraeClient::init()
 {
-    KCommonDecoration::init();
+    // HACK: we need to add the GraphicsView as a child widget to a normal widget
+    // the GraphicsView eats the mouse release event and by that kwin core starts to move
+    // the decoration each time the decoration is clicked
+    // therefore we use two widgets and inject an own mouse release event to the parent widget
+    // when the graphics view eats a mouse event
+    createMainWidget();
+    widget()->setAttribute(Qt::WA_TranslucentBackground);
+    widget()->setAttribute(Qt::WA_NoSystemBackground);
+    m_view = new QGraphicsView(m_scene, widget());
+    m_view->setAttribute(Qt::WA_TranslucentBackground);
+    m_view->setFrameShape(QFrame::NoFrame);
+    QPalette pal = m_view->palette();
+    pal.setColor(m_view->backgroundRole(), Qt::transparent);
+    m_view->setPalette(pal);
+    QPalette pal2 = widget()->palette();
+    pal2.setColor(widget()->backgroundRole(), Qt::transparent);
+    widget()->setPalette(pal2);
+    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // scene initialisation
+    m_scene->setActive(isActive(), false);
+    m_scene->setIcon(icon());
+    m_scene->setAllDesktops(isOnAllDesktops());
+    m_scene->setMaximizeMode(options()->moveResizeMaximizedWindows() ? MaximizeRestore : maximizeMode());
+    m_scene->setShade(isShade());
+    m_scene->setKeepAbove(keepAbove());
+    m_scene->setKeepBelow(keepBelow());
+    m_scene->setCaption(caption());
+    AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
 }
 
-void AuroraeClient::reset(unsigned long changed)
+void AuroraeClient::activeChange()
 {
-    if (changed & SettingCompositing) {
-        updateWindowShape();
+    if (m_scene->isActive() != isActive()) {
+        m_scene->setActive(isActive());
     }
-    widget()->update();
-
-    KCommonDecoration::reset(changed);
-}
-
-QString AuroraeClient::visibleName() const
-{
-    return i18n("Aurorae Theme Engine");
-}
-
-QString AuroraeClient::defaultButtonsLeft() const
-{
-    return AuroraeFactory::instance()->themeConfig().defaultButtonsLeft();
-}
-
-QString AuroraeClient::defaultButtonsRight() const
-{
-    return AuroraeFactory::instance()->themeConfig().defaultButtonsRight();
-}
-
-bool AuroraeClient::decorationBehaviour(DecorationBehaviour behavior) const
-{
-    switch (behavior) {
-    case DB_MenuClose:
-        return true; // Close on double click
-
-    case DB_WindowMask:
-    case DB_ButtonHide:
-        return false;
-    default:
-        return false;
-    }
-}
-
-int AuroraeClient::layoutMetric(LayoutMetric lm, bool respectWindowState,
-                                   const KCommonDecorationButton *button) const
-{
-    if (!AuroraeFactory::instance()->isValid()) {
-        return KCommonDecoration::layoutMetric(lm, respectWindowState, button);
-    }
-    bool maximized = maximizeMode() == MaximizeFull &&
-                     !options()->moveResizeMaximizedWindows();
-    const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
-    qreal left, top, right, bottom;
-    AuroraeFactory::instance()->frame()->getMargins(left, top, right, bottom);
-    int borderLeft, borderRight, borderBottom;;
-    switch (KDecoration::options()->preferredBorderSize(AuroraeFactory::instance())) {
-    case BorderTiny:
-        if (compositingActive()) {
-            borderLeft = qMin(0, (int)left - conf.borderLeft() - conf.paddingLeft());
-            borderRight = qMin(0, (int)right - conf.borderRight() - conf.paddingRight());
-            borderBottom = qMin(0, (int)bottom - conf.borderBottom() - conf.paddingBottom());
-        } else {
-            borderLeft = qMin(0, (int)left - conf.borderLeft());
-            borderRight = qMin(0, (int)right - conf.borderRight());
-            borderBottom = qMin(0, (int)bottom - conf.borderBottom());
-        }
-        break;
-    case BorderLarge:
-        borderLeft = borderRight = borderBottom = 4;
-        break;
-    case BorderVeryLarge:
-        borderLeft = borderRight = borderBottom = 8;
-        break;
-    case BorderHuge:
-        borderLeft = borderRight = borderBottom = 12;
-        break;
-    case BorderVeryHuge:
-        borderLeft = borderRight = borderBottom = 23;
-        break;
-    case BorderOversized:
-        borderLeft = borderRight = borderBottom = 36;
-        break;
-    case BorderNormal:
-    default:
-        borderLeft = borderRight = borderBottom =  0;
-    }
-    switch (lm) {
-    case LM_BorderLeft:
-        return maximized && respectWindowState ? 0 : conf.borderLeft() + borderLeft;
-    case LM_BorderRight:
-        return maximized && respectWindowState ? 0 : conf.borderRight() + borderRight;
-    case LM_BorderBottom:
-        return maximized && respectWindowState ? 0 : conf.borderBottom() + borderBottom;
-
-    case LM_OuterPaddingLeft:
-        return conf.paddingLeft();
-    case LM_OuterPaddingRight:
-        return conf.paddingRight();
-    case LM_OuterPaddingTop:
-        return conf.paddingTop();
-    case LM_OuterPaddingBottom:
-        return conf.paddingBottom();
-
-    case LM_TitleEdgeLeft:
-        return maximized && respectWindowState ? conf.titleEdgeLeftMaximized() : conf.titleEdgeLeft();
-    case LM_TitleEdgeRight:
-        return maximized && respectWindowState ? conf.titleEdgeRightMaximized() : conf.titleBorderRight();
-    case LM_TitleEdgeTop:
-        return maximized && respectWindowState ? conf.titleEdgeTopMaximized() : conf.titleEdgeTop();
-    case LM_TitleEdgeBottom:
-        return maximized && respectWindowState ? conf.titleEdgeBottomMaximized() : conf.titleEdgeBottom();
-
-    case LM_ButtonMarginTop:
-        return conf.buttonMarginTop();
-
-    case LM_TitleBorderLeft:
-        return conf.titleBorderLeft();
-    case LM_TitleBorderRight:
-        return conf.titleBorderRight();
-    case LM_TitleHeight:
-        return conf.titleHeight();
-
-    case LM_ButtonWidth:
-        switch (button->type()) {
-        case MinButton:
-            return conf.buttonWidthMinimize();
-        case MaxButton:
-            return conf.buttonWidthMaximizeRestore();
-        case CloseButton:
-            return conf.buttonWidthClose();
-        case OnAllDesktopsButton:
-            return conf.buttonWidthAllDesktops();
-        case AboveButton:
-            return conf.buttonWidthKeepAbove();
-        case BelowButton:
-            return conf.buttonWidthKeepBelow();
-        case ShadeButton:
-            return conf.buttonWidthShade();
-        case MenuButton:
-            return conf.buttonWidthMenu();
-        case HelpButton:
-            return conf.buttonWidthHelp();
-        default:
-            return conf.buttonWidth();
-        }
-    case LM_ButtonHeight:
-        return conf.buttonHeight();
-    case LM_ButtonSpacing:
-        return conf.buttonSpacing();
-    case LM_ExplicitButtonSpacer:
-        return conf.explicitButtonSpacer();
-
-    default:
-        return KCommonDecoration::layoutMetric(lm, respectWindowState, button);
-    }
-}
-
-KCommonDecorationButton *AuroraeClient::createButton(ButtonType type)
-{
-    AuroraeFactory *factory = AuroraeFactory::instance();
-    switch (type) {
-    case MenuButton:
-        return new AuroraeButton(type, this);
-    case MinButton:
-        if (factory->hasButton("minimize")) {
-            return new AuroraeButton(type, this);
-        } else {
-            return NULL;
-        }
-    case MaxButton:
-        if (factory->hasButton("maximize") || factory->hasButton("restore")) {
-            return new AuroraeButton(type, this);
-        } else {
-            return NULL;
-        }
-    case CloseButton:
-        if (factory->hasButton("close")) {
-            return new AuroraeButton(type, this);
-        } else {
-            return NULL;
-        }
-    case OnAllDesktopsButton:
-        if (factory->hasButton("alldesktops")) {
-            return new AuroraeButton(type, this);
-        } else {
-            return NULL;
-        }
-    case HelpButton:
-        if (factory->hasButton("help")) {
-            return new AuroraeButton(type, this);
-        } else {
-            return NULL;
-        }
-    case AboveButton:
-        if (factory->hasButton("keepabove")) {
-            return new AuroraeButton(type, this);
-        } else {
-            return NULL;
-        }
-    case BelowButton:
-        if (factory->hasButton("keepbelow")) {
-            return new AuroraeButton(type, this);
-        } else {
-            return NULL;
-        }
-    case ShadeButton:
-        if (factory->hasButton("shade")) {
-            return new AuroraeButton(type, this);
-        } else {
-            return NULL;
-        }
-    default:
-        return NULL;
-    }
-}
-
-void AuroraeClient::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event);
-    if (isPreview() || !AuroraeFactory::instance()->isValid()) {
-        return;
-    }
-    bool maximized = maximizeMode() == MaximizeFull &&
-                     !options()->moveResizeMaximizedWindows();
-
-    QPainter painter(widget());
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-
-    const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
-    Plasma::FrameSvg *frame = AuroraeFactory::instance()->frame();
-
-    frame->setElementPrefix("decoration");
-    if (!isActive() && frame->hasElementPrefix("decoration-inactive")) {
-        frame->setElementPrefix("decoration-inactive");
-    }
-    if (!compositingActive() && frame->hasElementPrefix("decoration-opaque")) {
-        frame->setElementPrefix("decoration-opaque");
-        if (!isActive() && frame->hasElementPrefix("decoration-opaque-inactive")) {
-            frame->setElementPrefix("decoration-opaque-inactive");
-        }
-    }
-    if (maximized) {
-        if (frame->hasElementPrefix("decoration-maximized")) {
-            frame->setElementPrefix("decoration-maximized");
-        }
-        if (!isActive() && frame->hasElementPrefix("decoration-maximized-inactive")) {
-            frame->setElementPrefix("decoration-maximized-inactive");
-        }
-        if (!compositingActive() && frame->hasElementPrefix("decoration-maximized-opaque")) {
-            frame->setElementPrefix("decoration-maximized-opaque");
-            if (!isActive() && frame->hasElementPrefix("decoration-maximized-opaque-inactive")) {
-                frame->setElementPrefix("decoration-maximized-opaque-inactive");
-            }
-        }
-    }
-
-    // restrict painting on the decoration - no need to paint behind the window
-    int left, right, top, bottom;
-    decoration()->borders(left, right, top, bottom);
-    if (!compositingActive() || (compositingActive() && !transparentRect().isNull())) {
-        // only clip when compositing is not active and we don't extend into the client
-        painter.setClipping(true);
-        painter.setClipRect(0, 0,
-                            left + conf.paddingLeft(),
-                            height() + conf.paddingTop() + conf.paddingBottom(),
-                            Qt::ReplaceClip);
-        painter.setClipRect(0, 0,
-                            width() + conf.paddingLeft() + conf.paddingRight(),
-                            top + conf.paddingTop(),
-                            Qt::UniteClip);
-        painter.setClipRect(width() - right + conf.paddingLeft(), 0,
-                            right + conf.paddingRight(),
-                            height() + conf.paddingTop() + conf.paddingBottom(),
-                            Qt::UniteClip);
-        painter.setClipRect(0, height() - bottom + conf.paddingTop(),
-                            width() + conf.paddingLeft() + conf.paddingRight(),
-                            bottom + conf.paddingBottom(),
-                            Qt::UniteClip);
-    }
-
-    // top
-    if (maximized) {
-        frame->setEnabledBorders(Plasma::FrameSvg::NoBorder);
-    } else {
-        frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
-    }
-    QRectF rect = QRectF(0.0, 0.0, widget()->width(), widget()->height());
-    if (maximized) {
-        rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
-                      widget()->width() - conf.paddingRight(),
-                      widget()->height() - conf.paddingBottom());
-        if (transparentRect().isNull()) {
-            rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
-                          widget()->width() - conf.paddingRight(),
-                          layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeBottom));
-        }
-    }
-    QRectF sourceRect = rect;
-    if (!compositingActive()) {
-        if (frame->hasElementPrefix("decoration-opaque")) {
-            rect = QRectF(conf.paddingLeft(), conf.paddingTop(),
-                          widget()->width()-conf.paddingRight()-conf.paddingLeft(),
-                          widget()->height()-conf.paddingBottom()-conf.paddingTop());
-            sourceRect = QRectF(0.0, 0.0, rect.width(), rect.height());
-        }
-        else {
-            rect = QRectF(conf.paddingLeft(), conf.paddingTop(), widget()->width(), widget()->height());
-            sourceRect = rect;
-        }
-    }
-    frame->resizeFrame(rect.size());
-
-    // animation
-    if (isAnimating() && frame->hasElementPrefix("decoration-inactive")) {
-        QPixmap target = frame->framePixmap();
-        frame->setElementPrefix("decoration-inactive");
-        if (!isActive()) {
-            frame->setElementPrefix("decoration");
-        }
-        if (!compositingActive() && frame->hasElementPrefix("decoration-opaque-inactive")) {
-            frame->setElementPrefix("decoration-opaque-inactive");
-            if (!isActive()) {
-                frame->setElementPrefix("decoration-opaque");
-            }
-        }
-        if (maximized && frame->hasElementPrefix("decoration-maximized-inactive")) {
-            frame->setElementPrefix("decoration-maximized-inactive");
-            if (!isActive()) {
-                frame->setElementPrefix("decoration-maximized");
-            }
-            if (!compositingActive() && frame->hasElementPrefix("decoration-maximized-opaque-inactive")) {
-                frame->setElementPrefix("decoration-maximized-opaque-inactive");
-                if (!isActive()) {
-                    frame->setElementPrefix("decoration-maximized-opaque");
-                }
-            }
-        } else if (maximized && frame->hasElementPrefix("decoration-maximized")) {
-            frame->setElementPrefix("decoration-maximized");
-        }
-        frame->resizeFrame(rect.size());
-        QPixmap result = Plasma::PaintUtils::transition(frame->framePixmap(),
-                                                        target, m_animationProgress);
-        painter.drawPixmap(rect.toRect(), result, sourceRect);
-    } else {
-        frame->paintFrame(&painter, rect, sourceRect);
-    }
-
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    if (isAnimating()) {
-        QPixmap result;
-        if (isActive()) {
-            result = Plasma::PaintUtils::transition(m_inactiveText, m_activeText, m_animationProgress);
-        } else {
-            result = Plasma::PaintUtils::transition(m_activeText, m_inactiveText, m_animationProgress);
-        }
-        painter.drawPixmap(0, 0, result);
-    } else {
-        if (isActive()) {
-            painter.drawPixmap(0, 0, m_activeText);
-        } else {
-            painter.drawPixmap(0, 0, m_inactiveText);
-            }
-    }
-}
-
-void AuroraeClient::generateTextPixmap(QPixmap& pixmap, bool active)
-{
-    QPainter painter(&pixmap);
-    pixmap.fill(Qt::transparent);
-    if (!AuroraeFactory::instance()->isValid()) {
-        return;
-    }
-    const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
-    painter.setFont(options()->font(active));
-    if ((active && conf.haloActive()) || (!active && conf.haloInactive())) {
-        QRectF haloRect = painter.fontMetrics().boundingRect(titleRect(),
-            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
-            caption());
-        if (haloRect.width() > titleRect().width()) {
-            haloRect.setWidth(titleRect().width());
-        }
-        Plasma::PaintUtils::drawHalo(&painter, haloRect);
-    }
-    if (conf.useTextShadow()) {
-        // shadow code is inspired by Qt FAQ: How can I draw shadows behind text?
-        // see http://www.qtsoftware.com/developer/faqs/faq.2007-07-27.3052836051
-        const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
-        painter.save();
-        if (active) {
-            painter.setPen(conf.activeTextShadowColor());
-        }
-        else {
-            painter.setPen(conf.inactiveTextShadowColor());
-        }
-        int dx = conf.textShadowOffsetX();
-        int dy = conf.textShadowOffsetY();
-        painter.setOpacity(0.5);
-        painter.drawText(pixmap.rect().translated(dx, dy),
-                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
-                            caption());
-        painter.setOpacity(0.2);
-        painter.drawText(pixmap.rect().translated(dx+1, dy),
-                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
-                            caption());
-        painter.drawText(pixmap.rect().translated(dx-1, dy),
-                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
-                            caption());
-        painter.drawText(pixmap.rect().translated(dx, dy+1),
-                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
-                            caption());
-        painter.drawText(pixmap.rect().translated(dx, dy-1),
-                            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
-                            caption());
-        painter.restore();
-    }
-    if (active) {
-        painter.setPen(conf.activeTextColor());
-    } else {
-        painter.setPen(conf.inactiveTextColor());
-    }
-    painter.drawText(titleRect(), conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
-                      caption());
-    painter.end();
 }
 
 void AuroraeClient::captionChange()
 {
-    generateTextPixmap(m_activeText, true);
-    generateTextPixmap(m_inactiveText, false);
-    KCommonDecoration::captionChange();
+    m_scene->setCaption(caption());
+}
+
+void AuroraeClient::iconChange()
+{
+    m_scene->setIcon(icon());
+}
+
+void AuroraeClient::desktopChange()
+{
+    m_scene->setAllDesktops(isOnAllDesktops());
+}
+
+void AuroraeClient::maximizeChange()
+{
+    if (!options()->moveResizeMaximizedWindows()) {
+        m_scene->setMaximizeMode(maximizeMode());
+    }
+}
+
+void AuroraeClient::resize(const QSize &s)
+{
+    m_scene->setSceneRect(QRectF(QPoint(0, 0), s));
+    m_scene->updateLayout();
+    m_view->resize(s);
+    widget()->resize(s);
+    updateWindowShape();
+}
+
+void AuroraeClient::shadeChange()
+{
+    m_scene->setShade(isShade());
+}
+
+void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
+{
+    const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
+    AuroraeFactory::instance()->theme()->borders(left, top, right, bottom, maximized);
+}
+
+void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
+{
+    AuroraeFactory::instance()->theme()->padding(left, top, right, bottom);
+}
+
+QSize AuroraeClient::minimumSize() const
+{
+    return widget()->minimumSize();
+}
+
+KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) const
+{
+    // based on the code from deKorator
+    int pos = PositionCenter;
+    if (isShade()) {
+        return Position(pos);
+    }
+
+    int borderLeft, borderTop, borderRight, borderBottom;
+    borders(borderLeft, borderRight, borderTop, borderBottom);
+    int paddingLeft, paddingTop, paddingRight, paddingBottom;
+    padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
+    if (point.x() >= (width() -  borderRight)) {
+        pos |= PositionRight;
+    } else if (point.x() <= borderLeft + paddingLeft) {
+        pos |= PositionLeft;
+    }
+
+    const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
+    int titleEdgeLeft, titleEdgeRight, titleEdgeTop, titleEdgeBottom;
+    AuroraeFactory::instance()->theme()->titleEdges(titleEdgeLeft, titleEdgeTop, titleEdgeRight, titleEdgeBottom, maximized);
+    if (point.y() >= height() - borderBottom) {
+        pos |= PositionBottom;
+    } else if (point.y() <= titleEdgeTop + paddingTop ) {
+        pos |= PositionTop;
+    }
+
+    return Position(pos);
+}
+
+void AuroraeClient::reset(long unsigned int changed)
+{
+    if (changed & SettingCompositing) {
+        updateWindowShape();
+        AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
+    }
+    if (changed & SettingButtons) {
+        m_scene->setButtons(options()->customButtonPositions() ? options()->titleButtonsLeft() : AuroraeFactory::instance()->theme()->defaultButtonsLeft(),
+                            options()->customButtonPositions() ? options()->titleButtonsRight() : AuroraeFactory::instance()->theme()->defaultButtonsRight());
+    }
+    KDecoration::reset(changed);
+}
+
+void AuroraeClient::menuClicked()
+{
+    showWindowMenu(QCursor::pos());
+}
+
+void AuroraeClient::toggleShade()
+{
+    setShade(!isShade());
+}
+
+void AuroraeClient::keepAboveChanged(bool above)
+{
+    if (above && m_scene->isKeepBelow()) {
+        m_scene->setKeepBelow(false);
+    }
+    m_scene->setKeepAbove(above);
+}
+
+void AuroraeClient::keepBelowChanged(bool below)
+{
+    if (below && m_scene->isKeepAbove()) {
+        m_scene->setKeepAbove(false);
+    }
+    m_scene->setKeepBelow(below);
+}
+
+void AuroraeClient::toggleKeepAbove()
+{
+    setKeepAbove(!keepAbove());
+}
+
+void AuroraeClient::toggleKeepBelow()
+{
+    setKeepBelow(!keepBelow());
 }
 
 void AuroraeClient::updateWindowShape()
@@ -958,70 +326,54 @@ void AuroraeClient::updateWindowShape()
     int w=widget()->width();
     int h=widget()->height();
 
-    if (maximized || compositingActive() || !AuroraeFactory::instance()->isValid()) {
+    if (maximized || compositingActive()) {
         QRegion mask(0,0,w,h);
         setMask(mask);
         return;
     }
 
-    const ThemeConfig &conf = AuroraeFactory::instance()->themeConfig();
-    Plasma::FrameSvg *deco = AuroraeFactory::instance()->frame();
+    int pl, pt, pr, pb;
+    padding(pl, pr, pt, pb);
+    Plasma::FrameSvg *deco = AuroraeFactory::instance()->theme()->decoration();
     if (!deco->hasElementPrefix("decoration-opaque")) {
         // opaque element is missing: set generic mask
-        w = w - conf.paddingLeft() - conf.paddingRight();
-        h = h - conf.paddingTop() - conf.paddingBottom();
-        QRegion mask(conf.paddingLeft(),conf.paddingTop(),w,h);
+        w = w - pl - pr;
+        h = h - pt - pb;
+        QRegion mask(pl, pt, w, h);
         setMask(mask);
         return;
     }
     deco->setElementPrefix("decoration-opaque");
-    deco->resizeFrame(QSize(w-conf.paddingLeft()-conf.paddingRight(),
-                                h-conf.paddingTop()-conf.paddingBottom()));
-    QRegion mask = deco->mask().translated(conf.paddingLeft(), conf.paddingTop());
+    deco->resizeFrame(QSize(w-pl-pr, h-pt-pb));
+    QRegion mask = deco->mask().translated(pl, pt);
     setMask(mask);
 }
 
-void AuroraeClient::activeChange()
+void AuroraeClient::titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
-    if (isAnimating()) {
-        m_animation->stop();
-    }
-    m_animationProgress = 0.0;
-    int time = AuroraeFactory::instance()->themeConfig().animationTime();
-    if (time != 0) {
-        m_animation->setDuration(time);
-        m_animation->setEasingCurve(QEasingCurve::InOutQuad);
-        m_animation->setStartValue(0.0);
-        m_animation->setEndValue(1.0);
-        m_animation->start();
-    }
-    KCommonDecoration::activeChange();
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, widget()->mapFromGlobal(QCursor::pos()),
+                                         QCursor::pos(), button, buttons, Qt::NoModifier);
+    processMousePressEvent(event);
+    delete event;
+    event = 0;
 }
 
-void AuroraeClient::resize(const QSize& s)
+void AuroraeClient::titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
-    KCommonDecoration::resize(s);
-    m_activeText = QPixmap(QSize(widget()->width(), titleRect().height() + titleRect().y()));
-    m_activeText.fill(Qt::transparent);
-    m_inactiveText = QPixmap(QSize(widget()->width(), titleRect().height() + titleRect().y()));
-    m_inactiveText.fill(Qt::transparent);
-    captionChange();
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, widget()->mapFromGlobal(QCursor::pos()),
+                                         QCursor::pos(), button, buttons, Qt::NoModifier);
+    QApplication::sendEvent(widget(), event);
+    delete event;
+    event = 0;
 }
 
-bool AuroraeClient::isAnimating() const
+void AuroraeClient::titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
-    return (m_animation->state() == QAbstractAnimation::Running);
-}
-
-qreal AuroraeClient::animationProgress() const
-{
-    return m_animationProgress;
-}
-
-void AuroraeClient::setAnimationProgress(qreal progress)
-{
-    m_animationProgress = progress;
-    widget()->update();
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseMove, widget()->mapFromGlobal(QCursor::pos()),
+                                         QCursor::pos(), button, buttons, Qt::NoModifier);
+    QApplication::sendEvent(widget(), event);
+    delete event;
+    event = 0;
 }
 
 } // namespace Aurorae
