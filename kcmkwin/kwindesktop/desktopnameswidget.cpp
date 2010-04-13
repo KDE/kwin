@@ -80,6 +80,10 @@ void DesktopNamesWidget::numberChanged( int number )
                 m_nameLabels << label;
 
                 setDefaultName( desktop +1 );
+                if( desktop > 1 )
+                    {
+                    setTabOrder( m_nameInputs[desktop - 1], m_nameInputs[desktop] );
+                    }
                 connect( edit, SIGNAL(textChanged(const QString&)), SIGNAL( changed() ));
                 }
             }
