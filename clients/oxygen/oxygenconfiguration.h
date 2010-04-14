@@ -46,7 +46,7 @@ namespace OxygenConfig
   static const QString ANIMATIONS_DURATION = "AnimationsDuration";
   static const QString TABS_ENABLED = "TabsEnabled";
   static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
-
+  static const QString SHADOW_CACHE_MODE = "ShadowCacheMode";
 }
 
 namespace Oxygen
@@ -172,6 +172,12 @@ namespace Oxygen
 
     //!@name cache mode
     //@{
+
+    static QString shadowCacheModeName( ShadowCacheMode, bool translated );
+    static ShadowCacheMode shadowCacheMode( QString, bool translated );
+
+    QString shadowCacheModeName( bool translated ) const
+    { return shadowCacheModeName( shadowCacheMode(), translated ); }
 
     void setShadowCacheMode( ShadowCacheMode mode )
     { shadowCacheMode_ = mode; }

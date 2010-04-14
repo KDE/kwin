@@ -132,6 +132,10 @@ namespace Oxygen
       OxygenConfig::NARROW_BUTTON_SPACING,
       defaultConfiguration.useNarrowButtonSpacing() ) );
 
+    // shadow cache mode
+    setShadowCacheMode( shadowCacheMode( group.readEntry(
+        OxygenConfig::SHADOW_CACHE_MODE, defaultConfiguration.shadowCacheModeName( false ) ), false ) );
+
   }
 
   //__________________________________________________
@@ -154,6 +158,7 @@ namespace Oxygen
     group.writeEntry( OxygenConfig::ANIMATIONS_DURATION, animationsDuration() );
     group.writeEntry( OxygenConfig::TABS_ENABLED, tabsEnabled() );
     group.writeEntry( OxygenConfig::NARROW_BUTTON_SPACING, useNarrowButtonSpacing() );
+    group.writeEntry( OxygenConfig::SHADOW_CACHE_MODE, shadowCacheModeName( false ) );
 
   }
 
@@ -327,6 +332,31 @@ namespace Oxygen
       tabsEnabled() == other.tabsEnabled() &&
       useNarrowButtonSpacing() == other.useNarrowButtonSpacing();
 
+  }
+
+  //__________________________________________________
+  QString OxygenConfiguration::shadowCacheModeName( ShadowCacheMode value, bool translated )
+  {
+    QString out;
+    switch( value )
+    {
+      case CacheDisabled: out = translated ? i18n( "Disabled" ):"Disabled"; break;
+      case CacheVariable: out = translated ? i18n( "Variable" ):"Variable"; break;
+      case CacheMaximum: out = translated ? i18n( "Maximum" ):"Maximum"; break;
+      default: return OxygenConfiguration().shadowCacheModeName( translated );
+    }
+
+    return out;
+
+  }
+
+  //__________________________________________________
+  OxygenConfiguration::ShadowCacheMode OxygenConfiguration::shadowCacheMode( QString value, bool translated )
+  {
+    if( value == shadowCacheModeName( CacheDisabled, translated ) ) return CacheDisabled;
+    else if( value == shadowCacheModeName( CacheVariable, translated ) ) return CacheVariable;
+    else if( value == shadowCacheModeName( CacheMaximum, translated ) ) return CacheMaximum;
+    else return OxygenConfiguration().shadowCacheMode();
   }
 
 }
