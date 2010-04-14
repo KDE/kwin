@@ -93,6 +93,20 @@ namespace Oxygen
       SizeGripWhenNeeded
     };
 
+    //! cache mode
+    enum ShadowCacheMode
+    {
+        // no shadow cache
+        CacheDisabled,
+
+        // shadow cache depends
+        // on animation duration
+        CacheVariable,
+
+        // shadow cache has maximum size
+        CacheMaximum
+    };
+
     //! default constructor
     OxygenConfiguration( void );
 
@@ -155,6 +169,17 @@ namespace Oxygen
     { useNarrowButtonSpacing_ = value; }
 
     //@}
+
+    //!@name cache mode
+    //@{
+
+    void setShadowCacheMode( ShadowCacheMode mode )
+    { shadowCacheMode_ = mode; }
+
+    ShadowCacheMode shadowCacheMode( void ) const
+    { return shadowCacheMode_; }
+
+    //@]
 
     //!@name frame border
     //@{
@@ -338,6 +363,9 @@ namespace Oxygen
 
     //! narrow button spacing
     bool useNarrowButtonSpacing_;
+
+    //! cache mode
+    ShadowCacheMode shadowCacheMode_;
 
   };
 

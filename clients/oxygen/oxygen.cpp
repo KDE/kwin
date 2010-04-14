@@ -48,7 +48,7 @@ namespace Oxygen
   OxygenFactory::OxygenFactory():
     initialized_( false ),
     helper_( "oxygenDeco" ),
-    shadowCache_( helper_, maxAnimationIndex)
+    shadowCache_( helper_ )
   {
     readConfig();
     setInitialized( true );
@@ -107,6 +107,32 @@ namespace Oxygen
     {
       setDefaultConfiguration( configuration );
       changed = true;
+    }
+
+    // initialize shadow cache
+    switch( defaultConfiguration().shadowCacheMode() )
+    {
+        case OxygenConfiguration::CacheDisabled:
+        {
+            shadowCache_.setEnabled( false );
+            break;
+        }
+
+        default:
+        case OxygenConfiguration::CacheVariable:
+        {
+            shadowCache_.setEnabled( true );
+            shadowCache_.setMaxIndex( qMin( 256, int( 120*defaultConfiguration().animationsDuration()/1000 ) ) );
+            break;
+        }
+
+        case OxygenConfiguration::CacheMaximum:
+        {
+            shadowCache_.setEnabled( true );
+            shadowCache_.setMaxIndex( 256 );
+            break;
+        }
+
     }
 
     // read exceptionsreadConfig

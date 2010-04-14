@@ -68,8 +68,6 @@ namespace Oxygen
 
   enum
   {
-    //! maximum index/frame used for animations
-    maxAnimationIndex = 256,
 
     //! this is the top title bar edge
     TFRAMESIZE = 3,

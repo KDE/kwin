@@ -32,19 +32,21 @@
 #include <cassert>
 #include <KColorUtils>
 #include <QtGui/QPainter>
+#include <QtCore/QTextStream>
 
 namespace Oxygen
 {
 
   //_______________________________________________________
-  OxygenShadowCache::OxygenShadowCache( OxygenDecoHelper& helper, int maxIndex ):
+  OxygenShadowCache::OxygenShadowCache( OxygenDecoHelper& helper ):
     helper_( helper ),
-    maxIndex_( maxIndex ),
     activeShadowConfiguration_( OxygenShadowConfiguration( QPalette::Active ) ),
     inactiveShadowConfiguration_( OxygenShadowConfiguration( QPalette::Inactive ) )
   {
-    shadowCache_.setMaxCost( 1<<6 );
-    animatedShadowCache_.setMaxCost( maxIndex_<<6 );
+
+    setEnabled( true );
+    setMaxIndex( 256 );
+
   }
 
   //_______________________________________________________
@@ -81,9 +83,10 @@ namespace Oxygen
   }
 
   //_______________________________________________________
-  TileSet* OxygenShadowCache::tileSet( const OxygenClient* client, int index )
+  TileSet* OxygenShadowCache::tileSet( const OxygenClient* client, qreal opacity )
   {
 
+    int index( opacity*maxIndex_ );
     assert( index <= maxIndex_ );
 
     // construct key
@@ -96,7 +99,6 @@ namespace Oxygen
 
     // create shadow and tileset otherwise
     qreal size( shadowSize() );
-    qreal opacity( qreal(index)/qreal(maxIndex_) );
 
     QPixmap shadow( size*2, size*2 );
     shadow.fill( Qt::transparent );

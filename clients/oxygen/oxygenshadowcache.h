@@ -44,11 +44,47 @@ namespace Oxygen
     public:
 
     //! constructor
-    OxygenShadowCache( OxygenDecoHelper& helper, int maxIndex );
+    OxygenShadowCache( OxygenDecoHelper& helper );
 
     //! destructor
     virtual ~OxygenShadowCache( void )
     {}
+
+    //! cache size
+    void setEnabled( bool enabled )
+    {
+        enabled_ = enabled;
+        if( enabled )
+        {
+
+            shadowCache_.setMaxCost( 1<<6 );
+            animatedShadowCache_.setMaxCost( maxIndex_<<6 );
+
+        } else {
+
+            shadowCache_.setMaxCost( 1 );
+            animatedShadowCache_.setMaxCost( 1 );
+
+        }
+    }
+
+    //! max animation index
+    int maxIndex( void ) const
+    { return maxIndex_; }
+
+    //! max animation index
+    void setMaxIndex( int value )
+    {
+        maxIndex_ = value;
+        if( enabled_ )
+        {
+
+            shadowCache_.setMaxCost( 1<<6 );
+            animatedShadowCache_.setMaxCost( maxIndex_<<6 );
+
+        }
+
+    }
 
     //! invalidate caches
     void invalidateCaches( void )
@@ -86,8 +122,8 @@ namespace Oxygen
     //! get shadow matching client
     TileSet* tileSet( const OxygenClient* );
 
-    //! get shadow matching client and animation index
-    TileSet* tileSet( const OxygenClient*, int );
+    //! get shadow matching client and opacity
+    TileSet* tileSet( const OxygenClient*, qreal );
 
     //! Key class to be used into QCache
     /*! class is entirely inline for optimization */
@@ -167,6 +203,9 @@ namespace Oxygen
 
     //! helper
     OxygenDecoHelper& helper_;
+
+    //! caching enable state
+    bool enabled_;
 
     //! max index
     /*! it is used to set caches max cost, and calculate animation opacity */

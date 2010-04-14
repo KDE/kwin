@@ -1345,8 +1345,7 @@ namespace Oxygen
       if( configuration().useOxygenShadows() && glowIsAnimated() && !isForcedActive() )
       {
 
-        int frame = maxAnimationIndex*glowIntensity();
-        tileSet = shadowCache().tileSet( this, frame );
+        tileSet = shadowCache().tileSet( this, glowIntensity() );
 
       } else tileSet = shadowCache().tileSet( this );
 

@@ -46,7 +46,8 @@ namespace Oxygen
     animateTitleChange_( true ),
     animationsDuration_( 150 ),
     tabsEnabled_( true ),
-    useNarrowButtonSpacing_( false )
+    useNarrowButtonSpacing_( false ),
+    shadowCacheMode_( CacheVariable )
   {}
 
   //__________________________________________________
