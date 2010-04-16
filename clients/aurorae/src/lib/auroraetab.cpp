@@ -81,8 +81,18 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     AuroraeScene *s = static_cast<AuroraeScene*>(scene());
     const bool active = s->isActive();
     const ThemeConfig &conf = m_theme->themeConfig();
+    Qt::Alignment align = conf.alignment();
+    if (align != Qt::AlignCenter && QApplication::layoutDirection() == Qt::RightToLeft) {
+        // have to swap the alignment to be consistent with other kwin decos.
+        // Decorations do not change in RTL mode
+        if (align == Qt::AlignLeft) {
+            align = Qt::AlignRight;
+        } else {
+            align = Qt::AlignLeft;
+        }
+    }
     const QRect textRect = painter->fontMetrics().boundingRect(rect().toRect(),
-            conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine,
+            align | conf.verticalAlignment() | Qt::TextSingleLine,
             m_caption);
     if ((active && conf.haloActive()) ||
         (!active && conf.haloInactive())) {
@@ -108,7 +118,7 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         }
     }
     p.setPen(color);
-    p.drawText(pix.rect(), conf.alignment() | conf.verticalAlignment() | Qt::TextSingleLine, m_caption);
+    p.drawText(pix.rect(), align | conf.verticalAlignment() | Qt::TextSingleLine, m_caption);
     if (textRect.width() > rect().width()) {
         // Fade out effect
         // based on fadeout of tasks applet in Plasma/desktop/applets/tasks/abstracttaskitem.cpp by

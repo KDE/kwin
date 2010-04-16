@@ -72,7 +72,7 @@ void AuroraeScene::init()
     QGraphicsLinearLayout *leftButtonsLayout = new QGraphicsLinearLayout;
     leftButtonsLayout->setSpacing(m_theme->themeConfig().buttonSpacing());
     leftButtonsLayout->setContentsMargins(0, 0, 0, 0);
-    initButtons(leftButtonsLayout, m_leftButtonOrder);
+    initButtons(leftButtonsLayout, buttonsToDirection(m_leftButtonOrder));
 
     m_leftButtons = new QGraphicsWidget;
     m_leftButtons->setLayout(leftButtonsLayout);
@@ -82,7 +82,7 @@ void AuroraeScene::init()
     QGraphicsLinearLayout *rightButtonsLayout = new QGraphicsLinearLayout;
     rightButtonsLayout->setSpacing(m_theme->themeConfig().buttonSpacing());
     rightButtonsLayout->setContentsMargins(0, 0, 0, 0);
-    initButtons(rightButtonsLayout, m_rightButtonOrder);
+    initButtons(rightButtonsLayout, buttonsToDirection(m_rightButtonOrder));
 
     m_rightButtons = new QGraphicsWidget;
     m_rightButtons->setLayout(rightButtonsLayout);
@@ -603,5 +603,18 @@ void AuroraeScene::wheelEvent(QGraphicsSceneWheelEvent* event)
     }
 }
 
+QString AuroraeScene::buttonsToDirection(const QString &buttons)
+{
+    QString ret;
+    if (QApplication::layoutDirection() == Qt::RightToLeft) {
+        // Qt swaps the buttons, so we have to swap them to be consistent with other KWin decos
+        foreach (QChar c, buttons) {
+            ret.prepend(c);
+        }
+    } else {
+        ret = buttons;
+    }
+    return ret;
+}
 
 } // namespace

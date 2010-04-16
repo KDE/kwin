@@ -101,6 +101,7 @@ private Q_SLOTS:
 private:
     void init();
     void initButtons(QGraphicsLinearLayout *layout, const QString &buttons) const;
+    QString buttonsToDirection(const QString &buttons);
     AuroraeTheme *m_theme;
     QGraphicsWidget *m_leftButtons;
     QGraphicsWidget *m_rightButtons;
