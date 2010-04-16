@@ -29,10 +29,14 @@ class KDesktopFile;
 class KDecorationPlugins;
 class KDecorationPreview;
 
+namespace Aurorae
+{
+class AuroraeTheme;
+class AuroraeScene;
+}
+
 namespace KWin
 {
-
-class AuroraePreview;
 
 class DecorationModelData
 {
@@ -53,7 +57,6 @@ class DecorationModelData
         QString version;
         QString license;
         QString auroraeName;
-        AuroraePreview *aurorae;
         KDecorationDefines::BorderSize borderSize;
 
         static bool less( const DecorationModelData& a, const DecorationModelData& b )
@@ -120,6 +123,8 @@ class DecorationModel : public QAbstractListModel
         bool m_customButtons;
         QString m_leftButtons;
         QString m_rightButtons;
+        Aurorae::AuroraeTheme* m_theme;
+        Aurorae::AuroraeScene* m_scene;
 };
 
 } // namespace KWin

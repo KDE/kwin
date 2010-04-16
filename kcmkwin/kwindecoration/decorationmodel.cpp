@@ -19,15 +19,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "decorationmodel.h"
 #include "preview.h"
-#include "auroraepreview.h"
+#include "auroraetheme.h"
+#include "auroraescene.h"
 // kwin
 #include <kdecorationfactory.h>
 // Qt
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtGui/QApplication>
+#include <QtGui/QPainter>
+#include <QtGui/QStyle>
 // KDE
 #include <KConfigGroup>
 #include <KDesktopFile>
+#include <KIcon>
+#include <KLocale>
 #include <KStandardDirs>
 
 namespace KWin
@@ -40,7 +46,10 @@ DecorationModel::DecorationModel( KSharedConfigPtr config, QObject* parent )
     , m_customButtons( false )
     , m_leftButtons( QString() )
     , m_rightButtons( QString() )
+    , m_theme( new Aurorae::AuroraeTheme( this ) )
+    , m_scene( new Aurorae::AuroraeScene( m_theme, QString(), QString(), true, this ) )
     {
+    m_scene->setIcon( KIcon( "xorg" ) );
     findDecorations();
     }
 
@@ -88,7 +97,6 @@ void DecorationModel::findDecorations()
                         data.name = desktopFile.readName();
                         data.libraryName = libName;
                         data.type = DecorationModelData::NativeDecoration;
-                        data.aurorae = NULL;
                         data.borderSize = KDecorationDefines::BorderNormal;
                         metaData( data, desktopFile );
                         m_decorations.append(data);
@@ -126,7 +134,6 @@ void DecorationModel::findAuroraeThemes()
         data.libraryName = "kwin3_aurorae";
         data.type = DecorationModelData::AuroraeDecoration;
         data.auroraeName = packageName;
-        data.aurorae = new AuroraePreview( name, packageName, themeRoot, this );
         data.borderSize = KDecorationDefines::BorderNormal;
         metaData( data, df );
         m_decorations.append(data);
@@ -245,8 +252,35 @@ void DecorationModel::regeneratePreview( const QModelIndex& index, const QSize& 
             data.preview = m_preview->preview();
             break;
         case DecorationModelData::AuroraeDecoration:
-            data.preview = data.aurorae->preview( size, m_customButtons, m_leftButtons, m_rightButtons );
+            {
+            QPixmap pix( size );
+            pix.fill( Qt::transparent );
+            KConfig conf( "aurorae/themes/" + data.auroraeName + '/' + data.auroraeName + "rc", KConfig::FullConfig, "data" );
+            m_theme->loadTheme( data.auroraeName, conf );
+            m_theme->setBorderSize( data.borderSize );
+            int left, top, right, bottom;
+            m_theme->borders( left, top, right, bottom, false );
+            int padLeft, padRight, padTop, padBottom;
+            m_theme->padding( padLeft, padTop, padRight, padBottom );
+            top = qMin( int( top * .9 ), 30 );
+            int xoffset = qMin( qMax( 10, QApplication::isRightToLeft() ? left : right ), 30 );
+            m_scene->setSceneRect( 0, 0 ,
+                                   size.width() - xoffset - 20 + padLeft + padRight,
+                                   size.height() - top - 20 + padLeft + padRight );
+            m_scene->setActive( false, false );
+            m_scene->setCaption( data.name + " - " + i18n( "Inactive Window" ) );
+            m_scene->setButtons( m_customButtons ? m_leftButtons : m_theme->defaultButtonsLeft(),
+                                 m_customButtons ? m_rightButtons : m_theme->defaultButtonsRight());
+            QPainter painter( &pix );
+            QRect rect = QRectF( QPointF( 10 + xoffset - padLeft, 10 - padTop ), m_scene->sceneRect().size() ).toRect();
+            m_scene->render( &painter, QStyle::visualRect( QApplication::layoutDirection(), pix.rect(), rect ));
+            m_scene->setActive( true, false );
+            m_scene->setCaption( data.name + " - " + i18n( "Active Window" ) );
+            rect = QRectF( QPointF( 10 - padLeft, top + 10 - padTop ), m_scene->sceneRect().size() ).toRect();
+            m_scene->render( &painter, QStyle::visualRect( QApplication::layoutDirection(), pix.rect(), rect ));
+            data.preview = pix;
             break;
+            }
         default:
             // nothing
             break;
