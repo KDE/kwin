@@ -103,12 +103,17 @@ public:
     QString defaultButtonsLeft() const;
     QString defaultButtonsRight() const;
     void setBorderSize(KDecorationDefines::BorderSize size);
+    bool isShowTooltips() const;
 
     // TODO: move to namespace
     static QLatin1String mapButtonToName(AuroraeButtonType type);
 
+public Q_SLOTS:
+    void setShowTooltips(bool show);
+
 Q_SIGNALS:
     void themeChanged();
+    void showTooltipsChanged(bool show);
 
 private:
     const ThemeConfig &themeConfig() const;

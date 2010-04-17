@@ -57,6 +57,7 @@ AuroraeScene::AuroraeScene(Aurorae::AuroraeTheme* theme, const QString& leftButt
 {
     init();
     connect(m_theme, SIGNAL(themeChanged()), SLOT(resetTheme()));
+    connect(m_theme, SIGNAL(showTooltipsChanged(bool)), SLOT(showTooltipsChanged(bool)));
 }
 
 AuroraeScene::~AuroraeScene()
@@ -290,6 +291,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
         switch (button.toAscii()) {
             case 'M': {
                 AuroraeMenuButton *button = new AuroraeMenuButton(m_theme);
+                if (m_theme->isShowTooltips()) {
+                    button->setToolTip(i18n("Menu"));
+                }
                 connect(button, SIGNAL(clicked()), SIGNAL(menuClicked()));
                 connect(button, SIGNAL(doubleClicked()), SIGNAL(menuDblClicked()));
                 layout->addItem(button);
@@ -300,6 +304,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
                     AuroraeButton *button = new AuroraeButton(m_theme, AllDesktopsButton);
                     button->setCheckable(true);
                     button->setChecked(m_allDesktops);
+                    if (m_theme->isShowTooltips()) {
+                        button->setToolTip(m_allDesktops?i18n("Not on all desktops"):i18n("On all desktops"));
+                    }
                     connect(button, SIGNAL(clicked()), SIGNAL(toggleOnAllDesktops()));
                     layout->addItem(button);
                 }
@@ -307,6 +314,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
             case 'H':
                 if (m_contextHelp && m_theme->hasButton(HelpButton)) {
                     AuroraeButton *button = new AuroraeButton(m_theme, HelpButton);
+                    if (m_theme->isShowTooltips()) {
+                        button->setToolTip(i18n("Help"));
+                    }
                     connect(button, SIGNAL(clicked()), SIGNAL(showContextHelp()));
                     layout->addItem(button);
                 }
@@ -314,6 +324,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
             case 'I':
                 if (m_theme->hasButton(MinimizeButton)) {
                     AuroraeButton *button = new AuroraeButton(m_theme, MinimizeButton);
+                    if (m_theme->isShowTooltips()) {
+                        button->setToolTip(i18n("Minimize"));
+                    }
                     connect(button, SIGNAL(clicked()), SIGNAL(minimizeWindow()));
                     layout->addItem(button);
                 }
@@ -322,6 +335,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
                 if (m_theme->hasButton(MaximizeButton) || m_theme->hasButton(RestoreButton)) {
                     AuroraeMaximizeButton *button = new AuroraeMaximizeButton(m_theme);
                     button->setMaximizeMode(m_maximizeMode);
+                    if (m_theme->isShowTooltips()) {
+                        button->setToolTip(m_maximizeMode==KDecorationDefines::MaximizeFull?i18n("Restore"):i18n("Maximize") );
+                    }
                     connect(button, SIGNAL(clicked(Qt::MouseButtons)), SIGNAL(maximize(Qt::MouseButtons)));
                     layout->addItem(button);
                 }
@@ -329,6 +345,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
             case 'X':
                 if (m_theme->hasButton(CloseButton)){
                     AuroraeButton *button = new AuroraeButton(m_theme, CloseButton);
+                    if (m_theme->isShowTooltips()) {
+                        button->setToolTip(i18n("Close"));
+                    }
                     connect(button, SIGNAL(clicked()), SIGNAL(closeWindow()));
                     layout->addItem(button);
                 }
@@ -338,6 +357,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
                     AuroraeButton *button = new AuroraeButton(m_theme, KeepAboveButton);
                     button->setCheckable(true);
                     button->setChecked(m_keepAbove);
+                    if (m_theme->isShowTooltips()) {
+                        button->setToolTip(m_keepAbove?i18n("Do not keep above others"):i18n("Keep above others"));
+                    }
                     connect(button, SIGNAL(clicked()), SIGNAL(toggleKeepAbove()));
                     layout->addItem(button);
                 }
@@ -347,6 +369,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
                     AuroraeButton *button = new AuroraeButton(m_theme, KeepBelowButton);
                     button->setCheckable(true);
                     button->setChecked(m_keepBelow);
+                    if (m_theme->isShowTooltips()) {
+                        button->setToolTip(m_keepBelow?i18n("Do not keep below others"):i18n("Keep below others"));
+                    }
                     connect(button, SIGNAL(clicked()), SIGNAL(toggleKeepBelow()));
                     layout->addItem(button);
                 }
@@ -356,6 +381,9 @@ void AuroraeScene::initButtons(QGraphicsLinearLayout* layout, const QString& but
                     AuroraeButton *button = new AuroraeButton(m_theme, ShadeButton);
                     button->setCheckable(true);
                     button->setChecked(m_shade);
+                    if (m_theme->isShowTooltips()) {
+                        button->setToolTip(m_shade?i18n("Unshade"):i18n("Shade"));
+                    }
                     connect(button, SIGNAL(clicked()), SIGNAL(toggleShade()));
                     layout->addItem(button);
                 }
@@ -417,6 +445,9 @@ void AuroraeScene::setMaximizeMode(KDecorationDefines::MaximizeMode mode)
     foreach (QGraphicsItem *item, items()) {
         if (AuroraeMaximizeButton *button = dynamic_cast< AuroraeMaximizeButton* >(item)) {
             button->setMaximizeMode(mode);
+            if (m_theme->isShowTooltips()) {
+                button->setToolTip(m_maximizeMode==KDecorationDefines::MaximizeFull?i18n("Restore"):i18n("Maximize") );
+            }
         }
     }
     updateLayout();
@@ -454,6 +485,9 @@ void AuroraeScene::setAllDesktops(bool all)
         if (AuroraeButton *button = dynamic_cast< AuroraeButton* >(item)) {
             if (button->type() == AllDesktopsButton) {
                 button->setChecked(m_allDesktops);
+                if (m_theme->isShowTooltips()) {
+                    button->setToolTip(m_allDesktops?i18n("Not on all desktops"):i18n("On all desktops"));
+                }
                 button->update();
             }
         }
@@ -475,6 +509,9 @@ void AuroraeScene::setKeepAbove(bool keep)
         if (AuroraeButton *button = dynamic_cast< AuroraeButton* >(item)) {
             if (button->type() == KeepAboveButton) {
                 button->setChecked(m_keepAbove);
+                if (m_theme->isShowTooltips()) {
+                    button->setToolTip(m_keepAbove?i18n("Do not keep above others"):i18n("Keep above others"));
+                }
                 button->update();
             }
         }
@@ -496,6 +533,9 @@ void AuroraeScene::setKeepBelow(bool keep)
         if (AuroraeButton *button = dynamic_cast< AuroraeButton* >(item)) {
             if (button->type() == KeepBelowButton) {
                 button->setChecked(m_keepBelow);
+                if (m_theme->isShowTooltips()) {
+                    button->setToolTip(m_keepBelow?i18n("Do not keep below others"):i18n("Keep below others"));
+                }
                 button->update();
             }
         }
@@ -517,6 +557,9 @@ void AuroraeScene::setShade(bool shade)
         if (AuroraeButton *button = dynamic_cast< AuroraeButton* >(item)) {
             if (button->type() == ShadeButton) {
                 button->setChecked(m_shade);
+                if (m_theme->isShowTooltips()) {
+                    button->setToolTip(m_shade?i18n("Unshade"):i18n("Shade"));
+                }
                 button->update();
             }
         }
@@ -615,6 +658,52 @@ QString AuroraeScene::buttonsToDirection(const QString &buttons)
         ret = buttons;
     }
     return ret;
+}
+
+void AuroraeScene::showTooltipsChanged(bool show)
+{
+    foreach (QGraphicsItem *item, items()) {
+        if (AuroraeButton *button = dynamic_cast< AuroraeButton* >(item)) {
+            if (show) {
+                // switch over type
+                switch (button->type()) {
+                case MenuButton:
+                    button->setToolTip(i18n("Menu"));
+                    break;
+                case MinimizeButton:
+                    button->setToolTip(i18n("Minimize"));
+                    break;
+                case RestoreButton: // fall through
+                case MaximizeButton:
+                    button->setToolTip(m_maximizeMode==KDecorationDefines::MaximizeFull?i18n("Restore"):i18n("Maximize") );
+                    break;
+                case KeepAboveButton:
+                    button->setToolTip(m_keepAbove?i18n("Do not keep above others"):i18n("Keep above others"));
+                    break;
+                case KeepBelowButton:
+                    button->setToolTip(m_keepBelow?i18n("Do not keep below others"):i18n("Keep below others"));
+                    break;
+                case ShadeButton:
+                    button->setToolTip(m_shade?i18n("Unshade"):i18n("Shade"));
+                    break;
+                case CloseButton:
+                    button->setToolTip(i18n("Close"));
+                    break;
+                case AllDesktopsButton:
+                    button->setToolTip(m_allDesktops?i18n("Not on all desktops"):i18n("On all desktops"));
+                    break;
+                case HelpButton:
+                    button->setToolTip(i18n("Help"));
+                    break;
+                default:
+                    // nothing
+                    break;
+                }
+            } else {
+                button->setToolTip(QString());
+            }
+        }
+    }
 }
 
 } // namespace

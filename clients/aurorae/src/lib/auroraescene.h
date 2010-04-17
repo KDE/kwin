@@ -97,6 +97,7 @@ protected:
 
 private Q_SLOTS:
     void resetTheme();
+    void showTooltipsChanged(bool show);
 
 private:
     void init();

@@ -48,12 +48,14 @@ public:
     QHash< AuroraeButtonType, Plasma::FrameSvg* > buttons;
     bool activeCompositing;
     KDecorationDefines::BorderSize borderSize;
+    bool showTooltips;
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
     : decoration(0)
     , activeCompositing(true)
     , borderSize(KDecoration::BorderNormal)
+    , showTooltips(true)
 {
 }
 
@@ -320,5 +322,15 @@ void AuroraeTheme::setBorderSize(KDecorationDefines::BorderSize size)
     d->borderSize = size;
 }
 
+bool AuroraeTheme::isShowTooltips() const
+{
+    return d->showTooltips;
+}
+
+void AuroraeTheme::setShowTooltips(bool show)
+{
+    d->showTooltips = show;
+    emit showTooltipsChanged(show);
+}
 
 } // namespace

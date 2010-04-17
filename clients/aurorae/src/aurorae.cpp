@@ -46,6 +46,7 @@ void AuroraeFactory::init()
     KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
     m_theme->loadTheme(themeName, config);
     m_theme->setBorderSize(KDecoration::options()->preferredBorderSize(this));
+    m_theme->setShowTooltips(options()->showTooltips());
 }
 
 AuroraeFactory::~AuroraeFactory()
