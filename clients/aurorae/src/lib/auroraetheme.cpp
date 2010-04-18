@@ -207,9 +207,49 @@ QLatin1String AuroraeTheme::mapButtonToName(AuroraeButtonType type)
         return QLatin1String("shade");
     case HelpButton:
         return QLatin1String("help");
+    case MenuButton:
+        return QLatin1String("menu");
     default:
         return QLatin1String("");
     }
+}
+
+char AuroraeTheme::mapButtonToChar(AuroraeButtonType type)
+{
+    char c = ' ';
+    switch (type) {
+    case Aurorae::MinimizeButton:
+        c = 'I';
+        break;
+    case Aurorae::MaximizeButton: // fall through
+    case Aurorae::RestoreButton:
+        c = 'A';
+        break;
+    case Aurorae::CloseButton:
+        c = 'X';
+        break;
+    case Aurorae::AllDesktopsButton:
+        c = 'S';
+        break;
+    case Aurorae::KeepAboveButton:
+        c = 'F';
+        break;
+    case Aurorae::KeepBelowButton:
+        c = 'B';
+        break;
+    case Aurorae::ShadeButton:
+        c = 'L';
+        break;
+    case Aurorae::HelpButton:
+        c = 'H';
+        break;
+    case Aurorae::MenuButton:
+        c = 'M';
+        break;
+    default:
+        break; // nothing
+    }
+    return c;
 }
 
 const QString &AuroraeTheme::themeName() const

@@ -107,6 +107,7 @@ public:
 
     // TODO: move to namespace
     static QLatin1String mapButtonToName(AuroraeButtonType type);
+    static char mapButtonToChar(AuroraeButtonType type);
 
 public Q_SLOTS:
     void setShowTooltips(bool show);
