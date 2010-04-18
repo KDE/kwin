@@ -43,6 +43,7 @@ AuroraeTab::AuroraeTab(AuroraeTheme* theme, const QString& caption)
         setGraphicsEffect(m_effect);
     }
     setAcceptedMouseButtons(Qt::NoButton);
+    connect(m_theme, SIGNAL(buttonSizesChanged()), SLOT(buttonSizesChanged()));
 }
 
 AuroraeTab::~AuroraeTab()
@@ -150,18 +151,25 @@ QSizeF AuroraeTab::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
     QFont titleFont = KGlobalSettings::windowTitleFont();
     QFontMetricsF fm(titleFont);
+    const qreal titleHeight = qMax((qreal)m_theme->themeConfig().titleHeight(),
+                                   m_theme->themeConfig().buttonHeight()*m_theme->buttonSizeFactor() +
+                                   m_theme->themeConfig().buttonMarginTop());
     switch (which) {
     case Qt::MinimumSize:
-        fm.boundingRect(m_caption.left(3)).size();
-        break;
+        return QSizeF(fm.boundingRect(m_caption.left(3)).width(), titleHeight);
     case Qt::PreferredSize:
-        return fm.boundingRect(m_caption).size();
+        return QSizeF(fm.boundingRect(m_caption).width(), titleHeight);
     case Qt::MaximumSize:
-        return QSizeF(scene()->sceneRect().width(), m_theme->themeConfig().titleHeight());
+        return QSizeF(scene()->sceneRect().width(), titleHeight);
     default:
         return QGraphicsWidget::sizeHint(which, constraint);
     }
     return QGraphicsWidget::sizeHint(which, constraint);
+}
+
+void AuroraeTab::buttonSizesChanged()
+{
+    updateGeometry();
 }
 
 } // namespace

@@ -75,6 +75,9 @@ public:
 Q_SIGNALS:
     void clicked();
 
+private Q_SLOTS:
+    void buttonSizesChanged();
+
 protected:
     enum ButtonState {
         Active = 0x1,

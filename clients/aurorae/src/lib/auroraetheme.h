@@ -104,6 +104,13 @@ public:
     QString defaultButtonsRight() const;
     void setBorderSize(KDecorationDefines::BorderSize size);
     bool isShowTooltips() const;
+    /**
+    * Sets the size of the buttons.
+    * The available sizes are identical to border sizes, therefore BorderSize is used.
+    * @param size The buttons size
+    */
+    void setButtonSize(KDecorationDefines::BorderSize size);
+    qreal buttonSizeFactor() const;
 
     // TODO: move to namespace
     static QLatin1String mapButtonToName(AuroraeButtonType type);
@@ -115,6 +122,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void themeChanged();
     void showTooltipsChanged(bool show);
+    void buttonSizesChanged();
 
 private:
     const ThemeConfig &themeConfig() const;

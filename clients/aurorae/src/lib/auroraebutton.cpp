@@ -51,6 +51,7 @@ AuroraeButton::AuroraeButton(AuroraeTheme* theme, AuroraeButtonType type)
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::LeftButton);
+    connect(m_theme, SIGNAL(buttonSizesChanged()), SLOT(buttonSizesChanged()));
 }
 
 AuroraeButton::~AuroraeButton()
@@ -88,34 +89,36 @@ QSizeF AuroraeButton::sizeHint(Qt::SizeHint which, const QSizeF& constraint) con
 {
     Q_UNUSED(which)
     Q_UNUSED(constraint)
+    const qreal factor = m_theme->buttonSizeFactor();
     switch (m_type) {
     case MinimizeButton:
-        return QSizeF(m_theme->themeConfig().buttonWidthMinimize(),
-                      m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidthMinimize()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     case MaximizeButton:
     case RestoreButton:
-        return QSizeF(m_theme->themeConfig().buttonWidthMaximizeRestore(),
-                      m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidthMaximizeRestore()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     case CloseButton:
-        return QSizeF(m_theme->themeConfig().buttonWidthClose(),
-                      m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidthClose()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     case AllDesktopsButton:
-        return QSizeF(m_theme->themeConfig().buttonWidthAllDesktops(),
-                      m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidthAllDesktops()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     case KeepAboveButton:
-        return QSizeF(m_theme->themeConfig().buttonWidthKeepAbove(),
-                      m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidthKeepAbove()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     case KeepBelowButton:
-        return QSizeF(m_theme->themeConfig().buttonWidthKeepBelow(),
-                      m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidthKeepBelow()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     case ShadeButton:
-        return QSizeF(m_theme->themeConfig().buttonWidthShade(),
-                      m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidthShade()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     case HelpButton:
-        return QSizeF(m_theme->themeConfig().buttonWidthHelp(),
-                      m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidthHelp()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     default:
-        return QSizeF(m_theme->themeConfig().buttonWidth(), m_theme->themeConfig().buttonHeight());
+        return QSizeF(m_theme->themeConfig().buttonWidth()*factor,
+                      m_theme->themeConfig().buttonHeight()*factor);
     }
 }
 void AuroraeButton::mousePressEvent(QGraphicsSceneMouseEvent* event)
@@ -307,6 +310,12 @@ void AuroraeButton::setAnimationProgress(qreal progress)
 {
     m_animationProgress = progress;
     update();
+}
+
+void AuroraeButton::buttonSizesChanged()
+{
+    updateGeometry();
+    static_cast<AuroraeScene*>(scene())->updateLayout();
 }
 
 /***********************************************

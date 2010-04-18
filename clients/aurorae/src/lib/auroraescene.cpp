@@ -99,7 +99,7 @@ void AuroraeScene::init()
     titleLayout->addItem(tab);
     m_title->setLayout(titleLayout);
     addItem(m_title);
-    tab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    tab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     setActive(m_active, false);
     updateLayout();
@@ -183,6 +183,8 @@ void AuroraeScene::drawBackground(QPainter *painter, const QRectF &rect)
         frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
     }
     QRectF r = sceneRect();
+    const qreal titleHeight = qMax((qreal)conf.titleHeight(),
+                                   conf.buttonHeight()*m_theme->buttonSizeFactor() + conf.buttonMarginTop());
     if (maximized) {
         r = QRectF(conf.paddingLeft(), conf.paddingTop(),
                       sceneRect().width() - conf.paddingRight() - conf.paddingLeft(),
@@ -190,7 +192,7 @@ void AuroraeScene::drawBackground(QPainter *painter, const QRectF &rect)
         if (true/*transparentRect().isNull()*/) {
             r = QRectF(conf.paddingLeft(), conf.paddingTop(),
                           sceneRect().width() - conf.paddingRight() - conf.paddingLeft(),
-                          conf.titleEdgeTopMaximized() + conf.titleHeight() + conf.titleEdgeBottomMaximized());
+                          conf.titleEdgeTopMaximized() + titleHeight + conf.titleEdgeBottomMaximized());
         }
     }
     QRectF sourceRect = QRectF(QPointF(0, 0), r.size());
@@ -257,6 +259,8 @@ void AuroraeScene::updateLayout()
     const int left  = config.paddingLeft();
     const int genericTop   = config.paddingTop() + marginTop;
     const int right = sceneRect().width() - m_rightButtons->preferredWidth() - config.paddingRight();
+    const qreal titleHeight = qMax((qreal)config.titleHeight(),
+                                   config.buttonHeight()*m_theme->buttonSizeFactor() + config.buttonMarginTop());
     if (m_maximizeMode == KDecorationDefines::MaximizeFull) { // TODO: check option
         const int top = genericTop + config.titleEdgeTopMaximized();
         m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeftMaximized(), top),
@@ -267,7 +271,7 @@ void AuroraeScene::updateLayout()
         const int leftTitle = m_leftButtons->geometry().right() + config.titleBorderLeft();
         const int titleWidth = m_rightButtons->geometry().left() - config.titleBorderRight() - leftTitle;
         m_title->setGeometry(leftTitle, config.paddingTop() + config.titleEdgeTopMaximized(),
-                             titleWidth, config.titleHeight());
+                             titleWidth, titleHeight);
         m_title->layout()->invalidate();
     } else {
         const int top = genericTop + config.titleEdgeTop();
@@ -277,7 +281,7 @@ void AuroraeScene::updateLayout()
         const int leftTitle = m_leftButtons->geometry().right() + config.titleBorderLeft();
         const int titleWidth = m_rightButtons->geometry().left() - config.titleBorderRight() - leftTitle;
         m_title->setGeometry(leftTitle, config.paddingTop() + config.titleEdgeTop(),
-                             titleWidth, config.titleHeight());
+                             titleWidth, titleHeight);
         m_title->layout()->invalidate();
     }
 }

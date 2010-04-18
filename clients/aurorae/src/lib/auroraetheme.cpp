@@ -49,6 +49,7 @@ public:
     bool activeCompositing;
     KDecorationDefines::BorderSize borderSize;
     bool showTooltips;
+    KDecorationDefines::BorderSize buttonSize;
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
@@ -56,6 +57,7 @@ AuroraeThemePrivate::AuroraeThemePrivate()
     , activeCompositing(true)
     , borderSize(KDecoration::BorderNormal)
     , showTooltips(true)
+    , buttonSize(KDecoration::BorderNormal)
 {
 }
 
@@ -263,11 +265,14 @@ const Aurorae::ThemeConfig &AuroraeTheme::themeConfig() const
 
 void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool maximized) const
 {
+    const qreal titleHeight = qMax((qreal)d->themeConfig.titleHeight(),
+                                   d->themeConfig.buttonHeight()*buttonSizeFactor() +
+                                   d->themeConfig.buttonMarginTop());
     if (maximized) {
         left   = 0;
         right  = 0;
         bottom = 0;
-        top    = d->themeConfig.titleHeight() + d->themeConfig.titleEdgeTopMaximized() + d->themeConfig.titleEdgeBottomMaximized();
+        top    = titleHeight + d->themeConfig.titleEdgeTopMaximized() + d->themeConfig.titleEdgeBottomMaximized();
     } else {
         switch (d->borderSize) {
         case KDecoration::BorderTiny:
@@ -303,7 +308,7 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
         left   += d->themeConfig.borderLeft();
         right  += d->themeConfig.borderRight();
         bottom += d->themeConfig.borderBottom();
-        top     = d->themeConfig.titleHeight() + d->themeConfig.titleEdgeTop() + d->themeConfig.titleEdgeBottom();
+        top     = titleHeight + d->themeConfig.titleEdgeTop() + d->themeConfig.titleEdgeBottom();
     }
 }
 
@@ -371,6 +376,33 @@ void AuroraeTheme::setShowTooltips(bool show)
 {
     d->showTooltips = show;
     emit showTooltipsChanged(show);
+}
+
+void AuroraeTheme::setButtonSize(KDecorationDefines::BorderSize size)
+{
+    d->buttonSize = size;
+    emit buttonSizesChanged();
+}
+
+qreal AuroraeTheme::buttonSizeFactor() const
+{
+    switch (d->buttonSize) {
+    case KDecorationDefines::BorderTiny:
+        return 0.8;
+    case KDecorationDefines::BorderLarge:
+        return 1.2;
+    case KDecorationDefines::BorderVeryLarge:
+        return 1.4;
+    case KDecorationDefines::BorderHuge:
+        return 1.6;
+    case KDecorationDefines::BorderVeryHuge:
+        return 1.8;
+    case KDecorationDefines::BorderOversized:
+        return 2.0;
+    case KDecorationDefines::BorderNormal: // fall through
+    default:
+        return 1.0;
+    }
 }
 
 } // namespace

@@ -39,6 +39,9 @@ public:
 public Q_SLOTS:
     void activeChanged();
 
+private Q_SLOTS:
+    void buttonSizesChanged();
+
 protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
 
