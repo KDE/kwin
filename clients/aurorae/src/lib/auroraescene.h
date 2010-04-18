@@ -67,6 +67,8 @@ public:
     void setButtons(const QString &left, const QString &right);
 
     void setCaption(const QString &caption);
+    const QString &leftButtons() const;
+    const QString &rightButtons() const;
 
 Q_SIGNALS:
     void menuClicked();

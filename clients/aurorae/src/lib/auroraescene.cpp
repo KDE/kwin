@@ -706,4 +706,14 @@ void AuroraeScene::showTooltipsChanged(bool show)
     }
 }
 
+const QString& AuroraeScene::leftButtons() const
+{
+    return m_leftButtonOrder;
+}
+
+const QString &AuroraeScene::rightButtons() const
+{
+    return m_rightButtonOrder;
+}
+
 } // namespace
