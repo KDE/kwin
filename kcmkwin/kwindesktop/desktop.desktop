@@ -8,10 +8,10 @@ Exec=kcmshell4 desktop
 X-KDE-Library=kcm_kwindesktop
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=desktop
+X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
-Name=Multiple Desktops
+Name=Virtual Desktops
 Name[af]=Veelvuldige Werkskerms
 Name[ar]=أسطح مكتب متعددة
 Name[be]=Некалькі працоўных сталоў

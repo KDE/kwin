@@ -11,7 +11,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=120
 
-Name=Window-Specific
+Name=Window Rules
 Name[af]=Vensterspesifike instellings
 Name[ar]=تفضيلات النوافذ
 Name[be]=Настаўленні для асобных вокнаў

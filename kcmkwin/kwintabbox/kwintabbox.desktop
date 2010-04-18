@@ -10,7 +10,7 @@ X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
-Name=Navigate Through Windows
+Name=Task Switcher
 Name[ca]=Navega per les finestres
 Name[ca@valencia]=Navega per les finestres
 Name[cs]=Navigace okny

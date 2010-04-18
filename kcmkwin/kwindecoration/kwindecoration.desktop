@@ -8,10 +8,10 @@ X-DocPath=kcontrol/kwindecoration/index.html
 X-KDE-Library=kcm_kwindecoration
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=appearance
+X-KDE-System-Settings-Parent-Category=desktop-appearance
 X-KDE-Weight=90
 
-Name=Windows
+Name=Window Decorations
 Name[af]=Vensters
 Name[ar]=النوافذ
 Name[be]=Вокны

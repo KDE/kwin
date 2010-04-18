@@ -8,7 +8,7 @@ X-DocPath=kcontrol/kwincompositing/index.html
 X-KDE-Library=kcm_kwincompositing
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=appearance
+X-KDE-System-Settings-Parent-Category=workspace-appearance-and-behavior
 X-KDE-Weight=50
 
 Name=Desktop Effects
