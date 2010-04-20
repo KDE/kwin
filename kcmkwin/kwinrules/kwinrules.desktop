@@ -12,7 +12,12 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=120
 
 Name=Window Rules
+Name[ia]=Regulas de Window
+Name[pt]=Regras das Janelas
+Name[sv]=Fönsterregler
+Name[uk]=Поведінка вікон
 Name[x-test]=xxWindow Rulesxx
+Name[zh_TW]=視窗規則
 
 Comment=Configure settings specifically for a window
 Comment[af]=Stel spesifieke venster instellings op

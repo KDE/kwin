@@ -12,7 +12,12 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
 Name=Virtual Desktops
+Name[ia]=Scriptorios Virtual
+Name[pt]=Ecrãs Virtuais
+Name[sv]=Virtuella skrivbord
+Name[uk]=Віртуальні стільниці
 Name[x-test]=xxVirtual Desktopsxx
+Name[zh_TW]=虛擬桌面
 
 Comment=You can configure how many virtual desktops there are.
 Comment[af]=Jy kan opstel hoeveel virtuele werkskerms daar is.

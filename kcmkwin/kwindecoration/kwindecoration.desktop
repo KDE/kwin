@@ -12,7 +12,12 @@ X-KDE-System-Settings-Parent-Category=desktop-appearance
 X-KDE-Weight=90
 
 Name=Window Decorations
+Name[ia]=Decorationes de fenestra
+Name[pt]=Decorações das Janelas
+Name[sv]=Fönsterdekorationer
+Name[uk]=Обрамлення вікон
 Name[x-test]=xxWindow Decorationsxx
+Name[zh_TW]=視窗裝飾
 
 Comment=Configure the look and feel of window titles
 Comment[af]=Stel die lyk-en-gevoel van venstertitels

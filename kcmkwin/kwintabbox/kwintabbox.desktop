@@ -11,7 +11,11 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
 Name=Task Switcher
+Name[pt]=Mudança de Tarefas
+Name[sv]=Aktivitetsbyte
+Name[uk]=Перемикання задач
 Name[x-test]=xxTask Switcherxx
+Name[zh_TW]=工作切換器
 Comment=Configure the behavior for navigating through windows.
 Comment[ca]=Configura el comportament per navegar per les finestres.
 Comment[ca@valencia]=Configura el comportament per navegar per les finestres.
