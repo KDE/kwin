@@ -96,15 +96,15 @@ namespace Oxygen
     //! cache mode
     enum ShadowCacheMode
     {
-        // no shadow cache
-        CacheDisabled,
+      // no shadow cache
+      CacheDisabled,
 
-        // shadow cache depends
-        // on animation duration
-        CacheVariable,
+      // shadow cache depends
+      // on animation duration
+      CacheVariable,
 
-        // shadow cache has maximum size
-        CacheMaximum
+      // shadow cache has maximum size
+      CacheMaximum
     };
 
     //! default constructor
