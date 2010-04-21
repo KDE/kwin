@@ -20,7 +20,12 @@ set(kcm_kwindecoration_PART_SRCS
     ${AURORAE_SOURCE_DIR}/themeconfig.cpp
 )
 
-kde4_add_ui_files(kcm_kwindecoration_PART_SRCS buttons.ui config.ui decoration.ui)
+kde4_add_ui_files(kcm_kwindecoration_PART_SRCS
+    auroraeconfig.ui
+    buttons.ui
+    config.ui
+    decoration.ui
+)
 
 kde4_add_plugin(kcm_kwindecoration ${kcm_kwindecoration_PART_SRCS})
 target_link_libraries(kcm_kwindecoration ${KDE4_PLASMA_LIBS} ${KDE4_KNEWSTUFF3_LIBS} kdecorations ${X11_LIBRARIES})

@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorationdelegate.h"
 #include "decorationmodel.h"
 #include "configdialog.h"
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QPainter>
 #include <QSortFilterProxyModel>
 #include <QApplication>
@@ -29,6 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+
+KWinAuroraeConfigForm::KWinAuroraeConfigForm( QWidget* parent )
+    : QWidget( parent )
+    {
+    setupUi( this );
+    }
 
 const int margin = 5;
 
@@ -122,22 +130,52 @@ void DecorationDelegate::slotConfigure()
     if (!focusedIndex().isValid())
         return;
 
-    const QModelIndex index = focusedIndex();
-    QString name = focusedIndex().model()->data( index , DecorationModel::LibraryNameRole ).toString();
-    QList< QVariant > borderSizes = focusedIndex().model()->data( index , DecorationModel::BorderSizesRole ).toList();
-    const KDecorationDefines::BorderSize size =
-        static_cast<KDecorationDefines::BorderSize>( itemView()->model()->data( index, DecorationModel::BorderSizeRole ).toInt() );
-    QPointer< KWinDecorationConfigDialog > configDialog =
-        new KWinDecorationConfigDialog( name, borderSizes, size, m_itemView );
-    if( configDialog->exec() == KDialog::Accepted )
+    const QModelIndex index = static_cast< QSortFilterProxyModel* >( m_itemView->model() )->mapFromSource( focusedIndex() );
+    bool reload = false;
+    if( focusedIndex().model()->data( index , DecorationModel::TypeRole ).toInt() ==
+        DecorationModelData::AuroraeDecoration )
         {
-        DecorationModel* model = static_cast< DecorationModel* >(
-            static_cast< QSortFilterProxyModel* >( itemView()->model() )->sourceModel() );
-        model->setBorderSize( index, configDialog->borderSize() );
-        model->regeneratePreview( focusedIndex() );
+        QPointer< KDialog > dlg = new KDialog( m_itemView );
+        dlg->setCaption( i18n( "Decoration Options" ) );
+        dlg->setButtons( KDialog::Ok | KDialog::Cancel );
+        KWinAuroraeConfigForm *form = new KWinAuroraeConfigForm( dlg );
+        dlg->setMainWidget( form );
+        form->borderSizesCombo->setCurrentIndex( index.data( DecorationModel::BorderSizeRole ).toInt() );
+        form->buttonSizesCombo->setCurrentIndex( index.data( DecorationModel::ButtonSizeRole ).toInt() );
+        if( dlg->exec() == KDialog::Accepted )
+            {
+            m_itemView->model()->setData( index,
+                                          form->borderSizesCombo->currentIndex(),
+                                          DecorationModel::BorderSizeRole );
+            m_itemView->model()->setData( index,
+                                          form->buttonSizesCombo->currentIndex(),
+                                          DecorationModel::ButtonSizeRole );
+            reload = true;
+            }
+        delete dlg;
         }
+    else
+        {
+        QString name = index.data( DecorationModel::LibraryNameRole ).toString();
+        QList< QVariant > borderSizes = index.data( DecorationModel::BorderSizesRole ).toList();
+        const KDecorationDefines::BorderSize size =
+            static_cast<KDecorationDefines::BorderSize>( index.data( DecorationModel::BorderSizeRole ).toInt() );
+        QPointer< KWinDecorationConfigDialog > configDialog =
+            new KWinDecorationConfigDialog( name, borderSizes, size, m_itemView );
+        if( configDialog->exec() == KDialog::Accepted )
+            {
+            m_itemView->model()->setData( index, configDialog->borderSize(), DecorationModel::BorderSizeRole );
+            reload = true;
+            }
 
-    delete configDialog;
+        delete configDialog;
+        }
+    if( reload )
+        {
+        // Send signal to all kwin instances
+        QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusConnection::sessionBus().send(message);
+        }
     }
 
 void DecorationDelegate::slotInfo()

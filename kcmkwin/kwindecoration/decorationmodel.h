@@ -58,6 +58,7 @@ class DecorationModelData
         QString license;
         QString auroraeName;
         KDecorationDefines::BorderSize borderSize;
+        KDecorationDefines::BorderSize buttonSize;
 
         static bool less( const DecorationModelData& a, const DecorationModelData& b )
             { return a.name < b.name; }
@@ -81,13 +82,15 @@ class DecorationModel : public QAbstractListModel
             PackageVersionRole = Qt::UserRole + 9,
             PackageLicenseRole = Qt::UserRole + 10,
             BorderSizeRole = Qt::UserRole + 11,
-            BorderSizesRole = Qt::UserRole + 12
+            BorderSizesRole = Qt::UserRole + 12,
+            ButtonSizeRole = Qt::UserRole + 13
             };
         DecorationModel( KSharedConfigPtr config, QObject* parent = 0 );
         ~DecorationModel();
 
         virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
         virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
+        virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
 
         void reload();
 
@@ -103,7 +106,6 @@ class DecorationModel : public QAbstractListModel
         void setButtons( bool custom, const QString& left, const QString& right );
 
         void setBorderSize( const QModelIndex& index, KDecorationDefines::BorderSize size );
-        void resetAuroraeBorderSizes( KDecorationDefines::BorderSize size );
 
         QModelIndex indexOfLibrary( const QString& libraryName ) const;
         QModelIndex indexOfName( const QString& decoName ) const;
@@ -125,6 +127,7 @@ class DecorationModel : public QAbstractListModel
         QString m_rightButtons;
         Aurorae::AuroraeTheme* m_theme;
         Aurorae::AuroraeScene* m_scene;
+        KSharedConfigPtr m_config;
 };
 
 } // namespace KWin

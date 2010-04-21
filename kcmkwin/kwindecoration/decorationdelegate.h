@@ -19,12 +19,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef PREVIEWDELEGATE_H
 #define PREVIEWDELEGATE_H
+#include "ui_auroraeconfig.h"
 #include <KWidgetItemDelegate>
 
 class KPushButton;
 
 namespace KWin
 {
+
+class KWinAuroraeConfigForm : public QWidget, public Ui::KWinAuroraeConfigForm
+{
+    Q_OBJECT
+
+    public:
+        explicit KWinAuroraeConfigForm( QWidget* parent );
+};
 
 class DecorationDelegate : public KWidgetItemDelegate
 {

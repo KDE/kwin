@@ -143,7 +143,6 @@ void KWinDecorationModule::readConfig( const KConfigGroup & conf )
         const QModelIndex index = m_proxyModel->mapFromSource( m_model->indexOfAuroraeName( themeName ) );
         if( index.isValid() )
             {
-            m_model->resetAuroraeBorderSizes( borderSize );
             m_ui->decorationList->setCurrentIndex( index );
             }
         }

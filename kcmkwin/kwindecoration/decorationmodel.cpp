@@ -49,6 +49,7 @@ DecorationModel::DecorationModel( KSharedConfigPtr config, QObject* parent )
     , m_theme( new Aurorae::AuroraeTheme( this ) )
     , m_scene( new Aurorae::AuroraeScene( m_theme, QString(), QString(), true, this ) )
     {
+    m_config = KSharedConfig::openConfig( "auroraerc" );
     m_scene->setIcon( KIcon( "xorg" ) );
     findDecorations();
     }
@@ -134,7 +135,9 @@ void DecorationModel::findAuroraeThemes()
         data.libraryName = "kwin3_aurorae";
         data.type = DecorationModelData::AuroraeDecoration;
         data.auroraeName = packageName;
-        data.borderSize = KDecorationDefines::BorderNormal;
+        KConfigGroup config( m_config, data.auroraeName );
+        data.borderSize = (KDecorationDefines::BorderSize)config.readEntry< int >( "BorderSize", KDecorationDefines::BorderNormal );
+        data.buttonSize = (KDecorationDefines::BorderSize)config.readEntry< int >( "ButtonSize", KDecorationDefines::BorderNormal );
         metaData( data, df );
         m_decorations.append(data);
         }
@@ -199,10 +202,47 @@ QVariant DecorationModel::data( const QModelIndex& index, int role ) const
                 }
             return sizes;
             }
+        case ButtonSizeRole:
+            if( m_decorations[ index.row() ].type == DecorationModelData::AuroraeDecoration )
+                return static_cast< int >( m_decorations[ index.row() ].buttonSize );
+            else
+                return QVariant();
         default:
             return QVariant();
         }
     }
+
+bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, int role)
+    {
+    if( !index.isValid() || ( role != BorderSizeRole && role != ButtonSizeRole ) )
+        return QAbstractItemModel::setData( index, value, role );
+
+    if( role == BorderSizeRole )
+        {
+        m_decorations[ index.row() ].borderSize = (KDecorationDefines::BorderSize)value.toInt();
+        if( m_decorations[ index.row() ].type == DecorationModelData::AuroraeDecoration )
+            {
+            KConfigGroup config( m_config, m_decorations[ index.row() ].auroraeName );
+            config.writeEntry( "BorderSize", value.toInt() );
+            config.sync();
+            }
+        emit dataChanged( index, index );
+        regeneratePreview( index );
+        return true;
+        }
+    if( role == ButtonSizeRole && m_decorations[ index.row() ].type == DecorationModelData::AuroraeDecoration )
+        {
+        m_decorations[ index.row() ].buttonSize = (KDecorationDefines::BorderSize)value.toInt();
+        KConfigGroup config( m_config, m_decorations[ index.row() ].auroraeName );
+        config.writeEntry( "ButtonSize", value.toInt() );
+        config.sync();
+        emit dataChanged( index, index );
+        regeneratePreview( index );
+        return true;
+        }
+    return QAbstractItemModel::setData( index, value, role );
+    }
+
 
 void DecorationModel::changeButtons( bool custom, const QString& left, const QString& right )
     {
@@ -258,6 +298,7 @@ void DecorationModel::regeneratePreview( const QModelIndex& index, const QSize& 
             KConfig conf( "aurorae/themes/" + data.auroraeName + '/' + data.auroraeName + "rc", KConfig::FullConfig, "data" );
             m_theme->loadTheme( data.auroraeName, conf );
             m_theme->setBorderSize( data.borderSize );
+            m_theme->setButtonSize( data.buttonSize );
             int left, top, right, bottom;
             m_theme->borders( left, top, right, bottom, false );
             int padLeft, padRight, padTop, padBottom;
@@ -327,21 +368,9 @@ QModelIndex DecorationModel::indexOfAuroraeName( const QString& auroraeName ) co
 
 void DecorationModel::setBorderSize( const QModelIndex& index, KDecorationDefines::BorderSize size )
     {
-    if( !index.isValid() )
+    if( !index.isValid() || m_decorations[ index.row() ].type == DecorationModelData::AuroraeDecoration )
         return;
     m_decorations[ index.row() ].borderSize = size;
-    }
-
-void DecorationModel::resetAuroraeBorderSizes( KDecorationDefines::BorderSize size )
-    {
-    QList<DecorationModelData>::iterator it = m_decorations.begin();
-
-    while( it != m_decorations.end() )
-        {
-        if( (*it).type == DecorationModelData::AuroraeDecoration )
-            (*it).borderSize = size;
-        ++it;
-        }
     }
 
 } // namespace KWin

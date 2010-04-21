@@ -137,10 +137,6 @@ void KWinDecorationConfigDialog::slotAccepted()
     KConfigGroup config( m_kwinConfig, "Style" );
     emit pluginSave( config );
     config.sync();
-    // Send signal to all kwin instances
-    QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-    QDBusConnection::sessionBus().send(message);
     }
 
 void KWinDecorationConfigDialog::slotSelectionChanged()

@@ -44,8 +44,10 @@ void AuroraeFactory::init()
 
     const QString themeName = group.readEntry("ThemeName", "example-deco");
     KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
+    KConfigGroup themeGroup(&conf, themeName);
     m_theme->loadTheme(themeName, config);
-    m_theme->setBorderSize(KDecoration::options()->preferredBorderSize(this));
+    m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
+    m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
     m_theme->setShowTooltips(options()->showTooltips());
 }
 
