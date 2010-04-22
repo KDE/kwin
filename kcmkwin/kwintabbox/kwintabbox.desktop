@@ -11,7 +11,9 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
 Name=Task Switcher
+Name[kk]=Тапсырма ауыстырғышы
 Name[pt]=Mudança de Tarefas
+Name[pt_BR]=Mudança de tarefas
 Name[sv]=Aktivitetsbyte
 Name[uk]=Перемикання задач
 Name[x-test]=xxTask Switcherxx
