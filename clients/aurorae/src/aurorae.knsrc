@@ -1,4 +1,4 @@
-[KNewStuff2]
-ProvidersUrl=http://download.kde.org/khotnewstuff/aurorae-providers.xml
+[KNewStuff3]
+Categories=Window Decoration Aurorae
 Uncompress=archive
 TargetDir=aurorae/themes
