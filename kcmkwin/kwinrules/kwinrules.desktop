@@ -12,6 +12,7 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=120
 
 Name=Window Rules
+Name[en_GB]=Window Rules
 Name[ia]=Regulas de Window
 Name[kk]=Терезе тәртібі
 Name[pt]=Regras das Janelas

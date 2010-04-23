@@ -12,6 +12,7 @@ X-KDE-System-Settings-Parent-Category=desktop-appearance
 X-KDE-Weight=90
 
 Name=Window Decorations
+Name[en_GB]=Window Decorations
 Name[ia]=Decorationes de fenestra
 Name[kk]=Терезенің безендірулері
 Name[pt]=Decorações das Janelas
