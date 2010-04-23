@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfig>
 #include <kdecoration.h>
 
+class QWidget;
 class KDesktopFile;
 class KDecorationPlugins;
 class KDecorationPreview;
@@ -128,6 +129,7 @@ class DecorationModel : public QAbstractListModel
         Aurorae::AuroraeTheme* m_theme;
         Aurorae::AuroraeScene* m_scene;
         KSharedConfigPtr m_config;
+        QWidget* m_renderWidget;
 };
 
 } // namespace KWin

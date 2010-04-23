@@ -38,6 +38,7 @@
 #include <kdecoration_plugins_p.h>
 #include <QX11Info>
 #include <kwindowsystem.h>
+#include <QTextDocument>
 
 KDecorationPreview::KDecorationPreview( QWidget* parent )
     :   QWidget( parent )
@@ -123,7 +124,7 @@ void KDecorationPreview::paintEvent( QPaintEvent* e )
         }
     }
 
-QPixmap KDecorationPreview::preview()
+QPixmap KDecorationPreview::preview( QTextDocument* document, QWidget* widget )
     {
     QPixmap pixmap( size() );
     pixmap.fill( Qt::transparent );
@@ -137,6 +138,25 @@ QPixmap KDecorationPreview::preview()
         {
         QWidget *w = deco[Active]->widget();
         w->render( &pixmap, w->mapToParent( QPoint(0, 0) ) );
+        int left, right, top, bottom;
+        deco[Active]->borders( left, right, top, bottom );
+        int padLeft, padRight, padTop, padBottom;
+        padLeft = padRight = padTop = padBottom = 0;
+        if( KDecorationUnstable *unstable = qobject_cast<KDecorationUnstable *>( deco[Active] ) )
+            {
+            unstable->padding( padLeft, padRight, padTop, padBottom );
+            }
+        widget->setGeometry( 0, 0,
+                             w->geometry().width() - left - right - padLeft - padRight,
+                             w->geometry().height() - top - bottom - padTop - padBottom );
+        QPoint topLeft = w->geometry().topLeft() + QPoint( left + padLeft, top + padTop );
+        widget->render( &pixmap, topLeft );
+        //Enable word-wrap
+        const int margin = 5;
+        document->setTextWidth( widget->width() - margin * 2 );
+        QPainter painter( &pixmap );
+        painter.translate( topLeft );
+        document->drawContents( &painter, widget->geometry().adjusted( margin, margin, -margin, -margin ));
         }
     return pixmap;
     }

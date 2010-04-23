@@ -30,6 +30,7 @@
 #include <kdecoration_plugins_p.h>
 
 class QLabel;
+class QTextDocument;
 
 class KDecorationPreviewBridge;
 class KDecorationPreviewOptions;
@@ -54,7 +55,7 @@ class KDecorationPreview
         QRect windowGeometry( bool ) const;
         void setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size);
         void setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right);
-        QPixmap preview();
+        QPixmap preview(QTextDocument* document, QWidget* widget);
     protected:
         virtual void paintEvent( QPaintEvent* );
         virtual void resizeEvent( QResizeEvent* );
