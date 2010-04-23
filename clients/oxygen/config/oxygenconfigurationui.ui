@@ -17,6 +17,9 @@
    </sizepolicy>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="KTabWidget" name="ktabwidget">
      <property name="currentIndex">
