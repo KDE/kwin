@@ -39,6 +39,12 @@ static const char* const border_names[ KDecorationDefines::BordersCount ] =
     I18N_NOOP( "Oversized" )
     };
 
+KWinAuroraeConfigForm::KWinAuroraeConfigForm( QWidget* parent )
+    : QWidget( parent )
+    {
+    setupUi( this );
+    }
+
 KWinDecorationConfigForm::KWinDecorationConfigForm( QWidget* parent )
     : QWidget( parent )
     {

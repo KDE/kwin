@@ -76,6 +76,7 @@ class KWinDecorationModule : public KCModule, public KDecorationDefines
         void slotSelectionChanged();
         void slotConfigureButtons();
         void slotGHNSClicked();
+        void slotConfigureDecoration();
 
     private:
         void readConfig( const KConfigGroup& conf );

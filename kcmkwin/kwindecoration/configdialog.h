@@ -23,9 +23,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdialog.h>
 #include <kdecoration.h>
 #include "ui_config.h"
+#include "ui_auroraeconfig.h"
 
 namespace KWin
 {
+
+class KWinAuroraeConfigForm : public QWidget, public Ui::KWinAuroraeConfigForm
+{
+    Q_OBJECT
+
+    public:
+        explicit KWinAuroraeConfigForm( QWidget* parent );
+};
 
 class KWinDecorationConfigForm : public QWidget, public Ui::KWinDecorationConfigForm
 {

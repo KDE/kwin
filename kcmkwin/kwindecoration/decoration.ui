@@ -47,6 +47,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="KPushButton" name="configureDecorationButton">
+       <property name="text">
+        <string>Configure Decoration...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="KPushButton" name="configureButtonsButton">
        <property name="text">
         <string>Configure Buttons...</string>
@@ -76,6 +83,13 @@
    <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>searchEdit</tabstop>
+  <tabstop>decorationList</tabstop>
+  <tabstop>configureDecorationButton</tabstop>
+  <tabstop>configureButtonsButton</tabstop>
+  <tabstop>ghnsButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

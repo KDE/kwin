@@ -19,38 +19,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "decorationdelegate.h"
 #include "decorationmodel.h"
-#include "configdialog.h"
-#include <QDBusConnection>
-#include <QDBusMessage>
 #include <QPainter>
 #include <QSortFilterProxyModel>
 #include <QApplication>
-#include <KAboutData>
-#include <KAboutApplicationDialog>
-#include <KPushButton>
 
 namespace KWin
 {
 
-KWinAuroraeConfigForm::KWinAuroraeConfigForm( QWidget* parent )
-    : QWidget( parent )
-    {
-    setupUi( this );
-    }
-
 const int margin = 5;
 
-DecorationDelegate::DecorationDelegate( QAbstractItemView* itemView, QObject* parent )
-    : KWidgetItemDelegate( itemView, parent )
-    , m_button( new KPushButton )
-    , m_itemView( itemView )
+DecorationDelegate::DecorationDelegate( QObject* parent )
+    : QStyledItemDelegate( parent )
     {
-        m_button->setIcon( KIcon( "configure" ) );
     }
 
 DecorationDelegate::~DecorationDelegate()
     {
-    delete m_button;
     }
 
 void DecorationDelegate::paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const
@@ -60,8 +44,7 @@ void DecorationDelegate::paint( QPainter* painter, const QStyleOptionViewItem& o
 
     QPixmap pixmap = index.model()->data( index, DecorationModel::PixmapRole ).value<QPixmap>();
 
-    const QSize previewArea = option.rect.size() -
-                                QSize( 3 * margin + m_button->sizeHint().width(),  2 * margin);
+    const QSize previewArea = option.rect.size() - QSize( 2*margin, 2*margin );
     if( pixmap.isNull() || pixmap.size() != previewArea )
         {
         emit regeneratePreview( static_cast< const QSortFilterProxyModel* >( index.model() )->mapToSource( index ),
@@ -75,142 +58,7 @@ QSize DecorationDelegate::sizeHint( const QStyleOptionViewItem& option, const QM
     {
     Q_UNUSED( option )
     Q_UNUSED( index )
-    const QSize pixmapSize = QSize( 400, 150 );
-    const QSize buttonSize = m_button->sizeHint();
-    const int width = margin * 3 + pixmapSize.width() + buttonSize.width();
-    const int height = qMax( margin * 2 + pixmapSize.height(), margin * 2 + buttonSize.height() * 2 );
-    return QSize( width, height );
-    }
-
-QList< QWidget* > DecorationDelegate::createItemWidgets() const
-    {
-    QList<QWidget*> widgets;
-    KPushButton *info = new KPushButton;
-    info->setIcon( KIcon( "dialog-information" ) );
-    setBlockedEventTypes( info, QList<QEvent::Type>() << QEvent::MouseButtonPress
-                            << QEvent::MouseButtonRelease << QEvent::MouseButtonDblClick
-                            << QEvent::KeyPress << QEvent::KeyRelease);
-
-    KPushButton *configure = new KPushButton;
-    configure->setIcon( KIcon( "configure" ) );
-    setBlockedEventTypes( configure, QList<QEvent::Type>() << QEvent::MouseButtonPress
-                            << QEvent::MouseButtonRelease << QEvent::MouseButtonDblClick
-                            << QEvent::KeyPress << QEvent::KeyRelease);
-
-    connect( configure, SIGNAL(clicked(bool)), SLOT(slotConfigure()) );
-    connect( info, SIGNAL(clicked(bool)), SLOT(slotInfo()) );
-
-    widgets << info << configure;
-    return widgets;
-    }
-
-void DecorationDelegate::updateItemWidgets(const QList< QWidget* > widgets, const QStyleOptionViewItem& option, const QPersistentModelIndex& index) const
-    {
-    KPushButton *button = static_cast<KPushButton*>( widgets[0] );
-    button->resize( button->sizeHint() );
-    button->move( option.rect.left() + option.rect.width() - margin - button->width(),
-                  option.rect.height() / 2 - button->sizeHint().height() );
-
-    if( !index.isValid() )
-        button->setVisible( false );
-
-    if( widgets.size() > 1 )
-        {
-        button = static_cast<KPushButton*>( widgets[1] );
-        button->resize( button->sizeHint() );
-        button->move( option.rect.left() + option.rect.width() - margin - button->width(),
-                      option.rect.height() / 2 );
-        if( !index.isValid() )
-            button->setVisible( false );
-        }
-    }
-
-void DecorationDelegate::slotConfigure()
-    {
-    if (!focusedIndex().isValid())
-        return;
-
-    const QModelIndex index = static_cast< QSortFilterProxyModel* >( m_itemView->model() )->mapFromSource( focusedIndex() );
-    bool reload = false;
-    if( focusedIndex().model()->data( index , DecorationModel::TypeRole ).toInt() ==
-        DecorationModelData::AuroraeDecoration )
-        {
-        QPointer< KDialog > dlg = new KDialog( m_itemView );
-        dlg->setCaption( i18n( "Decoration Options" ) );
-        dlg->setButtons( KDialog::Ok | KDialog::Cancel );
-        KWinAuroraeConfigForm *form = new KWinAuroraeConfigForm( dlg );
-        dlg->setMainWidget( form );
-        form->borderSizesCombo->setCurrentIndex( index.data( DecorationModel::BorderSizeRole ).toInt() );
-        form->buttonSizesCombo->setCurrentIndex( index.data( DecorationModel::ButtonSizeRole ).toInt() );
-        if( dlg->exec() == KDialog::Accepted )
-            {
-            m_itemView->model()->setData( index,
-                                          form->borderSizesCombo->currentIndex(),
-                                          DecorationModel::BorderSizeRole );
-            m_itemView->model()->setData( index,
-                                          form->buttonSizesCombo->currentIndex(),
-                                          DecorationModel::ButtonSizeRole );
-            reload = true;
-            }
-        delete dlg;
-        }
-    else
-        {
-        QString name = index.data( DecorationModel::LibraryNameRole ).toString();
-        QList< QVariant > borderSizes = index.data( DecorationModel::BorderSizesRole ).toList();
-        const KDecorationDefines::BorderSize size =
-            static_cast<KDecorationDefines::BorderSize>( index.data( DecorationModel::BorderSizeRole ).toInt() );
-        QPointer< KWinDecorationConfigDialog > configDialog =
-            new KWinDecorationConfigDialog( name, borderSizes, size, m_itemView );
-        if( configDialog->exec() == KDialog::Accepted )
-            {
-            m_itemView->model()->setData( index, configDialog->borderSize(), DecorationModel::BorderSizeRole );
-            reload = true;
-            }
-
-        delete configDialog;
-        }
-    if( reload )
-        {
-        // Send signal to all kwin instances
-        QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
-        QDBusConnection::sessionBus().send(message);
-        }
-    }
-
-void DecorationDelegate::slotInfo()
-    {
-    if (!focusedIndex().isValid())
-        return;
-
-    const QModelIndex index = focusedIndex();
-    const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
-    const QString comment = index.model()->data( index, DecorationModel::PackageDescriptionRole ).toString();
-    const QString author = index.model()->data( index, DecorationModel::PackageAuthorRole ).toString();
-    const QString email = index.model()->data( index, DecorationModel::PackageEmailRole ).toString();
-    const QString website = index.model()->data( index, DecorationModel::PackageWebsiteRole ).toString();
-    const QString version = index.model()->data( index, DecorationModel::PackageVersionRole ).toString();
-    const QString license = index.model()->data( index, DecorationModel::PackageLicenseRole ).toString();
-
-    KAboutData aboutData(name.toUtf8(), name.toUtf8(), ki18n(name.toUtf8()), version.toUtf8(), ki18n(comment.toUtf8()), KAboutLicense::byKeyword(license).key(), ki18n(QByteArray()), ki18n(QByteArray()), website.toLatin1());
-    aboutData.setProgramIconName("preferences-system-windows-action");
-    const QStringList authors = author.split(',');
-    const QStringList emails = email.split(',');
-    int i = 0;
-    if( authors.count() == emails.count() )
-        {
-        foreach( const QString &author, authors )
-            {
-            if( !author.isEmpty() )
-                {
-                aboutData.addAuthor(ki18n(author.toUtf8()), ki18n(QByteArray()), emails[i].toUtf8(), 0);
-                }
-            i++;
-            }
-        }
-    QPointer<KAboutApplicationDialog> about = new KAboutApplicationDialog( &aboutData, itemView() );
-    about->exec();
-    delete about;
+    return QSize( 450, 150 );
     }
 
 } // namespace KWin

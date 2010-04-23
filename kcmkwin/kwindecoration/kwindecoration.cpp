@@ -30,6 +30,7 @@
 // own
 #include "kwindecoration.h"
 #include "buttonsconfigdialog.h"
+#include "configdialog.h"
 #include "decorationdelegate.h"
 #include "decorationmodel.h"
 // Qt
@@ -69,8 +70,9 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     , m_configLoaded( false )
 {
     m_ui = new KWinDecorationForm( this );
-    DecorationDelegate* delegate = new DecorationDelegate( m_ui->decorationList, this );
+    DecorationDelegate* delegate = new DecorationDelegate( this );
     m_ui->decorationList->setItemDelegate( delegate );
+    m_ui->configureDecorationButton->setIcon( KIcon( "configure" ) );
     m_ui->configureButtonsButton->setIcon( KIcon( "configure" ) );
     m_ui->ghnsButton->setIcon( KIcon( "get-hot-new-stuff" ) );
     QVBoxLayout* layout = new QVBoxLayout( this );
@@ -93,6 +95,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     connect( m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
     connect( delegate, SIGNAL(regeneratePreview(QModelIndex,QSize)),
              m_model, SLOT(regeneratePreview(QModelIndex,QSize)));
+    connect( m_ui->configureDecorationButton, SIGNAL(clicked(bool)), SLOT(slotConfigureDecoration()));
 
     KAboutData *about =
             new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
@@ -300,6 +303,51 @@ void KWinDecorationModule::slotGHNSClicked()
             }
         }
     delete downloadDialog;
+    }
+
+void KWinDecorationModule::slotConfigureDecoration()
+    {
+    const QModelIndex index = m_proxyModel->mapToSource( m_ui->decorationList->currentIndex() );
+    bool reload = false;
+    if( index.data( DecorationModel::TypeRole ).toInt() == DecorationModelData::AuroraeDecoration )
+        {
+        QPointer< KDialog > dlg = new KDialog( this );
+        dlg->setCaption( i18n( "Decoration Options" ) );
+        dlg->setButtons( KDialog::Ok | KDialog::Cancel );
+        KWinAuroraeConfigForm *form = new KWinAuroraeConfigForm( dlg );
+        dlg->setMainWidget( form );
+        form->borderSizesCombo->setCurrentIndex( index.data( DecorationModel::BorderSizeRole ).toInt() );
+        form->buttonSizesCombo->setCurrentIndex( index.data( DecorationModel::ButtonSizeRole ).toInt() );
+        if( dlg->exec() == KDialog::Accepted )
+            {
+            m_model->setData( index, form->borderSizesCombo->currentIndex(), DecorationModel::BorderSizeRole );
+            m_model->setData( index, form->buttonSizesCombo->currentIndex(), DecorationModel::ButtonSizeRole );
+            reload = true;
+            }
+        delete dlg;
+        }
+    else
+        {
+        QString name = index.data( DecorationModel::LibraryNameRole ).toString();
+        QList< QVariant > borderSizes = index.data( DecorationModel::BorderSizesRole ).toList();
+        const KDecorationDefines::BorderSize size =
+            static_cast<KDecorationDefines::BorderSize>( index.data( DecorationModel::BorderSizeRole ).toInt() );
+        QPointer< KWinDecorationConfigDialog > configDialog =
+            new KWinDecorationConfigDialog( name, borderSizes, size, this );
+        if( configDialog->exec() == KDialog::Accepted )
+            {
+            m_model->setData( index, configDialog->borderSize(), DecorationModel::BorderSizeRole );
+            reload = true;
+            }
+
+        delete configDialog;
+        }
+    if( reload )
+        {
+        // Send signal to all kwin instances
+        QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusConnection::sessionBus().send(message);
+        }
     }
 
 } // namespace KWin

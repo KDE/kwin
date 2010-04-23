@@ -19,44 +19,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef PREVIEWDELEGATE_H
 #define PREVIEWDELEGATE_H
-#include "ui_auroraeconfig.h"
-#include <KWidgetItemDelegate>
+#include <QtGui/QStyledItemDelegate>
 
 class KPushButton;
 
 namespace KWin
 {
 
-class KWinAuroraeConfigForm : public QWidget, public Ui::KWinAuroraeConfigForm
-{
-    Q_OBJECT
-
-    public:
-        explicit KWinAuroraeConfigForm( QWidget* parent );
-};
-
-class DecorationDelegate : public KWidgetItemDelegate
+class DecorationDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
     public:
-        DecorationDelegate( QAbstractItemView* itemView, QObject* parent = 0 );
+        DecorationDelegate( QObject* parent = 0 );
         ~DecorationDelegate();
 
         virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
         virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-        virtual QList< QWidget* > createItemWidgets() const;
-        virtual void updateItemWidgets(const QList< QWidget* > widgets, const QStyleOptionViewItem& option, const QPersistentModelIndex& index) const;
 
     signals:
         void regeneratePreview( const QModelIndex& index, const QSize& size ) const;
-
-    private slots:
-        void slotConfigure();
-        void slotInfo();
-
-    private:
-        KPushButton* m_button;
-        QAbstractItemView* m_itemView;
 };
 
 } // namespace KWin
