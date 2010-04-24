@@ -12,9 +12,13 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
 Name=Virtual Desktops
+Name[de]=Virtuelle Arbeitsflächen
 Name[en_GB]=Virtual Desktops
 Name[ia]=Scriptorios Virtual
 Name[kk]=Виртуалды Үстелдер
+Name[lt]=Virtualūs darbastaliai
+Name[nb]=Virtuelle skrivebord
+Name[nl]=Virtuele bureaubladen
 Name[pt]=Ecrãs Virtuais
 Name[pt_BR]=Áreas de trabalho virtuais
 Name[sv]=Virtuella skrivbord
