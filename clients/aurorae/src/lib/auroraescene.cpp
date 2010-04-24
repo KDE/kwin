@@ -637,9 +637,7 @@ void AuroraeScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 void AuroraeScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsScene::mouseMoveEvent(event);
-    if (!event->isAccepted()) {
-        emit titleMouseMoved(event->button(), event->buttons());
-    }
+    emit titleMouseMoved(event->button(), event->buttons());
 }
 
 void AuroraeScene::wheelEvent(QGraphicsSceneWheelEvent* event)
