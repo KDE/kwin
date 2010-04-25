@@ -132,7 +132,7 @@ void Tile::restorePreviousGeometry()
     setGeometry( m_client->geometry() );
     }
 
-inline bool Tile::minimized() const
+bool Tile::minimized() const
     {
     return m_client->isMinimized();
     }
