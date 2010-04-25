@@ -38,11 +38,13 @@
 
 #include <KLocale>
 #include <KColorUtils>
+#include <KDebug>
 
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
 #include <QtGui/QBitmap>
+#include <QtCore/QObjectList>
 
 namespace Oxygen
 {
@@ -143,8 +145,8 @@ namespace Oxygen
     {
 
       QList<QLabel*> children( widget()->findChildren<QLabel*>() );
-      for( QList<QLabel*>::iterator iter = children.begin(); iter != children.end(); ++iter )
-      { (*iter)->setAutoFillBackground( false ); }
+      foreach( QLabel* widget, children )
+      { widget->setAutoFillBackground( false ); }
 
     }
 
