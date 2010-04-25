@@ -93,8 +93,15 @@ namespace Oxygen
     ui.label_5->setBuddy( ui.sizeGripMode );
 
     // shadows
+    ui.shadowMode->insertItems(0, QStringList()
+        << OxygenConfiguration::shadowModeName( OxygenConfiguration::OxygenShadows, true )
+        << OxygenConfiguration::shadowModeName( OxygenConfiguration::KWinShadows, true )
+        << OxygenConfiguration::shadowModeName( OxygenConfiguration::NoShadows, true ) );
+
     shadowConfigurations.push_back( ui.activeShadowConfiguration );
     shadowConfigurations.push_back( ui.inactiveShadowConfiguration );
+    connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SLOT(shadowModeChanged(int)) );
+    connect( ui.shadowMode, SIGNAL( currentIndexChanged(int)), SIGNAL(changed()) );
 
     // connections
     connect( ui.titleOutline, SIGNAL(toggled( bool )), ui.drawSeparator, SLOT( setDisabled( bool ) ) );
@@ -119,4 +126,11 @@ namespace Oxygen
 
   }
 
+  //_________________________________________________________
+  void OxygenConfigurationUI::shadowModeChanged( int index )
+  {
+    bool enabled( ui.shadowMode->itemText( index ) == OxygenConfiguration::shadowModeName( OxygenConfiguration::OxygenShadows, true ) );
+    foreach( OxygenShadowConfigurationUI* shadowConfiguration, shadowConfigurations )
+    { shadowConfiguration->setEnabled( enabled ); }
+  }
 }

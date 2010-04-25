@@ -137,6 +137,8 @@ namespace Oxygen
     userInterface_->ui.exceptions->exceptions().write( *configuration_ );
 
     // write shadow configuration
+    configurationGroup.writeEntry( OxygenConfig::SHADOW_MODE,
+        OxygenConfiguration::shadowModeName( OxygenConfiguration::shadowMode( userInterface_->ui.shadowMode->currentText(), true ), false ) );
     saveShadowConfiguration( QPalette::Active, *userInterface_->shadowConfigurations[0] );
     saveShadowConfiguration( QPalette::Inactive, *userInterface_->shadowConfigurations[1] );
 
@@ -197,6 +199,7 @@ namespace Oxygen
     userInterface_->shadowConfigurations[1]->setChecked( configuration.useDropShadows() );
     userInterface_->ui.tabsEnabled->setChecked( configuration.tabsEnabled() );
     userInterface_->ui.useAnimations->setChecked( configuration.useAnimations() );
+    userInterface_->ui.shadowMode->setCurrentIndex( userInterface_->ui.shadowMode->findText( configuration.shadowModeName( true ) ) );
   }
 
 
@@ -211,6 +214,7 @@ namespace Oxygen
     ui->ui.outerColor->setColor( configuration.outerColor() );
     ui->ui.useOuterColor->setChecked( configuration.useOuterColor() );
   }
+
   //_______________________________________________________________________
   void Config::aboutOxygen( void )
   {}

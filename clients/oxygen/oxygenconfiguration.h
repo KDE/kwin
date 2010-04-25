@@ -46,6 +46,7 @@ namespace OxygenConfig
   static const QString ANIMATIONS_DURATION = "AnimationsDuration";
   static const QString TABS_ENABLED = "TabsEnabled";
   static const QString NARROW_BUTTON_SPACING = "UseNarrowButtonSpacing";
+  static const QString SHADOW_MODE = "ShadowMode";
   static const QString SHADOW_CACHE_MODE = "ShadowCacheMode";
 }
 
@@ -93,7 +94,15 @@ namespace Oxygen
       SizeGripWhenNeeded
     };
 
-    //! cache mode
+    //! shadow mode
+    enum ShadowMode
+    {
+        OxygenShadows,
+        KWinShadows,
+        NoShadows
+    };
+
+    //! shadow cache mode
     enum ShadowCacheMode
     {
       // no shadow cache
@@ -170,7 +179,24 @@ namespace Oxygen
 
     //@}
 
-    //!@name cache mode
+    //!@name shadow mode
+    //@{
+    static QString shadowModeName( ShadowMode, bool translated );
+    static ShadowMode shadowMode( QString, bool translated );
+
+    QString shadowModeName( bool translated ) const
+    { return shadowModeName( shadowMode(), translated ); }
+
+    void setShadowMode( ShadowMode mode )
+    { shadowMode_ = mode; }
+
+    ShadowMode shadowMode( void ) const
+    { return shadowMode_; }
+
+    //@]
+
+
+    //!@name shadow mode cache mode
     //@{
 
     static QString shadowCacheModeName( ShadowCacheMode, bool translated );
@@ -370,7 +396,10 @@ namespace Oxygen
     //! narrow button spacing
     bool useNarrowButtonSpacing_;
 
-    //! cache mode
+    //! shadow mode
+    ShadowMode shadowMode_;
+
+    //! shadow cache mode
     ShadowCacheMode shadowCacheMode_;
 
   };

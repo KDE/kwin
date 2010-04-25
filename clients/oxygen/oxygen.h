@@ -114,6 +114,10 @@ namespace Oxygen
     virtual OxygenShadowCache& shadowCache( void )
     { return shadowCache_; }
 
+    //! shadow cache
+    virtual const OxygenShadowCache& shadowCache( void ) const
+    { return shadowCache_; }
+
     //! get configuration for a give client
     virtual OxygenConfiguration configuration( const OxygenClient& );
 
@@ -124,6 +128,10 @@ namespace Oxygen
 
     //! default configuration
     const OxygenConfiguration& defaultConfiguration( void ) const
+    { return defaultConfiguration_; }
+
+    //! default configuration
+    OxygenConfiguration& defaultConfiguration( void )
     { return defaultConfiguration_; }
 
     //! initialization

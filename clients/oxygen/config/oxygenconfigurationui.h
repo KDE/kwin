@@ -52,8 +52,12 @@ namespace Oxygen
     //! ui
     Ui_OxygenConfigurationUI ui;
 
-    // shadow configuration
+    //! shadow configuration
     QVector<OxygenShadowConfigurationUI*> shadowConfigurations;
+
+    protected slots:
+    //! shadow mode changed
+    void shadowModeChanged( int );
 
     signals:
 

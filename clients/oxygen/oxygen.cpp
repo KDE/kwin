@@ -143,8 +143,16 @@ namespace Oxygen
       changed = true;
     }
 
+    // shadow mode
+    if( configuration.shadowMode() != OxygenConfiguration::OxygenShadows )
+    {
+      defaultConfiguration().setUseOxygenShadows( false );
+      defaultConfiguration().setUseDropShadows( false );
+    }
+
     // read shadow configurations
     OxygenShadowConfiguration activeShadowConfiguration( QPalette::Active, config.group( "ActiveShadow" ) );
+    activeShadowConfiguration.setEnabled( defaultConfiguration().useOxygenShadows() );
     if( shadowCache().shadowConfigurationChanged( activeShadowConfiguration ) )
     {
       shadowCache().setShadowConfiguration( activeShadowConfiguration );
@@ -153,7 +161,7 @@ namespace Oxygen
 
     // read shadow configurations
     OxygenShadowConfiguration inactiveShadowConfiguration( QPalette::Inactive, config.group( "InactiveShadow" ) );
-    inactiveShadowConfiguration.setEnabled( configuration.useDropShadows() );
+    inactiveShadowConfiguration.setEnabled( defaultConfiguration().useDropShadows() );
     if( shadowCache().shadowConfigurationChanged( inactiveShadowConfiguration ) )
     {
       shadowCache().setShadowConfiguration( inactiveShadowConfiguration );
@@ -200,6 +208,8 @@ namespace Oxygen
 
       // compositing
       case AbilityProvidesShadow: // TODO: UI option to use default shadows instead
+      return defaultConfiguration().shadowMode() != OxygenConfiguration::KWinShadows;
+
       case AbilityUsesAlphaChannel:
       return true;
 
