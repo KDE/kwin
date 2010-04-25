@@ -42,9 +42,6 @@ public Q_SLOTS:
 private Q_SLOTS:
     void buttonSizesChanged();
 
-protected:
-    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint = QSizeF()) const;
-
 private:
     AuroraeTheme *m_theme;
     QString m_caption;

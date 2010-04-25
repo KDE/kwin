@@ -54,6 +54,13 @@ enum AuroraeButtonType {
     MenuButton
 };
 
+enum DecorationPosition {
+    DecorationTop = 0,
+    DecorationLeft,
+    DecorationRight,
+    DecorationBottom
+};
+
 class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
 {
     Q_OBJECT

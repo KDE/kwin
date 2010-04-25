@@ -81,6 +81,9 @@ public:
     int borderBottom() const {
         return m_borderBottom;
     }
+    int borderTop() const {
+        return m_borderTop;
+    }
 
     int titleEdgeTop() const {
         return m_titleEdgeTop;
@@ -182,6 +185,10 @@ public:
         return m_shadow;
     }
 
+    int decorationPosition() const {
+        return m_decorationPosition;
+    }
+
 private:
     QColor m_activeTextColor;
     QColor m_inactiveTextColor;
@@ -198,6 +205,7 @@ private:
     int m_borderLeft;
     int m_borderRight;
     int m_borderBottom;
+    int m_borderTop;
 
     // title
     int m_titleEdgeTop;
@@ -239,6 +247,8 @@ private:
     QString m_defaultButtonsLeft;
     QString m_defaultButtonsRight;
     bool m_shadow;
+
+    int m_decorationPosition;
 };
 
 }

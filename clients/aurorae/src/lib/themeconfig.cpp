@@ -63,12 +63,14 @@ void ThemeConfig::load(const KConfig &conf)
     m_defaultButtonsLeft = general.readEntry("LeftButtons", KDecorationOptions::defaultTitleButtonsLeft());
     m_defaultButtonsRight = general.readEntry("RightButtons", KDecorationOptions::defaultTitleButtonsRight());
     m_shadow = general.readEntry("Shadow", true);
+    m_decorationPosition = general.readEntry("DecorationPosition", 0);
 
     KConfigGroup border(&conf, "Layout");
     // default values taken from KCommonDecoration::layoutMetric() in kcommondecoration.cpp
     m_borderLeft = border.readEntry("BorderLeft", 5);
     m_borderRight = border.readEntry("BorderRight", 5);
     m_borderBottom = border.readEntry("BorderBottom", 5);
+    m_borderTop = border.readEntry("BorderTop", 0);
 
     m_titleEdgeTop = border.readEntry("TitleEdgeTop", 5);
     m_titleEdgeBottom = border.readEntry("TitleEdgeBottom", 5);

@@ -69,10 +69,23 @@ void AuroraeScene::init()
     if (!m_theme->isValid()) {
         return;
     }
+    Qt::Orientation orientation = Qt::Horizontal;
+    switch ((DecorationPosition)m_theme->themeConfig().decorationPosition()) {
+    case DecorationLeft: // fall through
+    case DecorationRight:
+        orientation = Qt::Vertical;
+        break;
+    case DecorationTop: // fall through
+    case DecorationBottom: // fall through
+    default: // fall through
+        orientation = Qt::Horizontal;
+        break;
+    }
     // left buttons
     QGraphicsLinearLayout *leftButtonsLayout = new QGraphicsLinearLayout;
     leftButtonsLayout->setSpacing(m_theme->themeConfig().buttonSpacing());
     leftButtonsLayout->setContentsMargins(0, 0, 0, 0);
+    leftButtonsLayout->setOrientation(orientation);
     initButtons(leftButtonsLayout, buttonsToDirection(m_leftButtonOrder));
 
     m_leftButtons = new QGraphicsWidget;
@@ -83,6 +96,7 @@ void AuroraeScene::init()
     QGraphicsLinearLayout *rightButtonsLayout = new QGraphicsLinearLayout;
     rightButtonsLayout->setSpacing(m_theme->themeConfig().buttonSpacing());
     rightButtonsLayout->setContentsMargins(0, 0, 0, 0);
+    rightButtonsLayout->setOrientation(orientation);
     initButtons(rightButtonsLayout, buttonsToDirection(m_rightButtonOrder));
 
     m_rightButtons = new QGraphicsWidget;
@@ -93,6 +107,7 @@ void AuroraeScene::init()
     QGraphicsLinearLayout *titleLayout = new QGraphicsLinearLayout;
     titleLayout->setSpacing(0);
     titleLayout->setContentsMargins(0, 0, 0, 0);
+    titleLayout->setOrientation(orientation);
     m_title = new QGraphicsWidget;
     AuroraeTab *tab = new AuroraeTab(m_theme, m_caption);
     connect(this, SIGNAL(activeChanged()), tab, SLOT(activeChanged()));
@@ -190,9 +205,32 @@ void AuroraeScene::drawBackground(QPainter *painter, const QRectF &rect)
                       sceneRect().width() - conf.paddingRight() - conf.paddingLeft(),
                       sceneRect().height() - conf.paddingBottom() - conf.paddingTop());
         if (true/*transparentRect().isNull()*/) {
-            r = QRectF(conf.paddingLeft(), conf.paddingTop(),
+            switch ((DecorationPosition)conf.decorationPosition()) {
+            case DecorationTop:
+                r = QRectF(conf.paddingLeft(), conf.paddingTop(),
                           sceneRect().width() - conf.paddingRight() - conf.paddingLeft(),
                           conf.titleEdgeTopMaximized() + titleHeight + conf.titleEdgeBottomMaximized());
+                break;
+            case DecorationBottom: {
+                const int h = conf.titleEdgeTopMaximized() + titleHeight + conf.titleEdgeBottomMaximized();
+                r = QRectF(conf.paddingLeft(),
+                           height() - conf.paddingBottom() - h,
+                           sceneRect().width() - conf.paddingRight() - conf.paddingLeft(),
+                           h);
+                break;
+            }
+            case DecorationLeft:
+                r = QRectF(conf.paddingLeft(), conf.paddingTop(),
+                           conf.titleEdgeLeftMaximized() + titleHeight + conf.titleEdgeRightMaximized(),
+                           height() - conf.paddingBottom() - conf.paddingTop());
+                break;
+            case DecorationRight: {
+                const int w = conf.titleEdgeLeftMaximized() + titleHeight + conf.titleEdgeRightMaximized();
+                r = QRectF(width() - conf.paddingRight() - w, conf.paddingTop(),
+                           w, height() - conf.paddingBottom() - conf.paddingTop());
+                break;
+            }
+            }
         }
     }
     QRectF sourceRect = QRectF(QPointF(0, 0), r.size());
@@ -262,26 +300,121 @@ void AuroraeScene::updateLayout()
     const qreal titleHeight = qMax((qreal)config.titleHeight(),
                                    config.buttonHeight()*m_theme->buttonSizeFactor() + config.buttonMarginTop());
     if (m_maximizeMode == KDecorationDefines::MaximizeFull) { // TODO: check option
-        const int top = genericTop + config.titleEdgeTopMaximized();
-        m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeftMaximized(), top),
-                                          m_leftButtons->size()));
-        m_rightButtons->setGeometry(QRectF(QPointF(right - config.titleEdgeRightMaximized(), top),
-                                           m_rightButtons->size()));
-        // title
-        const int leftTitle = m_leftButtons->geometry().right() + config.titleBorderLeft();
-        const int titleWidth = m_rightButtons->geometry().left() - config.titleBorderRight() - leftTitle;
-        m_title->setGeometry(leftTitle, config.paddingTop() + config.titleEdgeTopMaximized(),
-                             titleWidth, titleHeight);
+        switch ((DecorationPosition)config.decorationPosition()) {
+        case DecorationTop: {
+            const int top = genericTop + config.titleEdgeTopMaximized();
+            m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeftMaximized(), top),
+                                            m_leftButtons->size()));
+            m_rightButtons->setGeometry(QRectF(QPointF(right - config.titleEdgeRightMaximized(), top),
+                                            m_rightButtons->size()));
+            // title
+            const int leftTitle = m_leftButtons->geometry().right() + config.titleBorderLeft();
+            const int titleWidth = m_rightButtons->geometry().left() - config.titleBorderRight() - leftTitle;
+            m_title->setGeometry(leftTitle, config.paddingTop() + config.titleEdgeTopMaximized(),
+                                titleWidth, titleHeight);
+            break;
+        }
+
+        case DecorationBottom: {
+            const int bottom = height() - config.paddingBottom() - marginTop - config.titleEdgeBottomMaximized();
+            m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeftMaximized(),
+                                                      bottom - config.buttonHeight()),
+                                              m_leftButtons->size()));
+            m_rightButtons->setGeometry(QRectF(QPointF(right - config.titleEdgeRightMaximized(),
+                                                      bottom - config.buttonHeight()),
+                                              m_rightButtons->size()));
+            // title
+            const int leftTitle = m_leftButtons->geometry().right() + config.titleBorderLeft();
+            const int titleWidth = m_rightButtons->geometry().left() - config.titleBorderRight() - leftTitle;
+            m_title->setGeometry(leftTitle,
+                                 height() - config.paddingBottom() - config.titleEdgeBottomMaximized() - titleHeight,
+                                 titleWidth, titleHeight);
+            break;
+        }
+        case DecorationLeft: {
+            const int left = config.paddingLeft() + marginTop + config.titleEdgeLeftMaximized();
+            m_rightButtons->setGeometry(left,
+                                       height() - config.paddingBottom() - config.titleEdgeBottomMaximized() - m_rightButtons->preferredHeight(),
+                                       m_rightButtons->preferredWidth(), m_rightButtons->preferredHeight());
+            m_leftButtons->setGeometry(left, config.paddingTop() + config.titleEdgeTopMaximized(),
+                                        m_leftButtons->preferredWidth(), m_leftButtons->preferredHeight());
+            // title
+            const int topTitle = m_leftButtons->geometry().bottom() + config.titleBorderRight();
+            const int realTitleHeight = m_rightButtons->geometry().top() - config.titleBorderLeft() - topTitle;
+            m_title->setGeometry(left, topTitle, titleHeight, realTitleHeight);
+            break;
+        }
+        case DecorationRight: {
+            const int left = width() - config.paddingRight() - marginTop - config.titleEdgeRightMaximized() - titleHeight;
+            m_rightButtons->setGeometry(left,
+                                       height() - config.paddingBottom() - config.titleEdgeBottomMaximized() - m_rightButtons->preferredHeight(),
+                                       m_rightButtons->preferredWidth(), m_rightButtons->preferredHeight());
+            m_leftButtons->setGeometry(left, config.paddingTop() + config.titleEdgeTopMaximized(),
+                                        m_leftButtons->preferredWidth(), m_leftButtons->preferredHeight());
+            // title
+            const int topTitle = m_leftButtons->geometry().bottom() + config.titleBorderRight();
+            const int realTitleHeight = m_rightButtons->geometry().top() - config.titleBorderLeft() - topTitle;
+            m_title->setGeometry(left, topTitle, titleHeight, realTitleHeight);
+            break;
+        }
+        }
         m_title->layout()->invalidate();
     } else {
-        const int top = genericTop + config.titleEdgeTop();
-        m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeft(), top), m_leftButtons->size()));
-        m_rightButtons->setGeometry(QRectF(QPointF(right - config.titleEdgeRight(), top), m_rightButtons->size()));
-        // title
-        const int leftTitle = m_leftButtons->geometry().right() + config.titleBorderLeft();
-        const int titleWidth = m_rightButtons->geometry().left() - config.titleBorderRight() - leftTitle;
-        m_title->setGeometry(leftTitle, config.paddingTop() + config.titleEdgeTop(),
-                             titleWidth, titleHeight);
+        switch ((DecorationPosition)config.decorationPosition()) {
+        case DecorationTop: {
+            const int top = genericTop + config.titleEdgeTop();
+            m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeft(), top), m_leftButtons->size()));
+            m_rightButtons->setGeometry(QRectF(QPointF(right - config.titleEdgeRight(), top), m_rightButtons->size()));
+            // title
+            const int leftTitle = m_leftButtons->geometry().right() + config.titleBorderLeft();
+            const int titleWidth = m_rightButtons->geometry().left() - config.titleBorderRight() - leftTitle;
+            m_title->setGeometry(leftTitle, config.paddingTop() + config.titleEdgeTop(),
+                                titleWidth, titleHeight);
+            break;
+        }
+        case DecorationBottom: {
+            const int bottom = height() - config.paddingBottom() - marginTop - config.titleEdgeBottom();
+            m_leftButtons->setGeometry(QRectF(QPointF(left + config.titleEdgeLeft(),
+                                                      bottom - config.buttonHeight()),
+                                              m_leftButtons->size()));
+            m_rightButtons->setGeometry(QRectF(QPointF(right - config.titleEdgeRight(),
+                                                      bottom - config.buttonHeight()),
+                                              m_rightButtons->size()));
+            // title
+            const int leftTitle = m_leftButtons->geometry().right() + config.titleBorderLeft();
+            const int titleWidth = m_rightButtons->geometry().left() - config.titleBorderRight() - leftTitle;
+            m_title->setGeometry(leftTitle,
+                                 height() - config.paddingBottom() - config.titleEdgeBottom() - titleHeight,
+                                 titleWidth, titleHeight);
+            break;
+        }
+        case DecorationLeft: {
+            const int left = config.paddingLeft() + marginTop + config.titleEdgeLeft();
+            m_rightButtons->setGeometry(left,
+                                       height() - config.paddingBottom() - config.titleEdgeBottom() - m_rightButtons->preferredHeight(),
+                                       m_rightButtons->preferredWidth(), m_rightButtons->preferredHeight());
+            m_leftButtons->setGeometry(left, config.paddingTop() + config.titleEdgeTop(),
+                                        m_leftButtons->preferredWidth(), m_leftButtons->preferredHeight());
+            // title
+            const int topTitle = m_leftButtons->geometry().bottom() + config.titleBorderRight();
+            const int realTitleHeight = m_rightButtons->geometry().top() - config.titleBorderLeft() - topTitle;
+            m_title->setGeometry(left, topTitle, titleHeight, realTitleHeight);
+            break;
+        }
+        case DecorationRight: {
+            const int left = width() - config.paddingRight() - marginTop - config.titleEdgeRight() - titleHeight;
+            m_rightButtons->setGeometry(left,
+                                       height() - config.paddingBottom() - config.titleEdgeBottom() - m_rightButtons->preferredHeight(),
+                                       m_rightButtons->preferredWidth(), m_rightButtons->preferredHeight());
+            m_leftButtons->setGeometry(left, config.paddingTop() + config.titleEdgeTop(),
+                                        m_leftButtons->preferredWidth(), m_leftButtons->preferredHeight());
+            // title
+            const int topTitle = m_leftButtons->geometry().bottom() + config.titleBorderRight();
+            const int realTitleHeight = m_rightButtons->geometry().top() - config.titleBorderLeft() - topTitle;
+            m_title->setGeometry(left, topTitle, titleHeight, realTitleHeight);
+            break;
+        }
+        }
         m_title->layout()->invalidate();
     }
 }

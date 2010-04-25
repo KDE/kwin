@@ -269,13 +269,32 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
                                    d->themeConfig.buttonHeight()*buttonSizeFactor() +
                                    d->themeConfig.buttonMarginTop());
     if (maximized) {
-        left   = 0;
-        right  = 0;
-        bottom = 0;
-        top    = titleHeight + d->themeConfig.titleEdgeTopMaximized() + d->themeConfig.titleEdgeBottomMaximized();
+        const qreal title = titleHeight + d->themeConfig.titleEdgeTopMaximized() + d->themeConfig.titleEdgeBottomMaximized();
+        switch ((DecorationPosition)d->themeConfig.decorationPosition()) {
+        case DecorationTop:
+            left = right = bottom = 0;
+            top = title;
+            break;
+        case DecorationBottom:
+            left = right = top = 0;
+            bottom = title;
+            break;
+        case DecorationLeft:
+            top = right = bottom = 0;
+            left = title;
+            break;
+        case DecorationRight:
+            left = top = bottom = 0;
+            right = title;
+            break;
+        default:
+            left = right = bottom = top = 0;
+            break;
+        }
     } else {
         switch (d->borderSize) {
         case KDecoration::BorderTiny:
+            // TODO: this looks wrong
             if (isCompositingActive()) {
                 left = qMin(0, (int)left - d->themeConfig.borderLeft() - d->themeConfig.paddingLeft());
                 right = qMin(0, (int)right - d->themeConfig.borderRight() - d->themeConfig.paddingRight());
@@ -287,28 +306,54 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
             }
             break;
         case KDecoration::BorderLarge:
-            left = right = bottom = 4;
+            left = right = bottom = top = 4;
             break;
         case KDecoration::BorderVeryLarge:
-            left = right = bottom = 8;
+            left = right = bottom = top = 8;
             break;
         case KDecoration::BorderHuge:
-            left = right = bottom = 12;
+            left = right = bottom = top = 12;
             break;
         case KDecoration::BorderVeryHuge:
-            left = right = bottom = 23;
+            left = right = bottom = top = 23;
             break;
         case KDecoration::BorderOversized:
-            left = right = bottom = 36;
+            left = right = bottom = top = 36;
             break;
         case KDecoration::BorderNormal:
         default:
-            left = right = bottom =  0;
+            left = right = bottom = top = 0;
         }
-        left   += d->themeConfig.borderLeft();
-        right  += d->themeConfig.borderRight();
-        bottom += d->themeConfig.borderBottom();
-        top     = titleHeight + d->themeConfig.titleEdgeTop() + d->themeConfig.titleEdgeBottom();
+        const qreal title = titleHeight + d->themeConfig.titleEdgeTop() + d->themeConfig.titleEdgeBottom();
+        switch ((DecorationPosition)d->themeConfig.decorationPosition()) {
+        case DecorationTop:
+            left   += d->themeConfig.borderLeft();
+            right  += d->themeConfig.borderRight();
+            bottom += d->themeConfig.borderBottom();
+            top     = title;
+            break;
+        case DecorationBottom:
+            left   += d->themeConfig.borderLeft();
+            right  += d->themeConfig.borderRight();
+            bottom  = title;
+            top    += d->themeConfig.borderTop();
+            break;
+        case DecorationLeft:
+            left    = title;
+            right  += d->themeConfig.borderRight();
+            bottom += d->themeConfig.borderBottom();
+            top    += d->themeConfig.borderTop();
+            break;
+        case DecorationRight:
+            left   += d->themeConfig.borderLeft();
+            right   = title;
+            bottom += d->themeConfig.borderBottom();
+            top    += d->themeConfig.borderTop();
+            break;
+        default:
+            left = right = bottom = top = 0;
+            break;
+        }
     }
 }
 

@@ -92,18 +92,34 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
             align = Qt::AlignLeft;
         }
     }
-    const QRect textRect = painter->fontMetrics().boundingRect(rect().toRect(),
+    qreal w = rect().width();
+    qreal h = rect().height();
+    if (m_theme->themeConfig().decorationPosition() == DecorationLeft ||
+        m_theme->themeConfig().decorationPosition() == DecorationRight) {
+        h = rect().width();
+        w = rect().height();
+    }
+    const QRect textRect = painter->fontMetrics().boundingRect(QRect(rect().x(), rect().y(), w, h),
             align | conf.verticalAlignment() | Qt::TextSingleLine,
             m_caption);
     if ((active && conf.haloActive()) ||
         (!active && conf.haloInactive())) {
         QRect haloRect = textRect;
-        if (haloRect.width() > rect().width()) {
-            haloRect.setWidth(rect().width());
+        if (haloRect.width() > w) {
+            haloRect.setWidth(w);
+        }
+        painter->save();
+        if (m_theme->themeConfig().decorationPosition() == DecorationLeft) {
+            painter->translate(rect().bottomLeft());
+            painter->rotate(270);
+        } else if (m_theme->themeConfig().decorationPosition() == DecorationRight) {
+            painter->translate(rect().topRight());
+            painter->rotate(90);
         }
         Plasma::PaintUtils::drawHalo(painter, haloRect);
+        painter->restore();
     }
-    QPixmap pix(rect().size().toSize());
+    QPixmap pix(w, h);
     pix.fill(Qt::transparent);
     QPainter p(&pix);
     QColor color;
@@ -120,7 +136,7 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     }
     p.setPen(color);
     p.drawText(pix.rect(), align | conf.verticalAlignment() | Qt::TextSingleLine, m_caption);
-    if (textRect.width() > rect().width()) {
+    if (textRect.width() > w) {
         // Fade out effect
         // based on fadeout of tasks applet in Plasma/desktop/applets/tasks/abstracttaskitem.cpp by
         // Copyright (C) 2007 by Robert Knight <robertknight@gmail.com>
@@ -143,28 +159,15 @@ void AuroraeTab::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         p.fillRect(r, alphaGradient);
     }
     p.end();
-    painter->drawPixmap(rect().toRect(), pix);
-    painter->restore();
-}
-
-QSizeF AuroraeTab::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
-{
-    QFont titleFont = KGlobalSettings::windowTitleFont();
-    QFontMetricsF fm(titleFont);
-    const qreal titleHeight = qMax((qreal)m_theme->themeConfig().titleHeight(),
-                                   m_theme->themeConfig().buttonHeight()*m_theme->buttonSizeFactor() +
-                                   m_theme->themeConfig().buttonMarginTop());
-    switch (which) {
-    case Qt::MinimumSize:
-        return QSizeF(fm.boundingRect(m_caption.left(3)).width(), titleHeight);
-    case Qt::PreferredSize:
-        return QSizeF(fm.boundingRect(m_caption).width(), titleHeight);
-    case Qt::MaximumSize:
-        return QSizeF(scene()->sceneRect().width(), titleHeight);
-    default:
-        return QGraphicsWidget::sizeHint(which, constraint);
+    if (m_theme->themeConfig().decorationPosition() == DecorationLeft) {
+        painter->translate(rect().bottomLeft());
+        painter->rotate(270);
+    } else if (m_theme->themeConfig().decorationPosition() == DecorationRight) {
+        painter->translate(rect().topRight());
+        painter->rotate(90);
     }
-    return QGraphicsWidget::sizeHint(which, constraint);
+    painter->drawPixmap(pix.rect(), pix);
+    painter->restore();
 }
 
 void AuroraeTab::buttonSizesChanged()
