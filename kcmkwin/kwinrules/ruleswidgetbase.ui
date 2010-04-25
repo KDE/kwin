@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="TabPage1" >
       <property name="geometry" >
@@ -1290,16 +1290,6 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="2" >
-        <widget class="QCheckBox" name="autogroup" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <property name="text" >
-          <string/>
-         </property>
-        </widget>
-       </item>
        <item row="8" column="2" >
         <widget class="QCheckBox" name="autogroupfg" >
          <property name="enabled" >
@@ -1341,57 +1331,6 @@
        </item>
        <item row="8" column="1" >
         <widget class="KComboBox" name="rule_autogroupfg" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text" >
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="7" column="1" >
-        <widget class="KComboBox" name="rule_autogroup" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-         <item>
-          <property name="text" >
-           <string>Do Not Affect</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force</string>
-          </property>
-         </item>
-         <item>
-          <property name="text" >
-           <string>Force Temporarily</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="6" column="1" >
-        <widget class="KComboBox" name="rule_closeable" >
-         <property name="enabled" >
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1" >
-        <widget class="KComboBox" name="rule_autogroupid" >
          <property name="enabled" >
           <bool>false</bool>
          </property>
@@ -1663,7 +1602,7 @@
          </item>
         </widget>
        </item>
-       <item row="13" column="1" >
+       <item row="14" column="1" >
         <spacer>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -1718,7 +1657,7 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="0" >
+       <item row="13" column="0" >
         <widget class="QCheckBox" name="enable_shortcut" >
          <property name="text" >
           <string>Shortcut</string>
@@ -1728,7 +1667,7 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1" >
+       <item row="13" column="1" >
         <widget class="KComboBox" name="rule_shortcut" >
          <property name="enabled" >
           <bool>false</bool>
@@ -1765,28 +1704,28 @@
          </item>
         </widget>
        </item>
-       <item row="12" column="5" >
+       <item row="13" column="5" >
         <widget class="QPushButton" name="shortcut_edit" >
          <property name="text" >
           <string>Edit...</string>
          </property>
         </widget>
        </item>
-       <item row="12" column="2" colspan="3" >
+       <item row="13" column="2" colspan="3" >
         <widget class="KRestrictedLine" name="shortcut" >
          <property name="enabled" >
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="12" column="0">
         <widget class="QCheckBox" name="enable_tilingoption">
          <property name="text">
           <string>T&amp;iling</string>
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="12" column="1">
         <widget class="KComboBox" name="rule_tilingoption">
          <property name="enabled">
           <bool>false</bool>
@@ -1808,7 +1747,7 @@
          </item>
         </widget>
        </item>
-       <item row="9" column="2">
+       <item row="12" column="2">
         <widget class="KComboBox" name="tilingoption">
          <property name="enabled">
           <bool>false</bool>
@@ -2356,6 +2295,9 @@
   <tabstop>enable_opacityinactive</tabstop>
   <tabstop>rule_opacityinactive</tabstop>
   <tabstop>opacityinactive</tabstop>
+  <tabstop>enable_tilingoption</tabstop>
+  <tabstop>rule_tilingoption</tabstop>
+  <tabstop>tilingoption</tabstop>
   <tabstop>enable_shortcut</tabstop>
   <tabstop>rule_shortcut</tabstop>
   <tabstop>shortcut</tabstop>
