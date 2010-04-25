@@ -68,7 +68,7 @@ class TilingLayout
         virtual void preRemoveTile( Tile *t );
         
     private:
-        unsigned int findTilePos( Client *c ) const;
+        int findTilePos( Client *c ) const;
         virtual void arrange( QRect wgeom ) = 0;
 
         void addTileNoArrange( Tile *t );
@@ -107,10 +107,12 @@ inline Workspace* TilingLayout::workspace() const
 
 inline void TilingLayout::postAddTile( Tile *t )
     {
+    Q_UNUSED( t )
     }
 
 inline void TilingLayout::preRemoveTile( Tile *t )
     {
+    Q_UNUSED( t )
     }
 
 } // end namespace

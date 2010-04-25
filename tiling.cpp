@@ -270,7 +270,7 @@ void Workspace::notifyWindowActivated( Client *c )
 
         foreach( Tile *t, tiles )
             {
-              kDebug(1212) << t->client() << t->floating();
+              kDebug(1212) << static_cast<Toplevel *>(t->client()) << t->floating();
             if( t->floating() == raise_floating && t != tile_to_raise )
                 raiseClient( t->client() );
             }

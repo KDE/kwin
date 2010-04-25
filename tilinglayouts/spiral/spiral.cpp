@@ -70,7 +70,7 @@ void Spiral::arrange( QRect wgeom )
 
         if( i % 4 == 1 && i != 1 )
             wgeom.moveTop( wgeom.y() - wgeom.height() );
-        else if( i % 2 == 1 && i != 1 
+        else if( ( i % 2 == 1 && i != 1 )
                 || ( i % 4 == 0 && i < n ) )
             wgeom.moveTop( wgeom.y() + wgeom.height() );
 

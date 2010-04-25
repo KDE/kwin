@@ -96,6 +96,7 @@ Workspace::Workspace( bool restore )
     , desktopGrid_( new int[2] )
     , currentDesktop_( 0 )
     , desktopLayoutDynamicity_( false )
+    , tilingMode_( false )
     // Unsorted
     , active_popup( NULL )
     , active_popup_client( NULL )
@@ -153,7 +154,6 @@ Workspace::Workspace( bool restore )
     , transSlider( NULL )
     , transButton( NULL )
     , forceUnredirectCheck( true )
-    , tilingMode_( false )
     {
     (void) new KWinAdaptor( this );
 

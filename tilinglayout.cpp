@@ -38,9 +38,9 @@ TilingLayout::~TilingLayout()
     {
     }
 
-unsigned int TilingLayout::findTilePos( Client *c ) const
+int TilingLayout::findTilePos( Client *c ) const
     {
-    unsigned int i = 0;
+    int i = 0;
     foreach( Tile *t, m_tiles )
         {
         if( t->client() == c )
@@ -52,7 +52,7 @@ unsigned int TilingLayout::findTilePos( Client *c ) const
 
 Tile* TilingLayout::findTile( Client *c ) const
     {
-    unsigned int i = findTilePos( c );
+    int i = findTilePos( c );
     if( i != -1 )
         return m_tiles[ i ];
     return NULL;
@@ -138,6 +138,7 @@ void TilingLayout::addTile( Tile *t )
 
 void TilingLayout::addTile( Client *c )
     {
+    Q_UNUSED( c )
     }
 
 void TilingLayout::removeTileNoArrange( Tile * t )

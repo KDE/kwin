@@ -51,8 +51,8 @@ Tile::Tile( Client *c, const QRect& area)
  */
 Tile::Tile( const Tile& orig )
     : m_client( orig.client() ),
-      m_floating( orig.floating() ),
-      m_prevGeom( orig.m_prevGeom )
+      m_prevGeom( orig.m_prevGeom ),
+      m_floating( orig.floating() )
     {
     setGeometry( orig.geometry() );
     }
