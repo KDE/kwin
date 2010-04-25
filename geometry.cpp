@@ -2155,6 +2155,7 @@ void Client::move( int x, int y, ForceGeometry_t force )
     workspace()->checkActiveScreen( this );
     workspace()->updateStackingOrder();
     workspace()->checkUnredirect();
+    workspace()->notifyWindowMove( this, moveResizeGeom, initialMoveResizeGeom );
     // client itself is not damaged
     const QRect deco_rect = decorationRect().translated( geom.x(), geom.y() );
     addWorkspaceRepaint( deco_rect_before_block );
@@ -2807,15 +2808,56 @@ bool Client::startMoveResize()
 
 void Client::finishMoveResize( bool cancel )
     {
+    // store for notification
+    bool wasResize = isResize();
+    bool wasMove = isMove();
+
     leaveMoveResize();
-    if( isElectricBorderMaximizing() )
+
+    if( workspace()->tilingMode() )
         {
-        cancel = true;
+        if( wasResize )
+            workspace()->notifyWindowResizeDone( this, moveResizeGeom, initialMoveResizeGeom, cancel );
+        else if( wasMove )
+            workspace()->notifyWindowMoveDone( this, moveResizeGeom, initialMoveResizeGeom, cancel );
         }
+    else
+        {
     if( cancel )
         setGeometry( initialMoveResizeGeom );
     else
         setGeometry( moveResizeGeom );
+        }
+    if( cancel )
+        setGeometry( initialMoveResizeGeom );
+
+    if( isElectricBorderMaximizing() )
+        {
+        cancel = true;
+        }
+    if( isElectricBorderMaximizing() )
+        {
+        switch( electricMode )
+            {
+            case ElectricMaximizeMode:
+                if( maximizeMode() == MaximizeFull )
+                    setMaximize( false, false );
+                else
+                    setMaximize( true, true );
+                workspace()->restoreElectricBorderSize( ElectricTop );
+                break;
+            case ElectricLeftMode:
+                setQuickTileMode( QuickTileLeft );
+                workspace()->restoreElectricBorderSize( ElectricLeft );
+                break;
+            case ElectricRightMode:
+                setQuickTileMode( QuickTileRight );
+                workspace()->restoreElectricBorderSize( ElectricRight );
+                break;
+            }
+        electricMaximizing = false;
+        workspace()->hideElectricBorderWindowOutline();
+        }
     if( isElectricBorderMaximizing() )
         {
         switch( electricMode )
@@ -2841,6 +2883,7 @@ void Client::finishMoveResize( bool cancel )
         }
     checkMaximizeGeometry();
 // FRAME    update();
+
     Notify::raise( isResize() ? Notify::ResizeEnd : Notify::MoveEnd );
     if( effects )
         static_cast<EffectsHandlerImpl*>(effects)->windowUserMovedResized( effectWindow(), false, true );
@@ -2999,6 +3042,11 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
     bool update = false;
     if( isResize())
         {
+        // query layout for supported resize mode
+        if( workspace()->tilingMode() )
+            {
+            mode = workspace()->supportedTilingResizeMode( this, mode );
+            }
         // first resize (without checking constrains), then snap, then check bounds, then check constrains
         QRect orig = initialMoveResizeGeom;
         Sizemode sizemode = SizemodeAny;
@@ -3033,10 +3081,19 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
                 sizemode = SizemodeFixedW;
                 break;
             case PositionCenter:
+                // exception for tiling
+                // Center means no resizing allowed
+                if( workspace()->tilingMode() )
+                    {
+                    finishMoveResize( false );
+                    buttonDown = false;
+                    return;
+                    }
             default:
                 abort();
                 break;
             }
+        workspace()->notifyWindowResize( this, moveResizeGeom, initialMoveResizeGeom );
         // adjust new size to snap to other windows/borders
         moveResizeGeom = workspace()->adjustClientSize( this, moveResizeGeom, mode );
 
@@ -3208,8 +3265,12 @@ void Client::handleMoveResize( int x, int y, int x_root, int y_root )
 
     if( update )
         performMoveResize();
+
     if ( isMove() )
+        {
+        workspace()->notifyWindowMove( this, moveResizeGeom, initialMoveResizeGeom );
         workspace()->checkElectricBorder(globalPos, xTime());
+    }
     }
 
 void Client::performMoveResize()
@@ -3229,6 +3290,7 @@ void Client::performMoveResize()
     if( rules()->checkMoveResizeMode
         ( isResize() ? options->resizeMode : options->moveMode ) == Options::Opaque )
         {
+        if( !workspace()->tilingMode() )
         setGeometry( moveResizeGeom );
         positionGeometryTip();
         }

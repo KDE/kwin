@@ -61,6 +61,8 @@ class TabBox;
 }
 
 class Client;
+class Tile;
+class TilingLayout;
 class ClientGroup;
 class DesktopChangeOSD;
 class RootInfo;
@@ -168,6 +170,23 @@ class Workspace : public QObject, public KDecorationDefines
         void unreserveElectricBorder( ElectricBorder border );
         void reserveElectricBorderActions( bool reserve );
         void reserveElectricBorderSwitching( bool reserve );
+
+        //-------------------------------------------------
+        // Tiling
+    public:
+        bool tilingMode() const;
+        void setTilingMode( bool tiling );
+        void updateAllTiles();
+        void notifyWindowResize( Client *c, const QRect &moveResizeGeom, const QRect &orig );
+        void notifyWindowMove( Client *c, const QRect &moveResizeGeom, const QRect &orig );
+        void notifyWindowResizeDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled );
+        void notifyWindowMoveDone( Client *c, const QRect &moveResizeGeom, const QRect &orig, bool canceled );
+        void notifyWindowDesktopChanged( Client *c, int old_desktop );
+        void notifyWindowActivated( Client *c );
+        void notifyWindowMinimizeToggled( Client *c );
+        void notifyWindowMaximized( Client *c, WindowOperation op );
+
+        Position supportedTilingResizeMode( Client *c, Position currentMode );
 
         //-------------------------------------------------
         // Desktop layout
@@ -286,6 +305,9 @@ class Workspace : public QObject, public KDecorationDefines
         int currentDesktop_;
         bool desktopLayoutDynamicity_;
 
+        bool tilingMode_;
+        QVector<TilingLayout *> tilingLayouts;
+
         //-------------------------------------------------
         // Unsorted
 
@@ -396,6 +418,9 @@ class Workspace : public QObject, public KDecorationDefines
         void circulateDesktopApplications();
         bool compositingActive();
         bool waitForCompositingSetup();
+        void toggleTiling();
+        void nextTileLayout();
+        void previousTileLayout();
 
         void setCurrentScreen( int new_screen );
 
@@ -652,6 +677,24 @@ class Workspace : public QObject, public KDecorationDefines
         void suspendCompositing();
         void suspendCompositing( bool suspend );
 
+        void slotToggleTiling();
+        void slotToggleFloating();
+        void slotNextTileLayout();
+        void slotPreviousTileLayout();
+
+        void slotLeft();
+        void slotRight();
+        void slotTop();
+        void slotBottom();
+        void slotMoveLeft();
+        void slotMoveRight();
+        void slotMoveTop();
+        void slotMoveBottom();
+        void belowCursor();
+        
+        // NOTE: debug method
+        void dumpTiles() const;
+
         void slotSwitchToTabLeft(); // Slot to move left the active Client.
         void slotSwitchToTabRight(); // Slot to move right the active Client.
         void slotRemoveFromGroup(); // Slot to remove the active client from its group.
@@ -798,6 +841,16 @@ class Workspace : public QObject, public KDecorationDefines
         static const char* windowTypeToTxt( NET::WindowType type );
         static NET::WindowType txtToWindowType( const char* txt );
         static bool sessionInfoWindowTypeMatch( Client* c, SessionInfo* info );
+
+        Tile* getNiceTile() const;
+        void createTile( Client *c );
+        void removeTile( Client *c );
+        bool tileable( Client *c );
+        // int, and not Tile::Direction because 
+        // we are using a forward declaration for Tile
+        Tile* findAdjacentTile( Tile *ref, int d );
+        void focusTile( int d );
+        void moveTile( int d );
 
         Client* active_client;
         Client* last_active_client;
@@ -1274,6 +1327,30 @@ inline void Workspace::addClientGroup( ClientGroup* group )
 inline void Workspace::removeClientGroup( ClientGroup* group )
     {
     clientGroups.removeAll( group );
+    }
+
+/*
+ * Called from D-BUS
+ */
+inline void Workspace::toggleTiling()
+    {
+    slotToggleTiling();
+    }
+
+/*
+ * Called from D-BUS
+ */
+inline void Workspace::nextTileLayout()
+    {
+    slotNextTileLayout();
+    }
+
+/*
+ * Called from D-BUS
+ */
+inline void Workspace::previousTileLayout()
+    {
+    slotPreviousTileLayout();
     }
 
 } // namespace

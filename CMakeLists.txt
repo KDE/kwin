@@ -105,8 +105,25 @@ set(kwin_KDEINIT_SRCS
    compositingprefs.cpp
    desktoplayout.cpp
    paintredirector.cpp
+   tile.cpp
+   tiling.cpp
+   tilinglayout.cpp
+   tilinglayoutfactory.cpp
+
+   # tiling layouts
+   # spiral
+   #tilinglayouts/spiral/spiralfactory.cpp
+   tilinglayouts/spiral/spiral.cpp
+
+   # columns
+   #tilinglayouts/columns/columnsfactory.cpp
+   tilinglayouts/columns/columns.cpp
+
+   # floating
+   tilinglayouts/floating/floating.cpp
    )
 
+add_subdirectory( tilinglayouts )
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml workspace.h KWin::Workspace )
 
 

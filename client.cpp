@@ -895,6 +895,9 @@ void Client::minimize( bool avoid_animation )
     if( effects && !avoid_animation ) // TODO: Shouldn't it tell effects at least about the change?
         static_cast<EffectsHandlerImpl*>(effects)->windowMinimized( effectWindow());
 
+    // when tiling, request a rearrangement
+    workspace()->notifyWindowMinimizeToggled( this );
+
     // Update states of all other windows in this group
     if( clientGroup() )
         clientGroup()->updateStates( this );
@@ -911,8 +914,12 @@ void Client::unminimize( bool avoid_animation )
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients( this );
     updateWindowRules();
+    workspace()->updateAllTiles();
     if( effects && !avoid_animation )
         static_cast<EffectsHandlerImpl*>( effects )->windowUnminimized( effectWindow() );
+
+    // when tiling, request a rearrangement
+    workspace()->notifyWindowMinimizeToggled( this );
 
     // Update states of all other windows in this group
     if( clientGroup() )

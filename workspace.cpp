@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 
 #include "client.h"
+#include "tile.h"
 #include "tabbox.h"
 #include "desktopchangeosd.h"
 #include "atoms.h"
@@ -56,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "deleted.h"
 #include "effects.h"
+#include "tilinglayout.h"
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -151,6 +153,7 @@ Workspace::Workspace( bool restore )
     , transSlider( NULL )
     , transButton( NULL )
     , forceUnredirectCheck( true )
+    , tilingMode_( false )
     {
     (void) new KWinAdaptor( this );
 
@@ -469,6 +472,9 @@ void Workspace::init()
     outline_bottom = XCreateWindow( QX11Info::display(), QX11Info::appRootWindow(), 0, 0, 1, 1, 0,
         CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect, &attr );
 
+    // Enable/disable tiling
+    setTilingMode( options->tilingOn );
+
     // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't
     // want focus
@@ -550,6 +556,11 @@ Client* Workspace::createClient( Window w, bool is_mapped )
         return NULL;
         }
     addClient( c, Allowed );
+
+    tilingLayouts.resize( numberOfDesktops() + 1 );
+
+    createTile( c );
+
     if( scene )
         scene->windowAdded( c );
     if( effects )
@@ -649,6 +660,11 @@ void Workspace::removeClient( Client* c, allowed_t )
         tab_box->nextPrev( true );
 
     Q_ASSERT( clients.contains( c ) || desktops.contains( c ));
+    if( tilingMode() && tilingLayouts.value(c->desktop()) )
+        {
+        removeTile( c );
+        }
+    // TODO: if marked client is removed, notify the marked list
     clients.removeAll( c );
     desktops.removeAll( c );
     unconstrained_stacking_order.removeAll( c );
@@ -1134,6 +1150,10 @@ void Workspace::slotReconfigure()
         (*it)->applyWindowRules();
         discardUsedWindowRules( *it, false );
         }
+
+    setTilingMode( options->tilingOn );
+    // just so that we reset windows in the right manner, 'activate' the current active window
+    notifyWindowActivated( activeClient() );
     rootInfo->setSupported( NET::WM2FrameOverlap, mgr->factory()->supports( AbilityExtendIntoClientArea ) );
     }
 
@@ -1398,7 +1418,14 @@ bool Workspace::setCurrentDesktop( int new_desktop )
         rootInfo->setCurrentDesktop( currentDesktop() );
 
         if( movingClient && !movingClient->isOnDesktop( new_desktop ))
+            {
+            int old_desktop = movingClient->desktop();
             movingClient->setDesktop( new_desktop );
+            if( tilingMode() )
+                {
+                notifyWindowDesktopChanged( movingClient, old_desktop );
+                }
+            }
 
         for( int i = stacking_order.size() - 1; i >= 0 ; --i )
             if( stacking_order.at( i )->isOnDesktop( new_desktop ))
@@ -1532,6 +1559,7 @@ void Workspace::setNumberOfDesktops( int n )
             ++it)
             if( !(*it)->isOnAllDesktops() && (*it)->desktop() > numberOfDesktops() )
                 sendClientToDesktop( *it, numberOfDesktops(), true );
+        // TODO: Tile should have a method allClients, push them into other tiles
         }
     if( old_number_of_desktops > numberOfDesktops() )
         {
@@ -1550,6 +1578,8 @@ void Workspace::setNumberOfDesktops( int n )
     for( int i = 0; i < int( desktop_focus_chain.size() ); i++ )
         desktop_focus_chain[i] = i+1;
 
+    tilingLayouts.resize( numberOfDesktops() + 1 );
+
     // reset the desktop change osd
     desktop_change_osd->numberDesktopsChanged();
     // inform effects
@@ -1564,6 +1594,7 @@ void Workspace::setNumberOfDesktops( int n )
  */
 void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
     {
+    int old_desktop = c->desktop();
     bool was_on_desktop = c->isOnDesktop( desk ) || c->isOnAllDesktops();
     c->setDesktop( desk );
     if( c->desktop() != desk ) // No change or desktop forced
@@ -1581,6 +1612,8 @@ void Workspace::sendClientToDesktop( Client* c, int desk, bool dont_activate )
         }
     else
         raiseClient( c );
+
+    notifyWindowDesktopChanged( c, old_desktop );
 
     ClientList transients_stacking_order = ensureStackingOrder( c->transients() );
     for( ClientList::ConstIterator it = transients_stacking_order.constBegin();

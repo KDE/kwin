@@ -61,6 +61,7 @@ class WindowRules
         QSize checkMaxSize( QSize s ) const;
         int checkOpacityActive(int s) const;
         int checkOpacityInactive(int s) const;
+        int checkTilingOption( int s ) const;
         bool checkIgnoreGeometry( bool ignore ) const;
         int checkDesktop( int desktop, bool init = false ) const;
         NET::WindowType checkType( NET::WindowType type ) const;
@@ -115,6 +116,7 @@ class Rules
         bool applyMaxSize( QSize& s ) const;
         bool applyOpacityActive(int& s) const;
         bool applyOpacityInactive(int& s) const;
+        bool applyTilingOption( int& s ) const;
         bool applyIgnoreGeometry( bool& ignore ) const;
         bool applyDesktop( int& desktop, bool init ) const;
         bool applyType( NET::WindowType& type ) const;
@@ -214,6 +216,8 @@ class Rules
         ForceRule opacityactiverule;
         int opacityinactive;
         ForceRule opacityinactiverule;
+        int tilingoption;
+        ForceRule tilingoptionrule;
         bool ignoreposition;
         ForceRule ignorepositionrule;
         int desktop;

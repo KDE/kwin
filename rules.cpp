@@ -51,6 +51,7 @@ Rules::Rules()
     , maxsizerule( UnusedForceRule )
     , opacityactiverule( UnusedForceRule )
     , opacityinactiverule( UnusedForceRule )
+    , tilingoptionrule( UnusedForceRule )
     , ignorepositionrule( UnusedForceRule )
     , desktoprule( UnusedSetRule )
     , typerule( UnusedForceRule )
@@ -153,6 +154,7 @@ void Rules::readFromCfg( const KConfigGroup& cfg )
     READ_FORCE_RULE( opacityinactive,, 0);
     if( opacityinactive < 0 || opacityinactive > 100 )
         opacityinactive = 100;
+    READ_FORCE_RULE( tilingoption,, 0 );
     READ_FORCE_RULE( ignoreposition,, false);
     READ_SET_RULE( desktop,,0  );
     type = readType( cfg, "type" );
@@ -241,6 +243,7 @@ void Rules::write( KConfigGroup& cfg ) const
     WRITE_FORCE_RULE( maxsize, );
     WRITE_FORCE_RULE( opacityactive, );
     WRITE_FORCE_RULE( opacityinactive, );
+    WRITE_FORCE_RULE( tilingoption, );
     WRITE_FORCE_RULE( ignoreposition, );
     WRITE_SET_RULE( desktop, );
     WRITE_FORCE_RULE( type, int );
@@ -280,6 +283,7 @@ bool Rules::isEmpty() const
         && maxsizerule == UnusedForceRule
         && opacityactiverule == UnusedForceRule
         && opacityinactiverule == UnusedForceRule
+        && tilingoptionrule == UnusedForceRule
         && ignorepositionrule == UnusedForceRule
         && desktoprule == UnusedSetRule
         && typerule == UnusedForceRule
@@ -576,6 +580,7 @@ APPLY_FORCE_RULE( maxsize, MaxSize, QSize )
 APPLY_FORCE_RULE( opacityactive, OpacityActive, int )
 APPLY_FORCE_RULE( opacityinactive, OpacityInactive, int )
 APPLY_FORCE_RULE( ignoreposition, IgnorePosition, bool )
+APPLY_FORCE_RULE( tilingoption, TilingOption, int )
 
 // the cfg. entry needs to stay named the say for backwards compatibility
 bool Rules::applyIgnoreGeometry( bool& ignore ) const
@@ -672,6 +677,7 @@ void Rules::discardUsed( bool withdrawn )
     DISCARD_USED_FORCE_RULE( maxsize );
     DISCARD_USED_FORCE_RULE( opacityactive );
     DISCARD_USED_FORCE_RULE( opacityinactive );
+    DISCARD_USED_FORCE_RULE( tilingoption );
     DISCARD_USED_FORCE_RULE( ignoreposition );
     DISCARD_USED_SET_RULE( desktop );
     DISCARD_USED_FORCE_RULE( type );
@@ -781,6 +787,7 @@ CHECK_FORCE_RULE( MinSize, QSize )
 CHECK_FORCE_RULE( MaxSize, QSize )
 CHECK_FORCE_RULE( OpacityActive, int )
 CHECK_FORCE_RULE( OpacityInactive, int )
+CHECK_FORCE_RULE( TilingOption, int )
 CHECK_FORCE_RULE( IgnorePosition, bool )
 
 bool WindowRules::checkIgnoreGeometry( bool ignore ) const

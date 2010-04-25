@@ -103,6 +103,7 @@ RulesWidget::RulesWidget( QWidget* parent )
     SETUP( autogroupid, force );
     SETUP( opacityactive, force );
     SETUP( opacityinactive, force );
+    SETUP( tilingoption, force );
     SETUP( shortcut, force );
     // workarounds tab
     SETUP( fsplevel, force );
@@ -153,6 +154,7 @@ UPDATE_ENABLE_SLOT( autogroupfg )
 UPDATE_ENABLE_SLOT( autogroupid )
 UPDATE_ENABLE_SLOT( opacityactive )
 UPDATE_ENABLE_SLOT( opacityinactive )
+UPDATE_ENABLE_SLOT( tilingoption )
 void RulesWidget::updateEnableshortcut()
     {
     shortcut->setEnabled( enable_shortcut->isChecked() && rule_shortcut->currentIndex() != 0 );
@@ -267,6 +269,16 @@ int RulesWidget::comboToDesktop( int val ) const
     if( val == desktop->count() - 1 )
         return NET::OnAllDesktops;
     return val + 1;
+    }
+
+int RulesWidget::tilingToCombo( int t ) const
+    {
+    return qBound(0, t, 1);
+    }
+
+int RulesWidget::comboToTiling( int val ) const
+    {
+    return val; // 0 is tiling, 1 is floating
     }
 
 static int placementToCombo( Placement::Policy placement )
@@ -431,6 +443,7 @@ void RulesWidget::setRules( Rules* rules )
     LINEEDIT_FORCE_RULE( autogroupid, );
     LINEEDIT_FORCE_RULE( opacityactive, intToStr );
     LINEEDIT_FORCE_RULE( opacityinactive, intToStr );
+    COMBOBOX_FORCE_RULE( tilingoption, tilingToCombo );
     LINEEDIT_SET_RULE( shortcut, );
     COMBOBOX_FORCE_RULE( fsplevel, );
     COMBOBOX_FORCE_RULE( moveresizemode, moveresizeToCombo );
@@ -524,6 +537,7 @@ Rules* RulesWidget::rules() const
     LINEEDIT_FORCE_RULE( autogroupid, );
     LINEEDIT_FORCE_RULE( opacityactive, strToInt );
     LINEEDIT_FORCE_RULE( opacityinactive, strToInt );
+    COMBOBOX_FORCE_RULE( tilingoption, comboToTiling );
     LINEEDIT_SET_RULE( shortcut, );
     COMBOBOX_FORCE_RULE( fsplevel, );
     COMBOBOX_FORCE_RULE( moveresizemode, comboToMoveResize );
@@ -644,6 +658,7 @@ void RulesWidget::prefillUnusedValues( const KWindowInfo& info )
     //LINEEDIT_PREFILL( autogroupid, );
     LINEEDIT_PREFILL( opacityactive, intToStr, 100 /*get the actual opacity somehow*/);
     LINEEDIT_PREFILL( opacityinactive, intToStr, 100 /*get the actual opacity somehow*/);
+    COMBOBOX_PREFILL( tilingoption, tilingToCombo, 0 );
     //LINEEDIT_PREFILL( shortcut, );
     //COMBOBOX_PREFILL( fsplevel, );
     //COMBOBOX_PREFILL( moveresizemode, moveresizeToCombo );

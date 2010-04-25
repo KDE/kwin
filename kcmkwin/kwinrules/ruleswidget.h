@@ -77,6 +77,7 @@ class RulesWidget
         void updateEnableautogroupid();
         void updateEnableopacityactive();
         void updateEnableopacityinactive();
+        void updateEnabletilingoption();
         // workarounds tab
         void updateEnablefsplevel();
         void updateEnablemoveresizemode();
@@ -92,6 +93,8 @@ class RulesWidget
     private:
         int desktopToCombo( int d ) const;
         int comboToDesktop( int val ) const;
+        int tilingToCombo( int t ) const;
+        int comboToTiling( int val ) const;
         void prefillUnusedValues( const KWindowInfo& info );
         DetectDialog* detect_dlg;
         bool detect_dlg_ok;

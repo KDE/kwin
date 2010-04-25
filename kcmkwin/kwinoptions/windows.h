@@ -196,6 +196,7 @@ private slots:
 
   void changed() { emit KCModule::changed(true); }
 
+  void tilingOnChanged( bool a );
 private:
 
   int getShadeHoverInterval (void );
@@ -225,7 +226,21 @@ private:
 
   int getPlacement( void ); //CT
   void setPlacement(int); //CT
+
   KComboBox *placementCombo;
+
+  // ------------------------------
+  // Tiling related widgets/methods
+  // ------------------------------
+  KButtonGroup *tilBox;
+  QCheckBox *tilingOn;
+  QLabel *tilingLayoutLabel;
+  QLabel *tilingRaiseLabel;
+  QComboBox *tilingLayoutCombo;
+  QComboBox *tilingRaiseCombo;
+  void setTilingOn( bool );
+  void setTilingLayout( int );
+  void setTilingRaisePolicy( int );
 };
 
 #endif // KKWMWINDOWS_H

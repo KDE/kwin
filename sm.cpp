@@ -82,6 +82,17 @@ void Workspace::storeSession( KConfig* config, SMSavePhase phase )
     KConfigGroup cg(config, "Session");
     int count =  0;
     int active_client = -1;
+
+    if( phase == SMSavePhase2 || phase == SMSavePhase2Full )
+        {
+        cg.writeEntry( "tiling", tilingMode() );
+        if( tilingMode() )
+            {
+            kDebug(1212) << "Tiling was ON";
+            setTilingMode( false );
+            }
+        }
+
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) 
         {
         Client* c = (*it);
@@ -167,6 +178,9 @@ void Workspace::loadSessionInfo()
     {
     session.clear();
     KConfigGroup cg(kapp->sessionConfig(), "Session");
+
+    setTilingMode( cg.readEntry( "tiling", false ) );
+
     int count =  cg.readEntry( "count",0 );
     int active_client = cg.readEntry( "active",0 );
     for ( int i = 1; i <= count; i++ ) 

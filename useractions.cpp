@@ -668,6 +668,15 @@ void Workspace::performWindowOperation( Client* c, Options::WindowOperation op )
     if ( !c )
         return;
 
+    if( tilingMode()
+        && (    op == Options::MaximizeOp
+             || op == Options::HMaximizeOp
+             || op == Options::VMaximizeOp
+             || op == Options::RestoreOp ) )
+        {
+        notifyWindowMaximized( c, op );
+        }
+
     if (op == Options::MoveOp || op == Options::UnrestrictedMoveOp )
         QCursor::setPos( c->geometry().center() );
     if (op == Options::ResizeOp || op == Options::UnrestrictedResizeOp )

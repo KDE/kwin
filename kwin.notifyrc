@@ -6775,3 +6775,18 @@ Comment[x-test]=xxSome effects are not supported by backend or hardware.xx
 Comment[zh_CN]=因为后端或硬件的关系，一些效果不受支持。
 Comment[zh_TW]=有些效果未被後端介面或硬體支援。
 Action=Popup
+
+[Event/tilingenabled]
+Name=Tiling Enabled
+Comment=Tiling mode has been enabled
+Action=Popup
+
+[Event/tilingdisabled]
+Name=Tiling Disabled
+Comment=Tiling mode has been disabled
+Action=Popup
+
+[Event/tilinglayoutchanged]
+Name=Tiling Layout Changed
+Comment=Tiling Layout has been changed
+Action=Popup

@@ -117,6 +117,21 @@ class Options : public KDecorationOptions
         int shadeHoverInterval;
 
         /**
+         * Whether tiling is enabled or not
+         */
+        bool tilingOn;
+
+        /**
+         * Tiling Layout
+         */
+        int tilingLayout;
+
+        /**
+         * Tiling window raise policy.
+         */
+        int tilingRaisePolicy;
+
+        /**
            Different Alt-Tab-Styles:
            <ul>
 
